@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { CommunitiesComponent } from './communities.component';
@@ -56,7 +57,7 @@ describe('CommunitiesComponent', () => {
 		racetrackInfoService.sendCurrentTechnology(racetrack.solutions[0].technologies[0]);
 	};
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				CommunitiesModule,
@@ -69,8 +70,10 @@ describe('CommunitiesComponent', () => {
 					useClass: LifecycleComponent,
 				},
 			],
-		})
-		.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 
 		racetrackInfoService = TestBed.get(RacetrackInfoService);
 		racetrackService = TestBed.get(RacetrackService);

@@ -18,6 +18,9 @@ export class FingerprintBodyComponent implements OnChanges {
 
 	public selectedDevice: string;
 	public selectedAsset: any;
+	public alertFPCompare: any = { };
+	public alertFPSimilarAssets: any = { };
+	public alertFPIntelligence: any = { };
 	public cxLevel: number;
 
 	constructor (
@@ -51,4 +54,5 @@ export class FingerprintBodyComponent implements OnChanges {
 		this.tabIndex = 2;
 		this.selectedDevices = event;
 	}
+
 }

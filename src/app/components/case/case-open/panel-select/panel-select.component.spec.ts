@@ -1,7 +1,8 @@
+import { configureTestSuite } from 'ng-bullet';
 import { Component, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { async, fakeAsync, tick, ComponentFixture, TestBed } from '@angular/core/testing';
+import { fakeAsync, tick, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PanelSelectComponent } from './panel-select.component';
 import { PanelSelectModule } from './panel-select.module';
@@ -60,16 +61,15 @@ describe('PanelSelectComponent', () => {
 	let wrapperComponent: WrapperComponent;
 	let fixture: ComponentFixture<WrapperComponent>;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			declarations: [WrapperComponent],
 			imports: [
 				ReactiveFormsModule,
 				PanelSelectModule,
 			],
-		})
-		.compileComponents();
-	}));
+		});
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(WrapperComponent);

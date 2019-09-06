@@ -1611,6 +1611,10 @@ export class LifecycleComponent implements OnDestroy {
 	 * @returns the ContractQuota
 	 */
 	private loadCGT (): Observable<ContractQuota[]> | Observable<void | { }> {
+		if (window.Cypress) {
+			this.enableCGT = window.forceCGTDisplay;
+		}
+
 		if (this.enableCGT) {
 			this.status.loading.cgt = true;
 			if (window.Cypress) {

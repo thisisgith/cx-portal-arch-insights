@@ -1,4 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { configureTestSuite } from 'ng-bullet';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PoliciesComponent } from './policies.component';
 import { PoliciesModule } from './policies.module';
@@ -21,7 +22,7 @@ describe('PoliciesComponent', () => {
 		back: jasmine.createSpy('back'),
 	};
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				HttpClientTestingModule,
@@ -34,9 +35,8 @@ describe('PoliciesComponent', () => {
 					useValue: locationStub,
 				},
 			],
-		})
-		.compileComponents();
-	}));
+		});
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(PoliciesComponent);

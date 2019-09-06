@@ -1,4 +1,5 @@
-import { async, ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
+import { configureTestSuite } from 'ng-bullet';
+import { ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { RelatedRmaComponent } from './related-rma.component';
@@ -9,15 +10,14 @@ describe('RelatedRmaComponent', () => {
 	let component: RelatedRmaComponent;
 	let fixture: ComponentFixture<RelatedRmaComponent>;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				RelatedRmaModule,
 				RouterTestingModule,
 			],
-		})
-			.compileComponents();
-	}));
+		});
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(RelatedRmaComponent);

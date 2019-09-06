@@ -1,4 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { configureTestSuite } from 'ng-bullet';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { environment } from '@environment';
 import { DevicesWithExceptionsComponent } from './devices-with-exceptions.component';
 import { DevicesWithExceptionsModule } from './devices-with-exceptions.module';
@@ -16,7 +17,7 @@ describe('DevicesWithExceptionsComponent', () => {
 	let fixture: ComponentFixture<DevicesWithExceptionsComponent>;
 	let service: ArchitectureService;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [DevicesWithExceptionsModule,
 				HttpClientTestingModule,
@@ -40,9 +41,9 @@ describe('DevicesWithExceptionsComponent', () => {
 					},
 				},
 			],
-		})
-			.compileComponents();
-	}));
+		});
+	});
+
 	beforeEach(() => {
 		service = TestBed.get(ArchitectureService);
 		spyOn(service, 'getAllAssetsWithExceptions')
