@@ -205,8 +205,8 @@
 			</div>
 			<div class="line-clamp learning-popover__description" [innerText]="description" attr.data-auto-id="{{ autoid }}-HoverModal-Description"></div>
 			<div *ngIf="item && item.duration" class="learning-popover__footer" attr.data-auto-id="{{ autoid }}-HoverModal-Duration">
-				<span class="icon-clock" attr.data-auto-id="{{ autoid }}-HoverModal-DurationClock"></span>
-				<span [innerText]="item.duration"></span>
+				<span class="icon-clock qtr-margin-right" attr.data-auto-id="{{ autoid }}-HoverModal-DurationClock"></span>
+				<span class="learning-popover__footer__text" [innerText]="item.duration"></span>
 			</div>
 		</div>
 	</div>
@@ -283,7 +283,7 @@
 			<div class="divider divider--compressed"></div>
 			<div class="line-clamp acc-popover__description" [innerText]="description" attr.data-auto-id="{{ autoid }}-HoverModal-Description"></div>
 			<div *ngIf="item && item.duration" class="learning-duration text-right text-muted flex-fluid half-margin-left" attr.data-auto-id="{{ autoid }}-HoverModal-Duration">
-				<span class="icon-clock icon-small" attr.data-auto-id="{{ autoid }}-HoverModal-DurationClock"></span>
+				<span class="icon-clock icon-small qtr-margin-right" attr.data-auto-id="{{ autoid }}-HoverModal-DurationClock"></span>
 				<span [innerText]="item.duration"></span>
 			</div>
 			<div *ngIf= "item.status.toLowerCase()==='recommended'">
@@ -294,16 +294,16 @@
 					}">
 				</ng-container>
 			</div>
-			<div class="text-left" *ngIf="autoid==='moreACCList' && item.status.toLowerCase()==='in-progress'" attr.data-auto-id="{{ autoid }}-HoverModal-In-Progress">
-				<span class="icon-clock" attr.data-auto-id="{{ autoid }}-In-Progress-Icon"></span>
-				<span [innerText]="'_SessionInProgress_' | i18n" attr.data-auto-id="{{ autoid }}-In-Progress"></span>
+			<div class="text-left acc-popover__footer" *ngIf="autoid==='moreACCList' && item.status.toLowerCase()==='in-progress'" attr.data-auto-id="{{ autoid }}-HoverModal-In-Progress">
+				<span class="icon-clock qtr-margin-right" attr.data-auto-id="{{ autoid }}-In-Progress-Icon"></span>
+				<span class="acc-popover__footer__text" [innerText]="'_SessionInProgress_' | i18n" attr.data-auto-id="{{ autoid }}-In-Progress"></span>
 			</div>
-			<div class="text-left" *ngIf="autoid==='moreACCList' && item.status.toLowerCase()==='requested'" attr.data-auto-id="{{ autoid }}-HoverModal-Requested">
-				<span class="icon-check-outline" attr.data-auto-id="{{ autoid }}-HoverModal-Requested-Icon"></span>
-				<span [innerText]="'_Requested_' | i18n" attr.data-auto-id="{{ autoid }}-In-Progress"></span>
+			<div class="text-left acc-popover__footer" *ngIf="autoid==='moreACCList' && item.status.toLowerCase()==='requested'" attr.data-auto-id="{{ autoid }}-HoverModal-Requested">
+				<span class="icon-check-outline qtr-margin-right" attr.data-auto-id="{{ autoid }}-HoverModal-Requested-Icon"></span>
+				<span class="acc-popover__footer__text" [innerText]="'_Requested_' | i18n" attr.data-auto-id="{{ autoid }}-In-Progress"></span>
 			</div>
-			<div class="text-left text-success" *ngIf="autoid==='moreACCList' && item.status.toLowerCase()==='completed'" attr.data-auto-id="{{ autoid }}-HoverModal-CompletedMessage">
-				<span [innerText]="'_Completed_' | i18n"></span>
+			<div class="text-left text-success acc-popover__footer" *ngIf="autoid==='moreACCList' && item.status.toLowerCase()==='completed'" attr.data-auto-id="{{ autoid }}-HoverModal-CompletedMessage">
+				<span class="acc-popover__footer__text" [innerText]="'_Completed_' | i18n"></span>
 			</div>
 		</div>
 	</div>
@@ -647,8 +647,8 @@
 						</a>
 					</div>
 					<div *ngIf="item && item.duration" class="learning-duration" attr.data-auto-id="{{ autoid }}-HoverModal-Duration">
-						<span class="icon-clock" attr.data-auto-id="{{ autoid }}-HoverModal-DurationClock"></span>
-						<span [innerText]="item.duration"></span>
+						<span class="icon-clock qtr-margin-right" attr.data-auto-id="{{ autoid }}-HoverModal-DurationClock"></span>
+						<span [innerText]="item.duration" class="sb-popover__footer__text"></span>
 					</div>
 				</div>
 			</div>
@@ -1333,19 +1333,19 @@
 
 <ng-template #itemTypeIcons let-item="item" let-autoid="autoid">
 	<div class="text-left text-muted" *ngIf="item.type === 'Web Page'" attr.data-auto-id="{{ autoid }}-WebIcon">
-		<span class="icon-link qtr-padding-right"></span>
-		<span [innerText]="'_Web_' | i18n"></span>
+		<span class="icon-apps qtr-padding-right"></span>
+		<span class="item-type__text" [innerText]="'_Web_' | i18n"></span>
 	</div>
 	<div class="text-left text-muted" *ngIf="item.type === 'Video'" attr.data-auto-id="{{ autoid }}-VideoIcon">
-		<span class="icon-video qtr-padding-right"></span>
-		<span [innerText]="'_Video_' | i18n"></span>
+		<span class="icon-play-contained qtr-padding-right"></span>
+		<span class="item-type__text" [innerText]="'_Video_' | i18n"></span>
 	</div>
 	<div class="text-left text-muted" *ngIf="item.type === 'PDF'" attr.data-auto-id="{{ autoid }}-PDFIcon">
 		<span class="icon-file-pdf-o qtr-padding-right"></span>
-		<span [innerText]="'_PDF_' | i18n"></span>
+		<span class="item-type__text" [innerText]="'_PDF_' | i18n"></span>
 	</div>
 	<div class="text-left text-muted" *ngIf="item.type === 'Data Sheet'" attr.data-auto-id="{{ autoid }}-DataSheetIcon">
 		<span class="icon-document qtr-padding-right"></span>
-		<span [innerText]="'_Datasheet_' | i18n"></span>
+		<span class="item-type__text" [innerText]="'_Datasheet_' | i18n"></span>
 	</div>
 </ng-template>
