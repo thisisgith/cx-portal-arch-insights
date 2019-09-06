@@ -187,6 +187,34 @@ const getExportAllData = {
 };
 
 /**
+ * Failed to Get Export dada
+ */
+const getFailedExportAllData = {
+	connectionStatus: '',
+	data: '',
+	eventInfo: '',
+	eventList: [],
+	pagination: '',
+	status: 'fail',
+	statusCode: 'OK',
+	statusMessage: 'failed retrived records',
+};
+
+/**
+ * Failed to Get Export dada
+ */
+const getExceptionExportAllData = {
+	connectionStatus: '',
+	data: '',
+	eventInfo: '',
+	eventList: [],
+	pagination: '',
+	status: 'Exception',
+	statusCode: 'OK',
+	statusMessage: 'Server is down, please try again.',
+};
+
+/**
  * Time range data
  */
 const getTimeRangeData = {
@@ -507,5 +535,39 @@ export const AfmScenarios = [
 		},
 		url: api,
 		usecases: ['Use Case 10'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'Summary',
+					response: {
+						body: getFailedExportAllData,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: api,
+		usecases: ['Use Case 11'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'Summary',
+					response: {
+						body: getExceptionExportAllData,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: api,
+		usecases: ['Use Case 12'],
 	},
 ];

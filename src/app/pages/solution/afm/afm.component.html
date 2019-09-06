@@ -48,10 +48,6 @@
 			<span class="qtr-margin-right icon-circle"></span>
 			<span [innerText]="'_AfmP7Low_' | i18n"></span>
 		</span>
-		<span *ngSwitchDefault>
-			<!-- <span class="qtr-margin-right icon-circle "></span>
-            <span [innerText]="'_AfmP7Low_'|i18n"></span> -->
-		</span>
 	</div>
 </ng-template>
 
@@ -71,7 +67,7 @@
 	<div *ngIf="loading" class="base-margin-bottom">
 		<cui-spinner></cui-spinner>
 	</div>
-	<div class=" responsive-table" *ngIf="!loading">
+	<div class="responsive-table" *ngIf="!loading">
 		<cui-table
 			[options]="tableOptions"
 			[data]="tableData"
@@ -90,7 +86,7 @@
 				(onPageChanged)="onPagerUpdated($event)"
 			></cui-pager>
 		</div>
-		<div *ngIf="tableData.length == 0">
+		<div *ngIf="tableData.length === 0">
 			<div
 				class="text-muted text-xlarge flex-center"
 				[innerText]="'_AfmNoResults_' | i18n"
@@ -397,24 +393,10 @@
 </details-panel>
 
 <!-- App Details slide-out -->
-<details-panel
-	*ngIf="selectedAsset"
-	[hidden]="!selectedAsset"
-	[fullscreen]="fullscreen"
+<asset-details *ngIf="selectedAsset"
+	[asset]="selectedAsset"
+	[serialNumber]="selectedAsset?.serialNumber"
+	[element]=""
+	(close)="onPanelClose()"
 >
-	<details-panel-header
-		(close)="onPanelClose()"
-		[(fullscreen)]="fullscreen"
-		[fullscreenToggle]="false"
-	>
-		<asset-details-header [asset]="selectedAsset"></asset-details-header>
-		<div detailsPanelTitle class="text-xlarge">
-			<span class="icon-wifi"></span>
-			<span
-				class="qtr-margin-left"
-				[innerText]="tablePanelData?.hostName"
-			></span>
-		</div>
-	</details-panel-header>
-	<asset-details [asset]="selectedAsset"></asset-details>
-</details-panel>
+</asset-details>
