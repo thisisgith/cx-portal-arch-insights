@@ -93,7 +93,7 @@ describe('RiskMitigationComponent', () => {
 		component.ngOnInit();
 		fixture.detectChanges();
 		expect(component.status.isLoading)
-			.toBeFalsy();
+			.toBeTruthy();
 		const advisoryFilter = _.find(component.filters, { key: 'advisories' });
 		expect(advisoryFilter.seriesData)
 			.toBeDefined();
@@ -352,27 +352,27 @@ describe('RiskMitigationComponent', () => {
 
 	it('should unset the selectedAsset', () => {
 		component.onPanelClose();
-		expect(component.selectedAsset)
-			.toBeUndefined();
+		expect(component.selectedAsset.active)
+			.toBeFalsy();
 		expect(component.showAsset360)
 			.toBeFalsy();
 	});
 
 	it('should set the selectedAsset', () => {
 		component.onRowClicked({ active: true });
-		expect(component.selectedAsset)
-			.toBeDefined();
+		expect(component.selectedAsset.active)
+			.toBeTruthy();
 		expect(component.showAsset360)
 			.toBeFalsy();
 		component.onRowClicked({ active: false });
-		expect(component.selectedAsset)
-			.toBeUndefined();
+		expect(component.selectedAsset.active)
+			.toBeFalsy();
 	});
 
 	it('should unset the selectedAsset on panel close', () => {
 		component.onPanelClose();
-		expect(component.selectedAsset)
-			.toBeUndefined();
+		expect(component.selectedAsset.active)
+			.toBeFalsy();
 		expect(component.showAsset360)
 			.toBeFalsy();
 	});

@@ -69,7 +69,9 @@ export class RiskMitigationColumnChartComponent implements OnInit {
 								});
 							});
 						}
-						this.chart.ref.series[0].data[0].select();
+						if (this.chart.ref.series[0].data[0]) {
+							this.chart.ref.series[0].data[0].select();
+						}
 					},
 				},
 				height: 120,
