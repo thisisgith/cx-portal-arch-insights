@@ -783,6 +783,7 @@
 	"_RccDevice_": "Device",
 	"_RccImpactedAssets_": "Impacted Assets",
 	"_RccImpactedDevices_": "Impacted Devices - {0}",
+	"_RccInvalidSearchInput_": "Invalid search input",
 	"_RccNoDataAvailable_": "No Results Found",
 	"_RccNoResults_": " Data is unable to load",
 	"_RccNoValue_": "0",
