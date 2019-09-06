@@ -583,7 +583,7 @@ export class LifecycleComponent implements OnDestroy {
 					sortDirection: 'asc',
 					sortKey: 'bookmark',
 					template: this.bookmarkTemplate,
-					width: '10%',
+					width: '12%',
 				},
 				{
 					key: 'title',
@@ -592,7 +592,7 @@ export class LifecycleComponent implements OnDestroy {
 					sortDirection: 'asc',
 					sortKey: 'title',
 					template: this.titleTemplate,
-					width: '50%',
+					width: '44%',
 				},
 				{
 					key: 'status',
@@ -606,7 +606,7 @@ export class LifecycleComponent implements OnDestroy {
 				{
 					sortable: false,
 					template: this.actionTemplate,
-					width: '20%',
+					width: '24%',
 				},
 			],
 		});
