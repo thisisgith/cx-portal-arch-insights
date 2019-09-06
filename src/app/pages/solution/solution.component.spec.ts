@@ -1,10 +1,18 @@
 import { configureTestSuite } from 'ng-bullet';
-import { async, fakeAsync, flush, tick, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Subject, of, throwError } from 'rxjs';
+import {
+	async,
+	discardPeriodicTasks,
+	fakeAsync,
+	flush,
+	tick,
+	ComponentFixture,
+	TestBed,
+} from '@angular/core/testing';
+import { of, throwError } from 'rxjs';
 import { SolutionComponent } from './solution.component';
 import { SolutionModule } from './solution.module';
 import { RouterTestingModule } from '@angular/router/testing';
-import { NavigationEnd, Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { LifecycleComponent } from './lifecycle/lifecycle.component';
 import { LifecycleModule } from './lifecycle/lifecycle.module';
 import { AssetsComponent } from './assets/assets.component';
@@ -16,7 +24,6 @@ import {
 	VulnerabilityScenarios,
 	CoverageScenarios,
 	Mock,
-	user,
 } from '@mock';
 import * as _ from 'lodash-es';
 import { RacetrackService, ProductAlertsService, ContractsService } from '@sdp-api';
@@ -24,22 +31,6 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AdvisoriesComponent } from './advisories/advisories.component';
 import { CaseService } from '@cui-x/services';
 import { UtilsService, RacetrackInfoService } from '@services';
-
-/**
- * MockRouter used to help show/hide the spinner
- */
-class MockRouter {
-	public subject = new Subject();
-	public events = this.subject.asObservable();
-
-	/**
-	 * Mocking navigate from Router
-	 * @param url The url to mock route to
-	 */
-	public navigate (url: string) {
-		this.subject.next(new NavigationEnd(0, url, null));
-	}
-}
 
 /**
  * Will fetch the currently active response body from the mock object
@@ -95,27 +86,17 @@ describe('SolutionComponent', () => {
 				]),
 				SolutionModule,
 			],
-			providers: [
-				{
-					provide: Router,
-					useClass: MockRouter,
-				},
-				{
-					provide: ActivatedRoute,
-					useValue: {
-						snapshot: {
-							data: {
-								user,
-							},
-						},
-					},
-				},
-			],
 		});
 	});
 
 	beforeEach(async(() => {
+		fixture = TestBed.createComponent(SolutionComponent);
+		component = fixture.componentInstance;
+		router = TestBed.get(Router);
+		// router.navigate(['/solution/lifecycle']);
+	}));
 
+	beforeEach(() => {
 		contractsService = TestBed.get(ContractsService);
 		productAlertsService = TestBed.get(ProductAlertsService);
 		caseService = TestBed.get(CaseService);
@@ -123,13 +104,6 @@ describe('SolutionComponent', () => {
 		utils = TestBed.get(UtilsService);
 		localStorage.removeItem('quickTourFirstTime');
 		racetrackInfoService = TestBed.get(RacetrackInfoService);
-	}));
-
-	beforeEach(() => {
-		fixture = TestBed.createComponent(SolutionComponent);
-		component = fixture.componentInstance;
-		router = fixture.debugElement.injector.get(Router);
-		router.navigate(['/solution/lifecycle']);
 		restoreSpies();
 	});
 
@@ -138,21 +112,25 @@ describe('SolutionComponent', () => {
 			.toBeTruthy();
 	});
 
-	it('should change the active tab when the route changes', () => {
+	it('should change the active tab when the route changes', fakeAsync(() => {
+		router.navigate(['/solution/lifecycle']);
 		fixture.detectChanges();
+		tick();
 
 		expect(component.selectedFacet.route)
 			.toEqual('/solution/lifecycle');
 
 		router.navigate(['/solution/assets']);
 
-		fixture.detectChanges();
+		tick();
 
 		expect(component.selectedFacet.route)
 			.toEqual('/solution/assets');
-	});
+		tick();
+		discardPeriodicTasks();
+	}));
 
-	it('should not load anything else if racetrack fails', () => {
+	it('should not load anything else if racetrack fails', fakeAsync(() => {
 		racetrackInfoSpy = spyOn(racetrackService, 'getRacetrack')
 			.and
 			.returnValue(throwError(new HttpErrorResponse({
@@ -161,13 +139,17 @@ describe('SolutionComponent', () => {
 			})));
 
 		fixture.detectChanges();
+		tick(1000);
 
 		expect(component.selectedSolution)
 			.toBeUndefined();
-	});
+		discardPeriodicTasks();
+	}));
 
-	it('should change the selected facet', () => {
+	it('should change the selected facet', fakeAsync(() => {
+		router.navigate(['/solution/lifecycle']);
 		fixture.detectChanges();
+		tick();
 
 		expect(component.selectedFacet.route)
 			.toEqual('/solution/lifecycle');
@@ -176,8 +158,7 @@ describe('SolutionComponent', () => {
 		const assetsFacet = _.find(component.facets, { route: '/solution/assets' });
 
 		component.selectFacet(assetsFacet);
-
-		fixture.detectChanges();
+		tick(1000);
 
 		expect(component.selectedFacet)
 			.toEqual(assetsFacet);
@@ -185,9 +166,12 @@ describe('SolutionComponent', () => {
 			.toBeFalsy();
 
 		component.selectFacet(lifecyclesFacet);
+		tick(1000);
 		expect(component.quickTourActive)
 			.toBeFalsy();
-	});
+		flush();
+		discardPeriodicTasks();
+	}));
 
 	it('should change the active solution', fakeAsync(() => {
 		buildSpies();
@@ -197,16 +181,19 @@ describe('SolutionComponent', () => {
 		);
 		tick();
 		fixture.detectChanges();
+		tick();
 
 		expect(component.selectedSolution.name)
 			.toEqual('IBN');
 
-		component.changeSolution(component.solutions[1]);
+		component.changeSolution(null);
 		tick();
+		expect(component.selectedSolution)
+			.toBeNull();
+		discardPeriodicTasks();
 	}));
 
 	it('should change the active technology', fakeAsync(() => {
-		tick();
 		buildSpies();
 		racetrackInfoService.sendRacetrack(getActiveBody(RacetrackScenarios[0]));
 		racetrackInfoService.sendCurrentSolution(
@@ -217,26 +204,30 @@ describe('SolutionComponent', () => {
 		);
 		tick();
 		fixture.detectChanges();
+		tick();
 
 		expect(component.selectedTechnology.name)
 			.toEqual('Campus Network Assurance');
 
 		component.changeTechnology(component.selectedSolution.technologies[1]);
 
-		fixture.detectChanges();
+		tick();
 
 		expect(component.selectedTechnology.name)
 			.toEqual('Campus Network Segmentation');
+		discardPeriodicTasks();
 	}));
 
-	it('should always call getCaseAndRMACount', () => {
+	it('should always call getCaseAndRMACount', fakeAsync(() => {
 		spyOn(component, 'getCaseAndRMACount');
-		component.ngOnInit();
+		fixture.detectChanges();
+		tick(1000);
 		expect(component.getCaseAndRMACount)
 			.toHaveBeenCalled();
-	});
+		discardPeriodicTasks();
+	}));
 
-	it('should handle failing api calls', done => {
+	it('should handle failing api calls', fakeAsync(() => {
 		const error = {
 			status: 404,
 			statusText: 'Resource not found',
@@ -254,66 +245,60 @@ describe('SolutionComponent', () => {
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
 
-		fixture.whenStable()
-		.then(() => {
-			fixture.detectChanges();
+		fixture.detectChanges();
+		tick(1000);
 
-			const assetsFacet = _.find(component.facets, { key: 'assets' });
-			const advisoryFacet = _.find(component.facets, { key: 'advisories' });
-			const resolutionFacet = _.find(component.facets, { key: 'resolution' });
+		const assetsFacet = _.find(component.facets, { key: 'assets' });
+		const advisoryFacet = _.find(component.facets, { key: 'advisories' });
+		const resolutionFacet = _.find(component.facets, { key: 'resolution' });
 
-			expect(assetsFacet.loading)
-				.toBeFalsy();
+		expect(assetsFacet.loading)
+			.toBeFalsy();
 
-			expect(advisoryFacet.loading)
-				.toBeFalsy();
+		expect(advisoryFacet.loading)
+			.toBeFalsy();
 
-			expect(resolutionFacet.loading)
-				.toBeFalsy();
-
-			done();
-		});
-	});
+		expect(resolutionFacet.loading)
+			.toBeFalsy();
+		discardPeriodicTasks();
+	}));
 
 	it('should open Quick Tour when first time null', fakeAsync(() => {
-		tick();
+		router.navigate(['/solution/lifecycle']);
 		fixture.detectChanges();
+		tick();
 		expect(component.quickTourActive)
 			.toBeTruthy();
 		// Get rid of remaining timers which are still in queue for some reason
-		fixture.destroy();
-		flush();
+		discardPeriodicTasks();
 	}));
 
 	it('should open Quick Tour when first time true', fakeAsync(() => {
-		tick();
 		utils.setLocalStorage('quickTourFirstTime', { firstTime: true });
 		router.navigate(['/solution/lifecycle']);
 		tick();
 		fixture.detectChanges();
+		tick();
 		expect(component.quickTourActive)
 			.toBeTruthy();
 		// Get rid of remaining timers which are still in queue for some reason
-		fixture.destroy();
-		flush();
+		discardPeriodicTasks();
 	}));
 
 	it('should not open Quick Tour when not first time', fakeAsync(() => {
-		tick();
 		utils.setLocalStorage('quickTourFirstTime', { firstTime: false });
 		router.navigate(['/solution/lifecycle']);
 		tick();
 		fixture.detectChanges();
+		tick();
 		expect(component.quickTourActive)
 			.toBeFalsy();
 		// Get rid of remaining timers which are still in queue for some reason
-		fixture.destroy();
-		flush();
+		discardPeriodicTasks();
 	}));
 
 	it('should load the advisoriesFacet', fakeAsync(() => {
-		tick();
-		(<any> component).router.url = '';
+		router.navigate(['/solution/assets']);
 		spyOn(productAlertsService, 'getVulnerabilityCounts')
 			.and
 			.returnValue(of(getActiveBody(VulnerabilityScenarios[0])));
@@ -322,11 +307,12 @@ describe('SolutionComponent', () => {
 			.and
 			.returnValue(of(getActiveBody(CoverageScenarios[2])));
 
-		tick(5000);
 		fixture.detectChanges();
+		tick(5000);
 		const assetsFacet = _.find(component.facets, { key: 'assets' });
 
 		expect(assetsFacet.data)
 			.toEqual({ gaugePercent: 7, gaugeLabel: '7%' });
+		discardPeriodicTasks();
 	}));
 });
