@@ -6,7 +6,7 @@
 </div>
 <!-- timeline view -->
 <div class="dbl-margin-top"
-	*ngIf="!accept && !status.isLoading && assetDetails && assetDetails?.length > 0 && view =='timeline'">
+	*ngIf="!status.isLoading && assetDetails && assetDetails?.length > 0 && view =='timeline'">
 	<app-asset-timeline-chart [data]="timelineData" [fullscreen]="fullscreen">
 	</app-asset-timeline-chart>
 </div>

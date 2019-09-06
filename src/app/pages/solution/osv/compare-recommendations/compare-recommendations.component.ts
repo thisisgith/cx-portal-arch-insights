@@ -40,15 +40,15 @@ export class CompareRecommendationsComponent implements OnChanges {
 	public ngOnChanges (changes: SimpleChanges) {
 		const recommendations = _.get(changes, ['recommendations', 'currentValue']);
 		if (recommendations) {
-			this.formatData();
+			this.formatData(recommendations);
 		}
 	}
 
 	/**
 	 * formats data received from the api
 	 */
-	public formatData () {
-		_.map(this.recommendations, (recommendation: MachineRecommendations) => {
+	public formatData (recommendations) {
+		_.map(recommendations, (recommendation: MachineRecommendations) => {
 			const openBugs = _.get(recommendation, ['bugSeverity.OPEN']);
 			const openPsirts = _.get(recommendation, ['bugSeverity.OPEN']);
 			recommendation.score = _.isNumber(recommendation.score) ?
@@ -58,9 +58,9 @@ export class CompareRecommendationsComponent implements OnChanges {
 			recommendation.bugSeriesData = this.populateBarGraphData(openPsirts);
 			recommendation.psirtSeriesData = this.populateBarGraphData(openPsirts);
 		});
-		this.currentRecommendation = _.get(_.filter(this.recommendations,
+		this.currentRecommendation = _.get(_.filter(recommendations,
 			(recomm: MachineRecommendations) => recomm.name === 'profile current'), 0);
-		this.machineRecommendations = _.filter(this.recommendations,
+		this.machineRecommendations = _.filter(recommendations,
 			(recomm: MachineRecommendations) => recomm.name !== 'profile current');
 		this.sortData(this.machineRecommendations);
 	}
@@ -99,13 +99,11 @@ export class CompareRecommendationsComponent implements OnChanges {
 			_.map(data, (value: number, key: string) => {
 				if (!_.isNull(value)) {
 					return {
-						value,
-						filter: key.toLowerCase(),
+						value,						
 						label: key.toLowerCase() === 'critical' ?
 							I18n.get('_OsvCritical_')
 							: key.toLowerCase() === 'high' ?
-								I18n.get('_OsvHigh_') : I18n.get('_OsvLow_'),
-						selected: false,
+								I18n.get('_OsvHigh_') : I18n.get('_OsvLow_'),						
 					};
 				}
 			}));
