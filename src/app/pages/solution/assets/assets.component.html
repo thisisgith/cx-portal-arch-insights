@@ -5,7 +5,7 @@
 	(close)="onPanelClose()">
 </asset-details>
 
-<div class="panel panel--bordered base-padding-left base-padding-top no-padding-bottom">
+<div class="panel panel--bordered base-padding-left no-padding-bottom">
 	<cui-alert [options]="alert"></cui-alert>
 	<cui-tabs inline="true">
 		<cui-tab [label]="'_Assets_' | i18n"
@@ -32,7 +32,7 @@
 	</cui-tabs>
 </div>
 
-<div *ngIf="mainContent === 'assets'" class="panel panel--bordered base-margin-top">
+<div *ngIf="mainContent === 'assets'" class="panel panel--bordered half-margin-top">
 	<ng-container *ngIf="filtered">
 		<ng-container *ngTemplateOutlet="filterBar"></ng-container>
 	</ng-container>
