@@ -24,17 +24,6 @@
 					</div>
 				</div>
 				<div class="col-3 view-change-icons">
-					<div class="btn-group btn-group--square half-margin-right">
-						<button class="btn btn--small btn--gray-ghost disabled">
-							<span class="icon-location"></span>
-						</button>
-						<button data-auto-id="list-view-btn" class="btn btn--small btn--gray-ghost">
-							<span class="icon-list-view"></span>
-						</button>
-						<button data-auto-id="grid-view-btn" class="btn btn--small btn--gray-ghost">
-							<span class="icon-grid-view"></span>
-						</button>
-					</div>
 					<cui-dropdown [actions]="dropdownActions" position="left"
 						icon="icon-more icon-small text-muted rotate-90">
 					</cui-dropdown>
@@ -43,7 +32,7 @@
 		</div>
 	</div>
 </div>
-<div class="container base-margin-top">
+<div class="container base-margin-top" *ngIf="tableData.length">
 	<cui-table 
 	[options]="tableOptions" 
 	[data]="tableData"
@@ -60,6 +49,17 @@
 		[totalItems]="totalItems"
 		(onPageChanged)="onPagerUpdated($event)">
 	</cui-pager>
+	</div>
+</div>
+<div *ngIf="!tableData.length">
+	<div class="text-center dbl-margin-top dbl-margin-bottom">
+		<div>
+			<span class="text-muted text-xlarge"
+				[innerText]="'_NoResultsFound_' | i18n"
+				data-auto-id="NoResultsFoundTxt" >
+			</span>
+		</div>
+
 	</div>
 </div>
 <!-- grid-section ends -->
