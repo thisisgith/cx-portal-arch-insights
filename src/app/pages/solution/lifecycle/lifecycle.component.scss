@@ -18,8 +18,8 @@ $divider-color: #e1e1e1;
 
 %ribbon {
 	position: absolute;
-	right: 15px;
-	top: -3px;
+	top: 0;
+	right: 11px;
 	font-size: 21px;
 }
 
@@ -63,12 +63,6 @@ $divider-color: #e1e1e1;
 .scrollable-card-content {
 	position: fixed !important;
 	height: 100%;
-}
-
-.scrollable-list-content {
-	position: fixed !important;
-	overflow-y: scroll !important;
-	width: 100%;
 }
 
 .grid {
@@ -254,6 +248,14 @@ $divider-color: #e1e1e1;
 		color: $text-default-color;
 		font-size: 14px !important;
 		line-height: 20px !important;
+	}
+
+	button {
+		margin-top: 1px;
+	}
+
+	a button {
+		margin-top: 1px;
 	}
 }
 
@@ -447,6 +449,16 @@ $divider-color: #e1e1e1;
 	/* autoprefixer: off */
 	-webkit-box-orient: vertical;
 }
+
+.title-line-clamp {
+	display: -webkit-box;
+	overflow: hidden;
+	-webkit-line-clamp: 2;
+
+	/* autoprefixer: off */
+	-webkit-box-orient: vertical;
+}
+
 
 .table-img-width {
 	width: 80px;
@@ -659,29 +671,15 @@ $divider-color: #e1e1e1;
 }
 
 .ribbon {
+	&__blue,
 	&__blue__atx {
-		position: absolute;
-		right: 7px;
-		top: -1px;
-		color: $indigo;
-	}
-
-	&__blue {
 		color: $indigo;
 
 		@extend %ribbon;
 	}
 
+	&__white,
 	&__white__atx {
-		position: absolute;
-		right: 7px;
-		top: -1px;
-		color: $white;
-		-webkit-text-stroke-width: 1px;
-		-webkit-text-stroke-color: $info;
-	}
-
-	&__white {
 		color: $white;
 
 		@extend %ribbon__outline;
@@ -695,12 +693,6 @@ $divider-color: #e1e1e1;
 	&--hover {
 		right: 54px;
 	}
-}
-
-.ribbon__blue::before,
-.ribbon__white::before {
-	font-size: 18px !important;
-	line-height: 18px !important;
 }
 
 .star {
@@ -776,26 +768,28 @@ $divider-color: #e1e1e1;
 			background-color: $white;
 			border-radius: 5px;
 			height: 200px;
-			width: 500px;
+			width: 400px;
 			top: 100px;
 		}
 
 		&-recommendedACC {
-			left: -460px;
+			left: -415px;
+			top: 75px;
 		}
 
 		&-moreACCList {
 			left: -415px;
+			top: -90px;
 		}
 
 		&-recommendedElearning,
 		&-successbytes {
-			left: -475px;
+			left: -415px;
 		}
 
-		&-moreATXList,
-		&-moreACCList {
-			top: -90px;
+		&-moreATXList {
+			top: -70px;
+			right: -440px;
 		}
 
 		&-successbytes {
@@ -815,12 +809,9 @@ $divider-color: #e1e1e1;
 			}
 		}
 
-		&-moreATXList {
-			right: -450px;
-		}
-
 		&-recommendedATX {
 			right: -410px;
+			top: 105px;
 		}
 	}
 }
@@ -834,7 +825,6 @@ $divider-color: #e1e1e1;
 		&-moreACCList,
 		&-recommendedATX {
 			padding: 22px 0 22px 28px;
-			width: 400px;
 
 			.atx-popover__title,
 			.acc-popover__title {
@@ -869,13 +859,17 @@ $divider-color: #e1e1e1;
 				padding: 3px 12px;
 			}
 		}
+
+		&-moreATXList,
+		&-recommendedATX {
+			height: 160px;
+		}
 	}
 }
 
 #successbytes-item:hover #sb-hover-panel {
 	&-successbytes {
 		padding: 20px 0 25px 28px;
-		width: 450px;
 		height: 180px;
 
 		.sb-popover__title {
@@ -928,7 +922,6 @@ $divider-color: #e1e1e1;
 #recommended-elearning-item:hover #learn-hover-panel {
 	&-recommendedElearning {
 		padding: 20px 0 25px 28px;
-		width: 450px;
 		height: 180px;
 
 		.learning-popover__title {
@@ -966,8 +959,7 @@ $divider-color: #e1e1e1;
 #recommended-item:hover #acc-hover-panel {
 	&-recommendedACC {
 		padding: 20px 0 25px 28px;
-		width: 450px;
-		height: 180px;
+		height: 220px;
 
 		.acc-popover__title {
 			color: #767676;
@@ -1008,12 +1000,6 @@ $divider-color: #e1e1e1;
 	margin-left: -10px !important;
 }
 
-.table-responsive {
-	margin-top: 20px;
-	overflow-y: scroll;
-	height: 70%;
-}
-
 %tr-shared {
 	border-bottom-style: solid;
 	border-bottom-color: $light-gray-3;
@@ -1036,6 +1022,20 @@ tr.td-row td {
 ::ng-deep .cui .table th {
 	margin-top: 10px;
 	border-right: transparent !important;
+}
+
+.icon-bookmark {
+	-webkit-text-stroke-width: 1px;
+
+	&--on {
+		color: $cisco-blue;
+		-webkit-text-stroke-color: #5ddfff;
+	}
+
+	&--off {
+		color: #fff;
+		-webkit-text-stroke-color: #c1d8e2;
+	}
 }
 
 .icon-bookmark-clear {
@@ -1081,10 +1081,18 @@ polygon {
 
 .lifecycle-viewall-modal {
 	min-height: 100%;
+	overflow-y: scroll;
 }
+
 // leave the following here, just in case we will use this style
 // ::ng-deep .cui .dropdown__menu a.selected {
 // 	color:$vibblue !important;
 // 	background-color: transparent !important;
 // }
 
+/* Viewall List-view table styles */
+
+.bookmark-column .icon-bookmark {
+	font-size: 20px;
+	line-height: 20px;
+}

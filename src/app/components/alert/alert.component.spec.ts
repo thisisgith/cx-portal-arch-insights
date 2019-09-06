@@ -1,5 +1,6 @@
+import { configureTestSuite } from 'ng-bullet';
 import { DebugElement } from '@angular/core';
-import { async, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { AlertComponent } from './alert.component';
 import { AlertModule } from './alert.module';
@@ -10,15 +11,14 @@ describe('AlertComponent', () => {
 	let fixture: ComponentFixture<AlertComponent>;
 	let de: DebugElement;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [AlertModule],
 			providers: [
 				{ provide: 'ENVIRONMENT', useValue: environment },
 			],
-		})
-		.compileComponents();
-	}));
+		});
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(AlertComponent);

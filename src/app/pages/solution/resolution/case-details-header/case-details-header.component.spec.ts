@@ -1,5 +1,6 @@
+import { configureTestSuite } from 'ng-bullet';
 import { Component, ViewChild } from '@angular/core';
-import { async, fakeAsync, tick, ComponentFixture, TestBed } from '@angular/core/testing';
+import { fakeAsync, tick, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { of, throwError } from 'rxjs';
 
@@ -35,7 +36,7 @@ describe('CaseDetailsHeaderComponent', () => {
 	let service: RMAService;
 	let cuiModalService: CuiModalService;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			declarations: [
 				WrapperComponent,
@@ -44,9 +45,8 @@ describe('CaseDetailsHeaderComponent', () => {
 				CaseDetailsHeaderModule,
 				HttpClientTestingModule,
 			],
-		})
-			.compileComponents();
-	}));
+		});
+	});
 
 	beforeEach(() => {
 		service = TestBed.get(RMAService);

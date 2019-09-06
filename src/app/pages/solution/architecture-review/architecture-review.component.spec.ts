@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, fakeAsync, tick, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ArchitectureReviewComponent } from './architecture-review.component';
 import { ArchitectureReviewModule } from './architecture-review.module';
@@ -19,7 +20,7 @@ describe('ArchitectureReviewComponent', () => {
 	let service: ArchitectureReviewService;
 	const mockVisualFilter: VisualFilter = Object.create({ });
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				ArchitectureReviewModule,
@@ -41,8 +42,10 @@ describe('ArchitectureReviewComponent', () => {
 					},
 				},
 			],
-		})
-			.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 
 		service = TestBed.get(ArchitectureReviewService);
 	}));
@@ -189,14 +192,14 @@ describe('ArchitectureReviewComponent', () => {
 	});
 
 	it('should get the total count', fakeAsync(() => {
-		spyOn(service, 'getSDAReadinessCountResponse')
+		spyOn(service, 'getSDAReadinessCount')
 			.and
 			.returnValue(of(ArchitectureReviewScenarios[0]
 				.scenarios.GET[0].response.body.TotalCounts));
 
 		component.loadData();
 		tick();
-		expect(service.getSDAReadinessCountResponse)
+		expect(service.getSDAReadinessCount)
 			.toHaveBeenCalled();
 	}));
 
@@ -224,7 +227,7 @@ describe('ArchitectureReviewComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(service, 'getSDAReadinessCountResponse')
+		spyOn(service, 'getSDAReadinessCount')
 			.and
 			.returnValue(
 				throwError(new HttpErrorResponse(error)),

@@ -1,4 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { configureTestSuite } from 'ng-bullet';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { CasesComponent } from './cases.component';
 import { CasesModule } from './cases.module';
@@ -9,12 +10,11 @@ describe('CasesComponent', () => {
 	let fixture: ComponentFixture<CasesComponent>;
 	let de: DebugElement;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [CasesModule],
-		})
-		.compileComponents();
-	}));
+		});
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(CasesComponent);

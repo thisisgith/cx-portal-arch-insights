@@ -1,6 +1,7 @@
+import { configureTestSuite } from 'ng-bullet';
 import { Component, ViewChild } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { async, fakeAsync, tick, ComponentFixture, TestBed } from '@angular/core/testing';
+import { fakeAsync, tick, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { of } from 'rxjs';
 
@@ -33,7 +34,7 @@ describe('TechFormComponent', () => {
 	let caseService: CaseService;
 	let fixture: ComponentFixture<WrapperComponent>;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			declarations: [WrapperComponent],
 			imports: [
@@ -42,9 +43,8 @@ describe('TechFormComponent', () => {
 
 				TechFormModule,
 			],
-		})
-		.compileComponents();
-	}));
+		});
+	});
 
 	beforeEach(() => {
 		caseService = TestBed.get(CaseService);
