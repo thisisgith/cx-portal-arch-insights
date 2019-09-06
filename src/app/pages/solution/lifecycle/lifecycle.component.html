@@ -705,8 +705,10 @@
 							</div>
 						</div>
 					</div>
-					<ng-container *ngTemplateOutlet="cardViewTemplate; context: { type: type, view: this.accview }"></ng-container>
-					<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type, view: this.accview }"></ng-container>
+					<div class="modal-content-container">
+						<ng-container *ngTemplateOutlet="cardViewTemplate; context: { type: type, view: this.accview }"></ng-container>
+						<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type, view: this.accview }"></ng-container>
+					</div>
 				</ng-container>
 				<ng-container *ngSwitchCase="'ATX'">
 					<div class="flex-center-vertical">
@@ -736,8 +738,10 @@
 							</div>
 						</div>
 					</div>
-					<ng-container *ngTemplateOutlet="cardViewTemplate; context: { type: type, view: this.atxview }"></ng-container>
-					<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type, view: this.atxview }"></ng-container>
+					<div class="modal-content-container">
+						<ng-container *ngTemplateOutlet="cardViewTemplate; context: { type: type, view: this.atxview }"></ng-container>
+						<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type, view: this.atxview }"></ng-container>
+					</div>
 				</ng-container>
 				<ng-container *ngSwitchCase="'SB'">
 					<div class="flex-center-vertical">
@@ -767,8 +771,10 @@
 							</div>
 						</div>
 					</div>
-					<ng-container *ngTemplateOutlet="cardViewTemplate; context: { type: type, view: this.sbview }"></ng-container>
-					<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type, view: this.sbview }"></ng-container>
+					<div class="modal-content-container">
+						<ng-container *ngTemplateOutlet="cardViewTemplate; context: { type: type, view: this.sbview }"></ng-container>
+						<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type, view: this.sbview }"></ng-container>
+					</div>
 				</ng-container>
 				<ng-container *ngSwitchCase="'PG'">
 					<div class="flex-center-vertical">
@@ -798,10 +804,31 @@
 							</div>
 						</div>
 					</div>
-					<ng-container *ngTemplateOutlet="cardViewTemplate; context: { type: type, view: this.pgview }"></ng-container>
-					<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type, view: this.pgview }"></ng-container>
+					<div class="modal-content-container">
+						<span #topOfModal></span>
+						<ng-container *ngTemplateOutlet="cardViewTemplate; context: { type: type, view: this.pgview }"></ng-container>
+						<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type, view: this.pgview }"></ng-container>
+						<ng-container *ngTemplateOutlet="loadMoreTemplate; context: { type: type }"></ng-container>
+					</div>
 				</ng-container>
 			</ng-container>
+		</div>
+	</div>
+</ng-template>
+
+<ng-template #loadMoreTemplate let-type="type">
+	<div class="load-more base-padding-right dbl-margin-top">
+		<div class="dbl-margin-bottom">
+			<div class="subheader" [innerText]="'_ShowingXofY_' | i18n : getSelectedSuccessBytesCount(type) : getMaxSuccessBytesCount(type)"></div>
+			<div class="progressbar" [attr.data-percentage]="getSuccessBytesPercentage(type)">
+				<div class="progressbar__fill"></div>
+			</div>
+		</div>
+		<div class="dbl-margin-top dbl-margin-bottom">
+			<button class="btn btn--secondary btn--small text-uppercase" [innerText]="'_LoadMore_' | i18n"></button>
+		</div>
+		<div class="dbl-margin-top base-margin-bottom">
+			<span class="text-medium toggle" [innerText]="'_BackToTop_' | i18n" (click)="modalScrollToTop()"></span>
 		</div>
 	</div>
 </ng-template>

@@ -116,6 +116,8 @@ export class LifecycleComponent implements OnDestroy {
 	@ViewChild('titleTemplate', { static: true }) private titleTemplate: TemplateRef<{ }>;
 	@ViewChild('scrollModal', { static: false }) private scrollModalRef: ElementRef;
 	@ViewChild('lifecyclePanel', { static: true }) private lifecyclePanelRef: ElementRef;
+	@ViewChild('topOfModal', { static: false }) private topOfModal: ElementRef;
+
 	public modalContent: TemplateRef<{ }>;
 	public modal = {
 		content: null,
@@ -1870,5 +1872,43 @@ export class LifecycleComponent implements OnDestroy {
 		}
 
 		return `${this.appHeaderHeight}`;
+	}
+
+	/**
+	 * Scrolls to the top of the viewAll modal.
+	 */
+	public modalScrollToTop () {
+		this.topOfModal.nativeElement.scrollIntoView({
+			behavior: 'smooth',
+			block: 'start',
+			inline: 'nearest',
+		});
+	}
+
+	public getSelectedSuccessBytesCount (type: string): string {
+		switch (type) {
+			case 'PG':
+				return `${this.selectedProductGuides.length}`;
+			default:
+				return 'unknown';
+		}
+	}
+
+	public getMaxSuccessBytesCount (type: string): string {
+		switch (type) {
+			case 'PG':
+				return '255';
+			default:
+				return 'unknown';
+		}
+	}
+
+	public getSuccessBytesPercentage (type: string): string {
+		switch (type) {
+			case 'PG':
+				return `${Math.floor((this.selectedProductGuides.length / 255) * 100)}`;
+			default:
+				return '0';
+		}
 	}
 }
