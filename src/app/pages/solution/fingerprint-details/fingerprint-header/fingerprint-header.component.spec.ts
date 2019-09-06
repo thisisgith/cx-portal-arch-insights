@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FingerprintHeaderComponent } from './fingerprint-header.component';
 import { FingerprintHeaderModule } from './fingerprint-header.module';
@@ -17,7 +18,7 @@ describe('FingerprintHeaderComponent', () => {
 	let fixture: ComponentFixture<FingerprintHeaderComponent>;
 	let crashPreventionService: CrashPreventionService;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				FingerprintHeaderModule,
@@ -39,11 +40,38 @@ describe('FingerprintHeaderComponent', () => {
 					},
 				},
 			],
-		})
-			.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 		crashPreventionService = TestBed.get(CrashPreventionService);
 
 	}));
+
+	configureTestSuite(() => {
+		TestBed.configureTestingModule({
+			imports: [
+				FingerprintHeaderModule,
+				HttpClientTestingModule,
+				MicroMockModule,
+				RouterTestingModule,
+			],
+			providers: [
+				{ provide: 'ENVIRONMENT', useValue: environment },
+				{
+					provide: ActivatedRoute,
+					useValue: {
+						queryParams: of({ }),
+						snapshot: {
+							data: {
+								user,
+							},
+						},
+					},
+				},
+			],
+		});
+	});
 
 	beforeEach(async(() => {
 		window.sessionStorage.clear();

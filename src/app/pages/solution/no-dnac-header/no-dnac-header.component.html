@@ -1,31 +1,31 @@
 <ng-container *ngIf="(noDNAC || !hasCXCollector || !forceHidden)">
-	<div class="base-margin flex-center-vertical flex-wrap">
-		<div class="close-button">
-			<span
-				data-auto-id="setup-wizard-header-close-btn"
-				class="icon-close"
-				(click)="forceHidden = true; refreshButton()"
-			></span>
-		</div>
-		<div>
-			<h1
-				[innerText]="'_AssetInventoryNotConnected_' | i18n"
-			></h1>
-			<h3
+	<div class="row cx-no-dnac-container">
+		<span class="col-1"></span>
+		<div class="col-7">
+			<div class="flex-center-vertical">
+				<span class="cx-no-dnac-label" [innerText]="'_AssetInventory_' | i18n"></span>
+				<span class="cx-no-dnac-label half-margin-right" [innerText]="':'"></span>
+				<span class="cx-no-dnac-status icon-circle qtr-margin-right"></span>
+				<span class="cx-no-dnac-status" [innerText]="'_NotConnected_' | i18n"></span>
+			</div>
+			<div
 				*ngIf="noDNAC"
 				[innerText]="'_ContinueDNACSetupText_' | i18n"
-				class="text-muted"
-			></h3>
-			<h3
+				class="cx-no-dnac-description">
+			</div>
+			<div
 				*ngIf="!hasCXCollector"
 				[innerText]="'_SeeInfoForDevicesOnYourNetwork_' | i18n"
-				class="text-muted"
-			></h3>
+				class="cx-no-dnac-description">
+			</div>
 		</div>
-		<button
-			#continueSetupButton
-			class="btn btn--secondary btn--wide flex-right"
-			[innerText]="'_ContinueSetup_' | i18n | uppercase"
-			[routerLink]="['/setup-ie']"
-		></button> </div>
+		<div class="col-4">
+			<button
+				#continueSetupButton
+				class="btn btn--wide btn--primary flex-right text-uppercase text-bold"
+				[innerText]="'_ContinueSetup_' | i18n"
+				[routerLink]="['/setup-ie']">
+			</button>
+		</div>
+	</div>
 </ng-container>

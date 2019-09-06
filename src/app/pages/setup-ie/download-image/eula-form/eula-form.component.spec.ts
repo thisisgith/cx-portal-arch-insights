@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { EULAFormComponent } from './eula-form.component';
 import { EULAFormModule } from './eula-form.module';
@@ -6,14 +7,13 @@ describe('EULAFormComponent', () => {
 	let component: EULAFormComponent;
 	let fixture: ComponentFixture<EULAFormComponent>;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				EULAFormModule,
 			],
-		})
-		.compileComponents();
-	}));
+		});
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(EULAFormComponent);

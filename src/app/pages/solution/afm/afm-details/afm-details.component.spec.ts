@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AfmDetailsComponent } from './afm-details.component';
@@ -20,7 +21,7 @@ describe('AfmDetailsComponent', () => {
 	const mockResponse: AfmResponse = new Object();
 	let mockAfmService: AfmService;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [AfmDetailsModule, HttpClientTestingModule],
 			providers: [{ provide: 'ENVIRONMENT', useValue: environment },
@@ -35,8 +36,10 @@ describe('AfmDetailsComponent', () => {
 					},
 				},
 			}, AfmService],
-		})
-			.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 		mockAfmService = TestBed.get(AfmService);
 		spyOn(mockAfmService, 'ignoreEvent')
 			.and

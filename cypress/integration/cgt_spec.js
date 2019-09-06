@@ -53,13 +53,19 @@ describe('Customized Group Training (CGT)', () => {
 	before(() => {
 		cy.login();
 		cy.loadApp();
+
+		// Disable the setup wizard and quick tour so they don't block other elements
+		// Also, force the CGT panel to display
+		cy.window().then(win => {
+			win.Cypress.hideDNACHeader = true;
+			win.Cypress.showQuickTour = false;
+			win.forceCGTDisplay = true;
+		});
+
 		cy.waitForAppLoading();
 
 		// Wait for CGT to finish loading
 		cy.waitForAppLoading('cgtLoading', 15000);
-
-		// Close the setup wizard so it doesn't block other elements
-		cy.getByAutoId('setup-wizard-header-close-btn').click();
 	});
 
 	describe('PBC-301: (UI View) Lifecycle - Customized Group Training Request', () => {

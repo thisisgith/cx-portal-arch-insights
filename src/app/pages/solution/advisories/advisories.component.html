@@ -38,7 +38,12 @@
 	</cui-tabs>
 </div>
 
-<div *ngIf="selectedTab" class="panel panel--bordered base-margin-top">
+<div
+	#contentContainer
+	*ngIf="selectedTab"
+	class="panel panel--bordered base-margin-top"
+	[ngStyle]="{ 'height': selectedTab.contentContainerHeight }"
+>
 	<ng-container *ngIf="selectedTab.filtered">
 		<ng-container *ngTemplateOutlet="filterBar"></ng-container>
 	</ng-container>

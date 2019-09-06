@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
 import { AssetDetailsComponent } from './asset-detail.component';
 import { AssetDetailsModule } from './asset-detail.module';
@@ -16,7 +17,7 @@ describe('AssetDetailsComponent', () => {
 
 	let osvService: OSVService;
 	let selectedAsset;
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				AssetDetailsModule,
@@ -24,8 +25,10 @@ describe('AssetDetailsComponent', () => {
 				RouterTestingModule,
 				MicroMockModule,
 			],
-		})
-			.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 		osvService = TestBed.get(OSVService);
 		selectedAsset = (<any> OSVScenarios[4].scenarios.GET[0].response.body).uiAssetList[0];
 	}));

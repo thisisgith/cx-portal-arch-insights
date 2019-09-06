@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RccAssetViolationDetailsComponent } from './rcc-asset-violation-details.component';
 import { RccAssetViolationDetailsModule } from './rcc-asset-violation-details.module';
@@ -15,7 +16,7 @@ describe('RccAssetViolationDetailsComponent', () => {
 	let component: RccAssetViolationDetailsComponent;
 	let fixture: ComponentFixture<RccAssetViolationDetailsComponent>;
 	let rccAssetDetailsService: RccService;
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [RccAssetViolationDetailsModule,
 				HttpClientTestingModule,
@@ -36,8 +37,10 @@ describe('RccAssetViolationDetailsComponent', () => {
 					},
 				},
 			}],
-		})
-			.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 		rccAssetDetailsService = TestBed.get(RccService);
 	}));
 

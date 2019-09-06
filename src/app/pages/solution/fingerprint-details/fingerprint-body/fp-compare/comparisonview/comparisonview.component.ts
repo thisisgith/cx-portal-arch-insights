@@ -1,10 +1,11 @@
-import { Component, Input, SimpleChanges } from '@angular/core';
+import { Component, Input, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { LogService } from '@cisco-ngx/cui-services';
 import { Icomparison, CrashPreventionService } from '@sdp-api';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import * as _ from 'lodash-es';
+import { I18n } from '@cisco-ngx/cui-utils';
 
 /**
  * Comparisonview Component
@@ -28,6 +29,7 @@ export class ComparisonviewComponent {
 	public featuresData = null;
 	public comparisonInfo: any;
 	public compareviewLoading = false;
+	@Output() public reqError: EventEmitter<any> = new EventEmitter<any>();
 
 	constructor (
 		private logger: LogService,
@@ -61,16 +63,13 @@ export class ComparisonviewComponent {
 	 * @param changes containes changes details
 	 */
 	public ngOnChanges (changes: SimpleChanges): void {
-		if (changes.compareView !== undefined) {
-			this.compareView = changes.compareView.currentValue;
+		this.compareView = _.get(changes, ['compareView', 'currentValue'], this.compareView);
+		this.deviceId1 = _.get(changes, ['deviceId1', 'currentValue'], this.deviceId1);
+		this.deviceId2 = _.get(changes, ['deviceId2', 'currentValue'], this.deviceId2);
+		if (_.get(changes, ['deviceId1', 'currentValue'], false) ||
+		 _.get(changes, ['deviceId2', 'currentValue'], false)) {
+			this.loadData();
 		}
-		if (changes.deviceId1 !== undefined) {
-			this.deviceId1 = changes.deviceId1.currentValue;
-		}
-		if (changes.deviceId2 !== undefined) {
-			this.deviceId2 = changes.deviceId2.currentValue;
-		}
-		this.loadData();
 		this.logger.info(JSON.stringify(changes));
 	}
 
@@ -86,8 +85,17 @@ export class ComparisonviewComponent {
 				this.hardwareData = results.hardware;
 				this.softwareData = results.software;
 				this.featuresData = results.feature;
-				this.logger.info(JSON.stringify(results));
 				this.compareviewLoading = false;
-			});
+				this.reqError.emit();
+			},
+			err => {
+				this.compareviewLoading = false;
+				this.hardwareData = null;
+				this.softwareData = null;
+				this.featuresData = null;
+				this.reqError.emit(I18n.get('_CP_Compare_Assets_Error_'));
+				this.logger.error(err);
+			},
+			);
 	}
 }
