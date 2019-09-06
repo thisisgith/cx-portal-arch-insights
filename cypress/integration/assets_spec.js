@@ -78,11 +78,8 @@ describe('Assets', () => { // PBC-41
 				cy.getByAutoId('Asset360SerialNumber')
 					.should('have.text', `SN${asset.serialNumber}`);
 				if (asset.lastScan) {
-					cy.getByAutoId('Asset360LastScan')
-						.should(
-							'have.text',
-							`Last Scan${Cypress.moment(asset.lastScan).fromNow()}`
-						);
+					const scanTime = Cypress._.startCase(Cypress.moment(asset.lastScan).fromNow());
+					cy.getByAutoId('Asset360LastScan').should('have.text', `Last Scan${scanTime}`);
 				} else {
 					cy.getByAutoId('Asset360LastScan').should('have.text', 'Last ScanNever');
 				}
@@ -94,7 +91,6 @@ describe('Assets', () => { // PBC-41
 				cy.getByAutoId('YouHaveInventory').should(
 					'have.text', `you have ${hwResponse.length} of these in your inventory`
 				);
-				cy.getByAutoId('_ProductID_-Link').should('have.text', asset.productId);
 				cy.getByAutoId('_SoftwareVersion_-Link').should('have.text', asset.osVersion);
 			};
 
@@ -209,20 +205,20 @@ describe('Assets', () => { // PBC-41
 
 				return pageText;
 			};
-			// TODO: Disabled for PBC-684
-			// const getImpactIcon = severity => {
-			// 	switch (severity) {
-			// 		case 'Critical':
-			// 			return 'label--danger';
-			// 		case 'High':
-			// 			return 'label--warning-alt';
-			// 		case 'Medium':
-			// 			return 'label--warning';
-			// 		case 'Low':
-			// 		default:
-			// 			return 'label--info';
-			// 	}
-			// };
+
+			const getImpactIcon = severity => {
+				switch (severity) {
+					case 'Critical':
+						return 'label--danger';
+					case 'High':
+						return 'label--warning-alt';
+					case 'Medium':
+						return 'label--warning';
+					case 'Low':
+					default:
+						return 'label--info';
+				}
+			};
 
 			cy.get('tbody tr').eq(0).click();
 			cy.getByAutoId('ADVISORIESTab').click();
@@ -232,9 +228,8 @@ describe('Assets', () => { // PBC-41
 			Cypress._.each(advisorySec.data, (advisory, index) => {
 				cy.get('[data-auto-id="AssetDetailsAdvisoryTable"] tbody tr').eq(index).within(() => {
 					if (advisory.severity) {
-						// TODO: Disabled for PBC-684
-						// cy.getByAutoId('ImpactIcon')
-						// 	.should('have.class', getImpactIcon(advisory.severity));
+						cy.getByAutoId('ImpactIcon')
+							.should('have.class', getImpactIcon(advisory.severity));
 						cy.getByAutoId('ImpactText').should('have.text', advisory.severity);
 					} else {
 						cy.getByAutoId('ImpactText').should('have.text', 'Unknown');
@@ -349,15 +344,15 @@ describe('Assets', () => { // PBC-41
 			assetSummaryMock.enable('Asset Summary');
 		});
 
-		it('Gracefully handles API failures', () => {
-			advisoryFNMock.enable('Field Notice Advisories for FOC1544Y16T - Unreachable'); // PBC-342
+		it('Gracefully handles API failures', () => { // PBC-342
+			advisoryFNMock.enable('Field Notice Advisories for FOC1544Y16T - Unreachable');
 			assetSummaryMock.enable('Asset Summary - Unreachable');
 			hwMock.enable('Hardware productId - Unreachable');
 
 			cy.get('[data-auto-id="AssetsTableBody"] tr').eq(0).click();
 			cy.getByAutoId('_ProductSeries_-N/A').should('have.text', 'N/A');
-			cy.getByAutoId('_EndOfSale_-N/A').should('have.text', 'N/A');
-			cy.getByAutoId('_LastDateOfSupport_-N/A').should('have.text', 'N/A');
+			cy.getByAutoId('_EndOfSale_-data').should('have.text', 'Not Announced'); // PBC-707
+			cy.getByAutoId('_LastDateOfSupport_-data').should('have.text', 'Not Announced');
 			cy.getByAutoId('ADVISORIESTab').click();
 			cy.getByAutoId('AdvisoryTab-field').click();
 			cy.getByAutoId('AdvisoriesNoResultsFound').should('have.text', 'No Results Found');
@@ -476,18 +471,16 @@ describe('Assets', () => { // PBC-41
 			});
 		});
 
-		it('Supports selecting one or more assets in the list', () => { // PBC-698
+		it('Supports selecting one or more assets in the list', () => {
 			cy.getByAutoId(`InventoryItemCheckbox-${assets[0].serialNumber}`).click();
 			cy.getByAutoId(`InventoryItemCheckbox-${assets[1].serialNumber}`).click();
 			cy.getByAutoId(`InventoryItemSelect-${assets[0].serialNumber}`).should('be.checked');
 			cy.getByAutoId(`InventoryItemSelect-${assets[1].serialNumber}`).should('be.checked');
-			// TODO: Disabled for PBC-698
-			// cy.getByAutoId('TotalSelectedCount').should('have.text', '2 Selected');
+			cy.getByAutoId('TotalSelectedCount').should('have.text', '2 Selected');
 			cy.getByAutoId(`InventoryItemCheckbox-${assets[0].serialNumber}`).click();
 			cy.getByAutoId(`InventoryItemSelect-${assets[0].serialNumber}`).should('not.be.checked');
 			cy.getByAutoId('AllAssetSelectCheckbox').click();
-			// TODO: Disabled for PBC-698
-			// cy.getByAutoId('TotalSelectedCount').should('have.text', `${assets.length} Selected`);
+			cy.getByAutoId('TotalSelectedCount').should('have.text', `${assets.length} Selected`);
 			cy.getByAutoId('AllAssetSelectCheckbox').click();
 			cy.getByAutoId('TotalSelectedCount').should('not.exist');
 
@@ -496,8 +489,8 @@ describe('Assets', () => { // PBC-41
 			cy.getByAutoId(`${singleDeviceContract}Point`).click({ force: true });
 			cy.waitForAppLoading('inventoryLoading');
 			cy.get('[data-auto-id="AssetsTableBody"] tr').should('have.length', 1);
-			cy.get('td[data-auto-id*="InventoryItemSelect"]').click();
-			// TODO: Disabled for PBC-698
+			cy.get('td[data-auto-id*="InventoryItemSelect"]').click({ force: true });
+			// TODO: Disabled for PBC-700
 			// cy.getByAutoId('TotalSelectedCount').should('have.text', '1 Selected');
 			cy.getByAutoId('FilterBarClearAllFilters').click();
 		});
@@ -663,7 +656,7 @@ describe('Assets', () => { // PBC-41
 
 		it('Unchecks all select boxes after clearing filters', () => { // PBC-273
 			cy.getByAutoId('CoveredPoint').click({ force: true });
-			cy.getByAutoId('AllAssetSelectCheckbox').click();
+			cy.getByAutoId('AllAssetSelectCheckbox').click({ force: true });
 			cy.getByAutoId('AllAssetSelect').should('be.checked');
 			cy.get('[data-auto-id*="InventoryItemSelect-"]').eq(0).should('be.checked');
 			cy.getByAutoId('FilterBarClearAllFilters').click();
@@ -942,6 +935,7 @@ describe('Assets', () => { // PBC-41
 
 			// Related RMAs dropdown
 			cy.getByAutoId('relatedRMA').click();
+			cy.waitForAppLoading();
 			cy.getByAutoId('Name-Header').should('contain', i18n._Name_);
 			cy.getByAutoId('Status-Header').eq(0).should('contain', i18n._Status_);
 			cy.getByAutoId('Ship To-Header').should('contain', i18n._ShipTo_);
