@@ -1,5 +1,6 @@
+import { configureTestSuite } from 'ng-bullet';
 import { Component, DebugElement } from '@angular/core';
-import { async, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { HeightTransitionModule } from './height-transition.module';
 
@@ -22,13 +23,12 @@ describe('HeightTransitionDirective', () => {
 	let fixture: ComponentFixture<TestHeightTransition>;
 	let de: DebugElement;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			declarations: [TestHeightTransition],
 			imports: [HeightTransitionModule],
-		})
-		.compileComponents();
-	}));
+		});
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(TestHeightTransition);

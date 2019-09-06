@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ArchitectureComponent } from './architecture.component';
@@ -18,7 +19,7 @@ describe('ArchitectureComponent', () => {
 	let service: ArchitectureService;
 	const mockVisualFilter: VisualFilter = Object.create({ });
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				ArchitectureModule,
@@ -40,8 +41,10 @@ describe('ArchitectureComponent', () => {
 					},
 				},
 			],
-		})
-			.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 
 		service = TestBed.get(ArchitectureService);
 	}));

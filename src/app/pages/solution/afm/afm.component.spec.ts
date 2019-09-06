@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { AfmComponent } from './afm.component';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FaultManagementModule } from './afm.module';
@@ -20,7 +21,7 @@ describe('AfmComponent', () => {
 	let afmService: AfmService;
 	const afmFilter: any = new Object();
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [FaultManagementModule, HttpClientTestingModule],
 			providers: [{ provide: 'ENVIRONMENT', useValue: environment },
@@ -35,8 +36,10 @@ describe('AfmComponent', () => {
 					},
 				},
 			}, AfmService],
-		})
-			.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 		afmService = TestBed.get(AfmService);
 	}));
 

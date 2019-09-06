@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { Router } from '@angular/router';
@@ -28,14 +29,14 @@ describe('AppComponent', () => {
 	let service: AppService;
 
 	describe('Spinner', () => {
-		beforeEach(async(() => {
+		configureTestSuite(() => {
 			TestBed.configureTestingModule({
 				imports: [AppTestModule],
 			})
 				.compileComponents();
 
 			service = TestBed.get(AppService);
-		}));
+		});
 
 		beforeEach(() => {
 			fixture = TestBed.createComponent(AppComponent);
@@ -275,9 +276,7 @@ describe('AppComponent', () => {
 					RouterTestingModule,
 					AppModule,
 				],
-			})
-				.compileComponents();
-
+			});
 			service = TestBed.get(AppService);
 		}));
 
@@ -338,6 +337,24 @@ describe('AppComponent', () => {
 
 		it('should attempt to load foreign language i18n if requested', () => {
 			service.loadI18n(true, 'es');
+		});
+
+		it('should append path to routeStack', () => {
+			service.addRouteToList('test/route/1');
+		});
+
+		it('should get last item from routeStack', () => {
+			service.addRouteToList('test/route/2');
+
+			expect(service.getLastRoute())
+				.toBe('test/route/2');
+		});
+
+		it('should pop items from route stack', () => {
+			service.addRouteToList('test/route/3');
+
+			expect(service.popRoute())
+				.toBe('test/route/3');
 		});
 	});
 });

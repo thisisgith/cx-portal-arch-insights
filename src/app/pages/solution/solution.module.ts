@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { InlineSVGModule } from 'ng-inline-svg';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { SolutionComponent } from './solution.component';
 import { CuiGaugeModule, CuiSpinnerModule, CuiModalModule } from '@cisco-ngx/cui-components';
@@ -11,7 +12,13 @@ import {
 	InventoryModule,
 } from '@sdp-api';
 import { environment } from '@environment';
-import { BarChartModule, CaseModule, QuickTourModule } from '@components';
+import {
+	BarChartModule,
+	CaseModule,
+	QuickTourModule,
+	GaugeModule,
+	MultiGaugeModule,
+} from '@components';
 import { NoDNACHeaderModule } from './no-dnac-header/no-dnac-header.module';
 
 /**
@@ -31,9 +38,12 @@ const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 		CaseModule,
 		ContractsModule.forRoot({ rootUrl }),
 		CuiGaugeModule,
+		GaugeModule,
 		CuiModalModule,
 		I18nPipeModule,
+		MultiGaugeModule,
 		CuiSpinnerModule,
+		InlineSVGModule.forRoot({ baseUrl: '/' }),
 		InventoryModule.forRoot({ rootUrl }),
 		NoDNACHeaderModule,
 		QuickTourModule,

@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { SyslogsService, SyslogPanelGridData } from '@sdp-api';
 import { throwError, of } from 'rxjs';
@@ -18,7 +19,7 @@ describe('SyslogMessagesDetailsComponent', () => {
 	let syslogsService: SyslogsService;
 	const mockAsset: SyslogPanelGridData = Object.create({ });
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				SyslogMessagesDetailsModule,
@@ -40,8 +41,10 @@ describe('SyslogMessagesDetailsComponent', () => {
 					},
 				},
 			],
-		})
-			.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 
 		syslogsService = TestBed.get(SyslogsService);
 	}));
@@ -152,5 +155,15 @@ describe('SyslogMessagesDetailsComponent', () => {
 		expect(component.softwareItems)
 			.toBeDefined();
 		done();
+	});
+
+	it('should update pager', () => {
+		component.onPagerUpdated({
+			page: 1,
+		});
+		expect(component.tableConfig.tableOffset)
+			.toEqual(1);
+		expect(component.paginationConfig.pageNum)
+			.toEqual(2);
 	});
 });

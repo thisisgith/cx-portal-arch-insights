@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { environment } from '@environment';
 import { DevicesSdaComponent } from './devices-sda.component';
@@ -14,7 +15,7 @@ describe('DevicesSdaComponent', () => {
 	let fixture: ComponentFixture<DevicesSdaComponent>;
 	let service: ArchitectureReviewService;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				DevicesSdaModule,
@@ -34,8 +35,10 @@ describe('DevicesSdaComponent', () => {
 					},
 				}, ArchitectureReviewService,
 			],
-		})
-		.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 		service = TestBed.get(ArchitectureReviewService);
 	}));
 
