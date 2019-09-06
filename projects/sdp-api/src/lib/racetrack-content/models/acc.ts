@@ -27,7 +27,7 @@ export interface ACC {
   status?: string;
 
   /**
-   * If the User has favorite this item then it will be true else false
+   * If the User has favorite/bookmark this item then it will be true else false
    */
-  isFavorite?: boolean;
+  bookmark?: boolean;
 }
