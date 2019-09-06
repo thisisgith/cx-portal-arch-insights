@@ -323,12 +323,18 @@ $midnight-blue: #0d274d;
 		line-height: 20px !important;
 	}
 
-	button {
-		margin-top: 1px;
-	}
+	.force-flex {
+		display: flex;
+		flex-wrap: wrap;
 
-	a button {
-		margin-top: 1px;
+		& > * {
+			flex-shrink: 0;
+		}
+
+		& > button,
+		& * button {
+			margin-top: 1px;
+		}
 	}
 }
 
