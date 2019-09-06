@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { BugDetailsComponent } from './bug-details.component';
 import { BugDetailsModule } from './bug-details.module';
@@ -13,7 +14,7 @@ describe('BugDetailsComponent', () => {
 	let fixture: ComponentFixture<BugDetailsComponent>;
 	let diagnosticsService: DiagnosticsService;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				MicroMockModule,
@@ -23,8 +24,10 @@ describe('BugDetailsComponent', () => {
 			providers: [
 				{ provide: 'ENVIRONMENT', useValue: environment },
 			],
-		})
-		.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 
 		diagnosticsService = TestBed.get(DiagnosticsService);
 	}));

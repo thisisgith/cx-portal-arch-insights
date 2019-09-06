@@ -1,4 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { configureTestSuite } from 'ng-bullet';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SelectInstructionsComponent } from './select-instructions.component';
 import { SelectInstructionsModule } from './select-instructions.module';
@@ -10,7 +11,7 @@ describe('SelectInstructionsComponent', () => {
 	let component: SelectInstructionsComponent;
 	let fixture: ComponentFixture<SelectInstructionsComponent>;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				RouterTestingModule,
@@ -19,9 +20,8 @@ describe('SelectInstructionsComponent', () => {
 			providers: [
 				{ provide: 'ENVIRONMENT', useValue: environment },
 			],
-		})
-		.compileComponents();
-	}));
+		});
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(SelectInstructionsComponent);

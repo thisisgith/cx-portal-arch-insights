@@ -28,4 +28,5 @@ interface Window {
 	cgtLoading: boolean;
 	productGuidesLoading: boolean;
 	racetrackEvents: any;
+	forceCGTDisplay: boolean;
 }

@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { HttpErrorResponse } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -25,7 +26,7 @@ describe('DownloadImageComponent', () => {
 	let acceptK9Spy: jasmine.Spy;
 	let routerNavigateSpy: jasmine.Spy;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				DownloadImageModule,
@@ -35,8 +36,10 @@ describe('DownloadImageComponent', () => {
 			providers: [
 				{ provide: 'ENVIRONMENT', useValue: environment },
 			],
-		})
-		.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 		asdService = TestBed.get(ASDAPIService);
 		cpService = TestBed.get(ControlPointIERegistrationAPIService);
 		router = TestBed.get(Router);

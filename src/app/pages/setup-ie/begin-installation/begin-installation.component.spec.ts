@@ -1,4 +1,5 @@
-import { async, ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
+import { configureTestSuite } from 'ng-bullet';
+import { ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
 
 import { BeginInstallationComponent } from './begin-installation.component';
 import { BeginInstallationModule } from './begin-installation.module';
@@ -7,12 +8,11 @@ describe('BeginInstallationComponent', () => {
 	let component: BeginInstallationComponent;
 	let fixture: ComponentFixture<BeginInstallationComponent>;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [BeginInstallationModule],
-		})
-		.compileComponents();
-	}));
+		});
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(BeginInstallationComponent);

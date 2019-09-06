@@ -1,4 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { configureTestSuite } from 'ng-bullet';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CollapsibleComponent } from './collapsible.component';
 import { CollapsibleModule } from './collapsible.module';
@@ -7,12 +8,11 @@ describe('CollapsibleComponent', () => {
 	let component: CollapsibleComponent;
 	let fixture: ComponentFixture<CollapsibleComponent>;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [CollapsibleModule],
-		})
-		.compileComponents();
-	}));
+		});
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(CollapsibleComponent);

@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SecurityDetailsComponent } from './security-details.component';
@@ -23,7 +24,7 @@ describe('SecurityDetailsComponent', () => {
 	let productAlertsService: ProductAlertsService;
 	let inventoryService: InventoryService;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				HttpClientTestingModule,
@@ -34,8 +35,10 @@ describe('SecurityDetailsComponent', () => {
 			providers: [
 				{ provide: 'ENVIRONMENT', useValue: environment },
 			],
-		})
-		.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 
 		inventoryService = TestBed.get(InventoryService);
 		productAlertsService = TestBed.get(ProductAlertsService);

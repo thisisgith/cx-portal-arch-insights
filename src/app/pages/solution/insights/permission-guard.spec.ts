@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { InsightsComponent } from './insights.component';
 import { InsightsModule } from './insights.module';
@@ -31,7 +32,7 @@ describe('InsightsComponent', () => {
 	let userResolve: UserResolve;
 	let permissionGuard: PermissionGuard;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				InsightsModule,
@@ -52,8 +53,10 @@ describe('InsightsComponent', () => {
 			providers: [
 				UserResolve,
 			],
-		})
-			.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 		routeAuthService = TestBed.get(RouteAuthService);
 		userResolve = TestBed.get(UserResolve);
 	}));

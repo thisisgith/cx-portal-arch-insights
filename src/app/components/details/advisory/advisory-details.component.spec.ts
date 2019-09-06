@@ -1,4 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { configureTestSuite } from 'ng-bullet';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
 	AdvisorySecurityAdvisoryScenarios,
 	FieldNoticeAdvisoryScenarios,
@@ -27,15 +28,14 @@ describe('AdvisoryDetailsComponent', () => {
 	let component: AdvisoryDetailsComponent;
 	let fixture: ComponentFixture<AdvisoryDetailsComponent>;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				AdvisoryDetailsModule,
 				HttpClientTestingModule,
 			],
-		})
-		.compileComponents();
-	}));
+		});
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(AdvisoryDetailsComponent);
