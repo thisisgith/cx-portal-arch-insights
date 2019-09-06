@@ -3,6 +3,7 @@ import {
 } from '@angular/core';
 import * as _ from 'lodash-es';
 import { RacetrackTechnology } from '@sdp-api';
+import { environment } from '@environment';
 import { Subject } from 'rxjs';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { takeUntil } from 'rxjs/operators';
@@ -20,28 +21,30 @@ interface CommunityDetail {
 const publicCommunities: CommunityDetail[] = [
 	{
 		description: 'Wireless & Mobility',
-		url: 'https://community.cisco.com/t5/wireless-and-mobility' +
-		'/bd-p/5956-discussions-getting-started-wireles',
+		url: `${environment.publicCommunityUrl}/wireless-and-mobility` +
+			'/bd-p/5956-discussions-getting-started-wireles',
 		usecase: 'campus network assurance'	,
 	},
 	{
 		description: 'Software-Defined Access (SD-Access)',
-		url: 'https://community.cisco.com/t5/software-defined-access-sd/bd-p/discussions-sd-access',
+		url: `${environment.publicCommunityUrl}/software-defined-access-sd` +
+			'/bd-p/discussions-sd-access',
 		usecase: 'campus network segmentation',
 	},
 	{
 		description: 'Software-Defined Access (SD-Access)',
-		url: 'https://community.cisco.com/t5/software-defined-access-sd/bd-p/discussions-sd-access',
+		url: `${environment.publicCommunityUrl}/software-defined-access-sd` +
+			'/bd-p/discussions-sd-access',
 		usecase: 'scalable access policy',
 	},
 	{
 		description: 'Cisco Digital Network Architecture (DNA)',
-		url: 'https://community.cisco.com/t5/cisco-digital-network/bd-p/discussions-dna',
+		url: `${environment.publicCommunityUrl}/cisco-digital-network/bd-p/discussions-dna`,
 		usecase: 'network device onboarding',
 	},
 	{
 		description: 'Cisco Digital Network Architecture (DNA)',
-		url: 'https://community.cisco.com/t5/cisco-digital-network/bd-p/discussions-dna',
+		url: `${environment.publicCommunityUrl}/cisco-digital-network/bd-p/discussions-dna`,
 		usecase: 'campus software image management',
 	},
 ];
@@ -54,7 +57,6 @@ const publicCommunities: CommunityDetail[] = [
 })
 export class CommunitiesComponent implements OnDestroy {
 	private selectedTechnology: string;
-	private currentPitstop: string;
 	public publicCommunity: CommunityDetail;
 	public curatedCommunity: CommunityDetail;
 	public publicCommunityUrl: SafeUrl;
@@ -72,15 +74,8 @@ export class CommunitiesComponent implements OnDestroy {
 		)
 		.subscribe((technology: RacetrackTechnology) => {
 			this.selectedTechnology = technology.name;
-			this.currentPitstop = technology.currentPitstop;
 			this.getCommunities();
 			this.publicCommunityUrl = sanitizer.bypassSecurityTrustUrl(this.publicCommunity.url);
-			this.curatedCommunityUrl = sanitizer.bypassSecurityTrustUrl(this.curatedCommunity.url);
-		});
-		this.lifecycle.getCurrentPitstop()
-		.subscribe((pitstop: string) => {
-			this.currentPitstop = pitstop;
-			this.getCuratedCommunities();
 			this.curatedCommunityUrl = sanitizer.bypassSecurityTrustUrl(this.curatedCommunity.url);
 		});
 	}
@@ -142,9 +137,8 @@ export class CommunitiesComponent implements OnDestroy {
 		}
 
 		this.curatedCommunity = {
-			description: `${this.selectedTechnology} - ${this.currentPitstop}`,
-			url: `https://community.cisco.com/t5/${usecase}/bd-p/${board}/` +
-			`customFilteredByMultiLabel?board=${board}&amp;labels=${this.currentPitstop}`,
+			description: `${this.selectedTechnology}`,
+			url: `${environment.curatedCommunityUrl}/${usecase}/bd-p/${board}`,
 			usecase: this.selectedTechnology,
 		};
 	}
