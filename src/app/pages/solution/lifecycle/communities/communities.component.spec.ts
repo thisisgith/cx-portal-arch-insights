@@ -23,7 +23,7 @@ function getActiveBody (mock: Mock, type: string = 'GET') {
 	return active.response.body;
 }
 
-fdescribe('CommunitiesComponent', () => {
+describe('CommunitiesComponent', () => {
 	let component: CommunitiesComponent;
 	let fixture: ComponentFixture<CommunitiesComponent>;
 	let racetrackInfoService: RacetrackInfoService;
