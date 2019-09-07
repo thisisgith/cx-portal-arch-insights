@@ -1,8 +1,8 @@
 @import '~cisco-ui/src/scss/utilities/_variables.scss';
 
-::ng-deep { 
-		.timeline .highcharts-graph {
-			stroke: $primary;
-			stroke-width: 2;
-		}
+::ng-deep {
+	.timeline .highcharts-graph {
+		stroke: $primary;
+		stroke-width: 2;
+	}
 }

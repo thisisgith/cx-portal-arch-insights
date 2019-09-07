@@ -165,7 +165,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 				takeUntil(this.destroy$),
 			)
 			.subscribe(() => {
-				this.logger.debug('assets software.component: loadData()::Done Loading');
+				this.logger.debug('software group detail: loadData()::Done Loading');
 			});
 	}
 

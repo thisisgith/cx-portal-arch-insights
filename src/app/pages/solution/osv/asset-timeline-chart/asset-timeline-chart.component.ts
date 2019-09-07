@@ -2,7 +2,6 @@
 import {
 	Component,
 	Input,
-	ViewEncapsulation,
 	SimpleChanges,
 	OnInit,
 	Output,
@@ -21,7 +20,7 @@ import { DatePipe } from '@angular/common';
 /**
  * AssetTimelineChart Component
  */
-@Component({	
+@Component({
 	selector: 'app-asset-timeline-chart',
 	styleUrls: ['./asset-timeline-chart.component.scss'],
 	template: '<div [chart]="chart"></div>',

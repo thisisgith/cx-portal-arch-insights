@@ -4,12 +4,8 @@
 	background-color: $primary;
 	color: $white;
 	border: 1px solid $primary;
-	width: 65px;
+	width: 75px;
 	line-height: 16px;
-
-	&.versions {
-		width: 75px;
-	}
 
 	&::before {
 		content: "";
