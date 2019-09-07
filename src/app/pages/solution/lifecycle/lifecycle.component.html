@@ -253,13 +253,13 @@
 			<div class="divider divider--compressed"></div>
 			<div class="half-margin-left line-clamp" [innerText]="data.description" data-auto-id="atxMoreClickModal-Description"></div>
 			<div class="base-padding-top half-padding-left">
-				<button class="btn btn--small btn--secondary text-uppercase"
+				<button class="btn btn--small btn--secondary text-uppercase cx-button"
 					data-auto-id = "MoreATXViewSessions"
 					[ngClass]="data.sessions?.length > 0 ? null : 'disabled'"
 					(click)="atxMoreViewSessions()"
 					[innerText]="'_ViewSessions_' | i18n">
 				</button>
-				<button class="btn btn--small btn--secondary text-uppercase"
+				<button class="btn btn--small btn--secondary text-uppercase cx-button"
 					attr.data-auto-id = "MoreATXWatchNow-{{ data.recordingURL }}"
 					[ngClass]="data?.recordingURL ? null : 'disabled'"
 					(click)="atxWatchNow(data.recordingURL)"
@@ -331,21 +331,23 @@
 				</div>
 			</div>
 		</ng-container>
-		<button id="recommendedATXScheduleButton" data-auto-id="recommendedATXScheduleButton"
-			class="btn btn--small btn--secondary text-uppercase qtr-margin-right"
-			[ngClass]="item.sessions?.length > 0 ? null : 'disabled'"
-			(click)="recommendedATXViewSessions()"
-			[innerText]="'_ViewSessions_' | i18n">
-		</button>
-		<a
-			*ngIf="componentData.atx?.recommended?.recordingURL"
-			class="no-link"
-			target="_blank"
-			rel="noopener noreferrer"
-			[href]="componentData.atx?.recommended?.recordingURL">
-			<button data-auto-id="recommendedATXWatchButton" class="btn btn--small btn--secondary text-uppercase"
-				[innerText]="'_WatchNow_' | i18n"></button>
-		</a>
+		<div class="force-flex">
+			<button id="recommendedATXScheduleButton" data-auto-id="recommendedATXScheduleButton"
+				class="btn btn--small btn--secondary text-uppercase qtr-margin-right cx-button"
+				[ngClass]="item.sessions?.length > 0 ? null : 'disabled'"
+				(click)="recommendedATXViewSessions()"
+				[innerText]="'_ViewSessions_' | i18n">
+			</button>
+			<a
+				*ngIf="componentData.atx?.recommended?.recordingURL"
+				class="no-link"
+				target="_blank"
+				rel="noopener noreferrer"
+				[href]="componentData.atx?.recommended?.recordingURL">
+				<button data-auto-id="recommendedATXWatchButton" class="btn btn--small btn--secondary text-uppercase cx-button"
+					[innerText]="'_WatchNow_' | i18n"></button>
+			</a>
+		</div>
 	</div>
 </ng-template>
 
@@ -443,20 +445,20 @@
 				target="_blank"
 				*ngIf="data.status !== 'scheduled' && sessionSelected?.registrationURL && !notCurrentPitstop"
 				[href]="sessionSelected?.registrationURL">
-				<button class="btn btn--primary base-margin-top half-margin-left"
+				<button class="btn btn--primary base-margin-top half-margin-left cx-button"
 					[innerText]="'_Register_' | i18n"
 					data-auto-id="AtxScheduleCardRegisterButton">
 				</button>
 			</a>
 			<div class="pull-left half-padding-left">
-				<button class="btn btn--primary disabled base-margin-top half-margin-left"
+				<button class="btn btn--primary disabled base-margin-top half-margin-left cx-button"
 					*ngIf="!sessionSelected?.registrationURL || notCurrentPitstop || data.status === 'scheduled'"
 					[innerText]="'_Register_' | i18n"
 					data-auto-id="AtxScheduleCardRegisterButton">
 				</button>
 			</div>
 			<div class="half-padding-left pull-left">
-				<button class="btn btn--secondary base-margin-top text-danger half-margin-left"
+				<button class="btn btn--secondary base-margin-top text-danger half-margin-left cx-button"
 					[disabled]="!sessionSelected || !sessionSelected.scheduled"
 					[innerText]="'_Cancel_' | i18n"
 					(click)="cancelATXSession(data)"
@@ -895,7 +897,7 @@
 				<div class="divider no-margin"></div>
 				<div class="atx__card__actions">
 					<button id="cardRecommendedATXScheduleButton" data-auto-id="cardRecommendedATXScheduleButton"
-						class="btn btn--small btn--secondary text-uppercase"
+						class="btn btn--small btn--secondary text-uppercase cx-button"
 						[ngClass]="item?.sessions?.length > 0 ? null : 'disabled'"
 						(click)="atxScheduleCardOpened = true;
 							recommendedAtxScheduleCardOpened = false;
@@ -905,7 +907,7 @@
 					</button>
 					<a *ngIf="item.recordingURL" class="no-link" target="_blank" [href]="item.recordingURL">
 						<button data-auto-id="recommendedATXWatchButton"
-							class="btn btn--small btn--secondary text-uppercase"
+							class="btn btn--small btn--secondary text-uppercase cx-button"
 							[innerText]="'_WatchNow_' | i18n"></button>
 					</a>
 				</div>
@@ -1130,7 +1132,7 @@
 	<div class="cx-lifecycle-card--subtitle base-margin-bottom" [innerText]="'_CGTDescription_' | i18n"></div>
 	<div class="text-left" *ngIf="data.trainingsAvailable===0">
 		<button (click)="cgtRequestTrainingClicked = true"
-			class="btn btn--small text-uppercase"
+			class="btn btn--small text-uppercase cx-button"
 			[ngClass]="cgtRequestTrainingClicked ? ' btn--gray-ghost disabled' : 'btn--secondary'"
 			[innerText]="'_RequestTraining_' | i18n"
 			data-auto-id="Request-CgtCompleted">
@@ -1139,7 +1141,7 @@
 	</div>
 	<div class="text-left" *ngIf="data.trainingsAvailable>0">
 		<button (click)="selectCgtRequestForm(true, data.usedTrainings)"
-			class="btn btn--small btn--secondary text-uppercase"
+			class="btn btn--small btn--secondary text-uppercase cx-button"
 			[innerText]="'_RequestTraining_' | i18n"
 			data-auto-id="Request-CgtTraining">
 		</button>
@@ -1259,13 +1261,13 @@
 
 <ng-template #actionTemplate let-celldata="celldata" let-type="type">
 	<div class="text-right" *ngIf="type === 'ATX'">
-		<button data-auto-id="ViewSessionButton" class="btn btn--small btn--secondary cx-button text-uppercase qtr-margin-bottom qtr-margin-top"
+		<button data-auto-id="ViewSessionButton" class="btn btn--small btn--secondary cx-button text-uppercase qtr-margin-bottom qtr-margin-top cx-button"
 			[ngClass]="celldata?.sessions?.length > 0 ? null : 'disabled'"
 			(click)="atxScheduleCardOpened = true; recommendedAtxScheduleCardOpened = false; componentData.atx.interested = celldata; getCoordinates($event)"
 			[innerText]="'_ViewSessions_' | i18n">
 		</button>
 		<a class="no-link" target="_blank" [href]="celldata.recordingURL">
-			<button data-auto-id="WatchnowButton" class="btn btn--small btn--secondary cx-button text-uppercase half-margin-left"
+			<button data-auto-id="WatchnowButton" class="btn btn--small btn--secondary cx-button text-uppercase half-margin-left cx-button"
 				[innerText]="'_WatchNow_' | i18n"></button>
 		</a>
 	</div>

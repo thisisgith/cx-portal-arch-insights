@@ -12,8 +12,10 @@ import {
 	CuiDropdownModule,
 } from '@cisco-ngx/cui-components';
 import { DetailsPanelModule, AssetDetailsModule, AssetDetailsHeaderModule } from '@components';
-// tslint:disable-next-line: max-line-length
-import { SyslogsDevicesDetailsModule } from '../syslogs-devices-details/syslogs-devices-details.module';
+import {
+	SyslogsDevicesDetailsModule,
+} from '../syslogs-devices-details/syslogs-devices-details.module';
+
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
  */
