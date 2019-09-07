@@ -362,7 +362,7 @@ export const ATXScenarios = [
 				},
 			],
 		},
-		url: `${api}?usecase=Campus Network Assurance&solution=IBN&pitstop=Use&customerId=${customerId}`,
+		url: `${api}?usecase=Campus Network Assurance&solution=IBN&pitstop=Use&customerId=${customerId}&suggestedAction=Monitor Health of the Network`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -379,7 +379,7 @@ export const ATXScenarios = [
 				},
 			],
 		},
-		url: `${api}?usecase=Campus Network Segmentation&solution=IBN&pitstop=Onboard&customerId=${customerId}`,
+		url: `${api}?usecase=Campus Network Segmentation&solution=IBN&pitstop=Onboard&customerId=${customerId}&suggestedAction=Onboard 2`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -397,7 +397,7 @@ export const ATXScenarios = [
 			],
 		},
 		url: `${api}?usecase=Scalable Access Policy&solution=IBN&` +
-			`pitstop=Onboard&customerId=${customerId}`,
+			`pitstop=Onboard&customerId=${customerId}&suggestedAction=Onboard 2`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -415,7 +415,7 @@ export const ATXScenarios = [
 			],
 		},
 		url: `${api}?usecase=Network Device Onboarding&solution=IBN&` +
-			`pitstop=Onboard&customerId=${customerId}`,
+			`pitstop=Onboard&customerId=${customerId}&suggestedAction=Onboard 2`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -433,7 +433,7 @@ export const ATXScenarios = [
 			],
 		},
 		url: `${api}?usecase=Campus Software Image Management&solution=IBN&` +
-			`pitstop=Onboard&customerId=${customerId}`,
+			`pitstop=Onboard&customerId=${customerId}&suggestedAction=Onboard 2`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -451,7 +451,7 @@ export const ATXScenarios = [
 			],
 		},
 		url: `${api}?usecase=Campus Software Image Management&solution=IBN&` +
-			`pitstop=Onboard&customerId=${customerId}`,
+			`pitstop=Onboard&customerId=${customerId}&suggestedAction=Onboard 2`,
 		usecases: ['Use Case 1'],
 	},
 ];

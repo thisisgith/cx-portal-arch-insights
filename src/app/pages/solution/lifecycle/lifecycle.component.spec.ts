@@ -60,7 +60,6 @@ describe('LifecycleComponent', () => {
 	let racetrackInfoSpy;
 	let racetrackSPSpy;
 	let racetrackActionSpy;
-	let racetrackAccBookmarkSpy;
 	let racetrackCancelAtxSessionSpy;
 
 	/**
@@ -78,7 +77,6 @@ describe('LifecycleComponent', () => {
 		_.invoke(racetrackLearningSpy, 'restore');
 		_.invoke(racetrackSPSpy, 'restore');
 		_.invoke(racetrackActionSpy, 'restore');
-		_.invoke(racetrackAccBookmarkSpy, 'restore');
 		_.invoke(racetrackCancelAtxSessionSpy, 'restore');
 	};
 
@@ -142,10 +140,6 @@ describe('LifecycleComponent', () => {
 		racetrackActionSpy = spyOn(racetrackService, 'updatePitstopAction')
 			.and
 			.returnValue(of(getActiveBody(ActionScenarios[0], 'PATCH')));
-
-		racetrackAccBookmarkSpy = spyOn(racetrackContentService, 'updateACCBookmark')
-			.and
-			.returnValue(of(getActiveBody(ACCScenarios[6], 'POST')));
 	};
 
 	/**
@@ -742,9 +736,9 @@ describe('LifecycleComponent', () => {
 				.toBeTruthy();
 
 			const acc3 = component.componentData.acc.sessions[3];
-			component.setACCBookmark(acc3);
+			component.updateBookmark(acc3, 'ACC');
 			fixture.detectChanges();
-			expect(component.componentData.acc.sessions[3].isFavorite)
+			expect(component.componentData.acc.sessions[3].bookmark)
 				.toBeTruthy();
 
 			de = fixture.debugElement.query(By.css('.ribbon__blue'));
@@ -765,16 +759,16 @@ describe('LifecycleComponent', () => {
 			expect(component.selectedACC.length)
 				.toEqual(2);
 
-			component.setACCBookmark(acc3);
+			component.updateBookmark(acc3, 'ACC');
 			fixture.detectChanges();
-			expect(component.componentData.acc.sessions[3].isFavorite)
+			expect(component.componentData.acc.sessions[3].bookmark)
 				.toBeFalsy();
 
 			component.selectedFilterForACC = 'recommended';
 			component.selectFilter('ACC');
 			fixture.detectChanges();
 
-			expect(component.componentData.acc.sessions[0].isFavorite)
+			expect(component.componentData.acc.sessions[0].bookmark)
 				.toBeFalsy();
 			expect(component.componentData.acc.sessions[0].status)
 			.toEqual('requested');

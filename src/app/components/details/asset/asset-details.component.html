@@ -9,7 +9,8 @@
 			(alert)="handleAlert($event)">
 		</asset-details-header>
 		<div detailsPanelTitle class="text-xlarge flex-center-vertical">
-			<span class="half-margin-right flex-center-vertical" 
+			<span class="half-margin-right flex-center-vertical"
+				[title]="getProductTitle(element)"
 				*ngIf="element && getProductIcon(element)">
 				<img alt="{{ '_AssetIcon_' | i18n }}"
 					class="icon-asset"

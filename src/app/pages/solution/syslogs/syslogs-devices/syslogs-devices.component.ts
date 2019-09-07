@@ -134,8 +134,6 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 	public deviceGridInit () {
 		this.tableOptions = new CuiTableOptions({
 			bordered: false,
-			striped: false,
-			// tslint:disable-next-line: object-literal-sort-keys
 			columns: [
 				{
 					key: 'DeviceHost',
@@ -170,6 +168,7 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 			],
 			dynamicData: false,
 			singleSelect: true,
+			striped: false,
 		});
 	}
 
