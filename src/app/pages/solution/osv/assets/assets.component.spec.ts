@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 
 import { AssetsComponent } from './assets.component';
@@ -15,7 +16,7 @@ describe('AssetsComponent', () => {
 	let fixture: ComponentFixture<AssetsComponent>;
 
 	let osvService: OSVService;
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				AssetsModule,
@@ -23,8 +24,10 @@ describe('AssetsComponent', () => {
 				RouterTestingModule,
 				MicroMockModule,
 			],
-		})
-			.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 		osvService = TestBed.get(OSVService);
 	}));
 

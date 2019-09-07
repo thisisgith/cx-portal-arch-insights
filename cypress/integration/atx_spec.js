@@ -4,6 +4,7 @@ const atxMock = new MockService('ATXScenarios');
 const atxOnboardScenario = atxMock.getScenario('GET', '(ATX) IBN-Campus Network Assurance-Onboard');
 const atxItems = atxOnboardScenario.response.body.items;
 const visibleATXItems = atxItems.slice(0, 3);
+const moreListItems = visibleATXItems.slice(1, 3);
 const invisibleATXItems = atxItems.slice(3);
 const firstATXSessions = atxItems[0].sessions;
 
@@ -1568,6 +1569,98 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 				cy.getByAutoId('card-view-btn').click();
 				cy.getByAutoId('SuccessPathCloseModal').click();
 				cy.getByAutoId('ViewAllModal').should('not.exist');
+			});
+		});
+	});
+
+	describe('PBC-663: (UI) View - ATX More List Click Modal', () => {
+		it('Clicking a More list ATX should display the item details', () => {
+			moreListItems.forEach((item, index) => {
+				// Click on the more list item, verify the modal has details
+				cy.getByAutoId('ATXMoreClick')
+					.eq(index)
+					.click();
+
+				cy.getByAutoId('atxMoreClickModal')
+					.should('be.visible')
+					.within(() => {
+						cy.getByAutoId('atxMoreClickModal-Title')
+							.should('have.text', item.title);
+						cy.getByAutoId('atxMoreClickModal-Description')
+							.should('have.text', item.description);
+						cy.getByAutoId('MoreATXViewSessions').should('be.visible');
+						cy.getByAutoId(`MoreATXWatchNow-${item.recordingURL}`).should('be.visible');
+
+						// Handle bookmark
+						if (item.bookmark) {
+							cy.getByAutoId('ATXMoreRibbon').should('have.class', 'ribbon__blue');
+						} else {
+							cy.getByAutoId('ATXMoreRibbon').should('have.class', 'ribbon__white__atx');
+						}
+					});
+
+				// Close the click modal
+				cy.getByAutoId('closeMoreATXClickModal').click();
+				cy.getByAutoId('atxMoreClickModal').should('not.exist');
+			});
+		});
+
+		it('Verify More List click modal View Sessions button', () => {
+			moreListItems.forEach((item, index) => {
+				cy.getByAutoId('ATXMoreClick')
+					.eq(index)
+					.click();
+
+				cy.getByAutoId('atxMoreClickModal')
+					.should('be.visible')
+					.within(() => {
+						// Clicking the View Sessions button will close the click modal, and open the
+						// session modal
+						cy.getByAutoId('MoreATXViewSessions')
+							.should('be.visible')
+							.click();
+					});
+
+				cy.getByAutoId('atxMoreClickModal').should('not.exist');
+				cy.getByAutoId('atxScheduleCard')
+					.should('be.visible')
+					.within(() => {
+						// The schedule card is generic across all ways of opening, so no need to automate
+						// session scheduling, just verify the modal opens for the correct session
+						cy.getByAutoId('atxScheduleCard-Title').should('have.text', item.title);
+						cy.getByAutoId('AtxScheduleCardRegisterButton').should('be.visible');
+						cy.getByAutoId('AtxScheduleCardCancelButton').should('be.visible');
+						item.sessions.forEach(session => {
+							cy.getByAutoId(`SelectSession-${session.sessionId}`)
+								.should('be.visible');
+						});
+					});
+
+				// Close the View Sessions modal
+				cy.getByAutoId('AtxScheduleCardClose').click();
+				cy.getByAutoId('atxScheduleCard').should('not.exist');
+			});
+		});
+
+		it('Verify More List click modal Watch Now button', () => {
+			moreListItems.forEach((item, index) => {
+				cy.getByAutoId('ATXMoreClick')
+					.eq(index)
+					.click();
+
+				cy.getByAutoId('atxMoreClickModal')
+					.should('be.visible')
+					.within(() => {
+						// Clicking the Watch Now bbutton will close the atxMoreClickModal, and
+						// cross-launch to new tab. Note, Cypress can't see other tabs, so just
+						// check that the modal closed
+						cy.getByAutoId(`MoreATXWatchNow-${item.recordingURL}`)
+							.should('be.visible')
+							.click();
+					});
+
+				// Verify the modal closed
+				cy.getByAutoId('atxMoreClickModal').should('not.exist');
 			});
 		});
 	});

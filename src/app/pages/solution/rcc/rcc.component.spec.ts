@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { RccComponent } from './rcc.component';
@@ -20,7 +21,7 @@ describe('RccComponent', () => {
 	const mockFilter: Filter = Object.create({ });
 	const formBuilder: FormBuilder = new FormBuilder();
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				RccModule,
@@ -43,8 +44,10 @@ describe('RccComponent', () => {
 					},
 				},
 			],
-		})
-			.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 		rccService = TestBed.get(RccService);
 	}));
 
@@ -395,7 +398,7 @@ describe('RccComponent', () => {
 		};
 		component.searchViolations(event, 'clear');
 		expect(component.searched)
-			.toBeTruthy();
+			.toBeFalsy();
 	});
 
 	it('should invoke searchViolations with keycode 13', () => {
@@ -408,7 +411,7 @@ describe('RccComponent', () => {
 		};
 		component.searchViolations(event, 'input');
 		expect(component.searched)
-			.toBeTruthy();
+			.toBeFalsy();
 	});
 
 	it('should invoke searchViolations with keycode 8 and search type', () => {

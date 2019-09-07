@@ -9,7 +9,7 @@
 	</div>
 	<div data-auto-id="Asset360LastScan" class="asset__info flex-center-vertical">
 		<div class=" asset__info__label qtr-margin-right" [innerText]="'_LastScan_' | i18n"></div>
-		<div innerText="{{ (asset.lastScan | fromNow) || ('_Never_' | i18n) }}"></div>
+		<div innerText="{{ ((asset.lastScan | fromNow) || ('_Never_' | i18n)) | titlecase }}"></div>
 	</div>
 </div>
 <div class="row qtr-margin-top">

@@ -5,11 +5,9 @@ import { BaseService as __BaseService } from '../base-service';
 import { ArchitectureConfiguration as __Configuration } from '../architecture-configuration';
 import { StrictHttpResponse as __StrictHttpResponse } from '../../core/strict-http-response';
 import { Observable as __Observable } from 'rxjs';
-import { Observable, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { map as __map, filter as __filter } from 'rxjs/operators';
 import { ContractDeviceCountsResponse } from '../models/contract-device-counts-response';
-import { IException } from '../models/exception';
-import { IAsset } from '../models/asset';
 
 
 @Injectable({
@@ -17,14 +15,13 @@ import { IAsset } from '../models/asset';
 })
 class ArchitectureService extends __BaseService {
 
-  static readonly getContractCountsPath = '/api/customerportal/contracts/v1/device/count';
-  static readonly getAllCBPRules = '/cparchinsights/getAllCBPRules';
-  static readonly getCBPSeverityResponsePath = '/api/customerportal/archinsights/v1/cbprules';
-  static readonly getAllAssetsWithExceptionsResponsePath = '/api/customerportal/archinsights/v1/assets/exceptions';
-  static readonly getExceptionsCountResponsePath = '/api/customerportal/archinsights/v1/cbprules/count';
-  static readonly getAssetsExceptionsCountResponsePath = '/api/customerportal/archinsights/v1/assets/exceptions/count';
-  static readonly getAllCBPDeviceAffectedResponsePath = '/api/customerportal/archinsights/v1/assets/exceptions/devicedetails';
-  static readonly getAllCBPExceptionDetailsResponsePath = '/api/customerportal/archinsights/v1/cbprules/exceptiondetails';
+  static readonly getContractCountsPath = '/customerportal/contracts/v1/device/count';
+  static readonly getCBPSeverityResponsePath = '/customerportal/archinsights/v1/cbprules';
+  static readonly getAllAssetsWithExceptionsResponsePath = '/customerportal/archinsights/v1/assets/exceptions';
+  static readonly getExceptionsCountResponsePath = '/customerportal/archinsights/v1/cbprules/count';
+  static readonly getAssetsExceptionsCountResponsePath = '/customerportal/archinsights/v1/assets/exceptions/count';
+  static readonly getAllCBPDeviceAffectedResponsePath = '/customerportal/archinsights/v1/assets/exceptions/devicedetails';
+  static readonly getAllCBPExceptionDetailsResponsePath = '/customerportal/archinsights/v1/cbprules/exceptiondetails';
 
   private AssetsExceptionsCount = new Subject<any>();
 

@@ -11,14 +11,14 @@ import { SoftwareVersionsModule } from './software-versions/software-versions.mo
 import { environment } from '@environment';
 import { OSVModule } from '@sdp-api';
 
-import { DetailsPanelModule, PieChartModule } from '@components';
+import { DetailsPanelModule, PieChartModule, VisualFilterBarModule } from '@components';
 import { SoftwareGroupsModule } from './software-groups/software-groups.module';
 import { ContactSupportModule } from 'src/app/components/contact-support/contact-support.module';
 
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
  */
-const rootUrl = environment.sdpServiceOrigin;
+const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 
 /**
  * Child routes for OptimalSoftwareModule for lazy loading
@@ -51,6 +51,7 @@ const childRoutes: Routes = [
 		SoftwareGroupsModule,
 		CuiModalModule,
 		ContactSupportModule,
+		VisualFilterBarModule,
 	],
 })
 export class OptimalSoftwareVersionModule { }

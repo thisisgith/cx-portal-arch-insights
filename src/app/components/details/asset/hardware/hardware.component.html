@@ -1,19 +1,19 @@
 <cui-drawer projection="true" [expanded]="true" *ngIf="hardwareModules?.length">
-	<div class="cui-drawer-label text-large" [innerText]="'_Modules_' | i18n | uppercase"></div>
+	<div class="cui-drawer-label custom-text-large" [innerText]="'_Modules_' | i18n | uppercase"></div>
 	<div class="cui-drawer-content" data-auto-id="HardwareModulesDrawer">
 		<ng-container *ngTemplateOutlet="table; context: { data: hardwareModules, options: hardwareModulesTable }"></ng-container>
 	</div>
 </cui-drawer>
 
 <cui-drawer projection="true" [expanded]="true" *ngIf="timelineData?.length">
-	<div class="cui-drawer-label text-large" [innerText]="'_EOX_' | i18n | uppercase"></div>
+	<div class="cui-drawer-label custom-text-large" [innerText]="'_EndOfLife_' | i18n | uppercase"></div>
 	<div class="cui-drawer-content" data-auto-id="HardwareEOXDrawer">
 		<pbc-timeline class="no-margin" [data]="timelineData"></pbc-timeline>
 	</div>
 </cui-drawer>
 
 <cui-drawer projection="true" [expanded]="true" *ngIf="migrationData?.length">
-	<div class="cui-drawer-label text-large" [innerText]="'_MigrationOptions_' | i18n | uppercase"></div>
+	<div class="cui-drawer-label custom-text-large" [innerText]="'_MigrationOptions_' | i18n | uppercase"></div>
 	<div class="cui-drawer-content" data-auto-id="HardwareMigrationDrawer">
 		<ng-container *ngTemplateOutlet="table; context: { data: migrationData, options: migrationTable }"></ng-container>
 	</div>

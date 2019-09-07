@@ -1,4 +1,5 @@
-import { async, ComponentFixture, TestBed, fakeAsync, flush } from '@angular/core/testing';
+import { configureTestSuite } from 'ng-bullet';
+import { ComponentFixture, TestBed, fakeAsync, flush } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
@@ -23,7 +24,7 @@ describe('SerialSearchComponent', () => {
 	let caseService: CaseService;
 	let fixture: ComponentFixture<SerialSearchComponent>;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				SerialSearchModule,
@@ -31,9 +32,8 @@ describe('SerialSearchComponent', () => {
 				RouterModule,
 				RouterTestingModule,
 			],
-		})
-		.compileComponents();
-	}));
+		});
+	});
 
 	beforeEach(() => {
 		inventoryService = TestBed.get(InventoryService);

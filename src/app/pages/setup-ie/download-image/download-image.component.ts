@@ -9,7 +9,7 @@ import { I18n } from '@cisco-ngx/cui-utils';
 
 import { ControlPointIERegistrationAPIService, User } from '@sdp-api';
 
-import { empty, of, Subject, throwError } from 'rxjs';
+import { empty, of, Subject, throwError, timer } from 'rxjs';
 import { catchError, finalize, mergeMap, retryWhen, takeUntil, tap } from 'rxjs/operators';
 import * as _ from 'lodash-es';
 
@@ -162,9 +162,14 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 				retryWhen(errors => errors
 					.pipe(
 						mergeMap((err: string, i: number) => {
-							if (i < 1) {
+							if (i < 6) {
 								// try once to refresh the metadata_trans_id
-								return this.refreshMetadata();
+								if (i === 0) {
+									return this.refreshMetadata();
+								}
+
+								// keep trying up to 5 times
+								return timer(i * 500);
 							}
 
 							return throwError(err);
@@ -193,7 +198,7 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 
 					return empty();
 				}),
-				takeUntil(this.destroyed$),
+				// purposely not using takeUntil so that request is not cancelled
 			)
 			.subscribe(() => {
 				this.logger.debug('IE OVA download registered');

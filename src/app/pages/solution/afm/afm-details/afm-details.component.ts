@@ -1,9 +1,17 @@
-import { Component, Input, Output, EventEmitter, OnInit, OnChanges } from '@angular/core';
+import {
+	Component,
+	Input,
+	Output,
+	EventEmitter,
+	OnInit,
+	OnChanges,
+	SimpleChanges,
+ } from '@angular/core';
 import { LogService } from '@cisco-ngx/cui-services';
-import { Alarm, AfmSearchParams, AfmService } from '@sdp-api';
+import { Alarm, AfmSearchParams, AfmService, AfmResponse } from '@sdp-api';
 import { Subject } from 'rxjs';
-import { UserResolve } from '@utilities';
 import { takeUntil } from 'rxjs/operators';
+import * as _ from 'lodash-es';
 
 /**
  * Afm details panal header
@@ -23,38 +31,33 @@ export class AfmDetailsComponent implements OnInit, OnChanges {
 	private destroyed$: Subject<void> = new Subject<void>();
 	private destroy$ = new Subject();
 	public searchParams: AfmSearchParams;
-	public errorDesc: string;
 	public options: any = { visible : false };
 	public loading = false;
+	public status = false;
 
-	constructor (
-		private logger: LogService, private afmService: AfmService,
-		private userResolve: UserResolve,
-	) {
+	constructor (private logger: LogService, private afmService: AfmService) {
 		this.logger.debug('AFM Detaisls Component Created!');
 		this.searchParams = new Object();
-		this.userResolve.getCustomerId()
-			.pipe(
-				takeUntil(this.destroy$),
-			)
-			.subscribe((id: string) => {
-				this.searchParams.customerId = id;
-			});
+		this.status = false;
 	}
 
 	/**
 	 * Initialize on loading
 	 */
 	public ngOnInit () {
-		this.errorDesc = '';
 		this.eventUpdated.emit(false);
 	}
+
 	/**
 	 * Initialize error description
+	 * @param changes SimpleChanges
 	 */
-	public ngOnChanges () {
-		this.errorDesc = this.alarm.errorDesc;
+	public ngOnChanges (changes: SimpleChanges) {
+		const alarmData = _.get(changes, ['alarm', 'currentValue']);
+		const isFirstChange = _.get(changes, ['alarm', 'firstChange']);
 		this.options.visible = false;
+		this.status = (!isFirstChange
+			&& alarmData.status.toUpperCase() === 'IGNORED') ?  true  : false;
 	}
 
 	/**
@@ -72,47 +75,55 @@ export class AfmDetailsComponent implements OnInit, OnChanges {
 	 */
 	public toggleEvent (alarmData: Alarm) {
 		this.loading = true;
+		this.options.visible = false;
 		this.searchParams.customerId = alarmData.customerId;
 		this.searchParams.faultIC = alarmData.faultIC;
 		if (!alarmData.status || alarmData.status.toUpperCase() !== 'IGNORED') {
 			this.afmService.ignoreEvent(this.searchParams)
 				.pipe(takeUntil(this.destroy$))
 				.subscribe(response => {
-					this.options = {
-						alertIcon:  response.status.toUpperCase() === 'SUCCESS' ?
-						'icon-check-outline' : 'icon-error-outline',
-						message: response.statusMessage,
-						severity: response.status.toUpperCase() === 'SUCCESS' ?
-						 'alert--success' : 'alert--danger',
-						visible: true,
-					};
-					if (response.status.toUpperCase() !== 'SUCCESS') {
-						this.alarm.status = 'Success';
-					} else {
-						this.eventUpdated.emit(true);
-					}
-					this.loading = false;
+					this.changeStatus('IGNORED', response, alarmData);
 				});
 		} else {
 			this.afmService.revertIgnoreEvent(this.searchParams)
 				.pipe(takeUntil(this.destroy$))
 				.subscribe(response => {
-					this.options = {
-						alertIcon:  response.status.toUpperCase() === 'SUCCESS' ?
-						'icon-check-outline' : 'icon-error-outline',
-						message: response.statusMessage,
-						severity: response.status.toUpperCase() === 'SUCCESS' ?
-						 'alert--success' : 'alert--danger',
-						visible: true,
-					};
-					if (response.status.toUpperCase() !== 'SUCCESS') {
-						this.alarm.status = 'Ignored';
-					} else {
-						this.eventUpdated.emit(true);
-					}
-					this.loading = false;
+					this.changeStatus('REVERT', response, alarmData);
 				});
 		}
+	}
+
+	/**
+	 * it will change the status of ignore event
+	 *
+	 * @private
+	 * @param eventName name of event ignore/revert ignore
+	 * @param response AfmResponse  of the operation
+	 * @param alarmData alarmData
+	 * @memberof AfmDetailsComponent
+	 */
+	private changeStatus (eventName: string, response: AfmResponse, alarmData: Alarm) {
+		this.options = {
+			alertIcon:  response.status.toUpperCase() === 'SUCCESS' ?
+			'icon-check-outline' : 'icon-error-outline',
+			message: response.statusMessage,
+			severity: response.status.toUpperCase() === 'SUCCESS' ?
+			 'alert--success' : 'alert--danger',
+			visible: true,
+		};
+		if (response.status.toUpperCase() !== 'SUCCESS') {
+			this.status = eventName === 'REVERT' ?  true  : false;
+		} else {
+			this.eventUpdated.emit(true);
+			if (eventName === 'REVERT') {
+				this.status = false ;
+				alarmData.status = 'SUCCESS';
+			} else {
+				this.status = true;
+				alarmData.status = 'IGNORED';
+			}
+		}
+		this.loading = false;
 	}
 
 	/** Function used to destroy the component */

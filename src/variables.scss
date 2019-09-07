@@ -1,0 +1,27 @@
+@import '~cisco-ui/src/scss/utilities/_variables.scss';
+
+$header-title-color: #626262;
+$header-font-color: #626262;
+$header-bg-color: #fff;
+$site-bg-color: #ebeef2;
+$link-font-color: #64bbe3;
+$cards-top-border-color: #00bceb;
+$cards-top-sm-color: #00a2cb;
+$default-text-color: #394454;
+$secondary-and-button-text-color: #5d656c;
+$default-link-color: #227bb1;
+$visited-link: #6f53bc;
+$gray-text-color: #6c757d;
+$light-gray-text-color: #8e8e8e;
+$black-text-color: #243034;
+$dark-text-color1: #0d274d;
+$dark-text-color2: #1e4471;
+$accent-color1: #00bceb;
+$accent-color2: #92dde4;
+
+// Override cisco-ui variables
+$cui-resource-path: "../node_modules/cisco-ui/dist";
+$base-font-color: $default-text-color;
+$base-link-color: $default-link-color;
+$base-link-color-pressed: $visited-link;
+$base-muted-color: $light-gray-text-color;

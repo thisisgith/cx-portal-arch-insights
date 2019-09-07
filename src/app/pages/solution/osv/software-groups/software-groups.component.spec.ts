@@ -1,4 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { configureTestSuite } from 'ng-bullet';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SoftwareGroupsComponent } from './software-groups.component';
 import { SoftwareGroupsModule } from './software-groups.module';
@@ -15,7 +16,7 @@ describe('SoftwareGroupsComponent', () => {
 	let fixture: ComponentFixture<SoftwareGroupsComponent>;
 	let osvService: OSVService;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				SoftwareGroupsModule,
@@ -23,9 +24,8 @@ describe('SoftwareGroupsComponent', () => {
 				RouterTestingModule,
 				MicroMockModule,
 			],
-		})
-			.compileComponents();
-	}));
+		});
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(SoftwareGroupsComponent);

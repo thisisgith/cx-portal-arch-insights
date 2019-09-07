@@ -1,6 +1,7 @@
+import { configureTestSuite } from 'ng-bullet';
 import { Component, ViewChild } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { async, fakeAsync, tick, ComponentFixture, TestBed } from '@angular/core/testing';
+import { fakeAsync, tick, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { of } from 'rxjs';
 
@@ -33,7 +34,7 @@ describe('TechFormComponent', () => {
 	let caseService: CaseService;
 	let fixture: ComponentFixture<WrapperComponent>;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			declarations: [WrapperComponent],
 			imports: [
@@ -42,9 +43,8 @@ describe('TechFormComponent', () => {
 
 				TechFormModule,
 			],
-		})
-		.compileComponents();
-	}));
+		});
+	});
 
 	beforeEach(() => {
 		caseService = TestBed.get(CaseService);
@@ -139,6 +139,17 @@ describe('TechFormComponent', () => {
 	}));
 
 	it('should update tech/subtech form values when a suggested one is picked', fakeAsync(() => {
+		spyOn(caseService, 'fetchSubTechByName')
+			.and
+			.returnValue(
+				of({
+					subTech: {
+						_id: '1941',
+						subTechName: 'Adaptive Security Appliance (ASA) non-VPN problem',
+						techId: '54',
+					},
+				}),
+			);
 		component.form.controls.suggestedTech.setValue({
 			sub_tech: {
 				id: '1941',

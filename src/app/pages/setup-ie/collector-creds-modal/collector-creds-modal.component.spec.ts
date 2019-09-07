@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -20,7 +21,7 @@ describe('CollectorCredsModalComponent', () => {
 	let getAuthSpy: jasmine.Spy;
 	let modalHideSpy: jasmine.Spy;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			declarations: [CollectorCredsModalComponent],
 			imports: [
@@ -32,8 +33,10 @@ describe('CollectorCredsModalComponent', () => {
 			providers: [
 				{ provide: 'ENVIRONMENT', useValue: environment },
 			],
-		})
-		.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 		registerService = TestBed.get(RegisterCollectorService);
 		modalService = TestBed.get(CuiModalService);
 		getAuthSpy = spyOn(registerService, 'getAuthToken')

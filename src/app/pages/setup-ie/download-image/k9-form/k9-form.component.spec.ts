@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { K9FormComponent } from './k9-form.component';
 import { K9FormModule } from './k9-form.module';
@@ -6,14 +7,13 @@ describe('K9FormComponent', () => {
 	let component: K9FormComponent;
 	let fixture: ComponentFixture<K9FormComponent>;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				K9FormModule,
 			],
-		})
-		.compileComponents();
-	}));
+		});
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(K9FormComponent);

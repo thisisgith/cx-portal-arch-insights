@@ -34,13 +34,6 @@
 			</div>
 			<div class="col-md-12 base-margin-top">
 				<ng-container *ngTemplateOutlet="detailsData; context: {
-						title: '_ProductID_',
-						linkData: assetData?.productId || asset?.productId
-					}">
-				</ng-container>
-			</div>
-			<div class="col-md-12 base-margin-top">
-				<ng-container *ngTemplateOutlet="detailsData; context: {
 						title: '_SoftwareVersion_',
 						linkData: assetData?.swVersion || asset?.osVersion
 					}">
@@ -65,14 +58,14 @@
 			<div class="col-md-12">
 				<ng-container *ngTemplateOutlet="detailsData; context: {
 						title: '_EndOfSale_',
-						data: assetData?.eoSaleDate | date:'yyyy MMM dd'
+						data: (assetData?.eoSaleDate | date:'yyyy MMM dd') || ('_NotAnnounced_' | i18n)
 					}">
 				</ng-container>
 			</div>
 			<div class="col-md-12 base-margin-top">
 				<ng-container *ngTemplateOutlet="detailsData; context: {
-						title: '_EndOfSupport_',
-						data: assetData?.lastDateOfSupport | date:'yyyy MMM dd'
+						title: '_LastDateOfSupport_',
+						data: (assetData?.lastDateOfSupport | date:'yyyy MMM dd') || ('_NotAnnounced_' | i18n)
 					}">
 				</ng-container>
 			</div>
@@ -127,7 +120,7 @@
 		<div class="col-md-12 text-uppercase summary__details__title cx-text-gray text-small" [innerText]="title | i18n" attr.data-auto-id="{{ title }}"></div>
 	</div>
 	<div class="row text-medium cx-text-default" *ngIf="!titleOnly">
-		<div class="col-md-12" [innerText]="('_NA_' | i18n)" *ngIf="!(data || linkData)" attr.data-auto-id="{{ title }}-N/A"></div>
+		<div class="col-md-12" [innerText]="'_NA_' | i18n" *ngIf="!(data || linkData)" attr.data-auto-id="{{ title }}-N/A"></div>
 		<div *ngIf="data" class="col-md-12" [innerText]="data || ('_NA_' | i18n)" attr.data-auto-id="{{ title }}-data"></div>
 		<div class="col-md-12" attr.data-auto-id="{{ title }}-Link">
 			<a *ngIf="linkData && url" [href]="url" [innerText]="linkData"></a>

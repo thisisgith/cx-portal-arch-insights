@@ -1,4 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { configureTestSuite } from 'ng-bullet';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PolicyFormComponent } from './policy-form.component';
 import { PolicyFormModule } from './policy-form.module';
@@ -12,6 +13,8 @@ import { DeviceListModule } from './device-list/device-list.module';
 import { DevicePolicyResponseModel, CollectionPolicyResponseModel } from '@sdp-api';
 import { of } from 'rxjs';
 
+import * as _ from 'lodash-es';
+
 describe('PolicyFormComponent', () => {
 	let component: PolicyFormComponent;
 	let fixture: ComponentFixture<PolicyFormComponent>;
@@ -20,7 +23,7 @@ describe('PolicyFormComponent', () => {
 		back: jasmine.createSpy('back'),
 	};
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				HttpClientTestingModule,
@@ -35,9 +38,8 @@ describe('PolicyFormComponent', () => {
 					useValue: locationStub,
 				},
 			],
-		})
-		.compileComponents();
-	}));
+		});
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(PolicyFormComponent);
@@ -463,6 +465,48 @@ describe('PolicyFormComponent', () => {
 
 			expect(component.onLeftListCall)
 				.toHaveBeenCalled();
+		});
+	});
+
+	describe('should handle converting hours and min in time strings', () => {
+		it('12:00 am', () => {
+			_.set(component, ['policy', 'formattedSchedule'],
+				'2 devices are scanned at 12:00 am UTC');
+
+			component.setSelectors();
+
+			expect(component.hourmins.selected)
+				.toBe('0 0');
+		});
+
+		it('12:00 pm', () => {
+			_.set(component, ['policy', 'formattedSchedule'],
+				'2 devices are scanned at 12:00 pm UTC');
+
+			component.setSelectors();
+
+			expect(component.hourmins.selected)
+				.toBe('0 12');
+		});
+
+		it('6:00 am', () => {
+			_.set(component, ['policy', 'formattedSchedule'],
+				'2 devices are scanned at 06:00 am UTC');
+
+			component.setSelectors();
+
+			expect(component.hourmins.selected)
+				.toBe('0 6');
+		});
+
+		it('6:00 pm', () => {
+			_.set(component, ['policy', 'formattedSchedule'],
+				'2 devices are scanned at 06:00 pm UTC');
+
+			component.setSelectors();
+
+			expect(component.hourmins.selected)
+				.toBe('0 18');
 		});
 	});
 });

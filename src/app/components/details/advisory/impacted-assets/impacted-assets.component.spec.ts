@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { AdvisoryImpactedAssetsComponent } from './impacted-assets.component';
 import { AdvisoryImpactedAssetsModule } from './impacted-assets.module';
@@ -35,7 +36,7 @@ describe('AdvisoryImpactedAssetsComponent', () => {
 	let diagnosticsService: DiagnosticsService;
 	let inventoryService: InventoryService;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				HttpClientTestingModule,
@@ -46,8 +47,10 @@ describe('AdvisoryImpactedAssetsComponent', () => {
 			providers: [
 				{ provide: 'ENVIRONMENT', useValue: environment },
 			],
-		})
-		.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 
 		inventoryService = TestBed.get(InventoryService);
 		diagnosticsService = TestBed.get(DiagnosticsService);

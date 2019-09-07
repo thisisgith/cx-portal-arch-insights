@@ -16,16 +16,6 @@
 	}
 }
 
-.cui {
-	.panel--bordered-right {
-		border-right: none !important;
-	}
-}
-
-.no-padding {
-	padding: 0;
-}
-
 .selected {
 	color: $cisco-blue !important;
 }
@@ -55,7 +45,6 @@
 	display: flex !important;
 	flex-direction: column;
 	font-size: small;
-	margin: 5px;
 	cursor: pointer;
 }
 
