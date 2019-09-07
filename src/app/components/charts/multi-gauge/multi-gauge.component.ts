@@ -25,6 +25,7 @@ const d3 = { format, select, arc, line, transition, interpolate };
 interface GaugeDatum {
 	percentage: number;
 	label: string;
+	value: number;
 }
 
 /**
@@ -159,7 +160,7 @@ export class MultiGaugeComponent implements OnInit, OnChanges {
 			.style('letter-spacing', '0.72px')
 			.style('color', (_, i) => i === this.idx && this.selected ? '#00bceb' : '#243034')
 			.style('font-size', '15px')
-			.text(d => d3.format('.0f')(d.percentage));
+			.text(d => d3.format('.0f')(d.value));
 
 		const lineGenerator = d3.line();
 

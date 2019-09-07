@@ -41,6 +41,18 @@
 	border: 2px solid $primary;
 }
 
+.card__header {
+	min-height: 75px;
+}
+
+.card__footer {
+	min-height: 25px;
+}
+
+.card__body {
+	min-height: 200px;
+}
+
 .filter {
 	&__selected {
 		border-bottom: 4px solid $primary;
