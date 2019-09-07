@@ -49,7 +49,6 @@ export class RiskMitigationComponent {
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
-		this.customerId = 7293498;
 	}
 
 	@ViewChild('contextualMenuTemplate',
