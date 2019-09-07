@@ -312,7 +312,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 	 * Open contact support modal
 	 */
 	public openContactSupport () {
-		this.cuiModalService.showComponent(ContactSupportComponent, null);
+		this.cuiModalService.showComponent(ContactSupportComponent, { contactExpert: true });
 	}
 
 	/**

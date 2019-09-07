@@ -1,14 +1,14 @@
 @import '~cisco-ui/src/scss/utilities/_variables.scss';
 @import 'src/mixins.scss';
 
-#assetDetailTabs {
-	&.tabs {
+::ng-deep {
+	#assetDetailTabs &.tabs {
 		box-shadow: 0 -2px 0 $light-gray-3 inset !important;
-	}
 
-	> li {
-		margin: 0 50px 0 0 !important;
-		height: unset;
+		> li {
+			margin: 0 50px 0 0 !important;
+			height: unset;
+		}
 	}
 }
 
@@ -16,16 +16,6 @@
 	width: 50px;
 	border: 1px solid $primary;
 	margin-right: -3px;
-}
-
-.overflow-unset {
-	overflow: unset !important;
-}
-
-
-.badge.badge--blue.text-white.color-transparent {
-	color: transparent;
-	background: transparent;
 }
 
 .color-transparent {

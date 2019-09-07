@@ -23,7 +23,7 @@
 </div>
 <div class="divider qtr-margin-top"></div>
 <cui-alert [options]="alert"></cui-alert>
-<ng-container *ngTemplateOutlet="tableProfileGroups"></ng-container>
+<ng-container *ngTemplateOutlet="tableAssets"></ng-container>
 <div *ngIf="pagination && assets?.length > 0" class="base-margin-top">
 	<cui-pager 
 		[page]="pagination.page - 1" 
@@ -33,7 +33,7 @@
 	</cui-pager>
 </div>
 
-<ng-template #tableProfileGroups>
+<ng-template #tableAssets>
 	<div class="responsive-table" *ngIf="!status.isLoading && assetsTable && assets?.length">
 		<table class="table table--selectable table--compressed table--wrap table--lined table--hover table--nostripes">
 			<thead>
