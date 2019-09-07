@@ -12,6 +12,8 @@ import { Alarm, AfmSearchParams, AfmService, AfmResponse } from '@sdp-api';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import * as _ from 'lodash-es';
+import { UserResolve } from '@utilities';
+import { User } from '@interfaces';
 
 /**
  * Afm details panal header
@@ -35,10 +37,21 @@ export class AfmDetailsComponent implements OnInit, OnChanges {
 	public loading = false;
 	public status = false;
 
-	constructor (private logger: LogService, private afmService: AfmService) {
+	constructor (private logger: LogService,
+		private afmService: AfmService,
+		private userResolve: UserResolve) {
 		this.logger.debug('AFM Detaisls Component Created!');
 		this.searchParams = new Object();
 		this.status = false;
+		this.userResolve.getUser()
+		.pipe(
+			takeUntil(this.destroy$),
+		)
+		.subscribe((user: User) => {
+			this.searchParams.customerId = user.info.customerId;
+			this.searchParams.ccoId = user.info.individual.ccoId;
+			this.searchParams.emailAddress = user.info.individual.emailAddress;
+		});
 	}
 
 	/**
