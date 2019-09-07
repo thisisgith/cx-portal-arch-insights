@@ -1,25 +1,14 @@
 @import '~cisco-ui/src/scss/utilities/_variables.scss';
 @import 'src/mixins.scss';
 
-::ng-deep {
-	#assetDetailTabs &.tabs {
+#assetDetailTabs {
+	&.tabs {
 		box-shadow: 0 -2px 0 $light-gray-3 inset !important;
+	}
 
-		> li {
-			margin-right: 2px !important;
-
-			@include md {
-				margin-right: $base-spacing !important;
-			}
-
-			@include lg {
-				margin-right: $base-spacing !important;
-			}
-
-			@include xl {
-				margin-right: $base-spacing * 1.5 !important;
-			}
-		}
+	> li {
+		margin: 0 50px 0 0 !important;
+		height: unset;
 	}
 }
 

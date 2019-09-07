@@ -100,12 +100,12 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 		this.customerId = _.get(user, ['info', 'customerId']);
 		this.softwareGroupDetailsParams = {
 			customerId: this.customerId,
-			profileName: '7293498_NA',
+			profileName: '',
 		};
 		this.softwareGroupAssetsParams = {
 			customerId: this.customerId,
-			profileName: '7293498_NA',
-			id: '7293498_NA',
+			profileName: '',
+			id: '',
 			pageIndex: 1,
 			pageSize: 10,
 			sort: 'hostName',
@@ -113,8 +113,8 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 		};
 		this.softwareGroupVersionsParams = {
 			customerId: this.customerId,
-			profileName: '7293498_NA',
-			id: '7293498_NA',
+			profileName: '',
+			id: '',
 			pageIndex: 1,
 			pageSize: 10,
 			sort: 'swType',
