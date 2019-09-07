@@ -28,19 +28,12 @@ export class CompareRecommendationsComponent implements OnChanges {
 	public currentRecommendation: MachineRecommendations;
 	public machineRecommendations: MachineRecommendations[];
 	public barChartBackgroundColor = '#f2fbfd';
+	public barChartWidth = 200;
 	public severityMap = {
 		H: I18n.get('_OsvHigh_'),
 		M: I18n.get('_OsvMedium_'),
 		L: I18n.get('_OsvLow_'),
 	};
-
-	// public psirtSeverityMap = {
-	// 	Critical: I18n.get('_OsvCritical_'),
-	// 	High: I18n.get('_OsvHigh_'),
-	// 	Medium: I18n.get('_OsvMedium_'),
-	// 	Low: I18n.get('_OsvLow_'),
-	// 	Informational: I18n.get('_OsvInformational'),
-	// }
 
 	constructor (private logger: LogService) {
 		this.logger.debug('CompareRecommendationsComponent Created!');

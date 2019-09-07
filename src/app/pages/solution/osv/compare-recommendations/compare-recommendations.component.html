@@ -5,7 +5,7 @@
 			<!-- version and release date -->
 			<tr>
 				<td class="first-column-width no-border-bottom no-border-top"></td>
-				<td class="recommendation no-border-top">
+				<td class="recommendation-current no-border-top">
 					<div [ngClass]="{'text-xlarge':fullscreen,'text-large':!fullscreen}"
 						[innerText]="'_OsvCurrent_' | i18n | titlecase"></div>
 					<div class="half-margin-top">
@@ -37,21 +37,26 @@
 				<td class=" first-column-width no-border-bottom no-border-top text-large"
 					[innerText]="'_OsvStatusOrAction_' | i18n">
 				</td>
-				<td class="recommendation"></td>
+				<td class="recommendation-current"></td>
 				<td *ngFor="let recommendation of machineRecommendations" class="recommendation ">
-					<button *ngIf="!recommendation.accepted" (click)="onAcceptClick(recommendation.release)"
-						class="btn btn--secondary btn--small" [innerText]="'_OsvAccept_' | i18n"
+					<button 
+						*ngIf="!recommendation.accepted" 
+						(click)="onAcceptClick(recommendation.release)"
+						class="btn btn--secondary btn--small" 
+						[innerText]="'_OsvAccept_' | i18n"
 						attr.data-auto-id="AcceptVersion-">
 					</button>
 					<div *ngIf="recommendation.accepted" class="flex">
 						<div class="icon-check-outline text-success flex align-items-center"></div>
 						<div>
-							<div class="text-small half-padding-left" [innerText]="'_OsvAcceptedOn_' | i18n"></div>
-							<div class="text-small half-padding-left"
+							<div class="text-small qtr-padding-left" [innerText]="'_OsvAcceptedOn_' | i18n"></div>
+							<div class="text-small qtr-padding-left"
 								[innerText]="recommendation.acceptedDate | date:mediumDate"></div>
 						</div>
-						<button (click)="onCancelClick(recommendation.release)"
-							class="btn btn--secondary btn--small qtr-margin-left" [innerText]="'_Cancel_' | i18n"
+						<button 
+							(click)="onCancelClick(recommendation.release)"
+							class="btn btn--secondary btn--small qtr-margin-left" 
+							[innerText]="'_Cancel_' | i18n"
 							attr.data-auto-id="CancelAcceptVersion-{{recommendation.release}}">
 						</button>
 					</div>
@@ -61,17 +66,21 @@
 			<tr>
 				<td class="first-column-width overflow-unset no-border-bottom no-border-top text-large">
 					<span class="text-large" [innerText]="'_OsvRiskScore_' | i18n"></span>
-					<span class="qtr-margin-left  text-primary" data-balloon-length="large"
-						[attr.data-balloon]="'_OsvRiskScoreInfo_' | i18n" data-balloon-pos="right">
-						<i class="icon-info qtr-margin-bottom"></i>
+					<span 
+						class="qtr-margin-left  text-primary" 
+						data-balloon-length="large"
+						[attr.data-balloon]="'_OsvRiskScoreInfo_' | i18n" 
+						data-balloon-pos="right">
+							<i class="icon-info qtr-margin-bottom"></i>
 					</span>
 				</td>
-				<td class="text-xlarge recommendation">
+				<td class="text-xlarge recommendation-current">
 					<span [innerText]="currentRecommendation?.profileRisk"></span>
 				</td>
 				<td *ngFor="let recommendation of machineRecommendations" class="recommendation">
 					<div class="flex align-items-center">
-						<span class="text-xlarge qtr-margin-left" [innerText]="recommendation.expectedProfileRisk"></span>
+						<span class="text-xlarge qtr-margin-left"
+							[innerText]="recommendation.expectedProfileRisk"></span>
 					</div>
 				</td>
 			</tr>
@@ -80,16 +89,19 @@
 				<td class=" first-column-width headingClass no-border-bottom no-border-top text-large"
 					[innerText]="'_Bugs_' | i18n">
 				</td>
-				<td class="recommendation">
+				<td class="recommendation-current">
 					<div class="base-margin-bottom"
 						[ngClass]="{'text-small':!fullscreen,'text-large base-margin-top':fullscreen}"
-						[innerText]="'_OsvCurrentlyExposed_' | i18n | uppercase"></div>
+						[innerText]="'_OsvCurrentlyExposed_' | i18n | uppercase">					
+					</div>
 					<div class=" text-xlarge" [innerText]="currentRecommendation?.bugsExposed || '0'"
 						[ngClass]="{'base-padding-top':!fullscreen}"></div>
 					<div class="base-margin-top"
 						*ngIf="currentRecommendation?.bugSeriesData && currentRecommendation?.bugSeriesData.length > 0">
-						<bar-chart dataLabels="true" [backgroundColor]="barChartBackgroundColor"
-							[seriesData]="currentRecommendation.bugSeriesData" width="200">
+						<bar-chart 
+							dataLabels="true" 
+							[seriesData]="currentRecommendation.bugSeriesData"
+							[width]="barChartWidth">
 						</bar-chart>
 					</div>
 				</td>
@@ -111,7 +123,10 @@
 					</div>
 					<div class="base-margin-top"
 						*ngIf=" recommendation.bugSeriesData && recommendation.bugSeriesData.length > 0">
-						<bar-chart width="200" [backgroundColor]="barChartBackgroundColor" dataLabels="true"
+						<bar-chart 
+							[width]="barChartWidth" 
+							[backgroundColor]="barChartBackgroundColor" 
+							dataLabels="true"
 							[seriesData]="recommendation.bugSeriesData">
 						</bar-chart>
 					</div>
@@ -122,12 +137,14 @@
 				<td class=" first-column-width headingClass no-border-bottom no-border-top text-large"
 					[innerText]="'_SecurityAdvisories_' | i18n">
 				</td>
-				<td class="recommendation">
+				<td class="recommendation-current">
 					<div class="text-xlarge half-margin-top" [innerText]="currentRecommendation?.psirtExposed || '0'">
 					</div>
 					<div class="base-margin-top"
 						*ngIf="currentRecommendation?.psirtSeriesData && currentRecommendation?.psirtSeriesData.length > 0">
-						<bar-chart width="200" dataLabels="true" [backgroundColor]="barChartBackgroundColor"
+						<bar-chart 
+							[width]="barChartWidth" 
+							dataLabels="true"
 							[seriesData]="currentRecommendation.psirtSeriesData">
 						</bar-chart>
 					</div>
@@ -144,7 +161,10 @@
 					</div>
 					<div class="base-margin-top"
 						*ngIf=" recommendation.psirtSeriesData && recommendation.psirtSeriesData.length > 0">
-						<bar-chart width="200" [backgroundColor]="barChartBackgroundColor" dataLabels="true"
+						<bar-chart 
+							[width]="barChartWidth" 
+							[backgroundColor]="barChartBackgroundColor" 
+							dataLabels="true"
 							[seriesData]="recommendation.psirtSeriesData">
 						</bar-chart>
 					</div>

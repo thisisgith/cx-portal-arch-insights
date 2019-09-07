@@ -7,7 +7,9 @@
 <!-- timeline view -->
 <div class="dbl-margin-top"
 	*ngIf="!status.isLoading && assetDetails && assetDetails?.length > 0 && view =='timeline'">
-	<app-asset-timeline-chart [data]="timelineData" [fullscreen]="fullscreen">
+	<app-asset-timeline-chart 
+		[data]="timelineData" 
+		[fullscreen]="fullscreen">
 	</app-asset-timeline-chart>
 </div>
 
@@ -26,28 +28,33 @@
 				<th *ngFor="let column of assetDetailsTable.columns"
 					[ngClass]="{ 'sortable': column.sortable, 'sorted': column.sorting }"
 					attr.data-auto-id="AssetDetailsTable-{{column.key}}">
-					<span [innerText]="column.name"></span>
-					<span *ngIf="column.sortable && column.sorting" class="qtr-margin-left" [ngClass]="{
-											'icon-chevron-down': column.sortDirection === 'asc',
-											'icon-chevron-up': column.sortDirection === 'desc'
+						<span [innerText]="column.name"></span>
+						<span 
+							*ngIf="column.sortable && column.sorting" 
+							class="qtr-margin-left" 
+							[ngClass]="{
+												'icon-chevron-down': column.sortDirection === 'asc',
+												'icon-chevron-up': column.sortDirection === 'desc'
 										}">
-					</span>
+						</span>
 				</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr *ngFor="let item of assetDetails" attr.data-auto-id="AssetDetails-{{ item.swVersion }}">
-				<td *ngFor="let column of assetDetailsTable.columns" [ngStyle]="{ 'width': column.width }"
+				<td *ngFor="let column of assetDetailsTable.columns" 
+					[ngStyle]="{ 'width': column.width }"
 					(click)="column.click ? $event.stopPropagation() : null"
-					attr.data-auto-id="AssetDetailItemClickHandler-{{ item.swVersion }}" class="bordered-bottom">
-					<ng-container *ngIf="column.template">
-						<ng-container *ngTemplateOutlet="column.template; context: { celldata: item }">
+					attr.data-auto-id="AssetDetailItemClickHandler-{{ item.swVersion }}" 
+					class="bordered-bottom">
+						<ng-container *ngIf="column.template">
+							<ng-container *ngTemplateOutlet="column.template; context: { celldata: item }">
+							</ng-container>
 						</ng-container>
-					</ng-container>
-					<ng-container *ngIf="!column.template">
-						<span *ngIf="column.render" [innerHTML]="column.render(item)"></span>
-						<span *ngIf="!column.render" [innerText]="item[column.key]"></span>
-					</ng-container>
+						<ng-container *ngIf="!column.template">
+							<span *ngIf="column.render" [innerHTML]="column.render(item)"></span>
+							<span *ngIf="!column.render" [innerText]="item[column.key]"></span>
+						</ng-container>
 				</td>
 			</tr>
 		</tbody>
@@ -58,17 +65,18 @@
 		<table class="table table--compressed table--wrap table--lined table--nostripes no-margin-top">
 			<tbody>
 				<tr attr.data-auto-id="AssetDetails-{{ currentVersion.swVersion }}">
-					<td *ngFor="let column of assetDetailsTable.columns" [ngStyle]="{ 'width': column.width }"
+					<td *ngFor="let column of assetDetailsTable.columns" 
+						[ngStyle]="{ 'width': column.width }"
 						(click)="column.click ? $event.stopPropagation() : null"
 						attr.data-auto-id="AssetDetailItemClickHandler-{{ currentVersion.swVersion }}">
-						<ng-container *ngIf="column.template">
-							<ng-container *ngTemplateOutlet="column.template; context: { celldata: currentVersion }">
+							<ng-container *ngIf="column.template">
+								<ng-container *ngTemplateOutlet="column.template; context: { celldata: currentVersion }">
+								</ng-container>
 							</ng-container>
-						</ng-container>
-						<ng-container *ngIf="!column.template">
-							<span *ngIf="column.render" [innerHTML]="column.render(currentVersion)"></span>
-							<span *ngIf="!column.render" [innerText]="currentVersion[column.key]"></span>
-						</ng-container>
+							<ng-container *ngIf="!column.template">
+								<span *ngIf="column.render" [innerHTML]="column.render(currentVersion)"></span>
+								<span *ngIf="!column.render" [innerText]="currentVersion[column.key]"></span>
+							</ng-container>
 					</td>
 				</tr>
 			</tbody>
@@ -78,9 +86,12 @@
 
 <!-- view all os version link -->
 <div class="markup pull-right dbl-margin-top" *ngIf="!status.isLoading && assetDetails?.length > 0">
-	<a data-auto-id="ViewAllOsVersions" class="markup-toggle text-primary" (click)="viewAllVersions()">
-		<span class="markup-label" [innerText]="'_OsvViewAllOSVersions_' | i18n"></span>
-		<span class="icon-popout icon-small qtr-margin-left"></span>
+	<a 
+		data-auto-id="ViewAllOsVersions" 
+		class="markup-toggle text-primary" 
+		(click)="viewAllVersions()">
+			<span class="markup-label" [innerText]="'_OsvViewAllOSVersions_' | i18n"></span>
+			<span class="icon-popout icon-small qtr-margin-left"></span>
 	</a>
 </div>
 
@@ -95,13 +106,21 @@
 		</div>
 		<div class="col-md-2 pull-right">
 			<div class="btn-group btn-group--square half-margin-right pull-right">
-				<button [title]="'_OsvListView_' | i18n" data-auto-id="list-view-btn" class="btn btn--small "
-					[ngClass]="{ 'selected-view': view == 'list' }" (click)=" view = 'list'">
-					<span class="icon-list-view"></span>
+				<button 
+					[title]="'_OsvListView_' | i18n" 
+					data-auto-id="list-view-btn" 
+					class="btn btn--small "
+					[ngClass]="{ 'selected-view': view == 'list' }"
+					 (click)=" view = 'list'">
+						<span class="icon-list-view"></span>
 				</button>
-				<button [title]="'_OsvTimelineView_' | i18n" data-auto-id="timeline-view-btn" class="btn btn--small "
-					[ngClass]="{ 'selected-view': view == 'timeline' }" (click)="view = 'timeline'">
-					<span class="icon-time"></span>
+				<button 
+					[title]="'_OsvTimelineView_' | i18n" 
+					data-auto-id="timeline-view-btn" 
+					class="btn btn--small "
+					[ngClass]="{ 'selected-view': view == 'timeline' }" 
+					(click)="view = 'timeline'">
+						<span class="icon-time"></span>
 				</button>
 			</div>
 		</div>
@@ -112,8 +131,10 @@
 
 
 <ng-template #currentTemplate let-item="celldata">
-	<div *ngIf="item.name == 'current'" class="version-pointer-arrow half-padding-left relative text-small versions">
-		<span [innerText]="'_CurrentVersion_' | i18n"></span>
+	<div 
+		*ngIf="item.name == 'current'" 
+		class="version-pointer-arrow half-padding-left relative text-small versions">
+			<span [innerText]="'_CurrentVersion_' | i18n"></span>
 	</div>
 </ng-template>
 
@@ -128,18 +149,18 @@
 			<div class="label label--large qtr-margin-left qtr-margin-top" [title]="version.name"
 				*ngFor="let version of item.swVersionGroup">
 				<span class="text-capitalize" [innerHTML]="version.name"></span>
-				<span class="qtr-margin-left" [attr.data-balloon]="version.info" data-balloon-pos="down"
+				<span 
+					class="qtr-margin-left" 
+					[attr.data-balloon]="version.info" 
+					data-balloon-pos="down"
 					data-balloon-length="medium">
-					<i class="icon-info-outline icon-xsmall"></i>
+						<i class="icon-info-outline icon-xsmall"></i>
 				</span>
 			</div>
 		</div>
 	</div>
 	<div *ngIf="item.name == 'current'">
-		<span [innerText]="item.swVersion"></span>
-		<!-- <span data-auto-id="SoftwareGroupVersions" *ngIf="accept" class="toggle" (click)="showVersions.emit()"
-			[innerText]="'_OsvMultipleVersions_' | i18n:'1'">
-		</span> -->
+		<span [innerText]="item.swVersion"></span>		
 	</div>
 </ng-template>
 
@@ -155,8 +176,11 @@
 </ng-template>
 
 <ng-template #actionTemp let-item="celldata" let-selectedItem="selectedItem">
-	<button *ngIf="item.name != 'current' && !item.accepted && item.swVersion != 'NA'"
-		class="btn btn--secondary btn--small" [innerText]="'_OsvAccept_' | i18n" (click)="onAccept(item.swVersion)"
+	<button 
+		*ngIf="item.name != 'current' && !item.accepted && item.swVersion != 'NA'"
+		class="btn btn--secondary btn--small" 
+		[innerText]="'_OsvAccept_' | i18n" 
+		(click)="onAccept(item.swVersion)"
 		attr.data-auto-id="AcceptVersion-{{item.swVersion}}">
 	</button>
 	<div *ngIf="item.accepted" class="row">
@@ -166,8 +190,12 @@
 			<div class="text-small" *ngIf="recommAcceptedDate" [innerText]="recommAcceptedDate | date:mediumDate"></div>
 		</div>
 		<div class="col-5">
-			<button class="btn btn--secondary btn--small" [innerText]="'_Cancel_' | i18n"
-				(click)="onCancel(item.swVersion)" attr.data-auto-id="AcceptVersion-{{item.version}}"></button>
+			<button 
+				class="btn btn--secondary btn--small" 
+				[innerText]="'_Cancel_' | i18n"
+				(click)="onCancel(item.swVersion)" 
+				attr.data-auto-id="AcceptVersion-{{item.version}}">
+			</button>
 		</div>
 	</div>
 </ng-template>

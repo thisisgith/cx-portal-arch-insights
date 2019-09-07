@@ -2,15 +2,20 @@
 	<div class="col-md-6 flex flex-fill">
 		<div class="flex-center-vertical" *ngIf="pagination && assets?.length > 0">
 			<span [innerText]="'_OsvAssets_' | i18n" class="text-large"></span>
-			<span [innerText]="'_OsvShowingXofYAssets_' | i18n:paginationCount:pagination.total"
-				class="qtr-margin-left text-small text-muted" data-auto-id="ShowingAssetsCount">
+			<span 
+				[innerText]="'_OsvShowingXofYAssets_' | i18n:paginationCount:pagination.total"
+				class="qtr-margin-left text-small text-muted" 
+				data-auto-id="ShowingAssetsCount">
 			</span>
 		</div>
 	</div>
 	<div class="col-md-6 text-right">
 		<div>
 			<div [innerText]="'_CSNeedSoftwareRecommendation_' | i18n"></div>
-			<a (click)="contactSupport.emit()" class="recommedation-link text-primary" data-auto-id="ContactExpert"
+			<a 
+				(click)="contactSupport.emit()" 
+				class="recommedation-link text-primary" 
+				data-auto-id="ContactExpert"
 				[innerText]="'_CSRequestExpert_' | i18n">
 			</a>
 		</div>
@@ -20,7 +25,10 @@
 <cui-alert [options]="alert"></cui-alert>
 <ng-container *ngTemplateOutlet="tableProfileGroups"></ng-container>
 <div *ngIf="pagination && assets?.length > 0" class="base-margin-top">
-	<cui-pager [page]="pagination.page - 1" [limit]="pagination.rows" [totalItems]="pagination.total || 0"
+	<cui-pager 
+		[page]="pagination.page - 1" 
+		[limit]="pagination.rows" 
+		[totalItems]="pagination.total || 0"
 		(onPageChanged)="onPageChanged($event)">
 	</cui-pager>
 </div>
@@ -32,31 +40,40 @@
 				<tr>
 					<th *ngFor="let column of assetsTable.columns"
 						[ngClass]="{ 'sortable': column.sortable, 'sorted': column.sorting }"
-						(click)="sortTable(column)" attr.data-auto-id="AssetTable-{{column.key}}">
-						<span [innerText]="column.name"></span>
-						<span *ngIf="column.sortable && column.sorting" class="qtr-margin-left" [ngClass]="{
-										'icon-chevron-down': column.sortDirection === 'asc',
-										'icon-chevron-up': column.sortDirection === 'desc'
-									}">
-						</span>
+						(click)="sortTable(column)" 
+						attr.data-auto-id="AssetTable-{{column.key}}">
+							<span [innerText]="column.name"></span>
+							<span 
+								*ngIf="column.sortable && column.sorting" 
+								class="qtr-margin-left" 
+								[ngClass]="{
+											'icon-chevron-down': column.sortDirection === 'asc',
+											'icon-chevron-up': column.sortDirection === 'desc'
+										}">
+							</span>
 					</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr *ngFor="let item of assets" (click)="onRowSelect(item)" [ngClass]="{ 'active': item.rowSelected }"
+				<tr 
+					*ngFor="let item of assets" 
+					(click)="onRowSelect(item)" 
+					[ngClass]="{ 'active': item.rowSelected }"
 					attr.data-auto-id="Asset-{{ item.hostName }}">
-					<td *ngFor="let column of assetsTable.columns" [ngStyle]="{ 'width': column.width }"
-						(click)="column.click ? $event.stopPropagation() : null"
-						attr.data-auto-id="AssetItemClickHandler-{{ item.hostName }}">
-						<ng-container *ngIf="column.template">
-							<ng-container *ngTemplateOutlet="column.template; context: { celldata: item }">
-							</ng-container>
-						</ng-container>
-						<ng-container *ngIf="!column.template">
-							<span *ngIf="column.render" [innerHTML]="column.render(item)"></span>
-							<span *ngIf="!column.render" [innerText]="item[column.key]"></span>
-						</ng-container>
-					</td>
+						<td 
+							*ngFor="let column of assetsTable.columns" 
+							[ngStyle]="{ 'width': column.width }"
+							(click)="column.click ? $event.stopPropagation() : null"
+							attr.data-auto-id="AssetItemClickHandler-{{ item.hostName }}">
+								<ng-container *ngIf="column.template">
+									<ng-container *ngTemplateOutlet="column.template; context: { celldata: item }">
+									</ng-container>
+								</ng-container>
+								<ng-container *ngIf="!column.template">
+									<span *ngIf="column.render" [innerHTML]="column.render(item)"></span>
+									<span *ngIf="!column.render" [innerText]="item[column.key]"></span>
+								</ng-container>
+						</td>
 				</tr>
 			</tbody>
 		</table>
@@ -77,8 +94,11 @@
 </ng-template>
 
 <ng-template #versionTemplate let-item="celldata">
-	<span [title]="item.alert | uppercase" *ngIf="item?.alert && item?.alert != 'NA'"
-		[ngClass]="{'information':'text-primary','critical':text-danger}[item.alert]" class="icon-circle">
+	<span 
+		[title]="item.alert | uppercase" 
+		*ngIf="item?.alert && item?.alert != 'NA'"
+		[ngClass]="{'information':'text-primary','critical':text-danger}[item.alert]" 
+		class="icon-circle">
 	</span>
 	<span *ngIf="!item?.alert || item?.alert == 'NA'" class="icon-circle color-transparent"></span>
 	<span class="col-11" [innerText]="item.swVersion"></span>

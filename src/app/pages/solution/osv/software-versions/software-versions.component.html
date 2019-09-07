@@ -2,16 +2,21 @@
 	<div class="col-md-6 flex flex-fill" >
 		<div class="flex-center-vertical" *ngIf="pagination && softwareVersions?.length > 0">
 			<span [innerText]="'_OsvSoftwareVersions_' | i18n" class="text-large"></span>
-			<span [innerText]="'_OsvShowingXofYSoftwareVersions_' | i18n:paginationCount:pagination.total"
-				class="qtr-margin-left text-small text-muted" data-auto-id="ShowingAssetsCount">
+			<span 
+				[innerText]="'_OsvShowingXofYSoftwareVersions_' | i18n:paginationCount:pagination.total"
+				class="qtr-margin-left text-small text-muted" 
+				data-auto-id="ShowingAssetsCount">
 			</span>
 		</div>
 	</div>
 	<div class="col-md-6 text-right" >
 		<div>
 			<div [innerText]="'_CSNeedSoftwareRecommendation_' | i18n"></div>
-			<a  (click)="contactSupport.emit()" class="recommedation-link text-primary"
-				data-auto-id="ContactExpert" [innerText]="'_CSRequestExpert_' | i18n">
+			<a  
+				(click)="contactSupport.emit()" 
+				class="recommedation-link text-primary"
+				data-auto-id="ContactExpert" 
+				[innerText]="'_CSRequestExpert_' | i18n">
 			</a>
 		</div>
 	</div>

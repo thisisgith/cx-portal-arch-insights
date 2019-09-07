@@ -14,6 +14,11 @@
 			border-left: 1px solid $light-gray-5;
 		}
 
+		& tr td.recommendation-current {
+			vertical-align: top;			
+			border-left: 1px solid $light-gray-5;
+		}
+
 		& td.no-border-top {
 			border-top: 0;
 		}

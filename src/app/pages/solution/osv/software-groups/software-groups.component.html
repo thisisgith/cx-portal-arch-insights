@@ -2,15 +2,20 @@
 	<div class="col-md-6 flex flex-fill">
 		<div class="flex-center-vertical" *ngIf="pagination && softwareGroups?.length > 0">
 			<span [innerText]="'_OsvSoftwareGroups_' | i18n" class="text-large"></span>
-			<span *ngIf="pagination"
+			<span 
+				*ngIf="pagination"
 				[innerText]="'_OsvShowingXofYSoftwareGroups_' | i18n:paginationCount:pagination.total"
-				class="qtr-margin-left text-small text-muted" data-auto-id="ShowingSoftwareGroupsCount">
+				class="qtr-margin-left text-small text-muted" 
+				data-auto-id="ShowingSoftwareGroupsCount">
 			</span>
 		</div>
 	</div>
 	<div class="col-md-6 text-right">
 		<div [innerText]="'_CSNeedSoftwareRecommendation_' | i18n"></div>
-		<a (click)="contactSupport.emit()" class="recommedation-link text-primary" data-auto-id="ContactExpert"
+		<a 
+			(click)="contactSupport.emit()" 
+			class="recommedation-link text-primary" 
+			data-auto-id="ContactExpert"
 			[innerText]="'_CSRequestExpert_' | i18n">
 		</a>
 	</div>
@@ -19,7 +24,10 @@
 <cui-alert [options]="alert"></cui-alert>
 <ng-container *ngTemplateOutlet="tableSoftwareGroups"></ng-container>
 <div *ngIf="pagination && softwareGroups?.length > 0" class="base-margin-top">
-	<cui-pager [page]="pagination.page - 1" [limit]="pagination.rows" [totalItems]="pagination.total || 0"
+	<cui-pager 
+		[page]="pagination.page - 1" 
+		[limit]="pagination.rows" 
+		[totalItems]="pagination.total || 0"
 		(onPageChanged)="onPageChanged($event)">
 	</cui-pager>
 </div>
@@ -35,7 +43,10 @@
 					<th *ngFor="let column of softwareGroupsTable.columns"
 						[ngClass]="{ 'sortable': column.sortable, 'sorted': column.sorting }">
 						<span [innerText]="column.name"></span>
-						<span *ngIf="column.sortable && column.sorting" class="qtr-margin-left" [ngClass]="{
+						<span 
+							*ngIf="column.sortable && column.sorting" 
+							class="qtr-margin-left" 
+							[ngClass]="{
 										'icon-chevron-down': column.sortDirection === 'asc',
 										'icon-chevron-up': column.sortDirection === 'desc'
 									}">
@@ -44,21 +55,25 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr *ngFor="let item of softwareGroups" (click)="onRowSelect(item)"
+				<tr 
+					*ngFor="let item of softwareGroups" 
+					(click)="onRowSelect(item)"
 					[ngClass]="{ 'active': item.rowSelected }"
 					attr.data-auto-id="SoftwareGroups-{{ item.softwareProfile }}">
-					<td *ngFor="let column of softwareGroupsTable.columns" [ngStyle]="{ 'width': column.width }"
+					<td 
+						*ngFor="let column of softwareGroupsTable.columns" 
+						[ngStyle]="{ 'width': column.width }"
 						(click)="column.click ? $event.stopPropagation() : null"
 						attr.data-auto-id="SoftwareGroupsItemClickHandler-{{ item.softwareProfile }}">
-						<ng-container *ngIf="column.template">
-							<ng-container
-								*ngTemplateOutlet="column.template; context: { celldata: item ,actions: item.actions}">
+							<ng-container *ngIf="column.template">
+								<ng-container
+									*ngTemplateOutlet="column.template; context: { celldata: item ,actions: item.actions}">
+								</ng-container>
 							</ng-container>
-						</ng-container>
-						<ng-container *ngIf="!column.template">
-							<span *ngIf="column.render" [innerHTML]="column.render(item)"></span>
-							<span *ngIf="!column.render" [innerText]="item[column.key]"></span>
-						</ng-container>
+							<ng-container *ngIf="!column.template">
+								<span *ngIf="column.render" [innerHTML]="column.render(item)"></span>
+								<span *ngIf="!column.render" [innerText]="item[column.key]"></span>
+							</ng-container>
 					</td>
 				</tr>
 			</tbody>
@@ -85,16 +100,27 @@
 
 
 <ng-template #actionsTemplate let-item="celldata" let-actions="actions">
-	<cui-dropdown *ngIf="actions?.length > 0" [actions]="actions" position="left"
+	<cui-dropdown 
+		*ngIf="actions?.length > 0" 
+		[actions]="actions" 
+		position="left"
 		icon="icon-more icon-small text-muted rotate-90">
 	</cui-dropdown>
 </ng-template>
 
 <ng-template #currentOSVersionsTemp let-item="celldata">
-	<span *ngIf="item.swVersionCount > 1" data-auto-id="SoftwareGroupCurrentVersions" class="link toggle"
-		(click)="openCurrentVersionsTab($event,item)" [innerText]="'_OsvMultipleVersions_' | i18n:item.swVersionCount">
+	<span 
+		*ngIf="item.swVersionCount > 1" 
+		data-auto-id="SoftwareGroupCurrentVersions" 
+		class="link toggle"
+		(click)="openCurrentVersionsTab($event,item)" 
+		[innerText]="'_OsvMultipleVersions_' | i18n:item.swVersionCount">
 	</span>
-	<span *ngIf="item.swVersionCount == 1" data-auto-id="SoftwareGroupCurrentVersions" class="link toggle"
-		(click)="openCurrentVersionsTab($event,item)" [innerText]="item.swVersions">
+	<span 
+		*ngIf="item.swVersionCount == 1" 
+		data-auto-id="SoftwareGroupCurrentVersions" 
+		class="link toggle"
+		(click)="openCurrentVersionsTab($event,item)" 
+		[innerText]="item.swVersions">
 	</span>
 </ng-template>

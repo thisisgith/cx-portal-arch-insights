@@ -475,7 +475,8 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 				this.logger.debug('Updated');
 			}, () => {
 				this.status.profileRecommendations = false;
-				// _.invoke(this.alert, 'show', I18n.get('_OsvGenericError_'), 'danger');
+				_.invoke(this.recommendationAlert, 'show',
+						I18n.get('_OsvGenericError_'), 'danger');
 				this.logger.debug('Error in updating');
 			});
 	}
@@ -497,7 +498,8 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 				this.logger.debug('Updated');
 			}, () => {
 				this.status.profileRecommendations = false;
-				// _.invoke(this.alert, 'show', I18n.get('_OsvGenericError_'), 'danger');
+				_.invoke(this.recommendationAlert, 'show',
+						I18n.get('_OsvGenericError_'), 'danger');
 				this.logger.debug('Error in updating');
 			});
 

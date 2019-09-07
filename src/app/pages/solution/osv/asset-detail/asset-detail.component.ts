@@ -17,7 +17,7 @@ import {
 } from '@sdp-api';
 import { map, takeUntil, catchError } from 'rxjs/operators';
 import { Subject, of } from 'rxjs';
-import { CuiTableOptions, CuiModalService } from '@cisco-ngx/cui-components';
+import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { ActivatedRoute } from '@angular/router';
 
@@ -54,18 +54,17 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 		private logger: LogService,
 		private osvService: OSVService,
 		private route: ActivatedRoute,
-		private cuiModalService: CuiModalService,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
 		this.assetDetailsParams = {
 			customerId: this.customerId,
-			profileName: '7293498_NA',
-			image: 'NA',
-			pf: 'Cisco_5500',
-			pid: 'AIR-CT5520-K9',
-			swType: 'IOS',
-			swVersion: '8',
+			profileName: '',
+			image: '',
+			pf: '',
+			pid: '',
+			swType: '',
+			swVersion: '',
 			postDate: null,
 		};
 	}
@@ -131,7 +130,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 					this.logger.error('OSV Asset Recommendations : getAssetDetails() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
-					return of({ });
+					return of();
 				}),
 			)
 			.subscribe(() => {

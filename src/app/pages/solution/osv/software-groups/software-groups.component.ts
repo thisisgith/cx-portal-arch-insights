@@ -188,13 +188,13 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 						key: 'swType',
 						name: I18n.get('_OsvOSType_'),
 						sortable: false,
-						width: '10%',
+						width: '15%',
 					},
 					{
 						name: I18n.get('_OsvCurrentOSVersion_'),
 						sortable: false,
 						template: this.currentOSVersionsTemp,
-						width: '20%',
+						width: '15%',
 					},
 					{
 						key: 'optimalVersion',

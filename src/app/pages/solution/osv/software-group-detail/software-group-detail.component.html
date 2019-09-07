@@ -1,14 +1,19 @@
-<details-panel [minWidth]="'1024px'" *ngIf="selectedSoftwareGroup" [hidden]="!selectedSoftwareGroup"
+<details-panel 
+	[minWidth]="'1024px'" 
+	*ngIf="selectedSoftwareGroup" 
+	[hidden]="!selectedSoftwareGroup"
 	[fullscreen]="fullscreen">
-	<details-panel-header (close)="selectedSoftwareGroup = false" [(fullscreen)]="fullscreen"
-		[fullscreenToggle]="screenWidth > 1024 ? true : false">
-		<div detailsPanelTitle>
-			<div class="qtr-margin-left text-xlarge half-margin-bottom"
-				[innerText]="selectedSoftwareGroup?.profileName">
-			</div>
-		</div>
-	</details-panel-header>
-	<ng-container *ngTemplateOutlet="softwareGroupDetails"></ng-container>
+		<details-panel-header 
+			(close)="selectedSoftwareGroup = false" 
+			[(fullscreen)]="fullscreen"
+			[fullscreenToggle]="screenWidth > 1024 ? true : false">
+				<div detailsPanelTitle>
+					<div class="qtr-margin-left text-xlarge half-margin-bottom"
+						[innerText]="selectedSoftwareGroup?.profileName">
+					</div>
+				</div>
+		</details-panel-header>
+		<ng-container *ngTemplateOutlet="softwareGroupDetails"></ng-container>
 </details-panel>
 
 <ng-template #softwareGroupDetails>
@@ -69,8 +74,11 @@
 		</cui-table>
 		<div *ngIf="assetsPagination && softwareGroupAssets?.length > softwareGroupAssetsParams.pageSize"
 			class="base-margin-top">
-			<cui-pager [page]="assetsPagination.page - 1" [limit]="assetsPagination.rows"
-				[totalItems]="assetsPagination.total || 0" (onPageChanged)="onAssetsPageChanged($event)">
+			<cui-pager 
+				[page]="assetsPagination.page - 1" 
+				[limit]="assetsPagination.rows"
+				[totalItems]="assetsPagination.total || 0" 
+				(onPageChanged)="onAssetsPageChanged($event)">
 			</cui-pager>
 		</div>
 	</div>
@@ -98,8 +106,11 @@
 		</cui-table>
 		<div *ngIf="versionsPagination && softwareGroupVersions?.length > softwareGroupVersionsParams.pageSize"
 			class="base-margin-top">
-			<cui-pager [page]="versionsPagination.page - 1" [limit]="versionsPagination.rows"
-				[totalItems]="versionsPagination.total || 0" (onPageChanged)="onVersionsPageChanged($event)">
+			<cui-pager 
+				[page]="versionsPagination.page - 1" 
+				[limit]="versionsPagination.rows"
+				[totalItems]="versionsPagination.total || 0" 
+				(onPageChanged)="onVersionsPageChanged($event)">
 			</cui-pager>
 		</div>
 	</div>
@@ -125,8 +136,11 @@
 
 <!-- version template view for group assets -->
 <ng-template #versionTemplate let-item="celldata">
-	<span [title]="item.alert | uppercase" *ngIf="item?.alert && item?.alert != 'NA'"
-		[ngClass]="{'information':'text-primary','critical':text-danger}[item.alert]" class="icon-circle">
+	<span 
+		[title]="item.alert | uppercase" 
+		*ngIf="item?.alert && item?.alert != 'NA'"
+		[ngClass]="{'information':'text-primary','critical':text-danger}[item.alert]" 
+		class="icon-circle">
 	</span>
 	<span *ngIf="!item?.alert || item?.alert == 'NA'" class="icon-circle color-transparent"></span>
 	<span class="col-11" [innerText]="item.swVersion"></span>
