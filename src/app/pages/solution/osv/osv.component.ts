@@ -34,8 +34,6 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 		TemplateRef<{ }>;
 	@ViewChild('totalAssetsFilter', { static: true }) private totalAssetsFilterTemplate:
 		TemplateRef<{ }>;
-	@ViewChild('deploymentStatusFilter', { static: true }) private deploymentStatusFilterTemplate:
-		TemplateRef<{ }>;
 	public status = {
 		isLoading: true,
 	};
@@ -46,6 +44,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 	public tabIndex: number;
 	public filtered = false;
 	public filters: Filter[];
+	public allFilters: Filter[];
 	private destroy$ = new Subject();
 	public view: 'swGroups' | 'assets' | 'swVersions' | undefined
 		= 'swGroups';
@@ -86,8 +85,8 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 			this.showProfileInfo = false;
 			this.doNotShowAgain = true;
 		}
-
 		this.buildFilters();
+		this.loadData();
 	}
 
 	/**
@@ -95,7 +94,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 	 * @param tab the tab we're building the filters for
 	 */
 	private buildFilters () {
-		this.filters = [
+		this.allFilters = [
 			{
 				key: 'totalAssets',
 				loading: true,
@@ -115,7 +114,15 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 				view: ['assets'],
 			},
 		];
-		this.loadData();
+	}
+
+	/**
+	 * filter out the filters on the basis of selected view
+	 */
+	public filterByView () {
+		this.filters = _.filter(this.allFilters, (filter: Filter) =>
+			_.indexOf(filter.view, this.view) > -1,
+		);
 	}
 
 	/**
@@ -141,8 +148,8 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 	 */
 	private getSummary () {
 
-		const totalAssetsFilter = _.find(this.filters, { key: 'totalAssets' });
-		const assetTypeFilter = _.find(this.filters, { key: 'assetType' });
+		const totalAssetsFilter = _.find(this.allFilters, { key: 'totalAssets' });
+		const assetTypeFilter = _.find(this.allFilters, { key: 'assetType' });
 		return this.osvService.getSummary({ customerId: this.customerId })
 			.pipe(
 				map((response: SummaryResponse) => {
@@ -154,7 +161,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 						versions: response.versions,
 					}];
 					this.decideView(response);
-
+					this.filterByView();
 					assetTypeFilter.seriesData = _.compact(
 						_.map(response.asset_profile, (value: number, key: string) => {
 							if (value !== 0) {
@@ -177,7 +184,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 					assetTypeFilter.loading = false;
 					this.view = undefined;
 
-					return of({ });
+					return of();
 				}),
 			);
 	}
@@ -215,6 +222,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 			this.view = view;
 			this.reset();
 		}
+		this.filterByView();
 	}
 
 	/**
@@ -304,7 +312,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 	 * Open contact support modal
 	 */
 	public openContactSupport () {
-		this.cuiModalService.showComponent(ContactSupportComponent, { });
+		this.cuiModalService.showComponent(ContactSupportComponent, null);
 	}
 
 	/**
