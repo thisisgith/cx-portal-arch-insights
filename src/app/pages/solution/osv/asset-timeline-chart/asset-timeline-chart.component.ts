@@ -99,8 +99,7 @@ export class AssetTimelineChartComponent implements OnInit, OnChanges {
 						connectorColor: '#049fd9',
 						distance: 50,
 						enabled: true,
-						/* tslint:disable:object-literal-shorthand*/
-						/* tslint:disable:no-string-literal */
+						/* tslint:disable:no-string-literal object-literal-shorthand */
 						formatter: function () {
 							let format = '';
 							const name = this['point'].groupedLabels ?
@@ -117,6 +116,8 @@ export class AssetTimelineChartComponent implements OnInit, OnChanges {
 								format += '<span style=";font-size:12px;font-weight:bold';
 								format += 'color:#6ebe4a">Accepted</span>';
 							}
+							/* tslint:enable:no-string-literal object-literal-shorthand */
+
 							return format;
 						},
 						style: {
@@ -145,12 +146,12 @@ export class AssetTimelineChartComponent implements OnInit, OnChanges {
 				backgroundColor: '#39393b',
 				borderColor: '#39393b',
 				enabled: true,
-				/* tslint:disable:ter-max-len */
+				/* tslint:disable-next-line:ter-max-len */
 				headerFormat: '<span style="font-size:12px;font-weight:bold;">{point.key}</span><br/>',
 				pointFormat: '{point.info}',
 				style: {
-					width: 300,
 					color: '#fff',
+					width: 300,
 				},
 				useHTML: true,
 			},

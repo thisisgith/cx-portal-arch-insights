@@ -139,6 +139,17 @@ describe('TechFormComponent', () => {
 	}));
 
 	it('should update tech/subtech form values when a suggested one is picked', fakeAsync(() => {
+		spyOn(caseService, 'fetchSubTechByName')
+			.and
+			.returnValue(
+				of({
+					subTech: {
+						_id: '1941',
+						subTechName: 'Adaptive Security Appliance (ASA) non-VPN problem',
+						techId: '54',
+					},
+				}),
+			);
 		component.form.controls.suggestedTech.setValue({
 			sub_tech: {
 				id: '1941',

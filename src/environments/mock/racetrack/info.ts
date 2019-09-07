@@ -1044,18 +1044,9 @@ export const RacetrackScenarios = [
 				},
 				{
 					delay: Math.floor(Math.random() * 2000) + 250,
-					description: '(Racetrack) IBN-Assurance-Onboard-allNotManualCheckable',
+					description: '(Racetrack) IBN-Assurance-Onboard-noPitstopActions',
 					response: {
-						body: MockRacetrack('ibn', 'assurance', 'Onboard', 'allNotManualCheckable'),
-						status: 200,
-					},
-					selected: true,
-				},
-				{
-					delay: Math.floor(Math.random() * 2000) + 250,
-					description: '(Racetrack) IBN-Assurance-Onboard-allAutoCompleted',
-					response: {
-						body: MockRacetrack('ibn', 'assurance', 'Onboard', 'allAutoCompleted'),
+						body: MockRacetrack('ibn', 'assurance', 'Onboard', 'noPitstopActions'),
 						status: 200,
 					},
 					selected: true,

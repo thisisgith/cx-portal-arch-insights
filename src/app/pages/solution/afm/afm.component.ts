@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { LogService } from '@cisco-ngx/cui-services';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
@@ -29,7 +29,7 @@ import { ExportCsvService } from '@services';
 	styleUrls: ['./afm.component.scss'],
 	templateUrl: './afm.component.html',
 })
-export class AfmComponent {
+export class AfmComponent implements OnInit {
 
 	public showAlarmDetails = false;
 	public selectedAsset: Alarm;
@@ -58,6 +58,7 @@ export class AfmComponent {
 	public filterSpinner = false;
 	public eventStatus = false;
 	private destroy$ = new Subject();
+	private exportFileName: string;
 
 	public searchOptions = {
 		debounce: 1500,
@@ -67,17 +68,20 @@ export class AfmComponent {
 
 	private AFM_CONSTANT = {
 		ALARM: 'ALARM',
+		ALARM_TOTAL_COUNT: 'alarmCount',
 		CHATS: 'CHATS',
 		DAY1: 'Day1',
 		DAYS30: 'Days30',
 		DAYS7: 'Days7',
 		DAYS90: 'Days90',
-		EXCEPTION: 'Exception',
+		EXCEPTION: 'EXCEPTION',
 		FAIL: 'FAIL',
+		IGNORE_ALARM_TOTAL_COUNT: 'ignoredCount',
 		IGNORE_EVENT: 'IGNORE_EVENT',
 		SEARCH: 'SEARCH',
 		SUCCESS: 'SUCCESS',
 		TAC: 'TAC',
+		TAC_CASES_TOTAL_COUNT: 'tacCaseCount',
 	};
 
 	public headerCount = {
@@ -271,21 +275,6 @@ export class AfmComponent {
 	}
 
 	/**
-	 * Afm Search box functionality will retrive the results and populate in grid
-	 * @param searchParams AfmSearchParams
-	 * @memberof AfmComponent
-	 */
-	private getAfmSearchFilterInfo (searchParams: AfmSearchParams) {
-		this.loading = true;
-		this.afmService.getAfmSearchFilterInfo(searchParams)
-			.pipe(takeUntil(this.destroy$))
-			.subscribe(
-				response => {
-					this.prepareGridData(response);
-				});
-	}
-
-	/**
 	 * it will call at the time of pagination click
 	 * @param pageInfo AfmPagination
 	 * @memberof AfmComponent
@@ -309,9 +298,6 @@ export class AfmComponent {
 			case this.AFM_CONSTANT.TAC:
 				this.getAfmTacCaseData(this.searchParams);
 				break;
-			case this.AFM_CONSTANT.SEARCH:
-				this.getAfmSearchFilterInfo(this.searchParams);
-				break;
 			case this.AFM_CONSTANT.ALARM:
 				this.getAfmAlarmData(this.searchParams);
 				break;
@@ -331,6 +317,7 @@ export class AfmComponent {
 	 * it will retrive the All alarmds records only
 	 */
 	public allAlarmFilter () {
+		this.exportFileName = 'Total_Alarms_';
 		this.resetValuesWhileFilter();
 		this.timeRangeFiltered = false;
 		this.searchParams.headerFilterType = this.AFM_CONSTANT.ALARM;
@@ -342,26 +329,37 @@ export class AfmComponent {
 	 * it will retrive the TAC Case records only
 	 */
 	public tacCaseFilters () {
+		this.exportFileName = 'Total_TacCases_';
 		this.resetValuesWhileFilter();
 		this.timeRangeFiltered = false;
 		this.searchParams.headerFilterType = this.AFM_CONSTANT.TAC;
+		this.searchParams.firstTimeLoading = true;
 		this.clearToken();
 		this.getAfmTacCaseData(this.searchParams);
+	}
+
+	/**
+	 * it will retrive the Ignored Alarms only
+	 */
+	public ignoreAlarmFilters () {
+		this.exportFileName = 'Total_Ignored_Alarms_';
+		this.resetValuesWhileFilter();
+		this.timeRangeFiltered = false;
+		this.searchParams.headerFilterType = this.AFM_CONSTANT.IGNORE_EVENT;
+		this.searchParams.firstTimeLoading = true;
+		this.clearToken();
+		this.getAfmAlarmData(this.searchParams);
 	}
 
 	/**
 	 * it will retrive the Search records only
 	 */
 	public searchFilter () {
-		const searchWord = this.afmSearchInput;
-		if (!searchWord) {
-			this.allAlarmFilter();
-		} else {
-			this.resetValuesWhileFilter();
-			this.searchParams.searchTerm = searchWord;
-			this.searchParams.headerFilterType = this.AFM_CONSTANT.SEARCH;
-			this.getAfmSearchFilterInfo(this.searchParams);
-		}
+		this.exportFileName = 'Total_Alarms_Filtered_';
+		const searchTerm = this.afmSearchInput;
+		this.resetValuesWhileFilter();
+		this.searchParams.searchTerm = this.afmSearchInput = searchTerm;
+		this.getAfmAlarmData(this.searchParams);
 	}
 
 	/**
@@ -420,6 +418,7 @@ export class AfmComponent {
 	public eventUpdated (event) {
 		this.eventStatus = event;
 	}
+
 	/**
 	 * to close the panel
 	 */
@@ -431,18 +430,21 @@ export class AfmComponent {
 	 * Exoport events into CSV file need to implement
 	 */
 	public exportAllEvents () {
+		this.searchParams.firstTimeLoading = false;
 		this.filterSpinner = true;
-		this.afmService.exportAllRecords(this.searchParams.customerId)
+		this.afmService.exportAllRecords(this.searchParams)
 			.pipe(takeUntil(this.destroy$))
 			.subscribe(
 				response => {
 					if (response && response.status && response.status !== null &&
 						response.status.toUpperCase() === this.AFM_CONSTANT.SUCCESS) {
 						this.exportCsvService
-						.exportToCsv('Total_Alarm_Cases_', response.data);
-					} else {
+						.exportToCsv(this.exportFileName, response.data);
+					} else if (response.status.toUpperCase() === this.AFM_CONSTANT.FAIL) {
 						this.statusErrorMessage = response.statusMessage;
-						this.logger.error(response.statusMessage);
+					} else if (response.status.toUpperCase() === this.AFM_CONSTANT.EXCEPTION) {
+						this.statusErrorMessage = I18n.get('_AfmServerDown_');
+						this.logger.error(`Error connecting to api :${response.statusMessage}`);
 					}
 					this.filterSpinner = false;
 				},
@@ -514,7 +516,8 @@ export class AfmComponent {
 	 */
 	public onTimeRangefilterSelect (subfilter: number,
 		filter: AfmFilter, triggeredFromGraph: boolean) {
-	   this.timeRangeFiltered = true;
+		this.exportFileName = I18n.get('_AfmFileTotalAlarmsFiltered_');
+		this.timeRangeFiltered = true;
 	   this.resetValuesWhileFilter();
 	   const sub = _.find(filter.seriesData, { filter: subfilter });
 	   if (triggeredFromGraph) {
@@ -549,17 +552,6 @@ export class AfmComponent {
 	}
 
 	/**
-	 * Ignore Event function
-	 */
-	public ignoreAlarmFilters () {
-		this.resetValuesWhileFilter();
-		this.timeRangeFiltered = false;
-		this.searchParams.headerFilterType = this.AFM_CONSTANT.IGNORE_EVENT;
-		this.clearToken();
-		this.getAfmAlarmData(this.searchParams);
-	}
-
-	/**
 	 * it will prepare Pagination header to show from which to which records showing
 	 */
 	private preparePaginationHeader () {
@@ -580,10 +572,10 @@ export class AfmComponent {
 	 * setting default values while filtering
 	 */
 	private resetValuesWhileFilter () {
+		this.afmSearchInput = '';
 		this.searchParams.pageSize = this.tableLimit;
 		this.searchParams.pageNumber = 1;
 		this.searchParams.searchTerm = '';
-		this.searchParams.headerFilterType = this.AFM_CONSTANT.ALARM;
 		this.tableOffset = 0;
 	}
 
@@ -600,24 +592,33 @@ export class AfmComponent {
 				this.tableData = response.eventList;
 				this.pagination = response.pagination;
 				if (this.searchParams.firstTimeLoading) {
+					this.aggregationCount = response.aggregationsCount;
 					/**
 					 * first time loading we are setting the
 					 * Banner part for Total Alarms Count
 					 */
-					this.headerCount = {
-						totalAlarmCount: this.pagination.total,
-						totalIgnoreEventCount: this.pagination.ignoredEventCount,
-						totalTacCaseCount: this.pagination.totalTacCases,
-					};
+					if (this.aggregationCount) {
+						this.headerCount = {
+							totalAlarmCount:
+							this.aggregationCount[this.AFM_CONSTANT.ALARM_TOTAL_COUNT],
+							totalIgnoreEventCount:
+							this.aggregationCount[this.AFM_CONSTANT.IGNORE_ALARM_TOTAL_COUNT],
+							totalTacCaseCount:
+							this.aggregationCount[this.AFM_CONSTANT.TAC_CASES_TOTAL_COUNT],
+						};
+					}
 					this.searchParams.firstTimeLoading = false;
 					if (response.connectionStatus !== null) {
 						this.afmConnectionStatus = response.connectionStatus;
 					}
-					this.aggregationCount = response.aggregationsCount;
 					this.buildFilters();
 				}
 				this.preparePaginationHeader();
 			} else if (response.status.toUpperCase() === this.AFM_CONSTANT.FAIL) {
+				this.tableData = response.eventList;
+				this.pagination = response.pagination;
+				this.statusErrorMessage = response.statusMessage;
+			} else if (response.status.toUpperCase() === this.AFM_CONSTANT.EXCEPTION) {
 				this.tableData = response.eventList;
 				this.pagination = response.pagination;
 				this.logger.error(`Error while connecting apis :${response.statusMessage}`);

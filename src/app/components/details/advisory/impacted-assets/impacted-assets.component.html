@@ -30,17 +30,22 @@
 </ng-template>
 
 <ng-template #deviceColumn let-celldata="celldata">
-	<!-- TODO: Need specific icons for different device types -->
-	<span class="qtr-margin-right" *ngIf="getProductIcon(celldata)">
+	<span class="qtr-margin-right"
+		[title]="getProductTitle(celldata)"
+		*ngIf="getProductIcon(celldata)">
 		<img alt="{{ '_AssetIcon_' | i18n }}"
 			class="icon-asset"
-			attr.data-auto-id="DeviceIcon-{{ celldata?.deviceName || celldata?.hostName }}"
+			attr.data-auto-id="DeviceIcon-{{ celldata?.hostName || celldata?.deviceName }}"
 			src="assets/img/assets/device-{{ getProductIcon(celldata) }}.svg">
 	</span>
-	<!-- <a [innerText]="celldata?.deviceName || cellData?.hostName || ('_NA_' | i18n)"
-		(click)="selectedAsset = celldata">
-	</a> -->
-	<span [innerText]="celldata?.deviceName || celldata?.hostName || ('_NA_' | i18n)"></span>
+	<a *ngIf="celldata?.serialNumber"
+		[innerText]="celldata?.hostName"
+		[routerLink]="['/solution/assets']"
+		[queryParams]="{ serialNumber: celldata.serialNumber, select: true }">
+	</a>
+	<span *ngIf="!celldata?.serialNumber"
+		[innerText]="celldata?.deviceName || celldata?.hostName || ('_NA_' | i18n)">
+	</span>
 </ng-template>
 
 <ng-template #versionColumn let-celldata="celldata">

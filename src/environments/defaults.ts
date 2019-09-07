@@ -17,7 +17,8 @@ export const defaults = {
 	},
 	baseHref: '/osv/',
 	bugSearchTool: 'https://bst.cloudapps.cisco.com/bugsearch/bug/',
-	communityLink: 'https://community.cisco.com/t5/technology-and-support/ct-p/technology-support',
+	communityLink: 'https://cloudsso-test.cisco.com/idp/startSSO.ping?PartnerSpId=' +
+		'https://community-stage.cisco.com/auth/saml&TARGET=https://community-stage.cisco.com/',
 	controlPointsOrigin: 'https://cpp-api.sdp12-istg.csco.cloud/controlpoint',
 	csc: {
 		fileDownloadURL: `https://largefile-stage.cloudapps.cisco.com/Web-Ui?srId=
@@ -31,6 +32,8 @@ export const defaults = {
 	cuiColors: {
 		vibrantBlue: '#017cad',
 	},
+	// Curated Communities/Private Communitites/SuccessTrack URL
+	curatedCommunityUrl: 'https://community-stage.cisco.com/t5',
 	emailFromID: 'cxportal-noreply@cisco.com',
 	emailToID: 'cx-portal-support-nonprod@cisco.com',
 	feedbackToEmail: 'pbc-dev@cisco.com',
@@ -63,6 +66,9 @@ export const defaults = {
 		'https://xresps-stage.cloudapps.cisco.com/esps/search/suggest/cdcpr01zad',
 	],
 	production: false,
+	// Public community URL
+	publicCommunityUrl: 'https://cloudsso-test.cisco.com/idp/startSSO.ping?PartnerSpId=' +
+		'https://community-stage.cisco.com/auth/saml&TARGET=https://community-stage.cisco.com/t5',
 	rmaServiceClientId: 'yvgjnzruyuh9a7tdnbj8ka3n',
 	rmaServiceOrigin: 'https://api-stage.cisco.com',
 	rmaServicePaths: {
