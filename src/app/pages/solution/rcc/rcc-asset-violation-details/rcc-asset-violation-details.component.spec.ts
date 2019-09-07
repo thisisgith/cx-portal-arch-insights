@@ -264,6 +264,7 @@ describe('RccAssetViolationDetailsComponent', () => {
 				previousValue: selectedPreviousAssetData,
 			},
 		});
+		spyOn(component, 'loadData');
 		expect(component.loadData)
 			.toHaveBeenCalledTimes(0);
 	});
