@@ -49,6 +49,7 @@ export class RiskMitigationComponent {
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
+		this.customerId = 7293498;
 	}
 
 	@ViewChild('contextualMenuTemplate',
@@ -261,16 +262,7 @@ export class RiskMitigationComponent {
 						this.crashedAssetsGridDetails.tableOffset = 0;
 
 						this.paginationParams.page = 0;
-						let first = (this.paginationParams.page * 10) + 1;
-						let last = (this.paginationParams.page * 10) +
-						this.paginationParams.limit;
-						if (first > this.crashedAssetsGridDetails.totalItems) {
-							first = this.crashedAssetsGridDetails.totalItems;
-						}
-						if (last > this.crashedAssetsGridDetails.totalItems) {
-							last = this.crashedAssetsGridDetails.totalItems;
-						}
-						this.crashPagination = `${first}-${last}`;
+						this.updatePagerDetails();
 					}),
 					catchError(err => {
 						this.status.isLoading = false;
@@ -282,6 +274,21 @@ export class RiskMitigationComponent {
 					}),
 				)
 				.subscribe();
+	}
+	/**
+	 * Updates the crashed grid pagination details
+	 */
+	public updatePagerDetails () {
+		let first = (this.paginationParams.page * 10) + 1;
+		let last = (this.paginationParams.page * 10) +
+		this.paginationParams.limit;
+		if (first > this.crashedAssetsGridDetails.totalItems) {
+			first = this.crashedAssetsGridDetails.totalItems;
+		}
+		if (last > this.crashedAssetsGridDetails.totalItems) {
+			last = this.crashedAssetsGridDetails.totalItems;
+		}
+		this.crashPagination = `${first}-${last}`;
 	}
 
 	/**
@@ -354,17 +361,7 @@ export class RiskMitigationComponent {
 	public onPagerUpdated (pageInfo: any) {
 		this.crashedAssetsGridDetails.tableOffset = pageInfo.page;
 		this.paginationParams.page = pageInfo.page;
-		let first = (this.paginationParams.page * 10) + 1;
-		let last = (this.paginationParams.page * 10) +
-		this.paginationParams.limit;
-
-		if (first > this.crashedAssetsGridDetails.totalItems) {
-			first = this.crashedAssetsGridDetails.totalItems;
-		}
-		if (last > this.crashedAssetsGridDetails.totalItems) {
-			last = this.crashedAssetsGridDetails.totalItems;
-		}
-		this.crashPagination = `${first}-${last}`;
+		this.updatePagerDetails();
 	}
 
 	/**
@@ -438,16 +435,7 @@ export class RiskMitigationComponent {
 						this.crashedAssetsGridDetails.tableOffset = 0;
 
 						this.paginationParams.page = 0;
-						let first = (this.paginationParams.page * 10) + 1;
-						let last = (this.paginationParams.page * 10) +
-						this.paginationParams.limit;
-						if (first > this.crashedAssetsGridDetails.totalItems) {
-							first = this.crashedAssetsGridDetails.totalItems;
-						}
-						if (last > this.crashedAssetsGridDetails.totalItems) {
-							last = this.crashedAssetsGridDetails.totalItems;
-						}
-						this.crashPagination = `${first}-${last}`;
+						this.updatePagerDetails();
 					}),
 					catchError(err => {
 						this.status.isLoading = false;
