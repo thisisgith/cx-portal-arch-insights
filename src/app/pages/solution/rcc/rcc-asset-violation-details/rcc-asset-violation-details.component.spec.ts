@@ -265,7 +265,6 @@ describe('RccAssetViolationDetailsComponent', () => {
 			},
 		});
 		expect(component.loadData)
-		.not
-		.toHaveBeenCalled();
+			.toHaveBeenCalledTimes(0);
 	});
 });
