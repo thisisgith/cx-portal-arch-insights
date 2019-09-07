@@ -28,6 +28,19 @@ export class CompareRecommendationsComponent implements OnChanges {
 	public currentRecommendation: MachineRecommendations;
 	public machineRecommendations: MachineRecommendations[];
 	public barChartBackgroundColor = '#f2fbfd';
+	public severityMap = {
+		H: I18n.get('_OsvHigh_'),
+		M: I18n.get('_OsvMedium_'),
+		L: I18n.get('_OsvLow_'),
+	};
+
+	// public psirtSeverityMap = {
+	// 	Critical: I18n.get('_OsvCritical_'),
+	// 	High: I18n.get('_OsvHigh_'),
+	// 	Medium: I18n.get('_OsvMedium_'),
+	// 	Low: I18n.get('_OsvLow_'),
+	// 	Informational: I18n.get('_OsvInformational'),
+	// }
 
 	constructor (private logger: LogService) {
 		this.logger.debug('CompareRecommendationsComponent Created!');
@@ -46,23 +59,53 @@ export class CompareRecommendationsComponent implements OnChanges {
 
 	/**
 	 * formats data received from the api
+	 * @param recommendations machine recommendations
 	 */
 	public formatData (recommendations) {
 		_.map(recommendations, (recommendation: MachineRecommendations) => {
-			const openBugs = _.get(recommendation, ['bugSeverity.OPEN']);
-			const openPsirts = _.get(recommendation, ['bugSeverity.OPEN']);
-			recommendation.score = _.isNumber(recommendation.score) ?
-				recommendation.score.toFixed() : recommendation.score;
-			recommendation.bugsExposed = this.calculateExposed(openBugs);
-			recommendation.psirtExposed = this.calculateExposed(openBugs);
-			recommendation.bugSeriesData = this.populateBarGraphData(openPsirts);
-			recommendation.psirtSeriesData = this.populateBarGraphData(openPsirts);
+			recommendation.expectedProfileRisk = _.isNumber(recommendation.expectedProfileRisk) ?
+				recommendation.expectedProfileRisk.toFixed() : recommendation.expectedProfileRisk;
+
+			const openBugs = _.get(recommendation, ['bugSeverity', 'OPEN']);
+			const newOpenBugs = _.get(recommendation, ['bugSeverity', 'NEW_OPEN']);
+			const resolvedBugs = _.get(recommendation, ['bugSeverity', 'RESOLVED']);
+
+			const openBugsResponse = this.addOpen(openBugs, newOpenBugs);
+			recommendation.bugsExposed = openBugsResponse.totalOpenCount;
+			recommendation.resolvedBugsCount = this.calculateExposed(resolvedBugs);
+			recommendation.bugSeriesData = openBugsResponse.totalOpenCount > 0
+				? this.populateBarGraphData(openBugsResponse.totalOpen) : [];
+
+			const openPsirts = _.get(recommendation, ['psirtSeverity', 'OPEN']);
+			const newOpenPsirts = _.get(recommendation, ['psirtSeverity', 'NEW_OPEN']);
+			const resolvedPsirts = _.get(recommendation, ['psirtSeverity', 'RESOLVED']);
+
+			const openPsirtsResponse = this.addOpen(openPsirts, newOpenPsirts);
+			recommendation.psirtExposed = openPsirtsResponse.totalOpenCount;
+			recommendation.psirtResolvedCount = this.calculateExposed(resolvedPsirts);
+			recommendation.psirtSeriesData = openPsirtsResponse.totalOpenCount > 0 ?
+				this.populateBarGraphData(openPsirtsResponse.totalOpen) : [];
 		});
 		this.currentRecommendation = _.get(_.filter(recommendations,
 			(recomm: MachineRecommendations) => recomm.name === 'profile current'), 0);
 		this.machineRecommendations = _.filter(recommendations,
 			(recomm: MachineRecommendations) => recomm.name !== 'profile current');
 		this.sortData(this.machineRecommendations);
+	}
+
+	/**
+	 * adds the total open bugs
+	 * @param openBugs information about open bugs
+	 * @param newOpenBugs information about newly open bugs
+	 * @returns object containing the totalopencount
+	 */
+	public addOpen (openBugs, newOpenBugs) {
+		const totalOpen = { };
+		_.map(_.keys(this.severityMap), (value: number) => {
+			totalOpen[value] = _.get(openBugs, value, 0) + _.get(newOpenBugs, value, 0);
+		});
+		const totalOpenCount = this.calculateExposed(totalOpen);
+		return { totalOpenCount, totalOpen };
 	}
 
 	/**
@@ -86,24 +129,19 @@ export class CompareRecommendationsComponent implements OnChanges {
 	 * @returns seriesData for bar Chart
 	 */
 	public populateBarGraphData (severityInfo: any) {
-		let data = severityInfo;
+		const data = severityInfo;
 		if (_.keys(data).length > 0) {
-			data = {
-				High: data.High || 0,
-				Critical: data.Critical || 0,
-				Low: data.Low || 0,
-			};
+			_.map(_.keys(this.severityMap), (value: number) => {
+				data[value] = data[value] || 0;
+			});
 		}
 
-		return _.compact(
+		return  _.compact(
 			_.map(data, (value: number, key: string) => {
 				if (!_.isNull(value)) {
 					return {
-						value,						
-						label: key.toLowerCase() === 'critical' ?
-							I18n.get('_OsvCritical_')
-							: key.toLowerCase() === 'high' ?
-								I18n.get('_OsvHigh_') : I18n.get('_OsvLow_'),						
+						value,
+						label: this.severityMap[key],
 					};
 				}
 			}));

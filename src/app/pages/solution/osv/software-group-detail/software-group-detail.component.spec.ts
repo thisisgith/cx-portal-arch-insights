@@ -39,12 +39,16 @@ describe('SoftwareGroupDetailComponent', () => {
 	it('should load softwaregroup asset and versions', () => {
 		const sgAssets = <any> OSVScenarios[7].scenarios.GET[0].response.body;
 		const sgVersions = <any> OSVScenarios[8].scenarios.GET[0].response.body;
+		const sgRecommendations = <any> OSVScenarios[9].scenarios.GET[0].response.body;
 		spyOn(osvService, 'getSoftwareGroupAssets')
 			.and
 			.returnValue(of(sgAssets));
 		spyOn(osvService, 'getSoftwareGroupVersions')
 			.and
 			.returnValue(of(sgVersions));
+		spyOn(osvService, 'getSoftwareGroupRecommendations')
+			.and
+			.returnValue(of(sgRecommendations));
 		const selectedSG = (<any> OSVScenarios[1].scenarios.GET[0].response.body).uiProfileList[0];
 		component.selectedSoftwareGroup = selectedSG;
 		component.ngOnInit();
@@ -52,6 +56,10 @@ describe('SoftwareGroupDetailComponent', () => {
 		expect(component.softwareGroupAssets)
 			.toBeDefined();
 		expect(component.softwareGroupVersions)
+			.toBeDefined();
+		expect(component.machineRecommendations)
+			.toBeDefined();
+		expect(component.recommendations)
 			.toBeDefined();
 		expect(component.softwareGroupAssetsTable)
 			.toBeDefined();
@@ -95,5 +103,16 @@ describe('SoftwareGroupDetailComponent', () => {
 		fixture.detectChanges();
 		expect(component.tabIndex)
 			.toEqual(0);
+		component.ngOnChanges({
+			tabIndex: {
+				currentValue: 2,
+				firstChange: false,
+				isFirstChange: () => false,
+				previousValue: undefined,
+			},
+		});
+		fixture.detectChanges();
+		expect(component.tabIndex)
+			.toEqual(2);
 	});
 });

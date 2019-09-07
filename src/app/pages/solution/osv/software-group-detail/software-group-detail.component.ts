@@ -46,7 +46,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	@Input() public selectedSoftwareGroup: SoftwareGroup;
 	@Output() public selectedSoftwareGroupChange = new EventEmitter<SoftwareGroup>();
 	@ViewChild('versionTemplate', { static: true })
-		private versionTemplate: TemplateRef<{ }>;
+	private versionTemplate: TemplateRef<{ }>;
 	@Input() public tabIndex;
 
 	public status = {
@@ -182,6 +182,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 					this.status.profileRecommendations = false;
 					response.recommendations = _.compact(response.recommendations);
 					response.recommendationSummaries = _.compact(response.recommendationSummaries);
+					this.setProfileRiskScore(response);
 					this.setAcceptedVersion({
 						data: response.recommendations,
 						acceptedDate: response.recommAcceptedDate,
@@ -192,7 +193,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 						acceptedDate: response.recommAcceptedDate,
 						key: 'release',
 					});
-					this.recommendations = this.mergeMachineRecommendations(response);
+					this.recommendations = this.addCurrentRecommendation(response);
 					this.machineRecommendations = response.recommendationSummaries;
 					this.recommendationAcceptedDate = response.recommAcceptedDate;
 				}),
@@ -205,7 +206,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 					this.logger.error('OSV Asset Recommendations : getAssetDetails() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
-					return of({ });
+					return of();
 				}),
 			);
 	}
@@ -239,7 +240,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 					this.logger.error('OSV SG : getSoftwareGroupAsset() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
-					return of({ });
+					return of();
 				}),
 			);
 	}
@@ -273,7 +274,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 					this.logger.error('OSV SG : getSoftwareGroupVersions() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
-					return of({ });
+					return of();
 				}),
 			);
 	}
@@ -339,7 +340,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 							datePipe.transform(
 								new Date(item.postDate), 'yyyy MMM dd') :
 							'',
-						sortable: true,
+						sortable: false,
 					},
 					{
 						key: 'swType',
@@ -470,21 +471,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 		this.osvService.updateProfile(body)
 			.subscribe((response: SoftwareGroup) => {
 				this.status.profileRecommendations = false;
-				this.selectedSoftwareGroup.statusUpdated = true;
-				this.selectedSoftwareGroup.optimalVersion = response.optimalVersion;
-				this.setAcceptedVersion({
-					data: this.recommendations,
-					acceptedDate: response.recommAcceptedDate,
-					key: 'swVersion',
-				});
-				this.setAcceptedVersion({
-					data: this.machineRecommendations,
-					accpetedVersion: response.recommAcceptedDate,
-					key: 'release',
-				});
-				this.getSoftwareGroupAssets()
-					.subscribe();
-				this.selectedSoftwareGroupChange.emit(this.selectedSoftwareGroup);
+				this.refreshAfterAction(response);
 				this.logger.debug('Updated');
 			}, () => {
 				this.status.profileRecommendations = false;
@@ -506,22 +493,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 		this.osvService.cancelUpdateProfileResponse(body)
 			.subscribe((response: any) => {
 				this.status.profileRecommendations = false;
-				this.selectedSoftwareGroup.statusUpdated = true;
-				this.selectedSoftwareGroup.statusUpdated = true;
-				this.selectedSoftwareGroup.optimalVersion = response.optimalVersion;
-				this.setAcceptedVersion({
-					data: this.recommendations,
-					acceptedData: response.recommAcceptedDate,
-					key: 'swVersion',
-				});
-				this.setAcceptedVersion({
-					data: this.machineRecommendations,
-					acceptedData: response.recommAcceptedDate,
-					key: 'release',
-				});
-				this.getSoftwareGroupAssets()
-					.subscribe();
-				this.selectedSoftwareGroupChange.emit(this.selectedSoftwareGroup);
+				this.refreshAfterAction(response);
 				this.logger.debug('Updated');
 			}, () => {
 				this.status.profileRecommendations = false;
@@ -529,6 +501,30 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 				this.logger.debug('Error in updating');
 			});
 
+	}
+
+	/**
+	 * set refresh other tabs after accept or cancel action
+	 * @param response response from the accept or cancel action
+	 */
+	public refreshAfterAction (response: any) {
+		this.selectedSoftwareGroup.statusUpdated = true;
+		this.selectedSoftwareGroup.optimalVersion = response.optimalVersion;
+		this.setAcceptedVersion({
+			data: this.recommendations,
+			acceptedDate: response.recommAcceptedDate,
+			key: 'swVersion',
+		});
+		this.setAcceptedVersion({
+			data: this.machineRecommendations,
+			acceptedDate: response.recommAcceptedDate,
+			key: 'release',
+		});
+		this.getSoftwareGroupAssets()
+			.subscribe();
+		this.getSoftwareGroupVersions()
+			.subscribe();
+		this.selectedSoftwareGroupChange.emit(this.selectedSoftwareGroup);
 	}
 
 	/**
@@ -547,19 +543,11 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	}
 
 	/**
-	 * merge machine recommendations to basic recommendations otherwise
-	 *  add current recommendation to basic
+	 * add current recommendations to basic recommendations
 	 * @param response profile recommendations response
 	 * @returns merged array of software recommendations
 	 */
-	public mergeMachineRecommendations (response) {
-		if (response.recommendationSummaries && response.recommendationSummaries.length > 0) {
-			_.map(response.recommendationSummaries, (machineRecomm: MachineRecommendations) => {
-				machineRecomm.swVersion = machineRecomm.release;
-			});
-
-			return [...response.recommendations, ...response.recommendationSummaries];
-		}
+	public addCurrentRecommendation (response) {
 		if (response.recommendations && response.recommendations.length > 0) {
 			response.recommendations.push({
 				error: null,
@@ -570,6 +558,16 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 
 			return response.recommendations;
 		}
+	}
+
+	/**
+	 * adding risk score to machine recommendations
+	 * @param response of the profile recommendations call
+	 */
+	public setProfileRiskScore (response) {
+		_.map(response.recommendationSummaries, recommendation => {
+			recommendation.profileRisk = response.profileRisk;
+		});
 	}
 
 }

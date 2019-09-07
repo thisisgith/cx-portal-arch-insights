@@ -1,25 +1,26 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CompareRecommendationsComponent } from './compare-recommendations.component';
 import { CompareRecommendationsModule } from './compare-recommendations.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { OSVScenarios } from '@mock';
+import { MicroMockModule } from '@cui-x-views/mock';
+import { configureTestSuite } from 'ng-bullet';
 
 describe('CompareRecommendationsComponent', () => {
 	let component: CompareRecommendationsComponent;
 	let fixture: ComponentFixture<CompareRecommendationsComponent>;
-
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				CompareRecommendationsModule,
 				HttpClientTestingModule,
 				RouterTestingModule,
+				MicroMockModule,
 			],
-		})
-			.compileComponents();
-	}));
+		});
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(CompareRecommendationsComponent);
@@ -33,7 +34,7 @@ describe('CompareRecommendationsComponent', () => {
 	});
 
 	it('should show compare recommendations on ngOnChanges', () => {
-		const recommendations = (<any>OSVScenarios[9].scenarios.GET[0].response.body)
+		const recommendations = (<any> OSVScenarios[9].scenarios.GET[0].response.body)
 			.recommendationSummaries;
 		component.ngOnChanges({
 			recommendations: {
@@ -64,19 +65,14 @@ describe('CompareRecommendationsComponent', () => {
 	});
 
 	it('should calculate the number of bugsExposed', () => {
-		expect(component.calculateExposed({ a: 5, b: 10, c: 0 }))
+		expect(component.calculateExposed({ H: 5, L: 10, M: 0 }))
 			.toEqual(15);
-		expect(component.calculateExposed({}))
+		expect(component.calculateExposed({ }))
 			.toEqual(0);
 	});
 
 	it('should populate the bargraph series data', () => {
-		const expectedOutput = [
-			{ value: 5, label: 'H' },
-			{ value: 0, lable: 'C' },
-			{ value: 0, label: 'L' }
-		];
-		expect(component.populateBarGraphData({ High: 5 }).length)
-			.toEqual(3);		
+		expect(component.populateBarGraphData({ H: 5 }).length)
+			.toEqual(3);
 	});
 });

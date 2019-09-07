@@ -169,7 +169,7 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 						name: I18n.get('_OsvSoftwareGroup_'),
 						sortable: true,
 						sortDirection: 'asc',
-						sorting: false,
+						sorting: true,
 						width: '20%',
 					},
 					{

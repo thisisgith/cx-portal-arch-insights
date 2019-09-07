@@ -23,4 +23,7 @@ export interface MachineRecommendations {
 	bugSeriesData?: [],
 	psirtSeriesData?: [],
 	acceptedDate?: string;
+	expectedProfileRisk?: any;
+	resolvedBugsCount?: number;
+	psirtResolvedCount?: number;
 }

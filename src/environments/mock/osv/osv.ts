@@ -83,9 +83,19 @@ const mockMachineRecommendations: MachineRecommendationsResponse = [
 		bugs: [],
 		bugSeverity: {
 			OPEN: {
-				Critical: 0,
-				High: 0,
-				Low: 1,
+				H: 0,
+				M: 0,
+				L: 1,
+			},
+			NEW_OPEN: {
+				H: 0,
+				M: 0,
+				L: 1,
+			},
+			RESOLVED: {
+				H: 2,
+				M: 0,
+				L: 0,
 			},
 		},
 		name: 'Recommendation #1',
@@ -94,9 +104,14 @@ const mockMachineRecommendations: MachineRecommendationsResponse = [
 		psirtFixed: 32,
 		psirtSeverity: {
 			OPEN: {
-				Critical: 0,
-				High: 0,
-				Low: 1,
+				H: 0,
+				M: 0,
+				L: 1,
+			},
+			NEW_OPEN: {
+				H: 0,
+				M: 0,
+				L: 1,
 			},
 		},
 		release: '7.3(2)N1(1b)',
@@ -107,9 +122,9 @@ const mockMachineRecommendations: MachineRecommendationsResponse = [
 		bugs: [],
 		bugSeverity: {
 			OPEN: {
-				Critical: 0,
-				High: 0,
-				Low: 2,
+				H: 0,
+				M: 0,
+				L: 2,
 			},
 		},
 		name: 'Recommendation #2',
@@ -118,9 +133,9 @@ const mockMachineRecommendations: MachineRecommendationsResponse = [
 		psirtFixed: 32,
 		psirtSeverity: {
 			OPEN: {
-				Critical: 0,
-				High: 0,
-				Low: 1,
+				H: 0,
+				M: 0,
+				L: 1,
 			},
 		},
 		release: '7.3(2)N1(1c)',
@@ -131,9 +146,9 @@ const mockMachineRecommendations: MachineRecommendationsResponse = [
 		bugs: [],
 		bugSeverity: {
 			OPEN: {
-				Critical: 0,
-				High: 0,
-				Low: 1,
+				H: 0,
+				M: 0,
+				L: 1,
 			},
 		},
 		name: 'Recommendation #3',
@@ -142,9 +157,9 @@ const mockMachineRecommendations: MachineRecommendationsResponse = [
 		psirtFixed: 32,
 		psirtSeverity: {
 			OPEN: {
-				Critical: 0,
-				High: 0,
-				Low: 1,
+				H: 0,
+				M: 0,
+				L: 1,
 			},
 		},
 		release: '7.3(4)N1(1)',
@@ -156,9 +171,9 @@ const mockMachineRecommendations: MachineRecommendationsResponse = [
 		bugs: [],
 		bugSeverity: {
 			OPEN: {
-				Critical: 0,
-				High: 0,
-				Low: 1,
+				H: 0,
+				M: 0,
+				L: 1,
 			},
 		},
 		name: 'profile current',
@@ -167,9 +182,9 @@ const mockMachineRecommendations: MachineRecommendationsResponse = [
 		psirtFixed: 32,
 		psirtSeverity: {
 			OPEN: {
-				Critical: 0,
-				High: 0,
-				Low: 1,
+				H: 0,
+				M: 0,
+				L: 1,
 			},
 		},
 		release: '7.3(4)N1(1)',
@@ -204,6 +219,24 @@ const mockSoftwareGroupRecommendations: ProfileRecommendationsResponse = {
 			name: 'golden',
 			postDate: '2019-04-16T00:00:00.000+0000',
 			swVersion: 'NA',
+		},
+		{
+			error: null,
+			name: 'Recommendation #3',
+			postDate: '2019-04-16T00:00:00.000+0000',
+			swVersion: '7.3(2)N1(1a)',
+		},
+		{
+			error: null,
+			name: 'Recommendation #2',
+			postDate: '2019-04-16T00:00:00.000+0000',
+			swVersion: '7.3(2)N1(1b)',
+		},
+		{
+			error: null,
+			name: 'Recommendation #1',
+			postDate: '2019-04-16T00:00:00.000+0000',
+			swVersion: '7.3(2)N1(1c)',
 		},
 	],
 	recommendationSummaries: mockMachineRecommendations,

@@ -67,11 +67,11 @@
 					</span>
 				</td>
 				<td class="text-xlarge recommendation">
-					<span [innerText]="currentRecommendation?.score"></span>
+					<span [innerText]="currentRecommendation?.profileRisk"></span>
 				</td>
 				<td *ngFor="let recommendation of machineRecommendations" class="recommendation">
 					<div class="flex align-items-center">
-						<span class="text-xlarge qtr-margin-left" [innerText]="recommendation.score"></span>
+						<span class="text-xlarge qtr-margin-left" [innerText]="recommendation.expectedProfileRisk"></span>
 					</div>
 				</td>
 			</tr>
@@ -89,7 +89,7 @@
 					<div class="base-margin-top"
 						*ngIf="currentRecommendation?.bugSeriesData && currentRecommendation?.bugSeriesData.length > 0">
 						<bar-chart dataLabels="true" [backgroundColor]="barChartBackgroundColor"
-							[seriesData]="seriesData" width="200">
+							[seriesData]="currentRecommendation.bugSeriesData" width="200">
 						</bar-chart>
 					</div>
 				</td>
@@ -102,7 +102,7 @@
 					</div>
 					<div class="base-margin-top flex justify-content-between">
 						<div>
-							<span class="text-xlarge" [innerText]="recommendation.bugFixed  || '0'"></span>
+							<span class="text-xlarge" [innerText]="recommendation.resolvedBugsCount  || '0'"></span>
 							<span class="text-xlarge" [innerText]="'/'"></span>
 							<span class="text-xlarge" [innerText]="currentRecommendation?.bugsExposed || '0'"></span>
 
@@ -135,9 +135,9 @@
 				<td *ngFor="let recommendation of machineRecommendations" class="recommendation">
 					<div class="half-margin-top flex justify-content-between">
 						<div>
-							<span class="text-xlarge" [innerText]="recommendation.psirtFixed  || '0'"></span>
+							<span class="text-xlarge" [innerText]="recommendation.psirtResolvedCount  || '0'"></span>
 							<span class="text-xlarge" [innerText]="'/'"></span>
-							<span class="text-xlarge" [innerText]="currentRecommendation.psirtFixed  || '0'"></span>
+							<span class="text-xlarge" [innerText]="currentRecommendation.psirtExposed  || '0'"></span>
 
 						</div>
 						<div class="text-xlarge" [innerText]="recommendation.psirtExposed || '0'"></div>

@@ -1,5 +1,5 @@
 import { configureTestSuite } from 'ng-bullet';
-import { async, ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { AssetDetailsComponent } from './asset-detail.component';
 import { AssetDetailsModule } from './asset-detail.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
