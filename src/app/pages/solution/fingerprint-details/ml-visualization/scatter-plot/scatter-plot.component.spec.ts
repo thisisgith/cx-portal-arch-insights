@@ -77,7 +77,7 @@ fdescribe('ScatterPlotComponent', () => {
 				lemmaFeatureKclusterCrashrate: '5.9',
 				fingerprintKclusterCrashrate: '0.05',
 				productFamily: 'Cisco_Catalyst_9',
-				productId: 'C9407R'
+				productId: 'C9407R',
 			},
 		];
 

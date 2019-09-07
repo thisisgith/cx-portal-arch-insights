@@ -20,7 +20,7 @@ export class FingerprintBodyComponent implements OnChanges {
 	public alertFPCompare: any = { };
 	public alertFPSimilarAssets: any = { };
 	public alertFPIntelligence: any = { };
-	public alertMlVisualization:any = { };
+	public alertMlVisualization: any = { };
 	public cxLevel: number;
 
 	constructor (
