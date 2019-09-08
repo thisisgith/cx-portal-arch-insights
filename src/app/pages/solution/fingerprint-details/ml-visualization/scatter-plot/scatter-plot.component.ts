@@ -63,7 +63,6 @@ export class ScatterPlotComponent implements OnChanges, AfterViewInit {
 	public mouseup$;
 	public chart: Chart;
 	public chartDragMap: ChartDragMapper = new ChartDragMap();
-	public Highcharts = Highcharts;
 	@Input() public dataPoints: any = [];
 	@Input() public selectedDevice: any;
 	@Output() public groupSelected: EventEmitter<any[]> = new EventEmitter<any[]>();

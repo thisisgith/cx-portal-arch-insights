@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { ScatterPlotComponent } from './scatter-plot.component';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { ChartModule, HIGHCHARTS_MODULES } from 'angular-highcharts';
-import * as more from 'highcharts/highcharts-more.src';
 import * as boost from 'highcharts/modules/boost-canvas';
 import * as drag from 'highcharts/modules/draggable-points';
 
@@ -20,9 +19,7 @@ import * as drag from 'highcharts/modules/draggable-points';
 	exports: [ScatterPlotComponent],
 	entryComponents: [ScatterPlotComponent],
 	providers: [
-		{ provide: HIGHCHARTS_MODULES, useFactory: () => [boost] },
-		{ provide: HIGHCHARTS_MODULES, useFactory: () => [drag] },
-		{ provide: HIGHCHARTS_MODULES, useFactory: () => [more] },
+		{ provide: HIGHCHARTS_MODULES, useFactory: () => [boost, drag] },
 	],
 })
 export class ScatterPlotModule { }
