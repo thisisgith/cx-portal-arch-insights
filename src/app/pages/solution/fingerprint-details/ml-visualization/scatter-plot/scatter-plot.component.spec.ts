@@ -15,7 +15,7 @@ import * as boost from 'highcharts/modules/boost-canvas';
 import * as drag from 'highcharts/modules/draggable-points';
 import { By } from '@angular/platform-browser';
 
-fdescribe('ScatterPlotComponent', () => {
+describe('ScatterPlotComponent', () => {
 	let component: ScatterPlotComponent;
 	let fixture: ComponentFixture<ScatterPlotComponent>;
 
