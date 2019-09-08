@@ -12,12 +12,12 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Chart, HIGHCHARTS_MODULES } from 'angular-highcharts';
 import * as Highcharts from 'highcharts/highcharts';
-import * as more from 'highcharts/highcharts-more.src';
+import * as more from 'highcharts/highcharts-more';
 import * as boost from 'highcharts/modules/boost-canvas';
 import * as drag from 'highcharts/modules/draggable-points';
 import { By } from '@angular/platform-browser';
 
-fdescribe('ScatterPlotComponent', () => {
+describe('ScatterPlotComponent', () => {
 	let component: ScatterPlotComponent;
 	let fixture: ComponentFixture<ScatterPlotComponent>;
 
@@ -146,4 +146,5 @@ fdescribe('ScatterPlotComponent', () => {
 		expect(component.chart.ref.options.chart.zoomType)
 		.toBeUndefined();
 	}));
+
 });

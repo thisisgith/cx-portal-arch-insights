@@ -18,7 +18,7 @@ import { MicroMockModule } from '@cui-x-views/mock';
 import { HttpErrorResponse } from '@angular/common/http';
 import { By } from '@angular/platform-browser';
 
-fdescribe('MlVisualizationComponent', () => {
+describe('MlVisualizationComponent', () => {
 	let component: MlVisualizationComponent;
 	let fixture: ComponentFixture<MlVisualizationComponent>;
 	let mlVisualizationService: MlVisualizationService;
