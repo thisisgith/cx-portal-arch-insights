@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SettingsComponent } from './settings.component';
-import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
+import { I18nPipeModule, FromNowPipeModule } from '@cisco-ngx/cui-pipes';
 import { AdminWrapperModule } from '../admin-wrapper.module';
 import { HeightTransitionModule } from '@components';
 import { AppStatusColorPipe } from './app-status-color.pipe';
@@ -36,6 +36,7 @@ const imports = [
 	CuiSpinnerModule,
 	HeightTransitionModule,
 	I18nPipeModule,
+	FromNowPipeModule,
 	RouterModule,
 	UserModule.forRoot({ rootUrl }),
 ];

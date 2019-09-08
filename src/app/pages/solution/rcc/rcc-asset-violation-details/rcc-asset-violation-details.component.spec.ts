@@ -211,17 +211,6 @@ describe('RccAssetViolationDetailsComponent', () => {
 	});
 
 	it('should invoke onPageIndexChange method', () => {
-		component.assetRowParams = {
-			customerId: '7293498',
-			pageIndex: 0,
-			pageSize: 10,
-			policyGroupName: '',
-			policyName: '',
-			serialNumber: 'FCW2246E0PB',
-			severity: '',
-			sortBy: '',
-			sortOrder: '',
-		};
 		component.onPolicyAssetPagerUpdated({ page: 1, limit : 10 });
 		expect(component.tableOffset)
 			.toEqual(1);
@@ -264,8 +253,8 @@ describe('RccAssetViolationDetailsComponent', () => {
 				previousValue: selectedPreviousAssetData,
 			},
 		});
+		spyOn(component, 'loadData');
 		expect(component.loadData)
-		.not
-		.toHaveBeenCalled();
+			.toHaveBeenCalledTimes(0);
 	});
 });

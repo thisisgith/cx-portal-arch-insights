@@ -17,7 +17,7 @@
 					'visual-filter__card__not-selected': !filter.selected
 				}"
 				class="filter visual-filter__card"
-				*ngIf="filter.seriesData || filter.loading">
+				*ngIf="filter.seriesData.length || filter.loading">
 				<div *ngIf="filter.template">
 					<ng-container *ngTemplateOutlet="filter.template; context: { filter: filter }"></ng-container>
 				</div>

@@ -151,7 +151,7 @@
 	</ng-template>
 
 	<ng-template #filterBar>
-		<div class="row half-margin-top" *ngIf="filtered">
+		<div class="row half-margin-top" *ngIf="filtered && selectedFilters?.length > 0">
 			<div class="col-md-1 flex flex-center-vertical">
 				<span class="text-bold text-uppercase half-padding-right" [innerText]="'_Filtered_' | i18n"></span>
 			</div>
