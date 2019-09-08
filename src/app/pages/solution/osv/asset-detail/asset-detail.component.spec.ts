@@ -62,8 +62,6 @@ describe('AssetDetailsComponent', () => {
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
 		component.selectedAsset = <any> OSVScenarios[4].scenarios.GET[0].response.body;
-		expect(component.status.isLoading)
-			.toBe(true);
 		component.ngOnInit();
 		expect(component.assetDetails)
 			.toBe(null);

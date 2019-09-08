@@ -80,34 +80,15 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 	 * @param changes: changes
 	 */
 	public ngOnChanges (changes: SimpleChanges) {
-		const currentFilter = _.get(changes, ['filters', 'currentValue']);
 		const selectedSoftwareGroup = _.get(changes, ['selectedSoftwareGroup', 'currentValue']);
 		const statusUpdated = _.get(selectedSoftwareGroup, 'statusUpdated');
 		const isFirstChange = _.get(changes, 'selectedSoftwareGroup.firstChange');
-		if (currentFilter && !_.get(changes, 'filters.firstChange')) {
-			this.setFilter(currentFilter);
-			this.loadData();
-		}
 		if (selectedSoftwareGroup && statusUpdated && !isFirstChange) {
 			const selected = _.filter(this.softwareGroups, { id: selectedSoftwareGroup.id });
 			if (selected && selected.length > 0) {
 				selected[0].optimalVersion = _.get(selectedSoftwareGroup, 'optimalVersion');
 			}
 		}
-	}
-
-	/**
-	 * set the filters are part of query params
-	 * @param currentFilter current filters selected by customer
-	 */
-	public setFilter (currentFilter) {
-		const deploymentStatus = _.get(currentFilter, 'deploymentStatus', []);
-		let filter = '';
-		if (deploymentStatus.length > 0) {
-			filter += `deployment:${deploymentStatus.toString()}`;
-		}
-		this.softwareGroupsParams.pageIndex = 1;
-		this.softwareGroupsParams.filter = filter;
 	}
 
 	/**

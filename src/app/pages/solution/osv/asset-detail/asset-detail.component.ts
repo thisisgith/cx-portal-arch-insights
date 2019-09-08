@@ -126,6 +126,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 				}),
 				takeUntil(this.destroy$),
 				catchError(err => {
+					this.status.isLoading = false;
 					_.invoke(this.alert, 'show', I18n.get('_OsvGenericError_'), 'danger');
 					this.logger.error('OSV Asset Recommendations : getAssetDetails() ' +
 						`:: Error : (${err.status}) ${err.message}`);
