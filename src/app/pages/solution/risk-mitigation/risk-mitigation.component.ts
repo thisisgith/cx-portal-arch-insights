@@ -305,12 +305,9 @@ export class RiskMitigationComponent {
 								this.highCrashRiskAssetsGridDetails.tableData = results.devices;
 								this.highCrashRiskAssetsGridDetails.totalItems = results.count;
 
-								let first = (this.highCrashRiskParams.page * 10) + 1;
+								const first = (this.highCrashRiskParams.page * 10) + 1;
 								const last = (this.highCrashRiskParams.page * 10) +
 								this.highCrashRiskAssetsGridDetails.tableData.length;
-								if (first > this.highCrashRiskAssetsGridDetails.tableData.length) {
-									first = this.highCrashRiskAssetsGridDetails.tableData.length;
-								}
 								this.hcrPagination = `${first}-${last}`;
 
 							}),
@@ -423,6 +420,8 @@ export class RiskMitigationComponent {
 	 * @returns new table details
 	 */
 	public searchInCrashedAssetsGrid (params) {
+		this.status.isLoading = false;
+
 		return this.riskMitigationService.getSearchedData(params)
 				.pipe(
 					takeUntil(this.destroy$),
