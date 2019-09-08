@@ -128,6 +128,9 @@ describe('RiskMitigationComponent', () => {
 		spyOn(riskMitigationService, 'getCrashHistoryForDevice')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
+		spyOn(riskMitigationService, 'getFingerPrintDeviceDetailsData')
+		.and
+		.returnValue(throwError(new HttpErrorResponse(error)));
 		component.ngOnInit();
 		fixture.whenStable()
 			.then(() => {
@@ -435,6 +438,15 @@ describe('RiskMitigationComponent', () => {
 		fixture.detectChanges();
 		expect(component.getFilterDetailsForSearchQuery('').time)
 			.toEqual('90');
+		component.filters[0].seriesData[2].selected = false;
+		component.filters[0].seriesData[3].selected = false;
+		fixture.detectChanges();
+		component.filters[0].seriesData[0].selected = false;
+		component.filters[0].seriesData[1].selected = false;
+		component.filters[0].seriesData[2].selected = false;
+		component.filters[0].seriesData[3].selected = false;
+		expect(component.getFilterDetailsForSearchQuery('').time)
+			.toEqual('1');
 	});
 
 	it('should get fitered results on subfilter select', () => {
