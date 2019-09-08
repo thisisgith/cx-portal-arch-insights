@@ -420,7 +420,7 @@ export class RiskMitigationComponent {
 	 * @returns new table details
 	 */
 	public searchInCrashedAssetsGrid (params) {
-		this.status.isLoading = false;
+		this.status.isLoading = true;
 
 		return this.riskMitigationService.getSearchedData(params)
 				.pipe(
