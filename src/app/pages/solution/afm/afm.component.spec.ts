@@ -1,6 +1,7 @@
 import { configureTestSuite } from 'ng-bullet';
 import { AfmComponent } from './afm.component';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { fakeAsync, tick, ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 import { FaultManagementModule } from './afm.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ActivatedRoute } from '@angular/router';
@@ -11,19 +12,25 @@ import {
 	AfmService, AfmSearchParams, Alarm,
 } from '@sdp-api';
 import { HttpErrorResponse } from '@angular/common/http';
+import { I18n } from '@cisco-ngx/cui-utils';
+import * as enUSJson from '../../../../assets/i18n/en-US.json';
 
 describe('AfmComponent', () => {
 	let component: AfmComponent;
 	let fixture: ComponentFixture<AfmComponent>;
 	const mockAfmSearchParams: AfmSearchParams = new Object();
-	const cuiTable: any = new Object;
 	const mockAlarm: Alarm = new Object();
 	let afmService: AfmService;
 	const afmFilter: any = new Object();
 
 	configureTestSuite(() => {
 		TestBed.configureTestingModule({
-			imports: [FaultManagementModule, HttpClientTestingModule],
+			imports: [
+				FaultManagementModule,
+
+				HttpClientTestingModule,
+				RouterTestingModule,
+			],
 			providers: [{ provide: 'ENVIRONMENT', useValue: environment },
 			{
 				provide: ActivatedRoute,
@@ -39,14 +46,11 @@ describe('AfmComponent', () => {
 		});
 	});
 
-	beforeEach(async(() => {
-		afmService = TestBed.get(AfmService);
-	}));
-
 	beforeEach(() => {
+		I18n.injectDictionary(enUSJson);
+		afmService = TestBed.get(AfmService);
 		fixture = TestBed.createComponent(AfmComponent);
 		component = fixture.componentInstance;
-		fixture.detectChanges();
 	});
 
 	it('should create', () => {
@@ -54,22 +58,40 @@ describe('AfmComponent', () => {
 			.toBeTruthy();
 	});
 
-	it('should ignore alarm filters', () => {
+	it('should ignore alarm filters', fakeAsync(() => {
+		spyOn(afmService, 'getAfmAlarms')
+			.and
+			.returnValue(of(<any> AfmScenarios[1].scenarios.POST[0].response.body));
 		fixture.detectChanges();
+		tick();
 		component.ignoreAlarmFilters();
+		tick();
 		expect(component.tableOffset)
 			.toEqual(0);
-	});
+	}));
 
 	it('should change table sorting', () => {
-		spyOn(component, 'onTableSortingChanged');
+		const sort = {
+			name: 'Event Status',
+			sortDirection: 'asc',
+		};
+		spyOn(afmService, 'getAfmAlarms')
+			.and
+			.returnValue(of(<any> AfmScenarios[1].scenarios.POST[0].response.body));
 		fixture.detectChanges();
-		component.onTableSortingChanged(cuiTable);
-		expect(component.onTableSortingChanged)
+		component.onTableSortingChanged(sort);
+		expect(component.searchParams.sortField)
+			.toEqual('status.keyword');
+		expect(component.searchParams.sortType)
+			.toEqual('asc');
+		expect(afmService.getAfmAlarms)
 			.toHaveBeenCalled();
 	});
 
 	it('should close the panal', () => {
+		spyOn(afmService, 'getAfmAlarms')
+			.and
+			.returnValue(of(<any> AfmScenarios[1].scenarios.POST[0].response.body));
 		fixture.detectChanges();
 		component.onPanelClose();
 		expect(component.selectedAsset)
@@ -77,6 +99,9 @@ describe('AfmComponent', () => {
 	});
 
 	it('should connect to asset panal', () => {
+		spyOn(afmService, 'getAfmAlarms')
+			.and
+			.returnValue(of(<any> AfmScenarios[1].scenarios.POST[0].response.body));
 		fixture.detectChanges();
 		mockAlarm.customerId = '1234';
 		component.connectToAssetDetails(mockAlarm);
@@ -84,51 +109,82 @@ describe('AfmComponent', () => {
 			.toEqual(mockAlarm);
 	});
 
-	it('should call on pager update', () => {
+	it('should call on pager update', fakeAsync(() => {
+		spyOn(afmService, 'getAfmAlarms')
+			.and
+			.returnValue(of(<any> AfmScenarios[1].scenarios.POST[0].response.body));
+		fixture.detectChanges();
+		tick();
 		const pageData = {
 			limit: 10,
 			page: 1,
 		};
 		component.onPagerUpdated(pageData);
+		tick();
 		expect(component.tableOffset)
 			.toEqual(1);
-	});
+	}));
 
-	it('should sub filter on select', () => {
+	it('should sub filter on select', fakeAsync(() => {
+		spyOn(afmService, 'getAfmAlarms')
+			.and
+			.returnValue(of(<any> AfmScenarios[1].scenarios.POST[0].response.body));
+		spyOn(component, 'clearFilters');
+		fixture.detectChanges();
+		tick();
 		component.onSubfilterSelect();
-		expect(component.tableData)
-			.toEqual([]);
-	});
+		expect(component.clearFilters)
+			.toHaveBeenCalled();
+	}));
 
-	it('should show alarm details', () => {
+	it('should show alarm details', fakeAsync(() => {
+		spyOn(afmService, 'getAfmAlarms')
+			.and
+			.returnValue(of(<any> AfmScenarios[1].scenarios.POST[0].response.body));
 		component.onAlarmPanelClose();
 		fixture.detectChanges();
+		tick();
 		component.eventStatus = true;
 		component.onAlarmPanelClose();
 		expect(component.showAlarmDetails)
 			.toBeFalsy();
-	});
+	}));
 
-	it('should call search filter', () => {
+	it('should call search filter', fakeAsync(() => {
+		spyOn(afmService, 'getAfmAlarms')
+			.and
+			.returnValue(of(<any> AfmScenarios[1].scenarios.POST[0].response.body));
 		const mockEvent = {
 			keyCode: 12,
 		};
+		fixture.detectChanges();
+		tick();
 		component.keyDownAfmSearchFilter(mockEvent);
 		fixture.detectChanges();
+		tick();
 		spyOn(component, 'searchFilter');
 		const event = {
 			keyCode: 13,
 		};
 		component.keyDownAfmSearchFilter(event);
+		tick();
 		expect(component.searchFilter)
 			.toHaveBeenCalled();
-	});
+	}));
 
-	it('should be called on table sorting changed', () => {
+	// Ok, seriously? We need to make this a real test of SOMETHING
+	it('should be called on table sorting changed', fakeAsync(() => {
+		spyOn(afmService, 'getAfmAlarms')
+			.and
+			.returnValue(of(<any> AfmScenarios[1].scenarios.POST[0].response.body));
 		const eventSyslog = {
 			name: 'Syslog Event',
 			sortDirection: 'Syslog Event Description',
 		};
+		fixture.detectChanges();
+		expect(afmService.getAfmAlarms)
+			.toHaveBeenCalled();
+		tick();
 		component.searchParams.headerFilterType = 'TAC';
 		component.onTableSortingChanged(eventSyslog);
 		fixture.detectChanges();
@@ -178,11 +234,16 @@ describe('AfmComponent', () => {
 		};
 		component.searchParams.headerFilterType = 'Default';
 		component.onTableSortingChanged(eventDefault);
+		fixture.detectChanges();
+		tick();
 		expect(component.loading)
-			.toBeTruthy();
-	});
+			.toBeFalsy();
+	}));
 
-	it('should select time range filter', () => {
+	it('should select time range filter', fakeAsync(() => {
+		spyOn(afmService, 'getAfmAlarms')
+			.and
+			.returnValue(of(<any> AfmScenarios[1].scenarios.POST[0].response.body));
 		spyOn(afmService, 'getTimeRangeFilteredEvents')
 			.and
 			.returnValue(of(<any> AfmScenarios[3].scenarios.POST[0].response.body));
@@ -202,13 +263,17 @@ describe('AfmComponent', () => {
 			},
 		];
 		component.onTimeRangefilterSelect(subfilter, afmFilter, true);
+		tick();
 		expect(afmService.getTimeRangeFilteredEvents)
 			.toHaveBeenCalled();
 		expect(afmFilter.seriesData[0].selected)
 			.toBeTruthy();
-	});
+	}));
 
-	it('should not select time range filter', () => {
+	it('should not select time range filter', fakeAsync(() => {
+		spyOn(afmService, 'getAfmAlarms')
+			.and
+			.returnValue(of(<any> AfmScenarios[1].scenarios.POST[0].response.body));
 		spyOn(afmService, 'getTimeRangeFilteredEvents')
 			.and
 			.returnValue(of(<any> AfmScenarios[3].scenarios.POST[0].response.body));
@@ -222,15 +287,15 @@ describe('AfmComponent', () => {
 			},
 		];
 		component.onTimeRangefilterSelect(subfilter, afmFilter, false);
+		tick();
 		expect(afmService.getTimeRangeFilteredEvents)
 			.toHaveBeenCalled();
 		expect(afmFilter.seriesData[0].selected)
 			.toBeFalsy();
-	});
+	}));
 
 	it('should return filters', () => {
 		component.getSelectedSubFilters('Filter');
-		fixture.detectChanges();
 		component.filters =  [
 			{
 				key: 'afmFilter',
@@ -281,29 +346,31 @@ describe('AfmComponent', () => {
 			.toHaveBeenCalled();
 	});
 
-	it('should fail the export all service', () => {
+	it('should fail the export all service', fakeAsync(() => {
 		spyOn(afmService, 'exportAllRecords')
 			.and
 			.returnValue(of(<any> AfmScenarios[10].scenarios.GET[0].response.body));
 		component.exportAllEvents();
 		expect(afmService.exportAllRecords)
 			.toHaveBeenCalled();
+		tick();
 		expect(component.statusErrorMessage)
 			.toEqual('failed retrived records');
-	});
+	}));
 
-	it('should exception happen in export all service', () => {
+	it('should exception happen in export all service', fakeAsync(() => {
 		spyOn(afmService, 'exportAllRecords')
 			.and
 			.returnValue(of(<any> AfmScenarios[11].scenarios.GET[0].response.body));
 		component.exportAllEvents();
 		expect(afmService.exportAllRecords)
 			.toHaveBeenCalled();
+		tick();
 		expect(component.statusErrorMessage)
 			.toEqual('Server is down, please try again.');
-	});
+	}));
 
-	it('should throw an error in export all service', () => {
+	it('should throw an error in export all service', fakeAsync(() => {
 		const error = {
 			status: 404,
 			statusText: 'Resource not found',
@@ -312,9 +379,10 @@ describe('AfmComponent', () => {
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error).statusText));
 		component.exportAllEvents();
+		tick();
 		expect(component.statusErrorMessage)
 			.toEqual('Export operation failed :: Error : (Resource not found)');
-	});
+	}));
 
 	it('should update the event', () => {
 		const event = {
@@ -326,14 +394,17 @@ describe('AfmComponent', () => {
 	});
 
 	describe('connectToAlarmDetails', () => {
-		it('should collect alarm details', () => {
+		it('should collect alarm details', fakeAsync(() => {
 			spyOn(afmService, 'getAfmEvents')
 				.and
 				.returnValue(of(<any> AfmScenarios[4].scenarios.POST[0].response.body));
+			spyOn(afmService, 'getAfmAlarms')
+				.and
+				.returnValue(of(<any> AfmScenarios[1].scenarios.POST[0].response.body));
 			mockAlarm.syslogMsg = 'Sys log message';
 			mockAlarm.alarmId = 1001;
-			afmService = TestBed.get(AfmService);
 			component.connectToAlarmDetails(mockAlarm);
+			tick();
 			expect(afmService.getAfmEvents(mockAfmSearchParams))
 				.toBeTruthy();
 			expect(component.syslogEvent)
@@ -344,7 +415,7 @@ describe('AfmComponent', () => {
 				.toBeNull();
 			expect(afmService.getAfmEvents)
 				.toHaveBeenCalled();
-		});
+		}));
 
 		it('should call tac case filters', () => {
 			spyOn(afmService, 'getTacCases')
@@ -355,7 +426,7 @@ describe('AfmComponent', () => {
 				.toHaveBeenCalled();
 		});
 
-		it('should load afm alarms', () => {
+		it('should load afm alarms', fakeAsync(() => {
 			spyOn(afmService, 'getAfmAlarms')
 				.and
 				.returnValue(of(<any> AfmScenarios[1].scenarios.POST[0].response.body));
@@ -364,12 +435,13 @@ describe('AfmComponent', () => {
 			mockAfmSearchParams.headerFilterType = 'ALARM';
 			mockAfmSearchParams.searchTerm = '';
 			fixture.detectChanges();
+			tick();
 			component.allAlarmFilter();
 			expect(afmService.getAfmAlarms)
 				.toHaveBeenCalled();
-		});
+		}));
 
-		it('should load afm alarms with no status', () => {
+		it('should load afm alarms with no status', fakeAsync(() => {
 			spyOn(afmService, 'getAfmAlarms')
 				.and
 				.returnValue(of(<any> AfmScenarios[6].scenarios.POST[0].response.body));
@@ -378,16 +450,18 @@ describe('AfmComponent', () => {
 			mockAfmSearchParams.headerFilterType = 'ALARM';
 			mockAfmSearchParams.searchTerm = '';
 			fixture.detectChanges();
+			tick();
 			component.aggregationCount.set('Day1', 1)
 			.set('Days7', 1);
 			component.allAlarmFilter();
+			tick();
 			expect(component.loading)
 				.toBeFalsy();
 			expect(afmService.getAfmAlarms)
 				.toHaveBeenCalled();
-		});
+		}));
 
-		it('should load afm alarms with failed status', () => {
+		it('should load afm alarms with failed status', fakeAsync(() => {
 			spyOn(afmService, 'getAfmAlarms')
 				.and
 				.returnValue(of(<any> AfmScenarios[8].scenarios.POST[0].response.body));
@@ -396,14 +470,16 @@ describe('AfmComponent', () => {
 			mockAfmSearchParams.headerFilterType = 'ALARM';
 			mockAfmSearchParams.searchTerm = '';
 			fixture.detectChanges();
+			tick();
 			component.aggregationCount.set('Day1', 1)
 			.set('Days7', 1);
 			component.allAlarmFilter();
+			tick();
 			expect(component.loading)
 				.toBeFalsy();
 			expect(afmService.getAfmAlarms)
 				.toHaveBeenCalled();
-		});
+		}));
 
 		it('should load Afm Search Filter Info with lower case p', () => {
 			spyOn(afmService, 'getAfmAlarms')

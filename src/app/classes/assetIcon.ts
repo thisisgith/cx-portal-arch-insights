@@ -28,3 +28,18 @@ export function getProductTypeImage (asset: (Asset | NetworkElement)) {
 		}
 	}
 }
+
+/**
+ * Returns a title for an asset for use in the product images
+ * @param asset the asset to look up the type/family for
+ * @returns the title string
+ */
+export function getProductTypeTitle (asset: (Asset | NetworkElement)) {
+	const type = _.get(asset, 'productType');
+	const family = _.get(asset, 'productFamily');
+
+	const typeStr = type ? `${type} ` : '';
+	const familyStr = family ? `(${family})` : '';
+
+	return `${typeStr}${familyStr}`;
+}

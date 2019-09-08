@@ -8,7 +8,6 @@ import { LogService } from '@cisco-ngx/cui-services';
 
 import {
 	ACC,
-	ACCBookmarkSchema,
 	ACCResponse,
 	AtxSchema,
 	ATXResponseModel,
@@ -227,6 +226,7 @@ export class LifecycleComponent implements OnDestroy {
 		loading: {
 			acc: false,
 			atx: false,
+			bookmark: false,
 			cgt: false,
 			elearning: false,
 			productGuides: false,
@@ -540,7 +540,7 @@ export class LifecycleComponent implements OnDestroy {
 					name: I18n.get('_Bookmark_'),
 					sortable: true,
 					sortDirection: 'asc',
-					sortKey: 'isFavorite',
+					sortKey: 'bookmark',
 					template: this.bookmarkTemplate,
 					width: '10%',
 				},
@@ -774,45 +774,6 @@ export class LifecycleComponent implements OnDestroy {
 		this.atxMoreClicked = false;
 	}
 
-	 /**
-	  * Updates ACC bookmark
-	  * @param item ACC item
-	  * @returns ribbon
-	  */
-	 public setACCBookmark (item: ACC) {
-		this.status.loading.acc = true;
-		if (window.Cypress) {
-			window.accLoading = true;
-		}
-		const bookmarkParam: ACCBookmarkSchema = {
-			customerId: this.customerId,
-			isFavorite: !item.isFavorite,
-			pitstop: this.componentData.params.pitstop,
-			solution: this.componentData.params.solution,
-			usecase: this.componentData.params.usecase,
-		};
-		const params: RacetrackContentService.UpdateACCBookmarkParams = {
-			accId: item.accId,
-			bookmark: bookmarkParam,
-		};
-		this.contentService.updateACCBookmark(params)
-		.subscribe(() => {
-			item.isFavorite = !item.isFavorite;
-			this.status.loading.acc = false;
-			if (window.Cypress) {
-				window.accLoading = false;
-			}
-		},
-		err => {
-			this.status.loading.acc = false;
-			if (window.Cypress) {
-				window.accLoading = false;
-			}
-			this.logger.error(`lifecycle.component : setACCBookmark() :: Error  : (${
-				err.status}) ${err.message}`);
-		});
-	 }
-
 	/**
 	 * Selects the session
 	 * @param session the session we've clicked on
@@ -882,10 +843,10 @@ export class LifecycleComponent implements OnDestroy {
 		if (type === 'ACC') {
 			if (this.selectedFilterForACC === 'isBookmarked') {
 				this.selectedACC =
-				_.filter(this.componentData.acc.sessions, { isFavorite: true });
+				_.filter(this.componentData.acc.sessions, { bookmark: true });
 			} else if (this.selectedFilterForACC === 'hasNotBookmarked') {
 				this.selectedACC =
-				_.filter(this.componentData.acc.sessions, { isFavorite: false });
+				_.filter(this.componentData.acc.sessions, { bookmark: false });
 			} else {
 				this.selectedACC =
 					_.filter(this.componentData.acc.sessions,
@@ -1114,27 +1075,30 @@ export class LifecycleComponent implements OnDestroy {
 	 * @param item bookmark item object
 	 * @param inputCategory string of the category type
 	 */
-	 public updateBookmark (item: AtxSchema | SuccessPath, inputCategory: 'ATX' | 'SB' | 'PG') {
+	 public updateBookmark (item: ACC | AtxSchema | SuccessPath,
+			inputCategory: 'ACC' | 'ATX' | 'SB' | 'PG') {
 		let bookmark;
 		let id;
-		let lifecycleCategory: 'ATX' | 'SB';
+		let lifecycleCategory: 'ACC' | 'ATX' | 'SB';
 
 		// Product Guides has to be submitted as a Success Bytes bookmark.
 		if (inputCategory === 'PG') {
 			lifecycleCategory = 'SB';
 		} else {
-			lifecycleCategory = <'ATX' | 'SB'> inputCategory;
+			lifecycleCategory = <'ACC' | 'ATX' | 'SB'> inputCategory;
 		}
 
+		this.status.loading.bookmark = true;
+		bookmark = !_.get(item, 'bookmark');
+
 		switch (lifecycleCategory) {
+			case 'ACC':
+				id = _.get(item, 'accId');
+				break;
 			case 'ATX':
-				this.status.loading.atx = true;
-				bookmark = !_.get(item, 'bookmark');
 				id = _.get(item, 'atxId');
 				break;
 			case 'SB':
-				this.status.loading.success = true;
-				bookmark = !_.get(item, 'bookmark');
 				id = _.get(item, 'successByteId');
 				break;
 		}
@@ -1154,24 +1118,10 @@ export class LifecycleComponent implements OnDestroy {
 		this.contentService.updateBookmark(params)
 		.subscribe(() => {
 			item.bookmark = !item.bookmark;
-			switch (lifecycleCategory) {
-				case 'SB':
-					this.status.loading.success = false;
-					break;
-				case 'ATX':
-					this.status.loading.atx = false;
-					break;
-			}
+			this.status.loading.bookmark = false;
 		},
 		err => {
-			switch (lifecycleCategory) {
-				case 'SB':
-					this.status.loading.success = false;
-					break;
-				case 'ATX':
-					this.status.loading.atx = false;
-					break;
-			}
+			this.status.loading.bookmark = false;
 			this.logger.error(`lifecycle.component : updateBookmark() :: Error  : (${
 				err.status}) ${err.message}`);
 		});

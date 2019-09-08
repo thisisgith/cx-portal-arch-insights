@@ -1,6 +1,7 @@
 @import '~cisco-ui/src/scss/utilities/_variables.scss';
 
 $vibblue: #017cad;
+
 $accent-dark-blue: #227bb1;
 $text-default-color: #394454;
 $text-dark-gray: #5d656c;
@@ -10,11 +11,13 @@ $text-light-gray: #8e8e8e;
 $icon-light-gray: #bdc5cf;
 $icon-light-gray-2: #7f7f86;
 $icon-green: #6abf4b;
-$icon-light-gray-border: #c1d8e2;
-$button-teal-border: #95d1d6;
+$bookmark-white-outline-color: #c1d8e2;
+$button-outline-color: #95d1d6;
 $border-light-gray: #e5e5e5;
 $border-dark-blue: #00a2cb;
 $divider-color: #e1e1e1;
+$bookmark-blue-outline-color: #5ddfff;
+$midnight-blue: #0d274d;
 
 %ribbon {
 	position: absolute;
@@ -25,7 +28,7 @@ $divider-color: #e1e1e1;
 
 %ribbon__outline {
 	-webkit-text-stroke-width: 1px;
-	-webkit-text-stroke-color: $icon-light-gray-border;
+	-webkit-text-stroke-color: $bookmark-white-outline-color;
 
 	@extend %ribbon;
 }
@@ -54,59 +57,17 @@ $divider-color: #e1e1e1;
 	margin-left: -20px;
 }
 
+:host ::ng-deep .modal__body {
+	height: 100%;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+}
+
 :host ::ng-deep .modal__content {
 	position: fixed !important;
 	height: 90% !important;
 	width: 100% !important;
-}
-
-.scrollable-card-content {
-	position: fixed !important;
-	height: 100%;
-}
-
-.grid {
-	overflow-y: scroll !important;
-	height: 70%;
-	position: fixed;
-	width: 90%;
-}
-
-.atx {
-	&__header {
-		background: $indigo;
-	}
-
-	&__card {
-		padding: 0;
-		height: 525px;
-		box-shadow: -2px 0 transparent !important;
-
-		&__background {
-			background: $white;
-		}
-
-		&__header {
-			padding-right: 30px;
-			padding-left: 20px;
-		}
-
-		&__body {
-			padding-right: 30px;
-			padding-left: 20px;
-			height: 100px;
-			overflow: auto;
-		}
-
-		&__footer {
-			padding-right: 30px;
-			padding-left: 20px;
-		}
-	}
-
-	&__card:hover {
-		box-shadow: -2px 0 $vibblue !important;
-	}
 }
 
 .panel-border-top {
@@ -146,18 +107,12 @@ $divider-color: #e1e1e1;
 		height: 25px;
 		padding: 0 10px;
 		color: $dark-gray-2;
-		border: 1px solid $button-teal-border;
+		border: 1px solid $button-outline-color;
 		border-radius: 12px;
 		font-size: 12px;
 		letter-spacing: 0.1px;
 		line-height: 17px;
 		box-shadow: unset;
-
-		&:hover,
-		&:focus {
-			color: #fff;
-			border: 1px solid transparent;
-		}
 	}
 
 	.divider {
@@ -235,33 +190,6 @@ $divider-color: #e1e1e1;
 	padding-bottom: 4px;
 	border: 1px solid $border-light-gray;
 	box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.14);
-}
-
-.cx-lifecycle-card--recommended {
-	padding: 14px;
-
-	span.text-small {
-		margin-top: 14px;
-		margin-left: 2px;
-		color: $text-light-gray;
-		font-size: 10px !important;
-		line-height: 18px;
-	}
-
-	div.text-large {
-		padding-bottom: 16px;
-		color: $text-default-color;
-		font-size: 14px !important;
-		line-height: 20px !important;
-	}
-
-	button {
-		margin-top: 1px;
-	}
-
-	a button {
-		margin-top: 1px;
-	}
 }
 
 .cx-lifecycle-card--subheader {
@@ -364,9 +292,135 @@ $divider-color: #e1e1e1;
 	color: $text-dark-gray-3;
 }
 
+.card_footer_item button {
+	padding: 0 13px;
+	font-size: 13px;
+	color: $text-dark-gray;
+	box-shadow: inset 0 0 0 1px $button-outline-color;
+}
+
+.cx-lifecycle-card--recommended {
+	padding: 14px;
+
+	span.text-small {
+		margin-top: 14px;
+		margin-left: 2px;
+		color: $text-light-gray;
+		font-size: 10px !important;
+		line-height: 18px;
+	}
+
+	div.text-large {
+		padding-bottom: 16px;
+		color: $text-default-color;
+		font-size: 14px !important;
+		line-height: 20px !important;
+	}
+
+	.force-flex {
+		display: flex;
+		flex-wrap: wrap;
+
+		& > * {
+			flex-shrink: 0;
+		}
+
+		& > button,
+		& * button {
+			margin-top: 1px;
+		}
+	}
+}
+
+.card_footer_item button:hover,
+.card_footer_item button:active,
+.card_footer_item button:focus {
+	background-color: $button-outline-color;
+	box-shadow: 0 0 1px 1px $button-outline-color;
+}
+
+.card_footer_item {
+	width: 100%;
+}
+
+.card_footer_item .row {
+	align-items: center;
+}
+
+.card_footer_item span[class*="icon-"] {
+	font-size: 18px;
+}
+
 #accModal,
 #successModal {
 	background-color: $light-gray-5;
+}
+
+.small-panel {
+	padding: 0;
+	line-height: initial;
+}
+
+.atx {
+	&__header {
+		background: $indigo;
+	}
+
+	&__card {
+		display: flex;
+		flex-direction: column;
+		padding: 0;
+		height: 525px;
+		box-shadow: -2px 0 transparent !important;
+
+		&__background {
+			background: $white;
+		}
+
+		&__header {
+			padding-right: 30px;
+			padding-left: 20px;
+			color: $midnight-blue;
+		}
+
+		&__body {
+			padding-right: 30px;
+			padding-left: 20px;
+			height: 100px;
+			overflow: auto;
+			margin: 10px 0 20px 0;
+			font-size: 13px;
+			line-height: 17px;
+		}
+
+		&__label {
+			margin-top: 10px;
+
+			span {
+				font-size: 10px !important;
+			}
+		}
+
+		&__footer {
+			margin-top: auto;
+			width: 100%;
+
+			span:not([class*="icon-"]) {
+				color: $text-default-color;
+			}
+		}
+
+		&__status {
+			display: flex;
+			align-items: center;
+		}
+
+		&__actions {
+			padding: 15px;
+			display: flex;
+			justify-content: space-between;
+		}
+	}
 }
 
 .cx-lifecycle-card--recommended .icon-check-outline,
@@ -385,11 +439,6 @@ $divider-color: #e1e1e1;
 	}
 }
 
-.small-panel {
-	padding: 0;
-	line-height: initial;
-}
-
 .acc {
 	&__header {
 		background: transparent;
@@ -397,19 +446,36 @@ $divider-color: #e1e1e1;
 
 	&__card {
 		background: $white;
+		max-height: unset;
+		min-height: unset;
+		padding: 20px;
+		display: flex;
+		flex-direction: column;
+
+		&__header {
+			font-size: 11px !important;
+			line-height: 11px;
+		}
 	}
 
-	&__card:hover {
-		border-left: 2px solid $vibblue !important;
+	&__grid {
+		grid-template-rows: repeat(auto-fill, 250px) !important;
 	}
+}
+
+.acc__card .card__footer {
+	margin-top: auto;
 }
 
 .success__card__body {
 	height: 100px;
+	margin: 10px 0;
 }
 
 .success__card__title {
-	margin-bottom: 15px;
+	margin-bottom: 5px;
+	font-size: 16px;
+	color: $text-default-color;
 }
 
 .success__card__icons {
@@ -417,12 +483,18 @@ $divider-color: #e1e1e1;
 	flex-wrap: nowrap;
 	justify-content: left;
 
-	.type {
-		margin-right: 15px;
-	}
-
+	.type,
 	.duration {
-		margin-left: 15px;
+		margin-right: 15px;
+
+		span {
+			font-size: 11px;
+			color: $light-gray-1;
+
+			&[class*="icon-"] {
+				font-size: 14px;
+			}
+		}
 	}
 }
 
@@ -668,23 +740,36 @@ $divider-color: #e1e1e1;
 	width: 10%;
 }
 
-.card_footer_item {
-	width: 100%;
-	position: absolute;
-	bottom: 20px;
-	padding-right: 40px;
-}
-
 .ribbon {
 	&__blue,
 	&__blue__atx {
-		color: $indigo;
+		position: absolute;
+		right: 7px;
+		top: -1px;
+		color: $cisco-blue;
+		-webkit-text-stroke-width: 1px;
+		-webkit-text-stroke-color: $bookmark-blue-outline-color;
+	}
 
+	&__blue {
 		@extend %ribbon;
+
+		color: $cisco-blue;
+		-webkit-text-stroke-width: 1px;
+		-webkit-text-stroke-color: $bookmark-blue-outline-color;
 	}
 
 	&__white,
 	&__white__atx {
+		position: absolute;
+		right: 7px;
+		top: -1px;
+		color: $white;
+		-webkit-text-stroke-width: 1px;
+		-webkit-text-stroke-color: $bookmark-white-outline-color;
+	}
+
+	&__white {
 		color: $white;
 
 		@extend %ribbon__outline;
@@ -711,6 +796,12 @@ $divider-color: #e1e1e1;
 .alignRibbon {
 	position: absolute;
 	right: -9px;
+}
+
+.grid {
+	gap: 25px 25px;
+	grid-template-columns: repeat(auto-fill, 280px);
+	grid-template-rows: auto;
 }
 
 .grid.grid--4up,
@@ -1024,6 +1115,10 @@ tr.td-row td {
 	border-bottom-width: 1px;
 }
 
+tr.td-row::after {
+	display: none;
+}
+
 ::ng-deep .cui .table th {
 	margin-top: 10px;
 	border-right: transparent !important;
@@ -1086,7 +1181,9 @@ polygon {
 
 .lifecycle-viewall-modal {
 	min-height: 100%;
-	overflow-y: scroll;
+	overflow-y: hidden;
+	display: flex;
+	flex-direction: column;
 }
 
 // leave the following here, just in case we will use this style
@@ -1096,6 +1193,16 @@ polygon {
 // }
 
 /* Viewall List-view table styles */
+.list-view,
+.card-view {
+	height: 100%;
+	max-height: -webkit-fill-available;
+	overflow: scroll;
+}
+
+.list-view table {
+	margin-top: unset;
+}
 
 .bookmark-column .icon-bookmark {
 	font-size: 20px;
