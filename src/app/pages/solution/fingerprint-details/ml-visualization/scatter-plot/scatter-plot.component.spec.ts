@@ -10,9 +10,9 @@ import { ScatterPlotModule } from './scatter-plot.module';
 import { MicroMockModule } from '@cui-x-views/mock';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { Chart, HIGHCHARTS_MODULES } from 'angular-highcharts';
+import { ChartModule, Chart, HIGHCHARTS_MODULES } from 'angular-highcharts';
 import * as Highcharts from 'highcharts/highcharts';
-import * as more from 'highcharts/highcharts-more';
+import * as more from 'highcharts/highcharts-more.src';
 import * as boost from 'highcharts/modules/boost-canvas';
 import * as drag from 'highcharts/modules/draggable-points';
 import { By } from '@angular/platform-browser';
@@ -28,11 +28,10 @@ describe('ScatterPlotComponent', () => {
 				HttpClientTestingModule,
 				MicroMockModule,
 				RouterTestingModule,
+				ChartModule,
 			],
 			providers: [
-				{ provide: HIGHCHARTS_MODULES, useFactory: () => [boost] },
-				{ provide: HIGHCHARTS_MODULES, useFactory: () => [drag] },
-				{ provide: HIGHCHARTS_MODULES, useFactory: () => [more] },
+				{ provide: HIGHCHARTS_MODULES, useFactory: () => [boost, drag, more] },
 			],
 		})
 		.compileComponents();
@@ -41,8 +40,6 @@ describe('ScatterPlotComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(ScatterPlotComponent);
 		component = fixture.componentInstance;
-		component.Highcharts = Highcharts;
-		component.buildGraph();
 		fixture.detectChanges();
 	});
 
@@ -109,12 +106,60 @@ describe('ScatterPlotComponent', () => {
 	});
 
 	it('should select the deviceId in the scatter plot', () => {
+		component.dataPoints = [
+			{
+				position: {
+					x: 0.4990452157572191,
+					y: -0.06881163915251692,
+					z: -0.009611822430886645,
+				},
+				cluster: 5,
+				devices: [
+					{
+						deviceInfo: {
+							deviceId: 'NA,FOX1306GFKH,WS-C4506-E,NA',
+							productId: 'WS-C4506-E',
+						},
+						deviceName: 'C4506-E',
+					},
+				],
+				id: 0,
+				mass: 1,
+				radius: 1,
+				x: 0.4990452157572191,
+				y: -0.06881163915251692,
+				z: -0.009611822430886645,
+			},
+			{
+				position: {
+					x: -0.6855702541560552,
+					y: 4.192143103082259,
+					z: 1.778192935721556,
+				},
+				cluster: 5,
+				devices: [
+					{
+						deviceInfo: {
+							deviceId: 'NA,FOX1335GRHG,WS-C4506-E,NA',
+							productId: 'WS-C4506-E',
+						},
+						deviceName: 'c4500',
+					},
+				],
+				id: 1,
+				mass: 1,
+				radius: 1,
+				x: -0.6855702541560552,
+				y: 4.192143103082259,
+				z: 1.778192935721556,
+			},
+		];
 		component.buildGraph();
 		spyOn(component, 'updateSelectedDeviceBySearch');
 		component.ngOnChanges({
 			dataPoints: null,
 			selectedDevice: {
-				currentValue: 'TestDevice',
+				currentValue: 'NA,FOX1306GFKH,WS-C4506-E,NA',
 				firstChange: true,
 				isFirstChange: () => true,
 				previousValue: null,
@@ -137,14 +182,63 @@ describe('ScatterPlotComponent', () => {
 	}));
 
 	it('should select Rotate mode in Scatter Plot', fakeAsync(() => {
+		component.dataPoints = [
+			{
+				position: {
+					x: 0.4990452157572191,
+					y: -0.06881163915251692,
+					z: -0.009611822430886645,
+				},
+				cluster: 5,
+				devices: [
+					{
+						deviceInfo: {
+							deviceId: 'NA,FOX1306GFKH,WS-C4506-E,NA',
+							productId: 'WS-C4506-E',
+						},
+						deviceName: 'C4506-E',
+					},
+				],
+				id: 0,
+				mass: 1,
+				radius: 1,
+				x: 0.4990452157572191,
+				y: -0.06881163915251692,
+				z: -0.009611822430886645,
+			},
+			{
+				position: {
+					x: -0.6855702541560552,
+					y: 4.192143103082259,
+					z: 1.778192935721556,
+				},
+				cluster: 5,
+				devices: [
+					{
+						deviceInfo: {
+							deviceId: 'NA,FOX1335GRHG,WS-C4506-E,NA',
+							productId: 'WS-C4506-E',
+						},
+						deviceName: 'c4500',
+					},
+				],
+				id: 1,
+				mass: 1,
+				radius: 1,
+				x: -0.6855702541560552,
+				y: 4.192143103082259,
+				z: 1.778192935721556,
+			},
+		];
+		component.buildGraph();
 		spyOn(component, 'changeChartNavigation');
 		const button = fixture.debugElement.query(
 			By.css('[data-auto-id="RotateChart"]'),
 		);
 		button.nativeElement.click();
 		tick();
-		expect(component.chart.ref.options.chart.zoomType)
-		.toBeUndefined();
+		expect(component.changeChartNavigation)
+		.toHaveBeenCalledTimes(1);
 	}));
 
 });

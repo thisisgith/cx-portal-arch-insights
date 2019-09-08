@@ -233,11 +233,11 @@ export class MlVisualizationComponent implements OnInit, OnChanges, OnDestroy {
 	 * resetFilterForm
 	 */
 	public resetFilterForm () {
-		this.searchedDevice = null;
-		this.selectedDevice1 = null;
-		this.selectedDevice2 = null;
-		this.listOfDevices1 = null;
-		this.listOfDevices2 = null;
+		this.searchedDevice = '';
+		this.selectedDevice1 = '';
+		this.selectedDevice2 = '';
+		this.listOfDevices1 = [];
+		this.listOfDevices2 = [];
 	}
 
 	/**

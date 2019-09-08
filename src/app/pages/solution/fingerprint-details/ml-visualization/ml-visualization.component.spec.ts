@@ -339,14 +339,14 @@ describe('MlVisualizationComponent', () => {
 	it('should reset all filter values', () => {
 		component.resetFilterForm();
 		expect(component.searchedDevice)
-		.toBeNull();
+		.toBeFalsy();
 		expect(component.selectedDevice1)
-		.toBeNull();
+		.toBeFalsy();
 		expect(component.selectedDevice2)
-		.toBeNull();
-		expect(component.listOfDevices1)
-		.toBeNull();
-		expect(component.listOfDevices2)
-		.toBeNull();
+		.toBeFalsy();
+		expect(component.listOfDevices1.length)
+		.toEqual(0);
+		expect(component.listOfDevices2.length)
+		.toEqual(0);
 	});
 });
