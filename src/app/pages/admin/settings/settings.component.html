@@ -18,7 +18,11 @@
 					data-auto-id="settings.system.status.panel">
 					<div class="col-4">
 						<div [innerText]="'_CXCollector_' | i18n"></div>
-						<!-- <div class="text-small">Last data sent 6 min ago</div> -->
+						<div
+							*ngIf="data.lastUploadDate"
+							class="text-small"
+							[innerText]="'_LastDataSent_' | i18n:(data.lastUploadDate | fromNow)">
+						</div>
 					</div>
 					<div class="col-2" [innerText]="data.ieVersion || ''"></div>
 					<div class="col-3">

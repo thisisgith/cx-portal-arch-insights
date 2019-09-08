@@ -24,7 +24,6 @@
 		[ngClass]="{'disabled': !details?.advisory?.url}">
 	</a>
 
-	<!-- TODO: Implement when we know how to open a case against a field notice -->
 	<button *ngIf="impactedAssets?.length || selectedAsset"
 		class="text-capitalize btn btn--secondary btn--small"
 		[innerText]="'_OpenCase_' | i18n"

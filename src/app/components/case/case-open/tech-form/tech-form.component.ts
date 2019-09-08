@@ -217,12 +217,19 @@ export class TechFormComponent implements OnInit, OnChanges, OnDestroy {
 						_.includes(validCodes, activity.problemCode),
 					);
 			}
-			const problemAreasGrouped = _.groupBy(
+			let problemAreasGrouped = _.groupBy(
 				_.get(result, ['problemArea', 'customerActivities'], []),
 				'customerActivity',
 			);
-			this.problemAreaOptions = Object.values(problemAreasGrouped);
-			this.problemGroups = Object.keys(problemAreasGrouped);
+			/* Sort problem codes alphabetically for each group */
+			problemAreasGrouped =
+				_.mapValues(problemAreasGrouped, group => _.sortBy(group, 'problemCodeName'));
+			/* Sort groups by Customer Activity alphabetically */
+			this.problemAreaOptions =
+				_.sortBy(Object.values(problemAreasGrouped), o =>
+					_.get(o, [0, 'customerActivity'], ''));
+			this.problemGroups = Object.keys(problemAreasGrouped)
+				.sort();
 		});
 		// Listen for "subTech" to change, update problem areas.
 		this.form.controls.subtech.valueChanges.pipe(

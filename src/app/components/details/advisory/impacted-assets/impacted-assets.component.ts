@@ -26,7 +26,7 @@ import { of } from 'rxjs';
 import { CuiTableOptions, CuiTableColumnOption } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { AdvisoryType } from '@interfaces';
-import { getProductTypeImage } from '@classes';
+import { getProductTypeImage, getProductTypeTitle } from '@classes';
 
 /**
  * The interface for impacted asset ids utilizing managedNeId
@@ -69,6 +69,7 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 		elements?: InventoryService.GetNetworkElementsParams;
 	};
 	public getProductIcon = getProductTypeImage;
+	public getProductTitle = getProductTypeTitle;
 
 	constructor (
 		private logger: LogService,
@@ -171,6 +172,7 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 					sortDirection: 'asc',
 					sorting: true,
 					template: this.deviceColumn,
+					width: '100px',
 				},
 				{
 					key: 'ipAddress',

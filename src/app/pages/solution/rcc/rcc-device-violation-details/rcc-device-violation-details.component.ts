@@ -111,6 +111,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 	public loadData () {
 		this.initialLoading = true;
 		this.apiNoData = true;
+		this.errorResult = false;
 		forkJoin(
 			this.rccTrackService
 				.getRccPolicyRuleDetailsData(this.queryParamMapObj),
@@ -269,6 +270,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 	 */
 	public onSelection () {
 		this.selectionLoading = true;
+		this.errorResult = true;
 		const newQueryParamMapObj = { violationCount:
 			this.policyViolationInfo.violationcount, ...this.queryParamMapObj };
 		_.each(this.selectionObj,
@@ -284,10 +286,12 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 			this.tableConfig.tableOffset = 0;
 			this.impactedDeviceDetails = violationDetails.data.impactedAssets;
 			this.selectionLoading = false;
+			this.errorResult = false;
 			this.tableConfig.totalItems = this.impactedDeviceDetails.length;
 			this.impactedDeviceTableOptions = this.buildImpactedDeviceTableOptions();
 		},
 		error => {
+			this.errorResult = true;
 			this.selectionLoading = false;
 			this.logger.error(
 				'RccDeviceViolationDetailsComponent : onSelection() ' +

@@ -4,7 +4,6 @@ export { AtxSchema } from './models/atx-schema';
 export { AtxSessionSchema } from './models/atx-session-schema';
 export { ACCResponse } from './models/accresponse';
 export { ACC } from './models/acc';
-export { ACCBookmarkSchema } from './models/accbookmark-schema';
 export { ACCSessionAttendees } from './models/accsession-attendees';
 export { ACCRequestSessionSchema } from './models/accrequest-session-schema';
 export { ACCUserInfoSchema } from './models/accuser-info-schema';
