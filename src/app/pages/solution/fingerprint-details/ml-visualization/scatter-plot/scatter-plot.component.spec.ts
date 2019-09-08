@@ -11,13 +11,11 @@ import { MicroMockModule } from '@cui-x-views/mock';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ChartModule, Chart, HIGHCHARTS_MODULES } from 'angular-highcharts';
-import * as Highcharts from 'highcharts/highcharts';
-import * as more from 'highcharts/highcharts-more.src';
 import * as boost from 'highcharts/modules/boost-canvas';
 import * as drag from 'highcharts/modules/draggable-points';
 import { By } from '@angular/platform-browser';
 
-describe('ScatterPlotComponent', () => {
+fdescribe('ScatterPlotComponent', () => {
 	let component: ScatterPlotComponent;
 	let fixture: ComponentFixture<ScatterPlotComponent>;
 
@@ -31,7 +29,7 @@ describe('ScatterPlotComponent', () => {
 				ChartModule,
 			],
 			providers: [
-				{ provide: HIGHCHARTS_MODULES, useFactory: () => [boost, drag, more] },
+				{ provide: HIGHCHARTS_MODULES, useFactory: () => [boost, drag] },
 			],
 		})
 		.compileComponents();
@@ -44,9 +42,62 @@ describe('ScatterPlotComponent', () => {
 	});
 
 	it('should create', () => {
+		const scatterPlotDevices = [
+			{
+				position: {
+					x: 0.4990452157572191,
+					y: -0.06881163915251692,
+					z: -0.009611822430886645,
+				},
+				cluster: 5,
+				devices: [
+					{
+						deviceInfo: {
+							deviceId: 'NA,FOX1306GFKH,WS-C4506-E,NA',
+							productId: 'WS-C4506-E',
+						},
+						deviceName: 'C4506-E',
+					},
+				],
+				id: 0,
+				mass: 1,
+				radius: 1,
+				x: 0.4990452157572191,
+				y: -0.06881163915251692,
+				z: -0.009611822430886645,
+			},
+			{
+				position: {
+					x: -0.6855702541560552,
+					y: 4.192143103082259,
+					z: 1.778192935721556,
+				},
+				cluster: 5,
+				devices: [
+					{
+						deviceInfo: {
+							deviceId: 'NA,FOX1335GRHG,WS-C4506-E,NA',
+							productId: 'WS-C4506-E',
+						},
+						deviceName: 'c4500',
+					},
+				],
+				id: 1,
+				mass: 1,
+				radius: 1,
+				x: -0.6855702541560552,
+				y: 4.192143103082259,
+				z: 1.778192935721556,
+			},
+		];
+		component.chart = new Chart();
 		component.ngOnChanges({
-			dataPoints: null,
-			selectedDevice: null,
+			dataPoints: {
+				currentValue: scatterPlotDevices,
+				firstChange: true,
+				isFirstChange: () => true,
+				previousValue: null,
+			},
 		});
 		expect(component)
 		.toBeTruthy();
@@ -56,28 +107,52 @@ describe('ScatterPlotComponent', () => {
 		spyOn(component, 'buildGraph');
 		const scatterPlotDevices = [
 			{
-				deviceId: 'NA',
-				deviceName: 'Device_6_0_2_222',
-				featureProfilePCA1: '0.27194448313748254',
-				featureProfilePCA2: '-0.6677443614955769',
-				featureProfilePCA3: '-0.26921527251480576',
-				featureProfileKcluster: 0,
-				fingerprintPCA1: '-0.6536891710909882',
-				fingerprintPCA2: '0.4201990688658936',
-				fingerprintPCA3: '-0.6212148577636525',
-				lemmaFeaturePCA1: '0.12992399064088117',
-				lemmaFeaturePCA2: '0.03928785789397787',
-				lemmaFeaturePCA3: '-0.268887363699741',
-				lemmaFeatureKcluster: 0,
-				fingerprintKcluster: 0,
-				featureProfileKclusterCrashrate: '11.58',
-				lemmaFeatureKclusterCrashrate: '5.9',
-				fingerprintKclusterCrashrate: '0.05',
-				productFamily: 'Cisco_Catalyst_9',
-				productId: 'C9407R',
+				position: {
+					x: 0.4990452157572191,
+					y: -0.06881163915251692,
+					z: -0.009611822430886645,
+				},
+				cluster: 5,
+				devices: [
+					{
+						deviceInfo: {
+							deviceId: 'NA,FOX1306GFKH,WS-C4506-E,NA',
+							productId: 'WS-C4506-E',
+						},
+						deviceName: 'C4506-E',
+					},
+				],
+				id: 0,
+				mass: 1,
+				radius: 1,
+				x: 0.4990452157572191,
+				y: -0.06881163915251692,
+				z: -0.009611822430886645,
+			},
+			{
+				position: {
+					x: -0.6855702541560552,
+					y: 4.192143103082259,
+					z: 1.778192935721556,
+				},
+				cluster: 5,
+				devices: [
+					{
+						deviceInfo: {
+							deviceId: 'NA,FOX1335GRHG,WS-C4506-E,NA',
+							productId: 'WS-C4506-E',
+						},
+						deviceName: 'c4500',
+					},
+				],
+				id: 1,
+				mass: 1,
+				radius: 1,
+				x: -0.6855702541560552,
+				y: 4.192143103082259,
+				z: 1.778192935721556,
 			},
 		];
-
 		component.chart = new Chart();
 		component.ngOnChanges({
 			dataPoints: {
@@ -94,6 +169,55 @@ describe('ScatterPlotComponent', () => {
 	});
 
 	it('should not build graph on ngOnChanges', () => {
+		const scatterPlotDevices = [
+			{
+				position: {
+					x: 0.4990452157572191,
+					y: -0.06881163915251692,
+					z: -0.009611822430886645,
+				},
+				cluster: 5,
+				devices: [
+					{
+						deviceInfo: {
+							deviceId: 'NA,FOX1306GFKH,WS-C4506-E,NA',
+							productId: 'WS-C4506-E',
+						},
+						deviceName: 'C4506-E',
+					},
+				],
+				id: 0,
+				mass: 1,
+				radius: 1,
+				x: 0.4990452157572191,
+				y: -0.06881163915251692,
+				z: -0.009611822430886645,
+			},
+			{
+				position: {
+					x: -0.6855702541560552,
+					y: 4.192143103082259,
+					z: 1.778192935721556,
+				},
+				cluster: 5,
+				devices: [
+					{
+						deviceInfo: {
+							deviceId: 'NA,FOX1335GRHG,WS-C4506-E,NA',
+							productId: 'WS-C4506-E',
+						},
+						deviceName: 'c4500',
+					},
+				],
+				id: 1,
+				mass: 1,
+				radius: 1,
+				x: -0.6855702541560552,
+				y: 4.192143103082259,
+				z: 1.778192935721556,
+			},
+		];
+		component.dataPoints = scatterPlotDevices;
 		spyOn(component, 'buildGraph');
 		component.ngOnChanges({
 			dataPoints: null,
