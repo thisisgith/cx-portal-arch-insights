@@ -582,6 +582,7 @@ export class RccComponent implements OnInit, OnDestroy {
 			? this.violationGridObj.search = searchInput
 			: this.assetGridObj.searchParam = searchInput;
 		this.prevSearchText = searchInput;
+		this.searchInput = searchInput;
 		if (filter.key === 'policyGroup') {
 			this.policyGroup = sub.filter;
 			if (triggeredFromGraph) {
@@ -705,12 +706,12 @@ export class RccComponent implements OnInit, OnDestroy {
 			return;
 		}
 		if (type === 'clear' || (this.searchForm.valid &&
-			(event.keyCode === 8 || (!_.isEmpty(this.searchForm.value.search) &&
+			(event.keyCode === 8 || (!_.isEmpty(searchInput) &&
 			(event && event.keyCode && event.keyCode === 13)
-			|| (!_.isEmpty(this.searchForm.value.search) && type === 'search'))))) {
+			|| (!_.isEmpty(searchInput) && type === 'search'))))) {
 			this.errorPolicyView = false;
 			this.invalidSearchInput = false;
-			this.prevSearchText = this.searchForm.value.search.trim();
+			this.prevSearchText = searchInput;
 			this.searchInput = searchInput;
 			this.tableConfig.tableOffset = 0;
 			this.tableConfig.totalItems = 0;
