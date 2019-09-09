@@ -2,21 +2,21 @@
 	<div class="col-md-12">
 		<div class="row">
 			<div class="col-md-2 filter__selected">
-				<div class="row">
-					<div class="col-md-12 panel flex-center flex-fill filter assetsCount base-margin-top"
+				<div class="row base-margin-left">
+					<div class="half-margin-bottom qtr-margin-top base-margin-left cursor"
 						data-auto-id="selectedView" (click)="selectedView('violation')" [ngClass]="{'text-primary': !isAssetView}">
-						<div class="text-large flex-center dbl-padding-left dbl-padding-right" [innerHTML]="policyViolationsTotalCount | number"></div>
+						<h2 class="qtr-margin-bottom text-center assetsCount" [innerHTML]="policyViolationsTotalCount | number"></h2>
 						<div class="text-medium flex-center" [innerText]="'_RccViolations_' | i18n | titlecase"></div>
 					</div>
-					<div data-auto-id="1" class="col-md-12 panel flex-center flex-fill filter assetsCount"
-						(click)="selectedView('asset')" [ngClass]="{'text-primary': isAssetView}">
-						<div class="text-large flex-center dbl-padding-left dbl-padding-right" [innerHTML]="assetsTotalCount | number"></div>
+					<div class="half-margin-bottom qtr-margin-top cursor"
+						data-auto-id="1" (click)="selectedView('asset')" [ngClass]="{'text-primary': isAssetView}">
+						<h2 class="dbl-margin-left dbl-margin-right qtr-margin-bottom text-center assetsCount" [innerHTML]="assetsTotalCount | number"></h2>
 						<div class="text-medium flex-center" [innerText]= "'_RccAssetWithViolations_' | i18n"></div>
 					</div>
 				</div>
 			</div>
 			<div class="col-md-10 no-padding">
-				<div class="col-md-8 seperator-line half-margin-left">
+				<div class="col-md-7 seperator-line half-margin-left">
 					<div class="flex flex-fill flex-fluid">
 						<ng-container *ngFor="let filter of filters">
 							<div attr.id="RccSelectVisualFilter-{{ filter?.key }}"
@@ -175,7 +175,7 @@
 		</div>
 	</ng-template>
 	<!-- App Details 360 slide-out -->
-	<details-panel [hidden]="!selectedViolationModal" [fullscreen]="slideinFullScreen.violationFullScreen">
+	<details-panel [hidden]="!selectedViolationModal" [fullscreen]="slideinFullScreen.violationFullScreen" [minWidth]="'900px'">
 		<details-panel-header (close)="onPanelClose('selectedViolationModal');slideinFullScreen.violationFullScreen = false" [(fullscreen)]="slideinFullScreen.violationFullScreen"
 			[fullscreenToggle]="true">
 			<div detailsPanelTitle>
@@ -227,7 +227,7 @@
 		</app-rcc-device-violation-details>
 	</details-panel>
 
-	<details-panel [hidden]="!selectedAssetModal" [fullscreen]="slideinFullScreen.assetsFullScreen">
+	<details-panel [hidden]="!selectedAssetModal" [fullscreen]="slideinFullScreen.assetsFullScreen" [minWidth]="'900px'">
 		<details-panel-header (close)="onPanelClose('selectedAssetModal');slideinFullScreen.assetsFullScreen = false" [(fullscreen)]="slideinFullScreen.assetsFullScreen"
 			[fullscreenToggle]="true">
 			<div detailsPanelTitle>

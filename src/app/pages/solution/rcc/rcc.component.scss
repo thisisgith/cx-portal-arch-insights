@@ -42,10 +42,7 @@
 }
 
 .assetsCount {
-	display: flex !important;
-	flex-direction: column;
-	font-size: small;
-	cursor: pointer;
+	font-weight: 500;
 }
 
 .assetsCount:focus {

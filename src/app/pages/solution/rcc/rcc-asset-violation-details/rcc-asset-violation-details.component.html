@@ -39,7 +39,7 @@
 	</div>
 	
 	<div class="row base-padding-top half-padding-left responsive-table" *ngIf="(!isLoading && totalItems > 0); else commonMsgTemplate">
-		<cui-table class="table table--lined table--wrapped" [options]="rccAssetPolicyTableOptions"
+		<cui-table class="table table--lined table--wrapped table--fixed" [options]="rccAssetPolicyTableOptions"
 			[data]="rccAssetPolicyTableData" [limit]="tableLimit" [offset]="tableOffset"
 			(onSortingChanged)="onTableSortingChanged()" >
 		</cui-table>
@@ -84,7 +84,7 @@
 		</div>
 	</div>
 	<div class="base-margin-top text-small responsive-table">
-		<cui-table class="table table--lined " [options]="rccMessageTableOptions" [data]="item?.conditionList"
+		<cui-table class="table table--lined table--fixed" [options]="rccMessageTableOptions" [data]="item?.conditionList"
 			[limit]="tableLimit">
 		</cui-table>
 	</div>

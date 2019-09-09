@@ -75,7 +75,7 @@
 	</div>
 	<div class="row base-padding-top half-padding-left responsive-table"
 		*ngIf="(!selectionLoading  && tableConfig?.totalItems > 0); else commonMsgTemplate;">
-		<cui-table [options]="impactedDeviceTableOptions" 
+		<cui-table class="table table--fixed" [options]="impactedDeviceTableOptions" 
 			[data]="impactedDeviceDetails"
 			[offset]="tableConfig?.tableOffset" 
 			(onSortingChanged)="onTableSortingChanged()" 
@@ -92,7 +92,7 @@
 </div>
 <ng-template #policyRowWellTemplate let-item="item" class="half-margin-left">
 	<div class="base-margin-top text-small responsive-table">
-		<cui-table class="table table--lined " 
+		<cui-table class="table table--lined table--fixed" 
 			[options]="rccViolationInfoTableOptions"
 			[data]="item?.violations">
 		</cui-table>
