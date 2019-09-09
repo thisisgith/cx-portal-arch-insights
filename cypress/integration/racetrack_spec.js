@@ -16,6 +16,17 @@ const allManualCheckableCNAPitstopActions = Cypress._.find(
 	pitstop => pitstop.name === allManualCheckableCNATech.currentPitstop
 ).pitstopActions;
 
+const defaultScenario = infoMock.getScenario('GET',
+	'(Racetrack) IBN-Assurance-Onboard');
+const defaultCheckableItems = defaultScenario.response.body.solutions[0];
+// Abbrevieating Campus Network Assurance to CNA
+const defaultCheckableCNATech = Cypress._.find(defaultCheckableItems.technologies,
+	tech => tech.name === 'Campus Network Assurance');
+const defaultCurrentPitstopActions = Cypress._.find(
+	defaultCheckableCNATech.pitstops,
+	pitstop => pitstop.name === defaultCheckableCNATech.currentPitstop
+).pitstopActions;
+
 const actionMock = new MockService('ActionScenarios');
 
 describe('Racetrack Content', () => {
@@ -51,7 +62,7 @@ describe('Racetrack Content', () => {
 		'optimize',
 	];
 	stages.forEach(stageName => {
-		context.skip(`Click to preview "${stageName}" Stage`, () => {
+		context(`Click to preview "${stageName}" Stage`, () => {
 			before(() => {
 				// Click the stage circle to move the car there
 				// When scaling, points can end up "behind" the car or the secrettrack, so we need to
@@ -62,7 +73,8 @@ describe('Racetrack Content', () => {
 				cy.wait('progressMovingEnd', { eventObj: 'racetrackEvents' });
 			});
 
-			it('Progress Position', () => {
+			// TODO: This test "works", but introduces flake, so stability needs investigating
+			it.skip('Progress Position', () => {
 				cy.get('#progress').then(progressPath => {
 					const progressStrokeDasharray = progressPath.attr('stroke-dasharray');
 					const expectedStrokeDasharray = racetrackHelper
@@ -71,10 +83,43 @@ describe('Racetrack Content', () => {
 					expect(progressStrokeDasharray).eq(expectedStrokeDasharray);
 				});
 			});
+
+			it('pitstopActions checlist should update with preview', () => {
+				const previewPitstopActions = Cypress._.find(
+					defaultCheckableCNATech.pitstops,
+					pitstop => pitstop.name === stageName.charAt(0).toUpperCase() + stageName.slice(1)
+				).pitstopActions;
+
+				previewPitstopActions.forEach((action, index) => {
+					cy.getByAutoId('pitstopAction')
+						.eq(index)
+						.should('contain', action.name);
+				});
+			});
+
+			it('PBC-600: pitstopActions title/percentage should remain at currentPitstop', () => {
+				cy.getByAutoId('CurrentPitstopTitle')
+					.should('have.text', defaultCheckableCNATech.currentPitstop);
+
+				const numCompleted = Cypress._.filter(
+					defaultCurrentPitstopActions, action => action.isComplete === true
+				).length;
+				const expectedPercent = Math.floor(
+					(numCompleted / defaultCurrentPitstopActions.length) * 100
+				);
+				if (expectedPercent === 0) {
+					cy.getByAutoId('CompletedActionsPercent')
+						.should('contain', 'start');
+				} else {
+					cy.getByAutoId('CompletedActionsPercent')
+						.should('contain', `${expectedPercent}%`);
+				}
+			});
 		});
 	});
 
 	stages.forEach(stageName => {
+		// TODO: This test "works", but introduces flake, so stability needs investigating
 		context.skip(`Car Position - currentPitstop: "${stageName}"`, () => {
 			let expectedCoords;
 			let expectedRotations;
@@ -319,35 +364,6 @@ describe('Racetrack Content', () => {
 				cy.wrap($checkbox).should('have.class', 'disabled');
 			});
 		});
-
-		it('Pitstop actions should not be checkable if manualCheckAllowed is false', () => {
-			// Switch mocks and refresh the checkboxes
-			infoMock.enable('(Racetrack) IBN-Assurance-Onboard-allNotManualCheckable');
-			cy.loadApp();
-			cy.waitForAppLoading();
-
-			cy.getByAutoId('pitstopCheckboxLabel').each($checkbox => {
-				cy.wrap($checkbox).should('have.class', 'disabled');
-			});
-		});
-
-		it('Pitstop actions should be auto-checked if isCompleteAuto is true', () => {
-			// Switch mocks and refresh the checkboxes
-			infoMock.enable('(Racetrack) IBN-Assurance-Onboard-allAutoCompleted');
-			cy.loadApp();
-			cy.waitForAppLoading();
-
-			cy.getByAutoId('pitstopCheckboxLabel').each($checkbox => {
-				cy.wrap($checkbox).should('have.class', 'disabled');
-			});
-
-			// Addtionally, all auto-completed items should have an auto icon
-			cy.getByAutoId('actionlink').each($checkboxLink => {
-				cy.wrap($checkboxLink).within(() => {
-					cy.getByAutoId('pitstopCheckboxAutoIcon').should('exist');
-				});
-			});
-		});
 	});
 
 	describe('PBC-124: Lifecycle: Pitstop percentage completed', () => {
@@ -389,7 +405,7 @@ describe('Racetrack Content', () => {
 			});
 		});
 
-		it('Should show "Start" when 0% complete, instead of 0%', () => {
+		it('Should show "start" when 0% complete, instead of 0%', () => {
 			// Switch to a mock dataset with no completed items and refresh the data
 			infoMock.enable('(Racetrack) IBN-Assurance-Use');
 			// Unfortunately for Cypress, the racetrack panel only reloads data on page load...
@@ -397,7 +413,18 @@ describe('Racetrack Content', () => {
 			cy.waitForAppLoading();
 
 			cy.getByAutoId('CompletedActionsPercent')
-				.should('contain', 'Start');
+				.should('contain', 'start');
+		});
+
+		it('PBC-600: Should show "start" when there are no checklist items', () => {
+			// Switch to a mock dataset with no completed items and refresh the data
+			infoMock.enable('(Racetrack) IBN-Assurance-Onboard-noPitstopActions');
+			// Unfortunately for Cypress, the racetrack panel only reloads data on page load...
+			cy.loadApp();
+			cy.waitForAppLoading();
+
+			cy.getByAutoId('CompletedActionsPercent')
+				.should('contain', 'start');
 		});
 	});
 });

@@ -1,0 +1,151 @@
+<div class="flex-stretch">
+	<div class="flex half-padding dbl-padding-top">
+		<div class="col">
+			<cui-select
+				*ngIf="!loadingProductFamilies; else loadingTemplate"
+				[items]="productFamiliesList"
+				class="text-small text-dkgray-4"
+				[(ngModel)]="selectedProductFamily"
+				[label]="'_ProductFamily_' | i18n"
+				[required]="true"
+				[empty]="true"
+				[compressed]="true"
+				optionsKey="productFamily"
+				optionsValue="productFamily"
+				(ngModelChange)="updateMlVisualizationDevices($event)"
+				data-auto-id="ProductFamiliesList"
+			>
+			</cui-select>
+		</div>
+		<div class="col">
+			<cui-select
+				*ngIf="!loadingProductFamilies; else loadingTemplate"
+				[items]="listOfModes"
+				class="text-small text-dkgray-4"
+				[(ngModel)]="selectedMode"
+				[label]="'_CP_Mode_' | i18n"
+				[required]="true"
+				[empty]="true"
+				[compressed]="true"
+				(ngModelChange)="updateScatterPlotDataPoints($event)"
+				data-auto-id="ListOfModes"
+			>
+			</cui-select>
+		</div>
+	</div>
+	<div class="flex panel--bordered-top panel--bordered-bottom">
+		<div class="col-3 panel--bordered-right base-padding-top">
+			<div
+				class="row text-bold text-uppercase text-small"
+				[innerText]="'_CP_Filter_' | i18n"
+			></div>
+			<div class="row half-padding-top">
+				<div [innerText]="'_CP_AssetGroupToAssign_' | i18n"></div>
+				<form [formGroup]="requestForm">
+					<div class="form-group half-padding-top">
+						<label class="radio">
+							<input
+								type="radio"
+								formControlName="selectedGroup"
+								value="group1"
+								required
+								data-auto-id="SelectedGroup"
+							/>
+							<span class="radio__input"></span>
+							<span
+								class="radio__label hidden-xs"
+								[innerText]="'_CP_Group1_' | i18n"
+							></span>
+						</label>
+					</div>
+					<div class="form-group half-padding-top">
+						<label class="radio">
+							<input
+								type="radio"
+								formControlName="selectedGroup"
+								value="group2"
+								required
+								data-auto-id="SelectedGroup"
+							/>
+							<span class="radio__input"></span>
+							<span
+								class="radio__label hidden-xs"
+								[innerText]="'_CP_Group2_' | i18n"
+							></span>
+						</label>
+					</div>
+				</form>
+			</div>
+			<div class="row base-padding-top">
+				<cui-select
+					[items]="deviceSearchList"
+					[(ngModel)]="searchedDevice"
+					[label]="'_CP_Search_Asset_' | i18n"
+					[required]="false"
+					[empty]="true"
+					[compressed]="true"
+					optionsKey="deviceName"
+					optionsValue="deviceId"
+					data-auto-id="SearchdDevice"
+					(ngModelChange)="updateSelectedDeviceBySearch($event)"
+				>
+				</cui-select>
+			</div>
+			<div class="row base-padding-top">
+				<cui-select
+					[items]="listOfDevices1"
+					[(ngModel)]="selectedDevice1"
+					[label]="'_CP_AssetGroup1_' | i18n"
+					[required]="true"
+					[empty]="true"
+					[compressed]="true"
+					optionsKey="deviceName"
+					optionsValue="deviceInfo"
+					data-auto-id="SelectedDevice1"
+				>
+				</cui-select>
+			</div>
+			<div class="row half-padding-top">
+				<cui-select
+					[items]="listOfDevices2"
+					[(ngModel)]="selectedDevice2"
+					[label]="'_CP_AssetGroup2_' | i18n"
+					[required]="true"
+					[empty]="true"
+					[compressed]="true"
+					optionsKey="deviceName"
+					optionsValue="deviceInfo"
+					data-auto-id="SelectedDevice2"
+				>
+				</cui-select>
+			</div>
+			<div class="row base-padding-top text-center">
+				<button
+					data-auto-id="CompareButton"
+					class="btn btn--small"
+					innerText="Compare"
+					(click)="showDeviceComparison($event)"
+					[innerText]="'_CP_Compare_' | i18n"
+				></button>
+			</div>
+		</div>
+		<div class="col-9" *ngIf="!seriesDataLoading; else loadingTemplate">
+			<app-scatter-plot
+				[dataPoints]="scatterPlotDataPoints"
+				[selectedDevice]="selectedDevice"
+				(groupSelected)="updateDeviceList($event)"
+				*ngIf="!noData; else noDataTemplate"
+			>
+			</app-scatter-plot>
+		</div>
+	</div>
+</div>
+<ng-template #noDataTemplate>
+	<span
+		class="text-center dbl-padding-top"
+		[innerText]="'_NoResultsFound_' | i18n"
+	></span>
+</ng-template>
+<ng-template #loadingTemplate>
+	<cui-loader color="muted" class="dbl-padding dbl-padding-left"></cui-loader>
+</ng-template>

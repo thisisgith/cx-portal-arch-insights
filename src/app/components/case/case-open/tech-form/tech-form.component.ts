@@ -217,12 +217,19 @@ export class TechFormComponent implements OnInit, OnChanges, OnDestroy {
 						_.includes(validCodes, activity.problemCode),
 					);
 			}
-			const problemAreasGrouped = _.groupBy(
+			let problemAreasGrouped = _.groupBy(
 				_.get(result, ['problemArea', 'customerActivities'], []),
 				'customerActivity',
 			);
-			this.problemAreaOptions = Object.values(problemAreasGrouped);
-			this.problemGroups = Object.keys(problemAreasGrouped);
+			/* Sort problem codes alphabetically for each group */
+			problemAreasGrouped =
+				_.mapValues(problemAreasGrouped, group => _.sortBy(group, 'problemCodeName'));
+			/* Sort groups by Customer Activity alphabetically */
+			this.problemAreaOptions =
+				_.sortBy(Object.values(problemAreasGrouped), o =>
+					_.get(o, [0, 'customerActivity'], ''));
+			this.problemGroups = Object.keys(problemAreasGrouped)
+				.sort();
 		});
 		// Listen for "subTech" to change, update problem areas.
 		this.form.controls.subtech.valueChanges.pipe(
@@ -305,11 +312,10 @@ export class TechFormComponent implements OnInit, OnChanges, OnDestroy {
 						_id: value.tech.id,
 						techName: value.tech.name,
 					});
-					this.form.controls.subtech.setValue({
-						_id: value.sub_tech.id,
-						subTechName: value.sub_tech.name,
-						techId: value.tech.id,
-					});
+					this.fetchSubtechByName(value.sub_tech.name)
+					.pipe(takeUntil(this.destroy$))
+					.subscribe(response =>
+						this.form.controls.subtech.setValue(response.subTech));
 				} else {
 					this.form.controls.technology.setValue(null);
 					this.form.controls.subtech.setValue(null);
@@ -341,4 +347,21 @@ export class TechFormComponent implements OnInit, OnChanges, OnDestroy {
 			}),
 		);
 	}
+
+	/**
+	 * Fetches the subtech matching a specific name.
+	 * @param subTechName The name of the subtech to fetch.
+	 * @returns observable with results.
+	 */
+	private fetchSubtechByName (subTechName: string) {
+		return this.caseService.fetchSubTechByName(subTechName)
+			.pipe(
+				catchError(err => {
+					this.logger.error(`Fetch Subtech :: Error ${err}`);
+
+					return of(null);
+				}),
+			);
+	}
+
 }

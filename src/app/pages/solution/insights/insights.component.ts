@@ -53,7 +53,7 @@ export class InsightsComponent {
 					if (this.router.url === '/solution/insights/compliance') {
 						this.router.navigateByUrl('/solution/insights/risk-mitigation');
 					}
-					this.logger.error('assets.component : checkScan() ' +
+					this.logger.error('insights canActivate() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
 					return of();

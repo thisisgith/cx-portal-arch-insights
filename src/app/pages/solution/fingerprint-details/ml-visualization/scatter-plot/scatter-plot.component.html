@@ -1,0 +1,17 @@
+<div id="box" [chart]="chart"></div>
+<div class="chart-options">
+	<button
+		data-auto-id="RotateChart"
+		class="btn btn--icon"
+		(click)="changeChartNavigation(false)"
+	>
+		<span class="icon-4-way-nav"></span>
+	</button>
+	<button
+		data-auto-id="ChartZoom"
+		class="btn btn--icon"
+		(click)="changeChartNavigation(true)"
+	>
+		<span class="icon-search"></span>
+	</button>
+</div>

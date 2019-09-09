@@ -41,10 +41,10 @@ lint:
     - npm run lint:sdp
 
 # run our test:ci process for the commit
-unit:
-  stage: test
-  script:
-    - npm run test:ci
+# unit:
+#   stage: test
+#   script:
+#     - npm run test:ci
 
 # run our test:automation process for the commit
 # automation:
