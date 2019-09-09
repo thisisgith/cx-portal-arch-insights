@@ -1,4 +1,4 @@
-<details-panel *ngIf="!isLoading" [hidden]="!asset" [fullscreen]="fullscreen" id="details-panel">
+<details-panel *ngIf="!isLoading || asset" [hidden]="!asset" [fullscreen]="fullscreen" id="details-panel">
 	<details-panel-header (close)="onAllPanelsClose()"
 		(back)="onPanelBack()"
 		[(fullscreen)]="fullscreen"

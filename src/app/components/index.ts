@@ -1,6 +1,8 @@
 export { AdvisoryDetailsModule } from './details/advisory/advisory-details.module';
+export { AdvisoryDetailsComponent } from './details/advisory/advisory-details.component';
 export { AlertModule } from './alert/alert.module';
 export { AssetDetailsModule } from './details/asset/asset-details.module';
+export { AssetDetailsComponent } from './details/asset/asset-details.component';
 export { BarChartModule } from './charts/bar-chart/bar-chart.module';
 export { BubbleChartModule } from './charts/bubble-chart/bubble-chart.module';
 export { CharCountModule } from './char-count/char-count.module';
