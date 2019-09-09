@@ -30,7 +30,7 @@ export class DevicesListComponent implements OnInit, OnChanges {
 	public lastCollectionTime = '';
 	public deviceDetails: any = null;
 	public tabIndex = 0;
-	public globalSearchText = '';
+	public searchText = '';
 	public selectedAsset: any = null;
 	@ViewChild('productFamilyTemplate', { static: true })
 	private productFamilyTemplate: TemplateRef<{ }>;
@@ -136,11 +136,11 @@ export class DevicesListComponent implements OnInit, OnChanges {
 	public textFilter (event) {
 		// key code 13 refers to enter key
 		const eventKeycode = 13;
-		if (event.keyCode === eventKeycode || this.globalSearchText.trim().length === 0) {
+		if (event.keyCode === eventKeycode || this.searchText.trim().length === 0) {
 			this.isLoading = true;
 			this.tableStartIndex = 0;
 			this.paramsType.page = 0;
-			this.paramsType.searchText = this.globalSearchText;
+			this.paramsType.searchText = this.searchText;
 			this.getDevicesList();
 		}
 	}

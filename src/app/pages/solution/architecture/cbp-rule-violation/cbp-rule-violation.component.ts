@@ -39,7 +39,7 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 	@ViewChild('exceptionsTemplate', { static: true })
 	private exceptionsTemplate: TemplateRef<{ }>;
 
-	public globalSearchText = '';
+	public searchText = '';
 
 	public paramsType: params = {
 		customerId: '',
@@ -148,11 +148,11 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 	public textFilter (event) {
 		// key code 13 refers to enter key
 		const eventKeycode = 13;
-		if (event.keyCode === eventKeycode || this.globalSearchText.trim().length === 0) {
+		if (event.keyCode === eventKeycode || this.searchText.trim().length === 0) {
 			this.isLoading = true;
 			this.tableStartIndex = 0;
 			this.paramsType.page = 0;
-			this.paramsType.searchText = this.globalSearchText;
+			this.paramsType.searchText = this.searchText;
 			this.getCBPRulesData();
 		}
 	}
