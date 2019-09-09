@@ -9,7 +9,7 @@ import * as _ from 'lodash-es';
 /**
  * setting interface for input parameter
  */
-interface Seriesdata {
+interface SeriesData {
 	target: number;
 	xLabel: string;
 	y: number;
@@ -26,7 +26,7 @@ interface Seriesdata {
 
 export class BulletChartComponent implements OnInit {
 	public chart: Chart;
-	@Input() public seriesData: Seriesdata;
+	@Input() public seriesData: SeriesData;
 	/**
 	 * Component initialization
 	 */
