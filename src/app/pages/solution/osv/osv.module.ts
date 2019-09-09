@@ -13,6 +13,7 @@ import { OSVModule } from '@sdp-api';
 
 import { DetailsPanelModule, PieChartModule, VisualFilterBarModule } from '@components';
 import { SoftwareGroupsModule } from './software-groups/software-groups.module';
+import { SoftwareGroupDetailModule } from './software-group-detail/software-group-detail.module';
 import { ContactSupportModule } from 'src/app/components/contact-support/contact-support.module';
 
 /**
@@ -41,14 +42,15 @@ const childRoutes: Routes = [
 		I18nPipeModule,
 		DetailsPanelModule,
 		CuiTabsModule,
-		AssetDetailsModule,
 		CuiSpinnerModule,
 		FormsModule,
-		AssetsModule,
-		SoftwareVersionsModule,
-		OSVModule.forRoot({ rootUrl }),
 		PieChartModule,
+		OSVModule.forRoot({ rootUrl }),
+		AssetsModule,
+		AssetDetailsModule,
+		SoftwareVersionsModule,
 		SoftwareGroupsModule,
+		SoftwareGroupDetailModule,
 		CuiModalModule,
 		ContactSupportModule,
 		VisualFilterBarModule,
