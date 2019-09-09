@@ -82,6 +82,10 @@ export interface AfmSearchParams {
 	sortField?: string;
 	sortType?: string;
 	headerFilterType?: string;
+	ccoId?: string;
+	emailAddress?: string;
+	role?: string;
+	name?: string;
 }
 
 /**
