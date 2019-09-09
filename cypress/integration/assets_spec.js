@@ -489,9 +489,8 @@ describe('Assets', () => { // PBC-41
 			cy.getByAutoId(`${singleDeviceContract}Point`).click({ force: true });
 			cy.waitForAppLoading('inventoryLoading');
 			cy.get('[data-auto-id="AssetsTableBody"] tr').should('have.length', 1);
-			cy.get('td[data-auto-id*="InventoryItemSelect"]').click({ force: true });
-			// TODO: Disabled for PBC-700
-			// cy.getByAutoId('TotalSelectedCount').should('have.text', '1 Selected');
+			cy.get('[data-auto-id*="InventoryItemSelect-"]').click({ force: true });
+			cy.getByAutoId('TotalSelectedCount').should('have.text', '1 Selected');
 			cy.getByAutoId('FilterBarClearAllFilters').click();
 		});
 
@@ -531,23 +530,22 @@ describe('Assets', () => { // PBC-41
 			cy.waitForAppLoading('inventoryLoading');
 		});
 
-		// TODO: Disabled for PBC-700
-		it.skip('Filters asset list with all visual filters', () => { // PBC-228, PBC-253, PBC-700
+		it('Filters asset list with all visual filters', () => { // PBC-228, PBC-253, PBC-700
 			const checkAdvisoryFilters = () => {
 				cy.server();
 				cy.route('**/inventory/v1/assets?**').as('assets');
 				cy.get('[data-auto-id="VisualFilter-advisories"] [data-auto-id="BugsPoint"]')
 					.click({ force: true });
 				cy.wait('@assets').its('url').should('contain', 'hasBugs=true');
-				cy.getByAutoId('FilterTag-bugs').should('exist');
+				cy.getByAutoId('FilterTag-hasBugs').should('exist');
 				cy.get('[data-auto-id="VisualFilter-advisories"] [data-auto-id="Field NoticesPoint"]')
 					.click({ force: true });
 				cy.wait('@assets').its('url').should('contain', 'hasFieldNotices=true');
-				cy.getByAutoId('FilterTag-field-notices').should('exist');
+				cy.getByAutoId('FilterTag-hasFieldNotices').should('exist');
 				cy.get('[data-auto-id="VisualFilter-advisories"] [data-auto-id="Security AdvisoriesPoint"]')
 					.click({ force: true });
 				cy.wait('@assets').its('url').should('contain', 'hasSecurityAdvisories=true');
-				cy.getByAutoId('FilterTag-security-advisories').should('exist');
+				cy.getByAutoId('FilterTag-hasSecurityAdvisories').should('exist');
 			};
 
 			const { contractNumber, role } = assets[0];
@@ -569,8 +567,7 @@ describe('Assets', () => { // PBC-41
 			cy.url().should('not.contain', 'coverage').and('not.contain', 'role');
 		});
 
-		// TODO: Disabled for PBC-691
-		it.skip('Hides visual filters when count APIs are unavailable', () => { // PBC-254, PBC-691
+		it('Hides visual filters when count APIs are unavailable', () => { // PBC-254, PBC-691
 			coverageMock.enable('Contract Counts Data Unavailable');
 			cy.getByAutoId('Facet-Lifecycle').click(); // refresh table
 			cy.getByAutoId('Facet-Assets & Coverage').click();
@@ -584,8 +581,7 @@ describe('Assets', () => { // PBC-41
 			cy.waitForAppLoading();
 		});
 
-		// TODO: Disabled for PBC-700
-		it.skip('Combines visual filters appropriately', () => {
+		it('Combines visual filters appropriately', () => {
 			cy.server();
 			cy.route('**/inventory/v1/assets?*').as('assets');
 
@@ -601,8 +597,7 @@ describe('Assets', () => { // PBC-41
 			cy.getByAutoId('CoveredPoint').click({ force: true });
 			cy.waitForAppLoading('inventoryLoading');
 			cy.getByAutoId('VisualFilterCollapse').click();
-			// TODO: Disabled for PBC-700
-			// cy.getByAutoId('FilterTag-covered').should('be.visible');
+			cy.getByAutoId('FilterTag-covered').should('be.visible');
 			cy.getByAutoId('VisualFilter-total').should('not.be.visible');
 			cy.getByAutoId('VisualFilterCollapse').click();
 			cy.getByAutoId('VisualFilter-total').should('be.visible');
