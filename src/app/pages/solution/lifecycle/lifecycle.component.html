@@ -1,4 +1,4 @@
-<div class="panel panel--ltgray panel--bordered no-padding base-padding-right">
+<div class="panel panel--ltgray panel--bordered">
 	<div class="row base-padding-top">
 		<div class="col-md-3" *ngIf="!status.loading.racetrack && componentData?.racetrack?.stage">
 			<ng-container *ngTemplateOutlet="racetrack"></ng-container>
@@ -35,7 +35,7 @@
 							data: componentData.learning
 						}">
 					</ng-container>
-					<ng-container *ngIf="enableCGT || cxLevel === 3">
+					<ng-container *ngIf="enableCGT && cxLevel === 3">
 						<ng-container *ngTemplateOutlet="panel; context: {
 							template: cgtPanel,
 							icon: 'communities',
@@ -993,7 +993,7 @@
 			<div class="card_footer_item" data-auto-id="SuccessCardFooter">
 				<a class="no-link" target="_blank" [href]="item.url">
 					<button data-auto-id="LaunchButton" class="btn btn--small btn--secondary text-uppercase"
-						[innerText]="'_Launch_' | i18n"></button>
+						[innerText]="'_View_' | i18n"></button>
 				</a>
 			</div>
 		</div>
@@ -1058,7 +1058,7 @@
 			<div class="card_footer_item" data-auto-id="ProductGuidesCardFooter">
 				<a class="no-link" target="_blank" [href]="item.url">
 					<button data-auto-id="LaunchButton" class="btn btn--small btn--secondary text-uppercase"
-						[innerText]="'_Launch_' | i18n"></button>
+						[innerText]="'_View_' | i18n"></button>
 				</a>
 			</div>
 		</div>
@@ -1282,7 +1282,7 @@
 	<div *ngIf="type === 'SB' || type==='PG'" class="text-right">
 		<a class="no-link" target="_blank" [href]="celldata.url">
 			<button data-auto-id="LaunchButton" class="btn btn--small btn--secondary cx-button text-uppercase qtr-margin-left"
-				[innerText]="'_Launch_' | i18n"></button>
+				[innerText]="'_View_' | i18n"></button>
 		</a>
 	</div>
 </ng-template>
