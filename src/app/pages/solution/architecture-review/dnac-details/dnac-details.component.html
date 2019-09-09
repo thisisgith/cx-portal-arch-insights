@@ -7,7 +7,11 @@
 				</div>
 				<div class="cui-drawer-content">
 					<ng-container
-					*ngTemplateOutlet="SDAScaleUtilizationChart; context: { dnacDetails: dnacDetails }">
+					*ngTemplateOutlet="SDAScaleUtilizationChart; context: { 
+						networkDevicesData: networkDevicesData,
+						endPointsData :endPointsData,
+						fabricsData:fabricsData
+					 }">
 					</ng-container>
 				</div>
 			</cui-drawer>
@@ -15,7 +19,8 @@
 	</div>
 </div>
 
-<!-- <ng-template #SDAScaleUtilizationChart let-dnac="dnacDetails"> -->
+<ng-template #SDAScaleUtilizationChart let-fabricsData="fabricsData"
+	let-networkDevicesData="networkDevicesData" let-endPointsData="endPointsData">
 			<div *ngIf="!isLoading">
 				<bullet-chart [seriesData]="networkDevicesData" ></bullet-chart>
 			</div>
@@ -28,4 +33,4 @@
 			<div class="base-margin-top" *ngIf="isLoading">
 				<cui-spinner></cui-spinner>
 			</div>
-<!-- </ng-template> -->
+</ng-template>
