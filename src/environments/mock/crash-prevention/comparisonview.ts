@@ -192,6 +192,14 @@ const fpIntelligenceInfo = {
 	],
 };
 
+/** The mock response for fpIntelligenceInfo with no data */
+const fpIntelligenceInfoNodata = {
+	customerId: '7293498',
+	softwares: [],
+	productFamilies: [],
+	products: [],
+};
+
 /** Base of URL for SDP API */
 const api5 = 'api/customerportal/fingerprint/v1/Mlvisualization/7293498/';
 /** Mock data for */
@@ -357,6 +365,24 @@ export const ComparisonViewScenarios = [
 			],
 		},
 		url: `${api5}`,
+		usecases: ['Use Case 1'],
+	},
+	/** The scenarios */
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'fp IntelligenceInfo',
+					response: {
+						body: fpIntelligenceInfoNodata,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api4}`,
 		usecases: ['Use Case 1'],
 	},
 

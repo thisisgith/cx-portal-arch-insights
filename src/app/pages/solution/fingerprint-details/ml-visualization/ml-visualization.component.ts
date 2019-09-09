@@ -120,7 +120,7 @@ export class MlVisualizationComponent implements OnInit, OnChanges, OnDestroy {
 	 */
 	public fetchScatterPlotDataPoints (selectedVal) {
 		this.seriesDataLoading = true;
-		if (selectedVal !== null) {
+		if (selectedVal) {
 			this.mlVisualizationService
 				.getMlVisualizationDevices({
 					customerId: this.customerId,

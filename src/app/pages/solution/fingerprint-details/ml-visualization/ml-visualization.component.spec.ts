@@ -349,4 +349,66 @@ describe('MlVisualizationComponent', () => {
 		expect(component.listOfDevices2.length)
 		.toEqual(0);
 	});
+
+	it('Should set device list and data state on response', done => {
+		spyOn(
+			mlVisualizationService,
+			'getMlVisualizationDevices',
+		).and
+		.returnValue(
+			of(ComparisonViewScenarios[5].scenarios.GET[0].response.body),
+		);
+		component.ngOnChanges({
+			asset: {
+				currentValue: {
+					deviceId: 'TestDevice',
+					productFamily: 'TestProductFamily',
+				},
+				firstChange: true,
+				isFirstChange: () => true,
+				previousValue: null,
+			},
+		});
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+			expect(component.mlVisualizationDevices)
+			.toBeDefined();
+			expect(component.deviceSearchList)
+			.toBeDefined();
+			expect(component.noData)
+			.toBeFalsy();
+			done();
+		});
+	});
+
+	it('Should not load data when productFamily is null', done => {
+		spyOn(
+			mlVisualizationService,
+			'getMlVisualizationDevices',
+		).and
+		.returnValue(
+			of(ComparisonViewScenarios[5].scenarios.GET[0].response.body),
+		);
+		component.ngOnChanges({
+			asset: {
+				currentValue: {
+					deviceId: 'TestDevice',
+					productFamily: null,
+				},
+				firstChange: true,
+				isFirstChange: () => true,
+				previousValue: null,
+			},
+		});
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+			expect(component.mlVisualizationDevices)
+			.toBeUndefined();
+			expect(component.deviceSearchList)
+			.toBeUndefined();
+			done();
+		});
+	});
 });

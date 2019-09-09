@@ -477,4 +477,71 @@ describe('ScatterPlotComponent', () => {
 		expect(component.dataPoints[0].selected)
 		.toBeTruthy();
 	});
+
+	it('should register mouse events after view init', () => {
+		component.dataPoints = [
+			{
+				position: {
+					x: 0.4990452157572191,
+					y: -0.06881163915251692,
+					z: -0.009611822430886645,
+				},
+				cluster: 5,
+				devices: [
+					{
+						deviceInfo: {
+							deviceId: 'NA,FOX1306GFKH,WS-C4506-E,NA',
+							productId: 'WS-C4506-E',
+						},
+						deviceName: 'C4506-E',
+					},
+				],
+				id: 0,
+				mass: 1,
+				radius: 1,
+				x: 0.4990452157572191,
+				y: -0.06881163915251692,
+				z: -0.009611822430886645,
+			},
+			{
+				position: {
+					x: -0.6855702541560552,
+					y: 4.192143103082259,
+					z: 1.778192935721556,
+				},
+				cluster: 5,
+				devices: [
+					{
+						deviceInfo: {
+							deviceId: 'NA,FOX1335GRHG,WS-C4506-E,NA',
+							productId: 'WS-C4506-E',
+						},
+						deviceName: 'c4500',
+					},
+				],
+				id: 1,
+				mass: 1,
+				radius: 1,
+				x: -0.6855702541560552,
+				y: 4.192143103082259,
+				z: 1.778192935721556,
+			},
+		];
+		component.buildGraph();
+		component.ngOnChanges({
+			dataPoints: null,
+			selectedDevice: {
+				currentValue: 'NA,FOX1306GFKH,WS-C4506-E,NA',
+				firstChange: true,
+				isFirstChange: () => true,
+				previousValue: null,
+			},
+		});
+		spyOn(component, 'register');
+		component.ngAfterViewInit();
+		fixture.detectChanges();
+		expect(component.register)
+		.toHaveBeenCalled();
+	});
+
 });
