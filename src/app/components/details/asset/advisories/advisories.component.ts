@@ -206,9 +206,7 @@ export class AssetDetailsAdvisoriesComponent
 		_.map(this.tabs, (tab: Tab) => {
 			if (_.get(tab, ['params', 'serialNumber']) && tab.key === 'bug') {
 				tab.subject.next();
-			} else if (_.get(tab, ['params', 'managedNeId'])) {
-				tab.subject.next();
-			} else if (_.get(tab, ['params', 'neInstanceId'])) {
+			} else if (_.get(tab, ['params', 'hwInstanceId'])) {
 				tab.subject.next();
 			} else {
 				tab.loading = false;
@@ -258,7 +256,7 @@ export class AssetDetailsAdvisoriesComponent
 				moreLoading: false,
 				params: {
 					customerId: this.customerId,
-					managedNeId: this.asset.managedNeId ? [this.asset.managedNeId] : null,
+					hwInstanceId: this.asset.hwInstanceId ? [this.asset.hwInstanceId] : null,
 					page: 1,
 					rows: 10,
 					sort: ['severity:ASC'],
@@ -315,7 +313,7 @@ export class AssetDetailsAdvisoriesComponent
 				moreLoading: false,
 				params: {
 					customerId: this.customerId,
-					managedNeId: this.asset.managedNeId ? [this.asset.managedNeId] : null,
+					hwInstanceId: this.asset.hwInstanceId ? [this.asset.hwInstanceId] : null,
 					page: 1,
 					rows: 10,
 					sort: ['lastUpdated:DESC'],

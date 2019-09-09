@@ -25,6 +25,7 @@ import {
 	RacetrackTechnology,
 	CoverageCountsResponse,
 	ProductAlertsService,
+	InsightsCrashesService,
 	FieldNoticeAdvisoryResponse,
 	CriticalBugsResponse,
 	SecurityAdvisoriesResponse,
@@ -109,6 +110,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		private cdr: ChangeDetectorRef,
 		private racetrackInfoService: RacetrackInfoService,
 		private detailsPanelStackService: DetailsPanelStackService,
+		private insightsCrashesService: InsightsCrashesService,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
@@ -472,6 +474,35 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	}
 
 	/**
+	 * Fetches the counts for the advisories chart
+	 * @returns the advisory counts
+	 */
+	private fetchInsightsCounts () {
+		const insightsFacet = _.find(this.facets, { key: 'insights' });
+
+		insightsFacet.loading = true;
+		insightsFacet.isError = false;
+
+		return this.insightsCrashesService.getInsightsCounts(this.customerId)
+		.pipe(
+			map((counts: any) => {
+
+				insightsFacet.seriesData = counts;
+				insightsFacet.loading = false;
+			}),
+			catchError(err => {
+				insightsFacet.loading = false;
+				insightsFacet.isError = true;
+				this.logger.error('solution.component : fetchInsightsCounts() ' +
+				`:: Error : (${err.status}) ${err.message}`);
+
+				return of({ });
+			}),
+			takeUntil(this.destroy$),
+		);
+	}
+
+	/**
 	 * Fetch Case/RMA counts for the given serial number
 	 * @returns Observable with array of case followed by RMA counts
 	 */
@@ -538,7 +569,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 					active: false,
 				},
 				description: I18n.get('_QuickTourStep2Description_'),
-				relative: true,
+				relative: false,
 				stepIndex: 1,
 				stepPos: 'bottom',
 				title: I18n.get('_QuickTourStep2Title_'),
@@ -548,7 +579,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 				data: { },
 				description: I18n.get('_QuickTourStep3Description_'),
 				maxWidth: 300,
-				relative: false,
+				relative: true,
 				stepIndex: 2,
 				stepPos: 'bottom',
 				title: I18n.get('_QuickTourStep3Title_'),
@@ -556,7 +587,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 			{
 				arrows: 1,
 				data: {
-					active: false,
+					active: true,
 				},
 				description: I18n.get('_QuickTourStep1Description_'),
 				maxWidth: 400,
@@ -598,7 +629,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		const offsetLeft = this.contentContainer.nativeElement.offsetLeft;
 		const offsetTop = this.contentContainer.nativeElement.offsetTop;
 		const offsetWidth = this.contentContainer.nativeElement.offsetWidth;
-		const colRatio = 2 / 12;
+		const colRatio = 3 / 12;
 		const arrowOffset = 20;
 		step.data.left = offsetLeft + offsetWidth * colRatio - arrowOffset;
 		step.data.top = offsetTop + 150;
@@ -615,9 +646,9 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		const offsetTop = this.contentContainer.nativeElement.offsetTop;
 		const offsetWidth = this.contentContainer.nativeElement.offsetWidth;
 		const offsetHeight = this.contentContainer.nativeElement.offsetHeight;
-		const colRatio = 10 / 12 / 3;
-		const center = colRatio * 1.5;
-		step.data.left = offsetLeft + offsetWidth * (center + 1 / 6);
+		const colRatio = 3 / 12;
+		const center = colRatio * 2.5;
+		step.data.left = offsetLeft + offsetWidth * center;
 		step.data.top = offsetTop + offsetHeight * 0.4;
 		step.data.active = true;
 		step.width = offsetWidth * colRatio * 2;
@@ -633,6 +664,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		forkJoin(
 			this.fetchCoverageCount(),
 			this.fetchAdvisoryCounts(),
+			this.fetchInsightsCounts(),
 			this.getCaseAndRMACount(),
 		)
 		.pipe(
@@ -670,6 +702,12 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		if (this.activeRoute) {
 			this.selectFacet(this.getFacetFromRoute(this.activeRoute));
 		}
+	}
+
+	/**
+	 * Detects changes to the view after check
+	 */
+	public async ngAfterViewChecked () {
 		this.cdr.detectChanges();
 	}
 

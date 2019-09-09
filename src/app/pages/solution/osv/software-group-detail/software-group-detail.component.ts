@@ -120,8 +120,6 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 			sort: 'swType',
 			sortOrder: 'asc',
 		};
-
-		this.logger.debug('SoftwareGroupDetailComponent Created!');
 	}
 
 	/**

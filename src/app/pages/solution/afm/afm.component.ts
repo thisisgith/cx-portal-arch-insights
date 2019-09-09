@@ -101,7 +101,6 @@ export class AfmComponent implements OnInit {
 		private afmService: AfmService,
 		private userResolve: UserResolve,
 		private exportCsvService: ExportCsvService) {
-		this.logger.debug('AFM Component Created!');
 		this.searchParams = new Object();
 		this.searchParams.pageNumber = 1;
 		this.searchParams.pageSize = this.tableLimit;

@@ -28,7 +28,6 @@ export class DnacListComponent implements OnInit {
 		private architectureReviewService: ArchitectureReviewService,
 		private route: ActivatedRoute,
 	) {
-		this.logger.debug('DnacListComponent Created!');
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
 		this.params.customerId = this.customerId;

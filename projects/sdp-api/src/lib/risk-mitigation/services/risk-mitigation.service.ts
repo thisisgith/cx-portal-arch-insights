@@ -141,11 +141,24 @@ class RiskMitigationService extends __BaseService {
 		let __headers = new HttpHeaders();
 		let __body: any = null;
 
+		if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+
+		 if (params.page != null)
+		 __params = __params.set('page', params.page.toString());
+		 if (params.size != null)
+		 __params = __params.set('size', params.size.toString());
+		 if(params.search && params.search != ''){
+			__params = __params.set('search', params.search.toString());
+		 }
+		 if(params.sort && params.sort != ''){
+			__params = __params.set('sort', params.sort.toString());
+		 }
+
+
 
 		let req = new HttpRequest<any>(
 			'GET',
-			this.rootUrl + `${RiskMitigationService.getFingerPrintDeviceDetailsDataPath}` + params.customerId
-			+'?page='+params.page+'&size='+params.size,
+			this.rootUrl + `${RiskMitigationService.getFingerPrintDeviceDetailsDataPath}` + params.customerId,
 			__body,
 			{
 				headers: __headers,
@@ -184,6 +197,7 @@ class RiskMitigationService extends __BaseService {
 			})
 		);
 	}
+
 
 
 	getAllCrashesData(params: RiskMitigationService.GetAssetsParams): __Observable<CrashCount> {

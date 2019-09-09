@@ -12,7 +12,6 @@ import { AssetRecommendations, SoftwareGroup } from '@sdp-api';
 import { I18n } from '@cisco-ngx/cui-utils';
 import * as _ from 'lodash-es';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
-import { LogService } from '@cisco-ngx/cui-services';
 
 /**
  * Software Group Recommendations Component
@@ -35,9 +34,6 @@ export class SoftwareGroupRecommendationsComponent implements OnChanges {
 	public groupRecommendationsTable: CuiTableOptions;
 	public currentRecommendation: AssetRecommendations;
 	public groupRecommendations: AssetRecommendations[];
-	constructor (private logger: LogService) {
-		this.logger.debug('SoftwareGroupRecommendationsComponent Created!');
-	}
 
 	/**
 	 * lifecycle hook

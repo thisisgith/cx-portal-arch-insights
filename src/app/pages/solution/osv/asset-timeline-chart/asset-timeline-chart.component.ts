@@ -32,9 +32,7 @@ export class AssetTimelineChartComponent implements OnInit, OnChanges {
 	public chart: Chart;
 	constructor (
 		private logger: LogService,
-	) {
-		this.logger.debug('AssetTimelineChartComponent Created!');
-	}
+	) { }
 
 	/**
 	 * Initializes the bubble chart
