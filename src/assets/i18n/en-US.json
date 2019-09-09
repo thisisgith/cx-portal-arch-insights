@@ -811,6 +811,7 @@
 	"_RccDay_": " Day",
 	"_RccDays_": " Days",
 	"_RccDevice_": "Device",
+	"_RccErrorResults_": "Server is down, please try again.",
 	"_RccImpactedAssets_": "Impacted Assets",
 	"_RccImpactedDevices_": "Impacted Devices - {0}",
 	"_RccInvalidSearchInput_": "Invalid search input",

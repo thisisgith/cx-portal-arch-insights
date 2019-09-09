@@ -1,3 +1,23 @@
+<div class="half-padding-bottom">
+		<cui-alert 	[options]="alert" ></cui-alert>
+</div>
+<ng-template #loaderTemplate>
+		<div class="dbl-padding">
+			<cui-spinner color="default" label=""></cui-spinner>
+		</div>
+	</ng-template>
+	<ng-template #noDataAvailable>
+		<div class = "text-center base-padding-top">
+			<span class="text-muted text-xlarge dbl-padding-top dbl-padding-bottom"  
+			[innerText]="'_RccNoDataAvailable_' | i18n"
+			*ngIf="apiNoData && !errorResult">
+			</span>
+		</div>
+	</ng-template>
+	<ng-template #commonTemplate>
+		<div *ngIf="(initialLoading && apiNoData);then loaderTemplate else noDataAvailable">
+		</div>
+	</ng-template>
 <div *ngIf="(!initialLoading && !apiNoData); else commonTemplate;">
 	<div class="qtr-padding-top qtr-padding-bottom  ">
 		<span [innerText]="'_RccAssetViolations_' | i18n" 
@@ -58,8 +78,6 @@
 			<span class="text-muted text-xlarge" [innerText]="'_RccNoDataAvailable_' | i18n"
 				data-auto-id="NoResultsFoundTxt" *ngIf="!errorResult">
 			</span>
-			<span class="text-muted text-xlarge" [innerText]="'_RccNoResults_' | i18n"
-				*ngIf="errorResult"></span>
 		</div>
 	</div>
 </div>
@@ -113,19 +131,4 @@
 		}[item?.severity]">
 	</i>
 	<span [innerText]="item?.severity"></span>
-</ng-template>
-<ng-template #loaderTemplate>
-	<div class="dbl-padding">
-		<cui-spinner color="default" label=""></cui-spinner>
-	</div>
-</ng-template>
-<ng-template #noDataAvailable>
-			<span class="text-center dbl-margin-top dbl-margin-bottom" [innerText]="'_RccNoDataAvailable_' | i18n"
-				*ngIf="apiNoData"></span>
-			<span class="text-center dbl-margin-top dbl-margin-bottom" [innerText]="'_RccNoResults_' | i18n"
-				*ngIf="errorResult"></span>
-</ng-template>
-<ng-template #commonTemplate>
-	<div *ngIf="(initialLoading && apiNoData);then loaderTemplate else noDataAvailable">
-	</div>
 </ng-template>

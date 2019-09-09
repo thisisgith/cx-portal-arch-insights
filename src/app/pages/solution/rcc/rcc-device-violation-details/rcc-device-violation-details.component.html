@@ -1,3 +1,8 @@
+<div class="half-padding-bottom">
+		<cui-alert
+		[options]="alert"
+		></cui-alert>
+</div>
 <div *ngIf="(!initialLoading && !apiNoData); else commonTemplate;">
 	<div class="row">
 		<div class="col-12 base-margin-bottom">
@@ -89,6 +94,16 @@
 			</cui-pager>
 		</div>
 	</div>
+	<ng-template #commonMsgTemplate>
+		<div class="text-center dbl-margin-top dbl-margin-bottom"
+			*ngIf="(tableConfig?.totalItems === 0 && !selectionLoading); else loaderTemplate;">
+			<span class="text-muted text-xlarge" 
+				[innerText]="'_RccNoDataAvailable_' | i18n"
+				data-auto-id="NoResultsFoundTxt" 
+				*ngIf="!errorResult">
+			</span>
+		</div>
+	</ng-template>
 </div>
 <ng-template #policyRowWellTemplate let-item="item" class="half-margin-left">
 	<div class="base-margin-top text-small responsive-table">
@@ -113,11 +128,7 @@
 	<div class="text-center dbl-margin-top dbl-margin-bottom">
 		<span class="text-muted text-xlarge" 
 			[innerText]="'_RccNoDataAvailable_' | i18n"
-			*ngIf="apiNoData">
-		</span>
-		<span class="text-muted text-xlarge" 
-			[innerText]="'_RccNoResults_' | i18n"
-			*ngIf="errorResult">
+			*ngIf="apiNoData && !errorResult">
 		</span>
 	</div>
 </ng-template>
@@ -138,18 +149,4 @@
 		}[item?.severity]">
 	</i>
 	<span [innerText]="item?.severity"></span>
-</ng-template>
-<ng-template #commonMsgTemplate>
-	<div class="text-center dbl-margin-top dbl-margin-bottom"
-		*ngIf="(tableConfig?.totalItems === 0 && !selectionLoading); else loaderTemplate;">
-		<span class="text-muted text-xlarge" 
-			[innerText]="'_RccNoDataAvailable_' | i18n"
-			data-auto-id="NoResultsFoundTxt" 
-			*ngIf="!errorResult">
-		</span>
-		<span class="text-muted text-xlarge" 
-			[innerText]="'_RccNoResults_' | i18n"
-			*ngIf="errorResult">
-		</span>
-	</div>
 </ng-template>

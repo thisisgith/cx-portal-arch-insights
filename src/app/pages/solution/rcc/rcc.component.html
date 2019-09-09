@@ -42,6 +42,10 @@
 		<ng-container *ngTemplateOutlet="filterBar"></ng-container>
 		<div class="divider no-margin"></div>
 	</ng-container>
+	<div class="half-padding-bottom half-padding-top">
+		<cui-alert [options]="alert">
+		</cui-alert>
+	</div>
 	<div class="row container">
 		<div class="col-md-9 flex align-items-center" *ngIf="!isAssetView">
 			<span [innerText]="'_RccShowing_' | i18n"></span>

@@ -123,6 +123,7 @@ export class RccComponent implements OnInit, OnDestroy {
 	public noTableData = false;
 	public assetsConditionViolationsCount = 0;
 	public withViolationsAssetsCount;
+	public alert: any = { };
 	public searchOptions = {
 		debounce: 1500,
 		max: 100,
@@ -260,6 +261,7 @@ export class RccComponent implements OnInit, OnDestroy {
 	 */
 	public getRCCData (violationGridObj: violationGridParams) {
 		this.loading = true;
+		this.policyViolationsGridData = [];
 		this.RccTrackService
 			.getGridData(violationGridObj)
 			.pipe(takeUntil(this.destroy$))
@@ -281,6 +283,8 @@ export class RccComponent implements OnInit, OnDestroy {
 			},
 			error => {
 				this.loading = false;
+				this.noTableData = false;
+				this.alert.show(I18n.get('_RccErrorResults_'), 'danger');
 				this.logger.error(
 					'RccComponent : getRCCData() ' +
 				`:: Error : (${error.status}) ${error.message}`);
@@ -295,6 +299,7 @@ export class RccComponent implements OnInit, OnDestroy {
 	 */
 	public getRCCAssetData (assetGridObj: assetGridParams) {
 		this.loading = true;
+		this.tableAssetDataSample = [];
 		this.RccTrackService
 			.getAssetGridData(assetGridObj)
 			.subscribe(assetGridData => {
@@ -313,7 +318,9 @@ export class RccComponent implements OnInit, OnDestroy {
 			},
 			error => {
 				this.loading = false;
+				this.noTableData = false;
 				this.errorPolicyView = true;
+				this.alert.show(I18n.get('_RccErrorResults_'), 'danger');
 				this.logger.error(
 					'RccComponent : getRCCAssetData() ' +
 				`:: Error : (${error.status}) ${error.message}`);
@@ -367,6 +374,7 @@ export class RccComponent implements OnInit, OnDestroy {
 			},
 			error => {
 				this.loading = false;
+				this.alert.show(I18n.get('_RccErrorResults_'), 'danger');
 				this.logger.error(
 					'RccComponent : getFiltersData() ' +
 				`:: Error : (${error.status}) ${error.message}`);
@@ -428,6 +436,9 @@ export class RccComponent implements OnInit, OnDestroy {
 	public selectedView (view: any) {
 		this.tableConfig.totalItems = 0;
 		this.tableConfig.tableOffset = 0;
+		this.policyViolationsGridData = [];
+		this.tableAssetDataSample = [];
+		_.invoke(this.alert, 'hide');
 		this.view = view;
 		this.clearFilters();
 		if (view === 'violation') {
@@ -441,6 +452,7 @@ export class RccComponent implements OnInit, OnDestroy {
 		}
 		this.selectedAssetModal = false;
 		this.selectedViolationModal = false;
+		this.errorPolicyView = false;
 	}
 	/**
 	 * Determines whether pager updated on
@@ -449,6 +461,7 @@ export class RccComponent implements OnInit, OnDestroy {
 	public selectedAssetView (view: 'violation' | 'asset') {
 		this.view = view;
 		this.isAssetView = true;
+		_.invoke(this.alert, 'hide');
 		this.assetTableOptions = new CuiTableOptions({
 			bordered: false,
 			columns: [
@@ -546,6 +559,7 @@ export class RccComponent implements OnInit, OnDestroy {
 	 */
 	public onSubfilterSelect (subfilter: string, filter: Filter, triggeredFromGraph) {
 		this.errorPolicyView = false;
+		_.invoke(this.alert, 'hide');
 		const searchInput = this.searchInput.trim();
 		if (this.searchForm.invalid ||
 				(!_.isEmpty(searchInput) && searchInput.length < 2)) {
