@@ -201,6 +201,39 @@ const fpIntelligenceInfoNodata = {
 };
 
 /** Base of URL for SDP API */
+const api6 = 'api/customerportal/fingerprint/v1/similar-devices/7293498';
+/**
+ * The mock response for FP similar assets
+ */
+const fpSimilarAssetsInfo = {
+	customerId: '7293498',
+	count: 329,
+	crashPredicted: true,
+	similarDevices: [
+		{
+			deviceId: 'NA,FOX1306GFKH,WS-C4506-E,NA',
+			deviceName: 'C4506-E',
+			riskScore: 1.67,
+			productFamily: 'Cisco Catalyst 4500 Series Switches',
+			productId: 'WS-C4506-E',
+			softwareVersion: '15.0(2)SG7',
+			softwareType: 'IOS',
+			similarityScore: 68.8033,
+		},
+	],
+};
+
+/**
+ * The mock response for FP similar assets
+ */
+const fpSimilarAssetsInfoNoData = {
+	customerId: '7293498',
+	count: 329,
+	crashPredicted: true,
+	similarDevices: [],
+};
+
+/** Base of URL for SDP API */
 const api5 = 'api/customerportal/fingerprint/v1/Mlvisualization/7293498/';
 /** Mock data for */
 export const MlvisualizationInfo = {
@@ -437,6 +470,42 @@ export const ComparisonViewScenarios = [
 			],
 		},
 		url: `${api4}`,
+		usecases: ['Use Case 1'],
+	},
+	/** The scenarios */
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'fp Similar Assets',
+					response: {
+						body: fpSimilarAssetsInfo,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api6}`,
+		usecases: ['Use Case 1'],
+	},
+	/** The scenarios */
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'fp Similar Assets',
+					response: {
+						body: fpSimilarAssetsInfoNoData,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api6}`,
 		usecases: ['Use Case 1'],
 	},
 

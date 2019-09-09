@@ -153,4 +153,17 @@ describe('ScatterPlotComponent', () => {
 		.toHaveBeenCalled();
 	});
 
+	it('should select rotate mode in Scatter Plot', fakeAsync(() => {
+		component.dataPoints = scatterPlotDevices;
+		spyOn(component, 'changeChartNavigation');
+		fixture.detectChanges();
+		const button = fixture.debugElement.query(
+			By.css('[data-auto-id="RotateChart"]'),
+		);
+		button.nativeElement.click();
+		tick();
+		expect(component.chart.ref.options.chart.zoomType)
+		.toBeUndefined();
+	}));
+
 });
