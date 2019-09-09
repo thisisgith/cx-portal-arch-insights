@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { UserResolve } from '@utilities';
-import { map, flatMap, catchError } from 'rxjs/operators';
-import { of } from 'rxjs';
 import { RouteAuthService } from 'src/app/services';
+import { ActivatedRoute, Router } from '@angular/router';
+import * as _ from 'lodash-es';
+import { UserResolve } from '@utilities';
+import { flatMap, map, catchError } from 'rxjs/operators';
 import { LogService } from '@cisco-ngx/cui-services';
-
+import { of } from 'rxjs';
 /**
  * InsightsComponent
  */
@@ -16,12 +16,19 @@ import { LogService } from '@cisco-ngx/cui-services';
 export class InsightsComponent {
 	public customerId;
 	public hasPermission = false;
-	constructor (private routeAuthService: RouteAuthService,
-		private userResolve: UserResolve,
+	public cxLevel: number;
+	constructor (
+		private logger: LogService,
+		private routeAuthService: RouteAuthService,
+		private route: ActivatedRoute,
 		private router: Router,
-		private logger: LogService) { }
+		private userResolve: UserResolve) {
+		const user = _.get(this.route, ['snapshot', 'data', 'user']);
+		this.cxLevel = _.get(user, ['service', 'cxLevel'], 0);
+	}
+
 	/**
-	 * ngOnInit method execution
+	 * initialization hook
 	 */
 	public ngOnInit (): void {
 		this.canActivate();
@@ -38,17 +45,20 @@ export class InsightsComponent {
 
 					if (response) {
 						this.hasPermission = response;
-					} else {
+					} else if (this.router.url === '/solution/insights/compliance') {
 						this.router.navigateByUrl('/solution/insights/risk-mitigation');
 					}
 				}),
 				catchError(err => {
-					this.router.navigateByUrl('/solution/insights/risk-mitigation');
+					if (this.router.url === '/solution/insights/compliance') {
+						this.router.navigateByUrl('/solution/insights/risk-mitigation');
+					}
 					this.logger.error('assets.component : checkScan() ' +
-				`:: Error : (${err.status}) ${err.message}`);
+						`:: Error : (${err.status}) ${err.message}`);
 
 					return of();
 				}),
-			);
+			)
+			.subscribe();
 	}
 }
