@@ -28,9 +28,11 @@ import { ActivatedRoute } from '@angular/router';
 	templateUrl: './assets.component.html',
 })
 export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
+
 	@Input() public selectedAsset;
 	@Input() public filters;
 	@Input() public fullscreen;
+	@Input() public cxLevel;
 	@Output() public fullscreenChange = new EventEmitter<boolean>();
 	@Output() public selectedAssetChange = new EventEmitter<OSVAsset>();
 	@Output() public contactSupport = new EventEmitter();
@@ -63,6 +65,7 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
+
 		this.assetsParams = {
 			customerId: this.customerId,
 			filter: '',

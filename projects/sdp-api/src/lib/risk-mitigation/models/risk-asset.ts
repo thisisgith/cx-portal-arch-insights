@@ -53,4 +53,5 @@ export interface RiskAsset {
   equipmentType?: string;
   crashCount?: number;
   neName?: string;
+  active?: boolean;
 }

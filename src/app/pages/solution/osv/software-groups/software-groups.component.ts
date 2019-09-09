@@ -31,6 +31,7 @@ import * as _ from 'lodash-es';
 export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 	@Input() public filters;
 	@Output() public contactSupport = new EventEmitter();
+	@Input() public cxLevel;
 	@Input() public selectedSoftwareGroup;
 	@Output() public selectedSoftwareGroupChange = new EventEmitter<SoftwareGroup>();
 	@Input() public tabIndex;

@@ -40,7 +40,8 @@
 		<app-software-groups 
 			[(tabIndex)]="tabIndex" 
 			(contactSupport)="openContactSupport()"
-			[(selectedSoftwareGroup)]="selectedSoftwareGroup" 
+			[(selectedSoftwareGroup)]="selectedSoftwareGroup"
+			[cxLevel]="cxLevel"
 			[filters]="appliedFilters">
 		</app-software-groups>
 	</div>
@@ -49,11 +50,12 @@
 			(contactSupport)="openContactSupport()" 
 			[(fullscreen)]="fullscreen" 
 			[filters]="appliedFilters"
+			[cxLevel]="cxLevel"
 			[(selectedAsset)]="selectedAsset">
 		</app-assets>
 	</div>
 	<div *ngIf="view == 'swVersions'">
-		<app-software-versions (contactSupport)="openContactSupport()"></app-software-versions>
+		<app-software-versions (contactSupport)="openContactSupport()" [cxLevel]="cxLevel"></app-software-versions>
 	</div>
 	<div *ngIf="!view" class="dbl-margin-top text-center text-xlarge">
 		<span [innerText]="'_OsvNoAssets_' | i18n"></span>

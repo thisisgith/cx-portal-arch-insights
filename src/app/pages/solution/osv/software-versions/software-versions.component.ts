@@ -5,6 +5,7 @@ import {
 	OnInit,
 	OnDestroy,
 	EventEmitter,
+	Input,
 	Output,
 } from '@angular/core';
 import { LogService } from '@cisco-ngx/cui-services';
@@ -31,7 +32,7 @@ import { ActivatedRoute } from '@angular/router';
 	templateUrl: './software-versions.component.html',
 })
 export class SoftwareVersionsComponent implements OnInit, OnDestroy {
-	@Output() public contactExpert = new EventEmitter();
+	@Input() public cxLevel;
 	@ViewChild('releaseDate', { static: true }) private releaseDateTemplate: TemplateRef<{ }>;
 	@Output() public contactSupport = new EventEmitter();
 	public softwareVersionsTable: CuiTableOptions;
