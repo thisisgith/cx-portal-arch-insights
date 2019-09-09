@@ -2,8 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MlVisualizationComponent } from './ml-visualization.component';
 import { ChartModule, HIGHCHARTS_MODULES } from 'angular-highcharts';
-import * as more from 'highcharts/highcharts-more.src';
-import * as exporting from 'highcharts/modules/exporting.src';
 import * as highcharts3d from 'highcharts/highcharts-3d.src';
 import { CrashPreventionModule } from '@sdp-api';
 import { environment } from '@environment';
@@ -35,7 +33,7 @@ const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 	exports: [MlVisualizationComponent],
 	providers: [
 		{ provide: HIGHCHARTS_MODULES, useFactory: () =>
-			[more, exporting , highcharts3d] }, // add as factory to your providers
+			[highcharts3d] }, // add as factory to your providers
 	  ],
 	  entryComponents: [MlVisualizationComponent],
 })

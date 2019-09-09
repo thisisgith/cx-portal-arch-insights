@@ -9,6 +9,7 @@ import {
 	SimpleChanges,
 	Output,
 	EventEmitter,
+	OnInit,
 } from '@angular/core';
 import { Chart } from 'angular-highcharts';
 import * as Highcharts from 'highcharts/highcharts';
@@ -56,7 +57,7 @@ class ChartDragMap implements ChartDragMapper {
 	selector: 'app-scatter-plot',
 	templateUrl: './scatter-plot.component.html',
 })
-export class ScatterPlotComponent implements OnChanges, AfterViewInit {
+export class ScatterPlotComponent implements OnInit, OnChanges, AfterViewInit {
 	public sub: any;
 	public box: any;
 	public mousedown$;
@@ -72,6 +73,23 @@ export class ScatterPlotComponent implements OnChanges, AfterViewInit {
 	public windowHeight = 400;
 	public pointSize = 3;
 	@ViewChild('box', { static: false }) public plotContainer;
+	public chartRef: any;
+	public newSeries: Highcharts.SeriesScatter3dOptions = {
+		type: 'scatter3d',
+		allowPointSelect: true,
+		point: {
+			events: {
+				select: function (event: any) {
+					this.groupSelected.emit(
+						event.target.options.devices,
+					);
+				}.bind(this),
+			},
+		},
+		boostThreshold: 1,
+		name: 'MlVisualization',
+		data: [],
+	};
 
 	constructor (
 		private logger: LogService,
@@ -83,47 +101,46 @@ export class ScatterPlotComponent implements OnChanges, AfterViewInit {
 	}
 
 	/**
+	 * Initialize chart references
+	 */
+	public ngOnInit (): void {
+		this.buildGraph();
+		if (!this.chartRef) {
+			this.chart.ref$.subscribe(chartRef => {
+				this.chartRef = chartRef;
+				this.updateChart();
+			});
+		}
+	}
+
+	/**
 	 * Detect changes to load chart with updated values
 	 * @param changes updated values
 	 */
 	public ngOnChanges (changes: SimpleChanges): void {
 		if (changes.dataPoints) {
 			this.dataPoints = changes.dataPoints.currentValue;
-			this.buildGraph();
-			const newSeries: Highcharts.SeriesScatter3dOptions = {
-				type: 'scatter3d',
-				allowPointSelect: true,
-				point: {
-					events: {
-						select: function (event: any) {
-							this.groupSelected.emit(
-								event.target.options.devices,
-							);
-						}.bind(this),
-					},
-				},
-				boostThreshold: 1,
-				name: 'MlVisualization',
-				data: this.dataPoints,
-			};
-			this.chart.ref$.subscribe(chartRef => {
-				_.invoke(chartRef.series, '[0].remove');
-				chartRef.addSeries(newSeries);
-				chartRef.redraw(false);
-				this.updateSelectedDeviceBySearch(
-					this.selectedDevice,
-					chartRef.series[0].data,
-				);
-			});
+			this.updateChart();
 		}
 		if (changes.selectedDevice && !changes.dataPoints) {
-			this.chart.ref$.subscribe(chartRef => {
-				this.updateSelectedDeviceBySearch(
-					changes.selectedDevice.currentValue,
-					chartRef.series[0].data,
-				);
-			});
+			this.selectedDevice = changes.selectedDevice.currentValue;
+			this.updateChart();
 		}
+	}
+
+	/**
+	 * Update chart for the current values.
+	 */
+	public updateChart () {
+		this.newSeries.data = this.dataPoints;
+		_.invoke(this.chartRef, 'series[0].remove');
+		_.invoke(this.chartRef, 'addSeries', this.newSeries);
+		_.invoke(this.chartRef, 'redraw', false);
+		const seriesData = _.get(this.chartRef, ['series', '0', 'data'], []);
+		this.updateSelectedDeviceBySearch(
+			this.selectedDevice,
+			seriesData,
+		);
 	}
 
 	/**
