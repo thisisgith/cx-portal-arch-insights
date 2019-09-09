@@ -16,37 +16,16 @@
 	}
 }
 
-.selected {
-	color: $cisco-blue !important;
-}
-
-.violationcount {
-	color: $dark-gray-2 !important;
-	font-weight: 400;
-	font-size: 48px !important;
-	line-height: 72px !important;
-}
-
-.viocount {
-	margin-top: 1px;
-	color: $dark-gray-2 !important;
-}
-
 .seperator-line {
 	border-left: 1px solid $light-gray-3;
-}
-
-.searchSection {
-	float: right;
-	margin-top: -27px;
 }
 
 .assets-count {
 	font-weight: 500;
 }
 
-.assets-count:focus {
-	color: $status-blue;
+.cursor {
+	cursor: pointer;
 }
 
 .form-group__text .rcc-search {
