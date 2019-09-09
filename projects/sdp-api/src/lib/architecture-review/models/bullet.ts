@@ -1,6 +1,8 @@
 /*  tslint:disable */
 export interface Ibullet {
-    target: string,
-    xLabel: string,
-    y: string,
+    customerId : string;
+    dnacIP: string;
+    page: number;
+    pageSize: number;
+    searchText : string;
 }
