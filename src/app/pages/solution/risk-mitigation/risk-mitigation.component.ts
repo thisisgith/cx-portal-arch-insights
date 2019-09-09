@@ -149,7 +149,7 @@ export class RiskMitigationComponent {
 	 * @returns  the crashed device data
 	 */
 	public getHighCrashesDeviceData () {
-		this.highCrashRiskAssetsGridDetails.tableOffset = 0;
+		this.highCrashRiskAssetsGridDetails.tableOffset = this.highCrashRiskParams.page;
 		this.onlyCrashes = true;
 		this.getFingerPrintDeviceDetails(this.highCrashRiskParams);
 		const params = _.pick(_.cloneDeep(this.highCrashRiskParams), ['customerId']);
@@ -304,6 +304,7 @@ export class RiskMitigationComponent {
 								this.status.isLoading = false;
 								this.highCrashRiskAssetsGridDetails.tableData = results.devices;
 								this.highCrashRiskAssetsGridDetails.totalItems = results.count;
+								this.highCrashRiskAssetsGridDetails.tableOffset = param.page;
 
 								const first = (this.highCrashRiskParams.page * 10) + 1;
 								const last = (this.highCrashRiskParams.page * 10) +
