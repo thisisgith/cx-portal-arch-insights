@@ -12,4 +12,4 @@ export { severityMap, severityLevelMap } from './severities';
 
 export { KEY_CODES } from './utils';
 
-export { getProductTypeImage } from './assetIcon';
+export { getProductTypeImage, getProductTypeTitle } from './assetIcon';

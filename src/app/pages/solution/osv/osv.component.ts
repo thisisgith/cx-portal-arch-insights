@@ -52,6 +52,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 		assetType: '',
 		deploymentStatus: [],
 	};
+	public cxLevel: number;
 
 	constructor (
 		private logger: LogService,
@@ -61,6 +62,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
+		this.cxLevel = _.get(user, ['service', 'cxLevel'], 0);
 	}
 
 	/**

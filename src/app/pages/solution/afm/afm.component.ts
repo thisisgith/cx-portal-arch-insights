@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { LogService } from '@cisco-ngx/cui-services';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
@@ -29,7 +29,7 @@ import { ExportCsvService } from '@services';
 	styleUrls: ['./afm.component.scss'],
 	templateUrl: './afm.component.html',
 })
-export class AfmComponent {
+export class AfmComponent implements OnInit {
 
 	public showAlarmDetails = false;
 	public selectedAsset: Alarm;
@@ -153,7 +153,7 @@ export class AfmComponent {
 	 */
 	public ngOnInit () {
 		this.buildTable();
-		this.getAfmAlarmData(this.searchParams);
+		this.allAlarmFilter();
 	}
 
 	/**
@@ -597,7 +597,7 @@ export class AfmComponent {
 					 * first time loading we are setting the
 					 * Banner part for Total Alarms Count
 					 */
-					if (this.aggregationCount !== null) {
+					if (this.aggregationCount) {
 						this.headerCount = {
 							totalAlarmCount:
 							this.aggregationCount[this.AFM_CONSTANT.ALARM_TOTAL_COUNT],

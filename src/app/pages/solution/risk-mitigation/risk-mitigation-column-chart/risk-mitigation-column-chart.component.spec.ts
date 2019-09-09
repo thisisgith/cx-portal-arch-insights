@@ -145,7 +145,7 @@ describe('RiskMitigationColumnChartComponent', () => {
 			.toHaveBeenCalledTimes(1);
 	}));
 
-	it('should not build graph if not firstChange', fakeAsync(() => {
+	it('should call buildgraph on firstChange', fakeAsync(() => {
 		spyOn(component, 'buildGraph');
 		component.ngOnChanges({
 			resetChart: {
@@ -164,6 +164,6 @@ describe('RiskMitigationColumnChartComponent', () => {
 		tick();
 		fixture.detectChanges();
 		expect(component.buildGraph)
-			.toHaveBeenCalledTimes(0);
+			.toHaveBeenCalledTimes(1);
 	}));
 });

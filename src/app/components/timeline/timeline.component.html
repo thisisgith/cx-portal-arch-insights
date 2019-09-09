@@ -9,11 +9,20 @@
 				class="pbc-timeline__timestamp--content-top"
 				[ngClass]="{ 'text-muted': timestamp.muted }"
 			>
-				<div
+				<div *ngIf="!timestamp.url"
 					class="text-bold"
 					[innerHTML]="timestamp.title"
-					attr.data-auto-id="{{timestamp.title}}-Title"
-				></div>
+					attr.data-auto-id="{{timestamp.title}}-Title">
+				</div>
+				<div *ngIf="timestamp.url">
+					<a class="text-bold"
+						[innerHTML]="timestamp.title"
+						[href]="timestamp.url"
+						target="_blank"
+						rel="noopener noreferrer"
+						attr.data-auto-id="{{timestamp.title}}-Title-Link">
+					</a>
+				</div>
 				<small
 					[innerHTML]="timestamp.subTitle"
 					attr.data-auto-id="{{timestamp.title}}-SubTitle"

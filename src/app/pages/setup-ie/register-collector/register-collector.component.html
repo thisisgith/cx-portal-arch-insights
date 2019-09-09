@@ -145,26 +145,27 @@
 						</div>
 					</div>
 				</div>
-				<div class="dbl-margin-bottom">
-					<h4 [innerText]="'_IE_DeployForVirtualAccount_' | i18n"></h4>
-					<span class="text-large" [innerText]="'_IE_ThereCanOnlyBeOneSmartAccount_' | i18n"></span>
-				</div>
-				<div class="row dbl-margin-bottom">
-					<div class="col-md-6">
-						<!-- <div class="form-group dbl-margin-right"> -->
-							<!-- <div class="form-group__text select"> -->
-								<cui-select [label]="'_VirtualAccount_' | i18n" [items]="virtualAccounts"></cui-select>
-								<!-- <select class="form-control" id="virtaul-account-selector"> -->
-								<!-- 	<option *ngFor="let virtualAccount of virtualAccounts" -->
-								<!-- 		[innerText]="virtualAccount"> -->
-								<!-- 	</option> -->
-								<!-- </select> -->
-								<!-- <label for="input-layout-default" [innerText]="'_VirtualAccount_' | i18n"> -->
-								<!-- </label> -->
-							<!-- </div> -->
-						<!-- </div> -->
-					</div>
-				</div>
+				<!-- Should be added back in the future -->
+				<!-- <div class="dbl-margin-bottom"> -->
+				<!-- 	<h4 [innerText]="'_IE_DeployForVirtualAccount_' | i18n"></h4> -->
+				<!-- 	<span class="text-large" [innerText]="'_IE_ThereCanOnlyBeOneSmartAccount_' | i18n"></span> -->
+				<!-- </div> -->
+				<!-- <div class="row dbl-margin-bottom"> -->
+				<!-- 	<div class="col-md-6"> -->
+				<!-- 		<div class="form-group dbl-margin-right"> -->
+				<!-- 			<div class="form-group__text select"> -->
+				<!-- 				<cui-select [label]="'_VirtualAccount_' | i18n" [items]="virtualAccounts"></cui-select> -->
+				<!-- 				<select class="form-control" id="virtaul-account-selector"> -->
+				<!-- 					<option *ngFor="let virtualAccount of virtualAccounts" -->
+				<!-- 						[innerText]="virtualAccount"> -->
+				<!-- 					</option> -->
+				<!-- 				</select> -->
+				<!-- 				<label for="input-layout-default" [innerText]="'_VirtualAccount_' | i18n"> -->
+				<!-- 				</label> -->
+				<!-- 			</div> -->
+				<!-- 		</div> -->
+				<!-- 	</div> -->
+				<!-- </div> -->
 				<alert
 					[title]="error"
 					[(visible)]="error"
