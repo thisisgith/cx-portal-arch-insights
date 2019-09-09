@@ -3,6 +3,7 @@ import { InsightsResponse } from '@sdp-api';
 /** Base of URL for SDP API insights */
 const api = '/api/customerportal/insightsCounts/v1/allCounts/customer/';
 
+/** Mock Customer ID */
 const customerId = '7293498';
 
 /** The mock response for insights count */
