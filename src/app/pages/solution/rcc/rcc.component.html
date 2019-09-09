@@ -38,8 +38,9 @@
 		</div>
 	</div>
 	<ng-container>
+		<div class="divider no-margin"></div>
 		<ng-container *ngTemplateOutlet="filterBar"></ng-container>
-		<div class="divider qtr-margin-top"></div>
+		<div class="divider no-margin"></div>
 	</ng-container>
 	<div class="row container">
 		<div class="col-md-9 flex align-items-center" *ngIf="!isAssetView">
@@ -81,7 +82,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="container base-margin-top" *ngIf="!isAssetView">
+	<div class="container base-margin-top no-padding" *ngIf="!isAssetView">
 		<div *ngIf="loading" class="base-margin-bottom">
 			<cui-spinner></cui-spinner>
 		</div>
@@ -151,7 +152,7 @@
 	</ng-template>
 
 	<ng-template #filterBar>
-		<div class="row half-margin-top" *ngIf="filtered && selectedFilters?.length > 0">
+		<div class="row qtr-margin-top qtr-margin-bottom" *ngIf="filtered && selectedFilters?.length > 0">
 			<div class="col-md-1 flex flex-center-vertical">
 				<span class="text-bold text-uppercase half-padding-right" [innerText]="'_Filtered_' | i18n"></span>
 			</div>
