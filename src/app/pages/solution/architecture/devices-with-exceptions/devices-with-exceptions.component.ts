@@ -133,7 +133,7 @@ export class DevicesWithExceptionsComponent implements OnInit {
 	 */
 	public globalSearchFunction (event) {
 		const enterKeyCode = 13;
-		if (event.keyCode === enterKeyCode) {
+		if (event.keyCode === enterKeyCode || this.globalSearchText.length === 0) {
 			this.isLoading = true;
 			this.tableStartIndex = 0;
 			this.params.page = 0;

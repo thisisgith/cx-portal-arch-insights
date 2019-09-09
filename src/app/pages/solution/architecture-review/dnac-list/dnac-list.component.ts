@@ -135,7 +135,7 @@ export class DnacListComponent implements OnInit {
 	 * @param event contains eventdata
 	 */
 	public globalSearchFunction (event) {
-		if (event.keyCode === 13) {
+		if (event.keyCode === 13 || this.globalSearchText.length === 0) {
 			this.isLoading = true;
 			this.tableStartIndex = 0;
 			this.params.page = 0;
