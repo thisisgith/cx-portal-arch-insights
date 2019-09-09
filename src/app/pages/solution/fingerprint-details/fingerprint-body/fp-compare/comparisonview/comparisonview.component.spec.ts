@@ -130,7 +130,7 @@ describe('ComparisonviewComponent', () => {
 				firstChange: true,
 				isFirstChange: () => true,
 				previousValue: null,
-			}
+			},
 		});
 		fixture.detectChanges();
 		expect(crashPreventionService.getComparison).not
