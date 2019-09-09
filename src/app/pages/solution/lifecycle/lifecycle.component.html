@@ -338,15 +338,12 @@
 				(click)="recommendedATXViewSessions()"
 				[innerText]="'_ViewSessions_' | i18n">
 			</button>
-			<a
-				*ngIf="componentData.atx?.recommended?.recordingURL"
-				class="no-link"
-				target="_blank"
-				rel="noopener noreferrer"
-				[href]="componentData.atx?.recommended?.recordingURL">
-				<button data-auto-id="recommendedATXWatchButton" class="btn btn--small btn--secondary text-uppercase cx-button"
-					[innerText]="'_WatchNow_' | i18n"></button>
-			</a>
+			<button class="btn btn--small btn--secondary text-uppercase cx-button"
+				attr.data-auto-id = "recommendedATXWatchButton"
+				[ngClass]="componentData.atx?.recommended?.recordingURL ? null : 'disabled'"
+				(click)="atxWatchNow(componentData.atx.recommended.recordingURL)"
+				[innerText]="'_WatchNow_' | i18n">
+			</button>
 		</div>
 	</div>
 </ng-template>

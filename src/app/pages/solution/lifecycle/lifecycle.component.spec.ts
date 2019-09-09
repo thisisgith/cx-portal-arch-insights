@@ -571,8 +571,6 @@ describe('LifecycleComponent', () => {
 			component.sessionSelected = { };
 			component.getRacetrackInfo('Use');
 
-			tick();
-
 			const button = component.getAtxRegisterButton(data);
 
 			expect(button)
