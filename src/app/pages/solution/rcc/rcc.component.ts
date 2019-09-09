@@ -542,7 +542,7 @@ export class RccComponent implements OnInit, OnDestroy {
 	 */
 	public onSubfilterSelect (subfilter: string, filter: Filter, triggeredFromGraph) {
 		this.errorPolicyView = false;
-		if (!this.searchForm.valid ||
+		if (this.searchForm.invalid ||
 				(!_.isEmpty(this.searchInput.trim()) && this.searchInput.trim().length < 2)) {
 			this.invalidSearchInput = true;
 
@@ -680,10 +680,12 @@ export class RccComponent implements OnInit, OnDestroy {
 			}
 			this.searched = false;
 		}
-		if (!this.searchForm.valid && type !== 'clear'
+		if (this.searchForm.invalid && type !== 'clear'
 			&& ((event && event.keyCode && event.keyCode === 13) ||
 			type === 'search')) {
 			this.invalidSearchInput = true;
+
+			return;
 		}
 		if (this.prevSearchText.toLowerCase() === this.searchInput.trim()
 		.toLowerCase()) { return; }
@@ -691,6 +693,8 @@ export class RccComponent implements OnInit, OnDestroy {
 			type === 'search') && (this.searchInput.trim().length < 2)) {
 			this.searchInput = this.searchInput.trim();
 			this.invalidSearchInput = true;
+
+			return;
 		}
 		if (type === 'clear' || (this.searchForm.valid &&
 			(event.keyCode === 8 || (!_.isEmpty(this.searchForm.value.search) &&
@@ -699,6 +703,7 @@ export class RccComponent implements OnInit, OnDestroy {
 			this.errorPolicyView = false;
 			this.invalidSearchInput = false;
 			this.prevSearchText = this.searchForm.value.search.trim();
+			this.searchInput = this.searchInput.trim();
 			this.tableConfig.tableOffset = 0;
 			this.tableConfig.totalItems = 0;
 			this.searched = true;
