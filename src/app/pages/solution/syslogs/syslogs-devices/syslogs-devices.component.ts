@@ -176,9 +176,9 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 			.subscribe(gridData => {
 				this.tableData = gridData.responseData;
 				this.totalItems = gridData.responseData.length;
-				 this.tableEndIndex = 10;
+				this.tableEndIndex = 10;
 				if (this.tableEndIndex > this.totalItems) {
-					this.tableEndIndex = this.totalItems ;
+					this.tableEndIndex = this.totalItems;
 				}
 			},
 			catchError(err => {
@@ -241,10 +241,10 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 	 */
 	public onPagerUpdated (pageInfo: any) {
 		this.tableOffset = pageInfo.page;
-		this.tableStartIndex = (pageInfo.page * pageInfo.limit) ;
-		this.tableEndIndex = (pageInfo.page * pageInfo.limit) + 10 ;
+		this.tableStartIndex = (pageInfo.page * pageInfo.limit);
+		this.tableEndIndex = (pageInfo.page * pageInfo.limit) + 10;
 		if (this.tableEndIndex > this.totalItems) {
-			this.tableEndIndex = this.totalItems ;
+			this.tableEndIndex = this.totalItems;
 		}
 	}
 	/**

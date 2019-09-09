@@ -186,7 +186,7 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 				this.totalItems = gridData.length;
 				this.tableEndIndex = 10;
 				if (this.tableEndIndex > this.totalItems) {
-					this.tableEndIndex = this.totalItems ;
+					this.tableEndIndex = this.totalItems;
 				}
 			}, catchError(err => {
 				this.logger.error('syslogs-details.component : getDeviceGridData() ' +
@@ -238,9 +238,9 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 	public onPagerUpdated (pageInfo: any) {
 		this.tableOffset = pageInfo.page;
 		this.tableStartIndex = (pageInfo.page * pageInfo.limit);
-		this.tableEndIndex = (pageInfo.page * pageInfo.limit) + 10 ;
+		this.tableEndIndex = (pageInfo.page * pageInfo.limit) + 10;
 		if (this.tableEndIndex > this.totalItems) {
-			this.tableEndIndex = this.totalItems ;
+			this.tableEndIndex = this.totalItems;
 		}
 	}
 	/**
