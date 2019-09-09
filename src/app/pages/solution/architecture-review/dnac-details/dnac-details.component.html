@@ -1,7 +1,7 @@
 <div class="row base-margin-top">
 	<div class="col-md-12">
 		<div class="container">
-			<cui-drawer projection="true" [expanded]="true" *ngIf="dnacDetails">
+			<cui-drawer projection="true" expanded="true" *ngIf="dnacDetails">
 				<div class="cui-drawer-label text-large"
 					[innerText]="'_ArchitectureSDAScaleUtilization_' | i18n | uppercase">
 				</div>
@@ -23,11 +23,7 @@
 	let-networkDevicesData="networkDevicesData" let-endPointsData="endPointsData">
 			<div *ngIf="!isLoading">
 				<bullet-chart [seriesData]="networkDevicesData" ></bullet-chart>
-			</div>
-			<div *ngIf="!isLoading">
 				<bullet-chart [seriesData]="endPointsData" ></bullet-chart>
-			</div>
-			<div *ngIf="!isLoading">
 				<bullet-chart [seriesData]="fabricsData" ></bullet-chart>
 			</div>
 			<div class="base-margin-top" *ngIf="isLoading">

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed, fakeAsync } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 
 import { DnacDetailsComponent } from './dnac-details.component';
 import { DnacDetailsModule } from './dnac-details.module';
@@ -12,7 +12,7 @@ import { of, throwError } from 'rxjs';
 import { user } from '@mock';
 import { HttpErrorResponse } from '@angular/common/http';
 
-describe('DnacDetailsComponent', () => {
+fdescribe('DnacDetailsComponent', () => {
 	let component: DnacDetailsComponent;
 	let fixture: ComponentFixture<DnacDetailsComponent>;
 	let service: ArchitectureReviewService;
@@ -83,6 +83,8 @@ describe('DnacDetailsComponent', () => {
 			.returnValue(
 				throwError(new HttpErrorResponse(error)),
 			);
+		component.getNetworkDevicesCount();
+		tick();
 		expect(component.getNetworkDevicesCount)
 			.toThrowError();
 	}));

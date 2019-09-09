@@ -2,7 +2,7 @@
 /**
  * bullet chart data type
  */
-export interface Ibullet {
+export interface IBullet {
 	customerId?: string;
 	dnacIP?: string;
 	productId?: string;
