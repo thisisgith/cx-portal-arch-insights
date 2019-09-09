@@ -281,7 +281,9 @@ describe('RiskMitigationComponent', () => {
 			customerId: 324123,
 			limit: 10,
 			page: 2,
+			search: '',
 			size: 10,
+			sort: 'abc.desc',
 		};
 		component.onHcrPagerUpdated(param);
 		expect(component.highCrashRiskAssetsGridDetails.tableOffset)
@@ -312,7 +314,7 @@ describe('RiskMitigationComponent', () => {
 			.toBe(true);
 	});
 
-	it('on table sorting change', () => {
+	it('on crashed table sorting change', () => {
 		component.filters[0].seriesData = [
 			{
 				filter: 'Time: Last 24h',
@@ -390,6 +392,44 @@ describe('RiskMitigationComponent', () => {
 			.toBeDefined();
 		expect(component.showFpDetails)
 			.toBeTruthy();
+	});
+
+	it('on searching a string', () => {
+		component.onlyCrashes = false;
+		const result = {
+			customerId: 12323,
+			key: '',
+			search: '',
+			sortDirection: '',
+			time: '90d',
+		};
+		spyOn(component, 'getFilterDetailsForSearchQuery')
+			.and
+			.returnValue(result);
+		spyOn(component, 'searchInCrashedAssetsGrid');
+		spyOn(component, 'getFingerPrintDeviceDetails');
+		fixture.detectChanges();
+		component.onSearchQuery('testString');
+		expect(component.searchQueryInCrashGrid)
+		.toEqual('testString');
+		expect(component.getFilterDetailsForSearchQuery)
+		.toHaveBeenCalled();
+		expect(component.searchInCrashedAssetsGrid)
+		.toHaveBeenCalled();
+		fixture.detectChanges();
+		component.onlyCrashes = true;
+		component.onSearchQuery('testString');
+		expect(component.searchQueryInHighCrashGrid)
+		.toEqual('testString');
+		expect(component.highCrashRiskParams.page)
+		.toEqual(0);
+		expect(component.highCrashRiskParams.search)
+		.toEqual('testString');
+		expect(component.highCrashRiskParams.size)
+		.toEqual(10);
+		expect(component.getFingerPrintDeviceDetails)
+		.toHaveBeenCalled();
+
 	});
 
 	it('should hide the fingerprint details on panel close', () => {
