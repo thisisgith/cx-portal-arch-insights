@@ -17,11 +17,11 @@
 			</div>
 			<div class="col-md-10 no-padding">
 				<div class="col-md-7 seperator-line half-margin-left">
-					<div class="flex flex-fill flex-fluid">
+					<div class="flex flex-fluid">
 						<ng-container *ngFor="let filter of filters">
 							<div attr.id="RccSelectVisualFilter-{{ filter?.key }}"
 								attr.data-auto-id="RccSelectVisualFilter-{{filter?.key}}" [ngClass]="{filter__selected: filter?.selected,
-									'filter__not-selected': !filter?.selected}" class="panel flex-center flex-fill filter">
+									'filter__not-selected': !filter?.selected}" class="flex-center filter">
 								<div>
 									<div *ngIf="filter?.template">
 										<ng-container *ngTemplateOutlet="filter?.template;
