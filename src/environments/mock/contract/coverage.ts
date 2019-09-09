@@ -140,7 +140,7 @@ export const CoverageScenarios = [
 					description: 'Coverage < 1%',
 					response: {
 						body: {
-							covered: 8,
+							covered: 80,
 							expired: 0,
 							uncovered: 3,
 							unknown: 8915,
