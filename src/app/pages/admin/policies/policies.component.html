@@ -43,10 +43,10 @@
 					</div>
 					<div class="col-10">
 						<ng-container *ngIf="scan.policyType === 'SCAN'">
-							<div [innerText]="scan.deviceCount + ' devices are scanned ' + scan.formattedSchedule"></div>
+							<div [innerText]="'_XDevicesAreScheduledToBeScannedY_' | i18n : scan.deviceCount : scan.formattedSchedule"></div>
 						</ng-container>
 						<ng-container *ngIf="scan.policyType === 'IGNORE'">
-							<div [innerText]="scan.deviceCount + ' devices cannot be scanned at any time'"></div>
+							<div [innerText]="'_XDevicesCannotBeScanned_' | i18n : scan.deviceCount"></div>
 						</ng-container>
 					</div>
 					<div class="col-1 flex-center">
@@ -69,7 +69,7 @@
 						<span class="icon-compliance icon-small text-primary"></span>
 					</div>
 					<div class="col-10">
-						<div [innerText]="'Network runs collection ' + collection.formattedSchedule"></div>
+						<div [innerText]="'_NetworkRunsCollectionX_' | i18n : collection.formattedSchedule"></div>
 					</div>
 					<div class="col-1 flex-center">
 						<a
