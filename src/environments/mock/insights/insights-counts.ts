@@ -1,11 +1,14 @@
 import { InsightsResponse } from '@sdp-api';
 
 /** Base of URL for SDP API insights */
-const api = '/api/customerportal/insightsCounts/v1/allCounts/customer/7293498/timePeriod/0';
+const api = '/api/customerportal/insightsCounts/v1/allCounts/customer/';
+
+const customerId = '7293498';
 
 /** The mock response for insights count */
 const mockInsightsCounts: InsightsResponse = {
 	complianceIssueCnt: 0,
+	optedIn: true,
 	predictedCrashCnt: 3,
 	recentCrashCnt: 5,
 	totalCnt: 8,
@@ -26,7 +29,7 @@ export const InsightsScenarios = [
 				selected: true,
 			},
 		},
-		url: `${api}`,
+		url: `${api}${customerId}/timePeriod/0`,
 		usecases: ['Use Case 1'],
 	},
 ];

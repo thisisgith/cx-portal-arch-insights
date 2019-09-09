@@ -25,14 +25,14 @@ class InsightsCrashesService extends __BaseService {
    * The Vulnerabilities count API retrieves counts for product vulnerabilities. This includes counts for security advisories, field notices, and bugs.
    * @return successful operation
    */
-  getInsightsCountsResponse(): __Observable<__StrictHttpResponse<InsightsResponse>> {
+  getInsightsCountsResponse(customerId: string): __Observable<__StrictHttpResponse<InsightsResponse>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
     
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/customerportal/insightsCounts/v1/allCounts/customer/7293498/timePeriod/0`,
+      this.rootUrl + `/customerportal/insightsCounts/v1/allCounts/customer/${customerId}/timePeriod/0`,
       __body,
       {
         headers: __headers,
@@ -54,8 +54,8 @@ class InsightsCrashesService extends __BaseService {
    *
    * @return successful operation
    */
-  getInsightsCounts(): __Observable<InsightsResponse> {
-    return this.getInsightsCountsResponse().pipe(
+  getInsightsCounts(customerId: string): __Observable<InsightsResponse> {
+    return this.getInsightsCountsResponse(customerId).pipe(
       __map(_r => _r.body as InsightsResponse)
     );
   }

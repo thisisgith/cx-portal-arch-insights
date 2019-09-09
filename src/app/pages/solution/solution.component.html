@@ -146,13 +146,13 @@
 		<cui-spinner></cui-spinner>
 	</div>
 	<div class="kmii__detailed" *ngIf="!facet?.loading">
-		<div class="kmii__insights">
+		<div class="kmii__insights" *ngIf="!facet?.isError">
 			<span class="kmii__insights__num base-padding-top"
 				[class.kmii__insights__num--selected]="facet?.selected"
 				[innerText]="facet?.seriesData?.totalCnt">
 			</span>
 			<div class="kmii__insights__title">
-				 <div>
+				 <div *ngIf="facet?.seriesData?.optedIn">
 					<span [innerText]="facet?.seriesData?.complianceIssueCnt"></span>
 					<span class="qtr-padding-left" [innerText]="'_InsightsComplianceIssues_' | i18n"></span>
 				</div>
@@ -172,6 +172,7 @@
 				<span [innerText]="'+2'"></span>
 			</div>
 		</div>
+		<div class="kmii__insights__title" *ngIf="facet?.isError" [innerText]="'_InsightsNoResultsFound_' | i18n"></div>
 	</div>
 	<p class="km__items__item__label" [innerText]="facet?.title | uppercase"></p>
 	<div

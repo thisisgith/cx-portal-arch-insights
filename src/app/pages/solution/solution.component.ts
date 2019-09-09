@@ -481,8 +481,9 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		const insightsFacet = _.find(this.facets, { key: 'insights' });
 
 		insightsFacet.loading = true;
+		insightsFacet.isError = false;
 
-		return this.insightsCrashesService.getInsightsCounts()
+		return this.insightsCrashesService.getInsightsCounts(this.customerId)
 		.pipe(
 			map((counts: any) => {
 
@@ -491,6 +492,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 			}),
 			catchError(err => {
 				insightsFacet.loading = false;
+				insightsFacet.isError = true;
 				this.logger.error('solution.component : fetchInsightsCounts() ' +
 				`:: Error : (${err.status}) ${err.message}`);
 

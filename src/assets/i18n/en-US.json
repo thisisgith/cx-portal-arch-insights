@@ -500,6 +500,7 @@
 	"_InProgress_": "In progress",
 	"_Insights_": "Insights",
 	"_InsightsComplianceIssues_": "Compliance Issues",
+	"_InsightsNoResultsFound_": "No Results Found",
 	"_InsightsPredictedCrashes_": "Predicted Crashes",
 	"_InsightsRecentCrashes_": "Recent Crashes",
 	"_InstallCiscoIE_": "Install Cisco CX Collector and use its collector to connect devices to CX Portal.",
