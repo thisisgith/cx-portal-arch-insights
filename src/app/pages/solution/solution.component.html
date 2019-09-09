@@ -43,14 +43,13 @@
 		<div class="context-selector flex flex-fluid flex-center-vertical">
 			<div class="svg-chevron-right" *ngIf="selectedSolution">
 				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 23">
-					<polyline fill="none" stroke="#232323" points="40 27.626 50.882 36 62.619 27.626"
-						opacity=".222" transform="matrix(0 1 1 0 -27 -40)"></polyline>
+					<polyline fill="none" stroke="#232323" points="40 27.626 50.882 36 62.619 27.626" opacity=".222"
+						transform="matrix(0 1 1 0 -27 -40)"></polyline>
 				</svg>
 			</div>
 			<div *ngIf="selectedSolution">
 				<div class="group-label" [innerText]="'_Solution_' | i18n"></div>
-				<div class="dropdown" data-auto-id="SolutionDropdown"
-					[ngClass]="{'active': solutionDropdown }"
+				<div class="dropdown" data-auto-id="SolutionDropdown" [ngClass]="{'active': solutionDropdown }"
 					(click)="useCaseDropdown = false; solutionDropdown = !solutionDropdown">
 					<a class="text-color-dkgray text-size-18" [innerText]="selectedSolution.name"></a>
 					<div class="dropdown__menu">
@@ -64,8 +63,8 @@
 			</div>
 			<div class="svg-chevron-right" *ngIf="selectedTechnology">
 				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 23">
-					<polyline fill="none" stroke="#232323" points="40 27.626 50.882 36 62.619 27.626"
-						opacity=".222" transform="matrix(0 1 1 0 -27 -40)"></polyline>
+					<polyline fill="none" stroke="#232323" points="40 27.626 50.882 36 62.619 27.626" opacity=".222"
+						transform="matrix(0 1 1 0 -27 -40)"></polyline>
 				</svg>
 			</div>
 			<div *ngIf="selectedTechnology">
@@ -119,35 +118,37 @@
 </ng-template>
 
 <ng-template #insightsFacet let-facet="facet">
-	<!-- TODO: Insights track needs to wire this up with some sort of data, nothing here is real -->
-	<div class="kmii__detailed">
-		<div class="kmii__insights">
-			<span class="kmii__insights__num" [class.kmii__insights__num--selected]="facet?.selected"
-				[innerText]="facet?.seriesData?.totalCnt">
-			</span>
-			<div class="kmii__insights__title">
-				<div>
-					<span [innerText]="facet?.seriesData?.complianceIssueCnt"></span>
-					<span class="qtr-padding-left" [innerText]="'_InsightsComplianceIssues_' | i18n"></span>
-				</div>
-				<div>
-					<span [innerText]="facet?.seriesData?.predictedCrashCnt"></span>
-					<span class="qtr-padding-left" [innerText]="'_InsightsPredictedCrashes_' | i18n"></span>
-				</div>
-				<div>
-					<span [innerText]="facet?.seriesData?.recentCrashCnt"></span>
-					<span class="qtr-padding-left" [innerText]="'_InsightsRecentCrashes_' | i18n"></span>
-				</div>
-			</div>
-			<div class="kmii__insights__change" *ngIf="false">
-				<div class="kmii__insights__arrow" inlineSVG="assets/icons/icon-arrow-down.svg">
-				</div>
-				<span [innerText]="'+2'"></span>
-			</div>
-		</div>
-	</div>
-	<p class="km__items__item__label" [innerText]="facet?.title | uppercase"></p>
-	<div class="kmii__border" [class.kmii__border--selected]="facet?.selected"></div>
+	    <div class="kmii__detailed">
+		        <div class="kmii__insights">
+			            <span class="kmii__insights__num" [class.kmii__insights__num--selected]="facet?.selected"
+				                [innerText]="facet?.seriesData?.totalCnt">
+				            </span>
+			            <div class="kmii__insights__title">
+				                <div>
+					                    <span [innerText]="facet?.seriesData?.complianceIssueCnt"></span>
+					                    <span class="qtr-padding-left"
+						[innerText]="'_InsightsComplianceIssues_' | i18n"></span>
+					                </div>
+				                <div>
+					                    <span [innerText]="facet?.seriesData?.predictedCrashCnt"></span>
+					                    <span class="qtr-padding-left"
+						[innerText]="'_InsightsPredictedCrashes_' | i18n"></span>
+					                </div>
+				                <div>
+					                    <span [innerText]="facet?.seriesData?.recentCrashCnt"></span>
+					                    <span class="qtr-padding-left"
+						[innerText]="'_InsightsRecentCrashes_' | i18n"></span>
+					                </div>
+				            </div>
+			            <div class="kmii__insights__change" *ngIf="false">
+				                <div class="kmii__insights__arrow" inlineSVG="assets/icons/icon-arrow-down.svg">
+					                </div>
+				                <span [innerText]="'+2'"></span>
+				            </div>
+			        </div>
+		    </div>
+	    <p class="km__items__item__label" [innerText]="facet?.title | uppercase"></p>
+	    <div class="kmii__border" [class.kmii__border--selected]="facet?.selected"></div>
 </ng-template>
 
 <ng-template #advisoriesFacet let-facet="facet">
