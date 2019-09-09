@@ -36,7 +36,6 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 			.subscribe((id: string) => {
 				this.customerId = id;
 			});
-		this.logger.debug('BestpracticesComponent Created!');
 	}
 	get selectedFilters () {
 		return _.filter(this.filters, 'selected');

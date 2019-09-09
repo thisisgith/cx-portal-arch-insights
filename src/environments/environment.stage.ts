@@ -20,8 +20,8 @@ export const environment = {
 		referUrl: `${origin}/ws/oauth/v3/sso/`,
 		tokenUrl: `${origin}/ws/oauth/v3/token/cway/35ae50e6ff5843f59183da19cc44245d`,
 	},
-	emailToID: 'cx-portal-support-nonprod@cisco.com',
 	baseHref: '/pbc/',
+	emailToID: 'cx-portal-support-nonprod@cisco.com',
 	ieSetup: {
 		asdAuthURL: 'https://cway.cisco.com/ws/oauth/v3/token/cisco/ae95x38c7zgu5fas59gseyfk',
 		asdBaseURL: 'https://api.cisco.com/software/preview/v3.0',
@@ -39,6 +39,8 @@ export const environment = {
 			'management/network-automation-and-management/dna-center/1-4/user_guide/' +
 			'b_cisco_dna_center_ug_1_4/b_cisco_dna_center_ug_1_4_chapter_01001.html',
 	},
+	mapboxToken:
+	'pk.eyJ1IjoibWlzY2htaTIiLCJhIjoiY2p4eDl2ODVnMGpmODNkcDhsbG5nNXQ0YyJ9.vpfGffFASSUfANAU4Yvtxg',
 	production: true,
 	/**
 	 * sdpServiceOrigin MUST be explicitly declared in every single environment file,

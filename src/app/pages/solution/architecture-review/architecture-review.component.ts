@@ -48,7 +48,6 @@ export class ArchitectureReviewComponent implements OnInit {
 		private architectureService: ArchitectureReviewService,
 		private route: ActivatedRoute,
 		) {
-		this.logger.debug('ArchitectureReviewComponent Created!');
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
 	}

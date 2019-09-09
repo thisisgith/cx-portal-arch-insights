@@ -35,6 +35,7 @@ import { DetailsPanelStackService } from '@services';
 		'[class.hidden]': 'hidden',
 	},
 	selector: 'advisory-details',
+	styleUrls: ['./advisory-details.component.scss'],
 	templateUrl: './advisory-details.component.html',
 })
 export class AdvisoryDetailsComponent implements OnChanges, OnInit, OnDestroy, Panel360 {
