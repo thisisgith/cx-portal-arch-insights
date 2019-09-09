@@ -1,7 +1,5 @@
 <div class="half-padding-bottom">
-		<cui-alert
-		[options]="alert"
-		></cui-alert>
+	<cui-alert [options]="alert"></cui-alert>
 </div>
 <div *ngIf="(!initialLoading && !apiNoData); else commonTemplate;">
 	<div class="row">
