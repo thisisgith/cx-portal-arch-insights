@@ -9,7 +9,7 @@
 		</div>
 	</div>
 	<div class="col-md-6 text-right" >
-		<div>
+		<div *ngIf="cxLevel === 3">
 			<div [innerText]="'_CSNeedSoftwareRecommendation_' | i18n"></div>
 			<a (click)="contactSupport.emit()" class="recommedation-link text-primary" data-auto-id="ContactExpert" [innerText]="'_CSRequestExpert_' | i18n"></a>
 		</div>

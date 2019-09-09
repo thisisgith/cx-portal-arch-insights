@@ -26,6 +26,7 @@ import * as _ from 'lodash-es';
 	templateUrl: './software-groups.component.html',
 })
 export class SoftwareGroupsComponent implements OnInit, OnDestroy {
+	@Input() public cxLevel;
 	@Input() public fullscreen;
 	@Output() public fullscreenChange = new EventEmitter<boolean>();
 	@Input() public selectedSoftwareGroup;
