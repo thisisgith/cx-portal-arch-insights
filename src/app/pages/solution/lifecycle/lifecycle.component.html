@@ -440,23 +440,13 @@
 			</table>
 		</div>
 		<div>
-			<a id="AtxScheduleCardRegisterButton"
-				class="pull-left half-padding-left"
-				target="_blank"
-				*ngIf="data.status !== 'scheduled' && sessionSelected?.registrationURL && !notCurrentPitstop"
-				[href]="sessionSelected?.registrationURL">
-				<button class="btn btn--primary base-margin-top half-margin-left cx-button"
-					[innerText]="'_Register_' | i18n"
-					data-auto-id="AtxScheduleCardRegisterButton">
-				</button>
-			</a>
-			<div class="pull-left half-padding-left">
-				<button class="btn btn--primary disabled base-margin-top half-margin-left cx-button"
-					*ngIf="!sessionSelected?.registrationURL || notCurrentPitstop || data.status === 'scheduled'"
-					[innerText]="'_Register_' | i18n"
-					data-auto-id="AtxScheduleCardRegisterButton">
-				</button>
-			</div>
+			<button id="AtxScheduleCardRegisterButton"
+				class="pull-left half-padding-left btn btn--primary base-margin-top half-margin-left cx-button"
+				attr.data-auto-id = "AtxScheduleCardRegisterButton"
+				[ngClass]="getAtxRegisterButton(data)"
+				(click)="atxRegister(sessionSelected.registrationURL)"
+				[innerText]="'_Register_' | i18n">
+			</button>
 			<div class="half-padding-left pull-left">
 				<button class="btn btn--secondary base-margin-top text-danger half-margin-left cx-button"
 					[disabled]="!sessionSelected || !sessionSelected.scheduled"
@@ -905,11 +895,12 @@
 							getCoordinates($event)"
 						[innerText]="'_ViewSessions_' | i18n">
 					</button>
-					<a *ngIf="item.recordingURL" class="no-link" target="_blank" [href]="item.recordingURL">
-						<button data-auto-id="recommendedATXWatchButton"
-							class="btn btn--small btn--secondary text-uppercase cx-button"
-							[innerText]="'_WatchNow_' | i18n"></button>
-					</a>
+					<button class="btn btn--small btn--secondary text-uppercase cx-button"
+						attr.data-auto-id = "CardATXWatchNow-{{ item.recordingURL }}"
+						[ngClass]="item?.recordingURL ? null : 'disabled'"
+						(click)="atxWatchNow(item.recordingURL); closeModal()"
+						[innerText]="'_WatchNow_' | i18n">
+					</button>
 				</div>
 			</div>
 		</div>
@@ -1266,10 +1257,12 @@
 			(click)="atxScheduleCardOpened = true; recommendedAtxScheduleCardOpened = false; componentData.atx.interested = celldata; getCoordinates($event)"
 			[innerText]="'_ViewSessions_' | i18n">
 		</button>
-		<a class="no-link" target="_blank" [href]="celldata.recordingURL">
-			<button data-auto-id="WatchnowButton" class="btn btn--small btn--secondary cx-button text-uppercase half-margin-left cx-button"
-				[innerText]="'_WatchNow_' | i18n"></button>
-		</a>
+		<button class="btn btn--small btn--secondary text-uppercase cx-button half-margin-left"
+			attr.data-auto-id = "ListATXWatchNow-{{ celldata.recordingURL }}"
+			[ngClass]="celldata?.recordingURL ? null : 'disabled'"
+			(click)="atxWatchNow(celldata.recordingURL); closeModal()"
+			[innerText]="'_WatchNow_' | i18n">
+		</button>
 	</div>
 	<div *ngIf="type === 'ACC' && celldata.status === 'recommended'" class="text-right">
 		<ng-container *ngTemplateOutlet="!notCurrentPitstop ? enabledAccButton : disabledAccButton; context: {
