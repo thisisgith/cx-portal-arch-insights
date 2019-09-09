@@ -39,12 +39,12 @@ const publicCommunities: CommunityDetail[] = [
 	},
 	{
 		description: 'Cisco Digital Network Architecture (DNA)',
-		url: `${environment.publicCommunityUrl}/digital-network-architecture/bd-p/discussions-dna`,
+		url: `${environment.publicCommunityUrl}/${environment.DNACommunititesPath}/bd-p/discussions-dna`,
 		usecase: 'network device onboarding',
 	},
 	{
 		description: 'Cisco Digital Network Architecture (DNA)',
-		url: `${environment.publicCommunityUrl}/digital-network-architecture/bd-p/discussions-dna`,
+		url: `${environment.publicCommunityUrl}/${environment.DNACommunititesPath}/bd-p/discussions-dna`,
 		usecase: 'campus software image management',
 	},
 ];
