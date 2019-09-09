@@ -71,19 +71,19 @@ describe('FeedbackComponent', () => {
 		thumbUpBtn.nativeElement.click();
 		tick();
 		fixture.detectChanges();
-		expect(component.thumbsUpSelected)
+		expect(component.thumbSelected)
 			.toBeTruthy();
 
 		thumbDownBtn.nativeElement.click();
 		tick();
 		fixture.detectChanges();
-		expect(component.thumbsDownSelected)
+		expect(component.thumbSelected)
 			.toBeTruthy();
 
 		thumbDownBtn.nativeElement.click();
 		tick();
 		fixture.detectChanges();
-		expect(component.thumbsDownSelected)
+		expect(component.thumbSelected)
 			.toBeFalsy();
 	}));
 

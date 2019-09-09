@@ -20,6 +20,7 @@ import {
 	VulnerabilityScenarios,
 	user,
 } from '@mock';
+import { ElementRef } from '@angular/core';
 
 describe('AdvisoriesComponent', () => {
 	let component: AdvisoriesComponent;
@@ -547,6 +548,58 @@ describe('AdvisoriesComponent', () => {
 
 			expect(_.get(tab, ['params', 'search']))
 				.toBe('search');
+		}));
+
+		it('should handle details click inside', fakeAsync(() => {
+			buildSpies();
+			fixture.detectChanges();
+			tick(1000);
+			component.details = jasmine.createSpyObj('details', { contains: true });
+			const panelCloseSpy = spyOn(component, 'onPanelClose');
+			const target = new ElementRef({ });
+
+			// first click case but in details
+			component.detailsFirstClick = true;
+			component.onPageClick(target);
+
+			expect(component.detailsFirstClick)
+				.toBeFalsy();
+
+			// second click case
+			component.detailsFirstClick = false;
+			component.onPageClick(target);
+
+			expect(component.detailsFirstClick)
+				.toBeFalsy();
+			expect(panelCloseSpy)
+				.toHaveBeenCalledTimes(0);
+		}));
+
+		it('should handle details click outside', fakeAsync(() => {
+			buildSpies();
+			fixture.detectChanges();
+			tick(1000);
+			component.details = jasmine.createSpyObj('details', { contains: false });
+			spyOn(component, 'onPanelClose');
+			const target = new ElementRef({ });
+
+			// first click and outside details
+			component.detailsFirstClick = true;
+			component.onPageClick(target);
+
+			expect(component.detailsFirstClick)
+				.toBeFalsy();
+			expect(component.onPanelClose)
+				.toHaveBeenCalledTimes(0);
+
+			// second click case and outside
+			component.detailsFirstClick = false;
+			component.onPageClick(target);
+
+			expect(component.detailsFirstClick)
+				.toBeFalsy();
+			expect(component.onPanelClose)
+				.toHaveBeenCalled();
 		}));
 
 	});

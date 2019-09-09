@@ -88,12 +88,11 @@ export class NoDNACHeaderComponent implements OnDestroy, OnInit {
 	 * Emit position and dimensions of "Continue" button
 	 */
 	public refreshButton () {
+		const btn = this.continueSetupButton.nativeElement.getBoundingClientRect();
 		this.buttonData.emit({
 			active: !this.isInvisible,
-			left: this.continueSetupButton.nativeElement.offsetLeft +
-			this.continueSetupButton.nativeElement.offsetWidth / 2,
-			top: this.continueSetupButton.nativeElement.offsetTop +
-				this.continueSetupButton.nativeElement.offsetHeight / 2,
+			left: btn.left + btn.width / 2,
+			top: btn.top - btn.height / 2,
 		});
 	}
 }
