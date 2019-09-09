@@ -1,6 +1,12 @@
+@import '../../../../../mixins.scss';
+
 .architecture-column {
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	width: 200px;
+	max-width: 200px;
+}
+
+:host ::ng-deep .table {
+	@include table-ellipse;
 }

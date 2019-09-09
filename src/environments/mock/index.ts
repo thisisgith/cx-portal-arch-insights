@@ -16,6 +16,8 @@ export * from './controlpoints/devices';
 export * from './diagnostics/critical-bugs';
 export * from './diagnostics/critical-bugs-assets';
 
+export * from './insights/insights-counts';
+
 export * from './inventory/assets';
 export * from './inventory/asset-summary';
 export * from './inventory/hardware';

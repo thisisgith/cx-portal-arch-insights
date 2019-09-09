@@ -138,7 +138,7 @@ describe('DevicesWithExceptionsComponent', () => {
 
 	it('should trigger search function', () => {
 		const enterKeyCode = 13;
-		component.globalSearchFunction(enterKeyCode);
+		component.textFilter(enterKeyCode);
 		expect(component.isLoading)
 			.toBeFalsy();
 		expect(component.tableStartIndex)

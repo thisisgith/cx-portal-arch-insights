@@ -68,7 +68,6 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 		public syslogsService: SyslogsService,
 		private userResolve: UserResolve,
 	) {
-		this.logger.debug('BestpracticesComponent Created!');
 		this.userResolve.getCustomerId()
 		.pipe(
 		takeUntil(this.destroy$),

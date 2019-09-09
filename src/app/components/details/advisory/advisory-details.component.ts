@@ -7,6 +7,7 @@ import {
 	Output,
 	SimpleChanges,
 	OnDestroy,
+	ElementRef,
 } from '@angular/core';
 import * as _ from 'lodash-es';
 import { I18n } from '@cisco-ngx/cui-utils';
@@ -34,6 +35,7 @@ import { DetailsPanelStackService } from '@services';
 		'[class.hidden]': 'hidden',
 	},
 	selector: 'advisory-details',
+	styleUrls: ['./advisory-details.component.scss'],
 	templateUrl: './advisory-details.component.html',
 })
 export class AdvisoryDetailsComponent implements OnChanges, OnInit, OnDestroy, Panel360 {
@@ -56,6 +58,7 @@ export class AdvisoryDetailsComponent implements OnChanges, OnInit, OnDestroy, P
 	public impactedAssets: (Asset | NetworkElement)[];
 
 	constructor (
+		private _elementRef: ElementRef,
 		private userResolve: UserResolve,
 		private detailsPanelStackService: DetailsPanelStackService,
 	) {
@@ -140,6 +143,15 @@ export class AdvisoryDetailsComponent implements OnChanges, OnInit, OnDestroy, P
 	 */
 	public handleAlert (alert: Alert) {
 		this.alert.show(alert.message, alert.severity);
+	}
+
+	/**
+	 * Determines whether target is contained by this component
+	 * @param target target ElementRef
+	 * @returns true if component contains target
+	 */
+	public contains (target: ElementRef) {
+		return this._elementRef.nativeElement.contains(target);
 	}
 
 	/**
