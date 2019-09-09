@@ -571,10 +571,4 @@ describe('RccComponent', () => {
 		expect(component.noTableData)
 			.toBeTruthy();
 	});
-
-	it('Should invoke onTableSortingChanged and assign tableOffset to 0', () => {
-		component.onTableSortingChanged();
-		expect(component.tableConfig.tableOffset)
-			.toBe(0);
-	});
 });

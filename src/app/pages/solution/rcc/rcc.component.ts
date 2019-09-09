@@ -599,37 +599,29 @@ export class RccComponent implements OnInit, OnDestroy {
 		this.searchInput = searchInput;
 		if (filter.key === 'policyGroup') {
 			this.policyGroup = sub.filter;
-			if (triggeredFromGraph) {
-				this.violationGridObj.policyType = this.policyGroup;
-			} else {
-				this.violationGridObj.policyType = null;
-			}
+			(triggeredFromGraph)
+				? this.violationGridObj.policyType = this.policyGroup
+				: this.violationGridObj.policyType = null;
 			this.violationGridObj.pageIndex = 0;
 			this.getRCCData(this.violationGridObj);
 		} else if (filter.key === 'severity') {
 			this.severity = sub.filter;
-			if (triggeredFromGraph) {
-				this.violationGridObj.severity = this.severity;
-			} else {
-				this.violationGridObj.severity = null;
-			}
+			(triggeredFromGraph)
+				? this.violationGridObj.severity = this.severity
+				: this.violationGridObj.severity = null;
 			this.violationGridObj.pageIndex = 0;
 			this.getRCCData(this.violationGridObj);
 		} else if (filter.key === 'assetOsType') {
 			this.assetOsType = sub.filter;
-			if (triggeredFromGraph) {
-				this.assetGridObj.osType = this.assetOsType;
-			} else {
-				this.assetGridObj.osType = null;
-			}
+			(triggeredFromGraph)
+				? this.assetGridObj.osType = this.assetOsType
+				: this.assetGridObj.osType = null;
 			this.getRCCAssetData(this.assetGridObj);
 		} else if (filter.key === 'assetSeverity') {
 			this.severity = sub.filter;
-			if (triggeredFromGraph) {
-				this.assetGridObj.severity = this.severity;
-			} else {
-				this.assetGridObj.severity = null;
-			}
+			(triggeredFromGraph)
+				? this.assetGridObj.severity = this.severity
+				: this.assetGridObj.severity = null;
 			this.getRCCAssetData(this.assetGridObj);
 		}
 		this.tableConfig.tableOffset = 0;
