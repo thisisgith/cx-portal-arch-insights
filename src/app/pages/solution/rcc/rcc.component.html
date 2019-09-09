@@ -65,7 +65,7 @@
 							<input data-auto-id="searchInput" id="searchInput" type="search"
 								class="rcc-search"
 								#searchInput1 [(ngModel)]="searchInput" name="searchInput"
-								[minlength]="searchOptions?.min" [maxlength]="searchOptions?.max"
+								[maxlength]="searchOptions?.max"
 								[pattern]="searchOptions?.pattern" formControlName="search"
 								placeholder="{{ '_Search_' | i18n }}" (search)="clearSearchInput()">
 							<button data-auto-id="searchButton" type="button" class="link" (click)="searchViolations($event,'search')">
@@ -73,7 +73,7 @@
 							</button>
 						</div>
 						<div class="help-block text-danger flex" 
-							role="alert" *ngIf="invalidSearchInput">
+							role="alert" *ngIf="invalidSearchInput || searchForm.invalid">
 							<span [innerText]="'_RccInvalidSearchInput_' | i18n" ></span>
 						</div>
 					</form>
