@@ -34,8 +34,8 @@ const accFilters = [
 	{ filter: 'Scheduled', field: 'status', value: 'scheduled' },
 	{ filter: 'In progress', field: 'status', value: 'in-progress' },
 	{ filter: 'Completed', field: 'status', value: 'completed' },
-	{ filter: 'Bookmarked', field: 'isFavorite', value: true },
-	{ filter: 'Not bookmarked', field: 'isFavorite', value: false },
+	{ filter: 'Bookmarked', field: 'bookmark', value: true },
+	{ filter: 'Not bookmarked', field: 'bookmark', value: false },
 ];
 
 const i18n = require('../../src/assets/i18n/en-US.json');
@@ -86,7 +86,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 					.should('have.text', i18n._Requested_);
 				break;
 			default:	// Default: recommended
-				cy.getByAutoId('recommendedACCWatchButton')
+				cy.getByAutoId('Request1on1ACCButton')
 					.should('have.text', i18n._Request1on1_);
 				cy.getByAutoId('recommendedACC-Flag').should('exist');
 		}
@@ -130,12 +130,12 @@ describe('Accelerator (ACC)', () => { // PBC-32
 							.should('contain', i18n._Requested_);
 						break;
 					default:	// Default: recommended
-						cy.getByAutoId('Request1on1Button')
+						cy.getByAutoId('Request1on1ACCButton')
 							.should('contain', i18n._Request1on1_);
 				}
 
 				// PBC-237 Check bookmark ribbon
-				if (acc.isFavorite) {
+				if (acc.bookmark) {
 					cy.getByAutoId('ACCCardRibbon')
 						.should('have.class', 'ribbon__blue');
 				} else {
@@ -145,6 +145,49 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			});
 		});
 		cy.getByAutoId('SuccessPathCloseModal').click();
+	});
+
+	describe('ACC Card View', () => {
+		before(() => {
+			// Open the ACC View All modal, and ensure we're in card view
+			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
+			cy.getByAutoId('ViewAllModal').should('be.visible');
+			cy.getByAutoId('card-view-btn').click();
+			cy.getByAutoId('ACCCard').should('be.visible');
+		});
+
+		after(() => {
+			// Close the View All modal
+			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllModal').should('not.exist');
+
+			// Refresh the page to force-reset bookmarks
+			cy.loadApp();
+			cy.wait('(ACC) IBN-Campus Network Assurance-Onboard');
+		});
+
+		it('ACC View All card view should allow bookmarking/unbookmarking items', () => {
+			accItems.forEach((item, index) => {
+				cy.getByAutoId('ACCCard').eq(index).within(() => {
+					// Check for bookmark API calls
+					if (item.bookmark) {
+						cy.getByAutoId('ACCCardRibbon')
+							.should('have.class', 'ribbon__blue')
+							.click();
+						cy.wait('(Lifecycle) IBN-Bookmark');
+						cy.getByAutoId('ACCCardRibbon')
+							.should('have.class', 'ribbon__white');
+					} else {
+						cy.getByAutoId('ACCCardRibbon')
+							.should('have.class', 'ribbon__white')
+							.click();
+						cy.wait('(Lifecycle) IBN-Bookmark');
+						cy.getByAutoId('ACCCardRibbon')
+							.should('have.class', 'ribbon__blue');
+					}
+				});
+			});
+		});
 	});
 
 	describe('PBC-33: (UI) View - Solution Based: ACC Details', () => {
@@ -226,7 +269,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				cy.getByAutoId('cui-select').click();
 				cy.get(`a[title="${i18n._Bookmarked_}"]`).click();
 
-				const filteredItems = validACCItems.filter(item => (item.isFavorite === true));
+				const filteredItems = validACCItems.filter(item => (item.bookmark === true));
 				cy.getByAutoId('ACCCard').then(cards => {
 					expect(cards.length).to.eq(filteredItems.length);
 				});
@@ -238,7 +281,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				cy.getByAutoId('cui-select').click();
 				cy.get(`a[title="${i18n._NotBookmarked_}"]`).click();
 
-				const filteredItems = validACCItems.filter(item => (item.isFavorite === false));
+				const filteredItems = validACCItems.filter(item => (item.bookmark === false));
 				cy.getByAutoId('ACCCard').then(cards => {
 					expect(cards.length).to.eq(filteredItems.length);
 				});
@@ -502,7 +545,9 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				.and('contain', twoRecommendedItems[0].title);
 			cy.getByAutoId('recommendedACC-Image').should('exist')
 				.and('have.attr', 'src', twoRecommendedItems[0].url);
-			cy.getByAutoId('recommendedACCWatchButton').should('exist')
+			cy.getByAutoId('Request1on1ACCButton')
+				.should('exist')
+				.first()
 				.and('have.text', 'Request a 1-on-1');
 
 			// Recommended hover modal should show title and description
@@ -515,7 +560,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				// Since this handled by the styles, just validate the class exists
 				.and('have.class', 'line-clamp');
 			// PBC-603 Hover should include bookmark ribbon
-			if (twoRecommendedItems[0].isFavorite) {
+			if (twoRecommendedItems[0].bookmark) {
 				cy.getByAutoId('recommendedACC-HoverModal-BookmarkRibbon')
 					.should('exist')
 					.and('have.class', 'ribbon__blue');
@@ -564,12 +609,9 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			cy.getByAutoId('Facet-Lifecycle').click();
 			cy.wait('(ACC) IBN-Campus Network Assurance-Onboard-twoCompleted');
 
-			// Completed hover should have the completed text, not CSE text or request button
+			// Completed hover should not have CSE text or request button
 			cy.getByAutoId('recommendedACC').should('exist').within(() => {
 				cy.getByAutoId('Request1on1ACCButton').should('not.exist');
-
-				cy.getByAutoId('recommendedACC-HoverModal-CompletedMessage').should('exist');
-				cy.getByAutoId('recommendedACC-Checkmark').should('exist');
 			});
 		});
 	});
@@ -596,7 +638,9 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		});
 
 		it('PBC-260: Should be able to open request form from Lifecycle page', () => {
-			cy.getByAutoId('recommendedACCWatchButton').click();
+			cy.getByAutoId('Request1on1ACCButton')
+				.first()
+				.click();
 			cy.getByAutoId('accRequestModal').should('be.visible');
 			cy.getByAutoId('ACCCloseRequestModal').click();
 			cy.getByAutoId('accRequestModal').should('not.exist');
@@ -604,7 +648,11 @@ describe('Accelerator (ACC)', () => { // PBC-32
 
 		it('PBC-260: Should be able to open request form from View All cards', () => {
 			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
-			cy.getByAutoId('Request1on1Button').first().click();
+			cy.getByAutoId('ACCCard')
+				.first()
+				.within(() => {
+					cy.getByAutoId('Request1on1ACCButton').click();
+				});
 			cy.getByAutoId('accRequestModal').should('be.visible');
 			cy.getByAutoId('ACCCloseRequestModal').click();
 			cy.getByAutoId('accRequestModal').should('not.exist');
@@ -612,12 +660,16 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		});
 
 		it('PBC-260: Should be able to close or cancel request form', () => {
-			cy.getByAutoId('recommendedACCWatchButton').click();
+			cy.getByAutoId('Request1on1ACCButton')
+				.first()
+				.click();
 			cy.getByAutoId('accRequestModal').should('be.visible');
 			cy.getByAutoId('ACCCloseRequestModal').click();
 			cy.getByAutoId('accRequestModal').should('not.exist');
 
-			cy.getByAutoId('recommendedACCWatchButton').click();
+			cy.getByAutoId('Request1on1ACCButton')
+				.first()
+				.click();
 			cy.getByAutoId('accRequestModal').should('be.visible');
 			cy.getByAutoId('accRequestModal-Cancel').click();
 			cy.getByAutoId('accRequestModal').should('not.exist');
@@ -626,7 +678,9 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		describe('Form field validation', () => {
 			beforeEach(() => {
 				// Start with a clean modal for each test
-				cy.getByAutoId('recommendedACCWatchButton').click();
+				cy.getByAutoId('Request1on1ACCButton')
+					.first()
+					.click();
 				cy.getByAutoId('accRequestModal').should('be.visible');
 			});
 
@@ -959,7 +1013,9 @@ describe('Accelerator (ACC)', () => { // PBC-32
 
 			it('PBC-260: Should be able to submit when all fields are filled correctly', () => {
 				// Open the request form modal
-				cy.getByAutoId('recommendedACCWatchButton').click();
+				cy.getByAutoId('Request1on1ACCButton')
+					.first()
+					.click();
 				cy.getByAutoId('accRequestModal').should('be.visible');
 
 				// Fill in all required fields
@@ -1005,7 +1061,9 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				accMock.disable('(ACC) IBN-ACCRequestSubmit1');
 
 				// Open the request form modal
-				cy.getByAutoId('recommendedACCWatchButton').click();
+				cy.getByAutoId('Request1on1ACCButton')
+					.first()
+					.click();
 				cy.getByAutoId('accRequestModal').should('be.visible');
 
 				// Fill in all required fields
@@ -1069,7 +1127,9 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			});
 
 			it('Opening the Request 1-on-1 form should call user info API', () => {
-				cy.getByAutoId('recommendedACCWatchButton').click();
+				cy.getByAutoId('Request1on1ACCButton')
+					.first()
+					.click();
 
 				// Should show the loading header
 				cy.getByAutoId('RequestFormCustomerLoadingBanner')
@@ -1104,7 +1164,9 @@ describe('Accelerator (ACC)', () => { // PBC-32
 					response: 'Forced error from QA',
 				}).as('failedGetUserInfo');
 
-				cy.getByAutoId('recommendedACCWatchButton').click();
+				cy.getByAutoId('Request1on1ACCButton')
+					.first()
+					.click();
 				cy.wait('@failedGetUserInfo');
 
 				// Should show the error header
@@ -1119,7 +1181,9 @@ describe('Accelerator (ACC)', () => { // PBC-32
 
 			it('Submitting the Request 1-on-1 form should call the POST /acc/{accId}/request API with user input', () => {
 				// Open the request form modal
-				cy.getByAutoId('recommendedACCWatchButton').click();
+				cy.getByAutoId('Request1on1ACCButton')
+					.first()
+					.click();
 				cy.getByAutoId('accRequestModal').should('be.visible');
 				cy.wait('@getUserInfo').its('response.body').then(userInfoResponseBody => {
 					// Fill in all required fields
@@ -1231,7 +1295,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				twoRecommendedItems.forEach((acc, index) => {
 					if (acc.status === 'recommended') {
 						cy.getByAutoId('ACCCard').eq(index).within(() => {
-							cy.getByAutoId('Request1on1Button').click();
+							cy.getByAutoId('Request1on1ACCButton').click();
 						});
 						cy.getByAutoId('accRequestModal').should('exist');
 						cy.getByAutoId('accRequestModal-ItemTitle').should('have.text', acc.title);
@@ -1296,10 +1360,10 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				cy.get('tr').eq(index + 1).within(() => {
 					cy.getByAutoId('ACC-Title').should('have.text', item.title);
 					// Handle bookmark
-					if (item.isFavorite) {
-						cy.getByAutoId('SBListRibbon').should('have.class', 'text-indigo');
+					if (item.bookmark) {
+						cy.getByAutoId('SBListRibbon').should('have.class', 'icon-bookmark--on');
 					} else {
-						cy.getByAutoId('SBListRibbon').should('have.class', 'icon-bookmark-clear');
+						cy.getByAutoId('SBListRibbon').should('have.class', 'icon-bookmark--off');
 					}
 					// Handle status
 					switch (item.status) {
@@ -1352,32 +1416,32 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			cy.getByAutoId('ViewAllTable')
 				.within(() => {
 					cy.getByAutoId('ViewAllTable-columnHeader-Bookmark').click();
-					const sortedItemsAsc = Cypress._.orderBy(accItems, ['isFavorite'], ['asc']);
+					const sortedItemsAsc = Cypress._.orderBy(accItems, ['bookmark'], ['asc']);
 					sortedItemsAsc.forEach((item, index) => {
 						// Note that our actual data rows start at tr 1, because 0 is the headers
 						cy.get('tr').eq(index + 1).within(() => {
 							// Only check the field we've sorted by, since the sorting of items that have the
 							// same value depends on previous sorts
-							if (item.isFavorite) {
-								cy.getByAutoId('SBListRibbon').should('have.class', 'text-indigo');
+							if (item.bookmark) {
+								cy.getByAutoId('SBListRibbon').should('have.class', 'icon-bookmark--on');
 							} else {
-								cy.getByAutoId('SBListRibbon').should('have.class', 'icon-bookmark-clear');
+								cy.getByAutoId('SBListRibbon').should('have.class', 'icon-bookmark--off');
 							}
 						});
 					});
 
 					// Reverse the sort and re-verify order
 					cy.getByAutoId('ViewAllTable-columnHeader-Bookmark').click();
-					const sortedItemsDesc = Cypress._.orderBy(accItems, ['isFavorite'], ['desc']);
+					const sortedItemsDesc = Cypress._.orderBy(accItems, ['bookmark'], ['desc']);
 					sortedItemsDesc.forEach((item, index) => {
 						// Note that our actual data rows start at tr 1, because 0 is the headers
 						cy.get('tr').eq(index + 1).within(() => {
 							// Only check the field we've sorted by, since the sorting of items that have the
 							// same value depends on previous sorts
-							if (item.isFavorite) {
-								cy.getByAutoId('SBListRibbon').should('have.class', 'text-indigo');
+							if (item.bookmark) {
+								cy.getByAutoId('SBListRibbon').should('have.class', 'icon-bookmark--on');
 							} else {
-								cy.getByAutoId('SBListRibbon').should('have.class', 'icon-bookmark-clear');
+								cy.getByAutoId('SBListRibbon').should('have.class', 'icon-bookmark--off');
 							}
 						});
 					});
@@ -1541,20 +1605,20 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		it('ACC View All table view should allow bookmarking/unbookmarking items', () => {
 			accItems.forEach((item, index) => {
 				cy.get('tr').eq(index + 1).within(() => {
-					if (item.isFavorite) {
+					if (item.bookmark) {
 						cy.getByAutoId('SBListRibbon')
-							.should('have.class', 'text-indigo')
+							.should('have.class', 'icon-bookmark--on')
 							.click();
-						cy.wait(`(ACC) IBN-Bookmark-${item.accId}`);
+						cy.wait('(Lifecycle) IBN-Bookmark');
 						cy.getByAutoId('SBListRibbon')
-							.should('have.class', 'icon-bookmark-clear');
+							.should('have.class', 'icon-bookmark--off');
 					} else {
 						cy.getByAutoId('SBListRibbon')
-							.should('have.class', 'icon-bookmark-clear')
+							.should('have.class', 'icon-bookmark--off')
 							.click();
-						cy.wait(`(ACC) IBN-Bookmark-${item.accId}`);
+						cy.wait('(Lifecycle) IBN-Bookmark');
 						cy.getByAutoId('SBListRibbon')
-							.should('have.class', 'text-indigo');
+							.should('have.class', 'icon-bookmark--on');
 					}
 				});
 			});
@@ -2065,7 +2129,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		it('Should be able to bookmark an ACC item', () => {
 			cy.getByAutoId('ViewAllModal').within(() => {
 				validACCItems.forEach((acc, index) => {
-					if (!acc.isFavorite) {
+					if (!acc.bookmark) {
 						cy.getByAutoId('ACCCardRibbon')
 							.eq(index)
 							.should('have.class', 'ribbon__white')
@@ -2082,7 +2146,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		it('Should be able to UN-bookmark an ACC item', () => {
 			cy.getByAutoId('ViewAllModal').within(() => {
 				validACCItems.forEach((acc, index) => {
-					if (acc.isFavorite) {
+					if (acc.bookmark) {
 						cy.getByAutoId('ACCCardRibbon')
 							.eq(index)
 							.should('have.class', 'ribbon__blue')
@@ -2127,7 +2191,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			cy.wait('(ACC) IBN-Campus Network Assurance-Onboard-oneRecommended');
 
 			// Should hide the "More" list
-			cy.getByAutoId('moreACCList-Header');
+			cy.getByAutoId('moreACCList-Header').should('not.exist');
 			cy.getByAutoId('moreACCList').should('not.exist');
 		});
 
@@ -2141,7 +2205,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 						cy.getByAutoId('moreACCList-HoverModal-BookmarkRibbon').should('exist');
 
 						// Ribbon is blue for bookmarked, white otherwise
-						if (acc.isFavorite) {
+						if (acc.bookmark) {
 							cy.getByAutoId('moreACCList-HoverModal-BookmarkRibbon').should('have.class', 'ribbon__blue');
 							cy.getByAutoId('.star').should('not.exist');
 						} else {
@@ -2154,22 +2218,22 @@ describe('Accelerator (ACC)', () => { // PBC-32
 							case 'completed':
 								cy.getByAutoId('moreACCList-HoverModal-CompletedMessage')
 									.should('have.text', i18n._Completed_);
-								cy.getByAutoId('Request1on1Button')
+								cy.getByAutoId('Request1on1ACCButton')
 									.should('not.exist');
 								break;
 							case 'in-progress':
 								cy.getByAutoId('moreACCList-HoverModal-In-Progress')
 									.should('contain', i18n._SessionInProgress_);
-								cy.getByAutoId('Request1on1Button')
+								cy.getByAutoId('Request1on1ACCButton')
 									.should('not.exist');
 								break;
 							case 'requested':
 								// PBC-602 Green CSE message has been removed
-								cy.getByAutoId('Request1on1Button')
+								cy.getByAutoId('Request1on1ACCButton')
 									.should('not.exist');
 								break;
 							default:	// Default: recommended
-								cy.getByAutoId('Request1on1Button')
+								cy.getByAutoId('Request1on1ACCButton')
 									.should('contain', i18n._Request1on1_);
 						}
 					});
