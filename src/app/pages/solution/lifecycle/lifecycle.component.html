@@ -459,7 +459,7 @@
 			</div>
 			<div class="half-padding-left pull-left">
 				<button class="btn btn--secondary base-margin-top text-danger half-margin-left cx-button"
-					[disabled]="!sessionSelected || !sessionSelected.scheduled"
+					*ngIf="sessionSelected && sessionSelected.scheduled"
 					[innerText]="'_Cancel_' | i18n"
 					(click)="cancelATXSession(data)"
 					data-auto-id="AtxScheduleCardCancelButton">
