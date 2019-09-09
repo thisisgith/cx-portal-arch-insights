@@ -3,7 +3,7 @@ import {
 	ViewContainerRef,
 } from '@angular/core';
 import { LogService } from '@cisco-ngx/cui-services';
-import { CuiTableOptions } from '@cisco-ngx/cui-components';
+import { CuiTableOptions, CuiTableColumnOption } from '@cisco-ngx/cui-components';
 import {
 	RccService,
 	RccGridData,
@@ -634,10 +634,16 @@ export class RccComponent implements OnInit, OnDestroy {
 	}
 	/**
 	 * method to get sorting selection
-	 * @param selSortObj is sort object
+	 * @param columnData is sort object
 	 */
-	public onTableSortingChanged () {
+	public onTableSortingChanged (columnData: CuiTableColumnOption) {
 		this.tableConfig.tableOffset = 0;
+		this.violationGridObj.pageIndex = 1;
+		this.getRCCData({
+			sortName: columnData.key,
+			sortOrder: columnData.sortDirection,
+			...this.violationGridObj,
+		});
 	}
 	/**
 	 * method to clear selected filters
