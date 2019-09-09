@@ -5,12 +5,12 @@
 				<div class="row base-margin-left">
 					<div class="half-margin-bottom qtr-margin-top base-margin-left cursor"
 						data-auto-id="selectedView" (click)="selectedView('violation')" [ngClass]="{'text-primary': !isAssetView}">
-						<h2 class="qtr-margin-bottom text-center assetsCount" [innerHTML]="policyViolationsTotalCount | number"></h2>
+						<h2 class="qtr-margin-bottom text-center assets-count" [innerHTML]="policyViolationsTotalCount | number"></h2>
 						<div class="text-medium flex-center" [innerText]="'_RccViolations_' | i18n | titlecase"></div>
 					</div>
 					<div class="half-margin-bottom qtr-margin-top cursor"
 						data-auto-id="1" (click)="selectedView('asset')" [ngClass]="{'text-primary': isAssetView}">
-						<h2 class="dbl-margin-left dbl-margin-right qtr-margin-bottom text-center assetsCount" [innerHTML]="assetsTotalCount | number"></h2>
+						<h2 class="dbl-margin-left dbl-margin-right qtr-margin-bottom text-center assets-count" [innerHTML]="assetsTotalCount | number"></h2>
 						<div class="text-medium flex-center" [innerText]= "'_RccAssetWithViolations_' | i18n"></div>
 					</div>
 				</div>

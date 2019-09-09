@@ -56,9 +56,6 @@ export class CompareRecommendationsComponent implements OnChanges {
 	 */
 	public formatData (recommendations) {
 		_.map(recommendations, (recommendation: MachineRecommendations) => {
-			recommendation.expectedProfileRisk = _.isNumber(recommendation.expectedProfileRisk) ?
-				recommendation.expectedProfileRisk.toFixed() : recommendation.expectedProfileRisk;
-
 			const openBugs = _.get(recommendation, ['bugSeverity', 'OPEN']);
 			const newOpenBugs = _.get(recommendation, ['bugSeverity', 'NEW_OPEN']);
 			const resolvedBugs = _.get(recommendation, ['bugSeverity', 'RESOLVED']);
@@ -129,7 +126,7 @@ export class CompareRecommendationsComponent implements OnChanges {
 			});
 		}
 
-		return  _.compact(
+		return _.compact(
 			_.map(data, (value: number, key: string) => {
 				if (!_.isNull(value)) {
 					return {
