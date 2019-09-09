@@ -1,5 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import * as _ from 'lodash-es';
+import { ActivatedRoute } from '@angular/router';
+import { ArchitectureReviewService } from '@sdp-api';
 import { LogService } from '@cisco-ngx/cui-services';
 
 /**
@@ -10,51 +12,78 @@ import { LogService } from '@cisco-ngx/cui-services';
 	styleUrls: ['./dnac-details.component.scss'],
 	templateUrl: './dnac-details.component.html',
 })
-export class DnacDetailsComponent {
+export class DnacDetailsComponent implements OnChanges {
 
 	@Input('dnacDetails') public dnacDetails: any = null;
-	constructor (private logger: LogService) {
-	}
-	public seriesData = {
-		target: 1000,
-		xLabel: 'Network Devices',
-		y: 850,
-	};
-	public seriesData1 = {
-		target: 4000,
-		xLabel: 'End Points',
-		y: 3750,
-	};
-	public seriesData2 = {
-		target: 500,
-		xLabel: 'Fabrics',
-		y: 300,
+	public customerId: string;
+	public params = {
+		customerId: '',
+		dnacIP: '',
 	};
 
-	// /**
-	//  * oninit
-	//  */
-	// public ngOnInit () {
-	// }
+	public networkDevicesData = { };
+	public endPointsData = { };
+	public fabricsData = { };
+	public isLoading = true;
+
+	constructor (private logger: LogService,
+		private architectureService: ArchitectureReviewService,
+		private route: ActivatedRoute) {
+		const user = _.get(this.route, ['snapshot', 'data', 'user']);
+		this.customerId = _.get(user, ['info', 'customerId']);
+		this.params.customerId = _.cloneDeep(this.customerId);
+	}
+
+	/**
+	 * onchange
+	 */
+
+	public ngOnChanges () {
+		if (this.dnacDetails) {
+			this.params.dnacIP = this.dnacDetails.dnacIpaddress;
+		}
+		this.getNetworkDevicesCount();
+	}
 
 	/**
 	 * method to get networkdevices count
 	 */
 	public getNetworkDevicesCount () {
-		const networkDevices = _.get(this.dnacDetails);
-	}
 
-	/**
-	 * method to get EndPoints count
-	 */
-	public getEndPointsCount () {
-		const EndPoints = _.get(this.dnacDetails);
-	}
-
-	/**
-	 * method to get EndPoints count
-	 */
-	public getFabricsCount () {
-		const Fabrics = _.get(this.dnacDetails);
-	}
+		this.architectureService.getDnacList(this.params)
+		.subscribe(data => {
+			this.isLoading = false;
+			const networkDevices = _.get(data, 'Network Devices');
+			if (networkDevices) {
+				const series = {
+					target : Number(networkDevices.PublishedLimit),
+					xLabel : networkDevices.Label,
+					y : Number(networkDevices.Published),
+				};
+				this.networkDevicesData = series;
+			}
+			const endPoints = _.get(data, 'End Points');
+			if (endPoints) {
+				const series = {
+					target : Number(endPoints.PublishedLimit),
+					xLabel : endPoints.Label,
+					y : Number(endPoints.Published),
+				};
+				this.endPointsData = series;
+			}
+			const fabrics = _.get(data, 'Fabrics');
+			if (fabrics) {
+				const series = {
+					target : Number(fabrics.PublishedLimit),
+					xLabel : fabrics.Label,
+					y : Number(fabrics.Published),
+				};
+				this.fabricsData = series;
+			}
+		}, err => {
+			this.logger.error('bullet graph count' +
+				'  : getNetworkDevicesCount() ' +
+				`:: Error : (${err.status}) ${err.message}`);
+		});
+	 }
 }

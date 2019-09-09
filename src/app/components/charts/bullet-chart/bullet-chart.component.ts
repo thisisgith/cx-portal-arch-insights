@@ -2,9 +2,10 @@ import {
 	Component,
 	OnInit,
 	Input,
+	SimpleChanges,
 } from '@angular/core';
 import { Chart } from 'angular-highcharts';
-
+import * as _ from 'lodash-es';
 /**
  * setting interface for input parameter
  */
@@ -104,5 +105,17 @@ export class BulletChartComponent implements OnInit {
 				title: null,
 			  },
 		});
+	}
+
+	/**
+	 * OnChanges Functionality
+	 * @param changes The changes found
+	 */
+	public ngOnChanges (changes: SimpleChanges) {
+		const seriesInfo = _.get(changes, 'seriesData',
+			{ currentValue: null, firstChange: false });
+		if (seriesInfo.currentValue && !seriesInfo.firstChange) {
+			this.buildGraph();
+		}
 	}
 }

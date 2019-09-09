@@ -6,6 +6,7 @@ import {
 	CuiDrawerModule,
 	CuiDrawersModule,
 	CuiLoaderModule,
+	CuiSpinnerModule,
 } from '@cisco-ngx/cui-components';
 import { BulletChartModule } from '@components';
 
@@ -19,6 +20,7 @@ import { BulletChartModule } from '@components';
 		CuiDrawersModule,
 		CuiLoaderModule,
 		I18nPipeModule,
+		CuiSpinnerModule,
 		BulletChartModule,
 	],
 })

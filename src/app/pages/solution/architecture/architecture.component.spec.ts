@@ -45,7 +45,6 @@ describe('ArchitectureComponent', () => {
 	});
 
 	beforeEach(async(() => {
-
 		service = TestBed.get(ArchitectureService);
 	}));
 

@@ -44,7 +44,9 @@ export class DnacListComponent implements OnInit {
 	private destroy$ = new Subject();
 	public globalSearchText  = '';
 	public lastCollectionTime = '';
-	public params: IParamType = { customerId : '' , page: 0, pageSize: 10, searchText : '' };
+	public params =
+		{ customerId : '' , dnacIP: '', page: 0, pageSize: 10,
+		  searchText : '' };
 	public fullscreen: any ;
 	@ViewChild('devicesTemplate', { static: true })
 	private devicesTemplate: TemplateRef<{ }>;

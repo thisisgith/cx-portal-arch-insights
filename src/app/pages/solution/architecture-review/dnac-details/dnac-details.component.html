@@ -16,13 +16,16 @@
 </div>
 
 <!-- <ng-template #SDAScaleUtilizationChart let-dnac="dnacDetails"> -->
-			<div>
-				<bullet-chart [seriesData]="seriesData" ></bullet-chart>
+			<div *ngIf="!isLoading">
+				<bullet-chart [seriesData]="networkDevicesData" ></bullet-chart>
 			</div>
-			<div>
-				<bullet-chart [seriesData]="seriesData1" ></bullet-chart>
+			<div *ngIf="!isLoading">
+				<bullet-chart [seriesData]="endPointsData" ></bullet-chart>
 			</div>
-			<div>
-				<bullet-chart [seriesData]="seriesData2" ></bullet-chart>
+			<div *ngIf="!isLoading">
+				<bullet-chart [seriesData]="fabricsData" ></bullet-chart>
+			</div>
+			<div class="base-margin-top" *ngIf="isLoading">
+				<cui-spinner></cui-spinner>
 			</div>
 <!-- </ng-template> -->
