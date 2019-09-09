@@ -6,12 +6,15 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { OSVService } from '@sdp-api';
 import { OSVScenarios } from '@mock';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
+import { CuiModalService } from '@cisco-ngx/cui-components';
 
 describe('SoftwareGroupDetailComponent', () => {
 	let component: SoftwareGroupDetailComponent;
 	let fixture: ComponentFixture<SoftwareGroupDetailComponent>;
 	let osvService: OSVService;
+	let cuiModalService: CuiModalService;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -23,6 +26,7 @@ describe('SoftwareGroupDetailComponent', () => {
 		})
 			.compileComponents();
 		osvService = TestBed.get(OSVService);
+		cuiModalService = TestBed.get(CuiModalService);
 	}));
 
 	beforeEach(() => {
@@ -65,6 +69,38 @@ describe('SoftwareGroupDetailComponent', () => {
 			.toBeDefined();
 		expect(component.softwareGroupVersionsTable)
 			.toBeDefined();
+	});
+
+	it('should handle  softwaregroup asset and versions error', () => {
+		const error = {
+			status: 404,
+			statusText: 'Resource not found',
+		};
+		spyOn(osvService, 'getSoftwareGroupAssets')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+		spyOn(osvService, 'getSoftwareGroupVersions')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+		spyOn(osvService, 'getSoftwareGroupRecommendations')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+		const selectedSG = (<any> OSVScenarios[1].scenarios.GET[0].response.body).uiProfileList[0];
+		component.selectedSoftwareGroup = selectedSG;
+		component.ngOnInit();
+		fixture.detectChanges();
+		expect(component.softwareGroupAssets)
+			.toBeNull();
+		expect(component.softwareGroupVersions)
+			.toBeNull();
+		expect(component.machineRecommendations)
+			.toBeNull();
+		expect(component.recommendations)
+			.toBeNull();
+		expect(component.softwareGroupAssetsTable)
+			.toBeUndefined();
+		expect(component.softwareGroupVersionsTable)
+			.toBeUndefined();
 	});
 
 	it('should reload softwaregroup assets and version on ngOnChanges', () => {
@@ -115,4 +151,44 @@ describe('SoftwareGroupDetailComponent', () => {
 		expect(component.tabIndex)
 			.toEqual(2);
 	});
+
+	it('should refresh versions on page change', () => {
+		spyOn(osvService, 'getSoftwareGroupVersions')
+			.and
+			.returnValue(of());
+		component.onVersionsPageChanged({ page: 2 });
+		fixture.detectChanges();
+		expect(osvService.getSoftwareGroupVersions)
+			.toHaveBeenCalled();
+		expect(component.softwareGroupVersionsParams.pageIndex)
+			.toBe(3);
+	});
+
+	it('should refresh assets on page change', () => {
+		spyOn(osvService, 'getSoftwareGroupAssets')
+			.and
+			.returnValue(of());
+		component.onAssetsPageChanged({ page: 2 });
+		fixture.detectChanges();
+		expect(osvService.getSoftwareGroupAssets)
+			.toHaveBeenCalled();
+		expect(component.softwareGroupAssetsParams.pageIndex)
+			.toBe(3);
+	});
+
+	it('should trigger onAccept or onCancel actions', () => {
+		spyOn(component, 'onAccept');
+		spyOn(cuiModalService, 'showComponent');
+		component.onAction({ type: 'accept', version: '1.1' });
+		fixture.detectChanges();
+		expect(component.onAccept)
+			.toHaveBeenCalled();
+
+		component.onAction({ type: 'cancel', version: '1.1' });
+		fixture.detectChanges();
+		expect(cuiModalService.showComponent)
+			.toHaveBeenCalled();
+
+	});
+
 });
