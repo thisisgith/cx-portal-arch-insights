@@ -7,6 +7,7 @@ import {
 	CuiDropdownModule,
 	CuiSpinnerModule,
 	CuiPagerModule,
+	CuiAlertModule,
 } from '@cisco-ngx/cui-components';
 
 /**
@@ -22,6 +23,7 @@ import {
 		CuiDropdownModule,
 		CuiSpinnerModule,
 		CuiPagerModule,
+		CuiAlertModule,
 	],
 })
 export class SoftwareGroupsModule { }

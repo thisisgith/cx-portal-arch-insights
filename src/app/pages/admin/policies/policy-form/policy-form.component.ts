@@ -649,7 +649,11 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 		const date = matches[6];
 		const dayOfWeek = matches[7];
 
-		const milHour = amPm === 'am' ? hour - 12 : hour;
+		let milHour = amPm === 'pm' ? hour + 12 : hour;
+
+		// handle special case with 12 hours
+		milHour = (amPm === 'am' && hour === 12) ? 0 : milHour;
+		milHour = (amPm === 'pm' && hour === 12) ? 12 : milHour;
 
 		if (!date && !dayOfWeek) {
 			this.timePeriods.selected = 'daily';

@@ -5,6 +5,7 @@ import {
 	OnInit,
 	OnDestroy,
 	EventEmitter,
+	Input,
 	Output,
 } from '@angular/core';
 import { LogService } from '@cisco-ngx/cui-services';
@@ -13,7 +14,12 @@ import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { forkJoin, Subject, of } from 'rxjs';
 import { map, takeUntil, catchError } from 'rxjs/operators';
-import { OSVService, SoftwareVersionsResponse, OsvPagination, SoftwareVersion } from '@sdp-api';
+import {
+	OSVService,
+	SoftwareVersionsResponse,
+	OsvPagination,
+	SoftwareVersion,
+} from '@sdp-api';
 import * as _ from 'lodash-es';
 import { ActivatedRoute } from '@angular/router';
 
@@ -26,6 +32,7 @@ import { ActivatedRoute } from '@angular/router';
 	templateUrl: './software-versions.component.html',
 })
 export class SoftwareVersionsComponent implements OnInit, OnDestroy {
+	@Input() public cxLevel;
 	@ViewChild('releaseDate', { static: true }) private releaseDateTemplate: TemplateRef<{ }>;
 	@Output() public contactSupport = new EventEmitter();
 	public softwareVersionsTable: CuiTableOptions;
@@ -38,7 +45,7 @@ export class SoftwareVersionsComponent implements OnInit, OnDestroy {
 	public destroy$ = new Subject();
 	public softwareVersionsParams: OSVService.GetSoftwarVersionsParams;
 	public customerId: string;
-
+	public alert: any = { };
 	constructor (
 		private logger: LogService,
 		private osvService: OSVService,
@@ -50,7 +57,7 @@ export class SoftwareVersionsComponent implements OnInit, OnDestroy {
 			customerId: this.customerId,
 			pageIndex: 1,
 			pageSize: 10,
-			sort: 'swVersion',
+			sort: 'swType',
 			sortOrder: 'asc',
 		};
 	}
@@ -102,6 +109,7 @@ export class SoftwareVersionsComponent implements OnInit, OnDestroy {
 
 				}),
 				catchError(err => {
+					_.invoke(this.alert, 'show', I18n.get('_OsvGenericError_'), 'danger');
 					this.logger.error('OSV SoftwareVersions : getVersions() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
@@ -121,28 +129,34 @@ export class SoftwareVersionsComponent implements OnInit, OnDestroy {
 					{
 						key: 'swVersion',
 						name: I18n.get('_OsvVersion_'),
-						sortable: true,
-						sortDirection: 'asc',
-						sorting: true,
-						width: '25%',
+						sortable: false ,
+						width: '20%',
 					},
 					{
 						name: I18n.get('_OsvReleaseDate_'),
 						sortable: false,
 						template: this.releaseDateTemplate,
-						width: '25%',
+						width: '20%',
 					},
 					{
 						key: 'assetCount',
-						name: I18n.get('_OsvIndependentAssets_'),
+						name: I18n.get('_OsvIndependentAssetsCount_'),
 						sortable: false,
-						width: '25%',
+						width: '20%',
+					},
+					{
+						key: 'profileAssetCount',
+						name: I18n.get('_OsvAssetsOfSoftwareProfilesCount_'),
+						sortable: false,
+						width: '20%',
 					},
 					{
 						key: 'swType',
 						name: I18n.get('_OsvOSType_'),
-						sortable: false,
-						width: '25%',
+						sortable: true,
+						sortDirection: 'asc',
+						sorting: true,
+						width: '20%',
 					},
 				],
 				dynamicData: true,
@@ -181,6 +195,7 @@ export class SoftwareVersionsComponent implements OnInit, OnDestroy {
 	 * OnDestroy lifecycle hook
 	 */
 	public ngOnDestroy () {
+		_.invoke(this.alert, 'hide');
 		this.destroy$.next();
 		this.destroy$.complete();
 	}

@@ -25,6 +25,8 @@ export class BarChartComponent implements OnInit {
 	@Input() public width;
 	@Input() public loading;
 	@Input() public seriesData;
+	@Input() public dataLabels = false;
+	@Input() public backgroundColor = '#ffffff';
 	@Output() public subfilter = new EventEmitter<string>();
 	public chart: Chart;
 
@@ -55,6 +57,7 @@ export class BarChartComponent implements OnInit {
 
 		this.chart = new Chart({
 			chart: {
+				backgroundColor: this.backgroundColor,
 				events: {
 					load: () => {
 						if (window.Cypress) {
@@ -80,7 +83,7 @@ export class BarChartComponent implements OnInit {
 						}
 					},
 				},
-				height: this.seriesData.length * 25,
+				height: (this.seriesData.length + 1) * 25,
 				type: 'bar',
 				width: this.width || 225,
 			},
@@ -93,6 +96,9 @@ export class BarChartComponent implements OnInit {
 				},
 				series: {
 					cursor: 'pointer',
+					dataLabels: {
+						enabled: this.dataLabels,
+					},
 					point: {
 						events: {
 							click: event => this.selectSubfilter(event),

@@ -8,6 +8,7 @@ import { Component, Input } from '@angular/core';
 	templateUrl: './fingerprint-details.component.html',
 })
 export class FingerprintDetailsComponent {
+
 	@Input() public selectedDevice = '';
 	public fullscreen = false;
 
