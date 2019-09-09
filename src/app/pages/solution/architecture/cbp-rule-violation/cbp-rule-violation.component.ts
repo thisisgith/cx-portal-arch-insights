@@ -99,7 +99,7 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 			columns: [
 				{
 					key: 'bpRuleTitle',
-					name: I18n.get('_ArchitectureRuleName_'),
+					name: I18n.get('_ArchitectureRuleViolated_'),
 					sortable: false,
 				},
 				{

@@ -39,14 +39,16 @@
 	</div>
 
 	<ng-template #exceptionsFilter let-filter="filter">
-		<pie-chart
-			*ngIf="!status?.isLoading"
-			[seriesData]="filter?.seriesData"
-			(subfilter)="onSubfilterSelect($event.filter, filter)"
-		>
-		</pie-chart>
-		<div class="base-margin-top" *ngIf="status?.isLoading">
-			<cui-spinner></cui-spinner>
+		<div *ngIf="visualLabels[1]?.active">
+			<pie-chart
+				*ngIf="!status?.isLoading"
+				[seriesData]="filter?.seriesData"
+				(subfilter)="onSubfilterSelect($event.filter, filter)"
+			>
+			</pie-chart>
+			<div class="base-margin-top" *ngIf="status?.isLoading">
+				<cui-spinner></cui-spinner>
+			</div>
 		</div>
 	</ng-template>
 

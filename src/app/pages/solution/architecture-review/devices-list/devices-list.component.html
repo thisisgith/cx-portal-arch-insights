@@ -30,12 +30,6 @@
 		<cui-tab [label]="'_ArchitectureSDAProductCompatibility_' | i18n | uppercase">
 			<devices-sda [deviceDetails]="deviceDetails"></devices-sda>
 		</cui-tab>
-		<cui-tab [label]="'_ArchitectureL3AccessSwitching_' | i18n | uppercase" disabled="true">
-		</cui-tab>
-		<cui-tab [label]="'_ArchitectureSwitchRedundancy_' | i18n | uppercase" disabled="true">
-		</cui-tab>
-		<cui-tab [label]="'_ArchitectureSwitchInterfaceMTU_'  | i18n | uppercase" disabled="true">
-		</cui-tab>
 	</cui-tabs>
 </details-panel>
 
@@ -129,7 +123,7 @@
 	<span
 	[ngClass]="{
 		'text-danger': item?.softwareCompliance === 'No',
-		'transparent-style': item?.softwareCompliance === 'Yes' 
+		'transparent-style': item?.softwareCompliance !== 'No'
 	}"
 	 class="qtr-margin-right icon-circle">
 	</span>
