@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
-import { ArchitectureReviewService, assetExceptionList, IParamType } from '@sdp-api';
+import { ArchitectureReviewService, assetExceptionList, IBullet } from '@sdp-api';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { DatePipe } from '@angular/common';
@@ -43,7 +43,14 @@ export class DnacListComponent implements OnInit {
 	private destroy$ = new Subject();
 	public searchText  = '';
 	public lastCollectionTime = '';
-	public params: IParamType = { customerId : '' , page: 0, pageSize: 10, searchText : '' };
+	public params: IBullet =
+		{
+		  customerId : '',
+		  dnacIP: '',
+		  page: 0,
+		  pageSize: 10,
+		  searchText : '',
+		};
 	public fullscreen: any ;
 	@ViewChild('devicesTemplate', { static: true })
 	private devicesTemplate: TemplateRef<{ }>;
@@ -115,6 +122,7 @@ export class DnacListComponent implements OnInit {
 					sortable: false,
 				},
 			],
+			singleSelect: true,
 		});
 	}
 

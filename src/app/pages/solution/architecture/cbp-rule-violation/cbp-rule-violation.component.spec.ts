@@ -89,7 +89,7 @@ describe('CbpRuleViolationComponent', () => {
 
 	it('should trigger search function', () => {
 		const event = { keyCode: 13 };
-		component.globalSearchFunction(event.keyCode);
+		component.textFilter(event.keyCode);
 		expect(component.isLoading)
 				.toBeTruthy();
 		expect(component.tableStartIndex)
