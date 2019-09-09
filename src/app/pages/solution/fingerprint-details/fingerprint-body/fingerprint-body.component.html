@@ -2,16 +2,20 @@
 	<div class="half-padding-bottom">
 		<cui-alert
 			[options]="alertFPSimilarAssets"
-			*ngIf="tabIndex === 0"
+			[ngClass]="{'hide': tabIndex !== 0}"
 		></cui-alert>
 		<cui-alert
 			[options]="alertFPIntelligence"
-			*ngIf="tabIndex === 1"
+			[ngClass]="{'hide': tabIndex !== 1}"
 		></cui-alert>
 		<cui-alert
 			[options]="alertFPCompare"
-			*ngIf="tabIndex === 2"
+			[ngClass]="{'hide': tabIndex !== 2}"
 		></cui-alert>
+		<cui-alert
+		[options]="alertMlVisualization"
+		[ngClass]="{'hide': tabIndex !== 3}"
+	></cui-alert>
 	</div>
 	<cui-tabs [(activeTabIndex)]="tabIndex">
 		<cui-tab [label]="'_CP_SimilarAssets_' | i18n | uppercase">
@@ -50,6 +54,19 @@
 						: alertFPCompare.hide()
 				"
 			></app-fp-compare>
+		</cui-tab>
+		<cui-tab
+			[label]="'_CP_Machinelearningvisualization_' | i18n | uppercase"
+		>
+			<ml-visualization
+				[asset]="selectedAsset"
+				(devicesSelected)="showComparison($event)"
+				(reqError)="
+					$event
+						? alertMlVisualization.show($event, 'danger')
+						: alertMlVisualization.hide()
+				"
+			></ml-visualization>
 		</cui-tab>
 	</cui-tabs>
 </div>

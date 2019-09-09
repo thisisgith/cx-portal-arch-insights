@@ -1,10 +1,9 @@
-import { AssetRecommendations } from './asset-recommendations';
-
 /* tslint:disable */
 export interface OSVAsset {
 	alert: string;
-	customerId:number;
-	deployment: string;
+	contractType?: string;
+	customerId: number;
+	deploymentStatus?: string;
 	hostName: string;
 	id: string;
 	imageName: string;
@@ -13,6 +12,7 @@ export interface OSVAsset {
 	optimalVersion: string;
 	postDate: string;
 	productFamily: string;
+	profileName?: string;
 	productId: string;
 	recommendationCount: number;
 	recommAcceptedDate: string;

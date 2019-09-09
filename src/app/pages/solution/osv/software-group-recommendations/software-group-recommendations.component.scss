@@ -1,0 +1,37 @@
+@import '~cisco-ui/src/scss/utilities/_variables.scss';
+
+.version-pointer-arrow {
+	background-color: $primary;
+	color: $white;
+	border: 1px solid $primary;
+	line-height: 16px;
+	width: 75px;
+
+	&::before {
+		content: "";
+		width: 0;
+		height: 0;
+		border: 1.4em solid transparent;
+		position: absolute;
+		right: -32px;
+		top: 50%;
+		transform: translateY(-50%);
+		border-left: 14px solid $primary;
+	}
+}
+
+.label {
+	border-radius: 15px;
+}
+
+.groupRecommendationsTable tbody tr td.bordered-bottom {
+	border-bottom: 1px solid $light-gray-3;
+}
+
+.background-light-blue {
+	background: $light-blue;
+}
+
+.responsive-table {
+	overflow: unset;
+}

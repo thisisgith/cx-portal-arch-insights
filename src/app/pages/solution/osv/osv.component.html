@@ -1,19 +1,33 @@
-<details-panel *ngIf="selectedAsset" [hidden]="!selectedAsset" [fullscreen]="fullscreen">
-	<details-panel-header (close)="selectedAsset = false" [(fullscreen)]="fullscreen" [fullscreenToggle]="true">
-		<div detailsPanelTitle>
-			<div class="qtr-margin-left text-xlarge half-margin-bottom" [innerText]="selectedAsset?.hostName"></div>
-			<div class="qtr-margin-left text-medium">
-				<span class="text-bold" [innerText]="'_OsvIP_' | i18n"></span>
-				<span class="qtr-margin-left" [innerText]="selectedAsset?.ipAddress"></span>
-			</div>
-		</div>
-	</details-panel-header>
-	<asset-details [(selectedAsset)]="selectedAsset" [fullscreen]="fullscreen"></asset-details>
+<details-panel 
+	*ngIf="selectedAsset" 
+	[hidden]="!selectedAsset" 
+	[fullscreen]="fullscreen">
+		<details-panel-header 
+			(close)="selectedAsset = false" 
+			[(fullscreen)]="fullscreen" 
+			[fullscreenToggle]="true">
+				<div detailsPanelTitle>
+					<div class="qtr-margin-left text-xlarge half-margin-bottom" [innerText]="selectedAsset?.hostName"></div>
+					<div class="qtr-margin-left text-medium">
+						<span class="text-bold" [innerText]="'_OsvIP_' | i18n"></span>
+						<span class="qtr-margin-left" [innerText]="selectedAsset?.ipAddress"></span>
+					</div>
+				</div>
+		</details-panel-header>
+		<asset-details [(selectedAsset)]="selectedAsset" [fullscreen]="fullscreen">
+		</asset-details>
 </details-panel>
 
+<app-software-group-detail 
+	*ngIf="selectedSoftwareGroup" 
+	[tabIndex]="tabIndex"
+	[(selectedSoftwareGroup)]="selectedSoftwareGroup">
+</app-software-group-detail>
+
 <div class="panel panel--bordered base-padding-left base-padding-top no-padding-bottom">
-	<visual-filter-bar [filters]="filters"></visual-filter-bar>
+	<visual-filter-bar [filters]="filters"></visual-filter-bar>	
 </div>
+
 <div class="panel panel--bordered base-margin-top">
 	<div *ngIf="status.isLoading">
 		<cui-spinner></cui-spinner>
@@ -22,17 +36,26 @@
 		<div class="divider half-margin-top qtr-margin-bottom"></div>
 		<ng-container *ngTemplateOutlet="filterBar"></ng-container>
 	</ng-container>
-	<div class="divider no-margin-top qtr-margin-bottom" *ngIf="!status.isLoading && view"></div>
 	<div *ngIf="view == 'swGroups'">
-		<app-software-groups (contactSupport)="openContactSupport()" [(fullscreen)]="fullscreen"  [(selectedSoftwareGroup)]="selectedSoftwareGroup">
+		<app-software-groups 
+			[(tabIndex)]="tabIndex" 
+			(contactSupport)="openContactSupport()"
+			[(selectedSoftwareGroup)]="selectedSoftwareGroup"
+			[cxLevel]="cxLevel"
+			[filters]="appliedFilters">
 		</app-software-groups>
 	</div>
 	<div *ngIf="view == 'assets'">
-		<app-assets (contactSupport)="openContactSupport()" [(fullscreen)]="fullscreen" [filters]="appliedFilters"  [(selectedAsset)]="selectedAsset">
+		<app-assets 
+			(contactSupport)="openContactSupport()" 
+			[(fullscreen)]="fullscreen" 
+			[filters]="appliedFilters"
+			[cxLevel]="cxLevel"
+			[(selectedAsset)]="selectedAsset">
 		</app-assets>
 	</div>
 	<div *ngIf="view == 'swVersions'">
-		<app-software-versions (contactSupport)="openContactSupport()" ></app-software-versions>
+		<app-software-versions (contactSupport)="openContactSupport()" [cxLevel]="cxLevel"></app-software-versions>
 	</div>
 	<div *ngIf="!view" class="dbl-margin-top text-center text-xlarge">
 		<span [innerText]="'_OsvNoAssets_' | i18n"></span>
@@ -47,16 +70,21 @@
 		<div class="col-md-10">
 			<ng-container *ngFor="let filter of selectedFilters">
 				<ng-container *ngFor="let subfilter of getSelectedSubFilters(filter.key)">
-					<span class="label label--dkgray text-large" (click)="onSubfilterSelect(subfilter.filter, filter)"
+					<span 
+						class="label label--dkgray text-large" 
+						(click)="onSubfilterSelect(subfilter.filter, filter)"
 						attr.data-auto-id="FilterTag-{{ subfilter.filter }}">
-						<span [innerText]="subfilter.label"></span>
-						<span class="icon-close"></span>
+							<span [innerText]="subfilter.label"></span>
+							<span class="icon-close"></span>
 					</span>
 				</ng-container>
 			</ng-container>
 		</div>
 		<div class="col-md-1 text-center text-right">
-			<a (click)="clearFilters()" class="text-lowercase" [innerText]="'_ClearAll_' | i18n"
+			<a 
+				(click)="clearFilters()" 
+				class="text-lowercase" 
+				[innerText]="'_ClearAll_' | i18n"
 				data-auto-id="FilterBarClearAllFilters">
 			</a>
 		</div>
@@ -65,49 +93,129 @@
 
 <!-- Templates for our Visual Filters for the Assets Tab -->
 <ng-template #totalAssetsFilter let-filter="filter">
-	<div (click)="clearFilters()" data-auto-id="TotalVisualFilter" class="flex justify-content-around flex-column max-height">
-		<div class="row toggle" (click)="selectView('swGroups')" *ngIf="filter.seriesData[0]?.profiles > 0"
+	<div (click)="clearFilters()" data-auto-id="TotalVisualFilter"
+		class="flex justify-content-around flex-column max-height">
+		<div 
+			class="row toggle text-small" 
+			(click)="selectView('swGroups')" 
+			*ngIf="filter.seriesData[0]?.profiles > 0"
 			[ngClass]="{'text-primary':view == 'swGroups','text-muted':view != 'swGroups'}"
 			data-auto-id="TotalVisualFilterSoftwareGroups">
-			<div class="col-5 text-right">
-				<span class="qtr-margin-right text-huge" [innerText]="filter.seriesData[0].profiles"></span>
-			</div>
-			<div class="col-7 margin-auto">
-				<span class="text-large " [innerText]="'_OsvSoftwareGroups_' | i18n"></span>
-			</div>
+				<div class="col-5 text-right">
+					<span class="qtr-margin-right text-huge" [innerText]="filter.seriesData[0].profiles"></span>
+				</div>
+				<div class="col-7 margin-auto flex align-items-center">
+					<span class="text-large " [innerText]="'_OsvSoftwareGroups_' | i18n"></span>
+					<span class="pull-right text-primary relative" [title]="'_OsvSoftwareGroups_' | i18n">
+						<i 
+							data-auto-id="SoftwareGroupInfo" 
+							class="icon-question-circle icon-small"
+							(click)="$event.stopPropagation();showProfileInfo = !showProfileInfo;">
+						</i>
+						<ng-container *ngTemplateOutlet="softwareProfileInfo"></ng-container>
+					</span>
+				</div>
 		</div>
-		<div class="row toggle" (click)="selectView('assets')" *ngIf="filter.seriesData[0]?.assets > 0"
+		<div 
+			*ngIf="filter.seriesData[0]?.assets > 0"
+			class="row toggle text-small" 
 			[ngClass]="{'text-primary':view == 'assets','text-muted':view != 'assets'}"
+			(click)="selectView('assets')" 
 			data-auto-id="TotalVisualFilterAssets">
-			<div class="col-5 text-right">
-				<span class="qtr-margin-right text-huge" [innerText]="filter.seriesData[0].assets"></span>
-			</div>
-			<div class="col-7 margin-auto">
-				<span class="text-large " [innerText]="'_OsvAssets_' | i18n"></span>
-			</div>
+				<div class="col-5 text-right">
+					<span class="qtr-margin-right text-huge" [innerText]="filter.seriesData[0].assets"></span>
+				</div>
+				<div class="col-7 margin-auto">
+					<span class="text-large " [innerText]="'_OsvAssets_' | i18n"></span>
+					<span 
+						class="text-primary pull-right" 
+						data-balloon-length="medium"
+						[attr.data-balloon]="'_OsvAssetInfo_' | i18n" 
+						data-auto-id="AssetsToolTip" 
+						data-balloon-pos="down"
+						(click)="$event.stopPropagation();">
+							<i class="icon-info icon-small"></i>
+					</span>
+				</div>
 		</div>
-		<div class="row toggle" (click)="selectView('swVersions')" *ngIf="filter.seriesData[0]?.versions > 0" [ngClass]="{'text-primary':view == 'swVersions','text-muted':view != 'swVersions'}"
+		<div 
+			class="row toggle text-small" 
+			(click)="selectView('swVersions')" 
+			*ngIf="filter.seriesData[0]?.versions > 0"
+			[ngClass]="{'text-primary':view == 'swVersions','text-muted':view != 'swVersions'}"
 			data-auto-id="TotalVisualFilterSoftwareVersions">
-			<div class="col-5 text-right">
-				<span class="qtr-margin-right text-huge" [innerText]="filter.seriesData[0].versions"></span>
-			</div>
-			<div class="col-7 margin-auto">
-				<span class="text-large " [innerText]="'_OsvSoftwareVersions_' | i18n"></span>
-			</div>
+				<div class="col-5 text-right">
+					<span class="qtr-margin-right text-huge" [innerText]="filter.seriesData[0].versions"></span>
+				</div>
+				<div class="col-7 margin-auto">
+					<span class="text-large half-margin-right" [innerText]="'_OsvSoftwareVersions_' | i18n"></span>
+				</div>
 		</div>
 	</div>
-</ng-template>
-
-<ng-template #deploymentStatusFilter let-filter="filter">
-	<div>
-		<pie-chart [seriesData]="filter.seriesData" (subfilter)="onSubfilterSelect($event, filter)">
-		</pie-chart>
-	</div>
-
 </ng-template>
 
 <ng-template #assetTypeFilter let-filter="filter">
-	<pie-chart [seriesData]="filter.seriesData" (subfilter)="onSubfilterSelect($event, filter)">
-	</pie-chart>
+	<div>
+		<pie-chart 
+			[width]="'400'" 
+			[seriesData]="filter.seriesData"
+			(subfilter)="onSubfilterSelect($event.filter, filter)">
+		</pie-chart>
+	</div>
 </ng-template>
 <cui-modal></cui-modal>
+<ng-template #softwareProfileInfo>
+	<div class="absolute profile-info text-default" *ngIf="showProfileInfo">
+		<div class="row no-margin">
+			<div class="col-12 text-xlarge half-margin-bottom">
+				<div class="row">
+					<div class="col-md-10" [innerHTML]="'_OsvSoftwareGroups_' | i18n"></div>
+					<div class="col-md-2 close">
+						<i class=" icon-close pull-right qtr-margin-right"
+							(click)="$event.stopPropagation();showProfileInfo = false;"
+							data-auto-id="ToggleSoftwareProfileInfoVisibilty"></i>
+					</div>
+				</div>
+			</div>
+			<div class="col-12 divider qtr-margin-top qtr-margin-bottom"></div>
+			<div class="col-12 base-margin-bottom half-margin-left half-margin-top">
+				<div [innerHTML]="'_OsvSoftwareGroupInfoHeader_' | i18n"></div>
+				<ul class="half-margin-top">
+					<li>
+						<span class="text-bold" [innerText]="'_OsvAssetGroup_' | i18n"></span>
+						<ul>
+							<li *ngFor="let item of assetGroupList" [innerHTML]="item"></li>
+						</ul>
+					</li>
+					<li class="half-margin-top">
+						<span class="text-bold" [innerText]="'_OsvOperationalPreferences_' | i18n"></span>
+						<ul>
+							<li *ngFor="let item of operationalPreferencesList" [innerHTML]="item"></li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+			<div class="col-12 divider qtr-margin-top qtr-margin-bottom"></div>
+			<div class="col-6">
+				<button 
+					class="btn btn--primary-ghost btn--small" 
+					[innerText]="'_OsvClose_' | i18n"
+					(click)="$event.stopPropagation();showProfileInfo = false"
+					data-auto-id="CloseSoftwareProfileInfoDialog">
+				</button>
+			</div>
+			<div class="text-right col-6 qtr-margin-top">
+				<label class="checkbox vertical-center half-margin-right" (click)="$event.stopPropagation();"
+					data-auto-id="DonotShowProfileInfoAgain">
+					<input 
+						type="checkbox" 
+						[(ngModel)]="doNotShowAgain" 
+						(ngModelChange)="hideInfo($event)"
+						data-auto-id="DonotShowProfileInfoAgainCheckbox">
+					<span id="softwareGroupInfo" class="checkbox__input"></span>
+					<span class="checkbox__label" [innerText]="'_OsvDoNotShowAgain_' | i18n"></span>
+				</label>
+			</div>
+		</div>
+	</div>
+</ng-template>

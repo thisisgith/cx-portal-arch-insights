@@ -14,7 +14,7 @@ $close-default-color: #6e7580;
 	overflow-y: auto;
 	transform: translateX(-100%);
 	top: 47px;
-	padding: 17px 0 10px 0 !important;
+	padding: 15px 0 10px 0;
 	user-select: text;
 	z-index: 999999;
 
@@ -22,24 +22,20 @@ $close-default-color: #6e7580;
 		padding-left: $base-spacing-qtr;
 	}
 
-	& > div {
-		margin: unset !important;
-	}
-}
+	.cx-dropdown-close {
+		color: $close-default-color;
+		text-decoration: none;
+		position: absolute;
+		right: 13px;
+		top: 16px;
 
-.cx-dropdown-close {
-	color: $close-default-color !important;
-	text-decoration: none !important;
-	position: absolute;
-	right: 13px;
-	top: 16px;
+		:hover {
+			color: $primary;
+		}
 
-	:hover {
-		color: $primary !important;
-	}
-
-	.icon-exit {
-		font-size: 10px !important;
-		line-height: 10px;
+		.icon-exit {
+			font-size: 10px;
+			line-height: 10px;
+		}
 	}
 }

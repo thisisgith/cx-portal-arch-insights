@@ -6,6 +6,7 @@ export interface TimelineDatapoint {
 	subTitle: string;
 	date: Date;
 	muted?: boolean;
+	url?: string;
 }
 
 /**
