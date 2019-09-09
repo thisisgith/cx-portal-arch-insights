@@ -1,5 +1,5 @@
 import { configureTestSuite } from 'ng-bullet';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
 import { FpIntelligenceComponent } from './fp-intelligence.component';
 import { FpIntelligenceModule } from './fp-intelligence.module';
 import { environment } from '@environment';
@@ -144,21 +144,32 @@ describe('FpIntelligenceComponent', () => {
 
 	});
 
-	it('should not load data if form is invalid', done => {
-		component.requestForm.setValue({
-			deviceCount : 50,
-			minMatch: 0 ,
-			similarityCriteria: 'fingerprint'});
+	it('should not load data if response contains empty values', done => {
 		spyOn(fpIntelligenceService, 'getSimilarDevicesDistribution')
 		.and
-		.returnValue(of(ComparisonViewScenarios[4].scenarios.GET[0].response.body));
+		.returnValue(of(ComparisonViewScenarios[6].scenarios.GET[0].response.body));
 		component.ngOnInit();
 		fixture.whenStable()
 			.then(() => {
 				fixture.detectChanges();
-				expect(fpIntelligenceService.getSimilarDevicesDistribution).not
-					.toHaveBeenCalled();
+				expect(component.noData)
+					.toBeTruthy();
 				done();
 			});
 	});
+
+	it('should not load data if form is invalid', fakeAsync(() => {
+		component.requestForm.setValue({
+			deviceCount : 50,
+			minMatch: -1 ,
+			similarityCriteria: 'fingerprint'});
+		spyOn(fpIntelligenceService, 'getSimilarDevices')
+			.and
+			.returnValue(of(ComparisonViewScenarios[4].scenarios.GET[0].response.body));
+		component.ngOnInit();
+		tick(1000);
+		fixture.detectChanges();
+		expect(fpIntelligenceService.getSimilarDevices).not
+			.toHaveBeenCalled();
+	}));
 });
