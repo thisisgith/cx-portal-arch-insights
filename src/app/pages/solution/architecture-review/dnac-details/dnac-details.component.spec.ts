@@ -12,7 +12,7 @@ import { of, throwError } from 'rxjs';
 import { user } from '@mock';
 import { HttpErrorResponse } from '@angular/common/http';
 
-fdescribe('DnacDetailsComponent', () => {
+describe('DnacDetailsComponent', () => {
 	let component: DnacDetailsComponent;
 	let fixture: ComponentFixture<DnacDetailsComponent>;
 	let service: ArchitectureReviewService;
