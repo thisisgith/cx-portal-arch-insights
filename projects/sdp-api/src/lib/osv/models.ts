@@ -8,3 +8,13 @@ export { OSVAsset } from './models/asset';
 export { AssetsResponse } from './models/assets-response';
 export { SummaryResponse } from './models/summary-response';
 export { OsvPagination } from './models/pagination';
+export { SoftwareGroupAsset } from './models/software-group-asset';
+export { SoftwareGroupVersion } from './models/software-group-version';
+export { SoftwareGroupVersionsResponse } from './models/software-group-version-response';
+export { SoftwareGroupAssetsResponse } from './models/software-group-asset-response';
+export { OsvBug } from './models/bugs';
+export { OsvPsirt } from './models/psrits';
+export { MachineRecommendations } from './models/machine-recommendations'
+export { MachineRecommendationsResponse } from './models/machine-recommendations-response'
+export { OsvSeverity } from './models/osv-severity';
+export { ProfileRecommendationsResponse } from './models/profile-recommendations-response';

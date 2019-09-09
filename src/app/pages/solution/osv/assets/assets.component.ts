@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { LogService } from '@cisco-ngx/cui-services';
 
-import { CuiTableOptions, CuiModalService } from '@cisco-ngx/cui-components';
+import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { forkJoin, Subject, of } from 'rxjs';
 import { map, takeUntil, catchError } from 'rxjs/operators';
@@ -39,7 +39,6 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
 	@ViewChild('versionTemplate', { static: true }) private versionTemplate: TemplateRef<{ }>;
 	@ViewChild('recommendationsTemplate', { static: true })
-
 	private recommendationsTemplate: TemplateRef<{ }>;
 	public assetsTable: CuiTableOptions;
 	public status = {
@@ -57,12 +56,12 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 			label: I18n.get('_OsvBasicRecommendations_'),
 		},
 	];
+	public alert: any = { };
 
 	constructor (
 		private logger: LogService,
 		private osvService: OSVService,
 		private route: ActivatedRoute,
-		private cuiModalService: CuiModalService,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
@@ -103,14 +102,9 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 	 * @param currentFilter current filters selected by customer
 	 */
 	public setFilter (currentFilter) {
-		const deploymentStatus = _.get(currentFilter, 'deploymentStatus', []);
 		const assetType = _.get(currentFilter, 'assetType', []);
 		let filter = '';
-		if (deploymentStatus.length > 0) {
-			filter += `deployment:${deploymentStatus.toString()}`;
-		}
 		if (assetType.length === 1) {
-			filter += filter.length > 0 ? ';' : '';
 			filter += assetType.indexOf('assets_profile') > -1
 				? 'independent:no' : 'independent:yes';
 		}
@@ -154,6 +148,7 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 					this.buildTable();
 				}),
 				catchError(err => {
+					_.invoke(this.alert, 'show', I18n.get('_OsvGenericError_'), 'danger');
 					this.assets = [];
 					this.pagination = {
 						total: 0,
@@ -180,11 +175,17 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 						sortable: true,
 						sortDirection: 'asc',
 						sorting: true,
-						width: '20%',
+						width: '10%',
 					},
 					{
 						key: 'ipAddress',
 						name: I18n.get('_OsvIpAddress_'),
+						sortable: false,
+						width: '10%',
+					},
+					{
+						key: 'profileName',
+						name: I18n.get('_OsvSoftwareGroup_'),
 						sortable: false,
 						width: '10%',
 					},
@@ -204,13 +205,25 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 						name: I18n.get('_OsvCurrentOSVersion_'),
 						sortable: false,
 						template: this.versionTemplate,
-						width: '20%',
+						width: '10%',
+					},
+					{
+						key: 'optimalVersion',
+						name: I18n.get('_OsvOptimalVersion_'),
+						sortable: false,
+						width: '10%',
+					},
+					{
+						key: 'deploymentStatus',
+						name: I18n.get('_OsvDeploymentStatus_'),
+						sortable: false,
+						width: '10%',
 					},
 					{
 						name: I18n.get('_OsvRecommendations_'),
 						sortable: false,
 						template: this.recommendationsTemplate,
-						width: '20%',
+						width: '10%',
 					},
 				],
 				dynamicData: true,
@@ -246,6 +259,10 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 	 * OnDestroy lifecycle hook
 	 */
 	public ngOnDestroy () {
+		_.invoke(this.alert, 'hide');
+		_.map(this.assets, (asset: any) => {
+			asset.rowSelected = false;
+		});
 		this.destroy$.next();
 		this.destroy$.complete();
 	}

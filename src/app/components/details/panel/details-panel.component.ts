@@ -1,4 +1,4 @@
-import { Component, ContentChild, Input } from '@angular/core';
+import { Component, ContentChild, Input, HostBinding } from '@angular/core';
 import { DetailsPanelHeaderComponent } from './header/header.component';
 
 /**
@@ -18,4 +18,6 @@ export class DetailsPanelComponent {
 	@Input('hidden') public hidden = true;
 	@ContentChild(DetailsPanelHeaderComponent, { static: true })
 		public headerComponent: DetailsPanelHeaderComponent;
+	@HostBinding('style.minWidth')
+	@Input() public minWidth;
 }
