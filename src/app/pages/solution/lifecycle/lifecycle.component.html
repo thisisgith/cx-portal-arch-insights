@@ -104,23 +104,28 @@
 	<div class="base-margin-left" *ngIf="currentPitstop && currentPitstop?.pitstopActions?.length">
 		<div class="divider divider--compressed"></div>
 		<div class="base-margin-top">
-			<span class="icon-flagged"></span>
-			<span class="text-uppercase" [innerText]="'_MyCheckList_' | i18n"></span>
+			<span class="qtr-padding-bottom icon-flagged"></span>
+			<span class="text-uppercase qtr-padding-left" [innerText]="'_CheckList_' | i18n"></span>
 		</div>
 		<p class="text-small no-margin-top" [innerText]="'_ChecklistDesc_' | i18n"></p>
 		<div *ngFor="let action of currentPitActionsWithStatus" class="form-group form-group select" data-auto-id="pitstopAction">
 			<div class="actionname row qtr-padding-top qtr-padding-bottom" [ngClass]="{selected: action.selected}">
 				<div class="col-md-1">
-					<label class="checkbox" [ngClass]="{'disabled': action.action.isComplete || currentWorkingPitstop !== currentPitstop.name }" data-auto-id="pitstopCheckboxLabel">
-						<input data-auto-id="pitstopCheckbox" type="checkbox" [(ngModel)]="action.action.isComplete"
-							(change)="completeAction(action.action)" [checked]="action.action.isComplete">
-						<span class="checkbox__input" data-auto-id="pitstopCheckboxSpan"></span>
+					<!-- since updatePitstop API going through changes, we are temporarily disabling the user from checking a box -->
+					<!-- This will manually be done by the CSM/CSE.  Refer to PBC-725. -->
+					<!-- <label class="checkbox" [ngClass]="{'disabled': action.action.isComplete || currentWorkingPitstop !== currentPitstop.name }" data-auto-id="pitstopCheckboxLabel"> -->
+					<label class="checkbox disabled" data-auto-id="pitstopCheckboxLabel">
+						<input data-auto-id="pitstopCheckbox" type="checkbox"
+							(change)="completeAction(action.action)" [checked]="true"
+						>
+						<span class="checkbox__input" data-auto-id="pitstopCheckboxSpan"
+							[ngClass]="{'checkbox-complete': action.action.isComplete}"
+						></span>
 					</label>
 				</div>
 				<div class="col-md-11">
 					<a data-auto-id="actionlink"
 						class="no-link"
-						[ngClass]="{'disabled': action?.action?.isComplete, 'selected': action?.selected}"
 						data-toggle="tooltip" data-placement="bottom" title="{{action?.action?.description}}"
 						(click)="selectAction(action)">
 						<div class="checkbox__label text-medium"
