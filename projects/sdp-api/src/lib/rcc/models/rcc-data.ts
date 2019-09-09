@@ -45,8 +45,8 @@ export interface Filter {
 export interface violationGridParams {
     criteria: string,
     customerId: string,
-    pageLimit: number,
-    pageNum: number,
+    pageIndex: number,
+    pageSize: number,
     policyType: string,
     search: string,
     severity: string,

@@ -102,7 +102,7 @@
 			<cui-pager *ngIf="!loading && policyViolationsGridData.length > 0"
 				[page]="tableConfig?.tableOffset"
 				[limit]="tableConfig?.tableLimit"
-				[totalItems]="tableConfig?.totalItems" 
+				[totalItems]="violationPaginationConfig?.totalItems" 
 				(onPageChanged)="onPagerUpdated($event)">
 			</cui-pager>
 		</div>

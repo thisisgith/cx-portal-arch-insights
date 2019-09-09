@@ -75,7 +75,7 @@
 	</div>
 	<div class="row base-padding-top half-padding-left responsive-table"
 		*ngIf="(!selectionLoading  && tableConfig?.totalItems > 0); else commonMsgTemplate;">
-		<cui-table class="table table--fixed" [options]="impactedDeviceTableOptions" 
+		<cui-table class="table table--lined table--wrapped table--fixed" [options]="impactedDeviceTableOptions" 
 			[data]="impactedDeviceDetails"
 			[offset]="tableConfig?.tableOffset" 
 			(onSortingChanged)="onTableSortingChanged()" 

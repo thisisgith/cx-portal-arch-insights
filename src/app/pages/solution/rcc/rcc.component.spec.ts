@@ -478,8 +478,8 @@ describe('RccComponent', () => {
 		const violationGridObj = {
 			criteria: '',
 			customerId: '7293498',
-			pageLimit: 10,
-			pageNum: 1,
+			pageIndex: 1,
+			pageSize: 10,
 			policyType: 'PCI',
 			search: 'HIPAA',
 			severity: 'P1',
@@ -496,8 +496,8 @@ describe('RccComponent', () => {
 		const violationGridObj = {
 			criteria: '',
 			customerId: '7293498',
-			pageLimit: 10,
-			pageNum: 1,
+			pageIndex: 1,
+			pageSize: 10,
 			policyType: 'PCI',
 			search: 'HIPAA',
 			severity: 'P1',

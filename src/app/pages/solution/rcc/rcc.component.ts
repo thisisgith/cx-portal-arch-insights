@@ -62,6 +62,11 @@ export class RccComponent implements OnInit, OnDestroy {
 		pageNum: 1,
 		pagerLimit: 10,
 	};
+	public violationPaginationConfig = {
+		pageIndex: 1,
+		pageSize: 10,
+		totalItems: 0,
+	};
 	public loading = false;
 	public tableData: RccGridData;
 	public policyViolationsGridData: RccGridDataSample[] = [];
@@ -180,8 +185,8 @@ export class RccComponent implements OnInit, OnDestroy {
 		this.violationGridObj = {
 			criteria: this.criteria,
 			customerId: this.customerId,
-			pageLimit: this.paginationConfig.pageNum,
-			pageNum: this.paginationConfig.pageNum,
+			pageIndex: this.paginationConfig.pageNum,
+			pageSize: this.paginationConfig.pageLimit,
 			policyType: this.policyGroup,
 			search: this.searchInput,
 			severity: this.severity,
@@ -241,7 +246,7 @@ export class RccComponent implements OnInit, OnDestroy {
 					sortable: true,
 				},
 			],
-			dynamicData: false,
+			dynamicData: true,
 			hover: true,
 			singleSelect: true,
 			striped: false,
@@ -255,7 +260,6 @@ export class RccComponent implements OnInit, OnDestroy {
 	 */
 	public getRCCData (violationGridObj: violationGridParams) {
 		this.loading = true;
-		this.policyViolationsTableOptions = this.getPolicyViolationsTableOptions();
 		this.RccTrackService
 			.getGridData(violationGridObj)
 			.pipe(takeUntil(this.destroy$))
@@ -266,12 +270,12 @@ export class RccComponent implements OnInit, OnDestroy {
 				this.conditionViolations = responseData.violationcount;
 				this.conditionViolationsAssetCount = responseData.impassets;
 				if (this.policyViolationsGridData && this.policyViolationsGridData.length > 0) {
-					this.tableConfig.totalItems = this.policyViolationsGridData.length;
+					this.violationPaginationConfig.totalItems
+						= responseData.totalcount;
 					this.noTableData = false;
 				} else {
 					this.noTableData = true;
 				}
-				this.policyViolationsTableOptions = this.getPolicyViolationsTableOptions();
 				this.loading = false;
 				this.errorPolicyView = false;
 			},
@@ -405,8 +409,8 @@ export class RccComponent implements OnInit, OnDestroy {
 	 */
 	public onPagerUpdated (pageInfo: any) {
 		this.tableConfig.tableOffset = pageInfo.page;
-		this.paginationConfig.pageNum = pageInfo.page + 1;
-		// this.getRCCData(this.violationGridObj);
+		this.violationGridObj.pageIndex = pageInfo.page + 1;
+		this.getRCCData(this.violationGridObj);
 	}
 	/**
 	 * Determines whether asset pager updated on
@@ -429,7 +433,7 @@ export class RccComponent implements OnInit, OnDestroy {
 		if (view === 'violation') {
 			this.isAssetView = false;
 			this.buildFilters();
-			// this.getRCCData(this.violationGridObj);
+			this.getRCCData(this.violationGridObj);
 			this.getFiltersData();
 		} else {
 			this.isAssetView = true;
@@ -542,8 +546,9 @@ export class RccComponent implements OnInit, OnDestroy {
 	 */
 	public onSubfilterSelect (subfilter: string, filter: Filter, triggeredFromGraph) {
 		this.errorPolicyView = false;
+		const searchInput = this.searchInput.trim();
 		if (this.searchForm.invalid ||
-				(!_.isEmpty(this.searchInput.trim()) && this.searchInput.trim().length < 2)) {
+				(!_.isEmpty(searchInput) && searchInput.length < 2)) {
 			this.invalidSearchInput = true;
 
 			return;
@@ -574,9 +579,9 @@ export class RccComponent implements OnInit, OnDestroy {
 			sub.selected = !sub.selected;
 		}
 		(filter.key === 'policyGroup' || filter.key === 'severity')
-			? this.violationGridObj.search = this.searchInput.trim()
-			: this.assetGridObj.searchParam = this.searchInput.trim();
-		this.prevSearchText = this.searchInput.trim();
+			? this.violationGridObj.search = searchInput
+			: this.assetGridObj.searchParam = searchInput;
+		this.prevSearchText = searchInput;
 		if (filter.key === 'policyGroup') {
 			this.policyGroup = sub.filter;
 			if (triggeredFromGraph) {
@@ -584,6 +589,7 @@ export class RccComponent implements OnInit, OnDestroy {
 			} else {
 				this.violationGridObj.policyType = null;
 			}
+			this.violationGridObj.pageIndex = 0;
 			this.getRCCData(this.violationGridObj);
 		} else if (filter.key === 'severity') {
 			this.severity = sub.filter;
@@ -592,6 +598,7 @@ export class RccComponent implements OnInit, OnDestroy {
 			} else {
 				this.violationGridObj.severity = null;
 			}
+			this.violationGridObj.pageIndex = 0;
 			this.getRCCData(this.violationGridObj);
 		} else if (filter.key === 'assetOsType') {
 			this.assetOsType = sub.filter;
@@ -674,8 +681,9 @@ export class RccComponent implements OnInit, OnDestroy {
 	 */
 	public searchViolations (event: any, type: string) {
 		this.invalidSearchInput = false;
+		const searchInput = this.searchInput.trim();
 		if (event && event.keyCode === 8 && this.searched) {
-			if (!_.isEmpty(this.searchForm.value.search)) {
+			if (!_.isEmpty(searchInput)) {
 				return;
 			}
 			this.searched = false;
@@ -687,11 +695,11 @@ export class RccComponent implements OnInit, OnDestroy {
 
 			return;
 		}
-		if (this.prevSearchText.toLowerCase() === this.searchInput.trim()
+		if (this.prevSearchText.toLowerCase() === searchInput
 		.toLowerCase()) { return; }
 		if (((event && event.keyCode && event.keyCode === 13) ||
-			type === 'search') && (this.searchInput.trim().length < 2)) {
-			this.searchInput = this.searchInput.trim();
+			type === 'search') && (searchInput.length < 2)) {
+			this.searchInput = searchInput;
 			this.invalidSearchInput = true;
 
 			return;
@@ -703,15 +711,15 @@ export class RccComponent implements OnInit, OnDestroy {
 			this.errorPolicyView = false;
 			this.invalidSearchInput = false;
 			this.prevSearchText = this.searchForm.value.search.trim();
-			this.searchInput = this.searchInput.trim();
+			this.searchInput = searchInput;
 			this.tableConfig.tableOffset = 0;
 			this.tableConfig.totalItems = 0;
 			this.searched = true;
 			if (this.view === 'violation') {
-				this.violationGridObj.search = this.searchInput.trim();
+				this.violationGridObj.search = searchInput;
 				this.getRCCData(this.violationGridObj);
 			} else {
-				this.assetGridObj.searchParam = this.searchInput.trim();
+				this.assetGridObj.searchParam = searchInput;
 				this.getRCCAssetData(this.assetGridObj);
 			}
 		}
