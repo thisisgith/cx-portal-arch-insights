@@ -111,10 +111,10 @@
 					</form>
 				</div>
 				<div class="btn-group btn-group--square half-margin-right">
-					<button data-auto-id="list-view-btn" class="btn btn--small btn--gray-ghost" [ngClass]="{ 'selected': view == 'list' }" (click)="selectView('list')">
+					<button data-auto-id="list-view-btn" class="btn btn--small btn--gray-ghost" [ngClass]="{ 'selected': view === 'list' }" (click)="selectView('list')">
 						<span class="icon-list-view"></span>
 					</button>
-					<button data-auto-id="grid-view-btn" class="btn btn--small btn--gray-ghost" [ngClass]="{ 'selected': view == 'grid' }" (click)="selectView('grid')">
+					<button data-auto-id="grid-view-btn" class="btn btn--small btn--gray-ghost" [ngClass]="{ 'selected': view === 'grid' }" (click)="selectView('grid')">
 						<span class="icon-grid-view"></span>
 					</button>
 				</div>
@@ -128,7 +128,7 @@
 </ng-template>
 
 <ng-template #tableAssets>
-	<div class="responsive-table" *ngIf="assetsTable && inventory.length && (!view || view == 'list')">
+	<div class="responsive-table" *ngIf="assetsTable && inventory.length && (!view || view === 'list')">
 		<table class="table table--selectable table--compressed table--wrap table--lined table--hover table--nostripes" data-auto-id="AssetsTable">
 				<thead data-auto-id="AssetsTableHeader">
 					<tr>
@@ -190,7 +190,7 @@
 				</tbody>
 		</table>
 	</div>
-	<div class="panel panel--ltgray base-padding-right base-padding-left" *ngIf="assetsTable && inventory.length && view == 'grid'">
+	<div class="panel panel--ltgray base-padding-right base-padding-left" *ngIf="assetsTable && inventory.length && view === 'grid'">
 		<div class="row">
 			<div *ngFor="let item of inventory" class="col-md-2 half-margin-bottom half-margin-top flex">
 				<ng-container *ngTemplateOutlet="cardTemplate; context: { item: item }"></ng-container>

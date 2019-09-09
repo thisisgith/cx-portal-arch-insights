@@ -28,7 +28,6 @@ export class FingerprintBodyComponent implements OnChanges {
 		private logger: LogService,
 		private route: ActivatedRoute,
 	) {
-		this.logger.debug('FingerprintBodyComponent Created!');
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.cxLevel = _.get(user, ['service', 'cxLevel'], 0);
 	}

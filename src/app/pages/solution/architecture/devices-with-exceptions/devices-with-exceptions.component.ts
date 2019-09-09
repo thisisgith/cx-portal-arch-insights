@@ -29,7 +29,6 @@ export class DevicesWithExceptionsComponent implements OnInit {
 		private architectureService: ArchitectureService,
 		private route: ActivatedRoute,
 	) {
-		this.logger.debug('DevicesWithExceptionsComponent Created!');
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
 		this.params.customerId = _.cloneDeep(this.customerId);

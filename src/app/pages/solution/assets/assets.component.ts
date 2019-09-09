@@ -349,7 +349,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 */
 	private adjustQueryParams () {
 		const queryParams = _.omit(_.cloneDeep(this.assetParams), ['customerId', 'rows']);
-		this.filtered = !_.isEmpty(queryParams);
+		this.filtered = !_.isEmpty(_.omit(queryParams, ['sort', 'page']));
 		this.router.navigate([], {
 			queryParams,
 			relativeTo: this.route,
@@ -428,8 +428,10 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			});
 		});
 
-		this.assetParams = _.assignIn(_.pick(_.cloneDeep(this.assetParams),
-			['customerId', 'rows', 'sort'], { page: 1 }));
+		this.assetParams = _.assignIn(
+			_.pick(
+				_.cloneDeep(this.assetParams), ['customerId', 'rows', 'sort']),
+				{ page: 1 });
 
 		this.selectedSubfilters = [];
 		this.searchForm.controls.search.setValue('');

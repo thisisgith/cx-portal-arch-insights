@@ -379,8 +379,6 @@ describe('AdvisoriesComponent', () => {
 			component.onColumnSort(titleCol);
 			tick(1000);
 
-			expect(tab.filtered)
-				.toBeTruthy();
 			expect(tab.params.sort)
 				.toEqual(['title:ASC']);
 		}));
