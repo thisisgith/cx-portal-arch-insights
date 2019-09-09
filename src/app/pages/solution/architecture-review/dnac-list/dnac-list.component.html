@@ -4,15 +4,15 @@
 		<div class="row ">
 			<div class="col-md-8 base-margin-bottom">
 				<div *ngIf="dnacDetails?.version">
-					<span class="text-large" innerText="{{ ('_ArchitectureVersion_' | i18n) + ' : '}}">
+					<span class="text-large" [innerText]="('_ArchitectureVersion_' | i18n)+ ' : '">
 					</span>
-					<span class="text-large" innerText="{{ dnacDetails?.version }}">
+					<span class="text-large" [innerText]="dnacDetails?.version">
 					</span>
 				</div>
 			</div>
 		</div>		
 		<div detailsPanelTitle class="text-xlarge">
-			<span  class="qtr-margin-left"  innerText="{{ dnacDetails?.dnacHostname }}">
+			<span  class="qtr-margin-left"  [innerText]="dnacDetails?.dnacHostname">
 			</span>
 			<div class="text-medium  base-margin-top">
 				<span [innerText]="('_ArchitectureVersion_' | i18n)+ ' : '"></span>

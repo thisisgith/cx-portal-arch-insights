@@ -4,7 +4,7 @@ import { BulletChartModule } from './bullet-chart.module';
 import { Chart } from 'angular-highcharts';
 import { By } from '@angular/platform-browser';
 
-fdescribe('BulletChartComponent', () => {
+describe('BulletChartComponent', () => {
 	let component: BulletChartComponent;
 	let fixture: ComponentFixture<BulletChartComponent>;
 

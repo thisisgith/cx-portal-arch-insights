@@ -3,7 +3,6 @@ import * as _ from 'lodash-es';
 import { ActivatedRoute } from '@angular/router';
 import { ArchitectureReviewService } from '@sdp-api';
 import { LogService } from '@cisco-ngx/cui-services';
-
 /**
  * DNAC Details Component
  */
