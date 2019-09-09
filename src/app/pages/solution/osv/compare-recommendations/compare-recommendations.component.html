@@ -1,0 +1,180 @@
+<div *ngIf="machineRecommendations && machineRecommendations.length > 0"
+	class="compare-recommendations responsive-table">
+	<table class="table table--bordered table--nostripes table--wrap table--fixed">
+		<tbody>
+			<!-- version and release date -->
+			<tr>
+				<td class="first-column-width no-border-bottom no-border-top"></td>
+				<td class="recommendation-current no-border-top">
+					<div [ngClass]="{'text-xlarge':fullscreen,'text-large':!fullscreen}"
+						[innerText]="'_OsvCurrent_' | i18n | titlecase"></div>
+					<div class="half-margin-top">
+						<span *ngIf="selectedSoftwareGroup?.swVersionCount > 1"
+							data-auto-id="SoftwareGroupCurrentVersions" class="link toggle"
+							(click)="showVersions.emit()"
+							[innerText]="'_OsvMultipleVersions_' | i18n:selectedSoftwareGroup?.swVersionCount">
+						</span>
+						<span *ngIf="selectedSoftwareGroup?.swVersionCount == 1"
+							data-auto-id="SoftwareGroupCurrentVersion" class="link toggle" (click)="showVersions.emit()"
+							[innerText]="selectedSoftwareGroup?.swVersions">
+						</span>
+					</div>
+					<div class="half-margin-top">
+						<span *ngIf="currentRecommendation?.postDate"
+							[innerText]="currentRecommendation?.postDate | date:medium"></span>
+						<span *ngIf="!currentRecommendation?.postDate" [innerText]="'-'"></span>
+					</div>
+				</td>
+				<td *ngFor="let recommendation of machineRecommendations" class="recommendation no-border-top ">
+					<div [ngClass]="{'text-xlarge':fullscreen,'text-large':!fullscreen}"
+						[innerText]="recommendation.name"></div>
+					<div class="half-margin-top" [innerText]="recommendation.release"></div>
+					<div class="half-margin-top" [innerText]="recommendation.postDate | date:medium"></div>
+				</td>
+			</tr>
+			<!-- status or action -->
+			<tr>
+				<td class=" first-column-width no-border-bottom no-border-top text-large"
+					[innerText]="'_OsvStatusOrAction_' | i18n">
+				</td>
+				<td class="recommendation-current"></td>
+				<td *ngFor="let recommendation of machineRecommendations" class="recommendation ">
+					<button 
+						*ngIf="!recommendation.accepted" 
+						(click)="onAcceptClick(recommendation.release)"
+						class="btn btn--secondary btn--small" 
+						[innerText]="'_OsvAccept_' | i18n"
+						attr.data-auto-id="AcceptVersion-">
+					</button>
+					<div *ngIf="recommendation.accepted" class="flex">
+						<div class="icon-check-outline text-success flex align-items-center"></div>
+						<div>
+							<div class="text-small qtr-padding-left" [innerText]="'_OsvAcceptedOn_' | i18n"></div>
+							<div class="text-small qtr-padding-left"
+								[innerText]="recommendation.acceptedDate | date:mediumDate"></div>
+						</div>
+						<button 
+							(click)="onCancelClick(recommendation.release)"
+							class="btn btn--secondary btn--small qtr-margin-left" 
+							[innerText]="'_Cancel_' | i18n"
+							attr.data-auto-id="CancelAcceptVersion-{{recommendation.release}}">
+						</button>
+					</div>
+				</td>
+			</tr>
+			<!-- risk score -->
+			<tr>
+				<td class="first-column-width no-border-bottom no-border-top text-large">
+					<span class="text-large" [innerText]="'_OsvRiskScore_' | i18n"></span>
+					<span 
+						class="qtr-margin-left  text-primary" 
+						data-balloon-length="large"
+						[attr.data-balloon]="'_OsvRiskScoreInfo_' | i18n" 
+						data-balloon-pos="right">
+							<i class="icon-info qtr-margin-bottom"></i>
+					</span>
+				</td>
+				<td class="text-xlarge recommendation-current">
+					<span [innerText]="currentRecommendation?.profileRisk"></span>
+				</td>
+				<td *ngFor="let recommendation of machineRecommendations" class="recommendation">
+					<div class="flex align-items-center">
+						<span class="text-xlarge qtr-margin-left"
+							[innerText]="recommendation.expectedProfileRisk"></span>
+					</div>
+				</td>
+			</tr>
+			<!-- bugs -->
+			<tr>
+				<td class=" first-column-width headingClass no-border-bottom no-border-top text-large"
+					[innerText]="'_Bugs_' | i18n">
+				</td>
+				<td class="recommendation-current">
+					<div class="base-margin-bottom"
+						[ngClass]="{'text-small':!fullscreen,'text-large base-margin-top':fullscreen}"
+						[innerText]="'_OsvCurrentlyExposed_' | i18n | uppercase">					
+					</div>
+					<div class=" text-xlarge" [innerText]="currentRecommendation?.bugsExposed || '0'"
+						[ngClass]="{'base-padding-top':!fullscreen}"></div>
+					<div class="base-margin-top"
+						*ngIf="currentRecommendation?.bugSeriesData && currentRecommendation?.bugSeriesData.length > 0">
+						<bar-chart 
+							dataLabels="true" 
+							[seriesData]="currentRecommendation.bugSeriesData"
+							[width]="barChartWidth">
+						</bar-chart>
+					</div>
+				</td>
+				<td *ngFor="let recommendation of machineRecommendations" class="recommendation">
+					<div class="row" [ngClass]="{'base-margin-top':fullscreen}">
+						<div [ngClass]="{'text-small':!fullscreen,'text-large':fullscreen}" class="col-6"
+							[innerText]="'_OsvFixed_' | i18n"></div>
+						<div [ngClass]="{'text-small':!fullscreen,'text-large':fullscreen}"
+							[innerText]="'_OsvWillExposed_' | i18n" class="text-small col-6"></div>
+					</div>
+					<div class="base-margin-top flex justify-content-between">
+						<div>
+							<span class="text-xlarge" [innerText]="recommendation.resolvedBugsCount  || '0'"></span>
+							<span class="text-xlarge" [innerText]="'/'"></span>
+							<span class="text-xlarge" [innerText]="currentRecommendation?.bugsExposed || '0'"></span>
+
+						</div>
+						<div class="text-xlarge" [innerText]="recommendation.bugsExposed  || '0'"></div>
+					</div>
+					<div class="base-margin-top"
+						*ngIf=" recommendation.bugSeriesData && recommendation.bugSeriesData.length > 0">
+						<bar-chart 
+							[width]="barChartWidth" 
+							[backgroundColor]="barChartBackgroundColor" 
+							dataLabels="true"
+							[seriesData]="recommendation.bugSeriesData">
+						</bar-chart>
+					</div>
+				</td>
+			</tr>
+			<!-- security advisories -->
+			<tr>
+				<td class=" first-column-width headingClass no-border-bottom no-border-top text-large"
+					[innerText]="'_SecurityAdvisories_' | i18n">
+				</td>
+				<td class="recommendation-current">
+					<div class="text-xlarge half-margin-top" [innerText]="currentRecommendation?.psirtExposed || '0'">
+					</div>
+					<div class="base-margin-top"
+						*ngIf="currentRecommendation?.psirtSeriesData && currentRecommendation?.psirtSeriesData.length > 0">
+						<bar-chart 
+							[width]="barChartWidth" 
+							dataLabels="true"
+							[seriesData]="currentRecommendation.psirtSeriesData">
+						</bar-chart>
+					</div>
+				</td>
+				<td *ngFor="let recommendation of machineRecommendations" class="recommendation">
+					<div class="half-margin-top flex justify-content-between">
+						<div>
+							<span class="text-xlarge" [innerText]="recommendation.psirtResolvedCount  || '0'"></span>
+							<span class="text-xlarge" [innerText]="'/'"></span>
+							<span class="text-xlarge" [innerText]="currentRecommendation.psirtExposed  || '0'"></span>
+
+						</div>
+						<div class="text-xlarge" [innerText]="recommendation.psirtExposed || '0'"></div>
+					</div>
+					<div class="base-margin-top"
+						*ngIf=" recommendation.psirtSeriesData && recommendation.psirtSeriesData.length > 0">
+						<bar-chart 
+							[width]="barChartWidth" 
+							[backgroundColor]="barChartBackgroundColor" 
+							dataLabels="true"
+							[seriesData]="recommendation.psirtSeriesData">
+						</bar-chart>
+					</div>
+				</td>
+
+			</tr>
+		</tbody>
+	</table>
+</div>
+<div *ngIf="machineRecommendations && machineRecommendations?.length == 0">
+	<div class="flex-center-horizontal text-xlarge text-muted dbl-margin-top half-margin-bottom"
+		[innerText]="'_OsvNoRecommendations_' | i18n"></div>
+</div>
