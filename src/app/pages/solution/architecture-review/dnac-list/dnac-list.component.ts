@@ -28,7 +28,6 @@ export class DnacListComponent implements OnInit {
 		private architectureReviewService: ArchitectureReviewService,
 		private route: ActivatedRoute,
 	) {
-		this.logger.debug('DnacListComponent Created!');
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
 		this.params.customerId = this.customerId;
@@ -42,7 +41,7 @@ export class DnacListComponent implements OnInit {
 	public tableStartIndex = 0;
 	public tableEndIndex = 0;
 	private destroy$ = new Subject();
-	public globalSearchText  = '';
+	public searchText  = '';
 	public lastCollectionTime = '';
 	public params: IParamType = { customerId : '' , page: 0, pageSize: 10, searchText : '' };
 	public fullscreen: any ;
@@ -134,12 +133,14 @@ export class DnacListComponent implements OnInit {
 	 * Keys down function
 	 * @param event contains eventdata
 	 */
-	public globalSearchFunction (event) {
-		if (event.keyCode === 13) {
+	public textFilter (event) {
+		// key code 13 refers to enter key
+		const eventKeycode = 13;
+		if (event.keyCode === eventKeycode || this.searchText.trim().length === 0) {
 			this.isLoading = true;
 			this.tableStartIndex = 0;
 			this.params.page = 0;
-			this.params.searchText = this.globalSearchText;
+			this.params.searchText = this.searchText;
 			this.getDnacList();
 		}
 	}

@@ -69,7 +69,6 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 		private route: ActivatedRoute,
 		public userResolve: UserResolve,
 	) {
-		this.logger.debug('RccDeviceViolationDetailsComponent Created!');
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
 	}

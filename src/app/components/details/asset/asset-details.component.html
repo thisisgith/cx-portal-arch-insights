@@ -27,7 +27,7 @@
 	<div class="half-margin-bottom">
 		<cui-alert [options]="alert"></cui-alert>
 	</div>
-	<cui-tabs id="assetDetailTabs" *ngIf="asset && customerId">
+	<cui-tabs id="detailTabs" *ngIf="asset && customerId">
 		<cui-tab [label]="'_Summary_' | i18n | uppercase">
 			<div class="half-margin-top qtr-margin-left qtr-margin-right">
 				<asset-details-summary [asset]="asset" [customerId]="customerId"></asset-details-summary>

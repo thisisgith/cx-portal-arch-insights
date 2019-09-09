@@ -40,7 +40,6 @@ export class RccComponent implements OnInit, OnDestroy {
 		public fromNow: FromNowPipe,
 		private route: ActivatedRoute,
 	) {
-		this.logger.debug('RCC Component Created!');
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
 	}

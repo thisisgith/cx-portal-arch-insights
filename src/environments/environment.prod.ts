@@ -19,14 +19,14 @@ export const environment = {
 			origin
 		}/ws/oauth/v3/token/cway/e4f602992449cdb1d4aea2df5849f7d6ebd4280c1c8e1398fcfec534422533b8`,
 	},
-	baseHref: '/',
+	baseHref: '/pbc',
+	communityLink: 'https://cloudsso.cisco.com/idp/startSSO.ping?PartnerSpId=' +
+		'https://community.cisco.com/auth/saml&TARGET=https://community.cisco.com',
 	csc: {
 		fileDownloadURL: `https://largefile.cloudapps.cisco.com/Web-Ui?srId=
 			{0}&fileName={1}&appId=cxportal`,
 		fileList: '/ws/csc/v3/caseFiles',
 	},
-	communityLink: 'https://cloudsso.cisco.com/idp/startSSO.ping?PartnerSpId=' +
-		'https://community.cisco.com/auth/saml&TARGET=https://community.cisco.com',
 	csone: {
 		classifyAppId: 'CXPortal',
 		clientId: '262556217fbe45ecbbe27af70e443e78',
@@ -52,6 +52,8 @@ export const environment = {
 			'b_cisco_dna_center_ug_1_4/b_cisco_dna_center_ug_1_4_chapter_01001.html',
 	},
 	logoutUrl: 'https://www.cisco.com/autho/logout.html',
+	mapboxToken:
+	'pk.eyJ1IjoibWlzY2htaTIiLCJhIjoiY2p4eDl2ODVnMGpmODNkcDhsbG5nNXQ0YyJ9.vpfGffFASSUfANAU4Yvtxg',
 	mock: [],
 	myCase: 'https://mycase.cloudapps.cisco.com',
 	noAuthEndpoints: [

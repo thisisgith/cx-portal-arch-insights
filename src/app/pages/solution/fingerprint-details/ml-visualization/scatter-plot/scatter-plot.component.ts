@@ -96,7 +96,6 @@ export class ScatterPlotComponent implements OnInit, OnChanges, AfterViewInit {
 		public renderer: Renderer2,
 		private elRef: ElementRef,
 	) {
-		this.logger.debug('ScatterPlot component Created!');
 		this.chartDragMap = new ChartDragMap(null, null, 10, 30, null, null, 5);
 	}
 

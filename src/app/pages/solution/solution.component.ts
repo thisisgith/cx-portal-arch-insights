@@ -25,6 +25,7 @@ import {
 	RacetrackTechnology,
 	CoverageCountsResponse,
 	ProductAlertsService,
+	InsightsCrashesService,
 	FieldNoticeAdvisoryResponse,
 	CriticalBugsResponse,
 	SecurityAdvisoriesResponse,
@@ -109,6 +110,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		private cdr: ChangeDetectorRef,
 		private racetrackInfoService: RacetrackInfoService,
 		private detailsPanelStackService: DetailsPanelStackService,
+		private insightsCrashesService: InsightsCrashesService,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
@@ -472,6 +474,35 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	}
 
 	/**
+	 * Fetches the counts for the advisories chart
+	 * @returns the advisory counts
+	 */
+	private fetchInsightsCounts () {
+		const insightsFacet = _.find(this.facets, { key: 'insights' });
+
+		insightsFacet.loading = true;
+		insightsFacet.isError = false;
+
+		return this.insightsCrashesService.getInsightsCounts(this.customerId)
+		.pipe(
+			map((counts: any) => {
+
+				insightsFacet.seriesData = counts;
+				insightsFacet.loading = false;
+			}),
+			catchError(err => {
+				insightsFacet.loading = false;
+				insightsFacet.isError = true;
+				this.logger.error('solution.component : fetchInsightsCounts() ' +
+				`:: Error : (${err.status}) ${err.message}`);
+
+				return of({ });
+			}),
+			takeUntil(this.destroy$),
+		);
+	}
+
+	/**
 	 * Fetch Case/RMA counts for the given serial number
 	 * @returns Observable with array of case followed by RMA counts
 	 */
@@ -633,6 +664,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		forkJoin(
 			this.fetchCoverageCount(),
 			this.fetchAdvisoryCounts(),
+			this.fetchInsightsCounts(),
 			this.getCaseAndRMACount(),
 		)
 		.pipe(
