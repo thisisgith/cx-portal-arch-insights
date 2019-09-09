@@ -1,7 +1,7 @@
 <!-- Fly-Out View Slide-out -->
 <details-panel [hidden]="!dnacDetails" [fullscreen]="fullscreen">
 	<details-panel-header (close)="onPanelClose()" [(fullscreen)]="fullscreen" [fullscreenToggle]="false">
-		<div class="row ">
+		<div class="row">
 			<div class="col-md-8 base-margin-bottom">
 				<div *ngIf="dnacDetails?.version">
 					<span class="text-large" [innerText]="('_ArchitectureVersion_' | i18n)">
