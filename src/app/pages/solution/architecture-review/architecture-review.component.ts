@@ -94,9 +94,13 @@ export class ArchitectureReviewComponent implements OnInit {
 	 */
 	public selectVisualLabel (label: any) {
 		label.active = true;
+		const filter = _.find(this.filters, { key: 'exceptions' });
 		this.visualLabels.forEach(element => {
 			if (element !== label) {
 				element.active = false;
+				filter.title = '';
+			} else {
+				filter.title = I18n.get('_ArchitectureSDAReadiness_');
 			}
 		});
 	}
@@ -109,10 +113,10 @@ export class ArchitectureReviewComponent implements OnInit {
 			{
 				key: 'exceptions',
 				loading: true,
-				selected: true,
+				selected: false,
 				seriesData: [],
 				template: this.exceptionsFilterTemplate,
-				title: I18n.get('_ArchitectureSDAReadiness_'),
+				title: '',
 			},
 		];
 		this.loadData();

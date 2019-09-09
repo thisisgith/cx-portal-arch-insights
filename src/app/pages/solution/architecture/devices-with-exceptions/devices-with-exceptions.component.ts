@@ -43,7 +43,7 @@ export class DevicesWithExceptionsComponent implements OnInit {
 	public tableStartIndex = 0;
 	public tableEndIndex = 0;
 	private destroy$ = new Subject();
-	public globalSearchText = '';
+	public searchText = '';
 	public lastCollectionTime = '';
 	public params = { customerId: '', page: 0, pageSize: 10, searchText: '' };
 	public fullscreen: any;
@@ -130,13 +130,14 @@ export class DevicesWithExceptionsComponent implements OnInit {
 	 * Keys down function
 	 * @param event contains eventdata
 	 */
-	public globalSearchFunction (event) {
+	public textFilter (event) {
+		// key code 13 refers to enter key
 		const enterKeyCode = 13;
-		if (event.keyCode === enterKeyCode) {
+		if (event.keyCode === enterKeyCode || this.searchText.trim().length === 0) {
 			this.isLoading = true;
 			this.tableStartIndex = 0;
 			this.params.page = 0;
-			this.params.searchText = this.globalSearchText;
+			this.params.searchText = this.searchText;
 			this.getAllAssetsWithExceptions();
 		}
 	}

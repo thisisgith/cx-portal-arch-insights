@@ -163,8 +163,14 @@
 	"_ArchitectureSummary_": "Summary",
 	"_ArchitectureSwitchInterfaceMTU_": "Switch Interface MTU",
 	"_ArchitectureSwitchRedundancy_": "Switch Redundancy",
+<<<<<<< HEAD
 	"_ArchitectureVersion_": "Version : ",
 	"_ArchitectureWLC(WLCPublishedLimit)_": "WLC(WLC Published Limit)",
+=======
+	"_ArchitectureVersion_": "Version",
+	"_ArchitectureWLC(WLCPublishedLimit)_": "WLC (WLC Published Limit)",
+	"_ArchitectureRuleViolated_":"Rule Violated",
+>>>>>>> 6f78e41da219e236c2dbc9082d55129d696c98b7
 	"_AskAQuestion_": "Ask a Question (S4)",
 	"_AskTheExperts_": "Ask The Experts",
 	"_Asset_": "Asset",
