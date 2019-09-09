@@ -95,16 +95,16 @@
 			[data]="policyViolationsGridData"
 			[limit]="tableConfig?.tableLimit"
 			[offset]="tableConfig?.tableOffset"
-			(onSortingChanged)="onTableSortingChanged()"
+			(onSortingChanged)="onTableSortingChanged($event)"
 			(onTableRowClicked)="onViolationRowClicked($event)"
-			*ngIf="!loading && policyViolationsGridData.length > 0">
+			*ngIf="!loading && policyViolationsGridData?.length > 0">
 		</cui-table>
 		<div class="text-center dbl-margin-top dbl-margin-bottom">
 				<span class="text-muted text-xlarge " [innerText]="'_RccNoResults_' | i18n" *ngIf="errorPolicyView"></span>
 				<span *ngIf="!loading && noTableData " class="text-muted text-xlarge" [innerText]="'_RccNoDataAvailable_' | i18n"></span>
 		</div>
 		<div class="section">
-			<cui-pager *ngIf="!loading && policyViolationsGridData.length > 0"
+			<cui-pager *ngIf="!loading && policyViolationsGridData?.length > 0"
 				[page]="tableConfig?.tableOffset"
 				[limit]="tableConfig?.tableLimit"
 				[totalItems]="violationPaginationConfig?.totalItems" 
@@ -121,16 +121,16 @@
 			[data]="tableAssetDataSample"
 			[limit]="tableConfig?.tableLimit"
 			[offset]="tableConfig?.tableOffset"
-			(onSortingChanged)="onTableSortingChanged()"
+			(onSortingChanged)="onTableSortingChanged($event)"
 			(onTableRowClicked)="onAssetRowClicked($event)"
-			*ngIf="!loading && tableAssetDataSample.length > 0">
+			*ngIf="!loading && tableAssetDataSample?.length > 0">
 		</cui-table>
 		<div class="text-center dbl-margin-top dbl-margin-bottom">
 				<span class="text-muted text-xlarge" [innerText]="'_RccNoResults_' | i18n" *ngIf="errorPolicyView"></span>
 				<span *ngIf="!loading && noTableData" class="text-muted text-xlarge" [innerText]="'_RccNoDataAvailable_' | i18n"></span>
 		</div>
 		<div class="section">
-			<cui-pager *ngIf="!loading && tableAssetDataSample.length > 0"
+			<cui-pager *ngIf="!loading && tableAssetDataSample?.length > 0"
 				[page]="tableConfig?.tableOffset"
 				[limit]="tableConfig?.tableLimit"
 				[totalItems]="tableConfig?.totalItems" 

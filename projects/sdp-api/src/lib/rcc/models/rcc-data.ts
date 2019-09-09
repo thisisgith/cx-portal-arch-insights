@@ -50,6 +50,8 @@ export interface violationGridParams {
     policyType: string,
     search: string,
     severity: string,
+    sortName?: string,
+    sortOrder?: string,
 }
 
 export interface assetGridParams {
