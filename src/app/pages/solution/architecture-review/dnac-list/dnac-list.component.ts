@@ -50,7 +50,8 @@ export class DnacListComponent implements OnInit {
 		  dnacIP: '',
 		  page: 0,
 		  pageSize: 10,
-		  searchText : '' };
+		  searchText : '',
+		};
 	public fullscreen: any ;
 	@ViewChild('devicesTemplate', { static: true })
 	private devicesTemplate: TemplateRef<{ }>;
