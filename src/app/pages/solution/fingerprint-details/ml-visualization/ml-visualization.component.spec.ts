@@ -19,7 +19,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { By } from '@angular/platform-browser';
 import { MlvisualizationInfo } from 'src/environments/mock/crash-prevention/comparisonview';
 
-fdescribe('MlVisualizationComponent', () => {
+describe('MlVisualizationComponent', () => {
 	let component: MlVisualizationComponent;
 	let fixture: ComponentFixture<MlVisualizationComponent>;
 	let mlVisualizationService: MlVisualizationService;

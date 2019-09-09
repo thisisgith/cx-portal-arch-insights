@@ -17,7 +17,7 @@ import * as highcharts3d from 'highcharts/highcharts-3d.src';
 import { By } from '@angular/platform-browser';
 import { scatterPlotDevices } from 'src/environments/mock/crash-prevention/comparisonview';
 
-fdescribe('ScatterPlotComponent', () => {
+describe('ScatterPlotComponent', () => {
 	let component: ScatterPlotComponent;
 	let fixture: ComponentFixture<ScatterPlotComponent>;
 
