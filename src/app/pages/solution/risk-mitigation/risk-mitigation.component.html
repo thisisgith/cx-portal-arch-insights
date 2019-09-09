@@ -1,8 +1,7 @@
-<div class="panel">
-	<div class="row">
-		<div class="col-3 margin-bottom">
-			<div class="row">
-				<div class="col-10 filter__selected">
+<div class="panel panel--bordered base-padding-left base-padding-top no-padding-bottom">
+		<visual-filter-bar [filters]="filters">
+			<ng-template #startingCard>
+				<div class="filter__selected">
 					<div
 						data-auto-id="highCrashCount"
 						class="base-margin-bottom qtr-margin-top cursor"
@@ -35,44 +34,8 @@
 						></div>
 					</div>
 				</div>
-				<div
-					class="col-2 qtr-margin-right flex flex-center flex-fill flex-fluid"
-				>
-					<div class="icon-chevron-left mid-icon-place"></div>
-				</div>
-			</div>
-		</div>
-
-		<div class="col-2">
-			<div class="flex flex-fill flex-center flex-fluid">
-				<ng-container *ngFor="let filter of filters">
-					<div
-						attr.id="RiskMitigationSelectVisualFilter?-{{
-							filter.key
-						}}"
-						attr.data-auto-id="RiskMitigationSelectVisualFilter?-{{
-							filter.key
-						}}"
-					>
-						<div class="base-margin-bottom">
-							<div *ngIf="filter.template">
-								<ng-container
-									*ngTemplateOutlet="
-										filter.template;
-										context: { filter: filter }
-									"
-								>
-								</ng-container>
-							</div>
-						</div>
-						<div
-							class="hide filter__title text-muted text-large"
-							[innerText]="filter.title"
-						></div>
-					</div>
-				</ng-container>
-			</div>
-		</div>
+			</ng-template>
+		</visual-filter-bar>
 	</div>
 	<div class="divider qtr-margin half-margin-bottom"></div>
 
@@ -110,7 +73,6 @@
 		</div>
 	</div>
 	<div class="divider qtr-margin"></div>
-</div>
 
 <ng-template #advisoryFilter let-filter="filter">
 	<div [hidden]="onlyCrashes">

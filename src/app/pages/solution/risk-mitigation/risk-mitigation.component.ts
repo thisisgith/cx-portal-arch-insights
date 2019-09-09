@@ -114,7 +114,7 @@ export class RiskMitigationComponent {
 	public loadData () {
 		this.status.isLoading = true;
 		this.highCrashRiskParams = {
-			customerId: this.customerId,
+			customerId: _.cloneDeep(this.customerId),
 			page: 0,
 			search: '',
 			size: 10,
@@ -697,7 +697,7 @@ export class RiskMitigationComponent {
 				loading: true,
 				seriesData: [],
 				template: this.advisoryFilterTemplate,
-				title: I18n.get('_RMCrashes_'),
+				title: '',
 			},
 
 		];
