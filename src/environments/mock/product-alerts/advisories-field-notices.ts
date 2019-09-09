@@ -179,7 +179,7 @@ export const FieldNoticeAdvisoryScenarios = [
 			],
 		},
 		url: `${api}?customerId=${customerId}&sort=lastUpdated:DESC&rows=10&page=1` +
-			'&managedNeId=NA,FOC1544Y16T,WS-C2960S-24PS-L,NA',
+			'&hwInstanceId=FOC1544Y16T,WS-C2960S-24PS-L,NA,FOC1544Y16T,WS-C2960S-24PS-L,NA,NA',
 		usecases: ['Use Case 1'],
 	},
 ];
