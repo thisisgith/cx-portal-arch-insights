@@ -223,7 +223,6 @@ export class AfmComponent implements OnInit {
 			sortable: true,
 			striped: false,
 			updateParams: false,
-			wrapText: false,
 		});
 		this.searchForm = new FormGroup({
 			search: this.search,
