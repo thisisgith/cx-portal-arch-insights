@@ -134,8 +134,10 @@ export class DnacListComponent implements OnInit {
 	 * Keys down function
 	 * @param event contains eventdata
 	 */
-	public globalSearchFunction (event) {
-		if (event.keyCode === 13 || this.globalSearchText.length === 0) {
+	public textFilter (event) {
+		// key code 13 refers to enter key
+		const eventKeycode = 13;
+		if (event.keyCode === eventKeycode || this.globalSearchText.trim().length === 0) {
 			this.isLoading = true;
 			this.tableStartIndex = 0;
 			this.params.page = 0;
