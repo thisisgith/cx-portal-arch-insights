@@ -192,17 +192,59 @@ const fpIntelligenceInfo = {
 	],
 };
 
+/** The mock response for fpIntelligenceInfo with no data */
+const fpIntelligenceInfoNodata = {
+	customerId: '7293498',
+	softwares: [],
+	productFamilies: [],
+	products: [],
+};
+
+/** Base of URL for SDP API */
+const api6 = 'api/customerportal/fingerprint/v1/similar-devices/7293498';
+/**
+ * The mock response for FP similar assets
+ */
+const fpSimilarAssetsInfo = {
+	customerId: '7293498',
+	count: 329,
+	crashPredicted: true,
+	similarDevices: [
+		{
+			deviceId: 'NA,FOX1306GFKH,WS-C4506-E,NA',
+			deviceName: 'C4506-E',
+			riskScore: 1.67,
+			productFamily: 'Cisco Catalyst 4500 Series Switches',
+			productId: 'WS-C4506-E',
+			softwareVersion: '15.0(2)SG7',
+			softwareType: 'IOS',
+			similarityScore: 68.8033,
+		},
+	],
+};
+
+/**
+ * The mock response for FP similar assets
+ */
+const fpSimilarAssetsInfoNoData = {
+	customerId: '7293498',
+	count: 329,
+	crashPredicted: true,
+	similarDevices: [],
+};
+
 /** Base of URL for SDP API */
 const api5 = 'api/customerportal/fingerprint/v1/Mlvisualization/7293498/';
 /** Mock data for */
-const MlvisualizationInfo = {
+export const MlvisualizationInfo = {
 	count: 634,
 	customerId: '7293498',
 	scatterPlotDevices: [
 		{
-			deviceId: 'NA',
+			deviceId: 'TestDevice',
 			deviceName: 'Device_6_0_2_222',
 			featureProfileKcluster: 0,
+			featureProfileKclusterCrashrate: '0.05',
 			featureProfilePCA1: '0.27194448313748254',
 			featureProfilePCA2: '-0.6677443614955769',
 			featureProfilePCA3: '-0.26921527251480576',
@@ -223,6 +265,7 @@ const MlvisualizationInfo = {
 			deviceId: 'NA',
 			deviceName: 'Device_6_0_2_222',
 			featureProfileKcluster: 0,
+			featureProfileKclusterCrashrate: '0.05',
 			featureProfilePCA1: '0.27194448313748254',
 			featureProfilePCA2: '-0.6677443614955769',
 			featureProfilePCA3: '-0.26921527251480576',
@@ -241,6 +284,58 @@ const MlvisualizationInfo = {
 		},
 	],
 };
+
+/**
+ * Scatter plot data
+ */
+export const scatterPlotDevices = [
+	{
+		position: {
+			x: 0.4990452157572191,
+			y: -0.06881163915251692,
+			z: -0.009611822430886645,
+		},
+		cluster: 5,
+		devices: [
+			{
+				deviceInfo: {
+					deviceId: 'NA,FOX1306GFKH,WS-C4506-E,NA',
+					productId: 'WS-C4506-E',
+				},
+				deviceName: 'C4506-E',
+			},
+		],
+		id: 0,
+		mass: 1,
+		radius: 1,
+		x: 0.4990452157572191,
+		y: -0.06881163915251692,
+		z: -0.009611822430886645,
+	},
+	{
+		position: {
+			x: -0.6855702541560552,
+			y: 4.192143103082259,
+			z: 1.778192935721556,
+		},
+		cluster: 5,
+		devices: [
+			{
+				deviceInfo: {
+					deviceId: 'NA,FOX1335GRHG,WS-C4506-E,NA',
+					productId: 'WS-C4506-E',
+				},
+				deviceName: 'c4500',
+			},
+		],
+		id: 1,
+		mass: 1,
+		radius: 1,
+		x: -0.6855702541560552,
+		y: 4.192143103082259,
+		z: 1.778192935721556,
+	},
+];
 
 /** The scenarios */
 export const ComparisonViewScenarios = [
@@ -357,6 +452,60 @@ export const ComparisonViewScenarios = [
 			],
 		},
 		url: `${api5}`,
+		usecases: ['Use Case 1'],
+	},
+	/** The scenarios */
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'fp IntelligenceInfo',
+					response: {
+						body: fpIntelligenceInfoNodata,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api4}`,
+		usecases: ['Use Case 1'],
+	},
+	/** The scenarios */
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'fp Similar Assets',
+					response: {
+						body: fpSimilarAssetsInfo,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api6}`,
+		usecases: ['Use Case 1'],
+	},
+	/** The scenarios */
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'fp Similar Assets',
+					response: {
+						body: fpSimilarAssetsInfoNoData,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api6}`,
 		usecases: ['Use Case 1'],
 	},
 
