@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
-import { ArchitectureReviewService, assetExceptionList } from '@sdp-api';
+import { ArchitectureReviewService, assetExceptionList, Ibullet } from '@sdp-api';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { DatePipe } from '@angular/common';
@@ -44,7 +44,7 @@ export class DnacListComponent implements OnInit {
 	private destroy$ = new Subject();
 	public globalSearchText  = '';
 	public lastCollectionTime = '';
-	public params =
+	public params: Ibullet =
 		{
 		  customerId : '',
 		  dnacIP: '',
