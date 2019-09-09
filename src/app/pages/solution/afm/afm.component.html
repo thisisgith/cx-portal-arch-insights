@@ -52,15 +52,15 @@
 </ng-template>
 
 <ng-template #syslogTemplate let-celldata="celldata">
-	<div class="syslog" title="{{ celldata?.syslogMsg }}">
+	<span class="syslog" title="{{ celldata?.syslogMsg }}">
 		{{ celldata?.syslogMsg }}
-	</div>
+	</span>
 </ng-template>
 
 <ng-template #faultICTemplate let-celldata="celldata">
-	<div class="faultIc" title="{{ celldata?.faultIC }}">
+	<span class="faultIc" title="{{ celldata?.faultIC }}">
 		{{ celldata?.faultIC }}
-	</div>
+	</span>
 </ng-template>
 
 <ng-template #syslogContent>
