@@ -1238,7 +1238,8 @@ export class LifecycleComponent implements OnDestroy {
 	 * @returns button string
 	 */
 	 public getAtxRegisterButton (data: AtxSchema) {
-		let button: string = '';
+		let button: string;
+		button = '';
 		if (!_.get(this.sessionSelected, 'registrationURL') || this.notCurrentPitstop ||
 			_.isEqual(_.get(data, 'status'), 'scheduled')) {
 			button = 'disabled';
