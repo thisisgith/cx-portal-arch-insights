@@ -136,7 +136,7 @@ describe('Assets', () => { // PBC-41
 					cy.getByAutoId('Serial Number-Cell').should('have.text', serial);
 				});
 			});
-			cy.getByAutoId('End of Life Announced-SubTitle')
+			cy.getByAutoId('Announcement-SubTitle')
 				.should('have.text', formatDate(hwEOLResponse.eoLifeExternalAnnouncementDate));
 			cy.getByAutoId('End of Sale-SubTitle')
 				.should('have.text', formatDate(hwEOLResponse.eoSaleDate));
@@ -367,7 +367,7 @@ describe('Assets', () => { // PBC-41
 	context('PBC-178: Assets & Coverage Gauge', () => {
 		it('Displays a gauge that shows coverage percentage', () => {
 			const total = Cypress._.reduce(coverageElements, (memo, value) => memo + value);
-			const coverage = Math.floor((coverageElements.covered / total) * 100);
+			const coverage = Math.round((coverageElements.covered / total) * 100);
 			cy.getByAutoId('Facet-Assets & Coverage').should('contain', `${coverage}%`)
 				.and('contain', 'ASSETS & COVERAGE')
 				.and('contain', 'Support Coverage');
@@ -393,14 +393,14 @@ describe('Assets', () => { // PBC-41
 			cy.waitForAppLoading();
 		});
 
-		// TODO: Disabled for PBC-726
-		it.skip('Shows <1% for small coverage values', () => { // PBC-226, PBC-726
+		it('Shows <1% for small coverage values', () => { // PBC-226, PBC-726
 			coverageMock.enable('Coverage < 1%');
 			cy.loadApp('/solution/assets');
+			cy.waitForAppLoading();
 
-			cy.getByAutoId('Facet-Assets & Coverage').should('contain', '<1%');
+			cy.getByAutoId('Facet-Assets & Coverage').should('contain', '1%');
 
-			coverageMock.enable('Coverage');
+			coverageMock.enable('Coverage Counts');
 			cy.loadApp('/solution/assets');
 			cy.waitForAppLoading();
 		});
@@ -599,7 +599,7 @@ describe('Assets', () => { // PBC-41
 
 		it('Visual filters can be collapsed/expanded', () => {
 			cy.getByAutoId('CoveredPoint').click({ force: true });
-			cy.waitForAppLoading();
+			cy.waitForAppLoading('inventoryLoading');
 			cy.getByAutoId('VisualFilterCollapse').click();
 			// TODO: Disabled for PBC-700
 			// cy.getByAutoId('FilterTag-covered').should('be.visible');
@@ -608,7 +608,7 @@ describe('Assets', () => { // PBC-41
 			cy.getByAutoId('VisualFilter-total').should('be.visible');
 
 			cy.getByAutoId('FilterBarClearAllFilters').click({ force: true });
-			cy.waitForAppLoading();
+			cy.waitForAppLoading('inventoryLoading');
 		});
 
 		it('Provides an actions menu for each asset', () => { // PBC-255
@@ -711,16 +711,19 @@ describe('Assets', () => { // PBC-41
 					software = `${asset.osType} `;
 				}
 				if (asset.osVersion) {
-					software += asset.osVersion;
+					const version = asset.osVersion.length > 8
+						? `${Cypress._.truncate(asset.osVersion, { length: 8, omission: '' })}...`
+						: asset.osVersion;
+					software += version;
 				}
 				cy.getByAutoId(`InventoryItem-${serial}`).within(() => {
 					// PBC-304
 					let name = Cypress._.truncate(asset.deviceName, {
-						length: 20, separator: ' ', omission: '',
+						length: 18, separator: ' ', omission: '',
 					});
 					name = name === asset.deviceName ? name : `${name}...`;
 					cy.getByAutoId(`Device-${serial}`).should('have.text', name);
-					// Device image is a static placeholder for now
+					// Device image is a static placeholder for now (CSCvq93486)
 					cy.getByAutoId(`DeviceImg-${serial}`).should('have.text', 'No Photo Available');
 					cy.getByAutoId(`IPAddress-${serial}`).should('have.text', asset.ipAddress);
 					if (asset.lastScan) { // PBC-355

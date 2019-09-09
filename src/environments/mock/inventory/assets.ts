@@ -826,6 +826,23 @@ export const AssetScenarios = [
 		scenarios: {
 			GET: [
 				{
+					delay: 500,
+					description: 'Assets Page 1 (no page param)',
+					response: {
+						body: MockAssets(10, 1),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?customerId=${customerId}&sort=deviceName:ASC&rows=10`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
 					delay: 250,
 					description: 'Assets Page 2',
 					response: {
