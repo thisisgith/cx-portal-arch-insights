@@ -113,4 +113,27 @@ describe('ComparisonviewComponent', () => {
 		expect(crashPreventionService.getComparison)
 			.toHaveBeenCalledTimes(1);
 	});
+
+	it('should not load data if device IDs are not available', () => {
+		spyOn(crashPreventionService, 'getComparison')
+			.and
+			.returnValue(of(<any> []));
+		component.ngOnChanges({
+			deviceId1: {
+				currentValue: null,
+				firstChange: true,
+				isFirstChange: () => true,
+				previousValue: null,
+			},
+			deviceId2: {
+				currentValue: null,
+				firstChange: true,
+				isFirstChange: () => true,
+				previousValue: null,
+			},
+		});
+		fixture.detectChanges();
+		expect(crashPreventionService.getComparison).not
+			.toHaveBeenCalled();
+	});
 });

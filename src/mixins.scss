@@ -55,3 +55,14 @@ $screen-xxl-min: 1440px;
 		border-color: #ced0d3;
 	}
 }
+
+@mixin table-ellipse {
+	table-layout: fixed;
+
+	td {
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		max-width: 200px;
+	}
+}
