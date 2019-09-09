@@ -54,11 +54,6 @@ describe('AdvisoriesComponent', () => {
 			.returnValue(of(
 				FieldNoticeCountScenarios[0].scenarios.GET[0].response.body,
 			));
-		spyOn(productAlertsService, 'getVulnerabilityCounts')
-			.and
-			.returnValue(of(
-				VulnerabilityScenarios[0].scenarios.GET[0].response.body,
-			));
 		spyOn(diagnosticsService, 'getCriticalBugs')
 			.and
 			.returnValue(of(<any> CriticalBugScenarios[5].scenarios.GET[0].response.body));
@@ -235,36 +230,31 @@ describe('AdvisoriesComponent', () => {
 			fixture.detectChanges();
 			tick(1000);
 
-			const tab = _.find(component.tabs, { key: 'security' });
+			component.selectTab(_.findIndex(component.tabs, { key: 'security' }));
 
-			const totalFilter = _.find(tab.filters, { key: 'total' });
-			totalFilter.selected = false;
-			const impactFilter = _.find(tab.filters, { key: 'severity' });
-			impactFilter.selected = true;
-			const impactSubfilter = _.find(impactFilter.seriesData, { filter: 'critical' });
-			impactSubfilter.selected = true;
-			tab.selectedSubfilters = [impactSubfilter];
-			component.clearFilters();
+			const tab = component.selectedTab;
+			component.onSubfilterSelect('critical', _.find(tab.filters, { key: 'severity' }));
+
+			fixture.detectChanges();
 			tick(1000);
-			expect(tab.selectedSubfilters.length)
-				.toBe(0);
-			expect(tab.filtered)
+
+			expect(_.find(tab.filters, { key: 'total' }).selected)
 				.toBeFalsy();
 
-			_.each(_.omitBy(tab.filters, { key: 'total' }), filter => {
-				expect(filter.selected)
-					.toBeFalsy();
-				expect(_.some(filter.seriesData, 'selected'))
-					.toBeFalsy();
-			});
+			expect(tab.selectedSubfilters.length)
+				.toBe(1);
 
-			expect(totalFilter.selected)
+			component.clearFilters();
+
+			fixture.detectChanges();
+			tick(1000);
+
+			expect(tab.selectedSubfilters.length)
+				.toBe(0);
+			expect(_.find(tab.filters, { key: 'total' }).selected)
 				.toBeTruthy();
 		}));
 
-		/**
-		 * @TODO: modify test to use UI
-		 */
 		it('should set null values on request errors', fakeAsync(() => {
 			const error = {
 				status: 404,
@@ -274,11 +264,6 @@ describe('AdvisoriesComponent', () => {
 				.and
 				.returnValue(of(
 					FieldNoticeCountScenarios[0].scenarios.GET[0].response.body,
-				));
-			spyOn(productAlertsService, 'getVulnerabilityCounts')
-				.and
-				.returnValue(of(
-					VulnerabilityScenarios[0].scenarios.GET[0].response.body,
 				));
 			spyOn(diagnosticsService, 'getCriticalBugsStateCount')
 				.and
@@ -345,102 +330,37 @@ describe('AdvisoriesComponent', () => {
 				.toBeNull();
 		}));
 
-		/**
-		 * @TODO: modify test to use UI
-		 */
 		it('should set query params for Last Updated filter', fakeAsync(() => {
 			buildSpies();
 			fixture.detectChanges();
 			tick(1000);
-			spyOn(Date.prototype, 'getUTCFullYear').and
-				.callFake(() => 2013);
-			spyOn(Date.prototype, 'getUTCMonth').and
-				.callFake(() => 9);
-			spyOn(Date.prototype, 'getUTCDay').and
-				.callFake(() => 23);
+
 			const tab = _.find(component.tabs, { key: 'security' });
-			const currentTime = new Date(2013, 9, 23).getTime();
 			const lastUpdatedFilter = _.find(tab.filters, { key: 'lastUpdate' });
-			const dayInMillis = 24 * 60 * 60 * 1000;
 
 			component.onSubfilterSelect('gt-0-lt-30-days', lastUpdatedFilter);
 			tick(1000);
 
-			const lastUpdatedDate30 = _.map(
-				_.get(tab, ['params', 'lastUpdatedDateRange'])[0]
-					.split(','),
-				t => _.toSafeInteger(t));
-
-			expect(lastUpdatedDate30.length)
-				.toBe(2);
-			expect(currentTime - lastUpdatedDate30[0])
-				.toBe(dayInMillis * 30);
-			expect(currentTime - lastUpdatedDate30[1])
-				.toBe(0);
+			expect(_.get(tab, ['params', 'lastUpdatedDateRange']))
+				.toEqual(['gt-0-lt-30-days']);
 
 			component.onSubfilterSelect('gt-30-lt-60-days', lastUpdatedFilter);
 			tick(1000);
 
-			const lastUpdatedDate3060 = _.map(
-				_.get(tab, ['params', 'lastUpdatedDateRange'])[0]
-					.split(','),
-				t => _.toSafeInteger(t));
-
-			expect(lastUpdatedDate3060.length)
-				.toBe(2);
-			expect(currentTime - lastUpdatedDate3060[0])
-				.toBe(dayInMillis * 60);
-			expect(currentTime - lastUpdatedDate3060[1])
-				.toBe(dayInMillis * 30);
+			expect(_.get(tab, ['params', 'lastUpdatedDateRange']))
+				.toEqual(['gt-30-lt-60-days']);
 
 			component.onSubfilterSelect('gt-60-lt-90-days', lastUpdatedFilter);
 			tick(1000);
 
-			const lastUpdatedDate6090 = _.map(
-				_.get(tab, ['params', 'lastUpdatedDateRange'])[0]
-					.split(','),
-				t => _.toSafeInteger(t));
-
-			expect(lastUpdatedDate6090.length)
-				.toBe(2);
-			expect(currentTime - lastUpdatedDate6090[0])
-				.toBe(dayInMillis * 90);
-			expect(currentTime - lastUpdatedDate6090[1])
-				.toBe(dayInMillis * 60);
+			expect(_.get(tab, ['params', 'lastUpdatedDateRange']))
+				.toEqual(['gt-60-lt-90-days']);
 
 			component.onSubfilterSelect('further-out', lastUpdatedFilter);
 			tick(1000);
 
-			const lastUpdatedDate90 = _.map(
-				_.get(tab, ['params', 'lastUpdatedDateRange'])[0]
-					.split(','),
-				t => _.toSafeInteger(t));
-
-			expect(lastUpdatedDate90.length)
-				.toBe(2);
-			expect(currentTime - lastUpdatedDate90[1])
-				.toBe(dayInMillis * 90);
-		}));
-
-		it('should handle unsortable column', fakeAsync(() => {
-			buildSpies();
-			fixture.detectChanges();
-			tick(1000);
-			const tab = _.find(component.tabs, { key: 'security' });
-			tab.filtered = false;
-			const severityCol = _.find(tab.options.columns, { key: 'severity' });
-			severityCol.sortable = false;
-			severityCol.sortDirection = 'asc';
-			const titleCol = _.find(tab.options.columns, { key: 'title' });
-			titleCol.sorting = true;
-			titleCol.sortDirection = 'desc';
-
-			expect(tab.filtered)
-				.toBeFalsy();
-			component.onColumnSort(severityCol);
-			tick(1000);
-			expect(_.get(tab, ['params', 'sort']))
-				.toBeFalsy();
+			expect(_.get(tab, ['params', 'lastUpdatedDateRange']))
+				.toEqual(['further-out']);
 		}));
 
 		it('should handle sortable column', fakeAsync(() => {
@@ -519,7 +439,7 @@ describe('AdvisoriesComponent', () => {
 
 			expect(component.router.navigate)
 				.toHaveBeenCalledWith(['/solution/advisories/bugs'],
-					{ queryParams: { page: 1 } });
+					{ queryParams: { page: 1, sort: ['id:ASC'] } });
 
 			// test field notices tab
 			component.selectTab(_.findIndex(component.tabs, { key: 'field' }));
@@ -527,7 +447,7 @@ describe('AdvisoriesComponent', () => {
 
 			expect(component.router.navigate)
 				.toHaveBeenCalledWith(['/solution/advisories/field-notices'],
-					{ queryParams: { page: 1 } });
+					{ queryParams: { page: 1, sort: ['id:ASC'] } });
 
 			// test security tab
 			component.selectTab(_.findIndex(component.tabs, { key: 'security' }));
@@ -535,7 +455,7 @@ describe('AdvisoriesComponent', () => {
 
 			expect(component.router.navigate)
 				.toHaveBeenCalledWith(['/solution/advisories/security'],
-					{ queryParams: { page: 1 } });
+					{ queryParams: { page: 1, sort: ['severity:ASC'] } });
 		}));
 
 		it('should add the selected filters to the route', fakeAsync(() => {
@@ -563,7 +483,7 @@ describe('AdvisoriesComponent', () => {
 			expect(component.router.navigate)
 				.toHaveBeenCalledWith(
 					['/solution/advisories/security'],
-					{ queryParams: { page: 1, severity: ['info'] } });
+					{ queryParams: { page: 1, sort: ['severity:ASC'], severity: ['info'] } });
 		}));
 
 		it('should search', fakeAsync(() => {
@@ -633,7 +553,7 @@ describe('AdvisoriesComponent', () => {
 
 	describe('Query Params: Security Advisory', () => {
 		const queryParams = {
-			lastUpdatedDateRange: '1565624197000,1597246597000',
+			lastUpdatedDateRange: 'gt-30-lt-60-days',
 			severity: 'low',
 		};
 
@@ -683,7 +603,7 @@ describe('AdvisoriesComponent', () => {
 			tick(1000);
 			const tab = _.find(component.tabs, { key: 'security' });
 			expect(_.get(tab.params, 'lastUpdatedDateRange'))
-				.toEqual(_.castArray('1565624197000,1597246597000'));
+				.toEqual(_.castArray('gt-30-lt-60-days'));
 			expect(_.get(tab.params, 'severity'))
 				.toEqual(_.castArray('low'));
 		}));
@@ -691,7 +611,7 @@ describe('AdvisoriesComponent', () => {
 
 	describe('Query Params: Field Notice', () => {
 		const queryParams = {
-			lastUpdatedDateRange: '1565624197000,1597246597000',
+			lastUpdatedDateRange: 'gt-0-lt-30-days',
 		};
 		configureTestSuite(() => {
 			TestBed.configureTestingModule({
@@ -739,7 +659,7 @@ describe('AdvisoriesComponent', () => {
 			tick(1000);
 			const tab = _.find(component.tabs, { key: 'field' });
 			expect(_.get(tab.params, 'lastUpdatedDateRange'))
-				.toEqual(_.castArray('1565624197000,1597246597000'));
+				.toEqual(_.castArray('gt-0-lt-30-days'));
 		}));
 	});
 

@@ -337,7 +337,6 @@ $cx-font-size-24: 24px;
 
 	thead::after {
 		border-bottom: 1px solid #e4e4e4;
-		content: '';
 		display: block;
 		position: absolute;
 		left: 12px;
@@ -363,7 +362,6 @@ $cx-font-size-24: 24px;
 
 		&::after {
 			border-bottom: 1px solid #e4e4e4;
-			content: '';
 			display: block;
 			position: absolute;
 			left: 12px;

@@ -25,7 +25,10 @@ import {
 	RacetrackTechnology,
 	CoverageCountsResponse,
 	ProductAlertsService,
-	VulnerabilityResponse,
+	FieldNoticeAdvisoryResponse,
+	CriticalBugsResponse,
+	SecurityAdvisoriesResponse,
+	DiagnosticsService,
 } from '@sdp-api';
 import { CaseService } from '@cui-x/services';
 import { LogService } from '@cisco-ngx/cui-services';
@@ -97,6 +100,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		private contractsService: ContractsService,
 		private cuiModalService: CuiModalService,
 		private productAlertsService: ProductAlertsService,
+		private diagnosticsService: DiagnosticsService,
 		private router: Router,
 		private logger: LogService,
 		private caseService: CaseService,
@@ -348,11 +352,8 @@ export class SolutionComponent implements OnInit, OnDestroy {
 				const covered = _.get(counts, 'covered', 0);
 				const total = _.reduce(counts, (memo, value) => (memo + value), 0);
 
-				const percent = ((covered / total) * 100);
-				const gaugePercent = Math.floor(percent) || 0;
 				assetsFacet.data = {
-					gaugePercent,
-					gaugeLabel: (percent > 0 && percent < 1) ? '<1%' : `${gaugePercent}%`,
+					gaugePercent: ((covered / total) * 100),
 				};
 
 				assetsFacet.loading = false;
@@ -376,52 +377,79 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		const advisoryFacet = _.find(this.facets, { key: 'advisories' });
 
 		advisoryFacet.loading = true;
+		advisoryFacet.seriesData = [];
 
-		return this.productAlertsService.getVulnerabilityCounts({ customerId: this.customerId })
+		let advisoryTotal = 0;
+		let bugsTotal = 0;
+		let fieldTotal = 0;
+
+		return forkJoin([
+			this.productAlertsService.getAdvisoriesFieldNotices({
+				customerId: this.customerId, page: 1, rows: 1,
+			})
+			.pipe(
+				map((response: FieldNoticeAdvisoryResponse) => {
+					fieldTotal = _.get(response, ['Pagination', 'total'], 0);
+				}),
+				catchError(err => {
+					this.logger.error('solution.component : fetchAdvisoryCounts():field ' +
+					`:: Error : (${err.status}) ${err.message}`);
+
+					return of({ });
+				}),
+			),
+			this.productAlertsService.getAdvisoriesSecurityAdvisories({
+				customerId: this.customerId, page: 1, rows: 1,
+			})
+			.pipe(
+				map((response: SecurityAdvisoriesResponse) => {
+					advisoryTotal = _.get(response, ['Pagination', 'total'], 0);
+				}),
+				catchError(err => {
+					this.logger.error('solution.component : fetchAdvisoryCounts():security ' +
+					`:: Error : (${err.status}) ${err.message}`);
+
+					return of({ });
+				}),
+			),
+			this.diagnosticsService.getCriticalBugs({
+				customerId: this.customerId, page: 1, rows: 1,
+			})
+			.pipe(
+				map((response: CriticalBugsResponse) => {
+					bugsTotal = _.get(response, ['Pagination', 'total'], 0);
+				}),
+				catchError(err => {
+					this.logger.error('solution.component : fetchAdvisoryCounts():bugs ' +
+					`:: Error : (${err.status}) ${err.message}`);
+
+					return of({ });
+				}),
+			),
+		])
 		.pipe(
-			map((counts: VulnerabilityResponse) => {
-				const seriesData = [];
+			map(() => {
+				const total = advisoryTotal + fieldTotal + bugsTotal;
 
-				const advisories = _.get(counts, 'security-advisories', 0);
-				const fieldNotices = _.get(counts, 'field-notices', 0);
-				const bugs = _.get(counts, 'bugs', 0);
+				advisoryFacet.seriesData = [
+					{
+						label: I18n.get('_SecurityAdvisories_'),
+						percentage: (advisoryTotal / total) * 100,
+						value: advisoryTotal,
+					},
+					{
+						label: I18n.get('_FieldNotices_'),
+						percentage: (fieldTotal / total) * 100,
+						value: fieldTotal,
+					},
+					{
+						label: I18n.get('_Bugs_'),
+						percentage: (bugsTotal / total) * 100,
+						value: bugsTotal,
+					},
+				];
 
-				if (advisories) {
-					seriesData.push(
-						{
-							label: I18n.get('_SecurityAdvisories_'),
-							percentage: advisories,
-						},
-					);
-				}
-
-				if (fieldNotices) {
-					seriesData.push(
-						{
-							label: I18n.get('_FieldNotices_'),
-							percentage: fieldNotices,
-						},
-					);
-				}
-
-				if (bugs) {
-					seriesData.push(
-						{
-							label: I18n.get('_Bugs_'),
-							percentage: bugs,
-						},
-					);
-				}
-
-				advisoryFacet.seriesData = seriesData;
 				advisoryFacet.loading = false;
-			}),
-			catchError(err => {
-				advisoryFacet.loading = false;
-				this.logger.error('solution.component : fetchAdvisoryCounts() ' +
-				`:: Error : (${err.status}) ${err.message}`);
-
-				return of({ });
 			}),
 			takeUntil(this.destroy$),
 		);

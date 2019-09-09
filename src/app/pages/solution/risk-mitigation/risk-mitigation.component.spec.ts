@@ -96,7 +96,7 @@ describe('RiskMitigationComponent', () => {
 		component.ngOnInit();
 		fixture.detectChanges();
 		expect(component.status.isLoading)
-			.toBeFalsy();
+			.toBeTruthy();
 		const advisoryFilter = _.find(component.filters, { key: 'advisories' });
 		expect(advisoryFilter.seriesData)
 			.toBeDefined();
@@ -128,6 +128,9 @@ describe('RiskMitigationComponent', () => {
 		spyOn(riskMitigationService, 'getCrashHistoryForDevice')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
+		spyOn(riskMitigationService, 'getFingerPrintDeviceDetailsData')
+		.and
+		.returnValue(throwError(new HttpErrorResponse(error)));
 		component.ngOnInit();
 		fixture.whenStable()
 			.then(() => {
@@ -355,27 +358,27 @@ describe('RiskMitigationComponent', () => {
 
 	it('should unset the selectedAsset', () => {
 		component.onPanelClose();
-		expect(component.selectedAsset)
-			.toBeUndefined();
+		expect(component.selectedAsset.active)
+			.toBeFalsy();
 		expect(component.showAsset360)
 			.toBeFalsy();
 	});
 
 	it('should set the selectedAsset', () => {
 		component.onRowClicked({ active: true });
-		expect(component.selectedAsset)
-			.toBeDefined();
+		expect(component.selectedAsset.active)
+			.toBeTruthy();
 		expect(component.showAsset360)
 			.toBeFalsy();
 		component.onRowClicked({ active: false });
-		expect(component.selectedAsset)
-			.toBeUndefined();
+		expect(component.selectedAsset.active)
+			.toBeFalsy();
 	});
 
 	it('should unset the selectedAsset on panel close', () => {
 		component.onPanelClose();
-		expect(component.selectedAsset)
-			.toBeUndefined();
+		expect(component.selectedAsset.active)
+			.toBeFalsy();
 		expect(component.showAsset360)
 			.toBeFalsy();
 	});
@@ -435,6 +438,15 @@ describe('RiskMitigationComponent', () => {
 		fixture.detectChanges();
 		expect(component.getFilterDetailsForSearchQuery('').time)
 			.toEqual('90');
+		component.filters[0].seriesData[2].selected = false;
+		component.filters[0].seriesData[3].selected = false;
+		fixture.detectChanges();
+		component.filters[0].seriesData[0].selected = false;
+		component.filters[0].seriesData[1].selected = false;
+		component.filters[0].seriesData[2].selected = false;
+		component.filters[0].seriesData[3].selected = false;
+		expect(component.getFilterDetailsForSearchQuery('').time)
+			.toEqual('1');
 	});
 
 	it('should get fitered results on subfilter select', () => {

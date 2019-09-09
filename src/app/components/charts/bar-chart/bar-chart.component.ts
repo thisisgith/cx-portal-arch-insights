@@ -80,7 +80,7 @@ export class BarChartComponent implements OnInit {
 						}
 					},
 				},
-				height: this.seriesData.length * 25,
+				height: (this.seriesData.length + 1) * 25,
 				type: 'bar',
 				width: this.width || 225,
 			},
