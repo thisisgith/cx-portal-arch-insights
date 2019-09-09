@@ -35,6 +35,13 @@ export class RiskMitigationComponent {
 		min: 0,
 	};
 	public selectedFilters;
+	public hcrPagination;
+	public paginationParams = {
+		limit: 10,
+		page: 0,
+	};
+	public crashPagination: string;
+	public crashedAssetsCount = 0;
 	constructor (
 		private riskMitigationService: RiskMitigationService,
 		private logger: LogService,
@@ -53,7 +60,7 @@ export class RiskMitigationComponent {
 	public fullscreen = false;
 	public filters: Filter[];
 	public onlyCrashes = true;
-	public selectedAsset: RiskAsset;
+	public selectedAsset: RiskAsset = { active: false };
 	public selectedFingerPrintdata: HighCrashRiskDevices;
 	public showAsset360 = false;
 	public highCrashRiskParams: HighCrashRiskPagination;
@@ -97,7 +104,6 @@ export class RiskMitigationComponent {
 	@ViewChild('advisoryFilter', { static: true }) private advisoryFilterTemplate: TemplateRef<{ }>;
 
 	public status = {
-		inventoryLoading: true,
 		isLoading: true,
 	};
 
@@ -105,6 +111,7 @@ export class RiskMitigationComponent {
 	 * Load data of risk details
 	 */
 	public loadData () {
+		this.status.isLoading = true;
 		this.highCrashRiskParams = {
 			customerId: this.customerId,
 			page: 0,
@@ -118,7 +125,7 @@ export class RiskMitigationComponent {
 		.subscribe(() => {
 			this.status.isLoading = false;
 		});
-		this.getFingerPrintDeviceDetails(this.highCrashRiskParams);
+		this.getDeviceDetails('1');
 		this.onlyCrashes = true;
 	}
 
@@ -138,16 +145,26 @@ export class RiskMitigationComponent {
 	 * @returns  the crashed device data
 	 */
 	public getHighCrashesDeviceData () {
+		this.highCrashRiskAssetsGridDetails.tableOffset = 0;
 		this.onlyCrashes = true;
+		this.highCrashRiskParams = {
+			customerId: this.customerId,
+			page: 0,
+			size: 10,
+		};
+		this.getFingerPrintDeviceDetails(this.highCrashRiskParams);
 		const params = _.pick(_.cloneDeep(this.highCrashRiskParams), ['customerId']);
+		this.status.isLoading = true;
 
 		return this.riskMitigationService.getHighCrashRiskDeviceCountData(params)
 				.pipe(
 					takeUntil(this.destroy$),
 					map((results: HighCrashRiskDeviceCount) => {
+						this.status.isLoading = false;
 						this.highCrashDeviceCount = results.crashRiskDeviceCount;
 					}),
 					catchError(err => {
+						this.status.isLoading = false;
 						this.highCrashDeviceCount = undefined;
 						this.logger.error('High Crash Assets : getHighCrashesDeviceData() ' +
 							`:: Error : (${err.status}) ${err.message}`);
@@ -164,18 +181,19 @@ export class RiskMitigationComponent {
 	public getAllCrashesData () {
 		const params = _.pick(_.cloneDeep(this.highCrashRiskParams), ['customerId']);
 		this.onlyCrashes = false;
-		this.getDeviceDetails('1');
-		this.selectedTimeFilters();
+
 		return this.riskMitigationService.getAllCrashesData(params)
 			.pipe(
 				takeUntil(this.destroy$),
 				map((results: any) => {
 					const seriesData = this.marshallResultsObjectForGraph(results);
 					this.last24hrsData = results.devicesCrashCount_1d;
+					this.crashedAssetsCount = this.last24hrsData;
 					this.getAdvisoryCount(seriesData);
 				}),
 				catchError(err => {
 					this.last24hrsData = undefined;
+					this.crashedAssetsCount = undefined;
 					this.logger.error('Crash Assets : getAllCrashesData() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
@@ -231,16 +249,22 @@ export class RiskMitigationComponent {
 		} else {
 			_.unset(params, 'timePeriod');
 		}
+		this.status.isLoading = true;
 
 		return this.riskMitigationService.getDeviceDetails(params)
 				.pipe(
 					takeUntil(this.destroy$),
 					map((results: RiskAssets) => {
+						this.status.isLoading = false;
 						this.crashedAssetsGridDetails.tableData = results.deviceDetails;
 						this.crashedAssetsGridDetails.totalItems = _.size(results.deviceDetails);
 						this.crashedAssetsGridDetails.tableOffset = 0;
+
+						this.paginationParams.page = 0;
+						this.updatePagerDetails();
 					}),
 					catchError(err => {
+						this.status.isLoading = false;
 						this.crashedAssetsGridDetails.tableData = [];
 						this.logger.error('Crash Assets : getDeviceDetails() ' +
 							`:: Error : (${err.status}) ${err.message}`);
@@ -250,6 +274,21 @@ export class RiskMitigationComponent {
 				)
 				.subscribe();
 	}
+	/**
+	 * Updates the crashed grid pagination details
+	 */
+	public updatePagerDetails () {
+		let first = (this.paginationParams.page * 10) + 1;
+		let last = (this.paginationParams.page * 10) +
+		this.paginationParams.limit;
+		if (first > this.crashedAssetsGridDetails.totalItems) {
+			first = this.crashedAssetsGridDetails.totalItems;
+		}
+		if (last > this.crashedAssetsGridDetails.totalItems) {
+			last = this.crashedAssetsGridDetails.totalItems;
+		}
+		this.crashPagination = `${first}-${last}`;
+	}
 
 	/**
 	 * get the finger print device details
@@ -257,12 +296,21 @@ export class RiskMitigationComponent {
 	 * @returns observable of crash devices
 	 */
 	private getFingerPrintDeviceDetails (param: HighCrashRiskPagination) {
+		this.status.isLoading = true;
+
 		return this.riskMitigationService.getFingerPrintDeviceDetailsData(param)
 						.pipe(
 							takeUntil(this.destroy$),
 							map((results: HighCrashRisk) => {
+								this.status.isLoading = false;
 								this.highCrashRiskAssetsGridDetails.tableData = results.devices;
 								this.highCrashRiskAssetsGridDetails.totalItems = results.count;
+
+								const first = (this.highCrashRiskParams.page * 10) + 1;
+								const last = (this.highCrashRiskParams.page * 10) +
+								this.highCrashRiskAssetsGridDetails.tableData.length;
+								this.hcrPagination = `${first}-${last}`;
+
 							}),
 							catchError(err => {
 								this.highCrashRiskAssetsGridDetails.tableData  = [];
@@ -311,6 +359,8 @@ export class RiskMitigationComponent {
 	 */
 	public onPagerUpdated (pageInfo: any) {
 		this.crashedAssetsGridDetails.tableOffset = pageInfo.page;
+		this.paginationParams.page = pageInfo.page;
+		this.updatePagerDetails();
 	}
 
 	/**
@@ -372,16 +422,22 @@ export class RiskMitigationComponent {
 	public onSearchQuery (searchText: string) {
 		this.searchQueryString = searchText;
 		const params = this.getFilterDetailsForSearchQuery(this.searchQueryString);
+		this.status.isLoading = true;
 
 		return this.riskMitigationService.getSearchedData(params)
 				.pipe(
 					takeUntil(this.destroy$),
 					map((results: any) => {
+						this.status.isLoading = false;
 						this.crashedAssetsGridDetails.tableData = results.deviceDetails;
 						this.crashedAssetsGridDetails.totalItems = results.deviceDetails.length;
-						this.crashHistoryGridDetails.tableOffset = 0;
+						this.crashedAssetsGridDetails.tableOffset = 0;
+
+						this.paginationParams.page = 0;
+						this.updatePagerDetails();
 					}),
 					catchError(err => {
+						this.status.isLoading = false;
 						this.crashedAssetsGridDetails.tableData   = [];
 						this.logger.error('Crash Assets : onSearchQuery() ' +
 							`:: Error : (${err.status}) ${err.message}`);
@@ -400,7 +456,7 @@ export class RiskMitigationComponent {
 		if (asset.active) {
 			this.selectedAsset = asset;
 			this.getCrashedDeviceHistory(asset);
-		} else { this.selectedAsset = undefined; }
+		} else { this.selectedAsset.active = false; }
 	}
 	/**
 	 * Determines whether fpdpanel close on click
@@ -424,7 +480,7 @@ export class RiskMitigationComponent {
 	 */
 
 	public onPanelClose () {
-		this.selectedAsset = undefined;
+		this.selectedAsset.active = false;
 		this.showAsset360 = false;
 	}
 
@@ -461,6 +517,7 @@ export class RiskMitigationComponent {
 	 */
 	public redirectToAsset360 () {
 		this.showAsset360 = true;
+		this.selectedAsset.deviceName = this.selectedAsset.neName;
 	}
 	/**
 	 * Used to select which tab we want to view the data for
@@ -547,7 +604,7 @@ export class RiskMitigationComponent {
 			columns: [
 				{
 					key: 'deviceName',
-					name: I18n.get('_RMDevice_'),
+					name: I18n.get('_RMAsset_'),
 					sortable: false,
 				},
 				{
@@ -558,6 +615,11 @@ export class RiskMitigationComponent {
 				{
 					key: 'productFamily',
 					name: I18n.get('_RMProductFamily_'),
+					sortable: false,
+				},
+				{
+					key: 'softwareType',
+					name: I18n.get('_RMSoftwareType_'),
 					sortable: false,
 				},
 				{
@@ -624,6 +686,7 @@ export class RiskMitigationComponent {
 	public onSubfilterSelect (subfilter: string, filter: Filter) {
 		this.resetFilters();
 		const sub = _.find(filter.seriesData, { filter: subfilter });
+		this.crashedAssetsCount = sub.value;
 		sub.selected = (sub) ? !sub.selected : '';
 		filter.selected = _.some(filter.seriesData, 'selected');
 		let filterSelected: string;
@@ -652,6 +715,7 @@ export class RiskMitigationComponent {
 	 * Function used to clear the filters
 	 */
 	public clearFilters () {
+		this.clearAllFilters = !this.clearAllFilters;
 		_.each(this.filters, (clearFilter: Filter) => {
 			clearFilter.selected = false;
 			_.each(clearFilter.seriesData, (currentFilter: { selected: boolean; }) => {
@@ -660,7 +724,6 @@ export class RiskMitigationComponent {
 		});
 		this.resetFilters();
 		this.getDeviceDetails('1');
-		this.clearAllFilters = true;
 		const filter = _.find(this.filters, { key: 'advisories' });
 		if (filter) {
 			filter.seriesData[0].selected = true;
@@ -669,6 +732,7 @@ export class RiskMitigationComponent {
 		this.getSelectedSubFilters('advisories');
 		this.selectedFilters = this.filters;
 		this.selectedTimeFilters();
+		this.crashedAssetsCount = this.last24hrsData;
 	}
 
 	/**

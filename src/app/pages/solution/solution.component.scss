@@ -252,12 +252,20 @@
 	color: $secondary-and-button-text-color;
 }
 
+$cx-accent-color-1: #00bceb;
+$cx-gray-color-2: #b3b3b3;
+$cx-gray-color-4: #595b61;
+$cx-hover-color: rgba(221, 221, 221, 0.3);
+$cx-font-size-12: 12px;
+$cx-font-size-16: 16px;
+$cx-font-size-18: 18px;
+$cx-font-size-24: 24px;
+
 .content {
 	display: block;
-	width: 85%;
 	margin-left: auto;
 	margin-right: auto;
-	padding-bottom: 50px !important;
+	padding: 10px 10px 50px;
 	overflow-y: hidden;
 }
 
@@ -329,7 +337,6 @@
 
 	thead::after {
 		border-bottom: 1px solid #e4e4e4;
-		content: '';
 		display: block;
 		position: absolute;
 		left: 12px;
@@ -355,7 +362,6 @@
 
 		&::after {
 			border-bottom: 1px solid #e4e4e4;
-			content: '';
 			display: block;
 			position: absolute;
 			left: 12px;
@@ -393,4 +399,75 @@
 .insights-total {
 	font-size: 65px;
 	font-weight: 300;
+}
+
+.context-selector {
+	padding: 20px 0;
+
+	.svg-chevron-right {
+		height: 30px;
+		width: 11px;
+		margin-left: 20px;
+		margin-right: 20px;
+	}
+
+	.svg-home {
+		height: 22px;
+		width: 28px;
+	}
+
+	.group-label {
+		color: $cx-gray-color-2;
+		font-size: $cx-font-size-12;
+		text-transform: uppercase;
+	}
+
+	.dropdown {
+		> a {
+			color: $cx-gray-color-4;
+			font-size: $cx-font-size-18;
+
+			&::after {
+				content: "\25be";
+				font-size: $cx-font-size-24;
+				top: -4px;
+				transition: none;
+			}
+
+			&:hover,
+			&:active,
+			&:focus {
+				color: $cx-accent-color-1;
+			}
+		}
+
+		&.active {
+			> a::after {
+				top: 4px;
+			}
+		}
+
+		.dropdown__menu a {
+			border: 0 none;
+			padding: 10px 20px 10px 40px;
+			height: unset;
+			line-height: unset;
+			font-size: $cx-font-size-16;
+
+			&.selected {
+				background-color: transparent;
+				color: $cx-accent-color-1 !important; // Required to override cui color
+
+				&::after {
+					font-size: $cx-font-size-18;
+					left: 10px;
+					right: unset;
+				}
+			}
+
+			&:hover {
+				background-color: $cx-hover-color;
+			}
+		}
+	}
 }

@@ -75,6 +75,15 @@ const getAfmAlarmsData = {
  * Alarm with no status data
  */
 const getAfmAlarmsNoStatusData = {
+	aggregationsCount: {
+		alarmCount: 2,
+		Day1: 0,
+		Days30: 2,
+		Days7: 0,
+		Days90: 2,
+		ignoredCount: 0,
+		tacCaseCount: 0,
+	},
 	connectionStatus: '',
 	data: '',
 	eventInfo: '',
@@ -112,6 +121,15 @@ const getAfmAlarmsNoStatusData = {
  * Alarm with Failed status data
  */
 const getAfmAlarmsFailStatusData = {
+	aggregationsCount: {
+		alarmCount: 2,
+		Day1: 0,
+		Days30: 2,
+		Days7: 0,
+		Days90: 2,
+		ignoredCount: 0,
+		tacCaseCount: 0,
+	},
 	connectionStatus: '',
 	data: '',
 	eventInfo: '',
@@ -149,6 +167,15 @@ const getAfmAlarmsFailStatusData = {
  * Get Export dada
  */
 const getExportAllData = {
+	aggregationsCount: {
+		alarmCount: 2,
+		Day1: 0,
+		Days30: 2,
+		Days7: 0,
+		Days90: 2,
+		ignoredCount: 0,
+		tacCaseCount: 0,
+	},
 	connectionStatus: '',
 	data: '',
 	eventInfo: '',
@@ -187,9 +214,64 @@ const getExportAllData = {
 };
 
 /**
+ * Failed to Get Export dada
+ */
+const getFailedExportAllData = {
+	aggregationsCount: {
+		alarmCount: 2,
+		Day1: 0,
+		Days30: 2,
+		Days7: 0,
+		Days90: 2,
+		ignoredCount: 0,
+		tacCaseCount: 0,
+	},
+	connectionStatus: '',
+	data: '',
+	eventInfo: '',
+	eventList: [],
+	pagination: '',
+	status: 'fail',
+	statusCode: 'OK',
+	statusMessage: 'failed retrived records',
+};
+
+/**
+ * Failed to Get Export dada
+ */
+const getExceptionExportAllData = {
+	aggregationsCount: {
+		alarmCount: 2,
+		Day1: 0,
+		Days30: 2,
+		Days7: 0,
+		Days90: 2,
+		ignoredCount: 0,
+		tacCaseCount: 0,
+	},
+	connectionStatus: '',
+	data: '',
+	eventInfo: '',
+	eventList: [],
+	pagination: '',
+	status: 'Exception',
+	statusCode: 'OK',
+	statusMessage: 'Server is down, please try again.',
+};
+
+/**
  * Time range data
  */
 const getTimeRangeData = {
+	aggregationsCount: {
+		alarmCount: 2,
+		Day1: 0,
+		Days30: 2,
+		Days7: 0,
+		Days90: 2,
+		ignoredCount: 0,
+		tacCaseCount: 0,
+	},
 	connectionStatus: '',
 	data: '',
 	eventInfo: '',
@@ -227,6 +309,15 @@ const getTimeRangeData = {
  * Tac case data
  */
 const getTacCaseData = {
+	aggregationsCount: {
+		alarmCount: 2,
+		Day1: 0,
+		Days30: 2,
+		Days7: 0,
+		Days90: 2,
+		ignoredCount: 0,
+		tacCaseCount: 0,
+	},
 	connectionStatus: '',
 	data: '',
 	eventInfo: '',
@@ -264,6 +355,15 @@ const getTacCaseData = {
  * Tac case data
  */
 const getAfmEventData = {
+	aggregationsCount: {
+		alarmCount: 2,
+		Day1: 0,
+		Days30: 2,
+		Days7: 0,
+		Days90: 2,
+		ignoredCount: 0,
+		tacCaseCount: 0,
+	},
 	connectionStatus: '',
 	data: '',
 	eventInfo: '',
@@ -301,6 +401,15 @@ const getAfmEventData = {
  * Search filter Info data
  */
 const getSearchInfoData = {
+	aggregationsCount: {
+		alarmCount: 2,
+		Day1: 0,
+		Days30: 2,
+		Days7: 0,
+		Days90: 2,
+		ignoredCount: 0,
+		tacCaseCount: 0,
+	},
 	connectionStatus: '',
 	data: '',
 	eventInfo: '',
@@ -507,5 +616,39 @@ export const AfmScenarios = [
 		},
 		url: api,
 		usecases: ['Use Case 10'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'Summary',
+					response: {
+						body: getFailedExportAllData,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: api,
+		usecases: ['Use Case 11'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'Summary',
+					response: {
+						body: getExceptionExportAllData,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: api,
+		usecases: ['Use Case 12'],
 	},
 ];

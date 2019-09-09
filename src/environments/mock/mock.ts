@@ -97,8 +97,10 @@ import {
 	HardwareResponse,
 	IERegistrationResponseModel,
 	LicenseDataResponseModel,
+	MachineRecommendationsResponse,
 	PitstopActionUpdateResponse,
 	PoliciesGroupByDayInAMonthModel,
+	ProfileRecommendationsResponse,
 	RacetrackResponse,
 	RccAssetFilterResponse,
 	RoleCountResponse,
@@ -109,7 +111,9 @@ import {
 	SecurityAdvisorySeverityCountResponse,
 	SecurityAdvisorySummary,
 	ServiceInfoResponse,
+	SoftwareGroupAssetsResponse,
 	SoftwareGroupsResponse,
+	SoftwareGroupVersionsResponse,
 	SoftwareVersionsResponse,
 	SoftwareEOLResponse,
 	SoftwareEOLBulletinResponse,
@@ -152,8 +156,10 @@ type ResponseBody = (
 	HardwareResponse |
 	IERegistrationResponseModel |
 	LicenseDataResponseModel |
+	MachineRecommendationsResponse |
 	PitstopActionUpdateResponse |
 	PoliciesGroupByDayInAMonthModel |
+	ProfileRecommendationsResponse |
 	RacetrackResponse |
 	RMAResponse |
 	RoleCountResponse |
@@ -165,7 +171,9 @@ type ResponseBody = (
 	SecurityAdvisorySeverityCountResponse |
 	SecurityAdvisorySummary |
 	ServiceInfoResponse |
+	SoftwareGroupAssetsResponse |
 	SoftwareGroupsResponse |
+	SoftwareGroupVersionsResponse |
 	SoftwareVersionsResponse |
 	SoftwareEOLResponse |
 	SoftwareEOLBulletinResponse |

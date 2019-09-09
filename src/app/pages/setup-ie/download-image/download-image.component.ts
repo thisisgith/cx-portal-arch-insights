@@ -198,7 +198,7 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 
 					return empty();
 				}),
-				takeUntil(this.destroyed$),
+				// purposely not using takeUntil so that request is not cancelled
 			)
 			.subscribe(() => {
 				this.logger.debug('IE OVA download registered');

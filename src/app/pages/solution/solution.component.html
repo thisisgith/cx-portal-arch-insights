@@ -33,56 +33,53 @@
 		<no-dnac-header (buttonData)="refreshButtonInfo($event)"></no-dnac-header>
 	</div>
 
-	<div #content class="content base-padding">
+	<div #content class="content half-padding">
 		<router-outlet></router-outlet>
 	</div>
 </div>
 
 <ng-template #breadcrumbs>
-	<div class="cs">
-		<div class="cs__home" inlineSVG="assets/icons/icon-home.svg"></div>
-
-		<div class="cs__next-icon" inlineSVG="assets/icons/icon-arrow-breadcrumb.svg"></div>
-
-		<div class="cs__context">
-			<div class="cs__context__label" [innerText]="'_Solution_' | i18n"></div>
-			<div class="cs__context__dropdown">
-				<div data-auto-id="SolutionDropdown" class="dropdown" [class.active]="solutionDropdown"
+	<div class="container">
+		<div class="context-selector flex flex-fluid flex-center-vertical">
+			<div class="svg-chevron-right" *ngIf="selectedSolution">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 23">
+					<polyline fill="none" stroke="#232323" points="40 27.626 50.882 36 62.619 27.626"
+						opacity=".222" transform="matrix(0 1 1 0 -27 -40)"></polyline>
+				</svg>
+			</div>
+			<div *ngIf="selectedSolution">
+				<div class="group-label" [innerText]="'_Solution_' | i18n"></div>
+				<div class="dropdown" data-auto-id="SolutionDropdown"
+					[ngClass]="{'active': solutionDropdown }"
 					(click)="useCaseDropdown = false; solutionDropdown = !solutionDropdown">
-					<div class="flex-center">
-						<div class="cs__dropdown__title" [innerText]="selectedSolution?.name"></div>
-						<span class="cs__header__arrow qtr-margin-left"
-							[class.rotate-180]="solutionDropdown">&#9662;</span>
-					</div>
+					<a class="text-color-dkgray text-size-18" [innerText]="selectedSolution.name"></a>
 					<div class="dropdown__menu">
-						<a *ngFor="let solution of solutions" attr.data-auto-id="SolutionDropdown-{{ solution?.name }}"
+						<a *ngFor="let solution of solutions" attr.data-auto-id="SolutionDropdown-{{ solution.name }}"
 							class="text-uppercase" (click)="changeSolution(solution)" [ngClass]="{
-								'selected': selectedSolution?.name === solution?.name
-							}" [innerText]="solution?.name">
+								'selected': selectedSolution.name === solution.name
+							}" [innerText]="solution.name">
 						</a>
 					</div>
 				</div>
 			</div>
-		</div>
-
-		<div class="cs__next-icon" inlineSVG="assets/icons/icon-arrow-breadcrumb.svg"></div>
-
-		<div class="cs__context">
-			<div class="cs__context__label" [innerText]="'_UseCase_' | i18n"></div>
-			<div class="cs__context__dropdown">
-				<div data-auto-id="UseCaseDropdown" class="dropdown" [class.active]="useCaseDropdown"
+			<div class="svg-chevron-right" *ngIf="selectedTechnology">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 23">
+					<polyline fill="none" stroke="#232323" points="40 27.626 50.882 36 62.619 27.626"
+						opacity=".222" transform="matrix(0 1 1 0 -27 -40)"></polyline>
+				</svg>
+			</div>
+			<div *ngIf="selectedTechnology">
+				<div class="group-label" [innerText]="'_UseCase_' | i18n"></div>
+				<div class="dropdown" data-auto-id="UseCaseDropdown" [ngClass]="{'active': useCaseDropdown }"
 					(click)="solutionDropdown = false; useCaseDropdown = !useCaseDropdown">
-					<div class="flex-center">
-						<div class="cs__dropdown__title" [innerText]="selectedTechnology?.name"></div>
-						<span class="cs__header__arrow qtr-margin-left"
-							[class.rotate-180]="useCaseDropdown">&#9662;</span>
-					</div>
+					<a class="text-color-dkgray text-size-18" [innerText]="selectedTechnology.name">
+					</a>
 					<div class="dropdown__menu">
 						<a *ngFor="let technology of technologies"
-							attr.data-auto-id="TechnologyDropdown-{{ technology?.name }}"
+							attr.data-auto-id="TechnologyDropdown-{{ technology.name }}"
 							(click)="changeTechnology(technology)"
-							[ngClass]="{ 'selected': selectedTechnology?.name === technology?.name }"
-							[innerText]="technology?.name">
+							[ngClass]="{ 'selected': selectedTechnology.name === technology.name }"
+							[innerText]="technology.name">
 						</a>
 					</div>
 				</div>
