@@ -116,7 +116,7 @@ import {
 	SuccessPathsResponse,
 	UserTraining,
 	VulnerabilityResponse,
-	// InsightsResponse,
+	InsightsResponse,
 } from '@sdp-api';
 
 import { RMAResponse } from '@interfaces';
@@ -172,8 +172,8 @@ type ResponseBody = (
 	SoftwareEOLResponse |
 	SuccessPathsResponse |
 	UserTraining[] |
-	VulnerabilityResponse
-	// InsightsResponse
+	VulnerabilityResponse |
+	InsightsResponse
 );
 
 /**

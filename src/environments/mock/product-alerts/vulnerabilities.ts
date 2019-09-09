@@ -1,12 +1,10 @@
-import { VulnerabilityResponse, InsightsResponse } from '@sdp-api';
+import { VulnerabilityResponse } from '@sdp-api';
 import * as _ from 'lodash-es';
 
 /** Base of URL for SDP API */
 const api = '/api/customerportal/product-alerts/v1/vulnerabilities/count';
 /** Default Customer ID */
 const customerId = '2431199';
-/** Base of URL for SDP API insights */
-const insights = '/api/customerportal/product-alerts/v1/vulnerabilities/insights';
 
 /** The mock response for coverage counts */
 const mockAdvisoryCounts: VulnerabilityResponse = {
@@ -20,14 +18,6 @@ const mockLargeAdvisoryCounts: VulnerabilityResponse = {
 	bugs: 4562,
 	'field-notices': 67546,
 	'security-advisories': 4121,
-};
-
-/** The mock response for insights count */
-const mockInsightsCounts: InsightsResponse = {
-	complianceIssueCnt: 0,
-	predictedCrashCnt: 3,
-	recentCrashCnt: 5,
-	totalCnt: 8,
 };
 
 /** The scenarios */
@@ -74,26 +64,6 @@ export const VulnerabilityScenarios = [
 			],
 		},
 		url: `${api}?customerId=${customerId}`,
-		usecases: ['Use Case 1'],
-	},
-];
-
-/** The insights scenarios */
-export const InsightsScenarios = [
-	{
-		scenarios: {
-			GET:
-			{
-				delay: 100,
-				description: 'Insights Tab Counts',
-				response: {
-					body: mockInsightsCounts,
-					status: 200,
-				},
-				selected: true,
-			},
-		},
-		url: `${insights}`,
 		usecases: ['Use Case 1'],
 	},
 ];

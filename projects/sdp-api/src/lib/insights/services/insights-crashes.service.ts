@@ -29,12 +29,10 @@ class InsightsCrashesService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
-    console.log(this.rootUrl);
     
     let req = new HttpRequest<any>(
       'GET',
-      `https://cp-insights-counts.sdp12-istg.csco.cloud/v1/insightsCounts/allCounts/customer/7293498/timePeriod/0`,
-      // `https://api-stage.cisco.com/api/customerportal/product-alerts/v1/vulnerabilities/insights`,
+      this.rootUrl + `/customerportal/insightsCounts/v1/allCounts/customer/7293498/timePeriod/0`,
       __body,
       {
         headers: __headers,

@@ -463,12 +463,6 @@ export class SolutionComponent implements OnInit, OnDestroy {
 			}),
 			catchError(err => {
 				insightsFacet.loading = false;
-				insightsFacet.seriesData = {
-					complianceIssueCnt: 0,
-					predictedCrashCnt: 4,
-					recentCrashCnt: 5,
-					totalCnt: 8,
-				};
 				this.logger.error('solution.component : fetchInsightsCounts() ' +
 				`:: Error : (${err.status}) ${err.message}`);
 
