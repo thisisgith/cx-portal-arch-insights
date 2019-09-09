@@ -42,7 +42,6 @@ export class DevicesListComponent implements OnInit, OnChanges {
 		private architectureService: ArchitectureReviewService,
 		private route: ActivatedRoute,
 	) {
-		this.logger.debug('DevicesListComponent Created!');
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
 		this.paramsType.customerId = _.cloneDeep(this.customerId);

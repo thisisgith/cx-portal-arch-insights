@@ -491,8 +491,6 @@ describe('AssetsComponent', () => {
 			component.onColumnSort(serialNumberCol);
 			tick(1000);
 
-			expect(component.filtered)
-				.toBeTruthy();
 			expect(deviceNameCol.sorting)
 				.toBeFalsy();
 			expect(deviceNameCol.sortDirection)

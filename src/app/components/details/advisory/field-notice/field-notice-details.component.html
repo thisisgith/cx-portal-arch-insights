@@ -1,4 +1,6 @@
-<cui-tabs [activeTabIndex]="activeTab" (activeTabIndexChange)="activeTab = $event">
+<cui-tabs id="detailTabs"
+	[activeTabIndex]="activeTab"
+	(activeTabIndexChange)="activeTab = $event">
 	<cui-tab [label]="'_Summary_' | i18n | uppercase">
 		<ng-container *ngTemplateOutlet="summary"></ng-container>
 	</cui-tab>
@@ -15,7 +17,6 @@
 		</div>
 	</cui-tab>
 </cui-tabs>
-
 
 <ng-template #summary>
 	<div *ngIf="!isLoading">

@@ -52,7 +52,6 @@ export class ArchitectureComponent implements OnInit {
 		private architectureService: ArchitectureService,
 		private route: ActivatedRoute,
 		) {
-		this.logger.debug('ArchitectureComponent Created!');
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.cloneDeep(_.get(user, ['info', 'customerId']));
 	}

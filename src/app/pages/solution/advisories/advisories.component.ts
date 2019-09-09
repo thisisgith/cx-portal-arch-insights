@@ -181,7 +181,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 		const queryParams =
 			_.omit(_.cloneDeep(this.selectedTab.params), ['customerId', 'rows']);
 
-		this.selectedTab.filtered = !_.isEmpty(queryParams);
+		this.selectedTab.filtered = !_.isEmpty(_.omit(queryParams, ['sort', 'page']));
 
 		this.router.navigate([`/solution/advisories/${this.routeParam}`], {
 			queryParams,
@@ -1400,8 +1400,10 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 			});
 		});
 
-		tab.params = _.assignIn(_.pick(_.cloneDeep(tab.params),
-			['customerId', 'rows', 'sort'], { page: 1 }));
+		tab.params = _.assignIn(
+			_.pick(
+				_.cloneDeep(tab.params), ['customerId', 'rows', 'sort']),
+				{ page: 1 });
 
 		tab.searchForm.controls.search.setValue('');
 		tab.selectedSubfilters = [];

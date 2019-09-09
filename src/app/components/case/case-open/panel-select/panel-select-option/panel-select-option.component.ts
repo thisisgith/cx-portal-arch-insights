@@ -1,7 +1,5 @@
 import { Component, Input, TemplateRef, ViewChild } from '@angular/core';
 
-import { LogService } from '@cisco-ngx/cui-services';
-
 /**
  * Represents a single panel select option
  */
@@ -14,10 +12,4 @@ export class PanelSelectOptionComponent<T> {
 	@Input() public value: T;
 
 	public selected = false;
-
-	constructor (
-		private logger: LogService,
-	) {
-		this.logger.debug('PanelSelectOptionComponent Created!');
-	}
 }

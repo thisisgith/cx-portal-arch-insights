@@ -40,7 +40,6 @@ export class AfmDetailsComponent implements OnInit, OnChanges {
 	constructor (private logger: LogService,
 		private afmService: AfmService,
 		private userResolve: UserResolve) {
-		this.logger.debug('AFM Detaisls Component Created!');
 		this.searchParams = new Object();
 		this.status = false;
 		this.userResolve.getUser()

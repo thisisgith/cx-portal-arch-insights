@@ -54,7 +54,6 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 		private architectureService: ArchitectureService,
 		private route: ActivatedRoute,
 	) {
-		this.logger.debug('CbpRuleViolationComponent Created!');
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
 		this.paramsType.customerId = _.cloneDeep(this.customerId);
