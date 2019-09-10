@@ -148,43 +148,92 @@ describe('Accelerator (ACC)', () => { // PBC-32
 	});
 
 	describe('ACC Card View', () => {
-		before(() => {
-			// Open the ACC View All modal, and ensure we're in card view
-			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
-			cy.getByAutoId('ViewAllModal').should('be.visible');
-			cy.getByAutoId('card-view-btn').click();
-			cy.getByAutoId('ACCCard').should('be.visible');
-		});
+		describe('Bookmark items', () => {
+			before(() => {
+				// Switch to mock data with no items bookmarked
+				accMock.enable('(ACC) IBN-Campus Network Assurance-Onboard-twoRecommended');
 
-		after(() => {
-			// Close the View All modal
-			cy.getByAutoId('SuccessPathCloseModal').click();
-			cy.getByAutoId('ViewAllModal').should('not.exist');
+				// Refresh the data
+				cy.getByAutoId('Facet-Assets & Coverage').click();
+				cy.getByAutoId('Facet-Lifecycle').click();
+				cy.wait('(ACC) IBN-Campus Network Assurance-Onboard-twoRecommended');
 
-			// Refresh the page to force-reset bookmarks
-			cy.loadApp();
-			cy.wait('(ACC) IBN-Campus Network Assurance-Onboard');
-		});
+				// Open the ACC View All modal, and ensure we're in card view
+				cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
+				cy.getByAutoId('ViewAllModal').should('be.visible');
+				cy.getByAutoId('card-view-btn').click();
+				cy.getByAutoId('ACCCard').should('be.visible');
+			});
 
-		it('ACC View All card view should allow bookmarking/unbookmarking items', () => {
-			accItems.forEach((item, index) => {
-				cy.getByAutoId('ACCCard').eq(index).within(() => {
-					// Check for bookmark API calls
-					if (item.bookmark) {
-						cy.getByAutoId('ACCCardRibbon')
-							.should('have.class', 'ribbon__blue')
-							.click();
-						cy.wait('(Lifecycle) IBN-Bookmark');
-						cy.getByAutoId('ACCCardRibbon')
-							.should('have.class', 'ribbon__white');
-					} else {
+			after(() => {
+				// Switch back to the default mock
+				accMock.enable('(ACC) IBN-Campus Network Assurance-Onboard');
+
+				// Close the View All modal
+				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+
+				// Refresh the page to force-reset bookmarks
+				cy.loadApp();
+				cy.wait('(ACC) IBN-Campus Network Assurance-Onboard');
+			});
+
+			it('ACC View All card view should allow bookmarking items', () => {
+				cy.getByAutoId('ACCCard').each($card => {
+					cy.wrap($card).within(() => {
+						// Check for bookmark API calls
 						cy.getByAutoId('ACCCardRibbon')
 							.should('have.class', 'ribbon__white')
 							.click();
 						cy.wait('(Lifecycle) IBN-Bookmark');
 						cy.getByAutoId('ACCCardRibbon')
 							.should('have.class', 'ribbon__blue');
-					}
+					});
+				});
+			});
+		});
+
+		describe('Un-bookmark items', () => {
+			before(() => {
+				// Switch to mock data with no items bookmarked
+				accMock.enable('(ACC) IBN-Campus Network Assurance-Onboard-twoBookmarked');
+
+				// Refresh the data
+				cy.getByAutoId('Facet-Assets & Coverage').click();
+				cy.getByAutoId('Facet-Lifecycle').click();
+				cy.wait('(ACC) IBN-Campus Network Assurance-Onboard-twoBookmarked');
+
+				// Open the ACC View All modal, and ensure we're in card view
+				cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
+				cy.getByAutoId('ViewAllModal').should('be.visible');
+				cy.getByAutoId('card-view-btn').click();
+				cy.getByAutoId('ACCCard').should('be.visible');
+			});
+
+			after(() => {
+				// Switch back to the default mock
+				accMock.enable('(ACC) IBN-Campus Network Assurance-Onboard');
+
+				// Close the View All modal
+				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+
+				// Refresh the page to force-reset bookmarks
+				cy.loadApp();
+				cy.wait('(ACC) IBN-Campus Network Assurance-Onboard');
+			});
+
+			it('ACC View All card view should allow un-bookmarking items', () => {
+				cy.getByAutoId('ACCCard').each($card => {
+					cy.wrap($card).within(() => {
+						// Check for bookmark API calls
+						cy.getByAutoId('ACCCardRibbon')
+							.should('have.class', 'ribbon__blue')
+							.click();
+						cy.wait('(Lifecycle) IBN-Bookmark');
+						cy.getByAutoId('ACCCardRibbon')
+							.should('have.class', 'ribbon__white');
+					});
 				});
 			});
 		});
@@ -269,7 +318,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				cy.getByAutoId('cui-select').click();
 				cy.get(`a[title="${i18n._Bookmarked_}"]`).click();
 
-				const filteredItems = validACCItems.filter(item => (item.bookmark === true));
+				const filteredItems = validACCItems.filter(item => item.bookmark);
 				cy.getByAutoId('ACCCard').then(cards => {
 					expect(cards.length).to.eq(filteredItems.length);
 				});
@@ -281,7 +330,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				cy.getByAutoId('cui-select').click();
 				cy.get(`a[title="${i18n._NotBookmarked_}"]`).click();
 
-				const filteredItems = validACCItems.filter(item => (item.bookmark === false));
+				const filteredItems = validACCItems.filter(item => !item.bookmark);
 				cy.getByAutoId('ACCCard').then(cards => {
 					expect(cards.length).to.eq(filteredItems.length);
 				});
@@ -1602,23 +1651,117 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			});
 		});
 
-		it('ACC View All table view should allow bookmarking/unbookmarking items', () => {
-			accItems.forEach((item, index) => {
-				cy.get('tr').eq(index + 1).within(() => {
-					if (item.bookmark) {
-						cy.getByAutoId('SBListRibbon')
-							.should('have.class', 'icon-bookmark--on')
-							.click();
-						cy.wait('(Lifecycle) IBN-Bookmark');
-						cy.getByAutoId('SBListRibbon')
-							.should('have.class', 'icon-bookmark--off');
-					} else {
-						cy.getByAutoId('SBListRibbon')
-							.should('have.class', 'icon-bookmark--off')
-							.click();
-						cy.wait('(Lifecycle) IBN-Bookmark');
-						cy.getByAutoId('SBListRibbon')
-							.should('have.class', 'icon-bookmark--on');
+		describe('Bookmark items', () => {
+			before(() => {
+				// Switch to mock data with no items bookmarked
+				accMock.enable('(ACC) IBN-Campus Network Assurance-Onboard-twoRecommended');
+
+				// Close the View All modal
+				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+
+				// Refresh the data
+				cy.getByAutoId('Facet-Assets & Coverage').click();
+				cy.getByAutoId('Facet-Lifecycle').click();
+				cy.wait('(ACC) IBN-Campus Network Assurance-Onboard-twoRecommended');
+
+				// Re-open the ACC View All modal, and ensure we're in table view
+				cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
+				cy.getByAutoId('ViewAllModal').should('be.visible');
+				cy.getByAutoId('table-view-btn').click();
+				cy.getByAutoId('ViewAllTable').should('be.visible');
+			});
+
+			after(() => {
+				// Switch back to the default mock
+				accMock.enable('(ACC) IBN-Campus Network Assurance-Onboard');
+
+				// Close the View All modal
+				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+
+				// Refresh the page to force-reset bookmarks
+				cy.loadApp();
+				cy.wait('(ACC) IBN-Campus Network Assurance-Onboard');
+
+				// Re-open the ACC View All modal, and ensure we're in table view
+				cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
+				cy.getByAutoId('ViewAllModal').should('be.visible');
+				cy.getByAutoId('table-view-btn').click();
+				cy.getByAutoId('ViewAllTable').should('be.visible');
+			});
+
+			it('ACC View All table view should allow bookmarking items', () => {
+				cy.get('tr').each(($row, index) => {
+					if (index !== 0) {
+						// Skip the first tr element, since this holds the headers
+						cy.wrap($row).within(() => {
+							// Check for bookmark API calls
+							cy.getByAutoId('SBListRibbon')
+								.should('have.class', 'icon-bookmark--off')
+								.click();
+							cy.wait('(Lifecycle) IBN-Bookmark');
+							cy.getByAutoId('SBListRibbon')
+								.should('have.class', 'icon-bookmark--on');
+						});
+					}
+				});
+			});
+		});
+
+		describe('Un-bookmark items', () => {
+			before(() => {
+				// Switch to mock data with no items bookmarked
+				accMock.enable('(ACC) IBN-Campus Network Assurance-Onboard-twoBookmarked');
+
+				// Close the View All modal
+				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+
+				// Refresh the data
+				cy.getByAutoId('Facet-Assets & Coverage').click();
+				cy.getByAutoId('Facet-Lifecycle').click();
+				cy.wait('(ACC) IBN-Campus Network Assurance-Onboard-twoBookmarked');
+
+				// Re-open the ACC View All modal, and ensure we're in table view
+				cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
+				cy.getByAutoId('ViewAllModal').should('be.visible');
+				cy.getByAutoId('table-view-btn').click();
+				cy.getByAutoId('ViewAllTable').should('be.visible');
+			});
+
+			after(() => {
+				// Switch back to the default mock
+				accMock.enable('(ACC) IBN-Campus Network Assurance-Onboard');
+
+				// Close the View All modal
+				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+
+				// Refresh the page to force-reset bookmarks
+				cy.loadApp();
+				cy.wait('(ACC) IBN-Campus Network Assurance-Onboard');
+
+				// Re-open the ACC View All modal, and ensure we're in table view
+				cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
+				cy.getByAutoId('ViewAllModal').should('be.visible');
+				cy.getByAutoId('table-view-btn').click();
+				cy.getByAutoId('ViewAllTable').should('be.visible');
+			});
+
+			it('ACC View All table view should allow un-bookmarking items', () => {
+				cy.get('tr').each(($row, index) => {
+					if (index !== 0) {
+						// Skip the first tr element, since this holds the headers
+						cy.wrap($row).within(() => {
+							// Check for bookmark API calls
+							cy.getByAutoId('SBListRibbon')
+								.should('have.class', 'icon-bookmark--on')
+								.click();
+							cy.wait('(Lifecycle) IBN-Bookmark');
+							cy.getByAutoId('SBListRibbon')
+								.should('have.class', 'icon-bookmark--off');
+						});
 					}
 				});
 			});
