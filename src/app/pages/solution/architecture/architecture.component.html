@@ -51,14 +51,12 @@
 </ng-template>
 
 	<ng-template #filterBar>
-		<div class="row">
-			<div class="col-md-1 flex flex-center-vertical">
+		<div class="row flex-center-vertical half-margin-top base-margin-bottom">
+			<div class="col-md-11 flex">
 				<span
-					class="text-bold text-uppercase half-padding-right"
+					class="flex flex-center-vertical base-margin-left half-margin-right filter-bar__title"
 					[innerText]="'Filtered'"
 				></span>
-			</div>
-			<div class="col-md-10">
 				<ng-container *ngFor="let filter of selectedFilters">
 					<ng-container
 						*ngFor="
@@ -66,7 +64,7 @@
 						"
 					>
 						<span
-							class="label label--dkgray text-large"
+							class="label filter-bar__item"
 							(click)="
 								onSubfilterSelect(subfilter, filter)
 							"
@@ -78,10 +76,9 @@
 					</ng-container>
 				</ng-container>
 			</div>
-			<div class="col-md-1 text-center text-right">
+			<div class="col-md-1 flex flex-center flex-center-vertical filter-bar__clear">
 				<a
 					(click)="clearFilters()"
-					class="text-lowercase"
 					[innerText]="'_ArchitectureClearAll_' | i18n"
 					data-auto-id="FilterBarClearAllFilters"
 				>
