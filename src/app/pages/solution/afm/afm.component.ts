@@ -10,13 +10,15 @@ import {
 	AfmConnectivity,
 	AfmFilter,
 	AfmResponse,
+	InventoryService,
+	AssetLinkInfo,
 } from '@sdp-api';
 import * as _ from 'lodash-es';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { UserResolve } from '@utilities';
 import { takeUntil } from 'rxjs/operators';
-import { ExportCsvService } from '@services';
+import { ExportCsvService, AssetPanelLinkService } from '@services';
 
 /**
  * AfmComponet which shows in Insight view for Fault Management tab
@@ -59,6 +61,8 @@ export class AfmComponent implements OnInit {
 	public eventStatus = false;
 	private destroy$ = new Subject();
 	private exportFileName: string;
+	public assetParams: InventoryService.GetAssetsParams;
+	public assetLinkInfo: AssetLinkInfo;
 
 	public searchOptions = {
 		debounce: 1500,
@@ -100,6 +104,7 @@ export class AfmComponent implements OnInit {
 	constructor (private logger: LogService,
 		private afmService: AfmService,
 		private userResolve: UserResolve,
+		private assetPanelLinkService: AssetPanelLinkService,
 		private exportCsvService: ExportCsvService) {
 		this.searchParams = new Object();
 		this.searchParams.pageNumber = 1;
@@ -394,10 +399,28 @@ export class AfmComponent implements OnInit {
 	 */
 	public connectToAlarmDetails (alarm: Alarm) {
 		this.syslogEvent = alarm.syslogMsg;
-		this.showAlarmDetails = true;
 		this.selectedAsset = null;
 		this.searchParams.alarmId = alarm.alarmId;
+		this.searchParams.serialNumber = alarm.serialNumber;
+		this.assetParams = {
+			customerId: this.searchParams.customerId,
+			serialNumber: [this.searchParams.serialNumber],
+		};
 		this.getAfmEventData(this.searchParams);
+		this.getAssetLinkData(this.assetParams);
+		this.showAlarmDetails = true;
+	}
+
+	/**
+	 * Get asset link data
+	 * @param assetParams InventoryService.GetAssetsParams
+	 * @returns Asset link information
+	 */
+	private getAssetLinkData (assetParams: InventoryService.GetAssetsParams) {
+		return this.assetPanelLinkService.getAssetLinkData(assetParams)
+		.subscribe(response => {
+			this.assetLinkInfo = response;
+		});
 	}
 
 	/**

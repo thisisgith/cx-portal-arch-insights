@@ -99,7 +99,7 @@
 	<visual-filter-bar [filters]="filters">
 		<ng-template #startingCard>
 			<div
-				class="panel panel--bordered-right"
+				class="panel"
 				[ngClass]="{
 					filter__selected:
 						searchParams.headerFilterType !== 'CHATS' &&
@@ -181,11 +181,6 @@
 		(subfilter)="onTimeRangefilterSelect($event.filter, filter, true)"
 	>
 	</column-chart>
-	<div
-		class="text-large flex-center"
-		[ngClass]="{ 'text-primary': searchParams?.headerFilterType === 'CHATS' }"
-		[innerText]="filter.title"
-	></div>
 </ng-template>
 
 <ng-template #serverError>
@@ -332,6 +327,7 @@
 	*ngIf="showAlarmDetails"
 	[hidden]="!showAlarmDetails"
 	[fullscreen]="fullscreen"
+	id="details-panel"
 >
 	<details-panel-header
 		(close)="onAlarmPanelClose()"
@@ -394,9 +390,9 @@
 
 <!-- App Details slide-out -->
 <asset-details *ngIf="selectedAsset"
-	[asset]="selectedAsset"
-	[serialNumber]="selectedAsset?.serialNumber"
-	[element]=""
+	[asset]="assetLinkInfo?.asset"
+	[serialNumber]="assetLinkInfo?.asset?.serialNumber"
+	[element]="assetLinkInfo?.element"
 	(close)="onPanelClose()"
 >
 </asset-details>
