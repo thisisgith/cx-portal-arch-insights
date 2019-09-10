@@ -34,6 +34,7 @@ export const defaults = {
 	},
 	// Curated Communities/Private Communitites/SuccessTrack URL
 	curatedCommunityUrl: 'https://community-stage.cisco.com/t5',
+	DNACommunititesPath: 'digital-network-architecture',
 	emailFromID: 'cxportal-noreply@cisco.com',
 	emailToID: 'cx-portal-support-nonprod@cisco.com',
 	feedbackToEmail: 'pbc-dev@cisco.com',

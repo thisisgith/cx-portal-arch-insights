@@ -35,7 +35,8 @@
 	</div>
 </div>
 
-	<ng-template #exceptionsFilter let-filter="filter">
+<ng-template #exceptionsFilter let-filter="filter">
+	<div *ngIf="visualLabels[0].active">
 		<bar-chart
 			*ngIf="!status.isLoading"
 			[seriesData]="filter.seriesData"
@@ -46,7 +47,8 @@
 		<div class="base-margin-top" *ngIf="status.isLoading">
 			<cui-spinner></cui-spinner>
 		</div>
-	</ng-template>
+	</div>
+</ng-template>
 
 	<ng-template #filterBar>
 		<div class="row">
@@ -66,7 +68,7 @@
 						<span
 							class="label label--dkgray text-large"
 							(click)="
-								onSubfilterSelect(subfilter.filter, filter)
+								onSubfilterSelect(subfilter, filter)
 							"
 							attr.data-auto-id="FilterTag-{{ subfilter.filter }}"
 						>

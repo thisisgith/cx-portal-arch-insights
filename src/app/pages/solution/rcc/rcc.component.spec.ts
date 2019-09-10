@@ -478,8 +478,8 @@ describe('RccComponent', () => {
 		const violationGridObj = {
 			criteria: '',
 			customerId: '7293498',
-			pageLimit: 10,
-			pageNum: 1,
+			pageIndex: 1,
+			pageSize: 10,
 			policyType: 'PCI',
 			search: 'HIPAA',
 			severity: 'P1',
@@ -496,8 +496,8 @@ describe('RccComponent', () => {
 		const violationGridObj = {
 			criteria: '',
 			customerId: '7293498',
-			pageLimit: 10,
-			pageNum: 1,
+			pageIndex: 1,
+			pageSize: 10,
 			policyType: 'PCI',
 			search: 'HIPAA',
 			severity: 'P1',
@@ -570,11 +570,5 @@ describe('RccComponent', () => {
 		component.getRCCAssetData(violationGridObj);
 		expect(component.noTableData)
 			.toBeTruthy();
-	});
-
-	it('Should invoke onTableSortingChanged and assign tableOffset to 0', () => {
-		component.onTableSortingChanged();
-		expect(component.tableConfig.tableOffset)
-			.toBe(0);
 	});
 });

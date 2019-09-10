@@ -130,7 +130,7 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 					this.logger.error('OSV Profile Groups : getsoftwareGroups() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
-					return of({ });
+					return of();
 				}),
 			)
 			.subscribe(() => {
@@ -301,6 +301,29 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 	public openCurrentVersionsTab (event: any, item: SoftwareGroup) {
 		event.stopPropagation();
 		this.openSoftwareGroupDetails(3, item);
+	}
+
+	/**
+	 * sort table
+	 * @param sortColumn column to sort by
+	 */
+	public sortTable (sortColumn: any) {
+		if (!sortColumn.sortable) {
+			return;
+		}
+		if (sortColumn.sortDirection === 'asc') {
+			sortColumn.sortDirection = 'desc';
+		} else {
+			sortColumn.sortDirection = 'asc';
+		}
+		this.softwareGroupsTable.columns.forEach(column => {
+			column.sorting = false;
+		});
+		sortColumn.sorting = true;
+		this.softwareGroupsParams.sortOrder = sortColumn.sortDirection;
+		this.softwareGroupsParams.sort = sortColumn.key;
+		this.softwareGroupsParams.pageIndex = 1;
+		this.loadData();
 	}
 
 }

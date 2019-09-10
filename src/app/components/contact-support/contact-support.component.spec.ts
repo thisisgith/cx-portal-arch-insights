@@ -5,9 +5,10 @@ import { ContactSupportModule } from './contact-support.module';
 import { EmailControllerService } from '@sdp-api';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ProfileService } from '@cisco-ngx/cui-auth';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { UserResolve } from '@utilities';
 import { user } from '@mock';
+import { HttpErrorResponse } from '@angular/common/http';
 
 describe('ContactSupportComponent', () => {
 	let component: ContactSupportComponent;
@@ -84,6 +85,34 @@ describe('ContactSupportComponent', () => {
 			.toHaveBeenCalled();
 	});
 
+	it('should send a email request and handle an error response', () => {
+		const error = {
+			status: 404,
+			statusText: 'Resource not found',
+		};
+
+		spyOn(service, 'sendEmail')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+
+		const title = component.supportForm.controls.title;
+		expect(title.valid)
+			.toBeFalsy();
+
+		title.setValue('CX Portal Support');
+		const description = component.supportForm.controls.description;
+		expect(description.valid)
+			.toBeFalsy();
+
+		description.setValue('Test mail');
+		fixture.detectChanges();
+		component.submitMessage();
+		expect(service.sendEmail)
+			.toHaveBeenCalled();
+		expect(component.success)
+			.toBeFalsy();
+	});
+
 	it('should fetch list of portal support topics on init', () => {
 		spyOn(component, 'getTopicList');
 		component.ngOnInit();
@@ -102,7 +131,7 @@ describe('ContactSupportComponent', () => {
 			.toHaveBeenCalledTimes(0);
 	});
 
-	it('should not call the sendEmamil service if form is invalid', () => {
+	it('should not call the sendEmail service if form is invalid', () => {
 		spyOn(service, 'sendEmail')
 			.and
 			.returnValue(of(<any> { }));
@@ -111,5 +140,70 @@ describe('ContactSupportComponent', () => {
 		component.submitMessage();
 		expect(service.sendEmail)
 			.toHaveBeenCalledTimes(0);
+	});
+
+	it('should handle the contactSupport api failing', () => {
+		const error = {
+			status: 404,
+			statusText: 'Resource not found',
+		};
+
+		spyOn(service, 'contactSupport')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+
+		component.ngOnInit();
+		fixture.detectChanges();
+
+		const title = component.supportForm.controls.title;
+		expect(title.valid)
+			.toBeFalsy();
+
+		title.setValue('CX Portal Support');
+		const description = component.supportForm.controls.description;
+		expect(description.valid)
+			.toBeFalsy();
+
+		description.setValue('Test mail');
+
+		component.sendSupportEmail();
+
+		fixture.detectChanges();
+
+		expect(component.loading)
+			.toBeFalsy();
+		expect(component.success)
+			.toBeFalsy();
+	});
+
+	it('should handle the contactSupport api response', () => {
+		spyOn(service, 'contactSupport')
+			.and
+			.returnValue(of(<any> {
+				status: 'success',
+			}));
+
+		component.ngOnInit();
+		fixture.detectChanges();
+
+		const title = component.supportForm.controls.title;
+		expect(title.valid)
+			.toBeFalsy();
+
+		title.setValue('CX Portal Support');
+		const description = component.supportForm.controls.description;
+		expect(description.valid)
+			.toBeFalsy();
+
+		description.setValue('Test mail');
+
+		component.sendSupportEmail();
+
+		fixture.detectChanges();
+
+		expect(component.loading)
+			.toBeFalsy();
+		expect(component.success)
+			.toBeTruthy();
 	});
 });

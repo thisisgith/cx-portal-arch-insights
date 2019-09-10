@@ -72,7 +72,7 @@ export class DevicesSdaComponent implements OnInit, OnChanges {
 					sortable: false,
 				},
 				{
-					key: 'minimumSupportedVersion',
+					key: 'minimumSwVersion',
 					name: I18n.get('_ArchitectureMinimumSupportedVersion_'),
 					sortable: false,
 				},
