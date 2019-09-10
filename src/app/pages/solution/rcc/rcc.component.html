@@ -101,8 +101,8 @@
 		</cui-table>
 		<div class="text-center dbl-margin-top dbl-margin-bottom">
 			<div *ngIf="errorPolicyView">
-				<div class="text-muted text-xlarge " [innerText]="'_RccNoViolationData_' | i18n" ></div>
-				<div class="text-muted text-small " [innerText]="'_RccNoViolationList_' | i18n" ></div>
+				<div class="text-muted text-xlarge " [innerText]="'_RccErrorViolationMessage_' | i18n" ></div>
+				<div class="text-muted text-small " [innerText]="'_RccErrorViolationListMessage_' | i18n" ></div>
 			</div>
 			<span *ngIf="!loading && noTableData" class="text-muted text-xlarge" [innerText]="'_RccNoDataAvailable_' | i18n"></span>
 		</div>	
@@ -130,8 +130,8 @@
 		</cui-table>
 		<div class="text-center dbl-margin-top dbl-margin-bottom">
 			<div *ngIf="errorPolicyView">
-				<div class="text-muted text-xlarge " [innerText]="'_RccNoViolationData_' | i18n" ></div>
-				<div class="text-muted text-small " [innerText]="'_RccNoViolationList_' | i18n" ></div>
+				<div class="text-muted text-xlarge " [innerText]="'_RccErrorAssetMessage_' | i18n" ></div>
+				<div class="text-muted text-small " [innerText]="'_RccErrorAssetListMessage_' | i18n" ></div>
 			</div>				
 			<span *ngIf="!loading && noTableData" class="text-muted text-xlarge" [innerText]="'_RccNoDataAvailable_' | i18n"></span>
 		</div>
