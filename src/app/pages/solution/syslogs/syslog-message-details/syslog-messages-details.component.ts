@@ -33,6 +33,7 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 	public innerTableOptions: CuiTableOptions;
 	public selectDropDown = {
 		assets: { },
+		customerId: '',
 		productFamily: '',
 		productID: '',
 		selectedFilters : { },
@@ -181,6 +182,7 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 	public onSelection () {
 		this.selectDropDown.assets = this.asset;
 		this.selectDropDown.selectedFilters = this.selectedFilter;
+		this.selectDropDown.customerId = this.customerId;
 		this.syslogsService
 			.getPanelFilterGridData(
 				this.selectDropDown)
@@ -238,7 +240,11 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 
 	public loadSyslogPanelFilter (tableRowData) {
 		if (this.asset) {
-			this.syslogsService.getPanelFilterData(tableRowData)
+			const paramFilterData = {
+				customerId: this.customerId,
+				selectedRowData : tableRowData,
+			};
+			this.syslogsService.getPanelFilterData(paramFilterData)
 				.pipe(takeUntil(this.destroy$),
 				catchError(err => {
 					this.logger.error('syslog-messages-details.component : getPanelFilterData() ' +
