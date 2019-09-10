@@ -62,7 +62,7 @@ const routes: Routes = [
 			{
 				path: '',
 				pathMatch: 'full',
-				redirectTo: 'compliance',
+				redirectTo: 'osv',
 			},
 		],
 		component: InsightsComponent,
