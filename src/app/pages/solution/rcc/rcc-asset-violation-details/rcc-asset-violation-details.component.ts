@@ -48,6 +48,7 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 	public isLoading = false;
 	public apiNoData = true;
 	public errorResult = false;
+	public alert: any = { };
 	private destroy$ = new Subject();
 	@Input() public selectedAssetData: any;
 	public assetModalFilter: RccAssetSelectReq;
@@ -97,8 +98,12 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 				sortBy: '',
 				sortOrder: '',
 			};
+			this.rccAssetPolicyTableData = [];
+			this.rccMessageTableData = [];
 			this.loadData();
 			this.tableOffset = 0;
+			this.errorResult = false;
+			_.invoke(this.alert, 'hide');
 		}
 	}
 
@@ -108,7 +113,6 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 	public loadData () {
 		this.initialLoading = true;
 		this.apiNoData = true;
-		this.errorResult = false;
 		const assetFilterReq = {
 			customerId : this.assetRowParams.customerId,
 			serialNumber : this.assetRowParams.serialNumber,
@@ -123,45 +127,54 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 				takeUntil(this.destroy$),
 			)
 			.subscribe(([assetViolations, assetPolicyFilterInfo]) => {
-				if (assetPolicyFilterInfo) {
+				if (!_.isEmpty(assetPolicyFilterInfo.data)) {
 					this.assetPolicyFilterInfo = assetPolicyFilterInfo;
 					this.assetPolicyNameItems = [];
 					this.assetPolicyGroupItems = [];
 					this.assetPolicySeverityItems = [];
-					(assetPolicyFilterInfo.data.policyname).map((policyFilter: any, index: any) => {
-						this.assetPolicyNameItems.push({ id: index, name: policyFilter });
-					});
-					(assetPolicyFilterInfo.data.rulehighseverity).map(
-					(policySeverityFilter: string, index: any) => {
-						this.severityMappings.forEach(policySeverityMapData => {
-							if (policySeverityMapData.id === policySeverityFilter) {
-								this.assetPolicySeverityItems.push({
-									id: index, name: policySeverityFilter,
-									title: policySeverityMapData.name,
-								});
-							}
-
+					if (assetPolicyFilterInfo.data.policyname) {
+						(assetPolicyFilterInfo.data.policyname)
+						.map((policyFilter: any, index: any) => {
+							this.assetPolicyNameItems.push({ id: index, name: policyFilter });
 						});
-					});
-					(assetPolicyFilterInfo.data.policygroupname)
-					.map((policyGroup: any, index: any) => {
-						this.assetPolicyGroupItems.push({ id: index, name: policyGroup });
-					});
+					}
+					if (assetPolicyFilterInfo.data.rulehighseverity) {
+						(assetPolicyFilterInfo.data.rulehighseverity).map(
+						(policySeverityFilter: string, index: any) => {
+							this.severityMappings.forEach(policySeverityMapData => {
+								if (policySeverityMapData.id === policySeverityFilter) {
+									this.assetPolicySeverityItems.push({
+										id: index, name: policySeverityFilter,
+										title: policySeverityMapData.name,
+									});
+								}
+							});
+						});
+					}
+					if (assetPolicyFilterInfo.data.rulehighseverity) {
+						(assetPolicyFilterInfo.data.policygroupname)
+							.map((policyGroup: any, index: any) => {
+								this.assetPolicyGroupItems.push({ id: index, name: policyGroup });
+							});
+					}
 				}
 				this.rccAssetPolicyTableData = [];
-				this.rccAssetPolicyTableData = assetViolations.data.violation;
-				this.totalItems = this.rccAssetPolicyTableData.length;
-				if (this.rccAssetPolicyTableData.length > 0) {
-					this.apiNoData = false;
-				 }
-				this.tableOffset = 0;
+				if (!_.isEmpty(assetViolations.data)) {
+					this.rccAssetPolicyTableData = assetViolations.data.violation;
+					this.totalItems = this.rccAssetPolicyTableData.length;
+					if (this.rccAssetPolicyTableData.length > 0) {
+						this.apiNoData = false;
+					 }
+					this.tableOffset = 0;
+					this.buildGridTable();
+				}
 				this.initialLoading = false;
-				this.buildGridTable();
 			},
 				error => {
 					this.initialLoading = false;
 					this.errorResult = true;
-					this.apiNoData = false;
+					this.apiNoData = true;
+					this.alert.show(I18n.get('_RccErrorResults_'), 'danger');
 					this.logger.error(
 						'rcc-asset-violation-details.component : loadData() ' +
 					`:: Error : (${error.status}) ${error.message}`);
@@ -174,7 +187,9 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 	 */
 	public getAssetPolicyGridData () {
 		this.isLoading = true;
-		this.errorResult = false;
+		_.invoke(this.alert, 'hide');
+		this.totalItems = 0;
+		this.rccAssetPolicyTableData = [];
 		const params = _.cloneDeep(this.assetRowParams);
 		this.rccService.getAssetSummaryData(params)
 			.pipe(
@@ -184,7 +199,6 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 				(assetViolations => {
 					const assetViolationsResponse = assetViolations;
 					if (assetViolationsResponse) {
-						this.rccAssetPolicyTableData = [];
 						this.rccAssetPolicyTableData = assetViolations.data.violation;
 						if (this.rccAssetPolicyTableData) {
 							this.totalItems = _.size(this.rccAssetPolicyTableData);
@@ -192,11 +206,13 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 						this.isLoading = false;
 					}
 					this.tableOffset =  0;
+					this.errorResult = false;
 					this.buildGridTable();
 				}),
 				error => {
 					this.isLoading = false;
 					this.errorResult = true;
+					this.alert.show(I18n.get('_RccErrorResults_'), 'danger');
 					this.logger.error(
 						'rcc-asset-violation-details.component : getAssetPolicyGridData() ' +
 					`:: Error : (${error.status}) ${error.message}`);
