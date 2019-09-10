@@ -46,7 +46,7 @@
 		<ng-container *ngTemplateOutlet="filterBar"></ng-container>
 	</ng-container>
 	<div class="row" *ngIf="!selectedTab.loading && selectedTab.pagination?.total">
-		<div class="col-md-9 flex flex-fill">
+		<div class="col-auto flex flex-fill">
 			<div class="flex-center-vertical base-margin-left">
 				<span [innerText]="selectedTab.label" class="text-large"></span>
 				<span *ngIf="selectedTab?.pagination && selectedTab.pagination.total > 0"
@@ -56,7 +56,7 @@
 				</span>
 			</div>
 		</div>
-		<div class="col-md-3">
+		<div class="col-auto">
 			<div class="flex flex-fluid">
 				<div class="flex-fill form-group input--compressed input--icon half-margin-right">
 					<ng-container *ngTemplateOutlet="selectedTab.searchTemplate; context: { tab: selectedTab }"></ng-container>
