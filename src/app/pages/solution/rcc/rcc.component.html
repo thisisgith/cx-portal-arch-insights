@@ -95,14 +95,17 @@
 			[data]="policyViolationsGridData"
 			[limit]="tableConfig?.tableLimit"
 			[offset]="tableConfig?.tableOffset"
-			(onSortingChanged)="onTableSortingChanged($event)"
+			(onSortingChanged)="onViolationTableSortingChanged($event)"
 			(onTableRowClicked)="onViolationRowClicked($event)"
 			*ngIf="!loading && policyViolationsGridData?.length > 0">
 		</cui-table>
 		<div class="text-center dbl-margin-top dbl-margin-bottom">
-				<span class="text-muted text-xlarge " [innerText]="'_RccNoResults_' | i18n" *ngIf="errorPolicyView"></span>
-				<span *ngIf="!loading && noTableData " class="text-muted text-xlarge" [innerText]="'_RccNoDataAvailable_' | i18n"></span>
-		</div>
+			<div *ngIf="errorPolicyView">
+				<div class="text-muted text-xlarge " [innerText]="'_RccErrorViolationMessage_' | i18n" ></div>
+				<div class="text-muted text-small " [innerText]="'_RccErrorViolationListMessage_' | i18n" ></div>
+			</div>
+			<span *ngIf="!loading && noTableData" class="text-muted text-xlarge" [innerText]="'_RccNoDataAvailable_' | i18n"></span>
+		</div>	
 		<div class="section">
 			<cui-pager *ngIf="!loading && policyViolationsGridData?.length > 0"
 				[page]="tableConfig?.tableOffset"
@@ -126,8 +129,11 @@
 			*ngIf="!loading && tableAssetDataSample?.length > 0">
 		</cui-table>
 		<div class="text-center dbl-margin-top dbl-margin-bottom">
-				<span class="text-muted text-xlarge" [innerText]="'_RccNoResults_' | i18n" *ngIf="errorPolicyView"></span>
-				<span *ngIf="!loading && noTableData" class="text-muted text-xlarge" [innerText]="'_RccNoDataAvailable_' | i18n"></span>
+			<div *ngIf="errorPolicyView">
+				<div class="text-muted text-xlarge " [innerText]="'_RccErrorAssetMessage_' | i18n" ></div>
+				<div class="text-muted text-small " [innerText]="'_RccErrorAssetListMessage_' | i18n" ></div>
+			</div>				
+			<span *ngIf="!loading && noTableData" class="text-muted text-xlarge" [innerText]="'_RccNoDataAvailable_' | i18n"></span>
 		</div>
 		<div class="section">
 			<cui-pager *ngIf="!loading && tableAssetDataSample?.length > 0"
