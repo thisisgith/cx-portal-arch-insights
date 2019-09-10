@@ -388,7 +388,6 @@ $midnight-blue: #0d274d;
 		&__body {
 			padding-right: 30px;
 			padding-left: 20px;
-			height: 100px;
 			overflow: auto;
 			margin: 10px 0 20px 0;
 			font-size: 13px;
@@ -524,6 +523,15 @@ $midnight-blue: #0d274d;
 	display: -webkit-box;
 	overflow: hidden;
 	-webkit-line-clamp: 4;
+
+	/* autoprefixer: off */
+	-webkit-box-orient: vertical;
+}
+
+.desc-line-clamp {
+	display: -webkit-box;
+	overflow: hidden;
+	-webkit-line-clamp: 6;
 
 	/* autoprefixer: off */
 	-webkit-box-orient: vertical;
