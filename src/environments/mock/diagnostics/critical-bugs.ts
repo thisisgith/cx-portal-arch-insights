@@ -142,7 +142,7 @@ export const CriticalBugScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&rows=10&page=2`,
+		url: `${api}?customerId=${customerId}&sort=id:ASC&rows=10&page=2`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -159,7 +159,7 @@ export const CriticalBugScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&rows=10&page=3`,
+		url: `${api}?customerId=${customerId}&sort=id:ASC&rows=10&page=3`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -228,7 +228,7 @@ export const CriticalBugScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&rows=10&page=1`,
+		url: `${api}?customerId=${customerId}&sort=id:ASC&rows=10&page=1`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -262,7 +262,7 @@ export const CriticalBugScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&state=new&rows=10&page=1`,
+		url: `${api}?customerId=${customerId}&state=new&sort=id:ASC&rows=10&page=1`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -279,7 +279,7 @@ export const CriticalBugScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&state=resolved&rows=10&page=1`,
+		url: `${api}?customerId=${customerId}&state=resolved&sort=id:ASC&rows=10&page=1`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -297,6 +297,23 @@ export const CriticalBugScenarios = [
 			],
 		},
 		url: `${api}?customerId=${customerId}&serialNumber=35641136A1621&rows=10&page=1`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 200,
+					description: 'Critical Bugs - Count',
+					response: {
+						body: MockData(1, 1),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?customerId=${customerId}&rows=1&page=1`,
 		usecases: ['Use Case 1'],
 	},
 ];
