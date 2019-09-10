@@ -82,8 +82,13 @@
 			(onPageChanged)="onPagerUpdated($event)"></cui-pager>
 		</div>
 	</div>
+	<ng-template #prodFamily let-celldata="celldata">
+		<div class="prodFamily" title="{{ celldata?.ProductFamily }}">
+			{{celldata?.ProductFamily}} </div>
+
+	</ng-template>
 </div>
-<div *ngIf="!tableData?.length">
+<div *ngIf="!tableData?.length && !loading">
 	<div class="text-center dbl-margin-top dbl-margin-bottom">
 		<div>
 			<span class="text-muted text-xlarge"
@@ -94,6 +99,9 @@
 
 	</div>
 </div>
+<div *ngIf="loading && !tableData?.length " class="base-margin-bottom">
+		<cui-spinner></cui-spinner>
+	</div>
 
 <ng-template #innerTableRef let-item="item">
 	<cui-table 
