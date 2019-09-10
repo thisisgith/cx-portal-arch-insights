@@ -22,7 +22,7 @@ const publicCommunities: CommunityDetail[] = [
 	{
 		description: 'Wireless & Mobility',
 		url: `${environment.publicCommunityUrl}/wireless-and-mobility` +
-			'/bd-p/5956-discussions-getting-started-wireles',
+			'/bd-p/5956-discussions-getting-started-wireless',
 		usecase: 'campus network assurance'	,
 	},
 	{
@@ -40,7 +40,7 @@ const publicCommunities: CommunityDetail[] = [
 	{
 		description: 'Cisco Digital Network Architecture (DNA)',
 		url: `${environment.publicCommunityUrl}/${environment.DNACommunititesPath}` +
-			'/bd-p/discussions-dn',
+			'/bd-p/discussions-dna',
 		usecase: 'network device onboarding',
 	},
 	{
