@@ -215,6 +215,7 @@
 	<asset-details [asset]="selectedAsset"></asset-details>
 </details-panel>
 
+
 <details-panel
 	*ngIf="selectedAsset.active && !showAsset360"
 	[hidden]="!selectedAsset.active && showAsset360"
@@ -308,6 +309,7 @@
 				<a
 					data-auto-id="selectedName"
 					[innerHTML]="selectedFingerPrintdata.deviceName"
+					(click) = "conectFpDetailToAssetDetail()"
 				></a>
 			</span>
 		</div>

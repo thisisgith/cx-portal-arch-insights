@@ -13,6 +13,8 @@ export interface HighCrashRiskDevices {
    * global risk rank of the device
    */
 	globalRiskRank: string;
+
+	neName: string;
 		/**
    * Product family of the device
    */

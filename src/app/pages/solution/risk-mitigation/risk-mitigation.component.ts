@@ -151,6 +151,9 @@ export class RiskMitigationComponent {
 	public getHighCrashesDeviceData () {
 		this.highCrashRiskAssetsGridDetails.tableOffset = this.highCrashRiskParams.page;
 		this.onlyCrashes = true;
+		if (_.get(this.filters, [0, 'selected'])) {
+			this.filters[0].selected = false;
+		}
 		this.getFingerPrintDeviceDetails(this.highCrashRiskParams);
 		const params = _.pick(_.cloneDeep(this.highCrashRiskParams), ['customerId']);
 		this.status.isLoading = true;
@@ -180,6 +183,7 @@ export class RiskMitigationComponent {
 	public getAllCrashesData () {
 		const params = _.pick(_.cloneDeep(this.highCrashRiskParams), ['customerId']);
 		this.onlyCrashes = false;
+		this.filters[0].selected = true;
 
 		return this.riskMitigationService.getAllCrashesData(params)
 			.pipe(
@@ -501,6 +505,7 @@ export class RiskMitigationComponent {
 	public connectToFpDetails (asset: any) {
 		this.showFpDetails = true;
 		this.selectedFingerPrintdata = asset;
+		this.selectedFingerPrintdata.neName = asset.deviceName;
 	}
 
 	/**
@@ -546,6 +551,13 @@ export class RiskMitigationComponent {
 	public redirectToAsset360 () {
 		this.showAsset360 = true;
 		this.selectedAsset.deviceName = this.selectedAsset.neName;
+	}
+
+	/**
+	 * Redirects to asset360 from crash prevention
+	 */
+	public conectFpDetailToAssetDetail () {
+		this.showAsset360 = true;
 	}
 	/**
 	 * Used to select which tab we want to view the data for
@@ -745,7 +757,6 @@ export class RiskMitigationComponent {
 	public clearFilters () {
 		this.clearAllFilters = !this.clearAllFilters;
 		_.each(this.filters, (clearFilter: Filter) => {
-			clearFilter.selected = false;
 			_.each(clearFilter.seriesData, (currentFilter: { selected: boolean; }) => {
 				currentFilter.selected = false;
 			});
@@ -769,7 +780,6 @@ export class RiskMitigationComponent {
 	public resetFilters () {
 		this.searchQueryInCrashGrid = '';
 		_.each(this.filters, (filter: Filter) => {
-			filter.selected = false;
 			_.each(filter.seriesData, (currentFilter: { selected: boolean; }) => {
 				currentFilter.selected = false;
 			});

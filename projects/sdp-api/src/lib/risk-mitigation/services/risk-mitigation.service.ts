@@ -116,10 +116,14 @@ class RiskMitigationService extends __BaseService {
 		let __body: any = null;
 		let req:any;
 
+		 if(params.search){
+			__params = __params.set('searchQuery', params.search.toString());
+		 }
+
 		req = new HttpRequest<any>(
 			'GET',
 			this.rootUrl + `${RiskMitigationService.getSearchedDataPath}`+ params.customerId+'?timePeriod='
-			+ params.time+'&searchQuery='+params.search,
+			+ params.time,
 			__body,
 			{
 				headers: __headers,
