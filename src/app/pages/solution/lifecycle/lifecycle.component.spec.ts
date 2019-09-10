@@ -233,6 +233,16 @@ describe('LifecycleComponent', () => {
 			expect(component.atxview)
 				.toBe('grid');
 
+			component.selectView('grid', 'PG');
+			fixture.detectChanges();
+			expect(component.pgview)
+				.toBe('grid');
+
+			component.selectView('list', 'PG');
+			fixture.detectChanges();
+			expect(component.pgview)
+				.toBe('list');
+
 			done();
 		});
 	});
@@ -533,6 +543,38 @@ describe('LifecycleComponent', () => {
 
 			expect(component.atxMoreClicked)
 				.toBeFalsy();
+
+			spyOn(component, 'closeViewSessions');
+			fixture.detectChanges();
+
+			expect(component.closeViewSessions)
+				.toHaveBeenCalled();
+
+			// Test atxRegister()
+			component.atxRegister(recordingUrl);
+
+			spyOn(component, 'closeViewSessions');
+			spyOn(component, 'closeModal');
+			fixture.detectChanges();
+
+			expect(component.closeViewSessions)
+				.toHaveBeenCalled();
+
+			expect(component.closeModal)
+				.toHaveBeenCalled();
+
+			// Test getAtxRegisterButton()
+			let data: AtxSchema;
+			data = {
+				status: 'scheduled',
+			};
+			component.sessionSelected = { };
+			component.getRacetrackInfo('Use');
+
+			const button = component.getAtxRegisterButton(data);
+
+			expect(button)
+				.toEqual('disabled');
 
 		});
 

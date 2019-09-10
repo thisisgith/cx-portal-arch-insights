@@ -1229,7 +1229,33 @@ export class LifecycleComponent implements OnDestroy {
 	 */
 	 public atxWatchNow (recordingUrl: string) {
 		window.open(`${recordingUrl}`, '_blank');
-		this.atxMoreClicked = false;
+		this.closeViewSessions();
+	}
+
+	/**
+	 * Determines the class of Register button for ATX
+	 * @param data AtxSchema
+	 * @returns button string
+	 */
+	 public getAtxRegisterButton (data: AtxSchema) {
+		let button: string;
+		button = '';
+		if (!_.get(this.sessionSelected, 'registrationURL') || this.notCurrentPitstop ||
+			_.isEqual(_.get(data, 'status'), 'scheduled')) {
+			button = 'disabled';
+		}
+
+		return button;
+	}
+
+	/**
+	 * Opens the given recordingURL in a new tab
+	 * @param registerUrl string
+	 */
+	 public atxRegister (registerUrl: string) {
+		window.open(`${registerUrl}`, '_blank');
+		this.closeViewSessions();
+		this.closeModal();
 	}
 
 	/**
