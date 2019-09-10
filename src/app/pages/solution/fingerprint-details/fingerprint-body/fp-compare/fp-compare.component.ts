@@ -165,6 +165,7 @@ export class FpCompareComponent implements OnChanges {
 				});
 		} else {
 			this.deviceId1 = null;
+			this.listdeviceDataA = [];
 		}
 	}
 	/**
@@ -196,6 +197,7 @@ export class FpCompareComponent implements OnChanges {
 				});
 		} else {
 			this.deviceId2 = null;
+			this.listdeviceDataB = [];
 		}
 	}
 	/**
