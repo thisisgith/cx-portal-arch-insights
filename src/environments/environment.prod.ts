@@ -34,6 +34,7 @@ export const environment = {
 	// Curated Communities/Private Communitites/SuccessTrack URL
 	curatedCommunityUrl: 'https://community.cisco.com/t5',
 	DNACommunititesPath: 'cisco-digital-network',
+	emailToID: 'cx-portal-support@cisco.com',
 	feedbackToEmail: 'cx-portal-support@cisco.com',
 	ieSetup: {
 		asdAuthURL: 'https://cway.cisco.com/ws/oauth/v3/token/cisco/ae95x38c7zgu5fas59gseyfk',
