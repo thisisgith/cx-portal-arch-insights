@@ -44,7 +44,7 @@
 				<tr>
 					<th *ngFor="let column of softwareGroupsTable.columns"
 						[ngClass]="{ 'sortable': column.sortable, 'sorted': column.sorting }">
-						<span [innerText]="column.name"></span>
+						<span [innerText]="column.name" (click)="sortTable(column)"></span>
 						<span 
 							*ngIf="column.sortable && column.sorting" 
 							class="qtr-margin-left" 
