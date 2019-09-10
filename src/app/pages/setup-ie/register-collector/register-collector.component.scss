@@ -22,4 +22,63 @@
 		width: 50vw;
 		margin: auto;
 	}
+
+	.progress {
+		&-graphic {
+
+		}
+
+		&-block {
+			width: calc((100% / 5) - 20px);
+			background: #e0e0e0;
+			height: 24px;
+			display: inline-block;
+			margin-left: 10px;
+			margin-right: 10px;
+			margin-bottom: 10px;
+
+			&:first-child {
+				border-radius: 20px 0 0 20px;
+			}
+
+			&:last-child {
+				border-radius: 0 20px 20px 0;
+			}
+
+			&.pending {
+				animation-name: pulse;
+				animation-duration: 3s;
+				animation-iteration-count: infinite;
+			}
+
+			&.complete {
+				background: #828282;
+				animation: none;
+			}
+		}
+	}
+
+	.complete-graphic {
+		margin: auto;
+		height: 90px;
+		width: 90px;
+		border-radius: 200px;
+		border: 2px solid #6ebe4a;
+		position: relative;
+
+		.icon-check {
+			font-size: 56px;
+			position: absolute;
+			left: 15px;
+			top: 32px;
+		}
+	}
+}
+
+@keyframes pulse {
+	from { background: #828282; }
+
+	50% { background: #e0e0e0; }
+
+	to { background: #828282; }
 }

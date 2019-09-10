@@ -3,7 +3,7 @@
 		[innerText]="'_StepXColonY_' | i18n:'5':('_CiscoDNACollector_' | i18n)| uppercase"></h6>
 	<h1 [innerText]="'_ConnectCXCollectorToCXPortal_' | i18n" class="dbl-margin-bottom">
 	</h1>
-	<div class="form-container dbl-margin-bottom">
+	<div [hidden]="loading || registering" class="form-container dbl-margin-bottom">
 		<div class="secure-banner flex-center-vertical dbl-margin-bottom">
 			<span class="secure-banner__icon flex-center">
 				<span class="icon-lock"></span>
@@ -172,9 +172,6 @@
 				>
 					<div *ngIf="errorDetails" [innerText]="errorDetails"></div>
 				</alert>
-				<ng-container *ngIf="loading">
-					<cui-loader [label]="'_Loading_' | i18n"></cui-loader>
-				</ng-container>
 				<button
 					data-auto-id="submit-btn"
 					class="btn btn--wide btn--secondary qtr-margin-right"
@@ -188,5 +185,34 @@
 				</span>
 			</form>
 		</div>
+	</div>
+	<cui-loader [hidden]="!loading"></cui-loader>
+	<div [hidden]="!registering">
+		<div class="dbl-margin-bottom">
+			<h4 [innerText]="'_RegisteringCXCollector_' | i18n"></h4>
+		</div>
+		<div class="progress-graphic">
+			<div
+				class="progress-block"
+				*ngFor="let block of registerSteps; let i = index"
+				[ngClass]="{
+					'pending': i === currentStep + 1,
+					'complete': i <= currentStep 
+				}"
+			></div>
+		</div>
+		<div
+			*ngIf="registerSteps[currentStep]"
+			[innerText]="registerSteps[currentStep]"
+		></div>
+		<ng-container *ngIf="currentStep === 5">
+			<div class="dbl-margin-top complete-graphic">
+				<div class="icon-check text-success"></div>
+			</div>
+			<div
+				class="base-margin-top"
+				[innerText]="'_CXCollectorHasBeenRegistered_' | i18n"
+			></div>
+		</ng-container>
 	</div>
 </div>
