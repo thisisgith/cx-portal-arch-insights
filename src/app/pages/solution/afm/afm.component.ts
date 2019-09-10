@@ -15,9 +15,9 @@ import {
 } from '@sdp-api';
 import * as _ from 'lodash-es';
 import { FormControl, FormGroup } from '@angular/forms';
-import { Subject } from 'rxjs';
+import { Subject, of } from 'rxjs';
 import { UserResolve } from '@utilities';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, catchError } from 'rxjs/operators';
 import { ExportCsvService, AssetPanelLinkService } from '@services';
 
 /**
@@ -107,6 +107,7 @@ export class AfmComponent implements OnInit {
 		private assetPanelLinkService: AssetPanelLinkService,
 		private exportCsvService: ExportCsvService) {
 		this.searchParams = new Object();
+		this.assetLinkInfo = Object.create({ });
 		this.searchParams.pageNumber = 1;
 		this.searchParams.pageSize = this.tableLimit;
 		this.searchParams.firstTimeLoading = true;
@@ -418,9 +419,18 @@ export class AfmComponent implements OnInit {
 	 */
 	private getAssetLinkData (assetParams: InventoryService.GetAssetsParams) {
 		return this.assetPanelLinkService.getAssetLinkData(assetParams)
-		.subscribe(response => {
-			this.assetLinkInfo = response;
-		});
+			.pipe(takeUntil(this.destroy$))
+			.subscribe(response => {
+				this.assetLinkInfo.asset = response[0].data[0];
+				this.assetLinkInfo.element = response[1].data[0];
+			},
+			catchError(err => {
+				this.logger.error(
+					'AfmComponent : getAssetLinkData() ' +
+				`:: Error : (${err.status}) ${err.message}`);
+
+				return of({ });
+			}));
 	}
 
 	/**

@@ -5,7 +5,6 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { InventoryService } from '@sdp-api';
 import { of } from 'rxjs';
 import { AssetLinkScenarios } from '@mock';
-import { LogService } from '@cisco-ngx/cui-services';
 
 describe('AssetPanelLinkService', () => {
 
@@ -16,7 +15,7 @@ describe('AssetPanelLinkService', () => {
 	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [HttpClientTestingModule],
-			providers: [AssetPanelLinkService, InventoryService, LogService],
+			providers: [AssetPanelLinkService, InventoryService],
 		});
 	});
 
@@ -44,8 +43,10 @@ describe('AssetPanelLinkService', () => {
 
 		assetPanelLinkService.getAssetLinkData(assetParams);
 
-		expect(assetPanelLinkService.assetLinkInfo.asset.serialNumber)
-			.toEqual('FCH2139V1B0');
+		expect(inventoryService.getAssets)
+			.toHaveBeenCalled();
+		expect(inventoryService.getNetworkElements)
+			.toHaveBeenCalled();
 	});
 
 });
