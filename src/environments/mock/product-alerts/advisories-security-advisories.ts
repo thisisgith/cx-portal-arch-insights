@@ -158,7 +158,7 @@ export const AdvisorySecurityAdvisoryScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&rows=10&page=1`,
+		url: `${api}?customerId=${customerId}&sort=severity:ASC&rows=10&page=1`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -175,7 +175,7 @@ export const AdvisorySecurityAdvisoryScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&rows=10&page=2`,
+		url: `${api}?customerId=${customerId}&sort=severity:ASC&rows=10&page=2`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -192,7 +192,7 @@ export const AdvisorySecurityAdvisoryScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&rows=10&page=3`,
+		url: `${api}?customerId=${customerId}&sort=severity:ASC&rows=10&page=3`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -263,6 +263,41 @@ export const AdvisorySecurityAdvisoryScenarios = [
 		},
 		// tslint:disable-next-line
 		url: `${api}?customerId=${customerId}&sort=severity:ASC&rows=10&page=1&hwInstanceId=FOC1544Y16T,WS-C2960S-24PS-L,NA,FOC1544Y16T,WS-C2960S-24PS-L,NA,NA`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 250,
+					description: 'Advisory Security Advisories - Count',
+					response: {
+						body: MockData(1, 1),
+						status: 200,
+					},
+					selected: true,
+				},
+				{
+					delay: 0,
+					description: 'Advisory Security Advisories - Count Unreachable',
+					response: {
+						body: { data: [] },
+						status: 503,
+					},
+					selected: false,
+				},
+				{
+					delay: 250,
+					description: 'Advisory Security Advisories - Count Missing Keys',
+					response: {
+						body: MockData(1, 1).data,
+						status: 200,
+					},
+					selected: false,
+				},
+			],
+		},
+		url: `${api}?customerId=${customerId}&rows=1&page=1`,
 		usecases: ['Use Case 1'],
 	},
 ];
