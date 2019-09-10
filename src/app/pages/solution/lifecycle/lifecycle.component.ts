@@ -1171,9 +1171,10 @@ export class LifecycleComponent implements OnDestroy {
 	/**
 	 * Changes the atxMoreClicked flag and adds value to moreATXSelected
 	 * @param item ATXSchema
+	 * @param panel string
 	 */
-	 public atxMoreSelect (item: AtxSchema) {
-		 if (!this.atxMoreClicked) {
+	 public atxMoreSelect (item: AtxSchema, panel: string) {
+		 if (!this.atxMoreClicked && _.isEqual(panel, 'moreATXList')) {
 			this.atxScheduleCardOpened = false;
 			this.recommendedAtxScheduleCardOpened = false;
 			this.moreATXSelected = item;

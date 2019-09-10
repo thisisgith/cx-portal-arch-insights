@@ -523,7 +523,7 @@ describe('LifecycleComponent', () => {
 			component.atxMoreClicked = false;
 
 			// Test atxMoreSelect()
-			component.atxMoreSelect(item);
+			component.atxMoreSelect(item, 'moreATXList');
 
 			expect(component.atxMoreClicked)
 				.toBeTruthy();

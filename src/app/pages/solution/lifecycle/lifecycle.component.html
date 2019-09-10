@@ -486,7 +486,7 @@
 					<div id="{{ autoid }}-item" class="panel small-panel">
 						<div class="text-blue" [innerText]="item.title"
 							data-auto-id = "ATXMoreClick"
-							(click)="atxMoreSelect(item)"></div>
+							(click)="atxMoreSelect(item, autoid)"></div>
 						<ng-container *ngIf="autoid==='moreACCList'">
 							<ng-container *ngTemplateOutlet="accHover; context: {
 								title: item.title,
