@@ -339,7 +339,7 @@
 				[innerText]="'_ViewSessions_' | i18n">
 			</button>
 			<button class="btn btn--small btn--secondary text-uppercase cx-button"
-				attr.data-auto-id = "recommendedATXWatchButton"
+				data-auto-id = "recommendedATXWatchButton"
 				[ngClass]="componentData.atx?.recommended?.recordingURL ? null : 'disabled'"
 				(click)="atxWatchNow(componentData.atx.recommended.recordingURL)"
 				[innerText]="'_WatchNow_' | i18n">
