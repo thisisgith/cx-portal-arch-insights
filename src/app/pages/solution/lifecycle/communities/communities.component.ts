@@ -22,7 +22,7 @@ const publicCommunities: CommunityDetail[] = [
 	{
 		description: 'Wireless & Mobility',
 		url: `${environment.publicCommunityUrl}/wireless-and-mobility` +
-			'/bd-p/5956-discussions-getting-started-wireles',
+			'/bd-p/5956-discussions-getting-started-wireless',
 		usecase: 'campus network assurance'	,
 	},
 	{

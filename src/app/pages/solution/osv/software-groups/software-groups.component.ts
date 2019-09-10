@@ -129,6 +129,7 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 					_.invoke(this.alert, 'show', I18n.get('_OsvGenericError_'), 'danger');
 					this.logger.error('OSV Profile Groups : getsoftwareGroups() ' +
 						`:: Error : (${err.status}) ${err.message}`);
+					this.status.isLoading = false;
 
 					return of();
 				}),
