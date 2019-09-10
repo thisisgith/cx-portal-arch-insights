@@ -3,18 +3,15 @@ import MockService from '../support/mockService';
 
 const advisoryMock = new MockService('AdvisorySecurityAdvisoryScenarios');
 const advisoryScenario = advisoryMock.getScenario('GET', 'Advisory Security Advisories');
-const advisories = advisoryScenario.response.body.data;
+const advisories = advisoryScenario.response.body;
 const advisoryCountMock = new MockService('SecurityAdvisoryLastUpdatedCountScenarios');
 const fieldNoticeMock = new MockService('FieldNoticeAdvisoryScenarios');
 const fnScenario = fieldNoticeMock.getScenario('GET', 'Field Notice Advisories');
-const fieldNotices = fnScenario.response.body.data;
+const fieldNotices = fnScenario.response.body;
 const fnCountMock = new MockService('FieldNoticeCountScenarios');
 const bugMock = new MockService('CriticalBugScenarios');
 const bugScenario = bugMock.getScenario('GET', 'Critical Bugs');
-const bugs = bugScenario.response.body.data;
-const vulnMock = new MockService('VulnerabilityScenarios');
-const vulnScenario = vulnMock.getScenario('GET', 'Advisory Counts');
-const vulnResponse = vulnScenario.response.body;
+const bugs = bugScenario.response.body;
 const secBulletinMock = new MockService('SecurityAdvisoryBulletinScenarios');
 const secBulletinScenario = secBulletinMock.getScenario(
 	'GET', 'Security Advisory Details for ID 485'
@@ -49,7 +46,7 @@ describe('Advisories', () => { // PBC-306
 		cy.waitForAppLoading();
 	});
 
-	it('Does not make redundant API calls', () => {
+	it('Does not make redundant API calls', () => { // PBC-361
 		advisoryMock.disable('Advisory Security Advisories');
 		fieldNoticeMock.disable('Field Notice Advisories');
 		bugMock.disable('Critical Bugs');
@@ -58,7 +55,7 @@ describe('Advisories', () => { // PBC-306
 		const bugAPI = new RouteWatch('**/critical-bugs?*');
 
 		cy.reload();
-		psirtAPI.wait().then(() => {
+		cy.waitForAppLoading().then(() => {
 			cy.wrap(psirtAPI.called).should('eq', 1);
 			cy.wrap(fnAPI.called).should('eq', 1);
 			cy.wrap(bugAPI.called).should('eq', 1);
@@ -71,35 +68,26 @@ describe('Advisories', () => { // PBC-306
 
 	it('Displays a gauge that shows advisory counts', () => { // PBC-307
 		cy.getByAutoId('Facet-Advisories').within(() => {
-			cy.getByAutoId('Security AdvisoriesPoint').should(
-				'have.attr', 'data-auto-value', vulnResponse['security-advisories'].toString()
-			);
-			cy.getByAutoId('Field NoticesPoint').should(
-				'have.attr', 'data-auto-value', vulnResponse['field-notices'].toString()
-			);
-			cy.getByAutoId('BugsPoint').should(
-				'have.attr', 'data-auto-value', vulnResponse.bugs.toString()
-			);
+			cy.getByAutoId('Security AdvisoriesPoint')
+				.should('have.text', advisories.Pagination.total.toString());
+			cy.getByAutoId('Field NoticesPoint')
+				.should('have.text', fieldNotices.Pagination.total.toString());
+			cy.getByAutoId('BugsPoint').should('have.text', bugs.Pagination.total.toString());
 		});
 	});
 
 	it('Gracefully handles invalid API responses', () => {
-		vulnMock.enable('Advisory Counts - Unreachable');
+		advisoryMock.enable('Advisory Security Advisories - Count Unreachable');
 		cy.loadApp('/solution/advisories');
 		cy.waitForAppLoading();
-		cy.getByAutoId('Facet-Advisories').within(() => {
-			cy.get('bar-chart').should('not.be.visible');
-		});
+		cy.getByAutoId('Security AdvisoriesPoint').should('have.text', '0');
 
-		vulnMock.enable('Advisory Counts - Missing keys');
+		advisoryMock.enable('Advisory Security Advisories - Count Missing Keys');
 		cy.loadApp('/solution/advisories');
 		cy.waitForAppLoading();
-		cy.getByAutoId('Facet-Advisories').within(() => {
-			cy.getByAutoId('BugsPoint').should('be.visible');
-			cy.getByAutoId('Field NoticesPoint').should('not.exist');
-		});
+		cy.getByAutoId('Security AdvisoriesPoint').should('have.text', '0');
 
-		vulnMock.enable('Advisory Counts');
+		advisoryMock.enable('Advisory Security Advisories - Count');
 	});
 
 	context('Security Advisories', () => { // PBC-308 / PBC-314
@@ -107,7 +95,7 @@ describe('Advisories', () => { // PBC-306
 
 		it('Advisories are properly displayed in list format', () => {
 			cy.get('app-advisories tbody tr').each((row, index) => {
-				const advisory = advisories[index];
+				const advisory = advisories.data[index];
 				cy.wrap(row).within(() => {
 					cy.getByAutoId('ImpactIcon').should('have.class', impactMap(advisory.severity));
 					const impact = advisory.severity ? advisory.severity : 'N/A'; // PBC-362
@@ -181,35 +169,30 @@ describe('Advisories', () => { // PBC-306
 				cy.wait('@advisories').its('url').should('contain', 'severity=high');
 				cy.getByAutoId('< 30 DaysPoint').click({ force: true });
 				cy.wait('@advisories').its('url')
-					.should('match', /lastUpdatedDateRange=[0-9]+, [0-9]+/);
+					.should('match', /lastUpdatedDateRange=[0-9]+,[0-9]+/);
 
 				cy.getByAutoId('FilterBarClearAllFilters').click(); // cleanup
 			});
 
-			it('Clears applied filters one at a time', () => { // PBC-433
+			it('Clears applied filters one at a time', () => { // PBC-433, PBC-608
 				cy.getByAutoId('MediumPoint').click({ force: true });
-				// TODO: Disabled for PBC-608
-				// cy.getByAutoId('< 30 DaysPoint').click({ force: true });
+				cy.getByAutoId('< 30 DaysPoint').click({ force: true });
 				cy.get('[data-auto-id="FilterTag-medium"] > span.icon-close').click();
 				cy.getByAutoId('FilterTag-medium').should('not.exist');
-				// TODO: Disabled for PBC-608
-				// cy.getByAutoId('FilterTag-gt-0-lt-30-days').should('be.visible');
-				// cy.get('[data-auto-id="FilterTag-gt-0-lt-30-days"] > span.icon-close').click();
-				// cy.getByAutoId('FilterTag-gt-0-lt-30-days').should('not.exist');
+				cy.getByAutoId('FilterTag-gt-0-lt-30-days').should('be.visible');
+				cy.get('[data-auto-id="FilterTag-gt-0-lt-30-days"] > span.icon-close').click();
+				cy.getByAutoId('FilterTag-gt-0-lt-30-days').should('not.exist');
 			});
 
 			it('Clears all applied filters with a "Clear All" link', () => {
 				cy.getByAutoId('MediumPoint').click({ force: true });
-				// TODO: Disabled for PBC-608
-				// cy.getByAutoId('< 30 DaysPoint').click({ force: true });
+				cy.getByAutoId('< 30 DaysPoint').click({ force: true });
 				cy.getByAutoId('FilterTag-medium').should('be.visible');
-				// TODO: Disabled for PBC-608
-				// cy.getByAutoId('FilterTag-gt-0-lt-30-days').should('be.visible');
+				cy.getByAutoId('FilterTag-gt-0-lt-30-days').should('be.visible');
 				// PBC-366
 				cy.getByAutoId('FilterBarClearAllFilters').click().should('not.exist');
 				cy.getByAutoId('FilterTag-medium').should('not.exist');
-				// TODO: Disabled for PBC-608
-				// cy.getByAutoId('FilterTag-gt-0-lt-30-days').should('not.exist');
+				cy.getByAutoId('FilterTag-gt-0-lt-30-days').should('not.exist');
 			});
 
 			it('Visual filters can be collapsed/expanded', () => {
@@ -228,14 +211,14 @@ describe('Advisories', () => { // PBC-306
 				cy.getByAutoId('Facet-Lifecycle').click(); // refresh table
 				cy.getByAutoId('Facet-Advisories').click();
 
-				cy.getByAutoId('SelectVisualFilter-lastUpdate').should('not.be.visible');
-				cy.getByAutoId('SelectVisualFilter-severity').should('be.visible');
+				cy.getByAutoId('VisualFilter-lastUpdate').should('not.be.visible');
+				cy.getByAutoId('VisualFilter-severity').should('be.visible');
 
 				advisoryCountMock.enable('Mock Last Updated Count');
 				cy.getByAutoId('Facet-Lifecycle').click();
 				cy.getByAutoId('Facet-Advisories').click();
 				cy.waitForAppLoading();
-				cy.getByAutoId('SelectVisualFilter-lastUpdate').should('be.visible');
+				cy.getByAutoId('VisualFilter-lastUpdate').should('be.visible');
 			});
 		});
 
@@ -250,7 +233,7 @@ describe('Advisories', () => { // PBC-306
 					.format(dateFormat);
 				cy.getByAutoId('SecurityAdvisoryPublished')
 					.should('have.text', `Published${publishedDate}`);
-				const updatedDate = Cypress.moment(advisories[0].lastUpdated)
+				const updatedDate = Cypress.moment(advisories.data[0].lastUpdated)
 					.format(dateFormat);
 				cy.getByAutoId('SecurityAdvisoryLastUpdated')
 					.should('have.text', `Last Updated${updatedDate}`);
@@ -260,7 +243,7 @@ describe('Advisories', () => { // PBC-306
 					.should('have.text', secBulletin.bulletinTitle);
 				cy.getByAutoId('SecurityDetailsSummaryText')
 					.should('have.text', secBulletin.summaryText);
-				cy.get('app-advisories tbody tr').eq(0).click();
+				cy.getByAutoId('CloseDetails').click();
 			});
 
 			it('Gracefully handles invalid/empty API responses', () => {
@@ -274,12 +257,12 @@ describe('Advisories', () => { // PBC-306
 				secBulletinMock.enable('Security Advisory Details for ID 485 - Unreachable');
 				cy.get('app-advisories tbody tr').eq(0).click();
 				validate360();
-				cy.get('app-advisories tbody tr').eq(0).click();
+				cy.getByAutoId('CloseDetails').click();
 
 				secBulletinMock.enable('Security Advisory Details for ID 485 - Missing keys');
 				cy.get('app-advisories tbody tr').eq(0).click();
 				validate360();
-				cy.get('app-advisories tbody tr').eq(0).click();
+				cy.getByAutoId('CloseDetails').click();
 
 				secBulletinMock.enable('Security Advisory Details for ID 485');
 			});
@@ -291,7 +274,7 @@ describe('Advisories', () => { // PBC-306
 
 		it('Field Notices are properly displayed in list format', () => {
 			cy.get('app-advisories tbody tr').each((row, index) => {
-				const fieldNotice = fieldNotices[index];
+				const fieldNotice = fieldNotices.data[index];
 				cy.wrap(row).within(() => {
 					cy.getByAutoId('ID-Cell')
 						.should('have.text', fieldNotice.id.toString());
@@ -363,7 +346,7 @@ describe('Advisories', () => { // PBC-306
 				cy.route('**//product-alerts/v1/advisories-field-notices?*').as('advisories');
 				cy.getByAutoId('< 30 DaysPoint').click({ force: true });
 				cy.wait('@advisories').its('url')
-					.should('match', /lastUpdatedDateRange=[0-9]+, [0-9]+/);
+					.should('match', /lastUpdatedDateRange=[0-9]+,[0-9]+/);
 
 				cy.getByAutoId('FilterBarClearAllFilters').click(); // cleanup
 			});
@@ -388,15 +371,14 @@ describe('Advisories', () => { // PBC-306
 				cy.getByAutoId('Facet-Advisories').click();
 				cy.getByAutoId('FIELD NOTICESTab').click();
 
-				cy.getByAutoId('SelectVisualFilter-lastUpdate').should('not.be.visible');
+				cy.getByAutoId('VisualFilter-lastUpdate').should('not.be.visible');
 				cy.getByAutoId('TotalVisualFilter').should('be.visible');
 
 				fnCountMock.enable('Field Notice Update Counts');
 				cy.getByAutoId('Facet-Lifecycle').click();
 				cy.getByAutoId('Facet-Advisories').click();
 				cy.getByAutoId('FIELD NOTICESTab').click();
-				cy.waitForAppLoading();
-				cy.getByAutoId('SelectVisualFilter-lastUpdate').should('be.visible');
+				cy.getByAutoId('VisualFilter-lastUpdate').should('be.visible');
 			});
 		});
 	});
@@ -406,7 +388,7 @@ describe('Advisories', () => { // PBC-306
 
 		it('Bugs are properly displayed in list format', () => {
 			cy.get('app-advisories tbody tr').each((row, index) => {
-				const bug = bugs[index];
+				const bug = bugs.data[index];
 				cy.wrap(row).within(() => {
 					cy.getByAutoId('ID-Cell').should('have.text', bug.id);
 					cy.getByAutoId('Title-Cell').should('have.text', bug.title);
@@ -471,7 +453,7 @@ describe('Advisories', () => { // PBC-306
 
 		context('Details / 360', () => { // PBC-313
 			it('Properly displays advisory details', () => {
-				const bug = bugs[0];
+				const bug = bugs.data[0];
 				cy.get('app-advisories tbody [data-auto-id="ID-Cell"]').eq(0).click();
 				cy.getByAutoId('DetailsPanelTitle').should('have.text', `Bug ${bug.id}`);
 				cy.getByAutoId('BugDetailsSeverityIcon')
@@ -527,14 +509,14 @@ describe('Advisories', () => { // PBC-306
 				cy.getByAutoId('Facet-Advisories').click();
 				cy.getByAutoId('CRITICAL BUGSTab').click();
 
-				cy.getByAutoId('SelectVisualFilter-state').should('not.be.visible');
-				cy.getByAutoId('SelectVisualFilter-total').should('be.visible');
+				cy.getByAutoId('VisualFilter-state').should('not.be.visible');
+				cy.getByAutoId('VisualFilter-total').should('be.visible');
 
 				bugMock.enable('Critical Bug State Counts');
 				cy.getByAutoId('Facet-Lifecycle').click();
 				cy.getByAutoId('Facet-Advisories').click();
 				cy.getByAutoId('CRITICAL BUGSTab').click();
-				cy.getByAutoId('SelectVisualFilter-state').should('be.visible');
+				cy.getByAutoId('VisualFilter-state').should('be.visible');
 			});
 		});
 	});
