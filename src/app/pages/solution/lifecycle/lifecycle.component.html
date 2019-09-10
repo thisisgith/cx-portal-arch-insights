@@ -812,7 +812,7 @@
 </ng-template>
 
 <ng-template #cardViewTemplate let-type="type" let-view="view">
-	<div class="base-padding-right grid base-padding-top card-view"
+	<div class="grid base-padding card-view"
 		[ngClass]="(type === 'SB' || type === 'PG') ? 'acc__grid' : null"
 		*ngIf="(!view || view === 'grid')"
 		#scrollModal (scroll)="getScrollCoordinates(scrollModal)">
