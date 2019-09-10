@@ -14,26 +14,26 @@
 	<form [formGroup]="feedbackForm">
 		<span [innerText]="'_HowWouldYouRateYourExp_' | i18n"></span>
 		<div class="row flex-center-horizontal base-margin-top">
-			<button
+			<a
 				id="thumbUpBtn"
 				class="btn btn--icon btn--large btn--secondary"
 				[ngClass]="{
-					'active': thumbsUpSelected
+					'active': thumbSelected === 'up'
 				}"
 				data-auto-id="thumbUpBtn"
-				(click)="thumbClicked($event)">
+				(click)="thumbClicked('up')">
 				<span class="icon-like"></span>
-			</button>
-			<button
+			</a>
+			<a
 				id="thumbDownBtn"
 				class="btn btn--icon btn--large btn--secondary base-margin-left" 
 				[ngClass]="{
-					'active': thumbsDownSelected
+					'active': thumbSelected === 'down'
 				}"
 				data-auto-id="thumbDownBtn"
-				(click)="thumbClicked($event)">
+				(click)="thumbClicked('down')">
 				<span class="icon-like rotate-180"></span>
-			</button>
+			</a>
 		</div>
 
 		<div class="form-group dbl-margin-top">
@@ -43,9 +43,17 @@
 					class="textarea qtr-margin-top"
 					formControlName="comment"
 					rows="10"
-					[placeholder]="'Comments'"></textarea>
+					[placeholder]="'_Comments_' | i18n">
+				</textarea>
+				
 				<label for="input-textarea-multiple" [innerText]="'_WhatCanWeDoToImprove_' | i18n"></label>
 			</div>
+
+			<div char-count 
+				[value]="feedbackForm?.value?.comment?.length"
+				[max]="feedbackMaxLength">
+			</div>
+
 			<label class="checkbox half-margin-top">
 				<input type="checkbox" formControlName="allowedContact">
 				<span class="checkbox__input"></span>

@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 
 import { AssetsComponent } from './assets.component';
@@ -15,7 +16,7 @@ describe('AssetsComponent', () => {
 	let fixture: ComponentFixture<AssetsComponent>;
 
 	let osvService: OSVService;
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				AssetsModule,
@@ -23,8 +24,10 @@ describe('AssetsComponent', () => {
 				RouterTestingModule,
 				MicroMockModule,
 			],
-		})
-			.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 		osvService = TestBed.get(OSVService);
 	}));
 
@@ -148,7 +151,6 @@ describe('AssetsComponent', () => {
 		component.ngOnChanges({
 			filters: {
 				currentValue: {
-					deploymentStatus: ['none', 'upgrade'],
 					assetType: ['assets_profile'],
 				},
 				firstChange: false,
@@ -159,11 +161,10 @@ describe('AssetsComponent', () => {
 		tick();
 		fixture.detectChanges();
 		expect(component.assetsParams.filter)
-			.toBe('deployment:none,upgrade;independent:no');
+			.toBe('independent:no');
 		component.ngOnChanges({
 			filters: {
 				currentValue: {
-					deploymentStatus: ['none', 'upgrade'],
 					assetType: ['assets_profile', 'assets_without_profile'],
 				},
 				firstChange: false,
@@ -174,7 +175,7 @@ describe('AssetsComponent', () => {
 		tick();
 		fixture.detectChanges();
 		expect(component.assetsParams.filter)
-			.toBe('deployment:none,upgrade');
+			.toBe('');
 	}));
 
 	it('should not set filter if first change', fakeAsync(() => {

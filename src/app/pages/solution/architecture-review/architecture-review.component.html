@@ -1,77 +1,27 @@
-<div class="panel">
-	<div class="row">
-		<div
-			class="col-md-2 text-center"
-			(click)="clearFilters()"
-			data-auto-id="ClearFilters"
-		>
+<div class="panel panel--bordered base-padding-left base-padding-top no-padding-bottom">
+	<visual-filter-bar [filters]="filters">
+		<ng-template #startingCard>
 			<div
-				*ngFor="let label of visualLabels; let i = index"
-				[ngClass]="{ visualSelected: label?.active === true }"
-				(click)="selectVisualLabel(label)"
-				data-auto-id="SelectVisualLabelClick"
+				class="text-center"
+				(click)="clearFilters()"
+				data-auto-id="ClearFilters"
 			>
-				<h1 class="half-margin-top half-margin-bottom" [innerText]="label?.count">
-				</h1>
-				<div class="half-margin-bottom half-margin-top" [innerText]="label?.label">
-				</div>
-			</div>
-		</div>
-		<div class="col-md-10" *ngIf="visualLabels[1]?.active">
-			<div class="row">
-				<div class="col-md-3">
-					<div class="flex flex-fill flex-fluid">
-						<ng-container
-							*ngFor="let filter of filters; index as i"
-						>
-							<div
-								attr.id="ArchitectureSelectVisualFilter-{{
-									filter.key
-								}}"
-								attr.data-auto-id="AssetsSelectVisualFilter-{{
-									filter.key
-								}}"
-								[ngClass]="{
-									filter__selected: filter?.selected,
-									'filter__not-selected': !filter?.selected
-								}"
-								class="panel flex-center flex-fill filter"
-							>
-								<div class="base-margin-bottom">
-									<div *ngIf="filter?.template">
-										<ng-container
-											*ngTemplateOutlet="
-												filter?.template;
-												context: { filter: filter }
-											"
-										></ng-container>
-									</div>
-								</div>
-								<div
-									class="filter__title text-muted text-large"
-									[innerText]="filter?.title"
-								></div>
-							</div>
-							<div
-								*ngIf="filter.loading"
-								class="base-margin-bottom"
-							></div>
-						</ng-container>
+				<div
+					*ngFor="let label of visualLabels; let i = index"
+					[ngClass]="{ visualSelected: label?.active === true }"
+					(click)="selectVisualLabel(label)"
+					data-auto-id="SelectVisualLabelClick"
+				>
+					<h1 class="half-margin-top half-margin-bottom" [innerText]="label?.count">
+					</h1>
+					<div class="half-margin-bottom half-margin-top" [innerText]="label?.label">
 					</div>
 				</div>
 			</div>
-			<div class="text-center col-md-10" *ngIf="visualLabels[0]?.active">
-				<ng-container>
-					<p
-						[innerText]="
-							'_ArchitectureNoVisualFiltersToShow_' | i18n
-						"
-						class="text-large"
-					></p>
-				</ng-container>
-			</div>
-		</div>
-	</div>
+		</ng-template>
+	</visual-filter-bar>
+</div>
+<div class="panel panel--bordered base-margin-top">
 	<div class="divider half-margin-top"></div>
 	<div class="row">
 		<div class="col-md-12">
@@ -89,14 +39,16 @@
 	</div>
 
 	<ng-template #exceptionsFilter let-filter="filter">
-		<pie-chart
-			*ngIf="!status?.isLoading"
-			[seriesData]="filter?.seriesData"
-			(subfilter)="onSubfilterSelect($event.filter, filter)"
-		>
-		</pie-chart>
-		<div class="base-margin-top" *ngIf="status?.isLoading">
-			<cui-spinner></cui-spinner>
+		<div *ngIf="visualLabels[1]?.active">
+			<pie-chart
+				*ngIf="!status?.isLoading"
+				[seriesData]="filter?.seriesData"
+				(subfilter)="onSubfilterSelect($event.filter, filter)"
+			>
+			</pie-chart>
+			<div class="base-margin-top" *ngIf="status?.isLoading">
+				<cui-spinner></cui-spinner>
+			</div>
 		</div>
 	</ng-template>
 

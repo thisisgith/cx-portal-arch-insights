@@ -33,6 +33,9 @@ export class SyslogsDeviceDetailsComponent implements OnChanges, OnDestroy {
 	public excludeMsgFilter = '';
 	public selectedSeverity = '';
 	public selectedTimeRange = '';
+	public selectedCatalog = '';
+	public tableStartIndex = 0;
+	public tableEndIndex = 10;
 	public deviceDetailsParams: SyslogsService.GetSyslogsParams = { };
 	public tableConfig = {
 		tableLimit: 10,
@@ -95,12 +98,21 @@ export class SyslogsDeviceDetailsComponent implements OnChanges, OnDestroy {
 		name: I18n.get('_SyslogDays30_'),
 		value: 30,
 	}];
+	public catalogList = [
+		{
+			name: I18n.get('_SyslogCiscoCatalog_'),
+			value: 'Cisco',
+		},
+		{
+			name: I18n.get('_SyslogOthers_'),
+			value: 'Others',
+		},
+	];
 	constructor (
 		private logger: LogService,
 		public syslogsService: SyslogsService,
 		private userResolve: UserResolve,
 	) {
-		this.logger.debug('SyslogsDeviceDetailsComponent Created!');
 		this.userResolve.getCustomerId()
 			.pipe(
 			takeUntil(this.destroy$),
@@ -121,6 +133,7 @@ export class SyslogsDeviceDetailsComponent implements OnChanges, OnDestroy {
 		if (currentFilter) {
 			this.selectedTimeRange = currentFilter.days;
 			this.selectedSeverity = currentFilter.severity;
+			this.selectedCatalog = currentFilter.catalog;
 			this.deviceDetailsParams = {
 				catalog: currentFilter.catalog,
 				customerId: this.customerId,
@@ -186,7 +199,6 @@ export class SyslogsDeviceDetailsComponent implements OnChanges, OnDestroy {
 					sortable: true,
 				},
 				{
-					key: '',
 					name: I18n.get('_SyslogRecommendations_'),
 					sortable: true,
 					template: this.recommendation,
@@ -220,6 +232,10 @@ export class SyslogsDeviceDetailsComponent implements OnChanges, OnDestroy {
 		.subscribe((response: SyslogDevicePanelOuter[]) => {
 			this.tableData = MarshalTableData.marshalTableDataForInerGrid(response);
 			this.tableConfig.totalItems = response.length;
+			this.tableEndIndex = 10;
+			if (this.tableEndIndex > this.tableConfig.totalItems) {
+				this.tableEndIndex = this.tableConfig.totalItems;
+			}
 		});
 	}
 	/**
@@ -239,6 +255,7 @@ export class SyslogsDeviceDetailsComponent implements OnChanges, OnDestroy {
 	public onSelection () {
 		this.deviceDetailsParams.severity = +this.selectedSeverity;
 		this.deviceDetailsParams.days = +this.selectedTimeRange;
+		this.deviceDetailsParams.catalog = this.selectedCatalog;
 		this.SyslogDevicePanelData();
 	}
 
@@ -249,8 +266,12 @@ export class SyslogsDeviceDetailsComponent implements OnChanges, OnDestroy {
 	 public onPagerUpdated (pageInfo: any) {
 		this.tableConfig.tableOffset = pageInfo.page;
 		this.paginationConfig.pageNum = pageInfo.page + 1;
-	}
-
+		this.tableStartIndex = (pageInfo.page * pageInfo.limit) ;
+		this.tableEndIndex = (pageInfo.page * pageInfo.limit) + 10 ;
+		if (this.tableEndIndex > this.tableConfig.totalItems) {
+			this.tableEndIndex = this.tableConfig.totalItems ;
+		}
+	 }
 	/**
 	 * on destroy
 	 */

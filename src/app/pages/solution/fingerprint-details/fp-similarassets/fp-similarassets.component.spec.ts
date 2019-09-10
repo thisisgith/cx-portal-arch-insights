@@ -1,12 +1,12 @@
 
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { FpSimilarAssetsComponent } from './fp-similarassets.component';
 import { FpSimilarAssetsModule } from './fp-similarassets.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FpIntelligenceService } from '@sdp-api';
 import { environment } from '@environment';
 import { ActivatedRoute } from '@angular/router';
-import { user } from '@mock';
+import { user, ComparisonViewScenarios } from '@mock';
 import { of } from 'rxjs';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SimpleChanges, SimpleChange } from '@angular/core';
@@ -134,4 +134,48 @@ describe('FpSimilarassetsComponent', () => {
 		expect(component.selectedDevice2 === fakeTableRoeData)
 			.toBeFalsy();
 	});
+
+	it('should not load data if form is invalid', fakeAsync(() => {
+		component.requestForm.setValue({
+			deviceCount : 50,
+			minMatch: 0 ,
+			similarityCriteria: 'fingerprint'});
+		spyOn(fpIntelligenceService, 'getSimilarDevices')
+			.and
+			.returnValue(of(ComparisonViewScenarios[4].scenarios.GET[0].response.body));
+		component.ngOnInit();
+		tick(1000);
+		fixture.detectChanges();
+		expect(fpIntelligenceService.getSimilarDevices).not
+			.toHaveBeenCalled();
+	}));
+
+	it('should not load data if response contains empty values', done => {
+		spyOn(fpIntelligenceService, 'getSimilarDevices')
+		.and
+		.returnValue(of(ComparisonViewScenarios[8].scenarios.GET[0].response.body));
+		component.ngOnInit();
+		fixture.whenStable()
+			.then(() => {
+				fixture.detectChanges();
+				expect(component.noData)
+					.toBeTruthy();
+				done();
+			});
+	});
+
+	it('Should return the response', done => {
+		spyOn(fpIntelligenceService, 'getSimilarDevices')
+			.and
+			.returnValue(of(ComparisonViewScenarios[7].scenarios.GET[0].response.body));
+		component.ngOnInit();
+		fixture.whenStable()
+			.then(() => {
+				fixture.detectChanges();
+				expect(component.similarDevicesData)
+					.toBeDefined();
+				done();
+			});
+	});
+
 });

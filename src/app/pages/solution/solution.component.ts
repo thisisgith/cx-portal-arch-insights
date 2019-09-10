@@ -21,12 +21,15 @@ import { Subscription, forkJoin, of, Subject } from 'rxjs';
 import {
 	Asset,
 	ContractsService,
-	RacetrackService,
 	RacetrackSolution,
 	RacetrackTechnology,
 	CoverageCountsResponse,
 	ProductAlertsService,
-	VulnerabilityResponse,
+	InsightsCrashesService,
+	FieldNoticeAdvisoryResponse,
+	CriticalBugsResponse,
+	SecurityAdvisoriesResponse,
+	DiagnosticsService,
 } from '@sdp-api';
 import { CaseService } from '@cui-x/services';
 import { LogService } from '@cisco-ngx/cui-services';
@@ -86,6 +89,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	private quickTourFirstTime: boolean;
 	private destroy$ = new Subject();
 
+	@ViewChild('kmWrapper', { static: true }) private kmWrapperRef: ElementRef;
 	@ViewChild('advisoriesFacet', { static: true }) public advisoriesTemplate: TemplateRef<{ }>;
 	@ViewChild('assetsFacet', { static: true }) public assetsTemplate: TemplateRef<{ }>;
 	@ViewChild('lifecycleFacet', { static: true }) public lifecycleTemplate: TemplateRef<{ }>;
@@ -97,8 +101,8 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		private contractsService: ContractsService,
 		private cuiModalService: CuiModalService,
 		private productAlertsService: ProductAlertsService,
+		private diagnosticsService: DiagnosticsService,
 		private router: Router,
-		private racetrackService: RacetrackService,
 		private logger: LogService,
 		private caseService: CaseService,
 		private route: ActivatedRoute,
@@ -106,6 +110,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		private cdr: ChangeDetectorRef,
 		private racetrackInfoService: RacetrackInfoService,
 		private detailsPanelStackService: DetailsPanelStackService,
+		private insightsCrashesService: InsightsCrashesService,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
@@ -146,6 +151,35 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	}
 
 	/**
+	 * Shifts the Key metrics carousel items.
+	 * Positive values shift right, negative values shift left.
+	 * Shift is multiplied with the width of a single item.
+	 * @param {number} shift The direction and magnitude of shift.
+	 */
+	public shiftCarousel (shift) {
+		const wrapper = this.kmWrapperRef.nativeElement;
+		const itemWidth = wrapper.querySelector('.km__items__item').offsetWidth;
+		wrapper.scrollTo(wrapper.scrollLeft + (shift * itemWidth), 0);
+	}
+
+	/**
+	 * Checks if clicked key metric is out of view and brings it into view if needed
+	 * @param {Element} target the target key metric element
+	 */
+	public repositionCarousel (target) {
+		const wrapper = this.kmWrapperRef.nativeElement;
+		const wrapperBounds = wrapper.getBoundingClientRect();
+		const targetBounds = target.getBoundingClientRect();
+		const itemWidth = wrapper.querySelector('.km__items__item').offsetWidth;
+
+		if (targetBounds.left < wrapperBounds.left) {
+			wrapper.scrollTo(wrapper.scrollLeft - itemWidth, 0);
+		} else if (targetBounds.right > wrapperBounds.right) {
+			wrapper.scrollTo(wrapper.scrollLeft + itemWidth, 0);
+		}
+	}
+
+	/**
 	 * Change the selected fact
 	 * @param facet the facet we've clicked on
 	 * @param navigate whether to adjust the route params
@@ -157,6 +191,9 @@ export class SolutionComponent implements OnInit, OnDestroy {
 					f.selected = false;
 				}
 			});
+
+			const element = document.getElementById(facet.key);
+			this.repositionCarousel(element);
 
 			facet.selected = true;
 			this.selectedFacet = facet;
@@ -223,10 +260,6 @@ export class SolutionComponent implements OnInit, OnDestroy {
 				title: I18n.get('_Insights_'),
 			},
 		];
-
-		if (this.activeRoute) {
-			this.selectFacet(this.getFacetFromRoute(this.activeRoute));
-		}
 	}
 
 	/**
@@ -321,11 +354,8 @@ export class SolutionComponent implements OnInit, OnDestroy {
 				const covered = _.get(counts, 'covered', 0);
 				const total = _.reduce(counts, (memo, value) => (memo + value), 0);
 
-				const percent = ((covered / total) * 100);
-				const gaugePercent = Math.floor(percent) || 0;
 				assetsFacet.data = {
-					gaugePercent,
-					gaugeLabel: (percent > 0 && percent < 1) ? '<1%' : `${gaugePercent}%`,
+					gaugePercent: ((covered / total) * 100),
 				};
 
 				assetsFacet.loading = false;
@@ -349,49 +379,121 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		const advisoryFacet = _.find(this.facets, { key: 'advisories' });
 
 		advisoryFacet.loading = true;
+		advisoryFacet.seriesData = [];
 
-		return this.productAlertsService.getVulnerabilityCounts({ customerId: this.customerId })
+		let advisoryTotal = 0;
+		let bugsTotal = 0;
+		let fieldTotal = 0;
+
+		return forkJoin([
+			this.productAlertsService.getAdvisoriesFieldNotices({
+				customerId: this.customerId, page: 1, rows: 1,
+			})
+			.pipe(
+				map((response: FieldNoticeAdvisoryResponse) => {
+					fieldTotal = _.get(response, ['Pagination', 'total'], 0);
+				}),
+				catchError(err => {
+					this.logger.error('solution.component : fetchAdvisoryCounts():field ' +
+					`:: Error : (${err.status}) ${err.message}`);
+
+					return of({ });
+				}),
+			),
+			this.productAlertsService.getAdvisoriesSecurityAdvisories({
+				customerId: this.customerId, page: 1, rows: 1,
+			})
+			.pipe(
+				map((response: SecurityAdvisoriesResponse) => {
+					advisoryTotal = _.get(response, ['Pagination', 'total'], 0);
+				}),
+				catchError(err => {
+					this.logger.error('solution.component : fetchAdvisoryCounts():security ' +
+					`:: Error : (${err.status}) ${err.message}`);
+
+					return of({ });
+				}),
+			),
+			this.diagnosticsService.getCriticalBugs({
+				customerId: this.customerId, page: 1, rows: 1,
+			})
+			.pipe(
+				map((response: CriticalBugsResponse) => {
+					bugsTotal = _.get(response, ['Pagination', 'total'], 0);
+				}),
+				catchError(err => {
+					this.logger.error('solution.component : fetchAdvisoryCounts():bugs ' +
+					`:: Error : (${err.status}) ${err.message}`);
+
+					return of({ });
+				}),
+			),
+		])
 		.pipe(
-			map((counts: VulnerabilityResponse) => {
-				const seriesData = [];
+			map(() => {
+				const total = advisoryTotal + fieldTotal + bugsTotal;
 
-				const advisories = _.get(counts, 'security-advisories', 0);
-				const fieldNotices = _.get(counts, 'field-notices', 0);
-				const bugs = _.get(counts, 'bugs', 0);
+				advisoryFacet.seriesData = [
+					{
+						label: I18n.get('_SecurityAdvisories_'),
+						percentage: (advisoryTotal / total) * 100,
+						value: advisoryTotal,
+					},
+					{
+						label: I18n.get('_FieldNotices_'),
+						percentage: (fieldTotal / total) * 100,
+						value: fieldTotal,
+					},
+					{
+						label: I18n.get('_Bugs_'),
+						percentage: (bugsTotal / total) * 100,
+						value: bugsTotal,
+					},
+				];
 
-				if (advisories) {
-					seriesData.push(
-						{
-							label: I18n.get('_SecurityAdvisories_'),
-							value: advisories,
-						},
-					);
-				}
-
-				if (fieldNotices) {
-					seriesData.push(
-						{
-							label: I18n.get('_FieldNotices_'),
-							value: fieldNotices,
-						},
-					);
-				}
-
-				if (bugs) {
-					seriesData.push(
-						{
-							label: I18n.get('_Bugs_'),
-							value: bugs,
-						},
-					);
-				}
-
-				advisoryFacet.seriesData = seriesData;
 				advisoryFacet.loading = false;
 			}),
+			takeUntil(this.destroy$),
+		);
+	}
+
+	public get advisoryIndex () {
+		if (this.router.url.indexOf('/solution/advisories/security') !== -1) {
+			return 0;
+		}
+
+		if (this.router.url.indexOf('/solution/advisories/field-notices') !== -1) {
+			return 1;
+		}
+
+		if (this.router.url.indexOf('/solution/advisories/bugs') !== -1) {
+			return 2;
+		}
+
+		return null;
+	}
+
+	/**
+	 * Fetches the counts for the advisories chart
+	 * @returns the advisory counts
+	 */
+	private fetchInsightsCounts () {
+		const insightsFacet = _.find(this.facets, { key: 'insights' });
+
+		insightsFacet.loading = true;
+		insightsFacet.isError = false;
+
+		return this.insightsCrashesService.getInsightsCounts(this.customerId)
+		.pipe(
+			map((counts: any) => {
+
+				insightsFacet.seriesData = counts;
+				insightsFacet.loading = false;
+			}),
 			catchError(err => {
-				advisoryFacet.loading = false;
-				this.logger.error('solution.component : fetchAdvisoryCounts() ' +
+				insightsFacet.loading = false;
+				insightsFacet.isError = true;
+				this.logger.error('solution.component : fetchInsightsCounts() ' +
 				`:: Error : (${err.status}) ${err.message}`);
 
 				return of({ });
@@ -467,7 +569,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 					active: false,
 				},
 				description: I18n.get('_QuickTourStep2Description_'),
-				relative: true,
+				relative: false,
 				stepIndex: 1,
 				stepPos: 'bottom',
 				title: I18n.get('_QuickTourStep2Title_'),
@@ -477,7 +579,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 				data: { },
 				description: I18n.get('_QuickTourStep3Description_'),
 				maxWidth: 300,
-				relative: false,
+				relative: true,
 				stepIndex: 2,
 				stepPos: 'bottom',
 				title: I18n.get('_QuickTourStep3Title_'),
@@ -485,7 +587,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 			{
 				arrows: 1,
 				data: {
-					active: false,
+					active: true,
 				},
 				description: I18n.get('_QuickTourStep1Description_'),
 				maxWidth: 400,
@@ -527,7 +629,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		const offsetLeft = this.contentContainer.nativeElement.offsetLeft;
 		const offsetTop = this.contentContainer.nativeElement.offsetTop;
 		const offsetWidth = this.contentContainer.nativeElement.offsetWidth;
-		const colRatio = 2 / 12;
+		const colRatio = 3 / 12;
 		const arrowOffset = 20;
 		step.data.left = offsetLeft + offsetWidth * colRatio - arrowOffset;
 		step.data.top = offsetTop + 150;
@@ -544,9 +646,9 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		const offsetTop = this.contentContainer.nativeElement.offsetTop;
 		const offsetWidth = this.contentContainer.nativeElement.offsetWidth;
 		const offsetHeight = this.contentContainer.nativeElement.offsetHeight;
-		const colRatio = 10 / 12 / 3;
-		const center = colRatio * 1.5;
-		step.data.left = offsetLeft + offsetWidth * (center + 1 / 6);
+		const colRatio = 3 / 12;
+		const center = colRatio * 2.5;
+		step.data.left = offsetLeft + offsetWidth * center;
 		step.data.top = offsetTop + offsetHeight * 0.4;
 		step.data.active = true;
 		step.width = offsetWidth * colRatio * 2;
@@ -562,6 +664,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		forkJoin(
 			this.fetchCoverageCount(),
 			this.fetchAdvisoryCounts(),
+			this.fetchInsightsCounts(),
 			this.getCaseAndRMACount(),
 		)
 		.pipe(
@@ -596,6 +699,15 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	 * Detects changes to the view after init
 	 */
 	public async ngAfterViewInit () {
+		if (this.activeRoute) {
+			this.selectFacet(this.getFacetFromRoute(this.activeRoute));
+		}
+	}
+
+	/**
+	 * Detects changes to the view after check
+	 */
+	public async ngAfterViewChecked () {
 		this.cdr.detectChanges();
 	}
 

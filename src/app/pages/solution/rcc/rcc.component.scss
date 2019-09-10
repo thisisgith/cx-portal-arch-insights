@@ -1,4 +1,5 @@
 @import "~cisco-ui/src/scss/utilities/_variables.scss";
+@import '../../../../mixins.scss';
 
 .filter {
 	&__selected {
@@ -15,49 +16,18 @@
 	}
 }
 
-.cui {
-	.panel--bordered-right {
-		border-right: none !important;
-	}
-}
-
-.no-padding {
-	padding: 0;
-}
-
-.selected {
-	color: $cisco-blue !important;
-}
-
-.violationcount {
-	color: $dark-gray-2 !important;
-	font-weight: 400;
-	font-size: 48px !important;
-	line-height: 72px !important;
-}
-
-.viocount {
-	margin-top: 1px;
-	color: $dark-gray-2 !important;
-}
-
 .seperator-line {
 	border-left: 1px solid $light-gray-3;
 }
 
-.searchSection {
-	float: right;
-	margin-top: -27px;
+.assets-count {
+	font-weight: 500;
 }
 
-.assetsCount {
-	display: flex !important;
-	flex-direction: column;
-	font-size: small;
-	margin: 5px;
+.cursor {
 	cursor: pointer;
 }
 
-.assetsCount:focus {
-	color: $status-blue;
+.form-group__text .rcc-search {
+	@include filter-search;
 }

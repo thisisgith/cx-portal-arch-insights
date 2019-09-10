@@ -206,9 +206,7 @@ export class AssetDetailsAdvisoriesComponent
 		_.map(this.tabs, (tab: Tab) => {
 			if (_.get(tab, ['params', 'serialNumber']) && tab.key === 'bug') {
 				tab.subject.next();
-			} else if (_.get(tab, ['params', 'managedNeId'])) {
-				tab.subject.next();
-			} else if (_.get(tab, ['params', 'neInstanceId'])) {
+			} else if (_.get(tab, ['params', 'hwInstanceId'])) {
 				tab.subject.next();
 			} else {
 				tab.loading = false;
@@ -222,6 +220,9 @@ export class AssetDetailsAdvisoriesComponent
 	public loadMore () {
 		const tab = this.selectedTab;
 		tab.moreLoading = true;
+		if (window.Cypress) {
+			window.loading = true;
+		}
 
 		_.set(tab.params, 'page', _.get(tab.params, 'page') + 1);
 
@@ -242,6 +243,9 @@ export class AssetDetailsAdvisoriesComponent
 		obs.subscribe(
 			() => {
 				tab.moreLoading = false;
+				if (window.Cypress) {
+					window.loading = false;
+				}
 			},
 		);
 	}
@@ -258,7 +262,7 @@ export class AssetDetailsAdvisoriesComponent
 				moreLoading: false,
 				params: {
 					customerId: this.customerId,
-					managedNeId: this.asset.managedNeId ? [this.asset.managedNeId] : null,
+					hwInstanceId: this.asset.hwInstanceId ? [this.asset.hwInstanceId] : null,
 					page: 1,
 					rows: 10,
 					sort: ['severity:ASC'],
@@ -288,14 +292,19 @@ export class AssetDetailsAdvisoriesComponent
 							autoId: 'AdvisoryLastUpdated',
 							key: 'lastUpdated',
 							name: I18n.get('_LastUpdated_'),
-							render: item => item.lastUpdated ?
-								datePipe.transform(
-									new Date(item.lastUpdated), 'yyyy MMM dd') :
-									I18n.get('_Never_'),
+							render: item => {
+								const date = item.lastUpdated ? item.lastUpdated : item.publishedOn;
+								if (date) {
+									return datePipe.transform(new Date(date), 'yyyy MMM dd');
+								}
+
+								return I18n.get('_Never_');
+							},
 							sortable: false,
 							width: '125px',
 						},
 					],
+					hover: true,
 					padding: 'compressed',
 					singleSelect: true,
 					striped: false,
@@ -310,7 +319,7 @@ export class AssetDetailsAdvisoriesComponent
 				moreLoading: false,
 				params: {
 					customerId: this.customerId,
-					managedNeId: this.asset.managedNeId ? [this.asset.managedNeId] : null,
+					hwInstanceId: this.asset.hwInstanceId ? [this.asset.hwInstanceId] : null,
 					page: 1,
 					rows: 10,
 					sort: ['lastUpdated:DESC'],
@@ -338,16 +347,21 @@ export class AssetDetailsAdvisoriesComponent
 							autoId: 'AdvisoryLastUpdated',
 							key: 'lastUpdated',
 							name: I18n.get('_LastUpdated_'),
-							render: item => item.lastUpdated ?
-								datePipe.transform(
-									new Date(item.lastUpdated), 'yyyy MMM dd') :
-									I18n.get('_Never_'),
+							render: item => {
+								const date = item.lastUpdated ? item.lastUpdated : item.publishedOn;
+								if (date) {
+									return datePipe.transform(new Date(date), 'yyyy MMM dd');
+								}
+
+								return I18n.get('_Never_');
+							},
 							sortable: true,
 							sortDirection: 'desc',
 							sorting: true,
 							width: '125px',
 						},
 					],
+					hover: true,
 					padding: 'compressed',
 					singleSelect: true,
 					striped: false,
@@ -403,6 +417,7 @@ export class AssetDetailsAdvisoriesComponent
 							width: '125px',
 						},
 					],
+					hover: true,
 					padding: 'compressed',
 					singleSelect: true,
 					striped: false,

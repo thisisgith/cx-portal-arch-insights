@@ -6,7 +6,7 @@
 
 	<div data-auto-id="FieldNoticeLastUpdated" class="dbl-margin-right">
 		<div class="text-bold text-uppercase" [innerText]="'_LastUpdated_' | i18n"></div>
-		<div [innerText]="(details?.bulletin?.bulletinLastUpdated | date:'MMM dd, yyyy') || ('_Never_' | i18n)"></div>
+		<div [innerText]="(details?.bulletin?.bulletinLastUpdated | date:'MMM dd, yyyy') || (details?.bulletin?.bulletinFirstPublished | date:'MMM dd, yyyy') || ('_Never_' | i18n)"></div>
 	</div>
 
 	<div data-auto-id="FieldNoticeVersion" class="dbl-margin-right">
@@ -24,7 +24,6 @@
 		[ngClass]="{'disabled': !details?.advisory?.url}">
 	</a>
 
-	<!-- TODO: Implement when we know how to open a case against a field notice -->
 	<button *ngIf="impactedAssets?.length || selectedAsset"
 		class="text-capitalize btn btn--secondary btn--small"
 		[innerText]="'_OpenCase_' | i18n"

@@ -1,3 +1,9 @@
+@import '../../../../../mixins.scss';
+
 .transparent-style {
 	opacity: 0;
+}
+
+:host ::ng-deep .table {
+	@include table-ellipse;
 }

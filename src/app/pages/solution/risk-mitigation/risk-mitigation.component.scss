@@ -1,3 +1,5 @@
+@import '../../../../mixins.scss';
+
 .mid-icon-place {
 	margin-top: 40%;
 	font-size: x-large;
@@ -19,4 +21,12 @@
 
 .cursor {
 	cursor: pointer;
+}
+
+.risk-mitigation-search ::ng-deep .form-group .form-group__text input {
+	@include filter-search;
+}
+
+:host ::ng-deep .table {
+	@include table-ellipse;
 }

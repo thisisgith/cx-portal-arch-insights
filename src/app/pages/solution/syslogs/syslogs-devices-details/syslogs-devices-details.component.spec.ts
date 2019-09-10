@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { SyslogsDevicesDetailsModule } from './syslogs-devices-details.module';
 import { SyslogsDeviceDetailsComponent } from './syslogs-devices-details.component';
@@ -17,7 +18,7 @@ describe('SyslogsdevicedetailsComponent', () => {
 	let component: SyslogsDeviceDetailsComponent;
 	let fixture: ComponentFixture<SyslogsDeviceDetailsComponent>;
 	let syslogsService: SyslogsService;
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				SyslogsDevicesDetailsModule,
@@ -39,8 +40,10 @@ describe('SyslogsdevicedetailsComponent', () => {
 					},
 				},
 			],
-		})
-			.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 		syslogsService = TestBed.get(SyslogsService);
 	}));
 
@@ -94,8 +97,6 @@ describe('SyslogsdevicedetailsComponent', () => {
 					keyCode: 13,
 				};
 				component.keyDownFunction(event);
-				expect(event.keyCode)
-					.toEqual(13);
 				expect(component.deviceDetailsParams.includeMsgType)
 					.toEqual(includeMsg);
 				expect(component.deviceDetailsParams.excludeMsgType)

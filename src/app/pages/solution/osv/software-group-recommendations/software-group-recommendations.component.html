@@ -1,0 +1,155 @@
+<div *ngIf="groupRecommendations && groupRecommendations?.length == 0">
+	<div class="flex-center-horizontal text-xlarge text-muted dbl-margin-top half-margin-bottom"
+		[innerText]="'_OsvNoRecommendations_' | i18n"></div>
+</div>
+
+<!-- group recommendations table view -->
+<div class="dbl-margin-top responsive-table" *ngIf="groupRecommendations && groupRecommendations?.length > 0">
+	<table class="table table--compressed table--wrap table--lined table--nostripes groupRecommendationsTable">
+		<thead>
+			<tr>
+				<th *ngFor="let column of groupRecommendationsTable.columns"
+					[ngClass]="{ 'sortable': column.sortable, 'sorted': column.sorting }"
+					attr.data-auto-id="groupRecommendationsTable-{{column.key}}">
+						<span [innerText]="column.name"></span>
+						<span 
+							*ngIf="column.sortable && column.sorting" 
+							class="qtr-margin-left" 
+							[ngClass]="{
+											'icon-chevron-down': column.sortDirection === 'asc',
+											'icon-chevron-up': column.sortDirection === 'desc'
+										}">
+						</span>
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr *ngFor="let item of groupRecommendations" attr.data-auto-id="GroupRecommendations-{{ item.swVersion }}">
+				<td 
+					*ngFor="let column of groupRecommendationsTable.columns" 
+					[ngStyle]="{ 'width': column.width }"
+					(click)="column.click ? $event.stopPropagation() : null"
+					attr.data-auto-id="AssetDetailItemClickHandler-{{ item.swVersion }}" 
+					class="bordered-bottom">
+						<ng-container *ngIf="column.template">
+							<ng-container *ngTemplateOutlet="column.template; context: { celldata: item }">
+							</ng-container>
+						</ng-container>
+						<ng-container *ngIf="!column.template">
+							<span *ngIf="column.render" [innerHTML]="column.render(item)"></span>
+							<span *ngIf="!column.render" [innerText]="item[column.key]"></span>
+						</ng-container>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<!-- current version well -->
+	<div *ngIf="groupRecommendations && groupRecommendations?.length > 0 && currentRecommendation"
+		class=" responsive-table base-margin-top panel--ltgray panel--well half-padding background-light-blue">
+		<table class="table table--compressed table--wrap table--lined table--nostripes no-margin-top">
+			<tbody>
+				<tr attr.data-auto-id="GroupRecommendations-{{ currentRecommendation.swVersion }}">
+					<td 
+						*ngFor="let column of groupRecommendationsTable.columns" 
+						[ngStyle]="{ 'width': column.width }"
+						(click)="column.click ? $event.stopPropagation() : null"
+						attr.data-auto-id="AssetDetailItemClickHandler-{{ currentRecommendation.swVersion }}">
+							<ng-container *ngIf="column.template">
+								<ng-container
+									*ngTemplateOutlet="column.template; context: { celldata: currentRecommendation }">
+								</ng-container>
+							</ng-container>
+							<ng-container *ngIf="!column.template">
+								<span *ngIf="column.render" [innerHTML]="column.render(currentRecommendation)"></span>
+								<span *ngIf="!column.render" [innerText]="currentRecommendation[column.key]"></span>
+							</ng-container>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<!-- view all os version link -->
+<div class="markup pull-right dbl-margin-top" *ngIf="recommendations?.length > 0">
+	<a data-auto-id="ViewAllOsVersions" class="markup-toggle text-primary" (click)="viewAllVersions()">
+		<span class="markup-label" [innerText]="'_OsvViewAllOSVersions_' | i18n"></span>
+		<span class="icon-popout icon-small qtr-margin-left"></span>
+	</a>
+</div>
+
+
+<ng-template #versionTemplate let-item="celldata">
+	<div class="row flex align-items-center" *ngIf="item.name != 'profile current'">
+		<div class="col-4">
+			<span *ngIf="item.swVersion != 'NA'" [innerText]="item.swVersion"></span>
+			<span *ngIf="item.swVersion == 'NA'" [innerText]="'_OsvNotAvailable_' | i18n"></span>
+		</div>
+		<div class="col-8">
+			<div class="label label--large qtr-margin-left qtr-margin-top" [title]="version.name"
+				*ngFor="let version of item.swVersionGroup">
+				<span class="text-capitalize" [innerHTML]="version.name"></span>
+				<span 
+					class="qtr-margin-left" 
+					[attr.data-balloon]="version.info" 
+					data-balloon-pos="down"
+					data-balloon-length="medium">
+						<i class="icon-info-outline icon-xsmall"></i>
+				</span>
+			</div>
+		</div>
+	</div>
+	<div *ngIf="item.name == 'profile current'">
+		<span 
+			*ngIf="selectedSoftwareGroup?.swVersionCount > 1" 
+			data-auto-id="SoftwareGroupCurrentVersions"
+			class="link toggle" 
+			(click)="showVersions.emit()"
+			[innerText]="'_OsvMultipleVersions_' | i18n:selectedSoftwareGroup?.swVersionCount">
+		</span>
+		<span 
+			*ngIf="selectedSoftwareGroup?.swVersionCount == 1" 
+			data-auto-id="SoftwareGroupCurrentVersion"
+			class="link toggle" 
+			(click)="showVersions.emit()" 
+			[innerText]="selectedSoftwareGroup?.swVersions">
+		</span>
+	</div>
+</ng-template>
+
+<ng-template #actionsTemplate let-item="celldata">
+	<button 
+		*ngIf="item.name != 'profile current' && !item.accepted && item.swVersion != 'NA'"
+		class="btn btn--secondary btn--small" 
+		[innerText]="'_OsvAccept_' | i18n" 
+		(click)="onAcceptClick(item.swVersion)"
+		attr.data-auto-id="AcceptVersion-{{item.swVersion}}">
+	</button>
+	<div *ngIf="item.accepted" class="flex">
+		<div class="icon-check-outline text-success flex align-items-center"></div>
+		<div>
+			<div class="text-small qtr-padding-left" [innerText]="'_OsvAcceptedOn_' | i18n"></div>
+			<div class="text-small qtr-padding-left" [innerText]="item.acceptedDate | date:mediumDate"></div>
+		</div>
+		<button 
+			(click)="onCancelClick(item.release)" 
+			class="btn btn--secondary btn--small qtr-margin-left"
+			[innerText]="'_Cancel_' | i18n" 
+			attr.data-auto-id="CancelAcceptVersion-{{item.release}}">
+		</button>
+	</div>
+</ng-template>
+
+<ng-template #releaseDateTemplate let-item="celldata">
+	<div *ngIf="item.name != 'profile current' && item.postDate" [innerText]="item?.postDate | date:mediumDate"></div>
+	<div *ngIf="item.name == 'profile current' && item.postDate">
+		<span *ngIf="!accept" [innerText]="item.postDate | date:mediumDate"></span>
+		<span *ngIf="accept" [innerText]="'-'"></span>
+	</div>
+</ng-template>
+
+<ng-template #currentTemplate let-item="celldata">
+	<div *ngIf="item.name == 'profile current'" class="version-pointer-arrow half-padding-left relative text-small">
+		<span [innerText]="'_OsvCurrentVersion_' | i18n"></span>
+	</div>
+</ng-template>

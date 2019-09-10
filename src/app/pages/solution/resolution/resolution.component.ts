@@ -465,9 +465,9 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 		}, this);
 	}
 
-	/**
-	 * Gets the real values for the visual filters
-	 */
+/**
+	* Gets the real values for the visual filters
+	*/
 	private getFilterData () {
 		forkJoin(
 			this.getTotalFilterData(),

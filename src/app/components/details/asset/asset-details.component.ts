@@ -6,6 +6,7 @@ import {
 	EventEmitter,
 	Output,
 	SimpleChanges,
+	ElementRef,
 } from '@angular/core';
 import {
 	Asset, NetworkElement, InventoryService, Assets, NetworkElementResponse,
@@ -19,7 +20,7 @@ import { UserResolve } from '@utilities';
 import { Alert, Panel360 } from '@interfaces';
 import * as _ from 'lodash-es';
 import { LogService } from '@cisco-ngx/cui-services';
-import { getProductTypeImage } from '@classes';
+import { getProductTypeImage, getProductTypeTitle } from '@classes';
 import { DetailsPanelStackService } from '@services';
 
 /**
@@ -46,6 +47,7 @@ export class AssetDetailsComponent implements OnInit, OnDestroy, Panel360 {
 	public fullscreen = false;
 	public customerId: string;
 	public getProductIcon = getProductTypeImage;
+	public getProductTitle = getProductTypeTitle;
 	private destroyed$: Subject<void> = new Subject<void>();
 
 	constructor (
@@ -53,6 +55,7 @@ export class AssetDetailsComponent implements OnInit, OnDestroy, Panel360 {
 		private logger: LogService,
 		private userResolve: UserResolve,
 		private detailsPanelStackService: DetailsPanelStackService,
+		private _elementRef: ElementRef,
 	) {
 		this.userResolve.getCustomerId()
 		.pipe(
@@ -218,5 +221,14 @@ export class AssetDetailsComponent implements OnInit, OnDestroy, Panel360 {
 	 */
 	public onAllPanelsClose () {
 		this.detailsPanelStackService.reset();
+	}
+
+	/**
+	 * Determines whether target is contained by this component
+	 * @param target target ElementRef
+	 * @returns true if component contains target
+	 */
+	public contains (target: ElementRef) {
+		return this._elementRef.nativeElement.contains(target);
 	}
 }

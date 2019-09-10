@@ -1,6 +1,4 @@
-/* You can add global styles to this file, and also import other style files */
-$cui-resource-path: "../node_modules/cisco-ui/dist";
-
+@import './variables.scss';
 @import "~mapbox-gl/dist/mapbox-gl.css";
 @import '~cisco-ui/src/scss/cui-standard.scss';
 
@@ -34,6 +32,36 @@ $cui-resource-path: "../node_modules/cisco-ui/dist";
 	color: $soft-black;
 }
 
+.cx-text-default {
+	color: #394454;
+}
+
+.cx-text-secondary {
+	color: #5d656c;
+}
+
+.cx-text-gray {
+	color: #6c757d;
+}
+
+.cx-text-light-gray {
+	color: #8e8e8e;
+}
+
+.cx-button {
+	color: #5d656c !important;
+	font-size: 13px;
+
+	&:hover,
+	&:active,
+	&:focus,
+	&--solid {
+		background-color: #95d1d6 !important;
+		color: #fff !important;
+		box-shadow: inset 0 0 0 1px #95d1d6 !important;
+	}
+}
+
 /** Altering tabs css to match Demo app */
 
 .tab__heading {
@@ -59,8 +87,37 @@ $cui-resource-path: "../node_modules/cisco-ui/dist";
 }
 
 .cui .label {
-	background: #6a80a5;
 	color: #fff;
+}
+
+/**
+ * .label class above is overriding cisco ui label modifiers
+ * Need to redefine label modifiers to take precedence over override
+ */
+.cui .label--danger {
+	background: #e2231a;
+	color: #fff;
+}
+
+.cui .label--warning-alt {
+	background: #fc0;
+	color: #39393b;
+}
+
+.cui .label--warning {
+	background: #fbab18;
+	color: #39393b;
+}
+
+.cui .label--info {
+	background: #64bbe3;
+	color: #39393b;
+}
+
+/* End redefinition of label modifiers */
+
+.cui .content {
+	background: unset;
 }
 
 .highcharts-container,

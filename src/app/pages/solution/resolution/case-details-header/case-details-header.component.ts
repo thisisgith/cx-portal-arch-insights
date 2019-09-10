@@ -27,6 +27,7 @@ export class CaseDetailsHeaderComponent {
 	public loading = true;
 	private refreshRma$ = new Subject<string>();
 	private destroy$ = new Subject();
+	public rmaStrings: string[] = [];
 
 	constructor (
 		private rmaService: RMAService,
@@ -39,9 +40,12 @@ export class CaseDetailsHeaderComponent {
 	 * Initialization hook
 	 */
 	public ngOnInit () {
+		if (window.Cypress) {
+			window.loading = true;
+		}
 		// Refresh RMA Details for current case
 		this.refreshRma$.pipe(
-			switchMap(rmaNumbers => this.getRMADetails(rmaNumbers)),
+			switchMap(() => this.getRMADetails()),
 			takeUntil(this.destroy$),
 		)
 			.subscribe(rmaDetails => {
@@ -50,7 +54,19 @@ export class CaseDetailsHeaderComponent {
 						details, ['returns', 'RmaRecord', 0]),
 					));
 				}
+				if (window.Cypress) {
+					window.loading = false;
+				}
 			});
+	}
+
+	/**
+	 * Refreshes the component
+	 */
+	public refresh () {
+		if (this.case) {
+			this.refreshRma$.next();
+		}
 	}
 
 	/**
@@ -81,6 +97,9 @@ export class CaseDetailsHeaderComponent {
 		this.isRMAClicked = !this.isRMAClicked;
 		if (this.isRMAClicked) {
 			this.isAddNoteClicked = false;
+			if (this.rmaRecords.length < 1) {
+				this.refreshRma$.next(_.get(this.caseDetails, 'rmaNumber'));
+			}
 		}
 	}
 
@@ -98,19 +117,21 @@ export class CaseDetailsHeaderComponent {
 	 * @param rmaNumbers comma separated string of related rma numbers (often just 1)
 	 * @returns rma list
 	 */
-	public getRMADetails (rmaNumbers: string): Observable<RMAResponse[]> {
-		if (!rmaNumbers || !rmaNumbers.length) {
+	public getRMADetails (): Observable<RMAResponse[]> {
+		if (!this.rmaStrings || !this.rmaStrings.length) {
 			return of(null);
 		}
-		const rmaStrings = rmaNumbers.split(',');
-		const rmaCalls = rmaStrings.map(
+
+		const rmaCalls = this.rmaStrings.map(
 			rmaNum => this.rmaService.getByNumber(rmaNum.trim())
 				.pipe(
 					catchError(err => {
-						this.logger.error('rma.component : getRmaDetails() ' +
+						this.logger.error('case-details-header.component : getRmaDetails() ' +
 							`:: Error : (${err.status}) ${err.message}`);
 
-						return of(null);
+						const newRecord = { returns: { RmaRecord:
+							[{ rmaNo: Number(rmaNum.trim()) }] } };
+						return of(newRecord);
 					}),
 				),
 		);
@@ -125,17 +146,30 @@ export class CaseDetailsHeaderComponent {
 	public ngOnChanges (changes: SimpleChanges) {
 		if (changes.case) {
 			this.loading = true;
+			if (window.Cypress) {
+				window.loading = true;
+			}
 		}
 		if (changes.caseDetails) {
 			if (changes.caseDetails.currentValue) {
 				this.loading = false;
+				if (window.Cypress) {
+					window.loading = false;
+				}
 				this.isAddNoteClicked = false;
 				this.isRMAClicked = false;
 			} else {
 				this.loading = true;
+				if (window.Cypress) {
+					window.loading = true;
+				}
 			}
 			this.rmaRecords = [];
-			this.refreshRma$.next(_.get(this.caseDetails, 'rmaNumber'));
+			this.rmaStrings = [];
+			const rmaNumbers = _.get(this.caseDetails, 'rmaNumber');
+			if (rmaNumbers) {
+				this.rmaStrings = rmaNumbers.split(',');
+			}
 		}
 	}
 }

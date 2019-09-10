@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { AdvisoryFeedbackComponent } from './feedback.component';
 import { AdvisoryFeedbackModule } from './feedback.module';
@@ -16,7 +17,7 @@ describe('AdvisoryFeedbackComponent', () => {
 	let fixture: ComponentFixture<AdvisoryFeedbackComponent>;
 	let feedbackService: FeedbackService;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				HttpClientTestingModule,
@@ -26,8 +27,10 @@ describe('AdvisoryFeedbackComponent', () => {
 			providers: [
 				{ provide: 'ENVIRONMENT', useValue: environment },
 			],
-		})
-		.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 
 		feedbackService = TestBed.get(FeedbackService);
 	}));

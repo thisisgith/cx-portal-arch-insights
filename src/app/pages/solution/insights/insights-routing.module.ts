@@ -2,7 +2,6 @@ import { ModuleWithProviders } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { InsightsComponent } from './insights.component';
 import { UserResolve } from '@utilities';
-import { PermissionGuard } from './permission-guard';
 
 /**
  * Guidelines Module Routes
@@ -11,7 +10,6 @@ const routes: Routes = [
 	{
 		children: [
 			{
-				canActivate: [PermissionGuard],
 				loadChildren: () => import('../rcc/rcc.module')
 					.then(m => m.RccModule),
 				path: 'compliance',
@@ -64,7 +62,7 @@ const routes: Routes = [
 			{
 				path: '',
 				pathMatch: 'full',
-				redirectTo: 'compliance',
+				redirectTo: 'osv',
 			},
 		],
 		component: InsightsComponent,

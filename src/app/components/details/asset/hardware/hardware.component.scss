@@ -13,12 +13,6 @@
 		padding-left: 0 !important;
 	}
 
-	table {
-		table-layout: fixed;
-		border-collapse: collapse;
-		width: 100%;
-	}
-
 	small {
 		font-size: x-small;
 		font-style: italic;
@@ -40,4 +34,10 @@ tr.td-row td {
 	@extend %tr-shared;
 
 	border-bottom-width: 1px;
+}
+
+.custom-text-large {
+	// Workaround for PBC-624
+	// Can be removed if we migrate to cisco-ui@2.0.0 w/ text-size-*
+	font-size: 1.6rem !important;
 }

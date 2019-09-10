@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import {
 	AssetScenarios,
@@ -36,7 +37,7 @@ describe('AssetDetailsAdvisoriesComponent', () => {
 	let productAlertsService: ProductAlertsService;
 	let diagnosticsService: DiagnosticsService;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				AssetDetailsAdvisoriesModule,
@@ -47,8 +48,10 @@ describe('AssetDetailsAdvisoriesComponent', () => {
 			providers: [
 				{ provide: 'ENVIRONMENT', useValue: environment },
 			],
-		})
-		.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 
 		productAlertsService = TestBed.get(ProductAlertsService);
 		diagnosticsService = TestBed.get(DiagnosticsService);
@@ -191,5 +194,84 @@ describe('AssetDetailsAdvisoriesComponent', () => {
 
 			done();
 		});
+	});
+
+	it('should clear the advisory on panel close', done => {
+		component.asset = getActiveBody(AssetScenarios[0]).data[0];
+		component.customerId = user.info.customerId;
+
+		spyOn(productAlertsService, 'getAdvisoriesSecurityAdvisories')
+			.and
+			.returnValue(of(getActiveBody(AdvisorySecurityAdvisoryScenarios[0])));
+		spyOn(productAlertsService, 'getAdvisoriesFieldNotices')
+			.and
+			.returnValue(of(getActiveBody(FieldNoticeAdvisoryScenarios[0])));
+
+		spyOn(diagnosticsService, 'getCriticalBugs')
+			.and
+			.returnValue(of({ data: CriticalBugData }));
+
+		component.ngOnInit();
+
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+
+			const bugsTab = _.find(component.tabs, { key: 'bug' });
+
+			component.selectTab(bugsTab);
+			_.set(bugsTab.data[0], 'active', true);
+			component.onRowSelect(bugsTab.data[0]);
+			fixture.detectChanges();
+
+			expect(component.selectedAdvisory)
+				.toEqual({ id: bugsTab.data[0].id, type: 'bug' });
+
+			component.onPanelClose();
+
+			fixture.detectChanges();
+
+			expect(component.selectedAdvisory)
+				.toBeNull();
+
+			done();
+		});
+	});
+
+	it('should handle changing assets', () => {
+		const assets = getActiveBody(AssetScenarios[0]).data;
+
+		const asset = assets[0];
+		const newAsset = assets[1];
+
+		component.asset = asset;
+		component.ngOnChanges({
+			asset: {
+				currentValue: asset,
+				firstChange: true,
+				isFirstChange: () => true,
+				previousValue: null,
+			},
+		});
+
+		component.ngOnInit();
+		fixture.detectChanges();
+
+		expect(component.asset)
+			.toEqual(asset);
+
+		component.asset = newAsset;
+		component.ngOnChanges({
+			asset: {
+				currentValue: newAsset,
+				firstChange: false,
+				isFirstChange: () => false,
+				previousValue: asset,
+			},
+		});
+
+		fixture.detectChanges();
+		expect(component.asset)
+			.toEqual(newAsset);
 	});
 });

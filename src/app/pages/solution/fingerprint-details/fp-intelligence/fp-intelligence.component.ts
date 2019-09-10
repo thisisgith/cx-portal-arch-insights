@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, EventEmitter, Output } from '@angular/core';
 import { LogService } from '@cisco-ngx/cui-services';
 import { FpIntelligenceService, SimilarDevicesDistribution } from '@sdp-api';
 import { debounceTime } from 'rxjs/operators';
@@ -11,6 +11,7 @@ import {
 	AbstractControl,
 } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { I18n } from '@cisco-ngx/cui-utils';
 
 /**
  * type seriesData
@@ -61,6 +62,7 @@ export class FpIntelligenceComponent implements OnChanges {
 		],
 		similarityCriteria: ['fingerprint', Validators.required],
 	});
+	@Output() public reqError: EventEmitter<any> = new EventEmitter<any>();
 
 	public get deviceCount (): AbstractControl {
 		return this.requestForm.get('deviceCount');
@@ -112,13 +114,25 @@ export class FpIntelligenceComponent implements OnChanges {
 		this.fpIntelligenceService
 			.getSimilarDevicesDistribution(similarDeviceParams)
 			.subscribe(
-				similarDevieDistribution => {
-					this.updateSeriesData(similarDevieDistribution);
-					this.noData = false;
+				similarDeviceDistribution => {
+					const similarDeviceDistributionDataCount =
+					_.get(similarDeviceDistribution, ['softwares', 'length'], 0) +
+					_.get(similarDeviceDistribution, ['productFamilies', 'length'], 0) +
+					_.get(similarDeviceDistribution, ['products', 'length'], 0);
+					if (similarDeviceDistributionDataCount > 0) {
+						this.updateSeriesData(similarDeviceDistribution);
+						this.noData = false;
+						this.reqError.emit();
+					} else {
+						this.seriesDataLoading = false;
+						this.noData = true;
+						this.reqError.emit(I18n.get('_CP_FingerprintIntelligence_Error_'));
+					}
 				},
 				err => {
 					this.seriesDataLoading = false;
 					this.noData = true;
+					this.reqError.emit(I18n.get('_CP_FingerprintIntelligence_Error_'));
 					this.logger.error(err);
 				},
 				() => {

@@ -39,13 +39,15 @@ import { UserResolve } from '@utilities';
 interface EolTimelineProperty {
 	label: string;
 	propertyName: string;
+	urlName?: string;
 }
 
 /** properties in the SoftwareEolBulletin object to use in the timeline */
 const eolTimelineProperties: EolTimelineProperty[] = [
 	{
-		label: '_EndOfLifeAnnounced_',
+		label: '_Announcement_',
 		propertyName: 'eoLifeExternalAnnouncementDate',
+		urlName: 'URL',
 	},
 	{
 		label: '_EndOfSale_',
@@ -251,7 +253,7 @@ export class AssetDetailsSoftwareComponent implements OnInit, OnChanges, OnDestr
 					};
 
 					this.softwareLicensesTable = new CuiTableOptions({
-						bordered: true,
+						bordered: false,
 						columns: [
 							{
 								key: 'licenseName',
@@ -345,13 +347,22 @@ export class AssetDetailsSoftwareComponent implements OnInit, OnChanges, OnDestr
 		eolTimelineProperties.forEach(property => {
 			const propertyName = _.get(property, 'propertyName', '');
 			const label = _.get(property, 'label', '');
+			const urlName = _.get(property, 'urlName');
 			const value: string = _.get(this.eolBulletinData, propertyName, '');
+			const url: string = _.get(this.eolBulletinData, urlName);
+
 			if (value) {
-				this.timelineData.push({
+				const data: TimelineDatapoint = {
 					date: new Date(value),
 					subTitle: new Date(value).toDateString(),
 					title: I18n.get(label),
-				});
+				};
+
+				if (url) {
+					data.url = url;
+				}
+
+				this.timelineData.push(data);
 			}
 		});
 	}

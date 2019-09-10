@@ -156,7 +156,6 @@ implements OnInit, OnChanges, OnDestroy {
 			this.data.ipAddress = this.assetData.ipAddress;
 			this.data.lastScan = this.assetData.lastScan;
 			this.data.productId = this.assetData.productId;
-			this.data.productName = this.assetData.deviceName;
 			this.data.softwareType = this.assetData.osType;
 		});
 		/** Hardware Info Refresh */
@@ -172,6 +171,7 @@ implements OnInit, OnChanges, OnDestroy {
 			const hardwareData: HardwareInfo = _.get(response, ['data', 0]);
 			if (hardwareData) {
 				this.data.hostName = hardwareData.hostname;
+				this.data.productName = hardwareData.productName;
 				this.data.productSeries = hardwareData.productFamily;
 			}
 		});

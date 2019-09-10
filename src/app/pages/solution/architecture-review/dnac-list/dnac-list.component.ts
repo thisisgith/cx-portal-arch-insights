@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
-import { ArchitectureReviewService, assetExceptionList, IParamType } from '@sdp-api';
+import { ArchitectureReviewService, assetExceptionList, IBullet } from '@sdp-api';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { DatePipe } from '@angular/common';
@@ -28,7 +28,6 @@ export class DnacListComponent implements OnInit {
 		private architectureReviewService: ArchitectureReviewService,
 		private route: ActivatedRoute,
 	) {
-		this.logger.debug('DnacListComponent Created!');
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
 		this.params.customerId = this.customerId;
@@ -42,9 +41,16 @@ export class DnacListComponent implements OnInit {
 	public tableStartIndex = 0;
 	public tableEndIndex = 0;
 	private destroy$ = new Subject();
-	public globalSearchText  = '';
+	public searchText  = '';
 	public lastCollectionTime = '';
-	public params: IParamType = { customerId : '' , page: 0, pageSize: 10, searchText : '' };
+	public params: IBullet =
+		{
+		  customerId : '',
+		  dnacIP: '',
+		  page: 0,
+		  pageSize: 10,
+		  searchText : '',
+		};
 	public fullscreen: any ;
 	@ViewChild('devicesTemplate', { static: true })
 	private devicesTemplate: TemplateRef<{ }>;
@@ -52,6 +58,8 @@ export class DnacListComponent implements OnInit {
 	private endPointsTemplate: TemplateRef<{ }>;
 	@ViewChild('fabricsTemplate', { static: true })
 	private fabricsTemplate: TemplateRef<{ }>;
+	@ViewChild('wlcTemplate', { static: true })
+	private wlcTemplate: TemplateRef<{ }>;
 
 	/**
 	 * used to Intialize Table options
@@ -74,6 +82,11 @@ export class DnacListComponent implements OnInit {
 					sortable: false,
 				},
 				{
+					key: 'dnacVersion',
+					name: I18n.get('_ArchitectureDNACVersion_'),
+					sortable: false,
+				},
+				{
 					name: I18n.get('_ArchitectureDevices(DevicesPublishedLimit)_'),
 					sortable: false,
 					template : this.devicesTemplate,
@@ -87,6 +100,11 @@ export class DnacListComponent implements OnInit {
 					name: I18n.get('_ArchitectureFabrics(FabricsPublishedLimit)_'),
 					sortable: false,
 					template : this.fabricsTemplate,
+				},
+				{
+					name: I18n.get('_ArchitectureWLC(WLCPublishedLimit)_'),
+					sortable: false,
+					template : this.wlcTemplate,
 				},
 				{
 					key: 'dnacCpu',
@@ -104,6 +122,7 @@ export class DnacListComponent implements OnInit {
 					sortable: false,
 				},
 			],
+			singleSelect: true,
 		});
 	}
 
@@ -122,12 +141,14 @@ export class DnacListComponent implements OnInit {
 	 * Keys down function
 	 * @param event contains eventdata
 	 */
-	public globalSearchFunction (event) {
-		if (event.keyCode === 13) {
+	public textFilter (event) {
+		// key code 13 refers to enter key
+		const eventKeycode = 13;
+		if (event.keyCode === eventKeycode || this.searchText.trim().length === 0) {
 			this.isLoading = true;
 			this.tableStartIndex = 0;
 			this.params.page = 0;
-			this.params.searchText = this.globalSearchText;
+			this.params.searchText = this.searchText;
 			this.getDnacList();
 		}
 	}
@@ -191,7 +212,7 @@ export class DnacListComponent implements OnInit {
 	 * @param item - Contains dnac info
 	 * @returns - Returns the formatted string
 	 */
-	public getfabricsTemplate (item) {
+	public getFabricsTemplate (item) {
 		return `${item.noOfFabrics }(${item.fabricsPublishedLimits})`;
 	}
 
@@ -201,7 +222,7 @@ export class DnacListComponent implements OnInit {
 	 * @param item - Contains dnac info
 	 * @returns - Returns the formatted string
 	 */
-	public getendPointsTemplate (item) {
+	public getEndPointsTemplate (item) {
 		return `${item.noOfEndpoints }(${item.endpointsPublishedLimits})`;
 	}
 
@@ -211,8 +232,18 @@ export class DnacListComponent implements OnInit {
 	 * @param item - Contains dnac info
 	 * @returns - Returns the formatted string
 	 */
-	public getdevicesTemplate (item) {
+	public getDevicesTemplate (item) {
 		return `${item.noOfDevices }(${item.devicesPublishedLimits})`;
+	}
+
+	/**
+	 * This function is used to concate the noOfWlc and wlcPublishedLimits
+	 * in specific format
+	 * @param item - Contains dnac info
+	 * @returns - Returns the formatted string
+	 */
+	public getWlcTemplate (item) {
+		return `${item.noOfWlc }(${item.wlcPublishedLimits})`;
 	}
 
 }

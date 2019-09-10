@@ -12,7 +12,7 @@
 			<cui-loader></cui-loader>
 		</div>
 		<div *ngIf="!status.loading.overall">
-			<div class="text-large cx-text-soft-black" [innerText]="assetData?.productId || asset?.productId" data-auto-id="ProductId"></div>
+			<div class="text-large cx-text-default" [innerText]="assetData?.productId || asset?.productId" data-auto-id="ProductId"></div>
 			<div data-auto-id="YouHaveInventory"
 				class="text-small qtr-margin-top"
 				*ngIf="componentData.numberInInventory > 1"
@@ -29,13 +29,6 @@
 				<ng-container *ngTemplateOutlet="detailsData; context: {
 						title: '_ProductSeries_',
 						linkData: assetData?.productFamily
-					}">
-				</ng-container>
-			</div>
-			<div class="col-md-12 base-margin-top">
-				<ng-container *ngTemplateOutlet="detailsData; context: {
-						title: '_ProductID_',
-						linkData: assetData?.productId || asset?.productId
 					}">
 				</ng-container>
 			</div>
@@ -65,14 +58,14 @@
 			<div class="col-md-12">
 				<ng-container *ngTemplateOutlet="detailsData; context: {
 						title: '_EndOfSale_',
-						data: assetData?.eoSaleDate | date:'yyyy MMM dd'
+						data: (assetData?.eoSaleDate | date:'yyyy MMM dd') || ('_NotAnnounced_' | i18n)
 					}">
 				</ng-container>
 			</div>
 			<div class="col-md-12 base-margin-top">
 				<ng-container *ngTemplateOutlet="detailsData; context: {
-						title: '_EndOfSupport_',
-						data: assetData?.lastDateOfSupport | date:'yyyy MMM dd'
+						title: '_LastDateOfSupport_',
+						data: (assetData?.lastDateOfSupport | date:'yyyy MMM dd') || ('_NotAnnounced_' | i18n)
 					}">
 				</ng-container>
 			</div>
@@ -91,7 +84,7 @@
 </div>
 <div class="row" *ngIf="assetData?.installAddress1">
 	<div class="col-md-12 base-margin-top">
-		<span class="text-uppercase text-bold text-small" [innerText]="'_InstalledLocation_' | i18n"></span>
+		<span class="text-uppercase text-small cx-text-secondary" [innerText]="'_InstalledLocation_' | i18n"></span>
 	</div>
 	<div class="col-md-12 qtr-margin-top">
 		<asset-map [assetSummary]="assetData"></asset-map>
@@ -100,11 +93,11 @@
 
 <ng-template #supportData let-title="title" let-expirationDate="expirationDate" let-linkData="linkData" let-url="url" let-supportType="supportType">
 	<div class="row">
-		<div class="col-md-12 text-bold text-small text-uppercase" [innerText]="title | i18n" attr.data-auto-id="{{ title }}"></div>
+		<div class="col-md-12 text-small text-uppercase cx-text-gray" [innerText]="title | i18n" attr.data-auto-id="{{ title }}"></div>
 	</div>
-	<div class="row">
-		<div *ngIf="expirationDate" class="col-md-12" >
-			<div *ngIf="!isExpired(expirationDate)" class="text-default" [innerText]="'_CoveredUntil_' | i18n:(expirationDate | date:'yyyy MMM dd')" attr.data-auto-id="{{ title }}-CoveredUntil"></div>
+	<div class="row cx-text-default">
+		<div *ngIf="expirationDate" class="col-md-12">
+			<div *ngIf="!isExpired(expirationDate)" [innerText]="'_CoveredUntil_' | i18n:(expirationDate | date:'yyyy MMM dd')" attr.data-auto-id="{{ title }}-CoveredUntil"></div>
 			<div *ngIf="isExpired(expirationDate)" [ngClass]="{
 					'text-danger': (supportType === 'support'),
 					'text-warning': (supportType === 'warranty')
@@ -123,11 +116,11 @@
 </ng-template>
 
 <ng-template #detailsData let-title="title" let-data="data" let-linkData="linkData" let-url="url" let-titleOnly="titleOnly">
-	<div class="row">
-		<div class="col-md-12 text-bold text-small text-uppercase" [innerText]="title | i18n" attr.data-auto-id="{{ title }}"></div>
+	<div class="row summary__details">
+		<div class="col-md-12 text-uppercase summary__details__title cx-text-gray text-small" [innerText]="title | i18n" attr.data-auto-id="{{ title }}"></div>
 	</div>
-	<div class="row" *ngIf="!titleOnly">
-		<div class="col-md-12" [innerText]="('_NA_' | i18n)" *ngIf="!(data || linkData)" attr.data-auto-id="{{ title }}-N/A"></div>
+	<div class="row text-medium cx-text-default" *ngIf="!titleOnly">
+		<div class="col-md-12" [innerText]="'_NA_' | i18n" *ngIf="!(data || linkData)" attr.data-auto-id="{{ title }}-N/A"></div>
 		<div *ngIf="data" class="col-md-12" [innerText]="data || ('_NA_' | i18n)" attr.data-auto-id="{{ title }}-data"></div>
 		<div class="col-md-12" attr.data-auto-id="{{ title }}-Link">
 			<a *ngIf="linkData && url" [href]="url" [innerText]="linkData"></a>

@@ -1,4 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { configureTestSuite } from 'ng-bullet';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { QuickTourComponent } from './quick-tour.component';
 import { QuickTourModule } from './quick-tour.module';
 
@@ -6,12 +7,11 @@ describe('QuickTourComponent', () => {
 	let component: QuickTourComponent;
 	let fixture: ComponentFixture<QuickTourComponent>;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [QuickTourModule],
-		})
-		.compileComponents();
-	}));
+		});
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(QuickTourComponent);
@@ -114,9 +114,9 @@ describe('QuickTourComponent', () => {
 			expect(component.getTranslate({ stepPos: 'top' }))
 				.toBe('translate(-50%, -50%)');
 			expect(component.getTranslate({ stepPos: 'bottom' }))
-				.toBe('translate(-50%, 50%)');
+				.toBe('translate(-50%, 0%)');
 			expect(component.getTranslate({ }))
-				.toBe('translate(-50%, 50%)');
+				.toBe('translate(-50%, 0%)');
 			done();
 		});
 	});

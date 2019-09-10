@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
 import { FpCompareComponent } from '../fp-compare/fp-compare.component';
 import { FpCompareModule } from '../fp-compare/fp-compare.module';
@@ -16,7 +17,7 @@ describe('FpCompareComponent', () => {
 	let component: FpCompareComponent;
 	let fixture: ComponentFixture<FpCompareComponent>;
 	let crashPreventionService: CrashPreventionService;
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				FpCompareModule,
@@ -38,8 +39,10 @@ describe('FpCompareComponent', () => {
 					},
 				},
 			],
-		})
-			.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 
 		crashPreventionService = TestBed.get(CrashPreventionService);
 	}));

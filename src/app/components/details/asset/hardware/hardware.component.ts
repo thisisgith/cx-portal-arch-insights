@@ -39,13 +39,15 @@ import { UserResolve } from '@utilities';
 interface EolTimelineProperty {
 	label: string;
 	propertyName: string;
+	urlName?: string;
 }
 
 /** properties in the HardwareEolBulletin object to use in the timeline */
 const eolTimelineProperties: EolTimelineProperty[] = [
 	{
-		label: '_EndOfLifeAnnounced_',
+		label: '_Announcement_',
 		propertyName: 'eoLifeExternalAnnouncementDate',
+		urlName: 'URL',
 	},
 	{
 		label: '_EndOfSale_',
@@ -250,19 +252,16 @@ export class AssetDetailsHardwareComponent implements OnInit, OnChanges, OnDestr
 			}),
 			switchMap(() => {
 				const obsBatch = [];
-				const managedNeId = _.get(this.asset, 'managedNeId');
 				const hwInstanceId = _.get(this.asset, 'hwInstanceId');
 
-				if (managedNeId) {
+				if (hwInstanceId) {
 					this.hardwareEOLParams = {
 						customerId: this.customerId,
-						managedNeId: [managedNeId],
+						hwInstanceId: [hwInstanceId],
 					};
 
 					obsBatch.push(this.fetchEOLData());
-				}
 
-				if (hwInstanceId) {
 					this.moduleParams = {
 						containingHwId: [hwInstanceId],
 						customerId: this.customerId,
@@ -283,6 +282,7 @@ export class AssetDetailsHardwareComponent implements OnInit, OnChanges, OnDestr
 								name: `${I18n.get('_ProductFamily_')} / ${I18n.get('_ID_')}`,
 								sortable: false,
 								template: this.familyTemplate,
+								width: '50%',
 							},
 							{
 								key: 'serialNumber',
@@ -384,13 +384,22 @@ export class AssetDetailsHardwareComponent implements OnInit, OnChanges, OnDestr
 		eolTimelineProperties.forEach(property => {
 			const propertyName = _.get(property, 'propertyName', '');
 			const label = _.get(property, 'label', '');
+			const urlName = _.get(property, 'urlName');
 			const value: string = _.get(this.eolBulletinData, propertyName, '');
+			const url: string = _.get(this.eolBulletinData, urlName);
+
 			if (value) {
-				this.timelineData.push({
+				const data: TimelineDatapoint = {
 					date: new Date(value),
 					subTitle: new Date(value).toDateString(),
 					title: I18n.get(label),
-				});
+				};
+
+				if (url) {
+					data.url = url;
+				}
+
+				this.timelineData.push(data);
 			}
 		});
 	}

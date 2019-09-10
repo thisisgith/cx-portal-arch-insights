@@ -6,4 +6,11 @@
 		position: relative;
 		width: calc(100vw - 300px);
 	}
+
+	.help-link {
+		position: absolute;
+		right: 30px;
+		top: 70px;
+		cursor: pointer;
+	}
 }

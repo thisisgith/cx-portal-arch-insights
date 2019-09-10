@@ -1,4 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { configureTestSuite } from 'ng-bullet';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SoftwareGroupsComponent } from './software-groups.component';
 import { SoftwareGroupsModule } from './software-groups.module';
@@ -9,13 +10,14 @@ import { throwError, of } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { OSVScenarios } from '@mock';
 import { MicroMockModule } from '@cui-x-views/mock';
+import * as _ from 'lodash-es';
 
 describe('SoftwareGroupsComponent', () => {
 	let component: SoftwareGroupsComponent;
 	let fixture: ComponentFixture<SoftwareGroupsComponent>;
 	let osvService: OSVService;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				SoftwareGroupsModule,
@@ -23,9 +25,8 @@ describe('SoftwareGroupsComponent', () => {
 				RouterTestingModule,
 				MicroMockModule,
 			],
-		})
-			.compileComponents();
-	}));
+		});
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(SoftwareGroupsComponent);
@@ -89,7 +90,7 @@ describe('SoftwareGroupsComponent', () => {
 
 	it('should select/deselect a case on row click', () => {
 		component.softwareGroups = (<any> OSVScenarios[1].scenarios.GET[0].response.body)
-		.uiProfileList;
+			.uiProfileList;
 		const rowCase = (<any> OSVScenarios[1].scenarios.GET[0].response.body).uiProfileList[0];
 		component.onRowSelect(rowCase);
 		fixture.detectChanges();
@@ -98,5 +99,37 @@ describe('SoftwareGroupsComponent', () => {
 		component.onRowSelect(rowCase);
 		expect(component.selectedSoftwareGroup)
 			.toBeNull();
+	});
+
+	it('should set the optimal version if the selectedSoftwareGroup has statusUpdated', () => {
+		const softwareGroups = (<any> OSVScenarios[1].scenarios.GET[0].response.body);
+		spyOn(osvService, 'getSoftwareGroups')
+			.and
+			.returnValue(of(softwareGroups));
+		component.ngOnInit();
+		fixture.detectChanges();
+		expect(component.softwareGroups)
+			.toEqual(softwareGroups.uiProfileList);
+		const item = softwareGroups.uiProfileList[0];
+		component.onRowSelect(item);
+		fixture.detectChanges();
+		expect(item.rowSelected)
+			.toBeTruthy();
+		expect(item.optimalVersion)
+			.toBeNull();
+		const selectedSG = _.cloneDeep(item);
+		selectedSG.statusUpdated = true;
+		selectedSG.optimalVersion = '1.1';
+		component.ngOnChanges({
+			selectedSoftwareGroup: {
+				currentValue: selectedSG,
+				firstChange: false,
+				isFirstChange: () => false,
+				previousValue: null,
+			},
+		});
+		fixture.detectChanges();
+		expect(item.optimalVersion)
+			.toEqual('1.1');
 	});
 });

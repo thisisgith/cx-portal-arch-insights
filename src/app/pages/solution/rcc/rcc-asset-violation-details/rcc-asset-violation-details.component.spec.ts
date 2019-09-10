@@ -1,7 +1,8 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RccAssetViolationDetailsComponent } from './rcc-asset-violation-details.component';
 import { RccAssetViolationDetailsModule } from './rcc-asset-violation-details.module';
-import { of } from 'rxjs';
+import { throwError, of } from 'rxjs';
 import { RCCScenarios, user } from '@mock';
 import { RccService } from '@sdp-api';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -9,12 +10,13 @@ import { MicroMockModule } from '@cui-x-views/mock';
 import { RouterTestingModule } from '@angular/router/testing';
 import { environment } from '@environment';
 import { ActivatedRoute } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 
 describe('RccAssetViolationDetailsComponent', () => {
 	let component: RccAssetViolationDetailsComponent;
 	let fixture: ComponentFixture<RccAssetViolationDetailsComponent>;
 	let rccAssetDetailsService: RccService;
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [RccAssetViolationDetailsModule,
 				HttpClientTestingModule,
@@ -35,8 +37,10 @@ describe('RccAssetViolationDetailsComponent', () => {
 					},
 				},
 			}],
-		})
-			.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 		rccAssetDetailsService = TestBed.get(RccService);
 	}));
 
@@ -83,7 +87,7 @@ describe('RccAssetViolationDetailsComponent', () => {
 			.toBeDefined();
 
 	});
-	it('should select value from policygroup and load table data', done => {
+	it('should select value from policygroup and load table data', () => {
 		component.assetRowParams = {
 			customerId: '7293498',
 			pageIndex: 0,
@@ -104,10 +108,9 @@ describe('RccAssetViolationDetailsComponent', () => {
 				fixture.detectChanges();
 				expect(component.rccAssetPolicyTableData)
 					.toBeDefined();
-				done();
 			});
 	});
-	it('should select value from policyname and load table data', done => {
+	it('should select value from policyname and load table data', () => {
 
 		component.assetRowParams = {
 			customerId: '7293498',
@@ -126,10 +129,9 @@ describe('RccAssetViolationDetailsComponent', () => {
 			.returnValue(of(RCCScenarios[1].scenarios.GET[0].response.body));
 		expect(component.rccAssetPolicyTableData)
 			.toBeDefined();
-		done();
 	});
 
-	it('should select value from policy severity and load table data', done => {
+	it('should select value from policy severity and load table data', () => {
 		component.assetRowParams = {
 			customerId: '7293498',
 			pageIndex: 0,
@@ -147,7 +149,6 @@ describe('RccAssetViolationDetailsComponent', () => {
 			.returnValue(of(RCCScenarios[1].scenarios.GET[0].response.body));
 		expect(component.rccAssetPolicyTableData)
 			.toBeDefined();
-		done();
 	});
 	it('should be used to check on ng on changes', () => {
 		expect(component.selectedAssetData)
@@ -177,6 +178,12 @@ describe('RccAssetViolationDetailsComponent', () => {
 
 	});
 	it('to be called on table sorting changed', () => {
+		component.onTableSortingChanged();
+		expect(component.tableOffset)
+			.toEqual(0);
+	});
+
+	it('to be called on getAssetPolicyGridData', () => {
 		component.assetRowParams = {
 			customerId: '7293498',
 			pageIndex: 0,
@@ -188,7 +195,66 @@ describe('RccAssetViolationDetailsComponent', () => {
 			sortBy: '',
 			sortOrder: '',
 		};
-		component.onTableSortingChanged();
+
+		const error = {
+			status: 404,
+			statusText: 'Resource not found',
+		};
+		spyOn(rccAssetDetailsService, 'getAssetSummaryData')
+		.and
+		.returnValue(throwError(new HttpErrorResponse(error)));
 		component.getAssetPolicyGridData();
+		expect(component.errorResult)
+			.toBeTruthy();
+		expect(component.isLoading)
+			.toBeFalsy();
+	});
+
+	it('should invoke onPageIndexChange method', () => {
+		component.onPolicyAssetPagerUpdated({ page: 1, limit : 10 });
+		expect(component.tableOffset)
+			.toEqual(1);
+	});
+
+	it('Should invoke api with error', () => {
+		const error = {
+			status: 404,
+			statusText: 'Resource not found',
+		};
+		spyOn(rccAssetDetailsService, 'getAssetSummaryData')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+		spyOn(rccAssetDetailsService, 'getRccAssetFilterData')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+		component.assetRowParams = {
+			customerId: '7293498',
+			pageIndex: 0,
+			pageSize: 10,
+			policyGroupName: '',
+			policyName: '',
+			serialNumber: 'FCW2246E0PB',
+			severity: '',
+			sortBy: '',
+			sortOrder: '',
+		};
+		component.loadData();
+		expect(component.rccAssetPolicyTableData)
+			.toEqual([]);
+	});
+	it('should be called on asset information get updated', () => {
+		component.selectedAssetData = { serialNumber: 'FCW2246E0PB' };
+		const selectedPreviousAssetData = { serialNumber: 'FCW2246E0P9' };
+		component.ngOnChanges({
+			selectedAssetData: {
+				currentValue: component.selectedAssetData,
+				firstChange: false,
+				isFirstChange: () => true,
+				previousValue: selectedPreviousAssetData,
+			},
+		});
+		spyOn(component, 'loadData');
+		expect(component.loadData)
+			.toHaveBeenCalledTimes(0);
 	});
 });

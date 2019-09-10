@@ -1,4 +1,4 @@
-@import '~cisco-ui/src/scss/utilities/_variables.scss';
+@import '../../../variables.scss';
 @import '../../../mixins.scss';
 
 $cx-dropdown-max-width: 280px;
@@ -13,6 +13,8 @@ $separator-light-gray: #d9d9da;
 $divider-light-gray: #dfdede;
 $link-light-blue: #227bb1;
 $link-hover-background: #ecf4fc;
+$text-xsmall: 10px;
+$text-larger: 19px;
 
 %cx-dropdown-menu-item {
 	padding: 0 20px;
@@ -22,7 +24,6 @@ $link-hover-background: #ecf4fc;
 
 %cx-dropdown-link {
 	width: 100%;
-	margin: unset !important;
 
 	@extend %cx-dropdown-menu-item;
 
@@ -32,8 +33,18 @@ $link-hover-background: #ecf4fc;
 	}
 }
 
-a {
-	color: $link-light-blue !important;
+%cx-header-links--color {
+	.cx-header-label {
+		color: $primary;
+	}
+
+	.cx-user-label {
+		color: $primary;
+	}
+}
+
+.header a {
+	color: $link-light-blue;
 
 	&.text-small {
 		@extend %cx-dropdown-link;
@@ -44,20 +55,11 @@ a {
 	}
 }
 
-.clickable {
-	cursor: pointer;
-}
-
-.clickable {
-	cursor: pointer;
-}
-
 .header-bar__logo {
-	margin-left: 19px !important;
+	margin-left: 20px;
 
 	span.icon-cisco {
-		color: $primary !important;
-		font-size: 29px;
+		color: $primary;
 	}
 }
 
@@ -73,24 +75,19 @@ a {
 }
 
 .header-bar__main {
-	margin-right: unset !important;
+	margin-right: unset;
 
 	& .header-heading h5 {
-		margin-right: 25px !important;
+		margin-right: 25px;
 		font-size: 17px;
 		letter-spacing: -0.3px;
 		line-height: 23px;
-	}
-
-	.cx-header-search {
-		margin-left: auto;
-		margin-right: auto;
 	}
 }
 
 .header-toolbar {
 	height: 38px;
-	margin-left: 35px !important;
+	margin-left: 35px;
 }
 
 .cx-user-label--container {
@@ -118,8 +115,7 @@ a {
 	display: flex;
 	flex-direction: column;
 	height: 38px;
-	margin-right: 14px !important;
-	margin-left: unset !important;
+	margin-right: 15px;
 	align-items: center;
 	justify-content: center;
 	cursor: pointer;
@@ -127,61 +123,41 @@ a {
 	text-decoration: unset !important;
 
 	&--active {
-		.cx-header-label {
-			color: $primary !important;
-		}
-
-		.cx-user-label {
-			color: $primary !important;
-		}
+		@extend %cx-header-links--color;
 	}
 
 	&:hover {
-		.cx-header-label {
-			color: $primary !important;
-		}
-
-		.cx-user-label {
-			color: $primary !important;
-		}
+		@extend %cx-header-links--color;
 	}
 
 	&:focus {
-		.cx-header-label {
-			color: $primary !important;
-		}
-
-		.cx-user-label {
-			color: $primary !important;
-		}
+		@extend %cx-header-links--color;
 	}
 }
 
 .cx-header-icon {
-	margin-right: $base-spacing * 0.25 !important;
-	line-height: 24px !important;
-	font-size: 24px !important;
+	margin-right: $base-spacing * 0.25;
 	color: $icon-light-gray-1;
 
 	&--small {
 		color: $icon-light-gray-1;
-		margin-right: $base-spacing * 0.25 !important;
-		line-height: 18px !important;
-		font-size: 18px !important;
+		margin-right: $base-spacing * 0.25;
+		line-height: 18px;
+		font-size: 18px;
 	}
 }
 
 .cx-header-arrow {
 	display: inline-block;
 	transition: transform 0.2s ease-in-out;
-	color: $accent-light-gray-1;
+	color: $secondary-and-button-text-color;
 	font-size: 11px;
 }
 
 .header-toolbar .cx-header-links .cx-user-label {
-	margin-top: unset !important;
 	letter-spacing: -0.18px;
-	line-height: 14px !important;
+	font-size: $text-xsmall;
+	line-height: 14px;
 }
 
 .header-toolbar .cx-header-arrow {
@@ -190,27 +166,15 @@ a {
 	line-height: 14px;
 }
 
-a.cx-header-links.base-margin-right {
-	margin-right: 70px !important;
-}
-
-.cx-header-links--teams {
-	a {
-		margin-left: 8px !important;
-		font-size: 12px;
-		line-height: 14px;
-	}
-
-	::ng-deep .cx-header-dropdown {
-		left: 98px;
-	}
+.cx-header-links--learning {
+	margin-right: 70px;
 }
 
 .cx-header-links--portal-help {
-	margin-right: 0 !important;
+	margin-right: unset;
 
 	a.text-small {
-		margin-top: 12px !important;
+		margin-top: 10px;
 	}
 
 	.cx-header-arrow {
@@ -222,21 +186,42 @@ a.cx-header-links.base-margin-right {
 	}
 }
 
-.cx-header-links--user {
-	.text-small {
-		margin: unset !important;
+.cx-header-links--mock {
+	margin-right: unset;
 
-		a {
-			@extend %cx-dropdown-link;
+	a.text-small {
+		margin-top: 10px;
+	}
+
+	::ng-deep .cx-header-dropdown {
+		left: 40px;
+	}
+}
+
+.cx-header-links--teams {
+	a.text-small {
+		margin-left: 8px;
+		padding: unset;
+		line-height: unset;
+
+		&:hover {
+			background-color: unset;
+			text-decoration: underline;
 		}
+	}
+
+	::ng-deep .cx-header-dropdown {
+		left: 98px;
+	}
+}
+
+.cx-header-links--user {
+	a {
+		@extend %cx-dropdown-link;
 	}
 
 	.cx-user-icon + .cx-header-arrow {
 		bottom: 0;
-	}
-
-	.flex-center-vertical {
-		align-items: unset !important;
 	}
 
 	::ng-deep .cx-header-dropdown {
@@ -249,27 +234,15 @@ a.cx-header-links.base-margin-right {
 }
 
 .cx-header-links--settings {
-	margin-right: 13px !important;
+	margin-right: 15px;
 }
 
 .cx-header-links--more {
-	margin-right: 0 !important;
+	margin-right: unset;
 	width: 3px;
 
 	::ng-deep .cx-header-dropdown {
 		left: 13px;
-	}
-}
-
-.cx-header-links--mock {
-	margin-right: unset !important;
-
-	a.text-small {
-		margin-top: 12px !important;
-	}
-
-	::ng-deep .cx-header-dropdown {
-		left: 40px;
 	}
 }
 
@@ -304,15 +277,17 @@ a.cx-header-links.base-margin-right {
 }
 
 .icon-more {
-	font-size: 19px !important;
+	position: relative;
+	left: 2px;
+	font-size: $text-larger;
 }
 
 .icon-cog {
-	margin-right: unset !important;
+	margin-right: unset;
 }
 
 .icon-help-alt {
-	font-size: 22px !important;
+	font-size: 22px;
 }
 
 .cx-team-member-info {
@@ -350,30 +325,28 @@ a.cx-header-links.base-margin-right {
 
 .cx-team-member--title {
 	color: $text-light-gray-2;
-	font-size: 11px !important;
-	line-height: 14px !important;
+	font-size: 11px;
+	line-height: 14px;
 }
 
 .cx-team-member--contact {
-	margin-top: 22px !important;
-	margin-bottom: 0 !important;
+	margin-top: 22px;
 	line-height: 14px;
 
 	span {
-		color: $icon-dark-gray-1 !important;
+		color: $icon-dark-gray-1;
 	}
 }
 
 .cx-team-member--phone {
-	margin-top: 17px !important;
-	margin-bottom: 0 !important;
+	margin-top: 17px;
 	line-height: 14px;
 
 	.icon-mobile-phone {
-		color: $icon-dark-gray-1 !important;
+		color: $icon-dark-gray-1;
 
 		& + span {
-			margin-left: 8px !important;
+			margin-left: 8px;
 			color: $text-dark-blue;
 			line-height: 14px;
 		}

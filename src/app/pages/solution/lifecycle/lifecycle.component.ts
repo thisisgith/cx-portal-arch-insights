@@ -8,7 +8,6 @@ import { LogService } from '@cisco-ngx/cui-services';
 
 import {
 	ACC,
-	ACCBookmarkSchema,
 	ACCResponse,
 	AtxSchema,
 	ATXResponseModel,
@@ -151,6 +150,7 @@ export class LifecycleComponent implements OnDestroy {
 	public moreATXSelected: AtxSchema;
 	public moreXCoordinates = 0;
 	public moreYCoordinates = 0;
+	public atxMoreClicked = false;
 	// id of ACC in request form
 	public accTitleRequestForm: string;
 	public accIdRequestForm: string;
@@ -182,6 +182,8 @@ export class LifecycleComponent implements OnDestroy {
 	private selectedSolution: RacetrackSolution;
 	private selectedTechnology: RacetrackTechnology;
 	private currentPitstopCompPert: string;
+	// Enable or disable CGT based on this flag
+	public enableCGT = false;
 
 	public categoryOptions: [];
 	public pgCategoryOptions: [];
@@ -224,6 +226,7 @@ export class LifecycleComponent implements OnDestroy {
 		loading: {
 			acc: false,
 			atx: false,
+			bookmark: false,
 			cgt: false,
 			elearning: false,
 			productGuides: false,
@@ -249,6 +252,7 @@ export class LifecycleComponent implements OnDestroy {
 	public selectAccComponent = false;
 	public selectCgtComponent = false;
 	public cgtRequestTrainingClicked = false;
+	public cxLevel: number;
 
 	get currentPitstop () {
 		return _.get(this.componentData, ['racetrack', 'pitstop']);
@@ -267,7 +271,7 @@ export class LifecycleComponent implements OnDestroy {
 	) {
 		this.user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(this.user, ['info', 'customerId']);
-
+		this.cxLevel = _.get(this.user, ['service', 'cxLevel'], 0);
 		const currentSBView = window.sessionStorage.getItem('cxportal.cisco.com:lifecycle:sbview');
 		if (!currentSBView) {
 			window.sessionStorage.setItem('cxportal.cisco.com:lifecycle:sbview', this.sbview);
@@ -536,7 +540,7 @@ export class LifecycleComponent implements OnDestroy {
 					name: I18n.get('_Bookmark_'),
 					sortable: true,
 					sortDirection: 'asc',
-					sortKey: 'isFavorite',
+					sortKey: 'bookmark',
 					template: this.bookmarkTemplate,
 					width: '10%',
 				},
@@ -767,46 +771,8 @@ export class LifecycleComponent implements OnDestroy {
 		this.selectSession({ });
 		this.componentData.atx.interested = null;
 		this.moreATXSelected = null;
+		this.atxMoreClicked = false;
 	}
-
-	 /**
-	  * Updates ACC bookmark
-	  * @param item ACC item
-	  * @returns ribbon
-	  */
-	 public setACCBookmark (item: ACC) {
-		this.status.loading.acc = true;
-		if (window.Cypress) {
-			window.accLoading = true;
-		}
-		const bookmarkParam: ACCBookmarkSchema = {
-			customerId: this.customerId,
-			isFavorite: !item.isFavorite,
-			pitstop: this.componentData.params.pitstop,
-			solution: this.componentData.params.solution,
-			usecase: this.componentData.params.usecase,
-		};
-		const params: RacetrackContentService.UpdateACCBookmarkParams = {
-			accId: item.accId,
-			bookmark: bookmarkParam,
-		};
-		this.contentService.updateACCBookmark(params)
-		.subscribe(() => {
-			item.isFavorite = !item.isFavorite;
-			this.status.loading.acc = false;
-			if (window.Cypress) {
-				window.accLoading = false;
-			}
-		},
-		err => {
-			this.status.loading.acc = false;
-			if (window.Cypress) {
-				window.accLoading = false;
-			}
-			this.logger.error(`lifecycle.component : setACCBookmark() :: Error  : (${
-				err.status}) ${err.message}`);
-		});
-	 }
 
 	/**
 	 * Selects the session
@@ -877,10 +843,10 @@ export class LifecycleComponent implements OnDestroy {
 		if (type === 'ACC') {
 			if (this.selectedFilterForACC === 'isBookmarked') {
 				this.selectedACC =
-				_.filter(this.componentData.acc.sessions, { isFavorite: true });
+				_.filter(this.componentData.acc.sessions, { bookmark: true });
 			} else if (this.selectedFilterForACC === 'hasNotBookmarked') {
 				this.selectedACC =
-				_.filter(this.componentData.acc.sessions, { isFavorite: false });
+				_.filter(this.componentData.acc.sessions, { bookmark: false });
 			} else {
 				this.selectedACC =
 					_.filter(this.componentData.acc.sessions,
@@ -1109,27 +1075,30 @@ export class LifecycleComponent implements OnDestroy {
 	 * @param item bookmark item object
 	 * @param inputCategory string of the category type
 	 */
-	 public updateBookmark (item: AtxSchema | SuccessPath, inputCategory: 'ATX' | 'SB' | 'PG') {
+	 public updateBookmark (item: ACC | AtxSchema | SuccessPath,
+			inputCategory: 'ACC' | 'ATX' | 'SB' | 'PG') {
 		let bookmark;
 		let id;
-		let lifecycleCategory: 'ATX' | 'SB';
+		let lifecycleCategory: 'ACC' | 'ATX' | 'SB';
 
 		// Product Guides has to be submitted as a Success Bytes bookmark.
 		if (inputCategory === 'PG') {
 			lifecycleCategory = 'SB';
 		} else {
-			lifecycleCategory = <'ATX' | 'SB'> inputCategory;
+			lifecycleCategory = <'ACC' | 'ATX' | 'SB'> inputCategory;
 		}
 
+		this.status.loading.bookmark = true;
+		bookmark = !_.get(item, 'bookmark');
+
 		switch (lifecycleCategory) {
+			case 'ACC':
+				id = _.get(item, 'accId');
+				break;
 			case 'ATX':
-				this.status.loading.atx = true;
-				bookmark = !_.get(item, 'bookmark');
 				id = _.get(item, 'atxId');
 				break;
 			case 'SB':
-				this.status.loading.success = true;
-				bookmark = !_.get(item, 'bookmark');
 				id = _.get(item, 'successByteId');
 				break;
 		}
@@ -1149,24 +1118,10 @@ export class LifecycleComponent implements OnDestroy {
 		this.contentService.updateBookmark(params)
 		.subscribe(() => {
 			item.bookmark = !item.bookmark;
-			switch (lifecycleCategory) {
-				case 'SB':
-					this.status.loading.success = false;
-					break;
-				case 'ATX':
-					this.status.loading.atx = false;
-					break;
-			}
+			this.status.loading.bookmark = false;
 		},
 		err => {
-			switch (lifecycleCategory) {
-				case 'SB':
-					this.status.loading.success = false;
-					break;
-				case 'ATX':
-					this.status.loading.atx = false;
-					break;
-			}
+			this.status.loading.bookmark = false;
 			this.logger.error(`lifecycle.component : updateBookmark() :: Error  : (${
 				err.status}) ${err.message}`);
 		});
@@ -1197,7 +1152,8 @@ export class LifecycleComponent implements OnDestroy {
 	 * @param panel string
 	 */
 	 public getMoreCoordinates (moreList: HTMLElement, panel: string) {
-		if (_.isEqual(panel, 'moreATXList') && !this.atxScheduleCardOpened) {
+		if (_.isEqual(panel, 'moreATXList') &&
+			!this.atxScheduleCardOpened && !this.atxMoreClicked) {
 			this.moreXCoordinates = moreList.offsetWidth;
 			this.moreYCoordinates = moreList.offsetTop;
 		}
@@ -1205,12 +1161,36 @@ export class LifecycleComponent implements OnDestroy {
 
 	/**
 	 * Changes the atxScheduleCardOpened flag and adds value to moreATXSelected
-	 * @param item ATXSchema
 	 */
-	 public atxMoreViewSessions (item: AtxSchema) {
+	 public atxMoreViewSessions () {
 		this.atxScheduleCardOpened = true;
 		this.recommendedAtxScheduleCardOpened = false;
-		this.moreATXSelected = item;
+		this.atxMoreClicked = false;
+	}
+
+	/**
+	 * Changes the atxMoreClicked flag and adds value to moreATXSelected
+	 * @param item ATXSchema
+	 */
+	 public atxMoreSelect (item: AtxSchema) {
+		 if (!this.atxMoreClicked) {
+			this.atxScheduleCardOpened = false;
+			this.recommendedAtxScheduleCardOpened = false;
+			this.moreATXSelected = item;
+			this.atxMoreClicked = true;
+		 }
+	}
+
+	/**
+	 * Changes the recommendedAtxScheduleCardOpened flag
+	 */
+	 public recommendedATXViewSessions () {
+		if (!this.recommendedAtxScheduleCardOpened) {
+		   this.recommendedAtxScheduleCardOpened = true;
+		   this.atxScheduleCardOpened = false;
+		   this.componentData.atx.interested = null;
+		   this.atxMoreClicked = false;
+		}
 	}
 
 	/**
@@ -1224,8 +1204,32 @@ export class LifecycleComponent implements OnDestroy {
 		this.eventYCoordinates = 0;
 		this.moreXCoordinates = 0;
 		this.moreYCoordinates = 0;
-		this.componentData.atx.interested = null;
 		this.moreATXSelected = null;
+		this.atxMoreClicked = false;
+		if (this.componentData.atx) {
+			this.componentData.atx.interested = null;
+		}
+	}
+
+	/**
+	 * Get the panel styles based on button coordinates
+	 * @param atxMoreClick HTMLElement
+	 */
+	 public getATXMorePanel (atxMoreClick: HTMLElement) {
+		const _div = atxMoreClick;
+		if (this.atxMoreClicked && this.moreATXSelected && !this.atxScheduleCardOpened) {
+			_div.style.left = `${this.moreXCoordinates}px`;
+			_div.style.top = `${this.moreYCoordinates - _div.offsetHeight / 2}px`;
+		}
+	}
+
+	/**
+	 * Opens the given recordingURL in a new tab
+	 * @param recordingUrl string
+	 */
+	 public atxWatchNow (recordingUrl: string) {
+		window.open(`${recordingUrl}`, '_blank');
+		this.atxMoreClicked = false;
 	}
 
 	/**
@@ -1236,7 +1240,7 @@ export class LifecycleComponent implements OnDestroy {
 	public getPanel (viewAtxSessions: HTMLElement) {
 		let panel;
 		const _div = viewAtxSessions;
-		const atxPopupListViewAdjustPx = 193;
+		const atxPopupListViewAdjustPx = 255;
 		this.innerWidth = window.innerWidth;
 		if (this.componentData.atx.interested) {
 			switch (this.atxview) {
@@ -1325,6 +1329,7 @@ export class LifecycleComponent implements OnDestroy {
 	 * @returns the ATXResponse
 	 */
 	private loadATX (): Observable<ATXResponseModel> {
+		this.closeViewSessions();
 		this.status.loading.atx = true;
 		if (window.Cypress) {
 			window.atxLoading = true;
@@ -1384,7 +1389,7 @@ export class LifecycleComponent implements OnDestroy {
 
 		return this.contentService.getRacetrackSuccessPaths(
 			_.pick(this.componentData.params,
-				['customerId']))
+				['customerId', 'solution', 'usecase', 'rows']))
 		.pipe(
 			map((result: SuccessPathsResponse) => {
 				this.selectedFilterForPG = '';
@@ -1556,138 +1561,154 @@ export class LifecycleComponent implements OnDestroy {
 	 * @returns the ContractQuota
 	 */
 	private loadCGT (): Observable<ContractQuota[]> | Observable<void | { }> {
-		this.status.loading.cgt = true;
 		if (window.Cypress) {
-			window.cgtLoading = true;
+			this.enableCGT = window.forceCGTDisplay;
 		}
-		let startDate;
-		let endDate;
-		let trainingDuration;
-		let trainingLocation;
-		let trainingData;
-		let completedTrainingData = [];
-		let trainigsCompleted = 0;
-		let trainigsInProcess = 0;
-		this.usedTrainings = [];
 
-		const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June',
-			'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+		if (this.enableCGT) {
+			this.status.loading.cgt = true;
+			if (window.Cypress) {
+				window.cgtLoading = true;
+			}
+			let startDate;
+			let endDate;
+			let trainingDuration;
+			let trainingLocation;
+			let trainingData;
+			let completedTrainingData = [];
+			let trainigsCompleted = 0;
+			let trainigsInProcess = 0;
+			this.usedTrainings = [];
 
-		return this.contentService.getTrainingQuotas(
-			_.pick(this.componentData.params, ['customerId']))
-		.pipe(
-			map((result: ContractQuota[]) => {
-				this.status.loading.cgt = false;
-				if (window.Cypress) {
-					window.cgtLoading = false;
-				}
-				this.totalAllowedGroupTrainings = _.size(result) * 2;
-				_.each(result, training => {
-					if (new Date(_.get(training, 'contract_end_date')).getFullYear() ===
-						new Date().getFullYear()) {
-						this.usedTrainings = _.union(this.usedTrainings, [{
-							contract_number: _.get(training, 'tsa_contract_no'),
-							end_date: _.get(training, 'contract_end_date'),
-							used_sessions: _.get(training, 'closed_ilt_courses_inprocess'),
-						}]);
-						trainigsInProcess += _.get(training, 'closed_ilt_courses_inprocess');
-					} else {
-						this.usedTrainings = _.union(this.usedTrainings, [{
-							contract_number: _.get(training, 'tsa_contract_no'),
-							end_date: _.get(training, 'contract_end_date'),
-							used_sessions: 0,
-						}]);
+			const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June',
+				'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+			return this.contentService.getTrainingQuotas(
+				_.pick(this.componentData.params, ['customerId']))
+			.pipe(
+				map((result: ContractQuota[]) => {
+					this.status.loading.cgt = false;
+					if (window.Cypress) {
+						window.cgtLoading = false;
 					}
-				});
-				this.contentService.getCompletedTrainings(
-					_.pick(this.componentData.params, ['customerId']))
-					.pipe(
-						catchError(err => {
-							this.logger.error(`lifecycle.component : loadCGT() :
-							 getCompletedTrainings() :: Error : (${err.status}) ${err.message}`);
-
-							return of({ });
-						}),
-					)
-					.subscribe(response => {
-						this.completedTrainingsList = response;
-						_.each(this.completedTrainingsList, completedTraining => {
-							if (new Date(_.get(completedTraining, 'end_date')).getFullYear() ===
-								new Date().getFullYear()) {
-								_.each(this.usedTrainings, training => {
-									if (_.get(completedTraining, 'contract_number') ===
-										_.get(training, 'contract_number')) {
-										training.used_sessions = training.used_sessions + 1;
-									}
-								});
-								trainigsCompleted = trainigsCompleted + 1;
-							}
-							startDate = `${
-								monthNames[new Date(_.get(completedTraining, 'start_date'))
-								.getMonth()]
-							} ${new Date(_.get(completedTraining, 'start_date')).getUTCDate()}`;
-							startDate += _.isEqual(
-								new Date(_.get(completedTraining, 'start_date')).getUTCFullYear(),
-								new Date(_.get(completedTraining, 'end_date')).getUTCFullYear()) ?
-								'' : ` ${
-									new Date(_.get(completedTraining, 'start_date'))
-									.getUTCFullYear()
-								}`;
-							endDate = _.isEqual(
-								monthNames[new Date(_.get(completedTraining, 'start_date'))
-								.getMonth()],
-								monthNames[new Date(_.get(completedTraining, 'end_date'))
-								.getMonth()]) ? '' : `${
-									monthNames[new Date(_.get(completedTraining, 'end_date'))
-									.getMonth()]
-								} `;
-							endDate += new Date(_.get(completedTraining, 'end_date')).getUTCDate();
-							endDate += _.isEqual(
-								new Date(_.get(completedTraining, 'start_date')).getUTCFullYear(),
-								new Date(_.get(completedTraining, 'end_date')).getUTCFullYear()) ?
-								`, ${
-									new Date(_.get(completedTraining, 'end_date')).getUTCFullYear()
-								}` : ` ${
-									new Date(_.get(completedTraining, 'end_date')).getUTCFullYear()
-								}`;
-							trainingDuration = `${startDate}-${endDate}`;
-							trainingLocation = `with ${
-								_.get(completedTraining, 'instructors')
-							}, ${
-								_.get(completedTraining, 'city')
-							}, ${
-								_.get(completedTraining, 'country')
-							}`;
-							trainingData = {
-								trainingDuration,
-								trainingLocation,
-							};
-							completedTrainingData = _.union(completedTrainingData, [trainingData]);
-						});
-						this.groupTrainingsAvailable = this.totalAllowedGroupTrainings -
-							(trainigsCompleted + trainigsInProcess);
-						this.groupTrainingsAvailable = this.groupTrainingsAvailable > 0 ?
-							this.groupTrainingsAvailable : 0;
-						this.componentData.cgt = {
-							sessions: completedTrainingData,
-							trainingsAvailable: this.groupTrainingsAvailable,
-							usedTrainings: this.usedTrainings,
-						};
-
-						return result;
+					this.totalAllowedGroupTrainings = _.size(result) * 2;
+					_.each(result, training => {
+						if (new Date(_.get(training, 'contract_end_date')).getFullYear() ===
+							new Date().getFullYear()) {
+							this.usedTrainings = _.union(this.usedTrainings, [{
+								contract_number: _.get(training, 'tsa_contract_no'),
+								end_date: _.get(training, 'contract_end_date'),
+								used_sessions: _.get(training, 'closed_ilt_courses_inprocess'),
+							}]);
+							trainigsInProcess += _.get(training, 'closed_ilt_courses_inprocess');
+						} else {
+							this.usedTrainings = _.union(this.usedTrainings, [{
+								contract_number: _.get(training, 'tsa_contract_no'),
+								end_date: _.get(training, 'contract_end_date'),
+								used_sessions: 0,
+							}]);
+						}
 					});
-			}),
-			catchError(err => {
-				this.status.loading.cgt = false;
-				if (window.Cypress) {
-					window.cgtLoading = false;
-				}
-				this.logger.error(`lifecycle.component : loadCGT() :: Error : (${
-					err.status}) ${err.message}`);
+					this.contentService.getCompletedTrainings(
+						_.pick(this.componentData.params, ['customerId']))
+						.pipe(
+							catchError(err => {
+								this.logger.error(`lifecycle.component : loadCGT() :
+								getCompletedTrainings() :: Error : (${err.status}) ${err.message}`);
 
-				return of({ });
-			}),
-		);
+								return of({ });
+							}),
+						)
+						.subscribe(response => {
+							this.completedTrainingsList = response;
+							_.each(this.completedTrainingsList, completedTraining => {
+								if (new Date(_.get(completedTraining, 'end_date')).getFullYear() ===
+									new Date().getFullYear()) {
+									_.each(this.usedTrainings, training => {
+										if (_.get(completedTraining, 'contract_number') ===
+											_.get(training, 'contract_number')) {
+											training.used_sessions = training.used_sessions + 1;
+										}
+									});
+									trainigsCompleted = trainigsCompleted + 1;
+								}
+								startDate = `${
+									monthNames[new Date(_.get(completedTraining, 'start_date'))
+									.getMonth()]
+								} ${new Date(_.get(completedTraining, 'start_date')).getUTCDate()}`;
+								startDate += _.isEqual(
+									new Date(_.get(completedTraining, 'start_date'))
+										.getUTCFullYear(),
+									new Date(_.get(completedTraining, 'end_date'))
+										.getUTCFullYear()) ?
+									'' : ` ${
+										new Date(_.get(completedTraining, 'start_date'))
+											.getUTCFullYear()
+									}`;
+								endDate = _.isEqual(
+									monthNames[new Date(_.get(completedTraining, 'start_date'))
+									.getMonth()],
+									monthNames[new Date(_.get(completedTraining, 'end_date'))
+									.getMonth()]) ? '' : `${
+										monthNames[new Date(_.get(completedTraining, 'end_date'))
+										.getMonth()]
+									} `;
+								endDate += new Date(_.get(completedTraining, 'end_date'))
+									.getUTCDate();
+								endDate += _.isEqual(
+									new Date(_.get(completedTraining, 'start_date'))
+										.getUTCFullYear(),
+									new Date(_.get(completedTraining, 'end_date'))
+										.getUTCFullYear()) ?
+									`, ${
+										new Date(_.get(completedTraining, 'end_date'))
+											.getUTCFullYear()
+									}` : ` ${
+										new Date(_.get(completedTraining, 'end_date'))
+											.getUTCFullYear()
+									}`;
+								trainingDuration = `${startDate}-${endDate}`;
+								trainingLocation = `with ${
+									_.get(completedTraining, 'instructors')
+								}, ${
+									_.get(completedTraining, 'city')
+								}, ${
+									_.get(completedTraining, 'country')
+								}`;
+								trainingData = {
+									trainingDuration,
+									trainingLocation,
+								};
+								completedTrainingData =
+									_.union(completedTrainingData, [trainingData]);
+							});
+							this.groupTrainingsAvailable = this.totalAllowedGroupTrainings -
+								(trainigsCompleted + trainigsInProcess);
+							this.groupTrainingsAvailable = this.groupTrainingsAvailable > 0 ?
+								this.groupTrainingsAvailable : 0;
+							this.componentData.cgt = {
+								sessions: completedTrainingData,
+								trainingsAvailable: this.groupTrainingsAvailable,
+								usedTrainings: this.usedTrainings,
+							};
+
+							return result;
+						});
+				}),
+				catchError(err => {
+					this.status.loading.cgt = false;
+					if (window.Cypress) {
+						window.cgtLoading = false;
+					}
+					this.logger.error(`lifecycle.component : loadCGT() :: Error : (${
+						err.status}) ${err.message}`);
+
+					return of({ });
+				}),
+			);
+		}
+
+		return of({ });
 	}
 
 	/**

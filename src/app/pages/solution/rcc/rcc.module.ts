@@ -13,6 +13,7 @@ import {
 	CuiSelectModule,
 	CuiDropdownModule,
 	CuiSpinnerModule,
+	CuiAlertModule,
 } from '@cisco-ngx/cui-components';
 import { I18nPipeModule, FromNowPipeModule } from '@cisco-ngx/cui-pipes';
 import {
@@ -21,14 +22,14 @@ import {
 import {
 	RccDeviceViolationDetailsModule,
 } from './rcc-device-violation-details/rcc-device-violation-details.module';
-import { PieChartModule, DetailsPanelModule } from '@components';
+import { PieChartModule, DetailsPanelModule, VisualFilterBarModule } from '@components';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RccDataModule } from '@sdp-api';
 import { environment } from '@environment';
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
  */
-const rootUrl = environment.sdpServiceOrigin;
+const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 /**
  * Child routes for RCC Module for lazy loading
  */
@@ -50,6 +51,7 @@ const childRoutes: Routes = [
 		PieChartModule,
 		RccAssetViolationDetailsModule,
 		RccDeviceViolationDetailsModule,
+		CuiAlertModule,
 		CuiTableModule,
 		CuiPagerModule,
 		RccDataModule.forRoot({ rootUrl }),
@@ -64,6 +66,7 @@ const childRoutes: Routes = [
 		ReactiveFormsModule,
 		CuiDropdownModule,
 		CuiSpinnerModule,
+		VisualFilterBarModule,
 	],
 })
 export class RccModule { }

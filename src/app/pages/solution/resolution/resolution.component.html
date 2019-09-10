@@ -31,7 +31,7 @@
 	</cui-tabs>
 </div>
 
-<div *ngIf="mainContent === 'cases'" class="panel panel--bordered base-margin-top">
+<div *ngIf="mainContent === 'cases'" class="panel panel--bordered half-margin-top">
 	<ng-container *ngIf="filtered">
 		<ng-container *ngTemplateOutlet="filterBar"></ng-container>
 	</ng-container>
@@ -51,7 +51,7 @@
 			<form [formGroup]="searchCasesForm" (ngSubmit)="searchCaseNumber()">
 				<div class="form-group input--icon">
 					<div class="form-group__text">
-						<input id="input-type-search" type="text" data-auto-id="caseSearchBox"
+						<input id="input-type-search" type="text" data-auto-id="caseSearchBox" class="resolution-search"
 							[placeholder]="'_SearchOpenCases_' | i18n" formControlName="caseNo" autocomplete="off">
 						<span class="icon-close has-label close" data-auto-id="closeButton"
 							(click)="clearSearch()"></span>

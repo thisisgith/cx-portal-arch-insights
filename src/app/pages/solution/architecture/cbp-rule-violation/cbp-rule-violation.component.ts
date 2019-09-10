@@ -39,7 +39,7 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 	@ViewChild('exceptionsTemplate', { static: true })
 	private exceptionsTemplate: TemplateRef<{ }>;
 
-	public globalSearchText = '';
+	public searchText = '';
 
 	public paramsType: params = {
 		customerId: '',
@@ -54,7 +54,6 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 		private architectureService: ArchitectureService,
 		private route: ActivatedRoute,
 	) {
-		this.logger.debug('CbpRuleViolationComponent Created!');
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
 		this.paramsType.customerId = _.cloneDeep(this.customerId);
@@ -99,7 +98,7 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 			columns: [
 				{
 					key: 'bpRuleTitle',
-					name: I18n.get('_ArchitectureRuleName_'),
+					name: I18n.get('_ArchitectureRuleViolated_'),
 					sortable: false,
 				},
 				{
@@ -135,7 +134,9 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 					sortable: false,
 				},
 			],
+			hover: true,
 			singleSelect: true,
+			striped: false,
 		});
 	}
 
@@ -143,14 +144,14 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 	 * Keys down function
 	 * @param event contains eventdata
 	 */
-	public globalSearchFunction (event) {
+	public textFilter (event) {
 		// key code 13 refers to enter key
 		const eventKeycode = 13;
-		if (event.keyCode === eventKeycode) {
+		if (event.keyCode === eventKeycode || this.searchText.trim().length === 0) {
 			this.isLoading = true;
 			this.tableStartIndex = 0;
 			this.paramsType.page = 0;
-			this.paramsType.searchText = this.globalSearchText;
+			this.paramsType.searchText = this.searchText;
 			this.getCBPRulesData();
 		}
 	}

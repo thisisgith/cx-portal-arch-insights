@@ -142,7 +142,7 @@ export class QuickTourComponent implements OnInit {
 			case 'right':
 				return 'translate(0%, -50%)';
 			default:
-				return 'translate(-50%, 50%)';
+				return 'translate(-50%, 0%)';
 		}
 	}
 

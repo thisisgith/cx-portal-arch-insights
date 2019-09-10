@@ -1,4 +1,5 @@
 @import '~cisco-ui/src/scss/utilities/_variables.scss';
+@import '../../../../mixins.scss';
 
 .icon-asset {
 	height: 24px;
@@ -40,6 +41,18 @@
 	border: 2px solid $primary;
 }
 
+.card__header {
+	min-height: 75px;
+}
+
+.card__footer {
+	min-height: 25px;
+}
+
+.card__body {
+	min-height: 200px;
+}
+
 .filter {
 	&__selected {
 		border-bottom: 4px solid $primary;
@@ -53,4 +66,13 @@
 		position: absolute;
 		bottom: 0;
 	}
+}
+
+::ng-deep .cui .icon-more::before {
+	// styling to make the more icon sizing more aligned with design
+	font-size: 20px !important;
+}
+
+.form-group__text .assets-search {
+	@include filter-search;
 }

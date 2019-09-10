@@ -5,7 +5,7 @@
 	(close)="onPanelClose()">
 </advisory-details>
 
-<div class="panel panel--bordered base-padding-left base-padding-top no-padding-bottom">
+<div class="panel panel--bordered base-padding-left no-padding-bottom">
 	<cui-tabs inline="true"
 		*ngIf="tabs.length"
 		[activeTabIndex]="activeIndex"
@@ -14,7 +14,7 @@
 		<cui-tab *ngFor="let tab of tabs"
 			[label]="tab.label | uppercase"
 			[disabled]="tab.disabled">
-			<ng-container *ngIf="!selectedTab.loading && selectedTab.filters.length">
+			<ng-container *ngIf="selectedTab.filters.length">
 				<visual-filter-bar [filters]="tab.filters" [filterCollapse]="status.filterCollapse"></visual-filter-bar>
 			</ng-container>
 		</cui-tab>
@@ -38,8 +38,11 @@
 	</cui-tabs>
 </div>
 
-<div *ngIf="selectedTab" class="panel panel--bordered base-margin-top">
-	<ng-container *ngIf="selectedTab.filtered">
+<div #contentContainer
+	*ngIf="selectedTab"
+	class="panel panel--bordered half-margin-top"
+	[ngStyle]="{ 'height': selectedTab.contentContainerHeight }">
+	<ng-container *ngIf="selectedTab.filtered && !selectedTab.loading">
 		<ng-container *ngTemplateOutlet="filterBar"></ng-container>
 	</ng-container>
 	<div class="row" *ngIf="!selectedTab.loading && selectedTab.pagination?.total">
@@ -176,6 +179,7 @@
 		<div class="form-group__text">
 			<input id="searchInput-Security"
 				attr.data-auto-id="SearchInput-Security"
+				class="security-search"
 				type="text"
 				#securitySearchInput
 				[minlength]="searchOptions.min"
@@ -196,6 +200,7 @@
 		<div class="form-group__text">
 			<input id="searchInput-Field"
 				attr.data-auto-id="SearchInput-Field"
+				class="field-search"
 				type="text"
 				#fieldSearchInput
 				[minlength]="searchOptions.min"
@@ -216,6 +221,7 @@
 		<div class="form-group__text">
 			<input id="searchInput-Bugs"
 				attr.data-auto-id="SearchInput-Bugs"
+				class="bugs-search"
 				type="text"
 				#bugsSearchInput
 				[minlength]="searchOptions.min"
@@ -267,8 +273,8 @@
 
 <ng-template #lastUpdatedTemplate let-celldata="celldata">
 	<div class="flex flex-fill flex-center">
-		<span 
-			[innerText]="celldata?.lastUpdated ? (celldata?.lastUpdated | date:'yyyy MMM dd') : ('_Never_' | i18n)"
+		<span
+			[innerText]="(celldata?.lastUpdated | date:'yyyy MMM dd') || (celldata?.publishedOn | date:'yyyy MMM dd') || ('_Never_' | i18n)"
 			data-auto-id="LastUpdatedText"
 		></span>
 	</div>

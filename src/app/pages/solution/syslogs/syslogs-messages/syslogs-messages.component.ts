@@ -56,7 +56,6 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 		public syslogsService: SyslogsService,
 		private userResolve: UserResolve,
 	) {
-		this.logger.debug('BestpracticesComponent Created!');
 		this.userResolve.getCustomerId()
 		.pipe(
 		takeUntil(this.destroy$),
@@ -72,20 +71,6 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 			severity: 3,
 			size: this.pageLimit,
 		};
-	}
-	get dropdownActions () {
-		return _.filter([
-			this.selected
-				? {
-					label: `${I18n.get('_ExportSelected_')} (${
-						this.selected
-						})`,
-				}
-				: undefined,
-			{
-				label: I18n.get('_ExportAll_'),
-			},
-		]);
 	}
 	/**
 	 * grid column template of syslogs grid
@@ -174,7 +159,7 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 			],
 			dynamicData: false,
 			singleSelect: true,
-
+			striped: false,
 		});
 	}
 
@@ -198,6 +183,10 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 			.subscribe(gridData => {
 				this.tableData = gridData;
 				this.totalItems = gridData.length;
+				this.tableEndIndex = 10;
+				if (this.tableEndIndex > this.totalItems) {
+					this.tableEndIndex = this.totalItems;
+				}
 			}, catchError(err => {
 				this.logger.error('syslogs-details.component : getDeviceGridData() ' +
 					`:: Error : (${err.status}) ${err.message}`);
@@ -247,8 +236,11 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 	 */
 	public onPagerUpdated (pageInfo: any) {
 		this.tableOffset = pageInfo.page;
-		this.tableStartIndex = (pageInfo.page * pageInfo.limit) + 1 ;
-		this.tableEndIndex = (pageInfo.page * pageInfo.limit) + 10 ;
+		this.tableStartIndex = (pageInfo.page * pageInfo.limit);
+		this.tableEndIndex = (pageInfo.page * pageInfo.limit) + 10;
+		if (this.tableEndIndex > this.totalItems) {
+			this.tableEndIndex = this.totalItems;
+		}
 	}
 	/**
 	 * on destroy

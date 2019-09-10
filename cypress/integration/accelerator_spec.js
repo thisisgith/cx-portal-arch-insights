@@ -76,12 +76,12 @@ describe('Accelerator (ACC)', () => { // PBC-32
 					.should('have.text', i18n._Completed_);
 				break;
 			case 'in-progress':
-				cy.getByAutoId('recommendedACC-In-Progress-Icon').should('exist')
+				cy.getByAutoId('recommendedACC-In-Progress-Icon').should('exist');
 				cy.getByAutoId('recommendedACC-In-Progress')
 					.should('have.text', i18n._Requested_);
 				break;
 			case 'requested':
-				cy.getByAutoId('recommendedACC-Requested-Icon').should('exist')
+				cy.getByAutoId('recommendedACC-Requested-Icon').should('exist');
 				cy.getByAutoId('recommendedACC-Requested')
 					.should('have.text', i18n._Requested_);
 				break;
@@ -2158,9 +2158,13 @@ describe('Accelerator (ACC)', () => { // PBC-32
 									.should('not.exist');
 								break;
 							case 'in-progress':
+								cy.getByAutoId('moreACCList-HoverModal-In-Progress')
+									.should('contain', i18n._SessionInProgress_);
+								cy.getByAutoId('Request1on1Button')
+									.should('not.exist');
+								break;
 							case 'requested':
-								cy.getByAutoId('moreACCList-HoverModal-CSEMessage')
-									.should('contain', i18n._CSETouch_);
+								// PBC-602 Green CSE message has been removed
 								cy.getByAutoId('Request1on1Button')
 									.should('not.exist');
 								break;
@@ -2171,6 +2175,76 @@ describe('Accelerator (ACC)', () => { // PBC-32
 					});
 				});
 			});
+		});
+	});
+
+	describe('PBC-601: UAT F8724 - Lifecycle - ACC--Customer should be blocked from scheduling at pitstops more than 1 a...', () => {
+		before(() => {
+			// Switch to mock data with no scheduled items
+			accMock.enable('(ACC) IBN-Campus Network Assurance-Onboard-twoRecommended');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ACC) IBN-Campus Network Assurance-Onboard-twoRecommended');
+		});
+
+		after(() => {
+			// Reset the view to the currentPitstop
+			cy.get('#racecar').click();
+
+			// Switch back to the default mock data
+			accMock.enable('(ACC) IBN-Campus Network Assurance-Onboard');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ACC) IBN-Campus Network Assurance-Onboard');
+		});
+
+		it('Should allow scheduling of an ACC on the current pitstop', () => {
+			// Verify the Request 1-on-1 button is enabled
+			cy.getByAutoId('Request1on1ACCButton')
+				.first()
+				.should('not.have.class', 'disabled')
+				.click();
+			cy.getByAutoId('accRequestModal').should('be.visible');
+
+			// Close the modal
+			cy.getByAutoId('ACCCloseRequestModal').click();
+			cy.getByAutoId('accRequestModal').should('not.exist');
+		});
+
+		it('Should allow scheduling of an ACC on the next pitstop', () => {
+			// Move the preview to the next pitstop
+			cy.getByAutoId('Racetrack-Point-implement').click();
+			cy.wait('(ACC) IBN-Campus Network Assurance-Implement-twoRecommended', { timeout: 5000 });
+
+			// Verify the Request 1-on-1 button is enabled
+			cy.getByAutoId('Request1on1ACCButton')
+				.first()
+				.should('not.have.class', 'disabled')
+				.click();
+			cy.getByAutoId('accRequestModal').should('be.visible');
+
+			// Close the modal
+			cy.getByAutoId('ACCCloseRequestModal').click();
+			cy.getByAutoId('accRequestModal').should('not.exist');
+		});
+
+		it('Should NOT allow scheduling of an ACC on the after next pitstop', () => {
+			// Move the preview to the next pitstop
+			cy.getByAutoId('Racetrack-Point-use').click();
+			cy.wait('(ACC) IBN-Campus Network Assurance-Use-twoRecommended', { timeout: 5000 });
+
+			// NOTE: Cypress can not trigger elements with :hover css property. Since the tooltip
+			// doesn't exist in the DOM until we hover, only check that the button is disabled.
+			// See below for reference:
+			// https://docs.cypress.io/api/commands/hover.html#Workarounds
+			// https://github.com/cypress-io/cypress/issues/10
+			cy.getByAutoId('Request1on1ACCButton')
+				.first()
+				.should('have.class', 'disabled');
 		});
 	});
 });
