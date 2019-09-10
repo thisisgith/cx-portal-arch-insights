@@ -365,9 +365,9 @@
 <ng-template #filterBar>
 	<div class="row flex-center-vertical half-margin-top base-margin-bottom">
 		<div class="col-md-11 flex">
-			<span class="text-large flex flex-center-vertical base-margin-left half-margin-right" [innerText]="'_Filtered_' | i18n"></span>
+			<span class="flex flex-center-vertical base-margin-left half-margin-right filter-bar__title" [innerText]="'_Filtered_' | i18n"></span>
 			<ng-container *ngFor="let selectedSubfilter of selectedSubfilters">
-				<span class="label label--dkgray text-large"
+				<span class="label filter-bar__item"
 					(click)="onSubfilterSelect(selectedSubfilter.subfilter.filter, selectedSubfilter.filter)"
 					attr.data-auto-id="FilterTag-{{ selectedSubfilter.subfilter.filter }}">
 					<span [innerText]="selectedSubfilter.subfilter.label"></span>
@@ -375,7 +375,7 @@
 				</span>
 			</ng-container>
 		</div>
-		<div class="col-md-1 text-center text-right">
+		<div class="col-md-1 flex flex-center flex-center-vertical filter-bar__clear">
 			<a (click)="clearFilters()"
 				[innerText]="'_ClearAll_' | i18n"
 				data-auto-id="FilterBarClearAllFilters">

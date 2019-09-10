@@ -437,3 +437,21 @@ $cx-font-size-24: 24px;
 }
 
 /* CiscoUI table styling override end */
+
+:host ::ng-deep .filter-bar {
+	&__title {
+		font-size: 14px;
+		line-height: 16px;
+	}
+
+	&__item {
+		background: #6a80a5;
+		border-radius: 4px;
+		font-size: 14px;
+		line-height: 16px;
+	}
+
+	&__clear {
+		font-size: 12px;
+	}
+}
