@@ -12,7 +12,7 @@ import { ActivatedRoute } from '@angular/router';
 import { user } from '@mock';
 import { HttpErrorResponse } from '@angular/common/http';
 
-fdescribe('DnacListComponent', () => {
+describe('DnacListComponent', () => {
 	let component: DnacListComponent;
 	let fixture: ComponentFixture<DnacListComponent>;
 	let service: ArchitectureReviewService;
