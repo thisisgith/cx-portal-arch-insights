@@ -132,7 +132,7 @@ export const CriticalBugScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 200,
+					delay: 500,
 					description: 'Critical Bugs - Page 2',
 					response: {
 						body: MockData(10, 2, null, null, 4),
@@ -149,7 +149,7 @@ export const CriticalBugScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 200,
+					delay: 500,
 					description: 'Critical Bugs - Page 3',
 					response: {
 						body: MockData(10, 3, null, null, 4),
@@ -200,7 +200,7 @@ export const CriticalBugScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 200,
+					delay: 500,
 					description: 'Critical Bugs',
 					response: {
 						body: MockData(10, 1),
@@ -218,7 +218,7 @@ export const CriticalBugScenarios = [
 					selected: false,
 				},
 				{
-					delay: 200,
+					delay: 500,
 					description: 'Critical Bugs - Page 1',
 					response: {
 						body: MockData(10, 1, null, null, 4),
@@ -269,7 +269,7 @@ export const CriticalBugScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 200,
+					delay: 500,
 					description: 'Critical Bugs (Resolved)',
 					response: {
 						body: MockData(10, 1, ['resolved']),
