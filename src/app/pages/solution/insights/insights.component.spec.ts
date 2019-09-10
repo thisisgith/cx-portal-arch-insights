@@ -9,15 +9,12 @@ import { OptimalSoftwareVersionComponent } from '../osv/osv.component';
 import { RiskMitigationComponent } from '../risk-mitigation/risk-mitigation.component';
 import { OptimalSoftwareVersionModule } from '../osv/osv.module';
 import { RiskMitigationModule } from '../risk-mitigation/risk-mitigation.module';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { UserResolve } from '@utilities';
 import { RouteAuthService } from '@services';
+import { HttpErrorResponse } from '@angular/common/http';
 
-/**
- * class to mock router
- */
-
-fdescribe('InsightsComponent', () => {
+describe('InsightsComponent', () => {
 	let component: InsightsComponent;
 	let fixture: ComponentFixture<InsightsComponent>;
 	let routeAuthService: RouteAuthService;
@@ -33,11 +30,11 @@ fdescribe('InsightsComponent', () => {
 				RouterTestingModule.withRoutes([
 					{
 						component: OptimalSoftwareVersionComponent,
-						path: 'solution/best-practices/osv',
+						path: 'solution/insights/osv',
 					},
 					{
 						component: RiskMitigationComponent,
-						path: 'solution/best-practices/risk-mitigation',
+						path: 'solution/insights/risk-mitigation',
 					},
 				]),
 			],
@@ -48,7 +45,7 @@ fdescribe('InsightsComponent', () => {
 		fixture = TestBed.createComponent(InsightsComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
-		routeAuthService = TestBed.get(routeAuthService);
+		routeAuthService = TestBed.get(RouteAuthService);
 		userResolve = TestBed.get(UserResolve);
 	});
 
@@ -64,7 +61,8 @@ fdescribe('InsightsComponent', () => {
 		spyOn(userResolve, 'getCustomerId')
 			.and
 			.returnValue(of('1234'));
-
+		component.ngOnInit();
+		fixture.detectChanges();
 		expect(component.hasPermission)
 			.toBeTruthy();
 	});
@@ -76,7 +74,25 @@ fdescribe('InsightsComponent', () => {
 		spyOn(userResolve, 'getCustomerId')
 			.and
 			.returnValue(of('1234'));
+		component.ngOnInit();
+		fixture.detectChanges();
+		expect(component.hasPermission)
+			.toBeFalsy();
+	});
 
+	it('should should set hasPermission false if error', () => {
+		const error = {
+			status: 404,
+			statusText: 'Resource not found',
+		};
+		spyOn(routeAuthService, 'checkPermissions')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+		spyOn(userResolve, 'getCustomerId')
+			.and
+			.returnValue(of('1234'));
+		component.ngOnInit();
+		fixture.detectChanges();
 		expect(component.hasPermission)
 			.toBeFalsy();
 	});
