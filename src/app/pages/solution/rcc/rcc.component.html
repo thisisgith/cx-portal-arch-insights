@@ -95,17 +95,17 @@
 			[data]="policyViolationsGridData"
 			[limit]="tableConfig?.tableLimit"
 			[offset]="tableConfig?.tableOffset"
-			(onSortingChanged)="onTableSortingChanged($event)"
+			(onSortingChanged)="onViolationTableSortingChanged($event)"
 			(onTableRowClicked)="onViolationRowClicked($event)"
 			*ngIf="!loading && policyViolationsGridData?.length > 0">
 		</cui-table>
 		<div class="text-center dbl-margin-top dbl-margin-bottom">
-				<div *ngIf="errorPolicyView">
-					<div class="text-muted text-xlarge " [innerText]="'_RccNoViolationData_' | i18n" ></div>
-					<div class="text-muted text-small " [innerText]="'_RccNoViolationList_' | i18n" ></div>
-				</div>
-				<span *ngIf="!loading && noTableData" class="text-muted text-xlarge" [innerText]="'_RccNoDataAvailable_' | i18n"></span>
-		</div>
+			<div *ngIf="errorPolicyView">
+				<div class="text-muted text-xlarge " [innerText]="'_RccNoViolationData_' | i18n" ></div>
+				<div class="text-muted text-small " [innerText]="'_RccNoViolationList_' | i18n" ></div>
+			</div>
+			<span *ngIf="!loading && noTableData" class="text-muted text-xlarge" [innerText]="'_RccNoDataAvailable_' | i18n"></span>
+		</div>	
 		<div class="section">
 			<cui-pager *ngIf="!loading && policyViolationsGridData?.length > 0"
 				[page]="tableConfig?.tableOffset"
@@ -132,8 +132,8 @@
 			<div *ngIf="errorPolicyView">
 				<div class="text-muted text-xlarge " [innerText]="'_RccNoViolationData_' | i18n" ></div>
 				<div class="text-muted text-small " [innerText]="'_RccNoViolationList_' | i18n" ></div>
-			</div>
-				<span *ngIf="!loading && noTableData" class="text-muted text-xlarge" [innerText]="'_RccNoDataAvailable_' | i18n"></span>
+			</div>				
+			<span *ngIf="!loading && noTableData" class="text-muted text-xlarge" [innerText]="'_RccNoDataAvailable_' | i18n"></span>
 		</div>
 		<div class="section">
 			<cui-pager *ngIf="!loading && tableAssetDataSample?.length > 0"
