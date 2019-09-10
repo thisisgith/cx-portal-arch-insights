@@ -656,6 +656,7 @@ export class RccComponent implements OnInit, OnDestroy {
 	public clearFilters () {
 		this.filtered = false;
 		_.invoke(this.alert, 'hide');
+		this.errorPolicyView = false;
 		_.each(this.filters, (filter: Filter) => {
 			filter.selected = false;
 			_.each(filter.seriesData, f => {

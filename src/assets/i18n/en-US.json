@@ -814,6 +814,8 @@
 	"_RccAssetViolationAge_": "Violation Age",
 	"_RccAssetViolationCount_": "Violation Count",
 	"_RccAssetViolations_": "Violations",
+	"_RccNoViolationData_": "No Violations",
+	"_RccNoViolationList_": "All of your violations will be listed here",
 	"_RccAssetWithViolations_": "Assets with Violations",
 	"_RccConditionViolations_": "condition violations",
 	"_RccDay_": " Day",
