@@ -74,7 +74,7 @@
 
 <ng-template #titleBar>
 	<div class="row half-padding-bottom">
-		<div class="col-md-9 flex flex-fill">
+		<div class="col-auto flex flex-fill">
 			<div class="flex-center-vertical">
 				<span [innerText]="'_Assets_' | i18n" class="text-large base-margin-left" *ngIf="!status.isLoading"></span>
 				<span *ngIf="!status.isLoading && pagination && pagination.total" [innerText]="'_ShowingXofYAssets_' | i18n:paginationCount:pagination.total"
@@ -89,7 +89,7 @@
 				</span>
 			</div>
 		</div>
-		<div class="col-md-3">
+		<div class="col-auto">
 			<div class="flex flex-fluid flex-right">
 				<div class="flex-fill form-group input--compressed input--icon half-margin-right">
 					<form *ngIf="searchForm" [formGroup]="searchForm" novalidate>
