@@ -1058,10 +1058,7 @@ export class LifecycleComponent implements OnDestroy {
 	private calculateActionPercentage (pitstop: RacetrackPitstop) {
 		const start = I18n.get('_Start_');
 		if (pitstop) {
-			const completedActions = _.filter(pitstop.pitstopActions, 'isComplete').length;
-			const pct = Math.floor(
-				(completedActions / pitstop.pitstopActions.length) * 100) || 0;
-
+			const pct = _.get(pitstop, 'pitstop_adoption_percentage');
 			if (!_.isNil(pct)) {
 				return (pct === 0) ? start : `${pct.toString()}%`;
 			}

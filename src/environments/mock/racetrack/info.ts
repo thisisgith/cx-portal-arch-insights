@@ -37,6 +37,7 @@ function MockRacetrack (
 								description: 'The first pitstop',
 								isComplete: false,
 								name: 'Onboard',
+								pitstop_adoption_percentage: 25,
 								pitstopActions: [
 									{
 										description: 'DNAC discover network devices',
@@ -85,6 +86,7 @@ function MockRacetrack (
 								description: 'Implement',
 								isComplete: false,
 								name: 'Implement',
+								pitstop_adoption_percentage: 25,
 								pitstopActions: [
 									{
 										description: 'desc',
@@ -132,6 +134,7 @@ function MockRacetrack (
 								description: 'Use',
 								isComplete: false,
 								name: 'Use',
+								pitstop_adoption_percentage: 0,
 								pitstopActions: [
 									{
 										description: 'desc',
@@ -169,6 +172,7 @@ function MockRacetrack (
 								description: 'Engage',
 								isComplete: false,
 								name: 'Engage',
+								pitstop_adoption_percentage: 0,
 								pitstopActions: [
 									{
 										description: 'desc',
@@ -217,6 +221,7 @@ function MockRacetrack (
 								description: 'Adopt',
 								isComplete: false,
 								name: 'Adopt',
+								pitstop_adoption_percentage: 0,
 								pitstopActions: [
 									{
 										description: 'desc',
@@ -265,6 +270,7 @@ function MockRacetrack (
 								description: 'Optimize',
 								isComplete: false,
 								name: 'Optimize',
+								pitstop_adoption_percentage: 0,
 								pitstopActions: [
 									{
 										description: 'desc',
@@ -280,9 +286,10 @@ function MockRacetrack (
 								],
 							},
 						],
+						usecase_adoption_percentage: 81,
 					},
 					{
-						currentPitstop,
+						currentPitstop: 'Onboard',
 						description: 'sd desc',
 						name: 'Campus Network Segmentation',
 						pitstops: [
@@ -290,6 +297,7 @@ function MockRacetrack (
 								description: 'Onboard',
 								isComplete: false,
 								name: 'Onboard',
+								pitstop_adoption_percentage: 50,
 								pitstopActions: [
 									{
 										description: 'sdfsd',
@@ -317,6 +325,7 @@ function MockRacetrack (
 								description: 'Implement',
 								isComplete: false,
 								name: 'Implement',
+								pitstop_adoption_percentage: 50,
 								pitstopActions: [
 									{
 										description: 'sdfsd',
@@ -344,6 +353,7 @@ function MockRacetrack (
 								description: 'Use',
 								isComplete: false,
 								name: 'Use',
+								pitstop_adoption_percentage: 50,
 								pitstopActions: [
 									{
 										description: 'sdfsd',
@@ -371,6 +381,7 @@ function MockRacetrack (
 								description: 'Engage',
 								isComplete: false,
 								name: 'Engage',
+								pitstop_adoption_percentage: 50,
 								pitstopActions: [
 									{
 										description: 'sdfsd',
@@ -398,6 +409,7 @@ function MockRacetrack (
 								description: 'Adopt',
 								isComplete: false,
 								name: 'Adopt',
+								pitstop_adoption_percentage: 50,
 								pitstopActions: [
 									{
 										description: 'sdfsd',
@@ -425,6 +437,7 @@ function MockRacetrack (
 								description: 'Optimize',
 								isComplete: false,
 								name: 'Optimize',
+								pitstop_adoption_percentage: 50,
 								pitstopActions: [
 									{
 										description: 'sdfsd',
@@ -449,6 +462,7 @@ function MockRacetrack (
 								],
 							},
 						],
+						usecase_adoption_percentage: 70,
 					},
 					{
 						currentPitstop,
@@ -459,6 +473,7 @@ function MockRacetrack (
 								description: 'Onboard',
 								isComplete: false,
 								name: 'Onboard',
+								pitstop_adoption_percentage: 50,
 								pitstopActions: [
 									{
 										description: 'sdfsd',
@@ -486,6 +501,7 @@ function MockRacetrack (
 								description: 'Implement',
 								isComplete: false,
 								name: 'Implement',
+								pitstop_adoption_percentage: 50,
 								pitstopActions: [
 									{
 										description: 'sdfsd',
@@ -513,6 +529,7 @@ function MockRacetrack (
 								description: 'Use',
 								isComplete: false,
 								name: 'Use',
+								pitstop_adoption_percentage: 50,
 								pitstopActions: [
 									{
 										description: 'sdfsd',
@@ -540,6 +557,7 @@ function MockRacetrack (
 								description: 'Engage',
 								isComplete: false,
 								name: 'Engage',
+								pitstop_adoption_percentage: 50,
 								pitstopActions: [
 									{
 										description: 'sdfsd',
@@ -567,6 +585,7 @@ function MockRacetrack (
 								description: 'Adopt',
 								isComplete: false,
 								name: 'Adopt',
+								pitstop_adoption_percentage: 50,
 								pitstopActions: [
 									{
 										description: 'sdfsd',
@@ -594,6 +613,7 @@ function MockRacetrack (
 								description: 'Optimize',
 								isComplete: false,
 								name: 'Optimize',
+								pitstop_adoption_percentage: 50,
 								pitstopActions: [
 									{
 										description: 'sdfsd',
@@ -618,9 +638,10 @@ function MockRacetrack (
 								],
 							},
 						],
+						usecase_adoption_percentage: 30,
 					},
 					{
-						currentPitstop,
+						currentPitstop: 'Onboard',
 						description: 'Network Device Onboarding',
 						name: 'Network Device Onboarding',
 						pitstops: [
@@ -628,6 +649,7 @@ function MockRacetrack (
 								description: 'Onboard',
 								isComplete: false,
 								name: 'Onboard',
+								pitstop_adoption_percentage: 50,
 								pitstopActions: [
 									{
 										description: 'sdfsd',
@@ -655,10 +677,11 @@ function MockRacetrack (
 								description: 'Implement',
 								isComplete: false,
 								name: 'Implement',
+								pitstop_adoption_percentage: 0,
 								pitstopActions: [
 									{
 										description: 'sdfsd',
-										isComplete: true,
+										isComplete: false,
 										isCompleteAuto: false,
 										isCompleteManual: false,
 										isManaualOverride: false,
@@ -682,6 +705,7 @@ function MockRacetrack (
 								description: 'Use',
 								isComplete: false,
 								name: 'Use',
+								pitstop_adoption_percentage: 50,
 								pitstopActions: [
 									{
 										description: 'sdfsd',
@@ -709,10 +733,11 @@ function MockRacetrack (
 								description: 'Engage',
 								isComplete: false,
 								name: 'Engage',
+								pitstop_adoption_percentage: 0,
 								pitstopActions: [
 									{
 										description: 'sdfsd',
-										isComplete: true,
+										isComplete: false,
 										isCompleteAuto: false,
 										isCompleteManual: false,
 										isManaualOverride: false,
@@ -736,6 +761,7 @@ function MockRacetrack (
 								description: 'Adopt',
 								isComplete: false,
 								name: 'Adopt',
+								pitstop_adoption_percentage: 50,
 								pitstopActions: [
 									{
 										description: 'sdfsd',
@@ -763,6 +789,7 @@ function MockRacetrack (
 								description: 'Optimize',
 								isComplete: false,
 								name: 'Optimize',
+								pitstop_adoption_percentage: 50,
 								pitstopActions: [
 									{
 										description: 'sdfsd',
@@ -787,6 +814,7 @@ function MockRacetrack (
 								],
 							},
 						],
+						usecase_adoption_percentage: 40,
 					},
 					{
 						currentPitstop,
@@ -797,6 +825,7 @@ function MockRacetrack (
 								description: 'Onboard',
 								isComplete: false,
 								name: 'Onboard',
+								pitstop_adoption_percentage: 50,
 								pitstopActions: [
 									{
 										description: 'sdfsd',
@@ -824,6 +853,7 @@ function MockRacetrack (
 								description: 'Implement',
 								isComplete: false,
 								name: 'Implement',
+								pitstop_adoption_percentage: 50,
 								pitstopActions: [
 									{
 										description: 'sdfsd',
@@ -851,6 +881,7 @@ function MockRacetrack (
 								description: 'Use',
 								isComplete: false,
 								name: 'Use',
+								pitstop_adoption_percentage: 50,
 								pitstopActions: [
 									{
 										description: 'sdfsd',
@@ -878,6 +909,7 @@ function MockRacetrack (
 								description: 'Engage',
 								isComplete: false,
 								name: 'Engage',
+								pitstop_adoption_percentage: 50,
 								pitstopActions: [
 									{
 										description: 'sdfsd',
@@ -905,6 +937,7 @@ function MockRacetrack (
 								description: 'Adopt',
 								isComplete: false,
 								name: 'Adopt',
+								pitstop_adoption_percentage: 50,
 								pitstopActions: [
 									{
 										description: 'sdfsd',
@@ -932,6 +965,7 @@ function MockRacetrack (
 								description: 'Optimize',
 								isComplete: false,
 								name: 'Optimize',
+								pitstop_adoption_percentage: 50,
 								pitstopActions: [
 									{
 										description: 'sdfsd',
@@ -956,6 +990,7 @@ function MockRacetrack (
 								],
 							},
 						],
+						usecase_adoption_percentage: 15,
 					},
 				],
 			},
