@@ -655,6 +655,7 @@ export class RccComponent implements OnInit, OnDestroy {
 	 */
 	public clearFilters () {
 		this.filtered = false;
+		_.invoke(this.alert, 'hide');
 		_.each(this.filters, (filter: Filter) => {
 			filter.selected = false;
 			_.each(filter.seriesData, f => {
@@ -693,6 +694,7 @@ export class RccComponent implements OnInit, OnDestroy {
 	 */
 	public searchViolations (event: any, type: string) {
 		this.invalidSearchInput = false;
+		_.invoke(this.alert, 'hide');
 		const searchInput = this.searchInput.trim();
 		if (event && event.keyCode === 8 && this.searched) {
 			if (!_.isEmpty(searchInput)) {
