@@ -1,19 +1,47 @@
-<div class="row">
-		<div class="col-md-4">
-			<div class="container" *ngIf="dnacDetailsResponse?.length > 0">
-				<span [innerText]="'_ArchitectureDNAC_' | i18n" class="text-large"></span>
-				<span class="qtr-margin-left text-small text-muted"
-					[innerText]="'_ArchitectureShowingXofYTotalItems_' | i18n:(tableStartIndex+1):tableEndIndex:totalItems">
+<!-- Fly-Out View Slide-out -->
+<details-panel [hidden]="!dnacDetails" [fullscreen]="fullscreen">
+	<details-panel-header (close)="onPanelClose()" [(fullscreen)]="fullscreen" [fullscreenToggle]="false">
+		<div class="row">
+			<div class="col-md-8 base-margin-bottom">
+				<div *ngIf="dnacDetails?.version">
+					<span class="text-large" [innerText]="('_ArchitectureVersion_' | i18n)">
+					</span>
+					<span class="text-large" [innerText]="dnacDetails?.version">
+					</span>
+				</div>
+			</div>
+		</div>
+		<div detailsPanelTitle class="text-xlarge">
+			<span class="qtr-margin-left" [innerText]="dnacDetails?.dnacHostname">
+			</span>
+			<div class="text-medium  base-margin-top">
+				<span [innerText]="('_ArchitectureVersion_' | i18n)"></span>
+				<span class="qtr-margin-left" [innerText]="dnacDetails?.dnacIpaddress">
 				</span>
 			</div>
 		</div>
-		<div class="col-md-8">
-				<div>
+	</details-panel-header>
+	<dnac-details [dnacDetails]="dnacDetails"></dnac-details>
+</details-panel>
+
+<div class="row">
+	<div class="col-md-4">
+		<div class="container" *ngIf="dnacDetailsResponse?.length > 0">
+			<span [innerText]="'_ArchitectureDNAC_' | i18n" class="text-large"></span>
+			<span class="qtr-margin-left text-small text-muted"
+				[innerText]="'_ArchitectureShowingXofYTotalItems_' | i18n:(tableStartIndex+1):tableEndIndex:totalItems">
+			</span>
+		</div>
+	</div>
+	<div class="col-md-8">
+			
+				
+				
 					<form
 						#f="ngForm"
 						class="row flex flex-fluid flex-right qtr-margin-right"
 						id="searchForm"
-						(keydown)="globalSearchFunction($event)"
+						(keyup)="textFilter($event)"
 					>
 						<div class="qtr-padding-top">
 							<div class="container">
@@ -28,7 +56,7 @@
 									<input
 										data-auto-id="globalSearch"
 										#globalSearch="ngModel"
-										[(ngModel)]="globalSearchText"
+										[(ngModel)]="searchText"
 										name="globalSearch"
 										type="text"
 										class="form-control"
@@ -41,73 +69,68 @@
 							</div>
 						</div>
 					</form>
-				</div>
-			</div>
+				
+		
+</div>
 </div>
 <div class="divider"></div>
 <div class="panel">
-		<cui-table *ngIf="!isLoading && totalItems" [options]="tableOptions" [data]="dnacDetailsResponse" 
+	<cui-table *ngIf="!isLoading && totalItems" [options]="tableOptions" [data]="dnacDetailsResponse"
 		(onTableRowClicked)="onTableRowClicked($event)"></cui-table>
-		<div class="section" *ngIf="totalItems">
-			<cui-pager *ngIf="!isLoading" [page]="params?.page"
-			[limit]="params?.pageSize" [totalItems]="totalItems" 
+	<div class="section" *ngIf="totalItems">
+		<cui-pager *ngIf="!isLoading" [page]="params?.page" [limit]="params?.pageSize" [totalItems]="totalItems"
 			(onPageChanged)="onPagerUpdated($event)"></cui-pager>
-		</div>
-		<div class="base-margin-top" *ngIf="isLoading">
-			<cui-spinner></cui-spinner>
-		</div>
-		<div *ngIf="!dnacDetailsResponse?.length && !isLoading">
-			<div class="text-center dbl-margin-top dbl-margin-bottom">
-				<div>
-					<span class="text-muted text-xlarge"
-						[innerText]="'_NoResultsFound_' | i18n"
-						data-auto-id="NoResultsFoundTxt" >
-					</span>
-				</div>
+	</div>
+	<div class="base-margin-top" *ngIf="isLoading">
+		<cui-spinner></cui-spinner>
+	</div>
+	<div *ngIf="!dnacDetailsResponse?.length && !isLoading">
+		<div class="text-center dbl-margin-top dbl-margin-bottom">
+			<div>
+				<span class="text-muted text-xlarge" [innerText]="'_NoResultsFound_' | i18n"
+					data-auto-id="NoResultsFoundTxt">
+				</span>
 			</div>
 		</div>
+	</div>
 </div>
 
 <ng-template #devicesTemplate let-item="celldata">
-	<span 
-		[ngClass]="{
+	<span [ngClass]="{
 			'text-danger': item?.devicesPublishedViolated === 'Yes',
 			'transparent-style': item?.devicesPublishedViolated === 'No'
 		}" class="qtr-margin-right icon-circle">
 	</span>
-	<span [innerText]="getDevicesTemplate(item)"> 
+	<span [innerText]="getDevicesTemplate(item)">
 	</span>
 </ng-template>
 
 <ng-template #endPointsTemplate let-item="celldata">
-	<span 
-		[ngClass]="{
+	<span [ngClass]="{
 			'text-danger': item?.endpointsPublishedViolated === 'Yes',
 			'transparent-style': item?.endpointsPublishedViolated === 'No'
 		}" class="qtr-margin-right icon-circle">
 	</span>
-	<span [innerText]="getEndPointsTemplate(item)"> 
+	<span [innerText]="getEndPointsTemplate(item)">
 	</span>
 </ng-template>
 
 <ng-template #fabricsTemplate let-item="celldata">
-	<span 
-		[ngClass]="{
+	<span [ngClass]="{
 			'text-danger': item?.fabricsPublishedViolated === 'Yes',
 			'transparent-style': item?.fabricsPublishedViolated === 'No'
 		}" class="qtr-margin-right icon-circle">
 	</span>
-	<span [innerText]="getFabricsTemplate(item)"> 
+	<span [innerText]="getFabricsTemplate(item)">
 	</span>
 </ng-template>
 
 <ng-template #wlcTemplate let-item="celldata">
-	<span 
-		[ngClass]="{
+	<span [ngClass]="{
 			'text-danger': item?.wlcPublishedViolated === 'Yes',
 			'transparent-style': item?.wlcPublishedViolated === 'No'
 		}" class="qtr-margin-right icon-circle">
 	</span>
-	<span [innerText]="getWlcTemplate(item)"> 
+	<span [innerText]="getWlcTemplate(item)">
 	</span>
 </ng-template>

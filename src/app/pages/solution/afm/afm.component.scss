@@ -35,18 +35,8 @@
 	margin-top: -27px;
 }
 
-.syslog {
-	white-space: nowrap;
-	overflow: hidden;
-	width: 600px;
-	text-overflow: ellipsis;
-}
-
-.faultIc {
-	white-space: nowrap;
-	overflow: hidden;
-	width: 250px;
-	text-overflow: ellipsis;
+:host ::ng-deep .table {
+	@include table-ellipse;
 }
 
 .cursor {

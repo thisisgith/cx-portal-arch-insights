@@ -130,25 +130,21 @@ export class SoftwareVersionsComponent implements OnInit, OnDestroy {
 						key: 'swVersion',
 						name: I18n.get('_OsvVersion_'),
 						sortable: false ,
-						width: '20%',
 					},
 					{
 						name: I18n.get('_OsvReleaseDate_'),
-						sortable: false,
 						template: this.releaseDateTemplate,
-						width: '20%',
+						sortable: true,
 					},
 					{
 						key: 'assetCount',
 						name: I18n.get('_OsvIndependentAssetsCount_'),
 						sortable: false,
-						width: '20%',
 					},
 					{
 						key: 'profileAssetCount',
 						name: I18n.get('_OsvAssetsOfSoftwareProfilesCount_'),
 						sortable: false,
-						width: '20%',
 					},
 					{
 						key: 'swType',
@@ -156,7 +152,6 @@ export class SoftwareVersionsComponent implements OnInit, OnDestroy {
 						sortable: true,
 						sortDirection: 'asc',
 						sorting: true,
-						width: '20%',
 					},
 				],
 				dynamicData: true,
@@ -166,7 +161,6 @@ export class SoftwareVersionsComponent implements OnInit, OnDestroy {
 				singleSelect: false,
 				sortable: true,
 				striped: false,
-				wrapText: true,
 			});
 		}
 	}

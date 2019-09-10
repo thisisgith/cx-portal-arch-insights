@@ -46,6 +46,8 @@ export interface HighCrashRiskPagination {
 	page: number;
 	size:number;
 	limit?:number;
+	search: string;
+	sort: string;
 }
 
 export interface HighCrashRiskDeviceCount{

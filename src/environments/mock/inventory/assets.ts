@@ -659,7 +659,7 @@ export const MockAssetsData: Asset[] = [
  * @param role the roles to filter on
  * @returns the assets response
  */
-function MockAssets (
+export function MockAssets (
 	rows: number,
 	page: number,
 	contractNumber?: string[],
@@ -732,7 +732,7 @@ export const AssetScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 250,
+					delay: 500,
 					description: 'Covered Assets',
 					response: {
 						body: MockAssets(10, 1, null , [true]),
@@ -820,6 +820,23 @@ export const AssetScenarios = [
 			],
 		},
 		url: `${api}?customerId=${customerId}&sort=deviceName:ASC&rows=10&page=1`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 500,
+					description: 'Assets Page 1 (no page param)',
+					response: {
+						body: MockAssets(10, 1),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?customerId=${customerId}&sort=deviceName:ASC&rows=10`,
 		usecases: ['Use Case 1'],
 	},
 	{

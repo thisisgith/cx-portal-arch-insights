@@ -40,6 +40,9 @@ export class CaseDetailsHeaderComponent {
 	 * Initialization hook
 	 */
 	public ngOnInit () {
+		if (window.Cypress) {
+			window.loading = true;
+		}
 		// Refresh RMA Details for current case
 		this.refreshRma$.pipe(
 			switchMap(() => this.getRMADetails()),
@@ -50,6 +53,9 @@ export class CaseDetailsHeaderComponent {
 					this.rmaRecords = _.filter(rmaDetails.map(details => _.get(
 						details, ['returns', 'RmaRecord', 0]),
 					));
+				}
+				if (window.Cypress) {
+					window.loading = false;
 				}
 			});
 	}
@@ -140,14 +146,23 @@ export class CaseDetailsHeaderComponent {
 	public ngOnChanges (changes: SimpleChanges) {
 		if (changes.case) {
 			this.loading = true;
+			if (window.Cypress) {
+				window.loading = true;
+			}
 		}
 		if (changes.caseDetails) {
 			if (changes.caseDetails.currentValue) {
 				this.loading = false;
+				if (window.Cypress) {
+					window.loading = false;
+				}
 				this.isAddNoteClicked = false;
 				this.isRMAClicked = false;
 			} else {
 				this.loading = true;
+				if (window.Cypress) {
+					window.loading = true;
+				}
 			}
 			this.rmaRecords = [];
 			this.rmaStrings = [];

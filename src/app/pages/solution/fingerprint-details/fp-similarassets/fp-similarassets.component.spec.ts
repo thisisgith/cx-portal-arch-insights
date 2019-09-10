@@ -150,4 +150,32 @@ describe('FpSimilarassetsComponent', () => {
 			.toHaveBeenCalled();
 	}));
 
+	it('should not load data if response contains empty values', done => {
+		spyOn(fpIntelligenceService, 'getSimilarDevices')
+		.and
+		.returnValue(of(ComparisonViewScenarios[8].scenarios.GET[0].response.body));
+		component.ngOnInit();
+		fixture.whenStable()
+			.then(() => {
+				fixture.detectChanges();
+				expect(component.noData)
+					.toBeTruthy();
+				done();
+			});
+	});
+
+	it('Should return the response', done => {
+		spyOn(fpIntelligenceService, 'getSimilarDevices')
+			.and
+			.returnValue(of(ComparisonViewScenarios[7].scenarios.GET[0].response.body));
+		component.ngOnInit();
+		fixture.whenStable()
+			.then(() => {
+				fixture.detectChanges();
+				expect(component.similarDevicesData)
+					.toBeDefined();
+				done();
+			});
+	});
+
 });

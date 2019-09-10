@@ -54,6 +54,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 	public apiNoData = true;
 	public selectionLoading = false;
 	public errorResult = false;
+	public alert: any = { };
 	public selectionObj = {
 		osName : '',
 		productFamily : '',
@@ -68,7 +69,6 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 		private route: ActivatedRoute,
 		public userResolve: UserResolve,
 	) {
-		this.logger.debug('RccDeviceViolationDetailsComponent Created!');
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
 	}
@@ -85,6 +85,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 			productModel: [],
 		};
 		this.tableConfig.tableOffset = 0;
+		this.impactedDeviceDetails = [];
 		const policyViolationInfo = _.get(changes, ['policyViolationInfo', 'currentValue']);
 		const isFirstChange = _.get(changes, ['policyViolationInfo', 'firstChange']);
 		if (policyViolationInfo && !isFirstChange) {
@@ -103,6 +104,8 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 			};
 			this.impactedAssetsCount = this.policyViolationInfo.impassets;
 			this.loadData();
+			this.errorResult = false;
+			_.invoke(this.alert, 'hide');
 		}
 	}
 	/**
@@ -150,7 +153,8 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 			error => {
 				this.initialLoading = false;
 				this.errorResult = true;
-				this.apiNoData = false;
+				this.apiNoData = true;
+				this.alert.show(I18n.get('_RccErrorResults_'), 'danger');
 				this.logger.error(
 					'RccDeviceViolationDetailsComponent : loadData() ' +
 				`:: Error : (${error.status}) ${error.message}`);
@@ -269,8 +273,11 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 	 * @param selectedItem gives page number
 	 */
 	public onSelection () {
+		_.invoke(this.alert, 'hide');
 		this.selectionLoading = true;
 		this.errorResult = true;
+		this.impactedDeviceDetails = [];
+		this.tableConfig.totalItems = 0;
 		const newQueryParamMapObj = { violationCount:
 			this.policyViolationInfo.violationcount, ...this.queryParamMapObj };
 		_.each(this.selectionObj,
@@ -293,6 +300,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 		error => {
 			this.errorResult = true;
 			this.selectionLoading = false;
+			this.alert.show(I18n.get('_RccErrorResults_'), 'danger');
 			this.logger.error(
 				'RccDeviceViolationDetailsComponent : onSelection() ' +
 			`:: Error : (${error.status}) ${error.message}`);

@@ -160,15 +160,28 @@
 </ng-template>
 
 <ng-template #insightsFacet let-facet="facet">
-	<!-- TODO: Insights track needs to wire this up with some sort of data, nothing here is real -->
-	<div class="kmii__detailed">
-		<div class="kmii__insights">
-			<span class="kmii__insights__num"
+	<div *ngIf="facet?.loading" class="base-padding">
+		<cui-spinner></cui-spinner>
+	</div>
+	<div class="kmii__detailed" *ngIf="!facet?.loading">
+		<div class="kmii__insights" *ngIf="!facet?.isError">
+			<span class="kmii__insights__num base-padding-top"
 				[class.kmii__insights__num--selected]="facet?.selected"
-				[innerText]="'0'">
+				[innerText]="facet?.seriesData?.totalCnt">
 			</span>
 			<div class="kmii__insights__title">
-				<span [innerText]=""></span>
+				 <div *ngIf="facet?.seriesData?.optedIn">
+					<span [innerText]="facet?.seriesData?.complianceIssueCnt"></span>
+					<span class="qtr-padding-left" [innerText]="'_InsightsComplianceIssues_' | i18n"></span>
+				</div>
+				<div>
+					<span [innerText]="facet?.seriesData?.predictedCrashCnt"></span>
+					<span class="qtr-padding-left" [innerText]="'_InsightsPredictedCrashes_' | i18n"></span>
+				</div>
+				<div>
+					<span [innerText]="facet?.seriesData?.recentCrashCnt"></span>
+					<span class="qtr-padding-left" [innerText]="'_InsightsRecentCrashes_' | i18n"></span>
+				</div>
 			</div>
 			<div class="kmii__insights__change" *ngIf="false">
 				<div  class="kmii__insights__arrow"
@@ -177,6 +190,7 @@
 				<span [innerText]="'+2'"></span>
 			</div>
 		</div>
+		<div class="kmii__insights__title" *ngIf="facet?.isError" [innerText]="'_InsightsNoResultsFound_' | i18n"></div>
 	</div>
 	<p class="km__items__item__label" [innerText]="facet?.title | uppercase"></p>
 	<div

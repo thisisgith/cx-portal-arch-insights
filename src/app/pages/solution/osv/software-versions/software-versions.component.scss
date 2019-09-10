@@ -1,1 +1,5 @@
-/** Empty component SCSS file */
+@import '../../../../../mixins.scss';
+
+:host ::ng-deep .table {
+	@include table-ellipse;
+}

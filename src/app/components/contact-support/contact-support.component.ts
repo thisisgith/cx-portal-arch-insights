@@ -164,15 +164,9 @@ export class ContactSupportComponent implements OnInit, OnDestroy, CuiModalConte
 					takeUntil(this.destroy$),
 				)
 				.subscribe((response: ContactSupportResponse) => {
-					if (response.status) {
-						this.loading = false;
-						this.toggle = true;
-						this.success = true;
-					} else {
-						this.loading = false;
-						this.toggle = true;
-						this.success = false;
-					}
+					this.loading = false;
+					this.toggle = true;
+					this.success = response.status ? true : false;
 				});
 		}
 	}
