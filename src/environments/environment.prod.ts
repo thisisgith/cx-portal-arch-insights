@@ -68,6 +68,7 @@ export const environment = {
 		returns: '/return/v1.0/returns',
 	},
 	rmaToolUrl: 'https://ibpm.cisco.com/rma/home',
+	sdAccessCommunitiesPath: 'software-defined-access-sd',
 	sdpServiceBasePath: '/api/stg',
 	sdpServiceClientId: 'ejw4cbpvp3s8cyh4ry8qcnff',
 	/**
