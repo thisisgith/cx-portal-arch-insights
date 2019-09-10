@@ -102,7 +102,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 				productFamily : '',
 				productModel : '',
 			};
-			this.impactedAssetsCount = this.policyViolationInfo.impassets;
+			this.impactedAssetsCount = this.policyViolationInfo.impassetscount;
 			this.loadData();
 			this.errorResult = false;
 			_.invoke(this.alert, 'hide');
@@ -291,6 +291,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 		)
 		.subscribe(violationDetails => {
 			this.tableConfig.tableOffset = 0;
+			this.impactedAssetsCount =  violationDetails.data.impactedAssetsCount;
 			this.impactedDeviceDetails = violationDetails.data.impactedAssets;
 			this.selectionLoading = false;
 			this.errorResult = false;
