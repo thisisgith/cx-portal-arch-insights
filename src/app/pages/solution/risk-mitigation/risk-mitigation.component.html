@@ -87,13 +87,13 @@
 
 <ng-template #filterBar>
 	<div class="row">
-		<div class="col-2 flex flex-center-vertical">
+		<div class="col-1 flex flex-center-vertical">
 			<span
 				class="text-bold text-uppercase half-padding-right"
 				[innerText]="'_RMFiltered_' | i18n"
 			></span>
 		</div>
-		<div class="col-8">
+		<div class="col-10">
 			<ng-container *ngFor="let filter of selectedFilters">
 				<ng-container
 					*ngFor="let subfilter of getSelectedSubFilters(filter.key)"
@@ -114,7 +114,7 @@
 				</ng-container>
 			</ng-container>
 		</div>
-		<div class="col-2 text-center text-right">
+		<div class="col-1 text-center text-right">
 			<a
 				(click)="clearFilters()"
 				class="text-lowercase"
