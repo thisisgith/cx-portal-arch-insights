@@ -29,12 +29,13 @@
 			pagination: selectedTab?.pagination,
 			options: selectedTab?.table,
 			loading: selectedTab?.loading,
-			moreLoading: selectedTab?.moreLoading
+			moreLoading: selectedTab?.moreLoading,
+			type: selectedTab?.key
 		}">
 	</ng-container>
 </div>
 
-<ng-template #displayTable let-data="data" let-pagination="pagination" let-options="options" let-loading="loading" let-moreLoading="moreLoading">
+<ng-template #displayTable let-data="data" let-pagination="pagination" let-options="options" let-loading="loading" let-moreLoading="moreLoading" let-type="type">
 	<div *ngIf="!loading && options && data && data?.length > 0">
 		<div class="advisoryTable" data-auto-id="AssetDetailsAdvisoryTable">
 			<cui-table [options]="options"
@@ -57,7 +58,11 @@
 		<cui-loader></cui-loader>
 	</div>
 	<div *ngIf="!loading && (!data || data?.length === 0)" class="flex-center">
-		<span class="text-xlarge" [innerText]="'_NoResultsFound_' | i18n" data-auto-id="AdvisoriesNoResultsFound"></span>
+		<span
+			class="text-xlarge"
+			[innerText]="(type === 'bug' ? (asset.lastScan ? '_NoCriticalBugsFound_' : '_NoScanCompleted_') : '_NoResultsFound_') | i18n"
+			data-auto-id="AdvisoriesNoResultsFound">
+		</span>
 	</div>
 </ng-template>
 

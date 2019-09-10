@@ -30,12 +30,6 @@
 		<cui-tab [label]="'_ArchitectureSDAProductCompatibility_' | i18n | uppercase">
 			<devices-sda [deviceDetails]="deviceDetails"></devices-sda>
 		</cui-tab>
-		<cui-tab [label]="'_ArchitectureL3AccessSwitching_' | i18n | uppercase" disabled="true">
-		</cui-tab>
-		<cui-tab [label]="'_ArchitectureSwitchRedundancy_' | i18n | uppercase" disabled="true">
-		</cui-tab>
-		<cui-tab [label]="'_ArchitectureSwitchInterfaceMTU_'  | i18n | uppercase" disabled="true">
-		</cui-tab>
 	</cui-tabs>
 </details-panel>
 
@@ -58,7 +52,7 @@
 						#f="ngForm"
 						class="row flex flex-fluid flex-right qtr-margin-right"
 						id="searchForm"
-						(keydown)="globalSearchFunction($event)"
+						(keyup)="textFilter($event)"
 					>
 						<div class="qtr-padding-top">
 							<div class="container">
@@ -73,7 +67,7 @@
 									<input
 										data-auto-id="globalSearch"
 										#globalSearch="ngModel"
-										[(ngModel)]="globalSearchText"
+										[(ngModel)]="searchText"
 										name="globalSearch"
 										type="text"
 										class="form-control"
@@ -129,7 +123,7 @@
 	<span
 	[ngClass]="{
 		'text-danger': item?.softwareCompliance === 'No',
-		'transparent-style': item?.softwareCompliance === 'Yes' 
+		'transparent-style': item?.softwareCompliance !== 'No'
 	}"
 	 class="qtr-margin-right icon-circle">
 	</span>

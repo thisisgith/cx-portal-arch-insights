@@ -158,7 +158,7 @@ describe('DnacListComponent', () => {
 
 	it('should trigger search function for keycode 13', () => {
 		const event = { keyCode: 13 };
-		component.globalSearchFunction(event.keyCode);
+		component.textFilter(event.keyCode);
 		expect(component.isLoading)
 			.toBeTruthy();
 		expect(component.tableStartIndex)
@@ -172,7 +172,7 @@ describe('DnacListComponent', () => {
 		component.tableStartIndex = 1;
 		component.params.page = 1;
 		const event = { keyCode: 10 };
-		component.globalSearchFunction(event.keyCode);
+		component.textFilter(event.keyCode);
 		expect(component.isLoading)
 			.toBeFalsy();
 		expect(component.tableStartIndex === 0)
