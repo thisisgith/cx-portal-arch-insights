@@ -46,12 +46,12 @@ export class InsightsComponent {
 					if (response) {
 						this.hasPermission = response;
 					} else if (this.router.url === '/solution/insights/compliance') {
-						this.router.navigateByUrl('/solution/insights/risk-mitigation');
+						this.router.navigateByUrl('/solution/insights/osv');
 					}
 				}),
 				catchError(err => {
 					if (this.router.url === '/solution/insights/compliance') {
-						this.router.navigateByUrl('/solution/insights/risk-mitigation');
+						this.router.navigateByUrl('/solution/insights/osv');
 					}
 					this.logger.error('insights canActivate() ' +
 						`:: Error : (${err.status}) ${err.message}`);
