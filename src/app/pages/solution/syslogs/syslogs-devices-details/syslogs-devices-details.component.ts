@@ -113,7 +113,6 @@ export class SyslogsDeviceDetailsComponent implements OnChanges, OnDestroy {
 		public syslogsService: SyslogsService,
 		private userResolve: UserResolve,
 	) {
-		this.logger.debug('SyslogsDeviceDetailsComponent Created!');
 		this.userResolve.getCustomerId()
 			.pipe(
 			takeUntil(this.destroy$),

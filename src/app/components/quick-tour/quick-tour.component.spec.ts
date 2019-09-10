@@ -114,9 +114,9 @@ describe('QuickTourComponent', () => {
 			expect(component.getTranslate({ stepPos: 'top' }))
 				.toBe('translate(-50%, -50%)');
 			expect(component.getTranslate({ stepPos: 'bottom' }))
-				.toBe('translate(-50%, 50%)');
+				.toBe('translate(-50%, 0%)');
 			expect(component.getTranslate({ }))
-				.toBe('translate(-50%, 50%)');
+				.toBe('translate(-50%, 0%)');
 			done();
 		});
 	});

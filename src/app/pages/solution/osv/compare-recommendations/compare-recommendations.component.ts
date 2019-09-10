@@ -10,7 +10,6 @@ import {
 import { MachineRecommendations, SoftwareGroup } from '@sdp-api';
 import * as _ from 'lodash-es';
 import { I18n } from '@cisco-ngx/cui-utils';
-import { LogService } from '@cisco-ngx/cui-services';
 
 /**
  * Compare Recommendations Component
@@ -31,13 +30,9 @@ export class CompareRecommendationsComponent implements OnChanges {
 	public barChartWidth = 200;
 	public severityMap = {
 		H: I18n.get('_OsvHigh_'),
-		M: I18n.get('_OsvMedium_'),
 		L: I18n.get('_OsvLow_'),
+		M: I18n.get('_OsvMedium_'),
 	};
-
-	constructor (private logger: LogService) {
-		this.logger.debug('CompareRecommendationsComponent Created!');
-	}
 
 	/**
 	 * lifecycle hook
@@ -56,9 +51,6 @@ export class CompareRecommendationsComponent implements OnChanges {
 	 */
 	public formatData (recommendations) {
 		_.map(recommendations, (recommendation: MachineRecommendations) => {
-			recommendation.expectedProfileRisk = _.isNumber(recommendation.expectedProfileRisk) ?
-				recommendation.expectedProfileRisk.toFixed() : recommendation.expectedProfileRisk;
-
 			const openBugs = _.get(recommendation, ['bugSeverity', 'OPEN']);
 			const newOpenBugs = _.get(recommendation, ['bugSeverity', 'NEW_OPEN']);
 			const resolvedBugs = _.get(recommendation, ['bugSeverity', 'RESOLVED']);
@@ -129,7 +121,7 @@ export class CompareRecommendationsComponent implements OnChanges {
 			});
 		}
 
-		return  _.compact(
+		return _.compact(
 			_.map(data, (value: number, key: string) => {
 				if (!_.isNull(value)) {
 					return {

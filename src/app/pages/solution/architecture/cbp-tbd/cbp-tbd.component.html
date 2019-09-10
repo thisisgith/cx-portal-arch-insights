@@ -16,7 +16,7 @@
 				<thead>
 					<tr>
 						<th [innerHTML]="('_ArchitectureSeverity_' | i18n)"></th>
-						<th [innerHTML]="('_ArchitectureRuleName_' | i18n)"></th>
+						<th [innerHTML]="('_ArchitectureRuleViolated_' | i18n)"></th>
 						<th [innerHTML]="('_ArchitectureException_' | i18n)"></th>
 						<th></th>
 						<th></th>
@@ -39,8 +39,8 @@
 							</td>
 							<td>
 								<a data-auto-id="expandAndContractRowTextLink" (click)="expandRow(item) ">
-									<span [innerText]="item?.active ? ('_ArchitectureShowRecommendationAndCorrectiveAction_' | i18n)
-										: ('_ArchitectureHideRecommendationAndCorrectiveAction_' | i18n)">
+									<span [innerText]="item?.active ? ('_ArchitectureHideRecommendationAndCorrectiveAction_' | i18n)
+										: ('_ArchitectureShowRecommendationAndCorrectiveAction_' | i18n)">
 									</span>
 								</a>
 							</td>

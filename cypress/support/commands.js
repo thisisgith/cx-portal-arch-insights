@@ -11,15 +11,18 @@ Cypress.Commands.add('loadApp', (path = '/') => {
 
 /**
  * Waits for the specified loading property in the app to be set to false (finished loading)
- * @param {String} property - Property to check to be set to false
- * @param {Integer} timeout - Time in milliseconds to wait before failing
+ * @param {String} property Property to check to be set to false, or subject to subscribe to
+ * @param {Integer} timeout Time in milliseconds to wait before failing
  */
 Cypress.Commands.add('waitForAppLoading', (property = 'loading', timeout = 30000) => {
 	Cypress.log({
 		name: 'loading',
 		message: { property, timeout },
 	});
-	cy.window({ timeout, log: false }).should('have.property', property, false);
+	cy.window({ timeout, log: false }).then(win => {
+		cy.wrap(win, { timeout, log: false }).should('have.property', property, false);
+		win[property] = undefined; // reset boolean for next use
+	});
 });
 
 /**

@@ -1,0 +1,32 @@
+<div class="row base-margin-top">
+	<div class="col-md-12">
+		<div class="container">
+			<cui-drawer projection="true" expanded="true" *ngIf="dnacDetails">
+				<div class="cui-drawer-label text-large"
+					[innerText]="'_ArchitectureSDAScaleUtilization_' | i18n | uppercase">
+				</div>
+				<div class="cui-drawer-content">
+					<ng-container
+					*ngTemplateOutlet="SDAScaleUtilizationChart; context: { 
+						networkDevicesData: networkDevicesData,
+						endPointsData :endPointsData,
+						fabricsData:fabricsData
+					 }">
+					</ng-container>
+				</div>
+			</cui-drawer>
+		</div>
+	</div>
+</div>
+
+<ng-template #SDAScaleUtilizationChart let-fabricsData="fabricsData"
+	let-networkDevicesData="networkDevicesData" let-endPointsData="endPointsData">
+			<div *ngIf="!isLoading">
+				<bullet-chart [seriesData]="networkDevicesData" ></bullet-chart>
+				<bullet-chart [seriesData]="endPointsData" ></bullet-chart>
+				<bullet-chart [seriesData]="fabricsData" ></bullet-chart>
+			</div>
+			<div class="base-margin-top" *ngIf="isLoading">
+				<cui-spinner></cui-spinner>
+			</div>
+</ng-template>

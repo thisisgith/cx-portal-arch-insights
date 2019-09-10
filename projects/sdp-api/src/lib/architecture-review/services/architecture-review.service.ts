@@ -109,7 +109,8 @@ class ArchitectureReviewService extends __BaseService {
     if (params.pageSize != null) __params = __params.set('pageSize', params.pageSize);
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     if (params.searchText != null) __params = __params.set('searchText', params.searchText.toString());
-
+    if (params.dnacIP != null) __params = __params.set('dnacIP', params.dnacIP.toString());
+    
     let req = new HttpRequest<any>(
 	  'GET',
 	  this.rootUrl + `${ArchitectureReviewService.getDnacListResponsePath}`,

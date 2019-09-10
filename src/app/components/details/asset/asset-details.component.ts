@@ -6,6 +6,7 @@ import {
 	EventEmitter,
 	Output,
 	SimpleChanges,
+	ElementRef,
 } from '@angular/core';
 import {
 	Asset, NetworkElement, InventoryService, Assets, NetworkElementResponse,
@@ -54,6 +55,7 @@ export class AssetDetailsComponent implements OnInit, OnDestroy, Panel360 {
 		private logger: LogService,
 		private userResolve: UserResolve,
 		private detailsPanelStackService: DetailsPanelStackService,
+		private _elementRef: ElementRef,
 	) {
 		this.userResolve.getCustomerId()
 		.pipe(
@@ -219,5 +221,14 @@ export class AssetDetailsComponent implements OnInit, OnDestroy, Panel360 {
 	 */
 	public onAllPanelsClose () {
 		this.detailsPanelStackService.reset();
+	}
+
+	/**
+	 * Determines whether target is contained by this component
+	 * @param target target ElementRef
+	 * @returns true if component contains target
+	 */
+	public contains (target: ElementRef) {
+		return this._elementRef.nativeElement.contains(target);
 	}
 }

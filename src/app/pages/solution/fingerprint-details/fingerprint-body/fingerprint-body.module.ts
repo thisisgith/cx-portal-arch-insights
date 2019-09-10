@@ -7,6 +7,7 @@ import { CuiTabsModule, CuiAlertModule } from '@cisco-ngx/cui-components';
 import { FpCompareComponent } from './fp-compare/fp-compare.component';
 import { FpIntelligenceModule } from '../fp-intelligence/fp-intelligence.module';
 import { FpSimilarAssetsModule } from '../fp-similarassets/fp-similarassets.module';
+import { MlVisualizationModule } from '../ml-visualization/ml-visualization.module';
 
 /**
  * fingerprint-body Module
@@ -22,6 +23,7 @@ import { FpSimilarAssetsModule } from '../fp-similarassets/fp-similarassets.modu
 		FpIntelligenceModule,
 		FpSimilarAssetsModule,
 		CuiAlertModule,
+		MlVisualizationModule,
 	],
 	entryComponents: [
 		FpCompareComponent,

@@ -85,7 +85,6 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 		public syslogsService: SyslogsService,
 		private userResolve: UserResolve,
 	) {
-		this.logger.debug('SyslogMessagesDetailsComponent Created!');
 		this.userResolve.getCustomerId()
 			.pipe(
 				takeUntil(this.destroy$),

@@ -9,15 +9,15 @@
 	text-align: right;
 }
 
-#syslog-message-table .cui .table {
-	table-layout: fixed !important;
+:host ::ng-deep .table {
+	@include table-ellipse;
 }
 
 .syslog-column {
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	width: 400px !important;
+	max-width: 200px;
 }
 
 .form-group__text > input {
