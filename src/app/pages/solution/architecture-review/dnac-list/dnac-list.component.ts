@@ -144,9 +144,8 @@ export class DnacListComponent implements OnInit {
 	public textFilter (event) {
 		// key code 13 refers to enter key
 		const eventKeycode = 13;
-		if (event.keyCode !== eventKeycode) {
-			console.log('DO NOTHING');
-		} else if (event.keyCode === eventKeycode || this.searchText.trim().length === 0) {
+		if (event.keyCode === eventKeycode
+			|| (event.keyCode !== eventKeycode && this.searchText.trim().length === 0)) {
 			this.isLoading = true;
 			this.tableStartIndex = 0;
 			this.params.page = 0;
@@ -158,7 +157,6 @@ export class DnacListComponent implements OnInit {
 	 * used for setting the data for table
 	 */
 	public getDnacList () {
-		console.log('GET DNAC LIST');
 		this.tableStartIndex = this.params.page * this.params.pageSize;
 		const endIndex = (this.tableStartIndex + this.dnacDetailsResponse.length);
 		this.tableEndIndex = (endIndex) > this.totalItems ? this.totalItems : endIndex;
@@ -168,7 +166,6 @@ export class DnacListComponent implements OnInit {
 			takeUntil(this.destroy$),
 		)
 		.subscribe(res => {
-			console.log('RES', res);
 			if (!res) {
 				return this.inValidResponseHandler();
 			}
