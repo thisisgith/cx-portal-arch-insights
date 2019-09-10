@@ -225,6 +225,44 @@ export const ACCScenarios = [
 			GET: [
 				{
 					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ACC) IBN-Campus Network Assurance-Implement-twoRecommended',
+					response: {
+						body: MockACC('IBN', 'Campus Network Assurance', 'Implement', 'twoRecommended'),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?usecase=Campus Network Assurance&` +
+			`solution=IBN&pitstop=Implement&customerId=${customerId}&` +
+			'suggestedAction=Build your network & site hierarchy',
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ACC) IBN-Campus Network Assurance-Use-twoRecommended',
+					response: {
+						body: MockACC('IBN', 'Campus Network Assurance', 'Use', 'twoRecommended'),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?usecase=Campus Network Assurance&` +
+			`solution=IBN&pitstop=Use&customerId=${customerId}&` +
+			'suggestedAction=Monitor Health of the Network',
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
 					description: '(ACC) IBN-Campus Network Segmentation-Onboard',
 					response: {
 						body: MockACC('IBN', 'Campus Network Segmentation', 'Onboard', ''),

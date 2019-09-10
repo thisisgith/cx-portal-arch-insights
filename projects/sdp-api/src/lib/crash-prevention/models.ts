@@ -10,9 +10,11 @@ export { SimilarDevice } from './models/similar-device';
 export { SimilarDevicesList } from './models/similar-devices-list';
 export { CPProductFamily } from './models/product-family';
 export { ProductFamiliesList } from './models/product-families-list';
+export { MlVisualizationDevices } from './models/ml-visualization-devices';
+export { ScatterPlotDevice } from './models/scatter-plot-device';
 export {
-    SimilarDevicesDistribution,
-    DeviceSoftwareDistribution,
-    DeviceProductFamilyDistribution,
-    DeviceProductDistribution
+	SimilarDevicesDistribution,
+	DeviceSoftwareDistribution,
+	DeviceProductFamilyDistribution,
+	DeviceProductDistribution,
 } from './models/similar-devices-distribution';

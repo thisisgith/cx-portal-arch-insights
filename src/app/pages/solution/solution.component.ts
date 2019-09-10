@@ -569,7 +569,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 					active: false,
 				},
 				description: I18n.get('_QuickTourStep2Description_'),
-				relative: true,
+				relative: false,
 				stepIndex: 1,
 				stepPos: 'bottom',
 				title: I18n.get('_QuickTourStep2Title_'),
@@ -579,7 +579,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 				data: { },
 				description: I18n.get('_QuickTourStep3Description_'),
 				maxWidth: 300,
-				relative: false,
+				relative: true,
 				stepIndex: 2,
 				stepPos: 'bottom',
 				title: I18n.get('_QuickTourStep3Title_'),
@@ -587,7 +587,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 			{
 				arrows: 1,
 				data: {
-					active: false,
+					active: true,
 				},
 				description: I18n.get('_QuickTourStep1Description_'),
 				maxWidth: 400,
@@ -629,7 +629,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		const offsetLeft = this.contentContainer.nativeElement.offsetLeft;
 		const offsetTop = this.contentContainer.nativeElement.offsetTop;
 		const offsetWidth = this.contentContainer.nativeElement.offsetWidth;
-		const colRatio = 2 / 12;
+		const colRatio = 3 / 12;
 		const arrowOffset = 20;
 		step.data.left = offsetLeft + offsetWidth * colRatio - arrowOffset;
 		step.data.top = offsetTop + 150;
@@ -646,9 +646,9 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		const offsetTop = this.contentContainer.nativeElement.offsetTop;
 		const offsetWidth = this.contentContainer.nativeElement.offsetWidth;
 		const offsetHeight = this.contentContainer.nativeElement.offsetHeight;
-		const colRatio = 10 / 12 / 3;
-		const center = colRatio * 1.5;
-		step.data.left = offsetLeft + offsetWidth * (center + 1 / 6);
+		const colRatio = 3 / 12;
+		const center = colRatio * 2.5;
+		step.data.left = offsetLeft + offsetWidth * center;
 		step.data.top = offsetTop + offsetHeight * 0.4;
 		step.data.active = true;
 		step.width = offsetWidth * colRatio * 2;
@@ -702,6 +702,12 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		if (this.activeRoute) {
 			this.selectFacet(this.getFacetFromRoute(this.activeRoute));
 		}
+	}
+
+	/**
+	 * Detects changes to the view after check
+	 */
+	public async ngAfterViewChecked () {
 		this.cdr.detectChanges();
 	}
 

@@ -2,21 +2,21 @@
 	<div class="col-md-12">
 		<div class="row">
 			<div class="col-md-2 filter__selected">
-				<div class="row">
-					<div class="col-md-12 panel flex-center flex-fill filter assetsCount base-margin-top"
+				<div class="row base-margin-left">
+					<div class="half-margin-bottom qtr-margin-top base-margin-left cursor"
 						data-auto-id="selectedView" (click)="selectedView('violation')" [ngClass]="{'text-primary': !isAssetView}">
-						<div class="text-large flex-center dbl-padding-left dbl-padding-right" [innerHTML]="policyViolationsTotalCount | number"></div>
+						<h2 class="qtr-margin-bottom text-center assets-count" [innerHTML]="policyViolationsTotalCount | number"></h2>
 						<div class="text-medium flex-center" [innerText]="'_RccViolations_' | i18n | titlecase"></div>
 					</div>
-					<div data-auto-id="1" class="col-md-12 panel flex-center flex-fill filter assetsCount"
-						(click)="selectedView('asset')" [ngClass]="{'text-primary': isAssetView}">
-						<div class="text-large flex-center dbl-padding-left dbl-padding-right" [innerHTML]="assetsTotalCount | number"></div>
+					<div class="half-margin-bottom qtr-margin-top cursor"
+						data-auto-id="1" (click)="selectedView('asset')" [ngClass]="{'text-primary': isAssetView}">
+						<h2 class="dbl-margin-left dbl-margin-right qtr-margin-bottom text-center assets-count" [innerHTML]="assetsTotalCount | number"></h2>
 						<div class="text-medium flex-center" [innerText]= "'_RccAssetWithViolations_' | i18n"></div>
 					</div>
 				</div>
 			</div>
 			<div class="col-md-10 no-padding">
-				<div class="col-md-8 seperator-line half-margin-left">
+				<div class="col-md-7 seperator-line half-margin-left">
 					<div class="flex flex-fill flex-fluid">
 						<ng-container *ngFor="let filter of filters">
 							<div attr.id="RccSelectVisualFilter-{{ filter?.key }}"
@@ -38,9 +38,14 @@
 		</div>
 	</div>
 	<ng-container>
+		<div class="divider no-margin"></div>
 		<ng-container *ngTemplateOutlet="filterBar"></ng-container>
-		<div class="divider qtr-margin-top"></div>
+		<div class="divider no-margin"></div>
 	</ng-container>
+	<div class="half-padding-bottom half-padding-top">
+		<cui-alert [options]="alert">
+		</cui-alert>
+	</div>
 	<div class="row container">
 		<div class="col-md-9 flex align-items-center" *ngIf="!isAssetView">
 			<span [innerText]="'_RccShowing_' | i18n"></span>
@@ -65,7 +70,7 @@
 							<input data-auto-id="searchInput" id="searchInput" type="search"
 								class="rcc-search"
 								#searchInput1 [(ngModel)]="searchInput" name="searchInput"
-								[minlength]="searchOptions?.min" [maxlength]="searchOptions?.max"
+								[maxlength]="searchOptions?.max"
 								[pattern]="searchOptions?.pattern" formControlName="search"
 								placeholder="{{ '_Search_' | i18n }}" (search)="clearSearchInput()">
 							<button data-auto-id="searchButton" type="button" class="link" (click)="searchViolations($event,'search')">
@@ -73,7 +78,7 @@
 							</button>
 						</div>
 						<div class="help-block text-danger flex" 
-							role="alert" *ngIf="invalidSearchInput">
+							role="alert" *ngIf="invalidSearchInput || searchForm.invalid">
 							<span [innerText]="'_RccInvalidSearchInput_' | i18n" ></span>
 						</div>
 					</form>
@@ -81,7 +86,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="container base-margin-top" *ngIf="!isAssetView">
+	<div class="container qtr-margin-top no-padding" *ngIf="!isAssetView">
 		<div *ngIf="loading" class="base-margin-bottom">
 			<cui-spinner></cui-spinner>
 		</div>
@@ -90,19 +95,19 @@
 			[data]="policyViolationsGridData"
 			[limit]="tableConfig?.tableLimit"
 			[offset]="tableConfig?.tableOffset"
-			(onSortingChanged)="onTableSortingChanged()"
+			(onSortingChanged)="onTableSortingChanged($event)"
 			(onTableRowClicked)="onViolationRowClicked($event)"
-			*ngIf="!loading && policyViolationsGridData.length > 0">
+			*ngIf="!loading && policyViolationsGridData?.length > 0">
 		</cui-table>
 		<div class="text-center dbl-margin-top dbl-margin-bottom">
 				<span class="text-muted text-xlarge " [innerText]="'_RccNoResults_' | i18n" *ngIf="errorPolicyView"></span>
 				<span *ngIf="!loading && noTableData " class="text-muted text-xlarge" [innerText]="'_RccNoDataAvailable_' | i18n"></span>
 		</div>
 		<div class="section">
-			<cui-pager *ngIf="!loading && policyViolationsGridData.length > 0"
+			<cui-pager *ngIf="!loading && policyViolationsGridData?.length > 0"
 				[page]="tableConfig?.tableOffset"
 				[limit]="tableConfig?.tableLimit"
-				[totalItems]="tableConfig?.totalItems" 
+				[totalItems]="violationPaginationConfig?.totalItems" 
 				(onPageChanged)="onPagerUpdated($event)">
 			</cui-pager>
 		</div>
@@ -116,16 +121,16 @@
 			[data]="tableAssetDataSample"
 			[limit]="tableConfig?.tableLimit"
 			[offset]="tableConfig?.tableOffset"
-			(onSortingChanged)="onTableSortingChanged()"
+			(onSortingChanged)="onTableSortingChanged($event)"
 			(onTableRowClicked)="onAssetRowClicked($event)"
-			*ngIf="!loading && tableAssetDataSample.length > 0">
+			*ngIf="!loading && tableAssetDataSample?.length > 0">
 		</cui-table>
 		<div class="text-center dbl-margin-top dbl-margin-bottom">
 				<span class="text-muted text-xlarge" [innerText]="'_RccNoResults_' | i18n" *ngIf="errorPolicyView"></span>
 				<span *ngIf="!loading && noTableData" class="text-muted text-xlarge" [innerText]="'_RccNoDataAvailable_' | i18n"></span>
 		</div>
 		<div class="section">
-			<cui-pager *ngIf="!loading && tableAssetDataSample.length > 0"
+			<cui-pager *ngIf="!loading && tableAssetDataSample?.length > 0"
 				[page]="tableConfig?.tableOffset"
 				[limit]="tableConfig?.tableLimit"
 				[totalItems]="tableConfig?.totalItems" 
@@ -151,7 +156,7 @@
 	</ng-template>
 
 	<ng-template #filterBar>
-		<div class="row half-margin-top" *ngIf="filtered && selectedFilters?.length > 0">
+		<div class="row qtr-margin-top qtr-margin-bottom" *ngIf="filtered && selectedFilters?.length > 0">
 			<div class="col-md-1 flex flex-center-vertical">
 				<span class="text-bold text-uppercase half-padding-right" [innerText]="'_Filtered_' | i18n"></span>
 			</div>
@@ -175,7 +180,7 @@
 		</div>
 	</ng-template>
 	<!-- App Details 360 slide-out -->
-	<details-panel [hidden]="!selectedViolationModal" [fullscreen]="slideinFullScreen.violationFullScreen">
+	<details-panel [hidden]="!selectedViolationModal" [fullscreen]="slideinFullScreen.violationFullScreen" [minWidth]="'900px'">
 		<details-panel-header (close)="onPanelClose('selectedViolationModal');slideinFullScreen.violationFullScreen = false" [(fullscreen)]="slideinFullScreen.violationFullScreen"
 			[fullscreenToggle]="true">
 			<div detailsPanelTitle>
@@ -227,7 +232,7 @@
 		</app-rcc-device-violation-details>
 	</details-panel>
 
-	<details-panel [hidden]="!selectedAssetModal" [fullscreen]="slideinFullScreen.assetsFullScreen">
+	<details-panel [hidden]="!selectedAssetModal" [fullscreen]="slideinFullScreen.assetsFullScreen" [minWidth]="'900px'">
 		<details-panel-header (close)="onPanelClose('selectedAssetModal');slideinFullScreen.assetsFullScreen = false" [(fullscreen)]="slideinFullScreen.assetsFullScreen"
 			[fullscreenToggle]="true">
 			<div detailsPanelTitle>

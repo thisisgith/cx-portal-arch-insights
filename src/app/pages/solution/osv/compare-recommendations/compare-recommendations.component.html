@@ -75,12 +75,12 @@
 					</span>
 				</td>
 				<td class="text-xlarge recommendation-current">
-					<span [innerText]="currentRecommendation?.profileRisk"></span>
+					<span [innerText]="currentRecommendation?.profileRisk | number: '1.0-0'"></span>
 				</td>
 				<td *ngFor="let recommendation of machineRecommendations" class="recommendation">
 					<div class="flex align-items-center">
 						<span class="text-xlarge qtr-margin-left"
-							[innerText]="recommendation.expectedProfileRisk"></span>
+							[innerText]="recommendation.expectedProfileRisk | number: '1.0-0'"></span>
 					</div>
 				</td>
 			</tr>
