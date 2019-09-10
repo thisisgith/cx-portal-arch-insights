@@ -164,7 +164,7 @@ export class RiskMitigationComponent {
 					}),
 					catchError(err => {
 						this.status.isLoading = false;
-						this.highCrashDeviceCount = undefined;
+						this.highCrashDeviceCount = 0;
 						this.logger.error('High Crash Assets : getHighCrashesDeviceData() ' +
 							`:: Error : (${err.status}) ${err.message}`);
 
