@@ -43,8 +43,10 @@
 			<thead>
 				<tr>
 					<th *ngFor="let column of softwareGroupsTable.columns"
-						[ngClass]="{ 'sortable': column.sortable, 'sorted': column.sorting }">
-						<span [innerText]="column.name" (click)="sortTable(column)"></span>
+						[ngClass]="{ 'sortable': column.sortable, 'sorted': column.sorting }"
+						(click)="sortTable(column)"
+						data-auto-id="SoftwareGroupTableHeading">
+						<span [innerText]="column.name"></span>
 						<span 
 							*ngIf="column.sortable && column.sorting" 
 							class="qtr-margin-left" 

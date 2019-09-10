@@ -37,10 +37,10 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 	@Input() public tabIndex;
 	@Output() public tabIndexChange = new EventEmitter<number>();
 	@ViewChild('recommendationsTemplate', { static: true })
-	private recommendationsTemplate: TemplateRef<{}>;
-	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{}>;
+	private recommendationsTemplate: TemplateRef<{ }>;
+	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
 	@ViewChild('currentOSVersionsTemp', { static: true })
-	private currentOSVersionsTemp: TemplateRef<{}>;
+	private currentOSVersionsTemp: TemplateRef<{ }>;
 	public softwareGroupsTable: CuiTableOptions;
 	public status = {
 		isLoading: true,
@@ -51,8 +51,8 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 	public destroy$ = new Subject();
 	public softwareGroupsParams: OSVService.GetSoftwareGroupsParams;
 	public customerId: string;
-	public alert: any = {};
-	constructor(
+	public alert: any = { };
+	constructor (
 		public logger: LogService,
 		public osvService: OSVService,
 		public route: ActivatedRoute,
@@ -72,7 +72,7 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 	/**
 	 * OnInit lifecycle hook
 	 */
-	public ngOnInit() {
+	public ngOnInit () {
 		this.loadData();
 	}
 
@@ -80,7 +80,7 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 	 * lifecycle hook
 	 * @param changes: changes
 	 */
-	public ngOnChanges(changes: SimpleChanges) {
+	public ngOnChanges (changes: SimpleChanges) {
 		const selectedSoftwareGroup = _.get(changes, ['selectedSoftwareGroup', 'currentValue']);
 		const statusUpdated = _.get(selectedSoftwareGroup, 'statusUpdated');
 		const isFirstChange = _.get(changes, 'selectedSoftwareGroup.firstChange');
@@ -95,7 +95,7 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 	/**
 	 * Function used to load all of the data
 	 */
-	public loadData() {
+	public loadData () {
 		this.getSoftwareGroups();
 	}
 
@@ -103,7 +103,7 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 	 * fetches profile groups
 	 * @returns profile groups list observable
 	 */
-	public getSoftwareGroups() {
+	public getSoftwareGroups () {
 		this.status.isLoading = true;
 		return this.osvService.getSoftwareGroups(this.softwareGroupsParams)
 			.pipe(
@@ -130,7 +130,7 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 					this.logger.error('OSV Profile Groups : getsoftwareGroups() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
-					return of({});
+					return of();
 				}),
 			)
 			.subscribe(() => {
@@ -141,7 +141,7 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 	/**
 	 * Will construct the assets table
 	 */
-	public buildTable() {
+	public buildTable () {
 		if (!this.softwareGroupsTable) {
 			this.softwareGroupsTable = new CuiTableOptions({
 				bordered: true,
@@ -212,7 +212,7 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 	 * Function used to handle single row selection
 	 * @param item the item we selected
 	 */
-	public onRowSelect(item: any) {
+	public onRowSelect (item: any) {
 		this.softwareGroups.forEach((softwareGroup: any) => {
 			if (softwareGroup !== item) {
 				softwareGroup.rowSelected = false;
@@ -230,7 +230,7 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 	 * Page change handler
 	 * @param event the event emitted
 	 */
-	public onPageChanged(event: any) {
+	public onPageChanged (event: any) {
 		this.softwareGroupsParams.pageIndex = (event.page + 1);
 		this.loadData();
 	}
@@ -238,7 +238,7 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 	/**
 	 * OnDestroy lifecycle hook
 	 */
-	public ngOnDestroy() {
+	public ngOnDestroy () {
 		_.invoke(this.alert, 'hide');
 		_.map(this.softwareGroups, (softwareGroup: any) => {
 			softwareGroup.rowSelected = false;
@@ -252,7 +252,7 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 	 * @param softwareGroup the row we're building our actions for
 	 * @returns the built actions
 	 */
-	public getRowActions(softwareGroup: SoftwareGroup) {
+	public getRowActions (softwareGroup: SoftwareGroup) {
 		return _.filter([
 			{
 				label: I18n.get('_OsvCompareRecommendations'),
@@ -286,7 +286,7 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 	 * @param tabIndex tab to open
 	 * @param softwareGroup software group data for details
 	 */
-	public openSoftwareGroupDetails(tabIndex, softwareGroup) {
+	public openSoftwareGroupDetails (tabIndex, softwareGroup) {
 		this.selectedSoftwareGroup = _.cloneDeep(softwareGroup);
 		this.selectedSoftwareGroupChange.emit(this.selectedSoftwareGroup);
 		this.tabIndex = tabIndex;
@@ -298,16 +298,16 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 	 * @param event click event
 	 * @param item software groups row item
 	 */
-	public openCurrentVersionsTab(event: any, item: SoftwareGroup) {
+	public openCurrentVersionsTab (event: any, item: SoftwareGroup) {
 		event.stopPropagation();
 		this.openSoftwareGroupDetails(3, item);
 	}
 
 	/**
-* Sorts the table by a column
-* @param sortColumn The column to sort by
-*/
-	public sortTable(sortColumn: any) {
+	 * sort table
+	 * @param sortColumn column to sort by
+	 */
+	public sortTable (sortColumn: any) {
 		if (!sortColumn.sortable) {
 			return;
 		}
