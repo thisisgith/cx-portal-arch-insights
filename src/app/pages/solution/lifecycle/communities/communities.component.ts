@@ -27,20 +27,20 @@ const publicCommunities: CommunityDetail[] = [
 	},
 	{
 		description: 'Software-Defined Access (SD-Access)',
-		url: `${environment.publicCommunityUrl}/software-defined-access-sda` +
+		url: `${environment.publicCommunityUrl}/${environment.sdAccessCommunitiesPath}` +
 			'/bd-p/discussions-sd-access',
 		usecase: 'campus network segmentation',
 	},
 	{
 		description: 'Software-Defined Access (SD-Access)',
-		url: `${environment.publicCommunityUrl}/software-defined-access-sda` +
+		url: `${environment.publicCommunityUrl}/${environment.sdAccessCommunitiesPath}` +
 			'/bd-p/discussions-sd-access',
 		usecase: 'scalable access policy',
 	},
 	{
 		description: 'Cisco Digital Network Architecture (DNA)',
 		url: `${environment.publicCommunityUrl}/${environment.DNACommunititesPath}` +
-			'/bd-p/discussions-dn',
+			'/bd-p/discussions-dna',
 		usecase: 'network device onboarding',
 	},
 	{

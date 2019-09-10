@@ -76,6 +76,7 @@ export const defaults = {
 		returns: '/return/v1.0/returns',
 	},
 	rmaToolUrl: 'https://ibpm-stage.cisco.com/rma-qa3/home',
+	sdAccessCommunitiesPath: 'software-defined-access-sda',
 	sdpServiceBasePath: '/api',
 	sdpServiceClientId: '4jr3csg78pg7ws7gwvj82sfa',
 	/**
