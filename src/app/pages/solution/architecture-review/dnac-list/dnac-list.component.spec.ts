@@ -12,7 +12,7 @@ import { ActivatedRoute } from '@angular/router';
 import { user } from '@mock';
 import { HttpErrorResponse } from '@angular/common/http';
 
-describe('DnacListComponent', () => {
+fdescribe('DnacListComponent', () => {
 	let component: DnacListComponent;
 	let fixture: ComponentFixture<DnacListComponent>;
 	let service: ArchitectureReviewService;
@@ -165,20 +165,6 @@ describe('DnacListComponent', () => {
 			.toBe(0);
 		expect(component.params.page)
 			.toBe(0);
-	});
-
-	it('should not trigger search function for keycode not 13', () => {
-		component.isLoading = false;
-		component.tableStartIndex = 1;
-		component.params.page = 1;
-		const event = { keyCode: 10 };
-		component.textFilter(event.keyCode);
-		expect(component.isLoading)
-			.toBeFalsy();
-		expect(component.tableStartIndex === 0)
-			.toBeFalsy();
-		expect(component.params.page === 0)
-			.toBeFalsy();
 	});
 
 });
