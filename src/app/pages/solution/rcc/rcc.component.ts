@@ -451,6 +451,7 @@ export class RccComponent implements OnInit, OnDestroy {
 		this.selectedAssetModal = false;
 		this.selectedViolationModal = false;
 		this.errorPolicyView = false;
+		this.noTableData = false;
 	}
 	/**
 	 * Determines whether pager updated on
@@ -460,6 +461,8 @@ export class RccComponent implements OnInit, OnDestroy {
 		this.view = view;
 		this.isAssetView = true;
 		_.invoke(this.alert, 'hide');
+		this.errorPolicyView = false;
+		this.noTableData = false;
 		this.assetTableOptions = new CuiTableOptions({
 			bordered: false,
 			columns: [
@@ -668,6 +671,7 @@ export class RccComponent implements OnInit, OnDestroy {
 		this.filtered = false;
 		_.invoke(this.alert, 'hide');
 		this.errorPolicyView = false;
+		this.noTableData = false;
 		_.each(this.filters, (filter: Filter) => {
 			filter.selected = false;
 			_.each(filter.seriesData, f => {
@@ -711,6 +715,8 @@ export class RccComponent implements OnInit, OnDestroy {
 	public searchViolations (event: any, type: string) {
 		this.invalidSearchInput = false;
 		_.invoke(this.alert, 'hide');
+		this.errorPolicyView = false;
+		this.noTableData = false;
 		const searchInput = this.searchInput.trim();
 		if (event && event.keyCode === 8 && this.searched) {
 			if (!_.isEmpty(searchInput)) {
