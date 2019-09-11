@@ -1603,9 +1603,12 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 					.should('be.visible')
 					.within(() => {
 						cy.getByAutoId('atxMoreClickModal-Title')
-							.should('have.text', item.title);
+							.should('have.text', item.title)
+							.parent()
+							.should('have.class', 'title-line-clamp');
 						cy.getByAutoId('atxMoreClickModal-Description')
-							.should('have.text', item.description);
+							.should('have.text', item.description)
+							.and('have.class', 'line-clamp');
 						cy.getByAutoId('MoreATXViewSessions').should('be.visible');
 						cy.getByAutoId(`MoreATXWatchNow-${item.recordingURL}`).should('be.visible');
 

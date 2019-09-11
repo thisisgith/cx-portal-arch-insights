@@ -583,7 +583,7 @@ export class LifecycleComponent implements OnDestroy {
 					sortDirection: 'asc',
 					sortKey: 'bookmark',
 					template: this.bookmarkTemplate,
-					width: '10%',
+					width: '12%',
 				},
 				{
 					key: 'title',
@@ -592,7 +592,7 @@ export class LifecycleComponent implements OnDestroy {
 					sortDirection: 'asc',
 					sortKey: 'title',
 					template: this.titleTemplate,
-					width: '50%',
+					width: '44%',
 				},
 				{
 					key: 'status',
@@ -606,7 +606,7 @@ export class LifecycleComponent implements OnDestroy {
 				{
 					sortable: false,
 					template: this.actionTemplate,
-					width: '20%',
+					width: '24%',
 				},
 			],
 		});
@@ -1295,8 +1295,8 @@ export class LifecycleComponent implements OnDestroy {
 			_div.style.top = `${this.moreYCoordinates - _div.offsetHeight / 2}px`;
 			panel = 'panel panel--open';
 		} else {
-			_div.style.left = '40%';
-			_div.style.bottom = '10px';
+			_div.style.left = '128px';
+			_div.style.bottom = '-150px';
 			panel = 'panel panel--open';
 		}
 
