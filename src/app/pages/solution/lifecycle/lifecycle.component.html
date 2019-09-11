@@ -264,7 +264,7 @@
 				<button class="btn btn--small btn--secondary text-uppercase cx-button"
 					attr.data-auto-id = "MoreATXWatchNow-{{ data.recordingURL }}"
 					[ngClass]="data?.recordingURL ? null : 'disabled'"
-					(click)="atxWatchNow(data.recordingURL)"
+					(click)="crossLaunch(data.recordingURL)"
 					[innerText]="'_WatchNow_' | i18n">
 				</button>
 			</div>
@@ -343,7 +343,7 @@
 			<button class="btn btn--small btn--secondary text-uppercase cx-button"
 				data-auto-id = "recommendedATXWatchButton"
 				[ngClass]="componentData.atx?.recommended?.recordingURL ? null : 'disabled'"
-				(click)="atxWatchNow(componentData.atx.recommended.recordingURL)"
+				(click)="crossLaunch(componentData.atx.recommended.recordingURL)"
 				[innerText]="'_WatchNow_' | i18n">
 			</button>
 			<ng-container *ngIf="componentData?.atx?.recommended && recommendedAtxScheduleCardOpened">
@@ -447,7 +447,7 @@
 				class="pull-left btn btn--primary"
 				attr.data-auto-id = "AtxScheduleCardRegisterButton"
 				[ngClass]="getAtxRegisterButton(data)"
-				(click)="atxRegister(sessionSelected.registrationURL)"
+				(click)="crossLaunch(sessionSelected.registrationURL)"
 				[innerText]="'_Register_' | i18n">
 			</button>
 			<div class="half-padding-left pull-left">
@@ -569,10 +569,8 @@
 		<div class="view-all pull-right toggle"
 			*ngIf="data">
 			<a class="no-link show"
-				target="_blank"
-				rel="noopener noreferrer"
-				attr.data-auto-id="{{ title }}-ViewAll"
-				href="{{ link }}">
+				(click)="crossLaunch(link)"
+				attr.data-auto-id="{{ title }}-ViewAll">
 				<span class="text-med" [innerText]="'_ViewAll_' | i18n"></span>
 				<span class="icon-play"></span>
 			</a>
@@ -583,7 +581,7 @@
 			<div id="recommended-elearning-item" class=" panel small-panel" attr.data-auto-id="{{ title }}-Item">
 				<div class="row">
 					<div class="col-md-11">
-						<a class="no-link" target="_blank" rel="noopener noreferrer" [href]="item.url">
+						<a class="no-link" (click)="crossLaunch(item.url)" attr.data-auto-id="{{ title }} -item.title">
 							<span [innerText]="item.title"></span>
 						</a>
 					</div>
@@ -607,7 +605,7 @@
 <ng-template #successBlock let-title="title" let-data="data">
 	<div>
 		<div id="successbytes-item" class="cx-lifecycle-card--link panel small-panel" data-auto-id="successbytes-item" *ngFor="let item of data | slice:0:3">
-			<a class="toggle" target="_blank" rel="noopener noreferrer" [href]="item.url" [innerText]="item.title"></a>
+			<a class="toggle" (click)="crossLaunch(item.url)" [innerText]="item.title" attr.data-auto-id="{{ title }} -item.title"></a>
 			<ng-container *ngTemplateOutlet="successBytesHoverBlock; context: {
 				item: item,
 				autoid: 'successbytes'
@@ -905,7 +903,7 @@
 					<button class="btn btn--small btn--secondary text-uppercase cx-button"
 						attr.data-auto-id = "CardATXWatchNow-{{ item.recordingURL }}"
 						[ngClass]="item?.recordingURL ? null : 'disabled'"
-						(click)="atxWatchNow(item.recordingURL); closeModal()"
+						(click)="crossLaunch(item.recordingURL)"
 						[innerText]="'_WatchNow_' | i18n">
 					</button>
 				</div>
@@ -1267,7 +1265,7 @@
 		<button class="btn btn--small btn--secondary text-uppercase cx-button half-margin-left"
 			attr.data-auto-id = "ListATXWatchNow-{{ celldata.recordingURL }}"
 			[ngClass]="celldata?.recordingURL ? null : 'disabled'"
-			(click)="atxWatchNow(celldata.recordingURL); closeModal()"
+			(click)="crossLaunch(celldata.recordingURL)"
 			[innerText]="'_WatchNow_' | i18n">
 		</button>
 	</div>

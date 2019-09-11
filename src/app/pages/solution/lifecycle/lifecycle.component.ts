@@ -39,6 +39,7 @@ import { ActivatedRoute } from '@angular/router';
 import { User } from '@interfaces';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { RacetrackInfoService } from '@services';
+import { SafeUrl } from '@angular/platform-browser';
 
 /**
  * Interface representing our data object
@@ -712,6 +713,8 @@ export class LifecycleComponent implements OnDestroy {
 	 * @param type the modal template to display
 	 */
 	public showModal (type: string) {
+		// close all popup modals upon opening viewAll modal
+		this.closeViewSessions();
 		// reset the view to card view
 		// this.view = 'grid';
 		if (type === 'atx') {
@@ -1222,12 +1225,14 @@ export class LifecycleComponent implements OnDestroy {
 	}
 
 	/**
-	 * Opens the given recordingURL in a new tab
-	 * @param recordingUrl string
+	 * Opens the given URL in a new tab
+	 * @param crossLaunchUrl string
 	 */
-	 public atxWatchNow (recordingUrl: string) {
-		window.open(`${recordingUrl}`, '_blank');
-		this.closeViewSessions();
+	 public crossLaunch (crossLaunchUrl: SafeUrl) {
+		if (crossLaunchUrl) {
+			window.open(`${crossLaunchUrl}`, '_blank');
+			this.closeViewSessions();
+		}
 	}
 
 	/**
@@ -1244,16 +1249,6 @@ export class LifecycleComponent implements OnDestroy {
 		}
 
 		return button;
-	}
-
-	/**
-	 * Opens the given recordingURL in a new tab
-	 * @param registerUrl string
-	 */
-	 public atxRegister (registerUrl: string) {
-		window.open(`${registerUrl}`, '_blank');
-		this.closeViewSessions();
-		this.closeModal();
 	}
 
 	/**

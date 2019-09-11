@@ -4,9 +4,7 @@
 		<div class="flex-center-vertical" *ngIf="curatedCommunity" data-auto-id="CuratedCommunityLink">
 			<span class="icon-communities"></span>
 			<span><a class="cx-lifecycle-card--link no-link half-padding-left"
-					[href]="curatedCommunityUrl"
-					target="_blank"
-					rel="noopener noreferrer"
+					(click)="crossLaunch(curatedCommunityUrl)"
 					data-toggle="tooltip"
 					data-placement="bottom" title="{{curatedCommunity.description}}" id="curatedcommunitytitle"
 					attr.data-auto-id="communitytitle-{{curatedCommunity.description}}-Lifecycle"
@@ -16,9 +14,7 @@
 		<div class="flex-center-vertical" *ngIf="publicCommunity" data-auto-id="PublicCommunityLink">
 			<span class="icon-communities"></span>
 			<span><a class="cx-lifecycle-card--link no-link half-padding-left"
-					[href]="publicCommunityUrl"
-					target="_blank"
-					rel="noopener noreferrer"
+					(click)="crossLaunch(publicCommunityUrl)"
 					data-toggle="tooltip"
 					data-placement="bottom" title="{{publicCommunity.description}}" id="publiccommunitytitle"
 					attr.data-auto-id="communitytitle-{{publicCommunity.description}}-Public"
