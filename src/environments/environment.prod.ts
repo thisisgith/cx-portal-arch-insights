@@ -71,8 +71,6 @@ export const environment = {
 	sdpServiceBasePath: '/api/usa',
 	sdpServiceClientId: '3t4uvkxxnpps49vcc4qsafuc',
 	sdAccessCommunitiesPath: 'software-defined-access-sd',
-	sdpServiceBasePath: '/api/stg',
-	sdpServiceClientId: 'ejw4cbpvp3s8cyh4ry8qcnff',
 	/**
 	 * sdpServiceOrigin MUST be explicitly declared in every single environment file,
 	 * because it is used inside of a module forRoot() call
