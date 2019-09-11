@@ -333,12 +333,13 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 						width: '10%',
 					},
 					{
+						key: 'releaseDate',
 						name: I18n.get('_OsvReleaseDate_'),
 						render: item => !_.isNull(item.postDate) ?
 							datePipe.transform(
 								new Date(item.postDate), 'yyyy MMM dd') :
 							'',
-						sortable: false,
+						sortable: true,
 					},
 					{
 						key: 'swType',
@@ -382,9 +383,9 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 						key: 'hostName',
 						name: I18n.get('_OsvHostName'),
 						width: '10%',
-						sortable: false,
+						sortable: true,
 						sortDirection: 'asc',
-						sorting: false,
+						sorting: true,
 					},
 					{
 						key: 'ipAddress',
@@ -520,10 +521,12 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 			acceptedDate: response.recommAcceptedDate,
 			key: 'release',
 		});
-		this.getSoftwareGroupAssets()
+		setTimeout(() => {
+			this.getSoftwareGroupAssets()
 			.subscribe();
-		this.getSoftwareGroupVersions()
+			this.getSoftwareGroupVersions()
 			.subscribe();
+		}, 1000);
 		this.selectedSoftwareGroupChange.emit(this.selectedSoftwareGroup);
 	}
 

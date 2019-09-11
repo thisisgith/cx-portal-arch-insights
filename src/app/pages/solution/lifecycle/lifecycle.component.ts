@@ -53,7 +53,7 @@ interface ComponentData {
 	params: {
 		customerId: string;
 		pitstop: string;
-		rows?: number;
+		rows: number;
 		solution: string;
 		usecase: string;
 		suggestedAction?: string;
@@ -244,6 +244,7 @@ export class LifecycleComponent implements OnDestroy {
 		params: {
 			customerId: '',
 			pitstop: '',
+			rows: 500,
 			solution: '',
 			suggestedAction: '',
 			usecase: '',
@@ -421,7 +422,7 @@ export class LifecycleComponent implements OnDestroy {
 			params: {
 				customerId: this.customerId,
 				pitstop: '',
-				rows: 100,
+				rows: 500,
 				solution: '',
 				suggestedAction: '',
 				usecase: '',
@@ -1780,8 +1781,6 @@ export class LifecycleComponent implements OnDestroy {
 				this.stage.next(pitstop.name);
 			}
 
-			// UI not handling pagination for now, temporarily set to a large number
-			this.componentData.params.rows = 100;
 			this.loadRacetrackInfo();
 
 			this.status.loading.racetrack = false;
