@@ -14,6 +14,7 @@ export { CaseOpenComponent } from './case/case-open/case-open.component';
 export {
   CaseOpenAdvisoriesComponent,
 } from './case/case-open/case-open-advisories/case-open-advisories.component';
+export { ContactSupportComponent, ContactSupportModule } from './contact-support';
 export { HeaderComponent } from './header/header.component';
 export { AssetDetailsHeaderModule } from './details/asset/header/header.module';
 export { HeaderModule } from './header/header.module';
