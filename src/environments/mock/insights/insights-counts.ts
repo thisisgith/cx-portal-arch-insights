@@ -1,7 +1,7 @@
 import { InsightsResponse } from '@sdp-api';
 
 /** Base of URL for SDP API insights */
-const api = '/api/customerportal/insightsCounts/v1/allCounts/details/';
+const api = '/api/customerportal/insightsCounts/v1/allCounts/details';
 
 /** Mock Customer ID */
 const customerId = '7293498';
