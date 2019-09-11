@@ -12,7 +12,7 @@
 		(activeTabIndexChange)="selectTab($event)">
 
 		<cui-tab *ngFor="let tab of tabs"
-			[label]="tab.label | uppercase"
+			[label]="tab.label"
 			[disabled]="tab.disabled">
 			<ng-container *ngIf="selectedTab.filters.length">
 				<visual-filter-bar [filters]="tab.filters" [filterCollapse]="status.filterCollapse"></visual-filter-bar>
