@@ -371,6 +371,7 @@ $cx-font-size-24: 24px;
 /* CiscoUI table styling override start */
 // Chose to use specificity instead of importants
 :host ::ng-deep .table {
+	cursor: pointer;
 	border: none;
 	border-spacing: 2px;
 	border-collapse: collapse;

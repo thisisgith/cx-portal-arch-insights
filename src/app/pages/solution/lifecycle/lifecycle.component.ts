@@ -1295,8 +1295,8 @@ export class LifecycleComponent implements OnDestroy {
 			_div.style.top = `${this.moreYCoordinates - _div.offsetHeight / 2}px`;
 			panel = 'panel panel--open';
 		} else {
-			_div.style.left = '40%';
-			_div.style.bottom = '10px';
+			_div.style.left = '128px';
+			_div.style.bottom = '-150px';
 			panel = 'panel panel--open';
 		}
 
