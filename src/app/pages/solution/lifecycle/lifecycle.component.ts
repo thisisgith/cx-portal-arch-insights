@@ -1759,8 +1759,8 @@ export class LifecycleComponent implements OnDestroy {
 
 			this.componentData.racetrack = {
 				pitstop,
+				stage,
 				actionsCompPercent: this.currentPitstopCompPert,
-				stage: stage,
 			};
 
 			const nextAction = pitstop ? _.find(pitstop.pitstopActions, { isComplete: false })

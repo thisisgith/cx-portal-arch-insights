@@ -7,8 +7,6 @@ import {
 	EventEmitter,
 } from '@angular/core';
 import { PlatformLocation } from '@angular/common';
-
-
 import * as d3 from 'd3-selection';
 import { d3Transition } from 'd3-transition';
 import { easeLinear } from 'd3-ease';
@@ -118,8 +116,6 @@ export class RacetrackComponent implements OnInit {
 	 * @memberof RacetrackComponent
 	 */
 	public ngOnInit () {
-		const self = this;
-
 		const svg = d3.select('#racetrack-composite');
 		const racecar = svg.select('#racecar');
 		const track = svg.select('#secrettrack');
@@ -292,30 +288,32 @@ export class RacetrackComponent implements OnInit {
 				.on('click', d =>  {
 					this.zoomToStage(d, false);
 				})
-				.on('mouseenter', function (d) {
-					if (d === self.currentStage) {
+				.on('mouseenter', (d, i, nodes) => {
+					if (d === this.currentStage) {
 						return;
 					}
 
-					if (stages.indexOf(d) > stages.indexOf(self.currentStage)) {
-						d3.select(this)
+					if (stages.indexOf(d) > stages.indexOf(this.currentStage)) {
+						d3.select(nodes[i])
 							.transition()
 							.duration(50)
 							.attr('fill', '#14bdf4');
 					}
 
-					self.stageLabels.filter(dd => dd.name === d)
+					this.stageLabels.filter(dd => dd.name === d)
 						.style('font-weight', 'bold');
 				})
-				.on('mouseleave', function (d) {
-					if (d === self.current) {
+				.on('mouseleave', (d, i, nodes) => {
+					if (d === this.current) {
 						return;
 					}
 
-					d3.select(this)
+					d3.select(nodes[i])
 						.transition()
 						.duration(50)
 						.attr('fill', 'white');
+
+					this.stageLabels.style('font-weight', 'normal');
 				});
 
 		const labelsEnter = d3.select(this.track.node().parentNode)
@@ -337,7 +335,7 @@ export class RacetrackComponent implements OnInit {
 			.attr('transform', d => {
 				const dist = this.stageMap[d.name].distance;
 
-				if (d.name === 'onboard' || d.name === 'implement') {
+				if (d.name === 'Onboard' || d.name === 'Implement') {
 					return `${this.track.attr('transform')}
 					translate(${[points[dist].x - 90, points[dist].y + 25]})`;
 				}
@@ -359,10 +357,10 @@ export class RacetrackComponent implements OnInit {
 			.attr('points', '4,10 16,4 16,16')
 			.attr('fill', 'white')
 			.attr('transform', d => {
-				if (d.name === 'onboard') {
+				if (d.name === 'Onboard') {
 					return 'translate(99, -16) rotate(90)';
 				}
-				if (d.name === 'implement') {
+				if (d.name === 'Implement') {
 					return 'translate(101, -16) rotate(90)';
 				}
 
@@ -373,10 +371,10 @@ export class RacetrackComponent implements OnInit {
 			.attr('points', '7,11 17,6.5 17,15.5')
 			.attr('fill', '#b1e8f1')
 			.attr('transform', d => {
-				if (d.name === 'onboard') {
+				if (d.name === 'Onboard') {
 					return 'translate(100, -15) rotate(90)';
 				}
-				if (d.name === 'implement') {
+				if (d.name === 'Implement') {
 					return 'translate(102, -15) rotate(90)';
 				}
 
@@ -407,29 +405,29 @@ export class RacetrackComponent implements OnInit {
 			.style('cursor', 'pointer')
 			.raise()
 			.on('click', d => this.zoomToStage(d.name, false))
-			.on('mouseenter', function (d) {
-				if (d.name === self.currentStage) {
+			.on('mouseenter', (d, i, nodes) => {
+				if (d.name === this.currentStage) {
 					return;
 				}
 
-				d3.select(this)
+				d3.select(nodes[i])
 					.style('font-weight', 'bold');
 
-				self.stageCircles.filter(dd => dd === d.name &&
-						stages.indexOf(d.name) > stages.indexOf(self.currentStage))
+				this.stageCircles.filter(dd => dd === d.name &&
+						stages.indexOf(d.name) > stages.indexOf(this.currentStage))
 					.transition()
 					.duration(50)
 					.attr('fill', '#14bdf4');
 			})
-			.on('mouseleave', function (d) {
-				if (d.name === self.current) {
+			.on('mouseleave', (d, i, nodes)  => {
+				if (d.name === this.current) {
 					return;
 				}
 
-				d3.select(this)
+				d3.select(nodes[i])
 					.style('font-weight', 'normal');
 
-				self.stageCircles.filter(dd => dd === d.name)
+				this.stageCircles.filter(dd => dd === d.name)
 					.transition()
 					.duration(50)
 					.attr('fill', 'white');
@@ -453,15 +451,15 @@ export class RacetrackComponent implements OnInit {
 				.attr('transform', d => d.transform)
 				.attr('fill', '#8e8e8e')
 				.attr('font-size', '19')
-				.attr('opacity', 0)
+				.attr('opacity', 0);
 
 		this.refreshLabels();
 
 		this.svg.on('mouseover', () => {
-			for(const label of [this.stageLabels, this.staticStageLabels]) {
+			for (const label of [this.stageLabels, this.staticStageLabels]) {
 				label.transition()
 					.duration(200)
-					.attr('opacity', 1)
+					.attr('opacity', 1);
 			}
 		})
 		.on('mouseleave', this.refreshLabels.bind(this));
@@ -539,7 +537,7 @@ export class RacetrackComponent implements OnInit {
 				.attr('fill', '#14bdf4')
 				.attr('stroke', 'white')
 				.attr('stroke-width', 5)
-				.attr('filter', dropShadowUrl)
+				.attr('filter', dropShadowUrl);
 
 		const start = this.stageMap[this.currentStage].distance;
 		const end = this.stageMap[endpoint].distance;
@@ -626,7 +624,7 @@ export class RacetrackComponent implements OnInit {
 			.exponent(2.5);
 
 		if (endpoint === this.currentStage) {
-			points.reduce((chain, pt, i) => {
+			const chainedTransitions = points.reduce((chain, pt, i) => {
 				// skip half of the points to speed up animation, reduce calculations
 				// However, make sure we don't skip the last point
 				if (i % 2 && i !== points.length - 1) { return chain; }
@@ -666,6 +664,12 @@ export class RacetrackComponent implements OnInit {
 						}
 					});
 			}, this.racecar);
+
+			chainedTransitions.transition()
+				.select('circle')
+				.duration(300)
+				.attr('opacity', 0.8)
+				.attr('r', 40);
 		}
 
 		this.current = endpoint;
