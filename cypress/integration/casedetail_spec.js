@@ -329,6 +329,7 @@ describe('Case Detail Spec', () => {
 		};
 
 		it.skip('PBC-92 - Assets - Cases - Event Based Case Open (Single Asset)', () => {
+			// TODO: Skipped this test due to lack of advisory data 
 			cy.getByAutoId('ImpactedCountText').each($row => {
 				if ($row.text() === '1') {
 					cy.wrap($row).click();
