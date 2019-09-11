@@ -3,6 +3,7 @@ import {
 	ViewChild,
 	TemplateRef,
 	OnDestroy,
+	ElementRef,
  } from '@angular/core';
 import { LogService } from '@cisco-ngx/cui-services';
 
@@ -113,6 +114,7 @@ export class LifecycleComponent implements OnDestroy {
 	@ViewChild('statusTemplate', { static: true }) private statusTemplate: TemplateRef<{ }>;
 	@ViewChild('actionTemplate', { static: true }) private actionTemplate: TemplateRef<{ }>;
 	@ViewChild('titleTemplate', { static: true }) private titleTemplate: TemplateRef<{ }>;
+	@ViewChild('scrollModal', { static: false }) private scrollModalRef: ElementRef;
 	public modalContent: TemplateRef<{ }>;
 	public modal = {
 		content: null,
@@ -1265,18 +1267,20 @@ export class LifecycleComponent implements OnDestroy {
 	public getPanel (viewAtxSessions: HTMLElement) {
 		let panel;
 		const _div = viewAtxSessions;
-		const atxPopupListViewAdjustPx = 255;
+		const atxPopupListViewAdjustPx = 163;
 		this.innerWidth = window.innerWidth;
 		if (this.componentData.atx.interested) {
 			switch (this.atxview) {
 				case 'grid': {
-					if ((this.eventXCoordinates + 500) > this.innerWidth) {
-						_div.style.right = '90%';
-						_div.style.bottom = '-50px';
+					const rect = this.eventClickedElement.getBoundingClientRect();
+
+					if ((rect.right + 500) > this.scrollModalRef.nativeElement.clientWidth) {
+						_div.style.right = '98%';
+						_div.style.bottom = '-132.5px';
 						panel = 'panel cardpanel--openright';
 					} else {
-						_div.style.left = '40%';
-						_div.style.bottom = '-50px';
+						_div.style.left = '55%';
+						_div.style.bottom = '-132.5px';
 						panel = 'panel cardpanel--open';
 					}
 					break;
@@ -1285,15 +1289,15 @@ export class LifecycleComponent implements OnDestroy {
 					const rect = this.eventClickedElement.getBoundingClientRect();
 					const ht = this.eventClickedElement.scrollHeight;
 
-					_div.style.left = `${(rect.left - _div.scrollWidth)}px`;
+					_div.style.left = `${(rect.left - _div.scrollWidth) - 3}px`;
 					_div.style.top = `${(rect.top + (ht / 2))
 						+ this.scrollY - atxPopupListViewAdjustPx - this.appHeaderHeight}px`;
 					panel = 'panel listpanel--open';
 				}
 			}
 		} else if (this.atxScheduleCardOpened && this.moreATXSelected) {
-			_div.style.left = `${this.moreXCoordinates}px`;
-			_div.style.top = `${this.moreYCoordinates - _div.offsetHeight / 2}px`;
+			_div.style.left = `${this.moreXCoordinates + 30}px`;
+			_div.style.top = `${this.moreYCoordinates - _div.offsetHeight / 2 + 10}px`;
 			panel = 'panel panel--open';
 		} else {
 			_div.style.left = '128px';
