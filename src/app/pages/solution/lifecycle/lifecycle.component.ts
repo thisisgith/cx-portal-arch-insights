@@ -42,6 +42,21 @@ import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { RacetrackInfoService } from '@services';
 
 /**
+ * Interface representing success path and product guides modals
+ */
+interface SuccessPathsModel {
+	archetypes?: string[];
+	currentPage: number;
+	filter: string;
+	items?: SuccessPath[];
+	previewItems?: SuccessPath[];
+	rows: number;
+	sortField: 'title' | 'type' | 'category' | 'bookmark';
+	sortDirection: 'asc' | 'desc';
+	totalCount?: number;
+}
+
+/**
  * Interface representing our data object
  */
 interface ComponentData {
@@ -67,10 +82,10 @@ interface ComponentData {
 		certifications?: ELearning[];
 		elearning?: ELearning[];
 		training?: ELearning[];
-		success?: SuccessPath[];
-		archetype?: string[];
-		productGuides?: SuccessPath[];
-		pgArchetype?: string[];
+	};
+	success: {
+		bytes: SuccessPathsModel,
+		productGuides: SuccessPathsModel,
 	};
 	acc?: {
 		sessions: ACC[];
@@ -254,6 +269,22 @@ export class LifecycleComponent implements OnDestroy {
 			suggestedAction: '',
 			usecase: '',
 		},
+		success: {
+			bytes: {
+				currentPage: 1,
+				filter: '',
+				rows: 10,
+				sortDirection: 'asc',
+				sortField: 'title',
+			},
+			productGuides: {
+				currentPage: 1,
+				filter: '',
+				rows: 10,
+				sortDirection: 'asc',
+				sortField: 'title',
+			},
+		},
 	};
 
 	public selectAccComponent = false;
@@ -430,6 +461,22 @@ export class LifecycleComponent implements OnDestroy {
 				solution: '',
 				suggestedAction: '',
 				usecase: '',
+			},
+			success: {
+				bytes: {
+					currentPage: 1,
+					filter: '',
+					rows: 10,
+					sortDirection: 'asc',
+					sortField: 'title',
+				},
+				productGuides: {
+					currentPage: 1,
+					filter: '',
+					rows: 10,
+					sortDirection: 'asc',
+					sortField: 'title',
+				},
 			},
 		};
 	}
@@ -866,19 +913,19 @@ export class LifecycleComponent implements OnDestroy {
 	public selectFilter (type: string) {
 		if (type === 'SB') {
 			this.selectedSuccessPaths =
-				_.filter(this.componentData.learning.success,
+				_.filter(this.componentData.success.bytes.items,
 					{ archetype: this.selectedFilterForSB });
 			if (this.selectedFilterForSB === 'Not selected' || !this.selectedFilterForSB) {
-				this.selectedSuccessPaths = this.componentData.learning.success;
+				this.selectedSuccessPaths = this.componentData.success.bytes.items;
 			}
 		}
 
 		if (type === 'PG') {
 			this.selectedProductGuides =
-				_.filter(this.componentData.learning.productGuides,
+				_.filter(this.componentData.success.productGuides.items,
 					{ archetype: this.selectedFilterForPG });
 			if (this.selectedFilterForPG === 'Not selected' || !this.selectedFilterForPG) {
-				this.selectedProductGuides = this.componentData.learning.productGuides;
+				this.selectedProductGuides = this.componentData.success.productGuides.items;
 			}
 		}
 
@@ -1465,14 +1512,15 @@ export class LifecycleComponent implements OnDestroy {
 			map((result: SuccessPathsResponse) => {
 				this.selectedFilterForPG = '';
 				if (result.items.length) {
-					_.set(this.componentData, ['learning', 'productGuides'],
+					_.set(this.componentData.success.productGuides, ['items'],
 						result.items);
 					const resultItems = _.uniq(_.map(result.items, 'archetype'));
-					_.set(this.componentData, ['learning', 'pgArchetype'],
+					_.set(this.componentData.success.productGuides, ['archetypes'],
 						resultItems);
-					this.componentData.learning.pgArchetype.unshift('Not selected');
-					this.selectedProductGuides = this.componentData.learning.productGuides;
-					this.pgCategoryOptions = _.map(this.componentData.learning.pgArchetype,
+					this.componentData.success.productGuides.archetypes.unshift('Not selected');
+					this.selectedProductGuides = this.componentData.success.productGuides.items;
+					this.pgCategoryOptions = _.map(
+						this.componentData.success.productGuides.archetypes,
 						item => ({
 							name: item,
 							value: item,
@@ -1517,13 +1565,15 @@ export class LifecycleComponent implements OnDestroy {
 			map((result: SuccessPathsResponse) => {
 				this.selectedFilterForSB = '';
 				if (result.items.length) {
-					_.set(this.componentData, ['learning', 'success'], result.items);
+					_.set(this.componentData.success.bytes, ['items'], result.items);
+					_.set(this.componentData.success.bytes, ['previewItems'],
+						_.slice(result.items, 0, 3));
 					const resultItems = _.uniq(_.map(result.items, 'archetype'));
-					_.set(this.componentData, ['learning', 'archetype'], resultItems);
-					this.componentData.learning.archetype.unshift('Not selected');
-					this.selectedSuccessPaths = this.componentData.learning.success;
+					_.set(this.componentData.success.bytes, ['archetypes'], resultItems);
+					this.componentData.success.bytes.archetypes.unshift('Not selected');
+					this.selectedSuccessPaths = this.componentData.success.bytes.items;
 					this.categoryOptions =
-						_.map(this.componentData.learning.archetype, item => ({
+						_.map(this.componentData.success.bytes.archetypes, item => ({
 							name: item,
 							value: item,
 						}));

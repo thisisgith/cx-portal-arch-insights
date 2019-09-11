@@ -23,7 +23,7 @@
 						template: successBytesPanel,
 						title: '_SuccessBytes_',
 						loading: (status.loading.success || status.loading.productGuides),
-						data: componentData.learning,
+						data: componentData.success,
 						viewAllLabel: '_ViewAll_',
 						viewAll: '_SuccessBytes_'
 					}">
@@ -527,14 +527,14 @@
 
 <ng-template #successBytesPanel let-data="data">
 	<div class="cx-lifecycle-card--subtitle base-margin-bottom" [innerText]="'_SuccessBytesSubtitle_' | i18n"></div>
-	<div *ngIf="data.success?.length" data-auto-id="SuccessBytesPanel-SuccessPathsBlock">
+	<div *ngIf="data.bytes.items?.length" data-auto-id="SuccessBytesPanel-SuccessPathsBlock">
 		<ng-container *ngTemplateOutlet="successBlock; context: {
 				title: '_SuccessBytes_',
-				data: componentData.learning.success }">
+				data: componentData.success.bytes.previewItems }">
 		</ng-container>
 		<div class="divider"></div>
 	</div>
-	<div *ngIf="data.productGuides?.length" data-auto-id="SuccessBytesPanel-ProductGuidesBlock">
+	<div *ngIf="data.productGuides.items?.length" data-auto-id="SuccessBytesPanel-ProductGuidesBlock">
 		<ng-container *ngTemplateOutlet="productGuidesBlock; context: {
 				title: '_ProductGuides_' }">
 		</ng-container>
