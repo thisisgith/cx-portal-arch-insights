@@ -19,6 +19,7 @@ $border-dark-blue: #00a2cb;
 $divider-color: #e1e1e1;
 $bookmark-blue-outline-color: #5ddfff;
 $midnight-blue: #0d274d;
+$popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 
 %ribbon {
 	position: absolute;
@@ -372,6 +373,7 @@ $midnight-blue: #0d274d;
 	.force-flex {
 		display: flex;
 		flex-wrap: wrap;
+		position: relative;
 
 		& > * {
 			flex-shrink: 0;
@@ -631,17 +633,13 @@ $midnight-blue: #0d274d;
 .cardpanel--open,
 .cardpanel--openright,
 .listpanel--open {
-	box-shadow: $base-box-shadow;
+	box-shadow: $popover-box-shadow;
 	height: 325px;
 	width: 500px;
 	position: absolute;
 	z-index: 3;
 	background-color: $white;
-	border-radius: 10px;
-
-	#atxtitle {
-		height: 48px;
-	}
+	border-radius: 6px;
 
 	#atxdescription {
 		height: 60px;
@@ -736,15 +734,40 @@ $midnight-blue: #0d274d;
 	border-bottom: 30px solid transparent;
 }
 
+tr.td-row td {
+	@extend %tr-shared;
+
+	border-bottom-width: 1px;
+}
+
 .session-table {
 	overflow-y: scroll;
-	height: 120px;
+	height: 147px;
 	display: block;
+	background-color: rgba(245, 246, 249, 0.33);
+	border: 1px solid #e1e1e1;
+	margin-right: 27px;
+	margin-top: 8px;
+	position: relative;
 
-	tr td {
-		padding: 10px;
-		width: auto;
-		text-align: left;
+	.table {
+		margin-top: 0;
+		cursor: pointer;
+
+		tr {
+			height: 28px;
+			padding: 0;
+
+			&::after {
+				display: none;
+			}
+		}
+
+		tr td {
+			padding: 4px 8px;
+			width: auto;
+			text-align: left;
+		}
 	}
 }
 
@@ -875,6 +898,26 @@ $midnight-blue: #0d274d;
 	gap: 20px 20px;
 }
 
+%popover-tail {
+	// default styling to right
+	position: absolute;
+	top: calc(50% - 7px);
+	right: -7px;
+	height: 0;
+	width: 0;
+	border: 7px solid #000;
+	border-color: transparent transparent #fff #fff;
+	box-shadow: -2px 2px 3px 0 rgba(0, 0, 0, 0.06);
+	transform: rotate(-135deg);
+}
+
+%popover-tail--left {
+	@extend %popover-tail;
+
+	left: -7px;
+	transform: rotate(45deg);
+}
+
 #sb-hover-panel,
 #atx-hover-panel,
 #acc-hover-panel,
@@ -889,20 +932,99 @@ $midnight-blue: #0d274d;
 		position: relative;
 
 		.popover-tail {
-			// default styling to right
-			position: absolute;
-			top: calc(50% - 7px);
-			right: -7px;
-			height: 0;
-			width: 0;
-			border: 7px solid #000;
-			border-color: transparent transparent #fff #fff;
-			box-shadow: -2px 2px 3px 0 rgba(0, 0, 0, 0.06);
-			transform: rotate(-135deg);
+			@extend %popover-tail;
 
 			&--left {
-				left: -7px;
-				transform: rotate(45deg);
+				@extend %popover-tail--left;
+			}
+		}
+	}
+}
+
+#viewAtxPanel {
+	padding: 25px 0 26px 27px;
+
+	.popover-tail {
+		@extend %popover-tail--left;
+	}
+
+	&::after {
+		display: none;
+	}
+
+	#atxtitle h5 {
+		font-size: 16px;
+		color: #767676;
+		line-height: 19px;
+	}
+
+	.icon-close {
+		position: absolute;
+		top: -10px;
+		right: 28px;
+
+		&::before {
+			font-size: 12px !important;
+			line-height: 12px !important;
+			color: #929bab;
+		}
+	}
+
+	.divider--compressed {
+		margin-top: 6px;
+		margin-bottom: 20px;
+	}
+
+	.atx-scheduler-one-line {
+		position: relative;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		flex-wrap: nowrap;
+		padding-right: 27px;
+
+		h6 {
+			color: #394454;
+			font-size: 14px;
+			line-height: 16px;
+		}
+
+		.icon-clock::before {
+			font-size: 14px !important;
+			line-height: 14px !important;
+			color: #929bab;
+			margin-right: 4px;
+		}
+
+		.text-xsmall {
+			line-height: 14px !important;
+			color: #929bab;
+		}
+	}
+
+	.atx-scheduler__footer {
+		margin-top: 16px;
+
+		a:hover {
+			text-decoration: none;
+		}
+
+		.btn {
+			height: 28px;
+			width: 115px;
+			border-radius: 16.5px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			font-size: 13px;
+			font-weight: bold;
+			line-height: 18px;
+			text-transform: uppercase;
+			margin-right: 12px;
+
+			&--primary {
+				background: #00bceb;
+				color: white;
 			}
 		}
 	}
@@ -925,7 +1047,7 @@ $midnight-blue: #0d274d;
 		&-recommendedElearning {
 			display: block;
 			position: absolute;
-			box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
+			box-shadow: $popover-box-shadow;
 			z-index: 1;
 			background-color: $white;
 			border-radius: 5px;
@@ -1202,12 +1324,6 @@ tr.th-row th {
 	padding: 20px;
 }
 
-tr.td-row td {
-	@extend %tr-shared;
-
-	border-bottom-width: 1px;
-}
-
 tr.td-row::after {
 	display: none;
 }
@@ -1244,12 +1360,6 @@ tr.td-row::after {
 
 .learning-progressfill-col {
 	margin-left: 0 !important;
-}
-
-.atx-scheduler-one-line {
-	display: flex;
-	justify-content: space-between;
-	flex-wrap: nowrap;
 }
 
 .view-all {
