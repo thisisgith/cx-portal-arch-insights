@@ -2,6 +2,7 @@
 
 $vibblue: #017cad;
 
+$background-color: #f2f5f9;
 $accent-dark-blue: #227bb1;
 $text-default-color: #394454;
 $text-dark-gray: #5d656c;
@@ -57,17 +58,61 @@ $midnight-blue: #0d274d;
 	margin-left: -20px;
 }
 
+:host ::ng-deep .modal__header {
+	&__title {
+		font-weight: 300;
+		letter-spacing: 0.3px;
+		font-size: 32px;
+		line-height: 32px;
+	}
+
+	&__description {
+		font-size: 13px;
+	}
+}
+
 :host ::ng-deep .modal__body {
 	height: 100%;
 	overflow: hidden;
 	display: flex;
 	flex-direction: column;
+
+	&__topics {
+		flex-grow: 1;
+		font-size: 15px;
+	}
+
+	&__filter {
+		min-width: 220px;
+	}
+
+	&__view-toggle {
+		margin-left: 50px;
+	}
+
+	&__view-toggle .btn-group {
+		border-top: 1px solid #c8d4d7;
+		border-bottom: 1px solid #c8d4d7;
+	}
+
+	&__view-toggle .btn {
+		background: #fff;
+		color: #6a80a5;
+		width: 32px;
+		height: 30px;
+
+		&.selected {
+			background: #6a80a5;
+			color: #fff;
+		}
+	}
 }
 
 :host ::ng-deep .modal__content {
 	position: fixed !important;
 	height: 90% !important;
 	width: 100% !important;
+	background: $background-color !important;
 }
 
 .panel-border-top {
@@ -1136,7 +1181,8 @@ $midnight-blue: #0d274d;
 	border: 0 !important;
 	border-color: transparent;
 	background: transparent !important;
-	border-bottom: 2px solid $vibblue !important;
+	border-bottom: 1px solid $text-light-gray !important;
+	color: $text-dark-gray !important;
 }
 
 :host ::ng-deep .progressbar__fill {
@@ -1231,6 +1277,16 @@ polygon {
 	overflow-y: hidden;
 	display: flex;
 	flex-direction: column;
+
+	> div {
+		margin: 0 120px;
+	}
+}
+
+.lifecycle-viewall-modal span[class*="icon-close"] {
+	position: absolute;
+	right: 20px;
+	top: 15px;
 }
 
 // leave the following here, just in case we will use this style

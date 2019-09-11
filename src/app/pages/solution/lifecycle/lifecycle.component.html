@@ -658,28 +658,32 @@
 
 <ng-template #viewAllModal let-data="data" let-type="type">
 	<div id="viewAllModal" class="flex lifecycle-viewall-modal modal__content no-padding" data-auto-id="ViewAllModal">
-		<div class="modal__header acc__header half-padding-left half-padding-bottom no-margin-bottom">
-			<div class="row half-padding-top">
-				<div class="col-md-11 half-margin-top base-padding-left">
-					<div class="text-xlarge text-left text-uppercase" [innerText]="getTitle(type)" data-auto-id="ViewAllModal-Title"></div>
-					<div class="text-medium text-left qtr-margin-top" [innerText]="getSubtitle(type)" data-auto-id="ViewAllModal-Subtitle"></div>
+		<span (click)="closeModal()" data-auto-id="ViewAllCloseModal"
+			class="icon-close icon-small toggle cx-text-secondary"></span>
+		<div class="modal__header acc__header no-margin-bottom">
+			<div class="row base-margin-top">
+				<div class="col-md-11 half-margin-top">
+					<div class="modal__header__title cx-text-default text-left qtr-margin-bottom" 
+						[innerText]="getTitle(type)" 
+						data-auto-id="ViewAllModal-Title"></div>
+					<div class="modal__header__description text-left cx-text-light-gray" 
+						[innerText]="getSubtitle(type)" 
+						data-auto-id="ViewAllModal-Subtitle"></div>
 				</div>
 				<div class="col-md-1 half-margin-top">
-					<span (click)="closeModal()" data-auto-id="SuccessPathCloseModal"
-						class="icon-close icon-medium text-right toggle"></span>
 				</div>
 			</div>
 		</div>
-		<div class="divider base-margin-left base-margin-right"></div>
-		<div class="modal__body base-padding">
+		<div class="divider no-margin-right qtr-margin-top"></div>
+		<div class="modal__body base-padding-top base-padding-bottom">
 			<ng-container [ngSwitch]="type">
 				<ng-container *ngSwitchCase="'ACC'">
-					<div class="row half-margin-left half-margin-right">
-						<div class="col-md-9 text-large text-bold text-left"
+					<div class="flex-center-vertical">
+						<div class="text-left modal__body__topics cx-text-default"
 							[innerText]="'_TopicsAvailableSolution_' | i18n:selectedACC?.length || 0:componentData.params.solution:componentData.params.usecase"
 							data-auto-id="ViewAllModal-TopicsAvailable">
 						</div>
-						<div class="col-md-2">
+						<div class="modal__body__filter">
 							<cui-select class="lifecycle-filter"
 								data-auto-id="acc-filter"
 								[items]="statusOptions"
@@ -689,13 +693,13 @@
 								(ngModelChange)="selectFilter('ACC')">
 							</cui-select>
 						</div>
-						<div class="col-md-1 text-right">
+						<div class="text-right modal__body__view-toggle">
 							<div class="btn-group btn-group--square">
-								<button class="btn btn--small btn--gray-ghost" data-auto-id="table-view-btn"
+								<button class="btn btn--small" data-auto-id="acc-table-view-btn"
 									[ngClass]="{'selected': accview ==='list' }" (click)="selectView('list', type)">
 									<span class="icon-list-view"></span>
 								</button>
-								<button class="btn btn--small btn--gray-ghost" data-auto-id="card-view-btn"
+								<button class="btn btn--small" data-auto-id="acc-card-view-btn"
 									[ngClass]="{'selected': accview === 'grid' }" (click)="selectView('grid', type)">
 									<span class="icon-grid-view"></span>
 								</button>
@@ -706,11 +710,11 @@
 					<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type, view: this.accview }"></ng-container>
 				</ng-container>
 				<ng-container *ngSwitchCase="'ATX'">
-					<div class="row half-margin-left half-margin-right">
-						<div class="col-md-9 text-large text-bold text-left"
+					<div class="flex-center-vertical">
+						<div class="text-left modal__body__topics cx-text-default"
 							[innerText]="'_TopicsAvailableSolution_' | i18n:selectedATX?.length || 0:componentData.params.solution:componentData.params.usecase" data-auto-id="ATXTopicsAvailable">
 						</div>
-						<div class="col-md-2">
+						<div class="modal__body__filter">
 							<cui-select class="lifecycle-filter"
 								data-auto-id="atx-filter"
 								[items]="statusOptions"
@@ -720,13 +724,13 @@
 								(ngModelChange)="selectFilter('ATX')">
 							</cui-select>
 						</div>
-						<div class="col-md-1 text-right">
+						<div class="text-right modal__body__view-toggle">
 							<div class="btn-group btn-group--square">
-								<button class="btn btn--small btn--gray-ghost" data-auto-id="table-view-btn"
+								<button class="btn btn--small" data-auto-id="atx-table-view-btn"
 									[ngClass]="{'selected': atxview ==='list' }" (click)="selectView('list', type); atxScheduleCardOpened = false; selectSession(); eventXCoordinates = 0; eventYCoordinates = 0">
 									<span class="icon-list-view"></span>
 								</button>
-								<button class="btn btn--small btn--gray-ghost" data-auto-id="card-view-btn"
+								<button class="btn btn--small" data-auto-id="atx-card-view-btn"
 									[ngClass]="{'selected': atxview === 'grid' }" (click)="selectView('grid', type); atxScheduleCardOpened = false; selectSession(); eventXCoordinates = 0; eventYCoordinates = 0">
 									<span class="icon-grid-view"></span>
 								</button>
@@ -737,11 +741,11 @@
 					<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type, view: this.atxview }"></ng-container>
 				</ng-container>
 				<ng-container *ngSwitchCase="'SB'">
-					<div class="row half-margin-left half-margin-right">
-						<div class="col-md-9 text-large text-bold text-left"
+					<div class="flex-center-vertical">
+						<div class="text-left modal__body__topics cx-text-default"
 							[innerText]="'_TopicsAvailableSolution_' | i18n:selectedSuccessPaths?.length || 0:componentData.params.solution:componentData.params.usecase">
 						</div>
-						<div class="col-md-2">
+						<div class="modal__body__filter">
 							<cui-select class="lifecycle-filter"
 								data-auto-id="category-filter"
 								[items]="categoryOptions"
@@ -751,13 +755,13 @@
 								(ngModelChange)="selectFilter('SB')">
 							</cui-select>
 						</div>
-						<div class="col-md-1 text-right">
+						<div class="modal__body__view-toggle text-right">
 							<div class="btn-group btn-group--square">
-								<button class="btn btn--small btn--gray-ghost" data-auto-id="table-view-btn"
+								<button class="btn btn--small" data-auto-id="sb-table-view-btn"
 									[ngClass]="{'selected': sbview ==='list' }" (click)="selectView('list', type)">
 									<span class="icon-list-view"></span>
 								</button>
-								<button class="btn btn--small btn--gray-ghost" data-auto-id="card-view-btn"
+								<button class="btn btn--small" data-auto-id="sb-card-view-btn"
 									[ngClass]="{'selected': sbview === 'grid' }" (click)="selectView('grid', type)">
 									<span class="icon-grid-view"></span>
 								</button>
@@ -768,11 +772,11 @@
 					<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type, view: this.sbview }"></ng-container>
 				</ng-container>
 				<ng-container *ngSwitchCase="'PG'">
-					<div class="row half-margin-left half-margin-right">
-						<div class="col-md-9 text-large text-bold text-left"
+					<div class="flex-center-vertical">
+						<div class="text-left modal__body__topics cx-text-default"
 							[innerText]="'_TopicsAvailableSolution_' | i18n:selectedProductGuides?.length || 0:componentData.params.solution:componentData.params.usecase">
 						</div>
-						<div class="col-md-2">
+						<div class="modal__body__filter">
 							<cui-select class="lifecycle-filter"
 								data-auto-id="pg-category-filter"
 								[items]="pgCategoryOptions"
@@ -782,13 +786,13 @@
 								(ngModelChange)="selectFilter('PG')">
 							</cui-select>
 						</div>
-						<div class="col-md-1 text-right">
+						<div class="modal__body__view-toggle text-right">
 							<div class="btn-group btn-group--square">
-								<button class="btn btn--small btn--gray-ghost" data-auto-id="table-view-btn"
+								<button class="btn btn--small" data-auto-id="pg-table-view-btn"
 									[ngClass]="{'selected': pgview ==='list' }" (click)="selectView('list', type)">
 									<span class="icon-list-view"></span>
 								</button>
-								<button class="btn btn--small btn--gray-ghost" data-auto-id="card-view-btn"
+								<button class="btn btn--small" data-auto-id="pg-card-view-btn"
 									[ngClass]="{'selected': pgview === 'grid' }" (click)="selectView('grid', type)">
 									<span class="icon-grid-view"></span>
 								</button>
