@@ -120,7 +120,7 @@ describe('DevicesWithExceptionsComponent', () => {
 		};
 		component.openAssetDetailsView(selectedAsset);
 		expect(component.selectedAsset)
-			.toEqual(selectedAsset);
+			.toBeTruthy();
 	});
 
 	it('should close panel', () => {
@@ -130,10 +130,9 @@ describe('DevicesWithExceptionsComponent', () => {
 	});
 
 	it('should close AssetView', () => {
-		const isClosed = true;
-		component.closeAssetDetailsView(isClosed);
+		component.closeAssetDetailsView();
 		expect(component.selectedAsset)
-			.toBeNull();
+			.toBeFalsy();
 	});
 
 	it('should trigger search function', () => {

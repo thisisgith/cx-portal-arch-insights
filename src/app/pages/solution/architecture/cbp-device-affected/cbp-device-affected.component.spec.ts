@@ -66,10 +66,9 @@ describe('CbpDeviceAffectedComponent', () => {
 	});
 
 	it('should close panel', () => {
-		const isClosed = true;
-		component.onPanelClose(isClosed);
+		component.onPanelClose();
 		expect(component.selectedAsset)
-		.toBe(null);
+		.toBeFalsy();
 	});
 
 	it('should open asset view on click of table row', () => {
@@ -94,7 +93,7 @@ describe('CbpDeviceAffectedComponent', () => {
 		  };
 		component.openAsset360View(selectedAsset);
 		expect(component.selectedAsset)
-		.toBeDefined();
+		.toBeTruthy();
 	});
 
 });

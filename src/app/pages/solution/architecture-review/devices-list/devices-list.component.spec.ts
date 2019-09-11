@@ -119,20 +119,17 @@ describe('DevicesListComponent', () => {
 	it('should open asset details view', () => {
 		const item = {
 			customerId: '7293498',
-			hostName: 'LA1-AP3802-21',
+			serialNumber: 'LA1-AP3802-21',
 		};
 		component.openDeviceView(item);
 		expect(component.selectedAsset)
-		.toEqual(item);
+		.toBeTruthy();
 	});
 
 	it('should close asset details view', () => {
-		const notClose = false;
-		component.closeDeviceView(notClose);
-		const isClose = true;
-		component.closeDeviceView(isClose);
+		component.closeDeviceView();
 		expect(component.selectedAsset)
-		.toBeNull();
+		.toBeFalsy();
 	});
 
 	it('should get the Devices data' , () => {

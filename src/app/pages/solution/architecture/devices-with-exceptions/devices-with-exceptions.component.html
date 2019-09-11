@@ -28,7 +28,12 @@
 	<cbp-tbd [cbpDetails]="assetObject"></cbp-tbd>
 </details-panel>
 
-<asset-details *ngIf="selectedAsset" [asset]="selectedAsset" (close)="closeAssetDetailsView($event)"></asset-details>
+<asset-details *ngIf="selectedAsset"
+	[asset]="assetLinkInfo?.asset"
+	[serialNumber]="assetLinkInfo?.asset?.serialNumber"
+	[element]="assetLinkInfo?.element"
+	(close)="closeAssetDetailsView()">
+</asset-details>
 
 <div class="row">
 	<div class="col-md-4">
