@@ -74,7 +74,7 @@
 
 <ng-template #titleBar>
 	<div class="row half-padding-bottom">
-		<div class="col-md-9 flex flex-fill">
+		<div class="col-auto flex flex-fill">
 			<div class="flex-center-vertical">
 				<span [innerText]="'_Assets_' | i18n" class="text-large base-margin-left" *ngIf="!status.isLoading"></span>
 				<span *ngIf="!status.isLoading && pagination && pagination.total" [innerText]="'_ShowingXofYAssets_' | i18n:paginationCount:pagination.total"
@@ -89,7 +89,7 @@
 				</span>
 			</div>
 		</div>
-		<div class="col-md-3">
+		<div class="col-auto">
 			<div class="flex flex-fluid flex-right">
 				<div class="flex-fill form-group input--compressed input--icon half-margin-right">
 					<form *ngIf="searchForm" [formGroup]="searchForm" novalidate>
@@ -365,9 +365,9 @@
 <ng-template #filterBar>
 	<div class="row flex-center-vertical half-margin-top base-margin-bottom">
 		<div class="col-md-11 flex">
-			<span class="text-large flex flex-center-vertical base-margin-left half-margin-right" [innerText]="'_Filtered_' | i18n"></span>
+			<span class="flex flex-center-vertical base-margin-left half-margin-right filter-bar__title" [innerText]="'_Filtered_' | i18n"></span>
 			<ng-container *ngFor="let selectedSubfilter of selectedSubfilters">
-				<span class="label label--dkgray text-large"
+				<span class="label filter-bar__item"
 					(click)="onSubfilterSelect(selectedSubfilter.subfilter.filter, selectedSubfilter.filter)"
 					attr.data-auto-id="FilterTag-{{ selectedSubfilter.subfilter.filter }}">
 					<span [innerText]="selectedSubfilter.subfilter.label"></span>
@@ -375,7 +375,7 @@
 				</span>
 			</ng-container>
 		</div>
-		<div class="col-md-1 text-center text-right">
+		<div class="col-md-1 flex flex-center flex-center-vertical filter-bar__clear">
 			<a (click)="clearFilters()"
 				[innerText]="'_ClearAll_' | i18n"
 				data-auto-id="FilterBarClearAllFilters">

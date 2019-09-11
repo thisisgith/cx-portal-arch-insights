@@ -17,4 +17,9 @@ export interface RacetrackPitstop {
    */
   isComplete: boolean;
   pitstopActions: Array<RacetrackPitstopAction>;
+
+  /**
+   * Percentage completed checklist actions.
+   */
+  pitstop_adoption_percentage?: number;
 }

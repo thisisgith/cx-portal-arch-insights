@@ -30,6 +30,7 @@ import { I18n } from '@cisco-ngx/cui-utils';
 import * as _ from 'lodash-es';
 
 enum RegistrationError {
+	ADVANCED,
 	FILE_DOWNLOAD,
 	REGISTRATION,
 }
@@ -40,6 +41,7 @@ enum RegistrationError {
 const registrationErrorMap = {
 	[RegistrationError.FILE_DOWNLOAD]: I18n.get('_ErrorDownloadingRegistrationFile_'),
 	[RegistrationError.REGISTRATION]: I18n.get('_RegistrationError_'),
+	[RegistrationError.ADVANCED]: I18n.get('_RegistrationErrorAdvanced_'),
 };
 
 /**
@@ -145,12 +147,21 @@ export class RegisterCollectorComponent implements OnDestroy, OnInit, SetupStep 
 	public error: string;
 	public hasVirtualAccount = false;
 	public loading = false;
+	public registering = false;
 	public showProxyForm: boolean;
 	public virtualAccounts = [
 		{ name: 'test', value: 'test' },
 		{ name: 'values', value: 'values' },
 	];
 	public errorDetails: string;
+	public registerSteps = [
+		I18n.get('_InputValidationRunning_'),
+		I18n.get('_InputValidationCompleted_'),
+		I18n.get('_PasswordSet_'),
+		I18n.get('_HostTimezoneAndTimeSet_'),
+		I18n.get('_ConnectionWithCiscoEstablished_'),
+	];
+	public currentStep = 0;
 
 	public accountForm = new FormGroup({
 		password: new FormControl(null, [
@@ -236,7 +247,9 @@ export class RegisterCollectorComponent implements OnDestroy, OnInit, SetupStep 
 		this.loading = true;
 		this.cpService.getIERegistrationUsingGET(this.customerId)
 			.pipe(
-				finalize(() => this.loading = false),
+				finalize(() => {
+					this.loading = false;
+				}),
 				mergeMap(response => {
 					// response should contain the registration download
 					// try to download the registration file
@@ -266,7 +279,7 @@ export class RegisterCollectorComponent implements OnDestroy, OnInit, SetupStep 
 	public onSubmit () {
 		// this.onContinue();
 		const formValues = this.accountForm.value;
-		this.loading = true;
+		this.registering = true;
 		this.registerService
 			.registerOnline(
 			{
@@ -279,17 +292,21 @@ export class RegisterCollectorComponent implements OnDestroy, OnInit, SetupStep 
 				this.registrationFile,
 			)
 			.pipe(
-				finalize(() => this.loading = false),
 				catchError(err => {
-					this.error = registrationErrorMap[RegistrationError.REGISTRATION];
-					this.errorDetails = err.error;
-					this.loading = false;
+					if (this.shouldShowError(err.error)) {
+						this.error = registrationErrorMap[RegistrationError.REGISTRATION];
+						this.errorDetails = err.error;
+					} else {
+						this.error = registrationErrorMap[RegistrationError.ADVANCED];
+					}
+					this.registering = false;
 
 					return empty();
 				}),
 				takeUntil(this.destroyed$),
 			)
 			.subscribe(response => {
+				this.registering = false;
 				if (!/Device is already register/.test(response)) {
 					const state = this.state.getState() || { };
 					state.collectorToken = response;
@@ -318,6 +335,7 @@ export class RegisterCollectorComponent implements OnDestroy, OnInit, SetupStep 
 		if (
 			event.keyCode === KEY_CODES.ENTER
 			&& this.accountForm.valid
+			&& !this.registering
 			&& !this.loading
 		) {
 			this.onSubmit();
@@ -328,7 +346,7 @@ export class RegisterCollectorComponent implements OnDestroy, OnInit, SetupStep 
 	 * Start polling for status
 	 */
 	private startPolling () {
-		this.loading = true;
+		this.registering = true;
 
 		this.pollStatus()
 			.subscribe();
@@ -341,26 +359,39 @@ export class RegisterCollectorComponent implements OnDestroy, OnInit, SetupStep 
 	public pollStatus () {
 		return timer(0, 5000)
 			.pipe(
-				finalize(() => this.loading = false),
 				exhaustMap(() => this.registerService.getStatus()
 					.pipe(
 						catchError(() => this.getAuthToken()),
 					),
 				),
-				takeWhile(status => {
-					if ((<any> status).status === 'Registration Failed') {
+				takeWhile((status: any) => {
+					const stages = status.stages;
+					if (status.status === 'Registration Failed') {
 						this.error = registrationErrorMap[RegistrationError.REGISTRATION];
-						this.errorDetails = (<any> status).stages;
+						this.errorDetails = stages;
+						this.registering = false;
 
 						return false;
 					}
-					if ((<any> status).status === 'Registered') {
-						this.onStepComplete.emit();
+					if (status.status === 'Registered') {
+						this.getCurrentRegistrationStep(stages);
+						timer(2000)
+							.pipe(takeUntil(this.destroyed$))
+							.subscribe(() => {
+								// continue to next screen after a second
+								this.onStepComplete.emit();
+							});
 
 						return false;
 					}
+					this.getCurrentRegistrationStep(stages);
 
 					return true;
+				}),
+				catchError(() => {
+					this.registering = false;
+
+					return empty();
 				}),
 				takeUntil(this.destroyed$),
 			);
@@ -386,10 +417,45 @@ export class RegisterCollectorComponent implements OnDestroy, OnInit, SetupStep 
 				catchError(err => {
 					this.error = registrationErrorMap[RegistrationError.REGISTRATION];
 					this.errorDetails = err.error;
-					this.loading = false;
+					this.registering = false;
 
 					return empty();
 				}),
 			);
+	}
+
+	/**
+	 * Get Current Registration Step given API response
+	 * @param stages - string
+	 */
+	private getCurrentRegistrationStep (stages: string) {
+		if (/Core components are deployed and registration is successful/.test(stages)) {
+			this.currentStep = 5;
+		} else if (/Connection with Cisco established/.test(stages)) {
+			this.currentStep = 4;
+		} else if (/Host Timezone and Time set/.test(stages)) {
+			this.currentStep = 3;
+		} else if (/Password set/.test(stages)) {
+			this.currentStep = 2;
+		} else if (/Input Validation Completed/.test(stages)) {
+			this.currentStep = 1;
+		} else {
+			this.currentStep = 0;
+		}
+	}
+
+	/**
+	 * Some errors should be shown to the user. This method determines whether or not the errors
+	 * should be shown.
+	 * @param error - string
+	 * @returns boolean
+	 */
+	private shouldShowError (error: string) {
+		return /Password should not be empty/.test(error)
+			|| /Password for cxcadmin does not comply with password policy./.test(error)
+			|| /Invalid proxy port/.test(error)
+			|| /Please provide proxy password/.test(error)
+			|| /Please provide proxy user/.test(error)
+			|| /Registration could not be initiated as Proxy could not be configured/.test(error);
 	}
 }
