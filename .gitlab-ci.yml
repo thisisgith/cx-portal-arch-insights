@@ -24,6 +24,9 @@ building:
   cache:
     key: "PIPELINE-$CI_PIPELINE_ID"
     policy: pull
+    paths:
+      - package-lock.json
+      - node_modules/
   script:
     - npm run build:ci
 
@@ -33,6 +36,9 @@ audit:
   cache:
     key: "PIPELINE-$CI_PIPELINE_ID"
     policy: pull
+    paths:
+      - package-lock.json
+      - node_modules/
   allow_failure: true # temporary until @compodoc fixes their vulnerability issue, since this is only used for document generation, I dont consider it breaking
   script:
     - npm audit
@@ -43,6 +49,9 @@ lint:
   cache:
     key: "PIPELINE-$CI_PIPELINE_ID"
     policy: pull
+    paths:
+      - package-lock.json
+      - node_modules/
   script:
     - npm run lint
     - npm run lint:cypress
@@ -62,6 +71,9 @@ automation:
   cache:
     key: "PIPELINE-$CI_PIPELINE_ID"
     policy: pull
+    paths:
+      - package-lock.json
+      - node_modules/
   allow_failure: true
   before_script:
     - npm run start:background
