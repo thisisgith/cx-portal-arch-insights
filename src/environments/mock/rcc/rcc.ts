@@ -43,18 +43,20 @@ const violationDetails: any = {
 	status: 200,
 };
 
-/** This is mock data for violationDetails with empty impacted assets  */
-const emptyViolationDetails: any = {
-	data: {
-	  customerId: '7293498',
-	  impactedAssets: [],
-	  impactedAssetsCount: 0,
-	},
+/** This is mock data for violationDetails with empty data object  */
+const emptyViolationDataDetails: any = {
+	data: { },
 	error: null,
 	message: 'SUCCESS',
 	status: 200,
 };
-
+/** This is mock data for empty policyRuleDetails  */
+const emptyPolicyRuleDetails: any = {
+	data: { },
+	error: null,
+	message: 'SUCCESS',
+	status: 200,
+};
 /** This is mock data for policyRuleDetails  */
 const policyRuleDetails: any = {
 	data: {
@@ -94,9 +96,9 @@ const policyRuleDetails: any = {
 const violationGridData: any = {
 	data: {
 		customerId: '7293498',
-		impassets: 7,
+		impassetscount: 7,
 		summary: [{
-			impassets: 7,
+			impassetscount: 7,
 			policycategory: 'AAA Services',
 			policygroupid: 'PCI_IOS_XE_GROUP',
 			policyid: '_AAA_Authentication__Login__IOSXE_',
@@ -116,7 +118,7 @@ const violationGridData: any = {
 const emptyViolationGridData: any = {
 	data: {
 		customerId: '7293498',
-		impassets: 0,
+		impassetscount: 0,
 		summary: [],
 		violationcount: 0,
 	},
@@ -480,7 +482,7 @@ export const ComplianceScenarios = [
 					delay: 100,
 					description: 'Violation 360 Details',
 					response: {
-						body: emptyViolationDetails,
+						body: emptyViolationDataDetails,
 						status: 200,
 					},
 					selected: true,
@@ -557,5 +559,22 @@ export const ComplianceScenarios = [
 		},
 		url: `${api}/filter-asset-detail`,
 		usecases: ['Use Case 14'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'Policy Rule Details',
+					response: {
+						body: emptyPolicyRuleDetails,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/policy-rule-details`,
+		usecases: ['Use Case 15'],
 	},
 ];

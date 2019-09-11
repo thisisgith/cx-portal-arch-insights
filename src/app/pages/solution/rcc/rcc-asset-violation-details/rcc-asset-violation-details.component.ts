@@ -2,12 +2,17 @@ import { Component, Input, OnInit, ViewChild, TemplateRef, SimpleChanges } from 
 import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { Subscription, Subject, forkJoin } from 'rxjs';
-import { RccAssetSelectReq, RccService } from '@sdp-api';
+import { RccAssetSelectReq,
+		RccService,
+		InventoryService,
+		AssetLinkInfo,
+	} from '@sdp-api';
 import { takeUntil } from 'rxjs/operators';
 import { I18n } from '@cisco-ngx/cui-utils';
 import * as _ from 'lodash-es';
 import { UserResolve } from '@utilities';
 import { ActivatedRoute } from '@angular/router';
+import { AssetPanelLinkService } from '@services';
 /**
  * Component for portal support
  */
@@ -22,10 +27,13 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 		private rccService: RccService,
 		public userResolve: UserResolve,
 		private route: ActivatedRoute,
+		private assetPanelLinkService: AssetPanelLinkService,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
 	}
+	public assetParams: InventoryService.GetAssetsParams;
+	public assetLinkInfo: AssetLinkInfo;
 	public rccAssetPolicyTableOptions: CuiTableOptions;
 	public rccMessageTableOptions: CuiTableOptions;
 	public assetRowParams: any;
@@ -82,8 +90,7 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 	 */
 	public ngOnChanges (changes: SimpleChanges) {
 		const selectedData = _.get(changes, ['selectedAssetData', 'currentValue']);
-		const isFirstChange = _.get(changes, ['selectedAssetData', 'firstChange']);
-		if (selectedData && !isFirstChange) {
+		if (selectedData) {
 			this.policyGroupSelection = '';
 			this.policyNameSelection = '';
 			this.policySeveritySelection = '';
