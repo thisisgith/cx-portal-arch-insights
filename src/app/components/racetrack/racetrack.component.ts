@@ -94,6 +94,7 @@ export class RacetrackComponent implements OnInit {
 	public preview: d3.SVGElement;
 	private stageCircles: d3.SVGElement;
 	private stageLabels: d3.SVGElement;
+	private staticStageLabels: d3.SVGElement;
 	private selectedLabels: d3.SVGElement;
 	public length: number;
 	public progressSoFar: number;
@@ -434,12 +435,34 @@ export class RacetrackComponent implements OnInit {
 					.attr('fill', 'white');
 			});
 
+		this.staticStageLabels = d3.select(this.track.node().parentNode)
+			.selectAll('.static-label')
+			.data([
+				{
+					stage: 'PURCHASE',
+					transform: 'translate(35 125)',
+				},
+				{
+					stage: 'RENEW',
+					transform: 'translate(285 45)',
+				},
+			])
+			.enter()
+			.append('text')
+				.text(d => d.stage)
+				.attr('transform', d => d.transform)
+				.attr('fill', '#8e8e8e')
+				.attr('font-size', '19')
+				.attr('opacity', 0)
+
 		this.refreshLabels();
 
 		this.svg.on('mouseover', () => {
-			this.stageLabels.transition()
-				.duration(200)
-				.attr('opacity', 1);
+			for(const label of [this.stageLabels, this.staticStageLabels]) {
+				label.transition()
+					.duration(200)
+					.attr('opacity', 1)
+			}
 		})
 		.on('mouseleave', this.refreshLabels.bind(this));
 
@@ -500,7 +523,6 @@ export class RacetrackComponent implements OnInit {
 
 		this.onStageChange.emit(endpoint);
 
-		this.refreshLabels();
 		this.stageLabels.filter(d => d.name !== this.current)
 			.style('font-weight', 'normal');
 
@@ -741,6 +763,10 @@ export class RacetrackComponent implements OnInit {
 	 * Re-render labels
 	 */
 	private refreshLabels () {
+		this.staticStageLabels.transition()
+			.duration(200)
+			.attr('opacity', 0);
+
 		this.stageLabels.filter(d => (d.name !== this.currentStage) &&
 			(d.name !== this.current))
 			.transition()
