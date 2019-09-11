@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { SyslogsDevicesDetailsModule } from './syslogs-devices-details.module';
 import { SyslogsDeviceDetailsComponent } from './syslogs-devices-details.component';
@@ -17,7 +18,7 @@ describe('SyslogsdevicedetailsComponent', () => {
 	let component: SyslogsDeviceDetailsComponent;
 	let fixture: ComponentFixture<SyslogsDeviceDetailsComponent>;
 	let syslogsService: SyslogsService;
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				SyslogsDevicesDetailsModule,
@@ -39,8 +40,10 @@ describe('SyslogsdevicedetailsComponent', () => {
 					},
 				},
 			],
-		})
-			.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 		syslogsService = TestBed.get(SyslogsService);
 	}));
 
@@ -65,8 +68,9 @@ describe('SyslogsdevicedetailsComponent', () => {
 		fixture.whenStable()
 			.then(() => {
 				fixture.detectChanges();
+				const syslogMessageGrid = [];
 				expect(component.tableData)
-					.toBeUndefined();
+				.toEqual(syslogMessageGrid);
 
 				done();
 			});

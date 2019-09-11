@@ -1,8 +1,7 @@
-<div class="panel">
-	<div class="row">
-		<div class="col-3 margin-bottom">
-			<div class="row">
-				<div class="col-10 filter__selected">
+<div class="panel panel--bordered base-padding-left base-padding-top no-padding-bottom">
+		<visual-filter-bar [filters]="filters">
+			<ng-template #startingCard>
+				<div class="filter__selected">
 					<div
 						data-auto-id="highCrashCount"
 						class="base-margin-bottom qtr-margin-top cursor"
@@ -12,7 +11,6 @@
 						<div
 							class="text-huge flex-center dbl-padding-left dbl-padding-right"
 							[innerText]="highCrashDeviceCount"
-							*ngIf="highCrashDeviceCount"
 						></div>
 						<div
 							class="text-large flex-center"
@@ -27,53 +25,17 @@
 					>
 						<div
 							class="text-huge flex-center dbl-padding-left dbl-padding-right"
-							[innerHTML]="last24hrsData"
+							[innerHTML]="crashedAssetsCount"
 						>
 						</div>
 						<div
 							class="text-large flex-center"
-							[innerText]="'_RMCrashedAssetsInLast24Hrs_' | i18n"
+							[innerText]="'_RMCrashedAssets_' | i18n"
 						></div>
 					</div>
 				</div>
-				<div
-					class="col-2 qtr-margin-right flex flex-center flex-fill flex-fluid"
-				>
-					<div class="icon-chevron-left mid-icon-place"></div>
-				</div>
-			</div>
-		</div>
-
-		<div class="col-2">
-			<div class="flex flex-fill flex-center flex-fluid">
-				<ng-container *ngFor="let filter of filters">
-					<div
-						attr.id="RiskMitigationSelectVisualFilter?-{{
-							filter.key
-						}}"
-						attr.data-auto-id="RiskMitigationSelectVisualFilter?-{{
-							filter.key
-						}}"
-					>
-						<div class="base-margin-bottom">
-							<div *ngIf="filter.template">
-								<ng-container
-									*ngTemplateOutlet="
-										filter.template;
-										context: { filter: filter }
-									"
-								>
-								</ng-container>
-							</div>
-						</div>
-						<div
-							class="hide filter__title text-muted text-large"
-							[innerText]="filter.title"
-						></div>
-					</div>
-				</ng-container>
-			</div>
-		</div>
+			</ng-template>
+		</visual-filter-bar>
 	</div>
 	<div class="divider qtr-margin half-margin-bottom"></div>
 
@@ -82,15 +44,30 @@
 		<ng-container *ngTemplateOutlet="filterBar"></ng-container>
 	</ng-container>
 	<div class="row">
-		<div class="col-9 qtr-margin-top">
-			<span class="font15 qtr-margin-top" [innerText]="'_RMAssets_' | i18n"></span>
+		<div class="col-auto qtr-margin-top flex flex-fill flex-center-vertical">
+			<span class="font15" [innerText]="'_RMAssets_' | i18n"></span>
+			<span *ngIf="onlyCrashes" [innerText]="'_RMShowingXofYAssets_' | i18n:hcrPagination:highCrashRiskAssetsGridDetails.totalItems"
+				class="qtr-margin-left text-small text-muted" data-auto-id="ShowingAssetsCount">
+			</span>
+			<span *ngIf="!onlyCrashes" [innerText]="'_RMShowingXofYAssets_' | i18n:crashPagination:crashedAssetsGridDetails.totalItems"
+				class="qtr-margin-left text-small text-muted" data-auto-id="ShowingAssetsCount">
+			</span>
 		</div>
-		<div class="col-3" *ngIf="!onlyCrashes">
-			<cui-search
-				placeholder="Search"
+		<div class="col-auto">
+			<cui-search *ngIf="!onlyCrashes"
+				placeholder="{{ '_Search_' | i18n }}"
 				[debounce]="searchOptions.debounce"
 				[compressed]="true"
-				[searchText] = "searchQueryString"
+				[searchText] = "searchQueryInCrashGrid"
+				(onUpdate)="onSearchQuery($event)"
+				class="risk-mitigation-search"
+			>
+			</cui-search>
+			<cui-search *ngIf="onlyCrashes"
+				placeholder="{{ '_Search_' | i18n }}"
+				[debounce]="searchOptions.debounce"
+				[compressed]="true"
+				[searchText] = "searchQueryInHighCrashGrid"
 				(onUpdate)="onSearchQuery($event)"
 				class="risk-mitigation-search"
 			>
@@ -98,10 +75,9 @@
 		</div>
 	</div>
 	<div class="divider qtr-margin"></div>
-</div>
 
 <ng-template #advisoryFilter let-filter="filter">
-	<div *ngIf="!onlyCrashes">
+	<div [hidden]="onlyCrashes">
 		<risk-mitigation-column-chart
 			[resetChart]="clearAllFilters"
 			[seriesData]="filter.seriesData"
@@ -112,25 +88,23 @@
 </ng-template>
 
 <ng-template #filterBar>
-	<div class="row">
-		<div class="col-2 flex flex-center-vertical">
+	<div class="row flex-center-vertical half-margin-top base-margin-bottom">
+		<div class="col-md-11 flex">
 			<span
-				class="text-bold text-uppercase half-padding-right"
+				class="flex flex-center-vertical base-margin-left half-margin-right filter-bar__title"
 				[innerText]="'_RMFiltered_' | i18n"
 			></span>
-		</div>
-		<div class="col-8">
 			<ng-container *ngFor="let filter of selectedFilters">
 				<ng-container
 					*ngFor="let subfilter of getSelectedSubFilters(filter.key)"
 				>
 					<span
-						class="label label--dkgray text-large"
+						class="label filter-bar__item"
 						(click)="onSubfilterSelect(subfilter.filter, filter)"
 						attr.data-auto-id="FilterTag-{{ subfilter.filter }}"
 						*ngIf="!onlyCrashes"
 					>
-						<span [innerText]="'_RMTimeLast_' | i18n"></span>
+						<span class="qtr-padding-right" [innerText]="'_RMTimeLast_' | i18n"></span>
 						<span [innerHTML]="subfilter.label"></span>
 						<span
 							class="icon-close"
@@ -140,20 +114,19 @@
 				</ng-container>
 			</ng-container>
 		</div>
-		<div class="col-2 text-center text-right">
+		<div class="col-md-1 flex flex-center flex-center-vertical filter-bar__clear">
 			<a
 				(click)="clearFilters()"
-				class="text-lowercase"
 				[innerText]="'_RMClearAll_' | i18n"
 				data-auto-id="FilterBarClearAllFilters"
 			>
 			</a>
 		</div>
 	</div>
-	<div class="divider qtr-margin"></div>
 </ng-template>
+
 <div *ngIf="!onlyCrashes; else assetsWithCrashRisk">
-		<div *ngIf="!crashedAssetsGridDetails.tableData.length ">
+		<div *ngIf="!crashedAssetsGridDetails.tableData.length && !status.isLoading">
 				<div class="text-center dbl-margin-top dbl-margin-bottom">
 					<div>
 						<span class="text-muted text-xlarge"
@@ -166,7 +139,7 @@
 			</div>
 
 
-	<cui-table  *ngIf="crashedAssetsGridDetails.tableData.length"
+	<cui-table  *ngIf="crashedAssetsGridDetails.tableData.length && !status.isLoading"
 		(onTableRowClicked)="onRowClicked($event)"
 		[data]="crashedAssetsGridDetails.tableData"
 		[limit]="crashedAssetsGridDetails.tableLimit"
@@ -174,7 +147,7 @@
 		[options]="crashesAssetsGridOptions"
 		class="table--wrap"
 	></cui-table>
-	<div class="section">
+	<div class="section" *ngIf="!status.isLoading">
 		<cui-pager
 			*ngIf="crashedAssetsGridDetails.tableData.length"
 			[page]="crashedAssetsGridDetails.tableOffset"
@@ -184,12 +157,12 @@
 		></cui-pager>
 	</div>
 </div>
-<ng-template #showSpinner>
+<div *ngIf="status.isLoading">
 	<cui-spinner></cui-spinner>
-</ng-template>
+</div>
 <ng-template #assetsWithCrashRisk>
 
-		<div *ngIf="!highCrashRiskAssetsGridDetails.tableData.length">
+		<div *ngIf="!highCrashRiskAssetsGridDetails.tableData.length && !status.isLoading">
 				<div class="text-center dbl-margin-top dbl-margin-bottom">
 					<div>
 						<span class="text-muted text-xlarge"
@@ -200,14 +173,14 @@
 				</div>
 			</div>
 
-
-	<cui-table *ngIf="highCrashRiskAssetsGridDetails.tableData.length"
+	<cui-table [hidden]="!highCrashRiskAssetsGridDetails.tableData.length || status.isLoading"
 		[options]="highCrashRiskAssetsGridOptions"
 		[data]="highCrashRiskAssetsGridDetails.tableData"
 		(onTableRowClicked)="connectToFpDetails($event)"
+		(onSortingChanged)="highCrashTableSorted($event)"
 		class="table--wrap"
 	></cui-table>
-	<div class="section">
+	<div class="section" *ngIf="!status.isLoading">
 		<cui-pager
 			*ngIf="highCrashRiskAssetsGridDetails.totalItems"
 			[page]="highCrashRiskAssetsGridDetails.tableOffset"
@@ -241,8 +214,8 @@
 </details-panel>
 
 <details-panel
-	*ngIf="selectedAsset && !showAsset360"
-	[hidden]="!selectedAsset && showAsset360"
+	*ngIf="selectedAsset.active && !showAsset360"
+	[hidden]="!selectedAsset.active && showAsset360"
 	[fullscreen]="fullscreen"
 >
 	<details-panel-header
@@ -257,12 +230,14 @@
 					[innerText]="'_RMCrashHistoryFor_' | i18n"
 				></span>
 				<span class="qtr-margin-left">
+						<span class="text-info">&#60;</span>
 					<a
 						data-auto-id="selectedName"
 						(click)="redirectToAsset360()"
 						[innerHTML]="selectedAsset.neName"
 						></a
 					>
+					<span class="text-info">&#62;</span>
 				</span>
 			</div>
 			<div class="divider"></div>
@@ -291,7 +266,7 @@
 						></div>
 					</div>
 				</div>
-				<div class="col-3">
+				<div class="col-6">
 					<div
 						class="col-md-12 text-bold"
 						[innerText]="'_RMNumberOfCrashesInCrashHistory_' | i18n | uppercase"
@@ -306,7 +281,6 @@
 	</details-panel-header>
 	<cui-table
 		[options]="crashHistoryGridOptions"
-		class="table--wrap"
 		[data]="crashHistoryGridDetails.tableData"
 	></cui-table>
 </details-panel>
@@ -325,7 +299,7 @@
 		></app-fingerprint-header>
 		<div detailsPanelTitle class="text-xlarge">
 			<span
-				class="base-margin-left"
+				class="qtr-margin-left"
 				[innerText]="'_CP_FingerPrintDetailsFor_' | i18n"
 			></span>
 			<span class="qtr-margin-left">

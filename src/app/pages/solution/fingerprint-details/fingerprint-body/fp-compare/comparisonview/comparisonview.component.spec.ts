@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ComparisonviewComponent } from './comparisonview.component';
 import { ComparisonviewModule } from './comparisonview.module';
@@ -16,7 +17,7 @@ describe('ComparisonviewComponent', () => {
 	let fixture: ComponentFixture<ComparisonviewComponent>;
 	let crashPreventionService: CrashPreventionService;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [ComparisonviewModule,
 				HttpClientTestingModule,
@@ -37,8 +38,10 @@ describe('ComparisonviewComponent', () => {
 					},
 				},
 			],
-		})
-			.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 		crashPreventionService = TestBed.get(CrashPreventionService);
 	}));
 
@@ -99,8 +102,8 @@ describe('ComparisonviewComponent', () => {
 			.and
 			.returnValue(of(<any> []));
 		component.ngOnChanges({
-			devices: {
-				currentValue: null,
+			deviceId1: {
+				currentValue: 'Device_123',
 				firstChange: true,
 				isFirstChange: () => true,
 				previousValue: null,
@@ -109,5 +112,28 @@ describe('ComparisonviewComponent', () => {
 		fixture.detectChanges();
 		expect(crashPreventionService.getComparison)
 			.toHaveBeenCalledTimes(1);
+	});
+
+	it('should not load data if device IDs are not available', () => {
+		spyOn(crashPreventionService, 'getComparison')
+			.and
+			.returnValue(of(<any> []));
+		component.ngOnChanges({
+			deviceId1: {
+				currentValue: null,
+				firstChange: true,
+				isFirstChange: () => true,
+				previousValue: null,
+			},
+			deviceId2: {
+				currentValue: null,
+				firstChange: true,
+				isFirstChange: () => true,
+				previousValue: null,
+			},
+		});
+		fixture.detectChanges();
+		expect(crashPreventionService.getComparison).not
+			.toHaveBeenCalled();
 	});
 });

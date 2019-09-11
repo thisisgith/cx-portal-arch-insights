@@ -8,11 +8,14 @@ import {
 
 /** Base of URL for SDP API */
 const hwApi = '/api/customerportal/inventory/v1/hardware';
-// tslint:disable-next-line:completed-docs
+
+/** Contract API URL */
 const contractApi = '/api/customerportal/contracts/v1/details';
-// tslint:disable-next-line:completed-docs
-const vulnaribilityApi = '/api/customerportal/product-alerts/v1/vulnerabilities/count';
-// tslint:disable-next-line:completed-docs
+
+/** Vulnerability API  */
+const vulnerabilityApi = '/api/customerportal/product-alerts/v1/vulnerabilities/count';
+
+/** Asset API */
 const assetApi = '/api/customerportal/inventory/v1/assets';
 
 /** Default Customer ID */
@@ -159,7 +162,7 @@ export const SerialNumberScenarios = [
 				},
 			],
 		},
-		url: `${vulnaribilityApi}?customerId=${customerId}&serialNumber=${serialNumber}`,
+		url: `${vulnerabilityApi}?customerId=${customerId}&serialNumber=${serialNumber}`,
 		usecases: ['SN Search'],
 	},
 	{

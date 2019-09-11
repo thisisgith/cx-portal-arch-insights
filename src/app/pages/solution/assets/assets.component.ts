@@ -5,6 +5,7 @@ import {
 	TemplateRef,
 	ElementRef,
 	OnDestroy,
+	HostListener,
 } from '@angular/core';
 import { I18n } from '@cisco-ngx/cui-utils';
 import {
@@ -28,7 +29,7 @@ import {
 	NetworkElement,
 } from '@sdp-api';
 import * as _ from 'lodash-es';
-import { CuiModalService, CuiTableOptions, CuiTableColumnOption } from '@cisco-ngx/cui-components';
+import { CuiModalService, CuiTableOptions } from '@cisco-ngx/cui-components';
 import { LogService } from '@cisco-ngx/cui-services';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { forkJoin, fromEvent, of, Subject } from 'rxjs';
@@ -44,8 +45,8 @@ import {
 import { Router, ActivatedRoute } from '@angular/router';
 import { FromNowPipe } from '@cisco-ngx/cui-pipes';
 import { VisualFilter } from '@interfaces';
-import { CaseOpenComponent } from '@components';
-import { getProductTypeImage } from '@classes';
+import { CaseOpenComponent, AssetDetailsComponent } from '@components';
+import { getProductTypeImage, getProductTypeTitle } from '@classes';
 import { DetailsPanelStackService } from '@services';
 
 /**
@@ -89,6 +90,8 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	@ViewChild('criticalAdvisories', { static: true })
 		private criticalAdvisoriesTemplate: TemplateRef<{ }>;
 
+	@ViewChild('tableContainer', { static: false }) private tableContainer: ElementRef;
+
 	private searchInput: ElementRef;
 	@ViewChild('searchInput', { static: false }) set content (content: ElementRef) {
 		if (content) {
@@ -96,6 +99,9 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			this.searchSubscription();
 		}
 	}
+
+	@ViewChild(AssetDetailsComponent, { static: false })
+		public details: AssetDetailsComponent;
 
 	public mainContent = 'assets';
 	public alert: any = { };
@@ -129,6 +135,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			]),
 	});
 	private destroy$ = new Subject();
+	public tableContainerHeight: string;
 	public inventory: Item[] = [];
 	public assetsDropdown = false;
 	public allAssetsSelected = false;
@@ -141,6 +148,9 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	public fullscreen = false;
 	public selectedSubfilters: SelectedSubfilter[];
 	public getProductIcon = getProductTypeImage;
+	public getProductTitle = getProductTypeTitle;
+
+	public detailsFirstClick = true;
 
 	constructor (
 		private contractsService: ContractsService,
@@ -308,7 +318,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 */
 	public getAllSelectedSubFilters () {
 		return _.reduce(this.filters, (memo, filter) => {
-			if (filter.seriesData) {
+			if (filter.seriesData.length) {
 				const selected = _.map(_.filter(filter.seriesData, 'selected'),
 				f => ({ filter, subfilter: f }));
 
@@ -339,11 +349,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 */
 	private adjustQueryParams () {
 		const queryParams = _.omit(_.cloneDeep(this.assetParams), ['customerId', 'rows']);
-		if (!_.isEmpty(queryParams)) {
-			this.filtered = true;
-		} else {
-			this.filtered = false;
-		}
+		this.filtered = !_.isEmpty(_.omit(queryParams, ['sort', 'page']));
 		this.router.navigate([], {
 			queryParams,
 			relativeTo: this.route,
@@ -356,6 +362,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 */
 	public onPageChanged (event: any) {
 		this.assetParams.page = (event.page + 1);
+		this.allAssetsSelected = false;
 		this.adjustQueryParams();
 		this.InventorySubject.next();
 	}
@@ -364,6 +371,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 * Called on 360 details panel close button click
 	 */
 	public onPanelClose () {
+		_.set(this.selectedAsset, 'details', false);
 		this.selectedAsset = null;
 	}
 
@@ -384,6 +392,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 * @param item the item we selected
 	 */
 	public onRowSelect (item: Item) {
+		this.detailsFirstClick = true;
 		this.inventory.forEach((i: Item) => {
 			if (i !== item) {
 				i.details = false;
@@ -410,32 +419,23 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 * Function used to clear the filters
 	 */
 	public clearFilters () {
-		const totalFilter = _.find(this.filters, { key: 'total' });
 		this.filtered = false;
 
 		_.each(this.filters, (filter: VisualFilter) => {
-			filter.selected = false;
-			_.unset(this.assetParams, filter.key);
+			filter.selected = (filter.key === 'total') ? true : false;
 			_.each(filter.seriesData, f => {
 				f.selected = false;
 			});
 		});
 
-		_.each(this.assetsTable.columns, (c: CuiTableColumnOption) => {
-			c.sortDirection = 'desc';
-			c.sorting = false;
-		});
+		this.assetParams = _.assignIn(
+			_.pick(
+				_.cloneDeep(this.assetParams), ['customerId', 'rows', 'sort']),
+				{ page: 1 });
 
-		this.assetParams = {
-			customerId: this.customerId,
-			page: 1,
-			rows: this.getRows(),
-			sort: ['deviceName:ASC'],
-		};
-
+		this.selectedSubfilters = [];
 		this.searchForm.controls.search.setValue('');
 		this.allAssetsSelected = false;
-		totalFilter.selected = true;
 		this.adjustQueryParams();
 		this.InventorySubject.next();
 	}
@@ -465,7 +465,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			val =  _.map(_.filter(filter.seriesData, 'selected'), 'filter');
 			key = filter.key;
 		} else if (filter.key === 'eox') {
-			val = this.getLastUpdatedRange(subfilter);
+			val = _.map(_.filter(filter.seriesData, 'selected'), 'filter');
 			key = 'lastDateOfSupportRange';
 		} else if (filter.key === 'advisories') {
 			_.each(params, (_v, k) => {
@@ -473,7 +473,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					_.unset(params, [k]);
 				}
 			});
-			key = _.camelCase(`has ${subfilter}`);
+			key = subfilter;
 			val = true;
 		}
 
@@ -527,6 +527,8 @@ export class AssetsComponent implements OnInit, OnDestroy {
 
 		this.assetParams.rows = this.getRows();
 		this.buildTable();
+		this.buildInventorySubject();
+		this.buildFilters();
 		this.route.queryParams.subscribe(params => {
 			if (params.page) {
 				const page = _.toSafeInteger(params.page);
@@ -545,19 +547,20 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				this.assetParams.role = _.castArray(params.role);
 			}
 
-			if (params.hasBugs) {
-				this.assetParams.hasBugs = params.hasBugs;
-			}
-
 			if (params.serialNumber) {
 				this.assetParams.serialNumber = _.castArray(params.serialNumber);
 			}
 
-			if (params.hasFieldNotices) {
-				this.assetParams.hasFieldNotices = params.hasFieldNotices;
+			if (params.lastDateOfSupportRange) {
+				this.assetParams.lastDateOfSupportRange =
+					_.castArray(params.lastDateOfSupportRange);
 			}
 
-			if (params.hasSecurityAdvisories) {
+			if (params.hasBugs) {
+				this.assetParams.hasBugs = params.hasBugs;
+			} else if (params.hasFieldNotices) {
+				this.assetParams.hasFieldNotices = params.hasFieldNotices;
+			} else if (params.hasSecurityAdvisories) {
 				this.assetParams.hasSecurityAdvisories = params.hasSecurityAdvisories;
 			}
 
@@ -567,11 +570,6 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				this.searchOptions.pattern.test(params.search)) {
 				this.assetParams.search = params.search;
 				this.searchForm.controls.search.setValue(params.search);
-			}
-
-			if (params.lastDateOfSupportRange) {
-				this.assetParams.lastDateOfSupportRange =
-					_.castArray(params.lastDateOfSupportRange);
 			}
 
 			if (params.sort) {
@@ -597,9 +595,10 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			this.filtered = !_.isEmpty(
 				_.omit(_.cloneDeep(this.assetParams), ['customerId', 'rows', 'page', 'sort']),
 			);
+			const totalFilter = _.find(this.filters, { key: 'total' });
+			totalFilter.selected = !this.filtered;
 		});
-		this.buildInventorySubject();
-		this.buildFilters();
+		this.loadData();
 	}
 
 	/**
@@ -646,8 +645,17 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					this.selectSubFilters(this.assetParams.coverage, 'coverage');
 				}
 
-				// TODO: Add handler for EOX <- when api supports it
-				// TODO: Add handler for advisories <- when API supports it
+				if (this.assetParams.hasBugs) {
+					this.selectSubFilters(['hasBugs'], 'advisories');
+				} else if (this.assetParams.hasFieldNotices) {
+					this.selectSubFilters(['hasFieldNotices'], 'advisories');
+				} else if (this.assetParams.hasSecurityAdvisories) {
+					this.selectSubFilters(['hasSecurityAdvisories'], 'advisories');
+				}
+
+				if (this.assetParams.lastDateOfSupportRange) {
+					this.selectSubFilters(this.assetParams.lastDateOfSupportRange, 'eox');
+				}
 
 				return this.InventorySubject.next();
 			}),
@@ -713,7 +721,6 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				title: I18n.get('_NetworkRole_'),
 			},
 		];
-		this.loadData();
 	}
 
 	/**
@@ -725,11 +732,13 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		if (this.searchForm.valid && query) {
 			this.logger.debug(`assets.component :: doSearch() :: Searching for ${query}`);
 			_.set(this.assetParams, 'search', query);
+			_.set(this.assetParams, 'page', 1);
 			this.filtered = true;
 			this.adjustQueryParams();
 			this.InventorySubject.next();
 		} else if (!query && this.filtered) {
 			_.unset(this.assetParams, 'search');
+			_.set(this.assetParams, 'page', 1);
 			this.adjustQueryParams();
 			this.InventorySubject.next();
 		}
@@ -822,33 +831,33 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			map((data: VulnerabilityResponse) => {
 				const series = [];
 
-				const bugs = _.get(data, 'bugs');
+				const bugs = _.get(data, 'bugs', 0);
 
-				if (bugs && bugs > 0) {
+				if (bugs) {
 					series.push({
-						filter: 'bugs',
+						filter: 'hasBugs',
 						label: I18n.get('_Bugs_'),
 						selected: false,
 						value: bugs,
 					});
 				}
 
-				const notices = _.get(data, 'field-notices');
+				const notices = _.get(data, 'field-notices', 0);
 
-				if (notices && notices > 0) {
+				if (notices) {
 					series.push({
-						filter: 'field-notices',
+						filter: 'hasFieldNotices',
 						label: I18n.get('_FieldNotices_'),
 						selected: false,
 						value: notices,
 					});
 				}
 
-				const security = _.get(data, 'security-advisories');
+				const security = _.get(data, 'security-advisories', 0);
 
-				if (security && security > 0) {
+				if (security) {
 					series.push({
-						filter: 'security-advisories',
+						filter: 'hasSecurityAdvisories',
 						label: I18n.get('_SecurityAdvisories_'),
 						selected: false,
 						value: security,
@@ -1025,36 +1034,48 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			map((data: HardwareEOLCountResponse) => {
 				const series = [];
 
-				const sub30 = _.get(data, 'gt-0-lt-30-days', 0);
+				const sub30 = _.get(data, 'gt-0-lt-30-days');
+				const sub30Value = _.get(sub30, 'numericValue', 0);
 
-				if (sub30 && sub30 > 0) {
+				if (sub30Value) {
 					series.push({
 						filter: 'gt-0-lt-30-days',
+						filterValue: [`${
+							_.get(sub30, 'fromTimestampInMillis')},${
+								_.get(sub30, 'toTimestampInMillis')}`],
 						label: `< 30 ${I18n.get('_Days_')}`,
 						selected: false,
-						value: sub30,
+						value: sub30Value,
 					});
 				}
 
-				const sub60 = _.get(data, 'gt-30-lt-60-days', 0);
+				const sub60 = _.get(data, 'gt-30-lt-60-days');
+				const sub60Value = _.get(sub60, 'numericValue', 0);
 
-				if (sub60 && sub60 > 0) {
+				if (sub60Value) {
 					series.push({
 						filter: 'gt-30-lt-60-days',
+						filterValue: [`${
+							_.get(sub60, 'fromTimestampInMillis')},${
+								_.get(sub60, 'toTimestampInMillis')}`],
 						label: `30 - 60 ${I18n.get('_Days_')}`,
 						selected: false,
-						value: sub60,
+						value: sub60Value,
 					});
 				}
 
-				const sub90 = _.get(data, 'gt-60-lt-90-days', 0);
+				const sub90 = _.get(data, 'gt-60-lt-90-days');
+				const sub90Value = _.get(sub90, 'numericValue', 0);
 
-				if (sub90 && sub90 > 0) {
+				if (sub90Value) {
 					series.push({
 						filter: 'gt-60-lt-90-days',
+						filterValue: [`${
+							_.get(sub90, 'fromTimestampInMillis')},${
+								_.get(sub90, 'toTimestampInMillis')}`],
 						label: `61 - 90 ${I18n.get('_Days_')}`,
 						selected: false,
-						value: sub90,
+						value: sub90Value,
 					});
 				}
 
@@ -1080,6 +1101,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		this.InventorySubject
 		.pipe(
 			switchMap(() => this.fetchInventory()),
+			takeUntil(this.destroy$),
 		)
 		.subscribe();
 	}
@@ -1159,6 +1181,8 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				}
 
 				this.status.inventoryLoading = false;
+				this.tableContainerHeight = undefined;
+
 				if (window.Cypress) {
 					window.inventoryLoading = false;
 				}
@@ -1175,10 +1199,29 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		if (window.Cypress) {
 			window.inventoryLoading = true;
 		}
+
+		if (_.size(this.inventory) && this.tableContainer) {
+			this.tableContainerHeight = `${this.tableContainer.nativeElement.offsetHeight}px`;
+		}
+
 		this.inventory = [];
 		this.pagination = null;
 
-		const assetParams = _.cloneDeep(this.assetParams);
+		const assetParams = _.omit(_.cloneDeep(this.assetParams), ['lastDateOfSupportRange']);
+
+		if (this.assetParams.lastDateOfSupportRange) {
+			const rangeValue = _.head(this.assetParams.lastDateOfSupportRange);
+			const eoxFilter = _.find(this.filters, { key: 'eox' });
+			const rangeFilter = _.find(_.get(eoxFilter, 'seriesData', []),
+				{ filter: rangeValue });
+
+			if (rangeFilter && rangeFilter.filterValue) {
+				_.set(assetParams, 'lastDateOfSupportRange', rangeFilter.filterValue);
+			} else {
+				_.unset(this.assetParams, 'lastDateOfSupportRange');
+				this.adjustQueryParams();
+			}
+		}
 
 		_.each(assetParams, (value, key) => {
 			if (_.isArray(value) && _.isEmpty(value)) {
@@ -1232,36 +1275,6 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	}
 
 	/**
-	 * Given a filter key for lastUpdated, returns the date range
-	 * in the format of [<fromDateInMillis>, <toDateInMillis>).
-	 * @param subfilter date range subfilter
-	 * @returns The date range
-	 */
-	private getLastUpdatedRange (subfilter: string) {
-		const current = new Date();
-		const year = current.getUTCFullYear();
-		const month = current.getUTCMonth();
-		const day = current.getUTCDay();
-		const start = new Date(year, month, day);
-		const end = new Date(year, month, day);
-		switch (subfilter) {
-			case 'gt-0-lt-30-days':
-				start.setDate(start.getDate() - 30);
-				break;
-			case 'gt-30-lt-60-days':
-				start.setDate(start.getDate() - 60);
-				end.setDate(end.getDate() - 30);
-				break;
-			case 'gt-60-lt-90-days':
-				start.setDate(start.getDate() - 90);
-				end.setDate(end.getDate() - 60);
-				break;
-		}
-
-		return [`${start.getTime()}, ${end.getTime()}`];
-	}
-
-	/**
 	 * Handler for destroying subscriptions
 	 */
 	public ngOnDestroy () {
@@ -1273,7 +1286,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 * Changes the view to either list or grid
 	 * @param view view to set
 	 */
-   	public selectView (view: 'list' | 'grid') {
+	public selectView (view: 'list' | 'grid') {
 		if (this.view !== view) {
 			this.view = view;
 			window.sessionStorage.setItem('view', this.view);
@@ -1319,5 +1332,17 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			default:
 				$event.preventDefault(); // mark this event as handled
 		}
+	}
+
+	/**
+	 * Handler for mouse clicks to close panel
+	 * @param target where the mouse clicked
+	 */
+	@HostListener('document:click', ['$event.target'])
+	public onPageClick (target: ElementRef) {
+		if (this.details && !(this.details.contains(target) || this.detailsFirstClick)) {
+			this.onPanelClose();
+		}
+		this.detailsFirstClick = false;
 	}
 }

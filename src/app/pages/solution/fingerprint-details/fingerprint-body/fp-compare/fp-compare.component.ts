@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { IListdevice, CrashPreventionService, IProductFamily } from '@sdp-api';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
@@ -34,6 +34,7 @@ export class FpCompareComponent implements OnChanges {
 	public customerId: string;
 	public compareView: string;
 	@Input() public devices: any;
+	@Output() public reqError: EventEmitter<any> = new EventEmitter<any>();
 
 	public comparisonInfo = {
 		customerId: this.customerId,
@@ -109,6 +110,10 @@ export class FpCompareComponent implements OnChanges {
 					this.deviceId1 = deviceFound
 						? deviceFound.deviceId
 						: deviceFound;
+				},
+				err => {
+					this.deviceId1 = null;
+					this.logger.error(`:: Error : (${err.status}) ${err.message}`);
 				});
 			this.crashPreventionService
 				.getListdevice({
@@ -123,6 +128,10 @@ export class FpCompareComponent implements OnChanges {
 					this.deviceId2 = deviceFound
 						? deviceFound.deviceId
 						: deviceFound;
+				},
+				err => {
+					this.deviceId2 = null;
+					this.logger.error(`:: Error : (${err.status}) ${err.message}`);
 				});
 		}
 	}
@@ -133,22 +142,30 @@ export class FpCompareComponent implements OnChanges {
 	 */
 	public onSelection (selection: any) {
 		this.productFamilyA = selection;
-		/*Asset A is disabled  */
-		this.assetsAactive = false;
-		this.crashPreventionService
-			.getListdevice({
-				customerId: this.customerId,
-				productId: selection,
-			})
-			.pipe(takeUntil(this.destroy$))
-			.subscribe((results: IListdevice) => {
-				this.listdeviceDataA = results.deviceDetail;
-				const deviceFound = this.listdeviceDataA
-				.find(device => device.deviceId === this.deviceId1);
-				this.deviceId1 = deviceFound
-					? deviceFound.deviceId
-					: deviceFound;
-			});
+		if (this.productFamilyA) {
+			/*Asset A is disabled  */
+			this.assetsAactive = false;
+			this.crashPreventionService
+				.getListdevice({
+					customerId: this.customerId,
+					productId: selection,
+				})
+				.pipe(takeUntil(this.destroy$))
+				.subscribe((results: IListdevice) => {
+					this.listdeviceDataA = results.deviceDetail;
+					const deviceFound = this.listdeviceDataA
+					.find(device => device.deviceId === this.deviceId1);
+					this.deviceId1 = deviceFound
+						? deviceFound.deviceId
+						: deviceFound;
+				},
+				err => {
+					this.deviceId1 = null;
+					this.logger.error(`:: Error : (${err.status}) ${err.message}`);
+				});
+		} else {
+			this.deviceId1 = null;
+		}
 	}
 	/**
 	 * productfamilyB
@@ -156,22 +173,30 @@ export class FpCompareComponent implements OnChanges {
 	 */
 	public onSelection3 (selection: any) {
 		this.productFamilyB = selection;
-		/*Asset B is disabled  */
-		this.assetsBactive = false;
-		this.crashPreventionService
-			.getListdevice({
-				customerId: this.customerId,
-				productId: selection,
-			})
-			.pipe(takeUntil(this.destroy$))
-			.subscribe((results: IListdevice) => {
-				this.listdeviceDataB = results.deviceDetail;
-				const deviceFound = this.listdeviceDataB
-				.find(device => device.deviceId === this.deviceId2);
-				this.deviceId2 = deviceFound
-					? deviceFound.deviceId
-					: deviceFound;
-			});
+		if (this.productFamilyB) {
+			/*Asset B is disabled  */
+			this.assetsBactive = false;
+			this.crashPreventionService
+				.getListdevice({
+					customerId: this.customerId,
+					productId: selection,
+				})
+				.pipe(takeUntil(this.destroy$))
+				.subscribe((results: IListdevice) => {
+					this.listdeviceDataB = results.deviceDetail;
+					const deviceFound = this.listdeviceDataB
+					.find(device => device.deviceId === this.deviceId2);
+					this.deviceId2 = deviceFound
+						? deviceFound.deviceId
+						: deviceFound;
+				},
+				err => {
+					this.deviceId2 = null;
+					this.logger.error(`:: Error : (${err.status}) ${err.message}`);
+				});
+		} else {
+			this.deviceId2 = null;
+		}
 	}
 	/**
 	 * onSelection
@@ -207,5 +232,13 @@ export class FpCompareComponent implements OnChanges {
 			this.compareView = selectedTab;
 			this.logger.info(event);
 		}
+	}
+
+	/**
+	 * On error event
+	 * @param errorMsg Error Message
+	 */
+	public showError (errorMsg) {
+		this.reqError.emit(errorMsg);
 	}
 }

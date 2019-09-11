@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { InlineSVGModule } from 'ng-inline-svg';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { SolutionComponent } from './solution.component';
 import { CuiGaugeModule, CuiSpinnerModule, CuiModalModule } from '@cisco-ngx/cui-components';
@@ -9,9 +10,18 @@ import {
 	RacetrackModule,
 	RacetrackContentModule,
 	InventoryModule,
+	InsightsCrashesModule,
+	ProductAlertsModule,
+	DiagnosticsModule,
 } from '@sdp-api';
 import { environment } from '@environment';
-import { BarChartModule, CaseModule, QuickTourModule } from '@components';
+import {
+	BarChartModule,
+	CaseModule,
+	QuickTourModule,
+	GaugeModule,
+	MultiGaugeModule,
+} from '@components';
 import { NoDNACHeaderModule } from './no-dnac-header/no-dnac-header.module';
 
 /**
@@ -27,18 +37,26 @@ const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 	exports: [SolutionComponent],
 	imports: [
 		BarChartModule,
-		CommonModule,
 		CaseModule,
+		CommonModule,
 		ContractsModule.forRoot({ rootUrl }),
 		CuiGaugeModule,
 		CuiModalModule,
-		I18nPipeModule,
 		CuiSpinnerModule,
+		CuiSpinnerModule,
+		DiagnosticsModule.forRoot({ rootUrl }),
+		GaugeModule,
+		I18nPipeModule,
+		I18nPipeModule,
+		InlineSVGModule.forRoot({ baseUrl: '/' }),
 		InventoryModule.forRoot({ rootUrl }),
+		MultiGaugeModule,
 		NoDNACHeaderModule,
+		ProductAlertsModule.forRoot({ rootUrl }),
 		QuickTourModule,
 		RacetrackContentModule.forRoot({ rootUrl }),
 		RacetrackModule.forRoot({ rootUrl }),
+		InsightsCrashesModule.forRoot({ rootUrl }),
 		SolutionRoutingModule,
 	],
 })

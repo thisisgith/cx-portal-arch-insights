@@ -26,7 +26,12 @@ export const environment = {
 	csone: {
 		classifyAppId: 'CXPortal',
 		clientId: '262556217fbe45ecbbe27af70e443e78',
+		maxCasesPerRequest: 1000,
 	},
+	emailToID: 'cx-portal-support@cisco.com',
+	feedbackToEmail: 'cx-portal-support@cisco.com',
+	mapboxToken:
+	'pk.eyJ1IjoibWlzY2htaTIiLCJhIjoiY2p4eDl2ODVnMGpmODNkcDhsbG5nNXQ0YyJ9.vpfGffFASSUfANAU4Yvtxg',
 	mock: [],
 	myCase: 'https://mycase.cloudapps.cisco.com',
 	noAuthEndpoints: [

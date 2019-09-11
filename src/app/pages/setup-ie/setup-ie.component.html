@@ -1,4 +1,12 @@
 <ie-setup-status-bar [state]="steps[currentStep]?.state"></ie-setup-status-bar>
+<div class="help-link text-info flex-center-vertical">
+	<span class="icon-help-alt qtr-margin-right text-large"></span>
+	<a
+		class="link"
+		[innerText]="'_Help_' | i18n"
+		routerLink="help"
+	></a>
+</div>
 <div [hidden]="loading" class="dbl-margin-top">
 	<div class="base-padding base-margin-bottom slide-container">
 		<div #componentContainer></div>

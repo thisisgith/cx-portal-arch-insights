@@ -1,4 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { configureTestSuite } from 'ng-bullet';
+import { async, fakeAsync, tick, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ArchitectureReviewComponent } from './architecture-review.component';
 import { ArchitectureReviewModule } from './architecture-review.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -19,7 +20,7 @@ describe('ArchitectureReviewComponent', () => {
 	let service: ArchitectureReviewService;
 	const mockVisualFilter: VisualFilter = Object.create({ });
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				ArchitectureReviewModule,
@@ -41,9 +42,10 @@ describe('ArchitectureReviewComponent', () => {
 					},
 				},
 			],
-		})
-			.compileComponents();
+		});
+	});
 
+	beforeEach(async(() => {
 		service = TestBed.get(ArchitectureReviewService);
 	}));
 
@@ -81,16 +83,25 @@ describe('ArchitectureReviewComponent', () => {
 	});
 
 	it('should call selectVisualLabel', () => {
-		const visualLabel = { label: 'DNAC', active: false, count: null };
-
-		component.visualLabels =
-		[{
+		const visualLabel = {
 			active: false,
 			count: null,
-			key: 'devices',
-			label: 'Devices',
+			key: 'dnac',
+			label: 'DNAC',
+		};
+		component.visualLabels =
+		[{
+			active: true,
+			count: null,
+			key: 'dnac',
+			label: 'DNAC',
 		},
-		{ label: 'DNAC', active: true, count: null, key: 'dnac' }];
+		{
+			active: true,
+			count: null,
+			key: 'dnac',
+			label: 'DNAC',
+		}];
 		component.selectVisualLabel(visualLabel);
 		expect(component.visualLabels[0].active)
 			.toBeFalsy();
@@ -155,7 +166,7 @@ describe('ArchitectureReviewComponent', () => {
 		component.buildFilters();
 		expect(component.filters)
 			.toBeDefined();
-		spyOn(component, 'loadData');
+		component.loadData();
 		expect(component.status.isLoading)
 			.toBeTruthy();
 	});
@@ -188,47 +199,98 @@ describe('ArchitectureReviewComponent', () => {
 			});
 	});
 
-	it('should get the total count', () => {
-		spyOn(service, 'getSDAReadinessCountResponse')
+	it('should get the total count', fakeAsync(() => {
+		const response = {
+			Compliant: 10,
+			'Non-Compliant': 50,
+		};
+		spyOn(service, 'getSDAReadinessCount')
 			.and
-			.returnValue(of(ArchitectureReviewScenarios[0]
-				.scenarios.GET[0].response.body.TotalCounts));
+			.returnValue(of(response));
 
 		component.loadData();
-		expect(service.getSDAReadinessCountResponse)
+		tick();
+		expect(service.getSDAReadinessCount)
 			.toHaveBeenCalled();
-	});
+	}));
 
-	it('should call getDevicesCount on init', () => {
-		spyOn(service, 'getDevicesCountResponse')
+	it('should call sdaReadiness with empty response', fakeAsync(() => {
+
+		spyOn(service, 'getSDAReadinessCount')
+			.and
+			.returnValue(of([]));
+
+		component.loadData();
+		tick();
+		expect(service.getSDAReadinessCount)
+			.toHaveBeenCalled();
+	}));
+
+	it('should call getDevicesCount on init', fakeAsync(() => {
+		spyOn(service, 'getDevicesCount')
 			.and
 			.returnValue(of(ArchitectureReviewScenarios[0]
 				.scenarios.GET[0].response.body.TotalCounts));
 
-		spyOn(service, 'getDnacCountResponse')
+		spyOn(service, 'getDnacCount')
 			.and
 			.returnValue(of(ArchitectureReviewScenarios[0]
 				.scenarios.GET[0].response.body.TotalCounts));
 
 		component.ngOnInit();
-		expect(service.getDevicesCountResponse)
+		tick();
+		expect(service.getDevicesCount)
 			.toHaveBeenCalled();
-		expect(service.getDnacCountResponse)
+		expect(service.getDnacCount)
 			.toHaveBeenCalled();
-	});
+	}));
 
-	it('should throw errors', () => {
+	it('should throw errors', fakeAsync(() => {
 		const error = {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(service, 'getSDAReadinessCountResponse')
+		spyOn(service, 'getSDAReadinessCount')
 			.and
 			.returnValue(
 				throwError(new HttpErrorResponse(error)),
 			);
 		component.loadData();
+		tick();
 		expect(component.getDevicesCount)
 			.toThrowError();
-	});
+	}));
+
+	it('should throw errors if data is empty', fakeAsync(() => {
+		const error = {
+			status: 404,
+			statusText: 'Resource not found',
+		};
+		spyOn(service, 'getDevicesCount')
+			.and
+			.returnValue(
+				throwError(new HttpErrorResponse(error)),
+			);
+		component.getAllDevicesCount();
+		tick();
+		expect(component.getAllDevicesCount)
+			.toThrowError();
+	}));
+
+	it('should throw errors if service not called', fakeAsync(() => {
+		const error = {
+			status: 404,
+			statusText: 'Resource not found',
+		};
+		spyOn(service, 'getDnacCount')
+			.and
+			.returnValue(
+				throwError(new HttpErrorResponse(error)),
+			);
+		component.getDnacCount();
+		tick();
+		expect(component.getDnacCount)
+			.toThrowError();
+	}));
+
 });

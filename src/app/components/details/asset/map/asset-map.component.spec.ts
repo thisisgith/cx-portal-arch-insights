@@ -1,4 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { configureTestSuite } from 'ng-bullet';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { GeoCodeService } from '@services';
 import { GeoCodeResponse } from '@interfaces';
@@ -83,7 +84,7 @@ describe('AssetMap', () => {
 		attribution: 'All rights reserved.',
 	};
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				AssetMapModule,
@@ -92,9 +93,8 @@ describe('AssetMap', () => {
 			providers: [
 				GeoCodeService,
 			],
-		})
-		.compileComponents();
-	}));
+		});
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(AssetMapComponent);

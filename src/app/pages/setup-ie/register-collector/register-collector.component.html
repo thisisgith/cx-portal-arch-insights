@@ -3,7 +3,7 @@
 		[innerText]="'_StepXColonY_' | i18n:'5':('_CiscoDNACollector_' | i18n)| uppercase"></h6>
 	<h1 [innerText]="'_ConnectCXCollectorToCXPortal_' | i18n" class="dbl-margin-bottom">
 	</h1>
-	<div class="form-container dbl-margin-bottom">
+	<div [hidden]="loading || registering" class="form-container dbl-margin-bottom">
 		<div class="secure-banner flex-center-vertical dbl-margin-bottom">
 			<span class="secure-banner__icon flex-center">
 				<span class="icon-lock"></span>
@@ -145,35 +145,33 @@
 						</div>
 					</div>
 				</div>
-				<div class="dbl-margin-bottom">
-					<h4 [innerText]="'_IE_DeployForVirtualAccount_' | i18n"></h4>
-					<span class="text-large" [innerText]="'_IE_ThereCanOnlyBeOneSmartAccount_' | i18n"></span>
-				</div>
-				<div class="row dbl-margin-bottom">
-					<div class="col-md-6">
-						<!-- <div class="form-group dbl-margin-right"> -->
-							<!-- <div class="form-group__text select"> -->
-								<cui-select [label]="'_VirtualAccount_' | i18n" [items]="virtualAccounts"></cui-select>
-								<!-- <select class="form-control" id="virtaul-account-selector"> -->
-								<!-- 	<option *ngFor="let virtualAccount of virtualAccounts" -->
-								<!-- 		[innerText]="virtualAccount"> -->
-								<!-- 	</option> -->
-								<!-- </select> -->
-								<!-- <label for="input-layout-default" [innerText]="'_VirtualAccount_' | i18n"> -->
-								<!-- </label> -->
-							<!-- </div> -->
-						<!-- </div> -->
-					</div>
-				</div>
+				<!-- Should be added back in the future -->
+				<!-- <div class="dbl-margin-bottom"> -->
+				<!-- 	<h4 [innerText]="'_IE_DeployForVirtualAccount_' | i18n"></h4> -->
+				<!-- 	<span class="text-large" [innerText]="'_IE_ThereCanOnlyBeOneSmartAccount_' | i18n"></span> -->
+				<!-- </div> -->
+				<!-- <div class="row dbl-margin-bottom"> -->
+				<!-- 	<div class="col-md-6"> -->
+				<!-- 		<div class="form-group dbl-margin-right"> -->
+				<!-- 			<div class="form-group__text select"> -->
+				<!-- 				<cui-select [label]="'_VirtualAccount_' | i18n" [items]="virtualAccounts"></cui-select> -->
+				<!-- 				<select class="form-control" id="virtaul-account-selector"> -->
+				<!-- 					<option *ngFor="let virtualAccount of virtualAccounts" -->
+				<!-- 						[innerText]="virtualAccount"> -->
+				<!-- 					</option> -->
+				<!-- 				</select> -->
+				<!-- 				<label for="input-layout-default" [innerText]="'_VirtualAccount_' | i18n"> -->
+				<!-- 				</label> -->
+				<!-- 			</div> -->
+				<!-- 		</div> -->
+				<!-- 	</div> -->
+				<!-- </div> -->
 				<alert
 					[title]="error"
 					[(visible)]="error"
 				>
 					<div *ngIf="errorDetails" [innerText]="errorDetails"></div>
 				</alert>
-				<ng-container *ngIf="loading">
-					<cui-loader [label]="'_Loading_' | i18n"></cui-loader>
-				</ng-container>
 				<button
 					data-auto-id="submit-btn"
 					class="btn btn--wide btn--secondary qtr-margin-right"
@@ -187,5 +185,34 @@
 				</span>
 			</form>
 		</div>
+	</div>
+	<cui-loader [hidden]="!loading"></cui-loader>
+	<div [hidden]="!registering">
+		<div class="dbl-margin-bottom">
+			<h4 [innerText]="'_RegisteringCXCollector_' | i18n"></h4>
+		</div>
+		<div class="progress-graphic">
+			<div
+				class="progress-block"
+				*ngFor="let block of registerSteps; let i = index"
+				[ngClass]="{
+					'pending': i === currentStep + 1,
+					'complete': i <= currentStep 
+				}"
+			></div>
+		</div>
+		<div
+			*ngIf="registerSteps[currentStep]"
+			[innerText]="registerSteps[currentStep]"
+		></div>
+		<ng-container *ngIf="currentStep === 5">
+			<div class="dbl-margin-top complete-graphic">
+				<div class="icon-check text-success"></div>
+			</div>
+			<div
+				class="base-margin-top"
+				[innerText]="'_CXCollectorHasBeenRegistered_' | i18n"
+			></div>
+		</ng-container>
 	</div>
 </div>

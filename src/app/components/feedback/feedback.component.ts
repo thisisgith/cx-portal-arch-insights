@@ -19,12 +19,11 @@ import * as _ from 'lodash-es';
 export class FeedbackComponent implements OnInit {
 	public feedbackForm: FormGroup;
 	public isSubmitting = false;
-	public thumbsUpSelected = false;
-	public thumbsDownSelected = false;
+	public thumbSelected: 'up' | 'down' | '';
 
 	private user = this.profileService.getProfile();
 
-	private feedbackMaxLength = 2000;
+	public feedbackMaxLength = 2000;
 	public thumbValue = '-';
 	public okayToContact = 'No';
 	private userEmail = this.user.cpr.pf_auth_email;
@@ -129,20 +128,22 @@ export class FeedbackComponent implements OnInit {
 
 	/**
 	 * Handles the clicking of thumb buttons
-	 * @param event click event
+	 * @param dir direction of thumb
 	 */
-	 public thumbClicked (event: Event) {
-		const btnId = _.get(event, 'toElement.id');
-		if (btnId === 'thumbUpBtn') {
-			this.thumbsUpSelected = !this.thumbsUpSelected;
-			this.thumbsDownSelected = false;
-			this.thumbValue = 'Thumbs Up';
+	 public thumbClicked (dir: 'up' | 'down') {
+		this.thumbSelected = this.thumbSelected === dir ? '' : dir;
+		let val;
+		switch (this.thumbSelected) {
+			case 'up':
+				val = 'Thumbs Up';
+				break;
+			case 'down':
+				val = 'Thumbs Down';
+				break;
+			default:
+				val = '-';
 		}
-		if (btnId === 'thumbDownBtn') {
-			this.thumbsDownSelected = !this.thumbsDownSelected;
-			this.thumbsUpSelected = false;
-			this.thumbValue = 'Thumbs Down';
-		}
+		this.thumbValue = val;
 	}
 
 }

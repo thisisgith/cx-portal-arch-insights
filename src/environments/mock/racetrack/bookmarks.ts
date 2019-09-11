@@ -10,7 +10,7 @@ export const BookmarkScenarios = [
 			POST: [
 				{
 					delay: Math.floor(Math.random() * 2000) + 250,
-					description: '(SB) IBN-Bookmark',
+					description: '(Lifecycle) IBN-Bookmark',
 					response: {
 						status: 200,
 					},

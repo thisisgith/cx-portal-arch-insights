@@ -1,16 +1,17 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AfmDetailsComponent } from './afm-details.component';
 import { AfmDetailsModule } from './afm-details.module';
 import { environment } from '@environment';
 import { of } from 'rxjs';
-import { user } from '@mock';
+import { user, AfmScenarios } from '@mock';
 import { ActivatedRoute } from '@angular/router';
 import {
 	AfmService,
 	AfmSearchParams, Alarm, AfmResponse,
 } from '@sdp-api';
-import { AfmScenarios } from 'src/environments/mock/afm/afm';
+import { SimpleChanges, SimpleChange } from '@angular/core';
 
 describe('AfmDetailsComponent', () => {
 	let component: AfmDetailsComponent;
@@ -20,7 +21,7 @@ describe('AfmDetailsComponent', () => {
 	const mockResponse: AfmResponse = new Object();
 	let mockAfmService: AfmService;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [AfmDetailsModule, HttpClientTestingModule],
 			providers: [{ provide: 'ENVIRONMENT', useValue: environment },
@@ -35,8 +36,10 @@ describe('AfmDetailsComponent', () => {
 					},
 				},
 			}, AfmService],
-		})
-			.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 		mockAfmService = TestBed.get(AfmService);
 		spyOn(mockAfmService, 'ignoreEvent')
 			.and
@@ -131,4 +134,21 @@ describe('AfmDetailsComponent', () => {
 			.toHaveBeenCalled();
 	});
 
+	it('should change status on changes', () => {
+		const changes: SimpleChanges = {
+			alarm: new SimpleChange({ }, { status: 'Success' }, false),
+		};
+		component.ngOnChanges(changes);
+		expect(component.status)
+		.toBeFalsy();
+	});
+
+	it('should change status to true on changes', () => {
+		const changes: SimpleChanges = {
+			alarm: new SimpleChange({ }, { status: 'Ignored' }, false),
+		};
+		component.ngOnChanges(changes);
+		expect(component.status)
+		.toBeTruthy();
+	});
 });

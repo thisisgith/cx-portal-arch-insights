@@ -34,7 +34,8 @@ export class ArchitectureComponent implements OnInit {
 	private exceptionsFilterTemplate: TemplateRef<{ }>;
 
 	public visualLabels = [
-		{	active: true,
+		{
+			active: true,
 			count: null,
 			key: 'cbp-exception',
 			label: I18n.get('_ArchitectureConfigurationBestPracticesExceptions_'),
@@ -51,8 +52,7 @@ export class ArchitectureComponent implements OnInit {
 		private logger: LogService,
 		private architectureService: ArchitectureService,
 		private route: ActivatedRoute,
-		) {
-		this.logger.debug('ArchitectureComponent Created!');
+	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.cloneDeep(_.get(user, ['info', 'customerId']));
 	}
@@ -72,13 +72,13 @@ export class ArchitectureComponent implements OnInit {
 	 */
 	public getAssetsExceptionsCount () {
 		this.architectureService.getAssetsExceptionsCount({ customerId: this.customerId })
-		.pipe(
-			takeUntil(this.destroy$),
-		)
-		.subscribe(res => {
-			const assetException = _.find(this.visualLabels, { key: 'asset-exception' });
-			assetException.count = res.TotalCounts;
-		});
+			.pipe(
+				takeUntil(this.destroy$),
+			)
+			.subscribe(res => {
+				const assetException = _.find(this.visualLabels, { key: 'asset-exception' });
+				assetException.count = res.TotalCounts;
+			});
 	}
 
 	/**
@@ -87,9 +87,13 @@ export class ArchitectureComponent implements OnInit {
 	 */
 	public selectVisualLabel (label: any) {
 		label.active = true;
+		const filter = _.find(this.filters, { key: 'exceptions' });
 		this.visualLabels.forEach(element => {
 			if (element !== label) {
 				element.active = false;
+				filter.title = I18n.get('_ArchitectureSeverity_');
+			} else {
+				filter.title = '';
 			}
 		});
 	}
@@ -102,7 +106,7 @@ export class ArchitectureComponent implements OnInit {
 			{
 				key: 'exceptions',
 				loading: true,
-				selected: true,
+				selected: false,
 				seriesData: [],
 				template: this.exceptionsFilterTemplate,
 				title: I18n.get('_ArchitectureSeverity_'),
@@ -117,7 +121,7 @@ export class ArchitectureComponent implements OnInit {
 	 * @param filter the filter we selected the subfilter on
 	 */
 	public onSubfilterSelect (subfilter: string, filter: VisualFilter) {
-		const sub = _.find(filter.seriesData, { filter: subfilter });
+		const sub = _.find(filter.seriesData, subfilter);
 		if (sub) {
 			sub.selected = !sub.selected;
 		}

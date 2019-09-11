@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import * as enUSJson from 'src/assets/i18n/en-US.json';
 import { async, tick, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -59,7 +60,6 @@ describe('LifecycleComponent', () => {
 	let racetrackInfoSpy;
 	let racetrackSPSpy;
 	let racetrackActionSpy;
-	let racetrackAccBookmarkSpy;
 	let racetrackCancelAtxSessionSpy;
 
 	/**
@@ -77,7 +77,6 @@ describe('LifecycleComponent', () => {
 		_.invoke(racetrackLearningSpy, 'restore');
 		_.invoke(racetrackSPSpy, 'restore');
 		_.invoke(racetrackActionSpy, 'restore');
-		_.invoke(racetrackAccBookmarkSpy, 'restore');
 		_.invoke(racetrackCancelAtxSessionSpy, 'restore');
 	};
 
@@ -127,9 +126,7 @@ describe('LifecycleComponent', () => {
 		racetrackSPSpy = spyOn(racetrackContentService, 'getRacetrackSuccessPaths')
 			.and
 			.callFake(args => {
-				// Product Guides call will never have solution or pitstop.
-				// Success Bytes call will always have solution and pitstop.
-				if (!args.solution && !args.pitstop) {
+				if (!args.pitstop) {
 					return of(getActiveBody(SuccessPathScenarios[5]));
 				}
 
@@ -143,10 +140,6 @@ describe('LifecycleComponent', () => {
 		racetrackActionSpy = spyOn(racetrackService, 'updatePitstopAction')
 			.and
 			.returnValue(of(getActiveBody(ActionScenarios[0], 'PATCH')));
-
-		racetrackAccBookmarkSpy = spyOn(racetrackContentService, 'updateACCBookmark')
-			.and
-			.returnValue(of(getActiveBody(ACCScenarios[6], 'POST')));
 	};
 
 	/**
@@ -160,7 +153,7 @@ describe('LifecycleComponent', () => {
 		racetrackInfoService.sendCurrentTechnology(racetrack.solutions[0].technologies[0]);
 	};
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				HttpClientTestingModule,
@@ -180,8 +173,10 @@ describe('LifecycleComponent', () => {
 					},
 				},
 			],
-		})
-		.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 
 		racetrackInfoService = TestBed.get(RacetrackInfoService);
 		racetrackService = TestBed.get(RacetrackService);
@@ -237,6 +232,16 @@ describe('LifecycleComponent', () => {
 			fixture.detectChanges();
 			expect(component.atxview)
 				.toBe('grid');
+
+			component.selectView('grid', 'PG');
+			fixture.detectChanges();
+			expect(component.pgview)
+				.toBe('grid');
+
+			component.selectView('list', 'PG');
+			fixture.detectChanges();
+			expect(component.pgview)
+				.toBe('list');
 
 			done();
 		});
@@ -518,7 +523,7 @@ describe('LifecycleComponent', () => {
 			component.atxMoreClicked = false;
 
 			// Test atxMoreSelect()
-			component.atxMoreSelect(item);
+			component.atxMoreSelect(item, 'moreATXList');
 
 			expect(component.atxMoreClicked)
 				.toBeTruthy();
@@ -538,6 +543,38 @@ describe('LifecycleComponent', () => {
 
 			expect(component.atxMoreClicked)
 				.toBeFalsy();
+
+			spyOn(component, 'closeViewSessions');
+			fixture.detectChanges();
+
+			expect(component.closeViewSessions)
+				.toHaveBeenCalled();
+
+			// Test atxRegister()
+			component.atxRegister(recordingUrl);
+
+			spyOn(component, 'closeViewSessions');
+			spyOn(component, 'closeModal');
+			fixture.detectChanges();
+
+			expect(component.closeViewSessions)
+				.toHaveBeenCalled();
+
+			expect(component.closeModal)
+				.toHaveBeenCalled();
+
+			// Test getAtxRegisterButton()
+			let data: AtxSchema;
+			data = {
+				status: 'scheduled',
+			};
+			component.sessionSelected = { };
+			component.getRacetrackInfo('Use');
+
+			const button = component.getAtxRegisterButton(data);
+
+			expect(button)
+				.toEqual('disabled');
 
 		});
 
@@ -741,9 +778,9 @@ describe('LifecycleComponent', () => {
 				.toBeTruthy();
 
 			const acc3 = component.componentData.acc.sessions[3];
-			component.setACCBookmark(acc3);
+			component.updateBookmark(acc3, 'ACC');
 			fixture.detectChanges();
-			expect(component.componentData.acc.sessions[3].isFavorite)
+			expect(component.componentData.acc.sessions[3].bookmark)
 				.toBeTruthy();
 
 			de = fixture.debugElement.query(By.css('.ribbon__blue'));
@@ -764,16 +801,16 @@ describe('LifecycleComponent', () => {
 			expect(component.selectedACC.length)
 				.toEqual(2);
 
-			component.setACCBookmark(acc3);
+			component.updateBookmark(acc3, 'ACC');
 			fixture.detectChanges();
-			expect(component.componentData.acc.sessions[3].isFavorite)
+			expect(component.componentData.acc.sessions[3].bookmark)
 				.toBeFalsy();
 
 			component.selectedFilterForACC = 'recommended';
 			component.selectFilter('ACC');
 			fixture.detectChanges();
 
-			expect(component.componentData.acc.sessions[0].isFavorite)
+			expect(component.componentData.acc.sessions[0].bookmark)
 				.toBeFalsy();
 			expect(component.componentData.acc.sessions[0].status)
 			.toEqual('requested');
@@ -950,7 +987,7 @@ describe('LifecycleComponent', () => {
 			fixture.whenStable()
 				.then(() => {
 					expect(component.componentData.learning.productGuides.length)
-						.toEqual(10);
+						.toEqual(81);
 				});
 		});
 
@@ -986,23 +1023,104 @@ describe('LifecycleComponent', () => {
 
 			const sb1 = component.componentData.learning.productGuides[1];
 			expect(component.componentData.learning.productGuides[1].bookmark)
-				.toBeFalsy();
-			component.updateBookmark(sb1, 'SB');
+				.toBeTruthy();
+			component.updateBookmark(sb1, 'PG');
 			fixture.detectChanges();
 			expect(component.componentData.learning.productGuides[1].bookmark)
-				.toBeTruthy();
+				.toBeFalsy();
+
+			expect(component.selectedProductGuides.length)
+				.toEqual(81);
 
 			component.selectedFilterForPG = 'Project Planning';
 			component.selectFilter('PG');
 			fixture.detectChanges();
 			expect(component.selectedProductGuides.length)
-				.toEqual(3);
+				.toEqual(6);
 
 			component.selectedFilterForPG = 'Getting Started';
 			component.selectFilter('PG');
 			fixture.detectChanges();
 			expect(component.selectedProductGuides.length)
-				.toEqual(7);
+				.toEqual(8);
+
+			component.selectedFilterForPG = 'Architecture Transition Planning';
+			component.selectFilter('PG');
+			fixture.detectChanges();
+			expect(component.selectedProductGuides.length)
+				.toEqual(2);
+
+			component.selectedFilterForPG = 'Use Cases';
+			component.selectFilter('PG');
+			fixture.detectChanges();
+			expect(component.selectedProductGuides.length)
+				.toEqual(2);
+
+			component.selectedFilterForPG = 'Installation';
+			component.selectFilter('PG');
+			fixture.detectChanges();
+			expect(component.selectedProductGuides.length)
+				.toEqual(15);
+
+			component.selectedFilterForPG = 'Migration Readiness';
+			component.selectFilter('PG');
+			fixture.detectChanges();
+			expect(component.selectedProductGuides.length)
+				.toEqual(1);
+
+			component.selectedFilterForPG = 'Design/Config Planning';
+			component.selectFilter('PG');
+			fixture.detectChanges();
+			expect(component.selectedProductGuides.length)
+				.toEqual(2);
+
+			component.selectedFilterForPG = 'Operations';
+			component.selectFilter('PG');
+			fixture.detectChanges();
+			expect(component.selectedProductGuides.length)
+				.toEqual(23);
+
+			component.selectedFilterForPG = 'Feature Overview';
+			component.selectFilter('PG');
+			fixture.detectChanges();
+			expect(component.selectedProductGuides.length)
+				.toEqual(4);
+
+			component.selectedFilterForPG = 'Troubleshooting';
+			component.selectFilter('PG');
+			fixture.detectChanges();
+			expect(component.selectedProductGuides.length)
+				.toEqual(5);
+
+			component.selectedFilterForPG = 'ROI Business Assessment';
+			component.selectFilter('PG');
+			fixture.detectChanges();
+			expect(component.selectedProductGuides.length)
+				.toEqual(1);
+
+			component.selectedFilterForPG = 'Adoption Planning';
+			component.selectFilter('PG');
+			fixture.detectChanges();
+			expect(component.selectedProductGuides.length)
+				.toEqual(2);
+
+			component.selectedFilterForPG = 'Expert Features Overview';
+			component.selectFilter('PG');
+			fixture.detectChanges();
+			expect(component.selectedProductGuides.length)
+				.toEqual(2);
+
+			component.selectedFilterForPG = 'Performance/Health Monitoring';
+			component.selectFilter('PG');
+			fixture.detectChanges();
+			expect(component.selectedProductGuides.length)
+				.toEqual(5);
+
+			component.selectedFilterForPG = 'Asset/License Management';
+			component.selectFilter('PG');
+			fixture.detectChanges();
+			expect(component.selectedProductGuides.length)
+				.toEqual(3);
 
 			component.onSort('title', 'asc', 'PG');
 			fixture.detectChanges();

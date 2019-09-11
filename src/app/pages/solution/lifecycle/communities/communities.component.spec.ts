@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { CommunitiesComponent } from './communities.component';
@@ -56,7 +57,7 @@ describe('CommunitiesComponent', () => {
 		racetrackInfoService.sendCurrentTechnology(racetrack.solutions[0].technologies[0]);
 	};
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				CommunitiesModule,
@@ -69,8 +70,10 @@ describe('CommunitiesComponent', () => {
 					useClass: LifecycleComponent,
 				},
 			],
-		})
-		.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 
 		racetrackInfoService = TestBed.get(RacetrackInfoService);
 		racetrackService = TestBed.get(RacetrackService);
@@ -98,14 +101,11 @@ describe('CommunitiesComponent', () => {
 			fixture.whenStable()
 				.then(() => {
 					expect(component.publicCommunity.url)
-						.toEqual(
-							'https://community.cisco.com/t5/wireless-and-mobility' +
-							'/bd-p/5956-discussions-getting-started-wireles');
+						.toContain(
+							'wireless-and-mobility/bd-p/5956-discussions-getting-started-wireles');
 					expect(component.curatedCommunity.url)
-						.toEqual(
-							'https://community.cisco.com/t5/campus-network-assurance' +
-							'/bd-p/ibn-assurance/customFilteredByMultiLabel' +
-							'?board=ibn-assurance&amp;labels=Onboard');
+						.toContain(
+							'campus-network-assurance');
 				});
 		});
 
@@ -117,14 +117,11 @@ describe('CommunitiesComponent', () => {
 			fixture.whenStable()
 				.then(() => {
 					expect(component.publicCommunity.url)
-						.toEqual(
-							'https://community.cisco.com/t5/software-defined-access-sd' +
-							'/bd-p/discussions-sd-access');
+						.toContain(
+							'software-defined-access-sda/bd-p/discussions-sd-access');
 					expect(component.curatedCommunity.url)
-						.toEqual(
-							'https://community.cisco.com/t5/campus-network-segmentation' +
-							'/bd-p/ibn-segmentation/customFilteredByMultiLabel' +
-							'?board=ibn-segmentation&amp;labels=Onboard');
+						.toContain(
+							'campus-network-segmentation');
 				});
 		});
 
@@ -136,14 +133,11 @@ describe('CommunitiesComponent', () => {
 			fixture.whenStable()
 				.then(() => {
 					expect(component.publicCommunity.url)
-						.toEqual(
-							'https://community.cisco.com/t5/software-defined-access-sd' +
-							'/bd-p/discussions-sd-access');
+						.toContain(
+							'software-defined-access-sda/bd-p/discussions-sd-access');
 					expect(component.curatedCommunity.url)
-						.toEqual(
-							'https://community.cisco.com/t5/scalable-access-policy' +
-							'/bd-p/ibn-policy/customFilteredByMultiLabel' +
-							'?board=ibn-policy&amp;labels=Onboard');
+						.toContain(
+							'scalable-access-policy');
 				});
 		});
 
@@ -155,14 +149,11 @@ describe('CommunitiesComponent', () => {
 			fixture.whenStable()
 				.then(() => {
 					expect(component.publicCommunity.url)
-						.toEqual(
-							'https://community.cisco.com/t5/cisco-digital-network' +
-							'/bd-p/discussions-dna');
+						.toContain(
+							'digital-network-architecture/bd-p/discussions-dna');
 					expect(component.curatedCommunity.url)
-						.toEqual(
-							'https://community.cisco.com/t5/network-device-onboarding' +
-							'/bd-p/ibn-onboarding/customFilteredByMultiLabel' +
-							'?board=ibn-onboarding&amp;labels=Onboard');
+						.toContain(
+							'network-device-onboarding');
 				});
 		});
 
@@ -174,14 +165,11 @@ describe('CommunitiesComponent', () => {
 			fixture.whenStable()
 				.then(() => {
 					expect(component.publicCommunity.url)
-						.toEqual(
-							'https://community.cisco.com/t5/cisco-digital-network' +
-							'/bd-p/discussions-dna');
+						.toContain(
+							'digital-network-architecture/bd-p/discussions-dna');
 					expect(component.curatedCommunity.url)
-						.toEqual(
-							'https://community.cisco.com/t5/campus-software-image-management' +
-							'/bd-p/ibn-swim/customFilteredByMultiLabel' +
-							'?board=ibn-swim&amp;labels=Onboard');
+						.toContain(
+							'campus-software-image-management');
 				});
 		});
 	});

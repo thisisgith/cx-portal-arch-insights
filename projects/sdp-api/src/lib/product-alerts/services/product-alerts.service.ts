@@ -1242,6 +1242,8 @@ class ProductAlertsService extends __BaseService {
    *
    * - `managedNeId`: The unique, generated ID of the network element
    *
+   * - `hwInstanceId`: The unique, generated ID of the hardware element
+   *
    * - `fields`: Receive only requested fields in the response
    *
    * @return successful operation
@@ -1257,6 +1259,7 @@ class ProductAlertsService extends __BaseService {
     if (params.page != null) __params = __params.set('page', params.page.toString());
     (params.neInstanceId || []).forEach(val => {if (val != null) __params = __params.append('neInstanceId', val.toString())});
     (params.managedNeId || []).forEach(val => {if (val != null) __params = __params.append('managedNeId', val.toString())});
+    (params.hwInstanceId || []).forEach(val => {if (val != null) __params = __params.append('hwInstanceId', val.toString())});
     (params.fields || []).forEach(val => {if (val != null) __params = __params.append('fields', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
@@ -1293,6 +1296,8 @@ class ProductAlertsService extends __BaseService {
    * - `neInstanceId`: The unique, generated ID of the network element
    *
    * - `managedNeId`: The unique, generated ID of the network element
+   *
+   * - `hwInstanceId`: The unique, generated ID of the hardware element
    *
    * - `fields`: Receive only requested fields in the response
    *
@@ -2312,6 +2317,11 @@ module ProductAlertsService {
      * The unique, generated ID of the network element
      */
     managedNeId?: Array<string>;
+
+    /**
+     * The unique, generated ID of the hardware element
+     */
+    hwInstanceId?: Array<string>;
 
     /**
      * Receive only requested fields in the response

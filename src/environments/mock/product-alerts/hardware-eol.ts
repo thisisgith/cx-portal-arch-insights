@@ -4610,7 +4610,8 @@ export const HardwareEOLScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&managedNeId=NA,FOC1544Y16T,WS-C2960S-24PS-L,NA`,
+		url: `${api}?customerId=${customerId}&hwInstanceId=` +
+			'FOC1544Y16T,WS-C2960S-24PS-L,NA,FOC1544Y16T,WS-C2960S-24PS-L,NA,NA',
 		usecases: ['Use Case 1'],
 	},
 ];

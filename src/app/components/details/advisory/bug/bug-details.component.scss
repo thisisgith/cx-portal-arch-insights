@@ -1,4 +1,5 @@
 .descriptionHeight {
 	height: calc(50px + 45vh);
 	overflow: scroll;
+	overflow-x: hidden; // removes unnecessary scrollbar on windows
 }

@@ -1,0 +1,147 @@
+<details-panel 
+	[minWidth]="'1024px'" 
+	*ngIf="selectedSoftwareGroup" 
+	[hidden]="!selectedSoftwareGroup"
+	[fullscreen]="fullscreen">
+		<details-panel-header 
+			(close)="selectedSoftwareGroup = false" 
+			[(fullscreen)]="fullscreen"
+			[fullscreenToggle]="screenWidth > 1024 ? true : false">
+				<div detailsPanelTitle>
+					<div class="qtr-margin-left text-xlarge half-margin-bottom"
+						[innerText]="selectedSoftwareGroup?.profileName">
+					</div>
+				</div>
+		</details-panel-header>
+		<ng-container *ngTemplateOutlet="softwareGroupDetails"></ng-container>
+</details-panel>
+
+<ng-template #softwareGroupDetails>
+	<cui-tabs id="assetDetailTabs" [(activeTabIndex)]="tabIndex">
+		<cui-tab [label]="'_OsvCompareRecommendations' | i18n | uppercase">
+			<div class="base-margin-top">
+				<cui-spinner *ngIf="status.isLoading"></cui-spinner>
+				<ng-container *ngTemplateOutlet="compareRecommendationsTemp"></ng-container>
+			</div>
+		</cui-tab>
+		<cui-tab [label]="'_OsvSoftwareVersionSummary_' | i18n | uppercase">
+			<ng-container *ngTemplateOutlet="softwareGroupRecommendations"></ng-container>
+		</cui-tab>
+		<cui-tab [label]="'_OsvAssetsX_' | i18n:softwareGroupAssets?.length | uppercase">
+			<cui-alert [options]="assetAlert"></cui-alert>
+			<ng-container *ngTemplateOutlet="softwareGroupAssetsTemp"></ng-container>
+		</cui-tab>
+		<cui-tab [label]="'_OsvCurrentVersions_' | i18n:softwareGroupVersions?.length | uppercase">
+			<cui-alert [options]="versionAlert"></cui-alert>
+			<ng-container *ngTemplateOutlet="softwareGroupVersionsTemp"></ng-container>
+		</cui-tab>
+	</cui-tabs>
+</ng-template>
+
+<ng-template #softwareGroupRecommendations>
+	<cui-spinner *ngIf="status.profileRecommendations"></cui-spinner>
+	<div *ngIf="!status.profileRecommendations">
+		<cui-alert [options]="recommendationAlert"></cui-alert>
+		<div class="base-margin-top">
+			<software-group-recommendations 
+				[selectedSoftwareGroup]="selectedSoftwareGroup"
+				[recommendations]="recommendations"
+				(onAction)="onAction($event)"
+				(showVersions) = "tabIndex = 3;"
+			></software-group-recommendations>
+		</div>
+	</div>
+</ng-template>
+
+<ng-template #softwareGroupAssetsTemp>
+	<cui-alert [options]="assetAlert"></cui-alert>
+	<div class="base-margin-top">
+		<cui-spinner *ngIf="status.assetsLoading"></cui-spinner>
+	</div>
+	<div class="base-margin-top" *ngIf="!status.assetsLoading &&  softwareGroupAssets?.length > 0">
+		<div class="qtr-margin-top"
+			*ngIf="assetsPagination && softwareGroupAssets?.length > softwareGroupAssetsParams.pageSize">
+			<div class="flex flex-fill">
+				<div class="flex-center-vertical" *ngIf="assetsPagination && softwareGroupAssets?.length > 0">
+					<span [innerText]="'_OsvAssets_' | i18n" class="text-large"></span>
+					<span [innerText]="'_OsvShowingXofYAssets_' | i18n:assetsPaginationCount:assetsPagination.total"
+						class="qtr-margin-left text-small text-muted" data-auto-id="ShowingAssetsCount">
+					</span>
+				</div>
+			</div>
+		</div>
+		<cui-table [options]="softwareGroupAssetsTable" [data]="softwareGroupAssets">
+		</cui-table>
+		<div *ngIf="assetsPagination && softwareGroupAssets?.length > softwareGroupAssetsParams.pageSize"
+			class="base-margin-top">
+			<cui-pager 
+				[page]="assetsPagination.page - 1" 
+				[limit]="assetsPagination.rows"
+				[totalItems]="assetsPagination.total || 0" 
+				(onPageChanged)="onAssetsPageChanged($event)">
+			</cui-pager>
+		</div>
+	</div>
+</ng-template>
+
+
+<ng-template #softwareGroupVersionsTemp>
+	<cui-alert [options]="versionAlert"></cui-alert>
+	<div class="base-margin-top">
+		<cui-spinner *ngIf="status.versionsLoading"></cui-spinner>
+	</div>
+	<div class="base-margin-top" *ngIf="!status.versionsLoading &&  softwareGroupVersions?.length > 0">
+		<div class="qtr-margin-top"
+			*ngIf="versionsPagination && softwareGroupVersions?.length > softwareGroupVersionsParams.pageSize">
+			<div class="flex flex-fill">
+				<div class="flex-center-vertical" *ngIf="versionsPagination && softwareGroupVersions?.length > 0">
+					<span [innerText]="'_OsvAssets_' | i18n" class="text-large"></span>
+					<span [innerText]="'_OsvShowingXofYAssets_' | i18n:versionsPaginationCount:versionsPagination.total"
+						class="qtr-margin-left text-small text-muted" data-auto-id="ShowingAssetsCount">
+					</span>
+				</div>
+			</div>
+		</div>
+		<cui-table [options]="softwareGroupVersionsTable" [data]="softwareGroupVersions">
+		</cui-table>
+		<div *ngIf="versionsPagination && softwareGroupVersions?.length > softwareGroupVersionsParams.pageSize"
+			class="base-margin-top">
+			<cui-pager 
+				[page]="versionsPagination.page - 1" 
+				[limit]="versionsPagination.rows"
+				[totalItems]="versionsPagination.total || 0" 
+				(onPageChanged)="onVersionsPageChanged($event)">
+			</cui-pager>
+		</div>
+	</div>
+</ng-template>
+
+
+<ng-template #compareRecommendationsTemp>
+	<cui-spinner *ngIf="status.profileRecommendations"></cui-spinner>
+	<div *ngIf="!status.profileRecommendations">
+		<cui-alert [options]="recommendationAlert"></cui-alert>
+		<div class="base-margin-top">
+			<compare-recommendations 
+				[selectedSoftwareGroup]="selectedSoftwareGroup" 
+				[recommendations]="machineRecommendations"
+				(onAction)="onAction($event)"
+				(showVersions) = "tabIndex = 3;">
+			</compare-recommendations>
+		</div>
+	</div>
+</ng-template>
+
+<cui-modal></cui-modal>
+
+<!-- version template view for group assets -->
+<ng-template #versionTemplate let-item="celldata">
+	<span 
+		[title]="item.alert | uppercase" 
+		*ngIf="item?.alert && item?.alert != 'NA'"
+		[ngClass]="{'information':'text-primary','critical':'text-danger','warning':'text-warning-alt'}[item.alert]" 
+		class="icon-circle">
+	</span>
+	<span *ngIf="!item?.alert || item?.alert == 'NA'" class="icon-circle color-transparent"></span>
+	<span class="col-11" [innerText]="item.swVersion"></span>
+</ng-template>

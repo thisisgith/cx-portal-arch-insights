@@ -69,6 +69,9 @@ export class RiskMitigationColumnChartComponent implements OnInit {
 								});
 							});
 						}
+						if (_.get(this.chart, ['ref', 'series', 0, 'data', 0])) {
+							this.chart.ref.series[0].data[0].select();
+						}
 					},
 				},
 				height: 120,
@@ -158,12 +161,8 @@ export class RiskMitigationColumnChartComponent implements OnInit {
 	public ngOnChanges (changes: SimpleChanges) {
 		const seriesInfo = _.get(changes, 'seriesData',
 			{ currentValue: null, firstChange: false });
-		if (seriesInfo.currentValue && !seriesInfo.firstChange) {
+		if (seriesInfo.currentValue || !seriesInfo.firstChange) {
 			this.buildGraph();
-		}
-		if (_.get(changes, ['resetChart', 'currentValue'])) {
-			this.buildGraph();
-			changes.resetChart.previousValue = false;
 		}
 	}
 }

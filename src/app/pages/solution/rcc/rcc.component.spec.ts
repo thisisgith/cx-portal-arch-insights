@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { RccComponent } from './rcc.component';
@@ -20,7 +21,7 @@ describe('RccComponent', () => {
 	const mockFilter: Filter = Object.create({ });
 	const formBuilder: FormBuilder = new FormBuilder();
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				RccModule,
@@ -43,8 +44,10 @@ describe('RccComponent', () => {
 					},
 				},
 			],
-		})
-			.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 		rccService = TestBed.get(RccService);
 	}));
 
@@ -395,7 +398,7 @@ describe('RccComponent', () => {
 		};
 		component.searchViolations(event, 'clear');
 		expect(component.searched)
-			.toBeTruthy();
+			.toBeFalsy();
 	});
 
 	it('should invoke searchViolations with keycode 13', () => {
@@ -408,7 +411,7 @@ describe('RccComponent', () => {
 		};
 		component.searchViolations(event, 'input');
 		expect(component.searched)
-			.toBeTruthy();
+			.toBeFalsy();
 	});
 
 	it('should invoke searchViolations with keycode 8 and search type', () => {
@@ -475,8 +478,8 @@ describe('RccComponent', () => {
 		const violationGridObj = {
 			criteria: '',
 			customerId: '7293498',
-			pageLimit: 10,
-			pageNum: 1,
+			pageIndex: 1,
+			pageSize: 10,
 			policyType: 'PCI',
 			search: 'HIPAA',
 			severity: 'P1',
@@ -493,8 +496,8 @@ describe('RccComponent', () => {
 		const violationGridObj = {
 			criteria: '',
 			customerId: '7293498',
-			pageLimit: 10,
-			pageNum: 1,
+			pageIndex: 1,
+			pageSize: 10,
 			policyType: 'PCI',
 			search: 'HIPAA',
 			severity: 'P1',
@@ -567,11 +570,5 @@ describe('RccComponent', () => {
 		component.getRCCAssetData(violationGridObj);
 		expect(component.noTableData)
 			.toBeTruthy();
-	});
-
-	it('Should invoke onTableSortingChanged and assign tableOffset to 0', () => {
-		component.onTableSortingChanged();
-		expect(component.tableConfig.tableOffset)
-			.toBe(0);
 	});
 });

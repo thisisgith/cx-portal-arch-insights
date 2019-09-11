@@ -2,7 +2,6 @@
 import {
 	Component,
 	Input,
-	ViewEncapsulation,
 	SimpleChanges,
 	OnInit,
 	Output,
@@ -22,7 +21,6 @@ import { DatePipe } from '@angular/common';
  * AssetTimelineChart Component
  */
 @Component({
-	encapsulation: ViewEncapsulation.None,
 	selector: 'app-asset-timeline-chart',
 	styleUrls: ['./asset-timeline-chart.component.scss'],
 	template: '<div [chart]="chart"></div>',
@@ -34,9 +32,7 @@ export class AssetTimelineChartComponent implements OnInit, OnChanges {
 	public chart: Chart;
 	constructor (
 		private logger: LogService,
-	) {
-		this.logger.debug('AssetTimelineChartComponent Created!');
-	}
+	) { }
 
 	/**
 	 * Initializes the bubble chart
@@ -54,6 +50,24 @@ export class AssetTimelineChartComponent implements OnInit, OnChanges {
 		const seriesData = this.formatGraphData();
 		this.chart = new Chart({
 			chart: {
+				events: {
+					load: () => {
+						if (window.Cypress) {
+							// Hack to allow Cypress to click on highcharts series
+							_.each(this.chart.ref.series[0].points, point => {
+								point.graphic.element.setAttribute(
+									'data-auto-id', `${point.name}Point`,
+								);
+								// When a "normal" click event fires,
+								// turn it into a highcharts point event instead
+								point.graphic.element.addEventListener('click', () => {
+									const event = Object.assign(new MouseEvent('click'), { point });
+									point.firePointEvent('click', event);
+								});
+							});
+						}
+					},
+				},
 				styledMode: false,
 				type: 'timeline',
 			},
@@ -67,6 +81,13 @@ export class AssetTimelineChartComponent implements OnInit, OnChanges {
 				enabled: false,
 			},
 			plotOptions: {
+				series: {
+					point: {
+						events: {
+							click: event => this.selectSubfilter(event),
+						},
+					},
+				},
 				timeline: {
 					className: 'timeline',
 					dataLabels: {
@@ -74,13 +95,14 @@ export class AssetTimelineChartComponent implements OnInit, OnChanges {
 						connectorColor: '#049fd9',
 						distance: 50,
 						enabled: true,
-						/* tslint:disable:object-literal-shorthand*/
-						/* tslint:disable:no-string-literal */
+						/* tslint:disable:no-string-literal object-literal-shorthand */
 						formatter: function () {
 							let format = '';
+							const name = this['point'].groupedLabels ?
+							this['point'].groupedLabels : this['point'].name;
 							format += `<span style="cursor:pointer;">
 							<span style='cursor:pointer;font-weight: bold;font-size:14px' >
-							${this['point'].name}</span>
+							${name}</span>
 							<br/><span style='cursor:pointer;font-weight: normal;;font-size:11px'>
 							${this['point'].label}</span>
 							<br/><span style='cursor:pointer;font-weight: normal;;font-size:11px'>
@@ -90,6 +112,8 @@ export class AssetTimelineChartComponent implements OnInit, OnChanges {
 								format += '<span style=";font-size:12px;font-weight:bold';
 								format += 'color:#6ebe4a">Accepted</span>';
 							}
+							/* tslint:enable:no-string-literal object-literal-shorthand */
+
 							return format;
 						},
 						style: {
@@ -118,12 +142,12 @@ export class AssetTimelineChartComponent implements OnInit, OnChanges {
 				backgroundColor: '#39393b',
 				borderColor: '#39393b',
 				enabled: true,
-				/* tslint:disable:ter-max-len */
+				/* tslint:disable-next-line:ter-max-len */
 				headerFormat: '<span style="font-size:12px;font-weight:bold;">{point.key}</span><br/>',
 				pointFormat: '{point.info}',
 				style: {
-					width: 300,
 					color: '#fff',
+					width: 300,
 				},
 				useHTML: true,
 			},
@@ -162,9 +186,10 @@ export class AssetTimelineChartComponent implements OnInit, OnChanges {
 						accepted: value.accepted,
 						description: value.name,
 						info: value.info,
+						groupedLabels: value.groupedLabels,
 						label: value.swVersion,
 						name: _.capitalize(value.name),
-						releaseDate: datePipe.transform(new Date(value.postDate), 'dd MMM yyyy'),
+						releaseDate: datePipe.transform(new Date(value.postDate), 'MMM d, y'),
 						swVersion: value.swVersion,
 						x: Date.UTC(
 							releaseDate.getFullYear(),
@@ -189,6 +214,16 @@ export class AssetTimelineChartComponent implements OnInit, OnChanges {
 				this.buildGraph();
 			}, 250);
 		}
+	}
+
+	/**
+	 * Emits the subfilter selected
+	 * @param event highcharts click event
+	 */
+	public selectSubfilter (event: any) {
+		event.stopPropagation();
+		_.set(event, 'point.selected', true);
+		this.selectedPoint.emit(event.point);
 	}
 
 }

@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SoftwareVersionsComponent } from './software-versions.component';
@@ -17,7 +18,7 @@ describe('SoftwareVersionsComponent', () => {
 	let fixture: ComponentFixture<SoftwareVersionsComponent>;
 	let osvService: OSVService;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				SoftwareVersionsModule,
@@ -39,8 +40,10 @@ describe('SoftwareVersionsComponent', () => {
 					},
 				},
 			],
-		})
-			.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 		osvService = TestBed.get(OSVService);
 	}));
 

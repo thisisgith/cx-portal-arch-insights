@@ -1,4 +1,5 @@
-import { async, fakeAsync, tick, ComponentFixture, TestBed } from '@angular/core/testing';
+import { configureTestSuite } from 'ng-bullet';
+import { fakeAsync, tick, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { By } from '@angular/platform-browser';
@@ -19,16 +20,15 @@ describe('ResolutionComponent', () => {
 	let fixture: ComponentFixture<ResolutionComponent>;
 	let router: Router;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				ResolutionModule,
 				HttpClientTestingModule,
 				RouterTestingModule,
 			],
-		})
-		.compileComponents();
-	}));
+		});
+	});
 
 	beforeEach(() => {
 		service = TestBed.get(CaseService);
@@ -158,7 +158,7 @@ describe('ResolutionComponent', () => {
 		expect(component.selectedFilters)
 			.toContain(totalFilter);
 
-		component.onSubfilterSelect('New', statusFilter);
+		component.onSubfilterSelect('Customer Updated', statusFilter);
 
 		tick();
 		fixture.detectChanges();
@@ -169,7 +169,7 @@ describe('ResolutionComponent', () => {
 
 	it('should select status subfilters', fakeAsync(() => {
 		const statusFilter = _.find(component.filters, { key: 'status' });
-		component.onSubfilterSelect('New', statusFilter);
+		component.onSubfilterSelect('Customer Updated', statusFilter);
 
 		tick();
 		fixture.detectChanges();
@@ -177,7 +177,7 @@ describe('ResolutionComponent', () => {
 		expect(component.selectedFilters)
 			.toContain(statusFilter);
 
-		let subfilter = _.find(statusFilter.seriesData, { filter: 'New' });
+		let subfilter = _.find(statusFilter.seriesData, { filter: 'Customer Updated' });
 
 		expect(subfilter.selected)
 			.toBeTruthy();
@@ -199,7 +199,7 @@ describe('ResolutionComponent', () => {
 
 	it('should clear the filter when selecting the same subfilter twice', fakeAsync(() => {
 		const statusFilter = _.find(component.filters, { key: 'status' });
-		component.onSubfilterSelect('New', statusFilter);
+		component.onSubfilterSelect('Customer Updated', statusFilter);
 
 		tick();
 		fixture.detectChanges();
@@ -207,17 +207,17 @@ describe('ResolutionComponent', () => {
 		expect(component.selectedFilters)
 			.toContain(statusFilter);
 
-		let subfilter = _.find(statusFilter.seriesData, { filter: 'New' });
+		let subfilter = _.find(statusFilter.seriesData, { filter: 'Customer Updated' });
 
 		expect(subfilter.selected)
 			.toBeTruthy();
 
-		component.onSubfilterSelect('New', statusFilter);
+		component.onSubfilterSelect('Customer Updated', statusFilter);
 
 		tick();
 		fixture.detectChanges();
 
-		subfilter = _.find(statusFilter.seriesData, { filter: 'New' });
+		subfilter = _.find(statusFilter.seriesData, { filter: 'Customer Updated' });
 
 		expect(subfilter.selected)
 			.toBeFalsy();
@@ -291,7 +291,7 @@ describe('ResolutionComponent', () => {
 
 	it('should clear all status subfilters', fakeAsync(() => {
 		const statusFilter = _.find(component.filters, { key: 'status' });
-		component.onSubfilterSelect('New', statusFilter);
+		component.onSubfilterSelect('Customer Updated', statusFilter);
 
 		tick();
 		fixture.detectChanges();

@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -25,7 +26,7 @@ describe('NoDNACComponent', () => {
 	let dnacSpy: jasmine.Spy;
 
 	describe('with fake window', () => {
-		beforeEach(async(() => {
+		configureTestSuite(() => {
 			TestBed.configureTestingModule({
 				imports: [
 					HttpClientTestingModule,
@@ -37,8 +38,10 @@ describe('NoDNACComponent', () => {
 					{ provide: 'ENVIRONMENT', useValue: environment },
 					{ provide: WindowService, useClass: WindowMock },
 				],
-			})
-				.compileComponents();
+			});
+		});
+
+		beforeEach(async(() => {
 			setupService = TestBed.get(SetupIEService);
 			stateService = TestBed.get(SetupIEStateService);
 			dnacSpy = spyOn(setupService, 'checkForDNAC')
@@ -48,7 +51,6 @@ describe('NoDNACComponent', () => {
 			stateService.setState({
 				compKey: 8,
 			});
-
 			fixture = TestBed.createComponent(NoDNACComponent);
 			component = fixture.componentInstance;
 			fixture.detectChanges();
@@ -69,7 +71,7 @@ describe('NoDNACComponent', () => {
 	});
 
 	describe('with real window', () => {
-		beforeEach(async(() => {
+		configureTestSuite(() => {
 			TestBed.configureTestingModule({
 				imports: [
 					HttpClientTestingModule,
@@ -80,8 +82,10 @@ describe('NoDNACComponent', () => {
 					SetupIEService,
 					{ provide: 'ENVIRONMENT', useValue: environment },
 				],
-			})
-				.compileComponents();
+			});
+		});
+
+		beforeEach(async(() => {
 			setupService = TestBed.get(SetupIEService);
 			stateService = TestBed.get(SetupIEStateService);
 			dnacSpy = spyOn(setupService, 'checkForDNAC')

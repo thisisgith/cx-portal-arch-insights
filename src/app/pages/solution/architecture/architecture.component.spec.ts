@@ -1,16 +1,18 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { configureTestSuite } from 'ng-bullet';
+import { async, ComponentFixture, TestBed, fakeAsync } from '@angular/core/testing';
 
 import { ArchitectureComponent } from './architecture.component';
 import { ArchitectureModule } from './architecture.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ArchitectureService } from '@sdp-api';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { VisualFilter } from '@interfaces';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MicroMockModule } from '@cui-x-views/mock';
 import { environment } from '@environment';
 import { ActivatedRoute } from '@angular/router';
 import { user } from '@mock';
+import { HttpErrorResponse } from '@angular/common/http';
 
 describe('ArchitectureComponent', () => {
 	let component: ArchitectureComponent;
@@ -18,7 +20,7 @@ describe('ArchitectureComponent', () => {
 	let service: ArchitectureService;
 	const mockVisualFilter: VisualFilter = Object.create({ });
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				ArchitectureModule,
@@ -40,16 +42,14 @@ describe('ArchitectureComponent', () => {
 					},
 				},
 			],
-		})
-			.compileComponents();
+		});
+	});
 
+	beforeEach(async(() => {
 		service = TestBed.get(ArchitectureService);
 	}));
 
 	beforeEach(() => {
-		spyOn(service, 'getExceptionsCount')
-			.and
-			.returnValue(of({ CBPRulesCount: 5000 }));
 		spyOn(service, 'getAssetsExceptionsCount')
 			.and
 			.returnValue(of({ AssetsExceptionCount: 5000 }));
@@ -64,6 +64,26 @@ describe('ArchitectureComponent', () => {
 	});
 
 	it('should call exceptions count on init', () => {
+		const response = {
+			High: 10,
+			Low: 5,
+			Medium: 20,
+		};
+		spyOn(service, 'getExceptionsCount')
+			.and
+			.returnValue(of(response));
+		component.ngOnInit();
+		expect(service.getExceptionsCount)
+			.toHaveBeenCalled();
+		expect(service.getAssetsExceptionsCount)
+			.toHaveBeenCalled();
+	});
+
+	it('should call empty response on init', () => {
+		spyOn(service, 'getExceptionsCount')
+			.and
+			.returnValue(of([]));
+		component.ngOnInit();
 		expect(service.getExceptionsCount)
 			.toHaveBeenCalled();
 		expect(service.getAssetsExceptionsCount)
@@ -73,7 +93,7 @@ describe('ArchitectureComponent', () => {
 	it('should call clear filters', () => {
 		component.clearFilters();
 		expect(component.filtered)
-		.toBeFalsy();
+			.toBeFalsy();
 	});
 
 	it('should call selectVisualLabel', () => {
@@ -81,7 +101,9 @@ describe('ArchitectureComponent', () => {
 
 		component.selectVisualLabel(visualLabels);
 		expect(visualLabels.active)
-		.toBeTruthy();
+			.toBeTruthy();
+		expect(component.filters[0].title)
+			.toBeDefined();
 	});
 
 	it('should call onsubfilterselect', () => {
@@ -93,5 +115,42 @@ describe('ArchitectureComponent', () => {
 		},
 		];
 		component.onSubfilterSelect('high', mockVisualFilter);
+	});
+
+	it('should throw errors', fakeAsync(() => {
+		const error = {
+			status: 404,
+			statusText: 'Resource not found',
+		};
+		spyOn(service, 'getExceptionsCount')
+			.and
+			.returnValue(
+				throwError(new HttpErrorResponse(error)),
+			);
+
+		component.ngOnInit();
+		expect(service.getExceptionsCount)
+			.toHaveBeenCalled();
+	}));
+
+	it('should get selected sub folder', () => {
+		component.filters = [
+			{
+				key: 'ExceptionsFilter',
+				loading: true,
+				selected: true,
+				seriesData: [
+					{
+						filter: '',
+						label: '',
+						selected: true,
+						value: 12,
+					},
+				],
+				title: '',
+			}];
+		component.getSelectedSubFilters('NoFilter');
+		expect(component.getSelectedSubFilters('ExceptionsFilter'))
+			.toBeTruthy();
 	});
 });

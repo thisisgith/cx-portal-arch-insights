@@ -1,15 +1,16 @@
-<details-panel *ngIf="!isLoading" [hidden]="!asset" [fullscreen]="fullscreen" id="details-panel">
+<details-panel *ngIf="!isLoading || asset" [hidden]="!asset" [fullscreen]="fullscreen" id="details-panel">
 	<details-panel-header (close)="onAllPanelsClose()"
 		(back)="onPanelBack()"
 		[(fullscreen)]="fullscreen"
 		[fullscreenToggle]="false">
 		<asset-details-header [asset]="asset"
-			[element]="element"
+			[element]="element" 
 			[customerId]="customerId"
 			(alert)="handleAlert($event)">
 		</asset-details-header>
 		<div detailsPanelTitle class="text-xlarge flex-center-vertical">
-			<span class="half-margin-right flex-center-vertical" 
+			<span class="half-margin-right flex-center-vertical"
+				[title]="getProductTitle(element)"
 				*ngIf="element && getProductIcon(element)">
 				<img alt="{{ '_AssetIcon_' | i18n }}"
 					class="icon-asset"
@@ -26,7 +27,7 @@
 	<div class="half-margin-bottom">
 		<cui-alert [options]="alert"></cui-alert>
 	</div>
-	<cui-tabs id="assetDetailTabs" *ngIf="asset && customerId">
+	<cui-tabs id="detailTabs" *ngIf="asset && customerId">
 		<cui-tab [label]="'_Summary_' | i18n | uppercase">
 			<div class="half-margin-top qtr-margin-left qtr-margin-right">
 				<asset-details-summary [asset]="asset" [customerId]="customerId"></asset-details-summary>

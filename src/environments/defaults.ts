@@ -17,7 +17,8 @@ export const defaults = {
 	},
 	baseHref: '/pbc/',
 	bugSearchTool: 'https://bst.cloudapps.cisco.com/bugsearch/bug/',
-	communityLink: 'https://community.cisco.com/t5/technology-and-support/ct-p/technology-support',
+	communityLink: 'https://cloudsso-test.cisco.com/idp/startSSO.ping?PartnerSpId=' +
+		'https://community-stage.cisco.com/auth/saml&TARGET=https://community-stage.cisco.com/',
 	controlPointsOrigin: 'https://cpp-api.sdp12-istg.csco.cloud/controlpoint',
 	csc: {
 		fileDownloadURL: `https://largefile-stage.cloudapps.cisco.com/Web-Ui?srId=
@@ -27,20 +28,28 @@ export const defaults = {
 	csone: {
 		classifyAppId: 'CXPortal',
 		clientId: '07e418ac71284560944ea92f653a01c2',
+		maxCasesPerRequest: 1000,
 	},
 	cuiColors: {
 		vibrantBlue: '#017cad',
 	},
+	// Curated Communities/Private Communitites/SuccessTrack URL
+	curatedCommunityUrl: 'https://community-stage.cisco.com/t5',
+	DNACommunititesPath: 'digital-network-architecture',
 	emailFromID: 'cxportal-noreply@cisco.com',
 	emailToID: 'cx-portal-support-nonprod@cisco.com',
-	feedbackToEmail: 'pbc-dev@cisco.com',
+	feedbackToEmail: 'cx-portal-support-nonprod@cisco.com',
 	ieSetup: {
 		asdAuthURL: 'https://cway.cisco.com/ws/oauth/v3/token/cisco/ae95x38c7zgu5fas59gseyfk',
 		asdBaseURL: 'https://api.cisco.com/software/preview/v3.0',
 		CX_Coll_Reg_LS_KEY: 'cxportal.cisco.com:setup-ie:HAS_CX_COLLECTOR',
+		cxCollectorUserGuideLink: 'https://www.cisco.com/c/dam/en/us/support/docs/cloud-' +
+			'systems-management/Cisco-CX-Collector/CX_Collector_FAQ_TB_Guide.pdf',
 		DNAC_LS_KEY: 'cxportal.cisco.com:setup-ie:NO_DNAC',
 		downloadOvaLink: 'http://engci-maven-master.cisco.com/artifactory/services-cf-insight' +
 			'_engine-release/ie/Insight_Engine_1.0/ubuntu/103/CXC_1.0_Build-103.ova',
+		imageDownloadRetries: 6,
+		mockASD: true,
 		mockRegistration: true,
 		pingURL: '/ie-commonapi/services/version',
 		telemetryGuideUrl: 'https://www-author3.cisco.com/c/en/us/td/docs/cloud-systems-' +
@@ -48,7 +57,7 @@ export const defaults = {
 			'b_cisco_dna_center_ug_1_4/b_cisco_dna_center_ug_1_4_chapter_01001.html',
 	},
 	learningLink: 'https://pilot-digital-learning.cisco.com/cx/#/',
-	logoutUrl: 'https://www.cisco.com/autho/logout.html',
+	logoutUrl: 'https://www-stage.cisco.com/autho/logout.html',
 	manageProfileUrl: 'https://rpfa.cloudapps.cisco.com/rpfa/profile/profile_management.do',
 	mapboxForwardGeocodePath: '/geocoding/v5/mapbox.places',
 	mapboxHost: 'https://api.mapbox.com',
@@ -60,12 +69,16 @@ export const defaults = {
 		'https://xresps-stage.cloudapps.cisco.com/esps/search/suggest/cdcpr01zad',
 	],
 	production: false,
+	// Public community URL
+	publicCommunityUrl: 'https://cloudsso-test.cisco.com/idp/startSSO.ping?PartnerSpId=' +
+		'https://community-stage.cisco.com/auth/saml&TARGET=https://community-stage.cisco.com/t5',
 	rmaServiceClientId: 'yvgjnzruyuh9a7tdnbj8ka3n',
 	rmaServiceOrigin: 'https://api-stage.cisco.com',
 	rmaServicePaths: {
 		returns: '/return/v1.0/returns',
 	},
 	rmaToolUrl: 'https://ibpm-stage.cisco.com/rma-qa3/home',
+	sdAccessCommunitiesPath: 'software-defined-access-sda',
 	sdpServiceBasePath: '/api',
 	sdpServiceClientId: '4jr3csg78pg7ws7gwvj82sfa',
 	/**

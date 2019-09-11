@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { K9DeclineComponent } from './k9-decline.component';
 import { K9DeclineModule } from './k9-decline.module';
@@ -6,14 +7,13 @@ describe('K9DeclineComponent', () => {
 	let component: K9DeclineComponent;
 	let fixture: ComponentFixture<K9DeclineComponent>;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				K9DeclineModule,
 			],
-		})
-		.compileComponents();
-	}));
+		});
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(K9DeclineComponent);

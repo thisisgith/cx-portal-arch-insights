@@ -68,7 +68,6 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 		public syslogsService: SyslogsService,
 		private userResolve: UserResolve,
 	) {
-		this.logger.debug('BestpracticesComponent Created!');
 		this.userResolve.getCustomerId()
 		.pipe(
 		takeUntil(this.destroy$),
@@ -84,20 +83,6 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 			severity: 3,
 			size: this.pagerLimit,
 		};
-	}
-	get dropdownActions () {
-		return _.filter([
-			this.selected
-				? {
-					label: `${I18n.get('_ExportSelected_')} (${
-						this.selected
-						})`,
-				}
-				: undefined,
-			{
-				label: I18n.get('_ExportAll_'),
-			},
-		]);
 	}
 	/**
 	 * on changes
@@ -134,8 +119,6 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 	public deviceGridInit () {
 		this.tableOptions = new CuiTableOptions({
 			bordered: false,
-			striped: false,
-			// tslint:disable-next-line: object-literal-sort-keys
 			columns: [
 				{
 					key: 'DeviceHost',
@@ -170,6 +153,7 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 			],
 			dynamicData: false,
 			singleSelect: true,
+			striped: false,
 		});
 	}
 
@@ -191,6 +175,10 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 			.subscribe(gridData => {
 				this.tableData = gridData.responseData;
 				this.totalItems = gridData.responseData.length;
+				this.tableEndIndex = 10;
+				if (this.tableEndIndex > this.totalItems) {
+					this.tableEndIndex = this.totalItems;
+				}
 			},
 			catchError(err => {
 				this.logger.error('syslogs-devices.component : getDeviceGridData() ' +
@@ -252,6 +240,11 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 	 */
 	public onPagerUpdated (pageInfo: any) {
 		this.tableOffset = pageInfo.page;
+		this.tableStartIndex = (pageInfo.page * pageInfo.limit);
+		this.tableEndIndex = (pageInfo.page * pageInfo.limit) + 10;
+		if (this.tableEndIndex > this.totalItems) {
+			this.tableEndIndex = this.totalItems;
+		}
 	}
 	/**
 	 * Redirects to asset360

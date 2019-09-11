@@ -83,3 +83,7 @@ export * from './lib/syslogs/syslogs-data.module';
 export * from './lib/crash-prevention/models';
 export * from './lib/crash-prevention/services';
 export * from './lib/crash-prevention/crash-prevention.module';
+
+export * from './lib/insights/models';
+export * from './lib/insights/services';
+export * from './lib/insights/insights-crashes.module';

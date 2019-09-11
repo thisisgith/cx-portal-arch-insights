@@ -8,7 +8,6 @@ import { LogService } from '@cisco-ngx/cui-services';
 
 import {
 	ACC,
-	ACCBookmarkSchema,
 	ACCResponse,
 	AtxSchema,
 	ATXResponseModel,
@@ -53,7 +52,7 @@ interface ComponentData {
 	params: {
 		customerId: string;
 		pitstop: string;
-		rows?: number;
+		rows: number;
 		solution: string;
 		usecase: string;
 		suggestedAction?: string;
@@ -227,6 +226,7 @@ export class LifecycleComponent implements OnDestroy {
 		loading: {
 			acc: false,
 			atx: false,
+			bookmark: false,
 			cgt: false,
 			elearning: false,
 			productGuides: false,
@@ -243,6 +243,7 @@ export class LifecycleComponent implements OnDestroy {
 		params: {
 			customerId: '',
 			pitstop: '',
+			rows: 500,
 			solution: '',
 			suggestedAction: '',
 			usecase: '',
@@ -252,6 +253,7 @@ export class LifecycleComponent implements OnDestroy {
 	public selectAccComponent = false;
 	public selectCgtComponent = false;
 	public cgtRequestTrainingClicked = false;
+	public cxLevel: number;
 
 	get currentPitstop () {
 		return _.get(this.componentData, ['racetrack', 'pitstop']);
@@ -270,7 +272,7 @@ export class LifecycleComponent implements OnDestroy {
 	) {
 		this.user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(this.user, ['info', 'customerId']);
-
+		this.cxLevel = _.get(this.user, ['service', 'cxLevel'], 0);
 		const currentSBView = window.sessionStorage.getItem('cxportal.cisco.com:lifecycle:sbview');
 		if (!currentSBView) {
 			window.sessionStorage.setItem('cxportal.cisco.com:lifecycle:sbview', this.sbview);
@@ -419,7 +421,7 @@ export class LifecycleComponent implements OnDestroy {
 			params: {
 				customerId: this.customerId,
 				pitstop: '',
-				rows: 100,
+				rows: 500,
 				solution: '',
 				suggestedAction: '',
 				usecase: '',
@@ -539,7 +541,7 @@ export class LifecycleComponent implements OnDestroy {
 					name: I18n.get('_Bookmark_'),
 					sortable: true,
 					sortDirection: 'asc',
-					sortKey: 'isFavorite',
+					sortKey: 'bookmark',
 					template: this.bookmarkTemplate,
 					width: '10%',
 				},
@@ -582,7 +584,7 @@ export class LifecycleComponent implements OnDestroy {
 					sortDirection: 'asc',
 					sortKey: 'bookmark',
 					template: this.bookmarkTemplate,
-					width: '10%',
+					width: '12%',
 				},
 				{
 					key: 'title',
@@ -591,7 +593,7 @@ export class LifecycleComponent implements OnDestroy {
 					sortDirection: 'asc',
 					sortKey: 'title',
 					template: this.titleTemplate,
-					width: '50%',
+					width: '44%',
 				},
 				{
 					key: 'status',
@@ -605,7 +607,7 @@ export class LifecycleComponent implements OnDestroy {
 				{
 					sortable: false,
 					template: this.actionTemplate,
-					width: '20%',
+					width: '24%',
 				},
 			],
 		});
@@ -773,45 +775,6 @@ export class LifecycleComponent implements OnDestroy {
 		this.atxMoreClicked = false;
 	}
 
-	 /**
-	  * Updates ACC bookmark
-	  * @param item ACC item
-	  * @returns ribbon
-	  */
-	 public setACCBookmark (item: ACC) {
-		this.status.loading.acc = true;
-		if (window.Cypress) {
-			window.accLoading = true;
-		}
-		const bookmarkParam: ACCBookmarkSchema = {
-			customerId: this.customerId,
-			isFavorite: !item.isFavorite,
-			pitstop: this.componentData.params.pitstop,
-			solution: this.componentData.params.solution,
-			usecase: this.componentData.params.usecase,
-		};
-		const params: RacetrackContentService.UpdateACCBookmarkParams = {
-			accId: item.accId,
-			bookmark: bookmarkParam,
-		};
-		this.contentService.updateACCBookmark(params)
-		.subscribe(() => {
-			item.isFavorite = !item.isFavorite;
-			this.status.loading.acc = false;
-			if (window.Cypress) {
-				window.accLoading = false;
-			}
-		},
-		err => {
-			this.status.loading.acc = false;
-			if (window.Cypress) {
-				window.accLoading = false;
-			}
-			this.logger.error(`lifecycle.component : setACCBookmark() :: Error  : (${
-				err.status}) ${err.message}`);
-		});
-	 }
-
 	/**
 	 * Selects the session
 	 * @param session the session we've clicked on
@@ -881,10 +844,10 @@ export class LifecycleComponent implements OnDestroy {
 		if (type === 'ACC') {
 			if (this.selectedFilterForACC === 'isBookmarked') {
 				this.selectedACC =
-				_.filter(this.componentData.acc.sessions, { isFavorite: true });
+				_.filter(this.componentData.acc.sessions, { bookmark: true });
 			} else if (this.selectedFilterForACC === 'hasNotBookmarked') {
 				this.selectedACC =
-				_.filter(this.componentData.acc.sessions, { isFavorite: false });
+				_.filter(this.componentData.acc.sessions, { bookmark: false });
 			} else {
 				this.selectedACC =
 					_.filter(this.componentData.acc.sessions,
@@ -1096,10 +1059,7 @@ export class LifecycleComponent implements OnDestroy {
 	private calculateActionPercentage (pitstop: RacetrackPitstop) {
 		const start = I18n.get('_Start_');
 		if (pitstop) {
-			const completedActions = _.filter(pitstop.pitstopActions, 'isComplete').length;
-			const pct = Math.floor(
-				(completedActions / pitstop.pitstopActions.length) * 100) || 0;
-
+			const pct = _.get(pitstop, 'pitstop_adoption_percentage');
 			if (!_.isNil(pct)) {
 				return (pct === 0) ? start : `${pct.toString()}%`;
 			}
@@ -1113,27 +1073,30 @@ export class LifecycleComponent implements OnDestroy {
 	 * @param item bookmark item object
 	 * @param inputCategory string of the category type
 	 */
-	 public updateBookmark (item: AtxSchema | SuccessPath, inputCategory: 'ATX' | 'SB' | 'PG') {
+	 public updateBookmark (item: ACC | AtxSchema | SuccessPath,
+			inputCategory: 'ACC' | 'ATX' | 'SB' | 'PG') {
 		let bookmark;
 		let id;
-		let lifecycleCategory: 'ATX' | 'SB';
+		let lifecycleCategory: 'ACC' | 'ATX' | 'SB';
 
 		// Product Guides has to be submitted as a Success Bytes bookmark.
 		if (inputCategory === 'PG') {
 			lifecycleCategory = 'SB';
 		} else {
-			lifecycleCategory = <'ATX' | 'SB'> inputCategory;
+			lifecycleCategory = <'ACC' | 'ATX' | 'SB'> inputCategory;
 		}
 
+		this.status.loading.bookmark = true;
+		bookmark = !_.get(item, 'bookmark');
+
 		switch (lifecycleCategory) {
+			case 'ACC':
+				id = _.get(item, 'accId');
+				break;
 			case 'ATX':
-				this.status.loading.atx = true;
-				bookmark = !_.get(item, 'bookmark');
 				id = _.get(item, 'atxId');
 				break;
 			case 'SB':
-				this.status.loading.success = true;
-				bookmark = !_.get(item, 'bookmark');
 				id = _.get(item, 'successByteId');
 				break;
 		}
@@ -1153,24 +1116,10 @@ export class LifecycleComponent implements OnDestroy {
 		this.contentService.updateBookmark(params)
 		.subscribe(() => {
 			item.bookmark = !item.bookmark;
-			switch (lifecycleCategory) {
-				case 'SB':
-					this.status.loading.success = false;
-					break;
-				case 'ATX':
-					this.status.loading.atx = false;
-					break;
-			}
+			this.status.loading.bookmark = false;
 		},
 		err => {
-			switch (lifecycleCategory) {
-				case 'SB':
-					this.status.loading.success = false;
-					break;
-				case 'ATX':
-					this.status.loading.atx = false;
-					break;
-			}
+			this.status.loading.bookmark = false;
 			this.logger.error(`lifecycle.component : updateBookmark() :: Error  : (${
 				err.status}) ${err.message}`);
 		});
@@ -1220,9 +1169,10 @@ export class LifecycleComponent implements OnDestroy {
 	/**
 	 * Changes the atxMoreClicked flag and adds value to moreATXSelected
 	 * @param item ATXSchema
+	 * @param panel string
 	 */
-	 public atxMoreSelect (item: AtxSchema) {
-		 if (!this.atxMoreClicked) {
+	 public atxMoreSelect (item: AtxSchema, panel: string) {
+		 if (!this.atxMoreClicked && _.isEqual(panel, 'moreATXList')) {
 			this.atxScheduleCardOpened = false;
 			this.recommendedAtxScheduleCardOpened = false;
 			this.moreATXSelected = item;
@@ -1278,7 +1228,33 @@ export class LifecycleComponent implements OnDestroy {
 	 */
 	 public atxWatchNow (recordingUrl: string) {
 		window.open(`${recordingUrl}`, '_blank');
-		this.atxMoreClicked = false;
+		this.closeViewSessions();
+	}
+
+	/**
+	 * Determines the class of Register button for ATX
+	 * @param data AtxSchema
+	 * @returns button string
+	 */
+	 public getAtxRegisterButton (data: AtxSchema) {
+		let button: string;
+		button = '';
+		if (!_.get(this.sessionSelected, 'registrationURL') || this.notCurrentPitstop ||
+			_.isEqual(_.get(data, 'status'), 'scheduled')) {
+			button = 'disabled';
+		}
+
+		return button;
+	}
+
+	/**
+	 * Opens the given recordingURL in a new tab
+	 * @param registerUrl string
+	 */
+	 public atxRegister (registerUrl: string) {
+		window.open(`${registerUrl}`, '_blank');
+		this.closeViewSessions();
+		this.closeModal();
 	}
 
 	/**
@@ -1289,7 +1265,7 @@ export class LifecycleComponent implements OnDestroy {
 	public getPanel (viewAtxSessions: HTMLElement) {
 		let panel;
 		const _div = viewAtxSessions;
-		const atxPopupListViewAdjustPx = 193;
+		const atxPopupListViewAdjustPx = 255;
 		this.innerWidth = window.innerWidth;
 		if (this.componentData.atx.interested) {
 			switch (this.atxview) {
@@ -1320,8 +1296,8 @@ export class LifecycleComponent implements OnDestroy {
 			_div.style.top = `${this.moreYCoordinates - _div.offsetHeight / 2}px`;
 			panel = 'panel panel--open';
 		} else {
-			_div.style.left = '40%';
-			_div.style.bottom = '10px';
+			_div.style.left = '128px';
+			_div.style.bottom = '-150px';
 			panel = 'panel panel--open';
 		}
 
@@ -1438,7 +1414,7 @@ export class LifecycleComponent implements OnDestroy {
 
 		return this.contentService.getRacetrackSuccessPaths(
 			_.pick(this.componentData.params,
-				['customerId']))
+				['customerId', 'solution', 'usecase', 'rows']))
 		.pipe(
 			map((result: SuccessPathsResponse) => {
 				this.selectedFilterForPG = '';
@@ -1610,6 +1586,10 @@ export class LifecycleComponent implements OnDestroy {
 	 * @returns the ContractQuota
 	 */
 	private loadCGT (): Observable<ContractQuota[]> | Observable<void | { }> {
+		if (window.Cypress) {
+			this.enableCGT = window.forceCGTDisplay;
+		}
+
 		if (this.enableCGT) {
 			this.status.loading.cgt = true;
 			if (window.Cypress) {
@@ -1806,8 +1786,6 @@ export class LifecycleComponent implements OnDestroy {
 				this.stage.next(pitstop.name);
 			}
 
-			// UI not handling pagination for now, temporarily set to a large number
-			this.componentData.params.rows = 100;
 			this.loadRacetrackInfo();
 
 			this.status.loading.racetrack = false;

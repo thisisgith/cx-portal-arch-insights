@@ -3,185 +3,185 @@ const communitiesMapping = [
 	{
 		usecase: 'Campus Network Assurance',
 		title: 'Wireless & Mobility',
-		url: 'https://community.cisco.com/t5/wireless-and-mobility/bd-p/5956-discussions-getting-started-wireles',
+		url: 'https://cloudsso-test.cisco.com/idp/startSSO.ping?PartnerSpId=https://community-stage.cisco.com/auth/saml&TARGET=https://community-stage.cisco.com/t5/wireless-and-mobility/bd-p/5956-discussions-getting-started-wireless',
 		pitstops: [
 			{
 				name: 'Onboard',
-				curatedTooltip: 'Campus Network Assurance - Onboard',
-				curatedURL: 'https://community.cisco.com/t5/campus-network-assurance/bd-p/ibn-assurance/customFilteredByMultiLabel?board=ibn-assurance&amp;labels=Onboard',
+				curatedTooltip: 'Campus Network Assurance',
+				curatedURL: 'https://community-stage.cisco.com/t5/campus-network-assurance/bd-p/ibn-assurance',
 			},
 			{
 				name: 'Implement',
-				curatedTooltip: 'Campus Network Assurance - Implement',
-				curatedURL: 'https://community.cisco.com/t5/campus-network-assurance/bd-p/ibn-assurance/customFilteredByMultiLabel?board=ibn-assurance&amp;labels=Implement',
+				curatedTooltip: 'Campus Network Assurance',
+				curatedURL: 'https://community-stage.cisco.com/t5/campus-network-assurance/bd-p/ibn-assurance',
 			},
 			{
 				name: 'Use',
-				curatedTooltip: 'Campus Network Assurance - Use',
-				curatedURL: 'https://community.cisco.com/t5/campus-network-assurance/bd-p/ibn-assurance/customFilteredByMultiLabel?board=ibn-assurance&amp;labels=Use',
+				curatedTooltip: 'Campus Network Assurance',
+				curatedURL: 'https://community-stage.cisco.com/t5/campus-network-assurance/bd-p/ibn-assurance',
 			},
 			{
 				name: 'Engage',
-				curatedTooltip: 'Campus Network Assurance - Engage',
-				curatedURL: 'https://community.cisco.com/t5/campus-network-assurance/bd-p/ibn-assurance/customFilteredByMultiLabel?board=ibn-assurance&amp;labels=Engage',
+				curatedTooltip: 'Campus Network Assurance',
+				curatedURL: 'https://community-stage.cisco.com/t5/campus-network-assurance/bd-p/ibn-assurance',
 			},
 			{
 				name: 'Adopt',
-				curatedTooltip: 'Campus Network Assurance - Adopt',
-				curatedURL: 'https://community.cisco.com/t5/campus-network-assurance/bd-p/ibn-assurance/customFilteredByMultiLabel?board=ibn-assurance&amp;labels=Adopt',
+				curatedTooltip: 'Campus Network Assurance',
+				curatedURL: 'https://community-stage.cisco.com/t5/campus-network-assurance/bd-p/ibn-assurance',
 			},
 			{
 				name: 'Optimize',
-				curatedTooltip: 'Campus Network Assurance - Optimize',
-				curatedURL: 'https://community.cisco.com/t5/campus-network-assurance/bd-p/ibn-assurance/customFilteredByMultiLabel?board=ibn-assurance&amp;labels=Optimize',
+				curatedTooltip: 'Campus Network Assurance',
+				curatedURL: 'https://community-stage.cisco.com/t5/campus-network-assurance/bd-p/ibn-assurance',
 			},
 		],
 	},
 	{
 		usecase: 'Campus Network Segmentation',
 		title: 'Software-Defined Access (SD-Access)',
-		url: 'https://community.cisco.com/t5/software-defined-access-sd/bd-p/discussions-sd-access',
+		url: 'https://cloudsso-test.cisco.com/idp/startSSO.ping?PartnerSpId=https://community-stage.cisco.com/auth/saml&TARGET=https://community-stage.cisco.com/t5/software-defined-access-sda/bd-p/discussions-sd-access',
 		pitstops: [
 			{
 				name: 'Onboard',
-				curatedTooltip: 'Campus Network Segmentation - Onboard',
-				curatedURL: 'https://community.cisco.com/t5/campus-network-segmentation/bd-p/ibn-segmentation/customFilteredByMultiLabel?board=ibn-segmentation&amp;labels=Onboard',
+				curatedTooltip: 'Campus Network Segmentation',
+				curatedURL: 'https://community-stage.cisco.com/t5/campus-network-segmentation/bd-p/ibn-segmentation',
 			},
 			{
 				name: 'Implement',
-				curatedTooltip: 'Campus Network Segmentation - Implement',
-				curatedURL: 'https://community.cisco.com/t5/campus-network-segmentation/bd-p/ibn-segmentation/customFilteredByMultiLabel?board=ibn-segmentation&amp;labels=Implement',
+				curatedTooltip: 'Campus Network Segmentation',
+				curatedURL: 'https://community-stage.cisco.com/t5/campus-network-segmentation/bd-p/ibn-segmentation',
 			},
 			{
 				name: 'Use',
-				curatedTooltip: 'Campus Network Segmentation - Use',
-				curatedURL: 'https://community.cisco.com/t5/campus-network-segmentation/bd-p/ibn-segmentation/customFilteredByMultiLabel?board=ibn-segmentation&amp;labels=Use',
+				curatedTooltip: 'Campus Network Segmentation',
+				curatedURL: 'https://community-stage.cisco.com/t5/campus-network-segmentation/bd-p/ibn-segmentation',
 			},
 			{
 				name: 'Engage',
-				curatedTooltip: 'Campus Network Segmentation - Engage',
-				curatedURL: 'https://community.cisco.com/t5/campus-network-segmentation/bd-p/ibn-segmentation/customFilteredByMultiLabel?board=ibn-segmentation&amp;labels=Engage',
+				curatedTooltip: 'Campus Network Segmentation',
+				curatedURL: 'https://community-stage.cisco.com/t5/campus-network-segmentation/bd-p/ibn-segmentation',
 			},
 			{
 				name: 'Adopt',
-				curatedTooltip: 'Campus Network Segmentation - Adopt',
-				curatedURL: 'https://community.cisco.com/t5/campus-network-segmentation/bd-p/ibn-segmentation/customFilteredByMultiLabel?board=ibn-segmentation&amp;labels=Adopt',
+				curatedTooltip: 'Campus Network Segmentation',
+				curatedURL: 'https://community-stage.cisco.com/t5/campus-network-segmentation/bd-p/ibn-segmentation',
 			},
 			{
 				name: 'Optimize',
-				curatedTooltip: 'Campus Network Segmentation - Optimize',
-				curatedURL: 'https://community.cisco.com/t5/campus-network-segmentation/bd-p/ibn-segmentation/customFilteredByMultiLabel?board=ibn-segmentation&amp;labels=Optimize',
+				curatedTooltip: 'Campus Network Segmentation',
+				curatedURL: 'https://community-stage.cisco.com/t5/campus-network-segmentation/bd-p/ibn-segmentation',
 			},
 		],
 	},
 	{
 		usecase: 'Scalable Access Policy',
 		title: 'Software-Defined Access (SD-Access)',
-		url: 'https://community.cisco.com/t5/software-defined-access-sd/bd-p/discussions-sd-access',
+		url: 'https://cloudsso-test.cisco.com/idp/startSSO.ping?PartnerSpId=https://community-stage.cisco.com/auth/saml&TARGET=https://community-stage.cisco.com/t5/software-defined-access-sda/bd-p/discussions-sd-access',
 		pitstops: [
 			{
 				name: 'Onboard',
-				curatedTooltip: 'Scalable Access Policy - Onboard',
-				curatedURL: 'https://community.cisco.com/t5/scalable-access-policy/bd-p/ibn-policy/customFilteredByMultiLabel?board=ibn-policy&amp;labels=Onboard',
+				curatedTooltip: 'Scalable Access Policy',
+				curatedURL: 'https://community-stage.cisco.com/t5/scalable-access-policy/bd-p/ibn-policy',
 			},
 			{
 				name: 'Implement',
-				curatedTooltip: 'Scalable Access Policy - Implement',
-				curatedURL: 'https://community.cisco.com/t5/scalable-access-policy/bd-p/ibn-policy/customFilteredByMultiLabel?board=ibn-policy&amp;labels=Implement',
+				curatedTooltip: 'Scalable Access Policy',
+				curatedURL: 'https://community-stage.cisco.com/t5/scalable-access-policy/bd-p/ibn-policy',
 			},
 			{
 				name: 'Use',
-				curatedTooltip: 'Scalable Access Policy - Use',
-				curatedURL: 'https://community.cisco.com/t5/scalable-access-policy/bd-p/ibn-policy/customFilteredByMultiLabel?board=ibn-policy&amp;labels=Use',
+				curatedTooltip: 'Scalable Access Policy',
+				curatedURL: 'https://community-stage.cisco.com/t5/scalable-access-policy/bd-p/ibn-policy',
 			},
 			{
 				name: 'Engage',
-				curatedTooltip: 'Scalable Access Policy - Engage',
-				curatedURL: 'https://community.cisco.com/t5/scalable-access-policy/bd-p/ibn-policy/customFilteredByMultiLabel?board=ibn-policy&amp;labels=Engage',
+				curatedTooltip: 'Scalable Access Policy',
+				curatedURL: 'https://community-stage.cisco.com/t5/scalable-access-policy/bd-p/ibn-policy',
 			},
 			{
 				name: 'Adopt',
-				curatedTooltip: 'Scalable Access Policy - Adopt',
-				curatedURL: 'https://community.cisco.com/t5/scalable-access-policy/bd-p/ibn-policy/customFilteredByMultiLabel?board=ibn-policy&amp;labels=Adopt',
+				curatedTooltip: 'Scalable Access Policy',
+				curatedURL: 'https://community-stage.cisco.com/t5/scalable-access-policy/bd-p/ibn-policy',
 			},
 			{
 				name: 'Optimize',
-				curatedTooltip: 'Scalable Access Policy - Optimize',
-				curatedURL: 'https://community.cisco.com/t5/scalable-access-policy/bd-p/ibn-policy/customFilteredByMultiLabel?board=ibn-policy&amp;labels=Optimize',
+				curatedTooltip: 'Scalable Access Policy',
+				curatedURL: 'https://community-stage.cisco.com/t5/scalable-access-policy/bd-p/ibn-policy',
 			},
 		],
 	},
 	{
 		usecase: 'Network Device Onboarding',
 		title: 'Cisco Digital Network Architecture (DNA)',
-		url: 'https://community.cisco.com/t5/cisco-digital-network/bd-p/discussions-dna',
+		url: 'https://cloudsso-test.cisco.com/idp/startSSO.ping?PartnerSpId=https://community-stage.cisco.com/auth/saml&TARGET=https://community-stage.cisco.com/t5/digital-network-architecture/bd-p/discussions-dna',
 		pitstops: [
 			{
 				name: 'Onboard',
-				curatedTooltip: 'Network Device Onboarding - Onboard',
-				curatedURL: 'https://community.cisco.com/t5/network-device-onboarding/bd-p/ibn-onboarding/customFilteredByMultiLabel?board=ibn-onboarding&amp;labels=Onboard',
+				curatedTooltip: 'Network Device Onboarding',
+				curatedURL: 'https://community-stage.cisco.com/t5/network-device-onboarding/bd-p/ibn-onboarding',
 			},
 			{
 				name: 'Implement',
-				curatedTooltip: 'Network Device Onboarding - Implement',
-				curatedURL: 'https://community.cisco.com/t5/network-device-onboarding/bd-p/ibn-onboarding/customFilteredByMultiLabel?board=ibn-onboarding&amp;labels=Implement',
+				curatedTooltip: 'Network Device Onboarding',
+				curatedURL: 'https://community-stage.cisco.com/t5/network-device-onboarding/bd-p/ibn-onboarding',
 			},
 			{
 				name: 'Use',
-				curatedTooltip: 'Network Device Onboarding - Use',
-				curatedURL: 'https://community.cisco.com/t5/network-device-onboarding/bd-p/ibn-onboarding/customFilteredByMultiLabel?board=ibn-onboarding&amp;labels=Use',
+				curatedTooltip: 'Network Device Onboarding',
+				curatedURL: 'https://community-stage.cisco.com/t5/network-device-onboarding/bd-p/ibn-onboarding',
 			},
 			{
 				name: 'Engage',
-				curatedTooltip: 'Network Device Onboarding - Engage',
-				curatedURL: 'https://community.cisco.com/t5/network-device-onboarding/bd-p/ibn-onboarding/customFilteredByMultiLabel?board=ibn-onboarding&amp;labels=Engage',
+				curatedTooltip: 'Network Device Onboarding',
+				curatedURL: 'https://community-stage.cisco.com/t5/network-device-onboarding/bd-p/ibn-onboarding',
 			},
 			{
 				name: 'Adopt',
-				curatedTooltip: 'Network Device Onboarding - Adopt',
-				curatedURL: 'https://community.cisco.com/t5/network-device-onboarding/bd-p/ibn-onboarding/customFilteredByMultiLabel?board=ibn-onboarding&amp;labels=Adopt',
+				curatedTooltip: 'Network Device Onboarding',
+				curatedURL: 'https://community-stage.cisco.com/t5/network-device-onboarding/bd-p/ibn-onboarding',
 			},
 			{
 				name: 'Optimize',
-				curatedTooltip: 'Network Device Onboarding - Optimize',
-				curatedURL: 'https://community.cisco.com/t5/network-device-onboarding/bd-p/ibn-onboarding/customFilteredByMultiLabel?board=ibn-onboarding&amp;labels=Optimize',
+				curatedTooltip: 'Network Device Onboarding',
+				curatedURL: 'https://community-stage.cisco.com/t5/network-device-onboarding/bd-p/ibn-onboarding',
 			},
 		],
 	},
 	{
 		usecase: 'Campus Software Image Management',
 		title: 'Cisco Digital Network Architecture (DNA)',
-		url: 'https://community.cisco.com/t5/cisco-digital-network/bd-p/discussions-dna',
+		url: 'https://cloudsso-test.cisco.com/idp/startSSO.ping?PartnerSpId=https://community-stage.cisco.com/auth/saml&TARGET=https://community-stage.cisco.com/t5/digital-network-architecture/bd-p/discussions-dna',
 		pitstops: [
 			{
 				name: 'Onboard',
-				curatedTooltip: 'Campus Software Image Management - Onboard',
-				curatedURL: 'https://community.cisco.com/t5/campus-software-image-management/bd-p/ibn-swim/customFilteredByMultiLabel?board=ibn-swim&amp;labels=Onboard',
+				curatedTooltip: 'Campus Software Image Management',
+				curatedURL: 'https://community-stage.cisco.com/t5/campus-software-image-management/bd-p/ibn-swim',
 			},
 			{
 				name: 'Implement',
-				curatedTooltip: 'Campus Software Image Management - Implement',
-				curatedURL: 'https://community.cisco.com/t5/campus-software-image-management/bd-p/ibn-swim/customFilteredByMultiLabel?board=ibn-swim&amp;labels=Implement',
+				curatedTooltip: 'Campus Software Image Management',
+				curatedURL: 'https://community-stage.cisco.com/t5/campus-software-image-management/bd-p/ibn-swim',
 			},
 			{
 				name: 'Use',
-				curatedTooltip: 'Campus Software Image Management - Use',
-				curatedURL: 'https://community.cisco.com/t5/campus-software-image-management/bd-p/ibn-swim/customFilteredByMultiLabel?board=ibn-swim&amp;labels=Use',
+				curatedTooltip: 'Campus Software Image Management',
+				curatedURL: 'https://community-stage.cisco.com/t5/campus-software-image-management/bd-p/ibn-swim',
 			},
 			{
 				name: 'Engage',
-				curatedTooltip: 'Campus Software Image Management - Engage',
-				curatedURL: 'https://community.cisco.com/t5/campus-software-image-management/bd-p/ibn-swim/customFilteredByMultiLabel?board=ibn-swim&amp;labels=Engage',
+				curatedTooltip: 'Campus Software Image Management',
+				curatedURL: 'https://community-stage.cisco.com/t5/campus-software-image-management/bd-p/ibn-swim',
 			},
 			{
 				name: 'Adopt',
-				curatedTooltip: 'Campus Software Image Management - Adopt',
-				curatedURL: 'https://community.cisco.com/t5/campus-software-image-management/bd-p/ibn-swim/customFilteredByMultiLabel?board=ibn-swim&amp;labels=Adopt',
+				curatedTooltip: 'Campus Software Image Management',
+				curatedURL: 'https://community-stage.cisco.com/t5/campus-software-image-management/bd-p/ibn-swim',
 			},
 			{
 				name: 'Optimize',
-				curatedTooltip: 'Campus Software Image Management - Optimize',
-				curatedURL: 'https://community.cisco.com/t5/campus-software-image-management/bd-p/ibn-swim/customFilteredByMultiLabel?board=ibn-swim&amp;labels=Optimize',
+				curatedTooltip: 'Campus Software Image Management',
+				curatedURL: 'https://community-stage.cisco.com/t5/campus-software-image-management/bd-p/ibn-swim',
 			},
 		],
 	},
@@ -190,6 +190,9 @@ const communitiesMapping = [
 describe('Communities Panel', () => {
 	before(() => {
 		cy.login();
+		cy.window().then(win => { // Must be done before app loads
+			win.localStorage.quickTourFirstTime = { firstTime: false };
+		});
 		cy.loadApp();
 		cy.window().then(win => { // Must be done after app loads
 			win.Cypress.hideDNACHeader = true;
@@ -255,5 +258,10 @@ describe('Communities Panel', () => {
 				});
 			});
 		});
+	});
+
+	it('PBC-717: Update "Cisco Community" link in CX Portal header to point to stage', () => {
+		cy.getByAutoId('HeaderCommunityLink')
+			.should('have.attr', 'href', 'https://cloudsso-test.cisco.com/idp/startSSO.ping?PartnerSpId=https://community-stage.cisco.com/auth/saml&TARGET=https://community-stage.cisco.com/');
 	});
 });

@@ -31,7 +31,7 @@ function MockACC (
 			description: 'Experience this live coaching engagement on general Assurance ' +
 				'concepts and features such as network, device, client, and application ' +
 				'analytics. Help your team hit the ground running',
-			isFavorite: false,
+			bookmark: false,
 			status: 'requested',
 			title: 'Cisco Software-Defined Access Transition Planning',
 			url: 'https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/acc/images/' +
@@ -42,7 +42,7 @@ function MockACC (
 			description: 'Gain actionable insights into Cisco DNA Center use case ' +
 				'deployments and assists. Understand how to design, adopt, and leverage to ' +
 				'save time and resources within your network',
-			isFavorite: true,
+			bookmark: true,
 			status: 'in-progress',
 			title: 'Cisco DNA Pilot Usecase Deployment',
 			url: 'https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/acc/' +
@@ -53,7 +53,7 @@ function MockACC (
 			description: 'Experience this live coaching engagement on general Assurance ' +
 				'concepts and features such as network, device, client, and application ' +
 				'analytics. Help your team hit the ground running',
-			isFavorite: false,
+			bookmark: false,
 			status: 'in-progress',
 			title: 'Cisco DNA Center Use Cases',
 			url: 'https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/acc/' +
@@ -64,7 +64,7 @@ function MockACC (
 			description: 'Discover the standard steps required to engineer and commission ' +
 				'your appliance from an experienced Cisco DNA Center project manager. Understand ' +
 				'basic deployment requirements and schedules',
-			isFavorite: false,
+			bookmark: false,
 			status: 'recommended',
 			title: 'Cisco DNA Center Project Planning',
 			url: 'https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/acc/' +
@@ -75,7 +75,7 @@ function MockACC (
 			description: 'Experience this live coaching engagement on general Assurance ' +
 				'concepts and features such as network, device, client, and application ' +
 				'analytics. Help your team hit the ground running',
-			isFavorite: false,
+			bookmark: false,
 			status: 'completed',
 			title: 'Cisco DNA Center Wireless Assurance Feature Planning',
 			url: 'https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/acc/' +
@@ -89,7 +89,7 @@ function MockACC (
 			{
 				accId: `${accId5}`,
 				description: 'This is a title for Adoption',
-				isFavorite: false,
+				bookmark: false,
 				status: 'completed',
 				title: 'This is a title for Adoption',
 				url: 'https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/acc/' +
@@ -213,10 +213,58 @@ export const ACCScenarios = [
 					},
 					selected: false,
 				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ACC) IBN-Campus Network Assurance-Onboard-twoBookmarked',
+					response: {
+						body: MockACC('IBN', 'Campus Network Assurance', 'Onboard', 'twoBookmarked'),
+						status: 200,
+					},
+					selected: false,
+				},
 			],
 		},
 		url: `${api}?usecase=Campus Network Assurance&` +
-			`solution=IBN&pitstop=Onboard&customerId=${customerId}&suggestedAction=Get to know Cisco DNA Center`,
+			`solution=IBN&pitstop=Onboard&customerId=${customerId}&` +
+			'suggestedAction=Get to know Cisco DNA Center',
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ACC) IBN-Campus Network Assurance-Implement-twoRecommended',
+					response: {
+						body: MockACC('IBN', 'Campus Network Assurance', 'Implement', 'twoRecommended'),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?usecase=Campus Network Assurance&` +
+			`solution=IBN&pitstop=Implement&customerId=${customerId}&` +
+			'suggestedAction=Build your network & site hierarchy',
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ACC) IBN-Campus Network Assurance-Use-twoRecommended',
+					response: {
+						body: MockACC('IBN', 'Campus Network Assurance', 'Use', 'twoRecommended'),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?usecase=Campus Network Assurance&` +
+			`solution=IBN&pitstop=Use&customerId=${customerId}&` +
+			'suggestedAction=Monitor Health of the Network',
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -234,7 +282,7 @@ export const ACCScenarios = [
 			],
 		},
 		url: `${api}?usecase=Campus Network Segmentation&solution=IBN&` +
-			`pitstop=Onboard&customerId=${customerId}`,
+			`pitstop=Onboard&customerId=${customerId}&suggestedAction=Onboard 2`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -252,7 +300,7 @@ export const ACCScenarios = [
 			],
 		},
 		url: `${api}?usecase=Scalable Access Policy&solution=IBN&` +
-			`pitstop=Onboard&customerId=${customerId}`,
+			`pitstop=Onboard&customerId=${customerId}&suggestedAction=Onboard 2`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -270,7 +318,7 @@ export const ACCScenarios = [
 			],
 		},
 		url: `${api}?usecase=Network Device Onboarding&solution=IBN&` +
-			`pitstop=Onboard&customerId=${customerId}`,
+			`pitstop=Onboard&customerId=${customerId}&suggestedAction=Onboard 2`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -288,7 +336,7 @@ export const ACCScenarios = [
 			],
 		},
 		url: `${api}?usecase=Campus Software Image Management&solution=IBN&` +
-			`pitstop=Onboard&customerId=${customerId}`,
+			`pitstop=Onboard&customerId=${customerId}&suggestedAction=Onboard 2`,
 		usecases: ['Use Case 1'],
 	},
 	{

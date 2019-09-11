@@ -5,7 +5,7 @@ import { BaseService as __BaseService } from '../base-service';
 import { ArchitectureReviewConfiguration as __Configuration } from '../architecture-review-configuration';
 import { StrictHttpResponse as __StrictHttpResponse } from '../../core/strict-http-response';
 import { Observable as __Observable } from 'rxjs';
-import { Observable, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { map as __map, filter as __filter } from 'rxjs/operators';
 
 @Injectable({
@@ -13,14 +13,12 @@ import { map as __map, filter as __filter } from 'rxjs/operators';
 })
 class ArchitectureReviewService extends __BaseService {
 
-  static readonly getContractCountsPath = '';
-  static readonly getAllCBPRules = '';
-  static readonly getDevicesListResponsePath = '/api/customerportal/archinsights/v1/dnac/devicedetails';
-  static readonly getDnacListResponsePath = '/api/customerportal/archinsights/v1/dnac/details';
-  static readonly getDevicesCountResponsePath = '/api/customerportal/archinsights/v1/dnac/devicecount';
-  static readonly getDnacCountResponsePath = '/api/customerportal/archinsights/v1/dnac/count';
-  static readonly getDevicesSDAResponsePath = '/api/customerportal/archinsights/v1/dnac/deviceinsight';
-  static readonly getSDAReadinessCountResponse = '/api/customerportal/archinsights/v1/dnac/devicecompliance';
+  static readonly getDevicesListResponsePath = '/customerportal/archinsights/v1/dnac/devicedetails';
+  static readonly getDnacListResponsePath = '/customerportal/archinsights/v1/dnac/details';
+  static readonly getDevicesCountResponsePath = '/customerportal/archinsights/v1/dnac/devicecount';
+  static readonly getDnacCountResponsePath = '/customerportal/archinsights/v1/dnac/count';
+  static readonly getDevicesSDAResponsePath = '/customerportal/archinsights/v1/dnac/deviceinsight';
+  static readonly getSDAReadinessCountResponse = '/customerportal/archinsights/v1/dnac/devicecompliance';
 
   private AssetsExceptionsCount = new Subject<any>();
 
@@ -111,7 +109,8 @@ class ArchitectureReviewService extends __BaseService {
     if (params.pageSize != null) __params = __params.set('pageSize', params.pageSize);
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     if (params.searchText != null) __params = __params.set('searchText', params.searchText.toString());
-
+    if (params.dnacIP != null) __params = __params.set('dnacIP', params.dnacIP.toString());
+    
     let req = new HttpRequest<any>(
 	  'GET',
 	  this.rootUrl + `${ArchitectureReviewService.getDnacListResponsePath}`,
@@ -169,9 +168,9 @@ class ArchitectureReviewService extends __BaseService {
         __map(_r => _r.body)
       );
     }
-  
+
     getSDAReadinessCountResponse(params: any): __Observable<__StrictHttpResponse<any>> {
-  
+
       let __headers = new HttpHeaders();
       let __body: any = null;
       let __params = this.newParams();
@@ -186,14 +185,14 @@ class ArchitectureReviewService extends __BaseService {
           responseType: 'json',
           //        withCredentials: true,
         });
-  
+
       return this.http.request<any>(req).pipe(
         __filter(_r => _r instanceof HttpResponse),
         __map((_r) => {
           return _r as __StrictHttpResponse<any>;
         })
       );
-  
+
     }
 
   // count of all exceptions

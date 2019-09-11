@@ -5,6 +5,7 @@ import { InventoryModule, DiagnosticsModule } from '@sdp-api';
 import { environment } from '@environment';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { CuiTableModule, CuiSpinnerModule } from '@cisco-ngx/cui-components';
+import { RouterModule } from '@angular/router';
 
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
@@ -26,6 +27,7 @@ const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 		InventoryModule.forRoot({ rootUrl }),
 		DiagnosticsModule.forRoot({ rootUrl }),
 		I18nPipeModule,
+		RouterModule,
 	],
 })
 export class AdvisoryImpactedAssetsModule { }

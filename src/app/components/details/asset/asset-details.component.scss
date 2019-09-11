@@ -4,38 +4,6 @@
 $default-text-color: #394454;
 
 ::ng-deep {
-	#assetDetailTabs &.tabs {
-		box-shadow: 0 -2px 0 $light-gray-3 inset !important;
-
-		> li {
-			margin: 0 50px 0 0 !important;
-			height: unset;
-
-			> a {
-				text-transform: uppercase;
-				font-size: 13px !important;
-
-				&:hover {
-					color: $primary !important;
-					transition: box-shadow 0.2s linear;
-					box-shadow: 0 -2px 0 $primary inset !important;
-				}
-			}
-
-			&.active {
-				> a {
-					color: $primary !important;
-					box-shadow: 0 -2px 0 $primary inset !important;
-				}
-			}
-
-			&:hover {
-				color: $primary !important;
-				transition: box-shadow 0.2s linear;
-				box-shadow: 0 -2px 0 $primary inset !important;
-			}
-		}
-	}
 
 	/** 360 tables have different styling **/
 	.hardware-table,
@@ -43,6 +11,7 @@ $default-text-color: #394454;
 	.advisoryTable {
 		table {
 			border-collapse: collapse;
+			cursor: pointer;
 
 			thead::after {
 				left: 2px;
@@ -85,10 +54,6 @@ $default-text-color: #394454;
 
 	#details-panel .details-header .icon-close .icon--mid {
 		font-size: 18px;
-	}
-
-	#details-panel {
-		width: 590px;
 	}
 }
 

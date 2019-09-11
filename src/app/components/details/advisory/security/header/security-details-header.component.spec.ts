@@ -1,4 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { configureTestSuite } from 'ng-bullet';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SecurityDetailsHeaderComponent } from './security-details-header.component';
 import { SecurityDetailsHeaderModule } from './security-details-header.module';
@@ -7,12 +8,11 @@ describe('SecurityDetailsHeaderComponent', () => {
 	let component: SecurityDetailsHeaderComponent;
 	let fixture: ComponentFixture<SecurityDetailsHeaderComponent>;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [SecurityDetailsHeaderModule],
-		})
-		.compileComponents();
-	}));
+		});
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(SecurityDetailsHeaderComponent);

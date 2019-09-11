@@ -4,18 +4,19 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CaseParams, CaseDetails, CaseService } from '@cui-x/services';
 import { LogService } from '@cisco-ngx/cui-services';
 
-import { Observable, Subject, of, forkJoin } from 'rxjs';
+import { Observable, Subject, forkJoin } from 'rxjs';
 
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { I18n } from '@cisco-ngx/cui-utils';
-import { tap, switchMap, takeUntil, catchError, map } from 'rxjs/operators';
+import { tap, switchMap, takeUntil } from 'rxjs/operators';
 
 import * as _ from 'lodash-es';
 import { DateTime } from 'luxon';
 
 import { caseSeverities } from '@classes';
 import { Case, VisualFilter } from '@interfaces';
+import { environment } from '@environment';
 
 /**
  * Interface for series data used by visual filters.
@@ -30,64 +31,21 @@ interface FilterData {
 }
 
 /**
- * Master list of case statuses to filter on.
- * TODO: Get full list or make dynamic using API.
- */
-const statusList: string[] = [
-	'Cisco Pending',
-	'Close Pending',
-	'Customer Pending',
-	'Customer Requested Closure',
-	'Customer Updated',
-	'New',
-	'Release Pending',
-	'Service Order Pending',
-];
-
-/**
- * Array of default data for the status filter
- */
-const defaultStatusFilterData: FilterData[] =
-_.map(statusList, status => ({
-	filter: status,
-	label: status,
-	selected: false,
-}));
-
-/**
- * Array of default data for the severity filter
- */
-const defaultSeverityFilterData: FilterData[] =
-_.map(Object.entries(caseSeverities), severityMap => ({
-	color: severityMap[1].color,
-	filter: severityMap[0],
-	label: `S${severityMap[0]}`,
-	selected: false,
-}));
-
-/**
  * List of filter names that aren't stored under the "filters" case parameter
  * (due to the way the case service processes them)
  */
-const otherFilters = ['hasRMAs', 'lastUpdateFrom', 'lastUpdateTo',
+const altFilters = ['hasRMAs', 'lastUpdateFrom', 'lastUpdateTo',
 	'dateCreatedFrom', 'dateCreatedTo'];
 
 /** 1 day ago */
 const oneDay = DateTime.local()
-	.minus({ days: 1 })
-	.toUTC()
-	.toISO();
+	.minus({ days: 1 });
 /** 1 week ago */
 const oneWeek = DateTime.local()
-	.minus({ weeks: 1 })
-	.toUTC()
-	.toISO();
+	.minus({ weeks: 1 });
 /** 2 weeks ago */
 const twoWeeks = DateTime.local()
-	.minus({ weeks: 2 })
-	.toUTC()
-	.toISO();
-
+	.minus({ weeks: 2 });
 /** Labels and subfilters maps for the last updated filter */
 const lastUpdatedFilters = [
 	{
@@ -143,6 +101,7 @@ _.map(lastUpdatedFilters, fields => ({
 	filter: _.pick(fields, ['lastUpdateFrom', 'lastUpdateTo']),
 	label: fields.label,
 	selected: false,
+	value: 0,
 }));
 
 /**
@@ -154,6 +113,7 @@ _.map(durationOpenFilters, fields => ({
 	filter: _.pick(fields, ['dateCreatedFrom', 'dateCreatedTo']),
 	label: fields.label,
 	selected: false,
+	value: 0,
 }));
 
 /**
@@ -164,6 +124,7 @@ _.map(['No RMAs', 'With RMAs'], label => ({
 	label,
 	filter: label === 'No RMAs' ? 'F' : 'T',
 	selected: false,
+	value: 0,
 }));
 
 /**
@@ -190,6 +151,7 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 	public caseListData: any[];
 	public caseListTableOptions: CuiTableOptions;
 	public filters: VisualFilter[];
+	public builtFilters = false;
 	public mainContent = 'cases';
 	public filterCollapse = false;
 	public filtered = false;
@@ -326,10 +288,116 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 			}
 		});
 
+		this.initializeFilters();
 		this.buildRefreshSubject();
 		this.refresh$.next();
-		this.buildFilters();
-		this.getFilterData();
+	}
+
+	/**
+	 * Initializes the filters at half-opacity with stored values.
+	 */
+	private initializeFilters () {
+		const caseFilterData = JSON.parse(localStorage.getItem('caseFilterData')) ||
+			{
+				durationOpen: defaultDurationOpenFilterData,
+				lastUpdated: defaultLastUpdatedFilterData,
+				rma: defaultRmaFilterData,
+				severity: [],
+				status: [],
+				total: [{
+					filter: null,
+					label: null,
+					selected: true,
+					value: 0,
+				}],
+			};
+		this.filters = [
+			{
+				key: 'total',
+				loading: true,
+				selected: true,
+				seriesData: caseFilterData.total,
+				template: this.totalFilterTemplate,
+				title: I18n.get('_Total_'),
+			},
+			{
+				key: 'status',
+				loading: true,
+				seriesData: caseFilterData.status,
+				template: this.pieChartFilterTemplate,
+				title: I18n.get('_Status_'),
+			},
+			{
+				key: 'severity',
+				loading: true,
+				seriesData: caseFilterData.severity,
+				template: this.pieChartFilterTemplate,
+				title: I18n.get('_Severity_'),
+			},
+			{
+				key: 'lastUpdated',
+				loading: true,
+				seriesData: caseFilterData.lastUpdated,
+				template: this.columnChartFilterTemplate,
+				title: I18n.get('_LastUpdated_'),
+			},
+			{
+				key: 'durationOpen',
+				loading: true,
+				seriesData: caseFilterData.durationOpen,
+				template: this.columnChartFilterTemplate,
+				title: I18n.get('_TotalTimeOpen_'),
+			},
+			{
+				key: 'rma',
+				loading: true,
+				seriesData: caseFilterData.rma,
+				template: this.barChartFilterTemplate,
+				title: I18n.get('_RMAs_'),
+			},
+		];
+
+		// Select filters based on case params
+		const caseParams = _.cloneDeep(this.caseParams);
+		_.each(this.filters, filter => {
+			_.each(filter.seriesData, data => {
+				if (filter.key === 'status' || filter.key === 'severity') {
+					const subFilter = _.find(caseParams.filter,
+						param => _.includes(param, filter.key));
+					if (_.includes(subFilter, `:${data.filter}`) ||
+						_.includes(subFilter, `:O-${data.filter}`) ||
+						_.includes(subFilter, `,${data.filter}`)) {
+						this.onSubfilterSelect(data.label, filter, false);
+					}
+				} else if (filter.key === 'lastUpdated') {
+					const subFilter = _.find(defaultLastUpdatedFilterData,
+						{ label: data.label })
+						.filter;
+					// Extra DateTime object to protect from undefined values
+					const placeholderDateTime = DateTime.local();
+					const lastUpdateFrom = subFilter.lastUpdateFrom || placeholderDateTime;
+					const lastUpdateTo = subFilter.lastUpdateTo || placeholderDateTime;
+					if (lastUpdateFrom.equals(caseParams.lastUpdateFrom || placeholderDateTime) &&
+						lastUpdateTo.equals(caseParams.lastUpdateTo || placeholderDateTime)) {
+						this.onSubfilterSelect(data.label, filter, false);
+					}
+				} else if (filter.key === 'durationOpen') {
+					const subFilter = _.find(defaultDurationOpenFilterData,
+						{ label: data.label })
+						.filter;
+					// Extra DateTime object to protect from undefined values
+					const placeholderDateTime = DateTime.local();
+					const dateCreatedFrom = subFilter.dateCreatedFrom || placeholderDateTime;
+					const dateCreatedTo = subFilter.dateCreatedTo || placeholderDateTime;
+					if (dateCreatedFrom.equals(caseParams.dateCreatedFrom || placeholderDateTime) &&
+						dateCreatedTo.equals(caseParams.dateCreatedTo || placeholderDateTime)) {
+						this.onSubfilterSelect(data.label, filter, false);
+					}
+				} else if (filter.key === 'rma' && caseParams.hasRMAs === data.filter) {
+					this.onSubfilterSelect(data.label, filter, false);
+				}
+			}, this, filter);
+		}, this);
 	}
 
 	/**
@@ -366,6 +434,12 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 					_.set(data, 'active', false);
 				}
 			});
+
+			// Get/set values for the filters
+			if (!this.builtFilters) {
+				this.buildFilters();
+				this.builtFilters = true;
+			}
 		}, err => {
 			this.isLoading = false;
 			this.logger.error('resolution.component : Case List - ' +
@@ -374,325 +448,159 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 	}
 
 	/**
-	 * Initializes the visual filters with default values
+	 * Creates the visual filters for the case list.
+	 * @param totalCases The total number of open cases available to the current user
 	 */
 	private buildFilters () {
-		// Initialize filters
-		this.filters = [
-			{
-				key: 'total',
-				loading: true,
-				selected: true,
-				seriesData: [{
-					filter: null,
-					label: null,
-					selected: true,
-					value: 0 }],
-				template: this.totalFilterTemplate,
-				title: I18n.get('_Total_'),
-			},
-			{
-				key: 'status',
-				loading: true,
-				seriesData: defaultStatusFilterData,
-				template: this.pieChartFilterTemplate,
-				title: I18n.get('_Status_'),
-			},
-			{
-				key: 'severity',
-				loading: true,
-				seriesData: defaultSeverityFilterData,
-				template: this.pieChartFilterTemplate,
-				title: I18n.get('_Severity_'),
-			},
-			{
-				key: 'lastUpdated',
-				loading: true,
-				seriesData: defaultLastUpdatedFilterData,
-				template: this.columnChartFilterTemplate,
-				title: I18n.get('_LastUpdated_'),
-			},
-			{
-				key: 'durationOpen',
-				loading: true,
-				seriesData: defaultDurationOpenFilterData,
-				template: this.columnChartFilterTemplate,
-				title: I18n.get('_TotalTimeOpen_'),
-			},
-			{
-				key: 'rma',
-				loading: true,
-				seriesData: defaultRmaFilterData,
-				template: this.barChartFilterTemplate,
-				title: I18n.get('_RMAs_'),
-			},
-		];
-		// Select filters based on query params so they show up
-		// before waiting for all filters to load in
-		_.each(this.filters, filter => {
-			_.each(filter.seriesData, data => {
-				const caseParams = this.caseParams;
-				if (filter.key === 'status' || filter.key === 'severity') {
-					const caseParamsFilter = _.find(caseParams.filter,
-						param => _.includes(param, filter.key));
-					if (_.includes(caseParamsFilter, `:${data.filter}`) ||
-						_.includes(caseParamsFilter, `:O-${data.filter}`) ||
-						_.includes(caseParamsFilter, `,${data.filter}`)) {
-						this.onSubfilterSelect(data.label, filter, false);
-					}
-				} else if (filter.key === 'lastUpdated') {
-					const lastUpdateFilter = _.find(defaultLastUpdatedFilterData,
-						defaultData => defaultData.label === data.label).filter;
-					const lastUpdateFrom = lastUpdateFilter.lastUpdateFrom;
-					const lastUpdateTo = lastUpdateFilter.lastUpdateTo;
-					if (lastUpdateFrom === caseParams.lastUpdateFrom &&
-						lastUpdateTo === caseParams.lastUpdateTo) {
-						this.onSubfilterSelect(data.label, filter, false);
-					}
-				} else if (filter.key === 'durationOpen') {
-					const durationOpenFilter = _.find(defaultDurationOpenFilterData,
-						defaultData => defaultData.label === data.label).filter;
-					const dateCreatedFrom = durationOpenFilter.dateCreatedFrom;
-					const dateCreatedTo = durationOpenFilter.dateCreatedTo;
-					if (dateCreatedFrom === caseParams.dateCreatedFrom &&
-						dateCreatedTo === caseParams.dateCreatedTo) {
-						this.onSubfilterSelect(data.label, filter, false);
-					}
-				} else if (filter.key === 'rma' && caseParams.hasRMAs === data.filter) {
-					this.onSubfilterSelect(data.label, filter, false);
-				}
-			}, this, filter);
-		}, this);
-	}
-
-	/**
-	 * Gets the real values for the visual filters
-	 */
-	private getFilterData () {
-		forkJoin(
-			this.getTotalFilterData(),
-			this.getStatusFilterData(),
-			this.getSeverityFilterData(),
-			this.getLastUpdatedFilterData(),
-			this.getDurationOpenFilterData(),
-			this.getRmaFilterData(),
-		)
-		.subscribe(() => {
-			if (window.Cypress) {
-				window.loading = false;
-			}
-			this.logger.debug('resolution.component : buildFilters() :: Finished Building');
+		// Make requests to get/set values for the filters
+		this.caseService.read({
+			nocache: Date.now(),
+			page: 0,
+			size: 1,
+			sort: 'lastModifiedDate,DESC',
+			statusTypes: 'O',
+		})
+		.subscribe(response => {
+			this.getFilterData(response.totalElements);
+			this.logger.debug('resolution.component : buildFilters() :: Finished building filters');
 		}, err => {
 			if (window.Cypress) {
 				window.loading = false;
 			}
-			this.logger.error('resolution.component : Case List - ' +
+			this.logger.error('resolution.component : buildFilters() - ' +
 								 `:: Error : (${err.status}) ${err.message}`);
 		});
 	}
 
 	/**
-	 * Fetch the number of open cases and displays it in the total filter
-	 * @returns null observable
+	 * Gets and sets the values used to populate the visual filters
+	 * @param totalCases The total number of cases to get
 	 */
-	private getTotalFilterData () {
-		const params = {
-			nocache: Date.now(),
-			page: 0,
-			size: 1,
-			sort: 'caseNumber,ASC',
-			statusTypes: 'O',
-		};
+	private getFilterData (totalCases) {
+		const totalFilter = _.find(this.filters, { key: 'total' });
+		totalFilter.seriesData = [{ value: totalCases }];
 
-		return this.caseService.read(params)
-		.pipe(
-			map(result => {
-				const totalFilter = _.find(this.filters, { key: 'total' });
-				if (result.totalElements) {
-					totalFilter.seriesData = [{ value: result.totalElements }];
-				}
-				totalFilter.loading = false;
-			}),
-			catchError(err => {
-				this.logger.error('resolution.component : buildTotalFilter() ' +
-									`:: Error : (${err.status}) ${err.message}`);
-
-				return of(null);
-			}),
-		);
-	}
-
-	/**
-	 * Fetch the number of open cases and displays it in the total filter
-	 * @returns null observable
-	 */
-	private getStatusFilterData () {
-		const params = {
-			nocache: Date.now(),
-			page: 0,
-			size: 1,
-			sort: 'caseNumber,ASC',
-			statusTypes: 'O',
-		};
-
-		return forkJoin(
-			_.map(defaultStatusFilterData, statusFilter => this.caseService.read(
-				{ ...params, filter: [`status:O-${statusFilter.filter}`] },
-			)),
-		)
-		.pipe(
-			map(responses => this.setFilterSeriesData('status',
-				defaultStatusFilterData, responses)),
-			catchError(err => {
-				this.logger.error('resolution.component : buildStatusFilter() ' +
-									`:: Error : (${err.status}) ${err.message}`);
-
-				return of(null);
-			}),
-		);
-	}
-
-	/**
-	 * Fetch the number of open cases and displays it in the total filter
-	 * @returns null observable
-	 */
-	private getSeverityFilterData () {
-		const params = {
-			nocache: Date.now(),
-			page: 0,
-			size: 1,
-			sort: 'caseNumber,ASC',
-			statusTypes: 'O',
-		};
-
-		return forkJoin(
-			_.map(defaultSeverityFilterData, severityFilter => this.caseService.read(
-				{ ...params, filter: [`severity:${severityFilter.filter}`] },
-			)),
-		)
-		.pipe(
-			map(responses =>
-				this.setFilterSeriesData('severity', defaultSeverityFilterData, responses)),
-			catchError(err => {
-				this.logger.error('resolution.component : buildSeverityFilter() ' +
-									`:: Error : (${err.status}) ${err.message}`);
-
-				return of(null);
-			}),
-		);
-	}
-
-	/**
-	 * Fetch the total number of cases by when they were last updated
-	 * and displays them in the given filter
-	 * @returns null observable
-	 */
-	public getLastUpdatedFilterData () {
-		const params: CaseParams = {
-			nocache: Date.now(),
-			page: 0,
-			size: 1,
-			sort: 'caseNumber,ASC',
-			statusTypes: 'O',
-		};
-
-		return forkJoin(
-			_.map(defaultLastUpdatedFilterData, lastUpdatedFilter => this.caseService.read(
-				{ ...params, ...lastUpdatedFilter.filter },
-			)),
-		)
-		.pipe(
-			map(responses =>
-				this.setFilterSeriesData('lastUpdated', defaultLastUpdatedFilterData, responses)),
-			catchError(err => {
-				this.logger.error('resolution.component : buildLastUpdatedFilter() ' +
-									`:: Error : (${err.status}) ${err.message}`);
-
-				return of(null);
-			}),
-		);
-	}
-
-	/**
-	 * Fetch the total number of cases by duration open and displays them in the given filter
-	 * @returns null observable
-	 */
-	public getDurationOpenFilterData () {
-		const params: CaseParams = {
-			nocache: Date.now(),
-			page: 0,
-			size: 1,
-			sort: 'caseNumber,ASC',
-			statusTypes: 'O',
-		};
-
-		return forkJoin(
-			_.map(defaultDurationOpenFilterData, durationOpenFilter => this.caseService.read(
-				{ ...params, ...durationOpenFilter.filter },
-			)),
-		)
-		.pipe(
-			map(responses =>
-				this.setFilterSeriesData('durationOpen', defaultDurationOpenFilterData, responses)),
-			catchError(err => {
-				this.logger.error('resolution.component : buildDurationOpenFilter() ' +
-									`:: Error : (${err.status}) ${err.message}`);
-
-				return of(null);
-			}),
-		);
-	}
-
-	/**
-	 * Fetch Case/RMA counts and displays them in the given filter
-	 * @returns null observable
-	 */
-	public getRmaFilterData () {
-		const params: CaseParams = {
-			nocache: Date.now(),
-			page: 0,
-			size: 1,
-			sort: 'caseNumber,ASC',
-			statusTypes: 'O',
-		};
-
-		return forkJoin(
-			_.map(defaultRmaFilterData, rmaFilter => this.caseService.read(
-				{ ...params, hasRMAs: rmaFilter.filter },
-			)),
-		)
-		.pipe(
-			map(responses =>
-				this.setFilterSeriesData('rma', defaultRmaFilterData, responses)),
-			catchError(err => {
-				this.logger.error('resolution.component : buildRmaFilter() ' +
-									`:: Error : (${err.status}) ${err.message}`);
-
-				return of(null);
-			}),
-		);
-	}
-
-	/**
-	 * Sets the series data for the filter matching the given key
-	 * with the given information from the response
-	 * @param key Name of the filter to set data for
-	 * @param defaultData Array of default data for the filter
-	 * @param responses Responses from the Case API for each filter
-	 */
-	private setFilterSeriesData (key: string, defaultData, responses) {
-		const filter = _.find(this.filters, { key });
-		filter.seriesData = _.map(responses, (response, index) => ({
-			...defaultData[index],
-			selected: _.get(
-				_.find(filter.seriesData, data => data.label === defaultData[index].label),
-				'selected', false),
-			value: response.totalElements,
-		}), filter);
-		if (key === 'status' || key === 'severity') {
-			_.remove(filter.seriesData, data => !data.value);
+		const requestParamSet = [];
+		let currentPage = 0;
+		let casesRemaining = totalCases;
+		while (casesRemaining > 0) {
+			requestParamSet.push({
+				fields: 'createdDate,lastModifiedDate,priority,rmaNumber,status',
+				page: currentPage,
+				size: environment.csone.maxCasesPerRequest,
+				statusTypes: 'O',
+			});
+			currentPage += 1;
+			casesRemaining -= environment.csone.maxCasesPerRequest;
 		}
-		filter.loading = false;
+
+		forkJoin(
+			_.map(requestParamSet, params => this.caseService.read(params)),
+		)
+		.subscribe(responses => {
+			const cases = _.flatMap(responses, response => _.get(response, 'content', []));
+			// Get all of the filters and reset their data
+			const statusFilter = _.find(this.filters, { key: 'status' });
+			const severityFilter = _.find(this.filters, { key: 'severity' });
+			const lastUpdateFilter = _.find(this.filters, { key: 'lastUpdated' });
+			const durationOpenFilter = _.find(this.filters, { key: 'durationOpen' });
+			const rmaFilter = _.find(this.filters, { key: 'rma' });
+			_.each(this.filters, filter => {
+				if (filter.key !== 'total') {
+					_.each(filter.seriesData, data => data.value = 0);
+				}
+			});
+
+			// Iterate through cases to sum values for all subfilters
+			_.each(cases, caseFields => {
+				// Status (dynamic so we don't have to maintain a list of possible statuses)
+				const statusSubfilter = _.find(statusFilter.seriesData,
+					{ filter: caseFields.status });
+				if (!statusSubfilter) {
+					statusFilter.seriesData.push({
+						filter: caseFields.status,
+						label: caseFields.status,
+						selected: false,
+						value: 1,
+					});
+				} else {
+					statusSubfilter.value += 1;
+				}
+				// Severity
+				const severitySubfilter = _.find(severityFilter.seriesData,
+					{ filter: caseFields.priority });
+				if (!severitySubfilter) {
+					severityFilter.seriesData.push({
+						filter: caseFields.priority,
+						label: `S${caseFields.priority}`,
+						selected: false,
+						value: 1,
+					});
+				} else {
+					severitySubfilter.value += 1;
+				}
+				// Last Updated
+				const lastUpdate = DateTime.fromISO(caseFields.lastModifiedDate);
+				const lastUpdateSubfilter = _.find(lastUpdateFilter.seriesData, seriesData => {
+					const filterLastUpdateFrom = DateTime.fromISO(seriesData.filter.lastUpdateFrom);
+					const filterLastUpdateTo = DateTime.fromISO(seriesData.filter.lastUpdateTo);
+					if ((filterLastUpdateFrom && lastUpdate <= filterLastUpdateFrom) ||
+						(filterLastUpdateTo && lastUpdate > filterLastUpdateTo)) {
+						return false;
+					}
+
+					return true;
+				});
+				lastUpdateSubfilter.value += 1;
+				// Duration Open
+				const durationOpen = DateTime.fromISO(caseFields.createdDate);
+				const durationOpenSubfilter = _.find(durationOpenFilter.seriesData, seriesData => {
+					const filterOpenFrom = DateTime.fromISO(seriesData.filter.dateCreatedFrom);
+					const filterOpenTo = DateTime.fromISO(seriesData.filter.dateCreatedTo);
+					if ((filterOpenFrom && durationOpen <= filterOpenFrom) ||
+						(filterOpenTo && durationOpen > filterOpenTo)) {
+						return false;
+					}
+
+					return true;
+				});
+				durationOpenSubfilter.value += 1;
+				// RMA
+				const rmaSubfilter = _.find(rmaFilter.seriesData,
+					seriesData => caseFields.rmaNumber ?
+					seriesData.filter === 'T' : seriesData.filter === 'F');
+				rmaSubfilter.value += 1;
+			});
+
+			// Order severities (S1, S2, S3, S4)
+			severityFilter.seriesData = _.sortBy(severityFilter.seriesData,
+				seriesData => seriesData.filter);
+
+			// Finish loading and save data in localStorage
+			const caseFilterData = { };
+			_.each(this.filters, filter => {
+				if (_.includes(['status', 'severity'], filter.key)) {
+					// Don't include status or severities in pie charts with no associated cases
+					_.pick(filter.seriesData, data => data.value);
+				}
+				_.set(filter, 'seriesData', [...filter.seriesData]);
+				_.set(filter, 'loading', false);
+				caseFilterData[filter.key] = filter.seriesData.map(data =>
+					_.pick(data, ['barLabel', 'filter', 'label', 'value']));
+			});
+			localStorage.setItem('caseFilterData', JSON.stringify(caseFilterData));
+
+			if (window.Cypress) {
+				window.loading = false;
+			}
+			this.logger.debug('resolution.component : getFilterData() :: Finished getting data');
+		}, err => {
+			if (window.Cypress) {
+				window.loading = false;
+			}
+			this.logger.error('resolution.component : getFilterData() - ' +
+								 `:: Error : (${err.status}) ${err.message}`);
+		});
 	}
 
 	/**
@@ -761,7 +669,41 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 	 * @returns Observable with response data.
 	 */
 	public getCaseList (): Observable<any> {
-		return this.caseService.read(this.caseParams);
+		const requestParams = this.withISODates(this.caseParams);
+
+		return this.caseService.read(requestParams);
+	}
+
+	/**
+	 * Returns the given param set with the lastUpdate/dateCreated fields set to ISO dates.
+	 * Necessary to convert from query parameter labels to values that CSOne can parse.
+	 * @param params Parameter set to modify.
+	 * @returns The modified parameter set.
+	 */
+	private withISODates (params) {
+		const newParams = _.clone(params);
+		if (newParams.lastUpdateFrom) {
+			newParams.lastUpdateFrom = newParams.lastUpdateFrom
+			.toUTC()
+			.toISO();
+		}
+		if (newParams.lastUpdateTo) {
+			newParams.lastUpdateTo = newParams.lastUpdateTo
+			.toUTC()
+			.toISO();
+		}
+		if (newParams.dateCreatedFrom) {
+			newParams.dateCreatedFrom = newParams.dateCreatedFrom
+			.toUTC()
+			.toISO();
+		}
+		if (newParams.dateCreatedTo) {
+			newParams.dateCreatedTo = newParams.dateCreatedTo
+			.toUTC()
+			.toISO();
+		}
+
+		return newParams;
 	}
 
 	/**
@@ -825,8 +767,8 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 		_.each(this.filters, (filter: VisualFilter) => {
 			filter.selected = false;
 			_.set(this.caseParams, 'filter', []);
-			_.each(otherFilters, otherFilter => {
-				_.set(this.caseParams, otherFilter, null);
+			_.each(altFilters, altFilter => {
+				_.set(this.caseParams, altFilter, null);
 			});
 			_.each(filter.seriesData, f => {
 				f.selected = false;
@@ -876,8 +818,8 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 			}
 		} else if (key === 'lastUpdated') {
 			if (sub.selected) {
-				this.caseParams.lastUpdateFrom = sub.filter.lastUpdateFrom;
-				this.caseParams.lastUpdateTo = sub.filter.lastUpdateTo;
+				this.caseParams.lastUpdateFrom = DateTime.fromISO(sub.filter.lastUpdateFrom);
+				this.caseParams.lastUpdateTo = DateTime.fromISO(sub.filter.lastUpdateTo);
 			} else {
 				delete(this.caseParams.lastUpdateFrom);
 				delete(this.caseParams.lastUpdateTo);
@@ -889,8 +831,8 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 			});
 		}  else if (key === 'durationOpen') {
 			if (sub.selected) {
-				this.caseParams.dateCreatedFrom = sub.filter.dateCreatedFrom;
-				this.caseParams.dateCreatedTo = sub.filter.dateCreatedTo;
+				this.caseParams.dateCreatedFrom = DateTime.fromISO(sub.filter.dateCreatedFrom);
+				this.caseParams.dateCreatedTo = DateTime.fromISO(sub.filter.dateCreatedTo);
 			} else {
 				delete(this.caseParams.dateCreatedFrom);
 				delete(this.caseParams.dateCreatedTo);

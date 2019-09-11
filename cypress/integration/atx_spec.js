@@ -4,6 +4,7 @@ const atxMock = new MockService('ATXScenarios');
 const atxOnboardScenario = atxMock.getScenario('GET', '(ATX) IBN-Campus Network Assurance-Onboard');
 const atxItems = atxOnboardScenario.response.body.items;
 const visibleATXItems = atxItems.slice(0, 3);
+const moreListItems = visibleATXItems.slice(1, 3);
 const invisibleATXItems = atxItems.slice(3);
 const firstATXSessions = atxItems[0].sessions;
 
@@ -622,9 +623,9 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 					cy.getByAutoId('ATX-Title').should('have.text', item.title);
 					// Handle bookmark
 					if (item.bookmark) {
-						cy.getByAutoId('SBListRibbon').should('have.class', 'text-indigo');
+						cy.getByAutoId('SBListRibbon').should('have.class', 'icon-bookmark--on');
 					} else {
-						cy.getByAutoId('SBListRibbon').should('have.class', 'icon-bookmark-clear');
+						cy.getByAutoId('SBListRibbon').should('have.class', 'icon-bookmark--off');
 					}
 					// Handle status
 					switch (item.status) {
@@ -700,9 +701,9 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 							// Only check the field we've sorted by, since the sorting of items that have the
 							// same value depends on previous sorts
 							if (item.bookmark) {
-								cy.getByAutoId('SBListRibbon').should('have.class', 'text-indigo');
+								cy.getByAutoId('SBListRibbon').should('have.class', 'icon-bookmark--on');
 							} else {
-								cy.getByAutoId('SBListRibbon').should('have.class', 'icon-bookmark-clear');
+								cy.getByAutoId('SBListRibbon').should('have.class', 'icon-bookmark--off');
 							}
 						});
 					});
@@ -716,9 +717,9 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 							// Only check the field we've sorted by, since the sorting of items that have the
 							// same value depends on previous sorts
 							if (item.bookmark) {
-								cy.getByAutoId('SBListRibbon').should('have.class', 'text-indigo');
+								cy.getByAutoId('SBListRibbon').should('have.class', 'icon-bookmark--on');
 							} else {
-								cy.getByAutoId('SBListRibbon').should('have.class', 'icon-bookmark-clear');
+								cy.getByAutoId('SBListRibbon').should('have.class', 'icon-bookmark--off');
 							}
 						});
 					});
@@ -911,18 +912,18 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 				cy.get('tr').eq(index + 1).within(() => {
 					if (item.bookmark) {
 						cy.getByAutoId('SBListRibbon')
-							.should('have.class', 'text-indigo')
+							.should('have.class', 'icon-bookmark--on')
 							.click();
-						cy.wait('(SB) IBN-Bookmark');
+						cy.wait('(Lifecycle) IBN-Bookmark');
 						cy.getByAutoId('SBListRibbon')
-							.should('have.class', 'icon-bookmark-clear');
+							.should('have.class', 'icon-bookmark--off');
 					} else {
 						cy.getByAutoId('SBListRibbon')
-							.should('have.class', 'icon-bookmark-clear')
+							.should('have.class', 'icon-bookmark--off')
 							.click();
-						cy.wait('(SB) IBN-Bookmark');
+						cy.wait('(Lifecycle) IBN-Bookmark');
 						cy.getByAutoId('SBListRibbon')
-							.should('have.class', 'text-indigo');
+							.should('have.class', 'icon-bookmark--on');
 					}
 				});
 			});
@@ -1389,14 +1390,20 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 
 		describe('PBC-619: ATX Cancel UI', () => {
 			it('ATX (Lifecycle Page) View Sessions modal should include cancel button', () => {
-				// Cancel button should be present, but disabled by default
+				// PBC-746 - Cancel button should be hidden by default
 				cy.getByAutoId('recommendedATXScheduleButton').click();
 				cy.getByAutoId('atxScheduleCard')
 					.should('be.visible')
 					.within(() => {
+						// Button is initially hidden
+						cy.getByAutoId('AtxScheduleCardCancelButton')
+							.should('not.exist');
+
+						// Click the scheduled session, now the button should show up enabled
+						cy.getByAutoId('SelectSession-Session1').click();
 						cy.getByAutoId('AtxScheduleCardCancelButton')
 							.should('exist')
-							.and('have.attr', 'disabled');
+							.and('not.have.attr', 'disabled');
 					});
 
 				// Close the View Sessions modal
@@ -1410,17 +1417,23 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 				cy.getByAutoId('ViewAllModal').should('be.visible');
 				cy.getByAutoId('card-view-btn').click();
 
-				// Cancel button should be present, but disabled by default
-				cy.getByAutoId('ATXCard').each($card => {
+				// PBC-746 - Cancel button should be hidden by default
+				cy.getByAutoId('ATXCard').each(($card, index) => {
 					cy.wrap($card).within(() => {
 						cy.getByAutoId('cardRecommendedATXScheduleButton').click();
 					});
 					cy.getByAutoId('atxScheduleCard')
 						.should('be.visible')
 						.within(() => {
+							// Button is initially hidden
+							cy.getByAutoId('AtxScheduleCardCancelButton')
+								.should('not.exist');
+
+							// Click the scheduled session, now the button should show up enabled
+							cy.getByAutoId(`SelectSession-Session${index + 1}`).click();
 							cy.getByAutoId('AtxScheduleCardCancelButton')
 								.should('exist')
-								.and('have.attr', 'disabled');
+								.and('not.have.attr', 'disabled');
 						});
 
 					// Close the View Sessions modal
@@ -1439,7 +1452,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 				cy.getByAutoId('ViewAllModal').should('be.visible');
 				cy.getByAutoId('table-view-btn').click();
 
-				// Cancel button should be present, but disabled by default
+				// PBC-746 - Cancel button should be hidden by default
 				cy.get('tr').each(($row, index) => {
 					// Skip the first tr, as those are the column headers
 					if (index !== 0) {
@@ -1449,9 +1462,15 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 						cy.getByAutoId('atxScheduleCard')
 							.should('be.visible')
 							.within(() => {
+								// Button is initially hidden
+								cy.getByAutoId('AtxScheduleCardCancelButton')
+									.should('not.exist');
+
+								// Click the scheduled session, now the button should show up enabled
+								cy.getByAutoId(`SelectSession-Session${index}`).click();
 								cy.getByAutoId('AtxScheduleCardCancelButton')
 									.should('exist')
-									.and('have.attr', 'disabled');
+									.and('not.have.attr', 'disabled');
 							});
 
 						// Close the View Sessions modal
@@ -1568,6 +1587,185 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 				cy.getByAutoId('card-view-btn').click();
 				cy.getByAutoId('SuccessPathCloseModal').click();
 				cy.getByAutoId('ViewAllModal').should('not.exist');
+			});
+		});
+	});
+
+	describe('PBC-663: (UI) View - ATX More List Click Modal', () => {
+		it('Clicking a More list ATX should display the item details', () => {
+			moreListItems.forEach((item, index) => {
+				// Click on the more list item, verify the modal has details
+				cy.getByAutoId('ATXMoreClick')
+					.eq(index)
+					.click();
+
+				cy.getByAutoId('atxMoreClickModal')
+					.should('be.visible')
+					.within(() => {
+						cy.getByAutoId('atxMoreClickModal-Title')
+							.should('have.text', item.title)
+							.parent()
+							.should('have.class', 'title-line-clamp');
+						cy.getByAutoId('atxMoreClickModal-Description')
+							.should('have.text', item.description)
+							.and('have.class', 'line-clamp');
+						cy.getByAutoId('MoreATXViewSessions').should('be.visible');
+						cy.getByAutoId(`MoreATXWatchNow-${item.recordingURL}`).should('be.visible');
+
+						// Handle bookmark
+						if (item.bookmark) {
+							cy.getByAutoId('ATXMoreRibbon').should('have.class', 'ribbon__blue');
+						} else {
+							cy.getByAutoId('ATXMoreRibbon').should('have.class', 'ribbon__white__atx');
+						}
+					});
+
+				// Close the click modal
+				cy.getByAutoId('closeMoreATXClickModal').click();
+				cy.getByAutoId('atxMoreClickModal').should('not.exist');
+			});
+		});
+
+		it('Verify More List click modal View Sessions button', () => {
+			moreListItems.forEach((item, index) => {
+				cy.getByAutoId('ATXMoreClick')
+					.eq(index)
+					.click();
+
+				cy.getByAutoId('atxMoreClickModal')
+					.should('be.visible')
+					.within(() => {
+						// Clicking the View Sessions button will close the click modal, and open the
+						// session modal
+						cy.getByAutoId('MoreATXViewSessions')
+							.should('be.visible')
+							.click();
+					});
+
+				cy.getByAutoId('atxMoreClickModal').should('not.exist');
+				cy.getByAutoId('atxScheduleCard')
+					.should('be.visible')
+					.within(() => {
+						// The schedule card is generic across all ways of opening, so no need to automate
+						// session scheduling, just verify the modal opens for the correct session
+						cy.getByAutoId('atxScheduleCard-Title').should('have.text', item.title);
+						cy.getByAutoId('AtxScheduleCardRegisterButton').should('be.visible');
+						item.sessions.forEach(session => {
+							cy.getByAutoId(`SelectSession-${session.sessionId}`)
+								.should('be.visible');
+						});
+					});
+
+				// Close the View Sessions modal
+				cy.getByAutoId('AtxScheduleCardClose').click();
+				cy.getByAutoId('atxScheduleCard').should('not.exist');
+			});
+		});
+
+		it('Verify More List click modal Watch Now button', () => {
+			moreListItems.forEach((item, index) => {
+				cy.getByAutoId('ATXMoreClick')
+					.eq(index)
+					.click();
+
+				cy.getByAutoId('atxMoreClickModal')
+					.should('be.visible')
+					.within(() => {
+						// Clicking the Watch Now bbutton will close the atxMoreClickModal, and
+						// cross-launch to new tab. Note, Cypress can't see other tabs, so just
+						// check that the modal closed
+						cy.getByAutoId(`MoreATXWatchNow-${item.recordingURL}`)
+							.should('be.visible')
+							.click();
+					});
+
+				// Verify the modal closed
+				cy.getByAutoId('atxMoreClickModal').should('not.exist');
+			});
+		});
+	});
+
+	describe('ATX Watch Now button should be disabled when recordingURL missing/empty/null', () => {
+		after(() => {
+			// Switch back to the default mock data
+			atxMock.enable('(ATX) IBN-Campus Network Assurance-Onboard');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard');
+		});
+
+		const mockScenarios = [
+			'(ATX) IBN-Campus Network Assurance-Onboard-emptyRecordingUrl',
+			'(ATX) IBN-Campus Network Assurance-Onboard-missingRecordingUrl',
+			'(ATX) IBN-Campus Network Assurance-Onboard-nullRecordingUrl',
+		];
+		mockScenarios.forEach(mockScenario => {
+			describe(`Mock Scenario: ${mockScenario}`, () => {
+				before(() => {
+					// Switch to the desired mock data
+					atxMock.enable(mockScenario);
+
+					// Refresh the data
+					cy.getByAutoId('Facet-Assets & Coverage').click();
+					cy.getByAutoId('Facet-Lifecycle').click();
+					cy.wait(mockScenario);
+				});
+
+				it('Verify "Watch Now" button is disabled in main tile', () => {
+					cy.getByAutoId('recommendedATXWatchButton')
+						.should('exist')
+						.and('have.class', 'disabled');
+				});
+
+				it('Verify "Watch Now" button is disabled in click modal', () => {
+					cy.getByAutoId('Ask The Experts Panel').within(() => {
+						cy.getByAutoId('ATXMoreClick').click();
+					});
+					cy.getByAutoId('atxMoreClickModal').within(() => {
+						cy.getByAutoId('MoreATXWatchNow-')
+							.should('exist')
+							.and('have.class', 'disabled');
+					});
+
+					// Close the click modal
+					cy.getByAutoId('closeMoreATXClickModal').click();
+				});
+
+				it('Verify "Watch Now" button is disabled in View All card view', () => {
+					cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
+					cy.getByAutoId('card-view-btn').click();
+					cy.getByAutoId('ATXCard').each($card => {
+						cy.wrap($card).within(() => {
+							cy.getByAutoId('CardATXWatchNow-')
+								.should('exist')
+								.and('have.class', 'disabled');
+						});
+					});
+
+					// Close the View All modal
+					cy.getByAutoId('SuccessPathCloseModal').click();
+				});
+
+				it('Verify "Watch Now" button is disabled in View All table view', () => {
+					cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
+					cy.getByAutoId('table-view-btn').click();
+					cy.get('tr').each(($row, index) => {
+						// Ingore the first tr, since this holds our table headers
+						if (index !== 0) {
+							cy.wrap($row).within(() => {
+								cy.getByAutoId('ListATXWatchNow-')
+									.should('exist')
+									.and('have.class', 'disabled');
+							});
+						}
+					});
+
+					// Switch back to card view, and close the View All modal
+					cy.getByAutoId('card-view-btn').click();
+					cy.getByAutoId('SuccessPathCloseModal').click();
+				});
 			});
 		});
 	});

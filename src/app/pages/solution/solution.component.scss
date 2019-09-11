@@ -1,10 +1,314 @@
-@import '~cisco-ui/src/scss/utilities/_variables.scss';
+@import '../../../variables.scss';
+
+$cx-accent-color-1: #00bceb;
+$cx-gray-color-2: #b3b3b3;
+$cx-gray-color-4: #595b61;
+$cx-hover-color: rgba(221, 221, 221, 0.3);
+$cx-font-size-12: 12px;
+$cx-font-size-16: 16px;
+$cx-font-size-18: 18px;
+$cx-font-size-24: 24px;
+
+.cx-breadcrumb-bar {
+	background-color: #fff;
+}
+
+.km {
+	display: grid;
+	margin: 0;
+	grid-template-columns: auto auto auto;
+	justify-content: center;
+	background-color: #fff;
+	grid-template-rows: max-content;
+}
+
+%km__nav-btn {
+	display: flex;
+	height: 100%;
+	max-height: 146px;
+	width: 55px;
+	padding: 0 20px;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+
+	::ng-deep svg {
+		width: 55px;
+		height: auto;
+
+		g {
+			opacity: 1;
+		}
+
+		polygon {
+			fill: #d8d8d8;
+			opacity: 1;
+		}
+	}
+}
+
+.km__left {
+	@extend %km__nav-btn;
+}
+
+.km__right {
+	@extend %km__nav-btn;
+}
+
+.km__items__wrapper {
+	flex-shrink: 1;
+	padding: 0 2rem;
+	overflow: hidden;
+	scroll-behavior: smooth;
+}
+
+.km__items {
+	justify-content: center;
+	display: inline-flex;
+}
+
+.km__items__item {
+	display: flex;
+	flex-flow: column nowrap;
+	position: relative;
+	width: 312px;
+	height: 146px;
+	border-left: 1px solid #c2c2c2;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+
+	&:last-child {
+		border-right: 1px solid #c2c2c2;
+	}
+
+	&--selected {
+		box-shadow: 0 10px 17px 0 rgba(0, 0, 0, 0.2);
+		clip-path: polygon(-20% 0%, 120% 0%, 120% 120%, -20% 120%);
+
+		p {
+			color: $accent-color1;
+		}
+	}
+}
+
+.km__items__item__label {
+	margin: 0;
+	color: $default-text-color;
+	font-size: 14px;
+	font-weight: normal;
+	text-transform: uppercase;
+}
+
+.kmii__border {
+	width: 100%;
+	height: 4px;
+	background: transparent;
+	position: absolute;
+	bottom: 0;
+
+	&--selected {
+		border-bottom: 4px solid $accent-color1;
+	}
+}
+
+.kmii__detailed {
+	height: 101px;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
+
+.kmii__insights {
+	display: flex;
+	height: 100%;
+	width: 100%;
+	align-items: center;
+	justify-content: center;
+}
+
+.kmii__insights__num {
+	margin-right: 5px;
+	color: $black-text-color;
+	font-size: 46px;
+	font-weight: 300;
+
+	&--selected {
+		color: $accent-color1;
+	}
+}
+
+.kmii__insights__title {
+	margin-right: 20px;
+	color: $gray-text-color;
+	font-size: 14px;
+}
+
+.kmii__insights__change {
+	color: $gray-text-color;
+	font-size: 16px;
+	text-align: center;
+}
+
+.kmii__insights__arrow {
+	height: 22px;
+	width: 22px;
+	padding-left: 2px;
+
+	::ng-deep svg {
+		height: 22px;
+		width: 22px;
+		transform: rotate(180deg);
+
+		polygon {
+			fill: $accent-color2;
+		}
+	}
+}
+
+.kmii__resolution__item {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+}
+
+.kmii__resolution__label {
+	font-size: 10px;
+	line-height: 12px;
+	color: $gray-text-color;
+	width: 20px;
+	margin-right: 10px;
+
+	&--selected {
+		color: $accent-color1;
+	}
+}
+
+.kmii_resolution__value {
+	color: $black-text-color;
+	font-size: 26px;
+	font-weight: 200;
+	line-height: 12px;
+
+	&--selected {
+		color: $accent-color1;
+	}
+}
+
+/* Context Selector styling start */
+
+.cs {
+	display: flex;
+	align-items: center;
+	padding: 20px;
+
+	&__home {
+		width: 26px;
+		height: 25px;
+		display: flex;
+		align-items: center;
+
+		::ng-deep svg {
+			width: 26px;
+			height: 25px;
+		}
+	}
+
+	&__next-icon {
+		width: 10.86px;
+		height: 30px;
+		margin: 0 20px;
+
+		::ng-deep {
+			svg {
+				height: 25px;
+
+				polygon {
+					fill: rgba(#232323, 0.22);
+				}
+			}
+		}
+	}
+
+	&__context {
+		position: relative;
+		margin-left: 15px;
+		margin-right: 35px;
+	}
+
+	&__context__label {
+		color: $gray-text-color;
+		font-size: 12px;
+		line-height: 14px;
+		text-transform: uppercase;
+	}
+
+	.group-label {
+		color: $cx-gray-color-2;
+		font-size: $cx-font-size-12;
+		text-transform: uppercase;
+	}
+
+	.dropdown {
+		> a {
+			color: $cx-gray-color-4;
+			font-size: $cx-font-size-18;
+
+			&::after {
+				content: "\25be";
+				font-size: $cx-font-size-24;
+				top: -4px;
+				transition: none;
+			}
+
+			&:hover,
+			&:active,
+			&:focus {
+				color: $cx-accent-color-1;
+			}
+		}
+
+		&.active {
+			> a::after {
+				top: 4px;
+			}
+		}
+
+		.dropdown__menu a {
+			border: 0 none;
+			padding: 10px 20px 10px 40px;
+			height: unset;
+			line-height: unset;
+			font-size: $cx-font-size-16;
+
+			&.selected {
+				background-color: transparent;
+				color: $cx-accent-color-1 !important; // Required to override cui color
+
+				&::after {
+					font-size: $cx-font-size-18;
+					left: 10px;
+					right: unset;
+				}
+			}
+
+			&:hover {
+				background-color: $cx-hover-color;
+			}
+		}
+	}
+}
+
+/* Context Selector styling end */
 
 .content {
 	display: block;
-	width: 85%;
 	margin-left: auto;
 	margin-right: auto;
+	padding: 10px 10px 50px;
+	overflow-y: hidden;
 }
 
 .icon--mid {
@@ -45,11 +349,12 @@
 
 #slideout {
 	position: absolute;
-	top: 15px;
+	top: 73px;
 	width: 120px;
 	right: -75px;
 	cursor: pointer;
 	transition-duration: 0.5s;
+	z-index: 100;
 }
 
 #slideout.expand-on-load,
@@ -66,6 +371,7 @@
 /* CiscoUI table styling override start */
 // Chose to use specificity instead of importants
 :host ::ng-deep .table {
+	cursor: pointer;
 	border: none;
 	border-spacing: 2px;
 	border-collapse: collapse;
@@ -73,8 +379,8 @@
 	color: #6c757d;
 
 	thead::after {
+		content: "";
 		border-bottom: 1px solid #e4e4e4;
-		content: '';
 		display: block;
 		position: absolute;
 		left: 12px;
@@ -99,8 +405,8 @@
 		height: 42px;
 
 		&::after {
+			content: "";
 			border-bottom: 1px solid #e4e4e4;
-			content: '';
 			display: block;
 			position: absolute;
 			left: 12px;
@@ -134,3 +440,21 @@
 }
 
 /* CiscoUI table styling override end */
+
+:host ::ng-deep .filter-bar {
+	&__title {
+		font-size: 14px;
+		line-height: 16px;
+	}
+
+	&__item {
+		background: #6a80a5;
+		border-radius: 4px;
+		font-size: 14px;
+		line-height: 16px;
+	}
+
+	&__clear {
+		font-size: 12px;
+	}
+}

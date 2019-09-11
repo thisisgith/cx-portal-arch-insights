@@ -1,0 +1,31 @@
+<div class="container">
+	<h1
+		class="dbl-margin-bottom"
+		[innerText]="'_HelpSettingUpCXPortal_' | i18n"
+	></h1>
+	<div class="row text-large">
+		<div class="col-8">
+			<div class="dbl-margin-bottom">
+				<h4 class="half-margin-bottom" [innerText]="'_SupportGuides_' | i18n"></h4>
+				<a
+					[href]="env.ieSetup.cxCollectorUserGuideLink"
+					[innerText]="'_CXCollectorUserGuide_' | i18n"
+					target="_blank"
+				></a>
+			</div>
+		</div>
+		<div class="col-4">
+			<h4 class="half-margin-bottom" [innerText]="'_GetSupport_' | i18n"></h4>
+			<div
+				class="half-margin-bottom"
+				[innerText]="'_OpenACaseToGetHelpFromOurEngineers_' | i18n"
+			></div>
+			<a
+				data-auto-id="contact-support-link"
+				[innerText]="'_ContactSupport_' | i18n"
+				(click)="openContactSupport()"
+			></a>
+		</div>
+	</div>
+</div>
+<cui-modal></cui-modal>

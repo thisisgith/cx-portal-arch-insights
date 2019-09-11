@@ -5,6 +5,10 @@ import {
 	AssetRecommendationsResponse,
 	AssetsResponse,
 	SummaryResponse,
+	SoftwareGroupAssetsResponse,
+	SoftwareGroupVersionsResponse,
+	MachineRecommendationsResponse,
+	ProfileRecommendationsResponse,
 } from '@sdp-api';
 
 /** Base of URL for SDP API */
@@ -23,17 +27,24 @@ const pf = 'Cisco_5500';
 const assetId = '7293498_NA';
 
 /** softwareVersion Params */
-const svParams = '&pageIndex=1&pageSize=10&sort=swVersion&sortOrder=asc';
+const svParams = '&pageIndex=1&pageSize=10&sort=swType&sortOrder=asc';
 
 /** AssetList params */
 const assetParams = '&pageIndex=1&pageSize=10&sort=hostName&sortOrder=asc&filter=';
 
-/** Asset Details Params */
-const assetDetailsParams = `&id=${assetId}&pid=${pid}&pf=${pf}&swType=IOS&swVersions=8&image=NA`;
+/** Software Group Params */
+const sgParams = '&pageIndex=1&pageSize=10&sort=profileName&sortOrder=asc&filter=';
+
+/** SoftwareGroup Assets */
+const sgAssetsParams = '&pageIndex=1&pageSize=10&sort=hostName&sortOrder=asc';
+
+/** SoftwareGroup Versions */
+const sgVerParams = '&pageIndex=1&pageSize=10&sort=swType&sortOrder=asc';
 
 /** The mock response for basic recommendations */
 const mockBasicRecommendations: AssetRecommendationsResponse = [
 	{
+		accepted: true,
 		error: null,
 		name: 'suggested',
 		postDate: '2019-05-16T00:00:00.000+0000',
@@ -64,6 +75,172 @@ const mockBasicRecommendations: AssetRecommendationsResponse = [
 		swVersion: '15.3(3)M3',
 	},
 ];
+
+/** The mock response for machine recommendations */
+const mockMachineRecommendations: MachineRecommendationsResponse = [
+	{
+		bugFixed: 13,
+		bugs: [],
+		bugSeverity: {
+			OPEN: {
+				H: 0,
+				M: 0,
+				L: 1,
+			},
+			NEW_OPEN: {
+				H: 0,
+				M: 0,
+				L: 1,
+			},
+			RESOLVED: {
+				H: 2,
+				M: 0,
+				L: 0,
+			},
+		},
+		name: 'Recommendation #1',
+		osType: 'NX-OS',
+		psirts: [],
+		psirtFixed: 32,
+		psirtSeverity: {
+			OPEN: {
+				H: 0,
+				M: 0,
+				L: 1,
+			},
+			NEW_OPEN: {
+				H: 0,
+				M: 0,
+				L: 1,
+			},
+		},
+		release: '7.3(2)N1(1b)',
+		score: 640,
+	},
+	{
+		bugFixed: 12,
+		bugs: [],
+		bugSeverity: {
+			OPEN: {
+				H: 0,
+				M: 0,
+				L: 2,
+			},
+		},
+		name: 'Recommendation #2',
+		osType: 'NX-OS',
+		psirts: [],
+		psirtFixed: 32,
+		psirtSeverity: {
+			OPEN: {
+				H: 0,
+				M: 0,
+				L: 1,
+			},
+		},
+		release: '7.3(2)N1(1c)',
+		score: 640,
+	},
+	{
+		bugFixed: 11,
+		bugs: [],
+		bugSeverity: {
+			OPEN: {
+				H: 0,
+				M: 0,
+				L: 1,
+			},
+		},
+		name: 'Recommendation #3',
+		osType: 'NX-OS',
+		psirts: [],
+		psirtFixed: 32,
+		psirtSeverity: {
+			OPEN: {
+				H: 0,
+				M: 0,
+				L: 1,
+			},
+		},
+		release: '7.3(4)N1(1)',
+		score: 640,
+	}
+	,
+	{
+		bugFixed: 11,
+		bugs: [],
+		bugSeverity: {
+			OPEN: {
+				H: 0,
+				M: 0,
+				L: 1,
+			},
+		},
+		name: 'profile current',
+		osType: 'NX-OS',
+		psirts: [],
+		psirtFixed: 32,
+		psirtSeverity: {
+			OPEN: {
+				H: 0,
+				M: 0,
+				L: 1,
+			},
+		},
+		release: '7.3(4)N1(1)',
+		score: 640,
+	},
+];
+
+/** The mock response for basic recommendations */
+const mockSoftwareGroupRecommendations: ProfileRecommendationsResponse = {
+	recommendations: [
+		{
+			accepted: true,
+			error: null,
+			name: 'suggested',
+			postDate: '2019-05-16T00:00:00.000+0000',
+			swVersion: '15.7(3)M4b',
+		},
+		{
+			error: null,
+			name: 'latest',
+			postDate: '2019-05-16T00:00:00.000+0000',
+			swVersion: '15.7(3)M4b',
+		},
+		{
+			error: null,
+			name: 'minimum',
+			postDate: null,
+			swVersion: 'NA',
+		},
+		{
+			error: null,
+			name: 'golden',
+			postDate: '2019-04-16T00:00:00.000+0000',
+			swVersion: 'NA',
+		},
+		{
+			error: null,
+			name: 'Recommendation #3',
+			postDate: '2019-04-16T00:00:00.000+0000',
+			swVersion: '7.3(2)N1(1a)',
+		},
+		{
+			error: null,
+			name: 'Recommendation #2',
+			postDate: '2019-04-16T00:00:00.000+0000',
+			swVersion: '7.3(2)N1(1b)',
+		},
+		{
+			error: null,
+			name: 'Recommendation #1',
+			postDate: '2019-04-16T00:00:00.000+0000',
+			swVersion: '7.3(2)N1(1c)',
+		},
+	],
+	recommendationSummaries: mockMachineRecommendations,
+};
 
 /** The mock response for software versions */
 const mockSoftwareVersions: SoftwareVersionsResponse = {
@@ -205,6 +382,7 @@ const mockSoftwareGroups: SoftwareGroupsResponse = {
 	uiProfileList: [
 		{
 			assetCount: 1,
+			currentOSVersion: '2',
 			customerId: 231215372,
 			id: 'Prfoile_231215372_73-14312-05, 73-14312-05, 73-14312-05',
 			optimalVersion: null,
@@ -212,6 +390,7 @@ const mockSoftwareGroups: SoftwareGroupsResponse = {
 			productId: '73-14312-05, 73-14312-05, 73-14312-05',
 			profileName: '73-14312-05, 73-14312-05, 73-14312-05',
 			recommendation: null,
+			recommAcceptedDate: '2014-05-30T00:00:00.000+0000',
 			swType: 'IOS-XE',
 			swVersions: [
 				'16.8.1a',
@@ -356,7 +535,7 @@ const mockAssets: AssetsResponse = {
 		{
 			alert: 'NA',
 			customerId: 7293498,
-			deployment: 'None',
+			deploymentStatus: 'None',
 			hostName: '5520-1',
 			id: '7293498_NA,FCH2139V1B0,AIR-CT5520-K9,NA_AIR-CT5520-K9_FCH2139V1B0',
 			imageName: 'NA',
@@ -366,7 +545,7 @@ const mockAssets: AssetsResponse = {
 			postDate: '2019-07-02T00:00:00.000+0000',
 			productFamily: 'Cisco 5500 Series Wireless Controllers',
 			productId: 'AIR-CT5520-K9',
-			recommAcceptedDate: null,
+			recommAcceptedDate: '2014-05-30T00:00:00.000+0000',
 			recommendationCount: 3,
 			swType: 'AireOS',
 			swVersion: '8.8.125.0',
@@ -374,7 +553,7 @@ const mockAssets: AssetsResponse = {
 		{
 			alert: 'information',
 			customerId: 7293498,
-			deployment: 'None',
+			deploymentStatus: 'None',
 			hostName: '9407-dualsup.cisco.com',
 			id: '7293498_NA,FXS2202Q11R,C9407R,NA_C9407R_FXS2202Q11R',
 			imageName: 'NA',
@@ -392,7 +571,7 @@ const mockAssets: AssetsResponse = {
 		{
 			alert: null,
 			customerId: 7293498,
-			deployment: 'None',
+			deploymentStatus: 'None',
 			hostName: 'AIR-CT5760',
 			id: '7293498_NA,FOC1841V02P,AIR-CT5760,NA_AIR-CT5760_FOC1841V02P',
 			imageName: 'NA',
@@ -410,7 +589,7 @@ const mockAssets: AssetsResponse = {
 		{
 			alert: null,
 			customerId: 7293498,
-			deployment: 'None',
+			deploymentStatus: 'None',
 			hostName: 'AMS-AP3702-28',
 			id: '7293498_NA,FTX1927S1K5,AIR-CAP3702E-A-K9,NA_AIR-CAP3702E-A-K9_FTX1927S1K5',
 			imageName: 'NA',
@@ -428,7 +607,7 @@ const mockAssets: AssetsResponse = {
 		{
 			alert: 'NA',
 			customerId: 7293498,
-			deployment: 'None',
+			deploymentStatus: 'None',
 			hostName: 'AMS-AP3802-14',
 			id: '7293498_NA,FCW2136NCB4,AIR-AP3802I-B-K9,NA_AIR-AP3802I-B-K9_FCW2136NCB4',
 			imageName: 'NA',
@@ -446,7 +625,7 @@ const mockAssets: AssetsResponse = {
 		{
 			alert: 'NA',
 			customerId: 7293498,
-			deployment: 'None',
+			deploymentStatus: 'None',
 			hostName: '5520-1',
 			id: '7293498_NA,FCH2139V1B0,AIR-CT5520-K9,NA_AIR-CT5520-K9_FCH2139V1B0',
 			imageName: 'NA',
@@ -464,7 +643,7 @@ const mockAssets: AssetsResponse = {
 		{
 			alert: 'information',
 			customerId: 7293498,
-			deployment: 'None',
+			deploymentStatus: 'None',
 			hostName: '9407-dualsup.cisco.com',
 			id: '7293498_NA,FXS2202Q11R,C9407R,NA_C9407R_FXS2202Q11R',
 			imageName: 'NA',
@@ -482,7 +661,7 @@ const mockAssets: AssetsResponse = {
 		{
 			alert: null,
 			customerId: 7293498,
-			deployment: 'None',
+			deploymentStatus: 'None',
 			hostName: 'AIR-CT5760',
 			id: '7293498_NA,FOC1841V02P,AIR-CT5760,NA_AIR-CT5760_FOC1841V02P',
 			imageName: 'NA',
@@ -500,7 +679,7 @@ const mockAssets: AssetsResponse = {
 		{
 			alert: null,
 			customerId: 7293498,
-			deployment: 'None',
+			deploymentStatus: 'None',
 			hostName: 'AMS-AP3702-28',
 			id: '7293498_NA,FTX1927S1K5,AIR-CAP3702E-A-K9,NA_AIR-CAP3702E-A-K9_FTX1927S1K5',
 			imageName: 'NA',
@@ -518,7 +697,7 @@ const mockAssets: AssetsResponse = {
 		{
 			alert: 'NA',
 			customerId: 7293498,
-			deployment: 'None',
+			deploymentStatus: 'None',
 			hostName: 'AMS-AP3802-14',
 			id: '7293498_NA,FCW2136NCB4,AIR-AP3802I-B-K9,NA_AIR-AP3802I-B-K9_FCW2136NCB4',
 			imageName: 'NA',
@@ -547,7 +726,7 @@ const mockAssets1: AssetsResponse = {
 		{
 			alert: 'NA',
 			customerId: 7293498,
-			deployment: 'None',
+			deploymentStatus: 'None',
 			hostName: '5520-1',
 			id: '7293498_NA,FCH2139V1B0,AIR-CT5520-K9,NA_AIR-CT5520-K9_FCH2139V1B0',
 			imageName: 'NA',
@@ -565,7 +744,7 @@ const mockAssets1: AssetsResponse = {
 		{
 			alert: 'information',
 			customerId: 7293498,
-			deployment: 'None',
+			deploymentStatus: 'None',
 			hostName: '9407-dualsup.cisco.com',
 			id: '7293498_NA,FXS2202Q11R,C9407R,NA_C9407R_FXS2202Q11R',
 			imageName: 'NA',
@@ -583,7 +762,7 @@ const mockAssets1: AssetsResponse = {
 		{
 			alert: null,
 			customerId: 7293498,
-			deployment: 'None',
+			deploymentStatus: 'None',
 			hostName: 'AIR-CT5760',
 			id: '7293498_NA,FOC1841V02P,AIR-CT5760,NA_AIR-CT5760_FOC1841V02P',
 			imageName: 'NA',
@@ -601,7 +780,7 @@ const mockAssets1: AssetsResponse = {
 		{
 			alert: null,
 			customerId: 7293498,
-			deployment: 'None',
+			deploymentStatus: 'None',
 			hostName: 'AMS-AP3702-28',
 			id: '7293498_NA,FTX1927S1K5,AIR-CAP3702E-A-K9,NA_AIR-CAP3702E-A-K9_FTX1927S1K5',
 			imageName: 'NA',
@@ -619,7 +798,7 @@ const mockAssets1: AssetsResponse = {
 		{
 			alert: 'NA',
 			customerId: 7293498,
-			deployment: 'None',
+			deploymentStatus: 'None',
 			hostName: 'AMS-AP3802-14',
 			id: '7293498_NA,FCW2136NCB4,AIR-AP3802I-B-K9,NA_AIR-AP3802I-B-K9_FCW2136NCB4',
 			imageName: 'NA',
@@ -637,7 +816,7 @@ const mockAssets1: AssetsResponse = {
 		{
 			alert: 'NA',
 			customerId: 7293498,
-			deployment: 'None',
+			deploymentStatus: 'None',
 			hostName: 'AMS-AP3802-14',
 			id: '7293498_NA,FCW2136NCB4,AIR-AP3802I-B-K9,NA_AIR-AP3802I-B-K9_FCW2136NCB4',
 			imageName: 'NA',
@@ -670,6 +849,49 @@ const mockSummaryResponse: SummaryResponse = {
 	versions: 50,
 };
 
+/** The mock response for software group assets */
+const mockSoftwareGroupAssets: SoftwareGroupAssetsResponse = {
+	pagination: {
+		page: 1,
+		rows: 10,
+		total: 11,
+	},
+	uiAssetList: [
+		{
+			deploymentStatus: 'None',
+			id: '231215372_NA,FOC1842PJG4,EFOC1842PJG4',
+			ipAddress: '6.0.3.223',
+			hostName: 'Device_6_0_3_223',
+			optimalVersion: null,
+			postDate: '2018-04-06T00:00:00.000+0000',
+			productFamily: 'Cisco Catalyst 9300 Series Switches',
+			recommAcceptedDate: null,
+			recommendationCount: 0,
+			recommendations: null,
+			swType: 'IOS-XE',
+			swVersion: '16.8.1a',
+		},
+	],
+};
+
+/** The mock response for software gropu versions */
+const mockSoftwareGroupVersions: SoftwareGroupVersionsResponse = {
+	pagination: {
+		page: 1,
+		rows: 10,
+		total: 11,
+	},
+	uiProfileSwVersion: [
+		{
+			assetCount: 1,
+			deploymentStatus: '',
+			optimalVersion: '',
+			postDate: '06 April 2018',
+			swType: 'IOS-XE',
+			swVersion: '16.8.1a',
+		},
+	],
+};
 /** The scenarios */
 export const OSVScenarios = [
 	{
@@ -703,7 +925,7 @@ export const OSVScenarios = [
 				},
 			],
 		},
-		url: `${api}profiles?customerId=${customerId}&pageIndex=1&pageSize=10`,
+		url: `${api}profiles?customerId=${customerId}${sgParams}`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -728,7 +950,7 @@ export const OSVScenarios = [
 			GET: [
 				{
 					delay: 200,
-					description: 'Basic Recommendations Status Counts',
+					description: 'Basic Recommendations',
 					response: {
 						body: mockBasicRecommendations,
 						status: 200,
@@ -737,7 +959,8 @@ export const OSVScenarios = [
 				},
 			],
 		},
-		url: `${api}assetDetails?customerId=${customerId}${assetDetailsParams}`,
+		url: `${api}assetDetails?customerId=2431199&&profileName=${assetId}&pid=${pid}` +
+			`&pf=${pf}&swType=IOS&swVersions=8&image=NA&postDate=null`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -789,6 +1012,76 @@ export const OSVScenarios = [
 			],
 		},
 		url: `${api}versions?customerId=${customerId}${svParams}`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 1000,
+					description: 'Software Group Assets',
+					response: {
+						body: mockSoftwareGroupAssets,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}profileAssets?customerId=2431199&id=7293498_NA` +
+			`&profileName=7293498_NA${sgAssetsParams}`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'Software Group Versions',
+					response: {
+						body: mockSoftwareGroupVersions,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}profileVersions?customerId=2431199&id=7293498_NA` +
+			`&profileName=7293498_NA${sgVerParams}`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 200,
+					description: 'Software Profile Recommendations',
+					response: {
+						body: mockSoftwareGroupRecommendations,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}profileRecommendations?customerId=${customerId}&profileName=${assetId}`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 200,
+					description: 'Machine Recommendations',
+					response: {
+						body: mockMachineRecommendations,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}machineRecommendations?customerId=${customerId}&profileName=${assetId}`,
 		usecases: ['Use Case 1'],
 	},
 ];

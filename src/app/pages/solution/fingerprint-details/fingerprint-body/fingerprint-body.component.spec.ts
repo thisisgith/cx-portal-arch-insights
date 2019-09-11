@@ -1,4 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { configureTestSuite } from 'ng-bullet';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FingerprintBodyComponent } from './fingerprint-body.component';
 import { FingerprintBodyModule } from './fingerprint-body.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -8,16 +9,15 @@ describe('FingerprintBodyComponent', () => {
 	let component: FingerprintBodyComponent;
 	let fixture: ComponentFixture<FingerprintBodyComponent>;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				FingerprintBodyModule,
 				HttpClientTestingModule,
 				RouterTestingModule,
 			],
-		})
-			.compileComponents();
-	}));
+		});
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(FingerprintBodyComponent);

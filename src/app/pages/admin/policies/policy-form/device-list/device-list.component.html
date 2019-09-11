@@ -28,7 +28,7 @@
 				<span [innerText]="device.ipAddress"></span>
 			</div>
 			<div class="col-3 device-table">
-				<span [innerText]="device.lastScanDate ? (device.lastScanDate | fromNow) : ''"></span>
+				<span [innerText]="device.lastScanDate === 'Never' || device.lastScanDate === undefined ? ('_Never_' | i18n) : (device.lastScanDate | fromNow)"></span>
 			</div>
 		</div>
 	</div>

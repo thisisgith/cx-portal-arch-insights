@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { environment } from '@environment';
 import { DevicesListComponent } from './devices-list.component';
@@ -16,7 +17,7 @@ describe('DevicesListComponent', () => {
 	let fixture: ComponentFixture<DevicesListComponent>;
 	let service: ArchitectureReviewService;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				DevicesListModule,
@@ -36,8 +37,10 @@ describe('DevicesListComponent', () => {
 					},
 				}, ArchitectureReviewService,
 			],
-		})
-		.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 		service = TestBed.get(ArchitectureReviewService);
 	}));
 
@@ -94,11 +97,11 @@ describe('DevicesListComponent', () => {
 		const otherEvent = {
 			keyCode: 7,
 		};
-		component.globalSearchFunction(otherEvent);
+		component.textFilter(otherEvent);
 		const event = {
 			keyCode: 13,
 		};
-		component.globalSearchFunction(event);
+		component.textFilter(event);
 		expect(component.isLoading)
 		.toBeTruthy();
 		expect(component.tableStartIndex)

@@ -1,5 +1,6 @@
+import { configureTestSuite } from 'ng-bullet';
 import { Component } from '@angular/core';
-import { async, fakeAsync, tick, ComponentFixture, TestBed } from '@angular/core/testing';
+import { fakeAsync, tick, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Location } from '@angular/common';
 import { By } from '@angular/platform-browser';
@@ -20,7 +21,7 @@ describe('CaseSubmittedComponent', () => {
 	let location: Location;
 	let cuiModalService: CuiModalService;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			declarations: [TestComponent],
 			imports: [
@@ -31,9 +32,8 @@ describe('CaseSubmittedComponent', () => {
 
 				CaseSubmittedModule,
 			],
-		})
-		.compileComponents();
-	}));
+		});
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(CaseSubmittedComponent);
