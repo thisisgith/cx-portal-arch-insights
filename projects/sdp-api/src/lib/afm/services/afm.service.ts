@@ -21,7 +21,6 @@ export class AfmService extends BaseService {
 
 	private alarmsPath = `${this.rootUrl}/customerportal/afm/v1/fault/alarms`;
 	private tacCasesPath = `${this.rootUrl}/customerportal/afm/v1/fault/taccases`;
-	private searchPath = `${this.rootUrl}/customerportal/afm/v1/fault/search`;
 	private eventPath = `${this.rootUrl}/customerportal/afm/v1/fault/event`;
 	private ignoreEventPath = `${this.rootUrl}/customerportal/afm/v1/fault/ignoreevent`;
 	private revertIgnoreEventPath =
@@ -89,18 +88,6 @@ export class AfmService extends BaseService {
 	 */
 	public getTacCases (afmSearchParams: AfmSearchParams): Observable<AfmResponse> {
 		return this.http.post<AfmResponse>(this.tacCasesPath, afmSearchParams)
-			.pipe(__map(response => response), catchError(this.erroHandler));
-	}
-
-	/**
-	 * it will give alarm details based on search params
-	 * @param afmSearchParams AfmSearchParams
-	 * @returns Observable<AfmResponse>
-	 * @memberof AfmService
-	 */
-
-	public getAfmSearchFilterInfo (afmSearchParams: AfmSearchParams): Observable<AfmResponse> {
-		return this.http.post<AfmResponse>(this.searchPath, afmSearchParams)
 			.pipe(__map(response => response), catchError(this.erroHandler));
 	}
 
