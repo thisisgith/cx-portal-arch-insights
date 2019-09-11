@@ -390,6 +390,7 @@
 	"_DidTheseThings_": "I also did these things",
 	"_DidYouKnowSearch_": "Did you know you can search on:",
 	"_DisableACCRegister_":"You can request this Accelerator once you've moved forward on the track",
+	"_DisableViewSessions_":"Currently no sessions available",
 	"_DiskSpaceUtilization_": "Disk Space Utilization",
 	"_DNACErrorInfo_": "Check if the IP is configured correctly. Then, Check if the Cisco DNA Center IP is reachable from CX Collector and connected directly",
 	"_DNACNoTelemetry_": "Cisco DNA Center is set up on my network, but telemetry is turned off",
