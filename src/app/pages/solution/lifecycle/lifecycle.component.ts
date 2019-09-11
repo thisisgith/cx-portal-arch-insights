@@ -1229,7 +1229,7 @@ export class LifecycleComponent implements OnDestroy {
 	 * Opens the given URL in a new tab
 	 * @param crossLaunchUrl string
 	 */
-	 public crossLaunch (crossLaunchUrl: SafeUrl) {
+	 public crossLaunch (crossLaunchUrl: string) {
 		if (crossLaunchUrl) {
 			window.open(`${crossLaunchUrl}`, '_blank');
 			this.closeViewSessions();
