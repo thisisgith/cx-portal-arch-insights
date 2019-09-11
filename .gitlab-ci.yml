@@ -4,25 +4,25 @@ stages:
   - setup
   - test
 
-# add 'node_modules' to cache for speeding up builds
-cache:
-  key: "PIPELINE-$CI_PIPELINE_ID"
-  paths:
-    - package-lock.json
-    - node_modules/ # Node modules and dependencies
-
 # disable gitlab cli analytics
 before_script:
   - export NG_CLI_ANALYTICS=false
 
 setup:
   stage: setup
+  # add 'node_modules' to cache for speeding up builds
+  cache:
+    key: "PIPELINE-$CI_PIPELINE_ID"
+    paths:
+      - package-lock.json
+      - node_modules/
   script:
     - npm ci --audit=false
 
 building:
   stage: test
   cache:
+    key: "PIPELINE-$CI_PIPELINE_ID"
     policy: pull
   script:
     - npm run build:ci
@@ -31,6 +31,7 @@ building:
 audit:
   stage: test
   cache:
+    key: "PIPELINE-$CI_PIPELINE_ID"
     policy: pull
   allow_failure: true # temporary until @compodoc fixes their vulnerability issue, since this is only used for document generation, I dont consider it breaking
   script:
@@ -40,6 +41,7 @@ audit:
 lint:
   stage: test
   cache:
+    key: "PIPELINE-$CI_PIPELINE_ID"
     policy: pull
   script:
     - npm run lint
@@ -58,6 +60,7 @@ lint:
 automation:
   stage: test
   cache:
+    key: "PIPELINE-$CI_PIPELINE_ID"
     policy: pull
   allow_failure: true
   before_script:
