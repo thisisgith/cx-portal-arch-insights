@@ -5,12 +5,12 @@
 				<div class="row">
 					<div class="col-md-12 panel flex-center flex-fill filter assets-count"
 						data-auto-id="selectedView" (click)="selectedView('violation')" [ngClass]="{'text-primary': !isAssetView}">
-						<div class="flex-center dbl-padding-left dbl-padding-right font-size-32" [innerHTML]="policyViolationsTotalCount | number"></div>
+						<div class="flex-center dbl-padding-left dbl-padding-right font-size-32" [innerText]="policyViolationsTotalCount | number"></div>
 						<div class="text-medium flex-center qtr-margin-top" [innerText]="'_RccViolations_' | i18n | titlecase"></div>
 					</div>
-					<div data-auto-id="1" class="col-md-12 panel flex-center flex-fill filter assets-count"
+					<div data-auto-id="assetViolationCount" class="col-md-12 panel flex-center flex-fill filter assets-count"
 						(click)="selectedView('asset')" [ngClass]="{'text-primary': isAssetView}">
-						<div class="flex-center dbl-padding-left dbl-padding-right font-size-32" [innerHTML]="assetsTotalCount | number"></div>
+						<div class="flex-center dbl-padding-left dbl-padding-right font-size-32" [innerText]="assetsTotalCount | number"></div>
 						<div class="text-medium flex-center qtr-margin-top" [innerText]= "'_RccAssetWithViolations_' | i18n"></div>
 					</div>
 				</div>
