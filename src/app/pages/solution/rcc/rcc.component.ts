@@ -478,6 +478,7 @@ export class RccComponent implements OnInit, OnDestroy {
 					render: item => item.lastScan ?
 						this.fromNow.transform(item.lastScan) : I18n.get('_Never_'),
 					sortable: true,
+					sortKey: 'lastScan',
 				},
 				{
 					key: 'serialNumber',
