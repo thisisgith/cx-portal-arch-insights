@@ -123,13 +123,13 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 
 	public days: SelectOptions = {
 		options: [
-			{ key: I18n.get('_Sunday_'), value: '0' },
-			{ key: I18n.get('_Monday_'), value: '1' },
-			{ key: I18n.get('_Tuesday_'), value: '2' },
-			{ key: I18n.get('_Wednesday_'), value: '3' },
-			{ key: I18n.get('_Thursday_'), value: '4' },
-			{ key: I18n.get('_Friday_'), value: '5' },
-			{ key: I18n.get('_Saturday_'), value: '6'  },
+			{ key: I18n.get('_Sunday_'), value: 'SUN' },
+			{ key: I18n.get('_Monday_'), value: 'MON' },
+			{ key: I18n.get('_Tuesday_'), value: 'TUE' },
+			{ key: I18n.get('_Wednesday_'), value: 'WED' },
+			{ key: I18n.get('_Thursday_'), value: 'THU' },
+			{ key: I18n.get('_Friday_'), value: 'FRI' },
+			{ key: I18n.get('_Saturday_'), value: 'SAT'  },
 		],
 		selected: '',
 	};
@@ -668,7 +668,7 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 			const dayOfWeekNum = this.days.options.findIndex(element =>
 				element.key.toLowerCase() === dayOfWeek.toLowerCase());
 
-			this.days.selected = String(dayOfWeekNum);
+			this.days.selected = _.get(this, ['days', 'options', dayOfWeekNum, 'value']);
 		}
 
 		this.hourmins.selected = `${min} ${milHour}`;

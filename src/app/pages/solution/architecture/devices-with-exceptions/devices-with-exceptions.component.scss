@@ -1,1 +1,5 @@
-/** Empty component SCSS file */
+@import '../../../../../mixins.scss';
+
+.form-group__text .devices-with-exceptions-search {
+	@include filter-search;
+}

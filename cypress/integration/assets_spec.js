@@ -245,14 +245,15 @@ describe('Assets', () => { // PBC-41
 					cy.getByAutoId('AdvisoryLastUpdated').should('have.text', date);
 				});
 			});
-			if (advisorySec.Pagination.total > advisorySec.data.length) {
-				cy.getByAutoId('LoadMoreButton').click();
-				cy.waitForAppLoading();
-				cy.get('[data-auto-id="AssetDetailsAdvisoryTable"] tbody tr')
-					.should('have.length.greaterThan', 10);
-			} else {
-				cy.getByAutoId('LoadMoreButton').should('not.be.visible');
-			}
+			// TODO: Disabled for PBC-721
+			// if (advisorySec.Pagination.total > advisorySec.data.length) {
+			// 	cy.getByAutoId('LoadMoreButton').click();
+			// 	cy.waitForAppLoading();
+			// 	cy.get('[data-auto-id="AssetDetailsAdvisoryTable"] tbody tr')
+			// 		.should('have.length.greaterThan', 10);
+			// } else {
+			// 	cy.getByAutoId('LoadMoreButton').should('not.be.visible');
+			// }
 
 			cy.getByAutoId('AdvisoryTab-field').click();
 			pageText = getPaginationText(advisoryFN.Pagination, 'Field Notices');
@@ -273,14 +274,15 @@ describe('Assets', () => { // PBC-41
 					cy.getByAutoId('AdvisoryLastUpdated').should('have.text', date);
 				});
 			});
-			if (advisoryFN.Pagination.total > advisoryFN.data.length) {
-				cy.getByAutoId('LoadMoreButton').click();
-				cy.waitForAppLoading();
-				cy.get('[data-auto-id="AssetDetailsAdvisoryTable"] tbody tr')
-					.should('have.length.greaterThan', 10);
-			} else {
-				cy.getByAutoId('LoadMoreButton').should('not.be.visible');
-			}
+			// TODO: Disabled for PBC-721
+			// if (advisoryFN.Pagination.total > advisoryFN.data.length) {
+			// 	cy.getByAutoId('LoadMoreButton').click();
+			// 	cy.waitForAppLoading();
+			// 	cy.get('[data-auto-id="AssetDetailsAdvisoryTable"] tbody tr')
+			// 		.should('have.length.greaterThan', 10);
+			// } else {
+			// 	cy.getByAutoId('LoadMoreButton').should('not.be.visible');
+			// }
 
 			cy.getByAutoId('AdvisoryTab-bug').click();
 			pageText = getPaginationText(bugResponse.Pagination, 'Critical Bugs');
@@ -859,14 +861,15 @@ describe('Assets', () => { // PBC-41
 			const validate360OpenCase = asset => {
 				const haveVisibility = asset.supportCovered ? 'be.visible' : 'not.be.visible';
 				cy.getByAutoId('Asset360ScanBtn').should('be.visible');
-				cy.getByAutoId('Asset360OpenCaseBtn').should(haveVisibility).click(); // PBC344
+				cy.getByAutoId('Asset360OpenCaseBtn').should(haveVisibility).click(); // PBC-344
 				cy.getByAutoId('CaseOpenCancelButton').click(); // Cancel modal
 				cy.getByAutoId('CaseOpenCancel').click(); // Confirm cancel
 			};
 			cy.get('[data-auto-id="AssetsTableBody"] tr').eq(0).click();
 			validate360OpenCase(assets[0]); // Currently only first asset has the CaseOpen Button
 
-			cy.getByAutoId('CloseDetails').click();
+			// TODO: Disabled for PBC-721
+			// cy.getByAutoId('CloseDetails').click();
 		});
 	});
 

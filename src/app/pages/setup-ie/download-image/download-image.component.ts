@@ -9,7 +9,7 @@ import { I18n } from '@cisco-ngx/cui-utils';
 
 import { ControlPointIERegistrationAPIService, User } from '@sdp-api';
 
-import { empty, of, Subject, throwError, timer } from 'rxjs';
+import { empty, forkJoin, of, Subject, throwError, timer } from 'rxjs';
 import { catchError, finalize, mergeMap, retryWhen, takeUntil, tap } from 'rxjs/operators';
 import * as _ from 'lodash-es';
 
@@ -133,75 +133,12 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 	 */
 	public onDownload () {
 		this.loading = true;
-		this.getDownloadURL()
-			.pipe(
-				finalize(() => this.loading = false),
-				mergeMap(response => {
-					const hasError = _.get(
-						response,
-						'download_info_list[0].asd_download_url_exception.length',
-					);
-					if (!hasError) {
-						const url = _.get(response, 'download_info_list[0].cloud_url')
-							|| _.get(response, 'download_info_list[0].download_url');
-						if (url) {
-							if (/[?]/.test(url)) {
-								this.utils
-									.download(`${url}&access_token=${this.asdService.accessToken}`);
-							} else {
-								this.utils
-									.download(`${url}?access_token=${this.asdService.accessToken}`);
-							}
-						}
-
-						return of(response);
-					}
-
-					return throwError('metadata trans id expired');
-				}),
-				retryWhen(errors => errors
-					.pipe(
-						mergeMap((err: string, i: number) => {
-							if (i < 6) {
-								// try once to refresh the metadata_trans_id
-								if (i === 0) {
-									return this.refreshMetadata();
-								}
-
-								// keep trying up to 5 times
-								return timer(i * 500);
-							}
-
-							return throwError(err);
-						}),
-					),
-				),
-				catchError(() => {
-					this.showError(I18n.get('_AnErrorOccurredDuringDownload_'));
-
-					return empty();
-				}),
-				takeUntil(this.destroyed$),
-			)
+		forkJoin(
+			this.createRegistration(),
+			this.commenceDownload(),
+		)
 			.subscribe(() => {
 				this.continue();
-			});
-
-		this.controlPointsService
-			.createIERegistrationUsingPOST({
-				customerId: this.customerId,
-			})
-			.pipe(
-				finalize(() => this.loading = false),
-				catchError(() => {
-					this.showError(I18n.get('_AnErrorOccurredDuringDownload_'));
-
-					return empty();
-				}),
-				// purposely not using takeUntil so that request is not cancelled
-			)
-			.subscribe(() => {
-				this.logger.debug('IE OVA download registered');
 			});
 	}
 
@@ -343,6 +280,83 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 						this.k9Data = { };
 					}
 				}),
+			);
+	}
+
+	/**
+	 * Creates Registration File
+	 * @returns Observable
+	 */
+	private createRegistration () {
+		return this.controlPointsService
+			.createIERegistrationUsingPOST({
+				customerId: this.customerId,
+			})
+			.pipe(
+				finalize(() => this.loading = false),
+				catchError(() => {
+					this.showError(I18n.get('_AnErrorOccurredDuringDownload_'));
+
+					return empty();
+				}),
+				// purposely not using takeUntil so that request is not cancelled
+			);
+	}
+
+	/**
+	 * Commence Download
+	 * @returns Observable
+	 */
+	private commenceDownload () {
+		return this.getDownloadURL()
+			.pipe(
+				finalize(() => this.loading = false),
+				mergeMap(response => {
+					const hasError = _.get(
+						response,
+						'download_info_list[0].asd_download_url_exception.length',
+					);
+					if (!hasError) {
+						const url = _.get(response, 'download_info_list[0].cloud_url')
+							|| _.get(response, 'download_info_list[0].download_url');
+						if (url) {
+							if (/[?]/.test(url)) {
+								this.utils
+									.download(`${url}&access_token=${this.asdService.accessToken}`);
+							} else {
+								this.utils
+									.download(`${url}?access_token=${this.asdService.accessToken}`);
+							}
+						}
+
+						return of(response);
+					}
+
+					return throwError('metadata trans id expired');
+				}),
+				retryWhen(errors => errors
+					.pipe(
+						mergeMap((err: string, i: number) => {
+							if (i < _.get(this, 'env.ieSetup.imageDownloadRetries', 6)) {
+								// try once to refresh the metadata_trans_id
+								if (i === 0) {
+									return this.refreshMetadata();
+								}
+
+								// keep trying up to 5 times
+								return timer(i * 500);
+							}
+
+							return throwError(err);
+						}),
+					),
+				),
+				catchError(() => {
+					this.showError(I18n.get('_AnErrorOccurredDuringDownload_'));
+
+					return empty();
+				}),
+				takeUntil(this.destroyed$),
 			);
 	}
 }

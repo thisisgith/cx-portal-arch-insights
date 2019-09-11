@@ -133,8 +133,8 @@ export class SoftwareVersionsComponent implements OnInit, OnDestroy {
 					},
 					{
 						name: I18n.get('_OsvReleaseDate_'),
-						sortable: false,
 						template: this.releaseDateTemplate,
+						sortable: true,
 					},
 					{
 						key: 'assetCount',
