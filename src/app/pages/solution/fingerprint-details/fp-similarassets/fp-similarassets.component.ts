@@ -156,7 +156,7 @@ export class FpSimilarAssetsComponent {
 	public ngOnChanges (changes: SimpleChanges): void {
 		this.deviceId = _.get(changes, ['asset', 'currentValue', 'deviceId'], null);
 		this.productId = _.get(changes, ['asset', 'currentValue', 'productId'], null);
-		if (!_.get(changes, ['asset', 'firstChange'], false)) {
+		if (!_.get(changes, ['asset', 'firstChange'], false) && this.asset) {
 			this.loadSimilarDevicesData();
 		}
 	}
@@ -181,6 +181,7 @@ export class FpSimilarAssetsComponent {
 					} else {
 						this.seriesDataLoading = false;
 						this.noData = true;
+						this.reqError.emit();
 					}
 				},
 				err => {

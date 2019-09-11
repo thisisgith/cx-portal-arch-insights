@@ -100,7 +100,7 @@ export class FpIntelligenceComponent implements OnChanges {
 	 */
 	public ngOnChanges (changes: SimpleChanges): void {
 		this.deviceId = _.get(changes, ['asset', 'currentValue', 'deviceId'], null);
-		if (!_.get(changes, ['asset', 'firstChange'], false)) {
+		if (!_.get(changes, ['asset', 'firstChange'], false) && this.deviceId) {
 			this.loadSimilarDevicesDistribution();
 		}
 	}
@@ -125,6 +125,7 @@ export class FpIntelligenceComponent implements OnChanges {
 					} else {
 						this.seriesDataLoading = false;
 						this.noData = true;
+						this.reqError.emit();
 					}
 				},
 				err => {
