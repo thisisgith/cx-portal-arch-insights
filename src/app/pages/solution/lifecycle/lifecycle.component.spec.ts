@@ -534,8 +534,7 @@ describe('LifecycleComponent', () => {
 			expect(component.recommendedAtxScheduleCardOpened)
 				.toBeFalsy();
 
-			let crossLaunchUrl: string;
-			crossLaunchUrl = '';
+			const crossLaunchUrl = '';
 			component.atxMoreClicked = true;
 
 			// Test crossLaunch()

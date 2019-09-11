@@ -39,7 +39,6 @@ import { ActivatedRoute } from '@angular/router';
 import { User } from '@interfaces';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { RacetrackInfoService } from '@services';
-import { SafeUrl } from '@angular/platform-browser';
 
 /**
  * Interface representing our data object
@@ -1231,7 +1230,7 @@ export class LifecycleComponent implements OnDestroy {
 	 */
 	 public crossLaunch (crossLaunchUrl: string) {
 		if (crossLaunchUrl) {
-			window.open(`${crossLaunchUrl}`, '_blank');
+			window.open(crossLaunchUrl, '_blank');
 			this.closeViewSessions();
 		}
 	}
