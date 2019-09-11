@@ -84,7 +84,7 @@ describe('Racetrack Content', () => {
 				});
 			});
 
-			it('pitstopActions checlist should update with preview', () => {
+			it('pitstopActions checklist should update with preview', () => {
 				const previewPitstopActions = Cypress._.find(
 					defaultCheckableCNATech.pitstops,
 					pitstop => pitstop.name === stageName.charAt(0).toUpperCase() + stageName.slice(1)
@@ -101,12 +101,11 @@ describe('Racetrack Content', () => {
 				cy.getByAutoId('CurrentPitstopTitle')
 					.should('have.text', defaultCheckableCNATech.currentPitstop);
 
-				const numCompleted = Cypress._.filter(
-					defaultCurrentPitstopActions, action => action.isComplete === true
-				).length;
-				const expectedPercent = Math.floor(
-					(numCompleted / defaultCurrentPitstopActions.length) * 100
+				const currentPitstop = Cypress._.find(
+					defaultCheckableCNATech.pitstops,
+					pitstop => pitstop.name === defaultCheckableCNATech.currentPitstop
 				);
+				const expectedPercent = currentPitstop.pitstop_adoption_percentage;
 				if (expectedPercent === 0) {
 					cy.getByAutoId('CompletedActionsPercent')
 						.should('contain', 'start');
@@ -228,7 +227,8 @@ describe('Racetrack Content', () => {
 		});
 	});
 
-	describe('PBC-123: Lifecycle: Pitstop Action checkbox', () => {
+	// PBC-725 has disabled all checkboxes in the pitstopActions list
+	describe.skip('PBC-123: Lifecycle: Pitstop Action checkbox', () => {
 		const allCheckableScenario = infoMock.getScenario('GET', '(Racetrack) IBN-Assurance-Onboard-allManualCheckable');
 		const allCheckableSolutions = allCheckableScenario.response.body.solutions[0];
 		const allCheckableTech = Cypress._.find(allCheckableSolutions.technologies, tech => tech.name === 'Campus Network Assurance');
@@ -374,7 +374,8 @@ describe('Racetrack Content', () => {
 			cy.waitForAppLoading();
 		});
 
-		it('Checking a pitstop action should update the completion percentage', () => {
+		// PBC-725 has disabled all checkboxes in the pitstopActions list
+		it.skip('Checking a pitstop action should update the completion percentage', () => {
 			// Switch mocks and refresh the checkboxes
 			infoMock.enable('(Racetrack) IBN-Assurance-Onboard-allManualCheckable');
 			cy.loadApp();
@@ -425,6 +426,21 @@ describe('Racetrack Content', () => {
 
 			cy.getByAutoId('CompletedActionsPercent')
 				.should('contain', 'start');
+		});
+	});
+
+	describe('PBC-725: UATT F8334 - Lifecycle - Need to disable Checklist from user interactions', () => {
+		it('All pitstopActions checkboxes should be disabled', () => {
+			cy.getByAutoId('pitstopCheckboxLabel').each($checkbox => {
+				cy.wrap($checkbox).should('have.class', 'disabled');
+			});
+		});
+	});
+
+	describe('PBC-732: UAT F8334 -  Lifecycle - Lifecycle Adoption % not being rendered in UI', () => {
+		it('Overall adoption percentage should be set by API response', () => {
+			cy.getByAutoId('LifecycleAdoptionProgress')
+				.should('contain', defaultCheckableCNATech.usecase_adoption_percentage);
 		});
 	});
 });

@@ -264,7 +264,7 @@
 				<button class="btn btn--small btn--secondary text-uppercase cx-button"
 					attr.data-auto-id = "MoreATXWatchNow-{{ data.recordingURL }}"
 					[ngClass]="data?.recordingURL ? null : 'disabled'"
-					(click)="atxWatchNow(data.recordingURL)"
+					(click)="crossLaunch(data.recordingURL)"
 					[innerText]="'_WatchNow_' | i18n">
 				</button>
 			</div>
@@ -343,7 +343,7 @@
 			<button class="btn btn--small btn--secondary text-uppercase cx-button"
 				data-auto-id = "recommendedATXWatchButton"
 				[ngClass]="componentData.atx?.recommended?.recordingURL ? null : 'disabled'"
-				(click)="atxWatchNow(componentData.atx.recommended.recordingURL)"
+				(click)="crossLaunch(componentData.atx.recommended.recordingURL)"
 				[innerText]="'_WatchNow_' | i18n">
 			</button>
 			<ng-container *ngIf="componentData?.atx?.recommended && recommendedAtxScheduleCardOpened">
@@ -445,9 +445,9 @@
 		<div class="atx-scheduler__footer">
 			<button id="AtxScheduleCardRegisterButton"
 				class="pull-left btn btn--primary"
-				attr.data-auto-id = "AtxScheduleCardRegisterButton"
+				data-auto-id = "AtxScheduleCardRegisterButton"
 				[ngClass]="getAtxRegisterButton(data)"
-				(click)="atxRegister(sessionSelected.registrationURL)"
+				(click)="crossLaunch(sessionSelected.registrationURL)"
 				[innerText]="'_Register_' | i18n">
 			</button>
 			<div class="half-padding-left pull-left">
@@ -569,10 +569,8 @@
 		<div class="view-all pull-right toggle"
 			*ngIf="data">
 			<a class="no-link show"
-				target="_blank"
-				rel="noopener noreferrer"
-				attr.data-auto-id="{{ title }}-ViewAll"
-				href="{{ link }}">
+				(click)="crossLaunch(link)"
+				attr.data-auto-id="{{ title }}-ViewAll">
 				<span class="text-med" [innerText]="'_ViewAll_' | i18n"></span>
 				<span class="icon-play"></span>
 			</a>
@@ -583,7 +581,7 @@
 			<div id="recommended-elearning-item" class=" panel small-panel" attr.data-auto-id="{{ title }}-Item">
 				<div class="row">
 					<div class="col-md-11">
-						<a class="no-link" target="_blank" rel="noopener noreferrer" [href]="item.url">
+						<a class="no-link" (click)="crossLaunch(item.url)" attr.data-auto-id="{{ title }} -item.title">
 							<span [innerText]="item.title"></span>
 						</a>
 					</div>
@@ -607,7 +605,7 @@
 <ng-template #successBlock let-title="title" let-data="data">
 	<div>
 		<div id="successbytes-item" class="cx-lifecycle-card--link panel small-panel" data-auto-id="successbytes-item" *ngFor="let item of data | slice:0:3">
-			<a class="toggle" target="_blank" rel="noopener noreferrer" [href]="item.url" [innerText]="item.title"></a>
+			<a class="toggle" (click)="crossLaunch(item.url)" [innerText]="item.title" attr.data-auto-id="{{ title }} -item.title"></a>
 			<ng-container *ngTemplateOutlet="successBytesHoverBlock; context: {
 				item: item,
 				autoid: 'successbytes'
@@ -810,7 +808,7 @@
 
 <ng-template #cardViewTemplate let-type="type" let-view="view">
 	<div class="grid base-padding card-view"
-		[ngClass]="(type === 'SB' || type === 'PG') ? 'acc__grid' : null"
+		[ngClass]="(type === 'SB' || type === 'PG') ? 'success-grid' : ''"
 		*ngIf="(!view || view === 'grid')"
 		#scrollModal (scroll)="getScrollCoordinates(scrollModal)">
 		<ng-container *ngIf="type === 'ATX'">
@@ -854,7 +852,7 @@
 		*ngFor="let item of selectedATX"
 		[ngClass]="item.status === 'recommended' ? 'atx__card__recommended' : null"
 		data-auto-id="ATXCard">
-		<img class="max-width" alt="'_Placeholder_' | i18n" [src]="item.imageURL || 'assets/img/solutions/defaultLifecycleImage.png'" attr.data-auto-id="{{ autoid }}-Image">
+		<img class="max-width" alt="'_Placeholder_' | i18n" [src]="item.imageURL || 'assets/img/solutions/defaultLifecycleImage.png'" data-auto-id="ATXCard-Image">
 		<div class="text-left base-padding-left atx__card__label" [ngClass]="item.status === 'Recommended' ? 'text-dkgray-4' : 'text-clear'" data-auto-id="ATXCardHeader">
 			<span class="icon-flagged qtr-margin-right" data-auto-id="ATXCard-Flag"></span>
 			<span class="text-small" [innerText]="'_Recommended_' | i18n"></span>
@@ -869,7 +867,7 @@
 			[innerText]="item.title"
 			data-auto-id="ATXCardTitle">
 		</div>
-		<div class="card__body atx__card__body text-left desc-line-clamp" *ngIf="item && item.description" [innerText]="item.description"></div>
+		<div class="card__body atx__card__body text-left desc-line-clamp" *ngIf="item && item.description" [innerText]="item.description" data-auto-id="ATXCard-Description"></div>
 		<div class="card__footer atx__card__footer">
 			<div class="card_footer_item"  data-auto-id="ATXCardFooter">
 				<div class="atx__card__status text-left base-padding-left base-padding-right base-margin-bottom flex-middle">
@@ -905,7 +903,7 @@
 					<button class="btn btn--small btn--secondary text-uppercase cx-button"
 						attr.data-auto-id = "CardATXWatchNow-{{ item.recordingURL }}"
 						[ngClass]="item?.recordingURL ? null : 'disabled'"
-						(click)="atxWatchNow(item.recordingURL); closeModal()"
+						(click)="crossLaunch(item.recordingURL)"
 						[innerText]="'_WatchNow_' | i18n">
 					</button>
 				</div>
@@ -964,35 +962,42 @@
 </ng-template>
 
 <ng-template #cardSB>
-	<div class="card acc__card" *ngFor="let item of selectedSuccessPaths" data-auto-id="SuccessCard">
-		<div class="icon-bookmark" (click)="updateBookmark(item, 'SB')"
-			[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__white'" data-auto-id="SBCardRibbon"></div>
-		<div class="card__header acc__card__header text-left text-small qtr-margin-top text-uppercase" [innerText]="item.archetype"></div>
-		<div class="card__body success__card__body">
-			<div class="success__card__title text-left">
-				<a class="no-link" data-auto-id="successtitle" target="_blank" rel="noopener noreferrer"
-					[href]="item.url" [innerText]="item.title"></a>
-			</div>
-			<div class="success__card__icons">
-				<div class="type">
-						<ng-container *ngTemplateOutlet="itemTypeIcons; context: {
-							item: item,
-							autoid: 'SuccessBytesCard'
-						}">
-						</ng-container>
-				</div>
-				<div class="duration text-muted" *ngIf="item.duration">
-					<span class="icon-clock qtr-padding-right"></span>
-					<span [innerText]="item.duration"></span>
-				</div>
+	<div class="card success__card"
+		*ngFor="let item of selectedSuccessPaths"
+		data-auto-id="SBCard">
+		<div class="icon-bookmark toggle"
+			(click)="updateBookmark(item, 'SB')"
+			[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__white'"
+			data-auto-id="SBCardRibbon">
+		</div>
+		<div class="card__header success__card__archetype text-left text-small text-uppercase base-margin-top qtr-margin-bottom" [innerText]="item.archetype"></div>
+		<div class="card__header success__card__header text-left">
+			<a class="no-link" data-auto-id="successtitle" target="_blank" rel="noopener noreferrer"
+					[href]="item.url">
+				<span class="title-line-clamp" data-auto-id="SBCardTitle" [innerText]="item.title"></span>
+			</a>
+		</div>
+		<div class="card__body success__card__body text-left desc-line-clamp" *ngIf="item && item.description" [innerText]="item.description"></div>
+		<div class="success__card__icons">
+			<ng-container *ngTemplateOutlet="itemTypeIcons; context: {
+				item: item,
+				autoid: 'SuccessBytesCard'
+			}">
+			</ng-container>
+			<div class="duration text-muted" *ngIf="item.duration">
+				<span class="icon-clock qtr-padding-right"></span>
+				<span [innerText]="item.duration"></span>
 			</div>
 		</div>
-		<div class="card__footer success__card__launch">
-			<div class="card_footer_item" data-auto-id="SuccessCardFooter">
-				<a class="no-link" target="_blank" [href]="item.url">
-					<button data-auto-id="LaunchButton" class="btn btn--small btn--secondary text-uppercase"
-						[innerText]="'_View_' | i18n"></button>
-				</a>
+		<div class="card__footer success__card__footer">
+			<div class="card_footer_item"  data-auto-id="SBCardFooter">
+				<div class="divider no-margin"></div>
+				<div class="atx__card__actions">
+					<a class="no-link" target="_blank" [href]="item.url">
+						<button data-auto-id="LaunchButton" class="btn btn--small btn--secondary text-uppercase"
+							[innerText]="'_View_' | i18n"></button>
+					</a>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -1029,35 +1034,42 @@
 </ng-template>
 
 <ng-template #cardPG>
-	<div class="card acc__card" *ngFor="let item of selectedProductGuides" data-auto-id="ProductGuidesCard">
-		<div class="icon-bookmark" (click)="updateBookmark(item, 'PG')"
-			[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__white'" data-auto-id="ProductGuidesCard-Ribbon"></div>
-		<div class="card__header acc__card__header text-left text-small qtr-margin-top text-uppercase" [innerText]="item.archetype" data-auto-id="ProductGuidesCard-Archetype"></div>
-		<div class="card__body success__card__body">
-			<div class="success__card__title text-left">
-				<a class="no-link" target="_blank" rel="noopener noreferrer"
-					[href]="item.url" [innerText]="item.title" data-auto-id="ProductGuidesCard-Title"></a>
-			</div>
-			<div class="success__card__icons">
-				<div class="type">
-					<ng-container *ngTemplateOutlet="itemTypeIcons; context: {
-						item: item,
-						autoid: 'ProductGuidesCard'
-					}">
-					</ng-container>
-				</div>
-				<div class="duration text-muted" *ngIf="item.duration" data-auto-id="ProductGuidesCard-Duration">
-					<span class="icon-clock qtr-padding-right"></span>
-					<span [innerText]="item.duration"></span>
-				</div>
+	<div class="card success__card"
+		*ngFor="let item of selectedProductGuides"
+		data-auto-id="PGCard">
+		<div class="icon-bookmark toggle"
+			(click)="updateBookmark(item, 'PG')"
+			[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__white'"
+			data-auto-id="PGCardRibbon">
+		</div>
+		<div class="card__header success__card__archetype text-left text-small text-uppercase base-margin-top qtr-margin-bottom" [innerText]="item.archetype"></div>
+		<div class="card__header success__card__header text-left">
+			<a class="no-link" data-auto-id="successtitle" target="_blank" rel="noopener noreferrer"
+					[href]="item.url">
+				<span class="title-line-clamp" data-auto-id="PGCardTitle" [innerText]="item.title"></span>
+			</a>
+		</div>
+		<div class="card__body success__card__body text-left desc-line-clamp" *ngIf="item && item.description" [innerText]="item.description"></div>
+		<div class="success__card__icons">
+			<ng-container *ngTemplateOutlet="itemTypeIcons; context: {
+				item: item,
+				autoid: 'ProductGuidesCard'
+			}">
+			</ng-container>
+			<div class="duration text-muted" *ngIf="item.duration">
+				<span class="icon-clock qtr-padding-right"></span>
+				<span [innerText]="item.duration"></span>
 			</div>
 		</div>
-		<div class="card__footer success__card__launch">
-			<div class="card_footer_item" data-auto-id="ProductGuidesCardFooter">
-				<a class="no-link" target="_blank" [href]="item.url">
-					<button data-auto-id="LaunchButton" class="btn btn--small btn--secondary text-uppercase"
-						[innerText]="'_View_' | i18n"></button>
-				</a>
+		<div class="card__footer success__card__footer">
+			<div class="card_footer_item"  data-auto-id="PGCardFooter">
+				<div class="divider no-margin"></div>
+				<div class="atx__card__actions">
+					<a class="no-link" target="_blank" [href]="item.url">
+						<button data-auto-id="LaunchButton" class="btn btn--small btn--secondary text-uppercase"
+							[innerText]="'_View_' | i18n"></button>
+					</a>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -1267,7 +1279,7 @@
 		<button class="btn btn--small btn--secondary text-uppercase cx-button half-margin-left"
 			attr.data-auto-id = "ListATXWatchNow-{{ celldata.recordingURL }}"
 			[ngClass]="celldata?.recordingURL ? null : 'disabled'"
-			(click)="atxWatchNow(celldata.recordingURL); closeModal()"
+			(click)="crossLaunch(celldata.recordingURL)"
 			[innerText]="'_WatchNow_' | i18n">
 		</button>
 	</div>
@@ -1332,19 +1344,19 @@
 </ng-container>
 
 <ng-template #itemTypeIcons let-item="item" let-autoid="autoid">
-	<div class="text-left text-muted" *ngIf="item.type === 'Web Page'" attr.data-auto-id="{{ autoid }}-WebIcon">
+	<div class="type text-left text-muted" *ngIf="item.type === 'Web Page'" attr.data-auto-id="{{ autoid }}-WebIcon">
 		<span class="icon-apps qtr-padding-right"></span>
 		<span class="item-type__text" [innerText]="'_Web_' | i18n"></span>
 	</div>
-	<div class="text-left text-muted" *ngIf="item.type === 'Video'" attr.data-auto-id="{{ autoid }}-VideoIcon">
+	<div class="type text-left text-muted" *ngIf="item.type === 'Video'" attr.data-auto-id="{{ autoid }}-VideoIcon">
 		<span class="icon-play-contained qtr-padding-right"></span>
 		<span class="item-type__text" [innerText]="'_Video_' | i18n"></span>
 	</div>
-	<div class="text-left text-muted" *ngIf="item.type === 'PDF'" attr.data-auto-id="{{ autoid }}-PDFIcon">
+	<div class="type text-left text-muted" *ngIf="item.type === 'PDF'" attr.data-auto-id="{{ autoid }}-PDFIcon">
 		<span class="icon-file-pdf-o qtr-padding-right"></span>
 		<span class="item-type__text" [innerText]="'_PDF_' | i18n"></span>
 	</div>
-	<div class="text-left text-muted" *ngIf="item.type === 'Data Sheet'" attr.data-auto-id="{{ autoid }}-DataSheetIcon">
+	<div class="type text-left text-muted" *ngIf="item.type === 'Data Sheet'" attr.data-auto-id="{{ autoid }}-DataSheetIcon">
 		<span class="icon-document qtr-padding-right"></span>
 		<span class="item-type__text" [innerText]="'_Datasheet_' | i18n"></span>
 	</div>

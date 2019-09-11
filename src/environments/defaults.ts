@@ -28,6 +28,7 @@ export const defaults = {
 	csone: {
 		classifyAppId: 'CXPortal',
 		clientId: '07e418ac71284560944ea92f653a01c2',
+		maxCasesPerRequest: 1000,
 	},
 	cuiColors: {
 		vibrantBlue: '#017cad',

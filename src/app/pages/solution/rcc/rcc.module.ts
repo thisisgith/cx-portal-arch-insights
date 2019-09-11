@@ -22,7 +22,11 @@ import {
 import {
 	RccDeviceViolationDetailsModule,
 } from './rcc-device-violation-details/rcc-device-violation-details.module';
-import { PieChartModule, DetailsPanelModule, VisualFilterBarModule } from '@components';
+import { PieChartModule,
+		DetailsPanelModule,
+		VisualFilterBarModule,
+		AssetDetailsModule,
+	} from '@components';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RccDataModule } from '@sdp-api';
 import { environment } from '@environment';
@@ -67,6 +71,7 @@ const childRoutes: Routes = [
 		CuiDropdownModule,
 		CuiSpinnerModule,
 		VisualFilterBarModule,
+		AssetDetailsModule,
 	],
 })
 export class RccModule { }
