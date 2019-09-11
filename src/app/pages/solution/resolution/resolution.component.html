@@ -136,19 +136,19 @@
 </ng-template>
 
 <ng-template #pieChartFilter let-filter="filter">
-	<pie-chart id="pie" attr.data-auto-id="{{filter.key}}Filter"
+	<pie-chart id="pie" attr.data-auto-id="{{filter.key}}Filter" [loading]="filter.loading"
 		[seriesData]="filter.seriesData" (subfilter)="onSubfilterSelect($event.label, filter)">
 	</pie-chart>
 </ng-template>
 
 <ng-template #columnChartFilter let-filter="filter">
-	<column-chart id="column" attr.data-auto-id="{{filter.key}}Filter"
+	<column-chart id="column" attr.data-auto-id="{{filter.key}}Filter" [loading]="filter.loading"
 		[seriesData]="filter.seriesData" (subfilter)="onSubfilterSelect($event.label, filter)">
 	</column-chart>
 </ng-template>
 
 <ng-template #barChartFilter let-filter="filter">
-	<bar-chart id="bar" attr.data-auto-id="{{filter.key}}Filter"
+	<bar-chart id="bar" attr.data-auto-id="{{filter.key}}Filter" [loading]="filter.loading"
 		[seriesData]="filter.seriesData" (subfilter)="onSubfilterSelect($event.label, filter)">
 	</bar-chart>
 </ng-template>
