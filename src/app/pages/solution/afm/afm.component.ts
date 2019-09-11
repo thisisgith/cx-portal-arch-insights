@@ -10,13 +10,15 @@ import {
 	AfmConnectivity,
 	AfmFilter,
 	AfmResponse,
+	InventoryService,
+	AssetLinkInfo,
 } from '@sdp-api';
 import * as _ from 'lodash-es';
 import { FormControl, FormGroup } from '@angular/forms';
-import { Subject } from 'rxjs';
+import { Subject, of } from 'rxjs';
 import { UserResolve } from '@utilities';
-import { takeUntil } from 'rxjs/operators';
-import { ExportCsvService } from '@services';
+import { takeUntil, catchError } from 'rxjs/operators';
+import { ExportCsvService, AssetPanelLinkService } from '@services';
 
 /**
  * AfmComponet which shows in Insight view for Fault Management tab
@@ -59,6 +61,8 @@ export class AfmComponent implements OnInit {
 	public eventStatus = false;
 	private destroy$ = new Subject();
 	private exportFileName: string;
+	public assetParams: InventoryService.GetAssetsParams;
+	public assetLinkInfo: AssetLinkInfo;
 
 	public searchOptions = {
 		debounce: 1500,
@@ -100,8 +104,10 @@ export class AfmComponent implements OnInit {
 	constructor (private logger: LogService,
 		private afmService: AfmService,
 		private userResolve: UserResolve,
+		private assetPanelLinkService: AssetPanelLinkService,
 		private exportCsvService: ExportCsvService) {
 		this.searchParams = new Object();
+		this.assetLinkInfo = Object.create({ });
 		this.searchParams.pageNumber = 1;
 		this.searchParams.pageSize = this.tableLimit;
 		this.searchParams.firstTimeLoading = true;
@@ -394,10 +400,37 @@ export class AfmComponent implements OnInit {
 	 */
 	public connectToAlarmDetails (alarm: Alarm) {
 		this.syslogEvent = alarm.syslogMsg;
-		this.showAlarmDetails = true;
 		this.selectedAsset = null;
 		this.searchParams.alarmId = alarm.alarmId;
+		this.searchParams.serialNumber = alarm.serialNumber;
+		this.assetParams = {
+			customerId: this.searchParams.customerId,
+			serialNumber: [this.searchParams.serialNumber],
+		};
 		this.getAfmEventData(this.searchParams);
+		this.getAssetLinkData(this.assetParams);
+		this.showAlarmDetails = true;
+	}
+
+	/**
+	 * Get asset link data
+	 * @param assetParams InventoryService.GetAssetsParams
+	 * @returns Asset link information
+	 */
+	private getAssetLinkData (assetParams: InventoryService.GetAssetsParams) {
+		return this.assetPanelLinkService.getAssetLinkData(assetParams)
+			.pipe(takeUntil(this.destroy$))
+			.subscribe(response => {
+				this.assetLinkInfo.asset = _.get(response, [0, 'data', 0]);
+				this.assetLinkInfo.element = _.get(response, [1, 'data', 0]);
+			},
+			catchError(err => {
+				this.logger.error(
+					'AfmComponent : getAssetLinkData() ' +
+				`:: Error : (${err.status}) ${err.message}`);
+
+				return of({ });
+			}));
 	}
 
 	/**
