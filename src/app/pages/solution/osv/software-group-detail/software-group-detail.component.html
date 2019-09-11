@@ -139,7 +139,7 @@
 	<span 
 		[title]="item.alert | uppercase" 
 		*ngIf="item?.alert && item?.alert != 'NA'"
-		[ngClass]="{'information':'text-primary','critical':text-danger}[item.alert]" 
+		[ngClass]="{'information':'text-primary','critical':'text-danger','warning':'text-warning-alt'}[item.alert]" 
 		class="icon-circle">
 	</span>
 	<span *ngIf="!item?.alert || item?.alert == 'NA'" class="icon-circle color-transparent"></span>

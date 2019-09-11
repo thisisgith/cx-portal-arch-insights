@@ -113,7 +113,7 @@ export class SoftwareVersionsComponent implements OnInit, OnDestroy {
 					this.logger.error('OSV SoftwareVersions : getVersions() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
-					return of({ });
+					return of();
 				}),
 			);
 	}
@@ -129,9 +129,10 @@ export class SoftwareVersionsComponent implements OnInit, OnDestroy {
 					{
 						key: 'swVersion',
 						name: I18n.get('_OsvVersion_'),
-						sortable: false ,
+						sortable: false,
 					},
 					{
+						key: 'releaseDate',
 						name: I18n.get('_OsvReleaseDate_'),
 						template: this.releaseDateTemplate,
 						sortable: true,
