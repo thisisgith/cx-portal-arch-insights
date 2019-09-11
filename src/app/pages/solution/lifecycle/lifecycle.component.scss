@@ -557,6 +557,14 @@ $midnight-blue: #0d274d;
 	-webkit-box-orient: vertical;
 }
 
+.sb-desc-line-clamp {
+	display: -webkit-box;
+	overflow: hidden;
+	-webkit-line-clamp: 3;
+
+	/* autoprefixer: off */
+	-webkit-box-orient: vertical;
+}
 
 .table-img-width {
 	width: 80px;
@@ -1061,7 +1069,7 @@ $midnight-blue: #0d274d;
 
 		.sb-popover__footer {
 			position: absolute;
-			bottom: 25px;
+			bottom: 20px;
 			left: 28px;
 			display: flex;
 
