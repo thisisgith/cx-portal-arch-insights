@@ -103,13 +103,15 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 				cy.getByAutoId('ATXCardTitle').should('have.text', atx.title);
 				cy.getByAutoId('cardRecommendedATXScheduleButton')
 					.should('contain', i18n._ViewSessions_);
-				cy.getByAutoId('recommendedATXWatchButton')
+				cy.getByAutoId(`CardATXWatchNow-${atx.recordingURL}`)
 					.should('contain', i18n._WatchNow_);
+				cy.getByAutoId('ATXCard-Description')
+					.should('have.class', 'desc-line-clamp');
 				// If the description contains \n, those get converted to <br>, which breaks text
 				// matching. Thus, split the string on \n, and verify each section exists
 				const splitDescription = atx.description.split('\n');
 				splitDescription.forEach(substring => {
-					cy.get('.atx__card__body').should('contain', substring);
+					cy.getByAutoId('ATXCard-Description').should('contain', substring);
 				});
 				switch (atx.status) {
 					case 'completed':
@@ -391,10 +393,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 					// Click the first session, verify the register button is enabled and has correct link
 					cy.getByAutoId(`SelectSession-${firstATXSessions[0].sessionId}`).click();
 					cy.getByAutoId('AtxScheduleCardRegisterButton')
-						.should('not.have.class', 'disabled')
-						.parent()
-						.should('have.attr', 'href', firstATXSessions[0].registrationURL)
-						.and('have.attr', 'target', '_blank');
+						.should('not.have.class', 'disabled');
 				});
 
 			// Close the schedule pop-up
@@ -421,10 +420,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 						// Click the first session, verify the register button is enabled and has correct link
 						cy.getByAutoId(`SelectSession-${firstATXSessions[0].sessionId}`).click();
 						cy.getByAutoId('AtxScheduleCardRegisterButton')
-							.should('not.have.class', 'disabled')
-							.parent()
-							.should('have.attr', 'href', firstATXSessions[0].registrationURL)
-							.and('have.attr', 'target', '_blank');
+							.should('not.have.class', 'disabled');
 					});
 			});
 
@@ -461,10 +457,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 					// correct link
 					cy.getByAutoId(`SelectSession-${firstATXSessions[0].sessionId}`).click();
 					cy.getByAutoId('AtxScheduleCardRegisterButton')
-						.should('not.have.class', 'disabled')
-						.parent()
-						.should('have.attr', 'href', firstATXSessions[0].registrationURL)
-						.and('have.attr', 'target', '_blank');
+						.should('not.have.class', 'disabled');
 				});
 
 			// Close the schedule pop-up
@@ -898,11 +891,8 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 		it('ATX View All table view should allow Watch Now cross-launch', () => {
 			atxItems.forEach((item, index) => {
 				cy.get('tr').eq(index + 1).within(() => {
-					cy.getByAutoId('WatchnowButton')
-						.should('be.visible')
-						.parent()
-						.should('have.attr', 'href', item.recordingURL)
-						.and('have.attr', 'target', '_blank');
+					cy.getByAutoId(`ListATXWatchNow-${item.recordingURL}`)
+						.should('be.visible');
 				});
 			});
 		});

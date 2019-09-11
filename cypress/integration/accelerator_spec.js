@@ -115,7 +115,9 @@ describe('Accelerator (ACC)', () => { // PBC-32
 					cy.getByAutoId('ACCCardHeader').should('have.class', 'text-clear');
 				}
 				cy.getByAutoId('ACCCardTitle').should('have.text', acc.title);
-				cy.getByAutoId('ACCCardDescription').should('contain', acc.description);
+				cy.getByAutoId('ACCCardDescription')
+					.should('contain', acc.description)
+					.and('have.class', 'desc-line-clamp');
 				switch (acc.status) {
 					case 'completed':
 						cy.getByAutoId('ACCCardFooter')
