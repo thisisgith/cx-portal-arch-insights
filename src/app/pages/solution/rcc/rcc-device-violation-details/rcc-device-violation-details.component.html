@@ -76,7 +76,7 @@
 			</cui-select>
 		</div>
 	</div>
-	<div class="row base-padding-top half-padding-left responsive-table"
+	<div class="row half-padding-left responsive-table"
 		*ngIf="(!selectionLoading  && tableConfig?.totalItems > 0); else commonMsgTemplate;">
 		<cui-table class="table table--lined table--wrapped table--fixed" [options]="impactedDeviceTableOptions" 
 			[data]="impactedDeviceDetails"
