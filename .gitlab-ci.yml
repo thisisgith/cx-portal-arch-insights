@@ -22,12 +22,16 @@ setup:
 
 building:
   stage: test
+  cache:
+    policy: pull
   script:
     - npm run build:ci
 
 # run npm audit to verify dependency security
 audit:
   stage: test
+  cache:
+    policy: pull
   allow_failure: true # temporary until @compodoc fixes their vulnerability issue, since this is only used for document generation, I dont consider it breaking
   script:
     - npm audit
@@ -35,6 +39,8 @@ audit:
 # run our lint process against the committed files
 lint:
   stage: test
+  cache:
+    policy: pull
   script:
     - npm run lint
     - npm run lint:cypress
@@ -43,12 +49,16 @@ lint:
 # run our test:ci process for the commit
 # unit:
 #   stage: test
+#   cache:
+#     policy: pull
 #   script:
 #     - npm run test:ci
 
 # run automated Cypress tests for the commit
 automation:
   stage: test
+  cache:
+    policy: pull
   allow_failure: true
   before_script:
     - npm run start:background
