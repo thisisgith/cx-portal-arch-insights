@@ -1,5 +1,5 @@
 import { configureTestSuite } from 'ng-bullet';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 
 import { SoftwareGroupsComponent } from './software-groups.component';
 import { SoftwareGroupsModule } from './software-groups.module';
@@ -57,7 +57,7 @@ describe('SoftwareGroupsComponent', () => {
 			.toBe(false);
 	});
 
-	it('should set null values on request errors', () => {
+	it('should set null values on request errors', fakeAsync(() => {
 		const error = {
 			status: 404,
 			statusText: 'Resource not found',
@@ -67,6 +67,7 @@ describe('SoftwareGroupsComponent', () => {
 			.returnValue(throwError(new HttpErrorResponse(error)));
 		component.selectedSoftwareGroup = <any> OSVScenarios[1].scenarios.GET[0].response.body;
 		component.ngOnInit();
+		tick();
 		fixture.detectChanges();
 		expect(component.softwareGroups)
 			.toBeUndefined();
@@ -74,7 +75,7 @@ describe('SoftwareGroupsComponent', () => {
 			.toBe(false);
 		expect(component.softwareGroupsTable)
 			.toBeUndefined();
-	});
+	}));
 
 	it('should refresh on page change', () => {
 		spyOn(osvService, 'getSoftwareGroups')

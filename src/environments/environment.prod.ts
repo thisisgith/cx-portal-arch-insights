@@ -34,6 +34,7 @@ export const environment = {
 	// Curated Communities/Private Communitites/SuccessTrack URL
 	curatedCommunityUrl: 'https://community.cisco.com/t5',
 	DNACommunititesPath: 'cisco-digital-network',
+	emailToID: 'cx-portal-support@cisco.com',
 	feedbackToEmail: 'cx-portal-support@cisco.com',
 	ieSetup: {
 		asdAuthURL: 'https://cway.cisco.com/ws/oauth/v3/token/cisco/ae95x38c7zgu5fas59gseyfk',
@@ -44,6 +45,7 @@ export const environment = {
 		DNAC_LS_KEY: 'cxportal.cisco.com:setup-ie:NO_DNAC',
 		downloadOvaLink: 'http://engci-maven-master.cisco.com/artifactory/services-cf-insight' +
 			'_engine-release/ie/Insight_Engine_1.0/ubuntu/103/CXC_1.0_Build-103.ova',
+		imageDownloadRetries: 6,
 		mockASD: false,
 		mockRegistration: false,
 		pingURL: '/ie-commonapi/services/version',

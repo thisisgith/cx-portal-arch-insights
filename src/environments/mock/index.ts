@@ -73,3 +73,5 @@ export * from '../mock/afm/afm';
 export * from '../mock/architecture-review/architecture-review';
 
 export { ComparisonViewScenarios } from './crash-prevention/comparisonview';
+
+export * from '../mock/service/asset-panel-link';

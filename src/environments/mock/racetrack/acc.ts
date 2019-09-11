@@ -213,6 +213,15 @@ export const ACCScenarios = [
 					},
 					selected: false,
 				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ACC) IBN-Campus Network Assurance-Onboard-twoBookmarked',
+					response: {
+						body: MockACC('IBN', 'Campus Network Assurance', 'Onboard', 'twoBookmarked'),
+						status: 200,
+					},
+					selected: false,
+				},
 			],
 		},
 		url: `${api}?usecase=Campus Network Assurance&` +

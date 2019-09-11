@@ -80,7 +80,7 @@ export default class MockService {
 				name: 'Mock On',
 				message: '*',
 			});
-			cy.wrap(win.mockService.enableAll());
+			cy.wrap(win.mockService.enableAll(), { log: false });
 		});
 	}
 
