@@ -28,7 +28,7 @@ import {
 } from './collector-creds-modal/collector-creds-modal.component';
 import { SetupIEService } from './setup-ie.service';
 import { ControlPointsModule } from '@sdp-api';
-import { AlertModule } from '@components';
+import { AlertModule, ContactSupportModule } from '@components';
 import { environment } from '../../../environments/environment';
 import { SetupHelpComponent } from './help';
 
@@ -66,6 +66,7 @@ const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 		CommonModule,
 		ConnectCollectorModule,
 		ConnectDNACenterModule,
+		ContactSupportModule,
 		ControlPointsModule.forRoot({ rootUrl }),
 		CuiModalModule,
 		CuiSpinnerModule,

@@ -30,6 +30,7 @@ export const environment = {
 	csone: {
 		classifyAppId: 'CXPortal',
 		clientId: '262556217fbe45ecbbe27af70e443e78',
+		maxCasesPerRequest: 1000,
 	},
 	// Curated Communities/Private Communitites/SuccessTrack URL
 	curatedCommunityUrl: 'https://community.cisco.com/t5',

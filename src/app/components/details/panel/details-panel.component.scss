@@ -1,6 +1,43 @@
 @import '~cisco-ui/src/scss/utilities/_variables.scss';
+@import '../../../../mixins.scss';
 
-:host {
+$default-text-color: #394454;
+
+:host ::ng-deep {
+	.tabs {
+		box-shadow: 0 -2px 0 $light-gray-3 inset;
+
+		> li {
+			margin: 0 50px 0 0;
+
+			> a {
+				text-transform: uppercase;
+				font-size: 13px;
+				padding-bottom: 5px;
+				padding-top: 5px;
+
+				&:hover {
+					color: $primary;
+					transition: box-shadow 0.2s linear;
+					box-shadow: 0 -2px 0 $primary inset;
+				}
+			}
+
+			&.active {
+				> a {
+					color: $primary;
+					box-shadow: 0 -2px 0 $primary inset;
+				}
+			}
+
+			&:hover {
+				color: $primary;
+				transition: box-shadow 0.2s linear;
+				box-shadow: 0 -2px 0 $primary inset;
+			}
+		}
+	}
+
 	bottom: 0;
 	width: 50vw;
 	position: fixed;
@@ -19,7 +56,7 @@
 	}
 
 	.btn.btn--tiny {
-		height: 24px !important;
+		height: 24px;
 	}
 
 	&.hidden {
@@ -54,6 +91,6 @@
 	}
 
 	.float-left {
-		float: left !important;
+		float: left;
 	}
 }
