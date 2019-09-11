@@ -4124,7 +4124,7 @@ export const SuccessPathScenarios = [
 			],
 		},
 		url: `${api}?customerId=${customerId}&usecase=Campus Network Assurance&suggestedAction=Get to know Cisco DNA Center` +
-			'&solution=IBN&rows=100&pitstop=Onboard',
+			'&solution=IBN&rows=500&pitstop=Onboard',
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -4142,7 +4142,7 @@ export const SuccessPathScenarios = [
 			],
 		},
 		url: `${api}?customerId=${customerId}&usecase=Campus Network Segmentation&suggestedAction=Onboard 2` +
-			'&solution=IBN&rows=100&pitstop=Onboard',
+			'&solution=IBN&rows=500&pitstop=Onboard',
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -4160,7 +4160,7 @@ export const SuccessPathScenarios = [
 			],
 		},
 		url: `${api}?customerId=${customerId}&usecase=Scalable Access Policy&suggestedAction=Onboard 2` +
-			'&solution=IBN&rows=100&pitstop=Onboard',
+			'&solution=IBN&rows=500&pitstop=Onboard',
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -4178,7 +4178,7 @@ export const SuccessPathScenarios = [
 			],
 		},
 		url: `${api}?customerId=${customerId}&usecase=Network Device Onboarding&suggestedAction=Onboard 2` +
-			'&solution=IBN&rows=100&pitstop=Onboard',
+			'&solution=IBN&rows=500&pitstop=Onboard',
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -4196,7 +4196,7 @@ export const SuccessPathScenarios = [
 			],
 		},
 		url: `${api}?customerId=${customerId}&usecase=Campus Software Image Management&suggestedAction=Onboard 2` +
-			'&solution=IBN&rows=100&pitstop=Onboard',
+			'&solution=IBN&rows=500&pitstop=Onboard',
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -4214,7 +4214,7 @@ export const SuccessPathScenarios = [
 			],
 		},
 		url: `${api}?customerId=${customerId}&usecase=Campus Network Assurance` +
-			'&solution=IBN&rows=100',
+			'&solution=IBN&rows=500',
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -4232,7 +4232,7 @@ export const SuccessPathScenarios = [
 			],
 		},
 		url: `${api}?customerId=${customerId}&usecase=Network Device Onboarding` +
-			'&solution=IBN&rows=100',
+			'&solution=IBN&rows=500',
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -4250,7 +4250,7 @@ export const SuccessPathScenarios = [
 			],
 		},
 		url: `${api}?customerId=${customerId}&usecase=Campus Software Image Management` +
-			'&solution=IBN&rows=100',
+			'&solution=IBN&rows=500',
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -4268,7 +4268,7 @@ export const SuccessPathScenarios = [
 			],
 		},
 		url: `${api}?customerId=${customerId}&usecase=Campus Network Segmentation` +
-			'&solution=IBN&rows=100',
+			'&solution=IBN&rows=500',
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -4286,7 +4286,7 @@ export const SuccessPathScenarios = [
 			],
 		},
 		url: `${api}?customerId=${customerId}&usecase=Scalable Access Policy` +
-			'&solution=IBN&rows=100',
+			'&solution=IBN&rows=500',
 		usecases: ['Use Case 1'],
 	},
 ];

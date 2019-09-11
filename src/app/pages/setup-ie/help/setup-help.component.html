@@ -21,9 +21,11 @@
 				[innerText]="'_OpenACaseToGetHelpFromOurEngineers_' | i18n"
 			></div>
 			<a
-				[href]="'mailto:' + env.emailToID"
+				data-auto-id="contact-support-link"
 				[innerText]="'_ContactSupport_' | i18n"
+				(click)="openContactSupport()"
 			></a>
 		</div>
 	</div>
 </div>
+<cui-modal></cui-modal>

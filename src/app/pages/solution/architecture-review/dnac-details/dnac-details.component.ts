@@ -23,6 +23,7 @@ export class DnacDetailsComponent implements OnChanges {
 	public networkDevicesData = { };
 	public endPointsData = { };
 	public fabricsData = { };
+	public wlcData = { };
 	public isLoading = true;
 
 	constructor (private logger: LogService,
@@ -41,6 +42,7 @@ export class DnacDetailsComponent implements OnChanges {
 		if (this.dnacDetails) {
 			this.params.dnacIP = this.dnacDetails.dnacIpaddress;
 		}
+		this.isLoading = true;
 		this.getNetworkDevicesCount();
 	}
 
@@ -78,6 +80,15 @@ export class DnacDetailsComponent implements OnChanges {
 					y : Number(fabrics.Published),
 				};
 				this.fabricsData = series;
+			}
+			const wlcData = _.get(data, 'WLC');
+			if (wlcData) {
+				const series = {
+					target : Number(wlcData.PublishedLimit),
+					xLabel : wlcData.Label,
+					y : Number(wlcData.Published),
+				};
+				this.wlcData = series;
 			}
 		}, err => {
 			this.logger.error('bullet graph count' +
