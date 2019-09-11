@@ -2277,7 +2277,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 							.eq(index)
 							.should('have.class', 'ribbon__white')
 							.click();
-						cy.waitForAppLoading('accLoading', 5000);
+						cy.wait('(Lifecycle) IBN-Bookmark');
 						cy.getByAutoId('ACCCardRibbon')
 							.eq(index)
 							.should('have.class', 'ribbon__blue');
@@ -2294,7 +2294,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 							.eq(index)
 							.should('have.class', 'ribbon__blue')
 							.click();
-						cy.waitForAppLoading('accLoading', 5000);
+						cy.wait('(Lifecycle) IBN-Bookmark');
 						cy.getByAutoId('ACCCardRibbon')
 							.eq(index)
 							.should('have.class', 'ribbon__white');

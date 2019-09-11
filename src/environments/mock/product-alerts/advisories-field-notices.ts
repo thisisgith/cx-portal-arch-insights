@@ -90,7 +90,7 @@ export const FieldNoticeAdvisoryScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 350,
+					delay: 500,
 					description: 'Field Notice Advisories',
 					response: {
 						body: MockData(10, 1),
@@ -108,7 +108,7 @@ export const FieldNoticeAdvisoryScenarios = [
 					selected: false,
 				},
 				{
-					delay: 250,
+					delay: 500,
 					description: 'Field Notice Advisories - Page 1',
 					response: {
 						body: MockData(10, 1, 3),
@@ -125,7 +125,7 @@ export const FieldNoticeAdvisoryScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 250,
+					delay: 500,
 					description: 'Field Notice Advisories - Page 2',
 					response: {
 						body: MockData(10, 2, 3),
@@ -142,7 +142,7 @@ export const FieldNoticeAdvisoryScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 250,
+					delay: 500,
 					description: 'Field Notice Advisories - Page 3',
 					response: {
 						body: MockData(10, 3, 3),

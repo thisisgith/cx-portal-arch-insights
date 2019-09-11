@@ -43,6 +43,7 @@ $default-text-color: #394454;
 	.advisoryTable {
 		table {
 			border-collapse: collapse;
+			cursor: pointer;
 
 			thead::after {
 				left: 2px;
