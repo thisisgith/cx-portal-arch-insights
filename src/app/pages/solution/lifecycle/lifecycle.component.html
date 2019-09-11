@@ -92,12 +92,12 @@
 		<div class="half-padding-left">
 			<span *ngIf="currentPitstop" [innerHTML]="'_DuringXStage_' | i18n:currentPitstop.name"></span>
 			<span [ngSwitch]="componentData?.racetrack?.stage">
-				<span *ngSwitchCase="'onboard'" [innerHTML]="'_OnboardDescription_' | i18n"></span>
-				<span *ngSwitchCase="'implement'" [innerHTML]="'_ImplementDescription_' | i18n"></span>
-				<span *ngSwitchCase="'adopt'" [innerHTML]="'_AdoptDescription_' | i18n"></span>
-				<span *ngSwitchCase="'engage'" [innerHTML]="'_EngageDescription_' | i18n"></span>
-				<span *ngSwitchCase="'use'" [innerHTML]="'_UseDescription_' | i18n"></span>
-				<span *ngSwitchCase="'optimize'" [innerHTML]="'_OptimizeDescription_' | i18n"></span>
+				<span *ngSwitchCase="'Onboard'" [innerHTML]="'_OnboardDescription_' | i18n"></span>
+				<span *ngSwitchCase="'Implement'" [innerHTML]="'_ImplementDescription_' | i18n"></span>
+				<span *ngSwitchCase="'Adopt'" [innerHTML]="'_AdoptDescription_' | i18n"></span>
+				<span *ngSwitchCase="'Engage'" [innerHTML]="'_EngageDescription_' | i18n"></span>
+				<span *ngSwitchCase="'Use'" [innerHTML]="'_UseDescription_' | i18n"></span>
+				<span *ngSwitchCase="'Optimize'" [innerHTML]="'_OptimizeDescription_' | i18n"></span>
 			</span>
 		</div>
 	</div>

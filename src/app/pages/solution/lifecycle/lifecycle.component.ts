@@ -328,16 +328,15 @@ export class LifecycleComponent implements OnDestroy {
 
 				this.componentData.params.usecase = _.get(technology, 'name');
 				this.componentData.params.solution = currentSolution;
-
 				this.currentWorkingPitstop = _.get(this.selectedTechnology, 'currentPitstop');
 				const currentPitstop = _.find(
 					_.get(this.selectedTechnology, 'pitstops', []), (stop: RacetrackPitstop) =>
-					stop.name.toLowerCase() === this.currentWorkingPitstop.toLowerCase());
+					stop.name === this.currentWorkingPitstop);
 				this.currentPitstopCompPert =
 					this.calculateActionPercentage(currentPitstop);
 
 				let viewingIndex = racetrackComponent.stages
-					.indexOf(this.currentWorkingPitstop.toLowerCase()) + 1;
+					.indexOf(this.currentWorkingPitstop) + 1;
 				if (viewingIndex === racetrackComponent.stages.length) { viewingIndex = 0; }
 				this.currentViewingPitstop = racetrackComponent.stages[viewingIndex];
 
@@ -351,8 +350,8 @@ export class LifecycleComponent implements OnDestroy {
 	 * selected pitstop
 	 */
 	public get notCurrentPitstop () {
-		return this.currentWorkingPitstop.toLowerCase() !== this.currentPitstop.name.toLowerCase()
-			&& this.currentViewingPitstop.toLowerCase() !== this.currentPitstop.name.toLowerCase();
+		return this.currentWorkingPitstop !== this.currentPitstop.name
+			&& this.currentViewingPitstop !== this.currentPitstop.name;
 	}
 
 	/**
@@ -1028,11 +1027,11 @@ export class LifecycleComponent implements OnDestroy {
 		.subscribe((results: RacetrackResponse) => {
 			const responseSolution: RacetrackSolution = _.find(
 				_.get(results, 'solutions', []), (solution: RacetrackSolution) =>
-				solution.name.toLowerCase() === this.selectedSolution.name.toLowerCase());
+				solution.name === this.selectedSolution.name);
 
 			const responseTechnology: RacetrackTechnology = _.find(
 				_.get(responseSolution, 'technologies', []), (tech: RacetrackTechnology) =>
-				tech.name.toLowerCase() === this.selectedTechnology.name.toLowerCase());
+				tech.name === this.selectedTechnology.name);
 
 			if (responseTechnology) {
 				this.racetrackInfoService.sendCurrentTechnology(responseTechnology);
@@ -1756,12 +1755,12 @@ export class LifecycleComponent implements OnDestroy {
 
 			const pitstop = _.find(
 				_.get(this.selectedTechnology, 'pitstops', []), (stop: RacetrackPitstop) =>
-				stop.name.toLowerCase() === stage.toLowerCase());
+				stop.name === stage);
 
 			this.componentData.racetrack = {
 				pitstop,
 				actionsCompPercent: this.currentPitstopCompPert,
-				stage: stage.toLowerCase(),
+				stage: stage,
 			};
 
 			const nextAction = pitstop ? _.find(pitstop.pitstopActions, { isComplete: false })

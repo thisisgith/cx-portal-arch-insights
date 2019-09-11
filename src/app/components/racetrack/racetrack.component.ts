@@ -63,19 +63,19 @@ export const trackOffsetY = -287.23;
  * stages - list of possible racetrack stages
  */
 export const stages = [
-	// 'need',
-	// 'evaluate',
-	// 'select',
-	// 'purchase',
-	'onboard',
-	'implement',
-	'use',
-	'engage',
-	'adopt',
-	'optimize',
-	// 'renew',
-	// 'recommend',
-	// 'advocate',
+	// 'Need',
+	// 'Evaluate',
+	// 'Select',
+	// 'Purchase',
+	'Onboard',
+	'Implement',
+	'Use',
+	'Engage',
+	'Adopt',
+	'Optimize',
+	// 'Renew',
+	// 'Recommend',
+	// 'Advocate',
 ];
 
 /**
@@ -180,19 +180,19 @@ export class RacetrackComponent implements OnInit {
 		// at what % of the path does the stop for each stage fall
 		// (path does not start at 'purchase' stage)
 		this.stageMap = {
-			need: {
+			Need: {
 				distance: 33,
 			},
-			evaluate: {
+			Evaluate: {
 				distance: 43,
 			},
-			select: {
+			Select: {
 				distance: 54,
 			},
-			purchase: {
+			Purchase: {
 				distance: 66,
 			},
-			onboard: {
+			Onboard: {
 				distance: 82,
 				label: {
 					x: -26,
@@ -200,7 +200,7 @@ export class RacetrackComponent implements OnInit {
 					anchor: 'middle',
 				},
 			},
-			implement: {
+			Implement: {
 				distance: 87,
 				label: {
 					x: 0,
@@ -208,7 +208,7 @@ export class RacetrackComponent implements OnInit {
 					anchor: 'start',
 				},
 			},
-			use: {
+			Use: {
 				distance: 91,
 				label: {
 					x: 36,
@@ -216,7 +216,7 @@ export class RacetrackComponent implements OnInit {
 					anchor: 'start',
 				},
 			},
-			engage: {
+			Engage: {
 				distance: 95,
 				label: {
 					x: 20,
@@ -224,7 +224,7 @@ export class RacetrackComponent implements OnInit {
 					anchor: 'start',
 				},
 			},
-			adopt: {
+			Adopt: {
 				distance: 99.5,
 				label: {
 					x: 20,
@@ -232,7 +232,7 @@ export class RacetrackComponent implements OnInit {
 					anchor: 'start',
 				},
 			},
-			optimize: {
+			Optimize: {
 				distance: 4.5,
 				label: {
 					x: 20,
@@ -240,13 +240,13 @@ export class RacetrackComponent implements OnInit {
 					anchor: 'start',
 				},
 			},
-			renew: {
+			Renew: {
 				distance: 8,
 			},
-			recommend: {
+			Recommend: {
 				distance: 12,
 			},
-			advocate: {
+			Advocate: {
 				distance: 16,
 			},
 		};
@@ -263,7 +263,7 @@ export class RacetrackComponent implements OnInit {
 		this.racecar.select('circle')
 			.attr('filter', dropShadowUrl);
 
-		this.current = 'purchase';
+		this.current = 'Purchase';
 
 		this.stageCircles = d3.select(this.track.node().parentNode)
 			.selectAll('.stage')
@@ -289,7 +289,6 @@ export class RacetrackComponent implements OnInit {
 				.attr('data-auto-id', name => `Racetrack-Point-${name}`)
 				.raise()
 				.on('click', d =>  {
-					// this.onStageChange.emit(d);
 					this.zoomToStage(d, false);
 				})
 				.on('mouseenter', function (d) {
@@ -304,8 +303,8 @@ export class RacetrackComponent implements OnInit {
 							.attr('fill', '#14bdf4');
 					}
 
-					// self.stageLabels.filter(dd => dd.name === d)
-					// 	.style('font-weight', 'bold');
+					self.stageLabels.filter(dd => dd.name === d)
+						.style('font-weight', 'bold');
 				})
 				.on('mouseleave', function (d) {
 					if (d === self.current) {
@@ -316,8 +315,6 @@ export class RacetrackComponent implements OnInit {
 						.transition()
 						.duration(50)
 						.attr('fill', 'white');
-
-					// self.stageLabels.style('font-weight', 'normal');
 				});
 
 		const labelsEnter = d3.select(this.track.node().parentNode)
@@ -462,8 +459,8 @@ export class RacetrackComponent implements OnInit {
 
 		this.racecar.raise();
 
-		// progress bar starts from 'purchase' step
-		const purchaseDistance = ((points.length - this.stageMap.purchase.distance) *
+		// progress bar starts from 'Purchase' step
+		const purchaseDistance = ((points.length - this.stageMap.Purchase.distance) *
 			(this.length / points.length) - 7);
 
 		this.progress.attr('stroke', '#14bdf4')
@@ -485,8 +482,7 @@ export class RacetrackComponent implements OnInit {
 			.on('click', () => this.zoomToNext());
 
 		racecar.style('cursor', 'pointer')
-			.on('click', () => this.zoomToStage(this.currentStage.toLowerCase(), false));
-
+			.on('click', () => this.zoomToStage(this.currentStage, false));
 		// customer has already purchased, starts at onboarding
 		this.zoomToStage(this.stage, true);
 	}
@@ -502,6 +498,8 @@ export class RacetrackComponent implements OnInit {
 	public zoomToStage (endpoint: string, trackProgress = false) {
 		this.current = endpoint;
 
+		this.onStageChange.emit(endpoint);
+
 		this.refreshLabels();
 		this.stageLabels.filter(d => d.name !== this.current)
 			.style('font-weight', 'normal');
@@ -514,14 +512,14 @@ export class RacetrackComponent implements OnInit {
 			.attr('filter', 'none')
 			.attr('fill', 'white')
 			.attr('stroke-width', 0)
-			.filter(d => d === this.current && d !== this.currentStage.toLowerCase())
+			.filter(d => d === this.current && d !== this.currentStage)
 				.attr('r', 12)
 				.attr('fill', '#14bdf4')
 				.attr('stroke', 'white')
 				.attr('stroke-width', 5)
 				.attr('filter', dropShadowUrl)
 
-		const start = this.stageMap[this.currentStage.toLowerCase()].distance;
+		const start = this.stageMap[this.currentStage].distance;
 		const end = this.stageMap[endpoint].distance;
 
 		let points = [
@@ -537,14 +535,14 @@ export class RacetrackComponent implements OnInit {
 		// Only changing selected stage, not racecar stage
 		if (!trackProgress) {
 			// show the selected label for the selected stage
-			this.selectedLabels.filter(d => d.name === endpoint && d.name !== this.currentStage.toLowerCase())
+			this.selectedLabels.filter(d => d.name === endpoint && d.name !== this.currentStage)
 				.attr('opacity', 1)
 				.raise();
 
-			this.stageLabels.filter(d => d.name === endpoint && d.name !== this.currentStage.toLowerCase())
+			this.stageLabels.filter(d => d.name === endpoint && d.name !== this.currentStage)
 				.style('visibility', 'hidden');
 
-			if (stages.indexOf(endpoint) < stages.indexOf(this.currentStage.toLowerCase())) {
+			if (stages.indexOf(endpoint) < stages.indexOf(this.currentStage)) {
 				this.preview.attr('opacity', 0);
 
 				return;
@@ -552,7 +550,7 @@ export class RacetrackComponent implements OnInit {
 			this.preview.attr('opacity', 1);
 
 			// show preview line from racetrack to selected
-			const offset = ((this.points.length - this.stageMap[this.currentStage.toLowerCase()].distance) *
+			const offset = ((this.points.length - this.stageMap[this.currentStage].distance) *
 			(this.length / this.points.length) - 7);
 
 			this.preview.attr('stroke-dashoffset', offset);
@@ -605,7 +603,7 @@ export class RacetrackComponent implements OnInit {
 			.range([8, 150])
 			.exponent(2.5);
 
-		if (endpoint.toLowerCase() === this.currentStage.toLocaleLowerCase()) {
+		if (endpoint === this.currentStage) {
 			points.reduce((chain, pt, i) => {
 				// skip half of the points to speed up animation, reduce calculations
 				// However, make sure we don't skip the last point
@@ -651,9 +649,9 @@ export class RacetrackComponent implements OnInit {
 		this.current = endpoint;
 
 		if (trackProgress) {
-			const progressDistance = (end - this.stageMap.purchase.distance < 0 ?
-				(end + this.points.length) - this.stageMap.purchase.distance :
-				end - this.stageMap.purchase.distance) * this.length / this.points.length;
+			const progressDistance = (end - this.stageMap.Purchase.distance < 0 ?
+				(end + this.points.length) - this.stageMap.Purchase.distance :
+				end - this.stageMap.Purchase.distance) * this.length / this.points.length;
 
 			const progressSoFar = this.progressSoFar || 0;
 
@@ -698,7 +696,6 @@ export class RacetrackComponent implements OnInit {
 
 		if (next === stages.length) { next = 0; }
 
-		// this.onStageChange.emit(stages[next]);
 		this.zoomToStage(stages[next], trackProgress);
 	}
 
@@ -708,11 +705,10 @@ export class RacetrackComponent implements OnInit {
 	 * @memberof RacetrackComponent
 	 */
 	public zoomToCurrent (trackProgress = false) {
-		let next = stages.indexOf(this.currentStage.toLowerCase());
+		let next = stages.indexOf(this.currentStage);
 
 		if (next === stages.length) { next = 0; }
 
-		// this.onStageChange.emit(stages[next]);
 		this.zoomToStage(stages[next], trackProgress);
 	}
 
@@ -727,7 +723,6 @@ export class RacetrackComponent implements OnInit {
 
 		if (prev === -1) { prev = stages.length - 1; }
 
-		// this.onStageChange.emit(stages[prev]);
 		this.zoomToStage(stages[prev], trackProgress);
 	}
 
@@ -736,7 +731,7 @@ export class RacetrackComponent implements OnInit {
 	 * @param changes the changes detected
 	 */
 	public ngOnChanges (changes: SimpleChanges) {
-		const currentStage = _.get(changes, ['stage', 'currentValue']);
+		const currentStage = _.get(changes, ['currentStage', 'currentValue']);
 		if (currentStage && !changes.stage.firstChange) {
 			this.zoomToStage(currentStage, true);
 		}
@@ -746,13 +741,13 @@ export class RacetrackComponent implements OnInit {
 	 * Re-render labels
 	 */
 	private refreshLabels () {
-		this.stageLabels.filter(d => (d.name !== this.currentStage.toLowerCase()) &&
+		this.stageLabels.filter(d => (d.name !== this.currentStage) &&
 			(d.name !== this.current))
 			.transition()
 			.duration(200)
 			.attr('opacity', 0);
 
-		this.stageLabels.filter(d => (d.name === this.currentStage.toLowerCase()) ||
+		this.stageLabels.filter(d => (d.name === this.currentStage) ||
 			(d.name === this.current))
 			.raise()
 			.transition()
