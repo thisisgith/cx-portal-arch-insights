@@ -28,11 +28,13 @@ import { MarshalTableData } from '../syslogs.utils';
 export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 	@Input('asset') public asset: any;
 	@ViewChild('innerTableRef', { static: true }) public innerTableRef: TemplateRef<{ }>;
+	@ViewChild('prodFamily', { static: true }) public prodFamily: TemplateRef<{ }>;
 	@Input('selectedFilter') public selectedFilter: any;
 	public tableOptions: CuiTableOptions;
 	public innerTableOptions: CuiTableOptions;
 	public selectDropDown = {
 		assets: { },
+		customerId: '',
 		productFamily: '',
 		productID: '',
 		selectedFilters : { },
@@ -47,6 +49,7 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 	public productFamily: ProductFamily[];
 	public pagerLimit = 5;
 	public destroy$ = new Subject();
+	public loading = false;
 	public tableConfig = {
 		tableLimit: 10,
 		tableOffset: 0,
@@ -150,9 +153,9 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 					sortable: true,
 				},
 				{
-					key: 'ProductFamily',
 					name: I18n.get('_ProductFamily_'),
 					sortable: true,
+					template: this.prodFamily,
 				},
 				{
 					key: 'SoftwareType',
@@ -179,13 +182,17 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 	 */
 
 	public onSelection () {
+		this.loading = true;
+		this.tableData = [];
 		this.selectDropDown.assets = this.asset;
 		this.selectDropDown.selectedFilters = this.selectedFilter;
+		this.selectDropDown.customerId = this.customerId;
 		this.syslogsService
 			.getPanelFilterGridData(
 				this.selectDropDown)
 			.pipe(takeUntil(this.destroy$),
 			catchError(err => {
+				this.loading = false;
 				this.logger.error('syslog-messages-details.component : getPanelFilterGridData() ' +
 					`:: Error : (${err.status}) ${err.message}`);
 
@@ -193,6 +200,7 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 			}),
 			)
 			.subscribe((data: SyslogPanelGridData) => {
+				this.loading = false;
 				this.tableData = MarshalTableData.marshalTableDataForInerGrid(data.responseData);
 				this.tableConfig.totalItems = this.tableData.length;
 			});
@@ -204,6 +212,8 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 	 */
 
 	public loadSyslogPaneldata (tableRowData) {
+		this.loading = true;
+		this.tableData = [];
 		if (this.asset) {
 			this.panelDataParam = {
 				customerId: this.customerId,
@@ -215,6 +225,7 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 				.pipe(
 					takeUntil(this.destroy$),
 					catchError(err => {
+						this.loading = false;
 						this.logger
 						.error('syslog-messages-details.component : getPanelGridData() ' +
 							`:: Error : (${err.status}) ${err.message}`);
@@ -223,6 +234,7 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 					}),
 				)
 				.subscribe((data: SyslogPanelGridData) => {
+					this.loading = false;
 					this.tableData = MarshalTableData
 					.marshalTableDataForInerGrid(data.responseData);
 					this.tableConfig.totalItems = this.tableData.length;
@@ -237,8 +249,15 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 	 */
 
 	public loadSyslogPanelFilter (tableRowData) {
+		this.selectDropDown.productFamily = '';
+		this.selectDropDown.productID = '';
+		this.selectDropDown.Software = '';
 		if (this.asset) {
-			this.syslogsService.getPanelFilterData(tableRowData)
+			const paramFilterData = {
+				customerId: this.customerId,
+				selectedRowData : tableRowData,
+			};
+			this.syslogsService.getPanelFilterData(paramFilterData)
 				.pipe(takeUntil(this.destroy$),
 				catchError(err => {
 					this.logger.error('syslog-messages-details.component : getPanelFilterData() ' +

@@ -1,7 +1,25 @@
 .force-left {
-	left: 0;
+	left: 0 !important;
 }
 
 .full-width {
 	width: 100%;
+}
+
+:host ::ng-deep .modal__body {
+	left: 0 !important;
+	height: 100%;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+}
+
+:host ::ng-deep .modal__content {
+	left: 15% !important;
+	height: 100% !important;
+	overflow: hidden !important;
+	display: flex !important;
+	flex-direction: column !important;
+	position: fixed !important;
+	width: 70% !important;
 }

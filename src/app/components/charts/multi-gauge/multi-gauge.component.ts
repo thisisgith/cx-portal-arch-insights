@@ -160,7 +160,8 @@ export class MultiGaugeComponent implements OnInit, OnChanges {
 			.style('letter-spacing', '0.72px')
 			.style('color', (_, i) => i === this.idx && this.selected ? '#00bceb' : '#243034')
 			.style('font-size', '15px')
-			.text(d => d3.format('.0f')(d.value));
+			.text(d => d3.format('.0f')(d.value))
+			.attr('data-auto-id', d => `${d.label}Point`);
 
 		const lineGenerator = d3.line();
 

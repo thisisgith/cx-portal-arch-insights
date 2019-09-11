@@ -99,7 +99,7 @@
 	<visual-filter-bar [filters]="filters">
 		<ng-template #startingCard>
 			<div
-				class="panel panel--bordered-right"
+				class="panel"
 				[ngClass]="{
 					filter__selected:
 						searchParams.headerFilterType !== 'CHATS' &&
@@ -181,11 +181,6 @@
 		(subfilter)="onTimeRangefilterSelect($event.filter, filter, true)"
 	>
 	</column-chart>
-	<div
-		class="text-large flex-center"
-		[ngClass]="{ 'text-primary': searchParams?.headerFilterType === 'CHATS' }"
-		[innerText]="filter.title"
-	></div>
 </ng-template>
 
 <ng-template #serverError>
@@ -202,15 +197,13 @@
 </ng-template>
 
 <ng-template #filterBar>
-	<div *ngIf="timeRangeFiltered" class="row">
-		<div class="col-md-1 flex flex-center-vertical">
-			<span class="text-bold text-uppercase half-padding-right"
+	<div *ngIf="timeRangeFiltered" class="row flex-center-vertical half-margin-top base-margin-bottom">
+		<div class="col-md-11 flex">
+			<span class="flex flex-center-vertical base-margin-left half-margin-right filter-bar__title"
 				[innerText]="'_AfmFiltered_'| i18n"></span>
-		</div>
-		<div class="col-md-10">
 			<ng-container *ngFor="let filter of selectedFilters">
 				<ng-container *ngFor="let subfilter of getSelectedSubFilters(filter.key)">
-					<span class="label label--dkgray text-large"
+					<span class="label filter-bar__item"
 						(click)="onSubfilterSelect(subfilter.filter, filter)"
 						attr.data-auto-id="FilterTag-{{ subfilter.filter }}">
 						<span [innerText]="subfilter.label"></span>
@@ -219,8 +212,8 @@
 				</ng-container>
 			</ng-container>
 		</div>
-		<div class="col-md-1 text-center text-right">
-			<a (click)="clearFilters()" class="text-lowercase"
+		<div class="col-md-1 flex flex-center flex-center-vertical filter-bar__clear">
+			<a (click)="clearFilters()"
 				[innerText]="'_AfmClearAll_'| i18n"
 				data-auto-id="FilterBarClearAllFilters">
 			</a>
@@ -332,6 +325,7 @@
 	*ngIf="showAlarmDetails"
 	[hidden]="!showAlarmDetails"
 	[fullscreen]="fullscreen"
+	id="details-panel"
 >
 	<details-panel-header
 		(close)="onAlarmPanelClose()"
@@ -394,9 +388,9 @@
 
 <!-- App Details slide-out -->
 <asset-details *ngIf="selectedAsset"
-	[asset]="selectedAsset"
-	[serialNumber]="selectedAsset?.serialNumber"
-	[element]=""
+	[asset]="assetLinkInfo?.asset"
+	[serialNumber]="assetLinkInfo?.asset?.serialNumber"
+	[element]="assetLinkInfo?.element"
 	(close)="onPanelClose()"
 >
 </asset-details>

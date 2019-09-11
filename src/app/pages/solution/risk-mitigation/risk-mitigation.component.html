@@ -44,8 +44,8 @@
 		<ng-container *ngTemplateOutlet="filterBar"></ng-container>
 	</ng-container>
 	<div class="row">
-		<div class="col-9 qtr-margin-top">
-			<span class="font15 qtr-margin-top" [innerText]="'_RMAssets_' | i18n"></span>
+		<div class="col-auto qtr-margin-top flex flex-fill flex-center-vertical">
+			<span class="font15" [innerText]="'_RMAssets_' | i18n"></span>
 			<span *ngIf="onlyCrashes" [innerText]="'_RMShowingXofYAssets_' | i18n:hcrPagination:highCrashRiskAssetsGridDetails.totalItems"
 				class="qtr-margin-left text-small text-muted" data-auto-id="ShowingAssetsCount">
 			</span>
@@ -53,13 +53,14 @@
 				class="qtr-margin-left text-small text-muted" data-auto-id="ShowingAssetsCount">
 			</span>
 		</div>
-		<div class="col-3">
+		<div class="col-auto">
 			<cui-search *ngIf="!onlyCrashes"
 				placeholder="{{ '_Search_' | i18n }}"
 				[debounce]="searchOptions.debounce"
 				[compressed]="true"
 				[searchText] = "searchQueryInCrashGrid"
 				(onUpdate)="onSearchQuery($event)"
+				class="risk-mitigation-search"
 			>
 			</cui-search>
 			<cui-search *ngIf="onlyCrashes"
@@ -68,6 +69,7 @@
 				[compressed]="true"
 				[searchText] = "searchQueryInHighCrashGrid"
 				(onUpdate)="onSearchQuery($event)"
+				class="risk-mitigation-search"
 			>
 			</cui-search>
 		</div>
@@ -86,20 +88,18 @@
 </ng-template>
 
 <ng-template #filterBar>
-	<div class="row">
-		<div class="col-1 flex flex-center-vertical">
+	<div class="row flex-center-vertical half-margin-top base-margin-bottom">
+		<div class="col-md-11 flex">
 			<span
-				class="text-bold text-uppercase half-padding-right"
+				class="flex flex-center-vertical base-margin-left half-margin-right filter-bar__title"
 				[innerText]="'_RMFiltered_' | i18n"
 			></span>
-		</div>
-		<div class="col-10">
 			<ng-container *ngFor="let filter of selectedFilters">
 				<ng-container
 					*ngFor="let subfilter of getSelectedSubFilters(filter.key)"
 				>
 					<span
-						class="label label--dkgray text-large"
+						class="label filter-bar__item"
 						(click)="onSubfilterSelect(subfilter.filter, filter)"
 						attr.data-auto-id="FilterTag-{{ subfilter.filter }}"
 						*ngIf="!onlyCrashes"
@@ -114,17 +114,15 @@
 				</ng-container>
 			</ng-container>
 		</div>
-		<div class="col-1 text-center text-right">
+		<div class="col-md-1 flex flex-center flex-center-vertical filter-bar__clear">
 			<a
 				(click)="clearFilters()"
-				class="text-lowercase"
 				[innerText]="'_RMClearAll_' | i18n"
 				data-auto-id="FilterBarClearAllFilters"
 			>
 			</a>
 		</div>
 	</div>
-	<div class="divider qtr-margin"></div>
 </ng-template>
 
 <div *ngIf="!onlyCrashes; else assetsWithCrashRisk">

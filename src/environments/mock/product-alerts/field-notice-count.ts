@@ -13,16 +13,24 @@ const api = '/api/customerportal/product-alerts/v1/field-notices';
  */
 const mockCounts: FieldNoticeUpdatedResponse = {
 	'further-out': {
+		fromTimestampInMillis: 1568125813000,
 		numericValue: 5,
+		toTimestampInMillis: 1568125813000,
 	},
 	'gt-0-lt-30-days': {
+		fromTimestampInMillis: 1568125813000,
 		numericValue: 1,
+		toTimestampInMillis: 1570717813000,
 	},
 	'gt-30-lt-60-days': {
+		fromTimestampInMillis: 1570717813000,
 		numericValue: 4,
+		toTimestampInMillis: 1573396213000,
 	},
 	'gt-60-lt-90-days': {
+		fromTimestampInMillis: 1573396213000,
 		numericValue: 4,
+		toTimestampInMillis: 1575988213000,
 	},
 };
 

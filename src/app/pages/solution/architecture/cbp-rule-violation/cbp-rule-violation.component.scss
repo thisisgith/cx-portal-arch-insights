@@ -10,3 +10,7 @@
 :host ::ng-deep .table {
 	@include table-ellipse;
 }
+
+.form-group__text .cbp-rule-violation-search {
+	@include filter-search;
+}
