@@ -57,6 +57,7 @@ describe('Assets', () => { // PBC-41
 		cy.login();
 		cy.loadApp('/solution/assets');
 		cy.window().then(win => { // Must be done after app loads
+			MockService.enableAll();
 			win.Cypress.hideDNACHeader = true;
 		});
 		cy.waitForAppLoading();
@@ -801,6 +802,7 @@ describe('Assets', () => { // PBC-41
 
 			cy.getByAutoId('Facet-Lifecycle').click(); // refresh grid
 			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.waitForAppLoading('inventoryLoading');
 			cy.getByAutoId('NoResultsFoundTxt').should('have.text', 'No Results Found');
 
 			assetMock.enable('(Assets) Missing data - Grid View');
