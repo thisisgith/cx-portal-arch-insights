@@ -46,7 +46,7 @@ export class CbpDeviceAffectedComponent implements OnInit, OnChanges {
 	public isLoading = true;
 	public assetDatas: IAsset[] = [];
 	public assetParams: InventoryService.GetAssetsParams;
-	public assetLinkInfo: AssetLinkInfo;
+	public assetLinkInfo: AssetLinkInfo = Object.create({ });
 	public selectedAsset = false;
 	public destroy$ = new Subject();
 	public params: any = {

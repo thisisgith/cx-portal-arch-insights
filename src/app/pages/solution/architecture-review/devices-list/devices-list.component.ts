@@ -34,7 +34,7 @@ export class DevicesListComponent implements OnInit, OnChanges {
 	public searchText = '';
 	public selectedAsset = false;
 	public assetParams: InventoryService.GetAssetsParams;
-	public assetLinkInfo: AssetLinkInfo;
+	public assetLinkInfo: AssetLinkInfo = Object.create({ });
 	@ViewChild('productFamilyTemplate', { static: true })
 	private productFamilyTemplate: TemplateRef<{ }>;
 	@ViewChild('softwareVersionTemplate', { static: true })

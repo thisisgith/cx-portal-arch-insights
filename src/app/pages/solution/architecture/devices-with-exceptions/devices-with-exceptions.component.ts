@@ -45,7 +45,7 @@ export class DevicesWithExceptionsComponent implements OnInit {
 	public assetObject: IAsset = null;
 	public selectedAsset = false;
 	public assetParams: InventoryService.GetAssetsParams;
-	public assetLinkInfo: AssetLinkInfo;
+	public assetLinkInfo: AssetLinkInfo = Object.create({ });
 	public assetsExceptionDetails: assetExceptionList[] = [];
 	public tableOptions: CuiTableOptions;
 	public totalItems = 0;
