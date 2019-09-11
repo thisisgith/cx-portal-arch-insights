@@ -22,7 +22,7 @@ echo "Usage: ./deploy-s3-prd.sh <authy-token>"
 
 # Note, as an API user Jenkins deployments do no require 2FA, otherwise you must include the authy-token
 echo "Usage as user: ./deploy-s3.sh <authy-token>"
-echo "Usage as Jenkins:  ./deploy-s3.sh"
+echo "Usage as Jenkins:  ./deploy-s3-prd.sh"
 
 # set AWS session env vars
 if [ "$#" -ne 1 ]; then
