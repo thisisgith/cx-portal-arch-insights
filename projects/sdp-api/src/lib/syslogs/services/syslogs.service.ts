@@ -178,10 +178,10 @@ class SyslogsService extends __BaseService {
 	 */
 	sysPanelFilterData(syslogPanelParams){
 		let __params = this.newParams();
-		__params=__params.set('msgType',syslogPanelParams.MsgType);
-		__params=__params.set('filterTypes','ProductId');
-		__params=__params.set('filterTypes','SoftwareType');
-		__params=__params.set('filterTypes','ProductFamily');
+		__params=__params.set('msgType',syslogPanelParams.selectedRowData.MsgType);
+		__params=__params.set('filterTypes','ProductId,SoftwareType,ProductFamily');
+		__params=__params.set('companyId',syslogPanelParams.customerId)
+		
         const __headers = new HttpHeaders();
         const __body: any = null;
 		const req = new HttpRequest<any>(
@@ -216,6 +216,7 @@ class SyslogsService extends __BaseService {
 		__params=__params.set('productId',SyslogFilterParam.productID);
 		__params=__params.set('severity',SyslogFilterParam.selectedFilters.severity);
 		__params=__params.set('software',SyslogFilterParam.Software);
+		__params=__params.set('companyId',SyslogFilterParam.customerId)
         const __headers = new HttpHeaders();
         const __body: any = null;
 		const req = new HttpRequest<any>(

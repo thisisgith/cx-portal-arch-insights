@@ -54,4 +54,4 @@ automation:
     - npm run start:background
   script:
     # TODO: Add more spec files (comma separated) once they are stable
-    - npm run test:automation -- --spec "cypress/integration/assets_spec.js"
+    - npm run test:automation -- --spec "cypress/integration/assets_spec.js,cypress/integration/advisories_spec.js"

@@ -1058,10 +1058,7 @@ export class LifecycleComponent implements OnDestroy {
 	private calculateActionPercentage (pitstop: RacetrackPitstop) {
 		const start = I18n.get('_Start_');
 		if (pitstop) {
-			const completedActions = _.filter(pitstop.pitstopActions, 'isComplete').length;
-			const pct = Math.floor(
-				(completedActions / pitstop.pitstopActions.length) * 100) || 0;
-
+			const pct = _.get(pitstop, 'pitstop_adoption_percentage');
 			if (!_.isNil(pct)) {
 				return (pct === 0) ? start : `${pct.toString()}%`;
 			}
@@ -1171,9 +1168,10 @@ export class LifecycleComponent implements OnDestroy {
 	/**
 	 * Changes the atxMoreClicked flag and adds value to moreATXSelected
 	 * @param item ATXSchema
+	 * @param panel string
 	 */
-	 public atxMoreSelect (item: AtxSchema) {
-		 if (!this.atxMoreClicked) {
+	 public atxMoreSelect (item: AtxSchema, panel: string) {
+		 if (!this.atxMoreClicked && _.isEqual(panel, 'moreATXList')) {
 			this.atxScheduleCardOpened = false;
 			this.recommendedAtxScheduleCardOpened = false;
 			this.moreATXSelected = item;
@@ -1229,7 +1227,33 @@ export class LifecycleComponent implements OnDestroy {
 	 */
 	 public atxWatchNow (recordingUrl: string) {
 		window.open(`${recordingUrl}`, '_blank');
-		this.atxMoreClicked = false;
+		this.closeViewSessions();
+	}
+
+	/**
+	 * Determines the class of Register button for ATX
+	 * @param data AtxSchema
+	 * @returns button string
+	 */
+	 public getAtxRegisterButton (data: AtxSchema) {
+		let button: string;
+		button = '';
+		if (!_.get(this.sessionSelected, 'registrationURL') || this.notCurrentPitstop ||
+			_.isEqual(_.get(data, 'status'), 'scheduled')) {
+			button = 'disabled';
+		}
+
+		return button;
+	}
+
+	/**
+	 * Opens the given recordingURL in a new tab
+	 * @param registerUrl string
+	 */
+	 public atxRegister (registerUrl: string) {
+		window.open(`${registerUrl}`, '_blank');
+		this.closeViewSessions();
+		this.closeModal();
 	}
 
 	/**

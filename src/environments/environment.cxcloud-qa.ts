@@ -27,6 +27,8 @@ export const environment = {
 		classifyAppId: 'CXPortal',
 		clientId: '07e418ac71284560944ea92f653a01c2',
 	},
+	emailToID: 'cx-portal-support@cisco.com',
+	feedbackToEmail: 'cx-portal-support@cisco.com',
 	ieSetup: {
 		asdAuthURL: 'https://cway.cisco.com/ws/oauth/v3/token/cisco/ae95x38c7zgu5fas59gseyfk',
 		asdBaseURL: 'https://api.cisco.com/software/preview/v3.0',
@@ -34,6 +36,7 @@ export const environment = {
 		DNAC_LS_KEY: 'cxportal.cisco.com:setup-ie:NO_DNAC',
 		downloadOvaLink: 'http://engci-maven-master.cisco.com/artifactory/services-cf-insight' +
 			'_engine-release/ie/Insight_Engine_1.0/ubuntu/103/CXC_1.0_Build-103.ova',
+		imageDownloadRetries: 6,
 		mockASD: true,
 		mockRegistration: false,
 		pingURL: '/ie-commonapi/services/version',

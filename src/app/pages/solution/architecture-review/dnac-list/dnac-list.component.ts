@@ -144,7 +144,8 @@ export class DnacListComponent implements OnInit {
 	public textFilter (event) {
 		// key code 13 refers to enter key
 		const eventKeycode = 13;
-		if (event.keyCode === eventKeycode || this.searchText.trim().length === 0) {
+		if (event.keyCode === eventKeycode
+			|| (event.keyCode !== eventKeycode && this.searchText.trim().length === 0)) {
 			this.isLoading = true;
 			this.tableStartIndex = 0;
 			this.params.page = 0;

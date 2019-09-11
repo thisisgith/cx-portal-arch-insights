@@ -207,14 +207,15 @@
 					<span class="icon-email"></span>
 					<a class="text-small" href="mailto:{{ member.emailAddress }}" [innerText]="member.emailAddress" attr.data-auto-id="Cisco TeamMemberEmailLink-{{ member.emailAddress }}"></a>
 				</div>
-				<div class="cx-team-member--contact flex-center-vertical">
+				<!-- TODO: PBC-758 requires that webex and webex teams links not be shown -->
+				<!-- <div class="cx-team-member--contact flex-center-vertical">
 					<span class="icon-webex"></span>
 					<a class="text-small" [innerText]="'_Webex_' | i18n" [href]="webexUrl + member.ccoId" attr.data-auto-id="CiscoTeamMemberWebexLink-{{ member.ccoid }}"></a>
 				</div>
 				<div class="cx-team-member--contact flex-center-vertical">
 					<span class="icon-webex-teams-16"></span>
 					<a class="text-small" [innerText]="'_WebexTeams_' | i18n" [href]="sanitize(webexTeamsUrl + member.emailAddress)" attr.data-auto-id="CiscoTeamMemberWebexTeamsLink-{{ member.emailAddress }}"></a>
-				</div>
+				</div> -->
 			</div>
 		</div>
 	</div>

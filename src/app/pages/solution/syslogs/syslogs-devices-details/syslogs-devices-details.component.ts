@@ -33,7 +33,11 @@ export class SyslogsDeviceDetailsComponent implements OnChanges, OnDestroy {
 	public excludeMsgFilter = '';
 	public selectedSeverity = '';
 	public selectedTimeRange = '';
+	public selectedCatalog = '';
+	public tableStartIndex = 0;
+	public tableEndIndex = 10;
 	public deviceDetailsParams: SyslogsService.GetSyslogsParams = { };
+	public loading = false;
 	public tableConfig = {
 		tableLimit: 10,
 		tableOffset: 0,
@@ -95,6 +99,16 @@ export class SyslogsDeviceDetailsComponent implements OnChanges, OnDestroy {
 		name: I18n.get('_SyslogDays30_'),
 		value: 30,
 	}];
+	public catalogList = [
+		{
+			name: I18n.get('_SyslogCiscoCatalog_'),
+			value: 'Cisco',
+		},
+		{
+			name: I18n.get('_SyslogOthers_'),
+			value: 'Others',
+		},
+	];
 	constructor (
 		private logger: LogService,
 		public syslogsService: SyslogsService,
@@ -120,17 +134,18 @@ export class SyslogsDeviceDetailsComponent implements OnChanges, OnDestroy {
 		if (currentFilter) {
 			this.selectedTimeRange = currentFilter.days;
 			this.selectedSeverity = currentFilter.severity;
-			this.deviceDetailsParams = {
-				catalog: currentFilter.catalog,
-				customerId: this.customerId,
-				days: +this.selectedTimeRange,
-				deviceHost: currentAsset.DeviceHost,
-				excludeMsgType: this.excludeMsgFilter,
-				includeMsgType: this.includeMsgFilter,
-				severity: +this.selectedSeverity,
-			};
-			this.SyslogDevicePanelData();
+			this.selectedCatalog = currentFilter.catalog;
 		}
+		this.deviceDetailsParams = {
+			catalog: this.selectedCatalog,
+			customerId: this.customerId,
+			days: +this.selectedTimeRange,
+			deviceHost: currentAsset.DeviceHost,
+			excludeMsgType: this.excludeMsgFilter,
+			includeMsgType: this.includeMsgFilter,
+			severity: +this.selectedSeverity,
+		};
+		this.SyslogDevicePanelData();
 	}
 
 	/**
@@ -206,9 +221,12 @@ export class SyslogsDeviceDetailsComponent implements OnChanges, OnDestroy {
 	 * Onchanges lifecycle hook
 	 */
 	public SyslogDevicePanelData () {
+		this.loading = true;
+		this.tableData = [];
 		this.syslogsService.getdevicePanelDetails(this.deviceDetailsParams)
 		.pipe(takeUntil(this.destroy$),
 		catchError(err => {
+			this.loading = false;
 			this.logger.error('syslog-messages-details.component : getdevicePanelDetails() ' +
 				`:: Error : (${err.status}) ${err.message}`);
 
@@ -218,6 +236,11 @@ export class SyslogsDeviceDetailsComponent implements OnChanges, OnDestroy {
 		.subscribe((response: SyslogDevicePanelOuter[]) => {
 			this.tableData = MarshalTableData.marshalTableDataForInerGrid(response);
 			this.tableConfig.totalItems = response.length;
+			this.loading = false;
+			this.tableEndIndex = 10;
+			if (this.tableEndIndex > this.tableConfig.totalItems) {
+				this.tableEndIndex = this.tableConfig.totalItems;
+			}
 		});
 	}
 	/**
@@ -237,6 +260,7 @@ export class SyslogsDeviceDetailsComponent implements OnChanges, OnDestroy {
 	public onSelection () {
 		this.deviceDetailsParams.severity = +this.selectedSeverity;
 		this.deviceDetailsParams.days = +this.selectedTimeRange;
+		this.deviceDetailsParams.catalog = this.selectedCatalog;
 		this.SyslogDevicePanelData();
 	}
 
@@ -247,8 +271,12 @@ export class SyslogsDeviceDetailsComponent implements OnChanges, OnDestroy {
 	 public onPagerUpdated (pageInfo: any) {
 		this.tableConfig.tableOffset = pageInfo.page;
 		this.paginationConfig.pageNum = pageInfo.page + 1;
-	}
-
+		this.tableStartIndex = (pageInfo.page * pageInfo.limit) ;
+		this.tableEndIndex = (pageInfo.page * pageInfo.limit) + 10 ;
+		if (this.tableEndIndex > this.tableConfig.totalItems) {
+			this.tableEndIndex = this.tableConfig.totalItems ;
+		}
+	 }
 	/**
 	 * on destroy
 	 */
