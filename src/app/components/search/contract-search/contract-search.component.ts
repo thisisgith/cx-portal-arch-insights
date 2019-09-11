@@ -57,6 +57,7 @@ export class ContractSearchComponent extends SpecialSearchComponent
 	public loading = true;
 	public loadingCoverages = true;
 	public contractData: DeviceContractInfo;
+	public cxLevel: string;
 	public coverageCount: number;
 	public statusColor: StatusColorMap;
 	public showCxInfo = false;
@@ -77,6 +78,15 @@ export class ContractSearchComponent extends SpecialSearchComponent
 		)
 		.subscribe((id: string) => {
 			this.customerId = id;
+		});
+		this.userResolve.getCXLevel()
+		.pipe(
+			takeUntil(this.destroy$),
+		)
+		.subscribe((cxLevel: number) => {
+			if (!this.cxLevel) {
+				this.cxLevel = `CX Level ${cxLevel}`;
+			}
 		});
 	}
 
@@ -100,6 +110,9 @@ export class ContractSearchComponent extends SpecialSearchComponent
 				const statusKey = _.get(this.contractData, 'contractStatus', 'UNKNOWN')
 					.toUpperCase();
 				this.statusColor = _.get(StatusColorMap, statusKey);
+				if (this.contractData.cxLevel) {
+					this.cxLevel = this.cxLevel = `CX Level ${this.contractData.cxLevel}`;
+				}
 			} else {
 				this.hide.emit(true);
 			}
