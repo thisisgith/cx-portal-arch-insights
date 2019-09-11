@@ -120,7 +120,7 @@
 	</div>
 </ng-template>
 <ng-template #deviceLink let-item="celldata">
-	<span [innerText]="item?.hostName"></span>
+	<a data-auto-id="DeviceLinkSlideIn" (click)="openAssetDetails(item?.serialNumber)" [innerText]="item?.hostName"></a>
 </ng-template>
 <ng-template #noDataAvailable>
 	<div class="text-center dbl-margin-top dbl-margin-bottom">
