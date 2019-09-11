@@ -445,7 +445,7 @@
 		<div class="atx-scheduler__footer">
 			<button id="AtxScheduleCardRegisterButton"
 				class="pull-left btn btn--primary"
-				attr.data-auto-id = "AtxScheduleCardRegisterButton"
+				data-auto-id = "AtxScheduleCardRegisterButton"
 				[ngClass]="getAtxRegisterButton(data)"
 				(click)="atxRegister(sessionSelected.registrationURL)"
 				[innerText]="'_Register_' | i18n">
@@ -854,7 +854,7 @@
 		*ngFor="let item of selectedATX"
 		[ngClass]="item.status === 'recommended' ? 'atx__card__recommended' : null"
 		data-auto-id="ATXCard">
-		<img class="max-width" alt="'_Placeholder_' | i18n" [src]="item.imageURL || 'assets/img/solutions/defaultLifecycleImage.png'" attr.data-auto-id="{{ autoid }}-Image">
+		<img class="max-width" alt="'_Placeholder_' | i18n" [src]="item.imageURL || 'assets/img/solutions/defaultLifecycleImage.png'" data-auto-id="ATXCard-Image">
 		<div class="text-left base-padding-left atx__card__label" [ngClass]="item.status === 'Recommended' ? 'text-dkgray-4' : 'text-clear'" data-auto-id="ATXCardHeader">
 			<span class="icon-flagged qtr-margin-right" data-auto-id="ATXCard-Flag"></span>
 			<span class="text-small" [innerText]="'_Recommended_' | i18n"></span>
@@ -869,7 +869,7 @@
 			[innerText]="item.title"
 			data-auto-id="ATXCardTitle">
 		</div>
-		<div class="card__body atx__card__body text-left desc-line-clamp" *ngIf="item && item.description" [innerText]="item.description"></div>
+		<div class="card__body atx__card__body text-left desc-line-clamp" *ngIf="item && item.description" [innerText]="item.description" data-auto-id="ATXCard-Description"></div>
 		<div class="card__footer atx__card__footer">
 			<div class="card_footer_item"  data-auto-id="ATXCardFooter">
 				<div class="atx__card__status text-left base-padding-left base-padding-right base-margin-bottom flex-middle">
