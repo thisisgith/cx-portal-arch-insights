@@ -476,6 +476,77 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 	}
 }
 
+.title-line-clamp {
+	display: -webkit-box;
+	overflow: hidden;
+	-webkit-line-clamp: 2;
+
+	/* autoprefixer: off */
+	-webkit-box-orient: vertical;
+}
+
+.success {
+	&__card {
+		@extend .atx__card;
+
+		height: 315px;
+
+		&__archetype {
+			padding: 0 30px 0 20px;
+		}
+
+		&__background {
+			@extend .atx__card__background;
+		}
+
+		&__header {
+			@extend .atx__card__header;
+		}
+
+		&__body {
+			@extend .atx__card__body;
+
+			margin: 10px 0;
+		}
+
+		&__footer {
+			@extend .atx__card__footer;
+		}
+
+		&__actions {
+			@extend .atx__card__actions;
+		}
+
+		&__icons {
+			display: flex;
+			flex-wrap: nowrap;
+			justify-content: left;
+			padding: 0 30px 0 20px;
+
+			.type,
+			.duration {
+				margin-right: 15px;
+
+				span {
+					font-size: 11px;
+					color: $light-gray-1;
+
+					&[class*="icon-"] {
+						font-size: 14px;
+					}
+				}
+			}
+		}
+	}
+}
+
+.success-grid {
+
+	/* 'auto' sometimes messes up in weird corner cases for Success Bytes
+	with low numbers of cards. Force the grid to have the correct height. */
+	grid-template-rows: repeat(auto-fill, 315px) !important;
+}
+
 .cx-lifecycle-card--recommended .icon-check-outline,
 .cx-lifecycle-card--recommended .icon-clock,
 .cx-lifecycle-card--recommended .icon-certified {
@@ -526,41 +597,6 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 	margin-top: auto;
 }
 
-.success__card__body {
-	height: 100px;
-	margin: 10px 0;
-}
-
-.success__card__title {
-	margin-bottom: 5px;
-	font-size: 16px;
-	color: $text-default-color;
-}
-
-.success__card__icons {
-	display: flex;
-	flex-wrap: nowrap;
-	justify-content: left;
-
-	.type,
-	.duration {
-		margin-right: 15px;
-
-		span {
-			font-size: 11px;
-			color: $light-gray-1;
-
-			&[class*="icon-"] {
-				font-size: 14px;
-			}
-		}
-	}
-}
-
-.success__card__launch {
-	text-align: left;
-}
-
 .round-edges {
 	border-radius: 15px;
 }
@@ -594,16 +630,6 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 	/* autoprefixer: off */
 	-webkit-box-orient: vertical;
 }
-
-.title-line-clamp {
-	display: -webkit-box;
-	overflow: hidden;
-	-webkit-line-clamp: 2;
-
-	/* autoprefixer: off */
-	-webkit-box-orient: vertical;
-}
-
 
 .table-img-width {
 	width: 80px;
