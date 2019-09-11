@@ -421,8 +421,8 @@ export class AfmComponent implements OnInit {
 		return this.assetPanelLinkService.getAssetLinkData(assetParams)
 			.pipe(takeUntil(this.destroy$))
 			.subscribe(response => {
-				this.assetLinkInfo.asset = _.get(_.get(_.get(response,0), 'data'), 0);
-				this.assetLinkInfo.element = _.get(_.get(_.get(response,1), 'data'), 0);
+				this.assetLinkInfo.asset = _.get(_.get(_.get(response, 0), 'data'), 0);
+				this.assetLinkInfo.element = _.get(_.get(_.get(response, 1), 'data'), 0);
 			},
 			catchError(err => {
 				this.logger.error(
