@@ -1,7 +1,7 @@
 import { InsightsResponse } from '@sdp-api';
 
 /** Base of URL for SDP API insights */
-const api = '/api/customerportal/insightsCounts/v1/allCounts/customer/';
+const api = '/api/customerportal/insightsCounts/v1/allCounts/details/';
 
 /** Mock Customer ID */
 const customerId = '7293498';
@@ -30,7 +30,7 @@ export const InsightsScenarios = [
 				selected: true,
 			},
 		},
-		url: `${api}${customerId}/timePeriod/0`,
+		url: `${api}?customerId=${customerId}&timePeriod=0`,
 		usecases: ['Use Case 1'],
 	},
 ];

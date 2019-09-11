@@ -483,7 +483,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		insightsFacet.loading = true;
 		insightsFacet.isError = false;
 
-		return this.insightsCrashesService.getInsightsCounts(this.customerId)
+		return this.insightsCrashesService.getInsightsCounts({ customerId: this.customerId })
 		.pipe(
 			map((counts: any) => {
 
