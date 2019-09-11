@@ -17,4 +17,9 @@ export interface RacetrackTechnology {
    */
   currentPitstop: string;
   pitstops: Array<RacetrackPitstop>;
+
+  /**
+   * Percentage completed checklist actions across all pitstops.
+   */
+  usecase_adoption_percentage?: number;
 }

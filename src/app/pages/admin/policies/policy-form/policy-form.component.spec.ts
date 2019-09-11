@@ -58,7 +58,7 @@ describe('PolicyFormComponent', () => {
 			formattedSchedule: 'at 10:00 am, only on tuesday UTC',
 			policyId: 'b5a7a0bd-26a8-4c29-b8ec-7c3c2c40d3f4',
 			policyType: 'SCAN',
-			schedule: '0 0 10 * * 2',
+			schedule: '0 0 10 ? * TUE',
 		};
 
 		it('call editCollection', () => {
@@ -110,7 +110,7 @@ describe('PolicyFormComponent', () => {
 			formattedSchedule: 'at 10:00 am, only on tuesday UTC',
 			policyId: 'b5a7a0bd-26a8-4c29-b8ec-7c3c2c40d3f4',
 			policyType: 'SCAN',
-			schedule: '0 0 10 * * 2',
+			schedule: '0 0 10 ? * TUE',
 		};
 
 		it('editCollection', () => {
@@ -423,10 +423,10 @@ describe('PolicyFormComponent', () => {
 		});
 
 		it('testWeeklySchedule', () => {
-			const schedule = component.getSchedule('weekly', '6', undefined, '0 1');
+			const schedule = component.getSchedule('weekly', 'SAT', undefined, '0 1');
 
 			expect(schedule)
-				.toBe('0 0 1 ? * 6');
+				.toBe('0 0 1 ? * SAT');
 		});
 
 		it('testDailySchedule', () => {

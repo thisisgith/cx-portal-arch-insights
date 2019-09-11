@@ -37,6 +37,7 @@ export class SyslogsDeviceDetailsComponent implements OnChanges, OnDestroy {
 	public tableStartIndex = 0;
 	public tableEndIndex = 10;
 	public deviceDetailsParams: SyslogsService.GetSyslogsParams = { };
+	public loading = false;
 	public tableConfig = {
 		tableLimit: 10,
 		tableOffset: 0,
@@ -134,17 +135,17 @@ export class SyslogsDeviceDetailsComponent implements OnChanges, OnDestroy {
 			this.selectedTimeRange = currentFilter.days;
 			this.selectedSeverity = currentFilter.severity;
 			this.selectedCatalog = currentFilter.catalog;
-			this.deviceDetailsParams = {
-				catalog: currentFilter.catalog,
-				customerId: this.customerId,
-				days: +this.selectedTimeRange,
-				deviceHost: currentAsset.DeviceHost,
-				excludeMsgType: this.excludeMsgFilter,
-				includeMsgType: this.includeMsgFilter,
-				severity: +this.selectedSeverity,
-			};
-			this.SyslogDevicePanelData();
 		}
+		this.deviceDetailsParams = {
+			catalog: this.selectedCatalog,
+			customerId: this.customerId,
+			days: +this.selectedTimeRange,
+			deviceHost: currentAsset.DeviceHost,
+			excludeMsgType: this.excludeMsgFilter,
+			includeMsgType: this.includeMsgFilter,
+			severity: +this.selectedSeverity,
+		};
+		this.SyslogDevicePanelData();
 	}
 
 	/**
@@ -220,9 +221,12 @@ export class SyslogsDeviceDetailsComponent implements OnChanges, OnDestroy {
 	 * Onchanges lifecycle hook
 	 */
 	public SyslogDevicePanelData () {
+		this.loading = true;
+		this.tableData = [];
 		this.syslogsService.getdevicePanelDetails(this.deviceDetailsParams)
 		.pipe(takeUntil(this.destroy$),
 		catchError(err => {
+			this.loading = false;
 			this.logger.error('syslog-messages-details.component : getdevicePanelDetails() ' +
 				`:: Error : (${err.status}) ${err.message}`);
 
@@ -232,6 +236,7 @@ export class SyslogsDeviceDetailsComponent implements OnChanges, OnDestroy {
 		.subscribe((response: SyslogDevicePanelOuter[]) => {
 			this.tableData = MarshalTableData.marshalTableDataForInerGrid(response);
 			this.tableConfig.totalItems = response.length;
+			this.loading = false;
 			this.tableEndIndex = 10;
 			if (this.tableEndIndex > this.tableConfig.totalItems) {
 				this.tableEndIndex = this.tableConfig.totalItems;

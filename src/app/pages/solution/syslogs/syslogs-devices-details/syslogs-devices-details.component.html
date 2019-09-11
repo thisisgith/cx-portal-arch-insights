@@ -86,7 +86,7 @@
 			</cui-select>
 		</div>
 	</div>
-<div class="container base-margin-top" *ngIf="tableData?.length > 0">
+	<div class="container base-margin-top" *ngIf="tableData?.length > 0">
 	<cui-table 
 	data-auto-id="tableData" 
 	[options]="tableOptions" 
@@ -103,16 +103,18 @@
 		</cui-pager>
 	</div>
 </div>
-<div *ngIf="!tableData?.length">
+<div *ngIf="!tableData?.length && !loading ">
 	<div class="text-center dbl-margin-top dbl-margin-bottom">
 		<div>
 			<span class="text-muted text-xlarge" [innerText]="'_NoResultsFound_' | i18n"
 				data-auto-id="NoResultsFoundTxt">
 			</span>
 		</div>
-
 	</div>
 </div>
+<div *ngIf="loading && !tableData?.length " class="base-margin-bottom">
+		<cui-spinner></cui-spinner>
+	</div>
 
 <ng-template #innerTableRef let-item="item">
 	<div class="row">

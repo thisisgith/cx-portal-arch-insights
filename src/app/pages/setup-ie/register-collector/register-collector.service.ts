@@ -91,7 +91,9 @@ export class RegisterCollectorService {
 	public registerOnline (body: RegisterParams, file: Blob) {
 		const formData = new FormData();
 		formData.append('otherDetails', JSON.stringify(_.omitBy(body, _.isNil)));
-		formData.append('file', file, 'register.zip');
+		if (file) {
+			formData.append('file', file, 'register.zip');
+		}
 
 		return this.http.post(
 			`https://${this.collectorIP}${this.baseUrl}registerOnline`,
