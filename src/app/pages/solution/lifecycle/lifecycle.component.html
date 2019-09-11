@@ -864,7 +864,7 @@
 			[innerText]="item.title"
 			data-auto-id="ATXCardTitle">
 		</div>
-		<div class="card__body atx__card__body text-left" *ngIf="item && item.description" [innerText]="item.description"></div>
+		<div class="card__body atx__card__body text-left desc-line-clamp" *ngIf="item && item.description" [innerText]="item.description"></div>
 		<div class="card__footer atx__card__footer">
 			<div class="card_footer_item"  data-auto-id="ATXCardFooter">
 				<div class="atx__card__status text-left base-padding-left base-padding-right base-margin-bottom flex-middle">
@@ -929,7 +929,7 @@
 		<div class="card__header atx__card__header text-left"
 			*ngIf="item && item.title" [innerText]="item.title" data-auto-id="ACCCardTitle">
 		</div>
-		<div class="card__body atx__card__body text-left" *ngIf="item && item.description"
+		<div class="card__body atx__card__body text-left desc-line-clamp" *ngIf="item && item.description"
 			[innerText]="item.description" data-auto-id="ACCCardDescription"></div>
 		<div class="card__footer atx__card__footer">
 			<div class="card_footer_item" data-auto-id="ACCCardFooter">
