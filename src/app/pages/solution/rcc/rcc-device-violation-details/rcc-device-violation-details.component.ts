@@ -102,7 +102,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 				productFamily : '',
 				productModel : '',
 			};
-			this.impactedAssetsCount = this.policyViolationInfo.impassets;
+			this.impactedAssetsCount = this.policyViolationInfo.impassetscount;
 			this.loadData();
 			this.errorResult = false;
 			_.invoke(this.alert, 'hide');
