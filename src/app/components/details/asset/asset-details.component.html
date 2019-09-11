@@ -1,8 +1,11 @@
-<details-panel *ngIf="!isLoading || asset" [hidden]="!asset" [fullscreen]="fullscreen" id="details-panel">
+<details-panel *ngIf="!isLoading || asset" [hidden]="!asset" 
+	[fullscreen]="fullscreen" 
+	id="details-panel"
+	[minWidth]="minWidth">
 	<details-panel-header (close)="onAllPanelsClose()"
 		(back)="onPanelBack()"
 		[(fullscreen)]="fullscreen"
-		[fullscreenToggle]="false">
+		[fullscreenToggle]="fullscreenToggle">
 		<asset-details-header [asset]="asset"
 			[element]="element" 
 			[customerId]="customerId"
