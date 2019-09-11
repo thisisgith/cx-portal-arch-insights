@@ -1681,4 +1681,89 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			});
 		});
 	});
+
+	describe('ATX Watch Now button should be disabled when recordingURL missing/empty/null', () => {
+		after(() => {
+			// Switch back to the default mock data
+			atxMock.enable('(ATX) IBN-Campus Network Assurance-Onboard');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard');
+		});
+
+		const mockScenarios = [
+			'(ATX) IBN-Campus Network Assurance-Onboard-emptyRecordingUrl',
+			'(ATX) IBN-Campus Network Assurance-Onboard-missingRecordingUrl',
+			'(ATX) IBN-Campus Network Assurance-Onboard-nullRecordingUrl',
+		];
+		mockScenarios.forEach(mockScenario => {
+			describe(`Mock Scenario: ${mockScenario}`, () => {
+				before(() => {
+					// Switch to the desired mock data
+					atxMock.enable(mockScenario);
+
+					// Refresh the data
+					cy.getByAutoId('Facet-Assets & Coverage').click();
+					cy.getByAutoId('Facet-Lifecycle').click();
+					cy.wait(mockScenario);
+				});
+
+				it('Verify "Watch Now" button is disabled in main tile', () => {
+					cy.getByAutoId('recommendedATXWatchButton')
+						.should('exist')
+						.and('have.class', 'disabled');
+				});
+
+				it('Verify "Watch Now" button is disabled in click modal', () => {
+					cy.getByAutoId('Ask The Experts Panel').within(() => {
+						cy.getByAutoId('ATXMoreClick').click();
+					});
+					cy.getByAutoId('atxMoreClickModal').within(() => {
+						cy.getByAutoId('MoreATXWatchNow-')
+							.should('exist')
+							.and('have.class', 'disabled');
+					});
+
+					// Close the click modal
+					cy.getByAutoId('closeMoreATXClickModal').click();
+				});
+
+				it('Verify "Watch Now" button is disabled in View All card view', () => {
+					cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
+					cy.getByAutoId('card-view-btn').click();
+					cy.getByAutoId('ATXCard').each($card => {
+						cy.wrap($card).within(() => {
+							cy.getByAutoId('CardATXWatchNow-')
+								.should('exist')
+								.and('have.class', 'disabled');
+						});
+					});
+
+					// Close the View All modal
+					cy.getByAutoId('SuccessPathCloseModal').click();
+				});
+
+				it('Verify "Watch Now" button is disabled in View All table view', () => {
+					cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
+					cy.getByAutoId('table-view-btn').click();
+					cy.get('tr').each(($row, index) => {
+						// Ingore the first tr, since this holds our table headers
+						if (index !== 0) {
+							cy.wrap($row).within(() => {
+								cy.getByAutoId('ListATXWatchNow-')
+									.should('exist')
+									.and('have.class', 'disabled');
+							});
+						}
+					});
+
+					// Switch back to card view, and close the View All modal
+					cy.getByAutoId('card-view-btn').click();
+					cy.getByAutoId('SuccessPathCloseModal').click();
+				});
+			});
+		});
+	});
 });

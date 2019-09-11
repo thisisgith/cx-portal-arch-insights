@@ -326,6 +326,33 @@ export const ATXScenarios = [
 					},
 					selected: false,
 				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 100,
+					description: '(ATX) IBN-Campus Network Assurance-Onboard-emptyRecordingUrl',
+					response: {
+						body: MockATX('IBN', 'Campus Network Assurance', 'Onboard', 'emptyRecordingUrl'),
+						status: 200,
+					},
+					selected: false,
+				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 100,
+					description: '(ATX) IBN-Campus Network Assurance-Onboard-missingRecordingUrl',
+					response: {
+						body: MockATX('IBN', 'Campus Network Assurance', 'Onboard', 'missingRecordingUrl'),
+						status: 200,
+					},
+					selected: false,
+				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 100,
+					description: '(ATX) IBN-Campus Network Assurance-Onboard-nullRecordingUrl',
+					response: {
+						body: MockATX('IBN', 'Campus Network Assurance', 'Onboard', 'nullRecordingUrl'),
+						status: 200,
+					},
+					selected: false,
+				},
 			],
 		},
 		url: `${api}?usecase=Campus Network Assurance&solution=IBN&pitstop=Onboard&customerId=${customerId}&suggestedAction=Get to know Cisco DNA Center`,
