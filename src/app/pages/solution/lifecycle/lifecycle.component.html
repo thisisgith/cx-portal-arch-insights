@@ -1,4 +1,4 @@
-<div class="panel panel--ltgray panel--bordered no-padding base-padding-right">
+<div class="panel panel--ltgray panel--bordered">
 	<div class="row base-padding-top">
 		<div class="col-md-3" *ngIf="!status.loading.racetrack && componentData?.racetrack?.stage">
 			<ng-container *ngTemplateOutlet="racetrack"></ng-container>
@@ -35,7 +35,7 @@
 							data: componentData.learning
 						}">
 					</ng-container>
-					<ng-container *ngIf="enableCGT">
+					<ng-container *ngIf="enableCGT && cxLevel === 3">
 						<ng-container *ngTemplateOutlet="panel; context: {
 							template: cgtPanel,
 							icon: 'communities',
@@ -104,23 +104,28 @@
 	<div class="base-margin-left" *ngIf="currentPitstop && currentPitstop?.pitstopActions?.length">
 		<div class="divider divider--compressed"></div>
 		<div class="base-margin-top">
-			<span class="icon-flagged"></span>
-			<span class="text-uppercase" [innerText]="'_MyCheckList_' | i18n"></span>
+			<span class="qtr-padding-bottom icon-flagged"></span>
+			<span class="text-uppercase qtr-padding-left" [innerText]="'_CheckList_' | i18n"></span>
 		</div>
 		<p class="text-small no-margin-top" [innerText]="'_ChecklistDesc_' | i18n"></p>
 		<div *ngFor="let action of currentPitActionsWithStatus" class="form-group form-group select" data-auto-id="pitstopAction">
 			<div class="actionname row qtr-padding-top qtr-padding-bottom" [ngClass]="{selected: action.selected}">
 				<div class="col-md-1">
-					<label class="checkbox" [ngClass]="{'disabled': action.action.isComplete || currentWorkingPitstop !== currentPitstop.name }" data-auto-id="pitstopCheckboxLabel">
-						<input data-auto-id="pitstopCheckbox" type="checkbox" [(ngModel)]="action.action.isComplete"
-							(change)="completeAction(action.action)" [checked]="action.action.isComplete">
-						<span class="checkbox__input" data-auto-id="pitstopCheckboxSpan"></span>
+					<!-- since updatePitstop API going through changes, we are temporarily disabling the user from checking a box -->
+					<!-- This will manually be done by the CSM/CSE.  Refer to PBC-725. -->
+					<!-- <label class="checkbox" [ngClass]="{'disabled': action.action.isComplete || currentWorkingPitstop !== currentPitstop.name }" data-auto-id="pitstopCheckboxLabel"> -->
+					<label class="checkbox disabled" data-auto-id="pitstopCheckboxLabel">
+						<input data-auto-id="pitstopCheckbox" type="checkbox"
+							(change)="completeAction(action.action)" [checked]="true"
+						>
+						<span class="checkbox__input" data-auto-id="pitstopCheckboxSpan"
+							[ngClass]="{'checkbox-complete': action.action.isComplete}"
+						></span>
 					</label>
 				</div>
 				<div class="col-md-11">
 					<a data-auto-id="actionlink"
 						class="no-link"
-						[ngClass]="{'disabled': action?.action?.isComplete, 'selected': action?.selected}"
 						data-toggle="tooltip" data-placement="bottom" title="{{action?.action?.description}}"
 						(click)="selectAction(action)">
 						<div class="checkbox__label text-medium"
@@ -205,8 +210,8 @@
 			</div>
 			<div class="line-clamp learning-popover__description" [innerText]="description" attr.data-auto-id="{{ autoid }}-HoverModal-Description"></div>
 			<div *ngIf="item && item.duration" class="learning-popover__footer" attr.data-auto-id="{{ autoid }}-HoverModal-Duration">
-				<span class="icon-clock" attr.data-auto-id="{{ autoid }}-HoverModal-DurationClock"></span>
-				<span [innerText]="item.duration"></span>
+				<span class="icon-clock qtr-margin-right" attr.data-auto-id="{{ autoid }}-HoverModal-DurationClock"></span>
+				<span class="learning-popover__footer__text" [innerText]="item.duration"></span>
 			</div>
 		</div>
 	</div>
@@ -239,7 +244,7 @@
 				data-auto-id="ATXMoreRibbon">
 			</div>
 			<div class="row half-margin-top half-margin-left half-margin-right">
-				<div class="col-md-11 text-left">
+				<div class="col-md-11 text-left title-line-clamp">
 					<h6 class="text-indigo" [innerText]="data.title" data-auto-id="atxMoreClickModal-Title"></h6>
 				</div>
 				<div class="col-md-1">
@@ -283,7 +288,7 @@
 			<div class="divider divider--compressed"></div>
 			<div class="line-clamp acc-popover__description" [innerText]="description" attr.data-auto-id="{{ autoid }}-HoverModal-Description"></div>
 			<div *ngIf="item && item.duration" class="learning-duration text-right text-muted flex-fluid half-margin-left" attr.data-auto-id="{{ autoid }}-HoverModal-Duration">
-				<span class="icon-clock icon-small" attr.data-auto-id="{{ autoid }}-HoverModal-DurationClock"></span>
+				<span class="icon-clock icon-small qtr-margin-right" attr.data-auto-id="{{ autoid }}-HoverModal-DurationClock"></span>
 				<span [innerText]="item.duration"></span>
 			</div>
 			<div *ngIf= "item.status.toLowerCase()==='recommended'">
@@ -294,16 +299,16 @@
 					}">
 				</ng-container>
 			</div>
-			<div class="text-left" *ngIf="autoid==='moreACCList' && item.status.toLowerCase()==='in-progress'" attr.data-auto-id="{{ autoid }}-HoverModal-In-Progress">
-				<span class="icon-clock" attr.data-auto-id="{{ autoid }}-In-Progress-Icon"></span>
-				<span [innerText]="'_SessionInProgress_' | i18n" attr.data-auto-id="{{ autoid }}-In-Progress"></span>
+			<div class="text-left acc-popover__footer" *ngIf="autoid==='moreACCList' && item.status.toLowerCase()==='in-progress'" attr.data-auto-id="{{ autoid }}-HoverModal-In-Progress">
+				<span class="icon-clock qtr-margin-right" attr.data-auto-id="{{ autoid }}-In-Progress-Icon"></span>
+				<span class="acc-popover__footer__text" [innerText]="'_SessionInProgress_' | i18n" attr.data-auto-id="{{ autoid }}-In-Progress"></span>
 			</div>
-			<div class="text-left" *ngIf="autoid==='moreACCList' && item.status.toLowerCase()==='requested'" attr.data-auto-id="{{ autoid }}-HoverModal-Requested">
-				<span class="icon-check-outline" attr.data-auto-id="{{ autoid }}-HoverModal-Requested-Icon"></span>
-				<span [innerText]="'_Requested_' | i18n" attr.data-auto-id="{{ autoid }}-In-Progress"></span>
+			<div class="text-left acc-popover__footer" *ngIf="autoid==='moreACCList' && item.status.toLowerCase()==='requested'" attr.data-auto-id="{{ autoid }}-HoverModal-Requested">
+				<span class="icon-check-outline qtr-margin-right" attr.data-auto-id="{{ autoid }}-HoverModal-Requested-Icon"></span>
+				<span class="acc-popover__footer__text" [innerText]="'_Requested_' | i18n" attr.data-auto-id="{{ autoid }}-In-Progress"></span>
 			</div>
-			<div class="text-left text-success" *ngIf="autoid==='moreACCList' && item.status.toLowerCase()==='completed'" attr.data-auto-id="{{ autoid }}-HoverModal-CompletedMessage">
-				<span [innerText]="'_Completed_' | i18n"></span>
+			<div class="text-left text-success acc-popover__footer" *ngIf="autoid==='moreACCList' && item.status.toLowerCase()==='completed'" attr.data-auto-id="{{ autoid }}-HoverModal-CompletedMessage">
+				<span class="acc-popover__footer__text" [innerText]="'_Completed_' | i18n"></span>
 			</div>
 		</div>
 	</div>
@@ -338,15 +343,12 @@
 				(click)="recommendedATXViewSessions()"
 				[innerText]="'_ViewSessions_' | i18n">
 			</button>
-			<a
-				*ngIf="componentData.atx?.recommended?.recordingURL"
-				class="no-link"
-				target="_blank"
-				rel="noopener noreferrer"
-				[href]="componentData.atx?.recommended?.recordingURL">
-				<button data-auto-id="recommendedATXWatchButton" class="btn btn--small btn--secondary text-uppercase cx-button"
-					[innerText]="'_WatchNow_' | i18n"></button>
-			</a>
+			<button class="btn btn--small btn--secondary text-uppercase cx-button"
+				data-auto-id = "recommendedATXWatchButton"
+				[ngClass]="componentData.atx?.recommended?.recordingURL ? null : 'disabled'"
+				(click)="atxWatchNow(componentData.atx.recommended.recordingURL)"
+				[innerText]="'_WatchNow_' | i18n">
+			</button>
 		</div>
 	</div>
 </ng-template>
@@ -440,26 +442,16 @@
 			</table>
 		</div>
 		<div>
-			<a id="AtxScheduleCardRegisterButton"
-				class="pull-left half-padding-left"
-				target="_blank"
-				*ngIf="data.status !== 'scheduled' && sessionSelected?.registrationURL && !notCurrentPitstop"
-				[href]="sessionSelected?.registrationURL">
-				<button class="btn btn--primary base-margin-top half-margin-left cx-button"
-					[innerText]="'_Register_' | i18n"
-					data-auto-id="AtxScheduleCardRegisterButton">
-				</button>
-			</a>
-			<div class="pull-left half-padding-left">
-				<button class="btn btn--primary disabled base-margin-top half-margin-left cx-button"
-					*ngIf="!sessionSelected?.registrationURL || notCurrentPitstop || data.status === 'scheduled'"
-					[innerText]="'_Register_' | i18n"
-					data-auto-id="AtxScheduleCardRegisterButton">
-				</button>
-			</div>
+			<button id="AtxScheduleCardRegisterButton"
+				class="pull-left half-padding-left btn btn--primary base-margin-top half-margin-left cx-button"
+				attr.data-auto-id = "AtxScheduleCardRegisterButton"
+				[ngClass]="getAtxRegisterButton(data)"
+				(click)="atxRegister(sessionSelected.registrationURL)"
+				[innerText]="'_Register_' | i18n">
+			</button>
 			<div class="half-padding-left pull-left">
 				<button class="btn btn--secondary base-margin-top text-danger half-margin-left cx-button"
-					[disabled]="!sessionSelected || !sessionSelected.scheduled"
+					*ngIf="sessionSelected && sessionSelected.scheduled"
 					[innerText]="'_Cancel_' | i18n"
 					(click)="cancelATXSession(data)"
 					data-auto-id="AtxScheduleCardCancelButton">
@@ -499,7 +491,7 @@
 					<div id="{{ autoid }}-item" class="panel small-panel">
 						<div class="text-blue" [innerText]="item.title"
 							data-auto-id = "ATXMoreClick"
-							(click)="atxMoreSelect(item)"></div>
+							(click)="atxMoreSelect(item, autoid)"></div>
 						<ng-container *ngIf="autoid==='moreACCList'">
 							<ng-container *ngTemplateOutlet="accHover; context: {
 								title: item.title,
@@ -647,8 +639,8 @@
 						</a>
 					</div>
 					<div *ngIf="item && item.duration" class="learning-duration" attr.data-auto-id="{{ autoid }}-HoverModal-Duration">
-						<span class="icon-clock" attr.data-auto-id="{{ autoid }}-HoverModal-DurationClock"></span>
-						<span [innerText]="item.duration"></span>
+						<span class="icon-clock qtr-margin-right" attr.data-auto-id="{{ autoid }}-HoverModal-DurationClock"></span>
+						<span [innerText]="item.duration" class="sb-popover__footer__text"></span>
 					</div>
 				</div>
 			</div>
@@ -812,7 +804,7 @@
 </ng-template>
 
 <ng-template #cardViewTemplate let-type="type" let-view="view">
-	<div class="base-padding-right grid base-padding-top card-view"
+	<div class="grid base-padding card-view"
 		[ngClass]="(type === 'SB' || type === 'PG') ? 'acc__grid' : null"
 		*ngIf="(!view || view === 'grid')"
 		#scrollModal (scroll)="getScrollCoordinates(scrollModal)">
@@ -872,7 +864,7 @@
 			[innerText]="item.title"
 			data-auto-id="ATXCardTitle">
 		</div>
-		<div class="card__body atx__card__body text-left" *ngIf="item && item.description" [innerText]="item.description"></div>
+		<div class="card__body atx__card__body text-left desc-line-clamp" *ngIf="item && item.description" [innerText]="item.description"></div>
 		<div class="card__footer atx__card__footer">
 			<div class="card_footer_item"  data-auto-id="ATXCardFooter">
 				<div class="atx__card__status text-left base-padding-left base-padding-right base-margin-bottom flex-middle">
@@ -905,11 +897,12 @@
 							getCoordinates($event)"
 						[innerText]="'_ViewSessions_' | i18n">
 					</button>
-					<a *ngIf="item.recordingURL" class="no-link" target="_blank" [href]="item.recordingURL">
-						<button data-auto-id="recommendedATXWatchButton"
-							class="btn btn--small btn--secondary text-uppercase cx-button"
-							[innerText]="'_WatchNow_' | i18n"></button>
-					</a>
+					<button class="btn btn--small btn--secondary text-uppercase cx-button"
+						attr.data-auto-id = "CardATXWatchNow-{{ item.recordingURL }}"
+						[ngClass]="item?.recordingURL ? null : 'disabled'"
+						(click)="atxWatchNow(item.recordingURL); closeModal()"
+						[innerText]="'_WatchNow_' | i18n">
+					</button>
 				</div>
 			</div>
 		</div>
@@ -936,7 +929,7 @@
 		<div class="card__header atx__card__header text-left"
 			*ngIf="item && item.title" [innerText]="item.title" data-auto-id="ACCCardTitle">
 		</div>
-		<div class="card__body atx__card__body text-left" *ngIf="item && item.description"
+		<div class="card__body atx__card__body text-left desc-line-clamp" *ngIf="item && item.description"
 			[innerText]="item.description" data-auto-id="ACCCardDescription"></div>
 		<div class="card__footer atx__card__footer">
 			<div class="card_footer_item" data-auto-id="ACCCardFooter">
@@ -993,7 +986,7 @@
 			<div class="card_footer_item" data-auto-id="SuccessCardFooter">
 				<a class="no-link" target="_blank" [href]="item.url">
 					<button data-auto-id="LaunchButton" class="btn btn--small btn--secondary text-uppercase"
-						[innerText]="'_Launch_' | i18n"></button>
+						[innerText]="'_View_' | i18n"></button>
 				</a>
 			</div>
 		</div>
@@ -1058,7 +1051,7 @@
 			<div class="card_footer_item" data-auto-id="ProductGuidesCardFooter">
 				<a class="no-link" target="_blank" [href]="item.url">
 					<button data-auto-id="LaunchButton" class="btn btn--small btn--secondary text-uppercase"
-						[innerText]="'_Launch_' | i18n"></button>
+						[innerText]="'_View_' | i18n"></button>
 				</a>
 			</div>
 		</div>
@@ -1266,10 +1259,12 @@
 			(click)="atxScheduleCardOpened = true; recommendedAtxScheduleCardOpened = false; componentData.atx.interested = celldata; getCoordinates($event)"
 			[innerText]="'_ViewSessions_' | i18n">
 		</button>
-		<a class="no-link" target="_blank" [href]="celldata.recordingURL">
-			<button data-auto-id="WatchnowButton" class="btn btn--small btn--secondary cx-button text-uppercase half-margin-left cx-button"
-				[innerText]="'_WatchNow_' | i18n"></button>
-		</a>
+		<button class="btn btn--small btn--secondary text-uppercase cx-button half-margin-left"
+			attr.data-auto-id = "ListATXWatchNow-{{ celldata.recordingURL }}"
+			[ngClass]="celldata?.recordingURL ? null : 'disabled'"
+			(click)="atxWatchNow(celldata.recordingURL); closeModal()"
+			[innerText]="'_WatchNow_' | i18n">
+		</button>
 	</div>
 	<div *ngIf="type === 'ACC' && celldata.status === 'recommended'" class="text-right">
 		<ng-container *ngTemplateOutlet="!notCurrentPitstop ? enabledAccButton : disabledAccButton; context: {
@@ -1282,7 +1277,7 @@
 	<div *ngIf="type === 'SB' || type==='PG'" class="text-right">
 		<a class="no-link" target="_blank" [href]="celldata.url">
 			<button data-auto-id="LaunchButton" class="btn btn--small btn--secondary cx-button text-uppercase qtr-margin-left"
-				[innerText]="'_Launch_' | i18n"></button>
+				[innerText]="'_View_' | i18n"></button>
 		</a>
 	</div>
 </ng-template>
@@ -1333,19 +1328,19 @@
 
 <ng-template #itemTypeIcons let-item="item" let-autoid="autoid">
 	<div class="text-left text-muted" *ngIf="item.type === 'Web Page'" attr.data-auto-id="{{ autoid }}-WebIcon">
-		<span class="icon-link qtr-padding-right"></span>
-		<span [innerText]="'_Web_' | i18n"></span>
+		<span class="icon-apps qtr-padding-right"></span>
+		<span class="item-type__text" [innerText]="'_Web_' | i18n"></span>
 	</div>
 	<div class="text-left text-muted" *ngIf="item.type === 'Video'" attr.data-auto-id="{{ autoid }}-VideoIcon">
-		<span class="icon-video qtr-padding-right"></span>
-		<span [innerText]="'_Video_' | i18n"></span>
+		<span class="icon-play-contained qtr-padding-right"></span>
+		<span class="item-type__text" [innerText]="'_Video_' | i18n"></span>
 	</div>
 	<div class="text-left text-muted" *ngIf="item.type === 'PDF'" attr.data-auto-id="{{ autoid }}-PDFIcon">
 		<span class="icon-file-pdf-o qtr-padding-right"></span>
-		<span [innerText]="'_PDF_' | i18n"></span>
+		<span class="item-type__text" [innerText]="'_PDF_' | i18n"></span>
 	</div>
 	<div class="text-left text-muted" *ngIf="item.type === 'Data Sheet'" attr.data-auto-id="{{ autoid }}-DataSheetIcon">
 		<span class="icon-document qtr-padding-right"></span>
-		<span [innerText]="'_Datasheet_' | i18n"></span>
+		<span class="item-type__text" [innerText]="'_Datasheet_' | i18n"></span>
 	</div>
 </ng-template>

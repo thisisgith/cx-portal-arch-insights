@@ -12,6 +12,7 @@ import {
 	AfmScenarios,
 	ArchitectureReviewScenarios,
 	ArchitectureScenarios,
+	AssetLinkScenarios,
 	AssetScenarios,
 	AssetSummaryScenarios,
 	BookmarkScenarios,
@@ -61,6 +62,7 @@ import {
 	SoftwareEOLScenarios,
 	SuccessPathScenarios,
 	VulnerabilityScenarios,
+	InsightsScenarios,
 } from './';
 
 import { HttpHeaders } from '@angular/common/http';
@@ -96,8 +98,10 @@ import {
 	HardwareResponse,
 	IERegistrationResponseModel,
 	LicenseDataResponseModel,
+	MachineRecommendationsResponse,
 	PitstopActionUpdateResponse,
 	PoliciesGroupByDayInAMonthModel,
+	ProfileRecommendationsResponse,
 	RacetrackResponse,
 	RccAssetFilterResponse,
 	RoleCountResponse,
@@ -108,13 +112,16 @@ import {
 	SecurityAdvisorySeverityCountResponse,
 	SecurityAdvisorySummary,
 	ServiceInfoResponse,
+	SoftwareGroupAssetsResponse,
 	SoftwareGroupsResponse,
+	SoftwareGroupVersionsResponse,
 	SoftwareVersionsResponse,
 	SoftwareEOLResponse,
 	SoftwareEOLBulletinResponse,
 	SuccessPathsResponse,
 	UserTraining,
 	VulnerabilityResponse,
+	InsightsResponse,
 } from '@sdp-api';
 
 import { RMAResponse } from '@interfaces';
@@ -150,8 +157,10 @@ type ResponseBody = (
 	HardwareResponse |
 	IERegistrationResponseModel |
 	LicenseDataResponseModel |
+	MachineRecommendationsResponse |
 	PitstopActionUpdateResponse |
 	PoliciesGroupByDayInAMonthModel |
+	ProfileRecommendationsResponse |
 	RacetrackResponse |
 	RMAResponse |
 	RoleCountResponse |
@@ -163,14 +172,17 @@ type ResponseBody = (
 	SecurityAdvisorySeverityCountResponse |
 	SecurityAdvisorySummary |
 	ServiceInfoResponse |
+	SoftwareGroupAssetsResponse |
 	SoftwareGroupsResponse |
+	SoftwareGroupVersionsResponse |
 	SoftwareVersionsResponse |
 	SoftwareEOLResponse |
 	SoftwareEOLBulletinResponse |
 	SoftwareEOLResponse |
 	SuccessPathsResponse |
 	UserTraining[] |
-	VulnerabilityResponse
+	VulnerabilityResponse |
+	InsightsResponse
 );
 
 /**
@@ -228,6 +240,7 @@ export const mockSettings: MockSettings = {
 		ASDImageDownloadUrlScenarios,
 		ASDMetadataScenarios,
 		ASDTokenScenarios,
+		AssetLinkScenarios,
 		AssetScenarios,
 		AssetSummaryScenarios,
 		ATXScenarios,
@@ -280,5 +293,6 @@ export const mockSettings: MockSettings = {
 		SoftwareEOLScenarios,
 		SuccessPathScenarios,
 		VulnerabilityScenarios,
+		InsightsScenarios,
 	]),
 };

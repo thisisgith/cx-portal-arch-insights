@@ -73,8 +73,8 @@ describe('OptimalSoftwareVersionComponent', () => {
 
 		fixture.detectChanges();
 
-		expect(_.find(component.filters, { key: 'totalAssets' }).seriesData.length)
-			.toBe(0);
+		expect(_.find(component.filters))
+			.toBeUndefined();
 		expect(component.view)
 			.toBeUndefined();
 	});
@@ -82,6 +82,7 @@ describe('OptimalSoftwareVersionComponent', () => {
 	it('should switch active filters', done => {
 		fixture.whenStable()
 			.then(() => {
+				component.selectView('assets');
 				fixture.detectChanges();
 				const totalFilter = _.find(component.filters, { key: 'totalAssets' });
 				const assetType = _.find(component.filters, { key: 'assetType' });
@@ -103,6 +104,7 @@ describe('OptimalSoftwareVersionComponent', () => {
 	it('should select a assetType subfilter', done => {
 		fixture.whenStable()
 			.then(() => {
+				component.selectView('assets');
 				fixture.detectChanges();
 				const assetTypeFilter = _.find(component.filters,
 					{ key: 'assetType' });
@@ -114,7 +116,7 @@ describe('OptimalSoftwareVersionComponent', () => {
 					.toContain(assetTypeFilter);
 
 				const subfilter = _.find(assetTypeFilter.seriesData,
-				{ filter: 'assets_without_profile' });
+					{ filter: 'assets_without_profile' });
 
 				expect(subfilter.selected)
 					.toBeTruthy();
@@ -126,6 +128,7 @@ describe('OptimalSoftwareVersionComponent', () => {
 	it('should clear the filter when selecting the same subfilter twice', done => {
 		fixture.whenStable()
 			.then(() => {
+				component.selectView('assets');
 				fixture.detectChanges();
 				const assetTypeFilter = _.find(component.filters,
 					{ key: 'assetType' });
@@ -159,6 +162,7 @@ describe('OptimalSoftwareVersionComponent', () => {
 	it('should clear the filters on clear button', done => {
 		fixture.whenStable()
 			.then(() => {
+				component.selectView('assets');
 				fixture.detectChanges();
 				const assetTypeFilter = _.find(component.filters,
 					{ key: 'assetType' });
@@ -181,22 +185,6 @@ describe('OptimalSoftwareVersionComponent', () => {
 				expect(subfilter.selected)
 					.toBeFalsy();
 
-				done();
-			});
-	});
-
-	it('should turn of loading indicator once we have result from getSummary', done => {
-		spyOn(osvService, 'getSummary')
-			.and
-			.returnValue(of());
-		expect(component.status.isLoading)
-			.toBe(true);
-		component.ngOnInit();
-		fixture.whenStable()
-			.then(() => {
-				fixture.detectChanges();
-				expect(component.status.isLoading)
-					.toBe(false);
 				done();
 			});
 	});

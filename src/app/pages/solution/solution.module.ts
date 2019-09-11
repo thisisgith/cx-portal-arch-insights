@@ -10,6 +10,7 @@ import {
 	RacetrackModule,
 	RacetrackContentModule,
 	InventoryModule,
+	InsightsCrashesModule,
 	ProductAlertsModule,
 	DiagnosticsModule,
 } from '@sdp-api';
@@ -55,6 +56,7 @@ const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 		QuickTourModule,
 		RacetrackContentModule.forRoot({ rootUrl }),
 		RacetrackModule.forRoot({ rootUrl }),
+		InsightsCrashesModule.forRoot({ rootUrl }),
 		SolutionRoutingModule,
 	],
 })

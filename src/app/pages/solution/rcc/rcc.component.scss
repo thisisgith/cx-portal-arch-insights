@@ -16,40 +16,18 @@
 	}
 }
 
-.selected {
-	color: $cisco-blue !important;
-}
-
-.violationcount {
-	color: $dark-gray-2 !important;
-	font-weight: 400;
-	font-size: 48px !important;
-	line-height: 72px !important;
-}
-
-.viocount {
-	margin-top: 1px;
-	color: $dark-gray-2 !important;
-}
-
 .seperator-line {
 	border-left: 1px solid $light-gray-3;
 }
 
-.searchSection {
-	float: right;
-	margin-top: -27px;
-}
-
-.assetsCount {
+.assets-count {
 	display: flex !important;
 	flex-direction: column;
-	font-size: small;
 	cursor: pointer;
 }
 
-.assetsCount:focus {
-	color: $status-blue;
+.font-size-32 {
+	font-size: 32px !important;
 }
 
 .form-group__text .rcc-search {

@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatchesPipeModule } from '../pipes/matches.pipe.module';
 
 import {
 	I18nPipeModule, TruncatePipeModule,
@@ -23,6 +24,8 @@ import { SearchBarComponent } from './search-bar.component';
 
 		I18nPipeModule,
 		TruncatePipeModule,
+
+		MatchesPipeModule,
 	],
 })
 export class SearchBarModule { }

@@ -90,7 +90,7 @@ export const FieldNoticeAdvisoryScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 350,
+					delay: 500,
 					description: 'Field Notice Advisories',
 					response: {
 						body: MockData(10, 1),
@@ -108,7 +108,7 @@ export const FieldNoticeAdvisoryScenarios = [
 					selected: false,
 				},
 				{
-					delay: 250,
+					delay: 500,
 					description: 'Field Notice Advisories - Page 1',
 					response: {
 						body: MockData(10, 1, 3),
@@ -118,14 +118,14 @@ export const FieldNoticeAdvisoryScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&rows=10&page=1`,
+		url: `${api}?customerId=${customerId}&sort=id:ASC&rows=10&page=1`,
 		usecases: ['Use Case 1'],
 	},
 	{
 		scenarios: {
 			GET: [
 				{
-					delay: 250,
+					delay: 500,
 					description: 'Field Notice Advisories - Page 2',
 					response: {
 						body: MockData(10, 2, 3),
@@ -135,14 +135,14 @@ export const FieldNoticeAdvisoryScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&rows=10&page=2`,
+		url: `${api}?customerId=${customerId}&sort=id:ASC&rows=10&page=2`,
 		usecases: ['Use Case 1'],
 	},
 	{
 		scenarios: {
 			GET: [
 				{
-					delay: 250,
+					delay: 500,
 					description: 'Field Notice Advisories - Page 3',
 					response: {
 						body: MockData(10, 3, 3),
@@ -152,7 +152,7 @@ export const FieldNoticeAdvisoryScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&rows=10&page=3`,
+		url: `${api}?customerId=${customerId}&sort=id:ASC&rows=10&page=3`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -179,7 +179,24 @@ export const FieldNoticeAdvisoryScenarios = [
 			],
 		},
 		url: `${api}?customerId=${customerId}&sort=lastUpdated:DESC&rows=10&page=1` +
-			'&managedNeId=NA,FOC1544Y16T,WS-C2960S-24PS-L,NA',
+			'&hwInstanceId=FOC1544Y16T,WS-C2960S-24PS-L,NA,FOC1544Y16T,WS-C2960S-24PS-L,NA,NA',
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 250,
+					description: 'Field Notice Advisories - Count',
+					response: {
+						body: MockData(1, 1),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?customerId=${customerId}&rows=1&page=1`,
 		usecases: ['Use Case 1'],
 	},
 ];

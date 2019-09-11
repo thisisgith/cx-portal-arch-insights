@@ -45,12 +45,12 @@
 			</div>
 		</div>
 		<div class="col-md-8">
-				<div>
+				
 					<form
 						#f="ngForm"
 						class="row flex flex-fluid flex-right qtr-margin-right"
 						id="searchForm"
-						(keydown)="globalSearchFunction($event)"
+						(keyup)="textFilter($event)"
 					>
 						<div class="qtr-padding-top">
 							<div class="container">
@@ -66,10 +66,10 @@
 									<input
 										data-auto-id="globalSearch"
 										#globalSearch="ngModel"
-										[(ngModel)]="globalSearchText"
+										[(ngModel)]="searchText"
 										name="globalSearch"
 										type="text"
-										class="form-control"
+										class="form-control cbp-rule-violation-search"
 										placeholder="{{ '_ArchitectureSearch_' | i18n }}"
 									/>
 									<button type="button" class="link" tabindex="-1">
@@ -79,7 +79,7 @@
 							</div>
 						</div>
 					</form>
-				</div>
+				
 			</div>
 </div>
 <div class="divider no-qtr-margin"></div>

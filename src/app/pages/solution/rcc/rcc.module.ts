@@ -13,6 +13,7 @@ import {
 	CuiSelectModule,
 	CuiDropdownModule,
 	CuiSpinnerModule,
+	CuiAlertModule,
 } from '@cisco-ngx/cui-components';
 import { I18nPipeModule, FromNowPipeModule } from '@cisco-ngx/cui-pipes';
 import {
@@ -50,6 +51,7 @@ const childRoutes: Routes = [
 		PieChartModule,
 		RccAssetViolationDetailsModule,
 		RccDeviceViolationDetailsModule,
+		CuiAlertModule,
 		CuiTableModule,
 		CuiPagerModule,
 		RccDataModule.forRoot({ rootUrl }),

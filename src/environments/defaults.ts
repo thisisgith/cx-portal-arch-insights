@@ -34,9 +34,10 @@ export const defaults = {
 	},
 	// Curated Communities/Private Communitites/SuccessTrack URL
 	curatedCommunityUrl: 'https://community-stage.cisco.com/t5',
+	DNACommunititesPath: 'digital-network-architecture',
 	emailFromID: 'cxportal-noreply@cisco.com',
 	emailToID: 'cx-portal-support-nonprod@cisco.com',
-	feedbackToEmail: 'pbc-dev@cisco.com',
+	feedbackToEmail: 'cx-portal-support-nonprod@cisco.com',
 	ieSetup: {
 		asdAuthURL: 'https://cway.cisco.com/ws/oauth/v3/token/cisco/ae95x38c7zgu5fas59gseyfk',
 		asdBaseURL: 'https://api.cisco.com/software/preview/v3.0',
@@ -46,6 +47,7 @@ export const defaults = {
 		DNAC_LS_KEY: 'cxportal.cisco.com:setup-ie:NO_DNAC',
 		downloadOvaLink: 'http://engci-maven-master.cisco.com/artifactory/services-cf-insight' +
 			'_engine-release/ie/Insight_Engine_1.0/ubuntu/103/CXC_1.0_Build-103.ova',
+		imageDownloadRetries: 6,
 		mockASD: true,
 		mockRegistration: true,
 		pingURL: '/ie-commonapi/services/version',
@@ -75,6 +77,7 @@ export const defaults = {
 		returns: '/return/v1.0/returns',
 	},
 	rmaToolUrl: 'https://ibpm-stage.cisco.com/rma-qa3/home',
+	sdAccessCommunitiesPath: 'software-defined-access-sda',
 	sdpServiceBasePath: '/api',
 	sdpServiceClientId: '4jr3csg78pg7ws7gwvj82sfa',
 	/**

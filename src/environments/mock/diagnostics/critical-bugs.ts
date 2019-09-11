@@ -132,7 +132,7 @@ export const CriticalBugScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 200,
+					delay: 500,
 					description: 'Critical Bugs - Page 2',
 					response: {
 						body: MockData(10, 2, null, null, 4),
@@ -142,14 +142,14 @@ export const CriticalBugScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&rows=10&page=2`,
+		url: `${api}?customerId=${customerId}&sort=id:ASC&rows=10&page=2`,
 		usecases: ['Use Case 1'],
 	},
 	{
 		scenarios: {
 			GET: [
 				{
-					delay: 200,
+					delay: 500,
 					description: 'Critical Bugs - Page 3',
 					response: {
 						body: MockData(10, 3, null, null, 4),
@@ -159,7 +159,7 @@ export const CriticalBugScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&rows=10&page=3`,
+		url: `${api}?customerId=${customerId}&sort=id:ASC&rows=10&page=3`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -200,7 +200,7 @@ export const CriticalBugScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 200,
+					delay: 500,
 					description: 'Critical Bugs',
 					response: {
 						body: MockData(10, 1),
@@ -218,7 +218,7 @@ export const CriticalBugScenarios = [
 					selected: false,
 				},
 				{
-					delay: 200,
+					delay: 500,
 					description: 'Critical Bugs - Page 1',
 					response: {
 						body: MockData(10, 1, null, null, 4),
@@ -228,7 +228,7 @@ export const CriticalBugScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&rows=10&page=1`,
+		url: `${api}?customerId=${customerId}&sort=id:ASC&rows=10&page=1`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -262,14 +262,14 @@ export const CriticalBugScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&state=new&rows=10&page=1`,
+		url: `${api}?customerId=${customerId}&state=new&sort=id:ASC&rows=10&page=1`,
 		usecases: ['Use Case 1'],
 	},
 	{
 		scenarios: {
 			GET: [
 				{
-					delay: 200,
+					delay: 500,
 					description: 'Critical Bugs (Resolved)',
 					response: {
 						body: MockData(10, 1, ['resolved']),
@@ -279,7 +279,7 @@ export const CriticalBugScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&state=resolved&rows=10&page=1`,
+		url: `${api}?customerId=${customerId}&state=resolved&sort=id:ASC&rows=10&page=1`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -297,6 +297,23 @@ export const CriticalBugScenarios = [
 			],
 		},
 		url: `${api}?customerId=${customerId}&serialNumber=35641136A1621&rows=10&page=1`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 200,
+					description: 'Critical Bugs - Count',
+					response: {
+						body: MockData(1, 1),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?customerId=${customerId}&rows=1&page=1`,
 		usecases: ['Use Case 1'],
 	},
 ];

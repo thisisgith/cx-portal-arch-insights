@@ -97,11 +97,11 @@ describe('DevicesListComponent', () => {
 		const otherEvent = {
 			keyCode: 7,
 		};
-		component.globalSearchFunction(otherEvent);
+		component.textFilter(otherEvent);
 		const event = {
 			keyCode: 13,
 		};
-		component.globalSearchFunction(event);
+		component.textFilter(event);
 		expect(component.isLoading)
 		.toBeTruthy();
 		expect(component.tableStartIndex)

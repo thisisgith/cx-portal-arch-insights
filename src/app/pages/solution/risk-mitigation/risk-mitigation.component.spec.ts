@@ -96,7 +96,7 @@ describe('RiskMitigationComponent', () => {
 		component.ngOnInit();
 		fixture.detectChanges();
 		expect(component.status.isLoading)
-			.toBeFalsy();
+			.toBeTruthy();
 		const advisoryFilter = _.find(component.filters, { key: 'advisories' });
 		expect(advisoryFilter.seriesData)
 			.toBeDefined();
@@ -128,6 +128,9 @@ describe('RiskMitigationComponent', () => {
 		spyOn(riskMitigationService, 'getCrashHistoryForDevice')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
+		spyOn(riskMitigationService, 'getFingerPrintDeviceDetailsData')
+		.and
+		.returnValue(throwError(new HttpErrorResponse(error)));
 		component.ngOnInit();
 		fixture.whenStable()
 			.then(() => {
@@ -278,7 +281,9 @@ describe('RiskMitigationComponent', () => {
 			customerId: 324123,
 			limit: 10,
 			page: 2,
+			search: '',
 			size: 10,
+			sort: 'abc.desc',
 		};
 		component.onHcrPagerUpdated(param);
 		expect(component.highCrashRiskAssetsGridDetails.tableOffset)
@@ -309,7 +314,7 @@ describe('RiskMitigationComponent', () => {
 			.toBe(true);
 	});
 
-	it('on table sorting change', () => {
+	it('on crashed table sorting change', () => {
 		component.filters[0].seriesData = [
 			{
 				filter: 'Time: Last 24h',
@@ -355,27 +360,27 @@ describe('RiskMitigationComponent', () => {
 
 	it('should unset the selectedAsset', () => {
 		component.onPanelClose();
-		expect(component.selectedAsset)
-			.toBeUndefined();
+		expect(component.selectedAsset.active)
+			.toBeFalsy();
 		expect(component.showAsset360)
 			.toBeFalsy();
 	});
 
 	it('should set the selectedAsset', () => {
 		component.onRowClicked({ active: true });
-		expect(component.selectedAsset)
-			.toBeDefined();
+		expect(component.selectedAsset.active)
+			.toBeTruthy();
 		expect(component.showAsset360)
 			.toBeFalsy();
 		component.onRowClicked({ active: false });
-		expect(component.selectedAsset)
-			.toBeUndefined();
+		expect(component.selectedAsset.active)
+			.toBeFalsy();
 	});
 
 	it('should unset the selectedAsset on panel close', () => {
 		component.onPanelClose();
-		expect(component.selectedAsset)
-			.toBeUndefined();
+		expect(component.selectedAsset.active)
+			.toBeFalsy();
 		expect(component.showAsset360)
 			.toBeFalsy();
 	});
@@ -387,6 +392,44 @@ describe('RiskMitigationComponent', () => {
 			.toBeDefined();
 		expect(component.showFpDetails)
 			.toBeTruthy();
+	});
+
+	it('on searching a string', () => {
+		component.onlyCrashes = false;
+		const result = {
+			customerId: 12323,
+			key: '',
+			search: '',
+			sortDirection: '',
+			time: '90d',
+		};
+		spyOn(component, 'getFilterDetailsForSearchQuery')
+			.and
+			.returnValue(result);
+		spyOn(component, 'searchInCrashedAssetsGrid');
+		spyOn(component, 'getFingerPrintDeviceDetails');
+		fixture.detectChanges();
+		component.onSearchQuery('testString');
+		expect(component.searchQueryInCrashGrid)
+		.toEqual('testString');
+		expect(component.getFilterDetailsForSearchQuery)
+		.toHaveBeenCalled();
+		expect(component.searchInCrashedAssetsGrid)
+		.toHaveBeenCalled();
+		fixture.detectChanges();
+		component.onlyCrashes = true;
+		component.onSearchQuery('testString');
+		expect(component.searchQueryInHighCrashGrid)
+		.toEqual('testString');
+		expect(component.highCrashRiskParams.page)
+		.toEqual(0);
+		expect(component.highCrashRiskParams.search)
+		.toEqual('testString');
+		expect(component.highCrashRiskParams.size)
+		.toEqual(10);
+		expect(component.getFingerPrintDeviceDetails)
+		.toHaveBeenCalled();
+
 	});
 
 	it('should hide the fingerprint details on panel close', () => {
@@ -435,6 +478,15 @@ describe('RiskMitigationComponent', () => {
 		fixture.detectChanges();
 		expect(component.getFilterDetailsForSearchQuery('').time)
 			.toEqual('90');
+		component.filters[0].seriesData[2].selected = false;
+		component.filters[0].seriesData[3].selected = false;
+		fixture.detectChanges();
+		component.filters[0].seriesData[0].selected = false;
+		component.filters[0].seriesData[1].selected = false;
+		component.filters[0].seriesData[2].selected = false;
+		component.filters[0].seriesData[3].selected = false;
+		expect(component.getFilterDetailsForSearchQuery('').time)
+			.toEqual('1');
 	});
 
 	it('should get fitered results on subfilter select', () => {
