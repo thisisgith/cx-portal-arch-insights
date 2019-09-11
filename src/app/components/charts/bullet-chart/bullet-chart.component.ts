@@ -89,12 +89,6 @@ export class BulletChartComponent implements OnInit {
 			title: {
 				text: '',
 			},
-			tooltip: { // Add data-auto-id to the default tooltip format
-				footerFormat: '</div>',
-				headerFormat: '<div data-auto-id="{point.key}Tooltip">' +
-					'<span style="font-size: 10px">{point.key}</span><br/>',
-				useHTML: true,
-			},
 			xAxis: {
 				categories: [`<span style="font-size: 13px; font-weight: bold">
 					${this.seriesData.xLabel}</span>`],

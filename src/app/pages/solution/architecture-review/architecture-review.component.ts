@@ -57,35 +57,48 @@ export class ArchitectureReviewComponent implements OnInit {
 	 *  and buildFilters function for Updating the Table
 	 */
 	public ngOnInit (): void {
-		this.architectureService.getDevicesCount({ customerId: this.customerId })
-			.pipe(
-				takeUntil(this.destroy$),
-			)
-			.subscribe(res => {
-				const devices = _.find(this.visualLabels, { key: 'devices' });
-				devices.count = res.TotalCounts;
-			},
-			err => {
-				this.logger.error('Count of Devices' +
-					'  : getDevicesCount() ' +
-					`:: Error : (${err.status}) ${err.message}`);
-			});
-
-		this.architectureService.getDnacCount({ customerId: this.customerId })
-			.pipe(
-				takeUntil(this.destroy$),
-			)
-			.subscribe(res => {
-				const dnac = _.find(this.visualLabels, { key: 'dnac' });
-				dnac.count = res.TotalCounts;
-			},
-			err => {
-				this.logger.error('Count of Dnac' +
-					'  : getDnacCount() ' +
-					`:: Error : (${err.status}) ${err.message}`);
-			});
-
+		this.getAllDevicesCount();
+		this.getDnacCount();
 		this.buildFilters();
+	}
+
+	/**
+	 * method to get devices count
+	 */
+
+	public getAllDevicesCount () {
+		this.architectureService.getDevicesCount({ customerId: this.customerId })
+		.pipe(
+			takeUntil(this.destroy$),
+		)
+		.subscribe(res => {
+			const devices = _.find(this.visualLabels, { key: 'devices' });
+			devices.count = res.TotalCounts;
+		},
+		err => {
+			this.logger.error('Count of Devices' +
+				'  : getDevicesCount() ' +
+				`:: Error : (${err.status}) ${err.message}`);
+		});
+	}
+
+	/**
+	 * method to get devices count
+	 */
+	public getDnacCount () {
+		this.architectureService.getDnacCount({ customerId: this.customerId })
+		.pipe(
+			takeUntil(this.destroy$),
+		)
+		.subscribe(res => {
+			const dnac = _.find(this.visualLabels, { key: 'dnac' });
+			dnac.count = res.TotalCounts;
+		},
+		err => {
+			this.logger.error('Count of Dnac' +
+				'  : getDnacCount() ' +
+				`:: Error : (${err.status}) ${err.message}`);
+		});
 	}
 
 	/**
@@ -240,11 +253,6 @@ export class ArchitectureReviewComponent implements OnInit {
 				this.status.isLoading = false;
 
 				this.logger.debug('architecture.component : loadData() :: Finished Loading');
-			},
-			err => {
-				this.logger.error('architecture component : loadData()' +
-						'  : loadData() ' +
-						`:: Error : (${err.status}) ${err.message}`);
 			});
 	}
 

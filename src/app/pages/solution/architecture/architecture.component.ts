@@ -34,7 +34,8 @@ export class ArchitectureComponent implements OnInit {
 	private exceptionsFilterTemplate: TemplateRef<{ }>;
 
 	public visualLabels = [
-		{	active: true,
+		{
+			active: true,
 			count: null,
 			key: 'cbp-exception',
 			label: I18n.get('_ArchitectureConfigurationBestPracticesExceptions_'),
@@ -51,7 +52,7 @@ export class ArchitectureComponent implements OnInit {
 		private logger: LogService,
 		private architectureService: ArchitectureService,
 		private route: ActivatedRoute,
-		) {
+	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.cloneDeep(_.get(user, ['info', 'customerId']));
 	}
@@ -71,13 +72,13 @@ export class ArchitectureComponent implements OnInit {
 	 */
 	public getAssetsExceptionsCount () {
 		this.architectureService.getAssetsExceptionsCount({ customerId: this.customerId })
-		.pipe(
-			takeUntil(this.destroy$),
-		)
-		.subscribe(res => {
-			const assetException = _.find(this.visualLabels, { key: 'asset-exception' });
-			assetException.count = res.TotalCounts;
-		});
+			.pipe(
+				takeUntil(this.destroy$),
+			)
+			.subscribe(res => {
+				const assetException = _.find(this.visualLabels, { key: 'asset-exception' });
+				assetException.count = res.TotalCounts;
+			});
 	}
 
 	/**
