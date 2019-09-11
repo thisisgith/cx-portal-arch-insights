@@ -68,8 +68,9 @@ describe('SyslogsdevicedetailsComponent', () => {
 		fixture.whenStable()
 			.then(() => {
 				fixture.detectChanges();
+				const syslogMessageGrid = [];
 				expect(component.tableData)
-					.toBeUndefined();
+				.toEqual(syslogMessageGrid);
 
 				done();
 			});

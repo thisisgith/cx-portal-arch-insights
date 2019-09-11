@@ -7,6 +7,7 @@ import {
 	CuiPagerModule,
 	CuiSelectModule,
 	CuiDrawersModule,
+	CuiSpinnerModule,
 } from '@cisco-ngx/cui-components';
 import { SyslogsDeviceDetailsComponent } from './syslogs-devices-details.component';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
@@ -26,6 +27,7 @@ import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 		FormsModule,
 		ReactiveFormsModule,
 		I18nPipeModule,
+		CuiSpinnerModule,
 	],
 })
 export class SyslogsDevicesDetailsModule { }

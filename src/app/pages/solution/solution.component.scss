@@ -1,5 +1,14 @@
 @import '../../../variables.scss';
 
+$cx-accent-color-1: #00bceb;
+$cx-gray-color-2: #b3b3b3;
+$cx-gray-color-4: #595b61;
+$cx-hover-color: rgba(221, 221, 221, 0.3);
+$cx-font-size-12: 12px;
+$cx-font-size-16: 16px;
+$cx-font-size-18: 18px;
+$cx-font-size-24: 24px;
+
 .cx-breadcrumb-bar {
 	background-color: #fff;
 }
@@ -188,78 +197,111 @@
 	}
 }
 
+/* Context Selector styling start */
+
 .cs {
 	display: flex;
 	align-items: center;
-	padding: 20px 20px 20px 90px;
-}
+	padding: 20px;
 
-.cs__home {
-	margin-right: 15px;
-	width: 26px;
-	height: 25px;
-	display: flex;
-	align-items: center;
-
-	::ng-deep svg {
+	&__home {
 		width: 26px;
 		height: 25px;
-	}
-}
+		display: flex;
+		align-items: center;
 
-.cs__next-icon {
-	width: 10.86px;
-	height: 30px;
-
-	::ng-deep {
-		svg {
+		::ng-deep svg {
+			width: 26px;
 			height: 25px;
+		}
+	}
 
-			polygon {
-				fill: rgba(#232323, 0.22);
+	&__next-icon {
+		width: 10.86px;
+		height: 30px;
+		margin: 0 20px;
+
+		::ng-deep {
+			svg {
+				height: 25px;
+
+				polygon {
+					fill: rgba(#232323, 0.22);
+				}
+			}
+		}
+	}
+
+	&__context {
+		position: relative;
+		margin-left: 15px;
+		margin-right: 35px;
+	}
+
+	&__context__label {
+		color: $gray-text-color;
+		font-size: 12px;
+		line-height: 14px;
+		text-transform: uppercase;
+	}
+
+	.group-label {
+		color: $cx-gray-color-2;
+		font-size: $cx-font-size-12;
+		text-transform: uppercase;
+	}
+
+	.dropdown {
+		> a {
+			color: $cx-gray-color-4;
+			font-size: $cx-font-size-18;
+
+			&::after {
+				content: "\25be";
+				font-size: $cx-font-size-24;
+				top: -4px;
+				transition: none;
+			}
+
+			&:hover,
+			&:active,
+			&:focus {
+				color: $cx-accent-color-1;
+			}
+		}
+
+		&.active {
+			> a::after {
+				top: 4px;
+			}
+		}
+
+		.dropdown__menu a {
+			border: 0 none;
+			padding: 10px 20px 10px 40px;
+			height: unset;
+			line-height: unset;
+			font-size: $cx-font-size-16;
+
+			&.selected {
+				background-color: transparent;
+				color: $cx-accent-color-1 !important; // Required to override cui color
+
+				&::after {
+					font-size: $cx-font-size-18;
+					left: 10px;
+					right: unset;
+				}
+			}
+
+			&:hover {
+				background-color: $cx-hover-color;
 			}
 		}
 	}
 }
 
-.cs__context {
-	position: relative;
-	margin-left: 15px;
-	margin-right: 35px;
-}
-
-.cs__context__label {
-	color: $gray-text-color;
-	font-size: 12px;
-	line-height: 14px;
-	text-transform: uppercase;
-}
-
-.cs__context__dropdown ::ng-deep .dd__input__text {
-	color: $secondary-and-button-text-color;
-}
-
-.cs__dropdown__title {
-	cursor: pointer;
-	color: #5d656c;
-	font-size: 18px;
-	line-height: 22px;
-}
-
-.cs__header__arrow {
-	display: inline-block;
-	transition: transform 0.2s ease-in-out;
-	color: $secondary-and-button-text-color;
-}
-
-$cx-accent-color-1: #00bceb;
-$cx-gray-color-2: #b3b3b3;
-$cx-gray-color-4: #595b61;
-$cx-hover-color: rgba(221, 221, 221, 0.3);
-$cx-font-size-12: 12px;
-$cx-font-size-16: 16px;
-$cx-font-size-18: 18px;
-$cx-font-size-24: 24px;
+/* Context Selector styling end */
 
 .content {
 	display: block;
@@ -396,73 +438,20 @@ $cx-font-size-24: 24px;
 
 /* CiscoUI table styling override end */
 
-.context-selector {
-	padding: 20px 0;
-
-	.svg-chevron-right {
-		height: 30px;
-		width: 11px;
-		margin-left: 20px;
-		margin-right: 20px;
+:host ::ng-deep .filter-bar {
+	&__title {
+		font-size: 14px;
+		line-height: 16px;
 	}
 
-	.svg-home {
-		height: 22px;
-		width: 28px;
+	&__item {
+		background: #6a80a5;
+		border-radius: 4px;
+		font-size: 14px;
+		line-height: 16px;
 	}
 
-	.group-label {
-		color: $cx-gray-color-2;
-		font-size: $cx-font-size-12;
-		text-transform: uppercase;
-	}
-
-	.dropdown {
-		> a {
-			color: $cx-gray-color-4;
-			font-size: $cx-font-size-18;
-
-			&::after {
-				content: "\25be";
-				font-size: $cx-font-size-24;
-				top: -4px;
-				transition: none;
-			}
-
-			&:hover,
-			&:active,
-			&:focus {
-				color: $cx-accent-color-1;
-			}
-		}
-
-		&.active {
-			> a::after {
-				top: 4px;
-			}
-		}
-
-		.dropdown__menu a {
-			border: 0 none;
-			padding: 10px 20px 10px 40px;
-			height: unset;
-			line-height: unset;
-			font-size: $cx-font-size-16;
-
-			&.selected {
-				background-color: transparent;
-				color: $cx-accent-color-1 !important; // Required to override cui color
-
-				&::after {
-					font-size: $cx-font-size-18;
-					left: 10px;
-					right: unset;
-				}
-			}
-
-			&:hover {
-				background-color: $cx-hover-color;
-			}
-		}
+	&__clear {
+		font-size: 12px;
 	}
 }

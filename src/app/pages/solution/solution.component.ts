@@ -301,6 +301,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	 */
 	private fetchSolutions () {
 		this.status.loading = true;
+		const lifecycleFacet = _.find(this.facets, { key: 'lifecycle' });
 		this.racetrackInfoService.getRacetrack()
 		.pipe(
 			map(result => {
@@ -329,7 +330,12 @@ export class SolutionComponent implements OnInit, OnDestroy {
 
 		this.racetrackInfoService.getCurrentTechnology()
 		.pipe(
-			map(result => this.selectedTechnology = result),
+			map(result => {
+				this.selectedTechnology = result;
+				lifecycleFacet.data = {
+					gaugePercent: _.get(this.selectedTechnology, 'usecase_adoption_percentage'),
+				};
+			}),
 			takeUntil(this.destroy$),
 			catchError(err => {
 				this.logger.error(`Solution Data :: Get Current Technology :: Error ${err}`);

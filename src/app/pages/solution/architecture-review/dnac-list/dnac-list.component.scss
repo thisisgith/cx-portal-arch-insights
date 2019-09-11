@@ -7,3 +7,7 @@
 :host ::ng-deep .table {
 	@include table-ellipse;
 }
+
+.form-group__text .dnac-list-search {
+	@include filter-search;
+}
