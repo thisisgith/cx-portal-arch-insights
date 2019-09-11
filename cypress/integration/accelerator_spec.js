@@ -146,7 +146,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				}
 			});
 		});
-		cy.getByAutoId('SuccessPathCloseModal').click();
+		cy.getByAutoId('ViewAllCloseModal').click();
 	});
 
 	describe('ACC Card View', () => {
@@ -163,7 +163,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				// Open the ACC View All modal, and ensure we're in card view
 				cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
 				cy.getByAutoId('ViewAllModal').should('be.visible');
-				cy.getByAutoId('card-view-btn').click();
+				cy.getByAutoId('acc-card-view-btn').click();
 				cy.getByAutoId('ACCCard').should('be.visible');
 			});
 
@@ -172,7 +172,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				accMock.enable('(ACC) IBN-Campus Network Assurance-Onboard');
 
 				// Close the View All modal
-				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllCloseModal').click();
 				cy.getByAutoId('ViewAllModal').should('not.exist');
 
 				// Refresh the page to force-reset bookmarks
@@ -208,7 +208,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				// Open the ACC View All modal, and ensure we're in card view
 				cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
 				cy.getByAutoId('ViewAllModal').should('be.visible');
-				cy.getByAutoId('card-view-btn').click();
+				cy.getByAutoId('acc-card-view-btn').click();
 				cy.getByAutoId('ACCCard').should('be.visible');
 			});
 
@@ -217,7 +217,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				accMock.enable('(ACC) IBN-Campus Network Assurance-Onboard');
 
 				// Close the View All modal
-				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllCloseModal').click();
 				cy.getByAutoId('ViewAllModal').should('not.exist');
 
 				// Refresh the page to force-reset bookmarks
@@ -291,7 +291,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 
 		after(() => {
 			// Close the View All modal
-			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllCloseModal').click();
 			cy.getByAutoId('ViewAllModal').should('not.exist');
 		});
 
@@ -399,7 +399,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 
 		afterEach(() => {
 			// Close the View All modal
-			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllCloseModal').click();
 			cy.getByAutoId('ViewAllModal').should('not.exist');
 
 			// Make sure we're on the lifecycle page and the default use case
@@ -418,7 +418,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			});
 
 			// Close and re-open the modal
-			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllCloseModal').click();
 			cy.getByAutoId('ViewAllModal').should('not.exist');
 			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
 			cy.getByAutoId('ViewAllModal').should('exist');
@@ -441,7 +441,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			});
 
 			// Close the modal, change use cases, and re-open the modal
-			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllCloseModal').click();
 			cy.getByAutoId('ViewAllModal').should('not.exist');
 
 			cy.getByAutoId('UseCaseDropdown').click();
@@ -466,7 +466,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			});
 
 			// Close the modal, change to Assets & Coverage, back to Lifecycle, and re-open the modal
-			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllCloseModal').click();
 			cy.getByAutoId('ViewAllModal').should('not.exist');
 
 			cy.getByAutoId('Facet-Assets & Coverage').click();
@@ -491,7 +491,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			});
 
 			// Close the modal, reload the page, and re-open the modal
-			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllCloseModal').click();
 			cy.getByAutoId('ViewAllModal').should('not.exist');
 
 			cy.loadApp();
@@ -707,7 +707,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			cy.getByAutoId('accRequestModal').should('be.visible');
 			cy.getByAutoId('ACCCloseRequestModal').click();
 			cy.getByAutoId('accRequestModal').should('not.exist');
-			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllCloseModal').click();
 		});
 
 		it('PBC-260: Should be able to close or cancel request form', () => {
@@ -1327,7 +1327,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 
 			after(() => {
 				// Close the ACC View All modal
-				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllCloseModal').click();
 				cy.getByAutoId('ViewAllModal').should('not.exist');
 
 				// Ensure we are using the default mock data
@@ -1364,15 +1364,15 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			// Open the View All modal and switch to table view
 			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
 			cy.getByAutoId('ViewAllModal').should('be.visible');
-			cy.getByAutoId('table-view-btn').click();
+			cy.getByAutoId('acc-table-view-btn').click();
 			cy.getByAutoId('ViewAllTable').should('be.visible');
 		});
 
 		after(() => {
 			// Switch back to card view and close View All modal
-			cy.getByAutoId('card-view-btn').click();
+			cy.getByAutoId('acc-card-view-btn').click();
 			cy.getByAutoId('ACCCard').should('be.visible');
-			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllCloseModal').click();
 			cy.getByAutoId('ViewAllModal').should('not.be.visible');
 
 			// Refresh the page to force-reset bookmarks
@@ -1381,11 +1381,11 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		});
 
 		it('ACC View All should be able to toggle between table and card views', () => {
-			cy.getByAutoId('card-view-btn').click();
+			cy.getByAutoId('acc-card-view-btn').click();
 			cy.getByAutoId('ACCCard').should('be.visible');
 			cy.getByAutoId('ViewAllTable').should('not.be.visible');
 
-			cy.getByAutoId('table-view-btn').click();
+			cy.getByAutoId('acc-table-view-btn').click();
 			cy.getByAutoId('ACCCard').should('not.be.visible');
 			cy.getByAutoId('ViewAllTable').should('be.visible');
 		});
@@ -1659,7 +1659,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				accMock.enable('(ACC) IBN-Campus Network Assurance-Onboard-twoRecommended');
 
 				// Close the View All modal
-				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllCloseModal').click();
 				cy.getByAutoId('ViewAllModal').should('not.exist');
 
 				// Refresh the data
@@ -1670,7 +1670,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				// Re-open the ACC View All modal, and ensure we're in table view
 				cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
 				cy.getByAutoId('ViewAllModal').should('be.visible');
-				cy.getByAutoId('table-view-btn').click();
+				cy.getByAutoId('acc-table-view-btn').click();
 				cy.getByAutoId('ViewAllTable').should('be.visible');
 			});
 
@@ -1679,7 +1679,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				accMock.enable('(ACC) IBN-Campus Network Assurance-Onboard');
 
 				// Close the View All modal
-				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllCloseModal').click();
 				cy.getByAutoId('ViewAllModal').should('not.exist');
 
 				// Refresh the page to force-reset bookmarks
@@ -1689,7 +1689,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				// Re-open the ACC View All modal, and ensure we're in table view
 				cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
 				cy.getByAutoId('ViewAllModal').should('be.visible');
-				cy.getByAutoId('table-view-btn').click();
+				cy.getByAutoId('acc-table-view-btn').click();
 				cy.getByAutoId('ViewAllTable').should('be.visible');
 			});
 
@@ -1717,7 +1717,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				accMock.enable('(ACC) IBN-Campus Network Assurance-Onboard-twoBookmarked');
 
 				// Close the View All modal
-				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllCloseModal').click();
 				cy.getByAutoId('ViewAllModal').should('not.exist');
 
 				// Refresh the data
@@ -1728,7 +1728,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				// Re-open the ACC View All modal, and ensure we're in table view
 				cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
 				cy.getByAutoId('ViewAllModal').should('be.visible');
-				cy.getByAutoId('table-view-btn').click();
+				cy.getByAutoId('acc-table-view-btn').click();
 				cy.getByAutoId('ViewAllTable').should('be.visible');
 			});
 
@@ -1737,7 +1737,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				accMock.enable('(ACC) IBN-Campus Network Assurance-Onboard');
 
 				// Close the View All modal
-				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllCloseModal').click();
 				cy.getByAutoId('ViewAllModal').should('not.exist');
 
 				// Refresh the page to force-reset bookmarks
@@ -1747,7 +1747,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				// Re-open the ACC View All modal, and ensure we're in table view
 				cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
 				cy.getByAutoId('ViewAllModal').should('be.visible');
-				cy.getByAutoId('table-view-btn').click();
+				cy.getByAutoId('acc-table-view-btn').click();
 				cy.getByAutoId('ViewAllTable').should('be.visible');
 			});
 
@@ -1820,15 +1820,15 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			// Open the View All modal and switch to table view
 			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
 			cy.getByAutoId('ViewAllModal').should('be.visible');
-			cy.getByAutoId('table-view-btn').click();
+			cy.getByAutoId('acc-table-view-btn').click();
 			cy.getByAutoId('ViewAllTable').should('be.visible');
 		});
 
 		afterEach(() => {
 			// Switch back to card view and close View All modal
-			cy.getByAutoId('card-view-btn').click();
+			cy.getByAutoId('acc-card-view-btn').click();
 			cy.getByAutoId('ACCCard').should('be.visible');
-			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllCloseModal').click();
 			cy.getByAutoId('ViewAllModal').should('not.be.visible');
 
 			// Make sure we're on the lifecycle page and the default use case
@@ -1848,7 +1848,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				});
 
 			// Close and re-open the modal
-			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllCloseModal').click();
 			cy.getByAutoId('ViewAllModal').should('not.exist');
 
 			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
@@ -1879,7 +1879,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				});
 
 			// Switch to card view, verify the sort is still in place
-			cy.getByAutoId('card-view-btn').click();
+			cy.getByAutoId('acc-card-view-btn').click();
 			cy.getByAutoId('ViewAllModal').within(() => {
 				sortedItemsAsc.forEach((item, index) => {
 					cy.getByAutoId('ACCCard')
@@ -1889,7 +1889,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			});
 
 			// Switch back to table view, verify sort is still in place
-			cy.getByAutoId('table-view-btn').click();
+			cy.getByAutoId('acc-table-view-btn').click();
 			cy.getByAutoId('ViewAllTable')
 				.should('be.visible')
 				.within(() => {
@@ -1911,7 +1911,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				});
 
 			// Close the modal, switch use cases, and re-open the modal
-			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllCloseModal').click();
 			cy.getByAutoId('ViewAllModal').should('not.exist');
 
 			cy.getByAutoId('UseCaseDropdown').click();
@@ -1943,7 +1943,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				});
 
 			// Close the modal, change to Assets & Coverage, back to Lifecycle, and re-open the modal
-			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllCloseModal').click();
 			cy.getByAutoId('ViewAllModal').should('not.exist');
 
 			cy.getByAutoId('Facet-Assets & Coverage').click();
@@ -1975,7 +1975,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				});
 
 			// Close the modal, reload the page, and re-open the modal
-			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllCloseModal').click();
 			cy.getByAutoId('ViewAllModal').should('not.exist');
 
 			cy.loadApp();
@@ -2005,15 +2005,15 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			// Open the View All modal and switch to table view
 			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
 			cy.getByAutoId('ViewAllModal').should('be.visible');
-			cy.getByAutoId('table-view-btn').click();
+			cy.getByAutoId('acc-table-view-btn').click();
 			cy.getByAutoId('ViewAllTable').should('be.visible');
 		});
 
 		afterEach(() => {
 			// Switch back to card view and close View All modal
-			cy.getByAutoId('card-view-btn').click();
+			cy.getByAutoId('acc-card-view-btn').click();
 			cy.getByAutoId('ACCCard').should('be.visible');
-			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllCloseModal').click();
 			cy.getByAutoId('ViewAllModal').should('not.be.visible');
 
 			// Make sure we're on the lifecycle page and the default use case
@@ -2032,7 +2032,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			});
 
 			// Close and re-open the modal
-			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllCloseModal').click();
 			cy.getByAutoId('ViewAllModal').should('not.exist');
 
 			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
@@ -2057,7 +2057,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			});
 
 			// Switch to card view, verify the filter is still in place
-			cy.getByAutoId('card-view-btn').click();
+			cy.getByAutoId('acc-card-view-btn').click();
 			const filteredItems = accItems.filter(item => (item.status === 'requested'));
 			cy.getByAutoId('ViewAllModal').within(() => {
 				cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Requested');
@@ -2067,7 +2067,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			});
 
 			// Switch back to table view, verify the filter is still in place
-			cy.getByAutoId('table-view-btn').click();
+			cy.getByAutoId('acc-table-view-btn').click();
 			cy.getByAutoId('ViewAllTable')
 				.should('be.visible')
 				.within(() => {
@@ -2086,7 +2086,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			});
 
 			// Close the modal, change use cases, and re-open the modal
-			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllCloseModal').click();
 			cy.getByAutoId('ViewAllModal').should('not.exist');
 
 			cy.getByAutoId('UseCaseDropdown').click();
@@ -2112,7 +2112,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			});
 
 			// Close the modal, change to Assets & Coverage, back to Lifecycle, and re-open the modal
-			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllCloseModal').click();
 			cy.getByAutoId('ViewAllModal').should('not.exist');
 
 			cy.getByAutoId('Facet-Assets & Coverage').click();
@@ -2138,7 +2138,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			});
 
 			// Close the modal, reload the page, and re-open the modal
-			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllCloseModal').click();
 			cy.getByAutoId('ViewAllModal').should('not.exist');
 
 			cy.loadApp();
@@ -2161,14 +2161,14 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			// Open the modal and ensure we're in card view
 			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
 			cy.getByAutoId('ViewAllModal').should('be.visible');
-			cy.getByAutoId('card-view-btn').click();
+			cy.getByAutoId('acc-card-view-btn').click();
 			cy.getByAutoId('ACCCard').should('be.visible');
 		});
 
 		afterEach(() => {
 			// Switch to back to card view and close the modal
-			cy.getByAutoId('card-view-btn').click();
-			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('acc-card-view-btn').click();
+			cy.getByAutoId('ViewAllCloseModal').click();
 			cy.getByAutoId('ViewAllModal').should('not.exist');
 
 			// Make sure we're on the lifecycle page and the default use case
@@ -2181,11 +2181,11 @@ describe('Accelerator (ACC)', () => { // PBC-32
 
 		it('ACC View All table vs. card view should be sticky across modal close/re-open', () => {
 			// Switch to table view
-			cy.getByAutoId('table-view-btn').click();
+			cy.getByAutoId('acc-table-view-btn').click();
 			cy.getByAutoId('ViewAllTable').should('be.visible');
 
 			// Close and re-open the modal
-			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllCloseModal').click();
 			cy.getByAutoId('ViewAllModal').should('not.exist');
 
 			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
@@ -2197,11 +2197,11 @@ describe('Accelerator (ACC)', () => { // PBC-32
 
 		it('ACC View All table vs. card view should be sticky across usecase change', () => {
 			// Switch to table view
-			cy.getByAutoId('table-view-btn').click();
+			cy.getByAutoId('acc-table-view-btn').click();
 			cy.getByAutoId('ViewAllTable').should('be.visible');
 
 			// Close the modal, switch use cases, and re-open the modal
-			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllCloseModal').click();
 			cy.getByAutoId('ViewAllModal').should('not.exist');
 
 			cy.getByAutoId('UseCaseDropdown').click();
@@ -2216,11 +2216,11 @@ describe('Accelerator (ACC)', () => { // PBC-32
 
 		it('ACC View All table vs. card view should be sticky across page navigation', () => {
 			// Switch to table view
-			cy.getByAutoId('table-view-btn').click();
+			cy.getByAutoId('acc-table-view-btn').click();
 			cy.getByAutoId('ViewAllTable').should('be.visible');
 
 			// Close the modal, change to Assets & Coverage, back to Lifecycle, and re-open the modal
-			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllCloseModal').click();
 			cy.getByAutoId('ViewAllModal').should('not.exist');
 
 			cy.getByAutoId('Facet-Assets & Coverage').click();
@@ -2236,11 +2236,11 @@ describe('Accelerator (ACC)', () => { // PBC-32
 
 		it('ACC View All table vs. card view should be sticky across page reload', () => {
 			// Switch to table view
-			cy.getByAutoId('table-view-btn').click();
+			cy.getByAutoId('acc-table-view-btn').click();
 			cy.getByAutoId('ViewAllTable').should('be.visible');
 
 			// Close the modal, reload the page, and re-open the modal
-			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllCloseModal').click();
 			cy.getByAutoId('ViewAllModal').should('not.exist');
 
 			cy.loadApp();
@@ -2260,7 +2260,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		});
 
 		after(() => {
-			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllCloseModal').click();
 
 			// Reload the page to force-reset any changed bookmarks
 			// This is required since the mock bookmark APIs don't actually bookmark the ACC items

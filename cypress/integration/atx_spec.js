@@ -144,7 +144,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 				}
 			});
 		});
-		cy.getByAutoId('SuccessPathCloseModal').click();
+		cy.getByAutoId('ViewAllCloseModal').click();
 	});
 
 	it('ATX Tile Tooltip', () => {
@@ -247,7 +247,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			// Open the View All modal and ensure we're in card view
 			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 			cy.getByAutoId('ViewAllModal').should('be.visible');
-			cy.getByAutoId('card-view-btn').click();
+			cy.getByAutoId('atx-card-view-btn').click();
 			cy.getByAutoId('ATXCard').should('be.visible');
 
 			// Verify each completed item's card includes the completed icon
@@ -261,7 +261,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			});
 
 			// Close the View All modal
-			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllCloseModal').click();
 			cy.getByAutoId('ViewAllModal').should('not.exist');
 		});
 
@@ -269,7 +269,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			// Open the View All modal and ensure we're in table view
 			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 			cy.getByAutoId('ViewAllModal').should('be.visible');
-			cy.getByAutoId('table-view-btn').click();
+			cy.getByAutoId('atx-table-view-btn').click();
 			cy.getByAutoId('ViewAllTable').should('be.visible');
 
 			// Verify each completed item's card includes the completed icon
@@ -283,7 +283,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			});
 
 			// Close the View All modal
-			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllCloseModal').click();
 			cy.getByAutoId('ViewAllModal').should('not.exist');
 		});
 	});
@@ -324,7 +324,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			// Open the View All modal and ensure we're in card view
 			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 			cy.getByAutoId('ViewAllModal').should('be.visible');
-			cy.getByAutoId('card-view-btn').click();
+			cy.getByAutoId('atx-card-view-btn').click();
 			cy.getByAutoId('ATXCard').should('be.visible');
 
 			// Verify each completed item's card includes the completed icon
@@ -336,7 +336,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			});
 
 			// Close the View All modal
-			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllCloseModal').click();
 			cy.getByAutoId('ViewAllModal').should('not.exist');
 		});
 
@@ -344,7 +344,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			// Open the View All modal and ensure we're in table view
 			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 			cy.getByAutoId('ViewAllModal').should('be.visible');
-			cy.getByAutoId('table-view-btn').click();
+			cy.getByAutoId('atx-table-view-btn').click();
 			cy.getByAutoId('ViewAllTable').should('be.visible');
 
 			// Verify each completed item's card includes the completed icon
@@ -356,7 +356,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			});
 
 			// Close the View All modal
-			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllCloseModal').click();
 			cy.getByAutoId('ViewAllModal').should('not.exist');
 		});
 	});
@@ -397,7 +397,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 				});
 
 			// Close the schedule pop-up
-			cy.getByAutoId('AtxScheduleCardClose').click();
+			cy.getByAutoId('AtxScheduleCardClose').click({ force: true });
 			cy.getByAutoId('atxScheduleCard').should('not.exist');
 		});
 
@@ -405,7 +405,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			// Open the View All modal and switch to card view
 			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 			cy.getByAutoId('ViewAllModal').should('be.visible');
-			cy.getByAutoId('card-view-btn').click();
+			cy.getByAutoId('atx-card-view-btn').click();
 			cy.getByAutoId('ATXCard').should('be.visible');
 
 			// Open the schedule pop-up
@@ -425,11 +425,11 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			});
 
 			// Close the schedule pop-up
-			cy.getByAutoId('AtxScheduleCardClose').click();
+			cy.getByAutoId('AtxScheduleCardClose').click({ force: true });
 			cy.getByAutoId('atxScheduleCard').should('not.exist');
 
 			// Close the View All modal
-			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllCloseModal').click();
 			cy.getByAutoId('ViewAllModal').should('not.exist');
 		});
 
@@ -437,7 +437,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			// Open the View All modal and switch to table view
 			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 			cy.getByAutoId('ViewAllModal').should('be.visible');
-			cy.getByAutoId('table-view-btn').click();
+			cy.getByAutoId('atx-table-view-btn').click();
 			cy.getByAutoId('ViewAllTable')
 				.should('be.visible')
 				.within(() => {
@@ -461,13 +461,13 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 				});
 
 			// Close the schedule pop-up
-			cy.getByAutoId('AtxScheduleCardClose').click();
+			cy.getByAutoId('AtxScheduleCardClose').click({ force: true });
 			cy.getByAutoId('atxScheduleCard').should('not.exist');
 
 			// Switch back to card view and close the View All modal
-			cy.getByAutoId('card-view-btn').click();
+			cy.getByAutoId('atx-card-view-btn').click();
 			cy.getByAutoId('ATXCard').should('be.visible');
-			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllCloseModal').click();
 			cy.getByAutoId('ViewAllModal').should('not.exist');
 		});
 
@@ -492,7 +492,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 				});
 
 			// Close the schedule pop-up
-			cy.getByAutoId('AtxScheduleCardClose').click();
+			cy.getByAutoId('AtxScheduleCardClose').click({ force: true });
 			cy.getByAutoId('atxScheduleCard').should('not.exist');
 		});
 	});
@@ -529,7 +529,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			cy.getByAutoId('AtxScheduleCardRegisterButton').should('not.have.class', 'disabled');
 
 			// Close the modal
-			cy.getByAutoId('AtxScheduleCardClose').click();
+			cy.getByAutoId('AtxScheduleCardClose').click({ force: true });
 			cy.getByAutoId('atxScheduleCard').should('not.exist');
 		});
 
@@ -545,7 +545,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			cy.getByAutoId('AtxScheduleCardRegisterButton').should('not.have.class', 'disabled');
 
 			// Close the modal
-			cy.getByAutoId('AtxScheduleCardClose').click();
+			cy.getByAutoId('AtxScheduleCardClose').click({ force: true });
 			cy.getByAutoId('atxScheduleCard').should('not.exist');
 		});
 
@@ -560,7 +560,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			cy.getByAutoId('AtxScheduleCardRegisterButton').should('have.class', 'disabled');
 
 			// Close the modal
-			cy.getByAutoId('AtxScheduleCardClose').click();
+			cy.getByAutoId('AtxScheduleCardClose').click({ force: true });
 			cy.getByAutoId('atxScheduleCard').should('not.exist');
 		});
 	});
@@ -570,15 +570,15 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			// Open the View All modal and switch to table view
 			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 			cy.getByAutoId('ViewAllModal').should('be.visible');
-			cy.getByAutoId('table-view-btn').click();
+			cy.getByAutoId('atx-table-view-btn').click();
 			cy.getByAutoId('ViewAllTable').should('be.visible');
 		});
 
 		after(() => {
 			// Switch back to card view and close View All modal
-			cy.getByAutoId('card-view-btn').click();
+			cy.getByAutoId('atx-card-view-btn').click();
 			cy.getByAutoId('ATXCard').should('be.visible');
-			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllCloseModal').click();
 			cy.getByAutoId('ViewAllModal').should('not.be.visible');
 
 			// Refresh the page to force-reset bookmarks
@@ -587,11 +587,11 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 		});
 
 		it('ATX View All should be able to toggle between table and card views', () => {
-			cy.getByAutoId('card-view-btn').click();
+			cy.getByAutoId('atx-card-view-btn').click();
 			cy.getByAutoId('ATXCard').should('be.visible');
 			cy.getByAutoId('ViewAllTable').should('not.be.visible');
 
-			cy.getByAutoId('table-view-btn').click();
+			cy.getByAutoId('atx-table-view-btn').click();
 			cy.getByAutoId('ATXCard').should('not.be.visible');
 			cy.getByAutoId('ViewAllTable').should('be.visible');
 		});
@@ -882,7 +882,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 						cy.get('tr').then($rows => {
 							expect($rows.length).to.eq(item.sessions.length);
 						});
-						cy.getByAutoId('AtxScheduleCardClose').click();
+						cy.getByAutoId('AtxScheduleCardClose').click({ force: true });
 						cy.getByAutoId('atxScheduleCard').should('not.be.visible');
 					});
 			});
@@ -925,15 +925,15 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			// Open the View All modal and switch to table view
 			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 			cy.getByAutoId('ViewAllModal').should('be.visible');
-			cy.getByAutoId('table-view-btn').click();
+			cy.getByAutoId('atx-table-view-btn').click();
 			cy.getByAutoId('ViewAllTable').should('be.visible');
 		});
 
 		afterEach(() => {
 			// Switch back to card view and close View All modal
-			cy.getByAutoId('card-view-btn').click();
+			cy.getByAutoId('atx-card-view-btn').click();
 			cy.getByAutoId('ATXCard').should('be.visible');
-			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllCloseModal').click();
 			cy.getByAutoId('ViewAllModal').should('not.be.visible');
 
 			// Make sure we're on the lifecycle page and the default use case
@@ -953,7 +953,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 				});
 
 			// Close and re-open the modal
-			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllCloseModal').click();
 			cy.getByAutoId('ViewAllModal').should('not.exist');
 
 			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
@@ -984,7 +984,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 				});
 
 			// Switch to card view, verify the sort is still in place
-			cy.getByAutoId('card-view-btn').click();
+			cy.getByAutoId('atx-card-view-btn').click();
 			cy.getByAutoId('ViewAllModal').within(() => {
 				sortedItemsAsc.forEach((item, index) => {
 					cy.getByAutoId('ATXCard')
@@ -994,7 +994,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			});
 
 			// Switch back to table view, verify sort is still in place
-			cy.getByAutoId('table-view-btn').click();
+			cy.getByAutoId('atx-table-view-btn').click();
 			cy.getByAutoId('ViewAllTable')
 				.should('be.visible')
 				.within(() => {
@@ -1016,7 +1016,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 				});
 
 			// Close the modal, switch use cases, and re-open the modal
-			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllCloseModal').click();
 			cy.getByAutoId('ViewAllModal').should('not.exist');
 
 			cy.getByAutoId('UseCaseDropdown').click();
@@ -1048,7 +1048,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 				});
 
 			// Close the modal, change to Assets & Coverage, back to Lifecycle, and re-open the modal
-			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllCloseModal').click();
 			cy.getByAutoId('ViewAllModal').should('not.exist');
 
 			cy.getByAutoId('Facet-Assets & Coverage').click();
@@ -1080,7 +1080,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 				});
 
 			// Close the modal, reload the page, and re-open the modal
-			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllCloseModal').click();
 			cy.getByAutoId('ViewAllModal').should('not.exist');
 
 			cy.loadApp();
@@ -1110,15 +1110,15 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			// Open the View All modal and switch to table view
 			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 			cy.getByAutoId('ViewAllModal').should('be.visible');
-			cy.getByAutoId('table-view-btn').click();
+			cy.getByAutoId('atx-table-view-btn').click();
 			cy.getByAutoId('ViewAllTable').should('be.visible');
 		});
 
 		afterEach(() => {
 			// Switch back to card view and close View All modal
-			cy.getByAutoId('card-view-btn').click();
+			cy.getByAutoId('atx-card-view-btn').click();
 			cy.getByAutoId('ATXCard').should('be.visible');
-			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllCloseModal').click();
 			cy.getByAutoId('ViewAllModal').should('not.be.visible');
 
 			// Make sure we're on the lifecycle page and the default use case
@@ -1137,7 +1137,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			});
 
 			// Close and re-open the modal
-			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllCloseModal').click();
 			cy.getByAutoId('ViewAllModal').should('not.exist');
 
 			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
@@ -1162,7 +1162,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			});
 
 			// Switch to card view, verify the filter is still in place
-			cy.getByAutoId('card-view-btn').click();
+			cy.getByAutoId('atx-card-view-btn').click();
 			const filteredItems = atxItems.filter(item => (item.status === 'requested'));
 			cy.getByAutoId('ViewAllModal').within(() => {
 				cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Requested');
@@ -1170,7 +1170,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			});
 
 			// Switch back to table view, verify the filter is still in place
-			cy.getByAutoId('table-view-btn').click();
+			cy.getByAutoId('atx-table-view-btn').click();
 			cy.getByAutoId('ViewAllTable')
 				.should('be.visible')
 				.within(() => {
@@ -1189,7 +1189,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			});
 
 			// Close the modal, change use cases, and re-open the modal
-			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllCloseModal').click();
 			cy.getByAutoId('ViewAllModal').should('not.exist');
 
 			cy.getByAutoId('UseCaseDropdown').click();
@@ -1215,7 +1215,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			});
 
 			// Close the modal, change to Assets & Coverage, back to Lifecycle, and re-open the modal
-			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllCloseModal').click();
 			cy.getByAutoId('ViewAllModal').should('not.exist');
 
 			cy.getByAutoId('Facet-Assets & Coverage').click();
@@ -1241,7 +1241,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			});
 
 			// Close the modal, reload the page, and re-open the modal
-			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllCloseModal').click();
 			cy.getByAutoId('ViewAllModal').should('not.exist');
 
 			cy.loadApp();
@@ -1264,14 +1264,14 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			// Open the modal and ensure we're in card view
 			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 			cy.getByAutoId('ViewAllModal').should('be.visible');
-			cy.getByAutoId('card-view-btn').click();
+			cy.getByAutoId('atx-card-view-btn').click();
 			cy.getByAutoId('ATXCard').should('be.visible');
 		});
 
 		afterEach(() => {
 			// Switch to back to card view and close the modal
-			cy.getByAutoId('card-view-btn').click();
-			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('atx-card-view-btn').click();
+			cy.getByAutoId('ViewAllCloseModal').click();
 			cy.getByAutoId('ViewAllModal').should('not.exist');
 
 			// Make sure we're on the lifecycle page and the default use case
@@ -1284,11 +1284,11 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 
 		it('ATX View All table vs. card view should be sticky across modal close/re-open', () => {
 			// Switch to table view
-			cy.getByAutoId('table-view-btn').click();
+			cy.getByAutoId('atx-table-view-btn').click();
 			cy.getByAutoId('ViewAllTable').should('be.visible');
 
 			// Close and re-open the modal
-			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllCloseModal').click();
 			cy.getByAutoId('ViewAllModal').should('not.exist');
 
 			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
@@ -1300,11 +1300,11 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 
 		it('ATX View All table vs. card view should be sticky across usecase change', () => {
 			// Switch to table view
-			cy.getByAutoId('table-view-btn').click();
+			cy.getByAutoId('atx-table-view-btn').click();
 			cy.getByAutoId('ViewAllTable').should('be.visible');
 
 			// Close the modal, switch use cases, and re-open the modal
-			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllCloseModal').click();
 			cy.getByAutoId('ViewAllModal').should('not.exist');
 
 			cy.getByAutoId('UseCaseDropdown').click();
@@ -1319,11 +1319,11 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 
 		it('ATX View All table vs. card view should be sticky across page navigation', () => {
 			// Switch to table view
-			cy.getByAutoId('table-view-btn').click();
+			cy.getByAutoId('atx-table-view-btn').click();
 			cy.getByAutoId('ViewAllTable').should('be.visible');
 
 			// Close the modal, change to Assets & Coverage, back to Lifecycle, and re-open the modal
-			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllCloseModal').click();
 			cy.getByAutoId('ViewAllModal').should('not.exist');
 
 			cy.getByAutoId('Facet-Assets & Coverage').click();
@@ -1339,11 +1339,11 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 
 		it('ATX View All table vs. card view should be sticky across page reload', () => {
 			// Switch to table view
-			cy.getByAutoId('table-view-btn').click();
+			cy.getByAutoId('atx-table-view-btn').click();
 			cy.getByAutoId('ViewAllTable').should('be.visible');
 
 			// Close the modal, reload the page, and re-open the modal
-			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllCloseModal').click();
 			cy.getByAutoId('ViewAllModal').should('not.exist');
 
 			cy.loadApp();
@@ -1397,7 +1397,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 					});
 
 				// Close the View Sessions modal
-				cy.getByAutoId('AtxScheduleCardClose').click();
+				cy.getByAutoId('AtxScheduleCardClose').click({ force: true });
 				cy.getByAutoId('atxScheduleCard').should('not.exist');
 			});
 
@@ -1405,7 +1405,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 				// Open the ATX View All modal and ensure we're in card view
 				cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 				cy.getByAutoId('ViewAllModal').should('be.visible');
-				cy.getByAutoId('card-view-btn').click();
+				cy.getByAutoId('atx-card-view-btn').click();
 
 				// PBC-746 - Cancel button should be hidden by default
 				cy.getByAutoId('ATXCard').each(($card, index) => {
@@ -1427,12 +1427,12 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 						});
 
 					// Close the View Sessions modal
-					cy.getByAutoId('AtxScheduleCardClose').click();
+					cy.getByAutoId('AtxScheduleCardClose').click({ force: true });
 					cy.getByAutoId('atxScheduleCard').should('not.exist');
 				});
 
 				// Close the View All modal
-				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllCloseModal').click();
 				cy.getByAutoId('ViewAllModal').should('not.exist');
 			});
 
@@ -1440,7 +1440,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 				// Open the ATX View All modal and ensure we're in table view
 				cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 				cy.getByAutoId('ViewAllModal').should('be.visible');
-				cy.getByAutoId('table-view-btn').click();
+				cy.getByAutoId('atx-table-view-btn').click();
 
 				// PBC-746 - Cancel button should be hidden by default
 				cy.get('tr').each(($row, index) => {
@@ -1464,14 +1464,14 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 							});
 
 						// Close the View Sessions modal
-						cy.getByAutoId('AtxScheduleCardClose').click();
+						cy.getByAutoId('AtxScheduleCardClose').click({ force: true });
 						cy.getByAutoId('atxScheduleCard').should('not.exist');
 					}
 				});
 
 				// Switch back to card view and close the View All modal
-				cy.getByAutoId('card-view-btn').click();
-				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('atx-card-view-btn').click();
+				cy.getByAutoId('ViewAllCloseModal').click();
 				cy.getByAutoId('ViewAllModal').should('not.exist');
 			});
 		});
@@ -1516,7 +1516,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 				// Open the ATX View All modal and ensure we're in card view
 				cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 				cy.getByAutoId('ViewAllModal').should('be.visible');
-				cy.getByAutoId('card-view-btn').click();
+				cy.getByAutoId('atx-card-view-btn').click();
 
 				// Open the View Sessions modal
 				cy.getByAutoId('cardRecommendedATXScheduleButton')
@@ -1541,7 +1541,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 				cy.getByAutoId('atxScheduleCard').should('not.exist');
 
 				// Close the View All modal
-				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllCloseModal').click();
 				cy.getByAutoId('ViewAllModal').should('not.exist');
 			});
 
@@ -1549,7 +1549,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 				// Open the ATX View All modal and ensure we're in table view
 				cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 				cy.getByAutoId('ViewAllModal').should('be.visible');
-				cy.getByAutoId('table-view-btn').click();
+				cy.getByAutoId('atx-table-view-btn').click();
 
 				// Open the View Sessions modal
 				cy.getByAutoId('ViewSessionButton')
@@ -1574,8 +1574,8 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 				cy.getByAutoId('atxScheduleCard').should('not.exist');
 
 				// Switch back to card view and close the View All modal
-				cy.getByAutoId('card-view-btn').click();
-				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('atx-card-view-btn').click();
+				cy.getByAutoId('ViewAllCloseModal').click();
 				cy.getByAutoId('ViewAllModal').should('not.exist');
 			});
 		});
@@ -1647,7 +1647,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 					});
 
 				// Close the View Sessions modal
-				cy.getByAutoId('AtxScheduleCardClose').click();
+				cy.getByAutoId('AtxScheduleCardClose').click({ force: true });
 				cy.getByAutoId('atxScheduleCard').should('not.exist');
 			});
 		});
@@ -1725,7 +1725,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 
 				it('Verify "Watch Now" button is disabled in View All card view', () => {
 					cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
-					cy.getByAutoId('card-view-btn').click();
+					cy.getByAutoId('atx-card-view-btn').click();
 					cy.getByAutoId('ATXCard').each($card => {
 						cy.wrap($card).within(() => {
 							cy.getByAutoId('CardATXWatchNow-')
@@ -1735,12 +1735,12 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 					});
 
 					// Close the View All modal
-					cy.getByAutoId('SuccessPathCloseModal').click();
+					cy.getByAutoId('ViewAllCloseModal').click();
 				});
 
 				it('Verify "Watch Now" button is disabled in View All table view', () => {
 					cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
-					cy.getByAutoId('table-view-btn').click();
+					cy.getByAutoId('atx-table-view-btn').click();
 					cy.get('tr').each(($row, index) => {
 						// Ingore the first tr, since this holds our table headers
 						if (index !== 0) {
@@ -1753,8 +1753,8 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 					});
 
 					// Switch back to card view, and close the View All modal
-					cy.getByAutoId('card-view-btn').click();
-					cy.getByAutoId('SuccessPathCloseModal').click();
+					cy.getByAutoId('atx-card-view-btn').click();
+					cy.getByAutoId('ViewAllCloseModal').click();
 				});
 			});
 		});
