@@ -451,6 +451,7 @@ export class RccComponent implements OnInit, OnDestroy {
 		this.selectedAssetModal = false;
 		this.selectedViolationModal = false;
 		this.errorPolicyView = false;
+		this.noTableData = false;
 	}
 	/**
 	 * Determines whether pager updated on
@@ -460,6 +461,8 @@ export class RccComponent implements OnInit, OnDestroy {
 		this.view = view;
 		this.isAssetView = true;
 		_.invoke(this.alert, 'hide');
+		this.errorPolicyView = false;
+		this.noTableData = false;
 		this.assetTableOptions = new CuiTableOptions({
 			bordered: false,
 			columns: [
@@ -475,6 +478,7 @@ export class RccComponent implements OnInit, OnDestroy {
 					render: item => item.lastScan ?
 						this.fromNow.transform(item.lastScan) : I18n.get('_Never_'),
 					sortable: true,
+					sortKey: 'lastScan',
 				},
 				{
 					key: 'serialNumber',
@@ -601,20 +605,21 @@ export class RccComponent implements OnInit, OnDestroy {
 		this.searchInput = searchInput;
 		if (filter.key === policyGroupConst || filter.key === severityConst) {
 			this.policyViolationsTableOptions = this.getPolicyViolationsTableOptions();
+			this.violationGridObj.pageIndex = 1;
+			this.violationGridObj.sortName = null;
+			this.violationGridObj.sortOrder = null;
 		}
 		if (filter.key === policyGroupConst) {
 			this.policyGroup = sub.filter;
 			(triggeredFromGraph)
 				? this.violationGridObj.policyType = this.policyGroup
 				: this.violationGridObj.policyType = null;
-			this.violationGridObj.pageIndex = 0;
 			this.getRCCData(this.violationGridObj);
 		} else if (filter.key === severityConst) {
 			this.severity = sub.filter;
 			(triggeredFromGraph)
 				? this.violationGridObj.severity = this.severity
 				: this.violationGridObj.severity = null;
-			this.violationGridObj.pageIndex = 0;
 			this.getRCCData(this.violationGridObj);
 		} else if (filter.key === assetOsTypeConst) {
 			this.assetOsType = sub.filter;
@@ -650,11 +655,9 @@ export class RccComponent implements OnInit, OnDestroy {
 	public onViolationTableSortingChanged (columnData: CuiTableColumnOption) {
 		this.tableConfig.tableOffset = 0;
 		this.violationGridObj.pageIndex = 1;
-		this.getRCCData({
-			sortName: columnData.key,
-			sortOrder: columnData.sortDirection,
-			...this.violationGridObj,
-		});
+		this.violationGridObj.sortName = columnData.key;
+		this.violationGridObj.sortOrder = columnData.sortDirection;
+		this.getRCCData(this.violationGridObj);
 	}
 	/**
 	 * method to get asset table sorting selection
@@ -669,6 +672,7 @@ export class RccComponent implements OnInit, OnDestroy {
 		this.filtered = false;
 		_.invoke(this.alert, 'hide');
 		this.errorPolicyView = false;
+		this.noTableData = false;
 		_.each(this.filters, (filter: Filter) => {
 			filter.selected = false;
 			_.each(filter.seriesData, f => {
@@ -684,6 +688,8 @@ export class RccComponent implements OnInit, OnDestroy {
 			this.allAssetsSelected = false;
 			this.violationGridObj.search = null;
 			this.violationGridObj.pageIndex = 1;
+			this.violationGridObj.sortName = null;
+			this.violationGridObj.sortOrder = null;
 			this.policyViolationsTableOptions = this.getPolicyViolationsTableOptions();
 			this.getRCCData(this.violationGridObj);
 		} else {
@@ -710,6 +716,8 @@ export class RccComponent implements OnInit, OnDestroy {
 	public searchViolations (event: any, type: string) {
 		this.invalidSearchInput = false;
 		_.invoke(this.alert, 'hide');
+		this.errorPolicyView = false;
+		this.noTableData = false;
 		const searchInput = this.searchInput.trim();
 		if (event && event.keyCode === 8 && this.searched) {
 			if (!_.isEmpty(searchInput)) {
@@ -748,6 +756,8 @@ export class RccComponent implements OnInit, OnDestroy {
 				this.policyViolationsTableOptions = this.getPolicyViolationsTableOptions();
 				this.violationGridObj.search = searchInput;
 				this.violationGridObj.pageIndex = 1;
+				this.violationGridObj.sortName = null;
+				this.violationGridObj.sortOrder = null;
 				this.getRCCData(this.violationGridObj);
 			} else {
 				this.assetGridObj.searchParam = searchInput;

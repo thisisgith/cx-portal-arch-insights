@@ -21,11 +21,13 @@
 }
 
 .assets-count {
-	font-weight: 500;
+	display: flex !important;
+	flex-direction: column;
+	cursor: pointer;
 }
 
-.cursor {
-	cursor: pointer;
+.font-size-32 {
+	font-size: 32px !important;
 }
 
 .form-group__text .rcc-search {
