@@ -62,6 +62,8 @@ describe('DnacDetailsComponent', () => {
 		fixture.detectChanges();
 		expect(component.params.dnacIP)
 			.toBeDefined();
+		expect(component.isLoading)
+			.toBeTruthy();
 	});
 
 	it('should call getDnacList', () => {

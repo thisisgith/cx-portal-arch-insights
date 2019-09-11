@@ -12,11 +12,14 @@
 			</div>
 		</div>
 		<div detailsPanelTitle class="text-xlarge">
-			<span class="qtr-margin-left" [innerText]="dnacDetails?.dnacHostname">
-			</span>
+			<div>
+				<span [innerText]="('_ArchitectureDnacDetailsForIP_' | i18n)"></span>
+				<span class="qtr-margin-left" [innerText]="dnacDetails?.dnacHostname">
+				</span>
+			</div>
 			<div class="text-medium  base-margin-top">
 				<span [innerText]="('_ArchitectureVersion_' | i18n)"></span>
-				<span class="qtr-margin-left" [innerText]="dnacDetails?.dnacIpaddress">
+				<span class="qtr-margin-left" [innerText]="dnacDetails?.dnacVersion">
 				</span>
 			</div>
 		</div>
@@ -34,44 +37,33 @@
 		</div>
 	</div>
 	<div class="col-md-8">
-			
-				
-				
-					<form
-						#f="ngForm"
-						class="row flex flex-fluid flex-right qtr-margin-right"
-						id="searchForm"
-						(keyup)="textFilter($event)"
-					>
-						<div class="qtr-padding-top">
-							<div class="container">
-								<span [innerText]="'_ArchitectureLastUpdated_' | i18n" class="text-large"></span>
-								<span class="qtr-margin-left text-large"
-								[innerText]="lastCollectionTime"></span>
-							</div>
-						</div>
-						<div>
-							<div class="flex-fill form-group input--compressed input--icon half-margin-right">
-								<div class="form-group__text">
-									<input
-										data-auto-id="globalSearch"
-										#globalSearch="ngModel"
-										[(ngModel)]="searchText"
-										name="globalSearch"
-										type="text"
-										class="form-control"
-										placeholder="{{ '_ArchitectureSearch_' | i18n }}"
-									/>
-									<button type="button" class="link" tabindex="-1">
-										<span class="icon-search"></span>
-									</button>
-								</div>
-							</div>
-						</div>
-					</form>
-				
-		
-</div>
+
+
+
+		<form #f="ngForm" class="row flex flex-fluid flex-right qtr-margin-right" id="searchForm"
+			(keyup)="textFilter($event)">
+			<div class="qtr-padding-top">
+				<div class="container">
+					<span [innerText]="'_ArchitectureLastUpdated_' | i18n" class="text-large"></span>
+					<span class="qtr-margin-left text-large" [innerText]="lastCollectionTime"></span>
+				</div>
+			</div>
+			<div>
+				<div class="flex-fill form-group input--compressed input--icon half-margin-right">
+					<div class="form-group__text">
+						<input data-auto-id="globalSearch" #globalSearch="ngModel" [(ngModel)]="searchText"
+							name="globalSearch" type="text" class="form-control"
+							placeholder="{{ '_ArchitectureSearch_' | i18n }}" />
+						<button type="button" class="link" tabindex="-1">
+							<span class="icon-search"></span>
+						</button>
+					</div>
+				</div>
+			</div>
+		</form>
+
+
+	</div>
 </div>
 <div class="divider"></div>
 <div class="panel">
