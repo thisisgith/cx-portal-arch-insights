@@ -327,7 +327,6 @@ describe('Case Detail Spec', () => {
 			cy.getByAutoId('CaseOpenDoneButton').click();
 			cy.getByAutoId('CloseDetails').click();
 		};
-
 		it.skip('PBC-92 - Assets - Cases - Event Based Case Open (Single Asset)', () => {
 			// TODO: Skipped this test due to lack of advisory data 
 			cy.getByAutoId('ImpactedCountText').each($row => {
@@ -337,7 +336,6 @@ describe('Case Detail Spec', () => {
 			});	
 				this.verifyImpactedAssetFunctionality();
 		});
-
 		it('PBC-591 - Assets - Cases - Event Based Case Open (Multiple Assets)', () => {
 			cy.getByAutoId('Showing-Security Advisories-Count').should('exist');
 
