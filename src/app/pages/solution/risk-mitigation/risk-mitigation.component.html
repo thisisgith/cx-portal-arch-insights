@@ -288,6 +288,7 @@
 	*ngIf="showFpDetails  && !showAsset360"
 	[hidden]="!showFpDetails  && showAsset360"
 	[fullscreen]="fullscreen"
+	[minWidth]="'1024px'"
 >
 	<details-panel-header
 		(close)="onFPDPanelClose()"
