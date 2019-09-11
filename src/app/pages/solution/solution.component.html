@@ -109,7 +109,8 @@
 		textColor="#243034"
 		[arcColor]="facet?.selected ? '#00bceb' : '#92dde4'"
 		[percentage]="facet?.data?.gaugePercent || 0"
-		[label]="facet?.label">
+		[label]="facet?.label"
+		data-auto-id="LifecycleAdoptionProgress">
 	</app-gauge>
 	<p class="km__items__item__label" [innerText]="facet?.title | uppercase"></p>
 	<div
