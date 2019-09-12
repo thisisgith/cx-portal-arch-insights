@@ -1,1 +1,8 @@
-/* Empty SCSS Component File */
+::ng-deep {
+	#fingerprint &.tabs {
+		> li {
+			margin: 0 50px 0 0 !important;
+			height: unset;
+		}
+	}
+}
