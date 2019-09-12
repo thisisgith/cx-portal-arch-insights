@@ -191,27 +191,14 @@
 	</div>
 </ng-template>
 
-<details-panel
-	*ngIf="showAsset360"
-	[hidden]="!showAsset360"
-	[fullscreen]="fullscreen"
->
-	<details-panel-header
-		(close)="onPanelClose()"
-		[(fullscreen)]="fullscreen"
-		[fullscreenToggle]="false"
-	>
-		<asset-details-header [asset]="selectedAsset"></asset-details-header>
-		<div detailsPanelTitle class="text-xlarge">
-			<span class="icon-wifi"></span>
-			<span
-				class="qtr-margin-left"
-				[innerText]="selectedAsset?.neName"
-			></span>
-		</div>
-	</details-panel-header>
-	<asset-details [asset]="selectedAsset"></asset-details>
-</details-panel>
+
+<asset-details *ngIf="showAsset360"
+    [asset]="assetLinkInfo?.asset"
+    [serialNumber]="assetLinkInfo?.asset?.serialNumber"
+    [element]="assetLinkInfo?.element"
+
+ (close)="showAsset360 = false;">
+</asset-details>
 
 <details-panel
 	*ngIf="selectedAsset.active && !showAsset360"
@@ -279,15 +266,17 @@
 			</div>
 		</div>
 	</details-panel-header>
-	<cui-table
+	<cui-table *ngIf = "!isCrashHistoryLoading"
 		[options]="crashHistoryGridOptions"
 		[data]="crashHistoryGridDetails.tableData"
 	></cui-table>
+	<cui-loader  color="muted" *ngIf = "isCrashHistoryLoading"></cui-loader>
 </details-panel>
 <details-panel
 	*ngIf="showFpDetails  && !showAsset360"
 	[hidden]="!showFpDetails  && showAsset360"
 	[fullscreen]="fullscreen"
+	[minWidth]="'1024px'"
 >
 	<details-panel-header
 		(close)="onFPDPanelClose()"
@@ -299,13 +288,14 @@
 		></app-fingerprint-header>
 		<div detailsPanelTitle class="text-xlarge">
 			<span
-				class="qtr-margin-left"
+				class="base-margin-left"
 				[innerText]="'_CP_FingerPrintDetailsFor_' | i18n"
 			></span>
 			<span class="qtr-margin-left">
 				<a
 					data-auto-id="selectedName"
 					[innerHTML]="selectedFingerPrintdata.deviceName"
+					(click) = "showAsset360 = true;"
 				></a>
 			</span>
 		</div>

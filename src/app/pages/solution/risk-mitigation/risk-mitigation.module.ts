@@ -15,6 +15,7 @@ import {
 	CuiPagerModule,
 	CuiProgressbarModule,
 	CuiSpinnerModule,
+	CuiLoaderModule,
 } from '@cisco-ngx/cui-components';
 import {
 	RiskMitigationColumnChartModule,
@@ -63,6 +64,7 @@ const childRoutes: Routes = [
 		CuiSearchModule,
 		CuiIconModule,
 		CuiDropdownModule,
+		CuiLoaderModule,
 		CuiProgressbarModule,
 		AssetDetailsModule,
 		AssetDetailsHeaderModule,

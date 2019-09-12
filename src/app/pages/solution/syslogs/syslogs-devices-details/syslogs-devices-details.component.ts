@@ -52,7 +52,7 @@ export class SyslogsDeviceDetailsComponent implements OnChanges, OnDestroy {
 	public severityList = [
 		{
 			name: I18n.get('_SyslogSeverity0_'),
-			value: 0,
+			value: '0',
 		},
 		{
 			name: I18n.get('_SyslogSeverity1_'),

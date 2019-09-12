@@ -286,6 +286,14 @@ export const MlvisualizationInfo = {
 };
 
 /**
+ * Mock data for MlVisualizationInfo empty state
+ */
+export const MlVisualizationInfoEmpty = {
+	count: 634,
+	customerId: '7293498',
+	scatterPlotDevices: [],
+};
+/**
  * Scatter plot data
  */
 export const scatterPlotDevices = [
@@ -508,5 +516,22 @@ export const ComparisonViewScenarios = [
 		url: `${api6}`,
 		usecases: ['Use Case 1'],
 	},
-
+	/** The scenarios */
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'Ml visualizationInfo',
+					response: {
+						body: MlVisualizationInfoEmpty,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api5}`,
+		usecases: ['Use Case 1'],
+	},
 ];

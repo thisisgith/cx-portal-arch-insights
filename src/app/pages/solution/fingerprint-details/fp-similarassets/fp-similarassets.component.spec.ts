@@ -71,21 +71,25 @@ describe('FpSimilarassetsComponent', () => {
 
 	it('should getSimilarDevices for asset change', () => {
 		const fakeInput: SimpleChanges = {
-			asset: new SimpleChange(null, { productId: 'Hello', deviceId: 'Hello' }, true),
+			asset: new SimpleChange(null, { productId: 'TestProdID', deviceId: 'TestID' }, false),
 		};
 		const spy = spyOn(fpIntelligenceService, 'getSimilarDevices').and
 			.callThrough();
 		component.ngOnChanges(fakeInput);
-		expect(component.deviceId)
-			.toBeDefined();
-		expect(component.productId)
-			.toBeDefined();
-		expect(component.deviceId)
-			.toEqual('Hello');
-		expect(component.productId)
-			.toEqual('Hello');
-		expect(spy)
-			.toHaveBeenCalled();
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+			expect(component.deviceId)
+				.toBeDefined();
+			expect(component.productId)
+				.toBeDefined();
+			expect(component.deviceId)
+				.toEqual('TestID');
+			expect(component.productId)
+				.toEqual('TestProdID');
+			expect(spy)
+				.toHaveBeenCalled();
+		});
 	});
 
 	it('should not getSimilarDevices for asset null', () => {
@@ -138,7 +142,7 @@ describe('FpSimilarassetsComponent', () => {
 	it('should not load data if form is invalid', fakeAsync(() => {
 		component.requestForm.setValue({
 			deviceCount : 50,
-			minMatch: 0 ,
+			minMatch: -1 ,
 			similarityCriteria: 'fingerprint'});
 		spyOn(fpIntelligenceService, 'getSimilarDevices')
 			.and

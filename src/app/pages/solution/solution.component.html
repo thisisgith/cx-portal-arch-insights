@@ -54,7 +54,7 @@
 			<div class="cs__home" inlineSVG="assets/icons/icon-home.svg"></div>
 			<div class="cs__next-icon" inlineSVG="assets/icons/icon-arrow-breadcrumb.svg"></div>
 			<div *ngIf="selectedSolution">
-				<div class="group-label" [innerText]="'_Solution_' | i18n"></div>
+				<div class="group-label" [innerText]="'_SuccessTrack_' | i18n"></div>
 				<div class="dropdown" data-auto-id="SolutionDropdown"
 					[ngClass]="{'active': solutionDropdown }"
 					(click)="useCaseDropdown = false; solutionDropdown = !solutionDropdown">
@@ -109,7 +109,8 @@
 		textColor="#243034"
 		[arcColor]="facet?.selected ? '#00bceb' : '#92dde4'"
 		[percentage]="facet?.data?.gaugePercent || 0"
-		[label]="facet?.label">
+		[label]="facet?.label"
+		data-auto-id="LifecycleAdoptionProgress">
 	</app-gauge>
 	<p class="km__items__item__label" [innerText]="facet?.title | uppercase"></p>
 	<div

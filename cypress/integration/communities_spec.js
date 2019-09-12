@@ -3,7 +3,7 @@ const communitiesMapping = [
 	{
 		usecase: 'Campus Network Assurance',
 		title: 'Wireless & Mobility',
-		url: 'https://cloudsso-test.cisco.com/idp/startSSO.ping?PartnerSpId=https://community-stage.cisco.com/auth/saml&TARGET=https://community-stage.cisco.com/t5/wireless-and-mobility/bd-p/5956-discussions-getting-started-wireles',
+		url: 'https://cloudsso-test.cisco.com/idp/startSSO.ping?PartnerSpId=https://community-stage.cisco.com/auth/saml&TARGET=https://community-stage.cisco.com/t5/wireless-and-mobility/bd-p/5956-discussions-getting-started-wireless',
 		pitstops: [
 			{
 				name: 'Onboard',
@@ -190,6 +190,9 @@ const communitiesMapping = [
 describe('Communities Panel', () => {
 	before(() => {
 		cy.login();
+		cy.window().then(win => { // Must be done before app loads
+			win.localStorage.quickTourFirstTime = { firstTime: false };
+		});
 		cy.loadApp();
 		cy.window().then(win => { // Must be done after app loads
 			win.Cypress.hideDNACHeader = true;

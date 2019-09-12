@@ -179,6 +179,7 @@
 				[bordered]="true"
 				[totalItems]="similarDevicesData?.count"
 				(onPageChanged)="onPagerUpdated($event)"
+				*ngIf="!noData"
 			></cui-pager>
 		</div>
 	</div>
@@ -191,10 +192,12 @@
 	</div>
 </ng-template>
 <ng-template #crashRiskTemplate let-item="celldata">
-	<span
-		class="text-dkgray-1"
-		[innerHTML]="item.riskScore / 100 | percent: '2.2-4'"
-	></span>
+	<div class="text-center">
+		<span
+			class="text-dkgray-1"
+			[innerText]="item.riskScore / 100 | percent: '2.2-4'"
+		></span>
+	</div>
 </ng-template>
 <ng-template #similarityMatchTemplate let-item="celldata">
 	<div
@@ -212,18 +215,22 @@
 	</div>
 </ng-template>
 <ng-template #compareTemplate let-item="celldata">
-	<a
+	<div class="text-right">
+		<a
 		(click)="showDeviceComparison(item)"
 		data-auto-id="CompareButton"
 		[innerText]="'_CP_Compare_' | i18n"
 		class="gt-symbol text-right"
-	></a>
+		></a>
+	</div>
 </ng-template>
 <ng-template #noDataTemplate>
-	<span
+	<div class="section text-center text-large text-dkgray-4">
+		<span
 		class="text-center dbl-padding-top"
 		[innerText]="'_NoResultsFound_' | i18n"
-	></span>
+		></span>
+	</div>
 </ng-template>
 <ng-template #loadingTemplate>
 	<div class="col-12 dbl-padding-top">

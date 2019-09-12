@@ -410,13 +410,8 @@ describe('Assets', () => { // PBC-41
 
 		it('Pre-selects the gauge when reloading a page with filters applied', () => { // PBC-271
 			cy.getByAutoId('CoveredPoint', { timeout: 30000 }).click({ force: true });
-			// TODO: Workaround for PBC-593
-			cy.server();
-			cy.route('**/ws/oauth/v3/token/cisco/*').as('token');
-			// End workaround
 			cy.reload();
-			cy.wait('@token');
-			cy.waitForAppLoading();
+			cy.waitForAppLoading('inventoryLoading');
 			cy.getByAutoId('Facet-Assets & Coverage')
 				.should('have.class', 'km__items__item km__items__item--selected');
 			cy.getByAutoId('VisualFilter-coverage')
