@@ -1,12 +1,12 @@
 import { configureTestSuite } from 'ng-bullet';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, fakeAsync } from '@angular/core/testing';
 import { environment } from '@environment';
 import { DevicesSdaComponent } from './devices-sda.component';
 import { DevicesSdaModule } from './devices-sda.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ArchitectureReviewService } from '@sdp-api';
 import { ActivatedRoute } from '@angular/router';
-import { user, ArchitectureReviewScenarios } from '@mock';
+import { user } from '@mock';
 import { of, throwError } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 
@@ -58,13 +58,13 @@ describe('DevicesSdaComponent', () => {
 	it('should check for invalidResponseHandler', () => {
 		component.inValidResponseHandler();
 		expect(component.sdaVersion)
-		.toEqual('');
+			.toEqual('');
 		expect(component.isLoading)
-		.toBeFalsy();
+			.toBeFalsy();
 		expect(component.deviceDetails)
-		.toBeNull();
+			.toBeNull();
 		expect(component.totalItems)
-		.toEqual(0);
+			.toEqual(0);
 	});
 
 	it('should call deviceDetails on change', () => {
@@ -77,18 +77,32 @@ describe('DevicesSdaComponent', () => {
 
 		component.ngOnChanges();
 		expect(component.isLoading)
-		.toBeTruthy();
+			.toBeTruthy();
 	});
 
-	it('should call getDevicesSDA service', () => {
-		spyOn(service, 'getDevicesSDAResponse')
-		.and
-		.returnValue(of(<any> ArchitectureReviewScenarios[2].scenarios.POST[0].response.body));
-
+	it('should call getDevicesSDA service with emptyresponse', fakeAsync(() => {
+		spyOn(service, 'getDevicesSDA')
+			.and
+			.returnValue(of(null));
 		component.getSdaDeviceData();
-		expect(service.getDevicesSDAResponse)
-		.toHaveBeenCalled();
-	});
+		expect(service.getDevicesSDA)
+			.toHaveBeenCalled();
+	}));
+
+	it('should call getDevicesSDA service with response', fakeAsync(() => {
+		const response = {
+			dnacDeviceDetails: {
+				recommendedVersions: '',
+			},
+			dnacVersion: '1.1.2',
+		};
+		spyOn(service, 'getDevicesSDA')
+			.and
+			.returnValue(of(response));
+		component.getSdaDeviceData();
+		expect(service.getDevicesSDA)
+			.toHaveBeenCalled();
+	}));
 
 	it('should throw errors', () => {
 		const error = {
@@ -99,9 +113,9 @@ describe('DevicesSdaComponent', () => {
 			.and
 			.returnValue(
 				throwError(new HttpErrorResponse(error)),
-		);
+			);
 		component.getSdaDeviceData();
 		expect(component.sdaVersion)
-		.toEqual('');
+			.toEqual('');
 	});
 });

@@ -64,9 +64,25 @@ describe('ArchitectureComponent', () => {
 	});
 
 	it('should call exceptions count on init', () => {
+		const response = {
+			High: 10,
+			Low: 5,
+			Medium: 20,
+		};
 		spyOn(service, 'getExceptionsCount')
 			.and
-			.returnValue(of({ CBPRulesCount: 5000 }));
+			.returnValue(of(response));
+		component.ngOnInit();
+		expect(service.getExceptionsCount)
+			.toHaveBeenCalled();
+		expect(service.getAssetsExceptionsCount)
+			.toHaveBeenCalled();
+	});
+
+	it('should call empty response on init', () => {
+		spyOn(service, 'getExceptionsCount')
+			.and
+			.returnValue(of([]));
 		component.ngOnInit();
 		expect(service.getExceptionsCount)
 			.toHaveBeenCalled();
@@ -77,7 +93,7 @@ describe('ArchitectureComponent', () => {
 	it('should call clear filters', () => {
 		component.clearFilters();
 		expect(component.filtered)
-		.toBeFalsy();
+			.toBeFalsy();
 	});
 
 	it('should call selectVisualLabel', () => {
@@ -110,7 +126,7 @@ describe('ArchitectureComponent', () => {
 			.and
 			.returnValue(
 				throwError(new HttpErrorResponse(error)),
-				);
+			);
 
 		component.ngOnInit();
 		expect(service.getExceptionsCount)
@@ -118,7 +134,7 @@ describe('ArchitectureComponent', () => {
 	}));
 
 	it('should get selected sub folder', () => {
-		component.filters =  [
+		component.filters = [
 			{
 				key: 'ExceptionsFilter',
 				loading: true,
@@ -135,6 +151,6 @@ describe('ArchitectureComponent', () => {
 			}];
 		component.getSelectedSubFilters('NoFilter');
 		expect(component.getSelectedSubFilters('ExceptionsFilter'))
-		.toBeTruthy();
+			.toBeTruthy();
 	});
 });

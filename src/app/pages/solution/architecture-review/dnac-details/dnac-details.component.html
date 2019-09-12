@@ -10,7 +10,8 @@
 					*ngTemplateOutlet="SDAScaleUtilizationChart; context: { 
 						networkDevicesData: networkDevicesData,
 						endPointsData :endPointsData,
-						fabricsData:fabricsData
+						fabricsData:fabricsData,
+						isLoading:isLoading
 					 }">
 					</ng-container>
 				</div>
@@ -20,11 +21,13 @@
 </div>
 
 <ng-template #SDAScaleUtilizationChart let-fabricsData="fabricsData"
-	let-networkDevicesData="networkDevicesData" let-endPointsData="endPointsData">
+	let-networkDevicesData="networkDevicesData" let-endPointsData="endPointsData"
+	let-isLoading="isLoading">
 			<div *ngIf="!isLoading">
 				<bullet-chart [seriesData]="networkDevicesData" ></bullet-chart>
 				<bullet-chart [seriesData]="endPointsData" ></bullet-chart>
 				<bullet-chart [seriesData]="fabricsData" ></bullet-chart>
+				<bullet-chart [seriesData]="wlcData" ></bullet-chart>
 			</div>
 			<div class="base-margin-top" *ngIf="isLoading">
 				<cui-spinner></cui-spinner>

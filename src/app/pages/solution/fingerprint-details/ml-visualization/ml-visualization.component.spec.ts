@@ -75,12 +75,29 @@ describe('MlVisualizationComponent', () => {
 			'getMlVisualizationDevices',
 		).and
 		.returnValue(throwError(new HttpErrorResponse(error)));
+		component.ngOnChanges({
+			asset: {
+				currentValue: {
+					deviceId: null,
+					productFamily: 'TestProductFamily',
+				},
+				firstChange: true,
+				isFirstChange: () => true,
+				previousValue: null,
+			},
+		});
 		component.ngOnInit();
 		fixture.whenStable()
 		.then(() => {
 			fixture.detectChanges();
 			expect(component.selectedDevice1)
+			.toBeFalsy();
+			expect(component.mlVisualizationDevices)
 			.toBeUndefined();
+			expect(component.seriesDataLoading)
+				.toBeFalsy();
+			expect(component.noData)
+				.toBeTruthy();
 			done();
 		});
 	});
@@ -229,4 +246,32 @@ describe('MlVisualizationComponent', () => {
 			done();
 		});
 	});
+
+	it('should not load data if response contains empty values', done => {
+		spyOn(mlVisualizationService, 'getMlVisualizationDevices')
+		.and
+		.returnValue(of(ComparisonViewScenarios[9].scenarios.GET[0].response.body));
+		component.ngOnChanges({
+			asset: {
+				currentValue: {
+					deviceId: null,
+					productFamily: 'TestProductFamily',
+				},
+				firstChange: true,
+				isFirstChange: () => true,
+				previousValue: null,
+			},
+		});
+		component.ngOnInit();
+		fixture.whenStable()
+			.then(() => {
+				fixture.detectChanges();
+				expect(component.scatterPlotDataPoints.length)
+					.toEqual(0);
+				expect(component.coalescePoints(component.scatterPlotDataPoints).length)
+					.toEqual(0);
+				done();
+			});
+	});
+
 });
