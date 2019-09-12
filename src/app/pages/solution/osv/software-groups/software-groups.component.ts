@@ -262,7 +262,7 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 				},
 			},
 			{
-				label: I18n.get('_OsvRecommendations_'),
+				label: I18n.get('_OsvSoftwareVersionSummary_'),
 				onClick: () => {
 					this.openSoftwareGroupDetails(1, softwareGroup);
 				},

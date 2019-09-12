@@ -35,7 +35,7 @@
 
 <ng-template #tableAssets>
 	<div class="responsive-table" *ngIf="!status.isLoading && assetsTable && assets?.length">
-		<table class="table table--selectable table--compressed table--lined table--hover table--nostripes">
+		<table id="assetsListTable" class="table table--selectable table--compressed table--wrap table--lined table--hover table--nostripes">
 			<thead>
 				<tr>
 					<th *ngFor="let column of assetsTable.columns"
@@ -70,8 +70,8 @@
 									</ng-container>
 								</ng-container>
 								<ng-container *ngIf="!column.template">
-									<span *ngIf="column.render" [innerHTML]="column.render(item)"></span>
-									<span *ngIf="!column.render" [innerText]="item[column.key]"></span>
+									<span *ngIf="column.render" [title]="column.render(item)" [innerHTML]="column.render(item)"></span>
+									<span *ngIf="!column.render" [title]="item[column.key]" [innerText]="item[column.key]"></span>
 								</ng-container>
 						</td>
 				</tr>
@@ -101,7 +101,7 @@
 		class="icon-circle">		
 	</span>
 	<span *ngIf="!item?.alert || item?.alert == 'NA'" class="icon-circle color-transparent"></span>
-	<span class="col-11" [innerText]="item.swVersion"></span>
+	<span class="col-11" [title]="item.swVersion" [innerText]="item.swVersion"></span>
 </ng-template>
 <ng-template #noRecommendationsTemp>
 	<span class="badge-wrapper">

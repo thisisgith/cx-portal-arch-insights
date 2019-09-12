@@ -85,7 +85,7 @@ export class PieChartComponent implements OnInit {
 						}
 					},
 				},
-				height: 125,
+				height: 130,
 				plotBackgroundColor: null,
 				plotBorderWidth: null,
 				plotShadow: false,
