@@ -76,7 +76,7 @@
 			</cui-select>
 		</div>
 	</div>
-	<div class="row base-padding-top half-padding-left responsive-table"
+	<div class="row half-padding-left responsive-table"
 		*ngIf="(!selectionLoading  && tableConfig?.totalItems > 0); else commonMsgTemplate;">
 		<cui-table class="table table--lined table--wrapped table--fixed" [options]="impactedDeviceTableOptions" 
 			[data]="impactedDeviceDetails"
@@ -120,7 +120,7 @@
 	</div>
 </ng-template>
 <ng-template #deviceLink let-item="celldata">
-	<span [innerText]="item?.hostName"></span>
+	<a data-auto-id="DeviceLinkSlideIn" (click)="openAssetDetails(item?.serialNumber)" [innerText]="item?.hostName"></a>
 </ng-template>
 <ng-template #noDataAvailable>
 	<div class="text-center dbl-margin-top dbl-margin-bottom">

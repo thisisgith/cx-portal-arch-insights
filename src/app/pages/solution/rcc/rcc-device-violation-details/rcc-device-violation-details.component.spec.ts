@@ -172,8 +172,8 @@ describe('RccDeviceViolationDetailsComponent', () => {
 		component.ngOnChanges(changes);
 		tick();
 		fixture.detectChanges();
-		expect(component.policyRuleData.policy)
-			.toEqual({ });
+		expect(component.tableConfig.tableOffset)
+			.toEqual(0);
 	}));
 
 	it('Should not get the api data on ngonchanges when', fakeAsync(() => {
@@ -210,12 +210,7 @@ describe('RccDeviceViolationDetailsComponent', () => {
 	it('Should get the api data ngonchanges empty info data', fakeAsync(() => {
 		const changes = {
 			policyViolationInfo: {
-				currentValue: {
-					policycategory: '',
-					policygroupid: '',
-					policyname: '',
-					ruletitle: '',
-				},
+				currentValue: undefined,
 				firstChange: false,
 				isFirstChange: () => false,
 				previousValue: undefined,
@@ -235,12 +230,13 @@ describe('RccDeviceViolationDetailsComponent', () => {
 			.returnValue(of(ComplianceScenarios[9].scenarios.GET[0].response.body));
 		spyOn(rccTrackService, 'getRccPolicyRuleDetailsData')
 			.and
-			.returnValue(of(ComplianceScenarios[7].scenarios.GET[0].response.body));
+			.returnValue(of(ComplianceScenarios[14].scenarios.GET[0].response.body));
 		component.loadData();
 		tick();
 		fixture.detectChanges();
+		expect(component.policyRuleData)
+			.toBeDefined();
 		expect(component.impactedDeviceDetails)
 			.toEqual([]);
 	}));
-
 });

@@ -279,7 +279,7 @@ export const ELearningScenarios = [
 		},
 		url: `${api}?usecase=Campus Network Assurance&solution=IBN` +
 			`&pitstop=Onboard&customerId=${customerId}&suggestedAction=` +
-			'Get to know Cisco DNA Center&rows=100',
+			'Get to know Cisco DNA Center&rows=500',
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -297,7 +297,7 @@ export const ELearningScenarios = [
 			],
 		},
 		url: `${api}?usecase=Campus Network Segmentation&solution=IBN&pitstop=Onboard` +
-			`&customerId=${customerId}&suggestedAction=Onboard 2&rows=100`,
+			`&customerId=${customerId}&suggestedAction=Onboard 2&rows=500`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -315,7 +315,7 @@ export const ELearningScenarios = [
 			],
 		},
 		url: `${api}?usecase=Scalable Access Policy&solution=IBN&` +
-			`pitstop=Onboard&customerId=${customerId}&suggestedAction=Onboard 2&rows=100`,
+			`pitstop=Onboard&customerId=${customerId}&suggestedAction=Onboard 2&rows=500`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -333,7 +333,7 @@ export const ELearningScenarios = [
 			],
 		},
 		url: `${api}?usecase=Network Device Onboarding&solution=IBN&` +
-			`pitstop=Onboard&customerId=${customerId}&suggestedAction=Onboard 2&rows=100`,
+			`pitstop=Onboard&customerId=${customerId}&suggestedAction=Onboard 2&rows=500`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -351,7 +351,7 @@ export const ELearningScenarios = [
 			],
 		},
 		url: `${api}?usecase=Campus Software Image Management&solution=IBN&` +
-			`pitstop=Onboard&customerId=${customerId}&suggestedAction=Onboard 2&rows=100`,
+			`pitstop=Onboard&customerId=${customerId}&suggestedAction=Onboard 2&rows=500`,
 		usecases: ['Use Case 1'],
 	},
 ];

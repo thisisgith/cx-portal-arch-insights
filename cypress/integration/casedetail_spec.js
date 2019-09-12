@@ -311,18 +311,7 @@ describe('Case Detail Spec', () => {
 			cy.getByAutoId('Facet-Advisories').click();
 		});
 
-		it.skip('PBC-92 - Assets - Cases - Event Based Case Open (Single Asset)', () => {
-		});
-
-		it('PBC-591 - Assets - Cases - Event Based Case Open (Multiple Assets)', () => {
-			cy.getByAutoId('Showing-Security Advisories-Count').should('exist');
-
-			cy.getByAutoId('ImpactedCountText').each($row => {
-				if ($row.text() === '2 ') {
-					cy.wrap($row).click();
-				}
-			});
-
+		this.verifyImpactedAssetFunctionality = () => {
 			cy.getByAutoId('SecurityAdvisoryOpenCaseBtn').click();
 			cy.getByAutoId('PanelSelectOption1', { timeout: 10000 }).click();
 			// Select the dropdown option
@@ -337,6 +326,25 @@ describe('Case Detail Spec', () => {
 			cy.getByAutoId('CaseNumberButton').should('exist');
 			cy.getByAutoId('CaseOpenDoneButton').click();
 			cy.getByAutoId('CloseDetails').click();
+		};
+		it.skip('PBC-92 - Assets - Cases - Event Based Case Open (Single Asset)', () => {
+			// TODO: Skipped this test due to lack of advisory data 
+			cy.getByAutoId('ImpactedCountText').each($row => {
+				if ($row.text() === '1') {
+					cy.wrap($row).click();
+				}
+			});	
+				this.verifyImpactedAssetFunctionality();
 		});
+		it('PBC-591 - Assets - Cases - Event Based Case Open (Multiple Assets)', () => {
+			cy.getByAutoId('Showing-Security Advisories-Count').should('exist');
+
+			cy.getByAutoId('ImpactedCountText').each($row => {
+				if ($row.text() === '2 ') {
+					cy.wrap($row).click();
+				}
+			});	
+				this.verifyImpactedAssetFunctionality();
+		});	
 	});
 });
