@@ -316,6 +316,48 @@
 	</span>
 	<span [innerText]="item.globalRiskRank"></span>
 </ng-template>
-<ng-template #riskScore let-item="celldata">
-	<span [innerHTML]="item.riskScore"></span>
+<ng-template #lastOccuranceTemplate let-item="celldata">
+	<span title="{{ item?.lastOccurrence }}" [innerText]= "item.lastOccurrence">
+	</span>
+</ng-template>
+<ng-template #firstOccuranceTemplate let-item="celldata">
+	<span title="{{ item?.firstOccurrence }}" [innerText]= "item.firstOccurrence">
+	</span>
+</ng-template>
+<ng-template #swVersionTemplate let-item="celldata">
+	<span title="{{ item?.swVersion }}" [innerText]= "item.swVersion">
+	</span>
+</ng-template>
+<ng-template #neNameTemplate let-item="celldata">
+	<span title="{{ item?.neName }}" [innerText]= "item.neName">
+	</span>
+</ng-template>
+<ng-template #productIdTemplate let-item="celldata">
+	<span title="{{ item?.productId }}" [innerText]= "item.productId">
+	</span>
+</ng-template>
+<ng-template #productFamilyTemplate let-item="celldata">
+	<span title="{{ item?.productFamily }}" [innerText]= "item.productFamily">
+	</span>
+</ng-template>
+<ng-template #deviceNameTemplate let-item="celldata">
+	<span title="{{ item?.deviceName }}" [innerText]= "item.deviceName">
+	</span>
+</ng-template>
+<ng-template #softwareTypeTemplate let-item="celldata">
+	<span title="{{ item?.softwareType }}" [innerText]= "item.softwareType">
+	</span>
+</ng-template>
+<ng-template #softwareVersionTemplate let-item="celldata">
+	<span title="{{ item?.softwareVersion }}" [innerText]= "item.softwareVersion">
+	</span>
+</ng-template>
+<ng-template #riskScoreTemplate let-item="celldata">
+	<span title="{{ item?.riskScore }}" [innerHTML]="item.riskScore"></span>
+</ng-template>
+<ng-template #resetReasonTemplate let-item="celldata">
+	<span title="{{ item?.resetReason }}" [innerHTML]="item.resetReason"></span>
+</ng-template>
+<ng-template #timeStampTemplate let-item="celldata">
+	<span title="{{ item?.timeStamp }}" [innerHTML]="item.timeStamp"></span>
 </ng-template>
