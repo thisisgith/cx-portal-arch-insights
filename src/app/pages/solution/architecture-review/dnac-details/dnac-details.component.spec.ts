@@ -39,7 +39,7 @@ describe('DnacDetailsComponent', () => {
 				},
 			],
 		})
-		.compileComponents();
+			.compileComponents();
 	}));
 
 	beforeEach(async(() => {
@@ -62,12 +62,52 @@ describe('DnacDetailsComponent', () => {
 		fixture.detectChanges();
 		expect(component.params.dnacIP)
 			.toBeDefined();
+		expect(component.isLoading)
+			.toBeTruthy();
 	});
 
 	it('should call getDnacList', () => {
+
+		const response = {
+			'End Points':
+			{
+				Label: 'End Points',
+				Published: '0',
+				PublishedLimit: '2000',
+			},
+			Fabrics:
+			{
+				Label: 'Fabrics',
+				Published: '0',
+				PublishedLimit: '2000',
+			},
+			'Network Devices':
+			{
+				Label: 'Network Devices',
+				Published: '0',
+				PublishedLimit: '2000',
+			},
+			WLC:
+			{
+				Label: 'WLC',
+				Published: '0',
+				PublishedLimit: '2000',
+			},
+		};
+
 		spyOn(service, 'getDnacList')
-		.and
-		.returnValue(of({ data: [] }));
+			.and
+			.returnValue(of(response));
+		component.getNetworkDevicesCount();
+		expect(service.getDnacList)
+			.toHaveBeenCalled();
+	});
+
+	it('should not call getDnacList', () => {
+
+		spyOn(service, 'getDnacList')
+			.and
+			.returnValue(of([]));
 		component.getNetworkDevicesCount();
 		expect(service.getDnacList)
 			.toHaveBeenCalled();

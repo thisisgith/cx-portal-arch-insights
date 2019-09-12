@@ -1,6 +1,13 @@
 import {
-	Component, Input, OnInit, ViewChild, TemplateRef,
-	OnDestroy, SimpleChanges,
+	Component,
+	Input,
+	OnInit,
+	ViewChild,
+	TemplateRef,
+	OnDestroy,
+	SimpleChanges,
+	EventEmitter,
+	Output,
 } from '@angular/core';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
@@ -47,6 +54,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 	private violationAgeTemplate: TemplateRef<{ }>;
 	@ViewChild('severityIconTemplate', { static: true })
 	private severityIconTemplate: TemplateRef<{ }>;
+	@Output('assetDetails') public assetDetails: EventEmitter<string> = new EventEmitter<string>();
 	public policyRuleData: any = { };
 	public customerId: string;
 	public impactedAssetsCount: any;
@@ -87,8 +95,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 		this.tableConfig.tableOffset = 0;
 		this.impactedDeviceDetails = [];
 		const policyViolationInfo = _.get(changes, ['policyViolationInfo', 'currentValue']);
-		const isFirstChange = _.get(changes, ['policyViolationInfo', 'firstChange']);
-		if (policyViolationInfo && !isFirstChange) {
+		if (policyViolationInfo) {
 			this.queryParamMapObj = {
 				customerId: this.customerId,
 				policyCategory: this.policyViolationInfo.policycategory,
@@ -102,7 +109,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 				productFamily : '',
 				productModel : '',
 			};
-			this.impactedAssetsCount = this.policyViolationInfo.impassets;
+			this.impactedAssetsCount = this.policyViolationInfo.impassetscount;
 			this.loadData();
 			this.errorResult = false;
 			_.invoke(this.alert, 'hide');
@@ -320,6 +327,14 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 	public onTableSortingChanged () {
 		this.tableConfig.tableOffset = 0;
 	}
+	/**
+	 * Function called when sort changed
+	 * @param serialNumber gives sort information
+	 */
+	public openAssetDetails (serialNumber: string) {
+		this.assetDetails.emit(serialNumber);
+	}
+
 	/**
 	 * OnDestroy lifecycle hook
 	 */

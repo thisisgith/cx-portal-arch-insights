@@ -49,6 +49,8 @@ export class AssetDetailsComponent implements OnInit, OnDestroy, Panel360 {
 	public getProductIcon = getProductTypeImage;
 	public getProductTitle = getProductTypeTitle;
 	private destroyed$: Subject<void> = new Subject<void>();
+	@Input() public minWidth;
+	@Input() public fullscreenToggle;
 
 	constructor (
 		private inventoryService: InventoryService,

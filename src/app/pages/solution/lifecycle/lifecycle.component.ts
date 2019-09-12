@@ -52,7 +52,7 @@ interface ComponentData {
 	params: {
 		customerId: string;
 		pitstop: string;
-		rows?: number;
+		rows: number;
 		solution: string;
 		usecase: string;
 		suggestedAction?: string;
@@ -243,6 +243,7 @@ export class LifecycleComponent implements OnDestroy {
 		params: {
 			customerId: '',
 			pitstop: '',
+			rows: 500,
 			solution: '',
 			suggestedAction: '',
 			usecase: '',
@@ -420,7 +421,7 @@ export class LifecycleComponent implements OnDestroy {
 			params: {
 				customerId: this.customerId,
 				pitstop: '',
-				rows: 100,
+				rows: 500,
 				solution: '',
 				suggestedAction: '',
 				usecase: '',
@@ -583,7 +584,7 @@ export class LifecycleComponent implements OnDestroy {
 					sortDirection: 'asc',
 					sortKey: 'bookmark',
 					template: this.bookmarkTemplate,
-					width: '10%',
+					width: '12%',
 				},
 				{
 					key: 'title',
@@ -592,7 +593,7 @@ export class LifecycleComponent implements OnDestroy {
 					sortDirection: 'asc',
 					sortKey: 'title',
 					template: this.titleTemplate,
-					width: '50%',
+					width: '44%',
 				},
 				{
 					key: 'status',
@@ -606,7 +607,7 @@ export class LifecycleComponent implements OnDestroy {
 				{
 					sortable: false,
 					template: this.actionTemplate,
-					width: '20%',
+					width: '24%',
 				},
 			],
 		});
@@ -712,6 +713,8 @@ export class LifecycleComponent implements OnDestroy {
 	 * @param type the modal template to display
 	 */
 	public showModal (type: string) {
+		// close all popup modals upon opening viewAll modal
+		this.closeViewSessions();
 		// reset the view to card view
 		// this.view = 'grid';
 		if (type === 'atx') {
@@ -1222,12 +1225,14 @@ export class LifecycleComponent implements OnDestroy {
 	}
 
 	/**
-	 * Opens the given recordingURL in a new tab
-	 * @param recordingUrl string
+	 * Opens the given URL in a new tab
+	 * @param crossLaunchUrl string
 	 */
-	 public atxWatchNow (recordingUrl: string) {
-		window.open(`${recordingUrl}`, '_blank');
-		this.closeViewSessions();
+	 public crossLaunch (crossLaunchUrl: string) {
+		if (crossLaunchUrl) {
+			window.open(crossLaunchUrl, '_blank');
+			this.closeViewSessions();
+		}
 	}
 
 	/**
@@ -1244,16 +1249,6 @@ export class LifecycleComponent implements OnDestroy {
 		}
 
 		return button;
-	}
-
-	/**
-	 * Opens the given recordingURL in a new tab
-	 * @param registerUrl string
-	 */
-	 public atxRegister (registerUrl: string) {
-		window.open(`${registerUrl}`, '_blank');
-		this.closeViewSessions();
-		this.closeModal();
 	}
 
 	/**
@@ -1295,8 +1290,8 @@ export class LifecycleComponent implements OnDestroy {
 			_div.style.top = `${this.moreYCoordinates - _div.offsetHeight / 2}px`;
 			panel = 'panel panel--open';
 		} else {
-			_div.style.left = '40%';
-			_div.style.bottom = '10px';
+			_div.style.left = '128px';
+			_div.style.bottom = '-150px';
 			panel = 'panel panel--open';
 		}
 
@@ -1785,8 +1780,6 @@ export class LifecycleComponent implements OnDestroy {
 				this.stage.next(pitstop.name);
 			}
 
-			// UI not handling pagination for now, temporarily set to a large number
-			this.componentData.params.rows = 100;
 			this.loadRacetrackInfo();
 
 			this.status.loading.racetrack = false;
