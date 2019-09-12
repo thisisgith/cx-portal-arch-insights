@@ -124,6 +124,7 @@ export class DnacListComponent implements OnInit {
 			],
 			singleSelect: true,
 			striped: false,
+			wrapText: true,
 		});
 	}
 
