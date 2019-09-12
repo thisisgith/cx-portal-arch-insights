@@ -255,12 +255,11 @@
 			<div class="divider divider--compressed"></div>
 			<div class="half-margin-left line-clamp" [innerText]="data.description" data-auto-id="atxMoreClickModal-Description"></div>
 			<div class="base-padding-top half-padding-left">
-				<button class="btn btn--small btn--secondary text-uppercase cx-button"
-					data-auto-id = "MoreATXViewSessions"
-					[ngClass]="data.sessions?.length > 0 ? null : 'disabled'"
-					(click)="atxMoreViewSessions()"
-					[innerText]="'_ViewSessions_' | i18n">
-				</button>
+				<ng-container *ngTemplateOutlet="data?.sessions?.length > 0 ? 
+					enabledViewSessionsButton : disabledViewSessionsButton; context: {
+						type: 'moreView'
+					}">
+				</ng-container>
 				<button class="btn btn--small btn--secondary text-uppercase cx-button"
 					attr.data-auto-id = "MoreATXWatchNow-{{ data.recordingURL }}"
 					[ngClass]="data?.recordingURL ? null : 'disabled'"
@@ -334,12 +333,11 @@
 			</div>
 		</ng-container>
 		<div class="force-flex">
-			<button id="recommendedATXScheduleButton" data-auto-id="recommendedATXScheduleButton"
-				class="btn btn--small btn--secondary text-uppercase qtr-margin-right cx-button"
-				[ngClass]="item.sessions?.length > 0 ? null : 'disabled'"
-				(click)="recommendedATXViewSessions($event)"
-				[innerText]="'_ViewSessions_' | i18n">
-			</button>
+			<ng-container *ngTemplateOutlet="item?.sessions?.length > 0 ? 
+				enabledViewSessionsButton : disabledViewSessionsButton; context: {
+				type: 'recommendedView'
+			}">
+			</ng-container>	
 			<button class="btn btn--small btn--secondary text-uppercase cx-button"
 				data-auto-id = "recommendedATXWatchButton"
 				[ngClass]="componentData.atx?.recommended?.recordingURL ? null : 'disabled'"
@@ -891,15 +889,13 @@
 				</div>
 				<div class="divider no-margin"></div>
 				<div class="atx__card__actions">
-					<button id="cardRecommendedATXScheduleButton" data-auto-id="cardRecommendedATXScheduleButton"
-						class="btn btn--small btn--secondary text-uppercase cx-button"
-						[ngClass]="item?.sessions?.length > 0 ? null : 'disabled'"
-						(click)="atxScheduleCardOpened = true;
-							recommendedAtxScheduleCardOpened = false;
-							componentData.atx.interested = item;
-							getCoordinates($event)"
-						[innerText]="'_ViewSessions_' | i18n">
-					</button>
+					<ng-container *ngTemplateOutlet="item?.sessions?.length > 0 ? 
+						enabledViewSessionsButton : disabledViewSessionsButton; context: {
+						type: 'cardView',
+						componentData: componentData,
+						item: item
+					}">
+					</ng-container>
 					<button class="btn btn--small btn--secondary text-uppercase cx-button"
 						attr.data-auto-id = "CardATXWatchNow-{{ item.recordingURL }}"
 						[ngClass]="item?.recordingURL ? null : 'disabled'"
@@ -1271,11 +1267,13 @@
 
 <ng-template #actionTemplate let-celldata="celldata" let-type="type">
 	<div class="text-right" *ngIf="type === 'ATX'">
-		<button data-auto-id="ViewSessionButton" class="btn btn--small btn--secondary cx-button text-uppercase qtr-margin-bottom qtr-margin-top cx-button"
-			[ngClass]="celldata?.sessions?.length > 0 ? null : 'disabled'"
-			(click)="atxScheduleCardOpened = true; recommendedAtxScheduleCardOpened = false; componentData.atx.interested = celldata; getCoordinates($event)"
-			[innerText]="'_ViewSessions_' | i18n">
-		</button>
+		<ng-container *ngTemplateOutlet="celldata?.sessions?.length > 0 ? 
+			enabledViewSessionsButton : disabledViewSessionsButton; context: {
+			type:'listView',
+			componentData: componentData,
+			item: celldata
+		}">
+		</ng-container>			
 		<button class="btn btn--small btn--secondary text-uppercase cx-button half-margin-left"
 			attr.data-auto-id = "ListATXWatchNow-{{ celldata.recordingURL }}"
 			[ngClass]="celldata?.recordingURL ? null : 'disabled'"
@@ -1320,6 +1318,74 @@
 </ng-template>
 
 <ng-template #accDisableTooltip><p [innerText]="'_DisableACCRegister_' | i18n"></p></ng-template>
+
+<ng-template #enabledViewSessionsButton let-type="type" let-componentData="componentData" let-item="item">
+		<span [ngSwitch]="type" class="qtr-margin-right">
+			<button *ngSwitchCase="'moreView'" class="btn btn--small btn--secondary text-uppercase 
+				cx-button"
+				attr.data-auto-id="MoreATXViewSessions"
+				(click)="atxMoreViewSessions()"
+				[innerText]="'_ViewSessions_' | i18n">
+			</button>
+			<button *ngSwitchCase="'recommendedView'" id="recommendedATXScheduleButton" 
+				data-auto-id="recommendedATXScheduleButton"
+				class="btn btn--small btn--secondary text-uppercase qtr-margin-right cx-button"
+				(click)="recommendedATXViewSessions($event)"
+				[innerText]="'_ViewSessions_' | i18n">
+			</button>
+			<button *ngSwitchCase="'listView'" data-auto-id="ViewSessionButton" 
+				class="btn btn--small btn--secondary 
+					cx-button text-uppercase qtr-margin-bottom qtr-margin-top cx-button"
+				(click)="atxScheduleCardOpened = true; 
+					recommendedAtxScheduleCardOpened = false; 
+					componentData.atx.interested = item; getCoordinates($event)"
+				[innerText]="'_ViewSessions_' | i18n">
+			</button>
+			<button *ngSwitchCase="'cardView'" id="cardRecommendedATXScheduleButton" 
+				data-auto-id="cardRecommendedATXScheduleButton"
+				class="btn btn--small btn--secondary text-uppercase cx-button"
+				(click)="atxScheduleCardOpened = true;
+						recommendedAtxScheduleCardOpened = false;
+						componentData.atx.interested = item;
+						getCoordinates($event)"
+				[innerText]="'_ViewSessions_' | i18n">
+			</button>
+		</span>
+</ng-template>
+	
+<ng-template #disabledViewSessionsButton let-type="type">
+		<span [ngSwitch]="type" tooltip
+			[tooltipTemplate]="viewSessionsDisableTooltip"
+			tooltipDelay="500"
+			tooltipMaxWidth="225"
+			tooltipMaxHeight="85"
+			class="qtr-margin-right">
+			<button *ngSwitchCase="'moreView'" 
+				class="btn btn--small btn--secondary text-uppercase cx-button disabled"
+				attr.data-auto-id="MoreATXViewSessions"
+				[innerText]="'_ViewSessions_' | i18n">
+			</button>
+			<button *ngSwitchCase="'recommendedView'"  
+				data-auto-id="recommendedATXScheduleButton"
+				class="btn btn--small btn--secondary text-uppercase qtr-margin-right cx-button 
+					disabled"
+				[innerText]="'_ViewSessions_' | i18n">
+			</button>
+			<button *ngSwitchCase="'listView'" data-auto-id="ViewSessionButton" 
+				class="btn btn--small btn--secondary cx-button text-uppercase qtr-margin-bottom 
+					qtr-margin-top cx-button disabled"
+				[innerText]="'_ViewSessions_' | i18n">
+			</button>
+			<button *ngSwitchCase="'cardView'"
+				data-auto-id="cardRecommendedATXScheduleButton"
+				class="btn btn--small btn--secondary text-uppercase cx-button disabled"
+				[innerText]="'_ViewSessions_' | i18n">
+			</button>
+		</span>
+</ng-template>
+
+<ng-template #viewSessionsDisableTooltip><span [innerText]="'_DisableViewSessions_' | i18n"></span></ng-template>
+
 <ng-template #titleTemplate let-celldata="celldata" let-type="type">
 	<div class="row" *ngIf="type==='ATX' || type === 'ACC'">
 		<div class="col-md-12 flex">
