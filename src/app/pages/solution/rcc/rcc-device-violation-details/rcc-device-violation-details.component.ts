@@ -298,6 +298,11 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 		)
 		.subscribe(violationDetails => {
 			this.tableConfig.tableOffset = 0;
+			violationDetails.data.impactedAssets.forEach(asset => {
+				asset.violations.forEach((violation, i) => {
+					violation.index = i + 1;
+				});
+			});
 			this.impactedDeviceDetails = violationDetails.data.impactedAssets;
 			this.selectionLoading = false;
 			this.errorResult = false;

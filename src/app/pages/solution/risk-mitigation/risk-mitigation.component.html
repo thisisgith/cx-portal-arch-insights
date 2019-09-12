@@ -145,7 +145,7 @@
 		[limit]="crashedAssetsGridDetails.tableLimit"
 		[offset]="crashedAssetsGridDetails.tableOffset"
 		[options]="crashesAssetsGridOptions"
-		class="table--wrap"
+		class="table--wrap not-close-360"
 	></cui-table>
 	<div class="section" *ngIf="!status.isLoading">
 		<cui-pager
@@ -178,7 +178,7 @@
 		[data]="highCrashRiskAssetsGridDetails.tableData"
 		(onTableRowClicked)="connectToFpDetails($event)"
 		(onSortingChanged)="highCrashTableSorted($event)"
-		class="table--wrap"
+		class="table--wrap not-close-360"
 	></cui-table>
 	<div class="section" *ngIf="!status.isLoading">
 		<cui-pager
@@ -192,17 +192,17 @@
 </ng-template>
 
 
-<asset-details *ngIf="showAsset360"
+<asset-details *ngIf="selectedAsset"
     [asset]="assetLinkInfo?.asset"
     [serialNumber]="assetLinkInfo?.asset?.serialNumber"
     [element]="assetLinkInfo?.element"
-
- (close)="showAsset360 = false;">
+ 		(close)="onPanelClose()">
 </asset-details>
 
 <details-panel
-	*ngIf="selectedAsset.active && !showAsset360"
-	[hidden]="!selectedAsset.active && showAsset360"
+	*ngIf="selectedAsset && showAsset360"
+	[hidden]="!selectedAsset && !showAsset360"
+	(hiddenChange)="handleHidden($event)"
 	[fullscreen]="fullscreen"
 >
 	<details-panel-header
@@ -275,6 +275,7 @@
 <details-panel
 	*ngIf="showFpDetails  && !showAsset360"
 	[hidden]="!showFpDetails  && showAsset360"
+	(hiddenChange)="handleHidden($event)"
 	[fullscreen]="fullscreen"
 	[minWidth]="'1024px'"
 >

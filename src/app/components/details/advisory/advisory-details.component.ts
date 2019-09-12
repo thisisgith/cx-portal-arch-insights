@@ -7,7 +7,6 @@ import {
 	Output,
 	SimpleChanges,
 	OnDestroy,
-	ElementRef,
 } from '@angular/core';
 import * as _ from 'lodash-es';
 import { I18n } from '@cisco-ngx/cui-utils';
@@ -57,7 +56,6 @@ export class AdvisoryDetailsComponent implements OnChanges, OnInit, OnDestroy, P
 	public impactedAssets: (Asset | NetworkElement)[];
 
 	constructor (
-		private _elementRef: ElementRef,
 		private userResolve: UserResolve,
 		private detailsPanelStackService: DetailsPanelStackService,
 	) {
@@ -145,12 +143,13 @@ export class AdvisoryDetailsComponent implements OnChanges, OnInit, OnDestroy, P
 	}
 
 	/**
-	 * Determines whether target is contained by this component
-	 * @param target target ElementRef
-	 * @returns true if component contains target
+	 * Handles the hidden event from details-panel
+	 * @param hidden false if details slideout is open
 	 */
-	public contains (target: ElementRef) {
-		return this._elementRef.nativeElement.contains(target);
+	public handleHidden (hidden: boolean) {
+		if (hidden) {
+			this.onPanelClose();
+		}
 	}
 
 	/**

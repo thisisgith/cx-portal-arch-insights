@@ -110,6 +110,7 @@ export class CbpDeviceAffectedComponent implements OnInit, OnChanges {
 			],
 			hover: true,
 			striped: false,
+			wrapText: true,
 		});
 
 	}
@@ -192,6 +193,7 @@ export class CbpDeviceAffectedComponent implements OnInit, OnChanges {
 	 * in order to Close Fly-out View
 	 */
 	public onPanelClose () {
+		_.set(this.selectedAsset, 'active', false);
 		this.selectedAsset = false;
 	}
 

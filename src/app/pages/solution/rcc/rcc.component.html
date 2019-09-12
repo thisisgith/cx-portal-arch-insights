@@ -90,7 +90,8 @@
 		<div *ngIf="loading" class="base-margin-bottom">
 			<cui-spinner></cui-spinner>
 		</div>
-		<cui-table 
+		<cui-table
+			class="no-close-360"
 			[options]="policyViolationsTableOptions"
 			[data]="policyViolationsGridData"
 			[limit]="tableConfig?.tableLimit"
@@ -120,6 +121,7 @@
 			<cui-spinner></cui-spinner>
 		</div>
 		<cui-table
+			class="no-close-360"
 			[options]="assetTableOptions"
 			[data]="tableAssetDataSample"
 			[limit]="tableConfig?.tableLimit"
@@ -184,7 +186,7 @@
 		</div>
 	</ng-template>
 	<!-- App Details 360 slide-out -->
-	<details-panel *ngIf="selectedViolationModal" [hidden]="!selectedViolationModal" [fullscreen]="slideinFullScreen.violationFullScreen" [minWidth]="'900px'">
+	<details-panel *ngIf="selectedViolationModal" [hidden]="!selectedViolationModal" (hiddenChange)="handleHidden($event, 'selectedViolationModal')" [fullscreen]="slideinFullScreen.violationFullScreen" [minWidth]="'900px'">
 		<details-panel-header (close)="onPanelClose('selectedViolationModal');slideinFullScreen.violationFullScreen = false" [(fullscreen)]="slideinFullScreen.violationFullScreen"
 			[fullscreenToggle]="true">
 			<div detailsPanelTitle>
@@ -238,7 +240,7 @@
 		</app-rcc-device-violation-details>
 	</details-panel>
 
-	<details-panel *ngIf="selectedAssetModal" [hidden]="!selectedAssetModal" [fullscreen]="slideinFullScreen.assetsFullScreen" [minWidth]="'900px'">
+	<details-panel *ngIf="selectedAssetModal" [hidden]="!selectedAssetModal" (hiddenChange)="handleHidden($event, 'selectedAssetModal')" [fullscreen]="slideinFullScreen.assetsFullScreen" [minWidth]="'900px'">
 		<details-panel-header (close)="onPanelClose('selectedAssetModal');slideinFullScreen.assetsFullScreen = false" [(fullscreen)]="slideinFullScreen.assetsFullScreen"
 			[fullscreenToggle]="true">
 			<div detailsPanelTitle>

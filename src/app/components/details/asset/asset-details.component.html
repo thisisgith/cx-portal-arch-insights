@@ -1,4 +1,6 @@
-<details-panel *ngIf="!isLoading || asset" [hidden]="!asset" 
+<details-panel *ngIf="!isLoading || asset"
+	[hidden]="!asset"
+	(hiddenChange)="handleHidden($event)"
 	[fullscreen]="fullscreen" 
 	id="details-panel"
 	[minWidth]="minWidth">

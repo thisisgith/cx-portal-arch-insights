@@ -28,8 +28,9 @@
 	</div>
 </div>
 <div class="container base-margin-top" *ngIf="tableData.length">
-	<cui-table 
-	[options]="tableOptions" 
+	<cui-table
+	class="not-close-360"
+	[options]="tableOptions"
 	[data]="tableData"
 	[limit]="tableLimit" 
 	[offset]="tableOffset"
@@ -58,7 +59,7 @@
 	</div>
 </div>
 <!-- grid-section ends -->
-<details-panel *ngIf="selectedAsset" [hidden]="!selectedAsset" [fullscreen]="fullscreen">
+<details-panel *ngIf="selectedAsset" [hidden]="!selectedAsset" (hiddenChange)="handleHidden($event)" [fullscreen]="fullscreen">
 	<details-panel-header (close)="onPanelClose()" [(fullscreen)]="fullscreen" [fullscreenToggle]="false">
 		<div class="row">
 			<div class="col-md-12">
@@ -99,7 +100,7 @@
 	</details-panel-header>
 	<syslogs-devices-details [asset]="selectedAsset" [selectedFilter]="syslogsParams"></syslogs-devices-details>
 </details-panel>
-<details-panel *ngIf="showAssetDetails" [hidden]="!showAssetDetails" [fullscreen]="fullscreen">
+<details-panel *ngIf="showAssetDetails" [hidden]="!showAssetDetails" (hiddenChange)="handleHidden($event)" [fullscreen]="fullscreen">
 	<details-panel-header (close)="onPanelClose()" [(fullscreen)]="fullscreen" [fullscreenToggle]="false">
 		<asset-details-header [asset]="selectedAsset"></asset-details-header>
 		<div detailsPanelTitle class="text-xlarge">

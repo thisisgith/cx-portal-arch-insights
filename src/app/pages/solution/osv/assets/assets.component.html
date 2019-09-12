@@ -34,8 +34,8 @@
 </div>
 
 <ng-template #tableAssets>
-	<div class="responsive-table" *ngIf="!status.isLoading && assetsTable && assets?.length">
-		<table id="assetsListTable" class="table table--selectable table--compressed table--wrap table--lined table--hover table--nostripes">
+	<div class="responsive-table not-close-360" *ngIf="!status.isLoading && assetsTable && assets?.length">
+		<table class="table table--selectable table--compressed table--wrap table--lined table--hover table--nostripes">
 			<thead>
 				<tr>
 					<th *ngFor="let column of assetsTable.columns"

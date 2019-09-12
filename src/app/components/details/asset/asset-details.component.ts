@@ -212,6 +212,16 @@ export class AssetDetailsComponent implements OnInit, OnDestroy, Panel360 {
 	}
 
 	/**
+	 * Handles the hidden event from details-panel
+	 * @param hidden false if details slideout is open
+	 */
+	public handleHidden (hidden: boolean) {
+		if (hidden) {
+			this.onPanelClose();
+		}
+	}
+
+	/**
 	 * Removes the 360 panel from the stack when the back button is pressed
 	 */
 	public onPanelBack () {

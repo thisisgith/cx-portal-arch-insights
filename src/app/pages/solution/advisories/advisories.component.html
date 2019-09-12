@@ -65,7 +65,7 @@
 		</div>
 	</div>
 	<div *ngIf="!selectedTab.disabled">
-		<cui-table *ngIf="selectedTab.data?.length && selectedTab.options"
+		<cui-table class="not-close-360" *ngIf="selectedTab.data?.length && selectedTab.options"
 			[options]="selectedTab.options"
 			[data]="selectedTab.data"
 			(onTableRowClicked)="onRowSelect($event)"
