@@ -11,11 +11,13 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { user, ArchitectureReviewScenarios } from '@mock';
 import { SimpleChanges, SimpleChange } from '@angular/core';
+import { AssetPanelLinkService } from '@services';
 
 describe('DevicesListComponent', () => {
 	let component: DevicesListComponent;
 	let fixture: ComponentFixture<DevicesListComponent>;
 	let service: ArchitectureReviewService;
+	let assetService: AssetPanelLinkService;
 
 	configureTestSuite(() => {
 		TestBed.configureTestingModule({
@@ -42,6 +44,7 @@ describe('DevicesListComponent', () => {
 
 	beforeEach(async(() => {
 		service = TestBed.get(ArchitectureReviewService);
+		assetService = TestBed.get(AssetPanelLinkService);
 	}));
 
 	beforeEach(() => {
@@ -116,23 +119,23 @@ describe('DevicesListComponent', () => {
 		.toEqual(0);
 	});
 
-	it('should open asset details view', () => {
+	it('should open asset view on click of table row', () => {
 		const item = {
 			customerId: '7293498',
-			hostName: 'LA1-AP3802-21',
+			serialNumber: 'LA1-AP3802-21',
 		};
+		spyOn(assetService, 'getAssetLinkData')
+			.and
+			.returnValue(of({ }));
 		component.openDeviceView(item);
-		expect(component.selectedAsset)
-		.toEqual(item);
+		expect(assetService.getAssetLinkData)
+			.toHaveBeenCalled();
 	});
 
 	it('should close asset details view', () => {
-		const notClose = false;
-		component.closeDeviceView(notClose);
-		const isClose = true;
-		component.closeDeviceView(isClose);
+		component.closeDeviceView();
 		expect(component.selectedAsset)
-		.toBeNull();
+		.toBeFalsy();
 	});
 
 	it('should get the Devices data' , () => {

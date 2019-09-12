@@ -82,6 +82,7 @@ export class DevicesSdaComponent implements OnInit, OnChanges {
 					template: this.recommendedVersions,
 				},
 			],
+			striped: false,
 		});
 	}
 
