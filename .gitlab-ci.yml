@@ -4,30 +4,41 @@ stages:
   - setup
   - test
 
-# add 'node_modules' to cache for speeding up builds
-cache:
-  key: "PIPELINE-$CI_PIPELINE_ID"
-  paths:
-    - package-lock.json
-    - node_modules/ # Node modules and dependencies
-
 # disable gitlab cli analytics
 before_script:
   - export NG_CLI_ANALYTICS=false
 
 setup:
   stage: setup
+  # add 'node_modules' to cache for speeding up builds
+  cache:
+    key: "PIPELINE-$CI_PIPELINE_ID"
+    paths:
+      - package-lock.json
+      - node_modules/
   script:
     - npm ci --audit=false
 
 building:
   stage: test
+  cache:
+    key: "PIPELINE-$CI_PIPELINE_ID"
+    policy: pull
+    paths:
+      - package-lock.json
+      - node_modules/
   script:
     - npm run build:ci
 
 # run npm audit to verify dependency security
 audit:
   stage: test
+  cache:
+    key: "PIPELINE-$CI_PIPELINE_ID"
+    policy: pull
+    paths:
+      - package-lock.json
+      - node_modules/
   allow_failure: true # temporary until @compodoc fixes their vulnerability issue, since this is only used for document generation, I dont consider it breaking
   script:
     - npm audit
@@ -35,6 +46,12 @@ audit:
 # run our lint process against the committed files
 lint:
   stage: test
+  cache:
+    key: "PIPELINE-$CI_PIPELINE_ID"
+    policy: pull
+    paths:
+      - package-lock.json
+      - node_modules/
   script:
     - npm run lint
     - npm run lint:cypress
@@ -43,15 +60,23 @@ lint:
 # run our test:ci process for the commit
 # unit:
 #   stage: test
+#   cache:
+#     policy: pull
 #   script:
 #     - npm run test:ci
 
 # run automated Cypress tests for the commit
 automation:
   stage: test
+  cache:
+    key: "PIPELINE-$CI_PIPELINE_ID"
+    policy: pull
+    paths:
+      - package-lock.json
+      - node_modules/
   allow_failure: true
   before_script:
     - npm run start:background
   script:
     # TODO: Add more spec files (comma separated) once they are stable
-    - npm run test:automation -- --spec "cypress/integration/assets_spec.js,cypress/integration/advisories_spec.js"
+    - npm run test:automation -- --spec "cypress/integration/assets_spec.js,cypress/integration/advisories_spec.js,cypress/integration/communities_spec.js"

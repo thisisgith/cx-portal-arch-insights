@@ -184,7 +184,7 @@
 		</div>
 	</ng-template>
 	<!-- App Details 360 slide-out -->
-	<details-panel [hidden]="!selectedViolationModal" [fullscreen]="slideinFullScreen.violationFullScreen" [minWidth]="'900px'">
+	<details-panel *ngIf="selectedViolationModal" [hidden]="!selectedViolationModal" [fullscreen]="slideinFullScreen.violationFullScreen" [minWidth]="'900px'">
 		<details-panel-header (close)="onPanelClose('selectedViolationModal');slideinFullScreen.violationFullScreen = false" [(fullscreen)]="slideinFullScreen.violationFullScreen"
 			[fullscreenToggle]="true">
 			<div detailsPanelTitle>
@@ -232,16 +232,21 @@
 				</div>
 			</div>
 		</details-panel-header>
-		<app-rcc-device-violation-details [policyViolationInfo]="policyViolationInfo">
+		<app-rcc-device-violation-details 
+			[policyViolationInfo]="policyViolationInfo" 
+			(assetDetails)="openDevicePage($event);onPanelClose('selectedViolationModal');">
 		</app-rcc-device-violation-details>
 	</details-panel>
 
-	<details-panel [hidden]="!selectedAssetModal" [fullscreen]="slideinFullScreen.assetsFullScreen" [minWidth]="'900px'">
+	<details-panel *ngIf="selectedAssetModal" [hidden]="!selectedAssetModal" [fullscreen]="slideinFullScreen.assetsFullScreen" [minWidth]="'900px'">
 		<details-panel-header (close)="onPanelClose('selectedAssetModal');slideinFullScreen.assetsFullScreen = false" [(fullscreen)]="slideinFullScreen.assetsFullScreen"
 			[fullscreenToggle]="true">
 			<div detailsPanelTitle>
 				<span class="text-xlarge" [innerText]="('_RccViolationsFor_' | i18n)"></span>
-				<span class="text-xlarge" [innerHTML]="selectedAssetData?.deviceName || ('_NA_' | i18n)"></span>
+				<a data-auto-id="DeviceLink" class="text-xlarge"
+					(click)="openDevicePage(selectedAssetData?.serialNumber);onPanelClose('selectedAssetModal');"
+					[innerHTML]="selectedAssetData?.deviceName || ('_NA_' | i18n)">
+				</a>
 			</div>
 			<div class="row">
 				<div class="col-md-8 base-margin-bottom">
@@ -302,3 +307,12 @@
 		<span [innerHTML]="item?.violationCount"></span>
 	</ng-template>
 </div>
+<!-- App Details slide-out -->
+<asset-details *ngIf="openDeviceModal"
+	[asset]="assetLinkInfo?.asset"
+	[serialNumber]="assetLinkInfo?.asset?.serialNumber"
+	[element]="assetLinkInfo?.element"
+	(close)="onPanelClose('openDeviceModal')"
+	[minWidth]="'900px'"
+	[fullscreenToggle]="'true'">
+</asset-details>

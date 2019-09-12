@@ -5,7 +5,6 @@ import * as _ from 'lodash-es';
 import { RacetrackTechnology } from '@sdp-api';
 import { environment } from '@environment';
 import { Subject } from 'rxjs';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { takeUntil } from 'rxjs/operators';
 import { LifecycleComponent } from '../lifecycle.component';
 import { RacetrackInfoService } from '@services';
@@ -61,14 +60,13 @@ export class CommunitiesComponent implements OnDestroy {
 	private selectedTechnology: string;
 	public publicCommunity: CommunityDetail;
 	public curatedCommunity: CommunityDetail;
-	public publicCommunityUrl: SafeUrl;
-	public curatedCommunityUrl: SafeUrl;
+	public publicCommunityUrl: string;
+	public curatedCommunityUrl: string;
 	private destroy$ = new Subject();
 
 	constructor (
 		private racetrackInfoService: RacetrackInfoService,
 		private lifecycle: LifecycleComponent,
-		private sanitizer: DomSanitizer,
 	) {
 		this.racetrackInfoService.getCurrentTechnology()
 		.pipe(
@@ -77,8 +75,8 @@ export class CommunitiesComponent implements OnDestroy {
 		.subscribe((technology: RacetrackTechnology) => {
 			this.selectedTechnology = technology.name;
 			this.getCommunities();
-			this.publicCommunityUrl = sanitizer.bypassSecurityTrustUrl(this.publicCommunity.url);
-			this.curatedCommunityUrl = sanitizer.bypassSecurityTrustUrl(this.curatedCommunity.url);
+			this.publicCommunityUrl = this.publicCommunity.url;
+			this.curatedCommunityUrl = this.curatedCommunity.url;
 		});
 	}
 
@@ -143,6 +141,16 @@ export class CommunitiesComponent implements OnDestroy {
 			url: `${environment.curatedCommunityUrl}/${usecase}/bd-p/${board}`,
 			usecase: this.selectedTechnology,
 		};
+	}
+
+	/**
+	 * Opens the given URL in a new tab
+	 * @param crossLaunchUrl string
+	 */
+	 public crossLaunch (crossLaunchUrl: string) {
+		if (crossLaunchUrl) {
+			this.lifecycle.crossLaunch(crossLaunchUrl);
+		}
 	}
 
 	/**
