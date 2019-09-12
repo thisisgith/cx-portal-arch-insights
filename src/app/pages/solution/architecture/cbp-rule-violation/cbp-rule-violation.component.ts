@@ -218,6 +218,17 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 	 * in order to Close Fly-out View
 	 */
 	public onPanelClose () {
+		_.set(this.exceptionObject, 'active', false);
 		this.exceptionObject = null;
+	}
+
+	/**
+	 * Handles the hidden event from details-panel
+	 * @param hidden false if details slideout is open
+	 */
+	public handleHidden (hidden: boolean) {
+		if (hidden) {
+			this.onPanelClose();
+		}
 	}
 }

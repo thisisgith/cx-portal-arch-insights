@@ -68,7 +68,7 @@ export class RiskMitigationComponent {
 	public fullscreen = false;
 	public filters: Filter[];
 	public onlyCrashes = true;
-	public selectedAsset: RiskAsset = { active: false };
+	public selectedAsset: RiskAsset;
 	public selectedFingerPrintdata: HighCrashRiskDevices;
 	public showAsset360 = false;
 	public isCrashHistoryLoading = false;
@@ -497,21 +497,23 @@ export class RiskMitigationComponent {
 	 * @returns Network element
 	 */
 	public onRowClicked (asset: any) {
-		this.showAsset360 = false;
 		if (asset.active) {
 			this.selectedAsset = asset;
+			this.showAsset360 = true;
 			this.getCrashedDeviceHistory(asset);
-			this.getassetLinkInfo(asset);
 		} else {
 			this.selectedAsset.active = false;
+			this.showAsset360 = false;
+			this.getAssetLinkInfo(asset);
 		}
 	}
+
 	/**
 	 * Function to capture the row click on grid
 	 * @param asset will have the device details
 	 * @returns Network element
 	 */
-	public getassetLinkInfo (asset) {
+	public getAssetLinkInfo (asset) {
 		this.assetParams = {
 			customerId: JSON.stringify(this.customerId),
 			serialNumber: [asset.serialNumber],
@@ -538,7 +540,7 @@ export class RiskMitigationComponent {
 	public connectToFpDetails (asset: any) {
 		this.showFpDetails = true;
 		this.selectedFingerPrintdata = asset;
-		this.getassetLinkInfo(asset);
+		this.getAssetLinkInfo(asset);
 	}
 
 	/**
@@ -546,8 +548,21 @@ export class RiskMitigationComponent {
 	 */
 
 	public onPanelClose () {
-		this.selectedAsset.active = false;
+		_.set(this.selectedAsset, 'active', false);
+		_.set(this.selectedFingerPrintdata, 'active', false);
+		this.selectedAsset = null;
 		this.showAsset360 = false;
+		this.showFpDetails = false;
+	}
+
+	/**
+	 * Handles the hidden event from details-panel
+	 * @param hidden false if details slideout is open
+	 */
+	public handleHidden (hidden: boolean) {
+		if (hidden) {
+			this.onPanelClose();
+		}
 	}
 
 	/**

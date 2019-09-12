@@ -18,7 +18,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { Subject, of } from 'rxjs';
 import { UserResolve } from '@utilities';
 import { takeUntil, catchError } from 'rxjs/operators';
-import { ExportCsvService, AssetPanelLinkService } from '@services';
+import { ExportCsvService, DetailsPanelStackService, AssetPanelLinkService } from '@services';
 
 /**
  * AfmComponet which shows in Insight view for Fault Management tab
@@ -104,8 +104,10 @@ export class AfmComponent implements OnInit {
 	constructor (private logger: LogService,
 		private afmService: AfmService,
 		private userResolve: UserResolve,
+		private exportCsvService: ExportCsvService,
+		private detailsPanelStackService: DetailsPanelStackService,
 		private assetPanelLinkService: AssetPanelLinkService,
-		private exportCsvService: ExportCsvService) {
+	) {
 		this.searchParams = new Object();
 		this.assetLinkInfo = Object.create({ });
 		this.searchParams.pageNumber = 1;
@@ -454,7 +456,19 @@ export class AfmComponent implements OnInit {
 	 * to close the panel
 	 */
 	public onPanelClose () {
+		this.detailsPanelStackService.reset();
+		_.set(this.selectedAsset, 'active', false);
 		this.selectedAsset = null;
+	}
+
+	/**
+	 * Handles the hidden event from details-panel
+	 * @param hidden false if details slideout is open
+	 */
+	public handleHidden (hidden: boolean) {
+		if (hidden) {
+			this.onPanelClose();
+		}
 	}
 
 	/**

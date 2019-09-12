@@ -1,4 +1,4 @@
-<details-panel [hidden]="!selectedCase" [fullscreen]="fullscreen">
+<details-panel *ngIf="selectedCase" [hidden]="!selectedCase" (hiddenChange)="handleHidden($event)" [fullscreen]="fullscreen">
 	<details-panel-header (close)="detailsClose()" [(fullscreen)]="fullscreen">
 		<div detailsPanelTitle class="text-xlarge" [innerText]="'_RMACaseNumberTitle_' | i18n:selectedCase?.caseNumber"></div>
 		<app-case-details-header [case]="selectedCase" [caseDetails]="selectedDetails">
@@ -109,7 +109,7 @@
 </ng-template>
 
 <ng-template #caseList>
-	<cui-table data-auto-id="caseListTable" (onTableRowClicked)="onTableRowClicked($event)"
+	<cui-table class="not-close-360" data-auto-id="caseListTable" (onTableRowClicked)="onTableRowClicked($event)"
 		[options]="caseListTableOptions" [data]="caseListData" (onSortingChanged)="onTableSortingChanged($event)">
 	</cui-table>
 	<cui-pager class="half-margin" *ngIf="paginationInfo.totalElements>caseParams.size" [page]="caseParams.page"

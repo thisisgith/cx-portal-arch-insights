@@ -8,6 +8,7 @@ import { Subject } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import * as _ from 'lodash-es';
+import { DetailsPanelStackService } from '@services';
 
 /**
  * Devices With Exceptions Component
@@ -27,6 +28,7 @@ export class DnacListComponent implements OnInit {
 		private logger: LogService,
 		private architectureReviewService: ArchitectureReviewService,
 		private route: ActivatedRoute,
+		private detailsPanelStackService: DetailsPanelStackService,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
@@ -206,7 +208,19 @@ export class DnacListComponent implements OnInit {
 	 * in order to Close Fly-out View
 	 */
 	public onPanelClose () {
+		this.detailsPanelStackService.reset();
+		_.set(this.dnacDetails.active, false);
 		this.dnacDetails = null;
+	}
+
+	/**
+	 * Handles the hidden event from details-panel
+	 * @param hidden false if details slideout is open
+	 */
+	public handleHidden (hidden: boolean) {
+		if (hidden) {
+			this.onPanelClose();
+		}
 	}
 
 	/**
