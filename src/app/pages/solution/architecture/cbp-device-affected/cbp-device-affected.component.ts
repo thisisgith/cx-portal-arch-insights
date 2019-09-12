@@ -110,6 +110,7 @@ export class CbpDeviceAffectedComponent implements OnInit, OnChanges {
 			],
 			hover: true,
 			striped: false,
+			wrapText: true,
 		});
 
 	}

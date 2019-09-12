@@ -119,6 +119,7 @@ export class DevicesListComponent implements OnInit, OnChanges {
 			],
 			singleSelect: true,
 			striped: false,
+			wrapText: true,
 		});
 	}
 
