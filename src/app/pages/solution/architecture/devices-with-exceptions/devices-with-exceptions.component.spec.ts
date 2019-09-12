@@ -1,21 +1,24 @@
 import { configureTestSuite } from 'ng-bullet';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { environment } from '@environment';
 import { DevicesWithExceptionsComponent } from './devices-with-exceptions.component';
 import { DevicesWithExceptionsModule } from './devices-with-exceptions.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { ArchitectureService } from '@sdp-api';
 import { CuiTableModule, CuiPagerModule, CuiSpinnerModule } from '@cisco-ngx/cui-components';
 import { MicroMockModule } from '@cui-x-views/mock';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute } from '@angular/router';
 import { user } from '@mock';
+import { AssetPanelLinkService } from '@services';
+import { HttpErrorResponse } from '@angular/common/http';
 
 describe('DevicesWithExceptionsComponent', () => {
 	let component: DevicesWithExceptionsComponent;
 	let fixture: ComponentFixture<DevicesWithExceptionsComponent>;
 	let service: ArchitectureService;
+	let assetService: AssetPanelLinkService;
 
 	configureTestSuite(() => {
 		TestBed.configureTestingModule({
@@ -46,9 +49,7 @@ describe('DevicesWithExceptionsComponent', () => {
 
 	beforeEach(() => {
 		service = TestBed.get(ArchitectureService);
-		spyOn(service, 'getAllAssetsWithExceptions')
-			.and
-			.returnValue(of({ TotalCounts: 1000, AssetsExceptionDetails: [] }));
+		assetService = TestBed.get(AssetPanelLinkService);
 		fixture = TestBed.createComponent(DevicesWithExceptionsComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
@@ -60,7 +61,11 @@ describe('DevicesWithExceptionsComponent', () => {
 	});
 
 	it('should call getAllAssetsWithExceptions on init', () => {
-		component.ngOnInit();
+		const response = { TotalCounts: 1000, AssetsExceptionDetails: [] };
+		spyOn(service, 'getAllAssetsWithExceptions')
+		.and
+		.returnValue(of(response));
+		component.getAllAssetsWithExceptions();
 		expect(service.getAllAssetsWithExceptions)
 			.toHaveBeenCalled();
 	});
@@ -118,9 +123,12 @@ describe('DevicesWithExceptionsComponent', () => {
 			softwareType: 'IOS-XE',
 			softwareVersion: '16.3.3',
 		};
+		spyOn(assetService, 'getAssetLinkData')
+			.and
+			.returnValue(of({ }));
 		component.openAssetDetailsView(selectedAsset);
-		expect(component.selectedAsset)
-			.toEqual(selectedAsset);
+		expect(assetService.getAssetLinkData)
+			.toHaveBeenCalled();
 	});
 
 	it('should close panel', () => {
@@ -130,17 +138,16 @@ describe('DevicesWithExceptionsComponent', () => {
 	});
 
 	it('should close AssetView', () => {
-		const isClosed = true;
-		component.closeAssetDetailsView(isClosed);
+		component.closeAssetDetailsView();
 		expect(component.selectedAsset)
-			.toBeNull();
+			.toBeFalsy();
 	});
 
 	it('should trigger search function', () => {
 		const enterKeyCode = 13;
 		component.textFilter(enterKeyCode);
 		expect(component.isLoading)
-			.toBeFalsy();
+			.toBeTruthy();
 		expect(component.tableStartIndex)
 			.toBe(0);
 		expect(component.params.page)
@@ -148,5 +155,37 @@ describe('DevicesWithExceptionsComponent', () => {
 		expect(component.params.searchText)
 			.toBe('');
 	});
+
+	it('should call invalidResponse handler', () => {
+		component.inValidResponseHandler();
+		expect(component.isLoading)
+			.toBeFalsy();
+		expect(component.totalItems)
+			.toEqual(0);
+		expect(component.assetsExceptionDetails.length)
+			.toEqual(0);
+	});
+
+	it('should throw errors', fakeAsync(() => {
+		const error = {
+			status: 404,
+			statusText: 'Resource not found',
+		};
+		spyOn(service, 'getAllAssetsWithExceptions')
+			.and
+			.returnValue(
+				throwError(new HttpErrorResponse(error)),
+			);
+		component.getAllAssetsWithExceptions();
+		tick();
+		expect(component.getAllAssetsWithExceptions)
+			.toThrowError();
+		expect(component.isLoading)
+			.toBeFalsy();
+		expect(component.totalItems)
+			.toEqual(0);
+		expect(component.assetsExceptionDetails.length)
+			.toEqual(0);
+	}));
 
 });

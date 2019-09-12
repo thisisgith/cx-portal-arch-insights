@@ -116,7 +116,7 @@ export class SearchService {
 		})
 			.pipe(
 				catchError(err => {
-					this.logger.error(`Error fetching typehead, Err: ${err}`);
+					this.logger.error(`Error fetching typeahead, Err: ${err}`);
 
 					return of(null);
 				}),

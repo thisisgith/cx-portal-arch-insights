@@ -17,7 +17,7 @@
 		[ngClass]="{'hide': tabIndex !== 3}"
 	></cui-alert>
 	</div>
-	<cui-tabs [(activeTabIndex)]="tabIndex">
+	<cui-tabs id="fingerprint" [(activeTabIndex)]="tabIndex" alignment="left" tall="false">
 		<cui-tab [label]="'_CP_SimilarAssets_' | i18n | uppercase">
 			<app-fp-similarassets
 				[asset]="selectedAsset"

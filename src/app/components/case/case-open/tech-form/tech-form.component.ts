@@ -230,6 +230,9 @@ export class TechFormComponent implements OnInit, OnChanges, OnDestroy {
 					_.get(o, [0, 'customerActivity'], ''));
 			this.problemGroups = Object.keys(problemAreasGrouped)
 				.sort();
+			if (window.Cypress) {
+				window.cyProblemAreaCode = problemAreasGrouped;
+			}
 		});
 		// Listen for "subTech" to change, update problem areas.
 		this.form.controls.subtech.valueChanges.pipe(

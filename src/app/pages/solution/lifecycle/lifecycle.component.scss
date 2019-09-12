@@ -476,15 +476,6 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 	}
 }
 
-.title-line-clamp {
-	display: -webkit-box;
-	overflow: hidden;
-	-webkit-line-clamp: 2;
-
-	/* autoprefixer: off */
-	-webkit-box-orient: vertical;
-}
-
 .success {
 	&__card {
 		@extend .atx__card;
@@ -626,6 +617,24 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 	display: -webkit-box;
 	overflow: hidden;
 	-webkit-line-clamp: 6;
+
+	/* autoprefixer: off */
+	-webkit-box-orient: vertical;
+}
+
+.title-line-clamp {
+	display: -webkit-box;
+	overflow: hidden;
+	-webkit-line-clamp: 2;
+
+	/* autoprefixer: off */
+	-webkit-box-orient: vertical;
+}
+
+.sb-desc-line-clamp {
+	display: -webkit-box;
+	overflow: hidden;
+	-webkit-line-clamp: 3;
 
 	/* autoprefixer: off */
 	-webkit-box-orient: vertical;
@@ -970,8 +979,18 @@ tr.td-row td {
 #viewAtxPanel {
 	padding: 25px 0 26px 27px;
 
-	.popover-tail {
-		@extend %popover-tail--left;
+	&.panel--open,
+	&.cardpanel--open {
+		.popover-tail {
+			@extend %popover-tail--left;
+		}
+	}
+
+	&.listpanel--open,
+	&.cardpanel--openright {
+		.popover-tail {
+			@extend %popover-tail;
+		}
 	}
 
 	&::after {
@@ -1098,7 +1117,7 @@ tr.td-row td {
 		}
 
 		&-moreATXList {
-			top: -70px;
+			top: -90px;
 			right: -440px;
 		}
 
@@ -1190,7 +1209,7 @@ tr.td-row td {
 
 		&-moreATXList,
 		&-recommendedATX {
-			height: 160px;
+			height: 200px;
 		}
 	}
 }
@@ -1254,7 +1273,7 @@ tr.td-row td {
 
 		.sb-popover__footer {
 			position: absolute;
-			bottom: 25px;
+			bottom: 20px;
 			left: 28px;
 			display: flex;
 

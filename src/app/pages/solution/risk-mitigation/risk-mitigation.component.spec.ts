@@ -295,9 +295,13 @@ describe('RiskMitigationComponent', () => {
 	it('should return selected key of filter', () => {
 		component.ngOnInit();
 		const key = 'advisories';
-		const filter = component.getSelectedSubFilters(key);
+		let filter = component.getSelectedSubFilters(key);
 		expect(filter)
 		.toBeDefined();
+		fixture.detectChanges();
+		filter = component.getSelectedSubFilters('');
+		expect(filter)
+		.toBeUndefined();
 	});
 
 	it('should test high crash data params', () => {

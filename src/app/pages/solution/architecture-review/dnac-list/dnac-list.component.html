@@ -1,5 +1,5 @@
 <!-- Fly-Out View Slide-out -->
-<details-panel [hidden]="!dnacDetails" [fullscreen]="fullscreen">
+<details-panel *ngIf="dnacDetails" [hidden]="!dnacDetails" (hiddenChange)="handleHidden($event)" [fullscreen]="fullscreen">
 	<details-panel-header (close)="onPanelClose()" [(fullscreen)]="fullscreen" [fullscreenToggle]="false">
 		<div class="row">
 			<div class="col-md-8 base-margin-bottom">
@@ -63,7 +63,7 @@
 <div class="divider"></div>
 <div class="panel">
 	<cui-table *ngIf="!isLoading && totalItems" [options]="tableOptions" [data]="dnacDetailsResponse"
-		(onTableRowClicked)="onTableRowClicked($event)"></cui-table>
+		(onTableRowClicked)="onTableRowClicked($event)" class="not-close-360"></cui-table>
 	<div class="section" *ngIf="totalItems">
 		<cui-pager *ngIf="!isLoading" [page]="params?.page" [limit]="params?.pageSize" [totalItems]="totalItems"
 			(onPageChanged)="onPagerUpdated($event)"></cui-pager>

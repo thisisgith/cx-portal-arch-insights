@@ -24,7 +24,7 @@ import * as _ from 'lodash-es';
 import { FormControl, FormGroup } from '@angular/forms';
 import { FromNowPipe } from '@cisco-ngx/cui-pipes';
 import { ActivatedRoute } from '@angular/router';
-import { AssetPanelLinkService } from '@services';
+import { DetailsPanelStackService, AssetPanelLinkService } from '@services';
 
 /**
  * Main component for the RCC track
@@ -42,6 +42,7 @@ export class RccComponent implements OnInit, OnDestroy {
 		public userResolve: UserResolve,
 		public fromNow: FromNowPipe,
 		private route: ActivatedRoute,
+		private detailsPanelStackService: DetailsPanelStackService,
 		private assetPanelLinkService: AssetPanelLinkService,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
@@ -790,8 +791,22 @@ export class RccComponent implements OnInit, OnDestroy {
 	 * @param model is the selected slider name
 	 */
 	public onPanelClose (model: string) {
-		this[model] = !this[model];
+		this.detailsPanelStackService.reset();
+		_.set(this, [model, 'active'] , false);
+		this[model] = null;
 	}
+
+	/**
+	 * Handles the hidden event from details-panel
+	 * @param hidden false if details slideout is open
+	 * @param model current model
+	 */
+	public handleHidden (hidden: boolean, model: string) {
+		if (hidden) {
+			this.onPanelClose(model);
+		}
+	}
+
 	/**
 	 * destroy method to kill the services
 	 */

@@ -19,6 +19,7 @@ import { takeUntil, catchError } from 'rxjs/operators';
 import { I18n } from '@cisco-ngx/cui-utils';
 import * as _ from 'lodash-es';
 import { UserResolve } from '@utilities';
+import { DetailsPanelStackService } from '@services';
 
 /**
  * syslog Component
@@ -67,6 +68,7 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 		private logger: LogService,
 		public syslogsService: SyslogsService,
 		private userResolve: UserResolve,
+		private detailsPanelStackService: DetailsPanelStackService,
 	) {
 		this.userResolve.getCustomerId()
 		.pipe(
@@ -230,10 +232,23 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 	 * Determines whether panel close on
 	 */
 	public onPanelClose () {
+		this.detailsPanelStackService.reset();
+		_.set(this.selectedAsset, 'active', false);
 		this.selectedAsset = undefined;
 		this.showAssetPanel = false;
 		this.showAssetDetails = false;
 	}
+
+	/**
+	 * Handles the hidden event from details-panel
+	 * @param hidden false if details slideout is open
+	 */
+	public handleHidden (hidden: boolean) {
+		if (hidden) {
+			this.onPanelClose();
+		}
+	}
+
 	/**
 	 * Determines whether pager updated on
 	 * @param pageInfo contains page info

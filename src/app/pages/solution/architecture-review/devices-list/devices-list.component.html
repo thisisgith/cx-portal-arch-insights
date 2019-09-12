@@ -1,5 +1,5 @@
 <!-- App Details 360 slide-out -->
-<details-panel *ngIf="deviceDetails" [hidden]="!deviceDetails" [fullscreen]="fullscreen">
+<details-panel *ngIf="deviceDetails" [hidden]="!deviceDetails" (hiddenChange)="handleHidden($event)" [fullscreen]="fullscreen" [minWidth]="'70%'">
 	<details-panel-header (close)="onPanelClose()" [(fullscreen)]="fullscreen" [fullscreenToggle]="false">
 		<div detailsPanelTitle class="text-xlarge">
 			<span [innerText]="('_ArchitectureArchitectureReviewFor_' | i18n)">
@@ -34,8 +34,12 @@
 </details-panel>
 
 <!-- Asset 360 Fly-out View-->
-<asset-details *ngIf="selectedAsset" [asset]="selectedAsset" 
-	(close)="closeDeviceView($event)" ></asset-details>
+<asset-details *ngIf="selectedAsset" 
+	[asset]="assetLinkInfo?.asset"
+	[serialNumber]="assetLinkInfo?.asset?.serialNumber"
+	[element]="assetLinkInfo?.element"
+	(close)="closeDeviceView()">
+</asset-details>
 	
 <div class="row">
 		<div class="col-md-4">

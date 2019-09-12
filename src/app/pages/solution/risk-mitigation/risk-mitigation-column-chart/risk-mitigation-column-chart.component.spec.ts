@@ -78,7 +78,7 @@ describe('RiskMitigationColumnChartComponent', () => {
 	});
 
 	it('should call buildGraph if seriesData is present', () => {
-		component.seriesData = [];
+		window.Cypress = true;
 		component.ngOnInit();
 		fixture.detectChanges();
 		expect(component.chart)
@@ -173,12 +173,14 @@ describe('RiskMitigationColumnChartComponent', () => {
 				previousValue: null,
 			},
 			seriesData: {
-				currentValue: [{ test: 'test' }],
+				currentValue: null,
 				firstChange: true,
 				isFirstChange: () => true,
 				previousValue: null,
 			},
 		});
 		fixture.detectChanges();
+		expect(component.buildGraph)
+			.toHaveBeenCalledTimes(0);
 	}));
 });

@@ -39,7 +39,8 @@
 
 <ng-template #tableSoftwareVersion>
 	<div *ngIf="!status.isLoading &&  softwareVersions && softwareVersions?.length > 0">
-		<cui-table 
+		<cui-table
+			class="not-class-360"
 			[options]="softwareVersionsTable" 
 			[data]="softwareVersions"
 			(onSortingChanged)="onTableSortingChanged($event)">

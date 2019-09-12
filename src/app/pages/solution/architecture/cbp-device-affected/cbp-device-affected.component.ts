@@ -9,12 +9,19 @@ import {
 import { I18n } from '@cisco-ngx/cui-utils';
 import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
-import { ArchitectureService , IException, IAsset } from '@sdp-api';
+import {
+	ArchitectureService,
+	IException,
+	IAsset,
+	AssetLinkInfo,
+	InventoryService,
+} from '@sdp-api';
 import { DatePipe } from '@angular/common';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import * as _ from 'lodash-es';
+import { AssetPanelLinkService } from '@services';
 
 /**
  * CBP Device Affected Table Component
@@ -38,7 +45,9 @@ export class CbpDeviceAffectedComponent implements OnInit, OnChanges {
 	public totalItems = 0;
 	public isLoading = true;
 	public assetDatas: IAsset[] = [];
-	public selectedAsset: IAsset = null;
+	public assetParams: InventoryService.GetAssetsParams;
+	public assetLinkInfo: AssetLinkInfo = Object.create({ });
+	public selectedAsset = false;
 	public destroy$ = new Subject();
 	public params: any = {
 		body : [],
@@ -51,6 +60,7 @@ export class CbpDeviceAffectedComponent implements OnInit, OnChanges {
 		private logger: LogService,
 		private architectureService: ArchitectureService,
 		private route: ActivatedRoute,
+		private assetPanelLinkService: AssetPanelLinkService,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId =  _.get(user, ['info', 'customerId']);
@@ -100,6 +110,7 @@ export class CbpDeviceAffectedComponent implements OnInit, OnChanges {
 			],
 			hover: true,
 			striped: false,
+			wrapText: true,
 		});
 
 	}
@@ -161,19 +172,29 @@ export class CbpDeviceAffectedComponent implements OnInit, OnChanges {
 	 * Used for Opening the Asset 360 View the data for table
 	 * @param item - The Item to which Asset 360 needs to shown
 	 */
-	public openAsset360View (item: IAsset) {
-		this.selectedAsset = item;
+	public openAssetDetailsView (item: IAsset) {
+
+		this.assetParams = {
+			customerId: this.params.customerId,
+			serialNumber: [item.serialNumber],
+		};
+
+		this.assetPanelLinkService.getAssetLinkData(this.assetParams)
+			.subscribe(response => {
+				this.assetLinkInfo.asset = _.get(response, [0, 'data', 0]);
+				this.assetLinkInfo.element = _.get(response, [1, 'data', 0]);
+				this.selectedAsset = true;
+			});
+
 	}
 
 	/**
 	 * This method is used to set the null to asset object
 	 * in order to Close Fly-out View
-	 * @param isClosed - should be true or false
 	 */
-	public onPanelClose (isClosed: Boolean) {
-		if (isClosed) {
-			this.selectedAsset = null;
-		}
+	public onPanelClose () {
+		_.set(this.selectedAsset, 'active', false);
+		this.selectedAsset = false;
 	}
 
 }
