@@ -68,6 +68,7 @@ describe('Learn Panel', () => {
 
 		cy.waitForAppLoading();
 
+		// TODO: For some reason, waiting for these back to back is extremely flaky...
 		// Wait for both E-Learning and Success Paths to finish loading
 		// cy.waitForAppLoading('elearningLoading', 15000);
 		cy.waitForAppLoading('successPathsLoading', 15000);
