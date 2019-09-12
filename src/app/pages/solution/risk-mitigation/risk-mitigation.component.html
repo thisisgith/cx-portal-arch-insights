@@ -351,6 +351,6 @@
 	<span title="{{ item?.softwareVersion }}" [innerText]= "item.softwareVersion">
 	</span>
 </ng-template>
-<ng-template #riskScore let-item="celldata">
-	<span [innerHTML]="item.riskScore"></span>
+<ng-template #riskScoreTemplate let-item="celldata">
+	<span title="{{ item?.riskScore }}" [innerHTML]="item.riskScore"></span>
 </ng-template>
