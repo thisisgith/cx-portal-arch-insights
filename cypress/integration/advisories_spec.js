@@ -92,7 +92,7 @@ describe('Advisories', () => { // PBC-306
 	});
 
 	context('Security Advisories', () => { // PBC-308 / PBC-314
-		before(() => cy.getByAutoId('SECURITY ADVISORIESTab').click());
+		before(() => cy.getByAutoId('Security AdvisoriesTab').click());
 
 		it('Advisories are properly displayed in list format', () => {
 			cy.get('app-advisories tbody tr').each((row, index) => {
@@ -271,7 +271,7 @@ describe('Advisories', () => { // PBC-306
 	});
 
 	context('Field Notices', () => { // PBC-309 / PBC-315
-		before(() => cy.getByAutoId('FIELD NOTICESTab').click());
+		before(() => cy.getByAutoId('Field NoticesTab').click());
 
 		it('Field Notices are properly displayed in list format', () => {
 			cy.get('app-advisories tbody tr').each((row, index) => {
@@ -301,7 +301,7 @@ describe('Advisories', () => { // PBC-306
 			fieldNoticeMock.enable('Field Notice Advisories - Unreachable');
 			cy.getByAutoId('Facet-Assets & Coverage').click();
 			cy.getByAutoId('Facet-Advisories').click();
-			cy.getByAutoId('FIELD NOTICESTab').click();
+			cy.getByAutoId('Field NoticesTab').click();
 
 			cy.getByAutoId('NoResultsFoundTxt').should('have.text', 'No Results Found');
 
@@ -312,7 +312,7 @@ describe('Advisories', () => { // PBC-306
 			fieldNoticeMock.enable('Field Notice Advisories - Page 1');
 			cy.getByAutoId('Facet-Assets & Coverage').click();
 			cy.getByAutoId('Facet-Advisories').click();
-			cy.getByAutoId('FIELD NOTICESTab').click();
+			cy.getByAutoId('Field NoticesTab').click();
 
 			cy.getByAutoId('CUIPager-Page2').click()
 				.wait('Field Notice Advisories - Page 2')
@@ -370,7 +370,7 @@ describe('Advisories', () => { // PBC-306
 				fnCountMock.enable('Field Notice Counts - Unreachable');
 				cy.getByAutoId('Facet-Lifecycle').click(); // refresh table
 				cy.getByAutoId('Facet-Advisories').click();
-				cy.getByAutoId('FIELD NOTICESTab').click();
+				cy.getByAutoId('Field NoticesTab').click();
 
 				cy.getByAutoId('VisualFilter-lastUpdate').should('not.be.visible');
 				cy.getByAutoId('TotalVisualFilter').should('be.visible');
@@ -378,14 +378,14 @@ describe('Advisories', () => { // PBC-306
 				fnCountMock.enable('Field Notice Update Counts');
 				cy.getByAutoId('Facet-Lifecycle').click();
 				cy.getByAutoId('Facet-Advisories').click();
-				cy.getByAutoId('FIELD NOTICESTab').click();
+				cy.getByAutoId('Field NoticesTab').click();
 				cy.getByAutoId('VisualFilter-lastUpdate').should('be.visible');
 			});
 		});
 	});
 
 	context('Critical Bugs', () => { // PBC-310 / PBC-316
-		before(() => cy.getByAutoId('CRITICAL BUGSTab').click());
+		before(() => cy.getByAutoId('Critical BugsTab').click());
 
 		it('Bugs are properly displayed in list format', () => {
 			cy.get('app-advisories tbody tr').each((row, index) => {
@@ -412,7 +412,7 @@ describe('Advisories', () => { // PBC-306
 			bugMock.enable('Critical Bugs - Unreachable');
 			cy.getByAutoId('Facet-Assets & Coverage').click();
 			cy.getByAutoId('Facet-Advisories').click();
-			cy.getByAutoId('CRITICAL BUGSTab').click();
+			cy.getByAutoId('Critical BugsTab').click();
 
 			cy.getByAutoId('NoResultsFoundTxt').should('have.text', 'No Results Found');
 
@@ -423,7 +423,7 @@ describe('Advisories', () => { // PBC-306
 			bugMock.enable('Critical Bugs - Page 1');
 			cy.getByAutoId('Facet-Assets & Coverage').click();
 			cy.getByAutoId('Facet-Advisories').click();
-			cy.getByAutoId('CRITICAL BUGSTab').click();
+			cy.getByAutoId('Critical BugsTab').click();
 
 			cy.getByAutoId('CUIPager-Page2').click()
 				.wait('Critical Bugs - Page 2')
@@ -508,7 +508,7 @@ describe('Advisories', () => { // PBC-306
 				bugMock.enable('Critical Bug State Counts - Unreachable');
 				cy.getByAutoId('Facet-Lifecycle').click(); // refresh table
 				cy.getByAutoId('Facet-Advisories').click();
-				cy.getByAutoId('CRITICAL BUGSTab').click();
+				cy.getByAutoId('Critical BugsTab').click();
 
 				cy.getByAutoId('VisualFilter-state').should('not.be.visible');
 				cy.getByAutoId('VisualFilter-total').should('be.visible');
@@ -516,7 +516,7 @@ describe('Advisories', () => { // PBC-306
 				bugMock.enable('Critical Bug State Counts');
 				cy.getByAutoId('Facet-Lifecycle').click();
 				cy.getByAutoId('Facet-Advisories').click();
-				cy.getByAutoId('CRITICAL BUGSTab').click();
+				cy.getByAutoId('Critical BugsTab').click();
 				cy.getByAutoId('VisualFilter-state').should('be.visible');
 			});
 		});
