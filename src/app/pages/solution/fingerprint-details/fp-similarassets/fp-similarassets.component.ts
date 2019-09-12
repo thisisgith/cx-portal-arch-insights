@@ -57,7 +57,7 @@ export class FpSimilarAssetsComponent {
 			50,
 			[
 				Validators.required,
-				Validators.min(1),
+				Validators.min(0),
 				Validators.max(100),
 				Validators.pattern('^[0-9]*$'),
 			],
@@ -108,6 +108,7 @@ export class FpSimilarAssetsComponent {
 			.pipe(debounceTime(1000))
 			.subscribe(val => {
 				if (this.requestForm.valid) {
+					this.page = 0;
 					this.loadSimilarDevicesData();
 				}
 				this.logger.info(val);
@@ -153,10 +154,9 @@ export class FpSimilarAssetsComponent {
 	 * @param changes asset
 	 */
 	public ngOnChanges (changes: SimpleChanges): void {
-		const currentAsset = _.get(changes, ['asset', 'currentValue']);
-		if (currentAsset) {
-			this.deviceId = currentAsset.deviceId;
-			this.productId = currentAsset.productId;
+		this.deviceId = _.get(changes, ['asset', 'currentValue', 'deviceId'], null);
+		this.productId = _.get(changes, ['asset', 'currentValue', 'productId'], null);
+		if (!_.get(changes, ['asset', 'firstChange'], false) && this.asset) {
 			this.loadSimilarDevicesData();
 		}
 	}
@@ -181,7 +181,7 @@ export class FpSimilarAssetsComponent {
 					} else {
 						this.seriesDataLoading = false;
 						this.noData = true;
-						this.reqError.emit(I18n.get('_CP_SimilarAssets_Error_'));
+						this.reqError.emit();
 					}
 				},
 				err => {

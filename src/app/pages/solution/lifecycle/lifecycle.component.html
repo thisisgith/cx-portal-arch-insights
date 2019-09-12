@@ -200,7 +200,7 @@
 	<div id="learn-hover-panel-{{ autoid }}" class="panel" attr.data-auto-id="{{ autoid }}-HoverModal">
 		<div class="popover-tail"></div>
 		<div class="flex flex-column max-height">
-			<h6 class="learning-popover__title" [innerText]="title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
+			<h6 class="learning-popover__title title-line-clamp" [innerText]="title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
 			<div class="divider divider--compressed"></div>
 			<div *ngIf="item && item.fixedRating" class="half-margin-bottom">
 				<cui-rating [rating]="item.fixedRating" [alt]="true" [noClick]="true" size="small" attr.data-auto-id="{{ autoid }}-HoverModal-Rating"></cui-rating>
@@ -223,7 +223,7 @@
 				(click)="updateBookmark(item, 'ATX')"
 				attr.data-auto-id="{{ autoid }}-HoverModal-BookmarkRibbon">
 			</div>
-			<h6 class="atx-popover__title" [innerText]="title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
+			<h6 class="atx-popover__title title-line-clamp" [innerText]="title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
 			<div class="divider divider--compressed"></div>
 			<div class="atx-popover__description line-clamp" [innerText]="description" attr.data-auto-id="{{ autoid }}-HoverModal-Description"></div>
 		</div>
@@ -264,7 +264,7 @@
 				<button class="btn btn--small btn--secondary text-uppercase cx-button"
 					attr.data-auto-id = "MoreATXWatchNow-{{ data.recordingURL }}"
 					[ngClass]="data?.recordingURL ? null : 'disabled'"
-					(click)="atxWatchNow(data.recordingURL)"
+					(click)="crossLaunch(data.recordingURL)"
 					[innerText]="'_WatchNow_' | i18n">
 				</button>
 			</div>
@@ -281,7 +281,7 @@
 				[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__white'"
 				attr.data-auto-id="{{ autoid }}-HoverModal-BookmarkRibbon">
 			</div>
-			<h6 class="acc-popover__title" [innerText]="title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
+			<h6 class="acc-popover__title title-line-clamp" [innerText]="title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
 			<div class="divider divider--compressed"></div>
 			<div class="line-clamp acc-popover__description" [innerText]="description" attr.data-auto-id="{{ autoid }}-HoverModal-Description"></div>
 			<div *ngIf="item && item.duration" class="learning-duration text-right text-muted flex-fluid half-margin-left" attr.data-auto-id="{{ autoid }}-HoverModal-Duration">
@@ -343,7 +343,7 @@
 			<button class="btn btn--small btn--secondary text-uppercase cx-button"
 				data-auto-id = "recommendedATXWatchButton"
 				[ngClass]="componentData.atx?.recommended?.recordingURL ? null : 'disabled'"
-				(click)="atxWatchNow(componentData.atx.recommended.recordingURL)"
+				(click)="crossLaunch(componentData.atx.recommended.recordingURL)"
 				[innerText]="'_WatchNow_' | i18n">
 			</button>
 			<ng-container *ngIf="componentData?.atx?.recommended && recommendedAtxScheduleCardOpened">
@@ -447,7 +447,7 @@
 				class="pull-left btn btn--primary"
 				data-auto-id = "AtxScheduleCardRegisterButton"
 				[ngClass]="getAtxRegisterButton(data)"
-				(click)="atxRegister(sessionSelected.registrationURL)"
+				(click)="crossLaunch(sessionSelected.registrationURL)"
 				[innerText]="'_Register_' | i18n">
 			</button>
 			<div class="half-padding-left pull-left">
@@ -569,10 +569,8 @@
 		<div class="view-all pull-right toggle"
 			*ngIf="data">
 			<a class="no-link show"
-				target="_blank"
-				rel="noopener noreferrer"
-				attr.data-auto-id="{{ title }}-ViewAll"
-				href="{{ link }}">
+				(click)="crossLaunch(link)"
+				attr.data-auto-id="{{ title }}-ViewAll">
 				<span class="text-med" [innerText]="'_ViewAll_' | i18n"></span>
 				<span class="icon-play"></span>
 			</a>
@@ -583,7 +581,7 @@
 			<div id="recommended-elearning-item" class=" panel small-panel" attr.data-auto-id="{{ title }}-Item">
 				<div class="row">
 					<div class="col-md-11">
-						<a class="no-link" target="_blank" rel="noopener noreferrer" [href]="item.url">
+						<a class="no-link" (click)="crossLaunch(item.url)" attr.data-auto-id="{{ title }} -item.title">
 							<span [innerText]="item.title"></span>
 						</a>
 					</div>
@@ -607,7 +605,7 @@
 <ng-template #successBlock let-title="title" let-data="data">
 	<div>
 		<div id="successbytes-item" class="cx-lifecycle-card--link panel small-panel" data-auto-id="successbytes-item" *ngFor="let item of data | slice:0:3">
-			<a class="toggle" target="_blank" rel="noopener noreferrer" [href]="item.url" [innerText]="item.title"></a>
+			<a class="toggle" (click)="crossLaunch(item.url)" [innerText]="item.title" attr.data-auto-id="{{ title }} -item.title"></a>
 			<ng-container *ngTemplateOutlet="successBytesHoverBlock; context: {
 				item: item,
 				autoid: 'successbytes'
@@ -626,9 +624,9 @@
 					[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__white'"
 					attr.data-auto-id="{{ autoid }}-HoverModal-BookmarkRibbon">
 				</div>
-				<h6 class="sb-popover__title" [innerText]="item.title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
+				<h6 class="sb-popover__title title-line-clamp" [innerText]="item.title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
 				<div class="divider divider--compressed"></div>
-				<div class="line-clamp sb-popover__description" [innerText]="item.description" attr.data-auto-id="{{ autoid }}-HoverModal-Description"></div>
+				<div class="sb-desc-line-clamp sb-popover__description" [innerText]="item.description" attr.data-auto-id="{{ autoid }}-HoverModal-Description"></div>
 				<div class="sb-popover__footer">
 					<div>
 						<a class="no-link successbytes-type-link" data-auto-id="successlink" target="_blank" rel="noopener noreferrer" [href]="item.url">
@@ -905,7 +903,7 @@
 					<button class="btn btn--small btn--secondary text-uppercase cx-button"
 						attr.data-auto-id = "CardATXWatchNow-{{ item.recordingURL }}"
 						[ngClass]="item?.recordingURL ? null : 'disabled'"
-						(click)="atxWatchNow(item.recordingURL); closeModal()"
+						(click)="crossLaunch(item.recordingURL)"
 						[innerText]="'_WatchNow_' | i18n">
 					</button>
 				</div>
@@ -1281,7 +1279,7 @@
 		<button class="btn btn--small btn--secondary text-uppercase cx-button half-margin-left"
 			attr.data-auto-id = "ListATXWatchNow-{{ celldata.recordingURL }}"
 			[ngClass]="celldata?.recordingURL ? null : 'disabled'"
-			(click)="atxWatchNow(celldata.recordingURL); closeModal()"
+			(click)="crossLaunch(celldata.recordingURL)"
 			[innerText]="'_WatchNow_' | i18n">
 		</button>
 	</div>

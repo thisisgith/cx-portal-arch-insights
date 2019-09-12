@@ -2,6 +2,7 @@
 	[minWidth]="'1024px'" 
 	*ngIf="selectedSoftwareGroup" 
 	[hidden]="!selectedSoftwareGroup"
+	(hiddenChange)="handleHidden($event)"
 	[fullscreen]="fullscreen">
 		<details-panel-header 
 			(close)="selectedSoftwareGroup = false" 

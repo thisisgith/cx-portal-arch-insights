@@ -1,5 +1,5 @@
 <!-- App Details 360 slide-out -->
-<details-panel *ngIf="selectedDevice" [hidden]="!selectedDevice" [fullscreen]="fullscreen">
+<details-panel *ngIf="selectedDevice" [hidden]="!selectedDevice" (hiddenChange)="handleHidden($event)" [fullscreen]="fullscreen">
 	<details-panel-header (close)="onPanelClose()" [(fullscreen)]="fullscreen" [fullscreenToggle]="false">
 		<app-fingerprint-header [asset]="selectedDevice"></app-fingerprint-header>
 		<div detailsPanelTitle class="text-xlarge">

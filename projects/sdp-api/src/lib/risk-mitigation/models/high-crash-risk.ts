@@ -1,6 +1,7 @@
 /* tslint:disable */
 export interface HighCrashRiskDevices {
 
+	active: boolean;
 	/**
    * Address of the device
    */
@@ -13,6 +14,8 @@ export interface HighCrashRiskDevices {
    * global risk rank of the device
    */
 	globalRiskRank: string;
+
+	neName: string;
 		/**
    * Product family of the device
    */

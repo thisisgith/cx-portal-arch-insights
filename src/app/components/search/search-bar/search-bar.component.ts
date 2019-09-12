@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { SearchType, SearchEnum } from '@interfaces';
 import { SearchService } from '@services';
-import { Subject } from 'rxjs';
+import { Subject, of } from 'rxjs';
 import { debounceTime, switchMap, takeUntil } from 'rxjs/operators';
 
 import * as _ from 'lodash-es';
@@ -54,6 +54,7 @@ export class SearchBarComponent implements OnInit, OnDestroy {
 	private focused = false;
 	private destroy$ = new Subject();
 	private search$ = new Subject<string>();
+	private MINIMUM_TYPEAHEAD_CHARS = 3;
 
 	constructor (
 		private element: ElementRef,
@@ -208,12 +209,16 @@ export class SearchBarComponent implements OnInit, OnDestroy {
 	 * @returns Observable with typeahead results
 	 */
 	private fetchData (query: string) {
-		return this.service.fetchTypeahead({
-			bizcontext: 'ENT',
-			h: TYPEAHEAD_LIMIT,
-			locale: 'enus',
-			q: query,
-		});
+		if (query && query.length >= this.MINIMUM_TYPEAHEAD_CHARS) {
+			return this.service.fetchTypeahead({
+				bizcontext: 'ENT',
+				h: TYPEAHEAD_LIMIT,
+				locale: 'enus',
+				q: query,
+			});
+		}
+
+		return of(null);
 	}
 
 	/**

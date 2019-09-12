@@ -5,7 +5,6 @@ import {
 	TemplateRef,
 	ElementRef,
 	OnDestroy,
-	HostListener,
 } from '@angular/core';
 import { I18n } from '@cisco-ngx/cui-utils';
 import {
@@ -45,7 +44,7 @@ import {
 import { Router, ActivatedRoute } from '@angular/router';
 import { FromNowPipe } from '@cisco-ngx/cui-pipes';
 import { VisualFilter } from '@interfaces';
-import { CaseOpenComponent, AssetDetailsComponent } from '@components';
+import { CaseOpenComponent } from '@components';
 import { getProductTypeImage, getProductTypeTitle } from '@classes';
 import { DetailsPanelStackService } from '@services';
 
@@ -100,9 +99,6 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	@ViewChild(AssetDetailsComponent, { static: false })
-		public details: AssetDetailsComponent;
-
 	public mainContent = 'assets';
 	public alert: any = { };
 	public bulkDropdown = false;
@@ -149,8 +145,6 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	public selectedSubfilters: SelectedSubfilter[];
 	public getProductIcon = getProductTypeImage;
 	public getProductTitle = getProductTypeTitle;
-
-	public detailsFirstClick = true;
 
 	constructor (
 		private contractsService: ContractsService,
@@ -371,6 +365,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 * Called on 360 details panel close button click
 	 */
 	public onPanelClose () {
+		this.detailsPanelStackService.reset();
 		_.set(this.selectedAsset, 'details', false);
 		this.selectedAsset = null;
 	}
@@ -392,7 +387,6 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 * @param item the item we selected
 	 */
 	public onRowSelect (item: Item) {
-		this.detailsFirstClick = true;
 		this.inventory.forEach((i: Item) => {
 			if (i !== item) {
 				i.details = false;
@@ -1332,17 +1326,5 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			default:
 				$event.preventDefault(); // mark this event as handled
 		}
-	}
-
-	/**
-	 * Handler for mouse clicks to close panel
-	 * @param target where the mouse clicked
-	 */
-	@HostListener('document:click', ['$event.target'])
-	public onPageClick (target: ElementRef) {
-		if (this.details && !(this.details.contains(target) || this.detailsFirstClick)) {
-			this.onPanelClose();
-		}
-		this.detailsFirstClick = false;
 	}
 }
