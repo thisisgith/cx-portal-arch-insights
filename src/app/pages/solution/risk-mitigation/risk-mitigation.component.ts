@@ -79,7 +79,6 @@ export class RiskMitigationComponent {
 	  @ViewChild('softwareVersionTemplate', { static: true })
 	  public softwareVersionTemplate: TemplateRef<string>;
 
-
 	public openPanel = false;
 	public fullscreen = false;
 	public filters: Filter[];
