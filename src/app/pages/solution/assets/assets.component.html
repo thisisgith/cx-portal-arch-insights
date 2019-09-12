@@ -118,17 +118,18 @@
 						<span class="icon-grid-view"></span>
 					</button>
 				</div>
-				<cui-dropdown [actions]="dropdownActions"
+				<!-- Export options disabled until further notice -->
+				<!-- <cui-dropdown [actions]="dropdownActions"
 					position="left"
 					icon="icon-more icon-medium text-muted rotate-90">
-				</cui-dropdown>
+				</cui-dropdown> -->
 			</div>
 		</div>
 	</div>
 </ng-template>
 
 <ng-template #tableAssets>
-	<div class="responsive-table" *ngIf="assetsTable && inventory.length && (!view || view === 'list')">
+	<div class="responsive-table not-close-360" *ngIf="assetsTable && inventory.length && (!view || view === 'list')">
 		<table class="table table--selectable table--compressed table--wrap table--lined table--hover table--nostripes" data-auto-id="AssetsTable">
 				<thead data-auto-id="AssetsTableHeader">
 					<tr>

@@ -1,5 +1,5 @@
 <!-- App Details 360 slide-out -->
-<details-panel *ngIf="exceptionObject" [hidden]="!exceptionObject" [fullscreen]="fullscreen" [minWidth]="'80%'">
+<details-panel *ngIf="exceptionObject" [hidden]="!exceptionObject" (hiddenChange)="handleHidden($event)" [fullscreen]="fullscreen" [minWidth]="'80%'">
 	<details-panel-header (close)="onPanelClose()" [(fullscreen)]="fullscreen" [fullscreenToggle]="false">
 		<div detailsPanelTitle class="text-xlarge">
 			<span [innerText]="exceptionObject?.bpRuleTitle"></span>

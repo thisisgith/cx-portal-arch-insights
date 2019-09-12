@@ -81,6 +81,24 @@ describe('AssetDetailsComponent', () => {
 		});
 	});
 
+	it('should handle on panel hidden', done => {
+		fixture.whenStable()
+		.then(() => {
+			const panelCloseSpy = spyOn(component, 'onPanelClose');
+
+			component.handleHidden(false);
+			expect(panelCloseSpy)
+				.not
+				.toHaveBeenCalled();
+
+			component.handleHidden(true);
+			expect(panelCloseSpy)
+				.toHaveBeenCalled();
+
+			done();
+		});
+	});
+
 	it('should change assets', done => {
 		component.asset = MockAssetsData[0];
 
