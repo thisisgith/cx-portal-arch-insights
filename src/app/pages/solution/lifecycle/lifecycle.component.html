@@ -1,6 +1,6 @@
 <div class="panel panel--ltgray panel--bordered">
 	<div class="row base-padding-top">
-		<div class="col-md-3" *ngIf="!status.loading.racetrack && componentData?.racetrack?.stage">
+		<div class="col-md-3 base-padding-left" *ngIf="!status.loading.racetrack && componentData?.racetrack?.stage">
 			<ng-container *ngTemplateOutlet="racetrack"></ng-container>
 		</div>
 
@@ -103,8 +103,8 @@
 	</div>
 	<div class="pitstop-checklist base-margin-left" 
 		*ngIf="currentPitstop && currentPitstop?.pitstopActions?.length">
-		<div class="divider divider--compressed"></div>
-		<div class="pitstop-checklist__title base-margin-top cx-text-secondary">
+		<div class="divider"></div>
+		<div class="pitstop-checklist__title cx-text-secondary">
 			<div class="pitstop-checklist__flag"
 				inlineSVG="assets/img/solutions/icon-checkerflag.svg"></div>
 			<div class="text-uppercase half-padding-left" [innerText]="'_CheckList_' | i18n"></div>
@@ -126,8 +126,9 @@
 						></span>
 					</label>
 				</div>
-				<div class="actionname__textcx-text-secondary">
-						<div class="checkbox__label text-medium"
+				<div class="actionname__text cx-text-secondary"
+					[class.actionname__text--complete]="action?.action?.isComplete">
+						<div class="checkbox__label text-medium toggle"
 							attr.data-auto-id="actionLink-{{action.action.name}}"
 							data-toggle="tooltip" data-placement="bottom" title="{{action?.action?.description}}"
 							(click)="selectAction(action)"
@@ -138,7 +139,7 @@
 		</div>
 		<div *ngIf="hasSelectedAction()">
 			<div class="divider divider--compressed"></div>
-			<div class="text-vibblue base-margin-top base-margin-bottom toggle"
+			<div class="base-margin-top base-margin-bottom toggle pitstop-checklist__reset-filter"
 				id="ResetFilter"
 				[innerText]="'_ResetFilter_' | i18n"
 				(click)="resetFilter()"

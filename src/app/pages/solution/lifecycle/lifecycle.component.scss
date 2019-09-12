@@ -807,29 +807,31 @@ tr.td-row td {
 	}
 }
 
-.actionname.selected {
-	background-color: $vibblue;
-}
-
-.actiondesc {
-	display: none;
-}
-
-.actionname:hover .actiondesc {
-	display: block;
-	position: absolute;
-	box-shadow: $base-box-shadow;
-	z-index: 1;
-	background-color: $white;
-	height: 60px;
-	width: 250px;
-	bottom: -30px;
-	left: 30px;
-}
-
 .actionname__text {
 	flex-grow: 1;
 	font-size: 14px;
+
+	&--complete {
+		color: $accent-light-blue;
+	}
+}
+
+.actionname.selected {
+	background-color: $accent-light-blue;
+
+	.actionname__text {
+		color: #fff;
+	}
+
+	.checkbox__input::before {
+		background: $background-color;
+	}
+}
+
+.actionname:hover:not(.selected) {
+	.actionname__text {
+		color: $accent-light-blue;
+	}
 }
 
 .no-link.selected {
@@ -869,7 +871,7 @@ tr.td-row td {
 	line-height: 16px;
 }
 
-.pitstop-checklist__title  {
+.pitstop-checklist__title {
 	display: flex;
 	align-items: flex-start;
 	font-size: 16px;
@@ -878,6 +880,10 @@ tr.td-row td {
 
 .pitstop-checklist__flag {
 	width: 18px;
+}
+
+.pitstop-checklist__reset-filter {
+	color: $accent-light-blue;
 }
 
 .finishline {
@@ -1356,15 +1362,23 @@ tr.td-row td {
 :host ::ng-deep input:checked {
 	~ .checkbox__input::before {
 		box-shadow: inset 0 0 0 $cui-checkbox-border-width transparent !important;
-		background-color: transparent !important;
+		background-color: $background-color !important;
 	}
 }
 
 :host ::ng-deep input:not(:checked) {
 	~ .checkbox__input::before {
 		box-shadow: inset 0 0 0 $cui-checkbox-border-width #9e9ea2 !important;
-		background-color: transparent !important;
+		background-color: $background-color !important;
 	}
+}
+
+.actionname.selected .checkbox input:checked ~ .checkbox__input::before {
+	background: transparent !important;
+}
+
+.actionname.selected .checkbox input:checked ~ .checkbox__input::after {
+	color: #fff !important;
 }
 
 .checkbox-complete::after {
