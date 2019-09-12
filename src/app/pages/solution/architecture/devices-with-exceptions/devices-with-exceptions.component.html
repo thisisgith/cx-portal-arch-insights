@@ -1,5 +1,5 @@
 <!-- Fly-Out View Slide-out -->
-<details-panel *ngIf="assetObject" [hidden]="!assetObject" [fullscreen]="fullscreen">
+<details-panel *ngIf="assetObject" [hidden]="!assetObject" [fullscreen]="fullscreen"  [minWidth]="'70%'">
 	<details-panel-header (close)="onPanelClose()" [(fullscreen)]="fullscreen" [fullscreenToggle]="false">
 		<div class="row ">
 			<div class="col-md-8 base-margin-bottom">

@@ -122,6 +122,7 @@ export class DevicesWithExceptionsComponent implements OnInit {
 			hover: true,
 			singleSelect: true,
 			striped: false,
+			wrapText: true,
 		});
 	}
 

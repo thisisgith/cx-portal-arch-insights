@@ -4,9 +4,6 @@
 	opacity: 0;
 }
 
-:host ::ng-deep .table {
-	@include table-ellipse;
-}
 
 .form-group__text .devices-list-search {
 	@include filter-search;

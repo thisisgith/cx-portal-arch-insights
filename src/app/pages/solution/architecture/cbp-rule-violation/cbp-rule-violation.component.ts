@@ -137,6 +137,7 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 			hover: true,
 			singleSelect: true,
 			striped: false,
+			wrapText: true,
 		});
 	}
 

@@ -83,6 +83,7 @@ export class DevicesSdaComponent implements OnInit, OnChanges {
 				},
 			],
 			striped: false,
+			wrapText: true,
 		});
 	}
 
