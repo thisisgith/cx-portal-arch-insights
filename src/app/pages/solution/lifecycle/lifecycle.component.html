@@ -1,4 +1,4 @@
-<div class="panel panel--ltgray panel--bordered">
+<div class="panel panel--ltgray panel--bordered" #lifecyclePanel [class.panel--bottom-padding]="panelBottomPaddingNeeded">
 	<div class="row base-padding-top">
 		<div class="col-md-3" *ngIf="!status.loading.racetrack && componentData?.racetrack?.stage">
 			<ng-container *ngTemplateOutlet="racetrack"></ng-container>
@@ -490,7 +490,7 @@
 					<div id="{{ autoid }}-item" class="panel small-panel">
 						<div class="text-blue" [innerText]="item.title"
 							data-auto-id = "ATXMoreClick"
-							(click)="atxMoreSelect(item, autoid)"></div>
+							(click)="atxMoreSelect(item, autoid, moreList)"></div>
 						<ng-container *ngIf="autoid==='moreACCList'">
 							<ng-container *ngTemplateOutlet="accHover; context: {
 								title: item.title,
