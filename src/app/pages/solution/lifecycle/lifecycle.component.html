@@ -829,8 +829,8 @@
 </ng-template>
 
 <ng-template #listViewTemplate let-type="type" let-view="view">
-		<div class="base-padding-right base-margin-top list-view" *ngIf="view === 'list'" #scrollModal (scroll)="getScrollCoordinates(scrollModal)">
-			<div class="base-margin-top"  data-auto-id="ViewAllTable">
+		<div class="base-padding-right base-margin-top list-view" *ngIf="view === 'list'" #scrollModal (scroll)="getScrollCoordinates(scrollModal)" data-auto-id="ViewAllTable">
+			<div class="base-margin-top">
 					<table class="table table--nostripes table--wrap table--hover table--loose">
 					<ng-container *ngIf="type === 'ATX'">
 						<ng-container *ngTemplateOutlet="listView; context: { type: type, columns: atxTable.columns, data: selectedATX }"></ng-container>
@@ -972,14 +972,14 @@
 			[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__white'"
 			data-auto-id="SBCardRibbon">
 		</div>
-		<div class="card__header success__card__archetype text-left text-small text-uppercase base-margin-top qtr-margin-bottom" [innerText]="item.archetype"></div>
+		<div class="card__header success__card__archetype text-left text-small text-uppercase base-margin-top qtr-margin-bottom" [innerText]="item.archetype" data-auto-id="SBCardArchetype"></div>
 		<div class="card__header success__card__header text-left">
 			<a class="no-link" data-auto-id="successtitle" target="_blank" rel="noopener noreferrer"
 					[href]="item.url">
 				<span class="title-line-clamp" data-auto-id="SBCardTitle" [innerText]="item.title"></span>
 			</a>
 		</div>
-		<div class="card__body success__card__body text-left desc-line-clamp" *ngIf="item && item.description" [innerText]="item.description"></div>
+		<div class="card__body success__card__body text-left desc-line-clamp" *ngIf="item && item.description" [innerText]="item.description" data-auto-id="SBCardDescription"></div>
 		<div class="success__card__icons">
 			<ng-container *ngTemplateOutlet="itemTypeIcons; context: {
 				item: item,
@@ -1044,21 +1044,21 @@
 			[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__white'"
 			data-auto-id="PGCardRibbon">
 		</div>
-		<div class="card__header success__card__archetype text-left text-small text-uppercase base-margin-top qtr-margin-bottom" [innerText]="item.archetype"></div>
+		<div class="card__header success__card__archetype text-left text-small text-uppercase base-margin-top qtr-margin-bottom" [innerText]="item.archetype" data-auto-id="PGCardArchetype"></div>
 		<div class="card__header success__card__header text-left">
 			<a class="no-link" data-auto-id="successtitle" target="_blank" rel="noopener noreferrer"
 					[href]="item.url">
 				<span class="title-line-clamp" data-auto-id="PGCardTitle" [innerText]="item.title"></span>
 			</a>
 		</div>
-		<div class="card__body success__card__body text-left desc-line-clamp" *ngIf="item && item.description" [innerText]="item.description"></div>
+		<div class="card__body success__card__body text-left desc-line-clamp" *ngIf="item && item.description" [innerText]="item.description" data-auto-id="PGCardDescription"></div>
 		<div class="success__card__icons">
 			<ng-container *ngTemplateOutlet="itemTypeIcons; context: {
 				item: item,
 				autoid: 'ProductGuidesCard'
 			}">
 			</ng-container>
-			<div class="duration text-muted" *ngIf="item.duration">
+			<div class="duration text-muted" *ngIf="item.duration" data-auto-id="PGCardDuration">
 				<span class="icon-clock qtr-padding-right"></span>
 				<span [innerText]="item.duration"></span>
 			</div>
