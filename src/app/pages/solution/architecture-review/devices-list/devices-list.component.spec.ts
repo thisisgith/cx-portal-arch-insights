@@ -124,32 +124,9 @@ describe('DevicesListComponent', () => {
 			customerId: '7293498',
 			serialNumber: 'LA1-AP3802-21',
 		};
-		const response = [
-			{ data: [{
-				contractNumber: '-1',
-				criticalAdvisories: '-1',
-				deviceName: '{HOSTNAME}',
-				equipmentType: 'CHASSIS',
-				hwInstanceId: '12031,AIR-CT5508-K9,NA,12031,AIR-CT5508-K9,NA,NA',
-				ipAddress: '12.0.3.1',
-				lastScan: null,
-				managedNeId: 'NA,12031,AIR-CT5508-K9,NA',
-				neId: 'NA,12031,AIR-CT5508-K9,NA',
-				osType: null,
-				osVersion: null,
-				productId: '',
-				productName: '',
-				reachabilityStatus: 'Reachable',
-				role: 'ACCESS',
-				serialNumber: '12031',
-				solutionInfo: null,
-				supportCovered: false,
-			}],
-			},
-		];
 		spyOn(assetService, 'getAssetLinkData')
 			.and
-			.returnValue(of(response));
+			.returnValue(of({ }));
 		component.openDeviceView(item);
 		expect(assetService.getAssetLinkData)
 			.toHaveBeenCalled();
