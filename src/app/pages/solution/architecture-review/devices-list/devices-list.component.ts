@@ -6,9 +6,10 @@ import { DatePipe } from '@angular/common';
 import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
-import { ArchitectureReviewService, IParamType } from '@sdp-api';
+import { ArchitectureReviewService, IParamType, InventoryService, AssetLinkInfo } from '@sdp-api';
 import { ActivatedRoute } from '@angular/router';
 import * as _ from 'lodash-es';
+import { AssetPanelLinkService } from '@services';
 /**
  * CBP Rule Component
  */
@@ -31,7 +32,9 @@ export class DevicesListComponent implements OnInit, OnChanges {
 	public deviceDetails: any = null;
 	public tabIndex = 0;
 	public searchText = '';
-	public selectedAsset: any = null;
+	public selectedAsset = false;
+	public assetParams: InventoryService.GetAssetsParams;
+	public assetLinkInfo: AssetLinkInfo = Object.create({ });
 	@ViewChild('productFamilyTemplate', { static: true })
 	private productFamilyTemplate: TemplateRef<{ }>;
 	@ViewChild('softwareVersionTemplate', { static: true })
@@ -41,6 +44,7 @@ export class DevicesListComponent implements OnInit, OnChanges {
 		private logger: LogService,
 		private architectureService: ArchitectureReviewService,
 		private route: ActivatedRoute,
+		private assetPanelLinkService: AssetPanelLinkService,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
@@ -200,12 +204,9 @@ export class DevicesListComponent implements OnInit, OnChanges {
 	/**
 	 * This method is used to set the null to asset object
 	 * in order to Close Device View
-	 * @param isClosed - should be true or false
 	 */
-	public closeDeviceView (isClosed: Boolean) {
-		if (isClosed) {
-			this.selectedAsset = null;
-		}
+	public closeDeviceView () {
+		this.selectedAsset = false;
 	}
 
 	/**
@@ -213,7 +214,16 @@ export class DevicesListComponent implements OnInit, OnChanges {
 	 * @param item - The Item to which Asset 360 needs to shown
 	 */
 	public openDeviceView (item: any) {
-		this.selectedAsset = _.cloneDeep(item);
+		this.assetParams = {
+			customerId: this.paramsType.customerId,
+			serialNumber: [item.serialNumber],
+		};
+		this.assetPanelLinkService.getAssetLinkData(this.assetParams)
+			.subscribe(response => {
+				this.assetLinkInfo.asset = _.get(response, [0, 'data', 0]);
+				this.assetLinkInfo.element = _.get(response, [1, 'data', 0]);
+				this.selectedAsset = true;
+			});
 	}
 
 }

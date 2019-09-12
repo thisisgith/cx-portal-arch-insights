@@ -2,12 +2,19 @@ import { Component, OnInit } from '@angular/core';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
-import { ArchitectureService, IAsset, assetExceptionList } from '@sdp-api';
+import {
+	ArchitectureService,
+	IAsset,
+	assetExceptionList,
+	InventoryService,
+	AssetLinkInfo,
+} from '@sdp-api';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import * as _ from 'lodash-es';
+import { AssetPanelLinkService } from '@services';
 
 /**
  * Devices With Exceptions Component
@@ -28,6 +35,7 @@ export class DevicesWithExceptionsComponent implements OnInit {
 		private logger: LogService,
 		private architectureService: ArchitectureService,
 		private route: ActivatedRoute,
+		private assetPanelLinkService: AssetPanelLinkService,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
@@ -35,7 +43,9 @@ export class DevicesWithExceptionsComponent implements OnInit {
 	}
 
 	public assetObject: IAsset = null;
-	public selectedAsset: IAsset = null;
+	public selectedAsset = false;
+	public assetParams: InventoryService.GetAssetsParams;
+	public assetLinkInfo: AssetLinkInfo = Object.create({ });
 	public assetsExceptionDetails: assetExceptionList[] = [];
 	public tableOptions: CuiTableOptions;
 	public totalItems = 0;
@@ -199,12 +209,9 @@ export class DevicesWithExceptionsComponent implements OnInit {
 	/**
 		* This method is used to set the null to asset object
 		* in order to Close Fly-out View
-		* @param isClosed - should be true or false
 		*/
-	public closeAssetDetailsView (isClosed: Boolean) {
-		if (isClosed) {
-			this.selectedAsset = null;
-		}
+	public closeAssetDetailsView () {
+		this.selectedAsset = false;
 	}
 
 	/**
@@ -212,7 +219,18 @@ export class DevicesWithExceptionsComponent implements OnInit {
 	 * @param item - The Item to which Asset 360 needs to shown
 	 */
 	public openAssetDetailsView (item: IAsset) {
-		this.selectedAsset = item;
+		this.assetParams = {
+			customerId: this.params.customerId,
+			serialNumber: [item.serialNumber],
+		};
+
+		this.assetPanelLinkService.getAssetLinkData(this.assetParams)
+			.subscribe(response => {
+				this.assetLinkInfo.asset = _.get(response, [0, 'data', 0]);
+				this.assetLinkInfo.element = _.get(response, [1, 'data', 0]);
+				this.selectedAsset = true;
+			});
+
 	}
 
 }
