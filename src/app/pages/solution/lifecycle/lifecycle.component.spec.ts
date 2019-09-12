@@ -534,33 +534,17 @@ describe('LifecycleComponent', () => {
 			expect(component.recommendedAtxScheduleCardOpened)
 				.toBeFalsy();
 
-			let recordingUrl: string;
-			recordingUrl = '';
+			const crossLaunchUrl = '';
 			component.atxMoreClicked = true;
 
-			// Test atxWatchNow()
-			component.atxWatchNow(recordingUrl);
-
-			expect(component.atxMoreClicked)
-				.toBeFalsy();
-
-			spyOn(component, 'closeViewSessions');
-			fixture.detectChanges();
-
-			expect(component.closeViewSessions)
-				.toHaveBeenCalled();
-
-			// Test atxRegister()
-			component.atxRegister(recordingUrl);
+			// Test crossLaunch()
+			component.crossLaunch(crossLaunchUrl);
 
 			spyOn(component, 'closeViewSessions');
 			spyOn(component, 'closeModal');
 			fixture.detectChanges();
 
 			expect(component.closeViewSessions)
-				.toHaveBeenCalled();
-
-			expect(component.closeModal)
 				.toHaveBeenCalled();
 
 			// Test getAtxRegisterButton()

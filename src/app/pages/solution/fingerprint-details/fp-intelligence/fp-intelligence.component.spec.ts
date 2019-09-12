@@ -12,6 +12,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { FpIntelligenceService } from '@sdp-api';
 import { HttpErrorResponse } from '@angular/common/http';
 import { UserResolve } from '@utilities';
+import { SimpleChanges, SimpleChange } from '@angular/core';
 
 describe('FpIntelligenceComponent', () => {
 	let userResolve: UserResolve;
@@ -172,4 +173,32 @@ describe('FpIntelligenceComponent', () => {
 		expect(fpIntelligenceService.getSimilarDevices).not
 			.toHaveBeenCalled();
 	}));
+
+	it('should getSimilarDevicesDistribution for asset change', () => {
+		let fakeInput: SimpleChanges = {
+			asset: new SimpleChange(null, { deviceId: 'TestID' }, false),
+		};
+		const spy = spyOn(fpIntelligenceService, 'getSimilarDevicesDistribution').and
+			.callThrough();
+		component.ngOnChanges(fakeInput);
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+			expect(component.deviceId)
+				.toBeDefined();
+			expect(component.deviceId)
+				.toEqual('TestID');
+			expect(spy)
+				.toHaveBeenCalled();
+		});
+		fakeInput = {
+			asset: new SimpleChange(null, { deviceId: 'TestID' }, false),
+		};
+		component.ngOnChanges(fakeInput);
+		fixture.whenStable()
+		.then(() => {
+			expect(spy).not
+				.toHaveBeenCalled();
+		});
+	});
 });

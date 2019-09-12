@@ -55,7 +55,7 @@ export class FpIntelligenceComponent implements OnChanges {
 			50,
 			[
 				Validators.required,
-				Validators.min(1),
+				Validators.min(0),
 				Validators.max(100),
 				Validators.pattern('[0-9]*'),
 			],
@@ -99,9 +99,8 @@ export class FpIntelligenceComponent implements OnChanges {
 	 * @param changes simplechange
 	 */
 	public ngOnChanges (changes: SimpleChanges): void {
-		const currentAsset = _.get(changes, ['asset', 'currentValue']);
-		if (currentAsset) {
-			this.deviceId = currentAsset.deviceId;
+		this.deviceId = _.get(changes, ['asset', 'currentValue', 'deviceId'], null);
+		if (!_.get(changes, ['asset', 'firstChange'], false) && this.deviceId) {
 			this.loadSimilarDevicesDistribution();
 		}
 	}
@@ -126,7 +125,7 @@ export class FpIntelligenceComponent implements OnChanges {
 					} else {
 						this.seriesDataLoading = false;
 						this.noData = true;
-						this.reqError.emit(I18n.get('_CP_FingerprintIntelligence_Error_'));
+						this.reqError.emit();
 					}
 				},
 				err => {

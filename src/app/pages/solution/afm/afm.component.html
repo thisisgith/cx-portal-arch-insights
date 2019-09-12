@@ -69,6 +69,7 @@
 	</div>
 	<div class="responsive-table" *ngIf="!loading">
 		<cui-table
+			class="no-close-360"
 			[options]="tableOptions"
 			[data]="tableData"
 			[limit]="tableLimit"
@@ -324,6 +325,7 @@
 <details-panel
 	*ngIf="showAlarmDetails"
 	[hidden]="!showAlarmDetails"
+	(hiddenChange)="handleHidden($event)"
 	[fullscreen]="fullscreen"
 	id="details-panel"
 >

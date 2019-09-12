@@ -1,16 +1,5 @@
 @import '../../../../../mixins.scss';
 
-.architecture-column {
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	max-width: 200px;
-}
-
-:host ::ng-deep .table {
-	@include table-ellipse;
-}
-
 .form-group__text .cbp-rule-violation-search {
 	@include filter-search;
 }

@@ -17,8 +17,11 @@
 					<div class="flex-row">
 						<form [formGroup]="caseForm">
 							<dl class="base-margin-bottom">
-								<dt class="base-margin-bottom" [innerText]="'_CaseInitiatedFrom_' | i18n:typeTitle"></dt>
-								<dt [innerText]="'_AssetAssociated_' | i18n"></dt>
+								<dt class="base-margin-bottom" 
+								data-auto-id="CaseOpenFrom"
+								[innerText]="'_CaseInitiatedFrom_' | i18n:typeTitle"></dt>
+								<dt data-auto-id="CaseOpenAsset" 
+								[innerText]="'_AssetAssociated_' | i18n"></dt>
 								<dd>
 									<div><span [innerText]="allAssets[0]?.serialNumber"></span></div>
 									<div><span [innerText]="allAssets[0]?.deviceName || allAssets[0]?.hostName"></span></div>
@@ -43,7 +46,7 @@
 										</tbody>
 									</table>
 								</app-collapsible>
-								<dt [innerText]="'_CaseTitle_' | i18n"></dt>
+								<dt data-auto-id="CaseOpenTitle" [innerText]="'_CaseTitle_' | i18n"></dt>
 								<dd>
 									<div class="form-group">
 										<div class="form-group__text">
@@ -56,7 +59,7 @@
 										</div>
 									</div>
 								</dd>
-								<dt [innerText]="'_DescribeTheProblem_' | i18n"></dt>
+								<dt data-auto-id="CaseOpenDescription" [innerText]="'_DescribeTheProblem_' | i18n"></dt>
 								<dd>
 									<div class="form-group">
 										<div class="form-group__text">

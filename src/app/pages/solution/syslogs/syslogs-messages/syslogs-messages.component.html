@@ -55,6 +55,7 @@
 </div>
 <div class="container base-margin-top" data-auto-id="syslog-message-table" *ngIf="tableData.length">
 	<cui-table
+		class="not-close-360"
 		[options]="tableOptions"
 		[data]="tableData"
 		[limit]="tableLimit"
@@ -98,6 +99,7 @@
 <details-panel
 	*ngIf="selectedAsset"
 	[hidden]="!selectedAsset"
+	(hiddenChange)="handleHidden($event)"
 	[fullscreen]="fullscreen"
 >
 	<details-panel-header

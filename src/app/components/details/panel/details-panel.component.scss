@@ -13,8 +13,8 @@ $default-text-color: #394454;
 			> a {
 				text-transform: uppercase;
 				font-size: 13px;
-				padding-bottom: 5px;
-				padding-top: 5px;
+				padding-bottom: 5px !important;
+				padding-top: 5px !important;
 
 				&:hover {
 					color: $primary;

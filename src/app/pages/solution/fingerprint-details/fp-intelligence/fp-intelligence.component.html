@@ -210,10 +210,12 @@
 	</ng-container>
 </div>
 <ng-template #noDataTemplate>
-	<span
-		class="text-center dbl-padding"
+	<div class="section col-12 text-center text-large text-dkgray-4">
+		<span
+		class="text-center dbl-padding-top"
 		[innerText]="'_NoResultsFound_' | i18n"
-	></span>
+		></span>
+	</div>
 </ng-template>
 <ng-template #loadingTemplate>
 	<cui-loader color="muted"></cui-loader>

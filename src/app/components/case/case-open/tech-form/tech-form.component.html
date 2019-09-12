@@ -19,7 +19,7 @@
 					formControlName="technology">
 				</cui-select>
 			</dd>
-			<dt [innerText]="'_SubTech_' | i18n"></dt>
+			<dt [innerText]="'_SubTech_' | i18n" data-auto-id="CaseOpenSubTech"></dt>
 			<dd>
 				<cui-select *ngIf="!loadingSubtech; else loadingTemplate;"
 					[items]="subtechOptions"
@@ -30,7 +30,7 @@
 			</dd>
 		</div>
 		<ng-container *ngTemplateOutlet="suggestedTechs"></ng-container>
-		<dt [innerText]="'_ProblemArea_' | i18n"></dt>
+		<dt [innerText]="'_ProblemArea_' | i18n" data-auto-id="CaseOpenProblemArea"></dt>
 		<dd>
 			<cui-select *ngIf="!loadingProblemAreas; else loadingTemplate;"
 				[items]="problemAreaOptions"
