@@ -115,6 +115,7 @@ export class LifecycleComponent implements OnDestroy {
 	@ViewChild('actionTemplate', { static: true }) private actionTemplate: TemplateRef<{ }>;
 	@ViewChild('titleTemplate', { static: true }) private titleTemplate: TemplateRef<{ }>;
 	@ViewChild('scrollModal', { static: false }) private scrollModalRef: ElementRef;
+	@ViewChild('lifecyclePanel', { static: true }) private lifecyclePanelRef: ElementRef;
 	public modalContent: TemplateRef<{ }>;
 	public modal = {
 		content: null,
@@ -130,6 +131,7 @@ export class LifecycleComponent implements OnDestroy {
 	public visibleContext: AtxSchema[];
 	public atxScheduleCardOpened = false;
 	public recommendedAtxScheduleCardOpened = false;
+	public panelBottomPaddingNeeded = false;
 	public sessionSelected: AtxSessionSchema;
 	public customerId: string;
 	private user: User;
@@ -1173,10 +1175,16 @@ export class LifecycleComponent implements OnDestroy {
 	 * Changes the atxMoreClicked flag and adds value to moreATXSelected
 	 * @param item ATXSchema
 	 * @param panel string
+	 * @param moreList HTMLElement (optional)
 	 */
-	 public atxMoreSelect (item: AtxSchema, panel: string) {
+	 public atxMoreSelect (item: AtxSchema, panel: string, moreList?: HTMLElement) {
 		 if (!this.atxMoreClicked && _.isEqual(panel, 'moreATXList')) {
 			this.atxScheduleCardOpened = false;
+			// deals with moreCoordinates not being re-evaluated when viewSessions
+			// is open on another more select instance
+			if (moreList) {
+				this.getMoreCoordinates(moreList, panel);
+			}
 			this.recommendedAtxScheduleCardOpened = false;
 			this.moreATXSelected = item;
 			this.atxMoreClicked = true;
@@ -1208,6 +1216,7 @@ export class LifecycleComponent implements OnDestroy {
 		this.moreYCoordinates = 0;
 		this.moreATXSelected = null;
 		this.atxMoreClicked = false;
+		this.panelBottomPaddingNeeded = false;
 		if (this.componentData.atx) {
 			this.componentData.atx.interested = null;
 		}
@@ -1289,6 +1298,10 @@ export class LifecycleComponent implements OnDestroy {
 				}
 			}
 		} else if (this.atxScheduleCardOpened && this.moreATXSelected) {
+			const panelHeight = this.lifecyclePanelRef.nativeElement.clientHeight;
+			if (_div.clientHeight + this.moreYCoordinates > panelHeight) {
+				this.panelBottomPaddingNeeded = true;
+			}
 			_div.style.left = `${this.moreXCoordinates + 30}px`;
 			_div.style.top = `${this.moreYCoordinates - _div.offsetHeight / 2 + 10}px`;
 			panel = 'panel panel--open';
