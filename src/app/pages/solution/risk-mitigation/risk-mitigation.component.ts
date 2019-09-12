@@ -5,6 +5,7 @@ import * as _ from 'lodash-es';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { LogService } from '@cisco-ngx/cui-services';
+import { AssetPanelLinkService } from '@services';
 import {
 	CrashHistoryDeviceCount,
 	RiskMitigationService,
@@ -15,6 +16,8 @@ import {
 	HighCrashRiskDeviceCount,
 	HighCrashRisk,
 	RiskAssets,
+	InventoryService,
+	AssetLinkInfo,
 } from '@sdp-api';
 import { ActivatedRoute } from '@angular/router';
 
@@ -42,9 +45,13 @@ export class RiskMitigationComponent {
 		page: 0,
 	};
 	public crashPagination: string;
+	public assetParams: InventoryService.GetAssetsParams;
+	public assetLinkInfo: AssetLinkInfo = Object.create({ });
+
 	public crashedAssetsCount = 0;
 	constructor (
 		private riskMitigationService: RiskMitigationService,
+		private assetPanelLinkService: AssetPanelLinkService,
 		private logger: LogService,
 		private route: ActivatedRoute,
 	) {
@@ -64,6 +71,7 @@ export class RiskMitigationComponent {
 	public selectedAsset: RiskAsset = { active: false };
 	public selectedFingerPrintdata: HighCrashRiskDevices;
 	public showAsset360 = false;
+	public isCrashHistoryLoading = false;
 	public highCrashRiskParams: HighCrashRiskPagination;
 	public crashHistoryParams: CrashHistoryDeviceCount;
 	public highCrashDeviceCount = 0;
@@ -150,7 +158,11 @@ export class RiskMitigationComponent {
 	 */
 	public getHighCrashesDeviceData () {
 		this.highCrashRiskAssetsGridDetails.tableOffset = this.highCrashRiskParams.page;
+		this.showAsset360 = false;
 		this.onlyCrashes = true;
+		if (_.get(this.filters, [0, 'selected'])) {
+			this.filters[0].selected = false;
+		}
 		this.getFingerPrintDeviceDetails(this.highCrashRiskParams);
 		const params = _.pick(_.cloneDeep(this.highCrashRiskParams), ['customerId']);
 		this.status.isLoading = true;
@@ -180,6 +192,7 @@ export class RiskMitigationComponent {
 	public getAllCrashesData () {
 		const params = _.pick(_.cloneDeep(this.highCrashRiskParams), ['customerId']);
 		this.onlyCrashes = false;
+		this.filters[0].selected = true;
 
 		return this.riskMitigationService.getAllCrashesData(params)
 			.pipe(
@@ -330,6 +343,7 @@ export class RiskMitigationComponent {
 	 */
 	private getCrashedDeviceHistory (asset) {
 		this.crashHistoryGridDetails.tableData = [];
+		this.isCrashHistoryLoading = true;
 		this.crashHistoryParams = {
 			customerId: _.cloneDeep(this.customerId),
 			neInstanceId: asset.neInstanceId,
@@ -340,9 +354,11 @@ export class RiskMitigationComponent {
 								takeUntil(this.destroy$),
 								map((results: any) => {
 									this.crashHistoryGridDetails.tableData = results.crashes;
+									this.isCrashHistoryLoading = false;
 								}),
 								catchError(err => {
 									this.crashHistoryGridDetails.tableData  = [];
+									this.isCrashHistoryLoading = true;
 									this.logger.error('Crash Assets : getCrashedDeviceHistory() ' +
 										`:: Error : (${err.status}) ${err.message}`);
 
@@ -478,13 +494,34 @@ export class RiskMitigationComponent {
 	/**
 	 * Function to capture the row click on grid
 	 * @param asset will have the device details
+	 * @returns Network element
 	 */
 	public onRowClicked (asset: any) {
 		this.showAsset360 = false;
 		if (asset.active) {
 			this.selectedAsset = asset;
 			this.getCrashedDeviceHistory(asset);
-		} else { this.selectedAsset.active = false; }
+			this.getassetLinkInfo(asset);
+		} else {
+			this.selectedAsset.active = false;
+		}
+	}
+	/**
+	 * Function to capture the row click on grid
+	 * @param asset will have the device details
+	 * @returns Network element
+	 */
+	public getassetLinkInfo (asset) {
+		this.assetParams = {
+			customerId: JSON.stringify(this.customerId),
+			serialNumber: [asset.serialNumber],
+		};
+
+		return this.assetPanelLinkService.getAssetLinkData(this.assetParams)
+			.subscribe(response => {
+				this.assetLinkInfo.asset = _.get(response, [0, 'data', 0]);
+				this.assetLinkInfo.element = _.get(response, [1, 'data', 0]);
+			});
 	}
 	/**
 	 * Determines whether fpdpanel close on click
@@ -501,6 +538,7 @@ export class RiskMitigationComponent {
 	public connectToFpDetails (asset: any) {
 		this.showFpDetails = true;
 		this.selectedFingerPrintdata = asset;
+		this.getassetLinkInfo(asset);
 	}
 
 	/**
@@ -547,6 +585,7 @@ export class RiskMitigationComponent {
 		this.showAsset360 = true;
 		this.selectedAsset.deviceName = this.selectedAsset.neName;
 	}
+
 	/**
 	 * Used to select which tab we want to view the data for
 	 * @param tab the tab we've clicked on
@@ -745,7 +784,6 @@ export class RiskMitigationComponent {
 	public clearFilters () {
 		this.clearAllFilters = !this.clearAllFilters;
 		_.each(this.filters, (clearFilter: Filter) => {
-			clearFilter.selected = false;
 			_.each(clearFilter.seriesData, (currentFilter: { selected: boolean; }) => {
 				currentFilter.selected = false;
 			});
@@ -769,7 +807,6 @@ export class RiskMitigationComponent {
 	public resetFilters () {
 		this.searchQueryInCrashGrid = '';
 		_.each(this.filters, (filter: Filter) => {
-			filter.selected = false;
 			_.each(filter.seriesData, (currentFilter: { selected: boolean; }) => {
 				currentFilter.selected = false;
 			});
