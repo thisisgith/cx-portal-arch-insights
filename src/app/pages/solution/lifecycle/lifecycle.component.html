@@ -200,7 +200,7 @@
 	<div id="learn-hover-panel-{{ autoid }}" class="panel" attr.data-auto-id="{{ autoid }}-HoverModal">
 		<div class="popover-tail"></div>
 		<div class="flex flex-column max-height">
-			<h6 class="learning-popover__title" [innerText]="title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
+			<h6 class="learning-popover__title title-line-clamp" [innerText]="title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
 			<div class="divider divider--compressed"></div>
 			<div *ngIf="item && item.fixedRating" class="half-margin-bottom">
 				<cui-rating [rating]="item.fixedRating" [alt]="true" [noClick]="true" size="small" attr.data-auto-id="{{ autoid }}-HoverModal-Rating"></cui-rating>
@@ -223,7 +223,7 @@
 				(click)="updateBookmark(item, 'ATX')"
 				attr.data-auto-id="{{ autoid }}-HoverModal-BookmarkRibbon">
 			</div>
-			<h6 class="atx-popover__title" [innerText]="title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
+			<h6 class="atx-popover__title title-line-clamp" [innerText]="title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
 			<div class="divider divider--compressed"></div>
 			<div class="atx-popover__description line-clamp" [innerText]="description" attr.data-auto-id="{{ autoid }}-HoverModal-Description"></div>
 		</div>
@@ -281,7 +281,7 @@
 				[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__white'"
 				attr.data-auto-id="{{ autoid }}-HoverModal-BookmarkRibbon">
 			</div>
-			<h6 class="acc-popover__title" [innerText]="title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
+			<h6 class="acc-popover__title title-line-clamp" [innerText]="title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
 			<div class="divider divider--compressed"></div>
 			<div class="line-clamp acc-popover__description" [innerText]="description" attr.data-auto-id="{{ autoid }}-HoverModal-Description"></div>
 			<div *ngIf="item && item.duration" class="learning-duration text-right text-muted flex-fluid half-margin-left" attr.data-auto-id="{{ autoid }}-HoverModal-Duration">
@@ -624,9 +624,9 @@
 					[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__white'"
 					attr.data-auto-id="{{ autoid }}-HoverModal-BookmarkRibbon">
 				</div>
-				<h6 class="sb-popover__title" [innerText]="item.title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
+				<h6 class="sb-popover__title title-line-clamp" [innerText]="item.title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
 				<div class="divider divider--compressed"></div>
-				<div class="line-clamp sb-popover__description" [innerText]="item.description" attr.data-auto-id="{{ autoid }}-HoverModal-Description"></div>
+				<div class="sb-desc-line-clamp sb-popover__description" [innerText]="item.description" attr.data-auto-id="{{ autoid }}-HoverModal-Description"></div>
 				<div class="sb-popover__footer">
 					<div>
 						<a class="no-link successbytes-type-link" data-auto-id="successlink" target="_blank" rel="noopener noreferrer" [href]="item.url">
