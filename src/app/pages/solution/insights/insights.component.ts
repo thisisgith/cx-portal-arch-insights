@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { RouteAuthService } from 'src/app/services';
-import { ActivatedRoute, Router } from '@angular/router';
-import * as _ from 'lodash-es';
+import { Router } from '@angular/router';
 import { UserResolve } from '@utilities';
 import { flatMap, map, catchError } from 'rxjs/operators';
 import { LogService } from '@cisco-ngx/cui-services';
@@ -14,18 +13,13 @@ import { of } from 'rxjs';
 	templateUrl: './insights.component.html',
 })
 export class InsightsComponent {
-	public customerId;
 	public hasPermission = false;
-	public cxLevel: number;
 	constructor (
 		private logger: LogService,
 		private routeAuthService: RouteAuthService,
-		private route: ActivatedRoute,
 		private router: Router,
-		private userResolve: UserResolve) {
-		const user = _.get(this.route, ['snapshot', 'data', 'user']);
-		this.cxLevel = _.get(user, ['service', 'cxLevel'], 0);
-	}
+		private userResolve: UserResolve,
+	) { }
 
 	/**
 	 * initialization hook
