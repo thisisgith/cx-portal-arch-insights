@@ -327,6 +327,8 @@
 	"_CP_MLVisualizationError_": "Asset Clusters data not found.",
 	"_CP_MLVisualizationTitle": "Asset Clusters by Similarities",
 	"_CP_Mode_": "Mode",
+	"_CP_AssetPlaceholder_": "Select an Asset",
+	"_CP_ProductFamilyPlaceholder_": "Select a Product Family",
 	"_CP_Search_Asset_": "Search Asset",
 	"_CP_SerialNumber_": "Serial Number",
 	"_CP_SimilarAssets_": "Similar Assets",
