@@ -1,7 +1,7 @@
 <header class="header header--compressed">
 	<div class="header-bar container">
 		<div class="header-bar__main">
-			<div class="header-bar__heading half-padding">
+			<div class="header-bar__heading base-padding-left">
 				<h2 [innerText]="'_AdminSettings_' | i18n"></h2>
 			</div>
 		</div>
@@ -14,7 +14,7 @@
 		</div>
 	</div>
 </header>
-<nav class="sidebar sidebar--mini sidebar--dkgray" data-auto-id="settings.sidebar">
+<nav class="sidebar sidebar--mini" data-auto-id="settings.sidebar">
 	<ul>
 		<li class="sidebar__item"
 			[ngClass]="{ selected: routerPath === 'policies' }"
@@ -24,7 +24,7 @@
 				[routerLink]="['/admin', 'policies']"
 			>
 				<span class="icon-insights"></span>
-				<span [innerText]="'_Policies_' | i18n"></span>
+				<span class="sidebar__item__label" [innerText]="'_Policies_' | i18n"></span>
 			</a>
 		</li>
 		<li class="sidebar__item"
@@ -35,11 +35,11 @@
 				[routerLink]="['/admin', 'settings']"
 			>
 				<span class="icon-account"></span>
-				<span [innerText]="'_System_' | i18n"></span>
+				<span class="sidebar__item__label" [innerText]="'_System_' | i18n"></span>
 			</a>
 		</li>
 	</ul>
 </nav>
-<div class="admin-container base-padding">
+<div class="admin-container">
 	<ng-content></ng-content>
 </div>
