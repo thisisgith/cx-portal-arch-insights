@@ -101,13 +101,16 @@
 			</span>
 		</div>
 	</div>
-	<div class="base-margin-left" *ngIf="currentPitstop && currentPitstop?.pitstopActions?.length">
+	<div class="pitstop-checklist base-margin-left" 
+		*ngIf="currentPitstop && currentPitstop?.pitstopActions?.length">
 		<div class="divider divider--compressed"></div>
-		<div class="base-margin-top">
-			<span class="qtr-padding-bottom icon-flagged"></span>
-			<span class="text-uppercase qtr-padding-left" [innerText]="'_CheckList_' | i18n"></span>
+		<div class="pitstop-checklist__title base-margin-top cx-text-secondary">
+			<div class="pitstop-checklist__flag"
+				inlineSVG="assets/img/solutions/icon-checkerflag.svg"></div>
+			<div class="text-uppercase half-padding-left" [innerText]="'_CheckList_' | i18n"></div>
 		</div>
-		<p class="text-small no-margin-top" [innerText]="'_ChecklistDesc_' | i18n"></p>
+		<p class="text-small no-margin-top half-margin-bottom cx-text-light-gray" 
+			[innerText]="'_ChecklistDesc_' | i18n"></p>
 		<div *ngFor="let action of currentPitActionsWithStatus" class="form-group form-group select" data-auto-id="pitstopAction">
 			<div class="actionname row qtr-padding-top qtr-padding-bottom" [ngClass]="{selected: action.selected}">
 				<div class="col-md-1">
