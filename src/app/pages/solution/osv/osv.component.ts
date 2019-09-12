@@ -152,6 +152,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 
 		const totalAssetsFilter = _.find(this.allFilters, { key: 'totalAssets' });
 		const assetTypeFilter = _.find(this.allFilters, { key: 'assetType' });
+
 		return this.osvService.getSummary({ customerId: this.customerId })
 			.pipe(
 				map((response: SummaryResponse) => {
@@ -337,6 +338,27 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 			window.localStorage.setItem('doNotShowSGInfo', 'true');
 		} else {
 			window.localStorage.setItem('doNotShowSGInfo', 'false');
+		}
+	}
+
+	/**
+	 * Called on 360 details panel close button click
+	 */
+	public onPanelClose () {
+		_.set(this.selectedAsset, 'rowSelected', false);
+		this.selectedAsset = null;
+
+		_.set(this.selectedSoftwareGroup, 'rowSelected', false);
+		this.selectedSoftwareGroup = null;
+	}
+
+	/**
+	 * Handles the hidden event from details-panel
+	 * @param hidden false if details slideout is open
+	 */
+	public handleHidden (hidden: boolean) {
+		if (hidden) {
+			this.onPanelClose();
 		}
 	}
 }

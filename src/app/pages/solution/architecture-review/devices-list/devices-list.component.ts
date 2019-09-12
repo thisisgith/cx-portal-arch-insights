@@ -119,6 +119,7 @@ export class DevicesListComponent implements OnInit, OnChanges {
 			],
 			singleSelect: true,
 			striped: false,
+			wrapText: true,
 		});
 	}
 
@@ -198,7 +199,19 @@ export class DevicesListComponent implements OnInit, OnChanges {
 	 * in order to Close device View
 	 */
 	public onPanelClose () {
+		_.set(this.selectedAsset, 'active', false);
+		_.set(this.deviceDetails, 'active', false);
 		this.deviceDetails = null;
+	}
+
+	/**
+	 * Handles the hidden event from details-panel
+	 * @param hidden false if details slideout is open
+	 */
+	public handleHidden (hidden: boolean) {
+		if (hidden) {
+			this.onPanelClose();
+		}
 	}
 
 	/**
@@ -206,6 +219,7 @@ export class DevicesListComponent implements OnInit, OnChanges {
 	 * in order to Close Device View
 	 */
 	public closeDeviceView () {
+		_.set(this.selectedAsset, 'active', false);
 		this.selectedAsset = false;
 	}
 

@@ -979,8 +979,18 @@ tr.td-row td {
 #viewAtxPanel {
 	padding: 25px 0 26px 27px;
 
-	.popover-tail {
-		@extend %popover-tail--left;
+	&.panel--open,
+	&.cardpanel--open {
+		.popover-tail {
+			@extend %popover-tail--left;
+		}
+	}
+
+	&.listpanel--open,
+	&.cardpanel--openright {
+		.popover-tail {
+			@extend %popover-tail;
+		}
 	}
 
 	&::after {

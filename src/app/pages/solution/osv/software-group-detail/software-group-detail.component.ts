@@ -33,6 +33,7 @@ import { CuiTableOptions, CuiModalService } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { DatePipe } from '@angular/common';
 import { CancelConfirmComponent } from '../cancel-confirm/cancel-confirm.component';
+import { DetailsPanelStackService } from '@services';
 
 /**
  * SoftwareGroupDetail Component
@@ -48,6 +49,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	@ViewChild('versionTemplate', { static: true })
 	private versionTemplate: TemplateRef<{ }>;
 	@Input() public tabIndex;
+	@Output('close') public close = new EventEmitter<boolean>();
 
 	public status = {
 		profileRecommendations: true,
@@ -95,6 +97,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 		private osvService: OSVService,
 		private route: ActivatedRoute,
 		private cuiModalService: CuiModalService,
+		private detailsPanelStackService: DetailsPanelStackService,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
@@ -165,6 +168,16 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 			.subscribe(() => {
 				this.logger.debug('software group detail: loadData()::Done Loading');
 			});
+	}
+
+	/**
+	 * Handles the hidden event from details-panel
+	 * @param hidden false if details slideout is open
+	 */
+	public handleHidden (hidden: boolean) {
+		if (hidden) {
+			this.close.emit(true);
+		}
 	}
 
 	/**
