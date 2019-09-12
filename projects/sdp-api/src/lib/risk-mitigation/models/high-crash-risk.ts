@@ -1,6 +1,7 @@
 /* tslint:disable */
 export interface HighCrashRiskDevices {
 
+	active: boolean;
 	/**
    * Address of the device
    */
