@@ -6,11 +6,12 @@ import { CbpRuleViolationModule } from './cbp-rule-violation/cbp-rule-violation.
 import {
 	DevicesWithExceptionsModule } from './devices-with-exceptions/devices-with-exceptions.module';
 import { ChartModule } from 'angular-highcharts';
-import { CuiTabsModule, CuiSpinnerModule , CuiTabsNavModule } from '@cisco-ngx/cui-components';
+import { CuiTabsModule, CuiSpinnerModule, CuiTabsNavModule } from '@cisco-ngx/cui-components';
 import { BarChartModule, VisualFilterBarModule } from '@components';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { environment } from '@environment';
 import { ArchitectureModules } from '@sdp-api';
+import { InsightTabsModule } from 'src/app/components/insight-tabs/insight-tabs.module';
 
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
@@ -44,6 +45,7 @@ const childRoutes: Routes = [
 		CuiSpinnerModule,
 		I18nPipeModule,
 		VisualFilterBarModule,
+		InsightTabsModule,
 	],
 })
 export class ArchitectureModule { }
