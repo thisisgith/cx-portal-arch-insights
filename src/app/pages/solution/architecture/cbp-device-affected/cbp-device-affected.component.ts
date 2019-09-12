@@ -171,7 +171,7 @@ export class CbpDeviceAffectedComponent implements OnInit, OnChanges {
 	 * Used for Opening the Asset 360 View the data for table
 	 * @param item - The Item to which Asset 360 needs to shown
 	 */
-	public openAsset360View (item: IAsset) {
+	public openAssetDetailsView (item: IAsset) {
 
 		this.assetParams = {
 			customerId: this.params.customerId,
