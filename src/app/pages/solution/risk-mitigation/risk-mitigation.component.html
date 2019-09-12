@@ -354,3 +354,9 @@
 <ng-template #riskScoreTemplate let-item="celldata">
 	<span title="{{ item?.riskScore }}" [innerHTML]="item.riskScore"></span>
 </ng-template>
+<ng-template #resetReasonTemplate let-item="celldata">
+	<span title="{{ item?.resetReason }}" [innerHTML]="item.resetReason"></span>
+</ng-template>
+<ng-template #timeStampTemplate let-item="celldata">
+	<span title="{{ item?.timeStamp }}" [innerHTML]="item.timeStamp"></span>
+</ng-template>

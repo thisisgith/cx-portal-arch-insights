@@ -71,13 +71,17 @@ export class RiskMitigationComponent {
 	@ViewChild('neNameTemplate', { static: true }) public neNameTemplate: TemplateRef<string>;
 	@ViewChild('productIdTemplate', { static: true }) public productIdTemplate: TemplateRef<string>;
 	@ViewChild('productFamilyTemplate', { static: true })
-	 public productFamilyTemplate: TemplateRef<string>;
-	 @ViewChild('deviceNameTemplate', { static: true })
-	  public deviceNameTemplate: TemplateRef<string>;
-	  @ViewChild('softwareTypeTemplate', { static: true })
-	  public softwareTypeTemplate: TemplateRef<string>;
-	  @ViewChild('softwareVersionTemplate', { static: true })
-	  public softwareVersionTemplate: TemplateRef<string>;
+		public productFamilyTemplate: TemplateRef<string>;
+	@ViewChild('deviceNameTemplate', { static: true })
+		public deviceNameTemplate: TemplateRef<string>;
+	@ViewChild('softwareTypeTemplate', { static: true })
+		public softwareTypeTemplate: TemplateRef<string>;
+	@ViewChild('resetReasonTemplate', { static: true })
+		public resetReasonTemplate: TemplateRef<string>;
+	@ViewChild('softwareVersionTemplate', { static: true })
+		public softwareVersionTemplate: TemplateRef<string>;
+	@ViewChild('timeStampTemplate', { static: true })
+		public timeStampTemplate: TemplateRef<string>;
 
 	public openPanel = false;
 	public fullscreen = false;
@@ -630,11 +634,13 @@ export class RiskMitigationComponent {
 					name: I18n.get('_RMRessetReason_'),
 					sortable: false,
 					width: '250px',
+					template: this.resetReasonTemplate,
 				},
 				{
 					key: 'timeStamp',
 					name: I18n.get('_RMTimeStamp_'),
 					sortable: false,
+					template: this.timeStampTemplate,
 				}],
 		});
 		this.crashesAssetsGridOptions = new CuiTableOptions({
