@@ -1,6 +1,6 @@
 import {
 	Component,
-	OnInit,
+	OnChanges,
 	Input,
 	SimpleChanges,
 } from '@angular/core';
@@ -24,22 +24,15 @@ interface SeriesData {
 	template: '<div [chart]="chart"></div>',
 })
 
-export class BulletChartComponent implements OnInit {
+export class BulletChartComponent implements OnChanges {
 	public chart: Chart;
+	@Input() public loading;
 	@Input() public seriesData: SeriesData;
-	/**
-	 * Component initialization
-	 */
-	public ngOnInit () {
-		if (this.seriesData) {
-			this.buildGraph();
-		}
-	}
 
 	/**
 	 * Initializes the bullet chart
 	 */
-	public buildGraph () {
+	private buildGraph () {
 		this.chart = new Chart({
 			chart: {
 				height: 110,
@@ -78,10 +71,10 @@ export class BulletChartComponent implements OnInit {
 						target: this.seriesData.target,  // The target value of a point
 						y: this.seriesData.y,
 					}],
-					enableMouseTracking: true,
+					enableMouseTracking: !this.loading,
 					minPointLength: 5,
 					name: '',
-					opacity: 1,
+					opacity: this.loading ? 0.5 : 1,
 					showInLegend: false,
 					type: 'bullet',
 				},
@@ -106,10 +99,29 @@ export class BulletChartComponent implements OnInit {
 	 * @param changes The changes found
 	 */
 	public ngOnChanges (changes: SimpleChanges) {
+		const loadingInfo = _.get(changes, 'loading',
+			{ currentValue: false, firstChange: false, previousValue: false });
 		const seriesInfo = _.get(changes, 'seriesData',
-			{ currentValue: null, firstChange: false });
-		if (seriesInfo.currentValue && !seriesInfo.firstChange) {
+			{ currentValue: null, firstChange: false, previousValue: null });
+		if (!this.chart || !seriesInfo.previousValue) {
 			this.buildGraph();
+		} else {
+			if (loadingInfo.currentValue !== loadingInfo.previousValue) {
+				this.chart.ref.series[0].update(<any> {
+					enableMouseTracking: !loadingInfo.currentValue,
+					opacity: loadingInfo.currentValue ? 0.5 : 1,
+				});
+			}
+			if (seriesInfo.currentValue !== seriesInfo.previousValue) {
+				this.chart.ref.xAxis[0].update({ categories:
+				[`<span style="font-size: 13px; font-weight: bold">
+				${seriesInfo.currentValue.xLabel}</span>`] }, false);
+				const data = [{
+					target: seriesInfo.currentValue.target,
+					y: seriesInfo.currentValue.y,
+				}];
+				this.chart.ref.series[0].setData(data);
+			}
 		}
 	}
 }
