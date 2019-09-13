@@ -1,4 +1,10 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import {
+	Component,
+	OnInit,
+	TemplateRef,
+	ViewChild,
+	OnDestroy,
+} from '@angular/core';
 import { LogService } from '@cisco-ngx/cui-services';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
@@ -18,7 +24,12 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { Subject, of } from 'rxjs';
 import { UserResolve } from '@utilities';
 import { takeUntil, catchError } from 'rxjs/operators';
-import { ExportCsvService, AssetPanelLinkService } from '@services';
+import {
+	ExportCsvService,
+	AssetPanelLinkService,
+	DetailsPanelStackService,
+} from '@services';
+import { Panel360 } from '@interfaces';
 
 /**
  * AfmComponet which shows in Insight view for Fault Management tab
@@ -31,7 +42,7 @@ import { ExportCsvService, AssetPanelLinkService } from '@services';
 	styleUrls: ['./afm.component.scss'],
 	templateUrl: './afm.component.html',
 })
-export class AfmComponent implements OnInit {
+export class AfmComponent implements OnInit, OnDestroy, Panel360 {
 
 	public showAlarmDetails = false;
 	public selectedAsset: Alarm;
@@ -62,7 +73,7 @@ export class AfmComponent implements OnInit {
 	private destroy$ = new Subject();
 	private exportFileName: string;
 	public assetParams: InventoryService.GetAssetsParams;
-	public assetLinkInfo: AssetLinkInfo;
+	public assetLinkInfo: AssetLinkInfo = Object.create({ });
 
 	public searchOptions = {
 		debounce: 1500,
@@ -105,9 +116,9 @@ export class AfmComponent implements OnInit {
 		private afmService: AfmService,
 		private userResolve: UserResolve,
 		private assetPanelLinkService: AssetPanelLinkService,
+		private detailsPanelStackService: DetailsPanelStackService,
 		private exportCsvService: ExportCsvService) {
 		this.searchParams = new Object();
-		this.assetLinkInfo = Object.create({ });
 		this.searchParams.pageNumber = 1;
 		this.searchParams.pageSize = this.tableLimit;
 		this.searchParams.firstTimeLoading = true;
@@ -159,6 +170,17 @@ export class AfmComponent implements OnInit {
 	public ngOnInit () {
 		this.buildTable();
 		this.allAlarmFilter();
+	}
+
+	/**
+	 * Closes all details panels
+	 */
+	public onAllPanelsClose () {
+		this.detailsPanelStackService.reset();
+		this.showAlarmDetails = false;
+		if (this.eventStatus) {
+			this.allAlarmFilter();
+		}
 	}
 
 	/**
@@ -384,21 +406,16 @@ export class AfmComponent implements OnInit {
 			this.searchFilter();
 		}
 	}
-	/**
-	 * It will close the alarm panel
-	 */
-	public onAlarmPanelClose () {
-		this.showAlarmDetails = false;
-		if (this.eventStatus) {
-			this.allAlarmFilter();
-		}
-	}
 
 	/**
 	 * Create alarm panel and create table
 	 * @param alarm alarmdata
 	 */
 	public connectToAlarmDetails (alarm: Alarm) {
+		if (this.showAlarmDetails) {
+			this.detailsPanelStackService.reset();
+		}
+		this.detailsPanelStackService.push(this);
 		this.syslogEvent = alarm.syslogMsg;
 		this.selectedAsset = null;
 		this.searchParams.alarmId = alarm.alarmId;
@@ -451,6 +468,13 @@ export class AfmComponent implements OnInit {
 	}
 
 	/**
+	 * Removes the details panel from the stack when the back button is pressed
+	 */
+	public onPanelBack () {
+		this.detailsPanelStackService.pop();
+	}
+
+	/**
 	 * to close the panel
 	 */
 	public onPanelClose () {
@@ -458,7 +482,7 @@ export class AfmComponent implements OnInit {
 	}
 
 	/**
-	 * Exoport events into CSV file need to implement
+	 * Exoport events into CSV file need to impl ement
 	 */
 	public exportAllEvents () {
 		this.searchParams.firstTimeLoading = false;

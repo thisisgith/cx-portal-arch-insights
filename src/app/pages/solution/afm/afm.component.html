@@ -1,12 +1,12 @@
+<div  *ngIf="afmConnectionStatus?.status === 'Error'">
+	<ng-container *ngTemplateOutlet="serverError"></ng-container>
+</div>
 <div class="panel panel--bordered base-padding-left base-padding-top no-padding-bottom">
 	<ng-container *ngTemplateOutlet="visualFilters"></ng-container>
 </div>
 <div class="panel panel--bordered base-margin-top">
-	<ng-container>
-		<ng-container *ngTemplateOutlet="filterBar"></ng-container>
-		<div class="qtr-margin-top"></div>
-	</ng-container>
-	<div class="divider qtr-margin-top"></div>
+	<ng-container *ngTemplateOutlet="filterBar"></ng-container>
+	<div *ngIf="timeRangeFiltered" class="divider qtr-margin-top"></div>
 	<ng-container *ngTemplateOutlet="searchFilters"></ng-container>
 	<div class="divider qtr-margin-top"></div>
 	<ng-container *ngTemplateOutlet="syslogContent"></ng-container>
@@ -164,11 +164,6 @@
 			</div>
 		</ng-template>
 	</visual-filter-bar>
-	<div class="divider qtr-margin-top visual-filter-divider" *ngIf="selectedFilters?.length > 0"></div>
-	<ng-container  *ngIf="afmConnectionStatus?.status === 'Error'">
-		<div class="divider qtr-margin-top qtr-margin-bottom visual-filter-divider"></div>
-		<ng-container *ngTemplateOutlet="serverError"></ng-container>
-	</ng-container>
 	<div *ngIf="filterSpinner" class="base-margin-bottom">
 		<cui-spinner></cui-spinner>
 	</div>
@@ -184,7 +179,7 @@
 </ng-template>
 
 <ng-template #serverError>
-	<div *ngIf="statusErrorMessage?.length > 0">
+	<div *ngIf="statusErrorMessage?.length > 0" class="qtr-margin-top qtr-margin-bottom">
 		<div class="alert fade-and-slide-top text-left alert--danger" >
 			<div class="alert__icon icon-error-outline"></div>
 				<ng-container>
@@ -197,7 +192,7 @@
 </ng-template>
 
 <ng-template #filterBar>
-	<div *ngIf="timeRangeFiltered" class="row flex-center-vertical half-margin-top base-margin-bottom">
+	<div *ngIf="timeRangeFiltered" class="row flex-center-vertical half-margin-top">
 		<div class="col-md-11 flex">
 			<span class="flex flex-center-vertical base-margin-left half-margin-right filter-bar__title"
 				[innerText]="'_AfmFiltered_'| i18n"></span>
@@ -222,7 +217,7 @@
 </ng-template>
 
 <ng-template #searchFilters>
-	<div class="row">
+	<div class="row qtr-margin-top">
 		<div class="col-md-9 flex flex-fill">
 			<div class="flex-center-vertical">
 				<span
@@ -328,7 +323,8 @@
 	id="details-panel"
 >
 	<details-panel-header
-		(close)="onAlarmPanelClose()"
+		(close)="onAllPanelsClose()"
+		(back)="onPanelBack()"
 		[(fullscreen)]="fullscreen"
 		[fullscreenToggle]="false"
 	>
