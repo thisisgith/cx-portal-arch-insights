@@ -1460,7 +1460,7 @@ polygon {
 .card-view {
 	height: 100%;
 	max-height: -webkit-fill-available;
-	overflow: scroll;
+	overflow: auto;
 }
 
 .list-view table {
