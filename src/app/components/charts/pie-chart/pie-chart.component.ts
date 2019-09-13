@@ -36,6 +36,7 @@ const filterColors8Max = [
 @Component({
 	selector: 'pie-chart',
 	template: '<div [chart]="chart"></div>',
+	styleUrls: ['../tooltip/tooltip.scss'],
 })
 export class PieChartComponent implements OnChanges {
 
@@ -59,6 +60,11 @@ export class PieChartComponent implements OnChanges {
 		}));
 
 		this.chart = new Chart({
+			tooltip: {
+				useHTML: true,
+				backgroundColor: null,
+				borderWidth: 0,
+			},
 			chart: {
 				events: {
 					load: () => {

@@ -22,6 +22,7 @@ interface SeriesData {
 @Component({
 	selector: 'bullet-chart',
 	template: '<div [chart]="chart"></div>',
+	styleUrls: ['../tooltip/tooltip.scss'],
 })
 
 export class BulletChartComponent implements OnChanges {
@@ -90,7 +91,12 @@ export class BulletChartComponent implements OnChanges {
 			yAxis: {
 				gridLineWidth: 0,
 				title: null,
-			  },
+			},
+			tooltip: {
+				useHTML: true,
+				backgroundColor: null,
+				borderWidth: 0,
+			},
 		});
 	}
 
