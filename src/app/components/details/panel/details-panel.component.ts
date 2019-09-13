@@ -1,4 +1,4 @@
-import { Component, ContentChild, Input, HostBinding, HostListener, Output, EventEmitter } from '@angular/core';
+import { Component, ContentChild, Input, HostListener, Output, EventEmitter } from '@angular/core';
 import { DetailsPanelHeaderComponent } from './header/header.component';
 
 /**
@@ -8,6 +8,7 @@ import { DetailsPanelHeaderComponent } from './header/header.component';
 	host: {
 		'[class.fullscreen]': 'fullscreen',
 		'[class.hidden]': 'hidden',
+		'[style.minWidth]': 'minWidth',
 	},
 	selector: 'details-panel',
 	styleUrls: ['./details-panel.component.scss'],
@@ -19,7 +20,6 @@ export class DetailsPanelComponent {
 	@Output('hiddenChange') public hiddenChange = new EventEmitter<boolean>();
 	@ContentChild(DetailsPanelHeaderComponent, { static: true })
 		public headerComponent: DetailsPanelHeaderComponent;
-	@HostBinding('style.minWidth')
 	@Input() public minWidth;
 
 	/**
