@@ -1,0 +1,27 @@
+{
+    "solution": "IBN",
+    "usecase": "Campus Network Assurance",
+    "pitstop": null,
+    "items": [
+        {
+            "title": "Install the Appliance",
+            "description": "Install the Appliance",
+            "duration": "15 minutes",
+            "type": "Web Page",
+            "url": "http://cisco.lookbookhq.com/ibn-customer-portal/install-the-appliance?utm_campaign=IBN&utm_content=Guide&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Getting Started",
+            "bookmark": false,
+            "successByteId": "SB1"
+        },
+        {
+            "title": "Configure the Appliance",
+            "description": "Configure the Appliance",
+            "duration": "15 minutes",
+            "type": "Web Page",
+            "url": "http://cisco.lookbookhq.com/ibn-customer-portal/configure-the-appliance?utm_campaign=IBN&utm_content=Guide&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Getting Started",
+            "bookmark": false,
+            "successByteId": "SB2"
+        }
+    ]
+}

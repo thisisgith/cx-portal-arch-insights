@@ -62,7 +62,26 @@ export class RiskMitigationComponent {
 	@ViewChild('contextualMenuTemplate',
 	{ static: true }) private contextualMenuTemplate: TemplateRef<string>;
 	@ViewChild('cardColors', { static: true }) public cardColorsTemplate: TemplateRef<string>;
-	@ViewChild('riskScore', { static: true }) public riskScoreTemplate: TemplateRef<string>;
+	@ViewChild('lastOccuranceTemplate', { static: true })
+	public lastOccuranceTemplate: TemplateRef<string>;
+	@ViewChild('firstOccuranceTemplate', { static: true })
+	 public firstOccuranceTemplate: TemplateRef<string>;
+	@ViewChild('swVersionTemplate', { static: true }) public swVersionTemplate: TemplateRef<string>;
+	@ViewChild('riskScoreTemplate', { static: true }) public riskScoreTemplate: TemplateRef<string>;
+	@ViewChild('neNameTemplate', { static: true }) public neNameTemplate: TemplateRef<string>;
+	@ViewChild('productIdTemplate', { static: true }) public productIdTemplate: TemplateRef<string>;
+	@ViewChild('productFamilyTemplate', { static: true })
+		public productFamilyTemplate: TemplateRef<string>;
+	@ViewChild('deviceNameTemplate', { static: true })
+		public deviceNameTemplate: TemplateRef<string>;
+	@ViewChild('softwareTypeTemplate', { static: true })
+		public softwareTypeTemplate: TemplateRef<string>;
+	@ViewChild('resetReasonTemplate', { static: true })
+		public resetReasonTemplate: TemplateRef<string>;
+	@ViewChild('softwareVersionTemplate', { static: true })
+		public softwareVersionTemplate: TemplateRef<string>;
+	@ViewChild('timeStampTemplate', { static: true })
+		public timeStampTemplate: TemplateRef<string>;
 
 	public openPanel = false;
 	public fullscreen = false;
@@ -630,11 +649,13 @@ export class RiskMitigationComponent {
 					name: I18n.get('_RMRessetReason_'),
 					sortable: false,
 					width: '250px',
+					template: this.resetReasonTemplate,
 				},
 				{
 					key: 'timeStamp',
 					name: I18n.get('_RMTimeStamp_'),
 					sortable: false,
+					template: this.timeStampTemplate,
 				}],
 		});
 		this.crashesAssetsGridOptions = new CuiTableOptions({
@@ -644,21 +665,25 @@ export class RiskMitigationComponent {
 					key: 'neName',
 					name: I18n.get('_RMAsset_'),
 					sortable: true,
+					template: this.neNameTemplate,
 				},
 				{
 					key: 'productId',
 					name: I18n.get('_RMProductId_'),
 					sortable: true,
+					template: this.productIdTemplate,
 				},
 				{
 					key: 'productFamily',
 					name: I18n.get('_RMProductFamily_'),
 					sortable: true,
+					template: this.productFamilyTemplate,
 				},
 				{
 					key: 'swVersion',
 					name: I18n.get('_RMSoftwareVersion_'),
 					sortable: true,
+					template: this.swVersionTemplate,
 				},
 				{
 					key: 'crashCount',
@@ -669,11 +694,13 @@ export class RiskMitigationComponent {
 					key: 'firstOccurrence',
 					name: I18n.get('_RMFirstOccurance_'),
 					sortable: false,
+					template: this.firstOccuranceTemplate,
 				},
 				{
 					key: 'lastOccurrence',
 					name: I18n.get('_RMLastOccurance_'),
 					sortable: false,
+					template: this.lastOccuranceTemplate,
 				},
 			],
 			dynamicData: false,
@@ -688,26 +715,31 @@ export class RiskMitigationComponent {
 					key: 'deviceName',
 					name: I18n.get('_RMAsset_'),
 					sortable: true,
+					template: this.deviceNameTemplate,
 				},
 				{
 					key: 'productId',
 					name: I18n.get('_RMProductId_'),
 					sortable: true,
+					template: this.productIdTemplate,
 				},
 				{
 					key: 'productFamily',
 					name: I18n.get('_RMProductFamily_'),
 					sortable: true,
+					template: this.productFamilyTemplate,
 				},
 				{
 					key: 'softwareType',
 					name: I18n.get('_RMSoftwareType_'),
 					sortable: true,
+					template: this.softwareTypeTemplate,
 				},
 				{
 					key: 'softwareVersion',
 					name: I18n.get('_RMSoftwareVersion_'),
 					sortable: true,
+					template: this.softwareVersionTemplate,
 				},
 				{
 					key: 'riskScore',
