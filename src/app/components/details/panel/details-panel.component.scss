@@ -3,18 +3,33 @@
 
 $default-text-color: #394454;
 
-:host ::ng-deep {
-	.tabs {
-		box-shadow: 0 -2px 0 $light-gray-3 inset;
+:host {
+	::ng-deep {
+		.tabs {
+			box-shadow: 0 -2px 0 $light-gray-3 inset;
 
-		> li {
-			margin: 0 50px 0 0;
+			> li {
+				margin: 0 50px 0 0;
 
-			> a {
-				text-transform: uppercase;
-				font-size: 13px;
-				padding-bottom: 5px !important;
-				padding-top: 5px !important;
+				> a {
+					text-transform: uppercase;
+					font-size: 13px;
+					padding-bottom: 5px !important;
+					padding-top: 5px !important;
+
+					&:hover {
+						color: $primary;
+						transition: box-shadow 0.2s linear;
+						box-shadow: 0 -2px 0 $primary inset;
+					}
+				}
+
+				&.active {
+					> a {
+						color: $primary;
+						box-shadow: 0 -2px 0 $primary inset;
+					}
+				}
 
 				&:hover {
 					color: $primary;
@@ -22,41 +37,54 @@ $default-text-color: #394454;
 					box-shadow: 0 -2px 0 $primary inset;
 				}
 			}
-
-			&.active {
-				> a {
-					color: $primary;
-					box-shadow: 0 -2px 0 $primary inset;
-				}
-			}
-
-			&:hover {
-				color: $primary;
-				transition: box-shadow 0.2s linear;
-				box-shadow: 0 -2px 0 $primary inset;
-			}
 		}
-	}
 
-	bottom: 0;
-	width: 50vw;
-	position: fixed;
-	z-index: 1000;
-	height: calc(100vh - 55px);
-	right: 0;
-	transition: width 0.25s, transform 0.25s;
-	box-shadow: $base-box-shadow;
+		bottom: 0;
+		width: 50vw;
+		position: fixed;
+		z-index: 1000;
+		height: calc(100vh - 55px);
+		right: 0;
+		transition: width 0.25s, transform 0.25s;
+		box-shadow: $base-box-shadow;
 
-	.panel--no-padding {
-		padding: 0;
-	}
+		.panel--no-padding {
+			padding: 0;
+		}
 
-	.icon--mid {
-		font-size: 24px;
-	}
+		.icon--mid {
+			font-size: 24px;
+		}
 
-	.btn.btn--tiny {
-		height: 24px;
+		.btn.btn--tiny {
+			height: 24px;
+		}
+
+		> .scroll {
+			overflow: scroll;
+		}
+
+		> .panel {
+			height: 100%;
+		}
+
+		.map-box {
+			border-style: solid;
+			border-width: 1px;
+			border-color: rgb(215, 215, 215);
+			color: rgb(215, 215, 215);
+		}
+
+		.map-box-content {
+			border-right-style: solid;
+			border-left-style: solid;
+			border-width: 1px;
+			height: 100px;
+		}
+
+		.float-left {
+			float: left;
+		}
 	}
 
 	&.hidden {
@@ -64,33 +92,7 @@ $default-text-color: #394454;
 	}
 
 	&.fullscreen:not(.hidden) {
-		width: 100vw;
+		width: 100vw !important;
 		transform: translateX(0);
-	}
-
-	> .scroll {
-		overflow: scroll;
-	}
-
-	> .panel {
-		height: 100%;
-	}
-
-	.map-box {
-		border-style: solid;
-		border-width: 1px;
-		border-color: rgb(215, 215, 215);
-		color: rgb(215, 215, 215);
-	}
-
-	.map-box-content {
-		border-right-style: solid;
-		border-left-style: solid;
-		border-width: 1px;
-		height: 100px;
-	}
-
-	.float-left {
-		float: left;
 	}
 }
