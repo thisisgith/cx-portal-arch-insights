@@ -30,6 +30,7 @@ import { PieChartModule,
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RccDataModule } from '@sdp-api';
 import { environment } from '@environment';
+import { InsightTabsModule } from 'src/app/components/insight-tabs/insight-tabs.module';
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
  */
@@ -72,6 +73,7 @@ const childRoutes: Routes = [
 		CuiSpinnerModule,
 		VisualFilterBarModule,
 		AssetDetailsModule,
+		InsightTabsModule,
 	],
 })
 export class RccModule { }

@@ -48,6 +48,11 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 
 :host > .panel {
 	background: #f5f6f9;
+	padding-bottom: 40px;
+
+	&--bottom-padding {
+		padding-bottom: 120px;
+	}
 }
 
 .more-scroll {

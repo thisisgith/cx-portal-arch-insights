@@ -18,6 +18,7 @@ import { AssetDetailsModule } from '../../../components/details/asset/asset-deta
 import { AssetDetailsHeaderModule } from '../../../components/details/asset/header/header.module';
 import { ColumnChartModule, VisualFilterBarModule } from '@components';
 import { AfmDetailsModule } from './afm-details/afm-details.module';
+import { InsightTabsModule } from 'src/app/components/insight-tabs/insight-tabs.module';
 
 /** rootUrl for rest call */
 const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
@@ -55,6 +56,7 @@ const childRoutes: Routes = [
 		ColumnChartModule,
 		AfmDetailsModule,
 		VisualFilterBarModule,
+		InsightTabsModule,
 	],
 })
 
