@@ -180,6 +180,14 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	}
 
 	/**
+	 * Directs the user to the lifecycles facet
+	 */
+	public goHome () {
+		const lifecycleFacet = _.find(this.facets, { key: 'lifecycle' });
+		this.selectFacet(lifecycleFacet, true);
+	}
+
+	/**
 	 * Change the selected fact
 	 * @param facet the facet we've clicked on
 	 * @param navigate whether to adjust the route params

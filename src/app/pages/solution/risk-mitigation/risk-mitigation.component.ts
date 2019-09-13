@@ -521,7 +521,8 @@ export class RiskMitigationComponent {
 			this.showAsset360 = true;
 			this.getCrashedDeviceHistory(asset);
 		} else {
-			this.selectedAsset.active = false;
+			_.set(this.selectedAsset, 'active', false);
+			this.selectedAsset = null;
 			this.showAsset360 = false;
 			this.getAssetLinkInfo(asset);
 		}
@@ -548,6 +549,8 @@ export class RiskMitigationComponent {
 	 * Determines whether fpdpanel close on click
 	 */
 	public onFPDPanelClose () {
+		_.set(this.selectedFingerPrintdata, 'active', false);
+		this.selectedFingerPrintdata = null;
 		this.showFpDetails = false;
 	}
 
@@ -557,9 +560,15 @@ export class RiskMitigationComponent {
 	 */
 
 	public connectToFpDetails (asset: any) {
-		this.showFpDetails = true;
-		this.selectedFingerPrintdata = asset;
-		this.getAssetLinkInfo(asset);
+		if (_.get(asset, 'active')) {
+			this.showFpDetails = true;
+			this.selectedFingerPrintdata = asset;
+			this.getAssetLinkInfo(asset);
+		} else {
+			this.showFpDetails = false;
+			_.set(this.selectedFingerPrintdata, 'active', false);
+			this.selectedFingerPrintdata = null;
+		}
 	}
 
 	/**
