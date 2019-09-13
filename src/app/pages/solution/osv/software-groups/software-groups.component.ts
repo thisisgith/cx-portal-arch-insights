@@ -159,7 +159,7 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 						key: 'productFamily',
 						name: I18n.get('_OsvProductFamily_'),
 						sortable: true,
-						width: '20%',
+						width: '25%',
 					},
 					{
 						key: 'assetCount',
@@ -171,7 +171,7 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 						key: 'swType',
 						name: I18n.get('_OsvOSType_'),
 						sortable: false,
-						width: '15%',
+						width: '10%',
 					},
 					{
 						name: I18n.get('_OsvCurrentOSVersion_'),
@@ -256,13 +256,13 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 	public getRowActions (softwareGroup: SoftwareGroup) {
 		return _.filter([
 			{
-				label: I18n.get('_OsvCompareRecommendations'),
+				label: I18n.get('_OsvViewCompareRecommendations_'),
 				onClick: () => {
 					this.openSoftwareGroupDetails(0, softwareGroup);
 				},
 			},
 			{
-				label: I18n.get('_OsvRecommendations_'),
+				label: I18n.get('_OsvViewSoftwareVersionSummary_'),
 				onClick: () => {
 					this.openSoftwareGroupDetails(1, softwareGroup);
 				},

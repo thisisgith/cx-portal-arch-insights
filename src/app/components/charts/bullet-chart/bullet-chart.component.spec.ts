@@ -1,29 +1,45 @@
 import { configureTestSuite } from 'ng-bullet';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { CommonModule } from '@angular/common';
+import { Component, ViewChild } from '@angular/core';
 import { BulletChartComponent } from './bullet-chart.component';
-import { Chart, ChartModule } from 'angular-highcharts';
-import { BulletChartModule } from '@components';
+import { BulletChartModule } from './bullet-chart.module';
+
+/**
+ * Wrapper component for testing chart
+ */
+@Component({
+	template: `
+		<bullet-chart [loading]="loading" [seriesData]="seriesData"></bullet-chart>
+	`,
+})
+class WrapperComponent {
+	@ViewChild(BulletChartComponent, { static: true }) public bulletChart: BulletChartComponent;
+	public seriesData = {
+		target: 'target',
+		xlabel: 'a',
+		y: 1,
+	};
+	public loading = true;
+}
 
 describe('BulletChartComponent', () => {
+	let fixture: ComponentFixture<WrapperComponent>;
+	let wrapperComponent: WrapperComponent;
 	let component: BulletChartComponent;
-	let fixture: ComponentFixture<BulletChartComponent>;
+
 	configureTestSuite(() => {
 		TestBed.configureTestingModule({
-			imports: [
-				BulletChartModule,
-				ChartModule,
-				CommonModule,
+			declarations: [
+				WrapperComponent,
 			],
+			imports: [BulletChartModule],
 		});
 	});
 
 	beforeEach(() => {
-		fixture = TestBed.createComponent(BulletChartComponent);
-		component = fixture.componentInstance;
-		component.seriesData = {
-			target: 1000, xLabel: 'Network Devices', y: 850,
-		};
+		fixture = TestBed.createComponent(WrapperComponent);
+		wrapperComponent = fixture.componentInstance;
+		component = wrapperComponent.bulletChart;
 		fixture.detectChanges();
 	});
 
@@ -32,58 +48,40 @@ describe('BulletChartComponent', () => {
 			.toBeTruthy();
 	});
 
-	it('should call buildGraph on valid seriesData', () => {
-		component.ngOnInit();
-		expect(component.chart)
-			.toBeDefined();
+	it('should build the chart on init if the component has seriesData', () => {
+		expect(component.chart.ref.series[0].data[0].y)
+			.toBe(1);
 	});
 
-	it('should not call buildGraph on null seriesData', () => {
-		component.seriesData = undefined;
-		component.ngOnInit();
-		spyOn(component, 'buildGraph');
-		expect(component.buildGraph)
-			.toHaveBeenCalledTimes(0);
+	it('should build the chart when series data is set if it does not exist', () => {
+		component.chart = null;
+		fixture.detectChanges();
+		wrapperComponent.seriesData = {
+			target: 'target',
+			xlabel: 'a',
+			y: 1,
+		};
+		fixture.detectChanges();
+		expect(component.chart)
+			.not
+			.toBeNull();
 	});
 
-	it('should define chart on buildGraph call', () => {
-		component.buildGraph();
-		expect(component.chart)
-			.toBeDefined();
-		expect(component.chart instanceof Chart)
+	it('should update the chart on changes', () => {
+		expect(component.chart.ref.series[0].data[0].y)
+			.toBe(1);
+		expect(component.loading)
 			.toBeTruthy();
-	});
-	it('Should call ngonchanges method for first time', () => {
-		const changes = {
-			seriesData: {
-				currentValue: { },
-				firstChange: true,
-				isFirstChange: () => false,
-				previousValue: undefined,
-			},
+		wrapperComponent.seriesData = {
+			target: 'target2',
+			xlabel: 'b',
+			y: 2,
 		};
-		component.ngOnChanges(changes);
+		wrapperComponent.loading = false;
 		fixture.detectChanges();
-		expect(component.chart)
-			.toBeDefined();
-	});
-
-	it('Should call ngonchanges method second time onwards', () => {
-		const changes = {
-			seriesData: {
-				currentValue: {
-					target: 10,
-					xLabel: 'Fabrics',
-					y: 0,
-				},
-				firstChange: false,
-				isFirstChange: () => false,
-				previousValue: { },
-			},
-		};
-		component.ngOnChanges(changes);
-		fixture.detectChanges();
-		expect(component.chart)
-			.toBeDefined();
+		expect(component.chart.ref.series[0].data[0].y)
+			.toBe(2);
+		expect(component.loading)
+			.toBeFalsy();
 	});
 });

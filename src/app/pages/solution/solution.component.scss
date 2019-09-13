@@ -209,6 +209,8 @@ $cx-font-size-24: 24px;
 		height: 25px;
 		display: flex;
 		align-items: center;
+		outline: none;
+		cursor: pointer;
 
 		::ng-deep svg {
 			width: 26px;
