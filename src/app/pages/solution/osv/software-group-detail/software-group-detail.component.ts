@@ -176,8 +176,17 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	 */
 	public handleHidden (hidden: boolean) {
 		if (hidden) {
-			this.close.emit(true);
+			this.onPanelClose();
 		}
+	}
+
+	/**
+	 * Closes the panel and emits an event
+	 */
+	public onPanelClose () {
+		_.set(this.selectedSoftwareGroup, 'active', false);
+		this.selectedSoftwareGroup = null;
+		this.close.emit(true);
 	}
 
 	/**
@@ -585,5 +594,4 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 			recommendation.profileRisk = response.profileRisk;
 		});
 	}
-
 }

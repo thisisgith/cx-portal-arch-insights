@@ -51,7 +51,7 @@
 <ng-template #breadcrumbs>
 	<div class="container">
 		<div class="cs flex flex-fluid flex-center-vertical">
-			<div class="cs__home" inlineSVG="assets/icons/icon-home.svg"></div>
+			<div data-auto-id="HomeButton" class="cs__home" inlineSVG="assets/icons/icon-home.svg" (click)="goHome()"></div>
 			<div class="cs__next-icon" inlineSVG="assets/icons/icon-arrow-breadcrumb.svg"></div>
 			<div *ngIf="selectedSolution">
 				<div class="group-label" [innerText]="'_SuccessTrack_' | i18n"></div>

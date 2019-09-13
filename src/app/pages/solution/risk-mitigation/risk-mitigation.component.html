@@ -292,8 +292,8 @@
 	<cui-loader  color="muted" *ngIf = "isCrashHistoryLoading"></cui-loader>
 </details-panel>
 <details-panel
-	*ngIf="showFpDetails  && !showAsset360"
-	[hidden]="!showFpDetails  && showAsset360"
+	*ngIf="showFpDetails && !showAsset360"
+	[hidden]="!showFpDetails && showAsset360"
 	(hiddenChange)="handleHidden($event)"
 	[fullscreen]="fullscreen"
 	[minWidth]="'1024px'"
