@@ -616,10 +616,7 @@ export class RccComponent implements OnInit, OnDestroy {
 		this.prevSearchText = searchInput;
 		this.searchInput = searchInput;
 		if (filter.key === policyGroupConst || filter.key === severityConst) {
-			this.policyViolationsTableOptions = this.getPolicyViolationsTableOptions();
 			this.violationGridObj.pageIndex = 1;
-			this.violationGridObj.sortName = null;
-			this.violationGridObj.sortOrder = null;
 		}
 		if (filter.key === policyGroupConst) {
 			this.policyGroup = sub.filter;
@@ -694,6 +691,7 @@ export class RccComponent implements OnInit, OnDestroy {
 		this.searchInput = '';
 		this.invalidSearchInput = false;
 		this.prevSearchText = '';
+		this.tableConfig.tableOffset = 0;
 		if (this.view === 'violation') {
 			this.violationGridObj.policyType = null;
 			this.violationGridObj.severity = null;
@@ -765,11 +763,8 @@ export class RccComponent implements OnInit, OnDestroy {
 			this.tableConfig.totalItems = 0;
 			this.searched = true;
 			if (this.view === 'violation') {
-				this.policyViolationsTableOptions = this.getPolicyViolationsTableOptions();
 				this.violationGridObj.search = searchInput;
 				this.violationGridObj.pageIndex = 1;
-				this.violationGridObj.sortName = null;
-				this.violationGridObj.sortOrder = null;
 				this.getRCCData(this.violationGridObj);
 			} else {
 				this.assetGridObj.searchParam = searchInput;

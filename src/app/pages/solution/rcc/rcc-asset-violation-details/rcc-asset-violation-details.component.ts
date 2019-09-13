@@ -318,6 +318,7 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 				},
 			],
 			dynamicData: false,
+			hover: true,
 			rowWellColor: 'bordered',
 			rowWellTemplate: this.assetRowWellTemplate,
 			singleSelect: false,
