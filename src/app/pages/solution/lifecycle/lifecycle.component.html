@@ -1,6 +1,6 @@
 <div class="panel panel--ltgray panel--bordered" #lifecyclePanel [class.panel--bottom-padding]="panelBottomPaddingNeeded">
 	<div class="row base-padding-top">
-		<div class="col-md-3" *ngIf="!status.loading.racetrack && componentData?.racetrack?.stage">
+		<div class="col-md-3 base-padding-left" *ngIf="!status.loading.racetrack && componentData?.racetrack?.stage">
 			<ng-container *ngTemplateOutlet="racetrack"></ng-container>
 		</div>
 
@@ -101,43 +101,45 @@
 			</span>
 		</div>
 	</div>
-	<div class="base-margin-left" *ngIf="currentPitstop && currentPitstop?.pitstopActions?.length">
-		<div class="divider divider--compressed"></div>
-		<div class="base-margin-top">
-			<span class="qtr-padding-bottom icon-flagged"></span>
-			<span class="text-uppercase qtr-padding-left" [innerText]="'_CheckList_' | i18n"></span>
+	<div class="pitstop-checklist base-margin-left" 
+		*ngIf="currentPitstop && currentPitstop?.pitstopActions?.length">
+		<div class="divider"></div>
+		<div class="pitstop-checklist__title cx-text-secondary">
+			<div class="pitstop-checklist__flag"
+				inlineSVG="assets/img/solutions/icon-checkerflag.svg"></div>
+			<div class="text-uppercase half-padding-left" [innerText]="'_CheckList_' | i18n"></div>
 		</div>
-		<p class="text-small no-margin-top" [innerText]="'_ChecklistDesc_' | i18n"></p>
+		<p class="text-small no-margin-top half-margin-bottom cx-text-light-gray" 
+			[innerText]="'_ChecklistDesc_' | i18n"></p>
 		<div *ngFor="let action of currentPitActionsWithStatus" class="form-group form-group select" data-auto-id="pitstopAction">
-			<div class="actionname row qtr-padding-top qtr-padding-bottom" [ngClass]="{selected: action.selected}">
-				<div class="col-md-1">
+			<div class="actionname flex-center-vertical qtr-padding" [ngClass]="{selected: action.selected}">
+				<div class="half-margin-right flex-center-vertical">
 					<!-- since updatePitstop API going through changes, we are temporarily disabling the user from checking a box -->
 					<!-- This will manually be done by the CSM/CSE.  Refer to PBC-725. -->
 					<!-- <label class="checkbox" [ngClass]="{'disabled': action.action.isComplete || currentWorkingPitstop !== currentPitstop.name }" data-auto-id="pitstopCheckboxLabel"> -->
 					<label class="checkbox disabled" data-auto-id="pitstopCheckboxLabel">
 						<input data-auto-id="pitstopCheckbox" type="checkbox"
-							(change)="completeAction(action.action)" [checked]="true"
+							(change)="completeAction(action.action)" [checked]="action.action.isComplete"
 						>
 						<span class="checkbox__input" data-auto-id="pitstopCheckboxSpan"
 							[ngClass]="{'checkbox-complete': action.action.isComplete}"
 						></span>
 					</label>
 				</div>
-				<div class="col-md-11">
-					<a data-auto-id="actionlink"
-						class="no-link"
-						data-toggle="tooltip" data-placement="bottom" title="{{action?.action?.description}}"
-						(click)="selectAction(action)">
-						<div class="checkbox__label text-medium"
+				<div class="actionname__text cx-text-secondary"
+					[class.actionname__text--complete]="action?.action?.isComplete">
+						<div class="checkbox__label text-medium toggle"
+							attr.data-auto-id="actionLink-{{action.action.name}}"
+							data-toggle="tooltip" data-placement="bottom" title="{{action?.action?.description}}"
+							(click)="selectAction(action)"
 							[innerText]="action?.action?.name">
 						</div>
-					</a>
 				</div>
 			</div>
 		</div>
 		<div *ngIf="hasSelectedAction()">
 			<div class="divider divider--compressed"></div>
-			<div class="text-vibblue base-margin-top base-margin-bottom toggle"
+			<div class="base-margin-top base-margin-bottom toggle pitstop-checklist__reset-filter"
 				id="ResetFilter"
 				[innerText]="'_ResetFilter_' | i18n"
 				(click)="resetFilter()"
