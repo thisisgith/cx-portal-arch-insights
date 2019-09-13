@@ -49,7 +49,6 @@ interface SuccessPathsModel {
 	currentPage: number;
 	filter: string;
 	items?: SuccessPath[];
-	previewItems?: SuccessPath[];
 	rows: number;
 	sortField: 'title' | 'type' | 'category' | 'bookmark';
 	sortDirection: 'asc' | 'desc';
@@ -82,11 +81,10 @@ interface ComponentData {
 		certifications?: ELearning[];
 		elearning?: ELearning[];
 		training?: ELearning[];
+		success?: SuccessPath[];
+		archetype?: string[];
 	};
-	success: {
-		bytes: SuccessPathsModel,
-		productGuides: SuccessPathsModel,
-	};
+	productGuides: SuccessPathsModel;
 	acc?: {
 		sessions: ACC[];
 	};
@@ -251,7 +249,6 @@ export class LifecycleComponent implements OnDestroy {
 			cgt: false,
 			elearning: false,
 			productGuides: {
-				preview: false,
 				modal: false,
 				loadMore: false,
 			},
@@ -278,21 +275,12 @@ export class LifecycleComponent implements OnDestroy {
 			suggestedAction: '',
 			usecase: '',
 		},
-		success: {
-			bytes: {
-				currentPage: 1,
-				filter: '',
-				rows: 10,
-				sortDirection: 'asc',
-				sortField: 'title',
-			},
-			productGuides: {
-				currentPage: 1,
-				filter: '',
-				rows: 10,
-				sortDirection: 'asc',
-				sortField: 'title',
-			},
+		productGuides: {
+			currentPage: 1,
+			filter: '',
+			rows: 10,
+			sortDirection: 'asc',
+			sortField: 'title',
 		},
 	};
 
@@ -471,21 +459,12 @@ export class LifecycleComponent implements OnDestroy {
 				suggestedAction: '',
 				usecase: '',
 			},
-			success: {
-				bytes: {
-					currentPage: 1,
-					filter: '',
-					rows: 10,
-					sortDirection: 'asc',
-					sortField: 'title',
-				},
-				productGuides: {
-					currentPage: 1,
-					filter: '',
-					rows: 10,
-					sortDirection: 'asc',
-					sortField: 'title',
-				},
+			productGuides: {
+				currentPage: 1,
+				filter: '',
+				rows: 10,
+				sortDirection: 'asc',
+				sortField: 'title',
 			},
 		};
 	}
@@ -922,19 +901,19 @@ export class LifecycleComponent implements OnDestroy {
 	public selectFilter (type: string) {
 		if (type === 'SB') {
 			this.selectedSuccessPaths =
-				_.filter(this.componentData.success.bytes.items,
+				_.filter(this.componentData.learning.success,
 					{ archetype: this.selectedFilterForSB });
 			if (this.selectedFilterForSB === 'Not selected' || !this.selectedFilterForSB) {
-				this.selectedSuccessPaths = this.componentData.success.bytes.items;
+				this.selectedSuccessPaths = this.componentData.learning.success;
 			}
 		}
 
 		if (type === 'PG') {
 			this.selectedProductGuides =
-				_.filter(this.componentData.success.productGuides.items,
+				_.filter(this.componentData.productGuides.items,
 					{ archetype: this.selectedFilterForPG });
 			if (this.selectedFilterForPG === 'Not selected' || !this.selectedFilterForPG) {
-				this.selectedProductGuides = this.componentData.success.productGuides.items;
+				this.selectedProductGuides = this.componentData.productGuides.items;
 			}
 		}
 
@@ -1509,7 +1488,6 @@ export class LifecycleComponent implements OnDestroy {
 	 * @returns The success paths for product documentation and videos.
 	 */
 	private loadProductGuides (): Observable<SuccessPathsResponse> {
-		this.status.loading.productGuides.preview = true;
 		this.status.loading.productGuides.modal = true;
 		if (window.Cypress) {
 			window.productGuidesLoading = true;
@@ -1522,25 +1500,24 @@ export class LifecycleComponent implements OnDestroy {
 			map((result: SuccessPathsResponse) => {
 				this.selectedFilterForPG = '';
 				if (result.items.length) {
-					_.set(this.componentData.success.productGuides, ['items'],
+					_.set(this.componentData.productGuides, ['items'],
 						result.items);
 					const resultItems = _.uniq(_.map(result.items, 'archetype'));
-					_.set(this.componentData.success.productGuides, ['archetypes'],
+					_.set(this.componentData.productGuides, ['archetypes'],
 						resultItems);
-					this.componentData.success.productGuides.archetypes.unshift('Not selected');
-					this.selectedProductGuides = this.componentData.success.productGuides.items;
+					this.componentData.productGuides.archetypes.unshift('Not selected');
+					this.selectedProductGuides = this.componentData.productGuides.items;
 					this.pgCategoryOptions = _.map(
-						this.componentData.success.productGuides.archetypes,
+						this.componentData.productGuides.archetypes,
 						item => ({
 							name: item,
 							value: item,
 						}));
-					_.set(this.componentData.success.productGuides, ['totalCount'],
+					_.set(this.componentData.productGuides, ['totalCount'],
 						result.totalCount);
 				}
 
 				this.buildPGTable();
-				this.status.loading.productGuides.preview = false;
 				this.status.loading.productGuides.modal = false;
 				if (window.Cypress) {
 					window.productGuidesLoading = false;
@@ -1549,7 +1526,6 @@ export class LifecycleComponent implements OnDestroy {
 				return result;
 			}),
 			catchError(err => {
-				this.status.loading.productGuides.preview = false;
 				this.status.loading.productGuides.modal = false;
 				if (window.Cypress) {
 					window.productGuidesLoading = false;
@@ -1579,15 +1555,13 @@ export class LifecycleComponent implements OnDestroy {
 			map((result: SuccessPathsResponse) => {
 				this.selectedFilterForSB = '';
 				if (result.items.length) {
-					_.set(this.componentData.success.bytes, ['items'], result.items);
-					_.set(this.componentData.success.bytes, ['previewItems'],
-						_.slice(result.items, 0, 3));
+					_.set(this.componentData, ['learning', 'success'], result.items);
 					const resultItems = _.uniq(_.map(result.items, 'archetype'));
-					_.set(this.componentData.success.bytes, ['archetypes'], resultItems);
-					this.componentData.success.bytes.archetypes.unshift('Not selected');
-					this.selectedSuccessPaths = this.componentData.success.bytes.items;
+					_.set(this.componentData, ['learning', 'archetype'], resultItems);
+					this.componentData.learning.archetype.unshift('Not selected');
+					this.selectedSuccessPaths = this.componentData.learning.success;
 					this.categoryOptions =
-						_.map(this.componentData.success.bytes.archetypes, item => ({
+						_.map(this.componentData.learning.archetype, item => ({
 							name: item,
 							value: item,
 						}));
@@ -1972,7 +1946,7 @@ export class LifecycleComponent implements OnDestroy {
 	public getMaxSuccessBytesCount (type: string): string {
 		switch (type) {
 			case 'PG':
-				return `${this.componentData.success.productGuides.totalCount}`;
+				return `${this.componentData.productGuides.totalCount}`;
 			default:
 				return 'unknown';
 		}
@@ -1986,7 +1960,7 @@ export class LifecycleComponent implements OnDestroy {
 	public getSuccessBytesPercentage (type: string): string {
 		switch (type) {
 			case 'PG':
-				return `${Math.floor((this.selectedProductGuides.length / this.componentData.success.productGuides.totalCount) * 100)}`;
+				return `${Math.floor((this.selectedProductGuides.length / this.componentData.productGuides.totalCount) * 100)}`;
 			default:
 				return '0';
 		}

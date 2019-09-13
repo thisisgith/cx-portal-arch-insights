@@ -370,27 +370,14 @@ describe('LifecycleComponent', () => {
 			expect(component.componentData.learning)
 				.toBeUndefined();
 
-			// Success Bytes block
-			expect(component.componentData.success.bytes.archetypes)
-				.toBeUndefined();
-			expect(component.componentData.success.bytes.items)
-				.toBeUndefined();
-			expect(component.componentData.success.bytes.previewItems)
-				.toBeUndefined();
-			expect(component.componentData.success.bytes.totalCount)
-				.toBeUndefined();
-
 			// Product Guides block
-			expect(component.componentData.success.productGuides.archetypes)
+			expect(component.componentData.productGuides.archetypes)
 				.toBeUndefined();
-			expect(component.componentData.success.productGuides.items)
+			expect(component.componentData.productGuides.items)
 				.toBeUndefined();
-			expect(component.componentData.success.productGuides.previewItems)
+			expect(component.componentData.productGuides.totalCount)
 				.toBeUndefined();
-			expect(component.componentData.success.productGuides.totalCount)
-				.toBeUndefined();
-
-			expect(component.componentData.success.productGuides.items)
+			expect(component.componentData.productGuides.items)
 				.toBeUndefined();
 
 			expect(component.componentData.atx)
@@ -897,7 +884,7 @@ describe('LifecycleComponent', () => {
 
 			fixture.whenStable()
 				.then(() => {
-					expect(component.componentData.success.bytes.items.length)
+					expect(component.componentData.learning.success.length)
 						.toEqual(5);
 				});
 		});
@@ -932,12 +919,12 @@ describe('LifecycleComponent', () => {
 			expect(component.getSubtitle('SB'))
 				.toEqual('Resources to fine-tune your tech');
 
-			const sb1 = component.componentData.success.bytes.items[1];
-			expect(component.componentData.success.bytes.items[1].bookmark)
+			const sb1 = component.componentData.learning.success[1];
+			expect(component.componentData.learning.success[1].bookmark)
 				.toBeFalsy();
 			component.updateBookmark(sb1, 'SB');
 			fixture.detectChanges();
-			expect(component.componentData.success.bytes.items[1].bookmark)
+			expect(component.componentData.learning.success[1].bookmark)
 				.toBeTruthy();
 
 			component.selectedFilterForSB = 'Project Planning';
@@ -1021,7 +1008,7 @@ describe('LifecycleComponent', () => {
 
 			fixture.whenStable()
 				.then(() => {
-					expect(component.componentData.success.productGuides.items.length)
+					expect(component.componentData.productGuides.items.length)
 						.toEqual(81);
 				});
 		});
@@ -1056,12 +1043,12 @@ describe('LifecycleComponent', () => {
 			expect(component.getSubtitle('PG'))
 				.toEqual('\"How-to\" resources for planning, installation and more');
 
-			const sb1 = component.componentData.success.productGuides.items[1];
-			expect(component.componentData.success.productGuides.items[1].bookmark)
+			const sb1 = component.componentData.productGuides.items[1];
+			expect(component.componentData.productGuides.items[1].bookmark)
 				.toBeTruthy();
 			component.updateBookmark(sb1, 'PG');
 			fixture.detectChanges();
-			expect(component.componentData.success.productGuides.items[1].bookmark)
+			expect(component.componentData.productGuides.items[1].bookmark)
 				.toBeFalsy();
 
 			expect(component.selectedProductGuides.length)
