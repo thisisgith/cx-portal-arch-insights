@@ -1759,4 +1759,89 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			});
 		});
 	});
+
+	describe('ATX View Sessions button should be disabled when there are no sessions', () => {
+		after(() => {
+			// Switch back to the default mock data
+			atxMock.enable('(ATX) IBN-Campus Network Assurance-Onboard');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard');
+		});
+
+		const mockScenarios = [
+			'(ATX) IBN-Campus Network Assurance-Onboard-emptySessions',
+			'(ATX) IBN-Campus Network Assurance-Onboard-missingSessions',
+			'(ATX) IBN-Campus Network Assurance-Onboard-nullSessions',
+		];
+		mockScenarios.forEach(mockScenario => {
+			describe(`Mock Scenario: ${mockScenario}`, () => {
+				before(() => {
+					// Switch to the desired mock data
+					atxMock.enable(mockScenario);
+
+					// Refresh the data
+					cy.getByAutoId('Facet-Assets & Coverage').click();
+					cy.getByAutoId('Facet-Lifecycle').click();
+					cy.wait(mockScenario);
+				});
+
+				it('Verify "View Sessions" button is disabled in main tile', () => {
+					cy.getByAutoId('recommendedATXScheduleButton')
+						.should('exist')
+						.and('have.class', 'disabled');
+				});
+
+				it('Verify "View Sessions" button is disabled in click modal', () => {
+					cy.getByAutoId('Ask The Experts Panel').within(() => {
+						cy.getByAutoId('ATXMoreClick').click();
+					});
+					cy.getByAutoId('atxMoreClickModal').within(() => {
+						cy.getByAutoId('MoreATXViewSessions')
+							.should('exist')
+							.and('have.class', 'disabled');
+					});
+
+					// Close the click modal
+					cy.getByAutoId('closeMoreATXClickModal').click();
+				});
+
+				it('Verify "View Sessions" button is disabled in View All card view', () => {
+					cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
+					cy.getByAutoId('atx-card-view-btn').click();
+					cy.getByAutoId('ATXCard').each($card => {
+						cy.wrap($card).within(() => {
+							cy.getByAutoId('cardRecommendedATXScheduleButton')
+								.should('exist')
+								.and('have.class', 'disabled');
+						});
+					});
+
+					// Close the View All modal
+					cy.getByAutoId('ViewAllCloseModal').click();
+				});
+
+				it('Verify "View Sessions" button is disabled in View All table view', () => {
+					cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
+					cy.getByAutoId('atx-table-view-btn').click();
+					cy.get('tr').each(($row, index) => {
+						// Ingore the first tr, since this holds our table headers
+						if (index !== 0) {
+							cy.wrap($row).within(() => {
+								cy.getByAutoId('ViewSessionButton')
+									.should('exist')
+									.and('have.class', 'disabled');
+							});
+						}
+					});
+
+					// Switch back to card view, and close the View All modal
+					cy.getByAutoId('atx-card-view-btn').click();
+					cy.getByAutoId('ViewAllCloseModal').click();
+				});
+			});
+		});
+	});
 });
