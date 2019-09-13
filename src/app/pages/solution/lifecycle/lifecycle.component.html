@@ -22,7 +22,7 @@
 					<ng-container *ngTemplateOutlet="panel; context: {
 						template: successBytesPanel,
 						title: '_SuccessBytes_',
-						loading: (status.loading.success || status.loading.productGuides.modal),
+						loading: status.loading.success,
 						data: componentData.learning,
 						viewAllLabel: '_ViewAll_',
 						viewAll: '_SuccessBytes_'
@@ -534,7 +534,7 @@
 		</ng-container>
 		<div class="divider"></div>
 	</div>
-	<div *ngIf="componentData.productGuides.items?.length" data-auto-id="SuccessBytesPanel-ProductGuidesBlock">
+	<div data-auto-id="SuccessBytesPanel-ProductGuidesBlock">
 		<ng-container *ngTemplateOutlet="productGuidesBlock; context: {
 				title: '_ProductGuides_' }">
 		</ng-container>
@@ -810,8 +810,8 @@
 						<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type, view: this.pgview }"></ng-container>
 						<ng-container *ngTemplateOutlet="loadMoreTemplate; context: {
 							type: type,
-							loading: this.status.loading.productGuides.loadMore,
-							error: this.status.error.productGuides.loadMore
+							loading: this.status.loading.productGuides,
+							error: this.status.error.productGuides
 						}"></ng-container>
 					</div>
 				</ng-container>

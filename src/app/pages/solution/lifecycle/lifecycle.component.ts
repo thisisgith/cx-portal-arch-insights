@@ -248,17 +248,12 @@ export class LifecycleComponent implements OnDestroy {
 			bookmark: false,
 			cgt: false,
 			elearning: false,
-			productGuides: {
-				modal: false,
-				loadMore: false,
-			},
+			productGuides: false,
 			racetrack: false,
 			success: false,
 		},
 		error: {
-			productGuides: {
-				loadMore: false,
-			},
+			productGuides: false,
 		},
 	};
 
@@ -785,6 +780,7 @@ export class LifecycleComponent implements OnDestroy {
 				visible: true,
 			};
 		} else if (type === '_ProductGuides_') {
+			this.loadProductGuides().subscribe();
 			this.modal = {
 				content: this.viewAllModalTemplate,
 				context: {
@@ -1047,7 +1043,6 @@ export class LifecycleComponent implements OnDestroy {
 			if (results.isElearningChanged) { source.push(this.loadELearning()); }
 			if (results.isSuccessPathChanged) {
 				source.push(this.loadSuccessPaths());
-				source.push(this.loadProductGuides());
 			}
 			if (results.isCgtChanged) { source.push(this.loadCGT()); }
 			forkJoin(
@@ -1488,7 +1483,7 @@ export class LifecycleComponent implements OnDestroy {
 	 * @returns The success paths for product documentation and videos.
 	 */
 	private loadProductGuides (): Observable<SuccessPathsResponse> {
-		this.status.loading.productGuides.modal = true;
+		this.status.loading.productGuides = true;
 		if (window.Cypress) {
 			window.productGuidesLoading = true;
 		}
@@ -1518,7 +1513,7 @@ export class LifecycleComponent implements OnDestroy {
 				}
 
 				this.buildPGTable();
-				this.status.loading.productGuides.modal = false;
+				this.status.loading.productGuides = false;
 				if (window.Cypress) {
 					window.productGuidesLoading = false;
 				}
@@ -1526,7 +1521,8 @@ export class LifecycleComponent implements OnDestroy {
 				return result;
 			}),
 			catchError(err => {
-				this.status.loading.productGuides.modal = false;
+				this.status.loading.productGuides = false;
+				this.status.error.productGuides = true;
 				if (window.Cypress) {
 					window.productGuidesLoading = false;
 				}
@@ -1829,7 +1825,6 @@ export class LifecycleComponent implements OnDestroy {
 			this.loadATX(),
 			this.loadELearning(),
 			this.loadSuccessPaths(),
-			this.loadProductGuides(),
 			this.loadCGT(),
 		)
 		.subscribe();
