@@ -6,7 +6,7 @@ import {
 	Output,
 	EventEmitter,
 } from '@angular/core';
-
+import { PlatformLocation } from '@angular/common';
 import * as d3 from 'd3-selection';
 import { d3Transition } from 'd3-transition';
 import { easeLinear } from 'd3-ease';
@@ -21,8 +21,16 @@ d3.transition = d3Transition;
  *
  * @interface StageMap
  */
-interface StageMap {
-	[propName: string]: number;
+export interface StageMap {
+	[propName: string]: {
+		distance: number;
+		active?: boolean;
+		label?: {
+			x: number;
+			y: number;
+			anchor: string;
+		}
+	};
 }
 
 // These are exported so Cypress can access them
@@ -53,19 +61,19 @@ export const trackOffsetY = -287.23;
  * stages - list of possible racetrack stages
  */
 export const stages = [
-	// 'need',
-	// 'evaluate',
-	// 'select',
-	// 'purchase',
-	'onboard',
-	'implement',
-	'use',
-	'engage',
-	'adopt',
-	'optimize',
-	// 'renew',
-	// 'recommend',
-	// 'advocate',
+	// 'Need',
+	// 'Evaluate',
+	// 'Select',
+	// 'Purchase',
+	'Onboard',
+	'Implement',
+	'Use',
+	'Engage',
+	'Adopt',
+	'Optimize',
+	// 'Renew',
+	// 'Recommend',
+	// 'Advocate',
 ];
 
 /**
@@ -80,8 +88,15 @@ export class RacetrackComponent implements OnInit {
 	public svg: d3.SVGElement;
 	public track: d3.SVGElement;
 	public progress: d3.SVGElement;
+
+	public preview: d3.SVGElement;
+	private stageCircles: d3.SVGElement;
+	private stageLabels: d3.SVGElement;
+	private staticStageLabels: d3.SVGElement;
+	private selectedLabels: d3.SVGElement;
 	public length: number;
 	public progressSoFar: number;
+	public previewSoFar: number;
 	public stageMap: StageMap;
 	public stages: string[];
 	public points: DOMPoint[];
@@ -90,6 +105,10 @@ export class RacetrackComponent implements OnInit {
 	@Input('stage') public stage: string;
 	@Input('currentStage') public currentStage: string;
 	@Output() public onStageChange = new EventEmitter<string>();
+
+	constructor (
+		private platformLocation: PlatformLocation,
+	) { }
 
 	/**
 	 * Initializes racetrack variables and begins first animation
@@ -101,6 +120,7 @@ export class RacetrackComponent implements OnInit {
 		const racecar = svg.select('#racecar');
 		const track = svg.select('#secrettrack');
 		const progress = svg.select('#progress');
+		const preview = svg.select('#preview');
 		const length = track.node()
 			.getTotalLength();
 
@@ -108,6 +128,7 @@ export class RacetrackComponent implements OnInit {
 		this.racecar = racecar;
 		this.track = track;
 		this.progress = progress;
+		this.preview = preview;
 		this.length = length;
 
 		this.track.attr('transform', `translate(${trackOffsetX} ${trackOffsetY})`);
@@ -115,6 +136,19 @@ export class RacetrackComponent implements OnInit {
 		if (window.Cypress) {
 			window.racetrackEvents = new Subject();
 		}
+
+		this.svg.append('defs')
+			.append('filter')
+				.attr('id', 'drop-shadow')
+				.attr('y', '-30%')
+				.attr('x', '-30%')
+				.attr('width', '160%')
+				.attr('height', '160%')
+			.append('feDropShadow')
+				.attr('dx', 0)
+				.attr('dy', 0)
+				.attr('stdDeviation', 2)
+				.attr('flood-opacity', 0.4);
 
 		/**
 		 * @TODO: figure out how to replace this 'any'
@@ -143,30 +177,92 @@ export class RacetrackComponent implements OnInit {
 		// at what % of the path does the stop for each stage fall
 		// (path does not start at 'purchase' stage)
 		this.stageMap = {
-			adopt: 99.5,
-			advocate: 16,
-			engage: 95,
-			evaluate: 43,
-			implement: 87,
-			need: 33,
-			onboard: 82,
-			optimize: 4.5,
-			purchase: 66,
-			recommend: 12,
-			renew: 8,
-			select: 54,
-			use: 91,
+			Need: {
+				distance: 33,
+			},
+			Evaluate: {
+				distance: 43,
+			},
+			Select: {
+				distance: 54,
+			},
+			Purchase: {
+				distance: 66,
+			},
+			Onboard: {
+				distance: 82,
+				label: {
+					x: -26,
+					y: 55,
+					anchor: 'middle',
+				},
+			},
+			Implement: {
+				distance: 87,
+				label: {
+					x: 0,
+					y: 53,
+					anchor: 'start',
+				},
+			},
+			Use: {
+				distance: 91,
+				label: {
+					x: 36,
+					y: 23,
+					anchor: 'start',
+				},
+			},
+			Engage: {
+				distance: 95,
+				label: {
+					x: 20,
+					y: 6,
+					anchor: 'start',
+				},
+			},
+			Adopt: {
+				distance: 99.5,
+				label: {
+					x: 20,
+					y: 6,
+					anchor: 'start',
+				},
+			},
+			Optimize: {
+				distance: 4.5,
+				label: {
+					x: 20,
+					y: -3,
+					anchor: 'start',
+				},
+			},
+			Renew: {
+				distance: 8,
+			},
+			Recommend: {
+				distance: 12,
+			},
+			Advocate: {
+				distance: 16,
+			},
 		};
 
 		Object.keys(this.stageMap)
 			.forEach(key => {
 				// convert % points to use granularity of this.points
-				this.stageMap[key] *= (points.length / 100);
+				this.stageMap[key].distance *= (points.length / 100);
 			});
 
-		this.current = 'purchase';
+		// Setting racecar circle filter in here (need to append location to fix Safari bug).
+		// Inspired by: https://stackoverflow.com/questions/39345823/angular2-svg-filter-url
+		const dropShadowUrl = `url(${this.platformLocation.pathname}#drop-shadow)`;
+		this.racecar.select('circle')
+			.attr('filter', dropShadowUrl);
 
-		d3.select(this.track.node().parentNode)
+		this.current = 'Purchase';
+
+		this.stageCircles = d3.select(this.track.node().parentNode)
 			.selectAll('.stage')
 			.data(stages)
 			.enter()
@@ -176,12 +272,12 @@ export class RacetrackComponent implements OnInit {
 				.attr('fill', 'white')
 				.attr('r', 5)
 				.attr('cx', name => {
-					const dist = this.stageMap[name];
+					const dist = this.stageMap[name].distance;
 
 					return points[dist].x;
 				})
 				.attr('cy', name => {
-					const dist = this.stageMap[name];
+					const dist = this.stageMap[name].distance;
 
 					return points[dist].y;
 				})
@@ -190,9 +286,183 @@ export class RacetrackComponent implements OnInit {
 				.attr('data-auto-id', name => `Racetrack-Point-${name}`)
 				.raise()
 				.on('click', d =>  {
-					this.onStageChange.emit(d);
-					this.zoomToStage(d, true);
+					this.zoomToStage(d, false);
+				})
+				.on('mouseenter', (d, i, nodes) => {
+					if (d === this.currentStage) {
+						return;
+					}
+
+					if (stages.indexOf(d) > stages.indexOf(this.currentStage)) {
+						d3.select(nodes[i])
+							.transition()
+							.duration(50)
+							.attr('fill', '#14bdf4');
+					}
+
+					this.stageLabels.filter(dd => dd.name === d)
+						.style('font-weight', 'bold');
+				})
+				.on('mouseleave', (d, i, nodes) => {
+					if (d === this.current) {
+						return;
+					}
+
+					d3.select(nodes[i])
+						.transition()
+						.duration(50)
+						.attr('fill', 'white');
+
+					this.stageLabels.style('font-weight', 'normal');
 				});
+
+		const labelsEnter = d3.select(this.track.node().parentNode)
+			.selectAll('.stage-label')
+			.data(_.reduce(JSON.parse(JSON.stringify(this.stageMap)), (acc, stage, stageName) => {
+				if (stage.label) {
+					stage.name = stageName;
+					acc.push(stage);
+				}
+
+				return acc;
+			}, []))
+			.enter();
+
+		const selectedLabelHeight = 40;
+
+		this.selectedLabels = labelsEnter.append('g')
+			.classed('selected-label', true)
+			.attr('transform', d => {
+				const dist = this.stageMap[d.name].distance;
+
+				if (d.name === 'Onboard' || d.name === 'Implement') {
+					return `${this.track.attr('transform')}
+					translate(${[points[dist].x - 90, points[dist].y + 25]})`;
+				}
+
+				return `${this.track.attr('transform')}
+				translate(${[points[dist].x + 20, points[dist].y - selectedLabelHeight / 2]})`;
+			})
+			.attr('opacity', 0);
+
+		this.selectedLabels.append('rect')
+			.attr('height', selectedLabelHeight)
+			.attr('width', d => d.name.length * 12 + 20)
+			.attr('fill', '#b1e8f1')
+			.attr('stroke', 'white')
+			.attr('stroke-width', 3)
+			.attr('rx', 4);
+
+		this.selectedLabels.append('polygon')
+			.attr('points', '4,10 16,4 16,16')
+			.attr('fill', 'white')
+			.attr('transform', d => {
+				if (d.name === 'Onboard') {
+					return 'translate(99, -16) rotate(90)';
+				}
+				if (d.name === 'Implement') {
+					return 'translate(101, -16) rotate(90)';
+				}
+
+				return 'translate(-16, 10)';
+			});
+
+		this.selectedLabels.append('polygon')
+			.attr('points', '7,11 17,6.5 17,15.5')
+			.attr('fill', '#b1e8f1')
+			.attr('transform', d => {
+				if (d.name === 'Onboard') {
+					return 'translate(100, -15) rotate(90)';
+				}
+				if (d.name === 'Implement') {
+					return 'translate(102, -15) rotate(90)';
+				}
+
+				return 'translate(-15, 9)';
+			});
+
+		this.selectedLabels.append('text')
+			.text(d => d.name)
+			.attr('font-weight', 600)
+			.attr('font-style', 'oblique')
+			.attr('fill', '#535e6b')
+			.attr('font-size', 20)
+			.attr('transform', `translate(10, ${selectedLabelHeight / 2 + 8})`);
+
+		this.stageLabels = labelsEnter.append('text')
+			.classed('stage-label', true)
+			.text(d => d.name)
+			.attr('transform', d => {
+				const dist = this.stageMap[d.name].distance;
+
+				return `${this.track.attr('transform')}
+					translate(${[points[dist].x + d.label.x, points[dist].y + d.label.y]})`;
+			})
+			.attr('text-anchor', d => d.label.anchor)
+			.attr('font-size', '22px')
+			.attr('fill', '#535e6b')
+			.style('font-family', 'Arial')
+			.style('cursor', 'pointer')
+			.raise()
+			.on('click', d => this.zoomToStage(d.name, false))
+			.on('mouseenter', (d, i, nodes) => {
+				if (d.name === this.currentStage) {
+					return;
+				}
+
+				d3.select(nodes[i])
+					.style('font-weight', 'bold');
+
+				this.stageCircles.filter(dd => dd === d.name &&
+						stages.indexOf(d.name) > stages.indexOf(this.currentStage))
+					.transition()
+					.duration(50)
+					.attr('fill', '#14bdf4');
+			})
+			.on('mouseleave', (d, i, nodes)  => {
+				if (d.name === this.current) {
+					return;
+				}
+
+				d3.select(nodes[i])
+					.style('font-weight', 'normal');
+
+				this.stageCircles.filter(dd => dd === d.name)
+					.transition()
+					.duration(50)
+					.attr('fill', 'white');
+			});
+
+		this.staticStageLabels = d3.select(this.track.node().parentNode)
+			.selectAll('.static-label')
+			.data([
+				{
+					stage: 'PURCHASE',
+					transform: 'translate(35 125)',
+				},
+				{
+					stage: 'RENEW',
+					transform: 'translate(285 45)',
+				},
+			])
+			.enter()
+			.append('text')
+				.text(d => d.stage)
+				.attr('transform', d => d.transform)
+				.attr('fill', '#8e8e8e')
+				.attr('font-size', '19')
+				.attr('opacity', 0);
+
+		this.refreshLabels();
+
+		this.svg.on('mouseover', () => {
+			for (const label of [this.stageLabels, this.staticStageLabels]) {
+				label.transition()
+					.duration(200)
+					.attr('opacity', 1);
+			}
+		})
+		.on('mouseleave', this.refreshLabels.bind(this));
 
 		// uncomment to see dots at each half-percent of the racetrack, click a dot to log its %
 		// d3.select(track.node().parentNode).append('g').selectAll('circle')
@@ -210,29 +480,30 @@ export class RacetrackComponent implements OnInit {
 
 		this.racecar.raise();
 
-		// progress bar starts from 'purchase' step
-		const purchaseDistance = ((points.length - this.stageMap.purchase) *
+		// progress bar starts from 'Purchase' step
+		const purchaseDistance = ((points.length - this.stageMap.Purchase.distance) *
 			(this.length / points.length) - 7);
 
-		this.progress.attr('stroke', '#56C332')
-			.attr('stroke-width', 6)
+		this.progress.attr('stroke', '#14bdf4')
+			.attr('stroke-width', 17)
 			.attr('stroke-linecap', 'round')
 			.attr('stroke-dasharray', '0 1')
 			.attr('stroke-dashoffset', purchaseDistance);
 
+		this.preview.attr('stroke', 'white')
+			.attr('stroke-width', 2)
+			.attr('stroke-dasharray', '0 1');
+
 		// set up left and right arrow functionality
 		svg.select('#racetrack-left')
 			.style('cursor', 'pointer')
-			.style('color', '#BABBBD')
 			.on('click', () => this.zoomToPrevious());
 		svg.select('#racetrack-right')
 			.style('cursor', 'pointer')
-			.style('color', '#BABBBD')
 			.on('click', () => this.zoomToNext());
 
 		racecar.style('cursor', 'pointer')
-			.on('click', () => this.zoomToCurrent());
-
+			.on('click', () => this.zoomToStage(this.currentStage, false));
 		// customer has already purchased, starts at onboarding
 		this.zoomToStage(this.stage, true);
 	}
@@ -246,13 +517,81 @@ export class RacetrackComponent implements OnInit {
 	 * @memberof RacetrackComponent
 	 */
 	public zoomToStage (endpoint: string, trackProgress = false) {
-		const start = this.stageMap[this.current];
-		const end = this.stageMap[endpoint];
+		this.current = endpoint;
+
+		this.onStageChange.emit(endpoint);
+
+		this.stageLabels.filter(d => d.name !== this.current)
+			.style('font-weight', 'normal');
+
+		const dropShadowUrl = `url(${this.platformLocation.pathname}#drop-shadow)`;
+
+		this.stageCircles.transition()
+			.duration(300)
+			.attr('r', 7)
+			.attr('filter', 'none')
+			.attr('fill', 'white')
+			.attr('stroke-width', 0)
+			.filter(d => d === this.current && d !== this.currentStage)
+				.attr('r', 12)
+				.attr('fill', '#14bdf4')
+				.attr('stroke', 'white')
+				.attr('stroke-width', 5)
+				.attr('filter', dropShadowUrl);
+
+		const start = this.stageMap[this.currentStage].distance;
+		const end = this.stageMap[endpoint].distance;
 
 		let points = [
 			...this.points.slice(start),
 			...this.points.slice(0, end + 1),
 		];
+
+		this.selectedLabels.attr('opacity', 0)
+			.lower();
+
+		this.stageLabels.style('visibility', 'visible');
+
+		// Only changing selected stage, not racecar stage
+		if (!trackProgress) {
+			// show the selected label for the selected stage
+			this.selectedLabels.filter(d => d.name === endpoint && d.name !== this.currentStage)
+				.attr('opacity', 1)
+				.raise();
+
+			this.stageLabels.filter(d => d.name === endpoint && d.name !== this.currentStage)
+				.style('visibility', 'hidden');
+
+			if (stages.indexOf(endpoint) < stages.indexOf(this.currentStage)) {
+				this.preview.attr('opacity', 0);
+
+				return;
+			}
+			this.preview.attr('opacity', 1);
+
+			// show preview line from racetrack to selected
+			const offset = ((this.points.length - this.stageMap[this.currentStage].distance) *
+			(this.length / this.points.length) - 7);
+
+			this.preview.attr('stroke-dashoffset', offset);
+
+			const previewDistance = (end - start < 0 ?
+				(end + this.points.length) - start :
+				end - start) * this.length / this.points.length;
+
+			const previewSoFar = this.previewSoFar || 0;
+
+			this.preview.attr('stroke-dasharray',
+				`${previewSoFar} ${this.length - (previewSoFar)}`);
+
+			this.preview.transition()
+				.duration(1000)
+				.attr('stroke-dasharray', `${previewDistance} ${this.length - previewDistance}`);
+
+			this.previewSoFar = previewDistance;
+
+			return;
+		}
 
 		// if wrapping around the 'end' of the path, add an extra loop
 		if (end < start) {
@@ -284,8 +623,8 @@ export class RacetrackComponent implements OnInit {
 			.range([8, 150])
 			.exponent(2.5);
 
-		if (endpoint.toLowerCase() === this.currentStage.toLocaleLowerCase()) {
-			points.reduce((chain, pt, i) => {
+		if (endpoint === this.currentStage) {
+			const chainedTransitions = points.reduce((chain, pt, i) => {
 				// skip half of the points to speed up animation, reduce calculations
 				// However, make sure we don't skip the last point
 				if (i % 2 && i !== points.length - 1) { return chain; }
@@ -325,14 +664,20 @@ export class RacetrackComponent implements OnInit {
 						}
 					});
 			}, this.racecar);
+
+			chainedTransitions.transition()
+				.select('circle')
+				.duration(300)
+				.attr('opacity', 0.8)
+				.attr('r', 40);
 		}
 
 		this.current = endpoint;
 
 		if (trackProgress) {
-			const progressDistance = (end - this.stageMap.purchase < 0 ?
-				(end + this.points.length) - this.stageMap.purchase :
-				end - this.stageMap.purchase) * this.length / this.points.length;
+			const progressDistance = (end - this.stageMap.Purchase.distance < 0 ?
+				(end + this.points.length) - this.stageMap.Purchase.distance :
+				end - this.stageMap.Purchase.distance) * this.length / this.points.length;
 
 			const progressSoFar = this.progressSoFar || 0;
 
@@ -362,6 +707,7 @@ export class RacetrackComponent implements OnInit {
 				});
 
 			this.progressSoFar = progressDistance;
+			this.previewSoFar = 0;
 		}
 	}
 
@@ -376,7 +722,6 @@ export class RacetrackComponent implements OnInit {
 
 		if (next === stages.length) { next = 0; }
 
-		this.onStageChange.emit(stages[next]);
 		this.zoomToStage(stages[next], trackProgress);
 	}
 
@@ -386,11 +731,10 @@ export class RacetrackComponent implements OnInit {
 	 * @memberof RacetrackComponent
 	 */
 	public zoomToCurrent (trackProgress = false) {
-		let next = stages.indexOf(this.currentStage.toLowerCase());
+		let next = stages.indexOf(this.currentStage);
 
 		if (next === stages.length) { next = 0; }
 
-		this.onStageChange.emit(stages[next]);
 		this.zoomToStage(stages[next], trackProgress);
 	}
 
@@ -405,7 +749,6 @@ export class RacetrackComponent implements OnInit {
 
 		if (prev === -1) { prev = stages.length - 1; }
 
-		this.onStageChange.emit(stages[prev]);
 		this.zoomToStage(stages[prev], trackProgress);
 	}
 
@@ -414,9 +757,31 @@ export class RacetrackComponent implements OnInit {
 	 * @param changes the changes detected
 	 */
 	public ngOnChanges (changes: SimpleChanges) {
-		const currentStage = _.get(changes, ['stage', 'currentValue']);
+		const currentStage = _.get(changes, ['currentStage', 'currentValue']);
 		if (currentStage && !changes.stage.firstChange) {
 			this.zoomToStage(currentStage, true);
 		}
+	}
+
+	/**
+	 * Re-render labels
+	 */
+	private refreshLabels () {
+		this.staticStageLabels.transition()
+			.duration(200)
+			.attr('opacity', 0);
+
+		this.stageLabels.filter(d => (d.name !== this.currentStage) &&
+			(d.name !== this.current))
+			.transition()
+			.duration(200)
+			.attr('opacity', 0);
+
+		this.stageLabels.filter(d => (d.name === this.currentStage) ||
+			(d.name === this.current))
+			.raise()
+			.transition()
+			.duration(200)
+			.attr('opacity', 1);
 	}
 }

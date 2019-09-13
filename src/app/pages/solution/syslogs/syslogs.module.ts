@@ -20,6 +20,7 @@ import {
 } from '@components';
 import { SyslogsMessagesModule } from './syslogs-messages/syslogs-messages.module';
 import { SyslogsDevicesModule } from './syslogs-devices/syslogs-devices.module';
+import { InsightTabsModule } from 'src/app/components/insight-tabs/insight-tabs.module';
 
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
@@ -57,6 +58,7 @@ const childRoutes: Routes = [
 		SyslogsDevicesModule,
 		ColumnChartModule,
 		VisualFilterBarModule,
+		InsightTabsModule,
 	],
 })
 export class SyslogsModule { }
