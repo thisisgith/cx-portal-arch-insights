@@ -2,7 +2,7 @@ import {
 	Component,
 	EventEmitter,
 	Input,
-	OnInit,
+	OnChanges,
 	Output,
 	SimpleChanges,
 } from '@angular/core';
@@ -16,21 +16,12 @@ import * as _ from 'lodash-es';
 	selector: 'column-chart',
 	template: '<div [chart]="chart"></div>',
 })
-export class ColumnChartComponent implements OnInit {
+export class ColumnChartComponent implements OnChanges {
 
 	@Input() public loading;
 	@Input() public seriesData;
 	@Output() public subfilter = new EventEmitter<string>();
 	public chart: Chart;
-
-	/**
-	 * Initializes the bar chart
-	 */
-	public ngOnInit () {
-		if (this.seriesData) {
-			this.buildGraph();
-		}
-	}
 
 	/**
 	 * Builds our bar graph
@@ -41,6 +32,7 @@ export class ColumnChartComponent implements OnInit {
 		_.each(this.seriesData, d => {
 			data.push({
 				color: '#92dde4',
+				id: d.label,
 				name: d.label,
 				y: d.value,
 			});
@@ -145,10 +137,34 @@ export class ColumnChartComponent implements OnInit {
 	 * @param changes The changes found
 	 */
 	public ngOnChanges (changes: SimpleChanges) {
+		const loadingInfo = _.get(changes, 'loading',
+			{ currentValue: false, firstChange: false, previousValue: false });
 		const seriesInfo = _.get(changes, 'seriesData',
-			{ currentValue: null, firstChange: false });
-		if (seriesInfo.currentValue && !seriesInfo.firstChange) {
+			{ currentValue: null, firstChange: false, previousValue: null });
+		if (!this.chart || !seriesInfo.previousValue || !seriesInfo.previousValue.length) {
 			this.buildGraph();
+		} else {
+			if (loadingInfo.currentValue !== loadingInfo.previousValue) {
+				this.chart.ref.series[0].update(<any> {
+					enableMouseTracking: !loadingInfo.currentValue,
+					opacity: loadingInfo.currentValue ? 0.5 : 1,
+				});
+			}
+			if (seriesInfo.currentValue !== seriesInfo.previousValue) {
+				const data = [];
+				const categories = [];
+				_.each(seriesInfo.currentValue, d => {
+					data.push({
+						color: '#92dde4',
+						id: d.label,
+						name: d.label,
+						y: d.value,
+					});
+					categories.push(d.label);
+				});
+				this.chart.ref.xAxis[0].update({ categories }, false);
+				this.chart.ref.series[0].setData(data);
+			}
 		}
 	}
 }
