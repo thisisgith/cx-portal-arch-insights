@@ -358,6 +358,56 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 	min-width: 90px;
 }
 
+.lifecycle-viewall-modal {
+	min-height: 100%;
+	overflow-y: hidden;
+	display: flex;
+	flex-direction: column;
+
+	> div {
+		margin: 0 120px;
+	}
+}
+
+.lifecycle-viewall-modal span[class*="icon-close"] {
+	position: absolute;
+	right: 20px;
+	top: 15px;
+}
+
+.load-more {
+	& > div {
+		width: 100%;
+	}
+
+	& > div:first-of-type {
+		width: 400px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	div.subheader {
+		text-transform: unset;
+	}
+
+	span.text-medium {
+		color: $accent-dark-blue;
+	}
+
+	button {
+		color: $text-dark-gray;
+		box-shadow: inset 0 0 0 1px $button-outline-color;
+		width: 175px;
+	}
+
+	button:hover,
+	button:active,
+	button:focus {
+		background-color: $button-outline-color;
+		box-shadow: 0 0 1px 1px $button-outline-color;
+	}
+}
+
 .cx-lifecycle-card--recommended {
 	padding: 14px;
 
@@ -1472,23 +1522,6 @@ polygon {
 	height: 100%;
 }
 
-.lifecycle-viewall-modal {
-	min-height: 100%;
-	overflow-y: hidden;
-	display: flex;
-	flex-direction: column;
-
-	> div {
-		margin: 0 120px;
-	}
-}
-
-.lifecycle-viewall-modal span[class*="icon-close"] {
-	position: absolute;
-	right: 20px;
-	top: 15px;
-}
-
 // leave the following here, just in case we will use this style
 // ::ng-deep .cui .dropdown__menu a.selected {
 // 	color:$vibblue !important;
@@ -1509,37 +1542,4 @@ polygon {
 .bookmark-column .icon-bookmark {
 	font-size: 20px;
 	line-height: 20px;
-}
-
-.load-more {
-	& > div {
-		width: 100%;
-	}
-
-	& > div:first-of-type {
-		width: 400px;
-		margin-left: auto;
-		margin-right: auto;
-	}
-
-	div.subheader {
-		text-transform: unset;
-	}
-
-	span.text-medium {
-		color: $accent-dark-blue;
-	}
-
-	button {
-		color: $text-dark-gray;
-		box-shadow: inset 0 0 0 1px $button-outline-color;
-		width: 175px;
-	}
-
-	button:hover,
-	button:active,
-	button:focus {
-		background-color: $button-outline-color;
-		box-shadow: 0 0 1px 1px $button-outline-color;
-	}
 }

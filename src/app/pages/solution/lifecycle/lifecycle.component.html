@@ -823,21 +823,26 @@
 <ng-template #loadMoreTemplate let-type="type" let-loading="loading" let-error="error">
 	<div class="load-more base-padding-right dbl-margin-top">
 		<ng-container *ngIf="!loading">
-			<span *ngIf="error" class="text-danger dbl-margin-bottom">
+			<span *ngIf="error" data-auto-id="LoadMore-Error" class="text-danger dbl-margin-bottom">
 				<span class="icon-error qtr-margin-right"></span>
 				<span [innerText]="'_AnErrorOccurredResults_' | i18n"></span>
 			</span>
 			<div class="dbl-margin-bottom">
 				<div class="subheader" [innerText]="'_ShowingXofY_' | i18n : getSelectedSuccessBytesCount(type) : getMaxSuccessBytesCount(type)"></div>
-				<div class="progressbar" [attr.data-percentage]="getSuccessBytesPercentage(type)">
+				<div data-auto-id="LoadMore-ProgressBar" class="progressbar" [attr.data-percentage]="getSuccessBytesPercentage(type)">
 					<div class="progressbar__fill"></div>
 				</div>
 			</div>
 			<div class="dbl-margin-top dbl-margin-bottom">
-				<button class="btn btn--secondary btn--small text-uppercase" [innerText]="'_LoadMore_' | i18n"></button>
+				<button data-auto-id="LoadMore-Button"
+					class="btn btn--secondary btn--small text-uppercase"
+					[innerText]="'_LoadMore_' | i18n"></button>
 			</div>
 			<div class="dbl-margin-top base-margin-bottom">
-				<span class="text-medium toggle" [innerText]="'_BackToTop_' | i18n" (click)="modalScrollToTop()"></span>
+				<span data-auto-id="LoadMore-BackToTop"
+					class="text-medium toggle"
+					[innerText]="'_BackToTop_' | i18n"
+					(click)="modalScrollToTop()"></span>
 			</div>
 		</ng-container>
 		<ng-container *ngIf="loading">

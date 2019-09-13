@@ -261,8 +261,8 @@ export class LifecycleComponent implements OnDestroy {
 		error: {
 			productGuides: {
 				loadMore: false,
-			}
-		}
+			},
+		},
 	};
 
 	// Map of all scheduled ATX's
@@ -1947,7 +1947,13 @@ export class LifecycleComponent implements OnDestroy {
 		});
 	}
 
+	/**
+	 * Gets the number of items currently displayed in the modal
+	 * @param type The type of modal currently open
+	 * @returns The number of items in string format
+	 */
 	public getSelectedSuccessBytesCount (type: string): string {
+		// TODO: Placeholder value of 255 until proper API integration
 		switch (type) {
 			case 'PG':
 				return `${this.selectedProductGuides.length}`;
@@ -1956,7 +1962,14 @@ export class LifecycleComponent implements OnDestroy {
 		}
 	}
 
+	/**
+	 * Gets the maximum number of items to be displayed in the modal
+	 * as specified by the API
+	 * @param type The type of modal currently open
+	 * @returns The number of items in string format
+	 */
 	public getMaxSuccessBytesCount (type: string): string {
+		// TODO: Placeholder value of 255 until proper API integration
 		switch (type) {
 			case 'PG':
 				return '255';
@@ -1965,7 +1978,13 @@ export class LifecycleComponent implements OnDestroy {
 		}
 	}
 
+	/**
+	 * Gets the percentage of the maximum items retrieved by the modal
+	 * @param type The type of modal currently open
+	 * @returns The percentage in string format
+	 */
 	public getSuccessBytesPercentage (type: string): string {
+		// TODO: Placeholder value of 255 until proper API integration
 		switch (type) {
 			case 'PG':
 				return `${Math.floor((this.selectedProductGuides.length / 255) * 100)}`;
