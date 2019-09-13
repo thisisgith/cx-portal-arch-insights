@@ -10,6 +10,7 @@ import { PieChartModule, VisualFilterBarModule } from '@components';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { environment } from '@environment';
 import { ArchitectureReviewModules } from '@sdp-api';
+import { InsightTabsModule } from 'src/app/components/insight-tabs/insight-tabs.module';
 
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
@@ -43,6 +44,7 @@ const childRoutes: Routes = [
 		CuiSpinnerModule,
 		I18nPipeModule,
 		VisualFilterBarModule,
+		InsightTabsModule,
 	],
 })
 export class ArchitectureReviewModule { }

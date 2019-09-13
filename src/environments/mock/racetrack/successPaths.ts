@@ -86,9 +86,14 @@ function MockSP (
  * Mocks Product Documentation & Videos
  * @param solution the solution requested
  * @param usecase the usecase requested
+ * @param mockFileName the name of the corresponding json file to pull mock data from
  * @returns the mock data for the requested solution and usecase
  */
-function MockProductGuides (solution: string, usecase: string): SuccessPathsResponse {
+function MockProductGuides (solution: string, usecase: string, mockFileName?: string): SuccessPathsResponse {
+	if (mockFileName && mockFileName !== '') {
+		return require(`./productGuidesMockData/${mockFileName}.json`);
+	}
+
 	switch (usecase) {
 		case 'Campus Network Assurance':
 			return {
@@ -4207,6 +4212,24 @@ export const SuccessPathScenarios = [
 					description: 'Product Guides IBN - Campus Network Assurance',
 					response: {
 						body: MockProductGuides('IBN', 'Campus Network Assurance'),
+						status: 200,
+					},
+					selected: true,
+				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: 'Product Guides IBN - Campus Network Assurance - twoBookmarked',
+					response: {
+						body: MockProductGuides('IBN', 'Campus Network Assurance', 'twoBookmarked'),
+						status: 200,
+					},
+					selected: true,
+				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: 'Product Guides IBN - Campus Network Assurance - twoUnbookmarked',
+					response: {
+						body: MockProductGuides('IBN', 'Campus Network Assurance', 'twoUnbookmarked'),
 						status: 200,
 					},
 					selected: true,

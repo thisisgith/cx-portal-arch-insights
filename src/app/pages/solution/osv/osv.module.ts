@@ -15,6 +15,7 @@ import { DetailsPanelModule, PieChartModule, VisualFilterBarModule } from '@comp
 import { SoftwareGroupsModule } from './software-groups/software-groups.module';
 import { SoftwareGroupDetailModule } from './software-group-detail/software-group-detail.module';
 import { ContactSupportModule } from 'src/app/components/contact-support/contact-support.module';
+import { InsightTabsModule } from 'src/app/components/insight-tabs/insight-tabs.module';
 
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
@@ -54,6 +55,7 @@ const childRoutes: Routes = [
 		CuiModalModule,
 		ContactSupportModule,
 		VisualFilterBarModule,
+		InsightTabsModule,
 	],
 })
 export class OptimalSoftwareVersionModule { }
