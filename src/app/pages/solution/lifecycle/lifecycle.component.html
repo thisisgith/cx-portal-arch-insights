@@ -22,7 +22,7 @@
 					<ng-container *ngTemplateOutlet="panel; context: {
 						template: successBytesPanel,
 						title: '_SuccessBytes_',
-						loading: (status.loading.success || status.loading.productGuides),
+						loading: (status.loading.success || status.loading.productGuides.modal),
 						data: componentData.success,
 						viewAllLabel: '_ViewAll_',
 						viewAll: '_SuccessBytes_'
@@ -808,7 +808,11 @@
 						<span #topOfModal></span>
 						<ng-container *ngTemplateOutlet="cardViewTemplate; context: { type: type, view: this.pgview }"></ng-container>
 						<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type, view: this.pgview }"></ng-container>
-						<ng-container *ngTemplateOutlet="loadMoreTemplate; context: { type: type }"></ng-container>
+						<ng-container *ngTemplateOutlet="loadMoreTemplate; context: {
+							type: type,
+							loading: this.status.loading.productGuides.loadMore,
+							error: this.status.error.productGuides.loadMore
+						}"></ng-container>
 					</div>
 				</ng-container>
 			</ng-container>
@@ -816,20 +820,29 @@
 	</div>
 </ng-template>
 
-<ng-template #loadMoreTemplate let-type="type">
+<ng-template #loadMoreTemplate let-type="type" let-loading="loading" let-error="error">
 	<div class="load-more base-padding-right dbl-margin-top">
-		<div class="dbl-margin-bottom">
-			<div class="subheader" [innerText]="'_ShowingXofY_' | i18n : getSelectedSuccessBytesCount(type) : getMaxSuccessBytesCount(type)"></div>
-			<div class="progressbar" [attr.data-percentage]="getSuccessBytesPercentage(type)">
-				<div class="progressbar__fill"></div>
+		<ng-container *ngIf="!loading">
+			<span *ngIf="error" class="text-danger dbl-margin-bottom">
+				<span class="icon-error qtr-margin-right"></span>
+				<span [innerText]="'_AnErrorOccurredResults_' | i18n"></span>
+			</span>
+			<div class="dbl-margin-bottom">
+				<div class="subheader" [innerText]="'_ShowingXofY_' | i18n : getSelectedSuccessBytesCount(type) : getMaxSuccessBytesCount(type)"></div>
+				<div class="progressbar" [attr.data-percentage]="getSuccessBytesPercentage(type)">
+					<div class="progressbar__fill"></div>
+				</div>
 			</div>
-		</div>
-		<div class="dbl-margin-top dbl-margin-bottom">
-			<button class="btn btn--secondary btn--small text-uppercase" [innerText]="'_LoadMore_' | i18n"></button>
-		</div>
-		<div class="dbl-margin-top base-margin-bottom">
-			<span class="text-medium toggle" [innerText]="'_BackToTop_' | i18n" (click)="modalScrollToTop()"></span>
-		</div>
+			<div class="dbl-margin-top dbl-margin-bottom">
+				<button class="btn btn--secondary btn--small text-uppercase" [innerText]="'_LoadMore_' | i18n"></button>
+			</div>
+			<div class="dbl-margin-top base-margin-bottom">
+				<span class="text-medium toggle" [innerText]="'_BackToTop_' | i18n" (click)="modalScrollToTop()"></span>
+			</div>
+		</ng-container>
+		<ng-container *ngIf="loading">
+			<cui-spinner></cui-spinner>
+		</ng-container>
 	</div>
 </ng-template>
 

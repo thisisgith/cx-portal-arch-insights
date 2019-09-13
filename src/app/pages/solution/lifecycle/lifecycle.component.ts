@@ -250,10 +250,19 @@ export class LifecycleComponent implements OnDestroy {
 			bookmark: false,
 			cgt: false,
 			elearning: false,
-			productGuides: false,
+			productGuides: {
+				preview: false,
+				modal: false,
+				loadMore: false,
+			},
 			racetrack: false,
 			success: false,
 		},
+		error: {
+			productGuides: {
+				loadMore: false,
+			}
+		}
 	};
 
 	// Map of all scheduled ATX's
@@ -1500,7 +1509,8 @@ export class LifecycleComponent implements OnDestroy {
 	 * @returns The success paths for product documentation and videos.
 	 */
 	private loadProductGuides (): Observable<SuccessPathsResponse> {
-		this.status.loading.productGuides = true;
+		this.status.loading.productGuides.preview = true;
+		this.status.loading.productGuides.modal = true;
 		if (window.Cypress) {
 			window.productGuidesLoading = true;
 		}
@@ -1528,7 +1538,8 @@ export class LifecycleComponent implements OnDestroy {
 				}
 
 				this.buildPGTable();
-				this.status.loading.productGuides = false;
+				this.status.loading.productGuides.preview = false;
+				this.status.loading.productGuides.modal = false;
 				if (window.Cypress) {
 					window.productGuidesLoading = false;
 				}
@@ -1536,7 +1547,8 @@ export class LifecycleComponent implements OnDestroy {
 				return result;
 			}),
 			catchError(err => {
-				this.status.loading.productGuides = false;
+				this.status.loading.productGuides.preview = false;
+				this.status.loading.productGuides.modal = false;
 				if (window.Cypress) {
 					window.productGuidesLoading = false;
 				}
