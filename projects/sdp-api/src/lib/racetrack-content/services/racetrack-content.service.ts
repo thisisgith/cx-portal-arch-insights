@@ -447,7 +447,8 @@ class RacetrackContentService extends __BaseService {
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     if (params.usecase != null) __params = __params.set('usecase', params.usecase.toString());
     if (params.suggestedAction != null) __params = __params.set('suggestedAction', params.suggestedAction.toString());
-    (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
+    if (params.sortField != null) __params = __params.set('sort[0].field', params.sortField.toString());
+    if (params.sortOrder != null) __params = __params.set('sort[0].order', params.sortOrder.toString());
     if (params.solution != null) __params = __params.set('solution', params.solution.toString());
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
     if (params.pitstop != null) __params = __params.set('pitstop', params.pitstop.toString());
@@ -1060,9 +1061,14 @@ module RacetrackContentService {
     suggestedAction?: string;
 
     /**
-     * Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
+     * The field to sort the content by.
      */
-    sort?: Array<string>;
+    sortField?: 'archetype' | 'bookmark' | 'title' | 'type';
+
+    /**
+     * Sort direction for content. Can be either 'asc' or 'desc'.
+     */
+    sortOrder?: 'asc' | 'desc';
 
     /**
      * solution value ( ibn )

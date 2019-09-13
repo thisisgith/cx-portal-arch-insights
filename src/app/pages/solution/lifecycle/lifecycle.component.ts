@@ -1535,6 +1535,8 @@ export class LifecycleComponent implements OnDestroy {
 							name: item,
 							value: item,
 						}));
+					_.set(this.componentData.success.productGuides, ['totalCount'],
+						result.totalCount);
 				}
 
 				this.buildPGTable();
@@ -1953,7 +1955,6 @@ export class LifecycleComponent implements OnDestroy {
 	 * @returns The number of items in string format
 	 */
 	public getSelectedSuccessBytesCount (type: string): string {
-		// TODO: Placeholder value of 255 until proper API integration
 		switch (type) {
 			case 'PG':
 				return `${this.selectedProductGuides.length}`;
@@ -1969,10 +1970,9 @@ export class LifecycleComponent implements OnDestroy {
 	 * @returns The number of items in string format
 	 */
 	public getMaxSuccessBytesCount (type: string): string {
-		// TODO: Placeholder value of 255 until proper API integration
 		switch (type) {
 			case 'PG':
-				return '255';
+				return `${this.componentData.success.productGuides.totalCount}`;
 			default:
 				return 'unknown';
 		}
@@ -1984,10 +1984,9 @@ export class LifecycleComponent implements OnDestroy {
 	 * @returns The percentage in string format
 	 */
 	public getSuccessBytesPercentage (type: string): string {
-		// TODO: Placeholder value of 255 until proper API integration
 		switch (type) {
 			case 'PG':
-				return `${Math.floor((this.selectedProductGuides.length / 255) * 100)}`;
+				return `${Math.floor((this.selectedProductGuides.length / this.componentData.success.productGuides.totalCount) * 100)}`;
 			default:
 				return '0';
 		}
