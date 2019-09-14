@@ -271,7 +271,7 @@ export class AssetDetailsHeaderComponent implements OnChanges, OnInit, OnDestroy
 	 */
 	public refresh () {
 		_.set(this.status, ['scan', 'inProgress'], false);
-		if (_.get(this.asset, 'serialNumber')) {
+		if (this.asset && _.get(this.asset, 'serialNumber')) {
 			this.status.loading.overall = true;
 
 			this.status.scan.eligible = this.element ? true : false;

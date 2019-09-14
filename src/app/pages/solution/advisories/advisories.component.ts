@@ -1187,7 +1187,6 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 	 * Called on 360 details panel close button click
 	 */
 	public onPanelClose () {
-		this.detailsPanelStackService.reset();
 		const row = _.get(this.selectedAdvisory, 'advisory');
 		if (row) {
 			row.active = false;
