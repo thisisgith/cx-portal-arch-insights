@@ -88,6 +88,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	public quickTourActive: boolean;
 	private quickTourFirstTime: boolean;
 	private destroy$ = new Subject();
+	public cxLevel: number;
 
 	@ViewChild('kmWrapper', { static: true }) private kmWrapperRef: ElementRef;
 	@ViewChild('advisoriesFacet', { static: true }) public advisoriesTemplate: TemplateRef<{ }>;
@@ -114,6 +115,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
+		this.cxLevel = _.get(user, ['service', 'cxLevel'], 0);
 		this.eventsSubscribe = this.router.events.subscribe(
 			(event: RouterEvent): void => {
 				if (event instanceof NavigationEnd && event.url) {
