@@ -5,7 +5,6 @@ import {
 	TemplateRef,
 	OnDestroy,
 	ElementRef,
-	HostListener,
 } from '@angular/core';
 import { I18n } from '@cisco-ngx/cui-utils';
 import {
@@ -40,7 +39,6 @@ import { VisualFilter, AdvisoryType } from '@interfaces';
 import { LogService } from '@cisco-ngx/cui-services';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DetailsPanelStackService } from '@services';
-import { AdvisoryDetailsComponent } from '@components';
 
 /** Interface for a tab */
 interface Tab {
@@ -110,7 +108,6 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 	};
 	public contentContainerHeight: string;
 	public activeTab: number;
-	public detailsFirstClick = true;
 	@ViewChild('impactTemplate', { static: true }) private impactTemplate: TemplateRef<{ }>;
 	@ViewChild('impactedCountTemplate', { static: true })
 		private impactedCountTemplate: TemplateRef<{ }>;
@@ -157,8 +154,6 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 		}
 	}
 	@ViewChild('contentContainer', { static: false }) private contentContainer: ElementRef;
-	@ViewChild(AdvisoryDetailsComponent, { static: false })
-		public details: AdvisoryDetailsComponent;
 
 	constructor (
 		private diagnosticsService: DiagnosticsService,
@@ -1175,7 +1170,6 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 			SecurityAdvisoryInfo |
 			FieldNoticeAdvisory |
 			CriticalBug) {
-		this.detailsFirstClick = true;
 		if (_.get(row, 'active', false)) {
 			this.detailsPanelStackService.reset(true);
 			this.selectedAdvisory = {
@@ -1410,17 +1404,5 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 		tab.filtered = false;
 		this.adjustQueryParams();
 		tab.subject.next();
-	}
-
-	/**
-	 * Handler for mouse clicks to close panel
-	 * @param target where the mouse clicked
-	 */
-	@HostListener('document:click', ['$event.target'])
-	public onPageClick (target: ElementRef) {
-		if (this.details && !(this.details.contains(target) || this.detailsFirstClick)) {
-			this.onPanelClose();
-		}
-		this.detailsFirstClick = false;
 	}
 }

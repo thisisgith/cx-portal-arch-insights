@@ -51,7 +51,7 @@
 <ng-template #breadcrumbs>
 	<div class="container">
 		<div class="cs flex flex-fluid flex-center-vertical">
-			<div class="cs__home" inlineSVG="assets/icons/icon-home.svg"></div>
+			<div data-auto-id="HomeButton" class="cs__home" inlineSVG="assets/icons/icon-home.svg" (click)="goHome()"></div>
 			<div class="cs__next-icon" inlineSVG="assets/icons/icon-arrow-breadcrumb.svg"></div>
 			<div *ngIf="selectedSolution">
 				<div class="group-label" [innerText]="'_SuccessTrack_' | i18n"></div>
@@ -139,7 +139,7 @@
 	</div>
 	<div class="kmii__detailed" *ngIf="!facet?.loading">
 		<div class="kmii__insights" *ngIf="!facet?.isError">
-			<span class="kmii__insights__num base-padding-top"
+			<span *ngIf="(cxLevel === 3)" class="kmii__insights__num base-padding-top"
 				[class.kmii__insights__num--selected]="facet?.selected"
 				[innerText]="facet?.seriesData?.totalCnt">
 			</span>
@@ -148,11 +148,11 @@
 					<span [innerText]="facet?.seriesData?.complianceIssueCnt"></span>
 					<span class="qtr-padding-left" [innerText]="'_InsightsComplianceIssues_' | i18n"></span>
 				</div>
-				<div>
+				<div *ngIf="(cxLevel === 3)">
 					<span [innerText]="facet?.seriesData?.predictedCrashCnt"></span>
 					<span class="qtr-padding-left" [innerText]="'_InsightsPredictedCrashes_' | i18n"></span>
 				</div>
-				<div>
+				<div *ngIf="(cxLevel === 3)">
 					<span [innerText]="facet?.seriesData?.recentCrashCnt"></span>
 					<span class="qtr-padding-left" [innerText]="'_InsightsRecentCrashes_' | i18n"></span>
 				</div>
@@ -166,6 +166,13 @@
 		</div>
 		<div class="kmii__insights__title" *ngIf="facet?.isError" [innerText]="'_InsightsNoResultsFound_' | i18n"></div>
 	</div>
+	<app-gauge
+		textColor="#243034"
+		[arcColor]="facet?.selected ? '#00bceb' : '#92dde4'"
+		[percentage]="0"
+		[label]=""
+		*ngIf="!facet?.loading && cxLevel < 3 && !facet?.seriesData?.optedIn">
+	</app-gauge>
 	<p class="km__items__item__label" [innerText]="facet?.title | uppercase"></p>
 	<div
 		class="kmii__border"
@@ -225,4 +232,4 @@
 	</div>
 </ng-template>
 
-<cui-modal></cui-modal>
+<cui-modal class="not-close-360"></cui-modal>

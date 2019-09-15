@@ -899,6 +899,16 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 	}
 
 	/**
+	 * Handles the hidden event from details-panel
+	 * @param hidden false if details slideout is open
+	 */
+	public handleHidden (hidden: boolean) {
+		if (hidden) {
+			this.detailsClose();
+		}
+	}
+
+	/**
 	 * OnDestroy lifecycle hook
 	 */
 	public ngOnDestroy () {

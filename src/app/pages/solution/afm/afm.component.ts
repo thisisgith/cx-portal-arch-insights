@@ -24,12 +24,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { Subject, of } from 'rxjs';
 import { UserResolve } from '@utilities';
 import { takeUntil, catchError } from 'rxjs/operators';
-import {
-	ExportCsvService,
-	AssetPanelLinkService,
-	DetailsPanelStackService,
-} from '@services';
-import { Panel360 } from '@interfaces';
+import { ExportCsvService, DetailsPanelStackService, AssetPanelLinkService } from '@services';
 
 /**
  * AfmComponet which shows in Insight view for Fault Management tab
@@ -42,7 +37,7 @@ import { Panel360 } from '@interfaces';
 	styleUrls: ['./afm.component.scss'],
 	templateUrl: './afm.component.html',
 })
-export class AfmComponent implements OnInit, OnDestroy, Panel360 {
+export class AfmComponent implements OnInit, OnDestroy {
 
 	public showAlarmDetails = false;
 	public selectedAsset: Alarm;
@@ -115,9 +110,10 @@ export class AfmComponent implements OnInit, OnDestroy, Panel360 {
 	constructor (private logger: LogService,
 		private afmService: AfmService,
 		private userResolve: UserResolve,
-		private assetPanelLinkService: AssetPanelLinkService,
+		private exportCsvService: ExportCsvService,
 		private detailsPanelStackService: DetailsPanelStackService,
-		private exportCsvService: ExportCsvService) {
+		private assetPanelLinkService: AssetPanelLinkService,
+	) {
 		this.searchParams = new Object();
 		this.searchParams.pageNumber = 1;
 		this.searchParams.pageSize = this.tableLimit;
@@ -478,7 +474,21 @@ export class AfmComponent implements OnInit, OnDestroy, Panel360 {
 	 * to close the panel
 	 */
 	public onPanelClose () {
+		this.detailsPanelStackService.reset();
+		_.set(this.selectedAsset, 'active', false);
 		this.selectedAsset = null;
+	}
+
+	/**
+	 * Handles the hidden event from details-panel
+	 * @param hidden false if details slideout is open
+	 */
+	public handleHidden (hidden: boolean) {
+		if (hidden) {
+			this.showAlarmDetails = false;
+			this.onPanelClose();
+			this.detailsPanelStackService.reset();
+		}
 	}
 
 	/**

@@ -58,4 +58,54 @@ describe('DetailsPanelComponent', () => {
 		expect(component.headerComponent.content)
 			.toBeTruthy();
 	});
+
+	it('should handle page clicks', () => {
+		const closeDiv = document.createElement('div');
+		const notCloseDiv = document.createElement('div');
+		notCloseDiv.classList.add('not-close-360');
+
+		// These dummy divs will be cut off in the function
+		const dummy = document.createElement('div');
+		const dummy2 = document.createElement('div');
+		const eventIn = jasmine.createSpyObj('eventIn',
+			{
+				composedPath: [
+					closeDiv,
+					notCloseDiv,
+					dummy,
+					dummy2,
+				],
+			},
+		);
+
+		const eventOut = jasmine.createSpyObj('eventIn',
+			{
+				composedPath: [
+					closeDiv,
+					dummy,
+					dummy2,
+				],
+			},
+		);
+
+		component.hidden = false;
+		component.onPageClick(eventIn);
+		expect(component.hidden)
+			.toBe(false);
+
+		component.hidden = true;
+		component.onPageClick(eventIn);
+		expect(component.hidden)
+			.toBe(true);
+
+		component.hidden = false;
+		component.onPageClick(eventOut);
+		expect(component.hidden)
+			.toBe(true);
+
+		component.hidden = true;
+		component.onPageClick(eventOut);
+		expect(component.hidden)
+			.toBe(true);
+	});
 });

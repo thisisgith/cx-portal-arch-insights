@@ -2,19 +2,23 @@ import {
 	Component,
 	Input,
 	OnDestroy,
-	OnInit,
 	EventEmitter,
 	Output,
 	SimpleChanges,
 	ElementRef,
+	AfterViewInit,
 } from '@angular/core';
 import {
-	Asset, NetworkElement, InventoryService, Assets, NetworkElementResponse,
+	Asset,
+	Assets,
+	InventoryService,
+	NetworkElement,
+	NetworkElementResponse,
 } from '@sdp-api';
 
-import { Subject, of } from 'rxjs';
+import { Subject, of, forkJoin } from 'rxjs';
 import {
-	takeUntil, catchError, map, mergeMap,
+	takeUntil, catchError, map,
 } from 'rxjs/operators';
 import { UserResolve } from '@utilities';
 import { Alert, Panel360 } from '@interfaces';
@@ -22,6 +26,7 @@ import * as _ from 'lodash-es';
 import { LogService } from '@cisco-ngx/cui-services';
 import { getProductTypeImage, getProductTypeTitle } from '@classes';
 import { DetailsPanelStackService } from '@services';
+import { I18n } from '@cisco-ngx/cui-utils';
 
 /**
  * Asset Details Component
@@ -34,12 +39,14 @@ import { DetailsPanelStackService } from '@services';
 	styleUrls: ['./asset-details.component.scss'],
 	templateUrl: './asset-details.component.html',
 })
-export class AssetDetailsComponent implements OnInit, OnDestroy, Panel360 {
+export class AssetDetailsComponent implements OnDestroy, AfterViewInit, Panel360 {
 
 	@Input('serialNumber') public serialNumber: string;
 	@Input('asset') public asset: Asset;
 	@Input('element') public element: NetworkElement;
 	@Output('close') public close = new EventEmitter<boolean>();
+	@Input() public minWidth;
+	@Input() public fullscreenToggle;
 
 	public alert: any = { };
 	public isLoading = false;
@@ -49,8 +56,6 @@ export class AssetDetailsComponent implements OnInit, OnDestroy, Panel360 {
 	public getProductIcon = getProductTypeImage;
 	public getProductTitle = getProductTypeTitle;
 	private destroyed$: Subject<void> = new Subject<void>();
-	@Input() public minWidth;
-	@Input() public fullscreenToggle;
 
 	constructor (
 		private inventoryService: InventoryService,
@@ -73,6 +78,8 @@ export class AssetDetailsComponent implements OnInit, OnDestroy, Panel360 {
 	 */
 	private clear () {
 		this.asset = null;
+		this.element = null;
+		this.serialNumber = null;
 	}
 
 	/**
@@ -109,25 +116,26 @@ export class AssetDetailsComponent implements OnInit, OnDestroy, Panel360 {
 			return of(this.asset);
 		}
 
-		return this.inventoryService.getAssets({
-			customerId: this.customerId,
-			page: 1,
-			rows: 1,
-			serialNumber: [this.serialNumber],
-		})
-		.pipe(
-			map((response: Assets) => {
-				const asset: Asset = _.head(response.data);
+		return this.serialNumber ?
+			this.inventoryService.getAssets({
+				customerId: this.customerId,
+				page: 1,
+				rows: 1,
+				serialNumber: [this.serialNumber],
+			})
+			.pipe(
+				map((response: Assets) => {
+					const asset: Asset = _.head(response.data);
 
-				this.asset = asset ? asset : null;
-			}),
-			catchError(err => {
-				this.logger.error('asset-details.component : fetchAsset()' +
-					`:: Error : (${err.status}) ${err.message}`);
+					this.asset = asset ? asset : null;
+				}),
+				catchError(err => {
+					this.logger.error('asset-details.component : fetchAsset()' +
+						`:: Error : (${err.status}) ${err.message}`);
 
-				return of({ });
-			}),
-		);
+					return of({ });
+				}),
+			) : of({ });
 	}
 
 	/**
@@ -135,28 +143,29 @@ export class AssetDetailsComponent implements OnInit, OnDestroy, Panel360 {
 	 * @param asset the asset to use for lookup
 	 * @returns the observable
 	 */
-	private fetchNetworkElement (asset: Asset) {
+	private fetchNetworkElement () {
 		if (this.element) {
 			return of(this.element);
 		}
 
-		return this.inventoryService.getNetworkElements({
-			customerId: this.customerId,
-			serialNumber: [asset.serialNumber],
-		})
-		.pipe(
-			map((response: NetworkElementResponse) => {
-				const networkElement: NetworkElement = _.head(response.data);
+		return this.serialNumber ?
+			this.inventoryService.getNetworkElements({
+				customerId: this.customerId,
+				serialNumber: [this.serialNumber],
+			})
+			.pipe(
+				map((response: NetworkElementResponse) => {
+					const networkElement: NetworkElement = _.head(response.data);
 
-				this.element = networkElement ? networkElement : null;
-			}),
-			catchError(err => {
-				this.logger.error('asset-details.component : fetchNetworkElement()' +
-					`:: Error : (${err.status}) ${err.message}`);
+					this.element = networkElement ? networkElement : null;
+				}),
+				catchError(err => {
+					this.logger.error('asset-details.component : fetchNetworkElement()' +
+						`:: Error : (${err.status}) ${err.message}`);
 
-				return of({ });
-			}),
-		);
+					return of({ });
+				}),
+			) : of({ });
 	}
 
 	/**
@@ -167,28 +176,43 @@ export class AssetDetailsComponent implements OnInit, OnDestroy, Panel360 {
 
 		// If our serial number and our asset/element don't match,
 		// we need to unset them so we can refetch them
-		const serial = this.serialNumber ? this.serialNumber : _.get(this.asset, 'serialNumber');
-		if (serial && this.element && _.get(this.element, 'serialNumber') !== serial) {
+		const assetSerial = _.get(this.asset, 'serialNumber');
+		const elementSerial = _.get(this.element, 'serialNumber');
+
+		const serial = this.serialNumber || assetSerial || elementSerial;
+
+		if (serial && this.element && elementSerial !== serial) {
 			this.element = null;
 		}
-		if (serial && this.asset && _.get(this.asset, 'serialNumber') !== serial) {
+		if (serial && this.asset && assetSerial !== serial) {
 			this.asset = null;
 		}
+		if (serial && !this.serialNumber) {
+			this.serialNumber = serial;
+		}
 
-		this.fetchAsset()
-		.pipe(
-			mergeMap((asset: Asset) => this.fetchNetworkElement(asset)),
+		forkJoin(
+			this.fetchAsset(),
+			this.fetchNetworkElement(),
 		)
 		.subscribe(() => {
 			this.isLoading = false;
+
+			if (!this.serialNumber || !this.asset) {
+				this.handleAlert({
+					message: I18n.get('_UnableToRetrieveAssetDetails_'),
+					severity: 'danger',
+				});
+			}
 		});
 	}
 
 	/**
 	 * Initializer
 	 */
-	public ngOnInit () {
+	public ngAfterViewInit () {
 		this.detailsPanelStackService.push(this);
+		this.hidden = false;
 		this.refresh();
 	}
 
@@ -208,6 +232,16 @@ export class AssetDetailsComponent implements OnInit, OnDestroy, Panel360 {
 			}
 			_.invoke(this.alert, 'hide');
 			this.refresh();
+		}
+	}
+
+	/**
+	 * Handles the hidden event from details-panel
+	 * @param hidden false if details slideout is open
+	 */
+	public handleHidden (hidden: boolean) {
+		if (hidden) {
+			this.onPanelClose();
 		}
 	}
 

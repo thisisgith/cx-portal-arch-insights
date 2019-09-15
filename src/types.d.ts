@@ -29,4 +29,5 @@ interface Window {
 	productGuidesLoading: boolean;
 	racetrackEvents: any;
 	forceCGTDisplay: boolean;
+	cyProblemAreaCode: any;
 }

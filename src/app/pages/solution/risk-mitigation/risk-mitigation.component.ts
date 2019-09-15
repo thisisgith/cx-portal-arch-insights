@@ -5,6 +5,7 @@ import * as _ from 'lodash-es';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { LogService } from '@cisco-ngx/cui-services';
+import { AssetPanelLinkService } from '@services';
 import {
 	CrashHistoryDeviceCount,
 	RiskMitigationService,
@@ -15,6 +16,8 @@ import {
 	HighCrashRiskDeviceCount,
 	HighCrashRisk,
 	RiskAssets,
+	InventoryService,
+	AssetLinkInfo,
 } from '@sdp-api';
 import { ActivatedRoute } from '@angular/router';
 
@@ -42,9 +45,13 @@ export class RiskMitigationComponent {
 		page: 0,
 	};
 	public crashPagination: string;
+	public assetParams: InventoryService.GetAssetsParams;
+	public assetLinkInfo: AssetLinkInfo = Object.create({ });
+
 	public crashedAssetsCount = 0;
 	constructor (
 		private riskMitigationService: RiskMitigationService,
+		private assetPanelLinkService: AssetPanelLinkService,
 		private logger: LogService,
 		private route: ActivatedRoute,
 	) {
@@ -55,7 +62,26 @@ export class RiskMitigationComponent {
 	@ViewChild('contextualMenuTemplate',
 	{ static: true }) private contextualMenuTemplate: TemplateRef<string>;
 	@ViewChild('cardColors', { static: true }) public cardColorsTemplate: TemplateRef<string>;
-	@ViewChild('riskScore', { static: true }) public riskScoreTemplate: TemplateRef<string>;
+	@ViewChild('lastOccuranceTemplate', { static: true })
+	public lastOccuranceTemplate: TemplateRef<string>;
+	@ViewChild('firstOccuranceTemplate', { static: true })
+	 public firstOccuranceTemplate: TemplateRef<string>;
+	@ViewChild('swVersionTemplate', { static: true }) public swVersionTemplate: TemplateRef<string>;
+	@ViewChild('riskScoreTemplate', { static: true }) public riskScoreTemplate: TemplateRef<string>;
+	@ViewChild('neNameTemplate', { static: true }) public neNameTemplate: TemplateRef<string>;
+	@ViewChild('productIdTemplate', { static: true }) public productIdTemplate: TemplateRef<string>;
+	@ViewChild('productFamilyTemplate', { static: true })
+		public productFamilyTemplate: TemplateRef<string>;
+	@ViewChild('deviceNameTemplate', { static: true })
+		public deviceNameTemplate: TemplateRef<string>;
+	@ViewChild('softwareTypeTemplate', { static: true })
+		public softwareTypeTemplate: TemplateRef<string>;
+	@ViewChild('resetReasonTemplate', { static: true })
+		public resetReasonTemplate: TemplateRef<string>;
+	@ViewChild('softwareVersionTemplate', { static: true })
+		public softwareVersionTemplate: TemplateRef<string>;
+	@ViewChild('timeStampTemplate', { static: true })
+		public timeStampTemplate: TemplateRef<string>;
 
 	public openPanel = false;
 	public fullscreen = false;
@@ -64,6 +90,7 @@ export class RiskMitigationComponent {
 	public selectedAsset: RiskAsset = { active: false };
 	public selectedFingerPrintdata: HighCrashRiskDevices;
 	public showAsset360 = false;
+	public isCrashHistoryLoading = false;
 	public highCrashRiskParams: HighCrashRiskPagination;
 	public crashHistoryParams: CrashHistoryDeviceCount;
 	public highCrashDeviceCount = 0;
@@ -150,7 +177,11 @@ export class RiskMitigationComponent {
 	 */
 	public getHighCrashesDeviceData () {
 		this.highCrashRiskAssetsGridDetails.tableOffset = this.highCrashRiskParams.page;
+		this.showAsset360 = false;
 		this.onlyCrashes = true;
+		if (_.get(this.filters, [0, 'selected'])) {
+			this.filters[0].selected = false;
+		}
 		this.getFingerPrintDeviceDetails(this.highCrashRiskParams);
 		const params = _.pick(_.cloneDeep(this.highCrashRiskParams), ['customerId']);
 		this.status.isLoading = true;
@@ -180,6 +211,7 @@ export class RiskMitigationComponent {
 	public getAllCrashesData () {
 		const params = _.pick(_.cloneDeep(this.highCrashRiskParams), ['customerId']);
 		this.onlyCrashes = false;
+		this.filters[0].selected = true;
 
 		return this.riskMitigationService.getAllCrashesData(params)
 			.pipe(
@@ -330,6 +362,7 @@ export class RiskMitigationComponent {
 	 */
 	private getCrashedDeviceHistory (asset) {
 		this.crashHistoryGridDetails.tableData = [];
+		this.isCrashHistoryLoading = true;
 		this.crashHistoryParams = {
 			customerId: _.cloneDeep(this.customerId),
 			neInstanceId: asset.neInstanceId,
@@ -340,9 +373,11 @@ export class RiskMitigationComponent {
 								takeUntil(this.destroy$),
 								map((results: any) => {
 									this.crashHistoryGridDetails.tableData = results.crashes;
+									this.isCrashHistoryLoading = false;
 								}),
 								catchError(err => {
 									this.crashHistoryGridDetails.tableData  = [];
+									this.isCrashHistoryLoading = true;
 									this.logger.error('Crash Assets : getCrashedDeviceHistory() ' +
 										`:: Error : (${err.status}) ${err.message}`);
 
@@ -478,19 +513,43 @@ export class RiskMitigationComponent {
 	/**
 	 * Function to capture the row click on grid
 	 * @param asset will have the device details
+	 * @returns Network element
 	 */
 	public onRowClicked (asset: any) {
 		this.showAsset360 = false;
 		if (asset.active) {
 			this.selectedAsset = asset;
 			this.getCrashedDeviceHistory(asset);
-		} else { this.selectedAsset.active = false; }
+			this.getAssetLinkInfo(asset);
+		} else {
+			this.selectedAsset.active = false;
+		}
+	}
+
+	/**
+	 * Function to capture the row click on grid
+	 * @param asset will have the device details
+	 * @returns Network element
+	 */
+	public getAssetLinkInfo (asset) {
+		this.assetParams = {
+			customerId: JSON.stringify(this.customerId),
+			serialNumber: [asset.serialNumber],
+		};
+
+		return this.assetPanelLinkService.getAssetLinkData(this.assetParams)
+			.subscribe(response => {
+				this.assetLinkInfo.asset = _.get(response, [0, 'data', 0]);
+				this.assetLinkInfo.element = _.get(response, [1, 'data', 0]);
+			});
 	}
 	/**
 	 * Determines whether fpdpanel close on click
 	 */
 	public onFPDPanelClose () {
 		this.showFpDetails = false;
+		_.set(this.selectedFingerPrintdata, 'active', false);
+		this.selectedFingerPrintdata = null;
 	}
 
 	/**
@@ -499,17 +558,32 @@ export class RiskMitigationComponent {
 	 */
 
 	public connectToFpDetails (asset: any) {
-		this.showFpDetails = true;
-		this.selectedFingerPrintdata = asset;
+		if (_.get(asset, 'active')) {
+			this.showFpDetails = true;
+			this.selectedFingerPrintdata = asset;
+			this.getAssetLinkInfo(asset);
+		} else {
+			this.onFPDPanelClose();
+		}
 	}
 
 	/**
 	 * Determines whether panel close on when grids open details of asset
 	 */
-
 	public onPanelClose () {
-		this.selectedAsset.active = false;
+		_.set(this.selectedAsset, 'active', false);
 		this.showAsset360 = false;
+		this.onFPDPanelClose();
+	}
+
+	/**
+	 * Handles the hidden event from details-panel
+	 * @param hidden false if details slideout is open
+	 */
+	public handleHidden (hidden: boolean) {
+		if (hidden) {
+			this.onPanelClose();
+		}
 	}
 
 	/**
@@ -547,6 +621,7 @@ export class RiskMitigationComponent {
 		this.showAsset360 = true;
 		this.selectedAsset.deviceName = this.selectedAsset.neName;
 	}
+
 	/**
 	 * Used to select which tab we want to view the data for
 	 * @param tab the tab we've clicked on
@@ -576,11 +651,13 @@ export class RiskMitigationComponent {
 					name: I18n.get('_RMRessetReason_'),
 					sortable: false,
 					width: '250px',
+					template: this.resetReasonTemplate,
 				},
 				{
 					key: 'timeStamp',
 					name: I18n.get('_RMTimeStamp_'),
 					sortable: false,
+					template: this.timeStampTemplate,
 				}],
 		});
 		this.crashesAssetsGridOptions = new CuiTableOptions({
@@ -590,21 +667,25 @@ export class RiskMitigationComponent {
 					key: 'neName',
 					name: I18n.get('_RMAsset_'),
 					sortable: true,
+					template: this.neNameTemplate,
 				},
 				{
 					key: 'productId',
 					name: I18n.get('_RMProductId_'),
 					sortable: true,
+					template: this.productIdTemplate,
 				},
 				{
 					key: 'productFamily',
 					name: I18n.get('_RMProductFamily_'),
 					sortable: true,
+					template: this.productFamilyTemplate,
 				},
 				{
 					key: 'swVersion',
 					name: I18n.get('_RMSoftwareVersion_'),
 					sortable: true,
+					template: this.swVersionTemplate,
 				},
 				{
 					key: 'crashCount',
@@ -615,11 +696,13 @@ export class RiskMitigationComponent {
 					key: 'firstOccurrence',
 					name: I18n.get('_RMFirstOccurance_'),
 					sortable: false,
+					template: this.firstOccuranceTemplate,
 				},
 				{
 					key: 'lastOccurrence',
 					name: I18n.get('_RMLastOccurance_'),
 					sortable: false,
+					template: this.lastOccuranceTemplate,
 				},
 			],
 			dynamicData: false,
@@ -634,26 +717,31 @@ export class RiskMitigationComponent {
 					key: 'deviceName',
 					name: I18n.get('_RMAsset_'),
 					sortable: true,
+					template: this.deviceNameTemplate,
 				},
 				{
 					key: 'productId',
 					name: I18n.get('_RMProductId_'),
 					sortable: true,
+					template: this.productIdTemplate,
 				},
 				{
 					key: 'productFamily',
 					name: I18n.get('_RMProductFamily_'),
 					sortable: true,
+					template: this.productFamilyTemplate,
 				},
 				{
 					key: 'softwareType',
 					name: I18n.get('_RMSoftwareType_'),
 					sortable: true,
+					template: this.softwareTypeTemplate,
 				},
 				{
 					key: 'softwareVersion',
 					name: I18n.get('_RMSoftwareVersion_'),
 					sortable: true,
+					template: this.softwareVersionTemplate,
 				},
 				{
 					key: 'riskScore',
@@ -745,7 +833,6 @@ export class RiskMitigationComponent {
 	public clearFilters () {
 		this.clearAllFilters = !this.clearAllFilters;
 		_.each(this.filters, (clearFilter: Filter) => {
-			clearFilter.selected = false;
 			_.each(clearFilter.seriesData, (currentFilter: { selected: boolean; }) => {
 				currentFilter.selected = false;
 			});
@@ -769,7 +856,6 @@ export class RiskMitigationComponent {
 	public resetFilters () {
 		this.searchQueryInCrashGrid = '';
 		_.each(this.filters, (filter: Filter) => {
-			filter.selected = false;
 			_.each(filter.seriesData, (currentFilter: { selected: boolean; }) => {
 				currentFilter.selected = false;
 			});

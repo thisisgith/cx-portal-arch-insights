@@ -1,6 +1,7 @@
 import RouteWatch from '../support/routeWatch';
 import MockService from '../support/mockService';
 
+
 const advisoryMock = new MockService('AdvisorySecurityAdvisoryScenarios');
 const advisoryScenario = advisoryMock.getScenario('GET', 'Advisory Security Advisories');
 const advisories = advisoryScenario.response.body;
@@ -91,7 +92,7 @@ describe('Advisories', () => { // PBC-306
 	});
 
 	context('Security Advisories', () => { // PBC-308 / PBC-314
-		before(() => cy.getByAutoId('SECURITY ADVISORIESTab').click());
+		before(() => cy.getByAutoId('Security AdvisoriesTab').click());
 
 		it('Advisories are properly displayed in list format', () => {
 			cy.get('app-advisories tbody tr').each((row, index) => {
@@ -270,7 +271,7 @@ describe('Advisories', () => { // PBC-306
 	});
 
 	context('Field Notices', () => { // PBC-309 / PBC-315
-		before(() => cy.getByAutoId('FIELD NOTICESTab').click());
+		before(() => cy.getByAutoId('Field NoticesTab').click());
 
 		it('Field Notices are properly displayed in list format', () => {
 			cy.get('app-advisories tbody tr').each((row, index) => {
@@ -300,7 +301,7 @@ describe('Advisories', () => { // PBC-306
 			fieldNoticeMock.enable('Field Notice Advisories - Unreachable');
 			cy.getByAutoId('Facet-Assets & Coverage').click();
 			cy.getByAutoId('Facet-Advisories').click();
-			cy.getByAutoId('FIELD NOTICESTab').click();
+			cy.getByAutoId('Field NoticesTab').click();
 
 			cy.getByAutoId('NoResultsFoundTxt').should('have.text', 'No Results Found');
 
@@ -311,7 +312,7 @@ describe('Advisories', () => { // PBC-306
 			fieldNoticeMock.enable('Field Notice Advisories - Page 1');
 			cy.getByAutoId('Facet-Assets & Coverage').click();
 			cy.getByAutoId('Facet-Advisories').click();
-			cy.getByAutoId('FIELD NOTICESTab').click();
+			cy.getByAutoId('Field NoticesTab').click();
 
 			cy.getByAutoId('CUIPager-Page2').click()
 				.wait('Field Notice Advisories - Page 2')
@@ -369,7 +370,7 @@ describe('Advisories', () => { // PBC-306
 				fnCountMock.enable('Field Notice Counts - Unreachable');
 				cy.getByAutoId('Facet-Lifecycle').click(); // refresh table
 				cy.getByAutoId('Facet-Advisories').click();
-				cy.getByAutoId('FIELD NOTICESTab').click();
+				cy.getByAutoId('Field NoticesTab').click();
 
 				cy.getByAutoId('VisualFilter-lastUpdate').should('not.be.visible');
 				cy.getByAutoId('TotalVisualFilter').should('be.visible');
@@ -377,14 +378,14 @@ describe('Advisories', () => { // PBC-306
 				fnCountMock.enable('Field Notice Update Counts');
 				cy.getByAutoId('Facet-Lifecycle').click();
 				cy.getByAutoId('Facet-Advisories').click();
-				cy.getByAutoId('FIELD NOTICESTab').click();
+				cy.getByAutoId('Field NoticesTab').click();
 				cy.getByAutoId('VisualFilter-lastUpdate').should('be.visible');
 			});
 		});
 	});
 
 	context('Critical Bugs', () => { // PBC-310 / PBC-316
-		before(() => cy.getByAutoId('CRITICAL BUGSTab').click());
+		before(() => cy.getByAutoId('Critical BugsTab').click());
 
 		it('Bugs are properly displayed in list format', () => {
 			cy.get('app-advisories tbody tr').each((row, index) => {
@@ -411,7 +412,7 @@ describe('Advisories', () => { // PBC-306
 			bugMock.enable('Critical Bugs - Unreachable');
 			cy.getByAutoId('Facet-Assets & Coverage').click();
 			cy.getByAutoId('Facet-Advisories').click();
-			cy.getByAutoId('CRITICAL BUGSTab').click();
+			cy.getByAutoId('Critical BugsTab').click();
 
 			cy.getByAutoId('NoResultsFoundTxt').should('have.text', 'No Results Found');
 
@@ -422,7 +423,7 @@ describe('Advisories', () => { // PBC-306
 			bugMock.enable('Critical Bugs - Page 1');
 			cy.getByAutoId('Facet-Assets & Coverage').click();
 			cy.getByAutoId('Facet-Advisories').click();
-			cy.getByAutoId('CRITICAL BUGSTab').click();
+			cy.getByAutoId('Critical BugsTab').click();
 
 			cy.getByAutoId('CUIPager-Page2').click()
 				.wait('Critical Bugs - Page 2')
@@ -507,7 +508,7 @@ describe('Advisories', () => { // PBC-306
 				bugMock.enable('Critical Bug State Counts - Unreachable');
 				cy.getByAutoId('Facet-Lifecycle').click(); // refresh table
 				cy.getByAutoId('Facet-Advisories').click();
-				cy.getByAutoId('CRITICAL BUGSTab').click();
+				cy.getByAutoId('Critical BugsTab').click();
 
 				cy.getByAutoId('VisualFilter-state').should('not.be.visible');
 				cy.getByAutoId('VisualFilter-total').should('be.visible');
@@ -515,9 +516,147 @@ describe('Advisories', () => { // PBC-306
 				bugMock.enable('Critical Bug State Counts');
 				cy.getByAutoId('Facet-Lifecycle').click();
 				cy.getByAutoId('Facet-Advisories').click();
-				cy.getByAutoId('CRITICAL BUGSTab').click();
+				cy.getByAutoId('Critical BugsTab').click();
 				cy.getByAutoId('VisualFilter-state').should('be.visible');
 			});
+		});
+	});
+
+	context('Open case with Prediction', () => { // PBC-498
+		let predict0, predict1, predict2;
+		let techID, subID;
+		let problemCodes, problemAreas, problemAreaOptions;
+		let advtitle;
+		const customerAct = {
+			configArray: [],
+			upgradeArray: [],
+			operateArray: [],
+			installArray: [],
+		};
+		it('Open case with prediction', () => {
+			cy.server();
+			cy.route('POST', '**/classify').as('caseopen');
+			cy.route('**/tech/problemArea/**').as('problemcode');
+			cy.route('**/tech/subTech/**').as('subtech');
+			// Click one advisory, extract the advisory title which will be
+			// used for prediction query
+			cy.getByAutoId('TitleText').first().then(adv => {
+				advtitle = adv.text();
+				cy.log(`casetitle is ${advtitle}`);
+				cy.log(`casetitle is ${advtitle}`);
+				cy.get('app-advisories tbody tr').first().click();
+				cy.getByAutoId('SecurityDetailsTitleText').invoke('text')
+					.should('eq', advtitle);
+				// Click OpenCase button to open OpenCase Modal
+				cy.getByAutoId('SecurityAdvisoryOpenCaseBtn').click();
+				// Verify xhr query contains the advisory title, extract predictions from the response
+				cy.wait('@caseopen').then(xhr => {
+					const req = xhr.request.body.data;
+					const { predictions } = xhr.response.body;
+					expect(req).to.have.property('caseTitle', advtitle);
+					predict0 = `${predictions[0].tech.name} > ${predictions[0].sub_tech.name}`;
+					predict1 = `${predictions[1].tech.name} > ${predictions[1].sub_tech.name}`;
+					predict2 = `${predictions[2].tech.name} > ${predictions[2].sub_tech.name}`;
+					techID = predictions[0].tech.id;
+					subID = predictions[0].sub_tech.id;
+				});
+				cy.get('app-case-open-advisories', { timeout: 20000 }).within(() => {
+				// Verify the OpenCase Modal has all expected elements
+					cy.getByAutoId('CaseOpenFrom')
+						.should('have.text', 'Case Initiated from a Cisco Security Advisory')
+						.should('be.visible');
+					cy.getByAutoId('CaseOpenAsset').should('have.text', 'Asset Associated with the Case')
+						.should('be.visible');
+					cy.getByAutoId('CaseOpenTitle').should('have.text', 'Case Title')
+						.should('be.visible');
+					// Verify the Title field is prepopulated with the title of the advisory
+					cy.get('input[formcontrolname="title"]').invoke('val')
+						.should('eq', advtitle);
+					cy.getByAutoId('CaseOpenDescription').should('have.text', 'Describe the Problem')
+						.should('be.visible');
+					// Verify 'Describe the Problem' field is prepopulated with Advisory Info
+					cy.get('textarea[formcontrolname=description]').invoke('val').then(descText => {
+						expect(descText).to.include('Event: Security Advisory');
+					});
+					cy.get('tech-form dt').first().contains('Technology')
+						.should('be.visible');
+					cy.getByAutoId('CaseOpenSubTech').should('have.text', 'SubTech');
+					cy.getByAutoId('CaseOpenProblemArea').should('have.text', 'Problem Area')
+						.and('be.visible');
+					// Verify 'pre-selected case details' can be expanded and vice versa
+					cy.getByAutoId('ExpandContent').contains('View pre-selected case details')
+						.click();
+					cy.get('div[ng-reflect-height-transition-expanded=false]').should('exist');
+					cy.getByAutoId('ExpandContent').contains('View pre-selected case details')
+						.click();
+					cy.get('div[ng-reflect-height-transition-expanded=true]').should('exist');
+					// Verify the predictions provided by API are displayed
+					cy.getByAutoId('PanelSelectOption0').contains(predict0);
+					cy.getByAutoId('PanelSelectOption1').contains(predict1);
+					cy.getByAutoId('PanelSelectOption2').contains(predict2);
+					cy.getByAutoId('RefreshSuggestions').should('exist');
+					// Select the first prediction
+					cy.getByAutoId('PanelSelectOption0').click();
+					// Extract the problem codes info from API response for the selected subtech
+					cy.wait('@subtech').then(xhr => {
+						const sublists = xhr.response.body.subTechList;
+						const problem = sublists
+							.find(sublist => sublist.techId === techID && sublist._id === subID);
+						problemCodes = problem.problemCodes;
+					});
+					// Extract customer activities groups and the associated problem code names
+					cy.wait('@problemcode').then(xhr => {
+						problemAreas = xhr.response.body.problemArea.customerActivities;
+						problemCodes.forEach(problem => {
+							const config = problemAreas
+								.find(problemArea => problemArea.problemCode === problem && problemArea.customerActivity === 'Configuration');
+							const upgrade = problemAreas
+								.find(problemArea => problemArea.problemCode === problem && problemArea.customerActivity === 'Upgrade');
+							const operate = problemAreas
+								.find(problemArea => problemArea.problemCode === problem && problemArea.customerActivity === 'Operate');
+							const install = problemAreas
+								.find(problemArea => problemArea.problemCode === problem && problemArea.customerActivity === 'Installation');
+							if (config) {
+								customerAct.configArray.push(config.problemCodeName);
+							}
+							if (upgrade) {
+								customerAct.upgradeArray.push(upgrade.problemCodeName);
+							}
+							if (operate) {
+								customerAct.operateArray.push(operate.problemCodeName);
+							}
+							if (install) {
+								customerAct.installArray.push(install.problemCodeName);
+							}
+						});
+						customerAct.upgradeArray.sort();
+						customerAct.installArray.sort();
+						customerAct.configArray.sort();
+						customerAct.operateArray.sort();
+					});
+					// Verify the data input for ProblemArea matches with xhr response
+					cy.window().then(win => {
+						problemAreaOptions = win.cyProblemAreaCode;
+						problemAreaOptions.Configuration = problemAreaOptions.Configuration
+							.map(config => config.problemCodeName);
+						problemAreaOptions.Installation = problemAreaOptions.Installation
+							.map(install => install.problemCodeName);
+						problemAreaOptions.Operate = problemAreaOptions.Operate
+							.map(operate => operate.problemCodeName);
+						problemAreaOptions.Upgrade = problemAreaOptions.Upgrade
+							.map(upgrade => upgrade.problemCodeName);
+						expect(problemAreaOptions.Configuration).eql(customerAct.configArray);
+						expect(problemAreaOptions.Installation).eql(customerAct.installArray);
+						expect(problemAreaOptions.Operate).eql(customerAct.operateArray);
+						expect(problemAreaOptions.Upgrade).eql(customerAct.upgradeArray);
+					});
+				});
+			});
+			// Close the OpenCase Modal
+			cy.getByAutoId('CaseOpenClose').click();
+			cy.getByAutoId('CaseOpenCancel').click();
+			// Verify the OpenCase Modal is no longer displayed
+			cy.get('app-case-open-advisories').should('not.exist');
 		});
 	});
 });

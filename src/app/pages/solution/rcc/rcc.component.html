@@ -1,4 +1,5 @@
-<div class="panel">
+<div class="panel panel--bordered base-padding-left base-padding-top no-padding-bottom">
+	<insight-tabs></insight-tabs>
 	<div class="col-md-12">
 		<div class="row">
 			<div class="col-md-2 filter__selected">
@@ -90,7 +91,8 @@
 		<div *ngIf="loading" class="base-margin-bottom">
 			<cui-spinner></cui-spinner>
 		</div>
-		<cui-table 
+		<cui-table
+			class="no-close-360"
 			[options]="policyViolationsTableOptions"
 			[data]="policyViolationsGridData"
 			[limit]="tableConfig?.tableLimit"
@@ -120,6 +122,7 @@
 			<cui-spinner></cui-spinner>
 		</div>
 		<cui-table
+			class="no-close-360"
 			[options]="assetTableOptions"
 			[data]="tableAssetDataSample"
 			[limit]="tableConfig?.tableLimit"
@@ -184,7 +187,7 @@
 		</div>
 	</ng-template>
 	<!-- App Details 360 slide-out -->
-	<details-panel *ngIf="selectedViolationModal" [hidden]="!selectedViolationModal" [fullscreen]="slideinFullScreen.violationFullScreen" [minWidth]="'900px'">
+	<details-panel *ngIf="selectedViolationModal" [hidden]="!selectedViolationModal" (hiddenChange)="handleHidden($event, 'selectedViolationModal')" [fullscreen]="slideinFullScreen.violationFullScreen" [minWidth]="'900px'">
 		<details-panel-header (close)="onPanelClose('selectedViolationModal');slideinFullScreen.violationFullScreen = false" [(fullscreen)]="slideinFullScreen.violationFullScreen"
 			[fullscreenToggle]="true">
 			<div detailsPanelTitle>
@@ -234,17 +237,17 @@
 		</details-panel-header>
 		<app-rcc-device-violation-details 
 			[policyViolationInfo]="policyViolationInfo" 
-			(assetDetails)="openDevicePage($event);onPanelClose('selectedViolationModal');">
+			(assetDetails)="openDevicePage($event);">
 		</app-rcc-device-violation-details>
 	</details-panel>
 
-	<details-panel *ngIf="selectedAssetModal" [hidden]="!selectedAssetModal" [fullscreen]="slideinFullScreen.assetsFullScreen" [minWidth]="'900px'">
+	<details-panel *ngIf="selectedAssetModal" [hidden]="!selectedAssetModal" (hiddenChange)="handleHidden($event, 'selectedAssetModal')" [fullscreen]="slideinFullScreen.assetsFullScreen" [minWidth]="'900px'">
 		<details-panel-header (close)="onPanelClose('selectedAssetModal');slideinFullScreen.assetsFullScreen = false" [(fullscreen)]="slideinFullScreen.assetsFullScreen"
 			[fullscreenToggle]="true">
 			<div detailsPanelTitle>
 				<span class="text-xlarge" [innerText]="('_RccViolationsFor_' | i18n)"></span>
 				<a data-auto-id="DeviceLink" class="text-xlarge"
-					(click)="openDevicePage(selectedAssetData?.serialNumber);onPanelClose('selectedAssetModal');"
+					(click)="openDevicePage(selectedAssetData?.serialNumber);"
 					[innerHTML]="selectedAssetData?.deviceName || ('_NA_' | i18n)">
 				</a>
 			</div>

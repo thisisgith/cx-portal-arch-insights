@@ -3,6 +3,7 @@ import {
 	ViewChild,
 	TemplateRef,
 	OnDestroy,
+	ElementRef,
  } from '@angular/core';
 import { LogService } from '@cisco-ngx/cui-services';
 
@@ -113,6 +114,8 @@ export class LifecycleComponent implements OnDestroy {
 	@ViewChild('statusTemplate', { static: true }) private statusTemplate: TemplateRef<{ }>;
 	@ViewChild('actionTemplate', { static: true }) private actionTemplate: TemplateRef<{ }>;
 	@ViewChild('titleTemplate', { static: true }) private titleTemplate: TemplateRef<{ }>;
+	@ViewChild('scrollModal', { static: false }) private scrollModalRef: ElementRef;
+	@ViewChild('lifecyclePanel', { static: true }) private lifecyclePanelRef: ElementRef;
 	public modalContent: TemplateRef<{ }>;
 	public modal = {
 		content: null,
@@ -128,6 +131,7 @@ export class LifecycleComponent implements OnDestroy {
 	public visibleContext: AtxSchema[];
 	public atxScheduleCardOpened = false;
 	public recommendedAtxScheduleCardOpened = false;
+	public panelBottomPaddingNeeded = false;
 	public sessionSelected: AtxSessionSchema;
 	public customerId: string;
 	private user: User;
@@ -328,16 +332,15 @@ export class LifecycleComponent implements OnDestroy {
 
 				this.componentData.params.usecase = _.get(technology, 'name');
 				this.componentData.params.solution = currentSolution;
-
 				this.currentWorkingPitstop = _.get(this.selectedTechnology, 'currentPitstop');
 				const currentPitstop = _.find(
 					_.get(this.selectedTechnology, 'pitstops', []), (stop: RacetrackPitstop) =>
-					stop.name.toLowerCase() === this.currentWorkingPitstop.toLowerCase());
+					stop.name === this.currentWorkingPitstop);
 				this.currentPitstopCompPert =
 					this.calculateActionPercentage(currentPitstop);
 
 				let viewingIndex = racetrackComponent.stages
-					.indexOf(this.currentWorkingPitstop.toLowerCase()) + 1;
+					.indexOf(this.currentWorkingPitstop) + 1;
 				if (viewingIndex === racetrackComponent.stages.length) { viewingIndex = 0; }
 				this.currentViewingPitstop = racetrackComponent.stages[viewingIndex];
 
@@ -351,8 +354,8 @@ export class LifecycleComponent implements OnDestroy {
 	 * selected pitstop
 	 */
 	public get notCurrentPitstop () {
-		return this.currentWorkingPitstop.toLowerCase() !== this.currentPitstop.name.toLowerCase()
-			&& this.currentViewingPitstop.toLowerCase() !== this.currentPitstop.name.toLowerCase();
+		return this.currentWorkingPitstop !== this.currentPitstop.name
+			&& this.currentViewingPitstop !== this.currentPitstop.name;
 	}
 
 	/**
@@ -786,10 +789,43 @@ export class LifecycleComponent implements OnDestroy {
 	}
 
 	/**
+	 * register the ATX session
+	 * @param atx the session we've clicked on
+	 * @param session the crosslaunch url
+	 */
+	public registerATXSession (atx: AtxSchema, session: AtxSessionSchema) {
+		const ssId = session.sessionId;
+		this.status.loading.atx = true;
+		if (window.Cypress) {
+			window.atxLoading = true;
+		}
+		const params: RacetrackContentService.RegisterUserToAtxParams = {
+			atxId: atx.atxId,
+			sessionId: ssId,
+		};
+		this.crossLaunch(session.registrationURL);
+		this.contentService.registerUserToAtx(params)
+		.subscribe(() => {
+			atx.status = 'requested';
+			if (window.Cypress) {
+				window.atxLoading = false;
+			}
+		},
+		err => {
+			this.status.loading.atx = false;
+			if (window.Cypress) {
+				window.atxLoading = false;
+			}
+			this.logger.error(`lifecycle.component : registerATXSession() :: Error  : (${
+				err.status}) ${err.message}`);
+		});
+	}
+
+	/**
 	 * Selects the session
 	 * @param atx the session we've clicked on
 	 */
-	 public cancelATXSession (atx: AtxSchema) {
+	public cancelATXSession (atx: AtxSchema) {
 		const ssId = _.find(atx.sessions, { scheduled: true }).sessionId;
 		this.status.loading.atx = true;
 		if (window.Cypress) {
@@ -1028,11 +1064,11 @@ export class LifecycleComponent implements OnDestroy {
 		.subscribe((results: RacetrackResponse) => {
 			const responseSolution: RacetrackSolution = _.find(
 				_.get(results, 'solutions', []), (solution: RacetrackSolution) =>
-				solution.name.toLowerCase() === this.selectedSolution.name.toLowerCase());
+				solution.name === this.selectedSolution.name);
 
 			const responseTechnology: RacetrackTechnology = _.find(
 				_.get(responseSolution, 'technologies', []), (tech: RacetrackTechnology) =>
-				tech.name.toLowerCase() === this.selectedTechnology.name.toLowerCase());
+				tech.name === this.selectedTechnology.name);
 
 			if (responseTechnology) {
 				this.racetrackInfoService.sendCurrentTechnology(responseTechnology);
@@ -1172,10 +1208,16 @@ export class LifecycleComponent implements OnDestroy {
 	 * Changes the atxMoreClicked flag and adds value to moreATXSelected
 	 * @param item ATXSchema
 	 * @param panel string
+	 * @param moreList HTMLElement (optional)
 	 */
-	 public atxMoreSelect (item: AtxSchema, panel: string) {
+	 public atxMoreSelect (item: AtxSchema, panel: string, moreList?: HTMLElement) {
 		 if (!this.atxMoreClicked && _.isEqual(panel, 'moreATXList')) {
 			this.atxScheduleCardOpened = false;
+			// deals with moreCoordinates not being re-evaluated when viewSessions
+			// is open on another more select instance
+			if (moreList) {
+				this.getMoreCoordinates(moreList, panel);
+			}
 			this.recommendedAtxScheduleCardOpened = false;
 			this.moreATXSelected = item;
 			this.atxMoreClicked = true;
@@ -1207,6 +1249,7 @@ export class LifecycleComponent implements OnDestroy {
 		this.moreYCoordinates = 0;
 		this.moreATXSelected = null;
 		this.atxMoreClicked = false;
+		this.panelBottomPaddingNeeded = false;
 		if (this.componentData.atx) {
 			this.componentData.atx.interested = null;
 		}
@@ -1259,18 +1302,20 @@ export class LifecycleComponent implements OnDestroy {
 	public getPanel (viewAtxSessions: HTMLElement) {
 		let panel;
 		const _div = viewAtxSessions;
-		const atxPopupListViewAdjustPx = 255;
+		const atxPopupListViewAdjustPx = 163;
 		this.innerWidth = window.innerWidth;
 		if (this.componentData.atx.interested) {
 			switch (this.atxview) {
 				case 'grid': {
-					if ((this.eventXCoordinates + 500) > this.innerWidth) {
-						_div.style.right = '90%';
-						_div.style.bottom = '-50px';
+					const rect = this.eventClickedElement.getBoundingClientRect();
+
+					if ((rect.right + 500) > this.scrollModalRef.nativeElement.clientWidth) {
+						_div.style.right = '98%';
+						_div.style.bottom = '-132.5px';
 						panel = 'panel cardpanel--openright';
 					} else {
-						_div.style.left = '40%';
-						_div.style.bottom = '-50px';
+						_div.style.left = '55%';
+						_div.style.bottom = '-132.5px';
 						panel = 'panel cardpanel--open';
 					}
 					break;
@@ -1279,15 +1324,19 @@ export class LifecycleComponent implements OnDestroy {
 					const rect = this.eventClickedElement.getBoundingClientRect();
 					const ht = this.eventClickedElement.scrollHeight;
 
-					_div.style.left = `${(rect.left - _div.scrollWidth)}px`;
+					_div.style.left = `${(rect.left - _div.scrollWidth) - 3}px`;
 					_div.style.top = `${(rect.top + (ht / 2))
 						+ this.scrollY - atxPopupListViewAdjustPx - this.appHeaderHeight}px`;
 					panel = 'panel listpanel--open';
 				}
 			}
 		} else if (this.atxScheduleCardOpened && this.moreATXSelected) {
-			_div.style.left = `${this.moreXCoordinates}px`;
-			_div.style.top = `${this.moreYCoordinates - _div.offsetHeight / 2}px`;
+			const panelHeight = this.lifecyclePanelRef.nativeElement.clientHeight;
+			if (_div.clientHeight + this.moreYCoordinates > panelHeight) {
+				this.panelBottomPaddingNeeded = true;
+			}
+			_div.style.left = `${this.moreXCoordinates + 30}px`;
+			_div.style.top = `${this.moreYCoordinates - _div.offsetHeight / 2 + 10}px`;
 			panel = 'panel panel--open';
 		} else {
 			_div.style.left = '128px';
@@ -1756,12 +1805,12 @@ export class LifecycleComponent implements OnDestroy {
 
 			const pitstop = _.find(
 				_.get(this.selectedTechnology, 'pitstops', []), (stop: RacetrackPitstop) =>
-				stop.name.toLowerCase() === stage.toLowerCase());
+				stop.name === stage);
 
 			this.componentData.racetrack = {
 				pitstop,
+				stage,
 				actionsCompPercent: this.currentPitstopCompPert,
-				stage: stage.toLowerCase(),
 			};
 
 			const nextAction = pitstop ? _.find(pitstop.pitstopActions, { isComplete: false })

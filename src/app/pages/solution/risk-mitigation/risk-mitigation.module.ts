@@ -15,6 +15,7 @@ import {
 	CuiPagerModule,
 	CuiProgressbarModule,
 	CuiSpinnerModule,
+	CuiLoaderModule,
 } from '@cisco-ngx/cui-components';
 import {
 	RiskMitigationColumnChartModule,
@@ -28,6 +29,7 @@ import {
 	FingerprintBodyModule ,
 } from '../fingerprint-details/fingerprint-body/fingerprint-body.module';
 import { FingerprintDetailsModule } from '../fingerprint-details/fingerprint-details.module';
+import { InsightTabsModule } from 'src/app/components/insight-tabs/insight-tabs.module';
 
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
@@ -63,6 +65,7 @@ const childRoutes: Routes = [
 		CuiSearchModule,
 		CuiIconModule,
 		CuiDropdownModule,
+		CuiLoaderModule,
 		CuiProgressbarModule,
 		AssetDetailsModule,
 		AssetDetailsHeaderModule,
@@ -71,6 +74,7 @@ const childRoutes: Routes = [
 		FingerprintHeaderModule,
 		FingerprintBodyModule,
 		VisualFilterBarModule,
+		InsightTabsModule,
 	],
 })
 export class RiskMitigationModule { }

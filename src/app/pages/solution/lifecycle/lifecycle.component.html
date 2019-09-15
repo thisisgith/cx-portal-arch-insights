@@ -1,6 +1,6 @@
-<div class="panel panel--ltgray panel--bordered">
+<div class="panel panel--ltgray panel--bordered" #lifecyclePanel [class.panel--bottom-padding]="panelBottomPaddingNeeded">
 	<div class="row base-padding-top">
-		<div class="col-md-3" *ngIf="!status.loading.racetrack && componentData?.racetrack?.stage">
+		<div class="col-md-3 base-padding-left" *ngIf="!status.loading.racetrack && componentData?.racetrack?.stage">
 			<ng-container *ngTemplateOutlet="racetrack"></ng-container>
 		</div>
 
@@ -92,52 +92,54 @@
 		<div class="half-padding-left">
 			<span *ngIf="currentPitstop" [innerHTML]="'_DuringXStage_' | i18n:currentPitstop.name"></span>
 			<span [ngSwitch]="componentData?.racetrack?.stage">
-				<span *ngSwitchCase="'onboard'" [innerHTML]="'_OnboardDescription_' | i18n"></span>
-				<span *ngSwitchCase="'implement'" [innerHTML]="'_ImplementDescription_' | i18n"></span>
-				<span *ngSwitchCase="'adopt'" [innerHTML]="'_AdoptDescription_' | i18n"></span>
-				<span *ngSwitchCase="'engage'" [innerHTML]="'_EngageDescription_' | i18n"></span>
-				<span *ngSwitchCase="'use'" [innerHTML]="'_UseDescription_' | i18n"></span>
-				<span *ngSwitchCase="'optimize'" [innerHTML]="'_OptimizeDescription_' | i18n"></span>
+				<span *ngSwitchCase="'Onboard'" [innerHTML]="'_OnboardDescription_' | i18n"></span>
+				<span *ngSwitchCase="'Implement'" [innerHTML]="'_ImplementDescription_' | i18n"></span>
+				<span *ngSwitchCase="'Adopt'" [innerHTML]="'_AdoptDescription_' | i18n"></span>
+				<span *ngSwitchCase="'Engage'" [innerHTML]="'_EngageDescription_' | i18n"></span>
+				<span *ngSwitchCase="'Use'" [innerHTML]="'_UseDescription_' | i18n"></span>
+				<span *ngSwitchCase="'Optimize'" [innerHTML]="'_OptimizeDescription_' | i18n"></span>
 			</span>
 		</div>
 	</div>
-	<div class="base-margin-left" *ngIf="currentPitstop && currentPitstop?.pitstopActions?.length">
-		<div class="divider divider--compressed"></div>
-		<div class="base-margin-top">
-			<span class="qtr-padding-bottom icon-flagged"></span>
-			<span class="text-uppercase qtr-padding-left" [innerText]="'_CheckList_' | i18n"></span>
+	<div class="pitstop-checklist base-margin-left" 
+		*ngIf="currentPitstop && currentPitstop?.pitstopActions?.length">
+		<div class="divider"></div>
+		<div class="pitstop-checklist__title cx-text-secondary">
+			<div class="pitstop-checklist__flag"
+				inlineSVG="assets/img/solutions/icon-checkerflag.svg"></div>
+			<div class="text-uppercase half-padding-left" [innerText]="'_CheckList_' | i18n"></div>
 		</div>
-		<p class="text-small no-margin-top" [innerText]="'_ChecklistDesc_' | i18n"></p>
+		<p class="text-small no-margin-top half-margin-bottom cx-text-light-gray" 
+			[innerText]="'_ChecklistDesc_' | i18n"></p>
 		<div *ngFor="let action of currentPitActionsWithStatus" class="form-group form-group select" data-auto-id="pitstopAction">
-			<div class="actionname row qtr-padding-top qtr-padding-bottom" [ngClass]="{selected: action.selected}">
-				<div class="col-md-1">
+			<div class="actionname flex-center-vertical qtr-padding" [ngClass]="{selected: action.selected}">
+				<div class="half-margin-right flex-center-vertical">
 					<!-- since updatePitstop API going through changes, we are temporarily disabling the user from checking a box -->
 					<!-- This will manually be done by the CSM/CSE.  Refer to PBC-725. -->
 					<!-- <label class="checkbox" [ngClass]="{'disabled': action.action.isComplete || currentWorkingPitstop !== currentPitstop.name }" data-auto-id="pitstopCheckboxLabel"> -->
 					<label class="checkbox disabled" data-auto-id="pitstopCheckboxLabel">
 						<input data-auto-id="pitstopCheckbox" type="checkbox"
-							(change)="completeAction(action.action)" [checked]="true"
+							(change)="completeAction(action.action)" [checked]="action.action.isComplete"
 						>
 						<span class="checkbox__input" data-auto-id="pitstopCheckboxSpan"
 							[ngClass]="{'checkbox-complete': action.action.isComplete}"
 						></span>
 					</label>
 				</div>
-				<div class="col-md-11">
-					<a data-auto-id="actionlink"
-						class="no-link"
-						data-toggle="tooltip" data-placement="bottom" title="{{action?.action?.description}}"
-						(click)="selectAction(action)">
-						<div class="checkbox__label text-medium"
+				<div class="actionname__text cx-text-secondary"
+					[class.actionname__text--complete]="action?.action?.isComplete">
+						<div class="checkbox__label text-medium toggle"
+							attr.data-auto-id="actionLink-{{action.action.name}}"
+							data-toggle="tooltip" data-placement="bottom" title="{{action?.action?.description}}"
+							(click)="selectAction(action)"
 							[innerText]="action?.action?.name">
 						</div>
-					</a>
 				</div>
 			</div>
 		</div>
 		<div *ngIf="hasSelectedAction()">
 			<div class="divider divider--compressed"></div>
-			<div class="text-vibblue base-margin-top base-margin-bottom toggle"
+			<div class="base-margin-top base-margin-bottom toggle pitstop-checklist__reset-filter"
 				id="ResetFilter"
 				[innerText]="'_ResetFilter_' | i18n"
 				(click)="resetFilter()"
@@ -200,7 +202,7 @@
 	<div id="learn-hover-panel-{{ autoid }}" class="panel" attr.data-auto-id="{{ autoid }}-HoverModal">
 		<div class="popover-tail"></div>
 		<div class="flex flex-column max-height">
-			<h6 class="learning-popover__title" [innerText]="title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
+			<h6 class="learning-popover__title title-line-clamp" [innerText]="title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
 			<div class="divider divider--compressed"></div>
 			<div *ngIf="item && item.fixedRating" class="half-margin-bottom">
 				<cui-rating [rating]="item.fixedRating" [alt]="true" [noClick]="true" size="small" attr.data-auto-id="{{ autoid }}-HoverModal-Rating"></cui-rating>
@@ -223,7 +225,7 @@
 				(click)="updateBookmark(item, 'ATX')"
 				attr.data-auto-id="{{ autoid }}-HoverModal-BookmarkRibbon">
 			</div>
-			<h6 class="atx-popover__title" [innerText]="title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
+			<h6 class="atx-popover__title title-line-clamp" [innerText]="title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
 			<div class="divider divider--compressed"></div>
 			<div class="atx-popover__description line-clamp" [innerText]="description" attr.data-auto-id="{{ autoid }}-HoverModal-Description"></div>
 		</div>
@@ -255,12 +257,11 @@
 			<div class="divider divider--compressed"></div>
 			<div class="half-margin-left line-clamp" [innerText]="data.description" data-auto-id="atxMoreClickModal-Description"></div>
 			<div class="base-padding-top half-padding-left">
-				<button class="btn btn--small btn--secondary text-uppercase cx-button"
-					data-auto-id = "MoreATXViewSessions"
-					[ngClass]="data.sessions?.length > 0 ? null : 'disabled'"
-					(click)="atxMoreViewSessions()"
-					[innerText]="'_ViewSessions_' | i18n">
-				</button>
+				<ng-container *ngTemplateOutlet="data?.sessions?.length > 0 ? 
+					enabledViewSessionsButton : disabledViewSessionsButton; context: {
+						type: 'moreView'
+					}">
+				</ng-container>
 				<button class="btn btn--small btn--secondary text-uppercase cx-button"
 					attr.data-auto-id = "MoreATXWatchNow-{{ data.recordingURL }}"
 					[ngClass]="data?.recordingURL ? null : 'disabled'"
@@ -281,7 +282,7 @@
 				[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__white'"
 				attr.data-auto-id="{{ autoid }}-HoverModal-BookmarkRibbon">
 			</div>
-			<h6 class="acc-popover__title" [innerText]="title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
+			<h6 class="acc-popover__title title-line-clamp" [innerText]="title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
 			<div class="divider divider--compressed"></div>
 			<div class="line-clamp acc-popover__description" [innerText]="description" attr.data-auto-id="{{ autoid }}-HoverModal-Description"></div>
 			<div *ngIf="item && item.duration" class="learning-duration text-right text-muted flex-fluid half-margin-left" attr.data-auto-id="{{ autoid }}-HoverModal-Duration">
@@ -334,12 +335,11 @@
 			</div>
 		</ng-container>
 		<div class="force-flex">
-			<button id="recommendedATXScheduleButton" data-auto-id="recommendedATXScheduleButton"
-				class="btn btn--small btn--secondary text-uppercase qtr-margin-right cx-button"
-				[ngClass]="item.sessions?.length > 0 ? null : 'disabled'"
-				(click)="recommendedATXViewSessions($event)"
-				[innerText]="'_ViewSessions_' | i18n">
-			</button>
+			<ng-container *ngTemplateOutlet="item?.sessions?.length > 0 ? 
+				enabledViewSessionsButton : disabledViewSessionsButton; context: {
+				type: 'recommendedView'
+			}">
+			</ng-container>	
 			<button class="btn btn--small btn--secondary text-uppercase cx-button"
 				data-auto-id = "recommendedATXWatchButton"
 				[ngClass]="componentData.atx?.recommended?.recordingURL ? null : 'disabled'"
@@ -447,7 +447,7 @@
 				class="pull-left btn btn--primary"
 				data-auto-id = "AtxScheduleCardRegisterButton"
 				[ngClass]="getAtxRegisterButton(data)"
-				(click)="crossLaunch(sessionSelected.registrationURL)"
+				(click)="registerATXSession(data, sessionSelected)"
 				[innerText]="'_Register_' | i18n">
 			</button>
 			<div class="half-padding-left pull-left">
@@ -492,7 +492,7 @@
 					<div id="{{ autoid }}-item" class="panel small-panel">
 						<div class="text-blue" [innerText]="item.title"
 							data-auto-id = "ATXMoreClick"
-							(click)="atxMoreSelect(item, autoid)"></div>
+							(click)="atxMoreSelect(item, autoid, moreList)"></div>
 						<ng-container *ngIf="autoid==='moreACCList'">
 							<ng-container *ngTemplateOutlet="accHover; context: {
 								title: item.title,
@@ -624,9 +624,9 @@
 					[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__white'"
 					attr.data-auto-id="{{ autoid }}-HoverModal-BookmarkRibbon">
 				</div>
-				<h6 class="sb-popover__title" [innerText]="item.title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
+				<h6 class="sb-popover__title title-line-clamp" [innerText]="item.title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
 				<div class="divider divider--compressed"></div>
-				<div class="line-clamp sb-popover__description" [innerText]="item.description" attr.data-auto-id="{{ autoid }}-HoverModal-Description"></div>
+				<div class="sb-desc-line-clamp sb-popover__description" [innerText]="item.description" attr.data-auto-id="{{ autoid }}-HoverModal-Description"></div>
 				<div class="sb-popover__footer">
 					<div>
 						<a class="no-link successbytes-type-link" data-auto-id="successlink" target="_blank" rel="noopener noreferrer" [href]="item.url">
@@ -827,8 +827,8 @@
 </ng-template>
 
 <ng-template #listViewTemplate let-type="type" let-view="view">
-		<div class="base-padding-right base-margin-top list-view" *ngIf="view === 'list'" #scrollModal (scroll)="getScrollCoordinates(scrollModal)">
-			<div class="base-margin-top"  data-auto-id="ViewAllTable">
+		<div class="base-padding-right base-margin-top list-view" *ngIf="view === 'list'" #scrollModal (scroll)="getScrollCoordinates(scrollModal)" data-auto-id="ViewAllTable">
+			<div class="base-margin-top">
 					<table class="table table--nostripes table--wrap table--hover table--loose">
 					<ng-container *ngIf="type === 'ATX'">
 						<ng-container *ngTemplateOutlet="listView; context: { type: type, columns: atxTable.columns, data: selectedATX }"></ng-container>
@@ -862,7 +862,7 @@
 			[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__white'"
 			data-auto-id="ATXCardRibbon">
 		</div>
-		<div class="card__header atx__card__header text-left"
+		<div class="card__header atx__card__header text-left title-line-clamp"
 			*ngIf="item && item.title"
 			[innerText]="item.title"
 			data-auto-id="ATXCardTitle">
@@ -891,15 +891,13 @@
 				</div>
 				<div class="divider no-margin"></div>
 				<div class="atx__card__actions">
-					<button id="cardRecommendedATXScheduleButton" data-auto-id="cardRecommendedATXScheduleButton"
-						class="btn btn--small btn--secondary text-uppercase cx-button"
-						[ngClass]="item?.sessions?.length > 0 ? null : 'disabled'"
-						(click)="atxScheduleCardOpened = true;
-							recommendedAtxScheduleCardOpened = false;
-							componentData.atx.interested = item;
-							getCoordinates($event)"
-						[innerText]="'_ViewSessions_' | i18n">
-					</button>
+					<ng-container *ngTemplateOutlet="item?.sessions?.length > 0 ? 
+						enabledViewSessionsButton : disabledViewSessionsButton; context: {
+						type: 'cardView',
+						componentData: componentData,
+						item: item
+					}">
+					</ng-container>
 					<button class="btn btn--small btn--secondary text-uppercase cx-button"
 						attr.data-auto-id = "CardATXWatchNow-{{ item.recordingURL }}"
 						[ngClass]="item?.recordingURL ? null : 'disabled'"
@@ -970,14 +968,14 @@
 			[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__white'"
 			data-auto-id="SBCardRibbon">
 		</div>
-		<div class="card__header success__card__archetype text-left text-small text-uppercase base-margin-top qtr-margin-bottom" [innerText]="item.archetype"></div>
+		<div class="card__header success__card__archetype text-left text-small text-uppercase base-margin-top qtr-margin-bottom" [innerText]="item.archetype" data-auto-id="SBCardArchetype"></div>
 		<div class="card__header success__card__header text-left">
 			<a class="no-link" data-auto-id="successtitle" target="_blank" rel="noopener noreferrer"
 					[href]="item.url">
 				<span class="title-line-clamp" data-auto-id="SBCardTitle" [innerText]="item.title"></span>
 			</a>
 		</div>
-		<div class="card__body success__card__body text-left desc-line-clamp" *ngIf="item && item.description" [innerText]="item.description"></div>
+		<div class="card__body success__card__body text-left desc-line-clamp" *ngIf="item && item.description" [innerText]="item.description" data-auto-id="SBCardDescription"></div>
 		<div class="success__card__icons">
 			<ng-container *ngTemplateOutlet="itemTypeIcons; context: {
 				item: item,
@@ -1042,21 +1040,21 @@
 			[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__white'"
 			data-auto-id="PGCardRibbon">
 		</div>
-		<div class="card__header success__card__archetype text-left text-small text-uppercase base-margin-top qtr-margin-bottom" [innerText]="item.archetype"></div>
+		<div class="card__header success__card__archetype text-left text-small text-uppercase base-margin-top qtr-margin-bottom" [innerText]="item.archetype" data-auto-id="PGCardArchetype"></div>
 		<div class="card__header success__card__header text-left">
 			<a class="no-link" data-auto-id="successtitle" target="_blank" rel="noopener noreferrer"
 					[href]="item.url">
 				<span class="title-line-clamp" data-auto-id="PGCardTitle" [innerText]="item.title"></span>
 			</a>
 		</div>
-		<div class="card__body success__card__body text-left desc-line-clamp" *ngIf="item && item.description" [innerText]="item.description"></div>
+		<div class="card__body success__card__body text-left desc-line-clamp" *ngIf="item && item.description" [innerText]="item.description" data-auto-id="PGCardDescription"></div>
 		<div class="success__card__icons">
 			<ng-container *ngTemplateOutlet="itemTypeIcons; context: {
 				item: item,
 				autoid: 'ProductGuidesCard'
 			}">
 			</ng-container>
-			<div class="duration text-muted" *ngIf="item.duration">
+			<div class="duration text-muted" *ngIf="item.duration" data-auto-id="PGCardDuration">
 				<span class="icon-clock qtr-padding-right"></span>
 				<span [innerText]="item.duration"></span>
 			</div>
@@ -1271,11 +1269,13 @@
 
 <ng-template #actionTemplate let-celldata="celldata" let-type="type">
 	<div class="text-right" *ngIf="type === 'ATX'">
-		<button data-auto-id="ViewSessionButton" class="btn btn--small btn--secondary cx-button text-uppercase qtr-margin-bottom qtr-margin-top cx-button"
-			[ngClass]="celldata?.sessions?.length > 0 ? null : 'disabled'"
-			(click)="atxScheduleCardOpened = true; recommendedAtxScheduleCardOpened = false; componentData.atx.interested = celldata; getCoordinates($event)"
-			[innerText]="'_ViewSessions_' | i18n">
-		</button>
+		<ng-container *ngTemplateOutlet="celldata?.sessions?.length > 0 ? 
+			enabledViewSessionsButton : disabledViewSessionsButton; context: {
+			type:'listView',
+			componentData: componentData,
+			item: celldata
+		}">
+		</ng-container>			
 		<button class="btn btn--small btn--secondary text-uppercase cx-button half-margin-left"
 			attr.data-auto-id = "ListATXWatchNow-{{ celldata.recordingURL }}"
 			[ngClass]="celldata?.recordingURL ? null : 'disabled'"
@@ -1320,6 +1320,74 @@
 </ng-template>
 
 <ng-template #accDisableTooltip><p [innerText]="'_DisableACCRegister_' | i18n"></p></ng-template>
+
+<ng-template #enabledViewSessionsButton let-type="type" let-componentData="componentData" let-item="item">
+		<span [ngSwitch]="type" class="qtr-margin-right">
+			<button *ngSwitchCase="'moreView'" class="btn btn--small btn--secondary text-uppercase 
+				cx-button"
+				attr.data-auto-id="MoreATXViewSessions"
+				(click)="atxMoreViewSessions()"
+				[innerText]="'_ViewSessions_' | i18n">
+			</button>
+			<button *ngSwitchCase="'recommendedView'" id="recommendedATXScheduleButton" 
+				data-auto-id="recommendedATXScheduleButton"
+				class="btn btn--small btn--secondary text-uppercase qtr-margin-right cx-button"
+				(click)="recommendedATXViewSessions($event)"
+				[innerText]="'_ViewSessions_' | i18n">
+			</button>
+			<button *ngSwitchCase="'listView'" data-auto-id="ViewSessionButton" 
+				class="btn btn--small btn--secondary 
+					cx-button text-uppercase qtr-margin-bottom qtr-margin-top cx-button"
+				(click)="atxScheduleCardOpened = true; 
+					recommendedAtxScheduleCardOpened = false; 
+					componentData.atx.interested = item; getCoordinates($event)"
+				[innerText]="'_ViewSessions_' | i18n">
+			</button>
+			<button *ngSwitchCase="'cardView'" id="cardRecommendedATXScheduleButton" 
+				data-auto-id="cardRecommendedATXScheduleButton"
+				class="btn btn--small btn--secondary text-uppercase cx-button"
+				(click)="atxScheduleCardOpened = true;
+						recommendedAtxScheduleCardOpened = false;
+						componentData.atx.interested = item;
+						getCoordinates($event)"
+				[innerText]="'_ViewSessions_' | i18n">
+			</button>
+		</span>
+</ng-template>
+	
+<ng-template #disabledViewSessionsButton let-type="type">
+		<span [ngSwitch]="type" tooltip
+			[tooltipTemplate]="viewSessionsDisableTooltip"
+			tooltipDelay="500"
+			tooltipMaxWidth="225"
+			tooltipMaxHeight="85"
+			class="qtr-margin-right">
+			<button *ngSwitchCase="'moreView'" 
+				class="btn btn--small btn--secondary text-uppercase cx-button disabled"
+				attr.data-auto-id="MoreATXViewSessions"
+				[innerText]="'_ViewSessions_' | i18n">
+			</button>
+			<button *ngSwitchCase="'recommendedView'"  
+				data-auto-id="recommendedATXScheduleButton"
+				class="btn btn--small btn--secondary text-uppercase qtr-margin-right cx-button 
+					disabled"
+				[innerText]="'_ViewSessions_' | i18n">
+			</button>
+			<button *ngSwitchCase="'listView'" data-auto-id="ViewSessionButton" 
+				class="btn btn--small btn--secondary cx-button text-uppercase qtr-margin-bottom 
+					qtr-margin-top cx-button disabled"
+				[innerText]="'_ViewSessions_' | i18n">
+			</button>
+			<button *ngSwitchCase="'cardView'"
+				data-auto-id="cardRecommendedATXScheduleButton"
+				class="btn btn--small btn--secondary text-uppercase cx-button disabled"
+				[innerText]="'_ViewSessions_' | i18n">
+			</button>
+		</span>
+</ng-template>
+
+<ng-template #viewSessionsDisableTooltip><span [innerText]="'_DisableViewSessions_' | i18n"></span></ng-template>
+
 <ng-template #titleTemplate let-celldata="celldata" let-type="type">
 	<div class="row" *ngIf="type==='ATX' || type === 'ACC'">
 		<div class="col-md-12 flex">

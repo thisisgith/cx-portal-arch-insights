@@ -1,7 +1,7 @@
-<div  *ngIf="afmConnectionStatus?.status === 'Error'">
-	<ng-container *ngTemplateOutlet="serverError"></ng-container>
-</div>
+
 <div class="panel panel--bordered base-padding-left base-padding-top no-padding-bottom">
+	<insight-tabs></insight-tabs>
+	<ng-container *ngTemplateOutlet="serverError"></ng-container>
 	<ng-container *ngTemplateOutlet="visualFilters"></ng-container>
 </div>
 <div class="panel panel--bordered base-margin-top">
@@ -69,6 +69,7 @@
 	</div>
 	<div class="responsive-table" *ngIf="!loading">
 		<cui-table
+			class="no-close-360"
 			[options]="tableOptions"
 			[data]="tableData"
 			[limit]="tableLimit"
@@ -319,6 +320,7 @@
 <details-panel
 	*ngIf="showAlarmDetails"
 	[hidden]="!showAlarmDetails"
+	(hiddenChange)="handleHidden($event)"
 	[fullscreen]="fullscreen"
 	id="details-panel"
 >
