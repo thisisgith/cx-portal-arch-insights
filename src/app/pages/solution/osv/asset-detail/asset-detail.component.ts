@@ -121,7 +121,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 			.pipe(
 				map((response: AssetRecommendations[]) => {
 					this.assetDetails = this.groupData(response);
-					this.timelineData = this.sortData(response);
+					this.timelineData = this.assetDetails;
 					this.buildTable();
 				}),
 				takeUntil(this.destroy$),

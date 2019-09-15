@@ -4,7 +4,11 @@
 		<tbody>
 			<!-- version and release date -->
 			<tr>
-				<td class="first-column-width no-border-bottom no-border-top"></td>
+				<td 
+					class="first-column-width no-border-bottom no-border-top">
+						<div [innerText]="'_OsvRelease_' | i18n"></div>
+						<div [innerText]="'_OsvVersionAndDate_' | i18n"></div>
+				</td>
 				<td class="recommendation-current no-border-top">
 					<div [ngClass]="{'text-xlarge':fullscreen,'text-large':!fullscreen}"
 						[innerText]="'_OsvCurrent_' | i18n | titlecase"></div>
@@ -94,14 +98,14 @@
 						[ngClass]="{'text-small':!fullscreen,'text-large base-margin-top':fullscreen}"
 						[innerText]="'_OsvCurrentlyExposed_' | i18n | uppercase">					
 					</div>
-					<div class=" text-xlarge" [innerText]="currentRecommendation?.bugsExposed || '0'"
+					<div class="text-xlarge" [innerText]="currentRecommendation?.bugsExposed || '0'"
 						[ngClass]="{'base-padding-top':!fullscreen}"></div>
-					<div class="base-margin-top"
+					<div class="base-margin-top bar-chart"
 						*ngIf="currentRecommendation?.bugSeriesData && currentRecommendation?.bugSeriesData.length > 0">
 						<bar-chart 
 							dataLabels="true" 
 							[seriesData]="currentRecommendation.bugSeriesData"
-							[width]="barChartWidth">
+							[width]="'200'">
 						</bar-chart>
 					</div>
 				</td>
@@ -112,23 +116,26 @@
 						<div [ngClass]="{'text-small':!fullscreen,'text-large':fullscreen}"
 							[innerText]="'_OsvWillExposed_' | i18n" class="text-small col-6"></div>
 					</div>
-					<div class="base-margin-top flex justify-content-between">
-						<div>
+					<div class="base-margin-top row">
+						<div class="col-6">
 							<span class="text-xlarge" [innerText]="recommendation.resolvedBugsCount  || '0'"></span>
 							<span class="text-xlarge" [innerText]="'/'"></span>
 							<span class="text-xlarge" [innerText]="currentRecommendation?.bugsExposed || '0'"></span>
 
 						</div>
-						<div class="text-xlarge" [innerText]="recommendation.bugsExposed  || '0'"></div>
+						<div class="text-xlarge col-6" [innerText]="recommendation.bugsExposed  || '0'"></div>
 					</div>
-					<div class="base-margin-top"
+					<div class="base-margin-top row"
 						*ngIf=" recommendation.bugSeriesData && recommendation.bugSeriesData.length > 0">
-						<bar-chart 
-							[width]="barChartWidth" 
-							[backgroundColor]="barChartBackgroundColor" 
-							dataLabels="true"
-							[seriesData]="recommendation.bugSeriesData">
-						</bar-chart>
+						<div class="col-6"></div>
+						<div class="col-6 bar-chart">
+							<bar-chart 
+								[width]="barChartWidth" 
+								[backgroundColor]="barChartBackgroundColor" 
+								dataLabels="true"
+								[seriesData]="recommendation.bugSeriesData">
+							</bar-chart>
+					</div>
 					</div>
 				</td>
 			</tr>
@@ -140,33 +147,36 @@
 				<td class="recommendation-current">
 					<div class="text-xlarge half-margin-top" [innerText]="currentRecommendation?.psirtExposed || '0'">
 					</div>
-					<div class="base-margin-top"
+					<div class="base-margin-top bar-chart"
 						*ngIf="currentRecommendation?.psirtSeriesData && currentRecommendation?.psirtSeriesData.length > 0">
 						<bar-chart 
-							[width]="barChartWidth" 
+							[width]="'200'" 
 							dataLabels="true"
 							[seriesData]="currentRecommendation.psirtSeriesData">
 						</bar-chart>
 					</div>
 				</td>
 				<td *ngFor="let recommendation of machineRecommendations" class="recommendation">
-					<div class="half-margin-top flex justify-content-between">
-						<div>
+					<div class="half-margin-top row">
+						<div class="col-6">
 							<span class="text-xlarge" [innerText]="recommendation.psirtResolvedCount  || '0'"></span>
 							<span class="text-xlarge" [innerText]="'/'"></span>
 							<span class="text-xlarge" [innerText]="currentRecommendation.psirtExposed  || '0'"></span>
 
 						</div>
-						<div class="text-xlarge" [innerText]="recommendation.psirtExposed || '0'"></div>
+						<div class="text-xlarge col-6" [innerText]="recommendation.psirtExposed || '0'"></div>
 					</div>
-					<div class="base-margin-top"
+					<div class="base-margin-top row"
 						*ngIf=" recommendation.psirtSeriesData && recommendation.psirtSeriesData.length > 0">
-						<bar-chart 
-							[width]="barChartWidth" 
-							[backgroundColor]="barChartBackgroundColor" 
-							dataLabels="true"
-							[seriesData]="recommendation.psirtSeriesData">
-						</bar-chart>
+						<div class="col-6"></div>
+						<div class="col-6 bar-chart">
+							<bar-chart 
+								[width]="barChartWidth" 
+								[backgroundColor]="barChartBackgroundColor" 
+								dataLabels="true"
+								[seriesData]="recommendation.psirtSeriesData">
+							</bar-chart>
+					</div>
 					</div>
 				</td>
 

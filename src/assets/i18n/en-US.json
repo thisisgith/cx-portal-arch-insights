@@ -657,6 +657,8 @@
 	"_OsvCurrent_":"Current",
 	"_OsvCurrentInfo_": "Is active and running on the Cisco product.",
 	"_OsvCurrentlyExposed_": "Currently Exposed To",
+	"_OsvRelease_":"Release",
+	"_OsvVersionAndDate_":"Version & Date",
 	"_OsvCurrentOSVersion_": "Current OS Version",
 	"_OsvCurrentVersion_": "Current Version(s)",
 	"_OsvCurrentVersions_": "Current Versions ({0})",

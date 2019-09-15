@@ -91,6 +91,7 @@ export class AssetTimelineChartComponent implements OnInit, OnChanges {
 				timeline: {
 					className: 'timeline',
 					dataLabels: {
+						allowOverlap: false,
 						borderWidth: 0,
 						connectorColor: '#049fd9',
 						distance: 50,
@@ -99,14 +100,27 @@ export class AssetTimelineChartComponent implements OnInit, OnChanges {
 						formatter: function () {
 							let format = '';
 							const name = this['point'].groupedLabels ?
-							this['point'].groupedLabels : this['point'].name;
-							format += `<span style="cursor:pointer;">
-							<span style='cursor:pointer;font-weight: bold;font-size:14px' >
-							${name}</span>
-							<br/><span style='cursor:pointer;font-weight: normal;;font-size:11px'>
-							${this['point'].label}</span>
-							<br/><span style='cursor:pointer;font-weight: normal;;font-size:11px'>
-							${this['point'].releaseDate}</span><br/>
+								this['point'].groupedLabels : this['point'].name;
+							format += '<span style="cursor:pointer;">';
+							const versionLabels = name.split('/');
+							_.map(versionLabels, (versionName, index) => {
+								format += `<span
+									style='cursor:pointer;font-weight: bold;font-size:14px'>
+									${versionName}`;
+								if (index !== versionLabels.length - 1) {
+									format += ',';
+								}
+								format += '</span><br/>';
+							});
+							format += `
+								<span style='cursor:pointer;font-weight: normal;;font-size:11px'>
+									${this['point'].label}
+								</span>
+								<br/>
+								<span style='cursor:pointer;font-weight: normal;;font-size:11px'>
+									${this['point'].releaseDate}
+								</span>
+									<br/>
 							</span>`;
 							if (this['point'].accepted) {
 								format += '<span style=";font-size:12px;font-weight:bold';

@@ -26,15 +26,15 @@
 	(close)="onPanelClose()">
 </app-software-group-detail>
 
-<div class="panel panel--bordered base-padding-left base-padding-top no-padding-bottom">
+<div class="panel panel--bordered base-padding-left base-padding-top no-padding-bottom" *ngIf="view">
 	<insight-tabs></insight-tabs>
-	<visual-filter-bar [filters]="filters"></visual-filter-bar>	
-</div>
-
-<div class="panel panel--bordered base-margin-top">
+	<visual-filter-bar *ngIf="!status.isLoading" [filters]="filters"></visual-filter-bar>	
 	<div *ngIf="status.isLoading">
 		<cui-spinner></cui-spinner>
 	</div>
+</div>
+
+<div class="panel panel--bordered base-margin-top">	
 	<ng-container *ngIf="filtered">
 		<div class="divider half-margin-top qtr-margin-bottom"></div>
 		<ng-container *ngTemplateOutlet="filterBar"></ng-container>

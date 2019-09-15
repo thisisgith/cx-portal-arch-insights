@@ -26,8 +26,8 @@ export class CompareRecommendationsComponent implements OnChanges {
 	@Output() public showVersions = new EventEmitter();
 	public currentRecommendation: MachineRecommendations;
 	public machineRecommendations: MachineRecommendations[];
-	public barChartBackgroundColor = '#f2fbfd';
-	public barChartWidth = 200;
+	public barChartBackgroundColor = '#f2f2f2';
+	public barChartWidth = 80;
 	public severityMap = {
 		H: I18n.get('_OsvHigh_'),
 		L: I18n.get('_OsvLow_'),
