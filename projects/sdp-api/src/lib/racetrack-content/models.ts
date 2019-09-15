@@ -18,4 +18,5 @@ export { GroupTrainingRequestSchema } from './models/group-training-request-sche
 export { ContractQuota } from './models/contract-quota';
 export { UserTraining } from './models/user-training';
 export { BookmarkRequestSchema } from './models/bookmark-request-schema';
+export { AtxUserRegistrationsSchema } from './models/atx-user-registrations-schema';
 export { BookmarkResponseSchema } from './models/bookmark-response-schema';
