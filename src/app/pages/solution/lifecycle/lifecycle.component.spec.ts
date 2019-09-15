@@ -16,6 +16,7 @@ import {
 	Mock,
 	user,
 	CancelATXScenarios,
+	RegisterATXScenarios,
 } from '@mock';
 import { of, throwError } from 'rxjs';
 import { DebugElement } from '@angular/core';
@@ -61,6 +62,7 @@ describe('LifecycleComponent', () => {
 	let racetrackSPSpy;
 	let racetrackActionSpy;
 	let racetrackCancelAtxSessionSpy;
+	let racetrackRegisterAtxSessionSpy;
 
 	/**
 	 * Restore spies
@@ -78,6 +80,7 @@ describe('LifecycleComponent', () => {
 		_.invoke(racetrackSPSpy, 'restore');
 		_.invoke(racetrackActionSpy, 'restore');
 		_.invoke(racetrackCancelAtxSessionSpy, 'restore');
+		_.invoke(racetrackRegisterAtxSessionSpy, 'restore');
 	};
 
 	/**
@@ -108,6 +111,10 @@ describe('LifecycleComponent', () => {
 		racetrackCancelAtxSessionSpy = spyOn(racetrackContentService, 'cancelSessionATX')
 			.and
 			.returnValue(of(getActiveBody(CancelATXScenarios[0], 'DELETE')));
+
+		racetrackRegisterAtxSessionSpy = spyOn(racetrackContentService, 'registerUserToAtx')
+			.and
+			.returnValue(of(getActiveBody(RegisterATXScenarios[0], 'POST')));
 
 		// TODO Skip these tests as we are disbaling CGT
 		// Enable them when CGT is enabled
@@ -428,6 +435,12 @@ describe('LifecycleComponent', () => {
 				.toEqual('recommended');
 			expect(atx1.sessions[1].scheduled)
 				.toBeFalsy();
+
+			const session2 = atx1.sessions[1];
+			component.registerATXSession(atx1, session2);
+			fixture.detectChanges();
+			expect(atx1.status)
+					.toEqual('reqeusted');
 		});
 
 		it('should show the selected atx sessions in ATX More', () => {
