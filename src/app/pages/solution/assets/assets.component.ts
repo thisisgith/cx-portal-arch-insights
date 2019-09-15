@@ -365,7 +365,6 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 * Called on 360 details panel close button click
 	 */
 	public onPanelClose () {
-		this.detailsPanelStackService.reset();
 		_.set(this.selectedAsset, 'details', false);
 		this.selectedAsset = null;
 	}

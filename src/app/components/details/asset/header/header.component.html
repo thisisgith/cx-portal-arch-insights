@@ -1,15 +1,15 @@
-<div *ngIf="asset" class="asset base-margin-bottom">
+<div class="asset base-margin-bottom">
 	<div data-auto-id="Asset360IPAddress" class="asset__info flex-center-vertical">
 		<div class=" asset__info__label qtr-margin-right" [innerText]="'_IPAddress_' | i18n"></div>
-		<div innerText="{{ asset.ipAddress || ('_NA_' | i18n) }}"></div>
+		<div innerText="{{ asset?.ipAddress || ('_NA_' | i18n) }}"></div>
 	</div>
 	<div data-auto-id="Asset360SerialNumber" class="asset__info flex-center-vertical">
 		<div class=" asset__info__label qtr-margin-right" [innerText]="'_SN_' | i18n"></div>
-		<div innerText="{{ asset.serialNumber || ('_NA_' | i18n) }}"></div>
+		<div innerText="{{ asset?.serialNumber || ('_NA_' | i18n) }}"></div>
 	</div>
 	<div data-auto-id="Asset360LastScan" class="asset__info flex-center-vertical">
 		<div class=" asset__info__label qtr-margin-right" [innerText]="'_LastScan_' | i18n"></div>
-		<div innerText="{{ ((asset.lastScan | fromNow) || ('_Never_' | i18n)) | titlecase }}"></div>
+		<div innerText="{{ ((asset?.lastScan | fromNow) || ('_Never_' | i18n)) | titlecase }}"></div>
 	</div>
 </div>
 <div class="row qtr-margin-top">

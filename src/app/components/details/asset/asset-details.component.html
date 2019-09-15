@@ -1,6 +1,5 @@
-<details-panel *ngIf="!isLoading || asset"
-	[hidden]="!asset"
-	(hiddenChange)="handleHidden($event)"
+<details-panel (hiddenChange)="handleHidden($event)"
+	[hidden]="hidden"
 	[fullscreen]="fullscreen" 
 	id="details-panel"
 	[minWidth]="minWidth">
@@ -8,7 +7,8 @@
 		(back)="onPanelBack()"
 		[(fullscreen)]="fullscreen"
 		[fullscreenToggle]="fullscreenToggle">
-		<asset-details-header [asset]="asset"
+		<asset-details-header *ngIf="!isLoading"
+			[asset]="asset"
 			[element]="element" 
 			[customerId]="customerId"
 			(alert)="handleAlert($event)">
@@ -16,13 +16,13 @@
 		<div detailsPanelTitle class="text-xlarge flex-center-vertical">
 			<span class="half-margin-right flex-center-vertical"
 				[title]="getProductTitle(element)"
-				*ngIf="element && getProductIcon(element)">
+				*ngIf="asset && element && getProductIcon(element)">
 				<img alt="{{ '_AssetIcon_' | i18n }}"
 					class="icon-asset"
 					attr.data-auto-id="DeviceIcon-{{ asset?.deviceName }}"
 					src="assets/img/assets/device-{{ getProductIcon(element) }}.svg">
 			</span>
-			<span [innerText]="asset?.deviceName"></span>
+			<span [innerText]="asset?.deviceName || ('_NA_' | i18n)"></span>
 		</div>
 	</details-panel-header>
 	<ng-container *ngTemplateOutlet="assetDetails"></ng-container>
@@ -32,10 +32,19 @@
 	<div class="half-margin-bottom">
 		<cui-alert [options]="alert"></cui-alert>
 	</div>
-	<cui-tabs id="detailTabs" *ngIf="asset && customerId">
+	<cui-tabs id="detailTabs" *ngIf="customerId && !isLoading">
 		<cui-tab [label]="'_Summary_' | i18n | uppercase">
 			<div class="half-margin-top qtr-margin-left qtr-margin-right">
-				<asset-details-summary [asset]="asset" [customerId]="customerId"></asset-details-summary>
+				<asset-details-summary *ngIf="asset"
+					[asset]="asset"
+					[customerId]="customerId">
+				</asset-details-summary>
+				<div class="flex-center" *ngIf="!asset">
+					<span class="text-muted text-xlarge"
+						[innerText]="'_NoSummaryInformation_' | i18n"
+						data-auto-id="NoSummaryInformationText">
+					</span>
+				</div>
 			</div>
 		</cui-tab>
 		<cui-tab [label]="'_Hardware_' | i18n | uppercase">
@@ -50,7 +59,16 @@
 		</cui-tab>
 		<cui-tab [label]="'_Advisories_' | i18n | uppercase">
 			<div class="half-margin-top qtr-margin-left qtr-margin-right">
-				<asset-details-advisories [asset]="asset" [customerId]="customerId"></asset-details-advisories>
+				<asset-details-advisories *ngIf="asset"
+					[asset]="asset"
+					[customerId]="customerId">
+				</asset-details-advisories>
+				<div class="flex-center" *ngIf="!asset">
+					<span class="text-muted text-xlarge"
+						[innerText]="'_NoAdvisoryInformation_' | i18n"
+						data-auto-id="NoAdvisoryInformationText">
+					</span>
+				</div>
 			</div>
 		</cui-tab>
 	</cui-tabs>

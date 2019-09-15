@@ -2,19 +2,31 @@ import {
 	Component,
 	EventEmitter,
 	Input,
-	OnInit,
+	OnChanges,
 	Output,
 	SimpleChanges,
 } from '@angular/core';
 import { Chart } from 'angular-highcharts';
 import * as _ from 'lodash-es';
 
-/** All possible colors for the pie chart subfilters. */
-const filterColors = [
+/** All possible colors for the pie chart subfilters with 5 possible values. */
+const filterColors5Max = [
 	'#92dde4',
 	'#8ab6d0',
 	'#c8d4d7',
 	'#c8e4e6',
+	'#e4f0f1',
+];
+
+/** All possible colors for the pie chart subfilters with 8 possible values. */
+const filterColors8Max = [
+	'#92dde4',
+	'#8ab6d0',
+	'#c8d4d7',
+	'#c8e4e6',
+	'#92dde4',
+	'#8ab6d0',
+	'#c8d4d7',
 	'#e4f0f1',
 ];
 
@@ -25,39 +37,26 @@ const filterColors = [
 	selector: 'bubble-chart',
 	template: '<div [chart]="chart"></div>',
 })
-export class BubbleChartComponent implements OnInit {
+export class BubbleChartComponent implements OnChanges {
 
+	@Input() public loading;
 	@Input() public seriesData;
 	@Output() public subfilter = new EventEmitter<string>();
 	public chart: Chart;
 
 	/**
-	 * Initializes the bubble chart
-	 */
-	public ngOnInit () {
-		if (this.seriesData) {
-			this.buildGraph();
-		}
-	}
-
-	/**
 	 * Builds our bubble graph
 	 */
 	private buildGraph () {
-		const series = _.map(this.seriesData, (d, index) => ({
-			data: [
-				{
-					color: _.get(filterColors, index, '#000'),
-					name: d.label,
-					value: d.value,
-				},
-			],
+		const data = _.map(this.seriesData, (d, index) => ({
+			color: _.get(this.seriesData.length <= 5 ?
+				filterColors5Max : filterColors8Max, index, '#fff'),
+			id: d.label,
 			name: d.label,
-			type: undefined,
+			value: d.value,
 		}));
 
 		this.chart = new Chart({
-			series,
 			chart: {
 				events: {
 					load: () => {
@@ -119,6 +118,10 @@ export class BubbleChartComponent implements OnInit {
 					showInLegend: false,
 				},
 			},
+			series: [{
+				data,
+				type: undefined,
+			}],
 			title: {
 				text: null,
 			},
@@ -140,10 +143,29 @@ export class BubbleChartComponent implements OnInit {
 	 * @param changes The changes found
 	 */
 	public ngOnChanges (changes: SimpleChanges) {
+		const loadingInfo = _.get(changes, 'loading',
+			{ currentValue: false, firstChange: false, previousValue: false });
 		const seriesInfo = _.get(changes, 'seriesData',
-			{ currentValue: null, firstChange: false });
-		if (seriesInfo.currentValue && !seriesInfo.firstChange) {
+			{ currentValue: null, firstChange: false, previousValue: null });
+		if (!this.chart || !seriesInfo.previousValue || !seriesInfo.previousValue.length) {
 			this.buildGraph();
+		} else {
+			if (loadingInfo.currentValue !== loadingInfo.previousValue) {
+				this.chart.ref.series[0].update(<any> {
+					enableMouseTracking: !loadingInfo.currentValue,
+					opacity: loadingInfo.currentValue ? 0.5 : 1,
+				});
+			}
+			if (seriesInfo.currentValue !== seriesInfo.previousValue) {
+				const data = _.map(seriesInfo.currentValue, (d, index) => ({
+					color: _.get(seriesInfo.currentValue.length <= 5 ?
+						filterColors5Max : filterColors8Max, index, '#fff'),
+					id: d.label,
+					name: d.label,
+					value: d.value,
+				}));
+				this.chart.ref.series[0].setData(data);
+			}
 		}
 	}
 }

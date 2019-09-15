@@ -237,7 +237,7 @@
 		</details-panel-header>
 		<app-rcc-device-violation-details 
 			[policyViolationInfo]="policyViolationInfo" 
-			(assetDetails)="openDevicePage($event);onPanelClose('selectedViolationModal');">
+			(assetDetails)="openDevicePage($event);">
 		</app-rcc-device-violation-details>
 	</details-panel>
 
@@ -247,7 +247,7 @@
 			<div detailsPanelTitle>
 				<span class="text-xlarge" [innerText]="('_RccViolationsFor_' | i18n)"></span>
 				<a data-auto-id="DeviceLink" class="text-xlarge"
-					(click)="openDevicePage(selectedAssetData?.serialNumber);onPanelClose('selectedAssetModal');"
+					(click)="openDevicePage(selectedAssetData?.serialNumber);"
 					[innerHTML]="selectedAssetData?.deviceName || ('_NA_' | i18n)">
 				</a>
 			</div>

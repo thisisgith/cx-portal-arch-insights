@@ -89,12 +89,11 @@ exitIfError
 invalidate=`aws cloudfront create-invalidation --distribution-id $dist_id --paths '/*'`
 exitIfError
 id=`echo $invalidate | grep -Eow 'Id": ".*?"' | cut -f 2 -d " " | tr -d \"`
-echo "Invalidation in progress: $id"
+echo "Invalidation in progress: $id. This may take 5-10 minutes..."
 # check every 3 seconds to see if the cache has been invalidated
-complete='incomplete'
-while [[ $complete != *"Completed"* ]]; do
-	complete=`aws cloudfront get-invalidation --distribution-id $dist_id --id $id`
-	exitIfError
-	echo "Still invalidating..."
-	sleep 3
-done
+# complete='incomplete'
+# while [[ $complete != *"Completed"* ]]; do
+# 	complete=`aws cloudfront get-invalidation --distribution-id E18XZLV8ZX5K4N --id $id`
+# 	echo "Still invalidating..."
+#     sleep 3
+# done
