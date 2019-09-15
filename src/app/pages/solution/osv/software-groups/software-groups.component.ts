@@ -221,7 +221,7 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 			softwareGroup.statusUpdated = false;
 		});
 		item.rowSelected = !item.rowSelected;
-		this.tabIndex = 0;
+		this.tabIndex = 1;
 		this.tabIndexChange.emit(this.tabIndex);
 		this.selectedSoftwareGroup = item.rowSelected ? item : null;
 		this.selectedSoftwareGroupChange.emit(this.selectedSoftwareGroup);

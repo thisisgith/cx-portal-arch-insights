@@ -30,8 +30,8 @@ export class CompareRecommendationsComponent implements OnChanges {
 	public barChartWidth = 80;
 	public severityMap = {
 		H: I18n.get('_OsvHigh_'),
-		L: I18n.get('_OsvLow_'),
 		M: I18n.get('_OsvMedium_'),
+		L: I18n.get('_OsvLow_'),
 	};
 
 	/**
