@@ -447,7 +447,7 @@
 				class="pull-left btn btn--primary"
 				data-auto-id = "AtxScheduleCardRegisterButton"
 				[ngClass]="getAtxRegisterButton(data)"
-				(click)="crossLaunch(sessionSelected.registrationURL)"
+				(click)="registerATXSession(data, sessionSelected)"
 				[innerText]="'_Register_' | i18n">
 			</button>
 			<div class="half-padding-left pull-left">
