@@ -210,6 +210,8 @@ export class AssetDetailsAdvisoriesComponent
 				tab.subject.next();
 			} else if (_.get(tab, ['params', 'neInstanceId'])) {
 				tab.subject.next();
+			} else if (_.get(tab, ['params', 'hwInstanceId'])) {
+				tab.subject.next();
 			} else {
 				tab.loading = false;
 			}
@@ -264,7 +266,8 @@ export class AssetDetailsAdvisoriesComponent
 				moreLoading: false,
 				params: {
 					customerId: this.customerId,
-					neInstanceId: this.element.neInstanceId ? [this.element.neInstanceId] : null,
+					neInstanceId: _.get(this.element, 'neInstanceId') ?
+						[this.element.neInstanceId] : null,
 					page: 1,
 					rows: 10,
 					sort: ['severity:ASC'],
@@ -321,7 +324,8 @@ export class AssetDetailsAdvisoriesComponent
 				moreLoading: false,
 				params: {
 					customerId: this.customerId,
-					neInstanceId: this.element.neInstanceId ? [this.element.neInstanceId] : null,
+					hwInstanceId: _.get(this.asset, 'hwInstanceId') ?
+						[this.asset.hwInstanceId] : null,
 					page: 1,
 					rows: 10,
 					sort: ['lastUpdated:DESC'],
@@ -380,7 +384,8 @@ export class AssetDetailsAdvisoriesComponent
 					customerId: this.customerId,
 					page: 1,
 					rows: 10,
-					serialNumber: this.asset.serialNumber ? [this.asset.serialNumber] : null,
+					serialNumber: _.get(this.asset, 'serialNumber') ?
+						[this.asset.serialNumber] : null,
 				},
 				selected: false,
 				subject: new Subject(),
@@ -480,7 +485,7 @@ export class AssetDetailsAdvisoriesComponent
 	 * Refreshes and loads the date
 	 */
 	private refresh () {
-		if (this.asset && this.customerId) {
+		if ((this.asset || this.element) && this.customerId) {
 			this.clear();
 			this.initializeTabs();
 			this.initializeData();
