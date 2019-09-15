@@ -26,6 +26,7 @@ import {
 	SecurityAdvisoryInfo,
 	SecurityAdvisoriesResponse,
 	FieldNoticeAdvisoryResponse,
+	NetworkElement,
 } from '@sdp-api';
 import { CuiTableOptions, CuiTableColumnOption } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
@@ -66,6 +67,7 @@ export class AssetDetailsAdvisoriesComponent
 	implements OnInit, OnChanges, OnDestroy {
 
 	@Input('asset') public asset: Asset;
+	@Input('element') public element: NetworkElement;
 	@Input('customerId') public customerId: string;
 	@ViewChild('impact', { static: true }) private impactTemplate: TemplateRef<{ }>;
 	@ViewChild('fieldNoticeID', { static: true }) private fieldNoticeIDTemplate: TemplateRef<{ }>;
@@ -206,7 +208,7 @@ export class AssetDetailsAdvisoriesComponent
 		_.map(this.tabs, (tab: Tab) => {
 			if (_.get(tab, ['params', 'serialNumber']) && tab.key === 'bug') {
 				tab.subject.next();
-			} else if (_.get(tab, ['params', 'hwInstanceId'])) {
+			} else if (_.get(tab, ['params', 'neInstanceId'])) {
 				tab.subject.next();
 			} else {
 				tab.loading = false;
@@ -262,7 +264,7 @@ export class AssetDetailsAdvisoriesComponent
 				moreLoading: false,
 				params: {
 					customerId: this.customerId,
-					hwInstanceId: this.asset.hwInstanceId ? [this.asset.hwInstanceId] : null,
+					neInstanceId: this.element.neInstanceId ? [this.element.neInstanceId] : null,
 					page: 1,
 					rows: 10,
 					sort: ['severity:ASC'],
@@ -319,7 +321,7 @@ export class AssetDetailsAdvisoriesComponent
 				moreLoading: false,
 				params: {
 					customerId: this.customerId,
-					hwInstanceId: this.asset.hwInstanceId ? [this.asset.hwInstanceId] : null,
+					neInstanceId: this.element.neInstanceId ? [this.element.neInstanceId] : null,
 					page: 1,
 					rows: 10,
 					sort: ['lastUpdated:DESC'],
