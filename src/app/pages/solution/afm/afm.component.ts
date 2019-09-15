@@ -25,6 +25,7 @@ import { Subject, of } from 'rxjs';
 import { UserResolve } from '@utilities';
 import { takeUntil, catchError } from 'rxjs/operators';
 import { ExportCsvService, DetailsPanelStackService, AssetPanelLinkService } from '@services';
+import { Panel360 } from '@interfaces';
 
 /**
  * AfmComponet which shows in Insight view for Fault Management tab
@@ -37,7 +38,7 @@ import { ExportCsvService, DetailsPanelStackService, AssetPanelLinkService } fro
 	styleUrls: ['./afm.component.scss'],
 	templateUrl: './afm.component.html',
 })
-export class AfmComponent implements OnInit, OnDestroy {
+export class AfmComponent implements OnInit, OnDestroy, Panel360 {
 
 	public showAlarmDetails = false;
 	public selectedAsset: Alarm;
@@ -474,8 +475,6 @@ export class AfmComponent implements OnInit, OnDestroy {
 	 * to close the panel
 	 */
 	public onPanelClose () {
-		this.detailsPanelStackService.reset();
-		_.set(this.selectedAsset, 'active', false);
 		this.selectedAsset = null;
 	}
 
@@ -485,8 +484,8 @@ export class AfmComponent implements OnInit, OnDestroy {
 	 */
 	public handleHidden (hidden: boolean) {
 		if (hidden) {
-			this.showAlarmDetails = false;
 			this.onPanelClose();
+			this.showAlarmDetails = false;
 			this.detailsPanelStackService.reset();
 		}
 	}
