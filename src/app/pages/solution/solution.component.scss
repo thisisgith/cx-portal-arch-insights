@@ -380,6 +380,40 @@ $cx-font-size-24: 24px;
 	margin-top: 20px;
 	color: #6c757d;
 
+	.sortable:hover,
+	.sortable.sorted {
+		color: #227bb1;
+	}
+
+	.icon-chevron-down,
+	.icon-chevron-up {
+		width: 10px;
+		height: 7px;
+		position: relative;
+		font-size: 10px;
+
+		&::before {
+			display: inline-block;
+			width: 10px;
+			height: 7px;
+			content: '\25B2';
+			position: absolute;
+			top: -9px;
+		}
+	}
+
+	.icon-chevron-down::before {
+		transform: rotate(180deg);
+		top: 9px;
+	}
+
+	.label--circle.label--tiny {
+		width: 10px;
+		height: 10px;
+		min-width: 10px;
+		min-height: 10px;
+	}
+
 	thead::after {
 		content: "";
 		border-bottom: 1px solid #e4e4e4;
