@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subject, of, Observable } from 'rxjs';
-import { catchError, takeUntil, flatMap, mergeMap, map } from 'rxjs/operators';
+import { catchError, takeUntil, flatMap, mergeMap } from 'rxjs/operators';
 
 import { caseSeverities, CaseRequestType } from '@classes';
 import { CaseOpenRequest } from '@interfaces';
@@ -14,11 +14,6 @@ import { Asset,
 	DeviceContractResponse,
 	ContractsService,
 	NetworkElement,
-	NetworkDataGatewayService,
-	TransactionRequest,
-	Transaction,
-	TransactionRequestResponse,
-	TransactionStatusResponse,
 } from '@sdp-api';
 import { CaseOpenData } from './caseOpenData';
 import { CloseConfirmComponent } from './close-confirm/close-confirm.component';
@@ -92,7 +87,6 @@ export class CaseOpenComponent implements  CuiModalContent, OnInit, OnDestroy {
 		private profileService: ProfileService,
 		private contractsService: ContractsService,
 		private userResolve: UserResolve,
-		private networkService: NetworkDataGatewayService,
 	) {
 	}
 
@@ -237,15 +231,7 @@ export class CaseOpenComponent implements  CuiModalContent, OnInit, OnDestroy {
 						title: this.caseForm.controls.title.value,
 					};
 
-					return this.initiateScan()
-					.pipe(
-						map((response: TransactionStatusResponse) => {
-							if (_.get(response, 'status')) {
-								this.caseOpenData.scanStatus = response.status;
-							}
-							this.cuiModalService.onSuccess.emit(this.caseOpenData);
-						}),
-					);
+					this.cuiModalService.onSuccess.emit(this.caseOpenData);
 				}
 
 				return of({ });
@@ -254,65 +240,6 @@ export class CaseOpenComponent implements  CuiModalContent, OnInit, OnDestroy {
 		.subscribe(() => {
 			this.submitted = true;
 		});
-	}
-
-	/**
-	 * Checks the current scan status
-	 * @returns the observable
-	 */
-	private initiateScan () {
-		if (!this.element) {
-			return of({ });
-		}
-
-		const failureStatus = { status: 'FAILURE' };
-		const request: TransactionRequest = {
-			customerId: this.customerId,
-			neCount: 1,
-			requestBody: {
-				deviceOptions: 'LIST',
-				devices: [{
-					hostname: this.element.hostName,
-					ipAddress: this.element.ipAddress,
-					productId: this.element.productId,
-					serialNumber: this.element.serialNumber,
-				}],
-			},
-			requestType: 'PEC',
-			transactionType: 'SCAN',
-		};
-
-		return this.networkService.postDeviceTransactions(request)
-		.pipe(
-			takeUntil(this.destroy$),
-			mergeMap((response: TransactionRequestResponse) => {
-				const transaction: Transaction = _.head(response);
-
-				if (_.get(transaction, 'transactionId')) {
-					return this.networkService.getScanStatusByTransaction({
-						customerId: this.customerId,
-						transactionId: transaction.transactionId,
-					});
-				}
-
-				return of(failureStatus);
-			}),
-			catchError(err => {
-				this.logger.error('case-open.component : initiateScan() ' +
-				`:: Error : (${err.status}) ${err.message}`);
-
-				return of(failureStatus);
-			}),
-		)
-		.pipe(
-			map((response: TransactionStatusResponse) => response),
-			catchError(err => {
-				this.logger.error('case-open.component : initiateScan() ' +
-				`:: Error : (${err.status}) ${err.message}`);
-
-				return of(failureStatus);
-			}),
-		);
 	}
 
 	/**
