@@ -6,7 +6,7 @@ import {
 	Output,
 	SimpleChanges,
 	ElementRef,
-	AfterViewInit,
+	OnInit,
 } from '@angular/core';
 import {
 	Asset,
@@ -39,7 +39,7 @@ import { I18n } from '@cisco-ngx/cui-utils';
 	styleUrls: ['./asset-details.component.scss'],
 	templateUrl: './asset-details.component.html',
 })
-export class AssetDetailsComponent implements OnDestroy, AfterViewInit, Panel360 {
+export class AssetDetailsComponent implements OnDestroy, OnInit, Panel360 {
 
 	@Input('serialNumber') public serialNumber: string;
 	@Input('asset') public asset: Asset;
@@ -199,10 +199,13 @@ export class AssetDetailsComponent implements OnDestroy, AfterViewInit, Panel360
 			this.isLoading = false;
 
 			if (!this.serialNumber || !this.asset) {
-				this.handleAlert({
-					message: I18n.get('_UnableToRetrieveAssetDetails_'),
-					severity: 'danger',
-				});
+				// Have to force a cycle so that alert is instantiated correctly
+				setTimeout(() => {
+					this.handleAlert({
+						message: I18n.get('_UnableToRetrieveAssetDetails_'),
+						severity: 'danger',
+					});
+				}, 0);
 			}
 		});
 	}
@@ -210,7 +213,7 @@ export class AssetDetailsComponent implements OnDestroy, AfterViewInit, Panel360
 	/**
 	 * Initializer
 	 */
-	public ngAfterViewInit () {
+	public ngOnInit () {
 		this.detailsPanelStackService.push(this);
 		this.hidden = false;
 		this.refresh();
