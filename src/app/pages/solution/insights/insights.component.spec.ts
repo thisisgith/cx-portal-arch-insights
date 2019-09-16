@@ -54,46 +54,46 @@ describe('InsightsComponent', () => {
 			.toBeTruthy();
 	});
 
-	it('should return true if the user has permission', () => {
-		spyOn(routeAuthService, 'checkPermissions')
-			.and
-			.returnValue(of(true));
-		spyOn(userResolve, 'getCustomerId')
-			.and
-			.returnValue(of('1234'));
-		component.ngOnInit();
-		fixture.detectChanges();
-		expect(component.hasPermission)
-			.toBeTruthy();
-	});
+	// it('should return true if the user has permission', () => {
+	// 	spyOn(routeAuthService, 'checkPermissions')
+	// 		.and
+	// 		.returnValue(of(true));
+	// 	spyOn(userResolve, 'getCustomerId')
+	// 		.and
+	// 		.returnValue(of('1234'));
+	// 	component.ngOnInit();
+	// 	fixture.detectChanges();
+	// 	expect(component.hasPermission)
+	// 		.toBeTruthy();
+	// });
 
-	it('should return false and re-route to  risk mitigation', () => {
-		spyOn(routeAuthService, 'checkPermissions')
-			.and
-			.returnValue(of(false));
-		spyOn(userResolve, 'getCustomerId')
-			.and
-			.returnValue(of('1234'));
-		component.ngOnInit();
-		fixture.detectChanges();
-		expect(component.hasPermission)
-			.toBeFalsy();
-	});
+	// it('should return false and re-route to  risk mitigation', () => {
+	// 	spyOn(routeAuthService, 'checkPermissions')
+	// 		.and
+	// 		.returnValue(of(false));
+	// 	spyOn(userResolve, 'getCustomerId')
+	// 		.and
+	// 		.returnValue(of('1234'));
+	// 	component.ngOnInit();
+	// 	fixture.detectChanges();
+	// 	expect(component.hasPermission)
+	// 		.toBeFalsy();
+	// });
 
-	it('should should set hasPermission false if error', () => {
-		const error = {
-			status: 404,
-			statusText: 'Resource not found',
-		};
-		spyOn(routeAuthService, 'checkPermissions')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(userResolve, 'getCustomerId')
-			.and
-			.returnValue(of('1234'));
-		component.ngOnInit();
-		fixture.detectChanges();
-		expect(component.hasPermission)
-			.toBeFalsy();
-	});
+	// it('should should set hasPermission false if error', () => {
+	// 	const error = {
+	// 		status: 404,
+	// 		statusText: 'Resource not found',
+	// 	};
+	// 	spyOn(routeAuthService, 'checkPermissions')
+	// 		.and
+	// 		.returnValue(throwError(new HttpErrorResponse(error)));
+	// 	spyOn(userResolve, 'getCustomerId')
+	// 		.and
+	// 		.returnValue(of('1234'));
+	// 	component.ngOnInit();
+	// 	fixture.detectChanges();
+	// 	expect(component.hasPermission)
+	// 		.toBeFalsy();
+	// });
 });
