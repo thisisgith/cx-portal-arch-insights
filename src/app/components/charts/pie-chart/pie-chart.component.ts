@@ -165,7 +165,7 @@ export class PieChartComponent implements OnChanges {
 						filterColors5Max : filterColors8Max, index, '#fff'),
 					id: d.label,
 					name: d.label,
-					value: d.value,
+					y: d.value,
 				}));
 				this.chart.ref.series[0].setData(data);
 			}
