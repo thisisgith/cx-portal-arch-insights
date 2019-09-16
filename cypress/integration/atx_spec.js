@@ -80,6 +80,15 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 						cy.getByAutoId('moreATXList-HoverModal-BookmarkRibbon')
 							.should('have.class', 'ribbon__white');
 					}
+
+					cy.getByAutoId('moreATXList-HoverModal-Title')
+						.eq(index - 1)
+						.should('have.text', item.title)
+						.and('have.class', 'title-line-clamp');
+					cy.getByAutoId('moreATXList-HoverModal-Description')
+						.eq(index - 1)
+						.should('have.text', item.description)
+						.and('have.class', 'line-clamp');
 				}
 			});
 			invisibleATXItems.forEach(item => {
@@ -172,6 +181,19 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 					cy.getByAutoId('recommendedATX-HoverModal-BookmarkRibbon')
 						.should('have.class', 'ribbon__white');
 				}
+
+				// First item hover modal
+				cy.getByAutoId('recommendedATX-HoverModal-Title')
+					.should('have.text', firstItem.title)
+					.and('have.class', 'title-line-clamp');
+				// If the description contains \n, those get converted to <br>, which breaks text
+				// matching. Thus, split the string on \n, and verify each section exists
+				const splitDescription = firstItem.description.split('\n');
+				splitDescription.forEach(substring => {
+					cy.getByAutoId('recommendedATX-HoverModal-Description')
+						.should('contain', substring)
+						.and('have.class', 'line-clamp');
+				});
 			});
 	});
 
@@ -535,7 +557,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 
 		it('Should allow scheduling of an ATX on the next pitstop', () => {
 			// Move the preview to the next pitstop
-			cy.getByAutoId('Racetrack-Point-implement').click();
+			cy.getByAutoId('Racetrack-Point-Implement').click();
 			cy.wait('(ATX) IBN-Campus Network Assurance-Implement', { timeout: 5000 });
 
 			// Open the sessions modal, select a session, and verify button is enabled
@@ -551,7 +573,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 
 		it('Should NOT allow scheduling of an ATX on the after next pitstop', () => {
 			// Move the preview to the next pitstop
-			cy.getByAutoId('Racetrack-Point-use').click();
+			cy.getByAutoId('Racetrack-Point-Use').click();
 
 			// Open the sessions modal, select a session, and verify button is NOT enabled
 			cy.getByAutoId('recommendedATXScheduleButton').click();

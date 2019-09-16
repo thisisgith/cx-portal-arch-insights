@@ -604,7 +604,8 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			// Recommended hover modal should show title and description
 			cy.getByAutoId('recommendedACC-HoverModal').should('exist');
 			cy.getByAutoId('recommendedACC-HoverModal-Title').should('exist')
-				.and('contain', twoRecommendedItems[0].title);
+				.and('contain', twoRecommendedItems[0].title)
+				.and('have.class', 'title-line-clamp');
 			cy.getByAutoId('recommendedACC-HoverModal-Description').should('exist')
 				.and('contain', twoRecommendedItems[0].description)
 				// PBC-611 Truncate description text
@@ -2345,8 +2346,12 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			accMoreItems.forEach((acc, index) => {
 				cy.getByAutoId('moreACCList-item').eq(index).within(() => {
 					cy.getByAutoId('moreACCList-HoverModal').should('exist').within(() => {
-						cy.getByAutoId('moreACCList-HoverModal-Title').should('have.text', acc.title);
-						cy.getByAutoId('moreACCList-HoverModal-Description').should('have.text', acc.description);
+						cy.getByAutoId('moreACCList-HoverModal-Title')
+							.should('have.text', acc.title)
+							.and('have.class', 'title-line-clamp');
+						cy.getByAutoId('moreACCList-HoverModal-Description')
+							.should('have.text', acc.description)
+							.and('have.class', 'line-clamp');
 						cy.getByAutoId('moreACCList-HoverModal-BookmarkRibbon').should('exist');
 
 						// Ribbon is blue for bookmarked, white otherwise
@@ -2426,7 +2431,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 
 		it('Should allow scheduling of an ACC on the next pitstop', () => {
 			// Move the preview to the next pitstop
-			cy.getByAutoId('Racetrack-Point-implement').click();
+			cy.getByAutoId('Racetrack-Point-Implement').click();
 			cy.wait('(ACC) IBN-Campus Network Assurance-Implement-twoRecommended', { timeout: 5000 });
 
 			// Verify the Request 1-on-1 button is enabled
@@ -2443,7 +2448,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 
 		it('Should NOT allow scheduling of an ACC on the after next pitstop', () => {
 			// Move the preview to the next pitstop
-			cy.getByAutoId('Racetrack-Point-use').click();
+			cy.getByAutoId('Racetrack-Point-Use').click();
 			cy.wait('(ACC) IBN-Campus Network Assurance-Use-twoRecommended', { timeout: 5000 });
 
 			// NOTE: Cypress can not trigger elements with :hover css property. Since the tooltip
