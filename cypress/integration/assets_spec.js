@@ -865,8 +865,7 @@ describe('Assets', () => { // PBC-41
 			cy.get('[data-auto-id="AssetsTableBody"] tr').eq(0).click();
 			validate360OpenCase(assets[0]); // Currently only first asset has the CaseOpen Button
 
-			// TODO: Disabled for PBC-721
-			// cy.getByAutoId('CloseDetails').click();
+			cy.getByAutoId('CloseDetails').click();
 		});
 	});
 
