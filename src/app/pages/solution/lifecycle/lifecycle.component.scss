@@ -406,6 +406,10 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 		background-color: $button-outline-color;
 		box-shadow: 0 0 1px 1px $button-outline-color;
 	}
+
+	cui-spinner {
+		height: 100px;
+	}
 }
 
 .cx-lifecycle-card--recommended {
@@ -1533,6 +1537,13 @@ polygon {
 	height: 100%;
 	max-height: -webkit-fill-available;
 	overflow: auto;
+
+	.modal-spinner-container {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		height: 100%;
+	}
 }
 
 .list-view table {

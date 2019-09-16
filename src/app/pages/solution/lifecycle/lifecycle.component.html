@@ -779,7 +779,7 @@
 				<ng-container *ngSwitchCase="'PG'">
 					<div class="flex-center-vertical">
 						<div class="text-left modal__body__topics cx-text-default"
-							[innerText]="'_TopicsAvailableSolution_' | i18n:selectedProductGuides?.length || 0:componentData.params.solution:componentData.params.usecase">
+							[innerText]="'_TopicsAvailableSolution_' | i18n:componentData.productGuides.items?.length || 0:componentData.params.solution:componentData.params.usecase">
 						</div>
 						<div class="modal__body__filter">
 							<cui-select class="lifecycle-filter"
@@ -787,7 +787,7 @@
 								[items]="pgCategoryOptions"
 								[empty]="true"
 								[placeholder]="'_FilterBy_' | i18n"
-								[(ngModel)]="selectedFilterForPG"
+								[(ngModel)]="componentData.productGuides.filter"
 								(ngModelChange)="selectFilter('PG')">
 							</cui-select>
 						</div>
@@ -805,14 +805,19 @@
 						</div>
 					</div>
 					<div class="modal-content-container">
-						<span #topOfModal></span>
-						<ng-container *ngTemplateOutlet="cardViewTemplate; context: { type: type, view: this.pgview }"></ng-container>
-						<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type, view: this.pgview }"></ng-container>
-						<ng-container *ngTemplateOutlet="loadMoreTemplate; context: {
-							type: type,
-							loading: this.status.loading.productGuides,
-							error: this.status.error.productGuides
-						}"></ng-container>
+						<ng-container *ngIf="!this.status.loading.productGuides.modal">
+							<span #topOfModal></span>
+							<ng-container *ngTemplateOutlet="cardViewTemplate; context: { type: type, view: this.pgview }"></ng-container>
+							<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type, view: this.pgview }"></ng-container>
+							<ng-container *ngTemplateOutlet="loadMoreTemplate; context: {
+								type: type,
+								loading: this.status.loading.productGuides.more,
+								error: this.status.error.productGuides
+							}"></ng-container>
+						</ng-container>
+						<div class="modal-spinner-container" *ngIf="this.status.loading.productGuides.modal">
+							<cui-spinner></cui-spinner>
+						</div>
 					</div>
 				</ng-container>
 			</ng-container>
@@ -836,7 +841,9 @@
 			<div class="dbl-margin-top dbl-margin-bottom">
 				<button data-auto-id="LoadMore-Button"
 					class="btn btn--secondary btn--small text-uppercase"
-					[innerText]="'_LoadMore_' | i18n"></button>
+					[innerText]="'_LoadMore_' | i18n"
+					(click)="loadMoreContent(type)"
+					[disabled]="getLoadMoreDisabled(type)"></button>
 			</div>
 			<div class="dbl-margin-top base-margin-bottom">
 				<span data-auto-id="LoadMore-BackToTop"
@@ -885,7 +892,7 @@
 						<ng-container *ngTemplateOutlet="listView; context: { type: type, columns: successBytesTable.columns, data: selectedSuccessPaths }"></ng-container>
 					</ng-container>
 					<ng-container *ngIf="type === 'PG'">
-						<ng-container *ngTemplateOutlet="listView; context: { type: type, columns: productGuidesTable.columns, data: selectedProductGuides }"></ng-container>
+						<ng-container *ngTemplateOutlet="listView; context: { type: type, columns: productGuidesTable.columns, data: componentData.productGuides.items }"></ng-container>
 					</ng-container>
 					</table>
 				</div>
@@ -1078,7 +1085,7 @@
 
 <ng-template #cardPG>
 	<div class="card success__card"
-		*ngFor="let item of selectedProductGuides"
+		*ngFor="let item of componentData.productGuides.items"
 		data-auto-id="PGCard">
 		<div class="icon-bookmark toggle"
 			(click)="updateBookmark(item, 'PG')"

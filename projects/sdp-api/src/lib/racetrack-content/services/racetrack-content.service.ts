@@ -453,7 +453,7 @@ class RacetrackContentService extends __BaseService {
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
     if (params.pitstop != null) __params = __params.set('pitstop', params.pitstop.toString());
     if (params.page != null) __params = __params.set('page', params.page.toString());
-    (params.fields || []).forEach(val => {if (val != null) __params = __params.append('fields', val.toString())});
+    if (params.fields != null) __params = __params.set('fields', params.fields.toString());
     let req = new HttpRequest<any>(
       'GET',
       this.rootUrl + `/customerportal/racetrack/v1/successPaths`,
@@ -1093,7 +1093,7 @@ module RacetrackContentService {
     /**
      * Requested fields in the response.
      */
-    fields?: Array<string>;
+    fields?: string;
   }
 
   /**
