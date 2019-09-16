@@ -871,9 +871,9 @@
 		<div class="card__footer atx__card__footer">
 			<div class="card_footer_item"  data-auto-id="ATXCardFooter">
 				<div class="atx__card__status text-left base-padding-left base-padding-right base-margin-bottom flex-middle">
-					<span class="text-success icon-certified half-padding-right" *ngIf="item.status === 'completed'" data-auto-id="ATXCardFooter-CompletedIcon"></span>
-					<span class="text-info icon-clock half-padding-right" *ngIf="item.status === 'in-progress'" data-auto-id="ATXCardFooter-InProgressIcon"></span>
-					<span class="text-info icon-check-outline half-padding-right" *ngIf="item.status === 'requested'" data-auto-id="ATXCardFooter-RequestedIcon"></span>
+					<span class="icon-certified half-padding-right" *ngIf="item.status === 'completed'" data-auto-id="ATXCardFooter-CompletedIcon"></span>
+					<span class="icon-clock half-padding-right" *ngIf="item.status === 'in-progress'" data-auto-id="ATXCardFooter-InProgressIcon"></span>
+					<span class="icon-check-outline half-padding-right" *ngIf="item.status === 'requested'" data-auto-id="ATXCardFooter-RequestedIcon"></span>
 					<span class="text-medium" [innerText]="'_Completed_' | i18n" *ngIf="item.status === 'completed'" data-auto-id="ATXCardFooter-CompletedText"></span>
 					<span class="text-medium" [innerText]="'_InProgress_' | i18n" *ngIf="item.status === 'in-progress'" data-auto-id="ATXCardFooter-InProgressText"></span>
 					<span class="text-medium" [innerText]="'_Requested_' | i18n" *ngIf="item.status === 'requested'" data-auto-id="ATXCardFooter-RequestedText"></span>
@@ -883,7 +883,7 @@
 					<div *ngFor="let session of item.sessions">
 						<div
 							*ngIf="session.scheduled"
-							class="text-info icon-calendar half-padding-right"
+							class="icon-calendar half-padding-right"
 							data-auto-id="ATXCardFooter-ScheduledIcon"
 						></div>
 						<span class="text-medium" innerText="{{session.sessionStartDate | date:'medium'}}" data-auto-id="ATXCardFooter-ScheduledDate" *ngIf="session.scheduled"></span>
@@ -935,9 +935,9 @@
 		<div class="card__footer atx__card__footer">
 			<div class="card_footer_item" data-auto-id="ACCCardFooter">
 				<div class="atx__card__status text-left base-padding-left base-padding-right base-margin-bottom flex-middle">
-					<span class="text-success icon-certified half-padding-right" *ngIf="item.status === 'completed'"></span>
-					<span class="text-info icon-clock half-padding-right" *ngIf="item.status === 'in-progress'"></span>
-					<span class="text-info icon-check-outline half-padding-right" *ngIf="item.status === 'requested'"></span>
+					<span class="icon-certified half-padding-right" *ngIf="item.status === 'completed'"></span>
+					<span class="icon-clock half-padding-right" *ngIf="item.status === 'in-progress'"></span>
+					<span class="icon-check-outline half-padding-right" *ngIf="item.status === 'requested'"></span>
 					<span class="text-medium" [innerText]="'_Completed_' | i18n" *ngIf="item.status === 'completed'"></span>
 					<span class="text-medium" [innerText]="'_SessionInProgress_' | i18n" *ngIf="item.status === 'in-progress'"></span>
 					<span class="text-medium" [innerText]="'_Requested_' | i18n" *ngIf="item.status === 'requested'"></span>
@@ -1247,22 +1247,22 @@
 	<div *ngIf="celldata.status ==='scheduled'" data-auto-id="Table-Status-Scheduled">
 		<div *ngFor="let session of celldata.sessions">
 			<div *ngIf="session.scheduled">
-				<span class="text-primary icon-calendar icon-small" data-auto-id="Table-Status-Scheduled-Icon"></span>
+				<span class="icon-calendar icon-small" data-auto-id="Table-Status-Scheduled-Icon"></span>
 				<span class="half-margin-left"
 					innerText="{{ session.sessionStartDate | date:'medium'}}" data-auto-id="scheduledDate"></span>
 			</div>
 		</div>
 	</div>
 	<div *ngIf="celldata.status === 'requested'" data-auto-id="Table-Status-Requested">
-		<span class="text-primary icon-check-outline icon-small"></span>
+		<span class="icon-check-outline icon-small"></span>
 		<span class="half-margin-left" [innerText]="'_Requested_' | i18n"></span>
 	</div>
 	<div *ngIf="celldata.status ==='in-progress'" data-auto-id="Table-Status-InProgress">
-		<span class="text-primary icon-clock icon-small"></span>
+		<span class="icon-clock icon-small"></span>
 		<span class="half-margin-left" [innerText]="'_InProgress_' | i18n"></span>
 	</div>
 	<div *ngIf="celldata.status ==='completed'" data-auto-id="Table-Status-Completed">
-		<span class="text-success icon-certified icon-small" data-auto-id="Table-Status-Completed-Icon"></span>
+		<span class="icon-certified icon-small" data-auto-id="Table-Status-Completed-Icon"></span>
 		<span class="half-margin-left" [innerText]="'_Completed_' | i18n" data-auto-id="Table-Status-Completed-Text"></span>
 	</div>
 </ng-template>
