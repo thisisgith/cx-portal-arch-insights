@@ -888,15 +888,15 @@ describe('Assets', () => { // PBC-41
 				.should('have.text', caseResponse.status);
 			// Verify the Table headers
 			cy.getByAutoId('Severity-Header')
-				.should('contain', 'Severity');
+				.should('have.text', 'Severity');
 			cy.getByAutoId('Case ID-Header')
-				.should('contain', 'Case ID');
+				.should('have.text', 'Case ID');
 			cy.getByAutoId('Summary-Header')
-				.should('contain', 'Summary');
+				.should('have.text', 'Summary');
 			cy.getByAutoId('Status-Header')
-				.should('contain', 'Status');
+				.should('have.text', 'Status');
 			cy.getByAutoId('Updated-Header')
-				.should('contain', 'Updated');
+				.should('have.text', 'Updated');
 			expect(cy.getByAutoId('Summary-Cell')
 				.its('length')
 				.should('be.gt', 0));
@@ -928,35 +928,36 @@ describe('Assets', () => { // PBC-41
 			cy.getByAutoId('summaryTab').should('be.visible');
 			cy.getByAutoId('notesTab').should('be.visible');
 			cy.getByAutoId('filesTab').should('be.visible');
-			cy.getByAutoId('caseTechnology').should('contain', i18n._RMACaseTechnology_.toUpperCase());
+			cy.getByAutoId('caseTechnology')
+				.should('have.text', i18n._RMACaseTechnology_.toUpperCase());
 
 			// Related RMAs dropdown
 			cy.getByAutoId('relatedRMA').click();
 			cy.waitForAppLoading();
-			cy.getByAutoId('Name-Header').should('contain', i18n._Name_);
-			cy.getByAutoId('Status-Header').eq(0).should('contain', i18n._Status_);
-			cy.getByAutoId('Ship To-Header').should('contain', i18n._ShipTo_);
-			cy.getByAutoId('Contract Number-Header').should('contain', i18n._ContractNumber_);
-			cy.getByAutoId('Created-Header').should('contain', i18n._Created_);
+			cy.getByAutoId('Name-Header').should('have.text', i18n._Name_);
+			cy.getByAutoId('Status-Header').eq(0).should('have.text', i18n._Status_);
+			cy.getByAutoId('Ship To-Header').should('have.text', i18n._ShipTo_);
+			cy.getByAutoId('Contract Number-Header').should('have.text', i18n._ContractNumber_);
+			cy.getByAutoId('Created-Header').should('have.text', i18n._Created_);
 			// TODO: Verify the RMA dropdown data from Mock API
 			cy.getByAutoId('close').click();
 			cy.getByAutoId('caseProbType')
-				.should('contain', i18n._RMACaseProblemType_.toUpperCase());
+				.should('have.text', i18n._RMACaseProblemType_.toUpperCase());
 			cy.getByAutoId('caseAsset')
-				.should('contain', i18n._RMACaseAsset_.toUpperCase());
+				.should('have.text', i18n._RMACaseAsset_.toUpperCase());
 			cy.getByAutoId('caseSW')
-				.should('contain', i18n._RMACaseSoftwareVersion_.toUpperCase());
-			cy.getByAutoId('caseContract').should('contain', i18n._Contract_.toUpperCase());
+				.should('have.text', i18n._RMACaseSoftwareVersion_.toUpperCase());
+			cy.getByAutoId('caseContract').should('have.text', i18n._Contract_.toUpperCase());
 			cy.getByAutoId('caseTracking')
-				.should('contain', i18n._RMACaseTrackingNumber_.toUpperCase());
+				.should('have.text', i18n._RMACaseTrackingNumber_.toUpperCase());
 			cy.getByAutoId('caseOwnerEmail')
-				.should('contain', i18n._RMACaseOwnerEmail_.toUpperCase());
+				.should('have.text', i18n._RMACaseOwnerEmail_.toUpperCase());
 			cy.getByAutoId('caseTacEng')
-				.should('contain', i18n._TACEngineer_.toUpperCase());
+				.should('have.text', i18n._TACEngineer_.toUpperCase());
 			cy.getByAutoId('caseSummaryTitle')
-				.should('contain', i18n._RMACaseSummaryTitle_.toUpperCase());
+				.should('have.text', i18n._RMACaseSummaryTitle_.toUpperCase());
 			cy.getByAutoId('caseDescription')
-				.should('contain', i18n._RMACaseDescription_.toUpperCase());
+				.should('have.text', i18n._RMACaseDescription_.toUpperCase());
 			cy.get('[detailspaneltitle]')
 				.should('have.text', `Case ${caseResponse.caseNumber}`);
 			cy.get('[data-auto-id="caseContract"] + div')

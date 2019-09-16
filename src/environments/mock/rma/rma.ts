@@ -14,13 +14,14 @@ const defaultSn = 'AAA';
  * @param options Config for mock response
  * @returns response
  */
-function MockRMA (options: { devices: number } = { devices: 1 }): RMAResponse {
+function MockRMA (
+	options: { devices: number, rmaNo?: number } = { devices: 1, rmaNo: rmaNumber }): RMAResponse {
 	const rma: RMAResponse = {
 		APIPagination: {
 			lastIndex: '1',
 			pageIndex: '1',
 			pageRecords: '1',
-			selfLint: `https://api-stage.cisco.com${api}/rma_numbers/${rmaNumber}`,
+			selfLint: `https://api-stage.cisco.com${api}/rma_numbers/${options.rmaNo}`,
 			title: 'Service Order RMA API',
 			totalRecords: '1',
 		},
@@ -105,7 +106,7 @@ function MockRMA (options: { devices: number } = { devices: 1 }): RMAResponse {
 						returnWarehouse: 'BLR',
 					}],
 				},
-				rmaNo: rmaNumber,
+				rmaNo: options.rmaNo,
 				serviceLevel: 'Premium Parts & Labor - 4 Hour',
 				shipToInfo: {
 					ackEmail: 'mq123@cisco.com',
@@ -167,6 +168,22 @@ const error: RMAResponse = {
 };
 
 /**
+ * Normal response when no records exist
+ */
+const noRecords: RMAResponse = {
+	APIError: {
+		Error: [
+			{
+				errorCode: 'SVO_NO_RECORDS',
+				errorDescription: 'No order found for the given request.',
+				inputIdentifier: '88346235',
+				suggestedAction: 'No order found for the given request.',
+			},
+		],
+	},
+};
+
+/**
  * The scenarios
  */
 export const RMAScenarios = [
@@ -213,5 +230,39 @@ export const RMAScenarios = [
 		},
 		url: `${api}/rma_numbers/${rmaNumber}`,
 		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 500,
+					description: 'No records - 88346235',
+					response: {
+						body: noRecords,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/rma_numbers/88346235`,
+		usecases: ['RMA'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 500,
+					description: 'Records for 88346234',
+					response: {
+						body:  MockRMA({ devices: 1, rmaNo: 88346234 }),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/rma_numbers/88346234`,
+		usecases: ['RMA'],
 	},
 ];
