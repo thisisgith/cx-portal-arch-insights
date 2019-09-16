@@ -58,16 +58,16 @@ lint:
     - npm run lint:sdp
 
 # run our test:ci process for the commit
- unit:
-   stage: test
-   cache:
+unit:
+  stage: test
+  cache:
     key: "PIPELINE-$CI_PIPELINE_ID"
     policy: pull
     paths:
       - package-lock.json
       - node_modules/
-   script:
-     - npm run test:ci
+  script:
+    - npm run test:ci
 
 # run automated Cypress tests for the commit
 automation:
