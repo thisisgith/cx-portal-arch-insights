@@ -105,6 +105,14 @@ export class BubbleChartComponent implements OnChanges {
 						enableSimulation: false,
 						gravitationalConstant: 0.02,
 					},
+					marker: {
+						lineWidth: 0,
+						states: {
+							hover: {
+								enabled: false,
+							},
+						},
+					},
 					maxSize: '120%',
 					minSize: '30%',
 				},
