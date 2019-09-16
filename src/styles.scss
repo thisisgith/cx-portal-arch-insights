@@ -98,10 +98,6 @@
 		font-weight: bold;
 		border-color: transparent;
 	}
-
-	+ li {
-		margin-left: 3px;
-	}
 }
 
 /** Altering tabs css to match Demo app */
@@ -111,7 +107,6 @@
 	padding: 0 !important;
 }
 
-/* stylelint-disable-next-line no-descending-specificity */
 .cui .nav-tabs > li,
 .cui ul.tabs > li {
 	height: 26px;
@@ -127,6 +122,10 @@
 .cui ul.tabs > li:hover > a {
 	box-shadow: 0 -2px 0 #00bceb inset;
 	color: var(--accent-color1, #00bceb);
+}
+
+.cui .pagination > li + li {
+	margin-left: 3px;
 }
 
 .cui .label {
