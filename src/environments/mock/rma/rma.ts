@@ -176,7 +176,6 @@ const noRecords: RMAResponse = {
 			{
 				errorCode: 'SVO_NO_RECORDS',
 				errorDescription: 'No order found for the given request.',
-				inputIdentifier: '88346235',
 				suggestedAction: 'No order found for the given request.',
 			},
 		],
