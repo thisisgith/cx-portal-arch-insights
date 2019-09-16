@@ -293,11 +293,11 @@ export class RegisterCollectorComponent implements OnDestroy, OnInit, SetupStep 
 			)
 			.pipe(
 				catchError(err => {
-					if (this.shouldShowError(err.error)) {
+					if (err.status === 500 || this.shouldHideError(err.error)) {
+						this.error = registrationErrorMap[RegistrationError.ADVANCED];
+					} else {
 						this.error = registrationErrorMap[RegistrationError.REGISTRATION];
 						this.errorDetails = err.error;
-					} else {
-						this.error = registrationErrorMap[RegistrationError.ADVANCED];
 					}
 					this.registering = false;
 
@@ -375,7 +375,7 @@ export class RegisterCollectorComponent implements OnDestroy, OnInit, SetupStep 
 					}
 					if (status.status === 'Registered') {
 						this.getCurrentRegistrationStep(stages);
-						timer(2000)
+						timer(1500)
 							.pipe(takeUntil(this.destroyed$))
 							.subscribe(() => {
 								// continue to next screen after a second
@@ -450,12 +450,9 @@ export class RegisterCollectorComponent implements OnDestroy, OnInit, SetupStep 
 	 * @param error - string
 	 * @returns boolean
 	 */
-	private shouldShowError (error: string) {
-		return /Password should not be empty/.test(error)
-			|| /Password for cxcadmin does not comply with password policy./.test(error)
-			|| /Invalid proxy port/.test(error)
-			|| /Please provide proxy password/.test(error)
-			|| /Please provide proxy user/.test(error)
-			|| /Registration could not be initiated as Proxy could not be configured/.test(error);
+	private shouldHideError (error: string) {
+		return /Please provide valid registration file./.test(error)
+			|| /Only zip files can be attached./.test(error)
+			|| /Corrupt file. Please provide valid registration file./.test(error);
 	}
 }
