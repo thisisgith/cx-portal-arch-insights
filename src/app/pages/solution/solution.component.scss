@@ -419,6 +419,47 @@ $cx-font-size-24: 24px;
 			border-bottom: none;
 		}
 	}
+
+	.checkbox,
+	.checkbox input,
+	.checkbox__input,
+	.checkbox__input::before,
+	.checkbox__input::after {
+		width: 18px;
+		height: 18px;
+		min-width: 18px;
+	}
+
+	.checkbox {
+		&__input {
+			&::before {
+				box-shadow: unset;
+				border: 1px solid #c2c2c2;
+				border-radius: 0;
+			}
+		}
+
+		input {
+			&:hover,
+			&:focus,
+			&:active,
+			&:checked {
+				~ .checkbox__input {
+					&::before {
+						box-shadow: unset;
+						outline: none;
+						background-color: #fff;
+						border: 1px solid #c2c2c2;
+					}
+
+					&::after {
+						color: #00bceb;
+						font-size: 16px;
+					}
+				}
+			}
+		}
+	}
 }
 
 ::ng-deep .cui {
