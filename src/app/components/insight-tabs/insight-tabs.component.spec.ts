@@ -10,7 +10,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { InsightTabsModule } from './insight-tabs.module';
 
-fdescribe('InsightTabsComponent', () => {
+describe('InsightTabsComponent', () => {
 	let component: InsightTabsComponent;
 	let fixture: ComponentFixture<InsightTabsComponent>;
 	let routeAuthService: RouteAuthService;
