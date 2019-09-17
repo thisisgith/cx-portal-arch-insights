@@ -85,7 +85,7 @@ describe('FpIntelligenceComponent', () => {
 
 	it('Should return the response', fakeAsync(() => {
 		component.requestForm.setValue({
-			deviceCount : 50,
+			deviceCount: 50,
 			minMatch: 50 ,
 			similarityCriteria: 'fingerprint'});
 		spyOn(component, 'updateSeriesData');
@@ -152,7 +152,7 @@ describe('FpIntelligenceComponent', () => {
 
 	it('should not load data if response contains empty values', fakeAsync(() => {
 		component.requestForm.setValue({
-			deviceCount : 50,
+			deviceCount: 50,
 			minMatch: 50 ,
 			similarityCriteria: 'fingerprint'});
 		spyOn(fpIntelligenceService, 'getSimilarDevicesDistribution')
@@ -167,7 +167,7 @@ describe('FpIntelligenceComponent', () => {
 
 	it('should not load data if form is invalid', fakeAsync(() => {
 		component.requestForm.setValue({
-			deviceCount : 50,
+			deviceCount: 50,
 			minMatch: -1 ,
 			similarityCriteria: 'fingerprint'});
 		spyOn(fpIntelligenceService, 'getSimilarDevices')
