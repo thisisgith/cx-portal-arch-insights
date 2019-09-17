@@ -339,6 +339,20 @@ describe('LifecycleComponent', () => {
 					statusText: 'Resource not found',
 				})));
 
+			racetrackRegisterAtxSessionSpy = spyOn(racetrackContentService, 'registerUserToAtx')
+				.and
+				.returnValue(throwError(new HttpErrorResponse({
+					status: 404,
+					statusText: 'Resource not found',
+			})));
+
+			racetrackCancelAtxSessionSpy = spyOn(racetrackContentService, 'cancelSessionATX')
+				.and
+				.returnValue(throwError(new HttpErrorResponse({
+					status: 404,
+					statusText: 'Resource not found',
+			})));
+
 			racetrackInfoSpy = spyOn(racetrackService, 'getRacetrack')
 				.and
 				.returnValue(of(getActiveBody(RacetrackScenarios[0])));
