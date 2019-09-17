@@ -107,18 +107,6 @@ describe('SearchBarComponent', () => {
 			.toBeFalsy();
 	}));
 
-	it('should trigger typeahead search if blurred', fakeAsync(() => {
-		spyOn(service, 'fetchTypeahead')
-			.and
-			.returnValue(of(mockResponse));
-		component.searchText = 'Test';
-		component.onBlur();
-		fixture.detectChanges();
-		tick(300);
-		expect(service.fetchTypeahead)
-			.toHaveBeenCalled();
-	}));
-
 	it('should select on Enter', fakeAsync(() => {
 		spyOn(component, 'onSearchSelect');
 		const input = fixture.debugElement.query(By.css('input'));
