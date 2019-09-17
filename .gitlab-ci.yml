@@ -2,7 +2,9 @@ image: containers.cisco.com/cway/gitlab-ci:3.4.1
 
 stages:
   - setup
-  - test
+  - static
+  - automation
+  - build
 
 # disable gitlab cli analytics
 before_script:
@@ -20,7 +22,7 @@ setup:
     - npm ci --audit=false
 
 building:
-  stage: test
+  stage: build
   cache:
     key: "PIPELINE-$CI_PIPELINE_ID"
     policy: pull
@@ -32,7 +34,7 @@ building:
 
 # run npm audit to verify dependency security
 audit:
-  stage: test
+  stage: build
   cache:
     key: "PIPELINE-$CI_PIPELINE_ID"
     policy: pull
@@ -45,7 +47,7 @@ audit:
 
 # run our lint process against the committed files
 lint:
-  stage: test
+  stage: static
   cache:
     key: "PIPELINE-$CI_PIPELINE_ID"
     policy: pull
@@ -59,7 +61,7 @@ lint:
 
 # run our test:ci process for the commit
 unit:
-  stage: test
+  stage: static
   cache:
     key: "PIPELINE-$CI_PIPELINE_ID"
     policy: pull
