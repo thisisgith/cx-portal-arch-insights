@@ -40,7 +40,6 @@ import { ActivatedRoute } from '@angular/router';
 import { User } from '@interfaces';
 import { CuiTableOptions, CuiTableColumnOption } from '@cisco-ngx/cui-components';
 import { RacetrackInfoService } from '@services';
-import { CollapsibleComponent } from 'src/app/components/collapsible/collapsible.component';
 
 /**
  * Interface representing success path and product guides modals
@@ -241,6 +240,9 @@ export class LifecycleComponent implements OnDestroy {
 	];
 
 	public status = {
+		error: {
+			productGuides: false,
+		},
 		loading: {
 			acc: false,
 			atx: false,
@@ -253,9 +255,6 @@ export class LifecycleComponent implements OnDestroy {
 			},
 			racetrack: false,
 			success: false,
-		},
-		error: {
-			productGuides: false,
 		},
 	};
 
@@ -687,17 +686,20 @@ export class LifecycleComponent implements OnDestroy {
 				break;
 			case 'PG':
 				this.componentData.productGuides.sortDirection = <'asc' | 'desc'> sortDirection;
-				this.componentData.productGuides.sortField = <'title' | 'type' | 'archetype' | 'bookmark'> key;
+				this.componentData.productGuides.sortField
+					= <'title' | 'type' | 'archetype' | 'bookmark'> key;
 
-				this.loadProductGuides().subscribe(() => {
-					// Can only sort by one column at a time, so toggle the one column and then
-					// set the others to ascending.
-					this.productGuidesTable.columns.forEach(handleColumns);
-				},
-				() => {
-					// When there's an error, the arrow should not change. This function swallows
-					// the error and keeps the arrow unchanged.
-				});
+				this.loadProductGuides()
+					.subscribe(
+						() => {
+							// Can only sort by one column at a time, so toggle
+							// the one column and then set the others to ascending.
+							this.productGuidesTable.columns.forEach(handleColumns);
+						},
+						// When there's an error, the arrow should not change.
+						// This function swallows the error and keeps the arrow unchanged.
+						() => undefined,
+					);
 				break;
 		}
 	}
@@ -794,7 +796,12 @@ export class LifecycleComponent implements OnDestroy {
 			};
 		} else if (type === '_ProductGuides_') {
 			// Swallow the responses.
-			this.loadProductGuides().subscribe(() => { }, () => { });
+			this.loadProductGuides()
+				.subscribe(
+					() => undefined,
+					() => undefined,
+				);
+
 			this.modal = {
 				content: this.viewAllModalTemplate,
 				context: {
@@ -920,7 +927,11 @@ export class LifecycleComponent implements OnDestroy {
 
 		if (type === 'PG') {
 			// Swallow the responses.
-			this.loadProductGuides().subscribe(() => { }, () => { });
+			this.loadProductGuides()
+				.subscribe(
+					() => undefined,
+					() => undefined,
+				);
 		}
 
 		if (type === 'ACC') {
@@ -1053,6 +1064,7 @@ export class LifecycleComponent implements OnDestroy {
 			if (results.isElearningChanged) { source.push(this.loadELearning()); }
 			if (results.isSuccessPathChanged) {
 				source.push(this.loadSuccessPaths());
+				this.prepareProductGuides();
 			}
 			if (results.isCgtChanged) { source.push(this.loadCGT()); }
 			forkJoin(
@@ -1488,6 +1500,9 @@ export class LifecycleComponent implements OnDestroy {
 		);
 	}
 
+	/**
+	 * Retrieves the current filter for Product Guides.
+	 */
 	private get selectedFilterForPG () {
 		if (this.componentData.productGuides.filter === 'Not selected') {
 			return '';
@@ -1582,6 +1597,11 @@ export class LifecycleComponent implements OnDestroy {
 		this.buildPGTable();
 	}
 
+	/**
+	 * Loads additional Success Paths content for Product Documentation
+	 * and Videos. Additional content is appended to current content.
+	 * @returns The success paths for product documentation and videos.
+	 */
 	private loadMoreProductGuides () {
 		const curCount: number = _.get(this.componentData.productGuides, ['items'], []).length;
 		const totalCount: number = _.get(this.componentData.productGuides, ['totalCount'], 0);
@@ -1636,11 +1656,12 @@ export class LifecycleComponent implements OnDestroy {
 					return of({ });
 				}),
 			);
-		} else {
-			this.logger.warn('lifecycle.component : loadMoreProductGuides() :: Warning : '
-				+ 'Attempted to load more after last page.');
-			return of({ });
 		}
+
+		this.logger.warn('lifecycle.component : loadMoreProductGuides() :: Warning : '
+			+ 'Attempted to load more after last page.');
+
+		return of({ });
 	}
 
 	/**
@@ -2036,7 +2057,9 @@ export class LifecycleComponent implements OnDestroy {
 	public getSelectedSuccessBytesCount (type: string): string {
 		switch (type) {
 			case 'PG':
-				const curCount: number = _.get(this.componentData.productGuides, ['items'], []).length;
+				const curCount: number
+					= _.get(this.componentData.productGuides, ['items'], []).length;
+
 				return `${curCount}`;
 			default:
 				return 'unknown';
@@ -2053,6 +2076,7 @@ export class LifecycleComponent implements OnDestroy {
 		switch (type) {
 			case 'PG':
 				const totalCount: number = _.get(this.componentData.productGuides, ['totalCount']);
+
 				return `${totalCount}`;
 			default:
 				return 'unknown';
@@ -2067,27 +2091,44 @@ export class LifecycleComponent implements OnDestroy {
 	public getSuccessBytesPercentage (type: string): string {
 		switch (type) {
 			case 'PG':
-				const curCount: number = _.get(this.componentData.productGuides, ['items'], []).length;
-				const totalCount: number = _.get(this.componentData.productGuides, ['totalCount']);
+				const curCount: number
+					= _.get(this.componentData.productGuides, ['items'], []).length;
+				const totalCount: number
+					= _.get(this.componentData.productGuides, ['totalCount']);
+
 				return `${Math.floor((curCount / totalCount) * 100)}`;
 			default:
 				return '0';
 		}
 	}
 
+	/**
+	 * Creates a request to load more content into the modal when the
+	 * user clicks the Load More button
+	 * @param type The type of modal currently open
+	 */
 	public loadMoreContent (type: string) {
 		switch (type) {
 			case 'PG':
-				this.loadMoreProductGuides().subscribe();
+				this.loadMoreProductGuides()
+					.subscribe();
 				break;
 		}
 	}
 
+	/**
+	 * Calculates whether or not the Load More button should be disabled
+	 * or not
+	 * @param type The type of modal currently open
+	 * @returns True for disabled, false for enabled
+	 */
 	public getLoadMoreDisabled (type: string) {
 		switch (type) {
 			case 'PG':
-				const curCount: number = _.get(this.componentData.productGuides, ['items'], []).length;
-				const totalCount: number = _.get(this.componentData.productGuides, ['totalCount'], 0);
+				const curCount: number
+					= _.get(this.componentData.productGuides, ['items'], []).length;
+				const totalCount: number
+					= _.get(this.componentData.productGuides, ['totalCount'], 0);
 
 				return curCount >= totalCount;
 		}
