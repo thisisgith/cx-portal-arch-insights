@@ -5,7 +5,7 @@ import { By } from '@angular/platform-browser';
 import { RacetrackComponent, stages } from './racetrack.component';
 import { RacetrackComponentModule } from './racetrack.module';
 
-describe('RacetrackComponent', () => {
+fdescribe('RacetrackComponent', () => {
 	let component: RacetrackComponent;
 	let fixture: ComponentFixture<RacetrackComponent>;
 	let de: DebugElement;
@@ -20,8 +20,8 @@ describe('RacetrackComponent', () => {
 		fixture = TestBed.createComponent(RacetrackComponent);
 		component = fixture.componentInstance;
 
-		component.stage = 'onboard';
-		component.currentStage = 'onboard';
+		component.stage = 'Onboard';
+		component.currentStage = 'Onboard';
 
 		fixture.detectChanges();
 	});
@@ -63,8 +63,8 @@ describe('RacetrackComponent', () => {
 		});
 
 		it('should move to an arbitrary stage', () => {
-			const stageName = 'adopt';
-			component.currentStage = 'adopt';
+			const stageName = 'Adopt';
+			component.currentStage = 'Adopt';
 			component.zoomToStage(stageName);
 			expect(component.current)
 				.toEqual(stageName);
