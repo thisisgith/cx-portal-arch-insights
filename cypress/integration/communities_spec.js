@@ -232,8 +232,7 @@ describe('Communities Panel', () => {
 				cy.getByAutoId(`communitytitle-${mapping.title}-Public`)
 					.should('exist')
 					.and('have.attr', 'title', mapping.title)
-					.and('have.attr', 'href', mapping.url)
-					.and('have.attr', 'target', '_blank')	// target: _blank for cross-launch
+					.and('have.attr', 'data-auto-href', mapping.url)
 					.and('have.attr', 'data-toggle', 'tooltip');	// tooltip
 			});
 
@@ -247,13 +246,12 @@ describe('Communities Panel', () => {
 
 				mapping.pitstops.forEach(pitstop => {
 					it(`Success Track Community Links for pitstop: ${pitstop.name}`, () => {
-						cy.getByAutoId(`Racetrack-Point-${pitstop.name.toLowerCase()}`)
+						cy.getByAutoId(`Racetrack-Point-${pitstop.name}`)
 							.click({ force: true });
 						cy.getByAutoId(`communitytitle-${pitstop.curatedTooltip}-Lifecycle`)
 							.should('have.text', 'Success Track')
 							.and('have.attr', 'title', pitstop.curatedTooltip)
-							.and('have.attr', 'target', '_blank')
-							.and('have.attr', 'href', pitstop.curatedURL);
+							.and('have.attr', 'data-auto-href', pitstop.curatedURL);
 					});
 				});
 			});
