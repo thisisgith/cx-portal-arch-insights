@@ -52,6 +52,9 @@ describe('FpIntelligenceComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(FpIntelligenceComponent);
 		component = fixture.componentInstance;
+		component.softwareSeriesData = [];
+		component.productFamilySeriesData = [];
+		component.productSeriesData = [];
 		fixture.detectChanges();
 	});
 
@@ -74,25 +77,27 @@ describe('FpIntelligenceComponent', () => {
 		fixture.whenStable()
 			.then(() => {
 				fixture.detectChanges();
-				expect(component.softwareSeriesData)
-					.toBeUndefined();
+				expect(component.softwareSeriesData.length)
+					.toEqual(0);
 				done();
 			});
 	});
 
-	it('Should return the response', done => {
+	it('Should return the response', fakeAsync(() => {
+		component.requestForm.setValue({
+			deviceCount : 50,
+			minMatch: 50 ,
+			similarityCriteria: 'fingerprint'});
+		spyOn(component, 'updateSeriesData');
 		spyOn(fpIntelligenceService, 'getSimilarDevicesDistribution')
 			.and
 			.returnValue(of(ComparisonViewScenarios[4].scenarios.GET[0].response.body));
 		component.ngOnInit();
-		fixture.whenStable()
-			.then(() => {
-				fixture.detectChanges();
-				expect(component.updateSeriesData)
-					.toBeDefined();
-				done();
-			});
-	});
+		tick(1000);
+		fixture.detectChanges();
+		expect(component.updateSeriesData)
+			.toHaveBeenCalled();
+	}));
 
 	it('should resolve a customerId', done => {
 		spyOn(userResolve, 'getCustomerId')
@@ -145,19 +150,20 @@ describe('FpIntelligenceComponent', () => {
 
 	});
 
-	it('should not load data if response contains empty values', done => {
+	it('should not load data if response contains empty values', fakeAsync(() => {
+		component.requestForm.setValue({
+			deviceCount : 50,
+			minMatch: 50 ,
+			similarityCriteria: 'fingerprint'});
 		spyOn(fpIntelligenceService, 'getSimilarDevicesDistribution')
 		.and
 		.returnValue(of(ComparisonViewScenarios[6].scenarios.GET[0].response.body));
 		component.ngOnInit();
-		fixture.whenStable()
-			.then(() => {
-				fixture.detectChanges();
-				expect(component.noData)
-					.toBeTruthy();
-				done();
-			});
-	});
+		tick(1000);
+		fixture.detectChanges();
+		expect(component.noData)
+			.toBeTruthy();
+	}));
 
 	it('should not load data if form is invalid', fakeAsync(() => {
 		component.requestForm.setValue({
