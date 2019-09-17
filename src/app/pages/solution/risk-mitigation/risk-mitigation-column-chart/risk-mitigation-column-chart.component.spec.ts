@@ -11,7 +11,7 @@ import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 import { user } from '@mock';
 
-fdescribe('RiskMitigationColumnChartComponent', () => {
+describe('RiskMitigationColumnChartComponent', () => {
 	let component: RiskMitigationColumnChartComponent;
 	let fixture: ComponentFixture<RiskMitigationColumnChartComponent>;
 
