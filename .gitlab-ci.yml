@@ -73,7 +73,7 @@ unit:
 
 # run automated Cypress tests for the commit
 .job_template: &cypress_spec
-  stage: test
+  stage: automation
   cache:
     key: "PIPELINE-$CI_PIPELINE_ID"
     policy: pull
