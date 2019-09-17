@@ -70,7 +70,7 @@ unit:
     - npm run test:ci
 
 # run automated Cypress tests for the commit
-automation:
+.job_template: &cypress_spec
   stage: test
   cache:
     key: "PIPELINE-$CI_PIPELINE_ID"
@@ -83,4 +83,14 @@ automation:
     - npm run start:background
   script:
     # TODO: Add more spec files (comma separated) once they are stable
-    - npm run test:automation -- --spec "cypress/integration/assets_spec.js,cypress/integration/advisories_spec.js,cypress/integration/communities_spec.js,cypress/integration/insights_spec.js"
+    - npm run test:automation -- --spec "cypress/integration/$CI_BUILD_NAME.js"
+
+# Stable cypress specs to be run in CI
+advisories_spec:
+  <<: *cypress_spec
+assets_spec:
+  <<: *cypress_spec
+communities_spec:
+  <<: *cypress_spec
+insights_spec:
+  <<: *cypress_spec
