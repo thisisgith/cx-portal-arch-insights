@@ -3,9 +3,9 @@
 		class="text-primary base-margin-bottom"
 		[innerText]="'_StepXColonY_' | i18n:'4':('_CiscoDNACollector_' | i18n)| uppercase"
 	></h6>
-	<h1 [innerText]="'_IE_ConnectLocalMachine_' | i18n"
-		class="dbl-margin-bottom">
-	</h1>
+	<div [innerText]="'_IE_ConnectLocalMachine_' | i18n"
+		class="dbl-margin-bottom step-title">
+	</div>
 	<div class="form-container dbl-margin-bottom">
 		<div *ngIf="view === 'input' || view === 'connecting'">
 			<div class="base-margin-top base-margin-bottom">

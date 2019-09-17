@@ -19,3 +19,8 @@
 	background: #f7f8fc;
 	height: 100%;
 }
+
+::ng-deep .step-title {
+	font-size: 44px;
+	line-height: 60px;
+}
