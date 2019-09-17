@@ -569,4 +569,34 @@ describe('General Spec', () => {
 			cy.getByAutoId('portalSupportHide').click();
 		});
 	});
+
+	context('PBC-128, PBC-653, PBC-722: Feedback modal window feature', () => {
+		before(() => {
+			cy.login();
+			cy.loadApp();
+			cy.waitForAppLoading();
+		});
+
+		it('PBC-128: Feedback modal window feature', () => { // PBC-128
+			cy.getByAutoId('FeedbackModal').click();
+			cy.get('div.modal__title').should('have.text', i18n._Feedback_);
+			cy.get('div.modal__body > form > span').should('have.text', i18n._HowWouldYouRateYourExp_);
+			cy.getByAutoId('thumbUpBtn').should('exist');
+			cy.getByAutoId('thumbDownBtn').should('exist');
+			cy.getByAutoId('closeModalIcon').should('exist');
+			cy.get('div.form-group__text > label').should('have.text', i18n._WhatCanWeDoToImprove_);
+			cy.get('div.text-right.help-block.text-muted > div > span').should('have.text', '0/2000'); // PBC-653
+			cy.get('span.checkbox__input').should('exist');
+			cy.get('[class="checkbox__label hidden-xs text-small"]').should('have.text', i18n._CiscoCanContactMe_);
+			cy.getByAutoId('thumbUpBtn').click(); // PBC-722
+			cy.getByAutoId('thumbUpBtn').should('have.attr', 'class', 'btn btn--icon btn--large btn--secondary active');
+			cy.getByAutoId('thumbDownBtn').click();
+			cy.getByAutoId('thumbDownBtn').should('have.attr', 'class', 'btn btn--icon btn--large btn--secondary base-margin-left active');
+			cy.getByAutoId('submitBtn').should('be.disabled');
+			cy.get('[placeholder="Comments"]').click().type('QA test');
+			cy.get('div.text-right.help-block.text-muted > div > span').should('have.text', '7/2000');
+			cy.getByAutoId('submitBtn').should('be.enabled');
+			cy.getByAutoId('closeModalIcon').click();
+		});
+	});
 });
