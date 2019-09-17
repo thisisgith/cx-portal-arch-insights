@@ -38,7 +38,7 @@ import { map, catchError, takeUntil } from 'rxjs/operators';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { ActivatedRoute } from '@angular/router';
 import { User } from '@interfaces';
-import { CuiTableOptions } from '@cisco-ngx/cui-components';
+import { CuiTableOptions, CuiTableColumnOption } from '@cisco-ngx/cui-components';
 import { RacetrackInfoService } from '@services';
 import { CollapsibleComponent } from 'src/app/components/collapsible/collapsible.component';
 
@@ -657,46 +657,42 @@ export class LifecycleComponent implements OnDestroy {
 	 * @param type lifecycle item type
 	 */
 	public onSort (key: string, sortDirection: string, type: string) {
+		const newDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+		const handleColumns = (column: CuiTableColumnOption) => {
+			if (column.sortKey === key) {
+				column.sortDirection = newDirection;
+			} else {
+				column.sortDirection = 'asc';
+			}
+		};
+
 		switch (type) {
 			case 'SB':
 				this.selectedSuccessPaths = _.orderBy(
 					this.selectedSuccessPaths, [key], [sortDirection]);
-	
-				_.find(this.successBytesTable.columns, { sortKey: key }).sortDirection
-					= _.find(this.successBytesTable.columns, { sortKey: key }).sortDirection
-						=== 'asc' ? 'desc' : 'asc';
+
+				this.successBytesTable.columns.forEach(handleColumns);
 				break;
 			case 'ATX':
 				this.selectedATX = _.orderBy(
 					this.selectedATX, [key], [sortDirection]);
-	
-				_.find(this.atxTable.columns, { sortKey: key }).sortDirection
-					= _.find(this.atxTable.columns, { sortKey: key }).sortDirection
-						=== 'asc' ? 'desc' : 'asc';
+
+				this.atxTable.columns.forEach(handleColumns);
 				break;
 			case 'ACC':
 				this.selectedACC = _.orderBy(
 					this.selectedACC, [key], [sortDirection]);
-	
-				_.find(this.accTable.columns, { sortKey: key }).sortDirection
-					= _.find(this.accTable.columns, { sortKey: key }).sortDirection
-						=== 'asc' ? 'desc' : 'asc';
+
+				this.accTable.columns.forEach(handleColumns);
 				break;
 			case 'PG':
-				const newDirection = sortDirection === 'asc' ? 'desc' : 'asc';
-				this.componentData.productGuides.sortDirection = newDirection;
+				this.componentData.productGuides.sortDirection = <'asc' | 'desc'> sortDirection;
 				this.componentData.productGuides.sortField = <'title' | 'type' | 'archetype' | 'bookmark'> key;
 
 				this.loadProductGuides().subscribe(() => {
 					// Can only sort by one column at a time, so toggle the one column and then
 					// set the others to ascending.
-					this.productGuidesTable.columns.forEach(column => {
-						if (column.sortKey === key) {
-							column.sortDirection = newDirection;
-						} else {
-							column.sortDirection = 'asc';
-						}
-					});
+					this.productGuidesTable.columns.forEach(handleColumns);
 				},
 				() => {
 					// When there's an error, the arrow should not change. This function swallows
