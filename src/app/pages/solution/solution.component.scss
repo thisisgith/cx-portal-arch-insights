@@ -1,9 +1,10 @@
 @import '../../../variables.scss';
 
 $cx-accent-color-1: #00bceb;
-$cx-gray-color-2: #b3b3b3;
+$cx-accent-color-2: #227bb1;
+$cx-gray-color-2: #6c757d;
 $cx-gray-color-4: #595b61;
-$cx-hover-color: rgba(221, 221, 221, 0.3);
+$cx-hover-color: rgba(#ecf4fc, 0.7);
 $cx-font-size-12: 12px;
 $cx-font-size-16: 16px;
 $cx-font-size-18: 18px;
@@ -268,7 +269,7 @@ $cx-font-size-24: 24px;
 			&:hover,
 			&:active,
 			&:focus {
-				color: $cx-accent-color-1;
+				color: $cx-accent-color-2;
 			}
 		}
 
@@ -287,7 +288,7 @@ $cx-font-size-24: 24px;
 
 			&.selected {
 				background-color: transparent;
-				color: $cx-accent-color-1 !important; // Required to override cui color
+				color: $cx-accent-color-2 !important; // Required to override cui color
 
 				&::after {
 					font-size: $cx-font-size-18;
