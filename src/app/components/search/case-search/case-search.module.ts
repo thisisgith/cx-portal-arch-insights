@@ -21,6 +21,7 @@ import {
 	imports: [
 		CommonModule,
 		RouterModule,
+
 		CuiLoaderModule,
 		CuiSpinnerModule,
 		I18nPipeModule,
