@@ -43,25 +43,25 @@ export class DnacListComponent implements OnInit {
 	public tableStartIndex = 0;
 	public tableEndIndex = 0;
 	private destroy$ = new Subject();
-	public searchText = '';
+	public searchText  = '';
 	public lastCollectionTime = '';
 	public params: IBullet =
 		{
-			customerId: '',
-			dnacIP: '',
-			page: 0,
-			pageSize: 10,
-			searchText: '',
+		  customerId : '',
+		  dnacIP: '',
+		  page: 0,
+		  pageSize: 10,
+		  searchText : '',
 		};
-	public fullscreen: any;
+	public fullscreen: any ;
 	@ViewChild('devicesTemplate', { static: true })
-	private devicesTemplate: TemplateRef<{}>;
+	private devicesTemplate: TemplateRef<{ }>;
 	@ViewChild('endPointsTemplate', { static: true })
-	private endPointsTemplate: TemplateRef<{}>;
+	private endPointsTemplate: TemplateRef<{ }>;
 	@ViewChild('fabricsTemplate', { static: true })
-	private fabricsTemplate: TemplateRef<{}>;
+	private fabricsTemplate: TemplateRef<{ }>;
 	@ViewChild('wlcTemplate', { static: true })
-	private wlcTemplate: TemplateRef<{}>;
+	private wlcTemplate: TemplateRef<{ }>;
 
 	/**
 	 * used to Intialize Table options
@@ -91,22 +91,22 @@ export class DnacListComponent implements OnInit {
 				{
 					name: I18n.get('_ArchitectureDevices(DevicesPublishedLimit)_'),
 					sortable: false,
-					template: this.devicesTemplate,
+					template : this.devicesTemplate,
 				},
 				{
 					name: I18n.get('_ArchitectureEndPoints(EndPublishedLimit)_'),
 					sortable: false,
-					template: this.endPointsTemplate,
+					template : this.endPointsTemplate,
 				},
 				{
 					name: I18n.get('_ArchitectureFabrics(FabricsPublishedLimit)_'),
 					sortable: false,
-					template: this.fabricsTemplate,
+					template : this.fabricsTemplate,
 				},
 				{
 					name: I18n.get('_ArchitectureWLC(WLCPublishedLimit)_'),
 					sortable: false,
-					template: this.wlcTemplate,
+					template : this.wlcTemplate,
 				},
 				{
 					key: 'dnacCpu',
@@ -166,20 +166,20 @@ export class DnacListComponent implements OnInit {
 		this.tableEndIndex = (endIndex) > this.totalItems ? this.totalItems : endIndex;
 
 		this.architectureReviewService.getDnacList(this.params)
-			.pipe(
-				takeUntil(this.destroy$),
-			)
-			.subscribe(res => {
-				if (!res) {
-					return this.inValidResponseHandler();
-				}
-				const datePipe = new DatePipe('en-US');
-				this.isLoading = false;
-				this.totalItems = res.TotalCounts;
-				this.lastCollectionTime = datePipe.transform(res.CollectionDate, 'medium');
-				this.dnacDetailsResponse = res.dnacDetails;
-				this.tableEndIndex = (this.tableStartIndex + this.dnacDetailsResponse.length);
-			},
+		.pipe(
+			takeUntil(this.destroy$),
+		)
+		.subscribe(res => {
+			if (!res) {
+				return this.inValidResponseHandler();
+			}
+			const datePipe = new DatePipe('en-US');
+			this.isLoading = false;
+			this.totalItems = res.TotalCounts;
+			this.lastCollectionTime = datePipe.transform(res.CollectionDate, 'medium');
+			this.dnacDetailsResponse = res.dnacDetails;
+			this.tableEndIndex = (this.tableStartIndex + this.dnacDetailsResponse.length);
+		},
 				err => {
 					this.logger.error('Devices With Exceptions View' +
 						'  : getDnacList() ' +
@@ -209,7 +209,7 @@ export class DnacListComponent implements OnInit {
 	 */
 	public onPanelClose () {
 		this.detailsPanelStackService.reset();
-		_.set(_.get(this.dnacDetails, ['active']), false);
+		_.set(_.get(this.dnacDetails, 'active'), false);
 		this.dnacDetails = null;
 	}
 
@@ -230,7 +230,7 @@ export class DnacListComponent implements OnInit {
 	 * @returns - Returns the formatted string
 	 */
 	public getFabricsTemplate (item) {
-		return `${item.noOfFabrics}(${item.fabricsPublishedLimits})`;
+		return `${item.noOfFabrics }(${item.fabricsPublishedLimits})`;
 	}
 
 	/**
@@ -240,7 +240,7 @@ export class DnacListComponent implements OnInit {
 	 * @returns - Returns the formatted string
 	 */
 	public getEndPointsTemplate (item) {
-		return `${item.noOfEndpoints}(${item.endpointsPublishedLimits})`;
+		return `${item.noOfEndpoints }(${item.endpointsPublishedLimits})`;
 	}
 
 	/**
@@ -250,7 +250,7 @@ export class DnacListComponent implements OnInit {
 	 * @returns - Returns the formatted string
 	 */
 	public getDevicesTemplate (item) {
-		return `${item.noOfDevices}(${item.devicesPublishedLimits})`;
+		return `${item.noOfDevices }(${item.devicesPublishedLimits})`;
 	}
 
 	/**
@@ -260,7 +260,7 @@ export class DnacListComponent implements OnInit {
 	 * @returns - Returns the formatted string
 	 */
 	public getWlcTemplate (item) {
-		return `${item.noOfWlc}(${item.wlcPublishedLimits})`;
+		return `${item.noOfWlc }(${item.wlcPublishedLimits})`;
 	}
 
 }
