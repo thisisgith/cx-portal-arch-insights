@@ -4,7 +4,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { LifecycleComponent } from './lifecycle.component';
 import { LifecycleModule } from './lifecycle.module';
-import { RacetrackService, RacetrackContentService, AtxSchema } from '@sdp-api';
+import { RacetrackService, RacetrackContentService, AtxSchema, SuccessPathsResponse } from '@sdp-api';
 import {
 	RacetrackScenarios,
 	ATXScenarios,
@@ -18,7 +18,7 @@ import {
 	CancelATXScenarios,
 	RegisterATXScenarios,
 } from '@mock';
-import { of, throwError } from 'rxjs';
+import { of, throwError, Observable } from 'rxjs';
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -59,7 +59,8 @@ describe('LifecycleComponent', () => {
 	// let racetrackCgtCustomerQuotaSpy;
 	let racetrackLearningSpy;
 	let racetrackInfoSpy;
-	let racetrackSPSpy;
+	let racetrackSPSpy: jasmine.Spy<(params: RacetrackContentService.GetRacetrackSuccessPathsParams)
+		=> Observable<SuccessPathsResponse>>;
 	let racetrackActionSpy;
 	let racetrackCancelAtxSessionSpy;
 	let racetrackRegisterAtxSessionSpy;
@@ -134,7 +135,7 @@ describe('LifecycleComponent', () => {
 			.and
 			.callFake(args => {
 				if (!args.pitstop) {
-					return of(getActiveBody(SuccessPathScenarios[5]));
+					return of(getActiveBody(SuccessPathScenarios[10]));
 				}
 
 				return of(getActiveBody(SuccessPathScenarios[0]));
@@ -1000,20 +1001,276 @@ describe('LifecycleComponent', () => {
 	});
 
 	describe('Product Guides', () => {
-		it('should have loaded the successPaths items for product guides', () => {
+		it('should not load product guides until the modal is open', () => {
 			buildSpies();
 			sendParams();
 
 			fixture.detectChanges();
 
-			fixture.whenStable()
-				.then(() => {
-					expect(component.componentData.productGuides.items.length)
-						.toEqual(81);
-				});
+			expect(component.componentData.productGuides.items)
+				.toBeUndefined();
 		});
 
-		it('should show the Product Guides view-all modal', () => {
+		it('should load product guides when the modal is open', () => {
+			buildSpies();
+			sendParams();
+
+			fixture.detectChanges();
+
+			component.showModal('_ProductGuides_');
+
+			fixture.detectChanges();
+
+			expect(component.componentData.productGuides.items.length)
+				.toBe(10);
+			expect(component.componentData.productGuides.totalCount)
+				.toBe(10);
+		});
+
+		it('should correctly handle valid sorting', () => {
+			buildSpies();
+			sendParams();
+
+			fixture.detectChanges();
+
+			component.showModal('_ProductGuides_');
+			fixture.detectChanges();
+
+			component.onSort('title', 'asc', 'PG');
+			fixture.detectChanges();
+
+			// Ensure that the latest API call was correct.
+			let args = racetrackSPSpy
+				.calls
+				.mostRecent()
+				.args
+				.shift();
+			expect(args.sortOrder)
+				.toBe('asc');
+			expect(args.sortField)
+				.toBe('title');
+
+			// Ensure that the table was modified correctly.
+			expect(component.productGuidesTable.columns[0].sortDirection)
+				.toBe('asc'); // Bookmark
+			expect(component.productGuidesTable.columns[1].sortDirection)
+				.toBe('desc'); // Bookmark
+			expect(component.productGuidesTable.columns[2].sortDirection)
+				.toBe('asc'); // Archetype
+			expect(component.productGuidesTable.columns[3].sortDirection)
+				.toBe('asc'); // Media Type
+
+			// Ensure that new items were not appended like a Load More.
+			expect(component.componentData.productGuides.items.length)
+				.toBe(10);
+
+			// ------------------------------------------------
+			// Try a second sort.
+
+			component.onSort('archetype', 'asc', 'PG');
+			fixture.detectChanges();
+
+			// Ensure that the latest API call was correct.
+			args = racetrackSPSpy
+				.calls
+				.mostRecent()
+				.args
+				.shift();
+			expect(args.sortOrder)
+				.toBe('asc');
+			expect(args.sortField)
+				.toBe('archetype');
+
+			// Ensure that the table was modified correctly.
+			expect(component.productGuidesTable.columns[0].sortDirection)
+				.toBe('asc'); // Bookmark
+			expect(component.productGuidesTable.columns[1].sortDirection)
+				.toBe('asc'); // Bookmark
+			expect(component.productGuidesTable.columns[2].sortDirection)
+				.toBe('desc'); // Archetype
+			expect(component.productGuidesTable.columns[3].sortDirection)
+				.toBe('asc'); // Media Type
+
+			// Ensure that new items were not appended like a Load More.
+			expect(component.componentData.productGuides.items.length)
+				.toBe(10);
+		});
+
+		it('should correctly handle an invalid sort', () => {
+			buildSpies();
+			sendParams();
+
+			fixture.detectChanges();
+
+			component.showModal('_ProductGuides_');
+			fixture.detectChanges();
+
+			// Do a valid sort.
+			component.onSort('archetype', 'asc', 'PG');
+			fixture.detectChanges();
+
+			// Ensure that the table was modified correctly.
+			expect(component.productGuidesTable.columns[0].sortDirection)
+				.toBe('asc'); // Bookmark
+			expect(component.productGuidesTable.columns[1].sortDirection)
+				.toBe('asc'); // Bookmark
+			expect(component.productGuidesTable.columns[2].sortDirection)
+				.toBe('desc'); // Archetype
+			expect(component.productGuidesTable.columns[3].sortDirection)
+				.toBe('asc'); // Media Type
+
+			// Force an error response.
+			racetrackSPSpy.and
+				.returnValue(throwError(new HttpErrorResponse({
+					status: 500,
+					statusText: 'Internal server error',
+				})));
+
+			component.onSort('bookmark', 'asc', 'PG');
+			fixture.detectChanges();
+
+			// Ensure that the table was not modified.
+			expect(component.productGuidesTable.columns[0].sortDirection)
+				.toBe('asc'); // Bookmark
+			expect(component.productGuidesTable.columns[1].sortDirection)
+				.toBe('asc'); // Bookmark
+			expect(component.productGuidesTable.columns[2].sortDirection)
+				.toBe('desc'); // Archetype
+			expect(component.productGuidesTable.columns[3].sortDirection)
+				.toBe('asc'); // Media Type
+
+			// Ensure that sort and filter options have been reset.
+			expect(component.componentData.productGuides.sortDirection)
+				.toBe('asc');
+			expect(component.componentData.productGuides.sortField)
+				.toBe('title');
+			expect(component.componentData.productGuides.filter)
+				.toBe('');
+		});
+
+		it('should correctly handle filtering', () => {
+			buildSpies();
+			sendParams();
+
+			fixture.detectChanges();
+
+			component.showModal('_ProductGuides_');
+			fixture.detectChanges();
+
+			component.componentData.productGuides.filter = 'Project Planning';
+			component.selectFilter('PG');
+			fixture.detectChanges();
+
+			// Ensure that the latest API call was correct.
+			const args = racetrackSPSpy
+				.calls
+				.mostRecent()
+				.args
+				.shift();
+			expect(args.fields)
+				.toBe('Project Planning');
+
+			// Ensure that new items were not appended like a Load More.
+			expect(component.componentData.productGuides.items.length)
+				.toBe(10);
+
+			// Force an error response.
+			racetrackSPSpy.and
+				.returnValue(throwError(new HttpErrorResponse({
+					status: 500,
+					statusText: 'Internal server error',
+				})));
+
+			component.selectFilter('PG');
+			fixture.detectChanges();
+
+			// Ensure that sort and filter options have been reset.
+			expect(component.componentData.productGuides.sortDirection)
+				.toBe('asc');
+			expect(component.componentData.productGuides.sortField)
+				.toBe('title');
+			expect(component.componentData.productGuides.filter)
+				.toBe('');
+		});
+
+		it('should load more content when requested and error out gracefully', () => {
+			buildSpies();
+			sendParams();
+
+			fixture.detectChanges();
+
+			component.showModal('_ProductGuides_');
+			fixture.detectChanges();
+
+			// Button should be disabled with this sample data.
+			// We should be at 10/10 cards (100% progress).
+			const loadMoreButton = fixture.debugElement
+				.query(By.css('.load-more button'));
+
+			expect(component.getSelectedSuccessBytesCount('PG'))
+				.toBe('10');
+			expect(component.getMaxSuccessBytesCount('PG'))
+				.toBe('10');
+			expect(component.getSuccessBytesPercentage('PG'))
+				.toBe('100'); // 100%
+			expect(loadMoreButton)
+				.toBeTruthy();
+			expect(loadMoreButton.nativeElement.disabled)
+				.toBeTruthy();
+
+			// Fool the component in to thinking that there's more.
+			component.componentData.productGuides.totalCount = 100;
+			component.loadMoreContent('PG');
+			fixture.detectChanges();
+
+			expect(component.getSelectedSuccessBytesCount('PG'))
+				.toBe('20');
+			expect(component.getMaxSuccessBytesCount('PG'))
+				.toBe('100');
+			expect(component.getSuccessBytesPercentage('PG'))
+				.toBe('20'); // 20%
+			expect(loadMoreButton)
+				.toBeTruthy();
+			expect(loadMoreButton.nativeElement.disabled)
+				.toBeFalsy();
+
+			// Force an error response.
+			racetrackSPSpy.and
+				.returnValue(throwError(new HttpErrorResponse({
+					status: 500,
+					statusText: 'Internal server error',
+				})));
+
+			component.loadMoreContent('PG');
+			fixture.detectChanges();
+
+			const errorDisplay = fixture.debugElement
+				.query(By.css('.load-more .text-danger'));
+			expect(component.status.error.productGuides)
+				.toBeTruthy();
+			expect(errorDisplay)
+				.toBeTruthy();
+
+			// Reset the error response.
+			// Make another successful call.
+			racetrackSPSpy.and
+				.returnValue(of(getActiveBody(SuccessPathScenarios[10])));
+
+			component.loadMoreContent('PG');
+			fixture.detectChanges();
+
+			// The error display should be gone now.
+			expect(component.getSelectedSuccessBytesCount('PG'))
+				.toBe('30');
+			expect(component.getMaxSuccessBytesCount('PG'))
+				.toBe('100');
+			expect(component.getSuccessBytesPercentage('PG'))
+				.toBe('30'); // 30%
+			expect(errorDisplay)
+				.toBeTruthy();
+		});
+
+		it('should be able to handle regular usage', () => {
 			buildSpies();
 			sendParams();
 
@@ -1045,104 +1302,20 @@ describe('LifecycleComponent', () => {
 
 			const sb1 = component.componentData.productGuides.items[1];
 			expect(component.componentData.productGuides.items[1].bookmark)
-				.toBeTruthy();
+				.toBeFalsy();
 			component.updateBookmark(sb1, 'PG');
 			fixture.detectChanges();
 			expect(component.componentData.productGuides.items[1].bookmark)
-				.toBeFalsy();
+				.toBeTruthy();
 
-			expect(component.selectedProductGuides.length)
-				.toEqual(81);
+			expect(component.componentData.productGuides.items.length)
+				.toEqual(10);
 
-			component.selectedFilterForPG = 'Project Planning';
+			component.componentData.productGuides.filter = 'Project Planning';
 			component.selectFilter('PG');
 			fixture.detectChanges();
-			expect(component.selectedProductGuides.length)
-				.toEqual(6);
-
-			component.selectedFilterForPG = 'Getting Started';
-			component.selectFilter('PG');
-			fixture.detectChanges();
-			expect(component.selectedProductGuides.length)
-				.toEqual(8);
-
-			component.selectedFilterForPG = 'Architecture Transition Planning';
-			component.selectFilter('PG');
-			fixture.detectChanges();
-			expect(component.selectedProductGuides.length)
-				.toEqual(2);
-
-			component.selectedFilterForPG = 'Use Cases';
-			component.selectFilter('PG');
-			fixture.detectChanges();
-			expect(component.selectedProductGuides.length)
-				.toEqual(2);
-
-			component.selectedFilterForPG = 'Installation';
-			component.selectFilter('PG');
-			fixture.detectChanges();
-			expect(component.selectedProductGuides.length)
-				.toEqual(15);
-
-			component.selectedFilterForPG = 'Migration Readiness';
-			component.selectFilter('PG');
-			fixture.detectChanges();
-			expect(component.selectedProductGuides.length)
-				.toEqual(1);
-
-			component.selectedFilterForPG = 'Design/Config Planning';
-			component.selectFilter('PG');
-			fixture.detectChanges();
-			expect(component.selectedProductGuides.length)
-				.toEqual(2);
-
-			component.selectedFilterForPG = 'Operations';
-			component.selectFilter('PG');
-			fixture.detectChanges();
-			expect(component.selectedProductGuides.length)
-				.toEqual(23);
-
-			component.selectedFilterForPG = 'Feature Overview';
-			component.selectFilter('PG');
-			fixture.detectChanges();
-			expect(component.selectedProductGuides.length)
-				.toEqual(4);
-
-			component.selectedFilterForPG = 'Troubleshooting';
-			component.selectFilter('PG');
-			fixture.detectChanges();
-			expect(component.selectedProductGuides.length)
-				.toEqual(5);
-
-			component.selectedFilterForPG = 'ROI Business Assessment';
-			component.selectFilter('PG');
-			fixture.detectChanges();
-			expect(component.selectedProductGuides.length)
-				.toEqual(1);
-
-			component.selectedFilterForPG = 'Adoption Planning';
-			component.selectFilter('PG');
-			fixture.detectChanges();
-			expect(component.selectedProductGuides.length)
-				.toEqual(2);
-
-			component.selectedFilterForPG = 'Expert Features Overview';
-			component.selectFilter('PG');
-			fixture.detectChanges();
-			expect(component.selectedProductGuides.length)
-				.toEqual(2);
-
-			component.selectedFilterForPG = 'Performance/Health Monitoring';
-			component.selectFilter('PG');
-			fixture.detectChanges();
-			expect(component.selectedProductGuides.length)
-				.toEqual(5);
-
-			component.selectedFilterForPG = 'Asset/License Management';
-			component.selectFilter('PG');
-			fixture.detectChanges();
-			expect(component.selectedProductGuides.length)
-				.toEqual(3);
+			expect(component.componentData.productGuides.items.length)
+				.toEqual(10);
 
 			component.onSort('title', 'asc', 'PG');
 			fixture.detectChanges();
