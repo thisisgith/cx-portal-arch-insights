@@ -5,7 +5,7 @@ import { By } from '@angular/platform-browser';
 import { RacetrackComponent, stages } from './racetrack.component';
 import { RacetrackComponentModule } from './racetrack.module';
 
-fdescribe('RacetrackComponent', () => {
+describe('RacetrackComponent', () => {
 	let component: RacetrackComponent;
 	let fixture: ComponentFixture<RacetrackComponent>;
 	let de: DebugElement;
