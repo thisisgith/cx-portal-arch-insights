@@ -5,17 +5,22 @@ $default-text-color: #394454;
 
 :host {
 	::ng-deep {
-		.tabs {
+		ul.tabs {
 			box-shadow: 0 -2px 0 $light-gray-3 inset;
 
 			> li {
 				margin: 0 50px 0 0;
 
+				&:first-of-type {
+					margin-left: 0;
+				}
+
 				> a {
 					text-transform: uppercase;
 					font-size: 13px;
-					padding-bottom: 5px !important;
+					padding-bottom: 7px !important;
 					padding-top: 5px !important;
+					color: #6c757d;
 
 					&:hover {
 						color: $primary;
@@ -94,5 +99,9 @@ $default-text-color: #394454;
 	&.fullscreen:not(.hidden) {
 		width: 100vw !important;
 		transform: translateX(0);
+	}
+
+	.details-panel-container {
+		padding: 20px 30px 20px 40px;
 	}
 }
