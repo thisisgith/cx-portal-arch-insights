@@ -2,13 +2,13 @@
 	[activeTabIndex]="activeTab"
 	(activeTabIndexChange)="activeTab = $event">
 	<cui-tab [label]="'_Summary_' | i18n | uppercase">
-		<div class="half-margin-top qtr-margin-left qtr-margin-right">
+		<div class="half-margin-top">
 			<ng-container *ngTemplateOutlet="summary"></ng-container>
 		</div>
 	</cui-tab>
 	<cui-tab label="{{ '_ImpactedAssets_' | i18n | uppercase }} ({{ impactedCount }})"
 		[disabled]="!impactedCount || impactedCount === 0">
-		<div class="half-margin-top qtr-margin-left qtr-margin-right">
+		<div class="half-margin-top">
 			<advisory-impacted-assets
 				*ngIf="data?.assetIds?.impacted || data?.assetIds?.potentiallyImpacted"
 				[customerId]="customerId"
@@ -22,7 +22,7 @@
 
 <ng-template #summary>
 	<div *ngIf="!isLoading">
-		<div class="half-margin-left base-margin-top base-margin-bottom descriptionHeight">
+		<div class="base-margin-top base-margin-bottom descriptionHeight">
 			<ng-container *ngTemplateOutlet="detailText; context: {
 					title: ('_Title_' | i18n),
 					text: data?.bulletin?.bulletinTitle

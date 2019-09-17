@@ -155,6 +155,23 @@ describe('RiskMitigationColumnChartComponent', () => {
 				previousValue: null,
 			},
 			seriesData: {
+				currentValue: null,
+				firstChange: true,
+				isFirstChange: () => false,
+				previousValue: null,
+			},
+		});
+		fixture.detectChanges();
+		expect(component.buildGraph)
+			.toHaveBeenCalledTimes(0);
+		component.ngOnChanges({
+			resetChart: {
+				currentValue: undefined,
+				firstChange: false,
+				isFirstChange: () => false,
+				previousValue: null,
+			},
+			seriesData: {
 				currentValue: [{ test: 'test' }],
 				firstChange: true,
 				isFirstChange: () => true,
@@ -165,22 +182,5 @@ describe('RiskMitigationColumnChartComponent', () => {
 		fixture.detectChanges();
 		expect(component.buildGraph)
 			.toHaveBeenCalledTimes(1);
-		component.ngOnChanges({
-			resetChart: {
-				currentValue: undefined,
-				firstChange: true,
-				isFirstChange: () => false,
-				previousValue: null,
-			},
-			seriesData: {
-				currentValue: null,
-				firstChange: true,
-				isFirstChange: () => true,
-				previousValue: null,
-			},
-		});
-		fixture.detectChanges();
-		expect(component.buildGraph)
-			.toHaveBeenCalledTimes(0);
 	}));
 });

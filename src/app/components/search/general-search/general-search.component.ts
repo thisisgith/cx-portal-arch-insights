@@ -266,7 +266,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 	 */
 	private doSearch (query: SearchQuery, offset?: number, site?: Buckets, type?: Buckets):
 		Observable<CDCSearchResponse | null> {
-		return this.service.directCDCSearch({
+		return this.service.directCiscoSearch({
 			...(
 				this.context ? {
 					context: this.context,
@@ -371,6 +371,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 		const typeBuckets = _.get(
 			facets.find((o: Facets) => o.label === 'Site Subcategory'),
 			'buckets',
+			[],
 		);
 		if (this.lastFiltered !== 'site' && siteBuckets) {
 			this.siteOptions = siteBuckets.map((bucket: Buckets) => ({

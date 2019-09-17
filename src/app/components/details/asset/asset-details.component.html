@@ -34,7 +34,7 @@
 	</div>
 	<cui-tabs id="detailTabs" *ngIf="customerId && !isLoading">
 		<cui-tab [label]="'_Summary_' | i18n | uppercase">
-			<div class="half-margin-top qtr-margin-left qtr-margin-right">
+			<div class="half-margin-top">
 				<asset-details-summary *ngIf="asset"
 					[asset]="asset"
 					[customerId]="customerId">
@@ -48,17 +48,17 @@
 			</div>
 		</cui-tab>
 		<cui-tab [label]="'_Hardware_' | i18n | uppercase">
-			<div class="half-margin-top qtr-margin-left qtr-margin-right">
+			<div class="half-margin-top">
 				<asset-details-hardware [asset]="asset" [customerId]="customerId"></asset-details-hardware>
 			</div>
 		</cui-tab>
 		<cui-tab [label]="'_Software_' | i18n | uppercase">
-			<div class="half-margin-top qtr-margin-left qtr-margin-right">
+			<div class="half-margin-top">
 				<asset-details-software [asset]="asset" [customerId]="customerId"></asset-details-software>
 			</div>
 		</cui-tab>
 		<cui-tab [label]="'_Advisories_' | i18n | uppercase">
-			<div class="half-margin-top qtr-margin-left qtr-margin-right">
+			<div class="half-margin-top">
 				<asset-details-advisories *ngIf="asset || element"
 					[asset]="asset"
 					[element]="element"
