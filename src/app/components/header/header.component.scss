@@ -284,6 +284,12 @@ $text-larger: 19px;
 
 .icon-cog {
 	margin-right: unset;
+
+	&:before {
+		content: url('/assets/icons/icon-settings.svg');
+		height: 24px;
+		width: 24px;
+	}
 }
 
 .icon-help-alt {
