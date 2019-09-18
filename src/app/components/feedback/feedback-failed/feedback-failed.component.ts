@@ -6,6 +6,7 @@ import { CuiModalContent, CuiModalService } from '@cisco-ngx/cui-components';
  */
 @Component({
 	selector: 'app-feedback-failed',
+	styleUrls: ['../feedback.component.scss'],
 	templateUrl: './feedback-failed.component.html',
 })
 export class FeedbackFailedComponent implements CuiModalContent {

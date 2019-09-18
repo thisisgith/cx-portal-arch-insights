@@ -23,6 +23,7 @@ const successByteId5 = '111111';
  */
 function MockSP (
 	solution: string, usecase: string, pitstop: string): SuccessPathsResponse {
+	/* tslint:disable object-literal-sort-keys */
 	return {
 		pitstop,
 		solution,
@@ -4108,6 +4109,7 @@ function MockProductGuides (solution: string, usecase: string, mockFileName?: st
 		default:
 			return { };
 	}
+	/* tslint:enable object-literal-sort-keys */
 }
 
 /**

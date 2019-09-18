@@ -14,7 +14,7 @@ import * as _ from 'lodash-es';
  */
 @Component({
 	selector: 'bar-chart',
-	styleUrls: ['./bar-chart.component.scss'],
+	styleUrls: ['./bar-chart.component.scss', '../tooltip/tooltip.scss'],
 	template: `
 		<div [chart]="chart"></div>
 		<div class="hbar__divider"></div>
@@ -117,6 +117,8 @@ export class BarChartComponent implements OnChanges {
 				headerFormat: '<div data-auto-id="{point.key}Tooltip">' +
 					'<span style="font-size: 10px">{point.key}</span><br/>',
 				useHTML: true,
+				backgroundColor: null,
+				borderWidth: 0,
 			},
 			xAxis: {
 				categories,

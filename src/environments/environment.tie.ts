@@ -29,7 +29,7 @@ export const environment = {
 		maxCasesPerRequest: 1000,
 	},
 	emailToID: 'cx-portal-support@cisco.com',
-	feedbackToEmail: 'cx-portal-support@cisco.com',
+	feedbackToEmail: 'cxpm-feedback@cisco.com',
 	ieSetup: {
 		asdAuthURL: 'https://cway.cisco.com/ws/oauth/v3/token/cisco/ae95x38c7zgu5fas59gseyfk',
 		asdBaseURL: 'https://api.cisco.com/software/preview/v3.0',
