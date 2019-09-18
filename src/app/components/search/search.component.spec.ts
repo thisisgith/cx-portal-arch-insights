@@ -111,6 +111,7 @@ describe('SearchComponent', () => {
 		});
 		fixture.detectChanges();
 		component.onHide(false);
+		component.generalSearchLoading = false;
 		fixture.detectChanges();
 		const special = fixture.debugElement.query(By.css('#specialContainer'));
 		expect(special.nativeElement.hidden)
