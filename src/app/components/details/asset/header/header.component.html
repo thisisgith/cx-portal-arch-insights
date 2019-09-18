@@ -28,7 +28,9 @@
 	</div>
 	<div class="col-md-6 text-right">
 		<button class="btn btn--small btn--primary"
-			
+			[ngClass]="{
+				'active': status.scan.inProgress
+			}"
 			*ngIf="status.scan?.eligible"
 			(click)="initiateScan()"
 			data-auto-id="Asset360ScanBtn">
