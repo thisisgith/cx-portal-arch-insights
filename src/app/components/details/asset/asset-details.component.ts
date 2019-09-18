@@ -14,6 +14,7 @@ import {
 	InventoryService,
 	NetworkElement,
 	NetworkElementResponse,
+	TransactionStatusResponse,
 } from '@sdp-api';
 
 import { Subject, of, forkJoin } from 'rxjs';
@@ -55,6 +56,7 @@ export class AssetDetailsComponent implements OnDestroy, OnInit, Panel360 {
 	public customerId: string;
 	public getProductIcon = getProductTypeImage;
 	public getProductTitle = getProductTypeTitle;
+	public advisoryReload: EventEmitter<boolean> = new EventEmitter();
 	private destroyed$: Subject<void> = new Subject<void>();
 
 	constructor (
@@ -88,6 +90,16 @@ export class AssetDetailsComponent implements OnDestroy, OnInit, Panel360 {
 	 */
 	public handleAlert (alert: Alert) {
 		this.alert.show(alert.message, alert.severity);
+	}
+
+	/**
+	 * Will handle sending an update to a component based on the scan status
+	 * @param transaction the transaction status of the completed or failed scan
+	 */
+	public handleScanStatus (transaction: TransactionStatusResponse) {
+		if (transaction.status === 'SUCCESS') {
+			this.advisoryReload.next(true);
+		}
 	}
 
 	/**

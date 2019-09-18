@@ -73,10 +73,18 @@ describe('AdvisoriesComponent', () => {
 					HttpClientTestingModule,
 					MicroMockModule,
 					RouterTestingModule.withRoutes([
-						{ path: 'solution/advisories/security', component: AdvisoriesComponent },
-						{ path: 'solution/advisories/field-notices',
-							component: AdvisoriesComponent },
-						{ path: 'solution/advisories/bugs', component: AdvisoriesComponent },
+						{
+							component: AdvisoriesComponent,
+							path: 'solution/advisories/security',
+						},
+						{
+							component: AdvisoriesComponent,
+							path: 'solution/advisories/field-notices',
+						},
+						{
+							component: AdvisoriesComponent,
+							path: 'solution/advisories/bugs',
+						},
 					]),
 				],
 				providers: [
@@ -561,10 +569,18 @@ describe('AdvisoriesComponent', () => {
 					HttpClientTestingModule,
 					MicroMockModule,
 					RouterTestingModule.withRoutes([
-						{ path: 'solution/advisories/security', component: AdvisoriesComponent },
-						{ path: 'solution/advisories/field-notices',
-							component: AdvisoriesComponent },
-						{ path: 'solution/advisories/bugs', component: AdvisoriesComponent },
+						{
+							component: AdvisoriesComponent,
+							path: 'solution/advisories/security',
+						},
+						{
+							component: AdvisoriesComponent,
+							path: 'solution/advisories/field-notices',
+						},
+						{
+							component: AdvisoriesComponent,
+							path: 'solution/advisories/bugs',
+						},
 					]),
 				],
 				providers: [
@@ -617,10 +633,18 @@ describe('AdvisoriesComponent', () => {
 					HttpClientTestingModule,
 					MicroMockModule,
 					RouterTestingModule.withRoutes([
-						{ path: 'solution/advisories/security', component: AdvisoriesComponent },
-						{ path: 'solution/advisories/field-notices',
-							component: AdvisoriesComponent },
-						{ path: 'solution/advisories/bugs', component: AdvisoriesComponent },
+						{
+							component: AdvisoriesComponent,
+							path: 'solution/advisories/security',
+						},
+						{
+							component: AdvisoriesComponent,
+							path: 'solution/advisories/field-notices',
+						},
+						{
+							component: AdvisoriesComponent,
+							path: 'solution/advisories/bugs',
+						},
 					]),
 				],
 				providers: [
@@ -671,10 +695,18 @@ describe('AdvisoriesComponent', () => {
 					HttpClientTestingModule,
 					MicroMockModule,
 					RouterTestingModule.withRoutes([
-						{ path: 'solution/advisories/security', component: AdvisoriesComponent },
-						{ path: 'solution/advisories/field-notices',
-							component: AdvisoriesComponent },
-						{ path: 'solution/advisories/bugs', component: AdvisoriesComponent },
+						{
+							component: AdvisoriesComponent,
+							path: 'solution/advisories/security',
+						},
+						{
+							component: AdvisoriesComponent,
+							path: 'solution/advisories/field-notices',
+						},
+						{
+							component: AdvisoriesComponent,
+							path: 'solution/advisories/bugs',
+						},
 					]),
 				],
 				providers: [

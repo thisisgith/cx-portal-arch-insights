@@ -22,16 +22,16 @@ export const MockTransactionRequestResponse: Transaction[] = [
 export const MockInProgressResponse: TransactionStatusResponse[] = [
 	{
 		customerId,
+		transactionId,
 		status: 'IN_PROGRESS',
-		transactionType: transactionId,
 	},
 ];
 
 /** Mock data for Scan Status (SUCCESS) */
 export const MockSuccessResponse: TransactionStatusResponse = {
 	customerId,
+	transactionId,
 	status: 'SUCCESS',
-	transactionType: transactionId,
 };
 
 /** The scenarios */
