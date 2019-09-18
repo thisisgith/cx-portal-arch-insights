@@ -1002,7 +1002,7 @@ describe('LifecycleComponent', () => {
 		});
 	});
 
-	fdescribe('Product Guides', () => {
+	describe('Product Guides', () => {
 		it('should not load product guides until the modal is open', () => {
 			buildSpies();
 			sendParams();
