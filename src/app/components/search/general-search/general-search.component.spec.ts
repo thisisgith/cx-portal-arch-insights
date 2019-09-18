@@ -31,7 +31,7 @@ describe('GeneralSearchComponent', () => {
 	});
 
 	it('should create', () => {
-		spyOn(service, 'directCDCSearch')
+		spyOn(service, 'directCiscoSearch')
 			.and
 			.returnValue(
 				of(<CDCSearchResponse> (SearchScenarios[0].scenarios.POST[0].response.body)),
@@ -48,7 +48,7 @@ describe('GeneralSearchComponent', () => {
 	});
 
 	it('should refresh on query change', () => {
-		spyOn(service, 'directCDCSearch')
+		spyOn(service, 'directCiscoSearch')
 			.and
 			.returnValue(
 				of(<CDCSearchResponse> (SearchScenarios[0].scenarios.POST[0].response.body)),
@@ -63,14 +63,14 @@ describe('GeneralSearchComponent', () => {
 		component.query = { query: 'query2' };
 		fixture.detectChanges();
 		component.ngOnChanges();
-		expect(service.directCDCSearch)
+		expect(service.directCiscoSearch)
 			.toHaveBeenCalled();
 		expect(service.allSearch)
 			.toHaveBeenCalled();
 	});
 
 	it('should load more', fakeAsync(() => {
-		spyOn(service, 'directCDCSearch')
+		spyOn(service, 'directCiscoSearch')
 			.and
 			.returnValue(
 				of(<CDCSearchResponse> (SearchScenarios[0].scenarios.POST[0].response.body)),
@@ -88,12 +88,12 @@ describe('GeneralSearchComponent', () => {
 		button.nativeElement.click();
 		tick();
 		fixture.detectChanges();
-		expect(service.directCDCSearch)
+		expect(service.directCiscoSearch)
 			.toHaveBeenCalledTimes(2);
 	}));
 
 	it('should refresh on filter change', fakeAsync(() => {
-		spyOn(service, 'directCDCSearch')
+		spyOn(service, 'directCiscoSearch')
 			.and
 			.returnValue(
 				of(<CDCSearchResponse> (SearchScenarios[0].scenarios.POST[0].response.body)),
@@ -106,7 +106,7 @@ describe('GeneralSearchComponent', () => {
 		expect(component.selectedSite)
 			.toBe((<CDCSearchResponse> SearchScenarios[0].scenarios.POST[0]
 				.response.body).facets[0].buckets[0]);
-		expect(service.directCDCSearch)
+		expect(service.directCiscoSearch)
 			.toHaveBeenCalledTimes(2);
 		component.onTypeSelected((<CDCSearchResponse> SearchScenarios[0].scenarios.POST[0]
 			.response.body).facets[1].buckets[0]);
@@ -114,7 +114,7 @@ describe('GeneralSearchComponent', () => {
 		expect(component.selectedType)
 			.toBe((<CDCSearchResponse> SearchScenarios[0].scenarios.POST[0]
 				.response.body).facets[1].buckets[0]);
-		expect(service.directCDCSearch)
+		expect(service.directCiscoSearch)
 			.toHaveBeenCalledTimes(3);
 	}));
 
@@ -123,7 +123,7 @@ describe('GeneralSearchComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(service, 'directCDCSearch')
+		spyOn(service, 'directCiscoSearch')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
 		spyOn(service, 'allSearch')
@@ -136,7 +136,7 @@ describe('GeneralSearchComponent', () => {
 	});
 
 	it('should set the search token if one is returned', fakeAsync(() => {
-		spyOn(service, 'directCDCSearch')
+		spyOn(service, 'directCiscoSearch')
 			.and
 			.returnValue(
 				of(<CDCSearchResponse> (SearchScenarios[0].scenarios.POST[3].response.body)),
