@@ -46,6 +46,9 @@ module.exports = config => {
 			reports: ['html', 'lcovonly', 'text', 'text-summary', 'json', 'json-summary'],
 			fixWebpackSourcePaths: true,
 		},
+		browserConsoleLogOptions: {
+			terminal: false,
+		},
 		reporters: ['spec'],
 		port: 9876,
 		colors: true,

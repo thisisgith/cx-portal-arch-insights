@@ -196,8 +196,8 @@
 				class="progress-block"
 				*ngFor="let block of registerSteps; let i = index"
 				[ngClass]="{
-					'pending': i === currentStep + 1,
-					'complete': i <= currentStep 
+					'pending': i === currentStep,
+					'complete': i < currentStep 
 				}"
 			></div>
 		</div>

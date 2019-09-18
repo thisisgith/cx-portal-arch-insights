@@ -1,6 +1,6 @@
 /* tslint:disable */
 export interface TransactionStatusResponse {
   customerId?: string;
-  transactionType?: string;
+  transactionId?: string;
   status?: 'ACCEPTED' | 'RECEIVED' | 'IN_PROGRESS' | 'SUCCESS' | 'FAILURE';
 }

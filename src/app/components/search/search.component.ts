@@ -45,6 +45,7 @@ export class SearchComponent implements OnInit, OnDestroy {
 	public generalSearchHeader: string;
 	public hideSpecialSearch = true;
 	public hideGeneralSearch = false;
+	public generalSearchLoading = false;
 
 	public status = {
 		hidden: true,
