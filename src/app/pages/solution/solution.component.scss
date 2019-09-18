@@ -541,12 +541,10 @@ $cx-font-size-24: 24px;
 	.modal--fluid {
 		top: 55px;
 
-		.modal__dialog {
-			height: unset;
-
-			.modal__content {
-				min-height: calc(100vh - 55px);
-			}
+		.modal__dialog .modal__content {
+			height: 100%;
+			min-height: calc(100vh - 55px);
+			overflow-y: auto;
 		}
 	}
 }

@@ -1,3 +1,119 @@
 .body {
 	text-align: left;
 }
+
+.form-group__text {
+	input,
+	textarea {
+		border: none;
+		border-bottom: 1px solid #aeb8c1;
+		background: #f4f6f8;
+		color: #5d656c;
+
+		&:focus {
+			box-shadow: unset;
+		}
+	}
+}
+
+.form-group {
+	.checkbox input,
+	.checkbox__input,
+	.checkbox__input::before,
+	.checkbox__input::after {
+		width: 18px;
+		height: 18px;
+		min-width: 18px;
+	}
+
+	.checkbox {
+		&__input {
+			&::before {
+				box-shadow: unset;
+				border: 1px solid #c2c2c2;
+				border-radius: 0;
+			}
+		}
+
+		input {
+			&:hover,
+			&:focus,
+			&:active,
+			&:checked {
+				~ .checkbox__input {
+					&::before {
+						box-shadow: unset;
+						outline: none;
+						background-color: #fff;
+						border: 1px solid #c2c2c2;
+					}
+
+					&::after {
+						color: #00bceb;
+						font-size: 16px;
+					}
+				}
+			}
+		}
+	}
+}
+
+:host ::ng-deep .btn.btn--primary {
+	border-color: transparent;
+	color: #fff;
+	background-color: #00bceb;
+	box-shadow: unset;
+	font-weight: bold;
+
+	&:hover {
+		background-color: #227bb1;
+		border-color: transparent;
+		color: #fff;
+	}
+
+	&:active {
+		background-color: #176899;
+		color: #fff;
+		border-color: transparent;
+	}
+
+	&:focus {
+		box-shadow: 0 0 0 3px #d6eaee;
+		background-color: #176899;
+		border-color: transparent;
+		color: #fff;
+	}
+
+	&.disabled {
+		opacity: 0.3;
+		border-color: transparent;
+		color: #fff;
+		background-color: #00bceb;
+	}
+}
+
+:host ::ng-deep .btn.btn--secondary {
+	border-color: #95d1d6;
+	font-size: 13px;
+	color: #5d656d;
+	background-color: transparent;
+	box-shadow: unset;
+
+	&:hover {
+		background-color: #cdeaec;
+		color: #394454;
+		border-color: transparent;
+	}
+
+	&:active {
+		background-color: #a6dee3;
+		color: #394454;
+		border-color: transparent;
+	}
+
+	&:focus {
+		border: 3px solid #e6f4f7;
+		background-color: #cdeaec;
+		color: #176899;
+	}
+}
