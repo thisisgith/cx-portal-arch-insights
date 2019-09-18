@@ -4,8 +4,11 @@
 	position: fixed;
 	z-index: 10000;
 	background: $white;
-	box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.3);
+	border: none;
+	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.14), 0 3px 4px 0 rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
 	padding: $base-spacing * 0.5;
 	overflow: auto;
-	border: 1px solid $dark-gray-3;
+	color: #394454;
+	font-family: "CiscoSans", "Arial", sans-serif !important;
+	font-size: 12px;
 }
