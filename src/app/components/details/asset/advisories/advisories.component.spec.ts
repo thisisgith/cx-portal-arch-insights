@@ -1,5 +1,5 @@
 import { configureTestSuite } from 'ng-bullet';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
 import {
 	AssetScenarios,
 	AdvisorySecurityAdvisoryScenarios,
@@ -7,6 +7,7 @@ import {
 	Mock,
 	user,
 	CriticalBugData,
+	MockNetworkElements,
 } from '@mock';
 import { AssetDetailsAdvisoriesComponent } from './advisories.component';
 import { AssetDetailsAdvisoriesModule } from './advisories.module';
@@ -52,7 +53,6 @@ describe('AssetDetailsAdvisoriesComponent', () => {
 	});
 
 	beforeEach(async(() => {
-
 		productAlertsService = TestBed.get(ProductAlertsService);
 		diagnosticsService = TestBed.get(DiagnosticsService);
 	}));
@@ -74,6 +74,7 @@ describe('AssetDetailsAdvisoriesComponent', () => {
 			statusText: 'Resource not found',
 		};
 		component.asset = getActiveBody(AssetScenarios[0]).data[0];
+		component.element = MockNetworkElements[0];
 		component.customerId = user.info.customerId;
 
 		spyOn(productAlertsService, 'getAdvisoriesSecurityAdvisories')
@@ -109,6 +110,7 @@ describe('AssetDetailsAdvisoriesComponent', () => {
 
 	it('should attach results to the tabs data', done => {
 		component.asset = getActiveBody(AssetScenarios[0]).data[0];
+		component.element = MockNetworkElements[0];
 		component.customerId = user.info.customerId;
 
 		spyOn(productAlertsService, 'getAdvisoriesSecurityAdvisories')
@@ -136,8 +138,9 @@ describe('AssetDetailsAdvisoriesComponent', () => {
 		});
 	});
 
-	it('should set the selectedAdvisory when selecting a row', done => {
+	it('should set the selectedAdvisory when selecting a row', fakeAsync(() => {
 		component.asset = getActiveBody(AssetScenarios[0]).data[0];
+		component.element = MockNetworkElements[0];
 		component.customerId = user.info.customerId;
 
 		spyOn(productAlertsService, 'getAdvisoriesSecurityAdvisories')
@@ -146,58 +149,54 @@ describe('AssetDetailsAdvisoriesComponent', () => {
 		spyOn(productAlertsService, 'getAdvisoriesFieldNotices')
 			.and
 			.returnValue(of(getActiveBody(FieldNoticeAdvisoryScenarios[0])));
-
 		spyOn(diagnosticsService, 'getCriticalBugs')
 			.and
 			.returnValue(of({ data: CriticalBugData }));
 
 		component.ngOnInit();
+		fixture.detectChanges();
 
-		fixture.whenStable()
-		.then(() => {
-			fixture.detectChanges();
+		tick(1000);
 
-			const securityTab = _.find(component.tabs, { key: 'security' });
-			const fieldTab = _.find(component.tabs, { key: 'field' });
-			const bugsTab = _.find(component.tabs, { key: 'bug' });
+		const securityTab = _.find(component.tabs, { key: 'security' });
+		const fieldTab = _.find(component.tabs, { key: 'field' });
+		const bugsTab = _.find(component.tabs, { key: 'bug' });
 
-			component.selectTab(bugsTab);
-			_.set(bugsTab.data[0], 'active', true);
-			component.onRowSelect(bugsTab.data[0]);
-			fixture.detectChanges();
+		component.selectTab(bugsTab);
+		_.set(bugsTab.data[0], 'active', true);
+		component.onRowSelect(bugsTab.data[0]);
+		fixture.detectChanges();
 
-			expect(component.selectedAdvisory)
-				.toEqual({ id: bugsTab.data[0].id, type: 'bug' });
+		expect(component.selectedAdvisory)
+			.toEqual({ id: bugsTab.data[0].id, type: 'bug' });
 
-			_.set(bugsTab.data[0], 'active', false);
-			component.onRowSelect(bugsTab.data[0]);
-			fixture.detectChanges();
+		_.set(bugsTab.data[0], 'active', false);
+		component.onRowSelect(bugsTab.data[0]);
+		fixture.detectChanges();
 
-			expect(component.selectedAdvisory)
-				.toBeNull();
+		expect(component.selectedAdvisory)
+			.toBeNull();
 
-			component.selectTab(fieldTab);
-			_.set(fieldTab.data[0], 'active', true);
-			component.onRowSelect(fieldTab.data[0]);
-			fixture.detectChanges();
-			expect(component.selectedAdvisory)
-				.toEqual({ id: fieldTab.data[0].id, type: 'field' });
+		component.selectTab(fieldTab);
+		_.set(fieldTab.data[0], 'active', true);
+		component.onRowSelect(fieldTab.data[0]);
+		fixture.detectChanges();
+		expect(component.selectedAdvisory)
+			.toEqual({ id: fieldTab.data[0].id, type: 'field' });
 
-			component.selectTab(securityTab);
-			_.set(securityTab.data[0], 'active', true);
-			component.onRowSelect(securityTab.data[0]);
-			fixture.detectChanges();
-			expect(component.selectedAdvisory)
-				.toEqual({
-					id: securityTab.data[0].id,
-					type: 'security' });
-
-			done();
-		});
-	});
+		component.selectTab(securityTab);
+		_.set(securityTab.data[0], 'active', true);
+		component.onRowSelect(securityTab.data[0]);
+		fixture.detectChanges();
+		expect(component.selectedAdvisory)
+			.toEqual({
+				id: securityTab.data[0].id,
+				type: 'security' });
+	}));
 
 	it('should clear the advisory on panel close', done => {
 		component.asset = getActiveBody(AssetScenarios[0]).data[0];
+		component.element = MockNetworkElements[0];
 		component.customerId = user.info.customerId;
 
 		spyOn(productAlertsService, 'getAdvisoriesSecurityAdvisories')

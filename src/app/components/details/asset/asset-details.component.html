@@ -11,7 +11,8 @@
 			[asset]="asset"
 			[element]="element" 
 			[customerId]="customerId"
-			(alert)="handleAlert($event)">
+			(alert)="handleAlert($event)"
+			(scanStatus)="handleScanStatus($event)">
 		</asset-details-header>
 		<div detailsPanelTitle class="text-xlarge flex-center-vertical">
 			<span class="half-margin-right flex-center-vertical"
@@ -62,7 +63,8 @@
 				<asset-details-advisories *ngIf="asset || element"
 					[asset]="asset"
 					[element]="element"
-					[customerId]="customerId">
+					[customerId]="customerId"
+					[reload]="advisoryReload">
 				</asset-details-advisories>
 				<div class="flex-center" *ngIf="!asset && !element">
 					<span class="text-muted text-xlarge"
