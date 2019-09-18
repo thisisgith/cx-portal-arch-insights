@@ -37,6 +37,39 @@
 	.cx-text-gray {
 		color: #767676;
 	}
+
+
+	// cui text input override. May want to make available globally?
+	.form-group__text {
+		input {
+			border-radius: 0 !important;
+			border: unset !important;
+			border-bottom: 1px solid #aeb8c1 !important;
+			background: #f4f6f8 !important;
+
+			&:hover {
+				border-bottom: 1px solid #227bb1 !important;
+			}
+
+			&:active,
+			&:focus {
+				border-bottom-color: #00bceb !important;
+			}
+		}
+
+		input.ng-touched.ng-invalid {
+			border-bottom: 1px solid #e2231a !important;
+
+			&:hover,
+			&:active {
+				border-bottom: 1px solid #e2231a !important;
+			}
+
+			~ label {
+				color: #e2231a !important;
+			}
+		}
+	}
 }
 
 :host {
