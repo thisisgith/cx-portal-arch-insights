@@ -454,7 +454,7 @@ describe('LifecycleComponent', () => {
 			component.registerATXSession(atx1, session2);
 			fixture.detectChanges();
 			expect(atx1.status)
-					.toEqual('requested');
+				.toEqual('requested');
 		});
 
 		it('should show the selected atx sessions in ATX More', () => {

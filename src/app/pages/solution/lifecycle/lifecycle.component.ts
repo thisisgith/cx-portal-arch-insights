@@ -806,6 +806,7 @@ export class LifecycleComponent implements OnDestroy {
 		this.crossLaunch(session.registrationURL);
 		this.contentService.registerUserToAtx(params)
 		.subscribe(() => {
+			this.status.loading.atx = false;
 			atx.status = 'requested';
 			if (window.Cypress) {
 				window.atxLoading = false;
