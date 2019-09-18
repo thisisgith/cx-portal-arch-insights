@@ -1,6 +1,6 @@
 import { configureTestSuite } from 'ng-bullet';
 import * as enUSJson from 'src/assets/i18n/en-US.json';
-import { async, tick, ComponentFixture, TestBed, fakeAsync } from '@angular/core/testing';
+import { async, tick, ComponentFixture, TestBed, fakeAsync, discardPeriodicTasks } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { LifecycleComponent } from './lifecycle.component';
 import { LifecycleModule } from './lifecycle.module';
@@ -29,7 +29,6 @@ import { RacetrackInfoService } from '@services';
 import { AppService } from 'src/app/app.service';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { delay } from 'rxjs/operators';
-import 'zone.js/dist/zone-patch-rxjs-fake-async';
 
 /**
  * Will fetch the currently active response body from the mock object
@@ -1365,16 +1364,13 @@ describe('LifecycleComponent', () => {
 				.toBeFalsy();
 		});
 
-		it('should display a spinner when loading modal data', fakeAsync(() => {
+		it('should display a spinner when loading data', fakeAsync(() => {
 			buildSpies();
 			sendParams();
 
 			fixture.detectChanges();
 
 			// Force an asynchronous delay of 3 seconds.
-			// PLEASE NOTE THAT async() AND fakeAsync() DO NOT WORK WITH
-			// RXJS OBSERVABLE DELAY. YOU MUST IMPORT zone.js/dist/zone-patch-rxjs-fake-async
-			// FOR THIS TO WORK.
 			racetrackSPSpy.and
 				.returnValue(of(getActiveBody(SuccessPathScenarios[10]))
 					.pipe(delay(3000)));
@@ -1408,6 +1404,8 @@ describe('LifecycleComponent', () => {
 
 			expect(component.status.loading.productGuides.more)
 				.toBeFalsy();
+
+			discardPeriodicTasks();
 		}));
 	});
 

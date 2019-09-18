@@ -202,6 +202,11 @@ export class LifecycleComponent implements OnDestroy {
 	// Enable or disable CGT based on this flag
 	public enableCGT = false;
 
+	/**
+	 * The number of rows that Product Guides will request at a time.
+	 */
+	public readonly pgNumRows = 40;
+
 	public categoryOptions: [];
 	public pgCategoryOptions: [];
 	public statusOptions = [
@@ -274,7 +279,7 @@ export class LifecycleComponent implements OnDestroy {
 		productGuides: {
 			currentPage: 1,
 			filter: '',
-			rows: 10,
+			rows: this.pgNumRows,
 			sortDirection: 'asc',
 			sortField: 'title',
 		},
@@ -458,7 +463,7 @@ export class LifecycleComponent implements OnDestroy {
 			productGuides: {
 				currentPage: 1,
 				filter: '',
-				rows: 10,
+				rows: this.pgNumRows,
 				sortDirection: 'asc',
 				sortField: 'title',
 			},
@@ -1518,7 +1523,7 @@ export class LifecycleComponent implements OnDestroy {
 	private clearProductGuidesOptions () {
 		this.componentData.productGuides.currentPage = 1;
 		this.componentData.productGuides.filter = '';
-		this.componentData.productGuides.rows = 10;
+		this.componentData.productGuides.rows = this.pgNumRows;
 		this.componentData.productGuides.sortDirection = 'asc';
 		this.componentData.productGuides.sortField = 'title';
 	}
@@ -1548,7 +1553,7 @@ export class LifecycleComponent implements OnDestroy {
 			map((result: SuccessPathsResponse) => {
 				// TODO: When API implemented, this should not clear Filter.
 				// TODO: When API implemented, archetypes should be pulled separately.
-				if (result.items.length) {
+				if (result.items) {
 					_.set(this.componentData.productGuides, ['items'],
 						result.items);
 					const resultItems = _.uniq(_.map(result.items, 'archetype'));
@@ -1561,8 +1566,9 @@ export class LifecycleComponent implements OnDestroy {
 							name: item,
 							value: item,
 						}));
+					const totalCount: number = _.get(result, ['totalCount']);
 					_.set(this.componentData.productGuides, ['totalCount'],
-						result.totalCount);
+						totalCount);
 				}
 
 				this.status.loading.productGuides.modal = false;
@@ -1626,7 +1632,7 @@ export class LifecycleComponent implements OnDestroy {
 				_.assign(componentParams, pgParams))
 			.pipe(
 				map((result: SuccessPathsResponse) => {
-					if (result.items.length) {
+					if (result.items) {
 						const newItemsList
 							= _.concat(this.componentData.productGuides.items,
 								result.items);

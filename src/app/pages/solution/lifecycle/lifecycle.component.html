@@ -832,7 +832,7 @@
 				<span class="icon-error qtr-margin-right"></span>
 				<span [innerText]="'_AnErrorOccurredResults_' | i18n"></span>
 			</span>
-			<div class="dbl-margin-bottom">
+			<div *ngIf="getMaxSuccessBytesCount(type) > pgNumRows" class="dbl-margin-bottom">
 				<div class="subheader" [innerText]="'_ShowingXofY_' | i18n : getSelectedSuccessBytesCount(type) : getMaxSuccessBytesCount(type)"></div>
 				<div data-auto-id="LoadMore-ProgressBar" class="progressbar" [attr.data-percentage]="getSuccessBytesPercentage(type)">
 					<div class="progressbar__fill"></div>
