@@ -14,6 +14,7 @@ import * as _ from 'lodash-es';
  */
 @Component({
 	selector: 'app-feedback',
+	styleUrls: ['./feedback.component.scss'],
 	templateUrl: './feedback.component.html',
 })
 export class FeedbackComponent implements OnInit {
@@ -23,7 +24,7 @@ export class FeedbackComponent implements OnInit {
 
 	private user = this.profileService.getProfile();
 
-	public feedbackMaxLength = 2000;
+	public feedbackMaxLength = 32000;
 	public thumbValue = '-';
 	public okayToContact = 'No';
 	private userEmail = this.user.cpr.pf_auth_email;
