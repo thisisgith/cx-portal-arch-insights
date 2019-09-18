@@ -565,13 +565,13 @@ describe('LifecycleComponent', () => {
 			component.atxMoreClicked = true;
 
 			// Test crossLaunch()
-			component.crossLaunch(crossLaunchUrl);
-
 			spyOn(component, 'closeViewSessions');
+
+			component.crossLaunch(crossLaunchUrl);
 			fixture.detectChanges();
 
-			// expect(component.closeViewSessions)
-			// 	.toHaveBeenCalled();
+			expect(component.closeViewSessions)
+				.toHaveBeenCalled();
 
 			// Test getAtxRegisterButton()
 			let data: AtxSchema;
