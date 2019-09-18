@@ -219,7 +219,8 @@ export class HeaderComponent implements AfterViewChecked, OnInit, OnDestroy {
 		context.font = `${fontSize}px CiscoSans, Arial, sans-serif`;
 		context.textAlign = 'center';
 		context.fillStyle = environment.cuiColors.vibrantBlue;
-		context.fillText(initials, canvas.width / 2, canvas.height - (canvas.height / 2.8));
+		context.fillText(initials.toUpperCase(),
+			canvas.width / 2, canvas.height - (canvas.height / 2.8));
 
 		return canvas.toDataURL('image/png');
 	}
