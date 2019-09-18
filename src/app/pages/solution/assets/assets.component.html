@@ -90,7 +90,7 @@
 			</div>
 		</div>
 		<div class="col-auto">
-			<div class="flex flex-fluid flex-right">
+			<div class="flex flex-fluid flex-right align-items-end">
 				<div class="flex-fill form-group input--compressed input--icon half-margin-right">
 					<form *ngIf="searchForm" [formGroup]="searchForm" novalidate>
 						<div class="form-group__text">
@@ -110,12 +110,14 @@
 						</div>
 					</form>
 				</div>
-				<div class="btn-group btn-group--square half-margin-right">
-					<button data-auto-id="list-view-btn" class="btn btn--small btn--gray-ghost" [ngClass]="{ 'selected': view === 'list' }" (click)="selectView('list')">
-						<span class="icon-list-view"></span>
+				<div class="btn-group btn-group--square half-margin-right titlebar__viewmode">
+					<button data-auto-id="list-view-btn" class="btn btn--small qtr-padding" 
+						[ngClass]="{ 'selected': view === 'list' }" (click)="selectView('list')">
+						<div inlineSVG="assets/icons/nav-tableline-off.svg"></div>
 					</button>
-					<button data-auto-id="grid-view-btn" class="btn btn--small btn--gray-ghost" [ngClass]="{ 'selected': view === 'grid' }" (click)="selectView('grid')">
-						<span class="icon-grid-view"></span>
+					<button data-auto-id="grid-view-btn" class="btn btn--small qtr-padding" 
+						[ngClass]="{ 'selected': view === 'grid' }" (click)="selectView('grid')">
+						<div inlineSVG="assets/icons/nav-card-off.svg"></div>
 					</button>
 				</div>
 				<!-- Export options disabled until further notice -->
