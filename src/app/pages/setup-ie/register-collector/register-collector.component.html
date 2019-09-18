@@ -174,14 +174,14 @@
 				</alert>
 				<button
 					data-auto-id="submit-btn"
-					class="btn btn--wide btn--secondary qtr-margin-right"
+					class="btn cx-btn base-margin-right"
 					type="button"
 					[disabled]="accountForm.invalid || loading || error"
 					[innerText]="'_Continue_' | i18n | uppercase"
 					(click)="onSubmit()"
 				>
 				</button>
-				<span [innerText]="'_PressEnter_' | i18n" class="text-large">
+				<span [innerText]="'_PressEnter_' | i18n" class="text-medium text-uppercase cx-text-gray">
 				</span>
 			</form>
 		</div>

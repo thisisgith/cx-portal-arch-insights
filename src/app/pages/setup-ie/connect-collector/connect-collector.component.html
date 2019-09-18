@@ -61,13 +61,13 @@
 				<div class="flex-center">
 					<button
 						data-auto-id="connect-to-cx-collector-btn"
-						class="btn btn--secondary qtr-margin-right"
+						class="btn cx-btn base-margin-right"
 						[innerText]="'_ConnectToCXCollector_' | i18n | uppercase"
 						(click)="onSubmit()"
 					>
 					</button>
 					<span [innerText]="'_PressEnter_' | i18n"
-						class="text-large">
+						class="text-medium text-uppercase cx-text-gray">
 					</span>
 				</div>
 			</div>
@@ -112,13 +112,13 @@
 				<div class="base-margin-top flex-center-vertical">
 					<button
 						data-auto-id="submit-btn"
-						class="btn btn--secondary half-margin-right"
+						class="btn cx-btn base-margin-right"
 						type="submit"
 						[innerText]="'_ProceedToCertificate_' | i18n | uppercase"
 						(click)="openIpAddressInNewTab()"
 					></button>
 					<span [innerText]="'_OpensNewTab_' | i18n"
-							class="text-large">
+							class="text-medium text-uppercase cx-text-gray">
 					</span>
 				</div>
 			</ng-container>
