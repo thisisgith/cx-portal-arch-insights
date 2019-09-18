@@ -34,6 +34,6 @@ export class FieldNoticeDetailsHeaderComponent {
 			otherAssets: this.impactedAssets,
 			selectedAsset: this.selectedAsset,
 			type: 'field',
-		}, 'full');
+		}, 'fluid');
 	}
 }

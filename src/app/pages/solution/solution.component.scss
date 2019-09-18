@@ -536,3 +536,17 @@ $cx-font-size-24: 24px;
 		font-size: 12px;
 	}
 }
+
+.fullscreen-modal ::ng-deep {
+	.modal--fluid {
+		top: 55px;
+
+		.modal__dialog {
+			height: unset;
+
+			.modal__content {
+				min-height: calc(100vh - 55px);
+			}
+		}
+	}
+}
