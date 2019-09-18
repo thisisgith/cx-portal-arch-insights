@@ -8,6 +8,7 @@ import { Observable as __Observable } from 'rxjs';
 import { map as __map, filter as __filter } from 'rxjs/operators';
 
 import { ATXResponseModel } from '../models/atxresponse-model';
+import { AtxUserRegistrationsSchema } from '../models/atx-user-registrations-schema';
 import { ACCResponse } from '../models/accresponse';
 import { ACCRequestSessionSchema } from '../models/accrequest-session-schema';
 import { ACCUserInfoSchema } from '../models/accuser-info-schema';
@@ -25,6 +26,7 @@ import { BookmarkRequestSchema } from '../models/bookmark-request-schema';
 })
 class RacetrackContentService extends __BaseService {
   static readonly getRacetrackATXPath = '/atx';
+  static readonly registerUserToAtxPath = '/atx/registration';
   static readonly cancelSessionATXPath = '/atx/registration';
   static readonly getRacetrackACCPath = '/acc';
   static readonly requestACCPath = '/acc/{accId}/request';
@@ -132,6 +134,61 @@ class RacetrackContentService extends __BaseService {
   getRacetrackATX(params: RacetrackContentService.GetRacetrackATXParams): __Observable<ATXResponseModel> {
     return this.getRacetrackATXResponse(params).pipe(
       __map(_r => _r.body as ATXResponseModel)
+    );
+  }
+
+  /**
+   * @param params The `RacetrackContentService.RegisterUserToAtxParams` containing the following parameters:
+   *
+   * - `sessionId`: The SessionId of this Atx
+   *
+   * - `atxId`: The Atx Identifier
+   *
+   * - `X-Mashery-Handshake`: Mashery user credential header
+   *
+   * @return Successfully registered
+   */
+  registerUserToAtxResponse(params: RacetrackContentService.RegisterUserToAtxParams): __Observable<__StrictHttpResponse<AtxUserRegistrationsSchema>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    __headers = __headers.append("Content-Type", "application/json");
+    if (params.sessionId != null) __params = __params.set('sessionId', params.sessionId.toString());
+    if (params.atxId != null) __params = __params.set('atxId', params.atxId.toString());
+    if (params.XMasheryHandshake != null) __headers = __headers.set('X-Mashery-Handshake', params.XMasheryHandshake.toString());
+    let req = new HttpRequest<any>(
+      'POST',
+      this.rootUrl + `/customerportal/racetrack/v1/atx/registration`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<AtxUserRegistrationsSchema>;
+      })
+    );
+  }
+
+  /**
+   * @param params The `RacetrackContentService.RegisterUserToAtxParams` containing the following parameters:
+   *
+   * - `sessionId`: The SessionId of this Atx
+   *
+   * - `atxId`: The Atx Identifier
+   *
+   * - `X-Mashery-Handshake`: Mashery user credential header
+   *
+   * @return Successfully registered
+   */
+  registerUserToAtx(params: RacetrackContentService.RegisterUserToAtxParams): __Observable<AtxUserRegistrationsSchema> {
+    return this.registerUserToAtxResponse(params).pipe(
+      __map(_r => _r.body as AtxUserRegistrationsSchema)
     );
   }
 
@@ -866,6 +923,27 @@ module RacetrackContentService {
      * Requested fields in the response.
      */
     fields?: Array<string>;
+
+    /**
+     * Mashery user credential header
+     */
+    XMasheryHandshake?: string;
+  }
+
+  /**
+   * Parameters for registerUserToAtx
+   */
+  export interface RegisterUserToAtxParams {
+
+    /**
+     * The SessionId of this Atx
+     */
+    sessionId: string;
+
+    /**
+     * The Atx Identifier
+     */
+    atxId: string;
 
     /**
      * Mashery user credential header

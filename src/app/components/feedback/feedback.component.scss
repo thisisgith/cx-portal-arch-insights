@@ -1,0 +1,43 @@
+@import '~cisco-ui/src/scss/utilities/_variables.scss';
+
+$primary: #00bceb;
+$primary-darker: #00a3d2;
+$primary-lighter: #1ad6ff;
+
+.empty-comment {
+	background-color: #f6faff !important;
+}
+
+.btn {
+	&--thumbs {
+		border-radius: 100% !important;
+		background-color: transparent;
+		color: $gray;
+		border-color: $gray;
+
+		&.active {
+			background-color: $primary;
+			color: $white;
+			border-color: $primary;
+			transition: all 0.15s ease-in;
+		}
+
+		&:hover {
+			@extend .active;
+
+			opacity: 0.8;
+			transition: all 0.15s ease-in;
+		}
+	}
+
+	&--primary {
+		background-color: $primary !important;
+		border-color: $primary !important;
+		color: $white !important;
+
+		&:hover {
+			background-color: $primary-lighter !important;
+			border-color: $primary !important;
+		}
+	}
+}

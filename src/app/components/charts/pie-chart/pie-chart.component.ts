@@ -1,10 +1,10 @@
 import {
 	Component,
 	EventEmitter,
-	OnInit,
 	Output,
 	Input,
 	SimpleChanges,
+	OnChanges,
 } from '@angular/core';
 import { Chart } from 'angular-highcharts';
 import * as _ from 'lodash-es';
@@ -36,23 +36,16 @@ const filterColors8Max = [
 @Component({
 	selector: 'pie-chart',
 	template: '<div [chart]="chart"></div>',
+	styleUrls: ['../tooltip/tooltip.scss'],
 })
-export class PieChartComponent implements OnInit {
+export class PieChartComponent implements OnChanges {
 
 	@Input() public loading;
 	@Input() public seriesData;
 	@Input() public width = 225;
+	@Input() public height = 125;
 	@Output() public subfilter = new EventEmitter<string>();
 	public chart: Chart;
-
-	/**
-	 * Component initialization
-	 */
-	public ngOnInit () {
-		if (this.seriesData) {
-			this.buildGraph();
-		}
-	}
 
 	/**
 	 * Initializes the pie chart
@@ -60,12 +53,18 @@ export class PieChartComponent implements OnInit {
 	private buildGraph () {
 		const data = _.map(this.seriesData, (d, index) => ({
 			color: _.get(this.seriesData.length <= 5 ?
-				filterColors5Max : filterColors8Max, index, '#000'),
+				filterColors5Max : filterColors8Max, index, '#fff'),
+			id: d.label,
 			name: d.label,
 			y: d.value,
 		}));
 
 		this.chart = new Chart({
+			tooltip: {
+				useHTML: true,
+				backgroundColor: null,
+				borderWidth: 0,
+			},
 			chart: {
 				events: {
 					load: () => {
@@ -85,7 +84,7 @@ export class PieChartComponent implements OnInit {
 						}
 					},
 				},
-				height: 125,
+				height: this.height,
 				plotBackgroundColor: null,
 				plotBorderWidth: null,
 				plotShadow: false,
@@ -153,10 +152,29 @@ export class PieChartComponent implements OnInit {
 	 * @param changes The changes found
 	 */
 	public ngOnChanges (changes: SimpleChanges) {
+		const loadingInfo = _.get(changes, 'loading',
+			{ currentValue: false, firstChange: false, previousValue: false });
 		const seriesInfo = _.get(changes, 'seriesData',
-			{ currentValue: null, firstChange: false });
-		if (seriesInfo.currentValue && !seriesInfo.firstChange) {
+			{ currentValue: null, firstChange: false, previousValue: null });
+		if (!this.chart || !seriesInfo.previousValue || !seriesInfo.previousValue.length) {
 			this.buildGraph();
+		} else {
+			if (loadingInfo.currentValue !== loadingInfo.previousValue) {
+				this.chart.ref.series[0].update(<any> {
+					enableMouseTracking: !loadingInfo.currentValue,
+					opacity: loadingInfo.currentValue ? 0.5 : 1,
+				});
+			}
+			if (seriesInfo.currentValue !== seriesInfo.previousValue) {
+				const data = _.map(seriesInfo.currentValue, (d, index) => ({
+					color: _.get(seriesInfo.currentValue.length <= 5 ?
+						filterColors5Max : filterColors8Max, index, '#fff'),
+					id: d.label,
+					name: d.label,
+					y: d.value,
+				}));
+				this.chart.ref.series[0].setData(data);
+			}
 		}
 	}
 }

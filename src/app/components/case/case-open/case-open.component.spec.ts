@@ -3,7 +3,7 @@ import { fakeAsync, tick, ComponentFixture, TestBed } from '@angular/core/testin
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FormGroup } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { of, throwError } from 'rxjs';
+import { of } from 'rxjs';
 import { CaseScenarios, MockNetworkElements, MockAssetsData, user } from '@mock';
 import { ProfileService } from '@cisco-ngx/cui-auth';
 import { CuiModalService } from '@cisco-ngx/cui-components';
@@ -11,9 +11,7 @@ import { CloseConfirmComponent } from './close-confirm/close-confirm.component';
 import { CaseOpenComponent } from './case-open.component';
 import { CaseOpenModule } from './case-open.module';
 import { CaseService } from '@cui-x/services';
-import { NetworkDataGatewayService } from '@sdp-api';
 import { RouterTestingModule } from '@angular/router/testing';
-import { HttpErrorResponse } from '@angular/common/http';
 import { UserResolve } from '@utilities';
 
 describe('CaseOpenComponent', () => {
@@ -21,7 +19,6 @@ describe('CaseOpenComponent', () => {
 	let fixture: ComponentFixture<CaseOpenComponent>;
 	let cuiModalService: CuiModalService;
 	let caseService: CaseService;
-	let networkService: NetworkDataGatewayService;
 	let userResolve: UserResolve;
 
 	configureTestSuite(() => {
@@ -52,7 +49,6 @@ describe('CaseOpenComponent', () => {
 
 		fixture = TestBed.createComponent(CaseOpenComponent);
 		cuiModalService = TestBed.get(CuiModalService);
-		networkService = TestBed.get(NetworkDataGatewayService);
 		caseService = TestBed.get(CaseService);
 		component = fixture.componentInstance;
 		component.data = {
@@ -117,79 +113,5 @@ describe('CaseOpenComponent', () => {
 		tick();
 		expect(caseService.createCase)
 			.toHaveBeenCalled();
-	}));
-
-	it('should attempt to scan the device if case opens', () => {
-		spyOn(caseService, 'createCase')
-			.and
-			.returnValue(of({
-				caseNumber: 'fakeNumber',
-			}));
-		spyOn(networkService, 'postDeviceTransactions')
-			.and
-			.returnValue(of([{
-				transactionId: 'fake',
-			}]));
-		spyOn(networkService, 'getScanStatusByTransaction')
-			.and
-			.returnValue(of({
-				status: 'IN_PROGRESS',
-			}));
-
-		component.submit();
-		fixture.detectChanges();
-
-		expect(component.caseOpenData.scanStatus)
-			.toEqual('IN_PROGRESS');
-	});
-
-	it('should handle failure when attempting to scan after case open', fakeAsync(() => {
-		const error = {
-			status: 404,
-			statusText: 'Resource not found',
-		};
-		spyOn(caseService, 'createCase')
-			.and
-			.returnValue(of({
-				caseNumber: 'fakeNumber',
-			}));
-		spyOn(networkService, 'postDeviceTransactions')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-
-		component.submit();
-		tick();
-		fixture.detectChanges();
-
-		expect(component.caseOpenData.scanStatus)
-			.toEqual('FAILURE');
-	}));
-
-	it('should handle failure when attempting to get transaction of scan after case open',
-	fakeAsync(() => {
-		const error = {
-			status: 404,
-			statusText: 'Resource not found',
-		};
-		spyOn(caseService, 'createCase')
-			.and
-			.returnValue(of({
-				caseNumber: 'fakeNumber',
-			}));
-		spyOn(networkService, 'postDeviceTransactions')
-			.and
-			.returnValue(of([{
-				transactionId: 'fake',
-			}]));
-		spyOn(networkService, 'getScanStatusByTransaction')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-
-		component.submit();
-		tick();
-		fixture.detectChanges();
-
-		expect(component.caseOpenData.scanStatus)
-			.toEqual('FAILURE');
 	}));
 });

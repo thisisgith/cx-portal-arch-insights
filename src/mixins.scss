@@ -55,6 +55,13 @@ $screen-xxl-min: 1440px;
 	&:hover:not(:focus) {
 		border-color: #ced0d3;
 	}
+
+	~ button .icon-search::before,
+	~ label .icon-search::before {
+		content: url('/assets/icons/icon-search1.svg');
+		height: 20px;
+		width: 20px;
+	}
 }
 
 @mixin table-ellipse {

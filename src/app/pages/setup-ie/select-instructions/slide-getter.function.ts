@@ -49,10 +49,6 @@ export function getSlides (selection: Selection) {
 					type: ConnectDNACenterComponent,
 				},
 				{
-					state: SETUP_STATES.COLLECTOR,
-					type: ConnectDNACenterComponent,
-				},
-				{
 					inputs: {
 						slideSet: 'syslog',
 					},

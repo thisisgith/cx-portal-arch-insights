@@ -10,8 +10,8 @@
 
 		& tr td.recommendation {
 			vertical-align: top;
-			background-color: $light-blue;
-			border-left: 1px solid $light-gray-5;
+			background-color: $light-gray-5;
+			border-left: 1px solid $light-gray-2;
 		}
 
 		& tr td.recommendation-current {
@@ -30,5 +30,11 @@
 		& td.first-column-width {
 			width: 15%;
 		}
+	}
+}
+
+::ng-deep {
+	.bar-chart .hbar__divider {
+		width: 0 !important;
 	}
 }

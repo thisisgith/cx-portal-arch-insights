@@ -600,11 +600,17 @@ export const MockNetworkElements: NetworkElement[] = [
  * Function to generate the mock Network Response
  * @param rows the rows to return
  * @param page the page to return
+ * @param [serialNumber] the serial number to filter on
  * @returns the network element response
  */
-function MockNetwork (rows: number, page: number): NetworkElementResponse {
-	const data = _.cloneDeep(MockNetworkElements)
-		.slice((rows * (page - 1)), (rows * page));
+function MockNetwork (rows: number, page: number, serialNumber?: string): NetworkElementResponse {
+	let data;
+	if (serialNumber) {
+		data = _.filter(_.cloneDeep(MockNetworkElements), ne => ne.serialNumber === serialNumber);
+	} else {
+		data = _.cloneDeep(MockNetworkElements)
+			.slice((rows * (page - 1)), (rows * page));
+	}
 
 	return {
 		data,
@@ -731,7 +737,7 @@ export const NetworkScenarios = [
 					delay: 100,
 					description: 'Network Elements for FOC1544Y16T',
 					response: {
-						body: MockNetwork(1, 1),
+						body: MockNetwork(1, 1, 'FOC1544Y16T'),
 						status: 200,
 					},
 					selected: true,

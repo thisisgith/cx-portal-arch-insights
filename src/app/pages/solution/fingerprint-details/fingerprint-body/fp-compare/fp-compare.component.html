@@ -37,13 +37,13 @@
 	<div class="flex flex-fluid flex-center-horizontal half-padding-top">
 		<div class="flex-fill  btn-group btn-group--wide">
 			<button data-auto-id="hardwarebtn" [ngClass]="{active: compareView ==='hardware'}"
-				(click)="updateCompareView($event,'hardware')" class="text-uppercase btn btn--secondary btn--small"
+				(click)="updateCompareView($event,'hardware')" class="text-uppercase btn btn--small"
 				[innerText]="'_Hardware_' | i18n"></button>
 			<button data-auto-id="softwarebtn" [ngClass]="{active: compareView ==='software'}"
-				(click)="updateCompareView($event,'software')" class="text-uppercase btn btn--secondary btn--small "
+				(click)="updateCompareView($event,'software')" class="text-uppercase btn btn--small "
 				[innerText]="'_Software_' | i18n"></button>
 			<button data-auto-id="featuresbtn" [ngClass]="{active: compareView ==='feature'}"
-				(click)="updateCompareView($event,'feature')" class="text-uppercase btn btn--secondary btn--small"
+				(click)="updateCompareView($event,'feature')" class="text-uppercase btn btn--small"
 				[innerText]="'_CP_Features_' | i18n"></button>
 		</div>
 	</div>

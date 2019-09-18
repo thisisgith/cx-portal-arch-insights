@@ -11,6 +11,7 @@
 			"@interceptors": ["src/app/interceptors/index.ts"],
 			"@interfaces": ["src/app/interfaces/index.ts"],
 			"@mock": ["src/environments/mock/index.ts"],
+			"@pipes": ["src/app/pipes/index.ts"],
 			"@services": ["src/app/services/index.ts"],
 			"@utilities": ["src/app/utilities/index.ts"]
 		},

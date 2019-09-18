@@ -523,6 +523,8 @@ describe('Advisories', () => { // PBC-306
 	});
 
 	context('Open case with Prediction', () => { // PBC-498
+		before(() => cy.getByAutoId('Security AdvisoriesTab').click());
+
 		let predict0, predict1, predict2;
 		let techID, subID;
 		let problemCodes, problemAreas, problemAreaOptions;

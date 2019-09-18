@@ -9,7 +9,7 @@ import { I18n } from '@cisco-ngx/cui-utils';
 
 import { ControlPointIERegistrationAPIService, User } from '@sdp-api';
 
-import { empty, forkJoin, of, Subject, throwError, timer } from 'rxjs';
+import { empty, of, Subject, throwError, timer } from 'rxjs';
 import { catchError, finalize, mergeMap, retryWhen, takeUntil, tap } from 'rxjs/operators';
 import * as _ from 'lodash-es';
 
@@ -133,10 +133,10 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 	 */
 	public onDownload () {
 		this.loading = true;
-		forkJoin(
-			this.createRegistration(),
-			this.commenceDownload(),
-		)
+		this.createRegistration()
+			.pipe(
+				mergeMap(() => this.commenceDownload()),
+			)
 			.subscribe(() => {
 				this.continue();
 			});

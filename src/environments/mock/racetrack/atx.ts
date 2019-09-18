@@ -121,7 +121,7 @@ const onboardItems = [
 		],
 	},
 	{
-		atxId: 'DNA3',
+		atxId: 'ATX3',
 		title: 'Cisco DNA Center Project Plan Best Practices 2',
 		description: 'This is a high-level look at the things you should consider as you’re planning your Cisco DNA Center project, including subjects such as prerequisites for network devices',
 		imageURL: 'https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/atx/images/ATX-DNA-Center-Wireless-Assurance.png',
@@ -353,6 +353,33 @@ export const ATXScenarios = [
 					},
 					selected: false,
 				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 100,
+					description: '(ATX) IBN-Campus Network Assurance-Onboard-emptySessions',
+					response: {
+						body: MockATX('IBN', 'Campus Network Assurance', 'Onboard', 'emptySessions'),
+						status: 200,
+					},
+					selected: false,
+				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 100,
+					description: '(ATX) IBN-Campus Network Assurance-Onboard-missingSessions',
+					response: {
+						body: MockATX('IBN', 'Campus Network Assurance', 'Onboard', 'missingSessions'),
+						status: 200,
+					},
+					selected: false,
+				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 100,
+					description: '(ATX) IBN-Campus Network Assurance-Onboard-nullSessions',
+					response: {
+						body: MockATX('IBN', 'Campus Network Assurance', 'Onboard', 'nullSessions'),
+						status: 200,
+					},
+					selected: false,
+				},
 			],
 		},
 		url: `${api}?usecase=Campus Network Assurance&solution=IBN&pitstop=Onboard&customerId=${customerId}&suggestedAction=Get to know Cisco DNA Center`,
@@ -517,6 +544,76 @@ export const CancelATXScenarios = [
 			],
 		},
 		url: `${api}/registration?sessionId=Session2&atxId=ATX1`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			DELETE: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ATX) IBN-Cancel ATX3 Session13',
+					response: {
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/registration?sessionId=Session13&atxId=ATX3`,
+		usecases: ['Use Case 1'],
+	},
+];
+
+/**
+ * The Register scenarios
+ */
+export const RegisterATXScenarios = [
+	{
+		scenarios: {
+			POST: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ATX) IBN-Register ATX Session1',
+					response: {
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/registration?sessionId=Session2&atxId=ATX1`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			POST: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ATX) IBN-Register ATX Session2',
+					response: {
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/registration?sessionId=Session7&atxId=ATX2`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			POST: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ATX) IBN-Register ATX3 Session1',
+					response: {
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/registration?sessionId=Session13&atxId=ATX3`,
 		usecases: ['Use Case 1'],
 	},
 ];

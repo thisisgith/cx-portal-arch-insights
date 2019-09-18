@@ -209,7 +209,7 @@ export class DnacListComponent implements OnInit {
 	 */
 	public onPanelClose () {
 		this.detailsPanelStackService.reset();
-		_.set(this.dnacDetails.active, false);
+		_.set(_.get(this.dnacDetails, 'active'), false);
 		this.dnacDetails = null;
 	}
 

@@ -62,6 +62,44 @@
 	}
 }
 
+// CiscoUI Pager styling override
+.cui .pagination > li {
+	> a {
+		height: 26px;
+		border-color: transparent;
+		background-color: transparent;
+		padding: 0 4px;
+
+		&:hover {
+			border-color: transparent;
+			box-shadow: unset;
+		}
+
+		&.cui-pager-page {
+			width: 26px;
+			justify-content: center;
+			border-radius: 50%;
+			padding: 0;
+
+			&:hover {
+				border-color: #00bceb;
+			}
+		}
+
+		&.disabled {
+			background-color: transparent;
+			color: #8e8e8e;
+			opacity: 0.6;
+		}
+	}
+
+	&.active > a {
+		background: #00bceb;
+		font-weight: bold;
+		border-color: transparent;
+	}
+}
+
 /** Altering tabs css to match Demo app */
 
 .tab__heading {
@@ -84,6 +122,10 @@
 .cui ul.tabs > li:hover > a {
 	box-shadow: 0 -2px 0 #00bceb inset;
 	color: var(--accent-color1, #00bceb);
+}
+
+.cui .pagination > li + li {
+	margin-left: 3px;
 }
 
 .cui .label {

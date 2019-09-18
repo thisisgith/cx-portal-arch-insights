@@ -789,10 +789,44 @@ export class LifecycleComponent implements OnDestroy {
 	}
 
 	/**
+	 * register the ATX session
+	 * @param atx the session we've clicked on
+	 * @param session the crosslaunch url
+	 */
+	public registerATXSession (atx: AtxSchema, session: AtxSessionSchema) {
+		const ssId = session.sessionId;
+		this.status.loading.atx = true;
+		if (window.Cypress) {
+			window.atxLoading = true;
+		}
+		const params: RacetrackContentService.RegisterUserToAtxParams = {
+			atxId: atx.atxId,
+			sessionId: ssId,
+		};
+		this.crossLaunch(session.registrationURL);
+		this.contentService.registerUserToAtx(params)
+		.subscribe(() => {
+			this.status.loading.atx = false;
+			atx.status = 'requested';
+			if (window.Cypress) {
+				window.atxLoading = false;
+			}
+		},
+		err => {
+			this.status.loading.atx = false;
+			if (window.Cypress) {
+				window.atxLoading = false;
+			}
+			this.logger.error(`lifecycle.component : registerATXSession() :: Error  : (${
+				err.status}) ${err.message}`);
+		});
+	}
+
+	/**
 	 * Selects the session
 	 * @param atx the session we've clicked on
 	 */
-	 public cancelATXSession (atx: AtxSchema) {
+	public cancelATXSession (atx: AtxSchema) {
 		const ssId = _.find(atx.sessions, { scheduled: true }).sessionId;
 		this.status.loading.atx = true;
 		if (window.Cypress) {

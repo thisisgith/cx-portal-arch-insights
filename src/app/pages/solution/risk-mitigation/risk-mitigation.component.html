@@ -211,16 +211,16 @@
 </ng-template>
 
 
-<asset-details *ngIf="selectedAsset"
+<asset-details *ngIf="assetLinkInfo && showAsset360"
     [asset]="assetLinkInfo?.asset"
-    [serialNumber]="assetLinkInfo?.asset?.serialNumber"
+    [serialNumber]="assetLinkInfo?.asset?.serialNumber || assetLinkInfo?.element?.serialNumber"
     [element]="assetLinkInfo?.element"
- 		(close)="onPanelClose()">
+		(close)="showAsset360 = false">
 </asset-details>
 
 <details-panel
-	*ngIf="selectedAsset && showAsset360"
-	[hidden]="!selectedAsset && !showAsset360"
+	*ngIf="selectedAsset.active"
+	[hidden]="showAsset360"
 	(hiddenChange)="handleHidden($event)"
 	[fullscreen]="fullscreen"
 >
@@ -292,8 +292,8 @@
 	<cui-loader  color="muted" *ngIf = "isCrashHistoryLoading"></cui-loader>
 </details-panel>
 <details-panel
-	*ngIf="showFpDetails  && !showAsset360"
-	[hidden]="!showFpDetails  && showAsset360"
+	*ngIf="showFpDetails"
+	[hidden]="showAsset360"
 	(hiddenChange)="handleHidden($event)"
 	[fullscreen]="fullscreen"
 	[minWidth]="'1024px'"

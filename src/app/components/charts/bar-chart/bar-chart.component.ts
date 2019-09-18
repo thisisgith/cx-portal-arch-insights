@@ -2,9 +2,9 @@ import {
 	Component,
 	EventEmitter,
 	Input,
-	OnInit,
 	Output,
 	SimpleChanges,
+	OnChanges,
 } from '@angular/core';
 import { Chart } from 'angular-highcharts';
 import * as _ from 'lodash-es';
@@ -14,13 +14,13 @@ import * as _ from 'lodash-es';
  */
 @Component({
 	selector: 'bar-chart',
-	styleUrls: ['./bar-chart.component.scss'],
+	styleUrls: ['./bar-chart.component.scss', '../tooltip/tooltip.scss'],
 	template: `
 		<div [chart]="chart"></div>
 		<div class="hbar__divider"></div>
 	`,
 })
-export class BarChartComponent implements OnInit {
+export class BarChartComponent implements OnChanges {
 
 	@Input() public width;
 	@Input() public loading;
@@ -31,15 +31,6 @@ export class BarChartComponent implements OnInit {
 	public chart: Chart;
 
 	/**
-	 * Initializes the bar chart
-	 */
-	public ngOnInit () {
-		if (this.seriesData) {
-			this.buildGraph();
-		}
-	}
-
-	/**
 	 * Builds our bar graph
 	 */
 	private buildGraph () {
@@ -48,6 +39,7 @@ export class BarChartComponent implements OnInit {
 		_.each(this.seriesData, d => {
 			data.push({
 				color: '#92dde4',
+				id: d.label,
 				name: d.label,
 				y: d.value,
 			});
@@ -125,6 +117,8 @@ export class BarChartComponent implements OnInit {
 				headerFormat: '<div data-auto-id="{point.key}Tooltip">' +
 					'<span style="font-size: 10px">{point.key}</span><br/>',
 				useHTML: true,
+				backgroundColor: null,
+				borderWidth: 0,
 			},
 			xAxis: {
 				categories,
@@ -160,10 +154,34 @@ export class BarChartComponent implements OnInit {
 	 * @param changes The changes found
 	 */
 	public ngOnChanges (changes: SimpleChanges) {
+		const loadingInfo = _.get(changes, 'loading',
+			{ currentValue: false, firstChange: false, previousValue: false });
 		const seriesInfo = _.get(changes, 'seriesData',
-			{ currentValue: null, firstChange: false });
-		if (seriesInfo.currentValue && !seriesInfo.firstChange) {
+			{ currentValue: null, firstChange: false, previousValue: null });
+		if (!this.chart || !seriesInfo.previousValue || !seriesInfo.previousValue.length) {
 			this.buildGraph();
+		} else {
+			if (loadingInfo.currentValue !== loadingInfo.previousValue) {
+				this.chart.ref.series[0].update(<any> {
+					enableMouseTracking: !loadingInfo.currentValue,
+					opacity: loadingInfo.currentValue ? 0.5 : 1,
+				});
+			}
+			if (seriesInfo.currentValue !== seriesInfo.previousValue) {
+				const data = [];
+				const categories = [];
+				_.each(seriesInfo.currentValue, d => {
+					data.push({
+						color: '#92dde4',
+						id: d.label,
+						name: d.label,
+						y: d.value,
+					});
+					categories.push(d.label);
+				});
+				this.chart.ref.xAxis[0].update({ categories }, false);
+				this.chart.ref.series[0].setData(data);
+			}
 		}
 	}
 }
