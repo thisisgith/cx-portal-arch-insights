@@ -7,6 +7,7 @@ import {
 	SimpleChanges,
 	OnChanges,
 	OnDestroy,
+	EventEmitter,
 } from '@angular/core';
 
 import { DatePipe } from '@angular/common';
@@ -35,6 +36,7 @@ import {
 	map,
 	catchError,
 	switchMap,
+	takeUntil,
 } from 'rxjs/operators';
 import { AdvisoryType } from '@interfaces';
 
@@ -69,6 +71,7 @@ export class AssetDetailsAdvisoriesComponent
 	@Input('asset') public asset: Asset;
 	@Input('element') public element: NetworkElement;
 	@Input('customerId') public customerId: string;
+	@Input('reload') public reload: EventEmitter<boolean> = new EventEmitter();
 	@ViewChild('impact', { static: true }) private impactTemplate: TemplateRef<{ }>;
 	@ViewChild('fieldNoticeID', { static: true }) private fieldNoticeIDTemplate: TemplateRef<{ }>;
 	@ViewChild('bugID', { static: true }) private bugIDTemplate: TemplateRef<{ }>;
@@ -494,6 +497,16 @@ export class AssetDetailsAdvisoriesComponent
 
 	/** Function used to initialize the component */
 	public ngOnInit () {
+		this.reload
+		.pipe(
+			takeUntil(this.destroyed$),
+		)
+		.subscribe((toReload: boolean) => {
+			if (toReload) {
+				this.refresh();
+			}
+		});
+
 		this.refresh();
 	}
 

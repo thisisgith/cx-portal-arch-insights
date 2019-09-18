@@ -980,6 +980,7 @@
 	"_Scanning_": "Scanning",
 	"_ScanningCurrentlyInProgress_": "Scanning is currently in progress",
 	"_ScanningHasCompleted_": "Scanning has completed",
+	"_ScanningHasFailed_": "Scanning of the asset has failed to complete, please try again later",
 	"_Schedule_": "Schedule",
 	"_Scheduled_": "Scheduled",
 	"_ScheduledCollectionDetails_": "Schedule Collection Details",
