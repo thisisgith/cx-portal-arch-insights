@@ -61,7 +61,7 @@
 
 <ng-template #detailText let-title="title" let-text="text">
 	<div class="base-margin-bottom">
-		<div [innerText]="title" class="text-uppercase text-bold qtr-margin-bottom"></div>
-		<div [innerHTML]="text || ('_NA_' | i18n)" attr.data-auto-id="SecurityDetails{{title}}Text"></div>
+		<div [innerText]="title" class="text-uppercase qtr-margin-bottom content__title"></div>
+		<div [innerText]="text || ('_NA_' | i18n)" attr.data-auto-id="SecurityDetails{{title}}Text" class="content__text"></div>
 	</div>
 </ng-template>
