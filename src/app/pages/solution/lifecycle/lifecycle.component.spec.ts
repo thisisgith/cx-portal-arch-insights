@@ -1,6 +1,6 @@
 import { configureTestSuite } from 'ng-bullet';
 import * as enUSJson from 'src/assets/i18n/en-US.json';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, tick, ComponentFixture, TestBed, fakeAsync } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { LifecycleComponent } from './lifecycle.component';
 import { LifecycleModule } from './lifecycle.module';
@@ -28,6 +28,8 @@ import { ActivatedRoute } from '@angular/router';
 import { RacetrackInfoService } from '@services';
 import { AppService } from 'src/app/app.service';
 import { I18n } from '@cisco-ngx/cui-utils';
+import { delay } from 'rxjs/operators';
+import 'zone.js/dist/zone-patch-rxjs-fake-async';
 
 /**
  * Will fetch the currently active response body from the mock object
@@ -1000,7 +1002,7 @@ describe('LifecycleComponent', () => {
 		});
 	});
 
-	describe('Product Guides', () => {
+	fdescribe('Product Guides', () => {
 		it('should not load product guides until the modal is open', () => {
 			buildSpies();
 			sendParams();
@@ -1244,7 +1246,7 @@ describe('LifecycleComponent', () => {
 			component.loadMoreContent('PG');
 			fixture.detectChanges();
 
-			const errorDisplay = fixture.debugElement
+			let errorDisplay = fixture.debugElement
 				.query(By.css('.load-more .text-danger'));
 			expect(component.status.error.productGuides)
 				.toBeTruthy();
@@ -1266,8 +1268,29 @@ describe('LifecycleComponent', () => {
 				.toBe('100');
 			expect(component.getSuccessBytesPercentage('PG'))
 				.toBe('30'); // 30%
+			errorDisplay = fixture.debugElement
+				.query(By.css('.load-more .text-danger'));
+			expect(component.status.error.productGuides)
+				.toBeFalsy();
 			expect(errorDisplay)
-				.toBeTruthy();
+				.toBeFalsy();
+
+			// Alright, now pretend we're at the last page.
+			racetrackSPSpy.calls.reset();
+			component.componentData.productGuides.totalCount = 30;
+			component.loadMoreContent('PG');
+			fixture.detectChanges();
+
+			// The selected count should remain the same.
+			expect(racetrackSPSpy)
+				.not
+				.toHaveBeenCalled();
+			expect(component.getSelectedSuccessBytesCount('PG'))
+				.toBe('30');
+			expect(component.getMaxSuccessBytesCount('PG'))
+				.toBe('30');
+			expect(component.getSuccessBytesPercentage('PG'))
+				.toBe('100'); // 100%
 		});
 
 		it('should be able to handle regular usage', () => {
@@ -1341,6 +1364,51 @@ describe('LifecycleComponent', () => {
 			expect(de)
 				.toBeFalsy();
 		});
+
+		it('should display a spinner when loading modal data', fakeAsync(() => {
+			buildSpies();
+			sendParams();
+
+			fixture.detectChanges();
+
+			// Force an asynchronous delay of 3 seconds.
+			// PLEASE NOTE THAT async() AND fakeAsync() DO NOT WORK WITH
+			// RXJS OBSERVABLE DELAY. YOU MUST IMPORT zone.js/dist/zone-patch-rxjs-fake-async
+			// FOR THIS TO WORK.
+			racetrackSPSpy.and
+				.returnValue(of(getActiveBody(SuccessPathScenarios[10]))
+					.pipe(delay(3000)));
+
+			expect(component.status.loading.productGuides.modal)
+				.toBeFalsy();
+
+			component.showModal('_ProductGuides_');
+			expect(component.status.loading.productGuides.modal)
+				.toBeTruthy();
+
+			tick(3000);
+
+			expect(component.status.loading.productGuides.modal)
+				.toBeFalsy();
+
+			// ------------------------------------------------
+			// Now test the spinner for load more.
+
+			expect(component.status.loading.productGuides.more)
+				.toBeFalsy();
+
+			// Total count must be increased in order for loadMoreContent
+			// to work.
+			component.componentData.productGuides.totalCount = 100;
+			component.loadMoreContent('PG');
+			expect(component.status.loading.productGuides.more)
+				.toBeTruthy();
+
+			tick(3000);
+
+			expect(component.status.loading.productGuides.more)
+				.toBeFalsy();
+		}));
 	});
 
 	describe('E-Learning', () => {
