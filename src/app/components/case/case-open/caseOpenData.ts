@@ -8,7 +8,6 @@ export interface CaseOpenData {
 	description: string;
 	problemArea: string;
 	requestRma: boolean;
-	scanStatus?: string;
 	severity: number;
 	severityName: string;
 	subtech: string;

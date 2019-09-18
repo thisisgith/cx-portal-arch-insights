@@ -37,7 +37,7 @@
 					</dt>
 					<dd>
 						<span *ngIf="case?.opened; else unavailable"
-							[innerText]="case.opened | date:'dd-MMM-y hh:mm aa O'"></span>
+							[innerText]="case.opened | dateTime"></span>
 					</dd>
 					<dt>
 						<span class="subheading text-small text-uppercase"

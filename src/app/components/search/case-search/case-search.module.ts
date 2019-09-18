@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { I18nPipeModule, FromNowPipeModule, TruncatePipeModule } from '@cisco-ngx/cui-pipes';
 import { CaseSearchComponent } from './case-search.component';
+import { DateTimePipeModule } from '@pipes';
 
 import {
 	CuiLoaderModule,
@@ -20,11 +21,14 @@ import {
 	imports: [
 		CommonModule,
 		RouterModule,
+
 		CuiLoaderModule,
 		CuiSpinnerModule,
 		I18nPipeModule,
 		FromNowPipeModule,
 		TruncatePipeModule,
+
+		DateTimePipeModule,
 	],
 })
 export class CaseSearchModule { }

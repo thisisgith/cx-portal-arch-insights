@@ -390,7 +390,7 @@ describe('RiskMitigationComponent', () => {
 	});
 
 	it('should set the selectedFingerPrint data', () => {
-		const asset = { test: 'test' };
+		const asset = { test: 'test', active: true };
 		component.connectToFpDetails(asset);
 		expect(component.selectedFingerPrintdata)
 			.toBeDefined();

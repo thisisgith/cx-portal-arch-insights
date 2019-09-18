@@ -28,6 +28,7 @@
 		</div>
 		<div class="col-md-4">
 			<cui-select
+				*ngIf="typeOptions?.length > 1"
 				data-auto-id="searchTypeSelect"
 				[ngModel]="selectedType"
 				(ngModelChange)="onTypeSelected($event)"

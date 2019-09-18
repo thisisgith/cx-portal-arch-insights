@@ -227,7 +227,7 @@ export const AdvisorySecurityAdvisoryScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&sort=severity:ASC&rows=10&page=1&hwInstanceId=FOC1544Y16T,WS-C2960S-24PS-L,NA,FOC1544Y16T,WS-C2960S-24PS-L,NA,NA`,
+		url: `${api}?customerId=${customerId}&sort=severity:ASC&rows=10&page=1&neInstanceId=NA,FOC1544Y16T,WS-C4506-E,NA`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -244,7 +244,7 @@ export const AdvisorySecurityAdvisoryScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&sort=severity:ASC&rows=10&page=2&hwInstanceId=FOC1544Y16T,WS-C2960S-24PS-L,NA,FOC1544Y16T,WS-C2960S-24PS-L,NA,NA`,
+		url: `${api}?customerId=${customerId}&sort=severity:ASC&rows=10&page=2&neInstanceId=NA,FOC1544Y16T,WS-C4506-E,NA`,
 		usecases: ['Use Case 1'],
 	},
 	{

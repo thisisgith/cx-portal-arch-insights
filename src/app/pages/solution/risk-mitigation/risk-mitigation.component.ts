@@ -87,7 +87,7 @@ export class RiskMitigationComponent {
 	public fullscreen = false;
 	public filters: Filter[];
 	public onlyCrashes = true;
-	public selectedAsset: RiskAsset;
+	public selectedAsset: RiskAsset = { active: false };
 	public selectedFingerPrintdata: HighCrashRiskDevices;
 	public showAsset360 = false;
 	public isCrashHistoryLoading = false;
@@ -516,14 +516,13 @@ export class RiskMitigationComponent {
 	 * @returns Network element
 	 */
 	public onRowClicked (asset: any) {
+		this.showAsset360 = false;
 		if (asset.active) {
 			this.selectedAsset = asset;
-			this.showAsset360 = true;
 			this.getCrashedDeviceHistory(asset);
+			this.getAssetLinkInfo(asset);
 		} else {
 			this.selectedAsset.active = false;
-			this.showAsset360 = false;
-			this.getAssetLinkInfo(asset);
 		}
 	}
 
@@ -549,6 +548,8 @@ export class RiskMitigationComponent {
 	 */
 	public onFPDPanelClose () {
 		this.showFpDetails = false;
+		_.set(this.selectedFingerPrintdata, 'active', false);
+		this.selectedFingerPrintdata = null;
 	}
 
 	/**
@@ -557,21 +558,22 @@ export class RiskMitigationComponent {
 	 */
 
 	public connectToFpDetails (asset: any) {
-		this.showFpDetails = true;
-		this.selectedFingerPrintdata = asset;
-		this.getAssetLinkInfo(asset);
+		if (_.get(asset, 'active')) {
+			this.showFpDetails = true;
+			this.selectedFingerPrintdata = asset;
+			this.getAssetLinkInfo(asset);
+		} else {
+			this.onFPDPanelClose();
+		}
 	}
 
 	/**
 	 * Determines whether panel close on when grids open details of asset
 	 */
-
 	public onPanelClose () {
 		_.set(this.selectedAsset, 'active', false);
-		_.set(this.selectedFingerPrintdata, 'active', false);
-		this.selectedAsset = null;
 		this.showAsset360 = false;
-		this.showFpDetails = false;
+		this.onFPDPanelClose();
 	}
 
 	/**

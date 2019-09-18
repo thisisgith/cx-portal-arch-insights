@@ -18,26 +18,6 @@
 			data-auto-id="CaseNumberLink">
 		</a>
 	</h1>
-	<div class="alert" *ngIf="caseData?.scanStatus"
-		[ngClass]="{
-			'SUCCESS': 'alert--success',
-			'FAILURE': 'alert--danger'
-		}[caseData.scanStatus]">
-		<div class="alert__icon"
-			[ngClass]="{
-				'ACCEPTED': 'icon-info-outline',
-				'RECEIVED': 'icon-info-outline',
-				'IN_PROGRESS': 'icon-info-outline',
-				'SUCCESS': 'icon-check-outline',
-				'FAILURE': 'icon-error-outline'
-			}[caseData.scanStatus]">
-		</div>
-		<div class="alert__message">
-			<span *ngIf="caseData.scanStatus === 'FAILURE'" [innerText]="'_DeviceCaseScanInfoFailure_' | i18n"></span>
-			<span *ngIf="caseData.scanStatus === 'SUCCESS'" [innerText]="'_DeviceCaseScanInfoSuccess_' | i18n"></span>
-			<span *ngIf="caseData.scanStatus !== 'FAILURE' && caseData.scanStatus !== 'SUCCESS'" [innerText]="'_DeviceCaseScanInfo_' | i18n"></span>
-		</div>
-	</div>
 	<dl class="base-margin-top">
 		<dt [innerText]="'_Asset_' | i18n"></dt>
 		<dd>

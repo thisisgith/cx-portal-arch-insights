@@ -109,6 +109,7 @@ export class SoftwareVersionsComponent implements OnInit, OnDestroy {
 
 				}),
 				catchError(err => {
+					this.status.isLoading = false;
 					_.invoke(this.alert, 'show', I18n.get('_OsvGenericError_'), 'danger');
 					this.logger.error('OSV SoftwareVersions : getVersions() ' +
 						`:: Error : (${err.status}) ${err.message}`);

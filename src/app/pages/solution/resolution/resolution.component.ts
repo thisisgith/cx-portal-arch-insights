@@ -581,7 +581,7 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 			_.each(this.filters, filter => {
 				if (_.includes(['status', 'severity'], filter.key)) {
 					// Don't include status or severities in pie charts with no associated cases
-					_.pick(filter.seriesData, data => data.value);
+					_.set(filter, 'seriesData', _.filter(filter.seriesData, data => data.value));
 				}
 				_.set(filter, 'seriesData', [...filter.seriesData]);
 				_.set(filter, 'loading', false);

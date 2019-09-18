@@ -1,6 +1,6 @@
 <div class="panel panel--ltgray panel--bordered" #lifecyclePanel [class.panel--bottom-padding]="panelBottomPaddingNeeded">
 	<div class="row base-padding-top">
-		<div class="col-md-3" *ngIf="!status.loading.racetrack && componentData?.racetrack?.stage">
+		<div class="col-md-3 base-padding-left" *ngIf="!status.loading.racetrack && componentData?.racetrack?.stage">
 			<ng-container *ngTemplateOutlet="racetrack"></ng-container>
 		</div>
 
@@ -101,43 +101,45 @@
 			</span>
 		</div>
 	</div>
-	<div class="base-margin-left" *ngIf="currentPitstop && currentPitstop?.pitstopActions?.length">
-		<div class="divider divider--compressed"></div>
-		<div class="base-margin-top">
-			<span class="qtr-padding-bottom icon-flagged"></span>
-			<span class="text-uppercase qtr-padding-left" [innerText]="'_CheckList_' | i18n"></span>
+	<div class="pitstop-checklist base-margin-left" 
+		*ngIf="currentPitstop && currentPitstop?.pitstopActions?.length">
+		<div class="divider"></div>
+		<div class="pitstop-checklist__title cx-text-secondary">
+			<div class="pitstop-checklist__flag"
+				inlineSVG="assets/img/solutions/icon-checkerflag.svg"></div>
+			<div class="text-uppercase half-padding-left" [innerText]="'_CheckList_' | i18n"></div>
 		</div>
-		<p class="text-small no-margin-top" [innerText]="'_ChecklistDesc_' | i18n"></p>
+		<p class="text-small no-margin-top half-margin-bottom cx-text-light-gray" 
+			[innerText]="'_ChecklistDesc_' | i18n"></p>
 		<div *ngFor="let action of currentPitActionsWithStatus" class="form-group form-group select" data-auto-id="pitstopAction">
-			<div class="actionname row qtr-padding-top qtr-padding-bottom" [ngClass]="{selected: action.selected}">
-				<div class="col-md-1">
+			<div class="actionname flex-center-vertical qtr-padding" [ngClass]="{selected: action.selected}">
+				<div class="half-margin-right flex-center-vertical">
 					<!-- since updatePitstop API going through changes, we are temporarily disabling the user from checking a box -->
 					<!-- This will manually be done by the CSM/CSE.  Refer to PBC-725. -->
 					<!-- <label class="checkbox" [ngClass]="{'disabled': action.action.isComplete || currentWorkingPitstop !== currentPitstop.name }" data-auto-id="pitstopCheckboxLabel"> -->
 					<label class="checkbox disabled" data-auto-id="pitstopCheckboxLabel">
 						<input data-auto-id="pitstopCheckbox" type="checkbox"
-							(change)="completeAction(action.action)" [checked]="true"
+							(change)="completeAction(action.action)" [checked]="action.action.isComplete"
 						>
 						<span class="checkbox__input" data-auto-id="pitstopCheckboxSpan"
 							[ngClass]="{'checkbox-complete': action.action.isComplete}"
 						></span>
 					</label>
 				</div>
-				<div class="col-md-11">
-					<a data-auto-id="actionlink"
-						class="no-link"
-						data-toggle="tooltip" data-placement="bottom" title="{{action?.action?.description}}"
-						(click)="selectAction(action)">
-						<div class="checkbox__label text-medium"
+				<div class="actionname__text cx-text-secondary"
+					[class.actionname__text--complete]="action?.action?.isComplete">
+						<div class="checkbox__label text-medium toggle"
+							attr.data-auto-id="actionLink-{{action.action.name}}"
+							data-toggle="tooltip" data-placement="bottom" title="{{action?.action?.description}}"
+							(click)="selectAction(action)"
 							[innerText]="action?.action?.name">
 						</div>
-					</a>
 				</div>
 			</div>
 		</div>
 		<div *ngIf="hasSelectedAction()">
 			<div class="divider divider--compressed"></div>
-			<div class="text-vibblue base-margin-top base-margin-bottom toggle"
+			<div class="base-margin-top base-margin-bottom toggle pitstop-checklist__reset-filter"
 				id="ResetFilter"
 				[innerText]="'_ResetFilter_' | i18n"
 				(click)="resetFilter()"
@@ -445,7 +447,7 @@
 				class="pull-left btn btn--primary"
 				data-auto-id = "AtxScheduleCardRegisterButton"
 				[ngClass]="getAtxRegisterButton(data)"
-				(click)="crossLaunch(sessionSelected.registrationURL)"
+				(click)="registerATXSession(data, sessionSelected)"
 				[innerText]="'_Register_' | i18n">
 			</button>
 			<div class="half-padding-left pull-left">
@@ -860,7 +862,7 @@
 			[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__white'"
 			data-auto-id="ATXCardRibbon">
 		</div>
-		<div class="card__header atx__card__header text-left"
+		<div class="card__header atx__card__header text-left title-line-clamp"
 			*ngIf="item && item.title"
 			[innerText]="item.title"
 			data-auto-id="ATXCardTitle">
@@ -869,9 +871,9 @@
 		<div class="card__footer atx__card__footer">
 			<div class="card_footer_item"  data-auto-id="ATXCardFooter">
 				<div class="atx__card__status text-left base-padding-left base-padding-right base-margin-bottom flex-middle">
-					<span class="text-success icon-certified half-padding-right" *ngIf="item.status === 'completed'" data-auto-id="ATXCardFooter-CompletedIcon"></span>
-					<span class="text-info icon-clock half-padding-right" *ngIf="item.status === 'in-progress'" data-auto-id="ATXCardFooter-InProgressIcon"></span>
-					<span class="text-info icon-check-outline half-padding-right" *ngIf="item.status === 'requested'" data-auto-id="ATXCardFooter-RequestedIcon"></span>
+					<span class="icon-certified half-padding-right" *ngIf="item.status === 'completed'" data-auto-id="ATXCardFooter-CompletedIcon"></span>
+					<span class="icon-clock half-padding-right" *ngIf="item.status === 'in-progress'" data-auto-id="ATXCardFooter-InProgressIcon"></span>
+					<span class="icon-check-outline half-padding-right" *ngIf="item.status === 'requested'" data-auto-id="ATXCardFooter-RequestedIcon"></span>
 					<span class="text-medium" [innerText]="'_Completed_' | i18n" *ngIf="item.status === 'completed'" data-auto-id="ATXCardFooter-CompletedText"></span>
 					<span class="text-medium" [innerText]="'_InProgress_' | i18n" *ngIf="item.status === 'in-progress'" data-auto-id="ATXCardFooter-InProgressText"></span>
 					<span class="text-medium" [innerText]="'_Requested_' | i18n" *ngIf="item.status === 'requested'" data-auto-id="ATXCardFooter-RequestedText"></span>
@@ -881,7 +883,7 @@
 					<div *ngFor="let session of item.sessions">
 						<div
 							*ngIf="session.scheduled"
-							class="text-info icon-calendar half-padding-right"
+							class="icon-calendar half-padding-right"
 							data-auto-id="ATXCardFooter-ScheduledIcon"
 						></div>
 						<span class="text-medium" innerText="{{session.sessionStartDate | date:'medium'}}" data-auto-id="ATXCardFooter-ScheduledDate" *ngIf="session.scheduled"></span>
@@ -933,9 +935,9 @@
 		<div class="card__footer atx__card__footer">
 			<div class="card_footer_item" data-auto-id="ACCCardFooter">
 				<div class="atx__card__status text-left base-padding-left base-padding-right base-margin-bottom flex-middle">
-					<span class="text-success icon-certified half-padding-right" *ngIf="item.status === 'completed'"></span>
-					<span class="text-info icon-clock half-padding-right" *ngIf="item.status === 'in-progress'"></span>
-					<span class="text-info icon-check-outline half-padding-right" *ngIf="item.status === 'requested'"></span>
+					<span class="icon-certified half-padding-right" *ngIf="item.status === 'completed'"></span>
+					<span class="icon-clock half-padding-right" *ngIf="item.status === 'in-progress'"></span>
+					<span class="icon-check-outline half-padding-right" *ngIf="item.status === 'requested'"></span>
 					<span class="text-medium" [innerText]="'_Completed_' | i18n" *ngIf="item.status === 'completed'"></span>
 					<span class="text-medium" [innerText]="'_SessionInProgress_' | i18n" *ngIf="item.status === 'in-progress'"></span>
 					<span class="text-medium" [innerText]="'_Requested_' | i18n" *ngIf="item.status === 'requested'"></span>
@@ -1245,22 +1247,22 @@
 	<div *ngIf="celldata.status ==='scheduled'" data-auto-id="Table-Status-Scheduled">
 		<div *ngFor="let session of celldata.sessions">
 			<div *ngIf="session.scheduled">
-				<span class="text-primary icon-calendar icon-small" data-auto-id="Table-Status-Scheduled-Icon"></span>
+				<span class="icon-calendar icon-small" data-auto-id="Table-Status-Scheduled-Icon"></span>
 				<span class="half-margin-left"
 					innerText="{{ session.sessionStartDate | date:'medium'}}" data-auto-id="scheduledDate"></span>
 			</div>
 		</div>
 	</div>
 	<div *ngIf="celldata.status === 'requested'" data-auto-id="Table-Status-Requested">
-		<span class="text-primary icon-check-outline icon-small"></span>
+		<span class="icon-check-outline icon-small"></span>
 		<span class="half-margin-left" [innerText]="'_Requested_' | i18n"></span>
 	</div>
 	<div *ngIf="celldata.status ==='in-progress'" data-auto-id="Table-Status-InProgress">
-		<span class="text-primary icon-clock icon-small"></span>
+		<span class="icon-clock icon-small"></span>
 		<span class="half-margin-left" [innerText]="'_InProgress_' | i18n"></span>
 	</div>
 	<div *ngIf="celldata.status ==='completed'" data-auto-id="Table-Status-Completed">
-		<span class="text-success icon-certified icon-small" data-auto-id="Table-Status-Completed-Icon"></span>
+		<span class="icon-certified icon-small" data-auto-id="Table-Status-Completed-Icon"></span>
 		<span class="half-margin-left" [innerText]="'_Completed_' | i18n" data-auto-id="Table-Status-Completed-Text"></span>
 	</div>
 </ng-template>
@@ -1323,7 +1325,7 @@
 		<span [ngSwitch]="type" class="qtr-margin-right">
 			<button *ngSwitchCase="'moreView'" class="btn btn--small btn--secondary text-uppercase 
 				cx-button"
-				attr.data-auto-id="MoreATXViewSessions"
+				data-auto-id="MoreATXViewSessions"
 				(click)="atxMoreViewSessions()"
 				[innerText]="'_ViewSessions_' | i18n">
 			</button>
@@ -1362,7 +1364,7 @@
 			class="qtr-margin-right">
 			<button *ngSwitchCase="'moreView'" 
 				class="btn btn--small btn--secondary text-uppercase cx-button disabled"
-				attr.data-auto-id="MoreATXViewSessions"
+				data-auto-id="MoreATXViewSessions"
 				[innerText]="'_ViewSessions_' | i18n">
 			</button>
 			<button *ngSwitchCase="'recommendedView'"  

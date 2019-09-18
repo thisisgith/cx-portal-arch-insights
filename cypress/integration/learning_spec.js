@@ -422,7 +422,9 @@ describe('Learn Panel', () => {
 					.eq(index)
 					.should('contain', elearningItem.title)
 					.within(() => {
-						cy.getByAutoId('recommendedElearning-HoverModal-Title').should('contain', elearningItem.title);
+						cy.getByAutoId('recommendedElearning-HoverModal-Title')
+							.should('contain', elearningItem.title)
+							.and('have.class', 'title-line-clamp');
 						cy.getByAutoId('recommendedElearning-HoverModal-Description')
 							.should('contain', elearningItem.description)
 							// PBC-611 Truncate description text
@@ -1250,7 +1252,9 @@ describe('Learn Panel', () => {
 					.parent()
 					.parent()
 					.within(() => {
-						cy.getByAutoId('recommendedElearning-HoverModal-Title').should('contain', certificationItem.title);
+						cy.getByAutoId('recommendedElearning-HoverModal-Title')
+							.should('contain', certificationItem.title)
+							.and('have.class', 'title-line-clamp');
 						cy.getByAutoId('recommendedElearning-HoverModal-Description')
 							.should('contain', certificationItem.description)
 							// PBC-611 Truncate description text
@@ -2289,12 +2293,14 @@ describe('Learn Panel', () => {
 					.eq(index)
 					.should('contain', successItem.title)
 					.within(() => {
-						cy.getByAutoId('successbytes-HoverModal-Title').should('contain', successItem.title);
+						cy.getByAutoId('successbytes-HoverModal-Title')
+							.should('contain', successItem.title)
+							.and('have.class', 'title-line-clamp');
 						cy.getByAutoId('successbytes-HoverModal-Description')
 							.should('contain', successItem.description)
 							// PBC-611 Truncate description text
 							// Since this handled by the styles, just validate the class exists
-							.and('have.class', 'line-clamp');
+							.and('have.class', 'sb-desc-line-clamp');
 						// Duration/clock are only displayed if duration is set
 						if (successItem.duration) {
 							cy.getByAutoId('successbytes-HoverModal-DurationClock').should('exist');
