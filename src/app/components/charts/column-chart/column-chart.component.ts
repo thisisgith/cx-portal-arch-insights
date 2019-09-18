@@ -15,6 +15,7 @@ import * as _ from 'lodash-es';
 @Component({
 	selector: 'column-chart',
 	template: '<div [chart]="chart"></div>',
+	styleUrls: ['../tooltip/tooltip.scss'],
 })
 export class ColumnChartComponent implements OnChanges {
 
@@ -103,6 +104,8 @@ export class ColumnChartComponent implements OnChanges {
 				headerFormat: '<div data-auto-id="{point.key}Tooltip">' +
 					'<span style="font-size: 10px">{point.key}</span><br/>',
 				useHTML: true,
+				backgroundColor: null,
+				borderWidth: 0,
 			},
 			xAxis: {
 				categories,
