@@ -165,7 +165,7 @@ export const ACCScenarios = [
 						body: MockACC('IBN', 'Campus Network Assurance', 'Onboard', 'twoRecommended'),
 						status: 200,
 					},
-					selected: true,
+					selected: false,
 				},
 				{
 					delay: Math.floor(Math.random() * 2000) + 500,
