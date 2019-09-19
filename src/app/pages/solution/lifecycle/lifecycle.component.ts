@@ -40,6 +40,7 @@ import { ActivatedRoute } from '@angular/router';
 import { User } from '@interfaces';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { RacetrackInfoService } from '@services';
+import { environment } from '@environment';
 
 /**
  * Interface representing our data object
@@ -63,9 +64,11 @@ interface ComponentData {
 		recommended?: AtxSchema;
 		interested?: AtxSchema;
 	};
-	learning?: {
+	learning: {
 		certifications?: ELearning[];
+		certificationsUrl: string;
 		elearning?: ELearning[];
+		elearningUrl: string;
 		training?: ELearning[];
 		success?: SuccessPath[];
 		archetype?: string[];
@@ -252,6 +255,10 @@ export class LifecycleComponent implements OnDestroy {
 			suggestedAction: '',
 			usecase: '',
 		},
+		learning: {
+			certificationsUrl: `${environment.learningLink}?type=certification`,
+			elearningUrl: `${environment.learningLink}?type=e-learning`,
+		},
 	};
 
 	public selectAccComponent = false;
@@ -428,6 +435,10 @@ export class LifecycleComponent implements OnDestroy {
 				solution: '',
 				suggestedAction: '',
 				usecase: '',
+			},
+			learning: {
+				certificationsUrl: `${environment.learningLink}?type=certification`,
+				elearningUrl: `${environment.learningLink}?type=e-learning`,
 			},
 		};
 	}

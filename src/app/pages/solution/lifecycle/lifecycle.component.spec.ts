@@ -368,7 +368,7 @@ describe('LifecycleComponent', () => {
 				.toBeUndefined();
 
 			expect(component.componentData.learning)
-				.toBeUndefined();
+				.toBeDefined();
 
 			expect(component.componentData.atx)
 				.toBeUndefined();
