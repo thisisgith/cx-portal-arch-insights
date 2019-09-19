@@ -616,4 +616,20 @@ export const RegisterATXScenarios = [
 		url: `${api}/registration?sessionId=Session13&atxId=ATX3`,
 		usecases: ['Use Case 1'],
 	},
+	{
+		scenarios: {
+			POST: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ATX) IBN-Register ATX1 Session1',
+					response: {
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/registration?sessionId=Session1&atxId=ATX1`,
+		usecases: ['Use Case 1'],
+	},
 ];
