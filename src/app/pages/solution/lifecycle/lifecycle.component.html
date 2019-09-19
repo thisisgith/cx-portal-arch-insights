@@ -1397,7 +1397,16 @@
 	<div class="row" *ngIf="type==='ATX' || type === 'ACC'">
 		<div class="col-md-12 flex">
 			<span *ngIf="celldata.status === 'recommended'" class="icon-flagged qtr-margin-right cx-text-light-gray"></span>
-			<div class="no-margin cx-text-default" [innerText]="celldata.title" attr.data-auto-id="{{ type }}-Title"></div>
+			<div id="viewAllTable-item" class="panel small-panel">
+				<div class="no-margin cx-text-default" [innerText]="celldata.title" attr.data-auto-id="{{ type }}-Title"></div>
+				<ng-container *ngTemplateOutlet="atxHover; context: {
+					title: celldata.title,
+					description: celldata.description,
+					item: celldata,
+					autoid: 'viewAllTable'
+				}">
+				</ng-container>
+			</div>
 		</div>
 	</div>
 	<div *ngIf="type==='SB' || type==='PG'">
