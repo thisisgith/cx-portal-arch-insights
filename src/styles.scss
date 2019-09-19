@@ -149,6 +149,111 @@
 	}
 }
 
+.cui button.cxp-button {
+	// default stylings
+	border-color: transparent;
+	color: #fff;
+	background-color: #00bceb;
+	font-weight: bold;
+
+	&:hover {
+		background-color: #227bb1;
+		border-color: transparent;
+		color: #fff;
+	}
+
+	&:active {
+		background-color: #176899;
+		color: #fff;
+		border-color: transparent;
+	}
+
+	&:focus {
+		box-shadow: 0 0 0 3px #d6eaee;
+		background-color: #176899;
+		border-color: transparent;
+		color: #fff;
+	}
+
+	&.disabled {
+		opacity: 0.3;
+		border-color: transparent;
+		color: #fff;
+		background-color: #00bceb;
+	}
+
+	// "primary" styling
+	&--primary {
+		border-color: #95d1d6;
+		font-size: 13px;
+		font-weight: normal;
+		color: #5d656d;
+		background-color: transparent;
+		box-shadow: unset;
+
+		&:hover {
+			background-color: #cdeaec;
+			color: #394454;
+			border-color: transparent;
+		}
+
+		&:active {
+			background-color: #a6dee3;
+			color: #394454;
+			border-color: transparent;
+		}
+
+		&:focus {
+			border: 3px solid #e6f4f7;
+			background-color: #cdeaec;
+			color: #176899;
+		}
+
+		&.disabled {
+			background-color: #eff0f4;
+			color: #bdc5cf;
+			border-color: transparent;
+			opacity: 1;
+		}
+	}
+
+	// "secondary" styling
+	&--secondary {
+		border-color: #00bceb;
+		font-size: 13px;
+		background-color: transparent;
+		font-weight: normal;
+		box-shadow: unset;
+		color: #00bceb;
+
+		&:hover {
+			background-color: transparent;
+			color: #227bb1;
+			border-color: #227bb1;
+		}
+
+		&:active {
+			background-color: transparent;
+			color: #176899;
+			border-color: #176899;
+		}
+
+		&:focus {
+			border: 3px solid #d6eaee;
+			background-color: transparent;
+			color: #176899;
+			border-color: #176899;
+		}
+
+		&.disabled {
+			opacity: 0.3;
+			border-color: #00bceb;
+			color: #00bceb;
+			background-color: #fff;
+		}
+	}
+}
+
 // CiscoUI Pager styling override
 .cui .pagination > li {
 	> a {
