@@ -324,7 +324,7 @@ const mockData: IEHealthStatusResponseModel = {
 		},
 	],
 	ie_version: '0.9.1',
-	ieStatus: 'active',
+	ieStatus: 'Running',
 	remote_id: 'c1678010-759e-478f-bd47-d0ef8c53c9b8',
 	system_details: {
 		hardware_details: {
