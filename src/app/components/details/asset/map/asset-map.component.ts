@@ -14,6 +14,9 @@ import {
 } from '@sdp-api';
 
 import * as _ from 'lodash-es';
+import { takeUntil, catchError, map } from 'rxjs/operators';
+import { Subject, of } from 'rxjs';
+import { LogService } from '@cisco-ngx/cui-services';
 
 /**
  * Displays a map with a single device icon
@@ -36,14 +39,25 @@ export class AssetMapComponent implements OnInit {
 	public center: LngLatLike;
 	public marker: GeoCodeFeature;
 	public loading: boolean;
-
-	constructor (private geoCodeService: GeoCodeService) { }
+	public destroy$ = new Subject();
+	constructor (
+		private geoCodeService: GeoCodeService,
+		private logger: LogService,
+	) { }
 
 	/**
 	 * Initializes map
 	 */
 	public ngOnInit () {
 		this.updateCenter();
+	}
+
+	/**
+	 * Destroys component
+	 */
+	public ngOnDestroy () {
+		this.destroy$.next();
+		this.destroy$.complete();
 	}
 
 	/**
@@ -85,18 +99,26 @@ export class AssetMapComponent implements OnInit {
 				// country: installCountry,
 				limit: 1,
 			})
-				.subscribe(data => {
-					this.loading = false;
-					if (data.features && data.features.length) {
-						this.marker = data.features[0];
-						this.center = data.features[0].center;
-						this.zoom = [11];
-					} else {
-						this.clearMap();
-					}
-				}, () => {
-					this.clearMap();
-				});
+				.pipe(
+					map(data => {
+						this.loading = false;
+						if (data.features && data.features.length) {
+							this.marker = data.features[0];
+							this.center = data.features[0].center;
+							this.zoom = [11];
+						} else {
+							this.clearMap();
+						}
+					}),
+					takeUntil(this.destroy$),
+					catchError(err => {
+						this.loading = false;
+						this.logger.error(`Create Asset Map :: Error ${err}`);
+
+						return of(null);
+					}),
+				)
+				.subscribe();
 		} else {
 			this.clearMap();
 		}
