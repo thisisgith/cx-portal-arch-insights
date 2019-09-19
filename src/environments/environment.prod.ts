@@ -53,6 +53,7 @@ export const environment = {
 			'management/network-automation-and-management/dna-center/1-4/user_guide/' +
 			'b_cisco_dna_center_ug_1_4/b_cisco_dna_center_ug_1_4_chapter_01001.html',
 	},
+	learningLink: 'https://digital-learning.cisco.com/cx#/',
 	logoutUrl: 'https://www.cisco.com/autho/logout.html',
 	mapboxToken:
 	'pk.eyJ1IjoibWlzY2htaTIiLCJhIjoiY2p4eDl2ODVnMGpmODNkcDhsbG5nNXQ0YyJ9.vpfGffFASSUfANAU4Yvtxg',
