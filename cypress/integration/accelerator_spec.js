@@ -1429,8 +1429,11 @@ describe('Accelerator (ACC)', () => { // PBC-32
 							});
 							break;
 						case 'recommended':
-							// For recommended, status column is blank, we have a Request button instead
+							// For recommended, status column is a -, and we have a Request button
 							cy.getByAutoId('Request1on1ACCButton').should('be.visible');
+							cy.getByAutoId('Table-Status-Default')
+								.should('be.visible')
+								.and('have.text', '-');
 							break;
 						case 'completed':
 							cy.getByAutoId('Table-Status-Completed').within(() => {
@@ -1441,9 +1444,11 @@ describe('Accelerator (ACC)', () => { // PBC-32
 						default:
 							Cypress.log({
 								name: 'LOG',
-								message: `UNRECOGNIZED ACC STATUS TYPE: ${item.type} ! TREATING AS RECOMMENDED...`,
+								message: `RECOMMENDED OR UNRECOGNIZED ACC STATUS TYPE: ${item.status} ! DEFAULTING TO -`,
 							});
-							cy.getByAutoId('Request1on1ACCButton').should('be.visible');
+							cy.getByAutoId('Table-Status-Default')
+								.should('be.visible')
+								.and('have.text', '-');
 					}
 				});
 			});
