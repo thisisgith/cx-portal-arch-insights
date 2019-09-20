@@ -132,7 +132,7 @@ $default-text-color: #394454;
 				&.active {
 					box-shadow: none !important;
 					color: #394454 !important;
-					background-color: #95d1d6 !important;
+					background-color: #a6dee3 !important;
 				}
 
 				&:focus,
@@ -140,6 +140,12 @@ $default-text-color: #394454;
 					color: #176899 !important;
 					background-color: #cdeaec !important;
 					box-shadow: inset 0 0 0 3px #e6f4f7 !important;
+				}
+
+				&.disabled {
+					box-shadow: none !important;
+					background-color: #eff0f4 !important;
+					color: #bdc5cf !important;
 				}
 			}
 
@@ -172,7 +178,7 @@ $default-text-color: #394454;
 			}
 
 			&:disabled,
-			&.disabled {
+			&.disabled:not(.btn--primary) {
 				opacity: 30% !important;
 			}
 
