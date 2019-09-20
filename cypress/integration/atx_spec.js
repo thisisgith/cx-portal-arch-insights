@@ -675,20 +675,14 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 									cy.get('span').should('have.class', 'icon-certified');
 								});
 							break;
-						case 'recommended':
-							// Recommended items have no status text according to mockups:
-							// https://cisco.invisionapp.com/d/main#/console/17190680/374150316/preview
-							Cypress.log({
-								name: 'LOG',
-								message: `IGNORING ATX STATUS TYPE: ${item.status}`,
-							});
-							break;
 						default:
 							Cypress.log({
 								name: 'LOG',
-								message: `UNRECOGNIZED ATX STATUS TYPE: ${item.status} ! TREATING AS COMPLETED...`,
+								message: `RECOMMENDED OR UNRECOGNIZED ATX STATUS TYPE: ${item.status} ! DEFAULTING TO -`,
 							});
-							cy.getByAutoId('Table-Status-Completed').should('be.visible');
+							cy.getByAutoId('Table-Status-Default')
+								.should('be.visible')
+								.and('have.text', '-');
 					}
 				});
 			});
