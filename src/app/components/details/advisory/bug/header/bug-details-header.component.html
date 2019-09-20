@@ -39,7 +39,7 @@
 
 <div class="row" *ngIf="details">
 	<div class="col-md-8">
-		<a class="btn btn--secondary btn--small"
+		<a class="btn btn--small btn--primary"
 			*ngIf="details?.advisory?.id"
 			href="{{ bugSearchToolURL }}{{ details.advisory.id }}"
 			target="_blank"
@@ -49,7 +49,7 @@
 		</a>
 	</div>
 	<div class="col-md-4 text-right">
-		<button class="text-capitalize btn btn--secondary btn--small"
+		<button class="text-capitalize btn btn--small btn--primary "
 			[innerText]="'_OpenCase_' | i18n"
 			data-auto-id="CriticalBugOpenCaseLink"
 			(click)="onOpenCase()">

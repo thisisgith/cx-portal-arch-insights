@@ -11,7 +11,8 @@
 			[asset]="asset"
 			[element]="element" 
 			[customerId]="customerId"
-			(alert)="handleAlert($event)">
+			(alert)="handleAlert($event)"
+			(scanStatus)="handleScanStatus($event)">
 		</asset-details-header>
 		<div detailsPanelTitle class="text-xlarge flex-center-vertical">
 			<span class="half-margin-right flex-center-vertical"

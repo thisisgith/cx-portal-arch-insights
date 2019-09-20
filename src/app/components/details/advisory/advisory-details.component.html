@@ -32,7 +32,7 @@
 			[customerId]="customerId"
 			(alert)="handleAlert($event)"
 			(details)="onDetailsLoad($event)"
-			(assets)="impactedAssets = $event.impacted">
+			(assets)="impactedAssets = $event.impacted.concat($event.potentiallyImpacted)">
 		</security-details>
 		<field-notice-details *ngIf="type === 'field'"
 			[id]="advisoryId"
@@ -40,7 +40,7 @@
 			[customerId]="customerId"
 			(alert)="handleAlert($event)"
 			(details)="onDetailsLoad($event)"
-			(assets)="impactedAssets = $event.impacted">
+			(assets)="impactedAssets = $event.impacted.concat($event.potentiallyImpacted)">
 		</field-notice-details>
 		<bug-details *ngIf="type === 'bug'"
 			[id]="advisoryId"
@@ -48,7 +48,7 @@
 			[customerId]="customerId"
 			(alert)="handleAlert($event)"
 			(details)="onDetailsLoad($event)"
-			(assets)="impactedAssets = $event.impacted">
+			(assets)="impactedAssets = $event.impacted.concat($event.potentiallyImpacted)">
 		</bug-details>
 	</ng-container>
 </details-panel>

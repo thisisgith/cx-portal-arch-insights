@@ -53,6 +53,7 @@ export class AssetDetailsHeaderComponent implements OnChanges, OnInit, OnDestroy
 	@Input('asset') public asset: Asset;
 	@Input('customerId') public customerId: string;
 	@Output('alert') public alertMessage = new EventEmitter<Alert>();
+	@Output('scanStatus') public scanStatus = new EventEmitter<TransactionStatusResponse>();
 
 	public openCases: any[];
 	private caseParams: CaseParams = new CaseParams({
@@ -135,29 +136,24 @@ export class AssetDetailsHeaderComponent implements OnChanges, OnInit, OnDestroy
 		.pipe(
 			takeUntil(this.destroyed$),
 			mergeMap((response: ScanRequestResponse) => {
-				const inProgress = _.find(response, { status: 'IN_PROGRESS' });
-				const received = _.find(response, { status: 'RECEIVED' });
+				const scan = _.head(response);
+				const status = _.get(scan, 'status', '');
+				const inProgress = (
+					status === 'IN_PROGRESS' ||
+					status === 'RECEIVED' ||
+					status === 'ACCEPTED');
 
-				if (inProgress && inProgress.transactionId) {
+				if (scan && scan.transactionId && inProgress) {
 					_.set(this.status, ['scan', 'inProgress'], true);
 
 					this.alertMessage.emit({
-						message: I18n.get('_ScanningCurrentlyInProgress_'), severity: 'info' });
-
-					return this.scanPolling({
-						customerId: this.customerId,
-						transactionId: inProgress.transactionId,
+						message: I18n.get('_ScanningCurrentlyInProgress_'),
+						severity: 'info',
 					});
-				}
-				if (received && received.transactionId) {
-					_.set(this.status, ['scan', 'inProgress'], true);
-
-					this.alertMessage.emit({
-						message: I18n.get('_ScanningCurrentlyInProgress_'), severity: 'info' });
 
 					return this.scanPolling({
 						customerId: this.customerId,
-						transactionId: received.transactionId,
+						transactionId: scan.transactionId,
 					});
 				}
 
@@ -237,13 +233,18 @@ export class AssetDetailsHeaderComponent implements OnChanges, OnInit, OnDestroy
 			delay(3000),
 			takeUntil(this.destroyed$),
 			mergeMap((response: TransactionStatusResponse) => {
-				if (response.status === 'SUCCESS') {
+				const status = _.get(response, 'status');
+
+				if (status && status === 'SUCCESS' || status === 'FAILURE') {
 					this.alertMessage.emit({
-						message: I18n.get('_ScanningHasCompleted_'),
-						severity: 'success',
+						message: status === 'SUCCESS' ?
+							I18n.get('_ScanningHasCompleted_') : I18n.get('_ScanningHasFailed_'),
+						severity: status === 'SUCCESS' ? 'success' : 'danger',
 					});
 
 					_.set(this.status, ['scan', 'inProgress'], false);
+
+					this.scanStatus.emit(response);
 
 					return of({ });
 				}

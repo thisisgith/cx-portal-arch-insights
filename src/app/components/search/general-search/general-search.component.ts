@@ -63,6 +63,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 	@Input('context') public context: SearchContext;
 	@Input('header') public header: string;
 	@Output('results') public results = new EventEmitter();
+	@Output('loadingChange') public loadingChange = new EventEmitter<boolean>();
 
 	/**
 	 * Search token to display above the results
@@ -132,6 +133,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 			tap(refreshType => {
 				if (refreshType === 'query' || refreshType === 'filters') {
 					this.loading = true;
+					this.loadingChange.emit(true);
 				} else {
 					this.loadingPage = true;
 				}
@@ -150,6 +152,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 		.subscribe(results => {
 			const [result, refreshType] = results;
 			this.loading = false;
+			this.loadingChange.emit(false);
 			this.loadingPage = false;
 			if (_.get(result, 'searchToken')) {
 				this.searchToken = result.searchToken;

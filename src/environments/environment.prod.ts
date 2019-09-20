@@ -35,7 +35,7 @@ export const environment = {
 	curatedCommunityUrl: 'https://community.cisco.com/t5',
 	DNACommunititesPath: 'cisco-digital-network',
 	emailToID: 'cx-portal-support@cisco.com',
-	feedbackToEmail: 'cx-portal-support@cisco.com',
+	feedbackToEmail: 'cxpm-feedback@cisco.com',
 	ieSetup: {
 		asdAuthURL: 'https://cway.cisco.com/ws/oauth/v3/token/cisco/ae95x38c7zgu5fas59gseyfk',
 		asdBaseURL: 'https://api.cisco.com/software/preview/v3.0',
@@ -53,6 +53,7 @@ export const environment = {
 			'management/network-automation-and-management/dna-center/1-4/user_guide/' +
 			'b_cisco_dna_center_ug_1_4/b_cisco_dna_center_ug_1_4_chapter_01001.html',
 	},
+	learningLink: 'https://digital-learning.cisco.com/cx#/',
 	logoutUrl: 'https://www.cisco.com/autho/logout.html',
 	mapboxToken:
 	'pk.eyJ1IjoibWlzY2htaTIiLCJhIjoiY2p4eDl2ODVnMGpmODNkcDhsbG5nNXQ0YyJ9.vpfGffFASSUfANAU4Yvtxg',

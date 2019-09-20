@@ -207,9 +207,15 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 			.pipe(
 				tap(response => {
 					this.metadataTransId = _.get(response, 'metadata_response.metadata_trans_id');
-					this.imageGuid = _.get(response, 'metadata_response.metadata_mdfid_list[0]' +
+					const images = _.get(response, 'metadata_response.metadata_mdfid_list[0]' +
 						'.software_response_list[0].platform_list[0]' +
-						'.release_list[0].image_details[0].image_guid');
+						'.release_list[0].image_details');
+					const nonDeletedImages = _.filter(images, { is_deleted: 'N' });
+					this.imageGuid = _.get(
+						nonDeletedImages,
+						// gets latest non-deleted image
+						`[${nonDeletedImages.length - 1}].image_guid`,
+					);
 				}),
 			);
 	}

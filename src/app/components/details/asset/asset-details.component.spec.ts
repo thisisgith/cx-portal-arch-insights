@@ -1,5 +1,5 @@
 import { configureTestSuite } from 'ng-bullet';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { AssetDetailsComponent } from './asset-details.component';
 import { AssetDetailsModule } from './asset-details.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -10,11 +10,14 @@ import {
 import { RouterTestingModule } from '@angular/router/testing';
 import { UserResolve } from '@utilities';
 import { of } from 'rxjs';
+import { DetailsPanelStackService } from '@services';
 
 describe('AssetDetailsComponent', () => {
 	let component: AssetDetailsComponent;
 	let fixture: ComponentFixture<AssetDetailsComponent>;
 	let userResolve: UserResolve;
+
+	let detailsPanelStackService: DetailsPanelStackService;
 
 	configureTestSuite(() => {
 		TestBed.configureTestingModule({
@@ -38,7 +41,7 @@ describe('AssetDetailsComponent', () => {
 		spyOn(userResolve, 'getCustomerId')
 			.and
 			.returnValue(of(user.info.customerId));
-
+		detailsPanelStackService = TestBed.get(DetailsPanelStackService);
 		fixture = TestBed.createComponent(AssetDetailsComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
@@ -49,7 +52,7 @@ describe('AssetDetailsComponent', () => {
 			.toBeTruthy();
 	});
 
-	it('should emit on panel close', done => {
+	it('should emit on panel close', fakeAsync(() => {
 		component.asset = MockAssetsData[0];
 
 		component.close
@@ -59,44 +62,35 @@ describe('AssetDetailsComponent', () => {
 
 			expect(component.asset)
 				.toBeNull();
-
-			done();
 		});
-
-		fixture.detectChanges();
 
 		expect(component.asset)
 			.toEqual(MockAssetsData[0]);
 
 		component.onPanelClose();
-	});
+		tick();
+	}));
 
 	it('should resolve a customerId', done => {
 		fixture.whenStable()
 		.then(() => {
 			expect(component.customerId)
 				.toEqual(user.info.customerId);
-
 			done();
 		});
 	});
 
-	it('should handle on panel hidden', done => {
-		fixture.whenStable()
-		.then(() => {
-			const panelCloseSpy = spyOn(component, 'onPanelClose');
+	it('should handle on panel hidden', () => {
+		const panelCloseSpy = spyOn(component, 'onAllPanelsClose');
 
-			component.handleHidden(false);
-			expect(panelCloseSpy)
-				.not
-				.toHaveBeenCalled();
+		component.handleHidden(false);
+		expect(panelCloseSpy)
+			.not
+			.toHaveBeenCalled();
 
-			component.handleHidden(true);
-			expect(panelCloseSpy)
-				.toHaveBeenCalled();
-
-			done();
-		});
+		component.handleHidden(true);
+		expect(panelCloseSpy)
+			.toHaveBeenCalled();
 	});
 
 	it('should change assets', done => {
@@ -110,8 +104,6 @@ describe('AssetDetailsComponent', () => {
 				previousValue: null,
 			},
 		});
-
-		fixture.detectChanges();
 
 		expect(component.asset.deviceName)
 			.toEqual(MockAssetsData[0].deviceName);
@@ -131,8 +123,25 @@ describe('AssetDetailsComponent', () => {
 		.then(() => {
 			expect(component.asset.deviceName)
 				.toEqual(MockAssetsData[1].deviceName);
-
 			done();
 		});
+	});
+
+	it('should pop panel on back', () => {
+		spyOn(detailsPanelStackService, 'pop');
+
+		component.onPanelBack();
+
+		expect(detailsPanelStackService.pop)
+			.toHaveBeenCalled();
+	});
+
+	it('should reset stack service', () => {
+		spyOn(detailsPanelStackService, 'reset');
+
+		component.onAllPanelsClose();
+
+		expect(detailsPanelStackService.reset)
+			.toHaveBeenCalled();
 	});
 });

@@ -29,7 +29,7 @@ export const environment = {
 		maxCasesPerRequest: 1000,
 	},
 	emailToID: 'cx-portal-support@cisco.com',
-	feedbackToEmail: 'cx-portal-support@cisco.com',
+	feedbackToEmail: 'cxpm-feedback@cisco.com',
 	mapboxToken:
 	'pk.eyJ1IjoibWlzY2htaTIiLCJhIjoiY2p4eDl2ODVnMGpmODNkcDhsbG5nNXQ0YyJ9.vpfGffFASSUfANAU4Yvtxg',
 	mock: [],
