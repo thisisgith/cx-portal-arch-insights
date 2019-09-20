@@ -83,6 +83,7 @@ unit:
   allow_failure: true
   before_script:
     - npm run start:background
+    - cp "cypress/patches/verify.js" "node_modules/cypress/lib/tasks"
   script:
     - npm run test:automation -- --spec "cypress/integration/$CI_BUILD_NAME.js"
 
