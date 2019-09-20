@@ -1611,6 +1611,7 @@ export class LifecycleComponent implements OnDestroy {
 	private loadMoreProductGuides () {
 		const curCount: number = _.get(this.componentData.productGuides, ['items'], []).length;
 		const totalCount: number = _.get(this.componentData.productGuides, ['totalCount'], 0);
+		const incPage = this.componentData.productGuides.currentPage + 1;
 
 		if ((totalCount - curCount) > 0) {
 			this.status.loading.productGuides.more = true;
@@ -1622,7 +1623,7 @@ export class LifecycleComponent implements OnDestroy {
 				['customerId', 'solution', 'usecase']);
 			const pgParams = {
 				fields: this.selectedFilterForPG,
-				page: this.componentData.productGuides.currentPage + 1,
+				page: incPage,
 				rows: this.componentData.productGuides.rows,
 				sortField: this.componentData.productGuides.sortField,
 				sortOrder: this.componentData.productGuides.sortDirection,
@@ -1644,6 +1645,9 @@ export class LifecycleComponent implements OnDestroy {
 					if (window.Cypress) {
 						window.productGuidesLoading = false;
 					}
+
+					// If successful, increase stored page.
+					this.componentData.productGuides.currentPage = incPage;
 
 					return result;
 				}),
