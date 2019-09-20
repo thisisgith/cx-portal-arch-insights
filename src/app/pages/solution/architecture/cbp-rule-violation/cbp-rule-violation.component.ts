@@ -84,7 +84,7 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 				this.paramsType.severity = '';
 			}
 			if (isClearAllSelected) {
-				this.paramsType.searchText = this.searchText;
+				this.paramsType.searchText = '';
 				this.searchText = '';
 			}
 			this.isLoading = true;
