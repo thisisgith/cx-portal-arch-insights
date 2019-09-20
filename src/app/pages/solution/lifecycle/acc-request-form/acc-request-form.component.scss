@@ -14,14 +14,91 @@
 	z-index: 999998;
 }
 
-:host ::ng-deep .modal__content {
-	left: 15% !important;
+:host .modal-container .modal__dialog ::ng-deep .modal__content {
+	left: 15%;
 	height: 95% !important;
-	overflow-y: auto !important;
-	overflow-x: hidden !important;
-	display: flex !important;
-	flex-direction: column !important;
+	overflow-y: auto;
+	overflow-x: hidden;
+	display: flex;
+	flex-direction: column;
 	position: fixed !important;
 	width: 70% !important;
 	background-color: white !important;
+	padding: 0;
+	padding-left: 62px;
+	padding-top: 46px;
+}
+
+.request-modal {
+	&__title {
+		font-size: 32px;
+		line-height: 32px;
+		letter-spacing: 0.3px;
+		font-weight: 300;
+	}
+
+	&__acc-title {
+		font-size: 18px;
+		line-height: 21px;
+		margin-top: 28px;
+		margin-bottom: 24px;
+	}
+
+	&__details {
+		border-right: 1px solid #e0e2e4;
+		padding-top: 32px;
+
+		&__heading {
+			font-size: 11px;
+			letter-spacing: -0.02px;
+			line-height: 12px;
+			color: #6c757d;
+			margin-bottom: 4px;
+		}
+
+		&__xl-padding-top {
+			padding-top: 64px;
+		}
+	}
+
+	&__form-container {
+		padding: 32px 72px 65px 34px;
+
+		.form-margin-bottom {
+			margin-top: 0;
+			margin-bottom: 32px;
+		}
+
+		.form-margin-top {
+			margin-top: 32px;
+		}
+
+		.form-group__text {
+			input,
+			&.select select,
+			textarea {
+				border: none;
+				border-bottom: 1px solid #aeb8c1;
+				background: #f4f6f8;
+				color: #5d656c;
+				padding-left: 14px;
+
+				&:focus {
+					box-shadow: unset;
+				}
+			}
+
+			&.select::after {
+				color: #323c47;
+			}
+		}
+
+		.form-label {
+			font-size: 13px;
+			// font-weight: 500; no 500 weight, 600 too thick, 400 too thin
+			line-height: 13px;
+			color: #394454;
+			margin-bottom: 5px;
+		}
+	}
 }
