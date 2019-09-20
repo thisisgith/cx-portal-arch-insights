@@ -14,7 +14,7 @@
 				</a>
 				<a *ngIf="searchBreakpointShow(1023)" class="cx-header-links cx-header-links--learning" [href]="learningLink" target="_blank" data-auto-id="HeaderLearningLink" [title]="'_Learning_' | i18n">
 					<div class="text-nowrap">
-						<span class="cx-header-icon--small icon-learning hidden-xs"></span>
+						<span class="cx-header-icon cx-header-icon--small icon-learning hidden-xs"></span>
 						<span class="cx-header-label hidden-sm hidden-xs" [innerText]="'_Learning_' | i18n"></span>
 					</div>
 				</a>
@@ -81,7 +81,8 @@
 			<span class="v-separator hidden-md hidden-sm hidden-xs"></span>
 			<span class="cx-header-links cx-header-links--settings hidden-md hidden-sm hidden-xs">
 				<div data-auto-id="Admin" [title]="'_Admin_' | i18n" [routerLink]="['admin']">
-					<span class="cx-header-icon text-xlarge icon-cog "></span>
+					<span inlineSVG="/assets/icons/icon-settings.svg"
+						class="cx-header-icon text-xlarge flex-center no-margin"></span>
 				</div>
 			</span>
 			<span #portalHelp class="cx-header-links cx-header-links--portal-help hidden-md hidden-sm hidden-xs" [ngClass]="{ 'cx-header-links--active': portalHelp.active }" (click)="toggleDropdown(portalHelpDropdown, portalHelp)" [title]="'_PortalHelp_' | i18n" data-auto-id="HeaderPortalHelpButton">

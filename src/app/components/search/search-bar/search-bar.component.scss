@@ -51,7 +51,7 @@ a {
 
 	&:hover,
 	&:focus {
-		border: 1px solid $vibrant-blue;
+		border: 1px solid $cisco-blue;
 		padding-left: 32px;
 	}
 }
@@ -59,7 +59,7 @@ a {
 .icon-search {
 	color: $icon-light-gray;
 
-	&:before {
+	&::before {
 		content: url('/assets/icons/icon-search1.svg');
 		height: 20px;
 		width: 20px;
