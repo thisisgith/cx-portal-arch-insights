@@ -816,10 +816,6 @@ tr.td-row td {
 	flex-grow: 1;
 	font-size: 14px;
 
-	&:hover {
-		color: $text-default-color;
-	}
-
 	&--complete {
 		color: $text-default-color;
 	}
@@ -839,7 +835,7 @@ tr.td-row td {
 
 .actionname:hover:not(.selected) {
 	.actionname__text {
-		color: $accent-light-blue;
+		color: $accent-dark-blue;
 	}
 }
 

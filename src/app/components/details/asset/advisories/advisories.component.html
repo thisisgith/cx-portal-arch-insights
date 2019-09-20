@@ -45,10 +45,10 @@
 			</cui-table>
 		</div>
 		<div *ngIf="!moreLoading && pagination?.total > data?.length"
-				class="flex-center-horizontal base-margin-top"
-				data-auto-id="LoadMoreButton"
-				(click)="loadMore()">
-			<div class="btn btn--primary" [innerText]="'_ShowMore_' | i18n"></div>
+			class="flex-center-horizontal base-margin-top"
+			data-auto-id="LoadMoreButton"
+			(click)="loadMore()">
+			<a class="btn btn--primary" [innerText]="'_ShowMore_' | i18n"></a>
 		</div>
 		<div *ngIf="moreLoading">
 			<cui-loader></cui-loader>
