@@ -1282,8 +1282,8 @@ export class LifecycleComponent implements OnDestroy {
 	 public getATXMorePanel (atxMoreClick: HTMLElement) {
 		const _div = atxMoreClick;
 		if (this.atxMoreClicked && this.moreATXSelected && !this.atxScheduleCardOpened) {
-			_div.style.left = `${this.moreXCoordinates}px`;
-			_div.style.top = `${this.moreYCoordinates - _div.offsetHeight / 2}px`;
+			_div.style.left = `${this.moreXCoordinates + 30}px`;
+			_div.style.top = `${this.moreYCoordinates - _div.offsetHeight / 2 + 10}px`;
 		}
 	}
 
