@@ -57,7 +57,6 @@ export interface violationGridParams {
 export interface assetGridParams {
     criteria: string,
     customerId: string,
-    osType: string,
     pageLimit: number,
     pageNum: number,
     searchParam: string,

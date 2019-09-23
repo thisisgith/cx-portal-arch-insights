@@ -12,7 +12,7 @@
 					<div data-auto-id="assetViolationCount" class="col-md-12 panel flex-center flex-fill filter assets-count"
 						(click)="selectedView('asset')" [ngClass]="{'text-primary': isAssetView}">
 						<div class="flex-center dbl-padding-left dbl-padding-right font-size-32" [innerText]="assetsTotalCount | number"></div>
-						<div class="text-medium flex-center qtr-margin-top" [innerText]= "'_RccAssetWithViolations_' | i18n"></div>
+						<div class="text-medium flex-center qtr-margin-top" [innerText]= "'_RccSystemWithViolations_' | i18n"></div>
 					</div>
 				</div>
 			</div>
@@ -152,10 +152,6 @@
 		</pie-chart>
 	</ng-template>
 	<ng-template #severityFilter let-filter="filter">
-		<pie-chart [seriesData]="filter?.seriesData" (subfilter)="onSubfilterSelect($event, filter, true)">
-		</pie-chart>
-	</ng-template>
-	<ng-template #assetOsTypeFilter let-filter="filter">
 		<pie-chart [seriesData]="filter?.seriesData" (subfilter)="onSubfilterSelect($event, filter, true)">
 		</pie-chart>
 	</ng-template>
