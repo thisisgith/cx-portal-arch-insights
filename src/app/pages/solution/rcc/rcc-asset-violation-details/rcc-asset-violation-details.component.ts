@@ -304,13 +304,14 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 			bordered: false,
 			columns: [
 				{
-					key: 'message',
-					name: I18n.get('_RccAssetMessage_'),
+					key: 'severity',
+					name: I18n.get('_RccAssetSeverity_'),
 					sortable: false,
+					template: this.assetSeverityIconTemplate,
 				},
 				{
-					key: 'suggestedFix',
-					name: I18n.get('_RccAssetSuggestedFix_'),
+					key: 'message',
+					name: I18n.get('_RccAssetMessage_'),
 					sortable: false,
 				},
 				{
@@ -320,10 +321,9 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 					template: this.violationAgeTemplate,
 				},
 				{
-					key: 'severity',
-					name: I18n.get('_RccAssetSeverity_'),
+					key: 'suggestedFix',
+					name: I18n.get('_RccAssetSuggestedFix_'),
 					sortable: false,
-					template: this.assetSeverityIconTemplate,
 				},
 			],
 			dynamicData: false,
