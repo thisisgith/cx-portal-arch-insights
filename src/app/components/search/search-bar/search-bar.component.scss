@@ -24,7 +24,10 @@ a {
 }
 
 .dropdown__menu a {
+	height: unset;
 	overflow: visible;
+	white-space: pre-wrap;
+	word-wrap: break-word;
 }
 
 .dropdown {
