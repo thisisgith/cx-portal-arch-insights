@@ -650,7 +650,7 @@ export class RiskMitigationComponent {
 					key: 'resetReason',
 					name: I18n.get('_RMRessetReason_'),
 					sortable: false,
-					width: '250px',
+					width: '356px',
 					template: this.resetReasonTemplate,
 				},
 				{
