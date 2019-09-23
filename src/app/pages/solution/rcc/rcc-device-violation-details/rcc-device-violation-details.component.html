@@ -50,10 +50,10 @@
 			</cui-select>
 		</div>
 		<div class="col-4 half-padding-top half-padding-left">
-			<div [innerText]="'_RccProductModel_' | i18n"></div>
+			<div [innerText]="'_RccProductID_' | i18n"></div>
 			<cui-select data-auto-id="policyRuleSearch" 
 				[items]="policyRuleData?.deviceFilterDetails?.productModel"
-				placeholder="{{'_RccProductModelPlaceHolder_'| i18n }}" 
+				placeholder="{{'_RccProductIDPlaceHolder_'| i18n }}" 
 				[compressed]="true" 
 				[empty]="true"
 				[(ngModel)]="selectionObj.productModel" 
