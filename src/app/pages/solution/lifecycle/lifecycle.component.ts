@@ -1813,9 +1813,7 @@ export class LifecycleComponent implements OnDestroy {
 	 */
 	public getRacetrackInfo (stage: string) {
 		// If we currentWorkingPitstop has been populated, don't need to call APIs again
-		const currentPitstop: RacetrackPitstop  =
-			_.get(this.componentData, ['racetrack', 'pitstop']);
-		const name = currentPitstop ? currentPitstop.name : '';
+		const name = _.get(this.componentData, ['racetrack', 'pitstop', 'name']);
 		if (stage === name) {
 			return;
 		}
