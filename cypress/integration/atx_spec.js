@@ -675,20 +675,14 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 									cy.get('span').should('have.class', 'icon-certified');
 								});
 							break;
-						case 'recommended':
-							// Recommended items have no status text according to mockups:
-							// https://cisco.invisionapp.com/d/main#/console/17190680/374150316/preview
-							Cypress.log({
-								name: 'LOG',
-								message: `IGNORING ATX STATUS TYPE: ${item.status}`,
-							});
-							break;
 						default:
 							Cypress.log({
 								name: 'LOG',
-								message: `UNRECOGNIZED ATX STATUS TYPE: ${item.status} ! TREATING AS COMPLETED...`,
+								message: `RECOMMENDED OR UNRECOGNIZED ATX STATUS TYPE: ${item.status} ! DEFAULTING TO -`,
 							});
-							cy.getByAutoId('Table-Status-Completed').should('be.visible');
+							cy.getByAutoId('Table-Status-Default')
+								.should('be.visible')
+								.and('have.text', '-');
 					}
 				});
 			});
@@ -1920,6 +1914,50 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 
 			// Registration should close the View Sessions modal
 			cy.getByAutoId('atxScheduleCard').should('not.exist');
+		});
+	});
+
+	describe('PBC-869: ATX and ACC View All states', () => {
+		before(() => {
+			// Open the View All modal and switch to table view
+			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
+			cy.getByAutoId('atx-table-view-btn').click();
+		});
+
+		after(() => {
+			// Switch back to card view and close the View All modal
+			cy.getByAutoId('atx-card-view-btn').click();
+			cy.getByAutoId('ViewAllCloseModal').click();
+		});
+
+		it('ATX View All table view rows should have hover modals', () => {
+			atxItems.forEach((item, index) => {
+				cy.get('tr')
+					.eq(index + 1)
+					.within(() => {
+						cy.getByAutoId('viewAllTable-HoverModal').within(() => {
+							cy.getByAutoId('viewAllTable-HoverModal-Title')
+								.should('have.text', item.title)
+								.and('have.class', 'title-line-clamp');
+							// If the description contains \n, those get converted to <br>, which breaks text
+							// matching. Thus, split the string on \n, and verify each section exists
+							const splitDescription = item.description.split('\n');
+							splitDescription.forEach(substring => {
+								cy.getByAutoId('viewAllTable-HoverModal-Description')
+									.should('contain', substring)
+									.and('have.class', 'line-clamp');
+							});
+							// Handle bookmark
+							if (item.bookmark) {
+								cy.getByAutoId('viewAllTable-HoverModal-BookmarkRibbon')
+									.should('have.class', 'ribbon__blue');
+							} else {
+								cy.getByAutoId('viewAllTable-HoverModal-BookmarkRibbon')
+									.should('have.class', 'ribbon__white');
+							}
+						});
+					});
+			});
 		});
 	});
 });

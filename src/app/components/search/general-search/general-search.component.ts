@@ -56,6 +56,7 @@ interface RelatedResult {
  */
 @Component({
 	selector: 'app-general-search',
+	styleUrls: ['./general-search.component.scss'],
 	templateUrl: './general-search.component.html',
 })
 export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
@@ -312,7 +313,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 				const results: RelatedResult[] = [];
 				const atx = <AtxFuture>
 					(_.get(result, ['atx-future', 'documents', 0, 'search', 0]));
-				if (atx) {
+				if (atx && atx['Session Name']) {
 					results.push({
 						description: atx['Session Description'],
 						title: atx['Session Name'],
@@ -322,7 +323,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 				}
 				const acc = <Acc>
 					(_.get(result, ['acc', 'documents', 0, 'search', 0]));
-				if (acc) {
+				if (acc && acc.Title) {
 					results.push({
 						description: acc['Short Description'],
 						title: acc.Title,
@@ -332,7 +333,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 				}
 				const learning = <ELearning>
 					(_.get(result, ['elearning', 'documents', 0, 'search', 0]));
-				if (learning) {
+				if (learning && learning.title) {
 					results.push({
 						description: learning.description,
 						title: learning.title,
@@ -342,7 +343,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 				}
 				const community = <SearchCommunity>
 					(_.get(result, ['communitySearch', 'documents', 0]));
-				if (community) {
+				if (community && community.fields.title[0]) {
 					results.push({
 						description: community.fields.teaser[0],
 						title: community.fields.title[0],

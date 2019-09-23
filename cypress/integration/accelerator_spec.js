@@ -1429,8 +1429,11 @@ describe('Accelerator (ACC)', () => { // PBC-32
 							});
 							break;
 						case 'recommended':
-							// For recommended, status column is blank, we have a Request button instead
+							// For recommended, status column is a -, and we have a Request button
 							cy.getByAutoId('Request1on1ACCButton').should('be.visible');
+							cy.getByAutoId('Table-Status-Default')
+								.should('be.visible')
+								.and('have.text', '-');
 							break;
 						case 'completed':
 							cy.getByAutoId('Table-Status-Completed').within(() => {
@@ -1441,9 +1444,11 @@ describe('Accelerator (ACC)', () => { // PBC-32
 						default:
 							Cypress.log({
 								name: 'LOG',
-								message: `UNRECOGNIZED ACC STATUS TYPE: ${item.type} ! TREATING AS RECOMMENDED...`,
+								message: `RECOMMENDED OR UNRECOGNIZED ACC STATUS TYPE: ${item.status} ! DEFAULTING TO -`,
 							});
-							cy.getByAutoId('Request1on1ACCButton').should('be.visible');
+							cy.getByAutoId('Table-Status-Default')
+								.should('be.visible')
+								.and('have.text', '-');
 					}
 				});
 			});
@@ -2439,6 +2444,50 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			cy.getByAutoId('Request1on1ACCButton')
 				.first()
 				.should('have.class', 'disabled');
+		});
+	});
+
+	describe('PBC-869: ATX and ACC View All states', () => {
+		before(() => {
+			// Open the View All modal and switch to table view
+			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
+			cy.getByAutoId('acc-table-view-btn').click();
+		});
+
+		after(() => {
+			// Switch back to card view and close the View All modal
+			cy.getByAutoId('acc-card-view-btn').click();
+			cy.getByAutoId('ViewAllCloseModal').click();
+		});
+
+		it('ACC View All table view rows should have hover modals', () => {
+			accItems.forEach((item, index) => {
+				cy.get('tr')
+					.eq(index + 1)
+					.within(() => {
+						cy.getByAutoId('viewAllTable-HoverModal').within(() => {
+							cy.getByAutoId('viewAllTable-HoverModal-Title')
+								.should('have.text', item.title)
+								.and('have.class', 'title-line-clamp');
+							// If the description contains \n, those get converted to <br>, which breaks text
+							// matching. Thus, split the string on \n, and verify each section exists
+							const splitDescription = item.description.split('\n');
+							splitDescription.forEach(substring => {
+								cy.getByAutoId('viewAllTable-HoverModal-Description')
+									.should('contain', substring)
+									.and('have.class', 'line-clamp');
+							});
+							// Handle bookmark
+							if (item.bookmark) {
+								cy.getByAutoId('viewAllTable-HoverModal-BookmarkRibbon')
+									.should('have.class', 'ribbon__blue');
+							} else {
+								cy.getByAutoId('viewAllTable-HoverModal-BookmarkRibbon')
+									.should('have.class', 'ribbon__white');
+							}
+						});
+					});
+			});
 		});
 	});
 });
