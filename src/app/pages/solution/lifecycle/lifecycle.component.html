@@ -570,7 +570,8 @@
 			*ngIf="data">
 			<a class="no-link show"
 				(click)="crossLaunch(link)"
-				attr.data-auto-id="{{ title }}-ViewAll">
+				attr.data-auto-id="{{ title }}-ViewAll"
+				attr.data-auto-href="{{ link }}">
 				<span class="text-med" [innerText]="'_ViewAll_' | i18n"></span>
 				<span class="icon-play"></span>
 			</a>
@@ -581,7 +582,7 @@
 			<div id="recommended-elearning-item" class=" panel small-panel" attr.data-auto-id="{{ title }}-Item">
 				<div class="row">
 					<div class="col-md-11">
-						<a class="no-link" (click)="crossLaunch(item.url)" attr.data-auto-id="{{ title }} -item.title">
+						<a class="no-link" (click)="crossLaunch(item.url)" attr.data-auto-id="{{ title }} -item.title" attr.data-auto-href="{{ item.url }}">
 							<span [innerText]="item.title"></span>
 						</a>
 					</div>
@@ -605,7 +606,7 @@
 <ng-template #successBlock let-title="title" let-data="data">
 	<div>
 		<div id="successbytes-item" class="cx-lifecycle-card--link panel small-panel" data-auto-id="successbytes-item" *ngFor="let item of data | slice:0:3">
-			<a class="toggle" (click)="crossLaunch(item.url)" [innerText]="item.title" attr.data-auto-id="{{ title }} -item.title"></a>
+			<a class="toggle" (click)="crossLaunch(item.url)" [innerText]="item.title" attr.data-auto-id="{{ title }} -item.title" attr.data-auto-href="{{ item.url }}"></a>
 			<ng-container *ngTemplateOutlet="successBytesHoverBlock; context: {
 				item: item,
 				autoid: 'successbytes'
