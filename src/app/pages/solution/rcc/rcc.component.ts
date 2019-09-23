@@ -239,7 +239,7 @@ export class RccComponent implements OnInit, OnDestroy {
 				},
 				{
 					key: 'violationcount',
-					name: I18n.get('_RccViolations_'),
+					name: I18n.get('_RccAssetViolations_'),
 					sortable: true,
 				},
 				{
