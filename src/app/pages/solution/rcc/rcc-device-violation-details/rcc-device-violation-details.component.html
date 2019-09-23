@@ -26,7 +26,7 @@
 		<div class="col-12 base-margin-bottom">
 			<div data-auto-id="" class="dbl-margin-right">
 				<div class="text-large text-uppercase"
-				[innerText]="'_RccImpactedDevices_' | i18n:impactedAssetsCount || ('_NA_' | i18n)">
+				[innerText]="'_RccSystemsAffected_' | i18n:impactedAssetsCount || ('_NA_' | i18n)">
 			</div>
 			</div>
 		</div>
@@ -57,19 +57,6 @@
 				[compressed]="true" 
 				[empty]="true"
 				[(ngModel)]="selectionObj.productModel" 
-				(ngModelChange)="onSelection()" 
-				optionsKey="name"
-				optionsValue="name">
-			</cui-select>
-		</div>
-		<div class="col-4 half-padding-top half-padding-left">
-			<div [innerText]="'_RccOSName_' | i18n"></div>
-			<cui-select data-auto-id="policyRule" 
-				[items]="policyRuleData?.deviceFilterDetails?.osName"
-				placeholder="{{'_RccOSNamePlaceHolder_'| i18n }}" 
-				[compressed]="true" 
-				[empty]="true"
-				[(ngModel)]="selectionObj.osName" 
 				(ngModelChange)="onSelection()" 
 				optionsKey="name"
 				optionsValue="name">

@@ -64,7 +64,6 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 	public errorResult = false;
 	public alert: any = { };
 	public selectionObj = {
-		osName : '',
 		productFamily : '',
 		productModel : '',
 	};
@@ -88,7 +87,6 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 		this.policyRuleData.policy = { };
 		this.policyRuleData.rule = { };
 		this.policyRuleData.deviceFilterDetails = {
-			osName: [],
 			productFamily: [],
 			productModel: [],
 		};
@@ -105,7 +103,6 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 				severity: this.policyViolationInfo.ruleseverity,
 			};
 			this.selectionObj = {
-				osName : '',
 				productFamily : '',
 				productModel : '',
 			};
@@ -174,7 +171,6 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 		this.policyRuleData.policy = { };
 		this.policyRuleData.rule = { };
 		this.policyRuleData.deviceFilterDetails = {
-			osName: [],
 			productFamily: [],
 			productModel: [],
 		};
@@ -191,7 +187,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 			columns: [
 				{
 					key: 'hostName',
-					name: I18n.get('_Device_'),
+					name: I18n.get('_RccSystemName_'),
 					sortable: true,
 					template: this.deviceLinkTemplate,
 				},
@@ -207,17 +203,12 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 				},
 				{
 					key: 'productModel',
-					name: I18n.get('_ProductModel_'),
-					sortable: true,
-				},
-				{
-					key: 'osName',
-					name: I18n.get('_RccOSName_'),
+					name: I18n.get('_RccProductID_'),
 					sortable: true,
 				},
 				{
 					key: 'osVersion',
-					name: I18n.get('_OSVersion_'),
+					name: I18n.get('_RccRelease_'),
 					sortable: true,
 				},
 				{
