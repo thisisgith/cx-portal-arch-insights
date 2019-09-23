@@ -832,6 +832,7 @@ export class RiskMitigationComponent {
 	 */
 	public clearFilters () {
 		this.clearAllFilters = !this.clearAllFilters;
+		this.searchQueryInCrashGrid = '';
 		_.each(this.filters, (clearFilter: Filter) => {
 			_.each(clearFilter.seriesData, (currentFilter: { selected: boolean; }) => {
 				currentFilter.selected = false;
@@ -855,6 +856,7 @@ export class RiskMitigationComponent {
 	 */
 	public resetFilters () {
 		this.searchQueryInCrashGrid = '';
+		this.searchQueryInHighCrashGrid = '';
 		_.each(this.filters, (filter: Filter) => {
 			_.each(filter.seriesData, (currentFilter: { selected: boolean; }) => {
 				currentFilter.selected = false;
