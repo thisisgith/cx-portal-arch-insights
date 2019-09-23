@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { AdvisoryImpactedAssetsComponent } from './impacted-assets.component';
 import { InventoryModule, DiagnosticsModule } from '@sdp-api';
 import { environment } from '@environment';
-import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
+import { I18nPipeModule, TruncatePipeModule } from '@cisco-ngx/cui-pipes';
 import { CuiTableModule, CuiSpinnerModule } from '@cisco-ngx/cui-components';
 import { RouterModule } from '@angular/router';
 
@@ -28,6 +28,7 @@ const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 		DiagnosticsModule.forRoot({ rootUrl }),
 		I18nPipeModule,
 		RouterModule,
+		TruncatePipeModule,
 	],
 })
 export class AdvisoryImpactedAssetsModule { }

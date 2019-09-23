@@ -55,6 +55,7 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 		impacted: (Asset | NetworkElement)[];
 		potentiallyImpacted: (Asset | NetworkElement)[];
 	}>();
+	@ViewChild('ipAddressColumn', null) public ipAddressColumn: TemplateRef<{ }>;
 	@ViewChild('deviceColumn', null) public deviceColumn: TemplateRef<{ }>;
 	@ViewChild('versionColumn', null) public softwareVersionColumn: TemplateRef<{ }>;
 	@ViewChild('recommendedVersionColumn', null) public recommendedVersionColumn: TemplateRef<{ }>;
@@ -172,32 +173,29 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 					sortDirection: 'asc',
 					sorting: true,
 					template: this.deviceColumn,
-					width: '100px',
+					width: '300px',
 				},
 				{
 					key: 'ipAddress',
 					name: I18n.get('_IPAddress_'),
-					render: item => item.ipAddress ? item.ipAddress : I18n.get('_NA_'),
 					sortable: true,
-					width: '100px',
+					template: this.ipAddressColumn,
 				},
 				{
 					key: this.type === 'bug' ? 'softwareVersion' : 'swVersion',
 					name: I18n.get('_SoftwareVersion_'),
 					sortable: true,
 					template: this.softwareVersionColumn,
-					width: '100px',
 				},
 				{
 					name: I18n.get('_RecommendedSoftwareVersion_'),
 					sortable: false,
 					template: this.recommendedVersionColumn,
-					width: '125px',
 				},
 			],
 			padding: 'compressed',
 			striped: false,
-			wrapText: false,
+			wrapText: true,
 		});
 
 		if (this.type === 'bug' && this.id) {
