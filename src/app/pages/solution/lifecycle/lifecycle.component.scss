@@ -971,12 +971,10 @@ tr.td-row td {
 }
 
 .session-table {
-	overflow-y: scroll;
-	height: 147px;
 	display: block;
 	background-color: rgba(245, 246, 249, 0.33);
 	border: 1px solid #e1e1e1;
-	margin-right: 27px;
+	margin-right: 30px;
 	margin-top: 8px;
 	position: relative;
 
@@ -984,33 +982,72 @@ tr.td-row td {
 		margin-top: 0;
 		cursor: pointer;
 
-		tr {
-			height: 28px;
-			padding: 0;
+		thead {
+			display: block;
+
+			tr {
+				height: 28px;
+
+				td {
+					font-size: 11px;
+					color: #394454;
+					text-transform: uppercase;
+					padding: 4px 8px;
+				}
+			}
 
 			&::after {
-				display: none;
+				width: 100%;
+				left: 0;
 			}
 
-			&:hover {
-				background-color: #ecf4fc;
+			.table__head-spacer {
+				width: 172px;
 			}
+		}
 
-			td {
-				padding: 4px 8px;
-				width: auto;
-				text-align: left;
-			}
+		tbody {
+			overflow-y: scroll;
+			display: block;
+			height: 120px;
 
-			&.scheduled td {
-				font-weight: bold;
+			tr {
+				height: 28px;
+				padding: 0;
+				width: 100%;
 
-				&.icon {
-					color: $accent-light-blue;
-					padding-right: 0;
+				&::after {
+					display: none;
+				}
 
-					.icon-check {
-						margin-top: -4px;
+				&:hover {
+					background-color: #ecf4fc;
+				}
+
+				td {
+					color: #394454;
+					padding: 4px 8px;
+					width: auto;
+					text-align: left;
+					font-size: 13px;
+					line-height: 13px;
+					letter-spacing: -0.03px;
+					border: 0;
+
+					&:last-of-type {
+						width: 100%;
+					}
+				}
+
+				&.scheduled td {
+					font-weight: bold;
+
+					&.icon {
+						color: $accent-light-blue;
+
+						.icon-check {
+							margin-top: -4px;
+						}
 					}
 				}
 			}
@@ -1190,7 +1227,7 @@ tr.td-row td {
 }
 
 #viewAtxPanel {
-	padding: 25px 0 26px 27px;
+	padding: 25px 0 25px 30px;
 
 	&.panel--open,
 	&.cardpanel--open {
@@ -1219,11 +1256,11 @@ tr.td-row td {
 	.icon-close {
 		position: absolute;
 		top: -10px;
-		right: 28px;
+		right: 15px;
 
 		&::before {
-			font-size: 12px !important;
-			line-height: 12px !important;
+			font-size: 13px !important;
+			line-height: 13px !important;
 			color: #929bab;
 		}
 	}
@@ -1239,29 +1276,30 @@ tr.td-row td {
 		justify-content: space-between;
 		align-items: center;
 		flex-wrap: nowrap;
-		padding-right: 27px;
+		padding-right: 30px;
 
 		h6 {
 			color: #394454;
-			font-size: 14px;
+			font-size: 13px;
 			line-height: 16px;
+			font-weight: normal;
 		}
 
 		.icon-clock::before {
-			font-size: 14px !important;
+			font-size: 12px !important;
 			line-height: 14px !important;
 			color: #929bab;
-			margin-right: 4px;
 		}
 
 		.text-xsmall {
 			line-height: 14px !important;
 			color: #929bab;
+			margin-left: 4px;
 		}
 	}
 
 	.atx-scheduler__footer {
-		margin-top: 16px;
+		margin-top: 20px;
 
 		a:hover {
 			text-decoration: none;
