@@ -174,20 +174,20 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 					{
 						sortable: false,
 						template: this.currentTemplate,
-						width: '20%',
+						width: '12%',
 					},
 					{
 						name: I18n.get('_OsvVersion_'),
 						sortable: false,
 						template: this.versionTemplate,
-						width: '65%',
+						width: '70%',
 					},
 					{
 						key: 'postDate',
 						name: I18n.get('_OsvReleaseDate_'),
 						sortable: false,
 						template: this.releaseDateTemplate,
-						width: '15%',
+						width: '18%',
 					},
 				],
 				dynamicData: true,
