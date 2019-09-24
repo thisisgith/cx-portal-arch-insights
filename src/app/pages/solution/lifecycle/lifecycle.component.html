@@ -547,7 +547,7 @@
 			{ icon: 'clipboard-md',
 				title: '_ELearning_',
 				data: componentData.learning.elearning,
-				link: 'https://pilot-digital-learning.cisco.com/cx/#/?type=e-learning' }">
+				link: componentData.learning.elearningUrl }">
 		</ng-container>
 		<div class="divider"></div>
 	</div>
@@ -557,7 +557,7 @@
 			{ icon: 'certified',
 				title: '_Certifications_',
 				data: componentData.learning.certifications,
-				link: 'https://pilot-digital-learning.cisco.com/cx/#/?type=certification'} ">
+				link: componentData.learning.certificationsUrl } ">
 		</ng-container>
 	</div>
 </ng-template>
@@ -570,7 +570,8 @@
 			*ngIf="data">
 			<a class="no-link show"
 				(click)="crossLaunch(link)"
-				attr.data-auto-id="{{ title }}-ViewAll">
+				attr.data-auto-id="{{ title }}-ViewAll"
+				attr.data-auto-href="{{ link }}">
 				<span class="text-med" [innerText]="'_ViewAll_' | i18n"></span>
 				<span class="icon-play"></span>
 			</a>
@@ -581,7 +582,7 @@
 			<div id="recommended-elearning-item" class=" panel small-panel" attr.data-auto-id="{{ title }}-Item">
 				<div class="row">
 					<div class="col-md-11">
-						<a class="no-link" (click)="crossLaunch(item.url)" attr.data-auto-id="{{ title }} -item.title">
+						<a class="no-link" (click)="crossLaunch(item.url)" attr.data-auto-id="{{ title }} -item.title" attr.data-auto-href="{{ item.url }}">
 							<span [innerText]="item.title"></span>
 						</a>
 					</div>
@@ -605,7 +606,7 @@
 <ng-template #successBlock let-title="title" let-data="data">
 	<div>
 		<div id="successbytes-item" class="cx-lifecycle-card--link panel small-panel" data-auto-id="successbytes-item" *ngFor="let item of data | slice:0:3">
-			<a class="toggle" (click)="crossLaunch(item.url)" [innerText]="item.title" attr.data-auto-id="{{ title }} -item.title"></a>
+			<a class="toggle" (click)="crossLaunch(item.url)" [innerText]="item.title" attr.data-auto-id="{{ title }} -item.title" attr.data-auto-href="{{ item.url }}"></a>
 			<ng-container *ngTemplateOutlet="successBytesHoverBlock; context: {
 				item: item,
 				autoid: 'successbytes'
@@ -1244,27 +1245,32 @@
 </ng-template>
 
 <ng-template #statusTemplate let-celldata="celldata">
-	<div *ngIf="celldata.status ==='scheduled'" data-auto-id="Table-Status-Scheduled">
-		<div *ngFor="let session of celldata.sessions">
-			<div *ngIf="session.scheduled">
-				<span class="icon-calendar icon-small" data-auto-id="Table-Status-Scheduled-Icon"></span>
-				<span class="half-margin-left"
-					innerText="{{ session.sessionStartDate | date:'medium'}}" data-auto-id="scheduledDate"></span>
+	<ng-container [ngSwitch]="celldata.status">
+		<div *ngSwitchCase="'scheduled'" data-auto-id="Table-Status-Scheduled">
+			<div *ngFor="let session of celldata.sessions">
+				<div *ngIf="session.scheduled">
+					<span class="icon-calendar icon-small" data-auto-id="Table-Status-Scheduled-Icon"></span>
+					<span class="half-margin-left"
+						innerText="{{ session.sessionStartDate | date:'medium'}}" data-auto-id="scheduledDate"></span>
+				</div>
 			</div>
 		</div>
-	</div>
-	<div *ngIf="celldata.status === 'requested'" data-auto-id="Table-Status-Requested">
-		<span class="icon-check-outline icon-small"></span>
-		<span class="half-margin-left" [innerText]="'_Requested_' | i18n"></span>
-	</div>
-	<div *ngIf="celldata.status ==='in-progress'" data-auto-id="Table-Status-InProgress">
-		<span class="icon-clock icon-small"></span>
-		<span class="half-margin-left" [innerText]="'_InProgress_' | i18n"></span>
-	</div>
-	<div *ngIf="celldata.status ==='completed'" data-auto-id="Table-Status-Completed">
-		<span class="icon-certified icon-small" data-auto-id="Table-Status-Completed-Icon"></span>
-		<span class="half-margin-left" [innerText]="'_Completed_' | i18n" data-auto-id="Table-Status-Completed-Text"></span>
-	</div>
+		<div *ngSwitchCase="'requested'" data-auto-id="Table-Status-Requested">
+			<span class="icon-check-outline icon-small"></span>
+			<span class="half-margin-left" [innerText]="'_Requested_' | i18n"></span>
+		</div>
+		<div *ngSwitchCase="'in-progress'" data-auto-id="Table-Status-InProgress">
+			<span class="icon-clock icon-small"></span>
+			<span class="half-margin-left" [innerText]="'_InProgress_' | i18n"></span>
+		</div>
+		<div *ngSwitchCase="'completed'" data-auto-id="Table-Status-Completed">
+			<span class="icon-certified icon-small" data-auto-id="Table-Status-Completed-Icon"></span>
+			<span class="half-margin-left" [innerText]="'_Completed_' | i18n" data-auto-id="Table-Status-Completed-Text"></span>
+		</div>
+		<div *ngSwitchDefault>
+			<span [innerText]="'-'" data-auto-id="Table-Status-Default"></span>
+		</div>
+	</ng-container>
 </ng-template>
 
 <ng-template #actionTemplate let-celldata="celldata" let-type="type">
@@ -1392,7 +1398,16 @@
 	<div class="row" *ngIf="type==='ATX' || type === 'ACC'">
 		<div class="col-md-12 flex">
 			<span *ngIf="celldata.status === 'recommended'" class="icon-flagged qtr-margin-right cx-text-light-gray"></span>
-			<div class="no-margin cx-text-default" [innerText]="celldata.title" attr.data-auto-id="{{ type }}-Title"></div>
+			<div id="viewAllTable-item" class="panel small-panel">
+				<div class="no-margin cx-text-default" [innerText]="celldata.title" attr.data-auto-id="{{ type }}-Title"></div>
+				<ng-container *ngTemplateOutlet="atxHover; context: {
+					title: celldata.title,
+					description: celldata.description,
+					item: celldata,
+					autoid: 'viewAllTable'
+				}">
+				</ng-container>
+			</div>
 		</div>
 	</div>
 	<div *ngIf="type==='SB' || type==='PG'">

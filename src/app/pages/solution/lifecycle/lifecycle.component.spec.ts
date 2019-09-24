@@ -368,7 +368,7 @@ describe('LifecycleComponent', () => {
 				.toBeUndefined();
 
 			expect(component.componentData.learning)
-				.toBeUndefined();
+				.toBeDefined();
 
 			expect(component.componentData.atx)
 				.toBeUndefined();
@@ -566,12 +566,15 @@ describe('LifecycleComponent', () => {
 
 			// Test crossLaunch()
 			spyOn(component, 'closeViewSessions');
+			spyOn(window, 'open');
 
 			component.crossLaunch(crossLaunchUrl);
 			fixture.detectChanges();
 
 			expect(component.closeViewSessions)
 				.toHaveBeenCalled();
+			expect(window.open)
+				.toHaveBeenCalledWith(crossLaunchUrl, '_blank');
 
 			// Test getAtxRegisterButton()
 			let data: AtxSchema;
@@ -1310,7 +1313,7 @@ describe('LifecycleComponent', () => {
 
 			// since suggestedAction does not change, so will not trigger ATX API call
 			expect(racetrackContentService.getRacetrackATX)
-				.toHaveBeenCalledTimes(2);
+				.toHaveBeenCalledTimes(1);
 		});
 
 		it('should call racetrackService API to update pitstopAction', () => {
@@ -1324,7 +1327,7 @@ describe('LifecycleComponent', () => {
 
 			// update Action response back with isAtxChanged as true, so need to call ATX API
 			expect(racetrackContentService.getRacetrackATX)
-				.toHaveBeenCalledTimes(3);
+				.toHaveBeenCalledTimes(2);
 
 		});
 
@@ -1355,7 +1358,7 @@ describe('LifecycleComponent', () => {
 
 			// ATX should be refreshed since isAtxChanged is true from updateAction
 			expect(racetrackContentService.getRacetrackATX)
-				.toHaveBeenCalledTimes(3);
+				.toHaveBeenCalledTimes(2);
 		});
 
 		it('should disable ATX Registration if not current or current+1 pitstop', () => {
@@ -1370,22 +1373,34 @@ describe('LifecycleComponent', () => {
 			component.getRacetrackInfo('Use');
 			component.recommendedAtxScheduleCardOpened = true;
 			fixture.detectChanges();
-			de = fixture.debugElement.query(By.css('#AtxScheduleCardRegisterButton'));
-			expect(de)
-				.toBeFalsy();
+
+			let data: AtxSchema;
+			data = { };
+			component.sessionSelected = { };
+			const button = component.getAtxRegisterButton(data);
+
+			// expect the button diabled
+			expect(button)
+				.toEqual('disabled');
 
 			// change pitstop to "implement" (current+1) and check if button is enabled
 			component.getRacetrackInfo('Implement');
 			component.recommendedAtxScheduleCardOpened = true;
+			fixture.detectChanges();
+			let data1: AtxSchema;
+			data1 = { };
 			component.sessionSelected = {
 				presenterName: 'John Doe',
 				registrationURL: 'https://www.cisco.com/register',
 				sessionStartDate: 1565127052000,
 			};
-			fixture.detectChanges();
-			de = fixture.debugElement.query(By.css('#AtxScheduleCardRegisterButton'));
-			expect(de)
-				.toBeTruthy();
+
+			const button1 = component.getAtxRegisterButton(data1);
+
+			// expect the button not diabled
+			expect(button1)
+				.not
+				.toEqual('disabled');
 
 			// change pitstop to "Onboard" (current) and check if button is enabled
 			racetrackATXSpy.and
@@ -1393,16 +1408,20 @@ describe('LifecycleComponent', () => {
 
 			component.getRacetrackInfo('Onboard');
 			component.recommendedAtxScheduleCardOpened = true;
+			fixture.detectChanges();
+			let data2: AtxSchema;
+			data2 = { };
 			component.sessionSelected = {
 				presenterName: 'John Doe',
 				registrationURL: 'https://www.cisco.com/register',
 				sessionStartDate: 1565127052000,
 			};
-			fixture.detectChanges();
-			de = fixture.debugElement.query(By.css('#AtxScheduleCardRegisterButton'));
-			expect(de)
-			 	.toBeTruthy();
 
+			const button2 = component.getAtxRegisterButton(data2);
+
+			expect(button2)
+				.not
+				.toEqual('disabled');
 		});
 	});
 
