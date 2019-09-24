@@ -247,6 +247,10 @@ export class LifecycleComponent implements OnDestroy {
 	public scheduledAtxMap = { };
 
 	public componentData: ComponentData = {
+		learning: {
+			certificationsUrl: `${environment.learningLink}?type=certification`,
+			elearningUrl: `${environment.learningLink}?type=e-learning`,
+		},
 		params: {
 			customerId: '',
 			pitstop: '',
@@ -254,10 +258,6 @@ export class LifecycleComponent implements OnDestroy {
 			solution: '',
 			suggestedAction: '',
 			usecase: '',
-		},
-		learning: {
-			certificationsUrl: `${environment.learningLink}?type=certification`,
-			elearningUrl: `${environment.learningLink}?type=e-learning`,
 		},
 	};
 
@@ -428,6 +428,10 @@ export class LifecycleComponent implements OnDestroy {
 	 */
 	private resetComponentData () {
 		this.componentData = {
+			learning: {
+				certificationsUrl: `${environment.learningLink}?type=certification`,
+				elearningUrl: `${environment.learningLink}?type=e-learning`,
+			},
 			params: {
 				customerId: this.customerId,
 				pitstop: '',
@@ -435,10 +439,6 @@ export class LifecycleComponent implements OnDestroy {
 				solution: '',
 				suggestedAction: '',
 				usecase: '',
-			},
-			learning: {
-				certificationsUrl: `${environment.learningLink}?type=certification`,
-				elearningUrl: `${environment.learningLink}?type=e-learning`,
 			},
 		};
 	}
@@ -1136,6 +1136,9 @@ export class LifecycleComponent implements OnDestroy {
 		}
 
 		this.status.loading.bookmark = true;
+		if (window.Cypress) {
+			window.elearningLoading = true;
+		}
 		bookmark = !_.get(item, 'bookmark');
 
 		switch (lifecycleCategory) {
@@ -1166,9 +1169,15 @@ export class LifecycleComponent implements OnDestroy {
 		.subscribe(() => {
 			item.bookmark = !item.bookmark;
 			this.status.loading.bookmark = false;
+			if (window.Cypress) {
+				window.elearningLoading = false;
+			}
 		},
 		err => {
 			this.status.loading.bookmark = false;
+			if (window.Cypress) {
+				window.elearningLoading = false;
+			}
 			this.logger.error(`lifecycle.component : updateBookmark() :: Error  : (${
 				err.status}) ${err.message}`);
 		});
@@ -1872,6 +1881,12 @@ export class LifecycleComponent implements OnDestroy {
 	 * Handler for component intialization
 	 */
 	public ngOnInit () {
+		if (window.Cypress) {
+			window.activeComponents = {
+				...window.activeComponents,
+				LifecycleComponent: this,
+			};
+		}
 		const appHeader = document.getElementsByTagName('app-header');
 		this.appHeaderHeight = _.get(appHeader, '[0].clientHeight', 0);
 	}

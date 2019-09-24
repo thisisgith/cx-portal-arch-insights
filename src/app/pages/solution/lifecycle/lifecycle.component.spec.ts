@@ -567,12 +567,15 @@ describe('LifecycleComponent', () => {
 
 			// Test crossLaunch()
 			spyOn(component, 'closeViewSessions');
+			spyOn(window, 'open');
 
 			component.crossLaunch(crossLaunchUrl);
 			fixture.detectChanges();
 
 			expect(component.closeViewSessions)
 				.toHaveBeenCalled();
+			expect(window.open)
+				.toHaveBeenCalledWith(crossLaunchUrl, '_blank');
 
 			// Test getAtxRegisterButton()
 			let data: AtxSchema;
