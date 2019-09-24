@@ -141,9 +141,10 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 					this.rccUtilService.getSelectableData(
 						policyRuleDetails.data.deviceFilterDetails);
 					this.policyRuleData = policyRuleDetails.data;
-					this.policyRuleData.policy.desc = policyRuleDetails.data.policy.desc
+					const policyDesc = _.get(policyRuleDetails, ['data', 'policy', 'desc'], '')
 						.replace(/\&gt;/g, '>')
 						.replace(/\&lt;/g, '<');
+					_.set(this.policyRuleData, ['policy', 'desc'], policyDesc);
 				}
 				if (violationDetails.data && _.size(violationDetails.data) > 0) {
 					violationDetails.data.impactedAssets.forEach(asset => {
