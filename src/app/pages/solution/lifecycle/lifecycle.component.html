@@ -1013,7 +1013,7 @@
 			[ngClass]="{ 'sortable': column.sortable }"
 			(click)="column.sortable ? onSort(column.sortKey, column.sortDirection, type) : null">
 			<span [innerText]="column.name"></span>
-			<span *ngIf="column.sortable" class="qtr-margin-left" [ngClass]="{
+			<span *ngIf="column.sortable && column.sorting" class="qtr-margin-left" [ngClass]="{
 							'icon-chevron-down': column.sortDirection === 'asc',
 							'icon-chevron-up': column.sortDirection === 'desc'
 						}">

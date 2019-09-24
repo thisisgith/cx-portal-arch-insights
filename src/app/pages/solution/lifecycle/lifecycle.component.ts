@@ -457,6 +457,7 @@ export class LifecycleComponent implements OnDestroy {
 					sortKey: 'bookmark',
 					template: this.bookmarkTemplate,
 					width: '130px',
+					sorting: false,
 				},
 				{
 					key: 'title',
@@ -467,6 +468,7 @@ export class LifecycleComponent implements OnDestroy {
 					template: this.titleTemplate,
 					value: 'title',
 					width: 'auto',
+					sorting: false,
 				},
 				{
 					key: 'archetype',
@@ -476,6 +478,7 @@ export class LifecycleComponent implements OnDestroy {
 					sortKey: 'archetype',
 					value: 'archetype',
 					width: '20%',
+					sorting: false,
 				},
 				{
 					name: I18n.get('_Format_'),
@@ -484,6 +487,7 @@ export class LifecycleComponent implements OnDestroy {
 					sortKey: 'type',
 					template: this.formatTemplate,
 					width: '20%',
+					sorting: false,
 				},
 				{
 					sortable: false,
@@ -508,6 +512,7 @@ export class LifecycleComponent implements OnDestroy {
 					sortKey: 'bookmark',
 					template: this.bookmarkTemplate,
 					width: '130px',
+					sorting: false,
 				},
 				{
 					key: 'title',
@@ -518,6 +523,7 @@ export class LifecycleComponent implements OnDestroy {
 					template: this.titleTemplate,
 					value: 'title',
 					width: 'auto',
+					sorting: false,
 				},
 				{
 					key: 'archetype',
@@ -527,6 +533,7 @@ export class LifecycleComponent implements OnDestroy {
 					sortKey: 'archetype',
 					value: 'archetype',
 					width: '20%',
+					sorting: false,
 				},
 				{
 					name: I18n.get('_Format_'),
@@ -535,6 +542,7 @@ export class LifecycleComponent implements OnDestroy {
 					sortKey: 'type',
 					template: this.formatTemplate,
 					width: '20%',
+					sorting: false,
 				},
 				{
 					sortable: false,
@@ -558,6 +566,7 @@ export class LifecycleComponent implements OnDestroy {
 					sortKey: 'bookmark',
 					template: this.bookmarkTemplate,
 					width: '160px',
+					sorting: false,
 				},
 				{
 					key: 'title',
@@ -567,6 +576,7 @@ export class LifecycleComponent implements OnDestroy {
 					sortKey: 'title',
 					template: this.titleTemplate,
 					width: 'auto',
+					sorting: false,
 				},
 				{
 					key: 'status',
@@ -576,6 +586,7 @@ export class LifecycleComponent implements OnDestroy {
 					sortKey: 'status',
 					template: this.statusTemplate,
 					width: 'auto',
+					sorting: false,
 				},
 				{
 					sortable: false,
@@ -599,6 +610,7 @@ export class LifecycleComponent implements OnDestroy {
 					sortKey: 'bookmark',
 					template: this.bookmarkTemplate,
 					width: '160px',
+					sorting: false,
 				},
 				{
 					key: 'title',
@@ -608,6 +620,7 @@ export class LifecycleComponent implements OnDestroy {
 					sortKey: 'title',
 					template: this.titleTemplate,
 					width: 'auto',
+					sorting: false,
 				},
 				{
 					key: 'status',
@@ -617,6 +630,7 @@ export class LifecycleComponent implements OnDestroy {
 					sortKey: 'status',
 					template: this.statusTemplate,
 					width: 'auto',
+					sorting: false,
 				},
 				{
 					sortable: false,
@@ -634,37 +648,39 @@ export class LifecycleComponent implements OnDestroy {
 	 * @param type lifecycle item type
 	 */
 	public onSort (key: string, sortDirection: string, type: string) {
+		const sortColumn = table => {
+			for (const col of table.columns) {
+				col.sorting = false;
+			}
+			const clickedColumn = _.find(table.columns, { sortKey: key  });
+			clickedColumn.sorting = true;
+			clickedColumn.sortDirection = _.find(table.columns, { sortKey: key })
+				.sortDirection === 'asc' ? 'desc' : 'asc';
+		};
+
 		if (type === 'SB') {
 			this.selectedSuccessPaths = _.orderBy(
 				this.selectedSuccessPaths, [key], [sortDirection]);
 
-			_.find(this.successBytesTable.columns, { sortKey: key }).sortDirection
-				= _.find(this.successBytesTable.columns, { sortKey: key }).sortDirection
-					=== 'asc' ? 'desc' : 'asc';
+			sortColumn(this.successBytesTable);
 		}
 		if (type === 'ATX') {
 			this.selectedATX = _.orderBy(
 				this.selectedATX, [key], [sortDirection]);
 
-			_.find(this.atxTable.columns, { sortKey: key }).sortDirection
-				= _.find(this.atxTable.columns, { sortKey: key }).sortDirection
-					=== 'asc' ? 'desc' : 'asc';
+			sortColumn(this.atxTable);
 		}
 		if (type === 'ACC') {
 			this.selectedACC = _.orderBy(
 				this.selectedACC, [key], [sortDirection]);
 
-			_.find(this.accTable.columns, { sortKey: key }).sortDirection
-				= _.find(this.accTable.columns, { sortKey: key }).sortDirection
-					=== 'asc' ? 'desc' : 'asc';
+			sortColumn(this.accTable);
 		}
 		if (type === 'PG') {
 			this.selectedProductGuides = _.orderBy(
 				this.selectedProductGuides, [key], [sortDirection]);
 
-			_.find(this.productGuidesTable.columns, { sortKey: key }).sortDirection
-				= _.find(this.productGuidesTable.columns, { sortKey: key }).sortDirection
-					=== 'asc' ? 'desc' : 'asc';
+			sortColumn(this.productGuidesTable);
 		}
 	}
 
