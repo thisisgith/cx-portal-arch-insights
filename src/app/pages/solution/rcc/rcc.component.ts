@@ -402,7 +402,7 @@ export class RccComponent implements OnInit, OnDestroy {
 			.subscribe(assetFilterData => {
 				this.assetFilterObj = assetFilterData;
 				const filterObjRes = assetFilterData.data;
-				const assetSeverityFilter = _.find(this.filters, { key: 'assetOsType' });
+				const assetSeverityFilter = _.find(this.filters, { key: 'assetSeverity' });
 				assetSeverityFilter.seriesData = filterObjRes.severityList;
 				this.loading = false;
 			},
