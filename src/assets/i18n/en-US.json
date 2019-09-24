@@ -823,6 +823,7 @@
 	"_RccConditionViolations_": "condition violations",
 	"_RccDay_": " Day",
 	"_RccDays_": " Days",
+	"_RccErrorAssetListMessage_": "All of your assets will be listed here",
 	"_RccErrorAssetMessage_": "No Assets",
 	"_RccErrorResults_": "Server is down, please try again.",
 	"_RccErrorViolationListMessage_": "All of your violations will be listed here",
