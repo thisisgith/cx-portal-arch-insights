@@ -1520,9 +1520,11 @@ polygon {
 
 .list-view table {
 	margin-top: unset;
+	cursor: default;
 }
 
 .bookmark-column .icon-bookmark {
 	font-size: 20px;
 	line-height: 20px;
+	cursor: pointer;
 }
