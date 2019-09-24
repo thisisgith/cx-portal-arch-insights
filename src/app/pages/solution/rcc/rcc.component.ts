@@ -552,7 +552,7 @@ export class RccComponent implements OnInit, OnDestroy {
 	 * @param filter gives page info
 	 * @param triggeredFromGraph gives page info
 	 */
-	public onSubfilterSelect (subfilter: string, filter: Filter, triggeredFromGraph) {
+	public onSubfilterSelect (subfilter: any, filter: Filter, triggeredFromGraph) {
 		this.errorPolicyView = false;
 		_.invoke(this.alert, 'hide');
 		const searchInput = this.searchInput.trim();
