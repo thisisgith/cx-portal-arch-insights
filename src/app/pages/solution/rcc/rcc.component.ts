@@ -403,9 +403,7 @@ export class RccComponent implements OnInit, OnDestroy {
 				this.assetFilterObj = assetFilterData;
 				const filterObjRes = assetFilterData.data;
 				const assetSeverityFilter = _.find(this.filters, { key: 'assetOsType' });
-				assetSeverityFilter.seriesData = filterObjRes.ostypeList;
-				const assetOsTypeFilter = _.find(this.filters, { key: 'assetSeverity' });
-				assetOsTypeFilter.seriesData = filterObjRes.severityList;
+				assetSeverityFilter.seriesData = filterObjRes.severityList;
 				this.loading = false;
 			},
 			error => {
@@ -523,14 +521,14 @@ export class RccComponent implements OnInit, OnDestroy {
 				loading: true,
 				seriesData: [],
 				template: this.policyFilterTemplate,
-				title: I18n.get('Policy Group'),
+				title: I18n.get('_RccRegulatoryType_'),
 			},
 			{
 				key: 'severity',
 				loading: true,
 				seriesData: [],
 				template: this.severityFilterTemplate,
-				title: I18n.get('Severity'),
+				title: I18n.get('_RccSeverity_'),
 			},
 		];
 	}
@@ -544,7 +542,7 @@ export class RccComponent implements OnInit, OnDestroy {
 				loading: true,
 				seriesData: [],
 				template: this.severityFilterTemplate,
-				title: I18n.get('Severity'),
+				title: I18n.get('_RccSeverity_'),
 			},
 		];
 	}
