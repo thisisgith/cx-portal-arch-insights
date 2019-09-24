@@ -99,5 +99,7 @@ communities_spec:
   <<: *cypress_spec
 insights_spec:
   <<: *cypress_spec
+learning_spec:
+  <<: *cypress_spec
 settings_spec:
   <<: *cypress_spec
