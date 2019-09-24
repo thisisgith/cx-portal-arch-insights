@@ -86,6 +86,7 @@ export class RccComponent implements OnInit, OnDestroy {
 	public policyGroup = null;
 	public searched: boolean;
 	public severity = null;
+	public assetOsType = null;
 	public assetSeverity = null;
 	public criteria = '';
 	public assetsTotalCount: number;
@@ -202,6 +203,7 @@ export class RccComponent implements OnInit, OnDestroy {
 		this.assetGridObj = {
 			criteria: this.criteria,
 			customerId: this.customerId,
+			osType: this.assetOsType,
 			pageLimit: this.paginationConfig.pageNum,
 			pageNum: this.paginationConfig.pageNum,
 			searchParam: this.searchInput,
@@ -400,8 +402,10 @@ export class RccComponent implements OnInit, OnDestroy {
 			.subscribe(assetFilterData => {
 				this.assetFilterObj = assetFilterData;
 				const filterObjRes = assetFilterData.data;
-				const assetSeverityFilter = _.find(this.filters, { key: 'assetSeverity' });
-				assetSeverityFilter.seriesData = filterObjRes.severityList;
+				const assetSeverityFilter = _.find(this.filters, { key: 'assetOsType' });
+				assetSeverityFilter.seriesData = filterObjRes.ostypeList;
+				const assetOsTypeFilter = _.find(this.filters, { key: 'assetSeverity' });
+				assetOsTypeFilter.seriesData = filterObjRes.severityList;
 				this.loading = false;
 			},
 			error => {
@@ -587,6 +591,7 @@ export class RccComponent implements OnInit, OnDestroy {
 		}
 		const policyGroupConst = 'policyGroup';
 		const severityConst = 'severity';
+		const assetOsTypeConst = 'assetOsType';
 		const assetSeverityConst = 'assetSeverity';
 		(filter.key === policyGroupConst || filter.key === severityConst)
 			? this.violationGridObj.search = searchInput
@@ -611,7 +616,13 @@ export class RccComponent implements OnInit, OnDestroy {
 				? this.violationGridObj.severity = this.severity
 				: this.violationGridObj.severity = null;
 			this.getRCCData(this.violationGridObj);
-		}  else if (filter.key === assetSeverityConst) {
+		} else if (filter.key === assetOsTypeConst) {
+			this.assetOsType = sub.filter;
+			(triggeredFromGraph)
+				? this.assetGridObj.osType = this.assetOsType
+				: this.assetGridObj.osType = null;
+			this.getRCCAssetData(this.assetGridObj);
+		} else if (filter.key === assetSeverityConst) {
 			this.severity = sub.filter;
 			(triggeredFromGraph)
 				? this.assetGridObj.severity = this.severity
@@ -678,6 +689,7 @@ export class RccComponent implements OnInit, OnDestroy {
 			this.policyViolationsTableOptions = this.getPolicyViolationsTableOptions();
 			this.getRCCData(this.violationGridObj);
 		} else {
+			this.assetGridObj.osType = null;
 			this.assetGridObj.severity = null;
 			this.assetGridObj.searchParam = null;
 			this.getRCCAssetData(this.assetGridObj);
