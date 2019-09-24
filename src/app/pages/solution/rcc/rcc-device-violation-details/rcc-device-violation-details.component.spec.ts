@@ -136,7 +136,6 @@ describe('RccDeviceViolationDetailsComponent', () => {
 
 	it('Should invoke getRccViolationDetailsData api ', fakeAsync(() => {
 		component.selectionObj = {
-			osName: 'IOS-XE',
 			productFamily: 'C2300',
 			productModel: 'WS-C2300',
 		};

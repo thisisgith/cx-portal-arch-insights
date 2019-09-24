@@ -71,7 +71,6 @@ describe('RccAssetViolationDetailsComponent', () => {
 			pageIndex: 0,
 			pageSize: 10,
 			policyGroupName: '',
-			policyName: '',
 			serialNumber: 'FCW2246E0PB',
 			severity: '',
 			sortBy: '',
@@ -93,7 +92,6 @@ describe('RccAssetViolationDetailsComponent', () => {
 			pageIndex: 0,
 			pageSize: 10,
 			policyGroupName: '',
-			policyName: '',
 			serialNumber: 'FCW2246E0PB',
 			severity: '',
 			sortBy: '',
@@ -110,34 +108,12 @@ describe('RccAssetViolationDetailsComponent', () => {
 					.toBeDefined();
 			});
 	});
-	it('should select value from policyname and load table data', () => {
-
-		component.assetRowParams = {
-			customerId: '7293498',
-			pageIndex: 0,
-			pageSize: 10,
-			policyGroupName: '',
-			policyName: 'HIPPA',
-			serialNumber: 'FCW2246E0PB',
-			severity: '',
-			sortBy: '',
-			sortOrder: '',
-		};
-		component.onPolicyNameSelection(component.assetRowParams);
-		spyOn(rccAssetDetailsService, 'getAssetSummaryData')
-			.and
-			.returnValue(of(RCCScenarios[1].scenarios.GET[0].response.body));
-		expect(component.rccAssetPolicyTableData)
-			.toBeDefined();
-	});
-
 	it('should select value from policy severity and load table data', () => {
 		component.assetRowParams = {
 			customerId: '7293498',
 			pageIndex: 0,
 			pageSize: 10,
 			policyGroupName: '',
-			policyName: '',
 			serialNumber: 'FCW2246E0PB',
 			severity: '',
 			sortBy: '',
@@ -189,7 +165,6 @@ describe('RccAssetViolationDetailsComponent', () => {
 			pageIndex: 0,
 			pageSize: 10,
 			policyGroupName: '',
-			policyName: '',
 			serialNumber: 'FCW2246E0PB',
 			severity: '',
 			sortBy: '',
@@ -232,7 +207,6 @@ describe('RccAssetViolationDetailsComponent', () => {
 			pageIndex: 0,
 			pageSize: 10,
 			policyGroupName: '',
-			policyName: '',
 			serialNumber: 'FCW2246E0PB',
 			severity: '',
 			sortBy: '',
