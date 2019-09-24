@@ -112,7 +112,7 @@ describe('AssetDetailsHeaderComponent', () => {
 			});
 	});
 
-	it('should have active class to cases dropddown if active', () => {
+	it('should have active class to cases dropdown if active', () => {
 		component.casesDropdownActive = true;
 		component.openCases = (<any> CaseScenarios[4].scenarios.GET[0].response.body).content;
 

@@ -11,9 +11,9 @@
 		[innerText]="header"
 		class="base-margin-top half-margin-bottom">
 	</h6>
-	<h5 data-auto-id="searchHeader" [innerText]="'_XResults_' | i18n:totalCount:searchToken"
+	<h6 data-auto-id="searchHeader" [innerText]="'_XResults_' | i18n:totalCount:searchToken"
 		class="base-margin-bottom">
-	</h5>
+	</h6>
 	<span data-auto-id="filterBy" [innerText]="'_FilterBy_' | i18n"></span>
 	<div class="row">
 		<div class="col-md-4">
@@ -86,20 +86,20 @@
 			[attr.data-auto-id]="'searchResultLink' + place + index"
 			target="_blank"
 			rel="noopener noreferrer">
-			<h5 [innerHTML]="result.title | keyHighlight"></h5>
+			<h6 [innerHTML]="result.title | keyHighlight"></h6>
 		</a>
 	</div>
 	<div>
 		<span [innerHTML]="result.description | truncate:false:300 | keyHighlight"></span>
 	</div>
-	<a class="text-dkgray-4"
+	<a class="resultUrl text-dkgray-4"
 		target="_blank"
 		rel="noopener noreferrer"
 		[href]="result.displayUrl"
 		[innerText]="result.displayUrl | truncate:false:100">
 	</a>
 	<div *ngIf="result.pdfUrl">
-		<a class="text-dkgray-4"
+		<a class="resultUrl text-dkgray-4"
 			target="_blank"
 			rel="noopener noreferrer"
 			[href]="result.pdfUrl">
@@ -124,7 +124,7 @@
 					[attr.data-auto-id]="'relatedResultLink' + item.type"
 					target="_blank"
 					rel="noopener noreferrer">
-					<h5 [innerHTML]="item.title | keyHighlight"></h5>
+					<h6 [innerHTML]="item.title | keyHighlight"></h6>
 				</a>
 			</div>
 			<span [innerHTML]="item.description | truncate:false:100 | keyHighlight"></span>

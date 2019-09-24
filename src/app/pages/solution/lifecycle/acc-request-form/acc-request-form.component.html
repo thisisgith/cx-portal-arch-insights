@@ -8,15 +8,15 @@
 </div>
 
 <ng-template #accRequestModal>
-	<div id="accRequestModal" class="modal__content no-padding" data-auto-id="accRequestModal">
-		<div class="modal__header acc__header half-padding-left half-padding-bottom no-margin-bottom">
-			<div class="row half-padding-top dbl-padding-left">
+	<div id="accRequestModal" class="modal__content" data-auto-id="accRequestModal">
+		<div class="modal__header acc__header no-padding no-margin-bottom">
+			<div class="row">
 				<div class="col-md-11 half-margin-top">
-					<div class="text-xlarge text-left text-uppercase" [innerText]="'_Request1on1_' | i18n" data-auto-id="accRequestModal-Title"></div>
+					<div class="text-left request-modal__title" [innerText]="'_Request1on1_' | i18n" data-auto-id="accRequestModal-Title"></div>
 					<div class="text-medium text-left qtr-margin-top text-muted" [innerText]="'_FindCiscoExpert_' | i18n" data-auto-id="accRequestModal-SubTitle"></div>
 					<ng-container *ngIf="loading">
 						<div class="row half-padding-left base-padding-top">
-							<div class="alert dbl-padding-left">
+							<div class="alert">
 								<div class="alert__icon icon-info-outline"></div>
 								<div class="alert__message text-info" [innerText]="'_LoadingCustomerInfo_' | i18n" data-auto-id="RequestFormCustomerLoadingBanner"></div>
 							</div>
@@ -24,7 +24,7 @@
 					</ng-container>
 					<ng-container *ngIf="status.infoError">
 						<div class="row half-padding-left base-padding-top">
-							<div class="alert alert--danger dbl-padding-left">
+							<div class="alert alert--danger">
 								<div class="alert__icon icon-info-outline"></div>
 								<div class="alert__message text-bold" [innerText]="'_ErrorCustomerInfo_' | i18n" data-auto-id="RequestFormCustomerErrorBanner"></div>
 							</div>
@@ -32,7 +32,7 @@
 					</ng-container>
 					<ng-container *ngIf="status.submitError">
 						<div class="row half-padding-left base-padding-top">
-							<div class="alert alert--danger dbl-padding-left">
+							<div class="alert alert--danger">
 								<div class="alert__icon icon-info-outline"></div>
 								<div class="alert__message text-bold" [innerText]="'_RequestError_' | i18n" data-auto-id="RequestFormSubmitErrorBanner"></div>
 							</div>
@@ -40,7 +40,7 @@
 					</ng-container>
 					<ng-container *ngIf="status.success">
 						<div class="row half-padding-left base-padding-top">
-							<div class="alert alert--success dbl-padding-left">
+							<div class="alert alert--success">
 								<div class="alert__icon icon-info-outline"></div>
 								<div class="alert__message text-bold" [innerText]="'_RequestSuccess_' | i18n" data-auto-id="RequestFormSubmitSuccessBanner"></div>
 							</div>
@@ -52,34 +52,32 @@
 						class="icon-close icon-medium text-right toggle"></span>
 				</div>
 			</div>
-			<div class="dbl-padding-left">
-				<div class="divider"></div>
+			<div class="text-left request-modal__acc-title">
+				<span [innerText]="accTitle" data-auto-id="accRequestModal-ItemTitle"></span>
 			</div>
-			<div class="dbl-padding-left text-left">
-					<span class="text-large" [innerText]="accTitle" data-auto-id="accRequestModal-ItemTitle"></span>
-			</div>
-			<div class="row dbl-padding-left base-padding-top full-width">
-				<div class="col-md-4 text-left">
-					<div class="text-uppercase text-small text-muted" [innerText]="'_CompanyName_' | i18n" data-auto-id="accRequestModal-CompanyName-Heading"></div>
+			<div class="divider no-margin"></div>
+			<div class="row full-width">
+				<div class="col-md-3 text-left request-modal__details">
+					<div class="text-uppercase request-modal__details__heading" [innerText]="'_CompanyName_' | i18n" data-auto-id="accRequestModal-CompanyName-Heading"></div>
 					<div *ngIf="!loading" class="text-capitalize" [innerText]="custData?.companyName || ''" data-auto-id="accRequestModal-CompanyName-Value"></div>
-					<div class="text-uppercase text-small text-muted qtr-padding-top" [innerText]="'_CustomerUserName_' | i18n" data-auto-id="accRequestModal-CustomerUserName-Heading"></div>
+					<div class="text-uppercase request-modal__details__heading half-padding-top" [innerText]="'_CustomerUserName_' | i18n" data-auto-id="accRequestModal-CustomerUserName-Heading"></div>
 					<div *ngIf="!loading" class="text-capitalize" [innerText]="custData?.userFullName || ''" data-auto-id="accRequestModal-CustomerUserName-Value"></div>
-					<div class="text-uppercase text-small text-muted qtr-padding-top" [innerText]="'_JobTitle_' | i18n" data-auto-id="accRequestModal-JobTitle-Heading"></div>
+					<div class="text-uppercase request-modal__details__heading half-padding-top" [innerText]="'_JobTitle_' | i18n" data-auto-id="accRequestModal-JobTitle-Heading"></div>
 					<div *ngIf="!loading" class="text-capitalize" [innerText]="custData?.jobTitle || ''" data-auto-id="accRequestModal-JobTitle-Value"></div>
-					<div class="text-uppercase text-small text-muted qtr-padding-top" [innerText]="'_Email_' | i18n" data-auto-id="accRequestModal-Email-Heading"></div>
+					<div class="text-uppercase request-modal__details__heading half-padding-top" [innerText]="'_Email_' | i18n" data-auto-id="accRequestModal-Email-Heading"></div>
 					<div *ngIf="!loading" [innerText]="custData?.userEmail || ''" data-auto-id="accRequestModal-Email-Value"></div>
-					<div class="text-uppercase text-small text-muted qtr-padding-top" [innerText]="'_Phone_' | i18n" data-auto-id="accRequestModal-Phone-Heading"></div>
+					<div class="text-uppercase request-modal__details__heading half-padding-top" [innerText]="'_Phone_' | i18n" data-auto-id="accRequestModal-Phone-Heading"></div>
 					<div *ngIf="!loading" class="text-capitalize" [innerText]="custData?.userPhoneNumber || ''" data-auto-id="accRequestModal-Phone-Value"></div>
-					<div class="text-uppercase text-small text-muted dbl-padding-top"  [innerText]="'_CiscoContact_' | i18n" data-auto-id="accRequestModal-CiscoContact-Heading"></div>
+					<div class="text-uppercase request-modal__details__heading request-modal__details__xl-padding-top"  [innerText]="'_CiscoContact_' | i18n" data-auto-id="accRequestModal-CiscoContact-Heading"></div>
 					<div *ngIf="!loading" class="text-capitalize" [innerText]="custData?.ciscoContact || ''" data-auto-id="accRequestModal-CiscoContact-Value"></div>
-					<div class="text-uppercase text-small text-muted qtr-padding-top" [innerText]="'_CCOID_' | i18n" data-auto-id="accRequestModal-CCOID-Heading"></div>
+					<div class="text-uppercase request-modal__details__heading half-padding-top" [innerText]="'_CCOID_' | i18n" data-auto-id="accRequestModal-CCOID-Heading"></div>
 					<div *ngIf="!loading" [innerText]="custData?.ccoId || ''" data-auto-id="accRequestModal-CCOID-Value"></div>
-					<div class="text-uppercase text-small text-muted qtr-padding-top" [innerText]="'_Country_' | i18n" data-auto-id="accRequestModal-Country-Heading"></div>
+					<div class="text-uppercase request-modal__details__heading half-padding-top" [innerText]="'_Country_' | i18n" data-auto-id="accRequestModal-Country-Heading"></div>
 					<div *ngIf="!loading" class="text-capitalize" [innerText]="custData?.country || ''" data-auto-id="accRequestModal-Country-Value"></div>
 				</div>
-				<div class="col-md-8">
+				<div class="col-md-9 request-modal__form-container">
 					<form [formGroup]="requestForm" (ngSubmit)="onSubmit()">
-						<div class="form-group dbl-padding-left dbl-margin-right">
+						<div class="form-group col-md-6 no-padding">
 							<div class="form-group__text select">
 								<select id="attendees-select"
 									(change)="addAdditionalAttendeeForms(requestForm.get('attendees').value)"
@@ -87,20 +85,20 @@
 									data-auto-id="accRequestModal-NumberOfAttendees-Select">
 									<option *ngFor="let option of attendeeOptions" [value]="option.value" [innerText]="option.key"></option>
 								</select>
-								<label class="text-uppercase text-small" for="attendees-select" [innerText]="'_NumberOfAttendees_' | i18n" data-auto-id="accRequestModal-NumberOfAttendees-Heading"></label>
+								<label class="form-label" for="attendees-select" [innerText]="'_NumberOfAttendees_' | i18n" data-auto-id="accRequestModal-NumberOfAttendees-Heading"></label>
 							</div>
 						</div>
 						<ng-container *ngIf="requestForm.get('attendees').value > 1">
-							<div class="row half-padding-top dbl-padding-left dbl-margin-right">
+							<div class="row half-padding-top form-margin-top">
 								<div class="col-md-6 text-left">
-									<span class="text-uppercase text-small" [innerText]="'_AdditionalAttendeeName_' | i18n" data-auto-id="accRequestModal-AdditionalAttendeeName-Heading"></span>
+									<span class="form-label" [innerText]="'_AdditionalAttendeeName_' | i18n" data-auto-id="accRequestModal-AdditionalAttendeeName-Heading"></span>
 								</div>
 								<div class="col-md-6 text-left">
-									<span class="text-uppercase text-small" [innerText]="'_Email_' | i18n" data-auto-id="accRequestModal-AdditionalAttendeeEmail-Heading"></span>
+									<span class="form-label" [innerText]="'_Email_' | i18n" data-auto-id="accRequestModal-AdditionalAttendeeEmail-Heading"></span>
 								</div>
 							</div>
 							<ng-container *ngIf="requestForm.get('additionalAttendees')">
-								<div class="row qtr-padding-top dbl-padding-left dbl-margin-right"
+								<div class="row qtr-padding-top"
 									formArrayName="additionalAttendees"
 									*ngFor="let item of requestForm.get('additionalAttendees').controls; let i = index;">
 									<div class="col-md-6 no-padding-right" [formGroupName]="i">
@@ -110,7 +108,7 @@
 											</div>
 										</div>
 									</div>
-									<div class="col-md-6 no-padding-right" [formGroupName]="i">
+									<div class="col-md-6" [formGroupName]="i">
 										<div class="form-group">
 											<div class="form-group__text">
 												<input attr.id="additionalAttendeeEmail-{{ i }}" formControlName="attendeeEmail" type="email" attr.data-auto-id="accRequestModal-AdditionalAttendeeEmail-Input-{{ i }}" required>
@@ -120,67 +118,69 @@
 								</div>
 							</ng-container>
 						</ng-container>
-						<div class="form-group dbl-padding-left dbl-margin-right no-margin-top half-padding-top">
-							<div class="form-group__text select">
-								<select id="time-zone-select" formControlName="timeZone" data-auto-id="accRequestModal-TimeZone-Select">
-									<option *ngFor="let option of timeZoneOptions" [value]="option.value" [innerText]="option.key"></option>
-								</select>
-								<label class="text-uppercase text-small" for="time-zone-select" [innerText]="'_TimeZone_' | i18n" data-auto-id="accRequestModal-TimeZone-Heading"></label>
+						<div class="row form-margin-bottom form-margin-top">
+							<div class="text-left half-padding-top half-padding-bottom col-md-6">
+								<div class="form-label qtr-padding-bottom" [innerText]="'_PreferredTimeMeeting_' | i18n" data-auto-id="accRequestModal-PreferredTimeMeeting-Heading"></div>
+								<div class="form-group form-group--inline">
+									<label class="radio">
+										<input type="radio" formControlName="meetingTime" [value]="'_Morning_' | i18n" required>
+										<span class="radio__input" data-auto-id="accRequestModal-PreferredTimeMeeting-Morning"></span>
+										<span class="radio__label hidden-xs" [innerText]="'_Morning_' | i18n"></span>
+									</label>
+								</div>
+								<div class="form-group form-group--inline">
+									<label class="radio">
+										<input type="radio" formControlName="meetingTime" [value]="'_Afternoon_' | i18n" required>
+										<span class="radio__input" data-auto-id="accRequestModal-PreferredTimeMeeting-Afternoon"></span>
+										<span class="radio__label hidden-xs" [innerText]="'_Afternoon_' | i18n"></span>
+									</label>
+								</div>
+							</div>
+							<div class="form-group no-margin-top half-padding-top col-md-6">
+								<div class="form-group__text select">
+									<select id="time-zone-select" formControlName="timeZone" data-auto-id="accRequestModal-TimeZone-Select">
+										<option *ngFor="let option of timeZoneOptions" [value]="option.value" [innerText]="option.key"></option>
+									</select>
+									<label class="form-label" for="time-zone-select" [innerText]="'_TimeZone_' | i18n" data-auto-id="accRequestModal-TimeZone-Heading"></label>
+								</div>
 							</div>
 						</div>
-						<div class="text-left dbl-padding-left half-padding-top half-padding-bottom">
-							<div class="text-uppercase text-small qtr-padding-bottom" [innerText]="'_PreferredTimeMeeting_' | i18n" data-auto-id="accRequestModal-PreferredTimeMeeting-Heading"></div>
-							<div class="form-group form-group--inline">
-								<label class="radio">
-									<input type="radio" formControlName="meetingTime" [value]="'_Morning_' | i18n" required>
-									<span class="radio__input" data-auto-id="accRequestModal-PreferredTimeMeeting-Morning"></span>
-									<span class="radio__label hidden-xs" [innerText]="'_Morning_' | i18n"></span>
-								</label>
-							</div>
-							<div class="form-group form-group--inline dbl-padding-left">
-								<label class="radio">
-									<input type="radio" formControlName="meetingTime" [value]="'_Afternoon_' | i18n" required>
-									<span class="radio__input" data-auto-id="accRequestModal-PreferredTimeMeeting-Afternoon"></span>
-									<span class="radio__label hidden-xs" [innerText]="'_Afternoon_' | i18n"></span>
-								</label>
-							</div>
-						</div>
-						<div class="form-group dbl-padding-left dbl-margin-right">
+						<div class="form-group col-md-6 no-padding form-margin-bottom">
 							<div class="form-group__text select">
 								<select id="language-select" formControlName="language" data-auto-id="accRequestModal-LanguagePreference-Select">
 									<option *ngFor="let option of languageOptions" [value]="option.value" [innerText]="option.key"></option>
 								</select>
-								<label class="text-uppercase text-small" for="time-zone-select" [innerText]="'_LanguagePreference_' | i18n" data-auto-id="accRequestModal-LanguagePreference-Heading"></label>
+								<label class="form-label" for="time-zone-select" [innerText]="'_LanguagePreference_' | i18n" data-auto-id="accRequestModal-LanguagePreference-Heading"></label>
 							</div>
 						</div>
-						<div class="form-group dbl-padding-left dbl-margin-right">
+						<div class="form-group col-md-6 no-padding form-margin-bottom">
 							<div class="form-group__text select">
 								<select id="dnac-version-select" formControlName="dnacVersion"  data-auto-id="accRequestModal-DNACVersion-Select">
 									<option *ngFor="let option of dnacOptions" [value]="option.value" [innerText]="option.key"></option>
 								</select>
-								<label class="text-uppercase text-small" for="time-zone-select" [innerText]="'_DNACVersion_' | i18n" data-auto-id="accRequestModal-DNACVersion-Heading"></label>
+								<label class="form-label" for="time-zone-select" [innerText]="'_DNACVersion_' | i18n" data-auto-id="accRequestModal-DNACVersion-Heading"></label>
 							</div>
 						</div>
-						<div class="form-group dbl-padding-left dbl-margin-right">
+						<div class="form-group form-margin-bottom">
 							<div class="form-group__text">
 								<textarea [maxlength]="maxLength" id="input-textarea-accelerator" formControlName="acceleratorInterest" class="textarea" rows="5" data-auto-id="accRequestModal-WhyInterestedAccelerator-Input"></textarea>
-								<label class="text-uppercase text-small" for="input-textarea-accelerator" [innerText]="'_WhyInterestedAccelerator_' | i18n" data-auto-id="accRequestModal-WhyInterestedAccelerator-Heading"></label>
+								<label class="form-label" for="input-textarea-accelerator" [innerText]="'_WhyInterestedAccelerator_' | i18n" data-auto-id="accRequestModal-WhyInterestedAccelerator-Heading"></label>
 							</div>
 							<div class="help-block text-muted" role="alert">
 								<span>{{requestForm.get('acceleratorInterest').value.length}}/{{maxLength}} {{'_Characters_' | i18n}}</span>
 							</div>
 						</div>
-						<div class="form-group dbl-padding-left dbl-margin-right">
+						<div class="form-group form-margin-bottom">
 							<div class="form-group__text">
 								<textarea [maxlength]="maxLength" id="input-textarea-outcome" formControlName="desiredOutcome" class="textarea" rows="5" data-auto-id="accRequestModal-WhatWouldLikeToSeeOutcome-Input"></textarea>
-								<label class="text-uppercase text-small" for="input-textarea-outcome" [innerText]="'_WhatWouldLikeToSeeOutcome_' | i18n" data-auto-id="accRequestModal-WhatWouldLikeToSeeOutcome-Heading"></label>
+								<label class="form-label" for="input-textarea-outcome" [innerText]="'_WhatWouldLikeToSeeOutcome_' | i18n" data-auto-id="accRequestModal-WhatWouldLikeToSeeOutcome-Heading"></label>
 							</div>
 							<div class="help-block text-muted" role="alert">
 								<span>{{requestForm.get('desiredOutcome').value.length}}/{{maxLength}} {{'_Characters_' | i18n}}</span>
 							</div>
 						</div>
-						<div class="text-left dbl-padding-left half-padding-top half-padding-bottom">
-							<div class="text-uppercase text-small qtr-padding-bottom" [innerText]="'_PreferredEnvironmentAccelerator_' | i18n" data-auto-id="accRequestModal-PreferredEnvironmentAccelerator-Heading"></div>
+						<div class="text-left form-margin-bottom">
+							<div class="form-label qtr-padding-bottom" [innerText]="'_PreferredEnvironmentAccelerator_' | i18n" data-auto-id="accRequestModal-PreferredEnvironmentAccelerator-Heading"></div>
 							<div class="form-group form-group--inline">
 								<label class="radio">
 									<input type="radio" formControlName="environment" [value]="'_NonProdEnvironment_' | i18n">
@@ -188,7 +188,7 @@
 									<span class="radio__label hidden-xs" [innerText]="'_NonProdEnvironment_' | i18n"></span>
 								</label>
 							</div>
-							<div class="form-group form-group--inline dbl-padding-left">
+							<div class="form-group form-group--inline">
 								<label class="radio">
 									<input type="radio" formControlName="environment" [value]="'_CiscoLab_' | i18n">
 									<span class="radio__input" data-auto-id="accRequestModal-PreferredEnvironmentAccelerator-Cisco"></span>
@@ -196,9 +196,9 @@
 								</label>
 							</div>
 						</div>
-						<div class="half-padding-top dbl-padding-left text-left">
-							<button type="submit" [disabled]="invalidSubmit" class="btn btn--small btn--wide btn--primary" [innerText]="'_Submit_' | i18n" data-auto-id="accRequestModal-Submit"></button>
-							<button type="button" data-auto-id="accRequestModal-Cancel" class="btn btn--small -wide btn--secondary text-uppercase text-small" (click)="closeRequestForm()" [innerText]="'_Cancel_' | i18n"></button>
+						<div class="text-left">
+							<button type="submit" [disabled]="invalidSubmit" class="btn btn--small btn--primary" [innerText]="'_Submit_' | i18n" data-auto-id="accRequestModal-Submit"></button>
+							<button type="button" data-auto-id="accRequestModal-Cancel" class="btn btn--small btn--secondary text-uppercase text-small" (click)="closeRequestForm()" [innerText]="'_Cancel_' | i18n"></button>
 						</div>
 					</form>
 				</div>
