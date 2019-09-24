@@ -257,7 +257,7 @@ describe('RccComponent', () => {
 	});
 
 	it('Should invoke onViolationTableSortingChanged and to reset table params', () => {
-		const render = (item:any) => {
+		const render = (item: any) => {
 			if (typeof (item[this.key]) !== 'undefined' && item[this.key] !== null) {
 				return item[this.key].toString();
 			}
