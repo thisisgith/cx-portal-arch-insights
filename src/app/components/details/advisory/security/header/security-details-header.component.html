@@ -26,7 +26,16 @@
 			<span [innerText]="'_Published_' | i18n"></span>
 			<span>:</span>
 		</div>
-		<div [innerText]="details?.bulletin?.bulletinFirstPublished | date:'MMM dd, yyyy' || ('_NA_' | i18n)" class="header__text"></div>
+		<div *ngIf="details.bulletin && details.bulletin.bulletinFirstPublished"
+			[innerText]="details.bulletin.bulletinFirstPublished | fromNow"
+			[title]="details.bulletin.bulletinFirstPublished | dateTime"
+			class="header__text">
+		</div>
+		<div *ngIf="!details.bulletin || !details.bulletin.bulletinFirstPublished"
+			[innerText]="('_Never_' | i18n)"
+			[title]="('_Never_' | i18n)"
+			class="header__text">
+		</div>
 	</div>
 
 	<div data-auto-id="SecurityAdvisoryLastUpdated" class="header__item">
@@ -34,16 +43,25 @@
 			<span [innerText]="'_LastUpdated_' | i18n"></span>
 			<span>:</span>
 		</div>
-		<div [innerText]="(details?.advisory?.lastUpdated | date:'MMM dd, yyyy') || (details?.advisory?.publishedOn | date:'MMM dd, yyyy') || ('_Never_' | i18n)" class="header__text"></div>
+		<div *ngIf="details.advisory && details.advisory.lastUpdated"
+			[innerText]="details.advisory.lastUpdated | fromNow"
+			[title]="details.advisory.lastUpdated | dateTime"
+			class="header__text">
+		</div>
+		<div *ngIf="!details.advisory || !details.advisory.lastUpdated"
+			[innerText]="('_Never_' | i18n)"
+			[title]="('_Never_' | i18n)"
+			class="header__text">
+		</div>
 	</div>
 
 	<div data-auto-id="SecurityAdvisoryVersion" class="header__item">
-			<div class="header__text qtr-margin-right">
-				<span [innerText]="'_Version_' | i18n"></span>
-				<span>:</span>
-			</div>
-			<div [innerText]="details?.bulletin?.bulletinVersion || ('_NA_' | i18n)" class="header__text"></div>
+		<div class="header__text qtr-margin-right">
+			<span [innerText]="'_Version_' | i18n"></span>
+			<span>:</span>
 		</div>
+		<div [innerText]="details?.bulletin?.bulletinVersion || ('_NA_' | i18n)" class="header__text"></div>
+	</div>
 </div>
 
 <div class="row col-md-12 flex flex-container" *ngIf="details">

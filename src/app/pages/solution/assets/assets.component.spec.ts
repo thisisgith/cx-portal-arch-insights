@@ -163,6 +163,9 @@ describe('AssetsComponent', () => {
 				.toBe(0);
 			expect(_.find(component.filters, { key: 'coverage' }).seriesData.length)
 				.toBe(0);
+
+			fixture.destroy();
+			tick();
 		}));
 
 		it('should switch active filters', fakeAsync(() => {
@@ -182,6 +185,9 @@ describe('AssetsComponent', () => {
 
 			expect(_.filter(component.filters, 'selected'))
 				.toContain(coverageFilter);
+
+			fixture.destroy();
+			tick();
 		}));
 
 		it('should set query params for Hardware EOX filter', fakeAsync(() => {
@@ -213,6 +219,9 @@ describe('AssetsComponent', () => {
 			fixture.detectChanges();
 			expect(_.get(component, ['assetParams', 'lastDateOfSupportRange'])[0])
 				.toEqual('gt-60-lt-90-days');
+
+			fixture.destroy();
+			tick();
 		}));
 
 		it('should set query params for Advisories filter', fakeAsync(() => {
@@ -248,6 +257,9 @@ describe('AssetsComponent', () => {
 				.toBeFalsy();
 			expect(_.get(component, ['assetParams', 'hasSecurityAdvisories']))
 				.toBeTruthy();
+
+			fixture.destroy();
+			tick();
 		}));
 
 		it('should select a coverage subfilter', fakeAsync(() => {
@@ -267,6 +279,9 @@ describe('AssetsComponent', () => {
 
 			expect(subfilter.selected)
 				.toBeTruthy();
+
+			fixture.destroy();
+			tick();
 		}));
 
 		it('should clear the filter when selecting the same subfilter twice', fakeAsync(() => {
@@ -294,6 +309,9 @@ describe('AssetsComponent', () => {
 
 			expect(subfilter.selected)
 				.toBeFalsy();
+
+			fixture.destroy();
+			tick();
 		}));
 
 		it('should select view', fakeAsync(() => {
@@ -325,6 +343,9 @@ describe('AssetsComponent', () => {
 
 			expect(component.selectedAssets.length)
 				.toBe(0);
+
+			fixture.destroy();
+			tick();
 		}));
 
 		it('should clear selected filters', fakeAsync(() => {
@@ -337,6 +358,9 @@ describe('AssetsComponent', () => {
 
 			expect(_.some(component.filters, 'selected'))
 				.toBeFalsy();
+
+			fixture.destroy();
+			tick();
 		}));
 
 		it('should clear filters', fakeAsync(() => {
@@ -367,6 +391,9 @@ describe('AssetsComponent', () => {
 
 			expect(totalFilter.selected)
 				.toBeTruthy();
+
+			fixture.destroy();
+			tick();
 		}));
 
 		it('should close panel', fakeAsync(() => {
@@ -378,6 +405,9 @@ describe('AssetsComponent', () => {
 
 			expect(component.selectedAsset)
 				.toBeFalsy();
+
+			fixture.destroy();
+			tick();
 		}));
 
 		it('should search', fakeAsync(() => {
@@ -394,6 +424,9 @@ describe('AssetsComponent', () => {
 
 			expect(component.assetParams.search)
 				.toBeTruthy();
+
+			fixture.destroy();
+			tick();
 		}));
 
 		it('should not search', fakeAsync(() => {
@@ -410,6 +443,9 @@ describe('AssetsComponent', () => {
 
 			expect(component.assetParams.search)
 				.toBeFalsy();
+
+			fixture.destroy();
+			tick();
 		}));
 
 		it('should unset search param if search input is empty for refresh', fakeAsync(() => {
@@ -427,6 +463,9 @@ describe('AssetsComponent', () => {
 
 			expect(_.get(component.assetParams, 'search'))
 				.toBeFalsy();
+
+			fixture.destroy();
+			tick();
 		}));
 
 		it('should handle unsortable column', fakeAsync(() => {
@@ -460,6 +499,9 @@ describe('AssetsComponent', () => {
 				.toBe('desc');
 			expect(_.get(component, ['params', 'sort']))
 				.toBeFalsy();
+
+			fixture.destroy();
+			tick();
 		}));
 
 		it('should not refresh when valid search query', fakeAsync(() => {
@@ -472,6 +514,9 @@ describe('AssetsComponent', () => {
 
 			expect(_.get(component.assetParams, 'search'))
 				.toBe('search');
+
+			fixture.destroy();
+			tick();
 		}));
 
 		it('should handle sortable column', fakeAsync(() => {
@@ -500,6 +545,9 @@ describe('AssetsComponent', () => {
 				.toBe('asc');
 			expect(_.get(component, ['assetParams', 'sort']))
 				.toEqual(['serialNumber:ASC']);
+
+			fixture.destroy();
+			tick();
 		}));
 
 		it('should create our pagination after results load', fakeAsync(() => {
@@ -515,6 +563,9 @@ describe('AssetsComponent', () => {
 
 			expect(component.paginationCount)
 				.toEqual(`${first}-${last}`);
+
+			fixture.destroy();
+			tick();
 		}));
 
 		it('should set the coverage filter if param selected', fakeAsync(() => {
@@ -527,6 +578,9 @@ describe('AssetsComponent', () => {
 
 			expect(_.filter(component.filters, 'selected'))
 				.toContain(coverageFilter);
+
+			fixture.destroy();
+			tick();
 		}));
 
 		it('should set the role filter if param selected', fakeAsync(() => {
@@ -538,6 +592,9 @@ describe('AssetsComponent', () => {
 
 			expect(_.filter(component.filters, 'selected'))
 				.toContain(roleFilter);
+
+			fixture.destroy();
+			tick();
 		}));
 
 		it('should set the contract filter if param selected', fakeAsync(() => {
@@ -549,6 +606,9 @@ describe('AssetsComponent', () => {
 
 			expect(_.filter(component.filters, 'selected'))
 				.toContain(contractFilter);
+
+			fixture.destroy();
+			tick();
 		}));
 
 		it('should set the appropriate device icon based on type', fakeAsync(() => {
@@ -598,6 +658,9 @@ describe('AssetsComponent', () => {
 
 			expect(component.getProductIcon(Router))
 				.toEqual('router-outline');
+
+			fixture.destroy();
+			tick();
 		}));
 	});
 
@@ -659,6 +722,9 @@ describe('AssetsComponent', () => {
 				.toBe(true);
 			expect(_.get(component.assetParams, 'lastDateOfSupportRange'))
 				.toEqual(['gt-30-lt-60-days']);
+
+			fixture.destroy();
+			tick();
 		}));
 	});
 });
