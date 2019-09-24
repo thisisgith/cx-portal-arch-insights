@@ -157,6 +157,13 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 				this.rccAssetPolicyTableData = [];
 				if (!_.isEmpty(assetViolations.data)) {
 					this.rccAssetPolicyTableData = assetViolations.data.violation;
+					this.rccAssetPolicyTableData.forEach(assetPolicyDesc => {
+						const policyDesc =
+						_.get(assetPolicyDesc, ['policyDesc'], '')
+							.replace(/\&gt;/g, '>')
+							.replace(/\&lt;/g, '<');
+						_.set(assetPolicyDesc, ['policyDesc'], policyDesc);
+					});
 					this.totalItems = this.rccAssetPolicyTableData.length;
 					if (this.rccAssetPolicyTableData.length > 0) {
 						this.apiNoData = false;
