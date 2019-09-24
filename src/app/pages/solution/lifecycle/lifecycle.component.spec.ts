@@ -450,11 +450,12 @@ describe('LifecycleComponent', () => {
 			expect(atx1.sessions[1].scheduled)
 				.toBeFalsy();
 
+			// UI will not force to change the status, will rely on backend
 			const session2 = atx1.sessions[1];
 			component.registerATXSession(atx1, session2);
 			fixture.detectChanges();
 			expect(atx1.status)
-				.toEqual('requested');
+				.toEqual('recommended');
 		});
 
 		it('should show the selected atx sessions in ATX More', () => {
