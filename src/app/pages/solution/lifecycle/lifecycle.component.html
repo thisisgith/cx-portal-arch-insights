@@ -201,7 +201,7 @@
 <ng-template #learningHover let-title="title" let-item="item" let-description="description" let-autoid="autoid">
 	<div id="learn-hover-panel-{{ autoid }}" class="panel" attr.data-auto-id="{{ autoid }}-HoverModal">
 		<div class="popover-tail"></div>
-		<div class="flex flex-column max-height">
+		<div class="flex flex-column">
 			<h6 class="learning-popover__title title-line-clamp" [innerText]="title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
 			<div class="divider divider--compressed"></div>
 			<div *ngIf="item && item.fixedRating" class="half-margin-bottom">
