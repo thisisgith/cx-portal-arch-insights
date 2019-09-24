@@ -147,8 +147,9 @@ export class AdvisoryDetailsComponent implements OnChanges, OnInit, OnDestroy, P
 	 * @param hidden false if details slideout is open
 	 */
 	public handleHidden (hidden: boolean) {
+		this.hidden = hidden;
 		if (hidden) {
-			this.onPanelClose();
+			this.onAllPanelsClose();
 		}
 	}
 
@@ -157,6 +158,7 @@ export class AdvisoryDetailsComponent implements OnChanges, OnInit, OnDestroy, P
 	 */
 	public ngOnInit () {
 		this.detailsPanelStackService.push(this);
+		this.hidden = false;
 		this.refresh();
 	}
 

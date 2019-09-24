@@ -127,6 +127,7 @@ describe('AssetDetailsAdvisoriesComponent', () => {
 			fixture.detectChanges();
 
 			const advisoryTab = _.find(component.tabs, { key: 'security' });
+			_.set(advisoryTab, ['params', 'neInstanceId'], ['id']);
 			const fieldTab = _.find(component.tabs, { key: 'field' });
 
 			expect(advisoryTab.data.length)
@@ -152,7 +153,7 @@ describe('AssetDetailsAdvisoriesComponent', () => {
 		spyOn(diagnosticsService, 'getCriticalBugs')
 			.and
 			.returnValue(of({ data: CriticalBugData }));
-
+		fixture.detectChanges();
 		component.ngOnInit();
 		fixture.detectChanges();
 

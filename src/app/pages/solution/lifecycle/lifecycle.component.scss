@@ -817,7 +817,7 @@ tr.td-row td {
 	font-size: 14px;
 
 	&--complete {
-		color: $accent-light-blue;
+		color: $text-default-color;
 	}
 }
 
@@ -835,7 +835,7 @@ tr.td-row td {
 
 .actionname:hover:not(.selected) {
 	.actionname__text {
-		color: $accent-light-blue;
+		color: $accent-dark-blue;
 	}
 }
 
@@ -992,6 +992,7 @@ tr.td-row td {
 #learn-hover-panel {
 	&-recommendedACC,
 	&-recommendedATX,
+	&-viewAllTable,
 	&-moreATXList,
 	&-moreACCList,
 	&-recommendedElearning,
@@ -1109,6 +1110,7 @@ tr.td-row td {
 }
 
 #recommended-item:hover,
+#viewAllTable-item:hover,
 #moreACCList-item:hover,
 #moreATXList-item:hover,
 #successbytes-item:hover,
@@ -1119,6 +1121,7 @@ tr.td-row td {
 	#learn-hover-panel {
 		&-recommendedACC,
 		&-recommendedATX,
+		&-viewAllTable,
 		&-moreACCList,
 		&-moreATXList,
 		&-successbytes,
@@ -1175,17 +1178,24 @@ tr.td-row td {
 			right: -410px;
 			top: 105px;
 		}
+
+		&-viewAllTable {
+			right: -410px;
+			top: -90px;
+		}
 	}
 }
 
 #moreATXList-item:hover,
 #moreACCList-item:hover,
-#recommended-item:hover {
+#recommended-item:hover,
+#viewAllTable-item:hover {
 	#atx-hover-panel,
 	#acc-hover-panel {
 		&-moreATXList,
 		&-moreACCList,
-		&-recommendedATX {
+		&-recommendedATX,
+		&-viewAllTable {
 			padding: 22px 0 22px 28px;
 
 			.atx-popover__title,
@@ -1241,7 +1251,8 @@ tr.td-row td {
 		}
 
 		&-moreATXList,
-		&-recommendedATX {
+		&-recommendedATX,
+		&-viewAllTable {
 			height: 200px;
 		}
 	}

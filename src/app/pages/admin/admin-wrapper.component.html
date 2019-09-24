@@ -23,7 +23,12 @@
 				data-auto-id="sidebar.policies"
 				[routerLink]="['/admin', 'policies']"
 			>
-				<span class="icon-insights"></span>
+				<span class="badge-wrapper">
+					<span tabindex="0"
+						attr.data-auto-id="AdminSidebar-PoliciesIcon">
+						<span class="icon-insights text-noselect"></span>
+					</span>
+				</span>
 				<span class="sidebar__item__label" [innerText]="'_Policies_' | i18n"></span>
 			</a>
 		</li>
@@ -34,7 +39,18 @@
 				data-auto-id="sidebar.settings"
 				[routerLink]="['/admin', 'settings']"
 			>
-				<span class="icon-account"></span>
+				<span class="badge-wrapper">
+					<span tabindex="0"
+						attr.data-auto-id="AdminSidebar-AccountIcon">
+						<span class="icon-account text-noselect"></span>
+					</span>
+					<span
+						*ngIf="erroredAppsNum > 0"
+						class="badge badge--tiny badge--danger"
+						[innerText]="erroredAppsNum"
+						attr.data-auto-id="AdminSidebar-AccountBadge">
+					</span>
+				</span>
 				<span class="sidebar__item__label" [innerText]="'_System_' | i18n"></span>
 			</a>
 		</li>

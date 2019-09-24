@@ -1,6 +1,7 @@
 import MockService from '../support/mockService';
 
 const atxMock = new MockService('ATXScenarios');
+const registerATXMock = new MockService('RegisterATXScenarios');
 const atxOnboardScenario = atxMock.getScenario('GET', '(ATX) IBN-Campus Network Assurance-Onboard');
 const atxItems = atxOnboardScenario.response.body.items;
 const visibleATXItems = atxItems.slice(0, 3);
@@ -674,20 +675,14 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 									cy.get('span').should('have.class', 'icon-certified');
 								});
 							break;
-						case 'recommended':
-							// Recommended items have no status text according to mockups:
-							// https://cisco.invisionapp.com/d/main#/console/17190680/374150316/preview
-							Cypress.log({
-								name: 'LOG',
-								message: `IGNORING ATX STATUS TYPE: ${item.status}`,
-							});
-							break;
 						default:
 							Cypress.log({
 								name: 'LOG',
-								message: `UNRECOGNIZED ATX STATUS TYPE: ${item.status} ! TREATING AS COMPLETED...`,
+								message: `RECOMMENDED OR UNRECOGNIZED ATX STATUS TYPE: ${item.status} ! DEFAULTING TO -`,
 							});
-							cy.getByAutoId('Table-Status-Completed').should('be.visible');
+							cy.getByAutoId('Table-Status-Default')
+								.should('be.visible')
+								.and('have.text', '-');
 					}
 				});
 			});
@@ -1863,6 +1858,105 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 					cy.getByAutoId('atx-card-view-btn').click();
 					cy.getByAutoId('ViewAllCloseModal').click();
 				});
+			});
+		});
+	});
+
+	describe('PBC-849: Add API call to register ATX session', () => {
+		before(() => {
+			// Switch to a mock with a single item and single un-scheduled session
+			atxMock.enable('(ATX) IBN-Campus Network Assurance-Onboard-singleNoScheduled');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard-singleNoScheduled');
+		});
+
+		after(() => {
+			// Switch back to the default mock data
+			registerATXMock.enable('(ATX) IBN-Register ATX1 Session1');
+			atxMock.enable('(ATX) IBN-Campus Network Assurance-Onboard');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard');
+		});
+
+		it('Clicking the Register button for a session should call register API', () => {
+			cy.getByAutoId('recommendedATXScheduleButton').click();
+			cy.getByAutoId('SelectSession-Session1').click();
+			cy.getByAutoId('AtxScheduleCardRegisterButton').click();
+			cy.wait('(ATX) IBN-Register ATX1 Session1');
+
+			// Registration should close the View Sessions modal
+			cy.getByAutoId('atxScheduleCard').should('not.exist');
+		});
+
+		it('Registering for a session should handle failed API calls gracefully', () => {
+			// Disable the default ATX registration mock
+			registerATXMock.disable('(ATX) IBN-Register ATX1 Session1');
+
+			// Setup a Cypress mock so we can force a 500 error
+			cy.server();
+			cy.route({
+				method: 'POST',
+				url: '/api/customerportal/racetrack/v1/atx/registration?sessionId=Session1&atxId=ATX1',
+				status: 500,
+				response: 'Forced error from QA',
+			}).as('atxRegisterError');
+
+			cy.getByAutoId('recommendedATXScheduleButton').click();
+			cy.getByAutoId('SelectSession-Session1').click();
+			cy.getByAutoId('AtxScheduleCardRegisterButton').click();
+			cy.wait('@atxRegisterError');
+
+			// Registration should close the View Sessions modal
+			cy.getByAutoId('atxScheduleCard').should('not.exist');
+		});
+	});
+
+	describe('PBC-869: ATX and ACC View All states', () => {
+		before(() => {
+			// Open the View All modal and switch to table view
+			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
+			cy.getByAutoId('atx-table-view-btn').click();
+		});
+
+		after(() => {
+			// Switch back to card view and close the View All modal
+			cy.getByAutoId('atx-card-view-btn').click();
+			cy.getByAutoId('ViewAllCloseModal').click();
+		});
+
+		it('ATX View All table view rows should have hover modals', () => {
+			atxItems.forEach((item, index) => {
+				cy.get('tr')
+					.eq(index + 1)
+					.within(() => {
+						cy.getByAutoId('viewAllTable-HoverModal').within(() => {
+							cy.getByAutoId('viewAllTable-HoverModal-Title')
+								.should('have.text', item.title)
+								.and('have.class', 'title-line-clamp');
+							// If the description contains \n, those get converted to <br>, which breaks text
+							// matching. Thus, split the string on \n, and verify each section exists
+							const splitDescription = item.description.split('\n');
+							splitDescription.forEach(substring => {
+								cy.getByAutoId('viewAllTable-HoverModal-Description')
+									.should('contain', substring)
+									.and('have.class', 'line-clamp');
+							});
+							// Handle bookmark
+							if (item.bookmark) {
+								cy.getByAutoId('viewAllTable-HoverModal-BookmarkRibbon')
+									.should('have.class', 'ribbon__blue');
+							} else {
+								cy.getByAutoId('viewAllTable-HoverModal-BookmarkRibbon')
+									.should('have.class', 'ribbon__white');
+							}
+						});
+					});
 			});
 		});
 	});
