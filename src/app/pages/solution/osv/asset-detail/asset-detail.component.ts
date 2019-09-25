@@ -120,8 +120,11 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 		this.osvService.getAssetDetails(this.assetDetailsParams)
 			.pipe(
 				map((response: AssetRecommendations[]) => {
-					this.assetDetails = this.groupData(response);
-					this.timelineData = this.assetDetails;
+					const recommendations = _.filter(response, (detail: AssetRecommendations) =>
+					detail.name !== 'current');
+					this.currentVersion = _.get(_.filter(response, { name: 'current' }), 0);
+					this.assetDetails = this.groupData(recommendations);
+					this.timelineData = this.groupData(response);
 					this.buildTable();
 				}),
 				takeUntil(this.destroy$),
