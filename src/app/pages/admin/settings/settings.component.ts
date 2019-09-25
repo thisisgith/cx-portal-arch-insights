@@ -53,7 +53,7 @@ export class SettingsComponent  implements OnInit {
 		lastUploadDate: '',
 		memoryUsage: [
 			{
-				label: I18n.get('_CurrentCPUUtilization_'),
+				label: I18n.get('_CPUUtilization_'),
 				percentage: 0,
 				value: '',
 			},
