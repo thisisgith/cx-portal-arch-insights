@@ -128,13 +128,13 @@ export class SoftwareGroupRecommendationsComponent implements OnChanges {
 					{
 						sortable: false,
 						template: this.currentTemplate,
-						width: '20%',
+						width: '12%',
 					},
 					{
 						name: I18n.get('_OsvVersion_'),
 						sortable: false,
 						template: this.versionTemplate,
-						width: '35%',
+						width: '38%',
 					},
 					{
 						key: 'postDate',
@@ -147,7 +147,7 @@ export class SoftwareGroupRecommendationsComponent implements OnChanges {
 						name: I18n.get('_OsvStatusOrAction_'),
 						sortable: false,
 						template: this.actionsTemplate,
-						width: '30%',
+						width: '35%',
 					},
 				],
 				dynamicData: true,

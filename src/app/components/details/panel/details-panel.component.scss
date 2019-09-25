@@ -210,8 +210,8 @@ $default-text-color: #394454;
 				box-shadow: inset 0 0 0 1px #00bceb !important;
 			}
 
-			&:hover,
-			&.hover {
+			&:hover:not(.selected),
+			&.hover:not(.selected) {
 				color: #394454 !important;
 				box-shadow: inset 0 0 0 1px #176899 !important;
 			}

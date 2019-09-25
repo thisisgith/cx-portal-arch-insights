@@ -63,7 +63,7 @@ export class DevicesSdaComponent implements OnInit, OnChanges {
 			columns: [
 				{
 					key: 'deviceRole',
-					name: I18n.get('_ArchitectureDeviceRole_'),
+					name: I18n.get('_ArchitectureRole_'),
 					sortable: false,
 				},
 				{
@@ -73,11 +73,11 @@ export class DevicesSdaComponent implements OnInit, OnChanges {
 				},
 				{
 					key: 'minimumSwVersion',
-					name: I18n.get('_ArchitectureMinimumSupportedVersion_'),
+					name: I18n.get('_ArchitectureMinimumSupportedRelease_'),
 					sortable: false,
 				},
 				{
-					name: I18n.get('_ArchitectureCompliantVersion_'),
+					name: I18n.get('_ArchitectureSupportedReleases_'),
 					sortable: false,
 					template: this.recommendedVersions,
 				},
