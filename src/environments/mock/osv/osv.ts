@@ -53,7 +53,7 @@ const mockBasicRecommendations: AssetRecommendationsResponse = [
 	{
 		error: null,
 		name: 'latest',
-		postDate: '2018-05-16T00:00:00.000+0000',
+		postDate: '2019-05-14T00:00:00.000+0000',
 		swVersion: '15.7(2)M4b',
 	},
 	{
@@ -65,7 +65,7 @@ const mockBasicRecommendations: AssetRecommendationsResponse = [
 	{
 		error: null,
 		name: 'golden',
-		postDate: '2019-04-16T00:00:00.000+0000',
+		postDate: '2018-04-16T00:00:00.000+0000',
 		swVersion: 'NA',
 	},
 	{
