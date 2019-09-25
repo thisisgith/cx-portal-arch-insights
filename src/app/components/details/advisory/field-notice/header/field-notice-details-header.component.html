@@ -43,7 +43,7 @@
 </div>
 
 <div class="flex row col-md-12 flex-container" *ngIf="details">
-	<a class="text-capitalize btn btn--small btn--primary"
+	<a class="text-uppercase btn btn--primary"
 		[innerText]="'_ViewNotice_' | i18n"
 		data-auto-id="FieldNoticeViewNoticeLink"
 		[href]="details?.advisory?.url"
@@ -52,7 +52,7 @@
 	</a>
 
 	<button *ngIf="impactedAssets?.length || selectedAsset"
-		class="text-capitalize btn btn--small btn--primary"
+		class="text-uppercase btn btn--primary"
 		[innerText]="'_OpenCase_' | i18n"
 		data-auto-id="FieldNoticeOpenCaseLink"
 		(click)="onOpenCase()">

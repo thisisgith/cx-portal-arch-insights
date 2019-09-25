@@ -17,17 +17,17 @@
 <div class="row qtr-margin-top">
 	<div class="col-md-6">
 		<div *ngIf="!status?.loading?.cases && openCases?.length > 0"
-			class="dropdown dropdown--tail open-case-toggle-btn btn btn--small btn--primary flex-center-vertical flex-center"
+			class="dropdown dropdown--tail open-case-toggle-btn flex-center-vertical flex-center"
 			(click)="toggleActiveCases()"
 			[ngClass]="{
 				'active': casesDropdownActive
 			}"
 			data-auto-id="ToggleActiveCases">
-			<a innerText="{{ '_ViewOpenCases_' | i18n }} ({{ openCases.length }})"></a>
+			<a class="text-uppercase" innerText="{{ '_ViewOpenCases_' | i18n }} ({{ openCases.length }})"></a>
 		</div>
 	</div>
 	<div class="col-md-6 text-right">
-		<button class="btn btn--small btn--primary"
+		<button class="btn btn--primary text-uppercase"
 			[ngClass]="{
 				'active': status.scan.inProgress
 			}"
@@ -37,7 +37,7 @@
 			<span *ngIf="status.scan.inProgress" class="icon-animation spin qtr-margin-right"></span>
 			<span [innerText]="(status.scan.inProgress ? '_Scanning_' : '_Scan_') | i18n"></span>
 		</button>
-		<button class="btn btn--small btn--primary"
+		<button class="btn btn--primary text-uppercase"
 			*ngIf="asset?.supportCovered"
 			[innerText]="'_OpenCase_' | i18n"
 			data-auto-id="Asset360OpenCaseBtn"
