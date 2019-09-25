@@ -184,16 +184,16 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 						width: '10%',
 					},
 					{
-						key: 'profileName',
-						name: I18n.get('_OsvSoftwareGroup_'),
-						sortable: false,
-						width: '10%',
-					},
-					{
 						key: 'productFamily',
 						name: I18n.get('_OsvProductFamily_'),
 						sortable: true,
 						width: '20%',
+					},
+					{
+						key: 'profileName',
+						name: I18n.get('_OsvSoftwareGroup_'),
+						sortable: false,
+						width: '10%',
 					},
 					{
 						key: 'swType',
