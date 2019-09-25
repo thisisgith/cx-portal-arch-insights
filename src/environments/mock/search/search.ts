@@ -1,6 +1,6 @@
 import { CDCSearchResponse, GlobalSearchResponse } from '@sdp-api';
 /** base API for search */
-const api = '/api/customerportal/search/v1';
+const api = '/api/customerportal/search';
 /** base API for typeahead search */
 const typeaheadApi = '/esps/search/suggest';
 
@@ -564,7 +564,7 @@ export const SearchScenarios = [
 		scenarios: {
 			POST: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: Math.floor(Math.random() * 200) + 500,
 					description: 'Generic Example',
 					response: {
 						body: mockData,
@@ -586,7 +586,7 @@ export const SearchScenarios = [
 					},
 				},
 				{
-					delay: Math.floor(Math.random() * 2000) + 1000,
+					delay: Math.floor(Math.random() * 200) + 1000,
 					description: 'Failure Response',
 					response: {
 						status: 404,
@@ -595,7 +595,7 @@ export const SearchScenarios = [
 					selected: false,
 				},
 				{
-					delay: Math.floor(Math.random() * 2000) + 1000,
+					delay: Math.floor(Math.random() * 200) + 1000,
 					description: 'Response with Search Token',
 					response: {
 						body: mockDataWithSearchToken,
@@ -604,7 +604,7 @@ export const SearchScenarios = [
 				},
 			],
 		},
-		url: `${api}/cdcSearch`,
+		url: `${api}/v2/ciscoSearch`,
 		usecases: ['Example', 'More Example'],
 	},
 	{
@@ -638,7 +638,7 @@ export const SearchScenarios = [
 				},
 			],
 		},
-		url: `${api}/globalSearch`,
+		url: `${api}/v1/globalSearch`,
 		usecases: ['Example', 'More Example'],
 	},
 ];
