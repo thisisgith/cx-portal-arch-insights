@@ -19,6 +19,7 @@ import { I18nPipeModule, FromNowPipeModule } from '@cisco-ngx/cui-pipes';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ProductAlertsModule, DiagnosticsModule } from '@sdp-api';
 import { environment } from '@environment';
+import { DateTimePipeModule } from '@pipes';
 
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
@@ -48,6 +49,7 @@ const childRoutes: Routes = [
 		CuiSpinnerModule,
 		CuiTableModule,
 		CuiTabsModule,
+		DateTimePipeModule,
 		DetailsPanelModule,
 		DiagnosticsModule.forRoot({ rootUrl }),
 		FormsModule,

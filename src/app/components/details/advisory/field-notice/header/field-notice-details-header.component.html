@@ -4,7 +4,16 @@
 			<span [innerText]="'_Published_' | i18n"></span>
 			<span>:</span>
 		</div>
-		<div [innerText]="(details?.bulletin?.bulletinFirstPublished | date:'MMM dd, yyyy') || ('_NA_' | i18n)" class="header__text"></div>
+		<div *ngIf="details.bulletin && details.bulletin.bulletinFirstPublished"
+			[innerText]="details.bulletin.bulletinFirstPublished | fromNow"
+			[title]="details.bulletin.bulletinFirstPublished | dateTime"
+			class="header__text">
+		</div>
+		<div *ngIf="!details.bulletin || !details.bulletin.bulletinFirstPublished"
+			[innerText]="('_Never_' | i18n)"
+			[title]="('_Never_' | i18n)"
+			class="header__text">
+		</div>
 	</div>
 
 	<div data-auto-id="FieldNoticeLastUpdated" class="header__item">
@@ -12,7 +21,16 @@
 			<span [innerText]="'_LastUpdated_' | i18n"></span>
 			<span>:</span>
 		</div>
-		<div [innerText]="(details?.bulletin?.bulletinLastUpdated | date:'MMM dd, yyyy') || (details?.bulletin?.bulletinFirstPublished | date:'MMM dd, yyyy') || ('_Never_' | i18n)" class="header__text"></div>
+		<div *ngIf="details.advisory && details.advisory.lastUpdated"
+			[innerText]="details.advisory.lastUpdated | fromNow"
+			[title]="details.advisory.lastUpdated | dateTime"
+			class="header__text">
+		</div>
+		<div *ngIf="!details.advisory || !details.advisory.lastUpdated"
+			[innerText]="('_Never_' | i18n)"
+			[title]="('_Never_' | i18n)"
+			class="header__text">
+		</div>
 	</div>
 
 	<div data-auto-id="FieldNoticeVersion" class="header__item">

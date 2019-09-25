@@ -5,6 +5,7 @@ import { OpenCasesModule } from './open-cases/open-cases.module';
 import { I18nPipeModule, FromNowPipeModule } from '@cisco-ngx/cui-pipes';
 import { NetworkDataGatewayModule } from '@sdp-api';
 import { environment } from '@environment';
+import { DateTimePipeModule } from '@pipes';
 
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
@@ -17,6 +18,7 @@ const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 	exports: [AssetDetailsHeaderComponent],
 	imports: [
 		CommonModule,
+		DateTimePipeModule,
 		I18nPipeModule,
 		OpenCasesModule,
 		FromNowPipeModule,

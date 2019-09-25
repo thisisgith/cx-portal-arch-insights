@@ -86,6 +86,13 @@
 	</ng-container>
 </ng-template>
 
+<ng-template #lastUpdated let-celldata="celldata">
+	<span [innerText]="celldata.lastUpdated ? (celldata.lastUpdated | fromNow) : ('_Never_' | i18n)"
+		[title]="celldata.lastUpdated ? (celldata.lastUpdated | dateTime) : ('_Never_' | i18n)"
+		data-auto-id="LastUpdatedText">
+	</span>
+</ng-template>
+
 <ng-template #fieldNoticeID let-celldata="celldata">
 	<span *ngIf="!celldata.url" innerText="FN {{ celldata.id }}"></span>
 	<a *ngIf="celldata.url"

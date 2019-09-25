@@ -248,7 +248,7 @@
 				<div class="col-md-6 text-right text-dkgray-4 no-padding-left qtr-padding-right" [innerText]="'_LastScan_' | i18n"></div>
 				<div class="col-md-6 no-padding"
 					[innerText]="(item.data?.lastScan ? (item.data.lastScan | fromNow) : ('_Never_' | i18n)) | truncate:true:15"
-					[title]="(item.data?.lastScan ? (item.data.lastScan | fromNow) : ('_Never_' | i18n))"
+					[title]="(item.data?.lastScan ? (item.data.lastScan | dateTime) : ('_Never_' | i18n))"
 					attr.data-auto-id="LastScan-{{ item.data?.serialNumber }}">
 				</div>
 
@@ -363,6 +363,13 @@
 		position="left"
 		icon="icon-more icon-medium text-muted rotate-90">
 	</cui-dropdown>
+</ng-template>
+
+<ng-template #lastScanTemplate let-celldata="celldata">
+	<span [innerText]="celldata.lastScan ? (celldata.lastScan | fromNow) : ('_Never_' | i18n)"
+		[title]="celldata.lastScan ? (celldata.lastScan | dateTime) : ('_Never_' | i18n)"
+		attr.data-auto-id="LastScan-{{ celldata?.serialNumber }}">
+	</span>
 </ng-template>
 
 <ng-template #filterBar>

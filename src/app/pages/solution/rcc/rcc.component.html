@@ -12,7 +12,7 @@
 					<div data-auto-id="assetViolationCount" class="col-md-12 panel flex-center flex-fill filter assets-count"
 						(click)="selectedView('asset')" [ngClass]="{'text-primary': isAssetView}">
 						<div class="flex-center dbl-padding-left dbl-padding-right font-size-32" [innerText]="assetsTotalCount | number"></div>
-						<div class="text-medium flex-center qtr-margin-top" [innerText]= "'_RccAssetWithViolations_' | i18n"></div>
+						<div class="text-medium flex-center qtr-margin-top" [innerText]= "'_RccSystemWithViolations_' | i18n"></div>
 					</div>
 				</div>
 			</div>
@@ -155,10 +155,6 @@
 		<pie-chart [seriesData]="filter?.seriesData" (subfilter)="onSubfilterSelect($event, filter, true)">
 		</pie-chart>
 	</ng-template>
-	<ng-template #assetOsTypeFilter let-filter="filter">
-		<pie-chart [seriesData]="filter?.seriesData" (subfilter)="onSubfilterSelect($event, filter, true)">
-		</pie-chart>
-	</ng-template>
 	<ng-template #assetSeverityFilter let-filter="filter">
 		<pie-chart [seriesData]="filter?.seriesData" (subfilter)="onSubfilterSelect($event, filter, true)">
 		</pie-chart>
@@ -198,21 +194,15 @@
 			<div class="row ">
 				<div class="col-12 base-margin-bottom">
 					<div class="flex">
-						<div data-auto-id="RccPolicyGroup" class="dbl-margin-right">
-							<div class="text-small text-bold" [innerText]="'_RccAssetPolicyGroup_' | i18n">
+						<div data-auto-id="RccRegulatoryType" class="dbl-margin-right">
+							<div class="text-small text-bold" [innerText]="'_RccRegulatoryType_' | i18n">
 							</div>
 							<div [innerText]="policyViolationInfo?.policygroupid || ('_NA_' | i18n)"></div>
 						</div>
-						<div data-auto-id="RccSerialNumber" class="dbl-margin-right">
-							<div class="text-small text-bold" [innerText]="'_RccPolicyCategory_' | i18n">
+						<div data-auto-id="RccCategory" class="dbl-margin-right">
+							<div class="text-small text-bold" [innerText]="'_RccCategory_' | i18n">
 							</div>
 							<div [innerText]="policyViolationInfo?.policycategory || ('_NA_' | i18n) "></div>
-						</div>
-						<div data-auto-id="RccPoliyName" class="dbl-margin-right">
-							<div class="text-small text-bold" [innerText]="'_RccPolicyName_' | i18n">
-							</div>
-							<div [innerText]="policyViolationInfo?.policyname  || ('_NA_' | i18n) ">
-							</div>
 						</div>
 						<div data-auto-id="highestSeverity" class="dbl-margin-right">
 							<div class="text-small text-bold" [innerText]="'_HighestSeverity_' | i18n">
