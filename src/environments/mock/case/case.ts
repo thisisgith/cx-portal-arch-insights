@@ -978,7 +978,7 @@ const allCaseCountResponse = {
 };
 
 /** Build one big list of all pages (for visual filters) */
-const caseListAll = caseListResponse1;
+const caseListAll = _.cloneDeep(caseListResponse1);
 caseListAll.content = caseListAll.content.concat(caseListResponse2.content);
 caseListAll.numberOfElements = caseListAll.content.length;
 caseListAll.totalElements = caseListAll.content.length;
@@ -1160,7 +1160,7 @@ export const CaseScenarios = [
 		scenarios: {
 			POST: [
 				{
-					delay: 200,
+					delay: 500,
 					description: 'Cases Create Response',
 					response: {
 						body: caseCreatedResponse,
