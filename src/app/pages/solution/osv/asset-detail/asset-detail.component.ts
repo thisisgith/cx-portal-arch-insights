@@ -144,13 +144,11 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 
 	/**
 	 * group recommendations based on version
-	 * @param data Recommendations
+	 * @param recommendations Recommendations
 	 * @returns grouped data
 	 */
-	public groupData (data: AssetRecommendations[]) {
-		this.addVersionInfo(data);
-		const recommendations = _.filter(data, (detail: AssetRecommendations) =>
-			detail.name !== 'current');
+	public groupData (recommendations: AssetRecommendations[]) {
+		this.addVersionInfo(recommendations);
 		const groups = _.groupBy(recommendations, 'swVersion');
 		const groupedData = [];
 		_.map(_.keys(groups), swVersion => {
@@ -161,7 +159,6 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 			detail.swVersionGroup = _.cloneDeep(groups[swVersion]);
 			groupedData.push(detail);
 		});
-		this.currentVersion = _.get(_.filter(data, { name: 'current' }), 0);
 
 		return this.sortData(groupedData);
 	}
