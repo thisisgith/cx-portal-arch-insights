@@ -5,8 +5,9 @@ class RouteWatch {
 	/**
 	 * Constructor
 	 * @param {string | Glob | RegExp} route URL argument for cy.route()
+	 * @param {string} [method] HTTP request method (default = 'GET')
 	 */
-	constructor (route) {
+	constructor (route, method = 'GET') {
 		/**
 		 * Number of times a route was called
 		 */
@@ -47,6 +48,7 @@ class RouteWatch {
 
 		cy.server();
 		cy.route({
+			method,
 			url: route,
 			onAbort: () => { this.cancelled = true; },
 			onRequest: xhr => {

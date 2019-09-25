@@ -5,25 +5,30 @@
 			<div class="col-md-5">
 				<div class="text-bold font-size" [innerText]="'_RMACaseSeverity_' | i18n | uppercase"></div>
 				<div>
-					<span class="dot" [ngClass]="getSeverityColor(caseDetails?.priority)"></span>
+					<span class="dot"
+						[ngClass]="getSeverityColor(caseDetails?.priority)"
+						data-auto-id="CaseDetailsSeverityIcon"></span>
 					<span class="text-bold qtr-padding-left"
+						data-auto-id="CaseDetailsSeverity"
 						[innerText]="caseDetails?.priority? ('S'+ caseDetails.priority): ''"></span>
-					<span class="qtr-padding-left" [innerText]="caseDetails?.requestType"></span>
+					<span class="qtr-padding-left"
+						[innerText]="caseDetails?.requestType"
+						data-auto-id="CaseDetailsRequestType"></span>
 				</div>
 			</div>
 			<div class="col-md-3">
 				<div>
 					<span class="text-bold font-size" [innerText]="'_RMACaseStatus_' | i18n | uppercase"></span>
 				</div>
-				<div [innerText]="caseDetails?.status"></div>
+				<div data-auto-id="CaseDetailsStatus" [innerText]="caseDetails?.status"></div>
 			</div>
 			<div class="col-md-2">
 				<div class="text-bold font-size" [innerText]="'_RMACaseCreated_' | i18n | uppercase"></div>
-				<div [innerText]="caseDetails?.createdDate | date"></div>
+				<div data-auto-id="CaseDetailsCreatedDate" [innerText]="caseDetails?.createdDate | date"></div>
 			</div>
 			<div class="col-md-2">
 				<div class="text-bold font-size" [innerText]="'_RMACaseLastUpdated_' | i18n | uppercase"></div>
-				<div [innerText]="caseDetails?.lastUpdateDate | date"></div>
+				<div data-auto-id="CaseDetailsLastUpdatedDate" [innerText]="caseDetails?.lastUpdateDate | date"></div>
 			</div>
 		</div>
 
