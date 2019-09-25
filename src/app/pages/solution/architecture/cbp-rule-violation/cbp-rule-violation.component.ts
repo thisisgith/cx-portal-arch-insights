@@ -128,7 +128,7 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 				},
 				{
 					key: 'deviceIpsWithExceptions',
-					name: I18n.get('_ArchitectureAssetsImpacted_'),
+					name: I18n.get('_ArchitectureSystemsAffected_'),
 					render: item => item.deviceIpsWithExceptions.length !== 0
 								? _.split(item.deviceIpsWithExceptions, ';').length : '0',
 					sortable: false,
