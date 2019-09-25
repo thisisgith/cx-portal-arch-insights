@@ -143,6 +143,76 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 	}
 }
 
+// CUSTOM STYLING OF CUI-SELECT COMPONENT
+::ng-deep .cui cui-select {
+	cui-vscroll-viewport.dropdown__menu {
+		margin-top: 1px;
+
+		.cui-virtual-scroll-content-wrapper > div {
+			> a {
+				padding: 0 5px 0 25px !important;
+				border: 0 !important;
+				color: $text-default-color !important;
+
+				&.selected {
+					background-color: #ecf4fc !important;
+
+					&:after {
+						color: #00bceb;
+					}
+				}
+
+				&:after {
+					left: 5px;
+					font-size: 16px;
+				}
+
+				&:hover {
+					background-color: #f3f9ff;
+				}
+			}
+		}
+	}
+
+	.dropdown:not(.active) .form-group__text::after {
+		position:absolute;
+		top: 10px;
+		right: 10px;
+		content: "\E053";
+		font-family: "cui-font";
+		pointer-events: none;
+	}
+
+	.dropdown.active input::placeholder {
+		font-style: normal;
+	}
+
+	.dropdown.active.form-group .form-group__text input {
+		border-bottom: 1px solid #00bceb !important;
+	}
+
+	.form-group .form-group__text input {
+		border: 0 !important;
+		background: transparent !important;
+		border-bottom: 1px solid $text-light-gray !important;
+		border-radius: 0 !important;
+		color: $text-default-color !important;
+		cursor:pointer;
+
+		&:focus {
+			box-shadow: none;
+		}
+	} 
+
+	label {
+		color: $text-dark-gray;
+		font-size: 12px;
+		position: absolute;
+		left: -55px;
+		margin: 0;
+	}
+}
+
 .icon-check-outline,
 .icon-clock,
 .icon-calendar {
@@ -1451,16 +1521,6 @@ tr.td-row td {
 .checkbox-complete::after {
 	color: $accent-light-blue !important;
 	font-size: 20px !important;
-}
-
-
-:host ::ng-deep .lifecycle-filter input,
-:host ::ng-deep .lifecycle-filter input:focus {
-	border: 0 !important;
-	border-color: transparent;
-	background: transparent !important;
-	border-bottom: 1px solid $text-light-gray !important;
-	color: $text-dark-gray !important;
 }
 
 :host ::ng-deep .progressbar__fill {
