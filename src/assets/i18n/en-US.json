@@ -849,7 +849,7 @@
 	"_RccRegulatoryType_": "Regulatory Type",
 	"_RccRelease_": "Release",
 	"_RccRuleViolated_": "Rule Violated",
-	"_RccRuleNameArg_": "Rule Name: {0}",
+	"_RccRuleViolatedArg_": "Rule Violated: {0}",
 	"_RccSeverity_": "Severity",
 	"_RccSeverityValueP1_": "P1 - Emergency",
 	"_RccSeverityValueP2_": "P2 - Critical",
