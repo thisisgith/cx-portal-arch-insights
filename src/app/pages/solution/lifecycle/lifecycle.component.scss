@@ -1228,7 +1228,7 @@ tr.td-row td {
 				.icon-clock,
 				.icon-check-outline {
 					font-size: 10px;
-					color: #bdc5cf;
+					color: $icon-light-gray;
 					height: unset;
 				}
 
@@ -1285,7 +1285,7 @@ tr.td-row td {
 
 			.icon-clock {
 				font-size: 10px;
-				color: #bdc5cf;
+				color: $icon-light-gray;
 			}
 
 			&__text {
@@ -1328,7 +1328,7 @@ tr.td-row td {
 
 				.icon-clock {
 					font-size: 10px;
-					color: #bdc5cf;
+					color: $icon-light-gray;
 				}
 			}
 
@@ -1338,7 +1338,7 @@ tr.td-row td {
 				.icon-file-pdf-o,
 				.icon-document {
 					font-size: 10px;
-					color: #bdc5cf;
+					color: $icon-light-gray;
 				}
 			}
 
@@ -1521,6 +1521,35 @@ polygon {
 .list-view table {
 	margin-top: unset;
 	cursor: default;
+	
+	td {
+		div {
+			font-size: 13px;
+			color: $text-dark-gray;
+
+			&.col {
+				&--highlight {
+					font-size: 14px;
+					font-weight: bold;
+				}
+			}
+
+			.icon {
+				font-size: 18px;
+				color: $icon-light-gray;
+				margin-top: -3px;
+
+				&-inline {
+					position: absolute;
+					top: -5px;
+
+					&+span {
+						margin-left: 27px;
+					}
+				}
+			}
+		}
+	}
 }
 
 .bookmark-column .icon-bookmark {
