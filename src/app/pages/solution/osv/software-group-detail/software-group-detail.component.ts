@@ -375,6 +375,8 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 					{
 						key: 'optimalVersion',
 						name: I18n.get('_OsvOptimalOSVersion_'),
+						render: item =>
+								item.optimalVersion ? item.optimalVersion : '',
 						sortable: false,
 						width: '20%',
 					},
@@ -434,12 +436,16 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 					{
 						key: 'optimalVersion',
 						name: I18n.get('_OsvOptimalVersion_'),
+						render: item =>
+								item.optimalVersion ? item.optimalVersion : '',
 						sortable: false,
 						width: '16%',
 					},
 					{
 						key: 'deploymentStatus',
 						name: I18n.get('_OsvDeploymentStatus_'),
+						render: item =>
+								item.deploymentStatus ? item.deploymentStatus : '',
 						sortable: false,
 						width: '16%',
 					},
