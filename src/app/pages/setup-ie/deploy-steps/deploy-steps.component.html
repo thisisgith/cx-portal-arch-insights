@@ -5,7 +5,7 @@
 		[innerText]="'_StepXColonY_' | i18n:stepNum:stepLabel | uppercase"
 	></h6>
 	<div class="dbl-margin-bottom">
-		<h2 [innerText]="title"></h2>
+		<div class="step-title" [innerText]="title"></div>
 	</div>
 
 	<ng-container *ngFor="let slide of slides">
@@ -25,13 +25,13 @@
 			<div class="flex-center">
 				<button
 					data-auto-id="next-slide-btn"
-					class="btn btn--secondary qtr-margin-right"
+					class="btn cx-btn base-margin-right"
 					[innerText]="slide.buttonText | uppercase"
 					(click)="onNextSlide()">
 				</button>
 
 				<span [innerText]="'_PressEnter_' | i18n"
-					class="text-large">
+					class="text-medium text-uppercase cx-text-gray">
 				</span>
 			</div>
 		</div>
