@@ -193,6 +193,9 @@ describe('AssetDetailsAdvisoriesComponent', () => {
 			.toEqual({
 				id: securityTab.data[0].id,
 				type: 'security' });
+
+		fixture.destroy();
+		tick();
 	}));
 
 	it('should clear the advisory on panel close', done => {

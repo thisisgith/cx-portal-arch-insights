@@ -9,7 +9,9 @@
 	</div>
 	<div data-auto-id="Asset360LastScan" class="asset__info flex-center-vertical">
 		<div class=" asset__info__label qtr-margin-right" [innerText]="'_LastScan_' | i18n"></div>
-		<div innerText="{{ ((asset?.lastScan | fromNow) || ('_Never_' | i18n)) | titlecase }}"></div>
+		<div [innerText]="asset?.lastScan ? (asset.lastScan | fromNow) : ('_Never_' | i18n)"
+			[title]="asset?.lastScan ? (asset.lastScan | dateTime) : ('_Never_' | i18n)">
+		</div>
 	</div>
 </div>
 <div class="row qtr-margin-top">
@@ -20,10 +22,8 @@
 			[ngClass]="{
 				'active': casesDropdownActive
 			}"
-			data-auto-id="ToggleActiveCases"
-			>
-			<a innerText="{{ '_ViewOpenCases_' | i18n }} ({{ openCases.length }})">
-			</a>
+			data-auto-id="ToggleActiveCases">
+			<a innerText="{{ '_ViewOpenCases_' | i18n }} ({{ openCases.length }})"></a>
 		</div>
 	</div>
 	<div class="col-md-6 text-right">

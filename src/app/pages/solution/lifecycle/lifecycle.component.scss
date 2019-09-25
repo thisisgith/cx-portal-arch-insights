@@ -1280,7 +1280,7 @@ tr.td-row td {
 		.learning-popover__footer {
 			margin-top: 14px;
 			display: flex;
-			justify-content: flex-end;
+			justify-content: flex-start;
 			padding-right: 28px;
 
 			.icon-clock {
@@ -1520,9 +1520,11 @@ polygon {
 
 .list-view table {
 	margin-top: unset;
+	cursor: default;
 }
 
 .bookmark-column .icon-bookmark {
 	font-size: 20px;
 	line-height: 20px;
+	cursor: pointer;
 }

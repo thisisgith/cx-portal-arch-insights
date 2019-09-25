@@ -84,6 +84,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 
 	@ViewChild('deviceTemplate', { static: true }) private deviceTemplate: TemplateRef<{ }>;
 	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
+	@ViewChild('lastScanTemplate', { static: true }) private lastScanTemplate: TemplateRef<{ }>;
 	@ViewChild('supportCoverage', { static: true })
 		private supportCoverageTemplate: TemplateRef<{ }>;
 	@ViewChild('criticalAdvisories', { static: true })
@@ -953,9 +954,8 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					{
 						key: 'lastScan',
 						name: I18n.get('_LastScan_'),
-						render: item => item.lastScan ?
-							this.fromNow.transform(item.lastScan) : I18n.get('_Never_'),
 						sortable: false,
+						template: this.lastScanTemplate,
 						width: '100px',
 					},
 					{
