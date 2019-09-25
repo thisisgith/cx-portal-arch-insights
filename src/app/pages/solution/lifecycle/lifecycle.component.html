@@ -233,36 +233,35 @@
 </ng-template>
 
 <ng-template #atxMoreClick let-data="data">
-	<div class="panel atxMorepanel--open panel--bordered"
+	<div class="panel atxMorepanel--open"
 		#atxMoreClick [ngClass]="getATXMorePanel(atxMoreClick)"
 		*ngIf="atxMoreClicked" data-auto-id="atxMoreClickModal">
+		<div class="popover-tail popover-tail--left"></div>
 		<div class="flex flex-column max-height">
-			<div class="icon-bookmark icon-medium"
+			<div class="icon-bookmark"
 				[ngClass]="data.bookmark ? 'ribbon__blue__atx' : 'ribbon__white__atx'"
 				(click)="updateBookmark(data, 'ATX')"
 				data-auto-id="ATXMoreRibbon">
 			</div>
-			<div class="row half-margin-top half-margin-left half-margin-right">
-				<div class="col-md-11 text-left title-line-clamp">
-					<h6 class="text-indigo" [innerText]="data.title" data-auto-id="atxMoreClickModal-Title"></h6>
-				</div>
-				<div class="col-md-1">
-					<a class="no-link closebtn"
-						data-auto-id = "closeMoreATXClickModal"
-						(click)="atxMoreClicked = false; moreATXSelected = ''">
-						<span class="icon-close icon-small"></span>
-					</a>
-				</div>
+			<div class="text-left title-line-clamp">
+				<h6 class="atx-more-popover__title" [innerText]="data.title" data-auto-id="atxMoreClickModal-Title"></h6>
+			</div>
+			<div class="closebtn-container">
+				<a class="no-link closebtn"
+					data-auto-id = "closeMoreATXClickModal"
+					(click)="atxMoreClicked = false; moreATXSelected = ''">
+					<span class="icon-close"></span>
+				</a>
 			</div>
 			<div class="divider divider--compressed"></div>
-			<div class="half-margin-left line-clamp" [innerText]="data.description" data-auto-id="atxMoreClickModal-Description"></div>
-			<div class="base-padding-top half-padding-left">
+			<div class="line-clamp atx-more-popover__description" [innerText]="data.description" data-auto-id="atxMoreClickModal-Description"></div>
+			<div class="base-padding-top">
 				<ng-container *ngTemplateOutlet="data?.sessions?.length > 0 ? 
 					enabledViewSessionsButton : disabledViewSessionsButton; context: {
 						type: 'moreView'
 					}">
 				</ng-container>
-				<button class="cx-btn cx-btn--small cx-btn--primary text-uppercase"
+				<button class="cx-btn cx-btn--small cx-btn--primary text-uppercase qtr-margin-left"
 					attr.data-auto-id = "MoreATXWatchNow-{{ data.recordingURL }}"
 					[ngClass]="data?.recordingURL ? null : 'disabled'"
 					(click)="crossLaunch(data.recordingURL)"

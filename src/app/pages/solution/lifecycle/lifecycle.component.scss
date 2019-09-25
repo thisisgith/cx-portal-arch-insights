@@ -129,6 +129,20 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 	border-bottom: 0 none !important;
 }
 
+.icon-bookmark {
+	-webkit-text-stroke-width: 1px;
+
+	&--on {
+		color: $cisco-blue;
+		-webkit-text-stroke-color: #5ddfff;
+	}
+
+	&--off {
+		color: #fff;
+		-webkit-text-stroke-color: #c1d8e2;
+	}
+}
+
 .icon-check-outline,
 .icon-clock,
 .icon-calendar {
@@ -709,24 +723,47 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 }
 
 .atxMorepanel--open {
-	box-shadow: $base-box-shadow;
+	box-shadow: $popover-box-shadow;
 	height: 200px;
 	width: 500px;
 	position: absolute;
 	z-index: 3;
 	background-color: $white;
 	border-radius: 10px;
-}
+	padding: 25px 0 25px 30px;
 
-.atxMorepanel--open::after {
-	content: "";
-	position: absolute;
-	top: 40%;
-	left: -15px;
-	z-index: -1;
-	border-top: 25px solid transparent;
-	border-right: 35px solid white;
-	border-bottom: 30px solid transparent;
+	.popover-tail {
+		@extend %popover-tail--left;
+	}
+
+	.icon-bookmark {
+		font-size: 21px;
+		right: 45px;
+	}
+
+	.closebtn-container {
+		position: absolute;
+		top: 15px;
+		right: 15px;
+
+		.icon-close {
+			color: #b4b6b8;
+			font-size: 15px;
+		}
+	}
+
+	.atx-more-popover__title {
+		color: #6c757d;
+		font-size: 16px;
+		line-height: 19px;
+	}
+
+	.atx-more-popover__description {
+		color: #394454;
+		font-size: 13px;
+		line-height: 17px;
+		padding-right: 30px;
+	}
 }
 
 .panel--open::after {
@@ -1434,20 +1471,6 @@ tr.td-row::after {
 ::ng-deep .cui .table th {
 	margin-top: 10px;
 	border-right: transparent !important;
-}
-
-.icon-bookmark {
-	-webkit-text-stroke-width: 1px;
-
-	&--on {
-		color: $cisco-blue;
-		-webkit-text-stroke-color: #5ddfff;
-	}
-
-	&--off {
-		color: #fff;
-		-webkit-text-stroke-color: #c1d8e2;
-	}
 }
 
 .icon-bookmark-clear {
