@@ -176,6 +176,8 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 					{
 						key: 'optimalVersion',
 						name: I18n.get('_OsvOptimalVersion_'),
+						render: item =>
+								item.optimalVersion ? item.optimalVersion : '',
 						sortable: false,
 						width: '15%',
 					},
