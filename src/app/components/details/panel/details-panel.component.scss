@@ -95,6 +95,7 @@ $default-text-color: #394454;
 			border: none !important;
 			color: #fff !important;
 			height: 28px !important;
+			line-height: 28px !important;
 			font-size: 13px !important;
 			font-family: "CiscoSans Bold", sans-serif !important;
 			background-color: #00bceb !important;
@@ -184,10 +185,12 @@ $default-text-color: #394454;
 
 			&--small {
 				height: 25px !important;
+				line-height: 25px !important;
 			}
 
 			&--large {
 				height: 42px !important;
+				line-height: 42px !important;
 			}
 		}
 
