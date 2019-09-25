@@ -5,4 +5,8 @@
 		stroke: $primary;
 		stroke-width: 2;
 	}
+
+	#timeline-chart .highcharts-tooltip > span {
+		background: #000;
+	}
 }
