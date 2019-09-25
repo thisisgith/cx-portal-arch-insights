@@ -456,7 +456,7 @@ export class LifecycleComponent implements OnDestroy {
 					sortDirection: 'asc',
 					sortKey: 'bookmark',
 					template: this.bookmarkTemplate,
-					width: '10%',
+					width: '130px',
 				},
 				{
 					key: 'title',
@@ -466,7 +466,7 @@ export class LifecycleComponent implements OnDestroy {
 					sortKey: 'title',
 					template: this.titleTemplate,
 					value: 'title',
-					width: '35%',
+					width: 'auto',
 				},
 				{
 					key: 'archetype',
@@ -507,7 +507,7 @@ export class LifecycleComponent implements OnDestroy {
 					sortDirection: 'asc',
 					sortKey: 'bookmark',
 					template: this.bookmarkTemplate,
-					width: '10%',
+					width: '130px',
 				},
 				{
 					key: 'title',
@@ -517,7 +517,7 @@ export class LifecycleComponent implements OnDestroy {
 					sortKey: 'title',
 					template: this.titleTemplate,
 					value: 'title',
-					width: '35%',
+					width: 'auto',
 				},
 				{
 					key: 'archetype',
@@ -557,7 +557,7 @@ export class LifecycleComponent implements OnDestroy {
 					sortDirection: 'asc',
 					sortKey: 'bookmark',
 					template: this.bookmarkTemplate,
-					width: '10%',
+					width: '160px',
 				},
 				{
 					key: 'title',
@@ -566,7 +566,7 @@ export class LifecycleComponent implements OnDestroy {
 					sortDirection: 'asc',
 					sortKey: 'title',
 					template: this.titleTemplate,
-					width: '50%',
+					width: 'auto',
 				},
 				{
 					key: 'status',
@@ -575,12 +575,12 @@ export class LifecycleComponent implements OnDestroy {
 					sortDirection: 'asc',
 					sortKey: 'status',
 					template: this.statusTemplate,
-					width: '20%',
+					width: 'auto',
 				},
 				{
 					sortable: false,
 					template: this.actionTemplate,
-					width: '20%',
+					width: 'auto',
 				},
 			],
 		});
@@ -598,7 +598,7 @@ export class LifecycleComponent implements OnDestroy {
 					sortDirection: 'asc',
 					sortKey: 'bookmark',
 					template: this.bookmarkTemplate,
-					width: '12%',
+					width: '160px',
 				},
 				{
 					key: 'title',
@@ -607,7 +607,7 @@ export class LifecycleComponent implements OnDestroy {
 					sortDirection: 'asc',
 					sortKey: 'title',
 					template: this.titleTemplate,
-					width: '44%',
+					width: 'auto',
 				},
 				{
 					key: 'status',
@@ -616,12 +616,12 @@ export class LifecycleComponent implements OnDestroy {
 					sortDirection: 'asc',
 					sortKey: 'status',
 					template: this.statusTemplate,
-					width: '20%',
+					width: 'auto',
 				},
 				{
 					sortable: false,
 					template: this.actionTemplate,
-					width: '24%',
+					width: 'auto',
 				},
 			],
 		});
