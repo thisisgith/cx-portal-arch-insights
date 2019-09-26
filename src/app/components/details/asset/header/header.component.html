@@ -15,9 +15,9 @@
 	</div>
 </div>
 <div class="row qtr-margin-top">
-	<div class="col-md-6">
+	<div class="col-md-6 flex-center-vertical">
 		<div *ngIf="!status?.loading?.cases && openCases?.length > 0"
-			class="dropdown dropdown--tail open-case-toggle-btn flex-center-vertical flex-center"
+			class="dropdown dropdown--tail open-case-toggle-btn"
 			(click)="toggleActiveCases()"
 			[ngClass]="{
 				'active': casesDropdownActive
