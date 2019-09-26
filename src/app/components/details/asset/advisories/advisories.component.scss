@@ -16,21 +16,20 @@
 	}
 }
 
-.btn.btn--primary-ghost {
-	border: 1px solid #c8d4d7;
-	color: #394454;
-	font-size: 13px;
-	height: 25px;
+.btn-group .btn.btn--small {
+	// importants are needed due to importants in details-panel.component.scss
+	color: #394454 !important;
+	box-shadow: inset 0 0 0 1px #c8d4d7 !important;
 
 	&.selected {
-		background-color: #00bceb;
-		box-shadow: unset;
-		border-color: transparent;
+		background-color: #00bceb !important;
+		box-shadow: unset !important;
+		color: #fff !important;
 	}
 
 	&:hover:not(.selected) {
-		background-color: #fff;
-		color: #394454;
-		border-color: #227bb1;
+		background-color: #fff !important;
+		color: #394454 !important;
+		box-shadow: inset 0 0 0 1px #176899 !important;
 	}
 }

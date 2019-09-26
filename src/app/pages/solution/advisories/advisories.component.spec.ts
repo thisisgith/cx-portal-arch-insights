@@ -145,6 +145,7 @@ describe('AdvisoriesComponent', () => {
 
 			expect(_.filter(tab.filters, 'selected'))
 				.toContain(impactFilter);
+
 			fixture.destroy();
 			flush();
 		}));
@@ -216,6 +217,7 @@ describe('AdvisoriesComponent', () => {
 
 			expect(subfilter.selected)
 				.toBeFalsy();
+
 			fixture.destroy();
 			flush();
 		}));
@@ -230,7 +232,10 @@ describe('AdvisoriesComponent', () => {
 			tick(1000);
 
 			expect(tab.params.page)
-			.toBe(2);
+				.toBe(2);
+
+			fixture.destroy();
+			flush();
 		}));
 
 		it('should clear filters', fakeAsync(() => {
@@ -261,6 +266,9 @@ describe('AdvisoriesComponent', () => {
 				.toBe(0);
 			expect(_.find(tab.filters, { key: 'total' }).selected)
 				.toBeTruthy();
+
+			fixture.destroy();
+			flush();
 		}));
 
 		it('should set null values on request errors', fakeAsync(() => {
@@ -314,6 +322,9 @@ describe('AdvisoriesComponent', () => {
 				.toBe(0);
 			expect(bugsTab.loading)
 				.toBeFalsy();
+
+			fixture.destroy();
+			flush();
 		}));
 
 		it('should load security details if row selected', fakeAsync(() => {
@@ -336,6 +347,9 @@ describe('AdvisoriesComponent', () => {
 
 			expect(component.selectedAdvisory)
 				.toBeNull();
+
+			fixture.destroy();
+			flush();
 		}));
 
 		it('should set query params for Last Updated filter', fakeAsync(() => {
@@ -369,6 +383,9 @@ describe('AdvisoriesComponent', () => {
 
 			expect(_.get(tab, ['params', 'lastUpdatedDateRange']))
 				.toEqual(['further-out']);
+
+			fixture.destroy();
+			flush();
 		}));
 
 		it('should handle sortable column', fakeAsync(() => {
@@ -388,6 +405,9 @@ describe('AdvisoriesComponent', () => {
 
 			expect(tab.params.sort)
 				.toEqual(['title:ASC']);
+
+			fixture.destroy();
+			flush();
 		}));
 
 		it('should load field notice details if row selected', fakeAsync(() => {
@@ -410,6 +430,9 @@ describe('AdvisoriesComponent', () => {
 
 			expect(component.selectedAdvisory)
 				.toBeNull();
+
+			fixture.destroy();
+			flush();
 		}));
 
 		it('should load bug details if row selected', fakeAsync(() => {
@@ -432,6 +455,9 @@ describe('AdvisoriesComponent', () => {
 
 			expect(component.selectedAdvisory)
 				.toBeNull();
+
+			fixture.destroy();
+			flush();
 		}));
 
 		it('should change the route based on the selected tab', fakeAsync(() => {
@@ -462,6 +488,9 @@ describe('AdvisoriesComponent', () => {
 			expect(component.router.navigate)
 				.toHaveBeenCalledWith(['/solution/advisories/security'],
 					{ queryParams: { page: 1, sort: ['severity:ASC'] } });
+
+			fixture.destroy();
+			flush();
 		}));
 
 		it('should add the selected filters to the route', fakeAsync(() => {
@@ -490,6 +519,9 @@ describe('AdvisoriesComponent', () => {
 				.toHaveBeenCalledWith(
 					['/solution/advisories/security'],
 					{ queryParams: { page: 1, sort: ['severity:ASC'], severity: ['info'] } });
+
+			fixture.destroy();
+			flush();
 		}));
 
 		it('should search', fakeAsync(() => {
@@ -506,7 +538,10 @@ describe('AdvisoriesComponent', () => {
 			tick(1000);
 
 			expect(tab.filtered)
-			.toBeTruthy();
+				.toBeTruthy();
+
+			fixture.destroy();
+			flush();
 		}));
 
 		it('should not search', fakeAsync(() => {
@@ -525,6 +560,9 @@ describe('AdvisoriesComponent', () => {
 
 			expect(tab.filtered)
 				.toBeFalsy();
+
+			fixture.destroy();
+			flush();
 		}));
 
 		it('should unset search param if search input is empty for refresh', fakeAsync(() => {
@@ -541,6 +579,9 @@ describe('AdvisoriesComponent', () => {
 
 			expect(_.get(tab, ['params', 'search']))
 				.toBeFalsy();
+
+			fixture.destroy();
+			flush();
 		}));
 
 		it('should not refresh when valid search query', fakeAsync(() => {
@@ -553,6 +594,9 @@ describe('AdvisoriesComponent', () => {
 
 			expect(_.get(tab, ['params', 'search']))
 				.toBe('search');
+
+			fixture.destroy();
+			flush();
 		}));
 	});
 
@@ -619,6 +663,9 @@ describe('AdvisoriesComponent', () => {
 				.toEqual(_.castArray('gt-30-lt-60-days'));
 			expect(_.get(tab.params, 'severity'))
 				.toEqual(_.castArray('low'));
+
+			fixture.destroy();
+			flush();
 		}));
 	});
 
@@ -681,6 +728,9 @@ describe('AdvisoriesComponent', () => {
 			const tab = _.find(component.tabs, { key: 'field' });
 			expect(_.get(tab.params, 'lastUpdatedDateRange'))
 				.toEqual(_.castArray('gt-0-lt-30-days'));
+
+			fixture.destroy();
+			flush();
 		}));
 	});
 
@@ -743,6 +793,9 @@ describe('AdvisoriesComponent', () => {
 			const tab = component.selectedTab;
 			expect(_.get(tab.params, 'state'))
 				.toEqual(_.castArray('new'));
+
+			fixture.destroy();
+			flush();
 		}));
 	});
 });

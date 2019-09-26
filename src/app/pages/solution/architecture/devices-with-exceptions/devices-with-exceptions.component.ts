@@ -76,7 +76,7 @@ export class DevicesWithExceptionsComponent implements OnInit {
 			columns: [
 				{
 					key: 'hostName',
-					name: I18n.get('_ArchitectureHostName_'),
+					name: I18n.get('_ArchitectureSystemName_'),
 					sortable: false,
 				},
 				{
@@ -101,7 +101,7 @@ export class DevicesWithExceptionsComponent implements OnInit {
 				},
 				{
 					key: 'softwareVersion',
-					name: I18n.get('_ArchitectureSoftwareVersion_'),
+					name: I18n.get('_ArchitectureSoftwareRelease_'),
 					sortable: false,
 				},
 				{
@@ -113,7 +113,7 @@ export class DevicesWithExceptionsComponent implements OnInit {
 				},
 				{
 					key: 'ruleIdWithExceptions',
-					name: I18n.get('_ArchitectureCBPExceptions_'),
+					name: I18n.get('_ArchitectureExceptions_'),
 					render: item =>
 						item.ruleIdWithExceptions.split(';').length,
 					sortable: false,

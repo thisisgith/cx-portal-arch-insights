@@ -64,7 +64,6 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 	public errorResult = false;
 	public alert: any = { };
 	public selectionObj = {
-		osName : '',
 		productFamily : '',
 		productModel : '',
 	};
@@ -88,7 +87,6 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 		this.policyRuleData.policy = { };
 		this.policyRuleData.rule = { };
 		this.policyRuleData.deviceFilterDetails = {
-			osName: [],
 			productFamily: [],
 			productModel: [],
 		};
@@ -105,7 +103,6 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 				severity: this.policyViolationInfo.ruleseverity,
 			};
 			this.selectionObj = {
-				osName : '',
 				productFamily : '',
 				productModel : '',
 			};
@@ -141,13 +138,12 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 					this.rccUtilService.getSelectableData(
 						policyRuleDetails.data.deviceFilterDetails);
 					this.policyRuleData = policyRuleDetails.data;
+					const policyDesc = _.get(policyRuleDetails, ['data', 'policy', 'desc'], '')
+						.replace(/\&gt;/g, '>')
+						.replace(/\&lt;/g, '<');
+					_.set(this.policyRuleData, ['policy', 'desc'], policyDesc);
 				}
 				if (violationDetails.data && _.size(violationDetails.data) > 0) {
-					violationDetails.data.impactedAssets.forEach(asset => {
-						asset.violations.forEach((violation, i) => {
-							violation.index = i + 1;
-						});
-					});
 					this.impactedDeviceDetails = violationDetails.data.impactedAssets;
 					this.tableConfig.totalItems = this.impactedDeviceDetails.length;
 					if (this.impactedDeviceDetails.length > 0) {
@@ -174,7 +170,6 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 		this.policyRuleData.policy = { };
 		this.policyRuleData.rule = { };
 		this.policyRuleData.deviceFilterDetails = {
-			osName: [],
 			productFamily: [],
 			productModel: [],
 		};
@@ -191,7 +186,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 			columns: [
 				{
 					key: 'hostName',
-					name: I18n.get('_Device_'),
+					name: I18n.get('_RccSystemName_'),
 					sortable: true,
 					template: this.deviceLinkTemplate,
 				},
@@ -207,22 +202,17 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 				},
 				{
 					key: 'productModel',
-					name: I18n.get('_ProductModel_'),
-					sortable: true,
-				},
-				{
-					key: 'osName',
-					name: I18n.get('_RccOSName_'),
+					name: I18n.get('_RccProductID_'),
 					sortable: true,
 				},
 				{
 					key: 'osVersion',
-					name: I18n.get('_OSVersion_'),
+					name: I18n.get('_RccRelease_'),
 					sortable: true,
 				},
 				{
 					key: 'violationCount',
-					name: I18n.get('_RccViolationCount_'),
+					name: I18n.get('_RccAssetViolations_'),
 					sortable: false,
 				},
 			],
@@ -245,18 +235,14 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 			bordered: false,
 			columns: [
 				{
-					key: 'index',
-					name: I18n.get('_RccAssetSNum_'),
+					key: 'severity',
+					name: I18n.get('_RccSeverity_'),
 					sortable: false,
+					template: this.severityIconTemplate,
 				},
 				{
 					key: 'message',
 					name: I18n.get('_RccAssetMessage_'),
-					sortable: false,
-				},
-				{
-					key: 'suggestedfix',
-					name: I18n.get('_RccAssetSuggestedFix_'),
 					sortable: false,
 				},
 				{
@@ -266,10 +252,9 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 					template: this.violationAgeTemplate,
 				},
 				{
-					key: 'severity',
-					name: I18n.get('_RccSeverity_'),
+					key: 'suggestedfix',
+					name: I18n.get('_RccAssetSuggestedFix_'),
 					sortable: false,
-					template: this.severityIconTemplate,
 				},
 			],
 			striped: false,
@@ -298,11 +283,6 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 		)
 		.subscribe(violationDetails => {
 			this.tableConfig.tableOffset = 0;
-			violationDetails.data.impactedAssets.forEach(asset => {
-				asset.violations.forEach((violation, i) => {
-					violation.index = i + 1;
-				});
-			});
 			this.impactedDeviceDetails = violationDetails.data.impactedAssets;
 			this.selectionLoading = false;
 			this.errorResult = false;

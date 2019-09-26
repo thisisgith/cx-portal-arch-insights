@@ -4,7 +4,7 @@
 	background-color: $primary;
 	color: $white;
 	border: 1px solid $primary;
-	width: 75px;
+	width: 65px;
 	line-height: 16px;
 
 	&::before {
@@ -42,4 +42,13 @@
 
 .responsive-table {
 	overflow: unset;
+}
+
+.recommendation-label.label {
+	background: #ebeef3;
+	color: #394453;
+}
+
+.recommendation-icon-info {
+	color: #c2d1e2;
 }

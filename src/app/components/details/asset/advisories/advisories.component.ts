@@ -10,8 +10,6 @@ import {
 	EventEmitter,
 } from '@angular/core';
 
-import { DatePipe } from '@angular/common';
-
 import { LogService } from '@cisco-ngx/cui-services';
 
 import * as _ from 'lodash-es';
@@ -75,6 +73,7 @@ export class AssetDetailsAdvisoriesComponent
 	@ViewChild('impact', { static: true }) private impactTemplate: TemplateRef<{ }>;
 	@ViewChild('fieldNoticeID', { static: true }) private fieldNoticeIDTemplate: TemplateRef<{ }>;
 	@ViewChild('bugID', { static: true }) private bugIDTemplate: TemplateRef<{ }>;
+	@ViewChild('lastUpdated', { static: true }) private lastUpdatedTemplate: TemplateRef<{ }>;
 
 	public tabs: Tab[];
 	public isLoading = true;
@@ -259,8 +258,6 @@ export class AssetDetailsAdvisoriesComponent
 
 	/** Initializes our advisory tabs */
 	private initializeTabs () {
-		const datePipe = new DatePipe('en-US');
-
 		this.tabs = [
 			{
 				data: [],
@@ -300,15 +297,8 @@ export class AssetDetailsAdvisoriesComponent
 							autoId: 'AdvisoryLastUpdated',
 							key: 'lastUpdated',
 							name: I18n.get('_LastUpdated_'),
-							render: item => {
-								const date = item.lastUpdated ? item.lastUpdated : item.publishedOn;
-								if (date) {
-									return datePipe.transform(new Date(date), 'yyyy MMM dd');
-								}
-
-								return I18n.get('_Never_');
-							},
 							sortable: false,
+							template: this.lastUpdatedTemplate,
 							width: '125px',
 						},
 					],
@@ -353,20 +343,13 @@ export class AssetDetailsAdvisoriesComponent
 							value: 'title',
 						},
 						{
-							autoId: 'AdvisoryLastUpdated',
+							autoId: 'FieldNoticeLastUpdated',
 							key: 'lastUpdated',
 							name: I18n.get('_LastUpdated_'),
-							render: item => {
-								const date = item.lastUpdated ? item.lastUpdated : item.publishedOn;
-								if (date) {
-									return datePipe.transform(new Date(date), 'yyyy MMM dd');
-								}
-
-								return I18n.get('_Never_');
-							},
 							sortable: true,
 							sortDirection: 'desc',
 							sorting: true,
+							template: this.lastUpdatedTemplate,
 							width: '125px',
 						},
 					],
@@ -416,14 +399,12 @@ export class AssetDetailsAdvisoriesComponent
 							sortable: false,
 						},
 						{
+							autoId: 'BugLastUpdated',
 							name: I18n.get('_LastUpdated_'),
-							render: item => item.lastUpdated ?
-								datePipe.transform(
-									new Date(item.lastUpdated), 'yyyy MMM dd') :
-									I18n.get('_Never_'),
 							sortable: false,
 							sortDirection: 'desc',
 							sorting: true,
+							template: this.lastUpdatedTemplate,
 							width: '125px',
 						},
 					],

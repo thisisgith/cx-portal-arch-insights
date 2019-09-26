@@ -16,9 +16,9 @@
 		class="text-primary base-margin-bottom"
 		[innerText]="('_StepXColonY_' | i18n:'1':('_Prerequisites_' | i18n)) | uppercase"
 	></h6>
-	<h2 [innerText]="'_DownloadOVAImage_' | i18n"
-		class="xl-margin-bottom">
-	</h2>
+	<div [innerText]="'_DownloadOVAImage_' | i18n"
+		class="xl-margin-bottom step-title">
+	</div>
 	<cui-loader *ngIf="loading && !error" [label]="'_Loading_' | i18n"></cui-loader>
 	<k9-form
 		*ngIf="!loading && view === 'k9'"
@@ -41,7 +41,7 @@
 		*ngIf="!loading && view === 'pre-download'"
 		data-auto-id="download-image-btn"
 		[innerText]="'_DownloadImage_' | i18n | uppercase"
-		class="btn btn--primary"
+		class="btn cx-btn"
 		(click)="onDownload()"
 	>
 	</button>

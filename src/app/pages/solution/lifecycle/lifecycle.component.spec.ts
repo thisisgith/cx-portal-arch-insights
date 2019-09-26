@@ -450,11 +450,12 @@ describe('LifecycleComponent', () => {
 			expect(atx1.sessions[1].scheduled)
 				.toBeFalsy();
 
+			// UI will not force to change the status, will rely on backend
 			const session2 = atx1.sessions[1];
 			component.registerATXSession(atx1, session2);
 			fixture.detectChanges();
 			expect(atx1.status)
-				.toEqual('requested');
+				.toEqual('recommended');
 		});
 
 		it('should show the selected atx sessions in ATX More', () => {
@@ -566,12 +567,15 @@ describe('LifecycleComponent', () => {
 
 			// Test crossLaunch()
 			spyOn(component, 'closeViewSessions');
+			spyOn(window, 'open');
 
 			component.crossLaunch(crossLaunchUrl);
 			fixture.detectChanges();
 
 			expect(component.closeViewSessions)
 				.toHaveBeenCalled();
+			expect(window.open)
+				.toHaveBeenCalledWith(crossLaunchUrl, '_blank');
 
 			// Test getAtxRegisterButton()
 			let data: AtxSchema;
@@ -865,7 +869,7 @@ describe('LifecycleComponent', () => {
 		});
 	});
 
-	describe('Success Bytes', () => {
+	describe('Success Tips', () => {
 		it('should have loaded the successPaths items', () => {
 			buildSpies();
 			sendParams();
@@ -879,13 +883,13 @@ describe('LifecycleComponent', () => {
 				});
 		});
 
-		it('should show the Success Bytes view-all modal', () => {
+		it('should show the Success Tips view-all modal', () => {
 			buildSpies();
 			sendParams();
 
 			fixture.detectChanges();
 
-			component.showModal('_SuccessBytes_');
+			component.showModal('_SuccessTips_');
 			fixture.detectChanges();
 
 			expect(component.modal.visible)
@@ -904,7 +908,7 @@ describe('LifecycleComponent', () => {
 				.toBeTruthy();
 
 			expect(component.getTitle('SB'))
-				.toEqual('Success Bytes');
+				.toEqual('Success Tips');
 
 			expect(component.getSubtitle('SB'))
 				.toEqual('Resources to fine-tune your tech');
@@ -960,7 +964,7 @@ describe('LifecycleComponent', () => {
 				.toBeFalsy();
 		});
 
-		it('should load success bytes hover panel', () => {
+		it('should load Success Tips hover panel', () => {
 			buildSpies();
 			sendParams();
 			fixture.detectChanges();
@@ -1310,7 +1314,7 @@ describe('LifecycleComponent', () => {
 
 			// since suggestedAction does not change, so will not trigger ATX API call
 			expect(racetrackContentService.getRacetrackATX)
-				.toHaveBeenCalledTimes(2);
+				.toHaveBeenCalledTimes(1);
 		});
 
 		it('should call racetrackService API to update pitstopAction', () => {
@@ -1341,7 +1345,6 @@ describe('LifecycleComponent', () => {
 
 			expect(racetrackContentService.getRacetrackATX)
 				.toHaveBeenCalledTimes(3);
-
 		});
 
 		it('should disable ATX Registration if not current or current+1 pitstop', () => {
@@ -1356,22 +1359,34 @@ describe('LifecycleComponent', () => {
 			component.getLifecycleInfo('Use');
 			component.recommendedAtxScheduleCardOpened = true;
 			fixture.detectChanges();
-			de = fixture.debugElement.query(By.css('#AtxScheduleCardRegisterButton'));
-			expect(de)
-				.toBeFalsy();
+
+			let data: AtxSchema;
+			data = { };
+			component.sessionSelected = { };
+			const button = component.getAtxRegisterButton(data);
+
+			// expect the button diabled
+			expect(button)
+				.toEqual('disabled');
 
 			// change pitstop to "implement" (current+1) and check if button is enabled
 			component.getLifecycleInfo('Implement');
 			component.recommendedAtxScheduleCardOpened = true;
+			fixture.detectChanges();
+			let data1: AtxSchema;
+			data1 = { };
 			component.sessionSelected = {
 				presenterName: 'John Doe',
 				registrationURL: 'https://www.cisco.com/register',
 				sessionStartDate: 1565127052000,
 			};
-			fixture.detectChanges();
-			de = fixture.debugElement.query(By.css('#AtxScheduleCardRegisterButton'));
-			expect(de)
-				.toBeTruthy();
+
+			const button1 = component.getAtxRegisterButton(data1);
+
+			// expect the button not diabled
+			expect(button1)
+				.not
+				.toEqual('disabled');
 
 			// change pitstop to "Onboard" (current) and check if button is enabled
 			racetrackATXSpy.and
@@ -1379,16 +1394,20 @@ describe('LifecycleComponent', () => {
 
 			component.getLifecycleInfo('Onboard');
 			component.recommendedAtxScheduleCardOpened = true;
+			fixture.detectChanges();
+			let data2: AtxSchema;
+			data2 = { };
 			component.sessionSelected = {
 				presenterName: 'John Doe',
 				registrationURL: 'https://www.cisco.com/register',
 				sessionStartDate: 1565127052000,
 			};
-			fixture.detectChanges();
-			de = fixture.debugElement.query(By.css('#AtxScheduleCardRegisterButton'));
-			expect(de)
-			 	.toBeTruthy();
 
+			const button2 = component.getAtxRegisterButton(data2);
+
+			expect(button2)
+				.not
+				.toEqual('disabled');
 		});
 	});
 

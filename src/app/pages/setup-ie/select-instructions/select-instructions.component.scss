@@ -2,14 +2,32 @@
 
 :host {
 	button.btn.btn--wide {
-		border-radius: 4px;
+		border-radius: 3px;
 		margin-left: 0;
 		width: 300px;
 		margin-top: 6px;
 		padding: 15px;
-		text-align: left;
+		text-align: center;
 		white-space: normal;
 		line-height: $base-spacing;
 		height: unset;
+	}
+
+	button.btn.btn--secondary {
+		color: #394454;
+		font-size: 20px;
+		box-shadow: unset;
+		border: 1px solid #879eba;
+
+		&:hover {
+			background: #227bb1;
+			color: #fff;
+		}
+
+		&:active,
+		&:focus {
+			background: #016a94;
+			color: #fff;
+		}
 	}
 }

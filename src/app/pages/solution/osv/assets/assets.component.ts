@@ -184,16 +184,16 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 						width: '10%',
 					},
 					{
-						key: 'profileName',
-						name: I18n.get('_OsvSoftwareGroup_'),
-						sortable: false,
-						width: '10%',
-					},
-					{
 						key: 'productFamily',
 						name: I18n.get('_OsvProductFamily_'),
 						sortable: true,
 						width: '20%',
+					},
+					{
+						key: 'profileName',
+						name: I18n.get('_OsvSoftwareGroup_'),
+						sortable: false,
+						width: '10%',
 					},
 					{
 						key: 'swType',
@@ -210,12 +210,16 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 					{
 						key: 'optimalVersion',
 						name: I18n.get('_OsvOptimalVersion_'),
+						render: item =>
+								item.optimalVersion ? item.optimalVersion : '',
 						sortable: false,
 						width: '10%',
 					},
 					{
 						key: 'deploymentStatus',
 						name: I18n.get('_OsvDeploymentStatus_'),
+						render: item =>
+								item.deploymentStatus ? item.deploymentStatus : '',
 						sortable: false,
 						width: '10%',
 					},

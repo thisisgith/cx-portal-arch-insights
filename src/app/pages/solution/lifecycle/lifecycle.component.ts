@@ -249,6 +249,10 @@ export class LifecycleComponent implements OnDestroy {
 	public scheduledAtxMap = { };
 
 	public componentData: ComponentData = {
+		learning: {
+			certificationsUrl: `${environment.learningLink}?type=certification`,
+			elearningUrl: `${environment.learningLink}?type=e-learning`,
+		},
 		params: {
 			customerId: '',
 			pitstop: '',
@@ -256,10 +260,6 @@ export class LifecycleComponent implements OnDestroy {
 			solution: '',
 			suggestedAction: '',
 			usecase: '',
-		},
-		learning: {
-			certificationsUrl: `${environment.learningLink}?type=certification`,
-			elearningUrl: `${environment.learningLink}?type=e-learning`,
 		},
 	};
 
@@ -384,7 +384,7 @@ export class LifecycleComponent implements OnDestroy {
 				break;
 			}
 			case 'SB': {
-				title = I18n.get('_SuccessBytes_');
+				title = I18n.get('_SuccessTips_');
 				break;
 			}
 			case 'PG': {
@@ -430,6 +430,10 @@ export class LifecycleComponent implements OnDestroy {
 	 */
 	private resetComponentData () {
 		this.componentData = {
+			learning: {
+				certificationsUrl: `${environment.learningLink}?type=certification`,
+				elearningUrl: `${environment.learningLink}?type=e-learning`,
+			},
 			params: {
 				customerId: this.customerId,
 				pitstop: '',
@@ -437,10 +441,6 @@ export class LifecycleComponent implements OnDestroy {
 				solution: '',
 				suggestedAction: '',
 				usecase: '',
-			},
-			learning: {
-				certificationsUrl: `${environment.learningLink}?type=certification`,
-				elearningUrl: `${environment.learningLink}?type=e-learning`,
 			},
 		};
 	}
@@ -458,7 +458,8 @@ export class LifecycleComponent implements OnDestroy {
 					sortDirection: 'asc',
 					sortKey: 'bookmark',
 					template: this.bookmarkTemplate,
-					width: '10%',
+					width: '130px',
+					sorting: false,
 				},
 				{
 					key: 'title',
@@ -468,7 +469,8 @@ export class LifecycleComponent implements OnDestroy {
 					sortKey: 'title',
 					template: this.titleTemplate,
 					value: 'title',
-					width: '35%',
+					width: 'auto',
+					sorting: false,
 				},
 				{
 					key: 'archetype',
@@ -478,6 +480,7 @@ export class LifecycleComponent implements OnDestroy {
 					sortKey: 'archetype',
 					value: 'archetype',
 					width: '20%',
+					sorting: false,
 				},
 				{
 					name: I18n.get('_Format_'),
@@ -486,6 +489,7 @@ export class LifecycleComponent implements OnDestroy {
 					sortKey: 'type',
 					template: this.formatTemplate,
 					width: '20%',
+					sorting: false,
 				},
 				{
 					sortable: false,
@@ -509,7 +513,8 @@ export class LifecycleComponent implements OnDestroy {
 					sortDirection: 'asc',
 					sortKey: 'bookmark',
 					template: this.bookmarkTemplate,
-					width: '10%',
+					width: '130px',
+					sorting: false,
 				},
 				{
 					key: 'title',
@@ -519,7 +524,8 @@ export class LifecycleComponent implements OnDestroy {
 					sortKey: 'title',
 					template: this.titleTemplate,
 					value: 'title',
-					width: '35%',
+					width: 'auto',
+					sorting: false,
 				},
 				{
 					key: 'archetype',
@@ -529,6 +535,7 @@ export class LifecycleComponent implements OnDestroy {
 					sortKey: 'archetype',
 					value: 'archetype',
 					width: '20%',
+					sorting: false,
 				},
 				{
 					name: I18n.get('_Format_'),
@@ -537,6 +544,7 @@ export class LifecycleComponent implements OnDestroy {
 					sortKey: 'type',
 					template: this.formatTemplate,
 					width: '20%',
+					sorting: false,
 				},
 				{
 					sortable: false,
@@ -559,7 +567,8 @@ export class LifecycleComponent implements OnDestroy {
 					sortDirection: 'asc',
 					sortKey: 'bookmark',
 					template: this.bookmarkTemplate,
-					width: '10%',
+					width: '160px',
+					sorting: false,
 				},
 				{
 					key: 'title',
@@ -568,7 +577,8 @@ export class LifecycleComponent implements OnDestroy {
 					sortDirection: 'asc',
 					sortKey: 'title',
 					template: this.titleTemplate,
-					width: '50%',
+					width: 'auto',
+					sorting: false,
 				},
 				{
 					key: 'status',
@@ -577,12 +587,13 @@ export class LifecycleComponent implements OnDestroy {
 					sortDirection: 'asc',
 					sortKey: 'status',
 					template: this.statusTemplate,
-					width: '20%',
+					width: 'auto',
+					sorting: false,
 				},
 				{
 					sortable: false,
 					template: this.actionTemplate,
-					width: '20%',
+					width: 'auto',
 				},
 			],
 		});
@@ -600,7 +611,8 @@ export class LifecycleComponent implements OnDestroy {
 					sortDirection: 'asc',
 					sortKey: 'bookmark',
 					template: this.bookmarkTemplate,
-					width: '12%',
+					width: '160px',
+					sorting: false,
 				},
 				{
 					key: 'title',
@@ -609,7 +621,8 @@ export class LifecycleComponent implements OnDestroy {
 					sortDirection: 'asc',
 					sortKey: 'title',
 					template: this.titleTemplate,
-					width: '44%',
+					width: 'auto',
+					sorting: false,
 				},
 				{
 					key: 'status',
@@ -618,12 +631,13 @@ export class LifecycleComponent implements OnDestroy {
 					sortDirection: 'asc',
 					sortKey: 'status',
 					template: this.statusTemplate,
-					width: '20%',
+					width: 'auto',
+					sorting: false,
 				},
 				{
 					sortable: false,
 					template: this.actionTemplate,
-					width: '24%',
+					width: 'auto',
 				},
 			],
 		});
@@ -636,37 +650,39 @@ export class LifecycleComponent implements OnDestroy {
 	 * @param type lifecycle item type
 	 */
 	public onSort (key: string, sortDirection: string, type: string) {
+		const sortColumn = table => {
+			for (const col of table.columns) {
+				col.sorting = false;
+			}
+			const clickedColumn = _.find(table.columns, { sortKey: key  });
+			clickedColumn.sorting = true;
+			clickedColumn.sortDirection = _.find(table.columns, { sortKey: key })
+				.sortDirection === 'asc' ? 'desc' : 'asc';
+		};
+
 		if (type === 'SB') {
 			this.selectedSuccessPaths = _.orderBy(
 				this.selectedSuccessPaths, [key], [sortDirection]);
 
-			_.find(this.successBytesTable.columns, { sortKey: key }).sortDirection
-				= _.find(this.successBytesTable.columns, { sortKey: key }).sortDirection
-					=== 'asc' ? 'desc' : 'asc';
+			sortColumn(this.successBytesTable);
 		}
 		if (type === 'ATX') {
 			this.selectedATX = _.orderBy(
 				this.selectedATX, [key], [sortDirection]);
 
-			_.find(this.atxTable.columns, { sortKey: key }).sortDirection
-				= _.find(this.atxTable.columns, { sortKey: key }).sortDirection
-					=== 'asc' ? 'desc' : 'asc';
+			sortColumn(this.atxTable);
 		}
 		if (type === 'ACC') {
 			this.selectedACC = _.orderBy(
 				this.selectedACC, [key], [sortDirection]);
 
-			_.find(this.accTable.columns, { sortKey: key }).sortDirection
-				= _.find(this.accTable.columns, { sortKey: key }).sortDirection
-					=== 'asc' ? 'desc' : 'asc';
+			sortColumn(this.accTable);
 		}
 		if (type === 'PG') {
 			this.selectedProductGuides = _.orderBy(
 				this.selectedProductGuides, [key], [sortDirection]);
 
-			_.find(this.productGuidesTable.columns, { sortKey: key }).sortDirection
-				= _.find(this.productGuidesTable.columns, { sortKey: key }).sortDirection
-					=== 'asc' ? 'desc' : 'asc';
+			sortColumn(this.productGuidesTable);
 		}
 	}
 
@@ -751,7 +767,7 @@ export class LifecycleComponent implements OnDestroy {
 				},
 				visible: true,
 			};
-		} else if (type === '_SuccessBytes_') {
+		} else if (type === '_SuccessTips_') {
 			this.modal = {
 				content: this.viewAllModalTemplate,
 				context: {
@@ -820,7 +836,6 @@ export class LifecycleComponent implements OnDestroy {
 		this.contentService.registerUserToAtx(params)
 		.subscribe(() => {
 			this.status.loading.atx = false;
-			atx.status = 'requested';
 			if (window.Cypress) {
 				window.atxLoading = false;
 			}
@@ -1136,7 +1151,7 @@ export class LifecycleComponent implements OnDestroy {
 		let id;
 		let lifecycleCategory: 'ACC' | 'ATX' | 'SB';
 
-		// Product Guides has to be submitted as a Success Bytes bookmark.
+		// Product Guides has to be submitted as a Success Tips bookmark.
 		if (inputCategory === 'PG') {
 			lifecycleCategory = 'SB';
 		} else {
@@ -1144,6 +1159,9 @@ export class LifecycleComponent implements OnDestroy {
 		}
 
 		this.status.loading.bookmark = true;
+		if (window.Cypress) {
+			window.elearningLoading = true;
+		}
 		bookmark = !_.get(item, 'bookmark');
 
 		switch (lifecycleCategory) {
@@ -1174,9 +1192,15 @@ export class LifecycleComponent implements OnDestroy {
 		.subscribe(() => {
 			item.bookmark = !item.bookmark;
 			this.status.loading.bookmark = false;
+			if (window.Cypress) {
+				window.elearningLoading = false;
+			}
 		},
 		err => {
 			this.status.loading.bookmark = false;
+			if (window.Cypress) {
+				window.elearningLoading = false;
+			}
 			this.logger.error(`lifecycle.component : updateBookmark() :: Error  : (${
 				err.status}) ${err.message}`);
 		});
@@ -1281,8 +1305,8 @@ export class LifecycleComponent implements OnDestroy {
 	 public getATXMorePanel (atxMoreClick: HTMLElement) {
 		const _div = atxMoreClick;
 		if (this.atxMoreClicked && this.moreATXSelected && !this.atxScheduleCardOpened) {
-			_div.style.left = `${this.moreXCoordinates}px`;
-			_div.style.top = `${this.moreYCoordinates - _div.offsetHeight / 2}px`;
+			_div.style.left = `${this.moreXCoordinates + 30}px`;
+			_div.style.top = `${this.moreYCoordinates - _div.offsetHeight / 2 + 10}px`;
 		}
 	}
 
@@ -1819,6 +1843,12 @@ export class LifecycleComponent implements OnDestroy {
 	 * @param stage selected pitstop
 	 */
 	public getLifecycleInfo (stage: string) {
+		// If we currentWorkingPitstop has been populated, don't need to call APIs again
+		const name = _.get(this.componentData, ['racetrack', 'pitstop', 'name']);
+		if (stage === name) {
+			return;
+		}
+
 		if (this.componentData.params.solution && this.componentData.params.usecase) {
 			this.status.loading.racetrack = true;
 
@@ -1874,6 +1904,12 @@ export class LifecycleComponent implements OnDestroy {
 	 * Handler for component intialization
 	 */
 	public ngOnInit () {
+		if (window.Cypress) {
+			window.activeComponents = {
+				...window.activeComponents,
+				LifecycleComponent: this,
+			};
+		}
 		const appHeader = document.getElementsByTagName('app-header');
 		this.appHeaderHeight = _.get(appHeader, '[0].clientHeight', 0);
 	}

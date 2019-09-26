@@ -7,4 +7,68 @@
 		animation: fade-in 1s;
 		padding-bottom: 30px;
 	}
+
+	.settings-panel {
+		padding: 11px 0;
+
+		div[class^="col-"] {
+			padding-left: 0;
+			padding-right: 0;
+
+			span {
+				line-height: 21px;
+			}
+		}
+	}
+
+	.settings {
+		&__title {
+			color: #6c757d;
+			font-size: 15px;
+			font-weight: 300;
+			line-height: 12px;
+			text-transform: uppercase;
+
+			&--margin-top {
+				margin-top: 30px;
+			}
+		}
+
+		&__error {
+			border-left: 2px solid #e2231a;
+			color: #767676;
+			line-height: 22px;
+		}
+
+		&__divider {
+			margin-top: 0;
+			margin-bottom: 20px;
+			margin-right: 30px;
+		}
+
+		&__system {
+			&__title {
+				font-size: 14px;
+				color: #394454;
+				line-height: 18px;
+			}
+
+			&__description {
+				margin-top: 2px;
+				font-size: 13px;
+				color: #767676;
+				line-height: 22px;
+			}
+		}
+
+		&__info {
+			&__title {
+				font-size: 11px;
+				color: #6c757d;
+				letter-spacing: -0.02px;
+				line-height: 12px;
+				margin-bottom: 4px;
+			}
+		}
+	}
 }

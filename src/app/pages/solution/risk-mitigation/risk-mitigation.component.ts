@@ -547,6 +547,7 @@ export class RiskMitigationComponent {
 	 * Determines whether fpdpanel close on click
 	 */
 	public onFPDPanelClose () {
+		_.set(this.selectedFingerPrintdata, 'active', false);
 		this.showFpDetails = false;
 		_.set(this.selectedFingerPrintdata, 'active', false);
 		this.selectedFingerPrintdata = null;
@@ -572,6 +573,7 @@ export class RiskMitigationComponent {
 	 */
 	public onPanelClose () {
 		_.set(this.selectedAsset, 'active', false);
+		_.set(this.selectedFingerPrintdata, 'active', false);
 		this.showAsset360 = false;
 		this.onFPDPanelClose();
 	}
@@ -650,7 +652,7 @@ export class RiskMitigationComponent {
 					key: 'resetReason',
 					name: I18n.get('_RMRessetReason_'),
 					sortable: false,
-					width: '250px',
+					width: '356px',
 					template: this.resetReasonTemplate,
 				},
 				{
@@ -674,12 +676,6 @@ export class RiskMitigationComponent {
 					name: I18n.get('_RMProductId_'),
 					sortable: true,
 					template: this.productIdTemplate,
-				},
-				{
-					key: 'productFamily',
-					name: I18n.get('_RMProductFamily_'),
-					sortable: true,
-					template: this.productFamilyTemplate,
 				},
 				{
 					key: 'swVersion',
@@ -726,12 +722,6 @@ export class RiskMitigationComponent {
 					template: this.productIdTemplate,
 				},
 				{
-					key: 'productFamily',
-					name: I18n.get('_RMProductFamily_'),
-					sortable: true,
-					template: this.productFamilyTemplate,
-				},
-				{
 					key: 'softwareType',
 					name: I18n.get('_RMSoftwareType_'),
 					sortable: true,
@@ -742,12 +732,6 @@ export class RiskMitigationComponent {
 					name: I18n.get('_RMSoftwareVersion_'),
 					sortable: true,
 					template: this.softwareVersionTemplate,
-				},
-				{
-					key: 'riskScore',
-					name: I18n.get('_RMRisk_'),
-					sortable: true,
-					template: this.riskScoreTemplate,
 				},
 				{
 					key: 'globalRiskRank',
@@ -832,6 +816,7 @@ export class RiskMitigationComponent {
 	 */
 	public clearFilters () {
 		this.clearAllFilters = !this.clearAllFilters;
+		this.searchQueryInCrashGrid = '';
 		_.each(this.filters, (clearFilter: Filter) => {
 			_.each(clearFilter.seriesData, (currentFilter: { selected: boolean; }) => {
 				currentFilter.selected = false;
@@ -855,6 +840,7 @@ export class RiskMitigationComponent {
 	 */
 	public resetFilters () {
 		this.searchQueryInCrashGrid = '';
+		this.searchQueryInHighCrashGrid = '';
 		_.each(this.filters, (filter: Filter) => {
 			_.each(filter.seriesData, (currentFilter: { selected: boolean; }) => {
 				currentFilter.selected = false;

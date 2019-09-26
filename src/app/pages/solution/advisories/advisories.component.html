@@ -273,9 +273,20 @@
 
 <ng-template #lastUpdatedTemplate let-celldata="celldata">
 	<div class="flex flex-fill flex-center">
-		<span
-			[innerText]="(celldata?.lastUpdated | date:'yyyy MMM dd') || (celldata?.publishedOn | date:'yyyy MMM dd') || ('_Never_' | i18n)"
-			data-auto-id="LastUpdatedText"
-		></span>
+		<span *ngIf="celldata?.lastUpdated"
+			[innerText]="celldata.lastUpdated | fromNow"
+			[title]="celldata.lastUpdated | dateTime"
+			data-auto-id="LastUpdatedText">
+		</span>
+		<span *ngIf="!celldata?.lastUpdated && celldata?.publishedOn"
+			[innerText]="celldata.publishedOn | fromNow"
+			[title]="celldata.publishedOn | dateTime"
+			data-auto-id="LastUpdatedText">
+		</span>
+		<span *ngIf="!celldata?.lastUpdated && !celldata?.publishedOn"
+			[innerText]="'_Never_' | i18n"
+			[title]="'_Never_' | i18n"
+			data-auto-id="LastUpdatedText">
+		</span>
 	</div>
 </ng-template>

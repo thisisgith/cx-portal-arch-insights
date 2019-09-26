@@ -30,4 +30,5 @@ interface Window {
 	racetrackEvents: any;
 	forceCGTDisplay: boolean;
 	cyProblemAreaCode: any;
+	activeComponents: any;
 }

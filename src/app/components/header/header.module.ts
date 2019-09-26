@@ -7,6 +7,7 @@ import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { SearchModule } from '../search/search.module';
 import { HttpClientModule } from '@angular/common/http';
 import { MicroMockModule } from '@cui-x-views/mock';
+import { InlineSVGModule } from 'ng-inline-svg';
 
 /**
  * Module representing the Header Component
@@ -22,6 +23,7 @@ import { MicroMockModule } from '@cui-x-views/mock';
 		MicroMockModule,
 		RouterModule,
 		SearchModule,
+		InlineSVGModule.forRoot({ baseUrl: '/' }),
 	],
 })
 export class HeaderModule { }
