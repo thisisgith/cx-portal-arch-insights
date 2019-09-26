@@ -15,7 +15,7 @@
 	<div class="base-margin-bottom">
 		<div class="flex" *ngIf="alarm">
 			<div class="half-margin-left">
-				<div class="text-bold" [innerText]="'_AfmAssetName_' | i18n"></div>
+				<div class="text-bold" [innerText]="'_AfmSystemName_' | i18n"></div>
 				<div class="cursor" [ngClass]="{'text-primary' : alarm.hostName}"
 					innerText="{{ alarm?.hostName || ('_NA_' | i18n) }}" (click)="connectToAssetDetails(alarm)"
 					data-auto-id="HostName">
@@ -59,7 +59,7 @@
 				<div [innerText]="alarm.raiseSr" class="text-capitalize"></div>
 			</div>
 			<div class="base-margin-left">
-				<div class="text-bold" [innerText]="'_AfmTimeCreated_' | i18n"></div>
+				<div class="text-bold" [innerText]="'_AfmCaseCreated_' | i18n"></div>
 				<div>
 					<span [innerText]="alarm?.alarmCreated | date:'MMM dd, yyyy HH:mm:ss'"></span>
 				</div>
@@ -77,16 +77,17 @@
 					data-auto-id="EventStatus"
 					>
 				<span class="switch__input"></span>
-				<span class="switch__label half-margin-left" [innerText]="'_AfmIgnoreEvent_'|i18n"></span>
+				<span class="switch__label half-margin-left" [innerText]="'_AfmIgnoreFault_'|i18n"></span>
 			</label>
 		</div>
-		<div class="col-md-9 text-right dbl-margin-left" *ngIf="alarm?.raiseSr && alarm?.tacCaseNo">
-			<button id="viewDisabled" class="btn btn--gray-ghost text-tuppercase disabled"
+		<div class="col-md-5"></div>
+		<div class="col-md-4 text-right" *ngIf="alarm?.raiseSr && alarm?.tacCaseNo">
+			<button id="viewDisabled" class="btn btn--gray-ghost text-tuppercase"
 				[innerText]="'_AfmCaseIdX_'|i18n:alarm?.tacCaseNo"></button>
 		</div>
-		<div class="col-md-5" *ngIf="alarm?.raiseSr && alarm?.srStatus?.toUpperCase() === 'FAILED'"></div>
-		<div class="col-md-4 text-right" title="{{alarm?.errorDesc}}" *ngIf="alarm?.raiseSr && alarm?.srStatus?.toUpperCase() === 'FAILED'">
-			<div id="opacity" class="btn btn--gray-ghost disabled"
+		<div class="col-md-4 text-right" title="{{alarm?.errorDesc}}"
+			*ngIf="alarm?.raiseSr && alarm?.srStatus?.toUpperCase() === 'FAILED'">
+			<div id="opacity" class="btn btn--primary"
 				[innerText]="'_AfmEntitlementFailed_'| i18n"></div>
 		</div>
 	</div>

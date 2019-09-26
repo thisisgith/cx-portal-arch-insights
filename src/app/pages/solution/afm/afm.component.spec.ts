@@ -66,7 +66,7 @@ describe('AfmComponent', () => {
 
 	it('should change table sorting', () => {
 		const sort = {
-			name: 'Event Status',
+			name: 'Status',
 			sortDirection: 'asc',
 		};
 		spyOn(afmService, 'getAfmAlarms')

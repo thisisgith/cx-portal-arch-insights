@@ -57,12 +57,6 @@
 	</span>
 </ng-template>
 
-<ng-template #faultICTemplate let-celldata="celldata">
-	<span class="faultIc" title="{{ celldata?.faultIC }}">
-		{{ celldata?.faultIC }}
-	</span>
-</ng-template>
-
 <ng-template #syslogContent>
 	<div *ngIf="loading" class="base-margin-bottom">
 		<cui-spinner></cui-spinner>
@@ -122,7 +116,7 @@
 					></div>
 					<div
 						class="text-large col-md-8 base-margin-top"
-						[innerText]="'_AfmTotalAlarms_' | i18n"
+						[innerText]="'_AfmActiveFaults_' | i18n"
 					></div>
 				</div>
 				<div
@@ -140,7 +134,7 @@
 					></div>
 					<div
 						class="text-large col-md-8 base-margin-top"
-						[innerText]="'_AfmTacCases_' | i18n"
+						[innerText]="'_AfmSupportCases_' | i18n"
 					></div>
 				</div>
 				<div
@@ -159,7 +153,7 @@
 					></div>
 					<div
 						class="text-large col-md-8 base-margin-top"
-						[innerText]="'_AfmIgnoredAlarms_' | i18n"
+						[innerText]="'_AfmIgnoredFaults_' | i18n"
 					></div>
 				</div>
 			</div>
@@ -366,19 +360,6 @@
 						tablePanelData?.remediation || ('_NA_' | i18n)
 					}}"
 				></div>
-			</cui-tab>
-			<cui-tab [label]="'_AfmCliOutput_' | i18n | uppercase">
-				<div *ngFor="let cli of tablePanelData?.cliOutput">
-					<div class="base-margin-top">
-						---------------------------------
-					</div>
-					<div
-						class="base-margin-left"
-						innerText="{{ cli.command }}"
-					></div>
-					<div>---------------------------------</div>
-					<div innerText="{{ cli.commandResponse }}"></div>
-				</div>
 			</cui-tab>
 		</cui-tabs>
 	</div>

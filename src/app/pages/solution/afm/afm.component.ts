@@ -103,7 +103,6 @@ export class AfmComponent implements OnInit, OnDestroy, Panel360 {
 
 	@ViewChild('timeRangeFilter', { static: true }) private timeRangeFilterTemplate:
 		TemplateRef<{ }>;
-	@ViewChild('faultICTemplate', { static: true }) private faultICTemplate: TemplateRef<{ }>;
 	@ViewChild('syslogTemplate', { static: true }) private syslogTemplate: TemplateRef<{ }>;
 	@ViewChild('severityColors', { static: true }) public severityColorsTemplate: TemplateRef<{ }>;
 	@ViewChild('dateFilterPipe', { static: true }) public dateFilterTemplate: TemplateRef<{ }>;
@@ -142,19 +141,17 @@ export class AfmComponent implements OnInit, OnDestroy, Panel360 {
 
 	private getSortKey = sortKey => {
 		switch (sortKey) {
-			case 'Syslog Event':
-				return 'syslogMsg.keyword';
-			case 'Fault IC':
-				return 'faultIC.keyword';
-			case 'Serial Number':
-				return 'serialNumber.keyword';
-			case 'Event Severity':
+			case 'Severity':
 				return 'severity.keyword';
-			case 'Case ID':
+			case 'Title':
+				return 'syslogMsg.keyword';
+			case 'System Name':
+				return 'hostName.keyword';
+			case 'Case Number':
 				return 'tacCaseNo.keyword';
-			case 'Time Created':
+			case 'Case Created':
 				return 'alarmCreated';
-			case 'Event Status':
+			case 'Status':
 				return 'status.keyword';
 			default:
 				return 'alarmId';
@@ -209,27 +206,22 @@ export class AfmComponent implements OnInit, OnDestroy, Panel360 {
 					template: this.severityColorsTemplate,
 				},
 				{
-					name: I18n.get('_AfmSyslogEvent_'),
+					name: I18n.get('_AfmTitle_'),
 					sortable: true,
 					template: this.syslogTemplate,
 				},
 				{
-					name: I18n.get('_AfmFaultIC_'),
-					sortable: true,
-					template: this.faultICTemplate,
-				},
-				{
-					key: 'serialNumber',
-					name: I18n.get('_AfmSerialNumber_'),
+					key: 'deviceName',
+					name: I18n.get('_AfmSystemName_'),
 					sortable: true,
 				},
 				{
 					key: 'tacCaseNo',
-					name: I18n.get('_AfmCaseId_'),
+					name: I18n.get('_AfmCaseNumber_'),
 					sortable: true,
 				},
 				{
-					name: I18n.get('_AfmTimeCreated_'),
+					name: I18n.get('_AfmCaseCreated_'),
 					sortable: true,
 					template: this.dateFilterTemplate,
 				},
@@ -340,7 +332,7 @@ export class AfmComponent implements OnInit, OnDestroy, Panel360 {
 	 * it will retrive the All alarmds records only
 	 */
 	public allAlarmFilter () {
-		this.exportFileName = 'Total_Alarms_';
+		this.exportFileName = 'Active_Faults_';
 		this.resetValuesWhileFilter();
 		this.timeRangeFiltered = false;
 		this.searchParams.headerFilterType = this.AFM_CONSTANT.ALARM;
@@ -352,7 +344,7 @@ export class AfmComponent implements OnInit, OnDestroy, Panel360 {
 	 * it will retrive the TAC Case records only
 	 */
 	public tacCaseFilters () {
-		this.exportFileName = 'Total_TacCases_';
+		this.exportFileName = 'Support_Case_Created_';
 		this.resetValuesWhileFilter();
 		this.timeRangeFiltered = false;
 		this.searchParams.headerFilterType = this.AFM_CONSTANT.TAC;
@@ -365,7 +357,7 @@ export class AfmComponent implements OnInit, OnDestroy, Panel360 {
 	 * it will retrive the Ignored Alarms only
 	 */
 	public ignoreAlarmFilters () {
-		this.exportFileName = 'Total_Ignored_Alarms_';
+		this.exportFileName = 'Ignored_Faults_';
 		this.resetValuesWhileFilter();
 		this.timeRangeFiltered = false;
 		this.searchParams.headerFilterType = this.AFM_CONSTANT.IGNORE_EVENT;
