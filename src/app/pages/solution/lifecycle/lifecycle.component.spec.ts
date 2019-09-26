@@ -1328,7 +1328,7 @@ describe('LifecycleComponent', () => {
 
 			// ATX should be refreshed
 			expect(racetrackContentService.getRacetrackATX)
-				.toHaveBeenCalledTimes(1);
+				.toHaveBeenCalled();
 
 		});
 

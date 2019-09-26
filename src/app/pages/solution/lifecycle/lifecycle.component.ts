@@ -334,7 +334,7 @@ export class LifecycleComponent implements OnDestroy {
 		.subscribe((technology: RacetrackTechnology) => {
 			const currentSolution = this.componentData.params.solution;
 
-			const newTech = (currentSolution && technology !== this.selectedTechnology);
+			const newTech = currentSolution;
 			if (newTech) {
 				this.selectedTechnology = technology;
 
