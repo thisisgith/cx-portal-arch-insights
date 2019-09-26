@@ -15,18 +15,11 @@
 			<visual-filter-bar [filters]="filters" [filterCollapse]="filterCollapse"></visual-filter-bar>
 		</cui-tab>
 		<ng-template cuiTabPost>
-			<div class="text-right">
-				<div (click)="filterCollapse = !filterCollapse" class="half-margin-right"
-					data-auto-id="VisualFilterCollapse">
-					<span class="icon-filter icon-small text-muted qtr-margin-right toggle"></span>
-					<span class="text-muted toggle" [innerText]="'_VisualFilters_' | i18n"></span>
-					<span class="qtr-margin-left icon-tiny icon-dropdown text-muted toggle"
-						[ngClass]="{
-							'rotate-180': filterCollapse
-						}">
-					</span>
-				</div>
-			</div>
+			<visual-filter-toggle 
+				data-auto-id="VisualFilterToggle"
+				(click)="filterCollapse = !filterCollapse"
+				[filterCollapse]="filterCollapse"
+				></visual-filter-toggle>
 		</ng-template>
 	</cui-tabs>
 </div>
