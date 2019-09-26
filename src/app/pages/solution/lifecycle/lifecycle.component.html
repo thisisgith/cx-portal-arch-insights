@@ -87,7 +87,7 @@
 	<div class="half-padding-top half-padding-left">
 		<app-racetrack [stage]="componentData.racetrack.stage"
 			[currentStage]="currentWorkingPitstop"
-			(onStageChange)="getRacetrackInfo($event)">
+			(onStageChange)="getLifecycleInfo($event)">
 		</app-racetrack>
 		<div class="half-padding-left">
 			<span *ngIf="currentPitstop" [innerHTML]="'_DuringXStage_' | i18n:currentPitstop.name"></span>
@@ -114,16 +114,18 @@
 		<div *ngFor="let action of currentPitActionsWithStatus" class="form-group form-group select" data-auto-id="pitstopAction">
 			<div class="actionname flex-center-vertical qtr-padding" [ngClass]="{selected: action.selected}">
 				<div class="half-margin-right flex-center-vertical">
-					<!-- since updatePitstop API going through changes, we are temporarily disabling the user from checking a box -->
-					<!-- This will manually be done by the CSM/CSE.  Refer to PBC-725. -->
-					<!-- <label class="checkbox" [ngClass]="{'disabled': action.action.isComplete || currentWorkingPitstop !== currentPitstop.name }" data-auto-id="pitstopCheckboxLabel"> -->
-					<label class="checkbox disabled" data-auto-id="pitstopCheckboxLabel">
-						<input data-auto-id="pitstopCheckbox" type="checkbox"
-							(change)="completeAction(action.action)" [checked]="action.action.isComplete"
-						>
-						<span class="checkbox__input" data-auto-id="pitstopCheckboxSpan"
-							[ngClass]="{'checkbox-complete': action.action.isComplete}"
-						></span>
+					<label class="checkbox" 
+						[ngClass]="{'disabled': action.action.isComplete || currentWorkingPitstop !== currentPitstop.name || !action.action.manualCheckAllowed }" 
+						data-auto-id="pitstopCheckboxLabel">
+						<input data-auto-id="pitstopCheckbox" 
+							type="checkbox"
+							[(ngModel)]="action.action.isComplete"
+							(change)="completeAction(action.action)"
+							[checked]="action.action.isComplete">
+						<span class="checkbox__input" 
+							data-auto-id="pitstopCheckboxSpan"
+							[ngClass]="{'checkbox-complete': action.action.isComplete}">
+						</span>
 					</label>
 				</div>
 				<div class="actionname__text cx-text-secondary"
@@ -144,6 +146,27 @@
 				[innerText]="'_ResetFilter_' | i18n"
 				(click)="resetFilter()"
 				data-auto-id="ResetFilter">
+			</div>
+		</div>
+		<div class="panel messagepanel--open half-margin-left"
+			id="AllCompletionPopup"
+			*ngIf="showCompletionPopup">
+			<div class="row qtr-margin-top qtr-margin-left qtr-margin-right">
+				<div class="col-md-1">
+					<div class="pitstop-checklist__flag"
+						inlineSVG="assets/img/solutions/icon-checkerflag.svg"></div>
+				</div>
+				<div class="col-md-10 text-bold" [innerText]="'_NiceJob_' | i18n"></div>
+				<div class="col-md-1">
+					<a class="no-link closebtn"
+						(click)="showCompletionPopup = false"
+						data-auto-id="CompletionPopupClose">
+						<span class="icon-close icon-small"></span>
+					</a>
+				</div>
+			</div>
+			<div class="message">
+				<span [innerHTML]="'_NextCruise_' | i18n:currentViewingPitstop"></span>
 			</div>
 		</div>
 	</div>
@@ -1446,3 +1469,4 @@
 		<span class="item-type__text" [innerText]="'_Datasheet_' | i18n"></span>
 	</div>
 </ng-template>
+

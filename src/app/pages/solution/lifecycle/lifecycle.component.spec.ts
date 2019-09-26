@@ -146,7 +146,7 @@ describe('LifecycleComponent', () => {
 
 		racetrackActionSpy = spyOn(racetrackService, 'updatePitstopAction')
 			.and
-			.returnValue(of(getActiveBody(ActionScenarios[0], 'PATCH')));
+			.returnValue(of(getActiveBody(ActionScenarios[0], 'PUT')));
 	};
 
 	/**
@@ -583,7 +583,7 @@ describe('LifecycleComponent', () => {
 				status: 'scheduled',
 			};
 			component.sessionSelected = { };
-			component.getRacetrackInfo('Use');
+			component.getLifecycleInfo('Use');
 
 			const button = component.getAtxRegisterButton(data);
 
@@ -1326,9 +1326,9 @@ describe('LifecycleComponent', () => {
 			expect(racetrackService.updatePitstopAction)
 				.toHaveBeenCalled();
 
-			// update Action response back with isAtxChanged as true, so need to call ATX API
+			// ATX should be refreshed
 			expect(racetrackContentService.getRacetrackATX)
-				.toHaveBeenCalledTimes(2);
+				.toHaveBeenCalled();
 
 		});
 
@@ -1344,21 +1344,6 @@ describe('LifecycleComponent', () => {
 				.toBeTruthy();
 
 			expect(racetrackContentService.getRacetrackATX)
-				.toHaveBeenCalled();
-
-		});
-
-		it('should refresh ATX if suggestedAction changes', () => {
-			buildSpies();
-			sendParams();
-			component.completeAction(component.currentPitActionsWithStatus[2].action);
-			fixture.detectChanges();
-
-			expect(racetrackService.updatePitstopAction)
-				.toHaveBeenCalled();
-
-			// ATX should be refreshed since isAtxChanged is true from updateAction
-			expect(racetrackContentService.getRacetrackATX)
 				.toHaveBeenCalledTimes(2);
 		});
 
@@ -1371,7 +1356,7 @@ describe('LifecycleComponent', () => {
 				.toEqual('Onboard');
 
 			// change pitstop to "use" (current+2) and check if button is disabled
-			component.getRacetrackInfo('Use');
+			component.getLifecycleInfo('Use');
 			component.recommendedAtxScheduleCardOpened = true;
 			fixture.detectChanges();
 
@@ -1385,7 +1370,7 @@ describe('LifecycleComponent', () => {
 				.toEqual('disabled');
 
 			// change pitstop to "implement" (current+1) and check if button is enabled
-			component.getRacetrackInfo('Implement');
+			component.getLifecycleInfo('Implement');
 			component.recommendedAtxScheduleCardOpened = true;
 			fixture.detectChanges();
 			let data1: AtxSchema;
@@ -1407,7 +1392,7 @@ describe('LifecycleComponent', () => {
 			racetrackATXSpy.and
 				.returnValue(of(getActiveBody(ATXScenarios[7])));
 
-			component.getRacetrackInfo('Onboard');
+			component.getLifecycleInfo('Onboard');
 			component.recommendedAtxScheduleCardOpened = true;
 			fixture.detectChanges();
 			let data2: AtxSchema;
