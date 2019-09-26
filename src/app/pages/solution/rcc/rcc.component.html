@@ -1,5 +1,4 @@
 <div class="panel panel--bordered base-padding-left base-padding-top no-padding-bottom">
-	<insight-tabs></insight-tabs>
 	<div class="col-md-12">
 		<div class="row">
 			<div class="col-md-2 filter__selected">
@@ -17,8 +16,8 @@
 				</div>
 			</div>
 			<div class="col-md-10 no-padding">
-				<div class="col-md-7 seperator-line half-margin-left">
-					<div class="flex flex-fluid">
+				<div class="col-md-7 seperator-line half-margin-left" *ngIf="!errorPolicyView">
+					<div class="flex flex-fluid" *ngIf="!filterLoading">
 						<ng-container *ngFor="let filter of filters">
 							<div attr.id="RccSelectVisualFilter-{{ filter?.key }}"
 								attr.data-auto-id="RccSelectVisualFilter-{{filter?.key}}" [ngClass]="{filter__selected: filter?.selected,
@@ -30,9 +29,12 @@
 										</ng-container>
 									</div>
 								</div>
-								<div class="filter__title text-muted text-large" [innerHTML]="filter?.title"></div>
+								<div *ngIf="!filterLoading && !errorPolicyView" class="filter__title text-muted text-large" [innerHTML]="filter?.title"></div>
 							</div>
 						</ng-container>
+					</div>
+					<div *ngIf="filterLoading" class="base-margin-top base-margin-left">
+						<cui-spinner></cui-spinner>
 					</div>
 				</div>
 			</div>
@@ -48,7 +50,7 @@
 		</cui-alert>
 	</div>
 	<div class="row container">
-		<div class="col-md-9 flex align-items-center" *ngIf="!isAssetView">
+		<div class="col-md-9 flex align-items-center" *ngIf="!isAssetView && !errorPolicyView">
 			<span [innerText]="'_RccShowing_' | i18n"></span>
 			<span class="qtr-margin-left" [innerText]="(conditionViolations | number) || ('_RccNoValue_' | i18n)"></span>
 			<span class="qtr-margin-left" [innerText]="'_RccConditionViolations_' | i18n"></span>
@@ -56,14 +58,14 @@
 			<span class="qtr-margin-left" [innerText]="(conditionViolationsAssetCount | number) || ('_RccNoValue_' | i18n)"></span>
 			<span class="qtr-margin-left" [innerText]="'_RccSystems_' | i18n"></span>
 		</div>
-		<div class="col-md-9 flex align-items-center" *ngIf="isAssetView">
+		<div class="col-md-9 flex align-items-center" *ngIf="isAssetView && !errorPolicyView">
 			<span [innerText]="'_RccShowing_' | i18n"></span>
 			<span class="qtr-margin-left" [innerText]="(withViolationsAssetsCount | number) || ('_RccNoValue_' | i18n)"></span>
 			<span class="qtr-margin-left" [innerText]="'_RccSystemsWith_' | i18n"></span>
 			<span class="qtr-margin-left" [innerText]="(assetsConditionViolationsCount | number)  || ('_RccNoValue_' | i18n)"></span>
 			<span class="qtr-margin-left" [innerText]="'_RccConditionViolations_' | i18n"></span>
 		</div>
-		<div class="col-md-3">
+		<div class="col-md-3" *ngIf="!errorPolicyView && !noTableData">
 			<div class="flex flex-fluid flex-right">
 				<div class="flex-fill form-group input--compressed input--icon half-margin-right">
 					<form [formGroup]="searchForm" novalidate id="searchForm" (keyup)="searchViolations($event,'input')" data-auto-id="searchViolations">
