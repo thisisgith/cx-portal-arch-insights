@@ -16,6 +16,7 @@ import {
 } from './policy-calendar/calendar-cell-tooltip/calendar-cell-tooltip.component';
 
 import { TooltipModule } from '@components';
+import { InlineSVGModule } from 'ng-inline-svg';
 
 /**
  * SDP Root url for the apis
@@ -38,6 +39,7 @@ const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 		ControlPointsModule.forRoot({ rootUrl }),
 		CuiLoaderModule,
 		I18nPipeModule,
+		InlineSVGModule.forRoot({ baseUrl: '/' }),
 		PolicyFormModule,
 		RouterModule,
 		TooltipModule,

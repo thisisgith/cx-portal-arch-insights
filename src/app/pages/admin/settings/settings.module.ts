@@ -4,13 +4,12 @@ import { CommonModule } from '@angular/common';
 import { SettingsComponent } from './settings.component';
 import { I18nPipeModule, FromNowPipeModule } from '@cisco-ngx/cui-pipes';
 import { AdminWrapperModule } from '../admin-wrapper.module';
-import { HeightTransitionModule } from '@components';
+import { HeightTransitionModule, GaugeModule } from '@components';
 import { AppStatusColorPipe } from './app-status-color.pipe';
 import { ResourceGaugeColorPipe } from './resource-gauge-color.pipe';
 import { ControlPointsModule, UserModule } from '@sdp-api';
 
 import {
-	CuiGaugeModule,
 	CuiLoaderModule,
 	CuiSidebarModule,
 	CuiSpinnerModule,
@@ -30,10 +29,10 @@ const imports = [
 	AdminWrapperModule,
 	CommonModule,
 	ControlPointsModule.forRoot({ rootUrl }),
-	CuiGaugeModule,
 	CuiLoaderModule,
 	CuiSidebarModule,
 	CuiSpinnerModule,
+	GaugeModule,
 	HeightTransitionModule,
 	I18nPipeModule,
 	FromNowPipeModule,
