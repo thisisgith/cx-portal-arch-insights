@@ -1,0 +1,38 @@
+{
+	"postBrokerResponse": {
+		"fileInfo": {
+			"fileCategory": "web_uploaded",
+			"fileContentType": "text/plain",
+			"fileId": 154999846,
+			"fileName": "test.txt",
+			"fileSize": 0,
+			"fileStatus": "IN_PROGRESS",
+			"fileUploadDate": "25 Sep 2019 15:23 GMT"
+		},
+		"responseHeader": {
+			"responseCode": 0,
+			"responseDesc": "success"
+		},
+		"uploadInfo": {
+			"keyInfo": {
+				"encryptKeyChecksum": "944900117",
+				"encryptionKey": "4407A1050D75AA80E8F7A90FDDDC52D5",
+				"initializationVector": "BC7A771223E3B14F34CAF980A338D6A7"
+			},
+			"storageParam": [
+				{
+					"paramKey": "uploadToken",
+					"paramValue": "s2TEMO26ofEveb5d93Q1dxk5ByTD"
+				},
+				{
+					"paramKey": "destFolderPath",
+					"paramValue": "TAC/TAC/699161118/"
+				}
+			],
+			"uploadHost": "storageconnect-stg.cisco.com/Hi5Cloud/ContentManagement",
+			"uploadURL": "storageconnect-stg.cisco.com/Hi5Cloud/ContentManagement/uploadFile/s2TEMO26ofEveb5d93Q1dxk5ByTD/TAC/TAC/699161118/"
+		},
+		"xmlns": "http://www.cisco.com/ts/csc/FileBrokerModel"
+	},
+	"timestamp": 1569424999133
+}

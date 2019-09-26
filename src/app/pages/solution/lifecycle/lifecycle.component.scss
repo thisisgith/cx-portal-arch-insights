@@ -129,6 +129,20 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 	border-bottom: 0 none !important;
 }
 
+.icon-bookmark {
+	-webkit-text-stroke-width: 1px;
+
+	&--on {
+		color: $cisco-blue;
+		-webkit-text-stroke-color: #5ddfff;
+	}
+
+	&--off {
+		color: #fff;
+		-webkit-text-stroke-color: #c1d8e2;
+	}
+}
+
 .icon-check-outline,
 .icon-clock,
 .icon-calendar {
@@ -347,13 +361,6 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 	color: $text-dark-gray-3;
 }
 
-.card_footer_item button {
-	padding: 0 13px;
-	font-size: 13px;
-	color: $text-dark-gray;
-	box-shadow: inset 0 0 0 1px $button-outline-color;
-}
-
 .list-view button {
 	min-width: 90px;
 }
@@ -392,13 +399,6 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 	}
 }
 
-.card_footer_item button:hover,
-.card_footer_item button:active,
-.card_footer_item button:focus {
-	background-color: $button-outline-color;
-	box-shadow: 0 0 1px 1px $button-outline-color;
-}
-
 .card_footer_item {
 	width: 100%;
 }
@@ -425,15 +425,18 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 		display: flex;
 		flex-direction: column;
 		padding: 0;
-		height: 525px;
+		height: 434px;
 		outline: 1px solid $light-gray !important;
 		border: none;
+		box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.14);
+
 
 		&__background {
 			background: $white;
 		}
 
 		&__header {
+			line-height: initial;
 			padding-right: 30px;
 			padding-left: 20px;
 			color: $midnight-blue;
@@ -442,14 +445,14 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 		&__body {
 			padding-right: 30px;
 			padding-left: 20px;
-			overflow: auto;
-			margin: 10px 0 20px 0;
+			overflow: scroll;
+			margin: 15px 0 15px 0;
 			font-size: 13px;
 			line-height: 17px;
 		}
 
 		&__label {
-			margin-top: 10px;
+			line-height: 10px;
 
 			span {
 				font-size: 10px !important;
@@ -466,6 +469,7 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 		}
 
 		&__status {
+			margin-bottom: 15px;
 			display: flex;
 			align-items: center;
 		}
@@ -478,7 +482,9 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 	}
 
 	&__card:hover {
-		box-shadow: -4px 0 0 $cisco-blue !important;
+		box-shadow:
+		-4px 0 0 $cisco-blue,
+		0 1px 3px 0 rgba(0, 0, 0, 0.14);
 	}
 }
 
@@ -486,10 +492,12 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 	&__card {
 		@extend .atx__card;
 
-		height: 315px;
+		height: 280px;
 
 		&__archetype {
+			font-size: 10px;
 			padding: 0 30px 0 20px;
+			margin-top: 25px;
 		}
 
 		&__background {
@@ -498,12 +506,16 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 
 		&__header {
 			@extend .atx__card__header;
+
+			font-size: 16px;
+			margin-bottom: 8px;
 		}
 
 		&__body {
 			@extend .atx__card__body;
 
-			margin: 10px 0;
+			font-size: 12px;
+			margin: 8px 0;
 		}
 
 		&__footer {
@@ -526,7 +538,7 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 
 				span {
 					font-size: 11px;
-					color: $light-gray-1;
+					color: $icon-light-gray;
 
 					&[class*="icon-"] {
 						font-size: 14px;
@@ -541,7 +553,7 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 
 	/* 'auto' sometimes messes up in weird corner cases for Success Bytes
 	with low numbers of cards. Force the grid to have the correct height. */
-	grid-template-rows: repeat(auto-fill, 315px) !important;
+	grid-template-rows: repeat(auto-fill, 280px) !important;
 }
 
 .cx-lifecycle-card--recommended .icon-check-outline,
@@ -711,24 +723,47 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 }
 
 .atxMorepanel--open {
-	box-shadow: $base-box-shadow;
+	box-shadow: $popover-box-shadow;
 	height: 200px;
 	width: 500px;
 	position: absolute;
 	z-index: 3;
 	background-color: $white;
 	border-radius: 10px;
-}
+	padding: 25px 0 25px 30px;
 
-.atxMorepanel--open::after {
-	content: "";
-	position: absolute;
-	top: 40%;
-	left: -15px;
-	z-index: -1;
-	border-top: 25px solid transparent;
-	border-right: 35px solid white;
-	border-bottom: 30px solid transparent;
+	.popover-tail {
+		@extend %popover-tail--left;
+	}
+
+	.icon-bookmark {
+		font-size: 21px;
+		right: 45px;
+	}
+
+	.closebtn-container {
+		position: absolute;
+		top: 15px;
+		right: 15px;
+
+		.icon-close {
+			color: #b4b6b8;
+			font-size: 15px;
+		}
+	}
+
+	.atx-more-popover__title {
+		color: #6c757d;
+		font-size: 16px;
+		line-height: 19px;
+	}
+
+	.atx-more-popover__description {
+		color: #394454;
+		font-size: 13px;
+		line-height: 17px;
+		padding-right: 30px;
+	}
 }
 
 .panel--open::after {
@@ -1438,20 +1473,6 @@ tr.td-row::after {
 	border-right: transparent !important;
 }
 
-.icon-bookmark {
-	-webkit-text-stroke-width: 1px;
-
-	&--on {
-		color: $cisco-blue;
-		-webkit-text-stroke-color: #5ddfff;
-	}
-
-	&--off {
-		color: #fff;
-		-webkit-text-stroke-color: #c1d8e2;
-	}
-}
-
 .icon-bookmark-clear {
 	color: transparent;
 	-webkit-text-stroke-width: 1px;
@@ -1516,6 +1537,7 @@ polygon {
 	height: 100%;
 	max-height: -webkit-fill-available;
 	overflow: auto;
+	margin-top: 30px;
 }
 
 .list-view table {

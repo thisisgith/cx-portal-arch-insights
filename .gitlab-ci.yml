@@ -97,6 +97,8 @@ assets_spec:
   <<: *cypress_spec
 atx_spec:
   <<: *cypress_spec
+casedetail_spec:
+  <<: *cypress_spec
 communities_spec:
   <<: *cypress_spec
 insights_spec:

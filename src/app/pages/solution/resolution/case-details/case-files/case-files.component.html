@@ -20,12 +20,12 @@
 </ng-template>
 
 <ng-template #fileNameTmpl let-item="celldata">
-	<span [innerText]="item.fileInfo.fileName"></span>
+	<span data-auto-id="CaseFileName" [innerText]="item.fileInfo.fileName"></span>
 </ng-template>
 
 <ng-template #fileTypeTmpl let-item="celldata">
-	<span [ngClass]="getFileIconLabel(item?.fileInfo.fileContentType)['icon']"></span>
-	<span class="qtr-margin-left" [innerText]="getFileIconLabel(item?.fileInfo.fileContentType)['label']"></span>
+	<span data-auto-id="CaseFileTypeIcon" [ngClass]="getFileIconLabel(item?.fileInfo.fileContentType)['icon']"></span>
+	<span data-auto-id="CaseFileType" class="qtr-margin-left" [innerText]="getFileIconLabel(item?.fileInfo.fileContentType)['label']"></span>
 </ng-template>
 
 <ng-template #downloadTmpl let-item="celldata">
@@ -33,4 +33,6 @@
 		[href]="getDownloadURL(item?.fileInfo.fileName)"><span class="markup-label" [innerText]="'download'"></span></a>
 </ng-template>
 
-<ng-template #fileSizeTmpl let-item="celldata">{{ item.fileInfo.fileSize | fileSize }}</ng-template>
+<ng-template #fileSizeTmpl let-item="celldata">
+	<span data-auto-id="CaseFileSize" [innerText]="item.fileInfo.fileSize | fileSize"></span>
+</ng-template>
