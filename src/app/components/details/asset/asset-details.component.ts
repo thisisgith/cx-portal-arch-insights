@@ -256,7 +256,7 @@ export class AssetDetailsComponent implements OnDestroy, OnInit, Panel360 {
 	 */
 	public handleHidden (hidden: boolean) {
 		if (hidden) {
-			this.onPanelClose();
+			this.onAllPanelsClose();
 		}
 	}
 
@@ -272,14 +272,5 @@ export class AssetDetailsComponent implements OnDestroy, OnInit, Panel360 {
 	 */
 	public onAllPanelsClose () {
 		this.detailsPanelStackService.reset();
-	}
-
-	/**
-	 * Determines whether target is contained by this component
-	 * @param target target ElementRef
-	 * @returns true if component contains target
-	 */
-	public contains (target: ElementRef) {
-		return this._elementRef.nativeElement.contains(target);
 	}
 }

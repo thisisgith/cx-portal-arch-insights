@@ -1,5 +1,5 @@
 import { configureTestSuite } from 'ng-bullet';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import {
 	AdvisorySecurityAdvisoryScenarios,
 	FieldNoticeAdvisoryScenarios,
@@ -11,6 +11,7 @@ import { AdvisoryDetailsModule } from './advisory-details.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import * as _ from 'lodash-es';
 import { SecurityAdvisoryInfo, FieldNoticeAdvisory } from '@sdp-api';
+import { DetailsPanelStackService } from '@services';
 
 /**
  * Will fetch the currently active response body from the mock object
@@ -28,6 +29,8 @@ describe('AdvisoryDetailsComponent', () => {
 	let component: AdvisoryDetailsComponent;
 	let fixture: ComponentFixture<AdvisoryDetailsComponent>;
 
+	let detailsPanelStackService: DetailsPanelStackService;
+
 	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
@@ -38,6 +41,7 @@ describe('AdvisoryDetailsComponent', () => {
 	});
 
 	beforeEach(() => {
+		detailsPanelStackService = TestBed.get(DetailsPanelStackService);
 		fixture = TestBed.createComponent(AdvisoryDetailsComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
@@ -48,7 +52,7 @@ describe('AdvisoryDetailsComponent', () => {
 			.toBeTruthy();
 	});
 
-	it('should load a security advisory', () => {
+	it('should load a security advisory', fakeAsync(() => {
 		const advisory: SecurityAdvisoryInfo =
 			getActiveBody(AdvisorySecurityAdvisoryScenarios[0]).data[0];
 		const nextAdvisory: SecurityAdvisoryInfo =
@@ -73,7 +77,7 @@ describe('AdvisoryDetailsComponent', () => {
 			},
 		});
 
-		fixture.detectChanges();
+		tick();
 
 		component.advisory = nextAdvisory;
 		component.advisoryId = _.toString(nextAdvisory.id);
@@ -93,17 +97,14 @@ describe('AdvisoryDetailsComponent', () => {
 			},
 		});
 
-		fixture.whenStable()
-		.then(() => {
-			expect(component.advisoryId)
+		expect(component.advisoryId)
 			.toEqual(_.toString(nextAdvisory.id));
 
-			expect(component.title)
+		expect(component.title)
 			.toContain('Security');
-		});
-	});
+	}));
 
-	it('should load a bug', () => {
+	it('should load a bug', fakeAsync(() => {
 		const advisory = CriticalBugData[0];
 		const nextAdvisory = CriticalBugData[1];
 
@@ -126,7 +127,7 @@ describe('AdvisoryDetailsComponent', () => {
 			},
 		});
 
-		fixture.detectChanges();
+		tick();
 
 		component.advisory = nextAdvisory;
 		component.advisoryId = _.toString(nextAdvisory.id);
@@ -151,9 +152,9 @@ describe('AdvisoryDetailsComponent', () => {
 
 		expect(component.title)
 			.toEqual(`Bug ${nextAdvisory.id}`);
-	});
+	}));
 
-	it('should load a field notice', () => {
+	it('should load a field notice', fakeAsync(() => {
 		const advisory: FieldNoticeAdvisory =
 			getActiveBody(FieldNoticeAdvisoryScenarios[0]).data[0];
 		const nextAdvisory: FieldNoticeAdvisory =
@@ -178,7 +179,7 @@ describe('AdvisoryDetailsComponent', () => {
 			},
 		});
 
-		fixture.detectChanges();
+		tick();
 
 		component.advisory = nextAdvisory;
 		component.advisoryId = _.toString(nextAdvisory.id);
@@ -198,17 +199,14 @@ describe('AdvisoryDetailsComponent', () => {
 			},
 		});
 
-		fixture.whenStable()
-		.then(() => {
-			expect(component.advisoryId)
-				.toEqual(_.toString(nextAdvisory.id));
+		expect(component.advisoryId)
+			.toEqual(_.toString(nextAdvisory.id));
 
-			expect(component.title)
-				.toContain(`FN ${nextAdvisory.id}`);
-		});
-	});
+		expect(component.title)
+			.toContain(`FN ${nextAdvisory.id}`);
+	}));
 
-	it('should handle passing without an id', () => {
+	it('should handle passing without an id', fakeAsync(() => {
 		const advisory: FieldNoticeAdvisory =
 			getActiveBody(FieldNoticeAdvisoryScenarios[0]).data[0];
 
@@ -217,13 +215,13 @@ describe('AdvisoryDetailsComponent', () => {
 
 		component.ngOnInit();
 
-		fixture.detectChanges();
+		tick();
 
 		expect(component.advisoryId)
 			.toEqual(_.toString(advisory.id));
-	});
+	}));
 
-	it('should clear all pieces if invalid type', () => {
+	it('should clear all pieces if invalid type', fakeAsync(() => {
 		const advisory: FieldNoticeAdvisory =
 			getActiveBody(FieldNoticeAdvisoryScenarios[0]).data[0];
 
@@ -232,7 +230,7 @@ describe('AdvisoryDetailsComponent', () => {
 
 		component.ngOnInit();
 
-		fixture.detectChanges();
+		tick();
 
 		expect(component.advisoryId)
 			.toBeNull();
@@ -242,9 +240,9 @@ describe('AdvisoryDetailsComponent', () => {
 			.toBeNull();
 		expect(component.advisory)
 			.toBeNull();
-	});
+	}));
 
-	it('should clear all pieces if panel closes', () => {
+	it('should clear all pieces if panel closes', fakeAsync(() => {
 		const advisory: FieldNoticeAdvisory =
 			getActiveBody(FieldNoticeAdvisoryScenarios[0]).data[0];
 
@@ -253,14 +251,14 @@ describe('AdvisoryDetailsComponent', () => {
 
 		component.ngOnInit();
 
-		fixture.detectChanges();
+		tick();
 
 		expect(component.advisoryId)
 			.toEqual(_.toString(advisory.id));
 
 		component.onPanelClose();
 
-		fixture.detectChanges();
+		tick();
 
 		expect(component.advisoryId)
 			.toBeNull();
@@ -270,23 +268,35 @@ describe('AdvisoryDetailsComponent', () => {
 			.toBeNull();
 		expect(component.advisory)
 			.toBeNull();
+	}));
+
+	it('should handle on panel hidden', () => {
+		const panelCloseSpy = spyOn(component, 'onAllPanelsClose');
+		component.handleHidden(false);
+		expect(panelCloseSpy)
+			.not
+			.toHaveBeenCalled();
+
+		component.handleHidden(true);
+		expect(panelCloseSpy)
+			.toHaveBeenCalled();
 	});
 
-	it('should handle on panel hidden', done => {
-		fixture.whenStable()
-		.then(() => {
-			const panelCloseSpy = spyOn(component, 'onPanelClose');
+	it('should pop panel on back', () => {
+		spyOn(detailsPanelStackService, 'pop');
 
-			component.handleHidden(false);
-			expect(panelCloseSpy)
-				.not
+		component.onPanelBack();
+
+		expect(detailsPanelStackService.pop)
 				.toHaveBeenCalled();
+	});
 
-			component.handleHidden(true);
-			expect(panelCloseSpy)
-				.toHaveBeenCalled();
+	it('should reset stack service', () => {
+		spyOn(detailsPanelStackService, 'reset');
 
-			done();
-		});
+		component.onAllPanelsClose();
+
+		expect(detailsPanelStackService.reset)
+			.toHaveBeenCalled();
 	});
 });

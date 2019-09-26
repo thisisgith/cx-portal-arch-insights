@@ -22,6 +22,7 @@ export class ArchitectureComponent implements OnInit {
 	public customerId: string;
 	public filtered = false;
 	public selectedFilter = {
+		isClearAllSelected: false,
 		severity: '',
 	};
 	public filters: VisualFilter[];
@@ -132,6 +133,7 @@ export class ArchitectureComponent implements OnInit {
 			this.selectedFilter[filter.key] =
 				_.map(_.filter(filter.seriesData, 'selected'), 'filter');
 		}
+		this.selectedFilter.isClearAllSelected = false;
 		this.selectedFilter = _.cloneDeep(this.selectedFilter);
 	}
 
@@ -167,6 +169,7 @@ export class ArchitectureComponent implements OnInit {
 			});
 		});
 		this.selectedFilter = {
+			isClearAllSelected: true,
 			severity: '',
 		};
 	}
