@@ -850,7 +850,7 @@
 </ng-template>
 
 <ng-template #listViewTemplate let-type="type" let-view="view">
-		<div class="base-padding-right base-margin-top list-view" *ngIf="view === 'list'" #scrollModal (scroll)="getScrollCoordinates(scrollModal)" data-auto-id="ViewAllTable">
+		<div class="base-padding-right list-view" *ngIf="view === 'list'" #scrollModal (scroll)="getScrollCoordinates(scrollModal)" data-auto-id="ViewAllTable">
 			<div class="base-margin-top">
 					<table class="table table--nostripes table--wrap table--hover table--loose">
 					<ng-container *ngIf="type === 'ATX'">
