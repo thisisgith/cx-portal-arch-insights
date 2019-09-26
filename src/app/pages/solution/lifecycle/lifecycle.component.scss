@@ -670,6 +670,22 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 	color: $vibblue;
 }
 
+.messagepanel--open {
+	box-shadow: $popover-box-shadow;
+	padding-left: 15px;
+	height: 110px;
+	width: 390px;
+	position: absolute;
+	z-index: 2;
+	background-color: $white;
+
+	.message {
+		line-height: 25px;
+		width: 320px;
+		margin-left: 40px;
+	}
+}
+
 .panel--open,
 .cardpanel--open,
 .cardpanel--openright,
