@@ -201,7 +201,7 @@
 <ng-template #learningHover let-title="title" let-item="item" let-description="description" let-autoid="autoid">
 	<div id="learn-hover-panel-{{ autoid }}" class="panel" attr.data-auto-id="{{ autoid }}-HoverModal">
 		<div class="popover-tail"></div>
-		<div class="flex flex-column max-height">
+		<div class="flex flex-column">
 			<h6 class="learning-popover__title title-line-clamp" [innerText]="title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
 			<div class="divider divider--compressed"></div>
 			<div *ngIf="item && item.fixedRating" class="half-margin-bottom">
@@ -233,36 +233,35 @@
 </ng-template>
 
 <ng-template #atxMoreClick let-data="data">
-	<div class="panel atxMorepanel--open panel--bordered"
+	<div class="panel atxMorepanel--open"
 		#atxMoreClick [ngClass]="getATXMorePanel(atxMoreClick)"
 		*ngIf="atxMoreClicked" data-auto-id="atxMoreClickModal">
+		<div class="popover-tail popover-tail--left"></div>
 		<div class="flex flex-column max-height">
-			<div class="icon-bookmark icon-medium"
+			<div class="icon-bookmark"
 				[ngClass]="data.bookmark ? 'ribbon__blue__atx' : 'ribbon__white__atx'"
 				(click)="updateBookmark(data, 'ATX')"
 				data-auto-id="ATXMoreRibbon">
 			</div>
-			<div class="row half-margin-top half-margin-left half-margin-right">
-				<div class="col-md-11 text-left title-line-clamp">
-					<h6 class="text-indigo" [innerText]="data.title" data-auto-id="atxMoreClickModal-Title"></h6>
-				</div>
-				<div class="col-md-1">
-					<a class="no-link closebtn"
-						data-auto-id = "closeMoreATXClickModal"
-						(click)="atxMoreClicked = false; moreATXSelected = ''">
-						<span class="icon-close icon-small"></span>
-					</a>
-				</div>
+			<div class="text-left title-line-clamp">
+				<h6 class="atx-more-popover__title" [innerText]="data.title" data-auto-id="atxMoreClickModal-Title"></h6>
+			</div>
+			<div class="closebtn-container">
+				<a class="no-link closebtn"
+					data-auto-id = "closeMoreATXClickModal"
+					(click)="atxMoreClicked = false; moreATXSelected = ''">
+					<span class="icon-close"></span>
+				</a>
 			</div>
 			<div class="divider divider--compressed"></div>
-			<div class="half-margin-left line-clamp" [innerText]="data.description" data-auto-id="atxMoreClickModal-Description"></div>
-			<div class="base-padding-top half-padding-left">
+			<div class="line-clamp atx-more-popover__description" [innerText]="data.description" data-auto-id="atxMoreClickModal-Description"></div>
+			<div class="base-padding-top">
 				<ng-container *ngTemplateOutlet="data?.sessions?.length > 0 ? 
 					enabledViewSessionsButton : disabledViewSessionsButton; context: {
 						type: 'moreView'
 					}">
 				</ng-container>
-				<button class="btn btn--small btn--secondary text-uppercase cx-button"
+				<button class="cx-btn cx-btn--small cx-btn--primary text-uppercase qtr-margin-left"
 					attr.data-auto-id = "MoreATXWatchNow-{{ data.recordingURL }}"
 					[ngClass]="data?.recordingURL ? null : 'disabled'"
 					(click)="crossLaunch(data.recordingURL)"
@@ -340,7 +339,7 @@
 				type: 'recommendedView'
 			}">
 			</ng-container>	
-			<button class="btn btn--small btn--secondary text-uppercase cx-button"
+			<button class="cx-btn cx-btn--small cx-btn--primary text-uppercase"
 				data-auto-id = "recommendedATXWatchButton"
 				[ngClass]="componentData.atx?.recommended?.recordingURL ? null : 'disabled'"
 				(click)="crossLaunch(componentData.atx.recommended.recordingURL)"
@@ -451,7 +450,7 @@
 				[innerText]="'_Register_' | i18n">
 			</button>
 			<div class="half-padding-left pull-left">
-				<button class="btn btn--secondary text-danger cx-button"
+				<button class="cx-btn cx-btn--primary text-danger"
 					*ngIf="sessionSelected && sessionSelected.scheduled"
 					[innerText]="'_Cancel_' | i18n"
 					(click)="cancelATXSession(data)"
@@ -808,7 +807,7 @@
 </ng-template>
 
 <ng-template #cardViewTemplate let-type="type" let-view="view">
-	<div class="grid base-padding card-view"
+	<div class="grid base-padding-top base-padding-bottom card-view"
 		[ngClass]="(type === 'SB' || type === 'PG') ? 'success-grid' : ''"
 		*ngIf="(!view || view === 'grid')"
 		#scrollModal (scroll)="getScrollCoordinates(scrollModal)">
@@ -853,8 +852,10 @@
 		*ngFor="let item of selectedATX"
 		[ngClass]="item.status === 'recommended' ? 'atx__card__recommended' : null"
 		data-auto-id="ATXCard">
-		<img class="max-width" alt="'_Placeholder_' | i18n" [src]="item.imageURL || 'assets/img/solutions/defaultLifecycleImage.png'" data-auto-id="ATXCard-Image">
-		<div class="text-left base-padding-left atx__card__label" [ngClass]="item.status === 'Recommended' ? 'text-dkgray-4' : 'text-clear'" data-auto-id="ATXCardHeader">
+		<img class="max-width base-margin-bottom" alt="'_Placeholder_' | i18n" [src]="item.imageURL || 'assets/img/solutions/defaultLifecycleImage.png'" data-auto-id="ATXCard-Image">
+		<div class="text-left base-padding-left atx__card__label"
+			data-auto-id="ATXCardHeader"
+			*ngIf="item.status === 'Recommended'">
 			<span class="icon-flagged qtr-margin-right" data-auto-id="ATXCard-Flag"></span>
 			<span class="text-small" [innerText]="'_Recommended_' | i18n"></span>
 		</div>
@@ -871,7 +872,8 @@
 		<div class="card__body atx__card__body text-left desc-line-clamp" *ngIf="item && item.description" [innerText]="item.description" data-auto-id="ATXCard-Description"></div>
 		<div class="card__footer atx__card__footer">
 			<div class="card_footer_item"  data-auto-id="ATXCardFooter">
-				<div class="atx__card__status text-left base-padding-left base-padding-right base-margin-bottom flex-middle">
+				<div class="atx__card__status text-left base-padding-left base-padding-right flex-middle"
+					*ngIf="item.status !== 'scheduled'">
 					<span class="icon-certified half-padding-right" *ngIf="item.status === 'completed'" data-auto-id="ATXCardFooter-CompletedIcon"></span>
 					<span class="icon-clock half-padding-right" *ngIf="item.status === 'in-progress'" data-auto-id="ATXCardFooter-InProgressIcon"></span>
 					<span class="icon-check-outline half-padding-right" *ngIf="item.status === 'requested'" data-auto-id="ATXCardFooter-RequestedIcon"></span>
@@ -899,7 +901,7 @@
 						item: item
 					}">
 					</ng-container>
-					<button class="btn btn--small btn--secondary text-uppercase cx-button"
+					<button class="cx-btn cx-btn--small cx-btn--primary text-uppercase"
 						attr.data-auto-id = "CardATXWatchNow-{{ item.recordingURL }}"
 						[ngClass]="item?.recordingURL ? null : 'disabled'"
 						(click)="crossLaunch(item.recordingURL)"
@@ -918,9 +920,10 @@
 <ng-template #cardACC>
 	<div class="card atx__card" *ngFor="let item of selectedACC"
 		[ngClass]="item.status === 'recommended' ? 'acc__card__recommended' : null" data-auto-id="ACCCard">
-		<img class="max-width" alt="'_Placeholder_' | i18n" [src]="item.url || 'assets/img/solutions/defaultLifecycleImage.png'" attr.data-auto-id="{{ autoid }}-Image">
-		<div class="text-left base-padding-left atx__card__label" [ngClass]="item.status === 'recommended' ? 'text-dkgray-4' : 'text-clear'"
-			data-auto-id="ACCCardHeader">
+		<img class="max-width base-margin-bottom" alt="'_Placeholder_' | i18n" [src]="item.url || 'assets/img/solutions/defaultLifecycleImage.png'" attr.data-auto-id="{{ autoid }}-Image">
+		<div class="text-left base-padding-left atx__card__label half-margin-bottom" 
+			data-auto-id="ACCCardHeader"
+			*ngIf="item.status === 'recommended'">
 			<span class="icon-flagged qtr-margin-right" data-auto-id="ACCCard-Flag"></span>
 			<span class="text-small" [innerText]="'_Recommended_' | i18n"></span>
 		</div>
@@ -935,7 +938,7 @@
 			[innerText]="item.description" data-auto-id="ACCCardDescription"></div>
 		<div class="card__footer atx__card__footer">
 			<div class="card_footer_item" data-auto-id="ACCCardFooter">
-				<div class="atx__card__status text-left base-padding-left base-padding-right base-margin-bottom flex-middle">
+				<div class="atx__card__status text-left base-padding-left base-padding-right flex-middle">
 					<span class="icon-certified half-padding-right" *ngIf="item.status === 'completed'"></span>
 					<span class="icon-clock half-padding-right" *ngIf="item.status === 'in-progress'"></span>
 					<span class="icon-check-outline half-padding-right" *ngIf="item.status === 'requested'"></span>
@@ -969,14 +972,13 @@
 			[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__white'"
 			data-auto-id="SBCardRibbon">
 		</div>
-		<div class="card__header success__card__archetype text-left text-small text-uppercase base-margin-top qtr-margin-bottom" [innerText]="item.archetype" data-auto-id="SBCardArchetype"></div>
+		<div class="card__header success__card__archetype text-left text-uppercase qtr-margin-bottom cx-text-secondary" [innerText]="item.archetype" data-auto-id="SBCardArchetype"></div>
 		<div class="card__header success__card__header text-left">
 			<a class="no-link" data-auto-id="successtitle" target="_blank" rel="noopener noreferrer"
 					[href]="item.url">
 				<span class="title-line-clamp" data-auto-id="SBCardTitle" [innerText]="item.title"></span>
 			</a>
 		</div>
-		<div class="card__body success__card__body text-left desc-line-clamp" *ngIf="item && item.description" [innerText]="item.description" data-auto-id="SBCardDescription"></div>
 		<div class="success__card__icons">
 			<ng-container *ngTemplateOutlet="itemTypeIcons; context: {
 				item: item,
@@ -988,12 +990,13 @@
 				<span [innerText]="item.duration"></span>
 			</div>
 		</div>
+		<div class="card__body success__card__body text-left desc-line-clamp cx-text-secondary" *ngIf="item && item.description" [innerText]="item.description" data-auto-id="SBCardDescription"></div>
 		<div class="card__footer success__card__footer">
 			<div class="card_footer_item"  data-auto-id="SBCardFooter">
 				<div class="divider no-margin"></div>
 				<div class="atx__card__actions">
 					<a class="no-link" target="_blank" [href]="item.url">
-						<button data-auto-id="LaunchButton" class="btn btn--small btn--secondary text-uppercase"
+						<button data-auto-id="LaunchButton" class="cx-btn cx-btn--small cx-btn--primary text-uppercase"
 							[innerText]="'_View_' | i18n"></button>
 					</a>
 				</div>
@@ -1009,7 +1012,7 @@
 			[ngClass]="{ 'sortable': column.sortable }"
 			(click)="column.sortable ? onSort(column.sortKey, column.sortDirection, type) : null">
 			<span [innerText]="column.name"></span>
-			<span *ngIf="column.sortable" class="qtr-margin-left" [ngClass]="{
+			<span *ngIf="column.sortable && column.sorting" class="qtr-margin-left" [ngClass]="{
 							'icon-chevron-down': column.sortDirection === 'asc',
 							'icon-chevron-up': column.sortDirection === 'desc'
 						}">
@@ -1041,14 +1044,13 @@
 			[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__white'"
 			data-auto-id="PGCardRibbon">
 		</div>
-		<div class="card__header success__card__archetype text-left text-small text-uppercase base-margin-top qtr-margin-bottom" [innerText]="item.archetype" data-auto-id="PGCardArchetype"></div>
+		<div class="card__header success__card__archetype text-left text-uppercase qtr-margin-bottom cx-text-secondary" [innerText]="item.archetype" data-auto-id="PGCardArchetype"></div>
 		<div class="card__header success__card__header text-left">
 			<a class="no-link" data-auto-id="successtitle" target="_blank" rel="noopener noreferrer"
 					[href]="item.url">
 				<span class="title-line-clamp" data-auto-id="PGCardTitle" [innerText]="item.title"></span>
 			</a>
 		</div>
-		<div class="card__body success__card__body text-left desc-line-clamp" *ngIf="item && item.description" [innerText]="item.description" data-auto-id="PGCardDescription"></div>
 		<div class="success__card__icons">
 			<ng-container *ngTemplateOutlet="itemTypeIcons; context: {
 				item: item,
@@ -1060,12 +1062,13 @@
 				<span [innerText]="item.duration"></span>
 			</div>
 		</div>
+		<div class="card__body success__card__body text-left desc-line-clamp cx-text-secondary" *ngIf="item && item.description" [innerText]="item.description" data-auto-id="PGCardDescription"></div>
 		<div class="card__footer success__card__footer">
 			<div class="card_footer_item"  data-auto-id="PGCardFooter">
 				<div class="divider no-margin"></div>
 				<div class="atx__card__actions">
 					<a class="no-link" target="_blank" [href]="item.url">
-						<button data-auto-id="LaunchButton" class="btn btn--small btn--secondary text-uppercase"
+						<button data-auto-id="LaunchButton" class="cx-btn cx-btn--small cx-btn--primary text-uppercase"
 							[innerText]="'_View_' | i18n"></button>
 					</a>
 				</div>
@@ -1141,7 +1144,7 @@
 	<div class="cx-lifecycle-card--subtitle base-margin-bottom" [innerText]="'_CGTDescription_' | i18n"></div>
 	<div class="text-left" *ngIf="data.trainingsAvailable===0">
 		<button (click)="cgtRequestTrainingClicked = true"
-			class="btn btn--small text-uppercase cx-button"
+			class="cx-btn cx-btn--small cx-btn--primary text-uppercase"
 			[ngClass]="cgtRequestTrainingClicked ? ' btn--gray-ghost disabled' : 'btn--secondary'"
 			[innerText]="'_RequestTraining_' | i18n"
 			data-auto-id="Request-CgtCompleted">
@@ -1150,7 +1153,7 @@
 	</div>
 	<div class="text-left" *ngIf="data.trainingsAvailable>0">
 		<button (click)="selectCgtRequestForm(true, data.usedTrainings)"
-			class="btn btn--small btn--secondary text-uppercase cx-button"
+			class="cx-btn cx-btn--small cx-btn--primary text-uppercase"
 			[innerText]="'_RequestTraining_' | i18n"
 			data-auto-id="Request-CgtTraining">
 		</button>
@@ -1282,7 +1285,7 @@
 			item: celldata
 		}">
 		</ng-container>			
-		<button class="btn btn--small btn--secondary text-uppercase cx-button half-margin-left"
+		<button class="cx-btn cx-btn--small cx-btn--primary text-uppercase half-margin-left"
 			attr.data-auto-id = "ListATXWatchNow-{{ celldata.recordingURL }}"
 			[ngClass]="celldata?.recordingURL ? null : 'disabled'"
 			(click)="crossLaunch(celldata.recordingURL)"
@@ -1299,7 +1302,7 @@
 	</div>
 	<div *ngIf="type === 'SB' || type==='PG'" class="text-right">
 		<a class="no-link" target="_blank" [href]="celldata.url">
-			<button data-auto-id="LaunchButton" class="btn btn--small btn--secondary cx-button text-uppercase qtr-margin-left"
+			<button data-auto-id="LaunchButton" class="cx-btn cx-btn--small cx-btn--primary text-uppercase qtr-margin-left"
 				[innerText]="'_View_' | i18n"></button>
 		</a>
 	</div>
@@ -1308,7 +1311,7 @@
 <ng-template #enabledAccButton let-accId="accId" let-title="title">
 	<button data-auto-id="Request1on1ACCButton"
 		(click)="selectAccRequestForm(true, accId, title)"
-		class="btn btn--small btn--secondary text-uppercase cx-button"
+		class="cx-btn cx-btn--small cx-btn--primary text-uppercase"
 		[innerText]="'_Request1on1_' | i18n">
 	</button>
 </ng-template>
@@ -1319,7 +1322,7 @@
 		tooltipDelay="500"
 		tooltipMaxWidth="275">
 		<button data-auto-id="Request1on1ACCButton"
-			class="btn btn--small btn--secondary text-uppercase disabled cx-button"
+			class="cx-btn cx-btn--small cx-btn--primary text-uppercase disabled"
 			[innerText]="'_Request1on1_' | i18n">
 		</button>
 	</div>
@@ -1329,21 +1332,20 @@
 
 <ng-template #enabledViewSessionsButton let-type="type" let-componentData="componentData" let-item="item">
 		<span [ngSwitch]="type" class="qtr-margin-right">
-			<button *ngSwitchCase="'moreView'" class="btn btn--small btn--secondary text-uppercase 
-				cx-button"
+			<button *ngSwitchCase="'moreView'" 
+				class="cx-btn cx-btn--small cx-btn--primary text-uppercase"
 				data-auto-id="MoreATXViewSessions"
 				(click)="atxMoreViewSessions()"
 				[innerText]="'_ViewSessions_' | i18n">
 			</button>
 			<button *ngSwitchCase="'recommendedView'" id="recommendedATXScheduleButton" 
 				data-auto-id="recommendedATXScheduleButton"
-				class="btn btn--small btn--secondary text-uppercase qtr-margin-right cx-button"
+				class="cx-btn cx-btn--small cx-btn--primary text-uppercase qtr-margin-right"
 				(click)="recommendedATXViewSessions($event)"
 				[innerText]="'_ViewSessions_' | i18n">
 			</button>
 			<button *ngSwitchCase="'listView'" data-auto-id="ViewSessionButton" 
-				class="btn btn--small btn--secondary 
-					cx-button text-uppercase qtr-margin-bottom qtr-margin-top cx-button"
+				class="cx-btn cx-btn--small cx-btn--primary text-uppercase qtr-margin-bottom qtr-margin-top"
 				(click)="atxScheduleCardOpened = true; 
 					recommendedAtxScheduleCardOpened = false; 
 					componentData.atx.interested = item; getCoordinates($event)"
@@ -1351,7 +1353,7 @@
 			</button>
 			<button *ngSwitchCase="'cardView'" id="cardRecommendedATXScheduleButton" 
 				data-auto-id="cardRecommendedATXScheduleButton"
-				class="btn btn--small btn--secondary text-uppercase cx-button"
+				class="cx-btn cx-btn--small cx-btn--primary text-uppercase"
 				(click)="atxScheduleCardOpened = true;
 						recommendedAtxScheduleCardOpened = false;
 						componentData.atx.interested = item;
@@ -1369,24 +1371,24 @@
 			tooltipMaxHeight="85"
 			class="qtr-margin-right">
 			<button *ngSwitchCase="'moreView'" 
-				class="btn btn--small btn--secondary text-uppercase cx-button disabled"
+				class="cx-btn cx-btn--small cx-btn--primary text-uppercase disabled"
 				data-auto-id="MoreATXViewSessions"
 				[innerText]="'_ViewSessions_' | i18n">
 			</button>
 			<button *ngSwitchCase="'recommendedView'"  
 				data-auto-id="recommendedATXScheduleButton"
-				class="btn btn--small btn--secondary text-uppercase qtr-margin-right cx-button 
+				class="cx-btn cx-btn--small cx-btn--primary text-uppercase qtr-margin-right 
 					disabled"
 				[innerText]="'_ViewSessions_' | i18n">
 			</button>
 			<button *ngSwitchCase="'listView'" data-auto-id="ViewSessionButton" 
-				class="btn btn--small btn--secondary cx-button text-uppercase qtr-margin-bottom 
-					qtr-margin-top cx-button disabled"
+				class="cx-btn cx-btn--small cx-btn--primary text-uppercase qtr-margin-bottom 
+					qtr-margin-top disabled"
 				[innerText]="'_ViewSessions_' | i18n">
 			</button>
 			<button *ngSwitchCase="'cardView'"
 				data-auto-id="cardRecommendedATXScheduleButton"
-				class="btn btn--small btn--secondary text-uppercase cx-button disabled"
+				class="cx-btn cx-btn--small cx-btn--primary text-uppercase disabled"
 				[innerText]="'_ViewSessions_' | i18n">
 			</button>
 		</span>

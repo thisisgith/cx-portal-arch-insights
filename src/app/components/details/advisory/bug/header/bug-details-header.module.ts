@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BugDetailsHeaderComponent } from './bug-details-header.component';
-import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
+import { I18nPipeModule, FromNowPipeModule } from '@cisco-ngx/cui-pipes';
+import { DateTimePipeModule } from '@pipes';
 
 /**
  * Bug Details Header Module
@@ -11,6 +12,8 @@ import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 	exports: [BugDetailsHeaderComponent],
 	imports: [
 		CommonModule,
+		DateTimePipeModule,
+		FromNowPipeModule,
 		I18nPipeModule,
 	],
 })

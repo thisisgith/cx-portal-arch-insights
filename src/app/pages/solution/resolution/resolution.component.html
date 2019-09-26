@@ -120,7 +120,7 @@
 <ng-template #severityTmpl let-item="celldata"><span data-auto-id="severityValue" ><span class="icon-circle icon-small"
 			data-auto-id="severityIcon" [ngClass]="getSeverityColor(item['priority'])"></span> S{{item["priority"]}}</span></ng-template>
 
-<ng-template #updatedTmpl let-item="celldata"><span [innerText]="item['lastModifiedDate'] | date"></span></ng-template>
+<ng-template #updatedTmpl let-item="celldata"><span data-auto-id="CaseListUpdated" [innerText]="item['lastModifiedDate'] | date"></span></ng-template>
 
 <!-- Templates for our Visual Filters for the Assets Tab -->
 <ng-template #totalFilter let-filter="filter">

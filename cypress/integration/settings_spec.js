@@ -26,7 +26,7 @@ describe('Control Point (Admin Settings)', () => { // PBC-207
 			cy.getByAutoId('settings.system.app.panel').should('exist');
 
 			cy.getByAutoId('settings.system.usage').should('exist');
-			cy.getByAutoId('settings.system.usage.label').should('have.text', i18n._ResourceUsage_.toUpperCase());
+			cy.getByAutoId('settings.system.usage.label').should('have.text', i18n._SystemUtilization_.toUpperCase());
 
 			cy.getByAutoId('settings.system.info').should('exist');
 			cy.getByAutoId('settings.system.info.label').should('have.text', i18n._SystemInfo_.toUpperCase());

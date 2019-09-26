@@ -39,26 +39,39 @@
 			src="assets/img/assets/device-{{ getProductIcon(celldata) }}.svg">
 	</span>
 	<a *ngIf="celldata?.serialNumber"
-		[innerText]="celldata?.hostName"
+		[innerText]="celldata?.hostName | truncate:false:20"
+		[title]="celldata?.hostName"
 		[routerLink]="['/solution/assets']"
 		[queryParams]="{ serialNumber: celldata.serialNumber, select: true }">
 	</a>
 	<span *ngIf="!celldata?.serialNumber"
-		[innerText]="celldata?.deviceName || celldata?.hostName || ('_NA_' | i18n)">
+		[title]="celldata?.deviceName || celldata?.hostName || ('_NA_' | i18n)"
+		[innerText]="(celldata?.deviceName || celldata?.hostName || ('_NA_' | i18n)) | truncate:false:20">
 	</span>
 </ng-template>
 
 <ng-template #versionColumn let-celldata="celldata">
 	<!-- TODO: update when there is a way to tell if the software is outdated -->
 	<div [ngClass]="{ 'text-danger': celldata.outdated }">
-		<span [innerText]="celldata?.osVersion || celldata?.softwareVersion || celldata?.swVersion || ('_NA_' | i18n)"></span>
+		<span [title]="celldata?.osVersion || celldata?.softwareVersion || celldata?.swVersion || ('_NA_' | i18n)"
+			[innerText]="celldata?.osVersion || celldata?.softwareVersion || celldata?.swVersion || ('_NA_' | i18n)">
+		</span>
 		<!-- <span *ngIf="celldata.outdated" class="icon-arrow-down-tail"></span> -->
 	</div>
 </ng-template>
 
+<ng-template #ipAddressColumn let-celldata="celldata">
+	<span [title]="celldata?.ipAddress || ('_NA_' | i18n)"
+		[innerText]="celldata?.ipAddress || ('_NA_' | i18n)">
+	</span>
+</ng-template>
+
 <ng-template #recommendedVersionColumn let-celldata="celldata">
 	<!-- TODO: update once it's possible to retrieve the recommended version -->
-	<span [innerText]="'_NA_' | i18n"></span>
+	<span
+		[title]="'_NA_' | i18n"
+		[innerText]="'_NA_' | i18n">
+	</span>
 	<!-- <a><span *ngIf="celldata.recommendedVersion" [innerText]="celldata.recommendedVersion"></span></a> -->
 </ng-template>
 	

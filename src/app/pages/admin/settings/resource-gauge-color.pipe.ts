@@ -32,13 +32,13 @@ export class ResourceGaugeColorPipe implements PipeTransform {
 		let color = '';
 
 		if (this.threasholds.good(val)) {
-			color = 'success';
+			color = '#6ebe4a';
 		} else if (this.threasholds.warn(val)) {
-			color = 'warning';
+			color = '#fbab18';
 		} else if (this.threasholds.bad(val)) {
-			color = 'danger';
+			color = '#e2231a';
 		} else {
-			color = 'secondary';
+			color = '#000';
 		}
 
 		return color;

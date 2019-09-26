@@ -46,6 +46,16 @@ function setEnv () {
 			deploy_command="cxportal-qa"
 			bucket="s3://cisco-cx-customer-portal"
 			;;
+	  "qa2")
+	     dist_id="EWCEMDJ2O4JUM"
+	     deploy_command="cxportal-qa"
+	     bucket="s3://cisco-cx-customer-portal-qa2"
+	    ;;
+	  "lt2")
+	     dist_id="E250CLJCD4Z158"
+	     deploy_command="cxportal-lt"
+	     bucket="s3://cisco-cx-customer-portal-lt2"
+	    ;;
 	esac
 }
 
@@ -56,7 +66,7 @@ if [ "$#" -lt 1 ]; then
 	# need to provide at least 1 argument
 	showUsage
 else
-	if [ "$1" != "qa" ] && [ "$1" != 'lt' ] && [ "$1" != 'prd' ]; then
+	if [ "$1" != "qa" ] && [ "$1" != 'lt' ] && [ "$1" != 'prd' ] && [ "$1" != 'qa2' ] && [ "$1" != 'lt2' ]; then
 		# 1st argument must be environment
 		showUsage
 	fi

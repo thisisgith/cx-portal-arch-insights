@@ -9,12 +9,12 @@
 		<div class="row">
 			<div class="col-lg-6" data-auto-id="settings.system.status">
 				<h5
-					class="base-margin-top half-margin-bottom"
+					class="base-margin-top half-margin-bottom settings__title"
 					data-auto-id="settings.system.status.label"
 					[innerText]="'_Status_' | i18n | uppercase"
 				></h5>
 				<div
-					class="panel panel--bordered flex base-margin-right"
+					class="panel settings-panel panel--bordered-top flex base-margin-right"
 					data-auto-id="settings.system.status.panel">
 					<div class="col-4">
 						<div [innerText]="'_CXCollector_' | i18n"></div>
@@ -44,7 +44,7 @@
 				</div>
 				<div
 					*ngIf="data.dnac_details && data.dnac_details[0]"
-					class="panel settings-panel panel--bordered-right panel--bordered-left panel--bordered-bottom base-margin-right"
+					class="panel settings-panel panel--bordered-top panel--bordered-bottom base-margin-right"
 					data-auto-id="settings.system.status.panel">
 					<div class="flex">
 						<div class="col-4">
@@ -84,7 +84,7 @@
 					</div>
 				</div>
 				<h5
-					class="base-margin-top half-margin-bottom"
+					class="half-margin-bottom settings__title settings__title--margin-top"
 					data-auto-id="settings.system.app.label"
 					[innerText]="'_Applications_' | i18n | uppercase"
 				></h5>
@@ -95,8 +95,6 @@
 						settings-panel
 						panel
 						panel--bordered-top
-						panel--bordered-left
-						panel--bordered-right
 						base-margin-right" [ngClass]="{
 							'panel--bordered-bottom': i === (data.component_details.length - 1)
 						}">
@@ -129,7 +127,7 @@
 						</div>
 						<div heightTransition [heightTransitionExpanded]="app.showError">
 							<div
-								class="base-padding-top half-padding-left"
+								class="half-padding-top base-padding-left settings__error"
 								[innerText]="app.additional_details?.error"
 							></div>
 						</div>
@@ -138,37 +136,39 @@
 			</div>
 			<div class="col-lg-3" data-auto-id="settings.system.usage">
 				<h5
-					class="base-margin-top base-margin-bottom"
+					class="base-margin-top half-margin-bottom settings__title"
 					data-auto-id="settings.system.usage.label"
-					[innerText]="'_ResourceUsage_' | i18n | uppercase"
+					[innerText]="'_SystemUtilization_' | i18n | uppercase"
 				></h5>
+				<div class="divider settings__divider"></div>
 				<div
 					*ngFor="let gauge of data.memoryUsage"
 					class="flex-center-vertical base-margin-bottom"
 					[attr.data-auto-id]="'usage-' + gauge.label">
-					<cui-gauge
+					<app-gauge
 						[percentage]="gauge.percentage"
-						[value]="gauge.percentage + '%'"
-						[color]="gauge.percentage | guageColor"
-						size="small"
-					></cui-gauge>
+						[arcColor]="gauge.percentage | guageColor"
+						textColor="#243034"
+						[width]="82"
+					></app-gauge>
 					<div class="base-margin-left base-margin-bottom">
-						<div class="text-bold" [innerText]="gauge.label | uppercase"></div>
-						<div *ngIf="gauge.value" [innerText]="gauge.value"></div>
+						<div class="settings__system__title" [innerText]="gauge.label"></div>
+						<div *ngIf="gauge.value" [innerText]="gauge.value" class="settings__system__description"></div>
 					</div>
 				</div>
 			</div>
 			<div class="col-lg-3" data-auto-id="settings.system.info">
 				<h5
-					class="base-margin-top half-margin-bottom"
+					class="base-margin-top half-margin-bottom settings__title"
 					data-auto-id="settings.system.info.label"
 					[innerText]="'_SystemInfo_' | i18n | uppercase"
 				></h5>
+				<div class="divider settings__divider"></div>
 				<div
 					*ngFor="let info of data.systemInfo"
 					[attr.data-auto-id]="'info-' + info.label">
-					<div class="base-margin-top">
-						<div class="text-bold" [innerText]="info.label | uppercase"></div>
+					<div class="half-padding-top base-padding-bottom">
+						<div class="settings__info__title" [innerText]="info.label | uppercase"></div>
 						<div [innerText]="info.value"></div>
 					</div>
 				</div>

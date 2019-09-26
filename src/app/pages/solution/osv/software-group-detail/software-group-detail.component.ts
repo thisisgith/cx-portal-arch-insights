@@ -349,10 +349,18 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 				bordered: true,
 				columns: [
 					{
+						key: 'swType',
+						name: I18n.get('_OsvOSType_'),
+						sortable: true,
+						sortDirection: 'asc',
+						sorting: true,
+						width: '20%',
+					},
+					{
 						key: 'swVersion',
 						name: I18n.get('_OsvVersion_'),
 						sortable: false,
-						width: '10%',
+						width: '20%',
 					},
 					{
 						key: 'releaseDate',
@@ -362,23 +370,21 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 								new Date(item.postDate), 'yyyy MMM dd') :
 							'',
 						sortable: true,
+						width: '20%',
 					},
 					{
-						key: 'swType',
-						name: I18n.get('_OsvOSType_'),
-						sortable: true,
-						sortDirection: 'asc',
-						sorting: true,
+						key: 'optimalVersion',
+						name: I18n.get('_OsvOptimalOSVersion_'),
+						render: item =>
+								item.optimalVersion ? item.optimalVersion : '',
+						sortable: false,
+						width: '20%',
 					},
 					{
 						key: 'assetCount',
 						name: I18n.get('_OsvAssetCount_'),
 						sortable: false,
-					},
-					{
-						key: 'optimalVersion',
-						name: I18n.get('_OsvOptimalOSVersion_'),
-						sortable: false,
+						width: '20%',
 					},
 				],
 				dynamicData: true,
@@ -404,35 +410,44 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 					{
 						key: 'hostName',
 						name: I18n.get('_OsvHostName'),
-						width: '10%',
 						sortable: true,
 						sortDirection: 'asc',
 						sorting: true,
+						width: '20%',
 					},
 					{
 						key: 'ipAddress',
 						name: I18n.get('_OsvIpAddress_'),
 						sortable: false,
+						width: '16%',
 					},
 					{
 						key: 'swType',
 						name: I18n.get('_OsvOSType_'),
 						sortable: false,
+						width: '16%',
 					},
 					{
 						name: I18n.get('_OsvCurrentOSVersion_'),
 						template: this.versionTemplate,
 						sortable: false,
+						width: '16%',
 					},
 					{
 						key: 'optimalVersion',
 						name: I18n.get('_OsvOptimalVersion_'),
+						render: item =>
+								item.optimalVersion ? item.optimalVersion : '',
 						sortable: false,
+						width: '16%',
 					},
 					{
 						key: 'deploymentStatus',
 						name: I18n.get('_OsvDeploymentStatus_'),
+						render: item =>
+								item.deploymentStatus ? item.deploymentStatus : '',
 						sortable: false,
+						width: '16%',
 					},
 				],
 				dynamicData: true,

@@ -162,12 +162,6 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 						width: '25%',
 					},
 					{
-						key: 'assetCount',
-						name: I18n.get('_OsvAssetCount_'),
-						sortable: false,
-						width: '10%',
-					},
-					{
 						key: 'swType',
 						name: I18n.get('_OsvOSType_'),
 						sortable: false,
@@ -182,8 +176,16 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 					{
 						key: 'optimalVersion',
 						name: I18n.get('_OsvOptimalVersion_'),
+						render: item =>
+								item.optimalVersion ? item.optimalVersion : '',
 						sortable: false,
 						width: '15%',
+					},
+					{
+						key: 'assetCount',
+						name: I18n.get('_OsvAssetCount_'),
+						sortable: false,
+						width: '10%',
 					},
 					{
 						name: I18n.get('_OsvRecommendations_'),

@@ -1,3 +1,77 @@
+::ng-deep {
+	.step-title {
+		font-size: 44px;
+		line-height: 60px;
+	}
+
+	.cx-btn {
+		height: 40px !important;
+		background: #00bceb !important;
+		color: #fff !important;
+		border-radius: 21px !important;
+		font-weight: 400 !important;
+		font-size: 18px !important;
+		box-shadow: none !important;
+		line-height: unset !important;
+		border: 3px solid transparent !important;
+		max-width: unset !important;
+
+		&:hover {
+			background: #227bb1 !important;
+		}
+
+		&:active,
+		&:focus {
+			background: #176899 !important;
+		}
+
+		&:focus {
+			border: 3px solid #d6eaee !important;
+		}
+
+		&--disabled {
+			opacity: 0.3 !important;
+		}
+	}
+
+	.cx-text-gray {
+		color: #767676;
+	}
+
+
+	// cui text input override. May want to make available globally?
+	.form-group__text {
+		input {
+			border-radius: 0 !important;
+			border: unset !important;
+			border-bottom: 1px solid #aeb8c1 !important;
+			background: #f4f6f8 !important;
+
+			&:hover {
+				border-bottom: 1px solid #227bb1 !important;
+			}
+
+			&:active,
+			&:focus {
+				border-bottom-color: #00bceb !important;
+			}
+		}
+
+		input.ng-touched.ng-invalid {
+			border-bottom: 1px solid #e2231a !important;
+
+			&:hover,
+			&:active {
+				border-bottom: 1px solid #e2231a !important;
+			}
+
+			~ label {
+				color: #e2231a !important;
+			}
+		}
+	}
+}
+
 :host {
 	.slide-container {
 		height: calc(100vh - 115px);
@@ -13,4 +87,9 @@
 		top: 70px;
 		cursor: pointer;
 	}
+}
+
+.setup-content {
+	background: #f7f8fc;
+	height: 100%;
 }

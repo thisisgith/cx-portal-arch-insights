@@ -38,7 +38,7 @@
 <div class="row base-margin-top">
 		<div class="col-md-4">
 			<div class="container" *ngIf="cbpRuleExceptions?.length > 0">
-				<span [innerText]="'_ArchitectureException_' | i18n" class="text-large"></span>
+				<span [innerText]="'_ArchitectureExceptions_' | i18n" class="text-large"></span>
 					<span class="qtr-margin-left text-small text-muted" 
 					[innerText]="'_ArchitectureShowingXofYTotalItems_' | i18n:(tableStartIndex+1):tableEndIndex:totalItems">
 					</span>
@@ -54,7 +54,7 @@
 					>
 						<div class="qtr-padding-top">
 							<div class="container">
-								<span [innerText]="'_ArchitectureLastUpdated_' | i18n" class="text-large"></span>
+								<span [innerText]="'_ArchitectureUpdated_' | i18n" class="text-large"></span>
 								<span data-auto-id="lastCollectionTime" 
 								class="qtr-margin-left text-large" 
 								[innerText]="lastCollectionTime"></span>

@@ -93,7 +93,7 @@ export class DevicesListComponent implements OnInit, OnChanges {
 			columns: [
 				{
 					key: 'neName',
-					name: I18n.get('_ArchitectureDevice_'),
+					name: I18n.get('_ArchitectureSystemName_'),
 					sortable: false,
 				},
 				{
@@ -112,7 +112,7 @@ export class DevicesListComponent implements OnInit, OnChanges {
 					sortable: false,
 				},
 				{
-					name: I18n.get('_ArchitectureSoftwareVersion_'),
+					name: I18n.get('_ArchitectureSoftwareRelease_'),
 					sortable: false,
 					template : this.softwareVersionTemplate,
 				},

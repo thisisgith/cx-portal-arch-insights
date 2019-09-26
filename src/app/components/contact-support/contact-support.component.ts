@@ -30,7 +30,7 @@ export class ContactSupportComponent implements OnInit, OnDestroy, CuiModalConte
 	public descriptionMaxLength;
 	public title: FormControl;
 	public description: FormControl;
-	public userMailId: string = this.profileService.getProfile().cpr.pf_auth_email;
+	public userMailId: string;
 	public modalHeading;
 	private destroy$ = new Subject();
 	public items: any[] = [];
@@ -38,7 +38,8 @@ export class ContactSupportComponent implements OnInit, OnDestroy, CuiModalConte
 	private customerId: string;
 
 	constructor (
-		public cuiModalService: CuiModalService, private profileService: ProfileService,
+		public cuiModalService: CuiModalService,
+		private profileService: ProfileService,
 		public emailControllerService: EmailControllerService,
 		private logger: LogService, private sanitizer: DomSanitizer,
 		private userResolve: UserResolve,
@@ -50,6 +51,8 @@ export class ContactSupportComponent implements OnInit, OnDestroy, CuiModalConte
 		)
 		.subscribe((id: string) => {
 			this.customerId = id;
+
+			this.userMailId = this.profileService.getProfile().cpr.pf_auth_email;
 			this.loading = false;
 		});
 	}
