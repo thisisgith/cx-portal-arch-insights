@@ -26,7 +26,7 @@ describe('Control Point (Admin Settings)', () => { // PBC-207
 			cy.getByAutoId('settings.system.app.panel').should('exist');
 
 			cy.getByAutoId('settings.system.usage').should('exist');
-			cy.getByAutoId('settings.system.usage.label').should('have.text', i18n._ResourceUsage_.toUpperCase());
+			cy.getByAutoId('settings.system.usage.label').should('have.text', i18n._SystemUtilization_.toUpperCase());
 
 			cy.getByAutoId('settings.system.info').should('exist');
 			cy.getByAutoId('settings.system.info.label').should('have.text', i18n._SystemInfo_.toUpperCase());
@@ -91,12 +91,12 @@ describe('Control Point (Admin Settings)', () => { // PBC-207
 			const hw = mainData.system_details.hardware_details;
 
 			cy.getByAutoId('settings.system.usage').within(() => {
-				cy.getByAutoId(`usage-${i18n._CurrentCPUUtilization_}`).should('contain', i18n._CurrentCPUUtilization_.toUpperCase());
+				cy.getByAutoId(`usage-${i18n._CPUUtilization_}`).should('contain', i18n._CPUUtilization_.toUpperCase());
 				cy.getByAutoId(`usage-${i18n._CurrentAvailableMemory_}`).should('contain', i18n._CurrentAvailableMemory_.toUpperCase());
 				cy.getByAutoId(`usage-${i18n._FreeDiskSpace_}`).should('contain', i18n._FreeDiskSpace_.toUpperCase());
 			});
 
-			cy.getByAutoId(`usage-${i18n._CurrentCPUUtilization_}`).within(() => {
+			cy.getByAutoId(`usage-${i18n._CPUUtilization_}`).within(() => {
 				cy.get('cui-gauge').should('exist');
 				cy.get('cui-gauge').should('have.text', `${Cypress._.parseInt(hw.cpu_utilization, 10)}%`);
 				cy.get('cui-gauge').should('have.attr', 'ng-reflect-color', 'success');
