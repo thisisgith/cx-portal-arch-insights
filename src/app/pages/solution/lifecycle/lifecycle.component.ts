@@ -428,15 +428,15 @@ export class LifecycleComponent implements OnDestroy {
 
 	/**
 	 * Get the filter option name
-	 * @returns Option name to be rendered 
+	 * @returns Option name to be rendered
 	 * @param {string} value Value to lookup
 	 */
-	public getStatusOptionName(value) {
-		if (!value) return;
-		const foundOption = this.statusOptions.find(opt => opt.value === value);
-		return foundOption ? foundOption.name : value;
+	public getStatusOptionName (value) {
+		if (value) {
+			const foundOption = this.statusOptions.find(opt => opt.value === value);
+			return foundOption ? foundOption.name : value;
+		}
 	}
-
 
 	/**
 	 * Resets our component data to its base requirements
