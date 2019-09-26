@@ -1027,8 +1027,10 @@ export class LifecycleComponent implements OnDestroy {
 
 			if (this.calculatePercentage(this.componentData.racetrack.pitstop) === 1) {
 				this.showCompletionPopup = true;
+				this.panelBottomPaddingNeeded = true;
 				setTimeout(() => {
 					this.showCompletionPopup = false;
+					this.panelBottomPaddingNeeded = false;
 				}, this.timeout);
 			}
 			// Need to call getRacetrackInfo to get the latest data
@@ -1132,8 +1134,8 @@ export class LifecycleComponent implements OnDestroy {
 			const completedActions = _.filter(pitstop.pitstopActions, 'isComplete').length;
 			pct = (completedActions / pitstop.pitstopActions.length);
 
-			if (!_.isNil(pct) || (pct <= 1)) {
-				return pct;
+			if (_.isNil(pct) || (pct > 1)) {
+				pct = 0;
 			}
 		}
 
