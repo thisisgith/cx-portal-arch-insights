@@ -105,12 +105,20 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 	&__view-toggle .btn {
 		background: #fff;
 		color: #6a80a5;
+		display: block;
 		width: 32px;
 		height: 30px;
 
 		&.selected {
 			background: #6a80a5;
-			color: #fff;
+
+			::ng-deep svg g {
+				fill: #fff;
+			}
+		}
+
+		&:hover:not(.selected) {
+			background: #ebf1f8;
 		}
 	}
 }
