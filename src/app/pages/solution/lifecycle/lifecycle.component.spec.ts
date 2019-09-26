@@ -1328,7 +1328,7 @@ describe('LifecycleComponent', () => {
 
 			// ATX should be refreshed
 			expect(racetrackContentService.getRacetrackATX)
-				.toHaveBeenCalledTimes(2);
+				.toHaveBeenCalledTimes(1);
 
 		});
 
@@ -1344,7 +1344,7 @@ describe('LifecycleComponent', () => {
 				.toBeTruthy();
 
 			expect(racetrackContentService.getRacetrackATX)
-				.toHaveBeenCalledTimes(3);
+				.toHaveBeenCalledTimes(2);
 		});
 
 		it('should disable ATX Registration if not current or current+1 pitstop', () => {
