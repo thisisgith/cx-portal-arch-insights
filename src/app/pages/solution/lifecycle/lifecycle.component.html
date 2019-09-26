@@ -1022,7 +1022,7 @@
 				<ng-container *ngTemplateOutlet="column.template; context: { celldata: item, type: type }"></ng-container>
 			</ng-container>
 			<ng-container *ngIf="!column.template">
-				<div [innerText]="item[column.key]" attr.data-auto-id="ViewAllTable-{{ column.name }}-rowValue">
+				<div class="list-view__col" [innerText]="item[column.key]" attr.data-auto-id="ViewAllTable-{{ column.name }}-rowValue">
 				</div>
 			</ng-container>
 		</td>
@@ -1209,7 +1209,7 @@
 </ng-container>
 
 <ng-template #formatTemplate let-celldata="celldata">
-	<div class="row">
+	<div class="row list-view__col">
 		<div class="col-md-5">
 			<div *ngIf="celldata.type">
 					<ng-container *ngTemplateOutlet="itemTypeIcons; context: {
@@ -1220,7 +1220,7 @@
 			</div>
 		</div>
 		<div class="col-md-7">
-			<div *ngIf="celldata.duration" class="text-muted">
+			<div *ngIf="celldata.duration">
 				<span class="icon-inline" inlineSVG="assets/icons/icon-matrics-timer.svg" data-auto-id="ViewAllTable-Format-rowValue-clock"></span>
 				<span [innerText]="celldata.duration" data-auto-id="ViewAllTable-Format-rowValue-duration"></span>
 			</div>
@@ -1410,7 +1410,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="col--highlight" *ngIf="type==='SB' || type==='PG'">
+	<div class="list-view__col--highlight" *ngIf="type==='SB' || type==='PG'">
 		<a class="no-link" target="_blank" rel="noopener noreferrer"
 			[innerText]="celldata.title" [href]="celldata.url" attr.data-auto-id="{{ type }}-Name-rowValue"></a>
 	</div>
@@ -1427,19 +1427,19 @@
 </ng-container>
 
 <ng-template #itemTypeIcons let-item="item" let-autoid="autoid">
-	<div class="type text-left text-muted" *ngIf="item.type === 'Web Page'" attr.data-auto-id="{{ autoid }}-WebIcon">
+	<div class="type text-left" *ngIf="item.type === 'Web Page'" attr.data-auto-id="{{ autoid }}-WebIcon">
 		<span class="icon-link icon qtr-padding-right"></span>
 		<span class="item-type__text" [innerText]="'_Web_' | i18n"></span>
 	</div>
-	<div class="type text-left text-muted" *ngIf="item.type === 'Video'" attr.data-auto-id="{{ autoid }}-VideoIcon">
+	<div class="type text-left" *ngIf="item.type === 'Video'" attr.data-auto-id="{{ autoid }}-VideoIcon">
 		<span class="icon-video icon qtr-padding-right"></span>
 		<span class="item-type__text" [innerText]="'_Video_' | i18n"></span>
 	</div>
-	<div class="type text-left text-muted" *ngIf="item.type === 'PDF'" attr.data-auto-id="{{ autoid }}-PDFIcon">
+	<div class="type text-left" *ngIf="item.type === 'PDF'" attr.data-auto-id="{{ autoid }}-PDFIcon">
 		<span class="icon-file-pdf-o icon qtr-padding-right"></span>
 		<span class="item-type__text" [innerText]="'_PDF_' | i18n"></span>
 	</div>
-	<div class="type text-left text-muted" *ngIf="item.type === 'Data Sheet'" attr.data-auto-id="{{ autoid }}-DataSheetIcon">
+	<div class="type text-left" *ngIf="item.type === 'Data Sheet'" attr.data-auto-id="{{ autoid }}-DataSheetIcon">
 		<span class="icon-file-o icon qtr-padding-right"></span>
 		<span class="item-type__text" [innerText]="'_Datasheet_' | i18n"></span>
 	</div>
