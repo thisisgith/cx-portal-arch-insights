@@ -46,3 +46,27 @@
 .form-group__text .afm-search {
 	@include filter-search;
 }
+
+$default-text-color: #394454;
+
+::ng-deep {
+
+	/** 360 tables have different styling **/
+	#details-panel .details-header .text-xlarge {
+		font-weight: 300;
+		font-size: 28px !important;
+		line-height: 28px !important;
+		color: $default-text-color;
+	}
+
+	#details-panel .details-header {
+		padding: 15px 35px !important;
+		background: #f4f6f8;
+		border-bottom: unset;
+	}
+
+	#details-panel .details-header .icon-close .icon--mid {
+		font-size: 18px;
+	}
+}
+

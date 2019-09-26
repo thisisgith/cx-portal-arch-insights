@@ -4,16 +4,18 @@ import { fakeAsync, tick, ComponentFixture, TestBed } from '@angular/core/testin
 import { RouterTestingModule } from '@angular/router/testing';
 import { FaultManagementModule } from './afm.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ActivatedRoute } from '@angular/router';
-import { environment } from '@environment';
 import { of, throwError } from 'rxjs';
-import { user, AfmScenarios } from '@mock';
+import { AfmScenarios } from '@mock';
 import {
 	AfmService, AfmSearchParams, Alarm,
 } from '@sdp-api';
 import { HttpErrorResponse } from '@angular/common/http';
 import { I18n } from '@cisco-ngx/cui-utils';
 import * as enUSJson from '../../../../assets/i18n/en-US.json';
+import {
+	AssetPanelLinkService,
+	DetailsPanelStackService,
+} from '@services';
 
 describe('AfmComponent', () => {
 	let component: AfmComponent;
@@ -21,34 +23,26 @@ describe('AfmComponent', () => {
 	const mockAfmSearchParams: AfmSearchParams = new Object();
 	const mockAlarm: Alarm = new Object();
 	let afmService: AfmService;
+	let detailsPanelStackService: DetailsPanelStackService;
+	let assetPanelLinkService: AssetPanelLinkService;
 	const afmFilter: any = new Object();
 
 	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				FaultManagementModule,
-
 				HttpClientTestingModule,
 				RouterTestingModule,
 			],
-			providers: [{ provide: 'ENVIRONMENT', useValue: environment },
-			{
-				provide: ActivatedRoute,
-				useValue: {
-					queryParams: of({ }),
-					snapshot: {
-						data: {
-							user,
-						},
-					},
-				},
-			}, AfmService],
+			providers: [AfmService, DetailsPanelStackService, AssetPanelLinkService],
 		});
 	});
 
 	beforeEach(() => {
 		I18n.injectDictionary(enUSJson);
 		afmService = TestBed.get(AfmService);
+		detailsPanelStackService = TestBed.get(DetailsPanelStackService);
+		assetPanelLinkService = TestBed.get(AssetPanelLinkService);
 		fixture = TestBed.createComponent(AfmComponent);
 		component = fixture.componentInstance;
 	});
@@ -141,13 +135,13 @@ describe('AfmComponent', () => {
 		spyOn(afmService, 'getAfmAlarms')
 			.and
 			.returnValue(of(<any> AfmScenarios[1].scenarios.POST[0].response.body));
-		component.onAlarmPanelClose();
+		component.onAllPanelsClose();
 		fixture.detectChanges();
 		tick();
 		component.eventStatus = true;
-		component.onAlarmPanelClose();
-		expect(component.showAlarmDetails)
-			.toBeFalsy();
+		component.onAllPanelsClose();
+		expect(afmService.getAfmAlarms)
+			.toHaveBeenCalled();
 	}));
 
 	it('should call search filter', fakeAsync(() => {
@@ -393,16 +387,70 @@ describe('AfmComponent', () => {
 		.toBeTruthy();
 	});
 
+	it('should call on panel back', () => {
+		spyOn(detailsPanelStackService, 'pop');
+		component.onPanelBack();
+		expect(detailsPanelStackService.pop)
+		.toHaveBeenCalled();
+	});
+
+	it('should handel panel to hide', () => {
+		spyOn(detailsPanelStackService, 'reset');
+		component.handleHidden(false);
+		fixture.detectChanges();
+		component.handleHidden(true);
+		expect(component.showAlarmDetails)
+		.toBeFalsy();
+		expect(detailsPanelStackService.reset)
+		.toHaveBeenCalled();
+	});
+
 	describe('connectToAlarmDetails', () => {
 		it('should collect alarm details', fakeAsync(() => {
+			const assetLinkResponse = [
+				{
+					data: [
+						{
+							contractNumber: '',
+							criticalAdvisories: '0',
+							deviceName: '5520-1',
+							equipmentType: 'CHASSIS',
+							hwInstanceId: 'FCH2139V1B0',
+							ipAddress: '10.105.218.192',
+						},
+					],
+				},
+				{
+					data: [
+						{
+							customerId: '7293498',
+							hostName: '5520-1',
+							imageName: null,
+							installedMemory: 0,
+							ipAddress: '10.105.218.192',
+							isManagedNE: true,
+							lastResetReason: null,
+							lastUpdateDate: '2019-08-30T17:47:30',
+						},
+					],
+				},
+			];
+
 			spyOn(afmService, 'getAfmEvents')
 				.and
 				.returnValue(of(<any> AfmScenarios[4].scenarios.POST[0].response.body));
 			spyOn(afmService, 'getAfmAlarms')
 				.and
 				.returnValue(of(<any> AfmScenarios[1].scenarios.POST[0].response.body));
+			spyOn(assetPanelLinkService, 'getAssetLinkData')
+				.and
+				.returnValue(of(assetLinkResponse));
 			mockAlarm.syslogMsg = 'Sys log message';
 			mockAlarm.alarmId = 1001;
+			component.showAlarmDetails = true;
+			component.connectToAlarmDetails(mockAlarm);
+			fixture.detectChanges();
+			component.showAlarmDetails = false;
 			component.connectToAlarmDetails(mockAlarm);
 			tick();
 			expect(afmService.getAfmEvents(mockAfmSearchParams))
@@ -415,6 +463,8 @@ describe('AfmComponent', () => {
 				.toBeNull();
 			expect(afmService.getAfmEvents)
 				.toHaveBeenCalled();
+			expect(assetPanelLinkService.getAssetLinkData)
+			.toHaveBeenCalled();
 		}));
 
 		it('should call tac case filters', () => {

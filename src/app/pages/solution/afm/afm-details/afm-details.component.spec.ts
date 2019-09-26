@@ -3,10 +3,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AfmDetailsComponent } from './afm-details.component';
 import { AfmDetailsModule } from './afm-details.module';
-import { environment } from '@environment';
 import { of } from 'rxjs';
-import { user, AfmScenarios } from '@mock';
-import { ActivatedRoute } from '@angular/router';
+import { AfmScenarios } from '@mock';
 import {
 	AfmService,
 	AfmSearchParams, Alarm, AfmResponse,
@@ -24,18 +22,7 @@ describe('AfmDetailsComponent', () => {
 	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [AfmDetailsModule, HttpClientTestingModule],
-			providers: [{ provide: 'ENVIRONMENT', useValue: environment },
-			{
-				provide: ActivatedRoute,
-				useValue: {
-					queryParams: of({ }),
-					snapshot: {
-						data: {
-							user,
-						},
-					},
-				},
-			}, AfmService],
+			providers: [AfmService],
 		});
 	});
 
