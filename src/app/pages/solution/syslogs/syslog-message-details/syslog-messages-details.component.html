@@ -87,6 +87,12 @@
 			{{celldata?.ProductFamily}} </div>
 
 	</ng-template>
+
+	<ng-template #prodId let-celldata="celldata">
+		<div title="{{ celldata?.ProductId }}">
+			{{celldata?.ProductId}} </div>
+
+	</ng-template>
 </div>
 <div *ngIf="!tableData?.length && !loading">
 	<div class="text-center dbl-margin-top dbl-margin-bottom">
@@ -113,3 +119,7 @@
 	[limit]="tableConfig.tableLimit">
 	</cui-table>
 </ng-template>
+<ng-template #innerMessageType let-celldata="celldata">
+		<div title="{{ celldata?.SyslogMsgDesc }}">
+			{{celldata?.SyslogMsgDesc}} </div>
+			</ng-template>

@@ -59,7 +59,7 @@
 	</div>
 </div>
 <!-- grid-section ends -->
-<details-panel *ngIf="selectedAsset" [hidden]="!selectedAsset" (hiddenChange)="handleHidden($event)" [fullscreen]="fullscreen">
+<details-panel *ngIf="selectedAsset" [hidden]="!selectedAsset" (hiddenChange)="handleHidden($event)" [fullscreen]="fullscreen" [minWidth]="'900px'">
 	<details-panel-header (close)="onPanelClose()" [(fullscreen)]="fullscreen" [fullscreenToggle]="false">
 		<div class="row">
 			<div class="col-md-12">
