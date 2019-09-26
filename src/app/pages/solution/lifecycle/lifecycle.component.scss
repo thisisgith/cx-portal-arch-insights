@@ -551,7 +551,7 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 
 .success-grid {
 
-	/* 'auto' sometimes messes up in weird corner cases for Success Bytes
+	/* 'auto' sometimes messes up in weird corner cases for Success Tips
 	with low numbers of cards. Force the grid to have the correct height. */
 	grid-template-rows: repeat(auto-fill, 280px) !important;
 }

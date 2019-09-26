@@ -382,7 +382,7 @@ export class LifecycleComponent implements OnDestroy {
 				break;
 			}
 			case 'SB': {
-				title = I18n.get('_SuccessBytes_');
+				title = I18n.get('_SuccessTips_');
 				break;
 			}
 			case 'PG': {
@@ -765,7 +765,7 @@ export class LifecycleComponent implements OnDestroy {
 				},
 				visible: true,
 			};
-		} else if (type === '_SuccessBytes_') {
+		} else if (type === '_SuccessTips_') {
 			this.modal = {
 				content: this.viewAllModalTemplate,
 				context: {
@@ -1144,7 +1144,7 @@ export class LifecycleComponent implements OnDestroy {
 		let id;
 		let lifecycleCategory: 'ACC' | 'ATX' | 'SB';
 
-		// Product Guides has to be submitted as a Success Bytes bookmark.
+		// Product Guides has to be submitted as a Success Tips bookmark.
 		if (inputCategory === 'PG') {
 			lifecycleCategory = 'SB';
 		} else {

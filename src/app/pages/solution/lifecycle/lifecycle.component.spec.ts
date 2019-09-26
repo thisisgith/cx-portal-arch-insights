@@ -869,7 +869,7 @@ describe('LifecycleComponent', () => {
 		});
 	});
 
-	describe('Success Bytes', () => {
+	describe('Success Tips', () => {
 		it('should have loaded the successPaths items', () => {
 			buildSpies();
 			sendParams();
@@ -883,13 +883,13 @@ describe('LifecycleComponent', () => {
 				});
 		});
 
-		it('should show the Success Bytes view-all modal', () => {
+		it('should show the Success Tips view-all modal', () => {
 			buildSpies();
 			sendParams();
 
 			fixture.detectChanges();
 
-			component.showModal('_SuccessBytes_');
+			component.showModal('_SuccessTips_');
 			fixture.detectChanges();
 
 			expect(component.modal.visible)
@@ -908,7 +908,7 @@ describe('LifecycleComponent', () => {
 				.toBeTruthy();
 
 			expect(component.getTitle('SB'))
-				.toEqual('Success Bytes');
+				.toEqual('Success Tips');
 
 			expect(component.getSubtitle('SB'))
 				.toEqual('Resources to fine-tune your tech');
@@ -964,7 +964,7 @@ describe('LifecycleComponent', () => {
 				.toBeFalsy();
 		});
 
-		it('should load success bytes hover panel', () => {
+		it('should load Success Tips hover panel', () => {
 			buildSpies();
 			sendParams();
 			fixture.detectChanges();

@@ -21,11 +21,11 @@
 				<div class="col-md-4">
 					<ng-container *ngTemplateOutlet="panel; context: {
 						template: successBytesPanel,
-						title: '_SuccessBytes_',
+						title: '_SuccessTips_',
 						loading: (status.loading.success || status.loading.productGuides),
 						data: componentData.learning,
 						viewAllLabel: '_ViewAll_',
-						viewAll: '_SuccessBytes_'
+						viewAll: '_SuccessTips_'
 					}">
 					</ng-container>
 					<ng-container *ngTemplateOutlet="panel; context: {
@@ -528,7 +528,7 @@
 	<div class="cx-lifecycle-card--subtitle base-margin-bottom" [innerText]="'_SuccessBytesSubtitle_' | i18n"></div>
 	<div *ngIf="data.success?.length" data-auto-id="SuccessBytesPanel-SuccessPathsBlock">
 		<ng-container *ngTemplateOutlet="successBlock; context: {
-				title: '_SuccessBytes_',
+				title: '_SuccessTips_',
 				data: componentData.learning.success }">
 		</ng-container>
 		<div class="divider"></div>
