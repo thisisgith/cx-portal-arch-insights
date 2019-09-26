@@ -1,11 +1,5 @@
 [![pipeline status](https://gitlab-sjc.cisco.com/sso-apps/persona-based-console/badges/develop/pipeline.svg)](https://gitlab-sjc.cisco.com/sso-apps/persona-based-console/commits/develop)
-[![documentation](http://swtg-rtp-dev-7.cisco.com/docs/persona-based-console/images/coverage-badge-documentation.svg)](http://swtg-rtp-dev-7.cisco.com/docs/persona-based-console/coverage.html)
-
-## Unit Test Coverages [![coverage report](https://gitlab-sjc.cisco.com/sso-apps/persona-based-console/badges/develop/coverage.svg)](https://gitlab-sjc.cisco.com/sso-apps/persona-based-console/commits/develop)
-[![statements](http://swtg-rtp-dev-7.cisco.com/docs/persona-based-console/images/coverage-badge-statements.svg)](http://swtg-rtp-dev-7.cisco.com/docs/persona-based-console/unit-test.html)
-[![branches](http://swtg-rtp-dev-7.cisco.com/docs/persona-based-console/images/coverage-badge-branches.svg)](http://swtg-rtp-dev-7.cisco.com/docs/persona-based-console/unit-test.html)
-[![functions](http://swtg-rtp-dev-7.cisco.com/docs/persona-based-console/images/coverage-badge-functions.svg)](http://swtg-rtp-dev-7.cisco.com/docs/persona-based-console/unit-test.html)
-[![lines](http://swtg-rtp-dev-7.cisco.com/docs/persona-based-console/images/coverage-badge-lines.svg)](http://swtg-rtp-dev-7.cisco.com/docs/persona-based-console/unit-test.html)
+[![coverage report](https://gitlab-sjc.cisco.com/sso-apps/persona-based-console/badges/develop/coverage.svg)](https://gitlab-sjc.cisco.com/sso-apps/persona-based-console/commits/develop)
 
 # Persona Based Console
 
