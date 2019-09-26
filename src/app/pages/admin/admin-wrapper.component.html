@@ -33,6 +33,22 @@
 			</a>
 		</li>
 		<li class="sidebar__item"
+			[ngClass]="{ selected: routerPath === 'assets' }"
+		>
+			<a
+				data-auto-id="sidebar.assets"
+				[routerLink]="['/admin', 'assets']"
+			>
+				<span class="badge-wrapper">
+					<span tabindex="0"
+						attr.data-auto-id="AdminSidebar-AssetsIcon">
+						<span class="icon-devices text-noselect"></span>
+					</span>
+				</span>
+				<span class="sidebar__item__label" [innerText]="'_Assets_' | i18n"></span>
+			</a>
+		</li>
+		<li class="sidebar__item"
 			[ngClass]="{ selected: routerPath === 'settings' }"
 		>
 			<a
