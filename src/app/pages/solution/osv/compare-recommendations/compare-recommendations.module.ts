@@ -4,6 +4,7 @@ import {
 	CuiTableModule,
 	CuiSpinnerModule,
 	CuiAlertModule,
+	CuiDropdownModule,
 } from '@cisco-ngx/cui-components';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { BarChartModule } from '@components';
@@ -22,6 +23,7 @@ import { CompareRecommendationsComponent } from './compare-recommendations.compo
 		CuiSpinnerModule,
 		BarChartModule,
 		CuiAlertModule,
+		CuiDropdownModule,
 	],
 })
 export class CompareRecommendationsModule { }
