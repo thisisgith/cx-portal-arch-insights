@@ -761,6 +761,12 @@ export class RacetrackComponent implements OnInit {
 		if (currentStage && !changes.stage.firstChange) {
 			this.zoomToStage(currentStage, true);
 		}
+
+		const previewStage = _.get(changes, ['stage', 'currentValue']);
+		if (previewStage && !changes.stage.firstChange) {
+			this.zoomToStage(previewStage, false);
+			this.refreshLabels();
+		}
 	}
 
 	/**
