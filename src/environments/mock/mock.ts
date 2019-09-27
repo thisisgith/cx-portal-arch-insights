@@ -100,7 +100,6 @@ import {
 	IERegistrationResponseModel,
 	LicenseDataResponseModel,
 	MachineRecommendationsResponse,
-	PitstopActionUpdateResponse,
 	PoliciesGroupByDayInAMonthModel,
 	ProfileRecommendationsResponse,
 	RacetrackResponse,
@@ -159,7 +158,6 @@ type ResponseBody = (
 	IERegistrationResponseModel |
 	LicenseDataResponseModel |
 	MachineRecommendationsResponse |
-	PitstopActionUpdateResponse |
 	PoliciesGroupByDayInAMonthModel |
 	ProfileRecommendationsResponse |
 	RacetrackResponse |

@@ -119,11 +119,11 @@ describe('Learn Panel', () => {
 			}
 
 			if (successPathItems.length > 0) {
-				cy.getByAutoId('Success Bytes Panel').should('exist')
-					.and('contain', 'Success Bytes')
+				cy.getByAutoId('Success Tips Panel').should('exist')
+					.and('contain', 'Success Tips')
 					.and('contain', 'Resources to fine-tune your tech');
 			} else {
-				cy.getByAutoId('Success Bytes Panel').should('not.exist');
+				cy.getByAutoId('Success Tips Panel').should('not.exist');
 			}
 		});
 
@@ -146,19 +146,19 @@ describe('Learn Panel', () => {
 					.should('not.contain', scenario.title);
 			});
 			visibleSuccessPathItems.forEach(scenario => {
-				cy.getByAutoId('Success Bytes Panel')
+				cy.getByAutoId('Success Tips Panel')
 					.should('contain', scenario.title);
 			});
 			invisibleSuccessPathItems.forEach(scenario => {
-				cy.getByAutoId('Success Bytes Panel')
+				cy.getByAutoId('Success Tips Panel')
 					.should('not.contain', scenario.title);
 			});
 		});
 	});
 
-	describe('PBC-15: (UI) View - Lifecycle - Success Bytes - View All Card View', () => {
+	describe('PBC-15: (UI) View - Lifecycle - Success Tips - View All Card View', () => {
 		beforeEach(() => {
-			cy.getByAutoId('ShowModalPanel-_SuccessBytes_').click();
+			cy.getByAutoId('ShowModalPanel-_SuccessTips_').click();
 			cy.getByAutoId('ViewAllModal').should('exist');
 		});
 
@@ -167,9 +167,9 @@ describe('Learn Panel', () => {
 			cy.getByAutoId('ViewAllModal').should('not.exist');
 		});
 
-		it('PBC-142/PBC-143: View All Success Bytes link should open modal with all results', () => {
+		it('PBC-142/PBC-143: View All Success Tips link should open modal with all results', () => {
 			cy.getByAutoId('ViewAllModal').should('exist')
-				.and('contain', 'Success Bytes')
+				.and('contain', 'Success Tips')
 				.and('contain', 'Resources to fine-tune your tech')
 				.and('contain', `${successPathItems.length} topics available`);
 			successPathItems.forEach((scenario, index) => {
@@ -195,7 +195,7 @@ describe('Learn Panel', () => {
 			});
 		});
 
-		it('PBC-142/PBC-143: View All Success Bytes modal includes content type icons', () => {
+		it('PBC-142/PBC-143: View All Success Tips modal includes content type icons', () => {
 			successPathItems.forEach((scenario, index) => {
 				switch (scenario.type) {
 					case 'Video':
@@ -239,7 +239,7 @@ describe('Learn Panel', () => {
 			});
 		});
 
-		it('PBC-199: View All Success Bytes modal should include bookmark ribbons', () => {
+		it('PBC-199: View All Success Tips modal should include bookmark ribbons', () => {
 			successPathItems.forEach((scenario, index) => {
 				cy.getByAutoId('SBCard').eq(index).within(() => {
 					if (scenario.bookmark) {
@@ -266,7 +266,7 @@ describe('Learn Panel', () => {
 
 		it('PBC-188: All Success Path View All links should cross-launch to specified URL', () => {
 			// Open the View All modal
-			cy.getByAutoId('ShowModalPanel-_SuccessBytes_').click();
+			cy.getByAutoId('ShowModalPanel-_SuccessTips_').click();
 			cy.getByAutoId('ViewAllModal').should('exist');
 
 			// Cypress does not and will never support multiple tabs, so just check the link element
@@ -441,10 +441,10 @@ describe('Learn Panel', () => {
 		});
 	});
 
-	describe('PBC-198: (UI) View - Lifecycle - Success Bytes - View All Table View', () => {
+	describe('PBC-198: (UI) View - Lifecycle - Success Tips - View All Table View', () => {
 		before(() => {
 			// Open the View All modal
-			cy.getByAutoId('ShowModalPanel-_SuccessBytes_').click();
+			cy.getByAutoId('ShowModalPanel-_SuccessTips_').click();
 
 			// Switch to table view
 			cy.getByAutoId('sb-table-view-btn').click({ force: true });
@@ -461,7 +461,7 @@ describe('Learn Panel', () => {
 			cy.wait('(SP) IBN-Campus Network Assurance-Onboard');
 		});
 
-		it('Success Bytes View All should be able to toggle between table and card views', () => {
+		it('Success Tips View All should be able to toggle between table and card views', () => {
 			cy.getByAutoId('sb-card-view-btn').click({ force: true });
 			cy.getByAutoId('SBCard').should('be.visible');
 			cy.getByAutoId('ViewAllTable').should('not.be.visible');
@@ -471,7 +471,7 @@ describe('Learn Panel', () => {
 			cy.getByAutoId('ViewAllTable').should('be.visible');
 		});
 
-		it('Success Bytes View All table should have expected columns', () => {
+		it('Success Tips View All table should have expected columns', () => {
 			cy.getByAutoId('ViewAllTable')
 				.within(() => {
 					cy.get('th').then($columnHeaders => {
@@ -485,7 +485,7 @@ describe('Learn Panel', () => {
 				});
 		});
 
-		it('Success Bytes View All table should not sort by default', () => {
+		it('Success Tips View All table should not sort by default', () => {
 			cy.getByAutoId('ViewAllTable')
 				.within(() => {
 					successPathItems.forEach((item, index) => {
@@ -533,7 +533,7 @@ describe('Learn Panel', () => {
 				});
 		});
 
-		it('Success Bytes View All table should be sortable by Name', () => {
+		it('Success Tips View All table should be sortable by Name', () => {
 			cy.getByAutoId('ViewAllTable')
 				.within(() => {
 					cy.getByAutoId('ViewAllTable-columnHeader-Name').click({ force: true });
@@ -561,7 +561,7 @@ describe('Learn Panel', () => {
 				});
 		});
 
-		it('Success Bytes View All table should be sortable by Category', () => {
+		it('Success Tips View All table should be sortable by Category', () => {
 			cy.getByAutoId('ViewAllTable')
 				.within(() => {
 					cy.getByAutoId('ViewAllTable-columnHeader-Category').click({ force: true });
@@ -589,7 +589,7 @@ describe('Learn Panel', () => {
 				});
 		});
 
-		it('Success Bytes View All table should be sortable by Format', () => {
+		it('Success Tips View All table should be sortable by Format', () => {
 			cy.getByAutoId('ViewAllTable')
 				.within(() => {
 					cy.getByAutoId('ViewAllTable-columnHeader-Format').click({ force: true });
@@ -664,7 +664,7 @@ describe('Learn Panel', () => {
 		});
 
 		successPathArchetypes.forEach(archetype => {
-			it(`View All Success Bytes modal (table view) can filter by archetype: ${archetype}`, () => {
+			it(`View All Success Tips modal (table view) can filter by archetype: ${archetype}`, () => {
 				// Filter by archetype, verify the count
 				cy.getByAutoId('ViewAllModal').within(() => {
 					cy.getByAutoId('cui-select').click();
@@ -682,7 +682,7 @@ describe('Learn Panel', () => {
 			});
 		});
 
-		it('View All Success Bytes modal (table view)  can filter by archetype: Not selected', () => {
+		it('View All Success Tips modal (table view)  can filter by archetype: Not selected', () => {
 			// Filter by archetype, verify the count. Note: 'Not selected' should show all items
 			cy.getByAutoId('ViewAllModal').within(() => {
 				cy.getByAutoId('cui-select').click();
@@ -698,7 +698,7 @@ describe('Learn Panel', () => {
 			});
 		});
 
-		it('View All Success Bytes modal table view should support sort and filter combined', () => {
+		it('View All Success Tips modal table view should support sort and filter combined', () => {
 			// Filter by archetype "Project Planning"
 			cy.getByAutoId('ViewAllModal').within(() => {
 				cy.getByAutoId('cui-select').click();
@@ -753,10 +753,10 @@ describe('Learn Panel', () => {
 		});
 	});
 
-	describe('PBC-198: Success Bytes View All table sorting stickiness', () => {
+	describe('PBC-198: Success Tips View All table sorting stickiness', () => {
 		beforeEach(() => {
 			// Open the View All modal
-			cy.getByAutoId('ShowModalPanel-_SuccessBytes_').click();
+			cy.getByAutoId('ShowModalPanel-_SuccessTips_').click();
 			cy.getByAutoId('ViewAllModal').should('exist');
 
 			// Switch to table view
@@ -779,7 +779,7 @@ describe('Learn Panel', () => {
 			cy.wait('(SP) IBN-Campus Network Assurance-Onboard');
 		});
 
-		it('Success Bytes View All table sort should be sticky across modal close/re-open', () => {
+		it('Success Tips View All table sort should be sticky across modal close/re-open', () => {
 			const sortedItemsAsc = Cypress._.orderBy(successPathItems, ['title'], ['asc']);
 
 			cy.getByAutoId('ViewAllTable')
@@ -791,7 +791,7 @@ describe('Learn Panel', () => {
 			cy.getByAutoId('ViewAllCloseModal').click();
 			cy.getByAutoId('ViewAllModal').should('not.exist');
 
-			cy.getByAutoId('ShowModalPanel-_SuccessBytes_').click();
+			cy.getByAutoId('ShowModalPanel-_SuccessTips_').click();
 			cy.getByAutoId('ViewAllModal').should('exist');
 
 			// Verify the still in table view and sort is still in place
@@ -808,7 +808,7 @@ describe('Learn Panel', () => {
 				});
 		});
 
-		it('Success Bytes View All table sort should be sticky across table/card view', () => {
+		it('Success Tips View All table sort should be sticky across table/card view', () => {
 			const sortedItemsAsc = Cypress._.orderBy(successPathItems, ['title'], ['asc']);
 
 			// Sort the data
@@ -842,7 +842,7 @@ describe('Learn Panel', () => {
 				});
 		});
 
-		it('Success Bytes View All table sort should NOT be sticky across use case changes', () => {
+		it('Success Tips View All table sort should NOT be sticky across use case changes', () => {
 			cy.getByAutoId('ViewAllTable')
 				.within(() => {
 					cy.getByAutoId('ViewAllTable-columnHeader-Name').click({ force: true });
@@ -856,7 +856,7 @@ describe('Learn Panel', () => {
 			cy.getByAutoId('TechnologyDropdown-Campus Network Segmentation').click();
 			cy.wait('(SP) IBN-Campus Network Segmentation-Onboard');
 
-			cy.getByAutoId('ShowModalPanel-_SuccessBytes_').click();
+			cy.getByAutoId('ShowModalPanel-_SuccessTips_').click();
 			cy.getByAutoId('ViewAllModal').should('exist');
 
 			// Verify still in table view and sort was reset to default
@@ -873,7 +873,7 @@ describe('Learn Panel', () => {
 				});
 		});
 
-		it('Success Bytes View All table sort should NOT be sticky across page navigation', () => {
+		it('Success Tips View All table sort should NOT be sticky across page navigation', () => {
 			cy.getByAutoId('ViewAllTable')
 				.within(() => {
 					cy.getByAutoId('ViewAllTable-columnHeader-Name').click({ force: true });
@@ -887,7 +887,7 @@ describe('Learn Panel', () => {
 			cy.getByAutoId('Facet-Lifecycle').click();
 			cy.wait('(SP) IBN-Campus Network Assurance-Onboard');
 
-			cy.getByAutoId('ShowModalPanel-_SuccessBytes_').click();
+			cy.getByAutoId('ShowModalPanel-_SuccessTips_').click();
 			cy.getByAutoId('ViewAllModal').should('exist');
 
 			// Verify the sort was reset to default
@@ -904,7 +904,7 @@ describe('Learn Panel', () => {
 				});
 		});
 
-		it('Success Bytes View All table sort should NOT be sticky across page reload', () => {
+		it('Success Tips View All table sort should NOT be sticky across page reload', () => {
 			cy.getByAutoId('ViewAllTable')
 				.within(() => {
 					cy.getByAutoId('ViewAllTable-columnHeader-Name').click({ force: true });
@@ -917,7 +917,7 @@ describe('Learn Panel', () => {
 			cy.loadApp();
 			cy.wait('(SP) IBN-Campus Network Assurance-Onboard');
 
-			cy.getByAutoId('ShowModalPanel-_SuccessBytes_').click();
+			cy.getByAutoId('ShowModalPanel-_SuccessTips_').click();
 			cy.getByAutoId('ViewAllModal').should('exist');
 
 			// Verify the sort was reset to default
@@ -937,7 +937,7 @@ describe('Learn Panel', () => {
 
 	describe('PBC-199: (UI) View - Lifecycle - Product Guides - Status Ribbons', () => {
 		before(() => {
-			cy.getByAutoId('ShowModalPanel-_SuccessBytes_').click();
+			cy.getByAutoId('ShowModalPanel-_SuccessTips_').click();
 		});
 
 		after(() => {
@@ -952,7 +952,7 @@ describe('Learn Panel', () => {
 			cy.waitForAppLoading('successPathsLoading', 15000);
 		});
 
-		it('Should be able to bookmark a Success Bytes item', () => {
+		it('Should be able to bookmark a Success Tips item', () => {
 			cy.getByAutoId('ViewAllModal').within(() => {
 				successPathItems.forEach((item, index) => {
 					if (!item.bookmark) {
@@ -970,7 +970,7 @@ describe('Learn Panel', () => {
 			});
 		});
 
-		it('Should be able to UN-bookmark a Success Bytes item', () => {
+		it('Should be able to UN-bookmark a Success Tips item', () => {
 			cy.getByAutoId('ViewAllModal').within(() => {
 				successPathItems.forEach((item, index) => {
 					if (item.bookmark) {
@@ -989,10 +989,10 @@ describe('Learn Panel', () => {
 		});
 	});
 
-	describe('PBC-200: (UI) View - Lifecycle - Success Bytes - Filter by Category', () => {
+	describe('PBC-200: (UI) View - Lifecycle - Success Tips - Filter by Category', () => {
 		before(() => {
 			// Open the View All modal
-			cy.getByAutoId('ShowModalPanel-_SuccessBytes_').click();
+			cy.getByAutoId('ShowModalPanel-_SuccessTips_').click();
 			cy.getByAutoId('ViewAllModal').should('exist');
 		});
 
@@ -1002,7 +1002,7 @@ describe('Learn Panel', () => {
 			cy.getByAutoId('ViewAllModal').should('not.exist');
 		});
 
-		it('View All Success Bytes modal shows all archetypes by default', () => {
+		it('View All Success Tips modal shows all archetypes by default', () => {
 			// Verify all cards are displayed by default
 			cy.getByAutoId('SBCard').then(cards => {
 				expect(cards.length).to.eq(successPathItems.length);
@@ -1010,7 +1010,7 @@ describe('Learn Panel', () => {
 		});
 
 		successPathArchetypes.forEach(archetype => {
-			it(`View All Success Bytes modal (card view) can filter by archetype: ${archetype}`, () => {
+			it(`View All Success Tips modal (card view) can filter by archetype: ${archetype}`, () => {
 				// Filter by archetype, verify the count
 				cy.getByAutoId('ViewAllModal').within(() => {
 					cy.getByAutoId('cui-select').click();
@@ -1024,7 +1024,7 @@ describe('Learn Panel', () => {
 			});
 		});
 
-		it('View All Success Bytes modal (card view) can filter by archetype: Not selected', () => {
+		it('View All Success Tips modal (card view) can filter by archetype: Not selected', () => {
 			// Filter by archetype, verify the count. Note: 'Not selected' should show all items
 			cy.getByAutoId('ViewAllModal').within(() => {
 				cy.getByAutoId('cui-select').click();
@@ -1036,7 +1036,7 @@ describe('Learn Panel', () => {
 			});
 		});
 
-		it('View All Success Bytes modal filter should be searchable', () => {
+		it('View All Success Tips modal filter should be searchable', () => {
 			cy.getByAutoId('ViewAllModal').within(() => {
 				// Start typing an archetype in the filter field
 				cy.getByAutoId('cui-select').click()
@@ -1054,7 +1054,7 @@ describe('Learn Panel', () => {
 			});
 		});
 
-		it('View All Success Bytes modal filter should be clearable', () => {
+		it('View All Success Tips modal filter should be clearable', () => {
 			cy.getByAutoId('ViewAllModal').within(() => {
 				cy.getByAutoId('cui-select').click();
 				cy.get('a[title="Getting Started"]').click();
@@ -1079,7 +1079,7 @@ describe('Learn Panel', () => {
 	describe('PBC-354: Verify View All filter stickiness', () => {
 		beforeEach(() => {
 			// Open the View All modal
-			cy.getByAutoId('ShowModalPanel-_SuccessBytes_').click();
+			cy.getByAutoId('ShowModalPanel-_SuccessTips_').click();
 			cy.getByAutoId('ViewAllModal').should('exist');
 		});
 
@@ -1096,7 +1096,7 @@ describe('Learn Panel', () => {
 			cy.wait('(SP) IBN-Campus Network Assurance-Onboard');
 		});
 
-		it('View All Success Bytes filter should be sticky', () => {
+		it('View All Success Tips filter should be sticky', () => {
 			cy.getByAutoId('ViewAllModal').within(() => {
 				cy.getByAutoId('cui-select').click();
 				cy.get('a[title="Project Planning"]').click({ force: true });
@@ -1107,7 +1107,7 @@ describe('Learn Panel', () => {
 			cy.getByAutoId('ViewAllCloseModal').click();
 			cy.getByAutoId('ViewAllModal').should('not.exist');
 
-			cy.getByAutoId('ShowModalPanel-_SuccessBytes_').click();
+			cy.getByAutoId('ShowModalPanel-_SuccessTips_').click();
 			cy.getByAutoId('ViewAllModal').should('exist');
 
 			// Verify the filter is still in place
@@ -1120,7 +1120,7 @@ describe('Learn Panel', () => {
 			});
 		});
 
-		it('View All Success Bytes filter should NOT be sticky across use case changes', () => {
+		it('View All Success Tips filter should NOT be sticky across use case changes', () => {
 			cy.getByAutoId('ViewAllModal').within(() => {
 				cy.getByAutoId('cui-select').click();
 				cy.get('a[title="Project Planning"]').click({ force: true });
@@ -1135,7 +1135,7 @@ describe('Learn Panel', () => {
 			cy.getByAutoId('TechnologyDropdown-Campus Network Segmentation').click();
 			cy.wait('(SP) IBN-Campus Network Segmentation-Onboard');
 
-			cy.getByAutoId('ShowModalPanel-_SuccessBytes_').click();
+			cy.getByAutoId('ShowModalPanel-_SuccessTips_').click();
 			cy.getByAutoId('ViewAllModal').should('exist');
 
 			// Verify the filter was cleared and all items are displayed
@@ -1145,7 +1145,7 @@ describe('Learn Panel', () => {
 			});
 		});
 
-		it('View All Success Bytes filter should NOT be sticky across page navigation', () => {
+		it('View All Success Tips filter should NOT be sticky across page navigation', () => {
 			cy.getByAutoId('ViewAllModal').within(() => {
 				cy.getByAutoId('cui-select').click();
 				cy.get('a[title="Project Planning"]').click({ force: true });
@@ -1160,7 +1160,7 @@ describe('Learn Panel', () => {
 			cy.getByAutoId('Facet-Lifecycle').click();
 			cy.wait('(SP) IBN-Campus Network Assurance-Onboard');
 
-			cy.getByAutoId('ShowModalPanel-_SuccessBytes_').click();
+			cy.getByAutoId('ShowModalPanel-_SuccessTips_').click();
 			cy.getByAutoId('ViewAllModal').should('exist');
 
 			// Verify the filter was cleared and all items are displayed
@@ -1170,7 +1170,7 @@ describe('Learn Panel', () => {
 			});
 		});
 
-		it('View All Success Bytes filter should NOT be sticky across page reload', () => {
+		it('View All Success Tips filter should NOT be sticky across page reload', () => {
 			cy.getByAutoId('ViewAllModal').within(() => {
 				cy.getByAutoId('cui-select').click();
 				cy.get('a[title="Project Planning"]').click({ force: true });
@@ -1184,7 +1184,7 @@ describe('Learn Panel', () => {
 			cy.loadApp();
 			cy.wait('(SP) IBN-Campus Network Assurance-Onboard');
 
-			cy.getByAutoId('ShowModalPanel-_SuccessBytes_').click();
+			cy.getByAutoId('ShowModalPanel-_SuccessTips_').click();
 			cy.getByAutoId('ViewAllModal').should('exist');
 
 			// Verify the filter was cleared and all items are displayed
@@ -1194,7 +1194,7 @@ describe('Learn Panel', () => {
 			});
 		});
 
-		it('PBC-198: View All Success Bytes filter should be sticky across table/card view', () => {
+		it('PBC-198: View All Success Tips filter should be sticky across table/card view', () => {
 			// Apply the filter
 			cy.getByAutoId('ViewAllModal').within(() => {
 				cy.getByAutoId('cui-select').click();
@@ -1261,8 +1261,8 @@ describe('Learn Panel', () => {
 	// TODO: These tests can be excruciatingly slow when running in the Cypress UI, due to the
 	// large number of elements that we're looping through...
 	describe('PBC-459: (UI) View - Lifecycle - All Product Documentation and Videos', () => {
-		it('Success Bytes section should include link to all docs', () => {
-			cy.getByAutoId('Success Bytes Panel').within(() => {
+		it('Success Tips section should include link to all docs', () => {
+			cy.getByAutoId('Success Tips Panel').within(() => {
 				cy.getByAutoId('ShowModalPanel-_ProductGuides_').should('be.visible');
 			});
 			cy.getByAutoId('ShowModalPanel-_ProductGuides_').click();
@@ -2136,9 +2136,9 @@ describe('Learn Panel', () => {
 		});
 	});
 
-	describe('Success Bytes: Hover-over to show more content about the module', () => {
+	describe('Success Tips: Hover-over to show more content about the module', () => {
 		visibleSuccessPathItems.forEach((successItem, index) => {
-			it(`Should have hover modal on Success Bytes links: ${successItem.title}`, () => {
+			it(`Should have hover modal on Success Tips links: ${successItem.title}`, () => {
 				// NOTE: Cypress can not trigger elements with :hover css property, so we'll just check
 				// that the hover modal and it's elements exist in the DOM. See below for reference:
 				// https://docs.cypress.io/api/commands/hover.html#Workarounds
@@ -2189,7 +2189,7 @@ describe('Learn Panel', () => {
 							default:
 								Cypress.log({
 									name: 'LOG',
-									message: `UNRECOGNIZED SUCCESS BYTES TYPE: ${successItem.type} ! TREATING AS WEB PAGE...`,
+									message: `UNRECOGNIZED Success Tips TYPE: ${successItem.type} ! TREATING AS WEB PAGE...`,
 								});
 								cy.getByAutoId('SuccessBytesHoverBlock-WebIcon').should('exist');
 						}

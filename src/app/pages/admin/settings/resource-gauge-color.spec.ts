@@ -7,27 +7,27 @@ describe('ResourceGaugeColorPipe', () => {
 		pipe = new ResourceGaugeColorPipe();
 	});
 
-	it('should return danger', () => {
-		const cssClass = pipe.transform('100');
-		expect(cssClass)
-			.toBe('danger');
+	it('should return red when danger', () => {
+		const gaugeColor = pipe.transform('100');
+		expect(gaugeColor)
+			.toBe('#e2231a');
 	});
 
-	it('should return warning', () => {
-		const cssClass = pipe.transform('60');
-		expect(cssClass)
-			.toBe('warning');
+	it('should return orange when warning', () => {
+		const gaugeColor = pipe.transform('60');
+		expect(gaugeColor)
+			.toBe('#fbab18');
 	});
 
-	it('should return success', () => {
-		const cssClass = pipe.transform('0');
-		expect(cssClass)
-			.toBe('success');
+	it('should return green when success', () => {
+		const gaugeColor = pipe.transform('0');
+		expect(gaugeColor)
+			.toBe('#6ebe4a');
 	});
 
-	it('should default to secondary', () => {
-		const cssClass = pipe.transform('other value');
-		expect(cssClass)
-			.toBe('secondary');
+	it('should default to black', () => {
+		const gaugeColor = pipe.transform('other value');
+		expect(gaugeColor)
+			.toBe('#000');
 	});
 });

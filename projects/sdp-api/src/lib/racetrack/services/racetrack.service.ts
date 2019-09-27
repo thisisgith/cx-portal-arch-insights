@@ -8,8 +8,7 @@ import { Observable as __Observable } from 'rxjs';
 import { map as __map, filter as __filter } from 'rxjs/operators';
 
 import { RacetrackResponse } from '../models/racetrack-response';
-import { PitstopActionUpdateResponse } from '../models/pitstop-action-update-response';
-import { PitstopActionUpdateRequest } from '../models/pitstop-action-update-request';
+import { PitstopActionUpdateRequestObject } from '../models/pitstop-action-update-request-object';
 @Injectable({
   providedIn: 'root',
 })
@@ -96,24 +95,17 @@ class RacetrackService extends __BaseService {
   }
 
   /**
-   * Racetrack information for a customer solution, use-case, pitstop, exit crtieria completion status
-   * @param params The `RacetrackService.UpdatePitstopActionParams` containing the following parameters:
-   *
-   * - `customerId`: Unique identifier of a Cisco customer.
-   *
-   * - `actionUpdate`: The action update set by the user
-   *
-   * @return successful operation, returns the racetrack information for the solution
+   * API to writeback the racetrack data
+   * @param actionUpdate The action update set by the user
    */
-  updatePitstopActionResponse(params: RacetrackService.UpdatePitstopActionParams): __Observable<__StrictHttpResponse<PitstopActionUpdateResponse>> {
+  updatePitstopActionResponse(actionUpdate?: PitstopActionUpdateRequestObject): __Observable<__StrictHttpResponse<null>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
 
-    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
-    __body = params.actionUpdate;
+    __body = actionUpdate;
     let req = new HttpRequest<any>(
-      'PATCH',
+      'PUT',
       this.rootUrl + `/customerportal/pitstop/v1/action/status`,
       __body,
       {
@@ -125,24 +117,18 @@ class RacetrackService extends __BaseService {
     return this.http.request<any>(req).pipe(
       __filter(_r => _r instanceof HttpResponse),
       __map((_r) => {
-        return _r as __StrictHttpResponse<PitstopActionUpdateResponse>;
+        return _r as __StrictHttpResponse<null>;
       })
     );
   }
 
   /**
-   * Racetrack information for a customer solution, use-case, pitstop, exit crtieria completion status
-   * @param params The `RacetrackService.UpdatePitstopActionParams` containing the following parameters:
-   *
-   * - `customerId`: Unique identifier of a Cisco customer.
-   *
-   * - `actionUpdate`: The action update set by the user
-   *
-   * @return successful operation, returns the racetrack information for the solution
+   * API to writeback the racetrack data
+   * @param actionUpdate The action update set by the user
    */
-  updatePitstopAction(params: RacetrackService.UpdatePitstopActionParams): __Observable<PitstopActionUpdateResponse> {
-    return this.updatePitstopActionResponse(params).pipe(
-      __map(_r => _r.body as PitstopActionUpdateResponse)
+  updatePitstopAction(actionUpdate?: PitstopActionUpdateRequestObject): __Observable<null> {
+    return this.updatePitstopActionResponse(actionUpdate).pipe(
+      __map(_r => _r.body as null)
     );
   }
 }
@@ -183,22 +169,6 @@ module RacetrackService {
      * Page number of the response
      */
     page?: number;
-  }
-
-  /**
-   * Parameters for updatePitstopAction
-   */
-  export interface UpdatePitstopActionParams {
-
-    /**
-     * Unique identifier of a Cisco customer.
-     */
-    customerId: string;
-
-    /**
-     * The action update set by the user
-     */
-    actionUpdate?: PitstopActionUpdateRequest;
   }
 }
 
