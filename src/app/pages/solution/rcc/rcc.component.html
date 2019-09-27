@@ -51,7 +51,7 @@
 		</cui-alert>
 	</div>
 	<div class="row container">
-		<div class="col-md-9 flex align-items-center" *ngIf="!isAssetView && !errorPolicyView && !noTableData">
+		<div class="col-md-9 flex align-items-center" *ngIf="!isAssetView && !errorPolicyView">
 			<span [innerText]="'_RccShowing_' | i18n"></span>
 			<span class="qtr-margin-left" [innerText]="(conditionViolations | number) || ('_RccNoValue_' | i18n)"></span>
 			<span class="qtr-margin-left" [innerText]="'_RccConditionViolations_' | i18n"></span>
@@ -59,14 +59,14 @@
 			<span class="qtr-margin-left" [innerText]="(conditionViolationsAssetCount | number) || ('_RccNoValue_' | i18n)"></span>
 			<span class="qtr-margin-left" [innerText]="'_RccSystems_' | i18n"></span>
 		</div>
-		<div class="col-md-9 flex align-items-center" *ngIf="isAssetView && !errorPolicyView && !noTableData">
+		<div class="col-md-9 flex align-items-center" *ngIf="isAssetView && !errorPolicyView">
 			<span [innerText]="'_RccShowing_' | i18n"></span>
 			<span class="qtr-margin-left" [innerText]="(withViolationsAssetsCount | number) || ('_RccNoValue_' | i18n)"></span>
 			<span class="qtr-margin-left" [innerText]="'_RccSystemsWith_' | i18n"></span>
 			<span class="qtr-margin-left" [innerText]="(assetsConditionViolationsCount | number)  || ('_RccNoValue_' | i18n)"></span>
 			<span class="qtr-margin-left" [innerText]="'_RccConditionViolations_' | i18n"></span>
 		</div>
-		<div class="col-md-3" *ngIf="!errorPolicyView && !noTableData">
+		<div class="col-md-3" *ngIf="!errorPolicyView">
 			<div class="flex flex-fluid flex-right">
 				<div class="flex-fill form-group input--compressed input--icon half-margin-right">
 					<form [formGroup]="searchForm" novalidate id="searchForm" (keyup)="searchViolations($event,'input')" data-auto-id="searchViolations">
@@ -164,7 +164,7 @@
 	</ng-template>
 
 	<ng-template #filterBar>
-		<div class="row flex-center-vertical half-margin-top base-margin-bottom" *ngIf="filtered && selectedFilters?.length > 0">
+		<div class="row flex-center-vertical half-margin-top half-margin-bottom" *ngIf="filtered && selectedFilters?.length > 0">
 			<div class="col-md-11 flex">
 				<span class="flex flex-center-vertical base-margin-left half-margin-right filter-bar__title" [innerText]="'_Filtered_' | i18n"></span>
 				<ng-container *ngFor="let filter of selectedFilters">
