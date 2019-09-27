@@ -209,7 +209,7 @@
 			</div>
 			<div class="line-clamp learning-popover__description" [innerText]="description" attr.data-auto-id="{{ autoid }}-HoverModal-Description"></div>
 			<div *ngIf="item && item.duration" class="learning-popover__footer" attr.data-auto-id="{{ autoid }}-HoverModal-Duration">
-				<span class="icon-clock qtr-margin-right" attr.data-auto-id="{{ autoid }}-HoverModal-DurationClock"></span>
+				<span class="icon--svg" inlineSVG="assets/icons/icon-matrics-timer.svg" attr.data-auto-id="{{ autoid }}-HoverModal-DurationClock"></span>
 				<span class="learning-popover__footer__text" [innerText]="item.duration"></span>
 			</div>
 		</div>
@@ -639,7 +639,7 @@
 						</a>
 					</div>
 					<div *ngIf="item && item.duration" class="learning-duration" attr.data-auto-id="{{ autoid }}-HoverModal-Duration">
-						<span class="icon-clock qtr-margin-right" attr.data-auto-id="{{ autoid }}-HoverModal-DurationClock"></span>
+						<span class="icon--svg" inlineSVG="assets/icons/icon-matrics-timer.svg" attr.data-auto-id="{{ autoid }}-HoverModal-DurationClock"></span>
 						<span [innerText]="item.duration" class="sb-popover__footer__text"></span>
 					</div>
 				</div>
@@ -1221,7 +1221,7 @@
 		</div>
 		<div class="col-md-7">
 			<div *ngIf="celldata.duration">
-				<span class="icon-inline" inlineSVG="assets/icons/icon-matrics-timer.svg" data-auto-id="ViewAllTable-Format-rowValue-clock"></span>
+				<span class="icon--inline" inlineSVG="assets/icons/icon-matrics-timer.svg" data-auto-id="ViewAllTable-Format-rowValue-clock"></span>
 				<span [innerText]="celldata.duration" data-auto-id="ViewAllTable-Format-rowValue-duration"></span>
 			</div>
 		</div>
