@@ -67,6 +67,8 @@ export class RiskMitigationComponent {
 	@ViewChild('firstOccuranceTemplate', { static: true })
 	 public firstOccuranceTemplate: TemplateRef<string>;
 	@ViewChild('swVersionTemplate', { static: true }) public swVersionTemplate: TemplateRef<string>;
+	@ViewChild('swTypeCrahsedTemplate', { static: true })
+	public swTypeCrahsedTemplate: TemplateRef<string>;
 	@ViewChild('riskScoreTemplate', { static: true }) public riskScoreTemplate: TemplateRef<string>;
 	@ViewChild('neNameTemplate', { static: true }) public neNameTemplate: TemplateRef<string>;
 	@ViewChild('productIdTemplate', { static: true }) public productIdTemplate: TemplateRef<string>;
@@ -682,6 +684,12 @@ export class RiskMitigationComponent {
 					name: I18n.get('_RMSoftwareVersion_'),
 					sortable: true,
 					template: this.swVersionTemplate,
+				},
+				{
+					key: 'swType',
+					name: I18n.get('_RMSoftwareType_'),
+					sortable: true,
+					template: this.swTypeCrahsedTemplate,
 				},
 				{
 					key: 'crashCount',
