@@ -449,14 +449,12 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 	public getSelectedSubFilters (key: string) {
 		const filter = _.find(this.filters, { key });
 		if (filter && this.noSyslogFilter) {
-			//const key = 'catalog';
 			let filterNoSyslog;
 			filterNoSyslog = _.find(this.filters, { key: 'catalog' });
 
 			filterNoSyslog.seriesData[0].selected = false;
 			filterNoSyslog.seriesData[1].selected = false;
 		} else if (filter && !this.noSyslogFilter) {
-			//const key = 'catalog';
 			let filterWithSyslog;
 			filterWithSyslog = _.find(this.filters, { key: 'catalog' });
 			if (this.appliedFilters.catalog === 'Cisco') {
