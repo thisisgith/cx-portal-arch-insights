@@ -12,6 +12,8 @@ import { ResolutionComponent } from './resolution.component';
 import { ResolutionModule } from './resolution.module';
 import { CaseScenarios } from '@mock';
 
+import { I18n } from '@cisco-ngx/cui-utils';
+
 import * as _ from 'lodash-es';
 
 describe('ResolutionComponent', () => {
@@ -113,15 +115,15 @@ describe('ResolutionComponent', () => {
 
 	it('should give the correct severity description', () => {
 		expect(component.getSeverityDescr('1'))
-			.toEqual('Network Down');
+			.toEqual(I18n.get('_OpenCaseNetworkDown_'));
 		expect(component.getSeverityDescr('2'))
-			.toEqual('Severely Degraded');
+			.toEqual(I18n.get('_OpenCaseSeverelyDegraded_'));
 		expect(component.getSeverityDescr('3'))
-			.toEqual('Network Impaired');
+			.toEqual(I18n.get('_OpenCaseNetworkImpaired_'));
 		expect(component.getSeverityDescr('4'))
-			.toEqual('Ask a Question');
+			.toEqual(I18n.get('_OpenCaseAskaQuestion_'));
 		expect(component.getSeverityDescr('42'))
-			.toEqual(undefined);
+		 	.toEqual('');
 	});
 
 	it('should use the case and serial queryparams', fakeAsync(() => {
