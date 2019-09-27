@@ -80,6 +80,7 @@ export class DevicesSdaComponent implements OnInit, OnChanges {
 					name: I18n.get('_ArchitectureCompliantVersion_'),
 					sortable: false,
 					template: this.recommendedVersions,
+					width: '20%',
 				},
 			],
 			striped: false,

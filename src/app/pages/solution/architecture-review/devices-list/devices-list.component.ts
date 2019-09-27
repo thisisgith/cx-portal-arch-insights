@@ -76,7 +76,12 @@ export class DevicesListComponent implements OnInit, OnChanges {
 		const isFirstChange = _.get(changes, ['filters', 'firstChange']);
 		if (selectedFilter && !isFirstChange) {
 			const compliantType = _.get(selectedFilter,  'exceptions');
+			const isClearAllSelected = _.get(selectedFilter, 'isClearAllSelected');
 			this.paramsType.deviceCompliance = compliantType ? compliantType.toString() : '';
+			if (isClearAllSelected) {
+				this.paramsType.searchText = '';
+				this.searchText = '';
+			}
 			this.isLoading = true;
 			this.tableStartIndex = 0;
 			this.paramsType.page = 0;
