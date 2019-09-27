@@ -28,7 +28,7 @@ export const environment = {
 		clientId: '07e418ac71284560944ea92f653a01c2',
 		maxCasesPerRequest: 1000,
 	},
-	emailToID: 'cx-portal-support@cisco.com',
+	emailToID: 'cx-portal-support-nonprod@cisco.com',
 	feedbackToEmail: 'cxpm-feedback@cisco.com',
 	ieSetup: {
 		asdAuthURL: 'https://cway.cisco.com/ws/oauth/v3/token/cisco/ae95x38c7zgu5fas59gseyfk',

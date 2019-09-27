@@ -21,7 +21,7 @@ export const environment = {
 		tokenUrl: `${origin}/ws/oauth/v3/token/cway/35ae50e6ff5843f59183da19cc44245d`,
 	},
 	baseHref: '/pbc/',
-	emailToID: 'cx-portal-support@cisco.com',
+	emailToID: 'cx-portal-support-nonprod@cisco.com',
 	feedbackToEmail: 'cxpm-feedback@cisco.com',
 	ieSetup: {
 		asdAuthURL: 'https://cway.cisco.com/ws/oauth/v3/token/cisco/ae95x38c7zgu5fas59gseyfk',
