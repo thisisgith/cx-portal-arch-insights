@@ -170,7 +170,7 @@ export class CaseDetailsComponent implements OnInit, OnDestroy {
 		return this.caseService.fetchCaseNotes(this.case.caseNumber, true)
 			.pipe(
 				catchError(err => {
-					this.logger.error('casedetails.component : getCaseDetails() ' +
+					this.logger.error('casedetails.component : getCaseNotes() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
 					return of({ });

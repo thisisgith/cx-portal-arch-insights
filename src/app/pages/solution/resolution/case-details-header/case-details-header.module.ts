@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { CaseDetailsHeaderComponent } from './case-details-header.component';
 import { CuiDropdownModule, CuiSpinnerModule, CuiModalModule } from '@cisco-ngx/cui-components';
 import { HttpClientModule } from '@angular/common/http';
-import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
+import { I18nPipeModule, FromNowPipeModule } from '@cisco-ngx/cui-pipes';
 import { FormsModule } from '@angular/forms';
 import { AddNoteModule } from '../case-details/add-note/add-note.module';
 import { RelatedRmaModule } from '../case-details/related-rma/related-rma.module';
@@ -26,6 +26,7 @@ import { CSCModule } from '@cui-x-views/csc';
 		CuiSpinnerModule,
 		CSCModule,
 		CuiModalModule,
+		FromNowPipeModule,
 	],
 })
 export class CaseDetailsHeaderModule { }

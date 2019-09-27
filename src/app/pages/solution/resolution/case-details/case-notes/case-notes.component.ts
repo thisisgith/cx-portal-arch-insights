@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { ProfileService } from '@cisco-ngx/cui-auth';
 
 /**
  * Case Notes Component
@@ -12,6 +13,10 @@ import { Component, OnInit, Input } from '@angular/core';
 export class CaseNotesComponent implements OnInit {
 
 	@Input() public caseNotes: any;
+
+	constructor (
+		private profileService: ProfileService,
+	) { }
 
 	/**
 	 * Initialization hook
@@ -28,6 +33,13 @@ export class CaseNotesComponent implements OnInit {
 			this.caseNotes.sort(
 				(a, b) => <any> new Date(b.createdDate) - <any> new Date(a.createdDate),
 			);
+
+			const userDetails = this.profileService.getProfile().cpr;
+			this.caseNotes.forEach((i: any) => {
+				if (i.createdByID.toLowerCase() === userDetails.pf_auth_uid.toLowerCase()) {
+					i.createdBy = 'You';
+				}
+			});
 		}
 	}
 }
