@@ -43,6 +43,9 @@ export class SoftwareGroupRecommendationsComponent implements OnChanges {
 		const recommendations = _.get(changes, ['recommendations', 'currentValue']);
 		if (recommendations) {
 			this.groupRecommendations = this.groupData(recommendations);
+			this.groupRecommendations.forEach((recomm: AssetRecommendations) => {
+				_.set(recomm, 'actions', this.getRowActions(recomm));
+			});
 			this.buildTable();
 		}
 	}
@@ -181,6 +184,22 @@ export class SoftwareGroupRecommendationsComponent implements OnChanges {
 		this.currentRecommendation = _.get(_.filter(data, { name: 'profile current' }), 0);
 
 		return this.sortData(groupedData);
+	}
+
+	/**
+	 * Returns the row specific actions
+	 * @param recomm the row we're building our actions for
+	 * @returns the built actions
+	 */
+	public getRowActions (recomm: AssetRecommendations) {
+		return [
+			{
+				label: _.upperCase(I18n.get('_Cancel_')),
+				onClick: () => {
+					this.onCancelClick(recomm.swVersion);
+				},
+			},
+		];
 	}
 
 }

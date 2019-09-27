@@ -36,7 +36,7 @@
 							</button>
 						</div>
 					</div>
-				</div>
+				</div> 
 				<div class="col-4">
 					<div class="form-group input--icon input--compressed">
 						<div class="form-group__text">
@@ -101,6 +101,7 @@
 	[hidden]="!selectedAsset"
 	(hiddenChange)="handleHidden($event)"
 	[fullscreen]="fullscreen"
+	[minWidth]="'900px'"
 >
 	<details-panel-header
 		(close)="onPanelClose()"
@@ -119,10 +120,23 @@
 			<div class="col-md-2">
 				<div class="row">
 					<div class="col-md-12" [innerText]="'Severity'"></div>
-					<div
-						class="col-md-12"
-						[innerText]="selectedAsset.SyslogSeverity"
-					></div>
+					<div 
+						class="col-md-12">
+	<i class="icon-circle" 
+						 	[ngClass]="{
+							'0': 'text-danger',
+							'1': 'text-danger',
+							'2': 'text-warning',
+							'3': 'text-warning-alt',
+							'4': 'text-warning-alt',
+							'5': 'text-primary',
+							'6': 'text-primary',
+							'7': 'text-primary'
+						}[selectedAsset?.SyslogSeverity]"
+						>
+					</i> 
+						<span [innerText]="selectedAsset.SyslogSeverity"></span>
+				</div>
 				</div>
 			</div>
 			<div class="col-md-3">
