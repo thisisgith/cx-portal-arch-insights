@@ -202,12 +202,14 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 					key: 'priority',
 					name: I18n.get('_RMACaseSeverity_'),
 					sortable: true,
+					width: '7%',
 					template: this.severityTemplate,
 				},
 				{
 					autoIdHeader: 'Case ID-Header',
 					key: 'caseNumber',
 					name: I18n.get('_CaseNumber_'),
+					width: '8%',
 					sortable: true,
 				},
 				{
@@ -220,12 +222,14 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 					autoIdHeader: 'Status-Header',
 					key: 'status',
 					name: I18n.get('_RMACaseStatus_'),
+					width: '12%',
 					sortable: true,
 				},
 				{
 					autoIdHeader: 'RMA-Header',
 					name: I18n.get('_RMACaseRMAs_'),
 					sortable: true,
+					width: '8%',
 					template: this.rmasTemplate,
 				},
 				{
@@ -240,7 +244,7 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 					name: I18n.get('_LastUpdated_'),
 					sortable: true,
 					sorting: true,
-					width: "5",
+					width: '8%',
 					template: this.updatedTemplate,
 				},
 			],
@@ -426,9 +430,6 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 		.subscribe(cases => {
 			this.isLoading = false;
 			this.caseListData = cases.content;
-
-			console.log("---->");
-			console.log(this.caseListData);
 
 			const first = (this.caseParams.size * (this.paginationInfo.currentPage)) + 1;
 			let last = (this.caseParams.size * (this.paginationInfo.currentPage + 1));

@@ -111,6 +111,19 @@ describe('ResolutionComponent', () => {
 			.toEqual(undefined);
 	});
 
+	it('should give the correct severity description', () => {
+		expect(component.getSeverityDescr('1'))
+			.toEqual("Network Down");
+		expect(component.getSeverityDescr('2'))
+			.toEqual("Severely Degraded");
+		expect(component.getSeverityDescr('3'))
+			.toEqual("Network Impaired");
+		expect(component.getSeverityDescr('4'))
+			.toEqual("Ask a Question");
+		expect(component.getSeverityDescr('42'))
+			.toEqual(undefined);
+	});
+
 	it('should use the case and serial queryparams', fakeAsync(() => {
 		router.navigate(
 			[],
