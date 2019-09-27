@@ -3,15 +3,15 @@
 	<visual-filter-bar [filters]="filters">
 		<ng-template #startingCard>
 			<div
-				class="text-center  panel panel--bordered-right  syslog-tab"
+				class="text-center panel cursor"
 			>
 				<div
 					*ngFor="let label of visualLabels; let i = index" data-auto-id="visualLabel"
 					[ngClass]="{ visualSelected: label.active == true }"
 					(click)="selectVisualLabel(i)"
 				>
-					<h1 [innerText]="label.count"></h1>
-					<div [innerText]="label.label"></div>
+					<div class="text-huge flex-center dbl-padding-left dbl-padding-right" [innerText]="label.count"></div>
+					<div class="text-large flex-center dbl-padding-left dbl-padding-right half-margin-bottom" [innerText]="label.label"></div>
 				</div>
 			</div>
 		</ng-template>
@@ -19,7 +19,6 @@
 	<!-- <div class="divider qtr-margin-top"></div> -->
 </div>
 <div class="panel panel--bordered base-margin-top">
-	<div class="divider qtr-margin-top visual-filter-divider"></div>
 	<ng-container>
 		<ng-container *ngTemplateOutlet="filterBar"></ng-container>
 		<div class="divider qtr-margin-top"></div>
@@ -61,7 +60,7 @@
 			</pie-chart>
 		</ng-template>
 <ng-template #filterBar>
-	<div class="row flex-center-vertical half-margin-top base-margin-bottom">
+	<div class="row flex-center-vertical">
 		<div class="col-md-11 flex">
 			<span
 				class="flex flex-center-vertical base-margin-left half-margin-right filter-bar__title"
