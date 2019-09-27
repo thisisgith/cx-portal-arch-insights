@@ -113,13 +113,13 @@ describe('ResolutionComponent', () => {
 
 	it('should give the correct severity description', () => {
 		expect(component.getSeverityDescr('1'))
-			.toEqual("Network Down");
+			.toEqual('Network Down');
 		expect(component.getSeverityDescr('2'))
-			.toEqual("Severely Degraded");
+			.toEqual('Severely Degraded');
 		expect(component.getSeverityDescr('3'))
-			.toEqual("Network Impaired");
+			.toEqual('Network Impaired');
 		expect(component.getSeverityDescr('4'))
-			.toEqual("Ask a Question");
+			.toEqual('Ask a Question');
 		expect(component.getSeverityDescr('42'))
 			.toEqual(undefined);
 	});
