@@ -22,6 +22,7 @@ import {
 	InventoryModule,
 } from '@sdp-api';
 import { environment } from '@environment';
+import { AssetDetailsModule } from '@components';
 
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
@@ -57,6 +58,7 @@ const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 		ProductAlertsModule.forRoot({ rootUrl }),
 		SearchServiceModule.forRoot({ rootUrl }),
 		InventoryModule.forRoot({ rootUrl }),
+		AssetDetailsModule,
 	],
 })
 export class SearchModule { }

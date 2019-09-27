@@ -52,6 +52,7 @@ implements OnInit, OnDestroy, OnChanges {
 		searchString?: string,
 		context?: SearchContext,
 	}>();
+	@Output() public showAssetDetails = new EventEmitter<{ }>();
 
 	/** Mock fields for the call to the SDP InventoryService API. */
 	private customerId: string;
@@ -325,5 +326,15 @@ implements OnInit, OnDestroy, OnChanges {
 			{ queryParams: { case: casenum } },
 		);
 		this.searchService.close();
+	}
+
+	/**
+	 * Used for Opening the Asset 360 View
+	 */
+	public openAssetDetailsView () {
+		if (this.customerId && this.case && this.case.serialNumber) {
+			this.showAssetDetails.emit({ customerId: this.customerId,
+				serialNumber : this.case.serialNumber });
+		}
 	}
 }

@@ -10,6 +10,7 @@ import {
 	ColumnChartModule,
 	BarChartModule,
 	VisualFilterBarModule,
+	AssetDetailsModule,
 } from '@components';
 
 import {
@@ -61,6 +62,7 @@ const childRoutes: Routes = [
 		RouterModule.forChild(childRoutes),
 		VisualFilterBarModule,
 		DateTimePipeModule,
+		AssetDetailsModule,
 	],
 })
 export class ResolutionModule { }

@@ -22,7 +22,10 @@
 	<div class="col-md-6">
 		<div class="text-bold font-size" data-auto-id="caseAsset" [innerText]="'_RMACaseAsset_' | i18n | uppercase">
 		</div>
-		<div [innerText]="caseDetails?.deviceName"></div>
+		<a data-auto-id="DeviceLink" *ngIf="caseDetails?.deviceName"
+					        (click)="openAssetDetailsView();"
+					        [innerText]="caseDetails?.deviceName">
+		</a>
 	</div>
 	<div class="col-md-6">
 		<div class="text-bold font-size" data-auto-id="caseSW"

@@ -17,6 +17,9 @@ import { DateTime } from 'luxon';
 import { caseSeverities } from '@classes';
 import { Case, VisualFilter } from '@interfaces';
 import { environment } from '@environment';
+import { AssetLinkInfo } from '@sdp-api';
+import { AssetPanelLinkService, DetailsPanelStackService } from '@services';
+import { UserResolve } from '@utilities';
 
 /**
  * Interface for series data used by visual filters.
@@ -177,6 +180,10 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 
 	public searchCasesForm: FormGroup;
 	public isSearchCaseFormInvalid = false;
+	public assetLinkInfo: AssetLinkInfo = Object.create({ });
+	public customerId: string;
+	public serialNumber: string;
+	public showAsset360 = false;
 
 	constructor (
 		private logger: LogService,
@@ -184,7 +191,16 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 		private formBuilder: FormBuilder,
 		public route: ActivatedRoute,
 		private router: Router,
-	) { }
+		private assetPanelLinkService: AssetPanelLinkService,
+		private userResolve: UserResolve,
+		private detailsPanelStackService: DetailsPanelStackService,
+	) {
+		this.userResolve.getCustomerId()
+		.pipe(takeUntil(this.destroy$))
+		.subscribe((id: string) => {
+			this.customerId = id;
+		});
+	 }
 
 	/** ngOnInit */
 	public ngOnInit () {
@@ -935,6 +951,31 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 		if (hidden) {
 			this.detailsClose();
 		}
+	}
+
+	/**
+	 * Used for Opening the Asset 360 View data
+	 * @param assetObj contains asset details
+	 */
+	public showAssetDetails (assetObj) {
+		this.handleHidden(true);
+		this.serialNumber = assetObj.serialNumber;
+		this.assetPanelLinkService.getAssetLinkData({
+			customerId: this.customerId,
+			serialNumber: [assetObj.serialNumber],
+		})
+		.pipe(takeUntil(this.destroy$))
+		.subscribe(response => {
+			this.assetLinkInfo.asset = _.get(response, [0, 'data', 0]);
+			this.assetLinkInfo.element = _.get(response, [1, 'data', 0]);
+			this.showAsset360 = true;
+		},
+		err => {
+			this.showAsset360 = true;
+			this.logger.error(
+				'RccComponent : getAssetLinkData() ' +
+			`:: Error : (${err.status}) ${err.message}`);
+		});
 	}
 
 	/**

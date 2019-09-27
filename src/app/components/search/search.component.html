@@ -21,6 +21,7 @@
 								<app-case-search *ngSwitchCase="'case'"
 									[caseNumber]="selectedSearch"
 									(hide)="onHide($event)"
+									(showAssetDetails)="showAssetDetails($event)"
 									(toggleGeneralSearch)="toggleGeneralSearch($event)">
 								</app-case-search>
 								<app-contract-search *ngSwitchCase="'contract'"
@@ -54,3 +55,12 @@
 		</div>
 	</div>
 </div>
+
+<!-- Fly-Out View Slide-out on Selection of Title -->
+<asset-details
+	*ngIf= "showAsset360"
+	[asset]="assetLinkInfo?.asset"
+	[serialNumber]="serialNumber"
+	[element]="assetLinkInfo?.element"
+	(close)="showAsset360 = false">
+</asset-details>

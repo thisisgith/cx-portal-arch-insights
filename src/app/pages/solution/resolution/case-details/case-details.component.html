@@ -3,7 +3,7 @@
 		<cui-tab autoId="summaryTab" [label]="'_RMACaseSummary_' | i18n | uppercase">
 			<div class="divider no-margin-top"></div>
 			<cui-spinner *ngIf="loading"></cui-spinner>
-			<app-case-summary *ngIf="!loading && case" [caseDetails]="caseDetails"></app-case-summary>
+			<app-case-summary *ngIf="!loading && case" [caseDetails]="caseDetails" (showAssetDetails)="showAssetDetailsView($event)"></app-case-summary>
 		</cui-tab>
 		<cui-tab
 			autoId="notesTab" [label]="'_RMACaseNotes_'| i18n:(caseNotes?.length > 0 ? '(' +caseNotes?.length + ')' : '') | uppercase">
