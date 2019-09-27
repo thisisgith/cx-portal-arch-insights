@@ -143,6 +143,7 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 
 	@ViewChild('severityTmpl', { static: true }) public severityTemplate: TemplateRef<any>;
 	@ViewChild('updatedTmpl', { static: true }) public updatedTemplate: TemplateRef<any>;
+	@ViewChild('rmasTmpl', { static: true }) public rmasTemplate: TemplateRef<any>;
 
 	public selectedCase: Case;
 	public selectedDetails: CaseDetails;
@@ -206,19 +207,13 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 				{
 					autoIdHeader: 'Case ID-Header',
 					key: 'caseNumber',
-					name: I18n.get('_RMACaseID_'),
-					sortable: true,
-				},
-				{
-					autoIdHeader: 'Device-Header',
-					key: 'deviceName',
-					name: I18n.get('_RMACaseDevice_'),
+					name: I18n.get('_CaseNumber_'),
 					sortable: true,
 				},
 				{
 					autoIdHeader: 'Summary-Header',
 					key: 'summary',
-					name: I18n.get('_RMACaseSummary_'),
+					name: I18n.get('_RMACaseSummaryTitle_'),
 					sortable: true,
 				},
 				{
@@ -228,15 +223,29 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 					sortable: true,
 				},
 				{
+					autoIdHeader: 'RMA-Header',
+					name: I18n.get('_RMACaseRMAs_'),
+					sortable: true,
+					template: this.rmasTemplate,
+				},
+				{
+					autoIdHeader: 'Device-Header',
+					key: 'deviceName',
+					name: I18n.get('_Asset_'),
+					sortable: true,
+				},
+				{
 					autoIdHeader: 'Updated-Header',
 					key: 'lastModifiedDate',
-					name: I18n.get('_RMACaseUpdatedDate_'),
+					name: I18n.get('_LastUpdated_'),
 					sortable: true,
 					sorting: true,
+					width: "5",
 					template: this.updatedTemplate,
 				},
 			],
 			hover: true,
+			wrapText: true,
 			singleSelect: true,
 			striped: false,
 		});
@@ -417,6 +426,9 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 		.subscribe(cases => {
 			this.isLoading = false;
 			this.caseListData = cases.content;
+
+			console.log("---->");
+			console.log(this.caseListData);
 
 			const first = (this.caseParams.size * (this.paginationInfo.currentPage)) + 1;
 			let last = (this.caseParams.size * (this.paginationInfo.currentPage + 1));
@@ -612,6 +624,17 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 		const severityInt = parseInt(severity, 10);
 
 		return _.get(caseSeverities[severityInt], 'class');
+	}
+
+	/**
+	 * get the description based on severity
+	 * @param severity of case
+	 * @returns void
+	 */
+	public getSeverityDescr (severity: string) {
+		const severityInt = parseInt(severity, 10);
+
+		return caseSeverities[severityInt].getCreateName();
 	}
 
 	/**

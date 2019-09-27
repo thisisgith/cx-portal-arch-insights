@@ -117,10 +117,22 @@
 	</cui-pager>
 </ng-template>
 
-<ng-template #severityTmpl let-item="celldata"><span data-auto-id="severityValue" ><span class="icon-circle icon-small"
-			data-auto-id="severityIcon" [ngClass]="getSeverityColor(item['priority'])"></span> S{{item["priority"]}}</span></ng-template>
+<!-- Templates for Case List View Columns -->
+<ng-template #severityTmpl let-item="celldata">
+	<span [attr.data-balloon]="getSeverityDescr(item['priority'])" data-balloon-pos="right">
+		<span data-auto-id="severityValue">
+			<span class="icon-circle icon-small"
+				data-auto-id="severityIcon" [ngClass]="getSeverityColor(item['priority'])"></span> S{{item["priority"]}}</span>
+	</span>
+</ng-template>
 
-<ng-template #updatedTmpl let-item="celldata"><span [innerText]="item['lastModifiedDate'] | date"></span></ng-template>
+<ng-template #updatedTmpl let-item="celldata"><span [innerText]="item['lastModifiedDate'] | fromNow"></span></ng-template>
+
+<ng-template #rmasTmpl let-item="celldata">
+	<span *ngIf="item['rmaNumber']" [attr.data-balloon]="'_RMACaseAssociatedRMAs_' | i18n:item['rmaNumber'].length" data-balloon-pos="right">
+		<span class="icon-check icon-medium text-success"></span>
+	</span> 
+</ng-template>
 
 <!-- Templates for our Visual Filters for the Assets Tab -->
 <ng-template #totalFilter let-filter="filter">
