@@ -17,7 +17,7 @@
 				</div>
 			</div>
 			<div class="col-md-10 no-padding">
-				<div class="col-md-7 seperator-line half-margin-left" *ngIf="!errorPolicyView && !noTableData">
+				<div class="col-md-7 seperator-line half-margin-left flex-center" *ngIf="!errorPolicyView && !noTableData">
 					<div class="flex flex-fluid" *ngIf="!filterLoading">
 						<ng-container *ngFor="let filter of filters">
 							<div attr.id="RccSelectVisualFilter-{{ filter?.key }}"
