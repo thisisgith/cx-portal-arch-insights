@@ -46,22 +46,22 @@
 						*ngIf="!recommendation.accepted" 
 						(click)="onAcceptClick(recommendation.release)"
 						class="btn btn--secondary btn--small" 
-						[innerText]="'_OsvAccept_' | i18n"
+						[innerText]="'_OsvAccept_' | i18n | uppercase"
 						attr.data-auto-id="AcceptVersion-">
 					</button>
-					<div *ngIf="recommendation.accepted" class="flex">
-						<div class="icon-check-outline text-success flex align-items-center"></div>
-						<div>
-							<div class="text-small qtr-padding-left" [innerText]="'_OsvAcceptedOn_' | i18n"></div>
-							<div class="text-small qtr-padding-left"
-								[innerText]="recommendation.acceptedDate | date:mediumDate"></div>
+					<div *ngIf="recommendation.accepted" class="flex justify-content-start">						
+						<div class="flex">
+								<div class="icon-check-outline icon-small text-success flex align-items-center"></div>
+							<div>
+									<div class="text-medium half-padding-left" [innerText]="'_OsvAcceptedOn_' | i18n"></div>
+									<div class="text-medium half-padding-left"
+										[innerText]="recommendation.acceptedDate | date:mediumDate">
+									</div>
+							</div>
 						</div>
-						<button 
-							(click)="onCancelClick(recommendation.release)"
-							class="btn btn--secondary btn--small qtr-margin-left" 
-							[innerText]="'_Cancel_' | i18n"
-							attr.data-auto-id="CancelAcceptVersion-{{recommendation.release}}">
-						</button>
+						<div class="flex align-item-center">
+							<ng-container *ngTemplateOutlet="cancelActionTemplate; context: { actions: recommendation.actions}"></ng-container>
+						</div>
 					</div>
 				</td>
 			</tr>
@@ -187,3 +187,11 @@
 	<div class="flex-center-horizontal text-xlarge text-muted dbl-margin-top half-margin-bottom"
 		[innerText]="'_OsvNoRecommendations_' | i18n"></div>
 </div>
+
+<ng-template #cancelActionTemplate let-actions="actions">
+	<cui-dropdown 
+		[actions]="actions" 
+		position="right"
+		icon="icon-more icon-small text-muted rotate-90">
+	</cui-dropdown>
+</ng-template>

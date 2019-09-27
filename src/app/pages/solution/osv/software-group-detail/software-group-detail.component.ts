@@ -26,13 +26,12 @@ import {
 	MachineRecommendations,
 	ProfileRecommendationsResponse,
 } from '@sdp-api';
-import { forkJoin, Subject, of, Subscription } from 'rxjs';
+import { forkJoin, Subject, of } from 'rxjs';
 import { takeUntil, map, catchError } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
-import { CuiTableOptions, CuiModalService } from '@cisco-ngx/cui-components';
+import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { DatePipe } from '@angular/common';
-import { CancelConfirmComponent } from '../cancel-confirm/cancel-confirm.component';
 import { DetailsPanelStackService } from '@services';
 
 /**
@@ -89,14 +88,12 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	public screenWidth = window.innerWidth;
 
 	public recommendationAcceptedDate: string;
-	public cancelSubscription: Subscription;
 	public actionData: any;
 
 	constructor (
 		private logger: LogService,
 		private osvService: OSVService,
 		private route: ActivatedRoute,
-		private cuiModalService: CuiModalService,
 		private detailsPanelStackService: DetailsPanelStackService,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
@@ -130,10 +127,6 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	 */
 	public ngOnInit (): void {
 		this.refresh();
-		this.cancelSubscription = this.cuiModalService.onCancel
-			.subscribe(() => {
-				this.onCancel();
-			});
 	}
 
 	/**
@@ -313,9 +306,6 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	 * OnDestroy lifecycle hook
 	 */
 	public ngOnDestroy () {
-		if (this.cancelSubscription) {
-			_.invoke(this.cancelSubscription, 'unsubscribe');
-		}
 		this.destroy$.next();
 		this.destroy$.complete();
 	}
@@ -489,7 +479,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 		if (data.type === 'accept') {
 			this.onAccept(data.version);
 		} else if (data.type === 'cancel') {
-			this.cuiModalService.showComponent(CancelConfirmComponent, { });
+			this.onCancel();
 		}
 	}
 
