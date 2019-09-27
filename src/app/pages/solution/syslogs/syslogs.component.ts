@@ -460,9 +460,9 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 			if (this.appliedFilters.catalog === 'Cisco') {
 				filterWithSyslog.seriesData[0].selected = true;
 				filterWithSyslog.seriesData[1].selected = false;
-		    } else {
-				filterWithSyslog.seriesData[0].selected = false;
-			    filterWithSyslog.seriesData[1].selected = true;
+			} else {
+			 filterWithSyslog.seriesData[0].selected = false;
+			 filterWithSyslog.seriesData[1].selected = true;
 			}
 
 		}
