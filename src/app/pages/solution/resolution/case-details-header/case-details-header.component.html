@@ -35,16 +35,16 @@
 		<div class="row base-padding-top">
 			<div class="col-md-6">
 				<div *ngIf="rmaStrings?.length >= 1" class="dropdown">
-					<button data-auto-id="relatedRMA" class="btn btn--small btn--secondary" (click)="toggleRMAList()"
+					<button data-auto-id="relatedRMA" class="btn btn--primary" (click)="toggleRMAList()"
 						[innerText]="'_RMACaseRelatedRMA_' | i18n:rmaStrings?.length"></button>
 				</div>
 			</div>
 			<div class="col-md-6 text-right">
 				<button data-auto-id="CaseAttachFile"
-					class="btn btn--small btn--secondary dbl-padding-left dbl-padding-right"
+					class="btn btn--primary dbl-padding-left dbl-padding-right"
 					[innerText]="'_RMACaseAttachFile_' | i18n" (click)="toggleAddFile()"></button>
 				<button data-auto-id="CaseAddNote"
-					class="btn btn--small btn--secondary dbl-padding-left dbl-padding-right"
+					class="btn btn--primary dbl-padding-left dbl-padding-right"
 					[innerText]="'_RMACaseAddNote_' | i18n" (click)="toggleAddNote()"></button>
 			</div>
 		</div>

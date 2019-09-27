@@ -15,29 +15,6 @@
 		padding-top: 130px;
 		background: #f7f8fc;
 
-		li a {
-			height: 80px;
-			border-right: 3px solid transparent;
-
-			span {
-				color: #afc6e4;
-			}
-
-			&:hover {
-				background-color: transparent;
-			}
-		}
-
-		ul li.selected a {
-			box-shadow: unset;
-			border-right: 3px solid #00bceb;
-			background-color: transparent;
-
-			span {
-				color: #00bceb;
-			}
-		}
-
 		&__item {
 			margin-bottom: 30px;
 
@@ -46,6 +23,50 @@
 				text-transform: uppercase;
 				font-size: 10px;
 				line-height: 14px;
+			}
+
+			&__icon {
+				width: 26px;
+				height: 26px;
+
+				::ng-deep svg {
+					width: 26px;
+					height: 26px;
+				}
+			}
+		}
+
+		li a {
+			height: 80px;
+			border-right: 3px solid transparent;
+
+			span {
+				color: #afc6e4;
+			}
+
+			.badge {
+				color: #fff;
+				font-size: 10px;
+				line-height: 10px;
+			}
+
+			&:hover {
+				background-color: transparent;
+				box-shadow: unset;
+			}
+		}
+
+		ul li.selected a {
+			box-shadow: unset;
+			border-right: 3px solid #00bceb;
+			background-color: transparent;
+
+			.sidebar__item__label {
+				color: #00bceb;
+			}
+
+			.sidebar__item__icon ::ng-deep path {
+				fill: #00bceb;
 			}
 		}
 	}

@@ -1,6 +1,22 @@
 @import '~cisco-ui/src/scss/utilities/_variables.scss';
 
 :host {
+	.calendar-title {
+		color: #6c757d;
+		font-size: 15px;
+		font-weight: 300;
+		line-height: 12px;
+		text-transform: uppercase;
+		height: 30px;
+		display: flex;
+		align-items: center;
+	}
+
+	.divider {
+		margin-top: 0;
+		margin-bottom: 27px;
+	}
+
 	.calendar-cell {
 		cursor: default;
 		margin: 2px;
