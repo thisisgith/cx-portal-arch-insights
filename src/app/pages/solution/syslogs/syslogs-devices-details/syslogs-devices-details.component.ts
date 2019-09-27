@@ -187,7 +187,6 @@ export class SyslogsDeviceDetailsComponent implements OnChanges, OnDestroy {
 			bordered: false,
 			columns: [
 				{
-					// key: 'MsgType',
 					name: I18n.get('_SyslogMessageGrid_'),
 					sortable: true,
 					template: this.messageType,

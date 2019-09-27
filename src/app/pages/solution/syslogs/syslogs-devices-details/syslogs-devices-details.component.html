@@ -104,7 +104,7 @@
 </div>
 <ng-template #messageType let-celldata="celldata">
 	<div title="{{ celldata?.MsgType }}">
-		{{celldata?.MsgType}} </div>
+		<span [innerText]="celldata?.MsgType"></span></div>
 		</ng-template>
 <div *ngIf="!tableData?.length && !loading ">
 	<div class="text-center dbl-margin-top dbl-margin-bottom">
@@ -149,5 +149,5 @@
 </ng-template>
 <ng-template #innerMessageType let-celldata="celldata">
 		<div title="{{ celldata?.SyslogMsgDesc }}">
-			{{celldata?.SyslogMsgDesc}} </div>
+			<span [innerText]="celldata?.SyslogMsgDesc"></span></div>
 			</ng-template>
