@@ -635,9 +635,11 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 	public getSeverityDescr (severity: string) {
 		const severityInt = parseInt(severity, 10);
 
-		if (Object.keys(caseSeverities).includes(severity))
+		if (Object.keys(caseSeverities)
+		.includes(severity)) {
 			return caseSeverities[severityInt].getCreateName();
-			
+		}
+
 		return '';
 	}
 
