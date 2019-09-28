@@ -1,5 +1,5 @@
 import { configureTestSuite } from 'ng-bullet';
-import { fakeAsync, tick, ComponentFixture, TestBed } from '@angular/core/testing';
+import { fakeAsync, tick, ComponentFixture, TestBed, flush } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { By } from '@angular/platform-browser';
@@ -142,6 +142,8 @@ describe('ResolutionComponent', () => {
 			});
 		expect(component.caseParams.serialNumbers)
 			.toEqual('FOX1306GBAD');
+
+		flush();
 	}));
 
 	it('should close the case details 360', () => {
@@ -164,6 +166,8 @@ describe('ResolutionComponent', () => {
 		fixture.detectChanges();
 		expect(component.selectedCase)
 			.toBeNull();
+
+		flush();
 	}));
 
 	it('should switch active filters', fakeAsync(() => {
@@ -180,6 +184,8 @@ describe('ResolutionComponent', () => {
 
 		expect(component.selectedFilters)
 			.toContain(statusFilter);
+
+		flush();
 	}));
 
 	it('should select status subfilters', fakeAsync(() => {
@@ -210,6 +216,8 @@ describe('ResolutionComponent', () => {
 
 		expect(subfilter.selected)
 			.toBeTruthy();
+
+		flush();
 	}));
 
 	it('should clear the filter when selecting the same subfilter twice', fakeAsync(() => {
@@ -236,6 +244,8 @@ describe('ResolutionComponent', () => {
 
 		expect(subfilter.selected)
 			.toBeFalsy();
+
+		flush();
 	}));
 
 	it('should select the lastUpdated filter properly', fakeAsync(() => {
@@ -258,6 +268,8 @@ describe('ResolutionComponent', () => {
 
 		expect(_.get(_.find(lastUpdatedFilter.seriesData, { label: '≤24 hr' }), 'selected'))
 			.toBeFalsy();
+
+		flush();
 	}));
 
 	it('should select the durationOpen filter properly', fakeAsync(() => {
@@ -280,6 +292,8 @@ describe('ResolutionComponent', () => {
 
 		expect(_.get(_.find(durationOpen.seriesData, { label: '≤24 hr' }), 'selected'))
 			.toBeFalsy();
+
+		flush();
 	}));
 
 	it('should select the RMAs filter properly', fakeAsync(() => {
@@ -302,6 +316,8 @@ describe('ResolutionComponent', () => {
 
 		expect(_.get(_.find(rmaFilter.seriesData, { filter: 'F' }), 'selected'))
 			.toBeFalsy();
+
+		flush();
 	}));
 
 	it('should clear all status subfilters', fakeAsync(() => {
@@ -330,6 +346,7 @@ describe('ResolutionComponent', () => {
 		const totalFilter = _.find(component.filters, { key: 'total' });
 		expect(component.selectedFilters)
 			.toContain(totalFilter);
-	}));
 
+		flush();
+	}));
 });
