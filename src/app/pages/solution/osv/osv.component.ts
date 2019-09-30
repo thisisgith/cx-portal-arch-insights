@@ -214,6 +214,8 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 			this.view = 'assets';
 		} else if (response.versions > 0) {
 			this.view = 'swVersions';
+		} else {
+			this.view = 'swGroups';
 		}
 	}
 
