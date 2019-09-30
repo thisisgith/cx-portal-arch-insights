@@ -33,6 +33,7 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 	@Input() public filters;
 	@Input() public fullscreen;
 	@Input() public cxLevel;
+	@Input() public assetsCount;
 	@Output() public fullscreenChange = new EventEmitter<boolean>();
 	@Output() public selectedAssetChange = new EventEmitter<OSVAsset>();
 	@Output() public contactSupport = new EventEmitter();
@@ -42,7 +43,7 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 	private recommendationsTemplate: TemplateRef<{ }>;
 	public assetsTable: CuiTableOptions;
 	public status = {
-		isLoading: true,
+		isLoading: false,
 	};
 	public assets: OSVAsset[];
 	public pagination: OsvPagination;
@@ -82,7 +83,9 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 	 * OnInit lifecycle hook
 	 */
 	public ngOnInit () {
-		this.loadData();
+		if (this.assetsCount > 0) {
+			this.loadData();
+		}
 	}
 
 	/**
@@ -91,7 +94,7 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 	 */
 	public ngOnChanges (changes: SimpleChanges) {
 		const currentFilter = _.get(changes, ['filters', 'currentValue']);
-		if (currentFilter && !changes.filters.firstChange) {
+		if (currentFilter && !changes.filters.firstChange && this.assetsCount > 0) {
 			this.setFilter(currentFilter);
 			this.loadData();
 		}

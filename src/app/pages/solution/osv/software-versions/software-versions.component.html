@@ -23,6 +23,9 @@
 </div>
 <div class="divider qtr-margin-top"></div>
 <cui-alert [options]="alert"></cui-alert>
+<div *ngIf="versionsCount == 0" class="dbl-margin-top text-center text-xlarge dbl-margin-bottom">
+	<span [innerText]="'_InsightsNoResultsFound_' | i18n"></span>
+</div>
 <ng-container *ngTemplateOutlet="tableSoftwareVersion"></ng-container>
 <div *ngIf="pagination && softwareVersions?.length > 0" class="base-margin-top">
 	<cui-pager 

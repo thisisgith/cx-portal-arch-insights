@@ -14,7 +14,7 @@ import { OSVService } from '@sdp-api';
 import { HttpErrorResponse } from '@angular/common/http';
 import * as _ from 'lodash-es';
 
-describe('OptimalSoftwareVersionComponent', () => {
+fdescribe('OptimalSoftwareVersionComponent', () => {
 	let component: OptimalSoftwareVersionComponent;
 	let fixture: ComponentFixture<OptimalSoftwareVersionComponent>;
 
@@ -76,7 +76,7 @@ describe('OptimalSoftwareVersionComponent', () => {
 		expect(_.find(component.filters))
 			.toBeUndefined();
 		expect(component.view)
-			.toBeUndefined();
+			.toEqual('swGroups');
 	});
 
 	it('should switch active filters', done => {
@@ -260,6 +260,6 @@ describe('OptimalSoftwareVersionComponent', () => {
 		component.ngOnInit();
 		fixture.detectChanges();
 		expect(component.view)
-			.toBeUndefined();
+			.toEqual('swGroups');
 	});
 });

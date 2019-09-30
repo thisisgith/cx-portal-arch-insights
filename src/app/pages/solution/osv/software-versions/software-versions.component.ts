@@ -33,11 +33,12 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class SoftwareVersionsComponent implements OnInit, OnDestroy {
 	@Input() public cxLevel;
+	@Input() public versionsCount;
 	@ViewChild('releaseDate', { static: true }) private releaseDateTemplate: TemplateRef<{ }>;
 	@Output() public contactSupport = new EventEmitter();
 	public softwareVersionsTable: CuiTableOptions;
 	public status = {
-		isLoading: true,
+		isLoading: false,
 	};
 	public softwareVersions: SoftwareVersion[];
 	public pagination: OsvPagination;
@@ -68,7 +69,9 @@ export class SoftwareVersionsComponent implements OnInit, OnDestroy {
 	 * OnInit lifecycle hook
 	 */
 	public ngOnInit () {
-		this.loadData();
+		if (this.versionsCount > 0) {
+			this.loadData();
+		}
 	}
 
 	/**

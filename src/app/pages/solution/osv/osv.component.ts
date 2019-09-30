@@ -46,8 +46,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 	public filters: Filter[];
 	public allFilters: Filter[];
 	private destroy$ = new Subject();
-	public view: 'swGroups' | 'assets' | 'swVersions' | undefined
-		= 'swGroups';
+	public view: 'swGroups' | 'assets' | 'swVersions';
 	public appliedFilters = {
 		assetType: '',
 		deploymentStatus: [],
@@ -57,6 +56,11 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 	public showProfileInfo = true;
 	public doNotShowAgain = false;
 	public cxLevel: number;
+	public dataCounts = {
+		assets: 0,
+		profiles: 0,
+		versions: 0,
+	};
 
 	constructor (
 		private logger: LogService,
@@ -163,6 +167,9 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 						profiles: response.profiles,
 						versions: response.versions,
 					}];
+					this.dataCounts.assets = response.assets;
+					this.dataCounts.profiles = response.profiles;
+					this.dataCounts.versions = response.versions;
 					this.decideView(response);
 					this.filterByView();
 					assetTypeFilter.seriesData = _.compact(
@@ -185,9 +192,13 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 						`:: Error : (${err.status}) ${err.message}`);
 					totalAssetsFilter.loading = false;
 					assetTypeFilter.loading = false;
-					this.view = undefined;
-
-					return of();
+					this.view = 'swGroups';
+					totalAssetsFilter.seriesData = [{
+						assets: 0,
+						profiles: 0,
+						versions: 0,
+					}];
+					return of({ });
 				}),
 			);
 	}
@@ -203,8 +214,6 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 			this.view = 'assets';
 		} else if (response.versions > 0) {
 			this.view = 'swVersions';
-		} else {
-			this.view = undefined;
 		}
 	}
 
