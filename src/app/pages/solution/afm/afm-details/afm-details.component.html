@@ -2,15 +2,10 @@
 	<span class="text-xlarge" [innerText]="'_AfmEvent360_' | i18n"></span>
 </div>
 
-
 <div class="row">
 	<div class="col-md-12 base-margin-bottom">
 		<div class="text-bold" [innerText]="'_AfmSyslog_'|i18n"></div>
 		<div innerText="{{ alarm?.syslogMsg || ('_NA_' | i18n) }}"></div>
-	</div>
-	<div class="col-md-12 base-margin-bottom">
-		<div class="text-bold" [innerText]="'_AfmFaultIcName_' | i18n"></div>
-		<div innerText="{{ alarm?.faultIC || ('_NA_' | i18n) }}"></div>
 	</div>
 	<div class="base-margin-bottom">
 		<div class="flex" *ngIf="alarm">
@@ -82,12 +77,12 @@
 		</div>
 		<div class="col-md-5"></div>
 		<div class="col-md-4 text-right" *ngIf="alarm?.raiseSr && alarm?.tacCaseNo">
-			<button id="viewDisabled" class="btn btn--gray-ghost text-tuppercase"
+			<button id="viewDisabled" class="btn btn--primary disabled"
 				[innerText]="'_AfmCaseIdX_'|i18n:alarm?.tacCaseNo"></button>
 		</div>
 		<div class="col-md-4 text-right" title="{{alarm?.errorDesc}}"
 			*ngIf="alarm?.raiseSr && alarm?.srStatus?.toUpperCase() === 'FAILED'">
-			<div id="opacity" class="btn btn--primary"
+			<div class="btn btn--primary disabled "
 				[innerText]="'_AfmEntitlementFailed_'| i18n"></div>
 		</div>
 	</div>

@@ -87,6 +87,7 @@ export class AfmComponent implements OnInit, OnDestroy, Panel360 {
 		DAYS90: 'Days90',
 		EXCEPTION: 'EXCEPTION',
 		FAIL: 'FAIL',
+		FAILED: 'FAILED',
 		IGNORE_ALARM_TOTAL_COUNT: 'ignoredCount',
 		IGNORE_EVENT: 'IGNORE_EVENT',
 		SEARCH: 'SEARCH',
@@ -294,8 +295,7 @@ export class AfmComponent implements OnInit, OnDestroy, Panel360 {
 	 * @param pageInfo AfmPagination
 	 * @memberof AfmComponent
 	 */
-	public onPagerUpdated (pageInfo: any) {
-		// {page: 0, limit: 10}
+	public onPagerUpdated (pageInfo) {
 		this.tableOffset = pageInfo.page;
 		this.searchParams.pageNumber = pageInfo.page + 1;
 		this.searchParams.pageSize = this.tableLimit;
@@ -401,21 +401,23 @@ export class AfmComponent implements OnInit, OnDestroy, Panel360 {
 	 * @param alarm alarmdata
 	 */
 	public connectToAlarmDetails (alarm: Alarm) {
-		if (this.showAlarmDetails) {
-			this.detailsPanelStackService.reset();
+		if (alarm.status.toUpperCase() !== this.AFM_CONSTANT.FAILED) {
+			if (this.showAlarmDetails) {
+				this.detailsPanelStackService.reset();
+			}
+			this.detailsPanelStackService.push(this);
+			this.syslogEvent = alarm.syslogMsg;
+			this.selectedAsset = null;
+			this.searchParams.alarmId = alarm.alarmId;
+			this.searchParams.serialNumber = alarm.serialNumber;
+			this.assetParams = {
+				customerId: this.searchParams.customerId,
+				serialNumber: [this.searchParams.serialNumber],
+			};
+			this.getAfmEventData(this.searchParams);
+			this.getAssetLinkData(this.assetParams);
+			this.showAlarmDetails = true;
 		}
-		this.detailsPanelStackService.push(this);
-		this.syslogEvent = alarm.syslogMsg;
-		this.selectedAsset = null;
-		this.searchParams.alarmId = alarm.alarmId;
-		this.searchParams.serialNumber = alarm.serialNumber;
-		this.assetParams = {
-			customerId: this.searchParams.customerId,
-			serialNumber: [this.searchParams.serialNumber],
-		};
-		this.getAfmEventData(this.searchParams);
-		this.getAssetLinkData(this.assetParams);
-		this.showAlarmDetails = true;
 	}
 
 	/**
@@ -518,7 +520,7 @@ export class AfmComponent implements OnInit, OnDestroy, Panel360 {
 	 * @param event - click event CuiTableOptions column info
 	 * @memberof AfmComponent
 	 */
-	public onTableSortingChanged (event: any) {
+	public onTableSortingChanged (event) {
 		this.searchParams.sortField = this.getSortKey(event.name);
 		this.searchParams.sortType = event.sortDirection;
 		this.loadFilterdData();
