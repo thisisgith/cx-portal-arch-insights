@@ -1041,6 +1041,7 @@ export class LifecycleComponent implements OnDestroy {
 			this.status.loading.racetrack = false;
 			this.logger.error(`lifecycle.component : completeAction() :: Error  : (${
 				err.status}) ${err.message}`);
+			this.getRacetrackInfo();
 		});
 	}
 
