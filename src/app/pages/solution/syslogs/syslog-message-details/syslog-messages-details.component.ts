@@ -29,6 +29,8 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 	@Input('asset') public asset: any;
 	@ViewChild('innerTableRef', { static: true }) public innerTableRef: TemplateRef<{ }>;
 	@ViewChild('prodFamily', { static: true }) public prodFamily: TemplateRef<{ }>;
+	@ViewChild('prodId', { static: true }) public prodId: TemplateRef<{ }>;
+	@ViewChild('innerMessageType', { static: true }) public innerMessageType: TemplateRef<{ }>;
 	@Input('selectedFilter') public selectedFilter: any;
 	public tableOptions: CuiTableOptions;
 	public innerTableOptions: CuiTableOptions;
@@ -122,8 +124,8 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 					name: I18n.get('_SyslogNumber_'),
 				},
 				{
-					key: 'SyslogMsgDesc',
 					name: I18n.get('_Syslog_SyslogMessageText_'),
+					template: this.innerMessageType,
 				},
 				{
 					key: 'MessageCount',
@@ -148,9 +150,9 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 					sortable: true,
 				},
 				{
-					key: 'ProductId',
 					name: I18n.get('_ProductID_'),
 					sortable: true,
+					template: this.prodId,
 				},
 				{
 					name: I18n.get('_ProductFamily_'),
