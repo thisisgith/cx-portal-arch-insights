@@ -36,6 +36,7 @@ const filterColors8Max = [
 @Component({
 	selector: 'bubble-chart',
 	template: '<div [chart]="chart"></div>',
+	styleUrls: ['../tooltip/tooltip.scss'],
 })
 export class BubbleChartComponent implements OnChanges {
 
@@ -57,6 +58,11 @@ export class BubbleChartComponent implements OnChanges {
 		}));
 
 		this.chart = new Chart({
+			tooltip: {
+				useHTML: true,
+				backgroundColor: null,
+				borderWidth: 0,
+			},
 			chart: {
 				events: {
 					load: () => {
@@ -104,6 +110,14 @@ export class BubbleChartComponent implements OnChanges {
 					layoutAlgorithm: {
 						enableSimulation: false,
 						gravitationalConstant: 0.02,
+					},
+					marker: {
+						lineWidth: 0,
+						states: {
+							hover: {
+								enabled: false,
+							},
+						},
 					},
 					maxSize: '120%',
 					minSize: '30%',

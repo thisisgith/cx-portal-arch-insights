@@ -233,13 +233,13 @@ describe('Advisories', () => { // PBC-306
 				const publishedDate = Cypress.moment(secBulletin.bulletinFirstPublished)
 					.format(dateFormat);
 				cy.getByAutoId('SecurityAdvisoryPublished')
-					.should('have.text', `Published${publishedDate}`);
+					.should('have.text', `Published:${publishedDate}`);
 				const updatedDate = Cypress.moment(advisories.data[0].lastUpdated)
 					.format(dateFormat);
 				cy.getByAutoId('SecurityAdvisoryLastUpdated')
-					.should('have.text', `Last Updated${updatedDate}`);
+					.should('have.text', `Last Updated:${updatedDate}`);
 				cy.getByAutoId('SecurityAdvisoryVersion')
-					.should('have.text', `Version${secBulletin.bulletinVersion}`);
+					.should('have.text', `Version:${secBulletin.bulletinVersion}`);
 				cy.getByAutoId('SecurityDetailsTitleText')
 					.should('have.text', secBulletin.bulletinTitle);
 				cy.getByAutoId('SecurityDetailsSummaryText')
@@ -250,7 +250,7 @@ describe('Advisories', () => { // PBC-306
 			it('Gracefully handles invalid/empty API responses', () => {
 				const validate360 = () => {
 					cy.getByAutoId('SecurityDetailsImpactText').should('have.text', 'N/A');
-					cy.getByAutoId('SecurityAdvisoryVersion').should('have.text', 'VersionN/A');
+					cy.getByAutoId('SecurityAdvisoryVersion').should('have.text', 'Version:N/A');
 					cy.getByAutoId('SecurityDetailsTitleText').should('have.text', 'N/A');
 					cy.getByAutoId('SecurityDetailsSummaryText').should('have.text', 'N/A');
 				};
@@ -462,12 +462,12 @@ describe('Advisories', () => { // PBC-306
 				cy.getByAutoId('BugDetailsSeverityText').should('have.text', bug.severity);
 				const publishedDate = Cypress.moment(bug.publishedOn).format(dateFormat);
 				cy.getByAutoId('CriticalBugPublished')
-					.should('have.text', `Published${publishedDate}`);
+					.should('have.text', `Published:${publishedDate}`);
 				const updatedDate = Cypress.moment(bug.lastUpdated).format(dateFormat);
 				cy.getByAutoId('CriticalBugLastUpdated')
-					.should('have.text', `Last Updated${updatedDate}`);
+					.should('have.text', `Last Updated:${updatedDate}`);
 				cy.getByAutoId('CriticalBugStatus')
-					.should('have.text', `Status${bug.state}`);
+					.should('have.text', `Status:${bug.state}`);
 				cy.get('[data-auto-id*="IMPACTED ASSETS"]')
 					.should('have.text', `IMPACTED ASSETS (${bug.assetsImpacted})`);
 				cy.getByAutoId('BugDetailsTitleText').should('have.text', bug.title);
@@ -523,6 +523,8 @@ describe('Advisories', () => { // PBC-306
 	});
 
 	context('Open case with Prediction', () => { // PBC-498
+		before(() => cy.getByAutoId('Security AdvisoriesTab').click());
+
 		let predict0, predict1, predict2;
 		let techID, subID;
 		let problemCodes, problemAreas, problemAreaOptions;

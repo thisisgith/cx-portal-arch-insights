@@ -3,3 +3,15 @@
 	overflow: scroll;
 	position: relative;
 }
+
+.btn-group.btn-group--wide > .btn {
+	padding: 0 20px;
+
+	&:first-child {
+		padding-left: 30px;
+	}
+
+	&:last-child {
+		padding-right: 30px;
+	}
+}

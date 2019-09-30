@@ -1,22 +1,49 @@
-<div class="flex row col-md-12 base-margin-bottom" *ngIf="details">
-	<div data-auto-id="FieldNoticePublished" class="dbl-margin-right">
-		<div class="text-bold text-uppercase" [innerText]="'_Published_' | i18n"></div>
-		<div [innerText]="(details?.bulletin?.bulletinFirstPublished | date:'MMM dd, yyyy') || ('_NA_' | i18n)"></div>
+<div class="flex row col-md-12 details-header__content" *ngIf="details">
+	<div data-auto-id="FieldNoticePublished" class="header__item">
+		<div class="header__text qtr-margin-right">
+			<span [innerText]="'_Published_' | i18n"></span>
+			<span>:</span>
+		</div>
+		<div *ngIf="details.bulletin && details.bulletin.bulletinFirstPublished"
+			[innerText]="details.bulletin.bulletinFirstPublished | fromNow"
+			[title]="details.bulletin.bulletinFirstPublished | dateTime"
+			class="header__text">
+		</div>
+		<div *ngIf="!details.bulletin || !details.bulletin.bulletinFirstPublished"
+			[innerText]="('_Never_' | i18n)"
+			[title]="('_Never_' | i18n)"
+			class="header__text">
+		</div>
 	</div>
 
-	<div data-auto-id="FieldNoticeLastUpdated" class="dbl-margin-right">
-		<div class="text-bold text-uppercase" [innerText]="'_LastUpdated_' | i18n"></div>
-		<div [innerText]="(details?.bulletin?.bulletinLastUpdated | date:'MMM dd, yyyy') || (details?.bulletin?.bulletinFirstPublished | date:'MMM dd, yyyy') || ('_Never_' | i18n)"></div>
+	<div data-auto-id="FieldNoticeLastUpdated" class="header__item">
+		<div class="header__text qtr-margin-right">
+			<span [innerText]="'_LastUpdated_' | i18n"></span>
+			<span>:</span>
+		</div>
+		<div *ngIf="details.advisory && details.advisory.lastUpdated"
+			[innerText]="details.advisory.lastUpdated | fromNow"
+			[title]="details.advisory.lastUpdated | dateTime"
+			class="header__text">
+		</div>
+		<div *ngIf="!details.advisory || !details.advisory.lastUpdated"
+			[innerText]="('_Never_' | i18n)"
+			[title]="('_Never_' | i18n)"
+			class="header__text">
+		</div>
 	</div>
 
-	<div data-auto-id="FieldNoticeVersion" class="dbl-margin-right">
-		<div class="text-bold text-uppercase" [innerText]="'_Version_' | i18n"></div>
-		<div [innerText]="details?.bulletin?.version || ('_NA_' | i18n)" class="text-capitalize"></div>
+	<div data-auto-id="FieldNoticeVersion" class="header__item">
+		<div class="header__text qtr-margin-right">
+			<span [innerText]="'_Version_' | i18n"></span>
+			<span>:</span>
+		</div>
+		<div [innerText]="details?.bulletin?.version || ('_NA_' | i18n)" class="text-capitalize header__text"></div>
 	</div>
 </div>
 
-<div class="flex row col-md-12 flex-container qtr-margin-bottom" *ngIf="details">
-	<a class="text-capitalize btn btn--secondary btn--small"
+<div class="flex row col-md-12 flex-container" *ngIf="details">
+	<a class="text-uppercase btn btn--primary"
 		[innerText]="'_ViewNotice_' | i18n"
 		data-auto-id="FieldNoticeViewNoticeLink"
 		[href]="details?.advisory?.url"
@@ -25,7 +52,7 @@
 	</a>
 
 	<button *ngIf="impactedAssets?.length || selectedAsset"
-		class="text-capitalize btn btn--secondary btn--small"
+		class="text-uppercase btn btn--primary"
 		[innerText]="'_OpenCase_' | i18n"
 		data-auto-id="FieldNoticeOpenCaseLink"
 		(click)="onOpenCase()">

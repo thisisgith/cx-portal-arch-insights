@@ -6,7 +6,7 @@ import {
 	Output,
 	SimpleChanges,
 	ElementRef,
-	AfterViewInit,
+	OnInit,
 } from '@angular/core';
 import {
 	Asset,
@@ -14,6 +14,7 @@ import {
 	InventoryService,
 	NetworkElement,
 	NetworkElementResponse,
+	TransactionStatusResponse,
 } from '@sdp-api';
 
 import { Subject, of, forkJoin } from 'rxjs';
@@ -39,7 +40,7 @@ import { I18n } from '@cisco-ngx/cui-utils';
 	styleUrls: ['./asset-details.component.scss'],
 	templateUrl: './asset-details.component.html',
 })
-export class AssetDetailsComponent implements OnDestroy, AfterViewInit, Panel360 {
+export class AssetDetailsComponent implements OnDestroy, OnInit, Panel360 {
 
 	@Input('serialNumber') public serialNumber: string;
 	@Input('asset') public asset: Asset;
@@ -55,6 +56,7 @@ export class AssetDetailsComponent implements OnDestroy, AfterViewInit, Panel360
 	public customerId: string;
 	public getProductIcon = getProductTypeImage;
 	public getProductTitle = getProductTypeTitle;
+	public advisoryReload: EventEmitter<boolean> = new EventEmitter();
 	private destroyed$: Subject<void> = new Subject<void>();
 
 	constructor (
@@ -88,6 +90,16 @@ export class AssetDetailsComponent implements OnDestroy, AfterViewInit, Panel360
 	 */
 	public handleAlert (alert: Alert) {
 		this.alert.show(alert.message, alert.severity);
+	}
+
+	/**
+	 * Will handle sending an update to a component based on the scan status
+	 * @param transaction the transaction status of the completed or failed scan
+	 */
+	public handleScanStatus (transaction: TransactionStatusResponse) {
+		if (transaction.status === 'SUCCESS') {
+			this.advisoryReload.next(true);
+		}
 	}
 
 	/**
@@ -199,10 +211,13 @@ export class AssetDetailsComponent implements OnDestroy, AfterViewInit, Panel360
 			this.isLoading = false;
 
 			if (!this.serialNumber || !this.asset) {
-				this.handleAlert({
-					message: I18n.get('_UnableToRetrieveAssetDetails_'),
-					severity: 'danger',
-				});
+				// Have to force a cycle so that alert is instantiated correctly
+				setTimeout(() => {
+					this.handleAlert({
+						message: I18n.get('_UnableToRetrieveAssetDetails_'),
+						severity: 'danger',
+					});
+				}, 0);
 			}
 		});
 	}
@@ -210,7 +225,7 @@ export class AssetDetailsComponent implements OnDestroy, AfterViewInit, Panel360
 	/**
 	 * Initializer
 	 */
-	public ngAfterViewInit () {
+	public ngOnInit () {
 		this.detailsPanelStackService.push(this);
 		this.hidden = false;
 		this.refresh();
@@ -241,7 +256,7 @@ export class AssetDetailsComponent implements OnDestroy, AfterViewInit, Panel360
 	 */
 	public handleHidden (hidden: boolean) {
 		if (hidden) {
-			this.onPanelClose();
+			this.onAllPanelsClose();
 		}
 	}
 
@@ -257,14 +272,5 @@ export class AssetDetailsComponent implements OnDestroy, AfterViewInit, Panel360
 	 */
 	public onAllPanelsClose () {
 		this.detailsPanelStackService.reset();
-	}
-
-	/**
-	 * Determines whether target is contained by this component
-	 * @param target target ElementRef
-	 * @returns true if component contains target
-	 */
-	public contains (target: ElementRef) {
-		return this._elementRef.nativeElement.contains(target);
 	}
 }

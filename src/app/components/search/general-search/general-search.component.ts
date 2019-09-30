@@ -56,6 +56,7 @@ interface RelatedResult {
  */
 @Component({
 	selector: 'app-general-search',
+	styleUrls: ['./general-search.component.scss'],
 	templateUrl: './general-search.component.html',
 })
 export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
@@ -63,6 +64,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 	@Input('context') public context: SearchContext;
 	@Input('header') public header: string;
 	@Output('results') public results = new EventEmitter();
+	@Output('loadingChange') public loadingChange = new EventEmitter<boolean>();
 
 	/**
 	 * Search token to display above the results
@@ -132,6 +134,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 			tap(refreshType => {
 				if (refreshType === 'query' || refreshType === 'filters') {
 					this.loading = true;
+					this.loadingChange.emit(true);
 				} else {
 					this.loadingPage = true;
 				}
@@ -150,6 +153,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 		.subscribe(results => {
 			const [result, refreshType] = results;
 			this.loading = false;
+			this.loadingChange.emit(false);
 			this.loadingPage = false;
 			if (_.get(result, 'searchToken')) {
 				this.searchToken = result.searchToken;
@@ -266,7 +270,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 	 */
 	private doSearch (query: SearchQuery, offset?: number, site?: Buckets, type?: Buckets):
 		Observable<CDCSearchResponse | null> {
-		return this.service.directCDCSearch({
+		return this.service.directCiscoSearch({
 			...(
 				this.context ? {
 					context: this.context,
@@ -309,7 +313,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 				const results: RelatedResult[] = [];
 				const atx = <AtxFuture>
 					(_.get(result, ['atx-future', 'documents', 0, 'search', 0]));
-				if (atx) {
+				if (atx && atx['Session Name']) {
 					results.push({
 						description: atx['Session Description'],
 						title: atx['Session Name'],
@@ -319,7 +323,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 				}
 				const acc = <Acc>
 					(_.get(result, ['acc', 'documents', 0, 'search', 0]));
-				if (acc) {
+				if (acc && acc.Title) {
 					results.push({
 						description: acc['Short Description'],
 						title: acc.Title,
@@ -329,7 +333,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 				}
 				const learning = <ELearning>
 					(_.get(result, ['elearning', 'documents', 0, 'search', 0]));
-				if (learning) {
+				if (learning && learning.title) {
 					results.push({
 						description: learning.description,
 						title: learning.title,
@@ -339,7 +343,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 				}
 				const community = <SearchCommunity>
 					(_.get(result, ['communitySearch', 'documents', 0]));
-				if (community) {
+				if (community && community.fields.title[0]) {
 					results.push({
 						description: community.fields.teaser[0],
 						title: community.fields.title[0],
@@ -371,6 +375,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 		const typeBuckets = _.get(
 			facets.find((o: Facets) => o.label === 'Site Subcategory'),
 			'buckets',
+			[],
 		);
 		if (this.lastFiltered !== 'site' && siteBuckets) {
 			this.siteOptions = siteBuckets.map((bucket: Buckets) => ({

@@ -8,7 +8,7 @@
 <div class="flex flex-fluid flex-center-horizontal">
 	<div class="flex-fill btn-group btn-group--wide">
 		<button *ngFor="let tab of tabs"
-			class="btn btn--small btn--primary-ghost"
+			class="btn btn--small"
 			[ngClass]="{
 				'selected': tab.selected,
 				'disabled': tab.disabled
@@ -45,10 +45,10 @@
 			</cui-table>
 		</div>
 		<div *ngIf="!moreLoading && pagination?.total > data?.length"
-				class="flex-center-horizontal base-margin-top"
-				data-auto-id="LoadMoreButton"
-				(click)="loadMore()">
-			<div class="btn btn--primary" [innerText]="'_ShowMore_' | i18n"></div>
+			class="flex-center-horizontal base-margin-top"
+			data-auto-id="LoadMoreButton"
+			(click)="loadMore()">
+			<a class="btn btn--primary text-uppercase" [innerText]="'_ShowMore_' | i18n"></a>
 		</div>
 		<div *ngIf="moreLoading">
 			<cui-loader></cui-loader>
@@ -84,6 +84,24 @@
 		<span data-auto-id="ImpactText" *ngSwitchCase="'Low'" [innerText]="'_Low_' | i18n"></span>
 		<span data-auto-id="ImpactText" *ngSwitchDefault [innerText]="'_Unknown_' | i18n"></span>
 	</ng-container>
+</ng-template>
+
+<ng-template #lastUpdated let-celldata="celldata">
+	<span *ngIf="celldata?.lastUpdated"
+		[innerText]="celldata.lastUpdated | fromNow"
+		[title]="celldata.lastUpdated | dateTime"
+		data-auto-id="LastUpdatedText">
+	</span>
+	<span *ngIf="!celldata?.lastUpdated && celldata?.publishedOn"
+		[innerText]="celldata.publishedOn | fromNow"
+		[title]="celldata.publishedOn | dateTime"
+		data-auto-id="LastUpdatedText">
+	</span>
+	<span *ngIf="!celldata?.lastUpdated && !celldata?.publishedOn"
+		[innerText]="'_Never_' | i18n"
+		[title]="'_Never_' | i18n"
+		data-auto-id="LastUpdatedText">
+	</span>
 </ng-template>
 
 <ng-template #fieldNoticeID let-celldata="celldata">

@@ -9,7 +9,7 @@ import { I18n } from '@cisco-ngx/cui-utils';
 
 import { ControlPointIERegistrationAPIService, User } from '@sdp-api';
 
-import { empty, forkJoin, of, Subject, throwError, timer } from 'rxjs';
+import { empty, of, Subject, throwError, timer } from 'rxjs';
 import { catchError, finalize, mergeMap, retryWhen, takeUntil, tap } from 'rxjs/operators';
 import * as _ from 'lodash-es';
 
@@ -133,10 +133,10 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 	 */
 	public onDownload () {
 		this.loading = true;
-		forkJoin(
-			this.createRegistration(),
-			this.commenceDownload(),
-		)
+		this.createRegistration()
+			.pipe(
+				mergeMap(() => this.commenceDownload()),
+			)
 			.subscribe(() => {
 				this.continue();
 			});
@@ -207,9 +207,15 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 			.pipe(
 				tap(response => {
 					this.metadataTransId = _.get(response, 'metadata_response.metadata_trans_id');
-					this.imageGuid = _.get(response, 'metadata_response.metadata_mdfid_list[0]' +
+					const images = _.get(response, 'metadata_response.metadata_mdfid_list[0]' +
 						'.software_response_list[0].platform_list[0]' +
-						'.release_list[0].image_details[0].image_guid');
+						'.release_list[0].image_details');
+					const nonDeletedImages = _.filter(images, { is_deleted: 'N' });
+					this.imageGuid = _.get(
+						nonDeletedImages,
+						// gets latest non-deleted image
+						`[${nonDeletedImages.length - 1}].image_guid`,
+					);
 				}),
 			);
 	}

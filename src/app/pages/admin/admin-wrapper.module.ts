@@ -5,6 +5,7 @@ import { AdminWrapperComponent } from './admin-wrapper.component';
 
 import { CuiSidebarModule, CuiSpinnerModule } from '@cisco-ngx/cui-components';
 import { RouterModule } from '@angular/router';
+import { InlineSVGModule } from 'ng-inline-svg';
 
 /**
  * Main Settings module
@@ -17,6 +18,7 @@ import { RouterModule } from '@angular/router';
 	imports: [
 		CommonModule,
 		I18nPipeModule,
+		InlineSVGModule.forRoot({ baseUrl: '/' }),
 		CuiSidebarModule,
 		CuiSpinnerModule,
 		RouterModule,

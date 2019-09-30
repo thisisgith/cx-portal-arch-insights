@@ -71,15 +71,15 @@ export const MockNetworkElements: NetworkElement[] = [
 		ipAddress: '10.119.1.102',
 		isManagedNE: true,
 		lastUpdateDate: '2019-05-14T18:27:06',
-		managedNeId: '10.119.1.172,NA,NA,NA',
+		managedNeId: 'NA,FOC1544Y17Q,WS-C2960S-24PS-L,NA',
 		managementAddress: '10.119.1.172',
-		neInstanceId: 'NA,FOC1844X089,WS-C3850-24S,NA',
+		neInstanceId: 'NA,FOC1544Y17Q,WS-C2960S-24PS-L,NA',
 		neName: '1971THE2-swi02-C3850_Core2_SD_DR.tbc.limad.net',
 		neRegistrationStatus: '',
 		productFamily: 'Cisco Catalyst 3850 Series Switches',
 		productId: 'WS-C3850-24S',
 		productType: 'LAN Switches',
-		serialNumber: 'FOC1844X089',
+		serialNumber: 'FOC1544Y17Q',
 		smartLicenseProductInstanceIdentifier: '',
 		smartLicenseVirtualAccountName: '',
 		swType: 'IOS-XE',
@@ -600,11 +600,17 @@ export const MockNetworkElements: NetworkElement[] = [
  * Function to generate the mock Network Response
  * @param rows the rows to return
  * @param page the page to return
+ * @param [serialNumber] the serial number to filter on
  * @returns the network element response
  */
-function MockNetwork (rows: number, page: number): NetworkElementResponse {
-	const data = _.cloneDeep(MockNetworkElements)
-		.slice((rows * (page - 1)), (rows * page));
+function MockNetwork (rows: number, page: number, serialNumber?: string): NetworkElementResponse {
+	let data;
+	if (serialNumber) {
+		data = _.filter(_.cloneDeep(MockNetworkElements), ne => ne.serialNumber === serialNumber);
+	} else {
+		data = _.cloneDeep(MockNetworkElements)
+			.slice((rows * (page - 1)), (rows * page));
+	}
 
 	return {
 		data,
@@ -731,7 +737,7 @@ export const NetworkScenarios = [
 					delay: 100,
 					description: 'Network Elements for FOC1544Y16T',
 					response: {
-						body: MockNetwork(1, 1),
+						body: MockNetwork(1, 1, 'FOC1544Y16T'),
 						status: 200,
 					},
 					selected: true,
@@ -797,6 +803,25 @@ export const NetworkScenarios = [
 			customerId
 		/* tslint:disable-next-line:ter-max-len max-line-length */
 		}&sort=hostName:ASC&rows=100&page=1&managedNeId=NA,FOX1335GRHG,WS-C4506-E,NA&managedNeId=NA,FOX1306GFKH,WS-C4506-E,NA`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 500,
+					description: 'Network Elements for SA 1074',
+					response: {
+						body: MockNetwork(5, 1),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?customerId=${customerId}&sort=hostName:ASC&rows=100&page=1`
+		+ '&managedNeId=NA,FOC1544Y17Q,WS-C2960S-24PS-L,NA'
+		+ '&managedNeId=NA,FOC1544Y1AV,WS-C2960S-24PS-L,NA',
 		usecases: ['Use Case 1'],
 	},
 ];

@@ -30,8 +30,8 @@ export class CompareRecommendationsComponent implements OnChanges {
 	public barChartWidth = 80;
 	public severityMap = {
 		H: I18n.get('_OsvHigh_'),
-		L: I18n.get('_OsvLow_'),
 		M: I18n.get('_OsvMedium_'),
+		L: I18n.get('_OsvLow_'),
 	};
 
 	/**
@@ -70,6 +70,7 @@ export class CompareRecommendationsComponent implements OnChanges {
 			recommendation.psirtResolvedCount = this.calculateExposed(resolvedPsirts);
 			recommendation.psirtSeriesData = openPsirtsResponse.totalOpenCount > 0 ?
 				this.populateBarGraphData(openPsirtsResponse.totalOpen) : [];
+			_.set(recommendation, 'actions', this.getRowActions(recommendation));
 		});
 		this.currentRecommendation = _.get(_.filter(recommendations,
 			(recomm: MachineRecommendations) => recomm.name === 'profile current'), 0);
@@ -158,5 +159,21 @@ export class CompareRecommendationsComponent implements OnChanges {
 	 */
 	public onCancelClick (version: string) {
 		this.onAction.emit({ version, type: 'cancel' });
+	}
+
+	/**
+	 * Returns the row specific actions
+	 * @param recomm the row we're building our actions for
+	 * @returns the built actions
+	 */
+	public getRowActions (recomm: MachineRecommendations) {
+		return [
+			{
+				label: _.upperCase(I18n.get('_Cancel_')),
+				onClick: () => {
+					this.onCancelClick(recomm.swVersion);
+				},
+			},
+		];
 	}
 }

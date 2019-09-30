@@ -23,7 +23,7 @@ import { DatePipe } from '@angular/common';
 @Component({
 	selector: 'app-asset-timeline-chart',
 	styleUrls: ['./asset-timeline-chart.component.scss'],
-	template: '<div [chart]="chart"></div>',
+	template: '<div id="timeline-chart" [chart]="chart"></div>',
 })
 export class AssetTimelineChartComponent implements OnInit, OnChanges {
 	@Input() public data: AssetRecommendationsResponse;

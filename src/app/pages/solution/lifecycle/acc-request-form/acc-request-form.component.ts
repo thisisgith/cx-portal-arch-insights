@@ -99,9 +99,9 @@ export class AccRequestFormComponent implements OnDestroy, OnInit, OnDestroy {
 	];
 
 	public dnacOptions: SelectOption[] = [
-		{ key: '1.21', value: '1.21' },
-		{ key: '1.20', value: '1.20' },
-		{ key: '1.19', value: '1.19' },
+		{ key: '1.3.X', value: '1.3.X' },
+		{ key: '1.2.X', value: '1.2.X' },
+		{ key: '1.1.X', value: '1.1.X' },
 	];
 
 	constructor (

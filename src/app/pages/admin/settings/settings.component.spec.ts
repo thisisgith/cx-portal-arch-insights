@@ -2,6 +2,7 @@ import { configureTestSuite } from 'ng-bullet';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SettingsComponent } from './settings.component';
 import { SettingsModule } from './settings.module';
+import { AppStatusColorPipe } from './app-status-color.pipe';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Location } from '@angular/common';
@@ -26,6 +27,7 @@ describe('SettingsComponent', () => {
 				RouterTestingModule,
 			],
 			providers: [
+				AppStatusColorPipe,
 				{
 					provide: Location,
 					useValue: locationStub,

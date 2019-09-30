@@ -2,7 +2,8 @@
 @import '../../../../mixins.scss';
 
 .icon-asset {
-	height: 24px;
+	height: 20px;
+	width: 20px;
 }
 
 .remove-shadow {
@@ -83,3 +84,28 @@
 .form-group__text .assets-search {
 	@include filter-search;
 }
+
+.titlebar__viewmode {
+	border-top: 1px solid #c8d4d7;
+	border-bottom: 1px solid #c8d4d7;
+}
+
+.titlebar__viewmode button {
+	width: 32px;
+	height: 30px;
+	display: block;
+	background: #fafbfc;
+
+	&:hover {
+		background: #ebf1f8;
+	}
+}
+
+.titlebar__viewmode button.selected {
+	background: #6a80a5;
+
+	::ng-deep svg g {
+		fill: #fff;
+	}
+}
+

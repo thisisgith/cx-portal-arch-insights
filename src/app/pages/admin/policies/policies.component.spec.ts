@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PoliciesComponent } from './policies.component';
 import { PoliciesModule } from './policies.module';
+import { AppStatusColorPipe } from '../settings/app-status-color.pipe';
 
 import {
 	PolicesScenarios,
@@ -30,6 +31,7 @@ describe('PoliciesComponent', () => {
 				RouterTestingModule,
 			],
 			providers: [
+				AppStatusColorPipe,
 				{
 					provide: Location,
 					useValue: locationStub,

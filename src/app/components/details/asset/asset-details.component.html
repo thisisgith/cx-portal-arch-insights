@@ -11,7 +11,8 @@
 			[asset]="asset"
 			[element]="element" 
 			[customerId]="customerId"
-			(alert)="handleAlert($event)">
+			(alert)="handleAlert($event)"
+			(scanStatus)="handleScanStatus($event)">
 		</asset-details-header>
 		<div detailsPanelTitle class="text-xlarge flex-center-vertical">
 			<span class="half-margin-right flex-center-vertical"
@@ -34,7 +35,7 @@
 	</div>
 	<cui-tabs id="detailTabs" *ngIf="customerId && !isLoading">
 		<cui-tab [label]="'_Summary_' | i18n | uppercase">
-			<div class="half-margin-top qtr-margin-left qtr-margin-right">
+			<div class="half-margin-top">
 				<asset-details-summary *ngIf="asset"
 					[asset]="asset"
 					[customerId]="customerId">
@@ -48,22 +49,23 @@
 			</div>
 		</cui-tab>
 		<cui-tab [label]="'_Hardware_' | i18n | uppercase">
-			<div class="half-margin-top qtr-margin-left qtr-margin-right">
+			<div class="half-margin-top">
 				<asset-details-hardware [asset]="asset" [customerId]="customerId"></asset-details-hardware>
 			</div>
 		</cui-tab>
 		<cui-tab [label]="'_Software_' | i18n | uppercase">
-			<div class="half-margin-top qtr-margin-left qtr-margin-right">
+			<div class="half-margin-top">
 				<asset-details-software [asset]="asset" [customerId]="customerId"></asset-details-software>
 			</div>
 		</cui-tab>
 		<cui-tab [label]="'_Advisories_' | i18n | uppercase">
-			<div class="half-margin-top qtr-margin-left qtr-margin-right">
-				<asset-details-advisories *ngIf="asset"
+			<div class="half-margin-top">
+				<asset-details-advisories *ngIf="asset || element"
 					[asset]="asset"
+					[element]="element"
 					[customerId]="customerId">
 				</asset-details-advisories>
-				<div class="flex-center" *ngIf="!asset">
+				<div class="flex-center" *ngIf="!asset && !element">
 					<span class="text-muted text-xlarge"
 						[innerText]="'_NoAdvisoryInformation_' | i18n"
 						data-auto-id="NoAdvisoryInformationText">

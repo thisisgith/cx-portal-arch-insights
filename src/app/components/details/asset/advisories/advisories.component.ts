@@ -7,9 +7,8 @@ import {
 	SimpleChanges,
 	OnChanges,
 	OnDestroy,
+	EventEmitter,
 } from '@angular/core';
-
-import { DatePipe } from '@angular/common';
 
 import { LogService } from '@cisco-ngx/cui-services';
 
@@ -26,6 +25,7 @@ import {
 	SecurityAdvisoryInfo,
 	SecurityAdvisoriesResponse,
 	FieldNoticeAdvisoryResponse,
+	NetworkElement,
 } from '@sdp-api';
 import { CuiTableOptions, CuiTableColumnOption } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
@@ -34,6 +34,7 @@ import {
 	map,
 	catchError,
 	switchMap,
+	takeUntil,
 } from 'rxjs/operators';
 import { AdvisoryType } from '@interfaces';
 
@@ -66,10 +67,13 @@ export class AssetDetailsAdvisoriesComponent
 	implements OnInit, OnChanges, OnDestroy {
 
 	@Input('asset') public asset: Asset;
+	@Input('element') public element: NetworkElement;
 	@Input('customerId') public customerId: string;
+	@Input('reload') public reload: EventEmitter<boolean> = new EventEmitter();
 	@ViewChild('impact', { static: true }) private impactTemplate: TemplateRef<{ }>;
 	@ViewChild('fieldNoticeID', { static: true }) private fieldNoticeIDTemplate: TemplateRef<{ }>;
 	@ViewChild('bugID', { static: true }) private bugIDTemplate: TemplateRef<{ }>;
+	@ViewChild('lastUpdated', { static: true }) private lastUpdatedTemplate: TemplateRef<{ }>;
 
 	public tabs: Tab[];
 	public isLoading = true;
@@ -206,6 +210,8 @@ export class AssetDetailsAdvisoriesComponent
 		_.map(this.tabs, (tab: Tab) => {
 			if (_.get(tab, ['params', 'serialNumber']) && tab.key === 'bug') {
 				tab.subject.next();
+			} else if (_.get(tab, ['params', 'neInstanceId'])) {
+				tab.subject.next();
 			} else if (_.get(tab, ['params', 'hwInstanceId'])) {
 				tab.subject.next();
 			} else {
@@ -252,8 +258,6 @@ export class AssetDetailsAdvisoriesComponent
 
 	/** Initializes our advisory tabs */
 	private initializeTabs () {
-		const datePipe = new DatePipe('en-US');
-
 		this.tabs = [
 			{
 				data: [],
@@ -262,7 +266,8 @@ export class AssetDetailsAdvisoriesComponent
 				moreLoading: false,
 				params: {
 					customerId: this.customerId,
-					hwInstanceId: this.asset.hwInstanceId ? [this.asset.hwInstanceId] : null,
+					neInstanceId: _.get(this.element, 'neInstanceId') ?
+						[this.element.neInstanceId] : null,
 					page: 1,
 					rows: 10,
 					sort: ['severity:ASC'],
@@ -292,15 +297,8 @@ export class AssetDetailsAdvisoriesComponent
 							autoId: 'AdvisoryLastUpdated',
 							key: 'lastUpdated',
 							name: I18n.get('_LastUpdated_'),
-							render: item => {
-								const date = item.lastUpdated ? item.lastUpdated : item.publishedOn;
-								if (date) {
-									return datePipe.transform(new Date(date), 'yyyy MMM dd');
-								}
-
-								return I18n.get('_Never_');
-							},
 							sortable: false,
+							template: this.lastUpdatedTemplate,
 							width: '125px',
 						},
 					],
@@ -319,7 +317,8 @@ export class AssetDetailsAdvisoriesComponent
 				moreLoading: false,
 				params: {
 					customerId: this.customerId,
-					hwInstanceId: this.asset.hwInstanceId ? [this.asset.hwInstanceId] : null,
+					hwInstanceId: _.get(this.asset, 'hwInstanceId') ?
+						[this.asset.hwInstanceId] : null,
 					page: 1,
 					rows: 10,
 					sort: ['lastUpdated:DESC'],
@@ -344,20 +343,13 @@ export class AssetDetailsAdvisoriesComponent
 							value: 'title',
 						},
 						{
-							autoId: 'AdvisoryLastUpdated',
+							autoId: 'FieldNoticeLastUpdated',
 							key: 'lastUpdated',
 							name: I18n.get('_LastUpdated_'),
-							render: item => {
-								const date = item.lastUpdated ? item.lastUpdated : item.publishedOn;
-								if (date) {
-									return datePipe.transform(new Date(date), 'yyyy MMM dd');
-								}
-
-								return I18n.get('_Never_');
-							},
 							sortable: true,
 							sortDirection: 'desc',
 							sorting: true,
+							template: this.lastUpdatedTemplate,
 							width: '125px',
 						},
 					],
@@ -378,7 +370,8 @@ export class AssetDetailsAdvisoriesComponent
 					customerId: this.customerId,
 					page: 1,
 					rows: 10,
-					serialNumber: this.asset.serialNumber ? [this.asset.serialNumber] : null,
+					serialNumber: _.get(this.asset, 'serialNumber') ?
+						[this.asset.serialNumber] : null,
 				},
 				selected: false,
 				subject: new Subject(),
@@ -406,14 +399,12 @@ export class AssetDetailsAdvisoriesComponent
 							sortable: false,
 						},
 						{
+							autoId: 'BugLastUpdated',
 							name: I18n.get('_LastUpdated_'),
-							render: item => item.lastUpdated ?
-								datePipe.transform(
-									new Date(item.lastUpdated), 'yyyy MMM dd') :
-									I18n.get('_Never_'),
 							sortable: false,
 							sortDirection: 'desc',
 							sorting: true,
+							template: this.lastUpdatedTemplate,
 							width: '125px',
 						},
 					],
@@ -478,7 +469,7 @@ export class AssetDetailsAdvisoriesComponent
 	 * Refreshes and loads the date
 	 */
 	private refresh () {
-		if (this.asset && this.customerId) {
+		if ((this.asset || this.element) && this.customerId) {
 			this.clear();
 			this.initializeTabs();
 			this.initializeData();
@@ -487,6 +478,16 @@ export class AssetDetailsAdvisoriesComponent
 
 	/** Function used to initialize the component */
 	public ngOnInit () {
+		this.reload
+		.pipe(
+			takeUntil(this.destroyed$),
+		)
+		.subscribe((toReload: boolean) => {
+			if (toReload) {
+				this.refresh();
+			}
+		});
+
 		this.refresh();
 	}
 

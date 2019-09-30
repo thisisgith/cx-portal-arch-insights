@@ -18,7 +18,7 @@
 		</dl>
 	</div>
 	<h3 data-auto-id="caseNum" [innerText]="'_Case_' | i18n:caseNumber.query"></h3>
-	<div *ngIf="case?.description; else unavailable" [innerText]="case.description"></div>
+	<div *ngIf="case?.summary; else unavailable" [innerText]="case.summary"></div>
 	<div class="row">
 		<div class="row no-gutters col-md-6">
 			<div class="col-md-7 base-margin-top base-margin-right">
@@ -37,7 +37,7 @@
 					</dt>
 					<dd>
 						<span *ngIf="case?.opened; else unavailable"
-							[innerText]="case.opened | date:'dd-MMM-y hh:mm aa O'"></span>
+							[innerText]="case.opened | dateTime"></span>
 					</dd>
 					<dt>
 						<span class="subheading text-small text-uppercase"

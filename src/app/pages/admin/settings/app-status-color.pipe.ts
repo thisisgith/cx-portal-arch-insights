@@ -26,6 +26,7 @@ export class AppStatusColorPipe implements PipeTransform {
 			ContainerCreation: 'text-warning',
 			Pending: 'text-warning',
 			PodInitializing: 'text-warning',
+			Reachable: 'text-success',
 			Running: 'text-success',
 			Stopped: 'text-secondary',
 		}[status];

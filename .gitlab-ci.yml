@@ -2,7 +2,9 @@ image: containers.cisco.com/cway/gitlab-ci:3.4.1
 
 stages:
   - setup
-  - test
+  - static
+  - automation
+  - build
 
 # disable gitlab cli analytics
 before_script:
@@ -20,7 +22,7 @@ setup:
     - npm ci --audit=false
 
 building:
-  stage: test
+  stage: build
   cache:
     key: "PIPELINE-$CI_PIPELINE_ID"
     policy: pull
@@ -32,7 +34,7 @@ building:
 
 # run npm audit to verify dependency security
 audit:
-  stage: test
+  stage: build
   cache:
     key: "PIPELINE-$CI_PIPELINE_ID"
     policy: pull
@@ -45,7 +47,7 @@ audit:
 
 # run our lint process against the committed files
 lint:
-  stage: test
+  stage: static
   cache:
     key: "PIPELINE-$CI_PIPELINE_ID"
     policy: pull
@@ -58,16 +60,20 @@ lint:
     - npm run lint:sdp
 
 # run our test:ci process for the commit
-# unit:
-#   stage: test
-#   cache:
-#     policy: pull
-#   script:
-#     - npm run test:ci
+unit:
+  stage: static
+  cache:
+    key: "PIPELINE-$CI_PIPELINE_ID"
+    policy: pull
+    paths:
+      - package-lock.json
+      - node_modules/
+  script:
+    - npm run test:ci
 
 # run automated Cypress tests for the commit
-automation:
-  stage: test
+.job_template: &cypress_spec
+  stage: automation
   cache:
     key: "PIPELINE-$CI_PIPELINE_ID"
     policy: pull
@@ -77,6 +83,27 @@ automation:
   allow_failure: true
   before_script:
     - npm run start:background
+    - cp "cypress/patches/verify.js" "node_modules/cypress/lib/tasks"
   script:
-    # TODO: Add more spec files (comma separated) once they are stable
-    - npm run test:automation -- --spec "cypress/integration/assets_spec.js,cypress/integration/advisories_spec.js,cypress/integration/communities_spec.js,cypress/integration/insights_spec.js"
+    - npm run test:automation -- --spec "cypress/integration/$CI_BUILD_NAME.js"
+
+# Stable cypress specs to be run in CI
+# TODO: Add more spec files once they are stable
+accelerator_spec:
+  <<: *cypress_spec
+advisories_spec:
+  <<: *cypress_spec
+assets_spec:
+  <<: *cypress_spec
+atx_spec:
+  <<: *cypress_spec
+casedetail_spec:
+  <<: *cypress_spec
+communities_spec:
+  <<: *cypress_spec
+insights_spec:
+  <<: *cypress_spec
+learning_spec:
+  <<: *cypress_spec
+settings_spec:
+  <<: *cypress_spec

@@ -37,7 +37,7 @@ module.exports = config => {
 					statements: 50,
 				},
 				global: {
-					branches: 75,
+					branches: 50,
 					functions: 75,
 					lines: 75,
 					statements: 75,
@@ -45,6 +45,9 @@ module.exports = config => {
 			},
 			reports: ['html', 'lcovonly', 'text', 'text-summary', 'json', 'json-summary'],
 			fixWebpackSourcePaths: true,
+		},
+		browserConsoleLogOptions: {
+			terminal: false,
 		},
 		reporters: ['spec'],
 		port: 9876,

@@ -14,20 +14,12 @@
 			<visual-filter-bar [filters]="filters" [filterCollapse]="filterCollapse"></visual-filter-bar>
 		</cui-tab>
 		<ng-template cuiTabPost>
-			<div class="text-right">
-				<div *ngIf="!status.isLoading && pagination"
-					(click)="filterCollapse = !filterCollapse"
-					data-auto-id="VisualFilterCollapse"
-					class="half-margin-right">
-					<span class="icon-filter icon-small text-muted qtr-margin-right toggle"></span>
-					<span class="text-muted toggle" [innerText]="'_VisualFilters_' | i18n"></span>
-					<span class="qtr-margin-left icon-tiny icon-dropdown text-muted toggle"
-						[ngClass]="{
-							'rotate-180': filterCollapse
-						}">
-					</span>
-				</div>
-			</div>
+			<visual-filter-toggle 
+				*ngIf="!status.isLoading && pagination"
+				data-auto-id="VisualFilterToggle"
+				(click)="filterCollapse = !filterCollapse"
+				[filterCollapse]="filterCollapse"
+				></visual-filter-toggle>
 		</ng-template>
 	</cui-tabs>
 </div>
@@ -90,7 +82,7 @@
 			</div>
 		</div>
 		<div class="col-auto">
-			<div class="flex flex-fluid flex-right">
+			<div class="flex flex-fluid flex-right align-items-end">
 				<div class="flex-fill form-group input--compressed input--icon half-margin-right">
 					<form *ngIf="searchForm" [formGroup]="searchForm" novalidate>
 						<div class="form-group__text">
@@ -110,12 +102,14 @@
 						</div>
 					</form>
 				</div>
-				<div class="btn-group btn-group--square half-margin-right">
-					<button data-auto-id="list-view-btn" class="btn btn--small btn--gray-ghost" [ngClass]="{ 'selected': view === 'list' }" (click)="selectView('list')">
-						<span class="icon-list-view"></span>
+				<div class="btn-group btn-group--square half-margin-right titlebar__viewmode">
+					<button data-auto-id="list-view-btn" class="btn btn--small qtr-padding" 
+						[ngClass]="{ 'selected': view === 'list' }" (click)="selectView('list')">
+						<div inlineSVG="assets/icons/nav-tableline-off.svg"></div>
 					</button>
-					<button data-auto-id="grid-view-btn" class="btn btn--small btn--gray-ghost" [ngClass]="{ 'selected': view === 'grid' }" (click)="selectView('grid')">
-						<span class="icon-grid-view"></span>
+					<button data-auto-id="grid-view-btn" class="btn btn--small qtr-padding" 
+						[ngClass]="{ 'selected': view === 'grid' }" (click)="selectView('grid')">
+						<div inlineSVG="assets/icons/nav-card-off.svg"></div>
 					</button>
 				</div>
 				<!-- Export options disabled until further notice -->
@@ -246,7 +240,7 @@
 				<div class="col-md-6 text-right text-dkgray-4 no-padding-left qtr-padding-right" [innerText]="'_LastScan_' | i18n"></div>
 				<div class="col-md-6 no-padding"
 					[innerText]="(item.data?.lastScan ? (item.data.lastScan | fromNow) : ('_Never_' | i18n)) | truncate:true:15"
-					[title]="(item.data?.lastScan ? (item.data.lastScan | fromNow) : ('_Never_' | i18n))"
+					[title]="(item.data?.lastScan ? (item.data.lastScan | dateTime) : ('_Never_' | i18n))"
 					attr.data-auto-id="LastScan-{{ item.data?.serialNumber }}">
 				</div>
 
@@ -361,6 +355,13 @@
 		position="left"
 		icon="icon-more icon-medium text-muted rotate-90">
 	</cui-dropdown>
+</ng-template>
+
+<ng-template #lastScanTemplate let-celldata="celldata">
+	<span [innerText]="celldata.lastScan ? (celldata.lastScan | fromNow) : ('_Never_' | i18n)"
+		[title]="celldata.lastScan ? (celldata.lastScan | dateTime) : ('_Never_' | i18n)"
+		attr.data-auto-id="LastScan-{{ celldata?.serialNumber }}">
+	</span>
 </ng-template>
 
 <ng-template #filterBar>

@@ -27,6 +27,8 @@ import {
 	BubbleChartModule,
 	VisualFilterBarModule,
 } from '@components';
+import { InlineSVGModule } from 'ng-inline-svg';
+import { DateTimePipeModule } from '@pipes';
 
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
@@ -60,6 +62,7 @@ const childRoutes: Routes = [
 		CuiSpinnerModule,
 		CuiTableModule,
 		CuiTabsModule,
+		DateTimePipeModule,
 		DetailsPanelModule,
 		FormsModule,
 		FromNowPipeModule,
@@ -72,6 +75,7 @@ const childRoutes: Routes = [
 		RouterModule.forChild(childRoutes),
 		TruncatePipeModule,
 		VisualFilterBarModule,
+		InlineSVGModule.forRoot({ baseUrl: '/' }),
 	],
 })
 export class AssetsModule { }

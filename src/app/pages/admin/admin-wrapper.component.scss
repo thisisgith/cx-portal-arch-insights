@@ -3,20 +3,97 @@
 		position: relative;
 		left: 80px;
 		width: calc(100vw - 80px);
-		top: 55px;
+		background: #fff;
+		height: calc(100vh - 76px - 55px);
+		padding: 0 40px;
+		top: 76px;
+		overflow-y: auto;
 	}
 
 	.sidebar {
-		top: 110px;
+		top: 55px;
+		padding-top: 130px;
+		background: #f7f8fc;
+
+		&__item {
+			margin-bottom: 30px;
+
+			&__label {
+				margin-top: 8px;
+				text-transform: uppercase;
+				font-size: 10px;
+				line-height: 14px;
+			}
+
+			&__icon {
+				width: 26px;
+				height: 26px;
+
+				::ng-deep svg {
+					width: 26px;
+					height: 26px;
+				}
+			}
+		}
+
+		li a {
+			height: 80px;
+			border-right: 3px solid transparent;
+
+			span {
+				color: #afc6e4;
+			}
+
+			.badge {
+				color: #fff;
+				font-size: 10px;
+				line-height: 10px;
+			}
+
+			&:hover {
+				background-color: transparent;
+				box-shadow: unset;
+			}
+		}
+
+		ul li.selected a {
+			box-shadow: unset;
+			border-right: 3px solid #00bceb;
+			background-color: transparent;
+
+			.sidebar__item__label {
+				color: #00bceb;
+			}
+
+			.sidebar__item__icon ::ng-deep path {
+				fill: #00bceb;
+			}
+		}
 	}
 
 	.icon-close {
 		cursor: pointer;
+		color: #747b86;
 	}
 
 	.header {
 		position: fixed;
-		left: 0;
+		left: 80px;
 		right: 0;
+		height: 76px;
+		border-bottom: none;
+		display: flex;
+		align-items: center;
+
+		&-bar__main {
+			display: flex;
+			align-items: center;
+		}
+
+		h2 {
+			font-size: 36px;
+			font-weight: 300;
+			line-height: 42px;
+		}
 	}
 }

@@ -1,8 +1,20 @@
 @import '~cisco-ui/src/scss/utilities/_variables.scss';
 
 .details-header {
-	background-color: $light-gray-4;
-	border-bottom: solid 1px $light-gray-3;
+	background-color: #f4f6f8;
+	padding: 30px 30px 18px 40px;
+
+	::ng-deep &__content {
+		margin-top: 30px;
+		margin-bottom: 32px;
+	}
+
+	::ng-deep .label--circle.label--tiny {
+		width: 10px;
+		height: 10px;
+		min-width: 10px;
+		max-width: 10px;
+	}
 }
 
 .icon--mid {

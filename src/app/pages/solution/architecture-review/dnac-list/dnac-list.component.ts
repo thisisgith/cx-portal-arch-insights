@@ -89,7 +89,7 @@ export class DnacListComponent implements OnInit {
 					sortable: false,
 				},
 				{
-					name: I18n.get('_ArchitectureDevices(DevicesPublishedLimit)_'),
+					name: I18n.get('_ArchitectureSystems(SystemsPublishedLimit)_'),
 					sortable: false,
 					template : this.devicesTemplate,
 				},
@@ -209,7 +209,7 @@ export class DnacListComponent implements OnInit {
 	 */
 	public onPanelClose () {
 		this.detailsPanelStackService.reset();
-		_.set(this.dnacDetails.active, false);
+		_.set(_.get(this.dnacDetails, 'active'), false);
 		this.dnacDetails = null;
 	}
 

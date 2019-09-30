@@ -1,10 +1,9 @@
-import { PitstopActionUpdateResponse } from '@sdp-api';
 
 /** Base of URL for SDP API */
 const api = '/api/customerportal/pitstop/v1/action/status';
 
 /** Default Customer ID */
-const customerId = '2431199';
+// const customerId = '2431199';
 
 /**
  * Stuff
@@ -16,22 +15,6 @@ const customerId = '2431199';
  * @param isSuccessPathChanged boolean
  * @returns response
  */
-function MockActionUpdate (
-	isAtxChanged: boolean,
-	isAccChanged: boolean,
-	isElearningChanged: boolean,
-	isCommunitiesChanged: boolean,
-	isCgtChanged: boolean,
-	isSuccessPathChanged: boolean): PitstopActionUpdateResponse {
-	return {
-		isAccChanged,
-		isAtxChanged,
-		isCgtChanged,
-		isCommunitiesChanged,
-		isElearningChanged,
-		isSuccessPathChanged,
-	};
-}
 
 /**
  * The scenarios
@@ -39,19 +22,18 @@ function MockActionUpdate (
 export const ActionScenarios = [
 	{
 		scenarios: {
-			PATCH: [
+			PUT: [
 				{
 					delay: Math.floor(Math.random() * 2000) + 50,
 					description: 'Update to complete the first Action',
 					response: {
-						body: MockActionUpdate(true, false, false, false, false, true),
 						status: 200,
 					},
 					selected: true,
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}`,
+		url: `${api}`,
 		usecases: ['Use Case 1'],
 	},
 ];

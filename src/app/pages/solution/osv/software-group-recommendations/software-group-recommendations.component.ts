@@ -43,6 +43,9 @@ export class SoftwareGroupRecommendationsComponent implements OnChanges {
 		const recommendations = _.get(changes, ['recommendations', 'currentValue']);
 		if (recommendations) {
 			this.groupRecommendations = this.groupData(recommendations);
+			this.groupRecommendations.forEach((recomm: AssetRecommendations) => {
+				_.set(recomm, 'actions', this.getRowActions(recomm));
+			});
 			this.buildTable();
 		}
 	}
@@ -128,13 +131,13 @@ export class SoftwareGroupRecommendationsComponent implements OnChanges {
 					{
 						sortable: false,
 						template: this.currentTemplate,
-						width: '20%',
+						width: '12%',
 					},
 					{
 						name: I18n.get('_OsvVersion_'),
 						sortable: false,
 						template: this.versionTemplate,
-						width: '35%',
+						width: '38%',
 					},
 					{
 						key: 'postDate',
@@ -147,7 +150,7 @@ export class SoftwareGroupRecommendationsComponent implements OnChanges {
 						name: I18n.get('_OsvStatusOrAction_'),
 						sortable: false,
 						template: this.actionsTemplate,
-						width: '30%',
+						width: '35%',
 					},
 				],
 				dynamicData: true,
@@ -181,6 +184,22 @@ export class SoftwareGroupRecommendationsComponent implements OnChanges {
 		this.currentRecommendation = _.get(_.filter(data, { name: 'profile current' }), 0);
 
 		return this.sortData(groupedData);
+	}
+
+	/**
+	 * Returns the row specific actions
+	 * @param recomm the row we're building our actions for
+	 * @returns the built actions
+	 */
+	public getRowActions (recomm: AssetRecommendations) {
+		return [
+			{
+				label: _.upperCase(I18n.get('_Cancel_')),
+				onClick: () => {
+					this.onCancelClick(recomm.swVersion);
+				},
+			},
+		];
 	}
 
 }

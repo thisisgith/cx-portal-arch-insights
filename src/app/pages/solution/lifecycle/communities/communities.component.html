@@ -8,6 +8,7 @@
 					data-toggle="tooltip"
 					data-placement="bottom" title="{{curatedCommunity.description}}" id="curatedcommunitytitle"
 					attr.data-auto-id="communitytitle-{{curatedCommunity.description}}-Lifecycle"
+					attr.data-auto-href="{{curatedCommunityUrl}}"
 					[innerText]="'_SuccessTrack_' | i18n"></a>
 			</span>
 		</div>
@@ -18,6 +19,7 @@
 					data-toggle="tooltip"
 					data-placement="bottom" title="{{publicCommunity.description}}" id="publiccommunitytitle"
 					attr.data-auto-id="communitytitle-{{publicCommunity.description}}-Public"
+					attr.data-auto-href="{{publicCommunityUrl}}"
 					[innerText]="'_Public_' | i18n"></a>
 			</span>
 		</div>

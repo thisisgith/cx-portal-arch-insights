@@ -74,6 +74,7 @@ export class RccComponent implements OnInit, OnDestroy {
 		totalItems: 0,
 	};
 	public loading = false;
+	public filterLoading = false;
 	public tableData: RccGridData;
 	public policyViolationsGridData: RccGridDataSample[] = [];
 	public tableAssetData: RccAssetGridData;
@@ -226,32 +227,27 @@ export class RccComponent implements OnInit, OnDestroy {
 				},
 				{
 					key: 'policygroupid',
-					name: I18n.get('_RccPolicyGroup_'),
+					name: I18n.get('_RccRegulatoryType_'),
 					sortable: true,
 				},
 				{
 					key: 'policycategory',
-					name: I18n.get('_RccPolicyCategory_'),
-					sortable: true,
-				},
-				{
-					key: 'policyname',
-					name: I18n.get('_RccPolicyName_'),
+					name: I18n.get('_RccCategory_'),
 					sortable: true,
 				},
 				{
 					key: 'ruletitle',
-					name: I18n.get('_RccRuleName_'),
+					name: I18n.get('_RccRuleViolated_'),
 					sortable: true,
 				},
 				{
 					key: 'violationcount',
-					name: I18n.get('_RccViolationCount_'),
+					name: I18n.get('_RccAssetViolations_'),
 					sortable: true,
 				},
 				{
 					key: 'impassetscount',
-					name: I18n.get('_RccImpactedAssets_'),
+					name: I18n.get('_RccAffectedSystems_'),
 					sortable: true,
 				},
 			],
@@ -367,7 +363,7 @@ export class RccComponent implements OnInit, OnDestroy {
 	 * @returns selected filters
 	 */
 	public getFiltersData () {
-		this.loading = true;
+		this.filterLoading = true;
 		this.RccTrackService
 			.getViolationCount({ customerId: this.customerId })
 			.pipe(takeUntil(this.destroy$))
@@ -380,10 +376,10 @@ export class RccComponent implements OnInit, OnDestroy {
 				severityFilter.seriesData = filterObjRes.severityFilters;
 				this.assetsTotalCount = filterObjRes.assetCount;
 				this.policyViolationsTotalCount = filterObjRes.policyViolationCount;
-				this.loading = false;
+				this.filterLoading = false;
 			},
 			error => {
-				this.loading = false;
+				this.filterLoading = false;
 				this.alert.show(I18n.get('_RccErrorResults_'), 'danger');
 				this.logger.error(
 					'RccComponent : getFiltersData() ' +
@@ -400,21 +396,19 @@ export class RccComponent implements OnInit, OnDestroy {
 	 * @returns selected filters
 	 */
 	public getAssetFiltersData () {
-		this.loading = true;
+		this.filterLoading = true;
 		this.RccTrackService
 			.getAssetCount({ customerId: this.customerId })
 			.pipe(takeUntil(this.destroy$))
 			.subscribe(assetFilterData => {
 				this.assetFilterObj = assetFilterData;
 				const filterObjRes = assetFilterData.data;
-				const assetSeverityFilter = _.find(this.filters, { key: 'assetOsType' });
-				assetSeverityFilter.seriesData = filterObjRes.ostypeList;
-				const assetOsTypeFilter = _.find(this.filters, { key: 'assetSeverity' });
-				assetOsTypeFilter.seriesData = filterObjRes.severityList;
-				this.loading = false;
+				const assetSeverityFilter = _.find(this.filters, { key: 'assetSeverity' });
+				assetSeverityFilter.seriesData = filterObjRes.severityList;
+				this.filterLoading = false;
 			},
 			error => {
-				this.loading = false;
+				this.filterLoading = false;
 				this.logger.error(
 					'RccComponent : getAssetFiltersData() ' +
 				`:: Error : (${error.status}) ${error.message}`);
@@ -480,9 +474,19 @@ export class RccComponent implements OnInit, OnDestroy {
 			columns: [
 				{
 					key: 'deviceName',
-					name: I18n.get('_RccDevice_'),
+					name: I18n.get('_RccSystemName_'),
 					sortable: true,
 					width: '24%',
+				},
+				{
+					key: 'serialNumber',
+					name: I18n.get('_RccAssetSerialNumber_'),
+					sortable: true,
+				},
+				{
+					key: 'osVersion',
+					name: I18n.get('_RccAssetSoftwareRelease_'),
+					sortable: true,
 				},
 				{
 					key: 'lastScan',
@@ -491,21 +495,6 @@ export class RccComponent implements OnInit, OnDestroy {
 						this.fromNow.transform(item.lastScan) : I18n.get('_Never_'),
 					sortable: true,
 					sortKey: 'lastScan',
-				},
-				{
-					key: 'serialNumber',
-					name: I18n.get('_RccAssetSerialNumber_'),
-					sortable: true,
-				},
-				{
-					key: 'osType',
-					name: I18n.get('_RccAssetSoftwareType_'),
-					sortable: true,
-				},
-				{
-					key: 'osVersion',
-					name: I18n.get('_RccAssetSoftwareVersion_'),
-					sortable: true,
 				},
 				{
 					key: 'violationCount',
@@ -533,14 +522,14 @@ export class RccComponent implements OnInit, OnDestroy {
 				loading: true,
 				seriesData: [],
 				template: this.policyFilterTemplate,
-				title: I18n.get('Policy Group'),
+				title: I18n.get('_RccRegulatoryType_'),
 			},
 			{
 				key: 'severity',
 				loading: true,
 				seriesData: [],
 				template: this.severityFilterTemplate,
-				title: I18n.get('Severity'),
+				title: I18n.get('_RccSeverity_'),
 			},
 		];
 	}
@@ -554,14 +543,7 @@ export class RccComponent implements OnInit, OnDestroy {
 				loading: true,
 				seriesData: [],
 				template: this.severityFilterTemplate,
-				title: I18n.get('Severity'),
-			},
-			{
-				key: 'assetOsType',
-				loading: true,
-				seriesData: [],
-				template: this.policyFilterTemplate,
-				title: I18n.get('OS Type'),
+				title: I18n.get('_RccAssetSeverity_'),
 			},
 		];
 	}
@@ -571,7 +553,7 @@ export class RccComponent implements OnInit, OnDestroy {
 	 * @param filter gives page info
 	 * @param triggeredFromGraph gives page info
 	 */
-	public onSubfilterSelect (subfilter: string, filter: Filter, triggeredFromGraph) {
+	public onSubfilterSelect (subfilter: any, filter: Filter, triggeredFromGraph) {
 		this.errorPolicyView = false;
 		_.invoke(this.alert, 'hide');
 		const searchInput = this.searchInput.trim();
@@ -616,7 +598,10 @@ export class RccComponent implements OnInit, OnDestroy {
 		this.prevSearchText = searchInput;
 		this.searchInput = searchInput;
 		if (filter.key === policyGroupConst || filter.key === severityConst) {
+			this.policyViolationsTableOptions = this.getPolicyViolationsTableOptions();
 			this.violationGridObj.pageIndex = 1;
+			this.violationGridObj.sortName = null;
+			this.violationGridObj.sortOrder = null;
 		}
 		if (filter.key === policyGroupConst) {
 			this.policyGroup = sub.filter;
@@ -763,8 +748,11 @@ export class RccComponent implements OnInit, OnDestroy {
 			this.tableConfig.totalItems = 0;
 			this.searched = true;
 			if (this.view === 'violation') {
+				this.policyViolationsTableOptions = this.getPolicyViolationsTableOptions();
 				this.violationGridObj.search = searchInput;
 				this.violationGridObj.pageIndex = 1;
+				this.violationGridObj.sortName = null;
+				this.violationGridObj.sortOrder = null;
 				this.getRCCData(this.violationGridObj);
 			} else {
 				this.assetGridObj.searchParam = searchInput;

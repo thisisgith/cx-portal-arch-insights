@@ -103,10 +103,10 @@
 			(click)="selectView('swGroups')"			
 			[ngClass]="{'text-primary':view == 'swGroups','text-muted':view != 'swGroups'}"
 			data-auto-id="TotalVisualFilterSoftwareGroups">
-				<div class="col-5 text-right">
+				<div class="col-6 text-right">
 					<span class="qtr-margin-right text-huge" [innerText]="filter.seriesData[0].profiles"></span>
 				</div>
-				<div class="col-7 margin-auto flex align-items-center">
+				<div class="col-6 margin-auto flex align-items-center">
 					<span class="text-large " [innerText]="'_OsvSoftwareGroups_' | i18n"></span>
 					<span class="pull-right text-primary relative" [title]="'_OsvSoftwareGroups_' | i18n">
 						<i 
@@ -123,10 +123,10 @@
 			[ngClass]="{'text-primary':view == 'assets','text-muted':view != 'assets'}"
 			(click)="selectView('assets')" 
 			data-auto-id="TotalVisualFilterAssets">
-				<div class="col-5 text-right">
+				<div class="col-6 text-right">
 					<span class="qtr-margin-right text-huge" [innerText]="filter.seriesData[0].assets"></span>
 				</div>
-				<div class="col-7 margin-auto">
+				<div class="col-6 margin-auto">
 					<span class="text-large " [innerText]="'_OsvAssets_' | i18n"></span>
 					<span 
 						class="text-primary pull-right" 
@@ -144,11 +144,11 @@
 			(click)="selectView('swVersions')" 			
 			[ngClass]="{'text-primary':view == 'swVersions','text-muted':view != 'swVersions'}"
 			data-auto-id="TotalVisualFilterSoftwareVersions">
-				<div class="col-5 text-right">
+				<div class="col-6 text-right">
 					<span class="qtr-margin-right text-huge" [innerText]="filter.seriesData[0].versions"></span>
 				</div>
-				<div class="col-7 margin-auto">
-					<span class="text-large half-margin-right" [innerText]="'_OsvSoftwareVersions_' | i18n"></span>
+				<div class="col-6 margin-auto">
+					<span class="text-large half-margin-right" [innerText]="'_OsvSoftwareVersionsRelease_' | i18n"></span>
 				</div>
 		</div>
 	</div>
