@@ -26,7 +26,7 @@
 	(close)="onPanelClose()">
 </app-software-group-detail>
 
-<div class="panel panel--bordered base-padding-left base-padding-top no-padding-bottom" *ngIf="view">
+<div class="panel panel--bordered base-padding-left base-padding-top no-padding-bottom">
 	<insight-tabs></insight-tabs>
 	<visual-filter-bar *ngIf="!status.isLoading" [filters]="filters"></visual-filter-bar>	
 	<div *ngIf="status.isLoading">
@@ -39,8 +39,9 @@
 		<div class="divider half-margin-top qtr-margin-bottom"></div>
 		<ng-container *ngTemplateOutlet="filterBar"></ng-container>
 	</ng-container>
-	<div *ngIf="view == 'swGroups'">
-		<app-software-groups 
+	<div class="min-height" *ngIf="view == 'swGroups'">
+		<app-software-groups
+			[softwareGroupsCount]="dataCounts.profiles"
 			[(tabIndex)]="tabIndex" 
 			(contactSupport)="openContactSupport()"
 			[(selectedSoftwareGroup)]="selectedSoftwareGroup"
@@ -48,8 +49,9 @@
 			[filters]="appliedFilters">
 		</app-software-groups>
 	</div>
-	<div *ngIf="view == 'assets'">
+	<div class="min-height" *ngIf="view == 'assets'">
 		<app-assets 
+			[assetsCount]="dataCounts.assets"
 			(contactSupport)="openContactSupport()" 
 			[(fullscreen)]="fullscreen" 
 			[filters]="appliedFilters"
@@ -57,12 +59,13 @@
 			[(selectedAsset)]="selectedAsset">
 		</app-assets>
 	</div>
-	<div *ngIf="view == 'swVersions'">
-		<app-software-versions (contactSupport)="openContactSupport()" [cxLevel]="cxLevel"></app-software-versions>
-	</div>
-	<div *ngIf="!view" class="dbl-margin-top text-center text-xlarge">
-		<span [innerText]="'_OsvNoAssets_' | i18n"></span>
-	</div>
+	<div class="min-height" *ngIf="view == 'swVersions'">
+		<app-software-versions 
+			[versionsCount]="dataCounts.versions"
+			(contactSupport)="openContactSupport()" 
+			[cxLevel]="cxLevel">
+		</app-software-versions>
+	</div>	
 </div>
 
 <ng-template #filterBar>
@@ -97,8 +100,7 @@
 		class="flex justify-content-around flex-column max-height">
 		<div 
 			class="row toggle text-small" 
-			(click)="selectView('swGroups')" 
-			*ngIf="filter.seriesData[0]?.profiles > 0"
+			(click)="selectView('swGroups')"			
 			[ngClass]="{'text-primary':view == 'swGroups','text-muted':view != 'swGroups'}"
 			data-auto-id="TotalVisualFilterSoftwareGroups">
 				<div class="col-6 text-right">
@@ -117,7 +119,6 @@
 				</div>
 		</div>
 		<div 
-			*ngIf="filter.seriesData[0]?.assets > 0"
 			class="row toggle text-small" 
 			[ngClass]="{'text-primary':view == 'assets','text-muted':view != 'assets'}"
 			(click)="selectView('assets')" 
@@ -140,8 +141,7 @@
 		</div>
 		<div 
 			class="row toggle text-small" 
-			(click)="selectView('swVersions')" 
-			*ngIf="filter.seriesData[0]?.versions > 0"
+			(click)="selectView('swVersions')" 			
 			[ngClass]="{'text-primary':view == 'swVersions','text-muted':view != 'swVersions'}"
 			data-auto-id="TotalVisualFilterSoftwareVersions">
 				<div class="col-6 text-right">

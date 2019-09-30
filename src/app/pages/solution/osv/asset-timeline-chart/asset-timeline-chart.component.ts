@@ -168,7 +168,7 @@ export class AssetTimelineChartComponent implements OnInit, OnChanges {
 			xAxis: {
 				lineColor: '#dfdfdf',
 				lineWidth: 1,
-				reversed: true,
+				reversed: false,
 				tickColor: '#dfdfdf',
 				tickInterval: (365 * 24 * 3600 * 1000) / 2,
 				tickLength: 10,
