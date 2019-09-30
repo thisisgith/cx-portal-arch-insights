@@ -33,18 +33,23 @@
 		</div>
 
 		<div class="row base-padding-top">
-			<div class="col-md-6">
-				<div *ngIf="rmaStrings?.length >= 1" class="dropdown">
-					<button data-auto-id="relatedRMA" class="btn btn--primary" (click)="toggleRMAList()"
-						[innerText]="'_RMACaseRelatedRMA_' | i18n:rmaStrings?.length"></button>
+			<div class="col-md-6 flex-center-vertical">
+				<div *ngIf="rmaStrings?.length >= 1"
+					class="dropdown dropdown--tail rma-toggle-btn"
+					(click)="toggleRMAList()"
+					[ngClass]="{
+						'active': isRMAClicked
+					}"
+					data-auto-id="relatedRMA">
+					<a class="text-uppercase" [innerText]="'_RMACaseRelatedRMA_' | i18n:rmaStrings?.length"></a>
 				</div>
 			</div>
 			<div class="col-md-6 text-right">
 				<button data-auto-id="CaseAttachFile"
-					class="btn btn--primary dbl-padding-left dbl-padding-right"
+					class="btn btn--primary text-uppercase dbl-padding-left dbl-padding-right"
 					[innerText]="'_RMACaseAttachFile_' | i18n" (click)="toggleAddFile()"></button>
 				<button data-auto-id="CaseAddNote"
-					class="btn btn--primary dbl-padding-left dbl-padding-right"
+					class="btn btn--primary text-uppercase dbl-padding-left dbl-padding-right"
 					[innerText]="'_RMACaseAddNote_' | i18n" (click)="toggleAddNote()"></button>
 			</div>
 		</div>

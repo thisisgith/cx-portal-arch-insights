@@ -22,6 +22,8 @@ import { MarshalTableData } from '../syslogs.utils';
 export class SyslogsDeviceDetailsComponent implements OnChanges, OnDestroy {
 	@ViewChild('recommendation', { static: true }) public recommendation: TemplateRef <{ }>;
 	@ViewChild('innerTableRef', { static: true }) public innerTableRef: TemplateRef<{ }>;
+	@ViewChild('messageType', { static: true }) public messageType: TemplateRef<{ }>;
+	@ViewChild('innerMessageType', { static: true }) public innerMessageType: TemplateRef<{ }>;
 	@Input('asset') public asset: any;
 	@Input('selectedFilter') public selectedFilter: any;
 	public tableOptions: CuiTableOptions;
@@ -164,8 +166,8 @@ export class SyslogsDeviceDetailsComponent implements OnChanges, OnDestroy {
 					name: I18n.get('_SyslogNumber_'),
 				},
 				{
-					key: 'SyslogMsgDesc',
 					name:  I18n.get('_Syslog_SyslogMessageText_'),
+					template: this.innerMessageType,
 				},
 				{
 					key: 'MessageCount',
@@ -185,9 +187,9 @@ export class SyslogsDeviceDetailsComponent implements OnChanges, OnDestroy {
 			bordered: false,
 			columns: [
 				{
-					key: 'MsgType',
 					name: I18n.get('_SyslogMessageGrid_'),
 					sortable: true,
+					template: this.messageType,
 				},
 				{
 					key: 'SyslogSeverity',

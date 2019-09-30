@@ -84,7 +84,13 @@
 	</div>
 	<ng-template #prodFamily let-celldata="celldata">
 		<div class="prodFamily" title="{{ celldata?.ProductFamily }}">
-			{{celldata?.ProductFamily}} </div>
+		<span [innerText]="celldata?.ProductFamily"></span> </div>
+
+	</ng-template>
+
+	<ng-template #prodId let-celldata="celldata">
+		<div title="{{ celldata?.ProductId }}">
+			<span [innerText]="celldata?.ProductId"></span> </div>
 
 	</ng-template>
 </div>
@@ -113,3 +119,7 @@
 	[limit]="tableConfig.tableLimit">
 	</cui-table>
 </ng-template>
+<ng-template #innerMessageType let-celldata="celldata">
+		<div title="{{ celldata?.SyslogMsgDesc }}">
+			<span [innerText]="celldata?.SyslogMsgDesc"></span> </div>
+			</ng-template>

@@ -7,9 +7,11 @@
 
 <div class="text-uppercase text-muted half-margin-top half-margin-bottom"><span [innerText]="'_SyslogFiltersBy_' | i18n"
 		class="text-large"></span></div>
-		<form #f="ngForm" class="row half-margin-bottom" id="searchForm" (keydown)="keyDownFunction($event)">
-			<div class="col-6">
-				<div class="form-group input--icon input--compressed">
+
+		<div class="flex col-md-12">
+					<form #f="ngForm" class="row" id="searchForm" (keydown)="keyDownFunction($event)">
+						<div class="flex col-md-12">
+				<div class="form-group input--icon input--compressed qtr-margin-right">
 					<div class="form-group__text">
 						<input 
 						data-auto-id="includeFilterId" 
@@ -25,9 +27,7 @@
 						</button>
 					</div>
 				</div>
-			</div>
-			<div class="col-6">
-				<div class="form-group input--icon input--compressed">
+				<div class="form-group input--icon input--compressed qtr-margin-right message-exclude">
 					<div class="form-group__text">
 						<input 
 						data-auto-id="excludeMsgId" 
@@ -44,9 +44,8 @@
 					</div>
 				</div>
 			</div>
-		</form>
-	<div class="row half-margin-top">
-		<div class="col-4">
+					</form>
+		<div class=" qtr-margin-right">
 			<cui-select 
 			data-auto-id="severity" 
 			label="{{ '_SyslogSeverity_' | i18n }}" 
@@ -59,7 +58,7 @@
 			optionsValue="value">
 			</cui-select>
 		</div>
-		<div class="col-4">
+		<div class="qtr-margin-right">
 			<cui-select 
 			data-auto-id="Catalog" 
 			label="{{ '_SyslogCatalog_' | i18n }}" 
@@ -72,7 +71,7 @@
 			optionsValue="value">
 			</cui-select>
 		</div>
-		<div class="col-4">
+		<div>
 			<cui-select 
 			data-auto-id="timeRange" 
 			label="{{ '_SyslogTimeRange_' | i18n }}" 
@@ -85,7 +84,7 @@
 			optionsValue="value">
 			</cui-select>
 		</div>
-	</div>
+		</div>
 	<div class="container base-margin-top" *ngIf="tableData?.length > 0">
 	<cui-table 
 	data-auto-id="tableData" 
@@ -103,6 +102,10 @@
 		</cui-pager>
 	</div>
 </div>
+<ng-template #messageType let-celldata="celldata">
+	<div title="{{ celldata?.MsgType }}">
+		<span [innerText]="celldata?.MsgType"></span></div>
+		</ng-template>
 <div *ngIf="!tableData?.length && !loading ">
 	<div class="text-center dbl-margin-top dbl-margin-bottom">
 		<div>
@@ -144,3 +147,7 @@
 <ng-template #recommendation>
 	<span [innerText]="'_SyslogViewDescriptionReccomendations_' | i18n"></span>
 </ng-template>
+<ng-template #innerMessageType let-celldata="celldata">
+		<div title="{{ celldata?.SyslogMsgDesc }}">
+			<span [innerText]="celldata?.SyslogMsgDesc"></span></div>
+			</ng-template>
