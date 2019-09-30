@@ -22,54 +22,6 @@
 		<div class="col-md-3">
 			<dl class="dl--inline-medium">
 				<dt>
-					<span class="subheading text-small text-uppercase" data-auto-id="contractType" [innerText]="'_Type_' | i18n"></span>
-				</dt>
-				<dd>
-					<span *ngIf="contractData?.cxLevel; else unavailable" data-auto-id="contractLevel" [innerText]="contractData.cxLevel"></span>
-					<span *ngIf="contractData?.cxLevel" class="qtr-margin-left icon-small icon-info-circle text-muted"
-						(mouseenter)="showCxInfo = true" (mouseleave)="showCxInfo = false"></span>
-					<div *ngIf="showCxInfo" class="toast toast--loose">
-						<div class="toast__body text-small">
-							<!-- TODO: Make toast body dynamic according to CX Level -->
-							<div class="toast__title">CX Level 2 Includes:</div>
-							<div class="toast__message">
-								<div>Ask the Expert Webinars</div>
-								<div>Access to Lifecycle Communities</div>
-								<div>24x7 Software Support (30 minute Critical Response)</div>
-								<div>24x7 Hardware Support (30 minute Response)</div>
-								<div>24x7 Solution Support (30 minute Response)</div>
-								<div>24x7x4hr RMAs</div>
-								<div>Access to CX Customer Portal including:</div>
-								<ul>
-									<li>Adoption view</li>
-									<li>Assets view</li>
-									<li>Rapid problem resolution</li>
-									<li>Personalized exposure checks</li>
-									<li>Case status</li>
-									<li>Case management KP eyes</li>
-									<li>Proactive notifications</li>
-								</ul>
-								<div>Access to e-learning courses</div>
-								<div>Remote practice labs</div>
-								<div>Certification prep</div>
-							</div>
-						</div>
-					</div>
-				</dd>
-				<dt>
-					<span class="subheading text-small text-uppercase"
-					data-auto-id="contractStart"
-					[innerText]="'_StartDate_' | i18n"></span>
-				</dt>
-				<dd>
-					<span *ngIf="contractData?.contractStartDate; else unavailable"
-						[innerText]="contractData.contractStartDate | date:'dd-MMM-y'"></span>
-				</dd>
-			</dl>
-		</div>
-		<div class="col-md-3">
-			<dl class="dl--inline-medium">
-				<dt>
 					<span class="subheading text-small text-uppercase"
 						data-auto-id="contractExpire"
 						[innerText]="'_ExpirationDate_' | i18n"></span>
@@ -92,6 +44,19 @@
 					<span *ngIf="coverageCount; else loadingCoveragesTemplate"
 						data-auto-id="contractAssetsCount"
 						[innerText]="coverageCount"></span>
+				</dd>
+			</dl>
+		</div>
+		<div class="col-md-3">
+			<dl class="dl--inline-medium">
+				<dt>
+					<span class="subheading text-small text-uppercase"
+					data-auto-id="contractStart"
+					[innerText]="'_StartDate_' | i18n"></span>
+				</dt>
+				<dd>
+					<span *ngIf="contractData?.contractStartDate; else unavailable"
+						[innerText]="contractData.contractStartDate | date:'dd-MMM-y'"></span>
 				</dd>
 			</dl>
 		</div>
