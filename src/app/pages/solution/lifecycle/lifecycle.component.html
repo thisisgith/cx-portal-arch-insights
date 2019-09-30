@@ -453,7 +453,7 @@
 						[ngClass]="{ 'active': sessionSelected?.sessionStartDate === session.sessionStartDate }">
 						<td class="text-xsmall"
 							[ngClass]="session.scheduled ? 'text-bold' : null"
-							innerText="{{session.sessionStartDate | date:'longDate'}}"></td>
+							innerText="{{session.sessionStartDate | date:'EEE MMM d, y'}}"></td>
 						<td class="text-xsmall"
 							[ngClass]="session.scheduled ? 'text-bold' : null"
 							innerText="{{session.sessionStartDate | date:'shortTime'}}"></td>
