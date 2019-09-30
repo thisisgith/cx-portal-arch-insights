@@ -62,6 +62,7 @@ import {
 	SoftwareEOLBulletinScenarios,
 	SoftwareEOLScenarios,
 	SuccessPathScenarios,
+	SyslogScenarios,
 	VulnerabilityScenarios,
 	InsightsScenarios,
 } from './';
@@ -292,6 +293,7 @@ export const mockSettings: MockSettings = {
 		SoftwareEOLBulletinScenarios,
 		SoftwareEOLScenarios,
 		SuccessPathScenarios,
+		SyslogScenarios,
 		VulnerabilityScenarios,
 		InsightsScenarios,
 	]),
