@@ -22,7 +22,7 @@ export const environment = {
 	},
 	baseHref: '/pbc/',
 	emailToID: 'cx-portal-support-nonprod@cisco.com',
-	feedbackToEmail: 'cxpm-feedback@cisco.com',
+	feedbackToEmail: 'cxportal-feedback@cisco.com',
 	ieSetup: {
 		asdAuthURL: 'https://cway.cisco.com/ws/oauth/v3/token/cisco/ae95x38c7zgu5fas59gseyfk',
 		asdBaseURL: 'https://api.cisco.com/software/preview/v3.0',
