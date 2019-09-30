@@ -121,8 +121,9 @@
 <ng-template #severityTmpl let-item="celldata">
 	<span [attr.data-balloon]="getSeverityDescr(item['priority'])" data-balloon-pos="right">
 		<span data-auto-id="severityValue">
-			<span class="icon-circle icon-small"
-				data-auto-id="severityIcon" [ngClass]="getSeverityColor(item['priority'])"></span> S{{item["priority"]}}</span>
+			<span class="icon-circle icon-small" data-auto-id="severityIcon" [ngClass]="getSeverityColor(item['priority'])" ></span>
+			<span [innerText]="' S'+item['priority']"></span>
+		</span>
 	</span>
 </ng-template>
 
