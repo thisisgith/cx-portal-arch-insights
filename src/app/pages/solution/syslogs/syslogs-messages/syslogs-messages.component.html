@@ -53,7 +53,7 @@
 	</div>
 
 </div>
-<div class="container base-margin-top" data-auto-id="syslog-message-table" *ngIf="tableData.length">
+<div class="container base-margin-top" data-auto-id="syslog-message-table" *ngIf="tableData.length && !loading">
 	<cui-table
 		class="not-close-360"
 		[options]="tableOptions"
@@ -62,11 +62,9 @@
 		[offset]="tableOffset"
 		(onSortingChanged)="onTableSortingChanged($event)"
 		(onTableRowClicked)="onTableRowSelection($event)"
-		*ngIf="!loading"
 	></cui-table>
 	<div class="section">
 		<cui-pager
-			*ngIf="tableData.length"
 			[page]="tableOffset"
 			[limit]="tableLimit"
 			[totalItems]="totalItems"
@@ -74,7 +72,13 @@
 		></cui-pager>
 	</div>
 </div>
-<div *ngIf="!tableData.length">
+<div class="container qtr-margin-top no-padding">
+	<div *ngIf="loading && !tableData.length" class="base-margin-bottom">
+		<cui-spinner></cui-spinner>
+	</div>
+</div>
+
+<div *ngIf="!tableData.length && !loading">
 	<div class="text-center dbl-margin-top dbl-margin-bottom">
 		<div>
 			<span class="text-muted text-xlarge"
