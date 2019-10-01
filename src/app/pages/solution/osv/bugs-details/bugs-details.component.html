@@ -192,3 +192,14 @@
 		</div>
 	</div>
 </ng-template>
+
+<ng-template #bugTitleTemp let-item="celldata">
+	<div class="title" [ngClass]="{'fullscreen':fullscreen}">
+		<span  [title]="item.title" [innerText]="item.title"></span>
+	</div>
+</ng-template>
+
+<ng-template #bugIdTemp let-item="celldata">		
+	<span  [title]="item.id" [innerText]="item.id"></span>
+	<span class="text-primary icon-popout icon-small qtr-margin-left"></span>
+</ng-template>

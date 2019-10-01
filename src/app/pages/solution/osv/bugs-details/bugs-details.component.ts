@@ -43,6 +43,10 @@ export class BugsDetailsComponent implements OnInit {
 		public impactTemp: TemplateRef<{ }>;
 	@ViewChild('titleTemp', { static: true })
 		public titleTemp: TemplateRef<{ }>;
+	@ViewChild('bugIdTemp', { static: true })
+		public bugIdTemp: TemplateRef<{ }>;
+	@ViewChild('bugTitleTemp', { static: true })
+		public bugTitleTemp: TemplateRef<{ }>;
 
 	public filters: Filter[];
 	public status = {
@@ -101,13 +105,14 @@ export class BugsDetailsComponent implements OnInit {
 						key: 'id',
 						name: I18n.get('_OsvBugId_'),
 						sortable: true,
+						template: this.bugIdTemp,
 						width: '15%',
 					},
 					{
 						key: 'title',
 						name: I18n.get('_Title_'),
 						sortable: false,
-						template: this.titleTemp,
+						template: this.bugTitleTemp,
 						width: '65%',
 					},
 					{
