@@ -11,7 +11,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { MicroMockModule } from '@cui-x-views/mock';
 import { environment } from '@environment';
 import { ActivatedRoute } from '@angular/router';
-import { user, ArchitectureReviewScenarios } from '@mock';
+import { user } from '@mock';
 import { HttpErrorResponse } from '@angular/common/http';
 
 describe('ArchitectureReviewComponent', () => {
@@ -226,24 +226,15 @@ describe('ArchitectureReviewComponent', () => {
 			.toHaveBeenCalled();
 	}));
 
-	it('should call getDevicesCount on init', fakeAsync(() => {
-		spyOn(service, 'getDevicesCount')
-			.and
-			.returnValue(of(ArchitectureReviewScenarios[0]
-				.scenarios.GET[0].response.body.TotalCounts));
-
-		spyOn(service, 'getDnacCount')
-			.and
-			.returnValue(of(ArchitectureReviewScenarios[0]
-				.scenarios.GET[0].response.body.TotalCounts));
-
+	it('should call getAllDevicesCount and getDnacCount on init', () => {
+		spyOn(component, 'getAllDevicesCount');
+		spyOn(component, 'getDnacCount');
 		component.ngOnInit();
-		tick();
-		expect(service.getDevicesCount)
+		expect(component.getAllDevicesCount)
 			.toHaveBeenCalled();
-		expect(service.getDnacCount)
+		expect(component.getDnacCount)
 			.toHaveBeenCalled();
-	}));
+	});
 
 	it('should throw errors', fakeAsync(() => {
 		const error = {
