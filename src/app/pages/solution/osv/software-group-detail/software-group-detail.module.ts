@@ -19,6 +19,7 @@ import {
 import {
 	CompareRecommendationsModule,
 } from '../compare-recommendations/compare-recommendations.module';
+import { BugsDetailsModule } from '../bugs-details/bugs-details.module';
 
 /**
  * SoftwareGroupDetail Module
@@ -41,6 +42,7 @@ import {
 		DetailsPanelModule,
 		SoftwareGroupRecommendationsModule,
 		CompareRecommendationsModule,
+		BugsDetailsModule,
 	],
 })
 export class SoftwareGroupDetailModule { }
