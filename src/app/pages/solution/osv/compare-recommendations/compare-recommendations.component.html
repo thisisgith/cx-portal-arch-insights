@@ -88,8 +88,8 @@
 				</td>
 			</tr>
 			<!-- bugs -->
-			<tr>
-				<td class=" first-column-width headingClass no-border-bottom no-border-top text-large"
+			<tr (click)="showDetailsView('bug')" data-auto-id="ShowBugDetails">
+				<td class=" first-column-width headingClass no-border-bottom no-border-top text-large  text-primary"
 					[innerText]="'_Bugs_' | i18n">
 				</td>
 				<td class="recommendation-current">
@@ -139,8 +139,8 @@
 				</td>
 			</tr>
 			<!-- security advisories -->
-			<tr>
-				<td class=" first-column-width headingClass no-border-bottom no-border-top text-large"
+			<tr data-auto-id="ShowPsirtDetails" (click)="showDetailsView('psirt')">
+				<td class=" first-column-width headingClass no-border-bottom no-border-top text-large text-primary"
 					[innerText]="'_SecurityAdvisories_' | i18n">
 				</td>
 				<td class="recommendation-current">

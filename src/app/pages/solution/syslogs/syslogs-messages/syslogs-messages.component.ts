@@ -69,7 +69,10 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 			catalog: 'Cisco',
 			customerId: this.customerId,
 			days: 1,
+			excludeMsgType: this.msgExclude,
+			includeMsgType: this.msgInclude,
 			pageNo: this.pageNum,
+			search: this.searchVal,
 			severity: 3,
 			size: this.pageLimit,
 		};
@@ -189,13 +192,14 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 				if (this.tableEndIndex > this.totalItems) {
 					this.tableEndIndex = this.totalItems;
 				}
+				this.loading = false;
 			}, catchError(err => {
+				this.loading = false;
 				this.logger.error('syslogs-details.component : getDeviceGridData() ' +
 					`:: Error : (${err.status}) ${err.message}`);
 
 				return of({ });
 			}));
-		this.loading = false;
 	}
 
 	/**
