@@ -175,7 +175,7 @@ describe('SyslogsMessagesComponent', () => {
 		const event = { keyCode: 10 };
 		component.searchAll(event.keyCode);
 		expect(component.syslogsParams.search)
-			.toBeUndefined();
+			.toEqual('');
 	});
 	it('should get reset selected table row data', () => {
 		fixture.detectChanges();

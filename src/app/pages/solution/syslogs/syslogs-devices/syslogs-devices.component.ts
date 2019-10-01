@@ -82,6 +82,7 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 			customerId: this.customerId,
 			days: 1,
 			pageNo: this.pageNum,
+			search: this.searchVal,
 			severity: 3,
 			size: this.pagerLimit,
 		};
@@ -163,6 +164,8 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 	 * Gets asset data
 	 */
 	public getAssetData () {
+		this.tableData = [];
+		this.loading = true;
 		this.gridSubscripion = this.syslogsService
 			.getDeviceGridData(this.syslogsParams)
 			.pipe(
@@ -181,8 +184,10 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 				if (this.tableEndIndex > this.totalItems) {
 					this.tableEndIndex = this.totalItems;
 				}
+				this.loading = false;
 			},
 			catchError(err => {
+				this.loading = false;
 				this.logger.error('syslogs-devices.component : getDeviceGridData() ' +
 					`:: Error : (${err.status}) ${err.message}`);
 
