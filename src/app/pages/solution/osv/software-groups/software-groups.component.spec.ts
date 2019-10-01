@@ -32,6 +32,7 @@ describe('SoftwareGroupsComponent', () => {
 		fixture = TestBed.createComponent(SoftwareGroupsComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
+		component.softwareGroupsCount = 1;
 		osvService = TestBed.get(OSVService);
 	});
 

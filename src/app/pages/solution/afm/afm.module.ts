@@ -13,10 +13,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AfmComponent } from './afm.component';
 import { AfmModule } from '@sdp-api';
 import { environment } from '@environment';
-import { DetailsPanelModule } from 'src/app/components/details/panel/details-panel.module';
-import { AssetDetailsModule } from '../../../components/details/asset/asset-details.module';
-import { AssetDetailsHeaderModule } from '../../../components/details/asset/header/header.module';
-import { ColumnChartModule, VisualFilterBarModule } from '@components';
+import {
+	ColumnChartModule,
+	VisualFilterBarModule,
+	AssetDetailsModule,
+	DetailsPanelModule,
+} from '@components';
 import { AfmDetailsModule } from './afm-details/afm-details.module';
 import { InsightTabsModule } from 'src/app/components/insight-tabs/insight-tabs.module';
 
@@ -52,7 +54,6 @@ const childRoutes: Routes = [
 		AfmModule.forRoot({ rootUrl }),
 		DetailsPanelModule,
 		AssetDetailsModule,
-		AssetDetailsHeaderModule,
 		ColumnChartModule,
 		AfmDetailsModule,
 		VisualFilterBarModule,

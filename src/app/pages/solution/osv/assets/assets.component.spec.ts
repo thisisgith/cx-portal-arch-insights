@@ -34,6 +34,7 @@ describe('AssetsComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(AssetsComponent);
 		component = fixture.componentInstance;
+		component.assetsCount = 1;
 		fixture.detectChanges();
 	});
 
