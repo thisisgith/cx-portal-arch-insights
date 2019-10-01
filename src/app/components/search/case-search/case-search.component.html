@@ -64,8 +64,9 @@
 							data-auto-id="caseDevice" [innerText]="'_Device_' | i18n"></span>
 					</dt>
 					<dd>
-						<span *ngIf="case?.hostName; else loadingHardwareTemplate"
-							[innerText]="case.hostName"></span>
+						<a data-auto-id="DeviceLink" *ngIf="case?.hostName; else loadingHardwareTemplate"
+							(click)="openAssetDetailsView();" [innerText]="case?.hostName">
+						</a> 
 					</dd>
 					<dt>
 						<span class="subheading text-small text-uppercase"

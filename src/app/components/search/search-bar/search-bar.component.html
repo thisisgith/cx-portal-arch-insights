@@ -21,7 +21,7 @@
 	<div class="dropdown active"
 		*ngIf="typeaheadItems && typeaheadItems.length">
 		<div class="dropdown__menu">
-			<a	*ngFor="let item of typeaheadItems"
+			<a	*ngFor="let item of typeaheadItems" class="cx-search-bar-word-break"
 				[ngClass]="{'keyboard-hover': item.keyHover}"
 				(click)="onSearchSelect(item.name, true)"
 				data-auto-id="searchBarTypeAhead">

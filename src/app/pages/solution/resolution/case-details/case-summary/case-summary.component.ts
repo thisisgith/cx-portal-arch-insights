@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 /**
  * Case Details Summary Component
@@ -11,4 +11,14 @@ import { Component, Input } from '@angular/core';
 
 export class CaseSummaryComponent {
 	@Input() public caseDetails: any;
+	@Output() public showAssetDetails: EventEmitter<{ }> = new EventEmitter<{ }>();
+
+	/**
+	 * Used for Opening the Asset 360 View the data
+	 */
+	public openAssetDetailsView () {
+		if (this.caseDetails && this.caseDetails.serialNumber) {
+			this.showAssetDetails.emit({ serialNumber: this.caseDetails.serialNumber });
+		}
+	}
 }

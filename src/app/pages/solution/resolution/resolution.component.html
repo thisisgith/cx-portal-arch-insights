@@ -5,7 +5,8 @@
 		</app-case-details-header>
 	</details-panel-header>
 	<app-case-details [case]="selectedCase"
-		[(caseDetails)]="selectedDetails">
+		[(caseDetails)]="selectedDetails"
+		(showAssetDetails)="showAssetDetails($event)">
 	</app-case-details>
 </details-panel>
 
@@ -127,7 +128,11 @@
 	</span>
 </ng-template>
 
-<ng-template #updatedTmpl let-item="celldata"><span [innerText]="item['lastModifiedDate'] | fromNow"></span></ng-template>
+<ng-template #updatedTmpl let-item="celldata">
+	<span [attr.data-balloon]="item['lastModifiedDate'] | dateTime" data-balloon-pos="left">
+		<span [innerText]="item['lastModifiedDate'] | fromNow"></span>
+	</span>
+</ng-template>
 
 <ng-template #rmasTmpl let-item="celldata">
 	<span *ngIf="item['rmaNumber']" [attr.data-balloon]="'_RMACaseAssociatedRMAs_' | i18n:item['rmaNumber'].length" data-balloon-pos="right">
@@ -165,3 +170,12 @@
 		[seriesData]="filter.seriesData" (subfilter)="onSubfilterSelect($event.label, filter)">
 	</bar-chart>
 </ng-template>
+
+<!-- Fly-Out View Slide-out on Selection of Title -->
+<asset-details
+	*ngIf= "showAsset360"
+	[asset]="assetLinkInfo?.asset"
+	[serialNumber]="serialNumber"
+	[element]="assetLinkInfo?.element"
+	(close)="showAsset360 = false">
+</asset-details>

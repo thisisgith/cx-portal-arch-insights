@@ -12,11 +12,13 @@ import { SearchEnum } from '@interfaces';
 
 import * as enUSJson from '../../../assets/i18n/en-US.json';
 import { of } from 'rxjs';
+import { AssetPanelLinkService } from '@services';
 
 describe('SearchComponent', () => {
 	let component: SearchComponent;
 	let fixture: ComponentFixture<SearchComponent>;
 	let caseService: CaseService;
+	let assetService: AssetPanelLinkService;
 
 	configureTestSuite(() => {
 		TestBed.configureTestingModule({
@@ -30,7 +32,7 @@ describe('SearchComponent', () => {
 
 	beforeEach(() => {
 		I18n.injectDictionary(enUSJson);
-
+		assetService = TestBed.get(AssetPanelLinkService);
 		fixture = TestBed.createComponent(SearchComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
@@ -185,6 +187,19 @@ describe('SearchComponent', () => {
 		fixture.detectChanges();
 		expect(component.status.hidden)
 			.toBeTruthy();
+	});
+
+	it('should open asset view upon click on the asset label', () => {
+		const params = {
+			customerId: '2431199',
+			serialNumber: ['FCH2139V1B0'],
+		};
+		spyOn(assetService, 'getAssetLinkData')
+			.and
+			.returnValue(of({ }));
+		component.showAssetDetails(params);
+		expect(assetService.getAssetLinkData)
+			.toHaveBeenCalled();
 	});
 
 });
