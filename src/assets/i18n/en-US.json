@@ -922,6 +922,8 @@
 	"_RMACaseOwnerEmail_": "Case Owner",
 	"_RMACaseProblemType_": "Problem Type",
 	"_RMACaseRelatedRMA_": "Related RMAs ({0})",
+	"_RMACaseRMAs_": "RMAs",
+	"_RMACaseAssociatedRMAs_": "{0} Associated RMA(s)",
 	"_RMACaseSeverity_": "Severity",
 	"_RMACaseSoftwareVersion_": "Software Version",
 	"_RMACaseStatus_": "Status",
