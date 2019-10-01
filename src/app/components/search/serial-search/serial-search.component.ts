@@ -32,6 +32,7 @@ import { SearchService } from '@services';
 import { SpecialSearchComponent } from '../special-search/special-search.component';
 import { CaseOpenComponent } from '../../case/case-open/case-open.component';
 import { SearchQuery } from '@interfaces';
+import { CoverageStatusPipe, CoverageType } from '@pipes';
 
 import * as _ from 'lodash-es';
 import { UserResolve } from '@utilities';
@@ -59,6 +60,7 @@ interface ContractData {
 	contractNum?: number;
 	cxLevel?: string;
 	expirationDate?: string;
+	coverageStatus?: CoverageType;
 }
 
 /**
@@ -113,6 +115,7 @@ implements OnInit, OnChanges, OnDestroy {
 	constructor (
 		private caseService: CaseService,
 		private contractService: ContractsService,
+		private coveragePipe: CoverageStatusPipe,
 		private cuiModalService: CuiModalService,
 		private logger: LogService,
 		private searchService: SearchService,
@@ -187,6 +190,9 @@ implements OnInit, OnChanges, OnDestroy {
 			this.loadingContract = false;
 			this.contractData = {
 				contractNum: _.get(response, ['data', 0, 'contractNumber'], null),
+				coverageStatus: this.coveragePipe.transform(
+					_.get(response, ['data', 0, 'contractEndDate'], null),
+				),
 				cxLevel: _.get(response, ['data', 0, 'cxLevel'], null),
 				expirationDate: _.get(response, ['data', 0, 'contractEndDate'], null),
 			};
