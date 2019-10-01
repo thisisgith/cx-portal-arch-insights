@@ -89,6 +89,8 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 
 	public recommendationAcceptedDate: string;
 	public actionData: any;
+	public showDetails = false;
+	public detailsParams: any;
 
 	constructor (
 		private logger: LogService,
@@ -126,6 +128,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	 * Initialization hook
 	 */
 	public ngOnInit (): void {
+		this.showDetails = false;
 		this.refresh();
 	}
 
@@ -306,6 +309,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	 * OnDestroy lifecycle hook
 	 */
 	public ngOnDestroy () {
+		this.showDetails = false;
 		this.destroy$.next();
 		this.destroy$.complete();
 	}
@@ -315,6 +319,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	 * @param changes the changes detected
 	 */
 	public ngOnChanges (changes: SimpleChanges) {
+		this.showDetails = false;
 		const currentSelectedGroup = _.get(changes, ['selectedSoftwareGroup', 'currentValue']);
 		const isFirstChange = _.get(changes, ['selectedSoftwareGroup', 'firstChange']);
 		const currentTabIndex = _.get(changes, ['tabIndex', 'currentValue']);
@@ -598,5 +603,21 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 		_.map(response.recommendationSummaries, recommendation => {
 			recommendation.profileRisk = response.profileRisk;
 		});
+	}
+
+	/**
+	 * show Bug and Psirt Details
+	 * @param details details emitted for showing bug details
+	 */
+	public showDetailsView (details: any) {
+		this.detailsParams = details;
+		this.showDetails = true;
+	}
+
+	/**
+	 * hide Bug and Psirt Details
+	 */
+	public hideDetailsView () {
+		this.showDetails = false;
 	}
 }
