@@ -400,7 +400,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 					},
 				],
 				key: 'bug',
-				label: I18n.get('_CriticalBugs_'),
+				label: I18n.get('_PriorityBugs_'),
 				loading: true,
 				options: new CuiTableOptions({
 					bordered: true,

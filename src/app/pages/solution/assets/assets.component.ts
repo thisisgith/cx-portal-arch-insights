@@ -26,6 +26,7 @@ import {
 	ScanRequestResponse,
 	NetworkElementResponse,
 	NetworkElement,
+	TransactionStatusResponse,
 } from '@sdp-api';
 import * as _ from 'lodash-es';
 import { CuiModalService, CuiTableOptions } from '@cisco-ngx/cui-components';
@@ -830,7 +831,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				if (bugs) {
 					series.push({
 						filter: 'hasBugs',
-						label: I18n.get('_Bugs_'),
+						label: I18n.get('_PriorityBugs_'),
 						selected: false,
 						value: bugs,
 					});
@@ -1013,6 +1014,25 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				return of({ });
 			}),
 		);
+	}
+
+	/**
+	 * Will handle reloading data if our scan request has completed
+	 * @param transaction the transaction status of the completed or failed scan
+	 */
+	public handleScanStatus (transaction: TransactionStatusResponse) {
+		if (transaction.status === 'SUCCESS') {
+			forkJoin(
+				this.getAdvisoryCount(),
+				this.fetchInventory(),
+			)
+			.subscribe(() => {
+				const currentSerial = _.get(this.selectedAsset, ['data', 'serialNumber']);
+				const refreshed = _.find(this.inventory, (i: Item) =>
+					_.get(i, ['data', 'serialNumber']) === currentSerial);
+				this.onRowSelect(refreshed);
+			});
+		}
 	}
 
 	/**
