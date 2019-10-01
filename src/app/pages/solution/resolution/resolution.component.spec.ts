@@ -13,12 +13,14 @@ import { ResolutionModule } from './resolution.module';
 import { CaseScenarios } from '@mock';
 
 import * as _ from 'lodash-es';
+import { AssetPanelLinkService } from '@services';
 
 describe('ResolutionComponent', () => {
 	let service: CaseService;
 	let component: ResolutionComponent;
 	let fixture: ComponentFixture<ResolutionComponent>;
 	let router: Router;
+	let assetService: AssetPanelLinkService;
 
 	configureTestSuite(() => {
 		TestBed.configureTestingModule({
@@ -32,6 +34,7 @@ describe('ResolutionComponent', () => {
 
 	beforeEach(() => {
 		service = TestBed.get(CaseService);
+		assetService = TestBed.get(AssetPanelLinkService);
 		spyOn(service, 'read')
 			.and
 			.returnValue(of(CaseScenarios[4].scenarios.GET[0].response.body));
@@ -347,4 +350,17 @@ describe('ResolutionComponent', () => {
 
 		flush();
 	}));
+
+	it('should open asset view upon click on the asset label', () => {
+		const params = {
+			customerId: '2431199',
+			serialNumber: ['FCH2139V1B0'],
+		};
+		spyOn(assetService, 'getAssetLinkData')
+			.and
+			.returnValue(of({ }));
+		component.showAssetDetails(params);
+		expect(assetService.getAssetLinkData)
+			.toHaveBeenCalled();
+	});
 });

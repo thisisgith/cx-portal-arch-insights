@@ -69,3 +69,11 @@ a {
 	height: 32px;
 	width: 32px;
 }
+
+.cx-search-bar-word-break {
+	height: auto !important;
+	padding: 6px 40px 6px 10px !important;
+	line-height: 23px !important;
+	white-space: normal !important;
+	word-break: break-word;
+}

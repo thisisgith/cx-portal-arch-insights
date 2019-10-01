@@ -30,6 +30,7 @@ export class CaseDetailsComponent implements OnInit, OnDestroy {
 	@Input() public case: Case;
 	@Input() public caseDetails: CaseDetails;
 	@Output() public caseDetailsChange = new EventEmitter<CaseDetails>();
+	@Output() public showAssetDetails: EventEmitter<{ }> = new EventEmitter<{ }>();
 
 	public caseNotes: any[];
 	public caseFiles: any;
@@ -176,6 +177,13 @@ export class CaseDetailsComponent implements OnInit, OnDestroy {
 					return of({ });
 				}),
 			);
+	}
+
+	/**
+	 * Used for Opening the Asset 360 View
+	 */
+	public showAssetDetailsView () {
+		this.showAssetDetails.emit({ serialNumber : this.caseDetails.serialNumber });
 	}
 
 	/**
