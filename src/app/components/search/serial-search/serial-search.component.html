@@ -47,6 +47,11 @@
 					</dt>
 					<dd>
 						<span *ngIf="contractData?.expirationDate; else loadingContractTemplate"
+							[ngClass]="{
+								'text-danger': (contractData?.coverageStatus === 'expired'),
+								'text-warning': (contractData?.coverageStatus === 'overdue'),
+								'text-success': (contractData?.coverageStatus === 'covered')
+							}"
 							[innerText]="(contractData.expirationDate | date:'dd-MMM-y') +
 							' (' + (contractData.expirationDate | fromNow) + ')'"></span>
 					</dd>
@@ -184,7 +189,7 @@
 				<button class="btn btn--small btn--secondary text-uppercase" data-auto-id="viewDeviceButton"
 					(click)="onViewDetails(serialNumber.query)" [innerText]="'_ViewDeviceDetails_' | i18n"></button>
 				<button class="btn btn--small btn--secondary text-uppercase" data-auto-id="openCaseButton"
-					*ngIf="assetData?.supportCovered"
+					*ngIf="assetData | canOpenCase:contractData?.expirationDate"
 					[innerText]="'_OpenACase_' | i18n"
 					(click)="openCase(assetData)"></button>
 		</div>
