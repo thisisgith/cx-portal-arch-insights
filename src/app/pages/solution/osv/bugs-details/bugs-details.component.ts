@@ -197,14 +197,14 @@ export class BugsDetailsComponent implements OnInit {
 
 			const offset = _.get(recommendation, ['params', 'offset']);
 			let first = (this.numberOfRows * ((offset + 1) - 1)) + 1;
-			if (data.length == 0) {
+			if (data.length === 0) {
 				first = 0;
 			}
 			let last = (this.numberOfRows * (offset + 1));
 			if (last > data.length) {
 				last = data.length;
 			}
-			_.set(recommendation, 'total', data.length);			
+			_.set(recommendation, 'total', data.length);
 			_.set(recommendation, 'paginationCount', `${first} - ${last}`);
 		});
 	}
@@ -418,7 +418,7 @@ export class BugsDetailsComponent implements OnInit {
 	 * set the filters are part of query params
 	 * @param recommendation current filters selected by customer
 	 */
-	public setFilter (recommendation) { 
+	public setFilter (recommendation) {
 		this.status.isFiltering = true;
 		const actualData = _.cloneDeep(_.get(_.filter(this.data,
 			(recomm: MachineRecommendations) => recomm.name === recommendation.name), 0));
