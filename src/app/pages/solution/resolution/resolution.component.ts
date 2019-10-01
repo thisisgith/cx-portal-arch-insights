@@ -213,7 +213,7 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 					autoIdHeader: 'Device-Header',
 					key: 'deviceName',
 					name: I18n.get('_RMACaseDevice_'),
-					sortable: true,
+					sortable: false,
 				},
 				{
 					autoIdHeader: 'Summary-Header',
