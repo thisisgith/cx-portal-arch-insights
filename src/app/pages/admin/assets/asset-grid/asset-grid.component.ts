@@ -10,7 +10,6 @@ import * as _ from 'lodash-es';
  */
 @Component({
 	selector: 'asset-grid',
-	styleUrls: ['./asset-grid.component.scss'],
 	templateUrl: './asset-grid.component.html',
 })
 export class AssetGridComponent implements OnDestroy {

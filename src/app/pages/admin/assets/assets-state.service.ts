@@ -23,7 +23,7 @@ export interface AssetStateChanges {
 	providedIn: 'root',
 })
 export class AssetsState {
-	private _assets: { data: DeviceDetailsByPage }[]; // TODO update the type here
+	private _assets: { data: DeviceDetailsByPage }[];
 	private _displayedAssets = 0;
 	private _filter: string;
 	private _isLoadingAssets: boolean;
@@ -79,7 +79,7 @@ export class AssetsState {
 		this._totalAssets = totalAssets;
 		this.changes.next({ totalAssets });
 	}
-	public get view () { return this.view; }
+	public get view () { return this._view; }
 	public set view (view) {
 		this._view = view;
 		this.changes.next({ view });

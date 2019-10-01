@@ -1,5 +1,5 @@
 import { fakeAsync, TestBed, tick, inject } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AssetsState } from './assets-state.service';
 
 describe('AssetsStateService', () => {
@@ -16,7 +16,7 @@ describe('AssetsStateService', () => {
 		expect(service)
 			.toBeTruthy();
 	}));
-	
+
 	it('should send current state', inject([AssetsState], (service: AssetsState) => {
 		expect(service.currentState.displayedAssets)
 			.toBe(0);
@@ -90,5 +90,6 @@ describe('AssetsStateService', () => {
 			.toBe('table');
 		expect(service.view)
 			.toBe('table');
+		updateSub.unsubscribe();
 	})));
 });
