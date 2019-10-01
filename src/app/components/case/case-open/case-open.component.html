@@ -90,7 +90,7 @@
 					<div class="flex flex-row dbl-margin-top">
 						<!-- Button to expand the initial form -->
 						<button *ngIf="!expand"
-							class="btn btn--primary btn--small half-margin-right"
+							class="cx-btn btn--small half-margin-right"
 							data-auto-id="CaseOpenNextButton"
 							[ngClass]="{ 'disabled': caseForm.controls.title.invalid || caseForm.controls.description.invalid || contractLoading }"
 							type="button"
@@ -99,14 +99,14 @@
 						</button>
 						<!-- Button after it's expanded, to submit the form -->
 						<button *ngIf="expand"
-							class="btn btn--primary btn--small half-margin-right"
+							class="cx-btn btn--small half-margin-right"
 							data-auto-id="CaseOpenSubmitButton"
 							[ngClass]="{ 'disabled': caseForm.invalid }"
 							type="button"
 							[innerText]="'_Submit_' | i18n"
 							(click)="submit()">
 						</button>
-						<button class="btn btn--secondary btn--small"
+						<button class="cx-btn cx-btn--primary btn--small"
 							data-auto-id="CaseOpenCancelButton"
 							type="button"
 							[innerText]="'_Cancel_' | i18n"

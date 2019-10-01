@@ -113,9 +113,12 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		validACCItems.forEach((acc, index) => {
 			cy.getByAutoId('ACCCard').eq(index).within(() => {
 				if (acc.status === 'recommended') {
-					cy.getByAutoId('ACCCardHeader').should('have.class', 'text-dkgray-4');
+					cy.getByAutoId('ACCCardHeader')
+						.should('exist')
+						.and('have.text', i18n._Recommended_);
+					cy.getByAutoId('ACCCard-Flag').should('exist');
 				} else {
-					cy.getByAutoId('ACCCardHeader').should('have.class', 'text-clear');
+					cy.getByAutoId('ACCCardHeader').should('not.exist');
 				}
 				cy.getByAutoId('ACCCardTitle').should('have.text', acc.title);
 				cy.getByAutoId('ACCCardDescription')
@@ -961,7 +964,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				cy.getByAutoId('accRequestModal-TimeZone-Select').select(i18n['_EasternTime/US_']);
 				cy.getByAutoId('accRequestModal-PreferredTimeMeeting-Morning').click({ force: true });
 				cy.getByAutoId('accRequestModal-LanguagePreference-Select').select(i18n._English_);
-				cy.getByAutoId('accRequestModal-DNACVersion-Select').select('1.20');
+				cy.getByAutoId('accRequestModal-DNACVersion-Select').select('1.2.X');
 				cy.getByAutoId('accRequestModal-WhyInterestedAccelerator-Input').type('Automation - Test Interest');
 				cy.getByAutoId('accRequestModal-WhatWouldLikeToSeeOutcome-Input').type('Automation - Test Outcome');
 				cy.getByAutoId('accRequestModal-PreferredEnvironmentAccelerator-NonProd').click();
@@ -997,7 +1000,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 					.invoke('val', '')
 					.trigger('change');
 				cy.getByAutoId('accRequestModal-Submit').should('be.disabled');
-				cy.getByAutoId('accRequestModal-DNACVersion-Select').select('1.20');
+				cy.getByAutoId('accRequestModal-DNACVersion-Select').select('1.2.X');
 				cy.getByAutoId('accRequestModal-Submit').should('be.enabled');
 
 				cy.getByAutoId('accRequestModal-WhyInterestedAccelerator-Input').clear();
@@ -1042,7 +1045,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				cy.getByAutoId('accRequestModal-NumberOfAttendees-Select').select('1');
 				cy.getByAutoId('accRequestModal-TimeZone-Select').select(i18n['_EasternTime/US_']);
 				cy.getByAutoId('accRequestModal-LanguagePreference-Select').select(i18n._English_);
-				cy.getByAutoId('accRequestModal-DNACVersion-Select').select('1.20');
+				cy.getByAutoId('accRequestModal-DNACVersion-Select').select('1.2.X');
 				cy.getByAutoId('accRequestModal-WhyInterestedAccelerator-Input').type('Automation - Test Interest');
 				cy.getByAutoId('accRequestModal-WhatWouldLikeToSeeOutcome-Input').type('Automation - Test Outcome');
 
@@ -1075,7 +1078,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				cy.getByAutoId('accRequestModal-PreferredTimeMeeting-Morning')
 					.click({ force: true });
 				cy.getByAutoId('accRequestModal-LanguagePreference-Select').select(i18n._English_);
-				cy.getByAutoId('accRequestModal-DNACVersion-Select').select('1.20');
+				cy.getByAutoId('accRequestModal-DNACVersion-Select').select('1.2.X');
 				cy.getByAutoId('accRequestModal-WhyInterestedAccelerator-Input').type('Automation - Test Interest');
 				cy.getByAutoId('accRequestModal-WhatWouldLikeToSeeOutcome-Input').type('Automation - Test Outcome');
 				cy.getByAutoId('accRequestModal-PreferredEnvironmentAccelerator-NonProd').click();
@@ -1124,7 +1127,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				cy.getByAutoId('accRequestModal-PreferredTimeMeeting-Morning')
 					.click({ force: true });
 				cy.getByAutoId('accRequestModal-LanguagePreference-Select').select(i18n._English_);
-				cy.getByAutoId('accRequestModal-DNACVersion-Select').select('1.20');
+				cy.getByAutoId('accRequestModal-DNACVersion-Select').select('1.2.X');
 				cy.getByAutoId('accRequestModal-WhyInterestedAccelerator-Input').type('Automation - Test Interest');
 				cy.getByAutoId('accRequestModal-WhatWouldLikeToSeeOutcome-Input').type('Automation - Test Outcome');
 				cy.getByAutoId('accRequestModal-PreferredEnvironmentAccelerator-NonProd').click();
@@ -1251,7 +1254,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 					cy.getByAutoId('accRequestModal-PreferredTimeMeeting-Morning')
 						.click({ force: true });
 					cy.getByAutoId('accRequestModal-LanguagePreference-Select').select(i18n._English_);
-					cy.getByAutoId('accRequestModal-DNACVersion-Select').select('1.20');
+					cy.getByAutoId('accRequestModal-DNACVersion-Select').select('1.2.X');
 					cy.getByAutoId('accRequestModal-WhyInterestedAccelerator-Input').type('Automation - Test Interest');
 					cy.getByAutoId('accRequestModal-WhatWouldLikeToSeeOutcome-Input').type('Automation - Test Outcome');
 					cy.getByAutoId('accRequestModal-PreferredEnvironmentAccelerator-NonProd').click();
@@ -1284,7 +1287,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 						expect(request.body.customerId)
 							.to.include('2431199');
 						expect(request.body.dnacVersion)
-							.to.include('1.20');
+							.to.include('1.2.X');
 						expect(request.body.environment)
 							.to.include('My non-production environment');
 						expect(request.body.jobTitle)
