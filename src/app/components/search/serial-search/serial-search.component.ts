@@ -387,6 +387,6 @@ implements OnInit, OnChanges, OnDestroy {
 	 * @param asset the Asset to open a case for.
 	 */
 	public openCase (asset: Asset) {
-		this.cuiModalService.showComponent(CaseOpenComponent, { asset }, 'full');
+		this.cuiModalService.showComponent(CaseOpenComponent, { asset }, 'fluid');
 	}
 }

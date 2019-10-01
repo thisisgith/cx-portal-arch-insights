@@ -319,7 +319,7 @@ export class AssetDetailsHeaderComponent implements OnChanges, OnInit, OnDestroy
 		*/
 	public openCase () {
 		 this.cuiModalService.showComponent(CaseOpenComponent,
-			{ asset: this.asset, element: this.element }, 'full')
+			{ asset: this.asset, element: this.element }, 'fluid')
 			.then((response: CaseOpenData) => {
 				const scanStatus = _.get(response, 'scanStatus');
 				if (scanStatus && (scanStatus !== 'FAILURE' && scanStatus !== 'SUCCESS')) {

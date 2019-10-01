@@ -218,7 +218,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				onClick: () => this.cuiModalService.showComponent(
 					CaseOpenComponent,
 					{ asset: item.data },
-					'full',
+					'fluid',
 				),
 			} : undefined,
 			_.get(item, ['element', 'isManagedNE'], false) ?
