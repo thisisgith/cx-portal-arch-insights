@@ -1,5 +1,5 @@
 import { configureTestSuite } from 'ng-bullet';
-import { fakeAsync, tick, ComponentFixture, TestBed } from '@angular/core/testing';
+import { fakeAsync, tick, ComponentFixture, TestBed, flush } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { By } from '@angular/platform-browser';
@@ -13,12 +13,14 @@ import { ResolutionModule } from './resolution.module';
 import { CaseScenarios } from '@mock';
 
 import * as _ from 'lodash-es';
+import { AssetPanelLinkService } from '@services';
 
 describe('ResolutionComponent', () => {
 	let service: CaseService;
 	let component: ResolutionComponent;
 	let fixture: ComponentFixture<ResolutionComponent>;
 	let router: Router;
+	let assetService: AssetPanelLinkService;
 
 	configureTestSuite(() => {
 		TestBed.configureTestingModule({
@@ -32,6 +34,7 @@ describe('ResolutionComponent', () => {
 
 	beforeEach(() => {
 		service = TestBed.get(CaseService);
+		assetService = TestBed.get(AssetPanelLinkService);
 		spyOn(service, 'read')
 			.and
 			.returnValue(of(CaseScenarios[4].scenarios.GET[0].response.body));
@@ -111,6 +114,19 @@ describe('ResolutionComponent', () => {
 			.toEqual(undefined);
 	});
 
+	it('should give the correct severity description', () => {
+		expect(component.getSeverityDescr('1'))
+			.toBeTruthy();
+		expect(component.getSeverityDescr('2'))
+			.toBeTruthy();
+		expect(component.getSeverityDescr('3'))
+			.toBeTruthy();
+		expect(component.getSeverityDescr('4'))
+			.toBeTruthy();
+		expect(component.getSeverityDescr('42'))
+		 	.toEqual('');
+	});
+
 	it('should use the case and serial queryparams', fakeAsync(() => {
 		router.navigate(
 			[],
@@ -127,6 +143,8 @@ describe('ResolutionComponent', () => {
 			});
 		expect(component.caseParams.serialNumbers)
 			.toEqual('FOX1306GBAD');
+
+		flush();
 	}));
 
 	it('should close the case details 360', () => {
@@ -149,6 +167,8 @@ describe('ResolutionComponent', () => {
 		fixture.detectChanges();
 		expect(component.selectedCase)
 			.toBeNull();
+
+		flush();
 	}));
 
 	it('should switch active filters', fakeAsync(() => {
@@ -165,6 +185,8 @@ describe('ResolutionComponent', () => {
 
 		expect(component.selectedFilters)
 			.toContain(statusFilter);
+
+		flush();
 	}));
 
 	it('should select status subfilters', fakeAsync(() => {
@@ -195,6 +217,8 @@ describe('ResolutionComponent', () => {
 
 		expect(subfilter.selected)
 			.toBeTruthy();
+
+		flush();
 	}));
 
 	it('should clear the filter when selecting the same subfilter twice', fakeAsync(() => {
@@ -221,6 +245,8 @@ describe('ResolutionComponent', () => {
 
 		expect(subfilter.selected)
 			.toBeFalsy();
+
+		flush();
 	}));
 
 	it('should select the lastUpdated filter properly', fakeAsync(() => {
@@ -243,6 +269,8 @@ describe('ResolutionComponent', () => {
 
 		expect(_.get(_.find(lastUpdatedFilter.seriesData, { label: '≤24 hr' }), 'selected'))
 			.toBeFalsy();
+
+		flush();
 	}));
 
 	it('should select the durationOpen filter properly', fakeAsync(() => {
@@ -265,6 +293,8 @@ describe('ResolutionComponent', () => {
 
 		expect(_.get(_.find(durationOpen.seriesData, { label: '≤24 hr' }), 'selected'))
 			.toBeFalsy();
+
+		flush();
 	}));
 
 	it('should select the RMAs filter properly', fakeAsync(() => {
@@ -287,6 +317,8 @@ describe('ResolutionComponent', () => {
 
 		expect(_.get(_.find(rmaFilter.seriesData, { filter: 'F' }), 'selected'))
 			.toBeFalsy();
+
+		flush();
 	}));
 
 	it('should clear all status subfilters', fakeAsync(() => {
@@ -315,6 +347,20 @@ describe('ResolutionComponent', () => {
 		const totalFilter = _.find(component.filters, { key: 'total' });
 		expect(component.selectedFilters)
 			.toContain(totalFilter);
+
+		flush();
 	}));
 
+	it('should open asset view upon click on the asset label', () => {
+		const params = {
+			customerId: '2431199',
+			serialNumber: ['FCH2139V1B0'],
+		};
+		spyOn(assetService, 'getAssetLinkData')
+			.and
+			.returnValue(of({ }));
+		component.showAssetDetails(params);
+		expect(assetService.getAssetLinkData)
+			.toHaveBeenCalled();
+	});
 });

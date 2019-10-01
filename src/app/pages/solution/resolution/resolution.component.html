@@ -5,7 +5,8 @@
 		</app-case-details-header>
 	</details-panel-header>
 	<app-case-details [case]="selectedCase"
-		[(caseDetails)]="selectedDetails">
+		[(caseDetails)]="selectedDetails"
+		(showAssetDetails)="showAssetDetails($event)">
 	</app-case-details>
 </details-panel>
 
@@ -37,7 +38,7 @@
 	</ng-container>
 	<div class="row align-items-center justify-content-between">
 		<div class="col-auto text-large">
-			<span data-auto-id="caseListHeader" [innerText]="'_ProblemResolutions_' | i18n"
+			<span data-auto-id="caseListHeader" [innerText]="'_OpenCases_' | i18n"
 				class="base-margin-left base-margin-right"></span>
 			<span *ngIf="caseListData?.length==0" class="text-muted text-medium"
 				data-auto-id="rmaShowingXcasesHeader"
@@ -117,10 +118,27 @@
 	</cui-pager>
 </ng-template>
 
-<ng-template #severityTmpl let-item="celldata"><span data-auto-id="severityValue" ><span class="icon-circle icon-small"
-			data-auto-id="severityIcon" [ngClass]="getSeverityColor(item['priority'])"></span> S{{item["priority"]}}</span></ng-template>
+<!-- Templates for Case List View Columns -->
+<ng-template #severityTmpl let-item="celldata">
+	<span [attr.data-balloon]="getSeverityDescr(item['priority'])" data-balloon-pos="right">
+		<span data-auto-id="severityValue">
+			<span class="icon-circle icon-small" data-auto-id="severityIcon" [ngClass]="getSeverityColor(item['priority'])" ></span>
+			<span [innerText]="' S'+item['priority']"></span>
+		</span>
+	</span>
+</ng-template>
 
-<ng-template #updatedTmpl let-item="celldata"><span [innerText]="item['lastModifiedDate'] | date"></span></ng-template>
+<ng-template #updatedTmpl let-item="celldata">
+	<span [attr.data-balloon]="item['lastModifiedDate'] | dateTime" data-balloon-pos="left">
+		<span [innerText]="item['lastModifiedDate'] | fromNow"></span>
+	</span>
+</ng-template>
+
+<ng-template #rmasTmpl let-item="celldata">
+	<span *ngIf="item['rmaNumber']" [attr.data-balloon]="'_RMACaseAssociatedRMAs_' | i18n:item['rmaNumber'].length" data-balloon-pos="right">
+		<span class="icon-check icon-medium text-success"></span>
+	</span> 
+</ng-template>
 
 <!-- Templates for our Visual Filters for the Assets Tab -->
 <ng-template #totalFilter let-filter="filter">
@@ -152,3 +170,12 @@
 		[seriesData]="filter.seriesData" (subfilter)="onSubfilterSelect($event.label, filter)">
 	</bar-chart>
 </ng-template>
+
+<!-- Fly-Out View Slide-out on Selection of Title -->
+<asset-details
+	*ngIf= "showAsset360"
+	[asset]="assetLinkInfo?.asset"
+	[serialNumber]="serialNumber"
+	[element]="assetLinkInfo?.element"
+	(close)="showAsset360 = false">
+</asset-details>

@@ -25,7 +25,7 @@ import {
 import {
 	LogService,
 } from '@cisco-ngx/cui-services';
-import { HeaderModule } from '@components';
+import { HeaderModule } from './components/header/header.module';
 import { NoResultsModule } from './components/search/no-results/no-results.module';
 import { EntitlementModule, RacetrackModule } from '@sdp-api';
 import { CaseOpenModule } from './components/case/case-open/case-open.module';

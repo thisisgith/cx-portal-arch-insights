@@ -17,6 +17,9 @@ import { DateTime } from 'luxon';
 import { caseSeverities } from '@classes';
 import { Case, VisualFilter } from '@interfaces';
 import { environment } from '@environment';
+import { AssetLinkInfo } from '@sdp-api';
+import { AssetPanelLinkService, DetailsPanelStackService } from '@services';
+import { UserResolve } from '@utilities';
 
 /**
  * Interface for series data used by visual filters.
@@ -143,6 +146,7 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 
 	@ViewChild('severityTmpl', { static: true }) public severityTemplate: TemplateRef<any>;
 	@ViewChild('updatedTmpl', { static: true }) public updatedTemplate: TemplateRef<any>;
+	@ViewChild('rmasTmpl', { static: true }) public rmasTemplate: TemplateRef<any>;
 
 	public selectedCase: Case;
 	public selectedDetails: CaseDetails;
@@ -176,6 +180,10 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 
 	public searchCasesForm: FormGroup;
 	public isSearchCaseFormInvalid = false;
+	public assetLinkInfo: AssetLinkInfo = Object.create({ });
+	public customerId: string;
+	public serialNumber: string;
+	public showAsset360 = false;
 
 	constructor (
 		private logger: LogService,
@@ -183,7 +191,16 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 		private formBuilder: FormBuilder,
 		public route: ActivatedRoute,
 		private router: Router,
-	) { }
+		private assetPanelLinkService: AssetPanelLinkService,
+		private userResolve: UserResolve,
+		private detailsPanelStackService: DetailsPanelStackService,
+	) {
+		this.userResolve.getCustomerId()
+		.pipe(takeUntil(this.destroy$))
+		.subscribe((id: string) => {
+			this.customerId = id;
+		});
+	 }
 
 	/** ngOnInit */
 	public ngOnInit () {
@@ -201,42 +218,54 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 					key: 'priority',
 					name: I18n.get('_RMACaseSeverity_'),
 					sortable: true,
+					width: '7%',
 					template: this.severityTemplate,
 				},
 				{
 					autoIdHeader: 'Case ID-Header',
 					key: 'caseNumber',
-					name: I18n.get('_RMACaseID_'),
-					sortable: true,
-				},
-				{
-					autoIdHeader: 'Device-Header',
-					key: 'deviceName',
-					name: I18n.get('_RMACaseDevice_'),
+					name: I18n.get('_CaseNumber_'),
+					width: '8%',
 					sortable: true,
 				},
 				{
 					autoIdHeader: 'Summary-Header',
 					key: 'summary',
-					name: I18n.get('_RMACaseSummary_'),
+					name: I18n.get('_RMACaseSummaryTitle_'),
 					sortable: true,
 				},
 				{
 					autoIdHeader: 'Status-Header',
 					key: 'status',
 					name: I18n.get('_RMACaseStatus_'),
+					width: '12%',
+					sortable: true,
+				},
+				{
+					autoIdHeader: 'RMA-Header',
+					name: I18n.get('_RMACaseRMAs_'),
+					sortable: true,
+					width: '8%',
+					template: this.rmasTemplate,
+				},
+				{
+					autoIdHeader: 'Device-Header',
+					key: 'deviceName',
+					name: I18n.get('_Asset_'),
 					sortable: true,
 				},
 				{
 					autoIdHeader: 'Updated-Header',
 					key: 'lastModifiedDate',
-					name: I18n.get('_RMACaseUpdatedDate_'),
+					name: I18n.get('_LastUpdated_'),
 					sortable: true,
 					sorting: true,
+					width: '8%',
 					template: this.updatedTemplate,
 				},
 			],
 			hover: true,
+			wrapText: true,
 			singleSelect: true,
 			striped: false,
 		});
@@ -615,6 +644,22 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 	}
 
 	/**
+	 * get the description based on severity
+	 * @param severity of case
+	 * @returns void
+	 */
+	public getSeverityDescr (severity: string) {
+		const severityInt = parseInt(severity, 10);
+
+		if (Object.keys(caseSeverities)
+		.includes(severity)) {
+			return caseSeverities[severityInt].getCreateName();
+		}
+
+		return '';
+	}
+
+	/**
 	 * sort each column in case table view
 	 * @param evt for table sort information
 	 */
@@ -906,6 +951,31 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 		if (hidden) {
 			this.detailsClose();
 		}
+	}
+
+	/**
+	 * Used for Opening the Asset 360 View data
+	 * @param assetObj contains asset details
+	 */
+	public showAssetDetails (assetObj) {
+		this.handleHidden(true);
+		this.serialNumber = assetObj.serialNumber;
+		this.assetPanelLinkService.getAssetLinkData({
+			customerId: this.customerId,
+			serialNumber: [assetObj.serialNumber],
+		})
+		.pipe(takeUntil(this.destroy$))
+		.subscribe(response => {
+			this.assetLinkInfo.asset = _.get(response, [0, 'data', 0]);
+			this.assetLinkInfo.element = _.get(response, [1, 'data', 0]);
+			this.showAsset360 = true;
+		},
+		err => {
+			this.showAsset360 = true;
+			this.logger.error(
+				'RccComponent : getAssetLinkData() ' +
+			`:: Error : (${err.status}) ${err.message}`);
+		});
 	}
 
 	/**
