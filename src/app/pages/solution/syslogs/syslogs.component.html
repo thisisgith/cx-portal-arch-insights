@@ -7,7 +7,7 @@
 			>
 				<div
 					*ngFor="let label of visualLabels; let i = index" data-auto-id="visualLabel"
-					[ngClass]="{ visualSelected: label.active == true }"
+					[ngClass]="{ 'visual-selected' : label.active == true }"
 					(click)="selectVisualLabel(i)"
 				>
 					<div class="text-huge flex-center dbl-padding-left dbl-padding-right" [innerText]="label.count"></div>

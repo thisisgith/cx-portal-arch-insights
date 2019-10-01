@@ -432,11 +432,7 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 			if (!this.appliedFilters.asset) {
 				this.appliedFilters.asset = '';
 			}
-			if (this.appliedFilters.asset === 'noSyslog') {
-				this.noSyslogFilter = true;
-			} else {
-				this.noSyslogFilter = false;
-			}
+			this.noSyslogFilter = (this.appliedFilters.asset === 'noSyslog') ?  true : false;
 		}
 		this.appliedFilters = _.cloneDeep(this.appliedFilters);
 		filter.selected = _.some(filter.seriesData, 'selected');
@@ -448,26 +444,22 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 	 */
 	public getSelectedSubFilters (key: string) {
 		const filter = _.find(this.filters, { key });
-		if (filter && this.noSyslogFilter) {
-			let filterNoSyslog;
-			filterNoSyslog = _.find(this.filters, { key: 'catalog' });
-
+		if (filter) {
+			const filterNoSyslog = _.find(this.filters, { key: 'catalog' });
 			filterNoSyslog.seriesData[0].selected = false;
 			filterNoSyslog.seriesData[1].selected = false;
-		} else if (filter && !this.noSyslogFilter) {
-			let filterWithSyslog;
-			filterWithSyslog = _.find(this.filters, { key: 'catalog' });
+		 if (!this.noSyslogFilter) {
+			filterNoSyslog.seriesData[1].selected = true;
+
 			if (this.appliedFilters.catalog === 'Cisco') {
-				filterWithSyslog.seriesData[0].selected = true;
-				filterWithSyslog.seriesData[1].selected = false;
-			} else {
-			 filterWithSyslog.seriesData[0].selected = false;
-			 filterWithSyslog.seriesData[1].selected = true;
+				filterNoSyslog.seriesData[0].selected = true;
+				filterNoSyslog.seriesData[1].selected = false;
 			}
 
 		}
 
-		return _.filter(filter.seriesData, 'selected');
+			return _.filter(filter.seriesData, 'selected');
+		}
 	}
 	/**
 	 * Clears filters

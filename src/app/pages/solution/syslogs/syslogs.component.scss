@@ -1,4 +1,4 @@
-@import "~cisco-ui/src/scss/utilities/_variables.scss";
+@import '../../../../variables.scss';
 
 .filter {
 	&__selected {
@@ -15,8 +15,8 @@
 	}
 }
 
-.visualSelected {
-	color: #00bceb;
+.visual-selected {
+	color: $accent-color1;
 }
 
 .visual-filter-divider {
