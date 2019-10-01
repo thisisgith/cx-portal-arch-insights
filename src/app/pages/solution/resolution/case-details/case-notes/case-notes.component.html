@@ -5,7 +5,7 @@
 				<div class="timeline__item no-margin">
 					<div class="timeline__icon"></div>
 					<div class="timeline__time">
-						<div class="timeline-date" [innerText]="item.createdDate | date"></div>
+						<div class="timeline-date" [innerText]="item.createdDate | fromNow"></div>
 						<div class="timeline-name" [innerText]="item.createdBy"></div>
 					</div>
 					<div class="timeline__content timeline-content-background half-padding">
