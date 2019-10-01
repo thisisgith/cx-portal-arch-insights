@@ -57,7 +57,7 @@ describe('CaseNotesComponent', () => {
 		spyOn(service, 'getUser')
 			.and
 			.returnValue(of(
-				user
+				user,
 			));
 		component.getSortedNotes();
 		expect(component.caseNotes[0].a)
