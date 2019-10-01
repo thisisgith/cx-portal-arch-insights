@@ -5,7 +5,9 @@
 				<div class="timeline__item no-margin">
 					<div class="timeline__icon"></div>
 					<div class="timeline__time">
-						<div class="timeline-date" [innerText]="item.createdDate | fromNow"></div>
+						<div [attr.data-balloon]="item?.createdDate | dateTime" data-balloon-pos="up">
+							<span class="timeline-date" [innerText]="item.createdDate | fromNow"></span>
+						</div>
 						<div class="timeline-name" [innerText]="item.createdBy"></div>
 					</div>
 					<div class="timeline__content timeline-content-background half-padding">
