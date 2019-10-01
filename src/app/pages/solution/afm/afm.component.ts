@@ -1,4 +1,10 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import {
+	Component,
+	OnInit,
+	TemplateRef,
+	ViewChild,
+	OnDestroy,
+} from '@angular/core';
 import { LogService } from '@cisco-ngx/cui-services';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
@@ -19,6 +25,7 @@ import { Subject, of } from 'rxjs';
 import { UserResolve } from '@utilities';
 import { takeUntil, catchError } from 'rxjs/operators';
 import { ExportCsvService, DetailsPanelStackService, AssetPanelLinkService } from '@services';
+import { Panel360 } from '@interfaces';
 
 /**
  * AfmComponet which shows in Insight view for Fault Management tab
@@ -31,7 +38,7 @@ import { ExportCsvService, DetailsPanelStackService, AssetPanelLinkService } fro
 	styleUrls: ['./afm.component.scss'],
 	templateUrl: './afm.component.html',
 })
-export class AfmComponent implements OnInit {
+export class AfmComponent implements OnInit, OnDestroy, Panel360 {
 
 	public showAlarmDetails = false;
 	public selectedAsset: Alarm;
@@ -62,7 +69,7 @@ export class AfmComponent implements OnInit {
 	private destroy$ = new Subject();
 	private exportFileName: string;
 	public assetParams: InventoryService.GetAssetsParams;
-	public assetLinkInfo: AssetLinkInfo;
+	public assetLinkInfo: AssetLinkInfo = Object.create({ });
 
 	public searchOptions = {
 		debounce: 1500,
@@ -80,6 +87,7 @@ export class AfmComponent implements OnInit {
 		DAYS90: 'Days90',
 		EXCEPTION: 'EXCEPTION',
 		FAIL: 'FAIL',
+		FAILED: 'FAILED',
 		IGNORE_ALARM_TOTAL_COUNT: 'ignoredCount',
 		IGNORE_EVENT: 'IGNORE_EVENT',
 		SEARCH: 'SEARCH',
@@ -96,7 +104,6 @@ export class AfmComponent implements OnInit {
 
 	@ViewChild('timeRangeFilter', { static: true }) private timeRangeFilterTemplate:
 		TemplateRef<{ }>;
-	@ViewChild('faultICTemplate', { static: true }) private faultICTemplate: TemplateRef<{ }>;
 	@ViewChild('syslogTemplate', { static: true }) private syslogTemplate: TemplateRef<{ }>;
 	@ViewChild('severityColors', { static: true }) public severityColorsTemplate: TemplateRef<{ }>;
 	@ViewChild('dateFilterPipe', { static: true }) public dateFilterTemplate: TemplateRef<{ }>;
@@ -109,7 +116,6 @@ export class AfmComponent implements OnInit {
 		private assetPanelLinkService: AssetPanelLinkService,
 	) {
 		this.searchParams = new Object();
-		this.assetLinkInfo = Object.create({ });
 		this.searchParams.pageNumber = 1;
 		this.searchParams.pageSize = this.tableLimit;
 		this.searchParams.firstTimeLoading = true;
@@ -136,19 +142,17 @@ export class AfmComponent implements OnInit {
 
 	private getSortKey = sortKey => {
 		switch (sortKey) {
-			case 'Syslog Event':
-				return 'syslogMsg.keyword';
-			case 'Fault IC':
-				return 'faultIC.keyword';
-			case 'Serial Number':
-				return 'serialNumber.keyword';
-			case 'Event Severity':
+			case 'Severity':
 				return 'severity.keyword';
-			case 'Case ID':
+			case 'Title':
+				return 'syslogMsg.keyword';
+			case 'System Name':
+				return 'hostName.keyword';
+			case 'Case Number':
 				return 'tacCaseNo.keyword';
-			case 'Time Created':
+			case 'Case Created':
 				return 'alarmCreated';
-			case 'Event Status':
+			case 'Status':
 				return 'status.keyword';
 			default:
 				return 'alarmId';
@@ -161,6 +165,17 @@ export class AfmComponent implements OnInit {
 	public ngOnInit () {
 		this.buildTable();
 		this.allAlarmFilter();
+	}
+
+	/**
+	 * Closes all details panels
+	 */
+	public onAllPanelsClose () {
+		this.detailsPanelStackService.reset();
+		this.showAlarmDetails = false;
+		if (this.eventStatus) {
+			this.allAlarmFilter();
+		}
 	}
 
 	/**
@@ -192,27 +207,22 @@ export class AfmComponent implements OnInit {
 					template: this.severityColorsTemplate,
 				},
 				{
-					name: I18n.get('_AfmSyslogEvent_'),
+					name: I18n.get('_AfmTitle_'),
 					sortable: true,
 					template: this.syslogTemplate,
 				},
 				{
-					name: I18n.get('_AfmFaultIC_'),
-					sortable: true,
-					template: this.faultICTemplate,
-				},
-				{
-					key: 'serialNumber',
-					name: I18n.get('_AfmSerialNumber_'),
+					key: 'deviceName',
+					name: I18n.get('_AfmSystemName_'),
 					sortable: true,
 				},
 				{
 					key: 'tacCaseNo',
-					name: I18n.get('_AfmCaseId_'),
+					name: I18n.get('_AfmCaseNumber_'),
 					sortable: true,
 				},
 				{
-					name: I18n.get('_AfmTimeCreated_'),
+					name: I18n.get('_AfmCaseCreated_'),
 					sortable: true,
 					template: this.dateFilterTemplate,
 				},
@@ -285,8 +295,7 @@ export class AfmComponent implements OnInit {
 	 * @param pageInfo AfmPagination
 	 * @memberof AfmComponent
 	 */
-	public onPagerUpdated (pageInfo: any) {
-		// {page: 0, limit: 10}
+	public onPagerUpdated (pageInfo) {
 		this.tableOffset = pageInfo.page;
 		this.searchParams.pageNumber = pageInfo.page + 1;
 		this.searchParams.pageSize = this.tableLimit;
@@ -323,7 +332,7 @@ export class AfmComponent implements OnInit {
 	 * it will retrive the All alarmds records only
 	 */
 	public allAlarmFilter () {
-		this.exportFileName = 'Total_Alarms_';
+		this.exportFileName = 'Active_Faults_';
 		this.resetValuesWhileFilter();
 		this.timeRangeFiltered = false;
 		this.searchParams.headerFilterType = this.AFM_CONSTANT.ALARM;
@@ -335,7 +344,7 @@ export class AfmComponent implements OnInit {
 	 * it will retrive the TAC Case records only
 	 */
 	public tacCaseFilters () {
-		this.exportFileName = 'Total_TacCases_';
+		this.exportFileName = 'Support_Case_Created_';
 		this.resetValuesWhileFilter();
 		this.timeRangeFiltered = false;
 		this.searchParams.headerFilterType = this.AFM_CONSTANT.TAC;
@@ -348,7 +357,7 @@ export class AfmComponent implements OnInit {
 	 * it will retrive the Ignored Alarms only
 	 */
 	public ignoreAlarmFilters () {
-		this.exportFileName = 'Total_Ignored_Alarms_';
+		this.exportFileName = 'Ignored_Faults_';
 		this.resetValuesWhileFilter();
 		this.timeRangeFiltered = false;
 		this.searchParams.headerFilterType = this.AFM_CONSTANT.IGNORE_EVENT;
@@ -386,32 +395,29 @@ export class AfmComponent implements OnInit {
 			this.searchFilter();
 		}
 	}
-	/**
-	 * It will close the alarm panel
-	 */
-	public onAlarmPanelClose () {
-		this.showAlarmDetails = false;
-		if (this.eventStatus) {
-			this.allAlarmFilter();
-		}
-	}
 
 	/**
 	 * Create alarm panel and create table
 	 * @param alarm alarmdata
 	 */
 	public connectToAlarmDetails (alarm: Alarm) {
-		this.syslogEvent = alarm.syslogMsg;
-		this.selectedAsset = null;
-		this.searchParams.alarmId = alarm.alarmId;
-		this.searchParams.serialNumber = alarm.serialNumber;
-		this.assetParams = {
-			customerId: this.searchParams.customerId,
-			serialNumber: [this.searchParams.serialNumber],
-		};
-		this.getAfmEventData(this.searchParams);
-		this.getAssetLinkData(this.assetParams);
-		this.showAlarmDetails = true;
+		if (alarm.status.toUpperCase() !== this.AFM_CONSTANT.FAILED) {
+			if (this.showAlarmDetails) {
+				this.detailsPanelStackService.reset();
+			}
+			this.detailsPanelStackService.push(this);
+			this.syslogEvent = alarm.syslogMsg;
+			this.selectedAsset = null;
+			this.searchParams.alarmId = alarm.alarmId;
+			this.searchParams.serialNumber = alarm.serialNumber;
+			this.assetParams = {
+				customerId: this.searchParams.customerId,
+				serialNumber: [this.searchParams.serialNumber],
+			};
+			this.getAfmEventData(this.searchParams);
+			this.getAssetLinkData(this.assetParams);
+			this.showAlarmDetails = true;
+		}
 	}
 
 	/**
@@ -453,11 +459,16 @@ export class AfmComponent implements OnInit {
 	}
 
 	/**
+	 * Removes the details panel from the stack when the back button is pressed
+	 */
+	public onPanelBack () {
+		this.detailsPanelStackService.pop();
+	}
+
+	/**
 	 * to close the panel
 	 */
 	public onPanelClose () {
-		this.detailsPanelStackService.reset();
-		_.set(this.selectedAsset, 'active', false);
 		this.selectedAsset = null;
 	}
 
@@ -468,11 +479,13 @@ export class AfmComponent implements OnInit {
 	public handleHidden (hidden: boolean) {
 		if (hidden) {
 			this.onPanelClose();
+			this.showAlarmDetails = false;
+			this.detailsPanelStackService.reset();
 		}
 	}
 
 	/**
-	 * Exoport events into CSV file need to implement
+	 * Exoport events into CSV file need to impl ement
 	 */
 	public exportAllEvents () {
 		this.searchParams.firstTimeLoading = false;
@@ -507,7 +520,7 @@ export class AfmComponent implements OnInit {
 	 * @param event - click event CuiTableOptions column info
 	 * @memberof AfmComponent
 	 */
-	public onTableSortingChanged (event: any) {
+	public onTableSortingChanged (event) {
 		this.searchParams.sortField = this.getSortKey(event.name);
 		this.searchParams.sortType = event.sortDirection;
 		this.loadFilterdData();
