@@ -134,6 +134,7 @@ export class LifecycleComponent implements OnDestroy {
 	public atxScheduleCardOpened = false;
 	public recommendedAtxScheduleCardOpened = false;
 	public panelBottomPaddingNeeded = false;
+	public panelBottomPaddingNeededForMessage = false;
 	public sessionSelected: AtxSessionSchema;
 	public customerId: string;
 	public buId: string;
@@ -1027,10 +1028,10 @@ export class LifecycleComponent implements OnDestroy {
 
 			if (this.calculatePercentage(this.componentData.racetrack.pitstop) === 1) {
 				this.showCompletionPopup = true;
-				this.panelBottomPaddingNeeded = true;
+				this.panelBottomPaddingNeededForMessage = true;
 				setTimeout(() => {
 					this.showCompletionPopup = false;
-					this.panelBottomPaddingNeeded = false;
+					this.panelBottomPaddingNeededForMessage = false;
 				}, this.timeout);
 			}
 			// Need to call getRacetrackInfo to get the latest data
@@ -1040,6 +1041,7 @@ export class LifecycleComponent implements OnDestroy {
 			this.status.loading.racetrack = false;
 			this.logger.error(`lifecycle.component : completeAction() :: Error  : (${
 				err.status}) ${err.message}`);
+			this.getRacetrackInfo();
 		});
 	}
 

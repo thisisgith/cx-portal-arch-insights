@@ -461,7 +461,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 						value: fieldTotal,
 					},
 					{
-						label: I18n.get('_Bugs_'),
+						label: I18n.get('_PriorityBugs_'),
 						percentage: (bugsTotal / total) * 100,
 						value: bugsTotal,
 					},

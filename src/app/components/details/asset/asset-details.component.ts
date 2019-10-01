@@ -5,7 +5,6 @@ import {
 	EventEmitter,
 	Output,
 	SimpleChanges,
-	ElementRef,
 	OnInit,
 } from '@angular/core';
 import {
@@ -46,6 +45,8 @@ export class AssetDetailsComponent implements OnDestroy, OnInit, Panel360 {
 	@Input('asset') public asset: Asset;
 	@Input('element') public element: NetworkElement;
 	@Output('close') public close = new EventEmitter<boolean>();
+	@Output('scanStatus') public scanStatus = new EventEmitter<TransactionStatusResponse>();
+
 	@Input() public minWidth;
 	@Input() public fullscreenToggle;
 
@@ -64,7 +65,6 @@ export class AssetDetailsComponent implements OnDestroy, OnInit, Panel360 {
 		private logger: LogService,
 		private userResolve: UserResolve,
 		private detailsPanelStackService: DetailsPanelStackService,
-		private _elementRef: ElementRef,
 	) {
 		this.userResolve.getCustomerId()
 		.pipe(
@@ -99,6 +99,22 @@ export class AssetDetailsComponent implements OnDestroy, OnInit, Panel360 {
 	public handleScanStatus (transaction: TransactionStatusResponse) {
 		if (transaction.status === 'SUCCESS') {
 			this.advisoryReload.next(true);
+
+			this.scanStatus.emit(transaction);
+
+			const cachedAsset = _.cloneDeep(this.asset);
+			this.asset = null;
+			this.isLoading = true;
+
+			this.fetchAsset()
+			.subscribe(() => {
+				this.isLoading = false;
+
+				if (!this.asset) {
+					// In case our refresh fails, use our previously found asset
+					this.asset = cachedAsset;
+				}
+			});
 		}
 	}
 
