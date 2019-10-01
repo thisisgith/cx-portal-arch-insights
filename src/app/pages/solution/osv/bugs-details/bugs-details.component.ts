@@ -51,6 +51,7 @@ export class BugsDetailsComponent implements OnInit {
 	public filters: Filter[];
 	public status = {
 		isLoading: true,
+		isFiltering: false,
 	};
 	public bugsTable: CuiTableOptions;
 	public psirtsTable: CuiTableOptions;
@@ -195,12 +196,15 @@ export class BugsDetailsComponent implements OnInit {
 				_.get(recommendation, ['data', 'psirts'], []);
 
 			const offset = _.get(recommendation, ['params', 'offset']);
-			const first = (this.numberOfRows * ((offset + 1) - 1)) + 1;
+			let first = (this.numberOfRows * ((offset + 1) - 1)) + 1;
+			if (data.length == 0) {
+				first = 0;
+			}
 			let last = (this.numberOfRows * (offset + 1));
 			if (last > data.length) {
 				last = data.length;
 			}
-			_.set(recommendation, 'total', data.length);
+			_.set(recommendation, 'total', data.length);			
 			_.set(recommendation, 'paginationCount', `${first} - ${last}`);
 		});
 	}
@@ -414,7 +418,8 @@ export class BugsDetailsComponent implements OnInit {
 	 * set the filters are part of query params
 	 * @param recommendation current filters selected by customer
 	 */
-	public setFilter (recommendation) {
+	public setFilter (recommendation) { 
+		this.status.isFiltering = true;
 		const actualData = _.cloneDeep(_.get(_.filter(this.data,
 			(recomm: MachineRecommendations) => recomm.name === recommendation.name), 0));
 		const viewType = _.get(this.params, 'viewType');
@@ -454,6 +459,9 @@ export class BugsDetailsComponent implements OnInit {
 			recommendation.data.psirts = filteredData;
 		recommendation.params.offset = 0;
 		this.populatePaginationInfo();
+		setTimeout(() => {
+			this.status.isFiltering = false;
+		}, 100);
 	}
 
 	/**

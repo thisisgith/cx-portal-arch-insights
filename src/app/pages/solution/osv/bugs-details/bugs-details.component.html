@@ -74,19 +74,20 @@
 				</div>
 			</div>
 		</div>
-		<div *ngIf="bugsTable && recommendation.data?.bugs && recommendation.data.bugs.length > 0">
+		<cui-spinner *ngIf="status.isFiltering"></cui-spinner>
+		<div *ngIf="!status.isFiltering && bugsTable && recommendation.data?.bugs && recommendation.data.bugs.length > 0">
 			<cui-table 
 				[limit]="recommendation.params.limit" 
 				[offset]="recommendation.params.offset"
 				[options]="bugsTable"
-				(onTableRowClicked)="onBugRowSelect($event)"
+				(onTableRowClicked)="onBugRowSelect($event)"				
 				[data]="recommendation?.data.bugs">
 			</cui-table>
 		</div>
 		<div *ngIf="recommendation.data?.bugs.length == 0" class="text-center text-xlarge dbl-margin-top">
 			<span [innerText]="'_OsvNoBugsFound_' | i18n"></span>
 		</div>
-		<div class="base-margin-top">
+		<div class="base-margin-top" *ngIf="recommendation?.total > 0">
 			<cui-pager 
 				[page]="recommendation.params.offset" 
 				[limit]="recommendation.params.limit"
@@ -117,7 +118,8 @@
 				</div>
 			</div>
 		</div>
-		<div *ngIf="psirtsTable && recommendation.data.psirts && recommendation.data.psirts?.length > 0">
+		<cui-spinner *ngIf="status.isFiltering"></cui-spinner>
+		<div *ngIf="!status.isFiltering && psirtsTable && recommendation.data.psirts && recommendation.data.psirts?.length > 0">
 			<cui-table 
 				[limit]="recommendation.params.limit" 
 				[offset]="recommendation.params.offset"
@@ -129,7 +131,7 @@
 		<div *ngIf="recommendation.data.psirts.length == 0" class="text-center text-xlarge dbl-margin-top">
 			<span [innerText]="'_OsvNoSecurityAdvisoriesFound_' | i18n"></span>
 		</div>
-		<div class="base-margin-top">
+		<div class="base-margin-top" *ngIf="recommendation?.total > 0">
 			<cui-pager 
 				[page]="recommendation.params.offset" 
 				[limit]="recommendation.params.limit"
