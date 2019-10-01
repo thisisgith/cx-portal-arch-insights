@@ -30,7 +30,7 @@ export class ContactSupportComponent implements OnInit, OnDestroy, CuiModalConte
 	public descriptionMaxLength;
 	public title: FormControl;
 	public description: FormControl;
-	public userMailId: string = this.profileService.getProfile().cpr.pf_auth_email;
+	public userMailId: string = _.get(this.profileService.getProfile(), ['cpr', 'pf_auth_email']);
 	public modalHeading;
 	private destroy$ = new Subject();
 	public items: any[] = [];
@@ -144,7 +144,7 @@ export class ContactSupportComponent implements OnInit, OnDestroy, CuiModalConte
 	 */
 	public sendSupportEmail () {
 		if (this.supportForm.valid) {
-			const userDetails = this.profileService.getProfile().cpr;
+			const userDetails = _.get(this.profileService.getProfile(), 'cpr');
 			const params = {
 				body: this.supportForm.controls.description.value,
 				cc: _.get(userDetails, 'pf_auth_email'),
@@ -176,7 +176,7 @@ export class ContactSupportComponent implements OnInit, OnDestroy, CuiModalConte
 	 * @returns email template
 	 */
 	public createEmailTemplate () {
-		const userDetails = this.profileService.getProfile().cpr;
+		const userDetails = _.get(this.profileService.getProfile(), 'cpr', { });
 
 		return `${userDetails.pf_auth_firstname}` +
 			` ${userDetails.pf_auth_lastname}` + ` ${I18n.get('_SupportSentBy_')}\n\n` +
