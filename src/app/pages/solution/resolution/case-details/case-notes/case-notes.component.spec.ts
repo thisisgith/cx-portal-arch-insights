@@ -2,14 +2,14 @@ import { configureTestSuite } from 'ng-bullet';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CaseNotesComponent } from './case-notes.component';
 import { CaseNotesModule } from './case-notes.module';
-import { UserResolve } from '@utilities';
 import { of } from 'rxjs';
 import { user } from '@mock';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { environment } from '@environment';
+import { ActivatedRoute } from '@angular/router';
 
 describe('CaseNotesComponent', () => {
 	let component: CaseNotesComponent;
-	let service: UserResolve;
 	let fixture: ComponentFixture<CaseNotesComponent>;
 
 	configureTestSuite(() => {
@@ -18,12 +18,25 @@ describe('CaseNotesComponent', () => {
 				CaseNotesModule,
 				HttpClientTestingModule,
 			],
+			providers: [
+				{ provide: 'ENVIRONMENT', useValue: environment },
+				{
+					provide: ActivatedRoute,
+					useValue: {
+						queryParams: of({ }),
+						snapshot: {
+							data: {
+								user,
+							},
+						},
+					},
+				},
+			],
 		});
 	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(CaseNotesComponent);
-		service = TestBed.get(UserResolve);
 		component = fixture.componentInstance;
 		component.caseNotes = [];
 		fixture.detectChanges();
@@ -54,11 +67,6 @@ describe('CaseNotesComponent', () => {
 				a: 1,
 			},
 		];
-		spyOn(service, 'getUser')
-			.and
-			.returnValue(of(
-				user,
-			));
 		component.getSortedNotes();
 		expect(component.caseNotes[0].a)
 			.toEqual(1);

@@ -1,10 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { UserResolve } from '@utilities';
-import { User } from '@interfaces';
-import { takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
 import { I18n } from '@cisco-ngx/cui-utils';
 import * as _ from 'lodash-es';
+import { ActivatedRoute } from '@angular/router';
 
 /**
  * Case Notes Component
@@ -18,11 +15,14 @@ import * as _ from 'lodash-es';
 export class CaseNotesComponent implements OnInit {
 
 	@Input() public caseNotes: any;
-	private destroy$ = new Subject();
+	public ccoId: string;
 
 	constructor (
-		private userResolve: UserResolve,
-	) { }
+		private route: ActivatedRoute,
+	) {
+		const user = _.get(this.route, ['snapshot', 'data', 'user']);
+		this.ccoId = _.get(user, ['info', 'individual', 'ccoId'], '');
+	}
 
 	/**
 	 * Initialization hook
@@ -40,19 +40,11 @@ export class CaseNotesComponent implements OnInit {
 				(a, b) => <any> new Date(b.createdDate) - <any> new Date(a.createdDate),
 			);
 
-			this.userResolve.getUser()
-				.pipe(
-					takeUntil(this.destroy$),
-				)
-				.subscribe((user: User) => {
-					const ccoId = _.get(user, ['info', 'individual', 'ccoId'], '');
-
-					this.caseNotes.forEach((note: any) => {
-						if (note.createdByID.toLowerCase() === ccoId.toLowerCase()) {
-							note.createdBy = I18n.get('_RMACaseYou_');
-						}
-					});
-				});
+			this.caseNotes.forEach((note: any) => {
+				if (note.createdByID.toLowerCase() === this.ccoId.toLowerCase()) {
+					note.createdBy = I18n.get('_RMACaseYou_');
+				}
+			});
 		}
 	}
 }
