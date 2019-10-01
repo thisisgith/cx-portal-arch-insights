@@ -37,7 +37,7 @@ export class CaseNotesComponent implements OnInit {
 	public getSortedNotes () {
 		if (this.caseNotes && this.caseNotes.length > 0) {
 			this.caseNotes.sort(
-				(a, b) => <any>new Date(b.createdDate) - <any>new Date(a.createdDate),
+				(a, b) => <any> new Date(b.createdDate) - <any> new Date(a.createdDate),
 			);
 
 			this.userResolve.getUser()
