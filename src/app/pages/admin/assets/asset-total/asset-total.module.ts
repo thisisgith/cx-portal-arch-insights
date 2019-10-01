@@ -7,11 +7,6 @@ import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { CuiLoaderModule } from '@cisco-ngx/cui-components';
 
 /**
- * SDP Root url for the apis
- */
-// const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
-
-/**
  * Main Policies module
  */
 @NgModule({

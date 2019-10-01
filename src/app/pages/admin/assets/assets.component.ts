@@ -22,7 +22,6 @@ interface PaginationInfo {
  */
 @Component({
 	selector: 'admin-assets',
-	styleUrls: ['./assets.component.scss'],
 	templateUrl: './assets.component.html',
 })
 export class AdminAssetsComponent implements AfterViewInit, OnDestroy {

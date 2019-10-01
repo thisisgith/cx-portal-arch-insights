@@ -6,11 +6,6 @@ import { FromNowPipeModule, I18nPipeModule, TruncatePipeModule } from '@cisco-ng
 import { CuiDropdownModule, CuiLoaderModule } from '@cisco-ngx/cui-components';
 
 /**
- * SDP Root url for the apis
- */
-// const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
-
-/**
  * Main Policies module
  */
 @NgModule({

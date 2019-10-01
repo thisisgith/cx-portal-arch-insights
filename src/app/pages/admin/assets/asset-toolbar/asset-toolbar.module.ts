@@ -9,11 +9,6 @@ import { CuiLoaderModule } from '@cisco-ngx/cui-components';
 import { InlineSVGModule } from 'ng-inline-svg';
 
 /**
- * SDP Root url for the apis
- */
-// const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
-
-/**
  * Main Policies module
  */
 @NgModule({

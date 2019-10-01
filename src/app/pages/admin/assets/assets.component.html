@@ -9,7 +9,6 @@
 	</ng-container>
 	<ng-container *ngIf="view$ | async as view">
 		<ng-container *ngIf="!(isLoadingAssets$ | async); else loader">
-			<div>{{loading}}</div>
 			<asset-table *ngIf="view === 'table'"></asset-table>
 			<asset-grid *ngIf="view === 'grid'"></asset-grid>
 		</ng-container>

@@ -237,7 +237,6 @@ export const mockSettings: MockSettings = {
 		ASDMetadataScenarios,
 		ASDTokenScenarios,
 		ATXScenarios,
-		ATXScenarios,
 		ActionScenarios,
 		AdvisorySecurityAdvisoryScenarios,
 		AfmScenarios,
