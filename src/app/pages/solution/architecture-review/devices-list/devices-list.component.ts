@@ -168,7 +168,8 @@ export class DevicesListComponent implements OnInit, OnChanges {
 				this.totalItems = data.TotalCounts;
 				this.dnacDeviceDetails = data.dnacDeviceDetails;
 				this.lastCollectionTime = datePipe.transform(data.CollectionDate, 'medium');
-				this.tableEndIndex = (this.tableStartIndex + this.dnacDeviceDetails.length);
+				this.tableEndIndex = (this.tableStartIndex + this.dnacDeviceDetails
+					? this.dnacDeviceDetails.length : 0);
 			}, err => {
 				this.logger.error('CBP Rule Component View' +
 					'  : getDevicesList() ' +
