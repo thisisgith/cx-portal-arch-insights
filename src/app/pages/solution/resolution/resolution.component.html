@@ -127,7 +127,11 @@
 	</span>
 </ng-template>
 
-<ng-template #updatedTmpl let-item="celldata"><span [innerText]="item['lastModifiedDate'] | fromNow"></span></ng-template>
+<ng-template #updatedTmpl let-item="celldata">
+	<span [attr.data-balloon]="item['lastModifiedDate'] | dateTime" data-balloon-pos="left">
+		<span [innerText]="item['lastModifiedDate'] | fromNow"></span>
+	</span>
+</ng-template>
 
 <ng-template #rmasTmpl let-item="celldata">
 	<span *ngIf="item['rmaNumber']" [attr.data-balloon]="'_RMACaseAssociatedRMAs_' | i18n:item['rmaNumber'].length" data-balloon-pos="right">
