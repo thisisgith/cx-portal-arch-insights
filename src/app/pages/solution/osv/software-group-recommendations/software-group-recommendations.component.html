@@ -119,7 +119,7 @@
 
 <ng-template #actionsTemplate let-item="celldata">
 	<button 
-		*ngIf="item.name != 'profile current' && !item.accepted && item.swVersion != 'NA'"
+		*ngIf="acceptanceAllowed.indexOf(item.name) != -1 && !item.accepted && item.swVersion != 'NA'"
 		class="btn btn--secondary btn--small" 
 		[innerText]="'_OsvAccept_' | i18n | uppercase" 
 		(click)="onAcceptClick(item.swVersion)"

@@ -77,6 +77,7 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 		severity: 3,
 		timeRange: 1,
 	};
+	public noSyslogFilter = false;
 	/**
 	 * Visual filters  of syslogs component
 	 */
@@ -97,6 +98,7 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 		isLoading: true,
 	};
 	public syslogsParams: SyslogsService.GetSyslogsParams = {
+		assetList: ['withSyslog'],
 		catalogList: ['Cisco'],
 		customerId: this.customerId,
 		pageNo: this.pageNum,
@@ -313,6 +315,12 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 							'catalog',
 						);
 					}
+					if (this.syslogsParams.assetList && this.visualLabels[1].active) {
+						this.selectSubFilters(
+							this.syslogsParams.assetList,
+							'asset',
+						);
+					}
 
 				}),
 			)
@@ -424,6 +432,7 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 			if (!this.appliedFilters.asset) {
 				this.appliedFilters.asset = '';
 			}
+			this.noSyslogFilter = (this.appliedFilters.asset === 'noSyslog') ?  true : false;
 		}
 		this.appliedFilters = _.cloneDeep(this.appliedFilters);
 		filter.selected = _.some(filter.seriesData, 'selected');
@@ -435,8 +444,20 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 	 */
 	public getSelectedSubFilters (key: string) {
 		const filter = _.find(this.filters, { key });
-
 		if (filter) {
+			const filterNoSyslog = _.find(this.filters, { key: 'catalog' });
+			filterNoSyslog.seriesData[0].selected = false;
+			filterNoSyslog.seriesData[1].selected = false;
+		 if (!this.noSyslogFilter) {
+			filterNoSyslog.seriesData[1].selected = true;
+
+			if (this.appliedFilters.catalog === 'Cisco') {
+				filterNoSyslog.seriesData[0].selected = true;
+				filterNoSyslog.seriesData[1].selected = false;
+			}
+
+		}
+
 			return _.filter(filter.seriesData, 'selected');
 		}
 	}
@@ -445,7 +466,7 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 	 */
 	public clearFilters () {
 		this.filtered = false;
-
+		this.noSyslogFilter = false;
 		_.each(this.filters, (filter: SyslogFilter) => {
 			filter.selected = false;
 			_.each(filter.seriesData, f => {
@@ -456,12 +477,16 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 		this.allAssetsSelected = false;
 		this.syslogsParams.timeRange = ['1'];
 		this.loadData();
-		this.appliedFilters = {
-			asset: '',
-			catalog: 'Cisco',
-			severity: 3,
-			timeRange: 1,
-		};
+		if (this.visualLabels[0].active) {
+			this.appliedFilters = {
+				asset: '',
+				catalog: 'Cisco',
+				severity: 3,
+				timeRange: 1,
+			};
+	   } else {
+			this.appliedFilters.asset = 'withSyslog';
+	   }
 	}
 	/**
 	 * Selects visual label
@@ -474,6 +499,7 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 			if (this.filters.length === 4) {
 				this.filters.pop();
 			}
+			this.appliedFilters.asset = '';
 		} else {
 			this.visualLabels[0].active = false;
 			this.visualLabels[1].active = true;
@@ -487,10 +513,10 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 					view: ['syslogMessage', 'syslogAsset'],
 				});
 		  }
-			this.getAssetCounts();
+		  this.appliedFilters.asset = 'withSyslog';
+		  this.getAssetCounts();
 		}
 		this.clearFilters();
-		this.loadData();
 	}
 	/**
 	 * on destroy

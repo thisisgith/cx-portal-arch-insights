@@ -1,0 +1,23 @@
+@import '~cisco-ui/src/scss/utilities/_variables.scss';
+
+::ng-deep {
+	#assetDetailTabs &.tabs {
+		box-shadow: 0 -2px 0 $light-gray-3 inset !important;
+
+		> li {
+			margin: 0 50px 0 0 !important;
+			height: unset;
+		}
+	}
+}
+
+.title {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	max-width: 400px;
+}
+
+.title.fullscreen {
+	max-width: 600px;
+}

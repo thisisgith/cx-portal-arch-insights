@@ -365,7 +365,8 @@ export interface GetSyslogsParams {
 	deviceHost?:string;
 	catalogList?:Array<string>;
 	severityList?:Array<string>;
-    search?:string;
+	search?:string;
+	assetList?:Array<string>;
 }
 }
 export { SyslogsService };

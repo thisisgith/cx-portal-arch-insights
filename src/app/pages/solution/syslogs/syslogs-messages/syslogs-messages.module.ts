@@ -10,6 +10,7 @@ import {
 	CuiTableModule,
 	CuiPagerModule,
 	CuiDropdownModule,
+	CuiSpinnerModule,
 } from '@cisco-ngx/cui-components';
 import { DetailsPanelModule, AssetDetailsModule, AssetDetailsHeaderModule } from '@components';
 import { SyslogMessagesDetailsModule,
@@ -42,6 +43,7 @@ const rootUrl = environment.sdpServiceOrigin;
 		DetailsPanelModule,
 		AssetDetailsModule,
 		AssetDetailsHeaderModule,
+		CuiSpinnerModule,
 	],
 })
 export class SyslogsMessagesModule { }
