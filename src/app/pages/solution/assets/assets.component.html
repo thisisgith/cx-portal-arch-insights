@@ -346,7 +346,8 @@
 	</span>
 	<span [innerText]="celldata.deviceName | truncate:true:50"
 		[title]="celldata.deviceName"
-		attr.data-auto-id="Device-{{celldata.serialNumber}}">
+		attr.data-auto-id="Device-{{celldata.serialNumber}}"
+		[ngClass]="{ 'name-align-left': (element && !getProductIcon(element)) || !element }">
 	</span>
 </ng-template>
 
