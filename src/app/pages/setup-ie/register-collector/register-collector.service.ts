@@ -24,6 +24,7 @@ export interface InstallAndRegisterDNACParams {
  * Parameters for the installAndRegisterDNAC public method
  */
 export interface RegisterParams {
+	oldPassword: string;
 	password: string;
 	proxyHost?: string;
 	proxyPort?: string;
