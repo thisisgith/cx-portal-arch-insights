@@ -32,6 +32,7 @@ export class AssetToolbarComponent implements OnDestroy, OnInit {
 	private destroyed$: Subject<void> = new Subject<void>();
 	private displayedAssets = 0;
 	private totalAssets = 0;
+	public selected = 0;
 	public counts$: Observable<AssetCounts> = this.state.changes
 		.pipe(
 			startWith(this.state.currentState),
