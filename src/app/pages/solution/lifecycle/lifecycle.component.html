@@ -22,7 +22,7 @@
 					<ng-container *ngTemplateOutlet="panel; context: {
 						template: successBytesPanel,
 						title: '_SuccessBytes_',
-						loading: (status.loading.success || status.loading.productGuides),
+						loading: status.loading.success,
 						data: componentData.learning,
 						viewAllLabel: '_ViewAll_',
 						viewAll: '_SuccessBytes_'
@@ -534,7 +534,7 @@
 		</ng-container>
 		<div class="divider"></div>
 	</div>
-	<div *ngIf="data.productGuides?.length" data-auto-id="SuccessBytesPanel-ProductGuidesBlock">
+	<div data-auto-id="SuccessBytesPanel-ProductGuidesBlock">
 		<ng-container *ngTemplateOutlet="productGuidesBlock; context: {
 				title: '_ProductGuides_' }">
 		</ng-container>
@@ -706,8 +706,10 @@
 							</div>
 						</div>
 					</div>
-					<ng-container *ngTemplateOutlet="cardViewTemplate; context: { type: type, view: this.accview }"></ng-container>
-					<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type, view: this.accview }"></ng-container>
+					<div class="modal-content-container">
+						<ng-container *ngTemplateOutlet="cardViewTemplate; context: { type: type, view: this.accview }"></ng-container>
+						<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type, view: this.accview }"></ng-container>
+					</div>
 				</ng-container>
 				<ng-container *ngSwitchCase="'ATX'">
 					<div class="flex-center-vertical">
@@ -737,8 +739,10 @@
 							</div>
 						</div>
 					</div>
-					<ng-container *ngTemplateOutlet="cardViewTemplate; context: { type: type, view: this.atxview }"></ng-container>
-					<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type, view: this.atxview }"></ng-container>
+					<div class="modal-content-container">
+						<ng-container *ngTemplateOutlet="cardViewTemplate; context: { type: type, view: this.atxview }"></ng-container>
+						<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type, view: this.atxview }"></ng-container>
+					</div>
 				</ng-container>
 				<ng-container *ngSwitchCase="'SB'">
 					<div class="flex-center-vertical">
@@ -768,13 +772,15 @@
 							</div>
 						</div>
 					</div>
-					<ng-container *ngTemplateOutlet="cardViewTemplate; context: { type: type, view: this.sbview }"></ng-container>
-					<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type, view: this.sbview }"></ng-container>
+					<div class="modal-content-container">
+						<ng-container *ngTemplateOutlet="cardViewTemplate; context: { type: type, view: this.sbview }"></ng-container>
+						<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type, view: this.sbview }"></ng-container>
+					</div>
 				</ng-container>
 				<ng-container *ngSwitchCase="'PG'">
 					<div class="flex-center-vertical">
 						<div class="text-left modal__body__topics cx-text-default"
-							[innerText]="'_TopicsAvailableSolution_' | i18n:selectedProductGuides?.length || 0:componentData.params.solution:componentData.params.usecase">
+							[innerText]="'_TopicsAvailableSolution_' | i18n:componentData.productGuides.items?.length || 0:componentData.params.solution:componentData.params.usecase">
 						</div>
 						<div class="modal__body__filter">
 							<cui-select class="lifecycle-filter"
@@ -782,7 +788,7 @@
 								[items]="pgCategoryOptions"
 								[empty]="true"
 								[placeholder]="'_FilterBy_' | i18n"
-								[(ngModel)]="selectedFilterForPG"
+								[(ngModel)]="componentData.productGuides.filter"
 								(ngModelChange)="selectFilter('PG')">
 							</cui-select>
 						</div>
@@ -799,11 +805,57 @@
 							</div>
 						</div>
 					</div>
-					<ng-container *ngTemplateOutlet="cardViewTemplate; context: { type: type, view: this.pgview }"></ng-container>
-					<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type, view: this.pgview }"></ng-container>
+					<div class="modal-content-container">
+						<ng-container *ngIf="!this.status.loading.productGuides.modal">
+							<span #topOfModal></span>
+							<ng-container *ngTemplateOutlet="cardViewTemplate; context: { type: type, view: this.pgview }"></ng-container>
+							<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type, view: this.pgview }"></ng-container>
+							<ng-container *ngTemplateOutlet="loadMoreTemplate; context: {
+								type: type,
+								loading: this.status.loading.productGuides.more,
+								error: this.status.error.productGuides
+							}"></ng-container>
+						</ng-container>
+						<div class="modal-spinner-container" *ngIf="this.status.loading.productGuides.modal">
+							<cui-spinner class="spinner"></cui-spinner>
+						</div>
+					</div>
 				</ng-container>
 			</ng-container>
 		</div>
+	</div>
+</ng-template>
+
+<ng-template #loadMoreTemplate let-type="type" let-loading="loading" let-error="error">
+	<div class="load-more base-padding-right dbl-margin-top">
+		<ng-container *ngIf="!loading">
+			<span *ngIf="error" data-auto-id="LoadMore-Error" class="text-danger dbl-margin-bottom">
+				<span class="icon-error qtr-margin-right"></span>
+				<span [innerText]="'_AnErrorOccurredResults_' | i18n"></span>
+			</span>
+			<div *ngIf="getMaxSuccessBytesCount(type) > pgNumRows" class="dbl-margin-bottom">
+				<div class="subheader" [innerText]="'_ShowingXofY_' | i18n : getSelectedSuccessBytesCount(type) : getMaxSuccessBytesCount(type)"></div>
+				<div data-auto-id="LoadMore-ProgressBar" class="progressbar" [attr.data-percentage]="getSuccessBytesPercentage(type)">
+					<div class="progressbar__fill"></div>
+				</div>
+			</div>
+			<div class="dbl-margin-top dbl-margin-bottom">
+				<button data-auto-id="LoadMore-Button"
+					class="btn btn--secondary btn--small text-uppercase"
+					[innerText]="'_LoadMore_' | i18n"
+					(click)="loadMoreContent(type)"
+					[disabled]="getLoadMoreDisabled(type)"></button>
+			</div>
+			<div class="dbl-margin-top base-margin-bottom">
+				<span data-auto-id="LoadMore-BackToTop"
+					class="text-medium toggle"
+					[innerText]="'_BackToTop_' | i18n"
+					(click)="modalScrollToTop()"></span>
+			</div>
+		</ng-container>
+		<ng-container *ngIf="loading">
+			<cui-spinner></cui-spinner>
+		</ng-container>
 	</div>
 </ng-template>
 
@@ -841,7 +893,7 @@
 						<ng-container *ngTemplateOutlet="listView; context: { type: type, columns: successBytesTable.columns, data: selectedSuccessPaths }"></ng-container>
 					</ng-container>
 					<ng-container *ngIf="type === 'PG'">
-						<ng-container *ngTemplateOutlet="listView; context: { type: type, columns: productGuidesTable.columns, data: selectedProductGuides }"></ng-container>
+						<ng-container *ngTemplateOutlet="listView; context: { type: type, columns: productGuidesTable.columns, data: componentData.productGuides.items }"></ng-container>
 					</ng-container>
 					</table>
 				</div>
@@ -1034,7 +1086,7 @@
 
 <ng-template #cardPG>
 	<div class="card success__card"
-		*ngFor="let item of selectedProductGuides"
+		*ngFor="let item of componentData.productGuides.items"
 		data-auto-id="PGCard">
 		<div class="icon-bookmark toggle"
 			(click)="updateBookmark(item, 'PG')"
