@@ -34,6 +34,6 @@ export class SecurityDetailsHeaderComponent {
 			otherAssets: this.impactedAssets,
 			selectedAsset: this.selectedAsset,
 			type: 'security',
-		}, 'full');
+		}, 'fluid');
 	}
 }
