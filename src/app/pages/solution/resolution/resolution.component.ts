@@ -206,19 +206,19 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 				{
 					autoIdHeader: 'Case ID-Header',
 					key: 'caseNumber',
-					name: I18n.get('_RMACaseID_'),
+					name: I18n.get('_CaseNumber_'),
 					sortable: true,
 				},
 				{
 					autoIdHeader: 'Device-Header',
 					key: 'deviceName',
-					name: I18n.get('_RMACaseDevice_'),
+					name: I18n.get('_RMAsset_'),
 					sortable: false,
 				},
 				{
 					autoIdHeader: 'Summary-Header',
 					key: 'summary',
-					name: I18n.get('_RMACaseSummary_'),
+					name: I18n.get('_Description_'),
 					sortable: true,
 				},
 				{
@@ -339,7 +339,7 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 				loading: true,
 				seriesData: caseFilterData.lastUpdated,
 				template: this.columnChartFilterTemplate,
-				title: I18n.get('_LastUpdated_'),
+				title: I18n.get('_RMACaseUpdatedDate_'),
 			},
 			{
 				key: 'durationOpen',
