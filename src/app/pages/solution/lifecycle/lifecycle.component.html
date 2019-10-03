@@ -712,10 +712,11 @@
 						</div>
 						<div class="modal__body__filter">
 							<cui-select class="lifecycle-filter"
+								[label]="'_FilterBy_' | i18n"
+								[inline]="true"
 								data-auto-id="acc-filter"
 								[items]="statusOptions"
-								[empty]="true"
-								[placeholder]="'_FilterBy_' | i18n"
+								[placeholder]="getStatusOptionName(selectedFilterForACC)"
 								[(ngModel)]="selectedFilterForACC"
 								(ngModelChange)="selectFilter('ACC')">
 							</cui-select>
@@ -745,8 +746,9 @@
 							<cui-select class="lifecycle-filter"
 								data-auto-id="atx-filter"
 								[items]="statusOptions"
-								[empty]="true"
-								[placeholder]="'_FilterBy_' | i18n"
+								[label]="'_FilterBy_' | i18n"
+								[inline]="true"
+								[placeholder]="getStatusOptionName(selectedFilterForATX)"
 								[(ngModel)]="selectedFilterForATX"
 								(ngModelChange)="selectFilter('ATX')">
 							</cui-select>
@@ -776,8 +778,9 @@
 							<cui-select class="lifecycle-filter"
 								data-auto-id="category-filter"
 								[items]="categoryOptions"
-								[empty]="true"
-								[placeholder]="'_FilterBy_' | i18n"
+								[label]="'_FilterBy_' | i18n"
+								[inline]="true"
+								[placeholder]="getStatusOptionName(selectedFilterForSB)"
 								[(ngModel)]="selectedFilterForSB"
 								(ngModelChange)="selectFilter('SB')">
 							</cui-select>
@@ -807,8 +810,9 @@
 							<cui-select class="lifecycle-filter"
 								data-auto-id="pg-category-filter"
 								[items]="pgCategoryOptions"
-								[empty]="true"
-								[placeholder]="'_FilterBy_' | i18n"
+								[label]="'_FilterBy_' | i18n"
+								[inline]="true"
+								[placeholder]="getStatusOptionName(selectedFilterForPG)"
 								[(ngModel)]="selectedFilterForPG"
 								(ngModelChange)="selectFilter('PG')">
 							</cui-select>
