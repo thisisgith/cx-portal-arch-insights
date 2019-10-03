@@ -153,7 +153,7 @@ export class BugsDetailsComponent implements OnInit {
 					},
 					{
 						key: 'version',
-						name: I18n.get('_OsvVersion_'),
+						name: I18n.get('_OsvPsirtVersion_'),
 						sortable: false,
 						width: '15%',
 					},

@@ -77,18 +77,18 @@
 							<i class="icon-info qtr-margin-bottom"></i>
 					</span>
 				</td>
-				<td class="text-xlarge recommendation-current">
+				<td class="text-large recommendation-current">
 					<span [innerText]="currentRecommendation?.profileRisk | number: '1.0-0'"></span>
 				</td>
 				<td *ngFor="let recommendation of machineRecommendations" class="recommendation">
 					<div class="flex align-items-center">
-						<span class="text-xlarge qtr-margin-left"
+						<span class="text-large qtr-margin-left"
 							[innerText]="recommendation.expectedProfileRisk | number: '1.0-0'"></span>
 					</div>
 				</td>
 			</tr>
 			<!-- bugs -->
-			<tr (click)="showDetailsView('bug')" data-auto-id="ShowBugDetails">
+			<tr id="bugs-details" (click)="showDetailsView('bug')" data-auto-id="ShowBugDetails">
 				<td class=" first-column-width headingClass no-border-bottom no-border-top text-large  text-primary"
 					[innerText]="'_Bugs_' | i18n">
 				</td>
@@ -97,7 +97,7 @@
 						[ngClass]="{'text-small':!fullscreen,'text-large base-margin-top':fullscreen}"
 						[innerText]="'_OsvCurrentlyExposed_' | i18n | uppercase">					
 					</div>
-					<div class="text-xlarge" [innerText]="currentRecommendation?.bugsExposed || '0'"
+					<div class="text-large" [innerText]="currentRecommendation?.bugsExposed || '0'"
 						[ngClass]="{'base-padding-top':!fullscreen}"></div>
 					<div class="base-margin-top bar-chart"
 						*ngIf="currentRecommendation?.bugSeriesData && currentRecommendation?.bugSeriesData.length > 0">
@@ -117,12 +117,12 @@
 					</div>
 					<div class="base-margin-top row">
 						<div class="col-6">
-							<span class="text-xlarge" [innerText]="recommendation.resolvedBugsCount  || '0'"></span>
-							<span class="text-xlarge" [innerText]="'/'"></span>
-							<span class="text-xlarge" [innerText]="currentRecommendation?.bugsExposed || '0'"></span>
+							<span class="text-large" [innerText]="recommendation.resolvedBugsCount  || '0'"></span>
+							<span class="text-large" [innerText]="'/'"></span>
+							<span class="text-large" [innerText]="currentRecommendation?.bugsExposed || '0'"></span>
 
 						</div>
-						<div class="text-xlarge col-6" [innerText]="recommendation.bugsExposed  || '0'"></div>
+						<div class="text-large col-6" [innerText]="recommendation.bugsExposed  || '0'"></div>
 					</div>
 					<div class="base-margin-top row"
 						*ngIf=" recommendation.bugSeriesData && recommendation.bugSeriesData.length > 0">
@@ -139,12 +139,12 @@
 				</td>
 			</tr>
 			<!-- security advisories -->
-			<tr data-auto-id="ShowPsirtDetails" (click)="showDetailsView('psirt')">
+			<tr id="psirts-details" data-auto-id="ShowPsirtDetails" (click)="showDetailsView('psirt')">
 				<td class=" first-column-width headingClass no-border-bottom no-border-top text-large text-primary"
 					[innerText]="'_SecurityAdvisories_' | i18n">
 				</td>
 				<td class="recommendation-current">
-					<div class="text-xlarge half-margin-top" [innerText]="currentRecommendation?.psirtExposed || '0'">
+					<div class="text-large half-margin-top" [innerText]="currentRecommendation?.psirtExposed || '0'">
 					</div>
 					<div class="base-margin-top bar-chart"
 						*ngIf="currentRecommendation?.psirtSeriesData && currentRecommendation?.psirtSeriesData.length > 0">
@@ -158,12 +158,12 @@
 				<td *ngFor="let recommendation of machineRecommendations" class="recommendation">
 					<div class="half-margin-top row">
 						<div class="col-6">
-							<span class="text-xlarge" [innerText]="recommendation.psirtResolvedCount  || '0'"></span>
-							<span class="text-xlarge" [innerText]="'/'"></span>
-							<span class="text-xlarge" [innerText]="currentRecommendation.psirtExposed  || '0'"></span>
+							<span class="text-large" [innerText]="recommendation.psirtResolvedCount  || '0'"></span>
+							<span class="text-large" [innerText]="'/'"></span>
+							<span class="text-large" [innerText]="currentRecommendation.psirtExposed  || '0'"></span>
 
 						</div>
-						<div class="text-xlarge col-6" [innerText]="recommendation.psirtExposed || '0'"></div>
+						<div class="text-large col-6" [innerText]="recommendation.psirtExposed || '0'"></div>
 					</div>
 					<div class="base-margin-top row"
 						*ngIf=" recommendation.psirtSeriesData && recommendation.psirtSeriesData.length > 0">

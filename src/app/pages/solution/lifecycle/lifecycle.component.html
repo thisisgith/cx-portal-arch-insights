@@ -150,23 +150,25 @@
 		</div>
 		<div class="panel messagepanel--open half-margin-left"
 			id="AllCompletionPopup"
-			*ngIf="showCompletionPopup">
+			*ngIf="showCompletionPopup"
+			data-auto-id="AllCompletionPopup">
 			<div class="row qtr-margin-top qtr-margin-left qtr-margin-right">
 				<div class="col-md-1">
 					<div class="pitstop-checklist__flag"
-						inlineSVG="assets/img/solutions/icon-checkerflag.svg"></div>
+						inlineSVG="assets/img/solutions/icon-checkerflag.svg"
+						data-auto-id="AllCompletionPopup-Flag"></div>
 				</div>
-				<div class="col-md-10 text-bold" [innerText]="'_NiceJob_' | i18n"></div>
+				<div class="col-md-10 text-bold" [innerText]="'_NiceJob_' | i18n" data-auto-id="AllCompletionPopup-Title"></div>
 				<div class="col-md-1">
 					<a class="no-link closebtn"
 						(click)="showCompletionPopup = false"
-						data-auto-id="CompletionPopupClose">
+						data-auto-id="AllCompletionPopup-Close">
 						<span class="icon-close icon-small"></span>
 					</a>
 				</div>
 			</div>
 			<div class="message">
-				<span [innerHTML]="'_NextCruise_' | i18n:currentViewingPitstop"></span>
+				<span [innerHTML]="'_NextCruise_' | i18n:currentViewingPitstop" data-auto-id="AllCompletionPopup-Message"></span>
 			</div>
 		</div>
 	</div>
@@ -351,7 +353,7 @@
 			<div class="cx-lifecycle-card--scheduled row half-padding-bottom">
 				<div class="col-md-1 icon-calendar" attr.data-auto-id="{{ autoid }}-Calendar"></div>
 				<div class="col-md-11 no-padding-left">
-					<div class="text-bold" [innerText]="scheduledAtxMap[item.atxId].sessionStartDate | date:'medium'" attr.data-auto-id="{{ autoid }}-Date"></div>
+					<div class="text-bold" [innerText]="scheduledAtxMap[item.atxId].sessionStartDate | date:'EEE MMM d, y h:mm a z'" attr.data-auto-id="{{ autoid }}-Date"></div>
 					<div [innerText]="'_InstructorX_' | i18n:scheduledAtxMap[item.atxId].presenterName" attr.data-auto-id="{{ autoid }}-Presenter"></div>
 				</div>
 			</div>
@@ -450,15 +452,18 @@
 					<tr attr.data-auto-id="SelectSession-{{ session.sessionId }}"
 						*ngFor="let session of data.sessions"
 						(click)="selectSession(session)"
-						[ngClass]="{ 'active': sessionSelected?.sessionStartDate === session.sessionStartDate }">
-						<td class="text-xsmall"
-							[ngClass]="session.scheduled ? 'text-bold' : null"
+						[ngClass]="{
+							'active': sessionSelected?.sessionStartDate === session.sessionStartDate,
+							'scheduled': session.scheduled
+						}">
+						<td class="text-size-14 icon">
+							<span class="icon-check" *ngIf="session.scheduled"></span>
+						</td>
+						<td class="text-xsmall no-padding-left"
 							innerText="{{session.sessionStartDate | date:'EEE MMM d, y'}}"></td>
 						<td class="text-xsmall"
-							[ngClass]="session.scheduled ? 'text-bold' : null"
 							innerText="{{session.sessionStartDate | date:'shortTime'}}"></td>
 						<td class="text-xsmall"
-							[ngClass]="session.scheduled ? 'text-bold' : null"
 							[innerText]="session.presenterName"></td>
 					</tr>
 				</tbody>
@@ -707,10 +712,11 @@
 						</div>
 						<div class="modal__body__filter">
 							<cui-select class="lifecycle-filter"
+								[label]="'_FilterBy_' | i18n"
+								[inline]="true"
 								data-auto-id="acc-filter"
 								[items]="statusOptions"
-								[empty]="true"
-								[placeholder]="'_FilterBy_' | i18n"
+								[placeholder]="getStatusOptionName(selectedFilterForACC)"
 								[(ngModel)]="selectedFilterForACC"
 								(ngModelChange)="selectFilter('ACC')">
 							</cui-select>
@@ -740,8 +746,9 @@
 							<cui-select class="lifecycle-filter"
 								data-auto-id="atx-filter"
 								[items]="statusOptions"
-								[empty]="true"
-								[placeholder]="'_FilterBy_' | i18n"
+								[label]="'_FilterBy_' | i18n"
+								[inline]="true"
+								[placeholder]="getStatusOptionName(selectedFilterForATX)"
 								[(ngModel)]="selectedFilterForATX"
 								(ngModelChange)="selectFilter('ATX')">
 							</cui-select>
@@ -771,8 +778,9 @@
 							<cui-select class="lifecycle-filter"
 								data-auto-id="category-filter"
 								[items]="categoryOptions"
-								[empty]="true"
-								[placeholder]="'_FilterBy_' | i18n"
+								[label]="'_FilterBy_' | i18n"
+								[inline]="true"
+								[placeholder]="getStatusOptionName(selectedFilterForSB)"
 								[(ngModel)]="selectedFilterForSB"
 								(ngModelChange)="selectFilter('SB')">
 							</cui-select>
@@ -802,8 +810,9 @@
 							<cui-select class="lifecycle-filter"
 								data-auto-id="pg-category-filter"
 								[items]="pgCategoryOptions"
-								[empty]="true"
-								[placeholder]="'_FilterBy_' | i18n"
+								[label]="'_FilterBy_' | i18n"
+								[inline]="true"
+								[placeholder]="getStatusOptionName(selectedFilterForPG)"
 								[(ngModel)]="selectedFilterForPG"
 								(ngModelChange)="selectFilter('PG')">
 							</cui-select>

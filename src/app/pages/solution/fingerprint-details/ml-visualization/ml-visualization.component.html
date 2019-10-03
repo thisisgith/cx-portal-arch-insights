@@ -40,7 +40,7 @@
 				[innerText]="'_CP_Filter_' | i18n"
 			></div>
 			<div class="row half-padding-top">
-				<div [innerText]="'_CP_AssetGroupToAssign_' | i18n"></div>
+				<div [innerText]="'_CP_SystemGroupToAssign_' | i18n"></div>
 				<form [formGroup]="requestForm">
 					<div class="form-group half-padding-top">
 						<label class="radio">
@@ -80,7 +80,7 @@
 				<cui-select
 					[items]="deviceSearchList"
 					[(ngModel)]="searchedDevice"
-					[label]="'_CP_Search_Asset_' | i18n"
+					[label]="'_CP_Search_System_' | i18n"
 					[required]="false"
 					[empty]="true"
 					[compressed]="true"
@@ -95,7 +95,7 @@
 				<cui-select
 					[items]="listOfDevices1"
 					[(ngModel)]="selectedDevice1"
-					[label]="'_CP_AssetGroup1_' | i18n"
+					[label]="'_CP_SystemGroup1_' | i18n"
 					[required]="true"
 					[empty]="true"
 					[compressed]="true"
@@ -109,7 +109,7 @@
 				<cui-select
 					[items]="listOfDevices2"
 					[(ngModel)]="selectedDevice2"
-					[label]="'_CP_AssetGroup2_' | i18n"
+					[label]="'_CP_SystemGroup2_' | i18n"
 					[required]="true"
 					[empty]="true"
 					[compressed]="true"
