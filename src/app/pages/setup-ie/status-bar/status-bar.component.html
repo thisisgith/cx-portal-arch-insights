@@ -7,7 +7,7 @@
 			[title]="step.label"
 		>
 			<img
-				*ngIf="!step.isVisited() && !step.isActive()"
+				[hidden]="step.isVisited() || step.isActive()"
 				alt="Step Inactive"
 				class="setup-step__icon"
 				type="image/svg+xml"
@@ -21,7 +21,7 @@
 				[ngClass]="{ 'visited': step.isVisited() }"
 			></div>
 			<img
-				*ngIf="step.isVisited() || step.isActive()"
+				[hidden]="!step.isVisited() && !step.isActive()"
 				alt="Step Active"
 				class="setup-step__icon"
 				type="image/svg+xml"
