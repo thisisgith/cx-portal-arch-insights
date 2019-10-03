@@ -287,7 +287,7 @@ $cx-font-size-24: 24px;
 			font-size: $cx-font-size-16;
 
 			&.selected {
-				background-color: transparent;
+				background-color: #ecf4fc !important;
 				color: $cx-accent-color-2 !important; // Required to override cui color
 
 				&::after {
