@@ -88,7 +88,7 @@
 				</td>
 			</tr>
 			<!-- bugs -->
-			<tr (click)="showDetailsView('bug')" data-auto-id="ShowBugDetails">
+			<tr id="bugs-details" (click)="showDetailsView('bug')" data-auto-id="ShowBugDetails">
 				<td class=" first-column-width headingClass no-border-bottom no-border-top text-large  text-primary"
 					[innerText]="'_Bugs_' | i18n">
 				</td>
@@ -139,7 +139,7 @@
 				</td>
 			</tr>
 			<!-- security advisories -->
-			<tr data-auto-id="ShowPsirtDetails" (click)="showDetailsView('psirt')">
+			<tr id="psirts-details" data-auto-id="ShowPsirtDetails" (click)="showDetailsView('psirt')">
 				<td class=" first-column-width headingClass no-border-bottom no-border-top text-large text-primary"
 					[innerText]="'_SecurityAdvisories_' | i18n">
 				</td>

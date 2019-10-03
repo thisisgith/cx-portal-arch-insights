@@ -190,7 +190,10 @@
 			<span  [title]="item.title" [innerText]="item.title"></span>
 		</div>
 		<div>
-			<span class="text-primary icon-popout icon-small qtr-margin-left"></span>
+				<img alt="{{ '_OsvOpenNewWindow_' | i18n }}"
+				class="qtr-margin-left"
+				attr.data-auto-id="OpenInNewWindow"
+				src="assets/icons/icon-open-new-window.svg">
 		</div>
 	</div>
 </ng-template>
@@ -203,5 +206,8 @@
 
 <ng-template #bugIdTemp let-item="celldata">		
 	<span  [title]="item.id" [innerText]="item.id"></span>
-	<span class="text-primary icon-popout icon-small qtr-margin-left"></span>
+	<img alt="{{ '_OsvOpenNewWindow_' | i18n }}"
+		class="qtr-margin-left"
+		attr.data-auto-id="OpenInNewWindow"
+		src="assets/icons/icon-open-new-window.svg">	
 </ng-template>
