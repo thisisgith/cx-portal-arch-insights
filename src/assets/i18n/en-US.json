@@ -752,6 +752,7 @@
 	"_OsvUngroupedAssetsCount_": "Ungrouped Assets Count",
 	"_OsvUpgrade_": "Upgrade",
 	"_OsvVersion_": "Release",
+	"_OsvPsirtVersion_": "Version",
 	"_OsvVersionSummary_": "Version Attribute",
 	"_OsvViewAllOSVersions_": "View all releases",
 	"_OsvWarningTooltip_": "Warning - current release needs upgrading to optimal software version.",
