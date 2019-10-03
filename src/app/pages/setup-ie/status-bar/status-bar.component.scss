@@ -18,6 +18,9 @@
 		.setup-step {
 			position: relative;
 			margin-right: -40px;
+			height: 100px;
+			width: 100px;
+			border-radius: 50%;
 
 			&__icon,
 			&__spacer {
@@ -30,35 +33,27 @@
 				position: absolute;
 				width: 100px;
 				text-align: right;
-				left: -116px;
+				left: -115%;
 				color: $cisco-blue;
-				top: 20px;
-			}
-
-			&__outline {
-				height: 100px;
-				width: 100px;
-				position: absolute;
-				border: 2px solid $cisco-blue;
-				border-radius: 50px;
-				right: -10px;
-				bottom: -6px;
-				background: $white;
-				z-index: -1;
 			}
 
 			&__connector {
 				height: 63px;
 				position: absolute;
 				width: 2px;
-				top: 78px;
-				left: 40px;
+				top: 89%;
+				left: 50%;
 				z-index: -2;
 				background: #dae6ed;
 
 				&.visited {
 					background: $cisco-blue;
 				}
+			}
+
+			&.setup-step--active {
+				border: 2px solid $cisco-blue;
+				background: #fff;
 			}
 		}
 	}

@@ -4,7 +4,7 @@
 	background-color: $primary;
 	color: $white;
 	border: 1px solid $primary;
-	width: 75px;
+	width: 65px;
 	line-height: 16px;
 
 	&::before {
@@ -17,14 +17,6 @@
 		top: 50%;
 		transform: translateY(-50%);
 		border-left: 14px solid $primary;
-	}
-}
-
-.selected-view {
-	background: $primary;
-
-	&:hover {
-		background: $primary;
 	}
 }
 
@@ -42,4 +34,38 @@
 
 .responsive-table {
 	overflow: unset;
+}
+
+.recommendation-label.label {
+	background: #ebeef3;
+	color: #394453;
+}
+
+.recommendation-icon-info {
+	color: #c2d1e2;
+}
+
+.titlebar__viewmode {
+	border-top: 1px solid #c8d4d7;
+	border-bottom: 1px solid #c8d4d7;
+}
+
+.titlebar__viewmode button {
+	width: 32px;
+	height: 30px !important;
+	display: block;
+	background: #fafbfc;
+
+	&:hover {
+		background: #ebf1f8;
+	}
+}
+
+#asset-group-btns.btn-group.titlebar__viewmode .btn.selected {
+	background: #6a80a5 !important;
+	box-shadow: inset 0 0 0 1px #6a80a5 !important;
+
+	::ng-deep svg g {
+		fill: #fff;
+	}
 }

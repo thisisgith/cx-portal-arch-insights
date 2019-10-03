@@ -74,6 +74,7 @@ export class RccComponent implements OnInit, OnDestroy {
 		totalItems: 0,
 	};
 	public loading = false;
+	public filterLoading = false;
 	public tableData: RccGridData;
 	public policyViolationsGridData: RccGridDataSample[] = [];
 	public tableAssetData: RccAssetGridData;
@@ -362,7 +363,7 @@ export class RccComponent implements OnInit, OnDestroy {
 	 * @returns selected filters
 	 */
 	public getFiltersData () {
-		this.loading = true;
+		this.filterLoading = true;
 		this.RccTrackService
 			.getViolationCount({ customerId: this.customerId })
 			.pipe(takeUntil(this.destroy$))
@@ -375,10 +376,10 @@ export class RccComponent implements OnInit, OnDestroy {
 				severityFilter.seriesData = filterObjRes.severityFilters;
 				this.assetsTotalCount = filterObjRes.assetCount;
 				this.policyViolationsTotalCount = filterObjRes.policyViolationCount;
-				this.loading = false;
+				this.filterLoading = false;
 			},
 			error => {
-				this.loading = false;
+				this.filterLoading = false;
 				this.alert.show(I18n.get('_RccErrorResults_'), 'danger');
 				this.logger.error(
 					'RccComponent : getFiltersData() ' +
@@ -395,7 +396,7 @@ export class RccComponent implements OnInit, OnDestroy {
 	 * @returns selected filters
 	 */
 	public getAssetFiltersData () {
-		this.loading = true;
+		this.filterLoading = true;
 		this.RccTrackService
 			.getAssetCount({ customerId: this.customerId })
 			.pipe(takeUntil(this.destroy$))
@@ -404,10 +405,10 @@ export class RccComponent implements OnInit, OnDestroy {
 				const filterObjRes = assetFilterData.data;
 				const assetSeverityFilter = _.find(this.filters, { key: 'assetSeverity' });
 				assetSeverityFilter.seriesData = filterObjRes.severityList;
-				this.loading = false;
+				this.filterLoading = false;
 			},
 			error => {
-				this.loading = false;
+				this.filterLoading = false;
 				this.logger.error(
 					'RccComponent : getAssetFiltersData() ' +
 				`:: Error : (${error.status}) ${error.message}`);
@@ -542,7 +543,7 @@ export class RccComponent implements OnInit, OnDestroy {
 				loading: true,
 				seriesData: [],
 				template: this.severityFilterTemplate,
-				title: I18n.get('_RccSeverity_'),
+				title: I18n.get('_RccAssetSeverity_'),
 			},
 		];
 	}

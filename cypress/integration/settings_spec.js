@@ -26,7 +26,7 @@ describe('Control Point (Admin Settings)', () => { // PBC-207
 			cy.getByAutoId('settings.system.app.panel').should('exist');
 
 			cy.getByAutoId('settings.system.usage').should('exist');
-			cy.getByAutoId('settings.system.usage.label').should('have.text', i18n._ResourceUsage_.toUpperCase());
+			cy.getByAutoId('settings.system.usage.label').should('have.text', i18n._SystemUtilization_.toUpperCase());
 
 			cy.getByAutoId('settings.system.info').should('exist');
 			cy.getByAutoId('settings.system.info.label').should('have.text', i18n._SystemInfo_.toUpperCase());
@@ -91,33 +91,34 @@ describe('Control Point (Admin Settings)', () => { // PBC-207
 			const hw = mainData.system_details.hardware_details;
 
 			cy.getByAutoId('settings.system.usage').within(() => {
-				cy.getByAutoId(`usage-${i18n._CurrentCPUUtilization_}`).should('contain', i18n._CurrentCPUUtilization_.toUpperCase());
-				cy.getByAutoId(`usage-${i18n._CurrentAvailableMemory_}`).should('contain', i18n._CurrentAvailableMemory_.toUpperCase());
-				cy.getByAutoId(`usage-${i18n._FreeDiskSpace_}`).should('contain', i18n._FreeDiskSpace_.toUpperCase());
+				cy.getByAutoId(`usage-${i18n._CurrentCPUUtilization_}`)
+					.should('contain', i18n._CurrentCPUUtilization_.toUpperCase());
+				cy.getByAutoId(`usage-${i18n._MemoryUtilization_}`)
+					.should('contain', i18n._MemoryUtilization_.toUpperCase());
+				cy.getByAutoId(`usage-${i18n._DiskSpaceUtilization_}`)
+					.should('contain', i18n._DiskSpaceUtilization_.toUpperCase());
 			});
 
 			cy.getByAutoId(`usage-${i18n._CurrentCPUUtilization_}`).within(() => {
-				cy.get('cui-gauge').should('exist');
-				cy.get('cui-gauge').should('have.text', `${Cypress._.parseInt(hw.cpu_utilization, 10)}%`);
+				cy.get('cui-gauge')
+					.should('have.text', `${Cypress._.parseInt(hw.cpu_utilization, 10)}%`);
 				cy.get('cui-gauge').should('have.attr', 'ng-reflect-color', 'success');
 			});
 
-			cy.getByAutoId(`usage-${i18n._CurrentAvailableMemory_}`).within(() => {
-				cy.get('cui-gauge').should('exist');
-				const expected = Math.ceil(
-					(Cypress._.parseInt(hw.free_memory, 10) / Cypress._.parseInt(hw.total_memory, 10)) * 100
-				);
+			cy.getByAutoId(`usage-${i18n._MemoryUtilization_}`).within(() => {
+				const used = Cypress._.parseInt(hw.total_memory, 10)
+					- Cypress._.parseInt(hw.free_memory, 10);
+				const expected = Math.ceil((used / Cypress._.parseInt(hw.total_memory, 10)) * 100);
 				cy.get('cui-gauge').should('have.text', `${expected}%`);
-				cy.get('cui-gauge').should('have.attr', 'ng-reflect-color', 'warning');
+				cy.get('cui-gauge').should('have.attr', 'ng-reflect-color', 'success');
 			});
 
-			cy.getByAutoId(`usage-${i18n._FreeDiskSpace_}`).within(() => {
-				cy.get('cui-gauge').should('exist');
-				const expected = Math.ceil(
-					(Cypress._.parseInt(hw.free_hdd_size, 10) / Cypress._.parseInt(hw.hdd_size, 10)) * 100
-				);
+			cy.getByAutoId(`usage-${i18n._DiskSpaceUtilization_}`).within(() => {
+				const used = Cypress._.parseInt(hw.hdd_size, 10)
+					- Cypress._.parseInt(hw.free_hdd_size, 10);
+				const expected = Math.ceil((used / Cypress._.parseInt(hw.hdd_size, 10)) * 100);
 				cy.get('cui-gauge').should('have.text', `${expected}%`);
-				cy.get('cui-gauge').should('have.attr', 'ng-reflect-color', 'danger');
+				cy.get('cui-gauge').should('have.attr', 'ng-reflect-color', 'success');
 			});
 		});
 
@@ -266,13 +267,11 @@ describe('Control Point (Setup Wizard)', () => { // PBC-190
 			cy.location('search').should('contain', 'compKey=2');
 			cy.location('search').should('contain', 'ovaSelection=vsphere');
 			cy.go('back');
-			cy.waitForAppLoading();
 
 			cy.contains('button', i18n._VMWareVCenter_).click();
 			cy.location('search').should('contain', 'compKey=2');
 			cy.location('search').should('contain', 'ovaSelection=vcenter');
 			cy.go('back');
-			cy.waitForAppLoading();
 
 			cy.contains('button', i18n._OracleVirtualBox_).click();
 			cy.location('search').should('contain', 'compKey=2');
@@ -291,24 +290,22 @@ describe('Control Point (Setup Wizard)', () => { // PBC-190
 
 		it('Download OVA Panel', () => {
 			cy.contains(`STEP 1: ${i18n._Prerequisites_.toUpperCase()}`).should('exist');
-			cy.contains(i18n._DownloadOVAImage_).should('exist');
+
+			cy.get('k9-form').should('exist');
+			cy.getByAutoId('accept-k9').should('have.attr', 'disabled');
+			cy.getByAutoId('business-fn-civ').click({ force: true });
+			cy.getByAutoId('accept-k9').should('have.attr', 'disabled');
+			cy.getByAutoId('setup.ova.eula1').click({ force: true });
+			cy.getByAutoId('accept-k9').should('not.have.attr', 'disabled');
+			cy.getByAutoId('accept-k9').click();
+
 			cy.contains('a', 'Cisco End User License Agreement').should('have.attr', 'href')
 				.and('eq', 'http://www.cisco.com/c/en/us/products/end-user-license-agreement.html');
-
-			cy.contains('button', i18n._DownloadImage_.toUpperCase()).should('have.attr', 'disabled');
-			cy.getByAutoId('business-fn-civ').click({ force: true });
-
-			cy.getByAutoId('setup.ova.eula1').should('have.attr', 'ng-reflect-model', 'false');
-			cy.contains('button', i18n._DownloadImage_.toUpperCase()).should('have.attr', 'disabled');
+			cy.getByAutoId('download-image-btn').should('have.attr', 'disabled');
 			cy.getByAutoId('setup.ova.eula1').click({ force: true });
 			cy.getByAutoId('setup.ova.eula1').should('have.attr', 'ng-reflect-model', 'true');
 
-			cy.getByAutoId('setup.ova.eula2').should('have.attr', 'ng-reflect-model', 'false');
-			cy.contains('button', i18n._DownloadImage_.toUpperCase()).should('have.attr', 'disabled');
-			cy.getByAutoId('setup.ova.eula2').click({ force: true });
-			cy.getByAutoId('setup.ova.eula2').should('have.attr', 'ng-reflect-model', 'true');
-
-			cy.contains('button', i18n._DownloadImage_.toUpperCase()).should('not.have.attr', 'disabled');
+			cy.getByAutoId('download-image-btn').should('not.have.attr', 'disabled');
 		});
 	});
 

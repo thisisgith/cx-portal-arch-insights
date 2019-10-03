@@ -93,12 +93,7 @@ export class DevicesListComponent implements OnInit, OnChanges {
 			columns: [
 				{
 					key: 'neName',
-					name: I18n.get('_ArchitectureDevice_'),
-					sortable: false,
-				},
-				{
-					key: 'productId',
-					name: I18n.get('_ArchitectureProductId_'),
+					name: I18n.get('_ArchitectureSystemName_'),
 					sortable: false,
 				},
 				{
@@ -107,12 +102,17 @@ export class DevicesListComponent implements OnInit, OnChanges {
 					template : this.productFamilyTemplate,
 				},
 				{
+					key: 'productId',
+					name: I18n.get('_ArchitectureProductId_'),
+					sortable: false,
+				},
+				{
 					key: 'softwareType',
 					name: I18n.get('_ArchitectureSoftwareType_'),
 					sortable: false,
 				},
 				{
-					name: I18n.get('_ArchitectureSoftwareVersion_'),
+					name: I18n.get('_ArchitectureSoftwareRelease_'),
 					sortable: false,
 					template : this.softwareVersionTemplate,
 				},
@@ -168,7 +168,8 @@ export class DevicesListComponent implements OnInit, OnChanges {
 				this.totalItems = data.TotalCounts;
 				this.dnacDeviceDetails = data.dnacDeviceDetails;
 				this.lastCollectionTime = datePipe.transform(data.CollectionDate, 'medium');
-				this.tableEndIndex = (this.tableStartIndex + this.dnacDeviceDetails.length);
+				this.tableEndIndex = (this.tableStartIndex + this.dnacDeviceDetails
+					? this.dnacDeviceDetails.length : 0);
 			}, err => {
 				this.logger.error('CBP Rule Component View' +
 					'  : getDevicesList() ' +

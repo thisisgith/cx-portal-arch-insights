@@ -36,7 +36,7 @@
 							</button>
 						</div>
 					</div>
-				</div>
+				</div> 
 				<div class="col-4">
 					<div class="form-group input--icon input--compressed">
 						<div class="form-group__text">
@@ -53,7 +53,7 @@
 	</div>
 
 </div>
-<div class="container base-margin-top" data-auto-id="syslog-message-table" *ngIf="tableData.length">
+<div class="container base-margin-top" data-auto-id="syslog-message-table" *ngIf="tableData.length && !loading">
 	<cui-table
 		class="not-close-360"
 		[options]="tableOptions"
@@ -62,11 +62,9 @@
 		[offset]="tableOffset"
 		(onSortingChanged)="onTableSortingChanged($event)"
 		(onTableRowClicked)="onTableRowSelection($event)"
-		*ngIf="!loading"
 	></cui-table>
 	<div class="section">
 		<cui-pager
-			*ngIf="tableData.length"
 			[page]="tableOffset"
 			[limit]="tableLimit"
 			[totalItems]="totalItems"
@@ -74,7 +72,13 @@
 		></cui-pager>
 	</div>
 </div>
-<div *ngIf="!tableData.length">
+<div class="container qtr-margin-top no-padding">
+	<div *ngIf="loading && !tableData.length" class="base-margin-bottom">
+		<cui-spinner></cui-spinner>
+	</div>
+</div>
+
+<div *ngIf="!tableData.length && !loading">
 	<div class="text-center dbl-margin-top dbl-margin-bottom">
 		<div>
 			<span class="text-muted text-xlarge"
@@ -101,6 +105,7 @@
 	[hidden]="!selectedAsset"
 	(hiddenChange)="handleHidden($event)"
 	[fullscreen]="fullscreen"
+	[minWidth]="'900px'"
 >
 	<details-panel-header
 		(close)="onPanelClose()"
@@ -119,10 +124,23 @@
 			<div class="col-md-2">
 				<div class="row">
 					<div class="col-md-12" [innerText]="'Severity'"></div>
-					<div
-						class="col-md-12"
-						[innerText]="selectedAsset.SyslogSeverity"
-					></div>
+					<div 
+						class="col-md-12">
+	<i class="icon-circle" 
+						 	[ngClass]="{
+							'0': 'text-danger',
+							'1': 'text-danger',
+							'2': 'text-warning',
+							'3': 'text-warning-alt',
+							'4': 'text-warning-alt',
+							'5': 'text-primary',
+							'6': 'text-primary',
+							'7': 'text-primary'
+						}[selectedAsset?.SyslogSeverity]"
+						>
+					</i> 
+						<span [innerText]="selectedAsset.SyslogSeverity"></span>
+				</div>
 				</div>
 			</div>
 			<div class="col-md-3">

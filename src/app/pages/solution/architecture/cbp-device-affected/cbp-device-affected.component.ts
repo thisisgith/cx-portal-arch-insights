@@ -76,13 +76,13 @@ export class CbpDeviceAffectedComponent implements OnInit, OnChanges {
 			bordered: false,
 			columns: [
 				{
-					name: I18n.get('_ArchitectureHostName_'),
+					name: I18n.get('_ArchitectureSystemName_'),
 					sortable: false,
 					template: this.assetTemplate,
 				},
 				{
-					key: 'productId',
-					name: I18n.get('_ArchitectureProductId_'),
+					key: 'ipAddress',
+					name: I18n.get('_ArchitectureIPAddress_'),
 					sortable: false,
 				},
 				{
@@ -91,20 +91,20 @@ export class CbpDeviceAffectedComponent implements OnInit, OnChanges {
 					sortable: false,
 				},
 				{
+					key: 'productId',
+					name: I18n.get('_ArchitectureProductId_'),
+					sortable: false,
+				},
+				{
 					key: 'softwareVersion',
-					name:  I18n.get('_ArchitectureSoftwareVersion_'),
+					name:  I18n.get('_ArchitectureSoftwareRelease_'),
 					sortable: false,
 				},
 				{
 					key: 'lastUpdateDate',
-					name: I18n.get('_ArchitectureConfigCollectionDate_'),
+					name: I18n.get('_ArchitectureConfigCollection_'),
 					render: item =>
 						datePipe.transform(item.lastUpdateDate, 'medium'),
-					sortable: false,
-				},
-				{
-					key: 'ipAddress',
-					name: I18n.get('_ArchitectureIPAddress_'),
 					sortable: false,
 				},
 			],

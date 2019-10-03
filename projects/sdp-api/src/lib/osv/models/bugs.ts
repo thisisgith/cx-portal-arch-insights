@@ -4,4 +4,5 @@ export interface OsvBug {
 	severity: string;
 	source: string;
 	status: string;
+	title?: string;
 }

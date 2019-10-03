@@ -3,7 +3,7 @@ const communitiesMapping = [
 	{
 		usecase: 'Campus Network Assurance',
 		title: 'Wireless & Mobility',
-		url: 'https://cloudsso-test.cisco.com/idp/startSSO.ping?PartnerSpId=https://community-stage.cisco.com/auth/saml&TARGET=https://community-stage.cisco.com/t5/wireless-and-mobility/bd-p/5956-discussions-getting-started-wireless',
+		url: 'https://cloudsso-test.cisco.com/idp/startSSO.ping?PartnerSpId=https://community-stage.cisco.com/auth/saml&TARGET=https://community-stage.cisco.com/t5/wireless-and-mobility/bd-p/5956-discussions-getting-started-wireles',
 		pitstops: [
 			{
 				name: 'Onboard',
@@ -248,10 +248,18 @@ describe('Communities Panel', () => {
 					it(`Success Track Community Links for pitstop: ${pitstop.name}`, () => {
 						cy.getByAutoId(`Racetrack-Point-${pitstop.name}`)
 							.click({ force: true });
+
+						// Verify Success Track URL (potentially different for each pitstop)
 						cy.getByAutoId(`communitytitle-${pitstop.curatedTooltip}-Lifecycle`)
 							.should('have.text', 'Success Track')
 							.and('have.attr', 'title', pitstop.curatedTooltip)
 							.and('have.attr', 'data-auto-href', pitstop.curatedURL);
+
+						// Verify the communities public URL (should NOT change per pitstop)
+						cy.getByAutoId(`communitytitle-${mapping.title}-Public`)
+							.should('exist')
+							.and('have.attr', 'title', mapping.title)
+							.and('have.attr', 'data-auto-href', mapping.url);
 					});
 				});
 			});

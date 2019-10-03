@@ -26,13 +26,12 @@ import {
 	MachineRecommendations,
 	ProfileRecommendationsResponse,
 } from '@sdp-api';
-import { forkJoin, Subject, of, Subscription } from 'rxjs';
+import { forkJoin, Subject, of } from 'rxjs';
 import { takeUntil, map, catchError } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
-import { CuiTableOptions, CuiModalService } from '@cisco-ngx/cui-components';
+import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { DatePipe } from '@angular/common';
-import { CancelConfirmComponent } from '../cancel-confirm/cancel-confirm.component';
 import { DetailsPanelStackService } from '@services';
 
 /**
@@ -89,14 +88,14 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	public screenWidth = window.innerWidth;
 
 	public recommendationAcceptedDate: string;
-	public cancelSubscription: Subscription;
 	public actionData: any;
+	public showDetails = false;
+	public detailsParams: any;
 
 	constructor (
 		private logger: LogService,
 		private osvService: OSVService,
 		private route: ActivatedRoute,
-		private cuiModalService: CuiModalService,
 		private detailsPanelStackService: DetailsPanelStackService,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
@@ -129,11 +128,8 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	 * Initialization hook
 	 */
 	public ngOnInit (): void {
+		this.showDetails = false;
 		this.refresh();
-		this.cancelSubscription = this.cuiModalService.onCancel
-			.subscribe(() => {
-				this.onCancel();
-			});
 	}
 
 	/**
@@ -313,9 +309,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	 * OnDestroy lifecycle hook
 	 */
 	public ngOnDestroy () {
-		if (this.cancelSubscription) {
-			_.invoke(this.cancelSubscription, 'unsubscribe');
-		}
+		this.showDetails = false;
 		this.destroy$.next();
 		this.destroy$.complete();
 	}
@@ -325,6 +319,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	 * @param changes the changes detected
 	 */
 	public ngOnChanges (changes: SimpleChanges) {
+		this.showDetails = false;
 		const currentSelectedGroup = _.get(changes, ['selectedSoftwareGroup', 'currentValue']);
 		const isFirstChange = _.get(changes, ['selectedSoftwareGroup', 'firstChange']);
 		const currentTabIndex = _.get(changes, ['tabIndex', 'currentValue']);
@@ -349,10 +344,18 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 				bordered: true,
 				columns: [
 					{
+						key: 'swType',
+						name: I18n.get('_OsvOSType_'),
+						sortable: true,
+						sortDirection: 'asc',
+						sorting: true,
+						width: '20%',
+					},
+					{
 						key: 'swVersion',
 						name: I18n.get('_OsvVersion_'),
 						sortable: false,
-						width: '10%',
+						width: '20%',
 					},
 					{
 						key: 'releaseDate',
@@ -362,23 +365,21 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 								new Date(item.postDate), 'yyyy MMM dd') :
 							'',
 						sortable: true,
+						width: '20%',
 					},
 					{
-						key: 'swType',
-						name: I18n.get('_OsvOSType_'),
-						sortable: true,
-						sortDirection: 'asc',
-						sorting: true,
+						key: 'optimalVersion',
+						name: I18n.get('_OsvOptimalOSVersion_'),
+						render: item =>
+								item.optimalVersion ? item.optimalVersion : '',
+						sortable: false,
+						width: '20%',
 					},
 					{
 						key: 'assetCount',
 						name: I18n.get('_OsvAssetCount_'),
 						sortable: false,
-					},
-					{
-						key: 'optimalVersion',
-						name: I18n.get('_OsvOptimalOSVersion_'),
-						sortable: false,
+						width: '20%',
 					},
 				],
 				dynamicData: true,
@@ -404,35 +405,44 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 					{
 						key: 'hostName',
 						name: I18n.get('_OsvHostName'),
-						width: '10%',
 						sortable: true,
 						sortDirection: 'asc',
 						sorting: true,
+						width: '20%',
 					},
 					{
 						key: 'ipAddress',
 						name: I18n.get('_OsvIpAddress_'),
 						sortable: false,
+						width: '16%',
 					},
 					{
 						key: 'swType',
 						name: I18n.get('_OsvOSType_'),
 						sortable: false,
+						width: '16%',
 					},
 					{
 						name: I18n.get('_OsvCurrentOSVersion_'),
 						template: this.versionTemplate,
 						sortable: false,
+						width: '16%',
 					},
 					{
 						key: 'optimalVersion',
 						name: I18n.get('_OsvOptimalVersion_'),
+						render: item =>
+								item.optimalVersion ? item.optimalVersion : '',
 						sortable: false,
+						width: '16%',
 					},
 					{
 						key: 'deploymentStatus',
 						name: I18n.get('_OsvDeploymentStatus_'),
+						render: item =>
+								item.deploymentStatus ? item.deploymentStatus : '',
 						sortable: false,
+						width: '16%',
 					},
 				],
 				dynamicData: true,
@@ -474,7 +484,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 		if (data.type === 'accept') {
 			this.onAccept(data.version);
 		} else if (data.type === 'cancel') {
-			this.cuiModalService.showComponent(CancelConfirmComponent, { });
+			this.onCancel();
 		}
 	}
 
@@ -593,5 +603,21 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 		_.map(response.recommendationSummaries, recommendation => {
 			recommendation.profileRisk = response.profileRisk;
 		});
+	}
+
+	/**
+	 * show Bug and Psirt Details
+	 * @param details details emitted for showing bug details
+	 */
+	public showDetailsView (details: any) {
+		this.detailsParams = details;
+		this.showDetails = true;
+	}
+
+	/**
+	 * hide Bug and Psirt Details
+	 */
+	public hideDetailsView () {
+		this.showDetails = false;
 	}
 }

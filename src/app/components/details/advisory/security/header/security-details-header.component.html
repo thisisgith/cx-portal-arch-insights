@@ -43,12 +43,12 @@
 			<span [innerText]="'_LastUpdated_' | i18n"></span>
 			<span>:</span>
 		</div>
-		<div *ngIf="details.advisory && details.advisory.lastUpdated"
-			[innerText]="details.advisory.lastUpdated | fromNow"
-			[title]="details.advisory.lastUpdated | dateTime"
+		<div *ngIf="details?.advisory && (details?.advisory?.lastUpdated || details?.advisory?.publishedOn)"
+			[innerText]="details.advisory.lastUpdated ? (details.advisory.lastUpdated | fromNow) : (details.advisory.publishedOn | fromNow)"
+			[title]="details.advisory.lastUpdated ? (details.advisory.lastUpdated | dateTime) : (details.advisory.publishedOn | dateTime)"
 			class="header__text">
 		</div>
-		<div *ngIf="!details.advisory || !details.advisory.lastUpdated"
+		<div *ngIf="!details.advisory || (!details.advisory.lastUpdated && !details.advisory.publishedOn)"
 			[innerText]="('_Never_' | i18n)"
 			[title]="('_Never_' | i18n)"
 			class="header__text">
@@ -65,7 +65,7 @@
 </div>
 
 <div class="row col-md-12 flex flex-container" *ngIf="details">
-	<a class="text-capitalize btn btn--small btn--primary"
+	<a class="text-uppercase btn btn--primary"
 		[innerText]="'_ViewAdvisory_' | i18n"
 		data-auto-id="SecurityAdvisoryViewNoticeLink"
 		[href]="details?.advisory?.url"
@@ -74,7 +74,7 @@
 	</a>
 
 	<button *ngIf="impactedAssets?.length || selectedAsset"
-		class="btn btn--small btn--primary"
+		class="btn btn--primary text-uppercase"
 		[innerText]="'_OpenCase_' | i18n"
 		data-auto-id="SecurityAdvisoryOpenCaseBtn"
 		(click)="onOpenCase()">

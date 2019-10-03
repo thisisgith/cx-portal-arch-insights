@@ -17,8 +17,8 @@
 				</div>
 			</div>
 			<div class="col-md-10 no-padding">
-				<div class="col-md-7 seperator-line half-margin-left">
-					<div class="flex flex-fluid">
+				<div class="col-md-7 seperator-line half-margin-left flex-center" *ngIf="!errorPolicyView && !noTableData">
+					<div class="flex flex-fluid" *ngIf="!filterLoading">
 						<ng-container *ngFor="let filter of filters">
 							<div attr.id="RccSelectVisualFilter-{{ filter?.key }}"
 								attr.data-auto-id="RccSelectVisualFilter-{{filter?.key}}" [ngClass]="{filter__selected: filter?.selected,
@@ -30,9 +30,12 @@
 										</ng-container>
 									</div>
 								</div>
-								<div class="filter__title text-muted text-large" [innerHTML]="filter?.title"></div>
+								<div *ngIf="!filterLoading && !errorPolicyView" class="filter__title text-muted text-large" [innerHTML]="filter?.title"></div>
 							</div>
 						</ng-container>
+					</div>
+					<div *ngIf="filterLoading" class="base-margin-top base-margin-left">
+						<cui-spinner></cui-spinner>
 					</div>
 				</div>
 			</div>
@@ -48,22 +51,22 @@
 		</cui-alert>
 	</div>
 	<div class="row container">
-		<div class="col-md-9 flex align-items-center" *ngIf="!isAssetView">
+		<div class="col-md-9 flex align-items-center" *ngIf="!isAssetView && !errorPolicyView">
 			<span [innerText]="'_RccShowing_' | i18n"></span>
 			<span class="qtr-margin-left" [innerText]="(conditionViolations | number) || ('_RccNoValue_' | i18n)"></span>
 			<span class="qtr-margin-left" [innerText]="'_RccConditionViolations_' | i18n"></span>
 			<span class="qtr-margin-left" [innerText]="'_RccAcross_' | i18n"></span>
 			<span class="qtr-margin-left" [innerText]="(conditionViolationsAssetCount | number) || ('_RccNoValue_' | i18n)"></span>
-			<span class="qtr-margin-left" [innerText]="'_RccAssets_' | i18n"></span>
+			<span class="qtr-margin-left" [innerText]="'_RccSystems_' | i18n"></span>
 		</div>
-		<div class="col-md-9 flex align-items-center" *ngIf="isAssetView">
+		<div class="col-md-9 flex align-items-center" *ngIf="isAssetView && !errorPolicyView">
 			<span [innerText]="'_RccShowing_' | i18n"></span>
 			<span class="qtr-margin-left" [innerText]="(withViolationsAssetsCount | number) || ('_RccNoValue_' | i18n)"></span>
-			<span class="qtr-margin-left" [innerText]="'_RccAssetsWith_' | i18n"></span>
+			<span class="qtr-margin-left" [innerText]="'_RccSystemsWith_' | i18n"></span>
 			<span class="qtr-margin-left" [innerText]="(assetsConditionViolationsCount | number)  || ('_RccNoValue_' | i18n)"></span>
 			<span class="qtr-margin-left" [innerText]="'_RccConditionViolations_' | i18n"></span>
 		</div>
-		<div class="col-md-3">
+		<div class="col-md-3" *ngIf="!errorPolicyView">
 			<div class="flex flex-fluid flex-right">
 				<div class="flex-fill form-group input--compressed input--icon half-margin-right">
 					<form [formGroup]="searchForm" novalidate id="searchForm" (keyup)="searchViolations($event,'input')" data-auto-id="searchViolations">
@@ -161,7 +164,7 @@
 	</ng-template>
 
 	<ng-template #filterBar>
-		<div class="row flex-center-vertical half-margin-top base-margin-bottom" *ngIf="filtered && selectedFilters?.length > 0">
+		<div class="row flex-center-vertical half-margin-top half-margin-bottom" *ngIf="filtered && selectedFilters?.length > 0">
 			<div class="col-md-11 flex">
 				<span class="flex flex-center-vertical base-margin-left half-margin-right filter-bar__title" [innerText]="'_Filtered_' | i18n"></span>
 				<ng-container *ngFor="let filter of selectedFilters">
@@ -188,11 +191,11 @@
 			[fullscreenToggle]="true">
 			<div detailsPanelTitle>
 				<span class="text-xlarge" 
-					[innerText]="'_RccRuleNameArg_' | i18n:policyViolationInfo?.ruletitle || ('_NA_' | i18n)">
+					[innerText]="'_RccRuleViolatedArg_' | i18n:policyViolationInfo?.ruletitle || ('_NA_' | i18n)">
 				</span>
 			</div>
 			<div class="row ">
-				<div class="col-12 base-margin-bottom">
+				<div class="col-12 base-margin-top">
 					<div class="flex">
 						<div data-auto-id="RccRegulatoryType" class="dbl-margin-right">
 							<div class="text-small text-bold" [innerText]="'_RccRegulatoryType_' | i18n">
@@ -242,7 +245,7 @@
 				</a>
 			</div>
 			<div class="row">
-				<div class="col-md-8 base-margin-bottom">
+				<div class="col-md-8 base-margin-top">
 					<div class="flex">
 						<div data-auto-id="RccIPAddress" class="dbl-margin-right">
 							<div class="text-small text-uppercase text-bold" [innerText]="'_RccAssetIpAddress_' | i18n">

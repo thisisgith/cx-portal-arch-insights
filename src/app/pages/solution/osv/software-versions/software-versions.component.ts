@@ -33,11 +33,12 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class SoftwareVersionsComponent implements OnInit, OnDestroy {
 	@Input() public cxLevel;
+	@Input() public versionsCount;
 	@ViewChild('releaseDate', { static: true }) private releaseDateTemplate: TemplateRef<{ }>;
 	@Output() public contactSupport = new EventEmitter();
 	public softwareVersionsTable: CuiTableOptions;
 	public status = {
-		isLoading: true,
+		isLoading: false,
 	};
 	public softwareVersions: SoftwareVersion[];
 	public pagination: OsvPagination;
@@ -68,7 +69,9 @@ export class SoftwareVersionsComponent implements OnInit, OnDestroy {
 	 * OnInit lifecycle hook
 	 */
 	public ngOnInit () {
-		this.loadData();
+		if (this.versionsCount > 0) {
+			this.loadData();
+		}
 	}
 
 	/**
@@ -131,22 +134,7 @@ export class SoftwareVersionsComponent implements OnInit, OnDestroy {
 						key: 'swVersion',
 						name: I18n.get('_OsvVersion_'),
 						sortable: false,
-					},
-					{
-						key: 'releaseDate',
-						name: I18n.get('_OsvReleaseDate_'),
-						template: this.releaseDateTemplate,
-						sortable: true,
-					},
-					{
-						key: 'assetCount',
-						name: I18n.get('_OsvIndependentAssetsCount_'),
-						sortable: false,
-					},
-					{
-						key: 'profileAssetCount',
-						name: I18n.get('_OsvAssetsOfSoftwareProfilesCount_'),
-						sortable: false,
+						width: '20%',
 					},
 					{
 						key: 'swType',
@@ -154,6 +142,26 @@ export class SoftwareVersionsComponent implements OnInit, OnDestroy {
 						sortable: true,
 						sortDirection: 'asc',
 						sorting: true,
+						width: '20%',
+					},
+					{
+						key: 'releaseDate',
+						name: I18n.get('_OsvReleaseDate_'),
+						template: this.releaseDateTemplate,
+						sortable: true,
+						width: '20%',
+					},
+					{
+						key: 'profileAssetCount',
+						name: I18n.get('_OsvAssetsOfSoftwareProfilesCount_'),
+						sortable: false,
+						width: '20%',
+					},
+					{
+						key: 'assetCount',
+						name: I18n.get('_OsvIndependentAssetsCount_'),
+						sortable: false,
+						width: '20%',
 					},
 				],
 				dynamicData: true,

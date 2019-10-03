@@ -74,7 +74,10 @@
 <div class="markup pull-right dbl-margin-top" *ngIf="recommendations?.length > 0">
 	<a data-auto-id="ViewAllOsVersions" class="markup-toggle text-primary" (click)="viewAllVersions()">
 		<span class="markup-label" [innerText]="'_OsvViewAllOSVersions_' | i18n"></span>
-		<span class="icon-popout icon-small qtr-margin-left"></span>
+		<img alt="{{ '_OsvOpenNewWindow_' | i18n }}"
+				class="qtr-margin-left"
+				attr.data-auto-id="OpenInNewWindow"
+				src="assets/icons/icon-open-new-window.svg">
 	</a>
 </div>
 
@@ -86,7 +89,7 @@
 			<span *ngIf="item.swVersion == 'NA'" [innerText]="'_OsvNotAvailable_' | i18n"></span>
 		</div>
 		<div class="col-8">
-			<div class="label label--large qtr-margin-left qtr-margin-top" [title]="version.name"
+			<div class="recommendation-label label label--large qtr-margin-left qtr-margin-top" [title]="version.name"
 				*ngFor="let version of item.swVersionGroup">
 				<span class="text-capitalize" [innerHTML]="version.name"></span>
 				<span 
@@ -94,7 +97,7 @@
 					[attr.data-balloon]="version.info" 
 					data-balloon-pos="down"
 					data-balloon-length="medium">
-						<i class="icon-info-outline icon-xsmall"></i>
+						<i class="recommendation-icon-info icon-info icon-small"></i>
 				</span>
 			</div>
 		</div>
@@ -119,24 +122,23 @@
 
 <ng-template #actionsTemplate let-item="celldata">
 	<button 
-		*ngIf="item.name != 'profile current' && !item.accepted && item.swVersion != 'NA'"
+		*ngIf="acceptanceAllowed.indexOf(item.name) != -1 && !item.accepted && item.swVersion != 'NA'"
 		class="btn btn--secondary btn--small" 
-		[innerText]="'_OsvAccept_' | i18n" 
+		[innerText]="'_OsvAccept_' | i18n | uppercase" 
 		(click)="onAcceptClick(item.swVersion)"
 		attr.data-auto-id="AcceptVersion-{{item.swVersion}}">
 	</button>
-	<div *ngIf="item.accepted" class="flex">
-		<div class="icon-check-outline text-success flex align-items-center"></div>
-		<div>
-			<div class="text-small qtr-padding-left" [innerText]="'_OsvAcceptedOn_' | i18n"></div>
-			<div class="text-small qtr-padding-left" [innerText]="item.acceptedDate | date:mediumDate"></div>
+	<div *ngIf="item.accepted" class="flex justify-content-start">		
+		<div class="flex">
+			<div class="icon-check-outline icon-small text-success flex align-items-center"></div>
+			<div>
+				<div class="text-medium half-padding-left" [innerText]="'_OsvAcceptedOn_' | i18n"></div>
+				<div class="text-medium half-padding-left" [innerText]="item.acceptedDate | date:mediumDate"></div>
+			</div>
 		</div>
-		<button 
-			(click)="onCancelClick(item.release)" 
-			class="btn btn--secondary btn--small qtr-margin-left"
-			[innerText]="'_Cancel_' | i18n" 
-			attr.data-auto-id="CancelAcceptVersion-{{item.release}}">
-		</button>
+		<div class="flex align-items-center cancel-dropdown">
+			<ng-container *ngTemplateOutlet="cancelActionTemplate; context: { celldata: item ,actions: item.actions}"></ng-container>
+		</div>		
 	</div>
 </ng-template>
 
@@ -152,4 +154,12 @@
 	<div *ngIf="item.name == 'profile current'" class="version-pointer-arrow half-padding-left relative text-small">
 		<span [innerText]="'_OsvCurrentVersion_' | i18n"></span>
 	</div>
+</ng-template>
+
+<ng-template #cancelActionTemplate let-item="celldata" let-actions="actions">
+	<cui-dropdown 
+		[actions]="actions" 
+		position="right"
+		icon="icon-more icon-small text-muted rotate-90">
+	</cui-dropdown>
 </ng-template>

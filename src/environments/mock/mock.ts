@@ -62,6 +62,7 @@ import {
 	SoftwareEOLBulletinScenarios,
 	SoftwareEOLScenarios,
 	SuccessPathScenarios,
+	SyslogScenarios,
 	VulnerabilityScenarios,
 	InsightsScenarios,
 } from './';
@@ -100,7 +101,6 @@ import {
 	IERegistrationResponseModel,
 	LicenseDataResponseModel,
 	MachineRecommendationsResponse,
-	PitstopActionUpdateResponse,
 	PoliciesGroupByDayInAMonthModel,
 	ProfileRecommendationsResponse,
 	RacetrackResponse,
@@ -159,7 +159,6 @@ type ResponseBody = (
 	IERegistrationResponseModel |
 	LicenseDataResponseModel |
 	MachineRecommendationsResponse |
-	PitstopActionUpdateResponse |
 	PoliciesGroupByDayInAMonthModel |
 	ProfileRecommendationsResponse |
 	RacetrackResponse |
@@ -294,6 +293,7 @@ export const mockSettings: MockSettings = {
 		SoftwareEOLBulletinScenarios,
 		SoftwareEOLScenarios,
 		SuccessPathScenarios,
+		SyslogScenarios,
 		VulnerabilityScenarios,
 		InsightsScenarios,
 	]),

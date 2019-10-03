@@ -15,25 +15,17 @@
 			[label]="tab.label"
 			[disabled]="tab.disabled">
 			<ng-container *ngIf="selectedTab.filters.length">
-				<visual-filter-bar [filters]="tab.filters" [filterCollapse]="status.filterCollapse"></visual-filter-bar>
+				<visual-filter-bar [filters]="tab.filters" [filterCollapse]="filterCollapse"></visual-filter-bar>
 			</ng-container>
 		</cui-tab>
 
 		<ng-template cuiTabPost>
-			<div class="text-right" *ngIf="selectedTab.filters?.length && selectedTab.pagination">
-				<div *ngIf="!status.isLoading"
-					(click)="status.filterCollapse = !status.filterCollapse"
-					data-auto-id="VisualFilterCollapse"
-					class="half-margin-right">
-					<span class="icon-filter icon-small text-muted qtr-margin-right toggle"></span>
-					<span class="text-muted toggle" [innerText]="'_VisualFilters_' | i18n"></span>
-					<span class="qtr-margin-left icon-tiny icon-dropdown text-muted toggle"
-						[ngClass]="{
-							'rotate-180': filterCollapse
-						}">
-					</span>
-				</div>
-			</div>
+			<visual-filter-toggle
+				*ngIf="selectedTab.filters?.length && selectedTab.pagination"
+				data-auto-id="VisualFilterToggle"
+				(click)="filterCollapse = !filterCollapse"
+				[filterCollapse]="filterCollapse"
+				></visual-filter-toggle>
 		</ng-template>
 	</cui-tabs>
 </div>
@@ -273,8 +265,19 @@
 
 <ng-template #lastUpdatedTemplate let-celldata="celldata">
 	<div class="flex flex-fill flex-center">
-		<span [innerText]="celldata.lastUpdated ? (celldata.lastUpdated | fromNow) : ('_Never_' | i18n)"
-			[title]="celldata.lastUpdated ? (celldata.lastUpdated | dateTime) : ('_Never_' | i18n)"
+		<span *ngIf="celldata?.lastUpdated"
+			[innerText]="celldata.lastUpdated | fromNow"
+			[title]="celldata.lastUpdated | dateTime"
+			data-auto-id="LastUpdatedText">
+		</span>
+		<span *ngIf="!celldata?.lastUpdated && celldata?.publishedOn"
+			[innerText]="celldata.publishedOn | fromNow"
+			[title]="celldata.publishedOn | dateTime"
+			data-auto-id="LastUpdatedText">
+		</span>
+		<span *ngIf="!celldata?.lastUpdated && !celldata?.publishedOn"
+			[innerText]="'_Never_' | i18n"
+			[title]="'_Never_' | i18n"
 			data-auto-id="LastUpdatedText">
 		</span>
 	</div>

@@ -50,6 +50,7 @@ describe('SoftwareVersionsComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(SoftwareVersionsComponent);
 		component = fixture.componentInstance;
+		component.versionsCount = 1;
 		fixture.detectChanges();
 	});
 

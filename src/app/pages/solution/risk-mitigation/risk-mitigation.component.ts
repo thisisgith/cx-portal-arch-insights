@@ -67,6 +67,8 @@ export class RiskMitigationComponent {
 	@ViewChild('firstOccuranceTemplate', { static: true })
 	 public firstOccuranceTemplate: TemplateRef<string>;
 	@ViewChild('swVersionTemplate', { static: true }) public swVersionTemplate: TemplateRef<string>;
+	@ViewChild('swTypeCrahsedTemplate', { static: true })
+	public swTypeCrahsedTemplate: TemplateRef<string>;
 	@ViewChild('riskScoreTemplate', { static: true }) public riskScoreTemplate: TemplateRef<string>;
 	@ViewChild('neNameTemplate', { static: true }) public neNameTemplate: TemplateRef<string>;
 	@ViewChild('productIdTemplate', { static: true }) public productIdTemplate: TemplateRef<string>;
@@ -547,6 +549,7 @@ export class RiskMitigationComponent {
 	 * Determines whether fpdpanel close on click
 	 */
 	public onFPDPanelClose () {
+		_.set(this.selectedFingerPrintdata, 'active', false);
 		this.showFpDetails = false;
 		_.set(this.selectedFingerPrintdata, 'active', false);
 		this.selectedFingerPrintdata = null;
@@ -572,6 +575,7 @@ export class RiskMitigationComponent {
 	 */
 	public onPanelClose () {
 		_.set(this.selectedAsset, 'active', false);
+		_.set(this.selectedFingerPrintdata, 'active', false);
 		this.showAsset360 = false;
 		this.onFPDPanelClose();
 	}
@@ -650,7 +654,7 @@ export class RiskMitigationComponent {
 					key: 'resetReason',
 					name: I18n.get('_RMRessetReason_'),
 					sortable: false,
-					width: '250px',
+					width: '356px',
 					template: this.resetReasonTemplate,
 				},
 				{
@@ -676,10 +680,10 @@ export class RiskMitigationComponent {
 					template: this.productIdTemplate,
 				},
 				{
-					key: 'productFamily',
-					name: I18n.get('_RMProductFamily_'),
+					key: 'swType',
+					name: I18n.get('_RMSoftwareType_'),
 					sortable: true,
-					template: this.productFamilyTemplate,
+					template: this.swTypeCrahsedTemplate,
 				},
 				{
 					key: 'swVersion',
@@ -726,12 +730,6 @@ export class RiskMitigationComponent {
 					template: this.productIdTemplate,
 				},
 				{
-					key: 'productFamily',
-					name: I18n.get('_RMProductFamily_'),
-					sortable: true,
-					template: this.productFamilyTemplate,
-				},
-				{
 					key: 'softwareType',
 					name: I18n.get('_RMSoftwareType_'),
 					sortable: true,
@@ -744,14 +742,8 @@ export class RiskMitigationComponent {
 					template: this.softwareVersionTemplate,
 				},
 				{
-					key: 'riskScore',
-					name: I18n.get('_RMRisk_'),
-					sortable: true,
-					template: this.riskScoreTemplate,
-				},
-				{
 					key: 'globalRiskRank',
-					name: I18n.get('_RMGlobalRisk_'),
+					name: I18n.get('_CP_Risk_'),
 					sortable: true,
 					template: this.cardColorsTemplate,
 				},
@@ -832,6 +824,7 @@ export class RiskMitigationComponent {
 	 */
 	public clearFilters () {
 		this.clearAllFilters = !this.clearAllFilters;
+		this.searchQueryInCrashGrid = '';
 		_.each(this.filters, (clearFilter: Filter) => {
 			_.each(clearFilter.seriesData, (currentFilter: { selected: boolean; }) => {
 				currentFilter.selected = false;
@@ -855,6 +848,7 @@ export class RiskMitigationComponent {
 	 */
 	public resetFilters () {
 		this.searchQueryInCrashGrid = '';
+		this.searchQueryInHighCrashGrid = '';
 		_.each(this.filters, (filter: Filter) => {
 			_.each(filter.seriesData, (currentFilter: { selected: boolean; }) => {
 				currentFilter.selected = false;

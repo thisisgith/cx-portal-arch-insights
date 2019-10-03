@@ -578,7 +578,7 @@ describe('RccComponent', () => {
 			.returnValue(throwError(new HttpErrorResponse(error)));
 		component.getFiltersData();
 		expect(component.loading)
-			.toBeFalsy();
+			.toBeTruthy();
 	});
 
 	it('should call getAssetFiltersData and return error', () => {
@@ -591,7 +591,7 @@ describe('RccComponent', () => {
 			.returnValue(throwError(new HttpErrorResponse(error)));
 		component.getAssetFiltersData();
 		expect(component.loading)
-			.toBeFalsy();
+			.toBeTruthy();
 	});
 
 	it('should call getRCCAssetData and return data', () => {

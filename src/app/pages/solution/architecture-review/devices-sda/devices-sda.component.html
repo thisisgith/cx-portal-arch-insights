@@ -2,7 +2,7 @@
 	<div class="col-md-12">
 		<div class="container">
 			<div *ngIf="!isLoading && totalItems > 0">
-				<span [innerText]="'_ArchitectureSdaVersion_' | i18n" class="text-large"></span>
+				<span [innerText]="'_ArchitectureSdaRelease_' | i18n" class="text-large"></span>
 				<span class="qtr-margin-left text-small text-muted" [innerText]="sdaVersion">
 				</span>
 			</div>
@@ -13,7 +13,7 @@
 <div class="row base-margin-top">
 	<div class="col-md-12">
 		<div class="container">
-			<cui-table *ngIf="!isLoading && totalItems" [options]="tableOptions"
+			<cui-table *ngIf="!isLoading && deviceSDAdatas?.length" [options]="tableOptions"
 				 [data]="deviceSDAdatas"></cui-table>
 			<div class="base-margin-top" *ngIf="isLoading">
 				<div class="loading-spinner flex-center" [attr.aria-label]="'_ArchitectureLoading_' | i18n">

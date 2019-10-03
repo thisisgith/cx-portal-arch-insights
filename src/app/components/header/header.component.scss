@@ -9,9 +9,9 @@ $text-dark-blue: #394454;
 $icon-light-gray-1: #bdc5cf;
 $icon-light-gray-2: #a5afbf;
 $icon-dark-gray-1: #6a80a5;
+$link-icon-hover: #98abc3;
 $separator-light-gray: #d9d9da;
 $divider-light-gray: #dfdede;
-$link-light-blue: #227bb1;
 $link-hover-background: #ecf4fc;
 $text-xsmall: 10px;
 $text-larger: 19px;
@@ -35,16 +35,24 @@ $text-larger: 19px;
 
 %cx-header-links--color {
 	.cx-header-label {
-		color: $primary;
+		color: $default-link-color;
 	}
 
 	.cx-user-label {
-		color: $primary;
+		color: $default-link-color;
+	}
+
+	.cx-header-icon {
+		color: $link-icon-hover;
+
+		::ng-deep svg path {
+			fill: $link-icon-hover;
+		}
 	}
 }
 
 .header a {
-	color: $link-light-blue;
+	color: $default-link-color;
 
 	&.text-small {
 		@extend %cx-dropdown-link;
@@ -282,10 +290,6 @@ $text-larger: 19px;
 	font-size: $text-larger;
 }
 
-.icon-cog {
-	margin-right: unset;
-}
-
 .icon-help-alt {
 	font-size: 22px;
 }
@@ -296,7 +300,6 @@ $text-larger: 19px;
 }
 
 .text-muted {
-	padding: 0 20px;
 	color: $accent-light-gray-1;
 	letter-spacing: -0.12px;
 	line-height: 14px;

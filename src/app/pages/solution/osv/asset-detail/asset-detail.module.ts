@@ -12,6 +12,7 @@ import {
 } from '@cisco-ngx/cui-components';
 import { AssetTimelineChartModule } from '../asset-timeline-chart/asset-timeline-chart.module';
 import { CancelConfirmModule } from '../cancel-confirm/cancel-confirm.module';
+import { InlineSVGModule } from 'ng-inline-svg';
 
 /** Module representing the Asset Software Details Component */
 @NgModule({
@@ -30,6 +31,7 @@ import { CancelConfirmModule } from '../cancel-confirm/cancel-confirm.module';
 		CancelConfirmModule,
 		CuiModalModule,
 		CuiAlertModule,
+		InlineSVGModule.forRoot({ baseUrl: '/' }),
 	],
 })
 export class AssetDetailsModule { }

@@ -104,7 +104,9 @@ export class QuickTourComponent implements OnInit {
 				(memo, step) => step.stepIndex < memo ? step.stepIndex : memo,
 				this.steps[0].stepIndex);
 			this.lastIndex = _.reduce(this.steps,
-				(memo, step) => step.stepIndex > memo ? step.stepIndex : memo,
+				(memo, step) => step.stepIndex > memo
+					? (step.data.active && step.stepIndex) || memo
+					: memo,
 				this.steps[0].stepIndex);
 		}
 	}

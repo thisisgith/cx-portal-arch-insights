@@ -14,10 +14,10 @@ export interface MachineRecommendations {
 	release: string;
 	swVersion?: string;
 	score: any;
-	bugFixed: number;
+	bugFixed?: number;
 	bugsExposed?: number;
 	psirtExposed?: number;
-	psirtFixed: number;
+	psirtFixed?: number;
 	bugSeverity: OsvSeverityTypes;
 	psirtSeverity: OsvSeverityTypes;
 	bugSeriesData?: [],
@@ -26,4 +26,6 @@ export interface MachineRecommendations {
 	expectedProfileRisk?: any;
 	resolvedBugsCount?: number;
 	psirtResolvedCount?: number;
+	totalBugsSeverity? : any;
+	totalPsirtsSeverity? : any;
 }

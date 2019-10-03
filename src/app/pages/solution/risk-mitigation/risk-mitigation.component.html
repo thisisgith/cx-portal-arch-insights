@@ -100,21 +100,8 @@
 				<ng-container *ngFor="let filter of selectedFilters">
 					<ng-container
 						*ngFor="let subfilter of getSelectedSubFilters(filter.key)"
-					>
-						<span
-							class="label filter-bar__item"
-							(click)="onSubfilterSelect(subfilter.filter, filter)"
-							attr.data-auto-id="FilterTag-{{ subfilter.filter }}"
-							*ngIf="!onlyCrashes"
-						>
-							<span
-								class="label label--dkgray text-large"
-								(click)="onSubfilterSelect(subfilter.filter, filter)"
-								attr.data-auto-id="FilterTag-{{ subfilter.filter }}"
-								*ngIf="!onlyCrashes"
-							>
-								<span
-									class="label label--dkgray text-large"
+					><span
+									class="label filter-bar__item"
 									(click)="onSubfilterSelect(subfilter.filter, filter)"
 									attr.data-auto-id="FilterTag-{{ subfilter.filter }}"
 									*ngIf="!onlyCrashes"
@@ -126,8 +113,6 @@
 										(click)="clearFilters()" data-auto-id="FilterBarClearAllFiltersIcon"
 									></span>
 								</span>
-							</span>
-						</span>
 					</ng-container>
 				</ng-container>
 			</div>
@@ -345,6 +330,10 @@
 </ng-template>
 <ng-template #swVersionTemplate let-item="celldata">
 	<span title="{{ item?.swVersion }}" [innerText]= "item.swVersion">
+	</span>
+</ng-template>
+<ng-template #swTypeCrahsedTemplate let-item="celldata">
+	<span title="{{ item?.swType }}" [innerText]= "item.swType">
 	</span>
 </ng-template>
 <ng-template #neNameTemplate let-item="celldata">

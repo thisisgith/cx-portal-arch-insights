@@ -234,7 +234,7 @@ export class ASDAPIService {
 		actual: Observable<T>,
 		caller: 'auth' | 'meta' | 'url',
 	): Observable<ASDResponse> {
-		if (this.env.ieSetup.mockASD) {
+		if (!window.Cypress && this.env.ieSetup.mockASD) {
 			switch (caller) {
 				case 'auth':
 					return of(ASDTokenScenarios[0].scenarios.GET[0].response.body);

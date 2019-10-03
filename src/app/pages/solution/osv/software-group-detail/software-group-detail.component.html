@@ -9,16 +9,36 @@
 			[(fullscreen)]="fullscreen"
 			[fullscreenToggle]="screenWidth > 1024 ? true : false">
 				<div detailsPanelTitle>
-					<div class="qtr-margin-left text-xlarge half-margin-bottom"
-						[innerText]="selectedSoftwareGroup?.profileName">
-					</div>
+						<div *ngIf="!showDetails; else detailsHeaderTemplate" 
+							class="qtr-margin-left text-xlarge half-margin-bottom"
+							[innerText]="selectedSoftwareGroup?.profileName">
+						</div>
 				</div>
 		</details-panel-header>
 		<ng-container *ngTemplateOutlet="softwareGroupDetails"></ng-container>
 </details-panel>
 
+<ng-template #detailsHeaderTemplate>
+	<div>
+		<span class="toggle icon-chevron-left icon-small qtr-margin-bottom" (click)="hideDetailsView()" data-auto-id="HideDetailsView"></span>
+		<span class="icon-chevron-right qtr-margin-left icon-small text-muted qtr-margin-bottom"></span>
+		<span class=" qtr-margin-left text-xlarge" [innerText]="'|'"></span>
+		<span class="base-margin-left text-xlarge" *ngIf="detailsParams.viewType == 'bug'"  [innerText]="'_Bugs_' | i18n"></span>
+		<span class="base-margin-left text-xlarge" *ngIf="detailsParams.viewType == 'psirt'" [innerText]="'_SecurityAdvisories_' | i18n"></span>
+	</div>
+</ng-template>
+
+<!-- bugs and psirts details template -->
+<ng-template #detailsTemplate>
+	<app-bugs-details 
+		[fullscreen]="fullscreen"
+		[params]= "detailsParams"
+		[data]="machineRecommendations">
+	</app-bugs-details>
+</ng-template>
+
 <ng-template #softwareGroupDetails>
-	<cui-tabs id="assetDetailTabs" [(activeTabIndex)]="tabIndex">
+	<cui-tabs *ngIf="!showDetails; else detailsTemplate"  id="assetDetailTabs" [(activeTabIndex)]="tabIndex">
 		<cui-tab [label]="'_OsvCompareRecommendations' | i18n | uppercase">
 			<div class="base-margin-top">
 				<cui-spinner *ngIf="status.isLoading"></cui-spinner>
@@ -71,7 +91,7 @@
 				</div>
 			</div>
 		</div>
-		<cui-table [options]="softwareGroupAssetsTable" [data]="softwareGroupAssets">
+		<cui-table id="software-group-assets" [options]="softwareGroupAssetsTable" [data]="softwareGroupAssets">
 		</cui-table>
 		<div *ngIf="assetsPagination && softwareGroupAssets?.length > softwareGroupAssetsParams.pageSize"
 			class="base-margin-top">
@@ -127,21 +147,37 @@
 				[selectedSoftwareGroup]="selectedSoftwareGroup" 
 				[recommendations]="machineRecommendations"
 				(onAction)="onAction($event)"
-				(showVersions) = "tabIndex = 3;">
+				(showDetails)="showDetailsView($event)">
 			</compare-recommendations>
 		</div>
 	</div>
 </ng-template>
 
-<cui-modal></cui-modal>
-
 <!-- version template view for group assets -->
 <ng-template #versionTemplate let-item="celldata">
-	<span 
-		[title]="item.alert | uppercase" 
-		*ngIf="item?.alert && item?.alert != 'NA'"
-		[ngClass]="{'information':'text-primary','critical':'text-danger','warning':'text-warning-alt'}[item.alert]" 
-		class="icon-circle">
+	<span 		
+		*ngIf="item.alert == 'information'"
+		[attr.data-balloon]="'_OsvInformationTooltip_' | i18n" 
+		data-balloon-pos="down"
+		data-balloon-length="medium"
+		>
+		<i class="icon-circle text-primary"></i>
+	</span>
+	<span 		
+		*ngIf="item.alert == 'critical'"
+		[attr.data-balloon]="'_OsvCriticalTooltip_' | i18n" 
+		data-balloon-pos="down"
+		data-balloon-length="medium"
+		class="icon-circle ">		
+		<i class="icon-circle text-danger"></i>
+	</span>
+	<span 		
+		*ngIf="item?.alert == 'warning'"
+		[attr.data-balloon]="'_OsvWarningTooltip_' | i18n" 
+		data-balloon-pos="down"
+		data-balloon-length="medium"
+		class="icon-circle text-warning-alt">	
+		<i class="icon-circle text-warning-alt"></i>	
 	</span>
 	<span *ngIf="!item?.alert || item?.alert == 'NA'" class="icon-circle color-transparent"></span>
 	<span class="col-11" [innerText]="item.swVersion"></span>
