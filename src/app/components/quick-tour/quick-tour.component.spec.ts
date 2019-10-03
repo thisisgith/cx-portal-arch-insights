@@ -18,12 +18,21 @@ describe('QuickTourComponent', () => {
 		component = fixture.componentInstance;
 		component.steps = [
 			{
+				data: {
+					active: true,
+				},
 				stepIndex: 2,
 			},
 			{
+				data: {
+					active: true,
+				},
 				stepIndex: 1,
 			},
 			{
+				data: {
+					active: true,
+				},
 				stepIndex: 6,
 			},
 		];

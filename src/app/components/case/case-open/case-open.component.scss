@@ -1,3 +1,59 @@
 .body {
 	text-align: left;
 }
+
+.form-group__text {
+	input,
+	textarea {
+		border: none;
+		border-bottom: 1px solid #aeb8c1;
+		background: #f4f6f8;
+		color: #5d656c;
+
+		&:focus {
+			box-shadow: unset;
+		}
+	}
+}
+
+.form-group {
+	.checkbox input,
+	.checkbox__input,
+	.checkbox__input::before,
+	.checkbox__input::after {
+		width: 18px;
+		height: 18px;
+		min-width: 18px;
+	}
+
+	.checkbox {
+		&__input {
+			&::before {
+				box-shadow: unset;
+				border: 1px solid #c2c2c2;
+				border-radius: 0;
+			}
+		}
+
+		input {
+			&:hover,
+			&:focus,
+			&:active,
+			&:checked {
+				~ .checkbox__input {
+					&::before {
+						box-shadow: unset;
+						outline: none;
+						background-color: #fff;
+						border: 1px solid #c2c2c2;
+					}
+
+					&::after {
+						color: #00bceb;
+						font-size: 16px;
+					}
+				}
+			}
+		}
+	}
+}

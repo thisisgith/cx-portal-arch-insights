@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SerialSearchComponent } from './serial-search.component';
+import { AssetsPipeModule } from '@pipes';
 
 import {
 	CuiLoaderModule,
@@ -21,6 +22,7 @@ import { I18nPipeModule, FromNowPipeModule } from '@cisco-ngx/cui-pipes';
 		CuiSpinnerModule,
 		I18nPipeModule,
 		FromNowPipeModule,
+		AssetsPipeModule,
 	],
 })
 export class SerialSearchModule { }

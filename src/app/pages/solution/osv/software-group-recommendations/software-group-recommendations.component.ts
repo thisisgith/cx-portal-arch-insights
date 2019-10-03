@@ -34,6 +34,13 @@ export class SoftwareGroupRecommendationsComponent implements OnChanges {
 	public groupRecommendationsTable: CuiTableOptions;
 	public currentRecommendation: AssetRecommendations;
 	public groupRecommendations: AssetRecommendations[];
+	public acceptanceAllowed = [
+		'profile current',
+		'suggested',
+		'Recommendation #1',
+		'Recommendation #2',
+		'Recommendation #3',
+	];
 
 	/**
 	 * lifecycle hook

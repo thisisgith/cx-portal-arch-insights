@@ -414,7 +414,7 @@ export class AssetDetailsAdvisoriesComponent
 					striped: false,
 					wrapText: true,
 				}),
-				title: I18n.get('_CriticalBugs_'),
+				title: I18n.get('_PriorityBugs_'),
 			},
 		];
 
