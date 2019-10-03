@@ -151,7 +151,7 @@
 				</div>
 				<div class="col-3">
 					<span
-						[innerText]="'_Assets_' | i18n | lowercase"
+						[innerText]="'_Systems_' | i18n | lowercase"
 						class="pull-left qtr-padding-top"
 					></span>
 				</div>
@@ -166,10 +166,10 @@
 	<ng-container *ngIf="!noData; else noDataTemplate">
 		<div class="col-6">
 			<div>
-				<span [innerText]="'_CP_DistributionofProducts_' | i18n"></span>
+				<span [innerText]="'_CP_DistributionofSystems_' | i18n"></span>
 				<div
 					class="text-small"
-					[innerText]="'_CP_Assetswithsimilarfeatures_' | i18n"
+					[innerText]="'_CP_SystemsWithSimilarFeatures_' | i18n"
 				></div>
 			</div>
 			<bar-chart
@@ -184,7 +184,7 @@
 				></span>
 				<div
 					class="text-small"
-					[innerText]="'_CP_Hardwarefoundonsimilarassets_' | i18n"
+					[innerText]="'_CP_HardwareFoundInSimilarSystems_' | i18n"
 				></div>
 			</div>
 			<bar-chart
@@ -195,11 +195,11 @@
 		<div class="col-6">
 			<div>
 				<span
-					[innerText]="'_CP_DistributionofSoftwareVersions_' | i18n"
+					[innerText]="'_CP_DistributionofSoftwareReleases_' | i18n"
 				></span>
 				<div
 					class="text-small"
-					[innerText]="'_CP_Softwareoperatingonsimilarassets_' | i18n"
+					[innerText]="'_CP_ReleasesOnSimilarSystems_' | i18n"
 				></div>
 			</div>
 			<bar-chart

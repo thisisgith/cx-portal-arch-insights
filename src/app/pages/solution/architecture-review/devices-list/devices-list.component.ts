@@ -97,14 +97,14 @@ export class DevicesListComponent implements OnInit, OnChanges {
 					sortable: false,
 				},
 				{
-					key: 'productId',
-					name: I18n.get('_ArchitectureProductId_'),
-					sortable: false,
-				},
-				{
 					name: I18n.get('_ArchitectureProductFamily_'),
 					sortable: false,
 					template : this.productFamilyTemplate,
+				},
+				{
+					key: 'productId',
+					name: I18n.get('_ArchitectureProductId_'),
+					sortable: false,
 				},
 				{
 					key: 'softwareType',
