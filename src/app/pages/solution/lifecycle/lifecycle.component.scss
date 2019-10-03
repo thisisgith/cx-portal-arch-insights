@@ -853,12 +853,29 @@ tr.td-row td {
 			&::after {
 				display: none;
 			}
-		}
 
-		tr td {
-			padding: 4px 8px;
-			width: auto;
-			text-align: left;
+			&:hover {
+				background-color: #ecf4fc;
+			}
+
+			td {
+				padding: 4px 8px;
+				width: auto;
+				text-align: left;
+			}
+
+			&.scheduled td {
+				font-weight: bold;
+
+				&.icon {
+					color: $accent-light-blue;
+					padding-right: 0;
+
+					.icon-check {
+						margin-top: -4px;
+					}
+				}
+			}
 		}
 	}
 }
