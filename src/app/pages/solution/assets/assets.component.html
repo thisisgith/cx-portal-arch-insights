@@ -2,7 +2,8 @@
 	[asset]="selectedAsset.data"
 	[element]="selectedAsset.element"
 	[serialNumber]="selectedAsset.data.serialNumber"
-	(close)="onPanelClose()">
+	(close)="onPanelClose()"
+	(scanStatus)="handleScanStatus($event)">
 </asset-details>
 
 <div class="panel panel--bordered base-padding-left no-padding-bottom">

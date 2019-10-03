@@ -461,7 +461,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 						value: fieldTotal,
 					},
 					{
-						label: I18n.get('_Bugs_'),
+						label: I18n.get('_PriorityBugs_'),
 						percentage: (bugsTotal / total) * 100,
 						value: bugsTotal,
 					},
@@ -585,7 +585,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 			{
 				arrows: 3,
 				data: {
-					active: false,
+					active: true,
 				},
 				description: I18n.get('_QuickTourStep2Description_'),
 				relative: false,
@@ -718,6 +718,8 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	 * Detects changes to the view after init
 	 */
 	public async ngAfterViewInit () {
+		this.calculateStep1();
+		this.calculateStep2();
 		if (this.activeRoute) {
 			this.selectFacet(this.getFacetFromRoute(this.activeRoute));
 		}

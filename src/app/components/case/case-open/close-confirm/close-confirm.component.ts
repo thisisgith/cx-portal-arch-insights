@@ -6,6 +6,7 @@ import { CuiModalService } from '@cisco-ngx/cui-components';
  */
 @Component({
 	selector: 'app-close-confirm',
+	styleUrls: ['./close-confirm.component.scss'],
 	templateUrl: './close-confirm.component.html',
 })
 export class CloseConfirmComponent {

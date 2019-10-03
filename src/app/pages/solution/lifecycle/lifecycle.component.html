@@ -1,4 +1,4 @@
-<div class="panel panel--ltgray panel--bordered" #lifecyclePanel [class.panel--bottom-padding]="panelBottomPaddingNeeded">
+<div class="panel panel--ltgray panel--bordered" #lifecyclePanel [class.panel--bottom-padding]="panelBottomPaddingNeeded || panelBottomPaddingNeededForMessage">
 	<div class="row base-padding-top">
 		<div class="col-md-3 base-padding-left" *ngIf="!status.loading.racetrack && componentData?.racetrack?.stage">
 			<ng-container *ngTemplateOutlet="racetrack"></ng-container>
@@ -453,7 +453,7 @@
 						[ngClass]="{ 'active': sessionSelected?.sessionStartDate === session.sessionStartDate }">
 						<td class="text-xsmall"
 							[ngClass]="session.scheduled ? 'text-bold' : null"
-							innerText="{{session.sessionStartDate | date:'longDate'}}"></td>
+							innerText="{{session.sessionStartDate | date:'EEE MMM d, y'}}"></td>
 						<td class="text-xsmall"
 							[ngClass]="session.scheduled ? 'text-bold' : null"
 							innerText="{{session.sessionStartDate | date:'shortTime'}}"></td>
