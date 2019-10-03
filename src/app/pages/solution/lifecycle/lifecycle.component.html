@@ -150,23 +150,25 @@
 		</div>
 		<div class="panel messagepanel--open half-margin-left"
 			id="AllCompletionPopup"
-			*ngIf="showCompletionPopup">
+			*ngIf="showCompletionPopup"
+			data-auto-id="AllCompletionPopup">
 			<div class="row qtr-margin-top qtr-margin-left qtr-margin-right">
 				<div class="col-md-1">
 					<div class="pitstop-checklist__flag"
-						inlineSVG="assets/img/solutions/icon-checkerflag.svg"></div>
+						inlineSVG="assets/img/solutions/icon-checkerflag.svg"
+						data-auto-id="AllCompletionPopup-Flag"></div>
 				</div>
-				<div class="col-md-10 text-bold" [innerText]="'_NiceJob_' | i18n"></div>
+				<div class="col-md-10 text-bold" [innerText]="'_NiceJob_' | i18n" data-auto-id="AllCompletionPopup-Title"></div>
 				<div class="col-md-1">
 					<a class="no-link closebtn"
 						(click)="showCompletionPopup = false"
-						data-auto-id="CompletionPopupClose">
+						data-auto-id="AllCompletionPopup-Close">
 						<span class="icon-close icon-small"></span>
 					</a>
 				</div>
 			</div>
 			<div class="message">
-				<span [innerHTML]="'_NextCruise_' | i18n:currentViewingPitstop"></span>
+				<span [innerHTML]="'_NextCruise_' | i18n:currentViewingPitstop" data-auto-id="AllCompletionPopup-Message"></span>
 			</div>
 		</div>
 	</div>
