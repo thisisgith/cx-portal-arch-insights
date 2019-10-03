@@ -27,7 +27,7 @@
 				<div data-auto-id="CaseDetailsCreatedDate" [innerText]="caseDetails?.createdDate | date"></div>
 			</div>
 			<div class="col-md-2">
-				<div class="text-bold font-size" [innerText]="'_RMACaseLastUpdated_' | i18n | uppercase"></div>
+				<div class="text-bold font-size" [innerText]="'_RMACaseUpdated_' | i18n | uppercase"></div>
 				<div data-auto-id="CaseDetailsLastUpdatedDate" [innerText]="caseDetails?.lastUpdateDate | date"></div>
 			</div>
 		</div>
@@ -46,10 +46,10 @@
 			</div>
 			<div class="col-md-6 text-right">
 				<button data-auto-id="CaseAttachFile"
-					class="btn btn--primary text-uppercase dbl-padding-left dbl-padding-right"
+					class="btn btn--primary text-uppercase"
 					[innerText]="'_RMACaseAttachFile_' | i18n" (click)="toggleAddFile()"></button>
 				<button data-auto-id="CaseAddNote"
-					class="btn btn--primary text-uppercase dbl-padding-left dbl-padding-right"
+					class="btn btn--primary text-uppercase"
 					[innerText]="'_RMACaseAddNote_' | i18n" (click)="toggleAddNote()"></button>
 			</div>
 		</div>
