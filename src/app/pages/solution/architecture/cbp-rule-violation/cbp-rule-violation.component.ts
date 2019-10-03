@@ -97,14 +97,14 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 			bordered: false,
 			columns: [
 				{
-					key: 'bpRuleTitle',
-					name: I18n.get('_ArchitectureRuleViolated_'),
-					sortable: false,
-				},
-				{
 					name: I18n.get('_ArchitectureSeverity_'),
 					sortable: false,
 					template: this.riskTemplate,
+				},
+				{
+					key: 'bpRuleTitle',
+					name: I18n.get('_ArchitectureRuleViolated_'),
+					sortable: false,
 				},
 				{
 					name: I18n.get('_ArchitectureException_'),
@@ -117,14 +117,14 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 					template: this.recommendationTemplate,
 				},
 				{
-					key: 'softwareType',
-					name: I18n.get('_ArchitectureSoftwareType_'),
-					sortable: false,
-				},
-				{
 					name: I18n.get('_ArchitectureCorrectiveAction_'),
 					sortable: false,
 					template: this.correctiveActionsTemplate,
+				},
+				{
+					key: 'softwareType',
+					name: I18n.get('_ArchitectureSoftwareType_'),
+					sortable: false,
 				},
 				{
 					key: 'deviceIpsWithExceptions',

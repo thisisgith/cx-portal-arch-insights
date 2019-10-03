@@ -95,6 +95,7 @@
 	"_ArchitectureAssetsAffected_": "Assets Affected",
 	"_ArchitectureAssetsImpacted_": "Assets Impacted",
 	"_ArchitectureBestPracticeRuleExceptions_": "Best Practice Rule Exceptions",
+	"_ArchitectureCBPExceptions_": "CBP Exceptions",
 	"_ArchitectureClearAll_":"Clear All",
 	"_ArchitectureCompliant_": "Compliant",
 	"_ArchitectureCompliantProductFamily_":"Compliant Product Family",

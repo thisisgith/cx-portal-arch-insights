@@ -85,13 +85,13 @@ export class DevicesWithExceptionsComponent implements OnInit {
 					sortable: false,
 				},
 				{
-					key: 'productId',
-					name: I18n.get('_ArchitectureProductId_'),
+					key: 'productFamily',
+					name: I18n.get('_ArchitectureProductFamily_'),
 					sortable: false,
 				},
 				{
-					key: 'productFamily',
-					name: I18n.get('_ArchitectureProductFamily_'),
+					key: 'productId',
+					name: I18n.get('_ArchitectureProductId_'),
 					sortable: false,
 				},
 				{
