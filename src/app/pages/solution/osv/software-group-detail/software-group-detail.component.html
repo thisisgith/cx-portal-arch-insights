@@ -91,7 +91,7 @@
 				</div>
 			</div>
 		</div>
-		<cui-table [options]="softwareGroupAssetsTable" [data]="softwareGroupAssets">
+		<cui-table id="software-group-assets" [options]="softwareGroupAssetsTable" [data]="softwareGroupAssets">
 		</cui-table>
 		<div *ngIf="assetsPagination && softwareGroupAssets?.length > softwareGroupAssetsParams.pageSize"
 			class="base-margin-top">
