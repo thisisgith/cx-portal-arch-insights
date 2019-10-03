@@ -74,7 +74,10 @@
 <div class="markup pull-right dbl-margin-top" *ngIf="recommendations?.length > 0">
 	<a data-auto-id="ViewAllOsVersions" class="markup-toggle text-primary" (click)="viewAllVersions()">
 		<span class="markup-label" [innerText]="'_OsvViewAllOSVersions_' | i18n"></span>
-		<span class="icon-popout icon-small qtr-margin-left"></span>
+		<img alt="{{ '_OsvOpenNewWindow_' | i18n }}"
+				class="qtr-margin-left"
+				attr.data-auto-id="OpenInNewWindow"
+				src="assets/icons/icon-open-new-window.svg">
 	</a>
 </div>
 
