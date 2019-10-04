@@ -67,6 +67,9 @@ export class BugsDetailsComponent implements OnInit {
 		{ key: 'M', label: I18n.get('_OsvMedium_'), name: 'Medium' },
 		{ key: 'L', label: I18n.get('_OsvLow_'), name: 'Low' },
 	];
+	public hasRecommendation1: boolean;
+	public hasRecommendation2: boolean;
+	public hasRecommendation3: boolean;
 
 	constructor (private logger: LogService) {
 		this.logger.debug('bug and psirt details component created');
@@ -331,6 +334,12 @@ export class BugsDetailsComponent implements OnInit {
 	 * setting the default for the details page
 	 */
 	public setDefaultData () {
+		this.hasRecommendation1 = _.filter(this.data,
+			(recomm: MachineRecommendations) => recomm.name === 'Recommendation #1');
+		this.hasRecommendation2 = _.find(this.data,
+			(recomm: MachineRecommendations) => recomm.name === 'Recommendation #2');
+		this.hasRecommendation3 = _.find(this.data,
+			(recomm: MachineRecommendations) => recomm.name === 'Recommendation #3');
 		const appliedFilters = {
 			state: [],
 			severity: [],

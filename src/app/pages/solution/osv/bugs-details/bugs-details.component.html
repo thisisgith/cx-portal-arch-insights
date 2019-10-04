@@ -6,15 +6,15 @@
 			<ng-container *ngTemplateOutlet="details;context:{recommendation: detailsData.current}">
 			</ng-container>
 		</cui-tab>
-		<cui-tab [label]="'_OsvRecommendedVersion_' | i18n:'1' | uppercase">
+		<cui-tab *ngIf="hasRecommendation1" [label]="'_OsvRecommendedVersion_' | i18n:'1' | uppercase">
 			<ng-container *ngTemplateOutlet="details; context: {recommendation: detailsData.recommended1}">
 			</ng-container>
 		</cui-tab>
-		<cui-tab [label]="'_OsvRecommendedVersion_' | i18n:'2' | uppercase">
+		<cui-tab *ngIf="hasRecommendation2" [label]="'_OsvRecommendedVersion_' | i18n:'2' | uppercase">
 			<ng-container *ngTemplateOutlet="details; context: {recommendation: detailsData.recommended2}">
 			</ng-container>
 		</cui-tab>
-		<cui-tab [label]="'_OsvRecommendedVersion_' | i18n:'3' | uppercase">
+		<cui-tab *ngIf="hasRecommendation3" [label]="'_OsvRecommendedVersion_' | i18n:'3' | uppercase">
 			<ng-container *ngTemplateOutlet="details; context: {recommendation: detailsData.recommended3}">
 			</ng-container>
 		</cui-tab>

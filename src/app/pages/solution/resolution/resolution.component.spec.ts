@@ -167,7 +167,7 @@ describe('ResolutionComponent', () => {
 			.toContain(statusFilter);
 	}));
 
-	xit('should select status subfilters', fakeAsync(() => {
+	it('should select status subfilters', fakeAsync(() => {
 		const statusFilter = _.find(component.filters, { key: 'status' });
 		component.onSubfilterSelect('Customer Updated', statusFilter);
 
@@ -197,7 +197,7 @@ describe('ResolutionComponent', () => {
 			.toBeTruthy();
 	}));
 
-	xit('should clear the filter when selecting the same subfilter twice', fakeAsync(() => {
+	it('should clear the filter when selecting the same subfilter twice', fakeAsync(() => {
 		const statusFilter = _.find(component.filters, { key: 'status' });
 		component.onSubfilterSelect('Customer Updated', statusFilter);
 
