@@ -128,6 +128,24 @@ _.map(['No RMAs', 'With RMAs'], label => ({
 }));
 
 /**
+ * All of the default filter values stored in a map.
+ * This will be used to initialize each filter when the new data is fetched and accumulated
+ */
+const defaultFiltersData = {
+	durationOpen: defaultDurationOpenFilterData,
+	lastUpdated: defaultLastUpdatedFilterData,
+	rma: defaultRmaFilterData,
+	severity: [],
+	status: [],
+	total: [{
+		filter: null,
+		label: null,
+		selected: true,
+		value: 0,
+	}],
+};
+
+/**
  * Resolution Component
  */
 @Component({
@@ -297,20 +315,9 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 	 * Initializes the filters at half-opacity with stored values.
 	 */
 	private initializeFilters () {
-		const caseFilterData = JSON.parse(localStorage.getItem('caseFilterData')) ||
-			{
-				durationOpen: defaultDurationOpenFilterData,
-				lastUpdated: defaultLastUpdatedFilterData,
-				rma: defaultRmaFilterData,
-				severity: [],
-				status: [],
-				total: [{
-					filter: null,
-					label: null,
-					selected: true,
-					value: 0,
-				}],
-			};
+		const caseFilterData = JSON.parse(
+			localStorage.getItem('caseFilterData'),
+		) || defaultFiltersData;
 		this.filters = [
 			{
 				key: 'total',
@@ -506,9 +513,7 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 			const durationOpenFilter = _.find(this.filters, { key: 'durationOpen' });
 			const rmaFilter = _.find(this.filters, { key: 'rma' });
 			_.each(this.filters, filter => {
-				if (filter.key !== 'total') {
-					_.each(filter.seriesData, data => data.value = 0);
-				}
+				filter.seriesData = defaultFiltersData[filter.key];
 			});
 
 			// Iterate through cases to sum values for all subfilters

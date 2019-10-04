@@ -105,12 +105,20 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 	&__view-toggle .btn {
 		background: #fff;
 		color: #6a80a5;
+		display: block;
 		width: 32px;
 		height: 30px;
 
 		&.selected {
 			background: #6a80a5;
-			color: #fff;
+
+			::ng-deep svg g {
+				fill: #fff;
+			}
+		}
+
+		&:hover:not(.selected) {
+			background: #ebf1f8;
 		}
 	}
 }
@@ -141,6 +149,65 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 		color: #fff;
 		-webkit-text-stroke-color: #c1d8e2;
 	}
+}
+
+.actionname__text {
+	flex-grow: 1;
+	font-size: 14px;
+
+	&--complete {
+		color: $text-default-color;
+	}
+}
+
+.actionname.selected {
+	background-color: $accent-light-blue;
+
+	.actionname__text {
+		color: #fff;
+	}
+
+	.checkbox__input::before {
+		background: $background-color;
+	}
+}
+
+.actionname:hover:not(.selected) {
+	.actionname__text {
+		color: $accent-dark-blue;
+	}
+}
+
+:host ::ng-deep input.checked,
+:host ::ng-deep input:checked {
+	~ .checkbox__input::before {
+		box-shadow: inset 0 0 0 $cui-checkbox-border-width transparent !important;
+		background-color: $background-color !important;
+	}
+}
+
+:host ::ng-deep input:not(:checked) {
+	~ .checkbox__input::before {
+		box-shadow: inset 0 0 0 $cui-checkbox-border-width #9e9ea2 !important;
+		background-color: $background-color !important;
+	}
+}
+
+.actionname.selected .checkbox input:checked ~ .checkbox__input::before {
+	background: transparent !important;
+}
+
+.actionname.selected .checkbox input:checked ~ .checkbox__input::after {
+	color: #fff !important;
+}
+
+.checkbox-complete::after {
+	color: $accent-light-blue !important;
+	font-size: 20px !important;
+}
+
+:host ::ng-deep .progressbar__fill {
+	margin-left: -10px !important;
 }
 
 .icon-check-outline,
@@ -396,6 +463,85 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 		& * button {
 			margin-top: 1px;
 		}
+	}
+}
+
+.lifecycle-viewall-modal {
+	min-height: 100%;
+	overflow-y: hidden;
+	display: flex;
+	flex-direction: column;
+
+	> div {
+		margin: 0 120px;
+	}
+}
+
+.lifecycle-viewall-modal span[class*="icon-close"] {
+	position: absolute;
+	right: 20px;
+	top: 15px;
+}
+
+// CUSTOM STYLING OF CUI-SELECT COMPONENT
+::ng-deep .cui .lifecycle-filter {
+	.cui-virtual-scroll-viewport.dropdown__menu {
+		margin-top: 1px;
+
+		.cui-virtual-scroll-content-wrapper > div {
+			> a {
+				padding: 0 5px 0 25px !important;
+				border: 0 !important;
+				color: $text-default-color !important;
+				font-size: 13px;
+
+				&.selected {
+					background-color: #ecf4fc !important;
+
+					&::after {
+						color: #00bceb;
+					}
+				}
+
+				&::after {
+					left: 5px;
+					font-size: 16px;
+				}
+
+				&:hover {
+					background-color: #f3f9ff;
+				}
+			}
+		}
+	}
+
+	.form-group .form-group__text input {
+		border: 0 !important;
+		background: transparent !important;
+		border-bottom: 1px solid $text-light-gray !important;
+		border-radius: 0 !important;
+		color: $text-default-color !important;
+		font-size: 13px;
+
+		&:focus {
+			box-shadow: none;
+		}
+	}
+
+	.dropdown.active input::placeholder {
+		font-style: normal;
+	}
+
+	.dropdown.active.form-group .form-group__text input {
+		border-bottom: 1px solid #00bceb !important;
+	}
+
+	label {
+		color: $text-dark-gray;
+		font-size: 12px;
+		position: absolute;
+		left: -55px;
+		margin: 0;
 	}
 }
 
@@ -877,33 +1023,6 @@ tr.td-row td {
 				}
 			}
 		}
-	}
-}
-
-.actionname__text {
-	flex-grow: 1;
-	font-size: 14px;
-
-	&--complete {
-		color: $text-default-color;
-	}
-}
-
-.actionname.selected {
-	background-color: $accent-light-blue;
-
-	.actionname__text {
-		color: #fff;
-	}
-
-	.checkbox__input::before {
-		background: $background-color;
-	}
-}
-
-.actionname:hover:not(.selected) {
-	.actionname__text {
-		color: $accent-dark-blue;
 	}
 }
 
@@ -1442,48 +1561,6 @@ tr.td-row td {
 	}
 }
 
-:host ::ng-deep input.checked,
-:host ::ng-deep input:checked {
-	~ .checkbox__input::before {
-		box-shadow: inset 0 0 0 $cui-checkbox-border-width transparent !important;
-		background-color: $background-color !important;
-	}
-}
-
-:host ::ng-deep input:not(:checked) {
-	~ .checkbox__input::before {
-		box-shadow: inset 0 0 0 $cui-checkbox-border-width #9e9ea2 !important;
-		background-color: $background-color !important;
-	}
-}
-
-.actionname.selected .checkbox input:checked ~ .checkbox__input::before {
-	background: transparent !important;
-}
-
-.actionname.selected .checkbox input:checked ~ .checkbox__input::after {
-	color: #fff !important;
-}
-
-.checkbox-complete::after {
-	color: $accent-light-blue !important;
-	font-size: 20px !important;
-}
-
-
-:host ::ng-deep .lifecycle-filter input,
-:host ::ng-deep .lifecycle-filter input:focus {
-	border: 0 !important;
-	border-color: transparent;
-	background: transparent !important;
-	border-bottom: 1px solid $text-light-gray !important;
-	color: $text-dark-gray !important;
-}
-
-:host ::ng-deep .progressbar__fill {
-	margin-left: -10px !important;
-}
-
 %tr-shared {
 	border-bottom-style: solid;
 	border-bottom-color: $light-gray-3;
@@ -1539,23 +1616,6 @@ polygon {
 
 .lifecycle-modal {
 	height: 100%;
-}
-
-.lifecycle-viewall-modal {
-	min-height: 100%;
-	overflow-y: hidden;
-	display: flex;
-	flex-direction: column;
-
-	> div {
-		margin: 0 120px;
-	}
-}
-
-.lifecycle-viewall-modal span[class*="icon-close"] {
-	position: absolute;
-	right: 20px;
-	top: 15px;
 }
 
 // leave the following here, just in case we will use this style
