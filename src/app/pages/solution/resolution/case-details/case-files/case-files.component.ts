@@ -115,7 +115,7 @@ export class CaseFilesComponent implements OnInit, OnChanges {
 	 */
 	public onTableSortingChanged (event) {
 		this.caseFiles = _.sortBy(this.caseFiles, [function (r) { return r.fileInfo[event.key]; }]);
-		if (event.sortDirection === 'desc') {
+		if (event.sortDirection === 'asc') {
 			this.caseFiles = this.caseFiles.reverse();
 		}
 	}
