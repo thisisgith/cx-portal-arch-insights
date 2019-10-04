@@ -2,7 +2,8 @@
 	*ngIf="selectedAsset"
 	[hidden]="!selectedAsset"
 	(hiddenChange)="handleHidden($event)"
-	[fullscreen]="fullscreen">
+	[fullscreen]="fullscreen"
+	[minWidth]="'800px'">
 		<details-panel-header 
 			(close)="onPanelClose()" 
 			[(fullscreen)]="fullscreen" 

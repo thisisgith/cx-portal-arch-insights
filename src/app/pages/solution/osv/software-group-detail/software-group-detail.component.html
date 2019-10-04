@@ -147,7 +147,8 @@
 				[selectedSoftwareGroup]="selectedSoftwareGroup" 
 				[recommendations]="machineRecommendations"
 				(onAction)="onAction($event)"
-				(showDetails)="showDetailsView($event)">
+				(showDetails)="showDetailsView($event)"
+				(showVersions)="tabIndex = 3">				
 			</compare-recommendations>
 		</div>
 	</div>
