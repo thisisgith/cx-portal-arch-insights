@@ -234,7 +234,7 @@
 			</div>
 			<div class="line-clamp learning-popover__description" [innerText]="description" attr.data-auto-id="{{ autoid }}-HoverModal-Description"></div>
 			<div *ngIf="item && item.duration" class="learning-popover__footer" attr.data-auto-id="{{ autoid }}-HoverModal-Duration">
-				<span class="icon-clock qtr-margin-right" attr.data-auto-id="{{ autoid }}-HoverModal-DurationClock"></span>
+				<span class="icon--svg" inlineSVG="assets/icons/icon-matrics-timer.svg" attr.data-auto-id="{{ autoid }}-HoverModal-DurationClock"></span>
 				<span class="learning-popover__footer__text" [innerText]="item.duration"></span>
 			</div>
 		</div>
@@ -666,7 +666,7 @@
 						</a>
 					</div>
 					<div *ngIf="item && item.duration" class="learning-duration" attr.data-auto-id="{{ autoid }}-HoverModal-Duration">
-						<span class="icon-clock qtr-margin-right" attr.data-auto-id="{{ autoid }}-HoverModal-DurationClock"></span>
+						<span class="icon--svg" inlineSVG="assets/icons/icon-matrics-timer.svg" attr.data-auto-id="{{ autoid }}-HoverModal-DurationClock"></span>
 						<span [innerText]="item.duration" class="sb-popover__footer__text"></span>
 					</div>
 				</div>
@@ -1057,7 +1057,7 @@
 				<ng-container *ngTemplateOutlet="column.template; context: { celldata: item, type: type }"></ng-container>
 			</ng-container>
 			<ng-container *ngIf="!column.template">
-				<div [innerText]="item[column.key]" attr.data-auto-id="ViewAllTable-{{ column.name }}-rowValue">
+				<div class="list-view__col" [innerText]="item[column.key]" attr.data-auto-id="ViewAllTable-{{ column.name }}-rowValue">
 				</div>
 			</ng-container>
 		</td>
@@ -1244,7 +1244,7 @@
 </ng-container>
 
 <ng-template #formatTemplate let-celldata="celldata">
-	<div class="row">
+	<div class="row list-view__col">
 		<div class="col-md-5">
 			<div *ngIf="celldata.type">
 					<ng-container *ngTemplateOutlet="itemTypeIcons; context: {
@@ -1255,9 +1255,9 @@
 			</div>
 		</div>
 		<div class="col-md-7">
-			<div *ngIf="celldata.duration" class="base-margin-left text-muted">
-				<span class="icon-clock icon-small" data-auto-id="ViewAllTable-Format-rowValue-clock"></span>
-				<span class="qtr-margin-left" [innerText]="celldata.duration" data-auto-id="ViewAllTable-Format-rowValue-duration"></span>
+			<div *ngIf="celldata.duration">
+				<span class="icon--inline" inlineSVG="assets/icons/icon-matrics-timer.svg" data-auto-id="ViewAllTable-Format-rowValue-clock"></span>
+				<span [innerText]="celldata.duration" data-auto-id="ViewAllTable-Format-rowValue-duration"></span>
 			</div>
 		</div>
 	</div>
@@ -1444,7 +1444,7 @@
 			</div>
 		</div>
 	</div>
-	<div *ngIf="type==='SB' || type==='PG'">
+	<div class="list-view__col--highlight" *ngIf="type==='SB' || type==='PG'">
 		<a class="no-link" target="_blank" rel="noopener noreferrer"
 			[innerText]="celldata.title" [href]="celldata.url" attr.data-auto-id="{{ type }}-Name-rowValue"></a>
 	</div>
@@ -1461,20 +1461,20 @@
 </ng-container>
 
 <ng-template #itemTypeIcons let-item="item" let-autoid="autoid">
-	<div class="type text-left text-muted" *ngIf="item.type === 'Web Page'" attr.data-auto-id="{{ autoid }}-WebIcon">
-		<span class="icon-apps qtr-padding-right"></span>
+	<div class="type text-left" *ngIf="item.type === 'Web Page'" attr.data-auto-id="{{ autoid }}-WebIcon">
+		<span class="icon-link icon qtr-padding-right"></span>
 		<span class="item-type__text" [innerText]="'_Web_' | i18n"></span>
 	</div>
-	<div class="type text-left text-muted" *ngIf="item.type === 'Video'" attr.data-auto-id="{{ autoid }}-VideoIcon">
-		<span class="icon-play-contained qtr-padding-right"></span>
+	<div class="type text-left" *ngIf="item.type === 'Video'" attr.data-auto-id="{{ autoid }}-VideoIcon">
+		<span class="icon-video icon qtr-padding-right"></span>
 		<span class="item-type__text" [innerText]="'_Video_' | i18n"></span>
 	</div>
-	<div class="type text-left text-muted" *ngIf="item.type === 'PDF'" attr.data-auto-id="{{ autoid }}-PDFIcon">
-		<span class="icon-file-pdf-o qtr-padding-right"></span>
+	<div class="type text-left" *ngIf="item.type === 'PDF'" attr.data-auto-id="{{ autoid }}-PDFIcon">
+		<span class="icon-file-pdf-o icon qtr-padding-right"></span>
 		<span class="item-type__text" [innerText]="'_PDF_' | i18n"></span>
 	</div>
-	<div class="type text-left text-muted" *ngIf="item.type === 'Data Sheet'" attr.data-auto-id="{{ autoid }}-DataSheetIcon">
-		<span class="icon-document qtr-padding-right"></span>
+	<div class="type text-left" *ngIf="item.type === 'Data Sheet'" attr.data-auto-id="{{ autoid }}-DataSheetIcon">
+		<span class="icon-file-o icon qtr-padding-right"></span>
 		<span class="item-type__text" [innerText]="'_Datasheet_' | i18n"></span>
 	</div>
 </ng-template>

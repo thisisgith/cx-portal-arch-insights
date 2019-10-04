@@ -974,7 +974,7 @@ describe('LifecycleComponent', () => {
 				.toBeTruthy();
 
 			// check if there is atleast one icon in the hover block
-			de = de.query(By.css('div .text-left.text-muted'))
+			de = de.query(By.css('div .type.text-left'))
 				.query(By.css('span[class^="icon-"]'));
 			expect(de)
 				.toBeTruthy();

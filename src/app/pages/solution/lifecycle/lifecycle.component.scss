@@ -718,6 +718,47 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 	}
 }
 
+/* Viewall List-view table styles */
+.list-view,
+.card-view {
+	height: 100%;
+	max-height: -webkit-fill-available;
+	overflow: auto;
+	margin-top: 30px;
+}
+
+.list-view table {
+	margin-top: unset;
+	cursor: default;
+
+	.list-view__col {
+		font-size: 13px;
+		color: $text-dark-gray;
+
+		&--highlight {
+			font-size: 14px;
+			font-weight: bold;
+		}
+
+		.icon {
+			font-size: 18px;
+			color: $icon-light-gray;
+			margin-top: -3px;
+
+			&--inline {
+				width: 28px;
+				height: 28px;
+				position: absolute;
+				top: -5px;
+
+				& + span {
+					margin-left: 27px;
+				}
+			}
+		}
+	}
+}
+
 .acc {
 	&__header {
 		background: transparent;
@@ -1371,6 +1412,21 @@ tr.td-row td {
 			top: -90px;
 		}
 	}
+
+	.icon {
+		font-size: 15px;
+		color: $icon-light-gray;
+
+		&--svg {
+			width: 20px;
+			height: 20px;
+			position: absolute;
+
+			& + span {
+				margin-left: 21px;
+			}
+		}
+	}
 }
 
 #moreATXList-item:hover,
@@ -1415,7 +1471,7 @@ tr.td-row td {
 				.icon-clock,
 				.icon-check-outline {
 					font-size: 10px;
-					color: #bdc5cf;
+					color: $icon-light-gray;
 					height: unset;
 				}
 
@@ -1470,14 +1526,10 @@ tr.td-row td {
 			justify-content: flex-start;
 			padding-right: 28px;
 
-			.icon-clock {
-				font-size: 10px;
-				color: #bdc5cf;
-			}
-
 			&__text {
 				font-size: 10px;
 				color: #929bab;
+				margin-top: 3px;
 				letter-spacing: 0.07px;
 			}
 		}
@@ -1515,7 +1567,7 @@ tr.td-row td {
 
 				.icon-clock {
 					font-size: 10px;
-					color: #bdc5cf;
+					color: $icon-light-gray;
 				}
 			}
 
@@ -1525,7 +1577,7 @@ tr.td-row td {
 				.icon-file-pdf-o,
 				.icon-document {
 					font-size: 10px;
-					color: #bdc5cf;
+					color: $icon-light-gray;
 				}
 			}
 
@@ -1535,6 +1587,7 @@ tr.td-row td {
 				color: #929bab;
 				letter-spacing: 0.07px;
 				line-height: 14px;
+				margin-top: 3px;
 			}
 		}
 	}
@@ -1623,20 +1676,6 @@ polygon {
 // 	color:$vibblue !important;
 // 	background-color: transparent !important;
 // }
-
-/* Viewall List-view table styles */
-.list-view,
-.card-view {
-	height: 100%;
-	max-height: -webkit-fill-available;
-	overflow: auto;
-	margin-top: 30px;
-}
-
-.list-view table {
-	margin-top: unset;
-	cursor: default;
-}
 
 .bookmark-column .icon-bookmark {
 	font-size: 20px;
