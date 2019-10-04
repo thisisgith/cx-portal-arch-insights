@@ -1,0 +1,1118 @@
+{
+    "solution": "IBN",
+    "usecase": "Campus Network Segmentation",
+    "pitstop": null,
+    "totalCount": 111,
+    "items": [
+        {
+            "title": "Install the Appliance",
+            "description": "Cisco Digital Network Architecture Center Appliance Installation Guide discusses workflow, inspection, warnings, rack requirements and LED.",
+            "duration": "15 minutes",
+            "type": "Web Page",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/install-the-appliance?utm_campaign=IBN&utm_content=Guide&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Getting Started",
+            "bookmark": true,
+            "successByteId": "SB1"
+        },
+        {
+            "title": "Configure the Appliance",
+            "description": "This guide discusses configuration workflow, browser access to CIMC, pre-flight checks, network interface card, bootable USB drive, reimage the appliance, ISO Image, master node, add-on nodes, and more.",
+            "duration": "15 minutes",
+            "type": "Web Page",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/configure-the-appliance?utm_campaign=IBN&utm_content=Guide&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Getting Started",
+            "bookmark": false,
+            "successByteId": "SB2"
+        },
+        {
+            "title": "Cisco DNA Center Appliance Setup",
+            "description": "In this 3-minute video you will learn the basics of the DNA appliance including a description of the appliance. What the ports are used for along with tips for ordering.",
+            "duration": "3 minutes",
+            "type": "Video",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/dna-center-appliance?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Getting Started",
+            "bookmark": false,
+            "successByteId": "SB3"
+        },
+        {
+            "title": "Complete First-Time Setup",
+            "description": "This guide provides information on first-time setup workflow, compatible browsers, first time login, Integration ISE With Cisco DNA Center, configure authentication, policy servers, configure SNMP properties and redistribute services.",
+            "duration": "30 minutes",
+            "type": "Web Page",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/ibn-firsttime-setup?utm_campaign=IBN&utm_content=Guide&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Getting Started",
+            "bookmark": true,
+            "successByteId": "SB4"
+        },
+        {
+            "title": "New and Changed Information - Center",
+            "description": "This guide summarizes the new and changed features for Cisco DNA Center and tells you where they are documented.",
+            "duration": "10 minutes",
+            "type": "Web Page",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/ibn-new-changed-info?utm_campaign=IBN&utm_content=Guide&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Getting Started",
+            "bookmark": true,
+            "successByteId": "SB5"
+        },
+        {
+            "title": "Get Started with Cisco IBN",
+            "description": "Get Started with Cisco DNA Center provides information you need to get started including about Cisco DNA Center, log in, first time as a Network Administrator, default home page, use global search and where to start.",
+            "duration": "30 minutes",
+            "type": "Web Page",
+            "url": "https://explore.cisco.com/ibn-customer-portal/install-the-appliance?utm_campaign=IBN&utm_content=Guide&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Getting Started",
+            "bookmark": true,
+            "successByteId": "SB6"
+        },
+        {
+            "title": "Introduction to Cisco DNA Center Interface",
+            "description": "This 2-minute video introduces you to the Cisco DNA interface.",
+            "duration": "2 minutes",
+            "type": "Video",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/dnac-ui-intro?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Getting Started",
+            "bookmark": false,
+            "successByteId": "SB7"
+        },
+        {
+            "title": "Enable Shared Services and External Connectivity",
+            "description": "In this video you will work through a lab and configure connectivity to shared services.",
+            "duration": "11 minutes",
+            "type": "Video",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/enable-shared-services-and-external-connectivity?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Getting Started",
+            "bookmark": false,
+            "successByteId": "SB8"
+        },
+        {
+            "title": "Review the Appliance Features",
+            "description": "This guide reviews appliance features. It includes a feature summary, describes front and rear panels, physical specifications, environmental specifications and power specifications.",
+            "duration": "10 minutes",
+            "type": "Web Page",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/appliance-features?utm_campaign=IBN&utm_content=Guide&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Project Planning",
+            "bookmark": false,
+            "successByteId": "SB9"
+        },
+        {
+            "title": "Plan the Deployment",
+            "description": "This guide provides information on DNA deployment it includes workflow, about Cisco DNA Center and Software-Defined Access and cable connections. It also discusses required subnets, additional IP addresses, SD-access ports and more.",
+            "duration": "30 minutes",
+            "type": "Web Page",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/plan-the-deployment?utm_campaign=IBN&utm_content=Guide&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Project Planning",
+            "bookmark": true,
+            "successByteId": "SB10"
+        },
+        {
+            "title": "Software-Defined Access Deployment Guide",
+            "description": "This guide is used to deploy the management infrastructure, including Cisco DNA Center, Cisco Identity Services Engine (ISE), and Cisco Wireless LAN Controllers (WLC).",
+            "duration": "60 minutes",
+            "type": "PDF",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/cvd-sda-deployment-guide?utm_campaign=IBN&utm_content=Guide&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Project Planning",
+            "bookmark": false,
+            "successByteId": "SB15"
+        },
+        {
+            "title": "Software-Defined Access Design Guide",
+            "description": "This guide provides an overview of the requirements for campus network designs, followed by a discussion about the latest technologies and designs that are available for building an SD-Access network to address those requirements.",
+            "duration": "60 minutes",
+            "type": "PDF",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/cvd-sda-design-guide?utm_campaign=IBN&utm_content=Guide&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Project Planning",
+            "bookmark": false,
+            "successByteId": "SB16"
+        },
+        {
+            "title": "SD-Access Segmentation Design Guide",
+            "description": "The purpose of this document is to become familiar with Cisco Software-Defined Access and its unparalleled capabilities in implementing network segmentation in your network.",
+            "duration": "60 minutes",
+            "type": "PDF",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/cvd-software-defined?utm_campaign=IBN&utm_content=Guide&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Project Planning",
+            "bookmark": false,
+            "successByteId": "SB17"
+        },
+        {
+            "title": "How to use Cisco DNA Center Appliance for Assurance and SD-Access",
+            "description": "This video gives an overview of the Cisco DNA Center Appliance hardware and for overviews on initial setup and Assurance configuration on Cisco DNA Center.",
+            "duration": "12 minutes",
+            "type": "Video",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/dnac-quick-start-video?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Project Planning",
+            "bookmark": false,
+            "successByteId": "SB18"
+        },
+        {
+            "title": "Introduction to Software-Defined Access",
+            "description": "In this 31-minute video you will learn the state of enterprise networking today. Why it’s time to move beyond virtual local area networks (VLANs) and access control list (ACL) based policy and more.",
+            "duration": "31 minutes",
+            "type": "Video",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/intro-software-defined-access?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Project Planning",
+            "bookmark": false,
+            "successByteId": "SB19"
+        },
+        {
+            "title": "A Deeper Look at Software-Defined Access",
+            "description": "This video takes an SDA Deep Dive as we examine the architecture, the tech, and the terminology that is about to simplify, well, everything.",
+            "duration": "29 minutes",
+            "type": "Video",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/sda-deep-dive-techwise-tv?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Project Planning",
+            "bookmark": false,
+            "successByteId": "SB20"
+        },
+        {
+            "title": "What is SD-Access",
+            "description": "This video provides and overview of SDA with Cisco DNA Center.",
+            "duration": "10 minutes",
+            "type": "Video",
+            "url": "https://explore.cisco.com/ibn-customer-portal/what-is-sda?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Project Planning",
+            "bookmark": false,
+            "successByteId": "SB21"
+        },
+        {
+            "title": "Fabric Roles and Terminology",
+            "description": "This video provides information on fabric roles & terminology.",
+            "duration": "13 minutes",
+            "type": "Video",
+            "url": "https://explore.cisco.com/ibn-customer-portal/fabric-roles-terminology?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Project Planning",
+            "bookmark": false,
+            "successByteId": "SB22"
+        },
+        {
+            "title": "Understanding Fabric Part One",
+            "description": "This video part one will help you understand fabric and the Cisco DNA Center.",
+            "duration": "16 minutes",
+            "type": "Video",
+            "url": "https://explore.cisco.com/ibn-customer-portal/understanding-fabric-part-1?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Project Planning",
+            "bookmark": false,
+            "successByteId": "SB23"
+        },
+        {
+            "title": "Understanding Fabric Part Two",
+            "description": "This video part two takes a deeper dive into understanding fabric and Cisco CNA Center..",
+            "duration": "19 minutes",
+            "type": "Video",
+            "url": "https://explore.cisco.com/ibn-customer-portal/understanding-fabric-part-2?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Project Planning",
+            "bookmark": false,
+            "successByteId": "SB24"
+        },
+        {
+            "title": "Fabric Fundamentals: Fabric Basics and Control-Plane",
+            "description": "This video provides information on fabric basics and control-plane.",
+            "duration": "22 minutes",
+            "type": "Video",
+            "url": "https://explore.cisco.com/ibn-customer-portal/fabric-basics-control-plane?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Project Planning",
+            "bookmark": false,
+            "successByteId": "SB25"
+        },
+        {
+            "title": "Fabric Fundamentals: Data-Plane and Policy-Plane",
+            "description": "Understanding Fabric Part Two. This video provides a deeper dive into fabric and control-plane.",
+            "duration": "16 minutes",
+            "type": "Video",
+            "url": "https://explore.cisco.com/ibn-customer-portal/data-plane-policy-plane?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Project Planning",
+            "bookmark": false,
+            "successByteId": "SB26"
+        },
+        {
+            "title": "Controller Fundamentals: Cisco DNAC Architecture",
+            "description": "This video provides information on controller fundamentals for Cisco DNAC Architecture.",
+            "duration": "12 minutes",
+            "type": "Video",
+            "url": "https://explore.cisco.com/ibn-customer-portal/cisco-dnac-architecture?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Project Planning",
+            "bookmark": false,
+            "successByteId": "SB27"
+        },
+        {
+            "title": "Controller Fundamentals: Cisco DNAC Workflows",
+            "description": "This video provides information on controller fundamentals for Cisco DNAC Workflows.",
+            "duration": "14 minutes",
+            "type": "Video",
+            "url": "https://explore.cisco.com/ibn-customer-portal/cisco-dnac-workflows?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Project Planning",
+            "bookmark": false,
+            "successByteId": "SB28"
+        },
+        {
+            "title": "Cisco DNAC Supported Devices",
+            "description": "This is an excel document that list supported devices and device information.",
+            "duration": "30 minutes",
+            "type": "Web Page",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/dna-compatibility-info?utm_campaign=IBN&utm_content=Guide&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Architecture Transition Planning",
+            "bookmark": false,
+            "successByteId": "SB29"
+        },
+        {
+            "title": "Cisco DNA Center Installation Prerequisites",
+            "description": "This 12-min video will walk you through the steps required to install a DNA appliance.",
+            "duration": "12 minutes",
+            "type": "Video",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/dna-center-installation-walkthrough?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Architecture Transition Planning",
+            "bookmark": false,
+            "successByteId": "SB30"
+        },
+        {
+            "title": "Cisco ISE Integration Guide",
+            "description": "Demonstrates the value of the Cisco DNA Center and Cisco® Identity Services Engine (ISE) integration",
+            "duration": "30 minutes",
+            "type": "Web Page",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/dna-ise-integration-quick-start-guide?utm_campaign=IBN&utm_content=Guide&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Use Cases",
+            "bookmark": false,
+            "successByteId": "SB31"
+        },
+        {
+            "title": "Software-Defined Access Guide",
+            "description": "Demonstrates the value of the Cisco® Software-Defined Access (SD-Access) solution using a specific combination of equipment, OS version, and configuration.",
+            "duration": "45 minutes",
+            "type": "Web Page",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/sda-onboarding-guide?utm_campaign=IBN&utm_content=Guide&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Use Cases",
+            "bookmark": false,
+            "successByteId": "SB34"
+        },
+        {
+            "title": "SD-Access Case Studies and References",
+            "description": "Customer success stories for Software-Defined Access (SDA)",
+            "duration": null,
+            "type": "Web Page",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/sda-case-studies-references?utm_campaign=IBN&utm_content=Case-Study&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Use Cases",
+            "bookmark": false,
+            "successByteId": "SB35"
+        },
+        {
+            "title": "Discover Your Network",
+            "description": "Explains the Cisco DNA Center's 'Discovery' feature, which helps with inventory and device controllability.",
+            "duration": "30 minutes",
+            "type": "Web Page",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/discover-your-network?utm_campaign=IBN&utm_content=Guide&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Installation",
+            "bookmark": false,
+            "successByteId": "SB36"
+        },
+        {
+            "title": "How To Configure CLI and SNMP Credentials on Cisco DNA Center",
+            "description": "Video explaining how to configure CLI and SNMP credentials on Cisco DNA Center.",
+            "duration": "4 minutes",
+            "type": "Video",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/cli-snmp-credentials-video?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Installation",
+            "bookmark": false,
+            "successByteId": "SB37"
+        },
+        {
+            "title": "Device Discovery Methods Using DNA Center",
+            "description": "Video explaining CDP and IP address range methods of device discovery on Cisco DNA Center.",
+            "duration": "3 minutes",
+            "type": "Video",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/device-discovery-methods-video?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Installation",
+            "bookmark": false,
+            "successByteId": "SB38"
+        },
+        {
+            "title": "Device Discovery on Cisco DNA Center using CDP",
+            "description": "Video showing how to discover your network devices on Cisco DNA Center using the Cisco Discovery Protocol.",
+            "duration": "5 minutes",
+            "type": "Video",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/dnac-how2-disc-CDP?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Installation",
+            "bookmark": false,
+            "successByteId": "SB39"
+        },
+        {
+            "title": "Cisco DNA Center Device Discovery using IP Address Range",
+            "description": "Video showing how to discover your network devices on Cisco DNA Center using the IP Address Range Method.",
+            "duration": "5 minutes",
+            "type": "Video",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/dnac-how2-disc-ip?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Installation",
+            "bookmark": false,
+            "successByteId": "SB40"
+        },
+        {
+            "title": "Manage Your Inventory",
+            "description": "Explains how the 'Inventory' function retrieves and saves details, such as host IP addresses, MAC addresses, and network attachment points about devices in its database.",
+            "duration": "30 minutes",
+            "type": "Web Page",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/manage-your-inventory?utm_campaign=IBN&utm_content=Guide&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Installation",
+            "bookmark": false,
+            "successByteId": "SB41"
+        },
+        {
+            "title": "Introduction to Device Inventory Using Cisco DNA Center",
+            "description": "Video showing how Cisco DNA Center makes Inventory management an effortless experience.",
+            "duration": "3 minutes",
+            "type": "Video",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/device-inventory-video?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Installation",
+            "bookmark": false,
+            "successByteId": "SB42"
+        },
+        {
+            "title": "Key Device Inventory Tasks Using Cisco DNA Center",
+            "description": "Video showing how to accomplish key tasks on your network using Cisco DNA Center Inventory tool.",
+            "duration": "6 minutes",
+            "type": "Video",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/device-inventory-tasks-video?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Installation",
+            "bookmark": false,
+            "successByteId": "SB43"
+        },
+        {
+            "title": "Design Network Hierarchy and Settings",
+            "description": "Explains how to create a network hierarchy within Cisco CNA Center that represents your network's geographical locations.",
+            "duration": "30 minutes",
+            "type": "Web Page",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/design-network-heirarchy-settings?utm_campaign=IBN&utm_content=Guide&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Installation",
+            "bookmark": false,
+            "successByteId": "SB44"
+        },
+        {
+            "title": "How To Create a Network Hierarchy on DNA Center",
+            "description": "This video shows you how to export an existing network hierarchy from Cisco Prime Infrastructure and import it into Cisco DNA Center.",
+            "duration": "4 minutes",
+            "type": "Video",
+            "url": "https://explore.cisco.com/ibn-customer-portal/create-network-hierarchy-video?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Installation",
+            "bookmark": false,
+            "successByteId": "SB45"
+        },
+        {
+            "title": "How to Import a Network Hierarchy in Cisco DNA Center",
+            "description": "This video shows you how to export an existing network hierarchy from Cisco Prime Infrastructure and import it into Cisco DNA Center.",
+            "duration": "4 minutes",
+            "type": "Video",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/import-network-hierarchy-video?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Installation",
+            "bookmark": false,
+            "successByteId": "SB46"
+        },
+        {
+            "title": "How To Add Devices to a Site",
+            "description": "In this video you will learn how to add devices to a site using Cisco DNA Center. This task is necessary to add the device to an SD-Access fabric domain.",
+            "duration": "3 minutes",
+            "type": "Video",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/dna-center-how-to-add-devices?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Installation",
+            "bookmark": false,
+            "successByteId": "SB48"
+        },
+        {
+            "title": "How To Create Server Settings Using Cisco DNA Center",
+            "description": "This video wants you to know that. You can customize the server settings assigned to different segments within the organization hierarchy created using Cisco DNA Center.",
+            "duration": "3 minutes",
+            "type": "Video",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/server-settings-video?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Installation",
+            "bookmark": false,
+            "successByteId": "SB49"
+        },
+        {
+            "title": "How To Add IP Address Pools Manually On Cisco DNA Center",
+            "description": "In this you video you will learn how to manually add IP address pools that enable you to create virtual networks in the SD-Access infrastructure using Cisco DNA Center.",
+            "duration": "3 minutes",
+            "type": "Video",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/dnac-how2-add-ip?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Installation",
+            "bookmark": false,
+            "successByteId": "SB50"
+        },
+        {
+            "title": "Navigating the ISE User Interface",
+            "description": "This video will show you how to use the Identity Services Engine (ISE) user interface when integrating with Cisco DNA Center.",
+            "duration": "18 minutes",
+            "type": "Video",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/dnac-sda-nav-ise?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Installation",
+            "bookmark": false,
+            "successByteId": "SB52"
+        },
+        {
+            "title": "Integrating ISE and DNA Center",
+            "description": "In this video you will see a demostration on how to integrate Identity Services Engine (ISE) and Cisco DNA Center.",
+            "duration": "22 minutes",
+            "type": "Video",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/dnac-sda-integrate-ise?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Installation",
+            "bookmark": false,
+            "successByteId": "SB53"
+        },
+        {
+            "title": "Setting up User Groups in ISE",
+            "description": "This video dives into showing you how to use user groups within Identity Services Engine (ISE) when integrating with Cisco DNA Center.",
+            "duration": "15 minutes",
+            "type": "Video",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/dnac-sda-ug-setup-ise?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Installation",
+            "bookmark": false,
+            "successByteId": "SB54"
+        },
+        {
+            "title": "Adding Groups and Policies to ISE",
+            "description": "This video will provide you with some clarity on how Groups and Policies in Identity Services Engine (ISE) interrelate with one another and why they are important within the context of an SD Access solution.",
+            "duration": "23 minutes",
+            "type": "Video",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/dnac-sda-groups-ise?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Installation",
+            "bookmark": false,
+            "successByteId": "SB55"
+        },
+        {
+            "title": "Prerequisites to Automate Underlay Network",
+            "description": "This video takes you through the prerequisite tasks for automating your underlay network using Cisco DNA Center.",
+            "duration": "3 minutes",
+            "type": "Video",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/cisco-sd-access-how-?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Installation",
+            "bookmark": false,
+            "successByteId": "SB56"
+        },
+        {
+            "title": "Discover the Underlay and Add it to the Inventory",
+            "description": "This video demonstrates for you how to use Cisco DNA Center to discover the underlay network and add it to the Inventory..",
+            "duration": "16 minutes",
+            "type": "Video",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/dnac-sda-underlay?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Installation",
+            "bookmark": false,
+            "successByteId": "SB57"
+        },
+        {
+            "title": "Adding an Edge Node Using Automated Underlay",
+            "description": "In this video you will learn how to add an Edge Node using Cisco DNA Center's 'Automated Underlay' feature.",
+            "duration": "25 minutes",
+            "type": "Video",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/dnac-sda-edge-node?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Installation",
+            "bookmark": false,
+            "successByteId": "SB58"
+        },
+        {
+            "title": "Using the IOS CLI to Verify the Underlay Configuration and Operation",
+            "description": "This video shows you how to use the IOS CLI to verify the underlay network configuration and operation.",
+            "duration": "17 minutes",
+            "type": "Video",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/dnac-sda-IOS-CLI?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Installation",
+            "bookmark": false,
+            "successByteId": "SB59"
+        },
+        {
+            "title": "Cisco SD-Access Overlay",
+            "description": "In this video you will learn about key building blocks and get a description of the key building blocks of Cisco SD-Access Overlay networks.",
+            "duration": "3 minutes",
+            "type": "Video",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/how-to-use-the-key-b?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Installation",
+            "bookmark": false,
+            "successByteId": "SB60"
+        },
+        {
+            "title": "Provisioning Devices and Creating the Fabric",
+            "description": "In this video you will learn about the Provisioning Workflow and where you provision devices and create the fabric within Cisco DNA Center.",
+            "duration": "26 minutes",
+            "type": "Video",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/dnac-sda-fabric?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Installation",
+            "bookmark": false,
+            "successByteId": "SB61"
+        },
+        {
+            "title": "Build the Fabric in DNA Center - Part 2",
+            "description": "This video shows you how to build the fabric in Cisco DNA Center (Part 2), which is the final Lesson in a series of videos about Building a Fabric.",
+            "duration": "14 minutes",
+            "type": "Video",
+            "url": "https://explore.cisco.com/ibn-customer-portal/cisco-dnac-workflows?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Installation",
+            "bookmark": false,
+            "successByteId": "SB62"
+        },
+        {
+            "title": "Cisco DNA Center Appliance and Addressing",
+            "description": "This vidoe takes you through design, policy, and provisioning within Cisco DNA Center, which is Lesson 1 in a series of videos about Building a Fabric.",
+            "duration": "16 minutes",
+            "type": "Video",
+            "url": "https://explore.cisco.com/ibn-customer-portal/appliance-addressing?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Installation",
+            "bookmark": false,
+            "successByteId": "SB63"
+        },
+        {
+            "title": "Fabric Planning I Cisco DNA Center",
+            "description": "This video teaches you about Fabric Planning in Cisco DNA Center, which is Lesson 3 in a series of videos about Building a Fabric.",
+            "duration": "20 minutes",
+            "type": "Video",
+            "url": "https://explore.cisco.com/ibn-customer-portal/fabric-planning-in-dnac?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Installation",
+            "bookmark": false,
+            "successByteId": "SB64"
+        },
+        {
+            "title": "Build the Fabric in DNA Center - Part 1",
+            "description": "This video shows you how to build the Fabric in Cisco DNA Center (Part 1), which is Lesson 4 in a series of videos about Building a Fabric.",
+            "duration": "16 minutes",
+            "type": "Video",
+            "url": "https://explore.cisco.com/ibn-customer-portal/building-fabric-dnac-part-1?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Installation",
+            "bookmark": false,
+            "successByteId": "SB65"
+        },
+        {
+            "title": "Cisco Digital Network Architecture Center Upgrade Guide",
+            "description": "This guide identifies Cisco DNA Center's upgrade prerequisites, paths, and procedures.",
+            "duration": "30 minutes",
+            "type": "Web Page",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/architecture-center-upgrade?utm_campaign=IBN&utm_content=Guide&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Migration Readiness",
+            "bookmark": false,
+            "successByteId": "SB66"
+        },
+        {
+            "title": "Cisco Software-Defined Access Upgrade Guide",
+            "description": "This guide identifies Software-Defined Access (SDA) upgrade prerequisites and procedures.",
+            "duration": "30 minutes",
+            "type": "Web Page",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/cisco-software-defin?utm_campaign=IBN&utm_content=Guide&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Migration Readiness",
+            "bookmark": false,
+            "successByteId": "SB67"
+        },
+        {
+            "title": "Release Notes for Cisco Digital Network Architecture Center",
+            "description": "This guide identifies release-specific information for Cisco DNA Center, version 1.2.10",
+            "duration": "30 minutes",
+            "type": "Web Page",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/release-notes-for-ci-1?utm_campaign=IBN&utm_content=Guide&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Design/Config Planning",
+            "bookmark": false,
+            "successByteId": "SB68"
+        },
+        {
+            "title": "Cisco Digital Network Architecture Center Security Best Practices Guide",
+            "description": "This guide explains best practices that must be followed to ensure a secure deployment.",
+            "duration": "45 minutes",
+            "type": "Web Page",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/security-best-practices?utm_campaign=IBN&utm_content=Guide&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Design/Config Planning",
+            "bookmark": false,
+            "successByteId": "SB69"
+        },
+        {
+            "title": "SD-Access Wireless Design and Deployment Guide",
+            "description": "Provides links to Wireless Lan Controller docs and guides, based on different software releases.",
+            "duration": "45 minutes",
+            "type": "Web Page",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/sd-access-wireless-d?utm_campaign=IBN&utm_content=Guide&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Design/Config Planning",
+            "bookmark": false,
+            "successByteId": "SB70"
+        },
+        {
+            "title": "SD-Access Scale",
+            "description": "Describes scale considerations with Software-Defined Access, version 1.2",
+            "duration": null,
+            "type": "Web Page",
+            "url": "https://explore.cisco.com/ibn-customer-portal/sd-access-scale-1-2?utm_campaign=IBN&utm_content=Guide&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Design/Config Planning",
+            "bookmark": false,
+            "successByteId": "SB71"
+        },
+        {
+            "title": "Cisco DNA Center SD Access LAN Automation Deployment Guide",
+            "description": "Describes the steps to implement LAN automation, which accelerates building the Software-Defined Access overlay network without the traditional network planning and implementation process.",
+            "duration": "30 minutes",
+            "type": "Web Page",
+            "url": "https://explore.cisco.com/ibn-customer-portal/cisco-dna-center-sd-?utm_campaign=IBN&utm_content=Guide&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Design/Config Planning",
+            "bookmark": false,
+            "successByteId": "SB72"
+        },
+        {
+            "title": "Display Your Network Topology",
+            "description": "Explains how to use the Topology feature within Cisco DNA Center, which creates a graphical view of your network.",
+            "duration": "30 minutes",
+            "type": "Web Page",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/display-network-topology?utm_campaign=IBN&utm_content=Guide&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Operations",
+            "bookmark": false,
+            "successByteId": "SB73"
+        },
+        {
+            "title": "Configure Telemetry Profile",
+            "description": "Explains how to configure and apply profiles on devices for monitoring and assessing their health within Cisco DNA Center.",
+            "duration": "20 minutes",
+            "type": "Web Page",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/cisco-digital-networ-1?utm_campaign=IBN&utm_content=Guide&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Operations",
+            "bookmark": false,
+            "successByteId": "SB74"
+        },
+        {
+            "title": "Provision Your Network",
+            "description": "Explains how to use Cisco DNA Center to onboard devices and deploy the policies across them.",
+            "duration": "20 minutes",
+            "type": "Web Page",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/provision-your-network?utm_campaign=IBN&utm_content=Guide&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Operations",
+            "bookmark": false,
+            "successByteId": "SB75"
+        },
+        {
+            "title": "Configure Policies",
+            "description": "Document which explains how DNAC enables you to create policies that reflect your organization's business intent.",
+            "duration": null,
+            "type": "Web Page",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/ibn-configure-policies?utm_campaign=IBN&utm_content=Guide&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Operations",
+            "bookmark": false,
+            "successByteId": "SB103"
+        },
+        {
+            "title": "How To Integrate Cisco ISE and DNA Data Center",
+            "description": "Video which shows how to integrate DNAC with Cisco ISE.",
+            "duration": "6 minutes",
+            "type": "Video",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/dna-center-how-to-integrate-ISE?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Operations",
+            "bookmark": false,
+            "successByteId": "SB104"
+        },
+        {
+            "title": "How to Automate Underlay Networks",
+            "description": "Video which shows you how to automate your LAN provisioning using DNAC.",
+            "duration": "3 minutes",
+            "type": "Video",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/dnac-how2-underlay-ntwrks?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Operations",
+            "bookmark": false,
+            "successByteId": "SB105"
+        },
+        {
+            "title": "How to Provision a Dual-Homed Switch by using LAN Automation",
+            "description": "Video which shows you how to provision a dual-homed network switch using the LAN Automation feature in the DNAC.",
+            "duration": "6 minutes",
+            "type": "Video",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/how-to-provision-dual-homed-switch?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Operations",
+            "bookmark": false,
+            "successByteId": "SB106"
+        },
+        {
+            "title": "How To Create a Custom Contract",
+            "description": "Video that explains how DNAC allows you to create custom contracts.",
+            "duration": "2 minutes",
+            "type": "Video",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/dna-center-how-to-custom?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Operations",
+            "bookmark": false,
+            "successByteId": "SB107"
+        },
+        {
+            "title": "How To Create a DNA Center Security Policy",
+            "description": "Video explaining how to apply security policies between scalable groups within a virtual network.",
+            "duration": "3 minutes",
+            "type": "Video",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/dna-center-how-to-sec-policy?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Operations",
+            "bookmark": false,
+            "successByteId": "SB108"
+        },
+        {
+            "title": "How To Provision Devices",
+            "description": "Video which explains how devices must be provisioned before they can be added to an Software-Defined Access fabric domain.",
+            "duration": "3 minutes",
+            "type": "Video",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/how-to-provision-dev?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Operations",
+            "bookmark": false,
+            "successByteId": "SB109"
+        },
+        {
+            "title": "How To Add Devices to a Site",
+            "description": "Video explaining how to learn how to add devices to a site using DNAC.",
+            "duration": "3 minutes",
+            "type": "Video",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/dna-center-how-to-add-devices?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Operations",
+            "bookmark": false,
+            "successByteId": "SB110"
+        },
+        {
+            "title": "How To Add Devices to a Fabric Domain",
+            "description": "Video on how to learn how to create or delete a fabric domain using DNAC.",
+            "duration": "4 minutes",
+            "type": "Video",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/how-to-add-devices-t?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Operations",
+            "bookmark": false,
+            "successByteId": "SB111"
+        },
+        {
+            "title": "How To Create a Fabric Domain",
+            "description": "Video on how to learn how to add a device or multiple devices to an Software-Defined Access fabric domain.",
+            "duration": "3 minutes",
+            "type": "Video",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/how-to-create-a-fabr?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Operations",
+            "bookmark": false,
+            "successByteId": "SB112"
+        },
+        {
+            "title": "How to Design and Deploy a Virtual Network With Cisco DNA Center",
+            "description": "Video which covers design and deployment of virtual network functions using DNAC.",
+            "duration": "4 minutes",
+            "type": "Video",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/how-to-design-and-de?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Operations",
+            "bookmark": false,
+            "successByteId": "SB113"
+        },
+        {
+            "title": "Provisioning Devices and Creating the Fabric",
+            "description": "Video which demonstrates how to provision a device and create a fabric (provisioning workflow).",
+            "duration": "26 minutes",
+            "type": "Video",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/dnac-sda-fabric?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Operations",
+            "bookmark": false,
+            "successByteId": "SB114"
+        },
+        {
+            "title": "Fabric Planning I Cisco DNA Center",
+            "description": "Video which introduces how to perform fabric planning in DNAC.",
+            "duration": "20 minutes",
+            "type": "Video",
+            "url": "https://explore.cisco.com/ibn-customer-portal/fabric-planning-in-dnac?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Operations",
+            "bookmark": false,
+            "successByteId": "SB115"
+        },
+        {
+            "title": "Build the Fabric in DNA Center - Part 1",
+            "description": "Video which demonstrates how to design, policy and provision the fabric in DNAC. Part one.",
+            "duration": "16 minutes",
+            "type": "Video",
+            "url": "https://explore.cisco.com/ibn-customer-portal/building-fabric-dnac-part-1?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Operations",
+            "bookmark": false,
+            "successByteId": "SB116"
+        },
+        {
+            "title": "Build the Fabric in DNA Center - Part 2",
+            "description": "Video which demonstrates how to design, policy and provision the fabric in DNAC. Part two.",
+            "duration": "14 minutes",
+            "type": "Video",
+            "url": "https://explore.cisco.com/ibn-customer-portal/building-fabric-in-dnac-part-2?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Operations",
+            "bookmark": false,
+            "successByteId": "SB117"
+        },
+        {
+            "title": "Cisco DNA Center Appliance and Addressing",
+            "description": "Video which explains the DNAC appliance and addressing issues.",
+            "duration": "16 minutes",
+            "type": "Video",
+            "url": "https://explore.cisco.com/ibn-customer-portal/appliance-addressing?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Operations",
+            "bookmark": false,
+            "successByteId": "SB118"
+        },
+        {
+            "title": "Cisco SD-Access Overlay",
+            "description": "Video which describes the key building blocks of Cisco SD-Access Overlay networks.",
+            "duration": "3 minutes",
+            "type": "Video",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/how-to-use-the-key-b?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Operations",
+            "bookmark": false,
+            "successByteId": "SB119"
+        },
+        {
+            "title": "Cisco DNA Center Data Sheet",
+            "description": "Overview Data Sheet for DNAC which is the foundational controller and analytics platform at the heart of Cisco’s intent-based networking.",
+            "duration": "30 minutes",
+            "type": "Data Sheet",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/cisco-dna-center-cis?utm_campaign=IBN&utm_content=Datasheet&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Feature Overview",
+            "bookmark": false,
+            "successByteId": "SB120"
+        },
+        {
+            "title": "SD-Access for IoT and Distributed Campus",
+            "description": "Video which explains how to extend intent for SD-Access for IoT and distributed campus in DNAC.",
+            "duration": "15 minutes",
+            "type": "Video",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/extending-intent-sd-access?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Feature Overview",
+            "bookmark": false,
+            "successByteId": "SB124"
+        },
+        {
+            "title": "Cisco SD-Access Overlay",
+            "description": "Video which describes the key building blocks of Cisco SD-Access Overlay networks.",
+            "duration": "3 minutes",
+            "type": "Video",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/how-to-use-the-key-b?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Feature Overview",
+            "bookmark": false,
+            "successByteId": "SB125"
+        },
+        {
+            "title": "Prerequisites to Deploy Network Function Virtualization Using Cisco DNA Center",
+            "description": "Video which covers the prerequisites that you must complete before deploying a virtual network in DNAC.",
+            "duration": "3 minutes",
+            "type": "Video",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/prereqs-deploy-ntwrk-function?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Feature Overview",
+            "bookmark": false,
+            "successByteId": "SB126"
+        },
+        {
+            "title": "DHCP in SD-Access Fabric",
+            "description": "Powerpoint presentation on SDA fabric DHCP solutions.",
+            "duration": "45 minutes",
+            "type": "Web Page",
+            "url": "https://explore.cisco.com/ibn-customer-portal/sda-fabric-dhcp-solution?utm_campaign=IBN&utm_content=Guide&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Feature Overview",
+            "bookmark": false,
+            "successByteId": "SB127"
+        },
+        {
+            "title": "Forwarding in SD-Access Fabric",
+            "description": "Powerpoint presentation on forwarding in the SD fabric.",
+            "duration": "45 minutes",
+            "type": "Web Page",
+            "url": "https://explore.cisco.com/ibn-customer-portal/sda-forwarding-model?utm_campaign=IBN&utm_content=Guide&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Feature Overview",
+            "bookmark": false,
+            "successByteId": "SB128"
+        },
+        {
+            "title": "Multicast in SD-Access Fabric",
+            "description": "Powerpoint presentation on SD-Access Multicasting in the fabric.",
+            "duration": "45 minutes",
+            "type": "Web Page",
+            "url": "https://explore.cisco.com/ibn-customer-portal/sda-fabric-multicast?utm_campaign=IBN&utm_content=Guide&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Feature Overview",
+            "bookmark": false,
+            "successByteId": "SB129"
+        },
+        {
+            "title": "Wireless Cat9800 with SD-Access",
+            "description": "Powerpoint presentation on wireless SD-Access for the Cat9800.",
+            "duration": "45  minutes",
+            "type": "Web Page",
+            "url": "https://explore.cisco.com/ibn-customer-portal/sda-wireless-enabling-ibn?utm_campaign=IBN&utm_content=Guide&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Feature Overview",
+            "bookmark": false,
+            "successByteId": "SB130"
+        },
+        {
+            "title": "Troubleshoot the Deployment",
+            "description": "Document which explains how to troubleshoot the installation of DNAC.",
+            "duration": "30 minutes",
+            "type": "Web Page",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/appliance-install-guide?utm_campaign=IBN&utm_content=Guide&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Troubleshooting",
+            "bookmark": false,
+            "successByteId": "SB131"
+        },
+        {
+            "title": "How To Check RADIUS Logs in ISE",
+            "description": "In this video you will learn how to access RADIUS logs in Cisco ISE. View information about RADIUS authentication sessions, and troubleshoot authentication issues.",
+            "duration": "2 minutes",
+            "type": "Video",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/ise-how-to-check-radius-logs?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Troubleshooting",
+            "bookmark": false,
+            "successByteId": "SB135"
+        },
+        {
+            "title": "How To Enable Debugs in ISE",
+            "description": "In this video you will learn how to change the log level for components in Cisco Identity Service Engine (ISE), the policy management tool in our Cisco DNA solution.",
+            "duration": "3 minutes",
+            "type": "Video",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/how-to-enable-debugs?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Troubleshooting",
+            "bookmark": false,
+            "successByteId": "SB136"
+        },
+        {
+            "title": "Cisco DNA ROI Calculator",
+            "description": "This site shows you how to use the Cisco DNA ROI Calculator to see how much your organization could save with a software-defined network.",
+            "duration": "60 minutes",
+            "type": "Web Page",
+            "url": "https://dnaroi.cisco.com/go/cisco/dnaroi/index.html?lang=en-us&ccid=cc000006&oid=caten000241",
+            "archetype": "ROI Business Assessment",
+            "bookmark": false,
+            "successByteId": "SB137"
+        },
+        {
+            "title": "Business Outcomes – SD Access",
+            "description": "This document defines overall business outcomes and provides SDA examples.",
+            "duration": "20 minutes",
+            "type": "PDF",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/business-outcomes-sda?utm_campaign=IBN&utm_content=Guide&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Feature Adoption",
+            "bookmark": false,
+            "successByteId": "SB138"
+        },
+        {
+            "title": "Feature to Business Outcomes Alignment for SD Access",
+            "description": "This document defines business outcomes and maps them to software defined access features.",
+            "duration": "20 minutes",
+            "type": "PDF",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/feature-to-business-outcome-align?utm_campaign=IBN&utm_content=Guide&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Feature Adoption",
+            "bookmark": false,
+            "successByteId": "SB139"
+        },
+        {
+            "title": "Adoption Planning Checklist",
+            "description": "This document provides a checklist for your adoption journey.",
+            "duration": "30 minutes",
+            "type": "PDF",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/adoption-planning-checklist?utm_campaign=IBN&utm_content=Checklist&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Adoption Planning",
+            "bookmark": false,
+            "successByteId": "SB140"
+        },
+        {
+            "title": "Adoption Success Plan Checklist",
+            "description": "This document provides a checklist for the execution of your adoption plan.",
+            "duration": "30 minutes",
+            "type": "PDF",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/adoption-success-checklist?utm_campaign=IBN&utm_content=Checklist&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Adoption Planning",
+            "bookmark": false,
+            "successByteId": "SB141"
+        },
+        {
+            "title": "SD-Access Wireless Design and Deployment Guide",
+            "description": "Here you will find a list of Technical References.",
+            "duration": "45 minutes",
+            "type": "Web Page",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/sd-access-wireless-d?utm_campaign=IBN&utm_content=Guide&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Feature Adoption",
+            "bookmark": false,
+            "successByteId": "SB142"
+        },
+        {
+            "title": "Manage Users",
+            "description": "This guide will help you to manage users. It includes information about user profiles, roles, local users, changing your password and more.",
+            "duration": "45 minutes",
+            "type": "Web Page",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/manage-users-guide?utm_campaign=IBN&utm_content=Guide&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Expert Features Overview",
+            "bookmark": false,
+            "successByteId": "SB143"
+        },
+        {
+            "title": "Backup and Restore",
+            "description": "This document will show you how to back-up and restore.",
+            "duration": "30 minutes",
+            "type": "Web Page",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/backup-restore-guide?utm_campaign=IBN&utm_content=Guide&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Expert Features Overview",
+            "bookmark": false,
+            "successByteId": "SB144"
+        },
+        {
+            "title": "Configure System Settings",
+            "description": "This document describes the procedures used to configure the system settings.",
+            "duration": "30 minutes",
+            "type": "Web Page",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/ibn-configure-system-settings?utm_campaign=IBN&utm_content=Guide&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Performance/Health Monitoring",
+            "bookmark": false,
+            "successByteId": "SB145"
+        },
+        {
+            "title": "Manage High Availability",
+            "description": "This document covers the requirements that need to be met to use HA, deployment and administration best practices, and the failure scenarios you may encounter.",
+            "duration": "30 minutes",
+            "type": "Web Page",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/ibn-manage-high-availability?utm_campaign=IBN&utm_content=Guide&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Performance/Health Monitoring",
+            "bookmark": false,
+            "successByteId": "SB146"
+        },
+        {
+            "title": "Manage Applications",
+            "description": "This document describes how to perform application management.",
+            "duration": "30 minutes",
+            "type": "Web Page",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/ibn-manage-applications?utm_campaign=IBN&utm_content=Guide&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Performance/Health Monitoring",
+            "bookmark": false,
+            "successByteId": "SB147"
+        },
+        {
+            "title": "Manage Users",
+            "description": "This document describes how to manage users.",
+            "duration": "30 minutes",
+            "type": "Web Page",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/manage-users-guide?utm_campaign=IBN&utm_content=Guide&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Performance/Health Monitoring",
+            "bookmark": false,
+            "successByteId": "SB148"
+        },
+        {
+            "title": "Backup and Restore",
+            "description": "This document shows you how to back-up and restore.",
+            "duration": "30 minutes",
+            "type": "Web Page",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/backup-restore-guide?utm_campaign=IBN&utm_content=Guide&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Performance/Health Monitoring",
+            "bookmark": false,
+            "successByteId": "SB149"
+        },
+        {
+            "title": "Manage Licenses",
+            "description": "This document explains license management.",
+            "duration": "30 minutes",
+            "type": "Web Page",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/ibn-manage-licenses?utm_campaign=IBN&utm_content=Guide&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Asset/License Management",
+            "bookmark": false,
+            "successByteId": "SB150"
+        },
+        {
+            "title": "Licensing DNA Center",
+            "description": "This document goes over licensing Cisco DNA Center 1.3.",
+            "duration": "30  minutes",
+            "type": "Data Sheet",
+            "url": "https://cisco.lookbookhq.com/ibn-customer-portal/ibn-data-sheet?utm_campaign=IBN&utm_content=Datasheet&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Asset/License Management",
+            "bookmark": false,
+            "successByteId": "SB151"
+        },
+        {
+            "title": "Cisco DNA Center – Essential vs Advantage",
+            "description": "This PPT describes the Cisco DNA Center – Essential vs Advantage.",
+            "duration": "30 minutes",
+            "type": "Web Page",
+            "url": "https://explore.cisco.com/ibn-customer-portal/dnac-advantage-and-essentials?utm_campaign=IBN&utm_content=Guide&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true",
+            "archetype": "Asset/License Management",
+            "bookmark": false,
+            "successByteId": "SB152"
+        }
+    ]
+}
