@@ -167,8 +167,9 @@
 </ng-template>
 
 <ng-template #stateTemplate let-item="celldata">
-	<span *ngIf="['OPEN','NEW_OPEN'].indexOf(item.status) > -1" [innerText]="'_OsvExposed_' | i18n"></span>
-	<span *ngIf="['RESOLVED'].indexOf(item.status) > -1" [innerText]="'_OsvFixed_' | i18n"></span>
+	<span *ngIf="item.status == 'OPEN'" [innerText]="'_OsvExposed_' | i18n"></span>
+	<span *ngIf="item.status == 'NEW_OPEN'" [innerText]="'_OsvNewExposed_' | i18n"></span>
+	<span *ngIf="item.status == 'RESOLVED'" [innerText]="'_OsvFixed_' | i18n"></span>
 </ng-template>
 
 <ng-template #updatedDateTemp let-item="celldata">

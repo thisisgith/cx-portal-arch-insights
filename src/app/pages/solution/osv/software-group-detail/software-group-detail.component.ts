@@ -91,6 +91,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	public actionData: any;
 	public showDetails = false;
 	public detailsParams: any;
+	public bugTabIndex = 0;
 
 	constructor (
 		private logger: LogService,
@@ -612,6 +613,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	public showDetailsView (details: any) {
 		this.detailsParams = details;
 		this.showDetails = true;
+		this.bugTabIndex = details.tabIndex;
 	}
 
 	/**

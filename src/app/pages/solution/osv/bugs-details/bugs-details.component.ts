@@ -29,6 +29,7 @@ export class BugsDetailsComponent implements OnInit {
 	@Input('fullscreen') public fullscreen;
 	@Input('data') public data;
 	@Input('params') public params;
+	@Input('tabIndex') public tabIndex = 0;
 	@ViewChild('totalFilterTemplate', { static: true })
 		public totalFilterTemplate: TemplateRef<{ }>;
 	@ViewChild('stateFilterTemplate', { static: true })
@@ -61,7 +62,6 @@ export class BugsDetailsComponent implements OnInit {
 		debounce: 600,
 	};
 	public numberOfRows = 10;
-	public tabIndex = 0;
 	public severityMap = [
 		{ key: 'H', label: I18n.get('_OsvHigh_'), name: 'High' },
 		{ key: 'M', label: I18n.get('_OsvMedium_'), name: 'Medium' },
@@ -248,11 +248,13 @@ export class BugsDetailsComponent implements OnInit {
 			_.set(severityFilter, 'seriesData', severityFilterSeriesData);
 			if (viewType === 'bug') {
 				stateFilter.seriesData =
-					this.populateStateFilter(_.get(recommendation, ['data', 'bugsExposed']),
+					this.populateStateFilter(_.get(recommendation, ['data', 'openBugsCount']),
+						_.get(recommendation, ['data', 'newOpenBugsCount']),
 						_.get(recommendation, ['data', 'resolvedBugsCount']));
 			} else {
 				stateFilter.seriesData =
-					this.populateStateFilter(_.get(recommendation, ['data', 'psirtExposed']),
+					this.populateStateFilter(_.get(recommendation, ['data', 'openPsirtCount']),
+						_.get(recommendation, ['data', 'newOpenPsirtCount']),
 						_.get(recommendation, ['data', 'psirtResolvedCount']));
 			}
 		});
@@ -261,10 +263,12 @@ export class BugsDetailsComponent implements OnInit {
 	/**
 	 * populate state filters
 	 * @param exposedCount  number of bugs exposed
+	 * @param newExposedCount  number of newly exposed bugs
 	 * @param resolvedCount number of bugs fixed
 	 * @returns the series data for state filters
 	 */
-	private populateStateFilter (exposedCount: number, resolvedCount: number) {
+	private populateStateFilter (exposedCount: number, newExposedCount: number,
+				resolvedCount: number) {
 		const seriesData = [];
 		if (exposedCount > 0) {
 			seriesData.push({
@@ -272,6 +276,14 @@ export class BugsDetailsComponent implements OnInit {
 				filter: 'Exposed',
 				label: I18n.get('_OsvExposed_'),
 				selected: _.get(this.params, 'filter') === 'exposed' ? true : false,
+			});
+		}
+		if (newExposedCount > 0) {
+			seriesData.push({
+				value: newExposedCount,
+				filter: 'New_Exposed',
+				label: I18n.get('_OsvNewExposed_'),
+				selected: _.get(this.params, 'filter') === 'new_exposed' ? true : false,
 			});
 		}
 		if (resolvedCount > 0) {
@@ -436,7 +448,10 @@ export class BugsDetailsComponent implements OnInit {
 					mappedStateFilters.push('RESOLVED');
 				}
 				if (stateFilters.indexOf('Exposed') > -1) {
-					mappedStateFilters.push(...['OPEN', 'NEW_OPEN']);
+					mappedStateFilters.push('OPEN');
+				}
+				if (stateFilters.indexOf('New_Exposed') > -1) {
+					mappedStateFilters.push('NEW_OPEN');
 				}
 				filteredData = _.filter(filteredData, recomm =>
 					mappedStateFilters.indexOf(recomm.status) > -1,

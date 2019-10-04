@@ -28,4 +28,8 @@ export interface MachineRecommendations {
 	psirtResolvedCount?: number;
 	totalBugsSeverity? : any;
 	totalPsirtsSeverity? : any;
+	openBugsCount?: number;
+	newOpenBugsCount?: number;
+	openPsirtCount?: number;
+	newOpenPsirtCount?: number;
 }
