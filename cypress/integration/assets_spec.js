@@ -944,9 +944,9 @@ describe('Assets', () => { // PBC-41
 			cy.getByAutoId('caseProbType')
 				.should('have.text', i18n._RMACaseProblemType_.toUpperCase());
 			cy.getByAutoId('caseAsset')
-				.should('have.text', i18n._RMACaseAsset_.toUpperCase());
+				.should('have.text', i18n._RMACaseSystem_.toUpperCase());
 			cy.getByAutoId('caseSW')
-				.should('have.text', i18n._RMACaseSoftwareVersion_.toUpperCase());
+				.should('have.text', i18n._RMACaseSoftwareRelease_.toUpperCase());
 			cy.getByAutoId('caseContract').should('have.text', i18n._Contract_.toUpperCase());
 			cy.getByAutoId('caseTracking')
 				.should('have.text', i18n._RMACaseTrackingNumber_.toUpperCase());
