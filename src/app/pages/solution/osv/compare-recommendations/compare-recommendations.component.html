@@ -108,7 +108,7 @@
 						</bar-chart>
 					</div>
 				</td>
-				<td (click)="showDetailsView('bug',i+1)" data-auto-id="ShowBugDetailsRecommendedReleasesTab" *ngFor="let recommendation of machineRecommendations;let i = index;" class="recommendation">
+				<td (click)="showDetailsView('bug',index+1)" data-auto-id="ShowBugDetailsRecommendedReleasesTab" *ngFor="let recommendation of machineRecommendations;" class="recommendation">
 					<div class="row" [ngClass]="{'base-margin-top':fullscreen}">
 						<div [ngClass]="{'text-small':!fullscreen,'text-large':fullscreen}"
 							[innerText]="'_OsvWillExposed_' | i18n" class="text-small col-6"></div>
@@ -154,7 +154,7 @@
 						</bar-chart>
 					</div>
 				</td>
-				<td (click)="showDetailsView('psirt',i+1)" data-auto-id="ShowPsirtDetailsRecommendedReleaseTab" *ngFor="let recommendation of machineRecommendations;let i = index;" class="recommendation">
+				<td (click)="showDetailsView('psirt',index+1)" data-auto-id="ShowPsirtDetailsRecommendedReleaseTab" *ngFor="let recommendation of machineRecommendations;" class="recommendation">
 					<div class="half-margin-top row">
 						<div class="text-large col-6" [innerText]="recommendation.psirtExposed || '0'"></div>
 						<div class="col-6 text-right">

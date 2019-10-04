@@ -119,7 +119,7 @@
 			data-balloon-length="medium">
 			<i class="icon-circle text-warning-alt"></i>	
 		</span>
-		<span *ngIf="!item?.alert || item?.alert == 'NA'" class="icon-circle color-transparent"></span>
+		<span *ngIf="!item?.alert || item?.alert == 'NA'" class="icon-circle color-transparent"></span> 
 		<span class="col-11" [title]="item?.swVersion" [innerText]="item?.swVersion"></span>
 	</div>
 </ng-template>
@@ -133,5 +133,5 @@
 </ng-template>
 
 <ng-template #hostTemplate let-item="celldata">
-	<span class="text-break" [innerText]="item.hostName"></span>
+	<span class="text-break" [innerText]="item?.hostName"></span>
 </ng-template>
