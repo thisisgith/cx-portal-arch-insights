@@ -170,16 +170,14 @@
 			*ngIf="item.alert == 'critical'"
 			[attr.data-balloon]="'_OsvCriticalTooltip_' | i18n" 
 			data-balloon-pos="down"
-			data-balloon-length="medium"
-			class="icon-circle ">		
+			data-balloon-length="medium">		
 			<i class="icon-circle text-danger"></i>
 		</span>
 		<span 		
 			*ngIf="item?.alert == 'warning'"
 			[attr.data-balloon]="'_OsvWarningTooltip_' | i18n" 
 			data-balloon-pos="down"
-			data-balloon-length="medium"
-			class="icon-circle text-warning-alt">	
+			data-balloon-length="medium">	
 			<i class="icon-circle text-warning-alt"></i>	
 		</span>
 		<span *ngIf="!item?.alert || item?.alert == 'NA'" class="icon-circle color-transparent"></span>
