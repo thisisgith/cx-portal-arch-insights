@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { AddNoteModule } from '../case-details/add-note/add-note.module';
 import { RelatedRmaModule } from '../case-details/related-rma/related-rma.module';
 import { CSCModule } from '@cui-x-views/csc';
+import { DateTimePipeModule } from '@pipes';
 
 /**
  * Case Details Header Module
@@ -27,6 +28,7 @@ import { CSCModule } from '@cui-x-views/csc';
 		CSCModule,
 		CuiModalModule,
 		FromNowPipeModule,
+		DateTimePipeModule,
 	],
 })
 export class CaseDetailsHeaderModule { }
