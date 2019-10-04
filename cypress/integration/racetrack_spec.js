@@ -33,6 +33,8 @@ const defaultCurrentPitstopActions = Cypress._.find(
 
 const actionMock = new MockService('ActionScenarios');
 
+const i18n = require('../../src/assets/i18n/en-US.json');
+
 describe('Racetrack Content', () => {
 	before(() => {
 		cy.login();
@@ -343,8 +345,7 @@ describe('Racetrack Content', () => {
 		});
 	});
 
-	// PBC-725 has disabled all checkboxes in the pitstopActions list
-	describe.skip('PBC-123: Lifecycle: Pitstop Action checkbox', () => {
+	describe('PBC-123: Lifecycle: Pitstop Action checkbox', () => {
 		const allCheckableScenario = infoMock.getScenario('GET', '(Racetrack) IBN-Assurance-Onboard-allManualCheckable');
 		const allCheckableSolutions = allCheckableScenario.response.body.solutions[0];
 		const allCheckableTech = Cypress._.find(allCheckableSolutions.technologies, tech => tech.name === 'Campus Network Assurance');
@@ -356,17 +357,11 @@ describe('Racetrack Content', () => {
 			// Setup our own mock so we can intercept PATCH calls for checking items
 			cy.server();
 			cy.route({
-				method: 'PATCH',
-				url: '**/api/customerportal/pitstop/v1/action/status?*',
+				method: 'PUT',
+				url: '**/api/customerportal/pitstop/v1/action/status',
 				status: 200,
-				response: {
-					isAccChanged: false,
-					isAtxChanged: false,
-					isCommunitiesChanged: false,
-					isElearningChanged: false,
-					isSuccessPathChanged: false,
-				},
-			}).as('patchActionStatus');
+				response: {},
+			}).as('putActionStatus');
 			actionMock.disable('Update to complete the first Action');
 		});
 
@@ -386,30 +381,16 @@ describe('Racetrack Content', () => {
 			allCheckableActions.forEach((action, index) => {
 				cy.getByAutoId('pitstopCheckboxSpan')
 					.eq(index)
-					.click();
-				cy.wait('@patchActionStatus');
+					.click({ force: true });
+				cy.wait('@putActionStatus');
 			});
 		});
 
-		it('SDP API responses for checked item should control data refreshes', () => {
-			// Switch mocks and refresh the checkboxes
+		it('SDP API 200 response for checked item should trigger data refreshes', () => {
+			// Switch mocks
 			infoMock.enable('(Racetrack) IBN-Assurance-Onboard-allManualCheckable');
-			cy.loadApp();
-			cy.waitForAppLoading();
 
-			// Set up mocks for patch and all Lifecycle GETs
-			cy.route({
-				method: 'PATCH',
-				url: '**/api/customerportal/pitstop/v1/action/status?*',
-				status: 200,
-				response: {
-					isAccChanged: true,
-					isAtxChanged: true,
-					isCommunitiesChanged: true,
-					isElearningChanged: true,
-					isSuccessPathChanged: true,
-				},
-			}).as('patchActionStatus');
+			// Set up mocks for all Lifecycle GETs
 			cy.route({
 				method: 'GET',
 				url: '**/api/customerportal/racetrack/v1/acc*',
@@ -428,7 +409,7 @@ describe('Racetrack Content', () => {
 			}).as('getELearning');
 			cy.route({
 				method: 'GET',
-				url: '**/api/customerportal/racetrack/v1/successPaths*',
+				url: '**/api/customerportal/racetrack/v1/successPaths*pitstop*',
 			}).as('getSuccessPaths');
 			infoMock.disable('(ACC) IBN-Campus Network Assurance-Onboard');
 			infoMock.disable('(ATX) IBN-Campus Network Assurance-Onboard');
@@ -436,18 +417,49 @@ describe('Racetrack Content', () => {
 			infoMock.disable('(E-Learning) IBN-Campus Network Assurance-Onboard');
 			infoMock.disable('(SP) IBN-Campus Network Assurance-Onboard');
 
-			// Click a checkbox and wait for the PATCH call to complete
-			cy.getByAutoId('pitstopCheckboxSpan')
-				.first()
-				.click();
-			cy.wait('@patchActionStatus');
-
-			// Verify all of the other Lifecycle APIs were called to refresh the data
+			// Reload to load in the new mock data
+			cy.loadApp();
+			cy.waitForAppLoading();
+			// Wait for all the GET calls to settle, so the Cypress mocks don't get confused
 			cy.wait('@getACC');
 			cy.wait('@getATX');
 			// cy.wait('@getCommunities');	// TODO: There is no communities API yet
 			cy.wait('@getELearning');
 			cy.wait('@getSuccessPaths');
+
+			// Click a checkbox and wait for the PUT call to complete
+			cy.getByAutoId('pitstopCheckboxSpan')
+				.first()
+				.click();
+			cy.wait('@putActionStatus');
+
+			// Verify all of the other Lifecycle APIs were called to refresh the data with the next
+			// suggestedAction
+			cy.wait('@getACC')
+				.its('url')
+				.then(url => {
+					expect(url).to.contain(`suggestedAction=${allCheckableActions[1].name}`);
+				});
+			cy.wait('@getATX')
+				.its('url')
+				.then(url => {
+					expect(url).to.contain(`suggestedAction=${allCheckableActions[1].name}`);
+				});
+			// TODO: There is no communities API yet
+			// cy.wait('@getCommunities')
+			// 	.its(url => {
+			// 	expect(url).to.contain(`suggestedAction=${allCheckableActions[1].name}`);
+			// 	});
+			cy.wait('@getELearning')
+				.its('url')
+				.then(url => {
+					expect(url).to.contain(`suggestedAction=${allCheckableActions[1].name}`);
+				});
+			cy.wait('@getSuccessPaths')
+				.its('url')
+				.then(url => {
+					expect(url).to.contain(`suggestedAction=${allCheckableActions[1].name}`);
+				});
 		});
 
 		it('Pitstop actions should be checkable in any order', () => {
@@ -464,8 +476,8 @@ describe('Racetrack Content', () => {
 					.parentsUntil('[data-auto-id="pitstopAction"]')	// Back us up to the parent pitstopAction
 					.within(() => {
 						cy.getByAutoId('pitstopCheckboxSpan')
-							.click();
-						cy.wait('@patchActionStatus');
+							.click({ force: true });
+						cy.wait('@putActionStatus');
 					});
 			});
 		});
@@ -479,6 +491,38 @@ describe('Racetrack Content', () => {
 			cy.getByAutoId('pitstopCheckboxLabel').each($checkbox => {
 				cy.wrap($checkbox).should('have.class', 'disabled');
 			});
+		});
+
+		it('Checking the last pitstop action should show popup', () => {
+			// Switch mocks and refresh the page
+			infoMock.enable('(Racetrack) IBN-Assurance-Onboard-allManualCheckable');
+			cy.loadApp();
+			cy.waitForAppLoading();
+
+			// Check all the items
+			allCheckableActions.forEach((action, index) => {
+				cy.getByAutoId('pitstopCheckboxSpan')
+					.eq(index)
+					.click({ force: true });
+				cy.wait('@putActionStatus');
+			});
+
+			// Check that the pop-up message is present
+			cy.getByAutoId('AllCompletionPopup')
+				.should('exist')
+				.within(() => {
+					cy.getByAutoId('AllCompletionPopup-Flag').should('exist');
+					cy.getByAutoId('AllCompletionPopup-Title')
+						.should('exist')
+						.and('have.text', i18n._NiceJob_);
+					cy.getByAutoId('AllCompletionPopup-Message')
+						.should('exist')
+						.and('contain', 'Your checklist status will be updated within 24 hrs so you can keep cruising in');
+				});
+
+			// Check that the pop-up message fades away
+			cy.wait(5000);
+			cy.getByAutoId('AllCompletionPopup').should('not.exist');
 		});
 	});
 

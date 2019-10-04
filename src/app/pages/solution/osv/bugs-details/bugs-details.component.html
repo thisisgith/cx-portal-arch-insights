@@ -6,15 +6,15 @@
 			<ng-container *ngTemplateOutlet="details;context:{recommendation: detailsData.current}">
 			</ng-container>
 		</cui-tab>
-		<cui-tab [label]="'_OsvRecommendedVersion_' | i18n:'1' | uppercase">
+		<cui-tab *ngIf="hasRecommendation1" [label]="'_OsvRecommendedVersion_' | i18n:'1' | uppercase">
 			<ng-container *ngTemplateOutlet="details; context: {recommendation: detailsData.recommended1}">
 			</ng-container>
 		</cui-tab>
-		<cui-tab [label]="'_OsvRecommendedVersion_' | i18n:'2' | uppercase">
+		<cui-tab *ngIf="hasRecommendation2" [label]="'_OsvRecommendedVersion_' | i18n:'2' | uppercase">
 			<ng-container *ngTemplateOutlet="details; context: {recommendation: detailsData.recommended2}">
 			</ng-container>
 		</cui-tab>
-		<cui-tab [label]="'_OsvRecommendedVersion_' | i18n:'3' | uppercase">
+		<cui-tab *ngIf="hasRecommendation3" [label]="'_OsvRecommendedVersion_' | i18n:'3' | uppercase">
 			<ng-container *ngTemplateOutlet="details; context: {recommendation: detailsData.recommended3}">
 			</ng-container>
 		</cui-tab>
@@ -167,8 +167,9 @@
 </ng-template>
 
 <ng-template #stateTemplate let-item="celldata">
-	<span *ngIf="['OPEN','NEW_OPEN'].indexOf(item.status) > -1" [innerText]="'_OsvExposed_' | i18n"></span>
-	<span *ngIf="['RESOLVED'].indexOf(item.status) > -1" [innerText]="'_OsvFixed_' | i18n"></span>
+	<span *ngIf="item.status == 'OPEN'" [innerText]="'_OsvExposed_' | i18n"></span>
+	<span *ngIf="item.status == 'NEW_OPEN'" [innerText]="'_OsvNewExposed_' | i18n"></span>
+	<span *ngIf="item.status == 'RESOLVED'" [innerText]="'_OsvFixed_' | i18n"></span>
 </ng-template>
 
 <ng-template #updatedDateTemp let-item="celldata">
@@ -185,23 +186,23 @@
 </ng-template>
 
 <ng-template #titleTemp let-item="celldata">
-	<div class="flex">
-		<div class="title" [ngClass]="{'fullscreen':fullscreen}">
-			<span  [title]="item.title" [innerText]="item.title"></span>
-		</div>
-		<div>
-			<span class="text-primary icon-popout icon-small qtr-margin-left"></span>
-		</div>
-	</div>
+	<span  [title]="item.title" >
+		<span [innerText]="item.title" ></span>
+		<img alt="{{ '_OsvOpenNewWindow_' | i18n }}"
+				class="qtr-margin-left"
+				attr.data-auto-id="OpenInNewWindow"
+				src="assets/icons/icon-open-new-window.svg">
+	</span>	
 </ng-template>
 
 <ng-template #bugTitleTemp let-item="celldata">
-	<div class="title" [ngClass]="{'fullscreen':fullscreen}">
-		<span  [title]="item.title" [innerText]="item.title"></span>
-	</div>
+	<span [title]="item.title" [innerText]="item.title"></span>
 </ng-template>
 
 <ng-template #bugIdTemp let-item="celldata">		
 	<span  [title]="item.id" [innerText]="item.id"></span>
-	<span class="text-primary icon-popout icon-small qtr-margin-left"></span>
+	<img alt="{{ '_OsvOpenNewWindow_' | i18n }}"
+		class="qtr-margin-left"
+		attr.data-auto-id="OpenInNewWindow"
+		src="assets/icons/icon-open-new-window.svg">	
 </ng-template>

@@ -1551,6 +1551,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 				// Click on the more list item, verify the modal has details
 				cy.getByAutoId('ATXMoreClick')
 					.eq(index)
+					.should('be.visible')
 					.click();
 
 				cy.getByAutoId('atxMoreClickModal')

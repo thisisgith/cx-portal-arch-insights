@@ -195,8 +195,8 @@ export class LifecycleComponent implements OnDestroy {
 	// Enable or disable CGT based on this flag
 	public enableCGT = false;
 
-	public categoryOptions: [];
-	public pgCategoryOptions: [];
+	public categoryOptions: any [];
+	public pgCategoryOptions: any [];
 	public statusOptions = [
 		{
 			name: I18n.get('_AllTitles_'),
@@ -424,6 +424,18 @@ export class LifecycleComponent implements OnDestroy {
 		}
 
 		return title;
+	}
+
+	/**
+	 * Get the filter option name
+	 * @returns Option name to be rendered
+	 * @param {string} value Value to lookup
+	 */
+	public getStatusOptionName (value) {
+		if (value) {
+			const foundOption = this.statusOptions.find(opt => opt.value === value);
+			return foundOption ? foundOption.name : value;
+		}
 	}
 
 	/**
@@ -1409,7 +1421,7 @@ export class LifecycleComponent implements OnDestroy {
 				['customerId', 'solution', 'usecase', 'pitstop', 'suggestedAction']))
 		.pipe(
 			map((result: ACCResponse) => {
-				this.selectedFilterForACC = '';
+				this.selectedFilterForACC = this.statusOptions[0].value;
 				this.componentData.acc = {
 					sessions: result.items,
 				};
@@ -1455,7 +1467,7 @@ export class LifecycleComponent implements OnDestroy {
 				['customerId', 'solution', 'usecase', 'pitstop', 'suggestedAction']))
 		.pipe(
 			map((result: ATXResponseModel) => {
-				this.selectedFilterForATX = '';
+				this.selectedFilterForATX = this.statusOptions[0].value;
 				this.componentData.atx = {
 					recommended: _.head(result.items),
 					sessions: result.items,
@@ -1507,7 +1519,6 @@ export class LifecycleComponent implements OnDestroy {
 				['customerId', 'solution', 'usecase', 'rows']))
 		.pipe(
 			map((result: SuccessPathsResponse) => {
-				this.selectedFilterForPG = '';
 				if (result.items.length) {
 					_.set(this.componentData, ['learning', 'productGuides'],
 						result.items);
@@ -1521,6 +1532,7 @@ export class LifecycleComponent implements OnDestroy {
 							name: item,
 							value: item,
 						}));
+					this.selectedFilterForPG = this.pgCategoryOptions[0].value;
 				}
 
 				this.buildPGTable();
@@ -1559,7 +1571,6 @@ export class LifecycleComponent implements OnDestroy {
 				['customerId', 'solution', 'usecase', 'pitstop', 'rows', 'suggestedAction']))
 		.pipe(
 			map((result: SuccessPathsResponse) => {
-				this.selectedFilterForSB = '';
 				if (result.items.length) {
 					_.set(this.componentData, ['learning', 'success'], result.items);
 					const resultItems = _.uniq(_.map(result.items, 'archetype'));
@@ -1571,6 +1582,7 @@ export class LifecycleComponent implements OnDestroy {
 							name: item,
 							value: item,
 						}));
+					this.selectedFilterForSB = this.categoryOptions[0].value;
 				}
 
 				this.buildSBTable();

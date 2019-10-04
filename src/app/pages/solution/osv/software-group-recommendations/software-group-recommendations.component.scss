@@ -44,3 +44,9 @@
 .recommendation-icon-info {
 	color: #c2d1e2;
 }
+
+::ng-deep {
+	.cancel-dropdown .dropdown__menu a span {
+		color: $danger;
+	}
+}

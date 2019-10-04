@@ -33,6 +33,7 @@
 	<app-bugs-details 
 		[fullscreen]="fullscreen"
 		[params]= "detailsParams"
+		[tabIndex]="bugTabIndex"
 		[data]="machineRecommendations">
 	</app-bugs-details>
 </ng-template>
@@ -91,7 +92,7 @@
 				</div>
 			</div>
 		</div>
-		<cui-table [options]="softwareGroupAssetsTable" [data]="softwareGroupAssets">
+		<cui-table id="software-group-assets" [options]="softwareGroupAssetsTable" [data]="softwareGroupAssets">
 		</cui-table>
 		<div *ngIf="assetsPagination && softwareGroupAssets?.length > softwareGroupAssetsParams.pageSize"
 			class="base-margin-top">
@@ -147,7 +148,8 @@
 				[selectedSoftwareGroup]="selectedSoftwareGroup" 
 				[recommendations]="machineRecommendations"
 				(onAction)="onAction($event)"
-				(showDetails)="showDetailsView($event)">
+				(showDetails)="showDetailsView($event)"
+				(showVersions)="tabIndex = 3">				
 			</compare-recommendations>
 		</div>
 	</div>
@@ -155,30 +157,34 @@
 
 <!-- version template view for group assets -->
 <ng-template #versionTemplate let-item="celldata">
-	<span 		
-		*ngIf="item.alert == 'information'"
-		[attr.data-balloon]="'_OsvInformationTooltip_' | i18n" 
-		data-balloon-pos="down"
-		data-balloon-length="medium"
-		>
-		<i class="icon-circle text-primary"></i>
-	</span>
-	<span 		
-		*ngIf="item.alert == 'critical'"
-		[attr.data-balloon]="'_OsvCriticalTooltip_' | i18n" 
-		data-balloon-pos="down"
-		data-balloon-length="medium"
-		class="icon-circle ">		
-		<i class="icon-circle text-danger"></i>
-	</span>
-	<span 		
-		*ngIf="item?.alert == 'warning'"
-		[attr.data-balloon]="'_OsvWarningTooltip_' | i18n" 
-		data-balloon-pos="down"
-		data-balloon-length="medium"
-		class="icon-circle text-warning-alt">	
-		<i class="icon-circle text-warning-alt"></i>	
-	</span>
-	<span *ngIf="!item?.alert || item?.alert == 'NA'" class="icon-circle color-transparent"></span>
-	<span class="col-11" [innerText]="item.swVersion"></span>
+	<div class="no-wrap">
+		<span 		
+			*ngIf="item.alert == 'information'"
+			[attr.data-balloon]="'_OsvInformationTooltip_' | i18n" 
+			data-balloon-pos="down"
+			data-balloon-length="medium"
+			>
+			<i class="icon-circle text-primary"></i>
+		</span>
+		<span 		
+			*ngIf="item.alert == 'critical'"
+			[attr.data-balloon]="'_OsvCriticalTooltip_' | i18n" 
+			data-balloon-pos="down"
+			data-balloon-length="medium">		
+			<i class="icon-circle text-danger"></i>
+		</span>
+		<span 		
+			*ngIf="item?.alert == 'warning'"
+			[attr.data-balloon]="'_OsvWarningTooltip_' | i18n" 
+			data-balloon-pos="down"
+			data-balloon-length="medium">	
+			<i class="icon-circle text-warning-alt"></i>	
+		</span>
+		<span *ngIf="!item?.alert || item?.alert == 'NA'" class="icon-circle color-transparent"></span>
+		<span class="col-11" [innerText]="item?.swVersion"></span>
+	</div>
+</ng-template>
+
+<ng-template #hostTemplate let-item="celldata">
+	<span class="text-break" [innerText]="item?.hostName"></span>
 </ng-template>

@@ -151,7 +151,7 @@
 				</div>
 				<div class="col-3">
 					<span
-						[innerText]="'_Assets_' | i18n | lowercase"
+						[innerText]="'_Systems_' | i18n | lowercase"
 						class="pull-left qtr-padding-top"
 					></span>
 				</div>
@@ -189,14 +189,6 @@
 	<div>
 		<span class="text-info" [innerText]="item.deviceName"></span><br />
 		<span class="text-small" [innerText]="item.productFamily"></span>
-	</div>
-</ng-template>
-<ng-template #crashRiskTemplate let-item="celldata">
-	<div class="text-center">
-		<span
-			class="text-dkgray-1"
-			[innerText]="item.riskScore / 100 | percent: '2.2-4'"
-		></span>
 	</div>
 </ng-template>
 <ng-template #similarityMatchTemplate let-item="celldata">
