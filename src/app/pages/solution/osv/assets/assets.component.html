@@ -97,7 +97,7 @@
 </ng-template>
 
 <ng-template #versionTemplate let-item="celldata">		
-	<div class="nowrap">
+	<div class="no-wrap">
 		<span 		
 			*ngIf="item.alert == 'information'"
 			[attr.data-balloon]="'_OsvInformationTooltip_' | i18n" 
@@ -120,7 +120,7 @@
 			<i class="icon-circle text-warning-alt"></i>	
 		</span>
 		<span *ngIf="!item?.alert || item?.alert == 'NA'" class="icon-circle color-transparent"></span>
-		<span class="col-11" [title]="item.swVersion" [innerText]="item.swVersion"></span>
+		<span class="col-11" [title]="item?.swVersion" [innerText]="item?.swVersion"></span>
 	</div>
 </ng-template>
 
