@@ -5,3 +5,112 @@
 .full-width {
 	width: 100%;
 }
+
+.modal-backdrop {
+	background: #000;
+	opacity: 0.7;
+}
+
+.modal-container {
+	position: fixed;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 999998;
+}
+
+.close-icon-container {
+	position: absolute;
+	top: 30px;
+	right: 23px;
+
+	.icon-close {
+		color: #6e7580;
+	}
+}
+
+.modal__content {
+	left: 50%;
+	transform: translateX(-50%);
+	height: 95% !important;
+	overflow-y: auto;
+	overflow-x: hidden;
+	max-width: 867px;
+	background: #fff !important;
+	box-shadow: 0 7px 8px -4px rgba(0, 0, 0, 0.2), 0 12px 17px 2px rgba(0, 0, 0, 0.14), 0 5px 22px 4px rgba(0, 0, 0, 0.12) !important;
+	padding-left: 62px !important;
+	padding-top: 46px !important;
+}
+
+.cx-btn {
+	padding: 0 28px;
+	margin-right: 14px;
+}
+
+.request-modal {
+	&__title {
+		font-size: 32px;
+		line-height: 32px;
+		letter-spacing: 0.3px;
+		font-weight: 300;
+	}
+
+	&__details {
+		border-right: 1px solid #e0e2e4;
+		padding-top: 32px;
+
+		&__heading {
+			font-size: 11px;
+			letter-spacing: -0.02px;
+			line-height: 12px;
+			color: #6c757d;
+			margin-bottom: 4px;
+		}
+
+		&__xl-padding-top {
+			padding-top: 64px;
+		}
+	}
+
+	&__form-container {
+		padding: 32px 72px 65px 34px;
+
+		.form-margin-bottom {
+			margin-top: 0;
+			margin-bottom: 32px;
+		}
+
+		.form-margin-top {
+			margin-top: 32px;
+		}
+
+		.form-group__text {
+			input,
+			&.select select,
+			textarea {
+				border: none;
+				border-bottom: 1px solid #aeb8c1;
+				border-radius: 0;
+				background: #f4f6f8;
+				color: #5d656c;
+				padding-left: 14px;
+
+				&:focus {
+					box-shadow: unset;
+				}
+			}
+
+			&.select::after {
+				color: #323c47;
+			}
+		}
+
+		.form-label {
+			font-size: 13px;
+			// font-weight: 500; no 500 weight, 600 too thick, 400 too thin
+			line-height: 13px;
+			color: #394454;
+			margin-bottom: 5px;
+		}
+	}
+}

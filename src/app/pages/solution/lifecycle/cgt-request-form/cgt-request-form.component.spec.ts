@@ -136,13 +136,13 @@ describe('CgtRequestFormComponent', () => {
 	});
 
 	it('submit button should exist', () => {
-		de = fixture.debugElement.query(By.css('.btn--primary'));
+		de = fixture.debugElement.query(By.css('.cx-btn'));
 		expect(de)
 			.toBeTruthy();
 	});
 
 	it('canel button should exist', () => {
-		de = fixture.debugElement.query(By.css('.btn--secondary'));
+		de = fixture.debugElement.query(By.css('.cx-btn--primary'));
 		expect(de)
 			.toBeTruthy();
 		el = de.nativeElement;
