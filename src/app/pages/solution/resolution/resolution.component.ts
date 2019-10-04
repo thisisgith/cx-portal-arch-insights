@@ -624,7 +624,8 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 	 * @param evt for table sort information
 	 */
 	public onTableSortingChanged (evt: any) {
-		this.caseParams.sort = `${evt.key},${evt.sortDirection}`;
+		const sortDir = (evt.sortDirection === 'asc') ? 'desc' : 'asc';
+		this.caseParams.sort = `${evt.key},${sortDir}`;
 		this.refresh$.next();
 	}
 
