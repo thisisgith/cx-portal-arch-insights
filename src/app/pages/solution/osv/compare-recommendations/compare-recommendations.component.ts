@@ -28,7 +28,7 @@ export class CompareRecommendationsComponent implements OnChanges {
 	public currentRecommendation: MachineRecommendations;
 	public machineRecommendations: MachineRecommendations[];
 	public barChartBackgroundColor = '#f2f2f2';
-	public barChartWidth = 150;
+	public barChartWidth = 130;
 	public severityMap = {
 		H: I18n.get('_OsvH_'),
 		M: I18n.get('_OsvM_'),
