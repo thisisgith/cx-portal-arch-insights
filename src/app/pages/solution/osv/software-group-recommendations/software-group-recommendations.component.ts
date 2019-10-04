@@ -186,6 +186,12 @@ export class SoftwareGroupRecommendationsComponent implements OnChanges {
 		_.map(_.keys(groups), swVersion => {
 			const detail: AssetRecommendations = _.get(_.filter(recommendations, { swVersion }), 0);
 			detail.swVersionGroup = _.cloneDeep(groups[swVersion]);
+			detail.showAccept = false;
+			detail.groupedLabels = _.map(groups[swVersion], recommendation => {
+				if (this.acceptanceAllowed.indexOf(recommendation.name) > -1) {
+					detail.showAccept = true;
+				}
+			});
 			groupedData.push(detail);
 		});
 		this.currentRecommendation = _.get(_.filter(data, { name: 'profile current' }), 0);
@@ -208,5 +214,4 @@ export class SoftwareGroupRecommendationsComponent implements OnChanges {
 			},
 		];
 	}
-
 }

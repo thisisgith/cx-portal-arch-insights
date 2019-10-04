@@ -88,11 +88,11 @@
 				</td>
 			</tr>
 			<!-- bugs -->
-			<tr id="bugs-details" (click)="showDetailsView('bug')" data-auto-id="ShowBugDetails">
-				<td class=" first-column-width headingClass no-border-bottom no-border-top text-large  text-primary"
+			<tr id="bugs-details"  data-auto-id="ShowBugDetails">
+				<td (click)="showDetailsView('bug',0)" data-auto-id="ShowBugDetailsCurrentReleasesTab" class=" first-column-width headingClass no-border-bottom no-border-top text-large  text-primary"
 					[innerText]="'_Bugs_' | i18n">
 				</td>
-				<td class="recommendation-current">
+				<td (click)="showDetailsView('bug',0)" data-auto-id="ShowBugDetailsCurrentReleasesTab" class="recommendation-current">
 					<div class="base-margin-bottom"
 						[ngClass]="{'text-small':!fullscreen,'text-large base-margin-top':fullscreen}"
 						[innerText]="'_OsvCurrentlyExposed_' | i18n | uppercase">					
@@ -108,26 +108,25 @@
 						</bar-chart>
 					</div>
 				</td>
-				<td *ngFor="let recommendation of machineRecommendations" class="recommendation">
+				<td (click)="showDetailsView('bug',index+1)" data-auto-id="ShowBugDetailsRecommendedReleasesTab" *ngFor="let recommendation of machineRecommendations;" class="recommendation">
 					<div class="row" [ngClass]="{'base-margin-top':fullscreen}">
-						<div [ngClass]="{'text-small':!fullscreen,'text-large':fullscreen}" class="col-6"
-							[innerText]="'_OsvFixed_' | i18n"></div>
 						<div [ngClass]="{'text-small':!fullscreen,'text-large':fullscreen}"
 							[innerText]="'_OsvWillExposed_' | i18n" class="text-small col-6"></div>
+						<div [ngClass]="{'text-small':!fullscreen,'text-large':fullscreen}" class="col-6 text-right"
+							[innerText]="'_OsvFixed_' | i18n"></div>
 					</div>
 					<div class="base-margin-top row">
-						<div class="col-6">
+						<div class="text-large col-6" [innerText]="recommendation.bugsExposed  || '0'"></div>
+						<div class="col-6 text-right">
 							<span class="text-large" [innerText]="recommendation.resolvedBugsCount  || '0'"></span>
 							<span class="text-large" [innerText]="'/'"></span>
 							<span class="text-large" [innerText]="currentRecommendation?.bugsExposed || '0'"></span>
 
 						</div>
-						<div class="text-large col-6" [innerText]="recommendation.bugsExposed  || '0'"></div>
 					</div>
-					<div class="base-margin-top row"
+					<div class="base-margin-top"
 						*ngIf=" recommendation.bugSeriesData && recommendation.bugSeriesData.length > 0">
-						<div class="col-6"></div>
-						<div class="col-6 bar-chart">
+						<div class="bar-chart">
 							<bar-chart 
 								[width]="barChartWidth" 
 								[backgroundColor]="barChartBackgroundColor" 
@@ -139,11 +138,11 @@
 				</td>
 			</tr>
 			<!-- security advisories -->
-			<tr id="psirts-details" data-auto-id="ShowPsirtDetails" (click)="showDetailsView('psirt')">
-				<td class=" first-column-width headingClass no-border-bottom no-border-top text-large text-primary"
+			<tr id="psirts-details" data-auto-id="ShowPsirtDetails" >
+				<td (click)="showDetailsView('psirt',0)" data-auto-id="ShowPsirtDetailsCurrentReleaseTab" class=" first-column-width headingClass no-border-bottom no-border-top text-large text-primary"
 					[innerText]="'_SecurityAdvisories_' | i18n">
 				</td>
-				<td class="recommendation-current">
+				<td (click)="showDetailsView('psirt',0)" data-auto-id="ShowPsirtDetailsCurrentReleaseTab" class="recommendation-current">
 					<div class="text-large half-margin-top" [innerText]="currentRecommendation?.psirtExposed || '0'">
 					</div>
 					<div class="base-margin-top bar-chart"
@@ -155,20 +154,19 @@
 						</bar-chart>
 					</div>
 				</td>
-				<td *ngFor="let recommendation of machineRecommendations" class="recommendation">
+				<td (click)="showDetailsView('psirt',index+1)" data-auto-id="ShowPsirtDetailsRecommendedReleaseTab" *ngFor="let recommendation of machineRecommendations;" class="recommendation">
 					<div class="half-margin-top row">
-						<div class="col-6">
+						<div class="text-large col-6" [innerText]="recommendation.psirtExposed || '0'"></div>
+						<div class="col-6 text-right">
 							<span class="text-large" [innerText]="recommendation.psirtResolvedCount  || '0'"></span>
 							<span class="text-large" [innerText]="'/'"></span>
 							<span class="text-large" [innerText]="currentRecommendation.psirtExposed  || '0'"></span>
 
 						</div>
-						<div class="text-large col-6" [innerText]="recommendation.psirtExposed || '0'"></div>
 					</div>
-					<div class="base-margin-top row"
+					<div class="base-margin-top"
 						*ngIf=" recommendation.psirtSeriesData && recommendation.psirtSeriesData.length > 0">
-						<div class="col-6"></div>
-						<div class="col-6 bar-chart">
+						<div class="bar-chart">
 							<bar-chart 
 								[width]="barChartWidth" 
 								[backgroundColor]="barChartBackgroundColor" 

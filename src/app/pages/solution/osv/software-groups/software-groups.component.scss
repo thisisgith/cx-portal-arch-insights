@@ -6,7 +6,7 @@
 }
 
 .responsive-table {
-	overflow: hidden;
+	overflow: unset;
 	padding-bottom: 20px;
 }
 
@@ -21,4 +21,8 @@
 
 .color-transparent {
 	color: transparent;
+}
+
+.software-pagination {
+	padding-bottom: 100px;
 }

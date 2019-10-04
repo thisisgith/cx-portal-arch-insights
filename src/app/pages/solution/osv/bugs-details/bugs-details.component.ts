@@ -29,6 +29,7 @@ export class BugsDetailsComponent implements OnInit {
 	@Input('fullscreen') public fullscreen;
 	@Input('data') public data;
 	@Input('params') public params;
+	@Input('tabIndex') public tabIndex = 0;
 	@ViewChild('totalFilterTemplate', { static: true })
 		public totalFilterTemplate: TemplateRef<{ }>;
 	@ViewChild('stateFilterTemplate', { static: true })
@@ -61,12 +62,14 @@ export class BugsDetailsComponent implements OnInit {
 		debounce: 600,
 	};
 	public numberOfRows = 10;
-	public tabIndex = 0;
 	public severityMap = [
 		{ key: 'H', label: I18n.get('_OsvHigh_'), name: 'High' },
 		{ key: 'M', label: I18n.get('_OsvMedium_'), name: 'Medium' },
 		{ key: 'L', label: I18n.get('_OsvLow_'), name: 'Low' },
 	];
+	public hasRecommendation1: boolean;
+	public hasRecommendation2: boolean;
+	public hasRecommendation3: boolean;
 
 	constructor (private logger: LogService) {
 		this.logger.debug('bug and psirt details component created');
@@ -100,28 +103,28 @@ export class BugsDetailsComponent implements OnInit {
 						sortDirection: 'asc',
 						sorting: true,
 						template: this.impactTemp,
-						width: '10%',
+						width: '15%',
 					},
 					{
 						key: 'id',
 						name: I18n.get('_OsvBugId_'),
 						sortable: true,
 						template: this.bugIdTemp,
-						width: '15%',
+						width: '20%',
 					},
 					{
 						key: 'title',
 						name: I18n.get('_Title_'),
 						sortable: false,
 						template: this.bugTitleTemp,
-						width: '65%',
+						width: '50%',
 					},
 					{
 						key: 'status',
 						name: I18n.get('_State_'),
 						sortable: true,
 						template: this.stateTemplate,
-						width: '10%',
+						width: '15%',
 					},
 				],
 				dynamicData: false,
@@ -142,14 +145,14 @@ export class BugsDetailsComponent implements OnInit {
 						name: I18n.get('_Impact_'),
 						sortable: true,
 						template: this.impactTemp,
-						width: '10%',
+						width: '15%',
 					},
 					{
 						key: 'title',
 						name: I18n.get('_Title_'),
 						sortable: false,
 						template: this.titleTemp,
-						width: '50%',
+						width: '35%',
 					},
 					{
 						key: 'version',
@@ -164,14 +167,14 @@ export class BugsDetailsComponent implements OnInit {
 						sortDirection: 'desc',
 						sorting: true,
 						template: this.updatedDateTemp,
-						width: '15%',
+						width: '20%',
 					},
 					{
 						key: 'status',
 						name: I18n.get('_State_'),
 						sortable: true,
 						template: this.stateTemplate,
-						width: '10%',
+						width: '15%',
 					},
 				],
 				dynamicData: false,
@@ -248,11 +251,13 @@ export class BugsDetailsComponent implements OnInit {
 			_.set(severityFilter, 'seriesData', severityFilterSeriesData);
 			if (viewType === 'bug') {
 				stateFilter.seriesData =
-					this.populateStateFilter(_.get(recommendation, ['data', 'bugsExposed']),
+					this.populateStateFilter(_.get(recommendation, ['data', 'openBugsCount']),
+						_.get(recommendation, ['data', 'newOpenBugsCount']),
 						_.get(recommendation, ['data', 'resolvedBugsCount']));
 			} else {
 				stateFilter.seriesData =
-					this.populateStateFilter(_.get(recommendation, ['data', 'psirtExposed']),
+					this.populateStateFilter(_.get(recommendation, ['data', 'openPsirtCount']),
+						_.get(recommendation, ['data', 'newOpenPsirtCount']),
 						_.get(recommendation, ['data', 'psirtResolvedCount']));
 			}
 		});
@@ -261,10 +266,12 @@ export class BugsDetailsComponent implements OnInit {
 	/**
 	 * populate state filters
 	 * @param exposedCount  number of bugs exposed
+	 * @param newExposedCount  number of newly exposed bugs
 	 * @param resolvedCount number of bugs fixed
 	 * @returns the series data for state filters
 	 */
-	private populateStateFilter (exposedCount: number, resolvedCount: number) {
+	private populateStateFilter (exposedCount: number, newExposedCount: number,
+				resolvedCount: number) {
 		const seriesData = [];
 		if (exposedCount > 0) {
 			seriesData.push({
@@ -272,6 +279,14 @@ export class BugsDetailsComponent implements OnInit {
 				filter: 'Exposed',
 				label: I18n.get('_OsvExposed_'),
 				selected: _.get(this.params, 'filter') === 'exposed' ? true : false,
+			});
+		}
+		if (newExposedCount > 0) {
+			seriesData.push({
+				value: newExposedCount,
+				filter: 'New_Exposed',
+				label: I18n.get('_OsvNewExposed_'),
+				selected: _.get(this.params, 'filter') === 'new_exposed' ? true : false,
 			});
 		}
 		if (resolvedCount > 0) {
@@ -319,6 +334,12 @@ export class BugsDetailsComponent implements OnInit {
 	 * setting the default for the details page
 	 */
 	public setDefaultData () {
+		this.hasRecommendation1 = _.filter(this.data,
+			(recomm: MachineRecommendations) => recomm.name === 'Recommendation #1');
+		this.hasRecommendation2 = _.find(this.data,
+			(recomm: MachineRecommendations) => recomm.name === 'Recommendation #2');
+		this.hasRecommendation3 = _.find(this.data,
+			(recomm: MachineRecommendations) => recomm.name === 'Recommendation #3');
 		const appliedFilters = {
 			state: [],
 			severity: [],
@@ -436,7 +457,10 @@ export class BugsDetailsComponent implements OnInit {
 					mappedStateFilters.push('RESOLVED');
 				}
 				if (stateFilters.indexOf('Exposed') > -1) {
-					mappedStateFilters.push(...['OPEN', 'NEW_OPEN']);
+					mappedStateFilters.push('OPEN');
+				}
+				if (stateFilters.indexOf('New_Exposed') > -1) {
+					mappedStateFilters.push('NEW_OPEN');
 				}
 				filteredData = _.filter(filteredData, recomm =>
 					mappedStateFilters.indexOf(recomm.status) > -1,
