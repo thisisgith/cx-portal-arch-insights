@@ -1414,13 +1414,18 @@ tr.td-row td {
 	}
 
 	.icon {
-		font-size: 11px;
+		font-size: 15px;
+		margin-top: -2px;
 		color: $icon-light-gray;
 
 		&--svg {
-			width: 15px;
-			height: 15px;
-			margin-right: 3px;
+			width: 20px;
+			height: 20px;
+			position: absolute;
+
+			& + span {
+				margin-left: 21px;
+			}
 		}
 	}
 }
@@ -1522,14 +1527,10 @@ tr.td-row td {
 			justify-content: flex-start;
 			padding-right: 28px;
 
-			.icon-clock {
-				font-size: 10px;
-				color: $icon-light-gray;
-			}
-
 			&__text {
 				font-size: 10px;
 				color: #929bab;
+				margin-top: 3px;
 				letter-spacing: 0.07px;
 			}
 		}
