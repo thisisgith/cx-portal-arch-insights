@@ -199,6 +199,9 @@
 			[innerText]="'_NoOpenAdvisories_' | i18n">
 		</div>
 	</div>
+	<div *ngIf="facet?.loading" class="base-padding">
+		<cui-spinner></cui-spinner>
+	</div>
 	<p class="km__items__item__label" [innerText]="facet?.title | uppercase"></p>
 	<div
 		class="kmii__border"

@@ -17,9 +17,9 @@ import {
 	HighCrashRisk,
 	RiskAssets,
 	InventoryService,
-	AssetLinkInfo,
 } from '@sdp-api';
 import { ActivatedRoute } from '@angular/router';
+import { AssetLinkInfo } from '@interfaces';
 
 /**
  * Risk mitigation component

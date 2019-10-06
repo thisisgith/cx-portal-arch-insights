@@ -3,7 +3,7 @@ import { fakeAsync, tick, ComponentFixture, TestBed } from '@angular/core/testin
 
 import { AssetsComponent } from './assets.component';
 import { AssetsModule } from './assets.module';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpResponse, HttpHeaders } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MicroMockModule } from '@cui-x-views/mock';
 import { environment } from '@environment';
@@ -22,6 +22,7 @@ import { ActivatedRoute } from '@angular/router';
 import {
 	user,
 	Mock,
+	RacetrackScenarios,
 	AssetScenarios,
 	ContractScenarios,
 	CoverageScenarios,
@@ -30,6 +31,7 @@ import {
 	RoleScenarios,
 	VulnerabilityScenarios,
 } from '@mock';
+import { RacetrackInfoService } from '@services';
 
 /**
  * Will fetch the currently active response body from the mock object
@@ -50,12 +52,33 @@ describe('AssetsComponent', () => {
 	let inventoryService: InventoryService;
 	let productAlertsService: ProductAlertsService;
 	let contractsService: ContractsService;
+	let racetrackInfoService: RacetrackInfoService;
+
+	/**
+	 * Sends our racetrack info
+	 */
+	const sendRacetrack = () => {
+		racetrackInfoService.sendRacetrack(getActiveBody(RacetrackScenarios[0]));
+		racetrackInfoService.sendCurrentSolution(
+			getActiveBody(RacetrackScenarios[0]).solutions[0],
+		);
+		racetrackInfoService.sendCurrentTechnology(
+			getActiveBody(RacetrackScenarios[0]).solutions[0].technologies[0],
+		);
+	};
 
 	const buildSpies = () => {
+		const countHeaders = new HttpHeaders().set('X-API-RESULT-COUNT', '4');
 		const assets = getActiveBody(AssetScenarios[5]);
 		spyOn(inventoryService, 'getAssets')
 			.and
 			.returnValue(of(assets));
+		spyOn(inventoryService, 'headAssetsResponse')
+			.and
+			.returnValue(of(new HttpResponse({
+				headers: countHeaders,
+				status: 200,
+			})));
 		spyOn(inventoryService, 'getNetworkElements')
 			.and
 			.returnValue(of(NetworkScenarios[1].scenarios.GET[0].response.body));
@@ -81,6 +104,8 @@ describe('AssetsComponent', () => {
 		spyOn(productAlertsService, 'getHardwareEolTopCount')
 			.and
 			.returnValue(of(HardwareEOLCountScenarios[0].scenarios.GET[0].response.body));
+
+		sendRacetrack();
 	};
 
 	describe('Without Query Params', () => {
@@ -114,6 +139,7 @@ describe('AssetsComponent', () => {
 			inventoryService = TestBed.get(InventoryService);
 			productAlertsService = TestBed.get(ProductAlertsService);
 			contractsService = TestBed.get(ContractsService);
+			racetrackInfoService = TestBed.get(RacetrackInfoService);
 			fixture = TestBed.createComponent(AssetsComponent);
 			component = fixture.componentInstance;
 		});
@@ -552,6 +578,7 @@ describe('AssetsComponent', () => {
 
 		it('should create our pagination after results load', fakeAsync(() => {
 			buildSpies();
+
 			const assets = getActiveBody(AssetScenarios[5]);
 
 			fixture.detectChanges();
@@ -703,6 +730,7 @@ describe('AssetsComponent', () => {
 			inventoryService = TestBed.get(InventoryService);
 			productAlertsService = TestBed.get(ProductAlertsService);
 			contractsService = TestBed.get(ContractsService);
+			racetrackInfoService = TestBed.get(RacetrackInfoService);
 			fixture = TestBed.createComponent(AssetsComponent);
 			component = fixture.componentInstance;
 		});

@@ -5,7 +5,6 @@ import { Subscription, Subject, forkJoin } from 'rxjs';
 import { RccAssetSelectReq,
 		RccService,
 		InventoryService,
-		AssetLinkInfo,
 	} from '@sdp-api';
 import { takeUntil } from 'rxjs/operators';
 import { I18n } from '@cisco-ngx/cui-utils';
@@ -13,6 +12,8 @@ import * as _ from 'lodash-es';
 import { UserResolve } from '@utilities';
 import { ActivatedRoute } from '@angular/router';
 import { AssetPanelLinkService } from '@services';
+import { AssetLinkInfo } from '@interfaces';
+
 /**
  * Component for portal support
  */
