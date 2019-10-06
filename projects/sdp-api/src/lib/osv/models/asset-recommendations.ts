@@ -8,5 +8,6 @@ export interface AssetRecommendations {
 	postDate: string;
 	swVersion: string;
 	swVersionGroup?: [];
-	groupedLabels?: string;	
+	groupedLabels?: string;
+	showAccept?: boolean;
 }

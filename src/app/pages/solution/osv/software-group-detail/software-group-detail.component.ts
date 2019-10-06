@@ -46,7 +46,9 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	@Input() public selectedSoftwareGroup: SoftwareGroup;
 	@Output() public selectedSoftwareGroupChange = new EventEmitter<SoftwareGroup>();
 	@ViewChild('versionTemplate', { static: true })
-	private versionTemplate: TemplateRef<{ }>;
+		private versionTemplate: TemplateRef<{ }>;
+	@ViewChild('hostTemplate', { static: true })
+		private hostTemplate: TemplateRef<{ }>;
 	@Input() public tabIndex;
 	@Output('close') public close = new EventEmitter<boolean>();
 
@@ -91,6 +93,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	public actionData: any;
 	public showDetails = false;
 	public detailsParams: any;
+	public bugTabIndex = 0;
 
 	constructor (
 		private logger: LogService,
@@ -408,6 +411,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 						sortable: true,
 						sortDirection: 'asc',
 						sorting: true,
+						template: this.hostTemplate,
 						width: '20%',
 					},
 					{
@@ -612,6 +616,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	public showDetailsView (details: any) {
 		this.detailsParams = details;
 		this.showDetails = true;
+		this.bugTabIndex = details.tabIndex;
 	}
 
 	/**

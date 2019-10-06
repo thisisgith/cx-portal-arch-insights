@@ -40,7 +40,9 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
 	@ViewChild('versionTemplate', { static: true }) private versionTemplate: TemplateRef<{ }>;
 	@ViewChild('recommendationsTemplate', { static: true })
-	private recommendationsTemplate: TemplateRef<{ }>;
+		private recommendationsTemplate: TemplateRef<{ }>;
+	@ViewChild('hostTemplate', { static: true })
+		private hostTemplate: TemplateRef<{ }>;
 	public assetsTable: CuiTableOptions;
 	public status = {
 		isLoading: false,
@@ -178,6 +180,7 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 						sortable: true,
 						sortDirection: 'asc',
 						sorting: true,
+						template: this.hostTemplate,
 						width: '15%',
 					},
 					{

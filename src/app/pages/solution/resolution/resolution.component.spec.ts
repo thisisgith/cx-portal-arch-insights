@@ -167,62 +167,6 @@ describe('ResolutionComponent', () => {
 			.toContain(statusFilter);
 	}));
 
-	it('should select status subfilters', fakeAsync(() => {
-		const statusFilter = _.find(component.filters, { key: 'status' });
-		component.onSubfilterSelect('Customer Updated', statusFilter);
-
-		tick();
-		fixture.detectChanges();
-
-		expect(component.selectedFilters)
-			.toContain(statusFilter);
-
-		let subfilter = _.find(statusFilter.seriesData, { filter: 'Customer Updated' });
-
-		expect(subfilter.selected)
-			.toBeTruthy();
-
-		const ciscoFilter = _.find(component.filters, { key: 'status' });
-		component.onSubfilterSelect('Cisco Pending', ciscoFilter);
-
-		tick();
-		fixture.detectChanges();
-
-		expect(component.selectedFilters)
-			.toContain(ciscoFilter);
-
-		subfilter = _.find(ciscoFilter.seriesData, { filter: 'Cisco Pending' });
-
-		expect(subfilter.selected)
-			.toBeTruthy();
-	}));
-
-	it('should clear the filter when selecting the same subfilter twice', fakeAsync(() => {
-		const statusFilter = _.find(component.filters, { key: 'status' });
-		component.onSubfilterSelect('Customer Updated', statusFilter);
-
-		tick();
-		fixture.detectChanges();
-
-		expect(component.selectedFilters)
-			.toContain(statusFilter);
-
-		let subfilter = _.find(statusFilter.seriesData, { filter: 'Customer Updated' });
-
-		expect(subfilter.selected)
-			.toBeTruthy();
-
-		component.onSubfilterSelect('Customer Updated', statusFilter);
-
-		tick();
-		fixture.detectChanges();
-
-		subfilter = _.find(statusFilter.seriesData, { filter: 'Customer Updated' });
-
-		expect(subfilter.selected)
-			.toBeFalsy();
-	}));
-
 	it('should select the lastUpdated filter properly', fakeAsync(() => {
 		const lastUpdatedFilter = _.find(component.filters, { key: 'lastUpdated' });
 		component.onSubfilterSelect('≤24 hr', lastUpdatedFilter);
@@ -287,34 +231,6 @@ describe('ResolutionComponent', () => {
 
 		expect(_.get(_.find(rmaFilter.seriesData, { filter: 'F' }), 'selected'))
 			.toBeFalsy();
-	}));
-
-	it('should clear all status subfilters', fakeAsync(() => {
-		const statusFilter = _.find(component.filters, { key: 'status' });
-		component.onSubfilterSelect('Customer Updated', statusFilter);
-
-		tick();
-		fixture.detectChanges();
-
-		expect(component.selectedFilters)
-			.toContain(statusFilter);
-
-		const ciscoFilter = _.find(component.filters, { key: 'status' });
-		component.onSubfilterSelect('Cisco Pending', ciscoFilter);
-
-		tick();
-		fixture.detectChanges();
-
-		const severityFilter = _.find(component.filters, { key: 'severity' });
-		component.onSubfilterSelect('S1', severityFilter);
-
-		tick();
-		fixture.detectChanges();
-
-		component.clearFilters();
-		const totalFilter = _.find(component.filters, { key: 'total' });
-		expect(component.selectedFilters)
-			.toContain(totalFilter);
 	}));
 
 });
