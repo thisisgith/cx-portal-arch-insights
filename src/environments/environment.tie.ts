@@ -17,7 +17,7 @@ export const environment = {
 		referUrl: `${origin}/ws/oauth/v3/sso/`,
 		tokenUrl: `${origin}/ws/oauth/v3/token/cway/35ae50e6ff5843f59183da19cc44245d`,
 	},
-	baseHref: '/pbc/',
+	baseHref: '/portal/',
 	csc: {
 		fileDownloadURL: `https://largefile-stage.cloudapps.cisco.com/Web-Ui?srId=
 		{0}&fileName={1}&appId=cxportal`,
