@@ -15,7 +15,7 @@ export const defaults = {
 		referUrl: `${origin}/ws/oauth/v3/sso/`,
 		tokenUrl: `${origin}/ws/oauth/v3/token/cway/35ae50e6ff5843f59183da19cc44245d`,
 	},
-	baseHref: '/pbc/',
+	baseHref: '/portal/',
 	bugSearchTool: 'https://bst.cloudapps.cisco.com/bugsearch/bug/',
 	communityLink: 'https://cloudsso-test.cisco.com/idp/startSSO.ping?PartnerSpId=' +
 		'https://community-stage.cisco.com/auth/saml&TARGET=https://community-stage.cisco.com/',

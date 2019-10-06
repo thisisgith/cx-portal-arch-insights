@@ -20,7 +20,7 @@ export const environment = {
 		referUrl: `${origin}/ws/oauth/v3/sso/`,
 		tokenUrl: `${origin}/ws/oauth/v3/token/cway/35ae50e6ff5843f59183da19cc44245d`,
 	},
-	baseHref: '/pbc/',
+	baseHref: '/portal/',
 	emailToID: 'cx-portal-support@cisco.com',
 	feedbackToEmail: 'cxpm-feedback@cisco.com',
 	ieSetup: {
