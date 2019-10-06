@@ -13,7 +13,6 @@ import {
 	ArchitectureService,
 	IException,
 	IAsset,
-	AssetLinkInfo,
 	InventoryService,
 } from '@sdp-api';
 import { DatePipe } from '@angular/common';
@@ -22,6 +21,7 @@ import { Subject } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import * as _ from 'lodash-es';
 import { AssetPanelLinkService } from '@services';
+import { AssetLinkInfo } from '@interfaces';
 
 /**
  * CBP Device Affected Table Component

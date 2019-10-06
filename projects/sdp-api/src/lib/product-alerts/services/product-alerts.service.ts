@@ -38,12 +38,14 @@ class ProductAlertsService extends __BaseService {
   static readonly getSecurityAdvisoryLastUpdatedCountPath = '/security-advisories/last-updated/count';
   static readonly headSecurityAdvisoryBulletinsPath = '/security-advisory-bulletins';
   static readonly getPSIRTBulletinPath = '/security-advisory-bulletins';
+  static readonly headAdvisoriesSecurityAdvisoriesPath = '/advisories-security-advisories';
   static readonly getAdvisoriesSecurityAdvisoriesPath = '/advisories-security-advisories';
   static readonly headFieldNoticesPath = '/field-notices';
   static readonly getFieldNoticePath = '/field-notices';
   static readonly headFieldNoticeBulletinsPath = '/field-notice-bulletins';
   static readonly getFieldNoticeBulletinPath = '/field-notice-bulletins';
   static readonly getFieldNoticesLastUpdatedCountPath = '/field-notices/last-updated/count';
+  static readonly headAdvisoriesFieldNoticesPath = '/advisories-field-notices';
   static readonly getAdvisoriesFieldNoticesPath = '/advisories-field-notices';
   static readonly headHardwareEolPath = '/hardware-eol';
   static readonly getHardwareEoxPath = '/hardware-eol';
@@ -68,6 +70,10 @@ class ProductAlertsService extends __BaseService {
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
+   * - `solution`: The solution name, should be from the enum list of values
+   *
    * - `serialNumber`: The recognized/validated Serial Number
    *
    * @return successful operation
@@ -78,6 +84,8 @@ class ProductAlertsService extends __BaseService {
     let __body: any = null;
 
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
+    if (params.solution != null) __params = __params.set('solution', params.solution.toString());
     (params.serialNumber || []).forEach(val => {if (val != null) __params = __params.append('serialNumber', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
@@ -103,6 +111,10 @@ class ProductAlertsService extends __BaseService {
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
+   * - `solution`: The solution name, should be from the enum list of values
+   *
    * - `serialNumber`: The recognized/validated Serial Number
    *
    * @return successful operation
@@ -115,14 +127,25 @@ class ProductAlertsService extends __BaseService {
 
   /**
    * Fetches meta information about the security-advisories API.
-   * @param customerId Unique identifier of a Cisco customer.
+   * @param params The `ProductAlertsService.HeadSecurityAdvisoriesParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
+   * - `solution`: The solution name, should be from the enum list of values
+   *
+   * - `equipmentType`: The equipment type, ie CHASSIS
    */
-  headSecurityAdvisoriesResponse(customerId: string): __Observable<__StrictHttpResponse<null>> {
+  headSecurityAdvisoriesResponse(params: ProductAlertsService.HeadSecurityAdvisoriesParams): __Observable<__StrictHttpResponse<null>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
 
-    if (customerId != null) __params = __params.set('customerId', customerId.toString());
+    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
+    if (params.solution != null) __params = __params.set('solution', params.solution.toString());
+    (params.equipmentType || []).forEach(val => {if (val != null) __params = __params.append('equipmentType', val.toString())});
     let req = new HttpRequest<any>(
       'HEAD',
       this.rootUrl + `/customerportal/product-alerts/v1/security-advisories`,
@@ -143,10 +166,18 @@ class ProductAlertsService extends __BaseService {
 
   /**
    * Fetches meta information about the security-advisories API.
-   * @param customerId Unique identifier of a Cisco customer.
+   * @param params The `ProductAlertsService.HeadSecurityAdvisoriesParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
+   * - `solution`: The solution name, should be from the enum list of values
+   *
+   * - `equipmentType`: The equipment type, ie CHASSIS
    */
-  headSecurityAdvisories(customerId: string): __Observable<null> {
-    return this.headSecurityAdvisoriesResponse(customerId).pipe(
+  headSecurityAdvisories(params: ProductAlertsService.HeadSecurityAdvisoriesParams): __Observable<null> {
+    return this.headSecurityAdvisoriesResponse(params).pipe(
       __map(_r => _r.body as null)
     );
   }
@@ -161,7 +192,11 @@ class ProductAlertsService extends __BaseService {
    *
    * - `vulnerabilityStatus`: The vulnerability status of a Network element.For Example:- Vulnerable, Potentially Vulnerable, and Not Vulnerable.
    *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
    * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
+   *
+   * - `solution`: The solution name, should be from the enum list of values
    *
    * - `rows`: Number of rows of data per page.
    *
@@ -172,6 +207,8 @@ class ProductAlertsService extends __BaseService {
    * - `managedNeId`: CDX should indicate the physical|logical hierarchy of the product (chassis to card, server to client, etc
    *
    * - `fields`: Requested fields in the response.
+   *
+   * - `equipmentType`: The equipment type, ie CHASSIS
    *
    * - `advisoryId`: Internally generated ID for a security advisory
    *
@@ -184,12 +221,15 @@ class ProductAlertsService extends __BaseService {
 
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     (params.vulnerabilityStatus || []).forEach(val => {if (val != null) __params = __params.append('vulnerabilityStatus', val.toString())});
+    if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
     (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
+    if (params.solution != null) __params = __params.set('solution', params.solution.toString());
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
     if (params.page != null) __params = __params.set('page', params.page.toString());
     (params.neInstanceId || []).forEach(val => {if (val != null) __params = __params.append('neInstanceId', val.toString())});
     (params.managedNeId || []).forEach(val => {if (val != null) __params = __params.append('managedNeId', val.toString())});
     (params.fields || []).forEach(val => {if (val != null) __params = __params.append('fields', val.toString())});
+    (params.equipmentType || []).forEach(val => {if (val != null) __params = __params.append('equipmentType', val.toString())});
     (params.advisoryId || []).forEach(val => {if (val != null) __params = __params.append('advisoryId', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
@@ -219,7 +259,11 @@ class ProductAlertsService extends __BaseService {
    *
    * - `vulnerabilityStatus`: The vulnerability status of a Network element.For Example:- Vulnerable, Potentially Vulnerable, and Not Vulnerable.
    *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
    * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
+   *
+   * - `solution`: The solution name, should be from the enum list of values
    *
    * - `rows`: Number of rows of data per page.
    *
@@ -230,6 +274,8 @@ class ProductAlertsService extends __BaseService {
    * - `managedNeId`: CDX should indicate the physical|logical hierarchy of the product (chassis to card, server to client, etc
    *
    * - `fields`: Requested fields in the response.
+   *
+   * - `equipmentType`: The equipment type, ie CHASSIS
    *
    * - `advisoryId`: Internally generated ID for a security advisory
    *
@@ -247,7 +293,11 @@ class ProductAlertsService extends __BaseService {
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
    * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
+   *
+   * - `solution`: The solution name, should be from the enum list of values
    *
    * - `rows`: Number of rows of data per page.
    *
@@ -261,7 +311,9 @@ class ProductAlertsService extends __BaseService {
     let __body: any = null;
 
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
     (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
+    if (params.solution != null) __params = __params.set('solution', params.solution.toString());
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
     if (params.page != null) __params = __params.set('page', params.page.toString());
     let req = new HttpRequest<any>(
@@ -288,7 +340,11 @@ class ProductAlertsService extends __BaseService {
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
    * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
+   *
+   * - `solution`: The solution name, should be from the enum list of values
    *
    * - `rows`: Number of rows of data per page.
    *
@@ -304,15 +360,24 @@ class ProductAlertsService extends __BaseService {
 
   /**
    * Generates the total number of security advisories and the count by severity
-   * @param customerId Unique identifier of a Cisco customer.
+   * @param params The `ProductAlertsService.GetSecurityAdvisorySummaryParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
+   * - `solution`: The solution name, should be from the enum list of values
+   *
    * @return OK
    */
-  getSecurityAdvisorySummaryResponse(customerId: string): __Observable<__StrictHttpResponse<SecurityAdvisorySummary>> {
+  getSecurityAdvisorySummaryResponse(params: ProductAlertsService.GetSecurityAdvisorySummaryParams): __Observable<__StrictHttpResponse<SecurityAdvisorySummary>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
 
-    if (customerId != null) __params = __params.set('customerId', customerId.toString());
+    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
+    if (params.solution != null) __params = __params.set('solution', params.solution.toString());
     let req = new HttpRequest<any>(
       'GET',
       this.rootUrl + `/customerportal/product-alerts/v1/security-advisories/summary`,
@@ -333,11 +398,18 @@ class ProductAlertsService extends __BaseService {
 
   /**
    * Generates the total number of security advisories and the count by severity
-   * @param customerId Unique identifier of a Cisco customer.
+   * @param params The `ProductAlertsService.GetSecurityAdvisorySummaryParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
+   * - `solution`: The solution name, should be from the enum list of values
+   *
    * @return OK
    */
-  getSecurityAdvisorySummary(customerId: string): __Observable<SecurityAdvisorySummary> {
-    return this.getSecurityAdvisorySummaryResponse(customerId).pipe(
+  getSecurityAdvisorySummary(params: ProductAlertsService.GetSecurityAdvisorySummaryParams): __Observable<SecurityAdvisorySummary> {
+    return this.getSecurityAdvisorySummaryResponse(params).pipe(
       __map(_r => _r.body as SecurityAdvisorySummary)
     );
   }
@@ -350,7 +422,11 @@ class ProductAlertsService extends __BaseService {
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
    * - `sort`: Sorting details. Default sort severity, count, date (newest)
+   *
+   * - `solution`: The solution name, should be from the enum list of values
    *
    * - `rows`: No of rows in a page
    *
@@ -364,7 +440,9 @@ class ProductAlertsService extends __BaseService {
     let __body: any = null;
 
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
     (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
+    if (params.solution != null) __params = __params.set('solution', params.solution.toString());
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
     if (params.page != null) __params = __params.set('page', params.page.toString());
     let req = new HttpRequest<any>(
@@ -393,7 +471,11 @@ class ProductAlertsService extends __BaseService {
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
    * - `sort`: Sorting details. Default sort severity, count, date (newest)
+   *
+   * - `solution`: The solution name, should be from the enum list of values
    *
    * - `rows`: No of rows in a page
    *
@@ -409,15 +491,24 @@ class ProductAlertsService extends __BaseService {
 
   /**
    * The Security Advisories Severity Count API retrieves count of security advisories falling into each severity category.
-   * @param customerId Unique identifier of a Cisco customer.
+   * @param params The `ProductAlertsService.GetSecurityAdvisorySeverityCountParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
+   * - `solution`: The solution name, should be from the enum list of values
+   *
    * @return OK
    */
-  getSecurityAdvisorySeverityCountResponse(customerId: string): __Observable<__StrictHttpResponse<SecurityAdvisorySeverityCountResponse>> {
+  getSecurityAdvisorySeverityCountResponse(params: ProductAlertsService.GetSecurityAdvisorySeverityCountParams): __Observable<__StrictHttpResponse<SecurityAdvisorySeverityCountResponse>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
 
-    if (customerId != null) __params = __params.set('customerId', customerId.toString());
+    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
+    if (params.solution != null) __params = __params.set('solution', params.solution.toString());
     let req = new HttpRequest<any>(
       'GET',
       this.rootUrl + `/customerportal/product-alerts/v1/security-advisories/severity/count`,
@@ -438,26 +529,42 @@ class ProductAlertsService extends __BaseService {
 
   /**
    * The Security Advisories Severity Count API retrieves count of security advisories falling into each severity category.
-   * @param customerId Unique identifier of a Cisco customer.
+   * @param params The `ProductAlertsService.GetSecurityAdvisorySeverityCountParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
+   * - `solution`: The solution name, should be from the enum list of values
+   *
    * @return OK
    */
-  getSecurityAdvisorySeverityCount(customerId: string): __Observable<SecurityAdvisorySeverityCountResponse> {
-    return this.getSecurityAdvisorySeverityCountResponse(customerId).pipe(
+  getSecurityAdvisorySeverityCount(params: ProductAlertsService.GetSecurityAdvisorySeverityCountParams): __Observable<SecurityAdvisorySeverityCountResponse> {
+    return this.getSecurityAdvisorySeverityCountResponse(params).pipe(
       __map(_r => _r.body as SecurityAdvisorySeverityCountResponse)
     );
   }
 
   /**
    * The Security Advisories Last Updated Count API retrieves count of security advisories falling into each date range by their Last Updated Date.
-   * @param customerId Unique identifier of a Cisco customer.
+   * @param params The `ProductAlertsService.GetSecurityAdvisoryLastUpdatedCountParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
+   * - `solution`: The solution name, should be from the enum list of values
+   *
    * @return OK
    */
-  getSecurityAdvisoryLastUpdatedCountResponse(customerId: string): __Observable<__StrictHttpResponse<AdvisoriesByLastUpdatedCount>> {
+  getSecurityAdvisoryLastUpdatedCountResponse(params: ProductAlertsService.GetSecurityAdvisoryLastUpdatedCountParams): __Observable<__StrictHttpResponse<AdvisoriesByLastUpdatedCount>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
 
-    if (customerId != null) __params = __params.set('customerId', customerId.toString());
+    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
+    if (params.solution != null) __params = __params.set('solution', params.solution.toString());
     let req = new HttpRequest<any>(
       'GET',
       this.rootUrl + `/customerportal/product-alerts/v1/security-advisories/last-updated/count`,
@@ -478,11 +585,18 @@ class ProductAlertsService extends __BaseService {
 
   /**
    * The Security Advisories Last Updated Count API retrieves count of security advisories falling into each date range by their Last Updated Date.
-   * @param customerId Unique identifier of a Cisco customer.
+   * @param params The `ProductAlertsService.GetSecurityAdvisoryLastUpdatedCountParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
+   * - `solution`: The solution name, should be from the enum list of values
+   *
    * @return OK
    */
-  getSecurityAdvisoryLastUpdatedCount(customerId: string): __Observable<AdvisoriesByLastUpdatedCount> {
-    return this.getSecurityAdvisoryLastUpdatedCountResponse(customerId).pipe(
+  getSecurityAdvisoryLastUpdatedCount(params: ProductAlertsService.GetSecurityAdvisoryLastUpdatedCountParams): __Observable<AdvisoriesByLastUpdatedCount> {
+    return this.getSecurityAdvisoryLastUpdatedCountResponse(params).pipe(
       __map(_r => _r.body as AdvisoriesByLastUpdatedCount)
     );
   }
@@ -641,15 +755,131 @@ class ProductAlertsService extends __BaseService {
 
   /**
    * Security advisories and their details against all assets for a customer are returned.
+   * @param params The `ProductAlertsService.HeadAdvisoriesSecurityAdvisoriesParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
+   * - `url`: URL of the Security Advisory
+   *
+   * - `title`: Security Advisory title
+   *
+   * - `solution`: The solution name, should be from the enum list of values
+   *
+   * - `severity`: The severity
+   *
+   * - `search`: Searchable fields - severity, title. Applied only when the length of this parameter is more than 3 characters.
+   *
+   * - `publishedOn`: The date on which the Advisory was published
+   *
+   * - `neInstanceId`: The unique, generated ID of the network element
+   *
+   * - `managedNeId`: Physical|logical hierarchy of the product (chassis to card, server to client, etc.)
+   *
+   * - `lastUpdatedDateRange`: A date range in the format of <fromDateInMillis>,<toDateInMillis>. fromDateInMillis is inclusive and toDateInMillis is exclusive. <toDateInMillis> format supported to filter advisories having lastUpdatedDateRange till particular date. Use <fromDateInMillis> format to filter advisories having lastUpdatedDateRange from a particular date.
+   *
+   * - `lastUpdated`: The date on which the Advisory was last updated. Currently this field in unavailable.
+   *
+   * - `id`:
+   *
+   * - `hwInstanceId`: Physical|logical hierarchy of the product (chassis to card, server to client, etc.)
+   *
+   * - `advisoryId`:
+   */
+  headAdvisoriesSecurityAdvisoriesResponse(params: ProductAlertsService.HeadAdvisoriesSecurityAdvisoriesParams): __Observable<__StrictHttpResponse<null>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
+    if (params.url != null) __params = __params.set('url', params.url.toString());
+    if (params.title != null) __params = __params.set('title', params.title.toString());
+    if (params.solution != null) __params = __params.set('solution', params.solution.toString());
+    (params.severity || []).forEach(val => {if (val != null) __params = __params.append('severity', val.toString())});
+    if (params.search != null) __params = __params.set('search', params.search.toString());
+    if (params.publishedOn != null) __params = __params.set('publishedOn', params.publishedOn.toString());
+    (params.neInstanceId || []).forEach(val => {if (val != null) __params = __params.append('neInstanceId', val.toString())});
+    (params.managedNeId || []).forEach(val => {if (val != null) __params = __params.append('managedNeId', val.toString())});
+    (params.lastUpdatedDateRange || []).forEach(val => {if (val != null) __params = __params.append('lastUpdatedDateRange', val.toString())});
+    if (params.lastUpdated != null) __params = __params.set('lastUpdated', params.lastUpdated.toString());
+    (params.id || []).forEach(val => {if (val != null) __params = __params.append('id', val.toString())});
+    (params.hwInstanceId || []).forEach(val => {if (val != null) __params = __params.append('hwInstanceId', val.toString())});
+    (params.advisoryId || []).forEach(val => {if (val != null) __params = __params.append('advisoryId', val.toString())});
+    let req = new HttpRequest<any>(
+      'HEAD',
+      this.rootUrl + `/customerportal/product-alerts/v1/advisories-security-advisories`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<null>;
+      })
+    );
+  }
+
+  /**
+   * Security advisories and their details against all assets for a customer are returned.
+   * @param params The `ProductAlertsService.HeadAdvisoriesSecurityAdvisoriesParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
+   * - `url`: URL of the Security Advisory
+   *
+   * - `title`: Security Advisory title
+   *
+   * - `solution`: The solution name, should be from the enum list of values
+   *
+   * - `severity`: The severity
+   *
+   * - `search`: Searchable fields - severity, title. Applied only when the length of this parameter is more than 3 characters.
+   *
+   * - `publishedOn`: The date on which the Advisory was published
+   *
+   * - `neInstanceId`: The unique, generated ID of the network element
+   *
+   * - `managedNeId`: Physical|logical hierarchy of the product (chassis to card, server to client, etc.)
+   *
+   * - `lastUpdatedDateRange`: A date range in the format of <fromDateInMillis>,<toDateInMillis>. fromDateInMillis is inclusive and toDateInMillis is exclusive. <toDateInMillis> format supported to filter advisories having lastUpdatedDateRange till particular date. Use <fromDateInMillis> format to filter advisories having lastUpdatedDateRange from a particular date.
+   *
+   * - `lastUpdated`: The date on which the Advisory was last updated. Currently this field in unavailable.
+   *
+   * - `id`:
+   *
+   * - `hwInstanceId`: Physical|logical hierarchy of the product (chassis to card, server to client, etc.)
+   *
+   * - `advisoryId`:
+   */
+  headAdvisoriesSecurityAdvisories(params: ProductAlertsService.HeadAdvisoriesSecurityAdvisoriesParams): __Observable<null> {
+    return this.headAdvisoriesSecurityAdvisoriesResponse(params).pipe(
+      __map(_r => _r.body as null)
+    );
+  }
+
+  /**
+   * Security advisories and their details against all assets for a customer are returned.
    * @param params The `ProductAlertsService.GetAdvisoriesSecurityAdvisoriesParams` containing the following parameters:
    *
    * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
    *
    * - `url`: URL of the Security Advisory
    *
    * - `title`: Security Advisory title
    *
    * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
+   *
+   * - `solution`: The solution name, should be from the enum list of values
    *
    * - `severity`: The severity
    *
@@ -685,9 +915,11 @@ class ProductAlertsService extends __BaseService {
     let __body: any = null;
 
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
     if (params.url != null) __params = __params.set('url', params.url.toString());
     if (params.title != null) __params = __params.set('title', params.title.toString());
     (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
+    if (params.solution != null) __params = __params.set('solution', params.solution.toString());
     (params.severity || []).forEach(val => {if (val != null) __params = __params.append('severity', val.toString())});
     if (params.search != null) __params = __params.set('search', params.search.toString());
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
@@ -725,11 +957,15 @@ class ProductAlertsService extends __BaseService {
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
    * - `url`: URL of the Security Advisory
    *
    * - `title`: Security Advisory title
    *
    * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
+   *
+   * - `solution`: The solution name, should be from the enum list of values
    *
    * - `severity`: The severity
    *
@@ -767,14 +1003,25 @@ class ProductAlertsService extends __BaseService {
 
   /**
    * Fetches meta information about the field-notices API.
-   * @param customerId Unique identifier of a Cisco customer.
+   * @param params The `ProductAlertsService.HeadFieldNoticesParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
+   * - `solution`: The solution name, should be from the enum list of values
+   *
+   * - `equipmentType`: The equipment type, ie CHASSIS
    */
-  headFieldNoticesResponse(customerId: string): __Observable<__StrictHttpResponse<null>> {
+  headFieldNoticesResponse(params: ProductAlertsService.HeadFieldNoticesParams): __Observable<__StrictHttpResponse<null>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
 
-    if (customerId != null) __params = __params.set('customerId', customerId.toString());
+    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
+    if (params.solution != null) __params = __params.set('solution', params.solution.toString());
+    (params.equipmentType || []).forEach(val => {if (val != null) __params = __params.append('equipmentType', val.toString())});
     let req = new HttpRequest<any>(
       'HEAD',
       this.rootUrl + `/customerportal/product-alerts/v1/field-notices`,
@@ -795,10 +1042,18 @@ class ProductAlertsService extends __BaseService {
 
   /**
    * Fetches meta information about the field-notices API.
-   * @param customerId Unique identifier of a Cisco customer.
+   * @param params The `ProductAlertsService.HeadFieldNoticesParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
+   * - `solution`: The solution name, should be from the enum list of values
+   *
+   * - `equipmentType`: The equipment type, ie CHASSIS
    */
-  headFieldNotices(customerId: string): __Observable<null> {
-    return this.headFieldNoticesResponse(customerId).pipe(
+  headFieldNotices(params: ProductAlertsService.HeadFieldNoticesParams): __Observable<null> {
+    return this.headFieldNoticesResponse(params).pipe(
       __map(_r => _r.body as null)
     );
   }
@@ -813,7 +1068,11 @@ class ProductAlertsService extends __BaseService {
    *
    * - `vulnerabilityStatus`: The vulnerability status of a Network element. For Example:- Vulnerable, Potentially Vulnerable, and Not Vulnerable.
    *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
    * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
+   *
+   * - `solution`: The solution name, should be from the enum list of values
    *
    * - `serialNumber`: The recognized/validated Serial Number
    *
@@ -829,6 +1088,8 @@ class ProductAlertsService extends __BaseService {
    *
    * - `fieldNoticeId`: The vulnerability status of a Network element. For Example:- Vulnerable, Potentially Vulnerable, and Not Vulnerable.
    *
+   * - `equipmentType`: The equipment type, ie CHASSIS
+   *
    * @return successful operation
    */
   getFieldNoticeResponse(params: ProductAlertsService.GetFieldNoticeParams): __Observable<__StrictHttpResponse<FieldNoticeResponse>> {
@@ -838,7 +1099,9 @@ class ProductAlertsService extends __BaseService {
 
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     (params.vulnerabilityStatus || []).forEach(val => {if (val != null) __params = __params.append('vulnerabilityStatus', val.toString())});
+    if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
     (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
+    if (params.solution != null) __params = __params.set('solution', params.solution.toString());
     (params.serialNumber || []).forEach(val => {if (val != null) __params = __params.append('serialNumber', val.toString())});
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
     if (params.page != null) __params = __params.set('page', params.page.toString());
@@ -846,6 +1109,7 @@ class ProductAlertsService extends __BaseService {
     (params.managedNeId || []).forEach(val => {if (val != null) __params = __params.append('managedNeId', val.toString())});
     (params.fields || []).forEach(val => {if (val != null) __params = __params.append('fields', val.toString())});
     (params.fieldNoticeId || []).forEach(val => {if (val != null) __params = __params.append('fieldNoticeId', val.toString())});
+    (params.equipmentType || []).forEach(val => {if (val != null) __params = __params.append('equipmentType', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
       this.rootUrl + `/customerportal/product-alerts/v1/field-notices`,
@@ -874,7 +1138,11 @@ class ProductAlertsService extends __BaseService {
    *
    * - `vulnerabilityStatus`: The vulnerability status of a Network element. For Example:- Vulnerable, Potentially Vulnerable, and Not Vulnerable.
    *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
    * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
+   *
+   * - `solution`: The solution name, should be from the enum list of values
    *
    * - `serialNumber`: The recognized/validated Serial Number
    *
@@ -889,6 +1157,8 @@ class ProductAlertsService extends __BaseService {
    * - `fields`: Requested fields in the response.
    *
    * - `fieldNoticeId`: The vulnerability status of a Network element. For Example:- Vulnerable, Potentially Vulnerable, and Not Vulnerable.
+   *
+   * - `equipmentType`: The equipment type, ie CHASSIS
    *
    * @return successful operation
    */
@@ -1032,15 +1302,24 @@ class ProductAlertsService extends __BaseService {
 
   /**
    * Number of field notices that got updated by date range. All request parameters are optional other than customerId.
-   * @param customerId Unique identifier of a Cisco customer.
+   * @param params The `ProductAlertsService.GetFieldNoticesLastUpdatedCountParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
+   * - `solution`: The solution name, should be from the enum list of values
+   *
    * @return successful operation
    */
-  getFieldNoticesLastUpdatedCountResponse(customerId: string): __Observable<__StrictHttpResponse<FieldNoticeUpdatedResponse>> {
+  getFieldNoticesLastUpdatedCountResponse(params: ProductAlertsService.GetFieldNoticesLastUpdatedCountParams): __Observable<__StrictHttpResponse<FieldNoticeUpdatedResponse>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
 
-    if (customerId != null) __params = __params.set('customerId', customerId.toString());
+    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
+    if (params.solution != null) __params = __params.set('solution', params.solution.toString());
     let req = new HttpRequest<any>(
       'GET',
       this.rootUrl + `/customerportal/product-alerts/v1/field-notices/last-updated/count`,
@@ -1061,12 +1340,121 @@ class ProductAlertsService extends __BaseService {
 
   /**
    * Number of field notices that got updated by date range. All request parameters are optional other than customerId.
-   * @param customerId Unique identifier of a Cisco customer.
+   * @param params The `ProductAlertsService.GetFieldNoticesLastUpdatedCountParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
+   * - `solution`: The solution name, should be from the enum list of values
+   *
    * @return successful operation
    */
-  getFieldNoticesLastUpdatedCount(customerId: string): __Observable<FieldNoticeUpdatedResponse> {
-    return this.getFieldNoticesLastUpdatedCountResponse(customerId).pipe(
+  getFieldNoticesLastUpdatedCount(params: ProductAlertsService.GetFieldNoticesLastUpdatedCountParams): __Observable<FieldNoticeUpdatedResponse> {
+    return this.getFieldNoticesLastUpdatedCountResponse(params).pipe(
       __map(_r => _r.body as FieldNoticeUpdatedResponse)
+    );
+  }
+
+  /**
+   * Field notices and their details against all assets for a customer are returned.
+   * @param params The `ProductAlertsService.HeadAdvisoriesFieldNoticesParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
+   * - `url`: URL of the Security Advisory
+   *
+   * - `solution`: The solution name, should be from the enum list of values
+   *
+   * - `search`: Searchable fields - title. Applied only when the length of this parameter is more than 3 characters.
+   *
+   * - `publishedOn`: The date on which the Advisory was published
+   *
+   * - `neInstanceId`: The unique, generated ID of the network element
+   *
+   * - `managedNeId`: Physical|logical hierarchy of the product (chassis to card, server to client, etc.)
+   *
+   * - `lastUpdatedDateRange`: A date range in the format of <fromDateInMillis>,<toDateInMillis>. fromDateInMillis is inclusive and toDateInMillis is exclusive. <toDateInMillis> format supported to filter advisories having lastUpdatedDateRange till particular date. Use <fromDateInMillis> format to filter advisories having lastUpdatedDateRange from a particular date.
+   *
+   * - `lastUpdated`: The date on which the Advisory was last updated. Currently this field in unavailable.
+   *
+   * - `id`:
+   *
+   * - `hwInstanceId`: Physical|logical hierarchy of the product (chassis to card, server to client, etc.)
+   *
+   * - `fieldNoticeId`: The Cisco.com bulletin number for Field Notices
+   */
+  headAdvisoriesFieldNoticesResponse(params: ProductAlertsService.HeadAdvisoriesFieldNoticesParams): __Observable<__StrictHttpResponse<null>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
+    if (params.url != null) __params = __params.set('url', params.url.toString());
+    if (params.solution != null) __params = __params.set('solution', params.solution.toString());
+    if (params.search != null) __params = __params.set('search', params.search.toString());
+    if (params.publishedOn != null) __params = __params.set('publishedOn', params.publishedOn.toString());
+    (params.neInstanceId || []).forEach(val => {if (val != null) __params = __params.append('neInstanceId', val.toString())});
+    (params.managedNeId || []).forEach(val => {if (val != null) __params = __params.append('managedNeId', val.toString())});
+    (params.lastUpdatedDateRange || []).forEach(val => {if (val != null) __params = __params.append('lastUpdatedDateRange', val.toString())});
+    if (params.lastUpdated != null) __params = __params.set('lastUpdated', params.lastUpdated.toString());
+    (params.id || []).forEach(val => {if (val != null) __params = __params.append('id', val.toString())});
+    (params.hwInstanceId || []).forEach(val => {if (val != null) __params = __params.append('hwInstanceId', val.toString())});
+    (params.fieldNoticeId || []).forEach(val => {if (val != null) __params = __params.append('fieldNoticeId', val.toString())});
+    let req = new HttpRequest<any>(
+      'HEAD',
+      this.rootUrl + `/customerportal/product-alerts/v1/advisories-field-notices`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<null>;
+      })
+    );
+  }
+
+  /**
+   * Field notices and their details against all assets for a customer are returned.
+   * @param params The `ProductAlertsService.HeadAdvisoriesFieldNoticesParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
+   * - `url`: URL of the Security Advisory
+   *
+   * - `solution`: The solution name, should be from the enum list of values
+   *
+   * - `search`: Searchable fields - title. Applied only when the length of this parameter is more than 3 characters.
+   *
+   * - `publishedOn`: The date on which the Advisory was published
+   *
+   * - `neInstanceId`: The unique, generated ID of the network element
+   *
+   * - `managedNeId`: Physical|logical hierarchy of the product (chassis to card, server to client, etc.)
+   *
+   * - `lastUpdatedDateRange`: A date range in the format of <fromDateInMillis>,<toDateInMillis>. fromDateInMillis is inclusive and toDateInMillis is exclusive. <toDateInMillis> format supported to filter advisories having lastUpdatedDateRange till particular date. Use <fromDateInMillis> format to filter advisories having lastUpdatedDateRange from a particular date.
+   *
+   * - `lastUpdated`: The date on which the Advisory was last updated. Currently this field in unavailable.
+   *
+   * - `id`:
+   *
+   * - `hwInstanceId`: Physical|logical hierarchy of the product (chassis to card, server to client, etc.)
+   *
+   * - `fieldNoticeId`: The Cisco.com bulletin number for Field Notices
+   */
+  headAdvisoriesFieldNotices(params: ProductAlertsService.HeadAdvisoriesFieldNoticesParams): __Observable<null> {
+    return this.headAdvisoriesFieldNoticesResponse(params).pipe(
+      __map(_r => _r.body as null)
     );
   }
 
@@ -1076,9 +1464,13 @@ class ProductAlertsService extends __BaseService {
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
    * - `url`: URL of the Security Advisory
    *
    * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
+   *
+   * - `solution`: The solution name, should be from the enum list of values
    *
    * - `search`: Searchable fields - title. Applied only when the length of this parameter is more than 3 characters.
    *
@@ -1112,8 +1504,10 @@ class ProductAlertsService extends __BaseService {
     let __body: any = null;
 
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
     if (params.url != null) __params = __params.set('url', params.url.toString());
     (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
+    if (params.solution != null) __params = __params.set('solution', params.solution.toString());
     if (params.search != null) __params = __params.set('search', params.search.toString());
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
     if (params.publishedOn != null) __params = __params.set('publishedOn', params.publishedOn.toString());
@@ -1150,9 +1544,13 @@ class ProductAlertsService extends __BaseService {
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
    * - `url`: URL of the Security Advisory
    *
    * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
+   *
+   * - `solution`: The solution name, should be from the enum list of values
    *
    * - `search`: Searchable fields - title. Applied only when the length of this parameter is more than 3 characters.
    *
@@ -1188,14 +1586,22 @@ class ProductAlertsService extends __BaseService {
 
   /**
    * Fetches meta information about the hardware-eol API.
-   * @param customerId Unique identifier of a Cisco customer.
+   * @param params The `ProductAlertsService.HeadHardwareEolParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
+   * - `solution`: The solution name, should be from the enum list of values
    */
-  headHardwareEolResponse(customerId: string): __Observable<__StrictHttpResponse<null>> {
+  headHardwareEolResponse(params: ProductAlertsService.HeadHardwareEolParams): __Observable<__StrictHttpResponse<null>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
 
-    if (customerId != null) __params = __params.set('customerId', customerId.toString());
+    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
+    if (params.solution != null) __params = __params.set('solution', params.solution.toString());
     let req = new HttpRequest<any>(
       'HEAD',
       this.rootUrl + `/customerportal/product-alerts/v1/hardware-eol`,
@@ -1216,10 +1622,16 @@ class ProductAlertsService extends __BaseService {
 
   /**
    * Fetches meta information about the hardware-eol API.
-   * @param customerId Unique identifier of a Cisco customer.
+   * @param params The `ProductAlertsService.HeadHardwareEolParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
+   * - `solution`: The solution name, should be from the enum list of values
    */
-  headHardwareEol(customerId: string): __Observable<null> {
-    return this.headHardwareEolResponse(customerId).pipe(
+  headHardwareEol(params: ProductAlertsService.HeadHardwareEolParams): __Observable<null> {
+    return this.headHardwareEolResponse(params).pipe(
       __map(_r => _r.body as null)
     );
   }
@@ -1478,15 +1890,24 @@ class ProductAlertsService extends __BaseService {
 
   /**
    * The Hardware EoL Top Count API retrieves count of assets reaching EoL associated with customer ID, by date range. All request parameters are optional other than customerId.
-   * @param customerId Unique identifier of a Cisco customer.
+   * @param params The `ProductAlertsService.GetHardwareEolTopCountParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
+   * - `solution`: The solution name, should be from the enum list of values
+   *
    * @return successful operation
    */
-  getHardwareEolTopCountResponse(customerId: string): __Observable<__StrictHttpResponse<HardwareEOLCountResponse>> {
+  getHardwareEolTopCountResponse(params: ProductAlertsService.GetHardwareEolTopCountParams): __Observable<__StrictHttpResponse<HardwareEOLCountResponse>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
 
-    if (customerId != null) __params = __params.set('customerId', customerId.toString());
+    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
+    if (params.solution != null) __params = __params.set('solution', params.solution.toString());
     let req = new HttpRequest<any>(
       'GET',
       this.rootUrl + `/customerportal/product-alerts/v1/hardware-eol/top/count`,
@@ -1507,25 +1928,40 @@ class ProductAlertsService extends __BaseService {
 
   /**
    * The Hardware EoL Top Count API retrieves count of assets reaching EoL associated with customer ID, by date range. All request parameters are optional other than customerId.
-   * @param customerId Unique identifier of a Cisco customer.
+   * @param params The `ProductAlertsService.GetHardwareEolTopCountParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
+   * - `solution`: The solution name, should be from the enum list of values
+   *
    * @return successful operation
    */
-  getHardwareEolTopCount(customerId: string): __Observable<HardwareEOLCountResponse> {
-    return this.getHardwareEolTopCountResponse(customerId).pipe(
+  getHardwareEolTopCount(params: ProductAlertsService.GetHardwareEolTopCountParams): __Observable<HardwareEOLCountResponse> {
+    return this.getHardwareEolTopCountResponse(params).pipe(
       __map(_r => _r.body as HardwareEOLCountResponse)
     );
   }
 
   /**
    * Fetches meta information about the software-eol API.
-   * @param customerId Unique identifier of a Cisco customer.
+   * @param params The `ProductAlertsService.HeadSoftwareEolParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
+   * - `solution`: The solution name, should be from the enum list of values
    */
-  headSoftwareEolResponse(customerId: string): __Observable<__StrictHttpResponse<null>> {
+  headSoftwareEolResponse(params: ProductAlertsService.HeadSoftwareEolParams): __Observable<__StrictHttpResponse<null>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
 
-    if (customerId != null) __params = __params.set('customerId', customerId.toString());
+    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
+    if (params.solution != null) __params = __params.set('solution', params.solution.toString());
     let req = new HttpRequest<any>(
       'HEAD',
       this.rootUrl + `/customerportal/product-alerts/v1/software-eol`,
@@ -1546,10 +1982,16 @@ class ProductAlertsService extends __BaseService {
 
   /**
    * Fetches meta information about the software-eol API.
-   * @param customerId Unique identifier of a Cisco customer.
+   * @param params The `ProductAlertsService.HeadSoftwareEolParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
+   * - `solution`: The solution name, should be from the enum list of values
    */
-  headSoftwareEol(customerId: string): __Observable<null> {
-    return this.headSoftwareEolResponse(customerId).pipe(
+  headSoftwareEol(params: ProductAlertsService.HeadSoftwareEolParams): __Observable<null> {
+    return this.headSoftwareEolResponse(params).pipe(
       __map(_r => _r.body as null)
     );
   }
@@ -1815,9 +2257,45 @@ module ProductAlertsService {
     customerId: string;
 
     /**
+     * Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+     */
+    useCase?: string;
+
+    /**
+     * The solution name, should be from the enum list of values
+     */
+    solution?: string;
+
+    /**
      * The recognized/validated Serial Number
      */
     serialNumber?: Array<string>;
+  }
+
+  /**
+   * Parameters for headSecurityAdvisories
+   */
+  export interface HeadSecurityAdvisoriesParams {
+
+    /**
+     * Unique identifier of a Cisco customer.
+     */
+    customerId: string;
+
+    /**
+     * Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+     */
+    useCase?: string;
+
+    /**
+     * The solution name, should be from the enum list of values
+     */
+    solution?: string;
+
+    /**
+     * The equipment type, ie CHASSIS
+     */
+    equipmentType?: Array<string>;
   }
 
   /**
@@ -1836,9 +2314,19 @@ module ProductAlertsService {
     vulnerabilityStatus?: Array<string>;
 
     /**
+     * Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+     */
+    useCase?: string;
+
+    /**
      * Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
      */
     sort?: Array<string>;
+
+    /**
+     * The solution name, should be from the enum list of values
+     */
+    solution?: string;
 
     /**
      * Number of rows of data per page.
@@ -1866,6 +2354,11 @@ module ProductAlertsService {
     fields?: Array<string>;
 
     /**
+     * The equipment type, ie CHASSIS
+     */
+    equipmentType?: Array<string>;
+
+    /**
      * Internally generated ID for a security advisory
      */
     advisoryId?: Array<number>;
@@ -1882,9 +2375,19 @@ module ProductAlertsService {
     customerId: string;
 
     /**
+     * Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+     */
+    useCase?: string;
+
+    /**
      * Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
      */
     sort?: Array<string>;
+
+    /**
+     * The solution name, should be from the enum list of values
+     */
+    solution?: string;
 
     /**
      * Number of rows of data per page.
@@ -1898,6 +2401,27 @@ module ProductAlertsService {
   }
 
   /**
+   * Parameters for getSecurityAdvisorySummary
+   */
+  export interface GetSecurityAdvisorySummaryParams {
+
+    /**
+     * Unique identifier of a Cisco customer.
+     */
+    customerId: string;
+
+    /**
+     * Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+     */
+    useCase?: string;
+
+    /**
+     * The solution name, should be from the enum list of values
+     */
+    solution?: string;
+  }
+
+  /**
    * Parameters for getTopSecurityAdvisories
    */
   export interface GetTopSecurityAdvisoriesParams {
@@ -1908,9 +2432,19 @@ module ProductAlertsService {
     customerId: string;
 
     /**
+     * Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+     */
+    useCase?: string;
+
+    /**
      * Sorting details. Default sort severity, count, date (newest)
      */
     sort?: Array<string>;
+
+    /**
+     * The solution name, should be from the enum list of values
+     */
+    solution?: string;
 
     /**
      * No of rows in a page
@@ -1921,6 +2455,48 @@ module ProductAlertsService {
      * Page number
      */
     page?: number;
+  }
+
+  /**
+   * Parameters for getSecurityAdvisorySeverityCount
+   */
+  export interface GetSecurityAdvisorySeverityCountParams {
+
+    /**
+     * Unique identifier of a Cisco customer.
+     */
+    customerId: string;
+
+    /**
+     * Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+     */
+    useCase?: string;
+
+    /**
+     * The solution name, should be from the enum list of values
+     */
+    solution?: string;
+  }
+
+  /**
+   * Parameters for getSecurityAdvisoryLastUpdatedCount
+   */
+  export interface GetSecurityAdvisoryLastUpdatedCountParams {
+
+    /**
+     * Unique identifier of a Cisco customer.
+     */
+    customerId: string;
+
+    /**
+     * Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+     */
+    useCase?: string;
+
+    /**
+     * The solution name, should be from the enum list of values
+     */
+    solution?: string;
   }
 
   /**
@@ -2006,6 +2582,79 @@ module ProductAlertsService {
   }
 
   /**
+   * Parameters for headAdvisoriesSecurityAdvisories
+   */
+  export interface HeadAdvisoriesSecurityAdvisoriesParams {
+
+    /**
+     * Unique identifier of a Cisco customer.
+     */
+    customerId: string;
+
+    /**
+     * Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+     */
+    useCase?: string;
+
+    /**
+     * URL of the Security Advisory
+     */
+    url?: string;
+
+    /**
+     * Security Advisory title
+     */
+    title?: string;
+
+    /**
+     * The solution name, should be from the enum list of values
+     */
+    solution?: string;
+
+    /**
+     * The severity
+     */
+    severity?: Array<string>;
+
+    /**
+     * Searchable fields - severity, title. Applied only when the length of this parameter is more than 3 characters.
+     */
+    search?: string;
+
+    /**
+     * The date on which the Advisory was published
+     */
+    publishedOn?: string;
+
+    /**
+     * The unique, generated ID of the network element
+     */
+    neInstanceId?: Array<string>;
+
+    /**
+     * Physical|logical hierarchy of the product (chassis to card, server to client, etc.)
+     */
+    managedNeId?: Array<string>;
+
+    /**
+     * A date range in the format of <fromDateInMillis>,<toDateInMillis>. fromDateInMillis is inclusive and toDateInMillis is exclusive. <toDateInMillis> format supported to filter advisories having lastUpdatedDateRange till particular date. Use <fromDateInMillis> format to filter advisories having lastUpdatedDateRange from a particular date.
+     */
+    lastUpdatedDateRange?: Array<string>;
+
+    /**
+     * The date on which the Advisory was last updated. Currently this field in unavailable.
+     */
+    lastUpdated?: string;
+    id?: Array<string>;
+
+    /**
+     * Physical|logical hierarchy of the product (chassis to card, server to client, etc.)
+     */
+    hwInstanceId?: Array<string>;
+    advisoryId?: Array<string>;
+  }
+
+  /**
    * Parameters for getAdvisoriesSecurityAdvisories
    */
   export interface GetAdvisoriesSecurityAdvisoriesParams {
@@ -2014,6 +2663,11 @@ module ProductAlertsService {
      * Unique identifier of a Cisco customer.
      */
     customerId: string;
+
+    /**
+     * Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+     */
+    useCase?: string;
 
     /**
      * URL of the Security Advisory
@@ -2029,6 +2683,11 @@ module ProductAlertsService {
      * Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
      */
     sort?: Array<string>;
+
+    /**
+     * The solution name, should be from the enum list of values
+     */
+    solution?: string;
 
     /**
      * The severity
@@ -2089,6 +2748,32 @@ module ProductAlertsService {
   }
 
   /**
+   * Parameters for headFieldNotices
+   */
+  export interface HeadFieldNoticesParams {
+
+    /**
+     * Unique identifier of a Cisco customer.
+     */
+    customerId: string;
+
+    /**
+     * Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+     */
+    useCase?: string;
+
+    /**
+     * The solution name, should be from the enum list of values
+     */
+    solution?: string;
+
+    /**
+     * The equipment type, ie CHASSIS
+     */
+    equipmentType?: Array<string>;
+  }
+
+  /**
    * Parameters for getFieldNotice
    */
   export interface GetFieldNoticeParams {
@@ -2104,9 +2789,19 @@ module ProductAlertsService {
     vulnerabilityStatus?: Array<string>;
 
     /**
+     * Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+     */
+    useCase?: string;
+
+    /**
      * Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
      */
     sort?: Array<string>;
+
+    /**
+     * The solution name, should be from the enum list of values
+     */
+    solution?: string;
 
     /**
      * The recognized/validated Serial Number
@@ -2142,6 +2837,11 @@ module ProductAlertsService {
      * The vulnerability status of a Network element. For Example:- Vulnerable, Potentially Vulnerable, and Not Vulnerable.
      */
     fieldNoticeId?: Array<number>;
+
+    /**
+     * The equipment type, ie CHASSIS
+     */
+    equipmentType?: Array<string>;
   }
 
   /**
@@ -2207,6 +2907,94 @@ module ProductAlertsService {
   }
 
   /**
+   * Parameters for getFieldNoticesLastUpdatedCount
+   */
+  export interface GetFieldNoticesLastUpdatedCountParams {
+
+    /**
+     * Unique identifier of a Cisco customer.
+     */
+    customerId: string;
+
+    /**
+     * Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+     */
+    useCase?: string;
+
+    /**
+     * The solution name, should be from the enum list of values
+     */
+    solution?: string;
+  }
+
+  /**
+   * Parameters for headAdvisoriesFieldNotices
+   */
+  export interface HeadAdvisoriesFieldNoticesParams {
+
+    /**
+     * Unique identifier of a Cisco customer.
+     */
+    customerId: string;
+
+    /**
+     * Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+     */
+    useCase?: string;
+
+    /**
+     * URL of the Security Advisory
+     */
+    url?: string;
+
+    /**
+     * The solution name, should be from the enum list of values
+     */
+    solution?: string;
+
+    /**
+     * Searchable fields - title. Applied only when the length of this parameter is more than 3 characters.
+     */
+    search?: string;
+
+    /**
+     * The date on which the Advisory was published
+     */
+    publishedOn?: string;
+
+    /**
+     * The unique, generated ID of the network element
+     */
+    neInstanceId?: Array<string>;
+
+    /**
+     * Physical|logical hierarchy of the product (chassis to card, server to client, etc.)
+     */
+    managedNeId?: Array<string>;
+
+    /**
+     * A date range in the format of <fromDateInMillis>,<toDateInMillis>. fromDateInMillis is inclusive and toDateInMillis is exclusive. <toDateInMillis> format supported to filter advisories having lastUpdatedDateRange till particular date. Use <fromDateInMillis> format to filter advisories having lastUpdatedDateRange from a particular date.
+     */
+    lastUpdatedDateRange?: Array<string>;
+
+    /**
+     * The date on which the Advisory was last updated. Currently this field in unavailable.
+     */
+    lastUpdated?: string;
+    id?: Array<string>;
+
+    /**
+     * Physical|logical hierarchy of the product (chassis to card, server to client, etc.)
+     */
+    hwInstanceId?: Array<string>;
+
+    /**
+     * The Cisco.com bulletin number for Field Notices
+     */
+    fieldNoticeId?: Array<number>;
+  }
+
+  /**
    * Parameters for getAdvisoriesFieldNotices
    */
   export interface GetAdvisoriesFieldNoticesParams {
@@ -2217,6 +3005,11 @@ module ProductAlertsService {
     customerId: string;
 
     /**
+     * Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+     */
+    useCase?: string;
+
+    /**
      * URL of the Security Advisory
      */
     url?: string;
@@ -2225,6 +3018,11 @@ module ProductAlertsService {
      * Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
      */
     sort?: Array<string>;
+
+    /**
+     * The solution name, should be from the enum list of values
+     */
+    solution?: string;
 
     /**
      * Searchable fields - title. Applied only when the length of this parameter is more than 3 characters.
@@ -2281,6 +3079,27 @@ module ProductAlertsService {
      * The Cisco.com bulletin number for Field Notices
      */
     fieldNoticeId?: Array<number>;
+  }
+
+  /**
+   * Parameters for headHardwareEol
+   */
+  export interface HeadHardwareEolParams {
+
+    /**
+     * Unique identifier of a Cisco customer.
+     */
+    customerId: string;
+
+    /**
+     * Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+     */
+    useCase?: string;
+
+    /**
+     * The solution name, should be from the enum list of values
+     */
+    solution?: string;
   }
 
   /**
@@ -2424,6 +3243,48 @@ module ProductAlertsService {
      * The Cisco.com bulletin number for an End-of-Life bulletin and Field Notices.
      */
     bulletinNumber?: Array<string>;
+  }
+
+  /**
+   * Parameters for getHardwareEolTopCount
+   */
+  export interface GetHardwareEolTopCountParams {
+
+    /**
+     * Unique identifier of a Cisco customer.
+     */
+    customerId: string;
+
+    /**
+     * Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+     */
+    useCase?: string;
+
+    /**
+     * The solution name, should be from the enum list of values
+     */
+    solution?: string;
+  }
+
+  /**
+   * Parameters for headSoftwareEol
+   */
+  export interface HeadSoftwareEolParams {
+
+    /**
+     * Unique identifier of a Cisco customer.
+     */
+    customerId: string;
+
+    /**
+     * Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+     */
+    useCase?: string;
+
+    /**
+     * The solution name, should be from the enum list of values
+     */
+    solution?: string;
   }
 
   /**

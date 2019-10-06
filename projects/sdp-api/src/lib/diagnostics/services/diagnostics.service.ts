@@ -19,6 +19,7 @@ class DiagnosticsService extends __BaseService {
   static readonly getScanResultsPath = '/scan-results';
   static readonly getCriticalBugsAssetsPath = '/critical-bugs/assets';
   static readonly getCriticalBugsStateCountPath = '/critical-bugs/state/count';
+  static readonly headCriticalBugsPath = '/critical-bugs';
   static readonly getCriticalBugsPath = '/critical-bugs';
 
   constructor(
@@ -194,7 +195,11 @@ class DiagnosticsService extends __BaseService {
    *
    * - `cdetId`: The CDET id
    *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
    * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
+   *
+   * - `solution`: The solution name, should be from the enum list of values
    *
    * - `rows`: Number of rows of data per page
    *
@@ -209,7 +214,9 @@ class DiagnosticsService extends __BaseService {
 
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     (params.cdetId || []).forEach(val => {if (val != null) __params = __params.append('cdetId', val.toString())});
+    if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
     (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
+    if (params.solution != null) __params = __params.set('solution', params.solution.toString());
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
     if (params.page != null) __params = __params.set('page', params.page.toString());
     let req = new HttpRequest<any>(
@@ -238,7 +245,11 @@ class DiagnosticsService extends __BaseService {
    *
    * - `cdetId`: The CDET id
    *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
    * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
+   *
+   * - `solution`: The solution name, should be from the enum list of values
    *
    * - `rows`: Number of rows of data per page
    *
@@ -254,15 +265,24 @@ class DiagnosticsService extends __BaseService {
 
   /**
    * Provides number of critical bugs in each state
-   * @param customerId Unique identifier of a Cisco customer.
+   * @param params The `DiagnosticsService.GetCriticalBugsStateCountParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
+   * - `solution`: The solution name, should be from the enum list of values
+   *
    * @return successful operation
    */
-  getCriticalBugsStateCountResponse(customerId: string): __Observable<__StrictHttpResponse<CriticalBugsCount>> {
+  getCriticalBugsStateCountResponse(params: DiagnosticsService.GetCriticalBugsStateCountParams): __Observable<__StrictHttpResponse<CriticalBugsCount>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
 
-    if (customerId != null) __params = __params.set('customerId', customerId.toString());
+    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
+    if (params.solution != null) __params = __params.set('solution', params.solution.toString());
     let req = new HttpRequest<any>(
       'GET',
       this.rootUrl + `/customerportal/diagnostics/v1/critical-bugs/state/count`,
@@ -283,12 +303,116 @@ class DiagnosticsService extends __BaseService {
 
   /**
    * Provides number of critical bugs in each state
-   * @param customerId Unique identifier of a Cisco customer.
+   * @param params The `DiagnosticsService.GetCriticalBugsStateCountParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
+   * - `solution`: The solution name, should be from the enum list of values
+   *
    * @return successful operation
    */
-  getCriticalBugsStateCount(customerId: string): __Observable<CriticalBugsCount> {
-    return this.getCriticalBugsStateCountResponse(customerId).pipe(
+  getCriticalBugsStateCount(params: DiagnosticsService.GetCriticalBugsStateCountParams): __Observable<CriticalBugsCount> {
+    return this.getCriticalBugsStateCountResponse(params).pipe(
       __map(_r => _r.body as CriticalBugsCount)
+    );
+  }
+
+  /**
+   * Provides details about critical bugs attached to assets
+   * @param params The `DiagnosticsService.HeadCriticalBugsParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
+   * - `title`: Security Advisory title
+   *
+   * - `state`: State of the bugs
+   *
+   * - `solution`: The solution name, should be from the enum list of values
+   *
+   * - `serialNumber`: A serial number is a unique number used for identification
+   *
+   * - `search`: Searchable fields - severity, title. Applied only when the length of this parameter is more than 3 characters.
+   *
+   * - `publishedOn`: The date on which the Advisory was published
+   *
+   * - `lastUpdatedDateRange`: A date range in the format of <fromDateInMillis>,<toDateInMillis>. fromDateInMillis is inclusive and toDateInMillis is exclusive. <toDateInMillis> format supported to filter advisories having lastUpdatedDateRange till particular date. Use <fromDateInMillis> format to filter advisories having lastUpdatedDateRange from a particular date.
+   *
+   * - `lastUpdated`: The date on which the Advisory was last updated. Currently this field in unavailable.
+   *
+   * - `id`: ID of the Bug
+   *
+   * - `cdetsId`: ID of the Bug
+   */
+  headCriticalBugsResponse(params: DiagnosticsService.HeadCriticalBugsParams): __Observable<__StrictHttpResponse<null>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
+    if (params.title != null) __params = __params.set('title', params.title.toString());
+    (params.state || []).forEach(val => {if (val != null) __params = __params.append('state', val.toString())});
+    if (params.solution != null) __params = __params.set('solution', params.solution.toString());
+    (params.serialNumber || []).forEach(val => {if (val != null) __params = __params.append('serialNumber', val.toString())});
+    if (params.search != null) __params = __params.set('search', params.search.toString());
+    if (params.publishedOn != null) __params = __params.set('publishedOn', params.publishedOn.toString());
+    (params.lastUpdatedDateRange || []).forEach(val => {if (val != null) __params = __params.append('lastUpdatedDateRange', val.toString())});
+    if (params.lastUpdated != null) __params = __params.set('lastUpdated', params.lastUpdated.toString());
+    (params.id || []).forEach(val => {if (val != null) __params = __params.append('id', val.toString())});
+    (params.cdetsId || []).forEach(val => {if (val != null) __params = __params.append('cdetsId', val.toString())});
+    let req = new HttpRequest<any>(
+      'HEAD',
+      this.rootUrl + `/customerportal/diagnostics/v1/critical-bugs`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<null>;
+      })
+    );
+  }
+
+  /**
+   * Provides details about critical bugs attached to assets
+   * @param params The `DiagnosticsService.HeadCriticalBugsParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
+   * - `title`: Security Advisory title
+   *
+   * - `state`: State of the bugs
+   *
+   * - `solution`: The solution name, should be from the enum list of values
+   *
+   * - `serialNumber`: A serial number is a unique number used for identification
+   *
+   * - `search`: Searchable fields - severity, title. Applied only when the length of this parameter is more than 3 characters.
+   *
+   * - `publishedOn`: The date on which the Advisory was published
+   *
+   * - `lastUpdatedDateRange`: A date range in the format of <fromDateInMillis>,<toDateInMillis>. fromDateInMillis is inclusive and toDateInMillis is exclusive. <toDateInMillis> format supported to filter advisories having lastUpdatedDateRange till particular date. Use <fromDateInMillis> format to filter advisories having lastUpdatedDateRange from a particular date.
+   *
+   * - `lastUpdated`: The date on which the Advisory was last updated. Currently this field in unavailable.
+   *
+   * - `id`: ID of the Bug
+   *
+   * - `cdetsId`: ID of the Bug
+   */
+  headCriticalBugs(params: DiagnosticsService.HeadCriticalBugsParams): __Observable<null> {
+    return this.headCriticalBugsResponse(params).pipe(
+      __map(_r => _r.body as null)
     );
   }
 
@@ -298,11 +422,15 @@ class DiagnosticsService extends __BaseService {
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
    * - `title`: Security Advisory title
    *
    * - `state`: State of the bugs
    *
    * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
+   *
+   * - `solution`: The solution name, should be from the enum list of values
    *
    * - `serialNumber`: A serial number is a unique number used for identification
    *
@@ -332,9 +460,11 @@ class DiagnosticsService extends __BaseService {
     let __body: any = null;
 
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
     if (params.title != null) __params = __params.set('title', params.title.toString());
     (params.state || []).forEach(val => {if (val != null) __params = __params.append('state', val.toString())});
     (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
+    if (params.solution != null) __params = __params.set('solution', params.solution.toString());
     (params.serialNumber || []).forEach(val => {if (val != null) __params = __params.append('serialNumber', val.toString())});
     if (params.search != null) __params = __params.set('search', params.search.toString());
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
@@ -369,11 +499,15 @@ class DiagnosticsService extends __BaseService {
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
    * - `title`: Security Advisory title
    *
    * - `state`: State of the bugs
    *
    * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
+   *
+   * - `solution`: The solution name, should be from the enum list of values
    *
    * - `serialNumber`: A serial number is a unique number used for identification
    *
@@ -514,9 +648,19 @@ module DiagnosticsService {
     cdetId: Array<string>;
 
     /**
+     * Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+     */
+    useCase?: string;
+
+    /**
      * Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
      */
     sort?: Array<string>;
+
+    /**
+     * The solution name, should be from the enum list of values
+     */
+    solution?: string;
 
     /**
      * Number of rows of data per page
@@ -530,6 +674,93 @@ module DiagnosticsService {
   }
 
   /**
+   * Parameters for getCriticalBugsStateCount
+   */
+  export interface GetCriticalBugsStateCountParams {
+
+    /**
+     * Unique identifier of a Cisco customer.
+     */
+    customerId: string;
+
+    /**
+     * Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+     */
+    useCase?: string;
+
+    /**
+     * The solution name, should be from the enum list of values
+     */
+    solution?: string;
+  }
+
+  /**
+   * Parameters for headCriticalBugs
+   */
+  export interface HeadCriticalBugsParams {
+
+    /**
+     * Unique identifier of a Cisco customer.
+     */
+    customerId: string;
+
+    /**
+     * Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+     */
+    useCase?: string;
+
+    /**
+     * Security Advisory title
+     */
+    title?: string;
+
+    /**
+     * State of the bugs
+     */
+    state?: Array<'new' | 'resolved' | 'verified' | 'duplicate' | 'closed'>;
+
+    /**
+     * The solution name, should be from the enum list of values
+     */
+    solution?: string;
+
+    /**
+     * A serial number is a unique number used for identification
+     */
+    serialNumber?: Array<string>;
+
+    /**
+     * Searchable fields - severity, title. Applied only when the length of this parameter is more than 3 characters.
+     */
+    search?: string;
+
+    /**
+     * The date on which the Advisory was published
+     */
+    publishedOn?: string;
+
+    /**
+     * A date range in the format of <fromDateInMillis>,<toDateInMillis>. fromDateInMillis is inclusive and toDateInMillis is exclusive. <toDateInMillis> format supported to filter advisories having lastUpdatedDateRange till particular date. Use <fromDateInMillis> format to filter advisories having lastUpdatedDateRange from a particular date.
+     */
+    lastUpdatedDateRange?: Array<string>;
+
+    /**
+     * The date on which the Advisory was last updated. Currently this field in unavailable.
+     */
+    lastUpdated?: string;
+
+    /**
+     * ID of the Bug
+     */
+    id?: Array<string>;
+
+    /**
+     * ID of the Bug
+     */
+    cdetsId?: Array<string>;
+  }
+
+  /**
    * Parameters for getCriticalBugs
    */
   export interface GetCriticalBugsParams {
@@ -538,6 +769,11 @@ module DiagnosticsService {
      * Unique identifier of a Cisco customer.
      */
     customerId: string;
+
+    /**
+     * Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+     */
+    useCase?: string;
 
     /**
      * Security Advisory title
@@ -553,6 +789,11 @@ module DiagnosticsService {
      * Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
      */
     sort?: Array<string>;
+
+    /**
+     * The solution name, should be from the enum list of values
+     */
+    solution?: string;
 
     /**
      * A serial number is a unique number used for identification

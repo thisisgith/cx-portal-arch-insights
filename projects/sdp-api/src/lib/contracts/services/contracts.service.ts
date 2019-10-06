@@ -322,6 +322,10 @@ class ContractsService extends __BaseService {
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
+   * - `solution`: The solution name, should be from the enum list of values
+   *
    * - `contractNumber`: The number of the service contract. Example:- 2689444; 91488861, 92246411
    *
    * @return successful operation
@@ -332,6 +336,8 @@ class ContractsService extends __BaseService {
     let __body: any = null;
 
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
+    if (params.solution != null) __params = __params.set('solution', params.solution.toString());
     (params.contractNumber || []).forEach(val => {if (val != null) __params = __params.append('contractNumber', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
@@ -357,6 +363,10 @@ class ContractsService extends __BaseService {
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
+   * - `solution`: The solution name, should be from the enum list of values
+   *
    * - `contractNumber`: The number of the service contract. Example:- 2689444; 91488861, 92246411
    *
    * @return successful operation
@@ -373,6 +383,10 @@ class ContractsService extends __BaseService {
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
+   * - `solution`: The solution name, should be from the enum list of values
+   *
    * - `coverage`: The values will be covered | uncovered | unknown | expired
    *
    * @return successful operation
@@ -383,6 +397,8 @@ class ContractsService extends __BaseService {
     let __body: any = null;
 
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
+    if (params.solution != null) __params = __params.set('solution', params.solution.toString());
     (params.coverage || []).forEach(val => {if (val != null) __params = __params.append('coverage', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
@@ -407,6 +423,10 @@ class ContractsService extends __BaseService {
    * @param params The `ContractsService.GetCoverageCountsParams` containing the following parameters:
    *
    * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
+   * - `solution`: The solution name, should be from the enum list of values
    *
    * - `coverage`: The values will be covered | uncovered | unknown | expired
    *
@@ -576,6 +596,16 @@ module ContractsService {
     customerId: string;
 
     /**
+     * Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+     */
+    useCase?: string;
+
+    /**
+     * The solution name, should be from the enum list of values
+     */
+    solution?: string;
+
+    /**
      * The number of the service contract. Example:- 2689444; 91488861, 92246411
      */
     contractNumber?: Array<string>;
@@ -590,6 +620,16 @@ module ContractsService {
      * Unique identifier of a Cisco customer.
      */
     customerId: string;
+
+    /**
+     * Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+     */
+    useCase?: string;
+
+    /**
+     * The solution name, should be from the enum list of values
+     */
+    solution?: string;
 
     /**
      * The values will be covered | uncovered | unknown | expired

@@ -18,16 +18,65 @@ import {
 	SecurityAdvisoryLastUpdatedCountScenarios,
 	CriticalBugScenarios,
 	VulnerabilityScenarios,
+	RacetrackScenarios,
 	user,
+	Mock,
 } from '@mock';
+import { RacetrackInfoService } from '@services';
+import { HttpHeaders, HttpResponse } from '@angular/common/http';
+
+/**
+ * Will fetch the currently active response body from the mock object
+ * @param mock the mock object
+ * @param type the scenario type
+ * @returns the body response
+ */
+function getActiveBody (mock: Mock, type: string = 'GET') {
+	const active = _.find(mock.scenarios[type], 'selected') || _.head(mock.scenarios[type]);
+
+	return active.response.body;
+}
 
 describe('AdvisoriesComponent', () => {
 	let component: AdvisoriesComponent;
 	let fixture: ComponentFixture<AdvisoriesComponent>;
 	let productAlertsService: ProductAlertsService;
 	let diagnosticsService: DiagnosticsService;
+	let racetrackInfoService: RacetrackInfoService;
+
+	/**
+	 * Sends our racetrack info
+	 */
+	const sendRacetrack = () => {
+		racetrackInfoService.sendRacetrack(getActiveBody(RacetrackScenarios[0]));
+		racetrackInfoService.sendCurrentSolution(
+			getActiveBody(RacetrackScenarios[0]).solutions[0],
+		);
+		racetrackInfoService.sendCurrentTechnology(
+			getActiveBody(RacetrackScenarios[0]).solutions[0].technologies[0],
+		);
+	};
 
 	const buildSpies = () => {
+		const countHeaders = new HttpHeaders().set('X-API-RESULT-COUNT', '4');
+		spyOn(productAlertsService, 'headAdvisoriesFieldNoticesResponse')
+			.and
+			.returnValue(of(new HttpResponse({
+				headers: countHeaders,
+				status: 200,
+			})));
+		spyOn(productAlertsService, 'headAdvisoriesSecurityAdvisoriesResponse')
+			.and
+			.returnValue(of(new HttpResponse({
+				headers: countHeaders,
+				status: 200,
+			})));
+		spyOn(diagnosticsService, 'headCriticalBugsResponse')
+			.and
+			.returnValue(of(new HttpResponse({
+				headers: countHeaders,
+				status: 200,
+			})));
 		spyOn(productAlertsService, 'getAdvisoriesFieldNotices')
 			.and
 			.returnValue(of(
@@ -62,6 +111,8 @@ describe('AdvisoriesComponent', () => {
 			.returnValue(of(
 				CriticalBugScenarios[0].scenarios.GET[0].response.body,
 			));
+
+		sendRacetrack();
 	};
 
 	describe('No Query Params', () => {
@@ -108,6 +159,7 @@ describe('AdvisoriesComponent', () => {
 		beforeEach(() => {
 			productAlertsService = TestBed.get(ProductAlertsService);
 			diagnosticsService = TestBed.get(DiagnosticsService);
+			racetrackInfoService = TestBed.get(RacetrackInfoService);
 			fixture = TestBed.createComponent(AdvisoriesComponent);
 			component = fixture.componentInstance;
 		});
@@ -298,9 +350,20 @@ describe('AdvisoriesComponent', () => {
 			spyOn(productAlertsService, 'getSecurityAdvisoryLastUpdatedCount')
 				.and
 				.returnValue(throwError(error));
+			spyOn(productAlertsService, 'headAdvisoriesSecurityAdvisoriesResponse')
+				.and
+				.returnValue(throwError(error));
+			spyOn(productAlertsService, 'headAdvisoriesFieldNoticesResponse')
+				.and
+				.returnValue(throwError(error));
+			spyOn(diagnosticsService, 'headCriticalBugsResponse')
+				.and
+				.returnValue(throwError(error));
 			spyOn(diagnosticsService, 'getCriticalBugs')
 				.and
 				.returnValue(throwError(error));
+
+			sendRacetrack();
 
 			fixture.detectChanges();
 			tick(1000);
@@ -648,6 +711,7 @@ describe('AdvisoriesComponent', () => {
 		beforeEach(() => {
 			productAlertsService = TestBed.get(ProductAlertsService);
 			diagnosticsService = TestBed.get(DiagnosticsService);
+			racetrackInfoService = TestBed.get(RacetrackInfoService);
 			fixture = TestBed.createComponent(AdvisoriesComponent);
 			component = fixture.componentInstance;
 		});
@@ -715,6 +779,7 @@ describe('AdvisoriesComponent', () => {
 		beforeEach(() => {
 			productAlertsService = TestBed.get(ProductAlertsService);
 			diagnosticsService = TestBed.get(DiagnosticsService);
+			racetrackInfoService = TestBed.get(RacetrackInfoService);
 			fixture = TestBed.createComponent(AdvisoriesComponent);
 			component = fixture.componentInstance;
 		});
@@ -780,6 +845,7 @@ describe('AdvisoriesComponent', () => {
 		beforeEach(() => {
 			productAlertsService = TestBed.get(ProductAlertsService);
 			diagnosticsService = TestBed.get(DiagnosticsService);
+			racetrackInfoService = TestBed.get(RacetrackInfoService);
 			fixture = TestBed.createComponent(AdvisoriesComponent);
 			component = fixture.componentInstance;
 		});

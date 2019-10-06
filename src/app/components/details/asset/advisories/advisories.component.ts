@@ -26,6 +26,8 @@ import {
 	SecurityAdvisoriesResponse,
 	FieldNoticeAdvisoryResponse,
 	NetworkElement,
+	RacetrackSolution,
+	RacetrackTechnology,
 } from '@sdp-api';
 import { CuiTableOptions, CuiTableColumnOption } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
@@ -37,6 +39,7 @@ import {
 	takeUntil,
 } from 'rxjs/operators';
 import { AdvisoryType } from '@interfaces';
+import { RacetrackInfoService } from '@services';
 
 /** Interface representing an advisory tab */
 interface Tab {
@@ -82,11 +85,14 @@ export class AssetDetailsAdvisoriesComponent
 		id: string;
 	};
 	private destroyed$: Subject<void> = new Subject<void>();
+	private selectedSolutionName: string;
+	private selectedTechnologyName: string;
 
 	constructor (
 		private logger: LogService,
 		private diagnosticsService: DiagnosticsService,
 		private productAlertsService: ProductAlertsService,
+		private racetrackInfoService: RacetrackInfoService,
 	) { }
 
 	get selectedTab (): Tab {
@@ -115,7 +121,11 @@ export class AssetDetailsAdvisoriesComponent
 		const tab = _.find(this.tabs, { key: 'security' });
 		tab.loading = true;
 
-		return this.productAlertsService.getAdvisoriesSecurityAdvisories(tab.params)
+		const params = _.cloneDeep(tab.params);
+		params.solution = this.selectedSolutionName;
+		params.useCase = this.selectedTechnologyName;
+
+		return this.productAlertsService.getAdvisoriesSecurityAdvisories(params)
 		.pipe(
 			map((response: SecurityAdvisoriesResponse) => {
 				this.setTabData(tab, append, response);
@@ -140,7 +150,11 @@ export class AssetDetailsAdvisoriesComponent
 		const tab = _.find(this.tabs, { key: 'field' });
 		tab.loading = true;
 
-		return this.productAlertsService.getAdvisoriesFieldNotices(tab.params)
+		const params = _.cloneDeep(tab.params);
+		params.solution = this.selectedSolutionName;
+		params.useCase = this.selectedTechnologyName;
+
+		return this.productAlertsService.getAdvisoriesFieldNotices(params)
 		.pipe(
 			map((response: FieldNoticeAdvisoryResponse) => {
 				this.setTabData(tab, append, response);
@@ -165,7 +179,11 @@ export class AssetDetailsAdvisoriesComponent
 		const tab = _.find(this.tabs, { key: 'bug' });
 		tab.loading = true;
 
-		return this.diagnosticsService.getCriticalBugs(tab.params)
+		const params = _.cloneDeep(tab.params);
+		params.solution = this.selectedSolutionName;
+		params.useCase = this.selectedTechnologyName;
+
+		return this.diagnosticsService.getCriticalBugs(params)
 		.pipe(
 			map((response: CriticalBugsResponse) => {
 				this.setTabData(tab, append, response);
@@ -488,7 +506,24 @@ export class AssetDetailsAdvisoriesComponent
 			}
 		});
 
-		this.refresh();
+		this.racetrackInfoService.getCurrentSolution()
+		.pipe(
+			takeUntil(this.destroyed$),
+		)
+		.subscribe((solution: RacetrackSolution) => {
+			this.selectedSolutionName = _.get(solution, 'name');
+		});
+
+		this.racetrackInfoService.getCurrentTechnology()
+		.pipe(
+			takeUntil(this.destroyed$),
+		)
+		.subscribe((technology: RacetrackTechnology) => {
+			if (this.selectedTechnologyName !== _.get(technology, 'name')) {
+				this.selectedTechnologyName = _.get(technology, 'name');
+				this.refresh();
+			}
+		});
 	}
 
 	/** Function used to destroy the component */

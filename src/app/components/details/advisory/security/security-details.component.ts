@@ -6,6 +6,7 @@ import {
 	OnChanges,
 	Output,
 	EventEmitter,
+	OnDestroy,
 } from '@angular/core';
 import * as _ from 'lodash-es';
 import {
@@ -18,16 +19,20 @@ import {
 	SecurityAdvisoryBulletinResponse,
 	SecurityAdvisoryInfo,
 	SecurityAdvisoriesResponse,
+	RacetrackSolution,
+	RacetrackTechnology,
 } from '@sdp-api';
 import { LogService } from '@cisco-ngx/cui-services';
 import {
 	map,
 	mergeMap,
 	catchError,
+	takeUntil,
 } from 'rxjs/operators';
-import { of, forkJoin } from 'rxjs';
+import { of, forkJoin, Subject } from 'rxjs';
 import { AssetIds } from '../impacted-assets/impacted-assets.component';
 import { Alert } from '@interfaces';
+import { RacetrackInfoService } from '@services';
 
 /** Data Interface */
 export interface Data {
@@ -45,7 +50,7 @@ export interface Data {
 	styleUrls: ['./security-details.component.scss'],
 	templateUrl: './security-details.component.html',
 })
-export class SecurityDetailsComponent implements OnInit, OnChanges {
+export class SecurityDetailsComponent implements OnInit, OnChanges, OnDestroy {
 
 	@Input('id') public id: string;
 	@Input('advisory') public advisory: SecurityAdvisoryInfo;
@@ -67,10 +72,14 @@ export class SecurityDetailsComponent implements OnInit, OnChanges {
 	public activeTab = 0;
 	public data: Data = { };
 	public isLoading = false;
+	private destroyed$: Subject<void> = new Subject<void>();
+	private selectedSolutionName: string;
+	private selectedTechnologyName: string;
 
 	constructor (
 		private logger: LogService,
 		private productAlertsService: ProductAlertsService,
+		private racetrackInfoService: RacetrackInfoService,
 	) { }
 
 	/**
@@ -167,6 +176,9 @@ export class SecurityDetailsComponent implements OnInit, OnChanges {
 				notice: {
 					advisoryId: [_.toSafeInteger(this.id)],
 					customerId: this.customerId,
+					equipmentType: ['CHASSIS'],
+					solution: this.selectedSolutionName,
+					useCase: this.selectedTechnologyName,
 					vulnerabilityStatus: ['POTVUL', 'VUL'],
 				},
 			};
@@ -178,6 +190,8 @@ export class SecurityDetailsComponent implements OnInit, OnChanges {
 				this.params.advisory = {
 					advisoryId: [_.toSafeInteger(this.id)],
 					customerId: this.customerId,
+					solution: this.selectedSolutionName,
+					useCase: this.selectedTechnologyName,
 				};
 
 				obsBatch.push(this.getAdvisory());
@@ -197,7 +211,24 @@ export class SecurityDetailsComponent implements OnInit, OnChanges {
 	 * Initializer
 	 */
 	public ngOnInit () {
-		this.refresh();
+		this.racetrackInfoService.getCurrentSolution()
+		.pipe(
+			takeUntil(this.destroyed$),
+		)
+		.subscribe((solution: RacetrackSolution) => {
+			this.selectedSolutionName = _.get(solution, 'name');
+		});
+
+		this.racetrackInfoService.getCurrentTechnology()
+		.pipe(
+			takeUntil(this.destroyed$),
+		)
+		.subscribe((technology: RacetrackTechnology) => {
+			if (this.selectedTechnologyName !== _.get(technology, 'name')) {
+				this.selectedTechnologyName = _.get(technology, 'name');
+				this.refresh();
+			}
+		});
 	}
 
 	/**
@@ -209,5 +240,11 @@ export class SecurityDetailsComponent implements OnInit, OnChanges {
 		if (currentId && !changes.id.firstChange) {
 			this.refresh();
 		}
+	}
+
+	/** Function used to destroy the component */
+	public ngOnDestroy () {
+		this.destroyed$.next();
+		this.destroyed$.complete();
 	}
 }

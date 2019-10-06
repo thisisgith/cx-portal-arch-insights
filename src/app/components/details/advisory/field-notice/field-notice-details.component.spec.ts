@@ -12,15 +12,44 @@ import {
 	MockFieldNoticeBulletins,
 	MockFieldNoticeAdvisories,
 	MockFieldNotices,
+	Mock,
+	RacetrackScenarios,
 } from '@mock';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MicroMockModule } from '@cui-x-views/mock';
+import { RacetrackInfoService } from '@services';
+
+/**
+ * Will fetch the currently active response body from the mock object
+ * @param mock the mock object
+ * @param type the scenario type
+ * @returns the body response
+ */
+function getActiveBody (mock: Mock, type: string = 'GET') {
+	const active = _.find(mock.scenarios[type], 'selected') || _.head(mock.scenarios[type]);
+
+	return active.response.body;
+}
 
 describe('FieldNoticeDetailsComponent', () => {
 	let component: FieldNoticeDetailsComponent;
 	let fixture: ComponentFixture<FieldNoticeDetailsComponent>;
 	let productAlertsService: ProductAlertsService;
 	let inventoryService: InventoryService;
+	let racetrackInfoService: RacetrackInfoService;
+
+	/**
+	 * Sends our racetrack info
+	 */
+	const sendRacetrack = () => {
+		racetrackInfoService.sendRacetrack(getActiveBody(RacetrackScenarios[0]));
+		racetrackInfoService.sendCurrentSolution(
+			getActiveBody(RacetrackScenarios[0]).solutions[0],
+		);
+		racetrackInfoService.sendCurrentTechnology(
+			getActiveBody(RacetrackScenarios[0]).solutions[0].technologies[0],
+		);
+	};
 
 	configureTestSuite(() => {
 		TestBed.configureTestingModule({
@@ -36,7 +65,7 @@ describe('FieldNoticeDetailsComponent', () => {
 	});
 
 	beforeEach(async(() => {
-
+		racetrackInfoService = TestBed.get(RacetrackInfoService);
 		inventoryService = TestBed.get(InventoryService);
 		productAlertsService = TestBed.get(ProductAlertsService);
 	}));
@@ -87,6 +116,7 @@ describe('FieldNoticeDetailsComponent', () => {
 		});
 
 		component.ngOnInit();
+		sendRacetrack();
 		fixture.detectChanges();
 	});
 
@@ -135,6 +165,7 @@ describe('FieldNoticeDetailsComponent', () => {
 		});
 
 		component.ngOnInit();
+		sendRacetrack();
 		fixture.detectChanges();
 	});
 
@@ -153,6 +184,7 @@ describe('FieldNoticeDetailsComponent', () => {
 		});
 
 		component.ngOnInit();
+		sendRacetrack();
 		fixture.detectChanges();
 
 		expect(component.data.advisory)

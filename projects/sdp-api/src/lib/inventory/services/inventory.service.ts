@@ -17,6 +17,7 @@ import { RoleCountResponse } from '../models/role-count-response';
   providedIn: 'root',
 })
 class InventoryService extends __BaseService {
+  static readonly headAssetsPath = '/assets';
   static readonly getAssetsPath = '/assets';
   static readonly getAssetSummaryPath = '/assets/summary';
   static readonly headHardwarePath = '/hardware';
@@ -36,11 +37,122 @@ class InventoryService extends __BaseService {
 
   /**
    * API to get all the assets
+   * @param params The `InventoryService.HeadAssetsParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
+   * - `solution`: The solution name, should be from the enum list of values
+   *
+   * - `serialNumber`: The serial number of the device
+   *
+   * - `search`: Searchable field - title. Applied only when the length of this parameter is more than 3 characters.
+   *
+   * - `role`: The device role
+   *
+   * - `managedNeId`:
+   *
+   * - `lastDateOfSupportRange`: A date range in the format of <fromDateInMillis>,<toDateInMillis>. fromDateInMillis is inclusive and toDateInMillis is exclusive. <toDateInMillis> format supported to filter advisories having lastDateOfSupportRange till particular date. Use <fromDateInMillis> format to filter advisories having lastDateOfSupportRange from a particular date.
+   *
+   * - `hwInstanceId`:
+   *
+   * - `hasSecurityAdvisories`: Activates filter on assets having security advisories. If multiple of these attributes are provided,  the last value would be considered. Values "true" or "1" are considered as boolean value  "True" and any other value is considered false. This filter is activated is attribute is present.
+   *
+   * - `hasFieldNotices`: Activates filter on assets having field notices. If multiple of these attributes are provided,  the last value would be considered. Values "true" or "1" are considered as boolean value  "True" and any other value is considered false. This filter is activated is attribute is present.
+   *
+   * - `hasBugs`: Activates filter on assets having bugs. If multiple of these attributes are provided,  the last value would be considered. Values "true" or "1" are considered as boolean value  "True" and any other value is considered false. This filter is activated is attribute is present.
+   *
+   * - `coverage`: The coverage
+   *
+   * - `contractNumber`: The contract numbers
+   */
+  headAssetsResponse(params: InventoryService.HeadAssetsParams): __Observable<__StrictHttpResponse<null>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
+    if (params.solution != null) __params = __params.set('solution', params.solution.toString());
+    (params.serialNumber || []).forEach(val => {if (val != null) __params = __params.append('serialNumber', val.toString())});
+    if (params.search != null) __params = __params.set('search', params.search.toString());
+    (params.role || []).forEach(val => {if (val != null) __params = __params.append('role', val.toString())});
+    (params.managedNeId || []).forEach(val => {if (val != null) __params = __params.append('managedNeId', val.toString())});
+    (params.lastDateOfSupportRange || []).forEach(val => {if (val != null) __params = __params.append('lastDateOfSupportRange', val.toString())});
+    (params.hwInstanceId || []).forEach(val => {if (val != null) __params = __params.append('hwInstanceId', val.toString())});
+    if (params.hasSecurityAdvisories != null) __params = __params.set('hasSecurityAdvisories', params.hasSecurityAdvisories.toString());
+    if (params.hasFieldNotices != null) __params = __params.set('hasFieldNotices', params.hasFieldNotices.toString());
+    if (params.hasBugs != null) __params = __params.set('hasBugs', params.hasBugs.toString());
+    (params.coverage || []).forEach(val => {if (val != null) __params = __params.append('coverage', val.toString())});
+    (params.contractNumber || []).forEach(val => {if (val != null) __params = __params.append('contractNumber', val.toString())});
+    let req = new HttpRequest<any>(
+      'HEAD',
+      this.rootUrl + `/customerportal/inventory/v1/assets`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<null>;
+      })
+    );
+  }
+
+  /**
+   * API to get all the assets
+   * @param params The `InventoryService.HeadAssetsParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
+   * - `solution`: The solution name, should be from the enum list of values
+   *
+   * - `serialNumber`: The serial number of the device
+   *
+   * - `search`: Searchable field - title. Applied only when the length of this parameter is more than 3 characters.
+   *
+   * - `role`: The device role
+   *
+   * - `managedNeId`:
+   *
+   * - `lastDateOfSupportRange`: A date range in the format of <fromDateInMillis>,<toDateInMillis>. fromDateInMillis is inclusive and toDateInMillis is exclusive. <toDateInMillis> format supported to filter advisories having lastDateOfSupportRange till particular date. Use <fromDateInMillis> format to filter advisories having lastDateOfSupportRange from a particular date.
+   *
+   * - `hwInstanceId`:
+   *
+   * - `hasSecurityAdvisories`: Activates filter on assets having security advisories. If multiple of these attributes are provided,  the last value would be considered. Values "true" or "1" are considered as boolean value  "True" and any other value is considered false. This filter is activated is attribute is present.
+   *
+   * - `hasFieldNotices`: Activates filter on assets having field notices. If multiple of these attributes are provided,  the last value would be considered. Values "true" or "1" are considered as boolean value  "True" and any other value is considered false. This filter is activated is attribute is present.
+   *
+   * - `hasBugs`: Activates filter on assets having bugs. If multiple of these attributes are provided,  the last value would be considered. Values "true" or "1" are considered as boolean value  "True" and any other value is considered false. This filter is activated is attribute is present.
+   *
+   * - `coverage`: The coverage
+   *
+   * - `contractNumber`: The contract numbers
+   */
+  headAssets(params: InventoryService.HeadAssetsParams): __Observable<null> {
+    return this.headAssetsResponse(params).pipe(
+      __map(_r => _r.body as null)
+    );
+  }
+
+  /**
+   * API to get all the assets
    * @param params The `InventoryService.GetAssetsParams` containing the following parameters:
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
    * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
+   *
+   * - `solution`: The solution name, should be from the enum list of values
    *
    * - `serialNumber`: The serial number of the device
    *
@@ -76,7 +188,9 @@ class InventoryService extends __BaseService {
     let __body: any = null;
 
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
     (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
+    if (params.solution != null) __params = __params.set('solution', params.solution.toString());
     (params.serialNumber || []).forEach(val => {if (val != null) __params = __params.append('serialNumber', val.toString())});
     if (params.search != null) __params = __params.set('search', params.search.toString());
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
@@ -114,7 +228,11 @@ class InventoryService extends __BaseService {
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
    * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
+   *
+   * - `solution`: The solution name, should be from the enum list of values
    *
    * - `serialNumber`: The serial number of the device
    *
@@ -341,14 +459,22 @@ class InventoryService extends __BaseService {
 
   /**
    * Returns the number of total number of managed NetworkElements along with query metadata (e.g. rows/page)
-   * @param customerId Unique identifier of a Cisco customer.
+   * @param params The `InventoryService.HeadNetworkElementsParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
+   * - `solution`: The solution name, should be from the enum list of values
    */
-  headNetworkElementsResponse(customerId: string): __Observable<__StrictHttpResponse<null>> {
+  headNetworkElementsResponse(params: InventoryService.HeadNetworkElementsParams): __Observable<__StrictHttpResponse<null>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
 
-    if (customerId != null) __params = __params.set('customerId', customerId.toString());
+    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
+    if (params.solution != null) __params = __params.set('solution', params.solution.toString());
     let req = new HttpRequest<any>(
       'HEAD',
       this.rootUrl + `/customerportal/inventory/v1/network-elements`,
@@ -369,10 +495,16 @@ class InventoryService extends __BaseService {
 
   /**
    * Returns the number of total number of managed NetworkElements along with query metadata (e.g. rows/page)
-   * @param customerId Unique identifier of a Cisco customer.
+   * @param params The `InventoryService.HeadNetworkElementsParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
+   * - `solution`: The solution name, should be from the enum list of values
    */
-  headNetworkElements(customerId: string): __Observable<null> {
-    return this.headNetworkElementsResponse(customerId).pipe(
+  headNetworkElements(params: InventoryService.HeadNetworkElementsParams): __Observable<null> {
+    return this.headNetworkElementsResponse(params).pipe(
       __map(_r => _r.body as null)
     );
   }
@@ -385,6 +517,8 @@ class InventoryService extends __BaseService {
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
    * - `sysName`: The SNMP sysName of the network element. It will be a fully-qualified name, if domain name is set on the device.
    *
    * - `swVersion`: The specific version of the software (Software Type) that is installed on the Network Element.
@@ -392,6 +526,8 @@ class InventoryService extends __BaseService {
    * - `swType`: Software Type identifies the specific type of software that is installed on this host/system.
    *
    * - `sort`: ASC (ascending) or DESC (descending)
+   *
+   * - `solution`: The solution name, should be from the enum list of values
    *
    * - `serialNumber`: The serial number of the device
    *
@@ -425,10 +561,12 @@ class InventoryService extends __BaseService {
     let __body: any = null;
 
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
     (params.sysName || []).forEach(val => {if (val != null) __params = __params.append('sysName', val.toString())});
     (params.swVersion || []).forEach(val => {if (val != null) __params = __params.append('swVersion', val.toString())});
     (params.swType || []).forEach(val => {if (val != null) __params = __params.append('swType', val.toString())});
     (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
+    if (params.solution != null) __params = __params.set('solution', params.solution.toString());
     (params.serialNumber || []).forEach(val => {if (val != null) __params = __params.append('serialNumber', val.toString())});
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
     if (params.productFamily != null) __params = __params.set('productFamily', params.productFamily.toString());
@@ -467,6 +605,8 @@ class InventoryService extends __BaseService {
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
    * - `sysName`: The SNMP sysName of the network element. It will be a fully-qualified name, if domain name is set on the device.
    *
    * - `swVersion`: The specific version of the software (Software Type) that is installed on the Network Element.
@@ -474,6 +614,8 @@ class InventoryService extends __BaseService {
    * - `swType`: Software Type identifies the specific type of software that is installed on this host/system.
    *
    * - `sort`: ASC (ascending) or DESC (descending)
+   *
+   * - `solution`: The solution name, should be from the enum list of values
    *
    * - `serialNumber`: The serial number of the device
    *
@@ -680,6 +822,10 @@ class InventoryService extends __BaseService {
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
+   * - `solution`: The solution name, should be from the enum list of values
+   *
    * - `role`: The device role
    *
    * @return successful operation
@@ -690,6 +836,8 @@ class InventoryService extends __BaseService {
     let __body: any = null;
 
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
+    if (params.solution != null) __params = __params.set('solution', params.solution.toString());
     (params.role || []).forEach(val => {if (val != null) __params = __params.append('role', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
@@ -715,6 +863,10 @@ class InventoryService extends __BaseService {
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
+   * - `solution`: The solution name, should be from the enum list of values
+   *
    * - `role`: The device role
    *
    * @return successful operation
@@ -729,6 +881,74 @@ class InventoryService extends __BaseService {
 module InventoryService {
 
   /**
+   * Parameters for headAssets
+   */
+  export interface HeadAssetsParams {
+
+    /**
+     * Unique identifier of a Cisco customer.
+     */
+    customerId: string;
+
+    /**
+     * Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+     */
+    useCase?: string;
+
+    /**
+     * The solution name, should be from the enum list of values
+     */
+    solution?: string;
+
+    /**
+     * The serial number of the device
+     */
+    serialNumber?: Array<string>;
+
+    /**
+     * Searchable field - title. Applied only when the length of this parameter is more than 3 characters.
+     */
+    search?: string;
+
+    /**
+     * The device role
+     */
+    role?: Array<string>;
+    managedNeId?: Array<string>;
+
+    /**
+     * A date range in the format of <fromDateInMillis>,<toDateInMillis>. fromDateInMillis is inclusive and toDateInMillis is exclusive. <toDateInMillis> format supported to filter advisories having lastDateOfSupportRange till particular date. Use <fromDateInMillis> format to filter advisories having lastDateOfSupportRange from a particular date.
+     */
+    lastDateOfSupportRange?: Array<string>;
+    hwInstanceId?: Array<string>;
+
+    /**
+     * Activates filter on assets having security advisories. If multiple of these attributes are provided,  the last value would be considered. Values "true" or "1" are considered as boolean value  "True" and any other value is considered false. This filter is activated is attribute is present.
+     */
+    hasSecurityAdvisories?: string;
+
+    /**
+     * Activates filter on assets having field notices. If multiple of these attributes are provided,  the last value would be considered. Values "true" or "1" are considered as boolean value  "True" and any other value is considered false. This filter is activated is attribute is present.
+     */
+    hasFieldNotices?: string;
+
+    /**
+     * Activates filter on assets having bugs. If multiple of these attributes are provided,  the last value would be considered. Values "true" or "1" are considered as boolean value  "True" and any other value is considered false. This filter is activated is attribute is present.
+     */
+    hasBugs?: string;
+
+    /**
+     * The coverage
+     */
+    coverage?: Array<'covered' | 'uncovered' | 'unknown' | 'expired'>;
+
+    /**
+     * The contract numbers
+     */
+    contractNumber?: Array<string>;
+  }
+
+  /**
    * Parameters for getAssets
    */
   export interface GetAssetsParams {
@@ -739,9 +959,19 @@ module InventoryService {
     customerId: string;
 
     /**
+     * Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+     */
+    useCase?: string;
+
+    /**
      * Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
      */
     sort?: Array<string>;
+
+    /**
+     * The solution name, should be from the enum list of values
+     */
+    solution?: string;
 
     /**
      * The serial number of the device
@@ -879,6 +1109,27 @@ module InventoryService {
   }
 
   /**
+   * Parameters for headNetworkElements
+   */
+  export interface HeadNetworkElementsParams {
+
+    /**
+     * Unique identifier of a Cisco customer.
+     */
+    customerId: string;
+
+    /**
+     * Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+     */
+    useCase?: string;
+
+    /**
+     * The solution name, should be from the enum list of values
+     */
+    solution?: string;
+  }
+
+  /**
    * Parameters for getNetworkElements
    */
   export interface GetNetworkElementsParams {
@@ -887,6 +1138,11 @@ module InventoryService {
      * Unique identifier of a Cisco customer.
      */
     customerId: string;
+
+    /**
+     * Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+     */
+    useCase?: string;
 
     /**
      * The SNMP sysName of the network element. It will be a fully-qualified name, if domain name is set on the device.
@@ -907,6 +1163,11 @@ module InventoryService {
      * ASC (ascending) or DESC (descending)
      */
     sort?: Array<string>;
+
+    /**
+     * The solution name, should be from the enum list of values
+     */
+    solution?: string;
 
     /**
      * The serial number of the device
@@ -1075,6 +1336,16 @@ module InventoryService {
      * Unique identifier of a Cisco customer.
      */
     customerId: string;
+
+    /**
+     * Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+     */
+    useCase?: string;
+
+    /**
+     * The solution name, should be from the enum list of values
+     */
+    solution?: string;
 
     /**
      * The device role

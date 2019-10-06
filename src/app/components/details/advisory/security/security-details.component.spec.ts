@@ -14,15 +14,44 @@ import {
 	MockAdvisorySecurityAdvisories,
 	MockSecurityAdvisoryBulletins,
 	MockSecurityAdvisories,
+	RacetrackScenarios,
+	Mock,
 } from '@mock';
 import { HttpErrorResponse } from '@angular/common/http';
 import { RouterTestingModule } from '@angular/router/testing';
+import { RacetrackInfoService } from '@services';
+
+/**
+ * Will fetch the currently active response body from the mock object
+ * @param mock the mock object
+ * @param type the scenario type
+ * @returns the body response
+ */
+function getActiveBody (mock: Mock, type: string = 'GET') {
+	const active = _.find(mock.scenarios[type], 'selected') || _.head(mock.scenarios[type]);
+
+	return active.response.body;
+}
 
 describe('SecurityDetailsComponent', () => {
 	let component: SecurityDetailsComponent;
 	let fixture: ComponentFixture<SecurityDetailsComponent>;
 	let productAlertsService: ProductAlertsService;
 	let inventoryService: InventoryService;
+	let racetrackInfoService: RacetrackInfoService;
+
+	/**
+	 * Sends our racetrack info
+	 */
+	const sendRacetrack = () => {
+		racetrackInfoService.sendRacetrack(getActiveBody(RacetrackScenarios[0]));
+		racetrackInfoService.sendCurrentSolution(
+			getActiveBody(RacetrackScenarios[0]).solutions[0],
+		);
+		racetrackInfoService.sendCurrentTechnology(
+			getActiveBody(RacetrackScenarios[0]).solutions[0].technologies[0],
+		);
+	};
 
 	configureTestSuite(() => {
 		TestBed.configureTestingModule({
@@ -39,7 +68,7 @@ describe('SecurityDetailsComponent', () => {
 	});
 
 	beforeEach(async(() => {
-
+		racetrackInfoService = TestBed.get(RacetrackInfoService);
 		inventoryService = TestBed.get(InventoryService);
 		productAlertsService = TestBed.get(ProductAlertsService);
 	}));
@@ -90,6 +119,7 @@ describe('SecurityDetailsComponent', () => {
 		});
 
 		component.ngOnInit();
+		sendRacetrack();
 		fixture.detectChanges();
 	});
 
@@ -138,6 +168,7 @@ describe('SecurityDetailsComponent', () => {
 		});
 
 		component.ngOnInit();
+		sendRacetrack();
 		fixture.detectChanges();
 	});
 
@@ -156,6 +187,7 @@ describe('SecurityDetailsComponent', () => {
 		});
 
 		component.ngOnInit();
+		sendRacetrack();
 		fixture.detectChanges();
 
 		expect(component.data.advisory)
