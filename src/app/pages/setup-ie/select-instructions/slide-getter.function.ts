@@ -19,80 +19,72 @@ export function getSlides (selection: Selection) {
 		case Selection.VSPHERE:
 			return [
 				{
-					state: SETUP_STATES.INIT,
-					type: DownloadImageComponent,
-				},
-				{
 					inputs: {
 						slideSet: 'ova',
 					},
-					state: SETUP_STATES.OVA,
+					state: SETUP_STATES.INSTALL,
 					type: DeployStepsComponent,
 				},
 				{
 					inputs: {
 						slideSet: 'ie',
 					},
-					state: SETUP_STATES.IE,
+					state: SETUP_STATES.INSTALL,
 					type: DeployStepsComponent,
 				},
 				{
-					state: SETUP_STATES.COLLECTOR,
+					state: SETUP_STATES.CONNECT_COLLECTOR,
 					type: ConnectCollectorComponent,
 				},
 				{
-					state: SETUP_STATES.COLLECTOR,
+					state: SETUP_STATES.CONFIGURE_COLLECTOR,
 					type: RegisterCollectorComponent,
 				},
 				{
-					state: SETUP_STATES.COLLECTOR,
+					state: SETUP_STATES.CONNECT_DNAC,
 					type: ConnectDNACenterComponent,
 				},
 				{
 					inputs: {
 						slideSet: 'syslog',
 					},
-					state: SETUP_STATES.COLLECTOR,
+					state: SETUP_STATES.CONNECT_DNAC,
 					type: DeployStepsComponent,
 				},
 			];
 		case Selection.VCENTER:
 			return [
 				{
-					state: SETUP_STATES.INIT,
-					type: DownloadImageComponent,
-				},
-				{
 					inputs: {
 						slideSet: 'vcenter',
 					},
-					state: SETUP_STATES.OVA,
+					state: SETUP_STATES.INSTALL,
 					type: DeployStepsComponent,
 				},
 				{
 					inputs: {
 						slideSet: 'ie',
 					},
-					state: SETUP_STATES.IE,
+					state: SETUP_STATES.INSTALL,
 					type: DeployStepsComponent,
 				},
 				{
-					state: SETUP_STATES.COLLECTOR,
+					state: SETUP_STATES.CONNECT_COLLECTOR,
 					type: ConnectCollectorComponent,
 				},
 				{
-					state: SETUP_STATES.COLLECTOR,
+					state: SETUP_STATES.CONFIGURE_COLLECTOR,
 					type: RegisterCollectorComponent,
 				},
 				{
-					state: SETUP_STATES.COLLECTOR,
+					state: SETUP_STATES.CONNECT_DNAC,
 					type: ConnectDNACenterComponent,
 				},
 				{
 					inputs: {
 						slideSet: 'syslog',
 					},
-					state: SETUP_STATES.COLLECTOR,
+					state: SETUP_STATES.CONNECT_DNAC,
 					type: DeployStepsComponent,
 				},
 			];
@@ -106,33 +98,33 @@ export function getSlides (selection: Selection) {
 					inputs: {
 						slideSet: 'vbox',
 					},
-					state: SETUP_STATES.OVA,
+					state: SETUP_STATES.INSTALL,
 					type: DeployStepsComponent,
 				},
 				{
 					inputs: {
 						slideSet: 'ie',
 					},
-					state: SETUP_STATES.IE,
+					state: SETUP_STATES.INSTALL,
 					type: DeployStepsComponent,
 				},
 				{
-					state: SETUP_STATES.COLLECTOR,
+					state: SETUP_STATES.CONNECT_COLLECTOR,
 					type: ConnectCollectorComponent,
 				},
 				{
-					state: SETUP_STATES.COLLECTOR,
+					state: SETUP_STATES.CONFIGURE_COLLECTOR,
 					type: RegisterCollectorComponent,
 				},
 				{
-					state: SETUP_STATES.COLLECTOR,
+					state: SETUP_STATES.CONNECT_DNAC,
 					type: ConnectDNACenterComponent,
 				},
 				{
 					inputs: {
 						slideSet: 'syslog',
 					},
-					state: SETUP_STATES.COLLECTOR,
+					state: SETUP_STATES.CONNECT_DNAC,
 					type: DeployStepsComponent,
 				},
 			];

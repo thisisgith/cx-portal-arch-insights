@@ -1,3 +1,26 @@
+<div class="install-progress-bar flex-center dbl-margin-bottom">
+	<ng-container *ngTemplateOutlet="pbStep; context: {
+		$implicit: '_AcceptTheEncryptionAgreement_' | i18n,
+		active: view === 'k9',
+		line: true,
+		visited: view !== 'k9'
+	}"></ng-container>
+	<ng-container *ngTemplateOutlet="pbStep; context: {
+		$implicit: '_AcceptTheLicenseAgreement_' | i18n,
+		active: view === 'eula',
+		line: true,
+		visited: view === 'pre-download'
+	}"></ng-container>
+	<ng-container *ngTemplateOutlet="pbStep; context: {
+		$implicit: '_DownloadTheOVATemplate_' | i18n,
+		active: view === 'pre-download',
+		line: true
+	}"></ng-container>
+	<ng-container *ngTemplateOutlet="pbStep; context: {
+		$implicit: '_DeployTheOVATemplate_' | i18n
+	}"></ng-container>
+</div>
+
 <alert
 	[title]="error"
 	[(visible)]="error"
@@ -12,12 +35,8 @@
 	</ng-container>
 </alert>
 <div class="text-center">
-	<h6
-		class="text-primary base-margin-bottom"
-		[innerText]="('_StepXColonY_' | i18n:'1':('_Prerequisites_' | i18n)) | uppercase"
-	></h6>
-	<div [innerText]="'_DownloadOVAImage_' | i18n"
-		class="xl-margin-bottom step-title">
+	<div [innerText]="'_Day0_Setup_25_' | i18n"
+		class="xl-margin-top base-margin-bottom step-title">
 	</div>
 	<cui-loader *ngIf="loading && !error" [label]="'_Loading_' | i18n"></cui-loader>
 	<k9-form
@@ -37,12 +56,30 @@
 		(onCancel)="cancelK9Decline()"
 		(onContinue)="confirmK9Decline()"
 	></k9-decline>
-	<button
+	<div 
 		*ngIf="!loading && view === 'pre-download'"
-		data-auto-id="download-image-btn"
-		[innerText]="'_DownloadImage_' | i18n | uppercase"
-		class="btn cx-btn"
-		(click)="onDownload()"
 	>
-	</button>
+		<h6
+			class="xl-margin-bottom"
+			[innerText]="'_DownloadTheOVAFile_' | i18n"
+		></h6>
+		
+		<button
+			data-auto-id="download-image-btn"
+			[innerText]="'_DownloadImage_' | i18n | uppercase"
+			class="btn cx-btn"
+			(click)="onDownload()"
+		>
+		</button>
+	</div>
 </div>
+
+<ng-template #pbStep let-label let-line="line" let-active="active" let-visited="visited">
+	<div class="install-progress-bar__step"
+		[ngClass]="{ 'active': active, 'visited': visited }">
+		<div class="install-progress-bar__circle"></div>
+		<div *ngIf="line" class="install-progress-bar__line"></div>
+		<div class="install-progress-bar__label"
+			[innerText]="label"></div>
+	</div>
+</ng-template>

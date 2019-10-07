@@ -86,7 +86,7 @@ export class ConnectDNACenterComponent implements OnInit, SetupStep {
 				if (!hasDNAC) {
 					this.onStepComplete.emit([
 						{
-							state: SETUP_STATES.COLLECTOR,
+							state: SETUP_STATES.CONNECT_DNAC,
 							type: NoDNACComponent,
 						},
 					]);

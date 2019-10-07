@@ -18,11 +18,12 @@ import { takeUntil } from 'rxjs/operators';
 import { SetupComponent, SetupStep } from '@interfaces';
 import { SETUP_STATES } from '@classes';
 import { BeginInstallationComponent } from './begin-installation/begin-installation.component';
-import { SelectInstructionsComponent } from './select-instructions/select-instructions.component';
 import { getSlides } from './select-instructions/slide-getter.function';
 import { IESetupWizardState, SetupIEStateService } from './setup-ie-state.service';
 import { Selection } from './setup-ie.types';
 import { ConnectDNACenterComponent } from './connect-dna-center/connect-dna-center.component';
+import { DownloadImageComponent } from './download-image/download-image.component';
+import { ConnectCollectorComponent } from './connect-collector/connect-collector.component';
 
 import { CuiModalService } from '@cisco-ngx/cui-components';
 import { ResetCacheModal } from './reset-cache-modal/reset-cache-modal.component';
@@ -40,8 +41,12 @@ const defaultSteps = [
 		type: BeginInstallationComponent,
 	},
 	{
-		state: SETUP_STATES.INIT,
-		type: SelectInstructionsComponent,
+		state: SETUP_STATES.INSTALL,
+		type: DownloadImageComponent,
+	},
+	{
+		state: SETUP_STATES.CONNECT_COLLECTOR,
+		type: ConnectCollectorComponent,
 	},
 ];
 
@@ -170,7 +175,7 @@ export class SetupIeComponent implements AfterViewInit, OnInit, OnDestroy {
 				_.isEqual(step.type, ConnectDNACenterComponent));
 			if (noDNAC) {
 				this.steps.splice(connectDnacIdx, 0, {
-					state: SETUP_STATES.COLLECTOR,
+					state: SETUP_STATES.CONNECT_DNAC,
 					type: NoDNACComponent,
 				});
 			}

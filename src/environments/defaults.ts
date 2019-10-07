@@ -49,7 +49,7 @@ export const defaults = {
 		downloadOvaLink: 'http://engci-maven-master.cisco.com/artifactory/services-cf-insight' +
 			'_engine-release/ie/Insight_Engine_1.0/ubuntu/103/CXC_1.0_Build-103.ova',
 		imageDownloadRetries: 6,
-		mockASD: true,
+		mockASD: false, // TODO set this to true
 		mockRegistration: true,
 		pingURL: '/ie-commonapi/services/version',
 		telemetryGuideUrl: 'https://www-author3.cisco.com/c/en/us/td/docs/cloud-systems-' +
