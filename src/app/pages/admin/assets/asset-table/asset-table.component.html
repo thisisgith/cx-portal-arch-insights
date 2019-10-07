@@ -1,0 +1,112 @@
+<div *ngIf="assets$ | async as assets" class="responsive-table">
+	<table
+		class="table
+			table--selectable
+			table--compressed
+			table--lined
+			table--hover
+			table--nostripes"
+		data-auto-id="AssetsTable"
+	>
+		<thead data-auto-id="AssetsTableHeader">
+			<tr>
+				<!-- Commenting out as this will need to be added back in when/if API supports --> 
+				<!-- <th> -->
+				<!-- 	<label class="checkbox"> -->
+				<!-- 		<input type="checkbox" -->
+				<!-- 			[checked]="allAssetsSelected" -->
+				<!-- 			(click)="onAllSelect(!allAssetsSelected)" -->
+				<!-- 			data-auto-id="AllAssetSelect" /> -->
+				<!-- 		<span class="checkbox__input" -->
+				<!-- 			data-auto-id="AllAssetSelectCheckbox"> -->
+				<!-- 		</span> -->
+				<!-- 	</label> -->
+				<!-- </th> -->
+				<th
+					attr.data-auto-id="InventoryHeader-{{ column.name }}"
+					*ngFor="let column of columns"
+					[ngClass]="{ 'sortable': column.sortable, 'sorted': column.sorting }"
+					(click)="onColumnSort(column)"
+				>
+					<span [innerText]="column.name"></span>
+					<span *ngIf="column.sortable && column.sorting"
+						class="qtr-margin-left"
+						[ngClass]="{
+							'icon-chevron-up': column.sortDirection === 'asc',
+							'icon-chevron-down': column.sortDirection === 'desc'
+						}">
+					</span>
+				</th>
+			</tr>
+		</thead>
+		<tbody data-auto-id="AssetsTableBody">
+			<tr
+				*ngFor="let item of assets; let i = index"
+				attr.data-auto-id="InventoryItem-{{ item.data.serialNumber }}"
+				[ngClass]="{ 'active': item.details }"
+			>
+				<!-- <td attr.data-auto-id="InventoryItemSelectTD-{{ item.data.serialNumber }}"> -->
+				<!-- 	<label class="checkbox"> -->
+				<!-- 		<input -->
+				<!-- 			type="checkbox" -->
+				<!-- 			[checked]="item.selected" -->
+				<!-- 			(click)="onClick($event, 'checkbox', item)" -->
+				<!-- 			attr.data-auto-id="InventoryItemSelect-{{ item.data.serialNumber }}" -->
+				<!-- 		/> -->
+				<!-- 		<span class="checkbox__input" -->
+				<!-- 			attr.data-auto-id="InventoryItemCheckbox-{{ item.data.serialNumber }}"> -->
+				<!-- 		</span> -->
+				<!-- 	</label> -->
+				<!-- </td> -->
+				<td *ngFor="let column of columns"
+					[ngStyle]="{ 'width': column.width }"
+					attr.data-auto-id="InventoryItemClickHandler-{{ item.data.serialNumber }}"
+					(click)="column.click ? onClick($event, 'menu') : onClick($event, 'item', item)">
+					<ng-container *ngIf="column.template">
+						<ng-container *ngTemplateOutlet="column.template; context: { celldata: item.data, element: item.element, actions: item.actions }"></ng-container>
+					</ng-container>
+					<ng-container *ngIf="!column.template">
+						<span *ngIf="column.render" [innerHTML]="column.render(item.data)"
+							attr.data-auto-id="{{ column.name }}-{{ item.data.serialNumber }}"></span>
+						<span *ngIf="!column.render" [innerText]="item.data[column.key]"
+							attr.data-auto-id="{ {column.name }}-{{ item.data.serialNumber }}"></span>
+					</ng-container>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+<ng-template #deviceNameCell let-celldata="celldata">
+	<span class="qtr-margin-right" *ngIf="celldata.productType && getProductIcon(celldata)"
+		[title]="getProductTitle(celldata)">
+		<img alt="{{ '_AssetIcon_' | i18n }}"
+			class="icon-asset"
+			attr.data-auto-id="DeviceIcon-{{ celldata?.deviceName }}"
+			src="assets/img/assets/device-{{ getProductIcon(celldata) }}.svg">
+	</span>
+	<span [innerText]="celldata.hostname | truncate:true:50"
+		[title]="celldata.hostname"
+		attr.data-auto-id="Device-{{celldata.serialNumber}}">
+	</span>
+</ng-template>
+
+<ng-template #lastScanCell let-celldata="celldata">
+	<span
+		[innerText]="(celldata.lastScan
+			? (celldata.lastScan | fromNow)
+			: ('_Never_' | i18n)) | truncate:true:15"
+	></span>
+</ng-template>
+
+<ng-template #statusCell let-celldata="celldata">
+	<span
+		class="icon-circle half-margin-right"
+		[ngStyle]="{ color: celldata.reachabilityStatus | statusColor }"
+	></span>
+	<span [innerText]="celldata.reachabilityStatus || ''"></span>
+</ng-template>
+
+<ng-template #dateCell let-celldata="celldata">
+	<span [innerText]="celldata.createdDate | date:mediumDate"></span>
+</ng-template>

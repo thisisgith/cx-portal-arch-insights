@@ -1,0 +1,37 @@
+<admin-wrapper>
+	<div class="flex base-margin-top dbl-margin-bottom">
+		<asset-total></asset-total>
+		<!-- Commenting out until functionality is supported -->
+		<!-- <reachability-chart></reachability-chart> -->
+	</div>
+	<ng-container *ngIf="!(isLoadingAssets$ | async)">
+		<asset-toolbar></asset-toolbar>
+	</ng-container>
+	<ng-container *ngIf="view$ | async as view">
+		<ng-container *ngIf="!(isLoadingAssets$ | async); else loader">
+			<asset-table *ngIf="view === 'table'"></asset-table>
+			<asset-grid *ngIf="view === 'grid'"></asset-grid>
+		</ng-container>
+	</ng-container>
+	<div
+		*ngIf="{
+			pagination: pagination$ | async,
+			isLoadingAssets: isLoadingAssets$ | async
+		} as pagerData"
+		class="half-margin-top base-margin-bottom"
+	>
+		<cui-pager
+			[hidden]="pagerData.isLoadingAssets"
+			[page]="pagerData.pagination?.page - 1"
+			[limit]="10"
+			[totalItems]="pagerData.pagination?.totalAssets || 0"
+			(onPageChanged)="onPageChanged($event)">
+		</cui-pager>
+	</div>
+</admin-wrapper>
+
+<ng-template #loader>
+	<div class="absolute-center">
+		<cui-loader></cui-loader>
+	</div>
+</ng-template>

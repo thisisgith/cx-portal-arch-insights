@@ -1,0 +1,7 @@
+<div
+	*ngIf="numDevices$ | async as numDevices"
+	class="text-center dbl-margin-right"
+>
+	<h3 class="number" [innerText]="numDevices | number:'2.'"></h3>
+	<div [innerText]="'_Devices_' | i18n | uppercase"></div>
+</div>

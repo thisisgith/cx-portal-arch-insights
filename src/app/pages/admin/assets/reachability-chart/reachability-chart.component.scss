@@ -1,0 +1,42 @@
+$reachable-color: #6cc04a;
+$connecting-color: #fbab18;
+$unreachable-color: #bec1c3;
+$auth-failed-color: #e3e3e3;
+
+:host {
+	.chart-container {
+		height: 16px;
+		background: $auth-failed-color;
+
+		.bar {
+			height: 16px;
+
+			&--reachable {
+				background: $reachable-color;
+			}
+
+			&--connecting {
+				background: $connecting-color;
+			}
+
+			&--unreachable {
+				background: $unreachable-color;
+			}
+
+			&--auth-failed {
+				background: $auth-failed-color;
+			}
+		}
+	}
+
+	.chart-labels {
+		div:last-child { min-width: 200px; }
+
+		div:first-child { min-width: 140px; }
+
+		div:first-child + div { min-width: 140px; }
+
+		div:first-child + div + div { min-width: 140px; }
+	}
+}
+

@@ -167,6 +167,31 @@
 	overflow: visible !important;
 }
 
+/** toolbar scss */
+.titlebar__viewmode {
+	border-top: 1px solid #c8d4d7;
+	border-bottom: 1px solid #c8d4d7;
+}
+
+.titlebar__viewmode button {
+	width: 32px;
+	height: 30px;
+	display: block;
+	background: #fafbfc;
+
+	&:hover {
+		background: #ebf1f8;
+	}
+}
+
+.titlebar__viewmode button.selected {
+	background: #6a80a5;
+
+	::ng-deep svg g {
+		fill: #fff;
+	}
+}
+
 .background-warning-lightOrange {
 	background: #fef6ea;
 }

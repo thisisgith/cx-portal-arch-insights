@@ -10,6 +10,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { ControlPointsModule } from '@sdp-api';
+import { AdminAssetsComponent, AdminAssetsModule } from './assets';
 import { SettingsComponent, SettingsModule } from './settings';
 import { PoliciesComponent, PoliciesModule } from './policies';
 
@@ -19,6 +20,10 @@ import { environment } from '@environment';
  * Child routes for Settings Module for lazy loading
  */
 const childRoutes: Routes = [
+	{
+		component: AdminAssetsComponent,
+		path: 'assets',
+	},
 	{
 		component: SettingsComponent,
 		path: 'settings',
@@ -48,17 +53,18 @@ const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
  */
 @NgModule({
 	imports: [
+		AdminAssetsModule,
 		CommonModule,
-		RouterModule.forChild(childRoutes),
-		I18nPipeModule,
 		ControlPointsModule,
-		CuiSidebarModule,
-		CuiSpinnerModule,
+		ControlPointsModule.forRoot({ rootUrl }),
 		CuiGaugeModule,
 		CuiLabelsModule,
-		SettingsModule,
+		CuiSidebarModule,
+		CuiSpinnerModule,
+		I18nPipeModule,
 		PoliciesModule,
-		ControlPointsModule.forRoot({ rootUrl }),
+		RouterModule.forChild(childRoutes),
+		SettingsModule,
 	],
 })
 export class AdminModule { }
