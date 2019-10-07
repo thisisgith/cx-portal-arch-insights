@@ -85,6 +85,7 @@
 </div>
 
 <ng-template #riskTmpl let-severity="itemSeverity">
+	<div class="severity-width">
 	<span class="qtr-margin-right icon-circle" [ngClass]="{
 		'High': 'text-danger',
 		'Medium': 'text-warning',
@@ -92,6 +93,7 @@
 			}[severity]">
 	</span>
 	<span [innerText]="severity"></span>
+	</div>
 </ng-template>
 
 

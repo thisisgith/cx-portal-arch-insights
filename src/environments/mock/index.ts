@@ -5,6 +5,7 @@ export * from './case/case';
 export * from './contract/contract';
 export * from './contract/coverage';
 
+export * from './controlpoints/assets';
 export * from './controlpoints/calendar';
 export * from './controlpoints/create-registration';
 export * from './controlpoints/dnac-status';

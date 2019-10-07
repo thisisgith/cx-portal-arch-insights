@@ -52,7 +52,7 @@ export class ContactSupportComponent implements OnInit, OnDestroy, CuiModalConte
 		.subscribe((id: string) => {
 			this.customerId = id;
 
-			this.userMailId = this.profileService.getProfile().cpr.pf_auth_email;
+			this.userMailId = _.get(this.profileService.getProfile(), ['cpr', 'pf_auth_email']);
 			this.loading = false;
 		});
 	}
@@ -147,7 +147,7 @@ export class ContactSupportComponent implements OnInit, OnDestroy, CuiModalConte
 	 */
 	public sendSupportEmail () {
 		if (this.supportForm.valid) {
-			const userDetails = this.profileService.getProfile().cpr;
+			const userDetails = _.get(this.profileService.getProfile(), 'cpr');
 			const params = {
 				body: this.supportForm.controls.description.value,
 				cc: _.get(userDetails, 'pf_auth_email'),
@@ -179,7 +179,7 @@ export class ContactSupportComponent implements OnInit, OnDestroy, CuiModalConte
 	 * @returns email template
 	 */
 	public createEmailTemplate () {
-		const userDetails = this.profileService.getProfile().cpr;
+		const userDetails = _.get(this.profileService.getProfile(), 'cpr', { });
 
 		return `${userDetails.pf_auth_firstname}` +
 			` ${userDetails.pf_auth_lastname}` + ` ${I18n.get('_SupportSentBy_')}\n\n` +

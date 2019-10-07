@@ -302,7 +302,7 @@ describe('PolicyFormComponent', () => {
 	describe('should edit device lists with inputs', () => {
 		beforeEach(() => {
 			component.deviceListLeft = [{
-				hostName: 'C3850',
+				hostname: 'C3850',
 				ipAddress: '172.25.121.6',
 				managedNeId: 'NA,FOC2045X0WJ,WS-C3850-48U-L,NA',
 				productId: 'WS-C3850-48U-L',
@@ -314,7 +314,7 @@ describe('PolicyFormComponent', () => {
 				softwareVersion: '03.06.05E',
 			}];
 			component.deviceListRight = [{
-				hostName: 'C3850',
+				hostname: 'C3850',
 				ipAddress: '172.25.121.6',
 				managedNeId: 'NA,FOC2045X0WJ,WS-C3850-48U-L,NA',
 				productId: 'WS-C3850-48U-L',

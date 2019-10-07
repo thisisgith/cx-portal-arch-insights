@@ -1,0 +1,73 @@
+<div class="row half-padding-bottom">
+	<div class="col-auto flex flex-fill">
+		<div class="flex-center-vertical">
+			<span
+				[innerText]="'_Assets_' | i18n"
+				class="text-large base-margin-left"
+			></span>
+			<ng-container *ngIf="counts$ | async as counts">
+				<span
+					[innerText]="'_ShowingXofYAssets_' | i18n
+						:counts.displayedAssets
+						:counts.totalAssets"
+					class="qtr-margin-left text-small text-muted"
+					data-auto-id="ShowingAssetsCount"
+				>
+				</span>
+			</ng-container>
+			<span *ngIf="selected > 0">
+				<span class="text-small text-muted qtr-margin-left qtr-margin-right">|</span>
+				<span
+					[innerText]="'_XSelected_' | i18n:selected"
+					class="text-bold text-small text-muted"
+					data-auto-id="TotalSelectedCount"
+				>
+				</span>
+			</span>
+		</div>
+	</div>
+	<div class="col-auto">
+		<div class="flex flex-fluid flex-right align-items-end">
+			<!-- SEARCH NOT YET SUPPORTED -->
+			<!-- <div class="flex-fill form-group input--compressed input--icon half-margin-right"> -->
+			<!-- 	<form *ngIf="searchForm" [formGroup]="searchForm" novalidate> -->
+			<!-- 		<div class="form-group__text"> -->
+			<!-- 			<input -->
+			<!-- 				id="searchInput" -->
+			<!-- 				attr.data-auto-id="SearchInput" -->
+			<!-- 				class="assets-search" -->
+			<!-- 				type="text" -->
+			<!-- 				#searchInput -->
+			<!-- 				formControlName="search" -->
+			<!-- 				placeholder="{{ '_Search_' | i18n }} {{ options?.title }}" -->
+			<!-- 				ngDefaultControl -->
+			<!-- 			> -->
+			<!-- 			<button type="button" class="link"> -->
+			<!-- 				<span class="icon-search"></span> -->
+			<!-- 			</button> -->
+			<!-- 		</div> -->
+			<!-- 	</form> -->
+			<!-- </div> -->
+			<div
+				*ngIf="view$ | async as view"
+				class="btn-group btn-group--square half-margin-right titlebar__viewmode"
+			>
+				<button
+					data-auto-id="list-view-btn"
+					class="btn btn--small qtr-padding" 
+					[ngClass]="{ 'selected': view === 'table' }"
+					(click)="selectView('table')">
+					<div inlineSVG="assets/icons/nav-tableline-off.svg"></div>
+				</button>
+				<button
+					data-auto-id="grid-view-btn"
+					class="btn btn--small qtr-padding" 
+					[ngClass]="{ 'selected': view === 'grid' }"
+					(click)="selectView('grid')"
+				>
+					<div inlineSVG="assets/icons/nav-card-off.svg"></div>
+				</button>
+			</div>
+		</div>
+	</div>
+</div>

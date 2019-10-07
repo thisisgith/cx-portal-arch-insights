@@ -65,6 +65,9 @@ export class ContractSearchComponent extends SpecialSearchComponent
 	private refresh$ = new Subject();
 	private destroy$ = new Subject();
 
+	public contractExpirationStatusColor: string;
+	public expirationDatePadding = '';
+
 	constructor (
 		private contractsService: ContractsService,
 		private logger: LogService,
@@ -100,6 +103,9 @@ export class ContractSearchComponent extends SpecialSearchComponent
 				const statusKey = _.get(this.contractData, 'contractStatus', 'UNKNOWN')
 					.toUpperCase();
 				this.statusColor = _.get(StatusColorMap, statusKey);
+				const ContractExpDate = new Date(_.get(this.contractData, 'contractEndDate'));
+				this.contractExpirationStatusColor = this.getExpirationStatusColor(ContractExpDate);
+
 			} else {
 				this.hide.emit(true);
 			}
@@ -187,4 +193,23 @@ export class ContractSearchComponent extends SpecialSearchComponent
 			}),
 		);
 	}
+
+	/**
+	 * Fetch colour status Expiration for Contract
+	 * based on current date - expiration date
+	 * @param contractExpDate takes expiration date as input
+	 * @returns colour to be displayed
+	 */
+	private getExpirationStatusColor (contractExpDate: any) {
+		if (contractExpDate) {
+			const dayInMilliseconds = (1000 * 60 * 60 * 24);
+			const dateNow: any = new Date();
+			const dateDifference =  Math.floor((contractExpDate - dateNow) / dayInMilliseconds);
+			this.expirationDatePadding = (dateDifference < 90) ? 'qtr-padding-left' : '';
+
+			return (dateDifference < 0) ? 'background-expired-lightRed' :
+			((dateDifference < 90) ? 'background-warning-lightOrange' : '');
+		}
+	}
+
 }

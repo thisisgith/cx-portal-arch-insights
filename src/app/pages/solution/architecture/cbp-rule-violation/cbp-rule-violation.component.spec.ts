@@ -129,7 +129,7 @@ describe('CbpRuleViolationComponent', () => {
 			.returnValue(of({ TotalCounts: 1000, BPRulesDetails: [] }));
 		component.ngOnChanges({
 			filters: {
-				currentValue: { exceptions: [] },
+				currentValue: { exceptions: [], isClearAllSelected: true },
 				firstChange: false,
 				isFirstChange: () => false,
 				previousValue: null,
@@ -139,16 +139,19 @@ describe('CbpRuleViolationComponent', () => {
 		fixture.detectChanges();
 		expect(service.getCBPSeverityList)
 			.toHaveBeenCalled();
+		expect(component.searchText.length)
+			.toBe(0);
 
 	});
 
 	it('should not reload the data on filter change if first change', () => {
+		component.searchText = 'airios';
 		spyOn(service, 'getCBPSeverityList')
 			.and
 			.returnValue(of({ TotalCounts: 1000, BPRulesDetails: [] }));
 		component.ngOnChanges({
 			filters: {
-				currentValue: { exceptions: [] },
+				currentValue: { isClearAllSelected: false },
 				firstChange: true,
 				isFirstChange: () => true,
 				previousValue: null,
@@ -158,7 +161,42 @@ describe('CbpRuleViolationComponent', () => {
 		fixture.detectChanges();
 		expect(service.getCBPSeverityList)
 			.toHaveBeenCalledTimes(0);
+		expect(component.searchText.length)
+			.toBeGreaterThan(0);
 
 	});
+	it('should call onpanelclose', () => {
+		spyOn(component, 'onPanelClose');
+		const hidden = true;
+		component.handleHidden(hidden);
+		expect(component.onPanelClose)
+			.toHaveBeenCalled();
+	});
+	it('should not call onpanelclose', () => {
+		spyOn(component, 'onPanelClose');
+		const hidden = false;
+		component.handleHidden(hidden);
+		expect(component.onPanelClose)
+			.not
+			.toHaveBeenCalled();
+	});
+	it('should not trigger search function', () => {
+		const enterKeyCode = 10;
+		spyOn(component, 'getCBPRulesData');
+		component.searchText = 'airios';
+		component.textFilter(enterKeyCode);
+		expect(component.getCBPRulesData)
+			.not
+			.toHaveBeenCalled();
+	});
 
+	it('should call invalidResponse handler', () => {
+		component.inValidResponseHandler();
+		expect(component.isLoading)
+			.toBeFalsy();
+		expect(component.totalItems)
+			.toEqual(0);
+		expect(component.cbpRuleExceptions.length)
+			.toEqual(0);
+	});
 });

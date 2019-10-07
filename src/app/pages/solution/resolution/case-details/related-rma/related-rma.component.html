@@ -11,7 +11,9 @@
 	</div>
 </div>
 <ng-template #createdDateTmpl let-item="celldata">
-	<span [innerText]="item?.orderDate? (item?.orderDate | fromNow) : ''"></span>
+	<span [attr.data-balloon]="item?.orderDate | dateTime" data-balloon-pos="left">
+		<span [innerText]="item?.orderDate? (item?.orderDate | fromNow) : ''"></span>
+	</span>
 </ng-template>
 <ng-template #shipToTmpl let-item="celldata">
 	<div [innerText]="item?.shipToInfo?.ackName"></div>

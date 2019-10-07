@@ -156,6 +156,16 @@ describe('DevicesWithExceptionsComponent', () => {
 			.toBe('');
 	});
 
+	it('should not trigger search function', () => {
+		const enterKeyCode = 10;
+		spyOn(component, 'getAllAssetsWithExceptions');
+		component.searchText = 'airios';
+		component.textFilter(enterKeyCode);
+		expect(component.getAllAssetsWithExceptions)
+			.not
+			.toHaveBeenCalled();
+	});
+
 	it('should call invalidResponse handler', () => {
 		component.inValidResponseHandler();
 		expect(component.isLoading)
@@ -188,4 +198,19 @@ describe('DevicesWithExceptionsComponent', () => {
 			.toEqual(0);
 	}));
 
+	it('should call onpanelclose', () => {
+		spyOn(component, 'onPanelClose');
+		const hidden = true;
+		component.handleHidden(hidden);
+		expect(component.onPanelClose)
+			.toHaveBeenCalled();
+	});
+	it('should not call onpanelclose', () => {
+		spyOn(component, 'onPanelClose');
+		const hidden = false;
+		component.handleHidden(hidden);
+		expect(component.onPanelClose)
+			.not
+			.toHaveBeenCalled();
+	});
 });

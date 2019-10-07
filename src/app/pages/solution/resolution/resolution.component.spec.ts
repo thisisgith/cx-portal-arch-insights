@@ -1,5 +1,5 @@
 import { configureTestSuite } from 'ng-bullet';
-import { fakeAsync, tick, ComponentFixture, TestBed } from '@angular/core/testing';
+import { fakeAsync, tick, ComponentFixture, TestBed, flush } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { By } from '@angular/platform-browser';
@@ -111,6 +111,19 @@ describe('ResolutionComponent', () => {
 			.toEqual(undefined);
 	});
 
+	it('should give the correct severity description', () => {
+		expect(component.getSeverityDescr('1'))
+			.toBeTruthy();
+		expect(component.getSeverityDescr('2'))
+			.toBeTruthy();
+		expect(component.getSeverityDescr('3'))
+			.toBeTruthy();
+		expect(component.getSeverityDescr('4'))
+			.toBeTruthy();
+		expect(component.getSeverityDescr('42'))
+		 	.toEqual('');
+	});
+
 	it('should use the case and serial queryparams', fakeAsync(() => {
 		router.navigate(
 			[],
@@ -127,6 +140,8 @@ describe('ResolutionComponent', () => {
 			});
 		expect(component.caseParams.serialNumbers)
 			.toEqual('FOX1306GBAD');
+
+		flush();
 	}));
 
 	it('should close the case details 360', () => {
@@ -149,6 +164,8 @@ describe('ResolutionComponent', () => {
 		fixture.detectChanges();
 		expect(component.selectedCase)
 			.toBeNull();
+
+		flush();
 	}));
 
 	it('should switch active filters', fakeAsync(() => {
@@ -165,6 +182,8 @@ describe('ResolutionComponent', () => {
 
 		expect(component.selectedFilters)
 			.toContain(statusFilter);
+
+		flush();
 	}));
 
 	it('should select the lastUpdated filter properly', fakeAsync(() => {
@@ -187,6 +206,8 @@ describe('ResolutionComponent', () => {
 
 		expect(_.get(_.find(lastUpdatedFilter.seriesData, { label: '≤24 hr' }), 'selected'))
 			.toBeFalsy();
+
+		flush();
 	}));
 
 	it('should select the durationOpen filter properly', fakeAsync(() => {
@@ -209,6 +230,8 @@ describe('ResolutionComponent', () => {
 
 		expect(_.get(_.find(durationOpen.seriesData, { label: '≤24 hr' }), 'selected'))
 			.toBeFalsy();
+
+		flush();
 	}));
 
 	it('should select the RMAs filter properly', fakeAsync(() => {
@@ -231,6 +254,8 @@ describe('ResolutionComponent', () => {
 
 		expect(_.get(_.find(rmaFilter.seriesData, { filter: 'F' }), 'selected'))
 			.toBeFalsy();
+
+		flush();
 	}));
 
 });

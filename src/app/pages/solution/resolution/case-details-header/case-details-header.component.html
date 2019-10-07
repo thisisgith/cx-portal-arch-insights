@@ -3,7 +3,7 @@
 	<div *ngIf="!loading" class="base-margin-top">
 		<div class="row flex maxWidth">
 			<div class="col-md-5">
-				<div class="text-bold font-size" [innerText]="'_RMACaseSeverity_' | i18n | uppercase"></div>
+				<div class="font-size" [innerText]="'_RMACaseSeverity_' | i18n | uppercase"></div>
 				<div>
 					<span class="dot"
 						[ngClass]="getSeverityColor(caseDetails?.priority)"
@@ -18,17 +18,21 @@
 			</div>
 			<div class="col-md-3">
 				<div>
-					<span class="text-bold font-size" [innerText]="'_RMACaseStatus_' | i18n | uppercase"></span>
+					<span class="font-size" [innerText]="'_RMACaseStatus_' | i18n | uppercase"></span>
 				</div>
 				<div data-auto-id="CaseDetailsStatus" [innerText]="caseDetails?.status"></div>
 			</div>
 			<div class="col-md-2">
-				<div class="text-bold font-size" [innerText]="'_RMACaseCreated_' | i18n | uppercase"></div>
-				<div data-auto-id="CaseDetailsCreatedDate" [innerText]="caseDetails?.createdDate | date"></div>
+				<div class="font-size" [innerText]="'_RMACaseCreated_' | i18n | uppercase"></div>
+				<div [attr.data-balloon]="caseDetails?.createdDate | dateTime" data-balloon-pos="left" data-auto-id="CaseDetailsCreatedDate">
+					<span [innerText]="caseDetails?.createdDate | fromNow"></span>
+				</div>
 			</div>
 			<div class="col-md-2">
-				<div class="text-bold font-size" [innerText]="'_RMACaseUpdated_' | i18n | uppercase"></div>
-				<div data-auto-id="CaseDetailsLastUpdatedDate" [innerText]="caseDetails?.lastUpdateDate | date"></div>
+				<div class="font-size" [innerText]="'_RMACaseLastUpdated_' | i18n | uppercase"></div>
+				<div [attr.data-balloon]="caseDetails?.lastUpdateDate | dateTime" data-balloon-pos="left" data-auto-id="CaseDetailsLastUpdatedDate">
+					<span [innerText]="caseDetails?.lastUpdateDate | fromNow"></span>
+				</div>
 			</div>
 		</div>
 

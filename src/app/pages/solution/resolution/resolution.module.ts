@@ -10,6 +10,7 @@ import {
 	ColumnChartModule,
 	BarChartModule,
 	VisualFilterBarModule,
+	AssetDetailsModule,
 } from '@components';
 
 import {
@@ -18,8 +19,9 @@ import {
 	CuiPagerModule,
 	CuiSpinnerModule,
 } from '@cisco-ngx/cui-components';
-import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
+import { I18nPipeModule, FromNowPipeModule } from '@cisco-ngx/cui-pipes';
 import { DetailsPanelModule } from 'src/app/components/details/panel/details-panel.module';
+import { DateTimePipeModule } from '@pipes';
 
 /**
  * Child routes for Resolution Module for lazy loading
@@ -55,9 +57,12 @@ const childRoutes: Routes = [
 		DetailsPanelModule,
 		FormsModule,
 		I18nPipeModule,
+		FromNowPipeModule,
 		ReactiveFormsModule,
 		RouterModule.forChild(childRoutes),
 		VisualFilterBarModule,
+		DateTimePipeModule,
+		AssetDetailsModule,
 	],
 })
 export class ResolutionModule { }

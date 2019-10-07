@@ -1,11 +1,9 @@
-/* tslint:disable */
 export { AdditionalDetails } from './models/additional-details';
 export { CSDFResponseModel } from './models/csdfresponse-model';
 export { CollectionPolicyResponseModel } from './models/collection-policy-response-model';
 export { CollectionPolicyUpdateRequestModel } from './models/collection-policy-update-request-model';
 export { ComponentDetails } from './models/component-details';
 export { DefaultResponseModel } from './models/default-response-model';
-export { Device } from './models/device';
 export { DeviceConnectivityAndEligibility } from './models/device-connectivity-and-eligibility';
 export { DeviceDetails } from './models/device-details';
 export { DeviceDetailsByPage } from './models/device-details-by-page';
@@ -14,16 +12,13 @@ export { DevicePolicyRequestModel } from './models/device-policy-request-model';
 export { DevicePolicyResponseModel } from './models/device-policy-response-model';
 export { DevicePolicyStatusResponseModel } from './models/device-policy-status-response-model';
 export { DevicePolicyUpdateRequestModel } from './models/device-policy-update-request-model';
-export { DeviceResponseModel } from './models/device-response-model';
 export { DevicesConnectivityResponseModel } from './models/devices-connectivity-response-model';
-export { Equipment } from './models/equipment';
 export { HardwareDetails } from './models/hardware-details';
 export { IEHealthStatusResponseModel } from './models/iehealth-status-response-model';
 export { IERegistrationRequestModel } from './models/ieregistration-request-model';
 export { IERegistrationResponseModel } from './models/ieregistration-response-model';
 export { IgnorePolicyRequestModel } from './models/ignore-policy-request-model';
 export { IgnorePolicyUpdateRequestModel } from './models/ignore-policy-update-request-model';
-export { InventoryDeviceEqContract } from './models/inventory-device-eq-contract';
 export { LicenseData } from './models/license-data';
 export { LicenseDataResponseModel } from './models/license-data-response-model';
 export { OSDetails } from './models/osdetails';

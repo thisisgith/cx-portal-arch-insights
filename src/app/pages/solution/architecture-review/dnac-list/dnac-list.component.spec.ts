@@ -167,4 +167,29 @@ describe('DnacListComponent', () => {
 			.toBe(0);
 	});
 
+	it('should call onpanelclose', () => {
+		spyOn(component, 'onPanelClose');
+		const hidden = true;
+		component.handleHidden(hidden);
+		expect(component.onPanelClose)
+			.toHaveBeenCalled();
+	});
+	it('should not call onpanelclose', () => {
+		spyOn(component, 'onPanelClose');
+		const hidden = false;
+		component.handleHidden(hidden);
+		expect(component.onPanelClose)
+			.not
+			.toHaveBeenCalled();
+	});
+	it('should not trigger search function', () => {
+		const enterKeyCode = 10;
+		spyOn(component, 'getDnacList');
+		component.searchText = 'airios';
+		component.textFilter(enterKeyCode);
+		expect(component.getDnacList)
+			.not
+			.toHaveBeenCalled();
+	});
+
 });

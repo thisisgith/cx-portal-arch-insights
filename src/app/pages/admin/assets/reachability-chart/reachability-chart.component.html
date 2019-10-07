@@ -1,0 +1,28 @@
+<div *ngIf="counts$ | async as counts">
+	<h6
+		[innerText]="'_CiscoDNACenterReachability_' | i18n | uppercase"
+		class="half-margin-bottom"
+	></h6>
+	<div class="chart-container flex">
+		<div
+			*ngFor="let count of counts"
+			class="bar"
+			[ngStyle]="{ 'width': count.percentage + '%' }"
+			[ngClass]="{
+				'Reachable': 'bar--reachable',
+				'Connecting': 'bar--connecting',
+				'Unreachable': 'bar--unreachable',
+				'Authentication Failed': 'bar--auth-failed'
+			}[count.label]"
+		>
+		</div>
+	</div>
+	<div class="chart-labels qtr-margin-top flex">
+		<div
+			*ngFor="let count of counts"
+			[ngStyle]="{ 'width': count.percentage + '%' }"
+		>
+			<a [innerText]="count.label + ' (' + count.count + ')'"></a>
+		</div>
+	</div>
+</div>

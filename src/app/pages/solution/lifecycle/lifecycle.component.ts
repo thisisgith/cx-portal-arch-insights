@@ -32,7 +32,7 @@ import {
 
 import * as racetrackComponent from '../../../components/racetrack/racetrack.component';
 import * as _ from 'lodash-es';
-import { Observable, of, forkJoin, ReplaySubject, Subject } from 'rxjs';
+import { Observable, of, forkJoin, ReplaySubject, Subject, throwError } from 'rxjs';
 import { map, catchError, takeUntil } from 'rxjs/operators';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { ActivatedRoute } from '@angular/router';
@@ -40,6 +40,20 @@ import { User } from '@interfaces';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { RacetrackInfoService } from '@services';
 import { environment } from '@environment';
+
+/**
+ * Interface representing success path and product guides modals
+ */
+interface SuccessPathsModel {
+	archetypes?: string[];
+	currentPage: number;
+	filter: string;
+	items?: SuccessPath[];
+	rows: number;
+	sortField: 'title' | 'type' | 'archetype' | 'bookmark';
+	sortDirection: 'asc' | 'desc';
+	totalCount?: number;
+}
 
 /**
  * Interface representing our data object
@@ -71,9 +85,8 @@ interface ComponentData {
 		training?: ELearning[];
 		success?: SuccessPath[];
 		archetype?: string[];
-		productGuides?: SuccessPath[];
-		pgArchetype?: string[];
 	};
+	productGuides: SuccessPathsModel;
 	acc?: {
 		sessions: ACC[];
 	};
@@ -118,6 +131,8 @@ export class LifecycleComponent implements OnDestroy {
 	@ViewChild('titleTemplate', { static: true }) private titleTemplate: TemplateRef<{ }>;
 	@ViewChild('scrollModal', { static: false }) private scrollModalRef: ElementRef;
 	@ViewChild('lifecyclePanel', { static: true }) private lifecyclePanelRef: ElementRef;
+	@ViewChild('topOfModal', { static: false }) private topOfModal: ElementRef;
+
 	public modalContent: TemplateRef<{ }>;
 	public modal = {
 		content: null,
@@ -143,7 +158,6 @@ export class LifecycleComponent implements OnDestroy {
 	public selectedFilterForSB = '';
 	public selectedFilterForATX = '';
 	public selectedFilterForACC = '';
-	public selectedFilterForPG = '';
 	public groupTrainingsAvailable = 0;
 	public selectedSuccessPaths: SuccessPath[];
 	public selectedScheduledATX: AtxSchema;
@@ -195,6 +209,10 @@ export class LifecycleComponent implements OnDestroy {
 	// Enable or disable CGT based on this flag
 	public enableCGT = false;
 
+	/**
+	 * The number of rows that Product Guides will request at a time.
+	 */
+	public readonly pgNumRows = 40;
 	public categoryOptions: any [];
 	public pgCategoryOptions: any [];
 	public statusOptions = [
@@ -233,13 +251,19 @@ export class LifecycleComponent implements OnDestroy {
 	];
 
 	public status = {
+		error: {
+			productGuides: false,
+		},
 		loading: {
 			acc: false,
 			atx: false,
 			bookmark: false,
 			cgt: false,
 			elearning: false,
-			productGuides: false,
+			productGuides: {
+				modal: false,
+				more: false,
+			},
 			racetrack: false,
 			success: false,
 		},
@@ -261,6 +285,13 @@ export class LifecycleComponent implements OnDestroy {
 			solution: '',
 			suggestedAction: '',
 			usecase: '',
+		},
+		productGuides: {
+			currentPage: 1,
+			filter: '',
+			rows: this.pgNumRows,
+			sortDirection: 'asc',
+			sortField: 'title',
 		},
 	};
 
@@ -434,6 +465,7 @@ export class LifecycleComponent implements OnDestroy {
 	public getStatusOptionName (value) {
 		if (value) {
 			const foundOption = this.statusOptions.find(opt => opt.value === value);
+
 			return foundOption ? foundOption.name : value;
 		}
 	}
@@ -454,6 +486,13 @@ export class LifecycleComponent implements OnDestroy {
 				solution: '',
 				suggestedAction: '',
 				usecase: '',
+			},
+			productGuides: {
+				currentPage: 1,
+				filter: '',
+				rows: this.pgNumRows,
+				sortDirection: 'asc',
+				sortField: 'title',
 			},
 		};
 	}
@@ -664,13 +703,15 @@ export class LifecycleComponent implements OnDestroy {
 	 */
 	public onSort (key: string, sortDirection: string, type: string) {
 		const sortColumn = table => {
+			const clickedColumn = _.find(table.columns, { sortKey: key  });
 			for (const col of table.columns) {
 				col.sorting = false;
+				if (col !== clickedColumn) {
+					col.sortDirection = 'asc';
+				}
 			}
-			const clickedColumn = _.find(table.columns, { sortKey: key  });
 			clickedColumn.sorting = true;
-			clickedColumn.sortDirection = _.find(table.columns, { sortKey: key })
-				.sortDirection === 'asc' ? 'desc' : 'asc';
+			clickedColumn.sortDirection = clickedColumn.sortDirection === 'asc' ? 'desc' : 'asc';
 		};
 
 		if (type === 'SB') {
@@ -695,7 +736,21 @@ export class LifecycleComponent implements OnDestroy {
 			this.selectedProductGuides = _.orderBy(
 				this.selectedProductGuides, [key], [sortDirection]);
 
-			sortColumn(this.productGuidesTable);
+			this.componentData.productGuides.sortDirection = <'asc' | 'desc'> sortDirection;
+			this.componentData.productGuides.sortField
+				= <'title' | 'type' | 'archetype' | 'bookmark'> key;
+
+			this.loadProductGuides()
+				.subscribe(
+					() => {
+						// Can only sort by one column at a time, so toggle
+						// the one column and then set the others to ascending.
+						sortColumn(this.productGuidesTable);
+					},
+					// When there's an error, the arrow should not change.
+					// This function swallows the error and keeps the arrow unchanged.
+					() => undefined,
+				);
 		}
 	}
 
@@ -790,10 +845,17 @@ export class LifecycleComponent implements OnDestroy {
 				visible: true,
 			};
 		} else if (type === '_ProductGuides_') {
+			// Swallow the responses.
+			this.loadProductGuides()
+				.subscribe(
+					() => undefined,
+					() => undefined,
+				);
+
 			this.modal = {
 				content: this.viewAllModalTemplate,
 				context: {
-					data: this.selectedProductGuides,
+					data: this.componentData.productGuides.items,
 					type: 'PG',
 				},
 				visible: true,
@@ -913,12 +975,12 @@ export class LifecycleComponent implements OnDestroy {
 		}
 
 		if (type === 'PG') {
-			this.selectedProductGuides =
-				_.filter(this.componentData.learning.productGuides,
-					{ archetype: this.selectedFilterForPG });
-			if (this.selectedFilterForPG === 'Not selected' || !this.selectedFilterForPG) {
-				this.selectedProductGuides = this.componentData.learning.productGuides;
-			}
+			// Swallow the responses.
+			this.loadProductGuides()
+				.subscribe(
+					() => undefined,
+					() => undefined,
+				);
 		}
 
 		if (type === 'ACC') {
@@ -1288,10 +1350,10 @@ export class LifecycleComponent implements OnDestroy {
 	 */
 	 public recommendedATXViewSessions () {
 		if (!this.recommendedAtxScheduleCardOpened) {
-		   this.recommendedAtxScheduleCardOpened = true;
-		   this.atxScheduleCardOpened = false;
-		   this.componentData.atx.interested = null;
-		   this.atxMoreClicked = false;
+			 this.recommendedAtxScheduleCardOpened = true;
+			 this.atxScheduleCardOpened = false;
+			 this.componentData.atx.interested = null;
+			 this.atxMoreClicked = false;
 		}
 	}
 
@@ -1505,38 +1567,74 @@ export class LifecycleComponent implements OnDestroy {
 	}
 
 	/**
+	 * Retrieves the current filter for Product Guides.
+	 */
+	private get selectedFilterForPG () {
+		if (this.componentData.productGuides.filter === 'Not selected') {
+			return '';
+		}
+
+		return this.componentData.productGuides.filter;
+	}
+
+	private set selectedFilterForPG (filter: string) {
+		this.componentData.productGuides.filter = filter;
+	}
+
+	/**
+	 * Clears user-configurable product guides component data without
+	 * removing the items on the screen.
+	 */
+	private clearProductGuidesOptions () {
+		this.componentData.productGuides.currentPage = 1;
+		this.componentData.productGuides.filter = '';
+		this.componentData.productGuides.rows = this.pgNumRows;
+		this.componentData.productGuides.sortDirection = 'asc';
+		this.componentData.productGuides.sortField = 'title';
+	}
+
+	/**
 	 * Loads success paths from the api for Product Documentation and Videos.
 	 * @returns The success paths for product documentation and videos.
 	 */
 	private loadProductGuides (): Observable<SuccessPathsResponse> {
-		this.status.loading.productGuides = true;
+		this.status.loading.productGuides.modal = true;
 		if (window.Cypress) {
 			window.productGuidesLoading = true;
 		}
 
+		const componentParams = _.pick(this.componentData.params,
+			['customerId', 'solution', 'usecase']);
+		const pgParams = {
+			fields: this.selectedFilterForPG,
+			rows: this.componentData.productGuides.rows,
+			sortField: this.componentData.productGuides.sortField,
+			sortOrder: this.componentData.productGuides.sortDirection,
+		};
+
 		return this.contentService.getRacetrackSuccessPaths(
-			_.pick(this.componentData.params,
-				['customerId', 'solution', 'usecase', 'rows']))
+			_.assign(componentParams, pgParams))
 		.pipe(
 			map((result: SuccessPathsResponse) => {
-				if (result.items.length) {
-					_.set(this.componentData, ['learning', 'productGuides'],
-						result.items);
+				if (result.items) {
+					_.set(this.componentData.productGuides, ['items'], result.items);
 					const resultItems = _.uniq(_.map(result.items, 'archetype'));
-					_.set(this.componentData, ['learning', 'pgArchetype'],
+					_.set(this.componentData.productGuides, ['archetypes'],
 						resultItems);
-					this.componentData.learning.pgArchetype.unshift('Not selected');
-					this.selectedProductGuides = this.componentData.learning.productGuides;
-					this.pgCategoryOptions = _.map(this.componentData.learning.pgArchetype,
+					this.componentData.productGuides.archetypes.unshift('Not selected');
+					this.pgCategoryOptions = _.map(
+						this.componentData.productGuides.archetypes,
 						item => ({
 							name: item,
 							value: item,
 						}));
 					this.selectedFilterForPG = this.pgCategoryOptions[0].value;
 				}
+				const totalCount: number = _.get(result, ['totalCount']);
+				_.set(this.componentData.productGuides, ['totalCount'], totalCount);
 
-				this.buildPGTable();
-				this.status.loading.productGuides = false;
+				this.status.loading.productGuides.modal = false;
+				this.status.error.productGuides = false;
 				if (window.Cypress) {
 					window.productGuidesLoading = false;
 				}
@@ -1544,16 +1642,98 @@ export class LifecycleComponent implements OnDestroy {
 				return result;
 			}),
 			catchError(err => {
-				this.status.loading.productGuides = false;
+				// Clear out the user-configurable options so that the user can't get
+				// themselves stuck.
+				this.clearProductGuidesOptions();
+				this.status.loading.productGuides.modal = false;
 				if (window.Cypress) {
 					window.productGuidesLoading = false;
 				}
 				this.logger.error(`lifecycle.component : loadProductGuides() :: Error : (${
 					err.status}) ${err.message}`);
 
-				return of({ });
+				return throwError(err);
 			}),
 		);
+	}
+
+	/**
+	 * Method called to do prepwork for Product Guides before
+	 * the data has been loaded in.
+	 */
+	private prepareProductGuides () {
+		this.buildPGTable();
+	}
+
+	/**
+	 * Loads additional Success Paths content for Product Documentation
+	 * and Videos. Additional content is appended to current content.
+	 * @returns The success paths for product documentation and videos.
+	 */
+	private loadMoreProductGuides () {
+		const curCount: number = _.get(this.componentData.productGuides, ['items'], []).length;
+		const totalCount: number = _.get(this.componentData.productGuides, ['totalCount'], 0);
+		const incPage = this.componentData.productGuides.currentPage + 1;
+
+		if ((totalCount - curCount) > 0) {
+			this.status.loading.productGuides.more = true;
+			if (window.Cypress) {
+				window.productGuidesLoading = true;
+			}
+
+			const componentParams = _.pick(this.componentData.params,
+				['customerId', 'solution', 'usecase']);
+			const pgParams = {
+				fields: this.selectedFilterForPG,
+				page: incPage,
+				rows: this.componentData.productGuides.rows,
+				sortField: this.componentData.productGuides.sortField,
+				sortOrder: this.componentData.productGuides.sortDirection,
+			};
+
+			return this.contentService.getRacetrackSuccessPaths(
+				_.assign(componentParams, pgParams))
+			.pipe(
+				map((result: SuccessPathsResponse) => {
+					if (result.items) {
+						const newItemsList
+							= _.concat(this.componentData.productGuides.items,
+								result.items);
+						this.componentData.productGuides.items = newItemsList;
+					}
+
+					this.status.loading.productGuides.more = false;
+					this.status.error.productGuides = false;
+					if (window.Cypress) {
+						window.productGuidesLoading = false;
+					}
+
+					// If successful, increase stored page.
+					this.componentData.productGuides.currentPage = incPage;
+
+					return result;
+				}),
+				catchError(err => {
+					// Clear out the user-configurable options so that the user can't get
+					// themselves stuck.
+					this.clearProductGuidesOptions();
+					this.status.loading.productGuides.more = false;
+					this.status.error.productGuides = true;
+					if (window.Cypress) {
+						window.productGuidesLoading = false;
+					}
+					this.logger.error(`lifecycle.component : loadMoreProductGuides() :: Error : (${
+						err.status}) ${err.message}`);
+
+					return of({ });
+				}),
+			);
+		}
+
+		this.logger.warn('lifecycle.component : loadMoreProductGuides() :: Warning : '
+			+ 'Attempted to load more after last page.');
+
+		return of({ });
 	}
 
 	/**
@@ -1842,12 +2022,12 @@ export class LifecycleComponent implements OnDestroy {
 	 * ForkJoin to load the other API Calls
 	 */
 	private loadLifecycleInfo () {
+		this.prepareProductGuides();
 		forkJoin(
 			this.loadACC(),
 			this.loadATX(),
 			this.loadELearning(),
 			this.loadSuccessPaths(),
-			this.loadProductGuides(),
 			this.loadCGT(),
 		)
 		.subscribe();
@@ -1940,5 +2120,101 @@ export class LifecycleComponent implements OnDestroy {
 		}
 
 		return `${this.appHeaderHeight}`;
+	}
+
+	/**
+	 * Scrolls to the top of the viewAll modal.
+	 */
+	public modalScrollToTop () {
+		this.topOfModal.nativeElement.scrollIntoView({
+			behavior: 'smooth',
+			block: 'start',
+			inline: 'nearest',
+		});
+	}
+
+	/**
+	 * Gets the number of items currently displayed in the modal
+	 * @param type The type of modal currently open
+	 * @returns The number of items in string format
+	 */
+	public getSelectedSuccessBytesCount (type: string): string {
+		switch (type) {
+			case 'PG':
+				const curCount: number
+					= _.get(this.componentData.productGuides, ['items'], []).length;
+
+				return `${curCount}`;
+			default:
+				return 'unknown';
+		}
+	}
+
+	/**
+	 * Gets the maximum number of items to be displayed in the modal
+	 * as specified by the API
+	 * @param type The type of modal currently open
+	 * @returns The number of items in string format
+	 */
+	public getMaxSuccessBytesCount (type: string): string {
+		switch (type) {
+			case 'PG':
+				const totalCount: number = _.get(this.componentData.productGuides, ['totalCount']);
+
+				return `${totalCount}`;
+			default:
+				return 'unknown';
+		}
+	}
+
+	/**
+	 * Gets the percentage of the maximum items retrieved by the modal
+	 * @param type The type of modal currently open
+	 * @returns The percentage in string format
+	 */
+	public getSuccessBytesPercentage (type: string): string {
+		switch (type) {
+			case 'PG':
+				const curCount: number
+					= _.get(this.componentData.productGuides, ['items'], []).length;
+				const totalCount: number
+					= _.get(this.componentData.productGuides, ['totalCount']);
+
+				return `${Math.floor((curCount / totalCount) * 100)}`;
+			default:
+				return '0';
+		}
+	}
+
+	/**
+	 * Creates a request to load more content into the modal when the
+	 * user clicks the Load More button
+	 * @param type The type of modal currently open
+	 */
+	public loadMoreContent (type: string) {
+		switch (type) {
+			case 'PG':
+				this.loadMoreProductGuides()
+					.subscribe();
+				break;
+		}
+	}
+
+	/**
+	 * Calculates whether or not the Load More button should be disabled
+	 * or not
+	 * @param type The type of modal currently open
+	 * @returns True for disabled, false for enabled
+	 */
+	public getLoadMoreDisabled (type: string) {
+		switch (type) {
+			case 'PG':
+				const curCount: number
+					= _.get(this.componentData.productGuides, ['items'], []).length;
+				const totalCount: number
+					= _.get(this.componentData.productGuides, ['totalCount'], 0);
+
+				return curCount >= totalCount;
+		}
 	}
 }

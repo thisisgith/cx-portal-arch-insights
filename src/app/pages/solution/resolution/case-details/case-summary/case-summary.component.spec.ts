@@ -24,4 +24,14 @@ describe('CaseSummaryComponent', () => {
 		expect(component)
 			.toBeTruthy();
 	});
+
+	it('should emit case serial number to open asset 360 view', () => {
+		component.caseDetails = {
+			serialNumber: 'FOC1544Y16T',
+		};
+		spyOn(component.showAssetDetails, 'emit');
+		component.openAssetDetailsView();
+		expect(component.showAssetDetails.emit)
+			.toHaveBeenCalled();
+	});
 });

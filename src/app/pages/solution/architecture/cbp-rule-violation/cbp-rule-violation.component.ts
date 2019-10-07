@@ -77,10 +77,15 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 		const isFirstChange = _.get(changes, ['filters', 'firstChange']);
 		if (selectedFilter && !isFirstChange) {
 			const severityType = _.get(selectedFilter,  'exceptions');
+			const isClearAllSelected = _.get(selectedFilter, 'isClearAllSelected');
 			if (severityType) {
 				this.paramsType.severity = _.cloneDeep(severityType.toString());
 			} else {
 				this.paramsType.severity = '';
+			}
+			if (isClearAllSelected) {
+				this.paramsType.searchText = '';
+				this.searchText = '';
 			}
 			this.isLoading = true;
 			this.tableStartIndex = 0;
@@ -105,6 +110,8 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 					key: 'bpRuleTitle',
 					name: I18n.get('_ArchitectureRuleViolated_'),
 					sortable: false,
+					template: this.riskTemplate,
+					width: '8%',
 				},
 				{
 					name: I18n.get('_ArchitectureException_'),

@@ -1,6 +1,6 @@
 <details-panel (hiddenChange)="handleHidden($event)"
 	[hidden]="hidden"
-	[fullscreen]="fullscreen" 
+	[fullscreen]="fullscreen"
 	id="details-panel"
 	[minWidth]="minWidth">
 	<details-panel-header (close)="onAllPanelsClose()"
@@ -9,7 +9,7 @@
 		[fullscreenToggle]="fullscreenToggle">
 		<asset-details-header *ngIf="!isLoading"
 			[asset]="asset"
-			[element]="element" 
+			[element]="element"
 			[customerId]="customerId"
 			(alert)="handleAlert($event)"
 			(scanStatus)="handleScanStatus($event)">

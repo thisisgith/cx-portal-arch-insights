@@ -5,12 +5,14 @@
 				<div class="timeline__item no-margin">
 					<div class="timeline__icon"></div>
 					<div class="timeline__time">
-						<div class="timeline-date" [innerText]="item.createdDate | date"></div>
-						<div class="timeline-name" [innerText]="item.createdBy"></div>
+						<div [attr.data-balloon]="item?.createdDate | dateTime" data-balloon-pos="up">
+							<span class="timeline-date" [innerText]="item?.createdDate | fromNow"></span>
+						</div>
+						<div class="timeline-name" [innerText]="item?.createdBy"></div>
 					</div>
 					<div class="timeline__content timeline-content-background half-padding">
-						<div class="small-font-size text-bold" [innerText]="item.note"></div>
-						<div class="small-font-size" [innerText]="item.noteDetail"></div>
+						<div class="small-font-size text-bold" [innerText]="item?.note"></div>
+						<div class="small-font-size" [innerText]="item?.noteDetail"></div>
 					</div>
 				</div>
 			</div>

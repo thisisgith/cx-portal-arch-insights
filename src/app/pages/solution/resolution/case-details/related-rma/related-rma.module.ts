@@ -4,6 +4,7 @@ import { RelatedRmaComponent } from './related-rma.component';
 import { CuiTableModule, CuiSpinnerModule } from '@cisco-ngx/cui-components';
 import { I18nPipeModule, FromNowPipeModule } from '@cisco-ngx/cui-pipes';
 import { FormsModule } from '@angular/forms';
+import { DateTimePipeModule } from '@pipes';
 
 /**
  * Related RMA list Module
@@ -18,6 +19,7 @@ import { FormsModule } from '@angular/forms';
 		FormsModule,
 		FromNowPipeModule,
 		CuiSpinnerModule,
+		DateTimePipeModule,
 	],
 })
 export class RelatedRmaModule { }

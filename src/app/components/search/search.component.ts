@@ -9,13 +9,15 @@ import {
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { SearchContext, SearchType, SearchEnum, SearchQuery } from '@interfaces';
-import { SearchService } from '@services';
+import { AssetLinkInfo, SearchContext, SearchType, SearchEnum, SearchQuery } from '@interfaces';
+import { SearchService, AssetPanelLinkService, DetailsPanelStackService } from '@services';
 
 import { I18n } from '@cisco-ngx/cui-utils';
 
 import { SearchBarComponent } from './search-bar/search-bar.component';
 import { SpecialSearchComponent } from './special-search/special-search.component';
+import * as _ from 'lodash-es';
+import { LogService } from '@cisco-ngx/cui-services';
 
 /**
  * Main Search Component
@@ -51,11 +53,18 @@ export class SearchComponent implements OnInit, OnDestroy {
 		hidden: true,
 	};
 
+	public showAsset360 = false;
+	public serialNumber: string;
+	public assetLinkInfo: AssetLinkInfo = Object.create({ });
+
 	private destroy$ = new Subject();
 
 	constructor (
 		private cdr: ChangeDetectorRef,
 		private searchService: SearchService,
+		private assetPanelLinkService: AssetPanelLinkService,
+		private detailsPanelStackService: DetailsPanelStackService,
+		private logger: LogService,
 	) { }
 
 	/**
@@ -166,5 +175,31 @@ export class SearchComponent implements OnInit, OnDestroy {
 		if (this.status.hidden) {
 			this.searchFocus.emit(focus);
 		}
+	}
+
+	/**
+	 * Used for Opening the Asset 360 View data
+	 * @param assetObj contains asset details
+	 */
+	public showAssetDetails (assetObj) {
+		this.onClose();
+		this.serialNumber = assetObj.serialNumber;
+		this.assetPanelLinkService.getAssetLinkData({
+			customerId: assetObj.customerId,
+			serialNumber: [assetObj.serialNumber],
+		})
+		.pipe(takeUntil(this.destroy$))
+		.subscribe(response => {
+			this.assetLinkInfo.asset = _.get(response, [0, 'data', 0]);
+			this.assetLinkInfo.element = _.get(response, [1, 'data', 0]);
+			this.showAsset360 = true;
+		},
+		err => {
+			this.showAsset360 = true;
+			this.logger.error(
+				'RccComponent : getAssetLinkData() ' +
+			`:: Error : (${err.status}) ${err.message}`);
+		});
+
 	}
 }

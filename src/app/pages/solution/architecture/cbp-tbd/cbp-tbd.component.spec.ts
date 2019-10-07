@@ -92,10 +92,35 @@ describe('CbpTbdComponent', () => {
 			.toBe(0);
 	});
 
+	it('should change params on onchange when cbpDetails is empty', () => {
+		component.isLoading = false;
+		component.cbpDetails = null;
+		component.ngOnChanges();
+		expect(component.isLoading)
+			.toBeFalsy();
+	});
+
 	it('should update pagination params', () => {
 		const pageEvent = { page: 1, limit: 10 };
 		component.onPagerUpdated(pageEvent);
 		expect(component.params.page)
 			.toBe(1);
+	});
+
+	it('should expand row', () => {
+		component.exceptionDatas =  [
+			{
+				active : false,
+				bpRuleId : '111',
+			},
+			{
+				active : false,
+				bpRuleId : '222',
+			},
+		];
+		const selectedItem = component.exceptionDatas[0];
+		component.expandRow(selectedItem);
+		expect(component.exceptionDatas[0].active)
+			.toBeTruthy();
 	});
 });

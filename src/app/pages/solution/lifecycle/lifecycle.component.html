@@ -22,7 +22,7 @@
 					<ng-container *ngTemplateOutlet="panel; context: {
 						template: successBytesPanel,
 						title: '_SuccessTips_',
-						loading: (status.loading.success || status.loading.productGuides),
+						loading: status.loading.success,
 						data: componentData.learning,
 						viewAllLabel: '_ViewAll_',
 						viewAll: '_SuccessTips_'
@@ -101,7 +101,7 @@
 			</span>
 		</div>
 	</div>
-	<div class="pitstop-checklist base-margin-left" 
+	<div class="pitstop-checklist base-margin-left"
 		*ngIf="currentPitstop && currentPitstop?.pitstopActions?.length">
 		<div class="divider"></div>
 		<div class="pitstop-checklist__title cx-text-secondary">
@@ -109,20 +109,20 @@
 				inlineSVG="assets/img/solutions/icon-checkerflag.svg"></div>
 			<div class="text-uppercase half-padding-left" [innerText]="'_CheckList_' | i18n"></div>
 		</div>
-		<p class="text-small no-margin-top half-margin-bottom cx-text-light-gray" 
+		<p class="text-small no-margin-top half-margin-bottom cx-text-light-gray"
 			[innerText]="'_ChecklistDesc_' | i18n"></p>
 		<div *ngFor="let action of currentPitActionsWithStatus" class="form-group form-group select" data-auto-id="pitstopAction">
 			<div class="actionname flex-center-vertical qtr-padding" [ngClass]="{selected: action.selected}">
 				<div class="half-margin-right flex-center-vertical">
-					<label class="checkbox" 
-						[ngClass]="{'disabled': action.action.isComplete || currentWorkingPitstop !== currentPitstop.name || !action.action.manualCheckAllowed }" 
+					<label class="checkbox"
+						[ngClass]="{'disabled': action.action.isComplete || currentWorkingPitstop !== currentPitstop.name || !action.action.manualCheckAllowed }"
 						data-auto-id="pitstopCheckboxLabel">
-						<input data-auto-id="pitstopCheckbox" 
+						<input data-auto-id="pitstopCheckbox"
 							type="checkbox"
 							[(ngModel)]="action.action.isComplete"
 							(change)="completeAction(action.action)"
 							[checked]="action.action.isComplete">
-						<span class="checkbox__input" 
+						<span class="checkbox__input"
 							data-auto-id="pitstopCheckboxSpan"
 							[ngClass]="{'checkbox-complete': action.action.isComplete}">
 						</span>
@@ -281,7 +281,7 @@
 			<div class="divider divider--compressed"></div>
 			<div class="line-clamp atx-more-popover__description" [innerText]="data.description" data-auto-id="atxMoreClickModal-Description"></div>
 			<div class="base-padding-top">
-				<ng-container *ngTemplateOutlet="data?.sessions?.length > 0 ? 
+				<ng-container *ngTemplateOutlet="data?.sessions?.length > 0 ?
 					enabledViewSessionsButton : disabledViewSessionsButton; context: {
 						type: 'moreView'
 					}">
@@ -359,11 +359,11 @@
 			</div>
 		</ng-container>
 		<div class="force-flex">
-			<ng-container *ngTemplateOutlet="item?.sessions?.length > 0 ? 
+			<ng-container *ngTemplateOutlet="item?.sessions?.length > 0 ?
 				enabledViewSessionsButton : disabledViewSessionsButton; context: {
 				type: 'recommendedView'
 			}">
-			</ng-container>	
+			</ng-container>
 			<button class="cx-btn cx-btn--small cx-btn--primary text-uppercase"
 				data-auto-id = "recommendedATXWatchButton"
 				[ngClass]="componentData.atx?.recommended?.recordingURL ? null : 'disabled'"
@@ -561,7 +561,7 @@
 		</ng-container>
 		<div class="divider"></div>
 	</div>
-	<div *ngIf="data.productGuides?.length" data-auto-id="SuccessBytesPanel-ProductGuidesBlock">
+	<div data-auto-id="SuccessBytesPanel-ProductGuidesBlock">
 		<ng-container *ngTemplateOutlet="productGuidesBlock; context: {
 				title: '_ProductGuides_' }">
 		</ng-container>
@@ -690,11 +690,11 @@
 		<div class="modal__header acc__header no-margin-bottom">
 			<div class="row base-margin-top">
 				<div class="col-md-11 half-margin-top">
-					<div class="modal__header__title cx-text-default text-left qtr-margin-bottom" 
-						[innerText]="getTitle(type)" 
+					<div class="modal__header__title cx-text-default text-left qtr-margin-bottom"
+						[innerText]="getTitle(type)"
 						data-auto-id="ViewAllModal-Title"></div>
-					<div class="modal__header__description text-left cx-text-light-gray" 
-						[innerText]="getSubtitle(type)" 
+					<div class="modal__header__description text-left cx-text-light-gray"
+						[innerText]="getSubtitle(type)"
 						data-auto-id="ViewAllModal-Subtitle"></div>
 				</div>
 				<div class="col-md-1 half-margin-top">
@@ -734,8 +734,10 @@
 							</div>
 						</div>
 					</div>
-					<ng-container *ngTemplateOutlet="cardViewTemplate; context: { type: type, view: this.accview }"></ng-container>
-					<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type, view: this.accview }"></ng-container>
+					<div class="modal-content-container">
+						<ng-container *ngTemplateOutlet="cardViewTemplate; context: { type: type, view: this.accview }"></ng-container>
+						<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type, view: this.accview }"></ng-container>
+					</div>
 				</ng-container>
 				<ng-container *ngSwitchCase="'ATX'">
 					<div class="flex-center-vertical">
@@ -766,8 +768,10 @@
 							</div>
 						</div>
 					</div>
-					<ng-container *ngTemplateOutlet="cardViewTemplate; context: { type: type, view: this.atxview }"></ng-container>
-					<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type, view: this.atxview }"></ng-container>
+					<div class="modal-content-container">
+						<ng-container *ngTemplateOutlet="cardViewTemplate; context: { type: type, view: this.atxview }"></ng-container>
+						<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type, view: this.atxview }"></ng-container>
+					</div>
 				</ng-container>
 				<ng-container *ngSwitchCase="'SB'">
 					<div class="flex-center-vertical">
@@ -798,13 +802,15 @@
 							</div>
 						</div>
 					</div>
-					<ng-container *ngTemplateOutlet="cardViewTemplate; context: { type: type, view: this.sbview }"></ng-container>
-					<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type, view: this.sbview }"></ng-container>
+					<div class="modal-content-container">
+						<ng-container *ngTemplateOutlet="cardViewTemplate; context: { type: type, view: this.sbview }"></ng-container>
+						<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type, view: this.sbview }"></ng-container>
+					</div>
 				</ng-container>
 				<ng-container *ngSwitchCase="'PG'">
 					<div class="flex-center-vertical">
 						<div class="text-left modal__body__topics cx-text-default"
-							[innerText]="'_TopicsAvailableSolution_' | i18n:selectedProductGuides?.length || 0:componentData.params.solution:componentData.params.usecase">
+							[innerText]="'_TopicsAvailableSolution_' | i18n:componentData.productGuides.items?.length || 0:componentData.params.solution:componentData.params.usecase">
 						</div>
 						<div class="modal__body__filter">
 							<cui-select class="lifecycle-filter"
@@ -830,11 +836,57 @@
 							</div>
 						</div>
 					</div>
-					<ng-container *ngTemplateOutlet="cardViewTemplate; context: { type: type, view: this.pgview }"></ng-container>
-					<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type, view: this.pgview }"></ng-container>
+					<div class="modal-content-container">
+						<ng-container *ngIf="!this.status.loading.productGuides.modal">
+							<span #topOfModal></span>
+							<ng-container *ngTemplateOutlet="cardViewTemplate; context: { type: type, view: this.pgview }"></ng-container>
+							<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type, view: this.pgview }"></ng-container>
+							<ng-container *ngTemplateOutlet="loadMoreTemplate; context: {
+								type: type,
+								loading: this.status.loading.productGuides.more,
+								error: this.status.error.productGuides
+							}"></ng-container>
+						</ng-container>
+						<div class="modal-spinner-container" *ngIf="this.status.loading.productGuides.modal">
+							<cui-spinner class="spinner"></cui-spinner>
+						</div>
+					</div>
 				</ng-container>
 			</ng-container>
 		</div>
+	</div>
+</ng-template>
+
+<ng-template #loadMoreTemplate let-type="type" let-loading="loading" let-error="error">
+	<div class="load-more base-padding-right dbl-margin-top">
+		<ng-container *ngIf="!loading">
+			<span *ngIf="error" data-auto-id="LoadMore-Error" class="text-danger dbl-margin-bottom">
+				<span class="icon-error qtr-margin-right"></span>
+				<span [innerText]="'_AnErrorOccurredResults_' | i18n"></span>
+			</span>
+			<div *ngIf="getMaxSuccessBytesCount(type) > pgNumRows" class="dbl-margin-bottom">
+				<div class="subheader" [innerText]="'_ShowingXofY_' | i18n : getSelectedSuccessBytesCount(type) : getMaxSuccessBytesCount(type)"></div>
+				<div data-auto-id="LoadMore-ProgressBar" class="progressbar" [attr.data-percentage]="getSuccessBytesPercentage(type)">
+					<div class="progressbar__fill"></div>
+				</div>
+			</div>
+			<div class="dbl-margin-top dbl-margin-bottom">
+				<button data-auto-id="LoadMore-Button"
+					class="btn btn--secondary btn--small text-uppercase"
+					[innerText]="'_LoadMore_' | i18n"
+					(click)="loadMoreContent(type)"
+					[disabled]="getLoadMoreDisabled(type)"></button>
+			</div>
+			<div class="dbl-margin-top base-margin-bottom">
+				<span data-auto-id="LoadMore-BackToTop"
+					class="text-medium toggle"
+					[innerText]="'_BackToTop_' | i18n"
+					(click)="modalScrollToTop()"></span>
+			</div>
+		</ng-container>
+		<ng-container *ngIf="loading">
+			<cui-spinner></cui-spinner>
+		</ng-container>
 	</div>
 </ng-template>
 
@@ -872,7 +924,7 @@
 						<ng-container *ngTemplateOutlet="listView; context: { type: type, columns: successBytesTable.columns, data: selectedSuccessPaths }"></ng-container>
 					</ng-container>
 					<ng-container *ngIf="type === 'PG'">
-						<ng-container *ngTemplateOutlet="listView; context: { type: type, columns: productGuidesTable.columns, data: selectedProductGuides }"></ng-container>
+						<ng-container *ngTemplateOutlet="listView; context: { type: type, columns: productGuidesTable.columns, data: componentData.productGuides.items }"></ng-container>
 					</ng-container>
 					</table>
 				</div>
@@ -926,7 +978,7 @@
 				</div>
 				<div class="divider no-margin"></div>
 				<div class="atx__card__actions">
-					<ng-container *ngTemplateOutlet="item?.sessions?.length > 0 ? 
+					<ng-container *ngTemplateOutlet="item?.sessions?.length > 0 ?
 						enabledViewSessionsButton : disabledViewSessionsButton; context: {
 						type: 'cardView',
 						componentData: componentData,
@@ -953,7 +1005,7 @@
 	<div class="card atx__card" *ngFor="let item of selectedACC"
 		[ngClass]="item.status === 'recommended' ? 'acc__card__recommended' : null" data-auto-id="ACCCard">
 		<img class="max-width base-margin-bottom" alt="'_Placeholder_' | i18n" [src]="item.url || 'assets/img/solutions/defaultLifecycleImage.png'" attr.data-auto-id="{{ autoid }}-Image">
-		<div class="text-left base-padding-left atx__card__label half-margin-bottom" 
+		<div class="text-left base-padding-left atx__card__label half-margin-bottom"
 			data-auto-id="ACCCardHeader"
 			*ngIf="item.status === 'recommended'">
 			<span class="icon-flagged qtr-margin-right" data-auto-id="ACCCard-Flag"></span>
@@ -1069,7 +1121,7 @@
 
 <ng-template #cardPG>
 	<div class="card success__card"
-		*ngFor="let item of selectedProductGuides"
+		*ngFor="let item of componentData.productGuides.items"
 		data-auto-id="PGCard">
 		<div class="icon-bookmark toggle"
 			(click)="updateBookmark(item, 'PG')"
@@ -1273,7 +1325,7 @@
 		</div>
 		<img class="table-img-width"
 			*ngIf="type === 'ATX' || type === 'ACC'"
-			alt="'_Placeholder_' | i18n" 
+			alt="'_Placeholder_' | i18n"
 			[src]="celldata.imageURL || celldata.url || 'assets/img/solutions/defaultLifecycleImage.png'"
 			attr.data-auto-id="{{ type }}-Image" />
 	</div>
@@ -1310,13 +1362,13 @@
 
 <ng-template #actionTemplate let-celldata="celldata" let-type="type">
 	<div class="text-right" *ngIf="type === 'ATX'">
-		<ng-container *ngTemplateOutlet="celldata?.sessions?.length > 0 ? 
+		<ng-container *ngTemplateOutlet="celldata?.sessions?.length > 0 ?
 			enabledViewSessionsButton : disabledViewSessionsButton; context: {
 			type:'listView',
 			componentData: componentData,
 			item: celldata
 		}">
-		</ng-container>			
+		</ng-container>
 		<button class="cx-btn cx-btn--small cx-btn--primary text-uppercase half-margin-left"
 			attr.data-auto-id = "ListATXWatchNow-{{ celldata.recordingURL }}"
 			[ngClass]="celldata?.recordingURL ? null : 'disabled'"
@@ -1364,26 +1416,26 @@
 
 <ng-template #enabledViewSessionsButton let-type="type" let-componentData="componentData" let-item="item">
 		<span [ngSwitch]="type" class="qtr-margin-right">
-			<button *ngSwitchCase="'moreView'" 
+			<button *ngSwitchCase="'moreView'"
 				class="cx-btn cx-btn--small cx-btn--primary text-uppercase"
 				data-auto-id="MoreATXViewSessions"
 				(click)="atxMoreViewSessions()"
 				[innerText]="'_ViewSessions_' | i18n">
 			</button>
-			<button *ngSwitchCase="'recommendedView'" id="recommendedATXScheduleButton" 
+			<button *ngSwitchCase="'recommendedView'" id="recommendedATXScheduleButton"
 				data-auto-id="recommendedATXScheduleButton"
 				class="cx-btn cx-btn--small cx-btn--primary text-uppercase qtr-margin-right"
 				(click)="recommendedATXViewSessions($event)"
 				[innerText]="'_ViewSessions_' | i18n">
 			</button>
-			<button *ngSwitchCase="'listView'" data-auto-id="ViewSessionButton" 
+			<button *ngSwitchCase="'listView'" data-auto-id="ViewSessionButton"
 				class="cx-btn cx-btn--small cx-btn--primary text-uppercase qtr-margin-bottom qtr-margin-top"
-				(click)="atxScheduleCardOpened = true; 
-					recommendedAtxScheduleCardOpened = false; 
+				(click)="atxScheduleCardOpened = true;
+					recommendedAtxScheduleCardOpened = false;
 					componentData.atx.interested = item; getCoordinates($event)"
 				[innerText]="'_ViewSessions_' | i18n">
 			</button>
-			<button *ngSwitchCase="'cardView'" id="cardRecommendedATXScheduleButton" 
+			<button *ngSwitchCase="'cardView'" id="cardRecommendedATXScheduleButton"
 				data-auto-id="cardRecommendedATXScheduleButton"
 				class="cx-btn cx-btn--small cx-btn--primary text-uppercase"
 				(click)="atxScheduleCardOpened = true;
@@ -1394,7 +1446,7 @@
 			</button>
 		</span>
 </ng-template>
-	
+
 <ng-template #disabledViewSessionsButton let-type="type">
 		<span [ngSwitch]="type" tooltip
 			[tooltipTemplate]="viewSessionsDisableTooltip"
@@ -1402,19 +1454,19 @@
 			tooltipMaxWidth="225"
 			tooltipMaxHeight="85"
 			class="qtr-margin-right">
-			<button *ngSwitchCase="'moreView'" 
+			<button *ngSwitchCase="'moreView'"
 				class="cx-btn cx-btn--small cx-btn--primary text-uppercase disabled"
 				data-auto-id="MoreATXViewSessions"
 				[innerText]="'_ViewSessions_' | i18n">
 			</button>
-			<button *ngSwitchCase="'recommendedView'"  
+			<button *ngSwitchCase="'recommendedView'"
 				data-auto-id="recommendedATXScheduleButton"
-				class="cx-btn cx-btn--small cx-btn--primary text-uppercase qtr-margin-right 
+				class="cx-btn cx-btn--small cx-btn--primary text-uppercase qtr-margin-right
 					disabled"
 				[innerText]="'_ViewSessions_' | i18n">
 			</button>
-			<button *ngSwitchCase="'listView'" data-auto-id="ViewSessionButton" 
-				class="cx-btn cx-btn--small cx-btn--primary text-uppercase qtr-margin-bottom 
+			<button *ngSwitchCase="'listView'" data-auto-id="ViewSessionButton"
+				class="cx-btn cx-btn--small cx-btn--primary text-uppercase qtr-margin-bottom
 					qtr-margin-top disabled"
 				[innerText]="'_ViewSessions_' | i18n">
 			</button>
@@ -1478,4 +1530,3 @@
 		<span class="item-type__text" [innerText]="'_Datasheet_' | i18n"></span>
 	</div>
 </ng-template>
-
