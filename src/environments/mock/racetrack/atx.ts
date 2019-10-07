@@ -21,6 +21,14 @@ const onboardItems = [
 		recordingURL: 'https://tklcs.cloudapps.cisco.com/tklcs/TKLDownloadServlet?nodeRef=workspace://SpacesStore/2ccb9372-82dc-4700-afc7-0a4ed0630685&activityId=2&fileId=123052',
 		duration: 4500,
 		bookmark: true,
+		feedbackInfo: {
+			available: false,
+		},
+		providerInfo: {
+			id: 'partner1',
+			logoURL: '',
+			name: 'Symantec',
+		},
 		sessions: [
 			{
 				sessionId: 'Session1',
@@ -71,10 +79,20 @@ const onboardItems = [
 		title: 'Cisco DNA Center Project Plan Best Practices 1',
 		description: 'This is a high-level look at the things you should consider as you’re planning your Cisco DNA Center project, including subjects such as prerequisites for network devices',
 		imageURL: 'https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/atx/images/ATX-Center-Project-Plan-Best-Practices.png',
-		status: 'scheduled',
+		status: 'completed',
 		recordingURL: 'https://tklcs.cloudapps.cisco.com/tklcs/TKLDownloadServlet?nodeRef=workspace://SpacesStore/310232f0-0a44-4286-a374-71edb71835ee&activityId=2&fileId=123051',
 		duration: 3600,
 		bookmark: false,
+		feedbackInfo: {
+			available: true,
+			feedbackId: 'feedback1',
+			thumbs: 'UP',
+		},
+		providerInfo: {
+			id: 'partner1',
+			logoURL: '',
+			name: 'Symantec',
+		},
 		sessions: [
 			{
 				sessionId: 'Session7',
@@ -129,6 +147,14 @@ const onboardItems = [
 		recordingURL: 'https://tklcs.cloudapps.cisco.com/tklcs/TKLDownloadServlet?nodeRef=workspace://SpacesStore/310232f0-0a44-4286-a374-71edb71835ee&activityId=2&fileId=123051',
 		duration: 3600,
 		bookmark: false,
+		feedbackInfo: {
+			available: false,
+		},
+		providerInfo: {
+			id: 'partner2',
+			logoURL: '',
+			name: 'Logitec',
+		},
 		sessions: [
 			{
 				sessionId: 'Session13',

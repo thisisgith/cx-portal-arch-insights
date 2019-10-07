@@ -1,6 +1,8 @@
 export { ErrorResponse as RacetrackContentErrorResponse } from './models/error-response';
 export { ATXResponseModel } from './models/atxresponse-model';
 export { AtxSchema } from './models/atx-schema';
+export { ProviderSchema } from './models/provider-schema';
+export { FeedbackSchema } from './models/feedback-schema';
 export { AtxSessionSchema } from './models/atx-session-schema';
 export { ACCResponse } from './models/accresponse';
 export { ACC } from './models/acc';
