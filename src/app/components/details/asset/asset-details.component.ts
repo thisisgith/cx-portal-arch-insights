@@ -5,7 +5,6 @@ import {
 	EventEmitter,
 	Output,
 	SimpleChanges,
-	ElementRef,
 	OnInit,
 } from '@angular/core';
 import {
@@ -15,6 +14,8 @@ import {
 	NetworkElement,
 	NetworkElementResponse,
 	TransactionStatusResponse,
+	RacetrackSolution,
+	RacetrackTechnology,
 } from '@sdp-api';
 
 import { Subject, of, forkJoin } from 'rxjs';
@@ -26,7 +27,7 @@ import { Alert, Panel360 } from '@interfaces';
 import * as _ from 'lodash-es';
 import { LogService } from '@cisco-ngx/cui-services';
 import { getProductTypeImage, getProductTypeTitle } from '@classes';
-import { DetailsPanelStackService } from '@services';
+import { DetailsPanelStackService, RacetrackInfoService } from '@services';
 import { I18n } from '@cisco-ngx/cui-utils';
 
 /**
@@ -46,6 +47,8 @@ export class AssetDetailsComponent implements OnDestroy, OnInit, Panel360 {
 	@Input('asset') public asset: Asset;
 	@Input('element') public element: NetworkElement;
 	@Output('close') public close = new EventEmitter<boolean>();
+	@Output('scanStatus') public scanStatus = new EventEmitter<TransactionStatusResponse>();
+
 	@Input() public minWidth;
 	@Input() public fullscreenToggle;
 
@@ -58,13 +61,15 @@ export class AssetDetailsComponent implements OnDestroy, OnInit, Panel360 {
 	public getProductTitle = getProductTypeTitle;
 	public advisoryReload: EventEmitter<boolean> = new EventEmitter();
 	private destroyed$: Subject<void> = new Subject<void>();
+	private selectedSolutionName: string;
+	private selectedTechnologyName: string;
 
 	constructor (
 		private inventoryService: InventoryService,
 		private logger: LogService,
 		private userResolve: UserResolve,
 		private detailsPanelStackService: DetailsPanelStackService,
-		private _elementRef: ElementRef,
+		private racetrackInfoService: RacetrackInfoService,
 	) {
 		this.userResolve.getCustomerId()
 		.pipe(
@@ -99,6 +104,22 @@ export class AssetDetailsComponent implements OnDestroy, OnInit, Panel360 {
 	public handleScanStatus (transaction: TransactionStatusResponse) {
 		if (transaction.status === 'SUCCESS') {
 			this.advisoryReload.next(true);
+
+			this.scanStatus.emit(transaction);
+
+			const cachedAsset = _.cloneDeep(this.asset);
+			this.asset = null;
+			this.isLoading = true;
+
+			this.fetchAsset()
+			.subscribe(() => {
+				this.isLoading = false;
+
+				if (!this.asset) {
+					// In case our refresh fails, use our previously found asset
+					this.asset = cachedAsset;
+				}
+			});
 		}
 	}
 
@@ -134,6 +155,8 @@ export class AssetDetailsComponent implements OnDestroy, OnInit, Panel360 {
 				page: 1,
 				rows: 1,
 				serialNumber: [this.serialNumber],
+				solution: this.selectedSolutionName,
+				useCase: this.selectedTechnologyName,
 			})
 			.pipe(
 				map((response: Assets) => {
@@ -164,6 +187,8 @@ export class AssetDetailsComponent implements OnDestroy, OnInit, Panel360 {
 			this.inventoryService.getNetworkElements({
 				customerId: this.customerId,
 				serialNumber: [this.serialNumber],
+				solution: this.selectedSolutionName,
+				useCase: this.selectedTechnologyName,
 			})
 			.pipe(
 				map((response: NetworkElementResponse) => {
@@ -226,9 +251,27 @@ export class AssetDetailsComponent implements OnDestroy, OnInit, Panel360 {
 	 * Initializer
 	 */
 	public ngOnInit () {
+		this.racetrackInfoService.getCurrentSolution()
+		.pipe(
+			takeUntil(this.destroyed$),
+		)
+		.subscribe((solution: RacetrackSolution) => {
+			this.selectedSolutionName = _.get(solution, 'name');
+		});
+
+		this.racetrackInfoService.getCurrentTechnology()
+		.pipe(
+			takeUntil(this.destroyed$),
+		)
+		.subscribe((technology: RacetrackTechnology) => {
+			if (this.selectedTechnologyName !== _.get(technology, 'name')) {
+				this.selectedTechnologyName = _.get(technology, 'name');
+				this.refresh();
+			}
+		});
+
 		this.detailsPanelStackService.push(this);
 		this.hidden = false;
-		this.refresh();
 	}
 
 	/**

@@ -1,3 +1,4 @@
+import * as _ from 'lodash-es';
 import { defaults } from '../../defaults';
 // tslint:disable-next-line:completed-docs
 const clientId = defaults.csone.clientId;
@@ -6,21 +7,28 @@ const caseDetailNum = '688296392';
 
 /** Base of URL for CSOne Case API */
 const api = '/ws/cases/v3/proxy';
+/** Base URL for CSC API */
+const cscApi = '/ws/csc/v3';
 
 /** Mock data for valid CSOne Case Details API results */
 const caseDetailsResponse = {
 	caseNumber: `${caseDetailNum}`,
+	contactEmail: 'svorma1@cisco.com',
 	contractId: '912512343',
 	createdDate: '22 Apr 2019 07:50 AM PST',
+	customerActivity: 'Operate',
 	description: 'CP DIAG Diagnostic Request for Device swtg-9404',
 	hostName: 'SJ-BLD3-02-147',
 	ownerEmail: 'testUser@cisco.com',
 	ownerName: 'Test User',
 	priority: '3',
+	problemCodeName: 'Software Failure',
 	rmaNumber: '88346234, 88346235, 800000000',
 	serialNumber: 'FOC1544Y16T',
 	status: 'Customer Updated',
+	subTechnologyName: 'IOS-XE Boot Failure',
 	summary: 'Test CIN Proxy Employee Subscription - testing case update.',
+	technologyName: 'Router and IOS-XE Architecture',
 	trackingNumber: '',
 };
 
@@ -45,7 +53,9 @@ const caseDetailsResponseAlt = {
 const caseNotesResponse = [
 	// tslint:disable:max-line-length ter-max-len
 	{
+		createdBy: 'Test User 123',
 		createdDate: '21 Jun 2019 01:16 PM EST',
+		note: 'here\'s a note!',
 		noteDetail: 'worked with customer to collect debug, reviewing log now',
 	},
 ];
@@ -270,9 +280,321 @@ const caseListResponse1 = {
 			technologyId: '0',
 			technologyName: 'Other',
 		},
+		{
+			bugId: '',
+			caseAccepted: false,
+			caseNumber: '68628590',
+			caseOrigin: 'Phone',
+			caseOwner: '',
+			caseType: 'TAC',
+			ccsUUId: 'jkipp@cisco.com',
+			childContainerId: '',
+			ciUUId: 'd2348285-e427-4720-8647-364a28eb9f32',
+			closedDate: '',
+			contactEmail: 'jkipp@cisco.com',
+			contactFirstName: 'Joseph',
+			contactId: 'jkipp',
+			contactLastName: 'Kipping',
+			contactPhone: '+14692551107',
+			containerType: '',
+			contractNumber: '',
+			country: '',
+			createdDate: '2019-05-20T13:16:35.000Z',
+			customerTicketNumber: '',
+			deviceName: 'SWTG-9404',
+			discussionThreadId: '',
+			hwProductId: '',
+			hwProductName: '',
+			initialPriority: '1',
+			jbrUUId: 'U6WPE6ZW1NHJY47A25CLTX2X2O',
+			kacUUId: '',
+			lastModifiedDate: '2019-05-20T13:16:42.000Z',
+			owner: '',
+			parentContainerId: '',
+			partnerCaseOwnerName: '',
+			picaId: '',
+			priority: '2',
+			problemCode: 'SOFTWARE_FAILURE',
+			problemDescription: 'Test CIN Sev1',
+			rmaCreatedDate: '',
+			rmaNumber: '',
+			serialNumber: '',
+			softwareVersion: '',
+			spokenLanguage: 'US',
+			status: 'Cisco Pending',
+			statusType: 'O',
+			subscriptionRefId: '',
+			subTechnologyId: '0',
+			subTechnologyName: 'Other',
+			summary: 'Test CIN Sev1',
+			swProductId: '',
+			swProductName: '',
+			technologyId: '0',
+			technologyName: 'Other',
+		},
+		{
+			bugId: '',
+			caseAccepted: false,
+			caseNumber: '686285191',
+			caseOrigin: 'Phone',
+			caseOwner: '',
+			caseType: 'TAC',
+			ccsUUId: 'jkipp@cisco.com',
+			childContainerId: '',
+			ciUUId: 'd2348285-e427-4720-8647-364a28eb9f32',
+			closedDate: '',
+			contactEmail: 'jkipp@cisco.com',
+			contactFirstName: 'Joseph',
+			contactId: 'jkipp',
+			contactLastName: 'Kipping',
+			contactPhone: '+14692551107',
+			containerType: '',
+			contractNumber: '',
+			country: '',
+			createdDate: '2019-05-20T13:16:35.000Z',
+			customerTicketNumber: '',
+			deviceName: 'SWTG-9404',
+			discussionThreadId: '',
+			hwProductId: '',
+			hwProductName: '',
+			initialPriority: '1',
+			jbrUUId: 'U6WPE6ZW1NHJY47A25CLTX2X2O',
+			kacUUId: '',
+			lastModifiedDate: '2019-05-20T13:16:42.000Z',
+			owner: '',
+			parentContainerId: '',
+			partnerCaseOwnerName: '',
+			picaId: '',
+			priority: '2',
+			problemCode: 'SOFTWARE_FAILURE',
+			problemDescription: 'Test CIN Sev1',
+			rmaCreatedDate: '',
+			rmaNumber: '',
+			serialNumber: '',
+			softwareVersion: '',
+			spokenLanguage: 'US',
+			status: 'Cisco Pending',
+			statusType: 'O',
+			subscriptionRefId: '',
+			subTechnologyId: '0',
+			subTechnologyName: 'Other',
+			summary: 'Test CIN Sev1',
+			swProductId: '',
+			swProductName: '',
+			technologyId: '0',
+			technologyName: 'Other',
+		},
+		{
+			bugId: '',
+			caseAccepted: false,
+			caseNumber: '686285192',
+			caseOrigin: 'Phone',
+			caseOwner: '',
+			caseType: 'TAC',
+			ccsUUId: 'jkipp@cisco.com',
+			childContainerId: '',
+			ciUUId: 'd2348285-e427-4720-8647-364a28eb9f32',
+			closedDate: '',
+			contactEmail: 'jkipp@cisco.com',
+			contactFirstName: 'Joseph',
+			contactId: 'jkipp',
+			contactLastName: 'Kipping',
+			contactPhone: '+14692551107',
+			containerType: '',
+			contractNumber: '',
+			country: '',
+			createdDate: '2019-05-20T13:16:35.000Z',
+			customerTicketNumber: '',
+			deviceName: 'SWTG-9404',
+			discussionThreadId: '',
+			hwProductId: '',
+			hwProductName: '',
+			initialPriority: '1',
+			jbrUUId: 'U6WPE6ZW1NHJY47A25CLTX2X2O',
+			kacUUId: '',
+			lastModifiedDate: '2019-05-20T13:16:42.000Z',
+			owner: '',
+			parentContainerId: '',
+			partnerCaseOwnerName: '',
+			picaId: '',
+			priority: '2',
+			problemCode: 'SOFTWARE_FAILURE',
+			problemDescription: 'Test CIN Sev1',
+			rmaCreatedDate: '',
+			rmaNumber: '',
+			serialNumber: '',
+			softwareVersion: '',
+			spokenLanguage: 'US',
+			status: 'Cisco Pending',
+			statusType: 'O',
+			subscriptionRefId: '',
+			subTechnologyId: '0',
+			subTechnologyName: 'Other',
+			summary: 'Test CIN Sev1',
+			swProductId: '',
+			swProductName: '',
+			technologyId: '0',
+			technologyName: 'Other',
+		},
+		{
+			bugId: '',
+			caseAccepted: false,
+			caseNumber: '686285193',
+			caseOrigin: 'Phone',
+			caseOwner: '',
+			caseType: 'TAC',
+			ccsUUId: 'jkipp@cisco.com',
+			childContainerId: '',
+			ciUUId: 'd2348285-e427-4720-8647-364a28eb9f32',
+			closedDate: '',
+			contactEmail: 'jkipp@cisco.com',
+			contactFirstName: 'Joseph',
+			contactId: 'jkipp',
+			contactLastName: 'Kipping',
+			contactPhone: '+14692551107',
+			containerType: '',
+			contractNumber: '',
+			country: '',
+			createdDate: '2019-05-20T13:16:35.000Z',
+			customerTicketNumber: '',
+			deviceName: 'SWTG-9404',
+			discussionThreadId: '',
+			hwProductId: '',
+			hwProductName: '',
+			initialPriority: '1',
+			jbrUUId: 'U6WPE6ZW1NHJY47A25CLTX2X2O',
+			kacUUId: '',
+			lastModifiedDate: '2019-05-20T13:16:42.000Z',
+			owner: '',
+			parentContainerId: '',
+			partnerCaseOwnerName: '',
+			picaId: '',
+			priority: '2',
+			problemCode: 'SOFTWARE_FAILURE',
+			problemDescription: 'Test CIN Sev1',
+			rmaCreatedDate: '',
+			rmaNumber: '',
+			serialNumber: '',
+			softwareVersion: '',
+			spokenLanguage: 'US',
+			status: 'Cisco Pending',
+			statusType: 'O',
+			subscriptionRefId: '',
+			subTechnologyId: '0',
+			subTechnologyName: 'Other',
+			summary: 'Test CIN Sev1',
+			swProductId: '',
+			swProductName: '',
+			technologyId: '0',
+			technologyName: 'Other',
+		},
+		{
+			bugId: '',
+			caseAccepted: false,
+			caseNumber: '686285194',
+			caseOrigin: 'Phone',
+			caseOwner: '',
+			caseType: 'TAC',
+			ccsUUId: 'jkipp@cisco.com',
+			childContainerId: '',
+			ciUUId: 'd2348285-e427-4720-8647-364a28eb9f32',
+			closedDate: '',
+			contactEmail: 'jkipp@cisco.com',
+			contactFirstName: 'Joseph',
+			contactId: 'jkipp',
+			contactLastName: 'Kipping',
+			contactPhone: '+14692551107',
+			containerType: '',
+			contractNumber: '',
+			country: '',
+			createdDate: '2019-05-20T13:16:35.000Z',
+			customerTicketNumber: '',
+			deviceName: 'SWTG-9404',
+			discussionThreadId: '',
+			hwProductId: '',
+			hwProductName: '',
+			initialPriority: '1',
+			jbrUUId: 'U6WPE6ZW1NHJY47A25CLTX2X2O',
+			kacUUId: '',
+			lastModifiedDate: '2019-05-20T13:16:42.000Z',
+			owner: '',
+			parentContainerId: '',
+			partnerCaseOwnerName: '',
+			picaId: '',
+			priority: '2',
+			problemCode: 'SOFTWARE_FAILURE',
+			problemDescription: 'Test CIN Sev1',
+			rmaCreatedDate: '',
+			rmaNumber: '',
+			serialNumber: '',
+			softwareVersion: '',
+			spokenLanguage: 'US',
+			status: 'Cisco Pending',
+			statusType: 'O',
+			subscriptionRefId: '',
+			subTechnologyId: '0',
+			subTechnologyName: 'Other',
+			summary: 'Test CIN Sev1',
+			swProductId: '',
+			swProductName: '',
+			technologyId: '0',
+			technologyName: 'Other',
+		},
+		{
+			bugId: '',
+			caseAccepted: false,
+			caseNumber: '686285195',
+			caseOrigin: 'Phone',
+			caseOwner: '',
+			caseType: 'TAC',
+			ccsUUId: 'jkipp@cisco.com',
+			childContainerId: '',
+			ciUUId: 'd2348285-e427-4720-8647-364a28eb9f32',
+			closedDate: '',
+			contactEmail: 'jkipp@cisco.com',
+			contactFirstName: 'Joseph',
+			contactId: 'jkipp',
+			contactLastName: 'Kipping',
+			contactPhone: '+14692551107',
+			containerType: '',
+			contractNumber: '',
+			country: '',
+			createdDate: '2019-05-20T13:16:35.000Z',
+			customerTicketNumber: '',
+			deviceName: 'SWTG-9404',
+			discussionThreadId: '',
+			hwProductId: '',
+			hwProductName: '',
+			initialPriority: '1',
+			jbrUUId: 'U6WPE6ZW1NHJY47A25CLTX2X2O',
+			kacUUId: '',
+			lastModifiedDate: '2019-05-20T13:16:42.000Z',
+			owner: '',
+			parentContainerId: '',
+			partnerCaseOwnerName: '',
+			picaId: '',
+			priority: '2',
+			problemCode: 'SOFTWARE_FAILURE',
+			problemDescription: 'Test CIN Sev1',
+			rmaCreatedDate: '',
+			rmaNumber: '',
+			serialNumber: '',
+			softwareVersion: '',
+			spokenLanguage: 'US',
+			status: 'Cisco Pending',
+			statusType: 'O',
+			subscriptionRefId: '',
+			subTechnologyId: '0',
+			subTechnologyName: 'Other',
+			summary: 'Test CIN Sev1',
+			swProductId: '',
+			swProductName: '',
+			technologyId: '0',
+			technologyName: 'Other',
+		},
 	],
-	numberOfElements: 4,
-	totalElements: 5,
+	numberOfElements: 10,
+	totalElements: 11,
 };
 
 /** Mock data for valid CSOne Case List API results - Page 2 (assuming size per page is 4) */
@@ -332,7 +654,7 @@ const caseListResponse2 = {
 		},
 	],
 	numberOfElements: 1,
-	totalElements: 5,
+	totalElements: 11,
 };
 
 /** Mock data for valid CSOne Case List API results - For single case - result of search */
@@ -360,277 +682,281 @@ const caseListResponseSingle = {
 
 /** Mock data for case files data */
 const caseFilesResponse = {
-	getBrokerResponse: {
-		downloadInfo: {
-			ebResponse: true,
-			fileDetail: [
-				{
-					downloadHost: 'storageconnect-prd.cisco.com',
-					downloadURL: 'https://storageconnect-prd.cisco.com/Hi5Cloud/ContentManagement/downloadFile/bMWI9u8G5s2EsPWhIuLbr9NSLvAi/TAC._SCM._bXNhbmd3YW4%3D/686715483/Screen+Shot+2019-05-08+at+10.36.20.jpg',
-					fileInfo: {
-						fileCategory: 'Web Uploaded',
-						fileContentType: 'image/jpeg',
-						fileId: 316677274,
-						fileName: 'New Screen Shot 2019-05-08 at 10.36.20.jpg',
-						fileSize: 68420,
-						fileStatus: 'COMPLETED',
-						fileUploadDate: '11 May 2019 05:00 GMT',
-						visibilityFlag: 'E',
-					},
-					storageParam: [
+	result: {
+		response: {
+			getBrokerResponse: {
+				downloadInfo: {
+					ebResponse: true,
+					fileDetail: [
 						{
-							paramKey: 'DownloadToken',
-							paramValue: 'bMWI9u8G5s2EsPWhIuLbr9NSLvAi',
+							downloadHost: 'storageconnect-prd.cisco.com',
+							downloadURL: 'https://storageconnect-prd.cisco.com/Hi5Cloud/ContentManagement/downloadFile/bMWI9u8G5s2EsPWhIuLbr9NSLvAi/TAC._SCM._bXNhbmd3YW4%3D/686715483/Screen+Shot+2019-05-08+at+10.36.20.jpg',
+							fileInfo: {
+								fileCategory: 'Web Uploaded',
+								fileContentType: 'image/jpeg',
+								fileId: 316677274,
+								fileName: 'New Screen Shot 2019-05-08 at 10.36.20.jpg',
+								fileSize: 68420,
+								fileStatus: 'COMPLETED',
+								fileUploadDate: '11 May 2019 05:00 GMT',
+								visibilityFlag: 'E',
+							},
+							storageParam: [
+								{
+									paramKey: 'DownloadToken',
+									paramValue: 'bMWI9u8G5s2EsPWhIuLbr9NSLvAi',
+								},
+								{
+									paramKey: 'destFolderPath',
+									paramValue: '686715483/Screen Shot 2019-05-08 at 10.36.20.jpg',
+								},
+							],
+							userInfo: {
+								userEmail: 'jkipp@cisco.com',
+								userName: 'Joseph Kipping',
+							},
 						},
 						{
-							paramKey: 'destFolderPath',
-							paramValue: '686715483/Screen Shot 2019-05-08 at 10.36.20.jpg',
-						},
-					],
-					userInfo: {
-						userEmail: 'jkipp@cisco.com',
-						userName: 'Joseph Kipping',
-					},
-				},
-				{
-					downloadHost: 'storageconnect-prd.cisco.com',
-					downloadURL: 'https://storageconnect-prd.cisco.com/Hi5Cloud/ContentManagement/downloadFile/bMWI9u8G5s2EsPWhIuLbr9NSLvAi/TAC._SCM._bXNhbmd3YW4%3D/686715483/Screen+Shot+2019-05-10+at+13.06.01.jpg',
-					fileInfo: {
-						fileCategory: 'Web Uploaded',
-						fileContentType: 'image/jpeg',
-						fileId: 316677275,
-						fileName: '2019-05-10 at 13.06.01.jpg',
-						fileSize: 103468,
-						fileStatus: 'COMPLETED',
-						fileUploadDate: '11 May 2019 05:00 GMT',
-						visibilityFlag: 'E',
-					},
-					storageParam: [
-						{
-							paramKey: 'DownloadToken',
-							paramValue: 'bMWI9u8G5s2EsPWhIuLbr9NSLvAi',
-						},
-						{
-							paramKey: 'destFolderPath',
-							paramValue: '686715483/Screen Shot 2019-05-10 at 13.06.01.jpg',
-						},
-					],
-					userInfo: {
-						userEmail: 'jkipp@cisco.com',
-						userName: 'Joseph Kipping',
-					},
-				},
-				{
-					downloadHost: 'storageconnect-prd.cisco.com',
-					downloadURL: 'https://storageconnect-prd.cisco.com/Hi5Cloud/ContentManagement/downloadFile/bMWI9u8G5s2EsPWhIuLbr9NSLvAi/TAC._SCM._bXNhbmd3YW4%3D/686715483/Screen+Shot+2019-05-06+at+13.51.35.jpg',
-					fileInfo: {
-						fileCategory: 'Web Uploaded',
-						fileContentType: 'image/jpeg',
-						fileId: 316675703,
-						fileName: 'Screen Shot 2019-05-06 at 13.51.35.jpg',
-						fileSize: 114988,
-						fileStatus: 'COMPLETED',
-						fileUploadDate: '11 May 2019 05:00 GMT',
-						visibilityFlag: 'E',
-					},
-					storageParam: [
-						{
-							oparamKey: 'DownloadToken',
-							oparamValue: 'bMWI9u8G5s2EsPWhIuLbr9NSLvAi',
+							downloadHost: 'storageconnect-prd.cisco.com',
+							downloadURL: 'https://storageconnect-prd.cisco.com/Hi5Cloud/ContentManagement/downloadFile/bMWI9u8G5s2EsPWhIuLbr9NSLvAi/TAC._SCM._bXNhbmd3YW4%3D/686715483/Screen+Shot+2019-05-10+at+13.06.01.jpg',
+							fileInfo: {
+								fileCategory: 'Web Uploaded',
+								fileContentType: 'image/jpeg',
+								fileId: 316677275,
+								fileName: '2019-05-10 at 13.06.01.jpg',
+								fileSize: 103468,
+								fileStatus: 'COMPLETED',
+								fileUploadDate: '11 May 2019 05:00 GMT',
+								visibilityFlag: 'E',
+							},
+							storageParam: [
+								{
+									paramKey: 'DownloadToken',
+									paramValue: 'bMWI9u8G5s2EsPWhIuLbr9NSLvAi',
+								},
+								{
+									paramKey: 'destFolderPath',
+									paramValue: '686715483/Screen Shot 2019-05-10 at 13.06.01.jpg',
+								},
+							],
+							userInfo: {
+								userEmail: 'jkipp@cisco.com',
+								userName: 'Joseph Kipping',
+							},
 						},
 						{
-							oparamKey: 'destFolderPath',
-							oparamValue: '686715483/Screen Shot 2019-05-06 at 13.51.35.jpg',
-						},
-					],
-					userInfo: {
-						userEmail: 'jkipp@cisco.com',
-						userName: 'Joseph Kipping',
-					},
-				},
-				{
-					downloadHost: 'storageconnect-prd.cisco.com',
-					downloadURL: 'https://storageconnect-prd.cisco.com/Hi5Cloud/ContentManagement/downloadFile/bMWI9u8G5s2EsPWhIuLbr9NSLvAi/TAC._SCM._bXNhbmd3YW4%3D/686715483/Screen+Shot+2019-05-08+at+10.27.43.jpg',
-					fileInfo: {
-						fileCategory: 'Web Uploaded',
-						fileContentType: 'image/jpeg',
-						fileId: 316675705,
-						fileName: 'Screen Shot 2019-05-08 at 10.27.43.jpg',
-						fileSize: 414129,
-						fileStatus: 'COMPLETED',
-						fileUploadDate: '11 May 2019 05:00 GMT',
-						visibilityFlag: 'E',
-					},
-					storageParam: [
-						{
-							paramKey: 'DownloadToken',
-							paramValue: 'bMWI9u8G5s2EsPWhIuLbr9NSLvAi',
-						},
-						{
-							paramKey: 'destFolderPath',
-							paramValue: '686715483/Screen Shot 2019-05-08 at 10.27.43.jpg',
-						},
-					],
-					userInfo: {
-						userEmail: 'jkipp@cisco.com',
-						userName: 'Joseph Kipping',
-					},
-				},
-				{
-					downloadHost: 'storageconnect-prd.cisco.com',
-					downloadURL: 'https://storageconnect-prd.cisco.com/Hi5Cloud/ContentManagement/downloadFile/bMWI9u8G5s2EsPWhIuLbr9NSLvAi/TAC._SCM._bXNhbmd3YW4%3D/686715483/Screen+Shot+2019-05-07+at+08.30.15.jpg',
-					fileInfo: {
-						fileCategory: 'Web Uploaded',
-						fileContentType: 'image/jpeg',
-						fileId: 316675706,
-						fileName: 'Screen Shot 2019-05-07 at 08.30.15.jpg',
-						fileSize: 959375,
-						fileStatus: 'COMPLETED',
-						fileUploadDate: '11 May 2019 05:00 GMT',
-						visibilityFlag: 'E',
-					},
-					storageParam: [
-						{
-							paramKey: 'DownloadToken',
-							paramValue: 'bMWI9u8G5s2EsPWhIuLbr9NSLvAi',
+							downloadHost: 'storageconnect-prd.cisco.com',
+							downloadURL: 'https://storageconnect-prd.cisco.com/Hi5Cloud/ContentManagement/downloadFile/bMWI9u8G5s2EsPWhIuLbr9NSLvAi/TAC._SCM._bXNhbmd3YW4%3D/686715483/Screen+Shot+2019-05-06+at+13.51.35.jpg',
+							fileInfo: {
+								fileCategory: 'Web Uploaded',
+								fileContentType: 'image/jpeg',
+								fileId: 316675703,
+								fileName: 'Screen Shot 2019-05-06 at 13.51.35.jpg',
+								fileSize: 114988,
+								fileStatus: 'COMPLETED',
+								fileUploadDate: '11 May 2019 05:00 GMT',
+								visibilityFlag: 'E',
+							},
+							storageParam: [
+								{
+									oparamKey: 'DownloadToken',
+									oparamValue: 'bMWI9u8G5s2EsPWhIuLbr9NSLvAi',
+								},
+								{
+									oparamKey: 'destFolderPath',
+									oparamValue: '686715483/Screen Shot 2019-05-06 at 13.51.35.jpg',
+								},
+							],
+							userInfo: {
+								userEmail: 'jkipp@cisco.com',
+								userName: 'Joseph Kipping',
+							},
 						},
 						{
-							paramKey: 'destFolderPath',
-							paramValue: '686715483/Screen Shot 2019-05-07 at 08.30.15.jpg',
-						},
-					],
-					userInfo: {
-						userEmail: 'jkipp@cisco.com',
-						userName: 'Joseph Kipping',
-					},
-				},
-				{
-					downloadHost: 'storageconnect-prd.cisco.com',
-					downloadURL: 'https://storageconnect-prd.cisco.com/Hi5Cloud/ContentManagement/downloadFile/bMWI9u8G5s2EsPWhIuLbr9NSLvAi/TAC._SCM._bXNhbmd3YW4%3D/686715483/Screen+Shot+2019-05-08+at+10.03.49.jpg',
-					fileInfo: {
-						fileCategory: 'Web Uploaded',
-						fileContentType: 'image/jpeg',
-						fileId: 316677276,
-						fileName: 'Screen Shot 2019-05-08 at 10.03.49.jpg',
-						fileSize: 1108522,
-						fileStatus: 'COMPLETED',
-						fileUploadDate: '11 May 2019 05:00 GMT',
-						visibilityFlag: 'E',
-					},
-					storageParam: [
-						{
-							paramKey: 'DownloadToken',
-							paramValue: 'bMWI9u8G5s2EsPWhIuLbr9NSLvAi',
-						},
-						{
-							paramKey: 'destFolderPath',
-							paramValue: '686715483/Screen Shot 2019-05-08 at 10.03.49.jpg',
-						},
-					],
-					userInfo: {
-						userEmail: 'jkipp@cisco.com',
-						userName: 'Joseph Kipping',
-					},
-				},
-				{
-					downloadHost: 'storageconnect-prd.cisco.com',
-					downloadURL: 'https://storageconnect-prd.cisco.com/Hi5Cloud/ContentManagement/downloadFile/bMWI9u8G5s2EsPWhIuLbr9NSLvAi/TAC._SCM._bXNhbmd3YW4%3D/686715483/good-jkipp-cfu2.1-upload-download-1.tar',
-					fileInfo: {
-						fileCategory: 'Web Uploaded',
-						fileContentType: 'application/x-tar',
-						fileId: 316675708,
-						fileName: 'good-jkipp-cfu2.1-upload-download-1.tar',
-						fileSize: 95150080,
-						fileStatus: 'COMPLETED',
-						fileUploadDate: '11 May 2019 05:03 GMT',
-						visibilityFlag: 'E',
-					},
-					storageParam: [
-						{
-							paramKey: 'DownloadToken',
-							paramValue: 'bMWI9u8G5s2EsPWhIuLbr9NSLvAi',
+							downloadHost: 'storageconnect-prd.cisco.com',
+							downloadURL: 'https://storageconnect-prd.cisco.com/Hi5Cloud/ContentManagement/downloadFile/bMWI9u8G5s2EsPWhIuLbr9NSLvAi/TAC._SCM._bXNhbmd3YW4%3D/686715483/Screen+Shot+2019-05-08+at+10.27.43.jpg',
+							fileInfo: {
+								fileCategory: 'Web Uploaded',
+								fileContentType: 'image/jpeg',
+								fileId: 316675705,
+								fileName: 'Screen Shot 2019-05-08 at 10.27.43.jpg',
+								fileSize: 414129,
+								fileStatus: 'COMPLETED',
+								fileUploadDate: '11 May 2019 05:00 GMT',
+								visibilityFlag: 'E',
+							},
+							storageParam: [
+								{
+									paramKey: 'DownloadToken',
+									paramValue: 'bMWI9u8G5s2EsPWhIuLbr9NSLvAi',
+								},
+								{
+									paramKey: 'destFolderPath',
+									paramValue: '686715483/Screen Shot 2019-05-08 at 10.27.43.jpg',
+								},
+							],
+							userInfo: {
+								userEmail: 'jkipp@cisco.com',
+								userName: 'Joseph Kipping',
+							},
 						},
 						{
-							paramKey: 'destFolderPath',
-							paramValue: '686715483/good-jkipp-cfu2.1-upload-download-1.tar',
+							downloadHost: 'storageconnect-prd.cisco.com',
+							downloadURL: 'https://storageconnect-prd.cisco.com/Hi5Cloud/ContentManagement/downloadFile/bMWI9u8G5s2EsPWhIuLbr9NSLvAi/TAC._SCM._bXNhbmd3YW4%3D/686715483/Screen+Shot+2019-05-07+at+08.30.15.jpg',
+							fileInfo: {
+								fileCategory: 'Web Uploaded',
+								fileContentType: 'image/jpeg',
+								fileId: 316675706,
+								fileName: 'Screen Shot 2019-05-07 at 08.30.15.jpg',
+								fileSize: 959375,
+								fileStatus: 'COMPLETED',
+								fileUploadDate: '11 May 2019 05:00 GMT',
+								visibilityFlag: 'E',
+							},
+							storageParam: [
+								{
+									paramKey: 'DownloadToken',
+									paramValue: 'bMWI9u8G5s2EsPWhIuLbr9NSLvAi',
+								},
+								{
+									paramKey: 'destFolderPath',
+									paramValue: '686715483/Screen Shot 2019-05-07 at 08.30.15.jpg',
+								},
+							],
+							userInfo: {
+								userEmail: 'jkipp@cisco.com',
+								userName: 'Joseph Kipping',
+							},
 						},
-					],
-					userInfo: {
-						userEmail: 'jkipp@cisco.com',
-						userName: 'Joseph Kipping',
-					},
+						{
+							downloadHost: 'storageconnect-prd.cisco.com',
+							downloadURL: 'https://storageconnect-prd.cisco.com/Hi5Cloud/ContentManagement/downloadFile/bMWI9u8G5s2EsPWhIuLbr9NSLvAi/TAC._SCM._bXNhbmd3YW4%3D/686715483/Screen+Shot+2019-05-08+at+10.03.49.jpg',
+							fileInfo: {
+								fileCategory: 'Web Uploaded',
+								fileContentType: 'image/jpeg',
+								fileId: 316677276,
+								fileName: 'Screen Shot 2019-05-08 at 10.03.49.jpg',
+								fileSize: 1108522,
+								fileStatus: 'COMPLETED',
+								fileUploadDate: '11 May 2019 05:00 GMT',
+								visibilityFlag: 'E',
+							},
+							storageParam: [
+								{
+									paramKey: 'DownloadToken',
+									paramValue: 'bMWI9u8G5s2EsPWhIuLbr9NSLvAi',
+								},
+								{
+									paramKey: 'destFolderPath',
+									paramValue: '686715483/Screen Shot 2019-05-08 at 10.03.49.jpg',
+								},
+							],
+							userInfo: {
+								userEmail: 'jkipp@cisco.com',
+								userName: 'Joseph Kipping',
+							},
+						},
+						{
+							downloadHost: 'storageconnect-prd.cisco.com',
+							downloadURL: 'https://storageconnect-prd.cisco.com/Hi5Cloud/ContentManagement/downloadFile/bMWI9u8G5s2EsPWhIuLbr9NSLvAi/TAC._SCM._bXNhbmd3YW4%3D/686715483/good-jkipp-cfu2.1-upload-download-1.tar',
+							fileInfo: {
+								fileCategory: 'Web Uploaded',
+								fileContentType: 'application/x-tar',
+								fileId: 316675708,
+								fileName: 'good-jkipp-cfu2.1-upload-download-1.tar',
+								fileSize: 95150080,
+								fileStatus: 'COMPLETED',
+								fileUploadDate: '11 May 2019 05:03 GMT',
+								visibilityFlag: 'E',
+							},
+							storageParam: [
+								{
+									paramKey: 'DownloadToken',
+									paramValue: 'bMWI9u8G5s2EsPWhIuLbr9NSLvAi',
+								},
+								{
+									paramKey: 'destFolderPath',
+									paramValue: '686715483/good-jkipp-cfu2.1-upload-download-1.tar',
+								},
+							],
+							userInfo: {
+								userEmail: 'jkipp@cisco.com',
+								userName: 'Joseph Kipping',
+							},
 
-				},
-				{
-					downloadHost: 'storageconnect-prd.cisco.com',
-					downloadURL: 'https://storageconnect-prd.cisco.com/Hi5Cloud/ContentManagement/downloadFile/bMWI9u8G5s2EsPWhIuLbr9NSLvAi/TAC._SCM._bXNhbmd3YW4%3D/686715483/Screenshot+2019-05-14+at+14.53.11.png',
-					fileInfo: {
-						fileCategory: 'Web Uploaded',
-						fileContentType: 'image/png',
-						fileId: 317190745,
-						fileName: 'Screenshot 2019-05-14 at 14.53.11.png',
-						fileSize: 120860,
-						fileStatus: 'COMPLETED',
-						fileUploadDate: '15 May 2019 06:14 GMT',
-						visibilityFlag: 'E',
-					},
-					storageParam: [
-						{
-							paramKey: 'DownloadToken',
-							paramValue: 'bMWI9u8G5s2EsPWhIuLbr9NSLvAi',
 						},
 						{
-							paramKey: 'destFolderPath',
-							paramValue: '686715483/Screenshot 2019-05-14 at 14.53.11.png',
+							downloadHost: 'storageconnect-prd.cisco.com',
+							downloadURL: 'https://storageconnect-prd.cisco.com/Hi5Cloud/ContentManagement/downloadFile/bMWI9u8G5s2EsPWhIuLbr9NSLvAi/TAC._SCM._bXNhbmd3YW4%3D/686715483/Screenshot+2019-05-14+at+14.53.11.png',
+							fileInfo: {
+								fileCategory: 'Web Uploaded',
+								fileContentType: 'image/png',
+								fileId: 317190745,
+								fileName: 'Screenshot 2019-05-14 at 14.53.11.png',
+								fileSize: 120860,
+								fileStatus: 'COMPLETED',
+								fileUploadDate: '15 May 2019 06:14 GMT',
+								visibilityFlag: 'E',
+							},
+							storageParam: [
+								{
+									paramKey: 'DownloadToken',
+									paramValue: 'bMWI9u8G5s2EsPWhIuLbr9NSLvAi',
+								},
+								{
+									paramKey: 'destFolderPath',
+									paramValue: '686715483/Screenshot 2019-05-14 at 14.53.11.png',
+								},
+							],
+							userInfo: {
+								userEmail: 'shahirem@cisco.com',
+								userName: 'Sharanabasayya Hiremath',
+							},
+						},
+						{
+							downloadHost: 'storageconnect-prd.cisco.com',
+							downloadURL: 'https://storageconnect-prd.cisco.com/Hi5Cloud/ContentManagement/downloadFile/bMWI9u8G5s2EsPWhIuLbr9NSLvAi/TAC._SCM._bXNhbmd3YW4%3D/686715483/Screen+Shot+2019-06-24+at+12.55.19.jpg',
+							fileInfo: {
+								fileCategory: 'Web Uploaded',
+								fileContentType: 'image/jpeg',
+								fileId: 323064730,
+								fileName: 'Screen Shot 2019-06-24 at 12.55.19.jpg',
+								fileSize: 1140911,
+								fileStatus: 'COMPLETED',
+								fileUploadDate: '24 Jun 2019 20:13 GMT',
+								visibilityFlag: 'E',
+							},
+							storageParam: [
+								{
+									paramKey: 'DownloadToken',
+									paramValue: 'bMWI9u8G5s2EsPWhIuLbr9NSLvAi',
+								},
+								{
+									paramKey: 'destFolderPath',
+									paramValue: '686715483/Screen Shot 2019-06-24 at 12.55.19.jpg',
+								},
+							],
+							userInfo: {
+								userEmail: 'jkipp@cisco.com',
+								userName: 'Joseph Kipping',
+							},
 						},
 					],
-					userInfo: {
-						userEmail: 'shahirem@cisco.com',
-						userName: 'Sharanabasayya Hiremath',
+					keyInfo: {
+						decryptionKey: 'EA96C18746F4EFF27CCB06B11527F2A0',
+						decryptKeyChecksum: '1490160048',
+						initializationVector: '87F88BA7047FF720D12CF6F1F5A51978',
 					},
+					noOfFiles: 12,
+					token: '7eaac568c5b4cd6569b6cfa21511ffd5',
 				},
-				{
-					downloadHost: 'storageconnect-prd.cisco.com',
-					downloadURL: 'https://storageconnect-prd.cisco.com/Hi5Cloud/ContentManagement/downloadFile/bMWI9u8G5s2EsPWhIuLbr9NSLvAi/TAC._SCM._bXNhbmd3YW4%3D/686715483/Screen+Shot+2019-06-24+at+12.55.19.jpg',
-					fileInfo: {
-						fileCategory: 'Web Uploaded',
-						fileContentType: 'image/jpeg',
-						fileId: 323064730,
-						fileName: 'Screen Shot 2019-06-24 at 12.55.19.jpg',
-						fileSize: 1140911,
-						fileStatus: 'COMPLETED',
-						fileUploadDate: '24 Jun 2019 20:13 GMT',
-						visibilityFlag: 'E',
-					},
-					storageParam: [
-						{
-							paramKey: 'DownloadToken',
-							paramValue: 'bMWI9u8G5s2EsPWhIuLbr9NSLvAi',
-						},
-						{
-							paramKey: 'destFolderPath',
-							paramValue: '686715483/Screen Shot 2019-06-24 at 12.55.19.jpg',
-						},
-					],
-					userInfo: {
-						userEmail: 'jkipp@cisco.com',
-						userName: 'Joseph Kipping',
-					},
+				responseHeader: {
+					responseCode: 0,
+					responseDesc: 'success',
 				},
-			],
-			keyInfo: {
-				decryptionKey: 'EA96C18746F4EFF27CCB06B11527F2A0',
-				decryptKeyChecksum: '1490160048',
-				initializationVector: '87F88BA7047FF720D12CF6F1F5A51978',
+				xmlns: 'http://www.cisco.com/ts/csc/FileBrokerModel',
 			},
-			noOfFiles: 12,
-			token: '7eaac568c5b4cd6569b6cfa21511ffd5',
 		},
-		responseHeader: {
-			responseCode: 0,
-			responseDesc: 'success',
-		},
-		xmlns: 'http://www.cisco.com/ts/csc/FileBrokerModel',
 	},
 };
 
@@ -639,6 +965,31 @@ const caseCreatedResponse = {
 	caseNumber: '686351315',
 	created: '2019-07-22T17:57:44.929Z',
 	timestamp: 1563818265222,
+};
+
+/** Mock for fetching 1 item to count all cases (for visual filters) */
+const allCaseCountResponse = {
+	 content: [{ }],
+	 lastPage: false,
+	 numberOfElements: 1,
+	 timestamp: 1569336747651,
+	 totalElements: 11,
+	 totalPages: 2,
+};
+
+/** Build one big list of all pages (for visual filters) */
+const caseListAll = _.cloneDeep(caseListResponse1);
+caseListAll.content = caseListAll.content.concat(caseListResponse2.content);
+caseListAll.numberOfElements = caseListAll.content.length;
+caseListAll.totalElements = caseListAll.content.length;
+
+/** Filter content by severity of 2 */
+const filteredContent = _.filter(caseListAll.content, { priority: '2' });
+/** Mock for filtering cases by S2 */
+const caseFilteredS2Response = {
+	content: filteredContent,
+	numberOfElements: filteredContent.length,
+	totalElements: filteredContent.length,
 };
 
 /** The scenarios */
@@ -729,7 +1080,7 @@ export const CaseScenarios = [
 				},
 			],
 		},
-		url: `${api}/${clientId}/details?statusTypes=O&pageSize=10&page=1&sortBy=lastModifiedDate&sortOrder=DESC&caseNumbers=`,
+		url: `${api}/${clientId}/details?statusTypes=O&pageSize=10&page=1&sortBy=lastModifiedDate&sortOrder=DESC&caseNumbers=&openStatuses=&closedStatuses=&priorities=`,
 		usecases: ['Use Case 1'],
 	},
 	// Valid Case List - Page 2
@@ -747,7 +1098,7 @@ export const CaseScenarios = [
 				},
 			],
 		},
-		url: `${api}/${clientId}/details?statusTypes=O&pageSize=10&page=2&sortBy=lastModifiedDate&sortOrder=DESC&caseNumbers=`,
+		url: `${api}/${clientId}/details?statusTypes=O&pageSize=10&page=2&sortBy=lastModifiedDate&sortOrder=DESC&caseNumbers=&openStatuses=&closedStatuses=&priorities=`,
 		usecases: ['Use Case 1'],
 	},
 	// Valid Case List - For single case
@@ -809,7 +1160,7 @@ export const CaseScenarios = [
 		scenarios: {
 			POST: [
 				{
-					delay: 200,
+					delay: 500,
 					description: 'Cases Create Response',
 					response: {
 						body: caseCreatedResponse,
@@ -822,13 +1173,67 @@ export const CaseScenarios = [
 		url: `${api}/${clientId}`,
 		usecases: ['Use Case 1'],
 	},
-	// cases download files
+	// Fetch count of cases
 	{
 		scenarios: {
 			GET: [
 				{
-					delay: 200,
-					description: 'Files for Case',
+					delay: 50,
+					description: 'Case Counts',
+					response: {
+						body: allCaseCountResponse,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/${clientId}/details?statusTypes=O&pageSize=1&page=1&sortBy=lastModifiedDate&sortOrder=DESC`,
+		usecases: ['Use Case 1'],
+	},
+	// Fetch all cases in page of 1000 (for visual filters)
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 150,
+					description: 'Get Case Visual Filters',
+					response: {
+						body: caseListAll,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/${clientId}/details?statusTypes=O&pageSize=1000&page=1&fields=createdDate,lastModifiedDate,priority,rmaNumber,status`,
+		usecases: ['Use Case 1'],
+	},
+	// Fetch cases filtered by severity S2 (on visual filter click)
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 20,
+					description: 'Get Cases filtered by S2',
+					response: {
+						body: caseFilteredS2Response,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/${clientId}/details?statusTypes=O&pageSize=10&page=1&sortBy=lastModifiedDate&sortOrder=DESC&caseNumbers=&openStatuses=&closedStatuses=&priorities=2`,
+		usecases: ['Use Case 1'],
+	},
+	// Valid Case File Attachments
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'Case Files',
 					response: {
 						body: caseFilesResponse,
 						status: 200,
@@ -837,7 +1242,7 @@ export const CaseScenarios = [
 				},
 			],
 		},
-		url: `${api}/453b7e10f08b428c90d48432312889ad/casefiles`,
+		url: `${cscApi}/caseFiles/${caseDetailNum}`,
 		usecases: ['Use Case 1'],
 	},
 ];

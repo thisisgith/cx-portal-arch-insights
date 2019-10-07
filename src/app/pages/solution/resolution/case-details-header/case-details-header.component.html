@@ -5,44 +5,56 @@
 			<div class="col-md-5">
 				<div class="font-size" [innerText]="'_RMACaseSeverity_' | i18n | uppercase"></div>
 				<div>
-					<span class="dot" [ngClass]="getSeverityColor(caseDetails?.priority)"></span>
-					<span class="qtr-padding-left"
+					<span class="dot"
+						[ngClass]="getSeverityColor(caseDetails?.priority)"
+						data-auto-id="CaseDetailsSeverityIcon"></span>
+					<span class="text-bold qtr-padding-left"
+						data-auto-id="CaseDetailsSeverity"
 						[innerText]="caseDetails?.priority? ('S'+ caseDetails.priority): ''"></span>
-					<span class="qtr-padding-left" [innerText]="caseDetails?.requestType"></span>
+					<span class="qtr-padding-left"
+						[innerText]="caseDetails?.requestType"
+						data-auto-id="CaseDetailsRequestType"></span>
 				</div>
 			</div>
 			<div class="col-md-3">
 				<div>
 					<span class="font-size" [innerText]="'_RMACaseStatus_' | i18n | uppercase"></span>
 				</div>
-				<div [innerText]="caseDetails?.status"></div>
+				<div data-auto-id="CaseDetailsStatus" [innerText]="caseDetails?.status"></div>
 			</div>
 			<div class="col-md-2">
 				<div class="font-size" [innerText]="'_RMACaseCreated_' | i18n | uppercase"></div>
-				<div [attr.data-balloon]="caseDetails?.createdDate | dateTime" data-balloon-pos="left">
+				<div [attr.data-balloon]="caseDetails?.createdDate | dateTime" data-balloon-pos="left" data-auto-id="CaseDetailsCreatedDate">
 					<span [innerText]="caseDetails?.createdDate | fromNow"></span>
 				</div>
 			</div>
 			<div class="col-md-2">
 				<div class="font-size" [innerText]="'_RMACaseLastUpdated_' | i18n | uppercase"></div>
-				<div [attr.data-balloon]="caseDetails?.lastUpdateDate | dateTime" data-balloon-pos="left">
+				<div [attr.data-balloon]="caseDetails?.lastUpdateDate | dateTime" data-balloon-pos="left" data-auto-id="CaseDetailsLastUpdatedDate">
 					<span [innerText]="caseDetails?.lastUpdateDate | fromNow"></span>
 				</div>
 			</div>
 		</div>
 
 		<div class="row base-padding-top">
-			<div class="col-md-6">
-				<div *ngIf="rmaStrings?.length >= 1" class="dropdown">
-					<button data-auto-id="relatedRMA" class="btn btn--small btn--secondary" (click)="toggleRMAList()"
-						[innerText]="'_RMACaseAssociatedRMA_' | i18n:rmaStrings?.length | uppercase"></button>
+			<div class="col-md-6 flex-center-vertical">
+				<div *ngIf="rmaStrings?.length >= 1"
+					class="dropdown dropdown--tail rma-toggle-btn"
+					(click)="toggleRMAList()"
+					[ngClass]="{
+						'active': isRMAClicked
+					}"
+					data-auto-id="relatedRMA">
+					<a class="text-uppercase" [innerText]="'_RMACaseRelatedRMA_' | i18n:rmaStrings?.length"></a>
 				</div>
 			</div>
 			<div class="col-md-6 text-right">
-				<button data-auto-id="CaseAttachFile" class="btn btn--small btn--secondary"
-					[innerText]="'_RMACaseAttachFile_' | i18n | uppercase" (click)="toggleAddFile()"></button>
-				<button data-auto-id="CaseAddNote" class="btn btn--small btn--secondary"
-					[innerText]="'_RMACaseAddNote_' | i18n | uppercase" (click)="toggleAddNote()"></button>
+				<button data-auto-id="CaseAttachFile"
+					class="btn btn--primary text-uppercase"
+					[innerText]="'_RMACaseAttachFile_' | i18n" (click)="toggleAddFile()"></button>
+				<button data-auto-id="CaseAddNote"
+					class="btn btn--primary text-uppercase"
+					[innerText]="'_RMACaseAddNote_' | i18n" (click)="toggleAddNote()"></button>
 			</div>
 		</div>
 		<div class="row">

@@ -8,7 +8,6 @@ import {
 	CuiSpinnerModule,
 	CuiButtonModule,
 	CuiAlertModule,
-	CuiModalModule,
 } from '@cisco-ngx/cui-components';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { AssetDetailsModule } from '../asset-detail/asset-detail.module';
@@ -20,6 +19,7 @@ import {
 import {
 	CompareRecommendationsModule,
 } from '../compare-recommendations/compare-recommendations.module';
+import { BugsDetailsModule } from '../bugs-details/bugs-details.module';
 
 /**
  * SoftwareGroupDetail Module
@@ -40,9 +40,9 @@ import {
 		CancelConfirmModule,
 		CuiAlertModule,
 		DetailsPanelModule,
-		CuiModalModule,
 		SoftwareGroupRecommendationsModule,
 		CompareRecommendationsModule,
+		BugsDetailsModule,
 	],
 })
 export class SoftwareGroupDetailModule { }

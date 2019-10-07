@@ -72,7 +72,7 @@ export class AdvisoryFeedbackComponent {
 		if (this.type === 'bug') {
 			feedback.cdetId = this.id;
 		} else if (this.type === 'field') {
-			feedback.fnId = this.id;
+			feedback.fieldNoticeId = this.id;
 		} else {
 			feedback.psirtId = this.id;
 		}

@@ -35,6 +35,6 @@ export class BugDetailsHeaderComponent {
 			otherAssets: this.impactedAssets,
 			selectedAsset: this.selectedAsset,
 			type: 'bug',
-		}, 'full');
+		}, 'fluid');
 	}
 }

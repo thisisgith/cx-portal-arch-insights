@@ -102,12 +102,13 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 			bordered: false,
 			columns: [
 				{
-					key: 'bpRuleTitle',
-					name: I18n.get('_ArchitectureRuleViolated_'),
+					name: I18n.get('_ArchitectureSeverity_'),
 					sortable: false,
+					template: this.riskTemplate,
 				},
 				{
-					name: I18n.get('_ArchitectureSeverity_'),
+					key: 'bpRuleTitle',
+					name: I18n.get('_ArchitectureRuleViolated_'),
 					sortable: false,
 					template: this.riskTemplate,
 					width: '8%',
@@ -123,18 +124,18 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 					template: this.recommendationTemplate,
 				},
 				{
-					key: 'softwareType',
-					name: I18n.get('_ArchitectureSoftwareType_'),
-					sortable: false,
-				},
-				{
 					name: I18n.get('_ArchitectureCorrectiveAction_'),
 					sortable: false,
 					template: this.correctiveActionsTemplate,
 				},
 				{
+					key: 'softwareType',
+					name: I18n.get('_ArchitectureSoftwareType_'),
+					sortable: false,
+				},
+				{
 					key: 'deviceIpsWithExceptions',
-					name: I18n.get('_ArchitectureAssetsImpacted_'),
+					name: I18n.get('_ArchitectureSystemsAffected_'),
 					render: item => item.deviceIpsWithExceptions.length !== 0
 								? _.split(item.deviceIpsWithExceptions, ';').length : '0',
 					sortable: false,

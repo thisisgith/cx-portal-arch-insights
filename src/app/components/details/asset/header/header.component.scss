@@ -11,7 +11,8 @@ $light-gray: #8e8e8e;
 
 :host {
 	.open-case-toggle-btn a {
-		color: #465f7e !important;
+		color: #465f7e;
+		font-size: 13px;
 	}
 }
 

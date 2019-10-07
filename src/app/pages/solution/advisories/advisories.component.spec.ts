@@ -18,16 +18,65 @@ import {
 	SecurityAdvisoryLastUpdatedCountScenarios,
 	CriticalBugScenarios,
 	VulnerabilityScenarios,
+	RacetrackScenarios,
 	user,
+	Mock,
 } from '@mock';
+import { RacetrackInfoService } from '@services';
+import { HttpHeaders, HttpResponse } from '@angular/common/http';
+
+/**
+ * Will fetch the currently active response body from the mock object
+ * @param mock the mock object
+ * @param type the scenario type
+ * @returns the body response
+ */
+function getActiveBody (mock: Mock, type: string = 'GET') {
+	const active = _.find(mock.scenarios[type], 'selected') || _.head(mock.scenarios[type]);
+
+	return active.response.body;
+}
 
 describe('AdvisoriesComponent', () => {
 	let component: AdvisoriesComponent;
 	let fixture: ComponentFixture<AdvisoriesComponent>;
 	let productAlertsService: ProductAlertsService;
 	let diagnosticsService: DiagnosticsService;
+	let racetrackInfoService: RacetrackInfoService;
+
+	/**
+	 * Sends our racetrack info
+	 */
+	const sendRacetrack = () => {
+		racetrackInfoService.sendRacetrack(getActiveBody(RacetrackScenarios[0]));
+		racetrackInfoService.sendCurrentSolution(
+			getActiveBody(RacetrackScenarios[0]).solutions[0],
+		);
+		racetrackInfoService.sendCurrentTechnology(
+			getActiveBody(RacetrackScenarios[0]).solutions[0].technologies[0],
+		);
+	};
 
 	const buildSpies = () => {
+		const countHeaders = new HttpHeaders().set('X-API-RESULT-COUNT', '4');
+		spyOn(productAlertsService, 'headAdvisoriesFieldNoticesResponse')
+			.and
+			.returnValue(of(new HttpResponse({
+				headers: countHeaders,
+				status: 200,
+			})));
+		spyOn(productAlertsService, 'headAdvisoriesSecurityAdvisoriesResponse')
+			.and
+			.returnValue(of(new HttpResponse({
+				headers: countHeaders,
+				status: 200,
+			})));
+		spyOn(diagnosticsService, 'headCriticalBugsResponse')
+			.and
+			.returnValue(of(new HttpResponse({
+				headers: countHeaders,
+				status: 200,
+			})));
 		spyOn(productAlertsService, 'getAdvisoriesFieldNotices')
 			.and
 			.returnValue(of(
@@ -62,6 +111,8 @@ describe('AdvisoriesComponent', () => {
 			.returnValue(of(
 				CriticalBugScenarios[0].scenarios.GET[0].response.body,
 			));
+
+		sendRacetrack();
 	};
 
 	describe('No Query Params', () => {
@@ -108,6 +159,7 @@ describe('AdvisoriesComponent', () => {
 		beforeEach(() => {
 			productAlertsService = TestBed.get(ProductAlertsService);
 			diagnosticsService = TestBed.get(DiagnosticsService);
+			racetrackInfoService = TestBed.get(RacetrackInfoService);
 			fixture = TestBed.createComponent(AdvisoriesComponent);
 			component = fixture.componentInstance;
 		});
@@ -145,6 +197,7 @@ describe('AdvisoriesComponent', () => {
 
 			expect(_.filter(tab.filters, 'selected'))
 				.toContain(impactFilter);
+
 			fixture.destroy();
 			flush();
 		}));
@@ -216,6 +269,7 @@ describe('AdvisoriesComponent', () => {
 
 			expect(subfilter.selected)
 				.toBeFalsy();
+
 			fixture.destroy();
 			flush();
 		}));
@@ -230,7 +284,10 @@ describe('AdvisoriesComponent', () => {
 			tick(1000);
 
 			expect(tab.params.page)
-			.toBe(2);
+				.toBe(2);
+
+			fixture.destroy();
+			flush();
 		}));
 
 		it('should clear filters', fakeAsync(() => {
@@ -261,6 +318,9 @@ describe('AdvisoriesComponent', () => {
 				.toBe(0);
 			expect(_.find(tab.filters, { key: 'total' }).selected)
 				.toBeTruthy();
+
+			fixture.destroy();
+			flush();
 		}));
 
 		it('should set null values on request errors', fakeAsync(() => {
@@ -290,9 +350,20 @@ describe('AdvisoriesComponent', () => {
 			spyOn(productAlertsService, 'getSecurityAdvisoryLastUpdatedCount')
 				.and
 				.returnValue(throwError(error));
+			spyOn(productAlertsService, 'headAdvisoriesSecurityAdvisoriesResponse')
+				.and
+				.returnValue(throwError(error));
+			spyOn(productAlertsService, 'headAdvisoriesFieldNoticesResponse')
+				.and
+				.returnValue(throwError(error));
+			spyOn(diagnosticsService, 'headCriticalBugsResponse')
+				.and
+				.returnValue(throwError(error));
 			spyOn(diagnosticsService, 'getCriticalBugs')
 				.and
 				.returnValue(throwError(error));
+
+			sendRacetrack();
 
 			fixture.detectChanges();
 			tick(1000);
@@ -314,6 +385,9 @@ describe('AdvisoriesComponent', () => {
 				.toBe(0);
 			expect(bugsTab.loading)
 				.toBeFalsy();
+
+			fixture.destroy();
+			flush();
 		}));
 
 		it('should load security details if row selected', fakeAsync(() => {
@@ -336,6 +410,9 @@ describe('AdvisoriesComponent', () => {
 
 			expect(component.selectedAdvisory)
 				.toBeNull();
+
+			fixture.destroy();
+			flush();
 		}));
 
 		it('should set query params for Last Updated filter', fakeAsync(() => {
@@ -369,6 +446,9 @@ describe('AdvisoriesComponent', () => {
 
 			expect(_.get(tab, ['params', 'lastUpdatedDateRange']))
 				.toEqual(['further-out']);
+
+			fixture.destroy();
+			flush();
 		}));
 
 		it('should handle sortable column', fakeAsync(() => {
@@ -388,6 +468,9 @@ describe('AdvisoriesComponent', () => {
 
 			expect(tab.params.sort)
 				.toEqual(['title:ASC']);
+
+			fixture.destroy();
+			flush();
 		}));
 
 		it('should load field notice details if row selected', fakeAsync(() => {
@@ -410,6 +493,9 @@ describe('AdvisoriesComponent', () => {
 
 			expect(component.selectedAdvisory)
 				.toBeNull();
+
+			fixture.destroy();
+			flush();
 		}));
 
 		it('should load bug details if row selected', fakeAsync(() => {
@@ -432,6 +518,9 @@ describe('AdvisoriesComponent', () => {
 
 			expect(component.selectedAdvisory)
 				.toBeNull();
+
+			fixture.destroy();
+			flush();
 		}));
 
 		it('should change the route based on the selected tab', fakeAsync(() => {
@@ -462,6 +551,9 @@ describe('AdvisoriesComponent', () => {
 			expect(component.router.navigate)
 				.toHaveBeenCalledWith(['/solution/advisories/security'],
 					{ queryParams: { page: 1, sort: ['severity:ASC'] } });
+
+			fixture.destroy();
+			flush();
 		}));
 
 		it('should add the selected filters to the route', fakeAsync(() => {
@@ -490,6 +582,9 @@ describe('AdvisoriesComponent', () => {
 				.toHaveBeenCalledWith(
 					['/solution/advisories/security'],
 					{ queryParams: { page: 1, sort: ['severity:ASC'], severity: ['info'] } });
+
+			fixture.destroy();
+			flush();
 		}));
 
 		it('should search', fakeAsync(() => {
@@ -506,7 +601,10 @@ describe('AdvisoriesComponent', () => {
 			tick(1000);
 
 			expect(tab.filtered)
-			.toBeTruthy();
+				.toBeTruthy();
+
+			fixture.destroy();
+			flush();
 		}));
 
 		it('should not search', fakeAsync(() => {
@@ -525,6 +623,9 @@ describe('AdvisoriesComponent', () => {
 
 			expect(tab.filtered)
 				.toBeFalsy();
+
+			fixture.destroy();
+			flush();
 		}));
 
 		it('should unset search param if search input is empty for refresh', fakeAsync(() => {
@@ -541,6 +642,9 @@ describe('AdvisoriesComponent', () => {
 
 			expect(_.get(tab, ['params', 'search']))
 				.toBeFalsy();
+
+			fixture.destroy();
+			flush();
 		}));
 
 		it('should not refresh when valid search query', fakeAsync(() => {
@@ -553,6 +657,9 @@ describe('AdvisoriesComponent', () => {
 
 			expect(_.get(tab, ['params', 'search']))
 				.toBe('search');
+
+			fixture.destroy();
+			flush();
 		}));
 	});
 
@@ -604,6 +711,7 @@ describe('AdvisoriesComponent', () => {
 		beforeEach(() => {
 			productAlertsService = TestBed.get(ProductAlertsService);
 			diagnosticsService = TestBed.get(DiagnosticsService);
+			racetrackInfoService = TestBed.get(RacetrackInfoService);
 			fixture = TestBed.createComponent(AdvisoriesComponent);
 			component = fixture.componentInstance;
 		});
@@ -619,6 +727,9 @@ describe('AdvisoriesComponent', () => {
 				.toEqual(_.castArray('gt-30-lt-60-days'));
 			expect(_.get(tab.params, 'severity'))
 				.toEqual(_.castArray('low'));
+
+			fixture.destroy();
+			flush();
 		}));
 	});
 
@@ -668,6 +779,7 @@ describe('AdvisoriesComponent', () => {
 		beforeEach(() => {
 			productAlertsService = TestBed.get(ProductAlertsService);
 			diagnosticsService = TestBed.get(DiagnosticsService);
+			racetrackInfoService = TestBed.get(RacetrackInfoService);
 			fixture = TestBed.createComponent(AdvisoriesComponent);
 			component = fixture.componentInstance;
 		});
@@ -681,6 +793,9 @@ describe('AdvisoriesComponent', () => {
 			const tab = _.find(component.tabs, { key: 'field' });
 			expect(_.get(tab.params, 'lastUpdatedDateRange'))
 				.toEqual(_.castArray('gt-0-lt-30-days'));
+
+			fixture.destroy();
+			flush();
 		}));
 	});
 
@@ -730,6 +845,7 @@ describe('AdvisoriesComponent', () => {
 		beforeEach(() => {
 			productAlertsService = TestBed.get(ProductAlertsService);
 			diagnosticsService = TestBed.get(DiagnosticsService);
+			racetrackInfoService = TestBed.get(RacetrackInfoService);
 			fixture = TestBed.createComponent(AdvisoriesComponent);
 			component = fixture.componentInstance;
 		});
@@ -743,6 +859,9 @@ describe('AdvisoriesComponent', () => {
 			const tab = component.selectedTab;
 			expect(_.get(tab.params, 'state'))
 				.toEqual(_.castArray('new'));
+
+			fixture.destroy();
+			flush();
 		}));
 	});
 });

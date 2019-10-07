@@ -26,3 +26,9 @@
 .font-size {
 	font-size: $small-font-size;
 }
+
+:host {
+	.rma-toggle-btn a {
+		color: #5d656c !important;
+	}
+}

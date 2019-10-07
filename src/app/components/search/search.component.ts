@@ -9,14 +9,13 @@ import {
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { SearchContext, SearchType, SearchEnum, SearchQuery } from '@interfaces';
+import { AssetLinkInfo, SearchContext, SearchType, SearchEnum, SearchQuery } from '@interfaces';
 import { SearchService, AssetPanelLinkService, DetailsPanelStackService } from '@services';
 
 import { I18n } from '@cisco-ngx/cui-utils';
 
 import { SearchBarComponent } from './search-bar/search-bar.component';
 import { SpecialSearchComponent } from './special-search/special-search.component';
-import { AssetLinkInfo } from '@sdp-api';
 import * as _ from 'lodash-es';
 import { LogService } from '@cisco-ngx/cui-services';
 

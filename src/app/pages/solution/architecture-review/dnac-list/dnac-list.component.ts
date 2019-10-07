@@ -89,7 +89,7 @@ export class DnacListComponent implements OnInit {
 					sortable: false,
 				},
 				{
-					name: I18n.get('_ArchitectureDevices(DevicesPublishedLimit)_'),
+					name: I18n.get('_ArchitectureSystems(SystemsPublishedLimit)_'),
 					sortable: false,
 					template : this.devicesTemplate,
 				},

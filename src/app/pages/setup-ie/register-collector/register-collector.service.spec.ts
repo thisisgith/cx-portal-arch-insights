@@ -81,7 +81,10 @@ describe('RegisterCollectorService', () => {
 				service: RegisterCollectorService,
 				httpMock: HttpTestingController,
 			) => {
-				service.registerOnline({ password: 'Admin@123' }, new Blob())
+				service.registerOnline({
+					oldPassword: 'Admin@1234',
+					password: 'Admin@123',
+				}, new Blob())
 					.subscribe(response => {
 						expect(response)
 							.toEqual('token');

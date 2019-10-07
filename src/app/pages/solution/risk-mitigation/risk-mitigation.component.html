@@ -332,6 +332,10 @@
 	<span title="{{ item?.swVersion }}" [innerText]= "item.swVersion">
 	</span>
 </ng-template>
+<ng-template #swTypeCrahsedTemplate let-item="celldata">
+	<span title="{{ item?.swType }}" [innerText]= "item.swType">
+	</span>
+</ng-template>
 <ng-template #neNameTemplate let-item="celldata">
 	<span title="{{ item?.neName }}" [innerText]= "item.neName">
 	</span>

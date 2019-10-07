@@ -1,0 +1,208 @@
+<cui-tabs 
+	id="assetDetailTabs" 
+	[(activeTabIndex)]="tabIndex" 
+	*ngIf="!status.isLoading && detailsData">
+		<cui-tab [label]="'_OsvCurrent_' | i18n | uppercase">
+			<ng-container *ngTemplateOutlet="details;context:{recommendation: detailsData.current}">
+			</ng-container>
+		</cui-tab>
+		<cui-tab *ngIf="hasRecommendation1" [label]="'_OsvRecommendedVersion_' | i18n:'1' | uppercase">
+			<ng-container *ngTemplateOutlet="details; context: {recommendation: detailsData.recommended1}">
+			</ng-container>
+		</cui-tab>
+		<cui-tab *ngIf="hasRecommendation2" [label]="'_OsvRecommendedVersion_' | i18n:'2' | uppercase">
+			<ng-container *ngTemplateOutlet="details; context: {recommendation: detailsData.recommended2}">
+			</ng-container>
+		</cui-tab>
+		<cui-tab *ngIf="hasRecommendation3" [label]="'_OsvRecommendedVersion_' | i18n:'3' | uppercase">
+			<ng-container *ngTemplateOutlet="details; context: {recommendation: detailsData.recommended3}">
+			</ng-container>
+		</cui-tab>
+</cui-tabs>
+
+<cui-spinner *ngIf="status.isLoading"></cui-spinner>
+
+<ng-template #details let-recommendation="recommendation">
+	<visual-filter-bar [filters]="recommendation.filters"></visual-filter-bar>
+	<ng-container *ngIf="recommendation.filtered">
+		<div class="divider half-margin-top qtr-margin-bottom"></div>
+		<ng-container *ngTemplateOutlet="filterBar;context:{recommendation:recommendation}"></ng-container>
+	</ng-container>
+	<ng-container *ngIf="params?.viewType == 'bug'">
+		<ng-container *ngTemplateOutlet="bugsTableTemp;context:{recommendation:recommendation}"></ng-container>
+	</ng-container>
+	<ng-container *ngIf="params?.viewType == 'psirt'">
+		<ng-container *ngTemplateOutlet="psirtTableTemp;context:{recommendation:recommendation}"></ng-container>
+	</ng-container>
+</ng-template>
+
+<ng-template #totalFilterTemplate let-filter="filter">
+	<div [ngClass]="{'text-primary':filter.selected,'text-muted':!filter.selected}" class="dbl-padding-bottom"
+		(click)="clearFilters()" data-auto-id="TotalVisualFilter" [innerText]="filter.seriesData[0]?.total || 0">
+	</div>
+</ng-template>
+
+
+<ng-template #stateFilterTemplate let-filter="filter">
+	<pie-chart [seriesData]="filter.seriesData" (subfilter)="onSubfilterSelect($event.filter, filter)">
+	</pie-chart>
+</ng-template>
+
+<ng-template #severityFilterTemplate let-filter="filter">
+	<pie-chart [seriesData]="filter.seriesData" (subfilter)="onSubfilterSelect($event.filter, filter)">
+	</pie-chart>
+</ng-template>
+
+
+<ng-template #bugsTableTemp let-recommendation="recommendation">
+	<div class="base-margin-top">
+		<div class="qtr-margin-top row">
+			<div class="col-md-9 flex flex-fill">
+				<div class="flex-center-vertical">
+					<span [innerText]="'_Bugs_' | i18n" class="text-large"></span>
+					<span
+						[innerText]="'_OsvShowingXofYBugs_' | i18n:recommendation.paginationCount:recommendation.total"
+						class="qtr-margin-left text-small text-muted" data-auto-id="ShowingBugsCount">
+					</span>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<div class="flex flex-fluid flex-right">
+					<cui-search placeholder="{{ '_Search_' | i18n }}" [debounce]="searchOptions.debounce"
+						[compressed]="true" (onUpdate)="onSearchQuery($event)">
+					</cui-search>
+				</div>
+			</div>
+		</div>
+		<cui-spinner *ngIf="status.isFiltering"></cui-spinner>
+		<div *ngIf="!status.isFiltering && bugsTable && recommendation.data?.bugs && recommendation.data.bugs.length > 0">
+			<cui-table 
+				[limit]="recommendation.params.limit" 
+				[offset]="recommendation.params.offset"
+				[options]="bugsTable"
+				(onTableRowClicked)="onBugRowSelect($event)"				
+				[data]="recommendation?.data.bugs">
+			</cui-table>
+		</div>
+		<div *ngIf="recommendation.data?.bugs.length == 0" class="text-center text-xlarge dbl-margin-top">
+			<span [innerText]="'_OsvNoBugsFound_' | i18n"></span>
+		</div>
+		<div class="base-margin-top" *ngIf="recommendation?.total > 0">
+			<cui-pager 
+				[page]="recommendation.params.offset" 
+				[limit]="recommendation.params.limit"
+				[totalItems]="recommendation.total || 0" 
+				(onPageChanged)="onPageChanged($event,recommendation)">
+			</cui-pager>
+		</div>
+	</div>
+</ng-template>
+
+<ng-template #psirtTableTemp let-recommendation="recommendation">
+	<div class="base-margin-top">
+		<div class="qtr-margin-top row">
+			<div class="col-md-9 flex flex-fill">
+				<div class="flex-center-vertical">
+					<span [innerText]="'_SecurityAdvisories_' | i18n" class="text-large"></span>
+					<span
+						[innerText]="'_OsvShowingXofYPsirts_' | i18n:recommendation.paginationCount:recommendation.total"
+						class="qtr-margin-left text-small text-muted" data-auto-id="ShowingBugsCount">
+					</span>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<div class="flex flex-fluid flex-right">
+					<cui-search placeholder="{{ '_Search_' | i18n }}" [debounce]="searchOptions.debounce"
+						[compressed]="true" (onUpdate)="onSearchQuery($event)">
+					</cui-search>
+				</div>
+			</div>
+		</div>
+		<cui-spinner *ngIf="status.isFiltering"></cui-spinner>
+		<div *ngIf="!status.isFiltering && psirtsTable && recommendation.data.psirts && recommendation.data.psirts?.length > 0">
+			<cui-table 
+				[limit]="recommendation.params.limit" 
+				[offset]="recommendation.params.offset"
+				[options]="psirtsTable"
+				(onTableRowClicked)="onRowSelect($event)"
+				[data]="recommendation.data.psirts" >
+			</cui-table>
+		</div>
+		<div *ngIf="recommendation.data.psirts.length == 0" class="text-center text-xlarge dbl-margin-top">
+			<span [innerText]="'_OsvNoSecurityAdvisoriesFound_' | i18n"></span>
+		</div>
+		<div class="base-margin-top" *ngIf="recommendation?.total > 0">
+			<cui-pager 
+				[page]="recommendation.params.offset" 
+				[limit]="recommendation.params.limit"
+				[totalItems]="recommendation.total || 0"
+				(onPageChanged)="onPageChanged($event,recommendation)">
+			</cui-pager>
+		</div>
+	</div>
+</ng-template>
+
+<ng-template #filterBar let-recommendation="recommendation">
+	<div class="row qtr-margin-top qtr-margin-bottom">
+		<div class="col-md-1 flex flex-center-vertical">
+			<span class="text-bold text-uppercase half-padding-right" [innerText]="'_Filtered_' | i18n"></span>
+		</div>
+		<div class="col-md-10">
+			<ng-container *ngFor="let filter of getSelectedFilters(recommendation)">
+				<ng-container *ngFor="let subfilter of getSelectedSubFilters(filter.key,recommendation)">
+					<span class="label label--dkgray text-large" (click)="onSubfilterSelect(subfilter.filter, filter)"
+						attr.data-auto-id="FilterTag-{{ subfilter.filter }}">
+						<span [innerText]="subfilter.label"></span>
+						<span class="icon-close"></span>
+					</span>
+				</ng-container>
+			</ng-container>
+		</div>
+		<div class="col-md-1 text-center text-right">
+			<a (click)="clearFilters()" class="text-lowercase" [innerText]="'_ClearAll_' | i18n"
+				data-auto-id="FilterBarClearAllFilters">
+			</a>
+		</div>
+	</div>
+</ng-template>
+
+<ng-template #stateTemplate let-item="celldata">
+	<span *ngIf="item.status == 'OPEN'" [innerText]="'_OsvExposed_' | i18n"></span>
+	<span *ngIf="item.status == 'NEW_OPEN'" [innerText]="'_OsvNewExposed_' | i18n"></span>
+	<span *ngIf="item.status == 'RESOLVED'" [innerText]="'_OsvFixed_' | i18n"></span>
+</ng-template>
+
+<ng-template #updatedDateTemp let-item="celldata">
+		<span *ngIf="item.lastUpdatedDate" [innerText]="item.lastUpdatedDate | date:medium"></span>
+</ng-template>
+
+<ng-template #impactTemp let-item="celldata">
+	<span 
+		[title]="item.severity | uppercase"
+		[ngClass]="{'Low':'text-warning','High':'text-danger','Medium':'text-warning-alt'}[item.severity]" 
+		class="icon-circle">		
+	</span>
+	<span class="qtr-margin-left" [title]="item.severity" [innerText]="item.severity"></span>
+</ng-template>
+
+<ng-template #titleTemp let-item="celldata">
+	<span  [title]="item.title" >
+		<span [innerText]="item.title" ></span>
+		<img alt="{{ '_OsvOpenNewWindow_' | i18n }}"
+				class="qtr-margin-left"
+				attr.data-auto-id="OpenInNewWindow"
+				src="assets/icons/icon-open-new-window.svg">
+	</span>	
+</ng-template>
+
+<ng-template #bugTitleTemp let-item="celldata">
+	<span [title]="item.title" [innerText]="item.title"></span>
+</ng-template>
+
+<ng-template #bugIdTemp let-item="celldata">		
+	<span  [title]="item.id" [innerText]="item.id"></span>
+	<img alt="{{ '_OsvOpenNewWindow_' | i18n }}"
+		class="qtr-margin-left"
+		attr.data-auto-id="OpenInNewWindow"
+		src="assets/icons/icon-open-new-window.svg">	
+</ng-template>

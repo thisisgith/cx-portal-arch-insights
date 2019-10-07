@@ -10,8 +10,6 @@ import {
 	EventEmitter,
 } from '@angular/core';
 
-import { DatePipe } from '@angular/common';
-
 import { LogService } from '@cisco-ngx/cui-services';
 
 import * as _ from 'lodash-es';
@@ -28,6 +26,8 @@ import {
 	SecurityAdvisoriesResponse,
 	FieldNoticeAdvisoryResponse,
 	NetworkElement,
+	RacetrackSolution,
+	RacetrackTechnology,
 } from '@sdp-api';
 import { CuiTableOptions, CuiTableColumnOption } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
@@ -39,6 +39,7 @@ import {
 	takeUntil,
 } from 'rxjs/operators';
 import { AdvisoryType } from '@interfaces';
+import { RacetrackInfoService } from '@services';
 
 /** Interface representing an advisory tab */
 interface Tab {
@@ -75,6 +76,7 @@ export class AssetDetailsAdvisoriesComponent
 	@ViewChild('impact', { static: true }) private impactTemplate: TemplateRef<{ }>;
 	@ViewChild('fieldNoticeID', { static: true }) private fieldNoticeIDTemplate: TemplateRef<{ }>;
 	@ViewChild('bugID', { static: true }) private bugIDTemplate: TemplateRef<{ }>;
+	@ViewChild('lastUpdated', { static: true }) private lastUpdatedTemplate: TemplateRef<{ }>;
 
 	public tabs: Tab[];
 	public isLoading = true;
@@ -83,11 +85,14 @@ export class AssetDetailsAdvisoriesComponent
 		id: string;
 	};
 	private destroyed$: Subject<void> = new Subject<void>();
+	private selectedSolutionName: string;
+	private selectedTechnologyName: string;
 
 	constructor (
 		private logger: LogService,
 		private diagnosticsService: DiagnosticsService,
 		private productAlertsService: ProductAlertsService,
+		private racetrackInfoService: RacetrackInfoService,
 	) { }
 
 	get selectedTab (): Tab {
@@ -116,7 +121,11 @@ export class AssetDetailsAdvisoriesComponent
 		const tab = _.find(this.tabs, { key: 'security' });
 		tab.loading = true;
 
-		return this.productAlertsService.getAdvisoriesSecurityAdvisories(tab.params)
+		const params = _.cloneDeep(tab.params);
+		params.solution = this.selectedSolutionName;
+		params.useCase = this.selectedTechnologyName;
+
+		return this.productAlertsService.getAdvisoriesSecurityAdvisories(params)
 		.pipe(
 			map((response: SecurityAdvisoriesResponse) => {
 				this.setTabData(tab, append, response);
@@ -141,7 +150,11 @@ export class AssetDetailsAdvisoriesComponent
 		const tab = _.find(this.tabs, { key: 'field' });
 		tab.loading = true;
 
-		return this.productAlertsService.getAdvisoriesFieldNotices(tab.params)
+		const params = _.cloneDeep(tab.params);
+		params.solution = this.selectedSolutionName;
+		params.useCase = this.selectedTechnologyName;
+
+		return this.productAlertsService.getAdvisoriesFieldNotices(params)
 		.pipe(
 			map((response: FieldNoticeAdvisoryResponse) => {
 				this.setTabData(tab, append, response);
@@ -166,7 +179,11 @@ export class AssetDetailsAdvisoriesComponent
 		const tab = _.find(this.tabs, { key: 'bug' });
 		tab.loading = true;
 
-		return this.diagnosticsService.getCriticalBugs(tab.params)
+		const params = _.cloneDeep(tab.params);
+		params.solution = this.selectedSolutionName;
+		params.useCase = this.selectedTechnologyName;
+
+		return this.diagnosticsService.getCriticalBugs(params)
 		.pipe(
 			map((response: CriticalBugsResponse) => {
 				this.setTabData(tab, append, response);
@@ -259,8 +276,6 @@ export class AssetDetailsAdvisoriesComponent
 
 	/** Initializes our advisory tabs */
 	private initializeTabs () {
-		const datePipe = new DatePipe('en-US');
-
 		this.tabs = [
 			{
 				data: [],
@@ -300,15 +315,8 @@ export class AssetDetailsAdvisoriesComponent
 							autoId: 'AdvisoryLastUpdated',
 							key: 'lastUpdated',
 							name: I18n.get('_LastUpdated_'),
-							render: item => {
-								const date = item.lastUpdated ? item.lastUpdated : item.publishedOn;
-								if (date) {
-									return datePipe.transform(new Date(date), 'yyyy MMM dd');
-								}
-
-								return I18n.get('_Never_');
-							},
 							sortable: false,
+							template: this.lastUpdatedTemplate,
 							width: '125px',
 						},
 					],
@@ -353,20 +361,13 @@ export class AssetDetailsAdvisoriesComponent
 							value: 'title',
 						},
 						{
-							autoId: 'AdvisoryLastUpdated',
+							autoId: 'FieldNoticeLastUpdated',
 							key: 'lastUpdated',
 							name: I18n.get('_LastUpdated_'),
-							render: item => {
-								const date = item.lastUpdated ? item.lastUpdated : item.publishedOn;
-								if (date) {
-									return datePipe.transform(new Date(date), 'yyyy MMM dd');
-								}
-
-								return I18n.get('_Never_');
-							},
 							sortable: true,
 							sortDirection: 'desc',
 							sorting: true,
+							template: this.lastUpdatedTemplate,
 							width: '125px',
 						},
 					],
@@ -416,14 +417,12 @@ export class AssetDetailsAdvisoriesComponent
 							sortable: false,
 						},
 						{
+							autoId: 'BugLastUpdated',
 							name: I18n.get('_LastUpdated_'),
-							render: item => item.lastUpdated ?
-								datePipe.transform(
-									new Date(item.lastUpdated), 'yyyy MMM dd') :
-									I18n.get('_Never_'),
 							sortable: false,
 							sortDirection: 'desc',
 							sorting: true,
+							template: this.lastUpdatedTemplate,
 							width: '125px',
 						},
 					],
@@ -433,7 +432,7 @@ export class AssetDetailsAdvisoriesComponent
 					striped: false,
 					wrapText: true,
 				}),
-				title: I18n.get('_CriticalBugs_'),
+				title: I18n.get('_PriorityBugs_'),
 			},
 		];
 
@@ -507,7 +506,24 @@ export class AssetDetailsAdvisoriesComponent
 			}
 		});
 
-		this.refresh();
+		this.racetrackInfoService.getCurrentSolution()
+		.pipe(
+			takeUntil(this.destroyed$),
+		)
+		.subscribe((solution: RacetrackSolution) => {
+			this.selectedSolutionName = _.get(solution, 'name');
+		});
+
+		this.racetrackInfoService.getCurrentTechnology()
+		.pipe(
+			takeUntil(this.destroyed$),
+		)
+		.subscribe((technology: RacetrackTechnology) => {
+			if (this.selectedTechnologyName !== _.get(technology, 'name')) {
+				this.selectedTechnologyName = _.get(technology, 'name');
+				this.refresh();
+			}
+		});
 	}
 
 	/** Function used to destroy the component */

@@ -1,7 +1,7 @@
 /**
  * Default Origin
  */
-const origin = 'https://swtgdev-apollo-2.cisco.com';
+const origin = 'https://crue-dev-1.cisco.com';
 
 /**
  * Contains default configurations to be used to import into other environment files,

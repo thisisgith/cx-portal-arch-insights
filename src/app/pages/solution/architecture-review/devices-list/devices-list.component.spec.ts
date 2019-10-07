@@ -148,18 +148,6 @@ describe('DevicesListComponent', () => {
 		.toHaveBeenCalled();
 	});
 
-	it('should get empty devices data', () => {
-		spyOn(service, 'getDevicesList')
-			.and
-			.returnValue(of(ArchitectureReviewScenarios[1].scenarios.GET[0].response.body));
-
-		component.getDevicesList();
-		expect(service.getDevicesList)
-		.toHaveBeenCalled();
-		expect(component.isLoading)
-		.toBeFalsy();
-	});
-
 	it('should throw errors', () => {
 		const error = {
 			status: 404,

@@ -113,9 +113,12 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		validACCItems.forEach((acc, index) => {
 			cy.getByAutoId('ACCCard').eq(index).within(() => {
 				if (acc.status === 'recommended') {
-					cy.getByAutoId('ACCCardHeader').should('have.class', 'text-dkgray-4');
+					cy.getByAutoId('ACCCardHeader')
+						.should('exist')
+						.and('have.text', i18n._Recommended_);
+					cy.getByAutoId('ACCCard-Flag').should('exist');
 				} else {
-					cy.getByAutoId('ACCCardHeader').should('have.class', 'text-clear');
+					cy.getByAutoId('ACCCardHeader').should('not.exist');
 				}
 				cy.getByAutoId('ACCCardTitle').should('have.text', acc.title);
 				cy.getByAutoId('ACCCardDescription')
@@ -693,7 +696,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		it('PBC-260: Should be able to open request form from Lifecycle page', () => {
 			cy.getByAutoId('Request1on1ACCButton')
 				.first()
-				.click();
+				.click({ force: true });
 			cy.getByAutoId('accRequestModal-Title').should('be.visible');
 			cy.getByAutoId('ACCCloseRequestModal').click();
 			cy.getByAutoId('accRequestModal').should('not.exist');
@@ -704,7 +707,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			cy.getByAutoId('ACCCard')
 				.first()
 				.within(() => {
-					cy.getByAutoId('Request1on1ACCButton').click();
+					cy.getByAutoId('Request1on1ACCButton').click({ force: true });
 				});
 			cy.getByAutoId('accRequestModal-Title').should('be.visible');
 			cy.getByAutoId('ACCCloseRequestModal').click();
@@ -715,14 +718,14 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		it('PBC-260: Should be able to close or cancel request form', () => {
 			cy.getByAutoId('Request1on1ACCButton')
 				.first()
-				.click();
+				.click({ force: true });
 			cy.getByAutoId('accRequestModal-Title').should('be.visible');
 			cy.getByAutoId('ACCCloseRequestModal').click();
 			cy.getByAutoId('accRequestModal').should('not.exist');
 
 			cy.getByAutoId('Request1on1ACCButton')
 				.first()
-				.click();
+				.click({ force: true });
 			cy.getByAutoId('accRequestModal-Title').should('be.visible');
 			cy.getByAutoId('accRequestModal-Cancel').click();
 			cy.getByAutoId('accRequestModal').should('not.exist');
@@ -733,7 +736,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				// Start with a clean modal for each test
 				cy.getByAutoId('Request1on1ACCButton')
 					.first()
-					.click();
+					.click({ force: true });
 			});
 
 			afterEach(() => {
@@ -910,7 +913,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			it('PBC-260: Preferred time options are exclusive', () => {
 				// Select morning, afternoon should be unchecked
 				cy.getByAutoId('accRequestModal-PreferredTimeMeeting-Morning')
-					.click()
+					.click({ force: true })
 					.parent()
 					.find('input')
 					.should('be.checked');
@@ -921,7 +924,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 
 				// Swap options to afternoon, should un-check morning
 				cy.getByAutoId('accRequestModal-PreferredTimeMeeting-Afternoon')
-					.click()
+					.click({ force: true })
 					.parent()
 					.find('input')
 					.should('be.checked');
@@ -934,7 +937,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			it('PBC-260: Environment options are exclusive', () => {
 				// Select NonProd, Cisco should be unchecked
 				cy.getByAutoId('accRequestModal-PreferredEnvironmentAccelerator-NonProd')
-					.click()
+					.click({ force: true })
 					.parent()
 					.find('input')
 					.should('be.checked');
@@ -945,7 +948,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 
 				// Swap options to Cisco, should un-check NonProd
 				cy.getByAutoId('accRequestModal-PreferredEnvironmentAccelerator-Cisco')
-					.click()
+					.click({ force: true })
 					.parent()
 					.find('input')
 					.should('be.checked');
@@ -959,9 +962,9 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				// Fill in all required fields
 				cy.getByAutoId('accRequestModal-NumberOfAttendees-Select').select('1');
 				cy.getByAutoId('accRequestModal-TimeZone-Select').select(i18n['_EasternTime/US_']);
-				cy.getByAutoId('accRequestModal-PreferredTimeMeeting-Morning').click();
+				cy.getByAutoId('accRequestModal-PreferredTimeMeeting-Morning').click({ force: true });
 				cy.getByAutoId('accRequestModal-LanguagePreference-Select').select(i18n._English_);
-				cy.getByAutoId('accRequestModal-DNACVersion-Select').select('1.20');
+				cy.getByAutoId('accRequestModal-DNACVersion-Select').select('1.2.X');
 				cy.getByAutoId('accRequestModal-WhyInterestedAccelerator-Input').type('Automation - Test Interest');
 				cy.getByAutoId('accRequestModal-WhatWouldLikeToSeeOutcome-Input').type('Automation - Test Outcome');
 				cy.getByAutoId('accRequestModal-PreferredEnvironmentAccelerator-NonProd').click();
@@ -997,7 +1000,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 					.invoke('val', '')
 					.trigger('change');
 				cy.getByAutoId('accRequestModal-Submit').should('be.disabled');
-				cy.getByAutoId('accRequestModal-DNACVersion-Select').select('1.20');
+				cy.getByAutoId('accRequestModal-DNACVersion-Select').select('1.2.X');
 				cy.getByAutoId('accRequestModal-Submit').should('be.enabled');
 
 				cy.getByAutoId('accRequestModal-WhyInterestedAccelerator-Input').clear();
@@ -1042,15 +1045,15 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				cy.getByAutoId('accRequestModal-NumberOfAttendees-Select').select('1');
 				cy.getByAutoId('accRequestModal-TimeZone-Select').select(i18n['_EasternTime/US_']);
 				cy.getByAutoId('accRequestModal-LanguagePreference-Select').select(i18n._English_);
-				cy.getByAutoId('accRequestModal-DNACVersion-Select').select('1.20');
+				cy.getByAutoId('accRequestModal-DNACVersion-Select').select('1.2.X');
 				cy.getByAutoId('accRequestModal-WhyInterestedAccelerator-Input').type('Automation - Test Interest');
 				cy.getByAutoId('accRequestModal-WhatWouldLikeToSeeOutcome-Input').type('Automation - Test Outcome');
 
 				cy.getByAutoId('accRequestModal-Submit').should('be.disabled');
 
 				// Make selections for the radio options, submit should now be enabled
-				cy.getByAutoId('accRequestModal-PreferredTimeMeeting-Morning').click();
-				cy.getByAutoId('accRequestModal-PreferredEnvironmentAccelerator-NonProd').click();
+				cy.getByAutoId('accRequestModal-PreferredTimeMeeting-Morning').click({ force: true });
+				cy.getByAutoId('accRequestModal-PreferredEnvironmentAccelerator-NonProd').click({ force: true });
 
 				cy.getByAutoId('accRequestModal-Submit').should('be.enabled');
 			});
@@ -1067,14 +1070,15 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				// Open the request form modal
 				cy.getByAutoId('Request1on1ACCButton')
 					.first()
-					.click();
+					.click({ force: true });
 
 				// Fill in all required fields
 				cy.getByAutoId('accRequestModal-NumberOfAttendees-Select').select('1');
 				cy.getByAutoId('accRequestModal-TimeZone-Select').select(i18n['_EasternTime/US_']);
-				cy.getByAutoId('accRequestModal-PreferredTimeMeeting-Morning').click();
+				cy.getByAutoId('accRequestModal-PreferredTimeMeeting-Morning')
+					.click({ force: true });
 				cy.getByAutoId('accRequestModal-LanguagePreference-Select').select(i18n._English_);
-				cy.getByAutoId('accRequestModal-DNACVersion-Select').select('1.20');
+				cy.getByAutoId('accRequestModal-DNACVersion-Select').select('1.2.X');
 				cy.getByAutoId('accRequestModal-WhyInterestedAccelerator-Input').type('Automation - Test Interest');
 				cy.getByAutoId('accRequestModal-WhatWouldLikeToSeeOutcome-Input').type('Automation - Test Outcome');
 				cy.getByAutoId('accRequestModal-PreferredEnvironmentAccelerator-NonProd').click();
@@ -1114,15 +1118,16 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				// Open the request form modal
 				cy.getByAutoId('Request1on1ACCButton')
 					.first()
-					.click();
+					.click({ force: true });
 				cy.getByAutoId('accRequestModal-Title').should('be.visible');
 
 				// Fill in all required fields
 				cy.getByAutoId('accRequestModal-NumberOfAttendees-Select').select('1');
 				cy.getByAutoId('accRequestModal-TimeZone-Select').select(i18n['_EasternTime/US_']);
-				cy.getByAutoId('accRequestModal-PreferredTimeMeeting-Morning').click();
+				cy.getByAutoId('accRequestModal-PreferredTimeMeeting-Morning')
+					.click({ force: true });
 				cy.getByAutoId('accRequestModal-LanguagePreference-Select').select(i18n._English_);
-				cy.getByAutoId('accRequestModal-DNACVersion-Select').select('1.20');
+				cy.getByAutoId('accRequestModal-DNACVersion-Select').select('1.2.X');
 				cy.getByAutoId('accRequestModal-WhyInterestedAccelerator-Input').type('Automation - Test Interest');
 				cy.getByAutoId('accRequestModal-WhatWouldLikeToSeeOutcome-Input').type('Automation - Test Outcome');
 				cy.getByAutoId('accRequestModal-PreferredEnvironmentAccelerator-NonProd').click();
@@ -1180,7 +1185,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			it('Opening the Request 1-on-1 form should call user info API', () => {
 				cy.getByAutoId('Request1on1ACCButton')
 					.first()
-					.click();
+					.click({ force: true });
 
 				// Should show the loading header
 				cy.getByAutoId('RequestFormCustomerLoadingBanner')
@@ -1217,7 +1222,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 
 				cy.getByAutoId('Request1on1ACCButton')
 					.first()
-					.click();
+					.click({ force: true });
 				cy.wait('@failedGetUserInfo');
 
 				// Should show the error header
@@ -1234,7 +1239,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				// Open the request form modal
 				cy.getByAutoId('Request1on1ACCButton')
 					.first()
-					.click();
+					.click({ force: true });
 				cy.getByAutoId('accRequestModal-Title').should('be.visible');
 				cy.wait('@getUserInfo').its('response.body').then(userInfoResponseBody => {
 					// Fill in all required fields
@@ -1246,9 +1251,10 @@ describe('Accelerator (ACC)', () => { // PBC-32
 						.clear()
 						.type('automation1@cisco.com');
 					cy.getByAutoId('accRequestModal-TimeZone-Select').select(i18n['_EasternTime/US_']);
-					cy.getByAutoId('accRequestModal-PreferredTimeMeeting-Morning').click();
+					cy.getByAutoId('accRequestModal-PreferredTimeMeeting-Morning')
+						.click({ force: true });
 					cy.getByAutoId('accRequestModal-LanguagePreference-Select').select(i18n._English_);
-					cy.getByAutoId('accRequestModal-DNACVersion-Select').select('1.20');
+					cy.getByAutoId('accRequestModal-DNACVersion-Select').select('1.2.X');
 					cy.getByAutoId('accRequestModal-WhyInterestedAccelerator-Input').type('Automation - Test Interest');
 					cy.getByAutoId('accRequestModal-WhatWouldLikeToSeeOutcome-Input').type('Automation - Test Outcome');
 					cy.getByAutoId('accRequestModal-PreferredEnvironmentAccelerator-NonProd').click();
@@ -1281,7 +1287,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 						expect(request.body.customerId)
 							.to.include('2431199');
 						expect(request.body.dnacVersion)
-							.to.include('1.20');
+							.to.include('1.2.X');
 						expect(request.body.environment)
 							.to.include('My non-production environment');
 						expect(request.body.jobTitle)
@@ -1346,7 +1352,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				twoRecommendedItems.forEach((acc, index) => {
 					if (acc.status === 'recommended') {
 						cy.getByAutoId('ACCCard').eq(index).within(() => {
-							cy.getByAutoId('Request1on1ACCButton').click();
+							cy.getByAutoId('Request1on1ACCButton').click({ force: true });
 						});
 						cy.getByAutoId('accRequestModal').should('exist');
 						cy.getByAutoId('accRequestModal-ItemTitle').should('have.text', acc.title);
@@ -1642,7 +1648,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				if (item.status === 'recommended') {
 					cy.get('tr').eq(index + 1).within(() => {
 						cy.getByAutoId('Request1on1ACCButton')
-							.click();
+							.click({ force: true });
 					});
 					cy.getByAutoId('accRequestModal-Title').should('be.visible');
 
@@ -2406,7 +2412,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			cy.getByAutoId('Request1on1ACCButton')
 				.first()
 				.should('not.have.class', 'disabled')
-				.click();
+				.click({ force: true });
 			cy.getByAutoId('accRequestModal-Title').should('be.visible');
 
 			// Close the modal
@@ -2423,7 +2429,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			cy.getByAutoId('Request1on1ACCButton')
 				.first()
 				.should('not.have.class', 'disabled')
-				.click();
+				.click({ force: true });
 			cy.getByAutoId('accRequestModal-Title').should('be.visible');
 
 			// Close the modal

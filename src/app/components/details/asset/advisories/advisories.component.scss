@@ -15,22 +15,3 @@
 		padding-right: 30px;
 	}
 }
-
-.btn.btn--primary-ghost {
-	border: 1px solid #c8d4d7;
-	color: #394454;
-	font-size: 13px;
-	height: 25px;
-
-	&.selected {
-		background-color: #00bceb;
-		box-shadow: unset;
-		border-color: transparent;
-	}
-
-	&:hover:not(.selected) {
-		background-color: #fff;
-		color: #394454;
-		border-color: #227bb1;
-	}
-}

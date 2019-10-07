@@ -6,6 +6,7 @@ import {
 	OnChanges,
 	Output,
 	EventEmitter,
+	OnDestroy,
 } from '@angular/core';
 import * as _ from 'lodash-es';
 import {
@@ -14,14 +15,18 @@ import {
 	NetworkElement,
 	DiagnosticsService,
 	CriticalBugsResponse,
+	RacetrackSolution,
+	RacetrackTechnology,
 } from '@sdp-api';
 import { LogService } from '@cisco-ngx/cui-services';
 import {
 	map,
 	catchError,
+	takeUntil,
 } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { of, Subject } from 'rxjs';
 import { Alert } from '@interfaces';
+import { RacetrackInfoService } from '@services';
 
 /** Data Interface */
 export interface Data {
@@ -36,7 +41,7 @@ export interface Data {
 	styleUrls: ['./bug-details.component.scss'],
 	templateUrl: './bug-details.component.html',
 })
-export class BugDetailsComponent implements OnInit, OnChanges {
+export class BugDetailsComponent implements OnInit, OnChanges, OnDestroy {
 
 	@Input('id') public id: string;
 	@Input('advisory') public advisory: CriticalBug;
@@ -54,10 +59,14 @@ export class BugDetailsComponent implements OnInit, OnChanges {
 	public activeTab = 0;
 	public impactedCount = 0;
 	public isLoading = false;
+	private destroyed$: Subject<void> = new Subject<void>();
+	private selectedSolutionName: string;
+	private selectedTechnologyName: string;
 
 	constructor (
 		private logger: LogService,
 		private diagnosticsService: DiagnosticsService,
+		private racetrackInfoService: RacetrackInfoService,
 	) { }
 
 	/**
@@ -101,6 +110,8 @@ export class BugDetailsComponent implements OnInit, OnChanges {
 				customerId: this.customerId,
 				page: 1,
 				rows: 1,
+				solution: this.selectedSolutionName,
+				useCase: this.selectedTechnologyName,
 			};
 
 			this.getBug()
@@ -115,7 +126,24 @@ export class BugDetailsComponent implements OnInit, OnChanges {
 	 * Initializer
 	 */
 	public ngOnInit () {
-		this.refresh();
+		this.racetrackInfoService.getCurrentSolution()
+		.pipe(
+			takeUntil(this.destroyed$),
+		)
+		.subscribe((solution: RacetrackSolution) => {
+			this.selectedSolutionName = _.get(solution, 'name');
+		});
+
+		this.racetrackInfoService.getCurrentTechnology()
+		.pipe(
+			takeUntil(this.destroyed$),
+		)
+		.subscribe((technology: RacetrackTechnology) => {
+			if (this.selectedTechnologyName !== _.get(technology, 'name')) {
+				this.selectedTechnologyName = _.get(technology, 'name');
+				this.refresh();
+			}
+		});
 	}
 
 	/**
@@ -127,5 +155,11 @@ export class BugDetailsComponent implements OnInit, OnChanges {
 		if (currentId && !changes.id.firstChange) {
 			this.refresh();
 		}
+	}
+
+	/** Function used to destroy the component */
+	public ngOnDestroy () {
+		this.destroyed$.next();
+		this.destroyed$.complete();
 	}
 }

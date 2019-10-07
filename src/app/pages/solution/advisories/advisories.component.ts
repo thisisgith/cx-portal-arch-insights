@@ -22,6 +22,8 @@ import {
 	AdvisoriesByLastUpdatedCount,
 	SecurityAdvisoriesResponse,
 	SecurityAdvisoryInfo,
+	RacetrackSolution,
+	RacetrackTechnology,
 } from '@sdp-api';
 import { of, forkJoin, Subject, fromEvent, Subscription } from 'rxjs';
 import * as _ from 'lodash-es';
@@ -38,7 +40,8 @@ import {
 import { VisualFilter, AdvisoryType } from '@interfaces';
 import { LogService } from '@cisco-ngx/cui-services';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DetailsPanelStackService } from '@services';
+import { DetailsPanelStackService, RacetrackInfoService } from '@services';
+import { HttpResponse } from '@angular/common/http';
 
 /** Interface for a tab */
 interface Tab {
@@ -108,6 +111,9 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 	};
 	public contentContainerHeight: string;
 	public activeTab: number;
+	private selectedSolutionName: string;
+	private selectedTechnologyName: string;
+
 	@ViewChild('impactTemplate', { static: true }) private impactTemplate: TemplateRef<{ }>;
 	@ViewChild('impactedCountTemplate', { static: true })
 		private impactedCountTemplate: TemplateRef<{ }>;
@@ -162,6 +168,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 		public route: ActivatedRoute,
 		public router: Router,
 		private detailsPanelStackService: DetailsPanelStackService,
+		private racetrackInfoService: RacetrackInfoService,
 	) {
 		this.routeParam = _.get(this.route, ['snapshot', 'params', 'advisory'], 'security');
 
@@ -174,7 +181,8 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 	 */
 	private adjustQueryParams () {
 		const queryParams =
-			_.omit(_.cloneDeep(this.selectedTab.params), ['customerId', 'rows']);
+			_.omit(_.cloneDeep(this.selectedTab.params),
+				['customerId', 'rows', 'solution', 'useCase']);
 
 		this.selectedTab.filtered = !_.isEmpty(_.omit(queryParams, ['sort', 'page']));
 
@@ -400,7 +408,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 					},
 				],
 				key: 'bug',
-				label: I18n.get('_CriticalBugs_'),
+				label: I18n.get('_PriorityBugs_'),
 				loading: true,
 				options: new CuiTableOptions({
 					bordered: true,
@@ -476,6 +484,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 		});
 
 		this.activeIndex = _.findIndex(this.tabs, 'selected');
+
 		this.buildSecurityAdvisoriesSubject();
 		this.buildFieldNoticesSubject();
 		this.buildBugsSubject();
@@ -525,7 +534,11 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 		const securityTab = _.find(this.tabs, { key: 'security' });
 		const impactFilter = _.find(securityTab.filters, { key: 'severity' });
 
-		return this.productAlertsService.getSecurityAdvisorySeverityCount(this.customerId)
+		return this.productAlertsService.getSecurityAdvisorySeverityCount({
+			customerId: this.customerId,
+			solution: this.selectedSolutionName,
+			useCase: this.selectedTechnologyName,
+		})
 		.pipe(
 			map((data: SecurityAdvisorySeverityCountResponse) => {
 				impactFilter.seriesData = _.compact(_.map(data, (count, severity) => {
@@ -573,7 +586,11 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 		const lastUpdateFilter =
 			_.find(securityTab.filters, { key: 'lastUpdate' });
 
-		return this.productAlertsService.getSecurityAdvisoryLastUpdatedCount(this.customerId)
+		return this.productAlertsService.getSecurityAdvisoryLastUpdatedCount({
+			customerId: this.customerId,
+			solution: this.selectedSolutionName,
+			useCase: this.selectedTechnologyName,
+		})
 			.pipe(
 				map((data: AdvisoriesByLastUpdatedCount) => {
 					const series = [];
@@ -659,7 +676,11 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 		const lastUpdateFilter =
 			_.find(fieldNoticesTab.filters, { key: 'lastUpdate' });
 
-		return this.productAlertsService.getFieldNoticesLastUpdatedCount(this.customerId)
+		return this.productAlertsService.getFieldNoticesLastUpdatedCount({
+			customerId: this.customerId,
+			solution: this.selectedSolutionName,
+			useCase: this.selectedTechnologyName,
+		})
 		.pipe(
 			map((data: FieldNoticeUpdatedResponse) => {
 				const series = [];
@@ -744,7 +765,11 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 		const bugsTab = _.find(this.tabs, { key: 'bug' });
 		const bugStateFilter = _.find(bugsTab.filters, { key: 'state' });
 
-		return this.diagnosticsService.getCriticalBugsStateCount(this.customerId)
+		return this.diagnosticsService.getCriticalBugsStateCount({
+			customerId: this.customerId,
+			solution: this.selectedSolutionName,
+			useCase: this.selectedTechnologyName,
+		})
 		.pipe(
 			map((data: CriticalBugsCount) => {
 				const series = [];
@@ -831,13 +856,15 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 		const totalBugsFilter = _.find(bugsTab.filters, { key: 'total' });
 
 		return forkJoin([
-			this.productAlertsService.getAdvisoriesFieldNotices({
-				customerId: this.customerId, page: 1, rows: 1,
+			this.productAlertsService.headAdvisoriesFieldNoticesResponse({
+				customerId: this.customerId,
+				solution: this.selectedSolutionName,
+				useCase: this.selectedTechnologyName,
 			})
 			.pipe(
-				map((response: FieldNoticeAdvisoryResponse) => {
+				map((response: HttpResponse<null>) => {
 					totalFieldNoticesFilter.seriesData = [{
-						value: _.get(response, ['Pagination', 'total'], 0),
+						value: _.toNumber(response.headers.get('X-API-RESULT-COUNT')) || 0,
 					}];
 					totalFieldNoticesFilter.loading = false;
 				}),
@@ -850,13 +877,15 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 					return of({ });
 				}),
 			),
-			this.productAlertsService.getAdvisoriesSecurityAdvisories({
-				customerId: this.customerId, page: 1, rows: 1,
+			this.productAlertsService.headAdvisoriesSecurityAdvisoriesResponse({
+				customerId: this.customerId,
+				solution: this.selectedSolutionName,
+				useCase: this.selectedTechnologyName,
 			})
 			.pipe(
-				map((response: SecurityAdvisoriesResponse) => {
+				map((response: HttpResponse<null>) => {
 					totalAdvisoryFilter.seriesData = [{
-						value: _.get(response, ['Pagination', 'total'], 0),
+						value: _.toNumber(response.headers.get('X-API-RESULT-COUNT')) || 0,
 					}];
 					totalAdvisoryFilter.loading = false;
 				}),
@@ -869,13 +898,15 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 					return of({ });
 				}),
 			),
-			this.diagnosticsService.getCriticalBugs({
-				customerId: this.customerId, page: 1, rows: 1,
+			this.diagnosticsService.headCriticalBugsResponse({
+				customerId: this.customerId,
+				solution: this.selectedSolutionName,
+				useCase: this.selectedTechnologyName,
 			})
 			.pipe(
-				map((response: CriticalBugsResponse) => {
+				map((response: HttpResponse<null>) => {
 					totalBugsFilter.seriesData = [{
-						value: _.get(response, ['Pagination', 'total'], 0),
+						value: _.toNumber(response.headers.get('X-API-RESULT-COUNT')) || 0,
 					}];
 					totalBugsFilter.loading = false;
 				}),
@@ -1009,6 +1040,9 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 		tab.data = [];
 
 		const params = _.omit(_.cloneDeep(tab.params), ['lastUpdatedDateRange']);
+		params.solution = this.selectedSolutionName;
+		params.useCase = this.selectedTechnologyName;
+
 		const lastUpdate = _.get(tab, ['params', 'lastUpdatedDateRange']);
 		if (lastUpdate) {
 			const rangeValue = _.head(lastUpdate);
@@ -1057,7 +1091,11 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 		}
 		tab.data = [];
 
-		return this.diagnosticsService.getCriticalBugs(tab.params)
+		const params = _.cloneDeep(tab.params);
+		params.solution = this.selectedSolutionName;
+		params.useCase = this.selectedTechnologyName;
+
+		return this.diagnosticsService.getCriticalBugs(params)
 		.pipe(
 			map((response: CriticalBugsResponse) => {
 				tab.data = _.get(response, 'data', []);
@@ -1091,6 +1129,9 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 		tab.data = [];
 
 		const params = _.omit(_.cloneDeep(tab.params), ['lastUpdatedDateRange']);
+		params.solution = this.selectedSolutionName;
+		params.useCase = this.selectedTechnologyName;
+
 		const lastUpdate = _.get(tab, ['params', 'lastUpdatedDateRange']);
 		if (lastUpdate) {
 			const rangeValue = _.head(lastUpdate);
@@ -1371,7 +1412,24 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 				_.omit(_.cloneDeep(tab.params), ['customerId', 'rows', 'page', 'sort']));
 		});
 
-		this.loadData();
+		this.racetrackInfoService.getCurrentSolution()
+		.pipe(
+			takeUntil(this.destroy$),
+		)
+		.subscribe((solution: RacetrackSolution) => {
+			this.selectedSolutionName = _.get(solution, 'name');
+		});
+
+		this.racetrackInfoService.getCurrentTechnology()
+		.pipe(
+			takeUntil(this.destroy$),
+		)
+		.subscribe((technology: RacetrackTechnology) => {
+			if (this.selectedTechnologyName !== _.get(technology, 'name')) {
+				this.selectedTechnologyName = _.get(technology, 'name');
+				this.loadData();
+			}
+		});
 	}
 
 	/**

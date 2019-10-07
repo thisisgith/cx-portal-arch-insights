@@ -7,7 +7,6 @@ import {
 	IAsset,
 	assetExceptionList,
 	InventoryService,
-	AssetLinkInfo,
 } from '@sdp-api';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
@@ -15,6 +14,7 @@ import { DatePipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import * as _ from 'lodash-es';
 import { AssetPanelLinkService } from '@services';
+import { AssetLinkInfo } from '@interfaces';
 
 /**
  * Devices With Exceptions Component
@@ -76,7 +76,7 @@ export class DevicesWithExceptionsComponent implements OnInit {
 			columns: [
 				{
 					key: 'hostName',
-					name: I18n.get('_ArchitectureHostName_'),
+					name: I18n.get('_ArchitectureSystemName_'),
 					sortable: false,
 				},
 				{
@@ -85,13 +85,13 @@ export class DevicesWithExceptionsComponent implements OnInit {
 					sortable: false,
 				},
 				{
-					key: 'productId',
-					name: I18n.get('_ArchitectureProductId_'),
+					key: 'productFamily',
+					name: I18n.get('_ArchitectureProductFamily_'),
 					sortable: false,
 				},
 				{
-					key: 'productFamily',
-					name: I18n.get('_ArchitectureProductFamily_'),
+					key: 'productId',
+					name: I18n.get('_ArchitectureProductId_'),
 					sortable: false,
 				},
 				{
@@ -101,7 +101,7 @@ export class DevicesWithExceptionsComponent implements OnInit {
 				},
 				{
 					key: 'softwareVersion',
-					name: I18n.get('_ArchitectureSoftwareVersion_'),
+					name: I18n.get('_ArchitectureSoftwareRelease_'),
 					sortable: false,
 				},
 				{
@@ -113,7 +113,7 @@ export class DevicesWithExceptionsComponent implements OnInit {
 				},
 				{
 					key: 'ruleIdWithExceptions',
-					name: I18n.get('_ArchitectureCBPExceptions_'),
+					name: I18n.get('_ArchitectureExceptions_'),
 					render: item =>
 						item.ruleIdWithExceptions.split(';').length,
 					sortable: false,

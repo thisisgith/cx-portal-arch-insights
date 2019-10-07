@@ -3,7 +3,7 @@ import { fakeAsync, tick, ComponentFixture, TestBed } from '@angular/core/testin
 
 import { AssetsComponent } from './assets.component';
 import { AssetsModule } from './assets.module';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpResponse, HttpHeaders } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MicroMockModule } from '@cui-x-views/mock';
 import { environment } from '@environment';
@@ -22,6 +22,7 @@ import { ActivatedRoute } from '@angular/router';
 import {
 	user,
 	Mock,
+	RacetrackScenarios,
 	AssetScenarios,
 	ContractScenarios,
 	CoverageScenarios,
@@ -30,6 +31,7 @@ import {
 	RoleScenarios,
 	VulnerabilityScenarios,
 } from '@mock';
+import { RacetrackInfoService } from '@services';
 
 /**
  * Will fetch the currently active response body from the mock object
@@ -50,12 +52,33 @@ describe('AssetsComponent', () => {
 	let inventoryService: InventoryService;
 	let productAlertsService: ProductAlertsService;
 	let contractsService: ContractsService;
+	let racetrackInfoService: RacetrackInfoService;
+
+	/**
+	 * Sends our racetrack info
+	 */
+	const sendRacetrack = () => {
+		racetrackInfoService.sendRacetrack(getActiveBody(RacetrackScenarios[0]));
+		racetrackInfoService.sendCurrentSolution(
+			getActiveBody(RacetrackScenarios[0]).solutions[0],
+		);
+		racetrackInfoService.sendCurrentTechnology(
+			getActiveBody(RacetrackScenarios[0]).solutions[0].technologies[0],
+		);
+	};
 
 	const buildSpies = () => {
+		const countHeaders = new HttpHeaders().set('X-API-RESULT-COUNT', '4');
 		const assets = getActiveBody(AssetScenarios[5]);
 		spyOn(inventoryService, 'getAssets')
 			.and
 			.returnValue(of(assets));
+		spyOn(inventoryService, 'headAssetsResponse')
+			.and
+			.returnValue(of(new HttpResponse({
+				headers: countHeaders,
+				status: 200,
+			})));
 		spyOn(inventoryService, 'getNetworkElements')
 			.and
 			.returnValue(of(NetworkScenarios[1].scenarios.GET[0].response.body));
@@ -81,6 +104,8 @@ describe('AssetsComponent', () => {
 		spyOn(productAlertsService, 'getHardwareEolTopCount')
 			.and
 			.returnValue(of(HardwareEOLCountScenarios[0].scenarios.GET[0].response.body));
+
+		sendRacetrack();
 	};
 
 	describe('Without Query Params', () => {
@@ -114,6 +139,7 @@ describe('AssetsComponent', () => {
 			inventoryService = TestBed.get(InventoryService);
 			productAlertsService = TestBed.get(ProductAlertsService);
 			contractsService = TestBed.get(ContractsService);
+			racetrackInfoService = TestBed.get(RacetrackInfoService);
 			fixture = TestBed.createComponent(AssetsComponent);
 			component = fixture.componentInstance;
 		});
@@ -163,6 +189,9 @@ describe('AssetsComponent', () => {
 				.toBe(0);
 			expect(_.find(component.filters, { key: 'coverage' }).seriesData.length)
 				.toBe(0);
+
+			fixture.destroy();
+			tick();
 		}));
 
 		it('should switch active filters', fakeAsync(() => {
@@ -182,6 +211,9 @@ describe('AssetsComponent', () => {
 
 			expect(_.filter(component.filters, 'selected'))
 				.toContain(coverageFilter);
+
+			fixture.destroy();
+			tick();
 		}));
 
 		it('should set query params for Hardware EOX filter', fakeAsync(() => {
@@ -213,6 +245,9 @@ describe('AssetsComponent', () => {
 			fixture.detectChanges();
 			expect(_.get(component, ['assetParams', 'lastDateOfSupportRange'])[0])
 				.toEqual('gt-60-lt-90-days');
+
+			fixture.destroy();
+			tick();
 		}));
 
 		it('should set query params for Advisories filter', fakeAsync(() => {
@@ -248,6 +283,9 @@ describe('AssetsComponent', () => {
 				.toBeFalsy();
 			expect(_.get(component, ['assetParams', 'hasSecurityAdvisories']))
 				.toBeTruthy();
+
+			fixture.destroy();
+			tick();
 		}));
 
 		it('should select a coverage subfilter', fakeAsync(() => {
@@ -267,6 +305,9 @@ describe('AssetsComponent', () => {
 
 			expect(subfilter.selected)
 				.toBeTruthy();
+
+			fixture.destroy();
+			tick();
 		}));
 
 		it('should clear the filter when selecting the same subfilter twice', fakeAsync(() => {
@@ -294,6 +335,9 @@ describe('AssetsComponent', () => {
 
 			expect(subfilter.selected)
 				.toBeFalsy();
+
+			fixture.destroy();
+			tick();
 		}));
 
 		it('should select view', fakeAsync(() => {
@@ -325,6 +369,9 @@ describe('AssetsComponent', () => {
 
 			expect(component.selectedAssets.length)
 				.toBe(0);
+
+			fixture.destroy();
+			tick();
 		}));
 
 		it('should clear selected filters', fakeAsync(() => {
@@ -337,6 +384,9 @@ describe('AssetsComponent', () => {
 
 			expect(_.some(component.filters, 'selected'))
 				.toBeFalsy();
+
+			fixture.destroy();
+			tick();
 		}));
 
 		it('should clear filters', fakeAsync(() => {
@@ -367,6 +417,9 @@ describe('AssetsComponent', () => {
 
 			expect(totalFilter.selected)
 				.toBeTruthy();
+
+			fixture.destroy();
+			tick();
 		}));
 
 		it('should close panel', fakeAsync(() => {
@@ -378,6 +431,9 @@ describe('AssetsComponent', () => {
 
 			expect(component.selectedAsset)
 				.toBeFalsy();
+
+			fixture.destroy();
+			tick();
 		}));
 
 		it('should search', fakeAsync(() => {
@@ -394,6 +450,9 @@ describe('AssetsComponent', () => {
 
 			expect(component.assetParams.search)
 				.toBeTruthy();
+
+			fixture.destroy();
+			tick();
 		}));
 
 		it('should not search', fakeAsync(() => {
@@ -410,6 +469,9 @@ describe('AssetsComponent', () => {
 
 			expect(component.assetParams.search)
 				.toBeFalsy();
+
+			fixture.destroy();
+			tick();
 		}));
 
 		it('should unset search param if search input is empty for refresh', fakeAsync(() => {
@@ -427,6 +489,9 @@ describe('AssetsComponent', () => {
 
 			expect(_.get(component.assetParams, 'search'))
 				.toBeFalsy();
+
+			fixture.destroy();
+			tick();
 		}));
 
 		it('should handle unsortable column', fakeAsync(() => {
@@ -460,6 +525,9 @@ describe('AssetsComponent', () => {
 				.toBe('desc');
 			expect(_.get(component, ['params', 'sort']))
 				.toBeFalsy();
+
+			fixture.destroy();
+			tick();
 		}));
 
 		it('should not refresh when valid search query', fakeAsync(() => {
@@ -472,6 +540,9 @@ describe('AssetsComponent', () => {
 
 			expect(_.get(component.assetParams, 'search'))
 				.toBe('search');
+
+			fixture.destroy();
+			tick();
 		}));
 
 		it('should handle sortable column', fakeAsync(() => {
@@ -500,10 +571,14 @@ describe('AssetsComponent', () => {
 				.toBe('asc');
 			expect(_.get(component, ['assetParams', 'sort']))
 				.toEqual(['serialNumber:ASC']);
+
+			fixture.destroy();
+			tick();
 		}));
 
 		it('should create our pagination after results load', fakeAsync(() => {
 			buildSpies();
+
 			const assets = getActiveBody(AssetScenarios[5]);
 
 			fixture.detectChanges();
@@ -515,6 +590,9 @@ describe('AssetsComponent', () => {
 
 			expect(component.paginationCount)
 				.toEqual(`${first}-${last}`);
+
+			fixture.destroy();
+			tick();
 		}));
 
 		it('should set the coverage filter if param selected', fakeAsync(() => {
@@ -527,6 +605,9 @@ describe('AssetsComponent', () => {
 
 			expect(_.filter(component.filters, 'selected'))
 				.toContain(coverageFilter);
+
+			fixture.destroy();
+			tick();
 		}));
 
 		it('should set the role filter if param selected', fakeAsync(() => {
@@ -538,6 +619,9 @@ describe('AssetsComponent', () => {
 
 			expect(_.filter(component.filters, 'selected'))
 				.toContain(roleFilter);
+
+			fixture.destroy();
+			tick();
 		}));
 
 		it('should set the contract filter if param selected', fakeAsync(() => {
@@ -549,6 +633,9 @@ describe('AssetsComponent', () => {
 
 			expect(_.filter(component.filters, 'selected'))
 				.toContain(contractFilter);
+
+			fixture.destroy();
+			tick();
 		}));
 
 		it('should set the appropriate device icon based on type', fakeAsync(() => {
@@ -598,6 +685,9 @@ describe('AssetsComponent', () => {
 
 			expect(component.getProductIcon(Router))
 				.toEqual('router-outline');
+
+			fixture.destroy();
+			tick();
 		}));
 	});
 
@@ -640,6 +730,7 @@ describe('AssetsComponent', () => {
 			inventoryService = TestBed.get(InventoryService);
 			productAlertsService = TestBed.get(ProductAlertsService);
 			contractsService = TestBed.get(ContractsService);
+			racetrackInfoService = TestBed.get(RacetrackInfoService);
 			fixture = TestBed.createComponent(AssetsComponent);
 			component = fixture.componentInstance;
 		});
@@ -659,6 +750,9 @@ describe('AssetsComponent', () => {
 				.toBe(true);
 			expect(_.get(component.assetParams, 'lastDateOfSupportRange'))
 				.toEqual(['gt-30-lt-60-days']);
+
+			fixture.destroy();
+			tick();
 		}));
 	});
 });

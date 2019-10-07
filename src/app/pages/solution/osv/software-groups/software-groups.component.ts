@@ -36,6 +36,7 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 	@Output() public selectedSoftwareGroupChange = new EventEmitter<SoftwareGroup>();
 	@Input() public tabIndex;
 	@Output() public tabIndexChange = new EventEmitter<number>();
+	@Input() public softwareGroupsCount;
 	@ViewChild('recommendationsTemplate', { static: true })
 	private recommendationsTemplate: TemplateRef<{ }>;
 	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
@@ -43,7 +44,7 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 	private currentOSVersionsTemp: TemplateRef<{ }>;
 	public softwareGroupsTable: CuiTableOptions;
 	public status = {
-		isLoading: true,
+		isLoading: false,
 	};
 	public softwareGroups: SoftwareGroup[];
 	public pagination: OsvPagination;
@@ -73,7 +74,9 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 	 * OnInit lifecycle hook
 	 */
 	public ngOnInit () {
-		this.loadData();
+		if (this.softwareGroupsCount > 0) {
+			this.loadData();
+		}
 	}
 
 	/**
@@ -162,12 +165,6 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 						width: '25%',
 					},
 					{
-						key: 'assetCount',
-						name: I18n.get('_OsvAssetCount_'),
-						sortable: false,
-						width: '10%',
-					},
-					{
 						key: 'swType',
 						name: I18n.get('_OsvOSType_'),
 						sortable: false,
@@ -182,8 +179,16 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 					{
 						key: 'optimalVersion',
 						name: I18n.get('_OsvOptimalVersion_'),
+						render: item =>
+								item.optimalVersion ? item.optimalVersion : '',
 						sortable: false,
 						width: '15%',
+					},
+					{
+						key: 'assetCount',
+						name: I18n.get('_OsvAssetCount_'),
+						sortable: false,
+						width: '10%',
 					},
 					{
 						name: I18n.get('_OsvRecommendations_'),

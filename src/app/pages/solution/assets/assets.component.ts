@@ -26,6 +26,9 @@ import {
 	ScanRequestResponse,
 	NetworkElementResponse,
 	NetworkElement,
+	TransactionStatusResponse,
+	RacetrackSolution,
+	RacetrackTechnology,
 } from '@sdp-api';
 import * as _ from 'lodash-es';
 import { CuiModalService, CuiTableOptions } from '@cisco-ngx/cui-components';
@@ -42,11 +45,11 @@ import {
 	takeUntil,
 } from 'rxjs/operators';
 import { Router, ActivatedRoute } from '@angular/router';
-import { FromNowPipe } from '@cisco-ngx/cui-pipes';
 import { VisualFilter } from '@interfaces';
 import { CaseOpenComponent } from '@components';
 import { getProductTypeImage, getProductTypeTitle } from '@classes';
-import { DetailsPanelStackService } from '@services';
+import { DetailsPanelStackService, RacetrackInfoService } from '@services';
+import { HttpResponse } from '@angular/common/http';
 
 /**
  * Interface representing an item of our inventory in our assets table
@@ -84,6 +87,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 
 	@ViewChild('deviceTemplate', { static: true }) private deviceTemplate: TemplateRef<{ }>;
 	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
+	@ViewChild('lastScanTemplate', { static: true }) private lastScanTemplate: TemplateRef<{ }>;
 	@ViewChild('supportCoverage', { static: true })
 		private supportCoverageTemplate: TemplateRef<{ }>;
 	@ViewChild('criticalAdvisories', { static: true })
@@ -137,6 +141,8 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	public allAssetsSelected = false;
 	public filtered = false;
 	private InventorySubject: Subject<{ }>;
+	private selectedSolutionName: string;
+	private selectedTechnologyName: string;
 
 	public view: 'list' | 'grid' = 'list';
 	public selectOnLoad = false;
@@ -154,9 +160,9 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		private productAlertsService: ProductAlertsService,
 		public route: ActivatedRoute,
 		public router: Router,
-		private fromNow: FromNowPipe,
 		private networkService: NetworkDataGatewayService,
 		private detailsPanelStackService: DetailsPanelStackService,
+		private racetrackInfoService: RacetrackInfoService,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
@@ -216,7 +222,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				onClick: () => this.cuiModalService.showComponent(
 					CaseOpenComponent,
 					{ asset: item.data },
-					'full',
+					'fluid',
 				),
 			} : undefined,
 			_.get(item, ['element', 'isManagedNE'], false) ?
@@ -342,7 +348,8 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 * Will adjust the browsers query params to preserve the current state
 	 */
 	private adjustQueryParams () {
-		const queryParams = _.omit(_.cloneDeep(this.assetParams), ['customerId', 'rows']);
+		const queryParams = _.omit(_.cloneDeep(this.assetParams),
+			['customerId', 'rows', 'solution', 'useCase']);
 		this.filtered = !_.isEmpty(_.omit(queryParams, ['sort', 'page']));
 		this.router.navigate([], {
 			queryParams,
@@ -511,6 +518,11 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		if (window.Cypress) {
 			window.loading = true;
 		}
+
+		this.buildInventorySubject();
+		this.buildTable();
+		this.buildFilters();
+
 		const currentView = window.sessionStorage.getItem('view');
 		if (!currentView) {
 			window.sessionStorage.setItem('view', this.view);
@@ -519,9 +531,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		}
 
 		this.assetParams.rows = this.getRows();
-		this.buildTable();
-		this.buildInventorySubject();
-		this.buildFilters();
+
 		this.route.queryParams.subscribe(params => {
 			if (params.page) {
 				const page = _.toSafeInteger(params.page);
@@ -591,7 +601,29 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			const totalFilter = _.find(this.filters, { key: 'total' });
 			totalFilter.selected = !this.filtered;
 		});
-		this.loadData();
+
+		this.racetrackInfoService.getCurrentSolution()
+		.pipe(
+			takeUntil(this.destroy$),
+		)
+		.subscribe((solution: RacetrackSolution) => {
+			this.selectedSolutionName = _.get(solution, 'name');
+			this.contractCountParams.solution = this.selectedSolutionName;
+		});
+
+		this.racetrackInfoService.getCurrentTechnology()
+		.pipe(
+			takeUntil(this.destroy$),
+		)
+		.subscribe((technology: RacetrackTechnology) => {
+			if (this.selectedTechnologyName !== _.get(technology, 'name')) {
+				this.selectedTechnologyName = _.get(technology, 'name');
+				this.contractCountParams.useCase = this.selectedTechnologyName;
+				this.buildTable();
+				this.buildFilters();
+				this.loadData();
+			}
+		});
 	}
 
 	/**
@@ -669,51 +701,53 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 * @param tab the tab we're building the filters for
 	 */
 	private buildFilters () {
-		this.filters = [
-			{
-				key: 'total',
-				loading: true,
-				selected: true,
-				seriesData: [],
-				template: this.totalFilterTemplate,
-				title: I18n.get('_Total_'),
-			},
-			{
-				key: 'coverage',
-				loading: true,
-				seriesData: [],
-				template: this.pieChartFilterTemplate,
-				title: I18n.get('_CoverageStatus_'),
-			},
-			{
-				key: 'contractNumber',
-				loading: true,
-				seriesData: [],
-				template: this.pieChartFilterTemplate,
-				title: I18n.get('_ContractNumber_'),
-			},
-			{
-				key: 'advisories',
-				loading: true,
-				seriesData: [],
-				template: this.barChartFilterTemplate,
-				title: I18n.get('_Advisories_'),
-			},
-			{
-				key: 'eox',
-				loading: true,
-				seriesData: [],
-				template: this.barChartFilterTemplate,
-				title: I18n.get('_HardwareEOX_'),
-			},
-			{
-				key: 'role',
-				loading: true,
-				seriesData: [],
-				template: this.bubbleChartFilterTemplate,
-				title: I18n.get('_NetworkRole_'),
-			},
-		];
+		if (!this.filters) {
+			this.filters = [
+				{
+					key: 'total',
+					loading: true,
+					selected: true,
+					seriesData: [],
+					template: this.totalFilterTemplate,
+					title: I18n.get('_Total_'),
+				},
+				{
+					key: 'coverage',
+					loading: true,
+					seriesData: [],
+					template: this.pieChartFilterTemplate,
+					title: I18n.get('_CoverageStatus_'),
+				},
+				{
+					key: 'contractNumber',
+					loading: true,
+					seriesData: [],
+					template: this.pieChartFilterTemplate,
+					title: I18n.get('_ContractNumber_'),
+				},
+				{
+					key: 'advisories',
+					loading: true,
+					seriesData: [],
+					template: this.barChartFilterTemplate,
+					title: I18n.get('_Advisories_'),
+				},
+				{
+					key: 'eox',
+					loading: true,
+					seriesData: [],
+					template: this.barChartFilterTemplate,
+					title: I18n.get('_HardwareEOX_'),
+				},
+				{
+					key: 'role',
+					loading: true,
+					seriesData: [],
+					template: this.bubbleChartFilterTemplate,
+					title: I18n.get('_NetworkRole_'),
+				},
+			];
+		}
 	}
 
 	/**
@@ -787,7 +821,11 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	private getCoverageCounts () {
 		const coverageFilter = _.find(this.filters, { key: 'coverage' });
 
-		return this.contractsService.getCoverageCounts({ customerId: this.customerId })
+		return this.contractsService.getCoverageCounts({
+			customerId: this.customerId,
+			solution: this.selectedSolutionName,
+			useCase: this.selectedTechnologyName,
+		})
 		.pipe(
 			map((data: CoverageCountsResponse) => {
 				coverageFilter.seriesData = _.compact(_.map(data, (value: number, key: string) => {
@@ -819,7 +857,11 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	private getAdvisoryCount () {
 		const advisoryFilter = _.find(this.filters, { key: 'advisories' });
 
-		return this.productAlertsService.getVulnerabilityCounts({ customerId: this.customerId })
+		return this.productAlertsService.getVulnerabilityCounts({
+			customerId: this.customerId,
+			solution: this.selectedSolutionName,
+			useCase: this.selectedTechnologyName,
+		})
 		.pipe(
 			map((data: VulnerabilityResponse) => {
 				const series = [];
@@ -829,7 +871,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				if (bugs) {
 					series.push({
 						filter: 'hasBugs',
-						label: I18n.get('_Bugs_'),
+						label: I18n.get('_PriorityBugs_'),
 						selected: false,
 						value: bugs,
 					});
@@ -877,7 +919,11 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	private getRoleCounts () {
 		const roleFilter = _.find(this.filters, { key: 'role' });
 
-		return this.inventoryService.getRoleCount({ customerId: this.customerId })
+		return this.inventoryService.getRoleCount({
+			customerId: this.customerId,
+			solution: this.selectedSolutionName,
+			useCase: this.selectedTechnologyName,
+		})
 		.pipe(
 			map((data: RoleCountResponse) => {
 				roleFilter.seriesData = _.map(data, (d: RoleCount) => ({
@@ -953,9 +999,8 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					{
 						key: 'lastScan',
 						name: I18n.get('_LastScan_'),
-						render: item => item.lastScan ?
-							this.fromNow.transform(item.lastScan) : I18n.get('_Never_'),
 						sortable: false,
+						template: this.lastScanTemplate,
 						width: '100px',
 					},
 					{
@@ -994,13 +1039,18 @@ export class AssetsComponent implements OnInit, OnDestroy {
 
 		const params = _.assignIn(
 			_.pick(
-				_.cloneDeep(this.assetParams), ['customerId', 'page']), { rows: 1 });
+				_.cloneDeep(this.assetParams), ['customerId']), {
+					solution: this.selectedSolutionName,
+					useCase: this.selectedTechnologyName,
+				});
 
-		return this.inventoryService.getAssets(params)
+		return this.inventoryService.headAssetsResponse(params)
 		.pipe(
-			map((results: Assets) => {
+			map((response: HttpResponse<null>) => {
+				const value = _.toNumber(response.headers.get('X-API-RESULT-COUNT')) || 0;
+
 				totalFilter.seriesData = [{
-					value: _.get(results, ['Pagination', 'total'], 0),
+					value,
 				}];
 
 				totalFilter.loading = false;
@@ -1016,13 +1066,36 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	}
 
 	/**
+	 * Will handle reloading data if our scan request has completed
+	 * @param transaction the transaction status of the completed or failed scan
+	 */
+	public handleScanStatus (transaction: TransactionStatusResponse) {
+		if (transaction.status === 'SUCCESS') {
+			forkJoin(
+				this.getAdvisoryCount(),
+				this.fetchInventory(),
+			)
+			.subscribe(() => {
+				const currentSerial = _.get(this.selectedAsset, ['data', 'serialNumber']);
+				const refreshed = _.find(this.inventory, (i: Item) =>
+					_.get(i, ['data', 'serialNumber']) === currentSerial);
+				this.onRowSelect(refreshed);
+			});
+		}
+	}
+
+	/**
 	 * Fetches the hardware eox counts for the visual filter
 	 * @returns the counts
 	 */
 	private getHardwareEOXCounts () {
 		const eoxFilter = _.find(this.filters, { key: 'eox' });
 
-		return this.productAlertsService.getHardwareEolTopCount(this.customerId)
+		return this.productAlertsService.getHardwareEolTopCount({
+			customerId: this.customerId,
+			solution: this.selectedSolutionName,
+			useCase: this.selectedTechnologyName,
+		})
 		.pipe(
 			map((data: HardwareEOLCountResponse) => {
 				const series = [];
@@ -1110,6 +1183,8 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			page: 1,
 			rows: this.getRows(),
 			serialNumber: _.map(assets.data, 'serialNumber'),
+			solution: this.selectedSolutionName,
+			useCase: this.selectedTechnologyName,
 		};
 
 		return this.inventoryService.getNetworkElements(params)
@@ -1201,6 +1276,8 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		this.pagination = null;
 
 		const assetParams = _.omit(_.cloneDeep(this.assetParams), ['lastDateOfSupportRange']);
+		assetParams.solution = this.selectedSolutionName;
+		assetParams.useCase = this.selectedTechnologyName;
 
 		if (this.assetParams.lastDateOfSupportRange) {
 			const rangeValue = _.head(this.assetParams.lastDateOfSupportRange);

@@ -34,6 +34,13 @@ export class SoftwareGroupRecommendationsComponent implements OnChanges {
 	public groupRecommendationsTable: CuiTableOptions;
 	public currentRecommendation: AssetRecommendations;
 	public groupRecommendations: AssetRecommendations[];
+	public acceptanceAllowed = [
+		'profile current',
+		'suggested',
+		'Recommendation #1',
+		'Recommendation #2',
+		'Recommendation #3',
+	];
 
 	/**
 	 * lifecycle hook
@@ -43,6 +50,9 @@ export class SoftwareGroupRecommendationsComponent implements OnChanges {
 		const recommendations = _.get(changes, ['recommendations', 'currentValue']);
 		if (recommendations) {
 			this.groupRecommendations = this.groupData(recommendations);
+			this.groupRecommendations.forEach((recomm: AssetRecommendations) => {
+				_.set(recomm, 'actions', this.getRowActions(recomm));
+			});
 			this.buildTable();
 		}
 	}
@@ -128,13 +138,13 @@ export class SoftwareGroupRecommendationsComponent implements OnChanges {
 					{
 						sortable: false,
 						template: this.currentTemplate,
-						width: '20%',
+						width: '12%',
 					},
 					{
 						name: I18n.get('_OsvVersion_'),
 						sortable: false,
 						template: this.versionTemplate,
-						width: '35%',
+						width: '38%',
 					},
 					{
 						key: 'postDate',
@@ -147,7 +157,7 @@ export class SoftwareGroupRecommendationsComponent implements OnChanges {
 						name: I18n.get('_OsvStatusOrAction_'),
 						sortable: false,
 						template: this.actionsTemplate,
-						width: '30%',
+						width: '35%',
 					},
 				],
 				dynamicData: true,
@@ -176,6 +186,12 @@ export class SoftwareGroupRecommendationsComponent implements OnChanges {
 		_.map(_.keys(groups), swVersion => {
 			const detail: AssetRecommendations = _.get(_.filter(recommendations, { swVersion }), 0);
 			detail.swVersionGroup = _.cloneDeep(groups[swVersion]);
+			detail.showAccept = false;
+			detail.groupedLabels = _.map(groups[swVersion], recommendation => {
+				if (this.acceptanceAllowed.indexOf(recommendation.name) > -1) {
+					detail.showAccept = true;
+				}
+			});
 			groupedData.push(detail);
 		});
 		this.currentRecommendation = _.get(_.filter(data, { name: 'profile current' }), 0);
@@ -183,4 +199,19 @@ export class SoftwareGroupRecommendationsComponent implements OnChanges {
 		return this.sortData(groupedData);
 	}
 
+	/**
+	 * Returns the row specific actions
+	 * @param recomm the row we're building our actions for
+	 * @returns the built actions
+	 */
+	public getRowActions (recomm: AssetRecommendations) {
+		return [
+			{
+				label: _.upperCase(I18n.get('_Cancel_')),
+				onClick: () => {
+					this.onCancelClick(recomm.swVersion);
+				},
+			},
+		];
+	}
 }

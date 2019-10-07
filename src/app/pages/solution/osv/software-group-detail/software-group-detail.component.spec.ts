@@ -8,13 +8,11 @@ import { OSVService } from '@sdp-api';
 import { OSVScenarios } from '@mock';
 import { of, throwError } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
-import { CuiModalService } from '@cisco-ngx/cui-components';
 
 describe('SoftwareGroupDetailComponent', () => {
 	let component: SoftwareGroupDetailComponent;
 	let fixture: ComponentFixture<SoftwareGroupDetailComponent>;
 	let osvService: OSVService;
-	let cuiModalService: CuiModalService;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -26,7 +24,6 @@ describe('SoftwareGroupDetailComponent', () => {
 		})
 			.compileComponents();
 		osvService = TestBed.get(OSVService);
-		cuiModalService = TestBed.get(CuiModalService);
 	}));
 
 	beforeEach(() => {
@@ -178,7 +175,7 @@ describe('SoftwareGroupDetailComponent', () => {
 
 	it('should trigger onAccept or onCancel actions', () => {
 		spyOn(component, 'onAccept');
-		spyOn(cuiModalService, 'showComponent');
+		spyOn(component, 'onCancel');
 		component.onAction({ type: 'accept', version: '1.1' });
 		fixture.detectChanges();
 		expect(component.onAccept)
@@ -186,7 +183,7 @@ describe('SoftwareGroupDetailComponent', () => {
 
 		component.onAction({ type: 'cancel', version: '1.1' });
 		fixture.detectChanges();
-		expect(cuiModalService.showComponent)
+		expect(component.onCancel)
 			.toHaveBeenCalled();
 
 	});

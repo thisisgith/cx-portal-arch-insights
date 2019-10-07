@@ -33,16 +33,19 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 	@Input() public filters;
 	@Input() public fullscreen;
 	@Input() public cxLevel;
+	@Input() public assetsCount;
 	@Output() public fullscreenChange = new EventEmitter<boolean>();
 	@Output() public selectedAssetChange = new EventEmitter<OSVAsset>();
 	@Output() public contactSupport = new EventEmitter();
 	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
 	@ViewChild('versionTemplate', { static: true }) private versionTemplate: TemplateRef<{ }>;
 	@ViewChild('recommendationsTemplate', { static: true })
-	private recommendationsTemplate: TemplateRef<{ }>;
+		private recommendationsTemplate: TemplateRef<{ }>;
+	@ViewChild('hostTemplate', { static: true })
+		private hostTemplate: TemplateRef<{ }>;
 	public assetsTable: CuiTableOptions;
 	public status = {
-		isLoading: true,
+		isLoading: false,
 	};
 	public assets: OSVAsset[];
 	public pagination: OsvPagination;
@@ -82,7 +85,9 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 	 * OnInit lifecycle hook
 	 */
 	public ngOnInit () {
-		this.loadData();
+		if (this.assetsCount > 0) {
+			this.loadData();
+		}
 	}
 
 	/**
@@ -91,7 +96,7 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 	 */
 	public ngOnChanges (changes: SimpleChanges) {
 		const currentFilter = _.get(changes, ['filters', 'currentValue']);
-		if (currentFilter && !changes.filters.firstChange) {
+		if (currentFilter && !changes.filters.firstChange && this.assetsCount > 0) {
 			this.setFilter(currentFilter);
 			this.loadData();
 		}
@@ -175,6 +180,7 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 						sortable: true,
 						sortDirection: 'asc',
 						sorting: true,
+						template: this.hostTemplate,
 						width: '15%',
 					},
 					{
@@ -184,16 +190,16 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 						width: '10%',
 					},
 					{
-						key: 'profileName',
-						name: I18n.get('_OsvSoftwareGroup_'),
-						sortable: false,
-						width: '10%',
-					},
-					{
 						key: 'productFamily',
 						name: I18n.get('_OsvProductFamily_'),
 						sortable: true,
 						width: '20%',
+					},
+					{
+						key: 'profileName',
+						name: I18n.get('_OsvSoftwareGroup_'),
+						sortable: false,
+						width: '10%',
 					},
 					{
 						key: 'swType',
@@ -210,12 +216,16 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 					{
 						key: 'optimalVersion',
 						name: I18n.get('_OsvOptimalVersion_'),
+						render: item =>
+								item.optimalVersion ? item.optimalVersion : '',
 						sortable: false,
 						width: '10%',
 					},
 					{
 						key: 'deploymentStatus',
 						name: I18n.get('_OsvDeploymentStatus_'),
+						render: item =>
+								item.deploymentStatus ? item.deploymentStatus : '',
 						sortable: false,
 						width: '10%',
 					},

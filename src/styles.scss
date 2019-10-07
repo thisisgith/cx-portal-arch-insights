@@ -48,17 +48,104 @@
 	color: #8e8e8e;
 }
 
-.cx-button {
-	color: #5d656c !important;
-	font-size: 13px;
+// custom CXP button
+.cx-btn {
+	font-weight: 600 !important;
+	outline: none;
+	cursor: pointer;
 
-	&:hover,
-	&:active,
-	&:focus,
-	&--solid {
-		background-color: #95d1d6 !important;
-		color: #fff !important;
-		box-shadow: inset 0 0 0 1px #95d1d6 !important;
+	@include btn-size(
+		$padding: 0 15px,
+		$font-size: 13px !important,
+		$line-height: 13px,
+		$height: 28px,
+		$min-width: 0
+	);
+	@include btn-color(
+		$color: #fff !important,
+		$background: #00bceb,
+		$background-disabled: #00bceb,
+		$background-hover: #227bb1,
+		$background-active: #176899,
+		$background-focus: #176899
+	);
+
+	&.focus,
+	&:focus {
+		box-shadow: 0 0 0 3px #d6eaee;
+	}
+
+	&--primary,
+	&--secondary {
+		font-weight: 400 !important;
+	}
+
+	&--primary {
+		@include btn-color(
+			$color: #5d656c !important,
+			$color-hover: #394454 !important,
+			$color-active: #394454 !important,
+			$color-focus: #176899 !important,
+			$background: #fff,
+			$background-disabled: #fff,
+			$background-hover: #cdeaec,
+			$background-active: #95d1d6,
+			$background-focus: #cdeaec,
+			$border-disabled: #95d1d6
+		);
+
+		box-shadow: 0 0 0 1px #95d1d6;
+
+		&.focus,
+		&:focus {
+			box-shadow: 0 0 0 3px #e6f4f7;
+		}
+	}
+
+	&--secondary {
+		@include btn-color(
+			$color: #00bceb !important,
+			$background: #fff,
+			$background-disabled: #fff,
+			$background-hover: #fff,
+			$background-active: #fff,
+			$background-focus: #fff,
+			$border-disabled: #00bceb
+		);
+
+		box-shadow: 0 0 0 1px #00bceb;
+
+		&.hover,
+		&:hover {
+			box-shadow: 0 0 0 1px #227bb1;
+			color: #227bb1 !important;
+		}
+
+		&.active,
+		&:active {
+			box-shadow: 0 0 0 1px #176899;
+			color: #176899 !important;
+		}
+
+		&.focus,
+		&:focus {
+			box-shadow: 0 0 0 3px #e6f4f7;
+			border: 1px solid #176899;
+			color: #176899 !important;
+		}
+	}
+
+	&--small {
+		height: 25px;
+	}
+
+	&--large {
+		height: 42px;
+	}
+
+	&.disabled,
+	&[disabled] {
+		opacity: 0.3 !important;
 	}
 }
 
@@ -80,10 +167,6 @@
 			justify-content: center;
 			border-radius: 50%;
 			padding: 0;
-
-			&:hover {
-				border-color: #00bceb;
-			}
 		}
 
 		&.disabled {
@@ -198,4 +281,8 @@
 
 .background-expired-lightRed {
 	background: #fce9e8;
+}
+
+.no-wrap {
+	white-space: nowrap;
 }

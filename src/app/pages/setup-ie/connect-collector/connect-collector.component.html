@@ -3,9 +3,9 @@
 		class="text-primary base-margin-bottom"
 		[innerText]="'_StepXColonY_' | i18n:'4':('_CiscoDNACollector_' | i18n)| uppercase"
 	></h6>
-	<h1 [innerText]="'_IE_ConnectLocalMachine_' | i18n"
-		class="dbl-margin-bottom">
-	</h1>
+	<div [innerText]="'_IE_ConnectLocalMachine_' | i18n"
+		class="dbl-margin-bottom step-title">
+	</div>
 	<div class="form-container dbl-margin-bottom">
 		<div *ngIf="view === 'input' || view === 'connecting'">
 			<div class="base-margin-top base-margin-bottom">
@@ -61,13 +61,13 @@
 				<div class="flex-center">
 					<button
 						data-auto-id="connect-to-cx-collector-btn"
-						class="btn btn--secondary qtr-margin-right"
+						class="btn cx-btn base-margin-right"
 						[innerText]="'_ConnectToCXCollector_' | i18n | uppercase"
 						(click)="onSubmit()"
 					>
 					</button>
 					<span [innerText]="'_PressEnter_' | i18n"
-						class="text-large">
+						class="text-medium text-uppercase cx-text-gray">
 					</span>
 				</div>
 			</div>
@@ -112,13 +112,13 @@
 				<div class="base-margin-top flex-center-vertical">
 					<button
 						data-auto-id="submit-btn"
-						class="btn btn--secondary half-margin-right"
+						class="btn cx-btn base-margin-right"
 						type="submit"
 						[innerText]="'_ProceedToCertificate_' | i18n | uppercase"
 						(click)="openIpAddressInNewTab()"
 					></button>
 					<span [innerText]="'_OpensNewTab_' | i18n"
-							class="text-large">
+							class="text-medium text-uppercase cx-text-gray">
 					</span>
 				</div>
 			</ng-container>

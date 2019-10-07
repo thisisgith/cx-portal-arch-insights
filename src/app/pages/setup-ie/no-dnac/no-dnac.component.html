@@ -1,7 +1,7 @@
 <div class="text-center">
-	<h1 [innerText]="'_ConnectDevicesToCXPortal_' | i18n"
-		class="xl-margin-bottom">
-	</h1>
+	<div [innerText]="'_ConnectDevicesToCXPortal_' | i18n"
+		class="xl-margin-bottom step-title">
+	</div>
 	<ng-container *ngIf="!clickedGuideLink">
 		<div class="dbl-margin-bottom">
 			<h4 [innerText]="'_DetectDNACFailureMsg_' | i18n"></h4>
@@ -41,12 +41,12 @@
 		</div>
 		<button
 			data-auto-id="telemetry-configured-btn"
-			class="btn btn--secondary qtr-margin-right"
+			class="btn cx-btn qtr-margin-right"
 			[innerText]="'_TelemetryIsNowConfigured_' | i18n | uppercase"
 			(click)="restartWizard()">
 		</button>
 		<span [innerText]="'_PressEnter_' | i18n"
-			class="text-large">
+			class="text-medium text-uppercase">
 		</span>
 	</ng-container>
 </div>

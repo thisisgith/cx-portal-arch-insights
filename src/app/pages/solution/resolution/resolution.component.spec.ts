@@ -13,14 +13,12 @@ import { ResolutionModule } from './resolution.module';
 import { CaseScenarios } from '@mock';
 
 import * as _ from 'lodash-es';
-import { AssetPanelLinkService } from '@services';
 
 describe('ResolutionComponent', () => {
 	let service: CaseService;
 	let component: ResolutionComponent;
 	let fixture: ComponentFixture<ResolutionComponent>;
 	let router: Router;
-	let assetService: AssetPanelLinkService;
 
 	configureTestSuite(() => {
 		TestBed.configureTestingModule({
@@ -34,7 +32,6 @@ describe('ResolutionComponent', () => {
 
 	beforeEach(() => {
 		service = TestBed.get(CaseService);
-		assetService = TestBed.get(AssetPanelLinkService);
 		spyOn(service, 'read')
 			.and
 			.returnValue(of(CaseScenarios[4].scenarios.GET[0].response.body));
@@ -189,66 +186,6 @@ describe('ResolutionComponent', () => {
 		flush();
 	}));
 
-	it('should select status subfilters', fakeAsync(() => {
-		const statusFilter = _.find(component.filters, { key: 'status' });
-		component.onSubfilterSelect('Customer Updated', statusFilter);
-
-		tick();
-		fixture.detectChanges();
-
-		expect(component.selectedFilters)
-			.toContain(statusFilter);
-
-		let subfilter = _.find(statusFilter.seriesData, { filter: 'Customer Updated' });
-
-		expect(subfilter.selected)
-			.toBeTruthy();
-
-		const ciscoFilter = _.find(component.filters, { key: 'status' });
-		component.onSubfilterSelect('Cisco Pending', ciscoFilter);
-
-		tick();
-		fixture.detectChanges();
-
-		expect(component.selectedFilters)
-			.toContain(ciscoFilter);
-
-		subfilter = _.find(ciscoFilter.seriesData, { filter: 'Cisco Pending' });
-
-		expect(subfilter.selected)
-			.toBeTruthy();
-
-		flush();
-	}));
-
-	it('should clear the filter when selecting the same subfilter twice', fakeAsync(() => {
-		const statusFilter = _.find(component.filters, { key: 'status' });
-		component.onSubfilterSelect('Customer Updated', statusFilter);
-
-		tick();
-		fixture.detectChanges();
-
-		expect(component.selectedFilters)
-			.toContain(statusFilter);
-
-		let subfilter = _.find(statusFilter.seriesData, { filter: 'Customer Updated' });
-
-		expect(subfilter.selected)
-			.toBeTruthy();
-
-		component.onSubfilterSelect('Customer Updated', statusFilter);
-
-		tick();
-		fixture.detectChanges();
-
-		subfilter = _.find(statusFilter.seriesData, { filter: 'Customer Updated' });
-
-		expect(subfilter.selected)
-			.toBeFalsy();
-
-		flush();
-	}));
-
 	it('should select the lastUpdated filter properly', fakeAsync(() => {
 		const lastUpdatedFilter = _.find(component.filters, { key: 'lastUpdated' });
 		component.onSubfilterSelect('≤24 hr', lastUpdatedFilter);
@@ -321,46 +258,4 @@ describe('ResolutionComponent', () => {
 		flush();
 	}));
 
-	it('should clear all status subfilters', fakeAsync(() => {
-		const statusFilter = _.find(component.filters, { key: 'status' });
-		component.onSubfilterSelect('Customer Updated', statusFilter);
-
-		tick();
-		fixture.detectChanges();
-
-		expect(component.selectedFilters)
-			.toContain(statusFilter);
-
-		const ciscoFilter = _.find(component.filters, { key: 'status' });
-		component.onSubfilterSelect('Cisco Pending', ciscoFilter);
-
-		tick();
-		fixture.detectChanges();
-
-		const severityFilter = _.find(component.filters, { key: 'severity' });
-		component.onSubfilterSelect('S1', severityFilter);
-
-		tick();
-		fixture.detectChanges();
-
-		component.clearFilters();
-		const totalFilter = _.find(component.filters, { key: 'total' });
-		expect(component.selectedFilters)
-			.toContain(totalFilter);
-
-		flush();
-	}));
-
-	it('should open asset view upon click on the asset label', () => {
-		const params = {
-			customerId: '2431199',
-			serialNumber: ['FCH2139V1B0'],
-		};
-		spyOn(assetService, 'getAssetLinkData')
-			.and
-			.returnValue(of({ }));
-		component.showAssetDetails(params);
-		expect(assetService.getAssetLinkData)
-			.toHaveBeenCalled();
-	});
 });

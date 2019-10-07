@@ -39,13 +39,13 @@ export class ArchitectureComponent implements OnInit {
 			active: true,
 			count: null,
 			key: 'cbp-exception',
-			label: I18n.get('_ArchitectureConfigurationBestPracticesExceptions_'),
+			label: I18n.get('_ArchitectureBestPracticeRuleExceptions_'),
 		},
 		{
 			active: false,
 			count: null,
 			key: 'asset-exception',
-			label: I18n.get('_ArchitectureAssetsWithExceptions_'),
+			label: I18n.get('_ArchitectureSystemsWithExceptions_'),
 		},
 	];
 

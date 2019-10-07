@@ -12,11 +12,13 @@ import {
 	CriticalBugAssetsScenarios,
 	MockNetworkElements,
 	Mock,
+	RacetrackScenarios,
 } from '@mock';
 import * as _ from 'lodash-es';
 import { DiagnosticsService, InventoryService } from '@sdp-api';
 import { throwError, of } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
+import { RacetrackInfoService } from '@services';
 
 /**
  * Will fetch the currently active response body from the mock object
@@ -35,6 +37,20 @@ describe('AdvisoryImpactedAssetsComponent', () => {
 	let fixture: ComponentFixture<AdvisoryImpactedAssetsComponent>;
 	let diagnosticsService: DiagnosticsService;
 	let inventoryService: InventoryService;
+	let racetrackInfoService: RacetrackInfoService;
+
+	/**
+	 * Sends our racetrack info
+	 */
+	const sendRacetrack = () => {
+		racetrackInfoService.sendRacetrack(getActiveBody(RacetrackScenarios[0]));
+		racetrackInfoService.sendCurrentSolution(
+			getActiveBody(RacetrackScenarios[0]).solutions[0],
+		);
+		racetrackInfoService.sendCurrentTechnology(
+			getActiveBody(RacetrackScenarios[0]).solutions[0].technologies[0],
+		);
+	};
 
 	configureTestSuite(() => {
 		TestBed.configureTestingModule({
@@ -51,7 +67,7 @@ describe('AdvisoryImpactedAssetsComponent', () => {
 	});
 
 	beforeEach(async(() => {
-
+		racetrackInfoService = TestBed.get(RacetrackInfoService);
 		inventoryService = TestBed.get(InventoryService);
 		diagnosticsService = TestBed.get(DiagnosticsService);
 	}));
@@ -79,6 +95,7 @@ describe('AdvisoryImpactedAssetsComponent', () => {
 			.returnValue(of({ data }));
 
 		component.ngOnInit();
+		sendRacetrack();
 		fixture.detectChanges();
 
 		fixture.whenStable()
@@ -111,6 +128,7 @@ describe('AdvisoryImpactedAssetsComponent', () => {
 			.returnValue(of({ data }));
 
 		component.ngOnInit();
+		sendRacetrack();
 		fixture.detectChanges();
 
 		fixture.whenStable()
@@ -145,6 +163,7 @@ describe('AdvisoryImpactedAssetsComponent', () => {
 			.returnValue(throwError(new HttpErrorResponse(error)));
 
 		component.ngOnInit();
+		sendRacetrack();
 		fixture.detectChanges();
 
 		fixture.whenStable()
@@ -173,6 +192,7 @@ describe('AdvisoryImpactedAssetsComponent', () => {
 			.returnValue(throwError(new HttpErrorResponse(error)));
 
 		component.ngOnInit();
+		sendRacetrack();
 		fixture.detectChanges();
 
 		fixture.whenStable()

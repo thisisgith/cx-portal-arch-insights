@@ -40,7 +40,7 @@ export class ArchitectureReviewComponent implements OnInit {
 			active: false,
 			count: null,
 			key: 'devices',
-			label: I18n.get('_ArchitectureDevices_'),
+			label: I18n.get('_ArchitectureSystems_'),
 		},
 	];
 

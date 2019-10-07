@@ -24,14 +24,15 @@ export class CompareRecommendationsComponent implements OnChanges {
 	@Input() public selectedSoftwareGroup: SoftwareGroup;
 	@Output() public onAction = new EventEmitter();
 	@Output() public showVersions = new EventEmitter();
+	@Output() public showDetails = new EventEmitter();
 	public currentRecommendation: MachineRecommendations;
 	public machineRecommendations: MachineRecommendations[];
 	public barChartBackgroundColor = '#f2f2f2';
-	public barChartWidth = 80;
+	public barChartWidth = 130;
 	public severityMap = {
-		H: I18n.get('_OsvHigh_'),
-		M: I18n.get('_OsvMedium_'),
-		L: I18n.get('_OsvLow_'),
+		H: I18n.get('_OsvH_'),
+		M: I18n.get('_OsvM_'),
+		L: I18n.get('_OsvL_'),
 	};
 
 	/**
@@ -57,9 +58,12 @@ export class CompareRecommendationsComponent implements OnChanges {
 
 			const openBugsResponse = this.addOpen(openBugs, newOpenBugs);
 			recommendation.bugsExposed = openBugsResponse.totalOpenCount;
+			recommendation.openBugsCount = this.calculateExposed(openBugs);
+			recommendation.newOpenBugsCount = this.calculateExposed(newOpenBugs);
 			recommendation.resolvedBugsCount = this.calculateExposed(resolvedBugs);
 			recommendation.bugSeriesData = openBugsResponse.totalOpenCount > 0
 				? this.populateBarGraphData(openBugsResponse.totalOpen) : [];
+			recommendation.totalBugsSeverity = this.addAll(openBugs, newOpenBugs, resolvedBugs);
 
 			const openPsirts = _.get(recommendation, ['psirtSeverity', 'OPEN']);
 			const newOpenPsirts = _.get(recommendation, ['psirtSeverity', 'NEW_OPEN']);
@@ -67,15 +71,39 @@ export class CompareRecommendationsComponent implements OnChanges {
 
 			const openPsirtsResponse = this.addOpen(openPsirts, newOpenPsirts);
 			recommendation.psirtExposed = openPsirtsResponse.totalOpenCount;
+			recommendation.openPsirtCount = this.calculateExposed(openPsirts);
+			recommendation.newOpenPsirtCount = this.calculateExposed(newOpenPsirts);
 			recommendation.psirtResolvedCount = this.calculateExposed(resolvedPsirts);
 			recommendation.psirtSeriesData = openPsirtsResponse.totalOpenCount > 0 ?
 				this.populateBarGraphData(openPsirtsResponse.totalOpen) : [];
+			_.set(recommendation, 'actions', this.getRowActions(recommendation));
+			recommendation.totalPsirtsSeverity =
+				this.addAll(openPsirts, newOpenPsirts, resolvedPsirts);
 		});
 		this.currentRecommendation = _.get(_.filter(recommendations,
 			(recomm: MachineRecommendations) => recomm.name === 'profile current'), 0);
 		this.machineRecommendations = _.filter(recommendations,
 			(recomm: MachineRecommendations) => recomm.name !== 'profile current');
 		this.sortData(this.machineRecommendations);
+	}
+
+	/**
+	 * adds the total open bugs
+	 * @param openBugs information about open bugs
+	 * @param newOpenBugs information about newly open
+	 * @param resolved information about resolved bugs
+	 * @returns object containing the totalopencount
+	 */
+	public addAll (openBugs, newOpenBugs, resolved) {
+		const total = { };
+		_.map(_.keys(this.severityMap), (value: number) => {
+			total[value] =
+				_.get(openBugs, value, 0)
+				+ _.get(newOpenBugs, value, 0)
+				+ _.get(resolved, value, 0);
+		});
+
+		return total;
 	}
 
 	/**
@@ -159,4 +187,30 @@ export class CompareRecommendationsComponent implements OnChanges {
 	public onCancelClick (version: string) {
 		this.onAction.emit({ version, type: 'cancel' });
 	}
+
+	/**
+	 * Returns the row specific actions
+	 * @param recomm the row we're building our actions for
+	 * @returns the built actions
+	 */
+	public getRowActions (recomm: MachineRecommendations) {
+		return [
+			{
+				label: _.upperCase(I18n.get('_Cancel_')),
+				onClick: () => {
+					this.onCancelClick(recomm.swVersion);
+				},
+			},
+		];
+	}
+
+	/**
+	 * show details of bugs
+	 * @param viewType specifies whether to open bugs or psirts details
+	 * @param tabIndex specifies which tab to open on bugs or psirts details
+	 */
+	public showDetailsView (viewType: string, tabIndex: number) {
+		this.showDetails.emit({ viewType , tabIndex });
+	}
+
 }

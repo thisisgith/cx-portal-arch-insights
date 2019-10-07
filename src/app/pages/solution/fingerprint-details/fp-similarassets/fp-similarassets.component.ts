@@ -128,23 +128,21 @@ export class FpSimilarAssetsComponent {
 			columns: [
 				{
 					key: 'deviceId',
-					name: I18n.get('_CP_Asset_'),
+					name: I18n.get('_CP_SystemName_'),
 					template: this.assetTemplate,
-				},
-				{
-					key: 'riskScore',
-					name: I18n.get('_CP_CompositeRisk_'),
-					template: this.crashRiskTemplate,
+					width : '34%',
 				},
 				{
 					key: 'similarityScore',
 					name: I18n.get('_CP_SimilarityMatch_'),
 					template: this.similarityMatchTemplate,
+					width : '33%',
 				},
 				{
 					key: 'deviceId',
 					name: '',
 					template: this.compareTemplate,
+					width : '33%',
 				},
 			],
 		});

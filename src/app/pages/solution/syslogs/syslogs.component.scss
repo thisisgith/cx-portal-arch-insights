@@ -1,4 +1,4 @@
-@import "~cisco-ui/src/scss/utilities/_variables.scss";
+@import '../../../../variables.scss';
 
 .filter {
 	&__selected {
@@ -15,12 +15,8 @@
 	}
 }
 
-.syslog-tab {
-	padding-top: 50px;
-}
-
-.visualSelected {
-	color: rgb(124, 181, 236);
+.visual-selected {
+	color: $accent-color1;
 }
 
 .visual-filter-divider {

@@ -8,6 +8,7 @@ import {
 	user,
 	CriticalBugData,
 	MockNetworkElements,
+	RacetrackScenarios,
 } from '@mock';
 import { AssetDetailsAdvisoriesComponent } from './advisories.component';
 import { AssetDetailsAdvisoriesModule } from './advisories.module';
@@ -19,6 +20,7 @@ import * as _ from 'lodash-es';
 import { ProductAlertsService, DiagnosticsService } from '@sdp-api';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MicroMockModule } from '@cui-x-views/mock';
+import { RacetrackInfoService } from '@services';
 
 /**
  * Will fetch the currently active response body from the mock object
@@ -37,6 +39,20 @@ describe('AssetDetailsAdvisoriesComponent', () => {
 	let fixture: ComponentFixture<AssetDetailsAdvisoriesComponent>;
 	let productAlertsService: ProductAlertsService;
 	let diagnosticsService: DiagnosticsService;
+	let racetrackInfoService: RacetrackInfoService;
+
+	/**
+	 * Sends our racetrack info
+	 */
+	const sendRacetrack = () => {
+		racetrackInfoService.sendRacetrack(getActiveBody(RacetrackScenarios[0]));
+		racetrackInfoService.sendCurrentSolution(
+			getActiveBody(RacetrackScenarios[0]).solutions[0],
+		);
+		racetrackInfoService.sendCurrentTechnology(
+			getActiveBody(RacetrackScenarios[0]).solutions[0].technologies[0],
+		);
+	};
 
 	configureTestSuite(() => {
 		TestBed.configureTestingModule({
@@ -55,6 +71,7 @@ describe('AssetDetailsAdvisoriesComponent', () => {
 	beforeEach(async(() => {
 		productAlertsService = TestBed.get(ProductAlertsService);
 		diagnosticsService = TestBed.get(DiagnosticsService);
+		racetrackInfoService = TestBed.get(RacetrackInfoService);
 	}));
 
 	beforeEach(() => {
@@ -86,6 +103,8 @@ describe('AssetDetailsAdvisoriesComponent', () => {
 		spyOn(diagnosticsService, 'getCriticalBugs')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
+
+		sendRacetrack();
 
 		component.ngOnInit();
 
@@ -120,6 +139,8 @@ describe('AssetDetailsAdvisoriesComponent', () => {
 			.and
 			.returnValue(of(getActiveBody(FieldNoticeAdvisoryScenarios[0])));
 
+		sendRacetrack();
+
 		component.ngOnInit();
 
 		fixture.whenStable()
@@ -153,6 +174,9 @@ describe('AssetDetailsAdvisoriesComponent', () => {
 		spyOn(diagnosticsService, 'getCriticalBugs')
 			.and
 			.returnValue(of({ data: CriticalBugData }));
+
+		sendRacetrack();
+
 		fixture.detectChanges();
 		component.ngOnInit();
 		fixture.detectChanges();
@@ -193,6 +217,9 @@ describe('AssetDetailsAdvisoriesComponent', () => {
 			.toEqual({
 				id: securityTab.data[0].id,
 				type: 'security' });
+
+		fixture.destroy();
+		tick();
 	}));
 
 	it('should clear the advisory on panel close', done => {
@@ -210,6 +237,8 @@ describe('AssetDetailsAdvisoriesComponent', () => {
 		spyOn(diagnosticsService, 'getCriticalBugs')
 			.and
 			.returnValue(of({ data: CriticalBugData }));
+
+		sendRacetrack();
 
 		component.ngOnInit();
 

@@ -76,7 +76,7 @@ describe('OptimalSoftwareVersionComponent', () => {
 		expect(_.find(component.filters))
 			.toBeUndefined();
 		expect(component.view)
-			.toBeUndefined();
+			.toEqual('swGroups');
 	});
 
 	it('should switch active filters', done => {
@@ -190,6 +190,7 @@ describe('OptimalSoftwareVersionComponent', () => {
 	});
 
 	it('seleceView should change the view ', () => {
+		component.selectView('swGroups');
 		expect(component.view)
 			.toEqual('swGroups');
 		component.selectView('swVersions');
@@ -260,6 +261,6 @@ describe('OptimalSoftwareVersionComponent', () => {
 		component.ngOnInit();
 		fixture.detectChanges();
 		expect(component.view)
-			.toBeUndefined();
+			.toEqual('swGroups');
 	});
 });
