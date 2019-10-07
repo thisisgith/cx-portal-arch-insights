@@ -3,8 +3,8 @@ import {
 	Output, ViewChild,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { InventoryService } from '@sdp-api';
-import { UtilsService } from '@services';
+import { InventoryService, RacetrackSolution, RacetrackTechnology } from '@sdp-api';
+import { UtilsService, RacetrackInfoService } from '@services';
 import { empty, Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
 import * as _ from 'lodash-es';
@@ -28,6 +28,8 @@ export class NoDNACHeaderComponent implements OnDestroy, OnInit {
 	@Output() public buttonData: EventEmitter<{ }> = new EventEmitter<{ }>();
 	private continueSetupButton: ElementRef;
 	private customerId: string;
+	private selectedSolutionName: string;
+	private selectedTechnologyName: string;
 	private destroyed$: Subject<void> = new Subject<void>();
 	@ViewChild('continueSetupButton', { static: false }) set button (button: ElementRef) {
 		if (button) {
@@ -44,6 +46,7 @@ export class NoDNACHeaderComponent implements OnDestroy, OnInit {
 		private inventoryService: InventoryService,
 		private route: ActivatedRoute,
 		private utils: UtilsService,
+		private racetrackInfoService: RacetrackInfoService,
 	) {
 		if (window.Cypress) {
 			this.forceHidden = _.get(window, 'Cypress.hideDNACHeader', false);
@@ -71,17 +74,44 @@ export class NoDNACHeaderComponent implements OnDestroy, OnInit {
 	 * NgOnInit
 	 */
 	public ngOnInit () {
+		this.racetrackInfoService.getCurrentSolution()
+		.pipe(
+			takeUntil(this.destroyed$),
+		)
+		.subscribe((solution: RacetrackSolution) => {
+			this.selectedSolutionName = _.get(solution, 'name');
+		});
+
+		this.racetrackInfoService.getCurrentTechnology()
+		.pipe(
+			takeUntil(this.destroyed$),
+		)
+		.subscribe((technology: RacetrackTechnology) => {
+			if (this.selectedTechnologyName !== _.get(technology, 'name')) {
+				this.selectedTechnologyName = _.get(technology, 'name');
+				this.checkNetworkElements();
+			}
+		});
+	}
+
+	/**
+	 * Call to check the network elements
+	 */
+	private checkNetworkElements () {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
-		this.inventoryService.getNetworkElements({ customerId: this.customerId })
-			.pipe(
-				catchError(() => empty()),
-				takeUntil(this.destroyed$),
-			)
-			.subscribe(res => {
-				this.hasCXCollector = res.Pagination.total !== 0;
-			});
-
+		this.inventoryService.getNetworkElements({
+			customerId: this.customerId,
+			solution: this.selectedSolutionName,
+			useCase: this.selectedTechnologyName,
+		})
+		.pipe(
+			catchError(() => empty()),
+			takeUntil(this.destroyed$),
+		)
+		.subscribe(res => {
+			this.hasCXCollector = res.Pagination.total !== 0;
+		});
 	}
 
 	/**

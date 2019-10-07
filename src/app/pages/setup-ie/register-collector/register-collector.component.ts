@@ -164,6 +164,10 @@ export class RegisterCollectorComponent implements OnDestroy, OnInit, SetupStep 
 	public currentStep = 0;
 
 	public accountForm = new FormGroup({
+		oldPassword: new FormControl(null, [
+			Validators.required,
+			passwordValidator,
+		]),
 		password: new FormControl(null, [
 			Validators.required,
 			passwordValidator,
@@ -187,6 +191,12 @@ export class RegisterCollectorComponent implements OnDestroy, OnInit, SetupStep 
 	}
 	public get pwControl () {
 		return this.accountForm.get('password');
+	}
+	public get oldPwErrors () {
+		return this.accountForm.get('oldPassword').errors;
+	}
+	public get oldPwControl () {
+		return this.accountForm.get('oldPassword');
 	}
 	public get confErrors () {
 		return this.accountForm.getError('doesNotMatch');
@@ -283,6 +293,7 @@ export class RegisterCollectorComponent implements OnDestroy, OnInit, SetupStep 
 		this.registerService
 			.registerOnline(
 			{
+				oldPassword: formValues.oldPassword,
 				password: formValues.password,
 				proxyHost: formValues.proxyHost,
 				proxyPassword: formValues.proxyPassword,

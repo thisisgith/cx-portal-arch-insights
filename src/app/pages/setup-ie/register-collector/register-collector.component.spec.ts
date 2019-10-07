@@ -156,6 +156,8 @@ describe('RegisterCollectorComponent', () => {
 
 		it('should register on Enter keypress', () => {
 			component.keyEvent(<any> { keyCode: 0 });
+			component.accountForm.get('oldPassword')
+				.setValue('Admin@1234');
 			component.accountForm.get('password')
 				.setValue('Admin@123');
 			component.accountForm.get('passwordConf')

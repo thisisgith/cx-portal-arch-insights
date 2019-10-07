@@ -14,7 +14,6 @@ import {
 	assetGridParams,
 	Filter,
 	InventoryService,
-	AssetLinkInfo,
 } from '@sdp-api';
 import { UserResolve } from '@utilities';
 import { Subject } from 'rxjs';
@@ -25,6 +24,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { FromNowPipe } from '@cisco-ngx/cui-pipes';
 import { ActivatedRoute } from '@angular/router';
 import { DetailsPanelStackService, AssetPanelLinkService } from '@services';
+import { AssetLinkInfo } from '@interfaces';
 
 /**
  * Main component for the RCC track

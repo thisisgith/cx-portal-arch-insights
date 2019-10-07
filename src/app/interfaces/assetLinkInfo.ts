@@ -1,5 +1,4 @@
-import { Asset } from './asset';
-import { NetworkElement } from './network-element';
+import { Asset, NetworkElement } from '@sdp-api';
 
 /**
  * Asset link Information

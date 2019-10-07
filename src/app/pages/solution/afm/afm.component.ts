@@ -17,7 +17,6 @@ import {
 	AfmFilter,
 	AfmResponse,
 	InventoryService,
-	AssetLinkInfo,
 } from '@sdp-api';
 import * as _ from 'lodash-es';
 import { FormControl, FormGroup } from '@angular/forms';
@@ -25,7 +24,7 @@ import { Subject, of } from 'rxjs';
 import { UserResolve } from '@utilities';
 import { takeUntil, catchError } from 'rxjs/operators';
 import { ExportCsvService, DetailsPanelStackService, AssetPanelLinkService } from '@services';
-import { Panel360 } from '@interfaces';
+import { AssetLinkInfo, Panel360 } from '@interfaces';
 
 /**
  * AfmComponet which shows in Insight view for Fault Management tab
