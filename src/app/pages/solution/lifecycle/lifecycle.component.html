@@ -182,10 +182,10 @@
 				hoverTemplate: atxHover,
 				title: data.recommended.title,
 				description: data.recommended.description,
-				src: data.recommended.imageURL || 'assets/img/solutions/defaultLifecycleImage.png',
+				src: data.recommended.imageURL || defaultRecommendedATXImg,
 				item: data.sessions[0],
 				autoid: 'recommendedATX'
-			}">
+			}"> 
 		</ng-container>
 	</ng-container>
 	<ng-container *ngIf="data.sessions.length">

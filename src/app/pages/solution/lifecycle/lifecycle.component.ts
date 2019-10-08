@@ -308,6 +308,12 @@ export class LifecycleComponent implements OnDestroy {
 		return _.get(this.componentData, ['racetrack', 'actionsCompPercent'], I18n.get('_Start_'));
 	}
 
+	get defaultRecommendedATXImg () {
+		return (this.componentData.atx.recommended.providerInfo ?
+			'assets/img/solutions/ATX-default-image-1-556x308.png' :
+			'assets/img/solutions/defaultLifecycleImage.png');
+	}
+
 	constructor (
 		private logger: LogService,
 		private contentService: RacetrackContentService,

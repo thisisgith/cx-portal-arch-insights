@@ -1,4 +1,6 @@
 /* tslint:disable */
+import { FeedbackSchema } from './feedback-schema';
+import { ProviderSchema } from './provider-schema';
 import { AtxSessionSchema } from './atx-session-schema';
 export interface AtxSchema {
 
@@ -16,6 +18,8 @@ export interface AtxSchema {
    * Description of the ATX
    */
   description?: string;
+  feedbackInfo?: FeedbackSchema;
+  providerInfo?: ProviderSchema;
 
   /**
    * Duration of the session in seconds
