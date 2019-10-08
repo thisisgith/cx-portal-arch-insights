@@ -1,64 +1,117 @@
-<div class="text-center">
+<div class="flex flex-column flex-center flex-center-vertical">
 	<h6
 		class="dbl-xl-margin-top text-primary base-margin-bottom"
 		[innerText]="('_StepXColonY_' | i18n:'1':('_Prerequisites_' | i18n)) | uppercase"
 	></h6>
-	<div [innerText]="'_ConnectDevicesToCX_' | i18n"
-		class="dbl-xl-margin-bottom step-title">
+	<div [innerText]="'_PrepareToSetUpCXPortal_' | i18n"
+		class="base-margin-bottom step-title">
 	</div>
 
-	<div class="base-margin-bottom text-large">
-		<span [innerText]="'_InstallCiscoIE_' | i18n"></span>
+	<div class="xl-margin-bottom flex flex-center flex-center-vertical">
+		<img
+			class="network-img"
+			alt="Network Diagram"
+			src="assets/img/setup-ie/illustrations/1_prerequisites.png"
+		>
 	</div>
-	<div class="xl-margin-bottom text-large">
-		<span [innerText]="'_YoullNeedAnEnvironment_' | i18n"></span>
-	</div>
-	<div class="flex-center xl-margin-bottom">
-		<div class="flex-center-vertical text-left col-md-3">
-			<img
-				class="base-margin-right"
-				type="image/svg+xml"
-				alt="Chip Icon"
-				src="assets/img/setup-ie/icons/icon-chip.svg">
-			<span class="text-large flex-fluid">
-				<span [innerText]="'_HasVMWare_' | i18n"></span>
-				<span	tabindex="0"
-				[attr.data-balloon]="'_VMWareTooltip_' | i18n"
-				data-balloon-break
-				data-balloon-pos="right">
-					<span class="half-margin-left icon-info-outline text-info"></span>
-				</span>
-			</span>
-		</div>
-		<div class="flex-center-vertical text-left col-md-3">
-			<img
-				class="base-margin-right"
-				type="image/svg+xml"
-				alt="List Icon"
-				src="assets/img/setup-ie/icons/icon-gblist.svg">
-			<span class="text-large flex-fluid"
-				  [innerText]="'_HasAtLeastReqs_' | i18n">
-			</span>
-		</div>
-		<div class="flex-center-vertical text-left col-md-3">
-			<img
-				class="base-margin-right"
-				type="image/svg+xml"
-				alt="WWW Icon"
-				src="assets/img/setup-ie/icons/icon-www.svg">
-			<span class="text-large flex-fluid"
-				  [innerText]="'_CanConnectTo_' | i18n">
-			</span>
-		</div>
-	</div>
-	<button
-		data-auto-id="get-started-btn"
-		class="btn cx-btn base-margin-right"
-		[innerText]="'_GetStarted_' | i18n | uppercase"
-		(click)="onBegin()">
-	</button>
 
-	<span [innerText]="'_PressEnter_' | i18n"
-		class="text-medium text-uppercase cx-text-gray">
-	</span>
+	<div class="text-left info-section row">
+		<div class="col-md-2">
+			<div inlineSVG="assets/img/setup-ie/icons/cxcollector.svg" class="collector-icon"></div>
+		</div>
+		<div class="col-md-10">
+			<div class="base-margin-bottom info-section__title">
+				<span [innerText]="'_YoullNeedAVirtualMachine_' | i18n"></span>
+			</div>
+			<div class="half-margin-bottom">
+				<span [innerText]="'_CXCollectorRunsOn_' | i18n"></span>
+			</div>
+			<div class="flex-center dbl-margin-bottom">
+				<ul class="flex-fluid">
+					<li><span [innerText]="'_AnyOfTheFollowingHypervisor_' | i18n"></span>
+						<ul>
+							<li [innerText]="'_VMWareVersionReq_' | i18n"></li>
+							<li [innerText]="'_VirtualBoxVersionReq_' | i18n"></li>
+						</ul>
+					</li>
+					<li><span [innerText]="'_HypervisorReqs_' | i18n"></span>
+						<ul>
+							<li [innerText]="'_VMReqCPU_' | i18n"></li>
+							<li [innerText]="'_VMReqMem_' | i18n"></li>
+							<li [innerText]="'_VMReqDisk_' | i18n"></li>
+						</ul>
+					</li>
+					<li [innerText]="'_CanConnectTo_' | i18n"></li>
+					<li [innerText]="'_ForLocalManagement_' | i18n"></li>
+				</ul>
+			</div>
+
+			<div class="base-margin-bottom text-large">
+				<span [innerText]="'_OtherNotesOnCXCollector_' | i18n"></span>
+			</div>
+			<div class="flex-center xl-margin-bottom">
+				<ul class="flex-fluid">
+					<li [innerText]="'_DHCPIsSupported_' | i18n"></li>
+					<li [innerText]="'_OnlyIPv4IsSupported_' | i18n"></li>
+				</ul>
+			</div>
+
+		</div>
+	</div>
+
+	<div class="text-left info-section xl-margin-bottom row">
+		<div class="col-md-10">
+			<div class="base-margin-bottom info-section__title">
+				<span [innerText]="'_EnsureCiscoDNACenterSetUp_' | i18n"></span>
+			</div>
+			<div>
+				<span [innerText]="'_CXPortalRequiresDNAC_' | i18n"></span>
+			</div>
+			<!-- <div>
+				<span [innerText]="'_GetInfoSettingUpDNAC_' | i18n"></span>
+			</div> -->
+		</div>
+		<div class="col-md-2 flex flex-right">
+			<div inlineSVG="assets/img/setup-ie/icons/dnaclogo.svg" class="dnac-icon"></div>
+		</div>
+	</div>
+
+
+	<div class="text-left info-section xl-margin-bottom row">
+		<div class="col-md-2">
+			<div inlineSVG="assets/img/setup-ie/icons/icon-lock2.svg" class="lock-icon"></div>
+		</div>
+		<div class="col-md-10">
+			<div class="base-margin-bottom info-section__title">
+				<span [innerText]="'_CXPortalSecurity_' | i18n"></span>
+			</div>
+			<div>
+				<span [innerText]="'_ConnectionBetweenCXPortal_' | i18n"></span>
+			</div>
+			<div>
+				<ul>
+					<li [innerText]="'_CXPortalSecurityPort_' | i18n"></li>
+					<li [innerText]="'_CXPortalSecurityEncrypt_' | i18n"></li>
+					<li [innerText]="'_CXPortalSecurityHTTPS_' | i18n"></li>
+					<li [innerText]="'_CXPortalSecurityCiphers_' | i18n"></li>
+					<li [innerText]="'_CXPortalSecurityTimeout_' | i18n"></li>
+					<li [innerText]="'_CXPortalSecurityCreds_' | i18n"></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<div class="text-center">
+		<button
+			data-auto-id="get-started-btn"
+			class="btn cx-btn base-margin-right"
+			[innerText]="'_GetStarted_' | i18n | uppercase"
+			(click)="onBegin()">
+		</button>
+
+		<span [innerText]="'_PressEnter_' | i18n"
+			class="text-medium text-uppercase cx-text-gray">
+		</span>
+	</div>
+
 </div>

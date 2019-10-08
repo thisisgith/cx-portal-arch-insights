@@ -4,6 +4,12 @@
 	<div [innerText]="'_ConnectCiscoDNACenterToCXPortal_' | i18n" class="dbl-margin-bottom step-title">
 	</div>
 	<div class="form-container dbl-margin-bottom">
+		<img
+			alt="placeholder"
+			class="xl-margin-bottom"
+			[alt]="'_IE_ConnectLocalMachine_' | i18n"
+			src="assets/img/setup-ie/illustrations/7_connect_DNAC.png"
+		>
 		<div class="secure-banner flex-center-vertical dbl-margin-bottom">
 			<span class="secure-banner__icon flex-center">
 				<span class="icon-lock"></span>
@@ -50,7 +56,7 @@
 			</form>
 			<form class="dbl-margin-bottom" [formGroup]="accountForm" (ngSubmit)="onSubmit()">
 				<div class="dbl-margin-bottom">
-					<h4 [innerText]="'_ConnectDNACToCXPortal_' | i18n"></h4>
+					<h4 [innerText]="'_ConnectDNACToCXPortal_' | i18n" class="half-margin-bottom"></h4>
 					<span class="text-large" [innerText]="'_SignIntoCiscoDNAC_' | i18n"></span>
 				</div>
 				<div class="row dbl-margin-bottom">
