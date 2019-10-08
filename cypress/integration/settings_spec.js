@@ -91,34 +91,34 @@ describe('Control Point (Admin Settings)', () => { // PBC-207
 			const hw = mainData.system_details.hardware_details;
 
 			cy.getByAutoId('settings.system.usage').within(() => {
-				cy.getByAutoId(`usage-${i18n._CurrentCPUUtilization_}`)
-					.should('contain', i18n._CurrentCPUUtilization_.toUpperCase());
+				cy.getByAutoId(`usage-${i18n._CPUUtilization_}`)
+					.should('contain', i18n._CPUUtilization_);
 				cy.getByAutoId(`usage-${i18n._MemoryUtilization_}`)
-					.should('contain', i18n._MemoryUtilization_.toUpperCase());
+					.should('contain', i18n._MemoryUtilization_);
 				cy.getByAutoId(`usage-${i18n._DiskSpaceUtilization_}`)
-					.should('contain', i18n._DiskSpaceUtilization_.toUpperCase());
+					.should('contain', i18n._DiskSpaceUtilization_);
 			});
 
-			cy.getByAutoId(`usage-${i18n._CurrentCPUUtilization_}`).within(() => {
-				cy.get('cui-gauge')
+			cy.getByAutoId(`usage-${i18n._CPUUtilization_}`).within(() => {
+				cy.get('app-gauge')
 					.should('have.text', `${Cypress._.parseInt(hw.cpu_utilization, 10)}%`);
-				cy.get('cui-gauge').should('have.attr', 'ng-reflect-color', 'success');
+				cy.get('app-gauge').should('have.attr', 'ng-reflect-arc-color', '#6ebe4a');
 			});
 
 			cy.getByAutoId(`usage-${i18n._MemoryUtilization_}`).within(() => {
 				const used = Cypress._.parseInt(hw.total_memory, 10)
 					- Cypress._.parseInt(hw.free_memory, 10);
 				const expected = Math.ceil((used / Cypress._.parseInt(hw.total_memory, 10)) * 100);
-				cy.get('cui-gauge').should('have.text', `${expected}%`);
-				cy.get('cui-gauge').should('have.attr', 'ng-reflect-color', 'success');
+				cy.get('app-gauge').should('have.text', `${expected}%`);
+				cy.get('app-gauge').should('have.attr', 'ng-reflect-arc-color', '#6ebe4a');
 			});
 
 			cy.getByAutoId(`usage-${i18n._DiskSpaceUtilization_}`).within(() => {
 				const used = Cypress._.parseInt(hw.hdd_size, 10)
 					- Cypress._.parseInt(hw.free_hdd_size, 10);
 				const expected = Math.ceil((used / Cypress._.parseInt(hw.hdd_size, 10)) * 100);
-				cy.get('cui-gauge').should('have.text', `${expected}%`);
-				cy.get('cui-gauge').should('have.attr', 'ng-reflect-color', 'success');
+				cy.get('app-gauge').should('have.text', `${expected}%`);
+				cy.get('app-gauge').should('have.attr', 'ng-reflect-arc-color', '#6ebe4a');
 			});
 		});
 
@@ -210,16 +210,29 @@ describe('Control Point (Setup Wizard)', () => { // PBC-190
 			cy.get('.setup-step').should('have.length', 4);
 		});
 		cy.get(`[title="${i18n._PreRequisites_.toUpperCase()}"]`).within(() => {
-			cy.get('.setup-step__icon').should('have.attr', 'src').and('include', a ? '-on.svg' : '-off.svg');
+			// Both images display, but one will be hidden
+			cy.get('.setup-step__icon[src="assets/img/setup-ie/icons/icon-s1-on.svg"]')
+				.should(`${a ? 'not.' : ''}have.attr`, 'hidden');
+			cy.get('.setup-step__icon[src="assets/img/setup-ie/icons/icon-s1-off.svg"]')
+				.should(`${a ? '' : 'not.'}have.attr`, 'hidden');
 		});
 		cy.get(`[title="${i18n._VirtualMachine_.toUpperCase()}"]`).within(() => {
-			cy.get('.setup-step__icon').should('have.attr', 'src').and('include', b ? '-on.svg' : '-off.svg');
+			cy.get('.setup-step__icon[src="assets/img/setup-ie/icons/icon-s2-on.svg"]')
+				.should(`${b ? 'not.' : ''}have.attr`, 'hidden');
+			cy.get('.setup-step__icon[src="assets/img/setup-ie/icons/icon-s2-off.svg"]')
+				.should(`${b ? '' : 'not.'}have.attr`, 'hidden');
 		});
 		cy.get(`[title="${i18n._CiscoCXCollector_.toUpperCase()}"]`).within(() => {
-			cy.get('.setup-step__icon').should('have.attr', 'src').and('include', c ? '-on.svg' : '-off.svg');
+			cy.get('.setup-step__icon[src="assets/img/setup-ie/icons/icon-s3-on.svg"]')
+				.should(`${c ? 'not.' : ''}have.attr`, 'hidden');
+			cy.get('.setup-step__icon[src="assets/img/setup-ie/icons/icon-s3-off.svg"]')
+				.should(`${c ? '' : 'not.'}have.attr`, 'hidden');
 		});
 		cy.get(`[title="${i18n._CiscoDNACollector_.toUpperCase()}"]`).within(() => {
-			cy.get('.setup-step__icon').should('have.attr', 'src').and('include', d ? '-on.svg' : '-off.svg');
+			cy.get('.setup-step__icon[src="assets/img/setup-ie/icons/icon-s4-on.svg"]')
+				.should(`${d ? 'not.' : ''}have.attr`, 'hidden');
+			cy.get('.setup-step__icon[src="assets/img/setup-ie/icons/icon-s4-off.svg"]')
+				.should(`${d ? '' : 'not.'}have.attr`, 'hidden');
 		});
 	}
 
