@@ -434,6 +434,7 @@ export class LifecycleComponent implements OnDestroy {
 	public getStatusOptionName (value) {
 		if (value) {
 			const foundOption = this.statusOptions.find(opt => opt.value === value);
+
 			return foundOption ? foundOption.name : value;
 		}
 	}
@@ -1398,7 +1399,7 @@ export class LifecycleComponent implements OnDestroy {
 			_div.style.top = `${this.moreYCoordinates - _div.offsetHeight / 2 + 10}px`;
 			panel = 'panel panel--open';
 		} else {
-			_div.style.left = '128px';
+			_div.style.left = '142px';
 			_div.style.bottom = '-150px';
 			panel = 'panel panel--open';
 		}
