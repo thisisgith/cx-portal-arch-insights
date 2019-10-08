@@ -933,17 +933,12 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 .cardpanel--openright,
 .listpanel--open {
 	box-shadow: $popover-box-shadow;
-	height: 325px;
+	height: 365px;
 	width: 500px;
 	position: absolute;
 	z-index: 3;
 	background-color: $white;
 	border-radius: 6px;
-
-	#atxdescription {
-		height: 60px;
-		overflow-y: auto;
-	}
 }
 
 .cgtpanel--open {
@@ -1064,7 +1059,7 @@ tr.td-row td {
 
 .session-table {
 	overflow-y: scroll;
-	height: 147px;
+	height: 120px;
 	display: block;
 	background-color: rgba(245, 246, 249, 0.33);
 	border: 1px solid #e1e1e1;
@@ -1257,6 +1252,12 @@ tr.td-row td {
 	transform: rotate(45deg);
 }
 
+%popover-tail-listview {
+	@extend %popover-tail;
+
+	top: calc(30% - 7px);
+}
+
 #sb-hover-panel,
 #atx-hover-panel,
 #acc-hover-panel,
@@ -1291,7 +1292,12 @@ tr.td-row td {
 		}
 	}
 
-	&.listpanel--open,
+	&.listpanel--open {
+		.popover-tail {
+			@extend %popover-tail-listview;
+		}
+	}
+
 	&.cardpanel--openright {
 		.popover-tail {
 			@extend %popover-tail;
@@ -1728,6 +1734,6 @@ polygon {
 
 .provider_icon {
 	position: absolute;
-	left: 7px;
-	top: 190px;
+	left: 10px;
+	top: 180px;
 }
