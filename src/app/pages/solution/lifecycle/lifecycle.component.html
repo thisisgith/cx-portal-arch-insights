@@ -348,7 +348,7 @@
 		<!-- Keep the following line for now since we don't have partner Logo yet -->
 		<!-- <span class="icon-check icon-medium half-padding-right"></span> -->
 		<span *ngIf="item.providerInfo?.logoURL">
-			<img class="table-img-width" [src]="item.providerInfo?.logoURL">
+			<img class="table-img-width" alt="'_Placeholder_' | i18n" [src]="item.providerInfo?.logoURL">
 		</span>
 		<span class="text-bold text-medium" [innerText]="item.providerInfo?.name"></span>
 	</div>
