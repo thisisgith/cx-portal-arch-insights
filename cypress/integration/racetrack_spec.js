@@ -534,38 +534,6 @@ describe('Racetrack Content', () => {
 			cy.waitForAppLoading();
 		});
 
-		// PBC-725 has disabled all checkboxes in the pitstopActions list
-		it.skip('Checking a pitstop action should update the completion percentage', () => {
-			// Switch mocks and refresh the checkboxes
-			infoMock.enable('(Racetrack) IBN-Assurance-Onboard-allManualCheckable');
-			cy.loadApp();
-			cy.waitForAppLoading();
-
-			// Check to see if any items are pre-completed
-			let numCompleted = Cypress._.filter(
-				allManualCheckableCNAPitstopActions, action => action.isComplete === true
-			).length;
-			let expectedPercent = Math.floor(
-				(numCompleted / allManualCheckableCNAPitstopActions.length) * 100
-			);
-
-			// Check each item, verify the percentage is updated
-			allManualCheckableCNAPitstopActions.forEach((action, index) => {
-				if (!action.isComplete) {
-					cy.getByAutoId('pitstopCheckboxSpan')
-						.eq(index)
-						.click();
-					numCompleted += 1;
-				}
-
-				expectedPercent = Math.floor(
-					(numCompleted / allManualCheckableCNAPitstopActions.length) * 100
-				);
-				cy.getByAutoId('CompletedActionsPercent')
-					.should('contain', `${expectedPercent}%`);
-			});
-		});
-
 		it('Should show "start" when 0% complete, instead of 0%', () => {
 			// Switch to a mock dataset with no completed items and refresh the data
 			infoMock.enable('(Racetrack) IBN-Assurance-Use');
@@ -586,14 +554,6 @@ describe('Racetrack Content', () => {
 
 			cy.getByAutoId('CompletedActionsPercent')
 				.should('contain', 'start');
-		});
-	});
-
-	describe('PBC-725: UATT F8334 - Lifecycle - Need to disable Checklist from user interactions', () => {
-		it('All pitstopActions checkboxes should be disabled', () => {
-			cy.getByAutoId('pitstopCheckboxLabel').each($checkbox => {
-				cy.wrap($checkbox).should('have.class', 'disabled');
-			});
 		});
 	});
 
