@@ -1,77 +1,32 @@
 <div class="text-center">
-	<h6
-		class="text-primary base-margin-bottom"
-		[innerText]="'_StepXColonY_' | i18n:'4':('_CiscoDNACollector_' | i18n)| uppercase"
-	></h6>
-	<div [innerText]="'_IE_ConnectLocalMachine_' | i18n"
+	<div [innerText]="'_ConnectTheVMToYourBrowser_' | i18n"
 		class="dbl-margin-bottom step-title">
 	</div>
 	<div class="form-container dbl-margin-bottom">
 		<div *ngIf="view === 'input' || view === 'connecting'">
 			<div class="base-margin-top base-margin-bottom">
 				<img
-					alt="placeholder"
+					alt="Network Diagram"
+					class="xl-margin-bottom"
 					[alt]="'_IE_ConnectLocalMachine_' | i18n"
-					src="assets/img/setup-ie/cxportal-cxcollector.png"
+					src="assets/img/setup-ie/illustrations/3_attempting_connect.png"
 				>
-				<h4
-					*ngIf="view === 'input'"
-					class="xl-margin-top"
-					[innerText]="'_IE_PleaseEnsureDirectAccess_' | i18n"
-				></h4>
 				<div
 					*ngIf="view === 'connecting'"
-					class="base-margin-top"
+					class="base-margin-top xl-margin-bottom"
 					[innerText]="'_AttemptingToConnect_' | i18n: ipAddress"
 				></div>
-				<hr [hidden]="view !== 'input'" class="dbl-margin-top">
 			</div>
 		</div>
 		<div class="text-left">
-			<div [hidden]="view !== 'input'">
-				<form
-					class="dbl-margin-bottom"
-					[formGroup]="accountForm"
-					(ngSubmit)="onSubmit()"
-				>
-					<div class="dbl-margin-bottom">
-						<h4 [innerText]="'_ConnectToCXCollector_' | i18n"></h4>
-						<span
-							class="text-large"
-							[innerText]="'_IE_EnterTheIPAddress_' | i18n"
-						></span>
-					</div>
-					<div class="row dbl-margin-bottom">
-						<div class="col-md-6">
-							<div class="form-group">
-								<div class="form-group__text">
-									<input
-										id="input-ip-address"
-										type="text"
-										formControlName="ipAddress"
-									>
-									<label for="input-layout-default"
-											[innerText]="'_IPAddress_' | i18n">
-									</label>
-								</div>
-							</div>
-						</div>
-					</div>
-				</form>
-				<div class="flex-center">
-					<button
-						data-auto-id="connect-to-cx-collector-btn"
-						class="btn cx-btn base-margin-right"
-						[innerText]="'_ConnectToCXCollector_' | i18n | uppercase"
-						(click)="onSubmit()"
-					>
-					</button>
-					<span [innerText]="'_PressEnter_' | i18n"
-						class="text-medium text-uppercase cx-text-gray">
-					</span>
-				</div>
-			</div>
 			<ng-container *ngIf="view === 'instruct'">
+				<img
+					alt="placeholder"
+					class="xl-margin-bottom"
+					*ngIf="view !== 'connecting'"
+					[alt]="'_IE_ConnectLocalMachine_' | i18n"
+					src="assets/img/setup-ie/illustrations/5_awaiting_certificate.png"
+				>
 				<div *ngIf="!ipAddressLink" class="dbl-margin-bottom">
 					<h4 [innerText]="'_AcceptCertificate_' | i18n"></h4>
 					<span
@@ -93,7 +48,7 @@
 						<img
 							alt="placeholder"
 							[alt]="'_AcceptCertInstructionsVerbose_' | i18n"
-							src="assets/img/setup-ie/accept-certificate-left.png"
+							src="assets/img/setup-ie/step_1.png"
 						>
 					</div>
 					<div class="col-md-6">
@@ -105,7 +60,7 @@
 						<img
 							alt="placeholder"
 							[alt]="'_AcceptCertInstructionsVerbose_' | i18n"
-							src="assets/img/setup-ie/accept-certificate-right.png"
+							src="assets/img/setup-ie/step_2.png"
 						>
 					</div>
 				</div>

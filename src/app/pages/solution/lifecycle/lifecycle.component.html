@@ -448,6 +448,13 @@
 		</div>
 		<div class="session-table responsive-table">
 			<table class="table table--nostripes table--selectable">
+				<thead>
+					<tr>
+						<td [innerText]="'_Date_' | i18n"></td>
+						<td class="table__head-spacer"></td>
+						<td [innerText]="'_Presenter_' | i18n"></td>
+					</tr>
+				</thead>
 				<tbody>
 					<tr attr.data-auto-id="SelectSession-{{ session.sessionId }}"
 						*ngFor="let session of data.sessions"
@@ -459,12 +466,10 @@
 						<td class="text-size-14 icon">
 							<span class="icon-check" *ngIf="session.scheduled"></span>
 						</td>
-						<td class="text-xsmall no-padding-left"
+						<td class="no-padding-left"
 							innerText="{{session.sessionStartDate | date:'EEE MMM d, y'}}"></td>
-						<td class="text-xsmall"
-							innerText="{{session.sessionStartDate | date:'shortTime'}}"></td>
-						<td class="text-xsmall"
-							[innerText]="session.presenterName"></td>
+						<td innerText="{{session.sessionStartDate | date:'shortTime'}}"></td>
+						<td [innerText]="session.presenterName"></td>
 					</tr>
 				</tbody>
 			</table>

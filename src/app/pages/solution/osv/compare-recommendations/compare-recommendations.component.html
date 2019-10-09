@@ -59,7 +59,7 @@
 									</div>
 							</div>
 						</div>
-						<div class="flex align-item-center">
+						<div class="flex align-item-center cancel-dropdown">
 							<ng-container *ngTemplateOutlet="cancelActionTemplate; context: { actions: recommendation.actions}"></ng-container>
 						</div>
 					</div>
@@ -104,7 +104,7 @@
 						<bar-chart 
 							dataLabels="true" 
 							[seriesData]="currentRecommendation.bugSeriesData"
-							[width]="'200'">
+							[width]="currentBarChartWidth">
 						</bar-chart>
 					</div>
 				</td>
@@ -148,7 +148,7 @@
 					<div class="base-margin-top bar-chart"
 						*ngIf="currentRecommendation?.psirtSeriesData && currentRecommendation?.psirtSeriesData.length > 0">
 						<bar-chart 
-							[width]="'200'" 
+							[width]="currentBarChartWidth" 
 							dataLabels="true"
 							[seriesData]="currentRecommendation.psirtSeriesData">
 						</bar-chart>

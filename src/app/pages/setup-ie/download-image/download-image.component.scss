@@ -11,49 +11,4 @@
 
 		div { padding: $base-spacing; }
 	}
-
-	.install-progress-bar {
-		&__step {
-			width: 200px;
-			text-align: center;
-			.install-progress-bar__label {
-				height: 36px;
-				width: 166px;
-				margin-left: auto;
-				margin-right: auto;
-				margin-top: 20px;
-			}
-
-			&.active, &.visited {
-				.install-progress-bar__circle {
-					background: #90A6C5;
-					border: 1px solid #43679E;
-				}
-			}
-			
-			&.visited {
-				.install-progress-bar__line {
-					background: #43679E;
-				}
-			}
-		}
-
-		&__circle {
-			width: 25px;
-			height: 25px;
-			background: #d8d8d8;
-			border: 1px solid #c4c4c6;
-			border-radius: 20px;
-			margin: auto;
-		}
-
-		&__line {
-			position: relative;
-			width: 175px;
-			background: #c4c4c6;
-			height: 2px;
-			bottom: 13px;
-			left: 113px;
-		}
-	}
 }

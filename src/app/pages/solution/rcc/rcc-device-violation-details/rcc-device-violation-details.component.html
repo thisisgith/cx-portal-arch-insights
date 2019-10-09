@@ -135,3 +135,6 @@
 	</i>
 	<span [innerText]="item?.severity"></span>
 </ng-template>
+<ng-template #suggestedFixTemplate let-item="celldata">
+	<div [innerHTML]="item?.suggestedfix"></div>
+</ng-template>

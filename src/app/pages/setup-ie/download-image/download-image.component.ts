@@ -40,7 +40,7 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 	public showInstructions = false;
 	public error: string;
 	public loading = false;
-	public view: 'pre-download' | 'k9' | 'k9-decline' | 'eula';
+	public view: 'connect' | 'pre-download' | 'k9' | 'k9-decline' | 'eula';
 	public didDecline = false;
 
 	public k9Data: Partial<K9FormData> = { };
@@ -138,7 +138,7 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 				mergeMap(() => this.commenceDownload()),
 			)
 			.subscribe(() => {
-				this.continue();
+				this.view = 'connect';
 			});
 	}
 

@@ -54,6 +54,8 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 	private violationAgeTemplate: TemplateRef<{ }>;
 	@ViewChild('severityIconTemplate', { static: true })
 	private severityIconTemplate: TemplateRef<{ }>;
+	@ViewChild('suggestedFixTemplate', { static: true })
+	private suggestedFixTemplate: TemplateRef<{ }>;
 	@Output('assetDetails') public assetDetails: EventEmitter<string> = new EventEmitter<string>();
 	public policyRuleData: any = { };
 	public customerId: string;
@@ -255,6 +257,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 					key: 'suggestedfix',
 					name: I18n.get('_RccAssetSuggestedFix_'),
 					sortable: false,
+					template: this.suggestedFixTemplate,
 				},
 			],
 			striped: false,

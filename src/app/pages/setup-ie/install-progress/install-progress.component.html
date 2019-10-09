@@ -1,0 +1,34 @@
+<div class="install-progress-bar flex-center dbl-margin-bottom">
+	<ng-container *ngTemplateOutlet="pbStep; context: {
+		$implicit: '_AcceptTheEncryptionAgreement_' | i18n,
+		active: view === 'k9',
+		line: true,
+		visited: view !== 'k9'
+	}"></ng-container>
+	<ng-container *ngTemplateOutlet="pbStep; context: {
+		$implicit: '_AcceptTheLicenseAgreement_' | i18n,
+		active: view === 'eula',
+		line: true,
+		visited: view === 'pre-download' || view === 'connect'
+	}"></ng-container>
+	<ng-container *ngTemplateOutlet="pbStep; context: {
+		$implicit: '_DownloadTheOVATemplate_' | i18n,
+		active: view === 'pre-download',
+		line: true,
+		visited: view === 'connect'
+	}"></ng-container>
+	<ng-container *ngTemplateOutlet="pbStep; context: {
+		$implicit: '_DeployTheOVATemplate_' | i18n,
+		active: view === 'connect'
+	}"></ng-container>
+</div>
+
+<ng-template #pbStep let-label let-line="line" let-active="active" let-visited="visited">
+	<div class="install-progress-bar__step"
+		[ngClass]="{ 'active': active, 'visited': visited }">
+		<div class="install-progress-bar__circle"></div>
+		<div *ngIf="line" class="install-progress-bar__line"></div>
+		<div class="install-progress-bar__label"
+			[innerText]="label"></div>
+	</div>
+</ng-template>
