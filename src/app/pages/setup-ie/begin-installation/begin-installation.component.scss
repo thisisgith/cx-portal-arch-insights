@@ -2,4 +2,47 @@
 	img {
 		height: 60px;
 	}
+
+	img.network-img {
+		height: 356px;
+	}
+
+	.info-section {
+		width: 65%;
+		font-size: 16px;
+		color: #58585b;
+
+		li {
+			padding-left: 10px;
+		}
+
+		li + li {
+			margin-top: 10px;
+		}
+
+		ul li {
+			margin-top: 10px;
+		}
+
+		&__title {
+			font-size: 26px;
+			line-height: 32px;
+			font-weight: 300;
+		}
+	}
+
+	.lock-icon ::ng-deep svg {
+		width: 97px;
+		height: 130px;
+	}
+
+	.collector-icon ::ng-deep svg {
+		width: 96px;
+		height: 90px;
+	}
+
+	.dnac-icon ::ng-deep svg {
+		width: 97px;
+		height: 70px;
+	}
 }

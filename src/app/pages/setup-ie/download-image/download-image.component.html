@@ -16,8 +16,11 @@
 		class="text-primary base-margin-bottom"
 		[innerText]="('_StepXColonY_' | i18n:'1':('_Prerequisites_' | i18n)) | uppercase"
 	></h6>
+	<div [innerText]="'_InstallCXCollectorOnVM_' | i18n"
+		class="step-title base-margin-bottom"
+	></div>
 	<div [innerText]="'_DownloadOVAImage_' | i18n"
-		class="xl-margin-bottom step-title">
+		class="xl-margin-bottom text-large">
 	</div>
 	<cui-loader *ngIf="loading && !error" [label]="'_Loading_' | i18n"></cui-loader>
 	<k9-form
