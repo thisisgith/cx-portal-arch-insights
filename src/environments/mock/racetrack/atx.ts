@@ -91,7 +91,7 @@ const onboardItems = [
 		providerInfo: {
 			id: 'partner1',
 			logoURL: '',
-			name: 'Symantec',
+			name: '',
 		},
 		sessions: [
 			{

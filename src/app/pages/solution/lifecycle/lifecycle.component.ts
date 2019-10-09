@@ -1429,7 +1429,6 @@ export class LifecycleComponent implements OnDestroy {
 	public getPanel (viewAtxSessions: HTMLElement) {
 		let panel;
 		const _div = viewAtxSessions;
-		// const atxPopupListViewAdjustPx = 163;
 		const atxPopupListViewAdjustPx = 320;
 		this.innerWidth = window.innerWidth;
 		if (this.componentData.atx.interested) {
@@ -2231,7 +2230,7 @@ export class LifecycleComponent implements OnDestroy {
 	 * @returns the title string with provider name
 	 */
 	public getProviderName (item: AtxSchema) {
-		if (_.get(item, ['providerInfo', 'name'], '') !== '') {
+		if (_.get(item, ['providerInfo', 'name'], '')) {
 			return `By ${item.providerInfo.name}`;
 		}
 
