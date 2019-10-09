@@ -560,6 +560,12 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 .small-panel {
 	padding: 0;
 	line-height: initial;
+
+	&:hover {
+		.cx-text-default {
+			color: $accent-dark-blue;
+		}
+	}
 }
 
 .atx {
