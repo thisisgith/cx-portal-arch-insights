@@ -67,6 +67,8 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 	private assetSeverityIconTemplate: TemplateRef<{ }>;
 	@ViewChild('violationAgeTemplate', { static: true })
 	private violationAgeTemplate: TemplateRef<{ }>;
+	@ViewChild('suggestedFixTemplate', { static: true })
+	private suggestedFixTemplate: TemplateRef<{ }>;
 	/* Will be used in next release*/
 	public severityMappings = { } = [
 		{ id: 'P1', name: I18n.get('_RccSeverityValueP1_') },
@@ -332,6 +334,7 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 					key: 'suggestedFix',
 					name: I18n.get('_RccAssetSuggestedFix_'),
 					sortable: false,
+					template: this.suggestedFixTemplate,
 				},
 			],
 			dynamicData: false,
