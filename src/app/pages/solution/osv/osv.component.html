@@ -102,18 +102,30 @@
 		<div 
 			class="row toggle text-small" 
 			(click)="selectView('swGroups')"			
-			[ngClass]="{'text-primary':view == 'swGroups','text-muted':view != 'swGroups'}"
 			data-auto-id="TotalVisualFilterSoftwareGroups">
-				<div class="col-6 text-right">
+				<div 
+					class="col-6 text-right"
+					[ngClass]="{'text-primary': view == 'swGroups','text-muted': view != 'swGroups'}"
+				>
 					<span class="qtr-margin-right text-huge" [innerText]="filter.seriesData[0].profiles"></span>
 				</div>
 				<div class="col-6 margin-auto flex align-items-center">
-					<span class="text-large " [innerText]="'_OsvSoftwareGroups_' | i18n"></span>
-					<span class="pull-right text-primary relative" [title]="'_OsvSoftwareGroups_' | i18n">
+					<span 
+						class="text-large filter-title" 
+						[innerText]="'_OsvSoftwareGroups_' | i18n"
+						[ngClass]="{'text-primary': view == 'swGroups','text-muted': view != 'swGroups'}"
+					></span>
+					<span 
+						class="text-primary" 
+						[title]="'_OsvSoftwareGroups_' | i18n"
+						[ngClass]="{'text-primary': view == 'swGroups','text-muted': view != 'swGroups'}">
+					</span>
+					<span class="pull-right relative">
 						<i 
 							data-auto-id="SoftwareGroupInfo" 
 							class="icon-question-circle icon-small"
-							(click)="$event.stopPropagation();showProfileInfo = !showProfileInfo;">
+							(click)="$event.stopPropagation();showProfileInfo = !showProfileInfo;"
+							[ngClass]="{'active': view == 'swGroups'}">
 						</i>
 						<ng-container *ngTemplateOutlet="softwareProfileInfo"></ng-container>
 					</span>
@@ -121,35 +133,57 @@
 		</div>
 		<div 
 			class="row toggle text-small" 
-			[ngClass]="{'text-primary':view == 'assets','text-muted':view != 'assets'}"
 			(click)="selectView('assets')" 
 			data-auto-id="TotalVisualFilterAssets">
-				<div class="col-6 text-right">
+				<div 
+					class="col-6 text-right"
+					[ngClass]="{'text-primary': view == 'assets','text-muted': view != 'assets'}"
+				>
 					<span class="qtr-margin-right text-huge" [innerText]="filter.seriesData[0].assets"></span>
 				</div>
-				<div class="col-6 margin-auto">
-					<span class="text-large " [innerText]="'_OsvAssets_' | i18n"></span>
+				<div class="col-6 flex margin-auto">
 					<span 
-						class="text-primary pull-right" 
+						class="text-large filter-title" 
+						[innerText]="'_OsvAssets_' | i18n"
+						[ngClass]="{'text-primary': view == 'assets','text-muted': view != 'assets'}"
+					></span>
+					<span 
+						class="text-primary" 
+						[ngClass]="{'text-primary': view == 'assets','text-muted': view != 'assets'}"
 						data-balloon-length="medium"
 						[attr.data-balloon]="'_OsvAssetInfo_' | i18n" 
 						data-auto-id="AssetsToolTip" 
 						data-balloon-pos="down"
 						(click)="$event.stopPropagation();">
-							<i class="icon-info icon-small"></i>
 					</span>
+					<span class="pull-right">
+						<i 
+							class="icon-question-circle icon-info icon-small"
+							[ngClass]="{'active': view == 'assets'}"
+						>
+						</i>
+					</span>
+							
+					
 				</div>
 		</div>
 		<div 
 			class="row toggle text-small" 
 			(click)="selectView('swVersions')" 			
-			[ngClass]="{'text-primary':view == 'swVersions','text-muted':view != 'swVersions'}"
 			data-auto-id="TotalVisualFilterSoftwareVersions">
 				<div class="col-6 text-right">
-					<span class="qtr-margin-right text-huge" [innerText]="filter.seriesData[0].versions"></span>
+					<span 
+						class="qtr-margin-right text-huge" 
+						[innerText]="filter.seriesData[0].versions"
+						[ngClass]="{'text-primary': view == 'swVersions','text-muted': view != 'swVersions'}"
+					></span>
 				</div>
 				<div class="col-6 margin-auto">
-					<span class="text-large half-margin-right" [innerText]="'_OsvSoftwareVersionsRelease_' | i18n"></span>
+					<span 
+						class="text-large half-margin-right" 
+						[innerText]="'_OsvSoftwareVersionsRelease_' | i18n"
+						[ngClass]="{'text-primary': view == 'swVersions','text-muted': view != 'swVersions'}"
+					></span>
 				</div>
 		</div>
 	</div>
@@ -167,20 +201,20 @@
 </ng-template>
 <cui-modal></cui-modal>
 <ng-template #softwareProfileInfo>
-	<div class="absolute profile-info text-default" *ngIf="showProfileInfo">
+	<div class="absolute profile-info" *ngIf="showProfileInfo">
 		<div class="row no-margin">
 			<div class="col-12 text-xlarge half-margin-bottom">
 				<div class="row">
-					<div class="col-md-10" [innerHTML]="'_OsvSoftwareGroups_' | i18n"></div>
+					<div class="col-md-10 text-default" [innerHTML]="'_OsvSoftwareGroups_' | i18n"></div>
 					<div class="col-md-2 close">
-						<i class=" icon-close pull-right qtr-margin-right"
+						<i class="icon-close pull-right qtr-margin-right"
 							(click)="$event.stopPropagation();showProfileInfo = false;"
 							data-auto-id="ToggleSoftwareProfileInfoVisibilty"></i>
 					</div>
 				</div>
 			</div>
 			<div class="col-12 divider qtr-margin-top qtr-margin-bottom"></div>
-			<div class="col-12 base-margin-bottom half-margin-left half-margin-top">
+			<div class="col-12 base-margin-bottom half-margin-left half-margin-top text-default">
 				<div [innerHTML]="'_OsvSoftwareGroupInfoHeader_' | i18n"></div>
 				<ul class="half-margin-top">
 					<li>
@@ -197,10 +231,9 @@
 					</li>
 				</ul>
 			</div>
-			<div class="col-12 divider qtr-margin-top qtr-margin-bottom"></div>
 			<div class="col-6">
 				<button 
-					class="btn btn--primary-ghost btn--small" 
+					class="cx-btn cx-btn--primary" 
 					[innerText]="'_OsvClose_' | i18n"
 					(click)="$event.stopPropagation();showProfileInfo = false"
 					data-auto-id="CloseSoftwareProfileInfoDialog">
