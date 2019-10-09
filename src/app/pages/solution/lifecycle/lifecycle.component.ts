@@ -1438,11 +1438,11 @@ export class LifecycleComponent implements OnDestroy {
 
 					if ((rect.right + 500) > this.scrollModalRef.nativeElement.clientWidth) {
 						_div.style.right = '98%';
-						_div.style.bottom = '-148.5px';
+						_div.style.bottom = '-165.5px';
 						panel = 'panel cardpanel--openright';
 					} else {
 						_div.style.left = '55%';
-						_div.style.bottom = '-148.5px';
+						_div.style.bottom = '-165.5px';
 						panel = 'panel cardpanel--open';
 					}
 					break;
@@ -1467,7 +1467,7 @@ export class LifecycleComponent implements OnDestroy {
 			panel = 'panel panel--open';
 		} else {
 			_div.style.left = '128px';
-			_div.style.bottom = '-165px';
+			_div.style.bottom = '-180px';
 			panel = 'panel panel--open';
 		}
 
@@ -2231,7 +2231,7 @@ export class LifecycleComponent implements OnDestroy {
 	 */
 	public getProviderName (item: AtxSchema) {
 		if (_.get(item, ['providerInfo', 'name'], '')) {
-			return `By ${item.providerInfo.name}`;
+			return `${I18n.get('_By_')}${item.providerInfo.name}`;
 		}
 
 		return '';

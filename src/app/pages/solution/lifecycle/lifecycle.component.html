@@ -444,7 +444,19 @@
 		</div>
 		<div class="divider divider--compressed"></div>
 		<div class="line-clamp atx-more-popover__description text-left" [innerText]="data.description" data-auto-id="atxMoreClickModal-Description"></div>
-		<div class="text-muted text-small qtr-margin-top qtr-margin-bottom text-left" [innerText]="getProviderName(data)"></div> 
+		<div class="text-muted text-small qtr-margin-top qtr-margin-bottom text-left" [innerText]="getProviderName(data)"></div>
+		<ng-container *ngIf="data.status === 'scheduled' && scheduledAtxMap[data.atxId]">
+			<div class="cx-lifecycle-card--scheduled half-padding-bottom text-left">
+				<span class="icon-calendar" attr.data-auto-id="{{ autoid }}-Calendar"></span>
+				<span class="qtr-padding-left">
+					<span class="text-bold"
+						[innerText]="scheduledAtxMap[data.atxId].sessionStartDate | date:'EEE MMM d, y h:mm a z'"
+						attr.data-auto-id="{{ autoid }}-Date"></span>
+					<span class="qtr-padding-left" [innerText]="'_InstructorX_' | i18n:scheduledAtxMap[data.atxId].presenterName"
+						attr.data-auto-id="{{ autoid }}-Presenter"></span>
+				</span>
+			</div>
+		</ng-container>
 		<div class="atx-scheduler-one-line">
 			<div>
 				<h6 class="text-left"
