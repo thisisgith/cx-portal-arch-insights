@@ -11,7 +11,7 @@
 </details-panel>
 
 <div class="panel panel--bordered base-padding-left base-padding-top no-padding-bottom">
-	<cui-tabs inline="true">
+	<cui-tabs inline="true" *ngIf="!isLoading">
 		<cui-tab data-auto-id="openCasesTab" [label]="'_OpenCases_' | i18n" (click)="mainContent = 'cases'">
 			<visual-filter-bar [filters]="filters" [filterCollapse]="filterCollapse"></visual-filter-bar>
 		</cui-tab>
