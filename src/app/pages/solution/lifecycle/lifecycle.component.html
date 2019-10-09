@@ -346,11 +346,11 @@
 	</div>
 	<div class="provider_icon">
 		<!-- Keep the following line for now since we don't have partner Logo yet -->
-		<!-- <span class="icon-check icon-medium half-padding-right"></span> -->
+		<!-- <span *ngIf="item.providerInfo?.logoURL" class="icon-check icon-medium half-padding-right"></span> -->
 		<span *ngIf="item.providerInfo?.logoURL">
 			<img class="table-img-width" alt="'_Placeholder_' | i18n" [src]="item.providerInfo?.logoURL">
 		</span>
-		<span class="text-bold text-medium" [innerText]="item.providerInfo?.name"></span>
+		<span *ngIf="!item.providerInfo?.logoURL" class="text-bold text-medium" [innerText]="item.providerInfo?.name"></span>
 	</div>
 	<img class="max-width" alt="'_Placeholder_' | i18n" [src]="src" attr.data-auto-id="{{ autoid }}-Image">
 	<div class="cx-lifecycle-card--recommended">
