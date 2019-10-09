@@ -314,7 +314,7 @@ export const ATXScenarios = [
 						body: MockATX('IBN', 'Campus Network Assurance', 'Onboard'),
 						status: 200,
 					},
-					selected: true,
+					selected: false,
 				},
 				{
 					delay: Math.floor(Math.random() * 2000) + 500,
@@ -413,7 +413,7 @@ export const ATXScenarios = [
 						body: MockATX('IBN', 'Campus Network Assurance', 'Onboard', 'partnerBranded'),
 						status: 200,
 					},
-					selected: false,
+					selected: true,
 				},
 				{
 					delay: Math.floor(Math.random() * 2000) + 500,

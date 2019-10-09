@@ -1089,19 +1089,11 @@
 					<span class="text-medium" [innerText]="'_InProgress_' | i18n" *ngIf="item.status === 'in-progress'" data-auto-id="ATXCardFooter-InProgressText"></span>
 					<span class="text-medium" [innerText]="'_Requested_' | i18n" *ngIf="item.status === 'requested'" data-auto-id="ATXCardFooter-RequestedText"></span>
 					<div class="atx__card__feedback" *ngIf="item.status === 'completed'">
-						<ng-container *ngIf="item.feedbackInfo.available">
-							<a data-auto-id="thumbUpBtn" class="btn btn--icon btn--small btn--selected">
-								<span class="icon-like" [class.rotate-180]="item.feedbackInfo.thumbs === 'DOWN'"></span>
-							</a>
-						</ng-container>
-						<ng-container  *ngIf="!item.feedbackInfo.available">
-							<a data-auto-id="thumbUpBtn" class="btn btn--icon btn--small">
-								<span class="icon-like"></span>
-							</a>
-							<a data-auto-id="thumbDownBtn" class="btn btn--icon btn--small">
-								<span class="icon-like rotate-180"></span>
-							</a>
-						</ng-container>
+						<session-feedback
+							[type]="AssetType.ATX"					
+							*ngIf="item.feedbackInfo"
+							[item]="item"
+						></session-feedback>
 					</div>
 				</div>
 				<div class="text-left base-padding-left base-padding-right base-margin-bottom"
@@ -1184,20 +1176,12 @@
 					<span class="text-medium" [innerText]="'_Completed_' | i18n" *ngIf="item.status === 'completed'"></span>
 					<span class="text-medium" [innerText]="'_SessionInProgress_' | i18n" *ngIf="item.status === 'in-progress'"></span>
 					<span class="text-medium" [innerText]="'_Requested_' | i18n" *ngIf="item.status === 'requested'"></span>
-					<div class="acc__card__feedback" *ngIf="item.status === 'completed'">
-						<ng-container *ngIf="item.feedbackInfo?.available">
-							<a data-auto-id="thumbUpBtn" class="btn btn--icon btn--small btn--selected">
-								<span class="icon-like" [class.rotate-180]="item.feedbackInfo?.thumbs === 'DOWN'"></span>
-							</a>
-						</ng-container>
-						<ng-container  *ngIf="!item.feedbackInfo?.available">
-							<a data-auto-id="thumbUpBtn" class="btn btn--icon btn--small">
-								<span class="icon-like"></span>
-							</a>
-							<a data-auto-id="thumbDownBtn" class="btn btn--icon btn--small">
-								<span class="icon-like rotate-180"></span>
-							</a>
-						</ng-container>
+					<div class="atx__card__feedback" *ngIf="item.status === 'completed'">
+						<session-feedback
+							[type]="AssetType.ACC"					
+							*ngIf="item.feedbackInfo"
+							[item]="item"
+						></session-feedback>
 					</div>
 				</div>
 				<div class="divider no-margin"></div>

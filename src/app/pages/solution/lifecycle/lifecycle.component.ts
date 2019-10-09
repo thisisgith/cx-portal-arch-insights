@@ -40,6 +40,7 @@ import { User } from '@interfaces';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { RacetrackInfoService } from '@services';
 import { environment } from '@environment';
+import { AssetType } from './feedback/session-feedback.component';
 
 /**
  * Interface representing success path and product guides modals
@@ -337,6 +338,7 @@ export class LifecycleComponent implements OnDestroy {
 	public selectCgtComponent = false;
 	public cgtRequestTrainingClicked = false;
 	public cxLevel: number;
+	public AssetType = AssetType;
 
 	get currentPitstop () {
 		return _.get(this.componentData, ['racetrack', 'pitstop']);

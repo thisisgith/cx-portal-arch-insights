@@ -1,0 +1,64 @@
+<ng-container *ngIf="item.feedbackInfo.available && feedbackComplete">
+	<a data-auto-id="thumbUpBtn" class="btn btn--icon btn--small btn--selected">
+		<span class="icon-like" [class.rotate-180]="item.feedbackInfo.thumbs === 'DOWN'"></span>
+	</a>
+</ng-container>
+<ng-container  *ngIf="!(item.feedbackInfo.available && feedbackComplete)">
+	<a data-auto-id="thumbUpBtn" class="btn btn--icon btn--small"
+		[class.btn--selected]="item.feedbackInfo.available && item.feedbackInfo.thumbs === FeedbackThumbs.UP"
+		(click)="submitFeedbackThumbsRating(FeedbackThumbs.UP)">
+		<span class="icon-like"></span>
+	</a>
+	<a data-auto-id="thumbDownBtn" class="btn btn--icon btn--small"
+		[class.btn--selected]="item.feedbackInfo.available && item.feedbackInfo.thumbs === FeedbackThumbs.DOWN"
+		(click)="submitFeedbackThumbsRating(FeedbackThumbs.DOWN)">
+		<span class="icon-like rotate-180"></span>
+	</a>
+	<div *ngIf="feedback"></div>
+</ng-container>
+<ng-container *ngIf="showPopup">
+	<div class="feedback-popup">
+		<span class="feedback-popup__close icon-close toggle"
+			(click)="closePopup()"
+		></span>
+		<ng-container *ngIf="!feedbackComplete">
+			<!-- todo: internationalize -->
+			<div class="feedback-popup__title" [innerText]="'_FeedbackThanks_' | i18n">
+			</div>
+			<div class="feedback-popup__description" [innerText]="'_FeedbackMore_' | i18n">
+			</div>
+			<div class="feedback-popup__comments half-margin-bottom">
+				<textarea
+					[attr.maxlength]="300"
+					[placeholder]="'_Comments_' | i18n"
+					[(ngModel)]="comments"
+					id="input-textarea-feedback-popup"
+					class="textarea"
+					data-auto-id="sessionFeedback-comments-input"
+					rows="4"></textarea>
+				<div class="text-right text-italic" [class.hidden]="!comments">
+					{{comments ? comments.length : ''}} <span class="text-muted">/ {{ commentMaxLength }}</span>
+				</div>
+			</div>
+		</ng-container>
+		<ng-container *ngIf="feedbackComplete">
+			<div class="feedback-popup__description feedback-popup__description--centered"
+				[innerText]="'_ThankYou_' | i18n"></div>
+		</ng-container>
+
+		<div class="feedback-popup__footer">
+			<button data-auto-id="feedback-popup-submit-comment"
+				*ngIf="feedbackComplete"
+				(click)="closePopup(target)"
+				class="cx-btn text-uppercase"
+				[innerText]="'_FeedbackClose_' | i18n">
+			</button>
+			<button data-auto-id="feedback-popup-submit-comment"
+				*ngIf="!feedbackComplete"
+				(click)="submitFeedbackComment(target)"
+				class="cx-btn text-uppercase"
+				[innerText]="'_FeedbackSubmit_' | i18n">
+			</button>
+		</div>
+	</div>
+</ng-container>
