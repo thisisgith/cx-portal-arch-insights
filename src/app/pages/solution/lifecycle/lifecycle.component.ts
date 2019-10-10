@@ -1429,7 +1429,7 @@ export class LifecycleComponent implements OnDestroy {
 	public getPanel (viewAtxSessions: HTMLElement) {
 		let panel;
 		const _div = viewAtxSessions;
-		const atxPopupListViewAdjustPx = 163;
+		const atxPopupListViewAdjustPx = 320;
 		this.innerWidth = window.innerWidth;
 		if (this.componentData.atx.interested) {
 			switch (this.atxview) {
@@ -1438,11 +1438,11 @@ export class LifecycleComponent implements OnDestroy {
 
 					if ((rect.right + 500) > this.scrollModalRef.nativeElement.clientWidth) {
 						_div.style.right = '98%';
-						_div.style.bottom = '-132.5px';
+						_div.style.bottom = '-165.5px';
 						panel = 'panel cardpanel--openright';
 					} else {
 						_div.style.left = '55%';
-						_div.style.bottom = '-132.5px';
+						_div.style.bottom = '-165.5px';
 						panel = 'panel cardpanel--open';
 					}
 					break;
@@ -1451,7 +1451,7 @@ export class LifecycleComponent implements OnDestroy {
 					const rect = this.eventClickedElement.getBoundingClientRect();
 					const ht = this.eventClickedElement.scrollHeight;
 
-					_div.style.left = `${(rect.left - _div.scrollWidth) - 3}px`;
+					_div.style.left = `${(rect.left - _div.scrollWidth) - 110 }px`;
 					_div.style.top = `${(rect.top + (ht / 2))
 						+ this.scrollY - atxPopupListViewAdjustPx - this.appHeaderHeight}px`;
 					panel = 'panel listpanel--open';
@@ -1467,7 +1467,7 @@ export class LifecycleComponent implements OnDestroy {
 			panel = 'panel panel--open';
 		} else {
 			_div.style.left = '128px';
-			_div.style.bottom = '-150px';
+			_div.style.bottom = '-180px';
 			panel = 'panel panel--open';
 		}
 
@@ -2222,5 +2222,18 @@ export class LifecycleComponent implements OnDestroy {
 
 				return curCount >= totalCount;
 		}
+	}
+
+	/**
+	 * provide provider name
+	 * @param item the Lifecycle item
+	 * @returns the title string with provider name
+	 */
+	public getProviderName (item: AtxSchema) {
+		if (_.get(item, ['providerInfo', 'name'], '')) {
+			return `${I18n.get('_By_')}${item.providerInfo.name}`;
+		}
+
+		return '';
 	}
 }
