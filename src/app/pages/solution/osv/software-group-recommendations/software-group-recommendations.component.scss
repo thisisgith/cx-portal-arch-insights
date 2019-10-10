@@ -1,4 +1,4 @@
-@import '~cisco-ui/src/scss/utilities/_variables.scss';
+@import '~src/variables.scss';
 
 .version-pointer-arrow {
 	background-color: $primary;
@@ -42,7 +42,7 @@
 }
 
 .recommendation-icon-info {
-	color: #c2d1e2;
+	color: $info-icon-font-color;
 }
 
 ::ng-deep {
