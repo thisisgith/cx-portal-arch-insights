@@ -9,6 +9,8 @@ import { map as __map, filter as __filter } from 'rxjs/operators';
 
 import { CSDFResponseModel } from '../models/csdfresponse-model';
 import { DefaultResponseModel } from '../models/default-response-model';
+import { IESetupCompletionUpdateRequestModel } from '../models/iesetup-completion-update-request-model';
+import { IESetupCompletionResponseModel } from '../models/iesetup-completion-response-model';
 import { IERegistrationRequestModel } from '../models/ieregistration-request-model';
 import { IERegistrationResponseModel } from '../models/ieregistration-response-model';
 @Injectable({
@@ -16,6 +18,8 @@ import { IERegistrationResponseModel } from '../models/ieregistration-response-m
 })
 class ControlPointIERegistrationAPIService extends __BaseService {
   static readonly getDnacStatusUsingGETPath = '/dnac/status/{customerId}';
+  static readonly updateRegistrationCompletionUsingPOSTPath = '/v1/ie-setup/status';
+  static readonly getIESetupCompletionStatusUsingGETPath = '/v1/ie-setup/status/{customerId}';
   static readonly createIERegistrationUsingPOSTPath = '/register/ie';
   static readonly getIERegistrationUsingGETPath = '/registration/ie/{customerId}';
 
@@ -61,6 +65,83 @@ class ControlPointIERegistrationAPIService extends __BaseService {
   getDnacStatusUsingGET(customerId: string): __Observable<CSDFResponseModel> {
     return this.getDnacStatusUsingGETResponse(customerId).pipe(
       __map(_r => _r.body as CSDFResponseModel)
+    );
+  }
+
+  /**
+   * @param ieSetupCompletionStatusUpdateRequestModel ieSetupCompletionStatusUpdateRequestModel
+   * @return OK
+   */
+  updateRegistrationCompletionUsingPOSTResponse(ieSetupCompletionStatusUpdateRequestModel: IESetupCompletionUpdateRequestModel): __Observable<__StrictHttpResponse<DefaultResponseModel>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    __headers = __headers.append("Content-Type", "application/json");
+    __body = ieSetupCompletionStatusUpdateRequestModel;
+    let req = new HttpRequest<any>(
+      'POST',
+      this.rootUrl + `/customerportal/controlpoint/v1/v1/ie-setup/status`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<DefaultResponseModel>;
+      })
+    );
+  }
+
+  /**
+   * @param ieSetupCompletionStatusUpdateRequestModel ieSetupCompletionStatusUpdateRequestModel
+   * @return OK
+   */
+  updateRegistrationCompletionUsingPOST(ieSetupCompletionStatusUpdateRequestModel: IESetupCompletionUpdateRequestModel): __Observable<DefaultResponseModel> {
+    return this.updateRegistrationCompletionUsingPOSTResponse(ieSetupCompletionStatusUpdateRequestModel).pipe(
+      __map(_r => _r.body as DefaultResponseModel)
+    );
+  }
+
+  /**
+   * @param customerId customerId
+   * @return OK
+   */
+  getIESetupCompletionStatusUsingGETResponse(customerId: string): __Observable<__StrictHttpResponse<IESetupCompletionResponseModel>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+
+    let req = new HttpRequest<any>(
+      'GET',
+      this.rootUrl + `/customerportal/controlpoint/v1/v1/ie-setup/status/${customerId}`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<IESetupCompletionResponseModel>;
+      })
+    );
+  }
+
+  /**
+   * @param customerId customerId
+   * @return OK
+   */
+  getIESetupCompletionStatusUsingGET(customerId: string): __Observable<IESetupCompletionResponseModel> {
+    return this.getIESetupCompletionStatusUsingGETResponse(customerId).pipe(
+      __map(_r => _r.body as IESetupCompletionResponseModel)
     );
   }
 

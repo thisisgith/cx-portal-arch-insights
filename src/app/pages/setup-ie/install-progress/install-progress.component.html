@@ -29,6 +29,7 @@
 		<div class="install-progress-bar__circle"></div>
 		<div *ngIf="line" class="install-progress-bar__line"></div>
 		<div class="install-progress-bar__label"
+			[ngClass]="{ 'text-bold': active }"
 			[innerText]="label"></div>
 	</div>
 </ng-template>

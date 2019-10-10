@@ -1,12 +1,11 @@
 import { SETUP_STATES } from '@classes';
 
-import { ConnectCollectorComponent } from '../connect-collector/connect-collector.component';
-import {
-	RegisterCollectorComponent,
-} from '../register-collector/register-collector.component';
-import { ConnectDNACenterComponent } from '../connect-dna-center/connect-dna-center.component';
+// import { ConnectCollectorComponent } from '../connect-collector/connect-collector.component';
+// import {
+// 	RegisterCollectorComponent,
+// } from '../register-collector/register-collector.component';
+// import { ConnectDNACenterComponent } from '../connect-dna-center/connect-dna-center.component';
 import { DeployStepsComponent } from '../deploy-steps/deploy-steps.component';
-import { DownloadImageComponent } from '../download-image/download-image.component';
 import { Selection } from '../setup-ie.types';
 
 /**
@@ -32,25 +31,25 @@ export function getSlides (selection: Selection) {
 					state: SETUP_STATES.INSTALL,
 					type: DeployStepsComponent,
 				},
-				{
-					state: SETUP_STATES.CONNECT_COLLECTOR,
-					type: ConnectCollectorComponent,
-				},
-				{
-					state: SETUP_STATES.CONFIGURE_COLLECTOR,
-					type: RegisterCollectorComponent,
-				},
-				{
-					state: SETUP_STATES.CONNECT_DNAC,
-					type: ConnectDNACenterComponent,
-				},
-				{
-					inputs: {
-						slideSet: 'syslog',
-					},
-					state: SETUP_STATES.CONNECT_DNAC,
-					type: DeployStepsComponent,
-				},
+				// {
+				// 	state: SETUP_STATES.CONNECT_COLLECTOR,
+				// 	type: ConnectCollectorComponent,
+				// },
+				// {
+				// 	state: SETUP_STATES.CONFIGURE_COLLECTOR,
+				// 	type: RegisterCollectorComponent,
+				// },
+				// {
+				// 	state: SETUP_STATES.CONNECT_DNAC,
+				// 	type: ConnectDNACenterComponent,
+				// },
+				// {
+				// 	inputs: {
+				// 		slideSet: 'syslog',
+				// 	},
+				// 	state: SETUP_STATES.CONNECT_DNAC,
+				// 	type: DeployStepsComponent,
+				// },
 			];
 		case Selection.VCENTER:
 			return [
@@ -68,32 +67,28 @@ export function getSlides (selection: Selection) {
 					state: SETUP_STATES.INSTALL,
 					type: DeployStepsComponent,
 				},
-				{
-					state: SETUP_STATES.CONNECT_COLLECTOR,
-					type: ConnectCollectorComponent,
-				},
-				{
-					state: SETUP_STATES.CONFIGURE_COLLECTOR,
-					type: RegisterCollectorComponent,
-				},
-				{
-					state: SETUP_STATES.CONNECT_DNAC,
-					type: ConnectDNACenterComponent,
-				},
-				{
-					inputs: {
-						slideSet: 'syslog',
-					},
-					state: SETUP_STATES.CONNECT_DNAC,
-					type: DeployStepsComponent,
-				},
+				// {
+				// 	state: SETUP_STATES.CONNECT_COLLECTOR,
+				// 	type: ConnectCollectorComponent,
+				// },
+				// {
+				// 	state: SETUP_STATES.CONFIGURE_COLLECTOR,
+				// 	type: RegisterCollectorComponent,
+				// },
+				// {
+				// 	state: SETUP_STATES.CONNECT_DNAC,
+				// 	type: ConnectDNACenterComponent,
+				// },
+				// {
+				// 	inputs: {
+				// 		slideSet: 'syslog',
+				// 	},
+				// 	state: SETUP_STATES.CONNECT_DNAC,
+				// 	type: DeployStepsComponent,
+				// },
 			];
 		case Selection.VBOX:
 			return [
-				{
-					state: SETUP_STATES.INIT,
-					type: DownloadImageComponent,
-				},
 				{
 					inputs: {
 						slideSet: 'vbox',
@@ -108,25 +103,25 @@ export function getSlides (selection: Selection) {
 					state: SETUP_STATES.INSTALL,
 					type: DeployStepsComponent,
 				},
-				{
-					state: SETUP_STATES.CONNECT_COLLECTOR,
-					type: ConnectCollectorComponent,
-				},
-				{
-					state: SETUP_STATES.CONFIGURE_COLLECTOR,
-					type: RegisterCollectorComponent,
-				},
-				{
-					state: SETUP_STATES.CONNECT_DNAC,
-					type: ConnectDNACenterComponent,
-				},
-				{
-					inputs: {
-						slideSet: 'syslog',
-					},
-					state: SETUP_STATES.CONNECT_DNAC,
-					type: DeployStepsComponent,
-				},
+				// {
+				// 	state: SETUP_STATES.CONNECT_COLLECTOR,
+				// 	type: ConnectCollectorComponent,
+				// },
+				// {
+				// 	state: SETUP_STATES.CONFIGURE_COLLECTOR,
+				// 	type: RegisterCollectorComponent,
+				// },
+				// {
+				// 	state: SETUP_STATES.CONNECT_DNAC,
+				// 	type: ConnectDNACenterComponent,
+				// },
+				// {
+				// 	inputs: {
+				// 		slideSet: 'syslog',
+				// 	},
+				// 	state: SETUP_STATES.CONNECT_DNAC,
+				// 	type: DeployStepsComponent,
+				// },
 			];
 		default:
 	}

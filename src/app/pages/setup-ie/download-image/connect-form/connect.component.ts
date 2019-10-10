@@ -35,6 +35,7 @@ function validateIpAddress (control: AbstractControl) {
 })
 export class ConnectComponent {
 	@Output() public onContinue: EventEmitter<void> = new EventEmitter<void>();
+	@Output() public onTutorial: EventEmitter<void> = new EventEmitter<void>();
 	public accountForm = new FormGroup({
 		ipAddress: new FormControl(null, [
 			Validators.required,
@@ -64,6 +65,13 @@ export class ConnectComponent {
 			queryParamsHandling: 'merge',
 		});
 		this.onContinue.emit();
+	}
+
+	/**
+	 * Emits a tutorial click event
+	 */
+	public onTutorialClick () {
+		this.onTutorial.emit();
 	}
 
 	/**

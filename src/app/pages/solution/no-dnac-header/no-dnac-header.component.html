@@ -1,12 +1,9 @@
 <ng-container *ngIf="(noDNAC || !hasCXCollector || !forceHidden)">
 	<div class="row cx-no-dnac-container">
-		<span class="col-1"></span>
 		<div class="col-7">
-			<div class="flex-center-vertical">
-				<span class="cx-no-dnac-label" [innerText]="'_AssetInventory_' | i18n"></span>
-				<span class="cx-no-dnac-label half-margin-right" [innerText]="':'"></span>
-				<span class="cx-no-dnac-status icon-circle qtr-margin-right"></span>
-				<span class="cx-no-dnac-status" [innerText]="'_NotConnected_' | i18n"></span>
+			<div class="flex-center-horizontal">
+				<span class="cx-no-dnac-label" [innerText]="'_SeeMoreInsights_' | i18n"></span>
+				<span class="cx-no-dnac-status" [innerText]="'_SetupCollectorBannerText_' | i18n"></span>
 			</div>
 			<div
 				*ngIf="noDNAC"
@@ -19,7 +16,7 @@
 				class="cx-no-dnac-description">
 			</div>
 		</div>
-		<div class="col-4">
+		<div class="flex-right base-margin-right">
 			<button
 				#continueSetupButton
 				class="btn btn--wide btn--primary flex-right text-uppercase text-bold"

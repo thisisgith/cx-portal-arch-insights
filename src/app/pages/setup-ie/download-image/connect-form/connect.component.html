@@ -1,6 +1,10 @@
 <div class="base-margin-bottom">
 	<span [innerText]="'_AfterOVADownloadDeploy_' | i18n"></span>
-	<a class="qtr-margin-left" [innerText]="'_ViewStepByStepTutorial_' | i18n"></a>
+	<a
+		class="qtr-margin-left"
+		[innerText]="'_ViewStepByStepTutorial_' | i18n"
+		(click)="onTutorialClick()"
+	></a>
 </div>
 <div class="form-container">
 	<img

@@ -1,9 +1,11 @@
 import { Component, EventEmitter, Inject, OnDestroy, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl, FormGroup } from '@angular/forms';
+import { SelectInstructionsComponent } from '../select-instructions/select-instructions.component';
 
 import { LogService } from '@cisco-ngx/cui-services';
-import { SetupStep } from '@interfaces';
+import { OnStepCompleteInsertOptions, SetupStep } from '@interfaces';
+import { SETUP_STATES } from '@classes';
 import { ASDAPIService, UtilsService } from '@services';
 import { I18n } from '@cisco-ngx/cui-utils';
 
@@ -26,6 +28,8 @@ import { EulaFormData } from './eula-form/eula-form.component';
 })
 export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 	@Output('onStepComplete') public onStepComplete = new EventEmitter<void>();
+	@Output('onStepCompleteInsert') public onStepCompleteInsert =
+		new EventEmitter<OnStepCompleteInsertOptions>();
 	private destroyed$: Subject<void> = new Subject<void>();
 	private user: User;
 	private customerId: string;
@@ -147,6 +151,25 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 	 */
 	public continue () {
 		this.onStepComplete.emit();
+	}
+
+	/**
+	 * Continues to the setup instructions
+	 */
+	public goToInstructions () {
+		this.onStepCompleteInsert.emit({
+			offset: 1,
+			steps: [
+				{
+					state: SETUP_STATES.INSTALL,
+					type: SelectInstructionsComponent,
+				},
+				{
+					state: SETUP_STATES.INSTALL,
+					type: DownloadImageComponent,
+				},
+			],
+		});
 	}
 
 	/**

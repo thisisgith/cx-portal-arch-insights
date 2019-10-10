@@ -53,5 +53,6 @@
 	<connect
 		*ngIf="!loading && view === 'connect'"
 		(onContinue)="continue()"
+		(onTutorial)="goToInstructions()"
 	></connect>
 </div>

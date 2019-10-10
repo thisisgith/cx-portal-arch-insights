@@ -15,6 +15,27 @@ import { SetupIEService } from '../setup-ie.service';
 import * as _ from 'lodash-es';
 
 /**
+ * Custom Validator for IP Address
+ * @param control {AbstractControl}
+ * @returns function
+ */
+function validateIpAddress (control: AbstractControl) {
+	const error = { value: 'Invalid IP Address Error' };
+	const regexMatch = control.value
+		&& control.value.match(/(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/);
+	if (!regexMatch) { return error; }
+	let hasError = false;
+	regexMatch.slice(1, 5)
+		.forEach(elem => {
+			const num = parseInt(elem, 10);
+			if (isNaN(num) || num > 255) { hasError = true; }
+		});
+	if (hasError) { return error; }
+
+	return null;
+}
+
+/**
  * Component for connecting to CX Collector
  */
 @Component({
@@ -29,10 +50,19 @@ export class ConnectCollectorComponent implements OnDestroy, OnInit, SetupStep {
 	public DNACStep = false;
 	public ipFieldHidden = false;
 	public ipAddressLink: string;
-	public view: 'input' | 'connecting' | 'instruct' = 'input';
+	public view: 'connecting' | 'instruct' = 'connecting';
+	public clickedProceed = false;
+
+	public accountForm = new FormGroup({
+		ipAddress: new FormControl(null, [
+			Validators.required,
+			validateIpAddress,
+		]),
+	});
 
 	private destroyed$: Subject<void> = new Subject<void>();
 	public reachedIP = false;
+	public ipAddress: string;
 
 	constructor (
 		@Inject('ENVIRONMENT') private env,
@@ -54,22 +84,49 @@ export class ConnectCollectorComponent implements OnDestroy, OnInit, SetupStep {
 	 * NgOnInit
 	 */
 	public ngOnInit () {
+		const state = this.state.getState();
+		this.ipAddress = state.collectorIP;
+		this.ipAddressLink = `https://${_.trim(this.ipAddress)}`;
+		this.checkIPConnection()
+				.pipe(takeUntil(this.destroyed$))
+				.subscribe(hasCert => {
+					if (!hasCert) {
+						this.view = 'instruct';
+					} else {
+						this.onConnect();
+					}
+				});
 		this.route.queryParams
 			.pipe(
 				takeUntil(this.destroyed$),
 			)
 			.subscribe(params => {
 				if (!params.collectorIP) {
-					this.view = 'input';
+					this.router.navigate([], {
+						queryParams: {
+							collectorIP: this.ipAddress,
+						},
+						queryParamsHandling: 'merge',
+					});
 				}
 			});
 	}
 
+	/**
+	 * Submits the user input IP Address
+	 */
+	public async onSubmit () {
+		const url = `https://${_.trim(this.ipAddress)}`;
+		this.ipAddressLink = url;
+		this.view = 'connecting';
+	}
 
 	/**
 	 * Opens the given IP Address in a new tab
 	 */
 	private openIpAddressInNewTab () {
+		this.clickedProceed = true;
+		this.pollIP();
 		window.open(`${this.ipAddressLink}/verified`, '_blank');
 	}
 
@@ -113,6 +170,22 @@ export class ConnectCollectorComponent implements OnDestroy, OnInit, SetupStep {
 	 * Handles saving state after secure connection is established
 	 */
 	private async onConnect () {
+		const state = this.state.getState() || { };
+		state.collectorIP = this.ipAddress;
+		this.state.setState(state);
+
 		this.onStepComplete.emit();
 	}
+
+	/**
+	 * Listen for ENTER key events and page to next page
+	 * @param event incoming keyboard event
+	 */
+	@HostListener('window:keyup', ['$event'])
+	public keyEvent (event: KeyboardEvent) {
+		if (event.keyCode === KEY_CODES.ENTER && this.accountForm.valid) {
+			this.onSubmit();
+		}
+	}
+
 }

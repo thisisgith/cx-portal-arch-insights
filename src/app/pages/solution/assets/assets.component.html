@@ -34,6 +34,7 @@
 			<ng-container *ngIf="!status.isLoading && pagination">
 				<ng-container *ngTemplateOutlet="titleBar"></ng-container>
 			</ng-container>
+			<no-dnac-header></no-dnac-header>
 			<ng-container *ngTemplateOutlet="tableAssets"></ng-container>
 			<div *ngIf="pagination && pagination.total" class="base-margin-top">
 				<cui-pager [page]="pagination.page - 1"
