@@ -253,6 +253,7 @@
 			<h6 class="atx-popover__title title-line-clamp" [innerText]="title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
 			<div class="divider divider--compressed"></div>
 			<div class="atx-popover__description line-clamp" [innerText]="description" attr.data-auto-id="{{ autoid }}-HoverModal-Description"></div>
+			<div class="text-muted text-small half-margin-top" [innerText]="getProviderName(item)"></div>
 		</div>
 	</div>
 </ng-template>
@@ -280,7 +281,8 @@
 			</div>
 			<div class="divider divider--compressed"></div>
 			<div class="line-clamp atx-more-popover__description" [innerText]="data.description" data-auto-id="atxMoreClickModal-Description"></div>
-			<div class="base-padding-top">
+			<div class="text-muted text-small qtr-margin-top" [innerText]="getProviderName(data)"></div>
+			<div class="half-padding-top">
 				<ng-container *ngTemplateOutlet="data?.sessions?.length > 0 ?
 					enabledViewSessionsButton : disabledViewSessionsButton; context: {
 						type: 'moreView'
@@ -341,6 +343,14 @@
 		[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__white'"
 		(click)="updateBookmark(item, 'ATX')"
 		data-auto-id="SBCardRibbon">
+	</div>
+	<div class="provider_icon">
+		<!-- Keep the following line for now since we don't have partner Logo yet -->
+		<!-- <span *ngIf="item.providerInfo?.logoURL" class="icon-check icon-medium half-padding-right"></span> -->
+		<span *ngIf="item.providerInfo?.logoURL">
+			<img class="table-img-width" alt="'_Placeholder_' | i18n" [src]="item.providerInfo?.logoURL">
+		</span>
+		<span *ngIf="!item.providerInfo?.logoURL" class="text-bold text-medium" [innerText]="item.providerInfo?.name"></span>
 	</div>
 	<img class="max-width" alt="'_Placeholder_' | i18n" [src]="src" attr.data-auto-id="{{ autoid }}-Image">
 	<div class="cx-lifecycle-card--recommended">
@@ -433,6 +443,20 @@
 			</div>
 		</div>
 		<div class="divider divider--compressed"></div>
+		<div class="line-clamp atx-more-popover__description text-left" [innerText]="data.description" data-auto-id="atxMoreClickModal-Description"></div>
+		<div class="text-muted text-small qtr-margin-top qtr-margin-bottom text-left" [innerText]="getProviderName(data)"></div>
+		<ng-container *ngIf="data.status === 'scheduled' && scheduledAtxMap[data.atxId]">
+			<div class="cx-lifecycle-card--scheduled half-padding-bottom text-left">
+				<span class="icon-calendar" attr.data-auto-id="{{ autoid }}-Calendar"></span>
+				<span class="qtr-padding-left">
+					<span class="text-bold"
+						[innerText]="scheduledAtxMap[data.atxId].sessionStartDate | date:'EEE MMM d, y h:mm a z'"
+						attr.data-auto-id="{{ autoid }}-Date"></span>
+					<span class="qtr-padding-left" [innerText]="'_InstructorX_' | i18n:scheduledAtxMap[data.atxId].presenterName"
+						attr.data-auto-id="{{ autoid }}-Presenter"></span>
+				</span>
+			</div>
+		</ng-container>
 		<div class="atx-scheduler-one-line">
 			<div>
 				<h6 class="text-left"
@@ -517,9 +541,12 @@
 			<div class="row" attr.data-auto-id="{{ autoid }}-item">
 				<div class="col-md-11">
 					<div id="{{ autoid }}-item" class="panel small-panel">
-						<div class="text-blue" [innerText]="item.title"
+						<div class="text-blue"
 							data-auto-id = "ATXMoreClick"
-							(click)="atxMoreSelect(item, autoid, moreList)"></div>
+							(click)="atxMoreSelect(item, autoid, moreList)">
+							<span [innerText]="item.title"></span>
+							<span class="text-muted half-margin-left" [innerText]="getProviderName(item)"></span>
+						</div>
 						<ng-container *ngIf="autoid==='moreACCList'">
 							<ng-container *ngTemplateOutlet="accHover; context: {
 								title: item.title,

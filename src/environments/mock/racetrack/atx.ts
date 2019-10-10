@@ -15,7 +15,7 @@ const onboardItems = [
 	{
 		atxId: 'ATX1',
 		title: 'Cisco DNA Center Getting Started',
-		description: 'We cover subjects including interface and network design overview, policy \nmanagement and deployment, device provisioning, and automation/assurance.',
+		description: 'We cover subjects including interface and network design overview, policy management and deployment, device provisioning, and automation/assurance.',
 		imageURL: 'https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/atx/images/ATX-DNA-Getting-Started.png',
 		status: 'scheduled',
 		recordingURL: 'https://tklcs.cloudapps.cisco.com/tklcs/TKLDownloadServlet?nodeRef=workspace://SpacesStore/2ccb9372-82dc-4700-afc7-0a4ed0630685&activityId=2&fileId=123052',
