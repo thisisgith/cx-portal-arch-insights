@@ -1,4 +1,4 @@
-@import '~cisco-ui/src/scss/utilities/_variables.scss';
+@import '~src/variables.scss';
 
 .profile-info {
 	z-index: 1000;
@@ -60,6 +60,9 @@
 
 .close {
 	color: $med-gray-2;
+	font-size: 16px;
+	position: relative;
+	top: -5px;
 }
 
 .checkbox input:checked ~ #softwareGroupInfo::before {
@@ -69,4 +72,18 @@
 
 .min-height {
 	min-height: 400px;
+}
+
+.icon-question-circle {
+	color: $info-icon-font-color;
+
+	&:hover,
+	&.active {
+		color: $accent-color1;
+	}
+}
+
+.filter-title {
+	flex: 0;
+	margin-right: 0.5rem;
 }

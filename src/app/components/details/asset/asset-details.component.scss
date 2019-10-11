@@ -1,4 +1,4 @@
-@import '~cisco-ui/src/scss/utilities/_variables.scss';
+@import '~src/variables.scss';
 @import '../../../../mixins.scss';
 
 $default-text-color: #394454;
@@ -48,7 +48,7 @@ $default-text-color: #394454;
 
 	#details-panel .details-header {
 		padding: 30px 30px 18px 40px !important;
-		background: #f4f6f8;
+		background: $light-gray-background;
 		border-bottom: unset;
 	}
 

@@ -1,7 +1,7 @@
-@import '~cisco-ui/src/scss/utilities/_variables.scss';
+@import "~src/variables.scss";
 
 .details-header {
-	background-color: #f4f6f8;
+	background-color: $light-gray-background;
 	padding: 30px 30px 18px 40px;
 
 	::ng-deep &__content {

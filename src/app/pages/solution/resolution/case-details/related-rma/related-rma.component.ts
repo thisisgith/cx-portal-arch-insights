@@ -4,6 +4,7 @@ import {
 import { FormControl, FormGroup } from '@angular/forms';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
+import { environment } from '@environment';
 
 /**
  * Related RMA list Component
@@ -19,8 +20,10 @@ export class RelatedRmaComponent {
 	public rmaForm: FormGroup;
 	public rmaTable: CuiTableOptions;
 	public loading = false;
+	public rmaToolUrl = environment.rmaToolUrl;
 	@ViewChild('createdDateTmpl', { static: true }) private createdDateTemplate: TemplateRef<{ }>;
 	@ViewChild('shipToTmpl', { static: true }) private shipToTemplate: TemplateRef<{ }>;
+	@ViewChild('caseRmaNoTemplate', { static: true }) public caseRmaNoTemplate: TemplateRef<{ }>;
 	@Output('close') public close = new EventEmitter<boolean>();
 	@Input() public rmaRecords: any;
 
@@ -44,6 +47,7 @@ export class RelatedRmaComponent {
 						name: I18n.get('_Name_'),
 						sortable: true,
 						sorting: true,
+						template: this.caseRmaNoTemplate,
 						width: '25px',
 					},
 					{

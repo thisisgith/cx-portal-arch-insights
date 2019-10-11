@@ -6,7 +6,7 @@ import 'cypress-file-upload';
 * Launches the app under test
 */
 Cypress.Commands.add('loadApp', (path = '/') => {
-	cy.visit(`pbc${path}`);
+	cy.visit(`portal${path}`);
 });
 
 /**

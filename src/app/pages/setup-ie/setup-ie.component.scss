@@ -1,3 +1,5 @@
+@import "~src/variables.scss";
+
 ::ng-deep {
 	.step-title {
 		font-size: 44px;
@@ -45,7 +47,7 @@
 			border-radius: 0 !important;
 			border: unset !important;
 			border-bottom: 1px solid #aeb8c1 !important;
-			background: #f4f6f8 !important;
+			background: $light-gray-background !important;
 
 			&:hover {
 				border-bottom: 1px solid #227bb1 !important;

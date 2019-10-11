@@ -1,5 +1,5 @@
 import { Component, ViewChild, TemplateRef, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, ActivationEnd, NavigationEnd } from '@angular/router';
 
 import { CaseParams, CaseDetails, CaseService } from '@cui-x/services';
 import { LogService } from '@cisco-ngx/cui-services';
@@ -217,6 +217,15 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 		.subscribe((id: string) => {
 			this.customerId = id;
 		});
+		let params: any = { };
+		this.router.events.subscribe(event => {
+			if (event instanceof ActivationEnd) {
+				params = (event.snapshot && event.snapshot.queryParams);
+			}
+			if (event instanceof NavigationEnd && params) {
+				this.getCaseDetailsInfo(params);
+			}
+		});
 	 }
 
 	/** ngOnInit */
@@ -293,56 +302,61 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 			striped: false,
 		});
 
-		this.route.queryParams
-		.subscribe(params => {
-			if (params.case) {
-				this.selectedCase = {
-					caseNumber: params.case,
-				};
-				this.searchCasesForm.patchValue(params.case);
-				_.set(this.caseParams, 'caseNumbers', params.case);
-			}
-
-			if (params.serial) {
-				_.set(this.caseParams, 'serialNumbers', params.serial);
-			}
-
-			if (params.filter) {
-				_.set(this.caseParams, 'filter', _.castArray(params.filter));
-			}
-
-			if (params.lastUpdated) {
-				const filter = _.find(defaultLastUpdatedFilterData, { label: params.lastUpdated })
-								.filter;
-				_.assign(this.caseParams, ...filter);
-			}
-
-			if (params.durationOpen) {
-				const filter = _.find(defaultDurationOpenFilterData, { label: params.durationOpen })
-								.filter;
-				_.assign(this.caseParams, ...filter);
-			}
-
-			if (params.hasRMAs) {
-				_.set(this.caseParams, 'hasRMAs', params.hasRMAs);
-			}
-
-			if (params.page) {
-				_.set(this.caseParams, 'coverage', params.page);
-			}
-
-			if (params.search) {
-				_.set(this.caseParams, 'search', params.search);
-			}
-
-			if (params.sort) {
-				_.set(this.caseParams, 'sort', params.sort);
-			}
-		});
-
 		this.initializeFilters();
 		this.buildRefreshSubject();
 		this.refresh$.next();
+	}
+
+	/**
+	 * get the search text case number
+	 * @param params  contains case number of the search case
+	 */
+	public getCaseDetailsInfo (params: any) {
+		if (params.case) {
+			this.selectedCase = {
+				caseNumber: params.case,
+			};
+			if (this.searchCasesForm) {
+				this.searchCasesForm.patchValue(params.case);
+			}
+			_.set(this.caseParams, 'caseNumbers', params.case);
+		}
+
+		if (params.serial) {
+			_.set(this.caseParams, 'serialNumbers', params.serial);
+		}
+
+		if (params.filter) {
+			_.set(this.caseParams, 'filter', _.castArray(params.filter));
+		}
+
+		if (params.lastUpdated) {
+			const filter = _.find(defaultLastUpdatedFilterData, { label: params.lastUpdated })
+				.filter;
+			_.assign(this.caseParams, ...filter);
+		}
+
+		if (params.durationOpen) {
+			const filter = _.find(defaultDurationOpenFilterData, { label: params.durationOpen })
+				.filter;
+			_.assign(this.caseParams, ...filter);
+		}
+
+		if (params.hasRMAs) {
+			_.set(this.caseParams, 'hasRMAs', params.hasRMAs);
+		}
+
+		if (params.page) {
+			_.set(this.caseParams, 'coverage', params.page);
+		}
+
+		if (params.search) {
+			_.set(this.caseParams, 'search', params.search);
+		}
+
+		if (params.sort) {
+			_.set(this.caseParams, 'sort', params.sort);
+		}
 	}
 
 	/**
