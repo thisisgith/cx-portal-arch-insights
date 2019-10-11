@@ -4,7 +4,13 @@ import { async, tick, ComponentFixture, TestBed, fakeAsync, discardPeriodicTasks
 import { RouterTestingModule } from '@angular/router/testing';
 import { LifecycleComponent } from './lifecycle.component';
 import { LifecycleModule } from './lifecycle.module';
-import { RacetrackService, RacetrackContentService, AtxSchema, SuccessPathsResponse, AtxSessionSchema } from '@sdp-api';
+import {
+	RacetrackService,
+	RacetrackContentService,
+	AtxSchema,
+	SuccessPathsResponse,
+	AtxSessionSchema,
+} from '@sdp-api';
 import {
 	RacetrackScenarios,
 	ATXScenarios,
