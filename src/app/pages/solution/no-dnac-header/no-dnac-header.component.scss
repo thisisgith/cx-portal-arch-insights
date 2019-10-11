@@ -2,7 +2,7 @@
 
 :host {
 	z-index: 1;
-	height: 60px !important;
+	min-height: 60px !important;
 
 	&.invisible { display: none; }
 

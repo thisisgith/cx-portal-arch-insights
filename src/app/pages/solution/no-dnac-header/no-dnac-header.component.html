@@ -1,18 +1,13 @@
 <ng-container *ngIf="(noDNAC || !hasCXCollector || !forceHidden)">
 	<div class="row cx-no-dnac-container">
 		<div class="col-7">
-			<div class="flex-center-horizontal">
+			<div class="flex-center">
 				<span class="cx-no-dnac-label" [innerText]="'_SeeMoreInsights_' | i18n"></span>
 				<span class="cx-no-dnac-status" [innerText]="'_SetupCollectorBannerText_' | i18n"></span>
 			</div>
 			<div
 				*ngIf="noDNAC"
 				[innerText]="'_ContinueDNACSetupText_' | i18n"
-				class="cx-no-dnac-description">
-			</div>
-			<div
-				*ngIf="!hasCXCollector"
-				[innerText]="'_SeeInfoForDevicesOnYourNetwork_' | i18n"
 				class="cx-no-dnac-description">
 			</div>
 		</div>

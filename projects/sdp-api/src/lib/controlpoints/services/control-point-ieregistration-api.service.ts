@@ -18,8 +18,8 @@ import { IERegistrationResponseModel } from '../models/ieregistration-response-m
 })
 class ControlPointIERegistrationAPIService extends __BaseService {
   static readonly getDnacStatusUsingGETPath = '/dnac/status/{customerId}';
-  static readonly updateRegistrationCompletionUsingPOSTPath = '/v1/ie-setup/status';
-  static readonly getIESetupCompletionStatusUsingGETPath = '/v1/ie-setup/status/{customerId}';
+  static readonly updateRegistrationCompletionUsingPOSTPath = '/ie-setup/status';
+  static readonly getIESetupCompletionStatusUsingGETPath = '/ie-setup/status/{customerId}';
   static readonly createIERegistrationUsingPOSTPath = '/register/ie';
   static readonly getIERegistrationUsingGETPath = '/registration/ie/{customerId}';
 
@@ -81,7 +81,7 @@ class ControlPointIERegistrationAPIService extends __BaseService {
     __body = ieSetupCompletionStatusUpdateRequestModel;
     let req = new HttpRequest<any>(
       'POST',
-      this.rootUrl + `/customerportal/controlpoint/v1/v1/ie-setup/status`,
+      this.rootUrl + `/customerportal/controlpoint/v1/ie-setup/status`,
       __body,
       {
         headers: __headers,
@@ -119,7 +119,7 @@ class ControlPointIERegistrationAPIService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/customerportal/controlpoint/v1/v1/ie-setup/status/${customerId}`,
+      this.rootUrl + `/customerportal/controlpoint/v1/ie-setup/status/${customerId}`,
       __body,
       {
         headers: __headers,
