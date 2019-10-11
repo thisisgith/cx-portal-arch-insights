@@ -1033,6 +1033,7 @@ export class LifecycleComponent implements OnDestroy {
 			pitstopAction: action.name,
 			solution: this.componentData.params.solution,
 			technology: this.componentData.params.usecase,
+			actionComplete: action.isComplete,
 		};
 
 		this.racetrackService.updatePitstopAction(actionUpdated)
@@ -1102,6 +1103,10 @@ export class LifecycleComponent implements OnDestroy {
 
 			if (responseTechnology) {
 				this.racetrackInfoService.sendCurrentTechnology(responseTechnology);
+				if (responseTechnology.usecase_adoption_percentage) {
+					this.racetrackInfoService.sendCurrentAdoptionPercentage(
+						responseTechnology.usecase_adoption_percentage);
+				}
 			}
 		},
 		err => {

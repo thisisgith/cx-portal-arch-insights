@@ -11,6 +11,7 @@ export class RacetrackInfoService {
 	private currentTechnology = new ReplaySubject<RacetrackTechnology>(1);
 	private currentSolution = new ReplaySubject<RacetrackSolution>(1);
 	public racetrack = new ReplaySubject<RacetrackResponse>(1);
+	private currentAdoptionPercentage = new ReplaySubject<number>(1);
 
 	/**
 	 * Returns the currently selected solution
@@ -37,6 +38,14 @@ export class RacetrackInfoService {
 	}
 
 	/**
+	 * Returns the adopiton percentage
+	 * @returns the observable representing adoption percentage
+	 */
+	public getCurrentAdoptionPercentage (): Observable<number> {
+		return this.currentAdoptionPercentage.asObservable();
+	}
+
+	/**
 	 * Sends out an update for the currently selected solution
 	 * @param solution the solution to send
 	 */
@@ -58,5 +67,13 @@ export class RacetrackInfoService {
 	 */
 	public sendRacetrack (racetrack: RacetrackResponse) {
 		this.racetrack.next(racetrack);
+	}
+
+	/**
+	 * Sends out an update adoption percertage
+	 * @param adoptionPercentage  to send
+	 */
+	public sendCurrentAdoptionPercentage (adoptionPercentage: number) {
+		this.currentAdoptionPercentage.next(adoptionPercentage);
 	}
 }
