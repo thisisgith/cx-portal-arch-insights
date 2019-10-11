@@ -55,7 +55,7 @@
 									<dl>
 										<dt [innerText]="'_Severity_' | i18n"></dt>
 										<dd>
-											<panel-select formControlName="severity">
+											<panel-select class="severity-type" formControlName="severity">
 												<ng-container *ngFor="let option of sevOptions">
 													<panel-select-option [value]="option.value">
 														<div class="half-margin-bottom">

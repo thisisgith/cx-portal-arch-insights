@@ -25,3 +25,8 @@
 		<span class="qtr-padding-left" [innerText]="item?.shipToInfo?.postalCode"></span>
 	</div>
 </ng-template>
+<ng-template #caseRmaNoTemplate let-item="celldata">
+	<a target="_blank" rel="noopener noreferrer" data-auto-id="CaseRmaOpenUrlLink"
+		href="{{rmaToolUrl}}/?&OrderNumber={{item.rmaNo}}" [innerText]="item.rmaNo">
+	</a>
+</ng-template>

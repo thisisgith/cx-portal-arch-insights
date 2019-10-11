@@ -16,7 +16,20 @@ export class MatchesPipe implements PipeTransform {
 	 * @returns html with values bolded
 	 */
 	public transform (value: string, substring: string): string {
-		return value.replace(new RegExp(`(${substring})`, 'gi'), '<b>$1</b>');
+		let searchTerms;
+		let completedString;
+		// Split the substring with a space and perfrom search
+		searchTerms = substring.replace(/([\^\$\(\)\[\]\{\}\*\.\+\?\|\\])/gi, '\\$1')
+						.split(' ');
+		completedString = value;
+		searchTerms.forEach(item => {
+			completedString = completedString.replace(
+				new RegExp(
+					'(?![^&;]+;)(?!<[^<>]*)(' + `${item}` + ')(?![^<>]*>)(?![^&;]+;)', 'i')
+				, '<b>$1</b>');
+		});
+
+		return completedString;
 	}
 
 }

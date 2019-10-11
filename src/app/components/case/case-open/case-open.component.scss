@@ -57,3 +57,11 @@
 		}
 	}
 }
+
+:host ::ng-deep .severity-type .justify-content-between {
+	justify-content: normal !important;
+
+	& > a {
+		padding-right: 20px;
+	}
+}
