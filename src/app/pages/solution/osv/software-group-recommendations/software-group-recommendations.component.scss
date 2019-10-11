@@ -1,17 +1,32 @@
 @import '~src/variables.scss';
 
+$text-dark-gray: #394453;
+
+.view-all-releases {
+	border: none;
+	box-shadow: none;
+	cursor: pointer;
+	background-color: transparent;
+	color: $default-link-color;
+
+	&:hover {
+		color: $default-link-hover-color;
+	}
+}
+
 .version-pointer-arrow {
 	background-color: $primary;
 	color: $white;
 	border: 1px solid $primary;
 	line-height: 16px;
 	width: 75px;
+	font-weight: bold;
 
 	&::before {
 		content: "";
 		width: 0;
 		height: 0;
-		border: 1.4em solid transparent;
+		border: 1.48em solid transparent;
 		position: absolute;
 		right: -32px;
 		top: 50%;
@@ -29,20 +44,25 @@
 }
 
 .background-light-blue {
-	background: $light-blue;
+	background: $light-gray-background;
 }
 
 .responsive-table {
 	overflow: unset;
+
+	.td-darkgrey {
+		color: $text-dark-gray;
+	}
 }
 
 .recommendation-label.label {
 	background: #ebeef3;
-	color: #394453;
+	color: $text-dark-gray;
 }
 
 .recommendation-icon-info {
-	color: $info-icon-font-color;
+	color: #c2d1e2;
+	font-weight: bold;
 }
 
 ::ng-deep {

@@ -1,3 +1,5 @@
+@import "~src/variables.scss";
+
 .force-left {
 	left: 0 !important;
 }
@@ -79,7 +81,7 @@
 			textarea {
 				border: none;
 				border-bottom: 1px solid #aeb8c1;
-				background: #f4f6f8;
+				background: $light-gray-background;
 				color: #5d656c;
 				padding-left: 14px;
 
