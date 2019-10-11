@@ -150,7 +150,7 @@ export class LifecycleComponent implements OnDestroy {
 	public recommendedAtxScheduleCardOpened = false;
 	public panelBottomPaddingNeeded = false;
 	public panelBottomPaddingNeededForMessage = false;
-	public sessionSelected: AtxSessionSchema;
+	public sessionSelected: AtxSessionSchema = null;
 	public customerId: string;
 	public buId: string;
 	private user: User;
@@ -888,6 +888,20 @@ export class LifecycleComponent implements OnDestroy {
 		this.componentData.atx.interested = null;
 		this.moreATXSelected = null;
 		this.atxMoreClicked = false;
+		this.sessionSelected = null;
+	}
+
+	/**
+	 * Check if the session starttime is within 24 hours
+	 * @param session the session will be checked
+	 * @returns boolean
+	 */
+	public isStartTimeWithin24Hrs (session: AtxSessionSchema) {
+		if (!session) {
+			return false;
+		}
+
+		return ((session.sessionStartDate - (new Date().getTime())) < 86400000);
 	}
 
 	/**
@@ -913,7 +927,10 @@ export class LifecycleComponent implements OnDestroy {
 			atxId: atx.atxId,
 			sessionId: ssId,
 		};
-		this.crossLaunch(session.registrationURL);
+		if (!atx.providerInfo) {
+			this.crossLaunch(session.registrationURL);
+		}
+		this.closeViewSessions();
 		this.contentService.registerUserToAtx(params)
 		.subscribe(() => {
 			this.status.loading.atx = false;
@@ -951,6 +968,7 @@ export class LifecycleComponent implements OnDestroy {
 			atx.status = 'recommended';
 			this.atxScheduleCardOpened = false;
 			this.recommendedAtxScheduleCardOpened = false;
+			this.sessionSelected = null;
 			this.status.loading.atx = false;
 			if (window.Cypress) {
 				window.atxLoading = false;
@@ -989,7 +1007,7 @@ export class LifecycleComponent implements OnDestroy {
 				);
 		}
 
-		if (type === 'ACC') {
+		if  (type === 'ACC') {
 			if (this.selectedFilterForACC === 'isBookmarked') {
 				this.selectedACC =
 				_.filter(this.componentData.acc.sessions, { bookmark: true });
@@ -1376,6 +1394,7 @@ export class LifecycleComponent implements OnDestroy {
 		this.moreYCoordinates = 0;
 		this.moreATXSelected = null;
 		this.atxMoreClicked = false;
+		this.sessionSelected = null;
 		this.panelBottomPaddingNeeded = false;
 		if (this.componentData.atx) {
 			this.componentData.atx.interested = null;
@@ -1401,7 +1420,6 @@ export class LifecycleComponent implements OnDestroy {
 	 public crossLaunch (crossLaunchUrl: string) {
 		if (crossLaunchUrl) {
 			window.open(crossLaunchUrl, '_blank');
-			this.closeViewSessions();
 		}
 	}
 
@@ -1413,7 +1431,14 @@ export class LifecycleComponent implements OnDestroy {
 	 public getAtxRegisterButton (data: AtxSchema) {
 		let button: string;
 		button = '';
-		if (!_.get(this.sessionSelected, 'registrationURL') || this.notCurrentPitstop ||
+		let sessionSelected = false;
+		if (_.get(data, 'providerInfo')) {
+			sessionSelected = this.sessionSelected ? true : false;
+		} else {
+			sessionSelected = _.get(this.sessionSelected, 'registrationURL', false);
+		}
+
+		if (!sessionSelected || this.notCurrentPitstop ||
 			_.isEqual(_.get(data, 'status'), 'scheduled')) {
 			button = 'disabled';
 		}
@@ -1429,7 +1454,7 @@ export class LifecycleComponent implements OnDestroy {
 	public getPanel (viewAtxSessions: HTMLElement) {
 		let panel;
 		const _div = viewAtxSessions;
-		const atxPopupListViewAdjustPx = 320;
+		const atxPopupListViewAdjustPx = 325;
 		this.innerWidth = window.innerWidth;
 		if (this.componentData.atx.interested) {
 			switch (this.atxview) {
@@ -1438,11 +1463,11 @@ export class LifecycleComponent implements OnDestroy {
 
 					if ((rect.right + 500) > this.scrollModalRef.nativeElement.clientWidth) {
 						_div.style.right = '98%';
-						_div.style.bottom = '-165.5px';
+						_div.style.bottom = '-175.5px';
 						panel = 'panel cardpanel--openright';
 					} else {
 						_div.style.left = '55%';
-						_div.style.bottom = '-165.5px';
+						_div.style.bottom = '-175.5px';
 						panel = 'panel cardpanel--open';
 					}
 					break;
@@ -1467,7 +1492,7 @@ export class LifecycleComponent implements OnDestroy {
 			panel = 'panel panel--open';
 		} else {
 			_div.style.left = '128px';
-			_div.style.bottom = '-180px';
+			_div.style.bottom = '-195px';
 			panel = 'panel panel--open';
 		}
 

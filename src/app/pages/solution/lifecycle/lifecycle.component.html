@@ -339,20 +339,20 @@
 </ng-template>
 
 <ng-template #recommendedATX let-item="item" let-autoid="autoid" let-title="title" let-src="src">
-	<div class="icon-bookmark toggle"
-		[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__white'"
-		(click)="updateBookmark(item, 'ATX')"
-		data-auto-id="SBCardRibbon">
+	<div class="max-width flex provider_image">
+		<div class="icon-bookmark toggle" [ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__white'"
+			(click)="updateBookmark(item, 'ATX')" data-auto-id="SBCardRibbon">
+		</div>
+		<img alt="'_Placeholder_' | i18n" [src]="src" attr.data-auto-id="{{ autoid }}-Image">
+		<ng-container *ngIf="item.providerInfo">
+			<!-- Keep the following line for now since we don't have partner Logo yet -->
+			<!-- <span *ngIf="item.providerInfo?.logoURL" class="icon-check icon-medium half-padding-right"></span> -->
+			<img *ngIf="item.providerInfo?.logoURL" class="table-img-width provider_icon" alt="'_Placeholder_' | i18n"
+				[src]="item.providerInfo?.logoURL">
+			<span *ngIf="!item.providerInfo?.logoURL" class="text-bold text-medium provider_icon"
+				[innerText]="item.providerInfo?.name"></span>
+		</ng-container>
 	</div>
-	<div class="provider_icon">
-		<!-- Keep the following line for now since we don't have partner Logo yet -->
-		<!-- <span *ngIf="item.providerInfo?.logoURL" class="icon-check icon-medium half-padding-right"></span> -->
-		<span *ngIf="item.providerInfo?.logoURL">
-			<img class="table-img-width" alt="'_Placeholder_' | i18n" [src]="item.providerInfo?.logoURL">
-		</span>
-		<span *ngIf="!item.providerInfo?.logoURL" class="text-bold text-medium" [innerText]="item.providerInfo?.name"></span>
-	</div>
-	<img class="max-width" alt="'_Placeholder_' | i18n" [src]="src" attr.data-auto-id="{{ autoid }}-Image">
 	<div class="cx-lifecycle-card--recommended">
 		<div>
 			<span class="icon-flagged" attr.data-auto-id="{{ autoid }}-Flag"></span>
@@ -443,21 +443,26 @@
 			</div>
 		</div>
 		<div class="divider divider--compressed"></div>
-		<div class="line-clamp atx-more-popover__description text-left" [innerText]="data.description" data-auto-id="atxMoreClickModal-Description"></div>
-		<div class="text-muted text-small qtr-margin-top qtr-margin-bottom text-left" [innerText]="getProviderName(data)"></div>
-		<ng-container *ngIf="data.status === 'scheduled' && scheduledAtxMap[data.atxId]">
-			<div class="cx-lifecycle-card--scheduled half-padding-bottom text-left">
-				<span class="icon-calendar" attr.data-auto-id="{{ autoid }}-Calendar"></span>
-				<span class="qtr-padding-left">
-					<span class="text-bold"
-						[innerText]="scheduledAtxMap[data.atxId].sessionStartDate | date:'EEE MMM d, y h:mm a z'"
-						attr.data-auto-id="{{ autoid }}-Date"></span>
-					<span class="qtr-padding-left" [innerText]="'_InstructorX_' | i18n:scheduledAtxMap[data.atxId].presenterName"
-						attr.data-auto-id="{{ autoid }}-Presenter"></span>
-				</span>
+		<div class="atx-scheduler-description">
+			<div class="line-clamp atx-more-popover__description text-left" [innerText]="data.description"
+				data-auto-id="atxMoreClickModal-Description"></div>
+			<div class="text-muted text-small qtr-margin-top qtr-margin-bottom text-left" [innerText]="getProviderName(data)">
 			</div>
-		</ng-container>
-		<div class="atx-scheduler-one-line">
+			<ng-container *ngIf="data.status === 'scheduled' && scheduledAtxMap[data.atxId]">
+				<div class="cx-lifecycle-card--scheduled half-padding-bottom text-left">
+					<span class="icon-calendar" attr.data-auto-id="{{ autoid }}-Calendar"></span>
+					<span class="qtr-padding-left">
+						<span class="text-bold"
+							[innerText]="scheduledAtxMap[data.atxId].sessionStartDate | date:'EEE MMM d, y h:mm a z'"
+							attr.data-auto-id="{{ autoid }}-Date"></span>
+						<span class="qtr-padding-left"
+							[innerText]="'_InstructorX_' | i18n:scheduledAtxMap[data.atxId].presenterName"
+							attr.data-auto-id="{{ autoid }}-Presenter"></span>
+					</span>
+				</div>
+			</ng-container>
+		</div>
+		<div class="atx-scheduler-one-line half-padding-top">
 			<div>
 				<h6 class="text-left"
 					[innerText]="'_ChooseSession_' | i18n">
@@ -473,6 +478,12 @@
 		<div class="session-table responsive-table">
 			<table class="table table--nostripes table--selectable">
 				<tbody>
+					<tr class="session-table-row">
+						<th></th>
+						<th class="text-uppercase text-small" [innerText]="'_Date_' | i18n"></th>
+						<th></th>
+						<th class="text-uppercase text-small" [innerText]="'_Instructor_' | i18n"></th>
+					</tr>
 					<tr attr.data-auto-id="SelectSession-{{ session.sessionId }}"
 						*ngFor="let session of data.sessions"
 						(click)="selectSession(session)"
@@ -494,21 +505,19 @@
 			</table>
 		</div>
 		<div class="atx-scheduler__footer">
-			<button id="AtxScheduleCardRegisterButton"
-				class="pull-left btn btn--primary"
-				data-auto-id = "AtxScheduleCardRegisterButton"
-				[ngClass]="getAtxRegisterButton(data)"
-				(click)="registerATXSession(data, sessionSelected)"
-				[innerText]="'_Register_' | i18n">
-			</button>
-			<div class="half-padding-left pull-left">
-				<button class="cx-btn cx-btn--primary text-danger"
-					*ngIf="sessionSelected && sessionSelected.scheduled"
-					[innerText]="'_Cancel_' | i18n"
-					(click)="cancelATXSession(data)"
-					data-auto-id="AtxScheduleCardCancelButton">
+			<div *ngIf="!isStartTimeWithin24Hrs(scheduledAtxMap[data.atxId])">
+				<button id="AtxScheduleCardRegisterButton" class="pull-left btn btn--primary"
+					data-auto-id="AtxScheduleCardRegisterButton" [ngClass]="getAtxRegisterButton(data)"
+					(click)="registerATXSession(data, sessionSelected)" [innerText]="'_Register_' | i18n">
 				</button>
+				<div class="half-padding-left pull-left">
+					<button class="cx-btn cx-btn--primary text-danger" *ngIf="sessionSelected && sessionSelected.scheduled"
+						[innerText]="'_Cancel_' | i18n" (click)="cancelATXSession(data)" data-auto-id="AtxScheduleCardCancelButton">
+					</button>
+				</div>
 			</div>
+			<div class="text-italic" *ngIf="isStartTimeWithin24Hrs(scheduledAtxMap[data.atxId]) && data.status === 'scheduled'"
+				[innerText]="'_UnableCancel_' | i18n"></div>
 		</div>
 	</div>
 </ng-template>
