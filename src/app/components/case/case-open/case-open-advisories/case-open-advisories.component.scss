@@ -1,3 +1,5 @@
+@import "~src/variables.scss";
+
 .body {
 	text-align: left;
 }
@@ -7,7 +9,7 @@
 	textarea {
 		border: none;
 		border-bottom: 1px solid #aeb8c1;
-		background: #f4f6f8;
+		background: $light-gray-background;
 		color: #5d656c;
 
 		&:focus {

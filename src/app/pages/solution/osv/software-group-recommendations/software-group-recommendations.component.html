@@ -30,7 +30,7 @@
 					[ngStyle]="{ 'width': column.width }"
 					(click)="column.click ? $event.stopPropagation() : null"
 					attr.data-auto-id="AssetDetailItemClickHandler-{{ item.swVersion }}" 
-					class="bordered-bottom">
+					class="bordered-bottom td-darkgrey">
 						<ng-container *ngIf="column.template">
 							<ng-container *ngTemplateOutlet="column.template; context: { celldata: item }">
 							</ng-container>
@@ -45,7 +45,7 @@
 	</table>
 	<!-- current version well -->
 	<div *ngIf="groupRecommendations && groupRecommendations?.length > 0 && currentRecommendation"
-		class="not-close-360 responsive-table base-margin-top panel--ltgray panel--well half-padding background-light-blue">
+		class="not-close-360 responsive-table base-margin-top panel--ltgray half-padding background-light-blue">
 		<table class="table table--compressed table--wrap table--lined table--nostripes no-margin-top">
 			<tbody>
 				<tr attr.data-auto-id="GroupRecommendations-{{ currentRecommendation.swVersion }}">
@@ -72,8 +72,15 @@
 
 <!-- view all os version link -->
 <div class="markup pull-right dbl-margin-top" *ngIf="recommendations?.length > 0">
-	<a data-auto-id="ViewAllOsVersions" class="markup-toggle text-primary" (click)="viewAllVersions()">
-		<span class="markup-label" [innerText]="'_OsvViewAllOSVersions_' | i18n"></span>
+	<a 
+		data-auto-id="ViewAllOsVersions" 
+		class="markup-toggle view-all-releases" 
+		(click)="viewAllVersions()"
+	>
+		<span 
+			class="markup-label" 
+			[innerText]="'_OsvViewAllOSVersions_' | i18n"
+		></span>
 		<img alt="{{ '_OsvOpenNewWindow_' | i18n }}"
 				class="qtr-margin-left"
 				attr.data-auto-id="OpenInNewWindow"
@@ -86,7 +93,7 @@
 	<div class="row flex align-items-center" *ngIf="item.name != 'profile current'">
 		<div class="col-4">
 			<span *ngIf="item.swVersion != 'NA'" [innerText]="item.swVersion"></span>
-			<span *ngIf="item.swVersion == 'NA'" [innerText]="'_OsvNotAvailable_' | i18n"></span>
+			<span *ngIf="item.swVersion == 'NA'" [innerText]="'' | i18n"></span>
 		</div>
 		<div class="col-8">
 			<div class="recommendation-label label label--large qtr-margin-left qtr-margin-top"
@@ -96,8 +103,13 @@
 					class="qtr-margin-left" 
 					[attr.data-balloon]="version.info" 
 					data-balloon-pos="down"
-					data-balloon-length="medium">
-						<i class="recommendation-icon-info icon-info icon-small"></i>
+					data-balloon-length="medium"
+				>
+					<img 
+						src="assets/icons/icon-search-info.svg" 
+						width="13" 
+						alt="{{ '_InfoIconHover_' | i18n }}" 
+					/>
 				</span>
 			</div>
 		</div>
@@ -123,7 +135,7 @@
 <ng-template #actionsTemplate let-item="celldata">
 	<button 
 		*ngIf="item.showAccept && !item.accepted && item.swVersion != 'NA'"
-		class="btn btn--secondary btn--small" 
+		class="cx-btn cx-btn--primary" 
 		[innerText]="'_OsvAccept_' | i18n | uppercase" 
 		(click)="onAcceptClick(item.swVersion)"
 		attr.data-auto-id="AcceptVersion-{{item.swVersion}}">
