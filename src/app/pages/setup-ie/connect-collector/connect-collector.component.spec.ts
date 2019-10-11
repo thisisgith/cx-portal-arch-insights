@@ -78,17 +78,6 @@ describe('ConnectCollectorComponent', () => {
 			.toBe(true);
 	});
 
-	it('should pass IP Address validation', () => {
-		const validIP = '1.1.1.255';
-		component.accountForm.get('ipAddress')
-			.setValue(validIP);
-		fixture.detectChanges();
-		expect(component.ipAddress)
-			.toBe(validIP);
-		expect(component.accountForm.valid)
-			.toBe(true);
-	});
-
 	it('should try to connect to cx collector', () => {
 		component.accountForm.get('ipAddress')
 			.setValue('127.0.0.1');

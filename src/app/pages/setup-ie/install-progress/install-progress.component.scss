@@ -1,30 +1,5 @@
 :host {
 	.install-progress-bar {
-		&__step {
-			width: 200px;
-			text-align: center;
-			.install-progress-bar__label {
-				height: 36px;
-				width: 166px;
-				margin-left: auto;
-				margin-right: auto;
-				margin-top: 20px;
-			}
-
-			&.active, &.visited {
-				.install-progress-bar__circle {
-					background: #90A6C5;
-					border: 1px solid #43679E;
-				}
-			}
-			
-			&.visited {
-				.install-progress-bar__line {
-					background: #43679E;
-				}
-			}
-		}
-
 		&__circle {
 			width: 25px;
 			height: 25px;
@@ -41,6 +16,33 @@
 			height: 2px;
 			bottom: 13px;
 			left: 113px;
+		}
+
+		&__step {
+			width: 200px;
+			text-align: center;
+
+			.install-progress-bar__label {
+				height: 36px;
+				width: 166px;
+				margin-left: auto;
+				margin-right: auto;
+				margin-top: 20px;
+			}
+
+			&.active,
+			&.visited {
+				.install-progress-bar__circle {
+					background: #90a6c5;
+					border: 1px solid #43679e;
+				}
+			}
+
+			&.visited {
+				.install-progress-bar__line {
+					background: #43679e;
+				}
+			}
 		}
 	}
 }

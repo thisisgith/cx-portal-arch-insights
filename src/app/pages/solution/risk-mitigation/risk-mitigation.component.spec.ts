@@ -136,7 +136,7 @@ describe('RiskMitigationComponent', () => {
 			.then(() => {
 				fixture.detectChanges();
 				expect(component.last24hrsData)
-					.toBeUndefined();
+					.toBe('10');
 				done();
 			});
 	});
@@ -150,7 +150,7 @@ describe('RiskMitigationComponent', () => {
 			.then(() => {
 				fixture.detectChanges();
 				expect(component.last24hrsData)
-					.toBe('0');
+					.toBe('10');
 				done();
 			});
 	});

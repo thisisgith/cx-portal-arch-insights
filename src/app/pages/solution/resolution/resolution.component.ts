@@ -506,14 +506,16 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 		)
 		.subscribe(responses => {
 			const cases = _.flatMap(responses, response => _.get(response, 'content', []));
-			// Get all of the filters and reset their data
+			// Get all of the filters (except for the total filter) and reset their data
 			const statusFilter = _.find(this.filters, { key: 'status' });
 			const severityFilter = _.find(this.filters, { key: 'severity' });
 			const lastUpdateFilter = _.find(this.filters, { key: 'lastUpdated' });
 			const durationOpenFilter = _.find(this.filters, { key: 'durationOpen' });
 			const rmaFilter = _.find(this.filters, { key: 'rma' });
 			_.each(this.filters, filter => {
-				filter.seriesData = defaultFiltersData[filter.key];
+				if (filter.key !== 'total') {
+					filter.seriesData = defaultFiltersData[filter.key];
+				}
 			});
 
 			// Iterate through cases to sum values for all subfilters

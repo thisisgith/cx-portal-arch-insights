@@ -1,9 +1,11 @@
 :host {
 	section {
 		margin: auto;
+
 		@media screen and (min-width: 1000px) {
 			width: 50vw;
 		}
+
 		@media screen and (max-width: 1000px) {
 			width: 90vw;
 		}
