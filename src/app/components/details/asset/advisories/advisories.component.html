@@ -60,7 +60,7 @@
 	<div *ngIf="!loading && (!data || data?.length === 0)" class="flex-center">
 		<span
 			class="text-xlarge"
-			[innerText]="(type === 'bug' ? (asset.lastScan ? '_NoCriticalBugsFound_' : '_NoScanCompleted_') : '_NoResultsFound_') | i18n"
+			[innerText]="(type === 'bug' ? (asset.lastScan ? '_NoPriorityBugsFound_' : '_NoScanCompleted_') : '_NoResultsFound_') | i18n"
 			data-auto-id="AdvisoriesNoResultsFound">
 		</span>
 	</div>
