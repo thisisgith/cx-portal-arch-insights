@@ -115,7 +115,7 @@
 			<div class="actionname flex-center-vertical qtr-padding" [ngClass]="{selected: action.selected}">
 				<div class="half-margin-right flex-center-vertical">
 					<label class="checkbox" 
-						[ngClass]="{'disabled': action.action.isComplete || currentWorkingPitstop !== currentPitstop.name || !action.action.manualCheckAllowed }" 
+						[ngClass]="{'disabled': currentWorkingPitstop !== currentPitstop.name || !action.action.manualCheckAllowed }" 
 						data-auto-id="pitstopCheckboxLabel">
 						<input data-auto-id="pitstopCheckbox" 
 							type="checkbox"

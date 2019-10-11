@@ -348,14 +348,28 @@ export class SolutionComponent implements OnInit, OnDestroy {
 					this.selectedTechnology = result;
 					this.selectedTechnologyName = _.get(this.selectedTechnology, 'name');
 					this.reloadFacets();
-					lifecycleFacet.data = {
-						gaugePercent: _.get(this.selectedTechnology, 'usecase_adoption_percentage'),
-					};
 				}
 			}),
 			takeUntil(this.destroy$),
 			catchError(err => {
 				this.logger.error(`Solution Data :: Get Current Technology :: Error ${err}`);
+
+				return of({ });
+			}),
+		)
+		.subscribe();
+
+		this.racetrackInfoService.getCurrentAdoptionPercentage()
+		.pipe(
+			map((result: number) => {
+				lifecycleFacet.data = {
+					gaugePercent: result,
+				};
+			}),
+			takeUntil(this.destroy$),
+			catchError(err => {
+				this.logger.error(
+					`Solution Data :: Get Current AdoptionPercentage :: Error ${err}`);
 
 				return of({ });
 			}),
