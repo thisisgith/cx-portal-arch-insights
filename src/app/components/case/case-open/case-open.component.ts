@@ -39,7 +39,8 @@ export class CaseOpenComponent implements  CuiModalContent, OnInit, OnDestroy {
 	public submitted = false;
 	public submitting = false;
 	public sevOptions = [
-		{
+		// commenting these two options until entitlement API should be avaiable
+		/*{
 			name: caseSeverities[1].getCreateName(),
 			subtitle: I18n.get('_SeverityX_', 1),
 			value: 1,
@@ -48,7 +49,7 @@ export class CaseOpenComponent implements  CuiModalContent, OnInit, OnDestroy {
 			name: caseSeverities[2].getCreateName(),
 			subtitle: I18n.get('_SeverityX_', 2),
 			value: 2,
-		},
+		},*/
 		{
 			name: caseSeverities[3].getCreateName(),
 			subtitle: I18n.get('_SeverityX_', 3),

@@ -51,6 +51,7 @@ const routes: Routes = [
  */
 const routerOptions: ExtraOptions = {
 	enableTracing: false,
+	onSameUrlNavigation: 'reload',
 };
 
 /**
