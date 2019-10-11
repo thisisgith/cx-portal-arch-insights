@@ -7,6 +7,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { ConnectCollectorComponent } from './connect-collector.component';
 import { ConnectCollectorModule } from './connect-collector.module';
 import { SetupIEService } from '../setup-ie.service';
+import { SetupIEStateService } from '../setup-ie-state.service';
 import { of, throwError } from 'rxjs';
 import * as _ from 'lodash-es';
 
@@ -17,6 +18,7 @@ describe('ConnectCollectorComponent', () => {
 	let fixture: ComponentFixture<ConnectCollectorComponent>;
 	let setupService: SetupIEService;
 	let pingSpy: jasmine.Spy;
+	let stateService: SetupIEStateService;
 
 	const setupSpies = () => {
 		pingSpy = spyOn(setupService, 'ping')
@@ -49,6 +51,11 @@ describe('ConnectCollectorComponent', () => {
 	});
 
 	beforeEach(async(() => {
+		stateService = TestBed.get(SetupIEStateService);
+		stateService.clearState();
+		stateService.setState({
+			collectorIP: '127.0.0.1',
+		});
 
 		setupService = TestBed.get(SetupIEService);
 		setupSpies();
@@ -75,17 +82,6 @@ describe('ConnectCollectorComponent', () => {
 			.setValue('1.1.1.256');
 		fixture.detectChanges();
 		expect(component.accountForm.invalid)
-			.toBe(true);
-	});
-
-	it('should pass IP Address validation', () => {
-		const validIP = '1.1.1.255';
-		component.accountForm.get('ipAddress')
-			.setValue(validIP);
-		fixture.detectChanges();
-		expect(component.ipAddress)
-			.toBe(validIP);
-		expect(component.accountForm.valid)
 			.toBe(true);
 	});
 

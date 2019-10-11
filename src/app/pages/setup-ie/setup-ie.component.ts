@@ -18,17 +18,20 @@ import { takeUntil } from 'rxjs/operators';
 import { SetupComponent, SetupStep } from '@interfaces';
 import { SETUP_STATES } from '@classes';
 import { BeginInstallationComponent } from './begin-installation/begin-installation.component';
-import { SelectInstructionsComponent } from './select-instructions/select-instructions.component';
 import { getSlides } from './select-instructions/slide-getter.function';
 import { IESetupWizardState, SetupIEStateService } from './setup-ie-state.service';
 import { Selection } from './setup-ie.types';
 import { ConnectDNACenterComponent } from './connect-dna-center/connect-dna-center.component';
+import { DownloadImageComponent } from './download-image/download-image.component';
+import { ConnectCollectorComponent } from './connect-collector/connect-collector.component';
+import { RegisterCollectorComponent } from './register-collector/register-collector.component';
 
 import { CuiModalService } from '@cisco-ngx/cui-components';
 import { ResetCacheModal } from './reset-cache-modal/reset-cache-modal.component';
 import { SetupIEService } from './setup-ie.service';
 import { UtilsService } from '@services';
 import { NoDNACComponent } from './no-dnac/no-dnac.component';
+import { ControlPointIERegistrationAPIService } from '@sdp-api';
 import * as _ from 'lodash-es';
 
 /**
@@ -40,8 +43,20 @@ const defaultSteps = [
 		type: BeginInstallationComponent,
 	},
 	{
-		state: SETUP_STATES.INIT,
-		type: SelectInstructionsComponent,
+		state: SETUP_STATES.INSTALL,
+		type: DownloadImageComponent,
+	},
+	{
+		state: SETUP_STATES.CONNECT_COLLECTOR,
+		type: ConnectCollectorComponent,
+	},
+	{
+		state: SETUP_STATES.CONFIGURE_COLLECTOR,
+		type: RegisterCollectorComponent,
+	},
+	{
+		state: SETUP_STATES.CONNECT_DNAC,
+		type: ConnectDNACenterComponent,
 	},
 ];
 
@@ -62,10 +77,12 @@ export class SetupIeComponent implements AfterViewInit, OnInit, OnDestroy {
 	private destroy$ = new Subject();
 	public savedState: IESetupWizardState;
 	public loading: boolean;
+	private customerId: string;
 
 	constructor (
 		@Inject('ENVIRONMENT') private env,
 		private cdr: ChangeDetectorRef,
+		private cpService: ControlPointIERegistrationAPIService,
 		private cuiModalService: CuiModalService,
 		private resolver: ComponentFactoryResolver,
 		private router: Router,
@@ -73,7 +90,10 @@ export class SetupIeComponent implements AfterViewInit, OnInit, OnDestroy {
 		private setupService: SetupIEService,
 		private state: SetupIEStateService,
 		private utils: UtilsService,
-	) { }
+	) {
+		const user = _.get(this.route, ['snapshot', 'data', 'user']);
+		this.customerId = _.get(user, ['info', 'customerId']);
+	}
 
 	/**
 	 * AfterViewInit {
@@ -162,15 +182,17 @@ export class SetupIeComponent implements AfterViewInit, OnInit, OnDestroy {
 	public setOvaSelection (ovaSelection: Selection) {
 		if (ovaSelection) {
 			this.steps = [
-				...defaultSteps,
+				...defaultSteps.slice(0, 2),
 				...(getSlides(ovaSelection) || []),
+				defaultSteps[1],
+				...defaultSteps.slice(2),
 			];
 			const noDNAC = this.utils.getLocalStorage(this.env.ieSetup.DNAC_LS_KEY);
 			const connectDnacIdx = _.indexOf(this.steps, step =>
 				_.isEqual(step.type, ConnectDNACenterComponent));
 			if (noDNAC) {
 				this.steps.splice(connectDnacIdx, 0, {
-					state: SETUP_STATES.COLLECTOR,
+					state: SETUP_STATES.CONNECT_DNAC,
 					type: NoDNACComponent,
 				});
 			}
@@ -200,6 +222,22 @@ export class SetupIeComponent implements AfterViewInit, OnInit, OnDestroy {
 			this.activeComponent.instance.ngOnChanges();
 		}
 		if (!this.activeComponent || ! this.activeComponent.instance) { return; }
+		const setNextStep = () => {
+			if (this.currentStep < (this.steps.length - 1)) {
+				const nextStep = Number(this.currentStep) + 1;
+				this.router.navigate([], {
+					queryParams: {
+						compKey: nextStep,
+					},
+					queryParamsHandling: 'merge',
+				});
+			} else {
+				// reached last step, route to home
+				this.router.navigate(['/'], {
+					queryParams: { },
+				});
+			}
+		};
 		this.activeComponent.instance.onStepComplete
 			.pipe(
 				takeUntil(this.destroy$),
@@ -212,19 +250,19 @@ export class SetupIeComponent implements AfterViewInit, OnInit, OnDestroy {
 					}
 					this.steps = this.steps.concat(newSteps);
 				}
-				if (this.currentStep < (this.steps.length - 1)) {
-					const nextStep = Number(this.currentStep) + 1;
-					this.router.navigate([], {
-						queryParams: {
-							compKey: nextStep,
-						},
-						queryParamsHandling: 'merge',
-					});
-				} else {
-					this.router.navigate(['/'], {
-						queryParams: { },
-					});
-				}
+				setNextStep();
 			});
+		if (this.activeComponent.instance.onStepCompleteInsert) {
+			this.activeComponent.instance.onStepCompleteInsert
+				.pipe(takeUntil(this.destroy$))
+				.subscribe(options => {
+					const startIdx = this.currentStep + options.offset;
+					const pastSteps = this.steps.slice(0, startIdx);
+					const futureSteps = this.steps.slice(startIdx);
+					const stepsToInsert = options.steps;
+					this.steps = [...pastSteps, ...stepsToInsert, ...futureSteps];
+					setNextStep();
+				});
+		}
 	}
 }

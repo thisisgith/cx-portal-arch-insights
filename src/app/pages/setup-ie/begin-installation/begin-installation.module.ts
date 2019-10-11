@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { BeginInstallationComponent } from './begin-installation.component';
 
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
@@ -13,6 +14,7 @@ import { InlineSVGModule } from 'ng-inline-svg';
 	imports: [
 		CommonModule,
 		I18nPipeModule,
+		RouterModule,
 		InlineSVGModule.forRoot({ baseUrl: '/' }),
 	],
 })

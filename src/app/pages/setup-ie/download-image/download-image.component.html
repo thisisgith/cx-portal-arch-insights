@@ -1,3 +1,4 @@
+<install-progress [view]="view"></install-progress>
 <alert
 	[title]="error"
 	[(visible)]="error"
@@ -12,15 +13,8 @@
 	</ng-container>
 </alert>
 <div class="text-center">
-	<h6
-		class="text-primary base-margin-bottom"
-		[innerText]="('_StepXColonY_' | i18n:'1':('_Prerequisites_' | i18n)) | uppercase"
-	></h6>
 	<div [innerText]="'_InstallCXCollectorOnVM_' | i18n"
-		class="step-title base-margin-bottom"
-	></div>
-	<div [innerText]="'_DownloadOVAImage_' | i18n"
-		class="xl-margin-bottom text-large">
+		class="xl-margin-top base-margin-bottom step-title">
 	</div>
 	<cui-loader *ngIf="loading && !error" [label]="'_Loading_' | i18n"></cui-loader>
 	<k9-form
@@ -40,12 +34,25 @@
 		(onCancel)="cancelK9Decline()"
 		(onContinue)="confirmK9Decline()"
 	></k9-decline>
-	<button
+	<div 
 		*ngIf="!loading && view === 'pre-download'"
-		data-auto-id="download-image-btn"
-		[innerText]="'_DownloadImage_' | i18n | uppercase"
-		class="btn cx-btn"
-		(click)="onDownload()"
 	>
-	</button>
+		<h6
+			class="xl-margin-bottom"
+			[innerText]="'_DownloadTheOVAFile_' | i18n"
+		></h6>
+		
+		<button
+			data-auto-id="download-image-btn"
+			[innerText]="'_DownloadImage_' | i18n | uppercase"
+			class="btn cx-btn"
+			(click)="onDownload()"
+		>
+		</button>
+	</div>
+	<connect
+		*ngIf="!loading && view === 'connect'"
+		(onContinue)="continue()"
+		(onTutorial)="goToInstructions()"
+	></connect>
 </div>

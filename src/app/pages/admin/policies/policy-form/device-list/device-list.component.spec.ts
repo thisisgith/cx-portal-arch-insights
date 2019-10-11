@@ -31,7 +31,7 @@ describe('DeviceListComponent', () => {
 	describe('should run refresh', () => {
 		beforeEach(() => {
 			component.items = [{
-				hostName: 'C3850',
+				hostname: 'C3850',
 				ipAddress: '172.25.121.6',
 				managedNeId: 'NA,FOC2045X0WJ,WS-C3850-48U-L,NA',
 				productId: 'WS-C3850-48U-L',
@@ -62,7 +62,7 @@ describe('DeviceListComponent', () => {
 
 	describe('should toggle device selected', () => {
 		const deviceRow: DeviceListRow = {
-			hostName: 'C3850',
+			hostname: 'C3850',
 			ipAddress: '172.25.121.6',
 			managedNeId: 'NA,FOC2045X0WJ,WS-C3850-48U-L,NA',
 			productId: 'WS-C3850-48U-L',

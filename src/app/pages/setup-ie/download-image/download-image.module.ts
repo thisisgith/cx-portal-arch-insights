@@ -9,6 +9,8 @@ import { AlertModule, HeightTransitionModule } from '@components';
 import { EULAFormModule } from './eula-form/eula-form.module';
 import { K9FormModule } from './k9-form/k9-form.module';
 import { K9DeclineModule } from './k9-decline/k9-decline.module';
+import { ConnectModule } from './connect-form/connect.module';
+import { InstallProgressModule } from '../install-progress/install-progress.module';
 
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 
@@ -25,12 +27,14 @@ const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 const imports = [
 	AlertModule,
 	CommonModule,
+	ConnectModule,
 	ControlPointsModule.forRoot({ rootUrl }),
 	CuiLoaderModule,
 	EULAFormModule,
 	FormsModule,
 	HeightTransitionModule,
 	I18nPipeModule,
+	InstallProgressModule,
 	K9DeclineModule,
 	K9FormModule,
 	ReactiveFormsModule,

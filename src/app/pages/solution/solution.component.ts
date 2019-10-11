@@ -650,18 +650,6 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	}
 
 	/**
-	 * Refreshes the data for the Quick Tour Step attached
-	 * to the No DNAC Header 'continue' button
-	 * @param info Data for the button
-	 */
-	public refreshButtonInfo (info) {
-		if (this.quickTourSteps) {
-			const step = _.find(this.quickTourSteps, { stepIndex: 2 });
-			step.data = info;
-		}
-	}
-
-	/**
 	 * On window resize, refresh button
 	 * @param event resize event
 	 */
