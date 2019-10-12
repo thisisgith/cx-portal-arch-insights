@@ -176,6 +176,9 @@
 
 <ng-template #atxPanel let-data="data">
 	<div class="cx-lifecycle-card--subtitle base-margin-bottom" [innerText]="'_TrainingWebinars_' | i18n"></div>
+	<ng-container *ngIf="data.sessions.length === 0">
+		<i class="cx-lifecycle-card--subtitle" [innerText]="'_NoSessionsPublished_' | i18n" data-auto-id="NoSessionsPublished-Message"></i>
+	</ng-container>
 	<ng-container *ngIf="data.sessions.length > 0 && data.recommended">
 		<ng-container *ngTemplateOutlet="recommended; context: {
 				template: recommendedATX,
@@ -496,6 +499,9 @@
 
 <ng-template #accPanel let-data="data">
 	<div class="cx-lifecycle-card--subtitle base-margin-bottom" [innerText]="'_1on1Coaching_' | i18n"></div>
+	<ng-container *ngIf="data.sessions.length === 0">
+		<i class="cx-lifecycle-card--subtitle" [innerText]="'_NoSessionsPublished_' | i18n" data-auto-id="NoSessionsPublished-Message"></i>
+	</ng-container>
 	<ng-container *ngIf="data.sessions[0]">
 		<ng-container *ngTemplateOutlet="recommended; context: {
 				template: recommendedACC,
@@ -1214,11 +1220,11 @@
 </ng-template>
 
 <ng-template #panel let-template="template" let-title="title" let-loading="loading" let-data="data" let-viewAll="viewAll" let-viewAllLabel="viewAllLabel" let-icon="icon">
-	<div class="cx-lifecycle-card panel base-padding-left base-padding-right panel-border-top" attr.data-auto-id="{{ title | i18n }} Panel" *ngIf="viewAll!=='acc' || data?.sessions?.length>0">
+	<div class="cx-lifecycle-card panel base-padding-left base-padding-right panel-border-top" attr.data-auto-id="{{ title | i18n }} Panel">
 		<div class="qtr-padding-bottom">
 			<span class="icon-{{ icon }}" *ngIf="icon"></span>
 			<span class="cx-lifecycle-card--title text-uppercase" [innerText]="title | i18n" attr.data-auto-id="PanelTitle-{{title}}"></span>
-			<div class="view-all pull-right toggle" [ngClass]="{'disabled': data?.sessions?.length === 0}" *ngIf="viewAll">
+			<div class="view-all pull-right toggle" *ngIf="viewAll">
 				<div  *ngIf="data"
 					(click)="showModal(viewAll)"
 					attr.data-auto-id="ShowModalPanel-{{ title }}">
