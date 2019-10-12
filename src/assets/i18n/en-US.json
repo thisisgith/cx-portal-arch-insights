@@ -665,6 +665,7 @@
 	"_NoResultsFoundForX_": "Your search of '{0}' returned no results, please try adjusting your query to try again.",
 	"_NoScanCompleted_": "No Scan Completed",
 	"_NoSessionsAvailable_": "No Sessions available for the contract {0}, please select another contract.",
+	"_NoSessionsPublished_": "No sessions are currently published",
 	"_NoSoftwareInformation_": "No Software Information",
 	"_NoSummaryInformation_": "No Summary Information",
 	"_NoSyslog_": "No Syslog",
