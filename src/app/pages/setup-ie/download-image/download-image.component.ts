@@ -6,6 +6,7 @@ import { SelectInstructionsComponent } from '../select-instructions/select-instr
 import { LogService } from '@cisco-ngx/cui-services';
 import { OnStepCompleteInsertOptions, SetupStep } from '@interfaces';
 import { SETUP_STATES } from '@classes';
+import { SetupIEStateService } from '../setup-ie-state.service';
 import { ASDAPIService, UtilsService } from '@services';
 import { I18n } from '@cisco-ngx/cui-utils';
 
@@ -72,6 +73,7 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 		private logger: LogService,
 		private route: ActivatedRoute,
 		private router: Router,
+		private state: SetupIEStateService,
 		private utils: UtilsService,
 	) {
 		this.user = _.get(this.route, ['snapshot', 'data', 'user']);
@@ -90,27 +92,32 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 	 * NgOnInit
 	 */
 	public ngOnInit () {
-		this.loading = true;
-		this.refreshMetadata()
-			.pipe(
-				finalize(() => this.loading = false),
-				mergeMap(() => this.getDownloadURL()),
-				catchError(() => {
-					this.showError(I18n.get('_AnErrorOccurredDuringDownload_'));
+		const state = this.state.getState();
+		if (state.compKey > 1) {
+			this.view = 'connect';
+		} else {
+			this.loading = true;
+			this.refreshMetadata()
+				.pipe(
+					finalize(() => this.loading = false),
+					mergeMap(() => this.getDownloadURL()),
+					catchError(() => {
+						this.showError(I18n.get('_AnErrorOccurredDuringDownload_'));
 
-					return empty();
-				}),
-			)
-			.subscribe(() => {
-				if (_.isEmpty(this.eulaData)) {
-					this.view = 'pre-download';
-				} else {
-					this.view = 'eula';
-				}
-				if (!_.isEmpty(this.k9Data)) {
-					this.view = 'k9';
-				}
-			});
+						return empty();
+					}),
+				)
+				.subscribe(() => {
+					if (_.isEmpty(this.eulaData)) {
+						this.view = 'pre-download';
+					} else {
+						this.view = 'eula';
+					}
+					if (!_.isEmpty(this.k9Data)) {
+						this.view = 'k9';
+					}
+				});
+		}
 	}
 
 	/**

@@ -1,6 +1,9 @@
 <div class="base-margin-bottom">
 	<span [innerText]="'_AfterOVADownloadDeploy_' | i18n"></span>
+	<span *ngIf="showTutorialLink"
+		class="qtr-margin-left" [innerText]="'_NeedHelp?_' | i18n"></span>
 	<a
+		*ngIf="showTutorialLink"
 		class="qtr-margin-left"
 		data-auto-id="step-by-step-link"
 		[innerText]="'_ViewStepByStepTutorial_' | i18n"

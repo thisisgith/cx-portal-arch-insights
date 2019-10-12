@@ -1,4 +1,4 @@
-import { Component, EventEmitter, HostListener, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SetupIEStateService } from '../../setup-ie-state.service';
@@ -33,9 +33,10 @@ function validateIpAddress (control: AbstractControl) {
 	styleUrls: ['./connect.component.scss'],
 	templateUrl: './connect.component.html',
 })
-export class ConnectComponent {
+export class ConnectComponent implements OnInit {
 	@Output() public onContinue: EventEmitter<void> = new EventEmitter<void>();
 	@Output() public onTutorial: EventEmitter<void> = new EventEmitter<void>();
+	public showTutorialLink: boolean;
 	public accountForm = new FormGroup({
 		ipAddress: new FormControl(null, [
 			Validators.required,
@@ -83,5 +84,13 @@ export class ConnectComponent {
 		if (event.keyCode === KEY_CODES.ENTER && this.accountForm.valid) {
 			this.onSubmit();
 		}
+	}
+
+	/**
+	 * NgOnInit
+	 */
+	public ngOnInit () {
+		const state = this.state.getState();
+		this.showTutorialLink = state.compKey > 1;
 	}
 }
