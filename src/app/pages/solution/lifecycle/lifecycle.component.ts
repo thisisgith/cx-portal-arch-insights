@@ -206,10 +206,10 @@ export class LifecycleComponent implements OnDestroy {
 			name: I18n.get('_Recommended_'),
 			value: 'recommended',
 		},
-		{
-			name: I18n.get('_Requested_'),
-			value: 'requested',
-		},
+		// {
+		// 	name: I18n.get('_Requested_'),
+		// 	value: 'requested',
+		// },
 		{
 			name: I18n.get('_Scheduled_'),
 			value: 'scheduled',
