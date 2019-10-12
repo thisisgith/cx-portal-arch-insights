@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { Router } from '@angular/router';
+import { SETUP_STATES } from '@classes';
 
 import { OnStepCompleteInsertOptions, SetupComponent, SetupStep } from '@interfaces';
 
@@ -40,8 +41,14 @@ export class SelectInstructionsComponent implements SetupStep {
 			replaceUrl: true,
 		});
 		this.onStepCompleteInsert.emit({
-			offset: 1,
-			steps: getSlides(selection),
+			offset: 0,
+			steps: [
+				{
+					state: SETUP_STATES.INSTALL,
+					type: SelectInstructionsComponent,
+				},
+				...getSlides(selection),
+			],
 		});
 	}
 }

@@ -25,6 +25,7 @@ import { ConnectDNACenterComponent } from './connect-dna-center/connect-dna-cent
 import { DownloadImageComponent } from './download-image/download-image.component';
 import { ConnectCollectorComponent } from './connect-collector/connect-collector.component';
 import { RegisterCollectorComponent } from './register-collector/register-collector.component';
+import { SelectInstructionsComponent } from './select-instructions/select-instructions.component';
 
 import { CuiModalService } from '@cisco-ngx/cui-components';
 import { ResetCacheModal } from './reset-cache-modal/reset-cache-modal.component';
@@ -183,6 +184,7 @@ export class SetupIeComponent implements AfterViewInit, OnInit, OnDestroy {
 		if (ovaSelection) {
 			this.steps = [
 				...defaultSteps.slice(0, 2),
+				{ state: SETUP_STATES.INSTALL, type: SelectInstructionsComponent },
 				...(getSlides(ovaSelection) || []),
 				defaultSteps[1],
 				...defaultSteps.slice(2),
@@ -257,8 +259,8 @@ export class SetupIeComponent implements AfterViewInit, OnInit, OnDestroy {
 				.pipe(takeUntil(this.destroy$))
 				.subscribe(options => {
 					const startIdx = this.currentStep + options.offset;
-					const pastSteps = this.steps.slice(0, startIdx);
-					const futureSteps = this.steps.slice(startIdx);
+					const pastSteps = defaultSteps.slice(0, startIdx);
+					const futureSteps = defaultSteps.slice(startIdx);
 					const stepsToInsert = options.steps;
 					this.steps = [...pastSteps, ...stepsToInsert, ...futureSteps];
 					setNextStep();

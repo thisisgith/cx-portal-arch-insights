@@ -150,9 +150,14 @@ export class ConnectDNACenterComponent implements OnInit, SetupStep {
 							completed: true,
 							customerId: this.customerId,
 						})
-						.subscribe(() => {
-							this.onStepComplete.emit();
-						});
+						.subscribe(
+							() => {
+								this.onStepComplete.emit();
+							},
+							() => {
+								this.onStepComplete.emit(); // continue even if an error occurs
+							},
+						);
 				});
 		}
 	}
