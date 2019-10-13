@@ -1224,7 +1224,7 @@
 		<div class="qtr-padding-bottom">
 			<span class="icon-{{ icon }}" *ngIf="icon"></span>
 			<span class="cx-lifecycle-card--title text-uppercase" [innerText]="title | i18n" attr.data-auto-id="PanelTitle-{{title}}"></span>
-			<div class="view-all pull-right toggle" *ngIf="viewAll">
+			<div class="view-all pull-right toggle" [ngClass]="{'disabled': data?.sessions?.length === 0}" *ngIf="viewAll">
 				<div  *ngIf="data"
 					(click)="showModal(viewAll)"
 					attr.data-auto-id="ShowModalPanel-{{ title }}">
