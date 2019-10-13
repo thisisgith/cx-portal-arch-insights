@@ -726,8 +726,8 @@
 								[label]="'_FilterBy_' | i18n"
 								[inline]="true"
 								data-auto-id="acc-filter"
-								[items]="statusOptions"
-								[placeholder]="getStatusOptionName(selectedFilterForACC)"
+								[items]="accStatusOptions"
+								[placeholder]="getStatusOptionName(selectedFilterForACC, accStatusOptions)"
 								[(ngModel)]="selectedFilterForACC"
 								(ngModelChange)="selectFilter('ACC')">
 							</cui-select>
@@ -756,10 +756,10 @@
 						<div class="modal__body__filter">
 							<cui-select class="lifecycle-filter"
 								data-auto-id="atx-filter"
-								[items]="statusOptions"
+								[items]="atxStatusOptions"
 								[label]="'_FilterBy_' | i18n"
 								[inline]="true"
-								[placeholder]="getStatusOptionName(selectedFilterForATX)"
+								[placeholder]="getStatusOptionName(selectedFilterForATX, atxStatusOptions)"
 								[(ngModel)]="selectedFilterForATX"
 								(ngModelChange)="selectFilter('ATX')">
 							</cui-select>
@@ -791,7 +791,7 @@
 								[items]="categoryOptions"
 								[label]="'_FilterBy_' | i18n"
 								[inline]="true"
-								[placeholder]="getStatusOptionName(selectedFilterForSB)"
+								[placeholder]="getStatusOptionName(selectedFilterForSB, categoryOptions)"
 								[(ngModel)]="selectedFilterForSB"
 								(ngModelChange)="selectFilter('SB')">
 							</cui-select>
@@ -823,7 +823,7 @@
 								[items]="pgCategoryOptions"
 								[label]="'_FilterBy_' | i18n"
 								[inline]="true"
-								[placeholder]="getStatusOptionName(selectedFilterForPG)"
+								[placeholder]="getStatusOptionName(selectedFilterForPG, pgCategoryOptions)"
 								[(ngModel)]="selectedFilterForPG"
 								(ngModelChange)="selectFilter('PG')">
 							</cui-select>
