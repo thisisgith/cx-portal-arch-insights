@@ -84,6 +84,8 @@ export class RiskMitigationComponent {
 		public softwareVersionTemplate: TemplateRef<string>;
 	@ViewChild('timeStampTemplate', { static: true })
 		public timeStampTemplate: TemplateRef<string>;
+	@ViewChild('riskTooltipTemplate', { static: true })
+		public riskTooltipTemplate: TemplateRef<string>;
 
 	public openPanel = false;
 	public fullscreen = false;
@@ -509,6 +511,7 @@ export class RiskMitigationComponent {
 	 * @param event will have the device details
 	 */
 	public highCrashTableSorted (event) {
+		if (event.key === 'globalRiskRank') { event.key = 'riskScore'; }
 		this.highCrashRiskParams.sort = `${event.key}.${event.sortDirection}`;
 		 this.getFingerPrintDeviceDetails(this.highCrashRiskParams);
 	}
@@ -742,8 +745,8 @@ export class RiskMitigationComponent {
 					template: this.softwareVersionTemplate,
 				},
 				{
+					headerTemplate:  this.riskTooltipTemplate,
 					key: 'globalRiskRank',
-					name: I18n.get('_CP_Risk_'),
 					sortable: true,
 					template: this.cardColorsTemplate,
 				},

@@ -369,3 +369,10 @@
 <ng-template #timeStampTemplate let-item="celldata">
 	<span title="{{ item?.timeStamp }}" [innerHTML]="item.timeStamp"></span>
 </ng-template>
+<ng-template #riskTooltipTemplate>
+	<span [innerText]="'_CP_Risk_' | i18n"></span>
+	<sup><div tooltip [tooltipTemplate]="riskTooltipContentTemplate" class="icon-info-outline qtr-margin-left" [tooltipMaxWidth]="200"></div></sup>
+</ng-template>
+<ng-template #riskTooltipContentTemplate>
+	<span [innerText]="'_CP_GlobalRiskRankToolTip_' | i18n" class="text-small"></span>
+</ng-template>
