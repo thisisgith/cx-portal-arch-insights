@@ -363,50 +363,47 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 	 * Initializes the filters at half-opacity with stored values.
 	 */
 	private initializeFilters () {
-		const caseFilterData = JSON.parse(
-			localStorage.getItem('caseFilterData'),
-		) || defaultFiltersData;
 		this.filters = [
 			{
 				key: 'total',
 				loading: true,
 				selected: true,
-				seriesData: caseFilterData.total,
+				seriesData: defaultFiltersData.total,
 				template: this.totalFilterTemplate,
 				title: I18n.get('_Total_'),
 			},
 			{
 				key: 'status',
 				loading: true,
-				seriesData: caseFilterData.status,
+				seriesData: defaultFiltersData.status,
 				template: this.pieChartFilterTemplate,
 				title: I18n.get('_Status_'),
 			},
 			{
 				key: 'severity',
 				loading: true,
-				seriesData: caseFilterData.severity,
+				seriesData: defaultFiltersData.severity,
 				template: this.pieChartFilterTemplate,
 				title: I18n.get('_Severity_'),
 			},
 			{
 				key: 'lastUpdated',
 				loading: true,
-				seriesData: caseFilterData.lastUpdated,
+				seriesData: defaultFiltersData.lastUpdated,
 				template: this.columnChartFilterTemplate,
 				title: I18n.get('_RMACaseUpdatedDate_'),
 			},
 			{
 				key: 'durationOpen',
 				loading: true,
-				seriesData: caseFilterData.durationOpen,
+				seriesData: defaultFiltersData.durationOpen,
 				template: this.columnChartFilterTemplate,
 				title: I18n.get('_TotalTimeOpen_'),
 			},
 			{
 				key: 'rma',
 				loading: true,
-				seriesData: caseFilterData.rma,
+				seriesData: defaultFiltersData.rma,
 				template: this.barChartFilterTemplate,
 				title: I18n.get('_RMAs_'),
 			},
@@ -470,7 +467,6 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 			takeUntil(this.destroy$),
 		)
 		.subscribe(cases => {
-			this.isLoading = false;
 			this.caseListData = cases.content;
 
 			const first = (this.caseParams.size * (this.paginationInfo.currentPage)) + 1;
@@ -494,6 +490,8 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 			if (!this.builtFilters) {
 				this.buildFilters();
 				this.builtFilters = true;
+			} else {
+				this.isLoading = false;
 			}
 		}, err => {
 			this.isLoading = false;
@@ -519,6 +517,7 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 			this.getFilterData(response.totalElements);
 			this.logger.debug('resolution.component : buildFilters() :: Finished building filters');
 		}, err => {
+			this.isLoading = false;
 			if (window.Cypress) {
 				window.loading = false;
 			}
@@ -629,8 +628,6 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 			severityFilter.seriesData = _.sortBy(severityFilter.seriesData,
 				seriesData => seriesData.filter);
 
-			// Finish loading and save data in localStorage
-			const caseFilterData = { };
 			_.each(this.filters, filter => {
 				if (_.includes(['status', 'severity'], filter.key)) {
 					// Don't include status or severities in pie charts with no associated cases
@@ -638,16 +635,15 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 				}
 				_.set(filter, 'seriesData', [...filter.seriesData]);
 				_.set(filter, 'loading', false);
-				caseFilterData[filter.key] = filter.seriesData.map(data =>
-					_.pick(data, ['barLabel', 'filter', 'label', 'value']));
 			});
-			localStorage.setItem('caseFilterData', JSON.stringify(caseFilterData));
+			this.isLoading = false;
 
 			if (window.Cypress) {
 				window.loading = false;
 			}
 			this.logger.debug('resolution.component : getFilterData() :: Finished getting data');
 		}, err => {
+			this.isLoading = false;
 			if (window.Cypress) {
 				window.loading = false;
 			}
