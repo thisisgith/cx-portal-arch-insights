@@ -142,22 +142,23 @@ export class ConnectDNACenterComponent implements OnInit, SetupStep {
 
 						return empty();
 					}),
-					takeUntil(this.destroyed$),
-				)
-				.subscribe(() => {
-					this.cpService
+					mergeMap(() => this.cpService
 						.updateRegistrationCompletionUsingPOST({
 							completed: true,
 							customerId: this.customerId,
 						})
-						.subscribe(
-							() => {
-								this.onStepComplete.emit();
-							},
-							() => {
+						.pipe(
+							catchError(() => {
 								this.onStepComplete.emit(); // continue even if an error occurs
-							},
-						);
+
+								return empty();
+							}),
+						),
+					),
+					takeUntil(this.destroyed$),
+				)
+				.subscribe(() => {
+					this.onStepComplete.emit();
 				});
 		}
 	}
