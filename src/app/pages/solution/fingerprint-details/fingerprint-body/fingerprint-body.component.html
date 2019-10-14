@@ -30,19 +30,6 @@
 			></app-fp-similarassets>
 		</cui-tab>
 		<cui-tab
-			[label]="'_CP_FingerprintIntelligence_' | i18n | uppercase"
-			*ngIf="cxLevel === 3"
-		>
-			<fp-intelligence
-				[asset]="selectedAsset"
-				(reqError)="
-					$event
-						? alertFPIntelligence.show($event, 'danger')
-						: alertFPIntelligence.hide()
-				"
-			></fp-intelligence>
-		</cui-tab>
-		<cui-tab
 			[label]="'_CP_Compare_' | i18n | uppercase"
 			*ngIf="cxLevel === 3"
 		>
@@ -54,19 +41,6 @@
 						: alertFPCompare.hide()
 				"
 			></app-fp-compare>
-		</cui-tab>
-		<cui-tab
-			[label]="'_CP_Machinelearningvisualization_' | i18n | uppercase"
-		>
-			<ml-visualization
-				[asset]="selectedAsset"
-				(devicesSelected)="showComparison($event)"
-				(reqError)="
-					$event
-						? alertMlVisualization.show($event, 'danger')
-						: alertMlVisualization.hide()
-				"
-			></ml-visualization>
 		</cui-tab>
 	</cui-tabs>
 </div>
