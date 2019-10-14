@@ -1,6 +1,7 @@
 import { configureTestSuite } from 'ng-bullet';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
+import { SetupIEStateService } from '../../setup-ie-state.service';
 
 import { ConnectComponent } from './connect.component';
 import { ConnectModule } from './connect.module';
@@ -8,6 +9,7 @@ import { ConnectModule } from './connect.module';
 describe('InstallProgressComponent', () => {
 	let component: ConnectComponent;
 	let fixture: ComponentFixture<ConnectComponent>;
+	let stateService: SetupIEStateService;
 
 	configureTestSuite(() => {
 		TestBed.configureTestingModule({
@@ -19,6 +21,11 @@ describe('InstallProgressComponent', () => {
 	});
 
 	beforeEach(() => {
+		stateService = TestBed.get(SetupIEStateService);
+		stateService.clearState();
+		stateService.setState({
+			compKey: 1,
+		});
 		fixture = TestBed.createComponent(ConnectComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();

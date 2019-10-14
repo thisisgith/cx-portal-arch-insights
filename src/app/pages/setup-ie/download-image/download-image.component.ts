@@ -92,6 +92,27 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 	 * NgOnInit
 	 */
 	public ngOnInit () {
+		this.resetViews();
+		this.route.queryParams
+			.pipe(
+				takeUntil(this.destroyed$),
+			)
+			.subscribe(params => {
+				if (params.downloadView === 'connect') {
+					this.view = 'connect';
+				} else {
+					this.resetViews();
+					const state = this.state.getState();
+					state.downloadView = undefined;
+					this.state.setState(state);
+				}
+			});
+	}
+
+	/**
+	 * Resets the Views
+	 */
+	private resetViews () {
 		const state = this.state.getState();
 		if (state.compKey > 1) {
 			this.view = 'connect';

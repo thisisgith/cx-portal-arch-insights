@@ -8,8 +8,9 @@ export interface IESetupWizardState {
 	collectorIP?: string;
 	collectorToken?: string;
 	compKey?: number;
-	ovaSelection?;
 	deployStepsSet?: string;
+	downloadView?: 'connect';
+	ovaSelection?;
 }
 
 /**
@@ -29,6 +30,7 @@ export class SetupIEStateService {
 	private _collectorToken: string;
 	private _ovaSelection;
 	private _deployStepsSet: string;
+	private _downloadView: 'connect';
 	private _noState: boolean;
 
 	constructor (
@@ -44,11 +46,12 @@ export class SetupIEStateService {
 	private _setState (state: IESetupWizardState) {
 		this._noState = Boolean(!state);
 		if (!this._noState) {
-			this._compKey = state.compKey;
-			this._deployStepsSet = state.deployStepsSet;
-			this._ovaSelection = state.ovaSelection;
 			this._collectorIP = state.collectorIP;
 			this._collectorToken = state.collectorToken;
+			this._compKey = state.compKey;
+			this._deployStepsSet = state.deployStepsSet;
+			this._downloadView = state.downloadView;
+			this._ovaSelection = state.ovaSelection;
 		}
 	}
 
@@ -79,6 +82,7 @@ export class SetupIEStateService {
 			collectorToken: this._collectorToken,
 			compKey: this._compKey,
 			deployStepsSet: this._deployStepsSet,
+			downloadView: this._downloadView,
 			ovaSelection: this._ovaSelection,
 		};
 	}

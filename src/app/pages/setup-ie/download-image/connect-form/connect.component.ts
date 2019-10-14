@@ -91,6 +91,14 @@ export class ConnectComponent implements OnInit {
 	 */
 	public ngOnInit () {
 		const state = this.state.getState();
-		this.showTutorialLink = state.compKey > 1;
+		this.showTutorialLink = state.compKey <= 1;
+		state.downloadView = 'connect';
+		this.state.setState(state);
+		this.router.navigate([], {
+			queryParams: {
+				downloadView: 'connect',
+			},
+			queryParamsHandling: 'merge',
+		});
 	}
 }
