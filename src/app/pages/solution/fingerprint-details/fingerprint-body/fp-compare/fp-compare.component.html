@@ -2,32 +2,103 @@
 	<div class="col-md-6 base-padding-top dbl-padding-right">
 		<div class="qtr-padding-bottom text-small text-dkgray-4 " [innerText]="'_ProductFamily_' | i18n"></div>
 		<div class="col-md-5"></div>
-		<cui-select data-auto-id="ProductFamilyAdrop" [required]="true" [empty]="true" [items]="productData"
-			[placeholder]="'_CP_ProductFamilyPlaceholder_' | i18n" [compressed]="true" [(ngModel)]="productId1"
-			optionsKey="productFamily" optionsValue="productId" (ngModelChange)="onSelection($event)">
+		<cui-select
+			data-auto-id="ProductFamilyAdrop"
+			[required]="true"
+			[empty]="true"
+			[items]="listOfProductFamilies"
+			[placeholder]="'_CP_ProductFamilyPlaceholder_' | i18n"
+			[compressed]="true"
+			[(ngModel)]="selectedProductFamily"
+			optionsKey="productFamily"
+			optionsValue="productIds"
+			(ngModelChange)="productFamilySelection($event)"
+			[errorMessage]="selectedProductFamily? '': 'Select a ProductFamily'">
 		</cui-select>
 	</div>
 	<div class="col-md-6 base-padding-top dbl-padding-right">
-		<div class="qtr-padding-bottom text-small text-dkgray-4" [innerText]="'_ProductFamily_' | i18n"></div>
-		<cui-select data-auto-id="ProductFamilyBdrop" [required]="true" [empty]="true" [items]="productData"
-		[placeholder]="'_CP_ProductFamilyPlaceholder_' | i18n" [compressed]="true" [(ngModel)]="productId2"
-			(ngModelChange)="onSelection3($event)" optionsKey="productFamily" optionsValue="productId">
+			<div class="qtr-padding-bottom text-small text-dkgray-4 " [innerText]="'_ProductFamily_' | i18n"></div>
+			<div class="col-md-5"></div>
+			<cui-select
+				data-auto-id="ProductFamilyAdrop"
+				[required]="true"
+				[empty]="true"
+				[disabled]="true"
+				[items]="listOfProductFamilies"
+				[placeholder]="'_CP_ProductFamilyPlaceholder_' | i18n"
+				[compressed]="true"
+				[(ngModel)]="selectedProductFamily"
+				optionsKey="productFamily"
+				optionsValue="productIds"
+				(ngModelChange)="productFamilySelection($event)">
+			</cui-select>
+			</div>
+</div>
+<div class="row">
+	<div class="col-md-6 half-padding-top dbl-padding-right">
+		<div class="qtr-padding-bottom text-small text-dkgray-4" [innerText]="'_CP_ProductId_' | i18n"></div>
+		<cui-select
+			data-auto-id="Pidsdrop"
+			[empty]="true"
+			[required]="true"
+			[compressed]="true"
+			[placeholder]="'_CP_ProductId_' | i18n"
+			[items]="listOfProductIds"
+			[(ngModel)]="selectedproductId"
+            optionsKey="productId"
+            optionsValue="productId"
+            (ngModelChange)="pidsSelection($event)"
+            [errorMessage]="selectedproductId? '': 'Select a ProductId'">
 		</cui-select>
 	</div>
+	<div class="col-md-6 half-padding-top dbl-padding-right">
+			<div class="qtr-padding-bottom text-small text-dkgray-4" [innerText]="'_CP_ProductId_' | i18n"></div>
+			<cui-select
+				data-auto-id="Pidsdrop"
+				[empty]="true"
+				[required]="true"
+				[compressed]="true"
+				[disabled]="true"
+				[placeholder]="'_CP_ProductId_' | i18n"
+				[items]="listOfProductIds"
+	            [(ngModel)]="selectedproductId"
+	            optionsKey="productId"
+	            optionsValue="productId"
+	            (ngModelChange)="pidsSelection($event)">
+			</cui-select>
+		</div>
 </div>
 <div class="row">
 	<div class="col-md-6 half-padding-top dbl-padding-right">
 		<div class="qtr-padding-bottom text-small text-dkgray-4" [innerText]="'_CP_SystemA_' | i18n"></div>
-		<cui-select data-auto-id="AssetAdrop" [empty]="true" [required]="true" [items]="listdeviceDataA"
-			[disabled]="assetsAactive" [placeholder]="'_CP_AssetPlaceholder_' | i18n" [compressed]="true" [(ngModel)]="deviceId1"
-			(ngModelChange)="onSelection1($event)" optionsKey="deviceName" optionsValue="deviceId">
+		<cui-select
+			data-auto-id="AssetAdrop"
+			[empty]="true"
+			[required]="true"
+			[items]="listdeviceData"
+			[placeholder]="'_CP_AssetPlaceholder_' | i18n"
+			[compressed]="true"
+			[(ngModel)]="deviceId1"
+			(ngModelChange)="assetASelection($event)"
+			optionsKey="deviceName"
+			optionsValue="deviceId"
+			[errorMessage]="deviceId1? '': 'Select an System'">
 		</cui-select>
 	</div>
 	<div class="col-md-6 half-padding-top dbl-padding-right">
 		<div class="qtr-padding-bottom text-small text-dkgray-4" [innerText]="'_CP_SystemB_' | i18n"></div>
-		<cui-select data-auto-id="AssetBdrop" [empty]="true" [required]="true" [items]="listdeviceDataB"
-			[disabled]="assetsBactive" [placeholder]="'_CP_AssetPlaceholder_' | i18n" [compressed]="true" [(ngModel)]="deviceId2"
-			(ngModelChange)="onSelection2($event)" optionsKey="deviceName" optionsValue="deviceId">
+		<cui-select
+			data-auto-id="AssetBdrop"
+			[empty]="true"
+			[required]="true"
+			[items]="listdeviceData"
+			[placeholder]="'_CP_AssetPlaceholder_' | i18n"
+			[compressed]="true"
+			[(ngModel)]="deviceId2"
+			(ngModelChange)="assetBSelection($event)"
+			optionsKey="deviceName"
+			optionsValue="deviceId"
+			[errorMessage]="assetBError? 'Select an System': ''">
 		</cui-select>
 	</div>
 </div>
@@ -36,9 +107,6 @@
 <div class="row">
 	<div class="flex flex-fluid flex-center-horizontal half-padding-top">
 		<div class="flex-fill  btn-group btn-group--wide">
-			<button data-auto-id="hardwarebtn" [ngClass]="{active: compareView ==='hardware'}"
-				(click)="updateCompareView($event,'hardware')" class="text-uppercase btn btn--small"
-				[innerText]="'_Hardware_' | i18n"></button>
 			<button data-auto-id="softwarebtn" [ngClass]="{active: compareView ==='software'}"
 				(click)="updateCompareView($event,'software')" class="text-uppercase btn btn--small "
 				[innerText]="'_Software_' | i18n"></button>

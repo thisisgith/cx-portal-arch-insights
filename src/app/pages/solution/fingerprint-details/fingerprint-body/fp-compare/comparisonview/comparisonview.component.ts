@@ -21,8 +21,6 @@ export class ComparisonviewComponent {
 	@Input() public deviceId2: string;
 	public customerId: string;
 	private destroy$ = new Subject();
-	public hardwaredetails: any;
-	public hardwareData = null;
 	public softwaredetails: any;
 	public softwareData = null;
 	public featuresdetails: any;
@@ -82,7 +80,6 @@ export class ComparisonviewComponent {
 		this.crashPreventionService.getComparison(this.comparisonInfo)
 			.pipe(takeUntil(this.destroy$))
 			.subscribe((results: Icomparison) => {
-				this.hardwareData = results.hardware;
 				this.softwareData = results.software;
 				this.featuresData = results.feature;
 				this.compareviewLoading = false;
@@ -90,7 +87,6 @@ export class ComparisonviewComponent {
 			},
 			err => {
 				this.compareviewLoading = false;
-				this.hardwareData = null;
 				this.softwareData = null;
 				this.featuresData = null;
 				this.reqError.emit(I18n.get('_CP_Compare_Assets_Error_'));

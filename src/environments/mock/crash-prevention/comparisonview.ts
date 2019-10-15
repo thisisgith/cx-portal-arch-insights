@@ -5,7 +5,7 @@ import { IListdevice } from '@sdp-api';
  *
  * @params {String} directory
  */
-const api = '/api/customerportal/inventory/v1/Productfamily';
+const api = '/api/customerportal/fingerprint/v1/list-product-families/';
 
 /**
  *  Mock data for
@@ -14,18 +14,29 @@ const api = '/api/customerportal/inventory/v1/Productfamily';
  */
 const productFamilydeatils: any = {
 	customerId: '7293498',
-	productFamily: [
+	crashPredicted: true,
+	productFamilies: [
 		{
-			productId: '',
-			productFamily: 'Cisco 4400 Series Integrated Services Routers',
+			productFamily: 'Cisco Catalyst 9400 Series Switches',
+			productIds: [
+				{
+					productId: 'C9407R',
+					count: 317,
+				},
+			],
 		},
 		{
-			productId: 'AIR-CT5760',
-			productFamily: 'Cisco 5700 Series Wireless LAN Controllers',
-		},
-		{
-			productId: 'ASA5540',
-			productFamily: 'Cisco ASA 5500-X Series Firewalls',
+			productFamily: 'Cisco Catalyst 9300 Series Switches',
+			productIds: [
+				{
+					productId: 'C9300-24UX, C9300-24UX, C9300-24UX',
+					count: 314,
+				},
+				{
+					productId: 'C9300-48UXM',
+					count: 1,
+				},
+			],
 		},
 	],
 };
@@ -45,22 +56,13 @@ const api1 = '/api/customerportal/inventory/v1/listDevicedeatis';
  */
 const listDevicedeatils: IListdevice = {
 	customerId: '7293498',
+	productId: 'AIR-CT5760',
+	crashPredicted: true,
 	deviceDetail: [
 		{
-			deviceId: 'NA,6011,C9407R,NA',
-			deviceName: 'Device_6_0_1_1',
-		},
-		{
-			deviceId: 'NA,60110,C9407R,NA',
-			deviceName: 'Device_6_0_1_10',
-		},
-		{
-			deviceId: 'NA,601101,C9407R,NA',
-			deviceName: 'Device_6_0_1_101',
-		},
-		{
-			deviceId: 'NA,601103,C9407R,NA',
-			deviceName: 'Device_6_0_1_103',
+			deviceId: 'NA,FOC1727V051,AIR-CT5760,NA',
+			deviceName: 'Controller',
+			serialNumber: 'FOC1727V051',
 		},
 	],
 };
