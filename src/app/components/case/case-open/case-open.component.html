@@ -17,13 +17,22 @@
 					<div class="flex-row">
 						<form [formGroup]="caseForm">
 							<dl>
-								<dt [innerText]="'_System_' | i18n"></dt>
+								<dt class="half-padding-bottom" [innerText]="'_System_' | i18n"></dt>
 								<dd>
-									<div><span [innerText]="asset?.serialNumber"></span></div>
-									<div><span [innerText]="asset?.deviceName"></span></div>
-									<div><span [innerText]="asset?.productId"></span></div>
+									<div class="row qtr-padding-bottom">
+										<div class="col-3 text-muted text-uppercase" [innerText]="'_SerialNumber_' | i18n"></div>
+										<div class="col-9" [innerText]="asset?.serialNumber"></div>
+									</div>
+									<div class="row qtr-padding-bottom">
+										<div class="col-3 text-muted text-uppercase" [innerText]="'_HostName_' | i18n"></div>
+										<div class="col-9" [innerText]="asset?.deviceName"></div>
+									</div>
+									<div class="row qtr-padding-bottom">
+										<div class="col-3 text-muted text-uppercase" [innerText]="'_Model_' | i18n"></div>
+										<div class="col-9" [innerText]="asset?.productId"></div>
+									</div>
 								</dd>
-								<dt [innerText]="'_CaseTitle_' | i18n"></dt>
+								<dt class="qtr-padding-bottom" [innerText]="'_CaseTitle_' | i18n"></dt>
 								<dd>
 									<div class="form-group">
 										<div class="form-group__text">
@@ -36,11 +45,11 @@
 										</div>
 									</div>
 								</dd>
-								<dt [innerText]="'_DescribeTheProblem_' | i18n"></dt>
+								<dt class="qtr-padding-bottom" [innerText]="'_DescribeTheProblem_' | i18n"></dt>
 								<dd>
 									<div class="form-group">
 										<div class="form-group__text">
-											<textarea class="textarea" rows="5" formControlName="description" [maxlength]="descriptionMaxLength"></textarea>
+											<textarea class="textarea" rows="14" formControlName="description" [maxlength]="descriptionMaxLength"></textarea>
 										</div>
 										<div char-count
 											[value]="caseForm.controls.description.value.length"
@@ -129,5 +138,8 @@
 </ng-template>
 
 <ng-template #submittingTemplate>
-	<cui-spinner color="default" [label]="'_OpeningCase_' | i18n"></cui-spinner>
+	<div class="text-center">
+		<div class="base-margin-bottom text-xlarge" [innerText]="'_OpeningCase_' | i18n"></div>
+		<cui-spinner color="default"></cui-spinner>
+	</div>
 </ng-template>

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
-import { CuiLoaderModule, CuiSelectModule, CuiSpinnerModule } from '@cisco-ngx/cui-components';
+import { CuiLoaderModule, CuiSelectModule, CuiSpinnerModule, CuiTableModule } from '@cisco-ngx/cui-components';
 
 import { CaseOpenAdvisoriesComponent } from './case-open-advisories.component';
 import { CollapsibleModule } from '../../../collapsible/collapsible.module';
@@ -25,6 +25,7 @@ import { TechFormModule } from '../tech-form/tech-form.module';
 		CuiLoaderModule,
 		CuiSelectModule,
 		CuiSpinnerModule,
+		CuiTableModule,
 		I18nPipeModule,
 
 		CaseSubmittedModule,

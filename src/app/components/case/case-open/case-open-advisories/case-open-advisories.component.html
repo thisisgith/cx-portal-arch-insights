@@ -20,33 +20,27 @@
 								<dt class="base-margin-bottom" 
 								data-auto-id="CaseOpenFrom"
 								[innerText]="'_CaseInitiatedFrom_' | i18n:typeTitle"></dt>
-								<dt data-auto-id="CaseOpenAsset" 
+								<dt class="half-padding-bottom" data-auto-id="CaseOpenAsset" 
 								[innerText]="'_AssetAssociated_' | i18n"></dt>
 								<dd>
-									<div><span [innerText]="allAssets[0]?.serialNumber"></span></div>
-									<div><span [innerText]="allAssets[0]?.deviceName || allAssets[0]?.hostName"></span></div>
-									<div><span [innerText]="allAssets[0]?.productId"></span></div>
+									<div class="row qtr-padding-bottom">
+										<div class="col-3 text-muted text-uppercase" [innerText]="'_SerialNumber_' | i18n"></div>
+										<div class="col-9" [innerText]="allAssets[0]?.serialNumber"></div>
+									</div>
+									<div class="row qtr-padding-bottom">
+										<div class="col-3 text-muted text-uppercase" [innerText]="'_HostName_' | i18n"></div>
+										<div class="col-9" [innerText]="allAssets[0]?.deviceName || allAssets[0]?.hostName"></div>
+									</div>
+									<div class="row qtr-padding-bottom">
+										<div class="col-3 text-muted text-uppercase" [innerText]="'_Model_' | i18n"></div>
+										<div class="col-9" [innerText]="allAssets[0]?.productId"></div>
+									</div>
 								</dd>
 								<app-collapsible *ngIf="allAssets.length > 1"
 									[text]="'_AdditionalImpactedAssetsToBe_' | i18n:(allAssets.length - 1)">
-									<table class="table table--nostripes">
-										<thead>
-											<tr>
-												<th [innerText]="'_SerialNumber_' | i18n"></th>
-												<th [innerText]="'_HostName_' | i18n"></th>
-												<th [innerText]="'_Model_' | i18n"></th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr *ngFor="let asset of allAssets | slice:1">
-												<td [innerText]="asset.serialNumber"></td>
-												<td [innerText]="asset.deviceName || asset.hostName"></td>
-												<td [innerText]="asset.productId"></td>
-											</tr>
-										</tbody>
-									</table>
+									<cui-table [options]="assetListTableOptions" [data]="allAssets | slice:1"></cui-table>
 								</app-collapsible>
-								<dt data-auto-id="CaseOpenTitle" [innerText]="'_CaseTitle_' | i18n"></dt>
+								<dt class="half-padding-top qtr-padding-bottom" data-auto-id="CaseOpenTitle" [innerText]="'_CaseTitle_' | i18n"></dt>
 								<dd>
 									<div class="form-group">
 										<div class="form-group__text">
@@ -59,11 +53,11 @@
 										</div>
 									</div>
 								</dd>
-								<dt data-auto-id="CaseOpenDescription" [innerText]="'_DescribeTheProblem_' | i18n"></dt>
+								<dt class="qtr-padding-bottom" data-auto-id="CaseOpenDescription" [innerText]="'_DescribeTheProblem_' | i18n"></dt>
 								<dd>
 									<div class="form-group">
 										<div class="form-group__text">
-											<textarea class="textarea" rows="5" formControlName="description" [maxlength]="descriptionMaxLength"></textarea>
+											<textarea class="textarea" rows="14" formControlName="description" [maxlength]="descriptionMaxLength"></textarea>
 										</div>
 										<div char-count
 											[value]="caseForm.controls.description.value.length"
@@ -114,7 +108,10 @@
 </div>
 
 <ng-template #submittingTemplate>
-	<cui-spinner color="default" [label]="'_OpeningCase_' | i18n"></cui-spinner>
+	<div class="text-center">
+		<div class="base-margin-bottom text-xlarge" [innerText]="'_OpeningCase_' | i18n"></div>
+		<cui-spinner color="default"></cui-spinner>
+	</div>
 </ng-template>
 
 <!-- Page that displays after a case submit success/fail -->

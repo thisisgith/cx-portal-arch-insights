@@ -81,4 +81,25 @@ describe('CaseSubmittedComponent', () => {
 		expect(location.path())
 			.toEqual('/solution/resolution?case=686350456');
 	}));
+
+	it('should not build table if there is only one asset', () => {
+		spyOn(component, 'buildAssetsTable');
+		expect(component.buildAssetsTable)
+			.toHaveBeenCalledTimes(0);
+	});
+
+	it('should build table if there are more than one assets', () => {
+		component.assets = [
+			{
+				serialNumber: '1234',
+			},
+			{
+				serialNumber: '5678',
+			},
+		];
+		spyOn(component, 'buildAssetsTable');
+		component.ngOnInit();
+		expect(component.buildAssetsTable)
+			.toHaveBeenCalled();
+	});
 });
