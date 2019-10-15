@@ -1,6 +1,6 @@
 import { RemoveInvalidTagsPipe } from './remove-invalid-tags.pipe.module';
 
-fdescribe('RemoveInvalidTagsPipe', () => {
+describe('RemoveInvalidTagsPipe', () => {
 	let pipe: RemoveInvalidTagsPipe;
 	beforeEach(() => {
 		pipe = new RemoveInvalidTagsPipe();
