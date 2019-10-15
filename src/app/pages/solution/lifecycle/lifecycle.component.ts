@@ -50,7 +50,7 @@ interface SuccessPathsModel {
 	filter: string;
 	items?: SuccessPath[];
 	rows: number;
-	sortField: 'title' | 'type' | 'archetype' | 'bookmark';
+	sort0Field: 'title' | 'type' | 'archetype' | 'bookmark';
 	sortDirection: 'asc' | 'desc';
 	totalCount?: number;
 }
@@ -127,6 +127,7 @@ export class LifecycleComponent implements OnDestroy {
 	@ViewChild('formatTemplate', { static: true }) private formatTemplate: TemplateRef<{ }>;
 	@ViewChild('bookmarkTemplate', { static: true }) private bookmarkTemplate: TemplateRef<{ }>;
 	@ViewChild('statusTemplate', { static: true }) private statusTemplate: TemplateRef<{ }>;
+	@ViewChild('providerTemplate', { static: true }) private providerTemplate: TemplateRef<{ }>;
 	@ViewChild('actionTemplate', { static: true }) private actionTemplate: TemplateRef<{ }>;
 	@ViewChild('titleTemplate', { static: true }) private titleTemplate: TemplateRef<{ }>;
 	@ViewChild('scrollModal', { static: false }) private scrollModalRef: ElementRef;
@@ -150,7 +151,7 @@ export class LifecycleComponent implements OnDestroy {
 	public recommendedAtxScheduleCardOpened = false;
 	public panelBottomPaddingNeeded = false;
 	public panelBottomPaddingNeededForMessage = false;
-	public sessionSelected: AtxSessionSchema;
+	public sessionSelected: AtxSessionSchema = null;
 	public customerId: string;
 	public buId: string;
 	private user: User;
@@ -291,7 +292,7 @@ export class LifecycleComponent implements OnDestroy {
 			filter: '',
 			rows: this.pgNumRows,
 			sortDirection: 'asc',
-			sortField: 'title',
+			sort0Field: 'title',
 		},
 	};
 
@@ -498,7 +499,7 @@ export class LifecycleComponent implements OnDestroy {
 				filter: '',
 				rows: this.pgNumRows,
 				sortDirection: 'asc',
-				sortField: 'title',
+				sort0Field: 'title',
 			},
 		};
 	}
@@ -639,6 +640,15 @@ export class LifecycleComponent implements OnDestroy {
 					sorting: false,
 				},
 				{
+					name: I18n.get('_ContentProvider_'),
+					sortable: true,
+					sortKey: 'providerInfo.name',
+					sortDirection: 'asc',
+					template: this.providerTemplate,
+					width: 'auto',
+					sorting: false,
+				},
+				{
 					key: 'status',
 					name: I18n.get('_Status_'),
 					sortable: true,
@@ -679,6 +689,15 @@ export class LifecycleComponent implements OnDestroy {
 					sortDirection: 'asc',
 					sortKey: 'title',
 					template: this.titleTemplate,
+					width: 'auto',
+					sorting: false,
+				},
+				{
+					name: I18n.get('_ContentProvider_'),
+					sortable: true,
+					sortKey: 'providerInfo.name',
+					sortDirection: 'asc',
+					template: this.providerTemplate,
 					width: 'auto',
 					sorting: false,
 				},
@@ -743,7 +762,7 @@ export class LifecycleComponent implements OnDestroy {
 				this.selectedProductGuides, [key], [sortDirection]);
 
 			this.componentData.productGuides.sortDirection = <'asc' | 'desc'> sortDirection;
-			this.componentData.productGuides.sortField
+			this.componentData.productGuides.sort0Field
 				= <'title' | 'type' | 'archetype' | 'bookmark'> key;
 
 			this.loadProductGuides()
@@ -888,6 +907,20 @@ export class LifecycleComponent implements OnDestroy {
 		this.componentData.atx.interested = null;
 		this.moreATXSelected = null;
 		this.atxMoreClicked = false;
+		this.sessionSelected = null;
+	}
+
+	/**
+	 * Check if the session starttime is within 24 hours
+	 * @param session the session will be checked
+	 * @returns boolean
+	 */
+	public isStartTimeWithin24Hrs (session: AtxSessionSchema) {
+		if (!session) {
+			return false;
+		}
+
+		return ((session.sessionStartDate - (new Date().getTime())) < 86400000);
 	}
 
 	/**
@@ -913,7 +946,10 @@ export class LifecycleComponent implements OnDestroy {
 			atxId: atx.atxId,
 			sessionId: ssId,
 		};
-		this.crossLaunch(session.registrationURL);
+		if (!atx.providerInfo) {
+			this.crossLaunch(session.registrationURL);
+		}
+		this.closeViewSessions();
 		this.contentService.registerUserToAtx(params)
 		.subscribe(() => {
 			this.status.loading.atx = false;
@@ -951,6 +987,7 @@ export class LifecycleComponent implements OnDestroy {
 			atx.status = 'recommended';
 			this.atxScheduleCardOpened = false;
 			this.recommendedAtxScheduleCardOpened = false;
+			this.sessionSelected = null;
 			this.status.loading.atx = false;
 			if (window.Cypress) {
 				window.atxLoading = false;
@@ -989,7 +1026,7 @@ export class LifecycleComponent implements OnDestroy {
 				);
 		}
 
-		if (type === 'ACC') {
+		if  (type === 'ACC') {
 			if (this.selectedFilterForACC === 'isBookmarked') {
 				this.selectedACC =
 				_.filter(this.componentData.acc.sessions, { bookmark: true });
@@ -1376,6 +1413,7 @@ export class LifecycleComponent implements OnDestroy {
 		this.moreYCoordinates = 0;
 		this.moreATXSelected = null;
 		this.atxMoreClicked = false;
+		this.sessionSelected = null;
 		this.panelBottomPaddingNeeded = false;
 		if (this.componentData.atx) {
 			this.componentData.atx.interested = null;
@@ -1401,7 +1439,6 @@ export class LifecycleComponent implements OnDestroy {
 	 public crossLaunch (crossLaunchUrl: string) {
 		if (crossLaunchUrl) {
 			window.open(crossLaunchUrl, '_blank');
-			this.closeViewSessions();
 		}
 	}
 
@@ -1413,7 +1450,14 @@ export class LifecycleComponent implements OnDestroy {
 	 public getAtxRegisterButton (data: AtxSchema) {
 		let button: string;
 		button = '';
-		if (!_.get(this.sessionSelected, 'registrationURL') || this.notCurrentPitstop ||
+		let sessionSelected = false;
+		if (_.get(data, 'providerInfo')) {
+			sessionSelected = this.sessionSelected ? true : false;
+		} else {
+			sessionSelected = _.get(this.sessionSelected, 'registrationURL', false);
+		}
+
+		if (!sessionSelected || this.notCurrentPitstop ||
 			_.isEqual(_.get(data, 'status'), 'scheduled')) {
 			button = 'disabled';
 		}
@@ -1429,7 +1473,7 @@ export class LifecycleComponent implements OnDestroy {
 	public getPanel (viewAtxSessions: HTMLElement) {
 		let panel;
 		const _div = viewAtxSessions;
-		const atxPopupListViewAdjustPx = 320;
+		const atxPopupListViewAdjustPx = 325;
 		this.innerWidth = window.innerWidth;
 		if (this.componentData.atx.interested) {
 			switch (this.atxview) {
@@ -1438,11 +1482,11 @@ export class LifecycleComponent implements OnDestroy {
 
 					if ((rect.right + 500) > this.scrollModalRef.nativeElement.clientWidth) {
 						_div.style.right = '98%';
-						_div.style.bottom = '-165.5px';
+						_div.style.bottom = '-175.5px';
 						panel = 'panel cardpanel--openright';
 					} else {
 						_div.style.left = '55%';
-						_div.style.bottom = '-165.5px';
+						_div.style.bottom = '-175.5px';
 						panel = 'panel cardpanel--open';
 					}
 					break;
@@ -1467,7 +1511,7 @@ export class LifecycleComponent implements OnDestroy {
 			panel = 'panel panel--open';
 		} else {
 			_div.style.left = '128px';
-			_div.style.bottom = '-180px';
+			_div.style.bottom = '-195px';
 			panel = 'panel panel--open';
 		}
 
@@ -1596,7 +1640,7 @@ export class LifecycleComponent implements OnDestroy {
 		this.componentData.productGuides.filter = '';
 		this.componentData.productGuides.rows = this.pgNumRows;
 		this.componentData.productGuides.sortDirection = 'asc';
-		this.componentData.productGuides.sortField = 'title';
+		this.componentData.productGuides.sort0Field = 'title';
 	}
 
 	/**
@@ -1612,10 +1656,10 @@ export class LifecycleComponent implements OnDestroy {
 		const componentParams = _.pick(this.componentData.params,
 			['customerId', 'solution', 'usecase']);
 		const pgParams = {
-			fields: this.selectedFilterForPG,
+			// fields: this.selectedFilterForPG,
 			rows: this.componentData.productGuides.rows,
-			sortField: this.componentData.productGuides.sortField,
-			sortOrder: this.componentData.productGuides.sortDirection,
+			sort0Field: this.componentData.productGuides.sort0Field,
+			sort0Order: this.componentData.productGuides.sortDirection,
 		};
 
 		return this.contentService.getRacetrackSuccessPaths(
@@ -1690,11 +1734,11 @@ export class LifecycleComponent implements OnDestroy {
 			const componentParams = _.pick(this.componentData.params,
 				['customerId', 'solution', 'usecase']);
 			const pgParams = {
-				fields: this.selectedFilterForPG,
+				// fields: this.selectedFilterForPG,
 				page: incPage,
 				rows: this.componentData.productGuides.rows,
-				sortField: this.componentData.productGuides.sortField,
-				sortOrder: this.componentData.productGuides.sortDirection,
+				sort0Field: this.componentData.productGuides.sort0Field,
+				sort0Order: this.componentData.productGuides.sortDirection,
 			};
 
 			return this.contentService.getRacetrackSuccessPaths(
@@ -2229,11 +2273,22 @@ export class LifecycleComponent implements OnDestroy {
 	 * @param item the Lifecycle item
 	 * @returns the title string with provider name
 	 */
-	public getProviderName (item: AtxSchema) {
+	public getProviderName (item: AtxSchema | ACC) {
 		if (_.get(item, ['providerInfo', 'name'], '')) {
 			return `${I18n.get('_By_')}${item.providerInfo.name}`;
 		}
 
 		return '';
+	}
+
+	/**
+	 * Determine whether to show Cisco or partner default image.
+	 * @param atx The ATX item
+	 * @returns the default image url
+	 */
+	public getDefaultATXImg (atx: AtxSchema) {
+		return (atx.providerInfo ?
+			'assets/img/solutions/ATX-default-image-1-556x308.png' :
+			'assets/img/solutions/defaultLifecycleImage.png');
 	}
 }

@@ -1,21 +1,7 @@
-@import "~src/variables.scss";
+@import '~cisco-ui/src/scss/utilities/_variables.scss';
 
-.body {
-	text-align: left;
-}
-
-.form-group__text {
-	input,
-	textarea {
-		border: none;
-		border-bottom: 1px solid #aeb8c1;
-		background: $light-gray-background;
-		color: #5d656c;
-
-		&:focus {
-			box-shadow: unset;
-		}
-	}
+.case-number {
+	font-weight: $h4-font-weight;
 }
 
 :host ::ng-deep .table {

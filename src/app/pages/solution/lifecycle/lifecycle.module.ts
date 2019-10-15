@@ -12,6 +12,7 @@ import { AccRequestFormModule } from './acc-request-form/acc-request-form.module
 import { CgtRequestFormModule } from './cgt-request-form/cgt-request-form.module';
 import { CommunitiesModule } from './communities/communities.module';
 import { InlineSVGModule } from 'ng-inline-svg';
+import { ImageDefaultDirective } from '@directives/image-default.directive';
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
  */
@@ -31,7 +32,7 @@ const childRoutes: Routes = [
  * Module representing the Lifecycle Component of the Solution Page
  */
 @NgModule({
-	declarations: [LifecycleComponent],
+	declarations: [LifecycleComponent, ImageDefaultDirective],
 	imports: [
 		AccRequestFormModule,
 		CgtRequestFormModule,

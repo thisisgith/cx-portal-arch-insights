@@ -1,6 +1,7 @@
 /* tslint:disable */
 import { SuccessPath } from './success-path';
 export interface SuccessPathsResponse {
+
   /**
    * ibn
    */
@@ -17,12 +18,8 @@ export interface SuccessPathsResponse {
   pitstop?: string;
 
   /**
-   * content to display
-   */
-  items?: Array<SuccessPath>;
-
-  /**
-   * the total number of items in this solution + usecase
+   * the total number of items in this solution + use
    */
   totalCount?: number;
+  items?: Array<SuccessPath>;
 }

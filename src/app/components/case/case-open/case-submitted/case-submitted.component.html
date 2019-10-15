@@ -11,63 +11,57 @@
 <div *ngIf="!errors && caseData">
 	<span class="icon-check-outline icon-small text-success qtr-margin-right"></span>
 	<span [innerText]="'_StatusCaseOpened_' | i18n"></span>
-	<h1 class="base-margin-top">
-		<span class="qtr-margin-right" [innerHTML]="('_CaseNumber_' | i18n) + ':'"></span>
-		<a [innerText]="caseData.caseNum"
+	<h2 class="base-margin-top">
+		<span class="qtr-margin-right case-number" [innerHTML]="('_CaseNumber_' | i18n) + ':'"></span>
+		<a [innerText]="caseData?.caseNum"
 			(click)="onViewCase()"
 			data-auto-id="CaseNumberLink">
 		</a>
-	</h1>
+	</h2>
 	<dl class="base-margin-top">
-		<dt [innerText]="'_System_' | i18n"></dt>
+		<dt class="half-padding-bottom" [innerText]="'_System_' | i18n"></dt>
 		<dd>
-			<div><span [innerText]="assets[0]?.serialNumber"></span></div>
-			<div><span [innerText]="assets[0]?.deviceName || assets[0]?.hostName"></span></div>
-			<div><span [innerText]="assets[0]?.productId"></span></div>
+			<div class="row qtr-padding-bottom">
+				<div class="col-3 text-muted text-uppercase" [innerText]="'_SerialNumber_' | i18n"></div>
+				<div class="col-9" [innerText]="assets[0]?.serialNumber"></div>
+			</div>
+			<div class="row qtr-padding-bottom">
+				<div class="col-3 text-muted text-uppercase" [innerText]="'_HostName_' | i18n"></div>
+				<div class="col-9" [innerText]="assets[0]?.deviceName || assets[0]?.hostName"></div>
+			</div>
+			<div class="row qtr-padding-bottom">
+				<div class="col-3 text-muted text-uppercase" [innerText]="'_Model_' | i18n"></div>
+				<div class="col-9" [innerText]="assets[0]?.productId"></div>
+			</div>
 		</dd>
 		<app-collapsible *ngIf="assets.length > 1"
 			[text]="'_AdditionalImpactedAssets_' | i18n:(assets.length - 1)">
-			<table class="table table--nostripes">
-				<thead>
-					<tr>
-						<th [innerText]="'_SerialNumber_' | i18n"></th>
-						<th [innerText]="'_HostName_' | i18n"></th>
-						<th [innerText]="'_Model_' | i18n"></th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr *ngFor="let asset of assets | slice:1">
-						<td [innerText]="asset.serialNumber"></td>
-						<td [innerText]="asset.deviceName || asset.hostName"></td>
-						<td [innerText]="asset.productId"></td>
-					</tr>
-				</tbody>
-			</table>
+			<cui-table [options]="assetListTableOptions" [data]="assets | slice:1"></cui-table>
 		</app-collapsible>
-		<dt [innerText]="'_CaseTitle_' | i18n"></dt>
+		<dt class="half-padding-top qtr-padding-bottom" [innerText]="'_CaseTitle_' | i18n"></dt>
 		<dd>
-			<span [innerText]="caseData.title"></span>
+			<span [innerText]="caseData?.title"></span>
 		</dd>
-		<dt [innerText]="'_Description_' | i18n"></dt>
+		<dt class="qtr-padding-bottom qtr-padding-top" [innerText]="'_Description_' | i18n"></dt>
 		<dd>
-			<p [innerText]="caseData.description"></p>
+			<span [innerText]="caseData?.description"></span>
 		</dd>
-		<dt [innerText]="'_Severity_' | i18n"></dt>
+		<dt class="qtr-padding-bottom qtr-padding-top" [innerText]="'_Severity_' | i18n"></dt>
 		<dd>
-			<span [innerText]="caseData.severityName"></span>
+			<span [innerText]="caseData?.severityName"></span>
 			<span class="qtr-margin-left qtr-margin-right" [innerText]="'-'"></span>
-			<span [innerText]="'_SeverityX_' | i18n:caseData.severity"></span>
-			<ul *ngIf="caseData.requestRma">
+			<span [innerText]="'_SeverityX_' | i18n:caseData?.severity"></span>
+			<ul *ngIf="caseData?.requestRma">
 				<li><span [innerText]="'_RMARequested_' | i18n"></span></li>
 			</ul>
 		</dd>
-		<dt [innerText]="'_Technology_' | i18n"></dt>
+		<dt class="qtr-padding-bottom qtr-padding-top" [innerText]="'_Technology_' | i18n"></dt>
 		<dd>
-			<span [innerText]="caseData.technology + ' > ' + caseData.subtech"></span>
+			<span [innerText]="caseData?.technology + ' > ' + caseData?.subtech"></span>
 		</dd>
-		<dt [innerText]="'_ProblemArea_' | i18n"></dt>
+		<dt class="qtr-padding-bottom qtr-padding-top" [innerText]="'_ProblemArea_' | i18n"></dt>
 		<dd>
-			<span [innerText]="caseData.customerActivity + ' > ' + caseData.problemArea"></span>
+			<span [innerText]="caseData?.customerActivity + ' > ' + caseData?.problemArea"></span>
 		</dd>
 	</dl>
 	<div class="flex dbl-margin-top">
@@ -77,7 +71,7 @@
 			[innerText]="'_Done_' | i18n"
 			(click)="close()">
 		</button>
-		<button class="cx-btn cx-btn--secondary btn--small"
+		<button class="cx-btn cx-btn--primary btn--small"
 			data-auto-id="CaseNumberButton"
 			type="button"
 			[innerText]="'_ViewCase_' | i18n"

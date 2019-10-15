@@ -276,20 +276,14 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 				{
 					autoIdHeader: 'RMA-Header',
 					name: I18n.get('_RMACaseRMAs_'),
-					sortable: true,
+					sortable: false,
 					width: '8%',
 					template: this.rmasTemplate,
 				},
 				{
-					autoIdHeader: 'Device-Header',
-					key: 'deviceName',
-					name: I18n.get('_Asset_'),
-					sortable: true,
-				},
-				{
 					autoIdHeader: 'Updated-Header',
 					key: 'lastModifiedDate',
-					name: I18n.get('_LastUpdated_'),
+					name: I18n.get('_RMACaseUpdatedDate_'),
 					sortable: true,
 					sorting: true,
 					width: '8%',

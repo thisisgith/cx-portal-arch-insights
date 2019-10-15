@@ -310,7 +310,8 @@
 			</div>
 			<h6 class="acc-popover__title title-line-clamp" [innerText]="title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
 			<div class="divider divider--compressed"></div>
-			<div class="line-clamp acc-popover__description" [innerText]="description" attr.data-auto-id="{{ autoid }}-HoverModal-Description"></div>
+			<div class="line-clamp acc-popover__description no-margin" [innerText]="description" attr.data-auto-id="{{ autoid }}-HoverModal-Description"></div>
+			<div class="text-muted text-small qtr-padding-bottom half-padding-top" [innerText]="getProviderName(item)"></div>
 			<div *ngIf="item && item.duration" class="learning-duration text-right text-muted flex-fluid half-margin-left" attr.data-auto-id="{{ autoid }}-HoverModal-Duration">
 				<span class="icon-clock icon-small qtr-margin-right" attr.data-auto-id="{{ autoid }}-HoverModal-DurationClock"></span>
 				<span [innerText]="item.duration"></span>
@@ -339,20 +340,20 @@
 </ng-template>
 
 <ng-template #recommendedATX let-item="item" let-autoid="autoid" let-title="title" let-src="src">
-	<div class="icon-bookmark toggle"
-		[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__white'"
-		(click)="updateBookmark(item, 'ATX')"
-		data-auto-id="SBCardRibbon">
+	<div class="max-width flex provider_image">
+		<div class="icon-bookmark toggle" [ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__white'"
+			(click)="updateBookmark(item, 'ATX')" data-auto-id="SBCardRibbon">
+		</div>
+		<img alt="'_Placeholder_' | i18n" [src]="src" attr.data-auto-id="{{ autoid }}-Image">
+		<ng-container *ngIf="item.providerInfo">
+			<!-- Keep the following line for now since we don't have partner Logo yet -->
+			<!-- <span *ngIf="item.providerInfo?.logoURL" class="icon-check icon-medium half-padding-right"></span> -->
+			<img *ngIf="item.providerInfo?.logoURL" class="table-img-width provider_icon" alt="'_Placeholder_' | i18n"
+				[src]="item.providerInfo?.logoURL">
+			<span *ngIf="!item.providerInfo?.logoURL" class="text-bold text-medium provider_icon"
+				[innerText]="item.providerInfo?.name"></span>
+		</ng-container>
 	</div>
-	<div class="provider_icon">
-		<!-- Keep the following line for now since we don't have partner Logo yet -->
-		<!-- <span *ngIf="item.providerInfo?.logoURL" class="icon-check icon-medium half-padding-right"></span> -->
-		<span *ngIf="item.providerInfo?.logoURL">
-			<img class="table-img-width" alt="'_Placeholder_' | i18n" [src]="item.providerInfo?.logoURL">
-		</span>
-		<span *ngIf="!item.providerInfo?.logoURL" class="text-bold text-medium" [innerText]="item.providerInfo?.name"></span>
-	</div>
-	<img class="max-width" alt="'_Placeholder_' | i18n" [src]="src" attr.data-auto-id="{{ autoid }}-Image">
 	<div class="cx-lifecycle-card--recommended">
 		<div>
 			<span class="icon-flagged" attr.data-auto-id="{{ autoid }}-Flag"></span>
@@ -392,6 +393,14 @@
 		[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__white'"
 		(click)="updateBookmark(item, 'ACC')"
 		data-auto-id="SBCardRibbon">
+	</div>
+	<div class="provider_icon_acc">
+		<!-- Keep the following line for now since we don't have partner Logo yet -->
+		<!-- <span *ngIf="item.providerInfo?.logoURL" class="icon-check icon-medium half-padding-right"></span> -->
+		<span *ngIf="item.providerInfo?.logoURL">
+			<img class="table-img-width" alt="'_Placeholder_' | i18n" [src]="item.providerInfo?.logoURL">
+		</span>
+		<span *ngIf="!item.providerInfo?.logoURL" class="text-bold text-medium" [innerText]="item.providerInfo?.name"></span>
 	</div>
 	<img class="max-width" alt="'_Placeholder_' | i18n" [src]="src" attr.data-auto-id="{{ autoid }}-Image">
 	<div class="cx-lifecycle-card--recommended">
@@ -443,21 +452,26 @@
 			</div>
 		</div>
 		<div class="divider divider--compressed"></div>
-		<div class="line-clamp atx-more-popover__description text-left" [innerText]="data.description" data-auto-id="atxMoreClickModal-Description"></div>
-		<div class="text-muted text-small qtr-margin-top qtr-margin-bottom text-left" [innerText]="getProviderName(data)"></div>
-		<ng-container *ngIf="data.status === 'scheduled' && scheduledAtxMap[data.atxId]">
-			<div class="cx-lifecycle-card--scheduled half-padding-bottom text-left">
-				<span class="icon-calendar" attr.data-auto-id="{{ autoid }}-Calendar"></span>
-				<span class="qtr-padding-left">
-					<span class="text-bold"
-						[innerText]="scheduledAtxMap[data.atxId].sessionStartDate | date:'EEE MMM d, y h:mm a z'"
-						attr.data-auto-id="{{ autoid }}-Date"></span>
-					<span class="qtr-padding-left" [innerText]="'_InstructorX_' | i18n:scheduledAtxMap[data.atxId].presenterName"
-						attr.data-auto-id="{{ autoid }}-Presenter"></span>
-				</span>
+		<div class="atx-scheduler-description">
+			<div class="line-clamp atx-more-popover__description text-left" [innerText]="data.description"
+				data-auto-id="atxMoreClickModal-Description"></div>
+			<div class="text-muted text-small qtr-margin-top qtr-margin-bottom text-left" [innerText]="getProviderName(data)">
 			</div>
-		</ng-container>
-		<div class="atx-scheduler-one-line">
+			<ng-container *ngIf="data.status === 'scheduled' && scheduledAtxMap[data.atxId]">
+				<div class="cx-lifecycle-card--scheduled half-padding-bottom text-left">
+					<span class="icon-calendar" attr.data-auto-id="{{ autoid }}-Calendar"></span>
+					<span class="qtr-padding-left">
+						<span class="text-bold"
+							[innerText]="scheduledAtxMap[data.atxId].sessionStartDate | date:'EEE MMM d, y h:mm a z'"
+							attr.data-auto-id="{{ autoid }}-Date"></span>
+						<span class="qtr-padding-left"
+							[innerText]="'_InstructorX_' | i18n:scheduledAtxMap[data.atxId].presenterName"
+							attr.data-auto-id="{{ autoid }}-Presenter"></span>
+					</span>
+				</div>
+			</ng-container>
+		</div>
+		<div class="atx-scheduler-one-line half-padding-top">
 			<div>
 				<h6 class="text-left"
 					[innerText]="'_ChooseSession_' | i18n">
@@ -473,6 +487,12 @@
 		<div class="session-table responsive-table">
 			<table class="table table--nostripes table--selectable">
 				<tbody>
+					<tr class="session-table-row">
+						<th></th>
+						<th class="text-uppercase text-small" [innerText]="'_Date_' | i18n"></th>
+						<th></th>
+						<th class="text-uppercase text-small" [innerText]="'_Instructor_' | i18n"></th>
+					</tr>
 					<tr attr.data-auto-id="SelectSession-{{ session.sessionId }}"
 						*ngFor="let session of data.sessions"
 						(click)="selectSession(session)"
@@ -494,21 +514,19 @@
 			</table>
 		</div>
 		<div class="atx-scheduler__footer">
-			<button id="AtxScheduleCardRegisterButton"
-				class="pull-left btn btn--primary"
-				data-auto-id = "AtxScheduleCardRegisterButton"
-				[ngClass]="getAtxRegisterButton(data)"
-				(click)="registerATXSession(data, sessionSelected)"
-				[innerText]="'_Register_' | i18n">
-			</button>
-			<div class="half-padding-left pull-left">
-				<button class="cx-btn cx-btn--primary text-danger"
-					*ngIf="sessionSelected && sessionSelected.scheduled"
-					[innerText]="'_Cancel_' | i18n"
-					(click)="cancelATXSession(data)"
-					data-auto-id="AtxScheduleCardCancelButton">
+			<div *ngIf="!isStartTimeWithin24Hrs(scheduledAtxMap[data.atxId])">
+				<button id="AtxScheduleCardRegisterButton" class="pull-left btn btn--primary"
+					data-auto-id="AtxScheduleCardRegisterButton" [ngClass]="getAtxRegisterButton(data)"
+					(click)="registerATXSession(data, sessionSelected)" [innerText]="'_Register_' | i18n">
 				</button>
+				<div class="half-padding-left pull-left">
+					<button class="cx-btn cx-btn--primary text-danger" *ngIf="sessionSelected && sessionSelected.scheduled"
+						[innerText]="'_Cancel_' | i18n" (click)="cancelATXSession(data)" data-auto-id="AtxScheduleCardCancelButton">
+					</button>
+				</div>
 			</div>
+			<div class="text-italic" *ngIf="isStartTimeWithin24Hrs(scheduledAtxMap[data.atxId]) && data.status === 'scheduled'"
+				[innerText]="'_UnableCancel_' | i18n"></div>
 		</div>
 	</div>
 </ng-template>
@@ -963,7 +981,22 @@
 		*ngFor="let item of selectedATX"
 		[ngClass]="item.status === 'recommended' ? 'atx__card__recommended' : null"
 		data-auto-id="ATXCard">
-		<img class="max-width base-margin-bottom" alt="'_Placeholder_' | i18n" [src]="item.imageURL || 'assets/img/solutions/defaultLifecycleImage.png'" data-auto-id="ATXCard-Image">
+		<div class="max-width base-margin-bottom atx__card__image flex">
+			<img alt="'_Placeholder_' | i18n" [src]="item.imageURL" data-auto-id="ATXCard-Image"
+				[default]="getDefaultATXImg(item)"
+			>
+			<ng-container *ngIf="item.providerInfo">
+				<img *ngIf="item.providerInfo.logoURL"
+					class="atx__card__logo"
+					alt="'_Placeholder_' | i18n"
+					[src]="item.providerInfo.logoURL"
+					data-auto-id="ATXCard-PartnerLogo"/>
+				<span *ngIf="!item.providerInfo.logoURL"
+					class="atx__card__logo"
+					[innerText]="item.providerInfo.name"
+				></span>
+			</ng-container>
+		</div>
 		<div class="text-left base-padding-left atx__card__label"
 			data-auto-id="ATXCardHeader"
 			*ngIf="item.status === 'Recommended'">
@@ -991,6 +1024,21 @@
 					<span class="text-medium" [innerText]="'_Completed_' | i18n" *ngIf="item.status === 'completed'" data-auto-id="ATXCardFooter-CompletedText"></span>
 					<span class="text-medium" [innerText]="'_InProgress_' | i18n" *ngIf="item.status === 'in-progress'" data-auto-id="ATXCardFooter-InProgressText"></span>
 					<span class="text-medium" [innerText]="'_Requested_' | i18n" *ngIf="item.status === 'requested'" data-auto-id="ATXCardFooter-RequestedText"></span>
+					<div class="atx__card__feedback" *ngIf="item.status === 'completed'">
+						<ng-container *ngIf="item.feedbackInfo.available">
+							<a data-auto-id="thumbUpBtn" class="btn btn--icon btn--small btn--selected">
+								<span class="icon-like" [class.rotate-180]="item.feedbackInfo.thumbs === 'DOWN'"></span>
+							</a>
+						</ng-container>
+						<ng-container  *ngIf="!item.feedbackInfo.available">
+							<a data-auto-id="thumbUpBtn" class="btn btn--icon btn--small">
+								<span class="icon-like"></span>
+							</a>
+							<a data-auto-id="thumbDownBtn" class="btn btn--icon btn--small">
+								<span class="icon-like rotate-180"></span>
+							</a>
+						</ng-container>
+					</div>
 				</div>
 				<div class="text-left base-padding-left base-padding-right base-margin-bottom"
 					*ngIf="item.status === 'scheduled'">
@@ -1031,6 +1079,12 @@
 <ng-template #cardACC>
 	<div class="card atx__card" *ngFor="let item of selectedACC"
 		[ngClass]="item.status === 'recommended' ? 'acc__card__recommended' : null" data-auto-id="ACCCard">
+		<div class="provider_icon_card">
+			<span *ngIf="item.providerInfo?.logoURL">
+				<img class="table-img-width" alt="'_Placeholder_' | i18n" [src]="item.providerInfo?.logoURL">
+			</span>
+			<span *ngIf="!item.providerInfo?.logoURL" class="text-bold text-medium" [innerText]="item.providerInfo?.name"></span>
+		</div>
 		<img class="max-width base-margin-bottom" alt="'_Placeholder_' | i18n" [src]="item.url || 'assets/img/solutions/defaultLifecycleImage.png'" attr.data-auto-id="{{ autoid }}-Image">
 		<div class="text-left base-padding-left atx__card__label half-margin-bottom"
 			data-auto-id="ACCCardHeader"
@@ -1045,7 +1099,7 @@
 		<div class="card__header atx__card__header text-left title-line-clamp"
 			*ngIf="item && item.title" [innerText]="item.title" data-auto-id="ACCCardTitle">
 		</div>
-		<div class="card__body atx__card__body text-left desc-line-clamp" *ngIf="item && item.description"
+		<div class="card__body atx__card__body text-left desc-line-clamp no-margin-bottom" *ngIf="item && item.description"
 			[innerText]="item.description" data-auto-id="ACCCardDescription"></div>
 		<div class="card__footer atx__card__footer">
 			<div class="card_footer_item" data-auto-id="ACCCardFooter">
@@ -1056,6 +1110,21 @@
 					<span class="text-medium" [innerText]="'_Completed_' | i18n" *ngIf="item.status === 'completed'"></span>
 					<span class="text-medium" [innerText]="'_SessionInProgress_' | i18n" *ngIf="item.status === 'in-progress'"></span>
 					<span class="text-medium" [innerText]="'_Requested_' | i18n" *ngIf="item.status === 'requested'"></span>
+					<div class="acc__card__feedback" *ngIf="item.status === 'completed'">
+						<ng-container *ngIf="item.feedbackInfo.available">
+							<a data-auto-id="thumbUpBtn" class="btn btn--icon btn--small btn--selected">
+								<span class="icon-like" [class.rotate-180]="item.feedbackInfo.thumbs === 'DOWN'"></span>
+							</a>
+						</ng-container>
+						<ng-container  *ngIf="!item.feedbackInfo.available">
+							<a data-auto-id="thumbUpBtn" class="btn btn--icon btn--small">
+								<span class="icon-like"></span>
+							</a>
+							<a data-auto-id="thumbDownBtn" class="btn btn--icon btn--small">
+								<span class="icon-like rotate-180"></span>
+							</a>
+						</ng-container>
+					</div>
 				</div>
 				<div class="divider no-margin"></div>
 				<div class="atx__card__actions">
@@ -1354,6 +1423,7 @@
 			*ngIf="type === 'ATX' || type === 'ACC'"
 			alt="'_Placeholder_' | i18n"
 			[src]="celldata.imageURL || celldata.url || 'assets/img/solutions/defaultLifecycleImage.png'"
+			[default]="type === 'ATX' ? getDefaultATXImg(celldata) : 'assets/img/solutions/defaultLifecycleImage.png'"
 			attr.data-auto-id="{{ type }}-Image" />
 	</div>
 </ng-template>
@@ -1385,6 +1455,12 @@
 			<span [innerText]="'-'" data-auto-id="Table-Status-Default"></span>
 		</div>
 	</ng-container>
+</ng-template>
+
+<ng-template #providerTemplate  let-celldata="celldata">
+	<span [innerText]="celldata.providerInfo ? celldata.providerInfo.name : 'Cisco'"
+		data-auto-id="partner-name"
+	></span>
 </ng-template>
 
 <ng-template #actionTemplate let-celldata="celldata" let-type="type">

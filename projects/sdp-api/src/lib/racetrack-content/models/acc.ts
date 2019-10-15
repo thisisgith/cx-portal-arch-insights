@@ -1,4 +1,6 @@
 /* tslint:disable */
+import { FeedbackSchema } from './feedback-schema';
+import { ProviderSchema } from './provider-schema';
 export interface ACC {
 
   /**
@@ -22,6 +24,11 @@ export interface ACC {
   url?: string;
 
   /**
+   * URL to link to ACC specific datasheet
+   */
+  datasheetURL?: string;
+
+  /**
    * Accelrator status for logged in user (recommended | completed | in-progress | scheduled)
    */
   status?: string;
@@ -30,4 +37,11 @@ export interface ACC {
    * If the User has favorite/bookmark this item then it will be true else false
    */
   bookmark?: boolean;
+
+  /**
+   * ACC Request Id
+   */
+  requestId?: string;
+  feedbackInfo?: FeedbackSchema;
+  providerInfo?: ProviderSchema;
 }

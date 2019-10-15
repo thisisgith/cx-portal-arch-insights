@@ -257,9 +257,13 @@ class RacetrackContentService extends __BaseService {
    *
    * - `suggestedAction`: suggestedAction for every Pitstop
    *
+   * - `status`: Comma separated values of status to filter ACCs.
+   *
    * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
    *
    * - `rows`: Number of rows of data per page.
+   *
+   * - `providerId`: Comma separated values of provider/partner Ids to filter ACCs.
    *
    * - `page`: Page number of the response
    *
@@ -277,8 +281,10 @@ class RacetrackContentService extends __BaseService {
     if (params.pitstop != null) __params = __params.set('pitstop', params.pitstop.toString());
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     if (params.suggestedAction != null) __params = __params.set('suggestedAction', params.suggestedAction.toString());
+    (params.status || []).forEach(val => {if (val != null) __params = __params.append('status', val.toString())});
     (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
+    (params.providerId || []).forEach(val => {if (val != null) __params = __params.append('providerId', val.toString())});
     if (params.page != null) __params = __params.set('page', params.page.toString());
     (params.fields || []).forEach(val => {if (val != null) __params = __params.append('fields', val.toString())});
     let req = new HttpRequest<any>(
@@ -313,9 +319,13 @@ class RacetrackContentService extends __BaseService {
    *
    * - `suggestedAction`: suggestedAction for every Pitstop
    *
+   * - `status`: Comma separated values of status to filter ACCs.
+   *
    * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
    *
    * - `rows`: Number of rows of data per page.
+   *
+   * - `providerId`: Comma separated values of provider/partner Ids to filter ACCs.
    *
    * - `page`: Page number of the response
    *
@@ -425,17 +435,17 @@ class RacetrackContentService extends __BaseService {
    *
    * - `suggestedAction`: suggestedAction for every Pitstop
    *
-   * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
+   * - `sort[0].order`: Sort order/direction for the Field/Column name.
+   *
+   * - `sort[0].field`: Field/Column name for which sorting needs to be applied.
    *
    * - `solution`: solution value ( ibn )
    *
-   * - `rows`: Number of rows of data per page.
+   * - `rows`: Number of rows of data per page. Default value is 10 and the maximum rows allowed per page is 100.
    *
    * - `pitstop`: Pitstop value (onboard | implement | use | engage)
    *
-   * - `page`: Page number of the response
-   *
-   * - `fields`: Requested fields in the response.
+   * - `page`: Page number of the response. Default value is 1.
    *
    * @return successful operation
    */
@@ -447,13 +457,12 @@ class RacetrackContentService extends __BaseService {
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     if (params.usecase != null) __params = __params.set('usecase', params.usecase.toString());
     if (params.suggestedAction != null) __params = __params.set('suggestedAction', params.suggestedAction.toString());
-    if (params.sortField != null) __params = __params.set('sort[0].field', params.sortField.toString());
-    if (params.sortOrder != null) __params = __params.set('sort[0].order', params.sortOrder.toString());
+    if (params.sort0Order != null) __params = __params.set('sort[0].order', params.sort0Order.toString());
+    if (params.sort0Field != null) __params = __params.set('sort[0].field', params.sort0Field.toString());
     if (params.solution != null) __params = __params.set('solution', params.solution.toString());
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
     if (params.pitstop != null) __params = __params.set('pitstop', params.pitstop.toString());
     if (params.page != null) __params = __params.set('page', params.page.toString());
-    if (params.fields != null) __params = __params.set('fields', params.fields.toString());
     let req = new HttpRequest<any>(
       'GET',
       this.rootUrl + `/customerportal/racetrack/v1/successPaths`,
@@ -482,17 +491,17 @@ class RacetrackContentService extends __BaseService {
    *
    * - `suggestedAction`: suggestedAction for every Pitstop
    *
-   * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
+   * - `sort[0].order`: Sort order/direction for the Field/Column name.
+   *
+   * - `sort[0].field`: Field/Column name for which sorting needs to be applied.
    *
    * - `solution`: solution value ( ibn )
    *
-   * - `rows`: Number of rows of data per page.
+   * - `rows`: Number of rows of data per page. Default value is 10 and the maximum rows allowed per page is 100.
    *
    * - `pitstop`: Pitstop value (onboard | implement | use | engage)
    *
-   * - `page`: Page number of the response
-   *
-   * - `fields`: Requested fields in the response.
+   * - `page`: Page number of the response. Default value is 1.
    *
    * @return successful operation
    */
@@ -1004,6 +1013,11 @@ module RacetrackContentService {
     suggestedAction?: string;
 
     /**
+     * Comma separated values of status to filter ACCs.
+     */
+    status?: Array<'Completed' | 'Recommended' | 'Scheduled' | 'Requested' | 'In Progress'>;
+
+    /**
      * Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
      */
     sort?: Array<string>;
@@ -1012,6 +1026,11 @@ module RacetrackContentService {
      * Number of rows of data per page.
      */
     rows?: number;
+
+    /**
+     * Comma separated values of provider/partner Ids to filter ACCs.
+     */
+    providerId?: Array<string>;
 
     /**
      * Page number of the response
@@ -1061,14 +1080,14 @@ module RacetrackContentService {
     suggestedAction?: string;
 
     /**
-     * The field to sort the content by.
+     * Sort order/direction for the Field/Column name.
      */
-    sortField?: 'archetype' | 'bookmark' | 'title' | 'type';
+    sort0Order?: 'asc' | 'desc';
 
     /**
-     * Sort direction for content. Can be either 'asc' or 'desc'.
+     * Field/Column name for which sorting needs to be applied.
      */
-    sortOrder?: 'asc' | 'desc';
+    sort0Field?: string;
 
     /**
      * solution value ( ibn )
@@ -1076,7 +1095,7 @@ module RacetrackContentService {
     solution?: string;
 
     /**
-     * Number of rows of data per page.
+     * Number of rows of data per page. Default value is 10 and the maximum rows allowed per page is 100.
      */
     rows?: number;
 
@@ -1086,14 +1105,9 @@ module RacetrackContentService {
     pitstop?: string;
 
     /**
-     * Page number of the response
+     * Page number of the response. Default value is 1.
      */
     page?: number;
-
-    /**
-     * Requested fields in the response.
-     */
-    fields?: string;
   }
 
   /**

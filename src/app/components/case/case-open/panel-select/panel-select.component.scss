@@ -22,3 +22,7 @@ a > div:hover {
 a > div.selected {
 	border: 1px solid $cisco-blue;
 }
+
+.no-underline {
+	text-decoration: none !important;
+}

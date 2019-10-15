@@ -4,7 +4,13 @@ import { async, tick, ComponentFixture, TestBed, fakeAsync, discardPeriodicTasks
 import { RouterTestingModule } from '@angular/router/testing';
 import { LifecycleComponent } from './lifecycle.component';
 import { LifecycleModule } from './lifecycle.module';
-import { RacetrackService, RacetrackContentService, AtxSchema, SuccessPathsResponse } from '@sdp-api';
+import {
+	RacetrackService,
+	RacetrackContentService,
+	AtxSchema,
+	SuccessPathsResponse,
+	AtxSessionSchema,
+} from '@sdp-api';
 import {
 	RacetrackScenarios,
 	ATXScenarios,
@@ -584,8 +590,6 @@ describe('LifecycleComponent', () => {
 			component.crossLaunch(crossLaunchUrl);
 			fixture.detectChanges();
 
-			expect(component.closeViewSessions)
-				.toHaveBeenCalled();
 			expect(window.open)
 				.toHaveBeenCalledWith(crossLaunchUrl, '_blank');
 
@@ -1050,9 +1054,9 @@ describe('LifecycleComponent', () => {
 				.mostRecent()
 				.args
 				.shift();
-			expect(args.sortOrder)
+			expect(args.sort0Order)
 				.toBe('asc');
-			expect(args.sortField)
+			expect(args.sort0Field)
 				.toBe('title');
 
 			// Ensure that the table was modified correctly.
@@ -1081,9 +1085,9 @@ describe('LifecycleComponent', () => {
 				.mostRecent()
 				.args
 				.shift();
-			expect(args.sortOrder)
+			expect(args.sort0Order)
 				.toBe('asc');
-			expect(args.sortField)
+			expect(args.sort0Field)
 				.toBe('archetype');
 
 			// Ensure that the table was modified correctly.
@@ -1147,7 +1151,7 @@ describe('LifecycleComponent', () => {
 			// Ensure that sort and filter options have been reset.
 			expect(component.componentData.productGuides.sortDirection)
 				.toBe('asc');
-			expect(component.componentData.productGuides.sortField)
+			expect(component.componentData.productGuides.sort0Field)
 				.toBe('title');
 			expect(component.componentData.productGuides.filter)
 				.toBe('');
@@ -1166,15 +1170,6 @@ describe('LifecycleComponent', () => {
 			component.selectFilter('PG');
 			fixture.detectChanges();
 
-			// Ensure that the latest API call was correct.
-			const args = racetrackSPSpy
-				.calls
-				.mostRecent()
-				.args
-				.shift();
-			expect(args.fields)
-				.toBe('Project Planning');
-
 			// Ensure that new items were not appended like a Load More.
 			expect(component.componentData.productGuides.items.length)
 				.toBe(10);
@@ -1192,7 +1187,7 @@ describe('LifecycleComponent', () => {
 			// Ensure that sort and filter options have been reset.
 			expect(component.componentData.productGuides.sortDirection)
 				.toBe('asc');
-			expect(component.componentData.productGuides.sortField)
+			expect(component.componentData.productGuides.sort0Field)
 				.toBe('title');
 			expect(component.componentData.productGuides.filter)
 				.toBe('');
@@ -1657,6 +1652,56 @@ describe('LifecycleComponent', () => {
 			expect(button2)
 				.not
 				.toEqual('disabled');
+		});
+
+		it('should disable RegButton if registerURL is empty and enable if it is Partner', () => {
+			buildSpies();
+			sendParams();
+
+			let data: AtxSchema;
+			data = { };
+			component.sessionSelected = {
+				presenterName: 'John Doe',
+				registrationURL: '',
+				sessionStartDate: 1565127052000,
+			};
+
+			let button = component.getAtxRegisterButton(data);
+
+			// expect the button diabled
+			expect(button)
+				.toEqual('disabled');
+
+			data = {
+				providerInfo: {
+					id: 'partner1',
+					logoURL: '',
+					name: 'Symantec',
+				},
+			};
+			button = component.getAtxRegisterButton(data);
+
+			// expect the button not diabled
+			expect(button)
+			.not
+			.toEqual('disabled');
+		});
+
+		it('should hide out Cancel Button when scheduled start time is within 24 hours', () => {
+			buildSpies();
+			sendParams();
+
+			let session: AtxSessionSchema;
+			session = {
+				presenterName: 'John Doe',
+				registrationURL: '',
+				sessionStartDate: (new Date().getTime() + 36000000),
+			};
+
+			const hide = component.isStartTimeWithin24Hrs(session);
+
+			expect(hide)
+			.toBeTruthy();
 		});
 	});
 
