@@ -190,15 +190,6 @@
 </ng-template>
 
 <ng-template #notAvailable >
-	<div data-auto-id="BugsNotAvailable" [ngClass]="{'base-padding-top':!fullscreen}">
-			<span  [innerText]="'_OsvNotAvailable_' | i18n"></span>
-			<span 
-				class="text-primary qtr-margin-left" 
-				data-balloon-length="medium"
-				[attr.data-balloon]="'_OsvNotAvailableInfo_' | i18n" 
-				data-auto-id="BugsNotAvailableToolTip" 
-				data-balloon-pos="down">
-					<i class="icon-info icon-small"></i>
-			</span>
+	<div data-auto-id="BugsNotAvailable" [ngClass]="{'base-padding-top':!fullscreen}" [innerText]="'_OsvNotAvailable_' | i18n">	
 	</div>
 </ng-template>
