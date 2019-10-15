@@ -78,7 +78,7 @@ describe('BugsDetailsComponent', () => {
 		expect(_.filter(currentTabData.filters, 'selected'))
 			.toContain(stateFilter);
 		expect(currentTabData.appliedFilters.state)
-			.toEqual(['Fixed']);
+			.toContain('Fixed');
 
 		component.onSubfilterSelect('High', severityFilter);
 		fixture.detectChanges();
@@ -90,7 +90,7 @@ describe('BugsDetailsComponent', () => {
 
 		component.onSubfilterSelect('High', severityFilter);
 		expect(currentTabData.appliedFilters.state)
-			.toEqual(['Fixed']);
+			.toContain('Fixed');
 		expect(currentTabData.appliedFilters.severity)
 			.toEqual([]);
 
