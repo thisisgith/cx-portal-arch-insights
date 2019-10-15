@@ -42,16 +42,16 @@
 		data-auto-id="TotalFilter" 
 		[ngClass]="{'base-padding-bottom':filter.seriesData[0]?.showTotal ,'dbl-padding-bottom':!filter.seriesData[0]?.showTotal}">
 		<div class="flex row" data-auto-id="TotalExposed" (click)="filterData('exposed')" 
-			[ngClass]="{'text-primary':filter.seriesData[0].selectedView == 'exposed'}">
+			[ngClass]="{'text-primary':filter.seriesData[0]?.selectedView == 'exposed'}">
 			<div class="col-8 text-right">
-				<span class="qtr-margin-right text-huge" [innerText]="filter.seriesData[0].exposed"></span>
+				<span class="qtr-margin-right text-huge" [innerText]="filter.seriesData[0]?.exposed"></span>
 			</div>
 			<div class="flex align-items-center col-4">
 				<span class="text-large" [innerText]="'_OsvExposed_' | i18n"></span>
 			</div>
 		</div>
 		<div *ngIf="filter.seriesData[0]?.showTotal" class="flex row" data-auto-id="Total" (click)="filterData('total')"
-			[ngClass]="{'text-primary':filter.seriesData[0].selectedView == 'total'}">
+			[ngClass]="{'text-primary':filter.seriesData[0]?.selectedView == 'total'}">
 			<div class="col-8 text-right">
 				<span class="qtr-margin-right text-huge" [innerText]="filter.seriesData[0]?.total || 0"></span>
 			</div>
