@@ -12,9 +12,9 @@
 		class="base-margin-top half-margin-bottom">
 	</h5>
 	<h5 data-auto-id="searchHeader" [innerText]="'_XResults_' | i18n:totalCount:searchToken"
-		class="resultsHeader base-margin-bottom">
+		class="results__header">
 	</h5>
-	<span data-auto-id="filterBy" class="text-small text-uppercase text-dkgray-4"
+	<span data-auto-id="filterBy" class="results__filter-by"
 		[innerText]="'_FilterBy_' | i18n"></span>
 	<div class="row">
 		<div class="col-md-4">
@@ -40,11 +40,11 @@
 	</div>
 	<!-- CDC Search Results, first 3 -->
 	<div *ngFor="let result of searchResults | slice:0:3; index as idx"
-		class="base-margin-top">
+		class="results__container">
 		<ng-container *ngTemplateOutlet="resultTemplate; context: { result: result, idx: idx, place: 'Pre' }"></ng-container>
 	</div>
 	<!-- Related ATX, ACC, Learning results -->
-	<div class="base-margin-top"
+	<div class="half-margin-top"
 		*ngIf="relatedResults?.length">
 		<div class="flex flex-center-vertical">
 			<h5 class="resultsHeader half-margin-right"
@@ -86,24 +86,24 @@
 			[attr.data-auto-id]="'searchResultLink' + place + index"
 			target="_blank"
 			rel="noopener noreferrer">
-			<h6 [innerHTML]="result.title | keyHighlight"></h6>
+			<h6 [innerHTML]="result.title | keyHighlight" class="results__container__title"></h6>
 		</a>
 	</div>
 	<div>
-		<span [innerHTML]="result.description | truncate:false:300 | keyHighlight"></span>
+		<span [innerHTML]="result.description | truncate:false:300 | keyHighlight" class="results__container__preview"></span>
 	</div>
-	<a class="resultUrl text-dkgray-4"
+	<a class="results__container__url"
 		target="_blank"
 		rel="noopener noreferrer"
 		[href]="result.displayUrl"
 		[innerText]="result.displayUrl | truncate:false:100">
 	</a>
 	<div *ngIf="result.pdfUrl">
-		<a class="resultUrl text-dkgray-4"
+		<a class="results__container__doc"
 			target="_blank"
 			rel="noopener noreferrer"
 			[href]="result.pdfUrl">
-			<span class="icon-file-pdf-o icon-xsmall qtr-margin-right"></span>
+			<span class="icon-file-pdf-o icon-xsmall half-margin-right"></span>
 			<span [innerText]="'_PDFSize_' | i18n:result.pdfSize"></span>
 		</a>
 	</div>
@@ -118,16 +118,16 @@
 	</ng-container>
 	<ng-container *ngIf="!loadingRelated">
 		<div *ngFor="let item of relatedResults"
-			class="half-padding-top half-margin-bottom">
+			class="results__container">
 			<div>
 				<a [href]="item.url"
 					[attr.data-auto-id]="'relatedResultLink' + item.type"
 					target="_blank"
 					rel="noopener noreferrer">
-					<h6 [innerHTML]="item.title | keyHighlight"></h6>
+					<h6 [innerHTML]="item.title | keyHighlight" class="results__container__title"></h6>
 				</a>
 			</div>
-			<span [innerHTML]="item.description | truncate:false:100 | keyHighlight"></span>
+			<span [innerHTML]="item.description | truncate:false:100 | keyHighlight" class="results__container__preview"></span>
 		</div>
 	</ng-container>
 </ng-template>
