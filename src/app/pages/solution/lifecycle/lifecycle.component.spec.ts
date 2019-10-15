@@ -1054,9 +1054,9 @@ describe('LifecycleComponent', () => {
 				.mostRecent()
 				.args
 				.shift();
-			expect(args.sortOrder)
+			expect(args.sort0Order)
 				.toBe('asc');
-			expect(args.sortField)
+			expect(args.sort0Field)
 				.toBe('title');
 
 			// Ensure that the table was modified correctly.
@@ -1085,9 +1085,9 @@ describe('LifecycleComponent', () => {
 				.mostRecent()
 				.args
 				.shift();
-			expect(args.sortOrder)
+			expect(args.sort0Order)
 				.toBe('asc');
-			expect(args.sortField)
+			expect(args.sort0Field)
 				.toBe('archetype');
 
 			// Ensure that the table was modified correctly.
@@ -1151,7 +1151,7 @@ describe('LifecycleComponent', () => {
 			// Ensure that sort and filter options have been reset.
 			expect(component.componentData.productGuides.sortDirection)
 				.toBe('asc');
-			expect(component.componentData.productGuides.sortField)
+			expect(component.componentData.productGuides.sort0Field)
 				.toBe('title');
 			expect(component.componentData.productGuides.filter)
 				.toBe('');
@@ -1170,15 +1170,6 @@ describe('LifecycleComponent', () => {
 			component.selectFilter('PG');
 			fixture.detectChanges();
 
-			// Ensure that the latest API call was correct.
-			const args = racetrackSPSpy
-				.calls
-				.mostRecent()
-				.args
-				.shift();
-			expect(args.fields)
-				.toBe('Project Planning');
-
 			// Ensure that new items were not appended like a Load More.
 			expect(component.componentData.productGuides.items.length)
 				.toBe(10);
@@ -1196,7 +1187,7 @@ describe('LifecycleComponent', () => {
 			// Ensure that sort and filter options have been reset.
 			expect(component.componentData.productGuides.sortDirection)
 				.toBe('asc');
-			expect(component.componentData.productGuides.sortField)
+			expect(component.componentData.productGuides.sort0Field)
 				.toBe('title');
 			expect(component.componentData.productGuides.filter)
 				.toBe('');

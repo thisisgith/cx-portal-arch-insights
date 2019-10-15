@@ -36,6 +36,15 @@ function MockACC (
 			title: 'Cisco Software-Defined Access Transition Planning',
 			url: 'https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/acc/images/' +
 				'acc_policy-enforcement-sda.png',
+			datasheetURL: 'www.cisco.com',
+			feedbackInfo: {
+				available: false,
+			},
+			providerInfo: {
+				id: 'partner1',
+				logoURL: '',
+				name: 'Symantec',
+			},
 		},
 		{
 			accId: `${accId2}`,
@@ -47,6 +56,17 @@ function MockACC (
 			title: 'Cisco DNA Pilot Usecase Deployment',
 			url: 'https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/acc/' +
 				'images/acc_sda-segregation-strategy.png',
+			datasheetURL: 'www.cisco.com',
+			feedbackInfo: {
+				available: true,
+				feedbackId: 'feedback1',
+				thumbs: <const> 'UP',
+			},
+			providerInfo: {
+				id: 'partner1',
+				logoURL: '',
+				name: 'Symantec',
+			},
 		},
 		{
 			accId: `${accId3}`,
@@ -58,6 +78,15 @@ function MockACC (
 			title: 'Cisco DNA Center Use Cases',
 			url: 'https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/acc/' +
 				'images/acc_deployment-best-practices.png',
+			datasheetURL: 'www.cisco.com',
+			feedbackInfo: {
+				available: false,
+			},
+			providerInfo: {
+				id: 'partner2',
+				logoURL: '',
+				name: 'Logitec',
+			},
 		},
 		{
 			accId: `${accId1}`,
@@ -65,10 +94,19 @@ function MockACC (
 				'your appliance from an experienced Cisco DNA Center project manager. Understand ' +
 				'basic deployment requirements and schedules',
 			bookmark: false,
-			status: 'recommended',
+			status: 'completed',
 			title: 'Cisco DNA Center Project Planning',
 			url: 'https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/acc/' +
 				'images/acc_access-overview-demo.png',
+			datasheetURL: 'www.cisco.com',
+			feedbackInfo: {
+				available: false,
+			},
+			providerInfo: {
+				id: 'partner2',
+				logoURL: '',
+				name: 'Logitec',
+			},
 		},
 		{
 			accId: `${accId4}`,
@@ -76,10 +114,14 @@ function MockACC (
 				'concepts and features such as network, device, client, and application ' +
 				'analytics. Help your team hit the ground running',
 			bookmark: false,
-			status: 'completed',
+			status: 'recommended',
 			title: 'Cisco DNA Center Wireless Assurance Feature Planning',
 			url: 'https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/acc/' +
 				'images/acc_access-infra-readiness.png',
+			datasheetURL: 'www.cisco.com',
+			feedbackInfo: {
+				available: false,
+			},
 		},
 		{ },
 	];
@@ -94,6 +136,15 @@ function MockACC (
 				title: 'This is a title for Adoption',
 				url: 'https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/acc/' +
 				'images/acc_access-overview-demo.png',
+				datasheetURL: 'www.cisco.com',
+				feedbackInfo: {
+					available: false,
+				},
+				providerInfo: {
+					id: 'partner2',
+					logoURL: '',
+					name: 'Logitec',
+				},
 			},
 		];
 	}

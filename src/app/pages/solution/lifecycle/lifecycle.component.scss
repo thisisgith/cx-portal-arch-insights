@@ -821,6 +821,22 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 			font-size: 11px !important;
 			line-height: 11px;
 		}
+
+		&__feedback {
+			margin-left: auto;
+
+			a.btn {
+				background: #fff;
+				color: $icon-light-gray;
+				border: 1px solid $icon-light-gray;
+			}
+
+			a.btn--selected {
+				border: 1px solid rgba(#32c5ff, 0.25);
+				color: $accent-light-blue;
+				cursor: unset;
+			}
+		}
 	}
 
 	&__card:hover {
@@ -1750,9 +1766,22 @@ polygon {
 	position: relative;
 }
 
+.provider_icon_card {
+	position: absolute;
+	left: 10px;
+	top: 125px;
+}
+
 .provider_icon {
 	position: absolute;
 	left: 10px;
 	bottom: 10px;
 	max-height: 35px;
 }
+
+.provider_icon_acc {
+	position: absolute;
+	left: 10px;
+	top: 160px;
+}
+

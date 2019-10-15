@@ -5,7 +5,7 @@ import { CaseService } from '@cui-x/services';
 import { Asset, CriticalBug, FieldNoticeBulletin,
 	SecurityAdvisoryBulletin, ContractsService,
 	DeviceContractResponse, NetworkElement } from '@sdp-api';
-import { CuiModalContent, CuiModalService } from '@cisco-ngx/cui-components';
+import { CuiModalContent, CuiModalService, CuiTableOptions } from '@cisco-ngx/cui-components';
 import { LogService } from '@cisco-ngx/cui-services';
 import { ProfileService } from '@cisco-ngx/cui-auth';
 import { I18n } from '@cisco-ngx/cui-utils';
@@ -54,6 +54,8 @@ export class CaseOpenAdvisoriesComponent
 	public caseOpenData: CaseOpenData;
 	public titleMaxLength = 255;
 	public descriptionMaxLength = 32000;
+
+	public assetListTableOptions: CuiTableOptions;
 
 	public data: { }; // Input data
 	public caseForm = new FormGroup({
@@ -127,6 +129,39 @@ export class CaseOpenAdvisoriesComponent
 		.subscribe(response => {
 			this.contractNumber = _.get(response, ['data', 0, 'contractNumber'], null);
 			this.contractLoading = false;
+		});
+
+		if (this.allAssets.length > 1) {
+			this.buildAssetsTable();
+		}
+	}
+
+	/**
+	 * Build assets table
+	 */
+	public buildAssetsTable () {
+		this.assetListTableOptions = new CuiTableOptions({
+			bordered: false,
+			columns: [
+				{
+					key: 'serialNumber',
+					name: I18n.get('_SerialNumber_'),
+					width: '25%',
+					sortable: false,
+				},
+				{
+					key: 'deviceName' || 'hostName',
+					name: I18n.get('_HostName_'),
+					sortable: false,
+				},
+				{
+					key: 'productId',
+					name: I18n.get('_Model_'),
+					sortable: false,
+				},
+			],
+			wrapText: true,
+			striped: false,
 		});
 	}
 

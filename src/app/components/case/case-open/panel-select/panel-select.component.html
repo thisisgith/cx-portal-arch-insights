@@ -1,7 +1,7 @@
 <ng-container *ngIf="layout === 'default'; else verticalTemplate;">
 	<div class="flex flex-wrap flex-row flex-grow justify-content-between">
 		<a *ngFor="let option of options; index as i;"
-			(click)="select(option)"
+			(click)="select(option)" class="no-underline"
 			data-auto-id="DummyId"
 			[attr.data-auto-id]="'PanelSelectOption' + i">
 			<div class="panel panel--bordered base-padding horizontal"
@@ -17,7 +17,7 @@
 		class="flex half-margin-top">
 		<div class="flex-fluid">
 			<a (click)="select(option)"
-				class="vertical flex-fluid"
+				class="vertical flex-fluid no-underline"
 				data-auto-id="DummyId"
 				[attr.data-auto-id]="'PanelSelectOption' + i">
 				<div class="panel panel--bordered base-padding vertical flex-fluid"
