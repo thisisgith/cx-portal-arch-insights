@@ -266,5 +266,18 @@ export class SetupIeComponent implements AfterViewInit, OnInit, OnDestroy {
 					setNextStep();
 				});
 		}
+		if (this.activeComponent.instance.goBack) {
+			this.activeComponent.instance.goBack
+				.pipe(takeUntil(this.destroy$))
+				.subscribe(numberOfStepsToGoBack => {
+					const nextStep = Math.max(0, this.currentStep - numberOfStepsToGoBack);
+					this.router.navigate([], {
+						queryParams: {
+							compKey: nextStep,
+						},
+						queryParamsHandling: 'merge',
+					});
+				});
+		}
 	}
 }
