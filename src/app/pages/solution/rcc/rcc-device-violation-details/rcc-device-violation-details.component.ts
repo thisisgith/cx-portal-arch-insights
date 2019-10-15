@@ -21,7 +21,6 @@ import { UserResolve } from '@utilities';
 import { ActivatedRoute } from '@angular/router';
 import { LogService } from '@cisco-ngx/cui-services';
 
-
 /**
  * Main component for the RCC track
  */
