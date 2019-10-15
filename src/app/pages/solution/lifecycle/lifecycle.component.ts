@@ -50,7 +50,7 @@ interface SuccessPathsModel {
 	filter: string;
 	items?: SuccessPath[];
 	rows: number;
-	sortField: 'title' | 'type' | 'archetype' | 'bookmark';
+	sort0Field: 'title' | 'type' | 'archetype' | 'bookmark';
 	sortDirection: 'asc' | 'desc';
 	totalCount?: number;
 }
@@ -127,6 +127,7 @@ export class LifecycleComponent implements OnDestroy {
 	@ViewChild('formatTemplate', { static: true }) private formatTemplate: TemplateRef<{ }>;
 	@ViewChild('bookmarkTemplate', { static: true }) private bookmarkTemplate: TemplateRef<{ }>;
 	@ViewChild('statusTemplate', { static: true }) private statusTemplate: TemplateRef<{ }>;
+	@ViewChild('providerTemplate', { static: true }) private providerTemplate: TemplateRef<{ }>;
 	@ViewChild('actionTemplate', { static: true }) private actionTemplate: TemplateRef<{ }>;
 	@ViewChild('titleTemplate', { static: true }) private titleTemplate: TemplateRef<{ }>;
 	@ViewChild('scrollModal', { static: false }) private scrollModalRef: ElementRef;
@@ -291,7 +292,7 @@ export class LifecycleComponent implements OnDestroy {
 			filter: '',
 			rows: this.pgNumRows,
 			sortDirection: 'asc',
-			sortField: 'title',
+			sort0Field: 'title',
 		},
 	};
 
@@ -498,7 +499,7 @@ export class LifecycleComponent implements OnDestroy {
 				filter: '',
 				rows: this.pgNumRows,
 				sortDirection: 'asc',
-				sortField: 'title',
+				sort0Field: 'title',
 			},
 		};
 	}
@@ -639,6 +640,15 @@ export class LifecycleComponent implements OnDestroy {
 					sorting: false,
 				},
 				{
+					name: I18n.get('_ContentProvider_'),
+					sortable: true,
+					sortKey: 'providerInfo.name',
+					sortDirection: 'asc',
+					template: this.providerTemplate,
+					width: 'auto',
+					sorting: false,
+				},
+				{
 					key: 'status',
 					name: I18n.get('_Status_'),
 					sortable: true,
@@ -743,7 +753,7 @@ export class LifecycleComponent implements OnDestroy {
 				this.selectedProductGuides, [key], [sortDirection]);
 
 			this.componentData.productGuides.sortDirection = <'asc' | 'desc'> sortDirection;
-			this.componentData.productGuides.sortField
+			this.componentData.productGuides.sort0Field
 				= <'title' | 'type' | 'archetype' | 'bookmark'> key;
 
 			this.loadProductGuides()
@@ -1596,7 +1606,7 @@ export class LifecycleComponent implements OnDestroy {
 		this.componentData.productGuides.filter = '';
 		this.componentData.productGuides.rows = this.pgNumRows;
 		this.componentData.productGuides.sortDirection = 'asc';
-		this.componentData.productGuides.sortField = 'title';
+		this.componentData.productGuides.sort0Field = 'title';
 	}
 
 	/**
@@ -1612,10 +1622,10 @@ export class LifecycleComponent implements OnDestroy {
 		const componentParams = _.pick(this.componentData.params,
 			['customerId', 'solution', 'usecase']);
 		const pgParams = {
-			fields: this.selectedFilterForPG,
+			// fields: this.selectedFilterForPG,
 			rows: this.componentData.productGuides.rows,
-			sortField: this.componentData.productGuides.sortField,
-			sortOrder: this.componentData.productGuides.sortDirection,
+			sort0Field: this.componentData.productGuides.sort0Field,
+			sort0Order: this.componentData.productGuides.sortDirection,
 		};
 
 		return this.contentService.getRacetrackSuccessPaths(
@@ -1690,11 +1700,11 @@ export class LifecycleComponent implements OnDestroy {
 			const componentParams = _.pick(this.componentData.params,
 				['customerId', 'solution', 'usecase']);
 			const pgParams = {
-				fields: this.selectedFilterForPG,
+				// fields: this.selectedFilterForPG,
 				page: incPage,
 				rows: this.componentData.productGuides.rows,
-				sortField: this.componentData.productGuides.sortField,
-				sortOrder: this.componentData.productGuides.sortDirection,
+				sort0Field: this.componentData.productGuides.sort0Field,
+				sort0Order: this.componentData.productGuides.sortDirection,
 			};
 
 			return this.contentService.getRacetrackSuccessPaths(
@@ -2229,7 +2239,7 @@ export class LifecycleComponent implements OnDestroy {
 	 * @param item the Lifecycle item
 	 * @returns the title string with provider name
 	 */
-	public getProviderName (item: AtxSchema) {
+	public getProviderName (item: AtxSchema | ACC) {
 		if (_.get(item, ['providerInfo', 'name'], '')) {
 			return `${I18n.get('_By_')}${item.providerInfo.name}`;
 		}
