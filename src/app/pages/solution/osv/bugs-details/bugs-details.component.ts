@@ -31,23 +31,23 @@ export class BugsDetailsComponent implements OnInit {
 	@Input('params') public params;
 	@Input('tabIndex') public tabIndex = 0;
 	@ViewChild('totalFilterTemplate', { static: true })
-		public totalFilterTemplate: TemplateRef<{ }>;
+	public totalFilterTemplate: TemplateRef<{ }>;
 	@ViewChild('stateFilterTemplate', { static: true })
-		public stateFilterTemplate: TemplateRef<{ }>;
+	public stateFilterTemplate: TemplateRef<{ }>;
 	@ViewChild('severityFilterTemplate', { static: true })
-		public severityFilterTemplate: TemplateRef<{ }>;
+	public severityFilterTemplate: TemplateRef<{ }>;
 	@ViewChild('stateTemplate', { static: true })
-		public stateTemplate: TemplateRef<{ }>;
+	public stateTemplate: TemplateRef<{ }>;
 	@ViewChild('updatedDateTemp', { static: true })
-		public updatedDateTemp: TemplateRef<{ }>;
+	public updatedDateTemp: TemplateRef<{ }>;
 	@ViewChild('impactTemp', { static: true })
-		public impactTemp: TemplateRef<{ }>;
+	public impactTemp: TemplateRef<{ }>;
 	@ViewChild('titleTemp', { static: true })
-		public titleTemp: TemplateRef<{ }>;
+	public titleTemp: TemplateRef<{ }>;
 	@ViewChild('bugIdTemp', { static: true })
-		public bugIdTemp: TemplateRef<{ }>;
+	public bugIdTemp: TemplateRef<{ }>;
 	@ViewChild('bugTitleTemp', { static: true })
-		public bugTitleTemp: TemplateRef<{ }>;
+	public bugTitleTemp: TemplateRef<{ }>;
 
 	public filters: Filter[];
 	public status = {
@@ -227,11 +227,25 @@ export class BugsDetailsComponent implements OnInit {
 			_.set(severityFilter, 'template', this.severityFilterTemplate);
 			totalFilter.seriesData = [
 				{
+					showTotal: true,
+					selectedView: 'exposed',
 					total: viewType === 'bug' ?
 						_.get(recommendation, ['data', 'bugs'], []).length :
 						_.get(recommendation, ['data', 'psirts'], []).length,
+					exposed: viewType === 'bug' ?
+						_.get(recommendation, ['data', 'openBugsCount'])
+						+ _.get(recommendation, ['data', 'newOpenBugsCount']) :
+						_.get(recommendation, ['data', 'openPsirtCount'])
+						+ _.get(recommendation, ['data', 'newOpenPsirtCount']),
 				},
 			];
+			recommendation.showNoInfoAvailable = false;
+			const totalCount = _.get(totalFilter, ['seriesData', '0', 'total']);
+			if (recommendation.name === 'profile current') {
+				recommendation.showNoInfoAvailable = totalCount > 0 ? false : true;
+				_.set(totalFilter, ['seriesData', '0', 'showTotal'], false);
+			}
+
 			const severityFilterData = viewType === 'bug' ?
 				_.get(recommendation, ['data', 'totalBugsSeverity']) :
 				_.get(recommendation, ['data', 'totalPsirtsSeverity']);
@@ -260,6 +274,8 @@ export class BugsDetailsComponent implements OnInit {
 						_.get(recommendation, ['data', 'newOpenPsirtCount']),
 						_.get(recommendation, ['data', 'psirtResolvedCount']));
 			}
+			recommendation.filtered = true;
+			this.setFilter(recommendation);
 		});
 	}
 
@@ -271,32 +287,31 @@ export class BugsDetailsComponent implements OnInit {
 	 * @returns the series data for state filters
 	 */
 	private populateStateFilter (exposedCount: number, newExposedCount: number,
-				resolvedCount: number) {
+		resolvedCount: number) {
 		const seriesData = [];
-		if (exposedCount > 0) {
+		if (exposedCount > 0 || newExposedCount > 0 || resolvedCount > 0) {
 			seriesData.push({
 				value: exposedCount,
 				filter: 'Exposed',
 				label: I18n.get('_OsvExposed_'),
-				selected: _.get(this.params, 'filter') === 'exposed' ? true : false,
+				selected: true,
 			});
-		}
-		if (newExposedCount > 0) {
+
 			seriesData.push({
 				value: newExposedCount,
 				filter: 'New_Exposed',
 				label: I18n.get('_OsvNewExposed_'),
-				selected: _.get(this.params, 'filter') === 'new_exposed' ? true : false,
+				selected: true,
 			});
-		}
-		if (resolvedCount > 0) {
+
 			seriesData.push({
 				value: resolvedCount,
 				filter: 'Fixed',
 				label: I18n.get('_OsvFixed_'),
-				selected: _.get(this.params, 'filter') === 'fixed' ? true : false,
+				selected: false,
 			});
 		}
+
 		return seriesData;
 	}
 
@@ -310,12 +325,12 @@ export class BugsDetailsComponent implements OnInit {
 				loading: false,
 				selected: true,
 				seriesData: [],
-				title: I18n.get('_Total_'),
+				title: '',
 			},
 			{
 				key: 'state',
 				loading: false,
-				selected: false,
+				selected: true,
 				seriesData: [],
 				title: I18n.get('_State_'),
 			},
@@ -341,7 +356,7 @@ export class BugsDetailsComponent implements OnInit {
 		this.hasRecommendation3 = _.find(this.data,
 			(recomm: MachineRecommendations) => recomm.name === 'Recommendation #3');
 		const appliedFilters = {
-			state: [],
+			state: ['New_Exposed', 'Exposed'],
 			severity: [],
 		};
 
@@ -359,7 +374,7 @@ export class BugsDetailsComponent implements OnInit {
 				data: _.cloneDeep(_.get(_.filter(this.data,
 					(recomm: MachineRecommendations) => recomm.name === 'profile current'), 0)),
 				paginationCount: '',
-				filtered: false,
+				filtered: true,
 				appliedFilters: _.cloneDeep(appliedFilters),
 			},
 			recommended1: {
@@ -369,7 +384,7 @@ export class BugsDetailsComponent implements OnInit {
 				data: _.cloneDeep(_.get(_.filter(this.data,
 					(recomm: MachineRecommendations) => recomm.name === 'Recommendation #1'), 0)),
 				paginationCount: '',
-				filtered: false,
+				filtered: true,
 				appliedFilters: _.cloneDeep(appliedFilters),
 			},
 			recommended2: {
@@ -379,7 +394,7 @@ export class BugsDetailsComponent implements OnInit {
 				data: _.cloneDeep(_.get(_.filter(this.data,
 					(recomm: MachineRecommendations) => recomm.name === 'Recommendation #2'), 0)),
 				paginationCount: '',
-				filtered: false,
+				filtered: true,
 				appliedFilters: _.cloneDeep(appliedFilters),
 			},
 			recommended3: {
@@ -389,7 +404,7 @@ export class BugsDetailsComponent implements OnInit {
 				data: _.cloneDeep(_.get(_.filter(this.data,
 					(recomm: MachineRecommendations) => recomm.name === 'Recommendation #3'), 0)),
 				paginationCount: '',
-				filtered: false,
+				filtered: true,
 				appliedFilters: _.cloneDeep(appliedFilters),
 			},
 		};
@@ -431,6 +446,10 @@ export class BugsDetailsComponent implements OnInit {
 
 			totalFilter.selected = !total;
 			recommendation.filtered = total;
+		}
+		if (recommendation.appliedFilters.state.length === 0 &&
+			recommendation.name !== 'profile current') {
+			_.set(totalFilter, ['seriesData', '0', 'selectedView'], 'total');
 		}
 		this.setFilter(recommendation);
 	}
@@ -537,6 +556,9 @@ export class BugsDetailsComponent implements OnInit {
 		viewType === 'bug' ? recommendation.data.bugs = actualData.bugs :
 			recommendation.data.psirts = actualData.psirts;
 		recommendation.params.offset = 0;
+		if (recommendation.name !== 'profile current') {
+			_.set(totalFilter, ['seriesData', '0', 'selectedView'], 'total');
+		}
 		this.populatePaginationInfo();
 	}
 
@@ -601,5 +623,23 @@ export class BugsDetailsComponent implements OnInit {
 	public onBugRowSelect (row: any) {
 		const url = `https://bst.cloudapps.cisco.com/bugsearch/bug/${row.id}`;
 		window.open(`${url}`, '_blank');
+	}
+
+	/**
+	 * filterData based on the selected view
+	 * @param type view type
+	 */
+	public filterData (type: string) {
+		const recommendation = this.getCurrentTabData();
+		const totalFilter = _.find(_.get(recommendation, 'filters'), { key: 'total' });
+		const stateFilter: Filter = _.find(_.get(recommendation, 'filters'), { key: 'state' });
+		this.clearFilters();
+		if (type === 'total') {
+			_.set(totalFilter, ['seriesData', '0', 'selectedView'], 'total');
+		} else {
+			_.set(totalFilter, ['seriesData', '0', 'selectedView'], 'exposed');
+			this.onSubfilterSelect('Exposed', stateFilter);
+			this.onSubfilterSelect('New_Exposed', stateFilter);
+		}
 	}
 }

@@ -97,8 +97,8 @@
 						[ngClass]="{'text-small':!fullscreen,'text-large base-margin-top':fullscreen}"
 						[innerText]="'_OsvCurrentlyExposed_' | i18n | uppercase">					
 					</div>
-					<div class="text-large" [innerText]="currentRecommendation?.bugsExposed || '0'"
-						[ngClass]="{'base-padding-top':!fullscreen}"></div>
+					<div class="text-large" *ngIf="currentRecommendation?.bugsExposed > 0; else notAvailable" [innerText]="currentRecommendation?.bugsExposed || '0'"
+						[ngClass]="{'base-padding-top':!fullscreen}"></div>				
 					<div class="base-margin-top bar-chart"
 						*ngIf="currentRecommendation?.bugSeriesData && currentRecommendation?.bugSeriesData.length > 0">
 						<bar-chart 
@@ -118,10 +118,7 @@
 					<div class="base-margin-top row">
 						<div class="text-large col-6" [innerText]="recommendation.bugsExposed  || '0'"></div>
 						<div class="col-6 text-right">
-							<span class="text-large" [innerText]="recommendation.resolvedBugsCount  || '0'"></span>
-							<span class="text-large" [innerText]="'/'"></span>
-							<span class="text-large" [innerText]="currentRecommendation?.bugsExposed || '0'"></span>
-
+							<span class="text-large" [innerText]="recommendation.resolvedBugsCount  || '0'"></span>					
 						</div>
 					</div>
 					<div class="base-margin-top"
@@ -159,8 +156,6 @@
 						<div class="text-large col-6" [innerText]="recommendation.psirtExposed || '0'"></div>
 						<div class="col-6 text-right">
 							<span class="text-large" [innerText]="recommendation.psirtResolvedCount  || '0'"></span>
-							<span class="text-large" [innerText]="'/'"></span>
-							<span class="text-large" [innerText]="currentRecommendation.psirtExposed  || '0'"></span>
 
 						</div>
 					</div>
@@ -192,4 +187,18 @@
 		position="right"
 		icon="icon-more icon-small text-muted rotate-90">
 	</cui-dropdown>
+</ng-template>
+
+<ng-template #notAvailable >
+	<div data-auto-id="BugsNotAvailable" [ngClass]="{'base-padding-top':!fullscreen}">
+			<span  [innerText]="'_OsvNotAvailable_' | i18n"></span>
+			<span 
+				class="text-primary qtr-margin-left" 
+				data-balloon-length="medium"
+				[attr.data-balloon]="'_OsvNotAvailableInfo_' | i18n" 
+				data-auto-id="BugsNotAvailableToolTip" 
+				data-balloon-pos="down">
+					<i class="icon-info icon-small"></i>
+			</span>
+	</div>
 </ng-template>
