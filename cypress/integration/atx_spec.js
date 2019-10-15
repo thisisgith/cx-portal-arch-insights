@@ -1177,7 +1177,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			cy.getByAutoId('ViewAllModal').should('exist');
 
 			// Verify the filter was cleared and all items are displayed
-			cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', '');
+			cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', i18n._AllTitles_);
 			cy.get('tr').then($rows => {
 				// Note that the first tr is the column headers
 				expect($rows.length - 1).to.eq(atxItems.length);
@@ -1203,7 +1203,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			cy.getByAutoId('ViewAllModal').should('exist');
 
 			// Verify the filter was cleared and all items are displayed
-			cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', '');
+			cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', i18n._AllTitles_);
 			cy.get('tr').then($rows => {
 				// Note that the first tr is the column headers
 				expect($rows.length - 1).to.eq(atxItems.length);
@@ -1228,7 +1228,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			cy.getByAutoId('ViewAllModal').should('exist');
 
 			// Verify the filter was cleared and all items are displayed
-			cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', '');
+			cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', i18n._AllTitles_);
 			cy.get('tr').then($rows => {
 				// Note that the first tr is the column headers
 				expect($rows.length - 1).to.eq(atxItems.length);
@@ -1604,7 +1604,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 							.should('have.text', 'Register');
 						item.sessions.forEach(session => {
 							cy.getByAutoId(`SelectSession-${session.sessionId}`)
-								.should('be.visible');
+								.should('exist');
 						});
 					});
 
