@@ -1,9 +1,12 @@
 import { Component, EventEmitter, Inject, OnDestroy, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl, FormGroup } from '@angular/forms';
+import { SelectInstructionsComponent } from '../select-instructions/select-instructions.component';
 
 import { LogService } from '@cisco-ngx/cui-services';
-import { SetupStep } from '@interfaces';
+import { OnStepCompleteInsertOptions, SetupStep } from '@interfaces';
+import { SETUP_STATES } from '@classes';
+import { SetupIEStateService } from '../setup-ie-state.service';
 import { ASDAPIService, UtilsService } from '@services';
 import { I18n } from '@cisco-ngx/cui-utils';
 
@@ -26,6 +29,8 @@ import { EulaFormData } from './eula-form/eula-form.component';
 })
 export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 	@Output('onStepComplete') public onStepComplete = new EventEmitter<void>();
+	@Output('onStepCompleteInsert') public onStepCompleteInsert =
+		new EventEmitter<OnStepCompleteInsertOptions>();
 	private destroyed$: Subject<void> = new Subject<void>();
 	private user: User;
 	private customerId: string;
@@ -40,7 +45,7 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 	public showInstructions = false;
 	public error: string;
 	public loading = false;
-	public view: 'pre-download' | 'k9' | 'k9-decline' | 'eula';
+	public view: 'connect' | 'pre-download' | 'k9' | 'k9-decline' | 'eula';
 	public didDecline = false;
 
 	public k9Data: Partial<K9FormData> = { };
@@ -68,6 +73,7 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 		private logger: LogService,
 		private route: ActivatedRoute,
 		private router: Router,
+		private state: SetupIEStateService,
 		private utils: UtilsService,
 	) {
 		this.user = _.get(this.route, ['snapshot', 'data', 'user']);
@@ -86,27 +92,53 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 	 * NgOnInit
 	 */
 	public ngOnInit () {
-		this.loading = true;
-		this.refreshMetadata()
+		this.resetViews();
+		this.route.queryParams
 			.pipe(
-				finalize(() => this.loading = false),
-				mergeMap(() => this.getDownloadURL()),
-				catchError(() => {
-					this.showError(I18n.get('_AnErrorOccurredDuringDownload_'));
-
-					return empty();
-				}),
+				takeUntil(this.destroyed$),
 			)
-			.subscribe(() => {
-				if (_.isEmpty(this.eulaData)) {
-					this.view = 'pre-download';
+			.subscribe(params => {
+				if (params.downloadView === 'connect') {
+					this.view = 'connect';
 				} else {
-					this.view = 'eula';
-				}
-				if (!_.isEmpty(this.k9Data)) {
-					this.view = 'k9';
+					this.resetViews();
+					const state = this.state.getState();
+					state.downloadView = undefined;
+					this.state.setState(state);
 				}
 			});
+	}
+
+	/**
+	 * Resets the Views
+	 */
+	private resetViews () {
+		const state = this.state.getState();
+		if (state.compKey > 1) {
+			this.view = 'connect';
+		} else {
+			this.loading = true;
+			this.refreshMetadata()
+				.pipe(
+					finalize(() => this.loading = false),
+					mergeMap(() => this.getDownloadURL()),
+					catchError(() => {
+						this.showError(I18n.get('_AnErrorOccurredDuringDownload_'));
+
+						return empty();
+					}),
+				)
+				.subscribe(() => {
+					if (_.isEmpty(this.eulaData)) {
+						this.view = 'pre-download';
+					} else {
+						this.view = 'eula';
+					}
+					if (!_.isEmpty(this.k9Data)) {
+						this.view = 'k9';
+					}
+				});
+		}
 	}
 
 	/**
@@ -138,7 +170,7 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 				mergeMap(() => this.commenceDownload()),
 			)
 			.subscribe(() => {
-				this.continue();
+				this.view = 'connect';
 			});
 	}
 
@@ -147,6 +179,25 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 	 */
 	public continue () {
 		this.onStepComplete.emit();
+	}
+
+	/**
+	 * Continues to the setup instructions
+	 */
+	public goToInstructions () {
+		this.onStepCompleteInsert.emit({
+			offset: 1,
+			steps: [
+				{
+					state: SETUP_STATES.INSTALL,
+					type: SelectInstructionsComponent,
+				},
+				{
+					state: SETUP_STATES.INSTALL,
+					type: DownloadImageComponent,
+				},
+			],
+		});
 	}
 
 	/**

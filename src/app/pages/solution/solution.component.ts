@@ -348,14 +348,28 @@ export class SolutionComponent implements OnInit, OnDestroy {
 					this.selectedTechnology = result;
 					this.selectedTechnologyName = _.get(this.selectedTechnology, 'name');
 					this.reloadFacets();
-					lifecycleFacet.data = {
-						gaugePercent: _.get(this.selectedTechnology, 'usecase_adoption_percentage'),
-					};
 				}
 			}),
 			takeUntil(this.destroy$),
 			catchError(err => {
 				this.logger.error(`Solution Data :: Get Current Technology :: Error ${err}`);
+
+				return of({ });
+			}),
+		)
+		.subscribe();
+
+		this.racetrackInfoService.getCurrentAdoptionPercentage()
+		.pipe(
+			map((result: number) => {
+				lifecycleFacet.data = {
+					gaugePercent: result,
+				};
+			}),
+			takeUntil(this.destroy$),
+			catchError(err => {
+				this.logger.error(
+					`Solution Data :: Get Current AdoptionPercentage :: Error ${err}`);
 
 				return of({ });
 			}),
@@ -633,18 +647,6 @@ export class SolutionComponent implements OnInit, OnDestroy {
 				title: I18n.get('_QuickTourStep1Title_'),
 			},
 		];
-	}
-
-	/**
-	 * Refreshes the data for the Quick Tour Step attached
-	 * to the No DNAC Header 'continue' button
-	 * @param info Data for the button
-	 */
-	public refreshButtonInfo (info) {
-		if (this.quickTourSteps) {
-			const step = _.find(this.quickTourSteps, { stepIndex: 2 });
-			step.data = info;
-		}
 	}
 
 	/**

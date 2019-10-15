@@ -180,6 +180,7 @@
 		background: #00bceb;
 		font-weight: bold;
 		border-color: transparent;
+		box-shadow: none;
 	}
 }
 
@@ -253,3 +254,20 @@
 .no-wrap {
 	white-space: nowrap;
 }
+
+.architecture-diagram {
+	@media screen and (min-width: 1000px) {
+		width: 60vw;
+	}
+
+	@media screen and (max-width: 1000px) {
+		width: 90vw;
+	}
+}
+
+.step-title {
+	font-size: 36px !important;
+	font-weight: 300;
+	color: #848587;
+}
+

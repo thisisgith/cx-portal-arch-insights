@@ -85,8 +85,8 @@
 			</cui-select>
 		</div>
 		</div>
-	<div class="container base-margin-top" *ngIf="tableData?.length > 0">
-	<cui-table 
+	<div class="row base-padding-top half-padding-left responsive-table" *ngIf="tableData?.length > 0">
+	<cui-table class="table table--lined table--wrapped table--fixed" 
 	data-auto-id="tableData" 
 	[options]="tableOptions" 
 	[data]="tableData" 
@@ -124,14 +124,14 @@
 		<div class="container">
 			<div class="text-uppercase text-bold half-margin-bottom"><span
 					[innerText]="'_SyslogDetailedDescription_' | i18n"></span> </div>
-			<div><span [innerText]="item.IcDesc"></span></div>
+			<div><span class= "table-text" [innerText]="item.IcDesc"></span></div>
 		</div>
 	</div>
 	<div class="row base-margin-top">
 		<div class="container">
 			<div class="text-uppercase text-bold half-margin-top half-margin-bottom"><span
 					[innerText]="'_SyslogRecommendations_' | i18n"></span></div>
-			<div><span [innerText]="item.Recommendation"></span></div>
+			<div><span class= "table-text" [innerText]="item.Recommendation"></span></div>
 		</div>
 	</div>
 	

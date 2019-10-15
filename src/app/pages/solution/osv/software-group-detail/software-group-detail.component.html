@@ -9,6 +9,7 @@
 			[(fullscreen)]="fullscreen"
 			[fullscreenToggle]="screenWidth > 1024 ? true : false">
 				<div detailsPanelTitle>
+						<div *ngIf="!showDetails;" class="qtr-margin-left half-margin-bottom" [innerText]="'_OsvSoftwareGroup_' | i18n"></div>
 						<div *ngIf="!showDetails; else detailsHeaderTemplate" 
 							class="qtr-margin-left text-xlarge half-margin-bottom"
 							[innerText]="selectedSoftwareGroup?.profileName">

@@ -134,21 +134,21 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 			bordered: false,
 			columns: [
 				{
-					key: 'MsgType',
-					name: I18n.get('_SyslogMessageGrid_'),
-					sortable: true,
-				},
-				{
 					key: 'SyslogSeverity',
 					name: I18n.get('_Severity_'),
 					sortable: true,
 				},
 				{
 					key: 'IcDesc',
-					name: I18n.get('_SyslogDetailedDescription_'),
+					name: I18n.get('_SyslogDescription_'),
 					sortable: true,
 					template: this.icDecTemplate,
 
+				},
+				{
+					key: 'deviceCount',
+					name: I18n.get('_SyslogAffectedSystems_'),
+					sortable: true,
 				},
 				{
 					key: 'Recommendation',
@@ -156,11 +156,7 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 					sortable: true,
 					template: this.actionTemplate,
 				},
-				{
-					key: 'deviceCount',
-					name: I18n.get('__SyslogDeviceCount__'),
-					sortable: true,
-				},
+
 			],
 			dynamicData: false,
 			singleSelect: true,

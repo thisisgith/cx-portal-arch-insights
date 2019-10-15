@@ -197,7 +197,7 @@ export class LifecycleComponent implements OnDestroy {
 
 	public categoryOptions: any [];
 	public pgCategoryOptions: any [];
-	public statusOptions = [
+	public accStatusOptions = [
 		{
 			name: I18n.get('_AllTitles_'),
 			value: 'allTitles',
@@ -207,9 +207,44 @@ export class LifecycleComponent implements OnDestroy {
 			value: 'recommended',
 		},
 		{
-			name: I18n.get('_Requested_'),
-			value: 'requested',
+		 	name: I18n.get('_Requested_'),
+		 	value: 'requested',
 		},
+		{
+			name: I18n.get('_Scheduled_'),
+			value: 'scheduled',
+		},
+		{
+			name: I18n.get('_InProgress_'),
+			value: 'in-progress',
+		},
+		{
+			name: I18n.get('_Completed_'),
+			value: 'completed',
+		},
+		{
+			name: I18n.get('_Bookmarked_'),
+			value: 'isBookmarked',
+		},
+		{
+			name: I18n.get('_NotBookmarked_'),
+			value: 'hasNotBookmarked',
+		},
+	];
+
+	public atxStatusOptions = [
+		{
+			name: I18n.get('_AllTitles_'),
+			value: 'allTitles',
+		},
+		{
+			name: I18n.get('_Recommended_'),
+			value: 'recommended',
+		},
+		// {
+		// 	name: I18n.get('_Requested_'),
+		// 	value: 'requested',
+		// },
 		{
 			name: I18n.get('_Scheduled_'),
 			value: 'scheduled',
@@ -430,10 +465,11 @@ export class LifecycleComponent implements OnDestroy {
 	 * Get the filter option name
 	 * @returns Option name to be rendered
 	 * @param {string} value Value to lookup
+	 * @param statusOptions dropdown values
 	 */
-	public getStatusOptionName (value) {
+	public getStatusOptionName (value, statusOptions) {
 		if (value) {
-			const foundOption = this.statusOptions.find(opt => opt.value === value);
+			const foundOption = statusOptions.find(opt => opt.value === value);
 
 			return foundOption ? foundOption.name : value;
 		}
@@ -1033,6 +1069,7 @@ export class LifecycleComponent implements OnDestroy {
 			pitstopAction: action.name,
 			solution: this.componentData.params.solution,
 			technology: this.componentData.params.usecase,
+			actionComplete: action.isComplete,
 		};
 
 		this.racetrackService.updatePitstopAction(actionUpdated)
@@ -1102,6 +1139,10 @@ export class LifecycleComponent implements OnDestroy {
 
 			if (responseTechnology) {
 				this.racetrackInfoService.sendCurrentTechnology(responseTechnology);
+				if (responseTechnology.usecase_adoption_percentage) {
+					this.racetrackInfoService.sendCurrentAdoptionPercentage(
+						responseTechnology.usecase_adoption_percentage);
+				}
 			}
 		},
 		err => {
@@ -1422,7 +1463,7 @@ export class LifecycleComponent implements OnDestroy {
 				['customerId', 'solution', 'usecase', 'pitstop', 'suggestedAction']))
 		.pipe(
 			map((result: ACCResponse) => {
-				this.selectedFilterForACC = this.statusOptions[0].value;
+				this.selectedFilterForACC = this.accStatusOptions[0].value;
 				this.componentData.acc = {
 					sessions: result.items,
 				};
@@ -1468,7 +1509,7 @@ export class LifecycleComponent implements OnDestroy {
 				['customerId', 'solution', 'usecase', 'pitstop', 'suggestedAction']))
 		.pipe(
 			map((result: ATXResponseModel) => {
-				this.selectedFilterForATX = this.statusOptions[0].value;
+				this.selectedFilterForATX = this.atxStatusOptions[0].value;
 				this.componentData.atx = {
 					recommended: _.head(result.items),
 					sessions: result.items,

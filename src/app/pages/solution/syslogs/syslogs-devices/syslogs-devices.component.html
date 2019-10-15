@@ -2,7 +2,7 @@
 <div class="row">
 	<div class="col-3">
 		<div class="container">
-			<span [innerText]="'_Asset_' | i18n" class="text-large"></span>
+			<span [innerText]="'_SyslogSystem_' | i18n" class="text-large"></span>
 			<span class="qtr-margin-left text-small text-muted" *ngIf="tableData.length > 0"
 				[innerText]="'_SyslogShowingXofYAssets_' | i18n:(tableStartIndex + 1):tableEndIndex:totalItems">
 			</span>
@@ -65,7 +65,7 @@
 			<div class="col-md-12">
 				<div class="col-md-12">
 					<div class="text-xlarge">
-						<span [innerText]="'__SyslogDeviceDetailsInfo__' | i18n"></span>
+						<span [innerText]="'_SyslogDeviceDetailsInfo_' | i18n"></span>
 						<span class="qtr-margin-left">
 							<a data-auto-id="selectedName" (click)="redirectToAssetDetails()"
 								[innerHTML]="selectedAsset.DeviceHost"></a>

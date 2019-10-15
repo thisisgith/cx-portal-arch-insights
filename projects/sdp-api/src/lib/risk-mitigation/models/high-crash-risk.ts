@@ -56,4 +56,5 @@ export interface HighCrashRiskPagination {
 export interface HighCrashRiskDeviceCount{
 	customerId: string;
 	crashRiskDeviceCount:number;
+	crashPredicted:boolean;
 }

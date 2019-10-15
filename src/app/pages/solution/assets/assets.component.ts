@@ -830,10 +830,12 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			map((data: CoverageCountsResponse) => {
 				coverageFilter.seriesData = _.compact(_.map(data, (value: number, key: string) => {
 					if (value !== 0) {
+						const filterKey = key === 'uncovered' ? 'not covered' : key;
+
 						return {
 							value,
 							filter: key,
-							label: _.capitalize(key),
+							label: _.startCase(filterKey),
 							selected: false,
 						};
 					}

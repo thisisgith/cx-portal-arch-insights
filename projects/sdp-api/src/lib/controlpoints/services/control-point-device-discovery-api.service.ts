@@ -7,12 +7,12 @@ import { StrictHttpResponse as __StrictHttpResponse } from '../../core/strict-ht
 import { Observable as __Observable } from 'rxjs';
 import { map as __map, filter as __filter } from 'rxjs/operators';
 
-import { DeviceResponseModel } from '../models/device-response-model';
+import { DeviceDetailsByPage } from '../models/device-details-by-page';
 @Injectable({
   providedIn: 'root',
 })
 class ControlPointDeviceDiscoveryAPIService extends __BaseService {
-  static readonly getDevicesUsingGETPath = '/devices/{customerId}';
+  static readonly getDevicesUsingGETPath = '/devices/{customerId}/{pageNumber}/{rowsPerPage}';
 
   constructor(
     config: __Configuration,
@@ -22,18 +22,27 @@ class ControlPointDeviceDiscoveryAPIService extends __BaseService {
   }
 
   /**
-   * @param customerId customerId
+   * @param params The `ControlPointDeviceDiscoveryAPIService.GetDevicesUsingGETParams` containing the following parameters:
+   *
+   * - `rowsPerPage`: rowsPerPage
+   *
+   * - `pageNumber`: pageNumber
+   *
+   * - `customerId`: customerId
+   *
    * @return OK
    */
-  getDevicesUsingGETResponse(customerId: string): __Observable<__StrictHttpResponse<DeviceResponseModel>> {
+  getDevicesUsingGETResponse(params: ControlPointDeviceDiscoveryAPIService.GetDevicesUsingGETParams): __Observable<__StrictHttpResponse<DeviceDetailsByPage>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
 
 
+
+
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/customerportal/controlpoint/v1/devices/${customerId}`,
+      this.rootUrl + `/customerportal/controlpoint/v1/devices/${params.customerId}/${params.pageNumber}/${params.rowsPerPage}`,
       __body,
       {
         headers: __headers,
@@ -44,23 +53,51 @@ class ControlPointDeviceDiscoveryAPIService extends __BaseService {
     return this.http.request<any>(req).pipe(
       __filter(_r => _r instanceof HttpResponse),
       __map((_r) => {
-        return _r as __StrictHttpResponse<DeviceResponseModel>;
+        return _r as __StrictHttpResponse<DeviceDetailsByPage>;
       })
     );
   }
 
   /**
-   * @param customerId customerId
+   * @param params The `ControlPointDeviceDiscoveryAPIService.GetDevicesUsingGETParams` containing the following parameters:
+   *
+   * - `rowsPerPage`: rowsPerPage
+   *
+   * - `pageNumber`: pageNumber
+   *
+   * - `customerId`: customerId
+   *
    * @return OK
    */
-  getDevicesUsingGET(customerId: string): __Observable<DeviceResponseModel> {
-    return this.getDevicesUsingGETResponse(customerId).pipe(
-      __map(_r => _r.body as DeviceResponseModel)
+  getDevicesUsingGET(params: ControlPointDeviceDiscoveryAPIService.GetDevicesUsingGETParams): __Observable<DeviceDetailsByPage> {
+    return this.getDevicesUsingGETResponse(params).pipe(
+      __map(_r => _r.body as DeviceDetailsByPage)
     );
   }
 }
 
 module ControlPointDeviceDiscoveryAPIService {
+
+  /**
+   * Parameters for getDevicesUsingGET
+   */
+  export interface GetDevicesUsingGETParams {
+
+    /**
+     * rowsPerPage
+     */
+    rowsPerPage: string;
+
+    /**
+     * pageNumber
+     */
+    pageNumber: string;
+
+    /**
+     * customerId
+     */
+    customerId: string;
+  }
 }
 
 export { ControlPointDeviceDiscoveryAPIService }

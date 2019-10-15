@@ -181,7 +181,6 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 :host ::ng-deep input.checked,
 :host ::ng-deep input:checked {
 	~ .checkbox__input::before {
-		box-shadow: inset 0 0 0 $cui-checkbox-border-width transparent !important;
 		background-color: $background-color !important;
 	}
 }
@@ -203,7 +202,7 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 
 .checkbox-complete::after {
 	color: $accent-light-blue !important;
-	font-size: 20px !important;
+	font-size: 18px !important;
 }
 
 :host ::ng-deep .progressbar__fill {
@@ -560,6 +559,12 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 .small-panel {
 	padding: 0;
 	line-height: initial;
+
+	&:hover {
+		.cx-text-default {
+			color: $accent-dark-blue;
+		}
+	}
 }
 
 .atx {

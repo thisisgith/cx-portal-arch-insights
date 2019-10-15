@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { RiskMitigationComponent } from './risk-mitigation.component';
-import { AssetDetailsModule, DetailsPanelModule, VisualFilterBarModule } from '@components';
+import { AssetDetailsModule, DetailsPanelModule, VisualFilterBarModule, TooltipModule } from '@components';
 import { AssetDetailsHeaderModule } from '../../../components/details/asset/header/header.module';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import {
@@ -75,6 +75,7 @@ const childRoutes: Routes = [
 		FingerprintBodyModule,
 		VisualFilterBarModule,
 		InsightTabsModule,
+		TooltipModule,
 	],
 })
 export class RiskMitigationModule { }

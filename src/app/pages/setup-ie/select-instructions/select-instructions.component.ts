@@ -1,7 +1,8 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { Router } from '@angular/router';
+import { SETUP_STATES } from '@classes';
 
-import { SetupComponent, SetupStep } from '@interfaces';
+import { OnStepCompleteInsertOptions, SetupComponent, SetupStep } from '@interfaces';
 
 import { getButtonList } from './button-list.const';
 
@@ -20,6 +21,7 @@ import { Selection } from '../setup-ie.types';
 })
 export class SelectInstructionsComponent implements SetupStep {
 	@Output() public onStepComplete = new EventEmitter<SetupComponent[]>();
+	@Output() public onStepCompleteInsert = new EventEmitter<OnStepCompleteInsertOptions>();
 	public buttons = getButtonList();
 
 	constructor (
@@ -38,6 +40,15 @@ export class SelectInstructionsComponent implements SetupStep {
 			queryParamsHandling: 'merge',
 			replaceUrl: true,
 		});
-		this.onStepComplete.emit(getSlides(selection));
+		this.onStepCompleteInsert.emit({
+			offset: 0,
+			steps: [
+				{
+					state: SETUP_STATES.INSTALL,
+					type: SelectInstructionsComponent,
+				},
+				...getSlides(selection),
+			],
+		});
 	}
 }

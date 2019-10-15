@@ -187,14 +187,14 @@ export class SyslogsDeviceDetailsComponent implements OnChanges, OnDestroy {
 			bordered: false,
 			columns: [
 				{
-					name: I18n.get('_SyslogMessageGrid_'),
-					sortable: true,
-					template: this.messageType,
-				},
-				{
 					key: 'SyslogSeverity',
 					name: I18n.get('_Severity_'),
 					sortable: true,
+				},
+				{
+					name: I18n.get('_SyslogMessageGrid_'),
+					sortable: true,
+					template: this.messageType,
 				},
 				{
 					key: 'MessageCount',
@@ -214,7 +214,7 @@ export class SyslogsDeviceDetailsComponent implements OnChanges, OnDestroy {
 			rowWellTemplate : this.innerTableRef,
 			singleSelect: true,
 			striped: false,
-			wrapText: false,
+			wrapText: true,
 		});
 	}
 	/**
