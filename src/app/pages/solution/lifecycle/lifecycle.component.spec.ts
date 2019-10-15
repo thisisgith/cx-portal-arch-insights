@@ -1677,7 +1677,7 @@ describe('LifecycleComponent', () => {
 
 			let button = component.getAtxRegisterButton(data);
 
-			// expect the button not diabled
+			// expect the button diabled
 			expect(button)
 				.toEqual('disabled');
 
