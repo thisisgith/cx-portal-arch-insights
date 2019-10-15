@@ -649,18 +649,50 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 			span:not([class*="icon-"]) {
 				color: $text-default-color;
 			}
+
+			.divider {
+				flex-basis: 100%;
+			}
 		}
 
 		&__status {
 			margin-bottom: 15px;
 			display: flex;
 			align-items: center;
+			flex-shrink: 0;
 		}
 
 		&__actions {
 			padding: 15px;
 			display: flex;
 			justify-content: space-between;
+		}
+
+		&__image {
+			position: relative;
+		}
+
+		&__logo {
+			position: absolute;
+			bottom: 10px;
+			left: 10px;
+			max-height: 35px;
+		}
+
+		&__feedback {
+			margin-left: auto;
+
+			a.btn {
+				background: #fff;
+				color: $icon-light-gray;
+				border: 1px solid $icon-light-gray;
+			}
+
+			a.btn--selected {
+				border: 1px solid rgba(#32c5ff, 0.25);
+				color: $accent-light-blue;
+				cursor: unset;
+			}
 		}
 	}
 
