@@ -42,8 +42,8 @@
 						</div>
 					</div>
 				</div>
-				<div id="generalContainer" class="panel dbl-padding-left dbl-padding-right" [hidden]="hideGeneralSearch">
-					<div class="base-padding-top" [hidden]="generalSearchHeader"></div>
+				<div id="generalContainer" class="panel general-search-panel" [hidden]="hideGeneralSearch">
+					<div [hidden]="generalSearchHeader"></div>
 					<app-general-search
 						[query]="generalSearch"
 						[header]="generalSearchHeader"
