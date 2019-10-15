@@ -949,7 +949,7 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 .cardpanel--openright,
 .listpanel--open {
 	box-shadow: $popover-box-shadow;
-	height: 400px;
+	height: 415px;
 	width: 500px;
 	position: absolute;
 	z-index: 3;
@@ -1067,6 +1067,17 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 	border-bottom: 30px solid transparent;
 }
 
+tr.th-row th {
+	@extend %tr-shared;
+
+	border-bottom-width: 2px;
+	padding: 20px;
+}
+
+tr.td-row::after {
+	display: none;
+}
+
 tr.td-row td {
 	@extend %tr-shared;
 
@@ -1117,6 +1128,14 @@ tr.td-row td {
 					}
 				}
 			}
+		}
+
+		th {
+			@extend %tr-shared;
+
+			border-bottom-width: 1px;
+			height: 30px;
+			padding: 0;
 		}
 	}
 }
@@ -1347,6 +1366,10 @@ tr.td-row td {
 		margin-bottom: 20px;
 	}
 
+	.atx-scheduler-description {
+		min-height: 120px;
+	}
+
 	.atx-scheduler-one-line {
 		position: relative;
 		display: flex;
@@ -1376,6 +1399,8 @@ tr.td-row td {
 
 	.atx-scheduler__footer {
 		margin-top: 16px;
+		position: absolute;
+		bottom: 20px;
 
 		a:hover {
 			text-decoration: none;
@@ -1685,17 +1710,6 @@ tr.td-row td {
 	background-color: white;
 }
 
-tr.th-row th {
-	@extend %tr-shared;
-
-	border-bottom-width: 2px;
-	padding: 20px;
-}
-
-tr.td-row::after {
-	display: none;
-}
-
 ::ng-deep .cui .table th {
 	margin-top: 10px;
 	border-right: transparent !important;
@@ -1748,6 +1762,10 @@ polygon {
 	cursor: pointer;
 }
 
+.provider_image {
+	position: relative;
+}
+
 .provider_icon_card {
 	position: absolute;
 	left: 10px;
@@ -1757,7 +1775,8 @@ polygon {
 .provider_icon {
 	position: absolute;
 	left: 10px;
-	top: 180px;
+	bottom: 10px;
+	max-height: 35px;
 }
 
 .provider_icon_acc {
@@ -1765,3 +1784,4 @@ polygon {
 	left: 10px;
 	top: 160px;
 }
+
