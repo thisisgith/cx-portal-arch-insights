@@ -985,7 +985,7 @@ describe('LifecycleComponent', () => {
 			sendParams();
 			fixture.detectChanges();
 
-			de = fixture.debugElement.query(By.css('#sb-hover-panel-successbytes'));
+			de = fixture.debugElement.query(By.css('.hover-panel--successbytes'));
 			expect(de)
 				.toBeTruthy();
 
@@ -1002,7 +1002,7 @@ describe('LifecycleComponent', () => {
 			spyOn(component, 'updateBookmark');
 			fixture.detectChanges();
 
-			de = fixture.debugElement.query(By.css('#sb-hover-panel-successbytes .icon-bookmark'));
+			de = fixture.debugElement.query(By.css('.hover-panel--successbytes .icon-bookmark'));
 			de.nativeElement.click();
 			expect(component.updateBookmark)
 				.toHaveBeenCalledTimes(1);

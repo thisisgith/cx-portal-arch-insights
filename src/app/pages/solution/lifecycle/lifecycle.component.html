@@ -201,30 +201,29 @@
 	</ng-container>
 </ng-template>
 
-<ng-template #recommended let-src="src" let-title="title" let-description="description"
-	let-template="template" let-autoid="autoid" let-item="item" let-hoverTemplate="hoverTemplate">
-	<div id="recommended-item" class="cx-lifecycle-card--recommended-item panel panel--bordered no-padding-top no-padding-left no-padding-right" attr.data-auto-id="{{ autoid }}">
+<ng-template #recommended 
+	let-src="src" 
+	let-title="title" 
+	let-description="description"
+	let-template="template" 
+	let-autoid="autoid" 
+	let-item="item" 
+	let-hoverTemplate="hoverTemplate">
+	<div class="recommended-item cx-lifecycle-card--recommended-item panel panel--bordered no-padding-top no-padding-left no-padding-right" attr.data-auto-id="{{ autoid }}">
 		<ng-container *ngTemplateOutlet="template; context: {
 			item: item,
 			autoid: autoid,
 			title: title,
-			src: src
+			src: src,
+			hoverTemplate: hoverTemplate,
+			description: description
 		}">
-		</ng-container>
-		<ng-container *ngIf="autoid">
-			<ng-container *ngTemplateOutlet="hoverTemplate; context: {
-				title: title,
-				description: description,
-				item: item,
-				autoid: autoid
-			}">
-			</ng-container>
 		</ng-container>
 	</div>
 </ng-template>
 
 <ng-template #learningHover let-title="title" let-item="item" let-description="description" let-autoid="autoid">
-	<div id="learn-hover-panel-{{ autoid }}" class="panel" attr.data-auto-id="{{ autoid }}-HoverModal">
+	<div class="panel hover-panel hover-panel--{{ autoid }}" attr.data-auto-id="{{ autoid }}-HoverModal">
 		<div class="popover-tail"></div>
 		<div class="flex flex-column">
 			<h6 class="learning-popover__title title-line-clamp" [innerText]="title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
@@ -242,7 +241,7 @@
 </ng-template>
 
 <ng-template #atxHover let-title="title" let-description="description" let-autoid="autoid" let-item="item">
-	<div id="atx-hover-panel-{{ autoid }}" class="panel" *ngIf="!atxScheduleCardOpened && !atxMoreClicked" attr.data-auto-id="{{ autoid }}-HoverModal">
+	<div class="panel hover-panel hover-panel--{{ autoid }}" *ngIf="!atxScheduleCardOpened && !atxMoreClicked" attr.data-auto-id="{{ autoid }}-HoverModal">
 		<div class="popover-tail popover-tail--left"></div>
 		<div class="flex flex-column max-height">
 			<div class="icon-bookmark ribbon--hover"
@@ -300,7 +299,7 @@
 </ng-template>
 
 <ng-template #accHover let-autoid="autoid" let-title="title" let-description="description" let-item="item">
-	<div id="acc-hover-panel-{{ autoid }}" class="panel" attr.data-auto-id="{{ autoid }}-HoverModal">
+	<div class="panel hover-panel hover-panel--{{ autoid }}" attr.data-auto-id="{{ autoid }}-HoverModal">
 		<div class="popover-tail"></div>
 		<div class="flex flex-column max-height">
 			<div class="icon-bookmark ribbon--hover"
@@ -339,12 +338,23 @@
 	</div>
 </ng-template>
 
-<ng-template #recommendedATX let-item="item" let-autoid="autoid" let-title="title" let-src="src">
+<ng-template #recommendedATX 
+	let-item="item" 
+	let-autoid="autoid" 
+	let-src="src"
+	let-title="title"
+	let-description="description"
+	let-hoverTemplate="hoverTemplate"
+>
 	<div class="max-width flex provider_image">
-		<div class="icon-bookmark toggle" [ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__white'"
-			(click)="updateBookmark(item, 'ATX')" data-auto-id="SBCardRibbon">
+		<div class="icon-bookmark toggle"
+			[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__white'"
+			(click)="updateBookmark(item, 'ATX')"
+			data-auto-id="SBCardRibbon">
 		</div>
-		<img alt="'_Placeholder_' | i18n" [src]="src" attr.data-auto-id="{{ autoid }}-Image">
+		<img alt="'_Placeholder_' | i18n"
+			[src]="src"
+			attr.data-auto-id="{{ autoid }}-Image">
 		<ng-container *ngIf="item.providerInfo">
 			<!-- Keep the following line for now since we don't have partner Logo yet -->
 			<!-- <span *ngIf="item.providerInfo?.logoURL" class="icon-check icon-medium half-padding-right"></span> -->
@@ -354,15 +364,25 @@
 				[innerText]="item.providerInfo?.name"></span>
 		</ng-container>
 	</div>
-	<div class="cx-lifecycle-card--recommended">
+	<div class="cx-lifecycle-card cx-lifecycle-card--recommended">
 		<div>
 			<span class="icon-flagged" attr.data-auto-id="{{ autoid }}-Flag"></span>
 			<span class="text-small" [innerText]="'_Recommended_' | i18n"></span>
 		</div>
-		<div class="text-large text-capitalize" [innerText]="title" attr.data-auto-id="{{ autoid }}-Title"></div>
+		<p class="text-capitalize cx-lifecycle-card__title" 
+			attr.data-auto-id="{{ autoid }}-Title">
+			{{ title }}
+			<ng-container *ngTemplateOutlet="hoverTemplate; context: {
+				title: title,
+				description: description,
+				item: item,
+				autoid: autoid
+			}">
+			</ng-container>
+		</p>
 		<ng-container *ngIf="item.status === 'scheduled' && scheduledAtxMap[item.atxId]">
 			<div class="cx-lifecycle-card--scheduled row half-padding-bottom">
-				<div class="col-md-1 icon-calendar" attr.data-auto-id="{{ autoid }}-Calendar"></div>
+				<div class="col-md-1 icon-calendar text-primary" attr.data-auto-id="{{ autoid }}-Calendar"></div>
 				<div class="col-md-11 no-padding-left">
 					<div class="text-bold" [innerText]="scheduledAtxMap[item.atxId].sessionStartDate | date:'EEE MMM d, y h:mm a z'" attr.data-auto-id="{{ autoid }}-Date"></div>
 					<div [innerText]="'_InstructorX_' | i18n:scheduledAtxMap[item.atxId].presenterName" attr.data-auto-id="{{ autoid }}-Presenter"></div>
@@ -388,7 +408,14 @@
 	</div>
 </ng-template>
 
-<ng-template #recommendedACC let-item="item" let-autoid="autoid" let-src="src">
+<ng-template #recommendedACC 
+	let-item="item" 
+	let-autoid="autoid" 
+	let-src="src"
+	let-title="title"
+	let-description="description"
+	let-hoverTemplate="hoverTemplate"
+>
 	<div class="icon-bookmark"
 		[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__white'"
 		(click)="updateBookmark(item, 'ACC')"
@@ -403,12 +430,23 @@
 		<span *ngIf="!item.providerInfo?.logoURL" class="text-bold text-medium" [innerText]="item.providerInfo?.name"></span>
 	</div>
 	<img class="max-width" alt="'_Placeholder_' | i18n" [src]="src" attr.data-auto-id="{{ autoid }}-Image">
-	<div class="cx-lifecycle-card--recommended">
+	<div class="cx-lifecycle-card cx-lifecycle-card--recommended">
 		<div class="qtr-padding-bottom">
 			<span class="icon-flagged" attr.data-auto-id="{{ autoid }}-Flag"></span>
 			<span class="text-small" [innerText]="'_Recommended_' | i18n"></span>
 		</div>
-		<div class="text-large" [innerText]="item.title" attr.data-auto-id="{{ autoid }}-Title"></div>
+		<p 
+			class="cx-lifecycle-card__title" 
+			attr.data-auto-id="{{ autoid }}-Title">
+			{{ item.title }}
+			<ng-container *ngTemplateOutlet="hoverTemplate; context: {
+				title: title,
+				description: description,
+				item: item,
+				autoid: autoid
+			}">
+			</ng-container>
+		</p>
 		<ng-container *ngIf="item.status === 'recommended'">
 			<ng-container *ngTemplateOutlet="!notCurrentPitstop ? enabledAccButton : disabledAccButton; context: {
 				accId: item.accId,
@@ -532,7 +570,7 @@
 </ng-template>
 
 <ng-template #accPanel let-data="data">
-	<div class="cx-lifecycle-card--subtitle base-margin-bottom" [innerText]="'_1on1Coaching_' | i18n"></div>
+	<div class="cx-lifecycle-card cx-lifecycle-card--subtitle base-margin-bottom" [innerText]="'_1on1Coaching_' | i18n"></div>
 	<ng-container *ngIf="data.sessions[0]">
 		<ng-container *ngTemplateOutlet="recommended; context: {
 				template: recommendedACC,
@@ -555,39 +593,41 @@
 		<span class="cx-lifecycle-card--more text-uppercase" [innerText]="'_More_' | i18n" attr.data-auto-id="{{ autoid }}-Header"></span>
 	</div>
 	<div [attr.data-auto-id]="autoid">
-		<div class="cx-lifecycle-card--more-link" #moreList (mouseenter)="getMoreCoordinates(moreList, autoid)" *ngFor="let item of data | slice:1:3">
+		<div class="cx-lifecycle-card__more-links" #moreList (mouseenter)="getMoreCoordinates(moreList, autoid)" *ngFor="let item of data | slice:1:3">
 			<div class="row" attr.data-auto-id="{{ autoid }}-item">
 				<div class="col-md-11">
 					<div id="{{ autoid }}-item" class="panel small-panel">
-						<div class="text-blue"
-							data-auto-id = "ATXMoreClick"
-							(click)="atxMoreSelect(item, autoid, moreList)">
-							<span [innerText]="item.title"></span>
-							<span class="text-muted half-margin-left" [innerText]="getProviderName(item)"></span>
+						<div class="text-blue cx-lifecycle-card__more-link" 
+							data-auto-id="ATXMoreClick"
+							(click)="atxMoreSelect(item, autoid, moreList)"
+						>
+							{{ item.title }}
+							<p class="cx-lifecycle-card__by-text text-muted" [innerText]="getProviderName(item)"></p>
+							<ng-container *ngIf="autoid==='moreACCList'">
+								<ng-container *ngTemplateOutlet="accHover; context: {
+									title: item.title,
+									description: item.description,
+									item: item,
+									autoid: 'moreACCList'
+								}">
+								</ng-container>
+							</ng-container>
+							<ng-container *ngIf="autoid==='moreATXList'">
+								<ng-container *ngTemplateOutlet="atxHover; context: {
+									title: item.title,
+									description: item.description,
+									item: item,
+									autoid: 'moreATXList'
+								}">
+								</ng-container>
+							</ng-container>
 						</div>
-						<ng-container *ngIf="autoid==='moreACCList'">
-							<ng-container *ngTemplateOutlet="accHover; context: {
-								title: item.title,
-								description: item.description,
-								item: item,
-								autoid: 'moreACCList'
-							}">
-							</ng-container>
-						</ng-container>
-						<ng-container *ngIf="autoid==='moreATXList'">
-							<ng-container *ngTemplateOutlet="atxHover; context: {
-								title: item.title,
-								description: item.description,
-								item: item,
-								autoid: 'moreATXList'
-							}">
-							</ng-container>
-						</ng-container>
+
 					</div>
 				</div>
 				<div
 					*ngIf="item.status === 'scheduled'"
-					class="col-md-1 icon-calendar"
+					class="col-md-1 icon-calendar text-primary"
 				></div>
 				<div class="col-md-1 icon-certified" *ngIf="item.status === 'completed'" attr.data-auto-id="{{ autoid }}-Checkmark"></div>
 				<div class="col-md-1 icon-clock" *ngIf="item.status === 'in-progress'" attr.data-auto-id="{{ autoid }}-ProgressBar"></div>
@@ -651,7 +691,7 @@
 	</div>
 	<div>
 		<div class="cx-lifecycle-card--link" *ngFor="let item of data | slice:0:3">
-			<div id="recommended-elearning-item" class=" panel small-panel" attr.data-auto-id="{{ title }}-Item">
+			<div class="recommended-elearning-item panel small-panel" attr.data-auto-id="{{ title }}-Item">
 				<div class="row">
 					<div class="col-md-11">
 						<a class="no-link" (click)="crossLaunch(item.url)" attr.data-auto-id="{{ title }} -item.title" attr.data-auto-href="{{ item.url }}">
@@ -676,20 +716,18 @@
 </ng-template>
 
 <ng-template #successBlock let-title="title" let-data="data">
-	<div>
-		<div id="successbytes-item" class="cx-lifecycle-card--link panel small-panel" data-auto-id="successbytes-item" *ngFor="let item of data | slice:0:3">
-			<a class="toggle" (click)="crossLaunch(item.url)" [innerText]="item.title" attr.data-auto-id="{{ title }} -item.title" attr.data-auto-href="{{ item.url }}"></a>
-			<ng-container *ngTemplateOutlet="successBytesHoverBlock; context: {
-				item: item,
-				autoid: 'successbytes'
-			}">
-			</ng-container>
-		</div>
+	<div class="successbytes-item cx-lifecycle-card--link panel small-panel" data-auto-id="successbytes-item" *ngFor="let item of data | slice:0:3">
+		<a class="toggle" (click)="crossLaunch(item.url)" [innerText]="item.title" attr.data-auto-id="{{ title }} -item.title" attr.data-auto-href="{{ item.url }}"></a>
+		<ng-container *ngTemplateOutlet="successBytesHoverBlock; context: {
+			item: item,
+			autoid: 'successbytes'
+		}">
+		</ng-container>
 	</div>
 </ng-template>
 
 <ng-template #successBytesHoverBlock let-item="item" let-autoid="autoid">
-		<div id="sb-hover-panel-{{ autoid }}" class="panel" attr.data-auto-id="{{ autoid }}-HoverModal">
+		<div class="panel hover-panel hover-panel--{{ autoid }}" attr.data-auto-id="{{ autoid }}-HoverModal">
 			<div class="popover-tail"></div>
 			<div class="flex flex-column max-height">
 				<div class="icon-bookmark ribbon--hover"

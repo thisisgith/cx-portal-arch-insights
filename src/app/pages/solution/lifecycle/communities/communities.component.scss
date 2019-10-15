@@ -38,13 +38,13 @@ $ciso-dark-blue: #00a2cb;
 }
 
 .cx-lifecycle-card--link {
-	color: $text-default-color !important;
+	color: $text-default-color;
 	font-size: 14px;
 	letter-spacing: 0.51px;
 	line-height: 25px;
 
 	&:hover {
-		color: $base-link-color !important;
+		color: $base-link-color;
 	}
 }
 
