@@ -302,6 +302,10 @@
 		</i>
 		<span [innerHTML]="item?.violationCount"></span>
 	</ng-template>
+
+	<ng-template #ruletitleTemplate let-item="celldata">
+		<div [innerHTML]="item?.ruletitle"></div>
+	</ng-template>
 </div>
 <!-- App Details slide-out -->
 <asset-details *ngIf="openDeviceModal"

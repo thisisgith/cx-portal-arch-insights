@@ -157,6 +157,7 @@ export class RccComponent implements OnInit, OnDestroy {
 	@ViewChild('policyFilter', { static: true }) private policyFilterTemplate: TemplateRef<{ }>;
 	@ViewChild('severityFilter', { static: true }) private severityFilterTemplate: TemplateRef<{ }>;
 	@ViewChild('severityColor', { static: true }) private severityColorTemplate: TemplateRef<{ }>;
+	@ViewChild('ruletitleTemplate', { static: true }) private ruletitleTemplate: TemplateRef<{ }>;
 	@ViewChild('tableIcon', { static: true }) private tableIconTemplate: TemplateRef<{ }>;
 	@ViewChild('assetSlider', { read: ViewContainerRef, static: true })
 	public entry: ViewContainerRef;
@@ -239,6 +240,7 @@ export class RccComponent implements OnInit, OnDestroy {
 					key: 'ruletitle',
 					name: I18n.get('_RccRuleViolated_'),
 					sortable: true,
+					template: this.ruletitleTemplate,
 				},
 				{
 					key: 'violationcount',
