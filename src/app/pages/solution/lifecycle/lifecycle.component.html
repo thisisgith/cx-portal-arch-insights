@@ -981,7 +981,22 @@
 		*ngFor="let item of selectedATX"
 		[ngClass]="item.status === 'recommended' ? 'atx__card__recommended' : null"
 		data-auto-id="ATXCard">
-		<img class="max-width base-margin-bottom" alt="'_Placeholder_' | i18n" [src]="item.imageURL || 'assets/img/solutions/defaultLifecycleImage.png'" data-auto-id="ATXCard-Image">
+		<div class="max-width base-margin-bottom atx__card__image flex">
+			<img alt="'_Placeholder_' | i18n" [src]="item.imageURL" data-auto-id="ATXCard-Image"
+				[default]="getDefaultATXImg(item)"
+			>
+			<ng-container *ngIf="item.providerInfo">
+				<img *ngIf="item.providerInfo.logoURL"
+					class="atx__card__logo"
+					alt="'_Placeholder_' | i18n"
+					[src]="item.providerInfo.logoURL"
+					data-auto-id="ATXCard-PartnerLogo"/>
+				<span *ngIf="!item.providerInfo.logoURL"
+					class="atx__card__logo"
+					[innerText]="item.providerInfo.name"
+				></span>
+			</ng-container>
+		</div>
 		<div class="text-left base-padding-left atx__card__label"
 			data-auto-id="ATXCardHeader"
 			*ngIf="item.status === 'Recommended'">
@@ -1009,6 +1024,21 @@
 					<span class="text-medium" [innerText]="'_Completed_' | i18n" *ngIf="item.status === 'completed'" data-auto-id="ATXCardFooter-CompletedText"></span>
 					<span class="text-medium" [innerText]="'_InProgress_' | i18n" *ngIf="item.status === 'in-progress'" data-auto-id="ATXCardFooter-InProgressText"></span>
 					<span class="text-medium" [innerText]="'_Requested_' | i18n" *ngIf="item.status === 'requested'" data-auto-id="ATXCardFooter-RequestedText"></span>
+					<div class="atx__card__feedback" *ngIf="item.status === 'completed'">
+						<ng-container *ngIf="item.feedbackInfo.available">
+							<a data-auto-id="thumbUpBtn" class="btn btn--icon btn--small btn--selected">
+								<span class="icon-like" [class.rotate-180]="item.feedbackInfo.thumbs === 'DOWN'"></span>
+							</a>
+						</ng-container>
+						<ng-container  *ngIf="!item.feedbackInfo.available">
+							<a data-auto-id="thumbUpBtn" class="btn btn--icon btn--small">
+								<span class="icon-like"></span>
+							</a>
+							<a data-auto-id="thumbDownBtn" class="btn btn--icon btn--small">
+								<span class="icon-like rotate-180"></span>
+							</a>
+						</ng-container>
+					</div>
 				</div>
 				<div class="text-left base-padding-left base-padding-right base-margin-bottom"
 					*ngIf="item.status === 'scheduled'">
@@ -1393,6 +1423,7 @@
 			*ngIf="type === 'ATX' || type === 'ACC'"
 			alt="'_Placeholder_' | i18n"
 			[src]="celldata.imageURL || celldata.url || 'assets/img/solutions/defaultLifecycleImage.png'"
+			[default]="type === 'ATX' ? getDefaultATXImg(celldata) : 'assets/img/solutions/defaultLifecycleImage.png'"
 			attr.data-auto-id="{{ type }}-Image" />
 	</div>
 </ng-template>

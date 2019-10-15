@@ -13,7 +13,8 @@
 			"@mock": ["src/environments/mock/index.ts"],
 			"@pipes": ["src/app/pipes/index.ts"],
 			"@services": ["src/app/services/index.ts"],
-			"@utilities": ["src/app/utilities/index.ts"]
+			"@utilities": ["src/app/utilities/index.ts"],
+			"@directives/*": ["src/app/directives/*"]
 		},
 		"declaration": false,
 		"emitDecoratorMetadata": true,

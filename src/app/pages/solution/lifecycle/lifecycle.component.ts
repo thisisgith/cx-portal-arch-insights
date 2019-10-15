@@ -693,6 +693,15 @@ export class LifecycleComponent implements OnDestroy {
 					sorting: false,
 				},
 				{
+					name: I18n.get('_ContentProvider_'),
+					sortable: true,
+					sortKey: 'providerInfo.name',
+					sortDirection: 'asc',
+					template: this.providerTemplate,
+					width: 'auto',
+					sorting: false,
+				},
+				{
 					key: 'status',
 					name: I18n.get('_Status_'),
 					sortable: true,
@@ -2270,5 +2279,16 @@ export class LifecycleComponent implements OnDestroy {
 		}
 
 		return '';
+	}
+
+	/**
+	 * Determine whether to show Cisco or partner default image.
+	 * @param atx The ATX item
+	 * @returns the default image url
+	 */
+	public getDefaultATXImg (atx: AtxSchema) {
+		return (atx.providerInfo ?
+			'assets/img/solutions/ATX-default-image-1-556x308.png' :
+			'assets/img/solutions/defaultLifecycleImage.png');
 	}
 }

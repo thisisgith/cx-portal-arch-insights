@@ -406,6 +406,15 @@ export const ATXScenarios = [
 					},
 					selected: false,
 				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 500,
+					description: '(ATX) IBN-Campus Network Assurance-Onboard-partnerBranded',
+					response: {
+						body: MockATX('IBN', 'Campus Network Assurance', 'Onboard', 'partnerBranded'),
+						status: 200,
+					},
+					selected: false,
+				},
 			],
 		},
 		url: `${api}?usecase=Campus Network Assurance&solution=IBN&pitstop=Onboard&customerId=${customerId}&suggestedAction=Get to know Cisco DNA Center`,
