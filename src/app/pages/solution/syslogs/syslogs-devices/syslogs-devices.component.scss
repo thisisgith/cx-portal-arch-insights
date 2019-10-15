@@ -13,6 +13,3 @@
 	@include filter-search;
 }
 
-:host ::ng-deep .table {
-	@include table-ellipse;
-}
