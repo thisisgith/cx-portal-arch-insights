@@ -89,8 +89,6 @@ describe('ComparisonviewComponent', () => {
 				fixture.detectChanges();
 				expect(component.featuresData)
 					.toBeDefined();
-				expect(component.hardwareData)
-					.toBeDefined();
 				expect(component.softwareData)
 					.toBeDefined();
 				done();
