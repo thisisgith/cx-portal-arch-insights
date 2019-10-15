@@ -580,7 +580,7 @@
 </ng-template>
 
 <ng-template #learnPanel let-data="data">
-	<div *ngIf="data.elearning?.length" data-auto-id="LearnPanel-ELearningBlock">
+	<div *ngIf="data.elearning" data-auto-id="LearnPanel-ELearningBlock">
 		<ng-container *ngTemplateOutlet="learningBlock; context:
 			{ icon: 'clipboard-md',
 				title: '_ELearning_',
@@ -590,7 +590,7 @@
 		<div class="divider"></div>
 	</div>
 
-	<div *ngIf="data.certifications?.length" data-auto-id="LearnPanel-CertificationsBlock">
+	<div *ngIf="data.certifications" data-auto-id="LearnPanel-CertificationsBlock">
 		<ng-container *ngTemplateOutlet="learningBlock; context:
 			{ icon: 'certified',
 				title: '_Certifications_',
@@ -605,6 +605,7 @@
 		<span class="icon-{{ icon }}"></span>
 		<span class="text-uppercase" [innerText]="title | i18n"></span>
 		<div class="view-all pull-right toggle"
+			[ngClass]="{'hide': data?.length === 0}"
 			*ngIf="data">
 			<a class="no-link show"
 				(click)="crossLaunch(link)"
@@ -613,6 +614,9 @@
 				<span class="text-med" [innerText]="'_ViewAll_' | i18n"></span>
 				<span class="icon-play"></span>
 			</a>
+		</div>
+		<div class="cx-lifecycle-card--subtitle base-margin-top" *ngIf="data?.length === 0">
+			<i [innerText]="'_NoContentAvailable_' | i18n" data-auto-id="NoContentAvailable-Message"></i>
 		</div>
 	</div>
 	<div>
@@ -1224,7 +1228,7 @@
 		<div class="qtr-padding-bottom">
 			<span class="icon-{{ icon }}" *ngIf="icon"></span>
 			<span class="cx-lifecycle-card--title text-uppercase" [innerText]="title | i18n" attr.data-auto-id="PanelTitle-{{title}}"></span>
-			<div class="view-all pull-right toggle" [ngClass]="{'disabled': data?.sessions?.length === 0}" *ngIf="viewAll">
+			<div class="view-all pull-right toggle" [ngClass]="{'hide': data?.sessions?.length === 0}" *ngIf="viewAll">
 				<div  *ngIf="data"
 					(click)="showModal(viewAll)"
 					attr.data-auto-id="ShowModalPanel-{{ title }}">
