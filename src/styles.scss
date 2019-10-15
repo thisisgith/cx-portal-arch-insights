@@ -150,6 +150,11 @@
 }
 
 // CiscoUI Pager styling override
+.cui .cui-pager {
+	display: flex;
+	justify-content: center !important;
+}
+
 .cui .pagination > li {
 	> a {
 		height: 26px;
