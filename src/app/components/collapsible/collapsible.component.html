@@ -3,7 +3,7 @@
 	(click)="collapsed = !collapsed;">
 	<span class="qtr-margin-right" [innerText]="text"></span>
 	<span class="icon icon-right-arrow-contained"
-		[ngClass]="{ 'arrowUp': collapsed, 'arrowDown': !collapsed }">
+		[ngClass]="{ 'arrowUp': !collapsed, 'arrowDown': collapsed }">
 	</span>
 </a>
 <div heightTransition [heightTransitionExpanded]="!collapsed">

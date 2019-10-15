@@ -62,7 +62,7 @@ export class CaseOpenComponent implements  CuiModalContent, OnInit, OnDestroy {
 		},
 	];
 	public descriptionMaxLength = 32000;
-	public titleMaxLength = 255;
+	public titleMaxLength = 80;
 	public caseForm = new FormGroup({
 		description: new FormControl('', [Validators.required,
 			Validators.maxLength(this.descriptionMaxLength)]),

@@ -29,7 +29,7 @@
 				</div>
 			</div>
 			<div class="col-md-2">
-				<div class="font-size" [innerText]="'_RMACaseLastUpdated_' | i18n | uppercase"></div>
+				<div class="font-size" [innerText]="'_RMACaseUpdated_' | i18n | uppercase"></div>
 				<div [attr.data-balloon]="caseDetails?.lastUpdateDate | dateTime" data-balloon-pos="left" data-auto-id="CaseDetailsLastUpdatedDate">
 					<span [innerText]="caseDetails?.lastUpdateDate | fromNow"></span>
 				</div>
@@ -45,7 +45,7 @@
 						'active': isRMAClicked
 					}"
 					data-auto-id="relatedRMA">
-					<a class="text-uppercase" [innerText]="'_RMACaseRelatedRMA_' | i18n:rmaStrings?.length"></a>
+					<a class="text-uppercase" [innerText]="'_RMACaseAssociatedRMA_' | i18n:rmaStrings?.length"></a>
 				</div>
 			</div>
 			<div class="col-md-6 text-right">

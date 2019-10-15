@@ -6,6 +6,7 @@ import { CaseSubmittedComponent } from './case-submitted.component';
 import { CollapsibleModule } from '../../../collapsible/collapsible.module';
 
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
+import { CuiTableModule } from '@cisco-ngx/cui-components';
 
 /**
  * Module to export CaseSubmittedComponent
@@ -18,6 +19,7 @@ import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 		RouterModule,
 
 		I18nPipeModule,
+		CuiTableModule,
 
 		CollapsibleModule,
 	],
