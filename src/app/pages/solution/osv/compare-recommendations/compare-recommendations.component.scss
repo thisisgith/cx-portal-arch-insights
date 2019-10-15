@@ -37,4 +37,17 @@
 	.bar-chart .hbar__divider {
 		width: 0 !important;
 	}
+
+	.cancel-dropdown .dropdown__menu a span {
+		color: $danger;
+	}
+}
+
+tr#psirts-details:hover,
+tr#bugs-details:hover {
+	background-color: $light-blue;
+
+	td.recommendation {
+		background-color: transparent;
+	}
 }

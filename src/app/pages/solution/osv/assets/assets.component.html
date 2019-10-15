@@ -97,34 +97,41 @@
 </ng-template>
 
 <ng-template #versionTemplate let-item="celldata">		
-	<span 		
-		*ngIf="item.alert == 'information'"
-		[attr.data-balloon]="'_OsvInformationTooltip_' | i18n" 
-		data-balloon-pos="down"
-		data-balloon-length="medium">
-		<i class="icon-circle text-primary"></i>
-	</span>
-	<span 		
-		*ngIf="item.alert == 'critical'"
-		[attr.data-balloon]="'_OsvCriticalTooltip_' | i18n" 
-		data-balloon-pos="down"
-		data-balloon-length="medium">
-		<i class="icon-circle text-danger"></i>
-	</span>
-	<span 		
-		*ngIf="item.alert == 'warning'"
-		[attr.data-balloon]="'_OsvWarningTooltip_' | i18n" 
-		data-balloon-pos="down"
-		data-balloon-length="medium">
-		<i class="icon-circle text-warning-alt"></i>	
-	</span>
-	<span *ngIf="!item?.alert || item?.alert == 'NA'" class="icon-circle color-transparent"></span>
-	<span class="col-11" [title]="item.swVersion" [innerText]="item.swVersion"></span>
+	<div class="no-wrap">
+		<span 		
+			*ngIf="item.alert == 'information'"
+			[attr.data-balloon]="'_OsvInformationTooltip_' | i18n" 
+			data-balloon-pos="down"
+			data-balloon-length="medium">
+			<i class="icon-circle text-primary"></i>
+		</span>
+		<span 		
+			*ngIf="item.alert == 'critical'"
+			[attr.data-balloon]="'_OsvCriticalTooltip_' | i18n" 
+			data-balloon-pos="down"
+			data-balloon-length="medium">
+			<i class="icon-circle text-danger"></i>
+		</span>
+		<span 		
+			*ngIf="item.alert == 'warning'"
+			[attr.data-balloon]="'_OsvWarningTooltip_' | i18n" 
+			data-balloon-pos="down"
+			data-balloon-length="medium">
+			<i class="icon-circle text-warning-alt"></i>	
+		</span>
+		<span *ngIf="!item?.alert || item?.alert == 'NA'" class="icon-circle color-transparent"></span> 
+		<span class="col-11" [title]="item?.swVersion" [innerText]="item?.swVersion"></span>
+	</div>
 </ng-template>
+
 <ng-template #noRecommendationsTemp>
 	<span class="badge-wrapper">
 		<span class="icon-lightbulb icon-small color-transparent"></span>
 		<span class="badge badge--blue text-white color-transparent"></span>
 	</span>
 	<span class="dbl-margin-left" [innerText]="'_OsvNone_' | i18n"></span>
+</ng-template>
+
+<ng-template #hostTemplate let-item="celldata">
+	<span class="text-break" [innerText]="item?.hostName"></span>
 </ng-template>

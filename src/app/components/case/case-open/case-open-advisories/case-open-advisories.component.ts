@@ -4,7 +4,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { CaseService } from '@cui-x/services';
 import { Asset, CriticalBug, FieldNoticeBulletin,
 	SecurityAdvisoryBulletin, ContractsService,
-	DeviceContractResponse } from '@sdp-api';
+	DeviceContractResponse, NetworkElement } from '@sdp-api';
 import { CuiModalContent, CuiModalService } from '@cisco-ngx/cui-components';
 import { LogService } from '@cisco-ngx/cui-services';
 import { ProfileService } from '@cisco-ngx/cui-auth';
@@ -33,16 +33,16 @@ export class CaseOpenAdvisoriesComponent
 	implements CuiModalContent, AfterViewInit, OnInit, OnDestroy {
 	@Input() public advisory: SecurityAdvisoryBulletin | FieldNoticeBulletin | CriticalBug;
 	@Input() public selectedAsset: Asset;
-	@Input() public otherAssets: Asset[];
+	@Input() public otherAssets: (Asset | NetworkElement)[];
 	@Input() public type: AdvisoryType;
 	@ViewChild('techForm', { static: false }) public techForm: TechFormComponent;
 	public titles = {
-		bug: '_CriticalBug_',
+		bug: '_PriorityBug_',
 		field: '_CiscoFieldNotice_',
 		security: '_CiscoSecurityAdvisory_',
 	};
 	public typeTitle: string;
-	public allAssets: Asset[];
+	public allAssets: (Asset | NetworkElement)[];
 	public loadingTech = false;
 	public loadingSubtech = false;
 	public loadingProblemAreas = false;
@@ -179,7 +179,8 @@ export class CaseOpenAdvisoriesComponent
 				'customerActivity',
 			),
 			description: this.caseForm.controls.description.value,
-			deviceName: this.allAssets[0].deviceName,
+			deviceName: _.get(this.allAssets[0], 'deviceName') ||
+				_.get(this.allAssets[0], 'hostName'),
 			noteDetails: {
 				note1: {
 					note: 'Additional Event Details',
@@ -195,7 +196,7 @@ export class CaseOpenAdvisoriesComponent
 			),
 			requestType: CaseRequestType.Diagnose,
 			serialNumber: this.allAssets[0].serialNumber,
-			softwareVersion: this.allAssets[0].osVersion,
+			softwareVersion: _.get(this.allAssets[0], 'osVersion'),
 			subTechId: _.get(
 				(<FormGroup> this.caseForm.controls.techInfo).controls.subtech.value,
 				'_id',

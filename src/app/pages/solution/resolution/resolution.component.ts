@@ -128,6 +128,24 @@ _.map(['No RMAs', 'With RMAs'], label => ({
 }));
 
 /**
+ * All of the default filter values stored in a map.
+ * This will be used to initialize each filter when the new data is fetched and accumulated
+ */
+const defaultFiltersData = {
+	durationOpen: defaultDurationOpenFilterData,
+	lastUpdated: defaultLastUpdatedFilterData,
+	rma: defaultRmaFilterData,
+	severity: [],
+	status: [],
+	total: [{
+		filter: null,
+		label: null,
+		selected: true,
+		value: 0,
+	}],
+};
+
+/**
  * Resolution Component
  */
 @Component({
@@ -206,19 +224,19 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 				{
 					autoIdHeader: 'Case ID-Header',
 					key: 'caseNumber',
-					name: I18n.get('_RMACaseID_'),
+					name: I18n.get('_CaseNumber_'),
 					sortable: true,
 				},
 				{
 					autoIdHeader: 'Device-Header',
 					key: 'deviceName',
-					name: I18n.get('_RMACaseDevice_'),
+					name: I18n.get('_RMAsset_'),
 					sortable: false,
 				},
 				{
 					autoIdHeader: 'Summary-Header',
 					key: 'summary',
-					name: I18n.get('_RMACaseSummary_'),
+					name: I18n.get('_Description_'),
 					sortable: true,
 				},
 				{
@@ -297,20 +315,9 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 	 * Initializes the filters at half-opacity with stored values.
 	 */
 	private initializeFilters () {
-		const caseFilterData = JSON.parse(localStorage.getItem('caseFilterData')) ||
-			{
-				durationOpen: defaultDurationOpenFilterData,
-				lastUpdated: defaultLastUpdatedFilterData,
-				rma: defaultRmaFilterData,
-				severity: [],
-				status: [],
-				total: [{
-					filter: null,
-					label: null,
-					selected: true,
-					value: 0,
-				}],
-			};
+		const caseFilterData = JSON.parse(
+			localStorage.getItem('caseFilterData'),
+		) || defaultFiltersData;
 		this.filters = [
 			{
 				key: 'total',
@@ -339,7 +346,7 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 				loading: true,
 				seriesData: caseFilterData.lastUpdated,
 				template: this.columnChartFilterTemplate,
-				title: I18n.get('_LastUpdated_'),
+				title: I18n.get('_RMACaseUpdatedDate_'),
 			},
 			{
 				key: 'durationOpen',
@@ -499,7 +506,7 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 		)
 		.subscribe(responses => {
 			const cases = _.flatMap(responses, response => _.get(response, 'content', []));
-			// Get all of the filters and reset their data
+			// Get all of the filters (except for the total filter) and reset their data
 			const statusFilter = _.find(this.filters, { key: 'status' });
 			const severityFilter = _.find(this.filters, { key: 'severity' });
 			const lastUpdateFilter = _.find(this.filters, { key: 'lastUpdated' });
@@ -507,7 +514,7 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 			const rmaFilter = _.find(this.filters, { key: 'rma' });
 			_.each(this.filters, filter => {
 				if (filter.key !== 'total') {
-					_.each(filter.seriesData, data => data.value = 0);
+					filter.seriesData = defaultFiltersData[filter.key];
 				}
 			});
 
@@ -619,7 +626,8 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 	 * @param evt for table sort information
 	 */
 	public onTableSortingChanged (evt: any) {
-		this.caseParams.sort = `${evt.key},${evt.sortDirection}`;
+		const sortDir = (evt.sortDirection === 'asc') ? 'desc' : 'asc';
+		this.caseParams.sort = `${evt.key},${sortDir}`;
 		this.refresh$.next();
 	}
 

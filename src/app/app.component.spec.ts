@@ -17,8 +17,7 @@ import { AppService } from './app.service';
 import { AppTestModule } from './app-test.module.spec';
 import { User } from '@interfaces';
 import { user } from '@mock';
-import { HttpErrorResponse } from '@angular/common/http';
-import { of } from 'rxjs';
+import { throwError } from 'rxjs';
 import { EntitlementService } from '@sdp-api';
 
 describe('AppComponent', () => {
@@ -190,7 +189,7 @@ describe('AppComponent', () => {
 			};
 			spyOn(entitlementService, 'getUser')
 				.and
-				.returnValue(of(new HttpErrorResponse(error)));
+				.returnValue(throwError(error));
 
 			fixture.whenStable()
 			.then(() => {
@@ -299,7 +298,7 @@ describe('AppComponent', () => {
 		});
 
 		it('should load the i18n files', () => {
-			const title = 'CX Customer Portal';
+			const title = 'Customer Experience Portal';
 			fixture.detectChanges();
 
 			fixture.whenStable()

@@ -78,6 +78,21 @@ describe('SolutionComponent', () => {
 			.returnValue(of(getActiveBody(RacetrackScenarios[0])));
 	};
 
+	/**
+	 * Sends our racetrack info
+	 */
+	const sendRacetrack = () => {
+		racetrackInfoService.sendRacetrack(getActiveBody(RacetrackScenarios[0]));
+		racetrackInfoService.sendCurrentSolution(
+			getActiveBody(RacetrackScenarios[0]).solutions[0],
+		);
+		racetrackInfoService.sendCurrentTechnology(
+			getActiveBody(RacetrackScenarios[0]).solutions[0].technologies[0],
+		);
+
+		racetrackInfoService.sendCurrentAdoptionPercentage(5);
+	};
+
 	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
@@ -99,7 +114,6 @@ describe('SolutionComponent', () => {
 		fixture = TestBed.createComponent(SolutionComponent);
 		component = fixture.componentInstance;
 		router = TestBed.get(Router);
-		// router.navigate(['/solution/lifecycle']);
 	}));
 
 	beforeEach(() => {
@@ -202,19 +216,19 @@ describe('SolutionComponent', () => {
 
 	it('should change the active technology', fakeAsync(() => {
 		buildSpies();
-		racetrackInfoService.sendRacetrack(getActiveBody(RacetrackScenarios[0]));
-		racetrackInfoService.sendCurrentSolution(
-			getActiveBody(RacetrackScenarios[0]).solutions[0],
-		);
-		racetrackInfoService.sendCurrentTechnology(
-			getActiveBody(RacetrackScenarios[0]).solutions[0].technologies[0],
-		);
+
+		sendRacetrack();
+
 		tick();
 		fixture.detectChanges();
 		tick();
 
 		expect(component.selectedTechnology.name)
 			.toEqual('Campus Network Assurance');
+
+		const lifecycleFacet = _.find(component.facets, { key: 'lifecycle' });
+		expect(lifecycleFacet.data)
+			.toEqual({ gaugePercent: 5 });
 
 		component.changeTechnology(component.selectedSolution.technologies[1]);
 
@@ -227,6 +241,9 @@ describe('SolutionComponent', () => {
 
 	it('should always call getCaseAndRMACount', fakeAsync(() => {
 		spyOn(component, 'getCaseAndRMACount');
+
+		sendRacetrack();
+
 		fixture.detectChanges();
 		tick(1000);
 		expect(component.getCaseAndRMACount)
@@ -248,17 +265,20 @@ describe('SolutionComponent', () => {
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
 
-		spyOn(productAlertsService, 'getAdvisoriesFieldNotices')
+		spyOn(productAlertsService, 'headAdvisoriesFieldNoticesResponse')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
 
-		spyOn(productAlertsService, 'getAdvisoriesSecurityAdvisories')
+		spyOn(productAlertsService, 'headAdvisoriesSecurityAdvisoriesResponse')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
 
-		spyOn(diagnosticsService, 'getCriticalBugs')
+		spyOn(diagnosticsService, 'headCriticalBugsResponse')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
+
+		sendRacetrack();
+		tick();
 
 		fixture.detectChanges();
 		tick(1000);
@@ -321,6 +341,8 @@ describe('SolutionComponent', () => {
 		spyOn(contractsService, 'getCoverageCounts')
 			.and
 			.returnValue(of(getActiveBody(CoverageScenarios[2])));
+
+		sendRacetrack();
 
 		fixture.detectChanges();
 		tick(5000);

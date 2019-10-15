@@ -30,7 +30,7 @@ describe('AfmDetailsComponent', () => {
 		mockAfmService = TestBed.get(AfmService);
 		spyOn(mockAfmService, 'ignoreEvent')
 			.and
-			.returnValue(of(<any> AfmScenarios[0].scenarios.POST[0].response.body));
+			.returnValue(of(AfmScenarios[1].scenarios.POST[0].response.body));
 	}));
 
 	beforeEach(() => {
@@ -79,7 +79,7 @@ describe('AfmDetailsComponent', () => {
 
 		spyOn(mockAfmService, 'revertIgnoreEvent')
 			.and
-			.returnValue(of(<any> AfmScenarios[0].scenarios.POST[0].response.body));
+			.returnValue(of(AfmScenarios[9].scenarios.POST[0].response.body));
 		mockAlarm.customerId = '1234';
 		mockAlarm.faultIC = '%Fault';
 		mockAlarm.status = 'Success';
@@ -102,7 +102,7 @@ describe('AfmDetailsComponent', () => {
 
 		spyOn(mockAfmService, 'revertIgnoreEvent')
 			.and
-			.returnValue(of(<any> AfmScenarios[9].scenarios.POST[0].response.body));
+			.returnValue(of(AfmScenarios[9].scenarios.POST[0].response.body));
 		mockAlarm.customerId = '1234';
 		mockAlarm.faultIC = '%Fault';
 		mockAlarm.status = 'Success';

@@ -40,7 +40,6 @@
 				data-auto-id="carousel-right"
 			></div>
 		</div>
-		<no-dnac-header (buttonData)="refreshButtonInfo($event)"></no-dnac-header>
 	</div>
 
 	<div #content class="content">
@@ -106,6 +105,7 @@
 
 <ng-template #lifecycleFacet let-facet="facet">
 	<app-gauge
+		class="kmii__detailed__graphic"
 		textColor="#243034"
 		[arcColor]="facet?.selected ? '#00bceb' : '#92dde4'"
 		[percentage]="facet?.data?.gaugePercent || 0"
@@ -121,6 +121,7 @@
 
 <ng-template #assetsFacet let-facet="facet">
 	<app-gauge
+		class="kmii__detailed__graphic"
 		textColor="#243034"
 		[arcColor]="facet?.selected ? '#00bceb' : '#92dde4'"
 		[percentage]="facet?.data?.gaugePercent || 0"
@@ -139,12 +140,12 @@
 	</div>
 	<div class="kmii__detailed" *ngIf="!facet?.loading">
 		<div class="kmii__insights" *ngIf="!facet?.isError">
-			<span *ngIf="(cxLevel === 3)" class="kmii__insights__num base-padding-top"
+			<span *ngIf="(cxLevel === 3)" class="kmii__insights__num"
 				[class.kmii__insights__num--selected]="facet?.selected"
 				[innerText]="facet?.seriesData?.totalCnt">
 			</span>
 			<div class="kmii__insights__title">
-				 <div *ngIf="facet?.seriesData?.optedIn">
+				<div *ngIf="facet?.seriesData?.optedIn">
 					<span [innerText]="facet?.seriesData?.complianceIssueCnt"></span>
 					<span class="qtr-padding-left" [innerText]="'_InsightsComplianceIssues_' | i18n"></span>
 				</div>
@@ -183,6 +184,7 @@
 <ng-template #advisoriesFacet let-facet="facet">
 	<div class="kmii__detailed" *ngIf="!facet?.loading">
 		<app-multi-gauge
+			class="kmii__detailed__graphic"
 			arcColor="#92dde4"
 			*ngIf="facet?.seriesData"
 			[data]="facet?.seriesData"
@@ -195,6 +197,9 @@
 			class="text-muted flex-center text-large base-padding-left base-padding-right dbl-padding-top dbl-padding-bottom"
 			[innerText]="'_NoOpenAdvisories_' | i18n">
 		</div>
+	</div>
+	<div *ngIf="facet?.loading" class="base-padding">
+		<cui-spinner></cui-spinner>
 	</div>
 	<p class="km__items__item__label" [innerText]="facet?.title | uppercase"></p>
 	<div

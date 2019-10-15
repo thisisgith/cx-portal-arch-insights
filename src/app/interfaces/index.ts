@@ -14,7 +14,7 @@ export {
 	Tech,
 } from './case';
 export { Contract } from './contract';
-export { SetupStep, SetupComponent } from './ie';
+export { OnStepCompleteInsertOptions, SetupStep, SetupComponent } from './ie';
 export {
 	LaborLine,
 	PartsLineDetail,
@@ -30,3 +30,4 @@ export { User } from './user';
 export { Alert } from './alert';
 export { GeoCodeResponse, GeoCodeParams, GeoCodeFeature } from './geocode';
 export { Panel360 } from './Panel360';
+export { AssetLinkInfo } from './assetLinkInfo';

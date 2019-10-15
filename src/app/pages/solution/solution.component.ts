@@ -26,9 +26,6 @@ import {
 	CoverageCountsResponse,
 	ProductAlertsService,
 	InsightsCrashesService,
-	FieldNoticeAdvisoryResponse,
-	CriticalBugsResponse,
-	SecurityAdvisoriesResponse,
 	DiagnosticsService,
 } from '@sdp-api';
 import { CaseService } from '@cui-x/services';
@@ -38,6 +35,7 @@ import { CuiModalService } from '@cisco-ngx/cui-components';
 import { catchError, map, takeUntil } from 'rxjs/operators';
 import { Step } from '../../../../src/app/components/quick-tour/quick-tour.component';
 import { DetailsPanelStackService, UtilsService, RacetrackInfoService } from '@services';
+import { HttpResponse } from '@angular/common/http';
 
 /**
  * Interface representing a facet
@@ -65,6 +63,8 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	public selectedFacet: Facet;
 	public selectedSolution: RacetrackSolution;
 	public selectedTechnology: RacetrackTechnology;
+	private selectedSolutionName: string;
+	private selectedTechnologyName: string;
 	private customerId: string;
 
 	public status = {
@@ -328,7 +328,10 @@ export class SolutionComponent implements OnInit, OnDestroy {
 
 		this.racetrackInfoService.getCurrentSolution()
 		.pipe(
-			map(result => this.selectedSolution = result),
+			map((result: RacetrackSolution) => {
+				this.selectedSolution = result;
+				this.selectedSolutionName = _.get(this.selectedSolution, 'name');
+			}),
 			takeUntil(this.destroy$),
 			catchError(err => {
 				this.logger.error(`Solution Data :: Get Current Solution :: Error ${err}`);
@@ -340,15 +343,33 @@ export class SolutionComponent implements OnInit, OnDestroy {
 
 		this.racetrackInfoService.getCurrentTechnology()
 		.pipe(
-			map(result => {
-				this.selectedTechnology = result;
-				lifecycleFacet.data = {
-					gaugePercent: _.get(this.selectedTechnology, 'usecase_adoption_percentage'),
-				};
+			map((result: RacetrackTechnology) => {
+				if (this.selectedTechnologyName !== _.get(result, 'name')) {
+					this.selectedTechnology = result;
+					this.selectedTechnologyName = _.get(this.selectedTechnology, 'name');
+					this.reloadFacets();
+				}
 			}),
 			takeUntil(this.destroy$),
 			catchError(err => {
 				this.logger.error(`Solution Data :: Get Current Technology :: Error ${err}`);
+
+				return of({ });
+			}),
+		)
+		.subscribe();
+
+		this.racetrackInfoService.getCurrentAdoptionPercentage()
+		.pipe(
+			map((result: number) => {
+				lifecycleFacet.data = {
+					gaugePercent: result,
+				};
+			}),
+			takeUntil(this.destroy$),
+			catchError(err => {
+				this.logger.error(
+					`Solution Data :: Get Current AdoptionPercentage :: Error ${err}`);
 
 				return of({ });
 			}),
@@ -364,7 +385,11 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		const assetsFacet = _.find(this.facets, { key: 'assets' });
 		assetsFacet.loading = true;
 
-		return this.contractsService.getCoverageCounts({ customerId: this.customerId })
+		return this.contractsService.getCoverageCounts({
+			customerId: this.customerId,
+			solution: this.selectedSolution.name,
+			useCase: this.selectedTechnology.name,
+		})
 		.pipe(
 			map((counts: CoverageCountsResponse) => {
 				const covered = _.get(counts, 'covered', 0);
@@ -402,12 +427,14 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		let fieldTotal = 0;
 
 		return forkJoin([
-			this.productAlertsService.getAdvisoriesFieldNotices({
-				customerId: this.customerId, page: 1, rows: 1,
+			this.productAlertsService.headAdvisoriesFieldNoticesResponse({
+				customerId: this.customerId,
+				solution: this.selectedSolutionName,
+				useCase: this.selectedTechnologyName,
 			})
 			.pipe(
-				map((response: FieldNoticeAdvisoryResponse) => {
-					fieldTotal = _.get(response, ['Pagination', 'total'], 0);
+				map((response: HttpResponse<null>) => {
+					fieldTotal = _.toNumber(response.headers.get('X-API-RESULT-COUNT')) || 0;
 				}),
 				catchError(err => {
 					this.logger.error('solution.component : fetchAdvisoryCounts():field ' +
@@ -416,12 +443,14 @@ export class SolutionComponent implements OnInit, OnDestroy {
 					return of({ });
 				}),
 			),
-			this.productAlertsService.getAdvisoriesSecurityAdvisories({
-				customerId: this.customerId, page: 1, rows: 1,
+			this.productAlertsService.headAdvisoriesSecurityAdvisoriesResponse({
+				customerId: this.customerId,
+				solution: this.selectedSolutionName,
+				useCase: this.selectedTechnologyName,
 			})
 			.pipe(
-				map((response: SecurityAdvisoriesResponse) => {
-					advisoryTotal = _.get(response, ['Pagination', 'total'], 0);
+				map((response: HttpResponse<null>) => {
+					advisoryTotal = _.toNumber(response.headers.get('X-API-RESULT-COUNT')) || 0;
 				}),
 				catchError(err => {
 					this.logger.error('solution.component : fetchAdvisoryCounts():security ' +
@@ -430,12 +459,14 @@ export class SolutionComponent implements OnInit, OnDestroy {
 					return of({ });
 				}),
 			),
-			this.diagnosticsService.getCriticalBugs({
-				customerId: this.customerId, page: 1, rows: 1,
+			this.diagnosticsService.headCriticalBugsResponse({
+				customerId: this.customerId,
+				solution: this.selectedSolutionName,
+				useCase: this.selectedTechnologyName,
 			})
 			.pipe(
-				map((response: CriticalBugsResponse) => {
-					bugsTotal = _.get(response, ['Pagination', 'total'], 0);
+				map((response: HttpResponse<null>) => {
+					bugsTotal = _.toNumber(response.headers.get('X-API-RESULT-COUNT')) || 0;
 				}),
 				catchError(err => {
 					this.logger.error('solution.component : fetchAdvisoryCounts():bugs ' +
@@ -585,7 +616,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 			{
 				arrows: 3,
 				data: {
-					active: false,
+					active: true,
 				},
 				description: I18n.get('_QuickTourStep2Description_'),
 				relative: false,
@@ -616,18 +647,6 @@ export class SolutionComponent implements OnInit, OnDestroy {
 				title: I18n.get('_QuickTourStep1Title_'),
 			},
 		];
-	}
-
-	/**
-	 * Refreshes the data for the Quick Tour Step attached
-	 * to the No DNAC Header 'continue' button
-	 * @param info Data for the button
-	 */
-	public refreshButtonInfo (info) {
-		if (this.quickTourSteps) {
-			const step = _.find(this.quickTourSteps, { stepIndex: 2 });
-			step.data = info;
-		}
 	}
 
 	/**
@@ -674,12 +693,10 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	}
 
 	/**
-	 * OnInit Functionality
+	 * Reloads our facets
 	 */
-	public ngOnInit () {
-		this.initializeQuickTour();
-		this.initializeFacets();
-		this.fetchSolutions();
+	private reloadFacets () {
+		this.status.loading = true;
 		forkJoin(
 			this.fetchCoverageCount(),
 			this.fetchAdvisoryCounts(),
@@ -697,9 +714,18 @@ export class SolutionComponent implements OnInit, OnDestroy {
 			takeUntil(this.destroy$),
 		)
 		.subscribe(() => {
-			this.refreshQuickTour();
 			this.status.loading = false;
 		});
+	}
+
+	/**
+	 * OnInit Functionality
+	 */
+	public ngOnInit () {
+		this.initializeQuickTour();
+		this.initializeFacets();
+		this.fetchSolutions();
+		this.refreshQuickTour();
 		this.collapseFeedbackTab();
 	}
 
@@ -718,6 +744,8 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	 * Detects changes to the view after init
 	 */
 	public async ngAfterViewInit () {
+		this.calculateStep1();
+		this.calculateStep2();
 		if (this.activeRoute) {
 			this.selectFacet(this.getFacetFromRoute(this.activeRoute));
 		}

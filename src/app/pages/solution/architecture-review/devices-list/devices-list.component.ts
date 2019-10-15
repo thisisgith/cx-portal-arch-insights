@@ -6,7 +6,8 @@ import { DatePipe } from '@angular/common';
 import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
-import { ArchitectureReviewService, IParamType, InventoryService, AssetLinkInfo } from '@sdp-api';
+import { ArchitectureReviewService, IParamType, InventoryService } from '@sdp-api';
+import { AssetLinkInfo } from '@interfaces';
 import { ActivatedRoute } from '@angular/router';
 import * as _ from 'lodash-es';
 import { AssetPanelLinkService } from '@services';
@@ -97,14 +98,14 @@ export class DevicesListComponent implements OnInit, OnChanges {
 					sortable: false,
 				},
 				{
-					key: 'productId',
-					name: I18n.get('_ArchitectureProductId_'),
-					sortable: false,
-				},
-				{
 					name: I18n.get('_ArchitectureProductFamily_'),
 					sortable: false,
 					template : this.productFamilyTemplate,
+				},
+				{
+					key: 'productId',
+					name: I18n.get('_ArchitectureProductId_'),
+					sortable: false,
 				},
 				{
 					key: 'softwareType',

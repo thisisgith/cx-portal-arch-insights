@@ -10,6 +10,7 @@ import { RegisterCollectorService } from '../register-collector/register-collect
 import { SetupIEService } from '../setup-ie.service';
 import { NoDNACComponent } from '../no-dnac/no-dnac.component';
 import { UtilsService } from '@services';
+import { ControlPointIERegistrationAPIService } from '@sdp-api';
 import * as _ from 'lodash-es';
 
 /**
@@ -28,6 +29,7 @@ export class ConnectDNACenterComponent implements OnInit, SetupStep {
 	public passwordError: boolean;
 	public loading: boolean;
 	public promptForCreds: boolean;
+	private customerId: string;
 
 	public accountForm = new FormGroup({
 		ipAddress: new FormControl(null, [
@@ -48,13 +50,17 @@ export class ConnectDNACenterComponent implements OnInit, SetupStep {
 
 	constructor (
 		@Inject('ENVIRONMENT') private env,
+		private cpService: ControlPointIERegistrationAPIService,
 		private route: ActivatedRoute,
 		private router: Router,
 		private registerService: RegisterCollectorService,
 		private setupService: SetupIEService,
 		private state: SetupIEStateService,
 		private utils: UtilsService,
-	) { }
+	) {
+		const user = _.get(this.route, ['snapshot', 'data', 'user']);
+		this.customerId = _.get(user, ['info', 'customerId']);
+	}
 
 	/**
 	 * NgOnInit
@@ -86,7 +92,7 @@ export class ConnectDNACenterComponent implements OnInit, SetupStep {
 				if (!hasDNAC) {
 					this.onStepComplete.emit([
 						{
-							state: SETUP_STATES.COLLECTOR,
+							state: SETUP_STATES.CONNECT_DNAC,
 							type: NoDNACComponent,
 						},
 					]);
@@ -136,14 +142,22 @@ export class ConnectDNACenterComponent implements OnInit, SetupStep {
 
 						return empty();
 					}),
+					mergeMap(() => this.cpService
+						.updateRegistrationCompletionUsingPOST({
+							completed: true,
+							customerId: this.customerId,
+						})
+						.pipe(
+							catchError(() => {
+								this.onStepComplete.emit(); // continue even if an error occurs
+
+								return empty();
+							}),
+						),
+					),
 					takeUntil(this.destroyed$),
 				)
 				.subscribe(() => {
-					// finished last step so hide the setup banner on the home page
-					this.utils.setLocalStorage(
-						this.env.ieSetup.CX_Coll_Reg_LS_KEY,
-						{ registered: true },
-					);
 					this.onStepComplete.emit();
 				});
 		}

@@ -6,6 +6,7 @@ import {
 	OnChanges,
 	Output,
 	EventEmitter,
+	OnDestroy,
 } from '@angular/core';
 import * as _ from 'lodash-es';
 import {
@@ -18,16 +19,20 @@ import {
 	FieldNoticeAdvisory,
 	FieldNoticeAdvisoryResponse,
 	NetworkElement,
+	RacetrackTechnology,
+	RacetrackSolution,
 } from '@sdp-api';
 import { LogService } from '@cisco-ngx/cui-services';
 import {
 	map,
 	mergeMap,
 	catchError,
+	takeUntil,
 } from 'rxjs/operators';
-import { of, forkJoin } from 'rxjs';
+import { of, forkJoin, Subject } from 'rxjs';
 import { AssetIds } from '../impacted-assets/impacted-assets.component';
 import { Alert } from '@interfaces';
+import { RacetrackInfoService } from '@services';
 
 /** Data Interface */
 export interface Data {
@@ -45,7 +50,7 @@ export interface Data {
 	styleUrls: ['./field-notice-details.component.scss'],
 	templateUrl: './field-notice-details.component.html',
 })
-export class FieldNoticeDetailsComponent implements OnInit, OnChanges {
+export class FieldNoticeDetailsComponent implements OnInit, OnChanges, OnDestroy {
 
 	@Input('id') public id: string;
 	@Input('advisory') public advisory: FieldNoticeAdvisory;
@@ -67,12 +72,14 @@ export class FieldNoticeDetailsComponent implements OnInit, OnChanges {
 	public activeTab = 0;
 	public data: Data = { };
 	public isLoading = false;
-	public upVoteSelected = false;
-	public downVoteSelected = false;
+	private destroyed$: Subject<void> = new Subject<void>();
+	private selectedSolutionName: string;
+	private selectedTechnologyName: string;
 
 	constructor (
 		private logger: LogService,
 		private productAlertsService: ProductAlertsService,
+		private racetrackInfoService: RacetrackInfoService,
 	) { }
 
 	/**
@@ -169,7 +176,10 @@ export class FieldNoticeDetailsComponent implements OnInit, OnChanges {
 				},
 				notice: {
 					customerId: this.customerId,
+					equipmentType: ['CHASSIS'],
 					fieldNoticeId: [_.toSafeInteger(this.id)],
+					solution: this.selectedSolutionName,
+					useCase: this.selectedTechnologyName,
 					vulnerabilityStatus: ['POTVUL', 'VUL'],
 				},
 			};
@@ -181,6 +191,8 @@ export class FieldNoticeDetailsComponent implements OnInit, OnChanges {
 				this.params.advisory = {
 					customerId: this.customerId,
 					fieldNoticeId: [_.toSafeInteger(this.id)],
+					solution: this.selectedSolutionName,
+					useCase: this.selectedTechnologyName,
 				};
 
 				obsBatch.push(this.getAdvisory());
@@ -189,6 +201,9 @@ export class FieldNoticeDetailsComponent implements OnInit, OnChanges {
 			this.isLoading = true;
 
 			forkJoin(obsBatch)
+			.pipe(
+				takeUntil(this.destroyed$),
+			)
 			.subscribe(() => {
 				this.isLoading = false;
 				this.details.emit(this.data);
@@ -200,7 +215,24 @@ export class FieldNoticeDetailsComponent implements OnInit, OnChanges {
 	 * Initializer
 	 */
 	public ngOnInit () {
-		this.refresh();
+		this.racetrackInfoService.getCurrentSolution()
+		.pipe(
+			takeUntil(this.destroyed$),
+		)
+		.subscribe((solution: RacetrackSolution) => {
+			this.selectedSolutionName = _.get(solution, 'name');
+		});
+
+		this.racetrackInfoService.getCurrentTechnology()
+		.pipe(
+			takeUntil(this.destroyed$),
+		)
+		.subscribe((technology: RacetrackTechnology) => {
+			if (this.selectedTechnologyName !== _.get(technology, 'name')) {
+				this.selectedTechnologyName = _.get(technology, 'name');
+				this.refresh();
+			}
+		});
 	}
 
 	/**
@@ -212,5 +244,11 @@ export class FieldNoticeDetailsComponent implements OnInit, OnChanges {
 		if (currentId && !changes.id.firstChange) {
 			this.refresh();
 		}
+	}
+
+	/** Function used to destroy the component */
+	public ngOnDestroy () {
+		this.destroyed$.next();
+		this.destroyed$.complete();
 	}
 }

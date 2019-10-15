@@ -5,7 +5,6 @@ import { Subscription, Subject, forkJoin } from 'rxjs';
 import { RccAssetSelectReq,
 		RccService,
 		InventoryService,
-		AssetLinkInfo,
 	} from '@sdp-api';
 import { takeUntil } from 'rxjs/operators';
 import { I18n } from '@cisco-ngx/cui-utils';
@@ -13,6 +12,8 @@ import * as _ from 'lodash-es';
 import { UserResolve } from '@utilities';
 import { ActivatedRoute } from '@angular/router';
 import { AssetPanelLinkService } from '@services';
+import { AssetLinkInfo } from '@interfaces';
+
 /**
  * Component for portal support
  */
@@ -66,6 +67,8 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 	private assetSeverityIconTemplate: TemplateRef<{ }>;
 	@ViewChild('violationAgeTemplate', { static: true })
 	private violationAgeTemplate: TemplateRef<{ }>;
+	@ViewChild('suggestedFixTemplate', { static: true })
+	private suggestedFixTemplate: TemplateRef<{ }>;
 	/* Will be used in next release*/
 	public severityMappings = { } = [
 		{ id: 'P1', name: I18n.get('_RccSeverityValueP1_') },
@@ -331,6 +334,7 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 					key: 'suggestedFix',
 					name: I18n.get('_RccAssetSuggestedFix_'),
 					sortable: false,
+					template: this.suggestedFixTemplate,
 				},
 			],
 			dynamicData: false,

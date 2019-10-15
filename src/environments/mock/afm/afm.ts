@@ -28,7 +28,7 @@ const getRevevtIngoredData = {
 	eventInfo: null,
 	eventList: null,
 	pagination: null,
-	status: 'Success',
+	status: 'Failed',
 	statusCode: null,
 	statusMessage: 'Event unignored successfully',
 };

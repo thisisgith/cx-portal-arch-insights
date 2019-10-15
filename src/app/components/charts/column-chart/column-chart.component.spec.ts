@@ -90,7 +90,7 @@ describe('ColumnChartComponent', () => {
 			},
 			stopPropagation: () => true,
 		});
-		expect(spy)
+		(<any> expect(spy))
 			.toHaveBeenCalledWith(wrapperComponent.seriesData[0]);
 	});
 });

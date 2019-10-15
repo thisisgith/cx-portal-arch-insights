@@ -82,9 +82,9 @@
 		</div>
 	</div>
 </div>
-<div class="row" *ngIf="assetData?.installAddress1">
-	<div class="col-md-12 base-margin-top">
-		<span class="text-uppercase text-small cx-text-secondary" [innerText]="'_InstalledLocation_' | i18n"></span>
+<div class="row summary__details" *ngIf="assetData?.installAddress1">
+	<div class="col-md-12 base-margin-top summary__details__title">
+		<span class="text-uppercase text cx-text-secondary" [innerText]="'_InstalledLocation_' | i18n"></span>
 	</div>
 	<div class="col-md-12 qtr-margin-top">
 		<asset-map [assetSummary]="assetData"></asset-map>
@@ -92,8 +92,8 @@
 </div>
 
 <ng-template #supportData let-title="title" let-expirationDate="expirationDate" let-linkData="linkData" let-url="url" let-supportType="supportType">
-	<div class="row">
-		<div class="col-md-12 text-small text-uppercase cx-text-gray" [innerText]="title | i18n" attr.data-auto-id="{{ title }}"></div>
+	<div class="row summary__details">
+		<div class="col-md-12 text-uppercase cx-text-gray summary__details__title" [innerText]="title | i18n" attr.data-auto-id="{{ title }}"></div>
 	</div>
 	<div class="row cx-text-default">
 		<div *ngIf="expirationDate" class="col-md-12">
@@ -117,7 +117,7 @@
 
 <ng-template #detailsData let-title="title" let-data="data" let-linkData="linkData" let-url="url" let-titleOnly="titleOnly">
 	<div class="row summary__details">
-		<div class="col-md-12 text-uppercase summary__details__title cx-text-gray text-small" [innerText]="title | i18n" attr.data-auto-id="{{ title }}"></div>
+		<div class="col-md-12 text-uppercase summary__details__title cx-text-gray" [innerText]="title | i18n" attr.data-auto-id="{{ title }}"></div>
 	</div>
 	<div class="row text-medium cx-text-default" *ngIf="!titleOnly">
 		<div class="col-md-12" [innerText]="'_NA_' | i18n" *ngIf="!(data || linkData)" attr.data-auto-id="{{ title }}-N/A"></div>

@@ -26,4 +26,9 @@ export interface PitstopActionUpdateRequestObject {
    * The pitstop action being updated
    */
   pitstopAction: string;
+
+  /**
+   * The pitstop action complete or not (true | false)
+   */
+  actionComplete: boolean;
 }

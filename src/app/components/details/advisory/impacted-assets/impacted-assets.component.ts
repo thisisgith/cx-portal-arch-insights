@@ -16,17 +16,21 @@ import {
 	BugImpactedAssetsResponse,
 	NetworkElementResponse,
 	NetworkElement,
+	RacetrackTechnology,
+	RacetrackSolution,
 } from '@sdp-api';
 import { LogService } from '@cisco-ngx/cui-services';
 import {
 	map,
 	catchError,
+	takeUntil,
 } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { of, Subject } from 'rxjs';
 import { CuiTableOptions, CuiTableColumnOption } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { AdvisoryType } from '@interfaces';
 import { getProductTypeImage, getProductTypeTitle } from '@classes';
+import { RacetrackInfoService } from '@services';
 
 /**
  * The interface for impacted asset ids utilizing managedNeId
@@ -71,11 +75,15 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 	};
 	public getProductIcon = getProductTypeImage;
 	public getProductTitle = getProductTypeTitle;
+	private selectedSolutionName: string;
+	private selectedTechnologyName: string;
+	private destroyed$: Subject<void> = new Subject<void>();
 
 	constructor (
 		private logger: LogService,
 		private inventoryService: InventoryService,
 		private diagnosticsService: DiagnosticsService,
+		private racetrackInfoService: RacetrackInfoService,
 	) { }
 
 	/**
@@ -204,6 +212,8 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 				customerId: this.customerId,
 				page: 1,
 				rows: 100,
+				solution: this.selectedSolutionName,
+				useCase: this.selectedTechnologyName,
 			});
 
 			this.fetchBugAssets();
@@ -216,7 +226,9 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 				),
 				page: 1,
 				rows: 100,
+				solution: this.selectedSolutionName,
 				sort: ['hostName:ASC'],
+				useCase: this.selectedTechnologyName,
 			});
 
 			this.getAssets();
@@ -242,7 +254,24 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 	 * Initializes the component
 	 */
 	public ngOnInit () {
-		this.refresh();
+		this.racetrackInfoService.getCurrentSolution()
+		.pipe(
+			takeUntil(this.destroyed$),
+		)
+		.subscribe((solution: RacetrackSolution) => {
+			this.selectedSolutionName = _.get(solution, 'name');
+		});
+
+		this.racetrackInfoService.getCurrentTechnology()
+		.pipe(
+			takeUntil(this.destroyed$),
+		)
+		.subscribe((technology: RacetrackTechnology) => {
+			if (this.selectedTechnologyName !== _.get(technology, 'name')) {
+				this.selectedTechnologyName = _.get(technology, 'name');
+				this.refresh();
+			}
+		});
 	}
 
 	/**
@@ -254,5 +283,11 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 		if (currentId && !changes.id.firstChange) {
 			this.refresh();
 		}
+	}
+
+	/** Function used to destroy the component */
+	public ngOnDestroy () {
+		this.destroyed$.next();
+		this.destroyed$.complete();
 	}
 }

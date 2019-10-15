@@ -91,7 +91,10 @@
 		class="markup-toggle text-primary" 
 		(click)="viewAllVersions()">
 			<span class="markup-label" [innerText]="'_OsvViewAllOSVersions_' | i18n"></span>
-			<span class="icon-popout icon-small qtr-margin-left"></span>
+			<img alt="{{ '_OsvOpenNewWindow_' | i18n }}"
+				class="qtr-margin-left"
+				attr.data-auto-id="OpenInNewWindow"
+				src="assets/icons/icon-open-new-window.svg">
 	</a>
 </div>
 
@@ -101,27 +104,19 @@
 			<div *ngIf="view =='list'" class="text-large"
 				[innerText]="'_OsvSoftwareVersionSummary_' | i18n | uppercase">
 			</div>
-		</div>
-		<div class="col-md-2 pull-right">
-			<div class="btn-group btn-group--square half-margin-right pull-right">
-				<button 
-					[title]="'_OsvListView_' | i18n" 
-					data-auto-id="list-view-btn" 
-					class="btn btn--small "
-					[ngClass]="{ 'selected-view': view == 'list' }"
-					 (click)=" view = 'list'">
-						<span class="icon-list-view"></span>
-				</button>
-				<button 
-					[title]="'_OsvTimelineView_' | i18n" 
-					data-auto-id="timeline-view-btn" 
-					class="btn btn--small "
-					[ngClass]="{ 'selected-view': view == 'timeline' }" 
-					(click)="view = 'timeline'">
-						<span class="icon-time"></span>
-				</button>
-			</div>
-		</div>
+		</div>		
+		<div class="flex flex-fluid flex-right align-items-end">
+				<div id="asset-group-btns" class="btn-group btn-group--square half-margin-right titlebar__viewmode">
+						<button data-auto-id="list-view-btn" class="btn btn--small qtr-padding" 
+							[ngClass]="{ 'selected': view === 'list' }" (click)=" view = 'list'">
+							<div inlineSVG="assets/icons/nav-tableline-off.svg"></div>
+						</button>
+						<button data-auto-id="timeline-view-btn" class="btn btn--small qtr-padding" 
+							[ngClass]="{ 'selected': view === 'timeline' }" (click)="view = 'timeline'">
+							<div inlineSVG="assets/icons/nav-timeline-off.svg"></div>
+						</button>
+				</div>
+		</div>		
 	</div>
 </ng-template>
 
@@ -144,7 +139,7 @@
 			<span *ngIf="item.swVersion == 'NA'" [innerText]="'_OsvNotAvailable_' | i18n"></span>
 		</div>
 		<div class="col-8">
-			<div class="recommendation-label label label--large qtr-margin-left qtr-margin-top" [title]="version.name"
+			<div class="recommendation-label label label--large qtr-margin-left qtr-margin-top"
 				*ngFor="let version of item.swVersionGroup">
 				<span class="text-capitalize" [innerHTML]="version.name"></span>
 				<span 

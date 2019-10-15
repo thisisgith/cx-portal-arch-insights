@@ -9,6 +9,7 @@ import { SETUP_STATES } from '@classes';
 export interface SetupStep {
 	inputs?: object;
 	onStepComplete: EventEmitter<void | SetupComponent[]>;
+	onStepCompleteInsert?: EventEmitter<OnStepCompleteInsertOptions>;
 	ngOnChanges?: () => void;
 }
 
@@ -19,4 +20,12 @@ export interface SetupComponent {
 	type: any;
 	state: SETUP_STATES;
 	inputs?: object;
+}
+
+/**
+ * Interface representing inputs for the onStepCompleteInsert event handler
+ */
+export interface OnStepCompleteInsertOptions {
+	steps: SetupComponent[];
+	offset: number;
 }

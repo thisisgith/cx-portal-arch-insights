@@ -6,18 +6,46 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import {
 	user,
 	MockAssetsData,
+	RacetrackScenarios,
+	Mock,
 } from '@mock';
 import { RouterTestingModule } from '@angular/router/testing';
 import { UserResolve } from '@utilities';
 import { of } from 'rxjs';
-import { DetailsPanelStackService } from '@services';
+import { DetailsPanelStackService, RacetrackInfoService } from '@services';
+import * as _ from 'lodash-es';
+
+/**
+ * Will fetch the currently active response body from the mock object
+ * @param mock the mock object
+ * @param type the scenario type
+ * @returns the body response
+ */
+function getActiveBody (mock: Mock, type: string = 'GET') {
+	const active = _.find(mock.scenarios[type], 'selected') || _.head(mock.scenarios[type]);
+
+	return active.response.body;
+}
 
 describe('AssetDetailsComponent', () => {
 	let component: AssetDetailsComponent;
 	let fixture: ComponentFixture<AssetDetailsComponent>;
 	let userResolve: UserResolve;
-
+	let racetrackInfoService: RacetrackInfoService;
 	let detailsPanelStackService: DetailsPanelStackService;
+
+	/**
+	 * Sends our racetrack info
+	 */
+	const sendRacetrack = () => {
+		racetrackInfoService.sendRacetrack(getActiveBody(RacetrackScenarios[0]));
+		racetrackInfoService.sendCurrentSolution(
+			getActiveBody(RacetrackScenarios[0]).solutions[0],
+		);
+		racetrackInfoService.sendCurrentTechnology(
+			getActiveBody(RacetrackScenarios[0]).solutions[0].technologies[0],
+		);
+	};
 
 	configureTestSuite(() => {
 		TestBed.configureTestingModule({
@@ -33,7 +61,7 @@ describe('AssetDetailsComponent', () => {
 	});
 
 	beforeEach(async(() => {
-
+		racetrackInfoService = TestBed.get(RacetrackInfoService);
 		userResolve = TestBed.get(UserResolve);
 	}));
 
@@ -94,6 +122,7 @@ describe('AssetDetailsComponent', () => {
 	});
 
 	it('should change assets', done => {
+		sendRacetrack();
 		component.asset = MockAssetsData[0];
 
 		component.ngOnChanges({

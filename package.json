@@ -65,6 +65,7 @@
 		"mapbox-gl": "^0.54.0",
 		"ngx-mapbox-gl": "^3.3.1",
 		"rxjs": "^6.5.3",
+		"smoothscroll-polyfill": "^0.4.4",
 		"tslib": "^1.9.0",
 		"zone.js": "~0.9.1"
 	},
@@ -91,7 +92,7 @@
 		"@cui-x/utilities": "^1.0.0",
 		"@cx-portal/metrics": "^1.0.8",
 		"@cypress/webpack-preprocessor": "^4.0.4",
-		"@swagger/cx-portal": "^2.0.20",
+		"@swagger/cx-portal": "^2.0.29",
 		"@swagger/ng-swagger-gen": "^1.0.0",
 		"@types/jasmine": "^3.4.0",
 		"@types/jasminewd2": "^2.0.6",

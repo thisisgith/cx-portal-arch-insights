@@ -74,7 +74,10 @@
 <div class="markup pull-right dbl-margin-top" *ngIf="recommendations?.length > 0">
 	<a data-auto-id="ViewAllOsVersions" class="markup-toggle text-primary" (click)="viewAllVersions()">
 		<span class="markup-label" [innerText]="'_OsvViewAllOSVersions_' | i18n"></span>
-		<span class="icon-popout icon-small qtr-margin-left"></span>
+		<img alt="{{ '_OsvOpenNewWindow_' | i18n }}"
+				class="qtr-margin-left"
+				attr.data-auto-id="OpenInNewWindow"
+				src="assets/icons/icon-open-new-window.svg">
 	</a>
 </div>
 
@@ -86,7 +89,7 @@
 			<span *ngIf="item.swVersion == 'NA'" [innerText]="'_OsvNotAvailable_' | i18n"></span>
 		</div>
 		<div class="col-8">
-			<div class="recommendation-label label label--large qtr-margin-left qtr-margin-top" [title]="version.name"
+			<div class="recommendation-label label label--large qtr-margin-left qtr-margin-top"
 				*ngFor="let version of item.swVersionGroup">
 				<span class="text-capitalize" [innerHTML]="version.name"></span>
 				<span 
@@ -119,7 +122,7 @@
 
 <ng-template #actionsTemplate let-item="celldata">
 	<button 
-		*ngIf="acceptanceAllowed.indexOf(item.name) != -1 && !item.accepted && item.swVersion != 'NA'"
+		*ngIf="!item.accepted && item.swVersion != 'NA'"
 		class="btn btn--secondary btn--small" 
 		[innerText]="'_OsvAccept_' | i18n | uppercase" 
 		(click)="onAcceptClick(item.swVersion)"
@@ -133,7 +136,7 @@
 				<div class="text-medium half-padding-left" [innerText]="item.acceptedDate | date:mediumDate"></div>
 			</div>
 		</div>
-		<div class="flex align-items-center">
+		<div class="flex align-items-center cancel-dropdown">
 			<ng-container *ngTemplateOutlet="cancelActionTemplate; context: { celldata: item ,actions: item.actions}"></ng-container>
 		</div>		
 	</div>

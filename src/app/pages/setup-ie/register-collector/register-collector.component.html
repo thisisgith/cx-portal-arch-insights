@@ -1,20 +1,51 @@
 <div class="text-center">
-	<h6 class="text-primary base-margin-bottom"
-		[innerText]="'_StepXColonY_' | i18n:'5':('_CiscoDNACollector_' | i18n)| uppercase"></h6>
 	<div [innerText]="'_ConnectCXCollectorToCXPortal_' | i18n" class="dbl-margin-bottom step-title">
 	</div>
 	<div [hidden]="loading || registering" class="form-container dbl-margin-bottom">
-		<div class="secure-banner flex-center-vertical dbl-margin-bottom">
-			<span class="secure-banner__icon flex-center">
-				<span class="icon-lock"></span>
-			</span>
-			<span class="base-margin-left" [innerText]="'_IE_CiscoDoesNotStoreTheseCreds_' | i18n"></span>
-		</div>
+		<img
+			alt="placeholder"
+			class="xl-margin-bottom"
+			[alt]="'_IE_ConnectLocalMachine_' | i18n"
+			src="assets/img/setup-ie/illustrations/6_setup_collector.png"
+		>
 		<div class="text-left">
 			<form class="dbl-margin-bottom" [formGroup]="accountForm" (ngSubmit)="onSubmit()">
 				<div class="dbl-margin-bottom">
-					<h4 [innerText]="'_IE_SetUpInsightEngineAccess_' | i18n"></h4>
+					<h4 [innerText]="'_IE_SetUpInsightEngineAccess_' | i18n" class="base-margin-bottom"></h4>
 					<span class="text-large" [innerText]="'_IE_SetAPasswordForIEDeployment_' | i18n"></span>
+				</div>
+				<div class="row base-margin-top">
+					<div class="col-md-6">
+						<div class="form-group">
+							<div class="form-group__text">
+								<input
+								id="input-old-password"
+								type="password"
+								formControlName="oldPassword">
+								<label for="input-layout-default" [innerText]="'_CurrentPassword_' | i18n">
+								</label>
+							</div>
+						</div>
+						<ng-container *ngIf="oldPwControl.dirty && oldPwErrors">
+							<ul class="qtr-margin-top">
+								<li
+									*ngIf="oldPwErros.needsLength"
+									[innerText]="'_MustBeNumChars_' | i18n:'8'"></li>
+								<li
+									*ngIf="oldPwErros.needsUppercase"
+									[innerText]="'_MissingUppercase_' | i18n"></li>
+								<li
+									*ngIf="oldPwErros.needsLowercase"
+									[innerText]="'_MissingLowercase_' | i18n"></li>
+								<li
+									*ngIf="oldPwErros.needsSpecialChar"
+									[innerText]="'_MissingSpecialChar_' | i18n"></li>
+								<li
+									*ngIf="oldPwErros.needsNumber"
+									[innerText]="'_MissingNumerical_' | i18n"></li>
+							</ul>
+						</ng-container>
+					</div>
 				</div>
 				<div class="row base-margin-top">
 					<div class="col-md-6">
@@ -24,7 +55,7 @@
 								id="input-password"
 								type="password"
 								formControlName="password">
-								<label for="input-layout-default" [innerText]="'_Password_' | i18n">
+								<label for="input-layout-default" [innerText]="'_NewPassword_' | i18n">
 								</label>
 							</div>
 						</div>
@@ -55,7 +86,7 @@
 									id="input-password-conf"
 									type="password"
 									formControlName="passwordConf">
-								<label for="input-layout-default" [innerText]="'_ConfirmPassword_' | i18n">
+								<label for="input-layout-default" [innerText]="'_ConfirmNewPassword_' | i18n">
 								</label>
 							</div>
 							<div class="help-block text-danger" role="alert" *ngIf="confErrors && confControl.dirty">

@@ -13,10 +13,9 @@ import { CuiSelectModule } from '@cisco-ngx/cui-components';
 	declarations: [ConnectCollectorComponent],
 	imports: [
 		CommonModule,
-		ReactiveFormsModule,
-
 		CuiSelectModule,
 		I18nPipeModule,
+		ReactiveFormsModule,
 	],
 })
 export class ConnectCollectorModule { }

@@ -17,9 +17,9 @@ import {
 	HighCrashRisk,
 	RiskAssets,
 	InventoryService,
-	AssetLinkInfo,
 } from '@sdp-api';
 import { ActivatedRoute } from '@angular/router';
+import { AssetLinkInfo } from '@interfaces';
 
 /**
  * Risk mitigation component
@@ -84,6 +84,8 @@ export class RiskMitigationComponent {
 		public softwareVersionTemplate: TemplateRef<string>;
 	@ViewChild('timeStampTemplate', { static: true })
 		public timeStampTemplate: TemplateRef<string>;
+	@ViewChild('riskTooltipTemplate', { static: true })
+		public riskTooltipTemplate: TemplateRef<string>;
 
 	public openPanel = false;
 	public fullscreen = false;
@@ -509,6 +511,7 @@ export class RiskMitigationComponent {
 	 * @param event will have the device details
 	 */
 	public highCrashTableSorted (event) {
+		if (event.key === 'globalRiskRank') { event.key = 'riskScore'; }
 		this.highCrashRiskParams.sort = `${event.key}.${event.sortDirection}`;
 		 this.getFingerPrintDeviceDetails(this.highCrashRiskParams);
 	}
@@ -680,16 +683,16 @@ export class RiskMitigationComponent {
 					template: this.productIdTemplate,
 				},
 				{
-					key: 'swVersion',
-					name: I18n.get('_RMSoftwareVersion_'),
-					sortable: true,
-					template: this.swVersionTemplate,
-				},
-				{
 					key: 'swType',
 					name: I18n.get('_RMSoftwareType_'),
 					sortable: true,
 					template: this.swTypeCrahsedTemplate,
+				},
+				{
+					key: 'swVersion',
+					name: I18n.get('_RMSoftwareVersion_'),
+					sortable: true,
+					template: this.swVersionTemplate,
 				},
 				{
 					key: 'crashCount',
@@ -742,8 +745,8 @@ export class RiskMitigationComponent {
 					template: this.softwareVersionTemplate,
 				},
 				{
+					headerTemplate:  this.riskTooltipTemplate,
 					key: 'globalRiskRank',
-					name: I18n.get('_RMGlobalRisk_'),
 					sortable: true,
 					template: this.cardColorsTemplate,
 				},

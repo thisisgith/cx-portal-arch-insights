@@ -14,47 +14,20 @@
 			></div>
 			<div [innerHTML]="deviceData.serialNumber"></div>
 		</div>
-		<div data-auto-id="riskScore" class="qtr-margin-left col-md-4">
-			<div class="row">
-				<div
-					class="text-small"
-					[innerText]="'_CP_CompositeRisk_' | i18n"
-				></div>
-			</div>
-			<div class="row">
-				<div class="col-md-8 no-padding-left">
-					<div
-						class="progressbar progressbar--large qtr-margin-top"
-						[attr.data-percentage]="riskScore"
-					>
-						<div class="progressbar__fill"></div>
-					</div>
-				</div>
-				<div>
-					<div
-						class="qtr-margin-left "
-						[ngClass]="
-							{
-								LOW: 'text-success',
-								MED: 'text-warning',
-								HIGH: 'text-danger'
-							}[deviceData.globalRiskRank]
-						"
-					>
-						<span class="icon-stop"></span>
-					</div>
-				</div>
-				<div class="col-md-3 no-padding-right">
-					<span class="fp-header-percentage" [innerHTML]="deviceData.riskScore"></span>
-				</div>
-			</div>
-		</div>
 		<div data-auto-id="globalRiskRank" class="qtr-margin-left col-md-4">
 			<div class="row">
 				<div
-					class="text-small"
-					[innerText]="'_CP_GlobalRiskRank_' | i18n"
+					class="text-small text-bold"
+					[innerText]="'_CP_Risk_' | i18n | uppercase"
 				></div>
+				<sup
+					><div
+						tooltip
+						[tooltipTemplate]="riskTooltipContentTemplate"
+						class="text-tiny icon-info-outline qtr-margin-left half-padding-bottom"
+						[tooltipMaxWidth]="200"
+					></div
+				></sup>
 			</div>
 			<div class="row">
 				<div class="col-md-8 no-padding-left">
@@ -86,3 +59,6 @@
 		</div>
 	</div>
 </div>
+<ng-template #riskTooltipContentTemplate>
+	<span [innerText]="'_CP_GlobalRiskRankToolTip_' | i18n" class="text-small"></span>
+</ng-template>

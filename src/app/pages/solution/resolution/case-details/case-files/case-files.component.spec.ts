@@ -124,16 +124,16 @@ describe('CaseFilesComponent', () => {
 			sortDirection: 'asc',
 		});
 		expect((<any> component).caseFiles[0].fileInfo.a)
-			.toEqual(0);
-		expect((<any> component).caseFiles[1].fileInfo.a)
 			.toEqual(1);
+		expect((<any> component).caseFiles[1].fileInfo.a)
+			.toEqual(0);
 		component.onTableSortingChanged({
-			key: 'fileSize',
+			key: 'a',
 			sortDirection: 'desc',
 		});
 		expect((<any> component).caseFiles[0].fileInfo.a)
-			.toEqual(1);
-		expect((<any> component).caseFiles[1].fileInfo.a)
 			.toEqual(0);
+		expect((<any> component).caseFiles[1].fileInfo.a)
+			.toEqual(1);
 	});
 });

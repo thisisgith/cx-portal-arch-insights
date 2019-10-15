@@ -50,7 +50,8 @@ export class ConnectCollectorComponent implements OnDestroy, OnInit, SetupStep {
 	public DNACStep = false;
 	public ipFieldHidden = false;
 	public ipAddressLink: string;
-	public view: 'input' | 'connecting' | 'instruct' = 'input';
+	public view: 'connecting' | 'instruct' = 'connecting';
+	public clickedProceed = false;
 
 	public accountForm = new FormGroup({
 		ipAddress: new FormControl(null, [
@@ -61,9 +62,7 @@ export class ConnectCollectorComponent implements OnDestroy, OnInit, SetupStep {
 
 	private destroyed$: Subject<void> = new Subject<void>();
 	public reachedIP = false;
-	public get ipAddress () {
-		return this.accountForm.get('ipAddress').value;
-	}
+	public ipAddress: string;
 
 	constructor (
 		@Inject('ENVIRONMENT') private env,
@@ -85,13 +84,30 @@ export class ConnectCollectorComponent implements OnDestroy, OnInit, SetupStep {
 	 * NgOnInit
 	 */
 	public ngOnInit () {
+		const state = this.state.getState();
+		this.ipAddress = state.collectorIP;
+		this.ipAddressLink = `https://${_.trim(this.ipAddress)}`;
+		this.checkIPConnection()
+				.pipe(takeUntil(this.destroyed$))
+				.subscribe(hasCert => {
+					if (!hasCert) {
+						this.view = 'instruct';
+					} else {
+						this.onConnect();
+					}
+				});
 		this.route.queryParams
 			.pipe(
 				takeUntil(this.destroyed$),
 			)
 			.subscribe(params => {
 				if (!params.collectorIP) {
-					this.view = 'input';
+					this.router.navigate([], {
+						queryParams: {
+							collectorIP: this.ipAddress,
+						},
+						queryParamsHandling: 'merge',
+					});
 				}
 			});
 	}
@@ -103,29 +119,14 @@ export class ConnectCollectorComponent implements OnDestroy, OnInit, SetupStep {
 		const url = `https://${_.trim(this.ipAddress)}`;
 		this.ipAddressLink = url;
 		this.view = 'connecting';
-		await this.router.navigate([], {
-			queryParams: {
-				collectorIP: this.ipAddress,
-			},
-			queryParamsHandling: 'merge',
-		});
-		this.checkIPConnection()
-				.pipe(takeUntil(this.destroyed$))
-				.subscribe(hasCert => {
-					if (!hasCert) {
-						// this.openIpAddressInNewTab();
-						this.view = 'instruct';
-						this.pollIP();
-					} else {
-						this.onConnect();
-					}
-				});
 	}
 
 	/**
 	 * Opens the given IP Address in a new tab
 	 */
 	private openIpAddressInNewTab () {
+		this.clickedProceed = true;
+		this.pollIP();
 		window.open(`${this.ipAddressLink}/verified`, '_blank');
 	}
 

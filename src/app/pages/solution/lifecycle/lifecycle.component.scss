@@ -105,12 +105,20 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 	&__view-toggle .btn {
 		background: #fff;
 		color: #6a80a5;
+		display: block;
 		width: 32px;
 		height: 30px;
 
 		&.selected {
 			background: #6a80a5;
-			color: #fff;
+
+			::ng-deep svg g {
+				fill: #fff;
+			}
+		}
+
+		&:hover:not(.selected) {
+			background: #ebf1f8;
 		}
 	}
 }
@@ -141,6 +149,64 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 		color: #fff;
 		-webkit-text-stroke-color: #c1d8e2;
 	}
+}
+
+.actionname__text {
+	flex-grow: 1;
+	font-size: 14px;
+
+	&--complete {
+		color: $text-default-color;
+	}
+}
+
+.actionname.selected {
+	background-color: $accent-light-blue;
+
+	.actionname__text {
+		color: #fff;
+	}
+
+	.checkbox__input::before {
+		background: $background-color;
+	}
+}
+
+.actionname:hover:not(.selected) {
+	.actionname__text {
+		color: $accent-dark-blue;
+	}
+}
+
+:host ::ng-deep input.checked,
+:host ::ng-deep input:checked {
+	~ .checkbox__input::before {
+		background-color: $background-color !important;
+	}
+}
+
+:host ::ng-deep input:not(:checked) {
+	~ .checkbox__input::before {
+		box-shadow: inset 0 0 0 $cui-checkbox-border-width #9e9ea2 !important;
+		background-color: $background-color !important;
+	}
+}
+
+.actionname.selected .checkbox input:checked ~ .checkbox__input::before {
+	background: transparent !important;
+}
+
+.actionname.selected .checkbox input:checked ~ .checkbox__input::after {
+	color: #fff !important;
+}
+
+.checkbox-complete::after {
+	color: $accent-light-blue !important;
+	font-size: 18px !important;
+}
+
+:host ::ng-deep .progressbar__fill {
+	margin-left: -10px !important;
 }
 
 .icon-check-outline,
@@ -399,6 +465,85 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 	}
 }
 
+.lifecycle-viewall-modal {
+	min-height: 100%;
+	overflow-y: hidden;
+	display: flex;
+	flex-direction: column;
+
+	> div {
+		margin: 0 120px;
+	}
+}
+
+.lifecycle-viewall-modal span[class*="icon-close"] {
+	position: absolute;
+	right: 20px;
+	top: 15px;
+}
+
+// CUSTOM STYLING OF CUI-SELECT COMPONENT
+::ng-deep .cui .lifecycle-filter {
+	.cui-virtual-scroll-viewport.dropdown__menu {
+		margin-top: 1px;
+
+		.cui-virtual-scroll-content-wrapper > div {
+			> a {
+				padding: 0 5px 0 25px !important;
+				border: 0 !important;
+				color: $text-default-color !important;
+				font-size: 13px;
+
+				&.selected {
+					background-color: #ecf4fc !important;
+
+					&::after {
+						color: #00bceb;
+					}
+				}
+
+				&::after {
+					left: 5px;
+					font-size: 16px;
+				}
+
+				&:hover {
+					background-color: #f3f9ff;
+				}
+			}
+		}
+	}
+
+	.form-group .form-group__text input {
+		border: 0 !important;
+		background: transparent !important;
+		border-bottom: 1px solid $text-light-gray !important;
+		border-radius: 0 !important;
+		color: $text-default-color !important;
+		font-size: 13px;
+
+		&:focus {
+			box-shadow: none;
+		}
+	}
+
+	.dropdown.active input::placeholder {
+		font-style: normal;
+	}
+
+	.dropdown.active.form-group .form-group__text input {
+		border-bottom: 1px solid #00bceb !important;
+	}
+
+	label {
+		color: $text-dark-gray;
+		font-size: 12px;
+		position: absolute;
+		left: -55px;
+		margin: 0;
+	}
+}
+
 .card_footer_item {
 	width: 100%;
 }
@@ -414,6 +559,12 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 .small-panel {
 	padding: 0;
 	line-height: initial;
+
+	&:hover {
+		.cx-text-default {
+			color: $accent-dark-blue;
+		}
+	}
 }
 
 .atx {
@@ -569,6 +720,47 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 		font-size: 13px;
 		letter-spacing: -0.33px;
 		line-height: 17px;
+	}
+}
+
+/* Viewall List-view table styles */
+.list-view,
+.card-view {
+	height: 100%;
+	max-height: -webkit-fill-available;
+	overflow: auto;
+	margin-top: 30px;
+}
+
+.list-view table {
+	margin-top: unset;
+	cursor: default;
+
+	.list-view__col {
+		font-size: 13px;
+		color: $text-dark-gray;
+
+		&--highlight {
+			font-size: 14px;
+			font-weight: bold;
+		}
+
+		.icon {
+			font-size: 18px;
+			color: $icon-light-gray;
+			margin-top: -3px;
+
+			&--inline {
+				width: 28px;
+				height: 28px;
+				position: absolute;
+				top: -5px;
+
+				& + span {
+					margin-left: 27px;
+				}
+			}
+		}
 	}
 }
 
@@ -833,12 +1025,10 @@ tr.td-row td {
 }
 
 .session-table {
-	overflow-y: scroll;
-	height: 147px;
 	display: block;
 	background-color: rgba(245, 246, 249, 0.33);
 	border: 1px solid #e1e1e1;
-	margin-right: 27px;
+	margin-right: 30px;
 	margin-top: 8px;
 	position: relative;
 
@@ -846,47 +1036,76 @@ tr.td-row td {
 		margin-top: 0;
 		cursor: pointer;
 
-		tr {
-			height: 28px;
-			padding: 0;
+		thead {
+			display: block;
+
+			tr {
+				height: 28px;
+
+				td {
+					font-size: 11px;
+					color: #394454;
+					text-transform: uppercase;
+					padding: 4px 8px;
+				}
+			}
 
 			&::after {
-				display: none;
+				width: 100%;
+				left: 0;
+			}
+
+			.table__head-spacer {
+				width: 172px;
 			}
 		}
 
-		tr td {
-			padding: 4px 8px;
-			width: auto;
-			text-align: left;
+		tbody {
+			overflow-y: scroll;
+			display: block;
+			height: 120px;
+
+			tr {
+				height: 28px;
+				padding: 0;
+				width: 100%;
+
+				&::after {
+					display: none;
+				}
+
+				&:hover {
+					background-color: #ecf4fc;
+				}
+
+				td {
+					color: #394454;
+					padding: 4px 8px;
+					width: auto;
+					text-align: left;
+					font-size: 13px;
+					line-height: 13px;
+					letter-spacing: -0.03px;
+					border: 0;
+
+					&:last-of-type {
+						width: 100%;
+					}
+				}
+
+				&.scheduled td {
+					font-weight: bold;
+
+					&.icon {
+						color: $accent-light-blue;
+
+						.icon-check {
+							margin-top: -4px;
+						}
+					}
+				}
+			}
 		}
-	}
-}
-
-.actionname__text {
-	flex-grow: 1;
-	font-size: 14px;
-
-	&--complete {
-		color: $text-default-color;
-	}
-}
-
-.actionname.selected {
-	background-color: $accent-light-blue;
-
-	.actionname__text {
-		color: #fff;
-	}
-
-	.checkbox__input::before {
-		background: $background-color;
-	}
-}
-
-.actionname:hover:not(.selected) {
-	.actionname__text {
-		color: $accent-dark-blue;
 	}
 }
 
@@ -1062,7 +1281,7 @@ tr.td-row td {
 }
 
 #viewAtxPanel {
-	padding: 25px 0 26px 27px;
+	padding: 25px 0 25px 30px;
 
 	&.panel--open,
 	&.cardpanel--open {
@@ -1091,11 +1310,11 @@ tr.td-row td {
 	.icon-close {
 		position: absolute;
 		top: -10px;
-		right: 28px;
+		right: 15px;
 
 		&::before {
-			font-size: 12px !important;
-			line-height: 12px !important;
+			font-size: 13px !important;
+			line-height: 13px !important;
 			color: #929bab;
 		}
 	}
@@ -1111,29 +1330,30 @@ tr.td-row td {
 		justify-content: space-between;
 		align-items: center;
 		flex-wrap: nowrap;
-		padding-right: 27px;
+		padding-right: 30px;
 
 		h6 {
 			color: #394454;
-			font-size: 14px;
+			font-size: 13px;
 			line-height: 16px;
+			font-weight: normal;
 		}
 
 		.icon-clock::before {
-			font-size: 14px !important;
+			font-size: 12px !important;
 			line-height: 14px !important;
 			color: #929bab;
-			margin-right: 4px;
 		}
 
 		.text-xsmall {
 			line-height: 14px !important;
 			color: #929bab;
+			margin-left: 4px;
 		}
 	}
 
 	.atx-scheduler__footer {
-		margin-top: 16px;
+		margin-top: 20px;
 
 		a:hover {
 			text-decoration: none;
@@ -1235,6 +1455,21 @@ tr.td-row td {
 			top: -90px;
 		}
 	}
+
+	.icon {
+		font-size: 15px;
+		color: $icon-light-gray;
+
+		&--svg {
+			width: 20px;
+			height: 20px;
+			position: absolute;
+
+			& + span {
+				margin-left: 21px;
+			}
+		}
+	}
 }
 
 #moreATXList-item:hover,
@@ -1279,7 +1514,7 @@ tr.td-row td {
 				.icon-clock,
 				.icon-check-outline {
 					font-size: 10px;
-					color: #bdc5cf;
+					color: $icon-light-gray;
 					height: unset;
 				}
 
@@ -1334,14 +1569,10 @@ tr.td-row td {
 			justify-content: flex-start;
 			padding-right: 28px;
 
-			.icon-clock {
-				font-size: 10px;
-				color: #bdc5cf;
-			}
-
 			&__text {
 				font-size: 10px;
 				color: #929bab;
+				margin-top: 3px;
 				letter-spacing: 0.07px;
 			}
 		}
@@ -1379,7 +1610,7 @@ tr.td-row td {
 
 				.icon-clock {
 					font-size: 10px;
-					color: #bdc5cf;
+					color: $icon-light-gray;
 				}
 			}
 
@@ -1389,7 +1620,7 @@ tr.td-row td {
 				.icon-file-pdf-o,
 				.icon-document {
 					font-size: 10px;
-					color: #bdc5cf;
+					color: $icon-light-gray;
 				}
 			}
 
@@ -1399,6 +1630,7 @@ tr.td-row td {
 				color: #929bab;
 				letter-spacing: 0.07px;
 				line-height: 14px;
+				margin-top: 3px;
 			}
 		}
 	}
@@ -1423,48 +1655,6 @@ tr.td-row td {
 			margin-bottom: 18px;
 		}
 	}
-}
-
-:host ::ng-deep input.checked,
-:host ::ng-deep input:checked {
-	~ .checkbox__input::before {
-		box-shadow: inset 0 0 0 $cui-checkbox-border-width transparent !important;
-		background-color: $background-color !important;
-	}
-}
-
-:host ::ng-deep input:not(:checked) {
-	~ .checkbox__input::before {
-		box-shadow: inset 0 0 0 $cui-checkbox-border-width #9e9ea2 !important;
-		background-color: $background-color !important;
-	}
-}
-
-.actionname.selected .checkbox input:checked ~ .checkbox__input::before {
-	background: transparent !important;
-}
-
-.actionname.selected .checkbox input:checked ~ .checkbox__input::after {
-	color: #fff !important;
-}
-
-.checkbox-complete::after {
-	color: $accent-light-blue !important;
-	font-size: 20px !important;
-}
-
-
-:host ::ng-deep .lifecycle-filter input,
-:host ::ng-deep .lifecycle-filter input:focus {
-	border: 0 !important;
-	border-color: transparent;
-	background: transparent !important;
-	border-bottom: 1px solid $text-light-gray !important;
-	color: $text-dark-gray !important;
-}
-
-:host ::ng-deep .progressbar__fill {
-	margin-left: -10px !important;
 }
 
 %tr-shared {
@@ -1524,42 +1714,11 @@ polygon {
 	height: 100%;
 }
 
-.lifecycle-viewall-modal {
-	min-height: 100%;
-	overflow-y: hidden;
-	display: flex;
-	flex-direction: column;
-
-	> div {
-		margin: 0 120px;
-	}
-}
-
-.lifecycle-viewall-modal span[class*="icon-close"] {
-	position: absolute;
-	right: 20px;
-	top: 15px;
-}
-
 // leave the following here, just in case we will use this style
 // ::ng-deep .cui .dropdown__menu a.selected {
 // 	color:$vibblue !important;
 // 	background-color: transparent !important;
 // }
-
-/* Viewall List-view table styles */
-.list-view,
-.card-view {
-	height: 100%;
-	max-height: -webkit-fill-available;
-	overflow: auto;
-	margin-top: 30px;
-}
-
-.list-view table {
-	margin-top: unset;
-	cursor: default;
-}
 
 .bookmark-column .icon-bookmark {
 	font-size: 20px;

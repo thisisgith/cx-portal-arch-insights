@@ -77,12 +77,12 @@
 		</div>
 		<div class="col-md-5"></div>
 		<div class="col-md-4 text-right" *ngIf="alarm?.raiseSr && alarm?.tacCaseNo">
-			<button id="viewDisabled" class="btn btn--primary disabled"
-				[innerText]="'_AfmCaseIdX_'|i18n:alarm?.tacCaseNo"></button>
+			<div id="viewDisabled" class="btn btn--primary disabled"
+				[innerText]="'_AfmCaseIdX_'|i18n:alarm?.tacCaseNo"></div>
 		</div>
 		<div class="col-md-4 text-right" title="{{alarm?.errorDesc}}"
 			*ngIf="alarm?.raiseSr && alarm?.srStatus?.toUpperCase() === 'FAILED'">
-			<div class="btn btn--primary disabled "
+			<div id="opacity" class="btn btn--primary disabled"
 				[innerText]="'_AfmEntitlementFailed_'| i18n"></div>
 		</div>
 	</div>

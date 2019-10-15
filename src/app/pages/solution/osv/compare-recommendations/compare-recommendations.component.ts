@@ -28,7 +28,8 @@ export class CompareRecommendationsComponent implements OnChanges {
 	public currentRecommendation: MachineRecommendations;
 	public machineRecommendations: MachineRecommendations[];
 	public barChartBackgroundColor = '#f2f2f2';
-	public barChartWidth = 80;
+	public barChartWidth = 130;
+	public currentBarChartWidth = 180;
 	public severityMap = {
 		H: I18n.get('_OsvH_'),
 		M: I18n.get('_OsvM_'),
@@ -58,6 +59,8 @@ export class CompareRecommendationsComponent implements OnChanges {
 
 			const openBugsResponse = this.addOpen(openBugs, newOpenBugs);
 			recommendation.bugsExposed = openBugsResponse.totalOpenCount;
+			recommendation.openBugsCount = this.calculateExposed(openBugs);
+			recommendation.newOpenBugsCount = this.calculateExposed(newOpenBugs);
 			recommendation.resolvedBugsCount = this.calculateExposed(resolvedBugs);
 			recommendation.bugSeriesData = openBugsResponse.totalOpenCount > 0
 				? this.populateBarGraphData(openBugsResponse.totalOpen) : [];
@@ -69,6 +72,8 @@ export class CompareRecommendationsComponent implements OnChanges {
 
 			const openPsirtsResponse = this.addOpen(openPsirts, newOpenPsirts);
 			recommendation.psirtExposed = openPsirtsResponse.totalOpenCount;
+			recommendation.openPsirtCount = this.calculateExposed(openPsirts);
+			recommendation.newOpenPsirtCount = this.calculateExposed(newOpenPsirts);
 			recommendation.psirtResolvedCount = this.calculateExposed(resolvedPsirts);
 			recommendation.psirtSeriesData = openPsirtsResponse.totalOpenCount > 0 ?
 				this.populateBarGraphData(openPsirtsResponse.totalOpen) : [];
@@ -203,9 +208,10 @@ export class CompareRecommendationsComponent implements OnChanges {
 	/**
 	 * show details of bugs
 	 * @param viewType specifies whether to open bugs or psirts details
+	 * @param tabIndex specifies which tab to open on bugs or psirts details
 	 */
-	public showDetailsView (viewType: string) {
-		this.showDetails.emit({ viewType });
+	public showDetailsView (viewType: string, tabIndex: number) {
+		this.showDetails.emit({ viewType , tabIndex });
 	}
 
 }

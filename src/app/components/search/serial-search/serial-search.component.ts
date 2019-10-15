@@ -25,9 +25,11 @@ import {
 	VulnerabilityResponse,
 	Assets,
 	HardwareInfo,
+	RacetrackSolution,
+	RacetrackTechnology,
 } from '@sdp-api';
 import { CaseService } from '@cui-x/services';
-import { SearchService } from '@services';
+import { SearchService, RacetrackInfoService } from '@services';
 
 import { SpecialSearchComponent } from '../special-search/special-search.component';
 import { CaseOpenComponent } from '../../case/case-open/case-open.component';
@@ -108,7 +110,8 @@ implements OnInit, OnChanges, OnDestroy {
 	public expirationFromNow: string;
 	public alertsData: AlertsData;
 	public caseData: CaseData;
-
+	private selectedSolutionName: string;
+	private selectedTechnologyName: string;
 	private refresh$ = new Subject();
 	private destroy$ = new Subject();
 
@@ -123,6 +126,7 @@ implements OnInit, OnChanges, OnDestroy {
 		private alertsService: ProductAlertsService,
 		public router: Router,
 		private userResolve: UserResolve,
+		private racetrackInfoService: RacetrackInfoService,
 	) {
 		super();
 		this.userResolve.getCustomerId()
@@ -131,6 +135,24 @@ implements OnInit, OnChanges, OnDestroy {
 		)
 		.subscribe((id: string) => {
 			this.customerId = id;
+		});
+
+		this.racetrackInfoService.getCurrentSolution()
+		.pipe(
+			takeUntil(this.destroy$),
+		)
+		.subscribe((solution: RacetrackSolution) => {
+			this.selectedSolutionName = _.get(solution, 'name');
+		});
+
+		this.racetrackInfoService.getCurrentTechnology()
+		.pipe(
+			takeUntil(this.destroy$),
+		)
+		.subscribe((technology: RacetrackTechnology) => {
+			if (this.selectedTechnologyName !== _.get(technology, 'name')) {
+				this.selectedTechnologyName = _.get(technology, 'name');
+			}
 		});
 	}
 
@@ -257,7 +279,12 @@ implements OnInit, OnChanges, OnDestroy {
 	 */
 	 private getAssetInfo (customerId: string, serialNumber: string):
 	 Observable<Assets> {
-		 return this.inventoryService.getAssets({ customerId, serialNumber: [serialNumber] })
+		 return this.inventoryService.getAssets({
+			 customerId,
+			 serialNumber: [serialNumber],
+			 solution: this.selectedSolutionName,
+			 useCase: this.selectedTechnologyName,
+		})
 		 .pipe(
 			 catchError(err => {
 				 this.logger.error(`Hardware Data :: ${serialNumber} :: Error ${err}`);
@@ -318,6 +345,8 @@ implements OnInit, OnChanges, OnDestroy {
 		return this.alertsService.getVulnerabilityCounts({
 			customerId,
 			serialNumber: [serialNumber],
+			solution: this.selectedSolutionName,
+			useCase: this.selectedTechnologyName,
 		})
 		.pipe(
 			catchError(err => {

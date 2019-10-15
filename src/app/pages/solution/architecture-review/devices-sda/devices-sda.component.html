@@ -13,7 +13,7 @@
 <div class="row base-margin-top">
 	<div class="col-md-12">
 		<div class="container">
-			<cui-table *ngIf="!isLoading && deviceSDAdatas.length > 0" [options]="tableOptions"
+			<cui-table *ngIf="!isLoading && deviceSDAdatas?.length" [options]="tableOptions"
 				 [data]="deviceSDAdatas"></cui-table>
 			<div class="base-margin-top" *ngIf="isLoading">
 				<div class="loading-spinner flex-center" [attr.aria-label]="'_ArchitectureLoading_' | i18n">
