@@ -427,7 +427,7 @@
 		<span *ngIf="item.providerInfo?.logoURL">
 			<img class="table-img-width" alt="'_Placeholder_' | i18n" [src]="item.providerInfo?.logoURL" attr.data-auto-id="{{ autoid }}-ProviderLogo">
 		</span>
-		<span *ngIf="!item.providerInfo?.logoURL && item.providerInfo?.name" class="text-bold text-medium" [innerText]="item.providerInfo?.name" attr.data-auto-id="{{ autoid }}-ProviderText">></span>
+		<span *ngIf="!item.providerInfo?.logoURL && item.providerInfo?.name" class="text-bold text-medium" [innerText]="item.providerInfo?.name" attr.data-auto-id="{{ autoid }}-ProviderText"></span>
 	</div>
 	<img class="max-width" alt="'_Placeholder_' | i18n" [src]="src" attr.data-auto-id="{{ autoid }}-Image">
 	<div class="cx-lifecycle-card cx-lifecycle-card--recommended">
