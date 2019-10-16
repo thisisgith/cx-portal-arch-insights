@@ -1,0 +1,34 @@
+[
+    {
+        "accId": "111111",
+        "description": "Discover the standard steps required to engineer and commission your appliance from an experienced Cisco DNA Center project manager. Understand basic deployment requirements and schedules",
+        "bookmark": false,
+        "status": "recommended",
+        "title": "Cisco DNA Center Project Planning",
+        "url": "https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/acc/images/acc_access-overview-demo.png",
+        "feedbackInfo": {
+            "available": false
+        },
+        "providerInfo": {
+            "id": "partner1",
+            "logoURL": "https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/acc/images/acc_deployment-best-practices.png",
+            "name": "Symantec"
+        }
+    },
+    {
+        "accId": "222222",
+        "description": "Gain actionable insights into Cisco DNA Center use case deployments and assists. Understand how to design, adopt, and leverage to save time and resources within your network",
+        "bookmark": false,
+        "status": "recommended",
+        "title": "Cisco DNA Pilot Usecase Deployment",
+        "url": "https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/acc/images/acc_sda-segregation-strategy.png",
+        "feedbackInfo": {
+            "available": false
+        },
+        "providerInfo": {
+            "id": "partner1",
+            "logoURL": "https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/acc/images/acc_deployment-best-practices.png",
+            "name": "Logitec"
+        }
+    }
+]
