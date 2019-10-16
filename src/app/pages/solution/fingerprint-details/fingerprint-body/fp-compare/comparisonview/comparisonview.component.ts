@@ -17,8 +17,10 @@ import { I18n } from '@cisco-ngx/cui-utils';
 })
 export class ComparisonviewComponent {
 	@Input() public compareView: string;
-	@Input() public deviceId1: string;
-	@Input() public deviceId2: string;
+	@Input() public deviceA: any;
+	@Input() public deviceB: any;
+	public deviceId1: string;
+	public deviceId2: string;
 	public customerId: string;
 	private destroy$ = new Subject();
 	public softwaredetails: any;
@@ -28,6 +30,8 @@ export class ComparisonviewComponent {
 	public comparisonInfo: any;
 	public compareviewLoading = false;
 	@Output() public reqError: EventEmitter<any> = new EventEmitter<any>();
+	public showAssetDetailsView = false;
+	public selectedAsset:any;
 
 	constructor (
 		private logger: LogService,
@@ -51,8 +55,8 @@ export class ComparisonviewComponent {
 	private initReqObj () {
 		this.comparisonInfo = {
 			customerId: this.customerId,
-			deviceId1: this.deviceId1,
-			deviceId2: this.deviceId2,
+			deviceId1: this.deviceA.deviceId,
+			deviceId2: this.deviceB.deviceId,
 		};
 	}
 
@@ -62,10 +66,10 @@ export class ComparisonviewComponent {
 	 */
 	public ngOnChanges (changes: SimpleChanges): void {
 		this.compareView = _.get(changes, ['compareView', 'currentValue'], this.compareView);
-		this.deviceId1 = _.get(changes, ['deviceId1', 'currentValue'], this.deviceId1);
-		this.deviceId2 = _.get(changes, ['deviceId2', 'currentValue'], this.deviceId2);
-		if (_.get(changes, ['deviceId1', 'currentValue'], false) ||
-		 _.get(changes, ['deviceId2', 'currentValue'], false)) {
+		this.deviceA = _.get(changes, ['deviceA', 'currentValue'], this.deviceId1);
+		this.deviceB = _.get(changes, ['deviceB', 'currentValue'], this.deviceId2);
+		if (_.get(changes, ['deviceA', 'currentValue'], false) ||
+		 _.get(changes, ['deviceB', 'currentValue'], false)) {
 			this.loadData();
 		}
 		this.logger.info(JSON.stringify(changes));
@@ -93,5 +97,10 @@ export class ComparisonviewComponent {
 				this.logger.error(err);
 			},
 			);
+	}
+
+	public showAssetDetails(selectedAsset){
+		this.selectedAsset = selectedAsset;
+		this.showAssetDetailsView = true;
 	}
 }

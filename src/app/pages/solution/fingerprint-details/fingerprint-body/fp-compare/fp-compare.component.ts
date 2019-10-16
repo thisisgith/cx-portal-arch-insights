@@ -35,6 +35,8 @@ export class FpCompareComponent implements OnChanges {
 	public compareView: string;
 	public listOfProductIds: any;
 	public selectedproductId: any;
+	public deviceA:any;
+	public deviceB:any;
 
 	@Input() public devices: any;
 	@Output() public reqError: EventEmitter<any> = new EventEmitter<any>();
@@ -121,11 +123,11 @@ export class FpCompareComponent implements OnChanges {
 				.pipe(takeUntil(this.destroy$))
 				.subscribe((results: IListdevice) => {
 					this.listdeviceData = results.deviceDetail;
-					const deviceAFound = this.listdeviceData
+					this.deviceA = this.listdeviceData
 					.find(device => device.deviceId === this.deviceId1);
-					this.deviceId1 = deviceAFound
-						? deviceAFound.deviceId
-						: deviceAFound;
+					this.deviceId1 = this.deviceA
+						? this.deviceA.deviceId
+						: this.deviceA;
 				},
 				err => {
 					this.deviceId1 = null;
@@ -139,11 +141,11 @@ export class FpCompareComponent implements OnChanges {
 				.pipe(takeUntil(this.destroy$))
 				.subscribe((results: IListdevice) => {
 					this.listdeviceData = results.deviceDetail;
-					const deviceFound = this.listdeviceData
+					this.deviceB = this.listdeviceData
 					.find(device => device.deviceId === this.deviceId2);
-					this.deviceId2 = deviceFound
-						? deviceFound.deviceId
-						: deviceFound;
+					this.deviceId2 = this.deviceB
+						? this.deviceB.deviceId
+						: this.deviceB;
 				},
 				err => {
 					this.deviceId2 = null;
@@ -182,16 +184,16 @@ export class FpCompareComponent implements OnChanges {
 				.pipe(takeUntil(this.destroy$))
 				.subscribe((results: IListdevice) => {
 					this.listdeviceData = results.deviceDetail;
-					const deviceAFound = this.listdeviceData
+					this.deviceA = this.listdeviceData
 					.find(device => device.deviceId === this.deviceId1);
-					this.deviceId1 = deviceAFound
-						? deviceAFound
-						: deviceAFound;
-					const deviceBFound = this.listdeviceData
-						.find(device => device.deviceId === this.deviceId1);
-					this.deviceId1 = deviceBFound
-							? deviceBFound
-							: deviceAFound;
+					this.deviceId1 = this.deviceA
+						? this.deviceA.deviceId
+						: this.deviceA;
+					this.deviceB = this.listdeviceData
+						.find(device => device.deviceId === this.deviceId2);
+					this.deviceId2 = this.deviceB
+							? this.deviceB.deviceId
+							: this.deviceB;
 				},
 				err => {
 					this.deviceId1 = null;
@@ -211,6 +213,7 @@ export class FpCompareComponent implements OnChanges {
 	 */
 	public assetASelection (selection: any) {
 		this.deviceId1 = selection;
+		this.deviceA = this.listdeviceData.find(device => device.deviceId === this.deviceId1);
 		this.logger.info(selection);
 	}
 	/**
@@ -220,6 +223,7 @@ export class FpCompareComponent implements OnChanges {
 	public assetBSelection (selection: any) {
 		this.deviceId2 = selection;
 		if (this.deviceId2) {
+			this.deviceB = this.listdeviceData.find(device => device.deviceId === this.deviceId2);
 			this.assetBError = false;
 			this.logger.info(selection);
 		} else {

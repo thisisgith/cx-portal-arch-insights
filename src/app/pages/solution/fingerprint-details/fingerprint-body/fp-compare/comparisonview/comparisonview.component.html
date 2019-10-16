@@ -1,4 +1,24 @@
 <div class="compare-text-warp dbl-margin-top" *ngIf="!compareviewLoading; else loaderTemplate;">
+	<div class="panel qtr-padding">
+		<div class="row">
+			<div class="col-md-6 pull-left">
+				<a
+					data-auto-id="selectedDeviceA"
+					class="text-large text-primary"
+					[innerHTML]="deviceA.deviceName"
+					(click) = "showAssetDetails(deviceA)"
+				></a>
+			</div>
+			<div class="col-md-6 pull-left">
+				<a
+					data-auto-id="selectedDeviceB"
+					class="text-large text-primary"
+					[innerHTML]="deviceB.deviceName"
+					(click) = "showAssetDetails(deviceB)"
+				></a>
+			</div>
+		</div>
+	</div>
 	<ng-container *ngIf="compareView === 'software'">
 		<div class="panel qtr-padding" *ngFor="let software of softwareData?.common">
 			<div class="row">
@@ -46,3 +66,5 @@
 		<cui-loader color="muted"></cui-loader>
 	</div>
 </ng-template>
+<asset-details *ngIf="showAssetDetailsView" [serialNumber]="selectedAsset.serialNumber" (close)="showAssetDetailsView = false">
+</asset-details>
