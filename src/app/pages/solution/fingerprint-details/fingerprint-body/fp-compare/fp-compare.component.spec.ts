@@ -135,15 +135,6 @@ describe('FpCompareComponent', () => {
 		expect(crashPreventionService.getListdevice)
 			.toHaveBeenCalled();
 	}));
-	it('should check onselection productFamilyA null', fakeAsync(() => {
-		const selection = null;
-		tick();
-		expect(selection)
-			.toBeNull();
-		fixture.detectChanges();
-		expect(component.selectedProductFamily)
-			.toBeUndefined();
-	}));
 	it('should check if compare details exist', () => {
 		expect(component.compareDetailsExist)
 		.toBeFalsy();

@@ -79,9 +79,9 @@ export class FpCompareComponent implements OnChanges {
 	 */
 	public ngOnChanges (changes: SimpleChanges): void {
 		if (changes.devices.currentValue) {
-			this.deviceId1 = changes.devices.currentValue.deviceId1;
-			this.selectedproductId = changes.devices.currentValue.productId1;
-			this.deviceId2 = changes.devices.currentValue.deviceId2;
+			this.deviceId1 = _.get(changes, ['devices', 'currentValue', 'deviceId1']);
+			this.selectedproductId = _.get(changes, ['devices', 'currentValue', 'productId1']);
+			this.deviceId2 = _.get(changes, ['devices', 'currentValue', 'deviceId2']);
 			this.productFamilydetails = {
 				customerId: this.customerId,
 			};

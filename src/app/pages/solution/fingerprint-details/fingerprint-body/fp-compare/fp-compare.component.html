@@ -13,7 +13,7 @@
 			optionsKey="productFamily"
 			optionsValue="productIds"
 			(ngModelChange)="productFamilySelection($event)"
-			[errorMessage]="selectedProductFamily? '': 'Select a ProductFamily'">
+			[errorMessage]="selectedProductFamily? '': '_CP_ProductFamilyErrorMessage_'|i18n">
 		</cui-select>
 	</div>
 	<div class="col-md-6 base-padding-top dbl-padding-right">
@@ -48,7 +48,7 @@
             optionsKey="productId"
             optionsValue="productId"
             (ngModelChange)="pidsSelection($event)"
-            [errorMessage]="selectedproductId? '': 'Select a ProductId'">
+            [errorMessage]="selectedproductId? '': '_CP_ProductIdErrorMessage_' | i18n">
 		</cui-select>
 	</div>
 	<div class="col-md-6 half-padding-top dbl-padding-right">
@@ -82,7 +82,7 @@
 			(ngModelChange)="assetASelection($event)"
 			optionsKey="deviceName"
 			optionsValue="deviceId"
-			[errorMessage]="deviceId1? '': 'Select an System'">
+			[errorMessage]="deviceId1? '': '_CP_SystemAErrorMessage_' | i18n">
 		</cui-select>
 	</div>
 	<div class="col-md-6 half-padding-top dbl-padding-right">
@@ -98,7 +98,7 @@
 			(ngModelChange)="assetBSelection($event)"
 			optionsKey="deviceName"
 			optionsValue="deviceId"
-			[errorMessage]="assetBError? 'Select an System': ''">
+			[errorMessage]="assetBError? ('_CP_SystemAErrorMessage_' | i18n) : ''">
 		</cui-select>
 	</div>
 </div>
