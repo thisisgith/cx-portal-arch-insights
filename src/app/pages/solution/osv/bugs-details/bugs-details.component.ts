@@ -274,7 +274,7 @@ export class BugsDetailsComponent implements OnInit {
 						_.get(recommendation, ['data', 'newOpenPsirtCount']),
 						_.get(recommendation, ['data', 'psirtResolvedCount']));
 			}
-			if (recommendation.name !== 'profile current') {
+			if (recommendation.name !== 'profile current' && recommendation.data) {
 				this.setFilter(recommendation);
 			}
 		});
