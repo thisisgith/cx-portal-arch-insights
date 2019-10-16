@@ -1,23 +1,7 @@
-import { UserFeedbackEntitySchema } from '@sdp-api';
-
 /** Base of URL for SDP API */
 const api = '/api/customerportal/racetrack/v1/feedback/cxportal';
-
+/** Default mock feedback id */
 const feedbackId = 'feedback-1';
-
-/**
- * Mock FeedbackResponst
- * @returns response
- */
-function MockSaveFeedbackResponse (): any {
-	return {
-		comment: "",
-		context: {
-			
-		},
-		thumbs: "UP"
-	};
-}
 
 /**
  * The scenarios
@@ -31,10 +15,10 @@ export const FeedbackScenarios = [
 					description: '(Lifecycle) Feedback POST',
 					response: {
 						body: {
+							feedbackId,
 							comment: '',
 							context: '',
-							feedbackId: feedbackId,
-							thumbs: 'UP'
+							thumbs: 'UP',
 						},
 						status: 200,
 					},
@@ -53,10 +37,10 @@ export const FeedbackScenarios = [
 					description: '(Lifecycle) Feedback PUT',
 					response: {
 						body:  {
+							feedbackId,
 							comment: 'this is awesome',
 							context: '',
-							feedbackId,
-							thumbs: 'UP'
+							thumbs: 'UP',
 						},
 						status: 200,
 					},

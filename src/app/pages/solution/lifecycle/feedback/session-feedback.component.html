@@ -1,5 +1,5 @@
 <ng-container *ngIf="item.feedbackInfo.available && feedbackComplete">
-	<a data-auto-id="thumbUpBtn" class="btn btn--icon btn--small btn--selected">
+	<a data-auto-id="thumbBtnStatus" class="btn btn--icon btn--small btn--selected">
 		<span class="icon-like" [class.rotate-180]="item.feedbackInfo.thumbs === 'DOWN'"></span>
 	</a>
 </ng-container>
@@ -19,6 +19,7 @@
 <ng-container *ngIf="showPopup">
 	<div class="feedback-popup">
 		<span class="feedback-popup__close icon-close toggle"
+			data-auto-id="feedback-popup-close-icon"
 			(click)="closePopup()"
 		></span>
 		<ng-container *ngIf="!feedbackComplete">
@@ -47,7 +48,7 @@
 		</ng-container>
 
 		<div class="feedback-popup__footer">
-			<button data-auto-id="feedback-popup-submit-comment"
+			<button data-auto-id="feedback-popup-close-button"
 				*ngIf="feedbackComplete"
 				(click)="closePopup(target)"
 				class="cx-btn text-uppercase"
