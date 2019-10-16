@@ -1,12 +1,12 @@
 {
     "solutions": [
         {
-            "description": "Campus Network Assurance Solution",
-            "name": "Campus Network Assurance",
+            "description": "IBN Solution",
+            "name": "IBN",
             "technologies": [
                 {
                     "currentPitstop": "Onboard",
-                    "description": "Campus Network Assurance Solution",
+                    "description": "Campus Network Assurance Usecase",
                     "name": "Campus Network Assurance",
                     "pitstops": [
                         {

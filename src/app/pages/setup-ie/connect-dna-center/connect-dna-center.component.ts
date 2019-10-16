@@ -23,6 +23,7 @@ import * as _ from 'lodash-es';
 })
 export class ConnectDNACenterComponent implements OnInit, SetupStep {
 	@Output('onStepComplete') public onStepComplete = new EventEmitter<SetupComponent[]>();
+	@Output() public goBack = new EventEmitter<number>();
 	public hasVirtualAccount = false;
 	public virtualAccounts = [];
 	public error: boolean;
@@ -76,10 +77,7 @@ export class ConnectDNACenterComponent implements OnInit, SetupStep {
 			} else {
 				// if no ip in queryParams, go to previous page
 				this.state.clearState();
-				this.router.navigate([], {
-					queryParams: { compKey: '5' },
-					queryParamsHandling: 'merge',
-				});
+				this.goBack.emit(3);
 			}
 		}
 		this.loading = true;
@@ -118,7 +116,6 @@ export class ConnectDNACenterComponent implements OnInit, SetupStep {
 			// try to get a new auth token
 			this.reAuthorize()
 				.pipe(
-					finalize(() => this.loading = false),
 					mergeMap(() => this.register()
 						.pipe(
 							catchError(() => {
@@ -128,13 +125,26 @@ export class ConnectDNACenterComponent implements OnInit, SetupStep {
 								return empty();
 							}),
 						)),
+					mergeMap(() => this.cpService
+						.updateRegistrationCompletionUsingPOST({
+							completed: true,
+							customerId: this.customerId,
+						})
+						.pipe(
+							catchError(() => {
+								this.onStepComplete.emit(); // continue even if an error occurs
+
+								return empty();
+							}),
+						)),
 					takeUntil(this.destroyed$),
 				)
-				.subscribe();
+				.subscribe(() => {
+					this.onStepComplete.emit();
+				});
 		} else {
 			this.register()
 				.pipe(
-					finalize(() => this.loading = false),
 					catchError(() => {
 						// CX Collector token may have expired, so prompt for credentials
 						this.promptForCreds = true;
@@ -153,8 +163,7 @@ export class ConnectDNACenterComponent implements OnInit, SetupStep {
 
 								return empty();
 							}),
-						),
-					),
+						)),
 					takeUntil(this.destroyed$),
 				)
 				.subscribe(() => {
