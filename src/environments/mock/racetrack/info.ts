@@ -1066,7 +1066,7 @@ export const RacetrackScenarios = [
 						body: MockRacetrack('ibn', 'assurance', 'Onboard', 'allManualCheckable'),
 						status: 200,
 					},
-					selected: true,
+					selected: false,
 				},
 				{
 					delay: Math.floor(Math.random() * 2000) + 250,
@@ -1075,7 +1075,7 @@ export const RacetrackScenarios = [
 						body: MockRacetrack('ibn', 'assurance', 'Onboard', 'allCompleted'),
 						status: 200,
 					},
-					selected: true,
+					selected: false,
 				},
 				{
 					delay: Math.floor(Math.random() * 2000) + 250,
@@ -1084,7 +1084,7 @@ export const RacetrackScenarios = [
 						body: MockRacetrack('ibn', 'assurance', 'Onboard', 'noPitstopActions'),
 						status: 200,
 					},
-					selected: true,
+					selected: false,
 				},
 			],
 		},
