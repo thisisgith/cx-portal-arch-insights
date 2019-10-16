@@ -57,11 +57,7 @@ export class ContractSearchComponent extends SpecialSearchComponent
 	public loading = true;
 	public loadingCoverages = true;
 	public contractData: DeviceContractInfo;
-<<<<<<< HEAD
-	public customerCXLevel: string;
-=======
-	public cxLevel: string;
->>>>>>> 81526a4b9c960b6446ce83720ed33ec1ca1c77ab
+	public customerCXLevel: number;
 	public coverageCount: number;
 	public statusColor: StatusColorMap;
 	public showCxInfo = false;
@@ -88,7 +84,7 @@ export class ContractSearchComponent extends SpecialSearchComponent
 			takeUntil(this.destroy$),
 		)
 		.subscribe((cxLevel: number) => {
-			this.customerCXLevel = `CX Level ${String(cxLevel)}`;
+			this.customerCXLevel = cxLevel;
 		});
 	}
 
@@ -111,7 +107,9 @@ export class ContractSearchComponent extends SpecialSearchComponent
 			if (this.contractData) {
 				// Use the customer's CX level if the contract doesn't specify one (for now)
 				// In the future, the backend should handle this automatically
-				this.contractData.cxLevel = this.contractData.cxLevel || this.customerCXLevel;
+				this.contractData.cxLevel =
+					String(this.contractData.cxLevel || this.customerCXLevel)
+					.replace(/[^0-9]/g, '');
 				const statusKey = _.get(this.contractData, 'contractStatus', 'UNKNOWN')
 					.toUpperCase();
 				this.statusColor = _.get(StatusColorMap, statusKey);
