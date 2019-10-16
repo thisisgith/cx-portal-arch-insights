@@ -88,7 +88,7 @@
 			</div>
 			<div class="col-md-3">
 				<div class="flex flex-fluid flex-right">
-					<cui-search placeholder="{{ '_Search_' | i18n }}" [debounce]="searchOptions.debounce"
+					<cui-search placeholder="{{ '_Search_' | i18n }}" [searchText]="recommendation.params?.search" [debounce]="searchOptions.debounce"
 						[compressed]="true" (onUpdate)="onSearchQuery($event)">
 					</cui-search>
 				</div>

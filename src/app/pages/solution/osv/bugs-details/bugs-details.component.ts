@@ -638,6 +638,7 @@ export class BugsDetailsComponent implements OnInit {
 		const totalFilter = _.find(_.get(recommendation, 'filters'), { key: 'total' });
 		const stateFilter: Filter = _.find(_.get(recommendation, 'filters'), { key: 'state' });
 		this.clearFilters();
+		recommendation.params.search = '';
 		if (type === 'total') {
 			_.set(totalFilter, ['seriesData', '0', 'selectedView'], 'total');
 		} else {
