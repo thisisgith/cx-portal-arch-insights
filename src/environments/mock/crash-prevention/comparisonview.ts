@@ -105,22 +105,6 @@ const comparisonInformation: any = {
 			},
 		],
 	},
-	hardware: {
-		common: [
-			'Cisco Catalyst 9400 Series Switches',
-			'C9407R',
-		],
-		unique: [
-			{
-				data: [],
-				deviceId: 'NA,601163,C9407R,NA',
-			},
-			{
-				data: [],
-				deviceId: 'NA,60221,C9407R,NA',
-			},
-		],
-	},
 	software: {
 		common: [
 			null,

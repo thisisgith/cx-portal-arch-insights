@@ -31,8 +31,7 @@ export class ComparisonviewComponent {
 	public compareviewLoading = false;
 	@Output() public reqError: EventEmitter<any> = new EventEmitter<any>();
 	public showAssetDetailsView = false;
-	public selectedAsset:any;
-
+	public selectedAsset: any;
 	constructor (
 		private logger: LogService,
 		public crashPreventionService: CrashPreventionService,
@@ -55,8 +54,8 @@ export class ComparisonviewComponent {
 	private initReqObj () {
 		this.comparisonInfo = {
 			customerId: this.customerId,
-			deviceId1: this.deviceA.deviceId,
-			deviceId2: this.deviceB.deviceId,
+			deviceId1: _.get(this.deviceA, 'deviceId', null),
+			deviceId2: _.get(this.deviceB, 'deviceId', null),
 		};
 	}
 
@@ -66,8 +65,8 @@ export class ComparisonviewComponent {
 	 */
 	public ngOnChanges (changes: SimpleChanges): void {
 		this.compareView = _.get(changes, ['compareView', 'currentValue'], this.compareView);
-		this.deviceA = _.get(changes, ['deviceA', 'currentValue'], this.deviceId1);
-		this.deviceB = _.get(changes, ['deviceB', 'currentValue'], this.deviceId2);
+		this.deviceA = _.get(changes, ['deviceA', 'currentValue'], this.deviceA);
+		this.deviceB = _.get(changes, ['deviceB', 'currentValue'], this.deviceB);
 		if (_.get(changes, ['deviceA', 'currentValue'], false) ||
 		 _.get(changes, ['deviceB', 'currentValue'], false)) {
 			this.loadData();
@@ -98,8 +97,11 @@ export class ComparisonviewComponent {
 			},
 			);
 	}
-
-	public showAssetDetails(selectedAsset){
+	/**
+	 * showAssetDetails
+	 * @param selectedAsset selectAsset
+	 */
+	public showAssetDetails (selectedAsset) {
 		this.selectedAsset = selectedAsset;
 		this.showAssetDetailsView = true;
 	}

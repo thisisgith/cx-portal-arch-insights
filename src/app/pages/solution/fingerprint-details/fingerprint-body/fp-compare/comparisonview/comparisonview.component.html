@@ -1,7 +1,7 @@
 <div class="compare-text-warp dbl-margin-top" *ngIf="!compareviewLoading; else loaderTemplate;">
 	<div class="panel qtr-padding">
 		<div class="row">
-			<div class="col-md-6 pull-left">
+			<div class="col-md-6 pull-left" *ngIf="deviceA">
 				<a
 					data-auto-id="selectedDeviceA"
 					class="text-large text-primary"
@@ -9,7 +9,7 @@
 					(click) = "showAssetDetails(deviceA)"
 				></a>
 			</div>
-			<div class="col-md-6 pull-left">
+			<div class="col-md-6 pull-left" *ngIf="deviceB">
 				<a
 					data-auto-id="selectedDeviceB"
 					class="text-large text-primary"

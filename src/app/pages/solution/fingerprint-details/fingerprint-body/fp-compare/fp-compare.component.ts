@@ -35,8 +35,8 @@ export class FpCompareComponent implements OnChanges {
 	public compareView: string;
 	public listOfProductIds: any;
 	public selectedproductId: any;
-	public deviceA:any;
-	public deviceB:any;
+	public deviceA: any;
+	public deviceB: any;
 
 	@Input() public devices: any;
 	@Output() public reqError: EventEmitter<any> = new EventEmitter<any>();

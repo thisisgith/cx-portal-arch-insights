@@ -112,18 +112,6 @@ describe('FpCompareComponent', () => {
 		expect(component.deviceId2)
 			.toBeDefined();
 	}));
-	/**
-	 * ProductFamily response
-	 */
-	// it('Should return the searched response', fakeAsync(() => {
-	// 	spyOn(crashPreventionService, 'getProductFamily')
-	// 		.and
-	// 		.returnValue(of(ComparisonViewScenarios[0].scenarios.GET[0].response.body));
-	// 	tick();
-	// 	fixture.detectChanges();
-	// 	expect(component.selectedProductFamily)
-	// 		.toBeDefined();
-	// }));
 	it('should call pidsSelection and return error', () => {
 		const error = {
 			status: 404,
@@ -159,14 +147,14 @@ describe('FpCompareComponent', () => {
 	it('should check if compare details exist', () => {
 		expect(component.compareDetailsExist)
 		.toBeFalsy();
-		component.deviceId1 = 'TestDevice1';
-		component.deviceId2 = 'TestDevice2';
-		component.selectedproductId = 'TestProduct1';
+		component.selectedproductId = 'TestProduct';
+		component.deviceId1 = 'TestDeviceA';
+		component.deviceId2 = 'TestDeviceB';
 		fixture.detectChanges();
 		expect(component.compareDetailsExist)
 		.toBeTruthy();
 	});
-	it('emit', () => {
+	it('should check reError emit', () => {
 		spyOn(component.reqError, 'emit');
 		const errorMsg = 'error';
 		component.showError(errorMsg);
@@ -213,9 +201,6 @@ describe('FpCompareComponent', () => {
 	}));
 
 	it('Should return the searched getListdevice response', fakeAsync(() => {
-		// spyOn(crashPreventionService, 'getProductFamily')
-		// 	.and
-		// 	.returnValue(of(<any> []));
 		spyOn(crashPreventionService, 'getListdevice')
 			.and
 			.returnValue(of(ComparisonViewScenarios[1].scenarios.GET[0].response.body));
@@ -229,8 +214,6 @@ describe('FpCompareComponent', () => {
 		});
 		tick();
 		fixture.detectChanges();
-		// expect(crashPreventionService.getProductFamily)
-		// 	.toHaveBeenCalled();
 		expect(crashPreventionService.getListdevice)
 			.toHaveBeenCalled();
 	}));
