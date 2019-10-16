@@ -4,11 +4,12 @@
 	<cui-tab [label]="'_Summary_' | i18n | uppercase">
 		<ng-container *ngTemplateOutlet="summary"></ng-container>
 	</cui-tab>
-	<cui-tab label="{{ '_ImpactedAssets_' | i18n | uppercase }} ({{ impactedCount }})"
+	<cui-tab label="{{ '_AffectedHardware_' | i18n | uppercase }} ({{ impactedCount }})"
 		[disabled]="!impactedCount || impactedCount === 0"
 		*ngIf="data?.assetIds?.impacted || data?.assetIds?.potentiallyImpacted">
 		<div class="half-margin-top">
 			<advisory-impacted-assets
+				type="field"
 				[customerId]="customerId"
 				[assetIds]="data.assetIds"
 				(impactedCount)="impactedCount = $event"

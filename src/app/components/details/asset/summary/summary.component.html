@@ -27,14 +27,14 @@
 		<div class="row">
 			<div class="col-md-12">
 				<ng-container *ngTemplateOutlet="detailsData; context: {
-						title: '_ProductSeries_',
+						title: '_ProductFamily_',
 						linkData: assetData?.productFamily
 					}">
 				</ng-container>
 			</div>
 			<div class="col-md-12 base-margin-top">
 				<ng-container *ngTemplateOutlet="detailsData; context: {
-						title: '_SoftwareVersion_',
+						title: '_SoftwareRelease_',
 						linkData: assetData?.swVersion || asset?.osVersion
 					}">
 				</ng-container>
@@ -43,9 +43,9 @@
 				<ng-container *ngTemplateOutlet="supportData; context: {
 					title: '_SupportCoverage_',
 					expirationDate: assetData?.coverageEndDate,
-					linkData: assetData?.contractNumber && assetData?.contractNumber !== 'UNKNOWN' ?
+					linkData: ('_ContractNumber_' | i18n) + ' ' + (assetData?.contractNumber && assetData?.contractNumber !== 'UNKNOWN' ?
 					(assetData?.contractNumber + (assetData?.slaDescription ? ' ' + assetData?.slaDescription : ''))
-					: null,
+					: null),
 					url: '',
 					supportType: 'support'
 				}">
