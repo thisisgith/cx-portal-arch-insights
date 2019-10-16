@@ -65,28 +65,6 @@
 					</div>
 				</td>
 			</tr>
-			<!-- risk score -->
-			<tr>
-				<td class="first-column-width no-border-bottom no-border-top text-large">
-					<span class="text-large" [innerText]="'_OsvRiskScore_' | i18n"></span>
-					<span 
-						class="qtr-margin-left  text-primary" 
-						data-balloon-length="large"
-						[attr.data-balloon]="'_OsvRiskScoreInfo_' | i18n" 
-						data-balloon-pos="right">
-							<i class="icon-info qtr-margin-bottom"></i>
-					</span>
-				</td>
-				<td class="text-large recommendation-current">
-					<span [innerText]="currentRecommendation?.profileRisk | number: '1.0-0'"></span>
-				</td>
-				<td *ngFor="let recommendation of machineRecommendations" class="recommendation">
-					<div class="flex align-items-center">
-						<span class="text-large qtr-margin-left"
-							[innerText]="recommendation.expectedProfileRisk | number: '1.0-0'"></span>
-					</div>
-				</td>
-			</tr>
 			<!-- bugs -->
 			<tr id="bugs-details"  data-auto-id="ShowBugDetails">
 				<td (click)="showDetailsView('bug',0)" data-auto-id="ShowBugDetailsCurrentReleasesTab" class=" first-column-width headingClass no-border-bottom no-border-top text-large  text-primary"
