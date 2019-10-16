@@ -11,7 +11,7 @@ import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import * as _ from 'lodash-es';
 import { LogService } from '@cisco-ngx/cui-services';
 import { MachineRecommendations } from '@sdp-api';
-
+import { environment } from '@environment';
 /**
  * Interface representing our visual filters
  */
@@ -621,7 +621,7 @@ export class BugsDetailsComponent implements OnInit {
 	 * @param row  table row
 	 */
 	public onBugRowSelect (row: any) {
-		const url = `https://bst.cloudapps.cisco.com/bugsearch/bug/${row.id}`;
+		const url = `${environment.bugSearchTool}${row.id}`;
 		window.open(`${url}`, '_blank');
 	}
 
