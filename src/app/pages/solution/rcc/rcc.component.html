@@ -308,7 +308,7 @@
 	</ng-template>
 </div>
 <!-- App Details slide-out -->
-<asset-details *ngIf="openDeviceModal"
+<asset-details *ngIf="openDeviceModal && (assetLinkInfo?.asset || assetLinkInfo?.asset?.serialNumber)"
 	[asset]="assetLinkInfo?.asset"
 	[serialNumber]="assetLinkInfo?.asset?.serialNumber"
 	[element]="assetLinkInfo?.element"
