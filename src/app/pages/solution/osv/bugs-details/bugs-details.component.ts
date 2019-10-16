@@ -11,7 +11,7 @@ import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import * as _ from 'lodash-es';
 import { LogService } from '@cisco-ngx/cui-services';
 import { MachineRecommendations } from '@sdp-api';
-
+import { environment } from '@environment';
 /**
  * Interface representing our visual filters
  */
@@ -274,8 +274,9 @@ export class BugsDetailsComponent implements OnInit {
 						_.get(recommendation, ['data', 'newOpenPsirtCount']),
 						_.get(recommendation, ['data', 'psirtResolvedCount']));
 			}
-			recommendation.filtered = true;
-			this.setFilter(recommendation);
+			if (recommendation.name !== 'profile current') {
+				this.setFilter(recommendation);
+			}
 		});
 	}
 
@@ -374,8 +375,11 @@ export class BugsDetailsComponent implements OnInit {
 				data: _.cloneDeep(_.get(_.filter(this.data,
 					(recomm: MachineRecommendations) => recomm.name === 'profile current'), 0)),
 				paginationCount: '',
-				filtered: true,
-				appliedFilters: _.cloneDeep(appliedFilters),
+				filtered: false,
+				appliedFilters: {
+					state: [],
+					severity: [],
+				},
 			},
 			recommended1: {
 				name: 'Recommendation #1',
@@ -621,7 +625,7 @@ export class BugsDetailsComponent implements OnInit {
 	 * @param row  table row
 	 */
 	public onBugRowSelect (row: any) {
-		const url = `https://bst.cloudapps.cisco.com/bugsearch/bug/${row.id}`;
+		const url = `${environment.bugSearchTool}${row.id}`;
 		window.open(`${url}`, '_blank');
 	}
 
@@ -634,6 +638,7 @@ export class BugsDetailsComponent implements OnInit {
 		const totalFilter = _.find(_.get(recommendation, 'filters'), { key: 'total' });
 		const stateFilter: Filter = _.find(_.get(recommendation, 'filters'), { key: 'state' });
 		this.clearFilters();
+		recommendation.params.search = '';
 		if (type === 'total') {
 			_.set(totalFilter, ['seriesData', '0', 'selectedView'], 'total');
 		} else {

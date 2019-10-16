@@ -29,10 +29,10 @@
 		<div class="divider half-margin-top qtr-margin-bottom"></div>
 		<ng-container *ngTemplateOutlet="filterBar;context:{recommendation:recommendation}"></ng-container>
 	</ng-container>
-	<ng-container *ngIf="params?.viewType == 'bug' && !recommendation?.showNoInfoAvailable;else noInformationAvailable">
+	<ng-container *ngIf="params?.viewType === 'bug' && !recommendation?.showNoInfoAvailable;else noInformationAvailable">
 		<ng-container *ngTemplateOutlet="bugsTableTemp;context:{recommendation:recommendation}"></ng-container>
 	</ng-container>
-	<ng-container *ngIf="params?.viewType == 'psirt'">
+	<ng-container *ngIf="params?.viewType === 'psirt'">
 		<ng-container *ngTemplateOutlet="psirtTableTemp;context:{recommendation:recommendation}"></ng-container>
 	</ng-container>
 </ng-template>
@@ -88,7 +88,7 @@
 			</div>
 			<div class="col-md-3">
 				<div class="flex flex-fluid flex-right">
-					<cui-search placeholder="{{ '_Search_' | i18n }}" [debounce]="searchOptions.debounce"
+					<cui-search placeholder="{{ '_Search_' | i18n }}" [searchText]="recommendation.params?.search" [debounce]="searchOptions.debounce"
 						[compressed]="true" (onUpdate)="onSearchQuery($event)">
 					</cui-search>
 				</div>
@@ -104,7 +104,7 @@
 				[data]="recommendation?.data.bugs">
 			</cui-table>
 		</div>
-		<div *ngIf="recommendation.data?.bugs.length == 0" class="text-center text-xlarge dbl-margin-top">
+		<div *ngIf="recommendation.data?.bugs.length === 0" class="text-center text-xlarge dbl-margin-top">
 			<span [innerText]="'_OsvNoBugsFound_' | i18n"></span>
 		</div>
 		<div class="base-margin-top" *ngIf="recommendation?.total > 0">
@@ -148,7 +148,7 @@
 				[data]="recommendation.data.psirts" >
 			</cui-table>
 		</div>
-		<div *ngIf="recommendation.data.psirts.length == 0" class="text-center text-xlarge dbl-margin-top">
+		<div *ngIf="recommendation.data.psirts.length === 0" class="text-center text-xlarge dbl-margin-top">
 			<span [innerText]="'_OsvNoSecurityAdvisoriesFound_' | i18n"></span>
 		</div>
 		<div class="base-margin-top" *ngIf="recommendation?.total > 0">
@@ -187,9 +187,9 @@
 </ng-template>
 
 <ng-template #stateTemplate let-item="celldata">
-	<span *ngIf="item.status == 'OPEN'" [innerText]="'_OsvExposed_' | i18n"></span>
-	<span *ngIf="item.status == 'NEW_OPEN'" [innerText]="'_OsvNewExposed_' | i18n"></span>
-	<span *ngIf="item.status == 'RESOLVED'" [innerText]="'_OsvFixed_' | i18n"></span>
+	<span *ngIf="item.status === 'OPEN'" [innerText]="'_OsvExposed_' | i18n"></span>
+	<span *ngIf="item.status === 'NEW_OPEN'" [innerText]="'_OsvNewExposed_' | i18n"></span>
+	<span *ngIf="item.status === 'RESOLVED'" [innerText]="'_OsvFixed_' | i18n"></span>
 </ng-template>
 
 <ng-template #updatedDateTemp let-item="celldata">

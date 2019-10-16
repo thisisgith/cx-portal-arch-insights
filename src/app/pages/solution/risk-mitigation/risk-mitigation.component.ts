@@ -698,6 +698,7 @@ export class RiskMitigationComponent {
 					key: 'crashCount',
 					name: I18n.get('_RMNumberOfCrashes_'),
 					sortable: true,
+					sortKey: 'crashCount',
 				},
 				{
 					key: 'firstOccurrence',
