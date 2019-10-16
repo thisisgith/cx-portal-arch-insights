@@ -67,8 +67,12 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 	private assetSeverityIconTemplate: TemplateRef<{ }>;
 	@ViewChild('violationAgeTemplate', { static: true })
 	private violationAgeTemplate: TemplateRef<{ }>;
+	@ViewChild('messageFixTemplate', { static: true })
+	private messageFixTemplate: TemplateRef<{ }>;
 	@ViewChild('suggestedFixTemplate', { static: true })
 	private suggestedFixTemplate: TemplateRef<{ }>;
+	@ViewChild('ruleNameTemplate', { static: true })
+	private ruleNameTemplate: TemplateRef<{ }>;
 	/* Will be used in next release*/
 	public severityMappings = { } = [
 		{ id: 'P1', name: I18n.get('_RccSeverityValueP1_') },
@@ -292,6 +296,7 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 					key: 'ruleName',
 					name: I18n.get('_RccAssetRuleViolated_'),
 					sortable: true,
+					template: this.ruleNameTemplate,
 					width: '47%',
 				},
 				{
@@ -323,6 +328,7 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 					key: 'message',
 					name: I18n.get('_RccAssetMessage_'),
 					sortable: false,
+					template: this.messageFixTemplate,
 				},
 				{
 					key: 'age',

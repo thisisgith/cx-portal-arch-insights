@@ -20,6 +20,7 @@ import * as _ from 'lodash-es';
 import { UserResolve } from '@utilities';
 import { ActivatedRoute } from '@angular/router';
 import { LogService } from '@cisco-ngx/cui-services';
+
 /**
  * Main component for the RCC track
  */
@@ -56,6 +57,10 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 	private severityIconTemplate: TemplateRef<{ }>;
 	@ViewChild('suggestedFixTemplate', { static: true })
 	private suggestedFixTemplate: TemplateRef<{ }>;
+	@ViewChild('messageFixTemplate', { static: true })
+	private messageFixTemplate: TemplateRef<{ }>;
+	@ViewChild('productFamilyTemplate', { static: true })
+	private productFamilyTemplate: TemplateRef<{ }>;
 	@Output('assetDetails') public assetDetails: EventEmitter<string> = new EventEmitter<string>();
 	public policyRuleData: any = { };
 	public customerId: string;
@@ -201,6 +206,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 					key: 'productFamily',
 					name: I18n.get('_ProductFamily_'),
 					sortable: true,
+					temaplte: this.productFamilyTemplate,
 				},
 				{
 					key: 'productModel',
@@ -246,6 +252,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 					key: 'message',
 					name: I18n.get('_RccAssetMessage_'),
 					sortable: false,
+					template: this.messageFixTemplate,
 				},
 				{
 					key: 'age',
