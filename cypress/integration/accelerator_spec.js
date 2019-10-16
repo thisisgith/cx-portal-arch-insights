@@ -7,6 +7,8 @@ const accScenario = accMock.getScenario('GET', `(ACC) ${solution}-${useCase}-Onb
 let accItems = accScenario.response.body.items;
 const twoRecommendedScenario = accMock.getScenario('GET', `(ACC) ${solution}-${useCase}-Onboard-twoRecommended`);
 const twoRecommendedItems = twoRecommendedScenario.response.body.items;
+const twoWithPartnerScenario = accMock.getScenario('GET', `(ACC) ${solution}-${useCase}-Onboard-twoWithPartner`);
+const twoWithPartnerItems = twoWithPartnerScenario.response.body.items;
 
 const accUserInfoMock = new MockService('ACCUserInfoScenarios');
 const accUserInfoScenario = accUserInfoMock.getScenario('GET', '(ACC) ACC-Request User Info');
@@ -2494,6 +2496,201 @@ describe('Accelerator (ACC)', () => { // PBC-32
 						});
 					});
 			});
+		});
+	});
+
+	describe('PBC-1017: UI - User interface needed for ACC details', () => {
+		// JIRA name is not terribly descriptive...
+		// These tests relate to partner-branding on ACC details (first item and More list)
+		afterEach(() => {
+			// Switch back to the default mock data
+			accMock.enable('(ACC) IBN-Campus Network Assurance-Onboard');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ACC) IBN-Campus Network Assurance-Onboard');
+		});
+
+		it('First ACC item details should show partner name when no logoURL', () => {
+			// Verify the logo text is shown, instead of the image
+			cy.getByAutoId('recommendedACC').within(() => {
+				cy.getByAutoId('recommendedACC-ProviderText')
+					.should('exist')
+					.and('have.text', accItems[0].providerInfo.name);
+				cy.getByAutoId('recommendedACC-ProviderLogo')
+					.should('not.exist');
+			});
+		});
+
+		it('First ACC item details should show partner image from logoURL', () => {
+			// Switch to mock data with logoURLs
+			accMock.enable('(ACC) IBN-Campus Network Assurance-Onboard-twoWithPartner');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ACC) IBN-Campus Network Assurance-Onboard-twoWithPartner');
+
+			// Verify the logo image is shown, instead of the text
+			cy.getByAutoId('recommendedACC').within(() => {
+				cy.getByAutoId('recommendedACC-ProviderLogo')
+					.should('exist')
+					.and('have.attr', 'src', twoWithPartnerItems[0].providerInfo.logoURL);
+				cy.getByAutoId('recommendedACC-ProviderText')
+					.should('not.exist');
+			});
+		});
+
+		it('First ACC item details should hide logo and partner name if both are missing', () => {
+			// Switch to mock data with NO providerInfo block
+			accMock.enable('(ACC) IBN-Campus Network Assurance-Onboard-twoRecommended');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ACC) IBN-Campus Network Assurance-Onboard-twoRecommended');
+
+			// Verify the logo is hidden, and text is blank
+			cy.getByAutoId('recommendedACC').within(() => {
+				cy.getByAutoId('recommendedACC-ProviderLogo')
+					.should('not.exist');
+				cy.getByAutoId('recommendedACC-ProviderText')
+					.and('have.text', '');
+			});
+		});
+
+		it('ACC More list items should show partner name regardless of logoURL', () => {
+			visibleACCItems.forEach((acc, index) => {
+				if (index !== 0) {
+					// Skip the first visible ACC, as this is in the detail panel
+					cy.getByAutoId('moreACCList-item')
+						.eq(index - 1)
+						.within(() => {
+							cy.getByAutoId('ATXMoreClick-Provider')
+								.should('have.text', `${i18n._By_}${acc.providerInfo.name}`);
+						});
+				}
+			});
+
+			// Switch to mock data with logoURLs
+			accMock.enable('(ACC) IBN-Campus Network Assurance-Onboard-twoWithPartner');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ACC) IBN-Campus Network Assurance-Onboard-twoWithPartner');
+
+			// Verify the more list still uses the name, not the image
+			cy.getByAutoId('moreACCList-item')
+				.first()
+				.within(() => {
+					cy.getByAutoId('ATXMoreClick-Provider')
+						.should('have.text', `${i18n._By_}${twoWithPartnerItems[1].providerInfo.name}`);
+				});
+		});
+
+		it('ACC More list items should NOT show partner name if missing', () => {
+			// Switch to mock data with NO providerInfo block
+			accMock.enable('(ACC) IBN-Campus Network Assurance-Onboard-twoRecommended');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ACC) IBN-Campus Network Assurance-Onboard-twoRecommended');
+
+			// Verify the "By <name>" text is hidden
+			cy.getByAutoId('moreACCList-item')
+				.first()
+				.within(() => {
+					cy.getByAutoId('ATXMoreClick-Provider')
+						.and('have.text', '');
+				});
+		});
+
+		it('First ACC item hover should show partner name regardless of logoURL', () => {
+			cy.getByAutoId('recommendedACC-HoverModal-Provider')
+				.should('have.text', `${i18n._By_}${accItems[0].providerInfo.name}`);
+
+			// Switch to mock data with logoURLs
+			accMock.enable('(ACC) IBN-Campus Network Assurance-Onboard-twoWithPartner');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ACC) IBN-Campus Network Assurance-Onboard-twoWithPartner');
+
+			// Verify the first item's hover still uses the name, not the image
+			cy.getByAutoId('recommendedACC-HoverModal-Provider')
+				.should('have.text', `${i18n._By_}${twoWithPartnerItems[0].providerInfo.name}`);
+		});
+
+		it('First ACC item hover should NOT show partner name if missing', () => {
+			// Switch to mock data with NO providerInfo block
+			accMock.enable('(ACC) IBN-Campus Network Assurance-Onboard-twoRecommended');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ACC) IBN-Campus Network Assurance-Onboard-twoRecommended');
+
+			// Verify the "By <name>" text is hidden
+			cy.getByAutoId('recommendedACC-HoverModal-Provider')
+				.should('have.text', '');
+		});
+
+		it('ACC More list item hovers should show partner name regarless of logoURL', () => {
+			visibleACCItems.forEach((acc, index) => {
+				if (index !== 0) {
+					// Skip the first visible item, as this is in the detail card
+					cy.getByAutoId('moreACCList-item')
+						.eq(index - 1)
+						.within(() => {
+							cy.getByAutoId('moreACCList-HoverModal').within(() => {
+								cy.getByAutoId('moreACCList-HoverModal-Provider')
+									.should('have.text', `${i18n._By_}${acc.providerInfo.name}`);
+							});
+						});
+				}
+			});
+
+			// Switch to mock data with logoURLs
+			accMock.enable('(ACC) IBN-Campus Network Assurance-Onboard-twoWithPartner');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ACC) IBN-Campus Network Assurance-Onboard-twoWithPartner');
+
+			// Verify the More list item's hover still uses the name, not the image
+			cy.getByAutoId('moreACCList-item')
+				.first()
+				.within(() => {
+					cy.getByAutoId('moreACCList-HoverModal').within(() => {
+						cy.getByAutoId('moreACCList-HoverModal-Provider')
+							.should('have.text', `${i18n._By_}${twoWithPartnerItems[1].providerInfo.name}`);
+					});
+				});
+		});
+
+		it('ACC More list item hovers should NOT show partner name if missing', () => {
+			// Switch to mock data with NO providerInfo block
+			accMock.enable('(ACC) IBN-Campus Network Assurance-Onboard-twoRecommended');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ACC) IBN-Campus Network Assurance-Onboard-twoRecommended');
+
+			// Verify the "By <name>" text is hidden
+			cy.getByAutoId('moreACCList-item')
+				.first()
+				.within(() => {
+					cy.getByAutoId('moreACCList-HoverModal').within(() => {
+						cy.getByAutoId('moreACCList-HoverModal-Provider')
+							.should('have.text', '');
+					});
+				});
 		});
 	});
 });
