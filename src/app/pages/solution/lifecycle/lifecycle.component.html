@@ -360,7 +360,7 @@
 			<!-- <span *ngIf="item.providerInfo?.logoURL" class="icon-check icon-medium half-padding-right"></span> -->
 			<img *ngIf="item.providerInfo?.logoURL" class="table-img-width provider_icon" alt="'_Placeholder_' | i18n"
 				[src]="item.providerInfo?.logoURL">
-			<span *ngIf="!item.providerInfo?.logoURL" class="text-bold text-medium provider_icon"
+			<span *ngIf="!item.providerInfo?.logoURL && item.providerInfo?.name" class="text-bold text-medium provider_icon"
 				[innerText]="item.providerInfo?.name"></span>
 		</ng-container>
 	</div>
@@ -427,7 +427,7 @@
 		<span *ngIf="item.providerInfo?.logoURL">
 			<img class="table-img-width" alt="'_Placeholder_' | i18n" [src]="item.providerInfo?.logoURL">
 		</span>
-		<span *ngIf="!item.providerInfo?.logoURL" class="text-bold text-medium" [innerText]="item.providerInfo?.name"></span>
+		<span *ngIf="!item.providerInfo?.logoURL && item.providerInfo?.name" class="text-bold text-medium" [innerText]="item.providerInfo?.name"></span>
 	</div>
 	<img class="max-width" alt="'_Placeholder_' | i18n" [src]="src" attr.data-auto-id="{{ autoid }}-Image">
 	<div class="cx-lifecycle-card cx-lifecycle-card--recommended">
@@ -1029,7 +1029,7 @@
 					alt="'_Placeholder_' | i18n"
 					[src]="item.providerInfo.logoURL"
 					data-auto-id="ATXCard-PartnerLogo"/>
-				<span *ngIf="!item.providerInfo.logoURL"
+				<span *ngIf="!item.providerInfo.logoURL && item.providerInfo.name"
 					class="atx__card__logo"
 					[innerText]="item.providerInfo.name"
 				></span>
@@ -1121,7 +1121,7 @@
 			<span *ngIf="item.providerInfo?.logoURL">
 				<img class="table-img-width" alt="'_Placeholder_' | i18n" [src]="item.providerInfo?.logoURL">
 			</span>
-			<span *ngIf="!item.providerInfo?.logoURL" class="text-bold text-medium" [innerText]="item.providerInfo?.name"></span>
+			<span *ngIf="!item.providerInfo?.logoURL && item.providerInfo?.name" class="text-bold text-medium" [innerText]="item.providerInfo?.name"></span>
 		</div>
 		<img class="max-width base-margin-bottom" alt="'_Placeholder_' | i18n" [src]="item.url || 'assets/img/solutions/defaultLifecycleImage.png'" attr.data-auto-id="{{ autoid }}-Image">
 		<div class="text-left base-padding-left atx__card__label half-margin-bottom"
@@ -1496,7 +1496,7 @@
 </ng-template>
 
 <ng-template #providerTemplate  let-celldata="celldata">
-	<span [innerText]="celldata.providerInfo ? celldata.providerInfo.name : 'Cisco'"
+	<span [innerText]="celldata.providerInfo ? (celldata.providerInfo.name ? celldata.providerInfo.name : '-') : 'Cisco'"
 		data-auto-id="partner-name"
 	></span>
 </ng-template>
