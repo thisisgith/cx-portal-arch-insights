@@ -280,8 +280,12 @@
 			</div>
 			<div class="divider divider--compressed"></div>
 			<div class="line-clamp atx-more-popover__description" [innerText]="data.description" data-auto-id="atxMoreClickModal-Description"></div>
-			<div class="text-muted text-small qtr-margin-top" [innerText]="getProviderName(data)"></div>
-			<div class="half-padding-top">
+			<div 
+				class="text-muted text-small atx-more-popover__provider-name" 
+				[innerText]="getProviderName(data)"
+				*ngIf="getProviderName(data)"
+			></div>
+			<div class="atx-more-popover__button-container">
 				<ng-container *ngTemplateOutlet="data?.sessions?.length > 0 ?
 					enabledViewSessionsButton : disabledViewSessionsButton; context: {
 						type: 'moreView'
