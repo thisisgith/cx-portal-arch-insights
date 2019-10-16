@@ -761,7 +761,11 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	 * @param app the app to delete
 	 */
 	 public async openFeedbackModal () {
-		await this.cuiModalService.showComponent(FeedbackComponent, { }, 'normal');
+		await this.cuiModalService.showComponent(FeedbackComponent, {
+			facet: this.selectedFacet.title,
+			pitstop: this.selectedTechnology.currentPitstop,
+			useCase: this.selectedTechnology.name,
+		}, 'normal');
 	}
 
 	/**
