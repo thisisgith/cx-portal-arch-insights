@@ -274,8 +274,9 @@ export class BugsDetailsComponent implements OnInit {
 						_.get(recommendation, ['data', 'newOpenPsirtCount']),
 						_.get(recommendation, ['data', 'psirtResolvedCount']));
 			}
-			recommendation.filtered = true;
-			this.setFilter(recommendation);
+			if (recommendation.name !== 'profile current') {
+				this.setFilter(recommendation);
+			}
 		});
 	}
 
@@ -374,8 +375,11 @@ export class BugsDetailsComponent implements OnInit {
 				data: _.cloneDeep(_.get(_.filter(this.data,
 					(recomm: MachineRecommendations) => recomm.name === 'profile current'), 0)),
 				paginationCount: '',
-				filtered: true,
-				appliedFilters: _.cloneDeep(appliedFilters),
+				filtered: false,
+				appliedFilters: {
+					state: [],
+					severity: [],
+				},
 			},
 			recommended1: {
 				name: 'Recommendation #1',
