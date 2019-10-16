@@ -57,7 +57,11 @@ export class ContractSearchComponent extends SpecialSearchComponent
 	public loading = true;
 	public loadingCoverages = true;
 	public contractData: DeviceContractInfo;
+<<<<<<< HEAD
 	public customerCXLevel: string;
+=======
+	public cxLevel: string;
+>>>>>>> 81526a4b9c960b6446ce83720ed33ec1ca1c77ab
 	public coverageCount: number;
 	public statusColor: StatusColorMap;
 	public showCxInfo = false;
