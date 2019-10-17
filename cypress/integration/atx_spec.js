@@ -478,13 +478,13 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 
 		it('Should prevent registering for the same item twice', () => {
 			// User is not allowed to register for multiple sessions of the same item
-			// Change to the default mock data (includes a scheduled item with multiple sessions)
-			atxMock.enable('(ATX) IBN-Campus Network Assurance-Onboard');
+			// Change to mock data that has scheduled sessions way in the future
+			atxMock.enable('(ATX) IBN-Campus Network Assurance-Onboard-twoScheduled');
 
 			// Refresh the data
 			cy.getByAutoId('Facet-Assets & Coverage').click();
 			cy.getByAutoId('Facet-Lifecycle').click();
-			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard');
+			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard-twoScheduled');
 
 			// Open the View Sessions pop-up
 			cy.getByAutoId('recommendedATXScheduleButton').click();
@@ -1900,6 +1900,205 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 							}
 						});
 					});
+			});
+		});
+	});
+
+	describe('PBC-1011: UI for customer registration of a partner-delivered ATX session', () => {
+		describe('Partner-delivered ATX session: currentPitstop', () => {
+			before(() => {
+				// Switch to mock data with no scheduled items
+				atxMock.enable('(ATX) IBN-Campus Network Assurance-Onboard-twoRecommendedWithPartner');
+
+				// Refresh the data
+				cy.getByAutoId('Facet-Assets & Coverage').click();
+				cy.getByAutoId('Facet-Lifecycle').click();
+				cy.wait('(ATX) IBN-Campus Network Assurance-Onboard-twoRecommendedWithPartner');
+			});
+
+			after(() => {
+				// Switch back to the default mock data
+				atxMock.enable('(ATX) IBN-Campus Network Assurance-Onboard');
+
+				// Refresh the data
+				cy.getByAutoId('Facet-Assets & Coverage').click();
+				cy.getByAutoId('Facet-Lifecycle').click();
+				cy.wait('(ATX) IBN-Campus Network Assurance-Onboard');
+			});
+
+			it('Should be able to schedule a Partner ATX session from the Lifecycle page', () => {
+				cy.getByAutoId('recommendedATXScheduleButton').click();
+				cy.getByAutoId('atxScheduleCard')
+					.within(() => {
+						// Register button should be disabled until a session is selected
+						cy.getByAutoId('AtxScheduleCardRegisterButton')
+							.should('have.class', 'disabled');
+
+						// Click the first session, verify the register button is enabled and has correct link
+						cy.getByAutoId(`SelectSession-${firstATXSessions[0].sessionId}`).click();
+						cy.getByAutoId('AtxScheduleCardRegisterButton')
+							.should('not.have.class', 'disabled');
+					});
+
+				// Close the schedule pop-up
+				cy.getByAutoId('AtxScheduleCardClose').click({ force: true });
+				cy.getByAutoId('atxScheduleCard').should('not.exist');
+			});
+
+			it('Should be able to schedule a Partner ATX session from View All card view', () => {
+				// Open the View All modal and switch to card view
+				cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
+				cy.getByAutoId('atx-card-view-btn').click({ force: true });
+				cy.getByAutoId('ATXCard').should('be.visible');
+
+				// Open the schedule pop-up
+				cy.getByAutoId('ATXCard').eq(0).within(() => {
+					cy.getByAutoId('cardRecommendedATXScheduleButton').click();
+					cy.getByAutoId('atxScheduleCard')
+						.within(() => {
+							// Register button should be disabled until a session is selected
+							cy.getByAutoId('AtxScheduleCardRegisterButton').should('have.class', 'disabled');
+
+							// Click the first session, verify the register button is enabled and has correct link
+							cy.getByAutoId(`SelectSession-${firstATXSessions[0].sessionId}`).click();
+							cy.getByAutoId('AtxScheduleCardRegisterButton')
+								.should('not.have.class', 'disabled');
+						});
+				});
+
+				// Close the schedule pop-up
+				cy.getByAutoId('AtxScheduleCardClose').click({ force: true });
+				cy.getByAutoId('atxScheduleCard').should('not.exist');
+
+				// Close the View All modal
+				cy.getByAutoId('ViewAllCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+			});
+
+			it('Should be able to schedule a Partner ATX session from View All table view', () => {
+				// Open the View All modal and switch to table view
+				cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
+				cy.getByAutoId('atx-table-view-btn').click({ force: true });
+				cy.getByAutoId('ViewAllTable')
+					.within(() => {
+						// Open the schedule pop-up
+						cy.get('tr').eq(1).within(() => {
+							cy.getByAutoId('ViewSessionButton').click();
+						});
+					});
+
+				cy.getByAutoId('atxScheduleCard')
+					.within(() => {
+						// Register button should be disabled until a session is selected
+						cy.getByAutoId('AtxScheduleCardRegisterButton').should('have.class', 'disabled');
+
+						// Click the first session, verify the register button is enabled and has
+						// correct link
+						cy.getByAutoId(`SelectSession-${firstATXSessions[0].sessionId}`).click();
+						cy.getByAutoId('AtxScheduleCardRegisterButton')
+							.should('not.have.class', 'disabled');
+					});
+
+				// Close the schedule pop-up
+				cy.getByAutoId('AtxScheduleCardClose').click({ force: true });
+				cy.getByAutoId('atxScheduleCard').should('not.exist');
+
+				// Switch back to card view and close the View All modal
+				cy.getByAutoId('atx-card-view-btn').click({ force: true });
+				cy.getByAutoId('ViewAllCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+			});
+
+			it('Should prevent registering for the same Partner item twice', () => {
+				// User is not allowed to register for multiple sessions of the same item
+				// Change to mock data that has scheduled sessions way in the future
+				atxMock.enable('(ATX) IBN-Campus Network Assurance-Onboard-twoScheduledWithPartner');
+
+				// Refresh the data
+				cy.getByAutoId('Facet-Assets & Coverage').click();
+				cy.getByAutoId('Facet-Lifecycle').click();
+				cy.wait('(ATX) IBN-Campus Network Assurance-Onboard-twoScheduledWithPartner');
+
+				// Open the View Sessions pop-up
+				cy.getByAutoId('recommendedATXScheduleButton').click();
+				cy.getByAutoId('atxScheduleCard')
+					.within(() => {
+						// Select a non-registered session, verify "Register" button remains disabled
+						cy.getByAutoId('SelectSession-Session1').click();
+						cy.getByAutoId('AtxScheduleCardRegisterButton').should('have.class', 'disabled');
+					});
+
+				// Close the schedule pop-up
+				cy.getByAutoId('AtxScheduleCardClose').click({ force: true });
+				cy.getByAutoId('atxScheduleCard').should('not.exist');
+			});
+		});
+
+		describe('Partner-delivered ATX session: future pitstops', () => {
+			before(() => {
+				// Switch to mock data with no scheduled items
+				atxMock.enable('(ATX) IBN-Campus Network Assurance-Onboard-twoRecommendedWithPartner');
+
+				// Refresh the data
+				cy.getByAutoId('Facet-Assets & Coverage').click();
+				cy.getByAutoId('Facet-Lifecycle').click();
+				cy.wait('(ATX) IBN-Campus Network Assurance-Onboard-twoRecommendedWithPartner');
+			});
+
+			after(() => {
+				// Reset the view to the currentPitstop
+				cy.get('#racecar').click();
+
+				// Switch back to the default mock data
+				atxMock.enable('(ATX) IBN-Campus Network Assurance-Onboard');
+
+				// Refresh the data
+				cy.getByAutoId('Facet-Assets & Coverage').click();
+				cy.getByAutoId('Facet-Lifecycle').click();
+				cy.wait('(ATX) IBN-Campus Network Assurance-Onboard');
+			});
+
+			it('Should allow scheduling of a Partner ATX on the current pitstop', () => {
+				// Open the sessions modal, select a session, and verify button is enabled
+				cy.getByAutoId('recommendedATXScheduleButton').click();
+				cy.getByAutoId('atxScheduleCard').should('be.visible');
+				cy.getByAutoId(`SelectSession-${firstATXSessions[0].sessionId}`).click();
+				cy.getByAutoId('AtxScheduleCardRegisterButton').should('not.have.class', 'disabled');
+
+				// Close the modal
+				cy.getByAutoId('AtxScheduleCardClose').click({ force: true });
+				cy.getByAutoId('atxScheduleCard').should('not.exist');
+			});
+
+			it('Should allow scheduling of a Partner ATX on the next pitstop', () => {
+				// Move the preview to the next pitstop
+				cy.getByAutoId('Racetrack-Point-Implement').click();
+				cy.wait('(ATX) IBN-Campus Network Assurance-Implement', { timeout: 5000 });
+
+				// Open the sessions modal, select a session, and verify button is enabled
+				cy.getByAutoId('recommendedATXScheduleButton').click();
+				cy.getByAutoId('atxScheduleCard').should('be.visible');
+				cy.getByAutoId(`SelectSession-${firstATXSessions[0].sessionId}`).click();
+				cy.getByAutoId('AtxScheduleCardRegisterButton').should('not.have.class', 'disabled');
+
+				// Close the modal
+				cy.getByAutoId('AtxScheduleCardClose').click({ force: true });
+				cy.getByAutoId('atxScheduleCard').should('not.exist');
+			});
+
+			it('Should NOT allow scheduling of a Partner ATX on the after next pitstop', () => {
+				// Move the preview to the next pitstop
+				cy.getByAutoId('Racetrack-Point-Use').click();
+
+				// Open the sessions modal, select a session, and verify button is NOT enabled
+				cy.getByAutoId('recommendedATXScheduleButton').click();
+				cy.getByAutoId('atxScheduleCard').should('be.visible');
+				cy.getByAutoId(`SelectSession-${firstATXSessions[0].sessionId}`).click();
+				cy.getByAutoId('AtxScheduleCardRegisterButton').should('have.class', 'disabled');
+
+				// Close the modal
+				cy.getByAutoId('AtxScheduleCardClose').click({ force: true });
+				cy.getByAutoId('atxScheduleCard').should('not.exist');
 			});
 		});
 	});
