@@ -61,11 +61,11 @@
 				<dl class="dl--inline-medium">
 					<dt>
 						<span class="subheading text-small text-uppercase"
-							data-auto-id="caseDevice" [innerText]="'_Device_' | i18n"></span>
+							data-auto-id="caseDevice" [innerText]="'_System_' | i18n"></span>
 					</dt>
 					<dd>
-						<a data-auto-id="DeviceLink" *ngIf="case?.hostName; else loadingHardwareTemplate"
-							(click)="openAssetDetailsView();" [innerText]="case?.hostName">
+						<a data-auto-id="DeviceLink" *ngIf="case?.deviceName || case?.hostName; else loadingHardwareTemplate"
+							(click)="openAssetDetailsView();" [innerText]="case?.deviceName || case?.hostName">
 						</a> 
 					</dd>
 					<dt>

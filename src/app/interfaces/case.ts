@@ -39,6 +39,8 @@ export interface Case {
 	tacEngineer?: string;
 	/** Tracking Number */
 	trackingNumber?: string;
+	/** Device Name */
+	deviceName?: string;
 }
 
 /**

@@ -1,7 +1,8 @@
 /* tslint:disable */
 export interface IProductFamily  {
-    customerId?: string;
+	customerId?: string;
+	productFamilies?: string;
     productId?:string;
-    productFamily?:string;
+	productFamily?:string;
+	listOfProductFamilies?: [];
   }
-  

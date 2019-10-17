@@ -990,18 +990,28 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 	}
 
 	&__card {
-		background: $white;
-		max-height: unset;
-		min-height: unset;
-		padding: 20px;
 		display: flex;
 		flex-direction: column;
+		padding: 0;
+		height: 434px;
+		outline: 1px solid $light-gray !important;
 		border: none;
-		outline: 1px solid $light-gray;
+		box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.14);
 
 		&__header {
 			font-size: 11px !important;
 			line-height: 11px;
+		}
+
+		&__image {
+			position: relative;
+		}
+
+		&__logo {
+			position: absolute;
+			bottom: 10px;
+			left: 10px;
+			max-height: 35px;
 		}
 
 		&__feedback {
@@ -1163,13 +1173,12 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 
 .atxMorepanel--open {
 	box-shadow: $popover-box-shadow;
-	height: 200px;
 	width: 500px;
 	position: absolute;
 	z-index: 3;
 	background-color: $white;
 	border-radius: 10px;
-	padding: 25px 0 25px 30px;
+	padding: 22px 0 25px 30px;
 
 	.popover-tail {
 		@extend %popover-tail--left;
@@ -1190,18 +1199,25 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 			font-size: 15px;
 		}
 	}
+}
 
-	.atx-more-popover__title {
+.atx-more-popover {
+	&__title {
 		color: #6c757d;
 		font-size: 16px;
 		line-height: 19px;
 	}
 
-	.atx-more-popover__description {
+	&__description {
 		color: $text-default-color;
 		font-size: 13px;
 		line-height: 17px;
 		padding-right: 30px;
+	}
+
+	&__button-container,
+	&__provider-name {
+		margin-top: 20px;
 	}
 }
 

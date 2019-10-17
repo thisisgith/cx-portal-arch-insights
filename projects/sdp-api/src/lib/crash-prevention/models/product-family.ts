@@ -1,4 +1,5 @@
 export interface CPProductFamily {
-    productFamily: string;
-    productId: string;
+	productFamilies: string;
+	productFamily: string;
+	productId: string;
 }

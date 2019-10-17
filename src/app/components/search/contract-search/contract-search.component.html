@@ -1,6 +1,6 @@
 <div *ngIf="loading" class="row no-gutters">
 	<div class="col-md-12">
-		<div class="innerSpecialPanel panel panel--loose">
+		<div class="inner-special-panel panel panel--loose">
 			<h4 class="text-uppercase text-muted base-margin-bottom" [innerText]="'_SearchingContracts_' | i18n"></h4>
 			<cui-spinner></cui-spinner>
 		</div>
@@ -9,39 +9,38 @@
 <div *ngIf="!loading">
 	<div class="half-margin-bottom">
 		<dl class="dl--inline">
-			<dt class="flex-center-inline-vertical">
-				<span class="qtr-margin-right icon-small icon-circle" [ngClass]="statusColor"></span>
-				<span class="text-muted" data-auto-id="contractStatus" [innerText]="('_Status_' | i18n) + ':'"></span>
-				<span class="qtr-margin-left text-muted" *ngIf="contractData?.contractStatus; else unavailable"
+			<dt class="flex-center-inline-vertical text-small">
+				<span class="qtr-margin-right icon-circle" [ngClass]="statusColor"></span>
+				<span class="text-dkgray-3" data-auto-id="contractStatus" [innerText]="('_Status_' | i18n) + ':'"></span>
+				<span class="qtr-margin-left text-dkgray-3" *ngIf="contractData?.contractStatus; else unavailable"
 					[innerText]="contractData.contractStatus"></span>
 			</dt>
 		</dl>
 	</div>
-	<h3 class="qtr-margin-top qtr-margin-bottom" data-auto-id="contractHeader" [innerText]="'_ContractX_' | i18n:contractNumber.query"></h3>
+	<h4 class="qtr-margin-top qtr-margin-bottom" data-auto-id="contractHeader" [innerText]="'_ContractX_' | i18n:contractNumber.query"></h4>
 	<div class="row half-margin-top">
 		<div class="col-md-3">
 			<dl class="dl--inline-medium">
 				<dt>
-					<span class="subheading text-small text-uppercase"
+					<span class="subheading text-xsmall text-uppercase text-dkgray-3"
 						data-auto-id="contractExpire"
 						[innerText]="'_ExpirationDate_' | i18n"></span>
 				</dt>
 				<dd>
-					<span [ngClass]="contractExpirationStatusColor">
+					<span class="text-small" [ngClass]="contractExpirationStatusColor">
 						<span *ngIf="contractData?.contractEndDate; else unavailable"
-							[ngClass]="expirationDatePadding"
 							[innerText]="contractData.contractEndDate | date:'dd-MMM-y'"></span>
 						<span *ngIf="contractData?.contractEndDate" class="qtr-margin-left"
 							[innerText]="'(' + (contractData?.contractEndDate | fromNow) + ')'"></span>
 					</span>
 				</dd>
 				<dt>
-					<span class="subheading text-small text-uppercase"
+					<span class="subheading text-xsmall text-uppercase text-dkgray-3"
 						data-auto-id="contractAssets"
 						[innerText]="'_AssetsCovered_' | i18n"></span>
 				</dt>
 				<dd>
-					<span *ngIf="coverageCount; else loadingCoveragesTemplate"
+					<span class="text-small" *ngIf="coverageCount; else loadingCoveragesTemplate"
 						data-auto-id="contractAssetsCount"
 						[innerText]="coverageCount"></span>
 				</dd>
@@ -50,12 +49,12 @@
 		<div class="col-md-3">
 			<dl class="dl--inline-medium">
 				<dt>
-					<span class="subheading text-small text-uppercase"
+					<span class="subheading text-xsmall text-uppercase text-dkgray-3"
 					data-auto-id="contractStart"
 					[innerText]="'_StartDate_' | i18n"></span>
 				</dt>
 				<dd>
-					<span *ngIf="contractData?.contractStartDate; else unavailable"
+					<span class="text-small" *ngIf="contractData?.contractStartDate; else unavailable"
 						[innerText]="contractData.contractStartDate | date:'dd-MMM-y'"></span>
 				</dd>
 			</dl>

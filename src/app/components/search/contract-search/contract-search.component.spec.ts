@@ -57,9 +57,6 @@ describe('ContractSearchComponent', () => {
 			.toBe(7);
 		expect(component.contractExpirationStatusColor)
 			.toBe('');
-		expect(component.expirationDatePadding)
-			.toBe('');
-
 	});
 
 	it('should set null values on request errors', () => {

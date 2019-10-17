@@ -2283,10 +2283,21 @@ export class LifecycleComponent implements OnDestroy {
 
 	/**
 	 * Determine whether to show Cisco or partner default image.
+	 * @param acc The acc item
+	 * @returns the default image url
+	 */
+	public getDefaultAccImg (acc: ACC) {
+		return (acc.providerInfo ?
+			'assets/img/solutions/acc-default-img.png' :
+			'assets/img/solutions/defaultLifecycleImage.png');
+	}
+
+	/**
+	 * Determine whether to show Cisco or partner default image.
 	 * @param atx The ATX item
 	 * @returns the default image url
 	 */
-	public getDefaultATXImg (atx: AtxSchema) {
+	public getDefaultAtxImg (atx: AtxSchema) {
 		return (atx.providerInfo ?
 			'assets/img/solutions/ATX-default-image-1-556x308.png' :
 			'assets/img/solutions/defaultLifecycleImage.png');
