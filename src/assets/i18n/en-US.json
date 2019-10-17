@@ -388,6 +388,7 @@
 	"_CXCollectorHasBeenRegistered_": "CX Collector has been registered",
 	"_CXCollectorRunsOn_": "CX Collector runs as a virtual machine (VM) and is available for download as an OVA.\n\nThe requirements to deploy are:",
 	"_CXCollectorUserGuide_": "CX Collector User Guide",
+	"_CXLevelX_": "CX Level {0}",
 	"_CXPortalRequiresDNAC_": "CX Portal requires Cisco DNA Center to collect device inventory. If you haven't set up Cisco DNA Center yet, the CX Portal Lifecycle section has relevant guides and training sessions to help you.",
 	"_CXPortalSecurity_": "CX Portal takes security seriously",
 	"_CXPortalSecurityCiphers_": "CX Collector’s SSH supports 11 different ciphers",
