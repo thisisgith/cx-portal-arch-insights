@@ -53,7 +53,8 @@
 				</div>
 			</div>
 			<div class="text-left request-modal__acc-title">
-				<span [innerText]="accTitle" data-auto-id="accRequestModal-ItemTitle"></span>
+				<div [innerText]="accTitle" data-auto-id="accRequestModal-ItemTitle"></div>
+				<div *ngIf="accProviderId && accProviderName" class="text-medium text-muted" [innerText]="accProviderName" data-auto-id="accRequestModal-ItemProvider"></div>
 			</div>
 			<div class="divider no-margin"></div>
 			<div class="row full-width">

@@ -177,6 +177,8 @@ export class LifecycleComponent implements OnDestroy {
 	// id of ACC in request form
 	public accTitleRequestForm: string;
 	public accIdRequestForm: string;
+	public accProviderId: string;
+	public accProviderName: string;
 	private destroyed$: Subject<void> = new Subject<void>();
 
 	// Current uncompleted pitstop
@@ -784,11 +786,21 @@ export class LifecycleComponent implements OnDestroy {
 	 * @param selected whether the component is visible or not
 	 * @param accId accId of selected ACC
 	 * @param accTitle title of selected ACC
+	 * @param accProviderId accProviderId of selected ACC
+	 * @param accProviderName accProviderName of selected ACC
 	 */
-	public selectAccRequestForm (selected: boolean, accId: string, accTitle: string) {
+	public selectAccRequestForm (
+		selected: boolean,
+		accId: string,
+		accTitle: string,
+		accProviderId: string,
+		accProviderName: string,
+	) {
 		if (selected) {
 			this.accIdRequestForm = accId;
 			this.accTitleRequestForm = accTitle;
+			this.accProviderId = accProviderId;
+			this.accProviderName = accProviderName;
 		}
 
 		this.selectAccComponent = selected;

@@ -323,6 +323,8 @@
 				<ng-container *ngTemplateOutlet="!notCurrentPitstop ? enabledAccButton : disabledAccButton; context: {
 					accId: item.accId,
 					title: item.title,
+					accProvderId: item.providerInfo?.id,
+					accProviderName: item.providerInfo?.name,
 					dataAutoId: 'Request1on1ACCButton'
 					}">
 				</ng-container>
@@ -457,6 +459,8 @@
 			<ng-container *ngTemplateOutlet="!notCurrentPitstop ? enabledAccButton : disabledAccButton; context: {
 				accId: item.accId,
 				title: item.title,
+				accProvderId: item.providerInfo?.id,
+				accProviderName: item.providerInfo?.name,
 				dataAutoId: 'Request1on1ACCButton'
 				}">
 			</ng-container>
@@ -666,7 +670,7 @@
 </ng-template>
 
 <ng-template #learnPanel let-data="data">
-	<div *ngIf="data.elearning?.length" data-auto-id="LearnPanel-ELearningBlock">
+	<div *ngIf="data.elearning" data-auto-id="LearnPanel-ELearningBlock">
 		<ng-container *ngTemplateOutlet="learningBlock; context:
 			{ icon: 'clipboard-md',
 				title: '_ELearning_',
@@ -676,7 +680,7 @@
 		<div class="divider"></div>
 	</div>
 
-	<div *ngIf="data.certifications?.length" data-auto-id="LearnPanel-CertificationsBlock">
+	<div *ngIf="data.certifications" data-auto-id="LearnPanel-CertificationsBlock">
 		<ng-container *ngTemplateOutlet="learningBlock; context:
 			{ icon: 'certified',
 				title: '_Certifications_',
@@ -1170,12 +1174,12 @@
 					<span class="text-medium" [innerText]="'_SessionInProgress_' | i18n" *ngIf="item.status === 'in-progress'"></span>
 					<span class="text-medium" [innerText]="'_Requested_' | i18n" *ngIf="item.status === 'requested'"></span>
 					<div class="acc__card__feedback" *ngIf="item.status === 'completed'">
-						<ng-container *ngIf="item.feedbackInfo.available">
+						<ng-container *ngIf="item.feedbackInfo?.available">
 							<a data-auto-id="thumbUpBtn" class="btn btn--icon btn--small btn--selected">
-								<span class="icon-like" [class.rotate-180]="item.feedbackInfo.thumbs === 'DOWN'"></span>
+								<span class="icon-like" [class.rotate-180]="item.feedbackInfo?.thumbs === 'DOWN'"></span>
 							</a>
 						</ng-container>
-						<ng-container  *ngIf="!item.feedbackInfo.available">
+						<ng-container  *ngIf="!item.feedbackInfo?.available">
 							<a data-auto-id="thumbUpBtn" class="btn btn--icon btn--small">
 								<span class="icon-like"></span>
 							</a>
@@ -1191,6 +1195,8 @@
 						<ng-container *ngTemplateOutlet="!notCurrentPitstop ? enabledAccButton : disabledAccButton; context: {
 							accId: item.accId,
 							title: item.title,
+							accProvderId: item.providerInfo?.id,
+							accProviderName: item.providerInfo?.name,
 							dataAutoId: 'Request1on1ACCButton'
 							}">
 						</ng-container>
@@ -1443,6 +1449,8 @@
 	<acc-request-form (visibleComponent)="selectAccRequestForm($event)"
 		[accId]="accIdRequestForm"
 		[accTitle]="accTitleRequestForm"
+		[accProviderId]="accProviderId"
+		[accProviderName]="accProviderName"
 		[solution]="selectedSolution.name"
 		[technology]="selectedTechnology.name"
 		[pitstop]="currentPitstop.name"
@@ -1542,6 +1550,8 @@
 		<ng-container *ngTemplateOutlet="!notCurrentPitstop ? enabledAccButton : disabledAccButton; context: {
 			accId: celldata.accId,
 			title: celldata.title,
+			accProviderId: celldata.providerInfo?.id,
+			accProviderName: celldata.providerInfo?.name,
 			dataAutoId: 'Request1on1ACCButton'
 			}">
 		</ng-container>
@@ -1554,9 +1564,9 @@
 	</div>
 </ng-template>
 
-<ng-template #enabledAccButton let-accId="accId" let-title="title">
+<ng-template #enabledAccButton let-accId="accId" let-title="title" let-accProviderId="accProviderId" let-accProviderName="accProviderName">
 	<button data-auto-id="Request1on1ACCButton"
-		(click)="selectAccRequestForm(true, accId, title)"
+		(click)="selectAccRequestForm(true, accId, title, accProviderId, accProviderName)"
 		class="cx-btn cx-btn--small cx-btn--primary text-uppercase"
 		[innerText]="'_Request1on1_' | i18n">
 	</button>
