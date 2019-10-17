@@ -177,6 +177,8 @@ export class LifecycleComponent implements OnDestroy {
 	// id of ACC in request form
 	public accTitleRequestForm: string;
 	public accIdRequestForm: string;
+	public accProviderId: string;
+	public accProviderName: string;
 	private destroyed$: Subject<void> = new Subject<void>();
 
 	// Current uncompleted pitstop
@@ -784,11 +786,21 @@ export class LifecycleComponent implements OnDestroy {
 	 * @param selected whether the component is visible or not
 	 * @param accId accId of selected ACC
 	 * @param accTitle title of selected ACC
+	 * @param accProviderId accProviderId of selected ACC
+	 * @param accProviderName accProviderName of selected ACC
 	 */
-	public selectAccRequestForm (selected: boolean, accId: string, accTitle: string) {
+	public selectAccRequestForm (
+		selected: boolean,
+		accId: string,
+		accTitle: string,
+		accProviderId: string,
+		accProviderName: string,
+	) {
 		if (selected) {
 			this.accIdRequestForm = accId;
 			this.accTitleRequestForm = accTitle;
+			this.accProviderId = accProviderId;
+			this.accProviderName = accProviderName;
 		}
 
 		this.selectAccComponent = selected;
@@ -1427,7 +1439,7 @@ export class LifecycleComponent implements OnDestroy {
 	 public getATXMorePanel (atxMoreClick: HTMLElement) {
 		const _div = atxMoreClick;
 		if (this.atxMoreClicked && this.moreATXSelected && !this.atxScheduleCardOpened) {
-			_div.style.left = `${this.moreXCoordinates + 30}px`;
+			_div.style.left = `${this.moreXCoordinates}px`;
 			_div.style.top = `${this.moreYCoordinates - _div.offsetHeight / 2 + 10}px`;
 		}
 	}
@@ -2283,10 +2295,21 @@ export class LifecycleComponent implements OnDestroy {
 
 	/**
 	 * Determine whether to show Cisco or partner default image.
+	 * @param acc The acc item
+	 * @returns the default image url
+	 */
+	public getDefaultAccImg (acc: ACC) {
+		return (acc.providerInfo ?
+			'assets/img/solutions/acc-default-img.png' :
+			'assets/img/solutions/defaultLifecycleImage.png');
+	}
+
+	/**
+	 * Determine whether to show Cisco or partner default image.
 	 * @param atx The ATX item
 	 * @returns the default image url
 	 */
-	public getDefaultATXImg (atx: AtxSchema) {
+	public getDefaultAtxImg (atx: AtxSchema) {
 		return (atx.providerInfo ?
 			'assets/img/solutions/ATX-default-image-1-556x308.png' :
 			'assets/img/solutions/defaultLifecycleImage.png');

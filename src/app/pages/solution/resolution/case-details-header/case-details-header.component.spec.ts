@@ -178,6 +178,9 @@ describe('CaseDetailsHeaderComponent', () => {
 		component.toggleAddFile();
 
 		expect(cuiModalService.showComponent)
-			.toHaveBeenCalledWith(UploadFilesContent, { caseNum: '92511831' });
+			.toHaveBeenCalledWith(UploadFilesContent, {
+				caseNum: '92511831',
+				options: { descriptionReq: false },
+			});
 	}));
 });

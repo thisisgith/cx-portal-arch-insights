@@ -9,6 +9,13 @@ import { environment } from '@environment';
 import { I18n } from '@cisco-ngx/cui-utils';
 import * as _ from 'lodash-es';
 
+/** Data Interface */
+interface Data {
+	facet?: string;
+	pitstop?: string;
+	useCase?: string;
+}
+
 /**
  * The main feedback component
  */
@@ -33,6 +40,7 @@ export class FeedbackComponent implements OnInit {
 		subject: I18n.get('_FeedbackEmailSubject_'),
 		to: environment.feedbackToEmail,
 	};
+	public data: Data = { };
 
 	constructor (
 		private cuiModalService: CuiModalService,
@@ -83,12 +91,15 @@ export class FeedbackComponent implements OnInit {
 			`Email\n${_.get(cpr, 'pf_auth_email', 'N/A')}`,
 			`Access Level\n${_.get(cpr, 'pf_auth_user_level', 'N/A')}`,
 			`Organization Name\n${_.get(cpr, 'pf_auth_company_name', 'N/A')}`,
+			`UseCase\n${_.get(this.data, 'usecase', 'N/A')}`,
+			`Current Pitstop\n${_.get(this.data, 'pitstop', 'N/A')}`,
 			`Date\n${new Date()}`,
 			'--------------------------------------',
 			`Rating\n${this.thumbValue}`,
 			`Feedback\n${this.feedbackForm.value.comment}`,
 			`Okay to contact?\n${this.okayToContact}`,
 			'--------------------------------------',
+			`Current Metric View\n${_.get(this.data, 'facet', 'N/A')}`,
 			`URL of page user was on when they clicked Feedback\n${window.location.href}`,
 		];
 

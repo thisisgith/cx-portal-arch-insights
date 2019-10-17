@@ -554,7 +554,9 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 			const durationOpenFilter = _.find(this.filters, { key: 'durationOpen' });
 			const rmaFilter = _.find(this.filters, { key: 'rma' });
 			_.each(this.filters, filter => {
-				filter.seriesData = defaultFiltersData[filter.key];
+				if (filter.key !== 'total') {
+					filter.seriesData = defaultFiltersData[filter.key];
+				}
 			});
 
 			// Iterate through cases to sum values for all subfilters
