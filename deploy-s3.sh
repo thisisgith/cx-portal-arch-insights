@@ -66,7 +66,7 @@ if [ "$#" -lt 1 ]; then
 	# need to provide at least 1 argument
 	showUsage
 else
-	if [ "$1" != "qa" ] && [ "$1" != 'lt' ] && [ "$1" != 'prd' ] && [ "$1" != 'qa2' ] && [ "$1" != 'lt2' ]; then
+	if [ "$1" != "qa" ] && [ "$1" != 'lt' ] && [ "$1" != 'prod' ] && [ "$1" != 'qa2' ] && [ "$1" != 'lt2' ]; then
 		# 1st argument must be environment
 		showUsage
 	fi
