@@ -202,6 +202,7 @@ implements OnInit, OnDestroy, OnChanges {
 		this.case.opened = caseDetails.createdDate;
 		this.case.description = caseDetails.description;
 		this.case.number = caseDetails.caseNumber;
+		this.case.deviceName = caseDetails.deviceName;
 		if (caseDetails.ownerName) {
 			this.case.owner = caseDetails.ownerName;
 			if (caseDetails.ownerEmail) {
