@@ -108,8 +108,11 @@ export class CaseDetailsHeaderComponent {
 	 */
 	public toggleAddFile () {
 		const data = _.cloneDeep(this.cscService.uploadDefaults);
-		data.tacCaseNum = this.case.caseNumber; // data.tacCaseNum = '92511831';
-		this.cuiModalService.showComponent(UploadFilesContent, { caseNum: data.tacCaseNum });
+		data.tacCaseNum = this.case.caseNumber;
+		this.cuiModalService.showComponent(UploadFilesContent, {
+			caseNum: data.tacCaseNum,
+			options: { descriptionReq: false },
+		});
 	}
 
 	/**
@@ -129,8 +132,12 @@ export class CaseDetailsHeaderComponent {
 						this.logger.error('case-details-header.component : getRmaDetails() ' +
 							`:: Error : (${err.status}) ${err.message}`);
 
-						const newRecord = { returns: { RmaRecord:
-							[{ rmaNo: Number(rmaNum.trim()) }] } };
+						const newRecord = {
+							returns: {
+								RmaRecord:
+									[{ rmaNo: Number(rmaNum.trim()) }],
+							},
+						};
 						return of(newRecord);
 					}),
 				),
