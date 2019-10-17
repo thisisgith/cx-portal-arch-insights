@@ -412,35 +412,37 @@
 	</div>
 </ng-template>
 
-<ng-template #recommendedACC 
-	let-item="item" 
-	let-autoid="autoid" 
+<ng-template #recommendedACC
+	let-item="item"
+	let-autoid="autoid"
 	let-src="src"
 	let-title="title"
 	let-description="description"
 	let-hoverTemplate="hoverTemplate"
 >
-	<div class="icon-bookmark"
-		[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__white'"
-		(click)="updateBookmark(item, 'ACC')"
-		data-auto-id="SBCardRibbon">
+	<div class="max-width flex provider_image">
+		<div class="icon-bookmark"
+			[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__white'"
+			(click)="updateBookmark(item, 'ACC')"
+			data-auto-id="SBCardRibbon">
+		</div>
+		<ng-container *ngIf="item.providerInfo">
+			<!-- Keep the following line for now since we don't have partner Logo yet -->
+			<!-- <span *ngIf="item.providerInfo?.logoURL" class="icon-check icon-medium half-padding-right"></span> -->
+			<img *ngIf="item.providerInfo?.logoURL" class="table-img-width provider_icon" alt="'_Placeholder_' | i18n"
+				[src]="item.providerInfo?.logoURL" attr.data-auto-id="{{ autoid }}-ProviderLogo">
+			<span *ngIf="!item.providerInfo?.logoURL" class="text-bold text-medium provider_icon"
+				[innerText]="item.providerInfo?.name" attr.data-auto-id="{{ autoid }}-ProviderText"></span>
+		</ng-container>
+		<img class="max-width" alt="'_Placeholder_' | i18n" [src]="src" attr.data-auto-id="{{ autoid }}-Image">
 	</div>
-	<div class="provider_icon_acc">
-		<!-- Keep the following line for now since we don't have partner Logo yet -->
-		<!-- <span *ngIf="item.providerInfo?.logoURL" class="icon-check icon-medium half-padding-right"></span> -->
-		<span *ngIf="item.providerInfo?.logoURL">
-			<img class="table-img-width" alt="'_Placeholder_' | i18n" [src]="item.providerInfo?.logoURL" attr.data-auto-id="{{ autoid }}-ProviderLogo">
-		</span>
-		<span *ngIf="!item.providerInfo?.logoURL" class="text-bold text-medium" [innerText]="item.providerInfo?.name" attr.data-auto-id="{{ autoid }}-ProviderText"></span>
-	</div>
-	<img class="max-width" alt="'_Placeholder_' | i18n" [src]="src" attr.data-auto-id="{{ autoid }}-Image">
 	<div class="cx-lifecycle-card cx-lifecycle-card--recommended">
 		<div class="qtr-padding-bottom">
 			<span class="icon-flagged" attr.data-auto-id="{{ autoid }}-Flag"></span>
 			<span class="text-small" [innerText]="'_Recommended_' | i18n"></span>
 		</div>
-		<p 
-			class="cx-lifecycle-card__title" 
+		<p
+			class="cx-lifecycle-card__title"
 			attr.data-auto-id="{{ autoid }}-Title">
 			{{ item.title }}
 			<ng-container *ngTemplateOutlet="hoverTemplate; context: {
@@ -460,16 +462,22 @@
 			</ng-container>
 		</ng-container>
 		<ng-container *ngIf="item.status === 'in-progress'">
-			<span class="icon-clock" attr.data-auto-id="{{ autoid }}-In-Progress-Icon"></span>
-			<span [innerText]="'_SessionInProgress_' | i18n" attr.data-auto-id="{{ autoid }}-In-Progress"></span>
+			<div>
+				<span class="icon-clock" attr.data-auto-id="{{ autoid }}-In-Progress-Icon"></span>
+				<span [innerText]="'_SessionInProgress_' | i18n" attr.data-auto-id="{{ autoid }}-In-Progress"></span>
+			</div>
 		</ng-container>
 		<ng-container *ngIf="item.status === 'requested'">
-			<span class="icon-check-outline" attr.data-auto-id="{{ autoid }}-Requested-Icon"></span>
-			<span [innerText]="'_Requested_' | i18n" attr.data-auto-id="{{ autoid }}-Requested"></span>
+			<div>
+				<span class="icon-check-outline" attr.data-auto-id="{{ autoid }}-Requested-Icon"></span>
+				<span [innerText]="'_Requested_' | i18n" attr.data-auto-id="{{ autoid }}-Requested"></span>
+			</div>
 		</ng-container>
 		<ng-container *ngIf="item.status === 'completed'">
-			<div class="icon-certified" attr.data-auto-id="{{ autoid }}-Checkmark"></div>
-			<span [innerText]="'_Completed_' | i18n" attr.data-auto-id="{{ autoid }}-Completed"></span>
+			<div>
+				<span class="icon-certified" attr.data-auto-id="{{ autoid }}-Checkmark"></span>
+				<span [innerText]="'_Completed_' | i18n" attr.data-auto-id="{{ autoid }}-Completed"></span>
+			</div>
 		</ng-container>
 	</div>
 </ng-template>
@@ -574,7 +582,7 @@
 </ng-template>
 
 <ng-template #accPanel let-data="data">
-	<div class="cx-lifecycle-card cx-lifecycle-card--subtitle base-margin-bottom" [innerText]="'_1on1Coaching_' | i18n"></div>
+	<div class="cx-lifecycle-card--subtitle base-margin-bottom" [innerText]="'_1on1Coaching_' | i18n"></div>
 	<ng-container *ngIf="data.sessions[0]">
 		<ng-container *ngTemplateOutlet="recommended; context: {
 				template: recommendedACC,
@@ -1025,7 +1033,7 @@
 		data-auto-id="ATXCard">
 		<div class="max-width base-margin-bottom atx__card__image flex">
 			<img alt="'_Placeholder_' | i18n" [src]="item.imageURL" data-auto-id="ATXCard-Image"
-				[default]="getDefaultATXImg(item)"
+				[default]="getDefaultAtxImg(item)"
 			>
 			<ng-container *ngIf="item.providerInfo">
 				<img *ngIf="item.providerInfo.logoURL"
@@ -1121,13 +1129,22 @@
 <ng-template #cardACC>
 	<div class="card atx__card" *ngFor="let item of selectedACC"
 		[ngClass]="item.status === 'recommended' ? 'acc__card__recommended' : null" data-auto-id="ACCCard">
-		<div class="provider_icon_card">
-			<span *ngIf="item.providerInfo?.logoURL">
-				<img class="table-img-width" alt="'_Placeholder_' | i18n" [src]="item.providerInfo?.logoURL">
-			</span>
-			<span *ngIf="!item.providerInfo?.logoURL" class="text-bold text-medium" [innerText]="item.providerInfo?.name"></span>
+		<div class="max-width base-margin-bottom acc__card__image flex">
+			<img alt="'_Placeholder_' | i18n" [src]="item.url" data-auto-id="ACCard-Image"
+				[default]="getDefaultAccImg(item)"
+			>
+			<ng-container *ngIf="item.providerInfo">
+				<img *ngIf="item.providerInfo.logoURL"
+					class="acc__card__logo"
+					alt="'_Placeholder_' | i18n"
+					[src]="item.providerInfo.logoURL"
+					data-auto-id="AccCard-PartnerLogo"/>
+				<span *ngIf="!item.providerInfo.logoURL"
+					class="acc__card__logo"
+					[innerText]="item.providerInfo.name"
+				></span>
+			</ng-container>
 		</div>
-		<img class="max-width base-margin-bottom" alt="'_Placeholder_' | i18n" [src]="item.url || 'assets/img/solutions/defaultLifecycleImage.png'" attr.data-auto-id="{{ autoid }}-Image">
 		<div class="text-left base-padding-left atx__card__label half-margin-bottom"
 			data-auto-id="ACCCardHeader"
 			*ngIf="item.status === 'recommended'">
@@ -1465,7 +1482,7 @@
 			*ngIf="type === 'ATX' || type === 'ACC'"
 			alt="'_Placeholder_' | i18n"
 			[src]="celldata.imageURL || celldata.url || 'assets/img/solutions/defaultLifecycleImage.png'"
-			[default]="type === 'ATX' ? getDefaultATXImg(celldata) : 'assets/img/solutions/defaultLifecycleImage.png'"
+			[default]="type === 'ATX' ? getDefaultAtxImg(celldata) : 'assets/img/solutions/defaultLifecycleImage.png'"
 			attr.data-auto-id="{{ type }}-Image" />
 	</div>
 </ng-template>
