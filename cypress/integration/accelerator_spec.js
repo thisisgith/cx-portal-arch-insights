@@ -4,7 +4,7 @@ const accMock = new MockService('ACCScenarios');
 const solution = 'IBN';
 const useCase = 'Campus Network Assurance';
 const accScenario = accMock.getScenario('GET', `(ACC) ${solution}-${useCase}-Onboard`);
-let accItems = accScenario.response.body.items;
+const accItems = accScenario.response.body.items;
 const twoRecommendedScenario = accMock.getScenario('GET', `(ACC) ${solution}-${useCase}-Onboard-twoRecommended`);
 const twoRecommendedItems = twoRecommendedScenario.response.body.items;
 const twoWithPartnerScenario = accMock.getScenario('GET', `(ACC) ${solution}-${useCase}-Onboard-twoWithPartner`);
@@ -14,19 +14,9 @@ const accUserInfoMock = new MockService('ACCUserInfoScenarios');
 const accUserInfoScenario = accUserInfoMock.getScenario('GET', '(ACC) ACC-Request User Info');
 const accUserInfoResponse = accUserInfoScenario.response.body;
 
-// ACC items are being sorted by the UI in the following order by status:
-// requested, in-progress, recommended, completed
-accItems = Cypress._.union(Cypress._.filter(accItems, { status: 'requested' }),
-	Cypress._.filter(accItems, { status: 'in-progress' }),
-	Cypress._.filter(accItems, { status: 'recommended' }),
-	Cypress._.filter(accItems, { status: 'completed' }));
-
 const validACCItems = Cypress._.filter(accItems, acc => acc.description || acc.title);
 const visibleACCItems = accItems.slice(0, 3);
 const invisibleACCItems = accItems.slice(3);
-
-// The recommended panel should only show the first recommended ACC item
-const firstRecommendedACC = Cypress._.head(Cypress._.filter(accItems, { status: 'recommended' }));
 
 const possibleAttendeesValues = [1, 2, 3, 4, 5];
 
@@ -73,7 +63,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 	it('Renders Accelerator tile', () => {
 		cy.getByAutoId('Accelerator Panel').should('exist');
 		cy.getByAutoId('PanelTitle-_Accelerator_').should('have.text', i18n._Accelerator_);
-		cy.getByAutoId('recommendedACC-Title').should('have.text', visibleACCItems[0].title);
+		cy.getByAutoId('recommendedACC-Title').should('contain', visibleACCItems[0].title);
 
 		switch (visibleACCItems[0].status) {
 			case 'completed':
@@ -751,7 +741,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				// Check the titles
 				cy.getByAutoId('accRequestModal-Title').should('have.text', i18n._Request1on1_);
 				cy.getByAutoId('accRequestModal-SubTitle').should('have.text', i18n._FindCiscoExpert_);
-				cy.getByAutoId('accRequestModal-ItemTitle').should('have.text', firstRecommendedACC.title);
+				cy.getByAutoId('accRequestModal-ItemTitle').should('have.text', twoRecommendedItems[0].title);
 
 				// Check the pre-filled field headings
 				cy.getByAutoId('accRequestModal-CompanyName-Heading').should('have.text', i18n._CompanyName_);
@@ -1103,7 +1093,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				cy.server();
 				cy.route({
 					method: 'POST',
-					url: `/api/customerportal/racetrack/v1/acc/${firstRecommendedACC.accId}/request`,
+					url: `/api/customerportal/racetrack/v1/acc/${twoRecommendedItems[0].accId}/request`,
 					status: 500,
 					response: 'Forced error from QA',
 				}).as('failedPostRequestForm');
@@ -1170,7 +1160,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				}).as('getUserInfo');
 				cy.route({
 					method: 'POST',
-					url: `/api/customerportal/racetrack/v1/acc/${firstRecommendedACC.accId}/request`,
+					url: `/api/customerportal/racetrack/v1/acc/${twoRecommendedItems[0].accId}/request`,
 					status: 200,
 					response: '',
 				}).as('postRequestForm');
@@ -1270,7 +1260,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 					// Wait for the API call and verify we sent the correct data
 					cy.wait('@postRequestForm').its('request').then(request => {
 						expect(request.body.accTitle)
-							.to.include(firstRecommendedACC.title);
+							.to.include(twoRecommendedItems[0].title);
 						expect(request.body.additionalAttendees.length)
 							.to.eq(1);
 						expect(request.body.additionalAttendees[0].attendeeName)
@@ -1402,11 +1392,12 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			cy.getByAutoId('ViewAllTable')
 				.within(() => {
 					cy.get('th').then($columnHeaders => {
-						// Should be 4 columns (Bookmark, Name, Status, Buttons)
-						expect($columnHeaders.length).to.eq(4);
+						// Should be 5 columns (Bookmark, Name, Content Provider, Status, Buttons)
+						expect($columnHeaders.length).to.eq(5);
 					});
 					cy.getByAutoId('ViewAllTable-columnHeader-Bookmark').should('exist');
 					cy.getByAutoId('ViewAllTable-columnHeader-Name').should('exist');
+					cy.getByAutoId('ViewAllTable-columnHeader-Content Provider').should('exist');
 					cy.getByAutoId('ViewAllTable-columnHeader-Status').should('exist');
 					// Buttons column has no title
 					cy.getByAutoId('ViewAllTable-columnHeader-').should('exist');
@@ -1414,7 +1405,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		});
 
 		it('ACC View All table view should have all data', () => {
-			accItems.forEach((item, index) => {
+			validACCItems.forEach((item, index) => {
 				cy.get('tr').eq(index + 1).within(() => {
 					cy.getByAutoId('ACC-Title').should('have.text', item.title);
 					// Handle bookmark
@@ -1466,7 +1457,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		it('ACC View All table should not sort by default', () => {
 			cy.getByAutoId('ViewAllTable')
 				.within(() => {
-					accItems.forEach((item, index) => {
+					validACCItems.forEach((item, index) => {
 						// Note that our actual data rows start at tr 1, because 0 is the headers
 						cy.get('tr').eq(index + 1).within(() => {
 							cy.getByAutoId('ACC-Title').should('have.text', item.title);
@@ -1479,7 +1470,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			cy.getByAutoId('ViewAllTable')
 				.within(() => {
 					cy.getByAutoId('ViewAllTable-columnHeader-Bookmark').click();
-					const sortedItemsAsc = Cypress._.orderBy(accItems, ['bookmark'], ['asc']);
+					const sortedItemsAsc = Cypress._.orderBy(validACCItems, ['bookmark'], ['asc']);
 					sortedItemsAsc.forEach((item, index) => {
 						// Note that our actual data rows start at tr 1, because 0 is the headers
 						cy.get('tr').eq(index + 1).within(() => {
@@ -1495,7 +1486,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 
 					// Reverse the sort and re-verify order
 					cy.getByAutoId('ViewAllTable-columnHeader-Bookmark').click();
-					const sortedItemsDesc = Cypress._.orderBy(accItems, ['bookmark'], ['desc']);
+					const sortedItemsDesc = Cypress._.orderBy(validACCItems, ['bookmark'], ['desc']);
 					sortedItemsDesc.forEach((item, index) => {
 						// Note that our actual data rows start at tr 1, because 0 is the headers
 						cy.get('tr').eq(index + 1).within(() => {
@@ -1515,7 +1506,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			cy.getByAutoId('ViewAllTable')
 				.within(() => {
 					cy.getByAutoId('ViewAllTable-columnHeader-Name').click();
-					const sortedItemsAsc = Cypress._.orderBy(accItems, ['title'], ['asc']);
+					const sortedItemsAsc = Cypress._.orderBy(validACCItems, ['title'], ['asc']);
 					sortedItemsAsc.forEach((item, index) => {
 						// Note that our actual data rows start at tr 1, because 0 is the headers
 						cy.get('tr').eq(index + 1).within(() => {
@@ -1527,7 +1518,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 
 					// Reverse the sort and re-verify order
 					cy.getByAutoId('ViewAllTable-columnHeader-Name').click();
-					const sortedItemsDesc = Cypress._.orderBy(accItems, ['title'], ['desc']);
+					const sortedItemsDesc = Cypress._.orderBy(validACCItems, ['title'], ['desc']);
 					sortedItemsDesc.forEach((item, index) => {
 						// Note that our actual data rows start at tr 1, because 0 is the headers
 						cy.get('tr').eq(index + 1).within(() => {
@@ -1543,7 +1534,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			cy.getByAutoId('ViewAllTable')
 				.within(() => {
 					cy.getByAutoId('ViewAllTable-columnHeader-Status').click();
-					const sortedItemsAsc = Cypress._.orderBy(accItems, ['status'], ['asc']);
+					const sortedItemsAsc = Cypress._.orderBy(validACCItems, ['status'], ['asc']);
 					sortedItemsAsc.forEach((item, index) => {
 						// Note that our actual data rows start at tr 1, because 0 is the headers
 						cy.get('tr').eq(index + 1).within(() => {
@@ -1575,7 +1566,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 
 					// Reverse the sort and re-verify order
 					cy.getByAutoId('ViewAllTable-columnHeader-Status').click();
-					const sortedItemsDesc = Cypress._.orderBy(accItems, ['status'], ['desc']);
+					const sortedItemsDesc = Cypress._.orderBy(validACCItems, ['status'], ['desc']);
 					sortedItemsDesc.forEach((item, index) => {
 						// Note that our actual data rows start at tr 1, because 0 is the headers
 						cy.get('tr').eq(index + 1).within(() => {
@@ -1614,7 +1605,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 					cy.getByAutoId('cui-select').click();
 					cy.get(`a[title="${filterMap.filter}"]`).click();
 
-					const filteredItems = accItems.filter(
+					const filteredItems = validACCItems.filter(
 						item => (item[filterMap.field] === filterMap.value)
 					);
 					cy.getByAutoId('ViewAllTable')
@@ -1638,7 +1629,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 					.within(() => {
 						cy.get('tr').then(rows => {
 							// Note that the first tr is the column headers
-							expect(rows.length - 1).to.eq(accItems.length);
+							expect(rows.length - 1).to.eq(validACCItems.length);
 						});
 					});
 			});
@@ -1647,7 +1638,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		it('ACC View All table view should allow requesting 1-on-1', () => {
 			// Verify a Request 1-on-1 button is available for all recommended items, and clicking
 			// it opens the request form
-			accItems.forEach((item, index) => {
+			validACCItems.forEach((item, index) => {
 				if (item.status === 'recommended') {
 					cy.get('tr').eq(index + 1).within(() => {
 						cy.getByAutoId('Request1on1ACCButton')
@@ -1780,7 +1771,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				cy.getByAutoId('cui-select').click();
 				cy.get('a[title="In progress"]').click();
 
-				const filteredItems = accItems.filter(
+				const filteredItems = validACCItems.filter(
 					item => (item.status === 'in-progress')
 				);
 				cy.getByAutoId('ViewAllTable')
@@ -1843,7 +1834,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		});
 
 		it('ACC View All table sort should be sticky across modal close/re-open', () => {
-			const sortedItemsAsc = Cypress._.orderBy(accItems, ['title'], ['asc']);
+			const sortedItemsAsc = Cypress._.orderBy(validACCItems, ['title'], ['asc']);
 
 			cy.getByAutoId('ViewAllTable')
 				.within(() => {
@@ -1872,7 +1863,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		});
 
 		it('ACC View All table sort should be sticky across table/card view', () => {
-			const sortedItemsAsc = Cypress._.orderBy(accItems, ['title'], ['asc']);
+			const sortedItemsAsc = Cypress._.orderBy(validACCItems, ['title'], ['asc']);
 
 			// Sort the data
 			cy.getByAutoId('ViewAllTable')
@@ -1925,7 +1916,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			// Verify still in table view and sort was reset to default
 			cy.getByAutoId('ViewAllTable')
 				.within(() => {
-					accItems.forEach((item, index) => {
+					validACCItems.forEach((item, index) => {
 						// Note that our actual data rows start at tr 1, because 0 is the headers
 						cy.get('tr').eq(index + 1).within(() => {
 							// Only check the field we've sorted by, since the sorting of items that have the
@@ -1956,7 +1947,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			// Verify the sort was reset to default
 			cy.getByAutoId('ViewAllTable')
 				.within(() => {
-					accItems.forEach((item, index) => {
+					validACCItems.forEach((item, index) => {
 						// Note that our actual data rows start at tr 1, because 0 is the headers
 						cy.get('tr').eq(index + 1).within(() => {
 							// Only check the field we've sorted by, since the sorting of items that have the
@@ -1986,7 +1977,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			// Verify the sort was reset to default
 			cy.getByAutoId('ViewAllTable')
 				.within(() => {
-					accItems.forEach((item, index) => {
+					validACCItems.forEach((item, index) => {
 						// Note that our actual data rows start at tr 1, because 0 is the headers
 						cy.get('tr').eq(index + 1).within(() => {
 							// Only check the field we've sorted by, since the sorting of items that have the
@@ -2038,7 +2029,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			// Verify the filter is still in place
 			cy.getByAutoId('ViewAllModal').within(() => {
 				cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Requested');
-				const filteredItems = accItems.filter(item => (item.status === 'requested'));
+				const filteredItems = validACCItems.filter(item => (item.status === 'requested'));
 				cy.get('tr').then($rows => {
 					// Note that the first tr is the column headers
 					expect($rows.length - 1).to.eq(filteredItems.length);
@@ -2055,7 +2046,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 
 			// Switch to card view, verify the filter is still in place
 			cy.getByAutoId('acc-card-view-btn').click();
-			const filteredItems = accItems.filter(item => (item.status === 'requested'));
+			const filteredItems = validACCItems.filter(item => (item.status === 'requested'));
 			cy.getByAutoId('ViewAllModal').within(() => {
 				cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Requested');
 				cy.getByAutoId('ACCCard').then($cards => {
@@ -2096,7 +2087,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', i18n._AllTitles_);
 			cy.get('tr').then($rows => {
 				// Note that the first tr is the column headers
-				expect($rows.length - 1).to.eq(accItems.length);
+				expect($rows.length - 1).to.eq(validACCItems.length);
 			});
 		});
 
@@ -2122,7 +2113,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', i18n._AllTitles_);
 			cy.get('tr').then($rows => {
 				// Note that the first tr is the column headers
-				expect($rows.length - 1).to.eq(accItems.length);
+				expect($rows.length - 1).to.eq(validACCItems.length);
 			});
 		});
 
@@ -2147,7 +2138,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', i18n._AllTitles_);
 			cy.get('tr').then($rows => {
 				// Note that the first tr is the column headers
-				expect($rows.length - 1).to.eq(accItems.length);
+				expect($rows.length - 1).to.eq(validACCItems.length);
 			});
 		});
 	});
@@ -2470,7 +2461,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		});
 
 		it('ACC View All table view rows should have hover modals', () => {
-			accItems.forEach((item, index) => {
+			validACCItems.forEach((item, index) => {
 				cy.get('tr')
 					.eq(index + 1)
 					.within(() => {
@@ -2518,7 +2509,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			cy.getByAutoId('recommendedACC').within(() => {
 				cy.getByAutoId('recommendedACC-ProviderText')
 					.should('exist')
-					.and('have.text', accItems[0].providerInfo.name);
+					.and('have.text', validACCItems[0].providerInfo.name);
 				cy.getByAutoId('recommendedACC-ProviderLogo')
 					.should('not.exist');
 			});
@@ -2552,12 +2543,12 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			cy.getByAutoId('Facet-Lifecycle').click();
 			cy.wait('(ACC) IBN-Campus Network Assurance-Onboard-twoRecommended');
 
-			// Verify the logo is hidden, and text is blank
+			// Verify the logo and text are hidden
 			cy.getByAutoId('recommendedACC').within(() => {
 				cy.getByAutoId('recommendedACC-ProviderLogo')
 					.should('not.exist');
 				cy.getByAutoId('recommendedACC-ProviderText')
-					.and('have.text', '');
+					.should('not.exist');
 			});
 		});
 
@@ -2611,7 +2602,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 
 		it('First ACC item hover should show partner name regardless of logoURL', () => {
 			cy.getByAutoId('recommendedACC-HoverModal-Provider')
-				.should('have.text', `${i18n._By_}${accItems[0].providerInfo.name}`);
+				.should('have.text', `${i18n._By_}${validACCItems[0].providerInfo.name}`);
 
 			// Switch to mock data with logoURLs
 			accMock.enable('(ACC) IBN-Campus Network Assurance-Onboard-twoWithPartner');
@@ -2692,6 +2683,233 @@ describe('Accelerator (ACC)', () => { // PBC-32
 							.should('have.text', '');
 					});
 				});
+		});
+	});
+
+	describe('PBC-1018: UI needed to display list of partner-offered ACC', () => {
+		// JIRA name is not terribly descriptive...
+		// These tests relate to partner-branding on ACC details (first item and More list)
+		afterEach(() => {
+			// Switch back to the default mock data
+			accMock.enable('(ACC) IBN-Campus Network Assurance-Onboard');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ACC) IBN-Campus Network Assurance-Onboard');
+		});
+
+		describe('ACC Card View', () => {
+			beforeEach(() => {
+				// Open the view all modal, and ensure we're in card view
+				cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
+				cy.getByAutoId('acc-card-view-btn').click();
+				cy.getByAutoId('ACCCard').should('exist');
+			});
+
+			afterEach(() => {
+				// Close the View All modal
+				cy.getByAutoId('ViewAllCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+			});
+
+			it('ACC Card View should show logo from logoURL', () => {
+				// Close the View All modal
+				cy.getByAutoId('ViewAllCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+
+				// Switch to mock data with logoURLs
+				accMock.enable('(ACC) IBN-Campus Network Assurance-Onboard-twoWithPartner');
+
+				// Refresh the data
+				cy.getByAutoId('Facet-Assets & Coverage').click();
+				cy.getByAutoId('Facet-Lifecycle').click();
+				cy.wait('(ACC) IBN-Campus Network Assurance-Onboard-twoWithPartner');
+
+				// Re-open the view all modal, and ensure we're in card view
+				cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
+				cy.getByAutoId('acc-card-view-btn').click();
+				cy.getByAutoId('ACCCard').should('exist');
+
+				twoWithPartnerItems.forEach((acc, index) => {
+					cy.getByAutoId('ACCCard')
+						.eq(index)
+						.within(() => {
+							cy.getByAutoId('ACCCard-ProviderLogo')
+								.should('have.attr', 'src', acc.providerInfo.logoURL);
+							cy.getByAutoId('ACCCard-ProviderText')
+								.should('not.exist');
+						});
+				});
+			});
+
+			it('ACC Card View should show partner name when no logoURL', () => {
+				validACCItems.forEach((acc, index) => {
+					// Only check for partner data on partner ACCs
+					if (acc.providerInfo) {
+						cy.getByAutoId('ACCCard')
+							.eq(index)
+							.within(() => {
+								cy.getByAutoId('ACCCard-ProviderText')
+									.should('have.text', acc.providerInfo.name);
+								cy.getByAutoId('ACCCard-ProviderLogo')
+									.should('not.exist');
+							});
+					}
+				});
+			});
+
+			it('ACC Card View should hide logo and partner name if both are missing', () => {
+				// Close the View All modal
+				cy.getByAutoId('ViewAllCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+
+				// Switch to mock data with NO providerInfo block
+				accMock.enable('(ACC) IBN-Campus Network Assurance-Onboard-twoRecommended');
+
+				// Refresh the data
+				cy.getByAutoId('Facet-Assets & Coverage').click();
+				cy.getByAutoId('Facet-Lifecycle').click();
+				cy.wait('(ACC) IBN-Campus Network Assurance-Onboard-twoRecommended');
+
+				// Re-open the view all modal, and ensure we're in card view
+				cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
+				cy.getByAutoId('acc-card-view-btn').click();
+				cy.getByAutoId('ACCCard').should('exist');
+
+				// Verify the logo and text are hidden
+				cy.getByAutoId('ACCCard').each($card => {
+					cy.wrap($card).within(() => {
+						cy.getByAutoId('ACCCard-ProviderLogo')
+							.should('not.exist');
+						cy.getByAutoId('ACCCard-ProviderText')
+							.should('not.exist');
+					});
+				});
+			});
+		});
+
+		describe('ACC Table View', () => {
+			afterEach(() => {
+				// Close the View All modal
+				cy.getByAutoId('ViewAllCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+			});
+
+			it('ACC Table View should show partner name regardless of logoURL', () => {
+				// Open the view all modal, and ensure we're in table view
+				cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
+				cy.getByAutoId('acc-table-view-btn').click();
+				cy.getByAutoId('ViewAllTable').should('exist');
+
+				validACCItems.forEach((acc, index) => {
+					cy.log(`ACC: ${acc.title}`);
+					// Partner ACCs should have the partner name
+					if (acc.providerInfo) {
+						// Skip the first tr, as this is the column headers
+						cy.get('tr')
+							.eq(index + 1)
+							.within(() => {
+								cy.getByAutoId('partner-name')
+									.should('have.text', acc.providerInfo.name);
+							});
+					} else {
+						// Non-partner ACCs will have "Cisco" as the provider
+						cy.get('tr')
+							.eq(index + 1)
+							.within(() => {
+								cy.getByAutoId('partner-name')
+									.should('have.text', 'Cisco');
+							});
+					}
+				});
+
+				// Close the View All modal
+				cy.getByAutoId('ViewAllCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+
+				// Switch to mock data with logoURLs
+				accMock.enable('(ACC) IBN-Campus Network Assurance-Onboard-twoWithPartner');
+
+				// Refresh the data
+				cy.getByAutoId('Facet-Assets & Coverage').click();
+				cy.getByAutoId('Facet-Lifecycle').click();
+				cy.wait('(ACC) IBN-Campus Network Assurance-Onboard-twoWithPartner');
+
+				// Open the view all modal, and ensure we're in table view
+				cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
+				cy.getByAutoId('acc-table-view-btn').click();
+				cy.getByAutoId('ViewAllTable').should('exist');
+
+				twoWithPartnerItems.forEach((acc, index) => {
+					// Skip the first tr, as this is the column headers
+					cy.get('tr')
+						.eq(index + 1)
+						.within(() => {
+							cy.getByAutoId('partner-name')
+								.should('have.text', acc.providerInfo.name);
+						});
+				});
+			});
+
+			// Waiting on PBC-1024: http://swtg-jira-lnx.cisco.com:8080/browse/PBC-1024
+			// Lifecycle: New partner branding on ACC and ATX needs to handle missing name
+			it.skip('ACC Table View should show dash if provider name is missing or blank', () => {
+				// Switch to mock data with blank partner names
+				accMock.enable('(ACC) IBN-Campus Network Assurance-Onboard-twoWithBlankPartner');
+
+				// Refresh the data
+				cy.getByAutoId('Facet-Assets & Coverage').click();
+				cy.getByAutoId('Facet-Lifecycle').click();
+				cy.wait('(ACC) IBN-Campus Network Assurance-Onboard-twoWithBlankPartner');
+
+				// Open the view all modal, and ensure we're in table view
+				cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
+				cy.getByAutoId('acc-table-view-btn').click();
+				cy.getByAutoId('ViewAllTable').should('exist');
+
+				cy.get('tr').each($row => {
+					cy.wrap($row).within(() => {
+						cy.getByAutoId('partner-name')
+							.should('have.text', '-');
+					});
+				});
+			});
+
+			it('ACC Table View should be sortable by provider', () => {
+				// Open the view all modal, and ensure we're in table view
+				cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
+				cy.getByAutoId('acc-table-view-btn').click();
+				cy.getByAutoId('ViewAllTable').should('exist');
+
+				// Click the header to sort in ascending order
+				cy.getByAutoId('ViewAllTable-columnHeader-Content Provider').click();
+
+				const sortedAsc = Cypress._.orderBy(validACCItems,
+					acc => acc.providerInfo && acc.providerInfo.name, 'asc');
+				sortedAsc.forEach((acc, index) => {
+					// Skip the first tr, as this is the column headers
+					cy.get('tr')
+						.eq(index + 1)
+						.within(() => {
+							cy.getByAutoId('ACC-Title').should('have.text', acc.title);
+						});
+				});
+
+				// Click the header again to reverse the sort
+				cy.getByAutoId('ViewAllTable-columnHeader-Content Provider').click();
+
+				const sortedDesc = Cypress._.orderBy(validACCItems,
+					acc => acc.providerInfo && acc.providerInfo.name, 'desc');
+				sortedDesc.forEach((acc, index) => {
+					// Skip the first tr, as this is the column headers
+					cy.get('tr')
+						.eq(index + 1)
+						.within(() => {
+							cy.getByAutoId('ACC-Title').should('have.text', acc.title);
+						});
+				});
+			});
 		});
 	});
 });

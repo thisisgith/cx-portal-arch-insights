@@ -1142,10 +1142,11 @@
 					class="acc__card__logo"
 					alt="'_Placeholder_' | i18n"
 					[src]="item.providerInfo.logoURL"
-					data-auto-id="AccCard-PartnerLogo"/>
+					data-auto-id="ACCCard-ProviderLogo"/>
 				<span *ngIf="!item.providerInfo.logoURL  && item.providerInfo?.name"
 					class="acc__card__logo"
 					[innerText]="item.providerInfo.name"
+					data-auto-id="ACCCard-ProviderText"
 				></span>
 			</ng-container>
 		</div>
