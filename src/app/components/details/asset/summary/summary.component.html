@@ -43,8 +43,8 @@
 				<ng-container *ngTemplateOutlet="supportData; context: {
 					title: '_SupportCoverage_',
 					expirationDate: assetData?.coverageEndDate,
-					linkData: ('_ContractNumber_' | i18n) + ' ' + (assetData?.contractNumber && assetData?.contractNumber !== 'UNKNOWN' ?
-					(assetData?.contractNumber + (assetData?.slaDescription ? ' ' + assetData?.slaDescription : ''))
+					linkData: (assetData?.contractNumber && assetData?.contractNumber !== 'UNKNOWN' ?
+					('_ContractNumber_' | i18n) + ' ' (assetData?.contractNumber + (assetData?.slaDescription ? ' ' + assetData?.slaDescription : ''))
 					: null),
 					url: '',
 					supportType: 'support'
