@@ -65,8 +65,7 @@ export class ContractSearchComponent extends SpecialSearchComponent
 	private refresh$ = new Subject();
 	private destroy$ = new Subject();
 
-	public contractExpirationStatusColor: string;
-	public expirationDatePadding = '';
+	public contractExpirationStatusColor: { };
 
 	constructor (
 		private contractsService: ContractsService,
@@ -205,10 +204,11 @@ export class ContractSearchComponent extends SpecialSearchComponent
 			const dayInMilliseconds = (1000 * 60 * 60 * 24);
 			const dateNow: any = new Date();
 			const dateDifference =  Math.floor((contractExpDate - dateNow) / dayInMilliseconds);
-			this.expirationDatePadding = (dateDifference < 90) ? 'qtr-padding-left' : '';
 
-			return (dateDifference < 0) ? 'background-expired-lightRed' :
-			((dateDifference < 90) ? 'background-warning-lightOrange' : '');
+			return (dateDifference < 0) ? {
+				'background-expired-lightRed': true, 'qtr-padding': true } :
+			((dateDifference < 90) ? {
+				'background-warning-lightOrange': true, 'qtr-padding': true } : '');
 		}
 	}
 
