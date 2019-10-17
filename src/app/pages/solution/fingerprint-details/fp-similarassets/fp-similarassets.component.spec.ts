@@ -103,19 +103,6 @@ describe('FpSimilarassetsComponent', () => {
 			.toHaveBeenCalledTimes(0);
 	});
 
-	it('should change page value on onPagerUpdated', () => {
-		const fakePageInfo = {
-			page: 10,
-		};
-		const spy = spyOn(fpIntelligenceService, 'getSimilarDevices').and
-			.callThrough();
-		component.onPagerUpdated(fakePageInfo);
-		expect(component.page)
-			.toEqual(10);
-		expect(spy)
-			.toHaveBeenCalled();
-	});
-
 	it('should selectedDevice2 on active tableRowData', () => {
 		const fakeTableRoeData = {
 			active: true,
@@ -141,9 +128,7 @@ describe('FpSimilarassetsComponent', () => {
 
 	it('should not load data if form is invalid', fakeAsync(() => {
 		component.requestForm.setValue({
-			deviceCount : 50,
-			minMatch: -1 ,
-			similarityCriteria: 'fingerprint'});
+			similarityCriteria: null});
 		spyOn(fpIntelligenceService, 'getSimilarDevices')
 			.and
 			.returnValue(of(ComparisonViewScenarios[4].scenarios.GET[0].response.body));
