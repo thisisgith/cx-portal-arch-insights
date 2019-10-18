@@ -70,6 +70,7 @@ export class DnacListComponent implements OnInit {
 	public ngOnInit () {
 		this.getCollectionId();
 		this.buildTable();
+		this.getCollectionId();
 	}
 
 	/**
@@ -117,36 +118,25 @@ export class DnacListComponent implements OnInit {
 					name: I18n.get('_ArchitectureSystems(SystemsPublishedLimit)_'),
 					sortable: false,
 					template : this.devicesTemplate,
+					width : '15%',
 				},
 				{
 					name: I18n.get('_ArchitectureEndPoints(EndPublishedLimit)_'),
 					sortable: false,
 					template : this.endPointsTemplate,
+					width : '17%',
 				},
 				{
 					name: I18n.get('_ArchitectureFabrics(FabricsPublishedLimit)_'),
 					sortable: false,
 					template : this.fabricsTemplate,
+					width : '17%',
 				},
 				{
 					name: I18n.get('_ArchitectureWLC(WLCPublishedLimit)_'),
 					sortable: false,
 					template : this.wlcTemplate,
-				},
-				{
-					key: 'dnacCpu',
-					name: I18n.get('_ArchitectureCPUUsage_'),
-					sortable: false,
-				},
-				{
-					key: 'dnacFilesystem',
-					name: I18n.get('_ArchitectureFileSystemUsage_'),
-					sortable: false,
-				},
-				{
-					key: 'dnacMemory',
-					name: I18n.get('_ArchitectureMemoryUsage_'),
-					sortable: false,
+					width : '17%',
 				},
 			],
 			singleSelect: true,
@@ -163,7 +153,7 @@ export class DnacListComponent implements OnInit {
 		this.isLoading = true;
 		this.params.page = event.page;
 		this.params.pageSize = event.limit;
-		this.getDnacList();
+		this.getCollectionId();
 	}
 
 	/**
@@ -179,7 +169,7 @@ export class DnacListComponent implements OnInit {
 			this.tableStartIndex = 0;
 			this.params.page = 0;
 			this.params.searchText = this.searchText;
-			this.getDnacList();
+			this.getCollectionId();
 		}
 	}
 	/**

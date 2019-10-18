@@ -18,7 +18,7 @@ class ArchitectureReviewService extends __BaseService {
   static readonly getDnacCountResponsePath = '/customerportal/archinsights/v1/dnac/count';
   static readonly getDevicesSDAResponsePath = '/customerportal/archinsights/v1/dnac/deviceinsight';
   static readonly getnonOptimalLinksResponsePath = '/customerportal/archinsights/v1/dnac/deviceinsight/nonoptimallinks';
-  static readonly getSDAReadinessCountResponse = '/customerportal/archinsights/v1/dnac/devicecompliance';
+  static readonly getSDAReadinessCountResponse = '/customerportal/archinsights/v1/dnac/devicecompliance/count';
   static readonly getCollectionIdResponsePath = '/customerportal/archinsights/v1/collectiondetails';
 
   private collectionId = new BehaviorSubject<any>({});
@@ -41,6 +41,7 @@ class ArchitectureReviewService extends __BaseService {
    * @return successful operation
    */
   getDevicesListResponse(params: any): __Observable<__StrictHttpResponse<any>> {
+    console.log(params);
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
@@ -99,6 +100,7 @@ class ArchitectureReviewService extends __BaseService {
   }
 
   getDnacListResponse(params:any): __Observable<__StrictHttpResponse<any>> {
+    console.log(params);
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
@@ -109,6 +111,7 @@ class ArchitectureReviewService extends __BaseService {
     if (params.collectionId != null) __params = __params.set('collectionId', params.collectionId.toString());
     if (params.searchText != null) __params = __params.set('searchText', params.searchText.toString());
     if (params.dnacIP != null) __params = __params.set('dnacIP', params.dnacIP.toString());
+    
 
     let req = new HttpRequest<any>(
 	  'GET',

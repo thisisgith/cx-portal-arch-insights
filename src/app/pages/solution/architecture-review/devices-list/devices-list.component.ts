@@ -122,8 +122,7 @@ export class DevicesListComponent implements OnInit, OnChanges {
 				`:: Error : (${err.status}) ${err.message}`);
 			this.invalidResponseHandler();
 		});
-	}
-
+	 }
 	/**
 	 * used to Intialize Table options
 	 */
@@ -188,7 +187,7 @@ export class DevicesListComponent implements OnInit, OnChanges {
 		this.isLoading = true;
 		this.paramsType.page = event.page;
 		this.paramsType.pageSize = event.limit;
-		this.getDevicesList();
+		this.getCollectionId();
 	}
 	/**
  	* Used for getting pageNumber Index and call the getdata function
@@ -218,7 +217,7 @@ export class DevicesListComponent implements OnInit, OnChanges {
 			this.tableStartIndex = 0;
 			this.paramsType.page = 0;
 			this.paramsType.searchText = this.searchText;
-			this.getDevicesList();
+			this.getCollectionId();
 		}
 	}
 
