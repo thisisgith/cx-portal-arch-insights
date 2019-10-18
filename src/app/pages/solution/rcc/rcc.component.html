@@ -308,10 +308,8 @@
 	</ng-template>
 </div>
 <!-- App Details slide-out -->
-<asset-details *ngIf="openDeviceModal && (assetLinkInfo?.asset || assetLinkInfo?.asset?.serialNumber)"
-	[asset]="assetLinkInfo?.asset"
-	[serialNumber]="assetLinkInfo?.asset?.serialNumber"
-	[element]="assetLinkInfo?.element"
+<asset-details *ngIf="openDeviceModal"
+	[serialNumber]="selectedAssetSerial"
 	(close)="onPanelClose('openDeviceModal')"
 	[minWidth]="'900px'"
 	[fullscreenToggle]="'true'">
