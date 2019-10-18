@@ -286,7 +286,7 @@ describe('Assets', () => { // PBC-41
 			// }
 
 			cy.getByAutoId('AdvisoryTab-bug').click();
-			pageText = getPaginationText(bugResponse.Pagination, 'Critical Bugs');
+			pageText = getPaginationText(bugResponse.Pagination, 'Priority Bugs');
 			cy.getByAutoId('AdvisoryTab-ShowingTxt').should('have.text', pageText);
 			Cypress._.each(bugResponse.data, (bug, index) => {
 				cy.get('[data-auto-id="AssetDetailsAdvisoryTable"] tbody tr').eq(index).within(() => {

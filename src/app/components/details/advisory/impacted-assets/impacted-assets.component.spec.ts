@@ -13,6 +13,7 @@ import {
 	MockNetworkElements,
 	Mock,
 	RacetrackScenarios,
+	MockAssetsData,
 } from '@mock';
 import * as _ from 'lodash-es';
 import { DiagnosticsService, InventoryService } from '@sdp-api';
@@ -94,6 +95,10 @@ describe('AdvisoryImpactedAssetsComponent', () => {
 			.and
 			.returnValue(of({ data }));
 
+		spyOn(inventoryService, 'getAssets')
+			.and
+			.returnValue(of({ data: MockAssetsData }));
+
 		component.ngOnInit();
 		sendRacetrack();
 		fixture.detectChanges();
@@ -126,6 +131,10 @@ describe('AdvisoryImpactedAssetsComponent', () => {
 		spyOn(inventoryService, 'getNetworkElements')
 			.and
 			.returnValue(of({ data }));
+
+		spyOn(inventoryService, 'getAssets')
+			.and
+			.returnValue(of({ data: MockAssetsData }));
 
 		component.ngOnInit();
 		sendRacetrack();
@@ -161,6 +170,9 @@ describe('AdvisoryImpactedAssetsComponent', () => {
 		spyOn(inventoryService, 'getNetworkElements')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
+		spyOn(inventoryService, 'getAssets')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
 
 		component.ngOnInit();
 		sendRacetrack();
@@ -188,6 +200,9 @@ describe('AdvisoryImpactedAssetsComponent', () => {
 			statusText: 'Resource not found',
 		};
 		spyOn(diagnosticsService, 'getCriticalBugsAssets')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+		spyOn(inventoryService, 'getAssets')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
 

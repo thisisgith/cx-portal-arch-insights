@@ -7,6 +7,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { ControlPointIERegistrationAPIService } from '@sdp-api';
 import { ASDAPIService } from '@services';
 import { of, throwError } from 'rxjs';
+import { SetupIEStateService } from '../setup-ie-state.service';
 
 import { DownloadImageComponent } from './download-image.component';
 import { DownloadImageModule } from './download-image.module';
@@ -25,6 +26,7 @@ describe('DownloadImageComponent', () => {
 	let acceptEULASpy: jasmine.Spy;
 	let acceptK9Spy: jasmine.Spy;
 	let routerNavigateSpy: jasmine.Spy;
+	let stateService: SetupIEStateService;
 
 	configureTestSuite(() => {
 		TestBed.configureTestingModule({
@@ -64,6 +66,11 @@ describe('DownloadImageComponent', () => {
 	}));
 
 	beforeEach(() => {
+		stateService = TestBed.get(SetupIEStateService);
+		stateService.clearState();
+		stateService.setState({
+			compKey: 1,
+		});
 		fixture = TestBed.createComponent(DownloadImageComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();

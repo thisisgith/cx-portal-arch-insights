@@ -1,7 +1,35 @@
+@import '../../../../../variables.scss';
+
 .percent-symbol::after {
 	content: "\0025";
 }
 
 .gt-symbol::after {
 	content: "\003E";
+}
+
+.text-color-black {
+	color: $black;
+}
+
+:host ::ng-deep .table {
+	th {
+		font-size: 12px;
+	}
+
+	tbody {
+		tr {
+			td:last-child {
+				border-right: 1px solid #e4e4e4;
+			}
+
+			td:first-child {
+				border-left: 1px solid #e4e4e4;
+			}
+		}
+
+		tr:last-child {
+			border-bottom: 1px solid #e4e4e4;
+		}
+	}
 }

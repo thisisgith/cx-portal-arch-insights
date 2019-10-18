@@ -199,6 +199,8 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 						key: 'profileName',
 						name: I18n.get('_OsvSoftwareGroup_'),
 						sortable: false,
+						render: item =>
+								item.profileName ? item.profileName : '',
 						width: '10%',
 					},
 					{

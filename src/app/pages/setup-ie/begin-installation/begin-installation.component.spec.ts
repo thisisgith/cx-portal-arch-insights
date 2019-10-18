@@ -3,6 +3,7 @@ import { ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
 
 import { BeginInstallationComponent } from './begin-installation.component';
 import { BeginInstallationModule } from './begin-installation.module';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('BeginInstallationComponent', () => {
 	let component: BeginInstallationComponent;
@@ -10,7 +11,7 @@ describe('BeginInstallationComponent', () => {
 
 	configureTestSuite(() => {
 		TestBed.configureTestingModule({
-			imports: [BeginInstallationModule],
+			imports: [BeginInstallationModule, HttpClientTestingModule],
 		});
 	});
 

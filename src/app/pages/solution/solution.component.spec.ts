@@ -89,6 +89,8 @@ describe('SolutionComponent', () => {
 		racetrackInfoService.sendCurrentTechnology(
 			getActiveBody(RacetrackScenarios[0]).solutions[0].technologies[0],
 		);
+
+		racetrackInfoService.sendCurrentAdoptionPercentage(5);
 	};
 
 	configureTestSuite(() => {
@@ -223,6 +225,10 @@ describe('SolutionComponent', () => {
 
 		expect(component.selectedTechnology.name)
 			.toEqual('Campus Network Assurance');
+
+		const lifecycleFacet = _.find(component.facets, { key: 'lifecycle' });
+		expect(lifecycleFacet.data)
+			.toEqual({ gaugePercent: 5 });
 
 		component.changeTechnology(component.selectedSolution.technologies[1]);
 

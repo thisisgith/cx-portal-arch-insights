@@ -1,19 +1,17 @@
 <div class="text-center">
-	<h6 class="text-primary base-margin-bottom"
-		[innerText]="'_StepXColonY_' | i18n:'5':('_CiscoDNACollector_' | i18n)| uppercase"></h6>
 	<div [innerText]="'_ConnectCXCollectorToCXPortal_' | i18n" class="dbl-margin-bottom step-title">
 	</div>
 	<div [hidden]="loading || registering" class="form-container dbl-margin-bottom">
-		<div class="secure-banner flex-center-vertical dbl-margin-bottom">
-			<span class="secure-banner__icon flex-center">
-				<span class="icon-lock"></span>
-			</span>
-			<span class="base-margin-left" [innerText]="'_IE_CiscoDoesNotStoreTheseCreds_' | i18n"></span>
-		</div>
+		<img
+			alt="placeholder"
+			class="xl-margin-bottom"
+			[alt]="'_IE_ConnectLocalMachine_' | i18n"
+			src="assets/img/setup-ie/illustrations/6_setup_collector.png"
+		>
 		<div class="text-left">
 			<form class="dbl-margin-bottom" [formGroup]="accountForm" (ngSubmit)="onSubmit()">
 				<div class="dbl-margin-bottom">
-					<h4 [innerText]="'_IE_SetUpInsightEngineAccess_' | i18n"></h4>
+					<h4 [innerText]="'_IE_SetUpInsightEngineAccess_' | i18n" class="base-margin-bottom"></h4>
 					<span class="text-large" [innerText]="'_IE_SetAPasswordForIEDeployment_' | i18n"></span>
 				</div>
 				<div class="row base-margin-top">

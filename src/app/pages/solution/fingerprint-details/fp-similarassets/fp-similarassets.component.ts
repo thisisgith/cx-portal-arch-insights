@@ -14,7 +14,6 @@ import {
 	FormGroup,
 	Validators,
 	FormBuilder,
-	AbstractControl,
 } from '@angular/forms';
 import { UserResolve } from '@utilities';
 import { takeUntil, debounceTime } from 'rxjs/operators';
@@ -40,29 +39,11 @@ export class FpSimilarAssetsComponent {
 	public tableOptions: CuiTableOptions;
 	public seriesDataLoading = false;
 	public page = 0;
-	public size = 10;
-	public similarityCriteria = 'fingerprint';
+	public size = 5;
+	public similarityCriteria = 'softwares_features';
 	public noData = false;
 	public requestForm: FormGroup = this.fb.group({
-		deviceCount: [
-			1000,
-			[
-				Validators.required,
-				Validators.min(1),
-				Validators.max(1000),
-				Validators.pattern('^[0-9]*$'),
-			],
-		],
-		minMatch: [
-			50,
-			[
-				Validators.required,
-				Validators.min(0),
-				Validators.max(100),
-				Validators.pattern('^[0-9]*$'),
-			],
-		],
-		similarityCriteria: ['fingerprint', Validators.required],
+		similarityCriteria: ['softwares_features', Validators.required],
 	});
 	public similarDevicesData: SimilarDevicesList;
 	@Output() public devicesSelected: EventEmitter<any> = new EventEmitter<any>();
@@ -76,13 +57,6 @@ export class FpSimilarAssetsComponent {
 	private similarityMatchTemplate: TemplateRef<[]>;
 	@ViewChild('compareTemplate', { static: true })
 	private compareTemplate: TemplateRef<[]>;
-
-	public get deviceCount (): AbstractControl {
-		return this.requestForm.get('deviceCount');
-	}
-	public get minMatch (): AbstractControl {
-		return this.requestForm.get('minMatch');
-	}
 
 	constructor (
 		private userResolve: UserResolve,
@@ -120,7 +94,7 @@ export class FpSimilarAssetsComponent {
 	 */
 	public similarDevicesGridInit () {
 		this.tableOptions = new CuiTableOptions({
-			bordered: false,
+			bordered: true,
 			dynamicData: true,
 			singleSelect: false,
 			striped: false,
@@ -130,19 +104,19 @@ export class FpSimilarAssetsComponent {
 					key: 'deviceId',
 					name: I18n.get('_CP_SystemName_'),
 					template: this.assetTemplate,
-					width : '34%',
+					width : '40%',
 				},
 				{
 					key: 'similarityScore',
 					name: I18n.get('_CP_SimilarityMatch_'),
 					template: this.similarityMatchTemplate,
-					width : '33%',
+					width : '30%',
 				},
 				{
 					key: 'deviceId',
 					name: '',
 					template: this.compareTemplate,
-					width : '33%',
+					width : '30%',
 				},
 			],
 		});
@@ -219,14 +193,6 @@ export class FpSimilarAssetsComponent {
 		if (tableRowData.active) {
 			this.selectedDevice2 = tableRowData;
 		}
-	}
-	/**
-	 * SimilarDevicedata
-	 * @param pageInfo similarDevicedata
-	 */
-	public onPagerUpdated (pageInfo: any) {
-		this.page = pageInfo.page;
-		this.loadSimilarDevicesData();
 	}
 
 	/**

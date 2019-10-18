@@ -139,7 +139,7 @@
 			<span *ngIf="item.swVersion == 'NA'" [innerText]="'_OsvNotAvailable_' | i18n"></span>
 		</div>
 		<div class="col-8">
-			<div class="recommendation-label label label--large qtr-margin-left qtr-margin-top" [title]="version.name"
+			<div class="recommendation-label label label--large qtr-margin-left qtr-margin-top"
 				*ngFor="let version of item.swVersionGroup">
 				<span class="text-capitalize" [innerHTML]="version.name"></span>
 				<span 

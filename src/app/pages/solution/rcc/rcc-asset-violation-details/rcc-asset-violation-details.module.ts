@@ -12,6 +12,7 @@ import {
 } from '@cisco-ngx/cui-components';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { AssetDetailsModule } from '../../../../components/details/asset/asset-details.module';
+import { RemoveInvalidTagsPipeModule } from '@pipes';
 
 /**
  * Module representing Rcc track
@@ -31,6 +32,7 @@ import { AssetDetailsModule } from '../../../../components/details/asset/asset-d
 		CuiSpinnerModule,
 		CuiAlertModule,
 		AssetDetailsModule,
+		RemoveInvalidTagsPipeModule,
 	],
 })
 export class RccAssetViolationDetailsModule { }
