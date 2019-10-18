@@ -64,8 +64,8 @@ describe('ComparisonviewComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		component.deviceId1 = 'NA,FOC1135Z4X9,WS-C3560G-24TS-E,NA';
-		component.deviceId2 = 'NA,FOC1448Z4U9,WS-C2960S-48TS-S,NA';
+		component.deviceA = 'NA,FOC1727V051,AIR-CT5760,NA';
+		component.deviceB = 'NA,FOC1727V051,AIR-CT5760,NA';
 		spyOn(crashPreventionService, 'getComparison')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
@@ -89,8 +89,6 @@ describe('ComparisonviewComponent', () => {
 				fixture.detectChanges();
 				expect(component.featuresData)
 					.toBeDefined();
-				expect(component.hardwareData)
-					.toBeDefined();
 				expect(component.softwareData)
 					.toBeDefined();
 				done();
@@ -102,7 +100,7 @@ describe('ComparisonviewComponent', () => {
 			.and
 			.returnValue(of(<any> []));
 		component.ngOnChanges({
-			deviceId1: {
+			deviceA: {
 				currentValue: 'Device_123',
 				firstChange: true,
 				isFirstChange: () => true,
@@ -119,13 +117,13 @@ describe('ComparisonviewComponent', () => {
 			.and
 			.returnValue(of(<any> []));
 		component.ngOnChanges({
-			deviceId1: {
+			deviceA: {
 				currentValue: null,
 				firstChange: true,
 				isFirstChange: () => true,
 				previousValue: null,
 			},
-			deviceId2: {
+			deviceB: {
 				currentValue: null,
 				firstChange: true,
 				isFirstChange: () => true,

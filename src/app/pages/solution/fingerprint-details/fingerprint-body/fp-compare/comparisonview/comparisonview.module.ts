@@ -5,6 +5,7 @@ import { CrashPreventionModule } from '@sdp-api';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { environment } from '@environment';
 import { CuiLoaderModule } from '@cisco-ngx/cui-components';
+import { AssetDetailsModule } from '@components';
 
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
@@ -21,6 +22,7 @@ const rootUrl = environment.sdpServiceOrigin;
 		I18nPipeModule,
 		CuiLoaderModule,
 		CrashPreventionModule.forRoot({ rootUrl }),
+		AssetDetailsModule,
 	],
 })
 export class ComparisonviewModule { }

@@ -16,23 +16,28 @@ import * as _ from 'lodash-es';
 export class FpCompareComponent implements OnChanges {
 	public deviceId1 = '';
 	public deviceId2 = '';
-	public productId1: string;
-	public productId2: string;
-	public assetsAactive = true;
-	public assetsBactive = true;
-	public productFamilyA: any;
-	public productFamilyB: any;
+	public productId: string;
+	public productFamily: string;
+	public selectedProductFamily: any;
 	public productFamilydetails: any;
 	public deviceListDetails: any = [];
-	public productData: any = [];
 	public riskScore: number;
 	public CpProductfamilyService: any;
 	public CpListdeviceService: any;
+	public productIds: any[];
+	public listOfProductFamilies: any;
+	public listdeviceData: any[];
 	public listdeviceDataA: any[];
 	public listdeviceDataB: any[];
+	public assetBError = false;
 	private destroy$ = new Subject();
 	public customerId: string;
 	public compareView: string;
+	public listOfProductIds: any;
+	public selectedproductId: any;
+	public deviceA: any;
+	public deviceB: any;
+
 	@Input() public devices: any;
 	@Output() public reqError: EventEmitter<any> = new EventEmitter<any>();
 
@@ -47,7 +52,7 @@ export class FpCompareComponent implements OnChanges {
 	 * @returns a boolean
 	 */
 	public get compareDetailsExist (): boolean {
-		if (this.productId1 && this.productId2
+		if (this.selectedproductId
 			&& this.deviceId1 && this.deviceId2) {
 
 			return true;
@@ -63,9 +68,9 @@ export class FpCompareComponent implements OnChanges {
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
-		this.compareView = 'hardware';
-		this.listdeviceDataA = [];
-		this.listdeviceDataB = [];
+		this.compareView = 'software';
+		this.productIds = [];
+		this.listdeviceData = [];
 	}
 
 	/**
@@ -74,12 +79,9 @@ export class FpCompareComponent implements OnChanges {
 	 */
 	public ngOnChanges (changes: SimpleChanges): void {
 		if (changes.devices.currentValue) {
-			this.deviceId1 = changes.devices.currentValue.deviceId1;
-			this.productId1 = changes.devices.currentValue.productId1;
-			this.deviceId2 = changes.devices.currentValue.deviceId2;
-			this.productId2 = changes.devices.currentValue.productId2;
-			this.assetsAactive = this.deviceId1 === '';
-			this.assetsBactive = this.deviceId1 === '';
+			this.deviceId1 = _.get(changes, ['devices', 'currentValue', 'deviceId1']);
+			this.selectedproductId = _.get(changes, ['devices', 'currentValue', 'productId1']);
+			this.deviceId2 = _.get(changes, ['devices', 'currentValue', 'deviceId2']);
 			this.productFamilydetails = {
 				customerId: this.customerId,
 			};
@@ -88,15 +90,31 @@ export class FpCompareComponent implements OnChanges {
 			 */
 			this.deviceListDetails = {
 				customerId: this.customerId,
-				deviceId: this.deviceId1,
-				productId: this.productId1,
+				productId: this.selectedproductId,
 			};
+			/**
+			 * API call for productFamilies
+			 */
 			this.crashPreventionService
 				.getProductFamily(this.productFamilydetails)
 				.pipe(takeUntil(this.destroy$))
 				.subscribe((results: IProductFamily) => {
-					this.productData = results.productFamily;
+					this.listOfProductFamilies = results.productFamilies;
+					this.listOfProductFamilies.forEach(pfGroup => {
+						pfGroup.productIds.forEach(pidGroup => {
+							if (this.selectedproductId === pidGroup.productId) {
+								this.selectedProductFamily = pfGroup.productFamily;
+								this.listOfProductIds = pfGroup.productIds;
+							}
+						});
+					});
+				},
+				err => {
+					this.selectedProductFamily = null;
+					this.selectedproductId = null;
+					this.logger.error(`:: Error : (${err.status}) ${err.message}`);
 				});
+
 			/**
 			 * API call for Listdevice
 			 */
@@ -104,12 +122,12 @@ export class FpCompareComponent implements OnChanges {
 				.getListdevice(this.deviceListDetails)
 				.pipe(takeUntil(this.destroy$))
 				.subscribe((results: IListdevice) => {
-					this.listdeviceDataA = results.deviceDetail;
-					const deviceFound = this.listdeviceDataA
+					this.listdeviceData = results.deviceDetail;
+					this.deviceA = this.listdeviceData
 					.find(device => device.deviceId === this.deviceId1);
-					this.deviceId1 = deviceFound
-						? deviceFound.deviceId
-						: deviceFound;
+					this.deviceId1 = this.deviceA
+						? this.deviceA.deviceId
+						: this.deviceA;
 				},
 				err => {
 					this.deviceId1 = null;
@@ -118,16 +136,16 @@ export class FpCompareComponent implements OnChanges {
 			this.crashPreventionService
 				.getListdevice({
 					customerId: this.customerId,
-					productId: this.productId2,
+					productId: this.selectedproductId,
 				})
 				.pipe(takeUntil(this.destroy$))
 				.subscribe((results: IListdevice) => {
-					this.listdeviceDataB = results.deviceDetail;
-					const deviceFound = this.listdeviceDataB
+					this.listdeviceData = results.deviceDetail;
+					this.deviceB = this.listdeviceData
 					.find(device => device.deviceId === this.deviceId2);
-					this.deviceId2 = deviceFound
-						? deviceFound.deviceId
-						: deviceFound;
+					this.deviceId2 = this.deviceB
+						? this.deviceB.deviceId
+						: this.deviceB;
 				},
 				err => {
 					this.deviceId2 = null;
@@ -137,14 +155,27 @@ export class FpCompareComponent implements OnChanges {
 	}
 
 	/**
-	 * productFamilyA
+	 * productFamily
 	 * @param selection listdevice
 	 */
-	public onSelection (selection: any) {
-		this.productFamilyA = selection;
-		if (this.productFamilyA) {
-			/*Asset A is disabled  */
-			this.assetsAactive = false;
+	public productFamilySelection (selection: any) {
+
+		if (selection) {
+			this.listOfProductIds = selection;
+		} else {
+			this.selectedProductFamily = null;
+			this.selectedproductId = null;
+			this.listOfProductIds = [];
+		}
+	}
+
+	/**
+	 * onSelection
+	 * @param selection pids
+	 */
+	public pidsSelection (selection: any) {
+		this.selectedproductId = selection;
+		if (this.selectedproductId) {
 			this.crashPreventionService
 				.getListdevice({
 					customerId: this.customerId,
@@ -152,71 +183,53 @@ export class FpCompareComponent implements OnChanges {
 				})
 				.pipe(takeUntil(this.destroy$))
 				.subscribe((results: IListdevice) => {
-					this.listdeviceDataA = results.deviceDetail;
-					const deviceFound = this.listdeviceDataA
+					this.listdeviceData = results.deviceDetail;
+					this.deviceA = this.listdeviceData
 					.find(device => device.deviceId === this.deviceId1);
-					this.deviceId1 = deviceFound
-						? deviceFound.deviceId
-						: deviceFound;
+					this.deviceId1 = this.deviceA
+						? this.deviceA.deviceId
+						: this.deviceA;
+					this.deviceB = this.listdeviceData
+						.find(device => device.deviceId === this.deviceId2);
+					this.deviceId2 = this.deviceB
+							? this.deviceB.deviceId
+							: this.deviceB;
 				},
 				err => {
 					this.deviceId1 = null;
-					this.logger.error(`:: Error : (${err.status}) ${err.message}`);
-				});
-		} else {
-			this.deviceId1 = null;
-			this.listdeviceDataA = [];
-		}
-	}
-	/**
-	 * productfamilyB
-	 * @param selection listdevice
-	 */
-	public onSelection3 (selection: any) {
-		this.productFamilyB = selection;
-		if (this.productFamilyB) {
-			/*Asset B is disabled  */
-			this.assetsBactive = false;
-			this.crashPreventionService
-				.getListdevice({
-					customerId: this.customerId,
-					productId: selection,
-				})
-				.pipe(takeUntil(this.destroy$))
-				.subscribe((results: IListdevice) => {
-					this.listdeviceDataB = results.deviceDetail;
-					const deviceFound = this.listdeviceDataB
-					.find(device => device.deviceId === this.deviceId2);
-					this.deviceId2 = deviceFound
-						? deviceFound.deviceId
-						: deviceFound;
-				},
-				err => {
 					this.deviceId2 = null;
 					this.logger.error(`:: Error : (${err.status}) ${err.message}`);
 				});
 		} else {
+			this.deviceId1 = null;
 			this.deviceId2 = null;
-			this.listdeviceDataB = [];
+			this.assetBError = true;
+			this.listdeviceData = [];
 		}
 	}
 	/**
 	 * onSelection
 	 * @param selection deviceId1
 	 */
-	public onSelection1 (selection: any) {
+	public assetASelection (selection: any) {
 		this.deviceId1 = selection;
+		this.deviceA = this.listdeviceData.find(device => device.deviceId === this.deviceId1);
 		this.logger.info(selection);
 	}
 	/**
 	 * onSelection
 	 * @param selection deviceId2
 	 */
-	public onSelection2 (selection: any) {
+	public assetBSelection (selection: any) {
 		this.deviceId2 = selection;
-		this.logger.info(selection);
+		if (this.deviceId2) {
+			this.deviceB = this.listdeviceData.find(device => device.deviceId === this.deviceId2);
+			this.assetBError = false;
+			this.logger.info(selection);
+		} else {
+			this.assetBError = true;
+		}
 	}
-
 	/**
 	 * Destroys the component
 	 */
