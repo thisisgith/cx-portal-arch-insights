@@ -12,5 +12,5 @@ export const environment = {
 	 * because it is used inside of a module forRoot() call
 	 */
 	sdpServiceBasePath: '/api',
-	sdpServiceOrigin: 'https://api-stage.cisco.com',
+	sdpServiceOrigin: 'https://api-dev.cisco.com',
 };

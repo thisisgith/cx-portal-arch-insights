@@ -59,31 +59,9 @@
 									</div>
 							</div>
 						</div>
-						<div class="flex align-item-center">
+						<div class="flex align-item-center cancel-dropdown">
 							<ng-container *ngTemplateOutlet="cancelActionTemplate; context: { actions: recommendation.actions}"></ng-container>
 						</div>
-					</div>
-				</td>
-			</tr>
-			<!-- risk score -->
-			<tr>
-				<td class="first-column-width no-border-bottom no-border-top text-large">
-					<span class="text-large" [innerText]="'_OsvRiskScore_' | i18n"></span>
-					<span 
-						class="qtr-margin-left  text-primary" 
-						data-balloon-length="large"
-						[attr.data-balloon]="'_OsvRiskScoreInfo_' | i18n" 
-						data-balloon-pos="right">
-							<i class="icon-info qtr-margin-bottom"></i>
-					</span>
-				</td>
-				<td class="text-large recommendation-current">
-					<span [innerText]="currentRecommendation?.profileRisk | number: '1.0-0'"></span>
-				</td>
-				<td *ngFor="let recommendation of machineRecommendations" class="recommendation">
-					<div class="flex align-items-center">
-						<span class="text-large qtr-margin-left"
-							[innerText]="recommendation.expectedProfileRisk | number: '1.0-0'"></span>
 					</div>
 				</td>
 			</tr>
@@ -97,14 +75,14 @@
 						[ngClass]="{'text-small':!fullscreen,'text-large base-margin-top':fullscreen}"
 						[innerText]="'_OsvCurrentlyExposed_' | i18n | uppercase">					
 					</div>
-					<div class="text-large" [innerText]="currentRecommendation?.bugsExposed || '0'"
-						[ngClass]="{'base-padding-top':!fullscreen}"></div>
+					<div class="text-large" *ngIf="currentRecommendation?.bugsExposed > 0; else notAvailable" [innerText]="currentRecommendation?.bugsExposed || '0'"
+						[ngClass]="{'base-padding-top':!fullscreen}"></div>				
 					<div class="base-margin-top bar-chart"
 						*ngIf="currentRecommendation?.bugSeriesData && currentRecommendation?.bugSeriesData.length > 0">
 						<bar-chart 
 							dataLabels="true" 
 							[seriesData]="currentRecommendation.bugSeriesData"
-							[width]="'200'">
+							[width]="currentBarChartWidth">
 						</bar-chart>
 					</div>
 				</td>
@@ -118,10 +96,7 @@
 					<div class="base-margin-top row">
 						<div class="text-large col-6" [innerText]="recommendation.bugsExposed  || '0'"></div>
 						<div class="col-6 text-right">
-							<span class="text-large" [innerText]="recommendation.resolvedBugsCount  || '0'"></span>
-							<span class="text-large" [innerText]="'/'"></span>
-							<span class="text-large" [innerText]="currentRecommendation?.bugsExposed || '0'"></span>
-
+							<span class="text-large" [innerText]="recommendation.resolvedBugsCount  || '0'"></span>					
 						</div>
 					</div>
 					<div class="base-margin-top"
@@ -148,7 +123,7 @@
 					<div class="base-margin-top bar-chart"
 						*ngIf="currentRecommendation?.psirtSeriesData && currentRecommendation?.psirtSeriesData.length > 0">
 						<bar-chart 
-							[width]="'200'" 
+							[width]="currentBarChartWidth" 
 							dataLabels="true"
 							[seriesData]="currentRecommendation.psirtSeriesData">
 						</bar-chart>
@@ -159,8 +134,6 @@
 						<div class="text-large col-6" [innerText]="recommendation.psirtExposed || '0'"></div>
 						<div class="col-6 text-right">
 							<span class="text-large" [innerText]="recommendation.psirtResolvedCount  || '0'"></span>
-							<span class="text-large" [innerText]="'/'"></span>
-							<span class="text-large" [innerText]="currentRecommendation.psirtExposed  || '0'"></span>
 
 						</div>
 					</div>
@@ -192,4 +165,9 @@
 		position="right"
 		icon="icon-more icon-small text-muted rotate-90">
 	</cui-dropdown>
+</ng-template>
+
+<ng-template #notAvailable >
+	<div data-auto-id="BugsNotAvailable" [ngClass]="{'base-padding-top':!fullscreen}" [innerText]="'_OsvNotAvailable_' | i18n">	
+	</div>
 </ng-template>

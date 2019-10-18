@@ -128,7 +128,7 @@ export class CaseNoteBuilder {
 				fields = this.fieldNoticeFields;
 				break;
 			case 'bug':
-				title = I18n.get('_CriticalBug_');
+				title = I18n.get('_PriorityBug_');
 				fields = this.bugFields;
 				break;
 		}

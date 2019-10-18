@@ -1,0 +1,50 @@
+[
+	{
+		"atxId": "ATX1",
+		"title": "Cisco DNA Center Getting Started",
+		"description": "We cover subjects including interface and network design overview, policy \nmanagement and deployment, device provisioning, and automation/assurance.",
+		"imageURL": "https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/atx/images/ATX-DNA-Getting-Started.png",
+		"status": "scheduled",
+		"recordingURL": "https://tklcs.cloudapps.cisco.com/tklcs/TKLDownloadServlet?nodeRef=workspace://SpacesStore/2ccb9372-82dc-4700-afc7-0a4ed0630685&activityId=2&fileId=123052",
+		"duration": 4500,
+		"bookmark": true,
+		"sessions": [
+			{
+				"sessionId": "Session1",
+				"sessionStartDate": 3565127052000,
+				"scheduled": true,
+				"presenterName": "John Doe",
+				"registrationURL": "https://cisco.webex.com/cisco/onstage/g.php?MTID=ec89a0c8c89abb903864c873b2a71ece2"
+			}
+		],
+        "providerInfo": {
+			"logoURL": "https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/acc/images/acc_policy-enforcement-sda.png",
+			"name": "Logitech",
+			"id": "logitech-1"
+		}
+    },
+    {
+		"atxId": "ATX2",
+		"title": "Cisco DNA Center Project Plan Best Practices 1",
+		"description": "This is a high-level look at the things you should consider as you’re planning your Cisco DNA Center project, including subjects such as prerequisites for network devices",
+		"imageURL": "https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/atx/images/ATX-Center-Project-Plan-Best-Practices.png",
+		"status": "scheduled",
+		"recordingURL": "https://tklcs.cloudapps.cisco.com/tklcs/TKLDownloadServlet?nodeRef=workspace://SpacesStore/310232f0-0a44-4286-a374-71edb71835ee&activityId=2&fileId=123051",
+		"duration": 3600,
+		"bookmark": false,
+		"sessions": [
+			{
+				"sessionId": "Session2",
+				"sessionStartDate": 3565190000000,
+				"presenterName": "Billy Manashi",
+				"scheduled": true,
+				"registrationURL": "https://cisco.webex.com/cisco/onstage/g.php?MTID=edfcb532bb594518ca707aa19c3a55feb"
+			}
+		],
+        "providerInfo": {
+			"logoURL": "https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/acc/images/acc_policy-enforcement-sda.png",
+			"name": "Logitech",
+			"id": "logitech-2"
+		}
+	}
+]

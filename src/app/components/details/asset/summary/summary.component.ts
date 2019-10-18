@@ -35,6 +35,8 @@ export class AssetDetailsSummaryComponent implements OnChanges, OnInit, OnDestro
 	@Input('customerId') public customerId: string;
 
 	public assetData: AssetSummary;
+	public warrantyStatus: 'Covered' | 'Uncovered';
+
 	private assetSummaryParams: InventoryService.GetAssetSummaryParams;
 	private hardwareParams: InventoryService.GetHardwareParams;
 
@@ -87,6 +89,8 @@ export class AssetDetailsSummaryComponent implements OnChanges, OnInit, OnDestro
 		.pipe(
 			map((response: AssetSummary) => {
 				this.assetData = response;
+				this.warrantyStatus = this.isExpired(this.assetData.warrantyEndDate)
+					? 'Uncovered' : 'Covered';
 			}),
 			catchError(err => {
 				this.status.loading.asset = false;

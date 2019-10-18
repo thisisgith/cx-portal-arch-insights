@@ -73,7 +73,7 @@
 		[ngClass]="{'disabled': !details?.advisory?.url}">
 	</a>
 
-	<button *ngIf="impactedAssets?.length || selectedAsset"
+	<button *ngIf="impactedAssets?.length || (selectedAsset | canOpenCase)"
 		class="btn btn--primary text-uppercase"
 		[innerText]="'_OpenCase_' | i18n"
 		data-auto-id="SecurityAdvisoryOpenCaseBtn"

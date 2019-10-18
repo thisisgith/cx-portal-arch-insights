@@ -75,7 +75,8 @@
 		</a>
 	</div>
 	<div class="col-md-4 text-right">
-		<button class="text-uppercase btn btn--primary "
+		<button *ngIf="impactedAssets?.length || (selectedAsset | canOpenCase)"
+			class="text-uppercase btn btn--primary"
 			[innerText]="'_OpenCase_' | i18n"
 			data-auto-id="CriticalBugOpenCaseLink"
 			(click)="onOpenCase()">

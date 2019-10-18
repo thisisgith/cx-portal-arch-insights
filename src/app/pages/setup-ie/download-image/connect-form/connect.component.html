@@ -1,0 +1,62 @@
+<div class="base-margin-bottom">
+	<span [innerText]="'_AfterOVADownloadDeploy_' | i18n"></span>
+	<span *ngIf="showTutorialLink"
+		class="qtr-margin-left" [innerText]="'_NeedHelp?_' | i18n"></span>
+	<a
+		*ngIf="showTutorialLink"
+		class="qtr-margin-left"
+		data-auto-id="step-by-step-link"
+		[innerText]="'_ViewStepByStepTutorial_' | i18n"
+		(click)="onTutorialClick()"
+	></a>
+</div>
+<div class="form-container">
+	<img
+		alt="Network Diagram"
+		class="xl-margin-bottom"
+		[alt]="'_IE_ConnectLocalMachine_' | i18n"
+		src="assets/img/setup-ie/illustrations/2_deploy_ova.png"
+	>
+	<form
+		class="dbl-margin-bottom text-left"
+		[formGroup]="accountForm"
+		(ngSubmit)="onSubmit()"
+	>
+		<div class="base-margin-bottom">
+			<h4 [innerText]="'_ConnectToCXCollector_' | i18n" class="base-margin-bottom"></h4>
+			<span
+				class="text-large"
+				[innerText]="'_IE_EnterTheIPAddress_' | i18n"
+			></span>
+		</div>
+		<div class="row dbl-margin-bottom">
+			<div class="col-md-6">
+				<div class="form-group">
+					<div class="form-group__text">
+						<input
+							id="input-ip-address"
+							type="text"
+							formControlName="ipAddress"
+						>
+						<label for="input-layout-default"
+								[innerText]="'_IPAddress_' | i18n">
+						</label>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+	<div class="flex-center">
+		<button
+			data-auto-id="connect-to-cx-collector-btn"
+			class="btn cx-btn base-margin-right"
+			[innerText]="'_Continue_' | i18n | uppercase"
+			[disabled]="accountForm.invalid"
+			(click)="onSubmit()"
+		>
+		</button>
+		<span [innerText]="'_PressEnter_' | i18n"
+			class="text-medium text-uppercase cx-text-gray">
+		</span>
+	</div>
+</div>

@@ -42,6 +42,7 @@
 			<div class="col-md-12 base-margin-top">
 				<ng-container *ngTemplateOutlet="supportData; context: {
 					title: '_SupportCoverage_',
+					coverage: assetData?.coverageStatus,
 					expirationDate: assetData?.coverageEndDate,
 					linkData: (assetData?.contractNumber && assetData?.contractNumber !== 'UNKNOWN' ?
 					('_ContractNumber_' | i18n) + ' ' (assetData?.contractNumber + (assetData?.slaDescription ? ' ' + assetData?.slaDescription : ''))
@@ -72,6 +73,7 @@
 			<div class="col-md-12 base-margin-top">
 				<ng-container *ngTemplateOutlet="supportData; context: {
 						title: '_Warranty_',
+						coverage: warrantyStatus,
 						expirationDate: assetData?.warrantyEndDate,
 						linkData: assetData?.warrantyType,
 						url: '',
@@ -91,14 +93,18 @@
 	</div>
 </div>
 
-<ng-template #supportData let-title="title" let-expirationDate="expirationDate" let-linkData="linkData" let-url="url" let-supportType="supportType">
+<ng-template #supportData let-title="title" let-coverage="coverage" let-expirationDate="expirationDate"
+	let-linkData="linkData" let-url="url" let-supportType="supportType">
 	<div class="row summary__details">
 		<div class="col-md-12 text-uppercase cx-text-gray summary__details__title" [innerText]="title | i18n" attr.data-auto-id="{{ title }}"></div>
 	</div>
 	<div class="row cx-text-default">
-		<div *ngIf="expirationDate" class="col-md-12">
-			<div *ngIf="!isExpired(expirationDate)" [innerText]="'_CoveredUntil_' | i18n:(expirationDate | date:'yyyy MMM dd')" attr.data-auto-id="{{ title }}-CoveredUntil"></div>
-			<div *ngIf="isExpired(expirationDate)" [ngClass]="{
+		<div *ngIf="coverage === 'Covered'" class="col-md-12">
+			<span *ngIf="expirationDate" [innerText]="'_CoveredUntil_' | i18n:(expirationDate | date:'yyyy MMM dd')" attr.data-auto-id="{{ title }}-CoveredUntil"></span>
+			<span *ngIf="!expirationDate" [innerText]="'_Covered_' | i18n" attr.data-auto-id="{{ title }}-Covered"></span>
+		</div>
+		<div *ngIf="coverage === 'Uncovered'" class="col-md-12">
+			<div *ngIf="expirationDate" [ngClass]="{
 					'text-danger': (supportType === 'support'),
 					'text-warning': (supportType === 'warranty')
 				}"
@@ -106,8 +112,11 @@
 				<span class="text-bold" [innerText]="('_ExpiredOn_' | i18n | uppercase) + ' '"></span>
 				<span [innerText]="expirationDate | date:'yyyy MMM dd'"></span>
 			</div>
+			<span *ngIf="!expirationDate" [innerText]="'_NotCovered_' | i18n" attr.data-auto-id="{{ title }}-Uncovered"></span>
 		</div>
-		<div *ngIf="!expirationDate" class="col-md-12" [innerText]="'_Uncovered_' | i18n" attr.data-auto-id="{{ title }}-Uncovered"></div>
+		<div *ngIf="coverage === 'Unknown' || !coverage" class="col-md-12">
+			<span [innerText]="'_Unknown_' | i18n" attr.data-auto-id="{{ title }}-Unknown"></span>
+		</div>
 		<div class="col-md-12" attr.data-auto-id="{{ title }}-Link">
 			<a *ngIf="linkData && url" [href]="url" [innerText]="linkData"></a>
 			<span *ngIf="linkData && !url" [innerText]="linkData"></span>

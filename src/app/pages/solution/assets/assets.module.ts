@@ -29,6 +29,7 @@ import {
 } from '@components';
 import { InlineSVGModule } from 'ng-inline-svg';
 import { DateTimePipeModule } from '@pipes';
+import { NoDNACHeaderModule } from '../no-dnac-header/no-dnac-header.module';
 
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
@@ -69,6 +70,7 @@ const childRoutes: Routes = [
 		I18nPipeModule,
 		InventoryModule.forRoot({ rootUrl }),
 		NetworkDataGatewayModule.forRoot({ rootUrl }),
+		NoDNACHeaderModule,
 		PieChartModule,
 		ProductAlertsModule.forRoot({ rootUrl }),
 		ReactiveFormsModule,

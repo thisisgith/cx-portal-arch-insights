@@ -1,34 +1,27 @@
-<div class="visual-container panel panel--bordered-right flex-center">
-	<div class="icons flex-center">
+<div class="visual-container panel">
+	<div class="icons flex-center-vertical">
 		<div
-			class="setup-step flex flex-center"
+			class="setup-step"
 			[class.setup-step--active]="step.isActive()"
 			*ngFor="let step of steps; index as i"
 			[title]="step.label"
 		>
 			<img
-				[hidden]="step.isVisited() || step.isActive()"
+				[hidden]="step.isActive()"
 				alt="Step Inactive"
 				class="setup-step__icon"
 				type="image/svg+xml"
 				[src]="step.iconInactiveSrc"
 				(load)="step.loaded = true"
 			>
-			<div class="setup-step__spacer" [hidden]="step.loaded"></div>
-			<div
-				*ngIf="i !== (steps.length - 1)"
-				class="setup-step__connector"
-				[ngClass]="{ 'visited': step.isVisited() }"
-			></div>
 			<img
-				[hidden]="!step.isVisited() && !step.isActive()"
+				[hidden]="!step.isActive()"
 				alt="Step Active"
 				class="setup-step__icon"
 				type="image/svg+xml"
 				[src]="step.iconActiveSrc"
 				(load)="step.loaded = true"
 			>
-			<div *ngIf="step.isActive()" class="setup-step__label" [innerText]="step.label"></div>
 		</div>
 	</div>
 </div>

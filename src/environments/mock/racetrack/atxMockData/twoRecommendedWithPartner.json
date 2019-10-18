@@ -1,0 +1,50 @@
+[
+	{
+		"atxId": "ATX1",
+		"title": "Cisco DNA Center Getting Started",
+		"description": "We cover subjects including interface and network design overview, policy \nmanagement and deployment, device provisioning, and automation/assurance.",
+		"imageURL": "https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/atx/images/ATX-DNA-Getting-Started.png",
+		"status": "recommended",
+		"recordingURL": "https://tklcs.cloudapps.cisco.com/tklcs/TKLDownloadServlet?nodeRef=workspace://SpacesStore/2ccb9372-82dc-4700-afc7-0a4ed0630685&activityId=2&fileId=123052",
+		"duration": 4500,
+		"bookmark": true,
+		"sessions": [
+			{
+				"sessionId": "Session1",
+				"sessionStartDate": 1565127052000,
+				"scheduled": false,
+				"presenterName": "John Doe",
+				"registrationURL": "https://cisco.webex.com/cisco/onstage/g.php?MTID=ec89a0c8c89abb903864c873b2a71ece2"
+			}
+        ],
+        "providerInfo": {
+			"logoURL": "https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/acc/images/acc_policy-enforcement-sda.png",
+			"name": "Logitech",
+			"id": "logitech-1"
+		}
+    },
+    {
+		"atxId": "ATX2",
+		"title": "Cisco DNA Center Getting Started 2",
+		"description": "We cover subjects including interface and network design overview, policy \nmanagement and deployment, device provisioning, and automation/assurance.",
+		"imageURL": "https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/atx/images/ATX-DNA-Getting-Started.png",
+		"status": "recommended",
+		"recordingURL": "https://tklcs.cloudapps.cisco.com/tklcs/TKLDownloadServlet?nodeRef=workspace://SpacesStore/2ccb9372-82dc-4700-afc7-0a4ed0630685&activityId=2&fileId=123052",
+		"duration": 4500,
+		"bookmark": true,
+		"sessions": [
+			{
+				"sessionId": "Session1",
+				"sessionStartDate": 1565127052000,
+				"scheduled": false,
+				"presenterName": "John Doe",
+				"registrationURL": "https://cisco.webex.com/cisco/onstage/g.php?MTID=ec89a0c8c89abb903864c873b2a71ece2"
+			}
+        ],
+        "providerInfo": {
+			"logoURL": "https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/acc/images/acc_policy-enforcement-sda.png",
+			"name": "Logitech",
+			"id": "logitech-2"
+		}
+	}
+]

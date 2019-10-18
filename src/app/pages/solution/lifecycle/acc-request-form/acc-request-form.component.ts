@@ -43,6 +43,8 @@ export class AccRequestFormComponent implements OnDestroy, OnInit, OnDestroy {
 
 	@Input() public accId: string;
 	@Input() public accTitle: string;
+	@Input() public accProviderId: string;
+	@Input() public accProviderName: string;
 	@Input() public solution: string;
 	@Input() public technology: string;
 	@Input() public pitstop: string;
@@ -186,14 +188,9 @@ export class AccRequestFormComponent implements OnDestroy, OnInit, OnDestroy {
 			accTitle: this.accTitle,
 			additionalAttendees: this.requestForm.get('additionalAttendees').value,
 			businessOutcome: this.requestForm.get('desiredOutcome').value,
-			ccoId: this.custData.ccoId,
-			ciscoContact: this.custData.ciscoContact,
-			companyName: this.custData.companyName,
-			country: this.custData.country,
 			customerId: this.customerId,
 			dnacVersion: this.requestForm.get('dnacVersion').value,
 			environment: this.requestForm.get('environment').value,
-			jobTitle: this.custData.jobTitle,
 			pitstop: this.pitstop,
 			preferredLanguage: this.requestForm.get('language').value,
 			preferredSlot: this.requestForm.get('meetingTime').value,
@@ -201,8 +198,8 @@ export class AccRequestFormComponent implements OnDestroy, OnInit, OnDestroy {
 			solution: this.solution,
 			timezone: this.requestForm.get('timeZone').value,
 			usecase: this.technology,
-			userEmail: this.custData.userEmail,
-			userPhoneNumber: this.custData.userPhoneNumber,
+			providerId: this.accProviderId,
+			providerName: this.accProviderName,
 		};
 
 		const params: RacetrackContentService.RequestACCParams = {

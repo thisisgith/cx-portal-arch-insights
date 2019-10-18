@@ -547,7 +547,7 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 		)
 		.subscribe(responses => {
 			const cases = _.flatMap(responses, response => _.get(response, 'content', []));
-			// Get all of the filters and reset their data
+			// Get all of the filters (except for the total filter) and reset their data
 			const statusFilter = _.find(this.filters, { key: 'status' });
 			const severityFilter = _.find(this.filters, { key: 'severity' });
 			const lastUpdateFilter = _.find(this.filters, { key: 'lastUpdated' });

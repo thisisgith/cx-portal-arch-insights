@@ -37,8 +37,6 @@ class FpIntelligenceService extends __BaseService {
         let __headers = new HttpHeaders();
         let __body: any = null;
         __params = __params.set('similarityCriteria',params.similarityCriteria);
-        __params = __params.set('minMatch',params.minMatch.toString());
-        __params = __params.set('deviceCount',params.deviceCount.toString());
         __params = __params.set('page',params.page.toString());
         __params = __params.set('size',params.size.toString());
         let req = new HttpRequest<any>(
@@ -141,8 +139,8 @@ module FpIntelligenceService {
          */
         customerId: string;
 
-        minMatch: number;
-        deviceCount: number;
+        minMatch?: number;
+        deviceCount?: number;
         similarityCriteria: string;
         page?: number;
         size?: number;

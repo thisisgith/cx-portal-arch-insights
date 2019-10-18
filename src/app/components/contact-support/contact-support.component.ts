@@ -30,7 +30,7 @@ export class ContactSupportComponent implements OnInit, OnDestroy, CuiModalConte
 	public descriptionMaxLength;
 	public title: FormControl;
 	public description: FormControl;
-	public userMailId: string;
+	public userMailId: string = _.get(this.profileService.getProfile(), ['cpr', 'pf_auth_email']);
 	public modalHeading;
 	private destroy$ = new Subject();
 	public items: any[] = [];

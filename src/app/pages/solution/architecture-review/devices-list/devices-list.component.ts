@@ -34,13 +34,23 @@ export class DevicesListComponent implements OnInit, OnChanges {
 	public tabIndex = 0;
 	public searchText = '';
 	public selectedAsset = false;
+	public collectionId: any;
 	public assetParams: InventoryService.GetAssetsParams;
 	public assetLinkInfo: AssetLinkInfo = Object.create({ });
-	@ViewChild('productFamilyTemplate', { static: true })
-	private productFamilyTemplate: TemplateRef<{ }>;
-	@ViewChild('softwareVersionTemplate', { static: true })
+	@ViewChild('sdaReady', { static: true })
+	private sdaReadyTemplate: TemplateRef<{ }>;
+	@ViewChild('assuranceReady', { static: true })
+	private assuranceReadyTemplate: TemplateRef<{ }>;
+	@ViewChild('swimReady', { static: true })
+	private swimReadyTemplate: TemplateRef<{ }>;
+	@ViewChild('pnpReady', { static: true })
+	private pnpReadyTemplate: TemplateRef<{ }>;
+	@ViewChild('productId', { static: true })
+	private productIdTemplate: TemplateRef<{ }>;
+	@ViewChild('softwareVersion', { static: true })
 	private softwareVersionTemplate: TemplateRef<{ }>;
-
+	public failedCriteriaMessages: any = null;
+	public deviceInfoMessage: any = null;
 	constructor (
 		private logger: LogService,
 		private architectureService: ArchitectureReviewService,
@@ -53,11 +63,13 @@ export class DevicesListComponent implements OnInit, OnChanges {
 	}
 
 	public paramsType: IParamType = {
+		collectionId: '',
 		customerId : '',
-		deviceCompliance: '',
+		filterBy: '',
 		page: 0,
 		pageSize: 10,
 		searchText: '',
+		useCase: '',
 	};
 
 	/**
@@ -76,9 +88,11 @@ export class DevicesListComponent implements OnInit, OnChanges {
 		const selectedFilter = _.get(changes, ['filters', 'currentValue']);
 		const isFirstChange = _.get(changes, ['filters', 'firstChange']);
 		if (selectedFilter && !isFirstChange) {
-			const compliantType = _.get(selectedFilter,  'exceptions');
+			const compliantType = _.get(selectedFilter,  'sdareadiness');
 			const isClearAllSelected = _.get(selectedFilter, 'isClearAllSelected');
-			this.paramsType.deviceCompliance = compliantType ? compliantType.toString() : '';
+			const useCase = _.get(selectedFilter, 'title');
+			this.paramsType.filterBy = compliantType ? compliantType.toString() : '';
+			this.paramsType.useCase = useCase ? useCase.toString() : '';
 			if (isClearAllSelected) {
 				this.paramsType.searchText = '';
 				this.searchText = '';
@@ -86,10 +100,29 @@ export class DevicesListComponent implements OnInit, OnChanges {
 			this.isLoading = true;
 			this.tableStartIndex = 0;
 			this.paramsType.page = 0;
-			this.getDevicesList();
+			this.getCollectionId();
 		}
 	}
 
+	/**
+	 * Method to fetch collectionId
+	 */
+
+	 public getCollectionId () {
+		this.architectureService.getCollectionId()
+		.subscribe(res => {
+			this.paramsType.collectionId = _.get(res, 'collection.collectionId');
+			const datePipe = new DatePipe('en-US');
+			this.getDevicesList();
+			this.lastCollectionTime = datePipe.transform(res.collection.collectionDate, 'medium');
+		},
+		err => {
+			this.logger.error('Devices list Component View' +
+				'  : getCollectionId() ' +
+				`:: Error : (${err.status}) ${err.message}`);
+			this.invalidResponseHandler();
+		});
+	 }
 	/**
 	 * used to Intialize Table options
 	 */
@@ -98,19 +131,21 @@ export class DevicesListComponent implements OnInit, OnChanges {
 			bordered: false,
 			columns: [
 				{
-					key: 'neName',
+					key: 'hostName',
 					name: I18n.get('_ArchitectureSystemName_'),
 					sortable: false,
 				},
 				{
-					name: I18n.get('_ArchitectureProductFamily_'),
-					sortable: false,
-					template : this.productFamilyTemplate,
-				},
-				{
-					key: 'productId',
 					name: I18n.get('_ArchitectureProductId_'),
 					sortable: false,
+					template : this.productIdTemplate,
+					width : '14%',
+				},
+				{
+					name: I18n.get('_ArchitectureSoftwareVersion_'),
+					sortable: false,
+					template : this.softwareVersionTemplate,
+					width : '14%',
 				},
 				{
 					key: 'softwareType',
@@ -118,9 +153,24 @@ export class DevicesListComponent implements OnInit, OnChanges {
 					sortable: false,
 				},
 				{
-					name: I18n.get('_ArchitectureSoftwareRelease_'),
+					name: I18n.get('_ArchitectureSDAReady_'),
 					sortable: false,
-					template : this.softwareVersionTemplate,
+					template : this.sdaReadyTemplate,
+				},
+				{
+					name: I18n.get('_ArchitectureAssuranceReady_'),
+					sortable: false,
+					template : this.assuranceReadyTemplate,
+				},
+				{
+					name: I18n.get('_ArchitetureSwimReady_'),
+					sortable: false,
+					template : this.swimReadyTemplate,
+				},
+				{
+					name: I18n.get('_ArchitecturePnpReady_'),
+					sortable: false,
+					template : this.pnpReadyTemplate,
 				},
 			],
 			singleSelect: true,
@@ -137,9 +187,24 @@ export class DevicesListComponent implements OnInit, OnChanges {
 		this.isLoading = true;
 		this.paramsType.page = event.page;
 		this.paramsType.pageSize = event.limit;
-		this.getDevicesList();
+		this.getCollectionId();
 	}
+	/**
+ 	* Used for getting pageNumber Index and call the getdata function
+ 	* @param message - The Object that contains pageNumber Index
+ 	*/
+	public getfailedCriteriaMessage (message: any) {
+		this.failedCriteriaMessages = message;
 
+	}
+	/**
+ 	* Used for getting pageNumber Index and call the getdata function
+ 	* @param message - The Object that contains pageNumber Index
+ 	*/
+	 public getDeviceInfo (message: any) {
+		this.deviceInfoMessage = message;
+
+	}
 	/**
 	 * Keys down function
 	 * @param event contains eventdata
@@ -152,7 +217,7 @@ export class DevicesListComponent implements OnInit, OnChanges {
 			this.tableStartIndex = 0;
 			this.paramsType.page = 0;
 			this.paramsType.searchText = this.searchText;
-			this.getDevicesList();
+			this.getCollectionId();
 		}
 	}
 
@@ -169,11 +234,9 @@ export class DevicesListComponent implements OnInit, OnChanges {
 				if (!data) {
 					return this.invalidResponseHandler();
 				}
-				const datePipe = new DatePipe('en-US');
 				this.isLoading = false;
-				this.totalItems = data.TotalCounts;
+				this.totalItems = data.totalCount;
 				this.dnacDeviceDetails = data.dnacDeviceDetails;
-				this.lastCollectionTime = datePipe.transform(data.CollectionDate, 'medium');
 				this.tableEndIndex = (this.tableStartIndex + this.dnacDeviceDetails
 					? this.dnacDeviceDetails.length : 0);
 			}, err => {

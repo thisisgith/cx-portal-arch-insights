@@ -154,3 +154,12 @@
 	</i>
 	<span [innerText]="item?.severity"></span>
 </ng-template>
+<ng-template #suggestedFixTemplate let-item="celldata">
+	<div [innerHTML]="item?.suggestedfix | removeInvalidTags: item?.suggestedfix"></div>
+</ng-template>
+<ng-template #messageFixTemplate let-item="celldata">
+	<div [innerHTML]="item?.message"></div>
+</ng-template>
+<ng-template #ruleNameTemplate let-item="celldata">
+	<div [innerHTML]="item?.ruleName"></div>
+</ng-template>

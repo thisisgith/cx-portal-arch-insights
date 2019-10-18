@@ -94,7 +94,7 @@
 		<div class="row flex-center-vertical half-margin-top base-margin-bottom">
 			<div class="col-md-11 flex">
 				<span
-					class="flex flex-center-vertical base-margin-left half-margin-right filter-bar__title"
+					class="flex flex-center-vertical filter-bar__title text-uppercase text-bold"
 					[innerText]="'_RMFiltered_' | i18n"
 				></span>
 				<ng-container *ngFor="let filter of selectedFilters">
@@ -368,4 +368,11 @@
 </ng-template>
 <ng-template #timeStampTemplate let-item="celldata">
 	<span title="{{ item?.timeStamp }}" [innerHTML]="item.timeStamp"></span>
+</ng-template>
+<ng-template #riskTooltipTemplate>
+	<span [innerText]="'_CP_Risk_' | i18n"></span>
+	<sup><div tooltip [tooltipTemplate]="riskTooltipContentTemplate" class="icon-info-outline qtr-margin-left" [tooltipMaxWidth]="200"></div></sup>
+</ng-template>
+<ng-template #riskTooltipContentTemplate>
+	<span [innerText]="'_CP_GlobalRiskRankToolTip_' | i18n" class="text-small"></span>
 </ng-template>

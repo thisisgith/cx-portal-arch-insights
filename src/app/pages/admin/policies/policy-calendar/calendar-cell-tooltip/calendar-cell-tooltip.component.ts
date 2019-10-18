@@ -45,7 +45,7 @@ export class CalendarCellTooltipComponent implements OnInit {
 		_.each(this.data.policies, policy => {
 			const schedString = cronstrue.toString(policy.schedule);
 			const timeRegex = /(\d{2}:\d{2} [AP]M)/;
-			const monthRegex = /on\sday\s\d\d\sof\sthe\smonth/;
+			const monthRegex = /on\sday\s\d{1,2}\sof\sthe\smonth/;
 			const weekRegex = /only\son\s/;
 			if (monthRegex.test(schedString)) {
 				this.monthlies.push({

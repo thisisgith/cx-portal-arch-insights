@@ -22,7 +22,6 @@ import {
 	GaugeModule,
 	MultiGaugeModule,
 } from '@components';
-import { NoDNACHeaderModule } from './no-dnac-header/no-dnac-header.module';
 
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
@@ -51,7 +50,6 @@ const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 		InlineSVGModule.forRoot({ baseUrl: '/' }),
 		InventoryModule.forRoot({ rootUrl }),
 		MultiGaugeModule,
-		NoDNACHeaderModule,
 		ProductAlertsModule.forRoot({ rootUrl }),
 		QuickTourModule,
 		RacetrackContentModule.forRoot({ rootUrl }),

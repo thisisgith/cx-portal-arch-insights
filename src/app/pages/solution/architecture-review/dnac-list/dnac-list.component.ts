@@ -47,6 +47,7 @@ export class DnacListComponent implements OnInit {
 	public lastCollectionTime = '';
 	public params: IBullet =
 		{
+		  collectionId: '',
 		  customerId : '',
 		  dnacIP: '',
 		  page: 0,
@@ -67,9 +68,34 @@ export class DnacListComponent implements OnInit {
 	 * used to Intialize Table options
 	 */
 	public ngOnInit () {
-		this.getDnacList();
+		this.getCollectionId();
 		this.buildTable();
+		this.getCollectionId();
 	}
+
+	/**
+	 * Method to fetch collectionId
+	 */
+
+	public getCollectionId () {
+		this.architectureReviewService.getCollectionId()
+		.subscribe(res => {
+			this.params.collectionId = _.get(res, 'collection.collectionId');
+			if (this.params.collectionId !== undefined) {
+				this.getDnacList();
+				const datePipe = new DatePipe('en-US');
+				this.lastCollectionTime = datePipe
+										  .transform(res.collection.collectionDate, 'medium');
+			}
+		},
+		err => {
+			this.logger.error('Dnac list Component View' +
+				'  : getCollectionId() ' +
+				`:: Error : (${err.status}) ${err.message}`);
+			this.inValidResponseHandler();
+		});
+	}
+
 	/**
 	 * builds Table
 	 */
@@ -92,36 +118,25 @@ export class DnacListComponent implements OnInit {
 					name: I18n.get('_ArchitectureSystems(SystemsPublishedLimit)_'),
 					sortable: false,
 					template : this.devicesTemplate,
+					width : '15%',
 				},
 				{
 					name: I18n.get('_ArchitectureEndPoints(EndPublishedLimit)_'),
 					sortable: false,
 					template : this.endPointsTemplate,
+					width : '17%',
 				},
 				{
 					name: I18n.get('_ArchitectureFabrics(FabricsPublishedLimit)_'),
 					sortable: false,
 					template : this.fabricsTemplate,
+					width : '17%',
 				},
 				{
 					name: I18n.get('_ArchitectureWLC(WLCPublishedLimit)_'),
 					sortable: false,
 					template : this.wlcTemplate,
-				},
-				{
-					key: 'dnacCpu',
-					name: I18n.get('_ArchitectureCPUUsage_'),
-					sortable: false,
-				},
-				{
-					key: 'dnacFilesystem',
-					name: I18n.get('_ArchitectureFileSystemUsage_'),
-					sortable: false,
-				},
-				{
-					key: 'dnacMemory',
-					name: I18n.get('_ArchitectureMemoryUsage_'),
-					sortable: false,
+					width : '17%',
 				},
 			],
 			singleSelect: true,
@@ -138,7 +153,7 @@ export class DnacListComponent implements OnInit {
 		this.isLoading = true;
 		this.params.page = event.page;
 		this.params.pageSize = event.limit;
-		this.getDnacList();
+		this.getCollectionId();
 	}
 
 	/**
@@ -154,7 +169,7 @@ export class DnacListComponent implements OnInit {
 			this.tableStartIndex = 0;
 			this.params.page = 0;
 			this.params.searchText = this.searchText;
-			this.getDnacList();
+			this.getCollectionId();
 		}
 	}
 	/**
@@ -173,10 +188,8 @@ export class DnacListComponent implements OnInit {
 			if (!res) {
 				return this.inValidResponseHandler();
 			}
-			const datePipe = new DatePipe('en-US');
 			this.isLoading = false;
-			this.totalItems = res.TotalCounts;
-			this.lastCollectionTime = datePipe.transform(res.CollectionDate, 'medium');
+			this.totalItems = res.totalCount;
 			this.dnacDetailsResponse = res.dnacDetails;
 			this.tableEndIndex = (this.tableStartIndex + this.dnacDetailsResponse.length);
 		},

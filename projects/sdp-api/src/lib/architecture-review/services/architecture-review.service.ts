@@ -4,8 +4,7 @@ import { HttpClient, HttpRequest, HttpResponse, HttpHeaders } from '@angular/com
 import { BaseService as __BaseService } from '../base-service';
 import { ArchitectureReviewConfiguration as __Configuration } from '../architecture-review-configuration';
 import { StrictHttpResponse as __StrictHttpResponse } from '../../core/strict-http-response';
-import { Observable as __Observable } from 'rxjs';
-import { Subject } from 'rxjs';
+import { Observable as __Observable, Observable, BehaviorSubject } from 'rxjs';
 import { map as __map, filter as __filter } from 'rxjs/operators';
 
 @Injectable({
@@ -18,13 +17,11 @@ class ArchitectureReviewService extends __BaseService {
   static readonly getDevicesCountResponsePath = '/customerportal/archinsights/v1/dnac/devicecount';
   static readonly getDnacCountResponsePath = '/customerportal/archinsights/v1/dnac/count';
   static readonly getDevicesSDAResponsePath = '/customerportal/archinsights/v1/dnac/deviceinsight';
-  static readonly getSDAReadinessCountResponse = '/customerportal/archinsights/v1/dnac/devicecompliance';
+  static readonly getnonOptimalLinksResponsePath = '/customerportal/archinsights/v1/dnac/deviceinsight/nonoptimallinks';
+  static readonly getSDAReadinessCountResponse = '/customerportal/archinsights/v1/dnac/devicecompliance/count';
+  static readonly getCollectionIdResponsePath = '/customerportal/archinsights/v1/collectiondetails';
 
-  private AssetsExceptionsCount = new Subject<any>();
-
-  private CBPRiskCount = new Subject<any>();
-
-  private AssetsExceptionsCountSubject = new Subject<any>();
+  private collectionId = new BehaviorSubject<any>({});
 
   constructor(
     config: __Configuration,
@@ -44,15 +41,19 @@ class ArchitectureReviewService extends __BaseService {
    * @return successful operation
    */
   getDevicesListResponse(params: any): __Observable<__StrictHttpResponse<any>> {
+    console.log(params);
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
 
     if (params.page != null) __params = __params.set('page', params.page.toString());
     if (params.pageSize != null) __params = __params.set('pageSize', params.pageSize.toString());
-    if (params.deviceCompliance != null) __params = __params.set('deviceCompliance', params.deviceCompliance.toString());
+    if (params.filterBy != null) __params = __params.set('filterBy', params.filterBy.toString());
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    if (params.collectionId != null) __params = __params.set('collectionId', params.collectionId.toString());
     if (params.searchText != null) __params = __params.set('searchText', params.searchText.toString());
+    if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
+
 
     // (params.contractNumber || []).forEach(val => {if (val != null) __params = __params.append('contractNumber', val.toString())});
     let req = new HttpRequest<any>(
@@ -93,14 +94,13 @@ class ArchitectureReviewService extends __BaseService {
   getDnacList(params:any): __Observable<any> {
     return this.getDnacListResponse(params).pipe(
       __map(_r => {
-
-        this.AssetsExceptionsCount.next({ count: _r.body.TotalCounts });
         return _r.body;
       })
     );
   }
 
   getDnacListResponse(params:any): __Observable<__StrictHttpResponse<any>> {
+    console.log(params);
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
@@ -108,9 +108,11 @@ class ArchitectureReviewService extends __BaseService {
     if (params.page != null) __params = __params.set('page', params.page);
     if (params.pageSize != null) __params = __params.set('pageSize', params.pageSize);
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    if (params.collectionId != null) __params = __params.set('collectionId', params.collectionId.toString());
     if (params.searchText != null) __params = __params.set('searchText', params.searchText.toString());
     if (params.dnacIP != null) __params = __params.set('dnacIP', params.dnacIP.toString());
     
+
     let req = new HttpRequest<any>(
 	  'GET',
 	  this.rootUrl + `${ArchitectureReviewService.getDnacListResponsePath}`,
@@ -129,6 +131,46 @@ class ArchitectureReviewService extends __BaseService {
       })
     );
   }
+
+  getCollectionDetails(params:any): __Observable<any> {
+    return this.getCollectionDetailsResponse(params).pipe(
+      __map(_r => {
+        this.collectionId.next({ collection : _r.body});
+        return _r.body;
+      })
+    );
+  }
+
+  getCollectionDetailsResponse(params:any): __Observable<__StrictHttpResponse<any>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+
+    let req = new HttpRequest<any>(
+	  'GET',
+	  this.rootUrl + `${ArchitectureReviewService.getCollectionIdResponsePath}`,
+      __body,
+
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<any>;
+      })
+    );
+  }
+
+  getCollectionId(): Observable<any> {
+    return this.collectionId.asObservable();
+  }
+  
   // Devices count of High and Medium Severity
   getDevicesCount(params: any): __Observable<any> {
     return this.getDevicesCountResponse(params).pipe(
@@ -142,6 +184,8 @@ class ArchitectureReviewService extends __BaseService {
     let __body: any = null;
     let __params = this.newParams();
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    if (params.collectionId != null) __params = __params.set('collectionId', params.collectionId.toString());
+
     let req = new HttpRequest<any>(
 	  'GET',
 	  this.rootUrl + `${ArchitectureReviewService.getDevicesCountResponsePath}`,
@@ -175,6 +219,7 @@ class ArchitectureReviewService extends __BaseService {
       let __body: any = null;
       let __params = this.newParams();
       if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+      if (params.collectionId != null) __params = __params.set('collectionId', params.collectionId.toString());
       let req = new HttpRequest<any>(
       'GET',
       this.rootUrl + `${ArchitectureReviewService.getSDAReadinessCountResponse}`,
@@ -203,11 +248,12 @@ class ArchitectureReviewService extends __BaseService {
   }
 
   getDnacCountResponse(params:any): __Observable<__StrictHttpResponse<any>> {
-
     let __headers = new HttpHeaders();
     let __body: any = null;
     let __params = this.newParams();
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    if (params.collectionId != null) __params = __params.set('collectionId', params.collectionId.toString());
+
     let req = new HttpRequest<any>(
       'GET',
 	  this.rootUrl + `${ArchitectureReviewService.getDnacCountResponsePath}`,
@@ -240,6 +286,49 @@ class ArchitectureReviewService extends __BaseService {
   }
 
   /**
+   * This function is used to get the asset details
+   * @param body This parameter containes array of assets
+   * @returns only body part of the HTTp response
+   */
+  getOptimalLinks(params: ArchitectureReviewService.getDevicesSDAParams): __Observable<any> {
+    return this.getOptimalLinksResponse(params).pipe(
+      __map(_r => _r.body)
+    );
+  }
+
+
+  getOptimalLinksResponse(params: ArchitectureReviewService.getDevicesSDAParams): __Observable<__StrictHttpResponse<any>> {
+
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = params.body;
+
+    if (params.page != null) __params = __params.set('page', params.page.toString());
+    if (params.pageSize != null) __params = __params.set('pageSize', params.pageSize.toString());
+	if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+	if (params.deviceIp != null) __params = __params.set('deviceIp', params.deviceIp.toString());
+  if (params.collectionId != null) __params = __params.set('collectionId', params.collectionId.toString());
+    let req = new HttpRequest<any>(
+      'GET',
+	  this.rootUrl + `${ArchitectureReviewService.getnonOptimalLinksResponsePath}`,
+      __body,
+      {
+        headers: __headers,
+        params : __params,
+        responseType: 'json',
+        //        withCredentials: true,
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<any>;
+      })
+    );
+  }
+
+
+  /**
    * This Function is used to get the asset detail by adding headers, params and body while sending the request
    * @param body This Parameter contains array of Assets
    * @returns Entire HTTP response is returned
@@ -252,10 +341,12 @@ class ArchitectureReviewService extends __BaseService {
 
     if (params.page != null) __params = __params.set('page', params.page.toString());
     if (params.pageSize != null) __params = __params.set('pageSize', params.pageSize.toString());
-    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+	if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+	if (params.deviceIp != null) __params = __params.set('deviceIp', params.deviceIp.toString());
+  if (params.collectionId != null) __params = __params.set('collectionId', params.collectionId.toString());
 
     let req = new HttpRequest<any>(
-      'POST',
+      'GET',
 	  this.rootUrl + `${ArchitectureReviewService.getDevicesSDAResponsePath}`,
       __body,
       {
@@ -316,7 +407,10 @@ module ArchitectureReviewService {
     /**
      * The Id's of the Assets Affected . Example:- 2689444; 91488861, 92246411
      */
-     body?: Array<string>;
+	 body?: Array<string>;
+
+   deviceIp?: string;
+   collectionId?: string;
   }
 
 }
