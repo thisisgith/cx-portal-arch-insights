@@ -2,8 +2,6 @@
 	<div class="text-bold text-small"
 		[innerText]="'_WasThisHelpful_' | i18n">
 	</div>
-	<div class="flex-right text-small text-muted dbl-margin-right"
-		[innerText]="'_XofY_' | i18n:feedbackValue.length:feedbackOptions.max"></div>
 </div>
 <form class="flex flex-fill flex-center-vertical"
 	[formGroup]="feedbackForm"
@@ -36,7 +34,6 @@
 				type="text"
 				data-auto-id="feedbackForm"
 				formControlName="feedback"
-				[maxlength]="feedbackOptions.max"
 				[pattern]="feedbackOptions.pattern"
 				[placeholder]="'_TellUsWhatYouThink_' | i18n">
 		</div>​
