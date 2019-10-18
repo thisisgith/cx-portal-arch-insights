@@ -326,7 +326,7 @@
 				<ng-container *ngTemplateOutlet="!notCurrentPitstop ? enabledAccButton : disabledAccButton; context: {
 					accId: item.accId,
 					title: item.title,
-					accProvderId: item.providerInfo?.id,
+					accProviderId: item.providerInfo?.id,
 					accProviderName: item.providerInfo?.name,
 					dataAutoId: 'Request1on1ACCButton'
 					}">
@@ -462,7 +462,7 @@
 			<ng-container *ngTemplateOutlet="!notCurrentPitstop ? enabledAccButton : disabledAccButton; context: {
 				accId: item.accId,
 				title: item.title,
-				accProvderId: item.providerInfo?.id,
+				accProviderId: item.providerInfo?.id,
 				accProviderName: item.providerInfo?.name,
 				dataAutoId: 'Request1on1ACCButton'
 				}">
@@ -1205,7 +1205,7 @@
 						<ng-container *ngTemplateOutlet="!notCurrentPitstop ? enabledAccButton : disabledAccButton; context: {
 							accId: item.accId,
 							title: item.title,
-							accProvderId: item.providerInfo?.id,
+							accProviderId: item.providerInfo?.id,
 							accProviderName: item.providerInfo?.name,
 							dataAutoId: 'Request1on1ACCButton'
 							}">
