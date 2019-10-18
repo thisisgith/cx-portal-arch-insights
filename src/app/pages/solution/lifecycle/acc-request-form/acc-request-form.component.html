@@ -47,9 +47,9 @@
 						</div>
 					</ng-container>
 				</div>
-				<div class="col-md-1 half-margin-top">
+				<div class="close-icon-container">
 					<span (click)="closeRequestForm()" data-auto-id="ACCCloseRequestModal"
-						class="icon-close icon-medium text-right toggle"></span>
+						class="icon-close icon-small text-right toggle"></span>
 				</div>
 			</div>
 			<div class="text-left request-modal__acc-title">
@@ -198,8 +198,8 @@
 							</div>
 						</div>
 						<div class="text-left">
-							<button type="submit" [disabled]="invalidSubmit" class="btn btn--small btn--primary" [innerText]="'_Submit_' | i18n" data-auto-id="accRequestModal-Submit"></button>
-							<button type="button" data-auto-id="accRequestModal-Cancel" class="btn btn--small btn--secondary text-uppercase text-small" (click)="closeRequestForm()" [innerText]="'_Cancel_' | i18n"></button>
+							<button type="submit" [disabled]="invalidSubmit" class="cx-btn btn--small" [innerText]="'_Submit_' | i18n" data-auto-id="accRequestModal-Submit"></button>
+							<button type="button" data-auto-id="accRequestModal-Cancel" class="cx-btn btn--small cx-btn--primary text-uppercase text-small" (click)="closeRequestForm()" [innerText]="'_Cancel_' | i18n"></button>
 						</div>
 					</form>
 				</div>
