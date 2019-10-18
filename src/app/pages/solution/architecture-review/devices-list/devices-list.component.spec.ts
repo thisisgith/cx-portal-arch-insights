@@ -13,7 +13,7 @@ import { user, ArchitectureReviewScenarios } from '@mock';
 import { SimpleChanges, SimpleChange } from '@angular/core';
 import { AssetPanelLinkService } from '@services';
 
-fdescribe('DevicesListComponent', () => {
+describe('DevicesListComponent', () => {
 	let component: DevicesListComponent;
 	let fixture: ComponentFixture<DevicesListComponent>;
 	let service: ArchitectureReviewService;
