@@ -1326,7 +1326,7 @@ tr.td-row td {
 		tbody {
 			overflow-y: scroll;
 			display: block;
-			height: 120px;
+			height: 90px;
 
 			tr {
 				height: 28px;
@@ -1350,6 +1350,9 @@ tr.td-row td {
 					line-height: 13px;
 					letter-spacing: -0.03px;
 					border: 0;
+					overflow: hidden;
+					text-overflow: ellipsis;
+					white-space: nowrap;
 
 					&:last-of-type {
 						width: 100%;
