@@ -227,13 +227,12 @@ export class ArchitectureReviewComponent implements OnInit {
 	public getDevicesCount () {
 		const exceptionFilter = _.find(this.filters, { key: 'sda' });
 
-		return this.architectureService.getSDAReadinessCount({ customerId: this.customerId })
+		return this.architectureService.getSDAReadinessCount(this.params)
 			.pipe(
 				takeUntil(this.destroy$),
 				map((data: any) => {
 					const series = [];
-
-					const Compliant = _.get(data, 'compliant');
+					const Compliant = _.get(data, 'overallCompliance.Yes');
 
 					if (Compliant && Compliant > 0) {
 						series.push({
@@ -244,7 +243,7 @@ export class ArchitectureReviewComponent implements OnInit {
 						});
 					}
 
-					const NonCompliant = _.get(data, 'nonCompliant');
+					const NonCompliant = _.get(data, 'overallCompliance.No');
 
 					if (NonCompliant && NonCompliant > 0) {
 						series.push({
@@ -255,7 +254,7 @@ export class ArchitectureReviewComponent implements OnInit {
 						});
 					}
 
-					const NotAvailable = _.get(data, 'notAvailable');
+					const NotAvailable = _.get(data, 'overallCompliance.NA');
 
 					if (NotAvailable && NotAvailable > 0) {
 						series.push({

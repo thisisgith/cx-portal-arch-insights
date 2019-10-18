@@ -9,7 +9,6 @@ const customerId = 2431199;
  * sample deviceIp
  */
 const deviceIp = '192.168.46.100';
-
 /**
  * collectionId for mock response
  */
@@ -297,9 +296,31 @@ const getDevicesCountResponseData = {
  * Get the SDA Chart Filter count
  */
 const getSDAChartFilterCountResponseData = {
-	compliant: 10,
-	nonCompliant: 40,
-	notAvailable : 2,
+	assuranceCompliance: {
+		NA: 1,
+		No: 3,
+		Yes: 4,
+	},
+	overallCompliance: {
+		NA: 1,
+		No: 3,
+		Yes: 4,
+	},
+	pnpCompliance: {
+		NA: 1,
+		No: 4,
+		Yes: 2,
+	},
+	sdaCompliance: {
+		NA: 1,
+		No: 4,
+		Warning: 1,
+		Yes: 2,
+	},
+	swimCompliance: {
+		NA: 1,
+		Yes: 6,
+	},
 };
 /**
  * Architecture Review Scenarios
@@ -406,7 +427,8 @@ export const ArchitectureReviewScenarios = [
 				},
 			],
 		},
-		url: `${api}/dnac/devicecompliance?customerId=${customerId}`,
+		url: `${api}/dnac/devicecompliance/count` +
+		`?customerId=${customerId}&collectionId=${collectionId}`,
 		usecases: ['Use Case 6'],
 	},
 	{
