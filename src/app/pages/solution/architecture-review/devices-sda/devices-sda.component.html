@@ -1,43 +1,77 @@
-<div class="row base-margin-top">
-	<div class="col-md-12">
-		<div class="container">
-			<div *ngIf="!isLoading && totalItems > 0">
-				<span [innerText]="'_ArchitectureSdaRelease_' | i18n" class="text-large"></span>
-				<span class="qtr-margin-left text-small text-muted" [innerText]="sdaVersion">
-				</span>
-			</div>
-		</div>
+<cui-drawer projection="true" expanded="true">
+	<div class="cui-drawer-label text-xlarge base-padding-top"
+		[innerText]="'_ArchitectureSoftwareRecommendation_' | i18n">
 	</div>
-</div>
-
-<div class="row base-margin-top">
-	<div class="col-md-12">
-		<div class="container">
-			<cui-table *ngIf="!isLoading && deviceSDAdatas?.length" [options]="tableOptions"
-				 [data]="deviceSDAdatas"></cui-table>
-			<div class="base-margin-top" *ngIf="isLoading">
-				<div class="loading-spinner flex-center" [attr.aria-label]="'_ArchitectureLoading_' | i18n">
-					<div class="wrapper">
-						<div class="wheel"></div>
-					</div>
-				</div>
-			</div>
-			<div *ngIf="!deviceSDAdatas?.length && !isLoading">
-				<div class="text-center dbl-margin-top dbl-margin-bottom">
-					<div>
-						<span class="text-muted text-xlarge"
-							[innerText]="'_NoResultsFound_' | i18n"
-							data-auto-id="NoResultsFoundTxt" >
-						</span>
-					</div>
-				</div>
-			</div>
-		</div>
+	<div class="cui-drawer-content">
+		<ng-container *ngTemplateOutlet="SDASupportedSoftwareContent;context: { 
+							sdaData: sdaData}">
+		</ng-container>
 	</div>
-</div>
-
-<ng-template #recommendedVersions let-item="celldata">
-	<div *ngFor="let version of item?.recommendedSwVersions">
-			<span [innerText]="version"></span>
-	</div>		
+</cui-drawer>
+<cui-drawer projection="true" expanded="true">
+	<div class="cui-drawer-label text-xlarge qtr-padding-top"
+		[innerText]="'_ArchitectureHardwareRecommendation_' | i18n">
+	</div>
+	<div class="cui-drawer-content">
+		<ng-container *ngTemplateOutlet="SDASupportedHardwareContent;context: { 
+			sdaData: sdaData}">
+		</ng-container>
+	</div>
+</cui-drawer>
+<cui-drawer projection="true" expanded="true">
+		<div class="cui-drawer-label text-xlarge"
+		[innerText]="'_ArchitectureUnderlayRecommendation_' | i18n">
+		</div>
+		<div class="cui-drawer-content">
+			<div *ngIf="showL3Switch" class="base-margin-bottom">
+				<div class="text-large half-padding-bottom" [innerText]="'_ArchitectureL3Switching_' | i18n | uppercase"></div>
+				<div class="text-medium" [innerText]="'_ArchitectureEnableL3Text_' | i18n"></div>
+			</div>
+			<div *ngIf="showSwitchRedundency" class="base-margin-bottom">
+					<div class="text-large half-padding-bottom" [innerText]="'_ArchitectureAccessSwitch_' | i18n | uppercase"></div>
+					<div class="text-medium" [innerText]="'_ArchitectureAccessSwitchText_' | i18n"></div>
+			</div>
+			<div *ngIf="showSwitchInterface">
+					<div class="text-large half-padding-bottom" [innerText]="'_ArchitectureSwitchInterface_' | i18n | uppercase"></div>
+					<div class="line-height-20" [innerText]="'_ArchitectureSwitchInterfaceText_' | i18n"></div>
+			</div>
+			<ng-container *ngTemplateOutlet="SDAUnderlayRecommendationTemplate">
+			</ng-container>
+		</div>
+</cui-drawer>
+<ng-template #SDASupportedSoftwareContent let-softwareSdaData="sdaData" >
+	<span [innerText]="'_ArchitectureRecommendedMessage_' | i18n"></span>
+	<a class="qtr-padding-left" data-auto-id="linkSlideIn"
+		[innerText]="'_ArchitectureRecommendedRedirectLink_' | i18n"></a>
+	<div class="base-margin-top panel">
+		<span class="text-large" [innerText]="'_ArchitectureSdaSupportedSoftware_' | i18n"></span>
+		<cui-table [options]="softwareTableOptions" [data]="sdaSoftwareGridData"></cui-table>
+	</div>
+</ng-template>
+<ng-template #SDASupportedHardwareContent let-hardwareSdaData="sdaData">
+	<span [innerText]="'_ArchitectureRecommendedHardwareMessage_' | i18n">
+	</span>
+	<span class="qtr-margin-left text-bold" [innerText]="hardwareSdaData?.hardwareRecommendation"></span>
+	<div class="base-margin-top panel" >
+		<span class="text-large" [innerText]="'_ArchitectureSdaSupportedHardware_' | i18n"></span>
+		<cui-table [options]="hardwareTableOptions" [data]="sdaHardwareGridData"></cui-table>
+	</div>
+</ng-template>
+<ng-template #SDAUnderlayRecommendationTemplate>
+		<cui-table [options]="nonOptimalLinksTableOptions" [data]="nonOptimalLinks"></cui-table>
+		<cui-pager
+				*ngIf="nonOptimalLinks?.length"
+				[limit]="nonOptimalLinkTableLimit"
+				[totalItems]="nonOptimalLinksTotalCount"
+			></cui-pager>
+</ng-template>
+<ng-template #sdaSoftwareVersions let-item="celldata">
+	<div *ngFor="let version of item?.software">
+		<span [innerText]="version"></span>
+	</div>
+</ng-template>
+<ng-template #sdaHardwareProductFamily let-item="celldata">
+	<div *ngFor="let productFamilyInfo of item?.productFamily">
+		<span [innerText]="productFamilyInfo"></span>
+	</div>
 </ng-template>

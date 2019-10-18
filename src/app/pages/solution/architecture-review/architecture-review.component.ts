@@ -24,6 +24,11 @@ export class ArchitectureReviewComponent implements OnInit {
 	public selectedFilter: ISeverity = {
 		isClearAllSelected: false,
 		severity: '',
+		title: '',
+	};
+	public params = {
+		collectionId : '',
+		customerId : '',
 	};
 	public filters: VisualFilter[];
 
@@ -31,11 +36,18 @@ export class ArchitectureReviewComponent implements OnInit {
 
 	private destroy$ = new Subject();
 
+	public collectionId: any;
+
 	@ViewChild('exceptionsFilter', { static: true })
 	private exceptionsFilterTemplate: TemplateRef<{ }>;
 
 	public visualLabels = [
-		{ label: I18n.get('_ArchitectureDNAC_'), active: true, count: null, key: 'dnac' },
+		{
+			active: true,
+			count: null,
+			key: 'dnac',
+			label: I18n.get('_ArchitectureDNAC_'),
+		},
 		{
 			active: false,
 			count: null,
@@ -51,6 +63,7 @@ export class ArchitectureReviewComponent implements OnInit {
 		) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
+		this.params.customerId = _.get(user, ['info', 'customerId']);
 	}
 
 	/**
@@ -58,9 +71,21 @@ export class ArchitectureReviewComponent implements OnInit {
 	 *  and buildFilters function for Updating the Table
 	 */
 	public ngOnInit (): void {
-		this.getAllDevicesCount();
-		this.getDnacCount();
-		this.buildFilters();
+		this.getCollectionId();
+	}
+
+	/**
+	 * Method to fetch collectionId
+	 */
+
+	public getCollectionId () {
+		this.architectureService.getCollectionDetails({ customerId: this.customerId })
+		.subscribe(res => {
+			this.params.collectionId = _.get(res, 'collectionId');
+			this.getAllDevicesCount();
+			this.getDnacCount();
+			this.buildFilters();
+		});
 	}
 
 	/**
@@ -68,13 +93,13 @@ export class ArchitectureReviewComponent implements OnInit {
 	 */
 
 	public getAllDevicesCount () {
-		this.architectureService.getDevicesCount({ customerId: this.customerId })
+		this.architectureService.getDevicesCount(this.params)
 		.pipe(
 			takeUntil(this.destroy$),
 		)
 		.subscribe(res => {
 			const devices = _.find(this.visualLabels, { key: 'devices' });
-			devices.count = res.TotalCounts;
+			devices.count = res.totalCount;
 		},
 		err => {
 			this.logger.error('Count of Devices' +
@@ -87,19 +112,19 @@ export class ArchitectureReviewComponent implements OnInit {
 	 * method to get devices count
 	 */
 	public getDnacCount () {
-		this.architectureService.getDnacCount({ customerId: this.customerId })
-		.pipe(
-			takeUntil(this.destroy$),
-		)
-		.subscribe(res => {
-			const dnac = _.find(this.visualLabels, { key: 'dnac' });
-			dnac.count = res.TotalCounts;
-		},
-		err => {
-			this.logger.error('Count of Dnac' +
-				'  : getDnacCount() ' +
-				`:: Error : (${err.status}) ${err.message}`);
-		});
+		this.architectureService.getDnacCount(this.params)
+			.pipe(
+				takeUntil(this.destroy$),
+			)
+			.subscribe(res => {
+				const dnac = _.find(this.visualLabels, { key: 'dnac' });
+				dnac.count = res.totalCount;
+			},
+			err => {
+				this.logger.error('Count of Dnac' +
+					'  : getDnacCount() ' +
+					`:: Error : (${err.status}) ${err.message}`);
+			});
 	}
 
 	/**
@@ -108,13 +133,13 @@ export class ArchitectureReviewComponent implements OnInit {
 	 */
 	public selectVisualLabel (label: any) {
 		label.active = true;
-		const filter = _.find(this.filters, { key: 'exceptions' });
+		const filter = _.find(this.filters, { key: 'sda' });
 		this.visualLabels.forEach(element => {
 			if (element !== label) {
 				element.active = false;
 				filter.title = '';
 			} else {
-				filter.title = I18n.get('_ArchitectureSDAReadiness_');
+				filter.title = I18n.get('_ArchitectureOverallReadiness_');
 			}
 		});
 	}
@@ -125,7 +150,7 @@ export class ArchitectureReviewComponent implements OnInit {
 	public buildFilters () {
 		this.filters = [
 			{
-				key: 'exceptions',
+				key: 'sda',
 				loading: true,
 				selected: false,
 				seriesData: [],
@@ -149,9 +174,11 @@ export class ArchitectureReviewComponent implements OnInit {
 
 		filter.selected = _.some(filter.seriesData, 'selected');
 
-		if (filter.key === 'exceptions') {
+		if (filter.key === 'sda') {
 			this.selectedFilter[filter.key] =
 				_.map(_.filter(filter.seriesData, 'selected'), 'filter');
+			this.selectedFilter.title = this.selectedFilter[filter.key].length > 0 ?
+			_.get(filter, 'key') : '';
 		}
 		this.selectedFilter.isClearAllSelected = false;
 		this.selectedFilter = _.cloneDeep(this.selectedFilter);
@@ -198,7 +225,7 @@ export class ArchitectureReviewComponent implements OnInit {
 	 * @returns the edvisory counts
 	 */
 	public getDevicesCount () {
-		const exceptionFilter = _.find(this.filters, { key: 'exceptions' });
+		const exceptionFilter = _.find(this.filters, { key: 'sda' });
 
 		return this.architectureService.getSDAReadinessCount({ customerId: this.customerId })
 			.pipe(
@@ -206,7 +233,7 @@ export class ArchitectureReviewComponent implements OnInit {
 				map((data: any) => {
 					const series = [];
 
-					const Compliant = _.get(data, 'Compliant');
+					const Compliant = _.get(data, 'compliant');
 
 					if (Compliant && Compliant > 0) {
 						series.push({
@@ -217,7 +244,7 @@ export class ArchitectureReviewComponent implements OnInit {
 						});
 					}
 
-					const NonCompliant = _.get(data, 'Non-Compliant');
+					const NonCompliant = _.get(data, 'nonCompliant');
 
 					if (NonCompliant && NonCompliant > 0) {
 						series.push({
@@ -225,6 +252,17 @@ export class ArchitectureReviewComponent implements OnInit {
 							label: I18n.get('_ArchitectureNonCompliant_'),
 							selected: false,
 							value: NonCompliant,
+						});
+					}
+
+					const NotAvailable = _.get(data, 'notAvailable');
+
+					if (NotAvailable && NotAvailable > 0) {
+						series.push({
+							filter: 'notAvailable',
+							label: I18n.get('_ArchitectureNotAvailable_'),
+							selected: false,
+							value: NotAvailable,
 						});
 					}
 

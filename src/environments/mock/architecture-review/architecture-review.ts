@@ -6,6 +6,25 @@ const api = '/api/customerportal/archinsights/v1';
 const customerId = 2431199;
 
 /**
+ * sample deviceIp
+ */
+const deviceIp = '192.168.46.100';
+
+/**
+ * collectionId for mock response
+ */
+
+const collectionId = '9ecf600a-d38b-4aed-9a34-ace3ca733e31';
+
+/**
+ * get collectionId
+ */
+
+const collectionIdResponse = {
+	collectionDate: '2019-09-01T05:38:59.619+0000',
+	collectionId: '9ecf600a-d38b-4aed-9a34-ace3ca733e31',
+};
+/**
  * get DNAC data
  */
 const getDnacList = {
@@ -39,7 +58,7 @@ const getDnacList = {
 			wlcPublishedViolated: 'No',
 		},
 	],
-	TotalCounts: 1,
+	totalCount: 1,
 };
 
 /**
@@ -49,162 +68,184 @@ const getDevicesSDAResponseData = {
 	CollectionDate: '2019-08-27T06:15:40.636+0000',
 	dnacDeviceDetails: [
 		{
-			assurance: 'N/A',
-			collectionId: 'a655cc77-bb6f-448c-b106-015c9e4d0ebc',
-			customerId: '2431199',
-			hardwareCompliance: 'No',
-			hostName: 'C3750E.domain1.com',
-			ipAddress: '192.168.99.215',
-			lastUpdateDate: '2019-08-27T12:44:20.000+0000',
-			managedNeId: 'NA,FDO1734H1MQ,WS-C3750X-24T-L,NA',
-			minimumSwVersion: 'N/A',
-			neInstanceId: 'NA,FDO1734H1MQ,WS-C3750X-24T-L,NA',
-			neName: 'C3750E.domain1.com',
-			productFamily: 'Cisco Catalyst 3750 Series Switches',
-			productId: 'WS-C3750X-24T-L',
-			productType: 'LAN Switches',
-			recommendedVersions: [],
-			sda: 'N/A',
-			serialNumber: 'FDO1734H1MQ',
-			softwareCompliance: 'No',
-			softwareType: 'IOS',
-			softwareVersion: '15.0(2)SE',
-			transactionId: 'a72dc4c7-bd4d-4358-85aa-d3b528282231',
+			assuranceCompliance: 'Yes',
+			currentDeviceRole: 'Controller',
+			dnacVersion: '1.2',
+			hardwarePidCompliant: 'Yes',
+			hostName: 'AP70F3.5A7E.44C8',
+			ipAddress: '192.168.46.100',
+			overallCompliance: 'Yes',
+			pnpCompliance: 'Yes',
+			productFamily: 'N/A',
+			productId: 'AIR-AP1800S-B-K9',
+			sdaCompliance: 'Yes',
+			softwareType: 'AireOs',
+			softwareTypeCompliant: 'Yes',
+			softwareVersion: '8.8.300.49',
+			softwareVersionCompliant: 'Yes',
+			swimCompliance: 'Yes',
 		},
 		{
-			assurance: 'N/A',
-			collectionId: '6e252e67-3548-4e7d-b827-121f696bfc45',
-			customerId: '7293498',
-			hardwareCompliance: 'Yes',
-			hostName: 'N9Kprk',
-			ipAddress: '192.168.99.215',
-			lastUpdateDate: '2019-08-27T12:44:20.000+0000',
-			managedNeId: 'NA,FDO1734H1MQ,WS-C3750X-24T-L,NA',
-			minimumSwVersion: 'N/A',
-			neInstanceId: 'NA,FDO1734H1MQ,WS-C3750X-24T-L,NA',
-			neName: 'N9Kprk',
-			productFamily: 'Cisco Catalyst Series Switches',
-			productId: 'FS-C3750X-24T-L',
-			productType: 'LAN Switches',
-			recommendedVersions: [],
-			sda: 'N/A',
-			serialNumber: 'FDO1734H1MQ',
-			softwareCompliance: 'Yes',
-			softwareType: 'IOS',
-			softwareVersion: '15.0(2)SE',
-			transactionId: 'a72dc4c7-bd4d-4358-85aa-d3b528282231',
+			assuranceCompliance: 'No',
+			currentDeviceRole: 'Controller',
+			dnacVersion: '1.2',
+			hardwarePidCompliant: 'No',
+			hostName: 'AP70F3.5A7E.44C8',
+			ipAddress: '192.168.46.100',
+			overallCompliance: 'No',
+			pnpCompliance: 'Yes',
+			productFamily: 'N/A',
+			productId: 'AIR-AP1800S-B-K9',
+			sdaCompliance: 'Yes',
+			softwareType: 'AireOs',
+			softwareTypeCompliant: 'Yes',
+			softwareVersion: '8.8.300.49',
+			softwareVersionCompliant: 'Yes',
+			swimCompliance: 'Yes',
 		},
 		{
-			assurance: 'N/A',
-			collectionId: 'a655cc77-bb6f-448c-b106-015c9e4d0ebc',
-			customerId: '7293498',
-			hardwareCompliance: 'Yes',
-			hostName: 'ASA-v',
-			ipAddress: '192.168.99.215',
-			lastUpdateDate: '2019-08-27T12:44:20.000+0000',
-			managedNeId: 'NA,FDO1734H1MQ,WS-C3750X-24T-L,NA',
-			minimumSwVersion: 'N/A',
-			neInstanceId: 'NA,FDO1734H1MQ,WS-C3750X-24T-L,NA',
-			neName: 'ASA-v',
-			productFamily: 'Cisco Catalyst 3750 Series Switches',
-			productId: 'WS-C3750X-24T-L',
-			productType: 'LAN Switches',
-			recommendedVersions: [],
-			sda: 'N/A',
-			serialNumber: 'FDO1734H1MQ',
-			softwareCompliance: 'No',
-			softwareType: 'IOS',
-			softwareVersion: '15.0(2)SE',
-			transactionId: 'a72dc4c7-bd4d-4358-85aa-d3b528282231',
+			assuranceCompliance: 'Yes',
+			currentDeviceRole: 'Controller',
+			dnacVersion: '1.2',
+			hardwarePidCompliant: 'No',
+			hostName: 'AP70F3.5A7E.44C8',
+			ipAddress: '192.168.46.100',
+			overallCompliance: 'No',
+			pnpCompliance: 'Yes',
+			productFamily: 'N/A',
+			productId: 'AIR-AP1800S-B-K9',
+			sdaCompliance: 'No',
+			softwareType: 'AireOs',
+			softwareTypeCompliant: 'Yes',
+			softwareVersion: '8.8.300.49',
+			softwareVersionCompliant: 'Yes',
+			swimCompliance: 'Yes',
+		},
+		{
+			assuranceCompliance: 'Yes',
+			currentDeviceRole: 'Controller',
+			dnacVersion: '1.2',
+			hardwarePidCompliant: 'Yes',
+			hostName: 'AP70F3.5A7E.44C8',
+			ipAddress: '192.168.46.100',
+			overallCompliance: 'Yes',
+			pnpCompliance: 'Yes',
+			productFamily: 'N/A',
+			productId: 'AIR-AP1800S-B-K9',
+			sdaCompliance: 'Warning',
+			softwareType: 'AireOs',
+			softwareTypeCompliant: 'Yes',
+			softwareVersion: '8.8.300.49',
+			softwareVersionCompliant: 'Yes',
+			swimCompliance: 'Yes',
+		},
+		{
+			assuranceCompliance: 'NA',
+			currentDeviceRole: 'Controller',
+			dnacVersion: '1.2',
+			hardwarePidCompliant: 'Yes',
+			hostName: 'AP70F3.5A7E.44C8',
+			ipAddress: '192.168.46.100',
+			overallCompliance: 'NA',
+			pnpCompliance: 'NA',
+			productFamily: 'N/A',
+			productId: 'AIR-AP1800S-B-K9',
+			sdaCompliance: 'NA',
+			softwareType: 'AireOs',
+			softwareTypeCompliant: 'NA',
+			softwareVersion: '8.8.300.49',
+			softwareVersionCompliant: 'No',
+			swimCompliance: 'NA',
+		},
+		{
+			assuranceCompliance: 'Yes',
+			currentDeviceRole: 'Controller',
+			dnacVersion: '1.2',
+			hardwarePidCompliant: 'Yes',
+			hostName: 'AP70F3.5A7E.44C8',
+			ipAddress: '192.168.46.100',
+			overallCompliance: 'No',
+			pnpCompliance: 'Yes',
+			productFamily: 'N/A',
+			productId: 'AIR-AP1800S-B-K9',
+			sdaCompliance: 'No',
+			softwareType: 'AireOs',
+			softwareTypeCompliant: 'Yes',
+			softwareVersion: '8.8.300.49',
+			softwareVersionCompliant: 'Yes',
+			swimCompliance: 'Yes',
 		},
 	],
-	dnacVersion: 1.0,
-	TotalCounts: 3,
+	totalCount: 6,
 };
 
 /**
- * Get reponse for SDA Product Compatability
- */
-const getSDAproductCompatabilityResponseData = {
-	dnacDeviceDetails: {
-	   assurance: 'No',
-	   collectionId: '6e252e67-3548-4e7d-b827-121f696bfc45',
-	   customerId: '2431199',
-	   hardwareCompliance: 'Yes',
-	   hostName: 'ASA-v',
-	   ipAddress: '172.21.31.144',
-	   lastUpdateDate: '2019-09-21T07:30:35.000+0000',
-	   managedNeId: 'NA,9A86PVSCGD3,ASAv,NA',
-	   neInstanceId: 'NA,9A86PVSCGD3,ASAv,NA',
-	   neName: 'ASA-v',
-	   productFamily: 'Adaptive Security Appliances (ASA)',
-	   productId: 'ASAv',
-	   productType: 'Security',
-	   recommendedVersions: [
-		{
-		  deviceRole: 'SD-Access Wireless',
-		  hardware: '802.11 Wave 1 access points: Cisco Aironet 1700 Series (AP 1700)',
-		  minimumSwVersion: 'AireOS 8.5.120',
-		  pid: 'AP 1700',
-		   recommendedSwVersions: [
-			  'IOS XE 16.10.1e',
-			  'IOS XE 16.11.1c',
-			  'AireOS 8.9.111.0',
-			  'AireOS 8.9.100.0',
-			  'AireOS 8.8.120.0',
-			  'AireOS 8.8.111.0',
-			  'AireOS 8.8.100.0',
-			  'AireOS 8.7.106.0',
-			  'AireOS 8.5.140.0',
-			  'AireOS 8.5.135.0',
-		   ],
-		},
-		{
-		   deviceRole: 'SD-Access Wireless',
-		   hardware: '802.11 Wave 1 access points: Cisco Aironet 2700 Series (AP 2700)',
-		   minimumSwVersion: 'AireOS 8.5.120',
-		   pid: 'AP 2700',
-		   recommendedSwVersions: [
-			  'IOS XE 16.10.1e',
-			  'IOS XE 16.11.1c',
-			  'AireOS 8.9.111.0',
-			  'AireOS 8.9.100.0',
-			  'AireOS 8.8.120.0',
-			  'AireOS 8.8.111.0',
-			  'AireOS 8.8.100.0',
-			  'AireOS 8.7.106.0',
-			  'AireOS 8.5.140.0',
-			  'AireOS 8.5.135.0',
-		   ],
-		},
-		{
-		   deviceRole: 'SD-Access Wireless',
-		   hardware: '802.11 Wave 1 access points: Cisco Aironet 3700 Series (AP 3700)',
-		   minimumSwVersion: 'AireOS 8.5.120',
-		   pid: 'AP 3700',
-		   recommendedSwVersions: [
-			  'IOS XE 16.10.1e',
-			  'IOS XE 16.11.1c',
-			  'AireOS 8.9.111.0',
-			  'AireOS 8.9.100.0',
-			  'AireOS 8.8.120.0',
-			  'AireOS 8.8.111.0',
-			  'AireOS 8.8.100.0',
-			  'AireOS 8.7.106.0',
-			  'AireOS 8.5.140.0',
-			  'AireOS 8.5.135.0',
-		   ],
-		},
-	 ],
-	   sda: 'No',
-	   serialNumber: '9A86PVSCGD3',
-	   softwareCompliance: 'No',
-	   softwareType: 'ASA',
-	   softwareVersion: '9.10(1)',
-	   transactionId: 'f23a56a8-337d-422d-9cd3-9cdf0071b61c',
+	* get SDA Supported hardware and software
+	*/
+const getSdaSupportedData = {
+	dnacDeviceDetails:	{
+		dnacVersion: '1.2',
+		failedCriteria: [
+			'We detected a software non-compliance for SDA.',
+			'We detected a non-compliance for SDA. L3 switching is not enabled on device C9300-24',
+		],
+		hardwareRecommendation: 'CX-9300L',
+		hostName: 'AP70F3.5A7E.44C8',
+		ipAddress: '192.168.46.100',
+		sdaHardwareSupported: [
+			{
+				deviceRole: 'controller',
+				productFamily: ['Cisco Catalyst 9300 Series Switches',
+					'Cisco Catalyst 9300 Series Switches'],
+			},
+		],
+		sdaL3AccessEnabled: 'Yes',
+		sdaNoOfMtuNonOptimalInterfaces: 7,
+		sdaRedundantLinks: 'Yes',
+		sdaSoftwareSupported: [
+			{
+				deviceRole: 'Fabric Edge',
+				productFamily: 'Cisco Catalyst 9300 Series Switches',
+				software: [
+					'IOS XE 16.10.1e',
+					'IOS XE 16.11.1c',
+					'AireOS 8.9.111.0',
+					'AireOS 8.9.100.0',
+					'AireOS 8.8.120.0',
+					'AireOS 8.8.111.0',
+				],
+			},
+		],
+		serialNumber: 'KWC21420A6L',
 	},
-	dnacVersion: '1.3',
-
+};
+/**
+ * Non optimal links response
+ */
+const nonOptimalLinksResponse = {
+	dnacDeviceDetails: {
+		mtuNonOptimalLinks: [
+			{
+				destinationDevice: '78654',
+				destinationInterface: 'interface2',
+				linkId: 'link1',
+				linkStatus: 'UP',
+				mtuValue: 1300,
+				sourceDevice: '6767999',
+				sourceInterface: 'interface1',
+			},
+			{
+				destinationDevice: '78654',
+				destinationInterface: 'interface2',
+				linkId: 'link1',
+				linkStatus: 'UP',
+				mtuValue: 5000,
+				sourceDevice: '6767999',
+				sourceInterface: 'interface1',
+			},
+		],
+		totalCount: 2,
+	},
 };
 
 /**
@@ -242,22 +283,23 @@ const getDNACDetails = {
  * Get the dnac count
  */
 const getDNACCountResponseData = {
-	TotalCounts : 1,
+	totalCount : 1,
 };
 
 /**
  * Get the Devices count
  */
 const getDevicesCountResponseData = {
-	TotalCounts : 51,
+	totalCount : 51,
 };
 
 /**
  * Get the SDA Chart Filter count
  */
 const getSDAChartFilterCountResponseData = {
-	Compliant: 8,
-	'Non-Compliant' : 43,
+	compliant: 10,
+	nonCompliant: 40,
+	notAvailable : 2,
 };
 /**
  * Architecture Review Scenarios
@@ -277,8 +319,8 @@ export const ArchitectureReviewScenarios = [
 				},
 			],
 		},
-		url: `${api}/dnac/` +
-		`details?page=0&pageSize=10&customerId=${customerId}&searchText=&dnacIP=`,
+		url: `${api}/dnac/details?page=0` +
+		`&pageSize=10&customerId=${customerId}&collectionId=${collectionId}&searchText=&dnacIP=`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -295,8 +337,8 @@ export const ArchitectureReviewScenarios = [
 				},
 			],
 		},
-		url: `${api}/dnac/` +
-		`devicedetails?page=0&pageSize=10&deviceCompliance=&customerId=${customerId}&searchText=`,
+		url: `${api}/dnac/devicedetails?page=0&pageSize=10` +
+		`&filterBy=&customerId=${customerId}&collectionId=${collectionId}&searchText=&useCase=`,
 		usecases: ['Use Case 2'],
 	},
 	{
@@ -330,7 +372,7 @@ export const ArchitectureReviewScenarios = [
 				},
 			],
 		},
-		url: `${api}/dnac/count?customerId=${customerId}`,
+		url: `${api}/dnac/count?customerId=${customerId}&collectionId=${collectionId}`,
 		usecases: ['Use Case 4'],
 	},
 	{
@@ -347,7 +389,7 @@ export const ArchitectureReviewScenarios = [
 				},
 			],
 		},
-		url: `${api}/dnac/devicecount?customerId=${customerId}`,
+		url: `${api}/dnac/devicecount?customerId=${customerId}&collectionId=${collectionId}`,
 		usecases: ['Use Case 5'],
 	},
 	{
@@ -369,19 +411,55 @@ export const ArchitectureReviewScenarios = [
 	},
 	{
 		scenarios: {
-			POST: [
+			GET: [
 				{
 					delay: 100,
-					description: 'SDA Product Compatability',
+					description: 'SDA Data',
 					response: {
-						body: getSDAproductCompatabilityResponseData,
+						body: getSdaSupportedData,
 						status: 200,
 					},
 					selected: true,
 				},
 			],
 		},
-		url: `${api}/dnac/deviceinsight?page=0&pageSize=10&customerId=${customerId}`,
+		url: `${api}/dnac/deviceinsight?page=0&pageSize=10&customerId=${customerId}` +
+		`&deviceIp=${deviceIp}&collectionId=${collectionId}`,
 		usecases: ['Use Case 7'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'Non Optimal Links',
+					response: {
+						body: nonOptimalLinksResponse,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/dnac/deviceinsight/nonoptimallinks?page=1&pageSize=10&` +
+		`customerId=${customerId}&deviceIp=${deviceIp}&collectionId=${collectionId}`,
+		usecases: ['Use Case 8'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'collection Id',
+					response: {
+						body: collectionIdResponse,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/collectiondetails?customerId=${customerId}`,
+		usecases: ['Use Case 9'],
 	},
 ];
