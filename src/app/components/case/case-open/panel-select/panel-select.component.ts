@@ -1,4 +1,4 @@
-import { Component, ContentChildren, Input, AfterContentInit, QueryList, Output, EventEmitter } from '@angular/core';
+import { Component, ContentChildren, Input, AfterContentInit, QueryList } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { PanelSelectOptionComponent } from './panel-select-option/panel-select-option.component';
@@ -20,7 +20,7 @@ export class PanelSelectComponent implements AfterContentInit, ControlValueAcces
 	@ContentChildren(PanelSelectOptionComponent) public options:
 		QueryList<PanelSelectOptionComponent<any>>;
 	@Input() public layout?: 'default' | 'vertical' = 'default';
-	@Output() public isSelected = new EventEmitter<boolean>();
+	public isSubtechSelected = false;
 	public onChange: any;
 	public initialValue: any;
 
@@ -42,12 +42,12 @@ export class PanelSelectComponent implements AfterContentInit, ControlValueAcces
 	 * @param option the option to select
 	 */
 	public select (option: PanelSelectOptionComponent<any>) {
+		this.isSubtechSelected = true;
 		this.options.forEach(o => {
 			o.selected = false;
 		});
 		option.selected = true;
 		this.onChange(option.value);
-		this.isSelected.emit(true);
 	}
 
 	/**
@@ -63,6 +63,7 @@ export class PanelSelectComponent implements AfterContentInit, ControlValueAcces
 	 * @param value incoming value
 	 */
 	public writeValue (value: any) {
+		this.isSubtechSelected = false;
 		if (this.options) {
 			this.options.forEach(o => {
 				o.selected = false;

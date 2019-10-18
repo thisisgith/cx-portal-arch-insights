@@ -59,8 +59,7 @@
 			</ng-container>
 			<div heightTransition [heightTransitionExpanded]="displaySuggestions && !loadingSuggestions">
 				<panel-select layout="vertical"
-					formControlName="suggestedTech"
-					(isSelected)="suggestionSelected($event)">
+					formControlName="suggestedTech">
 					<panel-select-option *ngFor="let option of recommendedTechs"
 						[value]="option">
 						<div class="flex-center-vertical">
@@ -73,9 +72,6 @@
 					[innerText]="'_SeeAllOptions_' | i18n"
 					data-auto-id="SeeAllTechs">
 				</a>
-				<div class="qtr-margin-top text-danger text-small" *ngIf="!isTechSuggestionSelected">
-					<span [innerText]="'_UserMessageForTechSuggestion_' | i18n"></span>
-				</div>
 			</div>
 		</form>
 	</dd>
