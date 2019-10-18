@@ -173,9 +173,8 @@ describe('DevicesListComponent', () => {
 		expect(component.tableStartIndex)
 		.toEqual(0);
 	});
-	// TODO: Needs rework, was causing the following error:
-	// Uncaught TypeError: Cannot read property 'collectionDate' of undefined thrown
-	xit('should call onpanelclose', () => {
+
+	it('should call onpanelclose', () => {
 		spyOn(component, 'onPanelClose');
 		const hidden = true;
 		component.handleHidden(hidden);
