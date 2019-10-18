@@ -1,5 +1,6 @@
 <!-- App Details 360 slide-out -->
-<details-panel *ngIf="deviceDetails" [hidden]="!deviceDetails" (hiddenChange)="handleHidden($event)" [fullscreen]="fullscreen">
+<details-panel *ngIf="deviceDetails" [hidden]="!deviceDetails" (hiddenChange)="handleHidden($event)" 
+ [fullscreen]="fullscreen" [minWidth] = "'900px'" (deviceInfo)="getDeviceInfo($event)">
 	<details-panel-header (close)="onPanelClose()" [(fullscreen)]="fullscreen" [fullscreenToggle]="false">
 		<div detailsPanelTitle class="text-xlarge">
 			<span [innerText]="('_ArchitectureArchitectureReviewFor_' | i18n)">
@@ -12,25 +13,25 @@
 			</a>
 		</div>
 		<div class="row ">
-			<div class="col-md-8 base-margin-bottom">
+			<div class="col-md-12 base-margin-top">
 				<div>
 					<span class="text-large" innerText="{{ ('_ArchitectureIP_' | i18n) + ' : '}}">
 					</span>
-					<span class="text-large" innerText="{{ deviceDetails?.ipAddress }}"></span>
+					<span class="text-large" innerText="{{ deviceInfoMessage?.ipAddress }}"></span>
 				</div>
-				<div>
+				<div class="qtr-padding-bottom">
 					<span class="text-large" innerText="{{ ('_ArchitectureSN_' | i18n) + ' : '}}">
 					</span>
-					<span class="text-large" innerText="{{ deviceDetails?.serialNumber }}"></span>
+					<span class="text-large" innerText="{{ deviceInfoMessage?.serialNumber }}"></span>
+				</div>
+				<div *ngFor="let failedCriterias of failedCriteriaMessages" class="qtr-padding-top">
+						<span class="icon-warning-outline text-warning qtr-margin-right"></span>
+						<span class="qtr-margin-left text-muted text-small" [innerText]="failedCriterias"></span>
 				</div>
 			</div>
 		</div>
 	</details-panel-header>
-	<cui-tabs [(activeTabIndex)]="tabIndex">
-		<cui-tab [label]="'_ArchitectureSDAProductCompatibility_' | i18n | uppercase">
-			<devices-sda [deviceDetails]="deviceDetails"></devices-sda>
-		</cui-tab>
-	</cui-tabs>
+	<devices-sda (failedCriteriaToEmit)="getfailedCriteriaMessage($event)" [deviceDetails]="deviceDetails" (deviceInfoToEmit)="getDeviceInfo($event)"></devices-sda>
 </details-panel>
 
 <!-- Asset 360 Fly-out View-->
@@ -111,25 +112,79 @@
 		</div>
 	</div>
 </div>
-<ng-template #productFamilyTemplate let-item="celldata">
+<ng-template #sdaReady let-item="celldata">
 	<span
 	[ngClass]="{
-		'text-danger': item?.hardwareCompliance === 'No',
-		'transparent-style': item?.hardwareCompliance === 'Yes'
+		'text--success': item?.sdaCompliance === 'Yes',
+		'text-danger': item?.sdaCompliance === 'No',
+		'text-warning': item?.sdaCompliance === 'Warning',
+		'transparent-style': item?.sdaCompliance === 'NA'
 	}"
 	class="qtr-margin-right icon-circle">
 	</span>
-	<span [innerText]="item?.productFamily"></span>
+	<span *ngIf="item?.sdaCompliance == 'Warning'" [innerText]="'_ArchitectureYes_' | i18n"></span>
+	<span *ngIf="item?.sdaCompliance != 'Warning'" [innerText]="item?.sdaCompliance"></span>
 </ng-template>
 
 
-<ng-template #softwareVersionTemplate let-item="celldata">
+<ng-template #assuranceReady let-item="celldata">
 	<span
 	[ngClass]="{
-		'text-danger': item?.softwareCompliance === 'No',
-		'transparent-style': item?.softwareCompliance !== 'No'
+		'text-success': item?.assuranceCompliance === 'Yes',
+		'text-danger': item?.assuranceCompliance === 'No',
+		'transparent-style': item?.assuranceCompliance === 'NA'
+	}"
+	 class="qtr-margin-right icon-circle">
+	</span>
+	<span [innerText]="item?.assuranceCompliance"></span>
+</ng-template>
+
+<ng-template #swimReady let-item="celldata">
+	<span
+	[ngClass]="{
+		'text-success': item?.swimCompliance === 'Yes',
+		'text-danger': item?.swimCompliance === 'No',
+		'transparent-style': item?.swimCompliance === 'NA'
+	}"
+	 class="qtr-margin-right icon-circle">
+	</span>
+	<span [innerText]="item?.swimCompliance"></span>
+</ng-template>
+
+<ng-template #pnpReady let-item="celldata">
+	<span
+	[ngClass]="{
+		'text-success': item?.pnpCompliance === 'Yes',
+		'text-danger': item?.pnpCompliance === 'No',
+		'transparent-style': item?.pnpCompliance === 'NA'
+	}"
+	 class="qtr-margin-right icon-circle">
+	</span>
+	<span [innerText]="item?.pnpCompliance"></span>
+</ng-template>
+
+<ng-template #productId let-item="celldata">
+	<span
+	[ngClass]="{
+		'transparent-style': item?.hardwarePidCompliant === 'Yes',
+		'icon-warning-outline': item?.hardwarePidCompliant === 'No',
+		'text-warning': item?.hardwarePidCompliant === 'No'	
+	}"
+	 class="qtr-margin-right icon-circle">
+	</span>
+	<span [innerText]="item?.productId"></span>
+</ng-template>
+
+<ng-template #softwareVersion let-item="celldata">
+	<span
+	[ngClass]="{
+		'transparent-style': item?.softwareVersionCompliant === 'Yes',
+		'icon-warning-outline': item?.softwareVersionCompliant === 'No',
+		'text-warning': item?.softwareVersionCompliant === 'No'	
 	}"
 	 class="qtr-margin-right icon-circle">
 	</span>
 	<span [innerText]="item?.softwareVersion"></span>
 </ng-template>
+
+

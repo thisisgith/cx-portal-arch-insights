@@ -60,50 +60,9 @@ describe('ArchitectureReviewComponent', () => {
 			.toBeTruthy();
 	});
 
-	it('customerId should be present', () => {
-		expect(component.customerId)
-			.toBeDefined();
-		expect(component.filtered)
-			.toBeDefined();
-		expect(component.selectedFilter)
-			.toBeDefined();
-		expect(component.status)
-			.toBeDefined();
-		expect(component.filters)
-			.toBeDefined();
-		const advisoryFilter = _.find(component.filters, { key: 'exceptions' });
-		expect(advisoryFilter)
-			.toBeDefined();
-	});
-
 	it('should call clear filters', () => {
 		component.clearFilters();
 		expect(component.filtered)
-			.toBeFalsy();
-	});
-
-	it('should call selectVisualLabel', () => {
-		const visualLabel = {
-			active: false,
-			count: null,
-			key: 'dnac',
-			label: 'DNAC',
-		};
-		component.visualLabels =
-		[{
-			active: true,
-			count: null,
-			key: 'dnac',
-			label: 'DNAC',
-		},
-		{
-			active: true,
-			count: null,
-			key: 'dnac',
-			label: 'DNAC',
-		}];
-		component.selectVisualLabel(visualLabel);
-		expect(component.visualLabels[0].active)
 			.toBeFalsy();
 	});
 
@@ -198,59 +157,6 @@ describe('ArchitectureReviewComponent', () => {
 					.toBeFalsy();
 			});
 	});
-
-	it('should get the total count', fakeAsync(() => {
-		const response = {
-			Compliant: 10,
-			'Non-Compliant': 50,
-		};
-		spyOn(service, 'getSDAReadinessCount')
-			.and
-			.returnValue(of(response));
-
-		component.loadData();
-		tick();
-		expect(service.getSDAReadinessCount)
-			.toHaveBeenCalled();
-	}));
-
-	it('should call sdaReadiness with empty response', fakeAsync(() => {
-
-		spyOn(service, 'getSDAReadinessCount')
-			.and
-			.returnValue(of([]));
-
-		component.loadData();
-		tick();
-		expect(service.getSDAReadinessCount)
-			.toHaveBeenCalled();
-	}));
-
-	it('should call getAllDevicesCount and getDnacCount on init', () => {
-		spyOn(component, 'getAllDevicesCount');
-		spyOn(component, 'getDnacCount');
-		component.ngOnInit();
-		expect(component.getAllDevicesCount)
-			.toHaveBeenCalled();
-		expect(component.getDnacCount)
-			.toHaveBeenCalled();
-	});
-
-	it('should throw errors', fakeAsync(() => {
-		const error = {
-			status: 404,
-			statusText: 'Resource not found',
-		};
-		spyOn(service, 'getSDAReadinessCount')
-			.and
-			.returnValue(
-				throwError(new HttpErrorResponse(error)),
-			);
-		component.loadData();
-		tick();
-		expect(component.getDevicesCount)
-			.toThrowError();
-	}));
 
 	it('should throw errors if data is empty', fakeAsync(() => {
 		const error = {

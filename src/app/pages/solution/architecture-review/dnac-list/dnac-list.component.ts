@@ -47,6 +47,7 @@ export class DnacListComponent implements OnInit {
 	public lastCollectionTime = '';
 	public params: IBullet =
 		{
+		  collectionId: '',
 		  customerId : '',
 		  dnacIP: '',
 		  page: 0,
@@ -67,9 +68,33 @@ export class DnacListComponent implements OnInit {
 	 * used to Intialize Table options
 	 */
 	public ngOnInit () {
-		this.getDnacList();
+		this.getCollectionId();
 		this.buildTable();
 	}
+
+	/**
+	 * Method to fetch collectionId
+	 */
+
+	public getCollectionId () {
+		this.architectureReviewService.getCollectionId()
+		.subscribe(res => {
+			this.params.collectionId = _.get(res, 'collection.collectionId');
+			if (this.params.collectionId !== undefined) {
+				this.getDnacList();
+				const datePipe = new DatePipe('en-US');
+				this.lastCollectionTime = datePipe
+										  .transform(res.collection.collectionDate, 'medium');
+			}
+		},
+		err => {
+			this.logger.error('Dnac list Component View' +
+				'  : getCollectionId() ' +
+				`:: Error : (${err.status}) ${err.message}`);
+			this.inValidResponseHandler();
+		});
+	}
+
 	/**
 	 * builds Table
 	 */
@@ -173,10 +198,8 @@ export class DnacListComponent implements OnInit {
 			if (!res) {
 				return this.inValidResponseHandler();
 			}
-			const datePipe = new DatePipe('en-US');
 			this.isLoading = false;
-			this.totalItems = res.TotalCounts;
-			this.lastCollectionTime = datePipe.transform(res.CollectionDate, 'medium');
+			this.totalItems = res.totalCount;
 			this.dnacDetailsResponse = res.dnacDetails;
 			this.tableEndIndex = (this.tableStartIndex + this.dnacDetailsResponse.length);
 		},

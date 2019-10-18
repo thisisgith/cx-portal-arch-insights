@@ -37,13 +37,13 @@ export class ArchitectureComponent implements OnInit {
 	public visualLabels = [
 		{
 			active: true,
-			count: null,
+			count: 0,
 			key: 'cbp-exception',
 			label: I18n.get('_ArchitectureBestPracticeRuleExceptions_'),
 		},
 		{
 			active: false,
-			count: null,
+			count: 0,
 			key: 'asset-exception',
 			label: I18n.get('_ArchitectureSystemsWithExceptions_'),
 		},
