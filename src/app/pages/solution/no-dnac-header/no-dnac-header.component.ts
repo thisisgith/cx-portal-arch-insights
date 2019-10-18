@@ -3,7 +3,11 @@ import {
 	Output, ViewChild,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { InventoryService, RacetrackSolution, RacetrackTechnology } from '@sdp-api';
+import {
+	ControlPointIERegistrationAPIService,
+	RacetrackSolution,
+	RacetrackTechnology,
+} from '@sdp-api';
 import { UtilsService, RacetrackInfoService } from '@services';
 import { empty, Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
@@ -14,7 +18,7 @@ import * as _ from 'lodash-es';
  */
 @Component({
 	host: {
-		class: 'panel panel--raised',
+		class: 'panel panel--dkgray',
 	},
 	selector: 'no-dnac-header',
 	styleUrls: ['./no-dnac-header.component.scss'],
@@ -43,7 +47,7 @@ export class NoDNACHeaderComponent implements OnDestroy, OnInit {
 	}
 	constructor (
 		@Inject('ENVIRONMENT') private env,
-		private inventoryService: InventoryService,
+		private cpService: ControlPointIERegistrationAPIService,
 		private route: ActivatedRoute,
 		private utils: UtilsService,
 		private racetrackInfoService: RacetrackInfoService,
@@ -100,17 +104,13 @@ export class NoDNACHeaderComponent implements OnDestroy, OnInit {
 	private checkNetworkElements () {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
-		this.inventoryService.getNetworkElements({
-			customerId: this.customerId,
-			solution: this.selectedSolutionName,
-			useCase: this.selectedTechnologyName,
-		})
+		this.cpService.getIESetupCompletionStatusUsingGET(this.customerId)
 		.pipe(
 			catchError(() => empty()),
 			takeUntil(this.destroyed$),
 		)
 		.subscribe(res => {
-			this.hasCXCollector = res.Pagination.total !== 0;
+			this.hasCXCollector = res.ieSetupCompleted;
 		});
 	}
 

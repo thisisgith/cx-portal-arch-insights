@@ -11,7 +11,6 @@ export interface IESetupStatusBarStep {
 	iconActiveSrc: SafeUrl;
 	iconInactiveSrc: SafeUrl;
 	isActive: () => boolean;
-	isVisited: () => boolean;
 	label: string;
 }
 
@@ -28,39 +27,43 @@ export class IESetupWizardStatusBar {
 	public steps: IESetupStatusBarStep[] = [
 		{
 			iconActiveSrc: this.sanitizer
-				.bypassSecurityTrustResourceUrl('assets/img/setup-ie/icons/icon-s1-on.svg'),
+				.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s1-on.png'),
 			iconInactiveSrc: this.sanitizer
-				.bypassSecurityTrustResourceUrl('assets/img/setup-ie/icons/icon-s1-off.svg'),
-			isActive: () => this.state === 'init',
-			isVisited: () => this.state !== 'init',
-			label: _.toUpper(I18n.get('_PreRequisites_')),
+				.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s1-off.png'),
+			isActive: () => this.state === SETUP_STATES.INIT,
+			label: _.toUpper(I18n.get('_PrepareToSetupCXPortal_')),
 		},
 		{
 			iconActiveSrc: this.sanitizer
-				.bypassSecurityTrustResourceUrl('assets/img/setup-ie/icons/icon-s2-on.svg'),
+				.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s2-on.png'),
 			iconInactiveSrc: this.sanitizer
-				.bypassSecurityTrustResourceUrl('assets/img/setup-ie/icons/icon-s2-off.svg'),
-			isActive: () => this.state === 'ova',
-			isVisited: () => this.state === 'ie' || this.state === 'collector',
-			label: _.toUpper(I18n.get('_VirtualMachine_')),
+				.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s2-off.png'),
+			isActive: () => this.state === SETUP_STATES.INSTALL,
+			label: _.toUpper(I18n.get('_InstallCXCollectorOnVM_')),
 		},
 		{
 			iconActiveSrc: this.sanitizer
-				.bypassSecurityTrustResourceUrl('assets/img/setup-ie/icons/icon-s3-on.svg'),
+				.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s3-on.png'),
 			iconInactiveSrc: this.sanitizer
-				.bypassSecurityTrustResourceUrl('assets/img/setup-ie/icons/icon-s3-off.svg'),
-			isActive: () => this.state === 'ie',
-			isVisited: () => this.state === 'collector',
-			label: _.toUpper(I18n.get('_CiscoCXCollector_')),
+				.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s3-off.png'),
+			isActive: () => this.state === SETUP_STATES.CONNECT_COLLECTOR,
+			label: _.toUpper(I18n.get('_ConnectVMToBrowser_')),
 		},
 		{
 			iconActiveSrc: this.sanitizer
-				.bypassSecurityTrustResourceUrl('assets/img/setup-ie/icons/icon-s4-on.svg'),
+				.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s4-on.png'),
 			iconInactiveSrc: this.sanitizer
-				.bypassSecurityTrustResourceUrl('assets/img/setup-ie/icons/icon-s4-off.svg'),
-			isActive: () => this.state === 'collector',
-			isVisited: () => this.state === 'collector',
-			label: _.toUpper(I18n.get('_CiscoDNACollector_')),
+				.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s4-off.png'),
+			isActive: () => this.state === SETUP_STATES.CONFIGURE_COLLECTOR,
+			label: _.toUpper(I18n.get('_ConfigureCXCollector_')),
+		},
+		{
+			iconActiveSrc: this.sanitizer
+				.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s5-on.png'),
+			iconInactiveSrc: this.sanitizer
+				.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s5-off.png'),
+			isActive: () => this.state === SETUP_STATES.CONNECT_DNAC,
+			label: _.toUpper(I18n.get('_ConnectDNAToCXCollector_')),
 		},
 	];
 	constructor (

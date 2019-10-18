@@ -1,25 +1,14 @@
 @import '../../../../variables.scss';
 
 :host {
-	background-color: rgba(255, 255, 255, 0.8) !important;
-	left: 0;
-	right: 0;
 	z-index: 1;
-	height: 148px !important;
-	margin-top: -146px !important;
+	min-height: 60px !important;
 
 	&.invisible { display: none; }
 
 	.btn {
 		min-width: 260px;
 		margin: auto;
-	}
-
-	.close-button {
-		cursor: pointer;
-		position: absolute;
-		top: 20px;
-		right: 30px;
 	}
 }
 
@@ -30,17 +19,16 @@
 
 .cx-no-dnac-label {
 	font-size: 26px;
-	color: $default-text-color;
+	color: $white;
 	line-height: 36px;
+	min-width: 260px;
+	margin-left: 10px;
 }
 
 .cx-no-dnac-status {
-	font-size: 20px;
-	color: #848484;
-	line-height: 36px;
+	color: $white;
 }
 
 .cx-no-dnac-description {
-	font-size: 20px;
 	color: #767676;
 }

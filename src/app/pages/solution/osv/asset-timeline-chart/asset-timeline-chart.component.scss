@@ -8,5 +8,7 @@
 
 	#timeline-chart .highcharts-tooltip > span {
 		background: $black;
+		color: $white !important;
+		font-size: 12px !important;
 	}
 }

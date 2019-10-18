@@ -75,23 +75,14 @@
 }
 
 :host {
-	.slide-container {
-		height: calc(100vh - 115px);
-		left: 300px;
-		overflow: auto;
-		position: relative;
-		width: calc(100vw - 300px);
-	}
-
 	.help-link {
-		position: absolute;
-		right: 30px;
-		top: 70px;
+		position: relative;
+		left: calc(100vw - 80px);
+		top: 11px;
 		cursor: pointer;
 	}
 }
 
 .setup-content {
-	background: #f7f8fc;
 	height: 100%;
 }

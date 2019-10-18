@@ -1,6 +1,7 @@
 export enum SETUP_STATES {
   INIT = 'init',
-  OVA = 'ova',
-  IE = 'ie',
-  COLLECTOR = 'collector',
+  INSTALL = 'install',
+  CONNECT_COLLECTOR = 'connect-collector',
+  CONFIGURE_COLLECTOR = 'configure-collector',
+  CONNECT_DNAC = 'connect-dnac',
 }

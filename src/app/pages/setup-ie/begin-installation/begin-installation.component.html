@@ -1,64 +1,161 @@
 <div class="text-center">
-	<h6
-		class="dbl-xl-margin-top text-primary base-margin-bottom"
-		[innerText]="('_StepXColonY_' | i18n:'1':('_Prerequisites_' | i18n)) | uppercase"
-	></h6>
-	<div [innerText]="'_ConnectDevicesToCX_' | i18n"
-		class="dbl-xl-margin-bottom step-title">
+	<div [innerText]="'_PrepareToSetUpCXPortal_' | i18n"
+		class="base-margin-bottom step-title">
 	</div>
+	<img
+		alt="Network Diagram"
+		class="architecture-diagram"
+		src="assets/img/setup-ie/diagram/1_prerequisites.png"/>
 
-	<div class="base-margin-bottom text-large">
-		<span [innerText]="'_InstallCiscoIE_' | i18n"></span>
-	</div>
-	<div class="xl-margin-bottom text-large">
-		<span [innerText]="'_YoullNeedAnEnvironment_' | i18n"></span>
-	</div>
-	<div class="flex-center xl-margin-bottom">
-		<div class="flex-center-vertical text-left col-md-3">
-			<img
-				class="base-margin-right"
-				type="image/svg+xml"
-				alt="Chip Icon"
-				src="assets/img/setup-ie/icons/icon-chip.svg">
-			<span class="text-large flex-fluid">
-				<span [innerText]="'_HasVMWare_' | i18n"></span>
-				<span	tabindex="0"
-				[attr.data-balloon]="'_VMWareTooltip_' | i18n"
-				data-balloon-break
-				data-balloon-pos="right">
-					<span class="half-margin-left icon-info-outline text-info"></span>
-				</span>
-			</span>
+	<section class="dbl-margin-top flex text-left">
+		<div class="col-2">
+			<div inlineSVG="assets/img/setup-ie/icons/cxcollector.svg" class="collector-icon"></div>
 		</div>
-		<div class="flex-center-vertical text-left col-md-3">
-			<img
-				class="base-margin-right"
-				type="image/svg+xml"
-				alt="List Icon"
-				src="assets/img/setup-ie/icons/icon-gblist.svg">
-			<span class="text-large flex-fluid"
-				  [innerText]="'_HasAtLeastReqs_' | i18n">
-			</span>
-		</div>
-		<div class="flex-center-vertical text-left col-md-3">
-			<img
-				class="base-margin-right"
-				type="image/svg+xml"
-				alt="WWW Icon"
-				src="assets/img/setup-ie/icons/icon-www.svg">
-			<span class="text-large flex-fluid"
-				  [innerText]="'_CanConnectTo_' | i18n">
-			</span>
-		</div>
-	</div>
-	<button
-		data-auto-id="get-started-btn"
-		class="btn cx-btn base-margin-right"
-		[innerText]="'_GetStarted_' | i18n | uppercase"
-		(click)="onBegin()">
-	</button>
 
-	<span [innerText]="'_PressEnter_' | i18n"
-		class="text-medium text-uppercase cx-text-gray">
-	</span>
+		<div class="info-section col-10">
+			<div class="base-margin-bottom info-section__title">
+				<span [innerText]="'_YoullNeedAHypervisor_' | i18n"></span>
+			</div>
+			<div class="half-margin-bottom">
+				<span [innerText]="'_CXCollectorRunsOn_' | i18n"></span>
+			</div>
+			<div class="flex-center dbl-margin-bottom">
+				<ul class="flex-fluid">
+					<li><span [innerText]="'_EitherOfTheFollowingHypervisors_' | i18n"></span>
+						<ul>
+							<li [innerText]="'_VMWareVersionReq_' | i18n"></li>
+							<li [innerText]="'_VirtualBoxVersionReq_' | i18n"></li>
+						</ul>
+					</li>
+					<li><span [innerText]="'_HypervisorReqs_' | i18n"></span>
+						<ul>
+							<li [innerText]="'_VMReqCPU_' | i18n"></li>
+							<li [innerText]="'_VMReqMem_' | i18n"></li>
+							<li [innerText]="'_VMReqDisk_' | i18n"></li>
+						</ul>
+					</li>
+					<li [innerText]="'_CanConnectTo_' | i18n"></li>
+					<li [innerText]="'_ForLocalManagement_' | i18n"></li>
+				</ul>
+			</div>
+
+			<div class="base-margin-bottom text-large">
+				<span [innerText]="'_OtherNotesOnCXCollector_' | i18n"></span>
+			</div>
+			<div class="flex-center xl-margin-bottom">
+				<ul class="flex-fluid">
+					<li [innerText]="'_DHCPIsSupported_' | i18n"></li>
+					<li [innerText]="'_OnlyIPv4IsSupported_' | i18n"></li>
+				</ul>
+			</div>
+			<!-- <h3 class="base-margin-bottom" [innerText]="'_Day0_Setup_1_' | i18n"></h3> -->
+			<!-- <div [innerText]="'_Day0_Setup_2_' | i18n"></div> -->
+			<!-- <ul> -->
+			<!-- 	<li class="base-margin-top" [innerText]="'_Day0_Setup_3_' | i18n"></li> -->
+			<!-- 	<li class="base-margin-top" [innerText]="'_Day0_Setup_4_' | i18n"></li> -->
+			<!-- 	<li class="base-margin-top" [innerText]="'_Day0_Setup_5_' | i18n"></li> -->
+			<!-- </ul> -->
+			<!-- <div -->
+			<!-- 	class="base-margin-top" -->
+			<!-- 	[innerText]="'_Day0_Setup_6_' | i18n" -->
+			<!-- ></div> -->
+			<!-- <ul> -->
+			<!-- 	<li class="base-margin-top" [innerText]="'_Day0_Setup_7_' | i18n"></li> -->
+			<!-- 	<li class="base-margin-top" [innerText]="'_Day0_Setup_8_' | i18n"></li> -->
+			<!-- 	<li class="base-margin-top" [innerText]="'_Day0_Setup_9_' | i18n"></li> -->
+			<!-- </ul> -->
+			<!-- <a routerLink="solution" class="base-margin-top"> -->
+			<!-- 	<span class="icon-help-outline qtr-margin-right"></span> -->
+			<!-- 	<span [innerText]="'_Day0_Setup_10_' | i18n"></span> -->
+			<!-- </a> -->
+		</div>
+	</section>
+
+	<section class="dbl-margin-top flex text-left">
+		<div class="info-section col-10">
+			<div class="base-margin-bottom info-section__title">
+				<span [innerText]="'_EnsureCiscoDNACenterSetUp_' | i18n"></span>
+			</div>
+			<div>
+				<span [innerText]="'_CXPortalRequiresDNAC_' | i18n"></span>
+			</div>
+			<!-- <div>
+				<span [innerText]="'_GetInfoSettingUpDNAC_' | i18n"></span>
+			</div> -->
+			<!-- <h3 -->
+			<!-- 	class="base-margin-bottom" -->
+			<!-- 	[innerText]="'_Day0_Setup_11_' | i18n"></h3> -->
+			<!-- <div -->
+			<!-- 	[innerText]="'_Day0_Setup_12_' | i18n"></div> -->
+			<!-- <a routerLink="solution" class="base-margin-top"> -->
+			<!-- 	<span class="icon-help-outline qtr-margin-right"></span> -->
+			<!-- 	<span [innerText]="'_Day0_Setup_13_' | i18n"></span> -->
+			<!-- </a> -->
+		</div>
+		<div class="col-2">
+			<div inlineSVG="assets/img/setup-ie/icons/dnaclogo.svg" class="dnac-icon"></div>
+		</div>
+	</section>
+
+	<section class="dbl-margin-top flex text-left">
+		<div class="col-2">
+			<div inlineSVG="assets/img/setup-ie/icons/icon-lock2.svg" class="lock-icon"></div>
+		</div>
+		<div class="info-section col-10">
+			<div class="base-margin-bottom info-section__title">
+				<span [innerText]="'_CXPortalSecurity_' | i18n"></span>
+			</div>
+			<div>
+				<span [innerText]="'_ConnectionBetweenCXPortal_' | i18n"></span>
+			</div>
+			<div>
+				<ul>
+					<li [innerText]="'_CXPortalSecurityPort_' | i18n"></li>
+					<li [innerText]="'_CXPortalSecurityEncrypt_' | i18n"></li>
+					<li [innerText]="'_CXPortalSecurityHTTPS_' | i18n"></li>
+					<li [innerText]="'_CXPortalSecurityCiphers_' | i18n"></li>
+					<li [innerText]="'_CXPortalSecurityTimeout_' | i18n"></li>
+					<li [innerText]="'_CXPortalSecurityCreds_' | i18n"></li>
+				</ul>
+			</div>
+			<!-- <h3 [innerText]="'_Day0_Setup_14_' | i18n"></h3> -->
+			<!-- <div class="base-margin-top" [innerText]="'_Day0_Setup_15_' | i18n"></div> -->
+			<!-- <ul> -->
+			<!-- 	<li class="base-margin-top" [innerText]="'_Day0_Setup_16_' | i18n"></li> -->
+			<!-- 	<li class="base-margin-top" [innerText]="'_Day0_Setup_17_' | i18n"></li> -->
+			<!-- 	<li class="base-margin-top" [innerText]="'_Day0_Setup_18_' | i18n"></li> -->
+			<!-- 	<li class="base-margin-top" [innerText]="'_Day0_Setup_19_' | i18n"></li> -->
+			<!-- 	<li class="base-margin-top" [innerText]="'_Day0_Setup_20_' | i18n"></li> -->
+			<!-- 	<li class="base-margin-top" [innerText]="'_Day0_Setup_21_' | i18n"></li> -->
+			<!-- </ul> -->
+		</div>
+	</section>
+
+	<!-- <section class="dbl-margin-top flex text-left"> -->
+	<!-- 	<div class="info-section col-10"> -->
+	<!-- 		<h3 -->
+	<!-- 			class="base-margin-bottom" -->
+	<!-- 			[innerText]="'_Day0_Setup_22_' | i18n"></h3> -->
+	<!-- 		<div -->
+	<!-- 			class=" base-margin-bottom" -->
+	<!-- 			[innerText]="'_Day0_Setup_23_' | i18n"></div> -->
+	<!-- 		<div -->
+	<!-- 			[innerText]="'_Day0_Setup_24_' | i18n"></div> -->
+	<!-- 	</div> -->
+	<!-- 	<div class="col-2"> -->
+	<!-- 	</div> -->
+	<!-- </section> -->
+
+	<div class="flex-center dbl-margin-top">
+		<button
+			data-auto-id="get-started-btn"
+			class="btn cx-btn base-margin-right"
+			[innerText]="'_Continue_' | i18n | uppercase"
+			(click)="onBegin()">
+		</button>
+
+		<span [innerText]="'_PressEnter_' | i18n"
+			class="text-medium text-uppercase cx-text-gray">
+		</span>
+	</div>
 </div>

@@ -10,6 +10,7 @@ import { RegisterCollectorService } from '../register-collector/register-collect
 import { SetupIEService } from '../setup-ie.service';
 import { NoDNACComponent } from '../no-dnac/no-dnac.component';
 import { UtilsService } from '@services';
+import { ControlPointIERegistrationAPIService } from '@sdp-api';
 import * as _ from 'lodash-es';
 
 /**
@@ -22,12 +23,14 @@ import * as _ from 'lodash-es';
 })
 export class ConnectDNACenterComponent implements OnInit, SetupStep {
 	@Output('onStepComplete') public onStepComplete = new EventEmitter<SetupComponent[]>();
+	@Output() public goBack = new EventEmitter<number>();
 	public hasVirtualAccount = false;
 	public virtualAccounts = [];
 	public error: boolean;
 	public passwordError: boolean;
 	public loading: boolean;
 	public promptForCreds: boolean;
+	private customerId: string;
 
 	public accountForm = new FormGroup({
 		ipAddress: new FormControl(null, [
@@ -48,13 +51,17 @@ export class ConnectDNACenterComponent implements OnInit, SetupStep {
 
 	constructor (
 		@Inject('ENVIRONMENT') private env,
+		private cpService: ControlPointIERegistrationAPIService,
 		private route: ActivatedRoute,
 		private router: Router,
 		private registerService: RegisterCollectorService,
 		private setupService: SetupIEService,
 		private state: SetupIEStateService,
 		private utils: UtilsService,
-	) { }
+	) {
+		const user = _.get(this.route, ['snapshot', 'data', 'user']);
+		this.customerId = _.get(user, ['info', 'customerId']);
+	}
 
 	/**
 	 * NgOnInit
@@ -70,10 +77,7 @@ export class ConnectDNACenterComponent implements OnInit, SetupStep {
 			} else {
 				// if no ip in queryParams, go to previous page
 				this.state.clearState();
-				this.router.navigate([], {
-					queryParams: { compKey: '5' },
-					queryParamsHandling: 'merge',
-				});
+				this.goBack.emit(3);
 			}
 		}
 		this.loading = true;
@@ -86,7 +90,7 @@ export class ConnectDNACenterComponent implements OnInit, SetupStep {
 				if (!hasDNAC) {
 					this.onStepComplete.emit([
 						{
-							state: SETUP_STATES.COLLECTOR,
+							state: SETUP_STATES.CONNECT_DNAC,
 							type: NoDNACComponent,
 						},
 					]);
@@ -112,7 +116,6 @@ export class ConnectDNACenterComponent implements OnInit, SetupStep {
 			// try to get a new auth token
 			this.reAuthorize()
 				.pipe(
-					finalize(() => this.loading = false),
 					mergeMap(() => this.register()
 						.pipe(
 							catchError(() => {
@@ -122,13 +125,26 @@ export class ConnectDNACenterComponent implements OnInit, SetupStep {
 								return empty();
 							}),
 						)),
+					mergeMap(() => this.cpService
+						.updateRegistrationCompletionUsingPOST({
+							completed: true,
+							customerId: this.customerId,
+						})
+						.pipe(
+							catchError(() => {
+								this.onStepComplete.emit(); // continue even if an error occurs
+
+								return empty();
+							}),
+						)),
 					takeUntil(this.destroyed$),
 				)
-				.subscribe();
+				.subscribe(() => {
+					this.onStepComplete.emit();
+				});
 		} else {
 			this.register()
 				.pipe(
-					finalize(() => this.loading = false),
 					catchError(() => {
 						// CX Collector token may have expired, so prompt for credentials
 						this.promptForCreds = true;
@@ -136,14 +152,21 @@ export class ConnectDNACenterComponent implements OnInit, SetupStep {
 
 						return empty();
 					}),
+					mergeMap(() => this.cpService
+						.updateRegistrationCompletionUsingPOST({
+							completed: true,
+							customerId: this.customerId,
+						})
+						.pipe(
+							catchError(() => {
+								this.onStepComplete.emit(); // continue even if an error occurs
+
+								return empty();
+							}),
+						)),
 					takeUntil(this.destroyed$),
 				)
 				.subscribe(() => {
-					// finished last step so hide the setup banner on the home page
-					this.utils.setLocalStorage(
-						this.env.ieSetup.CX_Coll_Reg_LS_KEY,
-						{ registered: true },
-					);
 					this.onStepComplete.emit();
 				});
 		}

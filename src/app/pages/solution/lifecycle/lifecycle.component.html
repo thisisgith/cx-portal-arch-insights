@@ -115,7 +115,7 @@
 			<div class="actionname flex-center-vertical qtr-padding" [ngClass]="{selected: action.selected}">
 				<div class="half-margin-right flex-center-vertical">
 					<label class="checkbox"
-						[ngClass]="{'disabled': action.action.isComplete || currentWorkingPitstop !== currentPitstop.name || !action.action.manualCheckAllowed }"
+						[ngClass]="{'disabled': currentWorkingPitstop !== currentPitstop.name || !action.action.manualCheckAllowed }"
 						data-auto-id="pitstopCheckboxLabel">
 						<input data-auto-id="pitstopCheckbox"
 							type="checkbox"
@@ -176,7 +176,10 @@
 
 <ng-template #atxPanel let-data="data">
 	<div class="cx-lifecycle-card--subtitle base-margin-bottom" [innerText]="'_TrainingWebinars_' | i18n"></div>
-	<ng-container *ngIf="data.recommended">
+	<ng-container *ngIf="data.sessions.length === 0">
+		<i class="cx-lifecycle-card--subtitle" [innerText]="'_NoSessionsPublished_' | i18n" data-auto-id="NoSessionsPublished-Message"></i>
+	</ng-container>
+	<ng-container *ngIf="data.sessions.length > 0 && data.recommended">
 		<ng-container *ngTemplateOutlet="recommended; context: {
 				template: recommendedATX,
 				hoverTemplate: atxHover,
@@ -540,6 +543,13 @@
 		</div>
 		<div class="session-table responsive-table">
 			<table class="table table--nostripes table--selectable">
+				<thead>
+					<tr>
+						<td [innerText]="'_Date_' | i18n"></td>
+						<td class="table__head-spacer"></td>
+						<td [innerText]="'_Presenter_' | i18n"></td>
+					</tr>
+				</thead>
 				<tbody>
 					<tr class="session-table-row">
 						<th></th>
@@ -557,12 +567,10 @@
 						<td class="text-size-14 icon">
 							<span class="icon-check" *ngIf="session.scheduled"></span>
 						</td>
-						<td class="text-xsmall no-padding-left"
+						<td class="no-padding-left"
 							innerText="{{session.sessionStartDate | date:'EEE MMM d, y'}}"></td>
-						<td class="text-xsmall"
-							innerText="{{session.sessionStartDate | date:'shortTime'}}"></td>
-						<td class="text-xsmall"
-							[innerText]="session.presenterName"></td>
+						<td innerText="{{session.sessionStartDate | date:'shortTime'}}"></td>
+						<td [innerText]="session.presenterName"></td>
 					</tr>
 				</tbody>
 			</table>
@@ -587,6 +595,9 @@
 
 <ng-template #accPanel let-data="data">
 	<div class="cx-lifecycle-card--subtitle base-margin-bottom" [innerText]="'_1on1Coaching_' | i18n"></div>
+	<ng-container *ngIf="data.sessions.length === 0">
+		<i class="cx-lifecycle-card--subtitle" [innerText]="'_NoSessionsPublished_' | i18n" data-auto-id="NoSessionsPublished-Message"></i>
+	</ng-container>
 	<ng-container *ngIf="data.sessions[0]">
 		<ng-container *ngTemplateOutlet="recommended; context: {
 				template: recommendedACC,
@@ -695,6 +706,7 @@
 		<span class="icon-{{ icon }}"></span>
 		<span class="text-uppercase" [innerText]="title | i18n"></span>
 		<div class="view-all pull-right toggle"
+			[ngClass]="{'hide': data?.length === 0}"
 			*ngIf="data">
 			<a class="no-link show"
 				(click)="crossLaunch(link)"
@@ -703,6 +715,9 @@
 				<span class="text-med" [innerText]="'_ViewAll_' | i18n"></span>
 				<span class="icon-play"></span>
 			</a>
+		</div>
+		<div class="cx-lifecycle-card--subtitle base-margin-top" *ngIf="data?.length === 0">
+			<i [innerText]="'_NoContentAvailable_' | i18n" data-auto-id="NoContentAvailable-Message"></i>
 		</div>
 	</div>
 	<div>
@@ -814,8 +829,8 @@
 								[label]="'_FilterBy_' | i18n"
 								[inline]="true"
 								data-auto-id="acc-filter"
-								[items]="statusOptions"
-								[placeholder]="getStatusOptionName(selectedFilterForACC)"
+								[items]="accStatusOptions"
+								[placeholder]="getStatusOptionName(selectedFilterForACC, accStatusOptions)"
 								[(ngModel)]="selectedFilterForACC"
 								(ngModelChange)="selectFilter('ACC')">
 							</cui-select>
@@ -846,10 +861,10 @@
 						<div class="modal__body__filter">
 							<cui-select class="lifecycle-filter"
 								data-auto-id="atx-filter"
-								[items]="statusOptions"
+								[items]="atxStatusOptions"
 								[label]="'_FilterBy_' | i18n"
 								[inline]="true"
-								[placeholder]="getStatusOptionName(selectedFilterForATX)"
+								[placeholder]="getStatusOptionName(selectedFilterForATX, atxStatusOptions)"
 								[(ngModel)]="selectedFilterForATX"
 								(ngModelChange)="selectFilter('ATX')">
 							</cui-select>
@@ -883,7 +898,7 @@
 								[items]="categoryOptions"
 								[label]="'_FilterBy_' | i18n"
 								[inline]="true"
-								[placeholder]="getStatusOptionName(selectedFilterForSB)"
+								[placeholder]="getStatusOptionName(selectedFilterForSB, categoryOptions)"
 								[(ngModel)]="selectedFilterForSB"
 								(ngModelChange)="selectFilter('SB')">
 							</cui-select>
@@ -917,7 +932,7 @@
 								[items]="pgCategoryOptions"
 								[label]="'_FilterBy_' | i18n"
 								[inline]="true"
-								[placeholder]="getStatusOptionName(selectedFilterForPG)"
+								[placeholder]="getStatusOptionName(selectedFilterForPG, pgCategoryOptions)"
 								[(ngModel)]="selectedFilterForPG"
 								(ngModelChange)="selectFilter('PG')">
 							</cui-select>
@@ -1423,11 +1438,11 @@
 </ng-template>
 
 <ng-template #panel let-template="template" let-title="title" let-loading="loading" let-data="data" let-viewAll="viewAll" let-viewAllLabel="viewAllLabel" let-icon="icon">
-	<div class="cx-lifecycle-card panel base-padding-left base-padding-right panel-border-top" attr.data-auto-id="{{ title | i18n }} Panel" *ngIf="viewAll!=='acc' || data?.sessions?.length>0">
+	<div class="cx-lifecycle-card panel base-padding-left base-padding-right panel-border-top" attr.data-auto-id="{{ title | i18n }} Panel">
 		<div class="qtr-padding-bottom">
 			<span class="icon-{{ icon }}" *ngIf="icon"></span>
 			<span class="cx-lifecycle-card--title text-uppercase" [innerText]="title | i18n" attr.data-auto-id="PanelTitle-{{title}}"></span>
-			<div class="view-all pull-right toggle" *ngIf="viewAll">
+			<div class="view-all pull-right toggle" [ngClass]="{'hide': data?.sessions?.length === 0}" *ngIf="viewAll">
 				<div  *ngIf="data"
 					(click)="showModal(viewAll)"
 					attr.data-auto-id="ShowModalPanel-{{ title }}">

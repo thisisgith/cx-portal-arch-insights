@@ -37,8 +37,8 @@ export const environment = {
 	emailToID: 'cx-portal-support@cisco.com',
 	feedbackToEmail: 'cxportal-feedback@cisco.com',
 	ieSetup: {
-		asdAuthURL: 'https://cway.cisco.com/ws/oauth/v3/token/cisco/ae95x38c7zgu5fas59gseyfk',
-		asdBaseURL: 'https://api.cisco.com/software/preview/v3.0',
+		asdAuthURL: 'https://cway.cisco.com/ws/oauth/v3/token/cisco/hbt89b3akgm88sscja2mcswe',
+		asdBaseURL: 'https://api.cisco.com/software/v3.0',
 		CX_Coll_Reg_LS_KEY: 'cxportal.cisco.com:setup-ie:HAS_CX_COLLECTOR',
 		cxCollectorUserGuideLink: 'https://www.cisco.com/c/dam/en/us/support/docs/cloud-' +
 			'systems-management/Cisco-CX-Collector/CX_Collector_FAQ_TB_Guide.pdf',

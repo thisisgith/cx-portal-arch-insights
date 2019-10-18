@@ -717,7 +717,7 @@ describe('LifecycleComponent', () => {
 				.toEqual('panel listpanel--open');
 
 			expect(component.getTitle('ATX'))
-				.toEqual('Ask The Experts');
+				.toEqual('Ask the Experts');
 
 			expect(component.getSubtitle('ATX'))
 				.toEqual('Interactive webinars available live or on-demand');

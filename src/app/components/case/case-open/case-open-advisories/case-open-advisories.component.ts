@@ -37,7 +37,7 @@ export class CaseOpenAdvisoriesComponent
 	@Input() public type: AdvisoryType;
 	@ViewChild('techForm', { static: false }) public techForm: TechFormComponent;
 	public titles = {
-		bug: '_CriticalBug_',
+		bug: '_PriorityBug_',
 		field: '_CiscoFieldNotice_',
 		security: '_CiscoSecurityAdvisory_',
 	};

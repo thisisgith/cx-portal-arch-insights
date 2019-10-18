@@ -125,7 +125,7 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 			columns: [
 				{
 					key: 'DeviceHost',
-					name: I18n.get('_Assets_'),
+					name: I18n.get('_SyslogSystemName_'),
 					sortable: true,
 				},
 				{
@@ -134,23 +134,18 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 					sortable: true,
 				},
 				{
-					key: 'ProductFamily',
-					name: I18n.get('_ProductFamily_'),
-					sortable: true,
-				},
-				{
 					key: 'SoftwareType',
-					name: I18n.get('_Software_'),
+					name: I18n.get('_SyslogSoftware_'),
 					sortable: true,
 				},
 				{
 					key: 'SoftwareVersion',
-					name: I18n.get('_SoftwareVersion_'),
+					name: I18n.get('_SyslogSoftwareVersion_'),
 					sortable: true,
 				},
 				{
 					key: 'syslogCount',
-					name: I18n.get('_SyslogUniqueSyslogCount_'),
+					name: I18n.get('_SyslogUniqueSyslog_'),
 					sortable: true,
 				},
 			],

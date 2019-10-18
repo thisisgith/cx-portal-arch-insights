@@ -382,7 +382,16 @@ describe('Racetrack Content', () => {
 				cy.getByAutoId('pitstopCheckboxSpan')
 					.eq(index)
 					.click({ force: true });
-				cy.wait('@putActionStatus');
+				// Verify the PUT body contents
+				cy.wait('@putActionStatus').its('request.body').then(body => {
+					expect(body.actionComplete).to.eq(true);
+					expect(body.buId).to.eq('2431199');
+					expect(body.customerId).to.eq('2431199');
+					expect(body.pitstop).to.eq('Onboard');
+					expect(body.pitstopAction).to.eq(`Manual Checkable Item ${index + 1}`);
+					expect(body.solution).to.eq('IBN');
+					expect(body.technology).to.eq('Campus Network Assurance');
+				});
 			});
 		});
 
@@ -482,14 +491,28 @@ describe('Racetrack Content', () => {
 			});
 		});
 
-		it('Pitstop actions that are checked should not be un-checkable', () => {
+		it('PBC-1022: Pitstop actions that are checked should be un-checkable', () => {
+			// As of PBC-1022, users are now allowed to uncheck pitstopActions items
 			// Switch mocks and refresh the checkboxes
 			infoMock.enable('(Racetrack) IBN-Assurance-Onboard-allCompleted');
 			cy.loadApp();
 			cy.waitForAppLoading();
 
-			cy.getByAutoId('pitstopCheckboxLabel').each($checkbox => {
-				cy.wrap($checkbox).should('have.class', 'disabled');
+			cy.getByAutoId('pitstopCheckboxLabel').each(($checkbox, index) => {
+				cy.getByAutoId('pitstopCheckboxLabel')
+					.eq(index)
+					.should('not.have.class', 'disabled')
+					.click({ force: true });
+				// Verify the PUT body contents
+				cy.wait('@putActionStatus').its('request.body').then(body => {
+					expect(body.actionComplete).to.eq(false);
+					expect(body.buId).to.eq('2431199');
+					expect(body.customerId).to.eq('2431199');
+					expect(body.pitstop).to.eq('Onboard');
+					expect(body.pitstopAction).to.eq(`Completed Item ${index + 1}`);
+					expect(body.solution).to.eq('IBN');
+					expect(body.technology).to.eq('Campus Network Assurance');
+				});
 			});
 		});
 

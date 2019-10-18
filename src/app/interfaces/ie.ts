@@ -7,9 +7,11 @@ import { SETUP_STATES } from '@classes';
  * onStepComplete() fires when the step is done and the next one should be paged to.
  */
 export interface SetupStep {
+	goBack?: EventEmitter<number>;
 	inputs?: object;
-	onStepComplete: EventEmitter<void | SetupComponent[]>;
 	ngOnChanges?: () => void;
+	onStepComplete: EventEmitter<void | SetupComponent[]>;
+	onStepCompleteInsert?: EventEmitter<OnStepCompleteInsertOptions>;
 }
 
 /**
@@ -19,4 +21,12 @@ export interface SetupComponent {
 	type: any;
 	state: SETUP_STATES;
 	inputs?: object;
+}
+
+/**
+ * Interface representing inputs for the onStepCompleteInsert event handler
+ */
+export interface OnStepCompleteInsertOptions {
+	steps: SetupComponent[];
+	offset: number;
 }

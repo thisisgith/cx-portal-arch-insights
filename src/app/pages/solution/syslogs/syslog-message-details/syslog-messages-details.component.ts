@@ -146,7 +146,7 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 			columns: [
 				{
 					key: 'DeviceHost',
-					name: I18n.get('_SyslogAsset_'),
+					name: I18n.get('_SyslogSystemName_'),
 					sortable: true,
 				},
 				{
@@ -155,18 +155,13 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 					template: this.prodId,
 				},
 				{
-					name: I18n.get('_ProductFamily_'),
-					sortable: true,
-					template: this.prodFamily,
-				},
-				{
 					key: 'SoftwareType',
-					name: I18n.get('_Software_'),
+					name: I18n.get('_SyslogSoftware_'),
 					sortable: true,
 				},
 				{
 					key: 'SoftwareVersion',
-					name: I18n.get('_SoftwareVersion_'),
+					name: I18n.get('_SyslogSoftwareVersion_'),
 					sortable: true,
 				},
 			],

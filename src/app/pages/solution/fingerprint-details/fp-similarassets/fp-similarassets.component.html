@@ -8,7 +8,7 @@
 	<form [formGroup]="requestForm" class="row">
 		<div class="col-6">
 			<div
-				class="text-medium text-bold base-padding-bottom"
+				class="text-medium half-padding-bottom text-color-black"
 				[innerText]="'_CP_SimilarityCriteria_' | i18n"
 			></div>
 			<div class="form-group form-group--inline">
@@ -16,7 +16,7 @@
 					<input
 						type="radio"
 						formControlName="similarityCriteria"
-						value="fingerprint"
+						value="softwares_features"
 						[(ngModel)]="similarityCriteria"
 						data-auto-id="SimilarityCriteriaFingerprint"
 					/>
@@ -44,125 +44,12 @@
 				</label>
 			</div>
 		</div>
-		<div class="col-3">
-			<label
-				class="text-medium text-bold"
-				for="input-size-compressed-match text-medium"
-				[innerText]="'_CP_MinimumMatch_' | i18n"
-			></label>
-			<div class="half-padding-top row">
-				<div
-					class="form-group input--compressed col-8 no-padding-right"
-				>
-					<div class="form-group__text">
-						<input
-							id="input-size-compressed-match"
-							type="number"
-							min="1"
-							max="100"
-							formControlName="minMatch"
-							autocomplete="off"
-						/>
-					</div>
-					<div
-						class="form-group__help text-danger"
-						role="alert"
-						*ngIf="
-							minMatch.invalid &&
-							(minMatch.dirty || minMatch.touched)
-						"
-					>
-						<span class="icon-error"></span>
-						<span
-							*ngIf="!!minMatch.errors.required"
-							[innerText]="'_CP_MinimumMatch_Required' | i18n"
-						></span>
-						<span
-							*ngIf="!!minMatch.errors.min"
-							[innerText]="
-								'_CP_MinimumMatch_Validation_Minimum' | i18n
-							"
-						></span>
-						<span
-							*ngIf="!!minMatch.errors.max"
-							[innerText]="
-								'_CP_MinimumMatch_Validation_Maximum' | i18n
-							"
-						></span>
-						<span
-							*ngIf="!!minMatch.errors.pattern"
-							[innerText]="'_CP_Decimal_Invalid_' | i18n"
-						></span>
-					</div>
-				</div>
-				<div class="col-3 no-padding-left text-center qtr-padding-top">
-					<span class="percent-symbol"></span>
-				</div>
-			</div>
-		</div>
-		<div class="col-3">
-			<label
-				class="text-medium text-bold"
-				for="input-size-compressed-count text-medium"
-				[innerText]="'_CP_Compareupto_' | i18n"
-			></label>
-			<div class="half-padding-top row">
-				<div class="form-group input--compressed col-8">
-					<div class="form-group__text">
-						<input
-							id="input-size-compressed-count"
-							type="number"
-							min="0"
-							max="1000"
-							formControlName="deviceCount"
-							autocomplete="off"
-						/>
-					</div>
-					<div
-						class="form-group__help text-danger"
-						role="alert"
-						*ngIf="
-							deviceCount.invalid &&
-							(deviceCount.dirty || deviceCount.touched)
-						"
-					>
-						<span class="icon-error"></span>
-						<span
-							*ngIf="!!deviceCount.errors.required"
-							[innerText]="'_CP_DeviceCount_Required' | i18n"
-						></span>
-						<span
-							*ngIf="!!deviceCount.errors.min"
-							[innerText]="
-								'_CP_DeviceCount_Validation_Minimum' | i18n
-							"
-						></span>
-						<span
-							*ngIf="!!deviceCount.errors.max"
-							[innerText]="
-								'_CP_DeviceCount_Validation_Maximum' | i18n
-							"
-						></span>
-						<span
-							*ngIf="!!deviceCount.errors.pattern"
-							[innerText]="'_CP_Decimal_Invalid_' | i18n"
-						></span>
-					</div>
-				</div>
-				<div class="col-3">
-					<span
-						[innerText]="'_Systems_' | i18n | lowercase"
-						class="pull-left qtr-padding-top"
-					></span>
-				</div>
-			</div>
-		</div>
 	</form>
 </div>
 <div class="row flex">
 	<div
 		*ngIf="!seriesDataLoading; else loadingTemplate"
-		class="container base-margin-top"
+		class="container"
 		data-auto-id="similar-assets-table"
 	>
 		<cui-table
@@ -172,16 +59,6 @@
 			[offset]="page"
 			*ngIf="!noData; else noDataTemplate"
 		></cui-table>
-		<div class="section">
-			<cui-pager
-				[page]="page"
-				[limit]="size"
-				[bordered]="true"
-				[totalItems]="similarDevicesData?.count"
-				(onPageChanged)="onPagerUpdated($event)"
-				*ngIf="!noData"
-			></cui-pager>
-		</div>
 	</div>
 	<!-- grid-section ends -->
 </div>
@@ -211,7 +88,7 @@
 		<a
 		(click)="showDeviceComparison(item)"
 		data-auto-id="CompareButton"
-		[innerText]="'_CP_Compare_' | i18n"
+		[innerText]="'_CP_Compare_' | i18n | lowercase"
 		class="gt-symbol text-right"
 		></a>
 	</div>

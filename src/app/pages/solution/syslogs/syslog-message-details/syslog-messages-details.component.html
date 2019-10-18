@@ -8,7 +8,7 @@
 	</div>
 	<span [innerText]="asset?.Recommendation"></span>
 	<div *ngIf="asset" class="text-uppercase half-margin-top">
-		<span [innerText]="'_SyslogImpactedAssets_' | i18n " class="text-large"></span>
+		<span [innerText]="'_SyslogAffectedSystems_' | i18n " class="text-large"></span>
 		<span [innerText]="- asset.deviceCount "></span>
 	</div>
 </div>
@@ -17,7 +17,7 @@
 		<span [innerText]="'_SyslogFilter_' | i18n "></span>
 	</div>
 	<div class="row half-margin-bottom ">
-		<div class="col-3">
+		<div class="col-4">
 			<cui-select 
 			data-auto-id="productID"
 			label="{{'_SyslogProdutId_' | i18n}}" 
@@ -29,7 +29,7 @@
 			[empty]="true">
 			</cui-select>
 		</div>
-		<div class="col-3">
+		<div class="col-4">
 			<cui-select 
 			data-auto-id="Software" 
 			label="{{'_SyslogSoftware_' | i18n}}" 
@@ -41,19 +41,7 @@
 			[empty]="true">
 			</cui-select>
 		</div>
-		<div class="col-3">
-			<cui-select 
-			data-auto-id="productFamily" 
-			label="{{'_SyslogProductFamily_' | i18n}}" 
-			[(ngModel)]="selectDropDown.productFamily"
-			(ngModelChange)="onSelection()" 
-			[items]="productFamily" 
-			optionsKey="value" 
-			optionsValue="value"
-			[empty]="true">
-			</cui-select>
-		</div>
-		<div class="col-3">
+		<div class="col-4">
 			<cui-select 
 			data-auto-id="timePeriod" 
 			label="{{'_SyslogTimePeriod_' | i18n}}" 

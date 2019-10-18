@@ -14,7 +14,7 @@ export {
 	Tech,
 } from './case';
 export { Contract } from './contract';
-export { SetupStep, SetupComponent } from './ie';
+export { OnStepCompleteInsertOptions, SetupStep, SetupComponent } from './ie';
 export {
 	LaborLine,
 	PartsLineDetail,

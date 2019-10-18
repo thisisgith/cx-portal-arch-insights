@@ -509,7 +509,7 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 					loading: true,
 					seriesData: [],
 					template: this.assetFilterTemplate,
-					title: I18n.get('_SyslogAsset_'),
+					title: I18n.get('_SyslogSystem_'),
 					view: ['syslogMessage', 'syslogAsset'],
 				});
 		  }

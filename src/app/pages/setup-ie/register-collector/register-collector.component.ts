@@ -144,6 +144,7 @@ function proxyHostValidator (control: FormControl) {
 })
 export class RegisterCollectorComponent implements OnDestroy, OnInit, SetupStep {
 	@Output('onStepComplete') public onStepComplete = new EventEmitter<void>();
+	@Output() public goBack = new EventEmitter<number>();
 	public error: string;
 	public hasVirtualAccount = false;
 	public loading = false;
@@ -247,10 +248,7 @@ export class RegisterCollectorComponent implements OnDestroy, OnInit, SetupStep 
 			} else {
 				// if no ip in queryParams, go to previous page
 				this.state.clearState();
-				this.router.navigate([], {
-					queryParams: { compKey: '5' },
-					queryParamsHandling: 'merge',
-				});
+				this.goBack.emit(2);
 			}
 		}
 		// get the user info on init (need customerId for download post)
