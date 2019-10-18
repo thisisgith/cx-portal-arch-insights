@@ -671,6 +671,8 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 		position: relative;
 
 		&:hover {
+			color: $accent-dark-blue;
+
 			.hover-panel {
 				display: block;
 
@@ -1754,8 +1756,12 @@ tr.td-row td {
 		display: inline-block;
 		position: relative;
 
-		&:hover .hover-panel {
-			display: block;
+		&:hover {
+			color: $accent-dark-blue !important;
+
+			.hover-panel {
+				display: block;
+			}
 		}
 	}
 
