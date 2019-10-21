@@ -2559,7 +2559,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 					cy.getByAutoId('moreACCList-item')
 						.eq(index - 1)
 						.within(() => {
-							cy.getByAutoId('ATXMoreClick-Provider')
+							cy.getByAutoId('moreACCList-Provider')
 								.should('have.text', `${i18n._By_}${acc.providerInfo.name}`);
 						});
 				}
@@ -2577,7 +2577,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			cy.getByAutoId('moreACCList-item')
 				.first()
 				.within(() => {
-					cy.getByAutoId('ATXMoreClick-Provider')
+					cy.getByAutoId('moreACCList-Provider')
 						.should('have.text', `${i18n._By_}${twoWithPartnerItems[1].providerInfo.name}`);
 				});
 		});
@@ -2595,7 +2595,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			cy.getByAutoId('moreACCList-item')
 				.first()
 				.within(() => {
-					cy.getByAutoId('ATXMoreClick-Provider')
+					cy.getByAutoId('moreACCList-Provider')
 						.and('have.text', '');
 				});
 		});
