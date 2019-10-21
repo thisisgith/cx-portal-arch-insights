@@ -619,11 +619,11 @@
 				<div class="col-md-11">
 					<div id="{{ autoid }}-item" class="panel small-panel">
 						<div class="text-blue cx-lifecycle-card__more-link" 
-							data-auto-id="ATXMoreClick"
+							attr.data-auto-id="{{ autoid }}-Click"
 							(click)="atxMoreSelect(item, autoid, moreList)"
 						>
 							{{ item.title }}
-							<p class="cx-lifecycle-card__by-text text-muted" [innerText]="getProviderName(item)" data-auto-id="ATXMoreClick-Provider"></p>
+							<p class="cx-lifecycle-card__by-text text-muted" [innerText]="getProviderName(item)" attr.data-auto-id="{{ autoid }}-Provider"></p>
 							<ng-container *ngIf="autoid==='moreACCList'">
 								<ng-container *ngTemplateOutlet="accHover; context: {
 									title: item.title,
