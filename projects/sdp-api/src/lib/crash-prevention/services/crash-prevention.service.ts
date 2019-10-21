@@ -74,7 +74,7 @@ class CrashPreventionService extends __BaseService {
     let __body: any = null;
     let pfURL: string = '';
     if (params.customerId != null && params.customerId != '') {
-      pfURL = this.rootUrl + `${CrashPreventionService.getDeviceInfoPath}` + params.customerId + '/' + encodeURIComponent(params.deviceId) + '/';
+      pfURL = this.rootUrl + `${CrashPreventionService.getDeviceInfoPath}` + params.customerId + '/' + btoa(params.deviceId) + '/';
     }
     let req = new HttpRequest<any>(
       'GET',
@@ -144,7 +144,7 @@ class CrashPreventionService extends __BaseService {
     let pfURL: string = '';
 
     if (params.customerId != null && params.customerId != '') {
-      pfURL = this.rootUrl + `${CrashPreventionService.getListdevicePath}` + params.customerId + '/' + encodeURIComponent(params.productId) + '/';
+      pfURL = this.rootUrl + `${CrashPreventionService.getListdevicePath}` + params.customerId + '/' + btoa(params.productId) + '/';
     }
 
     let req = new HttpRequest<any>(
