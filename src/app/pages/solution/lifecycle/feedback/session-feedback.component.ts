@@ -3,6 +3,7 @@ import {
 	OnDestroy,
 	OnInit,
 	Input,
+	ElementRef,
 } from '@angular/core';
 import { LogService } from '@cisco-ngx/cui-services';
 import {
@@ -26,6 +27,23 @@ enum FeedbackThumbs {
 }
 
 /**
+ * Interface for popup style properties
+ */
+interface PopupStyle {
+	left?: string;
+	right?: string;
+	height: string;
+	width: string;
+}
+
+/** Popup height */
+const POPUP_HEIGHT = 270;
+/** Popup width */
+const POPUP_WIDTH = 530;
+/** Popup tail width */
+const POPUP_TAIL_WIDTH = 10;
+
+/**
  * Feedback component for ATX/ACC sessions
  */
 @Component({
@@ -46,12 +64,19 @@ export class SessionFeedbackComponent implements OnDestroy, OnInit {
 	public destroy$ = new Subject();
 	public showPopup: boolean;
 	public feedbackComplete: boolean;
+	public popupStyle: PopupStyle;
+	public popupTailClass: string;
 
 	constructor (
 		private logger: LogService,
 		private contentService: RacetrackContentService,
 		private userResolve: UserResolve,
+		private elRef: ElementRef,
 	) {
+		this.popupStyle = {
+			height: `${POPUP_HEIGHT}px`,
+			width: `${POPUP_WIDTH}px`,
+		};
 		this.userResolve.getCustomerId()
 		.pipe(
 			takeUntil(this.destroy$),
@@ -80,6 +105,24 @@ export class SessionFeedbackComponent implements OnDestroy, OnInit {
 	}
 
 	/**
+	 * Determines position and displays popup
+	 */
+	public openPopup () {
+		const rootEl = this.elRef.nativeElement;
+		const rootElRect = rootEl.getBoundingClientRect();
+		if (rootElRect.left < POPUP_WIDTH + POPUP_TAIL_WIDTH) {
+			this.popupStyle.left = `calc(100% + ${POPUP_TAIL_WIDTH}px)`;
+			this.popupTailClass = 'popup-tail--left';
+			this.popupStyle.right = '';
+		} else {
+			this.popupStyle.right = `calc(100% + ${POPUP_TAIL_WIDTH}px)`;
+			this.popupStyle.left = '';
+			this.popupTailClass = '';
+		}
+		this.showPopup = true;
+	}
+
+	/**
 	 * Sends POST to save initial feedback
 	 * @param thumbs Up or Down rating
 	 */
@@ -101,7 +144,7 @@ export class SessionFeedbackComponent implements OnDestroy, OnInit {
 			feedback: params,
 		})
 		.subscribe(feedbackInfo => {
-			this.showPopup = true;
+			this.openPopup();
 			_.set(this.item, 'feedbackInfo.available', true);
 			_.set(this.item, 'feedbackInfo.feedbackId', feedbackInfo.feedbackId);
 			_.set(this.item, 'feedbackInfo.thumbs', feedbackInfo.thumbs);

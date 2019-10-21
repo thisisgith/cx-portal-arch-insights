@@ -17,7 +17,8 @@
 	<div *ngIf="feedback"></div>
 </ng-container>
 <ng-container *ngIf="showPopup">
-	<div class="feedback-popup">
+	<div class="feedback-popup" [ngStyle]="popupStyle">
+		<div class="popup-tail" [ngClass]="popupTailClass"></div>
 		<span class="feedback-popup__close icon-close toggle"
 			data-auto-id="feedback-popup-close-icon"
 			(click)="closePopup()"
