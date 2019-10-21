@@ -13,8 +13,9 @@ import {
 	Asset,
 	Assets,
 	InventoryPagination as Pagination,
-	ContractCount,
-	ContractDeviceCountsResponse,
+	// TODO: Re-enable when UX has been redesigned for LA
+	// ContractCount,
+	// ContractDeviceCountsResponse,
 	RoleCount,
 	RoleCountResponse,
 	CoverageCountsResponse,
@@ -538,9 +539,10 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				this.assetParams.page = (page < 1) ? 1 : page;
 			}
 
-			if (params.contractNumber) {
-				this.assetParams.contractNumber = _.castArray(params.contractNumber);
-			}
+			// TODO: Re-enable when UX has been redesigned for LA
+			// if (params.contractNumber) {
+			// 	this.assetParams.contractNumber = _.castArray(params.contractNumber);
+			// }
 
 			if (params.coverage) {
 				this.assetParams.coverage = _.castArray(params.coverage);
@@ -650,7 +652,8 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		this.status.isLoading = true;
 		forkJoin(
 			this.getCoverageCounts(),
-			this.getContractCounts(),
+			// TODO: Re-enable when UX has been redesigned for LA
+			// this.getContractCounts(),
 			this.getAdvisoryCount(),
 			this.getRoleCounts(),
 			this.getHardwareEOXCounts(),
@@ -658,9 +661,10 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		)
 		.pipe(
 			map(() => {
-				if (this.assetParams.contractNumber) {
-					this.selectSubFilters(this.assetParams.contractNumber, 'contractNumber');
-				}
+				// TODO: Re-enable when UX has been redesigned for LA
+				// if (this.assetParams.contractNumber) {
+				// 	this.selectSubFilters(this.assetParams.contractNumber, 'contractNumber');
+				// }
 
 				if (this.assetParams.role) {
 					this.selectSubFilters(this.assetParams.role, 'role');
@@ -718,13 +722,14 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					template: this.pieChartFilterTemplate,
 					title: I18n.get('_CoverageStatus_'),
 				},
-				{
-					key: 'contractNumber',
-					loading: true,
-					seriesData: [],
-					template: this.pieChartFilterTemplate,
-					title: I18n.get('_ContractNumber_'),
-				},
+				// TODO: Re-enable when UX has been redesigned for LA
+				// {
+				// 	key: 'contractNumber',
+				// 	loading: true,
+				// 	seriesData: [],
+				// 	template: this.pieChartFilterTemplate,
+				// 	title: I18n.get('_ContractNumber_'),
+				// },
 				{
 					key: 'advisories',
 					loading: true,
@@ -786,33 +791,36 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	}
 
 	/**
+	 * TODO: Re-enable when UX has been redesigned for LA
+	 * Disabling for EFT as part of CSCvr52422
+	 *
 	 * Fetches the contract counts for the visual filter
 	 * @returns the contract counts observable
 	 */
-	private getContractCounts () {
-		const contractFilter = _.find(this.filters, { key: 'contractNumber' });
+	// private getContractCounts () {
+	// 	const contractFilter = _.find(this.filters, { key: 'contractNumber' });
 
-		return this.contractsService.getContractCounts(this.contractCountParams)
-		.pipe(
-			map((data: ContractDeviceCountsResponse) => {
-				contractFilter.seriesData = _.map(data, (d: ContractCount) => ({
-					filter: d.contractNumber,
-					label: _.capitalize(d.contractNumber),
-					selected: false,
-					value: d.deviceCount,
-				}));
+	// 	return this.contractsService.getContractCounts(this.contractCountParams)
+	// 	.pipe(
+	// 		map((data: ContractDeviceCountsResponse) => {
+	// 			contractFilter.seriesData = _.map(data, (d: ContractCount) => ({
+	// 				filter: d.contractNumber,
+	// 				label: _.capitalize(d.contractNumber),
+	// 				selected: false,
+	// 				value: d.deviceCount,
+	// 			}));
 
-				contractFilter.loading = false;
-			}),
-			catchError(err => {
-				contractFilter.loading = false;
-				this.logger.error('assets.component : getContractCounts() ' +
-					`:: Error : (${err.status}) ${err.message}`);
+	// 			contractFilter.loading = false;
+	// 		}),
+	// 		catchError(err => {
+	// 			contractFilter.loading = false;
+	// 			this.logger.error('assets.component : getContractCounts() ' +
+	// 				`:: Error : (${err.status}) ${err.message}`);
 
-				return of({ });
-			}),
-		);
-	}
+	// 			return of({ });
+	// 		}),
+	// 	);
+	// }
 
 	/**
 	 * Fetches the coverage counts for the visual filter

@@ -25,6 +25,7 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { AdvisoryType, Alert, Panel360 } from '@interfaces';
 import { DetailsPanelStackService } from '@services';
+import { Impacted } from './impacted-assets/impacted-assets.component';
 
 /**
  * Advisory Details Component
@@ -182,5 +183,13 @@ export class AdvisoryDetailsComponent implements OnChanges, OnInit, OnDestroy, P
 	 */
 	public onAllPanelsClose () {
 		this.detailsPanelStackService.reset();
+	}
+
+	/**
+	 * Will filter out our impacted assets by those that are covered
+	 * @param event the assets
+	 */
+	public assetHandler (event: Impacted) {
+		this.impactedAssets = _.filter(event.assets, 'supportCovered');
 	}
 }

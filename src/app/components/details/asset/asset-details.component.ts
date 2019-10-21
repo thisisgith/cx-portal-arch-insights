@@ -228,23 +228,28 @@ export class AssetDetailsComponent implements OnDestroy, OnInit, Panel360 {
 			this.serialNumber = serial;
 		}
 
-		forkJoin(
-			this.fetchAsset(),
-			this.fetchNetworkElement(),
-		)
-		.subscribe(() => {
-			this.isLoading = false;
+		// Dont even try an fetch asset or NE if we don't have at least a serial number
+		if (serial) {
+			forkJoin(
+				this.fetchAsset(),
+				this.fetchNetworkElement(),
+			)
+			.subscribe(() => {
+				this.isLoading = false;
 
-			if (!this.serialNumber || !this.asset) {
-				// Have to force a cycle so that alert is instantiated correctly
-				setTimeout(() => {
-					this.handleAlert({
-						message: I18n.get('_UnableToRetrieveAssetDetails_'),
-						severity: 'danger',
-					});
-				}, 0);
-			}
-		});
+				if (!this.serialNumber || !this.asset) {
+					// Have to force a cycle so that alert is instantiated correctly
+					setTimeout(() => {
+						this.handleAlert({
+							message: I18n.get('_UnableToRetrieveAssetDetails_'),
+							severity: 'danger',
+						});
+					}, 0);
+				}
+			});
+		} else {
+			this.isLoading = false;
+		}
 	}
 
 	/**

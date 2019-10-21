@@ -25,7 +25,8 @@
 					<span class="subheading text-small text-uppercase" data-auto-id="contractType" [innerText]="'_Type_' | i18n"></span>
 				</dt>
 				<dd>
-					<span *ngIf="contractData?.cxLevel; else unavailable" data-auto-id="contractLevel" [innerText]="contractData.cxLevel"></span>
+					<span *ngIf="contractData?.cxLevel; else unavailable" data-auto-id="contractLevel"
+						[innerText]="'_CXLevelX_' | i18n:contractData.cxLevel"></span>
 					<span *ngIf="contractData?.cxLevel" class="qtr-margin-left icon-small icon-info-circle text-muted"
 						(mouseenter)="showCxInfo = true" (mouseleave)="showCxInfo = false"></span>
 					<div *ngIf="showCxInfo" class="toast toast--loose">

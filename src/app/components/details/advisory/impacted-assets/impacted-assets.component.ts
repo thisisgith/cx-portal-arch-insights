@@ -18,12 +18,14 @@ import {
 	NetworkElement,
 	RacetrackTechnology,
 	RacetrackSolution,
+	Assets,
 } from '@sdp-api';
 import { LogService } from '@cisco-ngx/cui-services';
 import {
 	map,
 	catchError,
 	takeUntil,
+	mergeMap,
 } from 'rxjs/operators';
 import { of, Subject } from 'rxjs';
 import { CuiTableOptions, CuiTableColumnOption } from '@cisco-ngx/cui-components';
@@ -41,6 +43,15 @@ export interface AssetIds {
 }
 
 /**
+ * The interface for our output
+ */
+export interface Impacted {
+	impacted: (Asset | NetworkElement)[];
+	potentiallyImpacted: (Asset | NetworkElement)[];
+	assets: Asset[];
+}
+
+/**
  * Security Details Component
  */
 @Component({
@@ -55,10 +66,7 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 	@Input('assetIds') public assetIds: AssetIds;
 	@Input('customerId') public customerId: string;
 	@Output('impactedCount') public impactedCount = new EventEmitter<number>();
-	@Output('assets') public assets = new EventEmitter<{
-		impacted: (Asset | NetworkElement)[];
-		potentiallyImpacted: (Asset | NetworkElement)[];
-	}>();
+	@Output('assets') public assets = new EventEmitter<Impacted>();
 	@ViewChild('ipAddressColumn', null) public ipAddressColumn: TemplateRef<{ }>;
 	@ViewChild('deviceColumn', null) public deviceColumn: TemplateRef<{ }>;
 	@ViewChild('versionColumn', null) public softwareVersionColumn: TemplateRef<{ }>;
@@ -68,10 +76,12 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 	public isLoading = false;
 	public potentiallyImpacted: (Asset | NetworkElement)[] = [];
 	public impacted: (Asset | NetworkElement)[] = [];
+	public impactedAssets: Asset[] = [];
 	public selectedAsset: Asset | NetworkElement;
 	private params: {
 		bugAssets?: DiagnosticsService.GetCriticalBugsAssetsParams;
 		elements?: InventoryService.GetNetworkElementsParams;
+		assets?: InventoryService.GetAssetsParams;
 	};
 	public getProductIcon = getProductTypeImage;
 	public getProductTitle = getProductTypeTitle;
@@ -87,10 +97,10 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 	) { }
 
 	/**
-	 * Fetches the assets affected by the field notice
+	 * Fetches the network elements affected
 	 * @returns the observable
 	 */
-	private getAssets () {
+	private fetchNetworkElements () {
 		this.isLoading = true;
 
 		this.impacted = [];
@@ -101,7 +111,7 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 
 		this.inventoryService.getNetworkElements(this.params.elements)
 		.pipe(
-			map((response: NetworkElementResponse) => {
+			mergeMap((response: NetworkElementResponse) => {
 				const data = _.get(response, 'data', []);
 
 				this.impacted =
@@ -112,23 +122,52 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 					_.filter(data,
 						x => _.includes(potentiallyImpacted, _.get(x, 'managedNeId'))) || [];
 
-				this.impactedCount.emit(this.impacted.length + this.potentiallyImpacted.length);
-				this.assets.emit({
-					impacted: this.impacted,
-					potentiallyImpacted: this.potentiallyImpacted,
-				});
+				return this.fetchAssets();
 			}),
 			catchError(err => {
-				this.impactedCount.emit(0);
-				this.logger.error('advisory-details:impacted-assets.component : getAssets() ' +
-					`:: Error : (${err.status}) ${err.message}`);
+				this.logger.error('advisory-details:impacted-assets.component : ' +
+				 `fetchNetworkElements() :: Error : (${err.status}) ${err.message}`);
 
 				return of({ });
 			}),
 		)
 		.subscribe(() => {
+			this.assets.emit({
+				assets: this.impactedAssets,
+				impacted: this.impacted,
+				potentiallyImpacted: this.potentiallyImpacted,
+			});
+			this.impactedCount.emit(this.impacted.length + this.potentiallyImpacted.length);
 			this.isLoading = false;
 		});
+	}
+
+	/**
+	 * Fetches the assets from /assets api
+	 * @returns the observable
+	 */
+	private fetchAssets () {
+		const serials = _.uniq(
+			_.map(_.concat(this.impacted, this.potentiallyImpacted), 'serialNumber'));
+
+		if (!serials.length) {
+			return of({ });
+		}
+		_.set(this.params.assets, 'serialNumber', serials);
+
+		return this.inventoryService.getAssets(this.params.assets)
+		.pipe(
+			map((response: Assets) => {
+				this.impactedAssets = _.get(response, 'data', []);
+			}),
+			catchError(err => {
+				this.logger.error('advisory-details:impacted-assets.component : fetchAssets() ' +
+					`:: Error : (${err.status}) ${err.message}`);
+
+				return of({ });
+			}),
+		);
+
 	}
 
 	/**
@@ -142,19 +181,12 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 
 		this.diagnosticsService.getCriticalBugsAssets(this.params.bugAssets)
 		.pipe(
-			map((response: BugImpactedAssetsResponse) => {
-				const data = _.get(response, 'data', []);
+			mergeMap((response: BugImpactedAssetsResponse) => {
+				this.impacted = _.get(response, 'data', []);
 
-				this.impacted = data;
-
-				this.impactedCount.emit(this.impacted.length + this.potentiallyImpacted.length);
-				this.assets.emit({
-					impacted: this.impacted,
-					potentiallyImpacted: this.potentiallyImpacted,
-				});
+				return this.fetchAssets();
 			}),
 			catchError(err => {
-				this.impactedCount.emit(0);
 				this.logger.error('advisory-details:impacted-assets.component : getAssets() ' +
 					`:: Error : (${err.status}) ${err.message}`);
 
@@ -162,6 +194,12 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 			}),
 		)
 		.subscribe(() => {
+			this.impactedCount.emit(this.impacted.length + this.potentiallyImpacted.length);
+			this.assets.emit({
+				assets: this.impactedAssets,
+				impacted: this.impacted,
+				potentiallyImpacted: this.potentiallyImpacted,
+			});
 			this.isLoading = false;
 		});
 	}
@@ -206,6 +244,14 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 			wrapText: true,
 		});
 
+		_.set(this.params, 'assets', {
+			customerId: this.customerId,
+			page: 1,
+			rows: 100,
+			solution: this.selectedSolutionName,
+			useCase: this.selectedTechnologyName,
+		});
+
 		if (this.type === 'bug' && this.id) {
 			_.set(this.params, 'bugAssets', {
 				cdetId: [this.id],
@@ -231,7 +277,7 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 				useCase: this.selectedTechnologyName,
 			});
 
-			this.getAssets();
+			this.fetchNetworkElements();
 		}
 	}
 
@@ -246,7 +292,7 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 		if (this.type === 'bug') {
 			this.fetchBugAssets();
 		} else {
-			this.getAssets();
+			this.fetchNetworkElements();
 		}
 	}
 

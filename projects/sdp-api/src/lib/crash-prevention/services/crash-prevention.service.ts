@@ -226,8 +226,9 @@ module CrashPreventionService {
     /**
      * Unique identifier of a Cisco customer.
      */
-    customerId: string;
-    productFamily: string;
+	customerId: string;
+	productFamilies: string;
+	productFamily: string;
     productId: string;
   }
   export interface GetlistdeviceParams {

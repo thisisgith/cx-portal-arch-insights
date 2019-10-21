@@ -1,24 +1,24 @@
 <div class="compare-text-warp dbl-margin-top" *ngIf="!compareviewLoading; else loaderTemplate;">
-	<ng-container *ngIf="compareView === 'hardware'">
-		<div class="panel qtr-padding" *ngFor="let hardware of hardwareData?.common">
-			<div class="row">
-				<div class="col-md-6 pull-left" [innerHTML]="hardware"></div>
-				<div class="col-md-6 pull-left" [innerHTML]="hardware"></div>
+	<div class="panel qtr-padding">
+		<div class="row">
+			<div class="col-md-6 pull-left" *ngIf="deviceA">
+				<a
+					data-auto-id="selectedDeviceA"
+					class="text-large text-primary"
+					[innerHTML]="deviceA.deviceName"
+					(click) = "showAssetDetails(deviceA)"
+				></a>
+			</div>
+			<div class="col-md-6 pull-left" *ngIf="deviceB">
+				<a
+					data-auto-id="selectedDeviceB"
+					class="text-large text-primary"
+					[innerHTML]="deviceB.deviceName"
+					(click) = "showAssetDetails(deviceB)"
+				></a>
 			</div>
 		</div>
-		<div class="panel panel--mdgray qtr-padding" *ngFor="let hardware of hardwareData?.unique[0].data">
-			<div class="row">
-				<div class="col-md-6 pull-left" [innerHTML]="hardware"></div>
-				<div class="col-md-6 pull-left compare-em-dash "></div>
-			</div>
-		</div>
-		<div class="panel panel--mdgray qtr-padding" *ngFor="let hardware of hardwareData?.unique[1].data">
-			<div class="row">
-				<div class="col-md-6 pull-left compare-em-dash"></div>
-				<div class="col-md-6 pull-left" [innerHTML]="hardware"></div>
-			</div>
-		</div>
-	</ng-container>
+	</div>
 	<ng-container *ngIf="compareView === 'software'">
 		<div class="panel qtr-padding" *ngFor="let software of softwareData?.common">
 			<div class="row">
@@ -66,3 +66,5 @@
 		<cui-loader color="muted"></cui-loader>
 	</div>
 </ng-template>
+<asset-details *ngIf="showAssetDetailsView" [serialNumber]="selectedAsset.serialNumber" (close)="showAssetDetailsView = false">
+</asset-details>

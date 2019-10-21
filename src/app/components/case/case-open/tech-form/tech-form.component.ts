@@ -54,7 +54,6 @@ export class TechFormComponent implements OnInit, OnChanges, OnDestroy {
 	private refreshSubtech$ = new Subject<string>();
 	private refreshPredictions$ = new Subject<{ caseTitle: string, caseDescription: string }>();
 	private destroy$ = new Subject();
-	public isTechSuggestionSelected = false;
 
 	constructor (
 		private caseService: CaseService,
@@ -273,7 +272,6 @@ export class TechFormComponent implements OnInit, OnChanges, OnDestroy {
 	 * When user clicks "See all Options" button, display full dropdown selects
 	 */
 	public onSeeAll () {
-		this.isTechSuggestionSelected = false;
 		this.displaySuggestions = false;
 	}
 
@@ -282,7 +280,6 @@ export class TechFormComponent implements OnInit, OnChanges, OnDestroy {
 	 */
 	public onRefreshSuggestions () {
 		this.displayAll = false;
-		this.isTechSuggestionSelected = false;
 		this.form.controls.suggestedTech.setValue(null);
 		this.refreshPredictions();
 	}
@@ -306,6 +303,8 @@ export class TechFormComponent implements OnInit, OnChanges, OnDestroy {
 			}
 
 			this.recommendedTechs = _.slice(result.predictions, 0, 3);
+
+			this.form.controls.suggestedTech.setValue(this.recommendedTechs[0]);
 		});
 
 		// Watch for the suggested tech selection to change,
@@ -369,13 +368,4 @@ export class TechFormComponent implements OnInit, OnChanges, OnDestroy {
 				}),
 			);
 	}
-
-	/**
-	 * hide user message on technology select
-	 * @param event receives boolean value
-	 */
-	public suggestionSelected (event: boolean) {
-		this.isTechSuggestionSelected = event;
-	}
-
 }

@@ -185,8 +185,10 @@ describe('AssetsComponent', () => {
 				.toBe(0);
 			expect(_.find(component.filters, { key: 'advisories' }).seriesData.length)
 				.toBe(0);
-			expect(_.find(component.filters, { key: 'contractNumber' }).seriesData.length)
-				.toBe(0);
+
+			// TODO: Re-enable when UX has been redesigned for LA
+			// expect(_.find(component.filters, { key: 'contractNumber' }).seriesData.length)
+			// 	.toBe(0);
 			expect(_.find(component.filters, { key: 'coverage' }).seriesData.length)
 				.toBe(0);
 
@@ -624,19 +626,20 @@ describe('AssetsComponent', () => {
 			tick();
 		}));
 
-		it('should set the contract filter if param selected', fakeAsync(() => {
-			buildSpies();
-			_.set(component.assetParams, 'contractNumber', ['UNKNOWN']);
-			fixture.detectChanges();
-			tick(1000);
-			const contractFilter = _.find(component.filters, { key: 'contractNumber' });
+		// TODO: Re-enable when UX has been redesigned for LA
+		// it('should set the contract filter if param selected', fakeAsync(() => {
+		// 	buildSpies();
+		// 	_.set(component.assetParams, 'contractNumber', ['UNKNOWN']);
+		// 	fixture.detectChanges();
+		// 	tick(1000);
+		// 	const contractFilter = _.find(component.filters, { key: 'contractNumber' });
 
-			expect(_.filter(component.filters, 'selected'))
-				.toContain(contractFilter);
+		// 	expect(_.filter(component.filters, 'selected'))
+		// 		.toContain(contractFilter);
 
-			fixture.destroy();
-			tick();
-		}));
+		// 	fixture.destroy();
+		// 	tick();
+		// }));
 
 		it('should set the appropriate device icon based on type', fakeAsync(() => {
 			const WLC: NetworkElement = {
@@ -740,8 +743,9 @@ describe('AssetsComponent', () => {
 			fixture.detectChanges();
 			tick(1000);
 
-			expect(_.get(component.assetParams, 'contractNumber'))
-				.toEqual(['1234']);
+			// TODO: Re-enable when UX has been redesigned for LA
+			// expect(_.get(component.assetParams, 'contractNumber'))
+			// 	.toEqual(['1234']);
 			expect(_.get(component.assetParams, 'coverage'))
 				.toEqual(['covered']);
 			expect(_.get(component.assetParams, 'role'))

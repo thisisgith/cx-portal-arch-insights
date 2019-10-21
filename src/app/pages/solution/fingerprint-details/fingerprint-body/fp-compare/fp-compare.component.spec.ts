@@ -71,33 +71,24 @@ describe('FpCompareComponent', () => {
 			.returnValue(throwError(new HttpErrorResponse(error)));
 		tick();
 		fixture.detectChanges();
-		expect(component.listdeviceDataA.length)
+		expect(component.listdeviceData.length)
 			.toEqual(0);
 	}));
 
 	it('should test data supplied to render chart', fakeAsync(() => {
 		const deviceDetails = {
 			customerId: '7293498',
+			productId: 'AIR-CT5760',
+			crashPredicted: true,
 			deviceDetail: [
 				{
-					deviceId: 'NA,6011,C9407R,NA',
-					deviceName: 'Device_6_0_1_1',
-				},
-				{
-					deviceId: 'NA,60110,C9407R,NA',
-					deviceName: 'Device_6_0_1_10',
-				},
-				{
-					deviceId: 'NA,601101,C9407R,NA',
-					deviceName: 'Device_6_0_1_101',
-				},
-				{
-					deviceId: 'NA,601103,C9407R,NA',
-					deviceName: 'Device_6_0_1_103',
+					deviceId: 'NA,FOC1727V051,AIR-CT5760,NA',
+					deviceName: 'Controller',
+					serialNumber: 'FOC1727V051',
 				},
 			],
 		};
-		component.onSelection1(deviceDetails);
+		component.assetASelection(deviceDetails);
 		tick();
 		expect(component.deviceId1)
 			.toBeDefined();
@@ -106,59 +97,75 @@ describe('FpCompareComponent', () => {
 	it('should test data supplied to a render chart', fakeAsync(() => {
 		const deviceDetails = {
 			customerId: '7293498',
+			productId: 'AIR-CT5760',
+			crashPredicted: true,
 			deviceDetail: [
 				{
-					deviceId: 'NA,6011,C9407R,NA',
-					deviceName: 'Device_6_0_1_1',
-				},
-				{
-					deviceId: 'NA,60110,C9407R,NA',
-					deviceName: 'Device_6_0_1_10',
-				},
-				{
-					deviceId: 'NA,601101,C9407R,NA',
-					deviceName: 'Device_6_0_1_101',
-				},
-				{
-					deviceId: 'NA,601103,C9407R,NA',
-					deviceName: 'Device_6_0_1_103',
+					deviceId: 'NA,FOC1727V051,AIR-CT5760,NA',
+					deviceName: 'Controller',
+					serialNumber: 'FOC1727V051',
 				},
 			],
 		};
-		component.onSelection2(deviceDetails);
+		component.assetBSelection(deviceDetails);
 		tick();
 		expect(component.deviceId2)
 			.toBeDefined();
 	}));
-	/**
-	 * ProductFamily response
-	 */
-	it('Should return the searched response', fakeAsync(() => {
-		spyOn(crashPreventionService, 'getProductFamily')
+	it('should call pidsSelection and return error', () => {
+		const error = {
+			status: 404,
+			statusText: 'Resource not found',
+		};
+		spyOn(crashPreventionService, 'getListdevice')
+		.and
+		.returnValue(throwError(new HttpErrorResponse(error)));
+		component.pidsSelection('ErrorData');
+		fixture.detectChanges();
+		expect(component.deviceId1)
+		.toBeNull();
+	});
+	it('should check onselection productFamilyA', fakeAsync(() => {
+		spyOn(crashPreventionService, 'getListdevice')
 			.and
-			.returnValue(of(ComparisonViewScenarios[0].scenarios.GET[0].response.body));
+			.returnValue(of(ComparisonViewScenarios[1].scenarios.GET[0].response.body));
+		component.pidsSelection('AIR-CT5760');
 		tick();
 		fixture.detectChanges();
-		expect(component.productData)
-			.toBeDefined();
+		expect(crashPreventionService.getListdevice)
+			.toHaveBeenCalled();
 	}));
-
-	it('should test data supplied to comparisonview', fakeAsync(() => {
-		const productFamilyDetails = {
-			customerId: '7293498',
-			productFamily: [
-				{
-					productFamily: 'Cisco 4400 Series Integrated Services Routers',
-					productId: '',
-				},
-			],
-		};
-		component.onSelection3(productFamilyDetails);
-		tick();
-		expect(component.productFamilyB)
-			.toBeDefined();
-	}));
-
+	it('should check if compare details exist', () => {
+		expect(component.compareDetailsExist)
+		.toBeFalsy();
+		component.selectedproductId = 'TestProduct';
+		component.deviceId1 = 'TestDeviceA';
+		component.deviceId2 = 'TestDeviceB';
+		fixture.detectChanges();
+		expect(component.compareDetailsExist)
+		.toBeTruthy();
+	});
+	it('should check reError emit', () => {
+		spyOn(component.reqError, 'emit');
+		const errorMsg = 'error';
+		component.showError(errorMsg);
+		fixture.detectChanges();
+		expect(component.reqError.emit)
+		.toHaveBeenCalled();
+	});
+	it('should check if assetBSelection exist or Not', () => {
+		component.deviceId2 = 'NA,60110,C9407R,NA';
+		fixture.detectChanges();
+		expect(component.assetBError)
+			.toBeFalsy();
+	});
+	it('should check if assetBSelection exist or Not', () => {
+		component.deviceId2 = null;
+		component.assetBSelection(component.deviceId2);
+		fixture.detectChanges();
+		expect(component.assetBError)
+		 .toBeTruthy();
+	});
 	it('should test data supplied to comparisonviewA ', fakeAsync(() => {
 		const productFamilyDetails = {
 			customerId: '7293498',
@@ -169,95 +176,22 @@ describe('FpCompareComponent', () => {
 				},
 			],
 		};
-		component.onSelection(productFamilyDetails);
-		expect(component.productFamilyA)
+		component.productFamilySelection(productFamilyDetails);
+		expect(component.listOfProductIds)
 			.toBeDefined();
 	}));
 
 	it('should check compare view value', fakeAsync(() => {
 		const button = fixture.debugElement.query(
-			By.css('[data-auto-id="hardwarebtn"]'),
+			By.css('[data-auto-id="softwarebtn"]'),
 		);
 		button.nativeElement.click();
 		tick();
 		expect(component.compareView)
-			.toEqual('hardware');
-	}));
-
-	it('should check onselection productFamilyA', fakeAsync(() => {
-		spyOn(crashPreventionService, 'getListdevice')
-			.and
-			.returnValue(of(ComparisonViewScenarios[1].scenarios.GET[0].response.body));
-		component.onSelection('AIR-CT5760');
-		tick();
-		fixture.detectChanges();
-		expect(crashPreventionService.getListdevice)
-			.toHaveBeenCalled();
-	}));
-
-	it('should set deviceId1 as selected if it exists in the deviceList', fakeAsync(() => {
-		spyOn(crashPreventionService, 'getListdevice')
-			.and
-			.returnValue(of(ComparisonViewScenarios[1].scenarios.GET[0].response.body));
-		component.deviceId1 = 'NA,60110,C9407R,NA';
-		component.onSelection('AIR-CT5760');
-		tick();
-		fixture.detectChanges();
-		expect(component.deviceId1)
-			.toEqual('NA,60110,C9407R,NA');
-	}));
-
-	it('should enable device selection when product family is selected', fakeAsync(() => {
-		spyOn(crashPreventionService, 'getListdevice')
-			.and
-			.returnValue(of(ComparisonViewScenarios[1].scenarios.GET[0].response.body));
-		component.deviceId1 = 'NA,60110,C9407R,NA';
-		component.onSelection('AIR-CT5760');
-		tick();
-		fixture.detectChanges();
-		expect(component.assetsAactive)
-			.toBeFalsy();
-	}));
-
-	it('should check onselection productFamilyB', fakeAsync(() => {
-		spyOn(crashPreventionService, 'getListdevice')
-			.and
-			.returnValue(of(ComparisonViewScenarios[1].scenarios.GET[0].response.body));
-		component.onSelection3('AIR-CT5760');
-		tick();
-		fixture.detectChanges();
-		expect(crashPreventionService.getListdevice)
-			.toHaveBeenCalled();
-	}));
-
-	it('should set deviceId2 as selected if it exists in the deviceList', fakeAsync(() => {
-		spyOn(crashPreventionService, 'getListdevice')
-			.and
-			.returnValue(of(ComparisonViewScenarios[1].scenarios.GET[0].response.body));
-		component.deviceId2 = 'NA,6011,C9407R,NA';
-		component.onSelection3('AIR-CT5760');
-		tick();
-		fixture.detectChanges();
-		expect(component.deviceId2)
-			.toEqual('NA,6011,C9407R,NA');
-	}));
-
-	it('should enable device selection when product family is selected', fakeAsync(() => {
-		spyOn(crashPreventionService, 'getListdevice')
-			.and
-			.returnValue(of(ComparisonViewScenarios[1].scenarios.GET[0].response.body));
-		component.deviceId2 = 'NA,60110,C9407R,NA';
-		component.onSelection3('AIR-CT5760');
-		tick();
-		fixture.detectChanges();
-		expect(component.assetsBactive)
-			.toBeFalsy();
+			.toEqual('software');
 	}));
 
 	it('Should return the searched getListdevice response', fakeAsync(() => {
-		spyOn(crashPreventionService, 'getProductFamily')
-			.and
-			.returnValue(of(<any> []));
 		spyOn(crashPreventionService, 'getListdevice')
 			.and
 			.returnValue(of(ComparisonViewScenarios[1].scenarios.GET[0].response.body));
@@ -271,8 +205,6 @@ describe('FpCompareComponent', () => {
 		});
 		tick();
 		fixture.detectChanges();
-		expect(crashPreventionService.getProductFamily)
-			.toHaveBeenCalled();
 		expect(crashPreventionService.getListdevice)
 			.toHaveBeenCalled();
 	}));

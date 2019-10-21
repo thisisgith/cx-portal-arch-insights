@@ -406,6 +406,7 @@
 
 <ng-template #pieChartFilter let-filter="filter">
 	<pie-chart [seriesData]="filter.seriesData"
+		width="240"
 		(subfilter)="onSubfilterSelect($event.filter, filter)">
 	</pie-chart>
 </ng-template>

@@ -18,7 +18,7 @@ export const environment = {
 		tokenUrl: `${origin}/ws/oauth/v3/token/cway/` +
 			'e4f602992449cdb1d4aea2df5849f7d6ebd4280c1c8e1398fcfec534422533b8',
 	},
-	baseHref: '/pbc',
+	baseHref: '/portal/',
 	communityLink: 'https://cloudsso.cisco.com/idp/startSSO.ping?PartnerSpId=' +
 		'https://community.cisco.com/auth/saml&TARGET=https://community.cisco.com',
 	csc: {
