@@ -534,7 +534,7 @@ describe('AdvisoriesComponent', () => {
 
 			expect(component.router.navigate)
 				.toHaveBeenCalledWith(['/solution/advisories/bugs'],
-					{ queryParams: { page: 1, sort: ['id:ASC'] } });
+					{ queryParams: { page: 1, sort: ['severity:ASC'] } });
 
 			// test field notices tab
 			component.selectTab(_.findIndex(component.tabs, { key: 'field' }));

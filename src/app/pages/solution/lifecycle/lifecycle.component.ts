@@ -1493,6 +1493,7 @@ export class LifecycleComponent implements OnDestroy {
 		if (crossLaunchUrl) {
 			window.open(crossLaunchUrl, '_blank');
 		}
+		this.atxMoreClicked = false;
 	}
 
 	/**

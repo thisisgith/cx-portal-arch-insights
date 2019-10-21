@@ -8,11 +8,11 @@
 			<span *ngIf="details?.advisory?.severity"
 				class="label label--circle label--tiny qtr-margin-right"
 				[ngClass]="{
-					'Critical': 'label--danger',
-					'High': 'label--warning-alt',
-					'Medium': 'label--warning',
-					'Low': 'label--info',
-					'Info': 'label--info'
+					'critical': 'label--danger',
+					'high': 'label--warning-alt',
+					'medium': 'label--warning',
+					'low': 'label--info',
+					'info': 'label--info'
 				}[details?.advisory?.severity]"
 				data-auto-id="BugDetailsSeverityIcon">
 			</span>
