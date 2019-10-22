@@ -85,7 +85,7 @@
 		"@cisco-ngx/cui-services": "^7.14.9",
 		"@cisco-ngx/cui-utils": "^7.14.9",
 		"@compodoc/compodoc": "^1.1.10",
-		"@cui-x-views/csc": "^1.0.0",
+		"@cui-x-views/csc": "^1.0.1",
 		"@cui-x-views/mock": "^1.2.1",
 		"@cui-x/cui-x-components": "^7.3.0",
 		"@cui-x/services": "^1.0.5",
