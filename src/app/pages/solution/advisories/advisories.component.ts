@@ -359,12 +359,6 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 							sortable: true,
 							template: this.lastUpdatedTemplate,
 						},
-						{
-							key: 'version',
-							name: I18n.get('_Version_'),
-							sortable: true,
-							template: this.versionTemplate,
-						},
 					],
 					dynamicData: true,
 					hover: true,
