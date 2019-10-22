@@ -1,10 +1,10 @@
 <div *ngIf="impacted?.length || potentiallyImpacted?.length">
 	<ng-container *ngIf="impacted?.length">
-		<ng-container *ngTemplateOutlet="deviceTable; context: { devices: impacted, options: assetsTable, title: '_Impacted_' }"></ng-container>
+		<ng-container *ngTemplateOutlet="deviceTable; context: { devices: impacted, options: affectedTable, title: '_Affected_' }"></ng-container>
 	</ng-container>
 
 	<ng-container *ngIf="potentiallyImpacted?.length">
-		<ng-container *ngTemplateOutlet="deviceTable; context: { devices: potentiallyImpacted, options: assetsTable, title: '_PotentiallyImpacted_' }"></ng-container>
+		<ng-container *ngTemplateOutlet="deviceTable; context: { devices: potentiallyImpacted, options: potentiallyAffectedTable, title: '_PotentiallyAffected_' }"></ng-container>
 	</ng-container>
 </div>
 

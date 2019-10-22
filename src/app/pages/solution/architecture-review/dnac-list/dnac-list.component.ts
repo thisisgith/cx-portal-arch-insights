@@ -80,12 +80,12 @@ export class DnacListComponent implements OnInit {
 	public getCollectionId () {
 		this.architectureReviewService.getCollectionId()
 		.subscribe(res => {
-			this.params.collectionId = _.get(res, 'collection.collectionId');
+			this.params.collectionId = _.get(res, ['collection', 'collectionId']);
 			if (this.params.collectionId !== undefined) {
 				this.getDnacList();
 				const datePipe = new DatePipe('en-US');
-				this.lastCollectionTime = datePipe
-										  .transform(res.collection.collectionDate, 'medium');
+				this.lastCollectionTime =
+					datePipe.transform(_.get(res, ['collection, collectionDate']), 'medium');
 			}
 		},
 		err => {

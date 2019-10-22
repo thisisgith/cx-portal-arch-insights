@@ -23,7 +23,7 @@
 
 	<div data-auto-id="SecurityAdvisoryPublished" class="header__item">
 		<div class="header__text qtr-margin-right">
-			<span [innerText]="'_Published_' | i18n"></span>
+			<span [innerText]="'_Created_' | i18n"></span>
 			<span>:</span>
 		</div>
 		<div *ngIf="details.bulletin && details.bulletin.bulletinFirstPublished"
@@ -40,7 +40,7 @@
 
 	<div data-auto-id="SecurityAdvisoryLastUpdated" class="header__item">
 		<div class="header__text qtr-margin-right">
-			<span [innerText]="'_LastUpdated_' | i18n"></span>
+			<span [innerText]="'_Updated_' | i18n"></span>
 			<span>:</span>
 		</div>
 		<div *ngIf="details?.advisory && (details?.advisory?.lastUpdated || details?.advisory?.publishedOn)"
