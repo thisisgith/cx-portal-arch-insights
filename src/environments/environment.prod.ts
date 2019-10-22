@@ -40,8 +40,8 @@ export const environment = {
 		asdAuthURL: 'https://cway.cisco.com/ws/oauth/v3/token/cisco/hbt89b3akgm88sscja2mcswe',
 		asdBaseURL: 'https://api.cisco.com/software/v3.0',
 		CX_Coll_Reg_LS_KEY: 'cxportal.cisco.com:setup-ie:HAS_CX_COLLECTOR',
-		cxCollectorUserGuideLink: 'https://www.cisco.com/c/dam/en/us/support/docs/cloud-' +
-			'systems-management/Cisco-CX-Collector/CX_Collector_FAQ_TB_Guide.pdf',
+		cxCollectorUserGuideLink: 'https://www.cisco.com/c/dam/en/us/support/docs/' +
+			'cloud-systems-management/Cisco-CX-Collector/Collector_Overview.pdf',
 		DNAC_LS_KEY: 'cxportal.cisco.com:setup-ie:NO_DNAC',
 		downloadOvaLink: 'http://engci-maven-master.cisco.com/artifactory/services-cf-insight' +
 			'_engine-release/ie/Insight_Engine_1.0/ubuntu/103/CXC_1.0_Build-103.ova',
