@@ -45,7 +45,7 @@
 					coverage: assetData?.coverageStatus,
 					expirationDate: assetData?.coverageEndDate,
 					linkData: (assetData?.contractNumber && assetData?.contractNumber !== 'UNKNOWN' ?
-					('_ContractNumber_' | i18n) + ' ' (assetData?.contractNumber + (assetData?.slaDescription ? ' ' + assetData?.slaDescription : ''))
+					('_ContractNumber_' | i18n) + ' ' + (assetData?.contractNumber + (assetData?.slaDescription ? ' ' + assetData?.slaDescription : ''))
 					: null),
 					url: '',
 					supportType: 'support'
