@@ -252,8 +252,8 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 						template: this.recommendedVersionColumn,
 					},
 				);
-				affectedOptions = _.cloneDeep(options);
-				potentiallyAffectedOptions = _.cloneDeep(options);
+				affectedOptions = _.clone(options);
+				potentiallyAffectedOptions = _.clone(options);
 				const affectedHostName = _.find(affectedOptions.columns, { key: 'hostName' });
 				_.set(affectedHostName, 'name', I18n.get('_System_'));
 				const potentiallyAffectedHostName =
@@ -263,8 +263,8 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 			case 'field':
 				const hostName = _.find(options.columns, { key: 'hostName' });
 				_.set(hostName, 'name', I18n.get('_ProductID_'));
-				affectedOptions = _.cloneDeep(options);
-				potentiallyAffectedOptions = _.cloneDeep(options);
+				affectedOptions = _.clone(options);
+				potentiallyAffectedOptions = _.clone(options);
 				break;
 			case 'bug':
 				options.columns.push(
@@ -280,8 +280,8 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 						sortable: false,
 						template: this.recommendedVersionColumn,
 					});
-				affectedOptions = _.cloneDeep(options);
-				potentiallyAffectedOptions = _.cloneDeep(options);
+				affectedOptions = _.clone(options);
+				potentiallyAffectedOptions = _.clone(options);
 				break;
 		}
 
