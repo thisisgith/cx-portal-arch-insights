@@ -56,7 +56,7 @@ export const environment = {
 	learningLink: 'https://digital-learning.cisco.com/cx#/',
 	logoutUrl: 'https://www.cisco.com/autho/logout.html',
 	mapboxToken:
-	'pk.eyJ1IjoibWlzY2htaTIiLCJhIjoiY2p4eDl2ODVnMGpmODNkcDhsbG5nNXQ0YyJ9.vpfGffFASSUfANAU4Yvtxg',
+	'sk.eyJ1Ijoic3NhbHRzZ2EiLCJhIjoiY2syMmVwd2h4MGp5aTNscGczNjlkbjRueSJ9.nAeOj3bDf0ePEUvb7q9F2g',
 	mock: [],
 	myCase: 'https://mycase.cloudapps.cisco.com',
 	noAuthEndpoints: [
