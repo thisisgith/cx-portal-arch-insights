@@ -1,46 +1,47 @@
 image: containers.cisco.com/cway/gitlab-ci:3.4.1
 
 stages:
-  - setup
+  # - setup
   - static
-  #- automation
+  # - automation
   - build
 
 # disable gitlab cli analytics
 before_script:
   - export NG_CLI_ANALYTICS=false
+  - npm ci --audit=false
 
-setup:
-  stage: setup
-  # add 'node_modules' to cache for speeding up builds
-  cache:
-    key: "PIPELINE-$CI_PIPELINE_ID"
-    paths:
-      - package-lock.json
-      - node_modules/
-  script:
-    - npm ci --audit=false
+# setup:
+#   stage: setup
+#   # add 'node_modules' to cache for speeding up builds
+#   cache:
+#     key: "PIPELINE-$CI_PIPELINE_ID"
+#     paths:
+#       - package-lock.json
+#       - node_modules/
+#   script:
+#     - npm ci --audit=false
 
 building:
   stage: build
-  cache:
-    key: "PIPELINE-$CI_PIPELINE_ID"
-    policy: pull
-    paths:
-      - package-lock.json
-      - node_modules/
+  # cache:
+  #   key: "PIPELINE-$CI_PIPELINE_ID"
+  #   policy: pull
+  #   paths:
+  #     - package-lock.json
+  #     - node_modules/
   script:
     - npm run build:ci
 
 # run npm audit to verify dependency security
 audit:
   stage: build
-  cache:
-    key: "PIPELINE-$CI_PIPELINE_ID"
-    policy: pull
-    paths:
-      - package-lock.json
-      - node_modules/
+  # cache:
+  #   key: "PIPELINE-$CI_PIPELINE_ID"
+  #   policy: pull
+  #   paths:
+  #     - package-lock.json
+  #     - node_modules/
   allow_failure: true # temporary until @compodoc fixes their vulnerability issue, since this is only used for document generation, I dont consider it breaking
   script:
     - npm audit
@@ -48,12 +49,12 @@ audit:
 # run our lint process against the committed files
 lint:
   stage: static
-  cache:
-    key: "PIPELINE-$CI_PIPELINE_ID"
-    policy: pull
-    paths:
-      - package-lock.json
-      - node_modules/
+  # cache:
+  #   key: "PIPELINE-$CI_PIPELINE_ID"
+  #   policy: pull
+  #   paths:
+  #     - package-lock.json
+  #     - node_modules/
   script:
     - npm run lint
     - npm run lint:cypress
@@ -62,12 +63,12 @@ lint:
 # run our test:ci process for the commit
 unit:
   stage: static
-  cache:
-    key: "PIPELINE-$CI_PIPELINE_ID"
-    policy: pull
-    paths:
-      - package-lock.json
-      - node_modules/
+  # cache:
+  #   key: "PIPELINE-$CI_PIPELINE_ID"
+  #   policy: pull
+  #   paths:
+  #     - package-lock.json
+  #     - node_modules/
   script:
     - npm run test:ci
 
