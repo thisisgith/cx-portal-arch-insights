@@ -72,7 +72,8 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 	@ViewChild('versionColumn', null) public softwareVersionColumn: TemplateRef<{ }>;
 	@ViewChild('recommendedVersionColumn', null) public recommendedVersionColumn: TemplateRef<{ }>;
 
-	public assetsTable: CuiTableOptions;
+	public affectedTable: CuiTableOptions;
+	public potentiallyAffectedTable: CuiTableOptions;
 	public isLoading = false;
 	public potentiallyImpacted: (Asset | NetworkElement)[] = [];
 	public impacted: (Asset | NetworkElement)[] = [];
@@ -209,7 +210,7 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 	 */
 	public refresh () {
 		this.params = { };
-		this.assetsTable = new CuiTableOptions({
+		const options = {
 			bordered: true,
 			columns: [
 				{
@@ -227,22 +228,65 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 					sortable: true,
 					template: this.ipAddressColumn,
 				},
-				{
-					key: this.type === 'bug' ? 'softwareVersion' : 'swVersion',
-					name: I18n.get('_SoftwareVersion_'),
-					sortable: true,
-					template: this.softwareVersionColumn,
-				},
-				{
-					name: I18n.get('_RecommendedSoftwareVersion_'),
-					sortable: false,
-					template: this.recommendedVersionColumn,
-				},
 			],
 			padding: 'compressed',
 			striped: false,
 			wrapText: true,
-		});
+		};
+
+		let affectedOptions;
+		let potentiallyAffectedOptions;
+		switch (this.type) {
+			case 'security':
+				options.columns.push(
+					{
+						key: 'swVersion',
+						name: I18n.get('_Release_'),
+						sortable: true,
+						template: this.softwareVersionColumn,
+					},
+					{
+						key: 'recommendedVersion',
+						name: I18n.get('_RecommendedRelease_'),
+						sortable: false,
+						template: this.recommendedVersionColumn,
+					},
+				);
+				affectedOptions = _.clone(options);
+				potentiallyAffectedOptions = _.clone(options);
+				const affectedHostName = _.find(affectedOptions.columns, { key: 'hostName' });
+				_.set(affectedHostName, 'name', I18n.get('_System_'));
+				const potentiallyAffectedHostName =
+					_.find(potentiallyAffectedOptions.columns, { key: 'hostName' });
+				_.set(potentiallyAffectedHostName, 'name', I18n.get('_SystemName_'));
+				break;
+			case 'field':
+				const hostName = _.find(options.columns, { key: 'hostName' });
+				_.set(hostName, 'name', I18n.get('_ProductID_'));
+				affectedOptions = _.clone(options);
+				potentiallyAffectedOptions = _.clone(options);
+				break;
+			case 'bug':
+				options.columns.push(
+					{
+						key: 'softwareVersion',
+						name: I18n.get('_Release_'),
+						sortable: true,
+						template: this.softwareVersionColumn,
+					},
+					{
+						key: 'recommendedVersion',
+						name: I18n.get('_RecommendedRelease_'),
+						sortable: false,
+						template: this.recommendedVersionColumn,
+					});
+				affectedOptions = _.clone(options);
+				potentiallyAffectedOptions = _.clone(options);
+				break;
+		}
+
+		this.affectedTable = new CuiTableOptions(affectedOptions);
+		this.potentiallyAffectedTable = new CuiTableOptions(potentiallyAffectedOptions);
 
 		_.set(this.params, 'assets', {
 			customerId: this.customerId,

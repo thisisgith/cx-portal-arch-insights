@@ -111,10 +111,11 @@ export class DevicesListComponent implements OnInit, OnChanges {
 	 public getCollectionId () {
 		this.architectureService.getCollectionId()
 		.subscribe(res => {
-			this.paramsType.collectionId = _.get(res, 'collection.collectionId');
+			this.paramsType.collectionId = _.get(res, ['collection, collectionId']);
 			const datePipe = new DatePipe('en-US');
 			this.getDevicesList();
-			this.lastCollectionTime = datePipe.transform(res.collection.collectionDate, 'medium');
+			this.lastCollectionTime =
+				datePipe.transform(_.get(res, ['collection, collectionDate']), 'medium');
 		},
 		err => {
 			this.logger.error('Devices list Component View' +
