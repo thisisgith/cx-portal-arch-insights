@@ -583,7 +583,7 @@
 				</div>
 			</div>
 			<div class="text-italic" *ngIf="isStartTimeWithin24Hrs(scheduledAtxMap[data.atxId]) && data.status === 'scheduled'"
-				[innerText]="'_UnableCancel_' | i18n"></div>
+				[innerText]="'_UnableCancel_' | i18n" data-auto-id="AtxScheduleCard-UnableCancel"></div>
 		</div>
 	</div>
 </ng-template>

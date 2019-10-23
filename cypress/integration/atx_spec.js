@@ -872,8 +872,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			});
 		});
 
-		// TODO: Failing due to PBC-1033: http://swtg-jira-lnx.cisco.com:8080/browse/PBC-1033
-		it.skip('ATX View All table view should allow scheduling', () => {
+		it('ATX View All table view should allow scheduling', () => {
 			// Verify a View Sessions button is available for all rows, and clicking it opens the
 			// atxScheduleCard with all the item's sessions
 			atxItems.forEach((item, index) => {
@@ -1570,7 +1569,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 				// Click on the more list item, verify the modal has details
 				cy.getByAutoId('moreATXList-Click')
 					.eq(index)
-					.should('be.visible')
+					.should('exist')
 					.click();
 
 				cy.getByAutoId('atxMoreClickModal')
@@ -1633,8 +1632,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			});
 		});
 
-		// TODO: Currently failing due to PBC-1035: http://swtg-jira-lnx.cisco.com:8080/browse/PBC-1035
-		it.skip('Verify More List click modal Watch Now button', () => {
+		it('Verify More List click modal Watch Now button', () => {
 			moreListItems.forEach((item, index) => {
 				cy.getByAutoId('moreATXList-Click')
 					.eq(index)
@@ -2561,4 +2559,63 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			});
 		});
 	});
+
+	describe('PBC-1019: UI work to un-register ATX session', () => {
+		beforeEach(() => {
+			// Nuke the mock data and reload a clean set
+			cy.clearLocalStorage('MockDB');
+
+			cy.loadApp();
+			cy.waitForAppLoading('atxLoading');
+		});
+
+		afterEach(() => {
+			// Nuke the mock data and reload a clean set
+			cy.clearLocalStorage('MockDB');
+
+			cy.loadApp();
+			cy.waitForAppLoading('atxLoading');
+		});
+
+		it('Should be able to cancel session more than 24 hours in the future', () => {
+			// Edit the mock data to put the first ATX item's scheduled date more than 24
+			// hours in the future
+			cy.window().then(win => {
+				const mockDB = JSON.parse(win.localStorage.getItem('MockDB'));
+				mockDB['(GET):/api/customerportal/racetrack/v1/atx?usecase=Campus Network Assurance&solution=IBN&pitstop=Onboard&customerId=2431199&suggestedAction=Get to know Cisco DNA Center'].scenarios.GET[0].response.body.items[0].sessions[1].sessionStartDate = new Date().getTime() + 86400000 + 3600000;
+				win.localStorage.setItem('MockDB', JSON.stringify(mockDB));
+			});
+
+			// Refresh the page to load the new mock data
+			cy.loadApp();
+			cy.waitForAppLoading('atxLoading');
+
+			// Open the View Sessions modal and click the scheduled session, verify Cancel is shown
+			cy.getByAutoId('recommendedATXScheduleButton').click();
+			cy.getByAutoId('SelectSession-Session2').click();
+			cy.getByAutoId('AtxScheduleCardCancelButton').should('exist');
+			cy.getByAutoId('AtxScheduleCard-UnableCancel').should('not.exist');
+		});
+
+		it('Should NOT be able to cancel session less than 24 hours in the future', () => {
+			// Edit the mock data to put the first ATX item's scheduled date less than 24
+			// hours in the future
+			cy.window().then(win => {
+				const mockDB = JSON.parse(win.localStorage.getItem('MockDB'));
+				mockDB['(GET):/api/customerportal/racetrack/v1/atx?usecase=Campus Network Assurance&solution=IBN&pitstop=Onboard&customerId=2431199&suggestedAction=Get to know Cisco DNA Center'].scenarios.GET[0].response.body.items[0].sessions[1].sessionStartDate = new Date().getTime() + 3600000;
+				win.localStorage.setItem('MockDB', JSON.stringify(mockDB));
+			});
+
+			// Refresh the page to load the new mock data
+			cy.loadApp();
+			cy.waitForAppLoading('atxLoading');
+
+			// Open the View Sessions modal and click the scheduled session, verify unable to
+			// cancel message is shown
+			cy.getByAutoId('recommendedATXScheduleButton').click();
+			cy.getByAutoId('SelectSession-Session2').click();
+			cy.getByAutoId('AtxScheduleCardCancelButton').should('not.exist');
+			cy.getByAutoId('AtxScheduleCard-UnableCancel').should('have.text', i18n._UnableCancel_);
+		});
+	})
 });
