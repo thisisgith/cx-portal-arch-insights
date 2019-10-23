@@ -1,14 +1,17 @@
 /* tslint:disable */
 export interface DeviceInfo {
-  productFamily?: string;
+  pk?: string;
   collectionBlockedDates?: string;
+  excludedCommands?: string;
   hostname?: string;
   hwId?: string;
   ipAddress?: string;
+  lastScan?: string;
   lastScanDate?: string;
   managedNeId?: string;
   managementAddress?: string;
-  excludedCommands?: string;
+  createdDate?: string;
+  productFamily?: string;
   productId?: string;
   productType?: string;
   reachabilityStatus?: string;

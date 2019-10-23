@@ -12,7 +12,7 @@ import { DeviceDetailsByPage } from '../models/device-details-by-page';
   providedIn: 'root',
 })
 class ControlPointDeviceDiscoveryAPIService extends __BaseService {
-  static readonly getDevicesUsingGETPath = '/devices/{customerId}/{pageNumber}/{rowsPerPage}';
+  static readonly getDevicesUsingGETPath = '/v1/devices/{customerId}/{solution}/{useCase}/{pageNumber}/{rowsPerPage}';
 
   constructor(
     config: __Configuration,
@@ -23,6 +23,10 @@ class ControlPointDeviceDiscoveryAPIService extends __BaseService {
 
   /**
    * @param params The `ControlPointDeviceDiscoveryAPIService.GetDevicesUsingGETParams` containing the following parameters:
+   *
+   * - `useCase`: useCase
+   *
+   * - `solution`: solution
    *
    * - `rowsPerPage`: rowsPerPage
    *
@@ -40,9 +44,11 @@ class ControlPointDeviceDiscoveryAPIService extends __BaseService {
 
 
 
+
+
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/customerportal/controlpoint/v1/devices/${params.customerId}/${params.pageNumber}/${params.rowsPerPage}`,
+      this.rootUrl + `/customerportal/controlpoint/v1/devices/${params.customerId}/${params.solution}/${params.useCase}/${params.pageNumber}/${params.rowsPerPage}`,
       __body,
       {
         headers: __headers,
@@ -60,6 +66,10 @@ class ControlPointDeviceDiscoveryAPIService extends __BaseService {
 
   /**
    * @param params The `ControlPointDeviceDiscoveryAPIService.GetDevicesUsingGETParams` containing the following parameters:
+   *
+   * - `useCase`: useCase
+   *
+   * - `solution`: solution
    *
    * - `rowsPerPage`: rowsPerPage
    *
@@ -82,6 +92,16 @@ module ControlPointDeviceDiscoveryAPIService {
    * Parameters for getDevicesUsingGET
    */
   export interface GetDevicesUsingGETParams {
+
+    /**
+     * useCase
+     */
+    useCase: string;
+
+    /**
+     * solution
+     */
+    solution: string;
 
     /**
      * rowsPerPage
