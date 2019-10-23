@@ -1,7 +1,10 @@
 export { RoleCountResponse } from './models/role-count-response';
 export { RoleCount } from './models/role-count';
+export { SystemAssets } from './models/system-assets';
 export { Assets } from './models/assets';
+export { SystemAsset } from './models/system-asset';
 export { Asset } from './models/asset';
+export { SolutionInfo } from './models/solution-info';
 export { AssetSummary } from './models/asset-summary';
 export { HardwareResponse } from './models/hardware-response';
 export { HardwareInfo } from './models/hardware-info';
