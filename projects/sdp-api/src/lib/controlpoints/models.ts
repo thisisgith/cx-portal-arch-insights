@@ -21,6 +21,7 @@ export { IESetupCompletionResponseModel } from './models/iesetup-completion-resp
 export { IESetupCompletionUpdateRequestModel } from './models/iesetup-completion-update-request-model';
 export { IgnorePolicyRequestModel } from './models/ignore-policy-request-model';
 export { IgnorePolicyUpdateRequestModel } from './models/ignore-policy-update-request-model';
+export { InsightObject } from './models/insight-object';
 export { LicenseData } from './models/license-data';
 export { LicenseDataResponseModel } from './models/license-data-response-model';
 export { OSDetails } from './models/osdetails';
@@ -28,3 +29,5 @@ export { Pagination } from './models/pagination';
 export { PoliciesGroupByDayInAMonthModel } from './models/policies-group-by-day-in-amonth-model';
 export { PolicyResponseModel } from './models/policy-response-model';
 export { SystemDetails } from './models/system-details';
+export { UserPreferenceRequestModel } from './models/user-preference-request-model';
+export { UserPreferenceResponseModel } from './models/user-preference-response-model';
