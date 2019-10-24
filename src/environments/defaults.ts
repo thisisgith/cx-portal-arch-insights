@@ -85,7 +85,7 @@ export const defaults = {
 	 * sdpServiceOrigin MUST be explicitly declared in every single environment file,
 	 * because it is used inside of a module forRoot() call
 	 */
-	sdpServiceOrigin: 'https://api-dev.cisco.com',
+	sdpServiceOrigin: 'https://api-stage.cisco.com',
 	sdpServicePaths: {
 		contracts: '/api/v1/contracts',
 		controlpoints: '/api/customerportal/controlpoint',

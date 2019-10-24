@@ -31,7 +31,6 @@ const serialNumber = 'FOX1333GGGG';
 export const mockAssetResponse: Assets = {
 	data: [
 		{
-			containingHwId: null,
 			contractNumber: 'UNKNOWN',
 			criticalAdvisories: null,
 			deviceName: 'Catalyst+2960S-24PS-L+Switch',

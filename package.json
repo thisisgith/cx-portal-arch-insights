@@ -92,7 +92,7 @@
 		"@cui-x/utilities": "^1.0.0",
 		"@cx-portal/metrics": "^1.0.9",
 		"@cypress/webpack-preprocessor": "^4.0.4",
-		"@swagger/cx-portal": "^2.0.33",
+		"@swagger/cx-portal": "^2.0.34",
 		"@swagger/ng-swagger-gen": "^1.0.0",
 		"@types/jasmine": "^3.4.0",
 		"@types/jasminewd2": "^2.0.6",

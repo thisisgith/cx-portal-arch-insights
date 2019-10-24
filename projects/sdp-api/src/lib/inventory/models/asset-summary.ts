@@ -1,18 +1,20 @@
 /* tslint:disable */
 export interface AssetSummary {
-  slaDescription?: string;
+  warrantyType?: string;
   customerId?: string;
   hwInstanceId?: string;
   productFamily?: string;
   productId?: string;
+  productName?: string;
   swVersion?: string;
   swType?: string;
   coverageStatus?: string;
   contractNumber?: string;
+  coverageStartDate?: string;
   coverageEndDate?: string;
   slaCode?: string;
+  slaDescription?: string;
   managedNeId?: string;
-  warrantyType?: string;
   warrantyEndDate?: string;
   installAddress1?: string;
   installAddress2?: string;
@@ -21,6 +23,10 @@ export interface AssetSummary {
   installCountry?: string;
   installPostalCode?: string;
   installProvince?: string;
+  installSiteName?: string;
   eoSaleDate?: string;
   lastDateOfSupport?: string;
+  cxLevel?: string;
+  saId?: number;
+  vaId?: Array<number>;
 }
