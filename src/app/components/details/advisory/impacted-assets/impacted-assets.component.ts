@@ -295,7 +295,7 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 						name: I18n.get('_RecommendedRelease_'),
 						sortable: false,
 						template: this.recommendedVersionColumn,
-					}
+					},
 				];
 				_.set(affectedOptions, 'columns', _.concat(affectedColumns, bugTableColumns));
 				_.set(potentiallyAffectedOptions, 'columns',
