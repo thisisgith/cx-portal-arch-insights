@@ -87,3 +87,7 @@ export * from './lib/crash-prevention/crash-prevention.module';
 export * from './lib/insights/models';
 export * from './lib/insights/services';
 export * from './lib/insights/insights-crashes.module';
+
+export * from './lib/asset-tagging/models';
+export * from './lib/asset-tagging/services';
+export * from './lib/asset-tagging/asset-tagging.module';
