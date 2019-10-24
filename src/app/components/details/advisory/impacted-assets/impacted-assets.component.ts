@@ -210,35 +210,36 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 	 */
 	public refresh () {
 		this.params = { };
-		const options = {
+		const defaultOptions = {
 			bordered: true,
-			columns: [
-				{
-					key: 'hostName',
-					name: I18n.get('_Device_'),
-					sortable: true,
-					sortDirection: 'asc',
-					sorting: true,
-					template: this.deviceColumn,
-					width: '300px',
-				},
-				{
-					key: 'ipAddress',
-					name: I18n.get('_IPAddress_'),
-					sortable: true,
-					template: this.ipAddressColumn,
-				},
-			],
+			columns: null,
 			padding: 'compressed',
 			striped: false,
 			wrapText: true,
 		};
+		const affectedOptions = _.cloneDeep(defaultOptions);
+		const potentiallyAffectedOptions = _.cloneDeep(defaultOptions);
+		const columns  = [
+			{
+				key: 'hostName',
+				name: I18n.get('_Device_'),
+				sortable: true,
+				sortDirection: 'asc',
+				sorting: true,
+				template: this.deviceColumn,
+				width: '300px',
+			},
+			{
+				key: 'ipAddress',
+				name: I18n.get('_IPAddress_'),
+				sortable: true,
+				template: this.ipAddressColumn,
+			},
+		];
 
-		let affectedOptions;
-		let potentiallyAffectedOptions;
 		switch (this.type) {
 			case 'security':
-				options.columns.push(
+				const securityTableColumns = [
 					{
 						key: 'swVersion',
 						name: I18n.get('_Release_'),
@@ -251,9 +252,10 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 						sortable: false,
 						template: this.recommendedVersionColumn,
 					},
-				);
-				affectedOptions = _.clone(options);
-				potentiallyAffectedOptions = _.clone(options);
+				];
+				_.set(affectedOptions, 'columns', _.concat(columns, securityTableColumns));
+				_.set(potentiallyAffectedOptions, 'columns',
+					_.concat(columns, securityTableColumns));
 				const affectedHostName = _.find(affectedOptions.columns, { key: 'hostName' });
 				_.set(affectedHostName, 'name', I18n.get('_System_'));
 				const potentiallyAffectedHostName =
@@ -261,13 +263,13 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 				_.set(potentiallyAffectedHostName, 'name', I18n.get('_SystemName_'));
 				break;
 			case 'field':
-				const hostName = _.find(options.columns, { key: 'hostName' });
-				_.set(hostName, 'name', I18n.get('_ProductID_'));
-				affectedOptions = _.clone(options);
-				potentiallyAffectedOptions = _.clone(options);
+				_.set(_.find(affectedOptions.columns, { key: 'hostName' }),
+					'name', I18n.get('_ProductID_'));
+				_.set(_.find(potentiallyAffectedOptions.columns, { key: 'hostName' }),
+					'name', I18n.get('_ProductID_'));
 				break;
 			case 'bug':
-				options.columns.push(
+				const bugTableColumns = [
 					{
 						key: 'softwareVersion',
 						name: I18n.get('_Release_'),
@@ -279,9 +281,11 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 						name: I18n.get('_RecommendedRelease_'),
 						sortable: false,
 						template: this.recommendedVersionColumn,
-					});
-				affectedOptions = _.clone(options);
-				potentiallyAffectedOptions = _.clone(options);
+					}
+				];
+				_.set(affectedOptions, 'columns', _.concat(columns, bugTableColumns));
+				_.set(potentiallyAffectedOptions, 'columns',
+					_.concat(columns, securityTableColumns));
 				break;
 		}
 
