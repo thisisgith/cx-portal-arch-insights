@@ -212,30 +212,41 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 		this.params = { };
 		const defaultOptions = {
 			bordered: true,
-			columns: null,
+			columns: [
+				{
+					key: 'hostName',
+					name: I18n.get('_Device_'),
+					sortable: true,
+					sortDirection: 'asc',
+					sorting: true,
+					width: '300px',
+				},
+				{
+					key: 'ipAddress',
+					name: I18n.get('_IPAddress_'),
+					sortable: true,
+				},
+			],
 			padding: 'compressed',
 			striped: false,
 			wrapText: true,
 		};
 		const affectedOptions = _.cloneDeep(defaultOptions);
 		const potentiallyAffectedOptions = _.cloneDeep(defaultOptions);
-		const columns  = [
-			{
-				key: 'hostName',
-				name: I18n.get('_Device_'),
-				sortable: true,
-				sortDirection: 'asc',
-				sorting: true,
-				template: this.deviceColumn,
-				width: '300px',
-			},
-			{
-				key: 'ipAddress',
-				name: I18n.get('_IPAddress_'),
-				sortable: true,
-				template: this.ipAddressColumn,
-			},
-		];
+
+		// Setting the template for this column after cloneDeep to circumvent performance
+		// issues with recursively cloning the options object
+		const affectedHostName = _.find(affectedOptions.columns, { key: 'hostName' });
+		const potentiallyAffectedHostName =
+			_.find(potentiallyAffectedOptions.columns, { key: 'hostName' });
+		_.set(affectedHostName, 'template', this.deviceColumn);
+		_.set(potentiallyAffectedHostName, 'template', this.deviceColumn);
+		_.set(_.find(affectedOptions.columns, { key: 'ipAddress' }),
+			'template', this.ipAddressColumn);
+		_.set(_.find(potentiallyAffectedOptions.columns, { key: 'ipAddress' }),
+			'template', this.ipAddressColumn);
+		const affectedColumns = _.get(affectedOptions, 'columns');
+		const potentiallyAffectedColumns = _.get(potentiallyAffectedOptions, 'columns');
 
 		switch (this.type) {
 			case 'security':
@@ -253,14 +264,17 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 						template: this.recommendedVersionColumn,
 					},
 				];
-				_.set(affectedOptions, 'columns', _.concat(columns, securityTableColumns));
+				// Concat the default columns with the extra columns
+				_.set(affectedOptions, 'columns',
+					_.concat(affectedColumns, securityTableColumns));
 				_.set(potentiallyAffectedOptions, 'columns',
-					_.concat(columns, securityTableColumns));
-				const affectedHostName = _.find(affectedOptions.columns, { key: 'hostName' });
-				_.set(affectedHostName, 'name', I18n.get('_System_'));
-				const potentiallyAffectedHostName =
-					_.find(potentiallyAffectedOptions.columns, { key: 'hostName' });
-				_.set(potentiallyAffectedHostName, 'name', I18n.get('_SystemName_'));
+					_.concat(potentiallyAffectedColumns, securityTableColumns));
+
+					// set names for hostName table header
+				_.set(_.find(affectedOptions.columns, { key: 'hostName' }),
+					'name', I18n.get('_System_'));
+				_.set(_.find(potentiallyAffectedOptions.columns, { key: 'hostName' }),
+					'name', I18n.get('_SystemName_'));
 				break;
 			case 'field':
 				_.set(_.find(affectedOptions.columns, { key: 'hostName' }),
@@ -283,9 +297,9 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 						template: this.recommendedVersionColumn,
 					}
 				];
-				_.set(affectedOptions, 'columns', _.concat(columns, bugTableColumns));
+				_.set(affectedOptions, 'columns', _.concat(affectedColumns, bugTableColumns));
 				_.set(potentiallyAffectedOptions, 'columns',
-					_.concat(columns, securityTableColumns));
+					_.concat(potentiallyAffectedColumns, securityTableColumns));
 				break;
 		}
 
