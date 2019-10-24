@@ -32,6 +32,7 @@ import { ResetCacheModal } from './reset-cache-modal/reset-cache-modal.component
 import { SetupIEService } from './setup-ie.service';
 import { UtilsService } from '@services';
 import { NoDNACComponent } from './no-dnac/no-dnac.component';
+import { ManageUsersComponent } from './manage-users/manage-users.component';
 import { ControlPointIERegistrationAPIService } from '@sdp-api';
 import * as _ from 'lodash-es';
 
@@ -58,6 +59,10 @@ const defaultSteps = [
 	{
 		state: SETUP_STATES.CONNECT_DNAC,
 		type: ConnectDNACenterComponent,
+	},
+	{
+		state: SETUP_STATES.MANAGE_USERS,
+		type: ManageUsersComponent,
 	},
 ];
 

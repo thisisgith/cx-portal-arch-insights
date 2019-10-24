@@ -1,0 +1,10 @@
+:host {
+	position: relative;
+
+	.select-role-dropdown {
+		position: absolute;
+		top: 22px;
+		z-index: 1000;
+		width: 250px;
+	}
+}

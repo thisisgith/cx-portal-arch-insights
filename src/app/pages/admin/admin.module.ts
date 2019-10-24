@@ -13,6 +13,7 @@ import { ControlPointsModule } from '@sdp-api';
 import { AdminAssetsComponent, AdminAssetsModule } from './assets';
 import { SettingsComponent, SettingsModule } from './settings';
 import { PoliciesComponent, PoliciesModule } from './policies';
+import { UsersComponent, UsersModule } from './users';
 
 import { environment } from '@environment';
 
@@ -35,6 +36,10 @@ const childRoutes: Routes = [
 	{
 		component: PoliciesComponent,
 		path: 'policies',
+	},
+	{
+		component: UsersComponent,
+		path: 'users',
 	},
 	{
 		path: '',
@@ -65,6 +70,7 @@ const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 		PoliciesModule,
 		RouterModule.forChild(childRoutes),
 		SettingsModule,
+		UsersModule,
 	],
 })
 export class AdminModule { }

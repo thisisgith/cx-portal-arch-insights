@@ -65,6 +65,14 @@ export class IESetupWizardStatusBar {
 			isActive: () => this.state === SETUP_STATES.CONNECT_DNAC,
 			label: _.toUpper(I18n.get('_ConnectDNAToCXCollector_')),
 		},
+		{
+			iconActiveSrc: this.sanitizer
+				.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s6-on.png'),
+			iconInactiveSrc: this.sanitizer
+				.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s6-off.png'),
+			isActive: () => this.state === SETUP_STATES.MANAGE_USERS,
+			label: _.toUpper(I18n.get('_AddUsersToCXPortal_')),
+		},
 	];
 	constructor (
 		private sanitizer: DomSanitizer,

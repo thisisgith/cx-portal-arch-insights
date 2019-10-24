@@ -1,0 +1,82 @@
+<div class="text-center dbl-margin-top">
+	<div class="responsive-table" *ngIf="users$ | async as users">
+		<table class="
+			table
+			table--selectable
+			table--lined
+			table--hover
+			table--nostripes
+			text-left
+			"
+		>
+			<thead>
+				<tr>
+					<th
+						class="sortable"
+						(click)="setSort('firstName')"
+						[ngClass]="{ 'text-info': sortProps.column === 'firstName' }"
+						data-auto-id="name-column-sort"
+					>
+						<span class="half-margin-right" [innerText]="'_User_' | i18n"></span>
+						<span
+							class="icon-dropdown text-xsmall"
+							[ngClass]="{
+								'flipped': sortProps.column === 'firstName'
+									&& sortProps.dir === 'desc'
+							}"
+						></span>
+					</th>
+					<th
+						class="sortable"
+						(click)="setSort('companyName')"
+						[ngClass]="{ 'text-info': sortProps.column === 'companyName' }"
+						data-auto-id="company-column-sort"
+					>
+						<span class="half-margin-right" [innerText]="'_Company_' | i18n"></span>
+						<span
+							class="icon-dropdown text-xsmall"
+							[ngClass]="{
+								'flipped': sortProps.column === 'companyName'
+									&& sortProps.dir === 'desc'
+							}"
+						></span>
+					</th>
+					<th [innerText]="'_SmartAccount_' | i18n"></th>
+					<th [innerText]="'_Role_' | i18n"></th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody *ngIf="!isLoading">
+				<tr *ngFor="let user of users">
+					<td>
+						<div class="flex">
+							<div class="user-avatar base-margin-right">
+								<div [innerText]="user | initials"></div>
+							</div>
+							<div class="user-info">
+								<h3 [innerText]="user.firstName + ' ' + user.lastName"></h3>
+								<div [innerText]="user.emailAddress"></div>
+							</div>
+						</div>
+					</td>
+					<td [innerText]="user.companyName"></td>
+					<td [innerText]="user.saAccountName || 'Acme Corp'"></td>
+					<td class="role-cell">
+						<select-role [role]="user.roles[0]"></select-role>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="text-center dbl-margin-top xl-margin-bottom" *ngIf="isLoading">
+		<cui-loader [label]="'_Loading_' | i18n"></cui-loader>
+	</div>
+	<div class="xl-margin-top dbl-margin-bottom text-center">
+		<button
+			class="btn disabled"
+			[innerText]="'_Update_' | i18n"
+			(click)="onUpdateClick()"
+			data-auto-id="update-btn"
+		></button>
+	</div>
+</div>

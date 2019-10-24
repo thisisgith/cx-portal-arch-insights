@@ -49,6 +49,22 @@
 			</a>
 		</li>
 		<li class="sidebar__item"
+			[ngClass]="{ selected: routerPath === 'users' }"
+		>
+			<a
+				data-auto-id="sidebar.users"
+				[routerLink]="['/admin', 'users']"
+			>
+				<span class="badge-wrapper">
+					<span tabindex="0"
+						attr.data-auto-id="AdminSidebar-UsersIcon">
+						<span class="icon-profile-settings text-noselect"></span>
+					</span>
+				</span>
+				<span class="sidebar__item__label" [innerText]="'_Users_' | i18n"></span>
+			</a>
+		</li>
+		<li class="sidebar__item"
 			[ngClass]="{ selected: routerPath === 'settings' }"
 		>
 			<a
