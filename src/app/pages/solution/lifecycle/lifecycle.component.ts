@@ -40,6 +40,7 @@ import { User } from '@interfaces';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { RacetrackInfoService } from '@services';
 import { environment } from '@environment';
+import { AssetType } from './feedback/session-feedback.component';
 
 /**
  * Interface representing success path and product guides modals
@@ -337,6 +338,7 @@ export class LifecycleComponent implements OnDestroy {
 	public selectCgtComponent = false;
 	public cgtRequestTrainingClicked = false;
 	public cxLevel: number;
+	public AssetType = AssetType;
 
 	get currentPitstop () {
 		return _.get(this.componentData, ['racetrack', 'pitstop']);
@@ -1737,6 +1739,7 @@ export class LifecycleComponent implements OnDestroy {
 				const totalCount: number = _.get(result, ['totalCount']);
 				_.set(this.componentData.productGuides, ['totalCount'], totalCount);
 
+				this.prepareProductGuides();
 				this.status.loading.productGuides.modal = false;
 				this.status.error.productGuides = false;
 				if (window.Cypress) {
@@ -1766,7 +1769,9 @@ export class LifecycleComponent implements OnDestroy {
 	 * the data has been loaded in.
 	 */
 	private prepareProductGuides () {
-		this.buildPGTable();
+		if (!this.productGuidesTable) {
+			this.buildPGTable();
+		}
 	}
 
 	/**
@@ -2126,7 +2131,6 @@ export class LifecycleComponent implements OnDestroy {
 	 * ForkJoin to load the other API Calls
 	 */
 	private loadLifecycleInfo () {
-		this.prepareProductGuides();
 		forkJoin(
 			this.loadACC(),
 			this.loadATX(),

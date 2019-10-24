@@ -864,17 +864,6 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 	font-size: 18px;
 }
 
-.small-panel {
-	padding: 0;
-	line-height: initial;
-
-	&:hover {
-		.cx-text-default {
-			color: $accent-dark-blue;
-		}
-	}
-}
-
 .success {
 	&__card {
 		@extend .atx__card;
@@ -1023,18 +1012,6 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 
 		&__feedback {
 			margin-left: auto;
-
-			a.btn {
-				background: #fff;
-				color: $icon-light-gray;
-				border: 1px solid $icon-light-gray;
-			}
-
-			a.btn--selected {
-				border: 1px solid rgba(#32c5ff, 0.25);
-				color: $accent-light-blue;
-				cursor: unset;
-			}
 		}
 	}
 
@@ -1744,6 +1721,25 @@ tr.td-row td {
 				line-height: 14px;
 				margin-top: 3px;
 			}
+		}
+	}
+}
+
+.small-panel {
+	padding: 0;
+	line-height: initial;
+
+	.cx-text-default {
+		&:hover {
+			+ .hover-panel {
+				display: block;
+			}
+		}
+	}
+
+	&:hover {
+		.cx-text-default {
+			color: $accent-dark-blue;
 		}
 	}
 }

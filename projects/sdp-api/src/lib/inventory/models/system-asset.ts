@@ -1,7 +1,7 @@
 /* tslint:disable */
 import { SolutionInfo } from './solution-info';
-export interface Asset {
-  neId?: string;
+export interface SystemAsset {
+  productId?: string;
 
   /**
    * Device name
@@ -17,11 +17,6 @@ export interface Asset {
    * Critical advisories
    */
   criticalAdvisories?: string;
-
-  /**
-   * If Device is Covered
-   */
-  supportCovered?: boolean;
 
   /**
    * Serial Number
@@ -42,23 +37,20 @@ export interface Asset {
    * Role
    */
   role?: string;
-
-  /**
-   * Contract Number
-   */
-  contractNumber?: string;
   managedNeId?: string;
+  neId?: string;
+  hwInstanceId?: string;
 
   /**
    * IP Address
    */
   ipAddress?: string;
-  hwInstanceId?: string;
-  productId?: string;
   productType?: string;
   productName?: string;
-  equipmentType?: string;
-  reachabilityStatus?: string;
+  hasSecurityAdvisories?: boolean;
+  hasBugs?: boolean;
+  scanStatus?: string;
+  isManagedNE?: boolean;
   solutionInfo?: Array<SolutionInfo>;
   cxLevel?: string;
   saId?: number;

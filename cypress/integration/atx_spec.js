@@ -11,6 +11,8 @@ const firstATXSessions = atxItems[0].sessions;
 
 const scheduledItems = atxMock.getScenario('GET', '(ATX) IBN-Campus Network Assurance-Onboard-twoScheduled').response.body.items;
 
+const twoRecommendedWithPartnerItems = atxMock.getScenario('GET', '(ATX) IBN-Campus Network Assurance-Onboard-twoRecommendedWithPartner').response.body.items;
+
 const atxFilters = [
 	{ filter: 'Recommended', field: 'status', value: 'recommended' },
 	{ filter: 'Scheduled', field: 'status', value: 'scheduled' },
@@ -870,8 +872,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			});
 		});
 
-		// TODO: Failing due to PBC-1033: http://swtg-jira-lnx.cisco.com:8080/browse/PBC-1033
-		it.skip('ATX View All table view should allow scheduling', () => {
+		it('ATX View All table view should allow scheduling', () => {
 			// Verify a View Sessions button is available for all rows, and clicking it opens the
 			// atxScheduleCard with all the item's sessions
 			atxItems.forEach((item, index) => {
@@ -1568,7 +1569,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 				// Click on the more list item, verify the modal has details
 				cy.getByAutoId('moreATXList-Click')
 					.eq(index)
-					.should('be.visible')
+					.should('exist')
 					.click();
 
 				cy.getByAutoId('atxMoreClickModal')
@@ -1631,8 +1632,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			});
 		});
 
-		// TODO: Currently failing due to PBC-1035: http://swtg-jira-lnx.cisco.com:8080/browse/PBC-1035
-		it.skip('Verify More List click modal Watch Now button', () => {
+		it('Verify More List click modal Watch Now button', () => {
 			moreListItems.forEach((item, index) => {
 				cy.getByAutoId('moreATXList-Click')
 					.eq(index)
@@ -2120,4 +2120,502 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			});
 		});
 	});
+
+	describe('PBC-1013: UI needed for ATX details', () => {
+		// JIRA name is not terribly descriptive...
+		// These tests relate to partner-branding on ATX details (first item, More list, View Sessions)
+		afterEach(() => {
+			// Switch back to the default mock data
+			// (has providerInfo.id and providerInfo.name, but providerInfo.logoURL is empty string)
+			atxMock.enable('(ATX) IBN-Campus Network Assurance-Onboard');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard');
+		});
+
+		it('First ATX item details should show partner name when no logoURL', () => {
+			// Verify the logo text is shown, instead of the image
+			cy.getByAutoId('recommendedATX').within(() => {
+				cy.getByAutoId('recommendedATX-ProviderText')
+					.should('exist')
+					.and('have.text', atxItems[0].providerInfo.name);
+				cy.getByAutoId('recommendedATX-ProviderLogo')
+					.should('not.exist');
+			});
+		});
+
+		it('First ATX item details should show partner image from logoURL', () => {
+			// Switch to mock data with logoURLs
+			atxMock.enable('(ATX) IBN-Campus Network Assurance-Onboard-twoRecommendedWithPartner');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard-twoRecommendedWithPartner');
+
+			// Verify the logo image is shown, instead of the text
+			cy.getByAutoId('recommendedATX').within(() => {
+				cy.getByAutoId('recommendedATX-ProviderLogo')
+					.should('exist')
+					.and('have.attr', 'src', twoRecommendedWithPartnerItems[0].providerInfo.logoURL);
+				cy.getByAutoId('recommendedATX-ProviderText')
+					.should('not.exist');
+			});
+		});
+
+		it('First ATX item details should hide logo and partner name if both are missing', () => {
+			// Switch to mock data with NO providerInfo block
+			atxMock.enable('(ATX) IBN-Campus Network Assurance-Onboard-twoRecommended');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard-twoRecommended');
+
+			// Verify the logo and text are hidden
+			cy.getByAutoId('recommendedATX').within(() => {
+				cy.getByAutoId('recommendedATX-ProviderLogo')
+					.should('not.exist');
+				cy.getByAutoId('recommendedATX-ProviderText')
+					.should('not.exist');
+			});
+		});
+
+		it('ATX More list items should show partner name regardless of logoURL', () => {
+			moreListItems.forEach((atx, index) => {
+				cy.getByAutoId('moreATXList-item')
+					.eq(index)
+					.within(() => {
+						cy.getByAutoId('moreATXList-Provider')
+							.should('have.text', `${i18n._By_}${atx.providerInfo.name}`);
+					});
+			});
+
+			// Switch to mock data with logoURLs
+			atxMock.enable('(ATX) IBN-Campus Network Assurance-Onboard-twoRecommendedWithPartner');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard-twoRecommendedWithPartner');
+
+			// Verify the more list still uses the name, not the image
+			cy.getByAutoId('moreATXList-item')
+				.first()
+				.within(() => {
+					cy.getByAutoId('moreATXList-Provider')
+						.should('have.text', `${i18n._By_}${twoRecommendedWithPartnerItems[1].providerInfo.name}`);
+				});
+		});
+
+		it('ATX More list items should NOT show partner name if missing', () => {
+			// Switch to mock data with NO providerInfo block
+			atxMock.enable('(ATX) IBN-Campus Network Assurance-Onboard-twoRecommended');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard-twoRecommended');
+
+			// Verify the "By <name>" text is hidden
+			cy.getByAutoId('moreATXList-item')
+				.first()
+				.within(() => {
+					cy.getByAutoId('moreATXList-Provider')
+						.and('have.text', '');
+				});
+		});
+
+		it('First ATX item hover should show partner name regardless of logoURL', () => {
+			cy.getByAutoId('recommendedATX-HoverModal-Provider')
+				.should('have.text', `${i18n._By_}${atxItems[0].providerInfo.name}`);
+
+			// Switch to mock data with logoURLs
+			atxMock.enable('(ATX) IBN-Campus Network Assurance-Onboard-twoRecommendedWithPartner');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard-twoRecommendedWithPartner');
+
+			// Verify the first item's hover still uses the name, not the image
+			cy.getByAutoId('recommendedATX-HoverModal-Provider')
+				.should('have.text', `${i18n._By_}${twoRecommendedWithPartnerItems[0].providerInfo.name}`);
+		});
+
+		it('First ATX item hover should NOT show partner name if missing', () => {
+			// Switch to mock data with NO providerInfo block
+			atxMock.enable('(ATX) IBN-Campus Network Assurance-Onboard-twoRecommended');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard-twoRecommended');
+
+			// Verify the "By <name>" text is hidden
+			cy.getByAutoId('recommendedATX-HoverModal-Provider')
+				.should('have.text', '');
+		});
+
+		it('ATX More list item hovers should show partner name regardless of logoURL', () => {
+			moreListItems.forEach((atx, index) => {
+				cy.getByAutoId('moreATXList-item')
+					.eq(index)
+					.within(() => {
+						cy.getByAutoId('moreATXList-HoverModal').within(() => {
+							cy.getByAutoId('moreATXList-HoverModal-Provider')
+								.should('have.text', `${i18n._By_}${atx.providerInfo.name}`);
+						});
+					});
+			});
+
+			// Switch to mock data with logoURLs
+			atxMock.enable('(ATX) IBN-Campus Network Assurance-Onboard-twoRecommendedWithPartner');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard-twoRecommendedWithPartner');
+
+			// Verify the More list item's hover still uses the name, not the image
+			cy.getByAutoId('moreATXList-item')
+				.first()
+				.within(() => {
+					cy.getByAutoId('moreATXList-HoverModal').within(() => {
+						cy.getByAutoId('moreATXList-HoverModal-Provider')
+							.should('have.text', `${i18n._By_}${twoRecommendedWithPartnerItems[1].providerInfo.name}`);
+					});
+				});
+		});
+
+		it('ATX More list item hovers should NOT show partner name if missing', () => {
+			// Switch to mock data with NO providerInfo block
+			atxMock.enable('(ATX) IBN-Campus Network Assurance-Onboard-twoRecommended');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard-twoRecommended');
+
+			// Verify the "By <name>" text is hidden
+			cy.getByAutoId('moreATXList-item')
+				.first()
+				.within(() => {
+					cy.getByAutoId('moreATXList-HoverModal').within(() => {
+						cy.getByAutoId('moreATXList-HoverModal-Provider')
+							.should('have.text', '');
+					});
+				});
+		});
+
+		it('ATX More list item click modals should show partner name regardless of logoURL', () => {
+			moreListItems.forEach((atx, index) => {
+				cy.getByAutoId('moreATXList-Click')
+					.eq(index)
+					.click();
+				cy.getByAutoId('atxMoreClickModal')
+					.within(() => {
+						cy.getByAutoId('atxMoreClickModal-Provider')
+							.should('have.text', `${i18n._By_}${atx.providerInfo.name}`);
+						cy.getByAutoId('closeMoreATXClickModal').click();
+					});
+			});
+
+			// Switch to mock data with logoURLs
+			atxMock.enable('(ATX) IBN-Campus Network Assurance-Onboard-twoRecommendedWithPartner');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard-twoRecommendedWithPartner');
+
+			// Verify the More list item's hover still uses the name, not the image
+			cy.getByAutoId('moreATXList-Click')
+				.first()
+				.click();
+			cy.getByAutoId('atxMoreClickModal')
+				.within(() => {
+					cy.getByAutoId('atxMoreClickModal-Provider')
+						.should('have.text', `${i18n._By_}${twoRecommendedWithPartnerItems[1].providerInfo.name}`);
+				});
+		});
+
+		it('ATX More list item click modals should NOT show partner name if missing', () => {
+			// Switch to mock data with NO providerInfo block
+			atxMock.enable('(ATX) IBN-Campus Network Assurance-Onboard-twoRecommended');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard-twoRecommended');
+
+			// Verify the "By <name>" text is hidden
+			cy.getByAutoId('moreATXList-Click')
+				.first()
+				.click();
+			cy.getByAutoId('atxMoreClickModal')
+				.within(() => {
+					cy.getByAutoId('atxMoreClickModal-Provider')
+						.should('not.exist');
+				});
+		});
+
+		describe('ATX View Sessions modal should show partner name regardless of logoURL', () => {
+			afterEach(() => {
+				// Refresh the page to force close all modals/popups
+				cy.loadApp();
+				cy.waitForAppLoading('atxLoading');
+			});
+
+			it('First ATX item', () => {
+				cy.getByAutoId('recommendedATXScheduleButton').click();
+				cy.getByAutoId('atxScheduleCard').within(() => {
+					cy.getByAutoId('atxScheduleCard-Provider')
+						.should('have.text', `${i18n._By_}${atxItems[0].providerInfo.name}`);
+				});
+
+				// Switch to mock data with logoURLs
+				atxMock.enable('(ATX) IBN-Campus Network Assurance-Onboard-twoRecommendedWithPartner');
+
+				// Refresh the data
+				cy.getByAutoId('Facet-Assets & Coverage').click();
+				cy.getByAutoId('Facet-Lifecycle').click();
+				cy.wait('(ATX) IBN-Campus Network Assurance-Onboard-twoRecommendedWithPartner');
+
+				// Verify the View Sessions modal still uses the name, not the image
+				cy.getByAutoId('recommendedATXScheduleButton').click();
+				cy.getByAutoId('atxScheduleCard').within(() => {
+					cy.getByAutoId('atxScheduleCard-Provider')
+						.should('have.text', `${i18n._By_}${twoRecommendedWithPartnerItems[0].providerInfo.name}`);
+				});
+			});
+
+			it('More list ATX item', () => {
+				cy.getByAutoId('moreATXList-Click')
+					.first()
+					.click();
+				cy.getByAutoId('atxMoreClickModal').within(() => {
+					cy.getByAutoId('MoreATXViewSessions').click();
+				});
+				cy.getByAutoId('atxScheduleCard').within(() => {
+					cy.getByAutoId('atxScheduleCard-Provider')
+						.should('have.text', `${i18n._By_}${atxItems[1].providerInfo.name}`);
+				});
+
+				// Switch to mock data with logoURLs
+				atxMock.enable('(ATX) IBN-Campus Network Assurance-Onboard-twoRecommendedWithPartner');
+
+				// Refresh the data
+				cy.getByAutoId('Facet-Assets & Coverage').click();
+				cy.getByAutoId('Facet-Lifecycle').click();
+				cy.wait('(ATX) IBN-Campus Network Assurance-Onboard-twoRecommendedWithPartner');
+
+				// Verify the View Sessions modal still uses the name, not the image
+				cy.getByAutoId('moreATXList-Click')
+					.first()
+					.click();
+				cy.getByAutoId('atxMoreClickModal').within(() => {
+					cy.getByAutoId('MoreATXViewSessions').click();
+				});
+				cy.getByAutoId('atxScheduleCard').within(() => {
+					cy.getByAutoId('atxScheduleCard-Provider')
+						.should('have.text', `${i18n._By_}${twoRecommendedWithPartnerItems[1].providerInfo.name}`);
+				});
+			});
+
+			it('View All Card View ATX item', () => {
+				cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
+				cy.getByAutoId('atx-card-view-btn').click();
+				cy.getByAutoId('ATXCard')
+					.first()
+					.within(() => {
+						cy.getByAutoId('cardRecommendedATXScheduleButton').click();
+					});
+				cy.getByAutoId('atxScheduleCard').within(() => {
+					cy.getByAutoId('atxScheduleCard-Provider')
+						.should('have.text', `${i18n._By_}${atxItems[0].providerInfo.name}`);
+				});
+				cy.getByAutoId('ViewAllCloseModal').click();
+
+				// Switch to mock data with logoURLs
+				atxMock.enable('(ATX) IBN-Campus Network Assurance-Onboard-twoRecommendedWithPartner');
+
+				// Refresh the data
+				cy.getByAutoId('Facet-Assets & Coverage').click();
+				cy.getByAutoId('Facet-Lifecycle').click();
+				cy.wait('(ATX) IBN-Campus Network Assurance-Onboard-twoRecommendedWithPartner');
+
+				// Verify the View Sessions modal still uses the name, not the image
+				cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
+				cy.getByAutoId('atx-card-view-btn').click();
+				cy.getByAutoId('ATXCard')
+					.first()
+					.within(() => {
+						cy.getByAutoId('cardRecommendedATXScheduleButton').click();
+					});
+				cy.getByAutoId('atxScheduleCard').within(() => {
+					cy.getByAutoId('atxScheduleCard-Provider')
+						.should('have.text', `${i18n._By_}${twoRecommendedWithPartnerItems[0].providerInfo.name}`);
+				});
+			});
+
+			it('View All Table View ATX item', () => {
+				cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
+				cy.getByAutoId('atx-table-view-btn').click();
+				cy.getByAutoId('ViewSessionButton')
+					.first()
+					.click();
+				cy.getByAutoId('atxScheduleCard').within(() => {
+					cy.getByAutoId('atxScheduleCard-Provider')
+						.should('have.text', `${i18n._By_}${atxItems[0].providerInfo.name}`);
+				});
+				cy.getByAutoId('ViewAllCloseModal').click();
+
+				// Switch to mock data with logoURLs
+				atxMock.enable('(ATX) IBN-Campus Network Assurance-Onboard-twoRecommendedWithPartner');
+
+				// Refresh the data
+				cy.getByAutoId('Facet-Assets & Coverage').click();
+				cy.getByAutoId('Facet-Lifecycle').click();
+				cy.wait('(ATX) IBN-Campus Network Assurance-Onboard-twoRecommendedWithPartner');
+
+				// Verify the View Sessions modal still uses the name, not the image
+				cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
+				cy.getByAutoId('atx-table-view-btn').click();
+				cy.getByAutoId('ViewSessionButton')
+					.first()
+					.click();
+				cy.getByAutoId('atxScheduleCard').within(() => {
+					cy.getByAutoId('atxScheduleCard-Provider')
+						.should('have.text', `${i18n._By_}${twoRecommendedWithPartnerItems[0].providerInfo.name}`);
+				});
+			});
+		});
+
+		describe('ATX View Sessions modal should NOT show partner name if missing', () => {
+			beforeEach(() => {
+				// Switch to mock data with NO providerInfo block
+				atxMock.enable('(ATX) IBN-Campus Network Assurance-Onboard-twoRecommended');
+
+				// Refresh the data
+				cy.getByAutoId('Facet-Assets & Coverage').click();
+				cy.getByAutoId('Facet-Lifecycle').click();
+				cy.wait('(ATX) IBN-Campus Network Assurance-Onboard-twoRecommended');
+			});
+
+			afterEach(() => {
+				// Refresh the page to force close all modals/popups
+				cy.loadApp();
+				cy.waitForAppLoading('atxLoading');
+			});
+
+			it('First ATX item', () => {
+				cy.getByAutoId('recommendedATXScheduleButton').click();
+				cy.getByAutoId('atxScheduleCard').within(() => {
+					cy.getByAutoId('atxScheduleCard-Provider')
+						.should('have.text', '');
+				});
+			});
+
+			it('More list ATX item', () => {
+				cy.getByAutoId('moreATXList-Click')
+					.first()
+					.click();
+				cy.getByAutoId('atxMoreClickModal').within(() => {
+					cy.getByAutoId('MoreATXViewSessions').click();
+				});
+				cy.getByAutoId('atxScheduleCard').within(() => {
+					cy.getByAutoId('atxScheduleCard-Provider')
+						.should('have.text', '');
+				});
+			});
+
+			it('View All Card View ATX item', () => {
+				cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
+				cy.getByAutoId('atx-card-view-btn').click();
+				cy.getByAutoId('ATXCard')
+					.first()
+					.within(() => {
+						cy.getByAutoId('cardRecommendedATXScheduleButton').click();
+					});
+				cy.getByAutoId('atxScheduleCard').within(() => {
+					cy.getByAutoId('atxScheduleCard-Provider')
+						.should('have.text', '');
+				});
+			});
+
+			it('View All Table View ATX item', () => {
+				cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
+				cy.getByAutoId('atx-table-view-btn').click();
+				cy.getByAutoId('ViewSessionButton')
+					.first()
+					.click();
+				cy.getByAutoId('atxScheduleCard').within(() => {
+					cy.getByAutoId('atxScheduleCard-Provider')
+						.should('have.text', '');
+				});
+			});
+		});
+	});
+
+	describe('PBC-1019: UI work to un-register ATX session', () => {
+		beforeEach(() => {
+			// Nuke the mock data and reload a clean set
+			cy.clearLocalStorage('MockDB');
+
+			cy.loadApp();
+			cy.waitForAppLoading('atxLoading');
+		});
+
+		afterEach(() => {
+			// Nuke the mock data and reload a clean set
+			cy.clearLocalStorage('MockDB');
+
+			cy.loadApp();
+			cy.waitForAppLoading('atxLoading');
+		});
+
+		it('Should be able to cancel session more than 24 hours in the future', () => {
+			// Edit the mock data to put the first ATX item's scheduled date more than 24
+			// hours in the future
+			cy.window().then(win => {
+				const mockDB = JSON.parse(win.localStorage.getItem('MockDB'));
+				mockDB['(GET):/api/customerportal/racetrack/v1/atx?usecase=Campus Network Assurance&solution=IBN&pitstop=Onboard&customerId=2431199&suggestedAction=Get to know Cisco DNA Center'].scenarios.GET[0].response.body.items[0].sessions[1].sessionStartDate = new Date().getTime() + 86400000 + 3600000;
+				win.localStorage.setItem('MockDB', JSON.stringify(mockDB));
+			});
+
+			// Refresh the page to load the new mock data
+			cy.loadApp();
+			cy.waitForAppLoading('atxLoading');
+
+			// Open the View Sessions modal and click the scheduled session, verify Cancel is shown
+			cy.getByAutoId('recommendedATXScheduleButton').click();
+			cy.getByAutoId('SelectSession-Session2').click();
+			cy.getByAutoId('AtxScheduleCardCancelButton').should('exist');
+			cy.getByAutoId('AtxScheduleCard-UnableCancel').should('not.exist');
+		});
+
+		it('Should NOT be able to cancel session less than 24 hours in the future', () => {
+			// Edit the mock data to put the first ATX item's scheduled date less than 24
+			// hours in the future
+			cy.window().then(win => {
+				const mockDB = JSON.parse(win.localStorage.getItem('MockDB'));
+				mockDB['(GET):/api/customerportal/racetrack/v1/atx?usecase=Campus Network Assurance&solution=IBN&pitstop=Onboard&customerId=2431199&suggestedAction=Get to know Cisco DNA Center'].scenarios.GET[0].response.body.items[0].sessions[1].sessionStartDate = new Date().getTime() + 3600000;
+				win.localStorage.setItem('MockDB', JSON.stringify(mockDB));
+			});
+
+			// Refresh the page to load the new mock data
+			cy.loadApp();
+			cy.waitForAppLoading('atxLoading');
+
+			// Open the View Sessions modal and click the scheduled session, verify unable to
+			// cancel message is shown
+			cy.getByAutoId('recommendedATXScheduleButton').click();
+			cy.getByAutoId('SelectSession-Session2').click();
+			cy.getByAutoId('AtxScheduleCardCancelButton').should('not.exist');
+			cy.getByAutoId('AtxScheduleCard-UnableCancel').should('have.text', i18n._UnableCancel_);
+		});
+	})
 });

@@ -21,6 +21,8 @@ import { ContractQuota } from '../models/contract-quota';
 import { UserTraining } from '../models/user-training';
 import { BookmarkResponseSchema } from '../models/bookmark-response-schema';
 import { BookmarkRequestSchema } from '../models/bookmark-request-schema';
+import { UserFeedbackEntitySchema } from '../models/user-feedback-entity-schema';
+import { UserFeedbackRequestSchema } from '../models/user-feedback-request-schema';
 @Injectable({
   providedIn: 'root',
 })
@@ -38,6 +40,8 @@ class RacetrackContentService extends __BaseService {
   static readonly getTrainingQuotasPath = '/grouptraining/customer/quotas';
   static readonly getCompletedTrainingsPath = '/grouptraining/customer/trainings/completed';
   static readonly updateBookmarkPath = '/bookmarks';
+  static readonly saveFeedbackPath = '/feedback/cxportal';
+  static readonly updateFeedbackPath = '/feedback/cxportal/{feedbackId}';
 
   constructor(
     config: __Configuration,
@@ -880,6 +884,111 @@ class RacetrackContentService extends __BaseService {
       __map(_r => _r.body as BookmarkResponseSchema)
     );
   }
+
+  /**
+   * @param params The `RacetrackContentService.SaveFeedbackParams` containing the following parameters:
+   *
+   * - `feedback`: The Feedback object
+   *
+   * - `X-Mashery-Handshake`: Mashery user credential header
+   *
+   * @return Successfully saved feedback
+   */
+  saveFeedbackResponse(params: RacetrackContentService.SaveFeedbackParams): __Observable<__StrictHttpResponse<UserFeedbackEntitySchema>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    __headers = __headers.append("Content-Type", "application/json");
+    __body = params.feedback;
+    if (params.XMasheryHandshake != null) __headers = __headers.set('X-Mashery-Handshake', params.XMasheryHandshake.toString());
+    let req = new HttpRequest<any>(
+      'POST',
+      this.rootUrl + `/customerportal/racetrack/v1/feedback/cxportal`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<UserFeedbackEntitySchema>;
+      })
+    );
+  }
+
+  /**
+   * @param params The `RacetrackContentService.SaveFeedbackParams` containing the following parameters:
+   *
+   * - `feedback`: The Feedback object
+   *
+   * - `X-Mashery-Handshake`: Mashery user credential header
+   *
+   * @return Successfully saved feedback
+   */
+  saveFeedback(params: RacetrackContentService.SaveFeedbackParams): __Observable<UserFeedbackEntitySchema> {
+    return this.saveFeedbackResponse(params).pipe(
+      __map(_r => _r.body as UserFeedbackEntitySchema)
+    );
+  }
+
+  /**
+   * @param params The `RacetrackContentService.UpdateFeedbackParams` containing the following parameters:
+   *
+   * - `updatedFeedback`: the updated Feedback object
+   *
+   * - `feedbackId`: Unique identifier of the feedback entry
+   *
+   * - `X-Mashery-Handshake`: Mashery user credential header
+   *
+   * @return Successfully udpated feedback
+   */
+  updateFeedbackResponse(params: RacetrackContentService.UpdateFeedbackParams): __Observable<__StrictHttpResponse<UserFeedbackEntitySchema>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    __headers = __headers.append("Content-Type", "application/json");
+    __body = params.updatedFeedback;
+
+    if (params.XMasheryHandshake != null) __headers = __headers.set('X-Mashery-Handshake', params.XMasheryHandshake.toString());
+    let req = new HttpRequest<any>(
+      'PUT',
+      this.rootUrl + `/customerportal/racetrack/v1/feedback/cxportal/${params.feedbackId}`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<UserFeedbackEntitySchema>;
+      })
+    );
+  }
+
+  /**
+   * @param params The `RacetrackContentService.UpdateFeedbackParams` containing the following parameters:
+   *
+   * - `updatedFeedback`: the updated Feedback object
+   *
+   * - `feedbackId`: Unique identifier of the feedback entry
+   *
+   * - `X-Mashery-Handshake`: Mashery user credential header
+   *
+   * @return Successfully udpated feedback
+   */
+  updateFeedback(params: RacetrackContentService.UpdateFeedbackParams): __Observable<UserFeedbackEntitySchema> {
+    return this.updateFeedbackResponse(params).pipe(
+      __map(_r => _r.body as UserFeedbackEntitySchema)
+    );
+  }
 }
 
 module RacetrackContentService {
@@ -1269,6 +1378,43 @@ module RacetrackContentService {
      * JSON Body to Bookmark
      */
     bookmarkRequestSchema: BookmarkRequestSchema;
+
+    /**
+     * Mashery user credential header
+     */
+    XMasheryHandshake?: string;
+  }
+
+  /**
+   * Parameters for saveFeedback
+   */
+  export interface SaveFeedbackParams {
+
+    /**
+     * The Feedback object
+     */
+    feedback: UserFeedbackRequestSchema;
+
+    /**
+     * Mashery user credential header
+     */
+    XMasheryHandshake?: string;
+  }
+
+  /**
+   * Parameters for updateFeedback
+   */
+  export interface UpdateFeedbackParams {
+
+    /**
+     * the updated Feedback object
+     */
+    updatedFeedback: UserFeedbackRequestSchema;
+
+    /**
+     * Unique identifier of the feedback entry
+     */
+    feedbackId: string;
 
     /**
      * Mashery user credential header
