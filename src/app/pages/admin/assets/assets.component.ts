@@ -1,11 +1,17 @@
-import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AssetsState } from './assets-state.service';
 import { empty, Observable, Subject } from 'rxjs';
 import {
 	catchError, delay, filter, map, startWith, switchMap, takeUntil, tap,
 } from 'rxjs/operators';
-import { ControlPointDeviceDiscoveryAPIService, DeviceDetailsByPage } from '@sdp-api';
+import {
+	ControlPointDeviceDiscoveryAPIService,
+	DeviceDetailsByPage,
+	RacetrackSolution,
+	RacetrackTechnology,
+} from '@sdp-api';
+import { RacetrackInfoService } from '@services';
 import { User } from '@interfaces';
 import * as _ from 'lodash-es';
 
@@ -24,7 +30,7 @@ interface PaginationInfo {
 	selector: 'admin-assets',
 	templateUrl: './assets.component.html',
 })
-export class AdminAssetsComponent implements AfterViewInit, OnDestroy {
+export class AdminAssetsComponent implements AfterViewInit, OnDestroy, OnInit {
 	private destroyed$: Subject<void> = new Subject<void>();
 	private page = 1;
 	private totalAssets = 0;
@@ -32,6 +38,8 @@ export class AdminAssetsComponent implements AfterViewInit, OnDestroy {
 		new Subject<DeviceDetailsByPage>();
 	private user: User;
 	private customerId: string;
+	private solution: RacetrackSolution;
+	private technology: RacetrackTechnology;
 	public view$: Observable<'table' | 'grid'> = this.state.changes.pipe(
 		startWith(this.state.currentState),
 		filter(change => !_.isUndefined(change.view)),
@@ -62,6 +70,7 @@ export class AdminAssetsComponent implements AfterViewInit, OnDestroy {
 
 	constructor (
 		private cdr: ChangeDetectorRef,
+		private racetrackInfoService: RacetrackInfoService,
 		private route: ActivatedRoute,
 		private service: ControlPointDeviceDiscoveryAPIService,
 		private state: AssetsState,
@@ -79,6 +88,18 @@ export class AdminAssetsComponent implements AfterViewInit, OnDestroy {
 	}
 
 	/**
+	 * NgOnInit
+	 */
+	public ngOnInit () {
+		this.racetrackInfoService.getCurrentSolution()
+			.pipe(takeUntil(this.destroyed$))
+			.subscribe(solution => this.solution = solution);
+		this.racetrackInfoService.getCurrentTechnology()
+			.pipe(takeUntil(this.destroyed$))
+			.subscribe(technology => this.technology = technology);
+	}
+
+	/**
 	 * NgAfterViewInit
 	 */
 	public ngAfterViewInit () {
@@ -93,6 +114,8 @@ export class AdminAssetsComponent implements AfterViewInit, OnDestroy {
 						customerId: this.customerId,
 						pageNumber: String(this.state.page),
 						rowsPerPage: '10',
+						solution: this.solution.name,
+						useCase: this.technology.name,
 					})
 					.pipe(
 						catchError(() => {

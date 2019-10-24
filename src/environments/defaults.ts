@@ -43,8 +43,8 @@ export const defaults = {
 		asdAuthURL: 'https://cway.cisco.com/ws/oauth/v3/token/cisco/ae95x38c7zgu5fas59gseyfk',
 		asdBaseURL: 'https://api.cisco.com/software/preview/v3.0',
 		CX_Coll_Reg_LS_KEY: 'cxportal.cisco.com:setup-ie:HAS_CX_COLLECTOR',
-		cxCollectorUserGuideLink: 'https://www.cisco.com/c/dam/en/us/support/docs/cloud-' +
-			'systems-management/Cisco-CX-Collector/CX_Collector_FAQ_TB_Guide.pdf',
+		cxCollectorUserGuideLink: 'https://www.cisco.com/c/dam/en/us/support/docs/' +
+			'cloud-systems-management/Cisco-CX-Collector/Collector_Overview.pdf',
 		DNAC_LS_KEY: 'cxportal.cisco.com:setup-ie:NO_DNAC',
 		downloadOvaLink: 'http://engci-maven-master.cisco.com/artifactory/services-cf-insight' +
 			'_engine-release/ie/Insight_Engine_1.0/ubuntu/103/CXC_1.0_Build-103.ova',
@@ -62,7 +62,7 @@ export const defaults = {
 	mapboxForwardGeocodePath: '/geocoding/v5/mapbox.places',
 	mapboxHost: 'https://api.mapbox.com',
 	mapboxToken:
-	'pk.eyJ1IjoibWlzY2htaTIiLCJhIjoiY2p4eDl2ODVnMGpmODNkcDhsbG5nNXQ0YyJ9.vpfGffFASSUfANAU4Yvtxg',
+	'sk.eyJ1Ijoic3NhbHRzZ2EiLCJhIjoiY2syMmVwd2h4MGp5aTNscGczNjlkbjRueSJ9.nAeOj3bDf0ePEUvb7q9F2g',
 	myCase: 'https://mycase2.cloudapps.cisco.com',
 	// ClientSSOInterceptor: No auth token for the typeahead url
 	noAuthEndpoints: [

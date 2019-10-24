@@ -864,6 +864,17 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 	font-size: 18px;
 }
 
+.small-panel {
+	padding: 0;
+	line-height: initial;
+
+	&:hover {
+		.cx-text-default {
+			color: $accent-dark-blue;
+		}
+	}
+}
+
 .success {
 	&__card {
 		@extend .atx__card;
@@ -1553,9 +1564,9 @@ tr.td-row td {
 		right: 15px;
 
 		&::before {
-			font-size: 12px !important;
-			line-height: 12px !important;
-			color: $text-blue-gray;
+			font-size: 13px !important;
+			line-height: 13px !important;
+			color: #929bab;
 		}
 	}
 
@@ -1577,7 +1588,7 @@ tr.td-row td {
 		padding-right: 30px;
 
 		h6 {
-			color: $text-default-color;
+			color: #394454;
 			font-size: 14px;
 			line-height: 16px;
 			font-weight: normal;
@@ -1586,7 +1597,7 @@ tr.td-row td {
 		.icon-clock::before {
 			font-size: 12px !important;
 			line-height: 14px !important;
-			color: $text-blue-gray;
+			color: #929bab;
 			margin-right: 4px;
 		}
 
@@ -1598,7 +1609,7 @@ tr.td-row td {
 	}
 
 	.atx-scheduler__footer {
-		margin-top: 16px;
+		margin-top: 20px;
 		position: absolute;
 		bottom: 20px;
 
@@ -1721,25 +1732,6 @@ tr.td-row td {
 				line-height: 14px;
 				margin-top: 3px;
 			}
-		}
-	}
-}
-
-.small-panel {
-	padding: 0;
-	line-height: initial;
-
-	.cx-text-default {
-		&:hover {
-			+ .hover-panel {
-				display: block;
-			}
-		}
-	}
-
-	&:hover {
-		.cx-text-default {
-			color: $accent-dark-blue;
 		}
 	}
 }

@@ -9,10 +9,14 @@
 				class="label label--circle label--tiny qtr-margin-right"
 				[ngClass]="{
 					'critical': 'label--danger',
+					'error': 'label--danger',
 					'high': 'label--warning-alt',
-					'medium': 'label--warning',
+					'info': 'label--info',
 					'low': 'label--info',
-					'info': 'label--info'
+					'medium': 'label--warning',
+					'notice': 'label--info',
+					'ok': 'label--info',
+					'warning': 'label--warning'
 				}[details?.advisory?.severity]"
 				data-auto-id="BugDetailsSeverityIcon">
 			</span>

@@ -306,6 +306,8 @@ export class TechFormComponent implements OnInit, OnChanges, OnDestroy {
 			}
 
 			this.recommendedTechs = _.slice(result.predictions, 0, 3);
+
+			this.form.controls.suggestedTech.setValue(this.recommendedTechs[0]);
 		});
 
 		// Watch for the suggested tech selection to change,
@@ -377,5 +379,4 @@ export class TechFormComponent implements OnInit, OnChanges, OnDestroy {
 	public suggestionSelected (event: boolean) {
 		this.isTechSuggestionSelected = event;
 	}
-
 }

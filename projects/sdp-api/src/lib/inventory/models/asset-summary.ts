@@ -1,6 +1,6 @@
 /* tslint:disable */
 export interface AssetSummary {
-  warrantyType?: string;
+  slaDescription?: string;
   customerId?: string;
   hwInstanceId?: string;
   productFamily?: string;
@@ -13,8 +13,8 @@ export interface AssetSummary {
   coverageStartDate?: string;
   coverageEndDate?: string;
   slaCode?: string;
-  slaDescription?: string;
   managedNeId?: string;
+  warrantyType?: string;
   warrantyEndDate?: string;
   installAddress1?: string;
   installAddress2?: string;
