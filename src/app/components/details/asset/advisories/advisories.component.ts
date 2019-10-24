@@ -125,6 +125,14 @@ export class AssetDetailsAdvisoriesComponent
 		params.solution = this.selectedSolutionName;
 		params.useCase = this.selectedTechnologyName;
 
+		if (params.sort) {
+			const [field, dir] = _.split(params.sort[0], ':');
+
+			if (field.includes('lastUpdated')) {
+				params.sort.push(`publishedOn:${dir}`);
+			}
+		}
+
 		return this.productAlertsService.getAdvisoriesSecurityAdvisories(params)
 		.pipe(
 			map((response: SecurityAdvisoriesResponse) => {
@@ -318,7 +326,7 @@ export class AssetDetailsAdvisoriesComponent
 							autoId: 'AdvisoryLastUpdated',
 							key: 'lastUpdated',
 							name: I18n.get('_LastUpdated_'),
-							sortable: false,
+							sortable: true,
 							template: this.lastUpdatedTemplate,
 							width: '125px',
 						},

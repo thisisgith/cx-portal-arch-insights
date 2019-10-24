@@ -1141,6 +1141,14 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 		params.solution = this.selectedSolutionName;
 		params.useCase = this.selectedTechnologyName;
 
+		if (params.sort) {
+			const [field, dir] = _.split(params.sort[0], ':');
+
+			if (field.includes('lastUpdated')) {
+				params.sort.push(`publishedOn:${dir}`);
+			}
+		}
+
 		const lastUpdate = _.get(tab, ['params', 'lastUpdatedDateRange']);
 		if (lastUpdate) {
 			const rangeValue = _.head(lastUpdate);
