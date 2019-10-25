@@ -114,8 +114,8 @@ export class AdminAssetsComponent implements AfterViewInit, OnDestroy, OnInit {
 						customerId: this.customerId,
 						pageNumber: String(this.state.page),
 						rowsPerPage: '10',
-						solution: this.solution.name,
-						useCase: this.technology.name,
+						solution: _.get(this, 'solution.name'),
+						useCase: _.get(this, 'technology.name'),
 					})
 					.pipe(
 						catchError(() => {

@@ -11,12 +11,12 @@
 					'critical': 'label--danger',
 					'error': 'label--danger',
 					'high': 'label--warning-alt',
-					'info': 'label--info',
-					'low': 'label--info',
 					'medium': 'label--warning',
+					'warning': 'label--warning',
+					'low': 'label--info',
+					'info': 'label--info',
 					'notice': 'label--info',
-					'ok': 'label--info',
-					'warning': 'label--warning'
+					'ok': 'label--info'
 				}[details?.advisory?.severity]"
 				data-auto-id="BugDetailsSeverityIcon">
 			</span>
@@ -24,47 +24,6 @@
 		</div>
 	</div>
 
-	<div data-auto-id="CriticalBugPublished" class="header__item">
-		<div class="header__text qtr-margin-right">
-			<span [innerText]="'_Created_' | i18n"></span>
-			<span>:</span>
-		</div>
-		<div *ngIf="details.advisory && details.advisory.publishedOn"
-			[innerText]="details.advisory.publishedOn | fromNow"
-			[title]="details.advisory.publishedOn | dateTime"
-			class="header__text">
-		</div>
-		<div *ngIf="!details.advisory || !details.advisory.publishedOn"
-			[innerText]="('_Never_' | i18n)"
-			[title]="('_Never_' | i18n)"
-			class="header__text">
-		</div>
-	</div>
-
-	<div data-auto-id="CriticalBugLastUpdated" class="header__item">
-		<div class="header__text qtr-margin-right">
-			<span [innerText]="'_Updated_' | i18n"></span>
-			<span>:</span>
-		</div>
-		<div *ngIf="details.advisory && details.advisory.lastUpdated"
-			[innerText]="details.advisory.lastUpdated | fromNow"
-			[title]="details.advisory.lastUpdated | dateTime"
-			class="header__text">
-		</div>
-		<div *ngIf="!details.advisory || !details.advisory.lastUpdated"
-			[innerText]="('_Never_' | i18n)"
-			[title]="('_Never_' | i18n)"
-			class="header__text">
-		</div>
-	</div>
-
-	<div data-auto-id="CriticalBugStatus" class="header__item">
-		<div class="header__text qtr-margin-right">
-			<span [innerText]="'_Status_' | i18n"></span>
-			<span>:</span>
-		</div>
-		<div [innerText]="details?.advisory?.state || ('_NA_' | i18n)" class="text-capitalize header__text"></div>
-	</div>
 </div>
 
 <div class="row" *ngIf="details">
