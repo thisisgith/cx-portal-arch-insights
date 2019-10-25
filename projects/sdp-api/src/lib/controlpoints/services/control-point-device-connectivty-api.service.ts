@@ -12,7 +12,7 @@ import { DevicesConnectivityResponseModel } from '../models/devices-connectivity
   providedIn: 'root',
 })
 class ControlPointDeviceConnectivtyAPIService extends __BaseService {
-  static readonly getDevicesConnectivityUsingGETPath = '/device/connectivity/{customerId}/{serialNumber}/{productId}';
+  static readonly getDevicesConnectivityUsingGETPath = '/v1/device/connectivity/{customerId}/{serialNumber}/{productId}';
 
   constructor(
     config: __Configuration,

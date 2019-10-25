@@ -299,13 +299,21 @@ export class AssetDetailsHardwareComponent implements OnInit, OnChanges, OnDestr
 					this.migrationTable = new CuiTableOptions({
 						bordered: false,
 						columns: [
-							{
-								key: 'migrationProductModel',
-								name: I18n.get('_ProductModel_'),
-								sortable: false,
-								template: this.migrationModelTemplate,
-								width: '150px',
-							},
+							// {
+							// 	key: 'migrationProductModel',
+							// 	name: I18n.get('_ProductModel_'),
+							// 	sortable: false,
+							// 	template: this.migrationModelTemplate,
+							// 	width: '150px',
+							// },
+							// {
+							// 	key: 'migrationProductSeries',
+							// 	name: I18n.get('_ProductSeries_'),
+							// 	render: item =>
+							// 		item.migrationProductSeries ?
+							// 		item.migrationProductSeries : I18n.get('_NA_'),
+							// 	sortable: false,
+							// },
 							{
 								key: 'migrationPid',
 								name: `${I18n.get('_ProductID_')}`,
@@ -315,11 +323,11 @@ export class AssetDetailsHardwareComponent implements OnInit, OnChanges, OnDestr
 								sortable: false,
 							},
 							{
-								key: 'migrationProductSeries',
-								name: I18n.get('_ProductSeries_'),
-								render: item =>
-									item.migrationProductSeries ?
-									item.migrationProductSeries : I18n.get('_NA_'),
+								name: `${I18n.get('_SerialNumber_')}`,
+								sortable: false,
+							},
+							{
+								name: `${I18n.get('_IPAddress_')}`,
 								sortable: false,
 							},
 						],

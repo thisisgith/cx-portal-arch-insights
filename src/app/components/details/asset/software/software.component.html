@@ -1,9 +1,11 @@
-<cui-drawer projection="true" [expanded]="true" *ngIf="softwareLicenses?.length">
+<!--
+	TODO: Re-enable in LA when license information is re-instated
+	<cui-drawer projection="true" [expanded]="true" *ngIf="softwareLicenses?.length">
 	<div class="cui-drawer-label custom-text-large" [innerText]="'_Licenses_' | i18n | uppercase"></div>
 	<div class="cui-drawer-content">
 		<ng-container *ngTemplateOutlet="licensesTable; context: { licenses: softwareLicenses, options: softwareLicensesTable }"></ng-container>
 	</div>
-</cui-drawer>
+</cui-drawer> -->
 <cui-drawer projection="true" [expanded]="true" *ngIf="operatingSystem">
 	<div class="cui-drawer-label custom-text-large" [innerText]="'_OperatingSystem_' | i18n | uppercase"></div>
 	<div class="cui-drawer-content">
@@ -34,10 +36,10 @@
 <ng-template #operatingSystemInfo let-data="data">
 	<div class="row">
 		<div class="col-md-6">
-			<div class="text-bold" [innerText]="'_Type_' | i18n | uppercase" data-auto-id="OSType"></div>
+			<div class="text-bold" [innerText]="'_SoftwareType_' | i18n | uppercase" data-auto-id="OSType"></div>
 			<div [innerText]="data.type || ('_NA_' | i18n)"></div>
 
-			<div class="text-bold half-margin-top" [innerText]="'_Version_' | i18n | uppercase" data-auto-id="OSVersion"></div>
+			<div class="text-bold half-margin-top" [innerText]="'_Release_' | i18n | uppercase" data-auto-id="OSVersion"></div>
 			<div [innerText]="data.version || ('_NA_' | i18n)"></div>
 		</div>
 		<div class="col-md-6" *ngIf="data.recommended">

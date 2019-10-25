@@ -53,6 +53,7 @@ export class RccComponent implements OnInit, OnDestroy {
 	}
 	public assetParams: InventoryService.GetAssetsParams;
 	public assetLinkInfo: AssetLinkInfo;
+	public selectedAssetSerial: string;
 	public view: 'violation' | 'asset' = 'violation';
 	public totalViolationsCount = { };
 	public policyViolationsTableOptions: CuiTableOptions;
@@ -776,7 +777,6 @@ export class RccComponent implements OnInit, OnDestroy {
 	 * @param model is the selected slider name
 	 */
 	public onPanelClose (model: string) {
-		this.detailsPanelStackService.reset();
 		_.set(this, [model, 'active'] , false);
 		this[model] = null;
 	}
@@ -804,17 +804,18 @@ export class RccComponent implements OnInit, OnDestroy {
 	 * @param serialNumber is serial number of device
 	 */
 	public openDevicePage (serialNumber: string) {
-		const assetParams = {
+		this.assetParams = {
 			customerId: this.customerId,
 			serialNumber: [serialNumber],
 		};
+		this.selectedAssetSerial = serialNumber;
 		this.openDeviceModal = true;
-		this.assetPanelLinkService.getAssetLinkData(assetParams)
-			.pipe(takeUntil(this.destroy$))
-			.subscribe(response => {
-				this.assetLinkInfo.asset = _.get(response, [0, 'data', 0]);
-				this.assetLinkInfo.element = _.get(response, [1, 'data', 0]);
-			},
+		this.assetPanelLinkService.getAssetLinkData(this.assetParams)
+		.pipe(takeUntil(this.destroy$))
+		.subscribe(response => {
+			this.assetLinkInfo.asset = _.get(response, [0, 'data', 0]);
+			this.assetLinkInfo.element = _.get(response, [1, 'data', 0]);
+		},
 			err => {
 				this.logger.error(
 					'RccComponent : getAssetLinkData() ' +

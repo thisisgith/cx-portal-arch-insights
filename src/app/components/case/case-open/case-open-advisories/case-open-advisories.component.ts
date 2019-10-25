@@ -207,7 +207,10 @@ export class CaseOpenAdvisoriesComponent
 	public submit () {
 		this.submitting = true;
 		const caseDetails: CaseOpenRequest = {
+			contactEmail: _.get(this.profileService.getProfile(), ['cpr', 'pf_auth_email']),
 			contactId: this.profileService.getProfile().cpr.pf_auth_uid,
+			contactMe: 'As soon as the Engineer is Available',
+			contactPreference: 'Email',
 			contractNumber: this.contractNumber,
 			customerActivity: _.get(
 				(<FormGroup> this.caseForm.controls.techInfo).controls.problemArea.value,
@@ -216,6 +219,7 @@ export class CaseOpenAdvisoriesComponent
 			description: this.caseForm.controls.description.value,
 			deviceName: _.get(this.allAssets[0], 'deviceName') ||
 				_.get(this.allAssets[0], 'hostName'),
+			lossOfServices: 'No',
 			noteDetails: {
 				note1: {
 					note: 'Additional Event Details',

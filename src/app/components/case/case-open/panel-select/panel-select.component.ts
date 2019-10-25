@@ -21,6 +21,7 @@ export class PanelSelectComponent implements AfterContentInit, ControlValueAcces
 		QueryList<PanelSelectOptionComponent<any>>;
 	@Input() public layout?: 'default' | 'vertical' = 'default';
 	@Output() public isSelected = new EventEmitter<boolean>();
+	public isSubtechSelected = false;
 	public onChange: any;
 	public initialValue: any;
 
@@ -42,6 +43,7 @@ export class PanelSelectComponent implements AfterContentInit, ControlValueAcces
 	 * @param option the option to select
 	 */
 	public select (option: PanelSelectOptionComponent<any>) {
+		this.isSubtechSelected = true;
 		this.options.forEach(o => {
 			o.selected = false;
 		});
@@ -63,6 +65,7 @@ export class PanelSelectComponent implements AfterContentInit, ControlValueAcces
 	 * @param value incoming value
 	 */
 	public writeValue (value: any) {
+		this.isSubtechSelected = false;
 		if (this.options) {
 			this.options.forEach(o => {
 				o.selected = false;

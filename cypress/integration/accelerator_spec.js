@@ -2496,6 +2496,8 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		// These tests relate to partner-branding on ACC details (first item and More list)
 		afterEach(() => {
 			// Switch back to the default mock data
+			// (has providerInfo.id and providerInfo.name, but providerInfo.logoURL is empty string)
+
 			accMock.enable('(ACC) IBN-Campus Network Assurance-Onboard');
 
 			// Refresh the data
@@ -2559,7 +2561,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 					cy.getByAutoId('moreACCList-item')
 						.eq(index - 1)
 						.within(() => {
-							cy.getByAutoId('ATXMoreClick-Provider')
+							cy.getByAutoId('moreACCList-Provider')
 								.should('have.text', `${i18n._By_}${acc.providerInfo.name}`);
 						});
 				}
@@ -2577,7 +2579,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			cy.getByAutoId('moreACCList-item')
 				.first()
 				.within(() => {
-					cy.getByAutoId('ATXMoreClick-Provider')
+					cy.getByAutoId('moreACCList-Provider')
 						.should('have.text', `${i18n._By_}${twoWithPartnerItems[1].providerInfo.name}`);
 				});
 		});
@@ -2595,7 +2597,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			cy.getByAutoId('moreACCList-item')
 				.first()
 				.within(() => {
-					cy.getByAutoId('ATXMoreClick-Provider')
+					cy.getByAutoId('moreACCList-Provider')
 						.and('have.text', '');
 				});
 		});
@@ -2631,7 +2633,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				.should('have.text', '');
 		});
 
-		it('ACC More list item hovers should show partner name regarless of logoURL', () => {
+		it('ACC More list item hovers should show partner name regardless of logoURL', () => {
 			visibleACCItems.forEach((acc, index) => {
 				if (index !== 0) {
 					// Skip the first visible item, as this is in the detail card

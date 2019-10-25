@@ -9,7 +9,6 @@ import {
 import { I18n } from '@cisco-ngx/cui-utils';
 import {
 	CriticalBug,
-	CriticalBugsCount,
 	CriticalBugsResponse,
 	DiagnosticsService,
 	FieldNoticeAdvisory,
@@ -237,7 +236,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 						selected: false,
 						seriesData: [],
 						template: this.columnChartFilterTemplate,
-						title: I18n.get('_LastUpdated_'),
+						title: I18n.get('_Updated_'),
 					},
 				],
 				key: 'security',
@@ -262,23 +261,23 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 							template: this.titleTemplate,
 						},
 						{
-							key: 'assetsImpacted',
-							name: `${I18n.get('_ImpactedAsset_')}
-								(${I18n.get('_PotentiallyImpacted_')})`,
-							sortable: true,
-							template: this.impactedCountTemplate,
-						},
-						{
-							key: 'lastUpdated',
-							name: I18n.get('_LastUpdated_'),
-							sortable: true,
-							template: this.lastUpdatedTemplate,
-						},
-						{
 							key: 'version',
 							name: I18n.get('_Version_'),
 							sortable: true,
 							template: this.versionTemplate,
+						},
+						{
+							key: 'lastUpdated',
+							name: I18n.get('_Updated_'),
+							sortable: true,
+							template: this.lastUpdatedTemplate,
+						},
+						{
+							key: 'assetsImpacted',
+							name: `${I18n.get('_AffectedSystems_')}
+								(${I18n.get('_PotentiallyAffected_')})`,
+							sortable: true,
+							template: this.impactedCountTemplate,
 						},
 					],
 					dynamicData: true,
@@ -317,7 +316,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 						selected: false,
 						seriesData: [],
 						template: this.columnChartFilterTemplate,
-						title: I18n.get('_LastUpdated_'),
+						title: I18n.get('_Updated_'),
 					},
 				],
 				key: 'field',
@@ -342,28 +341,28 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 							value: 'title',
 						},
 						{
+							key: 'version',
+							name: I18n.get('_Version_'),
+							sortable: true,
+							template: this.versionTemplate,
+						},
+						{
+							key: 'lastUpdated',
+							name: I18n.get('_Updated_'),
+							sortable: true,
+							template: this.lastUpdatedTemplate,
+						},
+						{
 							key: 'assetsImpacted',
-							name: I18n.get('_VulnerableAssets_'),
+							name: I18n.get('_AffectedHardware_'),
 							sortable: true,
 							template: this.impactedAssetsTemplate,
 						},
 						{
 							key: 'assetsPotentiallyImpacted',
-							name: I18n.get('_PotentiallyVulnerableAssets_'),
+							name: I18n.get('_PotentiallyAffectedHardware_'),
 							sortable: true,
 							template: this.potentiallyImpactedAssetsTemplate,
-						},
-						{
-							key: 'lastUpdated',
-							name: I18n.get('_LastUpdated_'),
-							sortable: true,
-							template: this.lastUpdatedTemplate,
-						},
-						{
-							key: 'version',
-							name: I18n.get('_Version_'),
-							sortable: true,
-							template: this.versionTemplate,
 						},
 					],
 					dynamicData: true,
@@ -398,14 +397,6 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 						template: this.totalFilterTemplate,
 						title: I18n.get('_Total_'),
 					},
-					{
-						key: 'state',
-						loading: true,
-						selected: false,
-						seriesData: [],
-						template: this.pieChartFilterTemplate,
-						title: I18n.get('_State_'),
-					},
 				],
 				key: 'bug',
 				label: I18n.get('_PriorityBugs_'),
@@ -415,13 +406,22 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 					columns: [
 						{
 							key: 'id',
-							name: I18n.get('_ID_'),
+							name: I18n.get('_BugID_'),
 							render: item => item.id || I18n.get('_NA_'),
+							sortable: true,
+							sorting: false,
+							value: 'id',
+							width: '100px',
+						},
+						{
+							key: 'severity',
+							name: I18n.get('_Severity_'),
+							render: item =>
+								item.severity ? _.capitalize(item.severity) : I18n.get('_NA_'),
 							sortable: true,
 							sortDirection: 'asc',
 							sorting: true,
-							value: 'id',
-							width: '100px',
+							value: 'severity',
 						},
 						{
 							key: 'title',
@@ -431,22 +431,10 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 						},
 						{
 							key: 'assetsImpacted',
-							name: I18n.get('_ImpactedAssets_'),
+							name: I18n.get('_AffectedSystems_'),
 							render: item => item.assetsImpacted || 0,
 							sortable: true,
 							value: 'assetsImpacted',
-						},
-						{
-							key: 'state',
-							name: I18n.get('_State_'),
-							sortable: true,
-							template: this.stateTemplate,
-						},
-						{
-							key: 'lastUpdated',
-							name: I18n.get('_LastUpdated_'),
-							sortable: true,
-							template: this.lastUpdatedTemplate,
 						},
 					],
 					dynamicData: true,
@@ -461,7 +449,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 					customerId: this.customerId,
 					page: 1,
 					rows: 10,
-					sort: ['id:ASC'],
+					sort: ['severity:ASC'],
 				},
 				route: 'bugs',
 				searchTemplate: this.bugsSearchTemplate,
@@ -758,89 +746,91 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 	}
 
 	/**
+	 * TODO: Disabled bug states API as part of US147542,
+	 * leaving code in case this needs to be re-enabled in the future
 	 * Gets the info for the Bug States pie chart on the critical bugs tab
 	 * @returns the info for the Bug States pie chart on the critical bugs tab
 	 */
-	private getBugStates () {
-		const bugsTab = _.find(this.tabs, { key: 'bug' });
-		const bugStateFilter = _.find(bugsTab.filters, { key: 'state' });
+	// private getBugStates () {
+	// 	const bugsTab = _.find(this.tabs, { key: 'bug' });
+	// 	const bugStateFilter = _.find(bugsTab.filters, { key: 'state' });
 
-		return this.diagnosticsService.getCriticalBugsStateCount({
-			customerId: this.customerId,
-			solution: this.selectedSolutionName,
-			useCase: this.selectedTechnologyName,
-		})
-		.pipe(
-			map((data: CriticalBugsCount) => {
-				const series = [];
+	// 	return this.diagnosticsService.getCriticalBugsStateCount({
+	// 		customerId: this.customerId,
+	// 		solution: this.selectedSolutionName,
+	// 		useCase: this.selectedTechnologyName,
+	// 	})
+	// 	.pipe(
+	// 		map((data: CriticalBugsCount) => {
+	// 			const series = [];
 
-				const newCount = _.get(data, 'new', 0);
+	// 			const newCount = _.get(data, 'new', 0);
 
-				if (newCount > 0) {
-					series.push({
-						filter: 'new',
-						label: I18n.get('_New_'),
-						selected: false,
-						value: newCount,
-					});
-				}
+	// 			if (newCount > 0) {
+	// 				series.push({
+	// 					filter: 'new',
+	// 					label: I18n.get('_New_'),
+	// 					selected: false,
+	// 					value: newCount,
+	// 				});
+	// 			}
 
-				const resolved = _.get(data, 'resolved', 0);
+	// 			const resolved = _.get(data, 'resolved', 0);
 
-				if (resolved > 0) {
-					series.push({
-						filter: 'resolved',
-						label: I18n.get('_Resolved_'),
-						selected: false,
-						value: resolved,
-					});
-				}
+	// 			if (resolved > 0) {
+	// 				series.push({
+	// 					filter: 'resolved',
+	// 					label: I18n.get('_Resolved_'),
+	// 					selected: false,
+	// 					value: resolved,
+	// 				});
+	// 			}
 
-				const verified = _.get(data, 'verified', 0);
+	// 			const verified = _.get(data, 'verified', 0);
 
-				if (verified > 0) {
-					series.push({
-						filter: 'verified',
-						label: I18n.get('_Verified_'),
-						selected: false,
-						value: verified,
-					});
-				}
+	// 			if (verified > 0) {
+	// 				series.push({
+	// 					filter: 'verified',
+	// 					label: I18n.get('_Verified_'),
+	// 					selected: false,
+	// 					value: verified,
+	// 				});
+	// 			}
 
-				const duplicate = _.get(data, 'duplicate', 0);
+	// 			const duplicate = _.get(data, 'duplicate', 0);
 
-				if (duplicate > 0) {
-					series.push({
-						filter: 'duplicate',
-						label: I18n.get('_Duplicate_'),
-						selected: false,
-						value: duplicate,
-					});
-				}
+	// 			if (duplicate > 0) {
+	// 				series.push({
+	// 					filter: 'duplicate',
+	// 					label: I18n.get('_Duplicate_'),
+	// 					selected: false,
+	// 					value: duplicate,
+	// 				});
+	// 			}
 
-				const closed = _.get(data, 'closed', 0);
+	// 			const closed = _.get(data, 'closed', 0);
 
-				if (closed > 0) {
-					series.push({
-						filter: 'closed',
-						label: I18n.get('_Closed_'),
-						selected: false,
-						value: closed,
-					});
-				}
+	// 			if (closed > 0) {
+	// 				series.push({
+	// 					filter: 'closed',
+	// 					label: I18n.get('_Closed_'),
+	// 					selected: false,
+	// 					value: closed,
+	// 				});
+	// 			}
 
-				bugStateFilter.seriesData = series;
-				bugStateFilter.loading = false;
-			}),
-			catchError(err => {
-				bugStateFilter.loading = false;
-				this.logger.error('advisories.component : getBugStates() ' +
-					`:: Error : (${err.status}) ${err.message}`);
+	// 			bugStateFilter.seriesData = series;
+	// 			bugStateFilter.loading = false;
+	// 		}),
+	// 		catchError(err => {
+	// 			bugStateFilter.loading = false;
+	// 			this.logger.error('advisories.component : getBugStates() ' +
+	// 				`:: Error : (${err.status}) ${err.message}`);
 
-				return of({ });
-			}),
-		);
-	}
+	// 			return of({ });
+	// 		}),
+	// 	);
+	// }
 
 	/**
 	 * Fetches the advisory counts for the visual filter
@@ -1132,6 +1122,14 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 		params.solution = this.selectedSolutionName;
 		params.useCase = this.selectedTechnologyName;
 
+		if (params.sort) {
+			const [field, dir] = _.split(params.sort[0], ':');
+
+			if (field.includes('lastUpdated')) {
+				params.sort.push(`publishedOn:${dir}`);
+			}
+		}
+
 		const lastUpdate = _.get(tab, ['params', 'lastUpdatedDateRange']);
 		if (lastUpdate) {
 			const rangeValue = _.head(lastUpdate);
@@ -1286,7 +1284,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 			this.getSeverityCount(),
 			this.getAdvisoriesLastUpdated(),
 			this.getFieldNoticesLastUpdated(),
-			this.getBugStates(),
+			// this.getBugStates(),
 			this.getTotals(),
 		)
 		.pipe(

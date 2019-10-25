@@ -14,7 +14,7 @@
 			(alert)="handleAlert($event)"
 			(scanStatus)="handleScanStatus($event)">
 		</asset-details-header>
-		<div detailsPanelTitle class="text-xlarge flex-center-vertical">
+		<div *ngIf="!isLoading" detailsPanelTitle class="text-xlarge flex-center-vertical">
 			<span class="half-margin-right flex-center-vertical"
 				[title]="getProductTitle(element)"
 				*ngIf="asset && element && getProductIcon(element)">
@@ -24,6 +24,9 @@
 					src="assets/img/assets/device-{{ getProductIcon(element) }}.svg">
 			</span>
 			<span [innerText]="asset?.deviceName || ('_NA_' | i18n)"></span>
+		</div>
+		<div *ngIf="isLoading">
+			<cui-loader></cui-loader>
 		</div>
 	</details-panel-header>
 	<ng-container *ngTemplateOutlet="assetDetails"></ng-container>

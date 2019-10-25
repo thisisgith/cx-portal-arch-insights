@@ -84,14 +84,11 @@ function MockSP (
  * @param solution the solution requested
  * @param usecase the usecase requested
  * @param mockFileName the file to load mock data from
+ * @param rows the number of items to return
  * @returns the mock data for the requested solution and usecase
  */
-function MockProductGuides (solution: string, usecase: string, mockFileName?: string): SuccessPathsResponse {
-	if (mockFileName) {
-		return require(`./pgMockData/${mockFileName}.json`);
-	}
-
-	return {
+function MockProductGuides (solution: string, usecase: string, mockFileName?: string, rows?: number): SuccessPathsResponse {
+	let response = {
 		solution,
 		usecase,
 		totalCount: 10,
@@ -198,6 +195,18 @@ function MockProductGuides (solution: string, usecase: string, mockFileName?: st
 			},
 		],
 	};
+
+	if (mockFileName) {
+		response = require(`./pgMockData/${mockFileName}.json`);
+	}
+
+	if (rows) {
+		response.items = response.items.slice(0, rows);
+
+		return response;
+	}
+
+	return response;
 }
 
 /**
@@ -302,7 +311,7 @@ export const SuccessPathScenarios = [
 					description: 'Product Guides IBN - Campus Network Assurance',
 					response: {
 						body: MockProductGuides('IBN', 'Campus Network Assurance',
-							'IBN-Campus Network Assurance'),
+							'IBN-Campus Network Assurance', 40),
 						status: 200,
 					},
 					selected: true,
@@ -312,25 +321,25 @@ export const SuccessPathScenarios = [
 					description: 'Product Guides IBN - Campus Network Assurance - twoBookmarked',
 					response: {
 						body: MockProductGuides('IBN', 'Campus Network Assurance',
-							'IBN-Campus Network Assurance-twoBookmarked'),
+							'IBN-Campus Network Assurance-twoBookmarked', 40),
 						status: 200,
 					},
-					selected: true,
+					selected: false,
 				},
 				{
 					delay: Math.floor(Math.random() * 2000) + 500,
 					description: 'Product Guides IBN - Campus Network Assurance - twoUnbookmarked',
 					response: {
 						body: MockProductGuides('IBN', 'Campus Network Assurance',
-							'IBN-Campus Network Assurance-twoUnbookmarked'),
+							'IBN-Campus Network Assurance-twoUnbookmarked', 40),
 						status: 200,
 					},
-					selected: true,
+					selected: false,
 				},
 			],
 		},
 		url: `${api}?customerId=${customerId}&usecase=Campus Network Assurance` +
-			'&solution=IBN&rows=500',
+		'&sort[0].field=title&sort[0].order=asc&solution=IBN&rows=40&fields=',
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -349,7 +358,7 @@ export const SuccessPathScenarios = [
 			],
 		},
 		url: `${api}?customerId=${customerId}&usecase=Network Device Onboarding` +
-			'&solution=IBN&rows=500',
+			'&sort[0].field=title&sort[0].order=asc&solution=IBN&rows=40&fields=',
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -368,7 +377,7 @@ export const SuccessPathScenarios = [
 			],
 		},
 		url: `${api}?customerId=${customerId}&usecase=Campus Software Image Management` +
-			'&solution=IBN&rows=500',
+			'&sort[0].field=title&sort[0].order=asc&solution=IBN&rows=40&fields=',
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -387,7 +396,7 @@ export const SuccessPathScenarios = [
 			],
 		},
 		url: `${api}?customerId=${customerId}&usecase=Campus Network Segmentation` +
-			'&solution=IBN&rows=500',
+			'&sort[0].field=title&sort[0].order=asc&solution=IBN&rows=40&fields=',
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -406,7 +415,7 @@ export const SuccessPathScenarios = [
 			],
 		},
 		url: `${api}?customerId=${customerId}&usecase=Scalable Access Policy` +
-			'&solution=IBN&rows=500',
+			'&sort[0].field=title&sort[0].order=asc&solution=IBN&rows=40&fields=',
 		usecases: ['Use Case 1'],
 	},
 	{

@@ -66,6 +66,7 @@ import {
 	SuccessPathScenarios,
 	SyslogScenarios,
 	VulnerabilityScenarios,
+	FeedbackScenarios,
 } from './';
 
 import { HttpHeaders } from '@angular/common/http';
@@ -297,5 +298,6 @@ export const mockSettings: MockSettings = {
 		SuccessPathScenarios,
 		SyslogScenarios,
 		VulnerabilityScenarios,
+		FeedbackScenarios,
 	]),
 };

@@ -1,7 +1,7 @@
 <div class="flex row col-md-12 details-header__content" *ngIf="details">
 	<div data-auto-id="FieldNoticePublished" class="header__item">
 		<div class="header__text qtr-margin-right">
-			<span [innerText]="'_Published_' | i18n"></span>
+			<span [innerText]="'_Created_' | i18n"></span>
 			<span>:</span>
 		</div>
 		<div *ngIf="details.bulletin && details.bulletin.bulletinFirstPublished"
@@ -18,7 +18,7 @@
 
 	<div data-auto-id="FieldNoticeLastUpdated" class="header__item">
 		<div class="header__text qtr-margin-right">
-			<span [innerText]="'_LastUpdated_' | i18n"></span>
+			<span [innerText]="'_Updated_' | i18n"></span>
 			<span>:</span>
 		</div>
 		<div *ngIf="details.advisory && details.advisory.lastUpdated"
@@ -31,14 +31,6 @@
 			[title]="('_Never_' | i18n)"
 			class="header__text">
 		</div>
-	</div>
-
-	<div data-auto-id="FieldNoticeVersion" class="header__item">
-		<div class="header__text qtr-margin-right">
-			<span [innerText]="'_Version_' | i18n"></span>
-			<span>:</span>
-		</div>
-		<div [innerText]="details?.bulletin?.version || ('_NA_' | i18n)" class="text-capitalize header__text"></div>
 	</div>
 </div>
 

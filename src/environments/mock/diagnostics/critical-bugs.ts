@@ -5,6 +5,7 @@ import {
 	DiagnosticsPagination as Pagination,
 } from '@sdp-api';
 import * as _ from 'lodash-es';
+import { HttpHeaders } from '@angular/common/http';
 
 /** The customerId */
 const customerId = '2431199';
@@ -31,7 +32,7 @@ export const CriticalBugData: CriticalBug[] = [
 		"title": "cman-fp/cman-cc slow memory leak is seen",
 		"description": "A slow memory leak is seen on cmfp and cmcc.",
 		"state": "resolved",
-		"severity": "notice",
+		"severity": "critical",
 		"publishedOn": "2019-07-10T07:37:34.993Z",
 		"lastUpdated": "2019-07-15T10:57:34.255Z",
 		"assetsImpacted": 2
@@ -41,7 +42,7 @@ export const CriticalBugData: CriticalBug[] = [
 		"title": "Cisco IOS Software for Cisco Catalyst 6800 Series Switches VPLS Denial of Service Vulnerability",
 		"description": "1. Apply necessary configs to make 3 PE full mesh VPLS topology and make sure that all VCs are UP. \r\n   Create l2 VFI using auto discovery. Attached the UUT running config. \r\n2. Enable MLDSN on xconnect vlan 10. configure CE-1 as MLDSN Querier for VLAN 10\r\n3. Check ipv6 mldsn mrouter ports are updated correctly on all the PEs\r\n4. on PE-2, core facing interface is configured in Macroon LC.\r\n\r\nUpon creating 1000 IPv6 host on IXIA port connected to CE-1 or PE-1, Macroon LC in PE-2 crashed.\r\nThe same crash is seen on idle state with 1000 VFI ( each vlan has 1 host configured in IXIA )\r\n\r\nAttached the complete logs, sh_mod_ver details.\r\n\r\nReproducible: consistent\r\n\r\nExpected behaviour: NO Crash should be seen \r\n\r\nWorkaround: Dont have Macroon LC as core facing interafce.\r\n\r\nImpact: LC crash\r\n\r\nImage used: c6848x-adventerprisek9_dbg-mz.SSA.154-1.IA001.106_20160717",
 		"state": "new",
-		"severity": "notice",
+		"severity": "info",
 		"publishedOn": "2019-07-18T07:37:34.993Z",
 		"lastUpdated": "2019-07-20T10:57:34.255Z",
 		"assetsImpacted": 3
@@ -125,7 +126,8 @@ export const CriticalBugScenarios = [
 				},
 			],
 		},
-		url: `${api}/state/count?customerId=${customerId}`,
+		url: `${api}/state/count?customerId=${customerId}`
+			+ '&useCase=Campus Network Assurance&solution=IBN',
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -142,7 +144,8 @@ export const CriticalBugScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&sort=id:ASC&rows=10&page=2`,
+		url: `${api}?customerId=${customerId}&useCase=Campus Network Assurance&solution=IBN`
+			+ '&sort=severity:ASC&rows=10&page=2',
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -159,7 +162,8 @@ export const CriticalBugScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&sort=id:ASC&rows=10&page=3`,
+		url: `${api}?customerId=${customerId}&useCase=Campus Network Assurance&solution=IBN`
+			+ '&sort=severity:ASC&rows=10&page=3',
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -176,7 +180,8 @@ export const CriticalBugScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&rows=1&page=1&cdetsId=CSCto03123`,
+		url: `${api}?customerId=${customerId}&useCase=Campus Network Assurance`
+			+ '&solution=IBN&rows=1&page=1&cdetsId=CSCto03123',
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -193,7 +198,8 @@ export const CriticalBugScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&rows=1&page=1&id=CSCva61927`,
+		url: `${api}?customerId=${customerId}&useCase=Campus Network Assurance`
+			+ '&solution=IBN&rows=1&page=1&id=CSCva61927',
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -228,7 +234,8 @@ export const CriticalBugScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&sort=id:ASC&rows=10&page=1`,
+		url: `${api}?customerId=${customerId}&useCase=Campus Network Assurance`
+			+ '&sort=severity:ASC&solution=IBN&rows=10&page=1',
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -245,7 +252,8 @@ export const CriticalBugScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=2431199&serialNumber=FOC1544Y16T&rows=10&page=1`,
+		url: `${api}?customerId=2431199&useCase=Campus Network Assurance&solution=IBN`
+			+ '&serialNumber=FOC1544Y16T&rows=10&page=1',
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -262,7 +270,8 @@ export const CriticalBugScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&state=new&sort=id:ASC&rows=10&page=1`,
+		url: `${api}?customerId=${customerId}&useCase=Campus Network Assurance&solution=IBN`
+			+ '&state=new&sort=severity:ASC&rows=10&page=1',
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -279,7 +288,8 @@ export const CriticalBugScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&state=resolved&sort=id:ASC&rows=10&page=1`,
+		url: `${api}?customerId=${customerId}&useCase=Campus Network Assurance&solution=IBN`
+			+ '&state=resolved&sort=severity:ASC&rows=10&page=1',
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -296,7 +306,8 @@ export const CriticalBugScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&serialNumber=35641136A1621&rows=10&page=1`,
+		url: `${api}?customerId=${customerId}&useCase=Campus Network Assurance&solution=IBN`
+			+ '&serialNumber=35641136A1621&rows=10&page=1',
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -313,7 +324,27 @@ export const CriticalBugScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&rows=1&page=1`,
+		url: `${api}?customerId=${customerId}&useCase=Campus Network Assurance&solution=IBN`
+			+ '&rows=1&page=1',
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			HEAD: [
+				{
+					delay: 100,
+					description: 'Critical Bugs - Count',
+					response: {
+						headers: new HttpHeaders({
+							'X-API-RESULT-COUNT': `${CriticalBugData.length}`,
+						}),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?customerId=${customerId}&useCase=Campus Network Assurance&solution=IBN`,
 		usecases: ['Use Case 1'],
 	},
 ];

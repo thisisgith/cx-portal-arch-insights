@@ -125,6 +125,14 @@ export class AssetDetailsAdvisoriesComponent
 		params.solution = this.selectedSolutionName;
 		params.useCase = this.selectedTechnologyName;
 
+		if (params.sort) {
+			const [field, dir] = _.split(params.sort[0], ':');
+
+			if (field.includes('lastUpdated')) {
+				params.sort.push(`publishedOn:${dir}`);
+			}
+		}
+
 		return this.productAlertsService.getAdvisoriesSecurityAdvisories(params)
 		.pipe(
 			map((response: SecurityAdvisoriesResponse) => {
@@ -186,6 +194,9 @@ export class AssetDetailsAdvisoriesComponent
 		return this.diagnosticsService.getCriticalBugs(params)
 		.pipe(
 			map((response: CriticalBugsResponse) => {
+				_.each(response.data, (bug: CriticalBug) => {
+					_.set(bug, 'severity', _.capitalize(_.get(bug, 'severity', '')));
+				});
 				this.setTabData(tab, append, response);
 				tab.loading = false;
 			}),
@@ -315,7 +326,7 @@ export class AssetDetailsAdvisoriesComponent
 							autoId: 'AdvisoryLastUpdated',
 							key: 'lastUpdated',
 							name: I18n.get('_LastUpdated_'),
-							sortable: false,
+							sortable: true,
 							template: this.lastUpdatedTemplate,
 							width: '125px',
 						},
@@ -390,6 +401,7 @@ export class AssetDetailsAdvisoriesComponent
 					rows: 10,
 					serialNumber: _.get(this.asset, 'serialNumber') ?
 						[this.asset.serialNumber] : null,
+					sort: ['severity:ASC'],
 				},
 				selected: false,
 				subject: new Subject(),
@@ -401,7 +413,17 @@ export class AssetDetailsAdvisoriesComponent
 							name: I18n.get('_ID_'),
 							sortable: true,
 							template: this.bugIDTemplate,
+							value: 'id',
 							width: '100px',
+						},
+						{
+							key: 'severity',
+							name: I18n.get('_Severity_'),
+							sortable: true,
+							sortDirection: 'asc',
+							sorting: true,
+							template: this.impactTemplate,
+							value: 'severity',
 						},
 						{
 							key: 'title',

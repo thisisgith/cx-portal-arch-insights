@@ -72,7 +72,8 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 	@ViewChild('versionColumn', null) public softwareVersionColumn: TemplateRef<{ }>;
 	@ViewChild('recommendedVersionColumn', null) public recommendedVersionColumn: TemplateRef<{ }>;
 
-	public assetsTable: CuiTableOptions;
+	public affectedTable: CuiTableOptions;
+	public potentiallyAffectedTable: CuiTableOptions;
 	public isLoading = false;
 	public potentiallyImpacted: (Asset | NetworkElement)[] = [];
 	public impacted: (Asset | NetworkElement)[] = [];
@@ -209,7 +210,7 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 	 */
 	public refresh () {
 		this.params = { };
-		this.assetsTable = new CuiTableOptions({
+		const defaultOptions = {
 			bordered: true,
 			columns: [
 				{
@@ -218,30 +219,99 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 					sortable: true,
 					sortDirection: 'asc',
 					sorting: true,
-					template: this.deviceColumn,
 					width: '300px',
 				},
 				{
 					key: 'ipAddress',
 					name: I18n.get('_IPAddress_'),
 					sortable: true,
-					template: this.ipAddressColumn,
-				},
-				{
-					key: this.type === 'bug' ? 'softwareVersion' : 'swVersion',
-					name: I18n.get('_SoftwareVersion_'),
-					sortable: true,
-					template: this.softwareVersionColumn,
-				},
-				{
-					name: I18n.get('_RecommendedSoftwareVersion_'),
-					sortable: false,
-					template: this.recommendedVersionColumn,
 				},
 			],
 			padding: 'compressed',
 			striped: false,
 			wrapText: true,
+		};
+		const affectedOptions = _.cloneDeep(defaultOptions);
+		const potentiallyAffectedOptions = _.cloneDeep(defaultOptions);
+
+		// Setting the template for this column after cloneDeep to circumvent performance
+		// issues with recursively cloning the options object
+		const affectedHostName = _.find(affectedOptions.columns, { key: 'hostName' });
+		const potentiallyAffectedHostName =
+			_.find(potentiallyAffectedOptions.columns, { key: 'hostName' });
+		_.set(affectedHostName, 'template', this.deviceColumn);
+		_.set(potentiallyAffectedHostName, 'template', this.deviceColumn);
+		_.set(_.find(affectedOptions.columns, { key: 'ipAddress' }),
+			'template', this.ipAddressColumn);
+		_.set(_.find(potentiallyAffectedOptions.columns, { key: 'ipAddress' }),
+			'template', this.ipAddressColumn);
+		const affectedColumns = _.get(affectedOptions, 'columns');
+		const potentiallyAffectedColumns = _.get(potentiallyAffectedOptions, 'columns');
+
+		switch (this.type) {
+			case 'security':
+				const securityTableColumns = [
+					{
+						key: 'swVersion',
+						name: I18n.get('_Release_'),
+						sortable: true,
+						template: this.softwareVersionColumn,
+					},
+					{
+						key: 'recommendedVersion',
+						name: I18n.get('_RecommendedRelease_'),
+						sortable: false,
+						template: this.recommendedVersionColumn,
+					},
+				];
+				// Concat the default columns with the extra columns
+				_.set(affectedOptions, 'columns',
+					_.concat(affectedColumns, securityTableColumns));
+				_.set(potentiallyAffectedOptions, 'columns',
+					_.concat(potentiallyAffectedColumns, securityTableColumns));
+
+					// set names for hostName table header
+				_.set(_.find(affectedOptions.columns, { key: 'hostName' }),
+					'name', I18n.get('_System_'));
+				_.set(_.find(potentiallyAffectedOptions.columns, { key: 'hostName' }),
+					'name', I18n.get('_SystemName_'));
+				break;
+			case 'field':
+				_.set(_.find(affectedOptions.columns, { key: 'hostName' }),
+					'name', I18n.get('_ProductID_'));
+				_.set(_.find(potentiallyAffectedOptions.columns, { key: 'hostName' }),
+					'name', I18n.get('_ProductID_'));
+				break;
+			case 'bug':
+				const bugTableColumns = [
+					{
+						key: 'softwareVersion',
+						name: I18n.get('_Release_'),
+						sortable: true,
+						template: this.softwareVersionColumn,
+					},
+					{
+						key: 'recommendedVersion',
+						name: I18n.get('_RecommendedRelease_'),
+						sortable: false,
+						template: this.recommendedVersionColumn,
+					},
+				];
+				_.set(affectedOptions, 'columns', _.concat(affectedColumns, bugTableColumns));
+				_.set(potentiallyAffectedOptions, 'columns',
+					_.concat(potentiallyAffectedColumns, securityTableColumns));
+				break;
+		}
+
+		this.affectedTable = new CuiTableOptions(affectedOptions);
+		this.potentiallyAffectedTable = new CuiTableOptions(potentiallyAffectedOptions);
+
+		_.set(this.params, 'assets', {
+			customerId: this.customerId,
+			page: 1,
+			rows: 100,
+			solution: this.selectedSolutionName,
+			useCase: this.selectedTechnologyName,
 		});
 
 		_.set(this.params, 'assets', {
