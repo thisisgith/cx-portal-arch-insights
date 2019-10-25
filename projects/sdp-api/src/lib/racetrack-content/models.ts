@@ -22,3 +22,5 @@ export { UserTraining } from './models/user-training';
 export { BookmarkRequestSchema } from './models/bookmark-request-schema';
 export { AtxUserRegistrationsSchema } from './models/atx-user-registrations-schema';
 export { BookmarkResponseSchema } from './models/bookmark-response-schema';
+export { UserFeedbackRequestSchema } from './models/user-feedback-request-schema';
+export { UserFeedbackEntitySchema } from './models/user-feedback-entity-schema';

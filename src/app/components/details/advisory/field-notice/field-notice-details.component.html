@@ -4,11 +4,12 @@
 	<cui-tab [label]="'_Summary_' | i18n | uppercase">
 		<ng-container *ngTemplateOutlet="summary"></ng-container>
 	</cui-tab>
-	<cui-tab label="{{ '_ImpactedAssets_' | i18n | uppercase }} ({{ impactedCount }})"
+	<cui-tab label="{{ '_AffectedHardware_' | i18n | uppercase }} ({{ impactedCount }})"
 		[disabled]="!impactedCount || impactedCount === 0"
 		*ngIf="data?.assetIds?.impacted || data?.assetIds?.potentiallyImpacted">
 		<div class="half-margin-top">
 			<advisory-impacted-assets
+				type="field"
 				[customerId]="customerId"
 				[assetIds]="data.assetIds"
 				(impactedCount)="impactedCount = $event"
@@ -29,21 +30,6 @@
 			<ng-container *ngTemplateOutlet="detailText; context: {
 					title: ('_ProblemDescription_' | i18n),
 					text: data?.bulletin?.description
-				}">
-			</ng-container>
-			<ng-container *ngTemplateOutlet="detailText; context: {
-					title: ('_Background_' | i18n),
-					text: data?.bulletin?.background
-				}">
-			</ng-container>
-			<ng-container *ngTemplateOutlet="detailText; context: {
-					title: ('_Symptom_' | i18n),
-					text: data?.bulletin?.symptom
-				}">
-			</ng-container>
-			<ng-container *ngTemplateOutlet="detailText; context: {
-					title: ('_Workaround_' | i18n) + ' / ' + ('_Solution_' | i18n),
-					text: data?.bulletin?.workaround || ('_NoWorkarounds_' | i18n)
 				}">
 			</ng-container>
 		</div>

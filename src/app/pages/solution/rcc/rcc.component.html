@@ -310,7 +310,7 @@
 <!-- App Details slide-out -->
 <asset-details *ngIf="openDeviceModal && (assetLinkInfo?.asset || assetLinkInfo?.asset?.serialNumber)"
 	[asset]="assetLinkInfo?.asset"
-	[serialNumber]="assetLinkInfo?.asset?.serialNumber"
+	[serialNumber]="selectedAssetSerial"
 	[element]="assetLinkInfo?.element"
 	(close)="onPanelClose('openDeviceModal')"
 	[minWidth]="'900px'"

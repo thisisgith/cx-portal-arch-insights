@@ -1,10 +1,11 @@
 /* tslint:disable */
+import { SolutionInfo } from './solution-info';
 export interface HardwareInfo {
 
   /**
-   * The name of a group of products derived from a common product platform
+   * The product name reported by PCE. Examples:- Cisco UCS B200 M4 Blade Server, UCS-IOM-2208XP, N20-FAN5
    */
-  productFamily?: string;
+  productName?: string;
 
   /**
    * Unique identifier of a Cisco customer
@@ -42,9 +43,9 @@ export interface HardwareInfo {
   productId?: string;
 
   /**
-   * The unique, generated ID of the managed network element
+   * The name of a group of products derived from a common product platform
    */
-  managedNeId: string;
+  productFamily?: string;
 
   /**
    * A single term that defines the physical nature of the product. This value is derived based on the following order of preference:- PCE, SNAS. Examples:- Firewall, Access Point
@@ -52,9 +53,9 @@ export interface HardwareInfo {
   productType?: string;
 
   /**
-   * The product name reported by PCE. Examples:- Cisco UCS B200 M4 Blade Server, UCS-IOM-2208XP, N20-FAN5
+   * The unique, generated ID of the managed network element
    */
-  productName?: string;
+  managedNeId: string;
 
   /**
    * An indication of the general hardware type of the physical entity (e.g. CHASSIS, MODULE, POWER SUPPLY, POWERSUPPLY, FAN, IPPHONE, OTHER)
@@ -80,4 +81,9 @@ export interface HardwareInfo {
    * The specific version of the software (Software Type) that is installed on the Network Element. Example:- 15.1(4)M4
    */
   tags?: Array<string>;
+  wfid?: string;
+  solutionInfo?: Array<SolutionInfo>;
+  cxLevel?: string;
+  saId?: number;
+  vaId?: Array<number>;
 }

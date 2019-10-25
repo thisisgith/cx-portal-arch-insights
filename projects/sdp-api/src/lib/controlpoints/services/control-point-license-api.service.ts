@@ -12,7 +12,7 @@ import { LicenseDataResponseModel } from '../models/license-data-response-model'
   providedIn: 'root',
 })
 class ControlPointLicenseAPIService extends __BaseService {
-  static readonly getLicenseUsingGETPath = '/license/{customerId}/{hostName}';
+  static readonly getLicenseUsingGETPath = '/v1/license/{customerId}/{hostName}';
 
   constructor(
     config: __Configuration,

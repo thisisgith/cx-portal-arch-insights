@@ -1,10 +1,7 @@
 /* tslint:disable */
+import { SolutionInfo } from './solution-info';
 export interface Asset {
-
-  /**
-   * Contract Number
-   */
-  contractNumber?: string;
+  neId?: string;
 
   /**
    * Device name
@@ -20,6 +17,10 @@ export interface Asset {
    * Critical advisories
    */
   criticalAdvisories?: string;
+
+  /**
+   * If Device is Covered
+   */
   supportCovered?: boolean;
 
   /**
@@ -43,15 +44,23 @@ export interface Asset {
   role?: string;
 
   /**
+   * Contract Number
+   */
+  contractNumber?: string;
+  managedNeId?: string;
+
+  /**
    * IP Address
    */
   ipAddress?: string;
-  managedNeId?: string;
-  neId?: string;
   hwInstanceId?: string;
-  containingHwId?: string;
   productId?: string;
+  productType?: string;
   productName?: string;
   equipmentType?: string;
   reachabilityStatus?: string;
+  solutionInfo?: Array<SolutionInfo>;
+  cxLevel?: string;
+  saId?: number;
+  vaId?: Array<number>;
 }

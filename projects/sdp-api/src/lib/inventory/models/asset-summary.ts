@@ -5,10 +5,12 @@ export interface AssetSummary {
   hwInstanceId?: string;
   productFamily?: string;
   productId?: string;
+  productName?: string;
   swVersion?: string;
   swType?: string;
   coverageStatus?: string;
   contractNumber?: string;
+  coverageStartDate?: string;
   coverageEndDate?: string;
   slaCode?: string;
   managedNeId?: string;
@@ -21,6 +23,10 @@ export interface AssetSummary {
   installCountry?: string;
   installPostalCode?: string;
   installProvince?: string;
+  installSiteName?: string;
   eoSaleDate?: string;
   lastDateOfSupport?: string;
+  cxLevel?: string;
+  saId?: number;
+  vaId?: Array<number>;
 }

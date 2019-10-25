@@ -41,7 +41,7 @@ class FpIntelligenceService extends __BaseService {
         __params = __params.set('size',params.size.toString());
         let req = new HttpRequest<any>(
             'GET',
-            this.rootUrl + FpIntelligenceService.getSimilarDevicesPath + `${params.customerId}/`+encodeURIComponent(params.deviceId),
+            this.rootUrl + FpIntelligenceService.getSimilarDevicesPath + `${params.customerId}/`+ btoa(params.deviceId),
             __body,
             {
                 headers: __headers,
@@ -105,7 +105,7 @@ class FpIntelligenceService extends __BaseService {
         __params = __params.set('deviceCount',params.deviceCount.toString());
         let req = new HttpRequest<any>(
             'GET',
-            this.rootUrl + FpIntelligenceService.getSimilarDevicesDistributionPath +`${params.customerId}/`+encodeURIComponent(params.deviceId),
+            this.rootUrl + FpIntelligenceService.getSimilarDevicesDistributionPath +`${params.customerId}/`+ btoa(params.deviceId),
             __body,
             {
                 headers: __headers,

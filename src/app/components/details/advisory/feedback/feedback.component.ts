@@ -32,16 +32,12 @@ export class AdvisoryFeedbackComponent {
 	@Output('alert') public alertMessage = new EventEmitter<Alert>();
 
 	public feedbackOptions = {
-		max: 150,
-		min: 5,
 		pattern: /^[a-zA-Z0-9\s\-\/\(\).]*$/,
 	};
 	public feedbackForm = new FormGroup({
 		feedback: new FormControl('',
 			[
 				Validators.required,
-				Validators.minLength(this.feedbackOptions.min),
-				Validators.maxLength(this.feedbackOptions.max),
 				Validators.pattern(this.feedbackOptions.pattern),
 			]),
 	});

@@ -133,6 +133,10 @@ export interface CaseOpenRequest {
 	siteId?: string;
 	summary?: string;
 	description?: string;
+	lossOfServices?: 'Yes' | 'No';
+	contactMe?: string;
+	contactPreference?: 'Email';
+	contactEmail?: string;
 	noteDetails?: {
 		[key: string]: {
 			note: string;

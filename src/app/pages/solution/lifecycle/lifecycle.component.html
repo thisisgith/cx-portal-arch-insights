@@ -255,7 +255,7 @@
 			<h6 class="atx-popover__title title-line-clamp" [innerText]="title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
 			<div class="divider divider--compressed"></div>
 			<div class="atx-popover__description line-clamp" [innerText]="description" attr.data-auto-id="{{ autoid }}-HoverModal-Description"></div>
-			<div class="text-muted text-small half-margin-top" [innerText]="getProviderName(item)"></div>
+			<div class="text-muted text-small half-margin-top" [innerText]="getProviderName(item)" attr.data-auto-id="{{ autoid }}-HoverModal-Provider"></div>
 		</div>
 	</div>
 </ng-template>
@@ -287,8 +287,9 @@
 				class="text-muted text-small atx-more-popover__provider-name" 
 				[innerText]="getProviderName(data)"
 				*ngIf="getProviderName(data)"
+				data-auto-id="atxMoreClickModal-Provider"
 			></div>
-			<div class="atx-more-popover__button-container">
+			<div class="atx-more-popover__button-container base-padding-top">
 				<ng-container *ngTemplateOutlet="data?.sessions?.length > 0 ?
 					enabledViewSessionsButton : disabledViewSessionsButton; context: {
 						type: 'moreView'
@@ -326,7 +327,7 @@
 				<ng-container *ngTemplateOutlet="!notCurrentPitstop ? enabledAccButton : disabledAccButton; context: {
 					accId: item.accId,
 					title: item.title,
-					accProvderId: item.providerInfo?.id,
+					accProviderId: item.providerInfo?.id,
 					accProviderName: item.providerInfo?.name,
 					dataAutoId: 'Request1on1ACCButton'
 					}">
@@ -368,9 +369,9 @@
 			<!-- Keep the following line for now since we don't have partner Logo yet -->
 			<!-- <span *ngIf="item.providerInfo?.logoURL" class="icon-check icon-medium half-padding-right"></span> -->
 			<img *ngIf="item.providerInfo?.logoURL" class="table-img-width provider_icon" alt="'_Placeholder_' | i18n"
-				[src]="item.providerInfo?.logoURL">
+				[src]="item.providerInfo?.logoURL" attr.data-auto-id="{{ autoid }}-ProviderLogo">
 			<span *ngIf="!item.providerInfo?.logoURL && item.providerInfo?.name" class="text-bold text-medium provider_icon"
-				[innerText]="item.providerInfo?.name"></span>
+				[innerText]="item.providerInfo?.name" attr.data-auto-id="{{ autoid }}-ProviderText"></span>
 		</ng-container>
 	</div>
 	<div class="cx-lifecycle-card cx-lifecycle-card--recommended">
@@ -462,7 +463,7 @@
 			<ng-container *ngTemplateOutlet="!notCurrentPitstop ? enabledAccButton : disabledAccButton; context: {
 				accId: item.accId,
 				title: item.title,
-				accProvderId: item.providerInfo?.id,
+				accProviderId: item.providerInfo?.id,
 				accProviderName: item.providerInfo?.name,
 				dataAutoId: 'Request1on1ACCButton'
 				}">
@@ -512,7 +513,7 @@
 		<div class="atx-scheduler-description">
 			<div class="line-clamp atx-more-popover__description text-left" [innerText]="data.description"
 				data-auto-id="atxMoreClickModal-Description"></div>
-			<div class="text-muted text-small qtr-margin-top qtr-margin-bottom text-left" [innerText]="getProviderName(data)">
+			<div class="text-muted text-small qtr-margin-top qtr-margin-bottom text-left" [innerText]="getProviderName(data)" data-auto-id="atxScheduleCard-Provider">
 			</div>
 			<ng-container *ngIf="data.status === 'scheduled' && scheduledAtxMap[data.atxId]">
 				<div class="cx-lifecycle-card--scheduled half-padding-bottom text-left">
@@ -551,12 +552,6 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr class="session-table-row">
-						<th></th>
-						<th class="text-uppercase text-small" [innerText]="'_Date_' | i18n"></th>
-						<th></th>
-						<th class="text-uppercase text-small" [innerText]="'_Instructor_' | i18n"></th>
-					</tr>
 					<tr attr.data-auto-id="SelectSession-{{ session.sessionId }}"
 						*ngFor="let session of data.sessions"
 						(click)="selectSession(session)"
@@ -588,7 +583,7 @@
 				</div>
 			</div>
 			<div class="text-italic" *ngIf="isStartTimeWithin24Hrs(scheduledAtxMap[data.atxId]) && data.status === 'scheduled'"
-				[innerText]="'_UnableCancel_' | i18n"></div>
+				[innerText]="'_UnableCancel_' | i18n" data-auto-id="AtxScheduleCard-UnableCancel"></div>
 		</div>
 	</div>
 </ng-template>
@@ -625,11 +620,11 @@
 				<div class="col-md-11">
 					<div id="{{ autoid }}-item" class="panel small-panel">
 						<div class="text-blue cx-lifecycle-card__more-link" 
-							data-auto-id="ATXMoreClick"
+							attr.data-auto-id="{{ autoid }}-Click"
 							(click)="atxMoreSelect(item, autoid, moreList)"
 						>
 							{{ item.title }}
-							<p class="cx-lifecycle-card__by-text text-muted" [innerText]="getProviderName(item)" data-auto-id="ATXMoreClick-Provider"></p>
+							<p class="cx-lifecycle-card__by-text text-muted" [innerText]="getProviderName(item)" attr.data-auto-id="{{ autoid }}-Provider"></p>
 							<ng-container *ngIf="autoid==='moreACCList'">
 								<ng-container *ngTemplateOutlet="accHover; context: {
 									title: item.title,
@@ -1094,19 +1089,11 @@
 					<span class="text-medium" [innerText]="'_InProgress_' | i18n" *ngIf="item.status === 'in-progress'" data-auto-id="ATXCardFooter-InProgressText"></span>
 					<span class="text-medium" [innerText]="'_Requested_' | i18n" *ngIf="item.status === 'requested'" data-auto-id="ATXCardFooter-RequestedText"></span>
 					<div class="atx__card__feedback" *ngIf="item.status === 'completed'">
-						<ng-container *ngIf="item.feedbackInfo.available">
-							<a data-auto-id="thumbUpBtn" class="btn btn--icon btn--small btn--selected">
-								<span class="icon-like" [class.rotate-180]="item.feedbackInfo.thumbs === 'DOWN'"></span>
-							</a>
-						</ng-container>
-						<ng-container  *ngIf="!item.feedbackInfo.available">
-							<a data-auto-id="thumbUpBtn" class="btn btn--icon btn--small">
-								<span class="icon-like"></span>
-							</a>
-							<a data-auto-id="thumbDownBtn" class="btn btn--icon btn--small">
-								<span class="icon-like rotate-180"></span>
-							</a>
-						</ng-container>
+						<session-feedback
+							[type]="AssetType.ATX"					
+							*ngIf="item.feedbackInfo"
+							[item]="item"
+						></session-feedback>
 					</div>
 				</div>
 				<div class="text-left base-padding-left base-padding-right base-margin-bottom"
@@ -1189,20 +1176,12 @@
 					<span class="text-medium" [innerText]="'_Completed_' | i18n" *ngIf="item.status === 'completed'"></span>
 					<span class="text-medium" [innerText]="'_SessionInProgress_' | i18n" *ngIf="item.status === 'in-progress'"></span>
 					<span class="text-medium" [innerText]="'_Requested_' | i18n" *ngIf="item.status === 'requested'"></span>
-					<div class="acc__card__feedback" *ngIf="item.status === 'completed'">
-						<ng-container *ngIf="item.feedbackInfo?.available">
-							<a data-auto-id="thumbUpBtn" class="btn btn--icon btn--small btn--selected">
-								<span class="icon-like" [class.rotate-180]="item.feedbackInfo?.thumbs === 'DOWN'"></span>
-							</a>
-						</ng-container>
-						<ng-container  *ngIf="!item.feedbackInfo?.available">
-							<a data-auto-id="thumbUpBtn" class="btn btn--icon btn--small">
-								<span class="icon-like"></span>
-							</a>
-							<a data-auto-id="thumbDownBtn" class="btn btn--icon btn--small">
-								<span class="icon-like rotate-180"></span>
-							</a>
-						</ng-container>
+					<div class="atx__card__feedback" *ngIf="item.status === 'completed'">
+						<session-feedback
+							[type]="AssetType.ACC"					
+							*ngIf="item.feedbackInfo"
+							[item]="item"
+						></session-feedback>
 					</div>
 				</div>
 				<div class="divider no-margin"></div>
@@ -1211,7 +1190,7 @@
 						<ng-container *ngTemplateOutlet="!notCurrentPitstop ? enabledAccButton : disabledAccButton; context: {
 							accId: item.accId,
 							title: item.title,
-							accProvderId: item.providerInfo?.id,
+							accProviderId: item.providerInfo?.id,
 							accProviderName: item.providerInfo?.name,
 							dataAutoId: 'Request1on1ACCButton'
 							}">
