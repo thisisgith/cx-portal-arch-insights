@@ -2122,6 +2122,136 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 		});
 	});
 
+	describe('PBC-1012: UI: Develop Feedback Form', () => {
+		beforeEach(() => {
+			// Force a hard refresh to reset the feedback data
+			cy.loadApp();
+			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard');
+
+			// Switch to mock data with completed items
+			atxMock.enable('(ATX) IBN-Campus Network Assurance-Onboard-twoCompleted');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard-twoCompleted');
+
+			// Feedback is currently only available on View All cards
+			// So open the View All modal and ensure we're in card view
+			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
+			cy.getByAutoId('atx-card-view-btn').click();
+			cy.getByAutoId('ATXCard').should('exist');
+
+			// Setup a Cypress route to intercept the POST API call
+			cy.server();
+			cy.route({
+				method: 'POST',
+				url: '/api/customerportal/racetrack/v1/feedback/cxportal',
+				status: 200,
+				response: {
+					feedbackId: 'feedback-1',
+					comment: '',
+					context: '',
+					thumbs: 'UP',
+				},
+			}).as('feedbackPost');
+			// Disable the default mock so Cypress can catch the request
+			feedbackMock.disable('(Lifecycle) Feedback POST');
+		});
+
+		afterEach(() => {
+			// Close the View All modal
+			cy.getByAutoId('ViewAllCloseModal').click();
+			cy.getByAutoId('ViewAllModal').should('not.exist');
+		});
+
+		after(() => {
+			// Switch back to the default mock data
+			feedbackMock.enable('(Lifecycle) Feedback PUT');
+			atxMock.enable('(ATX) IBN-Campus Network Assurance-Onboard');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard');
+		});
+
+		it('Clicking thumbs up on ATX card should call API and open feedback form', () => {
+			cy.getByAutoId('ATXCard')
+				.first()
+				.within(() => {
+					cy.getByAutoId('thumbUpBtn').click();
+				});
+			// Verify the POST body contents match Swagger specs
+			cy.wait('@feedbackPost')
+				.its('request.body')
+				.then(body => {
+					expect(body.comment).to.eq('');
+					expect(body.context.assetType).to.eq('ATX');
+					expect(body.context.customerId).to.eq('2431199');
+					expect(body.context.entityId).to.eq('ATX1');
+					expect(body.context.partnerId).to.eq('partner1');
+					expect(body.thumbs).to.eq('UP');
+				});
+
+			// Verify the comment popup was opened
+			cy.getByAutoId('FeedbackPopup')
+				.should('exist');
+		});
+
+		it('Clicking thumbs down on ATX card should call API and open feedback form', () => {
+			cy.getByAutoId('ATXCard')
+				.first()
+				.within(() => {
+					cy.getByAutoId('thumbDownBtn').click();
+				});
+			// Verify the POST body contents match Swagger specs
+			cy.wait('@feedbackPost')
+				.its('request.body')
+				.then(body => {
+					expect(body.comment).to.eq('');
+					expect(body.context.assetType).to.eq('ATX');
+					expect(body.context.customerId).to.eq('2431199');
+					expect(body.context.entityId).to.eq('ATX1');
+					expect(body.context.partnerId).to.eq('partner1');
+					expect(body.thumbs).to.eq('DOWN');
+				});
+
+			// Verify the comment popup was opened
+			cy.getByAutoId('FeedbackPopup')
+				.should('exist');
+		});
+
+		it('Submitting the feedback form should show Thank You message', () => {
+			cy.getByAutoId('ATXCard')
+				.first()
+				.within(() => {
+					cy.getByAutoId('thumbUpBtn').click();
+				});
+
+			cy.getByAutoId('FeedbackPopup')
+				.should('exist')
+				.within(() => {
+					// Enter a comment
+					cy.getByAutoId('FeedbackPopup-Comments-Input')
+						.clear()
+						.type('Automation Feedback');
+
+					// Submit the form
+					cy.getByAutoId('FeedbackPopup-Submit').click();
+
+					// Verify "Thank You" message is shown with a close button
+					cy.getByAutoId('FeedbackPopup-ThankYou')
+						.should('have.text', i18n._ThankYou_);
+					cy.getByAutoId('FeedbackPopup-Close')
+						.click();
+				});
+
+			cy.getByAutoId('FeedbackPopup')
+				.should('not.exist');
+		});
+	});
+
 	describe('PBC-1013: UI needed for ATX details', () => {
 		// JIRA name is not terribly descriptive...
 		// These tests relate to partner-branding on ATX details (first item, More list, View Sessions)
@@ -2737,7 +2867,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			cy.getByAutoId('FeedbackPopup')
 				.should('exist')
 				.within(() => {
-					// Comments field should only allow up to 300 characters
+					// Enter a comment
 					cy.getByAutoId('FeedbackPopup-Comments-Input')
 						.clear()
 						.type('Automation Feedback');
