@@ -1054,10 +1054,11 @@
 					class="atx__card__logo"
 					alt="'_Placeholder_' | i18n"
 					[src]="item.providerInfo.logoURL"
-					data-auto-id="ATXCard-PartnerLogo"/>
+					data-auto-id="ATXCard-ProviderLogo"/>
 				<span *ngIf="!item.providerInfo.logoURL && item.providerInfo.name"
 					class="atx__card__logo"
 					[innerText]="item.providerInfo.name"
+					data-auto-id="ATXCard-ProviderText"
 				></span>
 			</ng-container>
 		</div>

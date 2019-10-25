@@ -2690,7 +2690,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 
 	describe('PBC-1018: UI needed to display list of partner-offered ACC', () => {
 		// JIRA name is not terribly descriptive...
-		// These tests relate to partner-branding on ACC details (first item and More list)
+		// These tests relate to partner-branding on ACC listing (table and card views)
 		afterEach(() => {
 			// Switch back to the default mock data
 			accMock.enable('(ACC) IBN-Campus Network Assurance-Onboard');
@@ -2805,7 +2805,6 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				cy.getByAutoId('ViewAllTable').should('exist');
 
 				validACCItems.forEach((acc, index) => {
-					cy.log(`ACC: ${acc.title}`);
 					// Partner ACCs should have the partner name
 					if (acc.providerInfo) {
 						// Skip the first tr, as this is the column headers
@@ -2854,9 +2853,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				});
 			});
 
-			// Waiting on PBC-1024: http://swtg-jira-lnx.cisco.com:8080/browse/PBC-1024
-			// Lifecycle: New partner branding on ACC and ATX needs to handle missing name
-			it.skip('ACC Table View should show dash if provider name is missing or blank', () => {
+			it('ACC Table View should show dash if provider name is missing or blank', () => {
 				// Switch to mock data with blank partner names
 				accMock.enable('(ACC) IBN-Campus Network Assurance-Onboard-twoWithBlankPartner');
 
@@ -2870,11 +2867,14 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				cy.getByAutoId('acc-table-view-btn').click();
 				cy.getByAutoId('ViewAllTable').should('exist');
 
-				cy.get('tr').each($row => {
-					cy.wrap($row).within(() => {
-						cy.getByAutoId('partner-name')
-							.should('have.text', '-');
-					});
+				cy.get('tr').each(($row, index) => {
+					// Skip the first tr, as this holds the table's headers
+					if (index !== 0) {
+						cy.wrap($row).within(() => {
+							cy.getByAutoId('partner-name')
+								.should('have.text', '-');
+						});
+					}
 				});
 			});
 
