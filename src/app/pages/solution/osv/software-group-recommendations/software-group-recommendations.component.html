@@ -135,7 +135,7 @@
 <ng-template #actionsTemplate let-item="celldata">
 	<button 
 		*ngIf="!item.accepted && item.swVersion != 'NA'"
-		class="btn btn--secondary btn--small" 
+		class="btn btn--primary btn--small"
 		[innerText]="'_OsvAccept_' | i18n | uppercase" 
 		(click)="onAcceptClick(item.swVersion)"
 		attr.data-auto-id="AcceptVersion-{{item.swVersion}}">
