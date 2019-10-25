@@ -156,7 +156,10 @@ export class CaseOpenComponent implements  CuiModalContent, OnInit, OnDestroy {
 	public submit () {
 		this.submitting = true;
 		const caseDetails: CaseOpenRequest = {
+			contactEmail: _.get(this.profileService.getProfile(), ['cpr', 'pf_auth_email']),
 			contactId: this.profileService.getProfile().cpr.pf_auth_uid,
+			contactMe: 'As soon as the Engineer is Available',
+			contactPreference: 'Email',
 			contractNumber: this.contractNumber,
 			customerActivity: _.get(
 				// Have to explicitly cast it to a FormGroup
@@ -165,6 +168,7 @@ export class CaseOpenComponent implements  CuiModalContent, OnInit, OnDestroy {
 			),
 			description: this.caseForm.controls.description.value,
 			deviceName: this.asset.deviceName,
+			lossOfServices: 'No',
 			priority: this.caseForm.controls.severity.value,
 			problemCode: _.get(
 				(<FormGroup> this.caseForm.controls.techInfo).controls.problemArea.value,

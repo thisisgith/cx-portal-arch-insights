@@ -2,6 +2,7 @@ import MockService from '../support/mockService';
 
 const atxMock = new MockService('ATXScenarios');
 const registerATXMock = new MockService('RegisterATXScenarios');
+const feedbackMock = new MockService('FeedbackScenarios');
 const atxOnboardScenario = atxMock.getScenario('GET', '(ATX) IBN-Campus Network Assurance-Onboard');
 const atxItems = atxOnboardScenario.response.body.items;
 const visibleATXItems = atxItems.slice(0, 3);
@@ -2787,6 +2788,144 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 						});
 				});
 			});
+		});
+	});
+
+	describe('PBC-1036: UI for partner-delivered ATX session feedback', () => {
+		beforeEach(() => {
+			// Force a hard refresh to reset the feedback data
+			cy.loadApp();
+			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard');
+
+			// Switch to mock data with completed items
+			atxMock.enable('(ATX) IBN-Campus Network Assurance-Onboard-twoCompleted');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard-twoCompleted');
+
+			// Feedback is currently only available on View All cards
+			// So open the View All modal and ensure we're in card view
+			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
+			cy.getByAutoId('atx-card-view-btn').click();
+			cy.getByAutoId('ATXCard').should('exist');
+		});
+
+		afterEach(() => {
+			// Close the View All modal
+			cy.getByAutoId('ViewAllCloseModal').click();
+			cy.getByAutoId('ViewAllModal').should('not.exist');
+		});
+
+		after(() => {
+			// Switch back to the default mock data
+			feedbackMock.enable('(Lifecycle) Feedback PUT');
+			atxMock.enable('(ATX) IBN-Campus Network Assurance-Onboard');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard');
+		});
+
+		it('ATX Feedback form should have required fields', () => {
+			cy.getByAutoId('ATXCard').each($card => {
+				cy.wrap($card).within(() => {
+					cy.getByAutoId('thumbUpBtn').click();
+				});
+
+				cy.getByAutoId('FeedbackPopup')
+					.should('exist')
+					.within(() => {
+						cy.getByAutoId('FeedbackPopup-Title')
+							.should('have.text', i18n._FeedbackThanks_);
+						cy.getByAutoId('FeedbackPopup-Description')
+							.should('have.text', i18n._FeedbackMore_);
+						cy.getByAutoId('FeedbackPopup-Comments')
+							.should('exist');
+						// Character count only shows up if comments were entered
+						cy.getByAutoId('FeedbackPopup-Comments-Input')
+							.type('Automation Feedback');
+						cy.getByAutoId('FeedbackPopup-Comments-CharCount')
+							.should('contain', `${'Automation Feedback'.length} / 300`);
+
+						// Check Submit button exists, but don't click it
+						cy.getByAutoId('FeedbackPopup-Submit')
+							.should('exist');
+
+						// Close the feedback popup without submitting
+						cy.getByAutoId('FeedbackPopup-Close-Icon').click();
+					});
+			});
+		});
+
+		it('Comments field has a max length of 300 characters', () => {
+			cy.getByAutoId('ATXCard')
+				.first()
+				.within(() => {
+					cy.getByAutoId('thumbUpBtn').click();
+				});
+
+			cy.getByAutoId('FeedbackPopup')
+				.should('exist')
+				.within(() => {
+					// Comments field should only allow up to 300 characters
+					cy.getByAutoId('FeedbackPopup-Comments-Input')
+						.clear()
+						.type('a'.repeat(301));
+
+					// Field should only have ended up with 300 characters
+					cy.getByAutoId('FeedbackPopup-Comments-Input')
+						.invoke('val')
+						.then(text => {
+							expect(text.length).to.eq(300);
+						});
+
+					// Close the feedback popup
+					cy.getByAutoId('FeedbackPopup-Close-Icon').click();
+				});
+		});
+
+		it('Submitting feedback form should call API', () => {
+			// Setup a Cypress route to intercept the POST API call
+			cy.server();
+			cy.route({
+				method: 'PUT',
+				url: '/api/customerportal/racetrack/v1/feedback/cxportal/feedback-1',
+				status: 200,
+				response: 'Forced success from QA',
+			}).as('feedbackPut');
+			// Disable the default mock so Cypress can catch the request
+			feedbackMock.disable('(Lifecycle) Feedback PUT');
+
+			cy.getByAutoId('ATXCard')
+				.first()
+				.within(() => {
+					cy.getByAutoId('thumbUpBtn').click();
+				});
+
+			cy.getByAutoId('FeedbackPopup')
+				.should('exist')
+				.within(() => {
+					// Comments field should only allow up to 300 characters
+					cy.getByAutoId('FeedbackPopup-Comments-Input')
+						.clear()
+						.type('Automation Feedback');
+
+					// Submit the form
+					cy.getByAutoId('FeedbackPopup-Submit').click();
+				});
+
+			cy.wait('@feedbackPut')
+				.its('request.body')
+				.then(body => {
+					expect(body.comment).to.eq('Automation Feedback');
+					expect(body.context.assetType).to.eq('ATX');
+					expect(body.context.customerId).to.eq('2431199');
+					expect(body.context.entityId).to.eq('ATX1');
+					expect(body.context.partnerId).to.eq('partner1');
+				});
 		});
 	});
 });

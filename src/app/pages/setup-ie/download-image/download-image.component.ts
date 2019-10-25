@@ -374,8 +374,11 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 						'download_info_list[0].asd_download_url_exception.length',
 					);
 					if (!hasError) {
-						const url = _.get(response, 'download_info_list[0].cloud_url')
-							|| _.get(response, 'download_info_list[0].download_url');
+						const url = decodeURIComponent(
+							// disabling cloud_url temporarily because of prod auth issue
+							// _.get(response, 'download_info_list[0].cloud_url') ||
+							_.get(response, 'download_info_list[0].download_url'),
+						);
 						if (url) {
 							if (/[?]/.test(url)) {
 								this.utils
