@@ -27,6 +27,11 @@
 				}">
 			</ng-container>
 			<ng-container *ngTemplateOutlet="detailText; context: {
+				title: ('_BugSeverity_' | i18n),
+				text: data?.advisory?.severity | titlecase
+			}">
+		</ng-container>
+			<ng-container *ngTemplateOutlet="detailText; context: {
 					title: ('_Description_' | i18n),
 					text: data?.advisory?.description
 				}">
