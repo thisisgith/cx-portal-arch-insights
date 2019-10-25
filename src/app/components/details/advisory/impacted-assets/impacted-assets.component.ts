@@ -210,7 +210,7 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 	 */
 	public refresh () {
 		this.params = { };
-		const options = {
+		const defaultOptions = {
 			bordered: true,
 			columns: [
 				{
@@ -219,26 +219,38 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 					sortable: true,
 					sortDirection: 'asc',
 					sorting: true,
-					template: this.deviceColumn,
 					width: '300px',
 				},
 				{
 					key: 'ipAddress',
 					name: I18n.get('_IPAddress_'),
 					sortable: true,
-					template: this.ipAddressColumn,
 				},
 			],
 			padding: 'compressed',
 			striped: false,
 			wrapText: true,
 		};
+		const affectedOptions = _.cloneDeep(defaultOptions);
+		const potentiallyAffectedOptions = _.cloneDeep(defaultOptions);
 
-		let affectedOptions;
-		let potentiallyAffectedOptions;
+		// Setting the template for this column after cloneDeep to circumvent performance
+		// issues with recursively cloning the options object
+		const affectedHostName = _.find(affectedOptions.columns, { key: 'hostName' });
+		const potentiallyAffectedHostName =
+			_.find(potentiallyAffectedOptions.columns, { key: 'hostName' });
+		_.set(affectedHostName, 'template', this.deviceColumn);
+		_.set(potentiallyAffectedHostName, 'template', this.deviceColumn);
+		_.set(_.find(affectedOptions.columns, { key: 'ipAddress' }),
+			'template', this.ipAddressColumn);
+		_.set(_.find(potentiallyAffectedOptions.columns, { key: 'ipAddress' }),
+			'template', this.ipAddressColumn);
+		const affectedColumns = _.get(affectedOptions, 'columns');
+		const potentiallyAffectedColumns = _.get(potentiallyAffectedOptions, 'columns');
+
 		switch (this.type) {
 			case 'security':
-				options.columns.push(
+				const securityTableColumns = [
 					{
 						key: 'swVersion',
 						name: I18n.get('_Release_'),
@@ -251,23 +263,27 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 						sortable: false,
 						template: this.recommendedVersionColumn,
 					},
-				);
-				affectedOptions = _.clone(options);
-				potentiallyAffectedOptions = _.clone(options);
-				const affectedHostName = _.find(affectedOptions.columns, { key: 'hostName' });
-				_.set(affectedHostName, 'name', I18n.get('_System_'));
-				const potentiallyAffectedHostName =
-					_.find(potentiallyAffectedOptions.columns, { key: 'hostName' });
-				_.set(potentiallyAffectedHostName, 'name', I18n.get('_SystemName_'));
+				];
+				// Concat the default columns with the extra columns
+				_.set(affectedOptions, 'columns',
+					_.concat(affectedColumns, securityTableColumns));
+				_.set(potentiallyAffectedOptions, 'columns',
+					_.concat(potentiallyAffectedColumns, securityTableColumns));
+
+					// set names for hostName table header
+				_.set(_.find(affectedOptions.columns, { key: 'hostName' }),
+					'name', I18n.get('_System_'));
+				_.set(_.find(potentiallyAffectedOptions.columns, { key: 'hostName' }),
+					'name', I18n.get('_SystemName_'));
 				break;
 			case 'field':
-				const hostName = _.find(options.columns, { key: 'hostName' });
-				_.set(hostName, 'name', I18n.get('_ProductID_'));
-				affectedOptions = _.clone(options);
-				potentiallyAffectedOptions = _.clone(options);
+				_.set(_.find(affectedOptions.columns, { key: 'hostName' }),
+					'name', I18n.get('_ProductID_'));
+				_.set(_.find(potentiallyAffectedOptions.columns, { key: 'hostName' }),
+					'name', I18n.get('_ProductID_'));
 				break;
 			case 'bug':
-				options.columns.push(
+				const bugTableColumns = [
 					{
 						key: 'softwareVersion',
 						name: I18n.get('_Release_'),
@@ -279,9 +295,11 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 						name: I18n.get('_RecommendedRelease_'),
 						sortable: false,
 						template: this.recommendedVersionColumn,
-					});
-				affectedOptions = _.clone(options);
-				potentiallyAffectedOptions = _.clone(options);
+					},
+				];
+				_.set(affectedOptions, 'columns', _.concat(affectedColumns, bugTableColumns));
+				_.set(potentiallyAffectedOptions, 'columns',
+					_.concat(potentiallyAffectedColumns, securityTableColumns));
 				break;
 		}
 
