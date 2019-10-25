@@ -13,7 +13,7 @@ import { CollectionPolicyUpdateRequestModel } from '../models/collection-policy-
   providedIn: 'root',
 })
 class ControlPointModifyCollectionPolicyAPIService extends __BaseService {
-  static readonly updateCollectionPolicyUsingPATCHPath = '/collectionPolicy';
+  static readonly updateCollectionPolicyUsingPATCHPath = '/v1/collectionPolicy';
 
   constructor(
     config: __Configuration,

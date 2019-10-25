@@ -28,7 +28,8 @@ import {
 	SoftwareEOLResponse,
 	SoftwareEOL,
 	SoftwareInfo,
-	LicenseDataResponseModel,
+	// TODO: Re-enable in LA when license information is re-instated
+	// LicenseDataResponseModel,
 	ControlPointLicenseAPIService,
 } from '@sdp-api';
 import { TimelineDatapoint } from '@interfaces';
@@ -186,27 +187,28 @@ export class AssetDetailsSoftwareComponent implements OnInit, OnChanges, OnDestr
 	}
 
 	/**
+	 * TODO: Re-enable in LA when license information is re-instated
 	 * Fetches the license data for the selected asset
 	 * @returns license data
 	 */
-	private fetchLicenseData () {
-		this.status.loading.licenses = true;
+	// private fetchLicenseData () {
+	// 	this.status.loading.licenses = true;
 
-		return this.controlPointService.getLicenseUsingGET(this.licenseParams)
-		.pipe(
-			map((response: LicenseDataResponseModel) => {
-				this.softwareLicenses = _.get(response, 'license', []);
-				this.status.loading.licenses = false;
-			}),
-			catchError(err => {
-				this.status.loading.licenses = false;
-				this.logger.error('software.component : fetchLicenseData() ' +
-					`:: Error : (${err.status}) ${err.message}`);
+	// 	return this.controlPointService.getLicenseUsingGET(this.licenseParams)
+	// 	.pipe(
+	// 		map((response: LicenseDataResponseModel) => {
+	// 			this.softwareLicenses = _.get(response, 'license', []);
+	// 			this.status.loading.licenses = false;
+	// 		}),
+	// 		catchError(err => {
+	// 			this.status.loading.licenses = false;
+	// 			this.logger.error('software.component : fetchLicenseData() ' +
+	// 				`:: Error : (${err.status}) ${err.message}`);
 
-				return of({ });
-			}),
-		);
-	}
+	// 			return of({ });
+	// 		}),
+	// 	);
+	// }
 
 	/**
 	 * Refreshes the eox data
@@ -291,7 +293,8 @@ export class AssetDetailsSoftwareComponent implements OnInit, OnChanges, OnDestr
 						wrapText: true,
 					});
 
-					obsBatch.push(this.fetchLicenseData());
+					// TODO: Re-enable in LA when license information is re-instated
+					// obsBatch.push(this.fetchLicenseData());
 				}
 
 				return forkJoin(obsBatch);

@@ -314,6 +314,14 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 			useCase: this.selectedTechnologyName,
 		});
 
+		_.set(this.params, 'assets', {
+			customerId: this.customerId,
+			page: 1,
+			rows: 100,
+			solution: this.selectedSolutionName,
+			useCase: this.selectedTechnologyName,
+		});
+
 		if (this.type === 'bug' && this.id) {
 			_.set(this.params, 'bugAssets', {
 				cdetId: [this.id],

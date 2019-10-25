@@ -289,7 +289,7 @@
 				*ngIf="getProviderName(data)"
 				data-auto-id="atxMoreClickModal-Provider"
 			></div>
-			<div class="atx-more-popover__button-container">
+			<div class="atx-more-popover__button-container base-padding-top">
 				<ng-container *ngTemplateOutlet="data?.sessions?.length > 0 ?
 					enabledViewSessionsButton : disabledViewSessionsButton; context: {
 						type: 'moreView'
@@ -548,7 +548,7 @@
 					<tr>
 						<td [innerText]="'_Date_' | i18n"></td>
 						<td class="table__head-spacer"></td>
-						<td [innerText]="'_Instructor_' | i18n"></td>
+						<td [innerText]="'_Presenter_' | i18n"></td>
 					</tr>
 				</thead>
 				<tbody>

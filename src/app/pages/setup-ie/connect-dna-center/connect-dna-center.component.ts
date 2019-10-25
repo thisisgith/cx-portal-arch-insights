@@ -178,7 +178,11 @@ export class ConnectDNACenterComponent implements OnInit, SetupStep {
 	 */
 	@HostListener('window:keyup', ['$event'])
 	public keyEvent (event: KeyboardEvent) {
-		if (event.keyCode === KEY_CODES.ENTER && this.accountForm.valid) {
+		if (
+			event.keyCode === KEY_CODES.ENTER
+			&& this.accountForm.valid
+			&& !this.loading
+		) {
 			this.onSubmit();
 		}
 	}
