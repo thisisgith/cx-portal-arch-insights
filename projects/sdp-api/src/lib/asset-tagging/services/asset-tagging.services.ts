@@ -8,7 +8,6 @@ import { Observable as __Observable } from 'rxjs';
 import { map as __map, filter as __filter } from 'rxjs/operators';
 
 import { DeviceDetails } from '../models/device-detail';
-import { Devices } from '../models/devices';
 import { PolicyGroupDetails } from '../models/policy-group-details';
 import { PolicyGroupList } from '../models/policy-group-list';
 import { PolicyGroups } from '../models/policy-groups';

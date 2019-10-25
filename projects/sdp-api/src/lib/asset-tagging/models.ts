@@ -1,5 +1,4 @@
 export { DeviceDetails as AssetTaggingDeviceDetails } from './models/device-detail';
-export { Devices } from './models/devices';
 export { PolicyGroupDetails } from './models/policy-group-details';
 export { PolicyGroupList } from './models/policy-group-list';
 export { PolicyGroups } from './models/policy-groups';
