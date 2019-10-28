@@ -20,6 +20,7 @@ import { takeUntil } from 'rxjs/operators';
 import * as _ from 'lodash-es';
 import { CuiModalService } from '@cisco-ngx/cui-components';
 import { ContactSupportComponent } from '../contact-support/contact-support.component';
+import { I18n } from '@cisco-ngx/cui-utils';
 
 /**
  * Main Header Component
@@ -50,7 +51,35 @@ export class HeaderComponent implements AfterViewChecked, OnInit, OnDestroy {
 	// }];
 	// TODO: Portal Support is feedback
 	public portalHelpLinks = [{
-		name: 'Portal Support',
+		name: I18n.get('_PortalDemo_'),
+		url: '',
+	},
+	{
+		name: I18n.get('_GettingStarted_'),
+		url: 'https://www.cisco.com/c/dam/en/us/support/docs/cloud-systems-management/Cisco-CX-Collector/Collector_Overview.pdf',
+	},
+	{
+		name: I18n.get('_PortalSupport_'),
+		component: {
+			name : ContactSupportComponent,
+			params : { },
+		},
+	}];
+	public vendorLinks = [{
+		name: I18n.get('_TermsConditions_'),
+		url: 'https://www.cisco.com/c/en/us/about/legal/cloud-and-software/cloud-terms.html',
+	},
+	{
+		name: I18n.get('_PrivateStmt_'),
+		url: 'https://www.cisco.com/c/en/us/about/legal/privacy-full.html',
+	},
+	{
+		name: I18n.get('_cookies_'),
+		url: 'https://www.cisco.com/c/en/us/about/legal/privacy-full.html#cookies',
+	},
+	{
+		name: I18n.get('_Trademarks_'),
+		url: 'https://www.cisco.com/c/en/us/about/legal/trademarks.html',
 	}];
 	public profileLinks = [{
 		href: environment.manageProfileUrl,
@@ -133,10 +162,19 @@ export class HeaderComponent implements AfterViewChecked, OnInit, OnDestroy {
 	}
 
 	/**
-	 * Open contact support modal
-	 */
-	public openPortalSupport () {
-		this.cuiModalService.showComponent(ContactSupportComponent, { });
+	 * Handle link click event. Move user to a new url in a new tab or
+	 * open component to help user contact customer support.
+	 * @param link object containing clicked link details.
+ 	*/
+	private onLinkClick (link) {
+		if (link.url) {
+			window.open(link.url, '_target');
+			return;
+		}
+		if (link.component) {
+			this.cuiModalService.showComponent(link.component.name, link.component.params);
+			return;
+		}
 	}
 
 	/**
