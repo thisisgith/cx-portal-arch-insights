@@ -52,8 +52,8 @@
 							data-auto-id="caseOwner" [innerText]="'_CaseOwner_' | i18n"></span>
 					</dt>
 					<dd>
-						<span *ngIf="case?.owner; else unavailable"
-							[innerText]="case.owner"></span>
+						<a *ngIf="case?.contactEmail; else unavailable" data-auto-id="mailCaseOwner" href="mailto:{{case?.contactEmail}}"
+							[innerText]="case?.contactEmail"></a>
 					</dd>
 				</dl>
 			</div>
@@ -73,8 +73,8 @@
 							data-auto-id="caseTACEng" [innerText]="'_TACEngineer_' | i18n"></span>
 					</dt>
 					<dd>
-						<span *ngIf="case?.tacEngineer; else loadingSummaryTemplate"
-							[innerText]="case.tacEngineer"></span>
+						<a *ngIf="case?.ownerEmail ; else tacEngineerNotAvaiable"  data-auto-id="mailTacEngineer" href="mailto:{{case?.ownerEmail}}"
+							[innerText]="case?.ownerEmail"></a>
 					</dd>
 					<dt>
 						<span class="subheading text-small text-uppercase"
@@ -144,4 +144,8 @@
 
 <ng-template #unavailable>
 	<span class="text-muted" [innerText]="'_Unavailable_' | i18n"></span>
+</ng-template>
+
+<ng-template #tacEngineerNotAvaiable>
+	<span class="text-muted" [innerText]="'_RMACaseNoTACEngineer_' | i18n"></span>
 </ng-template>
