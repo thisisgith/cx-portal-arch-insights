@@ -381,3 +381,33 @@ $text-larger: 19px;
 		line-height: 14px;
 	}
 }
+
+.links {
+	padding: 5px 18px 3px 30px;
+	font-weight: bold;
+
+	&__title {
+		margin-bottom: 5px;
+		color: $dark-gray-2;
+	}
+
+	&__support {
+		font-size: 14px;
+		margin-bottom: 7px;
+	}
+
+	&__vendor {
+		font-size: 12px;
+	}
+
+	&__divider {
+		margin-top: 10px;
+		margin-bottom: 10px;
+	}
+
+	&__btn {
+		padding: unset;
+		color: #227bb1;
+	}
+}
+
