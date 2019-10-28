@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import {
 	ControlPointIEHealthStatusAPIService,
+	ControlPointInsightTypeAPIService,
+	ControlPointInsightTypePostAPIService,
 	IEHealthStatusResponseModel,
 	UserService,
+	InsightTypeRequestModel,
 } from '@sdp-api';
 import { User } from '@interfaces';
 import { ActivatedRoute } from '@angular/router';
@@ -15,6 +18,7 @@ import { catchError, finalize, takeUntil } from 'rxjs/operators';
 import { I18n } from '@cisco-ngx/cui-utils';
 
 import * as _ from 'lodash-es';
+import { FormsModule } from '@angular/forms';
 
 enum SystemInfo {
 	OS_IMAGE = 0,
@@ -41,7 +45,7 @@ enum MemoryUsage {
 	styleUrls: ['./settings.component.scss'],
 	templateUrl: './settings.component.html',
 })
-export class SettingsComponent  implements OnInit {
+export class SettingsComponent implements OnInit {
 	private destroyed$: Subject<void> = new Subject<void>();
 	public cpData: IEHealthStatusResponseModel[];
 	private customerId: string;
@@ -92,13 +96,20 @@ export class SettingsComponent  implements OnInit {
 	public error = false;
 	public errorMessage = '';
 	public loading = false;
+	public insightTypeResp: any;
+	public supportCaseInsightTypes = [];
+	public regulatoryCompliance: object;
+	public isLoading = false;
 
 	private user: User;
 
-	constructor (
+	constructor(
 		private controlPointIEHealthStatusAPIService: ControlPointIEHealthStatusAPIService,
 		private route: ActivatedRoute,
 		private userService: UserService,
+		private ControlPointInsightTypeAPIService: ControlPointInsightTypeAPIService,
+		private ControlPointInsightTypePostAPIService: ControlPointInsightTypePostAPIService,
+
 	) {
 		this.user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(this.user, ['info', 'customerId']);
@@ -109,7 +120,7 @@ export class SettingsComponent  implements OnInit {
 	 * @param {String} customerId - Customer ID string
 	 * @returns observable
 	 */
-	public getIEHealthStatusData (customerId: string) {
+	public getIEHealthStatusData(customerId: string) {
 		return this.controlPointIEHealthStatusAPIService.getIEHealthStatusUsingGET(customerId)
 			.pipe(
 				catchError(err => {
@@ -129,7 +140,7 @@ export class SettingsComponent  implements OnInit {
 	 * @param {String} total - String w/ total resource info
 	 * @returns - Int representing used resources out of 100
 	 */
-	public getResourcePercent (used, total) {
+	public getResourcePercent(used, total) {
 		const usedNum = parseInt(used, 10);
 		const totalNum = parseInt(total, 10);
 		if (!usedNum || !totalNum) {
@@ -144,7 +155,7 @@ export class SettingsComponent  implements OnInit {
 	 * @param resourceVal - String w/ resource info
 	 * @returns - string containing unit represented
 	 */
-	public getUnits (resourceVal: string) {
+	public getUnits(resourceVal: string) {
 		const results = resourceVal.match(/(\D+)/g);
 
 		return results ? results[0] : undefined;
@@ -153,7 +164,7 @@ export class SettingsComponent  implements OnInit {
 	/**
 	 * Converts free and total strings to free resources percent
 	 */
-	public handleData () {
+	public handleData() {
 		const component_details = _.get(this, 'cpData[0].component_details');
 		const hardware_details = _.get(this, 'cpData[0].system_details.hardware_details');
 		const os_details = _.get(this, 'cpData[0].system_details.os_details');
@@ -186,15 +197,15 @@ ${HDDSizeUnit}`;
 		);
 		this.data.memoryUsage[MemoryUsage.MEMORY].value =
 			usedMemory && totalMemory ?
-			`${usedMemory} of ${totalMemory}` :
-			I18n.get('_ErrorDisplayingData_');
+				`${usedMemory} of ${totalMemory}` :
+				I18n.get('_ErrorDisplayingData_');
 
 		this.data.memoryUsage[MemoryUsage.DISK_SPACE].percentage =
 			this.getResourcePercent(usedHDD, totalHDD);
 		this.data.memoryUsage[MemoryUsage.DISK_SPACE].value =
 			usedHDD && totalHDD ?
-			`${usedHDD} of ${totalHDD}` :
-			I18n.get('_ErrorDisplayingData_');
+				`${usedHDD} of ${totalHDD}` :
+				I18n.get('_ErrorDisplayingData_');
 
 		this.data.systemInfo[SystemInfo.OS_IMAGE].value = _.get(os_details, 'osImage');
 		this.data.systemInfo[SystemInfo.KERNEL_VERSION].value = _.get(os_details, 'kernelVersion');
@@ -217,7 +228,7 @@ ${HDDSizeUnit}`;
 	/**
 	 * NgOnDestroy
 	 */
-	public ngOnDestroy () {
+	public ngOnDestroy() {
 		this.destroyed$.next();
 		this.destroyed$.complete();
 	}
@@ -225,13 +236,27 @@ ${HDDSizeUnit}`;
 	/**
 	 * Function which instanstiates the settings page to the initial view
 	 */
-	public ngOnInit () {
+	public ngOnInit() {
 		this.loading = true;
 		this.getIEHealthStatusData(this.customerId)
 			.subscribe(response => {
 				this.cpData = response;
 				this.handleData();
 			});
+		this.getInsightType(this.customerId, "ALL")
+			.subscribe(response => {
+				console.log("==============response============", response);
+				this.insightTypeResp = response.body;
+
+				this.insightTypeResp.insightConfigs.forEach(insightConf => {
+					if (insightConf.insightType === 'COMPLIANCE') {
+						this.regulatoryCompliance = insightConf;
+					} else {
+						this.supportCaseInsightTypes.push(insightConf);
+					}
+				});
+
+			})
 	}
 
 	/**
@@ -240,11 +265,47 @@ ${HDDSizeUnit}`;
 	 * @param field {string}
 	 * @returns object
 	 */
-	private prefixWithV (obj: object, field: string) {
+	private prefixWithV(obj: object, field: string) {
 		if (!/^v/.test(obj[field]) && obj[field]) {
 			obj[field] = `v${obj[field]}`;
 		}
 
 		return obj;
 	}
+
+
+	/**
+	 * Sets health status info given customerId.
+	 * @param {String} customerId - Customer ID string
+	 * @returns observable
+	 */
+	public getInsightType (customerId: string, insightType: string) {
+		return this.ControlPointInsightTypeAPIService.getInsightTypeUsingGETResponse({customerId, insightType})
+			.pipe(
+				catchError(err => {
+					this.error = true;
+					this.errorMessage = err.message;
+
+					return empty();
+				}),
+				finalize(() => this.loading = false),
+				takeUntil(this.destroyed$),
+			);
+	}
+
+
+	public insightModeChange (insightType, mode) {
+		this.isLoading = true;
+		const parameters: InsightTypeRequestModel = {
+			customerId: this.customerId,
+			insightType: insightType,
+			mode: mode
+		};
+
+		return this.ControlPointInsightTypePostAPIService.saveInsightTypeUsingPOST(parameters)
+		.subscribe(response =>{
+			console.log("==============response============",response);
+			this.isLoading = false;
+		})
+	};
 }

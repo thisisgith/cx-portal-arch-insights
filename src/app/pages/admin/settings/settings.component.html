@@ -134,6 +134,63 @@
 					</div>
 				</div> -->
 			</div>
+
+			
+				<!--Insight type code start-->
+
+
+				<div class="col-lg-6">
+
+					<div class="row mb2">
+						<h6>Support Cases</h6>
+					</div>
+
+					<div class="row mb2" *ngFor="let insight of supportCaseInsightTypes">
+						<div class="col-md-9">
+							<span *ngIf="insight.insightType ==='RPR'"> Send device data to TAC for Rapid Problem Resolution cases </span>
+							<span *ngIf="insight.insightType ==='AFM'"> Automatically open a TAC support case for faults </span>
+						</div>
+						<div class="col-md-3">
+
+							<label class="switch">
+								<input type="checkbox" 
+								[(ngModel)]="insight.mode"
+								[checked]="insight.mode"
+								(change)="insightModeChange(insight.insightType, insight.mode)"
+								[(disabled)]="isLoading"/>
+								<span class="switch__input"></span>
+								<span class="switch__label">Yes</span>
+							</label>
+						</div>
+					</div>
+
+					<div class="row mb2 mt5" *ngIf="regulatoryCompliance">
+						<h6>Regulatory Compliance</h6>
+					</div>
+
+					<div class="row "  *ngIf="regulatoryCompliance">
+						<div class="col-md-9">
+							<span>Scan the network for regulatory compliance</span>
+						</div>
+						<div class="col-md-3">
+							<label class="switch">
+								<input type="checkbox" [(ngModel)]="regulatoryCompliance.mode"
+								[checked]="regulatoryCompliance.mode"
+								(change)="insightModeChange(regulatoryCompliance.insightType, regulatoryCompliance.mode)"
+								[(disabled)]="isLoading">
+								<span class="switch__input"></span>
+								<span class="switch__label">Yes</span>
+							</label>
+						</div>
+				</div>
+				</div>
+
+
+
+				<!--Insight type code end-->
+
+
+
 			<!-- <div class="col-lg-3" data-auto-id="settings.system.usage">
 				<h5
 					class="base-margin-top half-margin-bottom settings__title"
