@@ -245,7 +245,6 @@ ${HDDSizeUnit}`;
 			});
 		this.getInsightType(this.customerId, "ALL")
 			.subscribe(response => {
-				console.log("==============response============", response);
 				this.insightTypeResp = response.body;
 
 				this.insightTypeResp.insightConfigs.forEach(insightConf => {
@@ -304,7 +303,6 @@ ${HDDSizeUnit}`;
 
 		return this.ControlPointInsightTypePostAPIService.saveInsightTypeUsingPOST(parameters)
 		.subscribe(response =>{
-			console.log("==============response============",response);
 			this.isLoading = false;
 		})
 	};
