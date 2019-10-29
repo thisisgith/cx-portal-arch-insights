@@ -766,6 +766,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		await this.cuiModalService.showComponent(FeedbackComponent, {
 			facet: this.selectedFacet.title,
 			pitstop: this.selectedTechnology.currentPitstop,
+			solution: this.selectedSolutionName,
 			useCase: this.selectedTechnology.name,
 		}, 'normal');
 	}
