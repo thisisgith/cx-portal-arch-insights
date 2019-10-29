@@ -28,6 +28,9 @@ import {
 	ContractQuota,
 	UserTraining,
 	RacetrackResponse,
+	CompanyInfoList,
+	CompanyInfo,
+	GenericApiControllerService,
 } from '@sdp-api';
 
 import * as racetrackComponent from '../../../components/racetrack/racetrack.component';
@@ -96,6 +99,7 @@ interface ComponentData {
 		sessions: string[];
 		usedTrainings: string[];
 	};
+	partner?: CompanyInfo[];
 }
 
 /**
@@ -299,6 +303,7 @@ export class LifecycleComponent implements OnDestroy {
 			bookmark: false,
 			cgt: false,
 			elearning: false,
+			partner: false,
 			productGuides: {
 				modal: false,
 				more: false,
@@ -354,6 +359,7 @@ export class LifecycleComponent implements OnDestroy {
 		private racetrackService: RacetrackService,
 		private route: ActivatedRoute,
 		private racetrackInfoService: RacetrackInfoService,
+		private partnerService: GenericApiControllerService,
 	) {
 		this.user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(this.user, ['info', 'customerId']);
@@ -2353,5 +2359,23 @@ export class LifecycleComponent implements OnDestroy {
 		return (atx.providerInfo ?
 			'assets/img/solutions/ATX-default-image-1-556x308.png' :
 			'assets/img/solutions/defaultLifecycleImage.png');
+	}
+
+	/**
+	 * get List of Partner List
+	 */
+	 public getPartnerList () {
+		this.status.loading.partner = true;
+
+		this.partnerService.getPartnerListUsingGET(this.customerId)
+		.subscribe((result: CompanyInfoList) => {
+			this.status.loading.partner = false;
+			this.componentData.partner = result.companyList;
+		},
+		err => {
+			this.status.loading.partner = false;
+			this.logger.error(`lifecycle.component : getPartnerList() :: Error  : (${
+				err.status}) ${err.message}`);
+		});
 	}
 }
