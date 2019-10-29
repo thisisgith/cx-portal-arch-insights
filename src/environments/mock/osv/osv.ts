@@ -1208,7 +1208,7 @@ export const OSVScenarios = [
 				},
 			],
 		},
-		url: `${api}profiles?customerId=${customerId}${sgParams}`,
+		url: `${api}profiles?customerId=${customerId}${sgParams}&search=`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -1225,7 +1225,7 @@ export const OSVScenarios = [
 				},
 			],
 		},
-		url: `${api}versions?customerId=${customerId}${svParams}`,
+		url: `${api}versions?customerId=${customerId}${svParams}&search=`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -1260,7 +1260,7 @@ export const OSVScenarios = [
 				},
 			],
 		},
-		url: `${api}assets?customerId=${customerId}${assetParams}`,
+		url: `${api}assets?customerId=${customerId}${assetParams}&search=`,
 		usecases: ['Use Case 1'],
 	},
 	{
