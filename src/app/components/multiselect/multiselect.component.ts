@@ -17,7 +17,7 @@ import * as _ from 'lodash-es';
 	templateUrl: './multiselect.component.html',
 })
 export class MultiselectComponent {
-	private componentId: string;
+	public componentId: string;
 
 	@Input() public name: string;
 	@Input() public items: any[];
