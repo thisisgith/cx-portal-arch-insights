@@ -2,7 +2,7 @@ import { Component, HostListener, Inject, EventEmitter, OnInit, Output } from '@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { empty, Subject } from 'rxjs';
-import { catchError, finalize, mergeMap, takeUntil } from 'rxjs/operators';
+import { catchError, finalize, map, mergeMap, takeUntil } from 'rxjs/operators';
 import { SetupComponent, SetupStep } from '@interfaces';
 import { KEY_CODES, SETUP_STATES } from '@classes';
 import { SetupIEStateService } from '../setup-ie-state.service';
@@ -211,7 +211,7 @@ export class ConnectDNACenterComponent implements OnInit, SetupStep {
 				userId: 'cxcadmin',
 			})
 			.pipe(
-				mergeMap(response => {
+				map(response => {
 					const state = this.state.getState() || { };
 					state.collectorToken = response;
 					this.state.setState(state);
