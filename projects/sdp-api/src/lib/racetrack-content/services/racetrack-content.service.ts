@@ -1144,7 +1144,7 @@ module RacetrackContentService {
     /**
      * Comma separated values of status to filter ACCs.
      */
-    status?: Array<'Completed' | 'Recommended' | 'Scheduled' | 'Requested' | 'In Progress'>;
+    status?: Array<'recommended' | 'requested' | 'scheduled' | 'in-progress' | 'completed'>;
 
     /**
      * Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
