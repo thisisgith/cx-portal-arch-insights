@@ -154,10 +154,12 @@
 
 							<label class="switch">
 								<input type="checkbox" 
-								[(ngModel)]="insight.mode"
-								[checked]="insight.mode"
-								(change)="insightModeChange(insight.insightType, insight.mode)"
-								[(disabled)]="isLoading"/>
+									[(ngModel)]="insight.mode"
+									[checked]="insight.mode"
+									(change)="insightModeChange(insight.insightType, insight.mode)"
+									[(disabled)]="isLoading"
+									data-auto-id="yes-checkbox"
+								/>
 								<span class="switch__input"></span>
 								<span class="switch__label">Yes</span>
 							</label>
@@ -174,10 +176,13 @@
 						</div>
 						<div class="col-md-3">
 							<label class="switch">
-								<input type="checkbox" [(ngModel)]="regulatoryCompliance.mode"
-								[checked]="regulatoryCompliance.mode"
-								(change)="insightModeChange(regulatoryCompliance.insightType, regulatoryCompliance.mode)"
-								[(disabled)]="isLoading">
+								<input
+									type="checkbox" [(ngModel)]="regulatoryCompliance.mode"
+									[checked]="regulatoryCompliance.mode"
+									(change)="insightModeChange(regulatoryCompliance.insightType, regulatoryCompliance.mode)"
+									[(disabled)]="isLoading"
+									data-auto-id="rc-checkbox"
+								>
 								<span class="switch__input"></span>
 								<span class="switch__label">Yes</span>
 							</label>

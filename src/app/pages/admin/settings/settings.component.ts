@@ -18,7 +18,6 @@ import { catchError, finalize, takeUntil } from 'rxjs/operators';
 import { I18n } from '@cisco-ngx/cui-utils';
 
 import * as _ from 'lodash-es';
-import { FormsModule } from '@angular/forms';
 
 enum SystemInfo {
 	OS_IMAGE = 0,
@@ -103,13 +102,12 @@ export class SettingsComponent implements OnInit {
 
 	private user: User;
 
-	constructor(
+	constructor (
 		private controlPointIEHealthStatusAPIService: ControlPointIEHealthStatusAPIService,
 		private route: ActivatedRoute,
 		private userService: UserService,
-		private ControlPointInsightTypeAPIService: ControlPointInsightTypeAPIService,
-		private ControlPointInsightTypePostAPIService: ControlPointInsightTypePostAPIService,
-
+		private controlPointInsightTypeAPIService: ControlPointInsightTypeAPIService,
+		private controlPointInsightTypePostAPIService: ControlPointInsightTypePostAPIService,
 	) {
 		this.user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(this.user, ['info', 'customerId']);
@@ -120,7 +118,7 @@ export class SettingsComponent implements OnInit {
 	 * @param {String} customerId - Customer ID string
 	 * @returns observable
 	 */
-	public getIEHealthStatusData(customerId: string) {
+	public getIEHealthStatusData (customerId: string) {
 		return this.controlPointIEHealthStatusAPIService.getIEHealthStatusUsingGET(customerId)
 			.pipe(
 				catchError(err => {
@@ -140,7 +138,7 @@ export class SettingsComponent implements OnInit {
 	 * @param {String} total - String w/ total resource info
 	 * @returns - Int representing used resources out of 100
 	 */
-	public getResourcePercent(used, total) {
+	public getResourcePercent (used, total) {
 		const usedNum = parseInt(used, 10);
 		const totalNum = parseInt(total, 10);
 		if (!usedNum || !totalNum) {
@@ -155,7 +153,7 @@ export class SettingsComponent implements OnInit {
 	 * @param resourceVal - String w/ resource info
 	 * @returns - string containing unit represented
 	 */
-	public getUnits(resourceVal: string) {
+	public getUnits (resourceVal: string) {
 		const results = resourceVal.match(/(\D+)/g);
 
 		return results ? results[0] : undefined;
@@ -164,7 +162,7 @@ export class SettingsComponent implements OnInit {
 	/**
 	 * Converts free and total strings to free resources percent
 	 */
-	public handleData() {
+	public handleData () {
 		const component_details = _.get(this, 'cpData[0].component_details');
 		const hardware_details = _.get(this, 'cpData[0].system_details.hardware_details');
 		const os_details = _.get(this, 'cpData[0].system_details.os_details');
@@ -228,7 +226,7 @@ ${HDDSizeUnit}`;
 	/**
 	 * NgOnDestroy
 	 */
-	public ngOnDestroy() {
+	public ngOnDestroy () {
 		this.destroyed$.next();
 		this.destroyed$.complete();
 	}
@@ -236,14 +234,14 @@ ${HDDSizeUnit}`;
 	/**
 	 * Function which instanstiates the settings page to the initial view
 	 */
-	public ngOnInit() {
+	public ngOnInit () {
 		this.loading = true;
 		this.getIEHealthStatusData(this.customerId)
 			.subscribe(response => {
 				this.cpData = response;
 				this.handleData();
 			});
-		this.getInsightType(this.customerId, "ALL")
+		this.getInsightType(this.customerId, 'ALL')
 			.subscribe(response => {
 				this.insightTypeResp = response.body;
 
@@ -254,8 +252,7 @@ ${HDDSizeUnit}`;
 						this.supportCaseInsightTypes.push(insightConf);
 					}
 				});
-
-			})
+			});
 	}
 
 	/**
@@ -264,7 +261,7 @@ ${HDDSizeUnit}`;
 	 * @param field {string}
 	 * @returns object
 	 */
-	private prefixWithV(obj: object, field: string) {
+	private prefixWithV (obj: object, field: string) {
 		if (!/^v/.test(obj[field]) && obj[field]) {
 			obj[field] = `v${obj[field]}`;
 		}
@@ -272,14 +269,15 @@ ${HDDSizeUnit}`;
 		return obj;
 	}
 
-
 	/**
 	 * Sets health status info given customerId.
-	 * @param {String} customerId - Customer ID string
+	 * @param customerId - Customer ID string
+	 * @param insightType - string
 	 * @returns observable
 	 */
 	public getInsightType (customerId: string, insightType: string) {
-		return this.ControlPointInsightTypeAPIService.getInsightTypeUsingGETResponse({customerId, insightType})
+		return this.controlPointInsightTypeAPIService
+			.getInsightTypeUsingGETResponse({ customerId, insightType })
 			.pipe(
 				catchError(err => {
 					this.error = true;
@@ -292,18 +290,24 @@ ${HDDSizeUnit}`;
 			);
 	}
 
-
+	/**
+	 * Changes insight mode
+	 * @param insightType - string
+	 * @param mode - string
+	 * @returns observable
+	 */
 	public insightModeChange (insightType, mode) {
 		this.isLoading = true;
 		const parameters: InsightTypeRequestModel = {
+			insightType,
+			mode,
 			customerId: this.customerId,
-			insightType: insightType,
-			mode: mode
 		};
 
-		return this.ControlPointInsightTypePostAPIService.saveInsightTypeUsingPOST(parameters)
-		.subscribe(response =>{
-			this.isLoading = false;
-		})
-	};
+		return this.controlPointInsightTypePostAPIService
+			.saveInsightTypeUsingPOST(parameters)
+			.subscribe(() => {
+				this.isLoading = false;
+			});
+	}
 }
