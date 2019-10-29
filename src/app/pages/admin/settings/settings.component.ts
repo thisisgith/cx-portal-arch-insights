@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import {
 	ControlPointIEHealthStatusAPIService,
+	ControlPointInsightTypeAPIService,
+	ControlPointInsightTypePostAPIService,
 	IEHealthStatusResponseModel,
 	UserService,
+	InsightTypeRequestModel,
 } from '@sdp-api';
 import { User } from '@interfaces';
 import { ActivatedRoute } from '@angular/router';
@@ -41,7 +44,7 @@ enum MemoryUsage {
 	styleUrls: ['./settings.component.scss'],
 	templateUrl: './settings.component.html',
 })
-export class SettingsComponent  implements OnInit {
+export class SettingsComponent implements OnInit {
 	private destroyed$: Subject<void> = new Subject<void>();
 	public cpData: IEHealthStatusResponseModel[];
 	private customerId: string;
@@ -92,6 +95,10 @@ export class SettingsComponent  implements OnInit {
 	public error = false;
 	public errorMessage = '';
 	public loading = false;
+	public insightTypeResp: any;
+	public supportCaseInsightTypes = [];
+	public regulatoryCompliance: object;
+	public isLoading = false;
 
 	private user: User;
 
@@ -99,6 +106,8 @@ export class SettingsComponent  implements OnInit {
 		private controlPointIEHealthStatusAPIService: ControlPointIEHealthStatusAPIService,
 		private route: ActivatedRoute,
 		private userService: UserService,
+		private controlPointInsightTypeAPIService: ControlPointInsightTypeAPIService,
+		private controlPointInsightTypePostAPIService: ControlPointInsightTypePostAPIService,
 	) {
 		this.user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(this.user, ['info', 'customerId']);
@@ -186,15 +195,15 @@ ${HDDSizeUnit}`;
 		);
 		this.data.memoryUsage[MemoryUsage.MEMORY].value =
 			usedMemory && totalMemory ?
-			`${usedMemory} of ${totalMemory}` :
-			I18n.get('_ErrorDisplayingData_');
+				`${usedMemory} of ${totalMemory}` :
+				I18n.get('_ErrorDisplayingData_');
 
 		this.data.memoryUsage[MemoryUsage.DISK_SPACE].percentage =
 			this.getResourcePercent(usedHDD, totalHDD);
 		this.data.memoryUsage[MemoryUsage.DISK_SPACE].value =
 			usedHDD && totalHDD ?
-			`${usedHDD} of ${totalHDD}` :
-			I18n.get('_ErrorDisplayingData_');
+				`${usedHDD} of ${totalHDD}` :
+				I18n.get('_ErrorDisplayingData_');
 
 		this.data.systemInfo[SystemInfo.OS_IMAGE].value = _.get(os_details, 'osImage');
 		this.data.systemInfo[SystemInfo.KERNEL_VERSION].value = _.get(os_details, 'kernelVersion');
@@ -232,6 +241,18 @@ ${HDDSizeUnit}`;
 				this.cpData = response;
 				this.handleData();
 			});
+		this.getInsightType(this.customerId, 'ALL')
+			.subscribe(response => {
+				this.insightTypeResp = response.body;
+
+				this.insightTypeResp.insightConfigs.forEach(insightConf => {
+					if (insightConf.insightType === 'COMPLIANCE') {
+						this.regulatoryCompliance = insightConf;
+					} else {
+						this.supportCaseInsightTypes.push(insightConf);
+					}
+				});
+			});
 	}
 
 	/**
@@ -246,5 +267,47 @@ ${HDDSizeUnit}`;
 		}
 
 		return obj;
+	}
+
+	/**
+	 * Sets health status info given customerId.
+	 * @param customerId - Customer ID string
+	 * @param insightType - string
+	 * @returns observable
+	 */
+	public getInsightType (customerId: string, insightType: string) {
+		return this.controlPointInsightTypeAPIService
+			.getInsightTypeUsingGETResponse({ customerId, insightType })
+			.pipe(
+				catchError(err => {
+					this.error = true;
+					this.errorMessage = err.message;
+
+					return empty();
+				}),
+				finalize(() => this.loading = false),
+				takeUntil(this.destroyed$),
+			);
+	}
+
+	/**
+	 * Changes insight mode
+	 * @param insightType - string
+	 * @param mode - string
+	 * @returns observable
+	 */
+	public insightModeChange (insightType, mode) {
+		this.isLoading = true;
+		const parameters: InsightTypeRequestModel = {
+			insightType,
+			mode,
+			customerId: this.customerId,
+		};
+
+		return this.controlPointInsightTypePostAPIService
+			.saveInsightTypeUsingPOST(parameters)
+			.subscribe(() => {
+				this.isLoading = false;
+			});
 	}
 }

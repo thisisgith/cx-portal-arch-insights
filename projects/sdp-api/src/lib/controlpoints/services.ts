@@ -6,3 +6,5 @@ export { ControlPointIEHealthStatusAPIService } from './services/control-point-i
 export { ControlPointDevicePolicyAPIService } from './services/control-point-device-policy-api.service';
 export { ControlPointLicenseAPIService } from './services/control-point-license-api.service';
 export { ControlPointAdminSettingsAPIService } from './services/control-point-admin-settings-api.service';
+export { ControlPointInsightTypeAPIService } from './services/control-point-insight-type-api.service';
+export { ControlPointInsightTypePostAPIService } from './services/control-point-insight-type-post-api.service';

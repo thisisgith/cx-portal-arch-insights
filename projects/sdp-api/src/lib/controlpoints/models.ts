@@ -1,9 +1,7 @@
 export { AdditionalDetails } from './models/additional-details';
 export { CSDFResponseModel } from './models/csdfresponse-model';
 export { CollectionPolicyResponseModel } from './models/collection-policy-response-model';
-export {
-	CollectionPolicyUpdateRequestModel,
-} from './models/collection-policy-update-request-model';
+export { CollectionPolicyUpdateRequestModel } from './models/collection-policy-update-request-model';
 export { ComponentDetails } from './models/component-details';
 export { DefaultResponseModel } from './models/default-response-model';
 export { DeviceConnectivityAndEligibility } from './models/device-connectivity-and-eligibility';
@@ -20,18 +18,15 @@ export { IEHealthStatusResponseModel } from './models/iehealth-status-response-m
 export { IERegistrationRequestModel } from './models/ieregistration-request-model';
 export { IERegistrationResponseModel } from './models/ieregistration-response-model';
 export { IESetupCompletionResponseModel } from './models/iesetup-completion-response-model';
-export {
-	IESetupCompletionUpdateRequestModel,
-} from './models/iesetup-completion-update-request-model';
+export { IESetupCompletionUpdateRequestModel } from './models/iesetup-completion-update-request-model';
 export { IgnorePolicyRequestModel } from './models/ignore-policy-request-model';
 export { IgnorePolicyUpdateRequestModel } from './models/ignore-policy-update-request-model';
-export { InsightObject } from './models/insight-object';
 export { LicenseData } from './models/license-data';
 export { LicenseDataResponseModel } from './models/license-data-response-model';
 export { OSDetails } from './models/osdetails';
 export { Pagination } from './models/pagination';
 export { PoliciesGroupByDayInAMonthModel } from './models/policies-group-by-day-in-amonth-model';
 export { PolicyResponseModel } from './models/policy-response-model';
+export { InsightTypeResponseModel } from './models/insight-type-response-model';
+export { InsightTypeRequestModel } from './models/insight-type-request-model';
 export { SystemDetails } from './models/system-details';
-export { UserPreferenceRequestModel } from './models/user-preference-request-model';
-export { UserPreferenceResponseModel } from './models/user-preference-response-model';
