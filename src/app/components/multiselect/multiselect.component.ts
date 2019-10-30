@@ -4,6 +4,7 @@ import {
 	EventEmitter,
 	Input,
 	Output,
+	OnInit,
 } from '@angular/core';
 
 import * as _ from 'lodash-es';
@@ -16,7 +17,7 @@ import * as _ from 'lodash-es';
 	styleUrls: ['./multiselect.component.scss'],
 	templateUrl: './multiselect.component.html',
 })
-export class MultiselectComponent {
+export class MultiselectComponent implements OnInit {
 	public componentId: string;
 
 	@Input() public name: string;
@@ -28,6 +29,7 @@ export class MultiselectComponent {
 	public searchValue = '';
 	@Input() public nameKey = 'name';
 	@Input() public valueKey = 'value';
+	@Input() public defaultValues: string[] = [];
 
 	get inputValue (): string {
 		if (this.selectedIndices.length > 0 && this.selectedIndices.length !== this.items.length) {
@@ -44,6 +46,24 @@ export class MultiselectComponent {
 		private elRef: ElementRef,
 	) {
 		this.componentId = `${this.elRef.nativeElement.tagName}-${_.uniqueId()}`;
+	}
+
+	/**
+	 * OnInit lifecycle method.
+	 *
+	 * Search through defaultValues and if found in items, set as selected
+	 */
+	public ngOnInit () {
+		if (!this.defaultValues.length) {
+			return;
+		}
+		for (const defaultValue of this.defaultValues) {
+			const foundItemIdx = _.findIndex(this.items, item =>
+				item[this.valueKey] === defaultValue);
+			if (foundItemIdx >= 0 && !this.selectedIndices.includes(foundItemIdx)) {
+				this.selectedIndices.push(foundItemIdx);
+			}
+		}
 	}
 
 	/**
