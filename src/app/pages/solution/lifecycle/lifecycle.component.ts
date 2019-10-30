@@ -59,6 +59,22 @@ interface SuccessPathsModel {
 	totalCount?: number;
 }
 
+enum StatusValues {
+	'completed',
+	'recommended',
+	'scheduled',
+	'requested',
+	'in-progress',
+}
+
+/**
+ * Interface representing a status filter item
+ */
+interface StatusFilterItem {
+	key: string;
+	value: StatusValues;
+}
+
 /**
  * Interface representing our data object
  */
@@ -164,6 +180,8 @@ export class LifecycleComponent implements OnDestroy {
 	public selectedFilterForSB = '';
 	public selectedFilterForATX = '';
 	public selectedFilterForACC = '';
+	public selectedPartnerFilterForATX: CompanyInfo[];
+	public atxStatusFilter: StatusValues[];
 	public groupTrainingsAvailable = 0;
 	public selectedSuccessPaths: SuccessPath[];
 	public selectedScheduledATX: AtxSchema;
@@ -260,17 +278,13 @@ export class LifecycleComponent implements OnDestroy {
 
 	public atxStatusOptions = [
 		{
-			name: I18n.get('_AllTitles_'),
-			value: 'allTitles',
-		},
-		{
 			name: I18n.get('_Recommended_'),
 			value: 'recommended',
 		},
-		// {
-		// 	name: I18n.get('_Requested_'),
-		// 	value: 'requested',
-		// },
+		{
+			name: I18n.get('_Requested_'),
+			value: 'requested',
+		},
 		{
 			name: I18n.get('_Scheduled_'),
 			value: 'scheduled',
@@ -283,14 +297,14 @@ export class LifecycleComponent implements OnDestroy {
 			name: I18n.get('_Completed_'),
 			value: 'completed',
 		},
-		{
-			name: I18n.get('_Bookmarked_'),
-			value: 'isBookmarked',
-		},
-		{
-			name: I18n.get('_NotBookmarked_'),
-			value: 'hasNotBookmarked',
-		},
+		// {
+		// 	name: I18n.get('_Bookmarked_'),
+		// 	value: 'isBookmarked',
+		// },
+		// {
+		// 	name: I18n.get('_NotBookmarked_'),
+		// 	value: 'hasNotBookmarked',
+		// },
 	];
 
 	public status = {
@@ -433,6 +447,7 @@ export class LifecycleComponent implements OnDestroy {
 				this.currentViewingPitstop = racetrackComponent.stages[viewingIndex];
 				this.getLifecycleInfo(this.currentWorkingPitstop);
 			}
+			this.getPartnerList();
 		});
 	}
 
@@ -1630,9 +1645,16 @@ export class LifecycleComponent implements OnDestroy {
 			window.atxLoading = true;
 		}
 
-		return this.contentService.getRacetrackATX(
-			_.pick(this.componentData.params,
-				['customerId', 'solution', 'usecase', 'pitstop', 'suggestedAction']))
+		const params = _.pick(this.componentData.params,
+			['customerId', 'solution', 'usecase', 'pitstop', 'suggestedAction']);
+		if (!_.isEmpty(this.atxStatusFilter)) {
+			_.set(params, 'status', this.atxStatusFilter);
+		}
+		if (!_.isEmpty(this.selectedPartnerFilterForATX)) {
+			_.set(params, 'providerId', this.selectedPartnerFilterForATX);
+		}
+
+		return this.contentService.getRacetrackATX(params)
 		.pipe(
 			map((result: ATXResponseModel) => {
 				this.selectedFilterForATX = this.atxStatusOptions[0].value;
@@ -2291,6 +2313,36 @@ export class LifecycleComponent implements OnDestroy {
 				return `${Math.floor((curCount / totalCount) * 100)}`;
 			default:
 				return '0';
+		}
+	}
+
+	/**
+	 * Triggers the status filter for ACC or ATX items
+	 * @param selectedStatuses Selected statuses to filter on
+	 * @param type ATX or ACC
+	 */
+	public statusMultiFilter (selectedStatuses: StatusFilterItem[], type: 'ATX' | 'ACC') {
+		switch (type) {
+			case 'ATX':
+				this.atxStatusFilter = _.map(selectedStatuses, 'value');
+				this.loadATX()
+					.subscribe();
+				break;
+		}
+	}
+
+	/**
+	 * Triggers the status filter for ACC or ATX items
+	 * @param selectedPartners Selected statuses to filter on
+	 * @param type ATX or ACC
+	 */
+	 public partnerMultiFilter (selectedPartners: CompanyInfo[], type: 'ATX' | 'ACC') {
+		switch (type) {
+			case 'ATX':
+				this.selectedPartnerFilterForATX = _.map(selectedPartners, 'companyId');
+				this.loadATX()
+					.subscribe();
+				break;
 		}
 	}
 
