@@ -6,7 +6,7 @@ import { DevicesListModule } from './devices-list/devices-list.module';
 import { DnacListModule } from './dnac-list/dnac-list.module';
 import { ChartModule } from 'angular-highcharts';
 import { CuiTabsModule, CuiSpinnerModule , CuiTabsNavModule } from '@cisco-ngx/cui-components';
-import { PieChartModule, VisualFilterBarModule } from '@components';
+import { PieChartModule, VisualFilterBarModule, AssetTaggingModule  } from '@components';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { environment } from '@environment';
 import { ArchitectureReviewModules } from '@sdp-api';
@@ -33,6 +33,7 @@ const childRoutes: Routes = [
 	exports: [ArchitectureReviewComponent],
 	imports: [
 		CommonModule,
+		AssetTaggingModule,
 		RouterModule.forChild(childRoutes),
 		ChartModule,
 		DevicesListModule,

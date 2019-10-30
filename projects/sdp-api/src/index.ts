@@ -90,4 +90,4 @@ export * from './lib/insights/insights-crashes.module';
 
 export * from './lib/asset-tagging/models';
 export * from './lib/asset-tagging/services';
-export * from './lib/asset-tagging/asset-tagging.module';
+export * from './lib/asset-tagging/asset-tagging.modules';

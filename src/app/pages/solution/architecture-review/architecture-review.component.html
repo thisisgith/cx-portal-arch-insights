@@ -34,7 +34,8 @@
 				></app-devices-list>
 			</div>
 			<div *ngIf="visualLabels[0]?.active">
-				<app-dnac-list></app-dnac-list>
+				<!-- <app-dnac-list></app-dnac-list> -->
+				<asset-tagging [visible]='true' [policy]="'HIPPA'"></asset-tagging>
 			</div>
 		</div>
 	</div>
