@@ -4,4 +4,6 @@
 
 .compare-text-warp {
 	word-wrap: break-word;
+	overflow: scroll;
+	height: 200px;
 }
