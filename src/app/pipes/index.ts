@@ -10,3 +10,7 @@ export {
   AssetTagFilterPipeModule,
   AssetTagFilterPipe,
 } from './asset-tag-filter/asset-tag-filter.pipe.module';
+export {
+ AssetTagSortPipeModule,
+ AssetTagSortPipe,
+} from './asset-tag-sort/asset-tag-sort.pipe.module';

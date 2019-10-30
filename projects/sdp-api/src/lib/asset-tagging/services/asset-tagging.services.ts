@@ -4,7 +4,7 @@ import { HttpClient, HttpRequest, HttpResponse, HttpHeaders } from '@angular/com
 import { BaseService as __BaseService } from '../../core/base-service';
 import { AssetTaggingConfiguration as __Configuration } from '../asset-tagging-configuration';
 import { StrictHttpResponse as __StrictHttpResponse } from '../../core/strict-http-response';
-import { Observable as __Observable } from 'rxjs';
+import { Observable as __Observable, BehaviorSubject, Observable } from 'rxjs';
 import { map as __map, filter as __filter } from 'rxjs/operators';
 
 import { DeviceDetails } from '../models/device-detail';
@@ -23,6 +23,7 @@ class AssetTaggingService extends __BaseService {
 	static readonly getAsset360TagsPath = '/v1/device-tag-api';
 	static readonly getPoliciesPath = '/v1/all-policies-api';
 	static readonly getPolicyMappingPath = '/v1/save-tag-policy-mapping-api';
+	private tags = new BehaviorSubject<any>({});
 
 	constructor (
 		config: __Configuration,
@@ -31,6 +32,14 @@ class AssetTaggingService extends __BaseService {
 		super(config, http);
 	}
 
+	public set Tags(body) {
+		this.tags.next(body);
+	}
+	
+	getSelectedTags():__Observable<any> {
+		return this.tags.asObservable();
+	  }
+	  
 	/**
 	 * All Tags.
 	 * @param params The `AssetTaggingService.GetParams` containing the following parameters:

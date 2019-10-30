@@ -8,6 +8,7 @@ import { CuiLoaderModule, CuiSearchModule } from '@cisco-ngx/cui-components';
 import { TagListModule } from './tag-list/tag-list.module';
 import {  AssetTaggingModules } from '@sdp-api';
 import { environment } from '@environment';
+import { AssetTagFilterPipeModule } from '@pipes';
 
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
@@ -24,6 +25,7 @@ const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 	exports: [AssetTaggingComponent],
 	imports: [
 		AdminWrapperModule,
+		AssetTagFilterPipeModule,
 		CommonModule,
 		FormsModule,
 		I18nPipeModule,

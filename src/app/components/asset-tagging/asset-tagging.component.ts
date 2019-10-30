@@ -1,9 +1,8 @@
-import { Component, OnDestroy, Input, SimpleChanges, OnChanges } from '@angular/core';
+import { Component, OnDestroy, Input, OnChanges } from '@angular/core';
 import { Subject } from 'rxjs';
 import { LogService } from '@cisco-ngx/cui-services';
 import * as _ from 'lodash-es';
 import { Tags, AssetTaggingService } from '@sdp-api';
-import { ActivatedRoute } from '@angular/router';
 
 /**
  * Component for Asset Tagging
@@ -15,15 +14,12 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class AssetTaggingComponent implements OnChanges, OnDestroy {
 
-	@Input() public policy = 'HIPPA';
-	@Input() public visible = true;
+	@Input() public tagListRight: Tags[] = [];
+	@Input() public tagListLeft: Tags[] = [];
 	public leftTags = 'left';
 	public rightTags = 'right';
 	public allTagsSelectedRight = false;
 	public allTagsSelectedLeft = false;
-	public tagListRight: Tags[] = [];
-	public tagListRightTemp: any = { };
-	public tagListLeft: Tags[] = [];
 	public loadingListLeft = false;
 	public loadingListRight = false;
 	private destroyed$: Subject<void> = new Subject<void>();
@@ -41,105 +37,22 @@ export class AssetTaggingComponent implements OnChanges, OnDestroy {
 	public success = false;
 	public successMessage = '';
 	public customerId: string;
-	public params: AssetTaggingService.GetParams = {
-		customerId : '',
-	};
 
-	public postParams: AssetTaggingService.PostParams = {
-		body : {
-			policy: '',
-			tags : [],
-			toBeScanned: true,
-		},
-		customerId : '',
-	}
+	public postParams: Tags [] = [];
 
 	constructor (
 		private logger: LogService,
-		private route: ActivatedRoute,
 		public assetTaggingService: AssetTaggingService,
 	) {
-		const user = _.get(this.route, ['snapshot', 'data', 'user']);
-		this.customerId = _.get(user, ['info', 'customerId']);
-		this.params.customerId = _.get(user, ['info', 'customerId']);
 	}
 
 	/**
 	 * Used to detect the changes in input object and
 	 * Intialises the Tagging data if it is visible
-	 * @param changes SimpleChanges
 	 */
-	public ngOnChanges (changes: SimpleChanges) {
-		const visible = _.get(changes, ['visible', 'currentValue']);
-		// const policy = _.get(changes, ['policy', 'currentValue']);
-		const isFirstChange = _.get(changes, ['filters', 'firstChange']);
-		if (visible && !isFirstChange) {
-
-			this.assetTaggingService.getPolicy(this.params)
-				.subscribe(res => {
-					this.policyGroups = this.jsonCopy(res.policyGroups);
-				});
-			this.runListCalls();
-		}
-	}
-
-	/**
-	 * Calls for both lists
-	 */
-	public runListCalls () {
-		this.onLeftListCall();
-		this.onRightListCall();
-	}
-
-	/**
-	 * Called when policy is changed
-	 */
-	public onPolicyChange () {
-
-		const filteredPolicyGroup =
-			_.find(this.tagListRightTemp.policyGroups, { policyName : this.policy });
-
-		const modifiedRightTags = _.map(filteredPolicyGroup.tags , (item: Tags) => {
-			item.devices = filteredPolicyGroup.devices;
-
-			return item;
-		});
-
-		this.tagListRight = this.jsonCopy(modifiedRightTags);
-	}
-
-	/**
-	 * Calls api for getting left list data
-	 */
-	public onLeftListCall () {
-
-		this.assetTaggingService.getAllTags(this.params)
-			.subscribe(res => {
-				this.tagListLeft = this.jsonCopy(res.tags);
-				this.handleLeftTagSelectionChanged();
-			});
-	}
-
-	/**
-	 * Calls api for getting left list data
-	 */
-	public onRightListCall () {
-		this.assetTaggingService.getTagsAssociatedWithPolicy(this.params)
-			.subscribe(res => {
-				const filteredPolicyGroup =
-				_.find(res.policyGroups, { policyName : this.policy });
-				this.tagListRightTemp = this.jsonCopy(res);
-
-				const modifiedRightTags = _.map(filteredPolicyGroup.tags , (item: Tags) => {
-					item.devices = filteredPolicyGroup.devices;
-
-					return item;
-				});
-
-				this.tagListRight = this.jsonCopy(modifiedRightTags);
-				this.handleRightTagSelectionChanged();
-			});
-
+	public ngOnChanges () {
+		this.handleLeftTagSelectionChanged();
+		this.handleRightTagSelectionChanged();
 	}
 
 	/**
@@ -170,17 +83,31 @@ export class AssetTaggingComponent implements OnChanges, OnDestroy {
 		}
 
 		let selected = false;
+		let searchText = '';
 
 		if (selectorName === this.leftTags) {
 			this.allTagsSelectedLeft = !this.allTagsSelectedLeft;
 			selected = this.allTagsSelectedLeft;
+			if (this.leftSearchText) {
+				searchText = this.leftSearchText;
+			}
 		} else if (selectorName === this.rightTags) {
 			this.allTagsSelectedRight = !this.allTagsSelectedRight;
 			selected = this.allTagsSelectedRight;
+			if (this.rightSearchText) {
+				searchText = this.rightSearchText;
+			}
 		}
 
 		for (let devNum = 0; devNum < tags.length; devNum += 1) {
-			tags[devNum].selected = selected;
+			if (searchText) {
+				const tagName = tags[devNum].tagName.toLowerCase();
+				if (tagName.indexOf(searchText.toLowerCase()) > -1) {
+					tags[devNum].selected = selected;
+				}
+			} else {
+				tags[devNum].selected = selected;
+			}
 		}
 
 		this.handleTagSelectionChanged(selectorName);
@@ -189,17 +116,10 @@ export class AssetTaggingComponent implements OnChanges, OnDestroy {
 	/**
 	 * Submit the completed Collection Form
 	 */
-	public onSubmit () {
-		this.postParams.body.tags = this.getTagListNoSelect();
-		this.postParams.body.policy = this.policy;
-		this.postParams.body.toBeScanned = false;
-		this.postParams.customerId = this.customerId;
+	public submit () {
+		this.postParams = this.getTagListNoSelect();
 
-		this.assetTaggingService.postPolicyMapping(this.postParams)
-			.subscribe(() => {
-				this.success = true;
-				this.successMessage = "Data is saved and ran successfully";
-			});
+		this.assetTaggingService.Tags = this.postParams;
 	}
 
 	/**
@@ -226,9 +146,7 @@ export class AssetTaggingComponent implements OnChanges, OnDestroy {
 			}
 		}
 
-		if (this.tagListLeft.length === 0) {
-			this.allTagsSelectedLeft = false;
-		}
+		this.allTagsSelectedLeft = false;
 
 		this.handleLeftTagSelectionChanged();
 	}
@@ -247,11 +165,7 @@ export class AssetTaggingComponent implements OnChanges, OnDestroy {
 				this.tagListRight.splice(devNum, 1);
 			}
 		}
-
-		if (this.tagListRight.length === 0) {
-			this.allTagsSelectedRight = false;
-		}
-
+		this.allTagsSelectedRight = false;
 		this.handleRightTagSelectionChanged();
 	}
 
@@ -278,6 +192,7 @@ export class AssetTaggingComponent implements OnChanges, OnDestroy {
 	 */
 	public handleLeftTagSelectionChanged () {
 		this.selectedRowsLeftCount = _.filter(this.tagListLeft, ['selected', true]).length;
+		this.submit();
 	}
 
 	/**
@@ -285,6 +200,7 @@ export class AssetTaggingComponent implements OnChanges, OnDestroy {
 	 */
 	public handleRightTagSelectionChanged () {
 		this.selectedRowsRightCount = _.filter(this.tagListRight, ['selected', true]).length;
+		this.submit();
 	}
 
 	/**
@@ -294,9 +210,9 @@ export class AssetTaggingComponent implements OnChanges, OnDestroy {
 	 */
 	public onSearchQuery (searchText: string, selectorName: string) {
 		if (selectorName === this.leftTags) {
-			this.leftSearchText = searchText;
+			this.leftSearchText = searchText.trim();
 		} else {
-			this.rightSearchText = searchText;
+			this.rightSearchText = searchText.trim();
 		}
 	}
 

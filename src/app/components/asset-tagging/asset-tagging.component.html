@@ -1,128 +1,88 @@
 
-<ng-container *ngIf="visible">
-	<div *ngIf="success">
-		<div class="alert alert--success" role="alert">
-			<div class="alert__icon icon-check-outline"></div>
-			<div class="alert__message" [innerText]="successMessage"></div>
-		</div>
-	</div>
-	<div class="row dbl-padding-left base-padding-top full-width">
-		<div class="col-md-6">
-			<div class="form-inline">
-				<div class="form-group" *ngFor="let policies of policyGroups">
-					<div class="row">
-						<div class="col-md-3">
-							<label class="radio">
-								<input type="radio" 
-								name="policy"  
-								[(ngModel)]="policy" 
-								[value]= "policies" 
-								[disabled]="!isOptin"
-								(change)="onPolicyChange()">
-									<span class="radio__input"></span>
-									<span class="radio__label" [innerText]="policies"></span>
-							</label>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<form class="form-inline no-margin-bottom" (ngSubmit)="onSubmit()">
-		<div class="row dbl-padding-left dbl-padding-right base-padding-top full-width">
+<div class="row half-padding-top dbl-padding-left dbl-padding-right">
+	<div class="col-lg-5">
+		<div class="row  panel panel--bordered flex">
 			<div class="col-md-8">
-				<div class="half-padding-top  text-large text-left text-uppercase"
-					[innerText]="'_AssignTags_' | i18n | uppercase" data-auto-id="tagging.assigntags">
-				</div>
-			</div>
-			<div class="col-md-4 text-right">
-				<button type="submit" class="btn btn--small btn--wide btn--secondary" [innerText]="'save'"
-					data-auto-id="tagging.submit"></button>
-			</div>
-		</div>
-	</form>
-	<div class="row half-padding-top dbl-padding-left dbl-padding-right">
-		<div class="col-lg-5">
-			<div class="row  panel panel--bordered flex">
-				<div class="col-md-8">
-					<div class="half-padding-top  text-large text-left text-uppercase">
-						<span [innerText]="'_AssetTaggingTagsCount_' | i18n:(tagListLeft.length+1) "
+				<div class="half-padding-top  text-large text-left text-uppercase">
+					<span 
+						[innerText]="'_AssetTaggingTagsCount_' | i18n:((tagListLeft | filterTags:leftSearchText).length) "
 						data-auto-id="tagging.tagscount"></span>
-					</div>
-				</div>
-				<div class="col-md-4">
-					<cui-search 
-						placeholder="{{ '_Search_' | i18n }}"
-						[debounce]="'300'"
-						[compressed]="true"
-						(onUpdate)="onSearchQuery($event, leftTags)"
-					>
-					</cui-search>
 				</div>
 			</div>
-			<ng-container *ngTemplateOutlet="tagTableTemplate; context: {
-									name: leftTags,
-									tags: tagListLeft,
-									allTagsSelected: allTagsSelectedLeft,
-									loadingList: loadingListLeft,
-									searchText : leftSearchText
-								}"></ng-container>
-		</div>
-		<div id="button-column" class="col-lg-2">
-			<button class="btn btn--small btn--secondary shift-button" id="add" data-auto-id="tagging.add"
-				(click)="add()" [disabled]="selectedRowsLeftCount === 0">
-				<div class="row button-row">
-					<div class="col-2 no-padding">
-					</div>
-					<div class="col-8 button-txt" [innerText]="'_Add_' | i18n | uppercase">
-					</div>
-					<div class="col-2 no-padding">
-						<i class="button-txt text-right icon-chevron-right"></i>
-					</div>
-				</div>
-			</button>
-			<button class="btn btn--small btn--secondary shift-button" id="remove" data-auto-id="tagging.remove"
-				(click)="remove()" [disabled]="selectedRowsRightCount === 0">
-				<div class="row button-row">
-					<div class="col-2 no-padding">
-						<i class="button-txt text-right icon-chevron-left"></i>
-					</div>
-					<div class="col-8">
-						<span class="button-txt" [innerText]="'_Remove_' | i18n | uppercase"></span>
-					</div>
-					<div class="col-2 no-padding">
-					</div>
-				</div>
-			</button>
-		</div>
-		<div class="col-lg-5">
-			<div class="row  panel panel--bordered flex">
-				<div class="col-md-8">
-					<div class="half-padding-top  text-large text-left text-uppercase">
-						<span [innerText]="'_AssetTaggingTagsCountSelected_' | i18n:(tagListRight.length+1) "
-						data-auto-id="tagging.tagscount"></span>
-					</div>
-				</div>
-				<div class="col-md-4">
-					<cui-search 
-						placeholder="{{ '_Search_' | i18n }}"
-						[debounce]="'300'"
-						[compressed]="true"
-						(onUpdate)="onSearchQuery($event, rightTags)"
-					>
-					</cui-search>
-				</div>
+			<div class="col-md-4">
+				<cui-search 
+					placeholder="{{ '_Search_' | i18n }}"
+					[debounce]="'300'"
+					[compressed]="true"
+					(onUpdate)="onSearchQuery($event, leftTags)"
+				>
+				</cui-search>
 			</div>
-			<ng-container *ngTemplateOutlet="tagTableTemplate; context: {
-									name: rightTags,
-									tags: tagListRight,
-									allTagsSelected: allTagsSelectedRight,
-									loadingList: loadingListRight,
-									searchText : rightSearchText
-								}"></ng-container>
 		</div>
+		<ng-container *ngTemplateOutlet="tagTableTemplate; context: {
+								name: leftTags,
+								tags: tagListLeft,
+								allTagsSelected: allTagsSelectedLeft,
+								loadingList: loadingListLeft,
+								searchText : leftSearchText
+							}"></ng-container>
 	</div>
-</ng-container>
+	<div id="button-column" class="col-lg-2">
+		<button class="btn btn--small btn--secondary shift-button" id="add" data-auto-id="tagging.add"
+			(click)="add()" [disabled]="selectedRowsLeftCount === 0">
+			<div class="row button-row">
+				<div class="col-2 no-padding">
+				</div>
+				<div class="col-8 button-txt" [innerText]="'_Add_' | i18n | uppercase">
+				</div>
+				<div class="col-2 no-padding">
+					<i class="button-txt text-right icon-chevron-right"></i>
+				</div>
+			</div>
+		</button>
+		<button class="btn btn--small btn--secondary shift-button" id="remove" data-auto-id="tagging.remove"
+			(click)="remove()" [disabled]="selectedRowsRightCount === 0">
+			<div class="row button-row">
+				<div class="col-2 no-padding">
+					<i class="button-txt text-right icon-chevron-left"></i>
+				</div>
+				<div class="col-8">
+					<span class="button-txt" [innerText]="'_Remove_' | i18n | uppercase"></span>
+				</div>
+				<div class="col-2 no-padding">
+				</div>
+			</div>
+		</button>
+	</div>
+	<div class="col-lg-5">
+		<div class="row  panel panel--bordered flex">
+			<div class="col-md-8">
+				<div class="half-padding-top  text-large text-left text-uppercase">
+					<span 
+						[innerText]="'_AssetTaggingTagsCountSelected_' | i18n:((tagListRight| filterTags:rightSearchText).length) "
+						data-auto-id="tagging.tagscount"></span>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<cui-search 
+					placeholder="{{ '_Search_' | i18n }}"
+					[debounce]="'300'"
+					[compressed]="true"
+					(onUpdate)="onSearchQuery($event, rightTags)"
+				>
+				</cui-search>
+			</div>
+		</div>
+		<ng-container *ngTemplateOutlet="tagTableTemplate; context: {
+								name: rightTags,
+								tags: tagListRight,
+								allTagsSelected: allTagsSelectedRight,
+								loadingList: loadingListRight,
+								searchText : rightSearchText
+							}"></ng-container>
+	</div>
+</div>
+
 
 <ng-template #tagTableTemplate
 	let-name="name"
