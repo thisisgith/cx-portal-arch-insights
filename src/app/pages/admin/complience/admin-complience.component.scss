@@ -7,4 +7,9 @@
 		width: 175px;
 		height: 35px;
 	}
+
+	.flex-end {
+		display: flex;
+		flex-direction: row-reverse;
+	}
 }

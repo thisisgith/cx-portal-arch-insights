@@ -13,6 +13,7 @@ import {
 } from '@cisco-ngx/cui-components';
 
 import { environment } from '@environment';
+import { AssetTaggingModule } from '@components';
 
 /**
  * SDP Root url for the apis
@@ -32,6 +33,7 @@ const imports = [
 	I18nPipeModule,
 	FromNowPipeModule,
 	RouterModule,
+	AssetTaggingModule,
 	UserModule.forRoot({ rootUrl }),
 ];
 

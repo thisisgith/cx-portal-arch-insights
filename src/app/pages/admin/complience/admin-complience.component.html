@@ -1,5 +1,6 @@
 <admin-wrapper>
 	<div class="panel">
+		<div class="dbl-padding-left dbl-padding-right">
 			<div class="text-xlarge text-uppercase base-margin-bottom"
 			[innerText]="'_AdminPolicyTagging_' | i18n">
 			</div>
@@ -22,24 +23,46 @@
 						<span class="switch__label">One</span>
 					</label>
 				</div>
-			<div [hidden]= "!optlnStatus">
-			<div class="row">
-					<div class="col-md-2">
-					<div class="form-group">
-							<div class="form-group__text select">
-								<select id="select-type-basic" (change)="onPolicySelected($event.target.value)">
-									<option *ngFor="let policy of policies" 
-									[value]="policy.name">
-									{{policy.name}}
-									</option>
-								</select>
-								<label for="select-type-basic"
-								[innerText]="'_AdminPolicy_' | i18n"></label>
+
+				<div [hidden]= "!optlnStatus">
+						
+						<div class="row">
+								<div class="col-md-2">
+								<div class="form-group">
+										<div class="form-group__text select">
+											<select id="select-type-basic" (change)="onPolicySelected($event.target.value)">
+												<option *ngFor="let policy of policies" 
+												[value]="policy.name">
+												{{policy.name}}
+												</option>
+											</select>
+											<label for="select-type-basic"
+											[innerText]="'_AdminPolicy_' | i18n"></label>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-10">
+								<div class="row flex-end dbl-padding-top">
+									<div class="col-md-1">
+											<button class="btn btn--small btn--primary half-margin-top" (click)="savePolicyDetails()"
+											[innerText]="'_Save_' | i18n"></button>
+										</div>
+									<div class="col-md-2">{{toBeScanned}}
+										<div class="form-group form-group--inline base-margin-bottom">
+												<div class="subheader qtr-margin-bottom">Enable Scan</div>
+												<label class="switch">
+													<input type="checkbox" (click)="toBeScanned = !toBeScanned">
+													<span class="switch__input"></span>
+													<span class="switch__label">One</span>
+												</label>
+											</div>
+										</div>
 							</div>
-						</div>
+							</div>
+						</div>			
 					</div>
 			</div>
+			<asset-tagging [hidden]= "!optlnStatus" [tagListLeft]='leftSideTags' [tagListRight]='rightSideTags'></asset-tagging>
 			
-		</div>
 	</div>
 </admin-wrapper>

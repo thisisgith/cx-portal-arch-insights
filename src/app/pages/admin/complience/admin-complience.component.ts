@@ -5,7 +5,9 @@ import {
 	UserService,
 	RightTagResponse,
 	LeftTagResponse,
+	AssetTaggingService,
 } from '@sdp-api';
+
 import { User } from '@interfaces';
 import { ActivatedRoute } from '@angular/router';
 
@@ -15,7 +17,7 @@ import { catchError, finalize, takeUntil, map } from 'rxjs/operators';
 
 import { I18n } from '@cisco-ngx/cui-utils';
 
-import { RouteAuthService } from '@services';
+import { RouteAuthService} from '@services';
 
 import * as _ from 'lodash-es';
 import { LogService } from '@cisco-ngx/cui-services';
@@ -46,12 +48,15 @@ export class AdminComplienceComponent implements OnInit {
 	public selectedPolicy = '';
 	public leftSideTags = [];
 	public rightSideTags = [];
+	public saveDetails;
+	public toBeScanned = false;
 
 	private user: User;
 
 	constructor(
 		private controlPointIEHealthStatusAPIService: ControlPointIEHealthStatusAPIService,
 		public controlPointAdminComplienceService: ControlPointAdminComplienceService,
+		public assetTaggingService: AssetTaggingService,
 		private route: ActivatedRoute,
 		private logger: LogService,
 		private userService: UserService,
@@ -108,9 +113,9 @@ export class AdminComplienceComponent implements OnInit {
 				}),
 			);
 
-			
-
 	}
+
+	
 
 	public getLeftSideTags(){
 
@@ -172,6 +177,15 @@ export class AdminComplienceComponent implements OnInit {
 			this.selectedPolicy = policy;
 			this.filterDuplicates();
 		}
+	}
+
+	public savePolicyDetails(){
+		this.assetTaggingService.getSelectedTags()
+		.subscribe( res => {
+			this.saveDetails.tags = res;
+			this.saveDetails.policy = this.selectedPolicy;
+			this.saveDetails.toBeScanned = this.toBeScanned;
+		});
 	}
 
 	public updatePermissions(){
