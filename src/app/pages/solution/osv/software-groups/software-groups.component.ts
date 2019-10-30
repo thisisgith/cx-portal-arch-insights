@@ -37,6 +37,8 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 	@Input() public tabIndex;
 	@Output() public tabIndexChange = new EventEmitter<number>();
 	@Input() public softwareGroupsCount;
+	@Input() public solution;
+	@Input() public useCase;
 	@ViewChild('recommendationsTemplate', { static: true })
 	private recommendationsTemplate: TemplateRef<{ }>;
 	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
@@ -72,6 +74,8 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 			sort: 'profileName',
 			sortOrder: 'asc',
 			filter: '',
+			solution: '',
+			useCase: '',
 		};
 	}
 
@@ -83,6 +87,8 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 			if (this.filters) {
 				this.setFilter(this.filters);
 			}
+			this.softwareGroupsParams.solution = this.solution;
+			this.softwareGroupsParams.useCase = this.useCase;
 			this.loadData();
 		}
 	}
@@ -102,8 +108,18 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 			}
 		}
 		const currentFilter = _.get(changes, ['filters', 'currentValue']);
+		const solution = _.get(changes, ['solution', 'currentValue']);
+		const useCase = _.get(changes, ['useCase', 'currentValue']);
 		if (currentFilter && !changes.filters.firstChange && this.softwareGroupsCount > 0) {
 			this.setFilter(currentFilter);
+			this.loadData();
+		}
+		if (solution && !_.get(changes, ['solution', 'firstChange'])) {
+			this.softwareGroupsParams.solution = solution;
+			this.loadData();
+		}
+		if (useCase && !_.get(changes, ['useCase', 'firstChange'])) {
+			this.softwareGroupsParams.useCase = useCase;
 			this.loadData();
 		}
 	}
@@ -212,7 +228,7 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 						key: 'optimalVersion',
 						name: I18n.get('_OsvAcceptedRelease_'),
 						render: item =>
-								item.optimalVersion ? item.optimalVersion : '',
+							item.optimalVersion ? item.optimalVersion : '',
 						sortable: false,
 						width: '15%',
 					},
