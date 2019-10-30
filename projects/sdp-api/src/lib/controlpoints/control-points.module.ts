@@ -10,6 +10,7 @@ import { ControlPointIEHealthStatusAPIService } from './services/control-point-i
 import { ControlPointDevicePolicyAPIService } from './services/control-point-device-policy-api.service';
 import { ControlPointLicenseAPIService } from './services/control-point-license-api.service';
 import { ControlPointAdminSettingsAPIService } from './services/control-point-admin-settings-api.service';
+import { ControlPointAdminComplienceService } from './services/control-point-admin-complience-api.service';
 import { ControlPointInsightTypeAPIService } from './services/control-point-insight-type-api.service';
 import { ControlPointInsightTypePostAPIService } from './services/control-point-insight-type-post-api.service';
 
@@ -29,7 +30,8 @@ import { ControlPointInsightTypePostAPIService } from './services/control-point-
     ControlPointLicenseAPIService,
     ControlPointInsightTypeAPIService,
     ControlPointInsightTypePostAPIService,
-    ControlPointAdminSettingsAPIService
+    ControlPointAdminSettingsAPIService,
+    ControlPointAdminComplienceService,
   ],
 })
 export class ControlPointsModule {

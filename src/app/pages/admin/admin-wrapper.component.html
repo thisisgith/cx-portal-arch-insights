@@ -70,6 +70,22 @@
 				<span class="sidebar__item__label" [innerText]="'_System_' | i18n"></span>
 			</a>
 		</li>
+		<li class="sidebar__item"
+			[ngClass]="{ selected: routerPath === 'complience' }"
+		>
+			<a
+				data-auto-id="sidebar.complience"
+				[routerLink]="['/admin', 'complience']"
+			>
+				<span class="badge-wrapper">
+					<span tabindex="0"
+						attr.data-auto-id="AdminSidebar-AccountIcon">
+						<div class="icon-insights icon-medium"></div>
+					</span>
+				</span>
+				<span class="sidebar__item__label" [innerText]="'_Complience_' | i18n"></span>
+			</a>
+		</li>
 	</ul>
 </nav>
 <div class="admin-container">
