@@ -185,7 +185,7 @@
 				hoverTemplate: atxHover,
 				title: data.recommended.title,
 				description: data.recommended.description,
-				src: data.recommended.imageURL || defaultRecommendedATXImg,
+				src: data.recommended.imageURL || getDefaultAtxImg(data.recommended),
 				item: data.sessions[0],
 				autoid: 'recommendedATX'
 			}"> 

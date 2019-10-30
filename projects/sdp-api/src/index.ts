@@ -91,3 +91,8 @@ export * from './lib/insights/insights-crashes.module';
 export * from './lib/asset-tagging/models';
 export * from './lib/asset-tagging/services';
 export * from './lib/asset-tagging/asset-tagging.module';
+
+export * from './lib/partner/models/company-info-list';
+export * from './lib/partner/models/company-info';
+export * from './lib/partner/services';
+export * from './lib/partner/partner.module';

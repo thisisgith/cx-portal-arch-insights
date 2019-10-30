@@ -47,6 +47,7 @@ import {
 	LicenseScenarios,
 	NetworkScenarios,
 	OSVScenarios,
+	PartnerInfoScenarios,
 	PolicesScenarios,
 	RCCScenarios,
 	RMAScenarios,
@@ -84,6 +85,7 @@ import {
 	CDCSearchResponse,
 	CSDFResponseModel,
 	CommunitiesResponse,
+	CompanyInfoList,
 	ContractQuota,
 	CoverageCountsResponse,
 	CoverageResponse,
@@ -141,6 +143,7 @@ type ResponseBody = (
 	ATXResponseModel |
 	CDCSearchResponse |
 	CommunitiesResponse |
+	CompanyInfoList |
 	ContractQuota[] |
 	CoverageCountsResponse |
 	CoverageResponse |
@@ -278,6 +281,7 @@ export const mockSettings: MockSettings = {
 		LicenseScenarios,
 		NetworkScenarios,
 		OSVScenarios,
+		PartnerInfoScenarios,
 		PolicesScenarios,
 		RCCScenarios,
 		RMAScenarios,
