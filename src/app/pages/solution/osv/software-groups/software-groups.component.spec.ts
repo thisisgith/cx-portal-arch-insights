@@ -134,4 +134,36 @@ describe('SoftwareGroupsComponent', () => {
 		expect(item.optimalVersion)
 			.toEqual('1.1');
 	});
+
+	it('should refresh on filters change ', fakeAsync(() => {
+		component.ngOnChanges({
+			filters: {
+				currentValue: {
+					recommendationType: ['expert'],
+				},
+				firstChange: false,
+				isFirstChange: () => false,
+				previousValue: null,
+			},
+		});
+		tick();
+		fixture.detectChanges();
+		expect(component.softwareGroupsParams.filter)
+			.toBe('recommendationType:expert');
+		component.ngOnChanges({
+			filters: {
+				currentValue: {
+					recommendationType: ['expert', 'automated', 'none'],
+				},
+				firstChange: false,
+				isFirstChange: () => false,
+				previousValue: null,
+			},
+		});
+		tick();
+		fixture.detectChanges();
+		expect(component.softwareGroupsParams.filter)
+			.toBe('recommendationType:expert,automated,none');
+	}));
+
 });

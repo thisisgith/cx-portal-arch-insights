@@ -80,6 +80,9 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 	 */
 	public ngOnInit () {
 		if (this.softwareGroupsCount > 0) {
+			if (this.filters) {
+				this.setFilter(this.filters);
+			}
 			this.loadData();
 		}
 	}
@@ -98,6 +101,30 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 				selected[0].optimalVersion = _.get(selectedSoftwareGroup, 'optimalVersion');
 			}
 		}
+		const currentFilter = _.get(changes, ['filters', 'currentValue']);
+		if (currentFilter && !changes.filters.firstChange && this.softwareGroupsCount > 0) {
+			this.setFilter(currentFilter);
+			this.loadData();
+		}
+	}
+
+	/**
+	 * apply the filter selected by customer
+	 * @param currentFilter set the filter selected by customer
+	 */
+	public setFilter (currentFilter) {
+		const recommendationType = _.get(currentFilter, 'recommendationType', []);
+		const recommendationStatus = _.get(currentFilter, 'recommendationStatus', []);
+		let filter = '';
+		if (recommendationType.length > 0) {
+			filter += `recommendationType:${recommendationType.join(',')}`;
+		}
+		if (recommendationStatus.length > 0) {
+			filter += filter.length > 0 ? ';' : '';
+			filter += `recommendationStatus:${recommendationStatus.join(',')}`;
+		}
+		this.softwareGroupsParams.pageIndex = 1;
+		this.softwareGroupsParams.filter = filter;
 	}
 
 	/**
@@ -183,7 +210,7 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 					},
 					{
 						key: 'optimalVersion',
-						name: I18n.get('_OsvOptimalVersion_'),
+						name: I18n.get('_OsvAcceptedRelease_'),
 						render: item =>
 								item.optimalVersion ? item.optimalVersion : '',
 						sortable: false,
@@ -231,7 +258,7 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 			softwareGroup.statusUpdated = false;
 		});
 		item.rowSelected = !item.rowSelected;
-		this.tabIndex = 1;
+		this.tabIndex = 0;
 		this.tabIndexChange.emit(this.tabIndex);
 		this.selectedSoftwareGroup = item.rowSelected ? item : null;
 		this.selectedSoftwareGroupChange.emit(this.selectedSoftwareGroup);
@@ -265,28 +292,44 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 	 */
 	public getRowActions (softwareGroup: SoftwareGroup) {
 		return _.filter([
-			{
-				label: I18n.get('_OsvViewCompareRecommendations_'),
+			_.get(softwareGroup, 'recommendationStatus') !== 'inprogress' ? {
+				label: I18n.get('_OsvRequestExpertRecommendations_'),
+				onClick: () => {
+					// todo open contact support modal
+				},
+			} : undefined,
+			_.get(softwareGroup, 'recommendation') === 'expert' ? {
+				label: I18n.get('_OsvViewExpertRecommendations_'),
 				onClick: () => {
 					this.openSoftwareGroupDetails(0, softwareGroup);
+				},
+			} : undefined,
+			{
+				label: I18n.get('_OsvViewAutomatedRecommendations_'),
+				onClick: () => {
+					const tabIndex = _.get(softwareGroup, 'recommendation') === 'expert' ? 0 : 1;
+					this.openSoftwareGroupDetails(tabIndex, softwareGroup);
 				},
 			},
 			{
 				label: I18n.get('_OsvViewSoftwareVersionSummary_'),
 				onClick: () => {
-					this.openSoftwareGroupDetails(1, softwareGroup);
+					const tabIndex = _.get(softwareGroup, 'recommendation') === 'expert' ? 1 : 2;
+					this.openSoftwareGroupDetails(tabIndex, softwareGroup);
 				},
 			},
 			{
 				label: I18n.get('_OsvViewAssets_'),
 				onClick: () => {
-					this.openSoftwareGroupDetails(2, softwareGroup);
+					const tabIndex = _.get(softwareGroup, 'recommendation') === 'expert' ? 2 : 3;
+					this.openSoftwareGroupDetails(tabIndex, softwareGroup);
 				},
 			},
 			{
 				label: I18n.get('_OsvViewVersions_'),
 				onClick: () => {
-					this.openSoftwareGroupDetails(3, softwareGroup);
+					const tabIndex = _.get(softwareGroup, 'recommendation') === 'expert' ? 3 : 4;
+					this.openSoftwareGroupDetails(tabIndex, softwareGroup);
 				},
 			},
 		]);
