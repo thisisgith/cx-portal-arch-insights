@@ -33,7 +33,7 @@ const svParams = '&pageIndex=1&pageSize=10&sort=swType&sortOrder=asc';
 const assetParams = '&pageIndex=1&pageSize=10&sort=hostName&sortOrder=asc&filter=';
 
 /** Software Group Params */
-const sgParams = '&pageIndex=1&pageSize=10&sort=profileName&sortOrder=asc&filter=';
+const sgParams = '&pageIndex=1&pageSize=10&sort=profileName&sortOrder=asc';
 
 /** SoftwareGroup Assets */
 const sgAssetsParams = '&pageIndex=1&pageSize=10&sort=hostName&sortOrder=asc';
@@ -665,7 +665,8 @@ const mockSoftwareGroups: SoftwareGroupsResponse = {
 			productFamily: 'Cisco Catalyst 9300 Series Switches',
 			productId: '73-14312-05, 73-14312-05, 73-14312-05',
 			profileName: '7293498_NA',
-			recommendation: null,
+			recommendation: 'none',
+			recommendationStatus: 'inprogress',
 			recommAcceptedDate: '2014-05-30T00:00:00.000+0000',
 			swType: 'IOS-XE',
 			swVersions: [
@@ -680,7 +681,8 @@ const mockSoftwareGroups: SoftwareGroupsResponse = {
 			productFamily: 'Cisco Catalyst 9300 Series Switches',
 			productId: '73-15664-05, 73-15664-05, 73-15664-05',
 			profileName: '7293498_NA',
-			recommendation: null,
+			recommendation: 'expert',
+			recommendationStatus: 'completed',
 			swType: 'IOS-XE',
 			swVersions: [
 				'16.8.1a',
@@ -694,7 +696,8 @@ const mockSoftwareGroups: SoftwareGroupsResponse = {
 			productFamily: 'Cisco Catalyst 9300 Series Switches',
 			productId: '73-14311-06, 73-14311-06, 73-14311-06',
 			profileName: '7293498_NA',
-			recommendation: null,
+			recommendation: 'automated',
+			recommendationStatus: '',
 			swType: 'IOS-XE',
 			swVersions: [
 				'16.8.1a',
@@ -708,7 +711,8 @@ const mockSoftwareGroups: SoftwareGroupsResponse = {
 			productFamily: 'Cisco Catalyst 9300 Series Switches',
 			productId: 'QSFP-100G-SM-SR=, QSFP-100G-SM-SR=, QSFP-100G-SM-SR=',
 			profileName: '7293498_NA',
-			recommendation: null,
+			recommendation: 'expert',
+			recommendationStatus: 'inprogress',
 			swType: 'IOS-XE',
 			swVersions: [
 				'16.8.1a',
@@ -722,7 +726,7 @@ const mockSoftwareGroups: SoftwareGroupsResponse = {
 			productFamily: 'Cisco Catalyst 9300 Series Switches',
 			productId: 'CFP-100G-LR4=, CFP-100G-LR4=, CFP-100G-LR4=',
 			profileName: '7293498_NA',
-			recommendation: null,
+			recommendation: 'none',
 			swType: 'IOS-XE',
 			swVersions: [
 				'16.8.1a',
@@ -736,7 +740,8 @@ const mockSoftwareGroups: SoftwareGroupsResponse = {
 			productFamily: 'Cisco Catalyst 9300 Series Switches',
 			productId: 'PK-SFP-10G-SR=, PK-SFP-10G-SR=, PK-SFP-10G-SR=',
 			profileName: 'PK-SFP-10G-SR=, PK-SFP-10G-SR=, PK-SFP-10G-SR=',
-			recommendation: null,
+			recommendation: 'expert',
+			recommendationStatus: 'inprogress',
 			swType: 'IOS-XE',
 			swVersions: [
 				'16.8.1a',
@@ -750,7 +755,7 @@ const mockSoftwareGroups: SoftwareGroupsResponse = {
 			productFamily: 'Cisco Catalyst 9300 Series Switches',
 			productId: 'C3850-NM-4-10G, C3850-NM-4-10G, C3850-NM-4-10G',
 			profileName: 'C3850-NM-4-10G, C3850-NM-4-10G, C3850-NM-4-10G',
-			recommendation: null,
+			recommendation: 'automated',
 			swType: 'IOS-XE',
 			swVersions: [
 				'16.8.1a',
@@ -764,7 +769,7 @@ const mockSoftwareGroups: SoftwareGroupsResponse = {
 			productFamily: 'Cisco Catalyst 9300 Series Switches',
 			productId: 'ASR1002X-10G-K9, ASR1002X-10G-K9, ASR1002X-10G-K9',
 			profileName: 'ASR1002X-10G-K9, ASR1002X-10G-K9, ASR1002X-10G-K9',
-			recommendation: null,
+			recommendation: 'none',
 			swType: 'IOS-XE',
 			swVersions: [
 				'16.8.1a',
@@ -778,7 +783,7 @@ const mockSoftwareGroups: SoftwareGroupsResponse = {
 			productFamily: 'Cisco Catalyst 9300 Series Switches',
 			productId: 'XFP-10G-MM-SR, XFP-10G-MM-SR, XFP-10G-MM-SR',
 			profileName: 'XFP-10G-MM-SR, XFP-10G-MM-SR, XFP-10G-MM-SR',
-			recommendation: null,
+			recommendation: 'none',
 			swType: 'IOS-XE',
 			swVersions: [
 				'16.8.1a',
@@ -792,7 +797,7 @@ const mockSoftwareGroups: SoftwareGroupsResponse = {
 			productFamily: 'Cisco Catalyst 9300 Series Switches',
 			productId: 'C3850-NM-4-10G=, C3850-NM-4-10G=, C3850-NM-4-10G=',
 			profileName: 'C3850-NM-4-10G=, C3850-NM-4-10G=, C3850-NM-4-10G=',
-			recommendation: null,
+			recommendation: 'expert',
 			swType: 'IOS-XE',
 			swVersions: [
 				'16.8.1a',
@@ -1129,6 +1134,15 @@ const mockSummaryResponse: SummaryResponse = {
 		upgrade: 400,
 	},
 	profiles: 441,
+	recommendations: {
+		expert: 10,
+		automated: 15,
+		none: 13,
+	},
+	recommendation_status: {
+		completed: 10,
+		inprogress: 15,
+	},
 	versions: 50,
 };
 
@@ -1208,7 +1222,8 @@ export const OSVScenarios = [
 				},
 			],
 		},
-		url: `${api}profiles?customerId=${customerId}${sgParams}&search=`,
+		url: `${api}profiles?customerId=${customerId}${sgParams}` +
+			'&filter=recommendationType:expert,automated&search=',
 		usecases: ['Use Case 1'],
 	},
 	{

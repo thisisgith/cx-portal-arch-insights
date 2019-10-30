@@ -84,11 +84,7 @@ describe('OptimalSoftwareVersionComponent', () => {
 			.then(() => {
 				component.selectView('assets');
 				fixture.detectChanges();
-				const totalFilter = _.find(component.filters, { key: 'totalAssets' });
 				const assetType = _.find(component.filters, { key: 'assetType' });
-
-				expect(_.find(component.filters, 'selected'))
-					.toEqual(totalFilter);
 
 				component.onSubfilterSelect('assets_without_profile', assetType);
 
@@ -212,6 +208,16 @@ describe('OptimalSoftwareVersionComponent', () => {
 					upgrade: 400,
 				},
 				profiles: 0,
+				recommendations: {
+					expert: 10,
+					automated: 15,
+					none: 13,
+				},
+				recommendation_status: {
+					completed: 10,
+					inprogress: 15,
+				},
+
 				versions: 50,
 			}));
 		component.ngOnInit();
@@ -234,6 +240,16 @@ describe('OptimalSoftwareVersionComponent', () => {
 					upgrade: 400,
 				},
 				profiles: 0,
+				recommendations: {
+					expert: 10,
+					automated: 15,
+					none: 13,
+				},
+				recommendation_status: {
+					completed: 10,
+					inprogress: 15,
+				},
+
 				versions: 50,
 			}));
 		component.ngOnInit();
@@ -256,6 +272,15 @@ describe('OptimalSoftwareVersionComponent', () => {
 					upgrade: 400,
 				},
 				profiles: 0,
+				recommendations: {
+					expert: 10,
+					automated: 15,
+					none: 13,
+				},
+				recommendation_status: {
+					completed: 10,
+					inprogress: 15,
+				},
 				versions: 0,
 			}));
 		component.ngOnInit();

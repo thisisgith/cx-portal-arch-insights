@@ -103,30 +103,18 @@
 		<div 
 			class="row toggle text-small" 
 			(click)="selectView('swGroups')"			
+			[ngClass]="{'text-primary':view == 'swGroups','text-muted':view != 'swGroups'}"
 			data-auto-id="TotalVisualFilterSoftwareGroups">
-				<div 
-					class="col-6 text-right"
-					[ngClass]="{'text-primary': view == 'swGroups','text-muted': view != 'swGroups'}"
-				>
+				<div class="col-6 text-right">
 					<span class="qtr-margin-right text-huge" [innerText]="filter.seriesData[0].profiles"></span>
 				</div>
 				<div class="col-6 margin-auto flex align-items-center">
-					<span 
-						class="text-large filter-title" 
-						[innerText]="'_OsvSoftwareGroups_' | i18n"
-						[ngClass]="{'text-primary': view == 'swGroups','text-muted': view != 'swGroups'}"
-					></span>
-					<span 
-						class="text-primary" 
-						[title]="'_OsvSoftwareGroups_' | i18n"
-						[ngClass]="{'text-primary': view == 'swGroups','text-muted': view != 'swGroups'}">
-					</span>
-					<span class="pull-right relative">
+					<span class="text-large " [innerText]="'_OsvSoftwareGroups_' | i18n"></span>
+					<span class="pull-right text-primary relative" [title]="'_OsvSoftwareGroups_' | i18n">
 						<i 
 							data-auto-id="SoftwareGroupInfo" 
-							class="icon-question-circle icon-small"
-							(click)="$event.stopPropagation();showProfileInfo = !showProfileInfo;"
-							[ngClass]="{'active': view == 'swGroups'}">
+							class="icon-question-circle icon-small text-primary"
+							(click)="$event.stopPropagation();showProfileInfo = !showProfileInfo;">
 						</i>
 						<ng-container *ngTemplateOutlet="softwareProfileInfo"></ng-container>
 					</span>
@@ -134,54 +122,35 @@
 		</div>
 		<div 
 			class="row toggle text-small" 
+			[ngClass]="{'text-primary':view == 'assets','text-muted':view != 'assets'}"
 			(click)="selectView('assets')" 
 			data-auto-id="TotalVisualFilterAssets">
-				<div 
-					class="col-6 text-right"
-					[ngClass]="{'text-primary': view == 'assets','text-muted': view != 'assets'}"
-				>
+				<div class="col-6 text-right">
 					<span class="qtr-margin-right text-huge" [innerText]="filter.seriesData[0].assets"></span>
 				</div>
-				<div class="col-6 flex margin-auto">
+				<div class="col-6 margin-auto">
+					<span class="text-large " [innerText]="'_OsvAssets_' | i18n"></span>
 					<span 
-						class="text-large filter-title" 
-						[innerText]="'_OsvAssets_' | i18n"
-						[ngClass]="{'text-primary': view == 'assets','text-muted': view != 'assets'}"
-					></span>
-					<span 
-						class="text-primary" 
-						[ngClass]="{'text-primary': view == 'assets','text-muted': view != 'assets'}"
+						class="text-primary pull-right" 
 						data-balloon-length="medium"
 						[attr.data-balloon]="'_OsvAssetInfo_' | i18n" 
 						data-auto-id="AssetsToolTip" 
 						data-balloon-pos="down"
-						(click)="$event.stopPropagation();"
-					>
-						<i 
-							class="icon-info-circle icon-info icon-small"
-							[ngClass]="{'active': view == 'assets'}"
-						>
-						</i>
+						(click)="$event.stopPropagation();">
+							<i class="icon-info icon-small"></i>
 					</span>
 				</div>
 		</div>
 		<div 
 			class="row toggle text-small" 
 			(click)="selectView('swVersions')" 			
+			[ngClass]="{'text-primary':view == 'swVersions','text-muted':view != 'swVersions'}"
 			data-auto-id="TotalVisualFilterSoftwareVersions">
 				<div class="col-6 text-right">
-					<span 
-						class="qtr-margin-right text-huge" 
-						[innerText]="filter.seriesData[0].versions"
-						[ngClass]="{'text-primary': view == 'swVersions','text-muted': view != 'swVersions'}"
-					></span>
+					<span class="qtr-margin-right text-huge" [innerText]="filter.seriesData[0].versions"></span>
 				</div>
 				<div class="col-6 margin-auto">
-					<span 
-						class="text-large half-margin-right" 
-						[innerText]="'_OsvSoftwareVersionsRelease_' | i18n"
-						[ngClass]="{'text-primary': view == 'swVersions','text-muted': view != 'swVersions'}"
-					></span>
+					<span class="text-large half-margin-right" [innerText]="'_OsvSoftwareVersionsRelease_' | i18n"></span>
 				</div>
 		</div>
 	</div>
@@ -252,3 +221,25 @@
 		</div>
 	</div>
 </ng-template>
+
+<ng-template #recommendationTypeFilter let-filter="filter">
+	<div>
+		<pie-chart 
+			[width]="'255'"
+			[height]="'130'"
+			[seriesData]="filter.seriesData"
+			(subfilter)="onSubfilterSelect($event.filter, filter)">
+		</pie-chart>
+	</div>
+</ng-template>
+<ng-template #recommendationStatusFilter let-filter="filter">
+	<div>
+		<pie-chart 
+			[width]="'255'"
+			[height]="'130'"
+			[seriesData]="filter.seriesData"
+			(subfilter)="onSubfilterSelect($event.filter, filter)">
+		</pie-chart>
+	</div>
+</ng-template>
+	
