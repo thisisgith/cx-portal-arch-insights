@@ -118,6 +118,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 		)
 		.subscribe((solution: RacetrackSolution) => {
 			this.summaryParams.solution = _.get(solution, 'name');
+			this.refresh();
 		});
 
 		this.racetrackInfoService.getCurrentTechnology()
@@ -127,9 +128,10 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 		.subscribe((technology: RacetrackTechnology) => {
 			if (this.summaryParams.useCase !== _.get(technology, 'name')) {
 				this.summaryParams.useCase = _.get(technology, 'name');
-				this.loadData();
+				this.refresh();
 			}
 		});
+		this.refresh();
 	}
 
 	/**
@@ -184,6 +186,15 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 		this.filters = _.filter(this.allFilters, (filter: Filter) =>
 			_.indexOf(filter.view, this.view) > -1,
 		);
+	}
+
+	/**
+	 * refesh data
+	 */
+	public refresh () {
+		if (this.summaryParams.solution.length > 0 && this.summaryParams.useCase.length > 0) {
+			this.loadData();
+		}
 	}
 
 	/**
