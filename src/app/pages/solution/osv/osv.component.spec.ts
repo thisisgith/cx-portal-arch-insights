@@ -198,43 +198,4 @@ describe('OptimalSoftwareVersionComponent', () => {
 		expect(component.view)
 			.toEqual('swVersions');
 	});
-
-	it('select assets view if the assets count is equal to zero', () => {
-		const summaryResponse = <any> OSVScenarios[0].scenarios.GET[0].response.body;
-		summaryResponse.profiles = 0;
-		spyOn(osvService, 'getSummary')
-			.and
-			.returnValue(of(summaryResponse));
-		component.ngOnInit();
-		fixture.detectChanges();
-		expect(component.view)
-			.toEqual('assets');
-	});
-
-	it('select versions view if the versions count is equal to zero', () => {
-		const summaryResponse = <any> OSVScenarios[0].scenarios.GET[0].response.body;
-		summaryResponse.assets = 0;
-		summaryResponse.profiles = 0;
-		spyOn(osvService, 'getSummary')
-			.and
-			.returnValue(of(summaryResponse));
-		component.ngOnInit();
-		fixture.detectChanges();
-		expect(component.view)
-			.toEqual('swVersions');
-	});
-
-	it('select show no data if all counts are zero', () => {
-		const summaryResponse = <any> OSVScenarios[0].scenarios.GET[0].response.body;
-		summaryResponse.assets = 0;
-		summaryResponse.profiles = 0;
-		summaryResponse.versions = 0;
-		spyOn(osvService, 'getSummary')
-			.and
-			.returnValue(of(summaryResponse));
-		component.ngOnInit();
-		fixture.detectChanges();
-		expect(component.view)
-			.toEqual('swGroups');
-	});
 });
