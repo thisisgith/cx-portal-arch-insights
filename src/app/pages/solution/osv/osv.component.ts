@@ -91,6 +91,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.summaryParams.customerId = _.get(user, ['info', 'customerId']);
 		this.cxLevel = _.get(user, ['service', 'cxLevel'], 0);
+	}
 
 	/**
 	 * Used to select which tab we want to view the data for
