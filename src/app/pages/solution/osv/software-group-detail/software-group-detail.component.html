@@ -22,10 +22,9 @@
 		[innerText]="selectedSoftwareGroup?.profileName">
 	</div>
 	<div *ngIf="!showDetails" class="qtr-margin-left text-large half-margin-bottom">
-		<span class="qtr-margin-left text-large half-margin-bottom"
-			[innerText]="'_OsvProductFamilyName_' | i18n ">
+		<span [innerText]="'_OsvProductFamilyName_' | i18n ">
 		</span>
-		<span class="qtr-margin-left text-large half-margin-bottom"
+		<span class="qtr-margin-left"
 			[innerText]="selectedSoftwareGroup?.productFamily">
 		</span>
 	</div>
