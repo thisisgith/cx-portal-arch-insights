@@ -625,6 +625,7 @@
 	"_OsvAcceptedRelease_": "Accepted Release",
 	"_OsvDescription_": "Description",
 	"_OsvId_": "Id",
+	"_OsvRequestDate_":"Request Date",
 	"_OsvExpertRecommendations_": "Expert Recommendations",
 	"_OsvExpertRequestToolTip_":"Request will be raised for the Product Family",
 	"_OsvExpertRequestInProgressTooltip_":"Expert Recommendation request is in progress",
