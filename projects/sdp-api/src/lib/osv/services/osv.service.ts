@@ -98,6 +98,7 @@ class OSVService extends __BaseService {
 	 * - `sort` : Sorting to be done on which column
 	 * - `sortOrder` : Sorting Order
 	 * - `filter`:	filter to be applied
+	 * - `search`:	search to be applied
 	 *
 	 * @return successful operation
 	 */
@@ -112,6 +113,7 @@ class OSVService extends __BaseService {
 		if (params.sort != null) __params = __params.set('sort', params.sort.toString());
 		if (params.sortOrder != null) __params = __params.set('sortOrder', params.sortOrder.toString());
 		if (params.filter != null) __params = __params.set('filter', params.filter.toString());
+		if (params.search != null) __params = __params.set('search', params.search.toString());
 		let req = new HttpRequest<any>(
 			'GET',
 			this.rootUrl + `${OSVService.getSoftwareGroupsPath}`,
@@ -140,6 +142,7 @@ class OSVService extends __BaseService {
 	 * - `sort` : Sorting to be done on which column
 	 * - `sortOrder` : Sorting Order
 	 * - `filter`:	filter to be applied
+	 * - `search`:	search to be applied
 	 * @return successful operation
 	 */
 	getSoftwareGroups (params: OSVService.GetSoftwareGroupsParams): __Observable<SoftwareGroupsResponse> {
@@ -157,6 +160,7 @@ class OSVService extends __BaseService {
 	 * - `pageSize` : number of records to be fetched per page
 	 * - `sort` : Sorting to be done on which column
 	 * - `sortOrder` : Sorting Order
+	 * - `search` : search to be applied
 	 * @return successful operation
 	 */
 	getSoftwareVersionsResponse (params: OSVService.GetSoftwarVersionsParams): __Observable<__StrictHttpResponse<SoftwareVersionsResponse>> {
@@ -169,6 +173,7 @@ class OSVService extends __BaseService {
 		if (params.pageSize != null) __params = __params.set('pageSize', params.pageSize.toString());
 		if (params.sort != null) __params = __params.set('sort', params.sort.toString());
 		if (params.sortOrder != null) __params = __params.set('sortOrder', params.sortOrder.toString());
+		if (params.search != null) __params = __params.set('search', params.search.toString());
 		let req = new HttpRequest<any>(
 			'GET',
 			this.rootUrl + `${OSVService.getSoftwareVersionsPath}`,
@@ -195,6 +200,7 @@ class OSVService extends __BaseService {
 	 * - `pageSize` : number of records to be fetched per page
 	 * - `sort` : Sorting to be done on which column
 	 * - `sortOrder` : Sorting Order
+	 * - `search` : search to be applied
 	 * @return successful operation
 	 */
 	getSoftwareVersions (params: OSVService.GetSoftwarVersionsParams): __Observable<SoftwareVersionsResponse> {
@@ -274,6 +280,7 @@ class OSVService extends __BaseService {
 	 * - `sort` : Sorting to be done on which column
 	 * - `sortOrder` : Sorting Order
 	 * - `filter`:	filter to be applied	 * @return successful operation
+	 * - `search`:	search to be applied	 * @return successful operation
 	 */
 	getAssetsResponse (params: OSVService.GetAssetsParams): __Observable<__StrictHttpResponse<AssetsResponse>> {
 		let __params = this.newParams();
@@ -286,6 +293,7 @@ class OSVService extends __BaseService {
 		if (params.sort != null) __params = __params.set('sort', params.sort.toString());
 		if (params.sortOrder != null) __params = __params.set('sortOrder', params.sortOrder.toString());
 		if (params.filter != null) __params = __params.set('filter', params.filter.toString());
+		if (params.search != null) __params = __params.set('search', params.search.toString());
 
 		let req = new HttpRequest<any>(
 			'GET',
@@ -314,6 +322,7 @@ class OSVService extends __BaseService {
 	 * - `sort` : Sorting to be done on which column
 	 * - `sortOrder` : Sorting Order
 	 * - `filter`:	filter to be applied	 * @return successful operation
+	 * - `search`:	search to be applied	 * @return successful operation
 	 */
 	getAssets (params: OSVService.GetAssetsParams): __Observable<AssetsResponse> {
 		return this.getAssetsResponse(params).pipe(
@@ -646,8 +655,8 @@ module OSVService {
 		 */
 		pageSize: number;
 		/**
- * sort by field.
- */
+ 		 * sort by field.
+ 		 */
 		sort?: string;
 		/**
 		 * sortorder.
@@ -657,6 +666,10 @@ module OSVService {
 		 * filter.
 		 */
 		filter?: string;
+		/**
+		 * filter.
+		 */
+		search?: string;	
 	}
 
 	/**
@@ -684,6 +697,10 @@ module OSVService {
 		 * sortorder.
 		 */
 		sortOrder?: string;
+		/**
+		 * search.
+		 */
+		search?: string;
 	}
 
 
@@ -753,7 +770,10 @@ module OSVService {
 		 * filter.
 		 */
 		filter?: string;
-
+		/**
+		 * search.
+		 */
+		search?: string;
 	}
 
 	/**

@@ -53,6 +53,10 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 	public softwareGroupsParams: OSVService.GetSoftwareGroupsParams;
 	public customerId: string;
 	public alert: any = { };
+	public searchOptions = {
+		debounce: 600,
+	};
+
 	constructor (
 		public logger: LogService,
 		public osvService: OSVService,
@@ -64,6 +68,7 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 			customerId: this.customerId,
 			pageIndex: 1,
 			pageSize: 10,
+			search: '',
 			sort: 'profileName',
 			sortOrder: 'asc',
 			filter: '',
@@ -167,7 +172,7 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 					{
 						key: 'swType',
 						name: I18n.get('_OsvOSType_'),
-						sortable: false,
+						sortable: true,
 						width: '10%',
 					},
 					{
@@ -187,12 +192,12 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 					{
 						key: 'assetCount',
 						name: I18n.get('_OsvAssetCount_'),
-						sortable: false,
+						sortable: true,
 						width: '10%',
 					},
 					{
 						name: I18n.get('_OsvRecommendations_'),
-						sortable: false,
+						sortable: true,
 						template: this.recommendationsTemplate,
 						width: '15%',
 					},
@@ -332,4 +337,13 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 		this.loadData();
 	}
 
+	/**
+	 * Handler for performing a search
+	 * @param query search string
+	 */
+	public onSearchQuery (query?: string) {
+		this.softwareGroupsParams.search = query;
+		this.softwareGroupsParams.pageIndex = 1;
+		this.loadData();
+	}
 }

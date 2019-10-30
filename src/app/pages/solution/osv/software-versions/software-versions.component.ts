@@ -47,6 +47,10 @@ export class SoftwareVersionsComponent implements OnInit, OnDestroy {
 	public softwareVersionsParams: OSVService.GetSoftwarVersionsParams;
 	public customerId: string;
 	public alert: any = { };
+	public searchOptions = {
+		debounce: 600,
+	};
+
 	constructor (
 		private logger: LogService,
 		private osvService: OSVService,
@@ -58,6 +62,7 @@ export class SoftwareVersionsComponent implements OnInit, OnDestroy {
 			customerId: this.customerId,
 			pageIndex: 1,
 			pageSize: 10,
+			search: '',
 			sort: 'swType',
 			sortOrder: 'asc',
 		};
@@ -154,13 +159,13 @@ export class SoftwareVersionsComponent implements OnInit, OnDestroy {
 					{
 						key: 'profileAssetCount',
 						name: I18n.get('_OsvAssetsOfSoftwareProfilesCount_'),
-						sortable: false,
+						sortable: true,
 						width: '20%',
 					},
 					{
 						key: 'assetCount',
 						name: I18n.get('_OsvIndependentAssetsCount_'),
-						sortable: false,
+						sortable: true,
 						width: '20%',
 					},
 				],
@@ -202,5 +207,15 @@ export class SoftwareVersionsComponent implements OnInit, OnDestroy {
 		_.invoke(this.alert, 'hide');
 		this.destroy$.next();
 		this.destroy$.complete();
+	}
+
+	/**
+	 * Handler for performing a search
+	 * @param query search string
+	 */
+	public onSearchQueryVersion (query?: string) {
+		this.softwareVersionsParams.search = query;
+		this.softwareVersionsParams.pageIndex = 1;
+		this.loadData();
 	}
 }

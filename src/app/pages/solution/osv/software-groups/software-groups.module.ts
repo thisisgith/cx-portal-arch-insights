@@ -8,6 +8,7 @@ import {
 	CuiSpinnerModule,
 	CuiPagerModule,
 	CuiAlertModule,
+	CuiSearchModule,
 } from '@cisco-ngx/cui-components';
 
 /**
@@ -24,6 +25,7 @@ import {
 		CuiSpinnerModule,
 		CuiPagerModule,
 		CuiAlertModule,
+		CuiSearchModule,
 	],
 })
 export class SoftwareGroupsModule { }

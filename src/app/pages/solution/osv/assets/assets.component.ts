@@ -60,6 +60,9 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 		},
 	];
 	public alert: any = { };
+	public searchOptions = {
+		debounce: 600,
+	};
 
 	constructor (
 		private logger: LogService,
@@ -74,6 +77,7 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 			filter: '',
 			pageIndex: 1,
 			pageSize: 10,
+			search: '',
 			sort: 'hostName',
 			sortOrder: 'asc',
 		};
@@ -198,7 +202,7 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 					{
 						key: 'profileName',
 						name: I18n.get('_OsvSoftwareGroup_'),
-						sortable: false,
+						sortable: true,
 						render: item =>
 								item.profileName ? item.profileName : '',
 						width: '10%',
@@ -206,7 +210,7 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 					{
 						key: 'swType',
 						name: I18n.get('_OsvOSType_'),
-						sortable: false,
+						sortable: true,
 						width: '100px',
 					},
 					{
@@ -228,12 +232,12 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 						name: I18n.get('_OsvDeploymentStatus_'),
 						render: item =>
 								item.deploymentStatus ? item.deploymentStatus : '',
-						sortable: false,
+						sortable: true,
 						width: '10%',
 					},
 					{
 						name: I18n.get('_OsvRecommendations_'),
-						sortable: false,
+						sortable: true,
 						template: this.recommendationsTemplate,
 						width: '10%',
 					},
@@ -306,6 +310,16 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 		sortColumn.sorting = true;
 		this.assetsParams.sortOrder = sortColumn.sortDirection;
 		this.assetsParams.sort = sortColumn.key;
+		this.assetsParams.pageIndex = 1;
+		this.loadData();
+	}
+
+	/**
+	 * Handler for performing a search
+	 * @param query search string
+	 */
+	public onSearchQueryAsset (query?: string) {
+		this.assetsParams.search = query;
 		this.assetsParams.pageIndex = 1;
 		this.loadData();
 	}
