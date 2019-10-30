@@ -29,18 +29,5 @@
 				"
 			></app-fp-similarassets>
 		</cui-tab>
-		<cui-tab
-			[label]="'_CP_Compare_' | i18n | uppercase"
-			*ngIf="cxLevel === 3"
-		>
-			<app-fp-compare
-				[devices]="selectedDevices"
-				(reqError)="
-					$event
-						? alertFPCompare.show($event, 'danger')
-						: alertFPCompare.hide()
-				"
-			></app-fp-compare>
-		</cui-tab>
 	</cui-tabs>
 </div>
