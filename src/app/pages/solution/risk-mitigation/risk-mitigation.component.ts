@@ -5,7 +5,7 @@ import * as _ from 'lodash-es';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { LogService } from '@cisco-ngx/cui-services';
-import { AssetPanelLinkService } from '@services';
+import { AssetPanelLinkService, RacetrackInfoService } from '@services';
 import {
 	CrashHistoryDeviceCount,
 	RiskMitigationService,
@@ -18,6 +18,8 @@ import {
 	RiskAssets,
 	InventoryService,
 	HighCrashRiskDeviceTooltip,
+	RacetrackSolution,
+	RacetrackTechnology,
 } from '@sdp-api';
 import { ActivatedRoute } from '@angular/router';
 import { AssetLinkInfo } from '@interfaces';
@@ -50,11 +52,15 @@ export class RiskMitigationComponent {
 	public assetLinkInfo: AssetLinkInfo = Object.create({ });
 
 	public crashedAssetsCount = 0;
+	private selectedSolutionName: string;
+	private selectedTechnologyName: string;
+
 	constructor (
 		private riskMitigationService: RiskMitigationService,
 		private assetPanelLinkService: AssetPanelLinkService,
 		private logger: LogService,
 		private route: ActivatedRoute,
+		private racetrackInfoService: RacetrackInfoService,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
@@ -152,6 +158,8 @@ export class RiskMitigationComponent {
 			search: '',
 			size: 10,
 			sort: '',
+			solution: this.selectedSolutionName,
+			useCase: this.selectedTechnologyName,
 		};
 		this.status.isLoading = true;
 		forkJoin(
@@ -190,7 +198,11 @@ export class RiskMitigationComponent {
 		}
 		this.highCrashRiskParams.globalRiskRank = 'HIGH';
 		this.getFingerPrintDeviceDetails(this.highCrashRiskParams);
-		const params = _.pick(_.cloneDeep(this.highCrashRiskParams), ['customerId']);
+		const params = _.pick(_.cloneDeep(this.highCrashRiskParams), [
+			'customerId',
+			'solution',
+			'useCase',
+		]);
 		this.status.isLoading = true;
 
 		return this.riskMitigationService.getHighCrashRiskDeviceCountData(params)
@@ -217,7 +229,11 @@ export class RiskMitigationComponent {
 	 * @returns the total crashes observable
 	 */
 	public getAllCrashesData () {
-		const params = _.pick(_.cloneDeep(this.highCrashRiskParams), ['customerId']);
+		const params = _.pick(_.cloneDeep(this.highCrashRiskParams), [
+			'customerId',
+			'solution',
+			'useCase',
+		]);
 		this.onlyCrashes = false;
 		this.filters[0].selected = true;
 
@@ -281,7 +297,11 @@ export class RiskMitigationComponent {
 	 * @returns the total crashes observable
 	 */
 	public getDeviceDetails (timePeriod: string) {
-		const params = _.pick(_.cloneDeep(this.highCrashRiskParams), ['customerId']);
+		const params = _.pick(_.cloneDeep(this.highCrashRiskParams), [
+			'customerId',
+			'solution',
+			'useCase',
+		]);
 		this.crashedAssetsGridDetails.tableData = [];
 		if (timePeriod) {
 			params.timePeriod = timePeriod;
@@ -639,6 +659,25 @@ export class RiskMitigationComponent {
 	 * OnInit lifecycle hook
 	 */
 	public ngOnInit () {
+		this.racetrackInfoService.getCurrentSolution()
+		.pipe(
+			takeUntil(this.destroy$),
+		)
+		.subscribe((solution: RacetrackSolution) => {
+			this.selectedSolutionName = _.get(solution, 'name');
+		});
+
+		this.racetrackInfoService.getCurrentTechnology()
+		.pipe(
+			takeUntil(this.destroy$),
+		)
+		.subscribe((technology: RacetrackTechnology) => {
+			if (this.selectedTechnologyName !== _.get(technology, 'name')) {
+				this.selectedTechnologyName = _.get(technology, 'name');
+				this.loadData();
+			}
+		});
+
 		this.buildFilters();
 		this.buildTables();
 		this.loadData();

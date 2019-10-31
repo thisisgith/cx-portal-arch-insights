@@ -1,10 +1,12 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { LogService } from '@cisco-ngx/cui-services';
-import { CrashPreventionService, IDeviceInfo } from '@sdp-api';
+import { CrashPreventionService, IDeviceInfo, RacetrackSolution, RacetrackTechnology } from '@sdp-api';
 
 import { Subject } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import * as _ from 'lodash-es';
+import { takeUntil } from 'rxjs/operators';
+import { RacetrackInfoService } from '@services';
 
 /**
  * fingerprint-header Component
@@ -15,6 +17,7 @@ import * as _ from 'lodash-es';
 	templateUrl: './fingerprint-header.component.html',
 })
 export class FingerprintHeaderComponent implements  OnChanges {
+
 	@Input() public asset: any;
 	public deviceDetails: CrashPreventionService.GetDeviceParams;
 	public deviceData: any = [];
@@ -35,6 +38,7 @@ export class FingerprintHeaderComponent implements  OnChanges {
 		private logger: LogService,
 		public crashPreventionService: CrashPreventionService,
 		private route: ActivatedRoute,
+		private racetrackInfoService: RacetrackInfoService,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
@@ -64,7 +68,22 @@ export class FingerprintHeaderComponent implements  OnChanges {
 	 */
 	public ngOnChanges (changes: SimpleChanges): void {
 		if (changes.asset) {
-		 	this.deviceDetails.deviceId = changes.asset.currentValue.deviceId;
+			 this.deviceDetails.deviceId = changes.asset.currentValue.deviceId;
+			 this.racetrackInfoService.getCurrentSolution()
+			 .pipe(
+				 takeUntil(this.destroy$),
+			 )
+			 .subscribe((solution: RacetrackSolution) => {
+				 this.deviceDetails.solution = _.get(solution, 'name');
+			 });
+
+			 this.racetrackInfoService.getCurrentTechnology()
+			 .pipe(
+				 takeUntil(this.destroy$),
+			 )
+			 .subscribe((technology: RacetrackTechnology) => {
+				 this.deviceDetails.useCase = _.get(technology, 'name');
+			 });
 			 this.loadDeviceInfo();
 		}
 	}
