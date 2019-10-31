@@ -1222,7 +1222,7 @@ export const OSVScenarios = [
 				},
 			],
 		},
-		url: `${api}summary?customerId=${customerId}`,
+		url: `${api}summary?customerId=${customerId}&solution=IBN&useCase=Campus Network Assurance`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -1240,7 +1240,8 @@ export const OSVScenarios = [
 			],
 		},
 		url: `${api}profiles?customerId=${customerId}${sgParams}` +
-			'&filter=recommendationType:expert,automated&search=',
+			'&filter=recommendationType:expert,automated&search=' +
+			'&solution=IBN&useCase=Campus Network Assurance',
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -1257,7 +1258,8 @@ export const OSVScenarios = [
 				},
 			],
 		},
-		url: `${api}versions?customerId=${customerId}${svParams}&search=`,
+		url: `${api}versions?customerId=${customerId}${svParams}` +
+			'&search=&solution=IBN&useCase=Campus Network Assurance',
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -1292,7 +1294,8 @@ export const OSVScenarios = [
 				},
 			],
 		},
-		url: `${api}assets?customerId=${customerId}${assetParams}&search=`,
+		url: `${api}assets?customerId=${customerId}${assetParams}` +
+			'&search=&solution=IBN&useCase=Campus Network Assurance',
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -1309,7 +1312,8 @@ export const OSVScenarios = [
 				},
 			],
 		},
-		url: `${api}assets?customerId=${customerId}${assetParams}`,
+		url: `${api}assets?customerId=${customerId}${assetParams}` +
+			'&search=&solution=IBN&useCase=Campus Network Assurance',
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -1326,7 +1330,8 @@ export const OSVScenarios = [
 				},
 			],
 		},
-		url: `${api}versions?customerId=${customerId}${svParams}`,
+		url: `${api}versions?customerId=${customerId}${svParams}` +
+			'&solution=IBN&useCase=Campus Network Assurance',
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -1344,7 +1349,8 @@ export const OSVScenarios = [
 			],
 		},
 		url: `${api}profileAssets?customerId=2431199&id=7293498_NA` +
-			`&profileName=7293498_NA${sgAssetsParams}`,
+			`&profileName=7293498_NA${sgAssetsParams}` +
+			'&solution=IBN&useCase=Campus Network Assurance',
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -1362,7 +1368,8 @@ export const OSVScenarios = [
 			],
 		},
 		url: `${api}profileVersions?customerId=2431199&id=7293498_NA` +
-			`&profileName=7293498_NA${sgVerParams}`,
+			`&profileName=7293498_NA${sgVerParams}` +
+			'&solution=IBN&useCase=Campus Network Assurance',
 		usecases: ['Use Case 1'],
 	},
 	{

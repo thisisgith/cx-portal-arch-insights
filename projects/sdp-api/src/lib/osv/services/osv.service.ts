@@ -46,6 +46,8 @@ class OSVService extends __BaseService {
 	 * @param params The `OSVService.GetSummaryParams` containing the following parameters:
 	 *
 	 * - `customerId`: Unique identifier of a Cisco customer.
+	 * - `solution`: selected solution filter.
+	 * - `useCase`: selected useCase .
 	 *
 	 * @return successful operation
 	 */
@@ -55,6 +57,8 @@ class OSVService extends __BaseService {
 		let __body: any = null;
 
 		if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+		if (params.solution != null) __params = __params.set('solution', params.solution.toString());
+		if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
 		let req = new HttpRequest<any>(
 			'GET',
 			this.rootUrl + `${OSVService.getSummaryPath}`,
@@ -78,6 +82,8 @@ class OSVService extends __BaseService {
 	 * @param params The `OSVService.GetSummaryParams` containing the following parameters:
 	 *
 	 * - `customerId`: Unique identifier of a Cisco customer.
+	 * - `solution`: selected solution
+	 * - `useCase`: selected useCase
 	 *
 	 * @return successful operation
 	 */
@@ -99,6 +105,8 @@ class OSVService extends __BaseService {
 	 * - `sortOrder` : Sorting Order
 	 * - `filter`:	filter to be applied
 	 * - `search`:	search to be applied
+	 * - `solution` : solution filter selected
+	 * - `useCase` : useCase selected
 	 *
 	 * @return successful operation
 	 */
@@ -114,6 +122,8 @@ class OSVService extends __BaseService {
 		if (params.sortOrder != null) __params = __params.set('sortOrder', params.sortOrder.toString());
 		if (params.filter != null) __params = __params.set('filter', params.filter.toString());
 		if (params.search != null) __params = __params.set('search', params.search.toString());
+		if (params.solution != null) __params = __params.set('solution', params.solution.toString());
+		if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
 		let req = new HttpRequest<any>(
 			'GET',
 			this.rootUrl + `${OSVService.getSoftwareGroupsPath}`,
@@ -143,6 +153,9 @@ class OSVService extends __BaseService {
 	 * - `sortOrder` : Sorting Order
 	 * - `filter`:	filter to be applied
 	 * - `search`:	search to be applied
+	 * - `solution` : solution filter selected
+	 * - `useCase` : useCase selected
+
 	 * @return successful operation
 	 */
 	getSoftwareGroups (params: OSVService.GetSoftwareGroupsParams): __Observable<SoftwareGroupsResponse> {
@@ -161,6 +174,9 @@ class OSVService extends __BaseService {
 	 * - `sort` : Sorting to be done on which column
 	 * - `sortOrder` : Sorting Order
 	 * - `search` : search to be applied
+	 * - `solution` : solution filter selected
+	 * - `useCase` : useCase selected
+
 	 * @return successful operation
 	 */
 	getSoftwareVersionsResponse (params: OSVService.GetSoftwarVersionsParams): __Observable<__StrictHttpResponse<SoftwareVersionsResponse>> {
@@ -174,6 +190,8 @@ class OSVService extends __BaseService {
 		if (params.sort != null) __params = __params.set('sort', params.sort.toString());
 		if (params.sortOrder != null) __params = __params.set('sortOrder', params.sortOrder.toString());
 		if (params.search != null) __params = __params.set('search', params.search.toString());
+		if (params.solution != null) __params = __params.set('solution', params.solution.toString());
+		if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
 		let req = new HttpRequest<any>(
 			'GET',
 			this.rootUrl + `${OSVService.getSoftwareVersionsPath}`,
@@ -201,6 +219,9 @@ class OSVService extends __BaseService {
 	 * - `sort` : Sorting to be done on which column
 	 * - `sortOrder` : Sorting Order
 	 * - `search` : search to be applied
+	 * - `solution` : solution filter selected
+	 * - `useCase` : useCase selected
+
 	 * @return successful operation
 	 */
 	getSoftwareVersions (params: OSVService.GetSoftwarVersionsParams): __Observable<SoftwareVersionsResponse> {
@@ -219,7 +240,7 @@ class OSVService extends __BaseService {
 	 * - `swType`: Software Type of Asset
 	 * - `swVersion`: Software Version of Asset
 	 * - `image`: image of the asset
-	 * - `postDate` : postDate 
+	 * - `postDate` : postDate
 	 * @return successful operation
 	 */
 	getAssetDetailsResponse (params: OSVService.GetAssetDetailsParams): __Observable<__StrictHttpResponse<AssetRecommendationsResponse>> {
@@ -281,6 +302,9 @@ class OSVService extends __BaseService {
 	 * - `sortOrder` : Sorting Order
 	 * - `filter`:	filter to be applied	 * @return successful operation
 	 * - `search`:	search to be applied	 * @return successful operation
+ 	 * - `solution` : solution filter selected
+	 * - `useCase` : useCase selected
+
 	 */
 	getAssetsResponse (params: OSVService.GetAssetsParams): __Observable<__StrictHttpResponse<AssetsResponse>> {
 		let __params = this.newParams();
@@ -294,6 +318,8 @@ class OSVService extends __BaseService {
 		if (params.sortOrder != null) __params = __params.set('sortOrder', params.sortOrder.toString());
 		if (params.filter != null) __params = __params.set('filter', params.filter.toString());
 		if (params.search != null) __params = __params.set('search', params.search.toString());
+		if (params.solution != null) __params = __params.set('solution', params.solution.toString());
+		if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
 
 		let req = new HttpRequest<any>(
 			'GET',
@@ -323,6 +349,9 @@ class OSVService extends __BaseService {
 	 * - `sortOrder` : Sorting Order
 	 * - `filter`:	filter to be applied	 * @return successful operation
 	 * - `search`:	search to be applied	 * @return successful operation
+	 * - `solution` : solution filter selected
+	 * - `useCase` : useCase selected
+
 	 */
 	getAssets (params: OSVService.GetAssetsParams): __Observable<AssetsResponse> {
 		return this.getAssetsResponse(params).pipe(
@@ -416,6 +445,8 @@ class OSVService extends __BaseService {
 	 * - `sortOrder` : sort order
 	 * - `pageIndex` : pageIndex
 	 * - `pageSize` : number of results per page
+	 * - `solution` : solution filter selected
+	 * - `useCase` : useCase selected
 	 * @return successful operation
 	 */
 	getSoftwareGroupVersionsResponse (params: OSVService.GetSoftwareGroupAssetsParams): __Observable<__StrictHttpResponse<SoftwareGroupVersionsResponse>> {
@@ -430,6 +461,8 @@ class OSVService extends __BaseService {
 		if (params.pageSize != null) __params = __params.set('pageSize', params.pageSize.toString());
 		if (params.sort != null) __params = __params.set('sort', params.sort.toString());
 		if (params.sortOrder != null) __params = __params.set('sortOrder', params.sortOrder.toString());
+		if (params.solution != null) __params = __params.set('solution', params.solution.toString());
+		if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
 		let req = new HttpRequest<any>(
 			'GET',
 			this.rootUrl + `${OSVService.getSoftwareGroupVersionsPath}`,
@@ -459,6 +492,9 @@ class OSVService extends __BaseService {
 	 * - `sortOrder` : sort order
 	 * - `pageIndex` : pageIndex
 	 * - `pageSize` : number of results per page
+     * - `solution` : solution filter selected
+	 * - `useCase` : useCase selected
+
 	 *
 	 * @return successful operation
 	 */
@@ -479,6 +515,9 @@ class OSVService extends __BaseService {
 	 * - `sortOrder` : sort order
 	 * - `pageIndex` : pageIndex
 	 * - `pageSize` : number of results per page
+	 * - `solution` : solution filter selected
+	 * - `useCase` : useCase selected
+
 	 *
 	 * @return successful operation
 	 */
@@ -494,6 +533,8 @@ class OSVService extends __BaseService {
 		if (params.pageSize != null) __params = __params.set('pageSize', params.pageSize.toString());
 		if (params.sort != null) __params = __params.set('sort', params.sort.toString());
 		if (params.sortOrder != null) __params = __params.set('sortOrder', params.sortOrder.toString());
+		if (params.solution != null) __params = __params.set('solution', params.solution.toString());
+		if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
 		let req = new HttpRequest<any>(
 			'GET',
 			this.rootUrl + `${OSVService.getSoftwareGroupAssetsPath}`,
@@ -521,7 +562,10 @@ class OSVService extends __BaseService {
 	 * - `sort` : sort column
 	 * - `sortOrder` : sort order
 	 * - `pageIndex` : pageIndex
-	 * - `pageSize` : number of results per page	 
+	 * - `pageSize` : number of results per page
+ 	 * - `solution` : solution filter selected
+	 * - `useCase` : useCase selected
+ 
 	 * @return successful operation
 	 */
 	getSoftwareGroupAssets (params: OSVService.GetSoftwareGroupAssetsParams): __Observable<SoftwareGroupAssetsResponse> {
@@ -635,6 +679,14 @@ module OSVService {
 		 * Unique identifier of a Cisco customer.
 		 */
 		customerId: string;
+		/**
+		 * selection solution filter.
+		 */
+		solution: string;
+		/**
+		 * selected useCase.
+		 */
+		useCase: string;
 	}
 
 	/**
@@ -669,7 +721,15 @@ module OSVService {
 		/**
 		 * filter.
 		 */
-		search?: string;	
+		search?: string;
+		/**
+		 * selection solution filter.
+		 */
+		solution: string;
+		/**
+		 * selected useCase.
+		 */
+		useCase: string;	
 	}
 
 	/**
@@ -701,6 +761,14 @@ module OSVService {
 		 * search.
 		 */
 		search?: string;
+		/**
+		 * selection solution filter.
+		 */
+		solution: string;
+		/**
+		 * selected useCase.
+		 */
+		useCase: string;
 	}
 
 
@@ -774,6 +842,14 @@ module OSVService {
 		 * search.
 		 */
 		search?: string;
+		/**
+		 * selection solution filter.
+		 */
+		solution: string;
+		/**
+		 * selected useCase.
+		 */
+		useCase: string;
 	}
 
 	/**
@@ -841,6 +917,14 @@ module OSVService {
 		 * sortorder.
 		 */
 		sortOrder?: string;
+		/**
+		 * selection solution filter.
+		 */
+		solution: string;
+		/**
+		 * selected useCase.
+		 */
+		useCase: string;
 	}
 
 	/**
