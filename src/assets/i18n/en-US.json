@@ -227,6 +227,7 @@
 	"_AssetTaggingTagsCountSelected_":"{0} tags selected",
 	"_AssetTaggingEnableRegulatoryComplianceScanAcrossTheNetwork_":"Enable regulatory compliance scan across the network",
 	"_AssetTaggingTagName_": "Tag Name (Systems)",
+	"_AssetTaggingNoTagsInList_": "No Tags In List",
 	"_AssetTaggingTagNameCount_": "{0} ({1})",
 	"_Assurance_": "Assurance",
 	"_At_": "At",
