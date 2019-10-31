@@ -5,6 +5,14 @@
 		</div>
 
 		<div class="col-md-9">
+			<div class="global-filter" *ngIf="componentData.partner">
+				<multiselect name="Content Provider"
+					[items]="componentData.partner"
+					nameKey="companyName"
+					valueKey="companyId"
+					(changed)="setProviderFilter($event)">
+				</multiselect>
+			</div>
 			<div class="row">
 				<div class="col-md-4">
 					<app-communities></app-communities>
