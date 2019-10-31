@@ -27,6 +27,7 @@ import { PieChartModule,
 		DetailsPanelModule,
 		VisualFilterBarModule,
 		AssetDetailsModule,
+		TooltipModule,
 	} from '@components';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RccDataModule } from '@sdp-api';
@@ -76,6 +77,7 @@ const childRoutes: Routes = [
 		AssetDetailsModule,
 		InsightTabsModule,
 		RemoveInvalidTagsPipeModule,
+		TooltipModule,
 	],
 })
 export class RccModule { }
