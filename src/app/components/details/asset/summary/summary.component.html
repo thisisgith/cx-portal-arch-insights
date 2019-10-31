@@ -81,6 +81,13 @@
 					}">
 				</ng-container>
 			</div>
+			<div class="col-md-12 base-margin-top">
+				<ng-container *ngTemplateOutlet="tagsData; context: {
+						title: '_Tags_',
+						tags: tags,
+					}">
+				</ng-container>
+			</div>
 		</div>
 	</div>
 </div>
@@ -135,5 +142,17 @@
 			<a *ngIf="linkData && url" [href]="url" [innerText]="linkData"></a>
 			<span *ngIf="linkData && !url" [innerText]="linkData"></span>
 		</div>
+	</div>
+</ng-template>
+
+<ng-template #tagsData let-title="title" let-tags="tags">
+	<div class="row summary__details">
+		<div class="col-md-12 text-uppercase summary__details__title" [innerText]="title | i18n" attr.data-auto-id="{{ title }}"></div>
+	</div>
+	<div class="row text-medium cx-text-default">
+		<span class="label label--light" *ngFor="let tag of tags">
+			<span class="text-tertiary" [innerText]='tag'>
+			</span>
+		</span>
 	</div>
 </ng-template>

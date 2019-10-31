@@ -11,6 +11,9 @@ import {
 	Asset,
 	HardwareResponse,
 	AssetSummary,
+	AssetTaggingService,
+	AssetTaggingDeviceDetails,
+	Tags,
 } from '@sdp-api';
 
 import * as _ from 'lodash-es';
@@ -36,15 +39,18 @@ export class AssetDetailsSummaryComponent implements OnChanges, OnInit, OnDestro
 
 	public assetData: AssetSummary;
 	public warrantyStatus: 'Covered' | 'Uncovered';
+	public tags: Tags[];
 
 	private assetSummaryParams: InventoryService.GetAssetSummaryParams;
 	private hardwareParams: InventoryService.GetHardwareParams;
+	private assetTagsParams: AssetTaggingService.GetParams;
 
 	public status = {
 		loading: {
 			asset: false,
 			hardware: false,
 			overall: false,
+			tags: false,
 		},
 	};
 	public componentData = {
@@ -57,6 +63,7 @@ export class AssetDetailsSummaryComponent implements OnChanges, OnInit, OnDestro
 	constructor (
 		private logger: LogService,
 		private inventoryService: InventoryService,
+		private assetTaggingService: AssetTaggingService,
 	) { }
 
 	/**
@@ -126,6 +133,27 @@ export class AssetDetailsSummaryComponent implements OnChanges, OnInit, OnDestro
 	}
 
 	/**
+	 * Fetches the summary data for the asset
+	 * @returns the tags info
+	 */
+	private fetchTagsData () {
+		this.status.loading.tags = true;
+
+		return this.assetTaggingService.getAsset360Tags(this.assetTagsParams)
+		.pipe(
+			map((response: AssetTaggingDeviceDetails) => {
+				this.tags = response.tags;
+			}),
+			catchError(err => {
+				this.status.loading.tags = false;
+				this.logger.error('details.component : fetchTagsData()' +
+					`:: Error : (${err.status}) ${err.message}`);
+
+				return of({ });
+			}),
+		);
+	}
+	/**
 	 * Checks if our currently selected asset has changed
 	 * @param changes the changes detected
 	 */
@@ -185,6 +213,15 @@ export class AssetDetailsSummaryComponent implements OnChanges, OnInit, OnDestro
 					this.fetchAssetData(),
 				);
 			}
+
+			this.assetTagsParams = {
+				customerId: this.customerId,
+				deviceId: productId,
+			};
+
+			obsBatch.push(
+				this.fetchTagsData(),
+			);
 
 			this.hidden = false;
 			forkJoin(obsBatch)
