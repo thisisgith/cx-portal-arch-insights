@@ -106,4 +106,20 @@ describe('BugsDetailsComponent', () => {
 		expect(currentTabData.data.bugs.length)
 			.toEqual(1);
 	});
+
+	it('should create table based on view type', () => {
+		const sgRecommendations = <any> OSVScenarios[9].scenarios.GET[0].response.body;
+		component.data = sgRecommendations.recommendationSummaries;
+		component.params = { viewType: 'bug' };
+		component.ngOnInit();
+		fixture.detectChanges();
+		expect(component.bugsTable)
+			.toBeDefined();
+		component.params = { viewType: 'psirt' };
+		component.ngOnInit();
+		fixture.detectChanges();
+		expect(component.psirtsTable)
+			.toBeDefined();
+	});
+
 });

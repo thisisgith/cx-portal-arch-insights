@@ -17,6 +17,8 @@ import { SoftwareGroupAssetsResponse } from '../models/software-group-asset-resp
 import { MachineRecommendationsResponse } from '../models/machine-recommendations-response';
 import { SoftwareGroup } from '../models/software-group';
 import { ProfileRecommendationsResponse } from '../models/profile-recommendations-response';
+import { OsvPsirt } from '../models/psrits';
+import { OsvBug } from '../models/bugs';
 
 @Injectable({
 	providedIn: 'root',
@@ -33,7 +35,9 @@ class OSVService extends __BaseService {
 	static readonly getSoftwareGroupAssetsPath = '/customerportal/osv-ui/v1/profileAssets';
 	static readonly getSoftwareGroupRecommendationPath = '/customerportal/osv-ui/v1/profileRecommendations';
 	static readonly getMachineRecommendationsPath = '/customerportal/osv-ui/v1/machineRecommendations';
-
+	static readonly getPsirtDetailsPath = '/customerportal/osv-ui/v1/psirtDetail';
+	static readonly getBugDetailsPath = '/customerportal/osv-ui/v1/bugDetail';
+	
 	constructor (
 		config: __Configuration,
 		http: HttpClient
@@ -668,6 +672,94 @@ class OSVService extends __BaseService {
 		);
 	}
 
+   /**
+ 	* Psirt Details
+ 	* @param params The `OSVService.PristDetailsParams` containing the following parameters:
+ 	*
+ 	* - `psirtId `: Unique identifier of a Psirt.
+ 	*
+ 	* @return successful operation
+ 	*/
+	 getPsritDetailsResponse (params: OSVService.PristDetailsParams): __Observable<__StrictHttpResponse<OsvPsirt>> {
+		let __params = this.newParams();
+		let __headers = new HttpHeaders();
+		let __body: any = null;
+
+		if (params.psirtId != null) __params = __params.set('psirtId', params.psirtId.toString());
+		let req = new HttpRequest<any>(
+			'GET',
+			this.rootUrl + `${OSVService.getPsirtDetailsPath}`,
+			__body,
+			{
+				headers: __headers,
+				params: __params,
+				responseType: 'json',
+			});
+
+		return this.http.request<any>(req).pipe(
+			__filter(_r => _r instanceof HttpResponse),
+			__map((_r) => {
+				return _r as __StrictHttpResponse<OsvPsirt>;
+			})
+		);
+	}
+
+	/**
+	 * Psirt Details
+	 * @param params The `OSVService.PristDetailsParams` containing the following parameters:
+	 * - `customerId`: Unique identifier of a PSIRT.	
+	 * @return successful operation
+	 */
+	getPsirtDetails (params: OSVService.PristDetailsParams): __Observable<OsvPsirt> {
+		return this.getPsritDetailsResponse(params).pipe(
+			__map(_r => _r.body as OsvPsirt)
+		);
+	}
+
+   /**
+ 	* Bug Details
+ 	* @param params The `OSVService.BugDetailsParams` containing the following parameters:
+ 	*
+ 	* - `bugId `: Unique identifier of a Bug.
+ 	*
+ 	* @return successful operation
+ 	*/
+	 getBugDetailsResponse (params: OSVService.BugDetailsParams): __Observable<__StrictHttpResponse<OsvBug>> {
+		let __params = this.newParams();
+		let __headers = new HttpHeaders();
+		let __body: any = null;
+
+		if (params.bugId != null) __params = __params.set('bugId', params.bugId.toString());
+		let req = new HttpRequest<any>(
+			'GET',
+			this.rootUrl + `${OSVService.getBugDetailsPath}`,
+			__body,
+			{
+				headers: __headers,
+				params: __params,
+				responseType: 'json',
+			});
+
+		return this.http.request<any>(req).pipe(
+			__filter(_r => _r instanceof HttpResponse),
+			__map((_r) => {
+				return _r as __StrictHttpResponse<OsvBug>;
+			})
+		);
+	}
+
+	/**
+	 * Bug Details
+	 * @param params The `OSVService.BugDetailsParams` containing the following parameters:
+	 * - `customerId`: Unique identifier of a Bug.	
+	 * @return successful operation
+	 */
+	getBugDetails (params: OSVService.BugDetailsParams): __Observable<OsvBug> {
+		return this.getBugDetailsResponse(params).pipe(
+			__map(_r => _r.body as OsvBug)
+		);
+	}	
+
 }
 
 module OSVService {
@@ -943,6 +1035,26 @@ module OSVService {
 		 * optimal version to be updated
 		 */
 		optimalVersion: string;
+	}
+
+	/**
+	 * Parameters for psirt details
+	 */
+	export interface PristDetailsParams {
+		/**
+		 * Unique id of psirt.
+		 */
+		psirtId: string;		
+	}
+
+	/**
+	 * Parameters for bug details
+	 */
+	export interface BugDetailsParams {
+		/**
+		 * Unique id of bug.
+		 */
+		bugId: string;		
 	}
 }
 
