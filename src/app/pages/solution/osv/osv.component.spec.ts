@@ -9,16 +9,20 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { environment } from '@environment';
 import { ActivatedRoute } from '@angular/router';
 import { of, throwError } from 'rxjs';
-import { user, OSVScenarios } from '@mock';
+import { user, OSVScenarios, RacetrackScenarios } from '@mock';
 import { OSVService } from '@sdp-api';
 import { HttpErrorResponse } from '@angular/common/http';
 import * as _ from 'lodash-es';
+import { CuiModalService } from '@cisco-ngx/cui-components';
+import { RacetrackInfoService } from '@services';
 
-describe('OptimalSoftwareVersionComponent', () => {
+fdescribe('OptimalSoftwareVersionComponent', () => {
 	let component: OptimalSoftwareVersionComponent;
 	let fixture: ComponentFixture<OptimalSoftwareVersionComponent>;
 
 	let osvService: OSVService;
+	let cuiModalService: CuiModalService;
+	let racetrackInfoService: RacetrackInfoService;
 	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
@@ -47,6 +51,8 @@ describe('OptimalSoftwareVersionComponent', () => {
 	beforeEach(async(() => {
 
 		osvService = TestBed.get(OSVService);
+		cuiModalService = TestBed.get(CuiModalService);
+		racetrackInfoService = TestBed.get(RacetrackInfoService);
 	}));
 
 	beforeEach(() => {
@@ -197,5 +203,69 @@ describe('OptimalSoftwareVersionComponent', () => {
 		component.selectView('swVersions');
 		expect(component.view)
 			.toEqual('swVersions');
+	});
+
+	it('select show no data if all counts are zero', () => {
+		const summaryResponse = <any> OSVScenarios[0].scenarios.GET[0].response.body;
+		summaryResponse.assets = 0;
+		summaryResponse.profiles = 0;
+		summaryResponse.versions = 0;
+		spyOn(osvService, 'getSummary')
+			.and
+			.returnValue(of(summaryResponse));
+		component.ngOnInit();
+		fixture.detectChanges();
+		expect(component.view)
+			.toEqual('swGroups');
+	});
+
+	it('should set selected asset and selected software group to undefined onPanelClose', () => {
+		component.onPanelClose();
+		expect(component.selectedAsset)
+			.toBeNull();
+		expect(component.selectedSoftwareGroup)
+			.toBeNull();
+	});
+
+	it('should open contact support modal', () => {
+		spyOn(cuiModalService, 'showComponent');
+		component.openContactSupport();
+		expect(cuiModalService.showComponent)
+			.toHaveBeenCalled();
+	});
+
+	it('should set donotshow info in local storage', () => {
+		component.doNotShowAgain = true;
+		component.hideInfo();
+		fixture.detectChanges();
+		expect(window.localStorage.getItem('doNotShowSGInfo'))
+			.toEqual('true');
+		component.doNotShowAgain = false;
+		component.hideInfo();
+		fixture.detectChanges();
+		expect(window.localStorage.getItem('doNotShowSGInfo'))
+			.toEqual('false');
+	});
+
+	it('should call refresh on ibn or usecase filter change', done => {
+		spyOn(component, 'refresh');
+		fixture.whenStable()
+		.then(() => {
+			racetrackInfoService
+				.sendCurrentSolution(
+					RacetrackScenarios[0].scenarios.GET[0].response.body.solutions[0],
+				);
+			fixture.detectChanges();
+			expect(component.refresh)
+				.toHaveBeenCalled();
+			racetrackInfoService
+				.sendCurrentTechnology(
+				RacetrackScenarios[0].scenarios.GET[0].response.body.solutions[0].technologies[1],
+				);
+			fixture.detectChanges();
+			expect(component.refresh)
+				.toHaveBeenCalledTimes(2);
+			done();
+		});
 	});
 });
