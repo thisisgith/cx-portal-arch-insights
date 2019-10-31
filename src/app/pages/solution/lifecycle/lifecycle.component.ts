@@ -211,7 +211,7 @@ export class LifecycleComponent implements OnDestroy {
 	private showCompletionPopup = false;
 	private timeout = 5000;
 	// Enable or disable CGT based on this flag
-	public enableCGT = false;
+	public enableCGT = true;
 
 	/**
 	 * The number of rows that Product Guides will request at a time.
