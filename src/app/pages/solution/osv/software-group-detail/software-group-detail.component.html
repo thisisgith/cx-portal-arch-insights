@@ -30,6 +30,7 @@
 	</div>
 	<div *ngIf="!showDetails">
 		<button [disabled]="selectedSoftwareGroup?.recommendationStatus === 'inprogress'"	
+			(click)="openContactSupport()"
 			class="btn btn--secondary btn--wide base-padding-left base-padding-right"
 			[innerText]="'_OsvRequestExpertRecommendations_' | i18n | uppercase"
 			attr.data-auto-id="RequestExpertRecommendations">

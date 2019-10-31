@@ -30,10 +30,11 @@ import {
 import { forkJoin, Subject, of } from 'rxjs';
 import { takeUntil, map, catchError } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
-import { CuiTableOptions } from '@cisco-ngx/cui-components';
+import { CuiTableOptions, CuiModalService } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { DatePipe } from '@angular/common';
 import { DetailsPanelStackService } from '@services';
+import { ContactSupportComponent } from '@components';
 
 /**
  * SoftwareGroupDetail Component
@@ -106,6 +107,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 		private logger: LogService,
 		private osvService: OSVService,
 		private route: ActivatedRoute,
+		private cuiModalService: CuiModalService,
 		private detailsPanelStackService: DetailsPanelStackService,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
@@ -709,6 +711,22 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 				striped: true,
 				wrapText: true,
 			});
+		}
+	}
+
+	/**
+	 * Open contact support modal
+	 */
+	public openContactSupport () {
+		const options = {
+			contactExpert: true,
+			productFamily: this.selectedSoftwareGroup.productFamily,
+			osType: this.selectedSoftwareGroup.swType,
+			requestTypes: I18n.get('_OsvContactExpertRequestTypes_'),
+		};
+		const result = this.cuiModalService.showComponent(ContactSupportComponent, options);
+		if (result) {
+			this.refresh();
 		}
 	}
 
