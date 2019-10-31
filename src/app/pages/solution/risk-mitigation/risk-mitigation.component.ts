@@ -699,12 +699,6 @@ export class RiskMitigationComponent {
 					template: this.swVersionTemplate,
 				},
 				{
-					key: 'crashCount',
-					name: I18n.get('_RMNumberOfCrashes_'),
-					sortable: true,
-					sortKey: 'crashCount',
-				},
-				{
 					key: 'firstOccurrence',
 					name: I18n.get('_RMFirstOccurance_'),
 					sortable: false,
