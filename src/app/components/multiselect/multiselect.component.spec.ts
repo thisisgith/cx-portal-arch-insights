@@ -87,6 +87,15 @@ describe('MultiselectComponent', () => {
 		component.clear();
 		expect(component.selectedIndices.length)
 			.toBeLessThanOrEqual(0);
+	});
 
+	it('should set default selection', () =>  {
+		expect(component.selectedIndices.length)
+			.toBeLessThanOrEqual(0);
+		component.defaultValues = [testItems[0].value];
+		component.ngOnInit();
+		fixture.detectChanges();
+		expect(component.selectedIndices.length)
+			.toBeGreaterThanOrEqual(1);
 	});
 });
