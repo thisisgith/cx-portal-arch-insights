@@ -208,7 +208,7 @@
 							<div [innerText]="policyViolationInfo?.policycategory || ('_NA_' | i18n) "></div>
 						</div>
 						<div data-auto-id="highestSeverity" class="dbl-margin-right">
-							<div class="text-small text-bold" [innerText]="'_HighestSeverity_' | i18n">
+							<div class="text-small text-bold" [innerText]="'_RccHighestSeverity_' | i18n">
 							</div>
 							<div>
 								<i *ngIf="policyViolationInfo?.ruleseverity" 
@@ -258,7 +258,7 @@
 							</div>
 							<div [innerText]="selectedAssetData?.serialNumber || ('_NA_' | i18n)"></div>
 						</div>
-						<div data-auto-id="RccSerialNumber" class="dbl-margin-right">
+						<div data-auto-id="RccLastScan" class="dbl-margin-right">
 							<div class="text-small text-uppercase text-bold" [innerText]="'_RccAssetLastScan_' | i18n ">
 							</div>
 							<div [innerText]=" (selectedAssetData?.lastScan| date:'yyyy MMM dd' ) || ('_Never_' | i18n) ">
@@ -288,24 +288,32 @@
 		<span [innerHTML]="item?.ruleseverity"></span>
 	</ng-template>
 
-	<ng-template #tableIcon let-item="celldata">
-		<i class="qtr-margin-right icon-circle"
-			iconSize="default"
-			*ngIf="item?.severity"
-			[ngClass]="{
-				'P1': 'text-danger',
-				'P2': 'text-warning',
-				'P3': 'text-warning-alt',
-				'P4': 'text-success',
-				'P5': 'text-muted'
-			}[item?.severity]">
-		</i>
-		<span [innerHTML]="item?.violationCount"></span>
-	</ng-template>
-
 	<ng-template #ruletitleTemplate let-item="celldata">
 		<div [innerHTML]="item?.ruletitle"></div>
 	</ng-template>
+	<ng-template #policyCategoryTooltipTemplate>
+		<span [innerText]="'_RccCategory_' | i18n"></span>
+		<span tooltip 
+			[tooltipTemplate]="policyCategoryTooltipContentTemplate" 
+			class="icon-info-outline qtr-margin-left" 
+			[tooltipMaxWidth]="200">
+		</span>
+	</ng-template>
+	<ng-template #policyCategoryTooltipContentTemplate>
+		<span [innerText]="'_RccPolicyCategoryTooltip_' | i18n" class="text-small"></span>
+	</ng-template>
+	<ng-template #ruleViolationsTooltipTemplate>
+		<span [innerText]="'_RccRuleViolations_' | i18n"></span>
+		<span tooltip 
+			[tooltipTemplate]="ruleViolationsTooltipContentTemplate" 
+			class="icon-info-outline qtr-margin-left" 
+			[tooltipMaxWidth]="200">
+		</span>
+	</ng-template>
+	<ng-template #ruleViolationsTooltipContentTemplate>
+		<span [innerText]="'_RccRuleViolationsTooltip_' | i18n" class="text-small"></span>
+	</ng-template>
+	
 </div>
 <!-- App Details slide-out -->
 <asset-details *ngIf="openDeviceModal && (assetLinkInfo?.asset || assetLinkInfo?.asset?.serialNumber)"
