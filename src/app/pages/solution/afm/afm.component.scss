@@ -1,20 +1,6 @@
 @import "~cisco-ui/src/scss/utilities/_variables.scss";
-@import '../../../../mixins.scss';
-
-.filter {
-	&__selected {
-		border-bottom: 4px solid $primary;
-	}
-
-	&__not-selected {
-		border-bottom: 4px solid $white;
-	}
-
-	&__title {
-		position: absolute;
-		bottom: 020px;
-	}
-}
+@import '~src/mixins.scss';
+@import '~src/app/common-styles/visual-filter-series.scss';
 
 .visual-filter-container {
 	text-align: center;
@@ -46,3 +32,4 @@
 .form-group__text .afm-search {
 	@include filter-search;
 }
+

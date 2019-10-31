@@ -92,68 +92,85 @@
 <ng-template #visualFilters>
 	<visual-filter-bar [filters]="filters">
 		<ng-template #startingCard>
-			<div
-				class="panel"
-				[ngClass]="{
-					filter__selected:
-						searchParams.headerFilterType !== 'CHATS' &&
-						searchParams.headerFilterType !== 'SEARCH'
-				}"
-			>
-				<div
-					class="col-md-12 flex cursor"
+			<div class="container flex flex-column series">
+				<div class="row flex series__border series__border--left half-margin-bottom"
+					(click)="allAlarmFilter()" 
 					[ngClass]="{
-						'text-primary': searchParams.headerFilterType === 'ALARM'
+						'series__border--highlight': searchParams.headerFilterType === 'ALARM'
 					}"
-					(click)="allAlarmFilter()"
-					data-auto-id="TotalAlarm"
+					data-auto-id="totalAlarmCount"
 				>
-					<div
-						class="text-huge col-md-4 text-right"
-						data-auto-id="TotalVisualFilter"
-						[innerText]="headerCount?.totalAlarmCount"
-					></div>
-					<div
-						class="text-large col-md-8 half-margin-top"
-						[innerText]="'_AfmActiveFaults_' | i18n"
-					></div>
+					<div class="col-md-4 text-right" >
+						<span class="series__data series__data--sm" 
+							[ngClass]="{
+								'text-primary': searchParams.headerFilterType === 'ALARM'
+							}"
+						>{{ headerCount?.totalAlarmCount }}
+						</span>
+					</div>
+					<div class="col-md-8 text-left">
+						<span class="series__name series__name--md"
+							[innerText]="'_AfmActiveFaults_' | i18n"
+							[ngClass]="{
+								'text-primary': searchParams.headerFilterType === 'ALARM'
+							}"
+						>{{ '_AfmActiveFaults_' | i18n }}
+						</span>
+					</div>
 				</div>
-				<div
-					class="col-md-12 flex cursor"
-					[ngClass]="{
-						'text-primary': searchParams.headerFilterType === 'TAC'
-					}"
+
+				<div class="row flex series__border series__border--left half-margin-bottom"
 					(click)="tacCaseFilters()"
-					data-auto-id="TacCase"
-				>
-					<div
-						class="text-huge col-md-4 text-right"
-						data-auto-id="TotalVisualFilter"
-						[innerText]="headerCount?.totalTacCaseCount"
-					></div>
-					<div
-						class="text-large col-md-8 half-margin-top"
-						[innerText]="'_AfmSupportCases_' | i18n"
-					></div>
-				</div>
-				<div
-					class="col-md-12 flex cursor"
 					[ngClass]="{
-						'text-primary':
+						'series__border--highlight': searchParams.headerFilterType === 'TAC'
+					}"
+					data-auto-id="totalTacCaseCount"
+				>
+					<div class="col-md-4 text-right">
+						<span class="series__data series__data--sm"
+							[ngClass]="{
+								'text-primary': searchParams.headerFilterType === 'TAC'
+							}"
+						>{{ headerCount?.totalTacCaseCount }}
+						</span>
+					</div>
+					<div class="col-md-8 text-left">
+						<span class="series__name series__name--md"
+							[ngClass]="{
+								'text-primary': searchParams.headerFilterType === 'TAC'
+							}"
+						>{{ '_AfmSupportCases_' | i18n }}
+						</span>
+					</div>
+				</div>
+
+				<div class="row flex series__border series__border--left half-margin-bottom"
+					(click)="ignoreAlarmFilters()"
+					[ngClass]="{
+						'series__border--highlight':
 							searchParams.headerFilterType === 'IGNORE_EVENT'
 					}"
-					(click)="ignoreAlarmFilters()"
-					data-auto-id="IgnoreEvent"
+					data-auto-id="totalIgnoreEventCount"
 				>
-					<div
-						class="text-huge col-md-4 text-right"
-						data-auto-id="TotalVisualFilter"
-						[innerText]="headerCount?.totalIgnoreEventCount"
-					></div>
-					<div
-						class="text-large col-md-8 half-margin-top"
-						[innerText]="'_AfmIgnoredFaults_' | i18n"
-					></div>
+					<div class="col-md-4 text-right">
+						<span class="series__data series__data--sm"
+							[ngClass]="{
+								'text-primary':
+									searchParams.headerFilterType === 'IGNORE_EVENT'
+							}"
+						>{{ headerCount?.totalIgnoreEventCount }}
+						</span>
+					</div>
+					<div class="col-md-8 text-left">
+						<span class="series__name series__name--md"
+							[innerText]="'_AfmIgnoredFaults_' | i18n"
+							[ngClass]="{
+								'text-primary':
+									searchParams.headerFilterType === 'IGNORE_EVENT'
+							}"
+						>{{ '_AfmIgnoredFaults_' | i18n }}
+						</span>
+					</div>
 				</div>
 			</div>
 		</ng-template>
@@ -186,7 +203,8 @@
 </ng-template>
 
 <ng-template #filterBar>
-	<div *ngIf="timeRangeFiltered" class="row flex-center-vertical half-margin-top">
+	<div *ngIf="timeRangeFiltered" 
+		class="row flex-center-vertical half-margin-top">
 		<div class="col-md-11 flex">
 			<span class="flex flex-center-vertical base-margin-left half-margin-right filter-bar__title"
 				[innerText]="'_AfmFiltered_'| i18n"></span>

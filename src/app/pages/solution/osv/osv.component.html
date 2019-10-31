@@ -99,90 +99,101 @@
 <!-- Templates for our Visual Filters for the Assets Tab -->
 <ng-template #totalAssetsFilter let-filter="filter">
 	<div (click)="clearFilters()" data-auto-id="TotalVisualFilter"
-		class="flex justify-content-around flex-column max-height">
-		<div 
-			class="row toggle text-small" 
-			(click)="selectView('swGroups')"			
-			data-auto-id="TotalVisualFilterSoftwareGroups">
-				<div 
-					class="col-6 text-right"
-					[ngClass]="{'text-primary': view == 'swGroups','text-muted': view != 'swGroups'}"
+		class="flex justify-content-around flex-column max-height series">
+		<div
+			class="row toggle series__border series__border--left qtr-margin-bottom" 
+			[ngClass]="{'series__border--highlight': view === 'swGroups'}"
+			(click)="selectView('swGroups')"
+			data-auto-id="TotalVisualFilterSoftwareGroups"
+		>
+			<div
+				class="col-6 text-right"
+			>
+				<span class="series__data series__data--sm qtr-margin-right"
+					[ngClass]="{'text-primary': view === 'swGroups'}"
+				> {{ filter.seriesData[0].profiles }}
+				</span>
+			</div>
+			<div class="col-6 margin-auto flex align-items-center">
+				<span
+					class="series__name series__name--md filter-title"
+					[ngClass]="{'text-primary': view === 'swGroups'}"
+				>{{ '_OsvSoftwareGroups_' | i18n }}
+				</span>
+				<span
+					class="text-primary"
+					[title]="'_OsvSoftwareGroups_' | i18n"
+					[ngClass]="{'text-primary': view === 'swGroups'}"
 				>
-					<span class="qtr-margin-right text-huge" [innerText]="filter.seriesData[0].profiles"></span>
-				</div>
-				<div class="col-6 margin-auto flex align-items-center">
-					<span 
-						class="text-large filter-title" 
-						[innerText]="'_OsvSoftwareGroups_' | i18n"
-						[ngClass]="{'text-primary': view == 'swGroups','text-muted': view != 'swGroups'}"
-					></span>
-					<span 
-						class="text-primary" 
-						[title]="'_OsvSoftwareGroups_' | i18n"
-						[ngClass]="{'text-primary': view == 'swGroups','text-muted': view != 'swGroups'}">
-					</span>
-					<span class="pull-right relative">
-						<i 
-							data-auto-id="SoftwareGroupInfo" 
-							class="icon-question-circle icon-small"
-							(click)="$event.stopPropagation();showProfileInfo = !showProfileInfo;"
-							[ngClass]="{'active': view == 'swGroups'}">
-						</i>
-						<ng-container *ngTemplateOutlet="softwareProfileInfo"></ng-container>
-					</span>
-				</div>
+				</span>
+				<span class="pull-right relative text-small">
+					<i
+						data-auto-id="SoftwareGroupInfo"
+						class="icon-question-circle icon-small"
+						(click)="$event.stopPropagation();showProfileInfo = !showProfileInfo;"
+						[ngClass]="{'active': view === 'swGroups'}">
+					</i>
+					<ng-container *ngTemplateOutlet="softwareProfileInfo"></ng-container>
+				</span>
+			</div>
 		</div>
-		<div 
-			class="row toggle text-small" 
+		<div
+			class="row toggle series__border series__border--left qtr-margin-bottom" 
 			(click)="selectView('assets')" 
+			[ngClass]="{'series__border--highlight': view === 'assets'}"
 			data-auto-id="TotalVisualFilterAssets">
-				<div 
-					class="col-6 text-right"
-					[ngClass]="{'text-primary': view == 'assets','text-muted': view != 'assets'}"
+			<div
+				class="col-6 text-right"
+			>
+				<span
+					class="series__data qtr-margin-right series__data--sm"
+					[ngClass]="{'text-primary': view === 'assets'}"
+				>{{ filter.seriesData[0].assets }}
+				</span>
+			</div>
+			<div class="col-6 flex margin-auto">
+				<span
+					class="series__name series__name--md filter-title"
+					[ngClass]="{'text-primary': view === 'assets'}"
+				>{{ '_OsvAssets_' | i18n }}
+				</span>
+				<span
+					class="text-primary text-small"
+					[ngClass]="{'text-primary': view === 'assets'}"
+					data-balloon-length="medium"
+					[attr.data-balloon]="'_OsvAssetInfo_' | i18n"
+					data-auto-id="AssetsToolTip"
+					data-balloon-pos="down"
+					(click)="$event.stopPropagation();"
 				>
-					<span class="qtr-margin-right text-huge" [innerText]="filter.seriesData[0].assets"></span>
-				</div>
-				<div class="col-6 flex margin-auto">
-					<span 
-						class="text-large filter-title" 
-						[innerText]="'_OsvAssets_' | i18n"
-						[ngClass]="{'text-primary': view == 'assets','text-muted': view != 'assets'}"
-					></span>
-					<span 
-						class="text-primary" 
-						[ngClass]="{'text-primary': view == 'assets','text-muted': view != 'assets'}"
-						data-balloon-length="medium"
-						[attr.data-balloon]="'_OsvAssetInfo_' | i18n" 
-						data-auto-id="AssetsToolTip" 
-						data-balloon-pos="down"
-						(click)="$event.stopPropagation();"
+					<i
+						class="icon-info-circle icon-info icon-small"
+						[ngClass]="{'active': view === 'assets'}"
 					>
-						<i 
-							class="icon-info-circle icon-info icon-small"
-							[ngClass]="{'active': view == 'assets'}"
-						>
-						</i>
-					</span>
-				</div>
+					</i>
+				</span>
+			</div>
 		</div>
-		<div 
-			class="row toggle text-small" 
-			(click)="selectView('swVersions')" 			
-			data-auto-id="TotalVisualFilterSoftwareVersions">
-				<div class="col-6 text-right">
-					<span 
-						class="qtr-margin-right text-huge" 
-						[innerText]="filter.seriesData[0].versions"
-						[ngClass]="{'text-primary': view == 'swVersions','text-muted': view != 'swVersions'}"
-					></span>
-				</div>
-				<div class="col-6 margin-auto">
-					<span 
-						class="text-large half-margin-right" 
-						[innerText]="'_OsvSoftwareVersionsRelease_' | i18n"
-						[ngClass]="{'text-primary': view == 'swVersions','text-muted': view != 'swVersions'}"
-					></span>
-				</div>
+		<div
+			class="row toggle series__border series__border--left half-margin-bottom" 
+			(click)="selectView('swVersions')"
+			[ngClass]="{'series__border--highlight': view === 'swVersions'}"
+			data-auto-id="TotalVisualFilterSoftwareVersions"
+		>
+			<div class="col-6 text-right">
+				<span
+					class="qtr-margin-right series__data series__data--sm" 
+					[ngClass]="{'text-primary': view === 'swVersions'}"
+				>{{ filter.seriesData[0].versions }}
+				</span>
+			</div>
+			<div class="col-6 margin-auto text-small">
+				<span
+					class="series__name series__name--md half-margin-right" 
+					[ngClass]="{'text-primary': view === 'swVersions'}"
+				>{{ '_OsvSoftwareVersionsRelease_' | i18n }}
+				</span>
+			</div>
 		</div>
 	</div>
 </ng-template>
