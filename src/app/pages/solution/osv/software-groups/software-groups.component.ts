@@ -12,13 +12,14 @@ import {
 } from '@angular/core';
 
 import { LogService } from '@cisco-ngx/cui-services';
-import { CuiTableOptions } from '@cisco-ngx/cui-components';
+import { CuiTableOptions, CuiModalService } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { Subject, of } from 'rxjs';
 import { map, takeUntil, catchError } from 'rxjs/operators';
 import { SoftwareGroupsResponse, OSVService, OsvPagination, SoftwareGroup } from '@sdp-api';
 import { ActivatedRoute } from '@angular/router';
 import * as _ from 'lodash-es';
+import { ContactSupportComponent } from '@components';
 
 /**
  * SoftwareGroups Component
@@ -37,6 +38,8 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 	@Input() public tabIndex;
 	@Output() public tabIndexChange = new EventEmitter<number>();
 	@Input() public softwareGroupsCount;
+	@Input() public solution;
+	@Input() public useCase;
 	@ViewChild('recommendationsTemplate', { static: true })
 	private recommendationsTemplate: TemplateRef<{ }>;
 	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
@@ -61,6 +64,7 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 		public logger: LogService,
 		public osvService: OSVService,
 		public route: ActivatedRoute,
+		public cuiModalService: CuiModalService,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
@@ -72,6 +76,8 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 			sort: 'profileName',
 			sortOrder: 'asc',
 			filter: '',
+			solution: '',
+			useCase: '',
 		};
 	}
 
@@ -83,6 +89,8 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 			if (this.filters) {
 				this.setFilter(this.filters);
 			}
+			this.softwareGroupsParams.solution = this.solution;
+			this.softwareGroupsParams.useCase = this.useCase;
 			this.loadData();
 		}
 	}
@@ -102,8 +110,18 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 			}
 		}
 		const currentFilter = _.get(changes, ['filters', 'currentValue']);
+		const solution = _.get(changes, ['solution', 'currentValue']);
+		const useCase = _.get(changes, ['useCase', 'currentValue']);
 		if (currentFilter && !changes.filters.firstChange && this.softwareGroupsCount > 0) {
 			this.setFilter(currentFilter);
+			this.loadData();
+		}
+		if (solution && !_.get(changes, ['solution', 'firstChange'])) {
+			this.softwareGroupsParams.solution = solution;
+			this.loadData();
+		}
+		if (useCase && !_.get(changes, ['useCase', 'firstChange'])) {
+			this.softwareGroupsParams.useCase = useCase;
 			this.loadData();
 		}
 	}
@@ -212,7 +230,7 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 						key: 'optimalVersion',
 						name: I18n.get('_OsvAcceptedRelease_'),
 						render: item =>
-								item.optimalVersion ? item.optimalVersion : '',
+							item.optimalVersion ? item.optimalVersion : '',
 						sortable: false,
 						width: '15%',
 					},
@@ -295,7 +313,7 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 			_.get(softwareGroup, 'recommendationStatus') !== 'inprogress' ? {
 				label: I18n.get('_OsvRequestExpertRecommendations_'),
 				onClick: () => {
-					// todo open contact support modal
+					this.openContactSupport(softwareGroup);
 				},
 			} : undefined,
 			_.get(softwareGroup, 'recommendation') === 'expert' ? {
@@ -388,5 +406,22 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 		this.softwareGroupsParams.search = query;
 		this.softwareGroupsParams.pageIndex = 1;
 		this.loadData();
+	}
+
+	/**
+	 * Open contact support modal
+	 * @param selectedSoftwareGroup softwareGroup for which the request has to be made
+	 */
+	public openContactSupport (selectedSoftwareGroup: SoftwareGroup) {
+		const options = {
+			contactExpert: true,
+			productFamily: selectedSoftwareGroup.productFamily,
+			osType: selectedSoftwareGroup.swType,
+			requestTypes: I18n.get('_OsvContactExpertRequestTypes_'),
+		};
+		const result = this.cuiModalService.showComponent(ContactSupportComponent, options);
+		if (result) {
+			// refresh this view.
+		}
 	}
 }

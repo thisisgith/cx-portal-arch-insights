@@ -5,14 +5,12 @@ import { LogService } from '@cisco-ngx/cui-services';
 import * as _ from 'lodash-es';
 import { takeUntil, map, catchError } from 'rxjs/operators';
 import {
-	OSVService, SummaryResponse, OSVAsset,
+	OSVService, SummaryResponse, OSVAsset, RacetrackSolution, RacetrackTechnology,
 } from '@sdp-api';
 import { ActivatedRoute } from '@angular/router';
 import { VisualFilter } from '@interfaces';
 import { CuiModalService } from '@cisco-ngx/cui-components';
-import {
-	ContactSupportComponent,
-} from 'src/app/components/contact-support/contact-support.component';
+import { RacetrackInfoService } from '@services';
 
 /**
  * Interface representing our visual filters
@@ -72,15 +70,23 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 		{ key: 'automated', label: I18n.get('_OsvAutomatedRecommended_') },
 		{ key: 'none', label: I18n.get('_OsvNone_') },
 	];
+	public selectedSolutionName;
+	public selectedTechnologyName;
+	public summaryParams: OSVService.GetSummaryParams = {
+		customerId: '',
+		solution: '',
+		useCase: '',
+	};
 
 	constructor (
 		private logger: LogService,
 		private osvService: OSVService,
 		private route: ActivatedRoute,
 		private cuiModalService: CuiModalService,
+		private racetrackInfoService: RacetrackInfoService,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
-		this.customerId = _.get(user, ['info', 'customerId']);
+		this.summaryParams.customerId = _.get(user, ['info', 'customerId']);
 		this.cxLevel = _.get(user, ['service', 'cxLevel'], 0);
 	}
 
@@ -103,7 +109,26 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 			this.doNotShowAgain = true;
 		}
 		this.buildFilters();
-		this.loadData();
+		this.racetrackInfoService.getCurrentSolution()
+		.pipe(
+			takeUntil(this.destroy$),
+		)
+		.subscribe((solution: RacetrackSolution) => {
+			this.summaryParams.solution = _.get(solution, 'name');
+			this.refresh();
+		});
+
+		this.racetrackInfoService.getCurrentTechnology()
+		.pipe(
+			takeUntil(this.destroy$),
+		)
+		.subscribe((technology: RacetrackTechnology) => {
+			if (this.summaryParams.useCase !== _.get(technology, 'name')) {
+				this.summaryParams.useCase = _.get(technology, 'name');
+				this.refresh();
+			}
+		});
+		this.refresh();
 	}
 
 	/**
@@ -161,6 +186,15 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 	}
 
 	/**
+	 * refesh data
+	 */
+	public refresh () {
+		if (this.summaryParams.solution.length > 0 && this.summaryParams.useCase.length > 0) {
+			this.loadData();
+		}
+	}
+
+	/**
 	 * Function used to load all of the data
 	 */
 	private loadData () {
@@ -188,7 +222,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 		const recommendationTypeFilter = _.find(this.allFilters, { key: 'recommendationType' });
 		const recommendationStatusFilter = _.find(this.allFilters, { key: 'recommendationStatus' });
 
-		return this.osvService.getSummary({ customerId: this.customerId })
+		return this.osvService.getSummary(this.summaryParams)
 			.pipe(
 				map((response: SummaryResponse) => {
 					totalAssetsFilter.loading = false;
@@ -392,13 +426,6 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 			recommendationType: [],
 			recommendationStatus: [],
 		};
-	}
-
-	/**
-	 * Open contact support modal
-	 */
-	public openContactSupport () {
-		this.cuiModalService.showComponent(ContactSupportComponent, { contactExpert: true });
 	}
 
 	/**

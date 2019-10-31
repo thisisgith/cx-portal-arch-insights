@@ -48,7 +48,7 @@ describe('SoftwareGroupRecommendationsComponent', () => {
 		expect(component.groupRecommendations)
 			.toBeDefined();
 		expect(component.groupRecommendations.length)
-			.toEqual(5);
+			.toEqual(2);
 		expect(component.groupRecommendationsTable)
 			.toBeDefined();
 	});
