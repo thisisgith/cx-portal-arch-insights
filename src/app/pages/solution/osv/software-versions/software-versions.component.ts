@@ -107,7 +107,7 @@ export class SoftwareVersionsComponent implements OnInit, OnDestroy, OnChanges {
 	/**
 	 * Function used to load all of the data
 	 */
-	private loadData () {
+	public loadData () {
 		this.status.isLoading = true;
 		forkJoin(
 			this.getSoftwareVersions(),
