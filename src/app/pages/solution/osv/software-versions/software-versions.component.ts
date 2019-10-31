@@ -7,6 +7,8 @@ import {
 	EventEmitter,
 	Input,
 	Output,
+	SimpleChanges,
+	OnChanges,
 } from '@angular/core';
 import { LogService } from '@cisco-ngx/cui-services';
 
@@ -31,9 +33,11 @@ import { ActivatedRoute } from '@angular/router';
 	styleUrls: ['./software-versions.component.scss'],
 	templateUrl: './software-versions.component.html',
 })
-export class SoftwareVersionsComponent implements OnInit, OnDestroy {
+export class SoftwareVersionsComponent implements OnInit, OnDestroy, OnChanges {
 	@Input() public cxLevel;
 	@Input() public versionsCount;
+	@Input() public solution;
+	@Input() public useCase;
 	@ViewChild('releaseDate', { static: true }) private releaseDateTemplate: TemplateRef<{ }>;
 	@Output() public contactSupport = new EventEmitter();
 	public softwareVersionsTable: CuiTableOptions;
@@ -65,6 +69,8 @@ export class SoftwareVersionsComponent implements OnInit, OnDestroy {
 			search: '',
 			sort: 'swType',
 			sortOrder: 'asc',
+			solution: '',
+			useCase: '',
 		};
 	}
 
@@ -75,6 +81,25 @@ export class SoftwareVersionsComponent implements OnInit, OnDestroy {
 	 */
 	public ngOnInit () {
 		if (this.versionsCount > 0) {
+			this.softwareVersionsParams.solution = this.solution;
+			this.softwareVersionsParams.useCase = this.useCase;
+			this.loadData();
+		}
+	}
+
+	/**
+	 * lifecycle hook
+	 * @param changes: changes
+	 */
+	public ngOnChanges (changes: SimpleChanges) {
+		const solution = _.get(changes, ['solution', 'currentValue']);
+		const useCase = _.get(changes, ['useCase', 'currentValue']);
+		if (solution && !_.get(changes, ['solution', 'firstChange'])) {
+			this.softwareVersionsParams.solution = solution;
+			this.loadData();
+		}
+		if (useCase && !_.get(changes, ['useCase', 'firstChange'])) {
+			this.softwareVersionsParams.useCase = useCase;
 			this.loadData();
 		}
 	}
@@ -82,7 +107,7 @@ export class SoftwareVersionsComponent implements OnInit, OnDestroy {
 	/**
 	 * Function used to load all of the data
 	 */
-	private loadData () {
+	public loadData () {
 		this.status.isLoading = true;
 		forkJoin(
 			this.getSoftwareVersions(),

@@ -281,7 +281,7 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 			columns: [
 				{
 					key: 'ruleHighSeverity',
-					name: I18n.get('_RccAssetSeverity_'),
+					name: I18n.get('_RccHighestSeverity_'),
 					sortable: true,
 					template: this.assetSliderIconTemplate,
 					width: '20%',
@@ -301,7 +301,7 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 				},
 				{
 					key: 'violationCount',
-					name: I18n.get('_RccAssetViolationCount_'),
+					name: I18n.get('_RccRuleViolations_'),
 					sortable: false,
 					width: '3%',
 				},
