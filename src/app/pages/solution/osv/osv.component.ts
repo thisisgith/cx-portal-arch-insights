@@ -10,9 +10,6 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { VisualFilter } from '@interfaces';
 import { CuiModalService } from '@cisco-ngx/cui-components';
-import {
-	ContactSupportComponent,
-} from 'src/app/components/contact-support/contact-support.component';
 import { RacetrackInfoService } from '@services';
 
 /**
@@ -429,13 +426,6 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 			recommendationType: [],
 			recommendationStatus: [],
 		};
-	}
-
-	/**
-	 * Open contact support modal
-	 */
-	public openContactSupport () {
-		this.cuiModalService.showComponent(ContactSupportComponent, { contactExpert: true });
 	}
 
 	/**

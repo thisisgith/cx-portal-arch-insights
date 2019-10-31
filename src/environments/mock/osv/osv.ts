@@ -77,6 +77,51 @@ const mockBasicRecommendations: AssetRecommendationsResponse = [
 	},
 ];
 
+/** mock response of bug detail */
+const mockBugDetails = {
+	id: 'CSCvq69471',
+	severity: 'High',
+	source: 'SLM',
+	status: 'Fixed',
+	title: 'Sint nisi excepteur sunt enim cillum veniam enim.',
+	description: `$$PREFCS\n\nOSV F8885 requirements\n\n<B>Symptom:</B>\nAll headers in OSV
+	screen tables should be  click sort-able\n\nAsset list view - these need to be sortable
+	too\nIP Address\nSoftware Group\nOS Type\nCurrent OS\nDeployment Status\nRecommendations
+	 not sortable.\n\nSoftware group list view - these need to be sortable\nAs
+	above plus\n# Asset\n\nSoftware Version View\n+ Version\n+ # assets not
+	in software group\n+ # assets in software group\n\n<B>Conditions:</B>
+	Click header to see it does not sort A-Z, then Z-A order.\n\n
+	<B>Workaround:</B>\nNone\n\n<B>Further Problem Description:</B>\n\n\n`,
+};
+
+/** mock response of psirt detail */
+const mockPsirtDetail = {
+	id: 'CSCvr08842',
+	severity: 'High',
+	source: 'SLM',
+	status: 'Fixed',
+	title: 'Sint nisi excepteur sunt enim cillum veniam enim.',
+	description: `A vulnerability in the Cisco Discovery Protocol (CDP) module of\r\nCisco IOS
+	XE Software Releases 16.6.1 and 16.6.2 could allow an unauthenticated, adjacent\r\nattacker
+	to cause a memory leak that may lead to a denial of service\r\n(DoS) condition.<br />\r\n<br/>
+	\r\nThe vulnerability is due to incorrect processing\r\nof certain CDP packets. An attacker
+	could exploit this vulnerability by\r\nsending certain CDP packets to an affected device.'
+	A successful exploit\r\ncould cause an affected device to continuously consume memory
+	and\r\neventually result in a memory allocation failure that leads to a crash,
+	\r\ntriggering a reload of the affected device.\r\n<p>Cisco has released software
+	updates that address this vulnerability. There are no workarounds that address this
+	vulnerability.</p>\r\n<p>This advisory is available at the following link:<br />\r\n
+	<a href=\"https://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/
+	cisco-sa-20180926-cdp-memleak\">https://tools.cisco.com/security/center/content/
+	CiscoSecurityAdvisory/cisco-sa-20180926-cdp-memleak</a></p>\r\nThis advisory is
+	part of the September 26, 2018, release of the Cisco IOS and IOS XE Software
+	Security Advisory Bundled Publication, which includes 12 Cisco Security Advisories
+	that describe 13 vulnerabilities. For a complete list of the advisories and links
+	to them, see <a href=\"http://tools.cisco.com/security/center/viewErp.x?alertId
+	=ERP-69981\">Cisco Event Response: September 2018 Semiannual Cisco IOS and IOS
+	XE Software Security Advisory Bundled Publication</a>`,
+};
+
 /** The mock response for machine recommendations */
 const mockMachineRecommendations: MachineRecommendationsResponse = [
 	{
@@ -360,21 +405,21 @@ const mockMachineRecommendations: MachineRecommendationsResponse = [
 				id: 'CSCvr05056',
 				severity: 'High',
 				source: 'SLM',
-				status: 'Fixed',
+				status: 'RESOLVED',
 				title: 'Laboris laboris cupidatat eiusmod Lorem esse velit',
 			},
 			{
 				id: 'CSCvq77657',
 				severity: 'Medium',
 				source: 'SLM',
-				status: 'Fixed',
+				status: 'OPEN',
 				title: 'Anim laboris aute fugiat enim dolor nulla ipsum ex amet labore.',
 			},
 			{
 				id: 'CSCvr08842',
 				severity: 'Low',
 				source: 'SLM',
-				status: 'Fixed',
+				status: 'NEW_OPEN',
 			},
 			{
 				id: 'CSCvq85913',
@@ -1404,6 +1449,40 @@ export const OSVScenarios = [
 			],
 		},
 		url: `${api}machineRecommendations?customerId=${customerId}&profileName=${assetId}`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 200,
+					description: 'Bug Details',
+					response: {
+						body: mockBugDetails,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}bugDetail?bugId=CSCvr05056`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 200,
+					description: 'Psirt Details',
+					response: {
+						body: mockPsirtDetail,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}psirtDetail?psirtId=CSCvr08842`,
 		usecases: ['Use Case 1'],
 	},
 ];

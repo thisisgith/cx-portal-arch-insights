@@ -1,10 +1,41 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { TagListComponent } from './tag-list.component';
+import { RouterTestingModule } from '@angular/router/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { environment } from '@environment';
+import { ActivatedRoute } from '@angular/router';
+import { user } from '@mock';
+import { AssetTaggingService } from '@sdp-api';
+import { TagListModule } from './tag-list.module';
+import { of } from 'rxjs';
+import { configureTestSuite } from 'ng-bullet';
 
 describe('TagListComponent', () => {
 	let component: TagListComponent;
 	let fixture: ComponentFixture<TagListComponent>;
+
+	configureTestSuite(() => {
+		TestBed.configureTestingModule({
+			imports: [
+				TagListModule,
+				HttpClientTestingModule,
+				RouterTestingModule,
+			], providers: [
+				{ provide: 'ENVIRONMENT', useValue: environment },
+				{
+					provide: ActivatedRoute,
+					useValue: {
+						queryParams: of({ }),
+						snapshot: {
+							data: {
+								user,
+							},
+						},
+					},
+				}, AssetTaggingService,
+			],
+		});
+	});
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -26,6 +57,7 @@ describe('TagListComponent', () => {
 
 	it('should run refresh', () => {
 		spyOn(component, 'refresh');
+		component.ngAfterViewInit();
 		expect(component.refresh)
 		.toHaveBeenCalled();
 	});
@@ -33,7 +65,7 @@ describe('TagListComponent', () => {
 	it('should handle list with no items', () => {
 		component.items = [];
 		component.refresh();
-		component.doCheck();
+		component.ngDoCheck();
 
 		expect(component.itemsInView.length)
 				.toBe(0);
@@ -49,9 +81,14 @@ describe('TagListComponent', () => {
 		};
 		component.isDisabled = false;
 		component.toggleTagSelected(tag);
-
 		expect(tag.selected)
 				.toBeFalsy();
+
+		tag.selected = true;
+		component.isDisabled = true;
+		component.toggleTagSelected(tag);
+		expect(tag.selected)
+				.toBeTruthy();
 	});
 
 });
