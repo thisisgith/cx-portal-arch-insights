@@ -127,7 +127,7 @@ export class AssetTaggingComponent implements OnChanges, OnDestroy {
 	 * @param obj dict object
 	 * @returns copied object
 	 */
-	private jsonCopy (obj) {
+	public jsonCopy (obj) {
 		return JSON.parse(JSON.stringify(obj));
 	}
 
