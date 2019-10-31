@@ -180,7 +180,7 @@ export class LifecycleComponent implements OnDestroy {
 	public selectedFilterForSB = '';
 	public selectedFilterForATX = '';
 	public selectedFilterForACC = '';
-	public selectedPartnerFilterForATX: CompanyInfo[];
+	public selectedPartnerFilterForATX: string[];
 	public atxStatusFilter: StatusValues[];
 	public groupTrainingsAvailable = 0;
 	public selectedSuccessPaths: SuccessPath[];

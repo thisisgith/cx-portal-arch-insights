@@ -857,7 +857,7 @@
 							<ng-container class="modal__body__filter">
 								<multiselect [name]="'_Status_' | i18n"
 										[items]="atxStatusOptions"
-										[(ngModel)]="accStatusFilter"
+										[defaultValues]="atxStatusFilter"
 										(changed)="statusMultiFilter($event, 'ATX')">
 								</multiselect>
 							</ng-container>
@@ -868,7 +868,7 @@
 										[items]="componentData.partner"
 										nameKey="companyName"
 										valueKey="companyId"
-										[(ngModel)]="selectedPartnerFilterForATX"
+										[defaultValues]="selectedPartnerFilterForATX"
 										(changed)="partnerMultiFilter($event, 'ATX')">
 								</multiselect>
 							</ng-container>
