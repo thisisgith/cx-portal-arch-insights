@@ -32,7 +32,12 @@ const allCrashDetails: CrashCount = {
 
 const highCrashCount: HighCrashRiskDeviceCount = {
 	customerId: "15750",
-	crashRiskDeviceCount:15,
+	crashRiskDeviceCount:{
+		"high": 25,
+		"med": 50,
+		"low": 75,
+		"notEvaluated": 65
+		},
 	crashPredicted:true
 };
 
@@ -211,7 +216,7 @@ export const RiskScenarios = [
 				},
 			],
 		},
-		url: `${api}/crash-risk-devices/2431199?${customerId}&page=0&size=10`,
+		url: `${api}/crash-risk-devices/2431199?customerId=2431199&page=0&size=10&globalRiskRank=HIGH`,
 		usecases: ['Use Case 5'],
 	},
 	{
