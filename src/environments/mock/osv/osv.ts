@@ -9,6 +9,7 @@ import {
 	SoftwareGroupVersionsResponse,
 	MachineRecommendationsResponse,
 	ProfileRecommendationsResponse,
+	ExpertRecommendations,
 } from '@sdp-api';
 
 /** Base of URL for SDP API */
@@ -468,6 +469,39 @@ const mockMachineRecommendations: MachineRecommendationsResponse = [
 	},
 ];
 
+/** The mock response for DE recommendations */
+const mockExpertRecommendations: ExpertRecommendations[] = [
+	{
+		requestDate: '2008-01-10T18:30:00.000+0000',
+		status: 'completed',
+		releaseDate: '2008-01-10T18:30:00.000+0000',
+		release: '16.9.2',
+		downloadLink: '',
+		summary: 'Reprehenderit cupidatat ut excepteur velit cillum. Sint fugiat anim dolor ipsum' +
+			'sint nisi occaecat et cupidatat ullamco enim. Culpa sit voluptate est dolor' +
+			'cupidatat nostrud cillum elit. Sit velit veniam mollit exercitation duis ea' +
+			'culpa cillum aliquip. Reprehenderit proident dolore voluptate exercitation ' +
+			'ad est occaecat occaecat. Esse incididunt consectetur culpa eiusmod amet ' +
+			'consequat ut. Est non mollit anim veniam commodo laboris incididunt.' +
+			'Et cillum ad cillum sunt adipisicing ex occaecat laboris mollit minim elit.' +
+			'Occaecat eiusmod esse anim magna in enim Lorem cillum sint exercitation eu ' +
+			'Exercitation exercitation eiusmod mollit veniam duis nostrud voluptate. ' +
+			'Quis nostrud duis incididunt proident incididunt irure. Tempor velit nulla' +
+			'voluptate commodo aute consectetur veniam ipsum ea. Mollit pariatur consequat' +
+			'nostrud pariatur eiusmod reprehenderit ut duis voluptate sit ut laborum.' +
+			'Deserunt dolor deserunt ipsum consequat ipsum labore laborum sunt. Pariatur' +
+			'culpa occaecat tempor nisi anim dolore incididunt voluptate aute fugiat.',
+	},
+	{
+		requestDate: '2008-01-10T18:30:00.000+0000',
+		status: 'inprogress',
+		releaseDate: '2008-01-10T18:30:00.000+0000',
+		release: '16.9.2',
+		downloadLink: '',
+		summary: 'Dolore ipsum elit pariatur in aliqua sunt culpa.',
+	},
+];
+
 /** The mock response for basic recommendations */
 const mockSoftwareGroupRecommendations: ProfileRecommendationsResponse = {
 	recommendations: [
@@ -496,26 +530,9 @@ const mockSoftwareGroupRecommendations: ProfileRecommendationsResponse = {
 			postDate: '2019-04-16T00:00:00.000+0000',
 			swVersion: 'NA',
 		},
-		{
-			error: null,
-			name: 'Recommendation #3',
-			postDate: '2019-04-16T00:00:00.000+0000',
-			swVersion: '7.3(2)N1(1a)',
-		},
-		{
-			error: null,
-			name: 'Recommendation #2',
-			postDate: '2019-04-16T00:00:00.000+0000',
-			swVersion: '7.3(2)N1(1b)',
-		},
-		{
-			error: null,
-			name: 'Recommendation #1',
-			postDate: '2019-04-16T00:00:00.000+0000',
-			swVersion: '7.3(2)N1(1c)',
-		},
 	],
 	recommendationSummaries: mockMachineRecommendations,
+	expertRecommendations: mockExpertRecommendations,
 };
 
 /** The mock response for software versions */
@@ -1205,7 +1222,7 @@ export const OSVScenarios = [
 				},
 			],
 		},
-		url: `${api}summary?customerId=${customerId}`,
+		url: `${api}summary?customerId=${customerId}&solution=IBN&useCase=Campus Network Assurance`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -1223,7 +1240,8 @@ export const OSVScenarios = [
 			],
 		},
 		url: `${api}profiles?customerId=${customerId}${sgParams}` +
-			'&filter=recommendationType:expert,automated&search=',
+			'&filter=recommendationType:expert,automated&search=' +
+			'&solution=IBN&useCase=Campus Network Assurance',
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -1240,7 +1258,8 @@ export const OSVScenarios = [
 				},
 			],
 		},
-		url: `${api}versions?customerId=${customerId}${svParams}&search=`,
+		url: `${api}versions?customerId=${customerId}${svParams}` +
+			'&search=&solution=IBN&useCase=Campus Network Assurance',
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -1275,7 +1294,8 @@ export const OSVScenarios = [
 				},
 			],
 		},
-		url: `${api}assets?customerId=${customerId}${assetParams}&search=`,
+		url: `${api}assets?customerId=${customerId}${assetParams}` +
+			'&search=&solution=IBN&useCase=Campus Network Assurance',
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -1292,7 +1312,8 @@ export const OSVScenarios = [
 				},
 			],
 		},
-		url: `${api}assets?customerId=${customerId}${assetParams}`,
+		url: `${api}assets?customerId=${customerId}${assetParams}` +
+			'&search=&solution=IBN&useCase=Campus Network Assurance',
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -1309,7 +1330,8 @@ export const OSVScenarios = [
 				},
 			],
 		},
-		url: `${api}versions?customerId=${customerId}${svParams}`,
+		url: `${api}versions?customerId=${customerId}${svParams}` +
+			'&solution=IBN&useCase=Campus Network Assurance',
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -1327,7 +1349,8 @@ export const OSVScenarios = [
 			],
 		},
 		url: `${api}profileAssets?customerId=2431199&id=7293498_NA` +
-			`&profileName=7293498_NA${sgAssetsParams}`,
+			`&profileName=7293498_NA${sgAssetsParams}` +
+			'&solution=IBN&useCase=Campus Network Assurance',
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -1345,7 +1368,8 @@ export const OSVScenarios = [
 			],
 		},
 		url: `${api}profileVersions?customerId=2431199&id=7293498_NA` +
-			`&profileName=7293498_NA${sgVerParams}`,
+			`&profileName=7293498_NA${sgVerParams}` +
+			'&solution=IBN&useCase=Campus Network Assurance',
 		usecases: ['Use Case 1'],
 	},
 	{

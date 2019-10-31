@@ -147,7 +147,8 @@ export class AssetTaggingComponent implements OnChanges, OnDestroy {
 		}
 
 		this.allTagsSelectedLeft = false;
-
+		this.tagListLeft = this.jsonCopy(this.tagListLeft);
+		this.tagListRight = this.jsonCopy(this.tagListRight);
 		this.handleLeftTagSelectionChanged();
 	}
 
@@ -165,6 +166,8 @@ export class AssetTaggingComponent implements OnChanges, OnDestroy {
 				this.tagListRight.splice(devNum, 1);
 			}
 		}
+		this.tagListLeft = this.jsonCopy(this.tagListLeft);
+		this.tagListRight = this.jsonCopy(this.tagListRight);
 		this.allTagsSelectedRight = false;
 		this.handleRightTagSelectionChanged();
 	}

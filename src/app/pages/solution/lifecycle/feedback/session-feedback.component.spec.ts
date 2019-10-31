@@ -101,7 +101,7 @@ describe('SessionFeedbackComponent', () => {
 		fixture.detectChanges();
 
 		const submitBtn = fixture.debugElement.query(
-			By.css('[data-auto-id="feedback-popup-submit-comment"]'),
+			By.css('[data-auto-id="FeedbackPopup-Submit"]'),
 		);
 
 		const updateFeedbackSpy = spyOn(contentService, 'updateFeedback')

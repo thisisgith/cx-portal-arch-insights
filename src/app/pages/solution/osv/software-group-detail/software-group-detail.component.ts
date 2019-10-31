@@ -25,6 +25,7 @@ import {
 	MachineRecommendationsResponse,
 	MachineRecommendations,
 	ProfileRecommendationsResponse,
+	ExpertRecommendations,
 } from '@sdp-api';
 import { forkJoin, Subject, of } from 'rxjs';
 import { takeUntil, map, catchError } from 'rxjs/operators';
@@ -49,8 +50,12 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 		private versionTemplate: TemplateRef<{ }>;
 	@ViewChild('hostTemplate', { static: true })
 		private hostTemplate: TemplateRef<{ }>;
+	@ViewChild('expertActionTemplate', { static: true })
+		private expertActionTemplate: TemplateRef<{ }>;
 	@Input() public tabIndex;
 	@Output('close') public close = new EventEmitter<boolean>();
+	@Input() public solution;
+	@Input() public useCase;
 
 	public status = {
 		profileRecommendations: true,
@@ -67,6 +72,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 
 	public softwareGroupVersionsTable: CuiTableOptions;
 	public softwareGroupAssetsTable: CuiTableOptions;
+	public expertRecommendationsTable: CuiTableOptions;
 
 	public softwareGroupDetailsParams: OSVService.GetSoftwareGroupDetailsParam;
 	public softwareGroupAssetsParams: OSVService.GetSoftwareGroupAssetsParams;
@@ -90,6 +96,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	public screenWidth = window.innerWidth;
 
 	public recommendationAcceptedDate: string;
+	public expertRecommendations: ExpertRecommendations[];
 	public actionData: any;
 	public showDetails = false;
 	public detailsParams: any;
@@ -115,6 +122,8 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 			pageSize: 10,
 			sort: 'hostName',
 			sortOrder: 'asc',
+			solution: '',
+			useCase: '',
 		};
 		this.softwareGroupVersionsParams = {
 			customerId: this.customerId,
@@ -124,6 +133,8 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 			pageSize: 10,
 			sort: 'swType',
 			sortOrder: 'asc',
+			solution: '',
+			useCase: '',
 		};
 	}
 
@@ -144,10 +155,16 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 			const profileName = _.get(this.selectedSoftwareGroup, 'profileName');
 			const profileId = _.get(this.selectedSoftwareGroup, 'id');
 			this.softwareGroupDetailsParams.profileName = profileName;
+
 			this.softwareGroupAssetsParams.id = profileId;
 			this.softwareGroupAssetsParams.profileName = profileName;
+			this.softwareGroupAssetsParams.solution = this.solution;
+			this.softwareGroupAssetsParams.useCase = this.useCase;
+
 			this.softwareGroupVersionsParams.id = profileId;
 			this.softwareGroupVersionsParams.profileName = profileName;
+			this.softwareGroupVersionsParams.solution = this.solution;
+			this.softwareGroupVersionsParams.useCase = this.useCase;
 			this.loadData();
 		}
 	}
@@ -215,6 +232,8 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 					this.recommendations = this.addCurrentRecommendation(response);
 					this.machineRecommendations = response.recommendationSummaries;
 					this.recommendationAcceptedDate = response.recommAcceptedDate;
+					this.expertRecommendations = response.expertRecommendations;
+					this.buildExpertRecommendationsTable();
 				}),
 				takeUntil(this.destroy$),
 				catchError(err => {
@@ -333,6 +352,16 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 			this.tabIndex = _.isUndefined(this.tabIndex) ? 0 : this.tabIndex;
 		}
 		if (currentSelectedGroup && !isFirstChange) {
+			this.refresh();
+		}
+
+		const solution = _.get(changes, ['solution', 'currentValue']);
+		const useCase = _.get(changes, ['useCase', 'currentValue']);
+
+		if (solution && !_.get(changes, ['solution', 'firstChange'])) {
+			this.refresh();
+		}
+		if (useCase && !_.get(changes, ['useCase', 'firstChange'])) {
 			this.refresh();
 		}
 	}
@@ -625,4 +654,62 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	public hideDetailsView () {
 		this.showDetails = false;
 	}
+
+	/**
+	 * build software group assets table
+	 */
+	public buildExpertRecommendationsTable () {
+		if (!this.expertRecommendationsTable) {
+			const datePipe = new DatePipe('en-US');
+			this.expertRecommendationsTable = new CuiTableOptions({
+				bordered: true,
+				columns: [
+					{
+						key: 'requestDate',
+						name: I18n.get('_OsvRequestDate_'),
+						render: item =>
+							datePipe.transform(item.requestDate, 'yyyy MMM dd'),
+						sortable: false,
+						width: '15%',
+					},
+					{
+						key: 'status',
+						name: I18n.get('_Status_'),
+						sortable: false,
+						render: item =>
+								item.status ? _.capitalize(item.status) : '',
+						width: '15%',
+					},
+					{
+						key: 'release',
+						name: I18n.get('_OsvRelease_'),
+						sortable: false,
+						width: '15%',
+					},
+					{
+						name: I18n.get('_OsvReleaseDate_'),
+						render: item =>
+							datePipe.transform(item.releaseDate, 'yyyy MMM dd'),
+						sortable: false,
+						width: '15%',
+					},
+					{
+						name: '',
+						template: this.expertActionTemplate,
+						sortable: false,
+						width: '40%',
+					},
+				],
+				dynamicData: true,
+				hover: true,
+				padding: 'compressed',
+				selectable: false,
+				singleSelect: false,
+				sortable: true,
+				striped: true,
+				wrapText: true,
+			});
+		}
+	}
+
 }

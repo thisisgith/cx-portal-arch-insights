@@ -17,28 +17,28 @@
 	<div *ngIf="feedback"></div>
 </ng-container>
 <ng-container *ngIf="showPopup">
-	<div class="feedback-popup" [ngStyle]="popupStyle">
+	<div class="feedback-popup" [ngStyle]="popupStyle" data-auto-id="FeedbackPopup">
 		<div class="popup-tail" [ngClass]="popupTailClass"></div>
 		<span class="feedback-popup__close icon-close toggle"
-			data-auto-id="feedback-popup-close-icon"
+			data-auto-id="FeedbackPopup-Close-Icon"
 			(click)="closePopup()"
 		></span>
 		<ng-container *ngIf="!feedbackComplete">
 			<!-- todo: internationalize -->
-			<div class="feedback-popup__title" [innerText]="'_FeedbackThanks_' | i18n">
+			<div class="feedback-popup__title" [innerText]="'_FeedbackThanks_' | i18n" data-auto-id="FeedbackPopup-Title">
 			</div>
-			<div class="feedback-popup__description" [innerText]="'_FeedbackMore_' | i18n">
+			<div class="feedback-popup__description" [innerText]="'_FeedbackMore_' | i18n" data-auto-id="FeedbackPopup-Description">
 			</div>
-			<div class="feedback-popup__comments half-margin-bottom">
+			<div class="feedback-popup__comments half-margin-bottom" data-auto-id="FeedbackPopup-Comments">
 				<textarea
 					[attr.maxlength]="300"
 					[placeholder]="'_Comments_' | i18n"
 					[(ngModel)]="comments"
 					id="input-textarea-feedback-popup"
 					class="textarea"
-					data-auto-id="sessionFeedback-comments-input"
+					data-auto-id="FeedbackPopup-Comments-Input"
 					rows="4"></textarea>
-				<div class="text-right text-italic" [class.hidden]="!comments">
+				<div class="text-right text-italic" [class.hidden]="!comments" data-auto-id="FeedbackPopup-Comments-CharCount">
 					{{comments ? comments.length : ''}} <span class="text-muted">/ {{ commentMaxLength }}</span>
 				</div>
 			</div>
@@ -49,13 +49,13 @@
 		</ng-container>
 
 		<div class="feedback-popup__footer">
-			<button data-auto-id="feedback-popup-close-button"
+			<button data-auto-id="FeedbackPopup-Close"
 				*ngIf="feedbackComplete"
 				(click)="closePopup(target)"
 				class="cx-btn text-uppercase"
 				[innerText]="'_FeedbackClose_' | i18n">
 			</button>
-			<button data-auto-id="feedback-popup-submit-comment"
+			<button data-auto-id="FeedbackPopup-Submit"
 				*ngIf="!feedbackComplete"
 				(click)="submitFeedbackComment(target)"
 				class="cx-btn text-uppercase"

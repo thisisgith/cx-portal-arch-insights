@@ -224,7 +224,7 @@ describe('RiskMitigationComponent', () => {
 			{
 				filter: 'Time: Last 24h',
 				label: '24h',
-				selected: true,
+				selected: false,
 				value: 0,
 			},
 			{

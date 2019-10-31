@@ -32,3 +32,4 @@ export { MultiGaugeModule } from './charts/multi-gauge/multi-gauge.module';
 export { VisualFilterBarModule } from './visual-filter-bar/visual-filter-bar.module';
 export { VisualFilterBarComponent } from './visual-filter-bar/visual-filter-bar.component';
 export { AssetTaggingComponent, AssetTaggingModule } from './asset-tagging';
+export { MultiselectModule }  from './multiselect/multiselect.module';
