@@ -11,11 +11,12 @@ import {
 	CuiSidebarModule,
 	CuiSpinnerModule,
 	CuiModalModule,
+	CuiAlertModule,
 
 } from '@cisco-ngx/cui-components';
 
 import { environment } from '@environment';
-import { AssetTaggingModule } from '@components';
+import { AssetTaggingModule, TooltipModule } from '@components';
 
 /**
  * SDP Root url for the apis
@@ -37,6 +38,8 @@ const imports = [
 	RouterModule,
 	AssetTaggingModule,
 	CuiModalModule,
+	CuiAlertModule,
+	TooltipModule,
 	UserModule.forRoot({ rootUrl }),
 ];
 

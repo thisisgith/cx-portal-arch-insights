@@ -24,6 +24,8 @@
 					</label>
 				</div>
 
+				<cui-alert [options]="alert"></cui-alert>
+
 				<div [hidden]= "!optlnStatus">
 						
 						<div class="row">
@@ -49,7 +51,17 @@
 										</div>
 									<div class="col-md-2">
 										<div class="form-group form-group--inline base-margin-bottom" *ngIf="toBeScanned">
-												<div class="subheader qtr-margin-bottom">Enable Scan</div>
+												<div class="subheader qtr-margin-bottom">Enable Scan
+														<sup>
+																<div
+																	tooltip
+																	[tooltipTemplate]="policyTooltipContentTemplate"
+																	class="icon-info-outline"
+																	[tooltipMaxWidth]="200"
+																></div
+															></sup>
+												</div>
+												
 												<label class="switch">
 													<input type="checkbox" checked (click)="toBeScanned = !toBeScanned">
 													<span class="switch__input"></span>
@@ -57,7 +69,16 @@
 												</label>
 											</div>
 											<div class="form-group form-group--inline base-margin-bottom" *ngIf="!toBeScanned">
-													<div class="subheader qtr-margin-bottom">Enable Scan</div>
+													<div class="subheader qtr-margin-bottom">Enable Scan
+															<sup>
+																	<div
+																		tooltip
+																		[tooltipTemplate]="policyTooltipContentTemplate"
+																		class="icon-info-outline"
+																		[tooltipMaxWidth]="200"
+																	></div
+																></sup>
+													</div>
 													<label class="switch">
 														<input type="checkbox" (click)="toBeScanned = !toBeScanned">
 														<span class="switch__input"></span>
@@ -80,13 +101,18 @@
 <ng-template #confirmationModalTemplate>
 	<a class="modal__close" (click)="cuiModalService.hide()"><span class="icon-close"></span></a>
 	<div class="modal__header">
-		<h4 class="modal__title">Are you Sure?</h4>
+		<h4 class="modal__title">Are you sure you want to opt-out?</h4>
 	</div>														
 	<div class="modal__body">
-		<p class="subtitle">You wanted to discard changes?</p>
+		<p class="subtitle">If you opt-out all the mapping data will be deleted</p>
 	</div>
 	<div class="modal__footer">
-		<button class="btn btn--primary" (click)="discardChanges()">Yes</button>
-		<button class="btn" (click)="saveChanges()">No</button>
+		<button class="btn btn--primary" (click)="discardChanges()">Continue</button>
+		<button class="btn" (click)="saveChanges()">Cancel</button>
 	</div>
 </ng-template>
+
+<ng-template #policyTooltipContentTemplate>
+	<span>Policy level opt in/out will enable/disable policy rule execution on selected tags/devices</span>
+</ng-template>
+

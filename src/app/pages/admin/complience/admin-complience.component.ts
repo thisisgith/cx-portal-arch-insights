@@ -36,6 +36,8 @@ import { CuiModalService } from '@cisco-ngx/cui-components';
 export class AdminComplienceComponent implements OnInit {
 	@ViewChild('confirmationModalTemplate',
 	{ static: true }) private confirmationModalTemplate: TemplateRef<string>;
+	@ViewChild('alertTemplate',
+	{ static: true }) private alertTemplate: TemplateRef<string>;
 
 	private destroyed$: Subject<void> = new Subject<void>();
 	private customerId: string;
@@ -54,6 +56,7 @@ export class AdminComplienceComponent implements OnInit {
 	public rightSideTags = [];
 	public saveDetails;
 	public toBeScanned = false;
+	public alert: any = {};
 
 	private user: User;
 
@@ -199,6 +202,7 @@ export class AdminComplienceComponent implements OnInit {
 	}
 
 	public savePolicyDetails(){
+		this.alert.show('Tags details for the policy '+this.selectedPolicy+' are successfully saved', 'success');
 		this.assetTaggingService.getSelectedTags()
 		.subscribe( res => {
 			this.saveDetails.tags = res;
