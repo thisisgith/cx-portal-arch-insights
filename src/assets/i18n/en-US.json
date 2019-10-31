@@ -632,6 +632,7 @@
 	"_InformationWillBeLost_": "The information you entered will be lost.",
 	"_InfoIconHover_": "Hover for more information",
 	"_InProgress_": "In Progress",
+	"_OsvContactExpertRequestTypes_": ["Software Version Recommendation"],
 	"_OsvExecutiveSummary_":"Executive Summary",
 	"_OsvDownloadReport_": "Download Report",
 	"_OsvAcceptedRelease_": "Accepted Release",

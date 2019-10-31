@@ -10,8 +10,10 @@ import { I18n } from '@cisco-ngx/cui-utils';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import * as _ from 'lodash-es';
 import { LogService } from '@cisco-ngx/cui-services';
-import { MachineRecommendations } from '@sdp-api';
+import { MachineRecommendations, OSVService } from '@sdp-api';
 import { environment } from '@environment';
+import { Subject, of } from 'rxjs';
+import { takeUntil, catchError, map } from 'rxjs/operators';
 /**
  * Interface representing our visual filters
  */
@@ -48,11 +50,17 @@ export class BugsDetailsComponent implements OnInit {
 	public bugIdTemp: TemplateRef<{ }>;
 	@ViewChild('bugTitleTemp', { static: true })
 	public bugTitleTemp: TemplateRef<{ }>;
+	@ViewChild('bugRowWellTemplate', { static: true })
+		public bugRowWellTemplate: TemplateRef<{ }>;
+	@ViewChild('psirtRowWellTemplate', { static: true })
+		public psirtRowWellTemplate: TemplateRef<{ }>;
+	private destroy$ = new Subject();
 
 	public filters: Filter[];
 	public status = {
 		isLoading: true,
 		isFiltering: false,
+		isLoadingDetails: true,
 	};
 	public bugsTable: CuiTableOptions;
 	public psirtsTable: CuiTableOptions;
@@ -71,7 +79,8 @@ export class BugsDetailsComponent implements OnInit {
 	public hasRecommendation2: boolean;
 	public hasRecommendation3: boolean;
 
-	constructor (private logger: LogService) {
+	constructor (private osvService: OSVService,
+		private logger: LogService) {
 		this.logger.debug('bug and psirt details component created');
 	}
 
@@ -128,6 +137,7 @@ export class BugsDetailsComponent implements OnInit {
 					},
 				],
 				dynamicData: false,
+				rowWellTemplate: this.bugRowWellTemplate,
 				hover: true,
 				padding: 'compressed',
 				selectable: false,
@@ -178,6 +188,7 @@ export class BugsDetailsComponent implements OnInit {
 					},
 				],
 				dynamicData: false,
+				rowWellTemplate: this.psirtRowWellTemplate,
 				hover: true,
 				padding: 'compressed',
 				selectable: false,
@@ -614,17 +625,63 @@ export class BugsDetailsComponent implements OnInit {
 
 	/**
 	 * onTableRow click
-	 * @param row  table row
+	 * @param bug  table row
 	 */
-	public onRowSelect (row: any) {
-		window.open(`${row.url}`, '_blank');
+	public onBugRowSelect (bug: any) {
+		if (bug.hasDescription) {
+			bug.toggleWell = false;
+			bug.hasDescription = false;
+			return;
+		}
+		const recommendation = this.getCurrentTabData();
+		const data = recommendation.data.bugs;
+		_.map(data, row => {
+			row.toggleWell = false;
+			row.hasDescription = false;
+		});
+		bug.toggleWell = true;
+		bug.hasDescription = true;
+		if (bug.toggleWell) {
+			this.getBugDetails(bug);
+		}
 	}
 
 	/**
 	 * onTableRow click
+	 * @param psirt  table row
+	 */
+	public onPsirtRowSelect (psirt: any) {
+		if (psirt.hasDescription) {
+			psirt.toggleWell = false;
+			psirt.hasDescription = false;
+			return;
+		}
+		const recommendation = this.getCurrentTabData();
+		const data = recommendation.data.psirts;
+		_.map(data, row => {
+			row.toggleWell = false;
+			row.hasDescription = false;
+		});
+		psirt.toggleWell = true;
+		psirt.hasDescription = true;
+		if (psirt.toggleWell) {
+			this.getPsirtDetails(psirt);
+		}
+	}
+
+	/**
+	 * OnPsirt Details click
 	 * @param row  table row
 	 */
-	public onBugRowSelect (row: any) {
+	public onPsirtDetailClick (row: any) {
+		window.open(`${row.url}`, '_blank');
+	}
+
+	/**
+	 * OnBug Details click
+	 * @param row  table row
+	 */
+	public onBugDetailsClick (row: any) {
 		const url = `${environment.bugSearchTool}${row.id}`;
 		window.open(`${url}`, '_blank');
 	}
@@ -646,5 +703,63 @@ export class BugsDetailsComponent implements OnInit {
 			this.onSubfilterSelect('Exposed', stateFilter);
 			this.onSubfilterSelect('New_Exposed', stateFilter);
 		}
+	}
+
+	/**
+	 * get bug details
+	 * @param bug data row
+	 */
+	public getBugDetails (bug: any) {
+		this.status.isLoadingDetails = true;
+		this.osvService.getBugDetails({ bugId: bug.id })
+		.pipe(
+			takeUntil(this.destroy$),
+			map((response: any) => {
+				let description  = _.get(response, ['description'], '');
+				description = description.replace(/\n/g, '<br>');
+				bug.description = description ;
+			}),
+			catchError(err => {
+				this.logger.error('Bug Details ' +
+						`:: Error : (${err.status}) ${err.message}`);
+				this.status.isLoadingDetails = false;
+				return of({ });
+			}),
+		)
+		.subscribe(() => {
+			this.status.isLoadingDetails = false;
+		});
+	}
+
+	/**
+	 * get psirt details
+	 * @param psirt data row
+	 */
+	public getPsirtDetails (psirt: any) {
+		this.status.isLoadingDetails = true;
+		this.osvService.getPsirtDetails({ psirtId: psirt.psirtId })
+		.pipe(
+			takeUntil(this.destroy$),
+			map((response: any) => {
+				psirt.description = response.description;
+			}),
+			catchError(err => {
+				this.logger.error('Bug Details ' +
+						`:: Error : (${err.status}) ${err.message}`);
+				this.status.isLoadingDetails = false;
+				return of({ });
+			}),
+		)
+		.subscribe(() => {
+			this.status.isLoadingDetails = false;
+		});
+	}
+
+	/**
+	 * OnDestroy lifecycle hook
+	 */
+	public ngOnDestroy () {
+		this.destroy$.next();
+		this.destroy$.complete();
 	}
 }

@@ -13,7 +13,6 @@ import { user, OSVScenarios, RacetrackScenarios } from '@mock';
 import { OSVService } from '@sdp-api';
 import { HttpErrorResponse } from '@angular/common/http';
 import * as _ from 'lodash-es';
-import { CuiModalService } from '@cisco-ngx/cui-components';
 import { RacetrackInfoService } from '@services';
 
 describe('OptimalSoftwareVersionComponent', () => {
@@ -21,7 +20,6 @@ describe('OptimalSoftwareVersionComponent', () => {
 	let fixture: ComponentFixture<OptimalSoftwareVersionComponent>;
 
 	let osvService: OSVService;
-	let cuiModalService: CuiModalService;
 	let racetrackInfoService: RacetrackInfoService;
 	configureTestSuite(() => {
 		TestBed.configureTestingModule({
@@ -49,9 +47,7 @@ describe('OptimalSoftwareVersionComponent', () => {
 	});
 
 	beforeEach(async(() => {
-
 		osvService = TestBed.get(OSVService);
-		cuiModalService = TestBed.get(CuiModalService);
 		racetrackInfoService = TestBed.get(RacetrackInfoService);
 	}));
 
@@ -225,13 +221,6 @@ describe('OptimalSoftwareVersionComponent', () => {
 			.toBeNull();
 		expect(component.selectedSoftwareGroup)
 			.toBeNull();
-	});
-
-	it('should open contact support modal', () => {
-		spyOn(cuiModalService, 'showComponent');
-		component.openContactSupport();
-		expect(cuiModalService.showComponent)
-			.toHaveBeenCalled();
 	});
 
 	it('should set donotshow info in local storage', () => {
