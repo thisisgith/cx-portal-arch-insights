@@ -10,6 +10,8 @@ import {
 	CuiLoaderModule,
 	CuiSidebarModule,
 	CuiSpinnerModule,
+	CuiModalModule,
+
 } from '@cisco-ngx/cui-components';
 
 import { environment } from '@environment';
@@ -34,6 +36,7 @@ const imports = [
 	FromNowPipeModule,
 	RouterModule,
 	AssetTaggingModule,
+	CuiModalModule,
 	UserModule.forRoot({ rootUrl }),
 ];
 
