@@ -16,7 +16,7 @@ import * as _ from 'lodash-es';
 import { CuiModalService } from '@cisco-ngx/cui-components';
 import { RacetrackInfoService } from '@services';
 
-fdescribe('OptimalSoftwareVersionComponent', () => {
+describe('OptimalSoftwareVersionComponent', () => {
 	let component: OptimalSoftwareVersionComponent;
 	let fixture: ComponentFixture<OptimalSoftwareVersionComponent>;
 
