@@ -741,7 +741,7 @@ export class BugsDetailsComponent implements OnInit {
 		.pipe(
 			takeUntil(this.destroy$),
 			map((response: any) => {
-				psirt.description = response.description;
+				psirt.description = _.get(response, 'summary');
 			}),
 			catchError(err => {
 				this.logger.error('Bug Details ' +
