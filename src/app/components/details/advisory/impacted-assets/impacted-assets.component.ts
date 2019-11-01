@@ -69,6 +69,7 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 	@Output('assets') public assets = new EventEmitter<Impacted>();
 	@ViewChild('ipAddressColumn', null) public ipAddressColumn: TemplateRef<{ }>;
 	@ViewChild('deviceColumn', null) public deviceColumn: TemplateRef<{ }>;
+	@ViewChild('productIdColumn', null) public productIdColumn: TemplateRef<{ }>;
 	@ViewChild('versionColumn', null) public softwareVersionColumn: TemplateRef<{ }>;
 	@ViewChild('recommendedVersionColumn', null) public recommendedVersionColumn: TemplateRef<{ }>;
 
@@ -212,21 +213,7 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 		this.params = { };
 		const defaultOptions = {
 			bordered: true,
-			columns: [
-				{
-					key: 'hostName',
-					name: I18n.get('_Device_'),
-					sortable: true,
-					sortDirection: 'asc',
-					sorting: true,
-					width: '300px',
-				},
-				{
-					key: 'ipAddress',
-					name: I18n.get('_IPAddress_'),
-					sortable: true,
-				},
-			],
+			columns: null,
 			padding: 'compressed',
 			striped: false,
 			wrapText: true,
@@ -234,23 +221,53 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 		const affectedOptions = _.cloneDeep(defaultOptions);
 		const potentiallyAffectedOptions = _.cloneDeep(defaultOptions);
 
-		// Setting the template for this column after cloneDeep to circumvent performance
-		// issues with recursively cloning the options object
-		const affectedHostName = _.find(affectedOptions.columns, { key: 'hostName' });
-		const potentiallyAffectedHostName =
-			_.find(potentiallyAffectedOptions.columns, { key: 'hostName' });
-		_.set(affectedHostName, 'template', this.deviceColumn);
-		_.set(potentiallyAffectedHostName, 'template', this.deviceColumn);
-		_.set(_.find(affectedOptions.columns, { key: 'ipAddress' }),
-			'template', this.ipAddressColumn);
-		_.set(_.find(potentiallyAffectedOptions.columns, { key: 'ipAddress' }),
-			'template', this.ipAddressColumn);
-		const affectedColumns = _.get(affectedOptions, 'columns');
-		const potentiallyAffectedColumns = _.get(potentiallyAffectedOptions, 'columns');
-
 		switch (this.type) {
 			case 'security':
-				const securityTableColumns = [
+				const securityAffectedTableColumns = [
+					{
+						key: 'hostName',
+						name: I18n.get('_System_'),
+						sortable: true,
+						sortDirection: 'asc',
+						sorting: true,
+						template: this.deviceColumn,
+						width: '300px',
+					},
+					{
+						key: 'ipAddress',
+						name: I18n.get('_IPAddress_'),
+						sortable: true,
+						template: this.ipAddressColumn,
+					},
+					{
+						key: 'swVersion',
+						name: I18n.get('_Release_'),
+						sortable: true,
+						template: this.softwareVersionColumn,
+					},
+					{
+						key: 'recommendedVersion',
+						name: I18n.get('_RecommendedRelease_'),
+						sortable: false,
+						template: this.recommendedVersionColumn,
+					},
+				];
+				const securityPotentiallyAffectedTableColumns = [
+					{
+						key: 'hostName',
+						name: I18n.get('_SystemName_'),
+						sortable: true,
+						sortDirection: 'asc',
+						sorting: true,
+						template: this.deviceColumn,
+						width: '300px',
+					},
+					{
+						key: 'ipAddress',
+						name: I18n.get('_IPAddress_'),
+						sortable: true,
+						template: this.ipAddressColumn,
+					},
 					{
 						key: 'swVersion',
 						name: I18n.get('_Release_'),
@@ -265,25 +282,66 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 					},
 				];
 				// Concat the default columns with the extra columns
-				_.set(affectedOptions, 'columns',
-					_.concat(affectedColumns, securityTableColumns));
+				_.set(affectedOptions, 'columns', securityAffectedTableColumns);
 				_.set(potentiallyAffectedOptions, 'columns',
-					_.concat(potentiallyAffectedColumns, securityTableColumns));
-
-					// set names for hostName table header
-				_.set(_.find(affectedOptions.columns, { key: 'hostName' }),
-					'name', I18n.get('_System_'));
-				_.set(_.find(potentiallyAffectedOptions.columns, { key: 'hostName' }),
-					'name', I18n.get('_SystemName_'));
+					securityPotentiallyAffectedTableColumns);
 				break;
 			case 'field':
-				_.set(_.find(affectedOptions.columns, { key: 'hostName' }),
-					'name', I18n.get('_ProductID_'));
-				_.set(_.find(potentiallyAffectedOptions.columns, { key: 'hostName' }),
-					'name', I18n.get('_ProductID_'));
+				const fieldAffectedTableColumns = [
+					{
+						key: 'productId',
+						name: I18n.get('_ProductID_'),
+						sortable: true,
+						sortDirection: 'asc',
+						sorting: true,
+						template: this.productIdColumn,
+						width: '300px',
+					},
+					{
+						key: 'ipAddress',
+						name: I18n.get('_SystemName_'),
+						sortable: true,
+						template: this.ipAddressColumn,
+					},
+				];
+				const fieldPotentiallyAffectedTableColumns = [
+					{
+						key: 'productId',
+						name: I18n.get('_ProductID_'),
+						sortable: true,
+						sortDirection: 'asc',
+						sorting: true,
+						template: this.productIdColumn,
+						width: '300px',
+					},
+					{
+						key: 'ipAddress',
+						name: I18n.get('_SystemName_'),
+						sortable: true,
+						template: this.ipAddressColumn,
+					},
+				];
+				_.set(affectedOptions, 'columns', fieldAffectedTableColumns);
+				_.set(potentiallyAffectedOptions, 'columns',
+					fieldPotentiallyAffectedTableColumns);
 				break;
 			case 'bug':
-				const bugTableColumns = [
+				const bugAffectedTableColumns = [
+					{
+						key: 'hostName',
+						name: I18n.get('_Device_'),
+						sortable: true,
+						sortDirection: 'asc',
+						sorting: true,
+						template: this.deviceColumn,
+						width: '300px',
+					},
+					{
+						key: 'ipAddress',
+						name: I18n.get('_IPAddress_'),
+						sortable: true,
+						template: this.ipAddressColumn,
+					},
 					{
 						key: 'softwareVersion',
 						name: I18n.get('_Release_'),
@@ -297,14 +355,50 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 						template: this.recommendedVersionColumn,
 					},
 				];
-				_.set(affectedOptions, 'columns', _.concat(affectedColumns, bugTableColumns));
-				_.set(potentiallyAffectedOptions, 'columns',
-					_.concat(potentiallyAffectedColumns, securityTableColumns));
+				const bugPotentiallyAffectedTableColumns = [
+					{
+						key: 'hostName',
+						name: I18n.get('_Device_'),
+						sortable: true,
+						sortDirection: 'asc',
+						sorting: true,
+						template: this.deviceColumn,
+						width: '300px',
+					},
+					{
+						key: 'ipAddress',
+						name: I18n.get('_IPAddress_'),
+						sortable: true,
+						template: this.ipAddressColumn,
+					},
+					{
+						key: 'softwareVersion',
+						name: I18n.get('_Release_'),
+						sortable: true,
+						template: this.softwareVersionColumn,
+					},
+					{
+						key: 'recommendedVersion',
+						name: I18n.get('_RecommendedRelease_'),
+						sortable: false,
+						template: this.recommendedVersionColumn,
+					},
+				];
+				_.set(affectedOptions, 'columns', bugAffectedTableColumns);
+				_.set(potentiallyAffectedOptions, 'columns', bugPotentiallyAffectedTableColumns);
 				break;
 		}
 
 		this.affectedTable = new CuiTableOptions(affectedOptions);
 		this.potentiallyAffectedTable = new CuiTableOptions(potentiallyAffectedOptions);
+
+		_.set(this.params, 'assets', {
+			customerId: this.customerId,
+			page: 1,
+			rows: 100,
+			solution: this.selectedSolutionName,
+			useCase: this.selectedTechnologyName,
+		});
 
 		_.set(this.params, 'assets', {
 			customerId: this.customerId,

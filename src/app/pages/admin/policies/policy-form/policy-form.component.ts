@@ -15,17 +15,20 @@ import { LogService } from '@cisco-ngx/cui-services';
 import { I18n } from '@cisco-ngx/cui-utils';
 import {
 	CollectionPolicyUpdateRequestModel,
-	ControlPointModifyCollectionPolicyAPIService,
 	ControlPointDevicePolicyAPIService,
+	ControlPointModifyCollectionPolicyAPIService,
+	DeviceDetailsByPage,
 	DeviceInfo,
 	DevicePolicyRequestModel,
 	DevicePolicyUpdateRequestModel,
-	IgnorePolicyUpdateRequestModel,
 	IgnorePolicyRequestModel,
-	DeviceDetailsByPage,
+	IgnorePolicyUpdateRequestModel,
+	RacetrackSolution,
+	RacetrackTechnology,
 } from '@sdp-api';
 import { catchError, takeUntil, finalize } from 'rxjs/operators';
 import { empty, Subject } from 'rxjs';
+import { RacetrackInfoService } from '../../../../services/racetrack-info';
 
 import * as _ from 'lodash-es';
 
@@ -79,6 +82,8 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 	public rightDevices = 'right';
 
 	private destroyed$: Subject<void> = new Subject<void>();
+	private solution: RacetrackSolution;
+	private technology: RacetrackTechnology;
 	public timePeriod = '';
 	public title = '';
 	public deviceListRight: DeviceListRow[] = [];
@@ -189,6 +194,7 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 	constructor (
 		private logger: LogService,
 		private fb: FormBuilder,
+		private racetrackInfoService: RacetrackInfoService,
 		public collectionService: ControlPointModifyCollectionPolicyAPIService,
 		public devicePolicyService: ControlPointDevicePolicyAPIService,
 	) { }
@@ -212,6 +218,12 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 	 * Initialization of the Collection Form  and customer info
 	 */
 	public ngOnInit () {
+		this.racetrackInfoService.getCurrentSolution()
+			.pipe(takeUntil(this.destroyed$))
+			.subscribe(solution => this.solution = solution);
+		this.racetrackInfoService.getCurrentTechnology()
+			.pipe(takeUntil(this.destroyed$))
+			.subscribe(technology => this.technology = technology);
 		switch (this.type) {
 			case ModalTypes.editCollection: {
 				this.timePeriods.options.pop();
@@ -287,10 +299,12 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 
 		this.leftListCall = function () {
 			const params: ControlPointDevicePolicyAPIService
-			.GetDevicesForPolicyCreationUsingGETParams = {
+			.GetDevicesForPolicyCreationUsingGET1Params = {
 				customerId: this.customerId,
 				pageNumber: String(this.pageNumber),
 				rowsPerPage: String(this.rowsPerPage),
+				solution: this.solution.name,
+				useCase: this.technology.name,
 			};
 
 			return this.devicePolicyService.getDevicesForPolicyCreationUsingGET1(params);
@@ -328,10 +342,12 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 
 		this.leftListCall = function () {
 			const params: ControlPointDevicePolicyAPIService
-			.GetDevicesForPolicyCreationUsingGETParams = {
+			.GetDevicesForPolicyCreationUsingGET1Params = {
 				customerId: this.customerId,
 				pageNumber: String(this.pageNumber),
 				rowsPerPage: String(this.rowsPerPage),
+				solution: this.solution.name,
+				useCase: this.technology.name,
 			};
 
 			return this.devicePolicyService.getDevicesForIgnorePolicyCreationUsingGET(params);
@@ -363,10 +379,12 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 
 		this.leftListCall = function () {
 			const params: ControlPointDevicePolicyAPIService
-			.GetDevicesForPolicyCreationUsingGETParams = {
+			.GetDevicesForPolicyCreationUsingGET1Params = {
 				customerId: this.customerId,
 				pageNumber: String(this.pageNumber),
 				rowsPerPage: String(this.rowsPerPage),
+				solution: this.solution.name,
+				useCase: this.technology.name,
 			};
 
 			return this.devicePolicyService.getDevicesForPolicyCreationUsingGET1(params);
@@ -374,7 +392,7 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 
 		this.rightListCall = function () {
 			const params: ControlPointDevicePolicyAPIService
-			.GetDevicesForGivenPolicyUsingGETParams = {
+			.GetDevicesForGivenPolicyUsingGET1Params = {
 				customerId: this.customerId,
 				pageNumber: '1',
 				policyId: _.get(this.policy, 'policyId'),
@@ -426,6 +444,8 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 				pageNumber: String(this.pageNumber),
 				policyId: _.get(this.policy, 'policyId'),
 				rowsPerPage: String(this.rowsPerPage),
+				solution: this.solution.name,
+				useCase: this.technology.name,
 			};
 
 			return this.devicePolicyService.getEligibleDevicesForGivenIgnorePolicyUsingGET(params);

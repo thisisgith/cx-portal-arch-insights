@@ -32,14 +32,19 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class FpSimilarAssetsComponent {
 	@Input() public asset: any;
+	public deviceId1 = '';
+	public deviceId2 = '';
 	public customerId: string;
 	public deviceId: string;
+	public deviceName: string;
+	public serialNumber: string;
 	public productId: string;
+	public compareView: string;
 	private destroyed$: Subject<void> = new Subject<void>();
 	public tableOptions: CuiTableOptions;
 	public seriesDataLoading = false;
 	public page = 0;
-	public size = 5;
+	public size = 3;
 	public similarityCriteria = 'softwares_features';
 	public noData = false;
 	public requestForm: FormGroup = this.fb.group({
@@ -55,6 +60,8 @@ export class FpSimilarAssetsComponent {
 	private crashRiskTemplate: TemplateRef<[]>;
 	@ViewChild('similarityMatchTemplate', { static: true })
 	private similarityMatchTemplate: TemplateRef<[]>;
+	@ViewChild('comparisonviewTemplate', { static: true })
+	private comparisonviewTemplate: TemplateRef<[]>;
 	@ViewChild('compareTemplate', { static: true })
 	private compareTemplate: TemplateRef<[]>;
 
@@ -67,7 +74,13 @@ export class FpSimilarAssetsComponent {
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
+		this.compareView = 'software';
 	}
+	public comparisonInfo = {
+		customerId: this.customerId,
+		deviceId1: ' ',
+		deviceId2: ' ',
+	};
 	/**
 	 * similarDeviceData
 	 */
@@ -97,14 +110,15 @@ export class FpSimilarAssetsComponent {
 			bordered: true,
 			dynamicData: true,
 			singleSelect: false,
-			striped: false,
+			striped: true,
+			wrapText: true,
 			padding: 'compressed',
 			columns: [
 				{
 					key: 'deviceId',
 					name: I18n.get('_CP_SystemName_'),
 					template: this.assetTemplate,
-					width : '40%',
+					width : '34%',
 				},
 				{
 					key: 'similarityScore',
@@ -113,12 +127,20 @@ export class FpSimilarAssetsComponent {
 					width : '30%',
 				},
 				{
+					key: 'riskScore',
+					name: I18n.get('_CP_Risk_'),
+					template: this.crashRiskTemplate,
+					width : '20%',
+				},
+				{
 					key: 'deviceId',
 					name: '',
 					template: this.compareTemplate,
-					width : '30%',
+					width : '10%',
 				},
 			],
+			rowWellColor: 'black',
+			rowWellTemplate: this.comparisonviewTemplate,
 		});
 	}
 	/**
@@ -127,6 +149,8 @@ export class FpSimilarAssetsComponent {
 	 */
 	public ngOnChanges (changes: SimpleChanges): void {
 		this.deviceId = _.get(changes, ['asset', 'currentValue', 'deviceId'], null);
+		this.deviceName = _.get(changes, ['asset', 'currentValue', 'deviceId']);
+		this.serialNumber = _.get(changes, ['asset', 'currentValue', 'deviceId']);
 		this.productId = _.get(changes, ['asset', 'currentValue', 'productId'], null);
 		if (!_.get(changes, ['asset', 'firstChange'], false) && this.asset) {
 			this.loadSimilarDevicesData();
@@ -194,24 +218,25 @@ export class FpSimilarAssetsComponent {
 			this.selectedDevice2 = tableRowData;
 		}
 	}
-
 	/**
-	 * Navigates to compare tab for device comparison
-	 * @param item comparison
-	 * @returns flase
+	 * updateCompareView
+	 * @param event tab click event
+	 * @param selectedTab  compareview
 	 */
-	public showDeviceComparison (item) {
-		if (this.deviceId && item) {
-			this.devicesSelected.emit({
-				deviceId1: this.deviceId,
-				productId1: this.productId,
-				deviceId2: item.deviceId,
-				productId2: item.productId,
-			});
+	public updateCompareView (event, selectedTab) {
+		if (selectedTab) {
+			this.compareView = selectedTab;
+			this.logger.info(event);
 		}
-
-		return false;
 	}
+	/**
+	 * On error event
+	 * @param errorMsg Error Message
+	 */
+	public showError (errorMsg) {
+		this.reqError.emit(errorMsg);
+	}
+
 	/** Function used to destroy the component */
 	public ngOnDestroy () {
 		this.destroyed$.next();

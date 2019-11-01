@@ -53,6 +53,7 @@ export class RccComponent implements OnInit, OnDestroy {
 	}
 	public assetParams: InventoryService.GetAssetsParams;
 	public assetLinkInfo: AssetLinkInfo;
+	public selectedAssetSerial: string;
 	public view: 'violation' | 'asset' = 'violation';
 	public totalViolationsCount = { };
 	public policyViolationsTableOptions: CuiTableOptions;
@@ -158,8 +159,10 @@ export class RccComponent implements OnInit, OnDestroy {
 	@ViewChild('severityFilter', { static: true }) private severityFilterTemplate: TemplateRef<{ }>;
 	@ViewChild('severityColor', { static: true }) private severityColorTemplate: TemplateRef<{ }>;
 	@ViewChild('ruletitleTemplate', { static: true }) private ruletitleTemplate: TemplateRef<{ }>;
-	@ViewChild('tableIcon', { static: true }) private tableIconTemplate: TemplateRef<{ }>;
-	@ViewChild('assetSlider', { read: ViewContainerRef, static: true })
+	@ViewChild('policyCategoryTooltipTemplate', { static: true })
+	private policyCategoryTooltipTemplate: TemplateRef<string>;
+	@ViewChild('ruleViolationsTooltipTemplate', { static: true })
+	private ruleViolationsTooltipTemplate: TemplateRef<string>;
 	public entry: ViewContainerRef;
 	private InventorySubject: Subject<{ }>;
 	public filters: Filter[];
@@ -222,7 +225,7 @@ export class RccComponent implements OnInit, OnDestroy {
 			columns: [
 				{
 					key: 'ruleseverity',
-					name: I18n.get('_RccSeverity_'),
+					name: I18n.get('_RccHighestSeverity_'),
 					sortable: true,
 					template: this.severityColorTemplate,
 				},
@@ -232,8 +235,8 @@ export class RccComponent implements OnInit, OnDestroy {
 					sortable: true,
 				},
 				{
+					headerTemplate:  this.policyCategoryTooltipTemplate,
 					key: 'policycategory',
-					name: I18n.get('_RccCategory_'),
 					sortable: true,
 				},
 				{
@@ -243,8 +246,8 @@ export class RccComponent implements OnInit, OnDestroy {
 					template: this.ruletitleTemplate,
 				},
 				{
+					headerTemplate:  this.ruleViolationsTooltipTemplate,
 					key: 'violationcount',
-					name: I18n.get('_RccAssetViolations_'),
 					sortable: true,
 				},
 				{
@@ -481,8 +484,8 @@ export class RccComponent implements OnInit, OnDestroy {
 					width: '24%',
 				},
 				{
-					key: 'serialNumber',
-					name: I18n.get('_RccAssetSerialNumber_'),
+					key: 'ipAddress',
+					name: I18n.get('_RccAssetIpAddress_'),
 					sortable: true,
 				},
 				{
@@ -499,10 +502,14 @@ export class RccComponent implements OnInit, OnDestroy {
 					sortKey: 'lastScan',
 				},
 				{
-					key: 'violationCount',
-					name: I18n.get('_RccAssetViolations_'),
+					key: 'severity',
+					name: I18n.get('_RccHighestSeverity_'),
 					sortable: true,
-					template: this.tableIconTemplate,
+				},
+				{
+					key: 'violationCount',
+					name: I18n.get('_RccRuleViolations_'),
+					sortable: true,
 				},
 			],
 			dynamicData: false,
@@ -531,7 +538,7 @@ export class RccComponent implements OnInit, OnDestroy {
 				loading: true,
 				seriesData: [],
 				template: this.severityFilterTemplate,
-				title: I18n.get('_RccSeverity_'),
+				title: I18n.get('_RccHighestSeverity_'),
 			},
 		];
 	}
@@ -545,7 +552,7 @@ export class RccComponent implements OnInit, OnDestroy {
 				loading: true,
 				seriesData: [],
 				template: this.severityFilterTemplate,
-				title: I18n.get('_RccAssetSeverity_'),
+				title: I18n.get('_RccHighestSeverity_'),
 			},
 		];
 	}
@@ -776,7 +783,6 @@ export class RccComponent implements OnInit, OnDestroy {
 	 * @param model is the selected slider name
 	 */
 	public onPanelClose (model: string) {
-		this.detailsPanelStackService.reset();
 		_.set(this, [model, 'active'] , false);
 		this[model] = null;
 	}
@@ -804,17 +810,18 @@ export class RccComponent implements OnInit, OnDestroy {
 	 * @param serialNumber is serial number of device
 	 */
 	public openDevicePage (serialNumber: string) {
-		const assetParams = {
+		this.assetParams = {
 			customerId: this.customerId,
 			serialNumber: [serialNumber],
 		};
+		this.selectedAssetSerial = serialNumber;
 		this.openDeviceModal = true;
-		this.assetPanelLinkService.getAssetLinkData(assetParams)
-			.pipe(takeUntil(this.destroy$))
-			.subscribe(response => {
-				this.assetLinkInfo.asset = _.get(response, [0, 'data', 0]);
-				this.assetLinkInfo.element = _.get(response, [1, 'data', 0]);
-			},
+		this.assetPanelLinkService.getAssetLinkData(this.assetParams)
+		.pipe(takeUntil(this.destroy$))
+		.subscribe(response => {
+			this.assetLinkInfo.asset = _.get(response, [0, 'data', 0]);
+			this.assetLinkInfo.element = _.get(response, [1, 'data', 0]);
+		},
 			err => {
 				this.logger.error(
 					'RccComponent : getAssetLinkData() ' +

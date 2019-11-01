@@ -165,4 +165,30 @@ describe('SoftwareVersionsComponent', () => {
 		expect(component.pagination.total)
 			.toEqual(100);
 	});
+
+	it('should refresh on filters change ', () => {
+		spyOn(component, 'loadData');
+		component.ngOnChanges({
+			solution: {
+				currentValue: 'ibn',
+				firstChange: false,
+				isFirstChange: () => false,
+				previousValue: null,
+			},
+		});
+		fixture.detectChanges();
+		expect(component.loadData)
+			.toHaveBeenCalled();
+		component.ngOnChanges({
+			useCase: {
+				currentValue: 'Campus',
+				firstChange: false,
+				isFirstChange: () => false,
+				previousValue: null,
+			},
+		});
+		fixture.detectChanges();
+		expect(component.loadData)
+			.toHaveBeenCalled();
+	});
 });

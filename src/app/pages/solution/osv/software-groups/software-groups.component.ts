@@ -12,13 +12,14 @@ import {
 } from '@angular/core';
 
 import { LogService } from '@cisco-ngx/cui-services';
-import { CuiTableOptions } from '@cisco-ngx/cui-components';
+import { CuiTableOptions, CuiModalService } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { Subject, of } from 'rxjs';
 import { map, takeUntil, catchError } from 'rxjs/operators';
 import { SoftwareGroupsResponse, OSVService, OsvPagination, SoftwareGroup } from '@sdp-api';
 import { ActivatedRoute } from '@angular/router';
 import * as _ from 'lodash-es';
+import { ContactSupportComponent } from '@components';
 
 /**
  * SoftwareGroups Component
@@ -37,6 +38,8 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 	@Input() public tabIndex;
 	@Output() public tabIndexChange = new EventEmitter<number>();
 	@Input() public softwareGroupsCount;
+	@Input() public solution;
+	@Input() public useCase;
 	@ViewChild('recommendationsTemplate', { static: true })
 	private recommendationsTemplate: TemplateRef<{ }>;
 	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
@@ -53,10 +56,15 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 	public softwareGroupsParams: OSVService.GetSoftwareGroupsParams;
 	public customerId: string;
 	public alert: any = { };
+	public searchOptions = {
+		debounce: 600,
+	};
+
 	constructor (
 		public logger: LogService,
 		public osvService: OSVService,
 		public route: ActivatedRoute,
+		public cuiModalService: CuiModalService,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
@@ -64,9 +72,12 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 			customerId: this.customerId,
 			pageIndex: 1,
 			pageSize: 10,
+			search: '',
 			sort: 'profileName',
 			sortOrder: 'asc',
 			filter: '',
+			solution: '',
+			useCase: '',
 		};
 	}
 
@@ -75,6 +86,11 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 	 */
 	public ngOnInit () {
 		if (this.softwareGroupsCount > 0) {
+			if (this.filters) {
+				this.setFilter(this.filters);
+			}
+			this.softwareGroupsParams.solution = this.solution;
+			this.softwareGroupsParams.useCase = this.useCase;
 			this.loadData();
 		}
 	}
@@ -93,6 +109,40 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 				selected[0].optimalVersion = _.get(selectedSoftwareGroup, 'optimalVersion');
 			}
 		}
+		const currentFilter = _.get(changes, ['filters', 'currentValue']);
+		const solution = _.get(changes, ['solution', 'currentValue']);
+		const useCase = _.get(changes, ['useCase', 'currentValue']);
+		if (currentFilter && !changes.filters.firstChange && this.softwareGroupsCount > 0) {
+			this.setFilter(currentFilter);
+			this.loadData();
+		}
+		if (solution && !_.get(changes, ['solution', 'firstChange'])) {
+			this.softwareGroupsParams.solution = solution;
+			this.loadData();
+		}
+		if (useCase && !_.get(changes, ['useCase', 'firstChange'])) {
+			this.softwareGroupsParams.useCase = useCase;
+			this.loadData();
+		}
+	}
+
+	/**
+	 * apply the filter selected by customer
+	 * @param currentFilter set the filter selected by customer
+	 */
+	public setFilter (currentFilter) {
+		const recommendationType = _.get(currentFilter, 'recommendationType', []);
+		const recommendationStatus = _.get(currentFilter, 'recommendationStatus', []);
+		let filter = '';
+		if (recommendationType.length > 0) {
+			filter += `recommendationType:${recommendationType.join(',')}`;
+		}
+		if (recommendationStatus.length > 0) {
+			filter += filter.length > 0 ? ';' : '';
+			filter += `recommendationStatus:${recommendationStatus.join(',')}`;
+		}
+		this.softwareGroupsParams.pageIndex = 1;
+		this.softwareGroupsParams.filter = filter;
 	}
 
 	/**
@@ -167,7 +217,7 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 					{
 						key: 'swType',
 						name: I18n.get('_OsvOSType_'),
-						sortable: false,
+						sortable: true,
 						width: '10%',
 					},
 					{
@@ -178,21 +228,21 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 					},
 					{
 						key: 'optimalVersion',
-						name: I18n.get('_OsvOptimalVersion_'),
+						name: I18n.get('_OsvAcceptedRelease_'),
 						render: item =>
-								item.optimalVersion ? item.optimalVersion : '',
+							item.optimalVersion ? item.optimalVersion : '',
 						sortable: false,
 						width: '15%',
 					},
 					{
 						key: 'assetCount',
 						name: I18n.get('_OsvAssetCount_'),
-						sortable: false,
+						sortable: true,
 						width: '10%',
 					},
 					{
 						name: I18n.get('_OsvRecommendations_'),
-						sortable: false,
+						sortable: true,
 						template: this.recommendationsTemplate,
 						width: '15%',
 					},
@@ -226,7 +276,7 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 			softwareGroup.statusUpdated = false;
 		});
 		item.rowSelected = !item.rowSelected;
-		this.tabIndex = 1;
+		this.tabIndex = 0;
 		this.tabIndexChange.emit(this.tabIndex);
 		this.selectedSoftwareGroup = item.rowSelected ? item : null;
 		this.selectedSoftwareGroupChange.emit(this.selectedSoftwareGroup);
@@ -260,28 +310,44 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 	 */
 	public getRowActions (softwareGroup: SoftwareGroup) {
 		return _.filter([
-			{
-				label: I18n.get('_OsvViewCompareRecommendations_'),
+			_.get(softwareGroup, 'recommendationStatus') !== 'inprogress' ? {
+				label: I18n.get('_OsvRequestExpertRecommendations_'),
+				onClick: () => {
+					this.openContactSupport(softwareGroup);
+				},
+			} : undefined,
+			_.get(softwareGroup, 'recommendation') === 'expert' ? {
+				label: I18n.get('_OsvViewExpertRecommendations_'),
 				onClick: () => {
 					this.openSoftwareGroupDetails(0, softwareGroup);
+				},
+			} : undefined,
+			{
+				label: I18n.get('_OsvViewAutomatedRecommendations_'),
+				onClick: () => {
+					const tabIndex = _.get(softwareGroup, 'recommendation') === 'expert' ? 0 : 1;
+					this.openSoftwareGroupDetails(tabIndex, softwareGroup);
 				},
 			},
 			{
 				label: I18n.get('_OsvViewSoftwareVersionSummary_'),
 				onClick: () => {
-					this.openSoftwareGroupDetails(1, softwareGroup);
+					const tabIndex = _.get(softwareGroup, 'recommendation') === 'expert' ? 1 : 2;
+					this.openSoftwareGroupDetails(tabIndex, softwareGroup);
 				},
 			},
 			{
 				label: I18n.get('_OsvViewAssets_'),
 				onClick: () => {
-					this.openSoftwareGroupDetails(2, softwareGroup);
+					const tabIndex = _.get(softwareGroup, 'recommendation') === 'expert' ? 2 : 3;
+					this.openSoftwareGroupDetails(tabIndex, softwareGroup);
 				},
 			},
 			{
 				label: I18n.get('_OsvViewVersions_'),
 				onClick: () => {
-					this.openSoftwareGroupDetails(3, softwareGroup);
+					const tabIndex = _.get(softwareGroup, 'recommendation') === 'expert' ? 3 : 4;
+					this.openSoftwareGroupDetails(tabIndex, softwareGroup);
 				},
 			},
 		]);
@@ -332,4 +398,30 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 		this.loadData();
 	}
 
+	/**
+	 * Handler for performing a search
+	 * @param query search string
+	 */
+	public onSearchQuery (query?: string) {
+		this.softwareGroupsParams.search = query;
+		this.softwareGroupsParams.pageIndex = 1;
+		this.loadData();
+	}
+
+	/**
+	 * Open contact support modal
+	 * @param selectedSoftwareGroup softwareGroup for which the request has to be made
+	 */
+	public openContactSupport (selectedSoftwareGroup: SoftwareGroup) {
+		const options = {
+			contactExpert: true,
+			productFamily: selectedSoftwareGroup.productFamily,
+			osType: selectedSoftwareGroup.swType,
+			requestTypes: I18n.get('_OsvContactExpertRequestTypes_'),
+		};
+		const result = this.cuiModalService.showComponent(ContactSupportComponent, options);
+		if (result) {
+			// refresh this view.
+		}
+	}
 }

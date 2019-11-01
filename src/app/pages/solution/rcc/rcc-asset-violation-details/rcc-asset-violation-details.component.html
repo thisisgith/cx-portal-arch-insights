@@ -48,10 +48,10 @@
 			</cui-select>
 		</div>
 		<div class="col-4 qtr-padding-top qtr-padding-left">
-			<div [innerText]="'_RccAssetSeverity_' | i18n"></div>
+			<div [innerText]="'_RccHighestSeverity_' | i18n"></div>
 			<cui-select 
 				[items]="assetPolicySeverityItems" 
-				placeholder="{{'_RccPolicySeverityPlaceHolder_'| i18n }}"
+				placeholder="{{'_RccHighestSeverityPlaceHolder_'| i18n }}"
 				[compressed]="true" 
 				[empty]="true" 
 				[(ngModel)]="policySeveritySelection"
@@ -155,7 +155,7 @@
 	<span [innerText]="item?.severity"></span>
 </ng-template>
 <ng-template #suggestedFixTemplate let-item="celldata">
-	<div [innerHTML]="item?.suggestedfix | removeInvalidTags: item?.suggestedfix"></div>
+	<div [innerHTML]="item?.suggestedFix | removeInvalidTags: item?.suggestedFix"></div>
 </ng-template>
 <ng-template #messageFixTemplate let-item="celldata">
 	<div [innerHTML]="item?.message"></div>

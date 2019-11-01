@@ -28,6 +28,9 @@ import {
 	ContractQuota,
 	UserTraining,
 	RacetrackResponse,
+	CompanyInfoList,
+	CompanyInfo,
+	GenericApiControllerService,
 } from '@sdp-api';
 
 import * as racetrackComponent from '../../../components/racetrack/racetrack.component';
@@ -72,6 +75,7 @@ interface ComponentData {
 		solution: string;
 		usecase: string;
 		suggestedAction?: string;
+		providerId?: string[];
 	};
 	atx?: {
 		sessions?: AtxSchema[];
@@ -96,6 +100,7 @@ interface ComponentData {
 		sessions: string[];
 		usedTrainings: string[];
 	};
+	partner?: CompanyInfo[];
 }
 
 /**
@@ -299,6 +304,7 @@ export class LifecycleComponent implements OnDestroy {
 			bookmark: false,
 			cgt: false,
 			elearning: false,
+			partner: false,
 			productGuides: {
 				modal: false,
 				more: false,
@@ -348,18 +354,13 @@ export class LifecycleComponent implements OnDestroy {
 		return _.get(this.componentData, ['racetrack', 'actionsCompPercent'], I18n.get('_Start_'));
 	}
 
-	get defaultRecommendedATXImg () {
-		return (this.componentData.atx.recommended.providerInfo ?
-			'assets/img/solutions/ATX-default-image-1-556x308.png' :
-			'assets/img/solutions/defaultLifecycleImage.png');
-	}
-
 	constructor (
 		private logger: LogService,
 		private contentService: RacetrackContentService,
 		private racetrackService: RacetrackService,
 		private route: ActivatedRoute,
 		private racetrackInfoService: RacetrackInfoService,
+		private partnerService: GenericApiControllerService,
 	) {
 		this.user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(this.user, ['info', 'customerId']);
@@ -434,6 +435,7 @@ export class LifecycleComponent implements OnDestroy {
 				this.getLifecycleInfo(this.currentWorkingPitstop);
 			}
 		});
+		this.getPartnerList();
 	}
 
 	/**
@@ -1586,7 +1588,7 @@ export class LifecycleComponent implements OnDestroy {
 
 		return this.contentService.getRacetrackACC(
 			_.pick(this.componentData.params,
-				['customerId', 'solution', 'usecase', 'pitstop', 'suggestedAction']))
+				['customerId', 'solution', 'usecase', 'pitstop', 'suggestedAction', 'providerId']))
 		.pipe(
 			map((result: ACCResponse) => {
 				this.selectedFilterForACC = this.accStatusOptions[0].value;
@@ -1632,7 +1634,7 @@ export class LifecycleComponent implements OnDestroy {
 
 		return this.contentService.getRacetrackATX(
 			_.pick(this.componentData.params,
-				['customerId', 'solution', 'usecase', 'pitstop', 'suggestedAction']))
+				['customerId', 'solution', 'usecase', 'pitstop', 'suggestedAction', 'providerId']))
 		.pipe(
 			map((result: ATXResponseModel) => {
 				this.selectedFilterForATX = this.atxStatusOptions[0].value;
@@ -2359,5 +2361,46 @@ export class LifecycleComponent implements OnDestroy {
 		return (atx.providerInfo ?
 			'assets/img/solutions/ATX-default-image-1-556x308.png' :
 			'assets/img/solutions/defaultLifecycleImage.png');
+	}
+
+	/**
+	 * get List of Partner List
+	 */
+	 public getPartnerList () {
+		this.status.loading.partner = true;
+
+		this.partnerService.getPartnerListUsingGET(this.customerId)
+		.subscribe((result: CompanyInfoList) => {
+			// user can filter for Cisco via partnerId: '0000'
+			// but partner portal does not send back Cisco in company list.
+			// Manually adding to results here. Maybe the more appropriate
+			// solution is to call a customerPortal wrapper of getPartners that
+			// adds Cisco in for us?
+			const ciscoCompanyInfo: CompanyInfo = {
+				companyId: '0000',
+				companyName: 'Cisco',
+			};
+			this.status.loading.partner = false;
+			this.componentData.partner = [ciscoCompanyInfo, ...result.companyList];
+		},
+		err => {
+			this.status.loading.partner = false;
+			this.logger.error(`lifecycle.component : getPartnerList() :: Error  : (${
+				err.status}) ${err.message}`);
+		});
+	}
+
+	/**
+	 * Set providerId query data and reloads acc/atx
+	 * @param providers List of companyInfo to filter by
+	 */
+	public setProviderFilter (providers: CompanyInfo[]) {
+		const providerNames = providers.map(provider => provider.companyId);
+		this.componentData.params.providerId = providerNames;
+		forkJoin(
+			this.loadACC(),
+			this.loadATX(),
+		)
+		.subscribe();
 	}
 }

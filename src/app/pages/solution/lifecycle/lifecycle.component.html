@@ -5,6 +5,14 @@
 		</div>
 
 		<div class="col-md-9">
+			<div class="global-filter" *ngIf="componentData.partner">
+				<multiselect name="Content Provider"
+					[items]="componentData.partner"
+					nameKey="companyName"
+					valueKey="companyId"
+					(changed)="setProviderFilter($event)">
+				</multiselect>
+			</div>
 			<div class="row">
 				<div class="col-md-4">
 					<app-communities></app-communities>
@@ -185,7 +193,7 @@
 				hoverTemplate: atxHover,
 				title: data.recommended.title,
 				description: data.recommended.description,
-				src: data.recommended.imageURL || defaultRecommendedATXImg,
+				src: data.recommended.imageURL || getDefaultAtxImg(data.recommended),
 				item: data.sessions[0],
 				autoid: 'recommendedATX'
 			}"> 
@@ -289,7 +297,7 @@
 				*ngIf="getProviderName(data)"
 				data-auto-id="atxMoreClickModal-Provider"
 			></div>
-			<div class="atx-more-popover__button-container">
+			<div class="atx-more-popover__button-container base-padding-top">
 				<ng-container *ngTemplateOutlet="data?.sessions?.length > 0 ?
 					enabledViewSessionsButton : disabledViewSessionsButton; context: {
 						type: 'moreView'
@@ -548,7 +556,7 @@
 					<tr>
 						<td [innerText]="'_Date_' | i18n"></td>
 						<td class="table__head-spacer"></td>
-						<td [innerText]="'_Instructor_' | i18n"></td>
+						<td [innerText]="'_Presenter_' | i18n"></td>
 					</tr>
 				</thead>
 				<tbody>

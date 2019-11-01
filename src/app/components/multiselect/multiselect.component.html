@@ -1,0 +1,51 @@
+<div class="ms-form"  [class.ms-form--opened]="dropdownActive">
+	<input type="text"
+		(input)="onSearchInputChange($event.target.value)"
+		[(value)]="searchValue"
+		[placeholder]="inputValue"
+		[name]="componentId"
+		[id]="componentId"
+		class="ms-form__input"
+		(click)="!dropdownActive ? openDropdown() : null"
+		attr.data-auto-id="{{componentId}}-SearchInput">
+	<span class="ms-form__toggle dropdown-chevron icon-chevron-down"
+		[class.ms-form__toggle--flipped]="dropdownActive"
+		(click)="toggleDropdown()"
+		attr.data-auto-id="{{componentId}}-DropdownToggle"></span>
+
+	<div class="ms-dropdown" *ngIf="dropdownActive">
+		<div class="ms-dropdown__list">
+			<div class="ms-dropdown__list__item"
+				[class.ms-dropdown__list__item--selected]="allSelected"
+				(click)="toggleAllOptions()"
+				attr.data-auto-id="{{componentId}}-SelectAll"
+			>
+				<div [innerText]="'_All_' | i18n"></div>
+				<span class="icon-check"
+				*ngIf="allSelected"></span>
+			</div>
+			<ng-container *ngFor="let item of items; let i = index">
+				<div *ngIf="isIncludedInSearch(item)"
+					class="ms-dropdown__list__item"
+					[class.ms-dropdown__list__item--selected]="selectedIndices.includes(i) && !allSelected"
+					(click)="toggleOption(i)"
+					attr.data-auto-id="{{componentId}}-ListItem{{i}}">
+					<div attr.data-auto-id="{{componentId}}-ListItem{{i}}Text"
+						[innerHtml]="item[nameKey]"></div>
+					<span class="icon-check"
+						*ngIf="selectedIndices.includes(i) && !allSelected"></span>
+				</div>
+			</ng-container>
+		</div>
+		<div class="ms-dropdown__actions">
+			<button class="cx-btn"
+				(click)="save()"
+				[innerText]="'_Save_' | i18n"
+				attr.data-auto-id="{{componentId}}-SaveButton"></button>
+			<button class="cx-btn cx-btn--primary"
+				(click)="clear()"
+				[innerText]="'_Clear_' | i18n"
+				attr.data-auto-id="{{componentId}}-ClearButton"></button>
+		</div>
+	</div>
+</div>

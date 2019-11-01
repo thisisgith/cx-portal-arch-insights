@@ -15,6 +15,7 @@ import {
 	AssetLinkScenarios,
 	AssetScenarios,
 	AssetSummaryScenarios,
+	AssetTaggingScenarios,
 	BookmarkScenarios,
 	CGTScenarios,
 	CalendarScenarios,
@@ -46,6 +47,7 @@ import {
 	LicenseScenarios,
 	NetworkScenarios,
 	OSVScenarios,
+	PartnerInfoScenarios,
 	PolicesScenarios,
 	RCCScenarios,
 	RMAScenarios,
@@ -83,6 +85,7 @@ import {
 	CDCSearchResponse,
 	CSDFResponseModel,
 	CommunitiesResponse,
+	CompanyInfoList,
 	ContractQuota,
 	CoverageCountsResponse,
 	CoverageResponse,
@@ -140,6 +143,7 @@ type ResponseBody = (
 	ATXResponseModel |
 	CDCSearchResponse |
 	CommunitiesResponse |
+	CompanyInfoList |
 	ContractQuota[] |
 	CoverageCountsResponse |
 	CoverageResponse |
@@ -245,6 +249,7 @@ export const mockSettings: MockSettings = {
 		AssetLinkScenarios,
 		AssetScenarios,
 		AssetSummaryScenarios,
+		AssetTaggingScenarios,
 		BookmarkScenarios,
 		CGTScenarios,
 		CalendarScenarios,
@@ -276,6 +281,7 @@ export const mockSettings: MockSettings = {
 		LicenseScenarios,
 		NetworkScenarios,
 		OSVScenarios,
+		PartnerInfoScenarios,
 		PolicesScenarios,
 		RCCScenarios,
 		RMAScenarios,

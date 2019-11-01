@@ -34,15 +34,17 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 	@Input() public fullscreen;
 	@Input() public cxLevel;
 	@Input() public assetsCount;
+	@Input() public solution;
+	@Input() public useCase;
 	@Output() public fullscreenChange = new EventEmitter<boolean>();
 	@Output() public selectedAssetChange = new EventEmitter<OSVAsset>();
 	@Output() public contactSupport = new EventEmitter();
 	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
 	@ViewChild('versionTemplate', { static: true }) private versionTemplate: TemplateRef<{ }>;
 	@ViewChild('recommendationsTemplate', { static: true })
-		private recommendationsTemplate: TemplateRef<{ }>;
+	private recommendationsTemplate: TemplateRef<{ }>;
 	@ViewChild('hostTemplate', { static: true })
-		private hostTemplate: TemplateRef<{ }>;
+	private hostTemplate: TemplateRef<{ }>;
 	public assetsTable: CuiTableOptions;
 	public status = {
 		isLoading: false,
@@ -60,6 +62,9 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 		},
 	];
 	public alert: any = { };
+	public searchOptions = {
+		debounce: 600,
+	};
 
 	constructor (
 		private logger: LogService,
@@ -74,8 +79,11 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 			filter: '',
 			pageIndex: 1,
 			pageSize: 10,
+			search: '',
 			sort: 'hostName',
 			sortOrder: 'asc',
+			solution: '',
+			useCase: '',
 		};
 	}
 
@@ -86,6 +94,8 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 	 */
 	public ngOnInit () {
 		if (this.assetsCount > 0) {
+			this.assetsParams.solution = this.solution;
+			this.assetsParams.useCase = this.useCase;
 			this.loadData();
 		}
 	}
@@ -98,6 +108,16 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 		const currentFilter = _.get(changes, ['filters', 'currentValue']);
 		if (currentFilter && !changes.filters.firstChange && this.assetsCount > 0) {
 			this.setFilter(currentFilter);
+			this.loadData();
+		}
+		const solution = _.get(changes, ['solution', 'currentValue']);
+		const useCase = _.get(changes, ['useCase', 'currentValue']);
+		if (solution && !_.get(changes, ['solution', 'firstChange'])) {
+			this.assetsParams.solution = solution;
+			this.loadData();
+		}
+		if (useCase && !_.get(changes, ['useCase', 'firstChange'])) {
+			this.assetsParams.useCase = useCase;
 			this.loadData();
 		}
 	}
@@ -198,15 +218,15 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 					{
 						key: 'profileName',
 						name: I18n.get('_OsvSoftwareGroup_'),
-						sortable: false,
+						sortable: true,
 						render: item =>
-								item.profileName ? item.profileName : '',
+							item.profileName ? item.profileName : '',
 						width: '10%',
 					},
 					{
 						key: 'swType',
 						name: I18n.get('_OsvOSType_'),
-						sortable: false,
+						sortable: true,
 						width: '100px',
 					},
 					{
@@ -219,7 +239,7 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 						key: 'optimalVersion',
 						name: I18n.get('_OsvOptimalVersion_'),
 						render: item =>
-								item.optimalVersion ? item.optimalVersion : '',
+							item.optimalVersion ? item.optimalVersion : '',
 						sortable: false,
 						width: '10%',
 					},
@@ -227,13 +247,13 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 						key: 'deploymentStatus',
 						name: I18n.get('_OsvDeploymentStatus_'),
 						render: item =>
-								item.deploymentStatus ? item.deploymentStatus : '',
-						sortable: false,
+							item.deploymentStatus ? item.deploymentStatus : '',
+						sortable: true,
 						width: '10%',
 					},
 					{
 						name: I18n.get('_OsvRecommendations_'),
-						sortable: false,
+						sortable: true,
 						template: this.recommendationsTemplate,
 						width: '10%',
 					},
@@ -306,6 +326,16 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 		sortColumn.sorting = true;
 		this.assetsParams.sortOrder = sortColumn.sortDirection;
 		this.assetsParams.sort = sortColumn.key;
+		this.assetsParams.pageIndex = 1;
+		this.loadData();
+	}
+
+	/**
+	 * Handler for performing a search
+	 * @param query search string
+	 */
+	public onSearchQueryAsset (query?: string) {
+		this.assetsParams.search = query;
 		this.assetsParams.pageIndex = 1;
 		this.loadData();
 	}

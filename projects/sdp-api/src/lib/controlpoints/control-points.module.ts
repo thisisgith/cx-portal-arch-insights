@@ -9,6 +9,9 @@ import { ControlPointIERegistrationAPIService } from './services/control-point-i
 import { ControlPointIEHealthStatusAPIService } from './services/control-point-iehealth-status-api.service';
 import { ControlPointDevicePolicyAPIService } from './services/control-point-device-policy-api.service';
 import { ControlPointLicenseAPIService } from './services/control-point-license-api.service';
+import { ControlPointAdminSettingsAPIService } from './services/control-point-admin-settings-api.service';
+import { ControlPointInsightTypeAPIService } from './services/control-point-insight-type-api.service';
+import { ControlPointInsightTypePostAPIService } from './services/control-point-insight-type-post-api.service';
 
 /**
  * Provider for all ControlPoints services, plus ControlPointsConfiguration
@@ -23,7 +26,10 @@ import { ControlPointLicenseAPIService } from './services/control-point-license-
     ControlPointIERegistrationAPIService,
     ControlPointIEHealthStatusAPIService,
     ControlPointDevicePolicyAPIService,
-    ControlPointLicenseAPIService
+    ControlPointLicenseAPIService,
+    ControlPointInsightTypeAPIService,
+    ControlPointInsightTypePostAPIService,
+    ControlPointAdminSettingsAPIService
   ],
 })
 export class ControlPointsModule {

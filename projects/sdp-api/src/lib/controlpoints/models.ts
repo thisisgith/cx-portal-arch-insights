@@ -27,4 +27,6 @@ export { OSDetails } from './models/osdetails';
 export { Pagination } from './models/pagination';
 export { PoliciesGroupByDayInAMonthModel } from './models/policies-group-by-day-in-amonth-model';
 export { PolicyResponseModel } from './models/policy-response-model';
+export { InsightTypeResponseModel } from './models/insight-type-response-model';
+export { InsightTypeRequestModel } from './models/insight-type-request-model';
 export { SystemDetails } from './models/system-details';

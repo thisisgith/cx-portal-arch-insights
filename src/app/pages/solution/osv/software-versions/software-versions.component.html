@@ -9,15 +9,14 @@
 			</span>
 		</div>
 	</div>
-	<div class="col-md-6 text-right" >
-		<div *ngIf="cxLevel === 3">
-			<div [innerText]="'_CSNeedSoftwareRecommendation_' | i18n"></div>
-			<a  
-				(click)="contactSupport.emit()" 
-				class="recommedation-link text-primary"
-				data-auto-id="ContactExpert" 
-				[innerText]="'_CSRequestExpert_' | i18n">
-			</a>
+	<div class="col-md-6">
+		<div class="flex flex-fluid flex-right">
+			<cui-search 
+				placeholder="{{ '_Search_' | i18n }}" 
+				[debounce]="searchOptions.debounce"
+				[compressed]="true" 
+				(onUpdate)="onSearchQueryVersion($event)">
+			</cui-search>
 		</div>
 	</div>
 </div>

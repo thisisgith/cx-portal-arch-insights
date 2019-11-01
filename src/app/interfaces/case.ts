@@ -41,6 +41,10 @@ export interface Case {
 	trackingNumber?: string;
 	/** Device Name */
 	deviceName?: string;
+	/** Contact Email */
+	contactEmail?: string;
+	/** Owner Email */
+	ownerEmail?: string;
 }
 
 /**
@@ -133,6 +137,10 @@ export interface CaseOpenRequest {
 	siteId?: string;
 	summary?: string;
 	description?: string;
+	lossOfServices?: 'Yes' | 'No';
+	contactMe?: string;
+	contactPreference?: 'Email';
+	contactEmail?: string;
 	noteDetails?: {
 		[key: string]: {
 			note: string;

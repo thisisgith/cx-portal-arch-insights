@@ -57,6 +57,7 @@ export * from './racetrack/elearning';
 export * from './racetrack/info';
 export * from './racetrack/successPaths';
 export * from './racetrack/feedback';
+export * from './partner/partnerInfo';
 
 export * from './rcc/rcc';
 export * from './rcc/rcc-asset';
@@ -78,3 +79,4 @@ export { ComparisonViewScenarios } from './crash-prevention/comparisonview';
 
 export * from '../mock/service/asset-panel-link';
 export * from '../mock/syslogs/syslogs';
+export * from './asset-tagging/asset-tagging';

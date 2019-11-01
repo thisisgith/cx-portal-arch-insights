@@ -561,6 +561,28 @@ export const ATXScenarios = [
 			`pitstop=Onboard&customerId=${customerId}&suggestedAction=Onboard 2`,
 		usecases: ['Use Case 1'],
 	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 500,
+					description: '(ATX) IBN-Campus Network Assurance-Onboard-twoProviders(293531,293532)',
+					response: {
+						body: {
+							pitstop: 'Onboard',
+							solution: 'IBN',
+							usecase: 'Campus Network Assurance',
+							items: require('./atxMockData/twoProvidersOneAtx.json'),
+						},
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?usecase=Campus Network Assurance&solution=IBN&pitstop=Onboard&customerId=${customerId}&suggestedAction=Get to know Cisco DNA Center&providerId=293531&providerId=293532`,
+		usecases: ['Use Case 1'],
+	},
 ];
 
 /**

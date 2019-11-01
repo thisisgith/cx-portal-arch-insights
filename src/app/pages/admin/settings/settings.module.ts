@@ -8,6 +8,7 @@ import { HeightTransitionModule, GaugeModule } from '@components';
 import { AppStatusColorPipe } from './app-status-color.pipe';
 import { ResourceGaugeColorPipe } from './resource-gauge-color.pipe';
 import { ControlPointsModule, UserModule } from '@sdp-api';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import {
 	CuiLoaderModule,
@@ -37,6 +38,8 @@ const imports = [
 	I18nPipeModule,
 	FromNowPipeModule,
 	RouterModule,
+	FormsModule,
+	ReactiveFormsModule,
 	UserModule.forRoot({ rootUrl }),
 ];
 

@@ -4,10 +4,6 @@ $primary: #00bceb;
 $primary-darker: #00a3d2;
 $primary-lighter: #1ad6ff;
 
-.empty-comment {
-	background-color: #f6faff !important;
-}
-
 .btn {
 	&--thumbs {
 		border-radius: 100% !important;
@@ -38,6 +34,38 @@ $primary-lighter: #1ad6ff;
 		&:hover {
 			background-color: $primary-lighter !important;
 			border-color: $primary !important;
+		}
+	}
+}
+
+:host .modal {
+	&__header .modal__title {
+		font-size: 37px;
+		font-weight: 300;
+	}
+
+	&__header .modal__close .icon-close {
+		font-size: 18px;
+	}
+}
+
+.modal__body {
+	.modal {
+		&__question {
+			font-size: 15px;
+			font-weight: 500;
+		}
+
+		&__thumbs {
+			max-width: 60px;
+			max-height: 60px;
+			width: 60px;
+			height: 60px;
+		}
+
+		&__textarea {
+			background-color: #f3f6f8;
+			border-color: #aeb8c1;
 		}
 	}
 }

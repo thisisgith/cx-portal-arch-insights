@@ -52,6 +52,7 @@ export class CaseDetailsComponent implements OnInit, OnDestroy {
 	 * Initialization hook
 	 */
 	public ngOnInit () {
+		this.caseDetailsService.refreshNotesList(false);
 		this.refresh$.pipe(
 			tap(() => {
 				this.loading = true;

@@ -1,6 +1,6 @@
 <div class="panel panel--bordered base-padding-left base-padding-top no-padding-bottom">
 	<insight-tabs></insight-tabs>
-	<visual-filter-bar [filters]="filters">
+	<visual-filter-bar [filters]="onlyCrashes? (filters | slice:1):( filters | slice:0:1)">
 		<ng-template #startingCard>
 			<div class="filter__selected">
 				<div
@@ -104,9 +104,8 @@
 									class="label filter-bar__item"
 									(click)="onSubfilterSelect(subfilter.filter, filter)"
 									attr.data-auto-id="FilterTag-{{ subfilter.filter }}"
-									*ngIf="!onlyCrashes"
 								>
-									<span class="qtr-padding-right" [innerText]="'_RMTimeLast_' | i18n"></span>
+								<span class="qtr-padding-right" [innerText]="(filter.key === 'advisories'?'_RMTimeLast_': '_CP_RiskTag_') | i18n"></span>
 									<span [innerHTML]="subfilter.label"></span>
 									<span
 										class="icon-close"
@@ -375,4 +374,11 @@
 </ng-template>
 <ng-template #riskTooltipContentTemplate>
 	<span [innerText]="'_CP_GlobalRiskRankToolTip_' | i18n" class="text-small"></span>
+</ng-template>
+<ng-template #riskScoreFilterTemplate let-filter="filter">
+	<pie-chart
+		[seriesData]="filter.seriesData"
+		(subfilter)="onSubfilterSelect($event.filter, filter, true)"
+	>
+	</pie-chart>
 </ng-template>
