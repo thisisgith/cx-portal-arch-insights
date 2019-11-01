@@ -51,21 +51,7 @@
 </ng-template>
 
 <ng-template #productIdColumn let-celldata="celldata">
-	<span class="qtr-margin-right"
-		[title]="getProductTitle(celldata)"
-		*ngIf="getProductIcon(celldata)">
-		<img alt="{{ '_AssetIcon_' | i18n }}"
-			class="icon-asset"
-			attr.data-auto-id="DeviceIcon-{{ celldata?.hostName || celldata?.deviceName }}"
-			src="assets/img/assets/device-{{ getProductIcon(celldata) }}.svg">
-	</span>
-	<a *ngIf="celldata?.serialNumber"
-		[innerText]="celldata?.productId | truncate:false:20"
-		[title]="celldata?.productId"
-		[routerLink]="['/solution/assets']"
-		[queryParams]="{ serialNumber: celldata.serialNumber, select: true }">
-	</a>
-	<span *ngIf="!celldata?.serialNumber"
+	<span
 		[title]="celldata?.productId || ('_NA_' | i18n)"
 		[innerText]="(celldata?.productId || ('_NA_' | i18n)) | truncate:false:20">
 	</span>
@@ -84,6 +70,12 @@
 <ng-template #ipAddressColumn let-celldata="celldata">
 	<span [title]="celldata?.ipAddress || ('_NA_' | i18n)"
 		[innerText]="celldata?.ipAddress || ('_NA_' | i18n)">
+	</span>
+</ng-template>
+
+<ng-template #serialNumberColumn let-celldata="celldata">
+	<span [title]="celldata?.serialNumber || ('_NA_' | i18n)"
+		[innerText]="celldata?.serialNumber || ('_NA_' | i18n)">
 	</span>
 </ng-template>
 
