@@ -91,7 +91,6 @@ interface ComponentData {
 		solution: string;
 		usecase: string;
 		suggestedAction?: string;
-		// providerId?: string[];
 	};
 	atx?: {
 		sessions?: AtxSchema[];
