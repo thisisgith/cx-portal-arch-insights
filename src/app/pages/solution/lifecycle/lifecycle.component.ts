@@ -91,6 +91,7 @@ interface ComponentData {
 		solution: string;
 		usecase: string;
 		suggestedAction?: string;
+		// providerId?: string[];
 	};
 	atx?: {
 		sessions?: AtxSchema[];
@@ -176,10 +177,11 @@ export class LifecycleComponent implements OnDestroy {
 	public customerId: string;
 	public buId: string;
 	private user: User;
+	public partnerList: CompanyInfo [];
 	public totalAllowedGroupTrainings: number;
 	public selectedFilterForSB = '';
-	public selectedFilterForATX = '';
 	public selectedFilterForACC = '';
+	public selectedPartnerFilter: string [];
 	public selectedPartnerFilterForATX: string[];
 	public atxStatusFilter: StatusValues[];
 	public groupTrainingsAvailable = 0;
@@ -281,10 +283,10 @@ export class LifecycleComponent implements OnDestroy {
 			name: I18n.get('_Recommended_'),
 			value: 'recommended',
 		},
-		{
-			name: I18n.get('_Requested_'),
-			value: 'requested',
-		},
+		// {
+		// 	name: I18n.get('_Requested_'),
+		// 	value: 'requested',
+		// },
 		{
 			name: I18n.get('_Scheduled_'),
 			value: 'scheduled',
@@ -297,14 +299,6 @@ export class LifecycleComponent implements OnDestroy {
 			name: I18n.get('_Completed_'),
 			value: 'completed',
 		},
-		// {
-		// 	name: I18n.get('_Bookmarked_'),
-		// 	value: 'isBookmarked',
-		// },
-		// {
-		// 	name: I18n.get('_NotBookmarked_'),
-		// 	value: 'hasNotBookmarked',
-		// },
 	];
 
 	public status = {
@@ -419,6 +413,7 @@ export class LifecycleComponent implements OnDestroy {
 			this.componentData.params.solution = _.get(solution, 'name');
 		});
 
+		this.getPartnerList();
 		this.racetrackInfoService.getCurrentTechnology()
 		.pipe(
 			takeUntil(this.destroy$),
@@ -447,7 +442,6 @@ export class LifecycleComponent implements OnDestroy {
 				this.currentViewingPitstop = racetrackComponent.stages[viewingIndex];
 				this.getLifecycleInfo(this.currentWorkingPitstop);
 			}
-			this.getPartnerList();
 		});
 	}
 
@@ -557,6 +551,9 @@ export class LifecycleComponent implements OnDestroy {
 				sort0Field: 'title',
 			},
 		};
+		this.selectedPartnerFilter = [];
+		this.selectedPartnerFilterForATX = [];
+		this.atxStatusFilter = [];
 	}
 
 	/**
@@ -1107,23 +1104,6 @@ export class LifecycleComponent implements OnDestroy {
 				this.selectedACC = this.componentData.acc.sessions;
 			}
 		}
-
-		if (type === 'ATX') {
-			if (this.selectedFilterForATX === 'isBookmarked') {
-				this.selectedATX =
-				_.filter(this.componentData.atx.sessions, { bookmark: true });
-			} else if (this.selectedFilterForATX === 'hasNotBookmarked') {
-				this.selectedATX =
-				_.filter(this.componentData.atx.sessions, { bookmark: false });
-			} else {
-				this.selectedATX =
-					_.filter(this.componentData.atx.sessions,
-						{ status: this.selectedFilterForATX });
-			}
-			if (this.selectedFilterForATX === 'allTitles' || !this.selectedFilterForATX) {
-				this.selectedATX = this.componentData.atx.sessions;
-			}
-		}
 	}
 
 	/**
@@ -1601,7 +1581,7 @@ export class LifecycleComponent implements OnDestroy {
 
 		return this.contentService.getRacetrackACC(
 			_.pick(this.componentData.params,
-				['customerId', 'solution', 'usecase', 'pitstop', 'suggestedAction']))
+				['customerId', 'solution', 'usecase', 'pitstop', 'suggestedAction', 'providerId']))
 		.pipe(
 			map((result: ACCResponse) => {
 				this.selectedFilterForACC = this.accStatusOptions[0].value;
@@ -1657,7 +1637,6 @@ export class LifecycleComponent implements OnDestroy {
 		return this.contentService.getRacetrackATX(params)
 		.pipe(
 			map((result: ATXResponseModel) => {
-				this.selectedFilterForATX = this.atxStatusOptions[0].value;
 				this.componentData.atx = {
 					recommended: _.head(result.items),
 					sessions: result.items,
@@ -2421,13 +2400,38 @@ export class LifecycleComponent implements OnDestroy {
 
 		this.partnerService.getPartnerListUsingGET(this.customerId)
 		.subscribe((result: CompanyInfoList) => {
+			// user can filter for Cisco via partnerId: '0000'
+			// but partner portal does not send back Cisco in company list.
+			// Manually adding to results here. Maybe the more appropriate
+			// solution is to call a customerPortal wrapper of getPartners that
+			// adds Cisco in for us?
+			const ciscoCompanyInfo: CompanyInfo = {
+				companyId: '0000',
+				companyName: 'Cisco',
+			};
 			this.status.loading.partner = false;
-			this.componentData.partner = result.companyList;
+			this.partnerList = [ciscoCompanyInfo, ...result.companyList];
 		},
 		err => {
 			this.status.loading.partner = false;
 			this.logger.error(`lifecycle.component : getPartnerList() :: Error  : (${
 				err.status}) ${err.message}`);
 		});
+	}
+
+	/**
+	 * Set providerId query data and reloads acc/atx
+	 * @param providers List of companyInfo to filter by
+	 */
+	public setProviderFilter (providers: CompanyInfo[]) {
+		const providerNames = providers.map(provider => provider.companyId);
+		this.selectedPartnerFilter = providerNames;
+		// overwrite individial ATX and ACC parter filter
+		this.selectedPartnerFilterForATX = providerNames;
+		forkJoin(
+			this.loadACC(),
+			this.loadATX(),
+		)
+		.subscribe();
 	}
 }

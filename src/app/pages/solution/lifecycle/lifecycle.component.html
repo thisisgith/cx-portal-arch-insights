@@ -5,6 +5,15 @@
 		</div>
 
 		<div class="col-md-9">
+			<div class="global-filter" *ngIf="partnerList">
+				<multiselect name="Content Provider"
+					[items]="partnerList"
+					nameKey="companyName"
+					valueKey="companyId"
+					[defaultValues]="selectedPartnerFilter"
+					(changed)="setProviderFilter($event)">
+				</multiselect>
+			</div>
 			<div class="row">
 				<div class="col-md-4">
 					<app-communities></app-communities>
@@ -862,10 +871,10 @@
 								</multiselect>
 							</ng-container>
 						</div>
-						<div class="base-margin-left">
+						<div class="base-margin-left"  *ngIf="partnerList">
 							<ng-container class="modal__body__filter">
 								<multiselect [name]="'_ContentProvider_' | i18n"
-										[items]="componentData.partner"
+										[items]="partnerList"
 										nameKey="companyName"
 										valueKey="companyId"
 										[defaultValues]="selectedPartnerFilterForATX"
