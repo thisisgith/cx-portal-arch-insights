@@ -16,8 +16,10 @@ import * as _ from 'lodash-es';
 	selector: 'bar-chart',
 	styleUrls: ['./bar-chart.component.scss', '../tooltip/tooltip.scss'],
 	template: `
-		<div [chart]="chart"></div>
-		<div class="hbar__divider"></div>
+		<div>
+			<div [chart]="chart"></div>
+			<div class="hbar__divider"></div>
+		</div>
 	`,
 })
 export class BarChartComponent implements OnChanges {
