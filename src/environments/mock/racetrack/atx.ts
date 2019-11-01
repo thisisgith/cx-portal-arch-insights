@@ -600,7 +600,7 @@ export const ATXScenarios = [
 		},
 		url: `${api}?usecase=Campus Network Assurance&solution=IBN&` +
 			`pitstop=Onboard&customerId=${customerId}&suggestedAction=Get to know Cisco DNA Center&` +
-			`providerId=293531&providerId=293533`,
+			'providerId=293531&providerId=293533',
 		usecases: ['Use Case 1'],
 	},
 ];
