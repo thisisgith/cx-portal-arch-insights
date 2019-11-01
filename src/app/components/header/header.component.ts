@@ -51,19 +51,8 @@ export class HeaderComponent implements AfterViewChecked, OnInit, OnDestroy {
 	// }];
 	// TODO: Portal Support is feedback
 	public portalHelpLinks = [{
-		name: I18n.get('_PortalDemo_'),
-		url: '',
-	},
-	{
 		name: I18n.get('_GettingStarted_'),
 		url: 'https://www.cisco.com/c/dam/en/us/support/docs/cloud-systems-management/Cisco-CX-Collector/Collector_Overview.pdf',
-	},
-	{
-		name: I18n.get('_PortalSupport_'),
-		component: {
-			name : ContactSupportComponent,
-			params : { },
-		},
 	}];
 	public vendorLinks = [{
 		name: I18n.get('_TermsConditions_'),
@@ -162,19 +151,10 @@ export class HeaderComponent implements AfterViewChecked, OnInit, OnDestroy {
 	}
 
 	/**
-	 * Handle link click event. Move user to a new url in a new tab or
-	 * open component to help user contact customer support.
-	 * @param link object containing clicked link details.
- 	*/
-	private onLinkClick (link) {
-		if (link.url) {
-			window.open(link.url, '_target');
-			return;
-		}
-		if (link.component) {
-			this.cuiModalService.showComponent(link.component.name, link.component.params);
-			return;
-		}
+	 * open support modal.
+	 */
+	public openPortalSupport () {
+		this.cuiModalService.showComponent(ContactSupportComponent, { });
 	}
 
 	/**
