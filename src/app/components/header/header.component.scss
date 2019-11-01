@@ -404,11 +404,10 @@ $text-larger: 19px;
 		margin-top: 10px;
 		margin-bottom: 10px;
 	}
+
+	&__btn {
+		padding: unset;
+		color: #227bb1;
+	}
 }
 
-.link {
-	@extend .link;
-
-	padding: unset;
-	color: #227bb1;
-}

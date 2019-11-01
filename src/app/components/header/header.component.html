@@ -185,7 +185,7 @@
 		<div *ngFor="let link of portalHelpLinks">
 			<a class="links__support" [href]="link.url" target="_blank" [innerText]="link.name" data-auto-id="portalHelp"></a>
 		</div>
-		<button class="link" (click)="openPortalSupport()" data-auto-id="portalSupport">{{'_PortalSupport_' | i18n}}</button>
+		<button class="link links__btn" (click)="openPortalSupport()" data-auto-id="portalSupport">{{'_PortalSupport_' | i18n}}</button>
 		<div class="divider links__divider"></div>
 		<div *ngFor="let vendorLink of vendorLinks">
 			<a class="links__vendor" [innerText]="vendorLink.name" [href]="vendorLink.url" target="_blank"
