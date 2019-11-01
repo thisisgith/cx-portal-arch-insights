@@ -59,6 +59,22 @@ interface SuccessPathsModel {
 	totalCount?: number;
 }
 
+enum StatusValues {
+	'completed',
+	'recommended',
+	'scheduled',
+	'requested',
+	'in-progress',
+}
+
+/**
+ * Interface representing a status filter item
+ */
+interface StatusFilterItem {
+	key: string;
+	value: StatusValues;
+}
+
 /**
  * Interface representing our data object
  */
@@ -75,7 +91,6 @@ interface ComponentData {
 		solution: string;
 		usecase: string;
 		suggestedAction?: string;
-		providerId?: string[];
 	};
 	atx?: {
 		sessions?: AtxSchema[];
@@ -161,10 +176,13 @@ export class LifecycleComponent implements OnDestroy {
 	public customerId: string;
 	public buId: string;
 	private user: User;
+	public partnerList: CompanyInfo [];
 	public totalAllowedGroupTrainings: number;
 	public selectedFilterForSB = '';
-	public selectedFilterForATX = '';
 	public selectedFilterForACC = '';
+	public selectedPartnerFilter: string [];
+	public selectedPartnerFilterForATX: string[];
+	public atxStatusFilter: StatusValues[];
 	public groupTrainingsAvailable = 0;
 	public selectedSuccessPaths: SuccessPath[];
 	public selectedScheduledATX: AtxSchema;
@@ -261,10 +279,6 @@ export class LifecycleComponent implements OnDestroy {
 
 	public atxStatusOptions = [
 		{
-			name: I18n.get('_AllTitles_'),
-			value: 'allTitles',
-		},
-		{
 			name: I18n.get('_Recommended_'),
 			value: 'recommended',
 		},
@@ -283,14 +297,6 @@ export class LifecycleComponent implements OnDestroy {
 		{
 			name: I18n.get('_Completed_'),
 			value: 'completed',
-		},
-		{
-			name: I18n.get('_Bookmarked_'),
-			value: 'isBookmarked',
-		},
-		{
-			name: I18n.get('_NotBookmarked_'),
-			value: 'hasNotBookmarked',
 		},
 	];
 
@@ -406,6 +412,7 @@ export class LifecycleComponent implements OnDestroy {
 			this.componentData.params.solution = _.get(solution, 'name');
 		});
 
+		this.getPartnerList();
 		this.racetrackInfoService.getCurrentTechnology()
 		.pipe(
 			takeUntil(this.destroy$),
@@ -435,7 +442,6 @@ export class LifecycleComponent implements OnDestroy {
 				this.getLifecycleInfo(this.currentWorkingPitstop);
 			}
 		});
-		this.getPartnerList();
 	}
 
 	/**
@@ -544,6 +550,9 @@ export class LifecycleComponent implements OnDestroy {
 				sort0Field: 'title',
 			},
 		};
+		this.selectedPartnerFilter = [];
+		this.selectedPartnerFilterForATX = [];
+		this.atxStatusFilter = [];
 	}
 
 	/**
@@ -1094,23 +1103,6 @@ export class LifecycleComponent implements OnDestroy {
 				this.selectedACC = this.componentData.acc.sessions;
 			}
 		}
-
-		if (type === 'ATX') {
-			if (this.selectedFilterForATX === 'isBookmarked') {
-				this.selectedATX =
-				_.filter(this.componentData.atx.sessions, { bookmark: true });
-			} else if (this.selectedFilterForATX === 'hasNotBookmarked') {
-				this.selectedATX =
-				_.filter(this.componentData.atx.sessions, { bookmark: false });
-			} else {
-				this.selectedATX =
-					_.filter(this.componentData.atx.sessions,
-						{ status: this.selectedFilterForATX });
-			}
-			if (this.selectedFilterForATX === 'allTitles' || !this.selectedFilterForATX) {
-				this.selectedATX = this.componentData.atx.sessions;
-			}
-		}
 	}
 
 	/**
@@ -1632,12 +1624,18 @@ export class LifecycleComponent implements OnDestroy {
 			window.atxLoading = true;
 		}
 
-		return this.contentService.getRacetrackATX(
-			_.pick(this.componentData.params,
-				['customerId', 'solution', 'usecase', 'pitstop', 'suggestedAction', 'providerId']))
+		const params = _.pick(this.componentData.params,
+			['customerId', 'solution', 'usecase', 'pitstop', 'suggestedAction']);
+		if (!_.isEmpty(this.atxStatusFilter)) {
+			_.set(params, 'status', this.atxStatusFilter);
+		}
+		if (!_.isEmpty(this.selectedPartnerFilterForATX)) {
+			_.set(params, 'providerId', this.selectedPartnerFilterForATX);
+		}
+
+		return this.contentService.getRacetrackATX(params)
 		.pipe(
 			map((result: ATXResponseModel) => {
-				this.selectedFilterForATX = this.atxStatusOptions[0].value;
 				this.componentData.atx = {
 					recommended: _.head(result.items),
 					sessions: result.items,
@@ -2297,6 +2295,36 @@ export class LifecycleComponent implements OnDestroy {
 	}
 
 	/**
+	 * Triggers the status filter for ACC or ATX items
+	 * @param selectedStatuses Selected statuses to filter on
+	 * @param type ATX or ACC
+	 */
+	public statusMultiFilter (selectedStatuses: StatusFilterItem[], type: 'ATX' | 'ACC') {
+		switch (type) {
+			case 'ATX':
+				this.atxStatusFilter = _.map(selectedStatuses, 'value');
+				this.loadATX()
+					.subscribe();
+				break;
+		}
+	}
+
+	/**
+	 * Triggers the status filter for ACC or ATX items
+	 * @param selectedPartners Selected statuses to filter on
+	 * @param type ATX or ACC
+	 */
+	 public partnerMultiFilter (selectedPartners: CompanyInfo[], type: 'ATX' | 'ACC') {
+		switch (type) {
+			case 'ATX':
+				this.selectedPartnerFilterForATX = _.map(selectedPartners, 'companyId');
+				this.loadATX()
+					.subscribe();
+				break;
+		}
+	}
+
+	/**
 	 * Creates a request to load more content into the modal when the
 	 * user clicks the Load More button
 	 * @param type The type of modal currently open
@@ -2381,7 +2409,7 @@ export class LifecycleComponent implements OnDestroy {
 				companyName: 'Cisco',
 			};
 			this.status.loading.partner = false;
-			this.componentData.partner = [ciscoCompanyInfo, ...result.companyList];
+			this.partnerList = [ciscoCompanyInfo, ...result.companyList];
 		},
 		err => {
 			this.status.loading.partner = false;
@@ -2396,7 +2424,9 @@ export class LifecycleComponent implements OnDestroy {
 	 */
 	public setProviderFilter (providers: CompanyInfo[]) {
 		const providerNames = providers.map(provider => provider.companyId);
-		this.componentData.params.providerId = providerNames;
+		this.selectedPartnerFilter = providerNames;
+		// overwrite individial ATX and ACC parter filter
+		this.selectedPartnerFilterForATX = providerNames;
 		forkJoin(
 			this.loadACC(),
 			this.loadATX(),

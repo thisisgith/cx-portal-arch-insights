@@ -54,7 +54,7 @@ export class MultiselectComponent implements OnInit {
 	 * Search through defaultValues and if found in items, set as selected
 	 */
 	public ngOnInit () {
-		if (!this.defaultValues.length) {
+		if (!_.get(this.defaultValues, 'length')) {
 			return;
 		}
 		for (const defaultValue of this.defaultValues) {
