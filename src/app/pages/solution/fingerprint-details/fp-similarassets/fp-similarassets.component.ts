@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { LogService } from '@cisco-ngx/cui-services';
 import { Subject } from 'rxjs';
-import { FpIntelligenceService, SimilarDevicesList } from '@sdp-api';
+import { FpIntelligenceService, SimilarDevicesList, RacetrackSolution, RacetrackTechnology } from '@sdp-api';
 import {
 	FormGroup,
 	Validators,
@@ -21,6 +21,7 @@ import * as _ from 'lodash-es';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { ActivatedRoute } from '@angular/router';
+import { RacetrackInfoService } from '@services';
 
 /**
  * fp-similarassets component
@@ -64,6 +65,8 @@ export class FpSimilarAssetsComponent {
 	private comparisonviewTemplate: TemplateRef<[]>;
 	@ViewChild('compareTemplate', { static: true })
 	private compareTemplate: TemplateRef<[]>;
+	private selectedSolutionName: string;
+	private selectedTechnologyName: string;
 
 	constructor (
 		private userResolve: UserResolve,
@@ -71,6 +74,7 @@ export class FpSimilarAssetsComponent {
 		private logger: LogService,
 		private fb: FormBuilder,
 		private route: ActivatedRoute,
+		private racetrackInfoService: RacetrackInfoService,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
@@ -100,6 +104,21 @@ export class FpSimilarAssetsComponent {
 				}
 				this.logger.info(val);
 			});
+		this.racetrackInfoService.getCurrentSolution()
+		.pipe(
+			takeUntil(this.destroyed$),
+		)
+		.subscribe((solution: RacetrackSolution) => {
+			this.selectedSolutionName = _.get(solution, 'name');
+		});
+
+		this.racetrackInfoService.getCurrentTechnology()
+		.pipe(
+			takeUntil(this.destroyed$),
+		)
+		.subscribe((technology: RacetrackTechnology) => {
+			this.selectedTechnologyName = _.get(technology, 'name');
+		});
 	}
 
 	/**
@@ -165,6 +184,8 @@ export class FpSimilarAssetsComponent {
 		const similarDeviceParams = this.getSimilarDeviceParams(
 			this.requestForm.value,
 		);
+		similarDeviceParams.solution = this.selectedSolutionName;
+		similarDeviceParams.useCase = this.selectedTechnologyName;
 		this.fpIntelligenceService
 			.getSimilarDevices(similarDeviceParams)
 			.pipe(takeUntil(this.destroyed$))
