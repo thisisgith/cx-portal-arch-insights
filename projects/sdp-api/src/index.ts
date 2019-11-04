@@ -72,6 +72,9 @@ export * from './lib/risk-mitigation/models';
 export * from './lib/risk-mitigation/services';
 export * from './lib/risk-mitigation/risk-mitigation.module';
 
+export * from './lib/controlpoints/models/admin-complience';
+export * from './lib/controlpoints/models/left-tag-response';
+
 export * from './lib/afm/models';
 export * from './lib/afm/services';
 export * from './lib/afm/afm.module';
@@ -90,9 +93,9 @@ export * from './lib/insights/insights-crashes.module';
 
 export * from './lib/asset-tagging/models';
 export * from './lib/asset-tagging/services';
-export * from './lib/asset-tagging/asset-tagging.module';
 
 export * from './lib/partner/models/company-info-list';
 export * from './lib/partner/models/company-info';
 export * from './lib/partner/services';
 export * from './lib/partner/partner.module';
+export * from './lib/asset-tagging/asset-tagging.modules';

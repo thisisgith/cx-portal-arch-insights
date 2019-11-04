@@ -1,0 +1,15 @@
+:host {
+	.panel div {
+		word-wrap: break-word;
+	}
+
+	.AdminInputSelect {
+		width: 175px;
+		height: 35px;
+	}
+
+	.flex-end {
+		display: flex;
+		flex-direction: row-reverse;
+	}
+}

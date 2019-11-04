@@ -14,6 +14,8 @@ export * from './controlpoints/license';
 export * from './controlpoints/policies';
 export * from './controlpoints/devices';
 
+export * from './admin-complience/admin-complience';
+
 export * from './diagnostics/critical-bugs';
 export * from './diagnostics/critical-bugs-assets';
 
