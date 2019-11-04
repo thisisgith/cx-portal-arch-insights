@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import {
 	ControlPointIEHealthStatusAPIService,
 	ControlPointAdminComplienceService,
@@ -21,6 +21,7 @@ import { RouteAuthService} from '@services';
 
 import * as _ from 'lodash-es';
 import { LogService } from '@cisco-ngx/cui-services';
+import { CuiModalService } from '@cisco-ngx/cui-components';
 
 
 
@@ -33,6 +34,11 @@ import { LogService } from '@cisco-ngx/cui-services';
 	templateUrl: './admin-complience.component.html',
 })
 export class AdminComplienceComponent implements OnInit {
+	@ViewChild('confirmationModalTemplate',
+	{ static: true }) private confirmationModalTemplate: TemplateRef<string>;
+	@ViewChild('alertTemplate',
+	{ static: true }) private alertTemplate: TemplateRef<string>;
+
 	private destroyed$: Subject<void> = new Subject<void>();
 	private customerId: string;
 
@@ -50,11 +56,13 @@ export class AdminComplienceComponent implements OnInit {
 	public rightSideTags = [];
 	public saveDetails;
 	public toBeScanned = false;
+	public alert: any = {};
 
 	private user: User;
 
 	constructor(
 		private controlPointIEHealthStatusAPIService: ControlPointIEHealthStatusAPIService,
+		public cuiModalService: CuiModalService,
 		public controlPointAdminComplienceService: ControlPointAdminComplienceService,
 		public assetTaggingService: AssetTaggingService,
 		private route: ActivatedRoute,
@@ -115,7 +123,22 @@ export class AdminComplienceComponent implements OnInit {
 
 	}
 
-	
+	public toggleOptlnStatus() {
+		if (this.rightSideTags || this.leftSideTags) {
+			this.cuiModalService.show(this.confirmationModalTemplate, 'small');
+			this.optlnStatus = true;
+		}
+	}
+
+	public discardChanges(){
+		this.optlnStatus = false;
+		this.cuiModalService.hide();
+	}
+
+	public saveChanges(){
+		this.optlnStatus = true;
+		this.cuiModalService.hide();
+	}
 
 	public getLeftSideTags(){
 
@@ -165,7 +188,6 @@ export class AdminComplienceComponent implements OnInit {
 				tag.deviceCount = policyGroups.deviceCount;
 			});
 
-
 			  console.log('Left side Tags:' + this.leftSideTags);
 			  console.log('Right side Tags:' + this.rightSideTags);
 
@@ -180,6 +202,7 @@ export class AdminComplienceComponent implements OnInit {
 	}
 
 	public savePolicyDetails(){
+		this.alert.show('Tags details for the policy '+this.selectedPolicy+' are successfully saved', 'success');
 		this.assetTaggingService.getSelectedTags()
 		.subscribe( res => {
 			this.saveDetails.tags = res;
