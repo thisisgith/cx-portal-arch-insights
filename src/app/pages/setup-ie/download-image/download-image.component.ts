@@ -47,6 +47,7 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 	public loading = false;
 	public view: 'connect' | 'pre-download' | 'k9' | 'k9-decline' | 'eula';
 	public didDecline = false;
+	public region: 'emea' | 'usa' = 'usa';
 
 	public k9Data: Partial<K9FormData> = { };
 	public eulaData: Partial<EulaFormData> = { };
@@ -348,6 +349,9 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 		return this.controlPointsService
 			.createIERegistrationUsingPOST({
 				customerId: this.customerId,
+				datacenter: this.region,
+				saId: Number(this.customerId),
+				vaId: 0,
 			})
 			.pipe(
 				finalize(() => this.loading = false),

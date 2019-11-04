@@ -17,11 +17,11 @@ import { IERegistrationResponseModel } from '../models/ieregistration-response-m
   providedIn: 'root',
 })
 class ControlPointIERegistrationAPIService extends __BaseService {
-  static readonly getDnacStatusUsingGETPath = '/v1/dnac/status/{customerId}';
-  static readonly updateRegistrationCompletionUsingPOSTPath = '/v1/ie-setup/status';
-  static readonly getIESetupCompletionStatusUsingGETPath = '/v1/ie-setup/status/{customerId}';
-  static readonly createIERegistrationUsingPOSTPath = '/v1/register/ie';
-  static readonly getIERegistrationUsingGETPath = '/v1/registration/ie/{customerId}';
+  static readonly getDnacStatusUsingGETPath = '/dnac/status/{customerId}';
+  static readonly updateRegistrationCompletionUsingPOSTPath = '/ie-setup/status';
+  static readonly getIESetupCompletionStatusUsingGETPath = '/ie-setup/status/{customerId}';
+  static readonly createIERegistrationUsingPOSTPath = '/register/ie';
+  static readonly getIERegistrationUsingGETPath = '/registration/ie/{customerId}';
 
   constructor(
     config: __Configuration,

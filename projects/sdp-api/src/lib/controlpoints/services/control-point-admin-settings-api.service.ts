@@ -14,8 +14,8 @@ import { UserPreferenceResponseModel } from '../models/user-preference-response-
   providedIn: 'root',
 })
 class ControlPointAdminSettingsAPIService extends __BaseService {
-  static readonly createUserPreferenceDetailsUsingPOSTPath = '/v1/settings/insight';
-  static readonly getUserPreferenceDetailsUsingGETPath = '/v1/settings/insight/{customerId}/{insightType}';
+  static readonly createUserPreferenceDetailsUsingPOSTPath = '/settings/insight';
+  static readonly getUserPreferenceDetailsUsingGETPath = '/settings/insight/{customerId}/{insightType}';
 
   constructor(
     config: __Configuration,

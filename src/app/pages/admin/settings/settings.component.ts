@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {
 	ControlPointIEHealthStatusAPIService,
-	ControlPointInsightTypeAPIService,
-	ControlPointInsightTypePostAPIService,
+	ControlPointAdminSettingsAPIService,
 	IEHealthStatusResponseModel,
 	UserService,
-	InsightTypeRequestModel,
 } from '@sdp-api';
 import { User } from '@interfaces';
 import { ActivatedRoute } from '@angular/router';
@@ -106,8 +104,7 @@ export class SettingsComponent implements OnInit {
 		private controlPointIEHealthStatusAPIService: ControlPointIEHealthStatusAPIService,
 		private route: ActivatedRoute,
 		private userService: UserService,
-		private controlPointInsightTypeAPIService: ControlPointInsightTypeAPIService,
-		private controlPointInsightTypePostAPIService: ControlPointInsightTypePostAPIService,
+		private controlPointInsightTypeAPIService: ControlPointAdminSettingsAPIService,
 	) {
 		this.user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(this.user, ['info', 'customerId']);
@@ -243,7 +240,7 @@ ${HDDSizeUnit}`;
 			});
 		this.getInsightType(this.customerId, 'ALL')
 			.subscribe(response => {
-				this.insightTypeResp = response.body;
+				this.insightTypeResp = response;
 
 				this.insightTypeResp.insightConfigs.forEach(insightConf => {
 					if (insightConf.insightType === 'COMPLIANCE') {
@@ -277,7 +274,7 @@ ${HDDSizeUnit}`;
 	 */
 	public getInsightType (customerId: string, insightType: string) {
 		return this.controlPointInsightTypeAPIService
-			.getInsightTypeUsingGETResponse({ customerId, insightType })
+			.getUserPreferenceDetailsUsingGET({ customerId, insightType })
 			.pipe(
 				catchError(err => {
 					this.error = true;
@@ -298,14 +295,14 @@ ${HDDSizeUnit}`;
 	 */
 	public insightModeChange (insightType, mode) {
 		this.isLoading = true;
-		const parameters: InsightTypeRequestModel = {
+		const parameters = {
 			insightType,
 			mode,
 			customerId: this.customerId,
 		};
 
-		return this.controlPointInsightTypePostAPIService
-			.saveInsightTypeUsingPOST(parameters)
+		return this.controlPointInsightTypeAPIService
+			.createUserPreferenceDetailsUsingPOST(parameters)
 			.subscribe(() => {
 				this.isLoading = false;
 			});

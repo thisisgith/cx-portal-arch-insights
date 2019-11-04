@@ -12,7 +12,7 @@ import { DeviceDetailsByPage } from '../models/device-details-by-page';
   providedIn: 'root',
 })
 class ControlPointDeviceDiscoveryAPIService extends __BaseService {
-  static readonly getDevicesUsingGETPath = '/v1/devices/{customerId}/{solution}/{useCase}/{pageNumber}/{rowsPerPage}';
+  static readonly getDevicesUsingGETPath = '/devices/{customerId}/{solution}/{useCase}/{pageNumber}/{rowsPerPage}';
 
   constructor(
     config: __Configuration,
@@ -40,6 +40,11 @@ class ControlPointDeviceDiscoveryAPIService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
+
+
+
+
 
     let req = new HttpRequest<any>(
       'GET',
