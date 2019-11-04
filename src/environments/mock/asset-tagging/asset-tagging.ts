@@ -113,7 +113,7 @@ export const AssetTaggingScenarios = [
 				},
 			],
 		},
-		url: `${api}/tag-to-device-api?customerId=${customerId}`,
+		url: `${api}/tag-to-device-api/${customerId}`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -130,7 +130,7 @@ export const AssetTaggingScenarios = [
 				},
 			],
 		},
-		url: `${api}/tag-policy-mapping-api?customerId=${customerId}`,
+		url: `${api}/tag-policy-mapping-api/${customerId}`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -147,7 +147,7 @@ export const AssetTaggingScenarios = [
 				},
 			],
 		},
-		url: `${api}/device-tag-api?customerId=${customerId}&deviceId=${deviceId}`,
+		url: `${api}/device-tag-api/${customerId}&deviceId=${deviceId}`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -164,7 +164,7 @@ export const AssetTaggingScenarios = [
 				},
 			],
 		},
-		url: `${api}/all-policies-api?customerId=${customerId}`,
+		url: `${api}/all-policies-api/${customerId}`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -181,7 +181,7 @@ export const AssetTaggingScenarios = [
 				},
 			],
 		},
-		url: `${api}/save-tag-policy-mapping-api?customerId=${customerId}`,
+		url: `${api}/save-tag-policy-mapping-api/${customerId}`,
 		usecases: ['Use Case 1'],
 	},
 ];

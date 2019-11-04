@@ -50,18 +50,15 @@ class AssetTaggingService extends __BaseService {
 	 * @return successful operation
 	 */
 	getAllTagsResponse (params: AssetTaggingService.GetParams): __Observable<__StrictHttpResponse<DeviceDetails>> {
-		let __params = this.newParams();
 		let __headers = new HttpHeaders();
 		let __body: any = null;
 
-		if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
 		let req = new HttpRequest<any>(
 			'GET',
-			this.rootUrl + `${AssetTaggingService.getAllTagsPath}`,
+			this.rootUrl + `${AssetTaggingService.getAllTagsPath}`+'/'+ params.customerId.toString(),
 			__body,
 			{
 				headers: __headers,
-				params: __params,
 				responseType: 'json',
 			});
 
@@ -98,18 +95,15 @@ class AssetTaggingService extends __BaseService {
 	 * @return successful operation
 	 */
 	getTagsAssociatedWithPolicyResponse (params: AssetTaggingService.GetParams): __Observable<__StrictHttpResponse<PolicyGroupDetails>> {
-		let __params = this.newParams();
 		let __headers = new HttpHeaders();
 		let __body: any = null;
 
-		if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
 		let req = new HttpRequest<any>(
 			'GET',
-			this.rootUrl + `${AssetTaggingService.getTagsAssociatedWithPolicyPath}`,
+			this.rootUrl + `${AssetTaggingService.getTagsAssociatedWithPolicyPath}`+'/'+ params.customerId.toString(),
 			__body,
 			{
 				headers: __headers,
-				params: __params,
 				responseType: 'json',
 			});
 
@@ -150,11 +144,10 @@ class AssetTaggingService extends __BaseService {
 		let __headers = new HttpHeaders();
 		let __body: any = null;
 
-		if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
 		if (params.deviceId != null) __params = __params.set('deviceId', params.deviceId.toString());
 		let req = new HttpRequest<any>(
 			'GET',
-			this.rootUrl + `${AssetTaggingService.getAsset360TagsPath}`,
+			this.rootUrl + `${AssetTaggingService.getAsset360TagsPath}`+'/'+ params.customerId.toString(),
 			__body,
 			{
 				headers: __headers,
@@ -195,18 +188,15 @@ class AssetTaggingService extends __BaseService {
 	 * @return successful operation
 	 */
 	getPolicyResponse (params: AssetTaggingService.GetParams): __Observable<__StrictHttpResponse<PolicyGroupList>> {
-		let __params = this.newParams();
 		let __headers = new HttpHeaders();
 		let __body: any = null;
 
-		if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
 		let req = new HttpRequest<any>(
 			'GET',
-			this.rootUrl + `${AssetTaggingService.getPoliciesPath}`,
+			this.rootUrl + `${AssetTaggingService.getPoliciesPath}`+'/'+ params.customerId.toString(),
 			__body,
 			{
 				headers: __headers,
-				params: __params,
 				responseType: 'json',
 			});
 
@@ -243,18 +233,15 @@ class AssetTaggingService extends __BaseService {
 	 * @return successful operation
 	 */
 	postPolicyMappingResponse (params: AssetTaggingService.PostParams): __Observable<__StrictHttpResponse<any>> {
-		let __params = this.newParams();
 		let __headers = new HttpHeaders();
 		let __body: any = params.body;
 
-		if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
 		let req = new HttpRequest<any>(
 			'POST',
-			this.rootUrl + `${AssetTaggingService.getPolicyMappingPath}`,
+			this.rootUrl + `${AssetTaggingService.getPolicyMappingPath}`+'/'+ params.customerId.toString(),
 			__body,
 			{
 				headers: __headers,
-				params: __params,
 				responseType: 'json',
 			});
 
