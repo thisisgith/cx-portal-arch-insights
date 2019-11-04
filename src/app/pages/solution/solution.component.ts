@@ -220,6 +220,8 @@ export class SolutionComponent implements OnInit, OnDestroy {
 
 				if (this.selectedTechnology) {
 					this.racetrackInfoService.sendCurrentTechnology(this.selectedTechnology);
+					this.racetrackInfoService.sendCurrentAdoptionPercentage(
+						this.selectedTechnology.usecase_adoption_percentage);
 				}
 			}
 
@@ -288,6 +290,8 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	public changeTechnology (technology: RacetrackTechnology) {
 		this.selectedTechnology = technology;
 		this.racetrackInfoService.sendCurrentTechnology(technology);
+		this.racetrackInfoService.sendCurrentAdoptionPercentage(
+				technology.usecase_adoption_percentage);
 	}
 
 	/**
