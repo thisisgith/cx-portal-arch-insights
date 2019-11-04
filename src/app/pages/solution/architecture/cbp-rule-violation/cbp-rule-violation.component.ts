@@ -6,9 +6,11 @@ import { DatePipe } from '@angular/common';
 import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
-import { ArchitectureService, IException, cbpRuleException, params } from '@sdp-api';
+import { ArchitectureService, IException, cbpRuleException, params, ArchitectureReviewService } from '@sdp-api';
 import { ActivatedRoute } from '@angular/router';
 import * as _ from 'lodash-es';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 /**
  * CBP Rule Component
@@ -30,6 +32,7 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 	public tableEndIndex = 0;
 	public lastCollectionTime = '';
 	public exceptionObject: IException = null;
+	public destroy$ = new Subject();
 	@ViewChild('riskTemplate', { static: true })
 	private riskTemplate: TemplateRef<{ }>;
 	@ViewChild('recommendationTemplate', { static: true })
@@ -42,6 +45,7 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 	public searchText = '';
 
 	public paramsType: params = {
+		collectionId: '',
 		customerId: '',
 		page: 0,
 		pageSize: 10,
@@ -53,6 +57,7 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 		private logger: LogService,
 		private architectureService: ArchitectureService,
 		private route: ActivatedRoute,
+		private architectureReviewService: ArchitectureReviewService,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
@@ -63,9 +68,31 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 	 * Used to call the getCBPRulesData and buildTable function for Updating the Table
 	 */
 	public ngOnInit () {
-		this.getCBPRulesData();
+		this.getCollectionId();
 		this.buildTable();
 	}
+
+	/**
+	 * Method to fetch collectionId
+	 */
+
+	public getCollectionId () {
+		this.architectureReviewService.getCollectionId()
+		.pipe(
+			takeUntil(this.destroy$),
+		)
+		.subscribe(res => {
+			this.paramsType.collectionId = _.get(res, 'collection.collectionId');
+			if (this.paramsType.collectionId) {
+				this.getCBPRulesData();
+			}
+		},
+		err => {
+			this.logger.error('Devices list Component View' +
+				'  : getCollectionId() ' +
+				`:: Error : (${err.status}) ${err.message}`);
+		});
+	 }
 
 	/**
 	 * Used to detect the changes in input object and
@@ -90,6 +117,7 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 			this.isLoading = true;
 			this.tableStartIndex = 0;
 			this.paramsType.page = 0;
+			this.getCollectionId();
 			this.getCBPRulesData();
 		}
 	}

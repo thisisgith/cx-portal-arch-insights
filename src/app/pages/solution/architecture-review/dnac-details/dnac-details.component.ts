@@ -3,6 +3,8 @@ import * as _ from 'lodash-es';
 import { ActivatedRoute } from '@angular/router';
 import { ArchitectureReviewService } from '@sdp-api';
 import { LogService } from '@cisco-ngx/cui-services';
+import { takeUntil } from 'rxjs/operators';
+import {  Subject } from 'rxjs';
 /**
  * DNAC Details Component
  */
@@ -14,12 +16,19 @@ import { LogService } from '@cisco-ngx/cui-services';
 export class DnacDetailsComponent implements OnChanges {
 
 	@Input('dnacDetails') public dnacDetails: any = null;
+	@Input() public collectionTime: string | number | Date;
 	public customerId: string;
 	public params = {
+		collectionDate: 1,
+		collectionId: '',
 		customerId: '',
 		dnacIP: '',
 	};
-
+	public dataForSystemsGraph = [];
+	public dataForFabricsGraph = [];
+	public dataForWLCsGraph = [];
+	public dataForEndPointsGraph = [];
+	private destroy$ = new Subject();
 	public networkDevicesData = { };
 	public endPointsData = { };
 	public fabricsData = { };
@@ -42,8 +51,85 @@ export class DnacDetailsComponent implements OnChanges {
 		if (this.dnacDetails) {
 			this.params.dnacIP = this.dnacDetails.dnacIpaddress;
 		}
+		if (this.collectionTime) {
+			const date = new Date(this.collectionTime);
+			this.params.collectionDate = date.getTime();
+		}
 		this.isLoading = true;
-		this.getNetworkDevicesCount();
+		this.getCollectionId();
+	}
+
+	/**
+	 * method to get dnac scale utilization data
+	 */
+	public getDnacScaleUtilizationData () {
+		this.architectureService.getDnacScaleUtilizationData(this.params)
+		.subscribe(data => {
+			this.isLoading = false;
+			this.marshalDataForGraphs(data);
+		}, err => {
+			this.logger.error('time series count' +
+				'  : getDnacScaleUtilizationData() ' +
+				`:: Error : (${err.status}) ${err.message}`);
+		});
+	}
+
+	/**
+	 * method to marshall data for graphs
+	 * @param data will have api response
+	 */
+	public marshalDataForGraphs (data: { length: any; }) {
+		if (data.length) {
+			_.each(data,
+				(object: {
+					collectionDate: any;
+					noOfDevices: any;
+					noOfFabrics: any;
+					noOfWlc: any;
+					endpointsPeakTime: any;
+					noOfEndpoints: any;
+				}) => {
+					let tempArr = [];
+					tempArr.push(new Date(object.collectionDate));
+					tempArr.push(object.noOfDevices);
+					this.dataForSystemsGraph.push(tempArr);
+					tempArr = [];
+
+					tempArr.push(new Date(object.collectionDate));
+					tempArr.push(object.noOfFabrics);
+					this.dataForFabricsGraph.push(tempArr);
+					tempArr = [];
+
+					tempArr.push(new Date(object.collectionDate));
+					tempArr.push(object.noOfWlc);
+					this.dataForWLCsGraph.push(tempArr);
+					tempArr = [];
+
+					tempArr.push(new Date(object.endpointsPeakTime));
+					tempArr.push(object.noOfEndpoints);
+					this.dataForWLCsGraph.push(tempArr);
+			  });
+		}
+	}
+
+	/**
+	 * Method to fetch collectionId
+	 */
+
+	public getCollectionId () {
+		this.architectureService.getCollectionId()
+		.pipe(
+			takeUntil(this.destroy$),
+		)
+		.subscribe(res => {
+			this.params.collectionId = _.get(res, 'collection.collectionId');
+			this.getDnacScaleUtilizationData();
+		},
+		err => {
+			this.logger.error('Dnac list Component View' +
+				'  : getCollectionId() ' +
+				`:: Error : (${err.status}) ${err.message}`);
+		});
 	}
 
 	/**

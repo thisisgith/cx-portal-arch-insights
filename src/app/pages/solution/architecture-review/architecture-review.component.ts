@@ -22,6 +22,7 @@ export class ArchitectureReviewComponent implements OnInit {
 	public customerId: string;
 	public filtered = false;
 	public selectedFilter: ISeverity = {
+		filter : [],
 		isClearAllSelected: false,
 		severity: '',
 		title: '',
@@ -38,19 +39,39 @@ export class ArchitectureReviewComponent implements OnInit {
 
 	public collectionId: any;
 
+	public titlesList = [
+		{ title :  I18n.get('_ArchitectureOverallReadiness_') },
+		{ title :  I18n.get('_ArchitectureSDAReadiness_') },
+		{ title :  I18n.get('_ArchitectureAssuranceReadiness_') },
+		{ title :  I18n.get('_ArchitectureSwimReadiness_') },
+		{ title :  I18n.get('_ArchitecturePnpReady_') },
+	];
+
 	@ViewChild('exceptionsFilter', { static: true })
 	private exceptionsFilterTemplate: TemplateRef<{ }>;
+
+	@ViewChild('sdaReadinessFilter', { static: true })
+	private sdaReadinessFilterTemplate: TemplateRef<{ }>;
+
+	@ViewChild('assuranceReadinessFilter', { static: true })
+	private assuranceReadinessTemplate: TemplateRef<{ }>;
+
+	@ViewChild('swimReadinessFilter', { static: true })
+	private swimReadinessFilterTemplate: TemplateRef<{ }>;
+
+	@ViewChild('devicesOnboardingReadinessFilter', { static: true })
+	private devicesOnboardingReadinessFilterTemplate: TemplateRef<{ }>;
 
 	public visualLabels = [
 		{
 			active: true,
-			count: null,
+			count: 0,
 			key: 'dnac',
 			label: I18n.get('_ArchitectureDNAC_'),
 		},
 		{
 			active: false,
-			count: null,
+			count: 0,
 			key: 'devices',
 			label: I18n.get('_ArchitectureSystems_'),
 		},
@@ -133,13 +154,16 @@ export class ArchitectureReviewComponent implements OnInit {
 	 */
 	public selectVisualLabel (label: any) {
 		label.active = true;
-		const filter = _.find(this.filters, { key: 'sda' });
 		this.visualLabels.forEach(element => {
 			if (element !== label) {
 				element.active = false;
-				filter.title = '';
+				this.filters.forEach(item => {
+					item.title = '';
+				});
 			} else {
-				filter.title = I18n.get('_ArchitectureOverallReadiness_');
+				this.filters.map((ele, index) => {
+					ele.title = this.titlesList[index].title;
+				});
 			}
 		});
 	}
@@ -157,7 +181,40 @@ export class ArchitectureReviewComponent implements OnInit {
 				template: this.exceptionsFilterTemplate,
 				title: '',
 			},
+			{
+				key: 'sdareadiness',
+				loading: true,
+				selected: false,
+				seriesData: [],
+				template: this.sdaReadinessFilterTemplate,
+				title: '',
+			},
+			{
+				key: 'assurance',
+				loading: true,
+				selected: false,
+				seriesData: [],
+				template: this.assuranceReadinessTemplate,
+				title: '',
+			},
+			{
+				key: 'swim',
+				loading: true,
+				selected: false,
+				seriesData: [],
+				template: this.swimReadinessFilterTemplate,
+				title: '',
+			},
+			{
+				key: 'pnp',
+				loading: true,
+				selected: false,
+				seriesData: [],
+				template: this.devicesOnboardingReadinessFilterTemplate,
+				title: '',
+			},
 		];
+
 		this.loadData();
 	}
 
@@ -171,15 +228,18 @@ export class ArchitectureReviewComponent implements OnInit {
 		if (sub) {
 			sub.selected = !sub.selected;
 		}
-
 		filter.selected = _.some(filter.seriesData, 'selected');
 
-		if (filter.key === 'sda') {
-			this.selectedFilter[filter.key] =
+		this.filters.forEach(element => {
+			if (element.key === filter.key) {
+				this.selectedFilter.filter =
 				_.map(_.filter(filter.seriesData, 'selected'), 'filter');
-			this.selectedFilter.title = this.selectedFilter[filter.key].length > 0 ?
-			_.get(filter, 'key') : '';
-		}
+				this.selectedFilter.title = this.selectedFilter.filter.length > 0 ?
+				_.get(filter, 'key') : '';
+			} else {
+				element.selected = false;
+			}
+		});
 		this.selectedFilter.isClearAllSelected = false;
 		this.selectedFilter = _.cloneDeep(this.selectedFilter);
 	}
@@ -226,6 +286,10 @@ export class ArchitectureReviewComponent implements OnInit {
 	 */
 	public getDevicesCount () {
 		const exceptionFilter = _.find(this.filters, { key: 'sda' });
+		const sdaReadinessFilter = _.find(this.filters, { key: 'sdareadiness' });
+		const assuranceReadinessFilter = _.find(this.filters, { key: 'assurance' });
+		const swimReadinessDataFilter = _.find(this.filters, { key: 'swim' });
+		const pnpFilter = _.find(this.filters, { key: 'pnp' });
 
 		return this.architectureService.getSDAReadinessCount(this.params)
 			.pipe(
@@ -236,7 +300,7 @@ export class ArchitectureReviewComponent implements OnInit {
 
 					if (Compliant && Compliant > 0) {
 						series.push({
-							filter: 'compliant',
+							filter: 'Yes',
 							label: I18n.get('_ArchitectureCompliant_'),
 							selected: false,
 							value: Compliant,
@@ -247,7 +311,7 @@ export class ArchitectureReviewComponent implements OnInit {
 
 					if (NonCompliant && NonCompliant > 0) {
 						series.push({
-							filter: 'noncompliant',
+							filter: 'No',
 							label: I18n.get('_ArchitectureNonCompliant_'),
 							selected: false,
 							value: NonCompliant,
@@ -258,7 +322,7 @@ export class ArchitectureReviewComponent implements OnInit {
 
 					if (NotAvailable && NotAvailable > 0) {
 						series.push({
-							filter: 'notAvailable',
+							filter: 'NA',
 							label: I18n.get('_ArchitectureNotAvailable_'),
 							selected: false,
 							value: NotAvailable,
@@ -267,9 +331,158 @@ export class ArchitectureReviewComponent implements OnInit {
 
 					exceptionFilter.seriesData = series;
 					exceptionFilter.loading = false;
+
+					const sdaSeriesData = [];
+					const sdaCompliant = _.get(data, 'sdaCompliance.Yes');
+					if (sdaCompliant && sdaCompliant > 0) {
+						sdaSeriesData.push({
+							filter: 'Yes',
+							label: I18n.get('_ArchitectureCompliant_'),
+							selected: false,
+							value: sdaCompliant,
+						});
+					}
+
+					const sdaNonCompliant = _.get(data, 'sdaCompliance.No');
+
+					if (sdaNonCompliant && sdaNonCompliant > 0) {
+						sdaSeriesData.push({
+							filter: 'No',
+							label: I18n.get('_ArchitectureNonCompliant_'),
+							selected: false,
+							value: sdaNonCompliant,
+						});
+					}
+
+					const sdaNotAvailable = _.get(data, 'sdaCompliance.NA');
+
+					if (sdaNotAvailable && sdaNotAvailable > 0) {
+						sdaSeriesData.push({
+							filter: 'NA',
+							label: I18n.get('_ArchitectureNotAvailable_'),
+							selected: false,
+							value: sdaNotAvailable,
+						});
+					}
+
+					sdaReadinessFilter.seriesData = sdaSeriesData;
+					sdaReadinessFilter.loading = false;
+
+					const assuranceSeriesData = [];
+					const assuranceCompliant = _.get(data, 'assuranceCompliance.Yes');
+
+					if (assuranceCompliant && assuranceCompliant > 0) {
+						assuranceSeriesData.push({
+							filter: 'Yes',
+							label: I18n.get('_ArchitectureCompliant_'),
+							selected: false,
+							value: assuranceCompliant,
+						});
+					}
+
+					const assuranceNonCompliant = _.get(data, 'assuranceCompliance.No');
+
+					if (assuranceNonCompliant && assuranceNonCompliant > 0) {
+						assuranceSeriesData.push({
+							filter: 'No',
+							label: I18n.get('_ArchitectureNonCompliant_'),
+							selected: false,
+							value: assuranceNonCompliant,
+						});
+					}
+
+					const assuranceNotAvailable = _.get(data, 'assuranceCompliance.NA');
+
+					if (assuranceNotAvailable && assuranceNotAvailable > 0) {
+						assuranceSeriesData.push({
+							filter: 'NA',
+							label: I18n.get('_ArchitectureNotAvailable_'),
+							selected: false,
+							value: assuranceNotAvailable,
+						});
+					}
+
+					assuranceReadinessFilter.seriesData = assuranceSeriesData;
+					assuranceReadinessFilter.loading = false;
+
+					const swimReadinessData = [];
+					const swimCompliant = _.get(data, 'swimCompliance.Yes');
+
+					if (swimCompliant && swimCompliant > 0) {
+						swimReadinessData.push({
+							filter: 'Yes',
+							label: I18n.get('_ArchitectureCompliant_'),
+							selected: false,
+							value: swimCompliant,
+						});
+					}
+
+					const swimNonCompliant = _.get(data, 'swimCompliance.No');
+
+					if (swimNonCompliant && swimNonCompliant > 0) {
+						swimReadinessData.push({
+							filter: 'No',
+							label: I18n.get('_ArchitectureNonCompliant_'),
+							selected: false,
+							value: swimNonCompliant,
+						});
+					}
+
+					const swimNotAvailable = _.get(data, 'swimCompliance.NA');
+
+					if (swimNotAvailable && swimNotAvailable > 0) {
+						swimReadinessData.push({
+							filter: 'NA',
+							label: I18n.get('_ArchitectureNotAvailable_'),
+							selected: false,
+							value: swimNotAvailable,
+						});
+					}
+
+					swimReadinessDataFilter.seriesData = swimReadinessData;
+					swimReadinessDataFilter.loading = false;
+
+					const pnpReadinessData = [];
+					const pnpCompliant = _.get(data, 'pnpCompliance.Yes');
+
+					if (pnpCompliant && pnpCompliant > 0) {
+						pnpReadinessData.push({
+							filter: 'Yes',
+							label: I18n.get('_ArchitectureCompliant_'),
+							selected: false,
+							value: pnpCompliant,
+						});
+					}
+
+					const pnpNonCompliant = _.get(data, 'pnpCompliance.No');
+
+					if (pnpNonCompliant && pnpNonCompliant > 0) {
+						pnpReadinessData.push({
+							filter: 'No',
+							label: I18n.get('_ArchitectureNonCompliant_'),
+							selected: false,
+							value: pnpNonCompliant,
+						});
+					}
+
+					const pnpNotAvailable = _.get(data, 'pnpCompliance.NA');
+
+					if (pnpNotAvailable && pnpNotAvailable > 0) {
+						pnpReadinessData.push({
+							filter: 'NA',
+							label: I18n.get('_ArchitectureNotAvailable_'),
+							selected: false,
+							value: pnpNotAvailable,
+						});
+					}
+
+					pnpFilter.seriesData = pnpReadinessData;
+					pnpFilter.loading = false;
+
 				}),
 				catchError(err => {
 					exceptionFilter.loading = false;
+					sdaReadinessFilter.loading = false;
 					this.logger.error('architecture.component : getDevicesCount() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
