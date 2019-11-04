@@ -276,7 +276,7 @@
 
 <ng-template #expertActionTemplate let-item="celldata">
 	<div *ngIf="item.release">
-		<button (click)="openContactSupport()" class="btn btn--secondary btn--wide base-padding-left base-padding-right"
+		<button class="btn btn--secondary btn--wide base-padding-left base-padding-right"
 			[innerText]="'_OsvDownloadReport_' | i18n | uppercase" attr.data-auto-id="DownloadReport">
 		</button>
 		<button (click)="onAccept(item.release)" class="btn btn--secondary btn--wide base-padding-left base-padding-right"

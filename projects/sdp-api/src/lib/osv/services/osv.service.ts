@@ -584,6 +584,7 @@ class OSVService extends __BaseService {
  	*
  	* - `customerId`: Unique identifier of a Cisco customer.
  	* - `profileName` : unique identifier of software group
+ 	* - `productFamily` : product family of software group
  	*
  	* @return successful operation
  	*/
@@ -594,6 +595,7 @@ class OSVService extends __BaseService {
 
 		if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
 		__params = __params.set('profileName', params.profileName);
+		__params = __params.set('productFamily', params.productFamily);
 		let req = new HttpRequest<any>(
 			'GET',
 			this.rootUrl + `${OSVService.getSoftwareGroupRecommendationPath}`,
@@ -616,7 +618,8 @@ class OSVService extends __BaseService {
 	 * Software Group Assets
 	 * @param params The `OSVService.GetSoftwareGroupDetailsParam` containing the following parameters:
 	 * - `customerId`: Unique identifier of a Cisco customer.
-	 * - `profileName` : unique identifier of software group	
+	 * - `profileName` : unique identifier of software group
+	 * - `profileName` : product family of software gropu
 	 * @return successful operation
 	 */
 	getSoftwareGroupRecommendations (params: OSVService.GetSoftwareGroupDetailsParam): __Observable<ProfileRecommendationsResponse> {
@@ -975,6 +978,10 @@ module OSVService {
 		 * Unique identifier of a Software Group.
 		 */
 		profileName: string;
+		/**
+		 * Product Family of Selected Software Group 
+		 */
+		productFamily: string;
 	}
 
 	/**

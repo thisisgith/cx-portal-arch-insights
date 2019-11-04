@@ -412,16 +412,16 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 	 * Open contact support modal
 	 * @param selectedSoftwareGroup softwareGroup for which the request has to be made
 	 */
-	public openContactSupport (selectedSoftwareGroup: SoftwareGroup) {
+	public async openContactSupport (selectedSoftwareGroup: SoftwareGroup) {
 		const options = {
 			contactExpert: true,
 			productFamily: selectedSoftwareGroup.productFamily,
 			osType: selectedSoftwareGroup.swType,
 			requestTypes: I18n.get('_OsvContactExpertRequestTypes_'),
 		};
-		const result = this.cuiModalService.showComponent(ContactSupportComponent, options);
+		const result = await this.cuiModalService.showComponent(ContactSupportComponent, options);
 		if (result) {
-			// refresh this view.
+			this.loadData();
 		}
 	}
 }
