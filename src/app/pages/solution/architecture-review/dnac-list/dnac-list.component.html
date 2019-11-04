@@ -24,13 +24,13 @@
 			</div>
 		</div>
 	</details-panel-header>
-	<dnac-details [dnacDetails]="dnacDetails"></dnac-details>
+	<dnac-details [dnacDetails]="dnacDetails" [collectionTime]="lastCollectionTime"></dnac-details>
 </details-panel>
 
 <div class="row">
 	<div class="col-md-4">
 		<div class="container" *ngIf="dnacDetailsResponse?.length > 0">
-			<span [innerText]="'_ArchitectureDNAC_' | i18n" class="text-large"></span>
+			<span [innerText]="'_ArchitectureDNACScaleUtilization_' | i18n" class="text-large"></span>
 			<span class="qtr-margin-left text-small text-muted"
 				[innerText]="'_ArchitectureShowingXofYTotalItems_' | i18n:(tableStartIndex+1):tableEndIndex:totalItems">
 			</span>
@@ -83,40 +83,64 @@
 </div>
 
 <ng-template #devicesTemplate let-item="celldata">
-	<span [ngClass]="{
-			'text-danger': item?.devicesPublishedViolated === 'Yes',
-			'transparent-style': item?.devicesPublishedViolated === 'No'
-		}" class="qtr-margin-right icon-circle">
+	<span [ngClass]="setIndicators(item.devicesPublishedPercentage)" class="qtr-margin-right icon-circle">
 	</span>
 	<span [innerText]="getDevicesTemplate(item)">
 	</span>
 </ng-template>
 
+<ng-template #devicesTooltipTemplate>
+	<span [innerText]="'_ArchitectureSystems(SystemsPublishedLimit)_' | i18n"></span>
+	<sup><div tooltip [tooltipTemplate]="devicesTooltipContentTemplate" class="icon-info-outline qtr-margin-left" [tooltipMaxWidth]="200"></div></sup>
+</ng-template>
+
+<ng-template #devicesTooltipContentTemplate>
+	<span [innerText]="'_ArchitectureSystemsTooltipContent_' | i18n" class="text-small"></span>
+</ng-template>
+
+<ng-template #fabricsTooltipTemplate>
+	<span [innerText]="'_ArchitectureFabrics(FabricsPublishedLimit)_' | i18n"></span>
+	<sup><div tooltip [tooltipTemplate]="fabricsTooltipContentTemplate" class="icon-info-outline qtr-margin-left" [tooltipMaxWidth]="200"></div></sup>
+</ng-template>
+
+<ng-template #fabricsTooltipContentTemplate>
+	<span [innerText]="'_ArchitectureFabricsTooltipContent_' | i18n" class="text-small"></span>
+</ng-template>
+
+<ng-template #endPointsTooltipTemplate>
+	<span [innerText]="'_ArchitectureEndPoints(EndPublishedLimit)_' | i18n"></span>
+	<sup><div tooltip [tooltipTemplate]="endPointsTooltipContentTemplate" class="icon-info-outline qtr-margin-left" [tooltipMaxWidth]="200"></div></sup>
+</ng-template>
+
+<ng-template #endPointsTooltipContentTemplate>
+	<span [innerText]="'_ArchitectureEndpointTooltipContent_' | i18n" class="text-small"></span>
+</ng-template>
+
+<ng-template #wlcsTooltipTemplate>
+	<span [innerText]="'_ArchitectureWLC(WLCPublishedLimit)_' | i18n"></span>
+	<sup><div tooltip [tooltipTemplate]="wlcsTooltipContentTemplate" class="icon-info-outline qtr-margin-left" [tooltipMaxWidth]="200"></div></sup>
+</ng-template>
+
+<ng-template #wlcsTooltipContentTemplate>
+	<span [innerText]="'_ArchitectureWlcTooltipContent_' | i18n" class="text-small"></span>
+</ng-template>
+
 <ng-template #endPointsTemplate let-item="celldata">
-	<span [ngClass]="{
-			'text-danger': item?.endpointsPublishedViolated === 'Yes',
-			'transparent-style': item?.endpointsPublishedViolated === 'No'
-		}" class="qtr-margin-right icon-circle">
+	<span [ngClass]="setIndicators(item.endpointsPublishedPercentage)" class="qtr-margin-right icon-circle">
 	</span>
 	<span [innerText]="getEndPointsTemplate(item)">
 	</span>
 </ng-template>
 
 <ng-template #fabricsTemplate let-item="celldata">
-	<span [ngClass]="{
-			'text-danger': item?.fabricsPublishedViolated === 'Yes',
-			'transparent-style': item?.fabricsPublishedViolated === 'No'
-		}" class="qtr-margin-right icon-circle">
+	<span [ngClass]="setIndicators(item.fabricsPublishedPercentage)" class="qtr-margin-right icon-circle">
 	</span>
 	<span [innerText]="getFabricsTemplate(item)">
 	</span>
 </ng-template>
 
 <ng-template #wlcTemplate let-item="celldata">
-	<span [ngClass]="{
-			'text-danger': item?.wlcPublishedViolated === 'Yes',
-			'transparent-style': item?.wlcPublishedViolated === 'No'
-		}" class="qtr-margin-right icon-circle">
+	<span [ngClass]="setIndicators(item.wlcPublishedPercentage)" class="qtr-margin-right icon-circle">
 	</span>
 	<span [innerText]="getWlcTemplate(item)">
 	</span>

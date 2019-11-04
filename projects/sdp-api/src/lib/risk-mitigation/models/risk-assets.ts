@@ -15,6 +15,8 @@ export interface RiskAssets {
 export interface CrashHistoryDeviceCount {
 	customerId?:string;
 	neInstanceId?:string;
+	solution?: string;
+	useCase?: string;
 }
 
 export interface CrashHistoryDeviceList {

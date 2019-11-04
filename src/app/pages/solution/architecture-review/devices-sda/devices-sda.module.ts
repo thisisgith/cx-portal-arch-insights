@@ -5,6 +5,8 @@ import { CuiTableModule,
 	 CuiPagerModule,
 	 CuiDrawerModule,
 	CuiDrawersModule,
+	CuiAlertModule,
+	CuiSpinnerModule,
  } from '@cisco-ngx/cui-components';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 
@@ -19,7 +21,9 @@ import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 		I18nPipeModule,
 		CuiDrawerModule,
 		CuiPagerModule,
-	 	CuiDrawersModule,
+		CuiSpinnerModule,
+		 CuiDrawersModule,
+		 CuiAlertModule,
 	],
 })
 export class DevicesSdaModule { }

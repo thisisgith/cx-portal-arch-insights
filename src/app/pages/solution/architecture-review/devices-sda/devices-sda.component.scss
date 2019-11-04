@@ -1,5 +1,11 @@
 /** Empty component SCSS file */
+@import "~src/variables.scss";
+
 .line-height-20 {
 	line-height: 20px;
 	font-size: 14px;
+}
+
+.recommended-color {
+	background: $light-gray-background;
 }

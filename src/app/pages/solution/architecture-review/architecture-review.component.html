@@ -53,6 +53,62 @@
 		</div>
 	</ng-template>
 
+	<ng-template #sdaReadinessFilter let-filter="filter">
+		<div *ngIf="visualLabels[1]?.active">
+			<pie-chart
+				*ngIf="!status?.isLoading"
+				[seriesData]="filter?.seriesData"
+				(subfilter)="onSubfilterSelect($event.filter, filter)"
+			>
+			</pie-chart>
+			<div class="base-margin-top" *ngIf="status?.isLoading">
+				<cui-spinner></cui-spinner>
+			</div>
+		</div>
+	</ng-template>
+
+	<ng-template #assuranceReadinessFilter let-filter="filter">
+		<div *ngIf="visualLabels[1]?.active">
+			<pie-chart
+				*ngIf="!status?.isLoading"
+				[seriesData]="filter?.seriesData"
+				(subfilter)="onSubfilterSelect($event.filter, filter)"
+			>
+			</pie-chart>
+			<div class="base-margin-top" *ngIf="status?.isLoading">
+				<cui-spinner></cui-spinner>
+			</div>
+		</div>
+	</ng-template>
+
+	<ng-template #swimReadinessFilter let-filter="filter">
+		<div *ngIf="visualLabels[1]?.active">
+			<pie-chart
+				*ngIf="!status?.isLoading"
+				[seriesData]="filter?.seriesData"
+				(subfilter)="onSubfilterSelect($event.filter, filter)"
+			>
+			</pie-chart>
+			<div class="base-margin-top" *ngIf="status?.isLoading">
+				<cui-spinner></cui-spinner>
+			</div>
+		</div>
+	</ng-template>
+
+	<ng-template #devicesOnboardingReadinessFilter let-filter="filter">
+		<div *ngIf="visualLabels[1]?.active">
+			<pie-chart
+				*ngIf="!status?.isLoading"
+				[seriesData]="filter?.seriesData"
+				(subfilter)="onSubfilterSelect($event.filter, filter)"
+			>
+			</pie-chart>
+			<div class="base-margin-top" *ngIf="status?.isLoading">
+				<cui-spinner></cui-spinner>
+			</div>
+		</div>
+	</ng-template>
+
 	<ng-template #filterBar>
 		<div class="row flex-center-vertical half-margin-top base-margin-bottom">
 			<div class="col-md-11 flex">

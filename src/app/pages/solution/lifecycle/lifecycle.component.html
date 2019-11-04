@@ -5,11 +5,12 @@
 		</div>
 
 		<div class="col-md-9">
-			<div class="global-filter" *ngIf="componentData.partner">
+			<div class="global-filter" *ngIf="partnerList">
 				<multiselect name="Content Provider"
-					[items]="componentData.partner"
+					[items]="partnerList"
 					nameKey="companyName"
 					valueKey="companyId"
+					[defaultValues]="selectedPartnerFilter"
 					(changed)="setProviderFilter($event)">
 				</multiselect>
 			</div>
@@ -861,16 +862,25 @@
 						<div class="text-left modal__body__topics cx-text-default"
 							[innerText]="'_TopicsAvailableSolution_' | i18n:selectedATX?.length || 0:componentData.params.solution:componentData.params.usecase" data-auto-id="ATXTopicsAvailable">
 						</div>
-						<div class="modal__body__filter">
-							<cui-select class="lifecycle-filter"
-								data-auto-id="atx-filter"
-								[items]="atxStatusOptions"
-								[label]="'_FilterBy_' | i18n"
-								[inline]="true"
-								[placeholder]="getStatusOptionName(selectedFilterForATX, atxStatusOptions)"
-								[(ngModel)]="selectedFilterForATX"
-								(ngModelChange)="selectFilter('ATX')">
-							</cui-select>
+						<div class="base-margin-right">
+							<ng-container class="modal__body__filter">
+								<multiselect [name]="'_Status_' | i18n"
+										[items]="atxStatusOptions"
+										[defaultValues]="atxStatusFilter"
+										(changed)="statusMultiFilter($event, 'ATX')">
+								</multiselect>
+							</ng-container>
+						</div>
+						<div class="base-margin-left"  *ngIf="partnerList">
+							<ng-container class="modal__body__filter">
+								<multiselect [name]="'_ContentProvider_' | i18n"
+										[items]="partnerList"
+										nameKey="companyName"
+										valueKey="companyId"
+										[defaultValues]="selectedPartnerFilterForATX"
+										(changed)="partnerMultiFilter($event, 'ATX')">
+								</multiselect>
+							</ng-container>
 						</div>
 						<div class="text-right modal__body__view-toggle">
 							<div class="btn-group btn-group--square">
