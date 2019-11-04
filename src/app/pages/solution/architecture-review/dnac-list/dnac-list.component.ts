@@ -63,6 +63,14 @@ export class DnacListComponent implements OnInit {
 	private fabricsTemplate: TemplateRef<{ }>;
 	@ViewChild('wlcTemplate', { static: true })
 	private wlcTemplate: TemplateRef<{ }>;
+	@ViewChild('devicesTooltipTemplate', { static: true })
+	private devicesTooltipTemplate: TemplateRef<{ }>;
+	@ViewChild('fabricsTooltipTemplate', { static: true })
+	private fabricsTooltipTemplate: TemplateRef<{ }>;
+	@ViewChild('wlcsTooltipTemplate', { static: true })
+	private wlcsTooltipTemplate: TemplateRef<{ }>;
+	@ViewChild('endPointsTooltipTemplate', { static: true })
+	private endPointsTooltipTemplate: TemplateRef<{ }>;
 
 	/**
 	 * used to Intialize Table options
@@ -115,27 +123,29 @@ export class DnacListComponent implements OnInit {
 					sortable: false,
 				},
 				{
-					name: I18n.get('_ArchitectureSystems(SystemsPublishedLimit)_'),
+					headerTemplate: this.devicesTooltipTemplate,
 					sortable: false,
 					template : this.devicesTemplate,
-					width : '15%',
-				},
-				{
-					name: I18n.get('_ArchitectureEndPoints(EndPublishedLimit)_'),
-					sortable: false,
-					template : this.endPointsTemplate,
 					width : '17%',
 				},
 				{
-					name: I18n.get('_ArchitectureFabrics(FabricsPublishedLimit)_'),
+					headerTemplate : this.fabricsTooltipTemplate,
 					sortable: false,
 					template : this.fabricsTemplate,
 					width : '17%',
 				},
 				{
+					headerTemplate : this.wlcsTooltipTemplate,
 					name: I18n.get('_ArchitectureWLC(WLCPublishedLimit)_'),
 					sortable: false,
 					template : this.wlcTemplate,
+					width : '17%',
+				},
+				{
+					headerTemplate : this.endPointsTooltipTemplate,
+					name: I18n.get('_ArchitectureEndPoints(EndPublishedLimit)_'),
+					sortable: false,
+					template : this.endPointsTemplate,
 					width : '17%',
 				},
 			],
@@ -171,6 +181,19 @@ export class DnacListComponent implements OnInit {
 			this.params.searchText = this.searchText;
 			this.getCollectionId();
 		}
+	}
+
+	/**
+	 * To show status of the dnac
+	 * @param item will have the full indicator
+	 * @returns the css class
+	 */
+	public setIndicators (item) {
+		return {
+			'text-danger': item > 100,
+			'text-success': item < 90,
+			'text-warning': item > 90 && item < 100,
+		  };
 	}
 	/**
 	 * used for setting the data for table
@@ -243,7 +266,7 @@ export class DnacListComponent implements OnInit {
 	 * @returns - Returns the formatted string
 	 */
 	public getFabricsTemplate (item) {
-		return `${item.noOfFabrics }(${item.fabricsPublishedLimits})`;
+		return `${item.noOfFabrics }/${item.fabricsPublishedLimits}`;
 	}
 
 	/**
@@ -253,7 +276,7 @@ export class DnacListComponent implements OnInit {
 	 * @returns - Returns the formatted string
 	 */
 	public getEndPointsTemplate (item) {
-		return `${item.noOfEndpoints }(${item.endpointsPublishedLimits})`;
+		return `${item.noOfEndpoints }/${item.endpointsPublishedLimits}`;
 	}
 
 	/**
@@ -263,7 +286,7 @@ export class DnacListComponent implements OnInit {
 	 * @returns - Returns the formatted string
 	 */
 	public getDevicesTemplate (item) {
-		return `${item.noOfDevices }(${item.devicesPublishedLimits})`;
+		return `${item.noOfDevices }/${item.devicesPublishedLimits}`;
 	}
 
 	/**
@@ -273,7 +296,7 @@ export class DnacListComponent implements OnInit {
 	 * @returns - Returns the formatted string
 	 */
 	public getWlcTemplate (item) {
-		return `${item.noOfWlc }(${item.wlcPublishedLimits})`;
+		return `${item.noOfWlc }/${item.wlcPublishedLimits}`;
 	}
 
 }

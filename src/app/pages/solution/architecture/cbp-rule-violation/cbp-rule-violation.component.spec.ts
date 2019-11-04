@@ -52,15 +52,6 @@ describe('CbpRuleViolationComponent', () => {
 			.toBeTruthy();
 	});
 
-	it('should call getCBPSeverityList on init', () => {
-		spyOn(service, 'getCBPSeverityList')
-			.and
-			.returnValue(of({ TotalCounts: 1000, BPRulesDetails: [] }));
-		component.ngOnInit();
-		expect(service.getCBPSeverityList)
-			.toHaveBeenCalled();
-	});
-
 	it('should update pagination params', () => {
 		const pageEvent = { page: 1, limit: 10 };
 		component.onPagerUpdated(pageEvent);

@@ -16,6 +16,15 @@ const deviceIp = '192.168.46.100';
 const collectionId = '9ecf600a-d38b-4aed-9a34-ace3ca733e31';
 
 /**
+ * collectionDate for mock response
+ */
+const collectionDate = '1';
+/**
+ * dnacIp for mock response
+ */
+const dnacIp = '172.16.44.31';
+
+/**
  * get collectionId
  */
 
@@ -26,6 +35,7 @@ const collectionIdResponse = {
 /**
  * get DNAC data
  */
+
 const getDnacList = {
 	CollectionDate: '2019-08-27T06:15:40.636+0000',
 	dnacDetails: [
@@ -34,6 +44,7 @@ const getDnacList = {
 			collectorId: 'CSP0001047974',
 			customerId: '2431199',
 			devicesPublishedLimits: '5000',
+			devicesPublishedPercentage: 75,
 			devicesPublishedViolated: 'No',
 			dnacCpu: '',
 			dnacFilesystem: '',
@@ -43,8 +54,10 @@ const getDnacList = {
 			dnacSiteLocation: 'NA',
 			dnacVersion: '1.3',
 			endpointsPublishedLimits: '20000',
+			endpointsPublishedPercentage: 75,
 			endpointsPublishedViolated: 'No',
 			fabricsPublishedLimits: '10',
+			fabricsPublishedPercentage: 75,
 			fabricsPublishedViolated: 'No',
 			haCluster: 'NA',
 			haClusterNodes: 'NA',
@@ -54,6 +67,7 @@ const getDnacList = {
 			noOfFabrics: '0',
 			noOfWlc: '0',
 			wlcPublishedLimits: '500',
+			wlcPublishedPercentage: 75,
 			wlcPublishedViolated: 'No',
 		},
 	],
@@ -69,6 +83,7 @@ const getDevicesSDAResponseData = {
 		{
 			assuranceCompliance: 'Yes',
 			currentDeviceRole: 'Controller',
+			dnacCompliance : 'Yes',
 			dnacVersion: '1.2',
 			hardwarePidCompliant: 'Yes',
 			hostName: 'AP70F3.5A7E.44C8',
@@ -87,6 +102,7 @@ const getDevicesSDAResponseData = {
 		{
 			assuranceCompliance: 'No',
 			currentDeviceRole: 'Controller',
+			dnacCompliance : 'No',
 			dnacVersion: '1.2',
 			hardwarePidCompliant: 'No',
 			hostName: 'AP70F3.5A7E.44C8',
@@ -94,7 +110,7 @@ const getDevicesSDAResponseData = {
 			overallCompliance: 'No',
 			pnpCompliance: 'Yes',
 			productFamily: 'N/A',
-			productId: 'AIR-AP1800S-B-K9',
+			productId: '7293498_NA',
 			sdaCompliance: 'Yes',
 			softwareType: 'AireOs',
 			softwareTypeCompliant: 'Yes',
@@ -105,6 +121,7 @@ const getDevicesSDAResponseData = {
 		{
 			assuranceCompliance: 'Yes',
 			currentDeviceRole: 'Controller',
+			dnacCompliance : 'Yes',
 			dnacVersion: '1.2',
 			hardwarePidCompliant: 'No',
 			hostName: 'AP70F3.5A7E.44C8',
@@ -123,6 +140,7 @@ const getDevicesSDAResponseData = {
 		{
 			assuranceCompliance: 'Yes',
 			currentDeviceRole: 'Controller',
+			dnacCompliance : 'Yes',
 			dnacVersion: '1.2',
 			hardwarePidCompliant: 'Yes',
 			hostName: 'AP70F3.5A7E.44C8',
@@ -141,6 +159,7 @@ const getDevicesSDAResponseData = {
 		{
 			assuranceCompliance: 'NA',
 			currentDeviceRole: 'Controller',
+			dnacCompliance : 'NA',
 			dnacVersion: '1.2',
 			hardwarePidCompliant: 'Yes',
 			hostName: 'AP70F3.5A7E.44C8',
@@ -159,6 +178,7 @@ const getDevicesSDAResponseData = {
 		{
 			assuranceCompliance: 'Yes',
 			currentDeviceRole: 'Controller',
+			dnacCompliance : 'Yes',
 			dnacVersion: '1.2',
 			hardwarePidCompliant: 'Yes',
 			hostName: 'AP70F3.5A7E.44C8',
@@ -191,17 +211,22 @@ const getSdaSupportedData = {
 		hardwareRecommendation: 'CX-9300L',
 		hostName: 'AP70F3.5A7E.44C8',
 		ipAddress: '192.168.46.100',
-		sdaHardwareSupported: [
+		sdaL3AccessEnabled: 'Yes',
+
+		sdaNoOfMtuNonOptimalInterfaces: 7,
+		sdaRedundantLinks: 'Yes',
+		sdaSupportedHardware: [
 			{
 				deviceRole: 'controller',
 				productFamily: ['Cisco Catalyst 9300 Series Switches',
 					'Cisco Catalyst 9300 Series Switches'],
+				productId: [
+					'pid1',
+					'pid2',
+				],
 			},
 		],
-		sdaL3AccessEnabled: 'Yes',
-		sdaNoOfMtuNonOptimalInterfaces: 7,
-		sdaRedundantLinks: 'Yes',
-		sdaSoftwareSupported: [
+		sdaSupportedSoftware: [
 			{
 				deviceRole: 'Fabric Edge',
 				productFamily: 'Cisco Catalyst 9300 Series Switches',
@@ -246,6 +271,60 @@ const nonOptimalLinksResponse = {
 		totalCount: 2,
 	},
 };
+
+/**
+ * moc data for DNAC scale response
+ */
+const dnacScaleResponse = [
+	{
+		collectionDate: '1571443200',
+		endpointsPeakTime: '1571443700',
+		noOfDevices: 30,
+		noOfEndpoints: 70,
+		noOfFabrics: 40,
+		noOfWlc: 90,
+	},
+	{
+		collectionDate: '1571443300',
+		endpointsPeakTime: '1571439700',
+		noOfDevices: 20,
+		noOfEndpoints: 30,
+		noOfFabrics: 60,
+		noOfWlc: 20,
+	},
+	{
+		collectionDate: '1571444200',
+		endpointsPeakTime: '1571447500',
+		noOfDevices: 90,
+		noOfEndpoints: 40,
+		noOfFabrics: 60,
+		noOfWlc: 90,
+	},
+	{
+		collectionDate: '1571445240',
+		endpointsPeakTime: '1571448400',
+		noOfDevices: 80,
+		noOfEndpoints: 40,
+		noOfFabrics: 80,
+		noOfWlc: 10,
+	},
+	{
+		collectionDate: '1571443360',
+		endpointsPeakTime: '1571449000',
+		noOfDevices: 40,
+		noOfEndpoints: 20,
+		noOfFabrics: 80,
+		noOfWlc: 90,
+	},
+	{
+		collectionDate: '1571427200',
+		endpointsPeakTime: '1571444800',
+		noOfDevices: 30,
+		noOfEndpoints: 50,
+		noOfFabrics: 10,
+		noOfWlc: 70,
+	},
+];
 
 /**
  * get DNAC Details Data
@@ -302,23 +381,24 @@ const getSDAChartFilterCountResponseData = {
 		Yes: 4,
 	},
 	overallCompliance: {
-		NA: 1,
-		No: 3,
+		NA: 4,
+		No: 4,
 		Yes: 4,
 	},
 	pnpCompliance: {
-		NA: 1,
+		NA: 2,
 		No: 4,
 		Yes: 2,
 	},
 	sdaCompliance: {
-		NA: 1,
+		NA: 2,
 		No: 4,
 		Warning: 1,
 		Yes: 2,
 	},
 	swimCompliance: {
 		NA: 1,
+		No: 3,
 		Yes: 6,
 	},
 };
@@ -483,5 +563,23 @@ export const ArchitectureReviewScenarios = [
 		},
 		url: `${api}/collectiondetails?customerId=${customerId}`,
 		usecases: ['Use Case 9'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'collection Id',
+					response: {
+						body: dnacScaleResponse,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/dnac/sdaTrends?customerId=${customerId}` +
+		`&collectionId=${collectionId}&dnacIP=${dnacIp}&collectionDate=${collectionDate}`,
+		usecases: ['Use Case 10'],
 	},
 ];

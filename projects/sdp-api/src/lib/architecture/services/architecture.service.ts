@@ -56,6 +56,7 @@ class ArchitectureService extends __BaseService {
     if (params.severity != null) __params = __params.set('severity', params.severity.toString());
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     if (params.searchText != null) __params = __params.set('searchText', params.searchText.toString());
+    if (params.collectionId != null) __params = __params.set('collectionId', params.collectionId.toString());
 
     let req = new HttpRequest<any>(
 	  'GET',
@@ -111,6 +112,7 @@ class ArchitectureService extends __BaseService {
     if (params.pageSize != null) __params = __params.set('pageSize', params.pageSize);
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     if (params.searchText != null) __params = __params.set('searchText', params.searchText.toString());
+    if (params.collectionId != null) __params = __params.set('collectionId', params.collectionId.toString());
 
     let req = new HttpRequest<any>(
 	  'GET',
@@ -143,6 +145,8 @@ class ArchitectureService extends __BaseService {
     let __body: any = null;
     let __params = this.newParams();
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    if (params.collectionId != null) __params = __params.set('collectionId', params.collectionId.toString());
+
     let req = new HttpRequest<any>(
 	  'GET',
 	  this.rootUrl + `${ArchitectureService.getExceptionsCountResponsePath}`,
@@ -177,6 +181,9 @@ class ArchitectureService extends __BaseService {
     let __body: any = null;
     let __params = this.newParams();
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    if (params.collectionId != null) __params = __params.set('collectionId', params.collectionId.toString());
+
+
     let req = new HttpRequest<any>(
       'GET',
 	  this.rootUrl + `${ArchitectureService.getAssetsExceptionsCountResponsePath}`,
@@ -222,6 +229,8 @@ class ArchitectureService extends __BaseService {
     if (params.page != null) __params = __params.set('page', params.page.toString());
     if (params.pageSize != null) __params = __params.set('pageSize', params.pageSize.toString());
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    if (params.collectionId != null) __params = __params.set('collectionId', params.collectionId.toString());
+
 
     let req = new HttpRequest<any>(
       'POST',
@@ -267,6 +276,7 @@ class ArchitectureService extends __BaseService {
     if (params.page != null) __params = __params.set('page', params.page.toString());
     if (params.pageSize != null) __params = __params.set('pageSize', params.pageSize.toString());
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    if (params.collectionId != null) __params = __params.set('collectionId', params.collectionId.toString());
 
     let req = new HttpRequest<any>(
 	  'POST',
@@ -332,6 +342,8 @@ module ArchitectureService {
      * The Id's of the Assets Affected . Example:- 2689444; 91488861, 92246411
      */
      body :Array<string>;
+
+     collectionId: string;
   }
 
   /**
@@ -358,6 +370,8 @@ module ArchitectureService {
      * The Id's of the Devices with Exceptions . Example:- 2689444; 91488861, 92246411
      */
      body :Array<string>;
+
+     collectionId: string;
 
   }
 
