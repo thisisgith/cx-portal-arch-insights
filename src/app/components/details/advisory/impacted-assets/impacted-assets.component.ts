@@ -247,12 +247,6 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 						template: this.softwareVersionColumn,
 						width: '300px',
 					},
-					{
-						key: 'recommendedVersion',
-						name: I18n.get('_RecommendedRelease_'),
-						sortable: false,
-						template: this.recommendedVersionColumn,
-					},
 				];
 				const securityPotentiallyAffectedTableColumns = [
 					{
