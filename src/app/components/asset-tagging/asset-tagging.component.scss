@@ -62,11 +62,12 @@ select {
 	max-height: 200px;
 }
 
-.flex-right{
+.flex-right {
 	display: flex;
 	flex-direction: row;
 	justify-content: flex-end;
 }
+
 .heading-row {
 	margin-right: 0;
 }

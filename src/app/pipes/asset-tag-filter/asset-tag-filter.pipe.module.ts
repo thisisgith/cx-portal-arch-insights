@@ -1,6 +1,8 @@
 import { NgModule, Pipe, PipeTransform } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Tags } from '@sdp-api';
+import * as _ from 'lodash-es';
+
 /**
  * to filter the tags based on the searchText
  */
@@ -20,7 +22,14 @@ export class AssetTagFilterPipe implements PipeTransform {
 			return tags;
 		}
 
-		return tags.filter(tag =>
+		if (searchText.indexOf(',') !== -1) {
+			const searchTags = _.split(searchText, ',');
+
+			return _.filter(tags, tag => searchTags.some(searchTag =>
+				tag.tagName.toLowerCase() === searchTag.toLowerCase()));
+		}
+
+		return _.filter(tags, tag =>
 			tag.tagName.toLowerCase()
 				.indexOf(searchText.toLowerCase()) !== -1);
 	}

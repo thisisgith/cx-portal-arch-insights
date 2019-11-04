@@ -1,2 +1,2 @@
 export { AssetTaggingModule } from './asset-tagging.module';
-export { AssetTaggingComponent } from './asset-tagging.component'
+export { AssetTaggingComponent } from './asset-tagging.component';

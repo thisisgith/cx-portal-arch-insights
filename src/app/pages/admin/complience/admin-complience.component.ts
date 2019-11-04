@@ -12,18 +12,12 @@ import { User } from '@interfaces';
 import { ActivatedRoute } from '@angular/router';
 
 import { empty, Subject, from, of, forkJoin } from 'rxjs';
-import { catchError, finalize, takeUntil, map } from 'rxjs/operators';
-
-
-import { I18n } from '@cisco-ngx/cui-utils';
-
-import { RouteAuthService} from '@services';
+import { catchError, finalize, takeUntil, map, switchMap } from 'rxjs/operators';
+import { RouteAuthService } from '@services';
 
 import * as _ from 'lodash-es';
 import { LogService } from '@cisco-ngx/cui-services';
 import { CuiModalService } from '@cisco-ngx/cui-components';
-
-
 
 /**
  * Main Settings component
@@ -41,8 +35,6 @@ export class AdminComplienceComponent implements OnInit {
 
 	private destroyed$: Subject<void> = new Subject<void>();
 	private customerId: string;
-
-
 	public accepted = false;
 	public error = false;
 	public errorMessage = '';
@@ -54,13 +46,20 @@ export class AdminComplienceComponent implements OnInit {
 	public selectedPolicy = '';
 	public leftSideTags = [];
 	public rightSideTags = [];
-	public saveDetails;
+	public saveDetails: AssetTaggingService.PostParams = {
+		body: {
+			policy: '',
+			tags: [],
+			toBeScanned : false,
+		},
+		customerId: '',
+	};
 	public toBeScanned = false;
-	public alert: any = {};
+	public alert: any = { };
 
 	private user: User;
 
-	constructor(
+	constructor (
 		private controlPointIEHealthStatusAPIService: ControlPointIEHealthStatusAPIService,
 		public cuiModalService: CuiModalService,
 		public controlPointAdminComplienceService: ControlPointAdminComplienceService,
@@ -77,7 +76,7 @@ export class AdminComplienceComponent implements OnInit {
 	/**
 	 * Function which instanstiates the settings page to the initial view
 	 */
-	public ngOnInit() {
+	public ngOnInit () {
 		this.policies = [
 			{
 				name: 'select',
@@ -111,7 +110,7 @@ export class AdminComplienceComponent implements OnInit {
 				.pipe(
 				takeUntil(this.destroyed$),
 				map((results: any) => {
-					
+
 				}),
 				catchError(err => {
 					this.logger.error('High Crash Assets : getHighCrashesDeviceData() ' +
@@ -123,24 +122,24 @@ export class AdminComplienceComponent implements OnInit {
 
 	}
 
-	public toggleOptlnStatus() {
+	public toggleOptlnStatus () {
 		if (this.rightSideTags || this.leftSideTags) {
 			this.cuiModalService.show(this.confirmationModalTemplate, 'small');
 			this.optlnStatus = true;
 		}
 	}
 
-	public discardChanges(){
+	public discardChanges () {
 		this.optlnStatus = false;
 		this.cuiModalService.hide();
 	}
 
-	public saveChanges(){
+	public saveChanges () {
 		this.optlnStatus = true;
 		this.cuiModalService.hide();
 	}
 
-	public getLeftSideTags(){
+	public getLeftSideTags () {
 
 		return this.controlPointAdminComplienceService.getLeftSideTags(this.customerId)
 			.pipe(
@@ -158,7 +157,7 @@ export class AdminComplienceComponent implements OnInit {
 
 	}
 
-	public getRightSideTags(){
+	public getRightSideTags () {
 
 		return this.controlPointAdminComplienceService.getRightSideTags(this.customerId)
 			.pipe(
@@ -175,15 +174,15 @@ export class AdminComplienceComponent implements OnInit {
 			);
 	}
 
-	public filterDuplicates(){
+	public filterDuplicates () {
 		if (this.leftSideTagsResponse.tags) {
-			this.leftSideTags = this.leftSideTagsResponse.tags;
+			this.leftSideTags = _.cloneDeep(this.leftSideTagsResponse.tags);
 		}
-		if(this.rightSideTagsResponse.policyGroups){
-			let policyGroups = _.find(this.rightSideTagsResponse.policyGroups,
-				 {'policyName': this.selectedPolicy});
-			this.rightSideTags = policyGroups.tags;
-			_.each(this.rightSideTags, (tag)=> {
+		if (this.rightSideTagsResponse.policyGroups) {
+			const policyGroups = _.find(this.rightSideTagsResponse.policyGroups,
+				 { policyName: this.selectedPolicy });
+			this.rightSideTags = _.cloneDeep(policyGroups.tags);
+			_.each(this.rightSideTags, (tag) => {
 				tag.devices = policyGroups.devices;
 				tag.deviceCount = policyGroups.deviceCount;
 			});
@@ -191,33 +190,43 @@ export class AdminComplienceComponent implements OnInit {
 			  console.log('Left side Tags:' + this.leftSideTags);
 			  console.log('Right side Tags:' + this.rightSideTags);
 
+		}
 	}
-}
 
-	public onPolicySelected(policy){
-		if(policy != 'select'){
+	public onPolicySelected (policy) {
+		if (policy != 'select') {
 			this.selectedPolicy = policy;
 			this.filterDuplicates();
 		}
 	}
 
-	public savePolicyDetails(){
-		this.alert.show('Tags details for the policy '+this.selectedPolicy+' are successfully saved', 'success');
+	/**
+	 * This Function is used to save the policy details
+	 */
+	public savePolicyDetails () {
+
 		this.assetTaggingService.getSelectedTags()
-		.subscribe( res => {
-			this.saveDetails.tags = res;
-			this.saveDetails.policy = this.selectedPolicy;
-			this.saveDetails.toBeScanned = this.toBeScanned;
-		});
+		.pipe(
+			switchMap(tags => {
+				this.saveDetails.body.tags = tags;
+				this.saveDetails.body.policy = this.selectedPolicy;
+				this.saveDetails.body.toBeScanned = this.toBeScanned;
+				this.saveDetails.customerId = this.customerId;
+
+				return this.assetTaggingService.postPolicyMapping(this.saveDetails);
+			}),
+			takeUntil(this.destroyed$))
+		.subscribe(() => this.alert.show(`Tags details for the policy
+					${this.selectedPolicy} are successfully saved`, 'success'));
 	}
 
-	public updatePermissions(){
+	public updatePermissions () {
 
 		return this.routeAuthService.updatePermissions(this.customerId, true)
 		.pipe(
 		takeUntil(this.destroyed$),
 		map((results: any) => {
-			
+
 		}),
 		catchError(err => {
 			this.logger.error('High Crash Assets : getHighCrashesDeviceData() ' +
