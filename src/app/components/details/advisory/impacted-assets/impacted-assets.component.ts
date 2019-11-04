@@ -71,6 +71,7 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 	@ViewChild('deviceColumn', null) public deviceColumn: TemplateRef<{ }>;
 	@ViewChild('productIdColumn', null) public productIdColumn: TemplateRef<{ }>;
 	@ViewChild('versionColumn', null) public softwareVersionColumn: TemplateRef<{ }>;
+	@ViewChild('serialNumberColumn', null) public serialNumberColumn: TemplateRef<{ }>;
 	@ViewChild('recommendedVersionColumn', null) public recommendedVersionColumn: TemplateRef<{ }>;
 
 	public affectedTable: CuiTableOptions;
@@ -226,7 +227,7 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 				const securityAffectedTableColumns = [
 					{
 						key: 'hostName',
-						name: I18n.get('_System_'),
+						name: I18n.get('_SystemName_'),
 						sortable: true,
 						sortDirection: 'asc',
 						sorting: true,
@@ -244,6 +245,7 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 						name: I18n.get('_Release_'),
 						sortable: true,
 						template: this.softwareVersionColumn,
+						width: '300px',
 					},
 					{
 						key: 'recommendedVersion',
@@ -273,6 +275,7 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 						name: I18n.get('_Release_'),
 						sortable: true,
 						template: this.softwareVersionColumn,
+						width: '300px',
 					},
 					{
 						key: 'recommendedVersion',
@@ -289,36 +292,61 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 			case 'field':
 				const fieldAffectedTableColumns = [
 					{
-						key: 'productId',
-						name: I18n.get('_ProductID_'),
+						key: 'hostName',
+						name: I18n.get('_SystemName_'),
 						sortable: true,
 						sortDirection: 'asc',
 						sorting: true,
-						template: this.productIdColumn,
+						template: this.deviceColumn,
 						width: '300px',
 					},
 					{
 						key: 'ipAddress',
-						name: I18n.get('_SystemName_'),
+						name: I18n.get('_IPAddress_'),
 						sortable: true,
 						template: this.ipAddressColumn,
+					},
+					{
+						key: 'productId',
+						name: I18n.get('_ProductID_'),
+						sortable: true,
+						template: this.productIdColumn,
+					},
+					{
+						key: 'serialNumber',
+						name: I18n.get('_SerialNumber_'),
+						sortable: true,
+						template: this.serialNumberColumn,
 					},
 				];
 				const fieldPotentiallyAffectedTableColumns = [
 					{
-						key: 'productId',
-						name: I18n.get('_ProductID_'),
+						key: 'hostName',
+						name: I18n.get('_SystemName_'),
 						sortable: true,
 						sortDirection: 'asc',
 						sorting: true,
-						template: this.productIdColumn,
+						template: this.deviceColumn,
 						width: '300px',
 					},
 					{
 						key: 'ipAddress',
-						name: I18n.get('_SystemName_'),
+						name: I18n.get('_IPAddress_'),
 						sortable: true,
 						template: this.ipAddressColumn,
+					},
+					{
+						key: 'productId',
+						name: I18n.get('_ProductID_'),
+						sortable: true,
+						template: this.productIdColumn,
+						width: '300px',
+					},
+					{
+						key: 'serialNumber',
+						name: I18n.get('_SerialNumber_'),
+						sortable: true,
+						template: this.serialNumberColumn,
 					},
 				];
 				_.set(affectedOptions, 'columns', fieldAffectedTableColumns);

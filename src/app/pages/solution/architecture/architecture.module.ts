@@ -10,7 +10,7 @@ import { CuiTabsModule, CuiSpinnerModule, CuiTabsNavModule } from '@cisco-ngx/cu
 import { BarChartModule, VisualFilterBarModule } from '@components';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { environment } from '@environment';
-import { ArchitectureModules } from '@sdp-api';
+import { ArchitectureModules, ArchitectureReviewModules } from '@sdp-api';
 import { InsightTabsModule } from 'src/app/components/insight-tabs/insight-tabs.module';
 
 /**
@@ -42,6 +42,7 @@ const childRoutes: Routes = [
 		CuiTabsNavModule,
 		BarChartModule,
 		ArchitectureModules.forRoot({ rootUrl }),
+		ArchitectureReviewModules.forRoot({ rootUrl }),
 		CuiSpinnerModule,
 		I18nPipeModule,
 		VisualFilterBarModule,

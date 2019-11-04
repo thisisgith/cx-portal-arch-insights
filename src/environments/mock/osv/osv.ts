@@ -517,7 +517,7 @@ const mockMachineRecommendations: MachineRecommendationsResponse = [
 /** The mock response for DE recommendations */
 const mockExpertRecommendations: ExpertRecommendations[] = [
 	{
-		requestDate: '2008-01-10T18:30:00.000+0000',
+		recommSubmittedDate: '2008-01-10T18:30:00.000+0000',
 		status: 'completed',
 		releaseDate: '2008-01-10T18:30:00.000+0000',
 		release: '16.9.2',
@@ -538,7 +538,7 @@ const mockExpertRecommendations: ExpertRecommendations[] = [
 			'culpa occaecat tempor nisi anim dolore incididunt voluptate aute fugiat.',
 	},
 	{
-		requestDate: '2008-01-10T18:30:00.000+0000',
+		recommSubmittedDate: '2008-01-10T18:30:00.000+0000',
 		status: 'inprogress',
 		releaseDate: '2008-01-10T18:30:00.000+0000',
 		release: '16.9.2',
@@ -1431,7 +1431,8 @@ export const OSVScenarios = [
 				},
 			],
 		},
-		url: `${api}profileRecommendations?customerId=${customerId}&profileName=${assetId}`,
+		url: `${api}profileRecommendations?customerId=${customerId}&profileName=${assetId}` +
+				'&productFamily=Cisco Catalyst 9300 Series Switches',
 		usecases: ['Use Case 1'],
 	},
 	{

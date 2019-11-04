@@ -1,11 +1,9 @@
 <div class="row base-margin-top">
 	<div class="col-md-12">
 		<div class="container">
-			<cui-drawer projection="true" expanded="true" *ngIf="dnacDetails">
-				<div class="cui-drawer-label text-large"
-					[innerText]="'_ArchitectureSDAScaleUtilization_' | i18n | uppercase">
+				<div class="text-large"
+					[innerText]="'_ArchitectureDNACScaleUtilization_' | i18n">
 				</div>
-				<div class="cui-drawer-content">
 					<ng-container
 					*ngTemplateOutlet="SDAScaleUtilizationChart; context: { 
 						networkDevicesData: networkDevicesData,
@@ -14,8 +12,6 @@
 						isLoading:isLoading
 					 }">
 					</ng-container>
-				</div>
-			</cui-drawer>
 		</div>
 	</div>
 </div>
@@ -24,10 +20,22 @@
 	let-networkDevicesData="networkDevicesData" let-endPointsData="endPointsData"
 	let-isLoading="isLoading">
 			<div *ngIf="!isLoading">
-				<bullet-chart [seriesData]="networkDevicesData" ></bullet-chart>
-				<bullet-chart [seriesData]="endPointsData" ></bullet-chart>
-				<bullet-chart [seriesData]="fabricsData" ></bullet-chart>
-				<bullet-chart [seriesData]="wlcData" ></bullet-chart>
+				<div class="row padding-bottom">
+						<time-series-chart [graphData]="dataForSystemsGraph"
+						[height]="350" [title]="'_ArchitectureSystems_' | i18n" 
+						[width]="350" [plotYaxisLine]="dnacDetails.devicesPublishedLimits"></time-series-chart>
+						<time-series-chart [graphData]="dataForFabricsGraph"
+						[height]="350" [title]="'_ArchitectureFabrics_' | i18n"
+						[width]="350" [plotYaxisLine]="dnacDetails.fabricsPublishedLimits"></time-series-chart>
+				</div>	
+				<div class="row">
+						<time-series-chart [graphData]="dataForWLCsGraph"
+						[height]="350" [title]="'_ArchitectureWLCs_' | i18n"
+						[width]="350" [plotYaxisLine]="dnacDetails.wlcPublishedLimits"></time-series-chart>
+						<time-series-chart [graphData]="dataForWLCsGraph"
+						[height]="350" [title]="'_ArchitectureEndPoints_' | i18n"
+						[width]="350" [plotYaxisLine]="dnacDetails.endpointsPublishedLimits"></time-series-chart>
+				</div>
 			</div>
 			<div class="base-margin-top" *ngIf="isLoading">
 				<cui-spinner></cui-spinner>

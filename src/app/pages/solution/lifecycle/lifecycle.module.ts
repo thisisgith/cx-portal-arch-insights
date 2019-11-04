@@ -43,6 +43,7 @@ const childRoutes: Routes = [
 		CuiSpinnerModule,
 		FormsModule,
 		I18nPipeModule,
+		MultiselectModule,
 		RacetrackComponentModule,
 		CommunitiesModule,
 		RacetrackContentModule.forRoot({ rootUrl }),

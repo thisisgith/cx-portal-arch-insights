@@ -25,7 +25,7 @@ const onboardItems = [
 			available: false,
 		},
 		providerInfo: {
-			id: 'partner1',
+			id: '293531',
 			logoURL: '',
 			name: 'Symantec',
 		},
@@ -89,9 +89,9 @@ const onboardItems = [
 			thumbs: 'UP',
 		},
 		providerInfo: {
-			id: 'partner1',
+			id: '293532',
 			logoURL: '',
-			name: 'Symantec',
+			name: 'Salesforce',
 		},
 		sessions: [
 			{
@@ -151,7 +151,7 @@ const onboardItems = [
 			available: false,
 		},
 		providerInfo: {
-			id: 'partner2',
+			id: '293533',
 			logoURL: '',
 			name: 'Logitec',
 		},
@@ -174,6 +174,7 @@ const onboardItems = [
 		recordingURL: 'https://tklcs.cloudapps.cisco.com/tklcs/TKLDownloadServlet?nodeRef=workspace://SpacesStore/310232f0-0a44-4286-a374-71edb71835ee&activityId=2&fileId=123051',
 		duration: 3600,
 		bookmark: false,
+		providerInfo: null,
 		sessions: [
 			{
 				sessionId: 'Session14',
@@ -581,6 +582,25 @@ export const ATXScenarios = [
 			],
 		},
 		url: `${api}?usecase=Campus Network Assurance&solution=IBN&pitstop=Onboard&customerId=${customerId}&suggestedAction=Get to know Cisco DNA Center&providerId=293531&providerId=293532`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 500,
+					description: '(ATX) IBN-Campus Network Assurance-Onboard-With partner filter',
+					response: {
+						body: MockATX('IBN', 'Campus Network Assurance', 'Onboard', 'partnerFilter'),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?usecase=Campus Network Assurance&solution=IBN&` +
+			`pitstop=Onboard&customerId=${customerId}&suggestedAction=Get to know Cisco DNA Center&` +
+			'providerId=293531&providerId=293533',
 		usecases: ['Use Case 1'],
 	},
 ];

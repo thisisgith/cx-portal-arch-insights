@@ -13,7 +13,7 @@ import {
 	ArchitectureService,
 	IException,
 	IAsset,
-	InventoryService,
+	ArchitectureReviewService,
 } from '@sdp-api';
 import { DatePipe } from '@angular/common';
 import { takeUntil } from 'rxjs/operators';
@@ -22,6 +22,7 @@ import { ActivatedRoute } from '@angular/router';
 import * as _ from 'lodash-es';
 import { AssetPanelLinkService } from '@services';
 import { AssetLinkInfo } from '@interfaces';
+import { ArchitectureAssetsParams } from 'projects/sdp-api/src/lib/architecture-review/models/param-type';
 
 /**
  * CBP Device Affected Table Component
@@ -45,12 +46,13 @@ export class CbpDeviceAffectedComponent implements OnInit, OnChanges {
 	public totalItems = 0;
 	public isLoading = true;
 	public assetDatas: IAsset[] = [];
-	public assetParams: InventoryService.GetAssetsParams;
+	public assetParams: ArchitectureAssetsParams;
 	public assetLinkInfo: AssetLinkInfo = Object.create({ });
 	public selectedAsset = false;
 	public destroy$ = new Subject();
 	public params: any = {
 		body : [],
+		collectionId: '',
 		customerId: '',
 		page : 0,
 		pageSize : 10,
@@ -61,6 +63,7 @@ export class CbpDeviceAffectedComponent implements OnInit, OnChanges {
 		private architectureService: ArchitectureService,
 		private route: ActivatedRoute,
 		private assetPanelLinkService: AssetPanelLinkService,
+		private architectureReviewService: ArchitectureReviewService,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId =  _.get(user, ['info', 'customerId']);
@@ -112,8 +115,27 @@ export class CbpDeviceAffectedComponent implements OnInit, OnChanges {
 			striped: false,
 			wrapText: true,
 		});
-
+		this.getCollectionId();
 	}
+
+	/**
+	 * Method to fetch collectionId
+	 */
+
+	public getCollectionId () {
+		this.architectureReviewService.getCollectionId()
+		.pipe(
+			takeUntil(this.destroy$),
+		)
+		.subscribe(res => {
+			this.params.collectionId = _.get(res, 'collection.collectionId');
+		},
+		err => {
+			this.logger.error('Devices list Component View' +
+				'  : getCollectionId() ' +
+				`:: Error : (${err.status}) ${err.message}`);
+		});
+	 }
 
 	/**
 	 * Used to detect the changes in input object and
@@ -175,6 +197,7 @@ export class CbpDeviceAffectedComponent implements OnInit, OnChanges {
 	public openAssetDetailsView (item: IAsset) {
 
 		this.assetParams = {
+			collectionId: this.params.collectionId,
 			customerId: this.params.customerId,
 			serialNumber: [item.serialNumber],
 		};

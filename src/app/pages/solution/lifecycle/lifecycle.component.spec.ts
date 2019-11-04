@@ -7,6 +7,7 @@ import { LifecycleModule } from './lifecycle.module';
 import {
 	RacetrackService,
 	RacetrackContentService,
+	GenericApiControllerService,
 	AtxSchema,
 	SuccessPathsResponse,
 	AtxSessionSchema,
@@ -23,6 +24,7 @@ import {
 	user,
 	CancelATXScenarios,
 	RegisterATXScenarios,
+	PartnerInfoScenarios,
 } from '@mock';
 import { of, throwError, Observable } from 'rxjs';
 import { DebugElement } from '@angular/core';
@@ -56,6 +58,7 @@ describe('LifecycleComponent', () => {
 	let racetrackService: RacetrackService;
 	let racetrackContentService: RacetrackContentService;
 	let racetrackInfoService: RacetrackInfoService;
+	let partnerService: GenericApiControllerService;
 
 	let racetrackATXSpy;
 	let racetrackAccSpy;
@@ -71,6 +74,7 @@ describe('LifecycleComponent', () => {
 	let racetrackActionSpy;
 	let racetrackCancelAtxSessionSpy;
 	let racetrackRegisterAtxSessionSpy;
+	let partnerSpy;
 
 	/**
 	 * Restore spies
@@ -89,6 +93,7 @@ describe('LifecycleComponent', () => {
 		_.invoke(racetrackActionSpy, 'restore');
 		_.invoke(racetrackCancelAtxSessionSpy, 'restore');
 		_.invoke(racetrackRegisterAtxSessionSpy, 'restore');
+		_.invoke(partnerSpy, 'restore');
 	};
 
 	/**
@@ -103,6 +108,9 @@ describe('LifecycleComponent', () => {
 				}
 				if (args.pitstop === 'Use') {
 					return of(getActiveBody(ATXScenarios[2]));
+				}
+				if (!args.providerId) {
+					return of(getActiveBody(ATXScenarios[9]));
 				}
 
 				return of(getActiveBody(ATXScenarios[0]));
@@ -155,6 +163,10 @@ describe('LifecycleComponent', () => {
 		racetrackActionSpy = spyOn(racetrackService, 'updatePitstopAction')
 			.and
 			.returnValue(of(getActiveBody(ActionScenarios[0], 'PUT')));
+
+		partnerSpy = spyOn(partnerService, 'getPartnerListUsingGET')
+			.and
+			.returnValue(of(getActiveBody(PartnerInfoScenarios[0])));
 	};
 
 	/**
@@ -196,6 +208,7 @@ describe('LifecycleComponent', () => {
 		racetrackInfoService = TestBed.get(RacetrackInfoService);
 		racetrackService = TestBed.get(RacetrackService);
 		racetrackContentService = TestBed.get(RacetrackContentService);
+		partnerService = TestBed.get(GenericApiControllerService);
 	}));
 
 	beforeEach(() => {
@@ -208,6 +221,19 @@ describe('LifecycleComponent', () => {
 	it('should create', () => {
 		expect(component)
 			.toBeTruthy();
+	});
+
+	it('should get partner list', () => {
+		buildSpies();
+		sendParams();
+
+		fixture.detectChanges();
+
+		fixture.whenStable()
+			.then(() => {
+				expect(component.partnerList.length)
+					.toEqual(7);
+			});
 	});
 
 	/**
@@ -459,17 +485,17 @@ describe('LifecycleComponent', () => {
 			const atx1 = component.componentData.atx.sessions[0];
 			expect(atx1.status)
 				.toEqual('scheduled');
-			expect(atx1.sessions[1].scheduled)
+			expect(atx1.sessions[0].scheduled)
 				.toBeTruthy();
 			component.cancelATXSession(atx1);
 			fixture.detectChanges();
 			expect(atx1.status)
 				.toEqual('recommended');
-			expect(atx1.sessions[1].scheduled)
+			expect(atx1.sessions[0].scheduled)
 				.toBeFalsy();
 
 			// UI will not force to change the status, will rely on backend
-			const session2 = atx1.sessions[1];
+			const session2 = atx1.sessions[0];
 			component.registerATXSession(atx1, session2);
 			fixture.detectChanges();
 			expect(atx1.status)
@@ -722,12 +748,12 @@ describe('LifecycleComponent', () => {
 			expect(component.getSubtitle('ATX'))
 				.toEqual('Interactive webinars available live or on-demand');
 
-			const atx1 = component.componentData.atx.sessions[2];
-			expect(component.componentData.atx.sessions[2].bookmark)
+			const atx1 = component.componentData.atx.sessions[1];
+			expect(atx1.bookmark)
 				.toBeFalsy();
 			component.updateBookmark(atx1, 'ATX');
 			fixture.detectChanges();
-			expect(component.componentData.atx.sessions[2].bookmark)
+			expect(atx1.bookmark)
 				.toBeTruthy();
 
 			component.onSort('title', 'asc', 'ATX');
@@ -740,17 +766,21 @@ describe('LifecycleComponent', () => {
 			expect(component.atxTable.columns[1].sortDirection)
 				.toEqual('asc');
 
-			component.selectedFilterForATX = 'isBookmarked';
-			component.selectFilter('ATX');
+			// Test filter here
+			const partnerSelection = [
+				{
+					companyName: 'Symantec',
+					companyId: '293531',
+				},
+				{
+					companyName: 'Salesforce',
+					companyId: '293533',
+				},
+			];
+			component.partnerMultiFilter(partnerSelection, 'ATX');
 			fixture.detectChanges();
-			expect(component.selectedATX.length)
-				.toEqual(1);
-
-			component.selectedFilterForATX = 'allTitles';
-			component.selectFilter('ATX');
-			fixture.detectChanges();
-			expect(component.selectedATX.length)
-				.toEqual(4);
+			expect(component.selectedPartnerFilterForATX.length)
+				.toEqual(2);
 
 			de = fixture.debugElement.query(By.css('.icon-close'));
 			el = de.nativeElement;
