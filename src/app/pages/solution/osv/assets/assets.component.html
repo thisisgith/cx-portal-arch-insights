@@ -86,13 +86,7 @@
 </div>
 
 <ng-template #recommendationsTemplate let-item="celldata">
-	<div *ngIf="item.recommendationCount && item.recommendationCount > 0 ;else noRecommendationsTemp">
-		<span class="badge-wrapper">
-			<span class="icon-lightbulb icon-small"></span>
-			<span class="badge badge--blue text-white" [innerText]="item.recommendationCount"></span>
-		</span>
-		<span class="base-margin-left" [innerText]="'_OsvAvailable_' | i18n"></span>
-	</div>
+	<span class="qtr-margin-left" [innerText]="item.recommendationType | titlecase"></span>
 </ng-template>
 
 <ng-template #versionTemplate let-item="celldata">		
