@@ -22,7 +22,7 @@ export class DnacDetailsComponent implements OnChanges {
 		collectionDate: 1,
 		collectionId: '',
 		customerId: '',
-		dnacIP: '',
+		dnacIp: '',
 	};
 	public dataForSystemsGraph = [];
 	public dataForFabricsGraph = [];
@@ -49,7 +49,7 @@ export class DnacDetailsComponent implements OnChanges {
 
 	public ngOnChanges () {
 		if (this.dnacDetails) {
-			this.params.dnacIP = this.dnacDetails.dnacIpaddress;
+			this.params.dnacIp = this.dnacDetails.dnacIpaddress;
 		}
 		if (this.collectionTime) {
 			const date = new Date(this.collectionTime);

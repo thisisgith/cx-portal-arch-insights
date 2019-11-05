@@ -44,6 +44,7 @@ export class DnacListComponent implements OnInit {
 	public tableEndIndex = 0;
 	private destroy$ = new Subject();
 	public searchText  = '';
+	public collectionTime = '';
 	public lastCollectionTime = '';
 	public params: IBullet =
 		{
@@ -92,8 +93,9 @@ export class DnacListComponent implements OnInit {
 			if (this.params.collectionId !== undefined) {
 				this.getDnacList();
 				const datePipe = new DatePipe('en-US');
+				this.collectionTime = _.get(res, ['collection', 'collectionDate']);
 				this.lastCollectionTime =
-					datePipe.transform(_.get(res, ['collection, collectionDate']), 'medium');
+					datePipe.transform(_.get(res, ['collection', 'collectionDate']), 'medium');
 			}
 		},
 		err => {
