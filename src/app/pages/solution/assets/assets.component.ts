@@ -742,7 +742,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					loading: true,
 					seriesData: [],
 					template: this.barChartFilterTemplate,
-					title: I18n.get('_HardwareEOX_'),
+					title: I18n.get('_LastDateOfSupport_'),
 				},
 				{
 					key: 'role',
@@ -1110,48 +1110,61 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			map((data: HardwareEOLCountResponse) => {
 				const series = [];
 
-				const sub30 = _.get(data, 'gt-0-lt-30-days');
-				const sub30Value = _.get(sub30, 'numericValue', 0);
+				const sub12 = _.get(data, 'gt-0-lt-12-months');
+				const sub12Value = _.get(sub12, 'numericValue', 0);
 
-				if (sub30Value) {
+				if (sub12Value) {
 					series.push({
-						filter: 'gt-0-lt-30-days',
+						filter: 'gt-0-lt-12-months',
 						filterValue: [`${
-							_.get(sub30, 'fromTimestampInMillis')},${
-								_.get(sub30, 'toTimestampInMillis')}`],
-						label: `< 30 ${I18n.get('_Days_')}`,
+							_.get(sub12, 'fromTimestampInMillis')},${
+								_.get(sub12, 'toTimestampInMillis')}`],
+						label: `< 12 ${_.lowerCase(I18n.get('_Months_'))}`,
 						selected: false,
-						value: sub30Value,
+						value: sub12Value,
 					});
 				}
 
-				const sub60 = _.get(data, 'gt-30-lt-60-days');
-				const sub60Value = _.get(sub60, 'numericValue', 0);
+				const sub24 = _.get(data, 'gt-12-lt-24-months');
+				const sub24Value = _.get(sub24, 'numericValue', 0);
 
-				if (sub60Value) {
+				if (sub24Value) {
 					series.push({
-						filter: 'gt-30-lt-60-days',
+						filter: 'gt-12-lt-24-months',
 						filterValue: [`${
-							_.get(sub60, 'fromTimestampInMillis')},${
-								_.get(sub60, 'toTimestampInMillis')}`],
-						label: `30 - 60 ${I18n.get('_Days_')}`,
+							_.get(sub24, 'fromTimestampInMillis')},${
+								_.get(sub24, 'toTimestampInMillis')}`],
+						label: `12 - 24 ${_.lowerCase(I18n.get('_Months_'))}`,
 						selected: false,
-						value: sub60Value,
+						value: sub24Value,
 					});
 				}
 
-				const sub90 = _.get(data, 'gt-60-lt-90-days');
-				const sub90Value = _.get(sub90, 'numericValue', 0);
+				const sub36 = _.get(data, 'gt-24-lt-36-months');
+				const sub36Value = _.get(sub36, 'numericValue', 0);
 
-				if (sub90Value) {
+				if (sub36Value) {
 					series.push({
-						filter: 'gt-60-lt-90-days',
+						filter: 'gt-24-lt-36-months',
 						filterValue: [`${
-							_.get(sub90, 'fromTimestampInMillis')},${
-								_.get(sub90, 'toTimestampInMillis')}`],
-						label: `61 - 90 ${I18n.get('_Days_')}`,
+							_.get(sub36, 'fromTimestampInMillis')},${
+								_.get(sub36, 'toTimestampInMillis')}`],
+						label: `25 - 36 ${_.lowerCase(I18n.get('_Months_'))}`,
 						selected: false,
-						value: sub90Value,
+						value: sub36Value,
+					});
+				}
+
+				const gt36 = _.get(data, 'gt-36-months');
+				const gt36Value = _.get(gt36, 'numericValue', 0);
+
+				if (gt36Value) {
+					series.push({
+						filter: 'gt-36-months',
+						filterValue: [`${_.get(sub36, 'fromTimestampInMillis')}`],
+						label: `> 36 ${_.lowerCase(I18n.get('_Months_'))}`,
+						selected: false,
+						value: gt36Value,
 					});
 				}
 

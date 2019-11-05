@@ -218,35 +218,42 @@ describe('AssetsComponent', () => {
 			tick();
 		}));
 
-		it('should set query params for Hardware EOX filter', fakeAsync(() => {
+		it('should set query params for LDOS filter', fakeAsync(() => {
 			buildSpies();
 			fixture.detectChanges();
 			tick(1000);
 
 			const eoxFilter = _.find(component.filters, { key: 'eox' });
 
-			component.onSubfilterSelect('gt-0-lt-30-days', eoxFilter);
+			component.onSubfilterSelect('gt-0-lt-12-months', eoxFilter);
 			tick(1000);
 
 			fixture.detectChanges();
 
 			expect(_.get(component, ['assetParams', 'lastDateOfSupportRange'])[0])
-				.toEqual('gt-0-lt-30-days');
+				.toEqual('gt-0-lt-12-months');
 
-			component.onSubfilterSelect('gt-30-lt-60-days', eoxFilter);
+			component.onSubfilterSelect('gt-12-lt-24-months', eoxFilter);
 			tick(1000);
 
 			fixture.detectChanges();
 
 			expect(_.get(component, ['assetParams', 'lastDateOfSupportRange'])[0])
-				.toEqual('gt-30-lt-60-days');
+				.toEqual('gt-12-lt-24-months');
 
-			component.onSubfilterSelect('gt-60-lt-90-days', eoxFilter);
+			component.onSubfilterSelect('gt-24-lt-36-months', eoxFilter);
 			tick(1000);
 
 			fixture.detectChanges();
 			expect(_.get(component, ['assetParams', 'lastDateOfSupportRange'])[0])
-				.toEqual('gt-60-lt-90-days');
+				.toEqual('gt-24-lt-36-months');
+
+			component.onSubfilterSelect('gt-36-months', eoxFilter);
+			tick(1000);
+
+			fixture.detectChanges();
+			expect(_.get(component, ['assetParams', 'lastDateOfSupportRange'])[0])
+				.toEqual('gt-36-months');
 
 			fixture.destroy();
 			tick();
@@ -699,7 +706,7 @@ describe('AssetsComponent', () => {
 			contractNumber: '1234',
 			coverage: 'covered',
 			hasBugs: true,
-			lastDateOfSupportRange: 'gt-30-lt-60-days',
+			lastDateOfSupportRange: 'gt-12-lt-24-months',
 			role: 'access',
 		};
 
@@ -753,7 +760,7 @@ describe('AssetsComponent', () => {
 			expect(_.get(component.assetParams, 'hasBugs'))
 				.toBe(true);
 			expect(_.get(component.assetParams, 'lastDateOfSupportRange'))
-				.toEqual(['gt-30-lt-60-days']);
+				.toEqual(['gt-12-lt-24-months']);
 
 			fixture.destroy();
 			tick();

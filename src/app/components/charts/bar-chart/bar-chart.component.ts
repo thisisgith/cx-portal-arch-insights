@@ -131,6 +131,7 @@ export class BarChartComponent implements OnChanges {
 						fontFamily: 'CiscoSans, Arial, sans-serif',
 						fontSize: '10px',
 						fontWeight: '400',
+						width: 80,
 					},
 				},
 				lineColor: 'transparent',
