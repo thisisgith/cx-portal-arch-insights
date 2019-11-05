@@ -40,7 +40,7 @@ describe('MultiselectComponent', () => {
 
 	it('should toggle the dropdown menu', () => {
 		const toggleBtn = fixture.debugElement.query(
-			By.css(`[data-auto-id="${component.componentId}-DropdownToggle"]`),
+			By.css('[data-auto-id="MultiSelect-DropdownToggle"]'),
 		);
 
 		toggleBtn.nativeElement.click();
