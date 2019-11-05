@@ -115,7 +115,6 @@ export class CbpDeviceAffectedComponent implements OnInit, OnChanges {
 			striped: false,
 			wrapText: true,
 		});
-		this.getCollectionId();
 	}
 
 	/**
@@ -129,6 +128,7 @@ export class CbpDeviceAffectedComponent implements OnInit, OnChanges {
 		)
 		.subscribe(res => {
 			this.params.collectionId = _.get(res, 'collection.collectionId');
+			this.getData();
 		},
 		err => {
 			this.logger.error('Devices list Component View' +
@@ -143,12 +143,12 @@ export class CbpDeviceAffectedComponent implements OnInit, OnChanges {
 	 */
 	public ngOnChanges () {
 		if (this.cbpDetails) {
-			const deviceIdsWithExceptions = this.cbpDetails.deviceIpsWithExceptions.split(';');
+			const deviceIdsWithExceptions = this.cbpDetails.deviceIpsWithExceptions;
 			this.totalItems = deviceIdsWithExceptions.length;
 			this.params.body = deviceIdsWithExceptions;
 			this.params.page = 0 ;
 			this.isLoading = true;
-			this.getData();
+			this.getCollectionId();
 		}
 	}
 
