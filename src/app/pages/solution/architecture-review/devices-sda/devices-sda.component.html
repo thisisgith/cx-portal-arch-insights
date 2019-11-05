@@ -1,26 +1,26 @@
-<cui-drawer projection="true" expanded="true">
-	<div class="cui-drawer-label text-xlarge base-padding-top"
-		[innerText]="'_ArchitectureSoftwareRecommendation_' | i18n">
-	</div>
-	<div class="cui-drawer-content">
-		<ng-container *ngTemplateOutlet="SDASupportedSoftwareContent;context: { 
-							sdaData: sdaData}">
-		</ng-container>
-	</div>
-</cui-drawer>
-<cui-drawer projection="true" expanded="true">
-	<div class="cui-drawer-label text-xlarge qtr-padding-top"
-		[innerText]="'_ArchitectureHardwareRecommendation_' | i18n">
-	</div>
-	<div class="cui-drawer-content">
-		<ng-container *ngTemplateOutlet="SDASupportedHardwareContent;context: { 
+<div *ngIf="(!isError && !isLoading) else errorTemplate">
+	<cui-drawer projection="true" expanded="true" *ngIf="sdaHardwareGridData?.length > 0">
+		<div class="cui-drawer-label text-xlarge qtr-padding-top"
+			[innerText]="'_ArchitectureHardwareRecommendation_' | i18n">
+		</div>
+		<div class="cui-drawer-content">
+			<ng-container *ngTemplateOutlet="SDASupportedHardwareContent;context: { 
 			sdaData: sdaData}">
-		</ng-container>
-	</div>
-</cui-drawer>
-<cui-drawer projection="true" expanded="true">
-		<div class="cui-drawer-label text-xlarge"
-		[innerText]="'_ArchitectureUnderlayRecommendation_' | i18n">
+			</ng-container>
+		</div>
+	</cui-drawer>
+	<cui-drawer projection="true" expanded="true" *ngIf="sdaSoftwareGridData?.length > 0">
+		<div class="cui-drawer-label text-xlarge base-padding-top"
+			[innerText]="'_ArchitectureSoftwareRecommendation_' | i18n">
+		</div>
+		<div class="cui-drawer-content">
+			<ng-container *ngTemplateOutlet="SDASupportedSoftwareContent;context: { 
+							sdaData: sdaData}">
+			</ng-container>
+		</div>
+	</cui-drawer>
+	<cui-drawer expanded="true" projection="true">
+		<div class="cui-drawer-label text-xlarge" [innerText]="'_ArchitectureUnderlayRecommendation_' | i18n">
 		</div>
 		<div class="cui-drawer-content">
 			<div *ngIf="showL3Switch" class="base-margin-bottom">
@@ -38,21 +38,31 @@
 			<ng-container *ngTemplateOutlet="SDAUnderlayRecommendationTemplate">
 			</ng-container>
 		</div>
-</cui-drawer>
-<ng-template #SDASupportedSoftwareContent let-softwareSdaData="sdaData" >
+	</cui-drawer>
+</div>
+<ng-template #errorTemplate>
+		<div class="dbl-padding" *ngIf="isLoading">
+			<cui-spinner color="default" label=""></cui-spinner>
+		</div>
+	<div class="alert fade-and-slide-top text-left alert--danger" *ngIf="isError && !isLoading">
+		<div class="alert__icon icon-error-outline"></div>
+		<ng-container class="failed-criteria">
+			<div class="alert__message" [innerText]="'__ArchitectureErrorResults_' | i18n">
+			</div>
+		</ng-container>
+	</div>
+</ng-template>
+<ng-template #SDASupportedSoftwareContent let-softwareSdaData="sdaData">
 	<span [innerText]="'_ArchitectureRecommendedMessage_' | i18n"></span>
 	<a class="qtr-padding-left" data-auto-id="linkSlideIn"
-		[innerText]="'_ArchitectureRecommendedRedirectLink_' | i18n"></a>
-	<div class="base-margin-top panel">
+		[innerText]="'_ArchitectureRecommendedRedirectLink_' | i18n" (click)="callOsvPage(sdaData)"></a>
+	<div class="base-margin-top panel recommended-color">
 		<span class="text-large" [innerText]="'_ArchitectureSdaSupportedSoftware_' | i18n"></span>
 		<cui-table [options]="softwareTableOptions" [data]="sdaSoftwareGridData"></cui-table>
 	</div>
 </ng-template>
-<ng-template #SDASupportedHardwareContent let-hardwareSdaData="sdaData">
-	<span [innerText]="'_ArchitectureRecommendedHardwareMessage_' | i18n">
-	</span>
-	<span class="qtr-margin-left text-bold" [innerText]="hardwareSdaData?.hardwareRecommendation"></span>
-	<div class="base-margin-top panel" >
+<ng-template #SDASupportedHardwareContent let-hardwareSdaData="sdaData" >
+	<div class="qtr-margin-top panel recommended-color" >
 		<span class="text-large" [innerText]="'_ArchitectureSdaSupportedHardware_' | i18n"></span>
 		<cui-table [options]="hardwareTableOptions" [data]="sdaHardwareGridData"></cui-table>
 	</div>
@@ -66,12 +76,13 @@
 			></cui-pager>
 </ng-template>
 <ng-template #sdaSoftwareVersions let-item="celldata">
-	<div *ngFor="let version of item?.software">
-		<span [innerText]="version"></span>
-	</div>
+	<span [innerText]="item?.software"></span>
 </ng-template>
 <ng-template #sdaHardwareProductFamily let-item="celldata">
 	<div *ngFor="let productFamilyInfo of item?.productFamily">
 		<span [innerText]="productFamilyInfo"></span>
 	</div>
+</ng-template>
+<ng-template #sdaHardwareProductId let-item="celldata">
+	<span [innerText]="item?.productId"></span>
 </ng-template>

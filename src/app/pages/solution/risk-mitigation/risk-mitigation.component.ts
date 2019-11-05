@@ -5,7 +5,7 @@ import * as _ from 'lodash-es';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { LogService } from '@cisco-ngx/cui-services';
-import { AssetPanelLinkService } from '@services';
+import { AssetPanelLinkService, RacetrackInfoService } from '@services';
 import {
 	CrashHistoryDeviceCount,
 	RiskMitigationService,
@@ -17,6 +17,9 @@ import {
 	HighCrashRisk,
 	RiskAssets,
 	InventoryService,
+	HighCrashRiskDeviceTooltip,
+	RacetrackSolution,
+	RacetrackTechnology,
 } from '@sdp-api';
 import { ActivatedRoute } from '@angular/router';
 import { AssetLinkInfo } from '@interfaces';
@@ -49,11 +52,15 @@ export class RiskMitigationComponent {
 	public assetLinkInfo: AssetLinkInfo = Object.create({ });
 
 	public crashedAssetsCount = 0;
+	private selectedSolutionName: string;
+	private selectedTechnologyName: string;
+
 	constructor (
 		private riskMitigationService: RiskMitigationService,
 		private assetPanelLinkService: AssetPanelLinkService,
 		private logger: LogService,
 		private route: ActivatedRoute,
+		private racetrackInfoService: RacetrackInfoService,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
@@ -86,6 +93,8 @@ export class RiskMitigationComponent {
 		public timeStampTemplate: TemplateRef<string>;
 	@ViewChild('riskTooltipTemplate', { static: true })
 		public riskTooltipTemplate: TemplateRef<string>;
+	@ViewChild('riskScoreFilterTemplate', { static: true })
+		public riskScoreFilterTemplate: TemplateRef<string>;
 
 	public openPanel = false;
 	public fullscreen = false;
@@ -99,7 +108,6 @@ export class RiskMitigationComponent {
 	public crashHistoryParams: CrashHistoryDeviceCount;
 	public highCrashDeviceCount = 0;
 	public crashHistoryTableOptions: CuiTableOptions;
-
 	public crashesAssetsGridOptions: CuiTableOptions;
 	public crashedAssetsGridDetails = {
 		 tableData: [],
@@ -150,6 +158,8 @@ export class RiskMitigationComponent {
 			search: '',
 			size: 10,
 			sort: '',
+			solution: this.selectedSolutionName,
+			useCase: this.selectedTechnologyName,
 		};
 		this.status.isLoading = true;
 		forkJoin(
@@ -186,8 +196,13 @@ export class RiskMitigationComponent {
 		if (_.get(this.filters, [0, 'selected'])) {
 			this.filters[0].selected = false;
 		}
+		this.highCrashRiskParams.globalRiskRank = 'HIGH';
 		this.getFingerPrintDeviceDetails(this.highCrashRiskParams);
-		const params = _.pick(_.cloneDeep(this.highCrashRiskParams), ['customerId']);
+		const params = _.pick(_.cloneDeep(this.highCrashRiskParams), [
+			'customerId',
+			'solution',
+			'useCase',
+		]);
 		this.status.isLoading = true;
 
 		return this.riskMitigationService.getHighCrashRiskDeviceCountData(params)
@@ -195,7 +210,8 @@ export class RiskMitigationComponent {
 					takeUntil(this.destroy$),
 					map((results: HighCrashRiskDeviceCount) => {
 						this.status.isLoading = false;
-						this.highCrashDeviceCount = results.crashRiskDeviceCount;
+						this.highCrashDeviceCount = results.crashRiskDeviceCount.high;
+						this.getRiskScore(results.crashRiskDeviceCount);
 					}),
 					catchError(err => {
 						this.status.isLoading = false;
@@ -213,7 +229,11 @@ export class RiskMitigationComponent {
 	 * @returns the total crashes observable
 	 */
 	public getAllCrashesData () {
-		const params = _.pick(_.cloneDeep(this.highCrashRiskParams), ['customerId']);
+		const params = _.pick(_.cloneDeep(this.highCrashRiskParams), [
+			'customerId',
+			'solution',
+			'useCase',
+		]);
 		this.onlyCrashes = false;
 		this.filters[0].selected = true;
 
@@ -248,7 +268,7 @@ export class RiskMitigationComponent {
 			{
 				filter: 'Time: Last 24h',
 				label: '24h',
-				selected: true,
+				selected: false,
 				value: Number(data.devicesCrashCount_1d),
 			},
 			{
@@ -277,7 +297,11 @@ export class RiskMitigationComponent {
 	 * @returns the total crashes observable
 	 */
 	public getDeviceDetails (timePeriod: string) {
-		const params = _.pick(_.cloneDeep(this.highCrashRiskParams), ['customerId']);
+		const params = _.pick(_.cloneDeep(this.highCrashRiskParams), [
+			'customerId',
+			'solution',
+			'useCase',
+		]);
 		this.crashedAssetsGridDetails.tableData = [];
 		if (timePeriod) {
 			params.timePeriod = timePeriod;
@@ -440,7 +464,7 @@ export class RiskMitigationComponent {
 					break;
 				}
 			}
-		} else {
+		 } else {
 			time = '1';
 		}
 
@@ -635,6 +659,25 @@ export class RiskMitigationComponent {
 	 * OnInit lifecycle hook
 	 */
 	public ngOnInit () {
+		this.racetrackInfoService.getCurrentSolution()
+		.pipe(
+			takeUntil(this.destroy$),
+		)
+		.subscribe((solution: RacetrackSolution) => {
+			this.selectedSolutionName = _.get(solution, 'name');
+		});
+
+		this.racetrackInfoService.getCurrentTechnology()
+		.pipe(
+			takeUntil(this.destroy$),
+		)
+		.subscribe((technology: RacetrackTechnology) => {
+			if (this.selectedTechnologyName !== _.get(technology, 'name')) {
+				this.selectedTechnologyName = _.get(technology, 'name');
+				this.loadData();
+			}
+		});
+
 		this.buildFilters();
 		this.buildTables();
 		this.loadData();
@@ -693,12 +736,6 @@ export class RiskMitigationComponent {
 					name: I18n.get('_RMSoftwareVersion_'),
 					sortable: true,
 					template: this.swVersionTemplate,
-				},
-				{
-					key: 'crashCount',
-					name: I18n.get('_RMNumberOfCrashes_'),
-					sortable: true,
-					sortKey: 'crashCount',
 				},
 				{
 					key: 'firstOccurrence',
@@ -783,6 +820,13 @@ export class RiskMitigationComponent {
 				template: this.advisoryFilterTemplate,
 				title: '',
 			},
+			{
+				key: 'riskScore',
+				loading: true,
+				seriesData: [],
+				template: this.riskScoreFilterTemplate,
+				title:  I18n.get('_CP_Risk_'),
+			},
 
 		];
 	}
@@ -820,7 +864,13 @@ export class RiskMitigationComponent {
 				break;
 			}
 		}
-		this.getDeviceDetails(filterSelected);
+		if (filter.key === 'advisories') {
+			this.getDeviceDetails(filterSelected);
+		} else {
+			this.highCrashRiskParams.globalRiskRank = subfilter;
+			this.getFingerPrintDeviceDetails(this.highCrashRiskParams);
+
+		}
 	}
 
 	/**
@@ -870,6 +920,42 @@ export class RiskMitigationComponent {
 		if (filter) {
 			return _.filter(filter.seriesData, 'selected');
 		}
+
+	}
+	/**
+	 * Gets high crashes Risk Score  data
+	 * @param result will have search string
+	 * @returns  the crashed device data
+	 */
+	public getRiskScore (result: HighCrashRiskDeviceTooltip) {
+		const catalogFilter = _.find(this.filters, { key: 'riskScore' });
+
+		return (catalogFilter.seriesData = [
+			{
+				filter: 'HIGH',
+				label: I18n.get('_High_'),
+				selected: true,
+				value: result.high,
+			},
+			{
+				filter: 'LOW',
+				label: I18n.get('_Low_'),
+				selected: false,
+				value: result.low,
+			},
+			{
+				filter: 'MED',
+				label: I18n.get('_Medium_'),
+				selected: false,
+				value: result.med,
+			},
+			{
+				filter: 'Not Evaluated',
+				label: I18n.get('_CP_NotEvaluated'),
+				selected: false,
+				value: result.notEvaluated,
+			},
+		]);
 
 	}
 

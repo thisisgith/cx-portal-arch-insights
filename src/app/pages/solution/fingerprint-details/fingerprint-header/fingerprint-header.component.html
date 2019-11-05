@@ -1,57 +1,32 @@
 <div class="row" *ngIf="deviceData">
 	<div class="flex base-margin-top col-md-12 ">
-		<div data-auto-id="ipAddress" class="base-margin-left col-md-2">
-			<div
-				class="text-bold text-uppercase text-small"
-				[innerText]="'_CP_IpAddress_' | i18n"
-			></div>
+		<div data-auto-id="ipAddress" class="base-margin-left col-md-3">
+			<div class="text-bold text-uppercase text-small" [innerText]="'_CP_IpAddress_' | i18n"></div>
 			<div [innerHTML]="deviceData.ipAddress"></div>
 		</div>
 		<div data-auto-id="serialNumber" class=" col-md-3">
-			<div
-				class="text-bold text-uppercase text-small"
-				[innerText]="'_CP_SerialNumber_' | i18n"
-			></div>
+			<div class="text-bold text-uppercase text-small" [innerText]="'_CP_SerialNumber_' | i18n"></div>
 			<div [innerHTML]="deviceData.serialNumber"></div>
 		</div>
-		<div data-auto-id="globalRiskRank" class="qtr-margin-left col-md-4">
+		<div data-auto-id="globalRiskRank" class="col-md-6">
 			<div class="row">
-				<div
-					class="text-small text-bold"
-					[innerText]="'_CP_Risk_' | i18n | uppercase"
-				></div>
-				<sup
-					><div
-						tooltip
-						[tooltipTemplate]="riskTooltipContentTemplate"
-						class="text-tiny icon-info-outline qtr-margin-left half-padding-bottom"
-						[tooltipMaxWidth]="200"
-					></div
-				></sup>
+				<div class="text-small text-bold" [innerText]="'_CP_Risk_' | i18n | uppercase"></div>
+				<sup>
+					<div tooltip [tooltipTemplate]="riskTooltipContentTemplate"
+						class="text-tiny icon-info-outline qtr-margin-left half-padding-bottom" [tooltipMaxWidth]="200">
+					</div>
+				</sup>
 			</div>
 			<div class="row">
-				<div class="col-md-8 no-padding-left">
-					<div
-						class="progressbar progressbar--large qtr-margin-top"
-						[attr.data-percentage]="riskScore"
-					>
-						<div class="progressbar__fill"></div>
-					</div>
-				</div>
-				<div>
-					<div
-						class="qtr-margin-left "
-						[ngClass]="
+					<div class="qtr-margin-left " [ngClass]="
 							{
 								LOW: 'text-success',
 								MED: 'text-warning',
 								HIGH: 'text-danger'
 							}[deviceData.globalRiskRank]
-						"
-					>
-						<span class="icon-stop"></span>
+						">
+						<span class="icon-circle"></span>
 					</div>
-				</div>
 				<div class=" col-md-2 no-padding-right">
 					<span [innerHTML]="deviceData.globalRiskRank"></span>
 				</div>

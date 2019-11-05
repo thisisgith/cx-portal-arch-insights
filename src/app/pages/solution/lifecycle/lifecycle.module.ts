@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
-import { RacetrackComponentModule, TooltipModule } from '@components';
+import { RacetrackComponentModule, TooltipModule, MultiselectModule } from '@components';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { CuiSpinnerModule, CuiSelectModule, CuiRatingModule } from '@cisco-ngx/cui-components';
 import { FormsModule } from '@angular/forms';
@@ -43,6 +43,7 @@ const childRoutes: Routes = [
 		CuiSpinnerModule,
 		FormsModule,
 		I18nPipeModule,
+		MultiselectModule,
 		RacetrackComponentModule,
 		CommunitiesModule,
 		RacetrackContentModule.forRoot({ rootUrl }),
@@ -50,6 +51,7 @@ const childRoutes: Routes = [
 		RouterModule.forChild(childRoutes),
 		TooltipModule,
 		InlineSVGModule.forRoot({ baseUrl: '/' }),
+		MultiselectModule,
 	],
 	providers: [
 		{ provide: 'ENVIRONMENT', useValue: environment },

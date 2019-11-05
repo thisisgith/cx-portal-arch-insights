@@ -34,15 +34,17 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 	@Input() public fullscreen;
 	@Input() public cxLevel;
 	@Input() public assetsCount;
+	@Input() public solution;
+	@Input() public useCase;
 	@Output() public fullscreenChange = new EventEmitter<boolean>();
 	@Output() public selectedAssetChange = new EventEmitter<OSVAsset>();
 	@Output() public contactSupport = new EventEmitter();
 	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
 	@ViewChild('versionTemplate', { static: true }) private versionTemplate: TemplateRef<{ }>;
 	@ViewChild('recommendationsTemplate', { static: true })
-		private recommendationsTemplate: TemplateRef<{ }>;
+	private recommendationsTemplate: TemplateRef<{ }>;
 	@ViewChild('hostTemplate', { static: true })
-		private hostTemplate: TemplateRef<{ }>;
+	private hostTemplate: TemplateRef<{ }>;
 	public assetsTable: CuiTableOptions;
 	public status = {
 		isLoading: false,
@@ -80,6 +82,8 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 			search: '',
 			sort: 'hostName',
 			sortOrder: 'asc',
+			solution: '',
+			useCase: '',
 		};
 	}
 
@@ -90,6 +94,8 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 	 */
 	public ngOnInit () {
 		if (this.assetsCount > 0) {
+			this.assetsParams.solution = this.solution;
+			this.assetsParams.useCase = this.useCase;
 			this.loadData();
 		}
 	}
@@ -102,6 +108,16 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 		const currentFilter = _.get(changes, ['filters', 'currentValue']);
 		if (currentFilter && !changes.filters.firstChange && this.assetsCount > 0) {
 			this.setFilter(currentFilter);
+			this.loadData();
+		}
+		const solution = _.get(changes, ['solution', 'currentValue']);
+		const useCase = _.get(changes, ['useCase', 'currentValue']);
+		if (solution && !_.get(changes, ['solution', 'firstChange'])) {
+			this.assetsParams.solution = solution;
+			this.loadData();
+		}
+		if (useCase && !_.get(changes, ['useCase', 'firstChange'])) {
+			this.assetsParams.useCase = useCase;
 			this.loadData();
 		}
 	}
@@ -204,7 +220,7 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 						name: I18n.get('_OsvSoftwareGroup_'),
 						sortable: true,
 						render: item =>
-								item.profileName ? item.profileName : '',
+							item.profileName ? item.profileName : '',
 						width: '10%',
 					},
 					{
@@ -221,9 +237,9 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 					},
 					{
 						key: 'optimalVersion',
-						name: I18n.get('_OsvOptimalVersion_'),
+						name: I18n.get('_OsvAcceptedRelease_'),
 						render: item =>
-								item.optimalVersion ? item.optimalVersion : '',
+							item.optimalVersion ? item.optimalVersion : '',
 						sortable: false,
 						width: '10%',
 					},
@@ -231,7 +247,7 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 						key: 'deploymentStatus',
 						name: I18n.get('_OsvDeploymentStatus_'),
 						render: item =>
-								item.deploymentStatus ? item.deploymentStatus : '',
+							item.deploymentStatus ? item.deploymentStatus : '',
 						sortable: true,
 						width: '10%',
 					},

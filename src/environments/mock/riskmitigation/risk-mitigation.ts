@@ -32,7 +32,12 @@ const allCrashDetails: CrashCount = {
 
 const highCrashCount: HighCrashRiskDeviceCount = {
 	customerId: "15750",
-	crashRiskDeviceCount:15,
+	crashRiskDeviceCount:{
+		"high": 25,
+		"med": 50,
+		"low": 75,
+		"notEvaluated": 65
+		},
 	crashPredicted:true
 };
 
@@ -160,7 +165,7 @@ export const RiskScenarios = [
 				},
 			],
 		},
-		url: `${api}/crash-risk-device-count/${customerId}`,
+		url: `${api}/crash-risk-device-count/${customerId}?useCase=Campus Network Assurance&solution=IBN`,
 		usecases: ['Use Case 2'],
 	},
 	{
@@ -177,7 +182,7 @@ export const RiskScenarios = [
 				},
 			],
 		},
-		url: `${api}/crash-risk-device-count/${customerId}`,
+		url: `${api}/crash-risk-device-count/${customerId}?useCase=Campus Network Assurance&solution=IBN`,
 		usecases: ['Use Case 3'],
 	},
 	{
@@ -194,7 +199,7 @@ export const RiskScenarios = [
 				},
 			],
 		},
-		url: `${api}/crash-risk-device-count/${customerId}`,
+		url: `${api}/crash-risk-device-count/${customerId}?useCase=Campus Network Assurance&solution=IBN`,
 		usecases: ['Use Case 4'],
 	},
 	{
@@ -211,7 +216,7 @@ export const RiskScenarios = [
 				},
 			],
 		},
-		url: `${api}/crash-risk-devices/2431199?${customerId}&page=0&size=10`,
+		url: `${api}/crash-risk-devices/2431199?customerId=2431199&page=0&size=10&globalRiskRank=HIGH&useCase=Campus Network Assurance&solution=IBN`,
 		usecases: ['Use Case 5'],
 	},
 	{
@@ -228,7 +233,7 @@ export const RiskScenarios = [
 				},
 			],
 		},
-		url: `${riskApi}/crash-detail/2431199?timePeriod=1`,
+		url: `${riskApi}/crash-detail/2431199?timePeriod=1&useCase=Campus Network Assurance&solution=IBN`,
 		usecases: ['Use Case 6'],
 	},
 	{
@@ -245,7 +250,7 @@ export const RiskScenarios = [
 				},
 			],
 		},
-		url: `${riskApi}/device-frequent-crash-detail/2431199?deviceId=NA,FOC1544Y1AV,WS-C2960S-24PS-L,NA`,
+		url: `${riskApi}/device-frequent-crash-detail/2431199?deviceId=NA,FOC1544Y1AV,WS-C2960S-24PS-L,NA&useCase=Campus Network Assurance&solution=IBN`,
 		usecases: ['Use Case 7'],
 	},
 ];

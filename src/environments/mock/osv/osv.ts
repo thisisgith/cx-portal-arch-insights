@@ -9,6 +9,7 @@ import {
 	SoftwareGroupVersionsResponse,
 	MachineRecommendationsResponse,
 	ProfileRecommendationsResponse,
+	ExpertRecommendations,
 } from '@sdp-api';
 
 /** Base of URL for SDP API */
@@ -75,6 +76,51 @@ const mockBasicRecommendations: AssetRecommendationsResponse = [
 		swVersion: '15.3(3)M3',
 	},
 ];
+
+/** mock response of bug detail */
+const mockBugDetails = {
+	id: 'CSCvq69471',
+	severity: 'High',
+	source: 'SLM',
+	status: 'Fixed',
+	title: 'Sint nisi excepteur sunt enim cillum veniam enim.',
+	description: `$$PREFCS\n\nOSV F8885 requirements\n\n<B>Symptom:</B>\nAll headers in OSV
+	screen tables should be  click sort-able\n\nAsset list view - these need to be sortable
+	too\nIP Address\nSoftware Group\nOS Type\nCurrent OS\nDeployment Status\nRecommendations
+	 not sortable.\n\nSoftware group list view - these need to be sortable\nAs
+	above plus\n# Asset\n\nSoftware Version View\n+ Version\n+ # assets not
+	in software group\n+ # assets in software group\n\n<B>Conditions:</B>
+	Click header to see it does not sort A-Z, then Z-A order.\n\n
+	<B>Workaround:</B>\nNone\n\n<B>Further Problem Description:</B>\n\n\n`,
+};
+
+/** mock response of psirt detail */
+const mockPsirtDetail = {
+	id: 'CSCvr08842',
+	severity: 'High',
+	source: 'SLM',
+	status: 'Fixed',
+	title: 'Sint nisi excepteur sunt enim cillum veniam enim.',
+	description: `A vulnerability in the Cisco Discovery Protocol (CDP) module of\r\nCisco IOS
+	XE Software Releases 16.6.1 and 16.6.2 could allow an unauthenticated, adjacent\r\nattacker
+	to cause a memory leak that may lead to a denial of service\r\n(DoS) condition.<br />\r\n<br/>
+	\r\nThe vulnerability is due to incorrect processing\r\nof certain CDP packets. An attacker
+	could exploit this vulnerability by\r\nsending certain CDP packets to an affected device.'
+	A successful exploit\r\ncould cause an affected device to continuously consume memory
+	and\r\neventually result in a memory allocation failure that leads to a crash,
+	\r\ntriggering a reload of the affected device.\r\n<p>Cisco has released software
+	updates that address this vulnerability. There are no workarounds that address this
+	vulnerability.</p>\r\n<p>This advisory is available at the following link:<br />\r\n
+	<a href=\"https://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/
+	cisco-sa-20180926-cdp-memleak\">https://tools.cisco.com/security/center/content/
+	CiscoSecurityAdvisory/cisco-sa-20180926-cdp-memleak</a></p>\r\nThis advisory is
+	part of the September 26, 2018, release of the Cisco IOS and IOS XE Software
+	Security Advisory Bundled Publication, which includes 12 Cisco Security Advisories
+	that describe 13 vulnerabilities. For a complete list of the advisories and links
+	to them, see <a href=\"http://tools.cisco.com/security/center/viewErp.x?alertId
+	=ERP-69981\">Cisco Event Response: September 2018 Semiannual Cisco IOS and IOS
+	XE Software Security Advisory Bundled Publication</a>`,
+};
 
 /** The mock response for machine recommendations */
 const mockMachineRecommendations: MachineRecommendationsResponse = [
@@ -359,21 +405,21 @@ const mockMachineRecommendations: MachineRecommendationsResponse = [
 				id: 'CSCvr05056',
 				severity: 'High',
 				source: 'SLM',
-				status: 'Fixed',
+				status: 'RESOLVED',
 				title: 'Laboris laboris cupidatat eiusmod Lorem esse velit',
 			},
 			{
 				id: 'CSCvq77657',
 				severity: 'Medium',
 				source: 'SLM',
-				status: 'Fixed',
+				status: 'OPEN',
 				title: 'Anim laboris aute fugiat enim dolor nulla ipsum ex amet labore.',
 			},
 			{
 				id: 'CSCvr08842',
 				severity: 'Low',
 				source: 'SLM',
-				status: 'Fixed',
+				status: 'NEW_OPEN',
 			},
 			{
 				id: 'CSCvq85913',
@@ -468,6 +514,39 @@ const mockMachineRecommendations: MachineRecommendationsResponse = [
 	},
 ];
 
+/** The mock response for DE recommendations */
+const mockExpertRecommendations: ExpertRecommendations[] = [
+	{
+		recommSubmittedDate: '2008-01-10T18:30:00.000+0000',
+		status: 'completed',
+		releaseDate: '2008-01-10T18:30:00.000+0000',
+		release: '16.9.2',
+		downloadLink: '',
+		summary: 'Reprehenderit cupidatat ut excepteur velit cillum. Sint fugiat anim dolor ipsum' +
+			'sint nisi occaecat et cupidatat ullamco enim. Culpa sit voluptate est dolor' +
+			'cupidatat nostrud cillum elit. Sit velit veniam mollit exercitation duis ea' +
+			'culpa cillum aliquip. Reprehenderit proident dolore voluptate exercitation ' +
+			'ad est occaecat occaecat. Esse incididunt consectetur culpa eiusmod amet ' +
+			'consequat ut. Est non mollit anim veniam commodo laboris incididunt.' +
+			'Et cillum ad cillum sunt adipisicing ex occaecat laboris mollit minim elit.' +
+			'Occaecat eiusmod esse anim magna in enim Lorem cillum sint exercitation eu ' +
+			'Exercitation exercitation eiusmod mollit veniam duis nostrud voluptate. ' +
+			'Quis nostrud duis incididunt proident incididunt irure. Tempor velit nulla' +
+			'voluptate commodo aute consectetur veniam ipsum ea. Mollit pariatur consequat' +
+			'nostrud pariatur eiusmod reprehenderit ut duis voluptate sit ut laborum.' +
+			'Deserunt dolor deserunt ipsum consequat ipsum labore laborum sunt. Pariatur' +
+			'culpa occaecat tempor nisi anim dolore incididunt voluptate aute fugiat.',
+	},
+	{
+		recommSubmittedDate: '2008-01-10T18:30:00.000+0000',
+		status: 'inprogress',
+		releaseDate: '2008-01-10T18:30:00.000+0000',
+		release: '16.9.2',
+		downloadLink: '',
+		summary: 'Dolore ipsum elit pariatur in aliqua sunt culpa.',
+	},
+];
+
 /** The mock response for basic recommendations */
 const mockSoftwareGroupRecommendations: ProfileRecommendationsResponse = {
 	recommendations: [
@@ -496,26 +575,9 @@ const mockSoftwareGroupRecommendations: ProfileRecommendationsResponse = {
 			postDate: '2019-04-16T00:00:00.000+0000',
 			swVersion: 'NA',
 		},
-		{
-			error: null,
-			name: 'Recommendation #3',
-			postDate: '2019-04-16T00:00:00.000+0000',
-			swVersion: '7.3(2)N1(1a)',
-		},
-		{
-			error: null,
-			name: 'Recommendation #2',
-			postDate: '2019-04-16T00:00:00.000+0000',
-			swVersion: '7.3(2)N1(1b)',
-		},
-		{
-			error: null,
-			name: 'Recommendation #1',
-			postDate: '2019-04-16T00:00:00.000+0000',
-			swVersion: '7.3(2)N1(1c)',
-		},
 	],
 	recommendationSummaries: mockMachineRecommendations,
+	expertRecommendations: mockExpertRecommendations,
 };
 
 /** The mock response for software versions */
@@ -829,6 +891,7 @@ const mockAssets: AssetsResponse = {
 			profileName: '7293498_NA',
 			recommAcceptedDate: '2014-05-30T00:00:00.000+0000',
 			recommendationCount: 3,
+			recommendationType: 'automated',
 			swType: 'IOS',
 			swVersion: '8',
 		},
@@ -848,6 +911,7 @@ const mockAssets: AssetsResponse = {
 			profileName: '7293498_NA',
 			recommAcceptedDate: '2014-05-30T00:00:00.000+0000',
 			recommendationCount: 3,
+			recommendationType: 'automated',
 			swType: 'IOS',
 			swVersion: '8',
 		},
@@ -867,6 +931,7 @@ const mockAssets: AssetsResponse = {
 			profileName: '7293498_NA',
 			recommAcceptedDate: '2014-05-30T00:00:00.000+0000',
 			recommendationCount: 3,
+			recommendationType: 'none',
 			swType: 'IOS',
 			swVersion: '8',
 		},
@@ -886,6 +951,7 @@ const mockAssets: AssetsResponse = {
 			profileName: '7293498_NA',
 			recommAcceptedDate: '2014-05-30T00:00:00.000+0000',
 			recommendationCount: 3,
+			recommendationType: 'none',
 			swType: 'IOS',
 			swVersion: '8',
 		},
@@ -905,6 +971,7 @@ const mockAssets: AssetsResponse = {
 			profileName: '7293498_NA',
 			recommAcceptedDate: '2014-05-30T00:00:00.000+0000',
 			recommendationCount: 3,
+			recommendationType: 'none',
 			swType: 'IOS',
 			swVersion: '8',
 		},
@@ -924,6 +991,7 @@ const mockAssets: AssetsResponse = {
 			profileName: '7293498_NA',
 			recommAcceptedDate: '2014-05-30T00:00:00.000+0000',
 			recommendationCount: 3,
+			recommendationType: 'automated',
 			swType: 'IOS',
 			swVersion: '8',
 		},
@@ -943,6 +1011,7 @@ const mockAssets: AssetsResponse = {
 			profileName: '7293498_NA',
 			recommAcceptedDate: '2014-05-30T00:00:00.000+0000',
 			recommendationCount: 3,
+			recommendationType: 'none',
 			swType: 'IOS',
 			swVersion: '8',
 		},
@@ -961,6 +1030,7 @@ const mockAssets: AssetsResponse = {
 			productId: 'AIR-CT5760',
 			recommAcceptedDate: null,
 			recommendationCount: 0,
+			recommendationType: 'none',
 			swType: 'IOS-XE',
 			swVersion: '15.0(1)EX3',
 		},
@@ -979,6 +1049,7 @@ const mockAssets: AssetsResponse = {
 			productId: 'AIR-CAP3702E-A-K9',
 			recommAcceptedDate: null,
 			recommendationCount: 0,
+			recommendationType: 'automated',
 			swType: 'IOS',
 			swVersion: '8.8.120.0',
 		},
@@ -997,6 +1068,7 @@ const mockAssets: AssetsResponse = {
 			productId: 'AIR-AP3802I-B-K9',
 			recommAcceptedDate: null,
 			recommendationCount: 3,
+			recommendationType: 'none',
 			swType: 'IOS',
 			swVersion: '8.8.120.0',
 		},
@@ -1135,7 +1207,6 @@ const mockSummaryResponse: SummaryResponse = {
 	},
 	profiles: 441,
 	recommendations: {
-		expert: 10,
 		automated: 15,
 		none: 13,
 	},
@@ -1205,7 +1276,7 @@ export const OSVScenarios = [
 				},
 			],
 		},
-		url: `${api}summary?customerId=${customerId}`,
+		url: `${api}summary?customerId=${customerId}&solution=IBN&useCase=Campus Network Assurance`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -1223,7 +1294,8 @@ export const OSVScenarios = [
 			],
 		},
 		url: `${api}profiles?customerId=${customerId}${sgParams}` +
-			'&filter=recommendationType:expert,automated&search=',
+			'&filter=recommendationType:automated&search=' +
+			'&solution=IBN&useCase=Campus Network Assurance',
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -1240,7 +1312,8 @@ export const OSVScenarios = [
 				},
 			],
 		},
-		url: `${api}versions?customerId=${customerId}${svParams}&search=`,
+		url: `${api}versions?customerId=${customerId}${svParams}` +
+			'&search=&solution=IBN&useCase=Campus Network Assurance',
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -1275,7 +1348,8 @@ export const OSVScenarios = [
 				},
 			],
 		},
-		url: `${api}assets?customerId=${customerId}${assetParams}&search=`,
+		url: `${api}assets?customerId=${customerId}${assetParams}` +
+			'&search=&solution=IBN&useCase=Campus Network Assurance',
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -1292,7 +1366,8 @@ export const OSVScenarios = [
 				},
 			],
 		},
-		url: `${api}assets?customerId=${customerId}${assetParams}`,
+		url: `${api}assets?customerId=${customerId}${assetParams}` +
+			'&search=&solution=IBN&useCase=Campus Network Assurance',
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -1309,7 +1384,8 @@ export const OSVScenarios = [
 				},
 			],
 		},
-		url: `${api}versions?customerId=${customerId}${svParams}`,
+		url: `${api}versions?customerId=${customerId}${svParams}` +
+			'&solution=IBN&useCase=Campus Network Assurance',
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -1327,7 +1403,8 @@ export const OSVScenarios = [
 			],
 		},
 		url: `${api}profileAssets?customerId=2431199&id=7293498_NA` +
-			`&profileName=7293498_NA${sgAssetsParams}`,
+			`&profileName=7293498_NA${sgAssetsParams}` +
+			'&solution=IBN&useCase=Campus Network Assurance',
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -1345,7 +1422,8 @@ export const OSVScenarios = [
 			],
 		},
 		url: `${api}profileVersions?customerId=2431199&id=7293498_NA` +
-			`&profileName=7293498_NA${sgVerParams}`,
+			`&profileName=7293498_NA${sgVerParams}` +
+			'&solution=IBN&useCase=Campus Network Assurance',
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -1362,7 +1440,8 @@ export const OSVScenarios = [
 				},
 			],
 		},
-		url: `${api}profileRecommendations?customerId=${customerId}&profileName=${assetId}`,
+		url: `${api}profileRecommendations?customerId=${customerId}&profileName=${assetId}` +
+				'&productFamily=Cisco Catalyst 9300 Series Switches',
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -1380,6 +1459,40 @@ export const OSVScenarios = [
 			],
 		},
 		url: `${api}machineRecommendations?customerId=${customerId}&profileName=${assetId}`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 200,
+					description: 'Bug Details',
+					response: {
+						body: mockBugDetails,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}bugDetail?bugId=CSCvr05056`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 200,
+					description: 'Psirt Details',
+					response: {
+						body: mockPsirtDetail,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}psirtDetail?psirtId=CSCvr08842`,
 		usecases: ['Use Case 1'],
 	},
 ];

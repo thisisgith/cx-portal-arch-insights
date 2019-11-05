@@ -220,7 +220,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 				},
 				{
 					key: 'violationCount',
-					name: I18n.get('_RccAssetViolations_'),
+					name: I18n.get('_RccRuleViolations_'),
 					sortable: false,
 				},
 			],

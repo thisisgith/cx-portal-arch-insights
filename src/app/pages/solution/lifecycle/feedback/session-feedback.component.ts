@@ -124,6 +124,7 @@ export class SessionFeedbackComponent implements OnDestroy, OnInit {
 
 	/**
 	 * Sends POST to save initial feedback
+	 * Sends PUT if already posted
 	 * @param thumbs Up or Down rating
 	 */
 	public async submitFeedbackThumbsRating (thumbs: FeedbackThumbs) {
@@ -140,6 +141,22 @@ export class SessionFeedbackComponent implements OnDestroy, OnInit {
 				assetType: this.type,
 			},
 		};
+
+		// If feedbackId exists, we need to send PUT to update
+		if (_.get(this.item, 'feedbackInfo.feedbackId')) {
+			this.contentService.updateFeedback({
+				updatedFeedback: params,
+				feedbackId: _.get(this.item, 'feedbackInfo.feedbackId'),
+			})
+			.subscribe(res => {
+				_.set(this.item, 'feedbackInfo.thumbs', res.thumbs);
+			}, err => {
+				this.logger.error(`feedback.component : submitFeedbackThumbsRating() :: Error : (${
+					err.status}) ${err.message}`);
+			});
+			return;
+		}
+
 		this.contentService.saveFeedback({
 			feedback: params,
 		})
@@ -171,7 +188,7 @@ export class SessionFeedbackComponent implements OnDestroy, OnInit {
 					customerId: this.customerId,
 					assetType: this.type,
 				},
-				thumbs: this.thumbs,
+				thumbs: _.get(this.item, 'feedbackInfo.thumbs'),
 			},
 			feedbackId: _.get(this.item, 'feedbackInfo.feedbackId'),
 		};

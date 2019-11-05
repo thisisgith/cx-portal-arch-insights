@@ -33,6 +33,7 @@ export class DevicesListComponent implements OnInit, OnChanges {
 	public deviceDetails: any = null;
 	public tabIndex = 0;
 	public searchText = '';
+	public collectionTime = '';
 	public selectedAsset = false;
 	public collectionId: any;
 	public assetParams: InventoryService.GetAssetsParams;
@@ -49,8 +50,15 @@ export class DevicesListComponent implements OnInit, OnChanges {
 	private productIdTemplate: TemplateRef<{ }>;
 	@ViewChild('softwareVersion', { static: true })
 	private softwareVersionTemplate: TemplateRef<{ }>;
+	@ViewChild('dnac', { static: true })
+	private dnacTemplate: TemplateRef<{ }>;
+	@ViewChild('warningMessages', { static: true })
+	private warningMessages: TemplateRef<{ }>;
+
 	public failedCriteriaMessages: any = null;
 	public deviceInfoMessage: any = null;
+	public alert: any = { };
+	public selectedSoftwareGroup: any;
 	constructor (
 		private logger: LogService,
 		private architectureService: ArchitectureReviewService,
@@ -88,10 +96,10 @@ export class DevicesListComponent implements OnInit, OnChanges {
 		const selectedFilter = _.get(changes, ['filters', 'currentValue']);
 		const isFirstChange = _.get(changes, ['filters', 'firstChange']);
 		if (selectedFilter && !isFirstChange) {
-			const compliantType = _.get(selectedFilter,  'sdareadiness');
+			const compliantType = _.get(selectedFilter,  'filter');
 			const isClearAllSelected = _.get(selectedFilter, 'isClearAllSelected');
 			const useCase = _.get(selectedFilter, 'title');
-			this.paramsType.filterBy = compliantType ? compliantType.toString() : '';
+			this.paramsType.filterBy = compliantType ? compliantType : '';
 			this.paramsType.useCase = useCase ? useCase.toString() : '';
 			if (isClearAllSelected) {
 				this.paramsType.searchText = '';
@@ -111,11 +119,12 @@ export class DevicesListComponent implements OnInit, OnChanges {
 	 public getCollectionId () {
 		this.architectureService.getCollectionId()
 		.subscribe(res => {
-			this.paramsType.collectionId = _.get(res, ['collection, collectionId']);
+			this.paramsType.collectionId = _.get(res, ['collection', 'collectionId']);
 			const datePipe = new DatePipe('en-US');
 			this.getDevicesList();
+			this.collectionTime = _.get(res, ['collection', 'collectionDate']);
 			this.lastCollectionTime =
-				datePipe.transform(_.get(res, ['collection, collectionDate']), 'medium');
+				datePipe.transform(_.get(res, ['collection', 'collectionDate']), 'medium');
 		},
 		err => {
 			this.logger.error('Devices list Component View' +
@@ -152,6 +161,11 @@ export class DevicesListComponent implements OnInit, OnChanges {
 					key: 'softwareType',
 					name: I18n.get('_ArchitectureSoftwareType_'),
 					sortable: false,
+				},
+				{
+					name: I18n.get('_ArchitectureDNAC_'),
+					sortable: false,
+					template : this.dnacTemplate,
 				},
 				{
 					name: I18n.get('_ArchitectureSDAReady_'),
@@ -195,6 +209,7 @@ export class DevicesListComponent implements OnInit, OnChanges {
  	* @param message - The Object that contains pageNumber Index
  	*/
 	public getfailedCriteriaMessage (message: any) {
+		this.failedCriteriaMessages = { };
 		this.failedCriteriaMessages = message;
 
 	}
@@ -203,8 +218,23 @@ export class DevicesListComponent implements OnInit, OnChanges {
  	* @param message - The Object that contains pageNumber Index
  	*/
 	 public getDeviceInfo (message: any) {
+		this.deviceInfoMessage = [];
 		this.deviceInfoMessage = message;
-
+	}
+	/**
+	 * open osv flyout
+	 * @param message contains eventdata
+	 */
+	public openOsvSoftwarePanel (message: any) {
+		this.selectedSoftwareGroup = _.cloneDeep(message);
+		this.tabIndex = 1;
+	}
+	/**
+	 * Keys down function
+	 * @param event contains eventdata
+	 */
+	public onOsvPanelClose () {
+		this.selectedSoftwareGroup = null;
 	}
 	/**
 	 * Keys down function

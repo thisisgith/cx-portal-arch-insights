@@ -220,6 +220,8 @@ export class SolutionComponent implements OnInit, OnDestroy {
 
 				if (this.selectedTechnology) {
 					this.racetrackInfoService.sendCurrentTechnology(this.selectedTechnology);
+					this.racetrackInfoService.sendCurrentAdoptionPercentage(
+						this.selectedTechnology.usecase_adoption_percentage);
 				}
 			}
 
@@ -288,6 +290,8 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	public changeTechnology (technology: RacetrackTechnology) {
 		this.selectedTechnology = technology;
 		this.racetrackInfoService.sendCurrentTechnology(technology);
+		this.racetrackInfoService.sendCurrentAdoptionPercentage(
+				technology.usecase_adoption_percentage);
 	}
 
 	/**
@@ -766,6 +770,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		await this.cuiModalService.showComponent(FeedbackComponent, {
 			facet: this.selectedFacet.title,
 			pitstop: this.selectedTechnology.currentPitstop,
+			solution: this.selectedSolutionName,
 			useCase: this.selectedTechnology.name,
 		}, 'normal');
 	}

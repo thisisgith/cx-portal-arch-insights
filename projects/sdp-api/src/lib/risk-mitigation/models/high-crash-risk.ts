@@ -51,10 +51,21 @@ export interface HighCrashRiskPagination {
 	limit?:number;
 	search: string;
 	sort: string;
+	globalRiskRank?: string;
+	solution?: string;
+	useCase?: string;
 }
 
 export interface HighCrashRiskDeviceCount{
 	customerId: string;
-	crashRiskDeviceCount:number;
+	crashRiskDeviceCount?:HighCrashRiskDeviceTooltip;
 	crashPredicted:boolean;
+
+}
+
+export interface HighCrashRiskDeviceTooltip {
+		high?: number,
+		med?: number,
+		low?: number,
+		notEvaluated?:number,
 }

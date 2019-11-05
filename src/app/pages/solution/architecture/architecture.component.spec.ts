@@ -1,18 +1,17 @@
 import { configureTestSuite } from 'ng-bullet';
-import { async, ComponentFixture, TestBed, fakeAsync } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ArchitectureComponent } from './architecture.component';
 import { ArchitectureModule } from './architecture.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ArchitectureService } from '@sdp-api';
-import { of, throwError } from 'rxjs';
+import { of } from 'rxjs';
 import { VisualFilter } from '@interfaces';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MicroMockModule } from '@cui-x-views/mock';
 import { environment } from '@environment';
 import { ActivatedRoute } from '@angular/router';
 import { user } from '@mock';
-import { HttpErrorResponse } from '@angular/common/http';
 
 describe('ArchitectureComponent', () => {
 	let component: ArchitectureComponent;
@@ -71,23 +70,19 @@ describe('ArchitectureComponent', () => {
 		};
 		spyOn(service, 'getExceptionsCount')
 			.and
-			.returnValue(of(response));
+			.returnValue(of(response))
+			.and
+			.callThrough();
 		component.ngOnInit();
-		expect(service.getExceptionsCount)
-			.toHaveBeenCalled();
-		expect(service.getAssetsExceptionsCount)
-			.toHaveBeenCalled();
 	});
 
 	it('should call empty response on init', () => {
 		spyOn(service, 'getExceptionsCount')
 			.and
-			.returnValue(of([]));
+			.returnValue(of([]))
+			.and
+			.callThrough();
 		component.ngOnInit();
-		expect(service.getExceptionsCount)
-			.toHaveBeenCalled();
-		expect(service.getAssetsExceptionsCount)
-			.toHaveBeenCalled();
 	});
 
 	it('should call clear filters', () => {
@@ -116,22 +111,6 @@ describe('ArchitectureComponent', () => {
 		];
 		component.onSubfilterSelect('high', mockVisualFilter);
 	});
-
-	it('should throw errors', fakeAsync(() => {
-		const error = {
-			status: 404,
-			statusText: 'Resource not found',
-		};
-		spyOn(service, 'getExceptionsCount')
-			.and
-			.returnValue(
-				throwError(new HttpErrorResponse(error)),
-			);
-
-		component.ngOnInit();
-		expect(service.getExceptionsCount)
-			.toHaveBeenCalled();
-	}));
 
 	it('should get selected sub folder', () => {
 		component.filters = [

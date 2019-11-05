@@ -13,25 +13,43 @@
 			</a>
 		</div>
 		<div class="row ">
-			<div class="col-md-12 base-margin-top">
+			<div class="col-md-12 base-margin-top text-large">
 				<div>
-					<span class="text-large" innerText="{{ ('_ArchitectureIP_' | i18n) + ' : '}}">
+					<span innerText="{{ ('_ArchitectureIP_' | i18n) + ' : '}}">
 					</span>
-					<span class="text-large" innerText="{{ deviceInfoMessage?.ipAddress }}"></span>
+					<span innerText="{{ deviceInfoMessage?.ipAddress }}"></span>
 				</div>
-				<div class="qtr-padding-bottom">
-					<span class="text-large" innerText="{{ ('_ArchitectureSN_' | i18n) + ' : '}}">
+				<div>
+					<span  innerText="{{ ('_ArchitectureSN_' | i18n) + ' : '}}">
 					</span>
-					<span class="text-large" innerText="{{ deviceInfoMessage?.serialNumber }}"></span>
+					<span  innerText="{{ deviceInfoMessage?.serialNumber }}"></span>
 				</div>
-				<div *ngFor="let failedCriterias of failedCriteriaMessages" class="qtr-padding-top">
-						<span class="icon-warning-outline text-warning qtr-margin-right"></span>
-						<span class="qtr-margin-left text-muted text-small" [innerText]="failedCriterias"></span>
+				<div >
+					<span  innerText="{{ ('_ArchitectureSoftwareType_' | i18n) + ' : '}}">
+					</span>
+					<span  innerText="{{ deviceDetails?.softwareType }}"></span>
+				</div>
+				<div class="base-padding-bottom">
+					<span  innerText="{{ ('_ArchitectureDeviceRole_' | i18n) + ' : '}}">
+					</span>
+					<span  innerText="{{ deviceDetails?.currentDeviceRole }}"></span>
+				</div>
+				<div class="half-padding-bottom">
+					<div class="alert fade-and-slide-top text-left alert--warning" *ngIf="failedCriteriaMessages">
+						<div class="alert__icon icon-warning-outline"></div>
+							<ng-container class="failed-criteria">
+								<div class="alert__message" >
+									<div *ngFor="let failedCriterias of failedCriteriaMessages" class="qtr-padding-top">
+										<span class="qtr-margin-left text-muted text-small" [innerText]="failedCriterias"></span>
+									</div> 
+								</div>
+							</ng-container>
+					</div>
 				</div>
 			</div>
 		</div>
 	</details-panel-header>
-	<devices-sda (failedCriteriaToEmit)="getfailedCriteriaMessage($event)" [deviceDetails]="deviceDetails" (deviceInfoToEmit)="getDeviceInfo($event)"></devices-sda>
+	<devices-sda (osvCriteriaToEmit)="openOsvSoftwarePanel($event)" (failedCriteriaToEmit)="getfailedCriteriaMessage($event)" [deviceDetails]="deviceDetails" (deviceInfoToEmit)="getDeviceInfo($event)"></devices-sda>
 </details-panel>
 
 <!-- Asset 360 Fly-out View-->
@@ -41,6 +59,14 @@
 	[element]="assetLinkInfo?.element"
 	(close)="closeDeviceView()">
 </asset-details>
+
+<!-- Osv Fly-out View-->
+<app-software-group-detail 
+	*ngIf="selectedSoftwareGroup" 
+	[tabIndex]="tabIndex"
+	[(selectedSoftwareGroup)]="selectedSoftwareGroup"
+	(close)="onOsvPanelClose()">
+</app-software-group-detail> 
 	
 <div class="row">
 		<div class="col-md-4">
@@ -112,6 +138,19 @@
 		</div>
 	</div>
 </div>
+
+<ng-template #dnac let-item="celldata">
+	<span
+	[ngClass]="{
+		'text-success': item?.dnacCompliance === 'Yes',
+		'text-danger': item?.dnacCompliance === 'No',
+		'transparent-style': item?.dnacCompliance === 'NA'
+	}"
+	 class="qtr-margin-right icon-circle">
+	</span>
+	<span [innerText]="item?.dnacCompliance"></span>
+</ng-template>
+
 <ng-template #sdaReady let-item="celldata">
 	<span
 	[ngClass]="{
@@ -176,15 +215,13 @@
 </ng-template>
 
 <ng-template #softwareVersion let-item="celldata">
-	<span
-	[ngClass]="{
-		'transparent-style': item?.softwareVersionCompliant === 'Yes',
-		'icon-warning-outline': item?.softwareVersionCompliant === 'No',
-		'text-warning': item?.softwareVersionCompliant === 'No'	
-	}"
-	 class="qtr-margin-right icon-circle">
-	</span>
-	<span [innerText]="item?.softwareVersion"></span>
-</ng-template>
+	<span *ngIf="item?.softwareVersionCompliant === 'Yes'" [innerText]="item?.softwareVersion"></span>
+	<span *ngIf="item?.softwareVersionCompliant === 'No' && item?.softwareVersionCompliant === 'No'" class="icon-warning-outline" [innerText]="item?.softwareVersion"></span>
 
+</ng-template>
+<ng-template #warningMessages>
+	<div *ngFor="let failedCriterias of failedCriteriaMessages" class="qtr-padding-top">
+		<span class="qtr-margin-left text-muted text-small" [innerText]="failedCriterias"></span>
+	</div> 
+</ng-template>
 

@@ -40,7 +40,8 @@ class RiskMitigationService extends __BaseService {
 		let __params = this.newParams();
 		let __headers = new HttpHeaders();
 		let __body: any = null;
-
+		if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
+		if (params.solution != null) __params = __params.set('solution', params.solution.toString());
 
 		let req = new HttpRequest<any>(
 			'GET',
@@ -66,7 +67,8 @@ class RiskMitigationService extends __BaseService {
 		let __params = this.newParams();
 		let __headers = new HttpHeaders();
 		let __body: any = null;
-
+		if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
+		if (params.solution != null) __params = __params.set('solution', params.solution.toString());
 
 		let req = new HttpRequest<any>(
 			'GET',
@@ -90,6 +92,8 @@ class RiskMitigationService extends __BaseService {
 		let __params = this.newParams();
 		let __headers = new HttpHeaders();
 		let __body: any = null;
+		if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
+		if (params.solution != null) __params = __params.set('solution', params.solution.toString());
 
 
 		let req = new HttpRequest<any>(
@@ -122,6 +126,8 @@ class RiskMitigationService extends __BaseService {
 		 if(params.search){
 			__params = __params.set('searchQuery', params.search.toString());
 		 }
+		if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
+		if (params.solution != null) __params = __params.set('solution', params.solution.toString());
 
 		req = new HttpRequest<any>(
 			'GET',
@@ -159,7 +165,9 @@ class RiskMitigationService extends __BaseService {
 		 if(params.sort && params.sort != ''){
 			__params = __params.set('sort', params.sort.toString());
 		 }
-
+		 __params = __params.set('globalRiskRank', params.globalRiskRank);
+		if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
+		if (params.solution != null) __params = __params.set('solution', params.solution.toString());
 
 
 		let req = new HttpRequest<any>(
@@ -184,6 +192,8 @@ class RiskMitigationService extends __BaseService {
 		let __params = this.newParams();
 		let __headers = new HttpHeaders();
 		let __body: any = null;
+		if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
+		if (params.solution != null) __params = __params.set('solution', params.solution.toString());
 
 
 		let req = new HttpRequest<any>(
@@ -250,6 +260,8 @@ module RiskMitigationService {
 		timePeriod: string;
 		time: string;
 		search: string;
+		solution?: string;
+		useCase?: string;
 	}
 }
 

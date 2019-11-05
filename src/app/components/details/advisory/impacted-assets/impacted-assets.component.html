@@ -50,6 +50,13 @@
 	</span>
 </ng-template>
 
+<ng-template #productIdColumn let-celldata="celldata">
+	<span
+		[title]="celldata?.productId || ('_NA_' | i18n)"
+		[innerText]="(celldata?.productId || ('_NA_' | i18n)) | truncate:false:20">
+	</span>
+</ng-template>
+
 <ng-template #versionColumn let-celldata="celldata">
 	<!-- TODO: update when there is a way to tell if the software is outdated -->
 	<div [ngClass]="{ 'text-danger': celldata.outdated }">
@@ -63,6 +70,12 @@
 <ng-template #ipAddressColumn let-celldata="celldata">
 	<span [title]="celldata?.ipAddress || ('_NA_' | i18n)"
 		[innerText]="celldata?.ipAddress || ('_NA_' | i18n)">
+	</span>
+</ng-template>
+
+<ng-template #serialNumberColumn let-celldata="celldata">
+	<span [title]="celldata?.serialNumber || ('_NA_' | i18n)"
+		[innerText]="celldata?.serialNumber || ('_NA_' | i18n)">
 	</span>
 </ng-template>
 

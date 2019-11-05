@@ -1,1 +1,8 @@
-/* Empty SCSS Component File */
+@import '~cisco-ui/src/scss/utilities/_variables.scss';
+
+h2 { font-weight: $small-gauge-font-weight; }
+
+:host ::ng-deep .support-dropdown-menu .dropdown__menu {
+	height: $base-button-max-width + $base-large-button-icon-height !important;
+	max-height: unset !important;
+}

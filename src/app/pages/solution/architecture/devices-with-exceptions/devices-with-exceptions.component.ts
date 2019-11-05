@@ -6,7 +6,7 @@ import {
 	ArchitectureService,
 	IAsset,
 	assetExceptionList,
-	InventoryService,
+	ArchitectureReviewService,
 } from '@sdp-api';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
@@ -15,6 +15,7 @@ import { ActivatedRoute } from '@angular/router';
 import * as _ from 'lodash-es';
 import { AssetPanelLinkService } from '@services';
 import { AssetLinkInfo } from '@interfaces';
+import { ArchitectureAssetsParams } from 'projects/sdp-api/src/lib/architecture-review/models/param-type';
 
 /**
  * Devices With Exceptions Component
@@ -36,6 +37,7 @@ export class DevicesWithExceptionsComponent implements OnInit {
 		private architectureService: ArchitectureService,
 		private route: ActivatedRoute,
 		private assetPanelLinkService: AssetPanelLinkService,
+		private architectureReviewService: ArchitectureReviewService,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
@@ -44,7 +46,7 @@ export class DevicesWithExceptionsComponent implements OnInit {
 
 	public assetObject: IAsset = null;
 	public selectedAsset = false;
-	public assetParams: InventoryService.GetAssetsParams;
+	public assetParams: ArchitectureAssetsParams;
 	public assetLinkInfo: AssetLinkInfo = Object.create({ });
 	public assetsExceptionDetails: assetExceptionList[] = [];
 	public tableOptions: CuiTableOptions;
@@ -55,16 +57,37 @@ export class DevicesWithExceptionsComponent implements OnInit {
 	private destroy$ = new Subject();
 	public searchText = '';
 	public lastCollectionTime = '';
-	public params = { customerId: '', page: 0, pageSize: 10, searchText: '' };
+	public params = { customerId: '', page: 0, pageSize: 10, searchText: '', collectionId: '' };
 	public fullscreen: any;
 
 	/**
 	 * used to Intialize Table options
 	 */
 	public ngOnInit () {
+		this.getCollectionId();
 		this.getAllAssetsWithExceptions();
 		this.buildTable();
 	}
+
+	/**
+	 * Method to fetch collectionId
+	 */
+
+	public getCollectionId () {
+		this.architectureReviewService.getCollectionId()
+		.subscribe(res => {
+			this.params.collectionId = _.get(res, 'collection.collectionId');
+			const datePipe = new DatePipe('en-US');
+			this.lastCollectionTime =
+						 datePipe.transform(_.get(res, 'collection.collectionDate'),
+											 'medium');
+		},
+		err => {
+			this.logger.error('Devices list Component View' +
+				'  : getCollectionId() ' +
+				`:: Error : (${err.status}) ${err.message}`);
+		});
+	 }
 	/**
 	 * builds Table
 	 */
@@ -168,10 +191,8 @@ export class DevicesWithExceptionsComponent implements OnInit {
 				if (!res) {
 					return this.inValidResponseHandler();
 				}
-				const datePipe = new DatePipe('en-US');
 				this.isLoading = false;
 				this.totalItems = res.TotalCounts;
-				this.lastCollectionTime = datePipe.transform(res.CollectionDate, 'medium');
 				this.assetsExceptionDetails = res.AssetsExceptionDetails;
 				this.tableEndIndex = (this.tableStartIndex + this.assetsExceptionDetails.length);
 			}, err => {
@@ -232,6 +253,7 @@ export class DevicesWithExceptionsComponent implements OnInit {
 	 */
 	public openAssetDetailsView (item: IAsset) {
 		this.assetParams = {
+			collectionId: this.params.collectionId,
 			customerId: this.params.customerId,
 			serialNumber: [item.serialNumber],
 		};

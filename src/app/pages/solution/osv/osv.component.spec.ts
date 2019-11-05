@@ -9,16 +9,18 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { environment } from '@environment';
 import { ActivatedRoute } from '@angular/router';
 import { of, throwError } from 'rxjs';
-import { user } from '@mock';
+import { user, OSVScenarios, RacetrackScenarios } from '@mock';
 import { OSVService } from '@sdp-api';
 import { HttpErrorResponse } from '@angular/common/http';
 import * as _ from 'lodash-es';
+import { RacetrackInfoService } from '@services';
 
 describe('OptimalSoftwareVersionComponent', () => {
 	let component: OptimalSoftwareVersionComponent;
 	let fixture: ComponentFixture<OptimalSoftwareVersionComponent>;
 
 	let osvService: OSVService;
+	let racetrackInfoService: RacetrackInfoService;
 	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
@@ -45,14 +47,16 @@ describe('OptimalSoftwareVersionComponent', () => {
 	});
 
 	beforeEach(async(() => {
-
 		osvService = TestBed.get(OSVService);
+		racetrackInfoService = TestBed.get(RacetrackInfoService);
 	}));
 
 	beforeEach(() => {
 		window.localStorage.clear();
 		fixture = TestBed.createComponent(OptimalSoftwareVersionComponent);
 		component = fixture.componentInstance;
+		component.summaryParams.solution = 'ibn';
+		component.summaryParams.useCase = 'Campus Network Assurance';
 		fixture.detectChanges();
 	});
 
@@ -79,213 +83,185 @@ describe('OptimalSoftwareVersionComponent', () => {
 			.toEqual('swGroups');
 	});
 
-	it('should switch active filters', done => {
-		fixture.whenStable()
-			.then(() => {
-				component.selectView('assets');
-				fixture.detectChanges();
-				const assetType = _.find(component.filters, { key: 'assetType' });
+	it('should switch active filters', () => {
+		const summaryResponse = <any> OSVScenarios[0].scenarios.GET[0].response.body;
+		spyOn(osvService, 'getSummary')
+			.and
+			.returnValue(of(summaryResponse));
+		component.ngOnInit();
+		component.selectView('assets');
+		fixture.detectChanges();
+		const assetType = _.find(component.filters, { key: 'assetType' });
 
-				component.onSubfilterSelect('assets_without_profile', assetType);
+		component.onSubfilterSelect('assets_without_profile', assetType);
 
-				fixture.detectChanges();
+		fixture.detectChanges();
 
-				expect(_.filter(component.filters, 'selected'))
-					.toContain(assetType);
+		expect(_.filter(component.filters, 'selected'))
+			.toContain(assetType);
 
-				done();
-			});
 	});
 
-	it('should select a assetType subfilter', done => {
-		fixture.whenStable()
-			.then(() => {
-				component.selectView('assets');
-				fixture.detectChanges();
-				const assetTypeFilter = _.find(component.filters,
-					{ key: 'assetType' });
-				component.onSubfilterSelect('assets_without_profile', assetTypeFilter);
+	it('should select a assetType subfilter', () => {
+		const summaryResponse = <any> OSVScenarios[0].scenarios.GET[0].response.body;
+		spyOn(osvService, 'getSummary')
+			.and
+			.returnValue(of(summaryResponse));
+		component.ngOnInit();
+		component.selectView('assets');
+		fixture.detectChanges();
+		const assetTypeFilter = _.find(component.filters,
+			{ key: 'assetType' });
+		component.onSubfilterSelect('assets_without_profile', assetTypeFilter);
 
-				fixture.detectChanges();
+		fixture.detectChanges();
 
-				expect(_.filter(component.filters, 'selected'))
-					.toContain(assetTypeFilter);
+		expect(_.filter(component.filters, 'selected'))
+			.toContain(assetTypeFilter);
 
-				const subfilter = _.find(assetTypeFilter.seriesData,
-					{ filter: 'assets_without_profile' });
+		const subfilter = _.find(assetTypeFilter.seriesData,
+			{ filter: 'assets_without_profile' });
 
-				expect(subfilter.selected)
-					.toBeTruthy();
+		expect(subfilter.selected)
+			.toBeTruthy();
 
-				done();
-			});
 	});
 
-	it('should clear the filter when selecting the same subfilter twice', done => {
-		fixture.whenStable()
-			.then(() => {
-				component.selectView('assets');
-				fixture.detectChanges();
-				const assetTypeFilter = _.find(component.filters,
-					{ key: 'assetType' });
-				component.onSubfilterSelect('assets_without_profile', assetTypeFilter);
+	it('should clear the filter when selecting the same subfilter twice', () => {
+		const summaryResponse = <any> OSVScenarios[0].scenarios.GET[0].response.body;
+		spyOn(osvService, 'getSummary')
+			.and
+			.returnValue(of(summaryResponse));
+		component.ngOnInit();
+		component.selectView('assets');
+		fixture.detectChanges();
+		const assetTypeFilter = _.find(component.filters,
+			{ key: 'assetType' });
+		component.onSubfilterSelect('assets_without_profile', assetTypeFilter);
 
-				fixture.detectChanges();
+		fixture.detectChanges();
 
-				expect(_.filter(component.filters, 'selected'))
-					.toContain(assetTypeFilter);
+		expect(_.filter(component.filters, 'selected'))
+			.toContain(assetTypeFilter);
 
-				let subfilter = _.find(assetTypeFilter.seriesData,
-					{ filter: 'assets_without_profile' });
+		let subfilter = _.find(assetTypeFilter.seriesData,
+			{ filter: 'assets_without_profile' });
 
-				expect(subfilter.selected)
-					.toBeTruthy();
+		expect(subfilter.selected)
+			.toBeTruthy();
 
-				component.onSubfilterSelect('assets_without_profile', assetTypeFilter);
+		component.onSubfilterSelect('assets_without_profile', assetTypeFilter);
 
-				fixture.detectChanges();
+		fixture.detectChanges();
 
-				subfilter = _.find(assetTypeFilter.seriesData,
-					{ filter: 'assets_without_profile' });
+		subfilter = _.find(assetTypeFilter.seriesData,
+			{ filter: 'assets_without_profile' });
 
-				expect(subfilter.selected)
-					.toBeFalsy();
+		expect(subfilter.selected)
+			.toBeFalsy();
 
-				done();
-			});
 	});
 
-	it('should clear the filters on clear button', done => {
-		fixture.whenStable()
-			.then(() => {
-				component.selectView('assets');
-				fixture.detectChanges();
-				const assetTypeFilter = _.find(component.filters,
-					{ key: 'assetType' });
-				component.onSubfilterSelect('assets_without_profile', assetTypeFilter);
+	it('should clear the filters on clear button', () => {
+		const summaryResponse = <any> OSVScenarios[0].scenarios.GET[0].response.body;
+		spyOn(osvService, 'getSummary')
+			.and
+			.returnValue(of(summaryResponse));
+		component.ngOnInit();
+		component.selectView('assets');
+		fixture.detectChanges();
+		const assetTypeFilter = _.find(component.filters,
+			{ key: 'assetType' });
+		component.onSubfilterSelect('assets_without_profile', assetTypeFilter);
 
-				fixture.detectChanges();
+		fixture.detectChanges();
 
-				expect(_.filter(component.filters, 'selected'))
-					.toContain(assetTypeFilter);
+		expect(_.filter(component.filters, 'selected'))
+			.toContain(assetTypeFilter);
 
-				const subfilter = _.find(assetTypeFilter.seriesData,
-					{ filter: 'assets_without_profile' });
+		const subfilter = _.find(assetTypeFilter.seriesData,
+			{ filter: 'assets_without_profile' });
 
-				expect(subfilter.selected)
-					.toBeTruthy();
+		expect(subfilter.selected)
+			.toBeTruthy();
 
-				component.clearFilters();
-				fixture.detectChanges();
+		component.clearFilters();
+		fixture.detectChanges();
 
-				expect(subfilter.selected)
-					.toBeFalsy();
-
-				done();
-			});
+		expect(subfilter.selected)
+			.toBeFalsy();
 	});
 
-	it('seleceView should change the view ', () => {
-		component.selectView('swGroups');
+	it('selectView should change the view ', () => {
+		const summaryResponse = <any> OSVScenarios[0].scenarios.GET[0].response.body;
+		spyOn(osvService, 'getSummary')
+			.and
+			.returnValue(of(summaryResponse));
+		component.ngOnInit();
+		fixture.detectChanges();
+		component.selectView('assets');
 		expect(component.view)
-			.toEqual('swGroups');
+			.toEqual('assets');
+		fixture.detectChanges();
 		component.selectView('swVersions');
 		expect(component.view)
 			.toEqual('swVersions');
 	});
 
-	it('select assets view if the assets count is equal to zero', () => {
-		spyOn(osvService, 'getSummary')
-			.and
-			.returnValue(of({
-				asset_profile: {
-					assets_profile: 444,
-					assets_without_profile: 520,
-				},
-				assets: 964,
-				deployment: {
-					none: 963,
-					upgrade: 400,
-				},
-				profiles: 0,
-				recommendations: {
-					expert: 10,
-					automated: 15,
-					none: 13,
-				},
-				recommendation_status: {
-					completed: 10,
-					inprogress: 15,
-				},
-
-				versions: 50,
-			}));
-		component.ngOnInit();
-		fixture.detectChanges();
-		expect(component.view)
-			.toEqual('assets');
-	});
-
-	it('select versions view if the versions count is equal to zero', () => {
-		spyOn(osvService, 'getSummary')
-			.and
-			.returnValue(of({
-				asset_profile: {
-					assets_profile: 444,
-					assets_without_profile: 520,
-				},
-				assets: 0,
-				deployment: {
-					none: 963,
-					upgrade: 400,
-				},
-				profiles: 0,
-				recommendations: {
-					expert: 10,
-					automated: 15,
-					none: 13,
-				},
-				recommendation_status: {
-					completed: 10,
-					inprogress: 15,
-				},
-
-				versions: 50,
-			}));
-		component.ngOnInit();
-		fixture.detectChanges();
-		expect(component.view)
-			.toEqual('swVersions');
-	});
-
 	it('select show no data if all counts are zero', () => {
+		const summaryResponse = <any> OSVScenarios[0].scenarios.GET[0].response.body;
+		summaryResponse.assets = 0;
+		summaryResponse.profiles = 0;
+		summaryResponse.versions = 0;
 		spyOn(osvService, 'getSummary')
 			.and
-			.returnValue(of({
-				asset_profile: {
-					assets_profile: 444,
-					assets_without_profile: 520,
-				},
-				assets: 0,
-				deployment: {
-					none: 963,
-					upgrade: 400,
-				},
-				profiles: 0,
-				recommendations: {
-					expert: 10,
-					automated: 15,
-					none: 13,
-				},
-				recommendation_status: {
-					completed: 10,
-					inprogress: 15,
-				},
-				versions: 0,
-			}));
+			.returnValue(of(summaryResponse));
 		component.ngOnInit();
 		fixture.detectChanges();
 		expect(component.view)
 			.toEqual('swGroups');
+	});
+
+	it('should set selected asset and selected software group to undefined onPanelClose', () => {
+		component.onPanelClose();
+		expect(component.selectedAsset)
+			.toBeNull();
+		expect(component.selectedSoftwareGroup)
+			.toBeNull();
+	});
+
+	it('should set donotshow info in local storage', () => {
+		component.doNotShowAgain = true;
+		component.hideInfo();
+		fixture.detectChanges();
+		expect(window.localStorage.getItem('doNotShowSGInfo'))
+			.toEqual('true');
+		component.doNotShowAgain = false;
+		component.hideInfo();
+		fixture.detectChanges();
+		expect(window.localStorage.getItem('doNotShowSGInfo'))
+			.toEqual('false');
+	});
+
+	it('should call refresh on ibn or usecase filter change', done => {
+		spyOn(component, 'refresh');
+		fixture.whenStable()
+		.then(() => {
+			racetrackInfoService
+				.sendCurrentSolution(
+					RacetrackScenarios[0].scenarios.GET[0].response.body.solutions[0],
+				);
+			fixture.detectChanges();
+			expect(component.refresh)
+				.toHaveBeenCalled();
+			racetrackInfoService
+				.sendCurrentTechnology(
+				RacetrackScenarios[0].scenarios.GET[0].response.body.solutions[0].technologies[1],
+				);
+			fixture.detectChanges();
+			expect(component.refresh)
+				.toHaveBeenCalledTimes(2);
+			done();
+		});
 	});
 });
