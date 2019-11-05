@@ -8,10 +8,7 @@ import {
 import { empty, Observable, Subject } from 'rxjs';
 import { catchError, finalize, map, switchMap } from 'rxjs/operators';
 import { ControlPointUserManagementAPIService, SADetails } from '@sdp-api';
-import * as _ from 'lodash-es';
-
-/** Sortable Columns */
-type SortableColumn =  'companyName' | 'firstName';
+import { SortableColumn, SortProps } from './user-mgmt.types';
 
 /**
  * UserMgmtComponent
@@ -37,12 +34,13 @@ export class UserMgmtComponent implements AfterViewInit {
 
 				return response;
 			}),
-			map(response => this.sort(response.data)),
+			map(response => response.data),
 		);
-	public sortProps: { dir: 'asc' | 'desc'; column: SortableColumn; } = {
+	public sortProps: SortProps = {
 		column: 'firstName',
 		dir: 'asc',
 	};
+	public filter: string;
 
 	constructor (
 		private cdr: ChangeDetectorRef,
@@ -85,32 +83,14 @@ export class UserMgmtComponent implements AfterViewInit {
 	public setSort (col: SortableColumn) {
 		if (this.sortProps.column === col) {
 			if (this.sortProps.dir === 'asc') {
-				this.sortProps.dir = 'desc';
+				this.setSortProps({ dir: 'desc' });
 			} else {
-				this.sortProps.dir = 'asc';
+				this.setSortProps({ dir: 'asc' });
 			}
 		} else {
-			this.sortProps.dir = 'asc';
+			this.setSortProps({ dir: 'asc' });
 		}
-		this.sortProps.column = col;
-		this.updateUsers$.next();
-	}
-
-	/**
-	 * Sorts on a selected column
-	 * @param data - SADetails[]
-	 * @returns sorted
-	 */
-	private sort (data: SADetails[]) {
-		if (!this.sortProps) {
-			return data;
-		}
-		const sorted = _.sortBy(data, this.sortProps.column);
-		if (this.sortProps.dir === 'asc') {
-			return sorted;
-		}
-
-		return _.reverse(sorted);
+		this.setSortProps({ column: col });
 	}
 
 	/**
@@ -118,5 +98,17 @@ export class UserMgmtComponent implements AfterViewInit {
 	 */
 	public onUpdateClick () {
 		this.onUpdate.emit();
+	}
+
+	/**
+	 * Sets the sortProps field
+	 * @param sortProps SortProps
+	 */
+	private setSortProps (sortProps: Partial<SortProps>) {
+		// need to reassign sortProps object for pure pipe to detect changes
+		this.sortProps = {
+			column: sortProps.column || this.sortProps.column,
+			dir: sortProps.dir || this.sortProps.dir,
+		};
 	}
 }

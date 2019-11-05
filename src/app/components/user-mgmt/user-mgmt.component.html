@@ -1,4 +1,31 @@
 <div class="text-center dbl-margin-top">
+	<section class="search-section">
+		<div
+			class="qtr-margin-bottom text-small"
+			[innerText]="'_CXPortalUserMgmtIsPoweredBySA_' | i18n"
+		></div>
+		<div class="form-group input--icon half-margin-bottom">
+            <div class="form-group__text">
+                <input
+					[placeholder]="'_SearchUsers_' | i18n"
+					data-auto-id="user-search"
+					type="search"
+					[(ngModel)]="filter"
+				>
+                <button type="button" class="link">
+                    <span class="icon-search"></span>
+                </button>
+            </div>
+        </div>
+		<div class="add-user-btn flex text-info">
+			<div class="icon-add-contain half-margin-right"></div>
+			<div [innerText]="'_AddUser_' | i18n"></div>
+		</div>
+		<div class="flex text-small">
+			<div class="col-6" [innerText]="'_XSmartAccountUsers_' | i18n"></div>
+			<div class="col-6" [innerText]="'_XHaveAccessToCXPortal_' | i18n"></div>
+		</div>
+	</section>
 	<div class="responsive-table" *ngIf="users$ | async as users">
 		<table class="
 			table
@@ -47,7 +74,7 @@
 				</tr>
 			</thead>
 			<tbody *ngIf="!isLoading">
-				<tr *ngFor="let user of users">
+				<tr *ngFor="let user of users | userFilter:filter |userSort:sortProps">
 					<td>
 						<div class="flex">
 							<div class="user-avatar base-margin-right">
