@@ -133,10 +133,10 @@ export class HeaderComponent implements AfterViewChecked, OnInit, OnDestroy {
 	}
 
 	/**
-	 * Open contact support modal
+	 * Open contact support modal small
 	 */
 	public openPortalSupport () {
-		this.cuiModalService.showComponent(ContactSupportComponent, { });
+		this.cuiModalService.showComponent(ContactSupportComponent, { }, 'small');
 	}
 
 	/**

@@ -74,6 +74,7 @@ export * from './lib/risk-mitigation/risk-mitigation.module';
 
 export * from './lib/controlpoints/models/admin-complience';
 export * from './lib/controlpoints/models/left-tag-response';
+export * from './lib/controlpoints/models/policy-group';
 
 export * from './lib/afm/models';
 export * from './lib/afm/services';

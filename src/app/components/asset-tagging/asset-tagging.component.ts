@@ -61,7 +61,7 @@ export class AssetTaggingComponent implements OnChanges, OnDestroy {
 	 */
 	public getTagListNoSelect () {
 		return  _.map(this.tagListRight, item => {
-			const copy = this.jsonCopy(item);
+			const copy = _.cloneDeep(item);
 			delete copy.selected;
 
 			return copy;
@@ -102,7 +102,14 @@ export class AssetTaggingComponent implements OnChanges, OnDestroy {
 		for (let devNum = 0; devNum < tags.length; devNum += 1) {
 			if (searchText) {
 				const tagName = tags[devNum].tagName.toLowerCase();
-				if (tagName.indexOf(searchText.toLowerCase()) > -1) {
+				if (searchText.indexOf(',') > -1) {
+					const searchTags = _.split(searchText, ',');
+					const isTagAvailable = searchTags.some(searchTag =>
+													tagName === searchTag.toLowerCase());
+					if (isTagAvailable) {
+						tags[devNum].selected = selected;
+					}
+				} else if (tagName.indexOf(searchText.toLowerCase()) > -1) {
 					tags[devNum].selected = selected;
 				}
 			} else {
@@ -123,22 +130,13 @@ export class AssetTaggingComponent implements OnChanges, OnDestroy {
 	}
 
 	/**
-	 * Copies object using json stringify and json parse
-	 * @param obj dict object
-	 * @returns copied object
-	 */
-	public jsonCopy (obj) {
-		return JSON.parse(JSON.stringify(obj));
-	}
-
-	/**
 	 * Code for add button
 	 * Moves selected list items from left list to right list
 	 */
 	public add () {
 		for (let devNum = this.tagListLeft.length - 1; devNum >= 0; devNum -= 1) {
 			if (this.tagListLeft[devNum].selected) {
-				const deviceCopy = this.jsonCopy(this.tagListLeft[devNum]);
+				const deviceCopy = _.cloneDeep(this.tagListLeft[devNum]);
 				deviceCopy.selected = false;
 
 				this.tagListRight.push(deviceCopy);
@@ -147,8 +145,8 @@ export class AssetTaggingComponent implements OnChanges, OnDestroy {
 		}
 
 		this.allTagsSelectedLeft = false;
-		this.tagListLeft = this.jsonCopy(this.tagListLeft);
-		this.tagListRight = this.jsonCopy(this.tagListRight);
+		this.tagListLeft = _.cloneDeep(this.tagListLeft);
+		this.tagListRight = _.cloneDeep(this.tagListRight);
 		this.handleLeftTagSelectionChanged();
 	}
 
@@ -159,15 +157,15 @@ export class AssetTaggingComponent implements OnChanges, OnDestroy {
 	public remove () {
 		for (let devNum = this.tagListRight.length - 1; devNum >= 0; devNum -= 1) {
 			if (this.tagListRight[devNum].selected) {
-				const deviceCopy = this.jsonCopy(this.tagListRight[devNum]);
+				const deviceCopy = _.cloneDeep(this.tagListRight[devNum]);
 				deviceCopy.selected = false;
 
 				this.tagListLeft.push(deviceCopy);
 				this.tagListRight.splice(devNum, 1);
 			}
 		}
-		this.tagListLeft = this.jsonCopy(this.tagListLeft);
-		this.tagListRight = this.jsonCopy(this.tagListRight);
+		this.tagListLeft = _.cloneDeep(this.tagListLeft);
+		this.tagListRight = _.cloneDeep(this.tagListRight);
 		this.allTagsSelectedRight = false;
 		this.handleRightTagSelectionChanged();
 	}

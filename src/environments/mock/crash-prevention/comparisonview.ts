@@ -205,6 +205,7 @@ const fpSimilarAssetsInfo = {
 			softwareVersion: '15.0(2)SG7',
 			softwareType: 'IOS',
 			similarityScore: 68.8033,
+			globalRiskRank: 'LOW',
 		},
 	],
 };
@@ -270,6 +271,40 @@ export const MlvisualizationInfo = {
 		},
 	],
 };
+
+/** Base URL for device-details API */
+const api7 = `/api/customerportal/fingerprint/v1/device-details/2431199/
+TkEsRk9YMjAwOEdCQVQsQVNSMTAwMi1YLE5B`;
+/** The mock response for deviceDetailsResponse */
+const deviceDetailsResponse = {
+	customerId: '7293498',
+	deviceId: '12843610',
+	deviceName: 'dummy',
+	globalRiskRank: 'HIGH',
+	ipAddress: '0.0.0.0',
+	productFamily: 'Cisco Catalyst 3560-E Series Switches',
+	productId: 'WS-C3560E-48TD-S',
+	riskScore: '27.73',
+	serialNumber: 'FNS121708MX',
+	softwareType: 'IOS',
+	softwareVersion: '12.2(44)SE2',
+};
+
+/** Base of URL for SDP API */
+const api8 = '/api/customerportal/fingerprint/v1/similar-devices/2431199';
+/** Encoded device ID in path parameter */
+const encodedDeviceID = 'TkEsRk9YMjAwOEdCQVQsQVNSMTAwMi1YLE5B';
+/** Pagination parameters for similar devices API */
+const paginationParams = 'similarityCriteria=softwares_features&page=0&size=3';
+/** Solution useCase parameters */
+const selectedSolution = 'useCase=Campus Network Assurance&solution=IBN';
+
+/** Base URL for device comparison API */
+const api9 = '/api/customerportal/fingerprint/v1/compare-devices/2431199';
+/** devices to be compared */
+const deviceForComparison1 = 'deviceId1=NA%2CFOX2008GBAT%2CASR1002-X%2CNA';
+/** devices to be compared */
+const deviceForComparison2 = 'deviceId2=NA%2CFOX1306GFKH%2CWS-C4506-E%2CNA';
 
 /**
  * Mock data for MlVisualizationInfo empty state
@@ -519,5 +554,59 @@ export const ComparisonViewScenarios = [
 		},
 		url: `${api5}`,
 		usecases: ['Use Case 1'],
+	},
+	/** The scenarios */
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'deviceInfo Response',
+					response: {
+						body: deviceDetailsResponse,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api7}/?useCase=Campus Network Assurance&solution=IBN`,
+		usecases: ['Use Case 2'],
+	},
+	/** The scenarios */
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'fp Similar Assets',
+					response: {
+						body: fpSimilarAssetsInfo,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api8}/${encodedDeviceID}?${paginationParams}&${selectedSolution}`,
+		usecases: ['Use Case 2'],
+	},
+	/** The scenarios */
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'FP compare devices',
+					response: {
+						body: comparisonInformation,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api9}?${deviceForComparison1}&${deviceForComparison2}&${selectedSolution}`,
+		usecases: ['Use Case 2'],
 	},
 ];

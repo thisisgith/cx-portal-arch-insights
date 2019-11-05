@@ -1,8 +1,8 @@
 /* tslint:disable */
-import{PolicyGroups} from './policy-groups';
+import{PolicyGroup} from './policy-group';
 export interface RightTagResponse {
     customerId?: string;
-    policyGroups?: Array<PolicyGroups>;
+    policyGroups?: Array<PolicyGroup>;
 
   }
 

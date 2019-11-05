@@ -1,6 +1,6 @@
 /* tslint:disable */
 import {TagDetails} from './admin-complience';
-export interface PolicyGroups {
+export interface PolicyGroup {
     policyName:string;
     devices:[];
     toBeScanned: boolean;

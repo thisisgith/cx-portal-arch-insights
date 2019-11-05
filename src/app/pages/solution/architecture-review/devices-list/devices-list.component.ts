@@ -33,6 +33,7 @@ export class DevicesListComponent implements OnInit, OnChanges {
 	public deviceDetails: any = null;
 	public tabIndex = 0;
 	public searchText = '';
+	public collectionTime = '';
 	public selectedAsset = false;
 	public collectionId: any;
 	public assetParams: InventoryService.GetAssetsParams;
@@ -98,7 +99,7 @@ export class DevicesListComponent implements OnInit, OnChanges {
 			const compliantType = _.get(selectedFilter,  'filter');
 			const isClearAllSelected = _.get(selectedFilter, 'isClearAllSelected');
 			const useCase = _.get(selectedFilter, 'title');
-			this.paramsType.filterBy = compliantType ? compliantType.toString() : '';
+			this.paramsType.filterBy = compliantType ? compliantType : '';
 			this.paramsType.useCase = useCase ? useCase.toString() : '';
 			if (isClearAllSelected) {
 				this.paramsType.searchText = '';
@@ -121,6 +122,7 @@ export class DevicesListComponent implements OnInit, OnChanges {
 			this.paramsType.collectionId = _.get(res, ['collection', 'collectionId']);
 			const datePipe = new DatePipe('en-US');
 			this.getDevicesList();
+			this.collectionTime = _.get(res, ['collection', 'collectionDate']);
 			this.lastCollectionTime =
 				datePipe.transform(_.get(res, ['collection', 'collectionDate']), 'medium');
 		},

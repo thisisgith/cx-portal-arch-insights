@@ -8,11 +8,11 @@
 			[innerText]="'_AdminEnableRegulatoryComplience_' | i18n">
 			</div>
 			<div class="form-group form-group--inline base-margin-bottom"
-			*ngIf="optlnStatus" (click)="optlnStatus = !optlnStatus">
+			*ngIf="optlnStatus" (click)="toggleOptlnStatus()">
 				<label class="switch">
 					<input type="checkbox" checked>
 					<span class="switch__input"></span>
-					<span class="switch__label">One</span>
+					<span class="switch__label">Yes</span>
 				</label>
 			</div>
 			<div class="form-group form-group--inline base-margin-bottom"
@@ -20,9 +20,11 @@
 					<label class="switch">
 						<input type="checkbox" >
 						<span class="switch__input"></span>
-						<span class="switch__label">One</span>
+						<span class="switch__label">No</span>
 					</label>
 				</div>
+
+				<cui-alert [options]="alert"></cui-alert>
 
 				<div [hidden]= "!optlnStatus">
 						
@@ -47,15 +49,42 @@
 											<button class="btn btn--small btn--primary half-margin-top" (click)="savePolicyDetails()"
 											[innerText]="'_Save_' | i18n"></button>
 										</div>
-									<div class="col-md-2">{{toBeScanned}}
-										<div class="form-group form-group--inline base-margin-bottom">
-												<div class="subheader qtr-margin-bottom">Enable Scan</div>
+									<div class="col-md-2">
+										<div class="form-group form-group--inline base-margin-bottom" *ngIf="toBeScanned">
+												<div class="subheader qtr-margin-bottom">Enable Scan
+														<sup>
+																<div
+																	tooltip
+																	[tooltipTemplate]="policyTooltipContentTemplate"
+																	class="icon-info-outline"
+																	[tooltipMaxWidth]="200"
+																></div
+															></sup>
+												</div>
+												
 												<label class="switch">
-													<input type="checkbox" (click)="toBeScanned = !toBeScanned">
+													<input type="checkbox" checked (click)="toBeScanned = !toBeScanned">
 													<span class="switch__input"></span>
-													<span class="switch__label">One</span>
+													<span class="switch__label">Yes</span>
 												</label>
 											</div>
+											<div class="form-group form-group--inline base-margin-bottom" *ngIf="!toBeScanned">
+													<div class="subheader qtr-margin-bottom">Enable Scan
+															<sup>
+																	<div
+																		tooltip
+																		[tooltipTemplate]="policyTooltipContentTemplate"
+																		class="icon-info-outline"
+																		[tooltipMaxWidth]="200"
+																	></div
+																></sup>
+													</div>
+													<label class="switch">
+														<input type="checkbox" (click)="toBeScanned = !toBeScanned">
+														<span class="switch__input"></span>
+														<span class="switch__label">No</span>
+													</label>
+												</div>
 										</div>
 							</div>
 							</div>
@@ -66,3 +95,24 @@
 			
 	</div>
 </admin-wrapper>
+
+<cui-modal></cui-modal>
+
+<ng-template #confirmationModalTemplate>
+	<a class="modal__close" (click)="cuiModalService.hide()"><span class="icon-close"></span></a>
+	<div class="modal__header">
+		<h4 class="modal__title">Are you sure you want to opt-out?</h4>
+	</div>														
+	<div class="modal__body">
+		<p class="subtitle">If you opt-out all the mapping data will be deleted</p>
+	</div>
+	<div class="modal__footer">
+		<button class="btn btn--primary" (click)="discardChanges()">Continue</button>
+		<button class="btn" (click)="saveChanges()">Cancel</button>
+	</div>
+</ng-template>
+
+<ng-template #policyTooltipContentTemplate>
+	<span>Policy level opt in/out will enable/disable policy rule execution on selected tags/devices</span>
+</ng-template>
+

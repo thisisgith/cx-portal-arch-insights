@@ -115,7 +115,6 @@ interface ComponentData {
 		sessions: string[];
 		usedTrainings: string[];
 	};
-	partner?: CompanyInfo[];
 }
 
 /**
@@ -180,14 +179,14 @@ export class LifecycleComponent implements OnDestroy {
 	public totalAllowedGroupTrainings: number;
 	public selectedFilterForSB = '';
 	public selectedFilterForACC = '';
+	public selectedPartnerFilterForACC: string[];
 	public selectedPartnerFilter: string [];
 	public selectedPartnerFilterForATX: string[];
 	public atxStatusFilter: StatusValues[];
+	public accStatusFilter: StatusValues[];
 	public groupTrainingsAvailable = 0;
 	public selectedSuccessPaths: SuccessPath[];
 	public selectedScheduledATX: AtxSchema;
-	public atxCancelCoordinatesX = 0;
-	public atxCancelCoordinatesY = 0;
 	public eventXCoordinates = 0;
 	public eventYCoordinates = 0;
 	public eventClickedElement: HTMLElement;
@@ -244,16 +243,12 @@ export class LifecycleComponent implements OnDestroy {
 	public pgCategoryOptions: any [];
 	public accStatusOptions = [
 		{
-			name: I18n.get('_AllTitles_'),
-			value: 'allTitles',
-		},
-		{
 			name: I18n.get('_Recommended_'),
 			value: 'recommended',
 		},
 		{
-		 	name: I18n.get('_Requested_'),
-		 	value: 'requested',
+			name: I18n.get('_Requested_'),
+			value: 'requested',
 		},
 		{
 			name: I18n.get('_Scheduled_'),
@@ -266,14 +261,6 @@ export class LifecycleComponent implements OnDestroy {
 		{
 			name: I18n.get('_Completed_'),
 			value: 'completed',
-		},
-		{
-			name: I18n.get('_Bookmarked_'),
-			value: 'isBookmarked',
-		},
-		{
-			name: I18n.get('_NotBookmarked_'),
-			value: 'hasNotBookmarked',
 		},
 	];
 
@@ -552,6 +539,7 @@ export class LifecycleComponent implements OnDestroy {
 		};
 		this.selectedPartnerFilter = [];
 		this.selectedPartnerFilterForATX = [];
+		this.selectedPartnerFilterForACC = [];
 		this.atxStatusFilter = [];
 	}
 
@@ -1086,23 +1074,6 @@ export class LifecycleComponent implements OnDestroy {
 					() => undefined,
 				);
 		}
-
-		if  (type === 'ACC') {
-			if (this.selectedFilterForACC === 'isBookmarked') {
-				this.selectedACC =
-				_.filter(this.componentData.acc.sessions, { bookmark: true });
-			} else if (this.selectedFilterForACC === 'hasNotBookmarked') {
-				this.selectedACC =
-				_.filter(this.componentData.acc.sessions, { bookmark: false });
-			} else {
-				this.selectedACC =
-					_.filter(this.componentData.acc.sessions,
-						{ status: this.selectedFilterForACC });
-			}
-			if (this.selectedFilterForACC === 'allTitles' || !this.selectedFilterForACC) {
-				this.selectedACC = this.componentData.acc.sessions;
-			}
-		}
 	}
 
 	/**
@@ -1578,12 +1549,19 @@ export class LifecycleComponent implements OnDestroy {
 			window.accLoading = true;
 		}
 
-		return this.contentService.getRacetrackACC(
-			_.pick(this.componentData.params,
-				['customerId', 'solution', 'usecase', 'pitstop', 'suggestedAction', 'providerId']))
+		const params = _.pick(this.componentData.params,
+				['customerId', 'solution', 'usecase', 'pitstop', 'suggestedAction', 'providerId']);
+
+		if (!_.isEmpty(this.accStatusFilter)) {
+			_.set(params, 'status', this.accStatusFilter);
+		}
+		if (!_.isEmpty(this.selectedPartnerFilterForACC)) {
+			_.set(params, 'providerId', this.selectedPartnerFilterForACC);
+		}
+
+		return this.contentService.getRacetrackACC(params)
 		.pipe(
 			map((result: ACCResponse) => {
-				this.selectedFilterForACC = this.accStatusOptions[0].value;
 				this.componentData.acc = {
 					sessions: result.items,
 				};
@@ -2301,6 +2279,11 @@ export class LifecycleComponent implements OnDestroy {
 	 */
 	public statusMultiFilter (selectedStatuses: StatusFilterItem[], type: 'ATX' | 'ACC') {
 		switch (type) {
+			case 'ACC':
+				this.accStatusFilter = _.map(selectedStatuses, 'value');
+				this.loadACC()
+					.subscribe();
+				break;
 			case 'ATX':
 				this.atxStatusFilter = _.map(selectedStatuses, 'value');
 				this.loadATX()
@@ -2316,6 +2299,11 @@ export class LifecycleComponent implements OnDestroy {
 	 */
 	 public partnerMultiFilter (selectedPartners: CompanyInfo[], type: 'ATX' | 'ACC') {
 		switch (type) {
+			case 'ACC':
+				this.selectedPartnerFilterForACC = _.map(selectedPartners, 'companyId');
+				this.loadACC()
+					.subscribe();
+				break;
 			case 'ATX':
 				this.selectedPartnerFilterForATX = _.map(selectedPartners, 'companyId');
 				this.loadATX()
@@ -2427,6 +2415,7 @@ export class LifecycleComponent implements OnDestroy {
 		this.selectedPartnerFilter = providerNames;
 		// overwrite individial ATX and ACC parter filter
 		this.selectedPartnerFilterForATX = providerNames;
+		this.selectedPartnerFilterForACC = providerNames;
 		forkJoin(
 			this.loadACC(),
 			this.loadATX(),

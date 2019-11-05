@@ -4,6 +4,9 @@
 		<div class="row  panel panel--bordered flex">
 			<div class="col-md-8">
 				<div class="half-padding-top  text-large text-left text-uppercase">
+					<span>
+						Available:
+					</span>
 					<span 
 						[innerText]="'_AssetTaggingTagsCount_' | i18n:((tagListLeft | filterTags:leftSearchText).length) "
 						data-auto-id="tagging.tagscount"></span>
@@ -57,10 +60,14 @@
 	<div class="col-lg-5">
 		<div class="row  panel panel--bordered flex">
 			<div class="col-md-8">
-				<div class="half-padding-top  text-large text-left text-uppercase">
+				<div class="half-padding-top  text-large text-left text-uppercase">	
+						<span>
+								Selected:
+						</span>
 					<span 
 						[innerText]="'_AssetTaggingTagsCountSelected_' | i18n:((tagListRight| filterTags:rightSearchText).length) "
 						data-auto-id="tagging.tagscount"></span>
+						
 				</div>
 			</div>
 			<div class="col-md-4">

@@ -49,7 +49,7 @@ class ArchitectureReviewService extends __BaseService {
 
     if (params.page != null) __params = __params.set('page', params.page.toString());
     if (params.pageSize != null) __params = __params.set('pageSize', params.pageSize.toString());
-    if (params.filterBy != null) __params = __params.set('filterBy', params.filterBy.toString());
+    if (params.filterBy != null) __params = __params.set('filterBy', params.filterBy);
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     if (params.collectionId != null) __params = __params.set('collectionId', params.collectionId.toString());
     if (params.searchText != null) __params = __params.set('searchText', params.searchText.toString());
@@ -102,10 +102,10 @@ class ArchitectureReviewService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
-
+    
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     if (params.collectionId != null) __params = __params.set('collectionId', params.collectionId.toString());
-    if (params.dnacIP != null) __params = __params.set('dnacIP', params.dnacIP.toString());
+    if (params.dnacIp != null) __params = __params.set('dnacIp', params.dnacIp.toString());
     if (params.collectionDate != null) __params = __params.set('collectionDate', params.collectionDate.toString());
     
 

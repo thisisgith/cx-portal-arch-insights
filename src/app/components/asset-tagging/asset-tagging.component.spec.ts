@@ -97,22 +97,6 @@ describe('AssetTaggingComponent', () => {
 		.toEqual(component.tagListRight.length);
 	});
 
-	it('should return a object', () => {
-		const tags = [{
-			deviceCount: '3',
-			devices: ['D1', 'D2', 'D3'],
-			selected: true,
-			tagName: 'T1',
-			tagValue: 'TID1',
-		}];
-		let newTags;
-
-		newTags = component.jsonCopy(tags);
-
-		expect(newTags)
-		.toBeDefined();
-	});
-
 	it('should add tags to tagListRight if tag is selected and remove from tagListLeft', () => {
 		component.tagListLeft = [{
 			deviceCount: '3',
@@ -237,8 +221,8 @@ describe('AssetTaggingComponent', () => {
 			deviceCount: '3',
 			devices: ['D1', 'D2', 'D3'],
 			selected: false,
-			tagName: 'T1',
-			tagValue: 'TID1',
+			tagName: 'T2',
+			tagValue: 'TID2',
 		}];
 		component.leftSearchText = 'T1';
 
@@ -248,6 +232,14 @@ describe('AssetTaggingComponent', () => {
 		.toHaveBeenCalled();
 
 		component.leftSearchText = '88';
+		component.allTagsSelectedLeft  = false;
+		component.toggleAllTagsSelected(tags, component.leftTags);
+		expect(component.handleTagSelectionChanged)
+		.toHaveBeenCalled();
+		expect(component.allTagsSelectedLeft)
+			.toBeTruthy();
+
+		component.leftSearchText = 'T1,T2';
 		component.allTagsSelectedLeft  = false;
 		component.toggleAllTagsSelected(tags, component.leftTags);
 		expect(component.handleTagSelectionChanged)
@@ -283,6 +275,14 @@ describe('AssetTaggingComponent', () => {
 		.toHaveBeenCalled();
 
 		component.rightSearchText = '88';
+		component.allTagsSelectedRight  = false;
+		component.toggleAllTagsSelected(tags, component.rightTags);
+		expect(component.handleTagSelectionChanged)
+		.toHaveBeenCalled();
+		expect(component.allTagsSelectedRight)
+			.toBeTruthy();
+
+		component.rightSearchText = 'T1,T2';
 		component.allTagsSelectedRight  = false;
 		component.toggleAllTagsSelected(tags, component.rightTags);
 		expect(component.handleTagSelectionChanged)
