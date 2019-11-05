@@ -23,7 +23,7 @@
 </div>
 <div class="divider qtr-margin-top"></div>
 <cui-alert [options]="alert"></cui-alert>
-<div *ngIf="softwareGroupsCount == 0" class="dbl-margin-top text-center text-xlarge dbl-margin-bottom">
+<div *ngIf="softwareGroupsCount == 0 || softwareGroups?.length === 0" class="dbl-margin-top text-center text-xlarge dbl-margin-bottom">
 	<span [innerText]="'_InsightsNoResultsFound_' | i18n"></span>
 </div>
 <ng-container *ngTemplateOutlet="tableSoftwareGroups"></ng-container>

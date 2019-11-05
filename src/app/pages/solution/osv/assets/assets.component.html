@@ -22,7 +22,7 @@
 </div>
 <div class="divider qtr-margin-top"></div>
 <cui-alert [options]="alert"></cui-alert>
-<div *ngIf="assetsCount == 0" class="dbl-margin-top text-center text-xlarge dbl-margin-bottom">
+<div *ngIf="assetsCount == 0 || assets?.length === 0" class="dbl-margin-top text-center text-xlarge dbl-margin-bottom">
 	<span [innerText]="'_InsightsNoResultsFound_' | i18n"></span>
 </div>
 <ng-container *ngTemplateOutlet="tableAssets"></ng-container>
@@ -36,7 +36,7 @@
 </div>
 
 <ng-template #tableAssets>
-	<div class="responsive-table not-close-360" *ngIf="!status.isLoading && assetsTable && assets?.length">
+	<div class="responsive-table not-close-360" *ngIf="!status.isLoading && assetsTable && assets?.length > 0">
 		<table class="table table--selectable table--compressed table--wrap table--lined table--hover table--nostripes">
 			<thead>
 				<tr>

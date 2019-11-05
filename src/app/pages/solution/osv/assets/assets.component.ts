@@ -253,7 +253,7 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 					},
 					{
 						name: I18n.get('_OsvRecommendations_'),
-						sortable: true,
+						sortable: false,
 						template: this.recommendationsTemplate,
 						width: '10%',
 					},
