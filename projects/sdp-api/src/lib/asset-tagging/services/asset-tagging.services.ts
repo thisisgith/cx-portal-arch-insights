@@ -11,6 +11,7 @@ import { DeviceDetails } from '../models/device-detail';
 import { PolicyGroupDetails } from '../models/policy-group-details';
 import { PolicyGroupList } from '../models/policy-group-list';
 import { PolicyMapping } from '../models/policy-mapping';
+import { OptInOut } from '../models/opt-in-out';
 
 @Injectable({
 	providedIn: 'root',
@@ -23,6 +24,9 @@ class AssetTaggingService extends __BaseService {
 	static readonly getAsset360TagsPath = '/v1/device-tag-api';
 	static readonly getPoliciesPath = '/v1/all-policies-api';
 	static readonly getPolicyMappingPath = '/v1/save-tag-policy-mapping-api';
+	static readonly getOptinStatus = '/customerportal/compliance/v1/service/checkOptInStatus';
+	static readonly updateOptinStatus = '/customerportal/compliance/v1/service/updateOptInStatus';
+
 	private tags = new BehaviorSubject<any>({});
 
 	constructor (
@@ -35,11 +39,11 @@ class AssetTaggingService extends __BaseService {
 	public set Tags(body) {
 		this.tags.next(body);
 	}
-	
+
 	getSelectedTags():__Observable<any> {
 		return this.tags.asObservable();
 	  }
-	  
+
 	/**
 	 * All Tags.
 	 * @param params The `AssetTaggingService.GetParams` containing the following parameters:
@@ -217,8 +221,56 @@ class AssetTaggingService extends __BaseService {
 	 *
 	 * @return successful operation
 	 */
+	getOptInStatusResponse (params: AssetTaggingService.GetParams): __Observable<__StrictHttpResponse<OptInOut>> {
+		let __headers = new HttpHeaders();
+		let __body: any = null;
+		let __params = this.newParams();
+		if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+
+		let req = new HttpRequest<any>(
+			'GET',
+			this.rootUrl + `${AssetTaggingService.getOptinStatus}`,
+			__body,
+			{
+				headers: __headers,
+				params: __params,
+				responseType: 'json',
+			});
+
+		return this.http.request<any>(req).pipe(
+			__filter(_r => _r instanceof HttpResponse),
+			__map((_r) => {
+				return _r as __StrictHttpResponse<OptInOut>;
+			})
+		);
+	}
+
+	/**
+	 * Get Policies.
+	 * @param params The `AssetTaggingService.GetParams` containing the following parameters:
+	 *
+	 * - `customerId`: Unique identifier of a Cisco customer.
+	 * - `deviceId` : Unique device identifier (optional)
+	 *
+	 * @return successful operation
+	 */
 	getPolicy (params: AssetTaggingService.GetParams): __Observable<PolicyGroupList> {
 		return this.getPolicyResponse(params).pipe(
+			__map(_r => _r.body as PolicyGroupList)
+		);
+	}
+
+	/**
+	 * Get Policies.
+	 * @param params The `AssetTaggingService.GetParams` containing the following parameters:
+	 *
+	 * - `customerId`: Unique identifier of a Cisco customer.
+	 * - `deviceId` : Unique device identifier (optional)
+	 *
+	 * @return successful operation
+	 */
+	getOptInStatus (params: AssetTaggingService.GetParams): __Observable<PolicyGroupList> {
+		return this.getOptInStatusResponse(params).pipe(
 			__map(_r => _r.body as PolicyGroupList)
 		);
 	}
@@ -255,6 +307,37 @@ class AssetTaggingService extends __BaseService {
 
 	/**
 	 * Submit the policy mapping.
+	 * @param params The `AssetTaggingService.PutUpdateOptInParams` containing the following parameters:
+	 *
+	 * - `customerId`: Unique identifier of a Cisco customer.
+	 * - `params` : Contains the Rcc status
+	 *
+	 * @return successful operation
+	 */
+	updateOptStatusResponse (params: AssetTaggingService.PutUpdateOptInParams): __Observable<__StrictHttpResponse<OptInOut>> {
+		let __headers = new HttpHeaders();
+		let __params = this.newParams();
+		if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+		if (params.isRccOpted != null) __params = __params.set('isRccOpted', params.isRccOpted.toString());
+		let req = new HttpRequest<any>(
+			'PUT',
+			this.rootUrl + `${AssetTaggingService.updateOptinStatus}`,
+			{
+				headers: __headers,
+				params: __params,
+				responseType: 'json',
+			});
+
+		return this.http.request<any>(req).pipe(
+			__filter(_r => _r instanceof HttpResponse),
+			__map((_r) => {
+				return _r as __StrictHttpResponse<OptInOut>;
+			})
+		);
+	}
+
+	/**
+	 * Submit the policy mapping.
 	 * @param params The `AssetTaggingService.PostParams` containing the following parameters:
 	 *
 	 * - `customerId`: Unique identifier of a Cisco customer.
@@ -264,6 +347,21 @@ class AssetTaggingService extends __BaseService {
 	 */
 	postPolicyMapping (params: AssetTaggingService.PostParams): __Observable<any> {
 		return this.postPolicyMappingResponse(params).pipe(
+			__map(_r => _r.body as any)
+		);
+	}
+
+	/**
+	 * Submit the policy mapping.
+	 * @param params The `AssetTaggingService.PutUpdateOptInParams` containing the following parameters:
+	 *
+	 * - `customerId`: Unique identifier of a Cisco customer.
+	 * - `params` : Contains the Optin params
+	 *
+	 * @return successful operation
+	 */
+	updateOptStatus (params: AssetTaggingService.PutUpdateOptInParams): __Observable<any> {
+		return this.updateOptStatusResponse(params).pipe(
 			__map(_r => _r.body as any)
 		);
 	}
@@ -294,9 +392,23 @@ module AssetTaggingService {
 		 */
 		customerId: string;
 		/**
-		 * Contains the policy mapping 
+		 * Contains the policy mapping
 		 */
 		body : PolicyMapping;
+	}
+
+		/**
+	 * Parameters for put Calls
+	 */
+	export interface PutUpdateOptInParams {
+		/**
+		 * Unique identifier of a Cisco customer.
+		 */
+		customerId: string;
+		/**
+		 * Contains the Rcc value
+		 */
+		isRccOpted : boolean;
 	}
 
 }

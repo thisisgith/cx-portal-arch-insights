@@ -1,4 +1,5 @@
 export { DeviceDetails as AssetTaggingDeviceDetails } from './models/device-detail';
+export { OptInOut } from './models/opt-in-out';
 export { PolicyGroupDetails } from './models/policy-group-details';
 export { PolicyGroupList } from './models/policy-group-list';
 export { PolicyGroups } from './models/policy-groups';

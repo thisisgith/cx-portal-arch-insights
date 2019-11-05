@@ -96,6 +96,30 @@ const getPolicyList = {
 };
 
 /**
+ * Mock data for to checkOptinStatus list
+ */
+
+const getOptInStatus = {
+	data: {
+		rccOptInStatus: false,
+	},
+	message: 'SUCCESS',
+	pagination: null,
+	status: 200,
+};
+
+/**
+ * Mock data for to updateOptinStatus list
+ */
+
+const updateOptInStatus = {
+	data: null,
+	message: 'SUCCESS',
+	pagination: null,
+	status: 200,
+};
+
+/**
  *  Asset Tagging Component Scenarios
  */
 export const AssetTaggingScenarios = [
@@ -169,6 +193,23 @@ export const AssetTaggingScenarios = [
 	},
 	{
 		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'To get Opt status of complience',
+					response: {
+						body: getOptInStatus,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `/api/customerportal/compliance/v1/service/checkOptInStatus?customerId=${customerId}`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
 			POST: [
 				{
 					delay: 100,
@@ -182,6 +223,42 @@ export const AssetTaggingScenarios = [
 			],
 		},
 		url: `${api}/save-tag-policy-mapping-api/${customerId}`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			PUT: [
+				{
+					delay: 100,
+					description: 'To update a Opt in status in complience as true',
+					response: {
+						body: updateOptInStatus,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: '/api/customerportal/compliance/v1/service/updateOptInStatus?' +
+		`customerId=${customerId}&isRccOpted=true`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			PUT: [
+				{
+					delay: 100,
+					description: 'To update a Opt in status in complience as false',
+					response: {
+						body: updateOptInStatus,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: '/api/customerportal/compliance/v1/service/updateOptInStatus?' +
+		`customerId=${customerId}&isRccOpted=false`,
 		usecases: ['Use Case 1'],
 	},
 ];

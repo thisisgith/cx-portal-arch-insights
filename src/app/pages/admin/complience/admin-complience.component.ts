@@ -1,8 +1,6 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import {
-	ControlPointIEHealthStatusAPIService,
 	ControlPointAdminComplienceService,
-	UserService,
 	RightTagResponse,
 	LeftTagResponse,
 	AssetTaggingService,
@@ -11,8 +9,8 @@ import {
 import { User } from '@interfaces';
 import { ActivatedRoute } from '@angular/router';
 
-import { empty, Subject, from, of, forkJoin } from 'rxjs';
-import { catchError, finalize, takeUntil, map, switchMap } from 'rxjs/operators';
+import { Subject, of, forkJoin } from 'rxjs';
+import { catchError, takeUntil, map, switchMap } from 'rxjs/operators';
 import { RouteAuthService } from '@services';
 
 import * as _ from 'lodash-es';
@@ -30,8 +28,6 @@ import { CuiModalService } from '@cisco-ngx/cui-components';
 export class AdminComplienceComponent implements OnInit {
 	@ViewChild('confirmationModalTemplate',
 	{ static: true }) private confirmationModalTemplate: TemplateRef<string>;
-	@ViewChild('alertTemplate',
-	{ static: true }) private alertTemplate: TemplateRef<string>;
 
 	private destroyed$: Subject<void> = new Subject<void>();
 	private customerId: string;
@@ -60,13 +56,11 @@ export class AdminComplienceComponent implements OnInit {
 	private user: User;
 
 	constructor (
-		private controlPointIEHealthStatusAPIService: ControlPointIEHealthStatusAPIService,
 		public cuiModalService: CuiModalService,
 		public controlPointAdminComplienceService: ControlPointAdminComplienceService,
 		public assetTaggingService: AssetTaggingService,
 		private route: ActivatedRoute,
 		private logger: LogService,
-		private userService: UserService,
 		private routeAuthService: RouteAuthService,
 	) {
 		this.user = _.get(this.route, ['snapshot', 'data', 'user']);
@@ -102,16 +96,15 @@ export class AdminComplienceComponent implements OnInit {
 
 		this.optlnStatus = true;
 		forkJoin(
+			this.getOptinOutStatus(),
 			this.getLeftSideTags(),
 			this.getRightSideTags(),
-		).subscribe();
+		)
+		.subscribe();
 
 		return this.routeAuthService.checkPermissions(this.customerId)
 				.pipe(
 				takeUntil(this.destroyed$),
-				map((results: any) => {
-
-				}),
 				catchError(err => {
 					this.logger.error('High Crash Assets : getHighCrashesDeviceData() ' +
 						`:: Error : (${err.status}) ${err.message}`);
@@ -121,6 +114,10 @@ export class AdminComplienceComponent implements OnInit {
 			);
 
 	}
+	/**
+	 * Function to toggleOpt status
+	 * @returns null
+	 */
 
 	public toggleOptlnStatus () {
 		if (this.rightSideTags || this.leftSideTags) {
@@ -128,17 +125,53 @@ export class AdminComplienceComponent implements OnInit {
 			this.optlnStatus = true;
 		}
 	}
-
+	/**
+	 * Function to discard opt changes
+	 * @returns null
+	 */
 	public discardChanges () {
 		this.optlnStatus = false;
+		this.updateOptInOutStatus();
 		this.cuiModalService.hide();
 	}
-
+	/**
+	 * Function to save opt changes
+	 * @returns null
+	 */
 	public saveChanges () {
 		this.optlnStatus = true;
+		this.updateOptInOutStatus();
 		this.cuiModalService.hide();
 	}
+	/**
+	 * Function to get opt changes
+	 * @returns opt data
+	 */
 
+	public getOptinOutStatus () {
+		const params = {
+			customerId: this.customerId,
+		};
+
+		return this.assetTaggingService.getOptInStatus(params)
+			.pipe(
+				takeUntil(this.destroyed$),
+				map((results: any) => {
+					this.optlnStatus = results.data.rccOptInStatus;
+				}),
+				catchError(err => {
+					this.logger.error('OptinStatus : getOptinOutStatus() ' +
+						`:: Error : (${err.status}) ${err.message}`);
+
+					return of({ });
+				}),
+			);
+
+	}
+	/**
+	 * Function to get left side tags
+	 * @returns tags data
+	 */
 	public getLeftSideTags () {
 
 		return this.controlPointAdminComplienceService.getLeftSideTags(this.customerId)
@@ -148,7 +181,7 @@ export class AdminComplienceComponent implements OnInit {
 					this.leftSideTagsResponse = results;
 				}),
 				catchError(err => {
-					this.logger.error('Crash Assets : getLeftSideTags() ' +
+					this.logger.error('Left side tags : getLeftSideTags() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
 					return of({ });
@@ -156,7 +189,10 @@ export class AdminComplienceComponent implements OnInit {
 			);
 
 	}
-
+	/**
+	 * Function to get right side tags
+	 * @returns tags
+	 */
 	public getRightSideTags () {
 
 		return this.controlPointAdminComplienceService.getRightSideTags(this.customerId)
@@ -166,13 +202,17 @@ export class AdminComplienceComponent implements OnInit {
 					this.rightSideTagsResponse = results;
 				}),
 				catchError(err => {
-					this.logger.error('Crash Assets : getAllCrashesData() ' +
+					this.logger.error('Tags : getRightSideTags() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
 					return of({ });
 				}),
 			);
 	}
+	/**
+	 * Function to filter duplicates
+	 * @returns null
+	 */
 
 	public filterDuplicates () {
 		if (this.leftSideTagsResponse.tags) {
@@ -192,9 +232,14 @@ export class AdminComplienceComponent implements OnInit {
 
 		}
 	}
+	/**
+	 * Function to filter duplicates
+	 * @param policy type of policy selected
+	 * @returns response with success
+	 */
 
 	public onPolicySelected (policy) {
-		if (policy != 'select') {
+		if (policy !== 'select') {
 			this.selectedPolicy = policy;
 			this.filterDuplicates();
 		}
@@ -220,16 +265,29 @@ export class AdminComplienceComponent implements OnInit {
 					${this.selectedPolicy} are successfully saved`, 'success'));
 	}
 
+	/**
+	 * This Function is used to updateOptInOutStatus
+	 */
+	public updateOptInOutStatus () {
+		const params = {
+			customerId: this.customerId,
+			isRccOpted: this.optlnStatus,
+		};
+		this.assetTaggingService.updateOptStatus(params)
+		.subscribe();
+	}
+
+	/**
+	 * Function to update permission
+	 * @returns subscribe of data
+	 */
 	public updatePermissions () {
 
 		return this.routeAuthService.updatePermissions(this.customerId, true)
 		.pipe(
 		takeUntil(this.destroyed$),
-		map((results: any) => {
-
-		}),
 		catchError(err => {
-			this.logger.error('High Crash Assets : getHighCrashesDeviceData() ' +
+			this.logger.error('Update Permission : updatePermissions() ' +
 				`:: Error : (${err.status}) ${err.message}`);
 
 			return of({ });
