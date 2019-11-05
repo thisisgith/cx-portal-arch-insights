@@ -2762,7 +2762,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 		});
 	});
 
-	describe('PBC-1041: UI: Filter ATX by Partner', () => {
+	describe.only('PBC-1041: UI: Filter ATX by Partner', () => {
 		before(() => {
 			// Disable our default getATX mocks so Cypress can catch the calls instead
 			atxMock.disable('(ATX) IBN-Campus Network Assurance-Onboard');
@@ -3053,15 +3053,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 				cy.getByAutoId('atx-card-view-btn').click();
 				cy.getByAutoId('ATXCard').should('exist');
 
-				// Select a filter for each dropdown
-				cy.getByAutoId('ViewAllModal-StatusMultiFilter')
-					.within(() => {
-						cy.getByAutoId('MultiSelect-SearchInput').click();
-						cy.getByAutoId('MultiSelect-ListItem0').click();
-						cy.getByAutoId('MultiSelect-SaveButton').click();
-					});
-				cy.wait('@getATX');
-
+				// Select a filter for the partner dropdown
 				cy.getByAutoId('ViewAllModal-PartnerMultiFilter')
 					.within(() => {
 						cy.getByAutoId('MultiSelect-SearchInput').click();
@@ -3073,18 +3065,6 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 				// Switch to table view
 				cy.getByAutoId('atx-table-view-btn').click();
 				cy.getByAutoId('ViewAllTable').should('exist');
-
-				cy.getByAutoId('ViewAllModal-StatusMultiFilter')
-					.within(() => {
-						// Verify the filter from card view is still in place
-						cy.getByAutoId('MultiSelect-SearchInput').click();
-						cy.getByAutoId('MultiSelect-ListItem0')
-							.should('have.class', 'ms-dropdown__list__item--selected');
-						// Select an extra filter
-						cy.getByAutoId('MultiSelect-ListItem1').click();
-						cy.getByAutoId('MultiSelect-SaveButton').click();
-					});
-				cy.wait('@getATX');
 
 				cy.getByAutoId('ViewAllModal-PartnerMultiFilter')
 					.within(() => {
@@ -3100,17 +3080,6 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 				// Switch back to card view
 				cy.getByAutoId('atx-card-view-btn').click();
 				cy.getByAutoId('ATXCard').should('exist');
-
-				cy.getByAutoId('ViewAllModal-StatusMultiFilter')
-					.within(() => {
-						// Verify the filter from table view is still in place
-						cy.getByAutoId('MultiSelect-SearchInput').click();
-						cy.getByAutoId('MultiSelect-ListItem0')
-							.should('have.class', 'ms-dropdown__list__item--selected');
-						cy.getByAutoId('MultiSelect-ListItem1')
-							.should('have.class', 'ms-dropdown__list__item--selected');
-					});
-				cy.wait('@getATX');
 
 				cy.getByAutoId('ViewAllModal-PartnerMultiFilter')
 					.within(() => {
