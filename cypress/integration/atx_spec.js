@@ -14,10 +14,9 @@ const scheduledItems = atxMock.getScenario('GET', '(ATX) IBN-Campus Network Assu
 
 const twoRecommendedWithPartnerItems = atxMock.getScenario('GET', '(ATX) IBN-Campus Network Assurance-Onboard-twoRecommendedWithPartner').response.body.items;
 
-// TODO: Will be used when implementing the partner filter tests
-// const partnerInfoMock = new MockService('PartnerInfoScenarios');
-// const partnerInfoScenario = partnerInfoMock.getScenario('GET', '(Lifecycle) PartnerInfoListUsingGET');
-// const partnerInfoBody = partnerInfoScenario.response.body;
+const partnerInfoMock = new MockService('PartnerInfoScenarios');
+const partnerInfoScenario = partnerInfoMock.getScenario('GET', '(Lifecycle) PartnerInfoListUsingGET');
+const partnerInfoBody = partnerInfoScenario.response.body;
 
 const atxFilters = [
 	{ filter: 'Recommended', field: 'status', value: 'recommended' },
@@ -2763,8 +2762,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 		});
 	});
 
-	// TODO: Fill in test cases
-	describe.skip('PBC-1041: UI: Filter ATX by Partner', () => {
+	describe('PBC-1041: UI: Filter ATX by Partner', () => {
 		before(() => {
 			// Disable our default getATX mocks so Cypress can catch the calls instead
 			atxMock.disable('(ATX) IBN-Campus Network Assurance-Onboard');
@@ -2776,7 +2774,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			cy.server();
 			cy.route({
 				method: 'GET',
-				url: '/api/customerportal/racetrack/v1/atx**',
+				url: /.*api\/customerportal\/racetrack\/v1\/atx.*/,
 				status: 200,
 				response: {
 					pitstop: 'Onboard',
@@ -2790,6 +2788,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			cy.getByAutoId('Facet-Assets & Coverage').click();
 			cy.getByAutoId('Facet-Lifecycle').click();
 			cy.wait('@getATX');
+			cy.wait('(Lifecycle) PartnerInfoListUsingGET');
 		});
 
 		after(() => {
@@ -2802,48 +2801,569 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard');
 		});
 
-		it('Global filter by partner should update & override ATX View All filter', () => {
+		describe('Global vs. View All filters', () => {
+			it('Global filter by partner should update ATX View All filter', () => {
+				// Open the global filter and select the first two items
+				cy.getByAutoId('GlobalFilter')
+					.within(() => {
+						cy.getByAutoId('MultiSelect-SearchInput').click();
+						cy.getByAutoId('MultiSelect-ListItem0').click();
+						cy.getByAutoId('MultiSelect-ListItem1').click();
+						cy.getByAutoId('MultiSelect-SaveButton').click();
+					});
 
+				cy.wait('@getATX');
+
+				// Open the View All modal and verify the selected filter matches the global
+				cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
+
+				cy.getByAutoId('ViewAllModal')
+					.within(() => {
+						cy.getByAutoId('ViewAllModal-PartnerMultiFilter')
+							.within(() => {
+								cy.getByAutoId('MultiSelect-SearchInput').click();
+								cy.getByAutoId('MultiSelect-ListItem0')
+									.should('have.class', 'ms-dropdown__list__item--selected');
+								cy.getByAutoId('MultiSelect-ListItem1')
+									.should('have.class', 'ms-dropdown__list__item--selected');
+
+								// Make sure the rest of the items were not selected
+								cy.getByAutoId('MultiSelect-SelectAll')
+									.should('not.have.class', 'ms-dropdown__list__item--selected');
+								for (let i = 2; i < partnerInfoBody.companyList.length; i += 1) {
+									cy.getByAutoId(`MultiSelect-ListItem${i}`)
+										.should('not.have.class', 'ms-dropdown__list__item--selected');
+								}
+							});
+					});
+
+				// Close the View All modal
+				cy.getByAutoId('ViewAllCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+			});
+
+			it('Global filter by partner should override ATX View All filter', () => {
+				// Open the View All modal and select the first company
+				cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
+
+				cy.getByAutoId('ViewAllModal')
+					.within(() => {
+						cy.getByAutoId('ViewAllModal-PartnerMultiFilter')
+							.within(() => {
+								cy.getByAutoId('MultiSelect-SearchInput').click();
+								cy.getByAutoId('MultiSelect-ListItem0').click();
+								cy.getByAutoId('MultiSelect-SaveButton').click();
+							});
+					});
+
+				cy.wait('@getATX');
+
+				// Close the View All modal
+				cy.getByAutoId('ViewAllCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+
+				// Open the global filter and select the second company
+				cy.getByAutoId('GlobalFilter')
+					.within(() => {
+						cy.getByAutoId('MultiSelect-SearchInput').click();
+						cy.getByAutoId('MultiSelect-ListItem1').click();
+						cy.getByAutoId('MultiSelect-SaveButton').click();
+					});
+
+				cy.wait('@getATX');
+
+				// Open the View All modal and verify the selected filter has been overridden to
+				// match the gobal selection
+				cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
+
+				cy.getByAutoId('ViewAllModal')
+					.within(() => {
+						cy.getByAutoId('ViewAllModal-PartnerMultiFilter')
+							.within(() => {
+								cy.getByAutoId('MultiSelect-SearchInput').click();
+								cy.getByAutoId('MultiSelect-ListItem0')
+									.should('not.have.class', 'ms-dropdown__list__item--selected');
+								cy.getByAutoId('MultiSelect-ListItem1')
+									.should('have.class', 'ms-dropdown__list__item--selected');
+
+								// Make sure the rest of the items were not selected
+								cy.getByAutoId('MultiSelect-SelectAll')
+									.should('not.have.class', 'ms-dropdown__list__item--selected');
+								for (let i = 2; i < partnerInfoBody.companyList.length; i += 1) {
+									cy.getByAutoId(`MultiSelect-ListItem${i}`)
+										.should('not.have.class', 'ms-dropdown__list__item--selected');
+								}
+							});
+					});
+
+				// Close the View All modal
+				cy.getByAutoId('ViewAllCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+			});
+
+			it('ATX View All filter should NOT update/override global filter', () => {
+				// Open the global filter and select the first two items
+				cy.getByAutoId('GlobalFilter')
+					.within(() => {
+						cy.getByAutoId('MultiSelect-SearchInput').click();
+						cy.getByAutoId('MultiSelect-ListItem0').click();
+						cy.getByAutoId('MultiSelect-ListItem1').click();
+						cy.getByAutoId('MultiSelect-SaveButton').click();
+					});
+
+				cy.wait('@getATX');
+
+				// Open the View All modal and select a third company
+				cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
+
+				cy.getByAutoId('ViewAllModal')
+					.within(() => {
+						cy.getByAutoId('ViewAllModal-PartnerMultiFilter')
+							.within(() => {
+								cy.getByAutoId('MultiSelect-SearchInput').click();
+								cy.getByAutoId('MultiSelect-ListItem2').click();
+								cy.getByAutoId('MultiSelect-SaveButton').click();
+							});
+					});
+
+				cy.wait('@getATX');
+
+				// Close the View All modal
+				cy.getByAutoId('ViewAllCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+
+				// Open the global filter and verify only the first two companies are selected
+				cy.getByAutoId('GlobalFilter')
+					.within(() => {
+						cy.getByAutoId('MultiSelect-SearchInput').click();
+						cy.getByAutoId('MultiSelect-ListItem0')
+							.should('have.class', 'ms-dropdown__list__item--selected');
+						cy.getByAutoId('MultiSelect-ListItem1')
+							.should('have.class', 'ms-dropdown__list__item--selected');
+
+						cy.getByAutoId('MultiSelect-SelectAll')
+							.should('not.have.class', 'ms-dropdown__list__item--selected');
+						for (let i = 2; i < partnerInfoBody.companyList.length; i += 1) {
+							cy.getByAutoId(`MultiSelect-ListItem${i}`)
+								.should('not.have.class', 'ms-dropdown__list__item--selected');
+						}
+
+						// Close the global filter
+						cy.getByAutoId('MultiSelect-DropdownToggle').click();
+					});
+			});
 		});
 
-		it('ATX View All filter should NOT update/override global filter', () => {
+		describe('ATX View All filters', () => {
+			beforeEach(() => {
+				// Open the View All modal
+				cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
+			});
 
+			afterEach(() => {
+				// Close the View All modal
+				cy.getByAutoId('ViewAllCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+			});
+
+			it('ATX filter by partner "Save" button should trigger API call', () => {
+				// Select a filter, and close the modal
+				cy.getByAutoId('ViewAllModal')
+					.within(() => {
+						cy.getByAutoId('ViewAllModal-PartnerMultiFilter')
+							.within(() => {
+								// Click the save button without changing selection
+								cy.getByAutoId('MultiSelect-SearchInput').click();
+								cy.getByAutoId('MultiSelect-SaveButton').click();
+							});
+					});
+
+				cy.wait('@getATX').its('url').then(url => {
+					expect(url).to.eq('https://api-stage.cisco.com/api/customerportal/racetrack/v1/atx'
+						+ '?usecase=Campus Network Assurance&'
+						+ 'solution=IBN&pitstop=Onboard&'
+						+ 'customerId=2431199&'
+						+ 'suggestedAction=Get to know Cisco DNA Center');
+				});
+			});
+
+			it('Collapsing ATX filter without saving should revert to previous selection', () => {
+				cy.getByAutoId('ViewAllModal')
+					.within(() => {
+						cy.getByAutoId('ViewAllModal-PartnerMultiFilter')
+							.within(() => {
+								// Make a selection, but DON'T click Save
+								cy.getByAutoId('MultiSelect-SearchInput').click();
+								cy.getByAutoId('MultiSelect-ListItem0').click();
+
+								// Close the dropdown, and re-open it
+								cy.getByAutoId('MultiSelect-DropdownToggle').click();
+								cy.getByAutoId('MultiSelect-SearchInput').click();
+
+								// Verify the selection was reverted (to none selected)
+								cy.getByAutoId('MultiSelect-SelectAll')
+									.should('not.have.class', 'ms-dropdown__list__item--selected');
+								for (let i = 0; i < partnerInfoBody.companyList.length; i += 1) {
+									cy.getByAutoId(`MultiSelect-ListItem${i}`)
+										.should('not.have.class', 'ms-dropdown__list__item--selected');
+								}
+							});
+					});
+			});
+
+			it('ATX filters should support multi-selection', () => {
+				cy.getByAutoId('ViewAllModal')
+					.within(() => {
+						cy.getByAutoId('ViewAllModal-StatusMultiFilter')
+							.within(() => {
+								// Select two status filters and Save them
+								cy.getByAutoId('MultiSelect-SearchInput').click();
+								cy.getByAutoId('MultiSelect-ListItem0').click();
+								cy.getByAutoId('MultiSelect-ListItem1').click();
+								cy.getByAutoId('MultiSelect-SaveButton').click();
+							});
+						cy.wait('@getATX');
+
+						cy.getByAutoId('ViewAllModal-PartnerMultiFilter')
+							.within(() => {
+								// Select two partner filters and Save them
+								cy.getByAutoId('MultiSelect-SearchInput').click();
+								cy.getByAutoId('MultiSelect-ListItem0').click();
+								cy.getByAutoId('MultiSelect-ListItem1').click();
+								cy.getByAutoId('MultiSelect-SaveButton').click();
+							});
+						cy.wait('@getATX');
+
+						// Verify the multi-selects display the number of items selected
+						cy.getByAutoId('ViewAllModal-StatusMultiFilter')
+							.within(() => {
+								cy.getByAutoId('MultiSelect-SearchInput')
+									.should('have.attr', 'placeholder', `${i18n._Status_} (2)`);
+							});
+						cy.getByAutoId('ViewAllModal-PartnerMultiFilter')
+							.within(() => {
+								cy.getByAutoId('MultiSelect-SearchInput')
+									.should('have.attr', 'placeholder', `${i18n._ContentProvider_} (2)`);
+							});
+					});
+			});
+
+			it('ATX filters should apply to and be edit-able from both card and table view', () => {
+				// Ensure we're in card view
+				cy.getByAutoId('atx-card-view-btn').click();
+				cy.getByAutoId('ATXCard').should('exist');
+
+				// Select a filter for each dropdown
+				cy.getByAutoId('ViewAllModal-StatusMultiFilter')
+					.within(() => {
+						cy.getByAutoId('MultiSelect-SearchInput').click();
+						cy.getByAutoId('MultiSelect-ListItem0').click();
+						cy.getByAutoId('MultiSelect-SaveButton').click();
+					});
+				cy.wait('@getATX');
+
+				cy.getByAutoId('ViewAllModal-PartnerMultiFilter')
+					.within(() => {
+						cy.getByAutoId('MultiSelect-SearchInput').click();
+						cy.getByAutoId('MultiSelect-ListItem0').click();
+						cy.getByAutoId('MultiSelect-SaveButton').click();
+					});
+				cy.wait('@getATX');
+
+				// Switch to table view
+				cy.getByAutoId('atx-table-view-btn').click();
+				cy.getByAutoId('ViewAllTable').should('exist');
+
+				cy.getByAutoId('ViewAllModal-StatusMultiFilter')
+					.within(() => {
+						// Verify the filter from card view is still in place
+						cy.getByAutoId('MultiSelect-SearchInput').click();
+						cy.getByAutoId('MultiSelect-ListItem0')
+							.should('have.class', 'ms-dropdown__list__item--selected');
+						// Select an extra filter
+						cy.getByAutoId('MultiSelect-ListItem1').click();
+						cy.getByAutoId('MultiSelect-SaveButton').click();
+					});
+				cy.wait('@getATX');
+
+				cy.getByAutoId('ViewAllModal-PartnerMultiFilter')
+					.within(() => {
+						cy.getByAutoId('MultiSelect-SearchInput').click();
+						cy.getByAutoId('MultiSelect-ListItem0')
+							.should('have.class', 'ms-dropdown__list__item--selected');
+						// Select an extra filter
+						cy.getByAutoId('MultiSelect-ListItem1').click();
+						cy.getByAutoId('MultiSelect-SaveButton').click();
+					});
+				cy.wait('@getATX');
+
+				// Switch back to card view
+				cy.getByAutoId('atx-card-view-btn').click();
+				cy.getByAutoId('ATXCard').should('exist');
+
+				cy.getByAutoId('ViewAllModal-StatusMultiFilter')
+					.within(() => {
+						// Verify the filter from table view is still in place
+						cy.getByAutoId('MultiSelect-SearchInput').click();
+						cy.getByAutoId('MultiSelect-ListItem0')
+							.should('have.class', 'ms-dropdown__list__item--selected');
+						cy.getByAutoId('MultiSelect-ListItem1')
+							.should('have.class', 'ms-dropdown__list__item--selected');
+					});
+				cy.wait('@getATX');
+
+				cy.getByAutoId('ViewAllModal-PartnerMultiFilter')
+					.within(() => {
+						cy.getByAutoId('MultiSelect-SearchInput').click();
+						cy.getByAutoId('MultiSelect-ListItem0')
+							.should('have.class', 'ms-dropdown__list__item--selected');
+						cy.getByAutoId('MultiSelect-ListItem1')
+							.should('have.class', 'ms-dropdown__list__item--selected');
+					});
+				cy.wait('@getATX');
+			});
+
+			it('ATX filter by partner should show full list of partners from API', () => {
+				// Open the partner filter
+				cy.getByAutoId('ViewAllModal')
+					.within(() => {
+						cy.getByAutoId('ViewAllModal-PartnerMultiFilter')
+							.within(() => {
+								cy.getByAutoId('MultiSelect-SearchInput').click();
+
+								// Verify all the partners in the API response are in the dropdown
+								// Note the first item is forced to "Cisco"
+								cy.getByAutoId('MultiSelect-ListItem0Text')
+									.should('have.text', 'Cisco');
+								partnerInfoBody.companyList.forEach((company, index) => {
+									cy.getByAutoId(`MultiSelect-ListItem${index + 1}Text`)
+										.should('have.text', company.companyName);
+								});
+							});
+					});
+			});
+
+			it('ATX filter "All" selection should unselect all other dropdown entries', () => {
+
+			});
+
+			it('ATX filter entry selection should unselect the "All" entry', () => {
+
+			});
+
+			it('ATX filter "All" selection should call API with all available options', () => {
+				cy.getByAutoId('ViewAllModal')
+					.within(() => {
+						cy.getByAutoId('ViewAllModal-PartnerMultiFilter').click();
+						cy.getByAutoId('MultiSelect-SelectAll').click();
+						cy.getByAutoId('MultiSelect-SaveButton').click();
+						cy.getByAutoId('MultiSelect-DropdownList').should('not.exist');
+					});
+
+				// TODO: This is a workaround due to PBC-1044
+				// http://swtg-jira-lnx.cisco.com:8080/browse/PBC-1044
+				cy.wait('@getATX');
+				cy.wait('@getATX');
+				// End workaround
+
+				cy.wait('@getATX')
+					.its('url')
+					.then(url => {
+						partnerInfoBody.companyList.forEach(company => {
+							expect(url).to.contain(`providerId=${company.companyId}`);
+						});
+					});
+			});
+
+			it('ATX filters "Clear" button should clear filter selection', () => {
+				// Select a filter
+				cy.getByAutoId('ViewAllModal')
+					.within(() => {
+						cy.getByAutoId('ViewAllModal-PartnerMultiFilter').click();
+						cy.getByAutoId('MultiSelect-ListItem1').click();
+						cy.getByAutoId('MultiSelect-SaveButton').click();
+					});
+				cy.wait('@getATX');
+
+				// Re-open the filter dropdown
+				cy.getByAutoId('ViewAllModal')
+					.within(() => {
+						cy.getByAutoId('ViewAllModal-PartnerMultiFilter').click();
+						cy.getByAutoId('MultiSelect-ListItem1')
+							.should('have.class', 'ms-dropdown__list__item--selected');
+
+						// Click the clear button
+						cy.getByAutoId('MultiSelect-ClearButton').click();
+
+						// Verify all selections were cleared
+						cy.getByAutoId('MultiSelect-SelectAll')
+							.should('not.have.class', 'ms-dropdown__list__item--selected');
+						for (let i = 0; i < partnerInfoBody.companyList.length; i += 1) {
+							cy.getByAutoId(`MultiSelect-ListItem${i}`)
+								.should('not.have.class', 'ms-dropdown__list__item--selected');
+						}
+						cy.getByAutoId('MultiSelect-SaveButton').click();
+					});
+				cy.wait('@getATX');
+			});
+
+			it('ATX filters selecting all items individually should auto-select "All"', () => {
+				cy.getByAutoId('ViewAllModal')
+					.within(() => {
+						cy.getByAutoId('ViewAllModal-PartnerMultiFilter').click();
+						// Select all the partner filters
+						// NOTE: We have to add one to this list, as "Cisco" is added by the UI
+						for (let i = 0; i < partnerInfoBody.companyList.length + 1; i += 1) {
+							cy.getByAutoId(`MultiSelect-ListItem${i}`).click();
+						}
+
+						// Verify the selection has been automatically switched to "All"
+						cy.getByAutoId('MultiSelect-SelectAll')
+							.should('have.class', 'ms-dropdown__list__item--selected');
+
+						// Verify all other selections were unselected
+						for (let i = 0; i < partnerInfoBody.companyList.length + 1; i += 1) {
+							cy.getByAutoId(`MultiSelect-ListItem${i}`)
+								.should('not.have.class', 'ms-dropdown__list__item--selected');
+						}
+					});
+			});
 		});
 
-		it('ATX filter by partner should only be sticky across View All close/re-open', () => {
+		describe('ATX View All Partner Filter stickiness', () => {
+			beforeEach(() => {
+				// Open the View All modal
+				cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 
-		});
+				// Select a filter, and close the modal
+				cy.getByAutoId('ViewAllModal')
+					.within(() => {
+						cy.getByAutoId('ViewAllModal-PartnerMultiFilter')
+							.within(() => {
+								cy.getByAutoId('MultiSelect-SearchInput').click();
+								cy.getByAutoId('MultiSelect-ListItem0').click();
+								cy.getByAutoId('MultiSelect-SaveButton').click();
+							});
+					});
 
-		it('ATX filter by partner "Save" button should trigger API call', () => {
+				cy.wait('@getATX');
 
-		});
+				cy.getByAutoId('ViewAllCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+			});
 
-		it('Collapsing ATX filter without saving should revert to previous selection', () => {
+			afterEach(() => {
+				// Close the View All modal
+				cy.getByAutoId('ViewAllCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
 
-		});
+				// Force a refresh to reset any filters
+				cy.getByAutoId('Facet-Assets & Coverage').click();
+				cy.getByAutoId('Facet-Lifecycle').click();
+				cy.wait('@getATX');
+			});
 
-		it('ATX filters should support multi-selection', () => {
+			it('ATX filter by partner should be sticky across View All close/re-open', () => {
+				// Re-open the View All modal
+				cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 
-		});
+				// Verify the filter is still in place
+				cy.getByAutoId('ViewAllModal')
+					.within(() => {
+						cy.getByAutoId('ViewAllModal-PartnerMultiFilter')
+							.within(() => {
+								cy.getByAutoId('MultiSelect-SearchInput').click();
+								cy.getByAutoId('MultiSelect-ListItem0')
+									.should('have.class', 'ms-dropdown__list__item--selected');
 
-		it('ATX filters should apply to and be edit-able from both card and table view', () => {
+								// Make sure the rest of the items were not selected
+								cy.getByAutoId('MultiSelect-SelectAll')
+									.should('not.have.class', 'ms-dropdown__list__item--selected');
+								for (let i = 1; i < partnerInfoBody.companyList.length; i += 1) {
+									cy.getByAutoId(`MultiSelect-ListItem${i}`)
+										.should('not.have.class', 'ms-dropdown__list__item--selected');
+								}
+							});
+					});
+			});
 
-		});
+			it('ATX filter by partner should NOT be sticky across use case changes', () => {
+				// Change use cases and change back
+				cy.getByAutoId('UseCaseDropdown').click();
+				cy.getByAutoId('TechnologyDropdown-Campus Network Segmentation').click();
+				cy.wait('@getATX');
 
-		it('ATX filter by partner should show full list of partners from API', () => {
+				cy.getByAutoId('UseCaseDropdown').click();
+				cy.getByAutoId('TechnologyDropdown-Campus Network Assurance').click();
+				cy.wait('@getATX');
 
-		});
+				// Re-open the View All and verify the filter has been cleared
+				cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
+				cy.getByAutoId('ViewAllModal')
+					.within(() => {
+						cy.getByAutoId('ViewAllModal-PartnerMultiFilter')
+							.within(() => {
+								cy.getByAutoId('MultiSelect-SearchInput').click();
 
-		it('ATX filter "All" selection should unselect all other dropdown entries', () => {
+								// Make sure NONE of the items were selected
+								cy.getByAutoId('MultiSelect-SelectAll')
+									.should('not.have.class', 'ms-dropdown__list__item--selected');
+								for (let i = 0; i < partnerInfoBody.companyList.length; i += 1) {
+									cy.getByAutoId(`MultiSelect-ListItem${i}`)
+										.should('not.have.class', 'ms-dropdown__list__item--selected');
+								}
+							});
+					});
+			});
 
-		});
+			it('ATX filter by partner should NOT be sticky across page navigation', () => {
+				// Change tabs and change back
+				cy.getByAutoId('Facet-Assets & Coverage').click();
+				cy.getByAutoId('Facet-Lifecycle').click();
+				cy.wait('@getATX');
 
-		it('ATX filter entry selection should unselect the "All" entry', () => {
+				// Re-open the View All and verify the filter has been cleared
+				cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
+				cy.getByAutoId('ViewAllModal')
+					.within(() => {
+						cy.getByAutoId('ViewAllModal-PartnerMultiFilter')
+							.within(() => {
+								cy.getByAutoId('MultiSelect-SearchInput').click();
 
-		});
+								// Make sure NONE of the items were selected
+								cy.getByAutoId('MultiSelect-SelectAll')
+									.should('not.have.class', 'ms-dropdown__list__item--selected');
+								for (let i = 0; i < partnerInfoBody.companyList.length; i += 1) {
+									cy.getByAutoId(`MultiSelect-ListItem${i}`)
+										.should('not.have.class', 'ms-dropdown__list__item--selected');
+								}
+							});
+					});
+			});
 
-		it('ATX filter "All" selection should call API with all available options', () => {
+			it('ATX filter by partner should NOT be sticky across page reload', () => {
+				// Reload the page completely
+				cy.loadApp();
+				cy.waitForAppLoading('atxLoading');
 
+				// Re-open the View All and verify the filter has been cleared
+				cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
+				cy.getByAutoId('ViewAllModal')
+					.within(() => {
+						cy.getByAutoId('ViewAllModal-PartnerMultiFilter')
+							.within(() => {
+								cy.getByAutoId('MultiSelect-SearchInput').click();
+
+								// Make sure NONE of the items were selected
+								cy.getByAutoId('MultiSelect-SelectAll')
+									.should('not.have.class', 'ms-dropdown__list__item--selected');
+								for (let i = 0; i < partnerInfoBody.companyList.length; i += 1) {
+									cy.getByAutoId(`MultiSelect-ListItem${i}`)
+										.should('not.have.class', 'ms-dropdown__list__item--selected');
+								}
+							});
+					});
+			});
 		});
 	});
 });
