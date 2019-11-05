@@ -197,7 +197,7 @@
 				src: data.recommended.imageURL || getDefaultAtxImg(data.recommended),
 				item: data.sessions[0],
 				autoid: 'recommendedATX'
-			}"> 
+			}">
 		</ng-container>
 	</ng-container>
 	<ng-container *ngIf="data.sessions.length">
@@ -213,13 +213,13 @@
 	</ng-container>
 </ng-template>
 
-<ng-template #recommended 
-	let-src="src" 
-	let-title="title" 
+<ng-template #recommended
+	let-src="src"
+	let-title="title"
 	let-description="description"
-	let-template="template" 
-	let-autoid="autoid" 
-	let-item="item" 
+	let-template="template"
+	let-autoid="autoid"
+	let-item="item"
 	let-hoverTemplate="hoverTemplate">
 	<div class="recommended-item cx-lifecycle-card--recommended-item panel panel--bordered no-padding-top no-padding-left no-padding-right" attr.data-auto-id="{{ autoid }}">
 		<ng-container *ngTemplateOutlet="template; context: {
@@ -292,8 +292,8 @@
 			</div>
 			<div class="divider divider--compressed"></div>
 			<div class="line-clamp atx-more-popover__description" [innerText]="data.description" data-auto-id="atxMoreClickModal-Description"></div>
-			<div 
-				class="text-muted text-small atx-more-popover__provider-name" 
+			<div
+				class="text-muted text-small atx-more-popover__provider-name"
 				[innerText]="getProviderName(data)"
 				*ngIf="getProviderName(data)"
 				data-auto-id="atxMoreClickModal-Provider"
@@ -357,9 +357,9 @@
 	</div>
 </ng-template>
 
-<ng-template #recommendedATX 
-	let-item="item" 
-	let-autoid="autoid" 
+<ng-template #recommendedATX
+	let-item="item"
+	let-autoid="autoid"
 	let-src="src"
 	let-title="title"
 	let-description="description"
@@ -388,7 +388,7 @@
 			<span class="icon-flagged" attr.data-auto-id="{{ autoid }}-Flag"></span>
 			<span class="text-small" [innerText]="'_Recommended_' | i18n"></span>
 		</div>
-		<p class="text-capitalize cx-lifecycle-card__title" 
+		<p class="text-capitalize cx-lifecycle-card__title"
 			attr.data-auto-id="{{ autoid }}-Title">
 			{{ title }}
 			<ng-container *ngTemplateOutlet="hoverTemplate; context: {
@@ -828,16 +828,21 @@
 							[innerText]="'_TopicsAvailableSolution_' | i18n:selectedACC?.length || 0:componentData.params.solution:componentData.params.usecase"
 							data-auto-id="ViewAllModal-TopicsAvailable">
 						</div>
-						<div class="modal__body__filter">
-							<cui-select class="lifecycle-filter"
-								[label]="'_FilterBy_' | i18n"
-								[inline]="true"
-								data-auto-id="acc-filter"
+						<ng-container *ngIf="accview === 'grid'">
+							<multiselect [name]="'_Status_' | i18n"
 								[items]="accStatusOptions"
-								[placeholder]="getStatusOptionName(selectedFilterForACC, accStatusOptions)"
-								[(ngModel)]="selectedFilterForACC"
-								(ngModelChange)="selectFilter('ACC')">
-							</cui-select>
+								[defaultValues]="accStatusFilter"
+								(changed)="statusMultiFilter($event, 'ACC')">
+							</multiselect>
+						</ng-container>
+						<div class="base-margin-left" *ngIf="partnerList">
+							<multiselect [name]="'_ContentProvider_' | i18n"
+								[items]="partnerList"
+								nameKey="companyName"
+								valueKey="companyId"
+								[defaultValues]="selectedPartnerFilterForACC"
+								(changed)="partnerMultiFilter($event, 'ACC')">
+							</multiselect>
 						</div>
 						<div class="text-right modal__body__view-toggle">
 							<div class="btn-group btn-group--square">
@@ -1108,7 +1113,7 @@
 					<span class="text-medium" [innerText]="'_Requested_' | i18n" *ngIf="item.status === 'requested'" data-auto-id="ATXCardFooter-RequestedText"></span>
 					<div class="atx__card__feedback" *ngIf="item.status === 'completed'">
 						<session-feedback
-							[type]="AssetType.ATX"					
+							[type]="AssetType.ATX"
 							*ngIf="item.feedbackInfo"
 							[item]="item"
 						></session-feedback>
@@ -1196,7 +1201,7 @@
 					<span class="text-medium" [innerText]="'_Requested_' | i18n" *ngIf="item.status === 'requested'"></span>
 					<div class="atx__card__feedback" *ngIf="item.status === 'completed'">
 						<session-feedback
-							[type]="AssetType.ACC"					
+							[type]="AssetType.ACC"
 							*ngIf="item.feedbackInfo"
 							[item]="item"
 						></session-feedback>

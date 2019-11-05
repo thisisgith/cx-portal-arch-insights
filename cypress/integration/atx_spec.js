@@ -14,6 +14,11 @@ const scheduledItems = atxMock.getScenario('GET', '(ATX) IBN-Campus Network Assu
 
 const twoRecommendedWithPartnerItems = atxMock.getScenario('GET', '(ATX) IBN-Campus Network Assurance-Onboard-twoRecommendedWithPartner').response.body.items;
 
+// TODO: Will be used when implementing the partner filter tests
+// const partnerInfoMock = new MockService('PartnerInfoScenarios');
+// const partnerInfoScenario = partnerInfoMock.getScenario('GET', '(Lifecycle) PartnerInfoListUsingGET');
+// const partnerInfoBody = partnerInfoScenario.response.body;
+
 const atxFilters = [
 	{ filter: 'Recommended', field: 'status', value: 'recommended' },
 	{ filter: 'Scheduled', field: 'status', value: 'scheduled' },
@@ -2755,6 +2760,90 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 					expect(body.context.entityId).to.eq('ATX1');
 					expect(body.context.partnerId).to.eq('partner1');
 				});
+		});
+	});
+
+	// TODO: Fill in test cases
+	describe.skip('PBC-1041: UI: Filter ATX by Partner', () => {
+		before(() => {
+			// Disable our default getATX mocks so Cypress can catch the calls instead
+			atxMock.disable('(ATX) IBN-Campus Network Assurance-Onboard');
+		});
+
+		beforeEach(() => {
+			// Setup mocks from cypress to allow us to catch all possible ATX API
+			// calls and return a known response body
+			cy.server();
+			cy.route({
+				method: 'GET',
+				url: '/api/customerportal/racetrack/v1/atx**',
+				status: 200,
+				response: {
+					pitstop: 'Onboard',
+					solution: 'IBN',
+					usecase: 'Campus Network Assurance',
+					items: twoRecommendedWithPartnerItems,
+				},
+			}).as('getATX');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('@getATX');
+		});
+
+		after(() => {
+			// Reset our mocks to default data
+			atxMock.enable('(ATX) IBN-Campus Network Assurance-Onboard');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard');
+		});
+
+		it('Global filter by partner should update & override ATX View All filter', () => {
+
+		});
+
+		it('ATX View All filter should NOT update/override global filter', () => {
+
+		});
+
+		it('ATX filter by partner should only be sticky across View All close/re-open', () => {
+
+		});
+
+		it('ATX filter by partner "Save" button should trigger API call', () => {
+
+		});
+
+		it('Collapsing ATX filter without saving should revert to previous selection', () => {
+
+		});
+
+		it('ATX filters should support multi-selection', () => {
+
+		});
+
+		it('ATX filters should apply to and be edit-able from both card and table view', () => {
+
+		});
+
+		it('ATX filter by partner should show full list of partners from API', () => {
+
+		});
+
+		it('ATX filter "All" selection should unselect all other dropdown entries', () => {
+
+		});
+
+		it('ATX filter entry selection should unselect the "All" entry', () => {
+
+		});
+
+		it('ATX filter "All" selection should call API with all available options', () => {
+
 		});
 	});
 });

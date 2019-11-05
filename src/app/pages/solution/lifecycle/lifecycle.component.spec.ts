@@ -857,27 +857,10 @@ describe('LifecycleComponent', () => {
 			expect(de)
 				.toBeTruthy();
 
-			component.selectedFilterForACC = 'isBookmarked';
-			component.selectFilter('ACC');
-			fixture.detectChanges();
-			expect(component.selectedACC.length)
-				.toEqual(2);
-
 			component.updateBookmark(acc3, 'ACC');
 			fixture.detectChanges();
 			expect(component.componentData.acc.sessions[3].bookmark)
 				.toBeFalsy();
-
-			component.selectedFilterForACC = 'recommended';
-			component.selectFilter('ACC');
-			fixture.detectChanges();
-
-			expect(component.componentData.acc.sessions[0].bookmark)
-				.toBeFalsy();
-			expect(component.componentData.acc.sessions[0].status)
-			.toEqual('requested');
-			expect(component.selectedACC.length)
-				.toEqual(1);
 
 			const acc5 = component.componentData.acc.sessions[1];
 			expect(acc5.status)
@@ -893,11 +876,21 @@ describe('LifecycleComponent', () => {
 			expect(component.accTable.columns[1].sortDirection)
 				.toEqual('asc');
 
-			component.selectedFilterForACC = 'allTitles';
-			component.selectFilter('ACC');
+			// Test filter here
+			const partnerSelection = [
+				{
+					companyName: 'Symantec',
+					companyId: '293531',
+				},
+				{
+					companyName: 'Salesforce',
+					companyId: '293533',
+				},
+			];
+			component.partnerMultiFilter(partnerSelection, 'ACC');
 			fixture.detectChanges();
-			expect(component.selectedACC.length)
-				.toEqual(5);
+			expect(component.selectedPartnerFilterForACC.length)
+				.toEqual(2);
 
 			de = fixture.debugElement.query(By.css('.icon-close'));
 			el = de.nativeElement;
