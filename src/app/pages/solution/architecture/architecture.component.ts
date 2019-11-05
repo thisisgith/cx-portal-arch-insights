@@ -70,8 +70,6 @@ export class ArchitectureComponent implements OnInit {
 	 */
 	public ngOnInit (): void {
 		this.getCollectionId();
-		this.getExceptionsCount();
-		this.getAssetsExceptionsCount();
 		this.buildFilters();
 	}
 
@@ -84,6 +82,8 @@ export class ArchitectureComponent implements OnInit {
 		.subscribe(res => {
 			this.params.collectionId = _.get(res, 'collectionId');
 			this.loadData();
+			this.getExceptionsCount();
+			this.getAssetsExceptionsCount();
 		});
 	}
 
@@ -121,7 +121,7 @@ export class ArchitectureComponent implements OnInit {
 	/**
 	 * Initializes our visual filters
 	 */
-	private buildFilters () {
+	public buildFilters () {
 		this.filters = [
 			{
 				key: 'exceptions',
@@ -207,7 +207,7 @@ export class ArchitectureComponent implements OnInit {
 					cbpException.count = data.TotalCounts;
 					const series = [];
 
-					const High = _.get(data, 'High');
+					const High = _.get(data, 'high');
 
 					if (High && High > 0) {
 						series.push({
@@ -218,7 +218,7 @@ export class ArchitectureComponent implements OnInit {
 						});
 					}
 
-					const Medium = _.get(data, 'Medium');
+					const Medium = _.get(data, 'medium');
 
 					if (Medium && Medium > 0) {
 						series.push({
@@ -229,7 +229,7 @@ export class ArchitectureComponent implements OnInit {
 						});
 					}
 
-					const Low = _.get(data, 'Low');
+					const Low = _.get(data, 'low');
 
 					if (Low && Low > 0) {
 						series.push({

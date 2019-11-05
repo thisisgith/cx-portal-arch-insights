@@ -84,6 +84,10 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 		.subscribe(res => {
 			this.paramsType.collectionId = _.get(res, 'collection.collectionId');
 			if (this.paramsType.collectionId) {
+				const datePipe = new DatePipe('en-US');
+				this.lastCollectionTime =
+						 datePipe.transform(_.get(res, 'collection.collectionDate'),
+											 'medium');
 				this.getCBPRulesData();
 			}
 		},
@@ -138,7 +142,6 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 					key: 'bpRuleTitle',
 					name: I18n.get('_ArchitectureRuleViolated_'),
 					sortable: false,
-					template: this.riskTemplate,
 					width: '8%',
 				},
 				{
@@ -216,11 +219,9 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 			if (!data) {
 				return this.inValidResponseHandler();
 			}
-			const datePipe = new DatePipe('en-US');
 			this.isLoading = false;
 			this.totalItems = data.TotalCounts;
 			this.cbpRuleExceptions = data.BPRulesDetails;
-			this.lastCollectionTime = datePipe.transform(data.CollectionDate, 'medium');
 			this.tableEndIndex = (this.tableStartIndex + this.cbpRuleExceptions.length);
 		}, err => {
 			this.logger.error('CBP Rule Component View' +

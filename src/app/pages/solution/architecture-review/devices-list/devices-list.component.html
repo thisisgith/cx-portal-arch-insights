@@ -35,7 +35,7 @@
 					<span  innerText="{{ deviceDetails?.currentDeviceRole }}"></span>
 				</div>
 				<div class="half-padding-bottom">
-					<div class="alert fade-and-slide-top text-left alert--warning" >
+					<div class="alert fade-and-slide-top text-left alert--warning" *ngIf="failedCriteriaMessages">
 						<div class="alert__icon icon-warning-outline"></div>
 							<ng-container class="failed-criteria">
 								<div class="alert__message" >
@@ -148,7 +148,7 @@
 	}"
 	 class="qtr-margin-right icon-circle">
 	</span>
-	<span [innerText]="item?.assuranceCompliance"></span>
+	<span [innerText]="item?.dnacCompliance"></span>
 </ng-template>
 
 <ng-template #sdaReady let-item="celldata">
