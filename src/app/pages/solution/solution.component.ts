@@ -366,6 +366,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		this.racetrackInfoService.getCurrentAdoptionPercentage()
 		.pipe(
 			map((result: number) => {
+				this.selectedTechnology.usecase_adoption_percentage = result;
 				lifecycleFacet.data = {
 					gaugePercent: result,
 				};
