@@ -43,6 +43,8 @@ export class DevicesSdaComponent implements OnInit, OnChanges {
 	public sdaHardwareProductFamily: TemplateRef<any>;
 	public sdaSoftwareGridData: [];
 	public sdaHardwareGridData: [];
+	public isLoading = false;
+	public isError = false;
 	@Output() public osvCriteriaToEmit = new EventEmitter<any>();
 	@Output() public failedCriteriaToEmit = new EventEmitter<any>();
 	@Output() public deviceInfoToEmit = new EventEmitter<any>();
@@ -84,6 +86,7 @@ export class DevicesSdaComponent implements OnInit, OnChanges {
 	 * call the getdata function for Updating the Table
 	 */
 	public ngOnChanges () {
+		this.isLoading = true;
 		if (this.deviceDetails) {
 			const ipAddress = this.deviceDetails.ipAddress;
 			this.params.body = ipAddress;
@@ -96,6 +99,8 @@ export class DevicesSdaComponent implements OnInit, OnChanges {
 				this.getOptimalLinks(1),
 			)
 			.subscribe();
+		} else {
+			this.isLoading = false;
 		}
 	}
 	/**
@@ -108,6 +113,7 @@ export class DevicesSdaComponent implements OnInit, OnChanges {
 			this.params.collectionId = _.get(res, 'collection.collectionId');
 		},
 		err => {
+			this.errorHandler();
 			this.logger.error('Devices list Component View' +
 				'  : getCollectionId() ' +
 				`:: Error : (${err.status}) ${err.message}`);
@@ -128,8 +134,10 @@ export class DevicesSdaComponent implements OnInit, OnChanges {
 				const dnacDeviceDetails = results.dnacDeviceDetails;
 				this.nonOptimalLinks = dnacDeviceDetails.mtuNonOptimalLinks;
 				this.nonOptimalLinksTotalCount = dnacDeviceDetails.totalCount;
+				this.isLoading = false;
 			}),
 			catchError(err => {
+				this.errorHandler();
 				this.logger.error('Get SDA Devices : getSdaDeviceData() ' +
 					`:: Error : (${err.status}) ${err.message}`);
 
@@ -148,7 +156,7 @@ export class DevicesSdaComponent implements OnInit, OnChanges {
 			customerId: this.customerId,
 			id: this.deviceDetails.productId,
 			optimalVersion: null,
-			productFamily: '',
+			productFamily: this.deviceDetails.productFamily,
 			productId: this.deviceDetails.productId,
 			profileName: this.deviceDetails.productId,
 			recommAcceptedDate: '',
@@ -184,8 +192,10 @@ export class DevicesSdaComponent implements OnInit, OnChanges {
 				if (dnacDeviceDetails.sdaNoOfMtuNonOptimalInterfaces > 0) {
 					this.showSwitchInterface = true;
 				}
+				this.isLoading = false;
 			}),
 			catchError(err => {
+				this.errorHandler();
 				this.logger.error('Get SDA Devices : getSdaDeviceData() ' +
 					`:: Error : (${err.status}) ${err.message}`);
 
@@ -294,5 +304,12 @@ export class DevicesSdaComponent implements OnInit, OnChanges {
 	public ngOnDestroy () {
 		this.destroy$.next();
 		this.destroy$.complete();
+	}
+	/**
+	 * On Error
+	 */
+	public errorHandler () {
+		this.isLoading = false;
+		this.isError = true;
 	}
 }

@@ -41,9 +41,9 @@ function MockACC (
 				available: false,
 			},
 			providerInfo: {
-				id: 'partner1',
+				id: '293532',
 				logoURL: '',
-				name: 'Symantec',
+				name: 'Salesforce',
 			},
 		},
 		{
@@ -63,9 +63,9 @@ function MockACC (
 				thumbs: <const> 'UP',
 			},
 			providerInfo: {
-				id: 'partner1',
+				id: '293532',
 				logoURL: '',
-				name: 'Symantec',
+				name: 'Salesforce',
 			},
 		},
 		{
@@ -83,7 +83,7 @@ function MockACC (
 				available: false,
 			},
 			providerInfo: {
-				id: 'partner2',
+				id: '239533',
 				logoURL: '',
 				name: 'Logitec',
 			},
@@ -103,7 +103,7 @@ function MockACC (
 				available: false,
 			},
 			providerInfo: {
-				id: 'partner2',
+				id: '239533',
 				logoURL: '',
 				name: 'Logitec',
 			},
@@ -122,6 +122,7 @@ function MockACC (
 			feedbackInfo: {
 				available: false,
 			},
+			providerInfo: null,
 		},
 		{ },
 	];
@@ -141,7 +142,7 @@ function MockACC (
 					available: false,
 				},
 				providerInfo: {
-					id: 'partner2',
+					id: '293533',
 					logoURL: '',
 					name: 'Logitec',
 				},
@@ -541,6 +542,28 @@ export const ACCScenarios = [
 			],
 		},
 		url: `${api}?usecase=Campus Network Assurance&solution=IBN&pitstop=Onboard&customerId=${customerId}&suggestedAction=Get to know Cisco DNA Center&providerId=293531&providerId=293532`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 500,
+					description: '(ATX) IBN-Campus Network Assurance-Onboard-InProgress-Filter',
+					response: {
+						body: {
+							pitstop: 'Onboard',
+							solution: 'IBN',
+							usecase: 'Campus Network Assurance',
+							items: require('./accMockData/twoInProgress.json'),
+						},
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?usecase=Campus Network Assurance&solution=IBN&pitstop=Onboard&customerId=${customerId}&suggestedAction=Get to know Cisco DNA Center&status=in-progress`,
 		usecases: ['Use Case 1'],
 	},
 ];

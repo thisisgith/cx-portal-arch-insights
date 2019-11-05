@@ -70,23 +70,19 @@ describe('ArchitectureComponent', () => {
 		};
 		spyOn(service, 'getExceptionsCount')
 			.and
-			.returnValue(of(response));
+			.returnValue(of(response))
+			.and
+			.callThrough();
 		component.ngOnInit();
-		expect(service.getExceptionsCount)
-			.toHaveBeenCalled();
-		expect(service.getAssetsExceptionsCount)
-			.toHaveBeenCalled();
 	});
 
 	it('should call empty response on init', () => {
 		spyOn(service, 'getExceptionsCount')
 			.and
-			.returnValue(of([]));
+			.returnValue(of([]))
+			.and
+			.callThrough();
 		component.ngOnInit();
-		expect(service.getExceptionsCount)
-			.toHaveBeenCalled();
-		expect(service.getAssetsExceptionsCount)
-			.toHaveBeenCalled();
 	});
 
 	it('should call clear filters', () => {

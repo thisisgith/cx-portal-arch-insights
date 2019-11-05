@@ -247,12 +247,6 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 						template: this.softwareVersionColumn,
 						width: '300px',
 					},
-					{
-						key: 'recommendedVersion',
-						name: I18n.get('_RecommendedRelease_'),
-						sortable: false,
-						template: this.recommendedVersionColumn,
-					},
 				];
 				const securityPotentiallyAffectedTableColumns = [
 					{
@@ -276,12 +270,6 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 						sortable: true,
 						template: this.softwareVersionColumn,
 						width: '300px',
-					},
-					{
-						key: 'recommendedVersion',
-						name: I18n.get('_RecommendedRelease_'),
-						sortable: false,
-						template: this.recommendedVersionColumn,
 					},
 				];
 				// Concat the default columns with the extra columns

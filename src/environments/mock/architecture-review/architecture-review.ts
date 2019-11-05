@@ -109,7 +109,7 @@ const getDevicesSDAResponseData = {
 			ipAddress: '192.168.46.100',
 			overallCompliance: 'No',
 			pnpCompliance: 'Yes',
-			productFamily: 'N/A',
+			productFamily: 'Cisco Catalyst 9300 Series Switches',
 			productId: '7293498_NA',
 			sdaCompliance: 'Yes',
 			softwareType: 'AireOs',
@@ -579,7 +579,7 @@ export const ArchitectureReviewScenarios = [
 			],
 		},
 		url: `${api}/dnac/sdaTrends?customerId=${customerId}` +
-		`&collectionId=${collectionId}&dnacIP=${dnacIp}&collectionDate=${collectionDate}`,
+		`&collectionId=${collectionId}&dnacIp=${dnacIp}&collectionDate=${collectionDate}`,
 		usecases: ['Use Case 10'],
 	},
 ];
