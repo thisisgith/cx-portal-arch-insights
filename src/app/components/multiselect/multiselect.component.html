@@ -7,18 +7,18 @@
 		[id]="componentId"
 		class="ms-form__input"
 		(click)="!dropdownActive ? openDropdown() : null"
-		attr.data-auto-id="{{componentId}}-SearchInput">
+		data-auto-id="MultiSelect-SearchInput">
 	<span class="ms-form__toggle dropdown-chevron icon-chevron-down"
 		[class.ms-form__toggle--flipped]="dropdownActive"
 		(click)="toggleDropdown()"
-		attr.data-auto-id="{{componentId}}-DropdownToggle"></span>
+		data-auto-id="MultiSelect-DropdownToggle"></span>
 
 	<div class="ms-dropdown" *ngIf="dropdownActive">
 		<div class="ms-dropdown__list">
 			<div class="ms-dropdown__list__item"
 				[class.ms-dropdown__list__item--selected]="allSelected"
 				(click)="toggleAllOptions()"
-				attr.data-auto-id="{{componentId}}-SelectAll"
+				data-auto-id="MultiSelect-SelectAll"
 			>
 				<div [innerText]="'_All_' | i18n"></div>
 				<span class="icon-check"
@@ -29,8 +29,8 @@
 					class="ms-dropdown__list__item"
 					[class.ms-dropdown__list__item--selected]="selectedIndices.includes(i) && !allSelected"
 					(click)="toggleOption(i)"
-					attr.data-auto-id="{{componentId}}-ListItem{{i}}">
-					<div attr.data-auto-id="{{componentId}}-ListItem{{i}}Text"
+					attr.data-auto-id="MultiSelect-ListItem{{i}}">
+					<div attr.data-auto-id="MultiSelect-ListItem{{i}}Text"
 						[innerHtml]="item[nameKey]"></div>
 					<span class="icon-check"
 						*ngIf="selectedIndices.includes(i) && !allSelected"></span>
@@ -41,11 +41,11 @@
 			<button class="cx-btn"
 				(click)="save()"
 				[innerText]="'_Save_' | i18n"
-				attr.data-auto-id="{{componentId}}-SaveButton"></button>
+				data-auto-id="MultiSelect-SaveButton"></button>
 			<button class="cx-btn cx-btn--primary"
 				(click)="clear()"
 				[innerText]="'_Clear_' | i18n"
-				attr.data-auto-id="{{componentId}}-ClearButton"></button>
+				data-auto-id="MultiSelect-ClearButton"></button>
 		</div>
 	</div>
 </div>

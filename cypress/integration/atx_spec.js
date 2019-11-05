@@ -15,9 +15,9 @@ const scheduledItems = atxMock.getScenario('GET', '(ATX) IBN-Campus Network Assu
 const twoRecommendedWithPartnerItems = atxMock.getScenario('GET', '(ATX) IBN-Campus Network Assurance-Onboard-twoRecommendedWithPartner').response.body.items;
 
 // TODO: Will be used when implementing the partner filter tests
-// const partnerInfoMock = new MockService('PartnerInfoScenarios');
-// const partnerInfoScenario = partnerInfoMock.getScenario('GET', '(Lifecycle) PartnerInfoListUsingGET');
-// const partnerInfoBody = partnerInfoScenario.response.body;
+ const partnerInfoMock = new MockService('PartnerInfoScenarios');
+ const partnerInfoScenario = partnerInfoMock.getScenario('GET', '(Lifecycle) PartnerInfoListUsingGET');
+ const partnerInfoBody = partnerInfoScenario.response.body;
 
 const atxFilters = [
 	{ filter: 'Recommended', field: 'status', value: 'recommended' },
@@ -2764,7 +2764,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 	});
 
 	// TODO: Fill in test cases
-	describe.skip('PBC-1041: UI: Filter ATX by Partner', () => {
+	describe('PBC-1041: UI: Filter ATX by Partner', () => {
 		before(() => {
 			// Disable our default getATX mocks so Cypress can catch the calls instead
 			atxMock.disable('(ATX) IBN-Campus Network Assurance-Onboard');
@@ -2776,7 +2776,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			cy.server();
 			cy.route({
 				method: 'GET',
-				url: '/api/customerportal/racetrack/v1/atx**',
+				url: /.*api\/customerportal\/racetrack\/v1\/atx.*/,
 				status: 200,
 				response: {
 					pitstop: 'Onboard',
@@ -2835,11 +2835,70 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 		});
 
 		it('ATX filter "All" selection should unselect all other dropdown entries', () => {
+			// Click the View All button in the Ask the Experts panel
+			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 
+			cy.getByAutoId('ViewAllModal')
+				.within(() => {
+					// Only view within the View all selection of the ATX panel
+					cy.getByAutoId('ViewAllModal-PartnerMultiFilter').click();
+
+					// Open Partner dropdown
+					cy.getByAutoId('ViewAllModal-PartnerMultiFilter').click();
+
+					// Select other options that are not 'All' and save
+					for (let i = 1; i < partnerInfoBody.companyList.length; i += 2) {
+						cy.getByAutoId(`MultiSelect-ListItem${i}`).click();
+					}
+					cy.getByAutoId('MultiSelect-SaveButton').click();
+
+					// Reopen dropdown and select 'All'
+					cy.getByAutoId('ViewAllModal-PartnerMultiFilter').click();
+					cy.getByAutoId('MultiSelect-SelectAll').click();
+					cy.getByAutoId('MultiSelect-SaveButton').click();
+
+					// Loop through items in dropdown and confirm all other selections are not selected
+					for (let i = 1; i < partnerInfoBody.companyList.length; i += 2) {
+						cy.getByAutoId(`MultiSelect-ListItem${i}`)
+							.should('not.have.class', 'ms-dropdown__list__item--selected');
+					}
+				});
+			// Close the View All modal
+			cy.getByAutoId('ViewAllCloseModal').click();
+			cy.getByAutoId('ViewAllModal').should('not.exist');
 		});
 
 		it('ATX filter entry selection should unselect the "All" entry', () => {
+			// Click the View All button in the Ask the Experts panel
+			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 
+			cy.getByAutoId('ViewAllModal')
+				.within(() => {
+					// Open the Partner Dropdown
+					cy.getByAutoId('ViewAllModal-PartnerMultiFilter').click();
+
+					// Select All and click Save
+					cy.getByAutoId('MultiSelect-SelectAll').click();
+					cy.getByAutoId('MultiSelect-SaveButton').click();
+
+					// Reopen the dropdown
+					cy.getByAutoId('ViewAllModal-PartnerMultiFilter').click();
+
+					// Select another option from the drop down and save
+					cy.getByAutoId('MultiSelect-ListItem1').click();
+					cy.getByAutoId('MultiSelect-SaveButton').click();
+
+					// Reopen dropdown
+					cy.getByAutoId('ViewAllModal-PartnerMultiFilter').click();
+
+					// Confirm the All option is not selected (check that the class isn't there)
+					cy.getByAutoId('MultiSelect-SelectAll')
+						.should('not.have.class', 'ms-dropdown__list__item--selected');
+				});
+
+			// Close the View All modal
+			cy.getByAutoId('ViewAllCloseModal').click();
+			cy.getByAutoId('ViewAllModal').should('not.exist');
 		});
 
 		it('ATX filter "All" selection should call API with all available options', () => {
