@@ -366,9 +366,12 @@ export class RiskMitigationComponent {
 								this.highCrashRiskAssetsGridDetails.totalItems = results.count;
 								this.highCrashRiskAssetsGridDetails.tableOffset = param.page;
 
-								const first = (this.highCrashRiskParams.page * 10) + 1;
+								let first = (this.highCrashRiskParams.page * 10) + 1;
 								const last = (this.highCrashRiskParams.page * 10) +
 								this.highCrashRiskAssetsGridDetails.tableData.length;
+								if (first > this.highCrashRiskAssetsGridDetails.totalItems) {
+									first = this.highCrashRiskAssetsGridDetails.totalItems;
+								}
 								this.hcrPagination = `${first}-${last}`;
 
 							}),
