@@ -10,7 +10,7 @@ import { TagListModule } from './tag-list.module';
 import { of } from 'rxjs';
 import { configureTestSuite } from 'ng-bullet';
 
-fdescribe('TagListComponent', () => {
+describe('TagListComponent', () => {
 	let component: TagListComponent;
 	let fixture: ComponentFixture<TagListComponent>;
 
