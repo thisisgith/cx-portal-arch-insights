@@ -12,7 +12,7 @@ import { IEHealthStatusResponseModel } from '../models/iehealth-status-response-
   providedIn: 'root',
 })
 class ControlPointIEHealthStatusAPIService extends __BaseService {
-  static readonly getIEHealthStatusUsingGETPath = '/v1/ie/health-status/{customerId}';
+  static readonly getIEHealthStatusUsingGETPath = '/ie/health-status/{customerId}';
 
   constructor(
     config: __Configuration,
