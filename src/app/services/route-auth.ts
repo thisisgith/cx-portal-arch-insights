@@ -40,17 +40,16 @@ export class RouteAuthService {
 			);
 	}
 
-
 	/**
-	 * Check Rcc permission
-	 * @param customerId  customer id of logged in customer
+	 * Update permission for Rcc value
+	 * @param customerId is a string
+	 * @param optInStatus is accept
 	 * @returns Observable with response data.
 	 */
-
 	public updatePermissions (customerId: any, optlnStatus: any): __Observable<any> {
 		return this.updateHTTPGet<any>(
 			`${this.rootUrl}${this.rccPath}?` +
-			`customerId=${customerId}&isRccOpted=` +optlnStatus)
+			`customerId=${customerId}&isRccOpted=` + optlnStatus)
 			.pipe(
 				__map(_r => _r.body),
 				__map(_r => this.hasRccPermission = _r),
