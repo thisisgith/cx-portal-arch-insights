@@ -353,7 +353,6 @@ export class SolutionComponent implements OnInit, OnDestroy {
 					this.selectedTechnologyName = _.get(this.selectedTechnology, 'name');
 					_.set(this.selectedSolution.technologies,
 						{ name: this.selectedTechnologyName }, this.selectedTechnology);
-					console.log(this.selectedSolution);
 					this.reloadFacets();
 				}
 			}),
