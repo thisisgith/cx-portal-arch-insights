@@ -16,6 +16,7 @@ export interface OSVAsset {
 	productId: string;
 	recommendationCount: number;
 	recommAcceptedDate: string;
+	recommendationType?: string;
 	swType: string;
 	swVersion: string;
 	statusUpdated?: boolean;

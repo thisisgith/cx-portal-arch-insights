@@ -87,19 +87,7 @@
 	</div>
 </ng-template>
 
-<ng-template #recommendationsTemplate let-item="celldata">
-	<span 
-		*ngIf="item.recommendationStatus === 'inprogress'" 
-		class="text-primary" 
-		data-balloon-length="medium" 
-		[attr.data-balloon]="'_OsvExpertRequestInProgressTooltip_' | i18n"
-		data-auto-id="DERequestInProgress" 
-		data-balloon-pos="down">
-			<i class="icon-software-suggested icon-small"></i>
-	</span>
-	<span *ngIf="item.recommendationStatus !== 'inprogress'" class="text-primary">
-		<i class="icon-software-suggested icon-small color-transparent"></i>
-	</span>
+<ng-template #recommendationsTemplate let-item="celldata">	
 	<span class="qtr-margin-left" [innerText]="item.recommendation | titlecase"></span>
 </ng-template>
 
