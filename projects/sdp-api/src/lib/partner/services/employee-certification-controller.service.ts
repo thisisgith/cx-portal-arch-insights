@@ -47,7 +47,7 @@ class EmployeeCertificationControllerService extends __BaseService {
     if (params.Authorization != null) __headers = __headers.set('Authorization', params.Authorization.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/cxpp-partner-info/partnerInfo/v1/certificates`,
+      this.rootUrl + `/cxportal/cxpp-partner-info/partnerInfo/v1/certificates`,
       __body,
       {
         headers: __headers,
@@ -96,7 +96,7 @@ class EmployeeCertificationControllerService extends __BaseService {
     if (params.Authorization != null) __headers = __headers.set('Authorization', params.Authorization.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/cxpp-partner-info/partnerInfo/v1/certificates/count`,
+      this.rootUrl + `/cxportal/cxpp-partner-info/partnerInfo/v1/certificates/count`,
       __body,
       {
         headers: __headers,
@@ -148,7 +148,7 @@ class EmployeeCertificationControllerService extends __BaseService {
     if (params.Authorization != null) __headers = __headers.set('Authorization', params.Authorization.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/cxpp-partner-info/partnerInfo/v1/certificates/count/status`,
+      this.rootUrl + `/cxportal/cxpp-partner-info/partnerInfo/v1/certificates/count/status`,
       __body,
       {
         headers: __headers,
@@ -205,7 +205,7 @@ class EmployeeCertificationControllerService extends __BaseService {
     if (params.Authorization != null) __headers = __headers.set('Authorization', params.Authorization.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/cxpp-partner-info/partnerInfo/v1/certificates/employees`,
+      this.rootUrl + `/cxportal/cxpp-partner-info/partnerInfo/v1/certificates/employees`,
       __body,
       {
         headers: __headers,

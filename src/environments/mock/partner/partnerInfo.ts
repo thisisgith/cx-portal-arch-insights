@@ -1,7 +1,7 @@
 import { CompanyInfoList } from '@sdp-api';
 
 /** Base of URL for SDP API */
-const api = '/api/cxpp-partner-info/partnerInfo/v1/';
+const api = '/api/cxportal/cxpp-partner-info/partnerInfo/v1/';
 
 /** Default Customer ID */
 const customerId = '2431199';
