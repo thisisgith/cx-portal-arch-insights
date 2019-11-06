@@ -103,11 +103,11 @@ export class RccComponent implements OnInit, OnDestroy {
 	public errorMessage = ' ';
 	public errorPolicyView = false;
 	public policyViolationInfo = {
-		policycategory: '',
-		policygroupid: '',
-		policyname: '',
-		ruleseverity: '',
-		ruletitle: '',
+		policyCategory: '',
+		policyGroupId: '',
+		policyName: '',
+		ruleSeverity: '',
+		ruleTitle: '',
 	};
 	public selectedViolationModal = false;
 	public selectedAssetData = {
@@ -158,6 +158,7 @@ export class RccComponent implements OnInit, OnDestroy {
 	@ViewChild('policyFilter', { static: true }) private policyFilterTemplate: TemplateRef<{ }>;
 	@ViewChild('severityFilter', { static: true }) private severityFilterTemplate: TemplateRef<{ }>;
 	@ViewChild('severityColor', { static: true }) private severityColorTemplate: TemplateRef<{ }>;
+	@ViewChild('severityTemplate', { static: true }) private severityTemplate: TemplateRef<{ }>;
 	@ViewChild('ruletitleTemplate', { static: true }) private ruletitleTemplate: TemplateRef<{ }>;
 	@ViewChild('policyCategoryTooltipTemplate', { static: true })
 	private policyCategoryTooltipTemplate: TemplateRef<string>;
@@ -224,34 +225,37 @@ export class RccComponent implements OnInit, OnDestroy {
 			bordered: false,
 			columns: [
 				{
-					key: 'ruleseverity',
+					key: 'ruleSeverity',
 					name: I18n.get('_RccHighestSeverity_'),
 					sortable: true,
 					template: this.severityColorTemplate,
+					width: '13%',
 				},
 				{
-					key: 'policygroupid',
+					key: 'policyGroupName',
 					name: I18n.get('_RccRegulatoryType_'),
 					sortable: true,
 				},
 				{
 					headerTemplate:  this.policyCategoryTooltipTemplate,
-					key: 'policycategory',
+					key: 'policyCategory',
 					sortable: true,
+					width: '10%',
 				},
 				{
-					key: 'ruletitle',
+					key: 'ruleTitle',
 					name: I18n.get('_RccRuleViolated_'),
 					sortable: true,
 					template: this.ruletitleTemplate,
 				},
 				{
 					headerTemplate:  this.ruleViolationsTooltipTemplate,
-					key: 'violationcount',
+					key: 'violationCount',
 					sortable: true,
+					width: '14%',
 				},
 				{
-					key: 'impassetscount',
+					key: 'impAssetsCount',
 					name: I18n.get('_RccAffectedSystems_'),
 					sortable: true,
 				},
@@ -502,14 +506,15 @@ export class RccComponent implements OnInit, OnDestroy {
 					sortKey: 'lastScan',
 				},
 				{
-					key: 'severity',
-					name: I18n.get('_RccHighestSeverity_'),
+					headerTemplate:  this.ruleViolationsTooltipTemplate,
+					key: 'violationCount',
 					sortable: true,
 				},
 				{
-					key: 'violationCount',
-					name: I18n.get('_RccRuleViolations_'),
+					key: 'severity',
+					name: I18n.get('_RccHighestViolationSeverity_'),
 					sortable: true,
+					template: this.severityTemplate,
 				},
 			],
 			dynamicData: false,
