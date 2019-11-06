@@ -18,10 +18,6 @@ import { SessionFeedbackComponent } from './feedback/session-feedback.component'
  * The SDP Origin URL used for passing to the SDP-API Modules
  */
 const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
-/**
- * The SDP Partner API does not include '/api'
- */
-const rootUrlForPartner = environment.sdpServiceOrigin;
 
 /**
  * Child routes for Lifecycle Module for lazy loading
@@ -52,7 +48,7 @@ const childRoutes: Routes = [
 		CommunitiesModule,
 		RacetrackContentModule.forRoot({ rootUrl }),
 		RacetrackModule.forRoot({ rootUrl }),
-		PartnerModule.forRoot({ rootUrl: rootUrlForPartner }),
+		PartnerModule.forRoot({ rootUrl }),
 		RouterModule.forChild(childRoutes),
 		TooltipModule,
 		InlineSVGModule.forRoot({ baseUrl: '/' }),
