@@ -32,7 +32,7 @@ import { AssetLinkInfo } from '@interfaces';
 	templateUrl: './risk-mitigation.component.html',
 })
 export class RiskMitigationComponent {
-	public customerId: number;
+	public customerId: any;
 	public clearAllFilters = false;
 	public searchQueryInCrashGrid: String = '';
 	public searchQueryInHighCrashGrid: String = '';
@@ -562,7 +562,7 @@ export class RiskMitigationComponent {
 	 */
 	public getAssetLinkInfo (asset) {
 		this.assetParams = {
-			customerId: JSON.stringify(this.customerId),
+			customerId: this.customerId,
 			serialNumber: [asset.serialNumber],
 		};
 
