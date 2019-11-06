@@ -2762,7 +2762,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 		});
 	});
 
-	describe.only('PBC-1041: UI: Filter ATX by Partner', () => {
+	describe('PBC-1041: UI: Filter ATX by Partner', () => {
 		before(() => {
 			// Disable our default getATX mocks so Cypress can catch the calls instead
 			atxMock.disable('(ATX) IBN-Campus Network Assurance-Onboard');
@@ -3048,7 +3048,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 					});
 			});
 
-			it('ATX filters should apply to and be edit-able from both card and table view', () => {
+			it('ATX partner filter should apply to and be edit-able from both card and table view', () => {
 				// Ensure we're in card view
 				cy.getByAutoId('atx-card-view-btn').click();
 				cy.getByAutoId('ATXCard').should('exist');
