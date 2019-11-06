@@ -10,7 +10,7 @@ import { TagListModule } from './tag-list.module';
 import { of } from 'rxjs';
 import { configureTestSuite } from 'ng-bullet';
 
-describe('TagListComponent', () => {
+fdescribe('TagListComponent', () => {
 	let component: TagListComponent;
 	let fixture: ComponentFixture<TagListComponent>;
 
@@ -89,6 +89,77 @@ describe('TagListComponent', () => {
 		component.toggleTagSelected(tag);
 		expect(tag.selected)
 				.toBeTruthy();
+	});
+
+	it('should return sorted tags', () => {
+
+		const tags = [{
+			tagName: 'T2',
+			tagValue: 'TID1',
+		}, {
+			tagName: 'T1',
+			tagValue: 'TID1',
+		}, {
+			tagName: 'T3',
+			tagValue: 'TID1',
+		}, {
+			tagName: 'T4',
+			tagValue: 'TID1',
+		}] ;
+		component.searchText = '';
+
+		const sortedTags = component.sortAndFilterTags(tags);
+		expect(sortedTags[0].tagName.toLowerCase())
+		.toEqual('t1');
+
+	});
+
+	it('should return filtered tags', () => {
+
+		let tags = [{
+			tagName: 'T1',
+			tagValue: 'TID1',
+		}, {
+			tagName: 'T2',
+			tagValue: 'TID1',
+		}, {
+			tagName: 'T3',
+			tagValue: 'TID1',
+		}] ;
+		component.searchText = '1';
+		const filteredtags = component.filterTags(tags);
+		expect(filteredtags.length)
+		.toBe(1);
+
+		tags = [{
+			tagName: 'T1',
+			tagValue: 'TID1',
+		}, {
+			tagName: 'T2',
+			tagValue: 'TID1',
+		}, {
+			tagName: 'T3',
+			tagValue: 'TID1',
+		}] ;
+		component.searchText = 'T1,T2';
+		const advfilteredtags = component.filterTags(tags);
+		expect(advfilteredtags.length)
+		.toBe(2);
+
+		tags = [{
+			tagName: 'T1',
+			tagValue: 'TID1',
+		}, {
+			tagName: 'T2',
+			tagValue: 'TID1',
+		}, {
+			tagName: 'T3',
+			tagValue: 'TID1',
+		}] ;
+		component.searchText = '';
+		const alltags = component.filterTags(tags);
+		expect(alltags.length)
+		.toBe(3);
 	});
 
 });

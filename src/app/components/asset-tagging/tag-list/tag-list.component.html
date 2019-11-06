@@ -1,6 +1,6 @@
 <div #container class="list" (scroll)="refresh()">
 	<div class="list-view" [style.top]="(startIndex * rowHeight) + 'px'">
-		<div *ngFor="let tag of itemsInView | sortTags | filterTags:searchText; index as i"
+		<div *ngFor="let tag of sortAndFilterTags(itemsInView); index as i"
 			class="
                 row
                 panel
