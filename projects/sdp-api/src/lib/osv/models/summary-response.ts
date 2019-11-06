@@ -11,6 +11,6 @@ export interface SummaryResponse {
 	profiles: number;
 	asset_profile: AssetTypeCount;
 	deployment: DeploymentStatusCount;
-	recommendations: RecommendationTypeCount;
-	recommendation_status: RecommendationStatusCount;
+	recommendations?: RecommendationTypeCount;
+	recommendation_status?: RecommendationStatusCount;
 }

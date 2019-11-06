@@ -5,7 +5,7 @@
 		</div>
 
 		<div class="col-md-9">
-			<div class="global-filter" *ngIf="partnerList">
+			<div class="global-filter" *ngIf="partnerList" data-auto-id="GlobalFilter">
 				<multiselect name="Content Provider"
 					[items]="partnerList"
 					nameKey="companyName"
@@ -872,7 +872,8 @@
 								<multiselect [name]="'_Status_' | i18n"
 										[items]="atxStatusOptions"
 										[defaultValues]="atxStatusFilter"
-										(changed)="statusMultiFilter($event, 'ATX')">
+										(changed)="statusMultiFilter($event, 'ATX')"
+										data-auto-id="ViewAllModal-StatusMultiFilter">
 								</multiselect>
 							</ng-container>
 						</div>
@@ -883,7 +884,8 @@
 										nameKey="companyName"
 										valueKey="companyId"
 										[defaultValues]="selectedPartnerFilterForATX"
-										(changed)="partnerMultiFilter($event, 'ATX')">
+										(changed)="partnerMultiFilter($event, 'ATX')"
+										data-auto-id="ViewAllModal-PartnerMultiFilter">
 								</multiselect>
 							</ng-container>
 						</div>

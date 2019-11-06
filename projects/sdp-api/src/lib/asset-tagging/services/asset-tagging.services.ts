@@ -39,11 +39,11 @@ class AssetTaggingService extends __BaseService {
 	public set Tags(body) {
 		this.tags.next(body);
 	}
-
+	
 	getSelectedTags():__Observable<any> {
 		return this.tags.asObservable();
 	  }
-
+	  
 	/**
 	 * All Tags.
 	 * @param params The `AssetTaggingService.GetParams` containing the following parameters:

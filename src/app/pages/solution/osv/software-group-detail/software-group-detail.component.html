@@ -28,19 +28,6 @@
 			[innerText]="selectedSoftwareGroup?.productFamily">
 		</span>
 	</div>
-	<div *ngIf="!showDetails">
-		<button [disabled]="selectedSoftwareGroup?.recommendationStatus === 'inprogress'"	
-			(click)="openContactSupport()"
-			class="btn btn--secondary btn--wide base-padding-left base-padding-right"
-			[innerText]="'_OsvRequestExpertRecommendations_' | i18n | uppercase"
-			attr.data-auto-id="RequestExpertRecommendations">
-		</button>
-		<span class="text-primary qtr-margin-left" data-balloon-length="medium"
-			[attr.data-balloon]="'_OsvExpertRequestToolTip_' | i18n" data-auto-id="DERequestToolTip"
-			data-balloon-pos="down">
-			<i class="icon-info icon-small"></i>
-		</span>
-	</div>
 </ng-template>
 
 <ng-template #detailsHeaderTemplate>
@@ -64,15 +51,8 @@
 </ng-template>
 
 <ng-template #softwareGroupDetails>
-	<cui-tabs *ngIf="!showDetails; else detailsTemplate"  id="assetDetailTabs" [(activeTabIndex)]="tabIndex">
-		<cui-tab *ngIf="selectedSoftwareGroup?.recommendationStatus === 'inprogress' || selectedSoftwareGroup?.recommendation === 'expert' " 
-			[label]="'_OsvExpertRecommendations_' | i18n | uppercase">
-			<div class="base-margin-top">
-				<cui-spinner *ngIf="status.isLoading"></cui-spinner>
-				<ng-container *ngTemplateOutlet="expertRecommendationsTemp"></ng-container>
-			</div>
-		</cui-tab>
-		<cui-tab [label]="'_OsvAutomatedRecommendations_' | i18n | uppercase">
+	<cui-tabs *ngIf="!showDetails; else detailsTemplate"  id="assetDetailTabs" [(activeTabIndex)]="tabIndex">		
+		<cui-tab *ngIf="selectedSoftwareGroup?.recommendation === 'automated'" [label]="'_OsvAutomatedRecommendations_' | i18n | uppercase">
 			<div class="base-margin-top">
 				<cui-spinner *ngIf="status.isLoading"></cui-spinner>
 				<ng-container *ngTemplateOutlet="compareRecommendationsTemp"></ng-container>

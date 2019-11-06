@@ -75,7 +75,7 @@
 
 <!-- Templates for our Visual Filters for the Assets Tab -->
 <ng-template #totalAssetsFilter let-filter="filter">
-	<div (click)="clearFilters()" data-auto-id="TotalVisualFilter"
+	<div data-auto-id="TotalVisualFilter"
 		class="flex justify-content-around flex-column max-height">
 		<div class="row toggle text-small" (click)="selectView('swGroups')"
 			[ngClass]="{'text-primary':view == 'swGroups','text-muted':view != 'swGroups'}"
@@ -181,13 +181,6 @@
 </ng-template>
 
 <ng-template #recommendationTypeFilter let-filter="filter">
-	<div>
-		<pie-chart [width]="'255'" [height]="'130'" [seriesData]="filter.seriesData"
-			(subfilter)="onSubfilterSelect($event.filter, filter)">
-		</pie-chart>
-	</div>
-</ng-template>
-<ng-template #recommendationStatusFilter let-filter="filter">
 	<div>
 		<pie-chart [width]="'255'" [height]="'130'" [seriesData]="filter.seriesData"
 			(subfilter)="onSubfilterSelect($event.filter, filter)">
