@@ -32,7 +32,7 @@ import { AssetLinkInfo } from '@interfaces';
 	templateUrl: './risk-mitigation.component.html',
 })
 export class RiskMitigationComponent {
-	public customerId: number;
+	public customerId: any;
 	public clearAllFilters = false;
 	public searchQueryInCrashGrid: String = '';
 	public searchQueryInHighCrashGrid: String = '';
@@ -366,9 +366,12 @@ export class RiskMitigationComponent {
 								this.highCrashRiskAssetsGridDetails.totalItems = results.count;
 								this.highCrashRiskAssetsGridDetails.tableOffset = param.page;
 
-								const first = (this.highCrashRiskParams.page * 10) + 1;
+								let first = (this.highCrashRiskParams.page * 10) + 1;
 								const last = (this.highCrashRiskParams.page * 10) +
 								this.highCrashRiskAssetsGridDetails.tableData.length;
+								if (first > this.highCrashRiskAssetsGridDetails.totalItems) {
+									first = this.highCrashRiskAssetsGridDetails.totalItems;
+								}
 								this.hcrPagination = `${first}-${last}`;
 
 							}),
@@ -562,7 +565,7 @@ export class RiskMitigationComponent {
 	 */
 	public getAssetLinkInfo (asset) {
 		this.assetParams = {
-			customerId: JSON.stringify(this.customerId),
+			customerId: this.customerId,
 			serialNumber: [asset.serialNumber],
 		};
 

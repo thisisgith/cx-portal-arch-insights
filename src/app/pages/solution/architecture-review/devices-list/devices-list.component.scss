@@ -9,6 +9,10 @@
 	background: $white;
 }
 
+.icon-warning-outline {
+	color: $warning;
+}
+
 .form-group__text .devices-list-search {
 	@include filter-search;
 }
