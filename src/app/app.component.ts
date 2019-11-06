@@ -13,6 +13,7 @@ import { environment } from '@environment';
 import { setOptions } from 'highcharts';
 import { UserResolve } from '@utilities';
 import { User } from '@interfaces';
+import { EntitlementService } from '@sdp-api';
 import { AppService } from 'src/app/app.service';
 import * as _ from 'lodash-es';
 
@@ -38,6 +39,7 @@ export class AppComponent {
 		private router: Router,
 		private userResolve: UserResolve,
 		private appService: AppService,
+		private entitlementService: EntitlementService,
 	) {
 		setOptions({ lang: { thousandsSep: ',' } });
 
@@ -61,6 +63,10 @@ export class AppComponent {
 					this.appService.addRouteToList(url);
 				}
 			},
+		);
+
+		this.entitlementService.getNewUser().subscribe(
+			data => console.log('new data: ', data)
 		);
 
 		this.userResolve.getUser()

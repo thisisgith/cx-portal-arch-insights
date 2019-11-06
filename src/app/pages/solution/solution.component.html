@@ -51,12 +51,29 @@
 	<div class="container">
 		<div class="cs flex flex-fluid flex-center-vertical">
 			<div data-auto-id="HomeButton" class="cs__home" inlineSVG="assets/icons/icon-home.svg" (click)="goHome()"></div>
+			<div class="cs__next-icon" inlineSVG="assets/icons/icon-arrow-breadcrumb.svg" *ngIf="selectedSmartAccount"></div>
+			<div *ngIf="showSmartAccountSelection">
+				<div class="group-label" [innerText]="'_SmartAccount_' | i18n"></div>
+				<div class="dropdown" data-auto-id="SmartAccountDropdown"
+					[ngClass]="{'active': status.dropdowns.smartAccount }"
+					(click)="changeDropdownSelection('smartAccount')">
+					<a class="text-color-dkgray text-size-18" [innerText]="selectedSmartAccount.companyName"></a>
+					<div class="dropdown__menu">
+						<a *ngFor="let smartAccount of smartAccounts"
+							attr.data-auto-id="SmartAccountDropdown-{{ smartAccount.companyName }}"
+							(click)="changeSmartAccount(smartAccount)"
+							[ngClass]="{'selected': selectedSmartAccount.companyName === smartAccount.companyName}">
+							{{ smartAccount.companyName }}
+						</a>
+					</div>
+				</div>
+			</div>
 			<div class="cs__next-icon" inlineSVG="assets/icons/icon-arrow-breadcrumb.svg"></div>
 			<div *ngIf="selectedSolution">
 				<div class="group-label" [innerText]="'_SuccessTrack_' | i18n"></div>
 				<div class="dropdown" data-auto-id="SolutionDropdown"
-					[ngClass]="{'active': solutionDropdown }"
-					(click)="useCaseDropdown = false; solutionDropdown = !solutionDropdown">
+					[ngClass]="{'active': status.dropdowns.solution }"
+					(click)="changeDropdownSelection('solution')">
 					<a class="text-color-dkgray text-size-18" [innerText]="selectedSolution.name"></a>
 					<div class="dropdown__menu">
 						<a *ngFor="let solution of solutions" attr.data-auto-id="SolutionDropdown-{{ solution.name }}"
@@ -70,8 +87,8 @@
 			<div class="cs__next-icon" inlineSVG="assets/icons/icon-arrow-breadcrumb.svg" *ngIf="selectedTechnology"></div>
 			<div *ngIf="selectedTechnology">
 				<div class="group-label" [innerText]="'_UseCase_' | i18n"></div>
-				<div class="dropdown" data-auto-id="UseCaseDropdown" [ngClass]="{'active': useCaseDropdown }"
-					(click)="solutionDropdown = false; useCaseDropdown = !useCaseDropdown">
+				<div class="dropdown" data-auto-id="UseCaseDropdown" [ngClass]="{'active': status.dropdowns.technology }"
+					(click)="changeDropdownSelection('technology')">
 					<a class="text-color-dkgray text-size-18" [innerText]="selectedTechnology.name">
 					</a>
 					<div class="dropdown__menu">

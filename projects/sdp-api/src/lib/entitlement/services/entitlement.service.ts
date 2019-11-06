@@ -5,7 +5,7 @@ import { BaseService as __BaseService } from '../../core/base-service';
 import { EntitlementConfiguration as __Configuration } from '../entitlement-configuration';
 import { StrictHttpResponse as __StrictHttpResponse } from '../../core/strict-http-response';
 import { Observable as __Observable } from 'rxjs';
-import { map as __map, filter as __filter } from 'rxjs/operators';
+import { map as __map, filter as __filter, tap } from 'rxjs/operators';
 
 import { User } from '../models/user';
 import { Affiliation } from '../models/affiliation';
@@ -24,6 +24,32 @@ class EntitlementService extends __BaseService {
     http: HttpClient
   ) {
     super(config, http);
+  }
+
+  getNewUser(): __Observable<__StrictHttpResponse<User>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    let reqz = new HttpRequest<any>(
+      'GET',
+      this.rootUrl + `/cxportal/cxpp-entitlement-wrapper/v1/entitlement/user/accounts?accountType=CUSTOMER`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      });
+
+    return this.http.request<any>(reqz).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<User>;
+      }),
+      tap(_r => {
+        console.log('BRAND NEW API: ', _r)
+      })
+    );
   }
 
   /**
@@ -57,9 +83,112 @@ class EntitlementService extends __BaseService {
    * Returns information for this user (identified by the request credentials once the user logs in to the portal via ccoId). This includes the user's role and party affiliation
    * @return successful operation
    */
-  getUser(): __Observable<User> {
+  getUserz(): __Observable<User> {
     return this.getUserResponse().pipe(
       __map(_r => _r.body as User)
+    );
+  }
+
+  getUser(): __Observable<User> {
+    return this.getUserResponse().pipe(
+      __map(_r => {
+        // TODO: Undo temp changes
+        const mockCompanyList = {
+          companyList: [
+            {
+              companyName: 'Verizon',
+              companyId: 100117,
+              domainIdentifier: 'verizon.com',
+              accountType: 'CUSTOMER',
+              roleList: [
+                {
+                  roleName: 'AccountAdmin',
+                  roleDisplayName: 'Smart Account Administrator',
+                  tenant: 'SMARTACC',
+                  tenantDisplayName: 'Smart Account Management',
+                  attribType: null,
+                  attribValue: null,
+                  attribName: null
+                }
+              ]
+            },
+            {
+              companyName: 'Presidio Networked Solutions',
+              companyId: 100527,
+              domainIdentifier: 'presidio.com',
+              accountType: 'HOLDING',
+              roleList: [
+                {
+                  roleName: 'AccountAdmin',
+                  roleDisplayName: 'Smart Account Administrator',
+                  tenant: 'SMARTACC',
+                  tenantDisplayName: 'Smart Account Management',
+                  attribType: null,
+                  attribValue: null,
+                  attribName: null
+                }
+              ]
+            },
+            {
+              companyName: 'CISCO SYSTEMS INC - CREDIT CARD',
+              companyId: 293532,
+              domainIdentifier: 'ppadmin.cisco.com',
+              accountType: 'HOLDING',
+              roleList: [
+                {
+                  roleName: 'AccountAdmin',
+                  roleDisplayName: 'Smart Account Administrator',
+                  tenant: 'SMARTACC',
+                  tenantDisplayName: 'Smart Account Management',
+                  attribType: null,
+                  attribValue: null,
+                  attribName: null
+                },
+                {
+                  roleName: 'AccountApprover',
+                  roleDisplayName: 'Smart Account Approver',
+                  tenant: 'SMARTACC',
+                  tenantDisplayName: 'Smart Account Management',
+                  attribType: null,
+                  attribValue: null,
+                  attribName: null
+                }
+              ]
+            },
+            {
+              companyName: 'AMDOCS BCS INC',
+              companyId: 294166,
+              domainIdentifier: 'cxpartner-stage.cisco.com',
+              accountType: 'CUSTOMER',
+              roleList: [
+                {
+                  roleName: 'AccountApprover',
+                  roleDisplayName: 'Smart Account Approver',
+                  tenant: 'SMARTACC',
+                  tenantDisplayName: 'Smart Account Management',
+                  attribType: null,
+                  attribValue: null,
+                  attribName: null
+                },
+                {
+                  roleName: 'AccountAdmin',
+                  roleDisplayName: 'Smart Account Administrator',
+                  tenant: 'SMARTACC',
+                  tenantDisplayName: 'Smart Account Management',
+                  attribType: null,
+                  attribValue: null,
+                  attribName: null
+                }
+              ]
+            }
+          ]
+        }
+        return {
+          accessLevel: 2,
+          ..._r.body,
+          ...mockCompanyList
+        } as User;
+      })
     );
   }
 

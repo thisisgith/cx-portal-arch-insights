@@ -6,7 +6,7 @@ import { User } from '@interfaces';
 const customerId = '2431199';
 
 /** api for user info */
-const userApi = '/api/customerportal/entitlement/v1/user';
+const userApi = '/apiz/customerportal/entitlement/v1/user';
 
 /** api for service-info */
 const serviceApi1 = `/api/customerportal/entitlement/v1/party/service-info/${customerId}`;

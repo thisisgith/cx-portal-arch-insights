@@ -1,0 +1,727 @@
+swagger: '2.0'
+info:
+  description: CDX API Services
+  version: v1
+  title: API Services
+  termsOfService: ''
+  contact:
+    email: htrevino@cisco.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+host: 'api.cisco.com'
+# basePath: /cxpp-entitlement-wrapper
+paths:
+  /api/customerportal/entitlement/v1/user:
+    get:
+      tags:
+        - Org - User
+      summary: Returns information for this user (identified by the request credentials once the user logs in to the portal via ccoId). This incldues the user's role and party affiliation
+      description: Returns information for this user (identified by ccoId). This incldues the user's role and party affiliation
+      parameters:
+        - in: header
+          name: saId
+          type: number
+          format: int64
+          required: true
+        - in: header
+          name: vaId
+          type: number
+          format: int64
+          required: false
+      operationId: getUserByToken
+      produces:
+        - application/json
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/EntitlementResponse'
+        500:
+          description: '500 response'
+        401:
+          description: '401 response'
+        403:
+          description: '403 response'
+
+  /api/customerportal/entitlement/v2/user:
+    get:
+      tags:
+        - Org - User
+      summary: New version of the /v1/user API.
+      description: Returns information for this user (identified by ccoId). This incldues the user's role and party affiliation
+      parameters:
+        - in: header
+          name: CX-Context
+          type: string
+          schema:
+            example: {"customerId": "0000", "saId": "0000", "vaId": "0000"}
+          required: false
+        - in: header
+          name: saId
+          type: string
+          required: true
+        - in: header
+          name: vaId
+          type: number
+          required: true
+        - in: header
+          name: customerId
+          type: string
+          required: true
+      operationId: getUserV2
+      produces:
+        - application/json
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/EntitlementResponse'
+        500:
+          description: '500 response'
+        401:
+          description: '401 response'
+        403:
+          description: '403 response'
+
+  '/v1/entitlement/authorize/user-sa/{companyId}':
+    get:
+      tags:
+        - entitlement-controller
+      summary: Authorize the User and companyId combination
+      operationId: authorize-sa
+      produces:
+        - '*/*'
+      parameters:
+        - name: Authorization
+          in: header
+          description: Mashery user credential header
+          required: false
+          type: string
+        - name: companyId
+          in: path
+          description: Company Id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: boolean
+        '400':
+          description: Incorrect Request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Operation forbidden due to business policies
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '404':
+          description: Not Found
+        '500':
+          description: Error while fetching user accounts
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      deprecated: false
+  /v1/entitlement/company/cxlevels-methods:
+    get:
+      tags:
+        - entitlement-controller
+      summary: Company CXLevels and CXLevel methods
+      operationId: company-methods
+      produces:
+        - '*/*'
+      parameters:
+        - name: Authorization
+          in: header
+          description: Mashery user credential header
+          required: false
+          type: string
+        - name: smartAccount
+          in: query
+          description: Smart Account ID
+          required: true
+          type: string
+          allowEmptyValue: false
+        - name: virtualAccount
+          in: header
+          description: Virtual Account ID
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/CompanyCXLevelsAndMethodsResponse'
+        '400':
+          description: Incorrect Request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Operation forbidden due to business policies
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '404':
+          description: Not Found
+        '500':
+          description: Error while fetching user virtual accounts
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      deprecated: false
+  /v1/entitlement/user/accounts:
+    get:
+      tags:
+        - entitlement-controller
+      summary: User Accounts for given user. This will filter accounts by account type
+      operationId: user-accounts
+      produces:
+        - '*/*'
+      parameters:
+        - name: Authorization
+          in: header
+          description: Mashery user credential header
+          required: false
+          type: string
+        - name: accountType
+          in: query
+          description: |-
+            Account Type  
+             ALL - provides all the accounts user associated 
+            HOLDING - provides only partner accounts 
+            CUSTOMER - provides only customer accounts 
+            VIRTUAL - provides smartaccounts where user associated to virtual account role only
+          required: false
+          type: string
+          allowEmptyValue: false
+          enum:
+            - ALL
+            - CUSTOMER
+            - HOLDING
+            - VIRTUAL
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/UserEntitlement'
+        '400':
+          description: Incorrect Request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Operation forbidden due to business policies
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '404':
+          description: Not Found
+        '500':
+          description: Error while fetching user accounts
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      deprecated: false
+  /v1/entitlement/user/methods:
+    get:
+      tags:
+        - entitlement-controller
+      summary: User role level methods
+      operationId: user-methods
+      produces:
+        - '*/*'
+      parameters:
+        - name: Authorization
+          in: header
+          description: Mashery user credential header
+          required: false
+          type: string
+        - name: smartAccount
+          in: query
+          description: Smart Account ID
+          required: true
+          type: string
+          allowEmptyValue: false
+        - name: virtualAccount
+          in: header
+          description: Virtual Account ID
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/UserMethodsResponse'
+        '400':
+          description: Incorrect Request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Operation forbidden due to business policies
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '404':
+          description: Not Found
+        '500':
+          description: Error while fetching user virtual accounts
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      deprecated: false
+  /v1/entitlement/user/profile:
+    get:
+      tags:
+        - entitlement-controller
+      summary: User Profile details from CPR/Identity. Response coming currently from SAAdmin APIs and they CPR as source
+      operationId: profile
+      produces:
+        - '*/*'
+      parameters:
+        - name: Authorization
+          in: header
+          description: Mashery user credential header
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/User'
+        '400':
+          description: Incorrect Request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Operation forbidden due to business policies
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '404':
+          description: Not Found
+        '500':
+          description: Error while fetching user profile
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      deprecated: false
+  '/v1/entitlement/{companyId}/users':
+    get:
+      tags:
+        - entitlement-controller
+      summary: Company users
+      operationId: company-users
+      produces:
+        - '*/*'
+      parameters:
+        - name: Authorization
+          in: header
+          description: Mashery user credential header
+          required: false
+          type: string
+        - name: companyId
+          in: path
+          description: Smart Account ID
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Users'
+        '400':
+          description: Incorrect Request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Operation forbidden due to business policies
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '404':
+          description: Not Found
+        '500':
+          description: Error while fetching user virtual accounts
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      deprecated: false
+definitions:
+  TeamAccount:
+    type: object
+    properties:
+      team:
+        type: array
+        items:
+          $ref: '#/definitions/CiscoTeamMember'
+
+  CiscoTeamMember:
+    type: object
+    properties:
+      ccoId:
+        type: string
+      emailAddress:
+        type: string
+      familyName:
+        type: string
+      name:
+        type: string
+      phone:
+        type: string
+      title:
+        type: string
+
+  DataCenterInfo:
+        type: object
+        required:
+          - solution, useCase, cxLevel
+        properties:
+          dataCenter:
+            type: string
+            description: The code for the data center where the customer's data resides
+          apiDoman:
+            type: string
+            description: The API URL for the DC
+
+  EntitlementMethods:
+    type: object
+    properties:
+      methods:
+        type: array
+        items:
+          type: string
+
+  SubscribedServiceLevels:
+        type: object
+        required:
+          - serviceLineName, cxLevel
+        properties:
+          serviceLineName:
+            type: string
+            description: GSP Name
+          cxLevel:
+            type: string
+            description: The highest CX service level (e.g. 1, 2) for customer
+
+
+  EntitlementResponse:
+    type: object
+    properties:
+      orgName:
+        type: string
+        description: The name of the organization. Not available for LA, use information from account API
+      customerId:
+        type: string
+        description: This is the party identifier used throughout the system
+      cxBUId:
+        type: string
+        description: The CX BUId to which the user with the admin role is affilated. The value set for the admin role is propagated to other users so it can be looked up when any user logs in. The CXBUId is used to retrieve the lifecycle data from CSDF
+
+      individualAccount:
+        type: object
+        properties:
+
+          ccoId:
+            type: string
+            description: Individual's CCO Id
+          saId:
+            type: string
+            description: This is the Smart Account Id
+          vaId:
+           type: string
+           description: This is the Virtual Account Id
+
+          role:
+            type: string
+            description: The role assigned to this user under the specified SA or VA. Not populated for LA. Use role from accounts API
+
+          userMethods:
+             type: array
+             items:
+              type: string
+      account:
+        $ref: '#/definitions/TeamAccount'
+      subscribedServiceLevel:
+          $ref: '#/definitions/SubscribedServiceLevels'
+      dataCenter:
+        $ref: '#/definitions/DataCenterInfo'
+  BusinessProcessName:
+    type: object
+    properties:
+      businessProcessName:
+        type: string
+    title: BusinessProcessName
+  Company:
+    type: object
+    properties:
+      accountType:
+        type: string
+        enum:
+          - ALL
+          - CUSTOMER
+          - HOLDING
+          - VIRTUAL
+      companyId:
+        type: integer
+        format: int64
+      companyName:
+        type: string
+      domainIdentifier:
+        type: string
+      roleList:
+        type: array
+        items:
+          $ref: '#/definitions/Role'
+    title: Company
+  CompanyCXLevelsAndMethods:
+    type: object
+    properties:
+      businessProcessDetail:
+        type: array
+        items:
+          $ref: '#/definitions/BusinessProcessName'
+      cxLevel:
+        type: string
+      methods:
+        type: array
+        items:
+          type: string
+      parentContainerId:
+        type: string
+      serviceLineName:
+        type: string
+    title: CompanyCXLevelsAndMethods
+  CompanyCXLevelsAndMethodsResponse:
+    type: object
+    properties:
+      code:
+        type: string
+      currentPage:
+        type: integer
+        format: int64
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/CompanyCXLevelsAndMethods'
+      message:
+        type: string
+      perPage:
+        type: integer
+        format: int64
+      status:
+        type: string
+      timestamp:
+        type: string
+      totalEntries:
+        type: integer
+        format: int64
+    title: CompanyCXLevelsAndMethodsResponse
+  ErrorResponse:
+    type: object
+    properties:
+      message:
+        type: string
+      reason:
+        $ref: '#/definitions/Reason'
+      status:
+        type: integer
+        format: int32
+    title: ErrorResponse
+  Reason:
+    type: object
+    properties:
+      errorCode:
+        type: string
+      errorInfo:
+        type: string
+    title: Reason
+  Role:
+    type: object
+    properties:
+      attribName:
+        type: string
+      attribType:
+        type: string
+      attribValue:
+        type: string
+      roleDisplayName:
+        type: string
+      roleName:
+        type: string
+      tenant:
+        type: string
+      tenantDisplayName:
+        type: string
+    title: Role
+  SARole:
+    type: object
+    properties:
+      role:
+        type: string
+      roleDisplayName:
+        type: string
+      tenant:
+        type: string
+      tenantDisplayName:
+        type: string
+      type_1:
+        type: string
+      value_1:
+        type: string
+    title: SARole
+  SAUser:
+    type: object
+    properties:
+      accessLevel:
+        type: integer
+        format: int32
+      address:
+        type: string
+      billToIds:
+        type: array
+        items:
+          type: string
+      ccoId:
+        type: string
+      companyName:
+        type: string
+      emailAddress:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      phone:
+        type: string
+      prefCompany:
+        type: string
+      prefLanguage:
+        type: string
+      requestedBy:
+        type: string
+      status:
+        type: string
+      telephone:
+        type: string
+    title: SAUser
+  User:
+    type: object
+    properties:
+      accessLevel:
+        type: string
+      billToIds:
+        type: array
+        items:
+          type: string
+      city:
+        type: string
+      company:
+        type: string
+      country:
+        type: string
+      dplAddressFlag:
+        type: string
+      emailId:
+        type: string
+      encryptSwAccess:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      prefLanguage:
+        type: string
+      state:
+        type: string
+      street:
+        type: string
+      telephone:
+        type: string
+      userId:
+        type: string
+      userTitle:
+        type: string
+      zipCode:
+        type: string
+    title: User
+  UserEntitlement:
+    type: object
+    properties:
+      companyList:
+        type: array
+        items:
+          $ref: '#/definitions/Company'
+      env:
+        type: string
+      internalAssignableRoleList:
+        type: array
+        items:
+          $ref: '#/definitions/Role'
+      internalRoleList:
+        type: array
+        items:
+          $ref: '#/definitions/Role'
+      locale:
+        type: string
+      user:
+        $ref: '#/definitions/User'
+    title: UserEntitlement
+  UserMethods:
+    type: object
+    properties:
+      childContainerId:
+        type: string
+      methods:
+        type: array
+        items:
+          type: string
+      parentContainerId:
+        type: string
+    title: UserMethods
+  UserMethodsResponse:
+    type: object
+    properties:
+      code:
+        type: string
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/UserMethods'
+      message:
+        type: string
+      status:
+        type: string
+      timestamp:
+        type: string
+    title: UserMethodsResponse
+  UserRoles:
+    type: object
+    properties:
+      roles:
+        type: array
+        items:
+          $ref: '#/definitions/SARole'
+      user:
+        $ref: '#/definitions/SAUser'
+    title: UserRoles
+  Users:
+    type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/UserRoles'
+      errCode:
+        type: string
+      errMsg:
+        type: string
+      status:
+        type: string
+      totalRows:
+        type: integer
+        format: int32
+    title: Users

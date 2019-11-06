@@ -36,6 +36,7 @@ import { catchError, map, takeUntil } from 'rxjs/operators';
 import { Step } from '../../../../src/app/components/quick-tour/quick-tour.component';
 import { DetailsPanelStackService, UtilsService, RacetrackInfoService } from '@services';
 import { HttpResponse } from '@angular/common/http';
+import { SmartAccount, AccessLevel } from '@interfaces';
 
 /**
  * Interface representing a facet
@@ -59,7 +60,10 @@ interface Facet {
 	templateUrl: './solution.component.html',
 })
 export class SolutionComponent implements OnInit, OnDestroy {
-
+	public smartAccounts: SmartAccount[];
+	public selectedSmartAccount: SmartAccount;
+	public showSmartAccountSelection: boolean;
+	public accessLevel: number;
 	public selectedFacet: Facet;
 	public selectedSolution: RacetrackSolution;
 	public selectedTechnology: RacetrackTechnology;
@@ -69,6 +73,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 
 	public status = {
 		dropdowns: {
+			smartAccount: false,
 			solution: false,
 			technology: false,
 		},
@@ -114,6 +119,30 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		private insightsCrashesService: InsightsCrashesService,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
+		console.log('userzz: ', user);
+		const companyList = _.get(user, ['info', 'companyList'], []);
+		this.accessLevel = _.get(user, ['info', 'accessLevel'], 0);
+		this.smartAccounts = companyList.filter(
+			(_sa: SmartAccount) => _sa.accountType === 'CUSTOMER');
+		// Show Smart Account Selection only if the user is a customer and
+		// they have multiple smart accounts
+		this.showSmartAccountSelection = (this.accessLevel === AccessLevel.CUSTOMER &&
+			this.smartAccounts.length && this.smartAccounts.length > 1);
+		if (this.accessLevel === AccessLevel.CUSTOMER && this.smartAccounts.length) {
+			// If available, retrieve and set `selectedSmartAccount` from local storage.
+			// If not, default to the first smart account in user's list.
+			const currentSmartAccountId = Number(
+				window.localStorage.getItem('currentSmartAccount'));
+			if (currentSmartAccountId) {
+				this.selectedSmartAccount = _.find(this.smartAccounts, {
+					companyId: currentSmartAccountId,
+				});
+			}
+			if (!this.selectedSmartAccount) {
+				this.selectedSmartAccount = this.smartAccounts[0];
+			}
+		}
+
 		this.customerId = _.get(user, ['info', 'customerId']);
 		this.cxLevel = _.get(user, ['service', 'cxLevel'], 0);
 		this.eventsSubscribe = this.router.events.subscribe(
@@ -303,6 +332,28 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		if (topTechnology) {
 			this.changeTechnology(topTechnology);
 		}
+	}
+
+	/**
+	 * Change the smart account
+	 * @param smartAccount the selected smart account
+	 */
+	public changeSmartAccount (smartAccount: SmartAccount) {
+		this.selectedSmartAccount = smartAccount;
+		window.localStorage.setItem('currentSmartAccount', smartAccount.companyId.toString());
+	}
+
+	/**
+	 * Update the dropdown information in status
+	 * @param selectedDropdown the selected dropdown option
+	 */
+	public changeDropdownSelection (selectedDropdown: 'smartAccount' | 'solution' | 'technology') {
+		this.status.dropdowns = {
+			smartAccount: false,
+			solution: false,
+			technology: false,
+			[selectedDropdown]: !this.status.dropdowns[selectedDropdown],
+		};
 	}
 
 	/**

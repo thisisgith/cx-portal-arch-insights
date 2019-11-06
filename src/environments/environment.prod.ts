@@ -82,8 +82,8 @@ export const environment = {
 	sdpServiceOrigin: 'https://api.cisco.com',
 	sdpServicePaths: {
 		contracts: '/api/usa/v1/contracts',
-		controlpoints: '/api/usa/customerportal/controlpoint',
 		customerportal: '/api/usa/customerportal',
+		cxportal: '/api/cxportal',
 		inventory: '/api/usa/v1/inventory',
 	},
 	// ClientSSOInterceptor: No auth token for the typeahead url
