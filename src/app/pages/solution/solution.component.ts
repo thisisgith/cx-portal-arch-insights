@@ -350,6 +350,8 @@ export class SolutionComponent implements OnInit, OnDestroy {
 			map((result: RacetrackTechnology) => {
 				if (this.selectedTechnologyName !== _.get(result, 'name')) {
 					this.selectedTechnology = result;
+					_.set(this.selectedSolution.technologies,
+						{ name: this.selectedTechnologyName }, this.selectedTechnology);
 					this.selectedTechnologyName = _.get(this.selectedTechnology, 'name');
 					this.reloadFacets();
 				}
