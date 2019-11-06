@@ -39,7 +39,7 @@ class CiscoContactsApiControllerService extends __BaseService {
     if (Authorization != null) __headers = __headers.set('Authorization', Authorization.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/cxpp-partner-info/partnerInfo/v1/cisco-contacts/webex-token`,
+      this.rootUrl + `/cxportal/cxpp-partner-info/partnerInfo/v1/cisco-contacts/webex-token`,
       __body,
       {
         headers: __headers,
@@ -83,7 +83,7 @@ class CiscoContactsApiControllerService extends __BaseService {
     if (params.Authorization != null) __headers = __headers.set('Authorization', params.Authorization.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/cxpp-partner-info/partnerInfo/v1/cisco-contacts/${params.partnerId}`,
+      this.rootUrl + `/cxportal/cxpp-partner-info/partnerInfo/v1/cisco-contacts/${params.partnerId}`,
       __body,
       {
         headers: __headers,
