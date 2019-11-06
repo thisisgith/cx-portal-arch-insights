@@ -557,7 +557,7 @@ export class RccComponent implements OnInit, OnDestroy {
 				loading: true,
 				seriesData: [],
 				template: this.severityFilterTemplate,
-				title: I18n.get('_RccHighestSeverity_'),
+				title: I18n.get('_RccHighestViolationSeverity_'),
 			},
 		];
 	}
