@@ -867,7 +867,7 @@
 						<div class="text-left modal__body__topics cx-text-default"
 							[innerText]="'_TopicsAvailableSolution_' | i18n:selectedATX?.length || 0:componentData.params.solution:componentData.params.usecase" data-auto-id="ATXTopicsAvailable">
 						</div>
-						<div class="base-margin-right">
+						<div class="base-margin-right" *ngIf="atxview === 'grid'">
 							<ng-container class="modal__body__filter">
 								<multiselect [name]="'_Status_' | i18n"
 										[items]="atxStatusOptions"
