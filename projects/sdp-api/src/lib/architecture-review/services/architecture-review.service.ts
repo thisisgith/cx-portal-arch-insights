@@ -42,18 +42,18 @@ class ArchitectureReviewService extends __BaseService {
    * @return successful operation
    */
   getDevicesListResponse(params: any): __Observable<__StrictHttpResponse<any>> {
-    console.log(params);
+
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
 
     if (params.page != null) __params = __params.set('page', params.page.toString());
     if (params.pageSize != null) __params = __params.set('pageSize', params.pageSize.toString());
-    if (params.filterBy != null) __params = __params.set('filterBy', params.filterBy);
+    if (params.filterBy != null) __params = __params.set('complianceValue', params.filterBy);
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     if (params.collectionId != null) __params = __params.set('collectionId', params.collectionId.toString());
     if (params.searchText != null) __params = __params.set('searchText', params.searchText.toString());
-    if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
+    if (params.complianceType != null) __params = __params.set('complianceType', params.complianceType.toString());
 
 
     // (params.contractNumber || []).forEach(val => {if (val != null) __params = __params.append('contractNumber', val.toString())});

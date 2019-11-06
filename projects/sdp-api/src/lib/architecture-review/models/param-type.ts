@@ -1,12 +1,13 @@
 /*  tslint:disable */
 export interface IParamType {
     collectionId ?: string;
+    complianceType ? : string;
     customerId ?: string;
     page ?: number;
     pageSize ?: number;
     searchText ?: string;
-	deviceCompliance ?: string;
-	deviceIp ?: string;
+	  deviceCompliance ?: string;
+	  deviceIp ?: string;
     body ?: Array<string>;
     filterBy ?: string;
     useCase ? : string;

@@ -72,12 +72,12 @@ export class DevicesListComponent implements OnInit, OnChanges {
 
 	public paramsType: IParamType = {
 		collectionId: '',
-		customerId : '',
+		complianceType: '',
+		customerId: '',
 		filterBy: '',
 		page: 0,
 		pageSize: 10,
 		searchText: '',
-		useCase: '',
 	};
 
 	/**
@@ -100,7 +100,7 @@ export class DevicesListComponent implements OnInit, OnChanges {
 			const isClearAllSelected = _.get(selectedFilter, 'isClearAllSelected');
 			const useCase = _.get(selectedFilter, 'title');
 			this.paramsType.filterBy = compliantType ? compliantType : '';
-			this.paramsType.useCase = useCase ? useCase.toString() : '';
+			this.paramsType.complianceType = useCase ? useCase.toString() : '';
 			if (isClearAllSelected) {
 				this.paramsType.searchText = '';
 				this.searchText = '';
