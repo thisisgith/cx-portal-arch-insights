@@ -103,17 +103,17 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 		if (policyViolationInfo) {
 			this.queryParamMapObj = {
 				customerId: this.customerId,
-				policyCategory: this.policyViolationInfo.policycategory,
-				policyGroup: this.policyViolationInfo.policygroupid,
-				policyName: this.policyViolationInfo.policyid,
-				ruleName: this.policyViolationInfo.ruleid,
-				severity: this.policyViolationInfo.ruleseverity,
+				policyCategory: this.policyViolationInfo.policyCategory,
+				policyGroup: this.policyViolationInfo.policyGroupId,
+				policyName: this.policyViolationInfo.policyId,
+				ruleName: this.policyViolationInfo.ruleId,
+				severity: this.policyViolationInfo.ruleSeverity,
 			};
 			this.selectionObj = {
 				productFamily : '',
 				productModel : '',
 			};
-			this.impactedAssetsCount = this.policyViolationInfo.impassetscount;
+			this.impactedAssetsCount = this.policyViolationInfo.impAssetsCount;
 			this.loadData();
 			this.errorResult = false;
 			_.invoke(this.alert, 'hide');
@@ -132,7 +132,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 			this.rccTrackService
 				.getRccViolationDetailsData(
 				{
-					violationCount: this.policyViolationInfo.violationcount,
+					violationCount: this.policyViolationInfo.violationCount,
 					...this.queryParamMapObj,
 				}),
 		)
@@ -261,7 +261,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 					template: this.violationAgeTemplate,
 				},
 				{
-					key: 'suggestedfix',
+					key: 'suggestedFix',
 					name: I18n.get('_RccAssetSuggestedFix_'),
 					sortable: false,
 					template: this.suggestedFixTemplate,
@@ -281,7 +281,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 		this.impactedDeviceDetails = [];
 		this.tableConfig.totalItems = 0;
 		const newQueryParamMapObj = { violationCount:
-			this.policyViolationInfo.violationcount, ...this.queryParamMapObj };
+			this.policyViolationInfo.violationCount, ...this.queryParamMapObj };
 		_.each(this.selectionObj,
 			(value, key) => {
 				if (value !== null && value !== '') { newQueryParamMapObj[key] = value; }
