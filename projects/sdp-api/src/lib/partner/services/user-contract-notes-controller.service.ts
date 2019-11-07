@@ -52,7 +52,7 @@ class UserContractNotesControllerService extends __BaseService {
     if (params.Authorization != null) __headers = __headers.set('Authorization', params.Authorization.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/cxpp-partner-info/partnerInfo/v1/user/contract/notes`,
+      this.rootUrl + `/cxportal/cxpp-partner-info/partnerInfo/v1/user/contract/notes`,
       __body,
       {
         headers: __headers,
@@ -104,7 +104,7 @@ class UserContractNotesControllerService extends __BaseService {
     if (params.Authorization != null) __headers = __headers.set('Authorization', params.Authorization.toString());
     let req = new HttpRequest<any>(
       'POST',
-      this.rootUrl + `/cxpp-partner-info/partnerInfo/v1/user/contract/notes`,
+      this.rootUrl + `/cxportal/cxpp-partner-info/partnerInfo/v1/user/contract/notes`,
       __body,
       {
         headers: __headers,
@@ -154,7 +154,7 @@ class UserContractNotesControllerService extends __BaseService {
     if (params.Authorization != null) __headers = __headers.set('Authorization', params.Authorization.toString());
     let req = new HttpRequest<any>(
       'PUT',
-      this.rootUrl + `/cxpp-partner-info/partnerInfo/v1/user/contract/notes`,
+      this.rootUrl + `/cxportal/cxpp-partner-info/partnerInfo/v1/user/contract/notes`,
       __body,
       {
         headers: __headers,
@@ -203,7 +203,7 @@ class UserContractNotesControllerService extends __BaseService {
     if (params.Authorization != null) __headers = __headers.set('Authorization', params.Authorization.toString());
     let req = new HttpRequest<any>(
       'DELETE',
-      this.rootUrl + `/cxpp-partner-info/partnerInfo/v1/user/contract/notes/${params.documentId}`,
+      this.rootUrl + `/cxportal/cxpp-partner-info/partnerInfo/v1/user/contract/notes/${params.documentId}`,
       __body,
       {
         headers: __headers,

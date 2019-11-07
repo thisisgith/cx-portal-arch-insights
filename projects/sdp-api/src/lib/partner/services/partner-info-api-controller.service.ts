@@ -34,7 +34,7 @@ class PartnerInfoApiControllerService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/cxpp-partner-info/partnerInfo/alive`,
+      this.rootUrl + `/cxportal/cxpp-partner-info/partnerInfo/alive`,
       __body,
       {
         headers: __headers,
