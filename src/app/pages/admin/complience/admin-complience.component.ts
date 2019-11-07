@@ -15,6 +15,7 @@ import { RouteAuthService } from '@services';
 
 import * as _ from 'lodash-es';
 import { LogService } from '@cisco-ngx/cui-services';
+import { I18n } from '@cisco-ngx/cui-utils';
 import { CuiModalService } from '@cisco-ngx/cui-components';
 
 /**
@@ -42,6 +43,7 @@ export class AdminComplienceComponent implements OnInit {
 	public selectedPolicy = '';
 	public leftSideTags = [];
 	public rightSideTags = [];
+	public showAssetsComponent = false;
 	public saveDetails: AssetTaggingService.PostParams = {
 		body: {
 			policy: '',
@@ -239,9 +241,13 @@ export class AdminComplienceComponent implements OnInit {
 	 */
 
 	public onPolicySelected (policy) {
+		_.invoke(this.alert, 'hide');
 		if (policy !== 'select') {
 			this.selectedPolicy = policy;
 			this.filterDuplicates();
+			this.showAssetsComponent = true;
+		} else {
+			this.showAssetsComponent = false;
 		}
 	}
 
@@ -261,8 +267,9 @@ export class AdminComplienceComponent implements OnInit {
 				return this.assetTaggingService.postPolicyMapping(this.saveDetails);
 			}),
 			takeUntil(this.destroyed$))
-		.subscribe(() => this.alert.show(`Tags details for the policy
-					${this.selectedPolicy} are successfully saved`, 'success'));
+		.subscribe(() => _.invoke(this.alert, 'show',
+		I18n.get('_AssetsTaggingSavePolicyAlert_'), 'success'),
+					);
 	}
 
 	/**

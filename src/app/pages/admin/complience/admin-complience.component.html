@@ -24,6 +24,12 @@
 					</label>
 				</div>
 
+				<div class="row">
+					<div class="col-md-4">
+				<div class="form-group base-margin-bottom" [innerText]="'_AdminEnableRegulatoryComplienceNote_' | i18n"	></div>
+						</div>
+						</div>
+
 				<cui-alert [options]="alert"></cui-alert>
 
 				<div [hidden]= "!optlnStatus">
@@ -45,11 +51,11 @@
 								</div>
 								<div class="col-md-10">
 								<div class="row flex-end dbl-padding-top">
-									<div class="col-md-1">
+									<div class="col-md-1" [hidden]= "!showAssetsComponent">
 											<button class="btn btn--small btn--primary half-margin-top" (click)="savePolicyDetails()"
 											[innerText]="'_Save_' | i18n"></button>
 										</div>
-									<div class="col-md-2">
+									<div class="col-md-2" [hidden]= "!showAssetsComponent">
 										<div class="form-group form-group--inline base-margin-bottom" *ngIf="toBeScanned">
 												<div class="subheader qtr-margin-bottom">Enable Scan
 														<sup>
@@ -90,8 +96,10 @@
 							</div>
 						</div>
 					</div>
+					<div class="text-large" [hidden]= "!showAssetsComponent" [innerText]="'_AdminPolicyTaggingHeading_' | i18n"></div>
 			</div>
-			<asset-tagging [hidden]= "!optlnStatus" [tagListLeft]='leftSideTags' [tagListRight]='rightSideTags'></asset-tagging>
+
+			<asset-tagging [hidden]= "!showAssetsComponent" [tagListLeft]='leftSideTags' [tagListRight]='rightSideTags'></asset-tagging>
 
 	</div>
 </admin-wrapper>
