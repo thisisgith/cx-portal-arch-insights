@@ -51,7 +51,7 @@ class ControlPointUserManagementAPIService extends __BaseService {
 
     __body = requestModel;
     let req = new HttpRequest<any>(
-      'DELETE',
+      'POST',
       this.rootUrl + `/customerportal/controlpoint/v1/users/delete`,
       __body,
       {

@@ -22,11 +22,21 @@
 			<div [innerText]="'_AddUser_' | i18n"></div>
 		</div>
 		<div class="flex text-small">
-			<div class="col-6" [innerText]="'_XSmartAccountUsers_' | i18n"></div>
-			<div class="col-6" [innerText]="'_XHaveAccessToCXPortal_' | i18n"></div>
+			<div class="col-6" [innerText]="'_XSmartAccountUsers_' | i18n:numUsers"></div>
+			<div class="col-6" [innerText]="'_XHaveAccessToCXPortal_' | i18n:numUsers"></div>
 		</div>
 	</section>
-	<div class="responsive-table" *ngIf="users$ | async as users">
+	<alert
+		[title]="error.text"
+		[(visible)]="error.show"
+	>
+	</alert>
+	<div
+		class="responsive-table"
+		*ngIf="users$ | async
+			| userFilter:filter
+			| userSort:sortProps as users"
+	>
 		<table class="
 			table
 			table--selectable
@@ -74,7 +84,7 @@
 				</tr>
 			</thead>
 			<tbody *ngIf="!isLoading">
-				<tr *ngFor="let user of users | userFilter:filter |userSort:sortProps">
+				<tr *ngFor="let user of users">
 					<td>
 						<div class="flex">
 							<!-- <div class="user-avatar base-margin-right"> -->
@@ -89,7 +99,7 @@
 							</div>
 						</div>
 					</td>
-					<td [innerText]="user.companyName"></td>
+					<td [innerText]="user.companyName || ''"></td>
 					<!-- <td [innerText]="user.saAccountName || 'Acme Corp'"></td> -->
 					<td class="role-cell">
 						<select-role [role]="user.roles[0]"></select-role>
@@ -99,7 +109,7 @@
 							icon="icon-more"
 							position="left"
 							[actions]="userDropdownOptions"
-							(actionSelected)="handleUserDropdownSelection($event)"
+							(actionSelected)="handleUserDropdownSelection($event, user)"
 						>
 						</cui-dropdown>
 						
@@ -107,6 +117,16 @@
 				</tr>
 			</tbody>
 		</table>
+		<div
+			*ngIf="!isLoading && users && users.length === 0"
+		>
+			<div class="dbl-xl-margin-top base-margin-bottom icon-search text-huge"></div>
+			<h5 [innerText]="'_NoMatchesFoundInYourSmartAccountUsers_' | i18n"></h5>
+			<button class="btn btn--primary-ghost base-margin-top xl-margin-bottom">
+				<span [innerText]="'_AddNewUserToSmartAccount_' | i18n"></span>
+			</button>
+			<div class="divider"></div>
+		</div>
 	</div>
 	<div class="text-center dbl-margin-top xl-margin-bottom" *ngIf="isLoading">
 		<cui-loader [label]="'_Loading_' | i18n"></cui-loader>

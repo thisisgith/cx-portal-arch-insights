@@ -8,6 +8,7 @@ import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { SelectRoleModule } from './select-role/select-role.module';
 import { UserMgmtSortPipe } from './user-mgmt-sort.pipe';
 import { UserMgmtFilterPipe } from './user-mgmt-filter.pipe';
+import { AlertModule } from '../alert/alert.module';
 
 /**
  * UserMgmtModule
@@ -21,6 +22,7 @@ import { UserMgmtFilterPipe } from './user-mgmt-filter.pipe';
 	],
 	exports: [UserMgmtComponent],
 	imports: [
+		AlertModule,
 		CommonModule,
 		CuiDropdownModule,
 		CuiLoaderModule,

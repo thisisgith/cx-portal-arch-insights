@@ -1,7 +1,7 @@
 /* tslint:disable */
-import { SADetails } from './sadetails';
+import { UserDetails } from './user-details';
 export interface SAUserResponseModel {
-  data?: Array<SADetails>;
+  data?: Array<UserDetails>;
   errCode?: string;
   errMsg?: string;
   errors?: Array<string>;

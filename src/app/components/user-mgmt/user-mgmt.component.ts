@@ -7,10 +7,13 @@ import {
 	Output,
 } from '@angular/core';
 import { empty, Observable, Subject } from 'rxjs';
-import { catchError, finalize, map, switchMap, takeUntil } from 'rxjs/operators';
-import { ControlPointUserManagementAPIService, SADetails } from '@sdp-api';
+import { catchError, finalize, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { ControlPointUserManagementAPIService, UserDetails } from '@sdp-api';
 import { SortableColumn, SortProps } from './user-mgmt.types';
 import { I18nPipe } from '@cisco-ngx/cui-pipes';
+
+/** Placeholder for saCompanyId */
+const companyId = '106200';
 
 /**
  * UserMgmtComponent
@@ -23,13 +26,14 @@ import { I18nPipe } from '@cisco-ngx/cui-pipes';
 export class UserMgmtComponent implements AfterViewInit, OnDestroy {
 	@Output() private onUpdate = new EventEmitter<void>();
 	private destroyed$: Subject<void> = new Subject<void>();
-	private updateUsers$: Subject<SADetails[]> = new Subject<SADetails[]>();
-	public error: boolean;
+	private updateUsers$: Subject<UserDetails[]> = new Subject<UserDetails[]>();
 	public isLoading: boolean;
-	public users$: Observable<SADetails[]> = this.updateUsers$
+	public numUsers = 0;
+	public users$: Observable<UserDetails[]> = this.updateUsers$
 		.pipe(
 			switchMap(() => this.getUsers()),
 			map(response => response.data),
+			tap(users => this.numUsers = users.length),
 		);
 	public sortProps: SortProps = {
 		column: 'firstName',
@@ -41,6 +45,10 @@ export class UserMgmtComponent implements AfterViewInit, OnDestroy {
 			label: this.i18n.transform('_RemoveThisUserFromSmartAccount_'),
 		}],
 	];
+	public error = {
+		show: false,
+		text: this.i18n.transform('_AnErrorOccurred_'),
+	};
 
 	constructor (
 		private cdr: ChangeDetectorRef,
@@ -71,14 +79,14 @@ export class UserMgmtComponent implements AfterViewInit, OnDestroy {
 		this.isLoading = true;
 		this.cdr.detectChanges();
 
-		return this.usersService.getUserDetailsListForGivenSAUsingGET('106200')
+		return this.usersService.getUserDetailsListForGivenSAUsingGET(companyId)
 			.pipe(
 				finalize(() => {
 					this.isLoading = false;
 					this.cdr.detectChanges();
 				}),
 				catchError(() => {
-					this.error = true;
+					this.error.show = true;
 
 					return empty();
 				}),
@@ -124,12 +132,17 @@ export class UserMgmtComponent implements AfterViewInit, OnDestroy {
 	/**
 	 * Handles clicking the 'more' dropdown option on a user row
 	 * @param action any
-	 * @param user SADetails
+	 * @param user UserDetails
 	 */
-	public handleUserDropdownSelection (action: any, user: SADetails) {
+	public handleUserDropdownSelection (action: any, user: UserDetails) {
 		if (action.label === this.i18n.transform('_RemoveThisUserFromSmartAccount_')) {
 			this.deleteUser(user)
 				.pipe(
+					catchError(() => {
+						this.error.show = true;
+
+						return empty();
+					}),
 					takeUntil(this.destroyed$),
 				)
 				.subscribe(() => {
@@ -140,10 +153,15 @@ export class UserMgmtComponent implements AfterViewInit, OnDestroy {
 
 	/**
 	 * Makes API call to delete a user
-	 * @param user SADetails
+	 * @param user UserDetails
 	 * @returns observable
 	 */
-	private deleteUser (user: SADetails) {
-		return this.usersService.deleteUserUsingDELETE(user);
+	private deleteUser (user: UserDetails) {
+		return this.usersService.deleteUserUsingDELETE({
+			ccoId: user.ccoId,
+			isPartner: false,
+			roles: user.roles,
+			saCompanyId: companyId,
+		});
 	}
 }
