@@ -91,6 +91,7 @@ export const defaults = {
 		controlpoints: '/api/customerportal/controlpoint',
 		customerportal: '/api/customerportal',
 		inventory: '/api/v1/inventory',
+		partner: '/api/cxportal',
 	},
 	supportEmailLink: 'mailto:help@cisco.com',
 	typeaheadServiceOrigin: 'https://xresps-stage.cloudapps.cisco.com',

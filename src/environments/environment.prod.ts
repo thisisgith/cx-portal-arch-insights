@@ -85,6 +85,7 @@ export const environment = {
 		controlpoints: '/api/usa/customerportal/controlpoint',
 		customerportal: '/api/usa/customerportal',
 		inventory: '/api/usa/v1/inventory',
+		partner: '/api/usa/cxportal',
 	},
 	// ClientSSOInterceptor: No auth token for the typeahead url
 	typeaheadServiceOrigin: 'https://xresps.cloudapps.cisco.com',
