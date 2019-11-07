@@ -73,6 +73,7 @@ export const environment = {
 		controlpoints: '/api/customerportal/controlpoint',
 		customerportal: '/api/customerportal',
 		inventory: '/api/v1/inventory',
+		partner: '/api/cxportal',
 	},
 	typeaheadServiceOrigin: 'https://xresps.cloudapps.cisco.com',
 };
