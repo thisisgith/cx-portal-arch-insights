@@ -845,7 +845,6 @@ export class RiskMitigationComponent {
 	public onSubfilterSelect (subfilter: string, filter: Filter) {
 		this.resetFilters();
 		const sub = _.find(filter.seriesData, { filter: subfilter });
-		this.crashedAssetsCount = sub.value;
 		sub.selected = (sub) ? !sub.selected : '';
 		filter.selected = _.some(filter.seriesData, 'selected');
 		let filterSelected: string;
@@ -869,6 +868,7 @@ export class RiskMitigationComponent {
 		}
 		if (filter.key === 'advisories') {
 			this.getDeviceDetails(filterSelected);
+			this.crashedAssetsCount = sub.value;
 		} else {
 			this.highCrashRiskParams.globalRiskRank = subfilter;
 			this.getFingerPrintDeviceDetails(this.highCrashRiskParams);
