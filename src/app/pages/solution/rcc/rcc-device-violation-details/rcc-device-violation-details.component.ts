@@ -262,7 +262,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 				},
 				{
 					key: 'suggestedFix',
-					name: I18n.get('_RccAssetSuggestedFix_'),
+					name: I18n.get('_RccRecommendation_'),
 					sortable: false,
 					template: this.suggestedFixTemplate,
 				},
