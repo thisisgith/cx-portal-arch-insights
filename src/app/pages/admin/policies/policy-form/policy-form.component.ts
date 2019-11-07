@@ -241,9 +241,7 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 				break;
 			}
 			case ModalTypes.editPolicy: {
-				if (this.ignorePolicyExists) {
-					this.timePeriods.options.pop();
-				}
+				this.timePeriods.options.pop();
 
 				this.setSelectors();
 
@@ -251,6 +249,8 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 				break;
 			}
 			case ModalTypes.editIgnorePolicy: {
+				this.timePeriods.options = [this.timePeriods.options.pop()];
+
 				this.editIgnorePolicy();
 				break;
 			}
