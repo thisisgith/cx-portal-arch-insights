@@ -237,7 +237,7 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 					},
 					{
 						name: I18n.get('_OsvRecommendations_'),
-						sortable: true,
+						sortable: false,
 						template: this.recommendationsTemplate,
 						width: '15%',
 					},

@@ -7,6 +7,8 @@ import { StrictHttpResponse as __StrictHttpResponse } from '../../core/strict-ht
 import { Observable as __Observable } from 'rxjs';
 import { map as __map, filter as __filter } from 'rxjs/operators';
 
+import { DefaultResponseModel } from '../models/default-response-model';
+import { UserDeleteRequestModel } from '../models/user-delete-request-model';
 import { PartnerViewDetailsResponseModel } from '../models/partner-view-details-response-model';
 import { RoleDetailsResponseModel } from '../models/role-details-response-model';
 import { SAUserResponseModel } from '../models/sauser-response-model';
@@ -21,6 +23,7 @@ import { HADetailsResponseModel } from '../models/hadetails-response-model';
   providedIn: 'root',
 })
 class ControlPointUserManagementAPIService extends __BaseService {
+  static readonly deleteUserUsingDELETEPath = '/users/delete';
   static readonly getPartnerViewsMasterListUsingGETPath = '/users/partner/views/{companyAccountId}';
   static readonly getListRolesForGivenUserUsingGETPath = '/users/roles/{companyAccountId}';
   static readonly getUserDetailsListForGivenSAUsingGETPath = '/users/sa/{saAccountId}';
@@ -35,6 +38,44 @@ class ControlPointUserManagementAPIService extends __BaseService {
     http: HttpClient
   ) {
     super(config, http);
+  }
+
+  /**
+   * @param requestModel requestModel
+   * @return OK
+   */
+  deleteUserUsingDELETEResponse(requestModel: UserDeleteRequestModel): __Observable<__StrictHttpResponse<DefaultResponseModel>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    __body = requestModel;
+    let req = new HttpRequest<any>(
+      'DELETE',
+      this.rootUrl + `/customerportal/controlpoint/v1/users/delete`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<DefaultResponseModel>;
+      })
+    );
+  }
+
+  /**
+   * @param requestModel requestModel
+   * @return OK
+   */
+  deleteUserUsingDELETE(requestModel: UserDeleteRequestModel): __Observable<DefaultResponseModel> {
+    return this.deleteUserUsingDELETEResponse(requestModel).pipe(
+      __map(_r => _r.body as DefaultResponseModel)
+    );
   }
 
   /**

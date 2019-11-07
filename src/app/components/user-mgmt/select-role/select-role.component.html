@@ -1,17 +1,22 @@
 <ng-container *ngIf="options$ | async as options">
 	<div *ngIf="expanded" class="panel panel--raised select-role-dropdown">
-		<ng-container *ngFor="let option of options; let i = index">
+		<div class="dropdown-option" *ngFor="let option of options; let i = index">
 			<div
-				[ngClass]="{ 'text-info': option.roleDisplayName === role?.roleDisplayName }"
-				>
-				<span [innerText]="option.roleDisplayName"></span>
-			</div>
-			<div
-				class="text-small"
-				[innerText]="option.roleDescription"
+				class="dropdown-option__text"
+				[ngClass]="{
+					'active': option.roleDisplayName === role?.roleDisplayName
+				}"
+			>
+				<div class="text-bold">
+					<span [innerText]="option.roleDisplayName"></span>
+				</div>
+				<div
+					class="text-small"
+					[innerText]="option.roleDescription"
 				></div>
+			</div>
 			<div *ngIf="i !== (options.length - 1)" class="divider"></div>
-		</ng-container>
+		</div>
 	</div>
 </ng-container>
 <div *ngIf="role">

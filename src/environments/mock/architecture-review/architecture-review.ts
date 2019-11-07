@@ -438,8 +438,8 @@ export const ArchitectureReviewScenarios = [
 				},
 			],
 		},
-		url: `${api}/dnac/devicedetails?page=0&pageSize=10` +
-		`&filterBy=&customerId=${customerId}&collectionId=${collectionId}&searchText=&useCase=`,
+		url: `${api}/dnac/devicedetails?page=0&pageSize=10&complianceValue=` +
+		`&customerId=${customerId}&collectionId=${collectionId}&searchText=&complianceType=`,
 		usecases: ['Use Case 2'],
 	},
 	{

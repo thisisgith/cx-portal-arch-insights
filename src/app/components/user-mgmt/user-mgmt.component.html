@@ -68,7 +68,7 @@
 							}"
 						></span>
 					</th>
-					<th [innerText]="'_SmartAccount_' | i18n"></th>
+					<!-- <th [innerText]="'_SmartAccount_' | i18n"></th> -->
 					<th [innerText]="'_Role_' | i18n"></th>
 					<th></th>
 				</tr>
@@ -77,19 +77,32 @@
 				<tr *ngFor="let user of users | userFilter:filter |userSort:sortProps">
 					<td>
 						<div class="flex">
-							<div class="user-avatar base-margin-right">
-								<div [innerText]="user | initials"></div>
-							</div>
+							<!-- <div class="user-avatar base-margin-right"> -->
+							<!-- 	<div [innerText]="user | initials"></div> -->
+							<!-- </div> -->
 							<div class="user-info">
-								<h3 [innerText]="user.firstName + ' ' + user.lastName"></h3>
+								<div
+									class="text-xlarge"
+									[innerText]="user.firstName + ' ' + user.lastName"
+								></div>
 								<div [innerText]="user.emailAddress"></div>
 							</div>
 						</div>
 					</td>
 					<td [innerText]="user.companyName"></td>
-					<td [innerText]="user.saAccountName || 'Acme Corp'"></td>
+					<!-- <td [innerText]="user.saAccountName || 'Acme Corp'"></td> -->
 					<td class="role-cell">
 						<select-role [role]="user.roles[0]"></select-role>
+					</td>
+					<td>
+						<cui-dropdown
+							icon="icon-more"
+							position="left"
+							[actions]="userDropdownOptions"
+							(actionSelected)="handleUserDropdownSelection($event)"
+						>
+						</cui-dropdown>
+						
 					</td>
 				</tr>
 			</tbody>

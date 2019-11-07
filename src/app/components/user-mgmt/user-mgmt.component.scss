@@ -75,6 +75,7 @@
 
 		td {
 			border-right: none;
+			overflow: visible;
 
 			.flex-center {
 				// looks off when header is longer, so just aligning to the left

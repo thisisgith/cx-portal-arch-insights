@@ -13,7 +13,6 @@ import { DeviceDetailsByPage } from '../models/device-details-by-page';
 })
 class ControlPointDeviceDiscoveryAPIService extends __BaseService {
   static readonly getDevicesUsingGETPath = '/devices/{customerId}/{solution}/{useCase}/{pageNumber}/{rowsPerPage}';
-  static readonly getDevicesUsingGET_1Path = '/devices/{customerId}/{pageNumber}/{rowsPerPage}';
 
   constructor(
     config: __Configuration,
@@ -85,60 +84,6 @@ class ControlPointDeviceDiscoveryAPIService extends __BaseService {
       __map(_r => _r.body as DeviceDetailsByPage)
     );
   }
-
-  /**
-   * @param params The `ControlPointDeviceDiscoveryAPIService.GetDevicesUsingGET_1Params` containing the following parameters:
-   *
-   * - `rowsPerPage`: rowsPerPage
-   *
-   * - `pageNumber`: pageNumber
-   *
-   * - `customerId`: customerId
-   *
-   * @return OK
-   */
-  getDevicesUsingGET_1Response(params: ControlPointDeviceDiscoveryAPIService.GetDevicesUsingGET_1Params): __Observable<__StrictHttpResponse<DeviceDetailsByPage>> {
-    let __params = this.newParams();
-    let __headers = new HttpHeaders();
-    let __body: any = null;
-
-
-
-
-    let req = new HttpRequest<any>(
-      'GET',
-      this.rootUrl + `/customerportal/controlpoint/v1/devices/${params.customerId}/${params.pageNumber}/${params.rowsPerPage}`,
-      __body,
-      {
-        headers: __headers,
-        params: __params,
-        responseType: 'json',
-      });
-
-    return this.http.request<any>(req).pipe(
-      __filter(_r => _r instanceof HttpResponse),
-      __map((_r) => {
-        return _r as __StrictHttpResponse<DeviceDetailsByPage>;
-      })
-    );
-  }
-
-  /**
-   * @param params The `ControlPointDeviceDiscoveryAPIService.GetDevicesUsingGET_1Params` containing the following parameters:
-   *
-   * - `rowsPerPage`: rowsPerPage
-   *
-   * - `pageNumber`: pageNumber
-   *
-   * - `customerId`: customerId
-   *
-   * @return OK
-   */
-  getDevicesUsingGET_1(params: ControlPointDeviceDiscoveryAPIService.GetDevicesUsingGET_1Params): __Observable<DeviceDetailsByPage> {
-    return this.getDevicesUsingGET_1Response(params).pipe(
-      __map(_r => _r.body as DeviceDetailsByPage)
-    );
-  }
 }
 
 module ControlPointDeviceDiscoveryAPIService {
@@ -157,27 +102,6 @@ module ControlPointDeviceDiscoveryAPIService {
      * solution
      */
     solution: string;
-
-    /**
-     * rowsPerPage
-     */
-    rowsPerPage: string;
-
-    /**
-     * pageNumber
-     */
-    pageNumber: string;
-
-    /**
-     * customerId
-     */
-    customerId: string;
-  }
-
-  /**
-   * Parameters for getDevicesUsingGET_1
-   */
-  export interface GetDevicesUsingGET_1Params {
 
     /**
      * rowsPerPage

@@ -3,12 +3,14 @@ import {
 	ChangeDetectorRef,
 	Component,
 	EventEmitter,
+	OnDestroy,
 	Output,
 } from '@angular/core';
 import { empty, Observable, Subject } from 'rxjs';
-import { catchError, finalize, map, switchMap } from 'rxjs/operators';
+import { catchError, finalize, map, switchMap, takeUntil } from 'rxjs/operators';
 import { ControlPointUserManagementAPIService, SADetails } from '@sdp-api';
 import { SortableColumn, SortProps } from './user-mgmt.types';
+import { I18nPipe } from '@cisco-ngx/cui-pipes';
 
 /**
  * UserMgmtComponent
@@ -18,22 +20,15 @@ import { SortableColumn, SortProps } from './user-mgmt.types';
 	styleUrls: ['./user-mgmt.component.scss'],
 	templateUrl: './user-mgmt.component.html',
 })
-export class UserMgmtComponent implements AfterViewInit {
+export class UserMgmtComponent implements AfterViewInit, OnDestroy {
 	@Output() private onUpdate = new EventEmitter<void>();
+	private destroyed$: Subject<void> = new Subject<void>();
 	private updateUsers$: Subject<SADetails[]> = new Subject<SADetails[]>();
 	public error: boolean;
 	public isLoading: boolean;
 	public users$: Observable<SADetails[]> = this.updateUsers$
 		.pipe(
 			switchMap(() => this.getUsers()),
-			map(response => {
-				response.data = response.data.map(i => ({
-					...i.user,
-					roles: i.roles,
-				}));
-
-				return response;
-			}),
 			map(response => response.data),
 		);
 	public sortProps: SortProps = {
@@ -41,9 +36,15 @@ export class UserMgmtComponent implements AfterViewInit {
 		dir: 'asc',
 	};
 	public filter: string;
+	public userDropdownOptions = [
+		[{
+			label: this.i18n.transform('_RemoveThisUserFromSmartAccount_'),
+		}],
+	];
 
 	constructor (
 		private cdr: ChangeDetectorRef,
+		private i18n: I18nPipe,
 		private usersService: ControlPointUserManagementAPIService,
 	) { }
 
@@ -52,6 +53,14 @@ export class UserMgmtComponent implements AfterViewInit {
 	 */
 	public ngAfterViewInit () {
 		this.updateUsers$.next();
+	}
+
+	/**
+	 * NgOnDestroy
+	 */
+	public ngOnDestroy () {
+		this.destroyed$.next();
+		this.destroyed$.complete();
 	}
 
 	/**
@@ -110,5 +119,31 @@ export class UserMgmtComponent implements AfterViewInit {
 			column: sortProps.column || this.sortProps.column,
 			dir: sortProps.dir || this.sortProps.dir,
 		};
+	}
+
+	/**
+	 * Handles clicking the 'more' dropdown option on a user row
+	 * @param action any
+	 * @param user SADetails
+	 */
+	public handleUserDropdownSelection (action: any, user: SADetails) {
+		if (action.label === this.i18n.transform('_RemoveThisUserFromSmartAccount_')) {
+			this.deleteUser(user)
+				.pipe(
+					takeUntil(this.destroyed$),
+				)
+				.subscribe(() => {
+					this.updateUsers$.next();
+				});
+		}
+	}
+
+	/**
+	 * Makes API call to delete a user
+	 * @param user SADetails
+	 * @returns observable
+	 */
+	private deleteUser (user: SADetails) {
+		return this.usersService.deleteUserUsingDELETE(user);
 	}
 }

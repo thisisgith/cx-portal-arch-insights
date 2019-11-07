@@ -25,7 +25,7 @@ export class RolesService {
 
 		this._request = this.userService.getListRolesForGivenUserUsingGET('106200')
 			.pipe(
-				map(response => [...response.saRoles, ...response.vaRoles]),
+				map(response => [...response.saRoles/*, ...response.vaRoles*/]),
 				shareReplay(1),
 			);
 

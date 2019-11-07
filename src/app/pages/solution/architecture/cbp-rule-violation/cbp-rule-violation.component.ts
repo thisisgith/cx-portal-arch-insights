@@ -137,6 +137,7 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 					name: I18n.get('_ArchitectureSeverity_'),
 					sortable: false,
 					template: this.riskTemplate,
+					width: '10%',
 				},
 				{
 					key: 'bpRuleTitle',
