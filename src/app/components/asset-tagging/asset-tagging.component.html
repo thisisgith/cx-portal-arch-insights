@@ -7,13 +7,13 @@
 					<span>
 						Available:
 					</span>
-					<span 
-						[innerText]="'_AssetTaggingTagsCount_' | i18n:((tagListLeft | filterTags:leftSearchText).length) "
+					<span
+						[innerText]="'_AssetTaggingTagsCount_' | i18n:((tagListLeft).length) "
 						data-auto-id="tagging.tagscount"></span>
 				</div>
 			</div>
 			<div class="col-md-4">
-				<cui-search 
+				<cui-search
 					placeholder="{{ '_Search_' | i18n }}"
 					[debounce]="'300'"
 					[compressed]="true"
@@ -60,18 +60,18 @@
 	<div class="col-lg-5">
 		<div class="row  panel panel--bordered flex">
 			<div class="col-md-8">
-				<div class="half-padding-top  text-large text-left text-uppercase">	
+				<div class="half-padding-top  text-large text-left text-uppercase">
 						<span>
 								Selected:
 						</span>
-					<span 
-						[innerText]="'_AssetTaggingTagsCountSelected_' | i18n:((tagListRight| filterTags:rightSearchText).length) "
+					<span
+						[innerText]="'_AssetTaggingTagsCountSelected_' | i18n:((tagListRight).length) "
 						data-auto-id="tagging.tagscount"></span>
-						
+
 				</div>
 			</div>
 			<div class="col-md-4">
-				<cui-search 
+				<cui-search
 					placeholder="{{ '_Search_' | i18n }}"
 					[debounce]="'300'"
 					[compressed]="true"
