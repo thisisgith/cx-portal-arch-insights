@@ -29,19 +29,19 @@
 						<ng-container *ngIf="oldPwControl.dirty && oldPwErrors">
 							<ul class="qtr-margin-top">
 								<li
-									*ngIf="oldPwErros.needsLength"
+									*ngIf="oldPwErrors.needsLength"
 									[innerText]="'_MustBeNumChars_' | i18n:'8'"></li>
 								<li
-									*ngIf="oldPwErros.needsUppercase"
+									*ngIf="oldPwErrors.needsUppercase"
 									[innerText]="'_MissingUppercase_' | i18n"></li>
 								<li
-									*ngIf="oldPwErros.needsLowercase"
+									*ngIf="oldPwErrors.needsLowercase"
 									[innerText]="'_MissingLowercase_' | i18n"></li>
 								<li
-									*ngIf="oldPwErros.needsSpecialChar"
+									*ngIf="oldPwErrors.needsSpecialChar"
 									[innerText]="'_MissingSpecialChar_' | i18n"></li>
 								<li
-									*ngIf="oldPwErros.needsNumber"
+									*ngIf="oldPwErrors.needsNumber"
 									[innerText]="'_MissingNumerical_' | i18n"></li>
 							</ul>
 						</ng-container>
