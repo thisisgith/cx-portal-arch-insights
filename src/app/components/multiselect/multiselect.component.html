@@ -14,7 +14,7 @@
 		data-auto-id="MultiSelect-DropdownToggle"></span>
 
 	<div class="ms-dropdown" *ngIf="dropdownActive">
-		<div class="ms-dropdown__list">
+		<div class="ms-dropdown__list" data-auto-id="MultiSelect-DropdownList">
 			<div class="ms-dropdown__list__item"
 				[class.ms-dropdown__list__item--selected]="allSelected"
 				(click)="toggleAllOptions()"

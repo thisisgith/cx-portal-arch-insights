@@ -5,6 +5,8 @@ import {
 	Input,
 	Output,
 	OnInit,
+	OnChanges,
+	SimpleChanges,
 } from '@angular/core';
 
 import * as _ from 'lodash-es';
@@ -17,15 +19,15 @@ import * as _ from 'lodash-es';
 	styleUrls: ['./multiselect.component.scss'],
 	templateUrl: './multiselect.component.html',
 })
-export class MultiselectComponent implements OnInit {
+export class MultiselectComponent implements OnInit, OnChanges {
 	public componentId: string;
 
 	@Input() public name: string;
 	@Input() public items: any[];
 	@Output() public changed: EventEmitter<any> = new EventEmitter<any>();
 	public dropdownActive: boolean;
-	public selectedIndices: number[] = [];
-	public oldSelectedIndices: number[] = [];
+	public selectedIndices: number[];
+	public oldSelectedIndices: number[];
 	public searchValue = '';
 	@Input() public nameKey = 'name';
 	@Input() public valueKey = 'value';
@@ -54,6 +56,16 @@ export class MultiselectComponent implements OnInit {
 	 * Search through defaultValues and if found in items, set as selected
 	 */
 	public ngOnInit () {
+		this.reset();
+	}
+
+	/**
+	 * Resets selectedIndices and sets default values (if supplied)
+	 */
+	public reset () {
+		this.selectedIndices = [];
+		this.oldSelectedIndices = [];
+
 		if (!_.get(this.defaultValues, 'length')) {
 			return;
 		}
@@ -63,6 +75,17 @@ export class MultiselectComponent implements OnInit {
 			if (foundItemIdx >= 0 && !this.selectedIndices.includes(foundItemIdx)) {
 				this.selectedIndices.push(foundItemIdx);
 			}
+		}
+	}
+
+	/**
+	 * In some cases, the Input properties may be modified by external actions.
+	 * Watch for any changes and reset component
+	 * @param changes The changes
+	 */
+	public ngOnChanges (changes: SimpleChanges) {
+		if (changes.defaultValues && !changes.defaultValues.firstChange) {
+			this.reset();
 		}
 	}
 

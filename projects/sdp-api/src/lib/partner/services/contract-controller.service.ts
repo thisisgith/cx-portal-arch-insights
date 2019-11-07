@@ -58,7 +58,7 @@ class ContractControllerService extends __BaseService {
     if (params.Authorization != null) __headers = __headers.set('Authorization', params.Authorization.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/cxpp-partner-info/partnerInfo/v1/customer/asset-rating/count`,
+      this.rootUrl + `/cxportal/cxpp-partner-info/partnerInfo/v1/customer/asset-rating/count`,
       __body,
       {
         headers: __headers,
@@ -107,7 +107,7 @@ class ContractControllerService extends __BaseService {
     if (params.Authorization != null) __headers = __headers.set('Authorization', params.Authorization.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/cxpp-partner-info/partnerInfo/v1/customer/contracts`,
+      this.rootUrl + `/cxportal/cxpp-partner-info/partnerInfo/v1/customer/contracts`,
       __body,
       {
         headers: __headers,
@@ -159,7 +159,7 @@ class ContractControllerService extends __BaseService {
     if (params.Authorization != null) __headers = __headers.set('Authorization', params.Authorization.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/cxpp-partner-info/partnerInfo/v1/customer/contracts/contacts`,
+      this.rootUrl + `/cxportal/cxpp-partner-info/partnerInfo/v1/customer/contracts/contacts`,
       __body,
       {
         headers: __headers,
@@ -211,7 +211,7 @@ class ContractControllerService extends __BaseService {
     if (params.Authorization != null) __headers = __headers.set('Authorization', params.Authorization.toString());
     let req = new HttpRequest<any>(
       'POST',
-      this.rootUrl + `/cxpp-partner-info/partnerInfo/v1/customer/contracts/contacts`,
+      this.rootUrl + `/cxportal/cxpp-partner-info/partnerInfo/v1/customer/contracts/contacts`,
       __body,
       {
         headers: __headers,
@@ -261,7 +261,7 @@ class ContractControllerService extends __BaseService {
     if (params.Authorization != null) __headers = __headers.set('Authorization', params.Authorization.toString());
     let req = new HttpRequest<any>(
       'PUT',
-      this.rootUrl + `/cxpp-partner-info/partnerInfo/v1/customer/contracts/contacts`,
+      this.rootUrl + `/cxportal/cxpp-partner-info/partnerInfo/v1/customer/contracts/contacts`,
       __body,
       {
         headers: __headers,
@@ -310,7 +310,7 @@ class ContractControllerService extends __BaseService {
     if (params.Authorization != null) __headers = __headers.set('Authorization', params.Authorization.toString());
     let req = new HttpRequest<any>(
       'DELETE',
-      this.rootUrl + `/cxpp-partner-info/partnerInfo/v1/customer/contracts/contacts/${params.contactId}`,
+      this.rootUrl + `/cxportal/cxpp-partner-info/partnerInfo/v1/customer/contracts/contacts/${params.contactId}`,
       __body,
       {
         headers: __headers,
@@ -359,7 +359,7 @@ class ContractControllerService extends __BaseService {
     if (params.Authorization != null) __headers = __headers.set('Authorization', params.Authorization.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/cxpp-partner-info/partnerInfo/v1/customer/contracts/count`,
+      this.rootUrl + `/cxportal/cxpp-partner-info/partnerInfo/v1/customer/contracts/count`,
       __body,
       {
         headers: __headers,
@@ -411,7 +411,7 @@ class ContractControllerService extends __BaseService {
     if (params.Authorization != null) __headers = __headers.set('Authorization', params.Authorization.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/cxpp-partner-info/partnerInfo/v1/customer/contracts/${params.contractId}`,
+      this.rootUrl + `/cxportal/cxpp-partner-info/partnerInfo/v1/customer/contracts/${params.contractId}`,
       __body,
       {
         headers: __headers,
@@ -465,7 +465,7 @@ class ContractControllerService extends __BaseService {
     if (params.Authorization != null) __headers = __headers.set('Authorization', params.Authorization.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/cxpp-partner-info/partnerInfo/v1/customer/digital-assets`,
+      this.rootUrl + `/cxportal/cxpp-partner-info/partnerInfo/v1/customer/digital-assets`,
       __body,
       {
         headers: __headers,
@@ -516,7 +516,7 @@ class ContractControllerService extends __BaseService {
     if (params.Authorization != null) __headers = __headers.set('Authorization', params.Authorization.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/cxpp-partner-info/partnerInfo/v1/customer/portal-access`,
+      this.rootUrl + `/cxportal/cxpp-partner-info/partnerInfo/v1/customer/portal-access`,
       __body,
       {
         headers: __headers,
@@ -565,7 +565,7 @@ class ContractControllerService extends __BaseService {
     if (params.Authorization != null) __headers = __headers.set('Authorization', params.Authorization.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/cxpp-partner-info/partnerInfo/v1/customer/portal-access/count`,
+      this.rootUrl + `/cxportal/cxpp-partner-info/partnerInfo/v1/customer/portal-access/count`,
       __body,
       {
         headers: __headers,

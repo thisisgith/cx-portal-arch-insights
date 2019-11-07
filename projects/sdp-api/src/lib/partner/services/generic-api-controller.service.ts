@@ -45,7 +45,7 @@ class GenericApiControllerService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/cxpp-partner-info/partnerInfo/v1/customers/${partnerId}`,
+      this.rootUrl + `/cxportal/cxpp-partner-info/partnerInfo/v1/customers/${partnerId}`,
       __body,
       {
         headers: __headers,
@@ -84,7 +84,7 @@ class GenericApiControllerService extends __BaseService {
     __body = digitalAssets;
     let req = new HttpRequest<any>(
       'PUT',
-      this.rootUrl + `/cxpp-partner-info/partnerInfo/v1/digitalAssets/count`,
+      this.rootUrl + `/cxportal/cxpp-partner-info/partnerInfo/v1/digitalAssets/count`,
       __body,
       {
         headers: __headers,
@@ -128,7 +128,7 @@ class GenericApiControllerService extends __BaseService {
     if (params.level != null) __params = __params.set('level', params.level.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/cxpp-partner-info/partnerInfo/v1/internal/specialization`,
+      this.rootUrl + `/cxportal/cxpp-partner-info/partnerInfo/v1/internal/specialization`,
       __body,
       {
         headers: __headers,
@@ -171,7 +171,7 @@ class GenericApiControllerService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/cxpp-partner-info/partnerInfo/v1/${customerId}/partners`,
+      this.rootUrl + `/cxportal/cxpp-partner-info/partnerInfo/v1/${customerId}/partners`,
       __body,
       {
         headers: __headers,
@@ -209,7 +209,7 @@ class GenericApiControllerService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/cxpp-partner-info/partnerInfo/v1/${partnerId}/customers`,
+      this.rootUrl + `/cxportal/cxpp-partner-info/partnerInfo/v1/${partnerId}/customers`,
       __body,
       {
         headers: __headers,

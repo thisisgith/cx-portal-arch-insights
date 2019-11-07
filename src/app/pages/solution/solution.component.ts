@@ -351,6 +351,8 @@ export class SolutionComponent implements OnInit, OnDestroy {
 				if (this.selectedTechnologyName !== _.get(result, 'name')) {
 					this.selectedTechnology = result;
 					this.selectedTechnologyName = _.get(this.selectedTechnology, 'name');
+					_.set(this.selectedSolution.technologies,
+						{ name: this.selectedTechnologyName }, this.selectedTechnology);
 					this.reloadFacets();
 				}
 			}),
@@ -366,6 +368,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		this.racetrackInfoService.getCurrentAdoptionPercentage()
 		.pipe(
 			map((result: number) => {
+				this.selectedTechnology.usecase_adoption_percentage = result;
 				lifecycleFacet.data = {
 					gaugePercent: result,
 				};

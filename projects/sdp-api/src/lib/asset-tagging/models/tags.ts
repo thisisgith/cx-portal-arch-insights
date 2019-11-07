@@ -2,6 +2,7 @@
 export interface Tags {
 	tagName?: string;
 	tagValue?: string;
-	devices?: [];
+	devices?: Array<string>;
 	deviceCount?: string;
+	selected ?: boolean;
 }
