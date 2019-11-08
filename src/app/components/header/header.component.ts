@@ -69,6 +69,10 @@ export class HeaderComponent implements AfterViewChecked, OnInit, OnDestroy {
 	{
 		name: I18n.get('_Trademarks_'),
 		url: 'https://www.cisco.com/c/en/us/about/legal/trademarks.html',
+	},
+	{
+		name: I18n.get('_ReleaseNotes_'),
+		url: 'https://www.cisco.com/c/dam/en/us/support/docs/cloud-systems-management/Cisco-CX-Collector/CX_Portal_Release_Notes.pdf',
 	}];
 	public profileLinks = [{
 		href: environment.manageProfileUrl,
