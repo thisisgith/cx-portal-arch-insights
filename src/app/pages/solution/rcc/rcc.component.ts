@@ -133,6 +133,7 @@ export class RccComponent implements OnInit, OnDestroy {
 	public assetsConditionViolationsCount = 0;
 	public withViolationsAssetsCount;
 	public alert: any = { };
+	public lastScan = '';
 	public searchOptions = {
 		debounce: 1500,
 		max: 100,
@@ -160,6 +161,7 @@ export class RccComponent implements OnInit, OnDestroy {
 	@ViewChild('severityColor', { static: true }) private severityColorTemplate: TemplateRef<{ }>;
 	@ViewChild('severityTemplate', { static: true }) private severityTemplate: TemplateRef<{ }>;
 	@ViewChild('ruletitleTemplate', { static: true }) private ruletitleTemplate: TemplateRef<{ }>;
+	@ViewChild('lastScanTmpl', { static: true }) public lastScanTemplate: TemplateRef<{ }>;
 	@ViewChild('policyCategoryTooltipTemplate', { static: true })
 	private policyCategoryTooltipTemplate: TemplateRef<string>;
 	@ViewChild('ruleViolationsTooltipTemplate', { static: true })
@@ -359,6 +361,7 @@ export class RccComponent implements OnInit, OnDestroy {
 	public onAssetRowClicked (rowData: any) {
 		this.rowData = rowData;
 		this.selectedAssetData = rowData;
+		this.lastScan = rowData.lastScan;
 		this.selectedAssetModal = true;
 		this.selectedViolationModal = false;
 		this.openDeviceModal = false;
@@ -500,10 +503,9 @@ export class RccComponent implements OnInit, OnDestroy {
 				{
 					key: 'lastScan',
 					name: I18n.get('_RccAssetLastScan_'),
-					render: item => item.lastScan ?
-						this.fromNow.transform(item.lastScan) : I18n.get('_Never_'),
 					sortable: true,
 					sortKey: 'lastScan',
+					template: this.lastScanTemplate,
 				},
 				{
 					headerTemplate:  this.ruleViolationsTooltipTemplate,
@@ -521,6 +523,7 @@ export class RccComponent implements OnInit, OnDestroy {
 			hover: true,
 			singleSelect: true,
 			striped: false,
+			wrapText: true,
 		});
 		this.buildAssetFilters();
 		// this.getRCCAssetData(this.assetGridObj);
