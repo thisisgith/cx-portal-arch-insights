@@ -354,7 +354,8 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 	 */
 	public openCurrentVersionsTab (event: any, item: SoftwareGroup) {
 		event.stopPropagation();
-		this.openSoftwareGroupDetails(3, item);
+		const tabNo = item.recommendation === 'none' ? 2 : 3;
+		this.openSoftwareGroupDetails(tabNo, item);
 	}
 
 	/**
