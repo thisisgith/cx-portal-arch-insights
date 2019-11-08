@@ -137,7 +137,7 @@ export class RccComponent implements OnInit, OnDestroy {
 		debounce: 1500,
 		max: 100,
 		min: 2,
-		pattern: /^[a-zA-Z0-9_ ]*$/,
+		pattern: /^[a-zA-Z0-9\s\-\/\(\).]*$/,
 	};
 	public search: FormControl = new FormControl('');
 	public searchForm: FormGroup;
