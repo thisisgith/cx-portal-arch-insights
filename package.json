@@ -33,6 +33,7 @@
 		"generate:sdp:search": "cd projects/sdp-api && ng-swagger-gen --config ./configs/Search.json",
 		"generate:sdp:solution-based-racetrack-view": "cd projects/sdp-api && ng-swagger-gen --config ./configs/SolutionBasedRacetrackView.json",
 		"generate:sdp:entitlement": "cd projects/sdp-api && ng-swagger-gen --config ./configs/Entitlement.json",
+		"generate:sdp:entitlement-wrapper": "cd projects/sdp-api && ng-swagger-gen --config ./configs/EntitlementWrapper.json",
 		"generate:sdp:feedback": "cd projects/sdp-api && ng-swagger-gen --config ./configs/Feedback.json",
 		"generate:sdp:partner": "cd projects/sdp-api && ng-swagger-gen --config ./configs/Partner.json",
 		"test": "ng test --source-map=true --code-coverage",

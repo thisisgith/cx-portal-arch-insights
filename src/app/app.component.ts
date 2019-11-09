@@ -65,9 +65,9 @@ export class AppComponent {
 			},
 		);
 
-		this.entitlementService.getNewUser().subscribe(
-			data => console.log('new data: ', data)
-		);
+		// this.entitlementService.getNewUser().subscribe(
+		// 	data => console.log('new data: ', data)
+		// );
 
 		this.userResolve.getUser()
 		.subscribe((user: User) => {

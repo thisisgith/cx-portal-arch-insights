@@ -1,0 +1,191 @@
+swagger: '2.0'
+info:
+  description: Entitlement Wrapper APIs
+  version: 1.0.0
+  title: Entitlement Wrapper
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+host: 'api-stage.cisco.com'
+basePath: /api/cxportal/cxpp-entitlement-wrapper
+tags:
+  - name: entitlement-wrapper
+    description: 'Entitlement Wrapper APIs to get the user profile, accounts, roles and Methods from SAAdmin and EB APIs. Provides more granular APIs to authorize the requests with the given user, comapny id , role and methods.  '
+  - name: template-controller
+    description: Template Controller
+paths:
+  /v1/entitlement/user/accounts:
+    get:
+      tags:
+        - entitlement-wrapper
+      summary: User Accounts for given user. This will filter accounts by account type
+      operationId: user-accounts
+      produces:
+        - '*/*'
+      parameters:
+        - name: Authorization
+          in: header
+          description: Mashery user credential header
+          required: false
+          type: string
+        - name: accountType
+          in: query
+          description: |-
+            Account Type  
+            ALL - provides all the accounts user associated 
+            HOLDING - provides only partner accounts 
+            CUSTOMER - provides only customer accounts 
+            VIRTUAL - provides smartaccounts where user associated to virtual account role only
+          required: false
+          type: string
+          allowEmptyValue: false
+          enum:
+            - ALL
+            - CUSTOMER
+            - HOLDING
+            - VIRTUAL
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/UserEntitlement'
+        '400':
+          description: Incorrect Request
+          schema:
+            $ref: '#/definitions/EntitlementWrapperErrorResponse'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Operation forbidden due to business policies
+          schema:
+            $ref: '#/definitions/EntitlementWrapperErrorResponse'
+        '404':
+          description: Not Found
+        '500':
+          description: Error while fetching user accounts
+          schema:
+            $ref: '#/definitions/EntitlementWrapperErrorResponse'
+      deprecated: false
+
+definitions:
+  Company:
+    type: object
+    properties:
+      accountType:
+        type: string
+        enum:
+          - ALL
+          - CUSTOMER
+          - HOLDING
+          - VIRTUAL
+      companyId:
+        type: integer
+        format: int64
+      companyName:
+        type: string
+      domainIdentifier:
+        type: string
+      roleList:
+        type: array
+        items:
+          $ref: '#/definitions/Role'
+    title: Company
+  EntitlementWrapperErrorResponse:
+    type: object
+    properties:
+      message:
+        type: string
+      reason:
+        $ref: '#/definitions/Reason'
+      status:
+        type: integer
+        format: int32
+    title: EntitlementWrapperErrorResponse
+  Reason:
+    type: object
+    properties:
+      errorCode:
+        type: string
+      errorInfo:
+        type: string
+    title: Reason
+  Role:
+    type: object
+    properties:
+      attribName:
+        type: string
+      attribType:
+        type: string
+      attribValue:
+        type: string
+      roleDisplayName:
+        type: string
+      roleName:
+        type: string
+      tenant:
+        type: string
+      tenantDisplayName:
+        type: string
+    title: Role
+  User:
+    type: object
+    properties:
+      accessLevel:
+        type: string
+      billToIds:
+        type: array
+        items:
+          type: string
+      city:
+        type: string
+      company:
+        type: string
+      country:
+        type: string
+      dplAddressFlag:
+        type: string
+      emailId:
+        type: string
+      encryptSwAccess:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      prefLanguage:
+        type: string
+      state:
+        type: string
+      street:
+        type: string
+      telephone:
+        type: string
+      userId:
+        type: string
+      userTitle:
+        type: string
+      zipCode:
+        type: string
+    title: User
+  UserEntitlement:
+    type: object
+    properties:
+      companyList:
+        type: array
+        items:
+          $ref: '#/definitions/Company'
+      env:
+        type: string
+      internalAssignableRoleList:
+        type: array
+        items:
+          $ref: '#/definitions/Role'
+      internalRoleList:
+        type: array
+        items:
+          $ref: '#/definitions/Role'
+      locale:
+        type: string
+      user:
+        $ref: '#/definitions/User'
+    title: UserEntitlement

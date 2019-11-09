@@ -1,9 +1,9 @@
 
 import { Injectable } from '@angular/core';
 import { Resolve } from '@angular/router';
-import { EntitlementService, EntitledUser, ServiceInfoResponse } from '@sdp-api';
+import { EntitlementService, EntitledUser, ServiceInfoResponse, EntitlementWrapperService, UserEntitlement } from '@sdp-api';
 import { Observable, of, ReplaySubject } from 'rxjs';
-import { catchError, map, mergeMap } from 'rxjs/operators';
+import { catchError, map, mergeMap, tap } from 'rxjs/operators';
 import { LogService } from '@cisco-ngx/cui-services';
 import { User } from '@interfaces';
 import * as _ from 'lodash-es';
@@ -11,7 +11,7 @@ import { CuiModalService } from '@cisco-ngx/cui-components';
 import {
 	UnauthorizedUserComponent,
 } from '../components/unauthorized-user/unauthorized-user.component';
-
+import { UserService } from '@services';
 /**
  * Resolver to fetch our user
  */
@@ -30,6 +30,8 @@ export class UserResolve implements Resolve<any> {
 	constructor (
 		private cuiModalService: CuiModalService,
 		private entitlementService: EntitlementService,
+		private entitlementWrapperService: EntitlementWrapperService,
+		private userService: UserService,
 		private logger: LogService,
 	) { }
 
@@ -77,26 +79,31 @@ export class UserResolve implements Resolve<any> {
 	 * Function used to resolve a user
 	 * @returns the user
 	 */
-	public resolve (): Observable<User> {
-		if (this.cachedUser) {
-			return of(this.cachedUser);
-		}
+	public resolve (): Observable<UserEntitlement> {
+		// if (this.cachedUser) {
+		// 	return of(this.cachedUser);
+		// }
 
-		return this.entitlementService.getUser()
+		return this.entitlementWrapperService.userAccounts({ accountType: 'CUSTOMER' })
 		.pipe(
-			mergeMap((user: EntitledUser) => {
-				this.customerId.next(_.get(user, 'customerId'));
-
-				return this.getServiceInfo(user);
-			}),
-			catchError(err => {
-				this.logger.error('user-resolve : loadUser() ' +
-					`:: Error : (${err.status}) ${err.message}`);
-				this.cuiModalService.showComponent(UnauthorizedUserComponent, { });
-
-				return of(null);
-			}),
+			tap((data: UserEntitlement) => console.log('new data: ', data)),
 		);
+
+		// return this.entitlementService.getUser()
+		// .pipe(
+		// 	mergeMap((user: EntitledUser) => {
+		// 		this.customerId.next(_.get(user, 'customerId'));
+
+		// 		return this.getServiceInfo(user);
+		// 	}),
+		// 	catchError(err => {
+		// 		this.logger.error('user-resolve : loadUser() ' +
+		// 			`:: Error : (${err.status}) ${err.message}`);
+		// 		this.cuiModalService.showComponent(UnauthorizedUserComponent, { });
+
+		// 		return of(null);
+		// 	}),
+		// );
 	}
 
 	/**
