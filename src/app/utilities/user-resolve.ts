@@ -1,9 +1,9 @@
 
 import { Injectable } from '@angular/core';
 import { Resolve } from '@angular/router';
-import { EntitlementService, EntitledUser, ServiceInfoResponse, EntitlementWrapperService, UserEntitlement } from '@sdp-api';
+import { EntitlementService, EntitledUser, EntitlementWrapperService, UserEntitlement } from '@sdp-api';
 import { Observable, of, ReplaySubject } from 'rxjs';
-import { catchError, map, mergeMap, tap } from 'rxjs/operators';
+import { catchError, map, mergeMap } from 'rxjs/operators';
 import { LogService } from '@cisco-ngx/cui-services';
 import { User } from '@interfaces';
 import * as _ from 'lodash-es';
@@ -79,47 +79,47 @@ export class UserResolve implements Resolve<any> {
 	 * Function used to resolve a user
 	 * @returns the user
 	 */
-	public resolve (): Observable<UserEntitlement> {
-		// if (this.cachedUser) {
-		// 	return of(this.cachedUser);
-		// }
+	public resolve (): Observable<User> {
+		if (this.cachedUser) {
+			return of(this.cachedUser);
+		}
 
 		return this.entitlementWrapperService.userAccounts({ accountType: 'CUSTOMER' })
 		.pipe(
-			tap((data: UserEntitlement) => console.log('new data: ', data)),
+			mergeMap((account: UserEntitlement) => {
+				this.customerId.next(_.get(account, 'customerId'));
+
+				return this.getAccountInfo(account);
+			}),
+			catchError(err => {
+				this.logger.error('user-resolve : loadUser() ' +
+					`:: Error : (${err.status}) ${err.message}`);
+				this.cuiModalService.showComponent(UnauthorizedUserComponent, { });
+
+				return of(null);
+			}),
 		);
-
-		// return this.entitlementService.getUser()
-		// .pipe(
-		// 	mergeMap((user: EntitledUser) => {
-		// 		this.customerId.next(_.get(user, 'customerId'));
-
-		// 		return this.getServiceInfo(user);
-		// 	}),
-		// 	catchError(err => {
-		// 		this.logger.error('user-resolve : loadUser() ' +
-		// 			`:: Error : (${err.status}) ${err.message}`);
-		// 		this.cuiModalService.showComponent(UnauthorizedUserComponent, { });
-
-		// 		return of(null);
-		// 	}),
-		// );
 	}
 
 	/**
-	 * Fetches the service info for the user
-	 * @param user the user to fetch the service info for
+	 * Fetches additional user info for the account
+	 * @param account the account to fetch additional user info for
 	 * @returns the user
 	 */
-	private getServiceInfo (user: EntitledUser):
+	private getAccountInfo (account: UserEntitlement):
 		Observable<User> {
-		return this.entitlementService.getServiceInfo(_.get(user, 'customerId'))
+		return this.entitlementService.getUser()
 		.pipe(
-			map((response: ServiceInfoResponse) => {
+			map((response: EntitledUser) => {
 				this.cachedUser = {
-					info: user,
-					service: _.head(response),
+					info: {
+						...account,
+						...response,
+					},
+					service: _.get(response, ['subscribedSolutions', 0]),
 				};
+
+				console.log('this.cachedUser: ', this.cachedUser);
 
 				this.user.next(this.cachedUser);
 				const { cxLevel, useCase, solution } = _.get(this.cachedUser, 'service');
@@ -131,7 +131,7 @@ export class UserResolve implements Resolve<any> {
 				return this.cachedUser;
 			}),
 			catchError(err => {
-				this.logger.error('user-resolve : getServiceInfo() ' +
+				this.logger.error('user-resolve : getAccountInfo() ' +
 					`:: Error : (${err.status}) ${err.message}`);
 
 				return of(null);

@@ -1,4 +1,4 @@
-import { EntitledUser, ServiceInfo } from '@sdp-api';
+import { EntitledUser, ServiceInfo, UserEntitlement } from '@sdp-api';
 
 export enum AccessLevel {
 	ANONYMOUS = 0,
@@ -30,6 +30,6 @@ export interface SmartAccount {
  * Interface representing our User
  */
 export interface User {
-	info: EntitledUser;
+	info: UserEntitlement & EntitledUser;
 	service: ServiceInfo;
 }
