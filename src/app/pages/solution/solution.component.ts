@@ -119,7 +119,6 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		private insightsCrashesService: InsightsCrashesService,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
-		console.log('userzz: ', user);
 		const companyList = _.get(user, ['info', 'companyList'], []);
 		this.accessLevel = _.get(user, ['info', 'accessLevel'], 0);
 		this.smartAccounts = companyList.filter(

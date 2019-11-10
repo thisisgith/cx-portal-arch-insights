@@ -1,17 +1,16 @@
 
 import { Injectable } from '@angular/core';
 import { Resolve } from '@angular/router';
-import { EntitlementService, EntitledUser, EntitlementWrapperService, UserEntitlement } from '@sdp-api';
+import { EntitlementWrapperService, UserEntitlement, OrgUserService, OrgUserResponse } from '@sdp-api';
 import { Observable, of, ReplaySubject } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import { LogService } from '@cisco-ngx/cui-services';
-import { User } from '@interfaces';
+import { User, SmartAccount } from '@interfaces';
 import * as _ from 'lodash-es';
 import { CuiModalService } from '@cisco-ngx/cui-components';
 import {
 	UnauthorizedUserComponent,
 } from '../components/unauthorized-user/unauthorized-user.component';
-import { UserService } from '@services';
 /**
  * Resolver to fetch our user
  */
@@ -23,15 +22,16 @@ export class UserResolve implements Resolve<any> {
 	private cachedUser: User;
 	private customerId = new ReplaySubject<string>(1);
 	private user = new ReplaySubject<User>(1);
+	private smartAccount: SmartAccount;
 	private cxLevel = new ReplaySubject<number>(1);
 	private solution = new ReplaySubject<string>(1);
 	private useCase = new ReplaySubject<string>(1);
+	private role = new ReplaySubject<string>(1);
 
 	constructor (
 		private cuiModalService: CuiModalService,
-		private entitlementService: EntitlementService,
 		private entitlementWrapperService: EntitlementWrapperService,
-		private userService: UserService,
+		private orgUserService: OrgUserService,
 		private logger: LogService,
 	) { }
 
@@ -76,6 +76,14 @@ export class UserResolve implements Resolve<any> {
 	}
 
 	/**
+	 * Returns the current user role
+	 * @returns the observable representing the user role
+	 */
+	public getRole (): Observable<string> {
+		return this.role.asObservable();
+	}
+
+	/**
 	 * Function used to resolve a user
 	 * @returns the user
 	 */
@@ -88,6 +96,14 @@ export class UserResolve implements Resolve<any> {
 		.pipe(
 			mergeMap((account: UserEntitlement) => {
 				this.customerId.next(_.get(account, 'customerId'));
+				const activeSmartAccountId = window.localStorage.getItem('activeSmartAccount');
+				if (activeSmartAccountId) {
+					this.smartAccount = _.find(_.get('account', 'companyList', []), {
+						companyId: activeSmartAccountId,
+					});
+				} else {
+					this.smartAccount = _.get(account, ['companyList', 0]);
+				}
 
 				return this.getAccountInfo(account);
 			}),
@@ -103,23 +119,25 @@ export class UserResolve implements Resolve<any> {
 
 	/**
 	 * Fetches additional user info for the account
-	 * @param account the account to fetch additional user info for
+	 * @param account the user account to fetch additional info for
 	 * @returns the user
 	 */
 	private getAccountInfo (account: UserEntitlement):
 		Observable<User> {
-		return this.entitlementService.getUser()
+		return this.orgUserService.getUserV2({
+			customerId: `${this.smartAccount.companyId}:0`,
+			saId: `${this.smartAccount.companyId}`,
+			vaId: 0,
+		})
 		.pipe(
-			map((response: EntitledUser) => {
+			map((response: OrgUserResponse) => {
 				this.cachedUser = {
 					info: {
 						...account,
 						...response,
 					},
-					service: _.get(response, ['subscribedSolutions', 0]),
+					service: _.get(response, 'subscribedServiceLevel'),
 				};
-
-				console.log('this.cachedUser: ', this.cachedUser);
 
 				this.user.next(this.cachedUser);
 				const { cxLevel, useCase, solution } = _.get(this.cachedUser, 'service');
@@ -127,6 +145,7 @@ export class UserResolve implements Resolve<any> {
 				this.cxLevel.next(cxLevel);
 				this.useCase.next(useCase);
 				this.solution.next(solution);
+				this.role.next(_.get(response, ['individualAccount', 'role']));
 
 				return this.cachedUser;
 			}),

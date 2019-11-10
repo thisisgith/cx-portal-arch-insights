@@ -1,0 +1,193 @@
+swagger: '2.0'
+info:
+  description: CDX API Services
+  version: v1
+  title: API Services
+  termsOfService: ''
+  contact:
+    email: htrevino@cisco.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+host: 'api.cisco.com'
+basePath: '/api/cxportal/entitlement'
+security:
+  - OauthSecurity: []
+paths:
+  /v1/user:
+    get:
+      tags:
+        - Org - User
+      summary: Returns information for this user (identified by the request credentials once the user logs in to the portal via ccoId). This incldues the user's role and party affiliation
+      description: Returns information for this user (identified by ccoId). This incldues the user's role and party affiliation
+      parameters:
+        - in: header
+          name: saId
+          type: number
+          format: int64
+          required: true
+        - in: header
+          name: vaId
+          type: number
+          format: int64
+          required: false
+      operationId: getUserByToken
+      produces:
+        - application/json
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/OrgUserResponse'
+        500:
+          description: '500 response'
+        401:
+          description: '401 response'
+        403:
+          description: '403 response'
+
+  /v2/user:
+    get:
+      tags:
+        - Org - User
+      summary: New version of the /v1/user API.
+      description: Returns information for this user (identified by ccoId). This incldues the user's role and party affiliation
+      parameters:
+        - in: header
+          name: CX-Context
+          type: string
+          schema:
+            example: {"customerId": "0000", "saId": "0000", "vaId": "0000"}
+          required: false
+        - in: header
+          name: saId
+          type: string
+          required: true
+        - in: header
+          name: vaId
+          type: number
+          required: true
+        - in: header
+          name: customerId
+          type: string
+          required: true
+      operationId: getUserV2
+      produces:
+        - application/json
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/OrgUserResponse'
+        500:
+          description: '500 response'
+        401:
+          description: '401 response'
+        403:
+          description: '403 response'
+
+securityDefinitions:
+  OauthSecurity:
+    type: oauth2
+    flow: implicit
+    authorizationUrl: 'https://oauth.simple.api/authorization'
+
+definitions:
+  OrgUserTeamAccount:
+    type: object
+    properties:
+      team:
+        type: array
+        items:
+          $ref: '#/definitions/OrgUserCiscoTeamMember'
+
+  OrgUserCiscoTeamMember:
+    type: object
+    properties:
+      ccoId:
+        type: string
+      emailAddress:
+        type: string
+      familyName:
+        type: string
+      name:
+        type: string
+      phone:
+        type: string
+      title:
+        type: string
+
+  OrgUserDataCenterInfo:
+        type: object
+        required:
+          - solution, useCase, cxLevel
+        properties:
+          dataCenter:
+            type: string
+            description: The code for the data center where the customer's data resides
+          apiDoman:
+            type: string
+            description: The API URL for the DC
+
+  OrgUserMethods:
+    type: object
+    properties:
+      methods:
+        type: array
+        items:
+          type: string
+
+  OrgUserSubscribedServiceLevels:
+        type: object
+        required:
+          - serviceLineName, cxLevel
+        properties:
+          serviceLineName:
+            type: string
+            description: GSP Name
+          cxLevel:
+            type: string
+            description: The highest CX service level (e.g. 1, 2) for customer
+
+  OrgUserResponse:
+    type: object
+    properties:
+      orgName:
+        type: string
+        description: The name of the organization. Not available for LA, use information from account API
+      customerId:
+        type: string
+        description: This is the party identifier used throughout the system
+      cxBUId:
+        type: string
+        description: The CX BUId to which the user with the admin role is affilated. The value set for the admin role is propagated to other users so it can be looked up when any user logs in. The CXBUId is used to retrieve the lifecycle data from CSDF
+
+      individualAccount:
+        type: object
+        properties:
+
+          ccoId:
+            type: string
+            description: Individual's CCO Id
+          saId:
+            type: string
+            description: This is the Smart Account Id
+          vaId:
+           type: string
+           description: This is the Virtual Account Id
+
+          role:
+            type: string
+            description: The role assigned to this user under the specified SA or VA. Not populated for LA. Use role from accounts API
+
+          userMethods:
+             type: array
+             items:
+              type: string
+      account:
+        $ref: '#/definitions/OrgUserTeamAccount'
+      subscribedServiceLevel:
+          $ref: '#/definitions/OrgUserSubscribedServiceLevels'
+      dataCenter:
+        $ref: '#/definitions/OrgUserDataCenterInfo'
+
