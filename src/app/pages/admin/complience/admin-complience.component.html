@@ -94,6 +94,24 @@
 										</div>
 							</div>
 							</div>
+							<div *ngIf="selectedPolicy" class="device-tags-selection col-md-4">
+								<div class="form-group form-group--inline">
+									<label class="radio">
+										<input type="radio" name="inline-radio" [(ngModel)]="selectedDeviceTagType" 
+										value="allDevices" (change)="onChangesDeviceTagType()">
+										<span class="radio__input"></span>
+										<span class="radio__label hidden-xs">All Devices</span>
+									</label>
+								</div>
+								<div class="form-group form-group--inline">
+									<label class="radio">
+										<input type="radio" name="inline-radio" [(ngModel)]="selectedDeviceTagType"
+										 value="specificDeviceTags" (change)="onChangesDeviceTagType()">
+										<span class="radio__input"></span>
+										<span class="radio__label hidden-xs">Specific Device Tags</span>
+									</label>
+								</div>
+							</div>
 						</div>
 					</div>
 					<div class="text-large" [hidden]= "!showAssetsComponent" [innerText]="'_AdminPolicyTaggingHeading_' | i18n"></div>

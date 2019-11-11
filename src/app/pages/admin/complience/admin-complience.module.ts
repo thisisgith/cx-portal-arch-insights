@@ -5,6 +5,7 @@ import { AdminComplienceComponent } from './admin-complience.component';
 import { I18nPipeModule, FromNowPipeModule } from '@cisco-ngx/cui-pipes';
 import { AdminWrapperModule } from '../admin-wrapper.module';
 import { ControlPointsModule, UserModule } from '@sdp-api';
+import { FormsModule } from '@angular/forms';
 
 import {
 	CuiLoaderModule,
@@ -40,6 +41,7 @@ const imports = [
 	CuiModalModule,
 	CuiAlertModule,
 	TooltipModule,
+	FormsModule,
 	UserModule.forRoot({ rootUrl }),
 ];
 
