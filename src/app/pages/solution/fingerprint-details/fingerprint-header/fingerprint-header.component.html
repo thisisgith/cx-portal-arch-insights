@@ -11,11 +11,9 @@
 		<div data-auto-id="globalRiskRank" class="col-md-6">
 			<div class="row">
 				<div class="text-small text-bold" [innerText]="'_CP_Risk_' | i18n | uppercase"></div>
-				<sup>
 					<div tooltip [tooltipTemplate]="riskTooltipContentTemplate"
-						class="text-tiny icon-info-outline qtr-margin-left half-padding-bottom" [tooltipMaxWidth]="200">
+						class="text-small icon-info qtr-margin-left" [tooltipMaxWidth]="200">
 					</div>
-				</sup>
 			</div>
 			<div class="row">
 					<div [ngClass]="

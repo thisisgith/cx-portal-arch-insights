@@ -128,8 +128,8 @@ export class FpSimilarAssetsComponent {
 		this.tableOptions = new CuiTableOptions({
 			bordered: true,
 			dynamicData: true,
-			singleSelect: false,
-			striped: true,
+			singleSelect: true,
+			striped: false,
 			wrapText: true,
 			padding: 'compressed',
 			columns: [
