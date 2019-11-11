@@ -11,7 +11,7 @@ import { RouteAuthService } from '@services';
 import { HttpErrorResponse } from '@angular/common/http';
 import { LogService } from '@cisco-ngx/cui-services';
 
-describe('AdminComplienceComponent', () => {
+fdescribe('AdminComplienceComponent', () => {
 	let component: AdminComplienceComponent;
 	let fixture: ComponentFixture<AdminComplienceComponent>;
 
@@ -179,7 +179,7 @@ describe('AdminComplienceComponent', () => {
 				.and
 				.returnValue(throwError(new HttpErrorResponse(error)));
 			component.updatePermissions()
-			.subscribe(() => { },
+			.subscribe(null,
 				err => {
 					expect(err.status)
 					.toEqual(404);
@@ -197,7 +197,7 @@ describe('AdminComplienceComponent', () => {
 					statusText: 'Resource not found',
 				})));
 			component.getLeftSideTags()
-			.subscribe(() => { },
+			.subscribe(null,
 				err => {
 					expect(err.statusText)
 					.toEqual('Resource not found');
@@ -213,7 +213,7 @@ describe('AdminComplienceComponent', () => {
 					statusText: 'Resource not found',
 				})));
 			component.getRightSideTags()
-			.subscribe(() => { },
+			.subscribe(null,
 				err => {
 					expect(err.statusText)
 					.toEqual('Resource not found');
@@ -272,7 +272,7 @@ describe('AdminComplienceComponent', () => {
 		assetTaggingService.getSelectedTags()
 		.subscribe(res => {
 			expect(component.saveDetails.body.tags)
-			.toBeDefined();
+			.toEqual(res);
 		});
 	});
 
@@ -295,7 +295,7 @@ describe('AdminComplienceComponent', () => {
 				statusText: 'Resource not found',
 			})));
 		component.checkOptlnStatus()
-		.subscribe(() => { },
+		.subscribe(null,
 			err => {
 				expect(err.status)
 				.toEqual(404);
@@ -311,7 +311,7 @@ describe('AdminComplienceComponent', () => {
 				statusText: 'Resource not found',
 			})));
 		component.getOptinOutStatus()
-		.subscribe(() => { },
+		.subscribe(null,
 			res => {
 				expect(res.status)
 				.toEqual(404);
