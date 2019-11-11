@@ -186,7 +186,7 @@
 </ng-template>
 
 <ng-template #softwareVersion let-item="celldata">
-	<span *ngIf="item?.softwareVersionCompliant === 'No' && item?.softwareTypeCompliant === 'No'"
+	<span *ngIf="item?.softwareVersionCompliant === 'No' || item?.softwareTypeCompliant === 'No'"
 		class="icon-warning-outline"></span>
 	<span class="qtr-margin-left" [innerText]="item?.softwareVersion"></span>
 </ng-template>

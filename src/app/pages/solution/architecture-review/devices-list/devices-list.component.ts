@@ -152,7 +152,7 @@ export class DevicesListComponent implements OnInit, OnChanges {
 					width : '14%',
 				},
 				{
-					name: I18n.get('_ArchitectureSoftwareVersion_'),
+					name: I18n.get('_ArchitectureSoftwareRelease_'),
 					sortable: false,
 					template : this.softwareVersionTemplate,
 					width : '14%',
