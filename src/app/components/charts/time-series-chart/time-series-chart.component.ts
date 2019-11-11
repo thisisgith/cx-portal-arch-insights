@@ -89,21 +89,17 @@ export class TimeSeriesChartComponent {
 				gridLineColor: 'transparent',
 				gridLineWidth: 0,
 				lineWidth: 1,
-				 plotLines: [{
-					color: '#FF0000',
-					value: 0,
-					width: 1,
-				},
-				{
-					color: 'grey',
-					dashStyle: 'ShortDash',
-					label: {
-						align: 'right',
-						text: 'Published Limit',
-					},
-					value: this.plotYaxisLine,
-					width: 1,
-				}],
+				 plotLines: [
+					{
+						color: 'grey',
+						dashStyle: 'ShortDash',
+						label: {
+							align: 'right',
+							text: 'Published Limit',
+						},
+						value: this.plotYaxisLine,
+						width: 1,
+					}],
 				title: {
 					text: 'Count',
 				},

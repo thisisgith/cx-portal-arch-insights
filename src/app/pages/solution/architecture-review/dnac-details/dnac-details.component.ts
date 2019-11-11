@@ -90,24 +90,24 @@ export class DnacDetailsComponent implements OnChanges {
 					noOfEndpoints: any;
 				}) => {
 					let tempArr = [];
-					tempArr.push(new Date(object.collectionTime));
+					tempArr.push(object.collectionTime);
 					tempArr.push(Number(object.noOfDevices));
 					this.dataForSystemsGraph.push(tempArr);
 					tempArr = [];
 
-					tempArr.push(new Date(object.collectionTime));
+					tempArr.push(object.collectionTime);
 					tempArr.push(Number(object.noOfFabrics));
 					this.dataForFabricsGraph.push(tempArr);
 					tempArr = [];
 
-					tempArr.push(new Date(object.collectionTime));
+					tempArr.push(object.collectionTime);
 					tempArr.push(Number(object.noOfWlc));
 					this.dataForWLCsGraph.push(tempArr);
 					tempArr = [];
 
-					tempArr.push(new Date(object.endpointsPeakTime));
+					tempArr.push(object.endpointsPeakTime);
 					tempArr.push(Number(object.noOfEndpoints));
-					this.dataForWLCsGraph.push(tempArr);
+					this.dataForEndPointsGraph.push(tempArr);
 			  });
 		}
 	}
