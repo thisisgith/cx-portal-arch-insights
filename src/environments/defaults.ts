@@ -62,7 +62,7 @@ export const defaults = {
 	mapboxForwardGeocodePath: '/geocoding/v5/mapbox.places',
 	mapboxHost: 'https://api.mapbox.com',
 	mapboxToken:
-	'sk.eyJ1Ijoic3NhbHRzZ2EiLCJhIjoiY2syMmVwd2h4MGp5aTNscGczNjlkbjRueSJ9.nAeOj3bDf0ePEUvb7q9F2g',
+	'pk.eyJ1IjoibWlzY2htaTIiLCJhIjoiY2p4eDl2ODVnMGpmODNkcDhsbG5nNXQ0YyJ9.vpfGffFASSUfANAU4Yvtxg',
 	myCase: 'https://mycase2.cloudapps.cisco.com',
 	// ClientSSOInterceptor: No auth token for the typeahead url
 	noAuthEndpoints: [
@@ -91,6 +91,7 @@ export const defaults = {
 		controlpoints: '/api/customerportal/controlpoint',
 		customerportal: '/api/customerportal',
 		inventory: '/api/v1/inventory',
+		partner: '/api/cxportal',
 	},
 	supportEmailLink: 'mailto:help@cisco.com',
 	typeaheadServiceOrigin: 'https://xresps-stage.cloudapps.cisco.com',

@@ -341,12 +341,6 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 							value: 'title',
 						},
 						{
-							key: 'version',
-							name: I18n.get('_Version_'),
-							sortable: true,
-							template: this.versionTemplate,
-						},
-						{
 							key: 'lastUpdated',
 							name: I18n.get('_Updated_'),
 							sortable: true,
