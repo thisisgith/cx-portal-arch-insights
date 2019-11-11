@@ -20,9 +20,11 @@ import {
 export class UserResolve implements Resolve<any> {
 
 	private cachedUser: User;
+	private smartAccount: SmartAccount;
 	private customerId = new ReplaySubject<string>(1);
 	private user = new ReplaySubject<User>(1);
-	private smartAccount: SmartAccount;
+	private saId = new ReplaySubject<number>(1);
+	private vaId = new ReplaySubject<number>(1);
 	private cxLevel = new ReplaySubject<number>(1);
 	private solution = new ReplaySubject<string>(1);
 	private useCase = new ReplaySubject<string>(1);
@@ -75,12 +77,28 @@ export class UserResolve implements Resolve<any> {
 		return this.useCase.asObservable();
 	}
 
-	/**
-	 * Returns the current user role
-	 * @returns the observable representing the user role
-	 */
 	public getRole (): Observable<string> {
 		return this.role.asObservable();
+	}
+
+	public getSaId (): Observable<number> {
+		return this.saId.asObservable();
+	}
+
+	public getVaId (): Observable<number> {
+		return this.vaId.asObservable();
+	}
+
+	public setSaId (saId: number) {
+		const smartAccount = _.find(_.get(this.cachedUser, ['info', 'companyList'], []), {
+			companyId: saId,
+		});
+
+		if (smartAccount) {
+			this.saId.next(saId);
+			this.customerId.next(`${saId}:0`);
+			window.localStorage.setItem('activeSmartAccount', `${saId}`);
+		}
 	}
 
 	/**
@@ -95,7 +113,8 @@ export class UserResolve implements Resolve<any> {
 		return this.entitlementWrapperService.userAccounts({ accountType: 'CUSTOMER' })
 		.pipe(
 			mergeMap((account: UserEntitlement) => {
-				this.customerId.next(_.get(account, 'customerId'));
+				// If available, retrieve and set `activeSmartAccount` from local storage.
+				// If not, default to the first smart account in user's list.
 				const activeSmartAccountId = window.localStorage.getItem('activeSmartAccount');
 				if (activeSmartAccountId) {
 					this.smartAccount = _.find(_.get('account', 'companyList', []), {
@@ -104,6 +123,10 @@ export class UserResolve implements Resolve<any> {
 				} else {
 					this.smartAccount = _.get(account, ['companyList', 0]);
 				}
+				const saId = _.get(this.smartAccount, 'companyId');
+				this.saId.next(saId);
+				this.vaId.next(0);
+				this.customerId.next(`${saId}:0`);
 
 				return this.getAccountInfo(account);
 			}),
@@ -119,24 +142,23 @@ export class UserResolve implements Resolve<any> {
 
 	/**
 	 * Fetches additional user info for the account
-	 * @param account the user account to fetch additional info for
+	 * @param accountResponse the user account to fetch additional info for
 	 * @returns the user
 	 */
-	private getAccountInfo (account: UserEntitlement):
+	private getAccountInfo (accountResponse: UserEntitlement):
 		Observable<User> {
+		const saId = _.get(this.smartAccount, 'companyId');
+
 		return this.orgUserService.getUserV2({
-			customerId: `${this.smartAccount.companyId}:0`,
-			saId: `${this.smartAccount.companyId}`,
+			saId,
+			customerId: `${saId}:0`,
 			vaId: 0,
 		})
 		.pipe(
-			map((response: OrgUserResponse) => {
+			map((userResponse: OrgUserResponse) => {
 				this.cachedUser = {
-					info: {
-						...account,
-						...response,
-					},
-					service: _.get(response, 'subscribedServiceLevel'),
+					info: this.mapUserResponse(accountResponse, userResponse),
+					service: _.get(userResponse, 'subscribedServiceLevel'),
 				};
 
 				this.user.next(this.cachedUser);
@@ -145,7 +167,7 @@ export class UserResolve implements Resolve<any> {
 				this.cxLevel.next(cxLevel);
 				this.useCase.next(useCase);
 				this.solution.next(solution);
-				this.role.next(_.get(response, ['individualAccount', 'role']));
+				this.role.next(_.get(userResponse, ['individualAccount', 'role']));
 
 				return this.cachedUser;
 			}),
@@ -156,5 +178,36 @@ export class UserResolve implements Resolve<any> {
 				return of(null);
 			}),
 		);
+	}
+
+	/**
+	 * Temporary method to keep user response backward-compatible.
+	 * Maps data from `accounts` and `v2/user` APIs to match the old user obj.
+	 * @param accountResponse the response from `/accounts`
+	 * @param userResponse the response from `v2/user`
+	 * @returns the user
+	 */
+	private mapUserResponse (accountResponse: UserEntitlement, userResponse: OrgUserResponse) {
+		const smartAccount = this.smartAccount;
+		const accountUser = _.get(accountResponse, 'user', { });
+
+		return {
+			...accountResponse,
+			...userResponse,
+			name: smartAccount.companyName,
+			customerId: `${smartAccount.companyId}`,
+			individual: {
+				name: accountUser.firstName,
+				familyName: accountUser.lastName,
+				emailAddress: accountUser.emailId,
+				ccoId: userResponse.individualAccount.ccoId,
+				cxBUId: userResponse.individualAccount.cxBUId,
+				role: userResponse.individualAccount.role,
+			},
+			account: userResponse.account,
+			subscribedSolutions: {
+				cxLevel: _.get(userResponse, ['subscribedServiceLevel', 'cxLevel']),
+			},
+		};
 	}
 }

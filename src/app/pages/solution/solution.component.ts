@@ -37,6 +37,7 @@ import { Step } from '../../../../src/app/components/quick-tour/quick-tour.compo
 import { DetailsPanelStackService, UtilsService, RacetrackInfoService } from '@services';
 import { HttpResponse } from '@angular/common/http';
 import { SmartAccount, AccessLevel } from '@interfaces';
+import { UserResolve } from '@utilities';
 
 /**
  * Interface representing a facet
@@ -61,7 +62,7 @@ interface Facet {
 })
 export class SolutionComponent implements OnInit, OnDestroy {
 	public smartAccounts: SmartAccount[];
-	public selectedSmartAccount: SmartAccount;
+	public activeSmartAccount: SmartAccount;
 	public showSmartAccountSelection: boolean;
 	public accessLevel: number;
 	public selectedFacet: Facet;
@@ -117,30 +118,19 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		private racetrackInfoService: RacetrackInfoService,
 		private detailsPanelStackService: DetailsPanelStackService,
 		private insightsCrashesService: InsightsCrashesService,
+		private userResolve: UserResolve,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
-		const companyList = _.get(user, ['info', 'companyList'], []);
 		this.accessLevel = _.get(user, ['info', 'accessLevel'], 0);
-		this.smartAccounts = companyList.filter(
-			(_sa: SmartAccount) => _sa.accountType === 'CUSTOMER');
-		// Show Smart Account Selection only if the user is a customer and
-		// they have multiple smart accounts
-		this.showSmartAccountSelection = (this.accessLevel === AccessLevel.CUSTOMER &&
-			this.smartAccounts.length && this.smartAccounts.length > 1);
-		if (this.accessLevel === AccessLevel.CUSTOMER && this.smartAccounts.length) {
-			// If available, retrieve and set `selectedSmartAccount` from local storage.
-			// If not, default to the first smart account in user's list.
-			const currentSmartAccountId = Number(
-				window.localStorage.getItem('currentSmartAccount'));
-			if (currentSmartAccountId) {
-				this.selectedSmartAccount = _.find(this.smartAccounts, {
-					companyId: currentSmartAccountId,
-				});
-			}
-			if (!this.selectedSmartAccount) {
-				this.selectedSmartAccount = this.smartAccounts[0];
-			}
-		}
+		this.smartAccounts = _.get(user, ['info', 'companyList'], []);
+
+		this.userResolve.getSaId()
+		.subscribe((saId: number) => {
+			this.showSmartAccountSelection = this.smartAccounts.length > 1;
+			this.activeSmartAccount = _.find(this.smartAccounts, {
+				companyId: saId,
+			});
+		});
 
 		this.customerId = _.get(user, ['info', 'customerId']);
 		this.cxLevel = _.get(user, ['service', 'cxLevel'], 0);
@@ -333,13 +323,8 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	/**
-	 * Change the smart account
-	 * @param smartAccount the selected smart account
-	 */
-	public changeSmartAccount (smartAccount: SmartAccount) {
-		this.selectedSmartAccount = smartAccount;
-		window.localStorage.setItem('currentSmartAccount', smartAccount.companyId.toString());
+	public changeSmartAccount (saId: number) {
+		this.userResolve.setSaId(saId);
 	}
 
 	/**

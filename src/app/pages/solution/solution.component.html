@@ -51,18 +51,18 @@
 	<div class="container">
 		<div class="cs flex flex-fluid flex-center-vertical">
 			<div data-auto-id="HomeButton" class="cs__home" inlineSVG="assets/icons/icon-home.svg" (click)="goHome()"></div>
-			<div class="cs__next-icon" inlineSVG="assets/icons/icon-arrow-breadcrumb.svg" *ngIf="selectedSmartAccount"></div>
+			<div class="cs__next-icon" inlineSVG="assets/icons/icon-arrow-breadcrumb.svg" *ngIf="showSmartAccountSelection"></div>
 			<div *ngIf="showSmartAccountSelection">
 				<div class="group-label" [innerText]="'_SmartAccount_' | i18n"></div>
 				<div class="dropdown" data-auto-id="SmartAccountDropdown"
 					[ngClass]="{'active': status.dropdowns.smartAccount }"
 					(click)="changeDropdownSelection('smartAccount')">
-					<a class="text-color-dkgray text-size-18" [innerText]="selectedSmartAccount.companyName"></a>
+					<a class="text-color-dkgray text-size-18" [innerText]="activeSmartAccount.companyName"></a>
 					<div class="dropdown__menu">
 						<a *ngFor="let smartAccount of smartAccounts"
 							attr.data-auto-id="SmartAccountDropdown-{{ smartAccount.companyName }}"
-							(click)="changeSmartAccount(smartAccount)"
-							[ngClass]="{'selected': selectedSmartAccount.companyName === smartAccount.companyName}">
+							(click)="changeSmartAccount(smartAccount.companyId)"
+							[ngClass]="{'selected': activeSmartAccount.companyName === smartAccount.companyName}">
 							{{ smartAccount.companyName }}
 						</a>
 					</div>

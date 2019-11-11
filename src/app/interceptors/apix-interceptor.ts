@@ -50,7 +50,6 @@ export class APIxInterceptor implements HttpInterceptor {
 			this.originRegex =
 				new RegExp(`^${sdpServiceOrigin}|^${rmaServiceOrigin}`);
 		}
-		console.log('environment: ', environment, _.values(environment.sdpServicePaths));
 		this.sdpRegex = new RegExp(`^${
 			_.values(environment.sdpServicePaths)
 			.join('|^')
