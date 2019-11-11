@@ -32,7 +32,7 @@
 					<span innerText="{{ deviceDetails?.currentDeviceRole }}"></span>
 				</div>
 				<div class="half-padding-bottom">
-					<div class="alert fade-and-slide-top text-left alert--warning" *ngIf="failedCriteriaMessages">
+					<div class="alert fade-and-slide-top text-left alert--warning" *ngIf="failedCriteriaMessages?.length > 0">
 						<div class="alert__icon icon-warning-outline"></div>
 						<ng-container class="failed-criteria">
 							<div class="alert__message">
@@ -189,10 +189,4 @@
 	<span *ngIf="item?.softwareVersionCompliant === 'No' || item?.softwareTypeCompliant === 'No'"
 		class="icon-warning-outline"></span>
 	<span class="qtr-margin-left" [innerText]="item?.softwareVersion"></span>
-</ng-template>
-
-<ng-template #warningMessages>
-	<div *ngFor="let failedCriterias of failedCriteriaMessages" class="qtr-padding-top">
-		<span class="qtr-margin-left text-muted text-small" [innerText]="failedCriterias"></span>
-	</div>
 </ng-template>

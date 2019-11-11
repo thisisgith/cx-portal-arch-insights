@@ -209,7 +209,7 @@ export class DevicesListComponent implements OnInit, OnChanges {
  	* @param message - The Object that contains pageNumber Index
  	*/
 	public getfailedCriteriaMessage (message: any) {
-		this.failedCriteriaMessages = { };
+		this.failedCriteriaMessages = [];
 		this.failedCriteriaMessages = message;
 
 	}
@@ -292,6 +292,8 @@ export class DevicesListComponent implements OnInit, OnChanges {
  	* @param event - It contains the selected Exception
  	*/
 	public onTableRowClicked (event: any) {
+		this.failedCriteriaMessages = [];
+		this.deviceInfoMessage = [];
 		this.deviceDetails = _.cloneDeep(event);
 	}
 
