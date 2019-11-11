@@ -8,13 +8,16 @@ const customerId = '2431199';
 
 /** The mock response for coverage counts */
 const mockAdvisoryCounts: HardwareEOLCountResponse = {
-	'gt-0-lt-30-days': {
+	'gt-0-lt-12-months': {
 		numericValue: 5,
 	},
-	'gt-30-lt-60-days': {
+	'gt-12-lt-24-months': {
 		numericValue: 26,
 	},
-	'gt-60-lt-90-days': {
+	'gt-24-lt-36-months': {
+		numericValue: 8,
+	},
+	'gt-36-months': {
 		numericValue: 8,
 	},
 };

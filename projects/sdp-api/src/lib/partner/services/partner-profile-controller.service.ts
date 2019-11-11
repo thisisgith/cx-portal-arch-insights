@@ -47,7 +47,7 @@ class PartnerProfileControllerService extends __BaseService {
     if (params.Authorization != null) __headers = __headers.set('Authorization', params.Authorization.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/cxpp-partner-info/partnerInfo/v1/partner/profile`,
+      this.rootUrl + `/cxportal/cxpp-partner-info/partnerInfo/v1/partner/profile`,
       __body,
       {
         headers: __headers,
@@ -90,7 +90,7 @@ class PartnerProfileControllerService extends __BaseService {
     if (Authorization != null) __headers = __headers.set('Authorization', Authorization.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/cxpp-partner-info/partnerInfo/v1/partner/profile/user`,
+      this.rootUrl + `/cxportal/cxpp-partner-info/partnerInfo/v1/partner/profile/user`,
       __body,
       {
         headers: __headers,
@@ -140,7 +140,7 @@ class PartnerProfileControllerService extends __BaseService {
     if (params.Authorization != null) __headers = __headers.set('Authorization', params.Authorization.toString());
     let req = new HttpRequest<any>(
       'POST',
-      this.rootUrl + `/cxpp-partner-info/partnerInfo/v1/partner/profile/user/picture`,
+      this.rootUrl + `/cxportal/cxpp-partner-info/partnerInfo/v1/partner/profile/user/picture`,
       __body,
       {
         headers: __headers,

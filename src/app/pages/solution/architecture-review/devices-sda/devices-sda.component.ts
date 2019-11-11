@@ -18,7 +18,7 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import * as _ from 'lodash-es';
 import { catchError, takeUntil, map } from 'rxjs/operators';
-import { Subject, forkJoin, of } from 'rxjs';
+import { Subject, of } from 'rxjs';
 
 /**
  * Devices SDA Product Compatibility Component
@@ -37,10 +37,15 @@ export class DevicesSdaComponent implements OnInit, OnChanges {
 	public hardwareTableOptions: CuiTableOptions;
 	@ViewChild('sdaSoftwareVersions', { static: true })
 	public sdaSoftwareVersions: TemplateRef<any>;
+	@ViewChild('sdaHardwareProductId', { static: true })
+	public sdaHardwareProductId: TemplateRef<any>;
 	@ViewChild('sdaHardwareProductFamily', { static: true })
 	public sdaHardwareProductFamily: TemplateRef<any>;
 	public sdaSoftwareGridData: [];
 	public sdaHardwareGridData: [];
+	public isLoading = false;
+	public isError = false;
+	@Output() public osvCriteriaToEmit = new EventEmitter<any>();
 	@Output() public failedCriteriaToEmit = new EventEmitter<any>();
 	@Output() public deviceInfoToEmit = new EventEmitter<any>();
 	public customerId = '';
@@ -51,13 +56,15 @@ export class DevicesSdaComponent implements OnInit, OnChanges {
 	public showSwitchInterface = false;
 	public nonOptimalLinkTableLimit = 10;
 	public nonOptimalLinksTotalCount = 0;
+	public selectedSoftwareGroup: any;
+	public tabIndex: number;
 	public params: IParamType = {
-		body : [],
+		body: [],
 		collectionId: '',
 		customerId: '',
 		deviceIp: '',
-		page : 0,
-		pageSize : 10,
+		page: 0,
+		pageSize: 10,
 	};
 	public sdaData = { };
 	constructor (private logger: LogService, private route: ActivatedRoute,
@@ -79,18 +86,22 @@ export class DevicesSdaComponent implements OnInit, OnChanges {
 	 * call the getdata function for Updating the Table
 	 */
 	public ngOnChanges () {
+		this.isLoading = true;
 		if (this.deviceDetails) {
 			const ipAddress = this.deviceDetails.ipAddress;
 			this.params.body = ipAddress;
-			this.params.page = 0 ;
+			this.params.page = 0;
 			this.params.deviceIp = this.deviceDetails.ipAddress;
 			this.params.collectionId = '';
 			this.getCollectionId();
-			forkJoin(
-				this.getSdaDeviceData(),
-				this.getOptimalLinks(1),
-			)
-			.subscribe();
+			if (this.deviceDetails.sdaNoOfMtuNonOptimalInterfaces > 0) {
+				this.getSdaDeviceData();
+				this.getOptimalLinks(1);
+			} else {
+				this.getSdaDeviceData();
+			}
+		} else {
+			this.isLoading = false;
 		}
 	}
 	/**
@@ -99,15 +110,19 @@ export class DevicesSdaComponent implements OnInit, OnChanges {
 
 	public getCollectionId () {
 		this.architectureReviewService.getCollectionId()
-		.subscribe(res => {
-			this.params.collectionId = _.get(res, 'collection.collectionId');
-		},
-		err => {
-			this.logger.error('Devices list Component View' +
-				'  : getCollectionId() ' +
-				`:: Error : (${err.status}) ${err.message}`);
-		});
-	 }
+			.pipe(
+				takeUntil(this.destroy$),
+			)
+			.subscribe(res => {
+				this.params.collectionId = _.get(res, 'collection.collectionId');
+			},
+				err => {
+					this.errorHandler();
+					this.logger.error('Devices list Component View' +
+						'  : getCollectionId() ' +
+						`:: Error : (${err.status}) ${err.message}`);
+				});
+	}
 	/**
 	 * will get the data for underlay recommendation table
 	 * @returns data for underlay table
@@ -116,55 +131,84 @@ export class DevicesSdaComponent implements OnInit, OnChanges {
 	public getOptimalLinks (pageNo) {
 		this.params.page = pageNo;
 
-		return this.architectureReviewService.getOptimalLinks(this.params)
-		.pipe(
-			takeUntil(this.destroy$),
-			map((results: any) => {
-				const dnacDeviceDetails = results.dnacDeviceDetails;
-				this.nonOptimalLinks = dnacDeviceDetails.mtuNonOptimalLinks;
-				this.nonOptimalLinksTotalCount = dnacDeviceDetails.totalCount;
-			}),
-			catchError(err => {
-				this.logger.error('Get SDA Devices : getSdaDeviceData() ' +
-					`:: Error : (${err.status}) ${err.message}`);
+	 this.architectureReviewService.getOptimalLinks(this.params)
+			.pipe(
+				takeUntil(this.destroy$),
+				map((results: any) => {
+					const dnacDeviceDetails = results.dnacDeviceDetails;
+					this.nonOptimalLinks = dnacDeviceDetails.mtuNonOptimalLinks;
+					this.nonOptimalLinksTotalCount = dnacDeviceDetails.totalCount;
+					this.isLoading = false;
+				}),
+				catchError(err => {
+					this.logger.error('Get SDA Devices : getSdaDeviceData() ' +
+						`:: Error : (${err.status}) ${err.message}`);
 
-				return of({ });
-			}),
-		);
+					return of({ });
+				}),
+			);
 	}
-
+	/**
+	 * redirects to osv page
+	 * call method in parent component
+	 * @param message to pass
+	 */
+	public callOsvPage () {
+		const data = {
+			active: false,
+			customerId: this.customerId,
+			id: this.deviceDetails.productId,
+			optimalVersion: null,
+			productFamily: this.deviceDetails.productFamily,
+			productId: this.deviceDetails.productId,
+			profileName: this.deviceDetails.productId,
+			recommAcceptedDate: '',
+			recommendation: '',
+			rowSelected: true,
+			solution: '',
+			statusUpdated: false,
+			swType: this.deviceDetails.softwareType,
+			swVersions: [this.deviceDetails.softwareVersion],
+			useCase: '',
+		};
+		this.osvCriteriaToEmit.emit(data);
+	}
 	/**
 	 * gets SDA devices
 	 * @returns SDA devices
 	 */
 	public getSdaDeviceData () {
-		return this.architectureReviewService.getDevicesSDA(this.params)
-		.pipe(
-			takeUntil(this.destroy$),
-			map((results: any) => {
-				const dnacDeviceDetails = results.dnacDeviceDetails;
-				this.sdaData = dnacDeviceDetails;
-				this.sdaSoftwareGridData = dnacDeviceDetails.sdaSoftwareSupported;
-				this.sdaHardwareGridData = dnacDeviceDetails.sdaHardwareSupported;
-				this.failedCriteriaToEmit.emit(dnacDeviceDetails.failedCriteria);
-				this.deviceInfoToEmit.emit(dnacDeviceDetails);
-				if (dnacDeviceDetails.sdaL3AccessEnabled === 'Yes') {
-					this.showL3Switch = true;
-				}
-				if (dnacDeviceDetails.sdaRedundantLinks === 'Yes') {
-					this.showSwitchRedundency = true;
-				}
-				if (dnacDeviceDetails.sdaNoOfMtuNonOptimalInterfaces > 0) {
-					this.showSwitchInterface = true;
-				}
-			}),
-			catchError(err => {
-				this.logger.error('Get SDA Devices : getSdaDeviceData() ' +
-					`:: Error : (${err.status}) ${err.message}`);
+	 this.architectureReviewService.getDevicesSDA(this.params)
+			.pipe(
+				takeUntil(this.destroy$),
+			)
+			.subscribe(
+				(results => {
+					const dnacDeviceDetails = results.dnacDeviceDetails;
+					this.sdaData = dnacDeviceDetails;
+					this.sdaSoftwareGridData = dnacDeviceDetails.sdaSupportedSoftware;
+					this.sdaHardwareGridData = dnacDeviceDetails.sdaSupportedHardware;
+					this.failedCriteriaToEmit.emit(dnacDeviceDetails.failedCriteria);
+					this.deviceInfoToEmit.emit(dnacDeviceDetails);
+					if (dnacDeviceDetails.sdaL3AccessEnabled === 'Yes') {
+						this.showL3Switch = true;
+					}
+					if (dnacDeviceDetails.sdaRedundantLinks === 'Yes') {
+						this.showSwitchRedundency = true;
+					}
+					if (dnacDeviceDetails.sdaNoOfMtuNonOptimalInterfaces > 0) {
+						this.showSwitchInterface = true;
+					}
+					this.isLoading = false;
+				}),
+				catchError(err => {
+					this.errorHandler();
+					this.logger.error('Get SDA Devices : getSdaDeviceData() ' +
+						`:: Error : (${err.status}) ${err.message}`);
 
-				return of({ });
-			}),
-		);
+					return of({ });
+				}),
+			);
 	}
 	/**
 	 * This Function is used to build  software and hardware grid
@@ -194,6 +238,7 @@ export class DevicesSdaComponent implements OnInit, OnChanges {
 				},
 			],
 			striped: false,
+			wrapText: true,
 		});
 		this.hardwareTableOptions = new CuiTableOptions({
 			bordered: false,
@@ -208,8 +253,14 @@ export class DevicesSdaComponent implements OnInit, OnChanges {
 					key: 'productFamily',
 					name: I18n.get('_ArchitectureProductFamily_'),
 					sortable: false,
-					template: this.sdaHardwareProductFamily,
-					width: '80%',
+					width: '50%',
+				},
+				{
+					key: 'productId',
+					name: I18n.get('_ArchitectureProductId_'),
+					sortable: false,
+					template: this.sdaHardwareProductId,
+					width: '30%',
 				},
 			],
 			striped: false,
@@ -252,5 +303,19 @@ export class DevicesSdaComponent implements OnInit, OnChanges {
 			striped: false,
 			wrapText: true,
 		});
+	}
+	/**
+	 * OnDestroy lifecycle hook
+	 */
+	public ngOnDestroy () {
+		this.destroy$.next();
+		this.destroy$.complete();
+	}
+	/**
+	 * On Error
+	 */
+	public errorHandler () {
+		this.isLoading = false;
+		this.isError = true;
 	}
 }

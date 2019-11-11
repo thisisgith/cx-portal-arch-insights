@@ -191,7 +191,7 @@
 			[fullscreenToggle]="true">
 			<div detailsPanelTitle>
 				<span class="text-xlarge" 
-					[innerText]="'_RccRuleViolatedArg_' | i18n:policyViolationInfo?.ruletitle || ('_NA_' | i18n)">
+					[innerText]="'_RccRuleViolatedArg_' | i18n:policyViolationInfo?.ruleTitle || ('_NA_' | i18n)">
 				</span>
 			</div>
 			<div class="row ">
@@ -200,18 +200,18 @@
 						<div data-auto-id="RccRegulatoryType" class="dbl-margin-right">
 							<div class="text-small text-bold" [innerText]="'_RccRegulatoryType_' | i18n">
 							</div>
-							<div [innerText]="policyViolationInfo?.policygroupid || ('_NA_' | i18n)"></div>
+							<div [innerText]="policyViolationInfo?.policyGroupName || ('_NA_' | i18n)"></div>
 						</div>
 						<div data-auto-id="RccCategory" class="dbl-margin-right">
 							<div class="text-small text-bold" [innerText]="'_RccCategory_' | i18n">
 							</div>
-							<div [innerText]="policyViolationInfo?.policycategory || ('_NA_' | i18n) "></div>
+							<div [innerText]="policyViolationInfo?.policyCategory || ('_NA_' | i18n) "></div>
 						</div>
 						<div data-auto-id="highestSeverity" class="dbl-margin-right">
 							<div class="text-small text-bold" [innerText]="'_RccHighestSeverity_' | i18n">
 							</div>
 							<div>
-								<i *ngIf="policyViolationInfo?.ruleseverity" 
+								<i *ngIf="policyViolationInfo?.ruleSeverity" 
 									class="qtr-margin-right icon-circle" 
 									iconSize="default" 
 									[ngClass]="{
@@ -220,8 +220,8 @@
 										'P3': 'text-warning-alt',
 										'P4': 'text-success',
 										'P5': 'text-muted'
-									}[policyViolationInfo?.ruleseverity]"></i>
-								<span [innerText]="policyViolationInfo?.ruleseverity  || ('_NA_' | i18n) "></span>
+									}[policyViolationInfo?.ruleSeverity]"></i>
+								<span [innerText]="policyViolationInfo?.ruleSeverity  || ('_NA_' | i18n) "></span>
 							</div>
 						</div>
 					</div>
@@ -261,7 +261,7 @@
 						<div data-auto-id="RccLastScan" class="dbl-margin-right">
 							<div class="text-small text-uppercase text-bold" [innerText]="'_RccAssetLastScan_' | i18n ">
 							</div>
-							<div [innerText]=" (selectedAssetData?.lastScan| date:'yyyy MMM dd' ) || ('_Never_' | i18n) ">
+							<div [innerText]=" (lastScan | dateTime ) || ('_Never_' | i18n) ">
 							</div>
 						</div>
 					</div>
@@ -275,7 +275,7 @@
 	<ng-template #severityColor let-item="celldata">
 		<i class="qtr-margin-right icon-circle"
 			iconSize="default"
-			*ngIf="item?.ruleseverity"
+			*ngIf="item?.ruleSeverity"
 			[ngClass]="
 			{
 				'P1': 'text-danger',
@@ -283,13 +283,27 @@
 				'P3': 'text-warning-alt',
 				'P4': 'text-success',
 				'P5': 'text-muted'
-			}[item?.ruleseverity]">
+			}[item?.ruleSeverity]">
 		</i>
-		<span [innerHTML]="item?.ruleseverity"></span>
+		<span [innerHTML]="item?.ruleSeverity"></span>
+	</ng-template>
+	<ng-template #severityTemplate let-item="celldata">
+		<i class="qtr-margin-right icon-circle"
+			iconSize="default"
+			*ngIf="item?.severity"
+			[ngClass]="{
+				'P1': 'text-danger',
+				'P2': 'text-warning',
+				'P3': 'text-warning-alt',
+				'P4': 'text-success',
+				'P5': 'text-muted'
+			}[item?.severity]">
+		</i>
+		<span [innerHTML]="item?.severity"></span>
 	</ng-template>
 
 	<ng-template #ruletitleTemplate let-item="celldata">
-		<div [innerHTML]="item?.ruletitle"></div>
+		<div [innerHTML]="item?.ruleTitle"></div>
 	</ng-template>
 	<ng-template #policyCategoryTooltipTemplate>
 		<span [innerText]="'_RccCategory_' | i18n"></span>
@@ -324,3 +338,9 @@
 	[minWidth]="'900px'"
 	[fullscreenToggle]="'true'">
 </asset-details>
+
+<ng-template #lastScanTmpl let-item="celldata">
+	<span [attr.data-balloon]="item['lastScan'] | dateTime" data-balloon-pos="right">
+		<span [innerText]="item['lastScan'] | fromNow"></span>
+	</span>
+</ng-template>

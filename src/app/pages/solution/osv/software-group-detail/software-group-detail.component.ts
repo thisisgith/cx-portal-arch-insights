@@ -114,6 +114,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 		this.customerId = _.get(user, ['info', 'customerId']);
 		this.softwareGroupDetailsParams = {
 			customerId: this.customerId,
+			productFamily: '',
 			profileName: '',
 		};
 		this.softwareGroupAssetsParams = {
@@ -156,7 +157,9 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 			this.clear();
 			const profileName = _.get(this.selectedSoftwareGroup, 'profileName');
 			const profileId = _.get(this.selectedSoftwareGroup, 'id');
+			const productFamily = _.get(this.selectedSoftwareGroup, 'productFamily');
 			this.softwareGroupDetailsParams.profileName = profileName;
+			this.softwareGroupDetailsParams.productFamily = productFamily;
 
 			this.softwareGroupAssetsParams.id = profileId;
 			this.softwareGroupAssetsParams.profileName = profileName;
@@ -396,14 +399,14 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 						name: I18n.get('_OsvReleaseDate_'),
 						render: item => !_.isNull(item.postDate) ?
 							datePipe.transform(
-								new Date(item.postDate), 'yyyy MMM dd') :
+								new Date(item.postDate), 'MMM d, y') :
 							'',
 						sortable: true,
 						width: '20%',
 					},
 					{
 						key: 'optimalVersion',
-						name: I18n.get('_OsvOptimalOSVersion_'),
+						name: I18n.get('_OsvAcceptedRelease_'),
 						render: item =>
 								item.optimalVersion ? item.optimalVersion : '',
 						sortable: false,
@@ -465,7 +468,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 					},
 					{
 						key: 'optimalVersion',
-						name: I18n.get('_OsvOptimalVersion_'),
+						name: I18n.get('_OsvAcceptedRelease_'),
 						render: item =>
 								item.optimalVersion ? item.optimalVersion : '',
 						sortable: false,
@@ -667,10 +670,10 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 				bordered: true,
 				columns: [
 					{
-						key: 'requestDate',
+						key: 'recommSubmittedDate',
 						name: I18n.get('_OsvRequestDate_'),
 						render: item =>
-							datePipe.transform(item.requestDate, 'yyyy MMM dd'),
+							datePipe.transform(item.recommSubmittedDate, 'MMM d, y'),
 						sortable: false,
 						width: '15%',
 					},
@@ -691,7 +694,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 					{
 						name: I18n.get('_OsvReleaseDate_'),
 						render: item =>
-							datePipe.transform(item.releaseDate, 'yyyy MMM dd'),
+							datePipe.transform(item.releaseDate, 'MMM d, y'),
 						sortable: false,
 						width: '15%',
 					},
@@ -717,14 +720,14 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	/**
 	 * Open contact support modal
 	 */
-	public openContactSupport () {
+	public async openContactSupport () {
 		const options = {
 			contactExpert: true,
 			productFamily: this.selectedSoftwareGroup.productFamily,
 			osType: this.selectedSoftwareGroup.swType,
 			requestTypes: I18n.get('_OsvContactExpertRequestTypes_'),
 		};
-		const result = this.cuiModalService.showComponent(ContactSupportComponent, options);
+		const result = await this.cuiModalService.showComponent(ContactSupportComponent, options);
 		if (result) {
 			this.refresh();
 		}

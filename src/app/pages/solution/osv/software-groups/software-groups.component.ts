@@ -132,14 +132,9 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 	 */
 	public setFilter (currentFilter) {
 		const recommendationType = _.get(currentFilter, 'recommendationType', []);
-		const recommendationStatus = _.get(currentFilter, 'recommendationStatus', []);
 		let filter = '';
 		if (recommendationType.length > 0) {
 			filter += `recommendationType:${recommendationType.join(',')}`;
-		}
-		if (recommendationStatus.length > 0) {
-			filter += filter.length > 0 ? ';' : '';
-			filter += `recommendationStatus:${recommendationStatus.join(',')}`;
 		}
 		this.softwareGroupsParams.pageIndex = 1;
 		this.softwareGroupsParams.filter = filter;
@@ -242,7 +237,7 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 					},
 					{
 						name: I18n.get('_OsvRecommendations_'),
-						sortable: true,
+						sortable: false,
 						template: this.recommendationsTemplate,
 						width: '15%',
 					},
@@ -310,43 +305,30 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 	 */
 	public getRowActions (softwareGroup: SoftwareGroup) {
 		return _.filter([
-			_.get(softwareGroup, 'recommendationStatus') !== 'inprogress' ? {
-				label: I18n.get('_OsvRequestExpertRecommendations_'),
-				onClick: () => {
-					this.openContactSupport(softwareGroup);
-				},
-			} : undefined,
-			_.get(softwareGroup, 'recommendation') === 'expert' ? {
-				label: I18n.get('_OsvViewExpertRecommendations_'),
+			_.get(softwareGroup, 'recommendation') === 'automated' ? {
+				label: I18n.get('_OsvViewAutomatedRecommendations_'),
 				onClick: () => {
 					this.openSoftwareGroupDetails(0, softwareGroup);
 				},
 			} : undefined,
 			{
-				label: I18n.get('_OsvViewAutomatedRecommendations_'),
-				onClick: () => {
-					const tabIndex = _.get(softwareGroup, 'recommendation') === 'expert' ? 0 : 1;
-					this.openSoftwareGroupDetails(tabIndex, softwareGroup);
-				},
-			},
-			{
 				label: I18n.get('_OsvViewSoftwareVersionSummary_'),
 				onClick: () => {
-					const tabIndex = _.get(softwareGroup, 'recommendation') === 'expert' ? 1 : 2;
+					const tabIndex = _.get(softwareGroup, 'recommendation') === 'automated' ? 1 : 0;
 					this.openSoftwareGroupDetails(tabIndex, softwareGroup);
 				},
 			},
 			{
 				label: I18n.get('_OsvViewAssets_'),
 				onClick: () => {
-					const tabIndex = _.get(softwareGroup, 'recommendation') === 'expert' ? 2 : 3;
+					const tabIndex = _.get(softwareGroup, 'recommendation') === 'automated' ? 2 : 1;
 					this.openSoftwareGroupDetails(tabIndex, softwareGroup);
 				},
 			},
 			{
 				label: I18n.get('_OsvViewVersions_'),
 				onClick: () => {
-					const tabIndex = _.get(softwareGroup, 'recommendation') === 'expert' ? 3 : 4;
+					const tabIndex = _.get(softwareGroup, 'recommendation') === 'automated' ? 3 : 2;
 					this.openSoftwareGroupDetails(tabIndex, softwareGroup);
 				},
 			},
@@ -372,7 +354,8 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 	 */
 	public openCurrentVersionsTab (event: any, item: SoftwareGroup) {
 		event.stopPropagation();
-		this.openSoftwareGroupDetails(3, item);
+		const tabNo = item.recommendation === 'none' ? 2 : 3;
+		this.openSoftwareGroupDetails(tabNo, item);
 	}
 
 	/**
@@ -412,16 +395,16 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 	 * Open contact support modal
 	 * @param selectedSoftwareGroup softwareGroup for which the request has to be made
 	 */
-	public openContactSupport (selectedSoftwareGroup: SoftwareGroup) {
+	public async openContactSupport (selectedSoftwareGroup: SoftwareGroup) {
 		const options = {
 			contactExpert: true,
 			productFamily: selectedSoftwareGroup.productFamily,
 			osType: selectedSoftwareGroup.swType,
 			requestTypes: I18n.get('_OsvContactExpertRequestTypes_'),
 		};
-		const result = this.cuiModalService.showComponent(ContactSupportComponent, options);
+		const result = await this.cuiModalService.showComponent(ContactSupportComponent, options);
 		if (result) {
-			// refresh this view.
+			this.loadData();
 		}
 	}
 }

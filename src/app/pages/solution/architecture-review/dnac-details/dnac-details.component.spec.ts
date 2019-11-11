@@ -60,7 +60,7 @@ describe('DnacDetailsComponent', () => {
 	it('should call deviceDetails on change', () => {
 		component.ngOnChanges();
 		fixture.detectChanges();
-		expect(component.params.dnacIP)
+		expect(component.params.dnacIp)
 			.toBeDefined();
 		expect(component.isLoading)
 			.toBeTruthy();

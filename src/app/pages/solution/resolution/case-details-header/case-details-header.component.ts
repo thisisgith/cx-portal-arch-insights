@@ -111,7 +111,7 @@ export class CaseDetailsHeaderComponent {
 		data.tacCaseNum = this.case.caseNumber;
 		this.cuiModalService.showComponent(UploadFilesContent, {
 			caseNum: data.tacCaseNum,
-			options: { descriptionReq: false },
+			options: { descriptionValue: 'single', categoryReq: false },
 		});
 	}
 

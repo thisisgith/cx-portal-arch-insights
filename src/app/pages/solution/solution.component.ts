@@ -238,6 +238,8 @@ export class SolutionComponent implements OnInit, OnDestroy {
 
 				if (this.selectedTechnology) {
 					this.racetrackInfoService.sendCurrentTechnology(this.selectedTechnology);
+					this.racetrackInfoService.sendCurrentAdoptionPercentage(
+						this.selectedTechnology.usecase_adoption_percentage);
 				}
 			}
 
@@ -306,6 +308,8 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	public changeTechnology (technology: RacetrackTechnology) {
 		this.selectedTechnology = technology;
 		this.racetrackInfoService.sendCurrentTechnology(technology);
+		this.racetrackInfoService.sendCurrentAdoptionPercentage(
+				technology.usecase_adoption_percentage);
 	}
 
 	/**
@@ -386,6 +390,8 @@ export class SolutionComponent implements OnInit, OnDestroy {
 				if (this.selectedTechnologyName !== _.get(result, 'name')) {
 					this.selectedTechnology = result;
 					this.selectedTechnologyName = _.get(this.selectedTechnology, 'name');
+					_.set(this.selectedSolution.technologies,
+						{ name: this.selectedTechnologyName }, this.selectedTechnology);
 					this.reloadFacets();
 				}
 			}),
@@ -401,6 +407,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		this.racetrackInfoService.getCurrentAdoptionPercentage()
 		.pipe(
 			map((result: number) => {
+				this.selectedTechnology.usecase_adoption_percentage = result;
 				lifecycleFacet.data = {
 					gaugePercent: result,
 				};
@@ -805,6 +812,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		await this.cuiModalService.showComponent(FeedbackComponent, {
 			facet: this.selectedFacet.title,
 			pitstop: this.selectedTechnology.currentPitstop,
+			solution: this.selectedSolutionName,
 			useCase: this.selectedTechnology.name,
 		}, 'normal');
 	}

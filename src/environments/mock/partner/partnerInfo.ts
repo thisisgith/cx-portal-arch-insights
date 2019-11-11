@@ -1,7 +1,7 @@
 import { CompanyInfoList } from '@sdp-api';
 
 /** Base of URL for SDP API */
-const api = '/cxpp-partner-info/partnerInfo/v1/';
+const api = '/api/cxportal/cxpp-partner-info/partnerInfo/v1/';
 
 /** Default Customer ID */
 const customerId = '2431199';
@@ -10,15 +10,15 @@ const customerId = '2431199';
 const PartnerList: CompanyInfoList = {
 	companyList: [
 		{
-			companyName: 'CentrexIT',
+			companyName: 'Symantec',
 			companyId: '293531',
 		},
 		{
-			companyName: 'Logicallis',
+			companyName: 'Salesforce',
 			companyId: '293532',
 		},
 		{
-			companyName: 'Proxios',
+			companyName: 'Logitec',
 			companyId: '293533',
 		},
 		{
@@ -34,7 +34,7 @@ const PartnerList: CompanyInfoList = {
 			companyId: '293536',
 		},
 		{
-			companyName: 'Salesforce',
+			companyName: 'CentrexIT',
 			companyId: '293537',
 		},
 	],

@@ -5,6 +5,10 @@
 	border-bottom: 4px solid $info;
 }
 
+::ng-deep .hbar__divider {
+	display: none;
+}
+
 .filter {
 	&__not-selected {
 		border-bottom: 4px solid $white;
@@ -15,3 +19,4 @@
 		bottom: 0;
 	}
 }
+

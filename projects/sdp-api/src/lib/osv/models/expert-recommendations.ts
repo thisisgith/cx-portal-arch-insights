@@ -1,6 +1,6 @@
 /* tslint:disable */
 export interface ExpertRecommendations {
-	requestDate: string;
+	recommSubmittedDate: string;
 	status: string;
 	release?: string;
 	releaseDate?: string;

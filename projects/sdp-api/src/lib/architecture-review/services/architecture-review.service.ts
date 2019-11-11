@@ -20,6 +20,7 @@ class ArchitectureReviewService extends __BaseService {
   static readonly getnonOptimalLinksResponsePath = '/customerportal/archinsights/v1/dnac/deviceinsight/nonoptimallinks';
   static readonly getSDAReadinessCountResponse = '/customerportal/archinsights/v1/dnac/devicecompliance/count';
   static readonly getCollectionIdResponsePath = '/customerportal/archinsights/v1/collectiondetails';
+  static readonly getDnacScaleUtilizationPath = '/customerportal/archinsights/v1/dnac/sdaTrends';
 
   private collectionId = new BehaviorSubject<any>({});
 
@@ -41,18 +42,18 @@ class ArchitectureReviewService extends __BaseService {
    * @return successful operation
    */
   getDevicesListResponse(params: any): __Observable<__StrictHttpResponse<any>> {
-    console.log(params);
+
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
 
     if (params.page != null) __params = __params.set('page', params.page.toString());
     if (params.pageSize != null) __params = __params.set('pageSize', params.pageSize.toString());
-    if (params.filterBy != null) __params = __params.set('filterBy', params.filterBy.toString());
+    if (params.filterBy != null) __params = __params.set('complianceValue', params.filterBy);
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     if (params.collectionId != null) __params = __params.set('collectionId', params.collectionId.toString());
     if (params.searchText != null) __params = __params.set('searchText', params.searchText.toString());
-    if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
+    if (params.complianceType != null) __params = __params.set('complianceType', params.complianceType.toString());
 
 
     // (params.contractNumber || []).forEach(val => {if (val != null) __params = __params.append('contractNumber', val.toString())});
@@ -88,6 +89,44 @@ class ArchitectureReviewService extends __BaseService {
   getDevicesList(params: any): __Observable<any> {
     return this.getDevicesListResponse(params).pipe(
       __map(_r => { return _r.body})
+    );
+  }
+
+  getDnacScaleUtilizationData(params: any): __Observable<any> {
+    return this.getDnacScaleUtilizationResponse(params).pipe(
+      __map(_r => { return _r.body})
+    );
+  }
+
+  getDnacScaleUtilizationResponse(params:any): __Observable<__StrictHttpResponse<any>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+    
+    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    if (params.collectionId != null) __params = __params.set('collectionId', params.collectionId.toString());
+    if (params.dnacIp != null) __params = __params.set('dnacIp', params.dnacIp.toString());
+    if (params.collectionDate != null) __params = __params.set('collectionDate', params.collectionDate.toString());
+    
+
+    let req = new HttpRequest<any>(
+	  'GET',
+	  this.rootUrl + `${ArchitectureReviewService.getDnacScaleUtilizationPath}`,
+      __body,
+
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      });
+
+      console.log(req);
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<any>;
+      })
     );
   }
 

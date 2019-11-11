@@ -103,6 +103,8 @@ export class AppService {
 			const topTechnology = _.head(_.get(topSolution, 'technologies', []));
 			if (topTechnology) {
 				this.racetrackInfoService.sendCurrentTechnology(topTechnology);
+				this.racetrackInfoService.sendCurrentAdoptionPercentage(
+					topTechnology.usecase_adoption_percentage);
 			}
 		},
 		err => {

@@ -13,9 +13,9 @@ export const environment = {
 	origin,
 	auth: {
 		accountUrl: `${origin}/ws/account/v2/`,
-		ciscoTokenUrl: `${origin}/ws/oauth/v3/token/cisco`,
-		referUrl: `${origin}/ws/oauth/v3/sso/`,
-		tokenUrl: `${origin}/ws/oauth/v3/token/cway/` +
+		ciscoTokenUrl: `${origin}/ws/oauth/v4/token/cisco`,
+		referUrl: `${origin}/ws/oauth/v4/sso/`,
+		tokenUrl: `${origin}/ws/oauth/v4/token/cway/` +
 			'e4f602992449cdb1d4aea2df5849f7d6ebd4280c1c8e1398fcfec534422533b8',
 	},
 	baseHref: '/portal/',
@@ -56,7 +56,7 @@ export const environment = {
 	learningLink: 'https://digital-learning.cisco.com/cx#/',
 	logoutUrl: 'https://www.cisco.com/autho/logout.html',
 	mapboxToken:
-	'sk.eyJ1Ijoic3NhbHRzZ2EiLCJhIjoiY2syMmVwd2h4MGp5aTNscGczNjlkbjRueSJ9.nAeOj3bDf0ePEUvb7q9F2g',
+	'pk.eyJ1IjoibWljaGhhcnQiLCJhIjoiY2syNWMwMWt6MDAzYTNyczkxdjI2dWxsdSJ9.O3GKDafZWz1gpA4dJ6msHw',
 	mock: [],
 	myCase: 'https://mycase.cloudapps.cisco.com',
 	noAuthEndpoints: [
@@ -85,6 +85,7 @@ export const environment = {
 		customerportal: '/api/usa/customerportal',
 		cxportal: '/api/cxportal',
 		inventory: '/api/usa/v1/inventory',
+		partner: '/api/usa/cxportal',
 	},
 	// ClientSSOInterceptor: No auth token for the typeahead url
 	typeaheadServiceOrigin: 'https://xresps.cloudapps.cisco.com',

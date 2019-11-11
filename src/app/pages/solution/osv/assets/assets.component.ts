@@ -237,7 +237,7 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 					},
 					{
 						key: 'optimalVersion',
-						name: I18n.get('_OsvOptimalVersion_'),
+						name: I18n.get('_OsvAcceptedRelease_'),
 						render: item =>
 							item.optimalVersion ? item.optimalVersion : '',
 						sortable: false,
@@ -248,12 +248,12 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 						name: I18n.get('_OsvDeploymentStatus_'),
 						render: item =>
 							item.deploymentStatus ? item.deploymentStatus : '',
-						sortable: true,
+						sortable: false,
 						width: '10%',
 					},
 					{
 						name: I18n.get('_OsvRecommendations_'),
-						sortable: true,
+						sortable: false,
 						template: this.recommendationsTemplate,
 						width: '10%',
 					},

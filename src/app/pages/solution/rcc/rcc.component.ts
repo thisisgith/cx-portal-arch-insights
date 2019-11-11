@@ -103,11 +103,11 @@ export class RccComponent implements OnInit, OnDestroy {
 	public errorMessage = ' ';
 	public errorPolicyView = false;
 	public policyViolationInfo = {
-		policycategory: '',
-		policygroupid: '',
-		policyname: '',
-		ruleseverity: '',
-		ruletitle: '',
+		policyCategory: '',
+		policyGroupId: '',
+		policyName: '',
+		ruleSeverity: '',
+		ruleTitle: '',
 	};
 	public selectedViolationModal = false;
 	public selectedAssetData = {
@@ -133,11 +133,12 @@ export class RccComponent implements OnInit, OnDestroy {
 	public assetsConditionViolationsCount = 0;
 	public withViolationsAssetsCount;
 	public alert: any = { };
+	public lastScan = '';
 	public searchOptions = {
 		debounce: 1500,
 		max: 100,
 		min: 2,
-		pattern: /^[a-zA-Z0-9_ ]*$/,
+		pattern: /^[a-zA-Z0-9\s\-\/\(\).]*$/,
 	};
 	public search: FormControl = new FormControl('');
 	public searchForm: FormGroup;
@@ -158,7 +159,9 @@ export class RccComponent implements OnInit, OnDestroy {
 	@ViewChild('policyFilter', { static: true }) private policyFilterTemplate: TemplateRef<{ }>;
 	@ViewChild('severityFilter', { static: true }) private severityFilterTemplate: TemplateRef<{ }>;
 	@ViewChild('severityColor', { static: true }) private severityColorTemplate: TemplateRef<{ }>;
+	@ViewChild('severityTemplate', { static: true }) private severityTemplate: TemplateRef<{ }>;
 	@ViewChild('ruletitleTemplate', { static: true }) private ruletitleTemplate: TemplateRef<{ }>;
+	@ViewChild('lastScanTmpl', { static: true }) public lastScanTemplate: TemplateRef<{ }>;
 	@ViewChild('policyCategoryTooltipTemplate', { static: true })
 	private policyCategoryTooltipTemplate: TemplateRef<string>;
 	@ViewChild('ruleViolationsTooltipTemplate', { static: true })
@@ -224,34 +227,37 @@ export class RccComponent implements OnInit, OnDestroy {
 			bordered: false,
 			columns: [
 				{
-					key: 'ruleseverity',
+					key: 'ruleSeverity',
 					name: I18n.get('_RccHighestSeverity_'),
 					sortable: true,
 					template: this.severityColorTemplate,
+					width: '13%',
 				},
 				{
-					key: 'policygroupid',
+					key: 'policyGroupName',
 					name: I18n.get('_RccRegulatoryType_'),
 					sortable: true,
 				},
 				{
 					headerTemplate:  this.policyCategoryTooltipTemplate,
-					key: 'policycategory',
+					key: 'policyCategory',
 					sortable: true,
+					width: '10%',
 				},
 				{
-					key: 'ruletitle',
+					key: 'ruleTitle',
 					name: I18n.get('_RccRuleViolated_'),
 					sortable: true,
 					template: this.ruletitleTemplate,
 				},
 				{
 					headerTemplate:  this.ruleViolationsTooltipTemplate,
-					key: 'violationcount',
+					key: 'violationCount',
 					sortable: true,
+					width: '14%',
 				},
 				{
-					key: 'impassetscount',
+					key: 'impAssetsCount',
 					name: I18n.get('_RccAffectedSystems_'),
 					sortable: true,
 				},
@@ -355,6 +361,7 @@ export class RccComponent implements OnInit, OnDestroy {
 	public onAssetRowClicked (rowData: any) {
 		this.rowData = rowData;
 		this.selectedAssetData = rowData;
+		this.lastScan = rowData.lastScan;
 		this.selectedAssetModal = true;
 		this.selectedViolationModal = false;
 		this.openDeviceModal = false;
@@ -496,26 +503,27 @@ export class RccComponent implements OnInit, OnDestroy {
 				{
 					key: 'lastScan',
 					name: I18n.get('_RccAssetLastScan_'),
-					render: item => item.lastScan ?
-						this.fromNow.transform(item.lastScan) : I18n.get('_Never_'),
 					sortable: true,
 					sortKey: 'lastScan',
+					template: this.lastScanTemplate,
+				},
+				{
+					headerTemplate:  this.ruleViolationsTooltipTemplate,
+					key: 'violationCount',
+					sortable: true,
 				},
 				{
 					key: 'severity',
-					name: I18n.get('_RccHighestSeverity_'),
+					name: I18n.get('_RccHighestViolationSeverity_'),
 					sortable: true,
-				},
-				{
-					key: 'violationCount',
-					name: I18n.get('_RccRuleViolations_'),
-					sortable: true,
+					template: this.severityTemplate,
 				},
 			],
 			dynamicData: false,
 			hover: true,
 			singleSelect: true,
 			striped: false,
+			wrapText: true,
 		});
 		this.buildAssetFilters();
 		// this.getRCCAssetData(this.assetGridObj);
@@ -552,7 +560,7 @@ export class RccComponent implements OnInit, OnDestroy {
 				loading: true,
 				seriesData: [],
 				template: this.severityFilterTemplate,
-				title: I18n.get('_RccHighestSeverity_'),
+				title: I18n.get('_RccHighestViolationSeverity_'),
 			},
 		];
 	}

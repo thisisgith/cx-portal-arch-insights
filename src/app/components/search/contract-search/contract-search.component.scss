@@ -23,3 +23,12 @@ dd {
 	min-width: 100%;
 	max-width: inherit;
 }
+
+.cap-capitalize {
+	text-transform: lowercase;
+	display: inline-block;
+}
+
+.cap-capitalize::first-letter {
+	text-transform: uppercase;
+}

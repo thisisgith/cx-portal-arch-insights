@@ -193,9 +193,16 @@ describe('OptimalSoftwareVersionComponent', () => {
 	});
 
 	it('selectView should change the view ', () => {
-		component.selectView('swGroups');
+		const summaryResponse = <any> OSVScenarios[0].scenarios.GET[0].response.body;
+		spyOn(osvService, 'getSummary')
+			.and
+			.returnValue(of(summaryResponse));
+		component.ngOnInit();
+		fixture.detectChanges();
+		component.selectView('assets');
 		expect(component.view)
-			.toEqual('swGroups');
+			.toEqual('assets');
+		fixture.detectChanges();
 		component.selectView('swVersions');
 		expect(component.view)
 			.toEqual('swVersions');

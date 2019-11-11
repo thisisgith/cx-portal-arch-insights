@@ -28,7 +28,7 @@ const PARAMETER_CODEC = new ParameterCodec();
  * Base configuration for API services
  */
 export class BaseConfiguration {
-  rootUrl: string = '//api-stage.cisco.com';
+  rootUrl: string = '//api.cisco.com';
 }
 
 /**

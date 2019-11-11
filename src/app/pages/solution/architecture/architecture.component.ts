@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { LogService } from '@cisco-ngx/cui-services';
-import { ArchitectureService } from '@sdp-api';
+import { ArchitectureService, ArchitectureReviewService } from '@sdp-api';
 import { forkJoin, of, Subject } from 'rxjs';
 import { VisualFilter } from '@interfaces';
 import { map, catchError, takeUntil } from 'rxjs/operators';
@@ -20,6 +20,10 @@ import { I18n } from '@cisco-ngx/cui-utils';
 export class ArchitectureComponent implements OnInit {
 
 	public customerId: string;
+	public params: any = {
+		collectionId: '',
+		customerId: '',
+	};
 	public filtered = false;
 	public selectedFilter = {
 		isClearAllSelected: false,
@@ -53,9 +57,11 @@ export class ArchitectureComponent implements OnInit {
 		private logger: LogService,
 		private architectureService: ArchitectureService,
 		private route: ActivatedRoute,
+		private architectureReviewService: ArchitectureReviewService,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.cloneDeep(_.get(user, ['info', 'customerId']));
+		this.params.customerId = this.customerId;
 	}
 
 	/**
@@ -63,16 +69,29 @@ export class ArchitectureComponent implements OnInit {
 	 *  and buildFilters function for Updating the Table
 	 */
 	public ngOnInit (): void {
-		this.getExceptionsCount();
-		this.getAssetsExceptionsCount();
+		this.getCollectionId();
 		this.buildFilters();
+	}
+
+	/**
+	 * Method to fetch collectionId
+	 */
+
+	public getCollectionId () {
+		this.architectureReviewService.getCollectionDetails({ customerId: this.customerId })
+		.subscribe(res => {
+			this.params.collectionId = _.get(res, 'collectionId');
+			this.loadData();
+			this.getExceptionsCount();
+			this.getAssetsExceptionsCount();
+		});
 	}
 
 	/**
 	 * used to get the count of assets with exceptions
 	 */
 	public getAssetsExceptionsCount () {
-		this.architectureService.getAssetsExceptionsCount({ customerId: this.customerId })
+		this.architectureService.getAssetsExceptionsCount(this.params)
 			.pipe(
 				takeUntil(this.destroy$),
 			)
@@ -102,7 +121,7 @@ export class ArchitectureComponent implements OnInit {
 	/**
 	 * Initializes our visual filters
 	 */
-	private buildFilters () {
+	public buildFilters () {
 		this.filters = [
 			{
 				key: 'exceptions',
@@ -113,7 +132,6 @@ export class ArchitectureComponent implements OnInit {
 				title: I18n.get('_ArchitectureSeverity_'),
 			},
 		];
-		this.loadData();
 	}
 
 	/**
@@ -181,7 +199,7 @@ export class ArchitectureComponent implements OnInit {
 	private getExceptionsCount () {
 		const exceptionFilter = _.find(this.filters, { key: 'exceptions' });
 
-		return this.architectureService.getExceptionsCount({ customerId: this.customerId })
+		return this.architectureService.getExceptionsCount(this.params)
 			.pipe(
 				takeUntil(this.destroy$),
 				map((data: any) => {
@@ -189,7 +207,7 @@ export class ArchitectureComponent implements OnInit {
 					cbpException.count = data.TotalCounts;
 					const series = [];
 
-					const High = _.get(data, 'High');
+					const High = _.get(data, 'high');
 
 					if (High && High > 0) {
 						series.push({
@@ -200,7 +218,7 @@ export class ArchitectureComponent implements OnInit {
 						});
 					}
 
-					const Medium = _.get(data, 'Medium');
+					const Medium = _.get(data, 'medium');
 
 					if (Medium && Medium > 0) {
 						series.push({
@@ -211,7 +229,7 @@ export class ArchitectureComponent implements OnInit {
 						});
 					}
 
-					const Low = _.get(data, 'Low');
+					const Low = _.get(data, 'low');
 
 					if (Low && Low > 0) {
 						series.push({
