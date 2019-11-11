@@ -18,7 +18,7 @@ export interface OrgUserResponse {
    * The CX BUId to which the user with the admin role is affilated. The value set for the admin role is propagated to other users so it can be looked up when any user logs in. The CXBUId is used to retrieve the lifecycle data from CSDF
    */
   cxBUId?: string;
-  individualAccount?: {ccoId?: string, saId?: string, vaId?: string, role?: string, userMethods?: Array<string>};
+  individualAccount?: {ccoId?: string, saId?: string, vaId?: string, role?: string, userMethods?: Array<string>, cxBUId?: string};
   account?: OrgUserTeamAccount;
   subscribedServiceLevel?: OrgUserSubscribedServiceLevels;
   dataCenter?: OrgUserDataCenterInfo;

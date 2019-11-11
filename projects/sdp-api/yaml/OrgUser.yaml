@@ -179,11 +179,13 @@ definitions:
           role:
             type: string
             description: The role assigned to this user under the specified SA or VA. Not populated for LA. Use role from accounts API
-
           userMethods:
              type: array
              items:
               type: string
+          cxBUId:
+           type: string
+           description: This is the individula's cxBUId
       account:
         $ref: '#/definitions/OrgUserTeamAccount'
       subscribedServiceLevel:
