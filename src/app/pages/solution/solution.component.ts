@@ -64,7 +64,6 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	public smartAccounts: SmartAccount[];
 	public activeSmartAccount: SmartAccount;
 	public showSmartAccountSelection: boolean;
-	public accessLevel: number;
 	public selectedFacet: Facet;
 	public selectedSolution: RacetrackSolution;
 	public selectedTechnology: RacetrackTechnology;
@@ -121,7 +120,6 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		private userResolve: UserResolve,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
-		this.accessLevel = _.get(user, ['info', 'accessLevel'], 0);
 		this.smartAccounts = _.get(user, ['info', 'companyList'], []);
 
 		this.userResolve.getSaId()
@@ -301,10 +299,6 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		return _.find(this.facets, (facet: Facet) => route.includes(facet.route));
 	}
 
-	/**
-	 * Change our technology
-	 * @param technology the technology
-	 */
 	public changeTechnology (technology: RacetrackTechnology) {
 		this.selectedTechnology = technology;
 		this.racetrackInfoService.sendCurrentTechnology(technology);
@@ -312,10 +306,6 @@ export class SolutionComponent implements OnInit, OnDestroy {
 				technology.usecase_adoption_percentage);
 	}
 
-	/**
-	 * Change the solution
-	 * @param solution the selected solution
-	 */
 	public changeSolution (solution: RacetrackSolution) {
 		this.selectedSolution = solution;
 		this.racetrackInfoService.sendCurrentSolution(solution);
@@ -327,10 +317,6 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	/**
-	 * Change the smart account
-	 * @param saId the id for the selected SA
-	 */
 	public changeSmartAccount (saId: number) {
 		this.userResolve.setSaId(saId);
 	}
