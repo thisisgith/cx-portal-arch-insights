@@ -65,8 +65,6 @@ export class AppComponent {
 
 		this.userResolve.getUser()
 		.subscribe((user: User) => {
-			// KTODO: Remove log
-			console.log('...and the user is: ', user);
 			const { ccoId, emailAddress } = _.get(user, ['info', 'individual'],
 				{ ccoId: '', emailAddress: '' });
 

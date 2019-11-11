@@ -10,4 +10,3 @@ export { RacetrackInfoService } from './racetrack-info';
 export { ExportCsvService } from './export-csv.service';
 export { RouteAuthService } from './route-auth';
 export { AssetPanelLinkService } from './asset-panel-link.service';
-export { UserService } from './user';

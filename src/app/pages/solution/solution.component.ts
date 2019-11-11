@@ -36,7 +36,7 @@ import { catchError, map, takeUntil } from 'rxjs/operators';
 import { Step } from '../../../../src/app/components/quick-tour/quick-tour.component';
 import { DetailsPanelStackService, UtilsService, RacetrackInfoService } from '@services';
 import { HttpResponse } from '@angular/common/http';
-import { SmartAccount, AccessLevel } from '@interfaces';
+import { SmartAccount } from '@interfaces';
 import { UserResolve } from '@utilities';
 
 /**
@@ -323,6 +323,10 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		}
 	}
 
+	/**
+	 * Change the smart account
+	 * @param saId the id for the selected SA
+	 */
 	public changeSmartAccount (saId: number) {
 		this.userResolve.setSaId(saId);
 	}

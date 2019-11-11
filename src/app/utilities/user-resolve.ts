@@ -77,18 +77,34 @@ export class UserResolve implements Resolve<any> {
 		return this.useCase.asObservable();
 	}
 
+	/**
+	 * Returns the current user role
+	 * @returns the observable representing the user role
+	 */
 	public getRole (): Observable<string> {
 		return this.role.asObservable();
 	}
 
+	/**
+	 * Returns the current smart account id
+	 * @returns the observable representing the smart account id
+	 */
 	public getSaId (): Observable<number> {
 		return this.saId.asObservable();
 	}
 
+	/**
+	 * Returns the current virtual account id
+	 * @returns the observable representing the virtual account id
+	 */
 	public getVaId (): Observable<number> {
 		return this.vaId.asObservable();
 	}
 
+	/**
+	 * Sets the current smart account id
+	 * @param saId the selected smart account id
+	 */
 	public setSaId (saId: number) {
 		const smartAccount = _.find(_.get(this.cachedUser, ['info', 'companyList'], []), {
 			companyId: saId,

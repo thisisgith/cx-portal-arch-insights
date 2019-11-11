@@ -8,6 +8,9 @@ export enum AccessLevel {
 	EMPLOYEE,
 }
 
+/**
+ * Interface representing the User Role
+ */
 interface Role {
 	roleName: string;
 	roleDisplayName: string;
@@ -18,6 +21,9 @@ interface Role {
 	attribName?: string;
 }
 
+/**
+ * Interface representing the User's Smart Account
+ */
 export interface SmartAccount {
 	companyName: string;
 	companyId: number;
