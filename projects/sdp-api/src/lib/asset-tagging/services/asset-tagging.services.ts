@@ -19,11 +19,11 @@ import { OptInOut } from '../models/opt-in-out';
 
 class AssetTaggingService extends __BaseService {
 
-	static readonly getAllTagsPath = '/v1/tag-to-device-api';
-	static readonly getTagsAssociatedWithPolicyPath = '/v1/tag-policy-mapping-api';
-	static readonly getAsset360TagsPath = '/v1/device-tag-api';
-	static readonly getPoliciesPath = '/v1/all-policies-api';
-	static readonly getPolicyMappingPath = '/v1/save-tag-policy-mapping-api';
+	static readonly getAllTagsPath = '/customerportal/asset-tagging/v1/tag-to-device-api';
+	static readonly getTagsAssociatedWithPolicyPath = '/customerportal/asset-tagging/v1/tag-policy-mapping-api';
+	static readonly getAsset360TagsPath = '/customerportal/asset-tagging/v1/device-tag-api';
+	static readonly getPoliciesPath = '/customerportal/asset-tagging/v1/all-policies-api';
+	static readonly getPolicyMappingPath = '/customerportal/asset-tagging/v1/save-tag-policy-mapping-api';
 	static readonly getOptinStatus = '/customerportal/compliance/v1/service/checkOptInStatus';
 	static readonly updateOptinStatus = '/customerportal/compliance/v1/service/updateOptInStatus';
 

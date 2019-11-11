@@ -29,6 +29,7 @@ import {
  */
 @Component({
 	selector: 'asset-details-summary',
+	styleUrls: ['./summary.component.scss'],
 	templateUrl: './summary.component.html',
 })
 

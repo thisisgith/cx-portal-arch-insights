@@ -1,5 +1,5 @@
 /** This is an api url  */
-const api = '/api/v1';
+const api = '/api/customerportal/asset-tagging/v1';
 /**
  * Customer Id for mock response
  */
