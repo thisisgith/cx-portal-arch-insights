@@ -47,7 +47,7 @@ class EntitlementWrapperService extends __BaseService {
     if (params.Authorization != null) __headers = __headers.set('Authorization', params.Authorization.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/cxportal/cxpp-entitlement-wrapper/v1/entitlement/user/accounts`,
+      this.rootUrl + `/cxportal/cxpp-entitlement-wrapper/v1/entitlement/user/accounts`,
       __body,
       {
         headers: __headers,

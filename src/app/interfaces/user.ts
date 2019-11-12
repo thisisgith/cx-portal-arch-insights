@@ -1,5 +1,6 @@
 import { EntitledUser, ServiceInfo, UserEntitlement } from '@sdp-api';
 
+// TODO: Move to /constants when available
 export enum AccessLevel {
 	ANONYMOUS = 0,
 	GUEST,

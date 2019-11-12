@@ -27,7 +27,7 @@ import {
 } from '@cisco-ngx/cui-services';
 import { HeaderModule } from './components/header/header.module';
 import { NoResultsModule } from './components/search/no-results/no-results.module';
-import { EntitlementModule, RacetrackModule } from '@sdp-api';
+import { EntitlementModule, RacetrackModule, EntitlementWrapperModule, OrgUserModule } from '@sdp-api';
 import { CaseOpenModule } from './components/case/case-open/case-open.module';
 import { CloseConfirmModule } from './components/case/case-open/close-confirm/close-confirm.module';
 import { ContactSupportModule } from './components/contact-support/contact-support.module';
@@ -95,6 +95,8 @@ export function loadUserInfo (service: AppService) {
 		CuiSpinnerModule,
 		CuiToastModule,
 		EntitlementModule.forRoot({ rootUrl }),
+		EntitlementWrapperModule.forRoot({ rootUrl }),
+		OrgUserModule.forRoot({ rootUrl }),
 		RacetrackModule.forRoot({ rootUrl }),
 		FormsModule,
 		HeaderModule,

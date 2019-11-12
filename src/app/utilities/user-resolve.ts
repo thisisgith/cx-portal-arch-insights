@@ -11,6 +11,10 @@ import { CuiModalService } from '@cisco-ngx/cui-components';
 import {
 	UnauthorizedUserComponent,
 } from '../components/unauthorized-user/unauthorized-user.component';
+
+// TODO: Move to /constants when available
+const DEFAULT_DATACENTER = 'usa';
+
 /**
  * Resolver to fetch our user
  */
@@ -29,13 +33,16 @@ export class UserResolve implements Resolve<any> {
 	private solution = new ReplaySubject<string>(1);
 	private useCase = new ReplaySubject<string>(1);
 	private role = new ReplaySubject<string>(1);
+	private dataCenter = new ReplaySubject<string>(1);
 
 	constructor (
 		private cuiModalService: CuiModalService,
 		private entitlementWrapperService: EntitlementWrapperService,
 		private orgUserService: OrgUserService,
 		private logger: LogService,
-	) { }
+	) {
+		this.dataCenter.next(DEFAULT_DATACENTER);
+	}
 
 	public getCustomerId (): Observable<string> {
 		return this.customerId.asObservable();
@@ -67,6 +74,10 @@ export class UserResolve implements Resolve<any> {
 
 	public getVaId (): Observable<number> {
 		return this.vaId.asObservable();
+	}
+
+	public getDataCenter (): Observable<string> {
+		return this.dataCenter.asObservable();
 	}
 
 	public setSaId (saId: number) {
@@ -134,6 +145,7 @@ export class UserResolve implements Resolve<any> {
 		})
 		.pipe(
 			map((userResponse: OrgUserResponse) => {
+				this.dataCenter.next(_.get(userResponse, ['dataCenter', 'dataCenter'], DEFAULT_DATACENTER));
 				this.cachedUser = {
 					info: this.mapUserResponse(accountResponse, userResponse),
 					service: _.get(userResponse, 'subscribedServiceLevel'),

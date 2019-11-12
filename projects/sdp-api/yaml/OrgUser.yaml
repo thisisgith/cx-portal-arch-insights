@@ -10,7 +10,7 @@ info:
     name: Apache 2.0
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
 host: 'api.cisco.com'
-basePath: '/api/cxportal/entitlement'
+basePath: '/cxportal/entitlement'
 security:
   - OauthSecurity: []
 paths:

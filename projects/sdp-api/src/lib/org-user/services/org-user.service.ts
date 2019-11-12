@@ -41,7 +41,7 @@ class OrgUserService extends __BaseService {
     if (params.vaId != null) __headers = __headers.set('vaId', params.vaId.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/cxportal/entitlement/v1/user`,
+      this.rootUrl + `/cxportal/entitlement/v1/user`,
       __body,
       {
         headers: __headers,
@@ -98,7 +98,7 @@ class OrgUserService extends __BaseService {
     if (params.CXContext != null) __headers = __headers.set('CX-Context', params.CXContext.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/cxportal/entitlement/v2/user`,
+      this.rootUrl + `/cxportal/entitlement/v2/user`,
       __body,
       {
         headers: __headers,

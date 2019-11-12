@@ -7,7 +7,7 @@ info:
     name: Apache 2.0
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
 host: 'api-stage.cisco.com'
-basePath: /api/cxportal/cxpp-entitlement-wrapper
+basePath: '/cxportal/cxpp-entitlement-wrapper'
 tags:
   - name: entitlement-wrapper
     description: 'Entitlement Wrapper APIs to get the user profile, accounts, roles and Methods from SAAdmin and EB APIs. Provides more granular APIs to authorize the requests with the given user, comapny id , role and methods.  '

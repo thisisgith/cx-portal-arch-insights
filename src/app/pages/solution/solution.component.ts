@@ -796,6 +796,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	 */
 	 public async openFeedbackModal () {
 		await this.cuiModalService.showComponent(FeedbackComponent, {
+			saId: this.activeSmartAccount.companyId,
 			facet: this.selectedFacet.title,
 			pitstop: this.selectedTechnology.currentPitstop,
 			solution: this.selectedSolutionName,

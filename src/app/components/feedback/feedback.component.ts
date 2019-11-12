@@ -11,6 +11,7 @@ import * as _ from 'lodash-es';
 
 /** Data Interface */
 interface Data {
+	saId?: number;
 	facet?: string;
 	pitstop?: string;
 	solution?: string;
@@ -92,6 +93,7 @@ export class FeedbackComponent implements OnInit {
 			`Email\n${_.get(cpr, 'pf_auth_email', 'N/A')}`,
 			`Access Level\n${_.get(cpr, 'pf_auth_user_level', 'N/A')}`,
 			`Organization Name\n${_.get(cpr, 'pf_auth_company_name', 'N/A')}`,
+			`Smart Account ID\n${_.get(this.data, 'saId', 'N/A')}`,
 			`Success Track\n${_.get(this.data, 'solution', 'N/A')}`,
 			`UseCase\n${_.get(this.data, 'useCase', 'N/A')}`,
 			`Current Pitstop\n${_.get(this.data, 'pitstop', 'N/A')}`,
