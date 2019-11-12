@@ -69,3 +69,8 @@ export interface HighCrashRiskDeviceTooltip {
 		low?: number,
 		notEvaluated?:number,
 }
+export interface BarGraphValues {
+	role?:string,
+	deviceCount?:number
+}
+

@@ -11,11 +11,11 @@
 				>
 					<div
 						class="text-huge flex-center dbl-padding-left dbl-padding-right"
-						[innerText]="highCrashDeviceCount"
+						[innerText]="totalAssetCount"
 					></div>
 					<div
 						class="text-large flex-center"
-						[innerText]="'_RMHighCrashRiskAssets_' | i18n"
+						[innerText]="'_CP_Systems_' | i18n"
 					></div>
 				</div>
 				<div
@@ -25,14 +25,17 @@
 					[ngClass]="{ 'text-primary': !onlyCrashes }"
 				>
 					<div
-						class="text-huge flex-center dbl-padding-left dbl-padding-right"
+						class="text-huge flex-center"
 						[innerHTML]="crashedAssetsCount"
 					>
 					</div>
-					<div
-						class="text-large flex-center"
-						[innerText]="'_RMCrashedAssets_' | i18n"
+					<div 
+						class="text-large flex-center icon-position"
+						[innerText]="'_RMCrashedAssets_' | i18n" 
 					></div>
+						<span tooltip [tooltipTemplate]="crashSystemTooltipTemplate"
+							class="icon-info half-margin" [tooltipMaxWidth]="100">
+						</span>
 				</div>
 			</div>
 		</ng-template>
@@ -49,7 +52,10 @@
 	<div class="row">
 		<div class="col-auto qtr-margin-top flex flex-fill flex-center-vertical">
 			<span class="font15" [innerText]="'_RMAssets_' | i18n"></span>
-			<span *ngIf="onlyCrashes" [innerText]="'_RMShowingXofYAssets_' | i18n:hcrPagination:highCrashRiskAssetsGridDetails.totalItems"
+			<span *ngIf="onlyCrashes && !paginationStatus " [innerText]="'_RMShowingXofYAssets_' | i18n:hcrPagination:highCrashRiskAssetsGridDetails.totalItems"
+				class="qtr-margin-left text-small text-muted" data-auto-id="ShowingAssetsCount">
+			</span>
+			<span *ngIf="onlyCrashes && paginationStatus" [innerHTML]="'_RMRiskValuePagination_' | i18n:hcrPagination:highCrashRiskAssetsGridDetails.totalItems"
 				class="qtr-margin-left text-small text-muted" data-auto-id="ShowingAssetsCount">
 			</span>
 			<span *ngIf="!onlyCrashes" [innerText]="'_RMShowingXofYAssets_' | i18n:crashPagination:crashedAssetsGridDetails.totalItems"
@@ -106,7 +112,7 @@
 									attr.data-auto-id="FilterTag-{{ subfilter.filter }}"
 								>
 								<span class="qtr-padding-right" [innerText]="(filter.key === 'advisories'?'_RMTimeLast_': '_CP_RiskTag_') | i18n"></span>
-									<span [innerHTML]="subfilter.label"></span>
+									<span [innerHTML]="subfilter.label |slice:0:subfilter.label.indexOf('(')"></span>
 									<span
 										class="icon-close"
 										(click)="clearFilters()" data-auto-id="FilterBarClearAllFiltersIcon"
@@ -381,4 +387,7 @@
 		(subfilter)="onSubfilterSelect($event.filter, filter, true)"
 	>
 	</pie-chart>
+</ng-template>
+<ng-template #crashSystemTooltipTemplate>
+	<div><span [innerText]="crashedAssetsCount"></span><span [innerText]="'_CP_CrashedSystems_'|i18n"></span></div>
 </ng-template>

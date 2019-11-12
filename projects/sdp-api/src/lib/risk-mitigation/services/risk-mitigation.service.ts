@@ -7,7 +7,7 @@ import { Observable as __Observable, from } from 'rxjs';
 import { map as __map, filter as __filter } from 'rxjs/operators';
 import { StrictHttpResponse as __StrictHttpResponse } from '../../core/strict-http-response';
 import { RiskAssets, CrashHistoryDeviceCount, CrashHistoryDeviceList } from '../models/risk-assets';
-import { HighCrashRisk, HighCrashRiskPagination, HighCrashRiskDeviceCount } from '../models/high-crash-risk';
+import { HighCrashRisk, HighCrashRiskPagination, HighCrashRiskDeviceCount, BarGraphValues } from '../models/high-crash-risk';
 import { CrashCount } from '../models/crash-count';
 
 @Injectable({
@@ -27,6 +27,9 @@ class RiskMitigationService extends __BaseService {
 		'/customerportal/fingerprint/v1/crash-risk-devices/';
 	static readonly getCrashHistoryForDevicePath =
 		'/customerportal/rmc/v1/device-frequent-crash-detail/';
+	static readonly getTotalAssestCountPath =
+		'/customerportal/inventory/v1/role/device/count'
+
 
 	constructor(
 		config: __Configuration,
@@ -214,6 +217,32 @@ class RiskMitigationService extends __BaseService {
 		);
 	}
 
+	getTotalAssestCountResponse(params: CrashHistoryDeviceCount): __Observable<__StrictHttpResponse<BarGraphValues >> {
+		let __params = this.newParams();
+		__params = __params.set('customerId', params.customerId.toString())
+		__params = __params.set('useCase',params.useCase);
+		__params = __params.set('solution',params.solution);
+		
+		let __headers = new HttpHeaders();
+		let __body: any = null;
+		let req = new HttpRequest<any>(
+			'GET',
+			this.rootUrl + `${RiskMitigationService.getTotalAssestCountPath}`,
+			__body,
+			{
+				headers: __headers,
+				params: __params,
+				responseType: 'json',
+			});
+
+		return this.http.request<any>(req).pipe(
+			__filter(_r => _r instanceof HttpResponse),
+			__map((_r) => {
+				return _r as __StrictHttpResponse<BarGraphValues>;
+			})
+		);
+	}
+
 
 
 	getAllCrashesData(params: RiskMitigationService.GetAssetsParams): __Observable<CrashCount> {
@@ -249,6 +278,12 @@ class RiskMitigationService extends __BaseService {
 			__map(_r => _r.body as RiskAssets)
 		);
 	}
+	getTotalAssestCount(params: any): __Observable<BarGraphValues[] > {
+		return this.getTotalAssestCountResponse(params).pipe(
+			__map(_r => _r.body as BarGraphValues[] )
+		);
+	}
+
 }
 
 module RiskMitigationService {

@@ -30,3 +30,13 @@
 :host ::ng-deep .table {
 	@include table-ellipse;
 }
+
+.icon-info {
+	color:#c2d1e2;
+	height: 10px;
+
+}
+
+.icon-position {
+	display: inline !important;
+}

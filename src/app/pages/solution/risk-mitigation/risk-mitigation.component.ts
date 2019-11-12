@@ -54,6 +54,8 @@ export class RiskMitigationComponent {
 	public crashedAssetsCount = 0;
 	private selectedSolutionName: string;
 	private selectedTechnologyName: string;
+	public totalAssetCount;
+	public paginationStatus = false;
 
 	constructor (
 		private riskMitigationService: RiskMitigationService,
@@ -236,7 +238,6 @@ export class RiskMitigationComponent {
 			'useCase',
 		]);
 		this.onlyCrashes = false;
-		this.filters[0].selected = true;
 
 		return this.riskMitigationService.getAllCrashesData(params)
 			.pipe(
@@ -244,7 +245,7 @@ export class RiskMitigationComponent {
 				map((results: any) => {
 					const seriesData = this.marshallResultsObjectForGraph(results);
 					this.last24hrsData = results.devicesCrashCount_1d;
-					this.crashedAssetsCount = this.last24hrsData;
+					this.crashedAssetsCount = results.devicesCrashCount_90d;
 					this.getAdvisoryCount(seriesData);
 				}),
 				catchError(err => {
@@ -687,6 +688,7 @@ export class RiskMitigationComponent {
 		this.buildFilters();
 		this.buildTables();
 		this.loadData();
+		this.getTotalAssetCount();
 	}
 	/**
 	 * OnDestroy lifecycle hook
@@ -871,11 +873,13 @@ export class RiskMitigationComponent {
 		}
 		if (filter.key === 'advisories') {
 			this.getDeviceDetails(filterSelected);
-			this.crashedAssetsCount = sub.value;
 		} else {
 			this.highCrashRiskParams.globalRiskRank = subfilter;
 			this.getFingerPrintDeviceDetails(this.highCrashRiskParams);
 
+		}
+		if (subfilter === 'HIGH') {
+			this.paginationStatus = true;
 		}
 	}
 
@@ -901,7 +905,6 @@ export class RiskMitigationComponent {
 		this.getSelectedSubFilters('advisories');
 		this.selectedFilters = this.filters;
 		this.selectedTimeFilters();
-		this.crashedAssetsCount = this.last24hrsData;
 	}
 
 	/**
@@ -938,30 +941,46 @@ export class RiskMitigationComponent {
 		return (catalogFilter.seriesData = [
 			{
 				filter: 'HIGH',
-				label: I18n.get('_High_'),
+				label: `${I18n.get('_High_')}(${result.high})`,
 				selected: true,
 				value: result.high,
 			},
 			{
 				filter: 'LOW',
-				label: I18n.get('_Low_'),
+				label: `${I18n.get('_Low_')}(${result.low})`,
 				selected: false,
 				value: result.low,
 			},
 			{
 				filter: 'MED',
-				label: I18n.get('_Medium_'),
+				label: `${I18n.get('_Medium_')}(${result.med})`,
 				selected: false,
 				value: result.med,
 			},
 			{
 				filter: 'Not Evaluated',
-				label: I18n.get('_CP_NotEvaluated'),
+				label: `${I18n.get('_CP_NotEvaluated')}(${result.med})`,
 				selected: false,
 				value: result.notEvaluated,
 			},
 		]);
 
+	}
+
+	/**
+	 * Method used to get the total Assest Count
+	 */
+	public getTotalAssetCount () {
+		const totalCountParams = {
+			customerId: this.customerId,
+			solution: this.highCrashRiskParams.solution,
+			useCase: this.highCrashRiskParams.useCase,
+		};
+		this.riskMitigationService.getTotalAssestCount(totalCountParams)
+		.subscribe(response => {
+			this.totalAssetCount = response.map(element => element.deviceCount)
+			.reduce((sum, value) => sum + value, 0);
+		});
 	}
 
 }
