@@ -93,7 +93,6 @@ export class DevicesWithExceptionsComponent implements OnInit {
 	 */
 
 	public buildTable () {
-		const datePipe = new DatePipe('en-US');
 		this.tableOptions = new CuiTableOptions({
 			bordered: false,
 			columns: [
@@ -125,13 +124,6 @@ export class DevicesWithExceptionsComponent implements OnInit {
 				{
 					key: 'softwareVersion',
 					name: I18n.get('_ArchitectureSoftwareRelease_'),
-					sortable: false,
-				},
-				{
-					key: 'lastUpdateDate',
-					name: I18n.get('_ArchitectureConfigCollectionDate_'),
-					render: item =>
-						datePipe.transform(item.lastUpdateDate, 'medium'),
 					sortable: false,
 				},
 				{

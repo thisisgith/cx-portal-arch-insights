@@ -475,6 +475,8 @@ export class RiskMitigationComponent {
 		return {
 			time,
 			customerId: this.customerId,
+			solution: this.selectedSolutionName,
+			useCase: this.selectedTechnologyName,
 			key: '',
 			search: searchText,
 			sortDirection: '',
