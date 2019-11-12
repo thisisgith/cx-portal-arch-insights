@@ -57,7 +57,7 @@ describe('TagListComponent', () => {
 
 	it('should run refresh', () => {
 		spyOn(component, 'refresh');
-		component.ngAfterViewInit();
+		component.ngOnChanges();
 		expect(component.refresh)
 		.toHaveBeenCalled();
 	});

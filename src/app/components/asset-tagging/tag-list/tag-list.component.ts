@@ -1,4 +1,4 @@
-import { Component, ViewChild, Input, Output, EventEmitter } from '@angular/core';
+import { Component, ViewChild, Input, Output, EventEmitter, OnChanges } from '@angular/core';
 import { LogService } from '@cisco-ngx/cui-services';
 import { Tags } from '@sdp-api';
 import * as _ from 'lodash-es';
@@ -11,7 +11,7 @@ import * as _ from 'lodash-es';
 	styleUrls: ['./tag-list.component.scss'],
 	templateUrl: './tag-list.component.html',
 })
-export class TagListComponent {
+export class TagListComponent implements OnChanges {
 
 	@ViewChild('container', { static: false }) public container: any;
 	@Input() public rowHeight = 50;
@@ -28,9 +28,9 @@ export class TagListComponent {
 	) { }
 
 	/**
-	 * Refreshes virtual list on after view init
+	 * Refreshes virtual list on after each input change
 	 */
-	public ngAfterViewInit () {
+	public ngOnChanges () {
 		this.refresh();
 	}
 
