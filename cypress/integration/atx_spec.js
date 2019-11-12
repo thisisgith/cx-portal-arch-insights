@@ -3113,11 +3113,9 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			});
 
 			it('ATX filter "All" selection should unselect all other dropdown entries', () => {
+				// Only view within the View all selection of the ATX panel
 				cy.getByAutoId('ViewAllModal')
 					.within(() => {
-						// Only view within the View all selection of the ATX panel
-						cy.getByAutoId('ViewAllModal-PartnerMultiFilter').click();
-
 						// Open Partner dropdown
 						cy.getByAutoId('ViewAllModal-PartnerMultiFilter').click();
 
@@ -3141,6 +3139,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			});
 
 			it('ATX filter entry selection should unselect the "All" entry', () => {
+				// Only view within the View all selection of the ATX panel
 				cy.getByAutoId('ViewAllModal')
 					.within(() => {
 						// Open the Partner Dropdown
