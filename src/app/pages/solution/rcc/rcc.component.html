@@ -17,7 +17,7 @@
 				</div>
 			</div>
 			<div class="col-md-10 no-padding">
-				<div class="col-md-7 seperator-line half-margin-left flex-center" *ngIf="!errorPolicyView && !noTableData">
+				<div class="col-md-7 seperator-line half-margin-left flex-center" *ngIf="!errorPolicyView">
 					<div class="flex flex-fluid" *ngIf="!filterLoading">
 						<ng-container *ngFor="let filter of filters">
 							<div attr.id="RccSelectVisualFilter-{{ filter?.key }}"
@@ -261,7 +261,7 @@
 						<div data-auto-id="RccLastScan" class="dbl-margin-right">
 							<div class="text-small text-uppercase text-bold" [innerText]="'_RccAssetLastScan_' | i18n ">
 							</div>
-							<div [innerText]=" (selectedAssetData?.lastScan| date:'yyyy MMM dd' ) || ('_Never_' | i18n) ">
+							<div [innerText]=" (lastScan | dateTime ) || ('_Never_' | i18n) ">
 							</div>
 						</div>
 					</div>
@@ -338,3 +338,9 @@
 	[minWidth]="'900px'"
 	[fullscreenToggle]="'true'">
 </asset-details>
+
+<ng-template #lastScanTmpl let-item="celldata">
+	<span [attr.data-balloon]="item['lastScan'] | dateTime" data-balloon-pos="right">
+		<span [innerText]="item['lastScan'] | fromNow"></span>
+	</span>
+</ng-template>

@@ -5,7 +5,7 @@ import {
 	RccAssetViolationDetailsComponent,
 } from './rcc-asset-violation-details/rcc-asset-violation-details.component';
 import { RouterModule, Routes } from '@angular/router';
-import { RemoveInvalidTagsPipeModule } from '@pipes';
+import { RemoveInvalidTagsPipeModule, DateTimePipeModule } from '@pipes';
 import {
 	CuiTableModule,
 	CuiPagerModule,
@@ -78,6 +78,7 @@ const childRoutes: Routes = [
 		InsightTabsModule,
 		RemoveInvalidTagsPipeModule,
 		TooltipModule,
+		DateTimePipeModule,
 	],
 })
 export class RccModule { }

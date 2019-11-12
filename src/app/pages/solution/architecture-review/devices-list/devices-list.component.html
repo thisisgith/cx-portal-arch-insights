@@ -32,7 +32,7 @@
 					<span innerText="{{ deviceDetails?.currentDeviceRole }}"></span>
 				</div>
 				<div class="half-padding-bottom">
-					<div class="alert fade-and-slide-top text-left alert--warning" *ngIf="failedCriteriaMessages">
+					<div class="alert fade-and-slide-top text-left alert--warning" *ngIf="failedCriteriaMessages?.length > 0">
 						<div class="alert__icon icon-warning-outline"></div>
 						<ng-container class="failed-criteria">
 							<div class="alert__message">
@@ -124,10 +124,11 @@
 	<span [ngClass]="{
 		'text-success': item?.dnacCompliance === 'Yes',
 		'text-danger': item?.dnacCompliance === 'No',
-		'transparent-style': item?.dnacCompliance === 'NA'
+		'text-ocean': item?.dnacCompliance === 'NA'
 	}" class="qtr-margin-right icon-circle">
 	</span>
-	<span [innerText]="item?.dnacCompliance"></span>
+	<span [innerText]="item?.dnacCompliance" *ngIf="item?.dnacCompliance !== 'NA'"></span>
+	<span *ngIf="item?.dnacCompliance === 'NA'" [innerText]="'_ArchitectureNotAvailable_' | i18n"></span>
 </ng-template>
 
 <ng-template #sdaReady let-item="celldata">
@@ -135,11 +136,12 @@
 		'text--success': item?.sdaCompliance === 'Yes',
 		'text-danger': item?.sdaCompliance === 'No',
 		'text-warning': item?.sdaCompliance === 'Warning',
-		'transparent-style': item?.sdaCompliance === 'NA'
+		'text-ocean': item?.sdaCompliance === 'NA'
 	}" class="qtr-margin-right icon-circle">
 	</span>
 	<span *ngIf="item?.sdaCompliance == 'Warning'" [innerText]="'_ArchitectureYes_' | i18n"></span>
-	<span *ngIf="item?.sdaCompliance != 'Warning'" [innerText]="item?.sdaCompliance"></span>
+	<span *ngIf="item?.sdaCompliance != 'Warning' && item?.sdaCompliance != 'NA'" [innerText]="item?.sdaCompliance"></span>
+	<span *ngIf="item?.sdaCompliance === 'NA'" [innerText]="'_ArchitectureNotAvailable_' | i18n"></span>
 </ng-template>
 
 
@@ -147,46 +149,44 @@
 	<span [ngClass]="{
 		'text-success': item?.assuranceCompliance === 'Yes',
 		'text-danger': item?.assuranceCompliance === 'No',
-		'transparent-style': item?.assuranceCompliance === 'NA'
+		'text-ocean': item?.assuranceCompliance === 'NA'
 	}" class="qtr-margin-right icon-circle">
 	</span>
-	<span [innerText]="item?.assuranceCompliance"></span>
+	<span *ngIf="item?.assuranceCompliance !== 'NA'" [innerText]="item?.assuranceCompliance"></span>
+	<span *ngIf="item?.assuranceCompliance === 'NA'" [innerText]="'_ArchitectureNotAvailable_' | i18n"></span>
 </ng-template>
 
 <ng-template #swimReady let-item="celldata">
 	<span [ngClass]="{
 		'text-success': item?.swimCompliance === 'Yes',
 		'text-danger': item?.swimCompliance === 'No',
-		'transparent-style': item?.swimCompliance === 'NA'
+		'text-ocean': item?.swimCompliance === 'NA'
 	}" class="qtr-margin-right icon-circle">
 	</span>
-	<span [innerText]="item?.swimCompliance"></span>
+	<span [innerText]="item?.swimCompliance"  *ngIf="item?.swimCompliance != 'NA'"></span>
+	<span *ngIf="item?.swimCompliance === 'NA'" [innerText]="'_ArchitectureNotAvailable_' | i18n"></span>
 </ng-template>
 
 <ng-template #pnpReady let-item="celldata">
 	<span [ngClass]="{
 		'text-success': item?.pnpCompliance === 'Yes',
 		'text-danger': item?.pnpCompliance === 'No',
-		'transparent-style': item?.pnpCompliance === 'NA'
+		'text-ocean': item?.pnpCompliance === 'NA'
 	}" class="qtr-margin-right icon-circle">
 	</span>
-	<span [innerText]="item?.pnpCompliance"></span>
+	<span [innerText]="item?.pnpCompliance" *ngIf="item?.pnpCompliance != 'NA'"></span>
+	<span *ngIf="item?.pnpCompliance === 'NA'" [innerText]="'_ArchitectureNotAvailable_' | i18n"></span>
+	
 </ng-template>
 
 <ng-template #productId let-item="celldata">
-	<span *ngIf="item?.hardwarePidCompliant === 'No' && item?.hardwarePidCompliant === 'No'"
+	<span *ngIf="item?.hardwarePidCompliant === 'No'"
 		class="icon-warning-outline"></span>
 	<span class="qtr-margin-left" [innerText]="item?.productId"></span>
 </ng-template>
 
 <ng-template #softwareVersion let-item="celldata">
-	<span *ngIf="item?.softwareVersionCompliant === 'No' && item?.softwareVersionCompliant === 'No'"
+	<span *ngIf="item?.softwareVersionCompliant === 'No' || item?.softwareTypeCompliant === 'No'"
 		class="icon-warning-outline"></span>
 	<span class="qtr-margin-left" [innerText]="item?.softwareVersion"></span>
-</ng-template>
-
-<ng-template #warningMessages>
-	<div *ngFor="let failedCriterias of failedCriteriaMessages" class="qtr-padding-top">
-		<span class="qtr-margin-left text-muted text-small" [innerText]="failedCriterias"></span>
-	</div>
 </ng-template>

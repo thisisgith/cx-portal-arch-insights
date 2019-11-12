@@ -21,7 +21,7 @@
 
 <ng-template #summary>
 	<div *ngIf="!isLoading">
-			<div class="base-margin-top base-margin-bottom descriptionHeight">
+		<div class="base-margin-top base-margin-bottom descriptionHeight">
 			<ng-container *ngTemplateOutlet="detailText; context: {
 					title: ('_Title_' | i18n),
 					text: data?.bulletin?.bulletinTitle
@@ -29,7 +29,7 @@
 			</ng-container>
 			<ng-container *ngTemplateOutlet="detailText; context: {
 					title: ('_ProblemDescription_' | i18n),
-					text: data?.bulletin?.description
+					text: data?.bulletin?.problemDescription
 				}">
 			</ng-container>
 		</div>
