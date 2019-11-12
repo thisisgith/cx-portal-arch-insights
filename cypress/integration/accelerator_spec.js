@@ -3274,8 +3274,6 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				cy.getByAutoId('ViewAllModal')
 					.within(() => {
 						// Only view within the View all selection of the ATX panel
-						cy.getByAutoId('ViewAllModal-PartnerMultiFilter').click();
-
 						// Open Partner dropdown
 						cy.getByAutoId('ViewAllModal-PartnerMultiFilter').click();
 
