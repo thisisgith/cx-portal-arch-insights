@@ -51,11 +51,11 @@
 								</div>
 								<div class="col-md-10">
 								<div class="row flex-end dbl-padding-top">
-									<div class="col-md-1" [hidden]= "!showAssetsComponent">
+									<div class="col-md-1" *ngIf="selectedPolicy">
 											<button class="btn btn--small btn--primary half-margin-top" (click)="savePolicyDetails()"
 											[innerText]="'_Save_' | i18n"></button>
 										</div>
-									<div class="col-md-2" [hidden]= "!showAssetsComponent">
+									<div class="col-md-2" *ngIf="selectedPolicy">
 										<div class="form-group form-group--inline base-margin-bottom" *ngIf="toBeScanned">
 												<div class="subheader qtr-margin-bottom">Enable Scan
 														<sup>
@@ -114,10 +114,10 @@
 							</div>
 						</div>
 					</div>
-					<div class="text-large" [hidden]= "!showAssetsComponent" [innerText]="'_AdminPolicyTaggingHeading_' | i18n"></div>
+					<div class="text-large" [hidden]= "!optlnStatus || !showAssetsComponent" [innerText]="'_AdminPolicyTaggingHeading_' | i18n"></div>
 			</div>
 
-			<asset-tagging [hidden]= "!showAssetsComponent" [tagListLeft]='leftSideTags' [tagListRight]='rightSideTags'></asset-tagging>
+			<asset-tagging [hidden]= "!optlnStatus || !showAssetsComponent" [tagListLeft]='leftSideTags' [tagListRight]='rightSideTags'></asset-tagging>
 
 	</div>
 </admin-wrapper>
@@ -134,6 +134,20 @@
 	</div>
 	<div class="modal__footer">
 		<button class="btn btn--primary" (click)="discardChanges()">Continue</button>
+		<button class="btn" (click)="saveChanges()">Cancel</button>
+	</div>
+</ng-template>
+
+<ng-template #switchBetweenPolicy>
+	<a class="modal__close" (click)="cuiModalService.hide()"><span class="icon-close"></span></a>
+	<div class="modal__header">
+		<h4 class="modal__title">Are you sure you want to switch to other policy?</h4>
+	</div>
+	<div class="modal__body">
+		<p class="subtitle">If you switch to other policy all the mapping data will be deleted</p>
+	</div>
+	<div class="modal__footer">
+		<button class="btn btn--primary" (click)="discardChangesOnPolicyChange()">Continue</button>
 		<button class="btn" (click)="saveChanges()">Cancel</button>
 	</div>
 </ng-template>

@@ -30,6 +30,9 @@ export class AdminComplienceComponent implements OnInit {
 	@ViewChild('confirmationModalTemplate',
 	{ static: true }) private confirmationModalTemplate: TemplateRef<string>;
 
+	@ViewChild('switchBetweenPolicy',
+	{ static: true }) private switchBetweenPolicy: TemplateRef<string>;
+
 	private destroyed$: Subject<void> = new Subject<void>();
 	private customerId: string;
 	public accepted = false;
@@ -80,7 +83,7 @@ export class AdminComplienceComponent implements OnInit {
 				value: true,
 			},
 			{
-				name: 'HIPPA',
+				name: 'HIPAA',
 				value: false,
 			},
 			{
@@ -244,12 +247,16 @@ export class AdminComplienceComponent implements OnInit {
 	public onPolicySelected (policy) {
 		_.invoke(this.alert, 'hide');
 		if (policy !== 'select') {
+			if (this.selectedPolicy) {
+				this.cuiModalService.show(this.switchBetweenPolicy, 'small');
+			}
 			this.selectedPolicy = policy;
-			this.filterDuplicates();
-			this.showAssetsComponent = true;
+			// this.filterDuplicates();
+		// this.showAssetsComponent = true;
 		} else {
 			this.showAssetsComponent = false;
 		}
+	// this.onChangesDeviceTagType('allDevices');
 	}
 
 	/**
@@ -306,8 +313,26 @@ export class AdminComplienceComponent implements OnInit {
 
 /**
  * Function to update option selected by user
+ * @param type selected type by user
  */
-	public onChangesDeviceTagType () {
-		this.showAssetsComponent = this.selectedDeviceTagType === 'allDevices' ? false : true;
+	public onChangesDeviceTagType (type?) {
+		if (type) {
+			this.selectedDeviceTagType = type;
+		}
+		if (this.selectedDeviceTagType === 'allDevices') {
+			this.showAssetsComponent = false;
+			this.assetTaggingService.Tags = [];
+		} else {
+			this.showAssetsComponent = true;
+		}
+	}
+
+	/**
+	 * Function to discard selected policy change
+	 */
+	public discardChangesOnPolicyChange () {
+		this.onChangesDeviceTagType('allDevices');
+		this.filterDuplicates();
+		this.cuiModalService.hide();
 	}
 }
