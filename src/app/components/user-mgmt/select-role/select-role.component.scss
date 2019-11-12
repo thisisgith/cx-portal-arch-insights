@@ -10,12 +10,15 @@
 		padding: 0;
 
 		.dropdown-option {
-			&:hover, .active {
+			&:hover,
+			.active {
 				background: #d9f0f9;
 			}
+
 			&__text {
 				padding: 10px;
 			}
+
 			.divider {
 				margin: 0;
 			}

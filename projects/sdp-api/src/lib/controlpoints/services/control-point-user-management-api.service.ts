@@ -19,6 +19,8 @@ import { VADetailsResponseModel } from '../models/vadetails-response-model';
 import { UserValidationResponseModel } from '../models/user-validation-response-model';
 import { UserValidationRequestModel } from '../models/user-validation-request-model';
 import { HADetailsResponseModel } from '../models/hadetails-response-model';
+import { UserAddResponseModel } from '../models/user-add-response-model';
+import { UserAddRequestModel } from '../models/user-add-request-model';
 @Injectable({
   providedIn: 'root',
 })
@@ -31,6 +33,7 @@ class ControlPointUserManagementAPIService extends __BaseService {
   static readonly updateUsersUsingPOSTPath = '/users/update/role';
   static readonly getVAListForGivenSACUsingGETPath = '/users/va/{saAccountId}';
   static readonly validateNewlyAddedUserUsingPOSTPath = '/users/validate';
+  static readonly addNewUserUsingPOSTPath = '/users/add';
   static readonly getUserHADetailsUsingGETPath = '/users/validate/ha/{ccoId}';
 
   constructor(
@@ -343,6 +346,45 @@ class ControlPointUserManagementAPIService extends __BaseService {
   validateNewlyAddedUserUsingPOST(requestModel: UserValidationRequestModel): __Observable<UserValidationResponseModel> {
     return this.validateNewlyAddedUserUsingPOSTResponse(requestModel).pipe(
       __map(_r => _r.body as UserValidationResponseModel)
+    );
+  }
+
+    /**
+   * @param requestModel requestModel
+   * @return OK
+   */
+  AddNewUserUsingPOSTResponse(requestModel: UserAddRequestModel): __Observable<__StrictHttpResponse<UserAddResponseModel>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    __headers = __headers.append("Content-Type", "application/json");
+    __body = requestModel;
+    let req = new HttpRequest<any>(
+      'POST',
+      this.rootUrl + `/customerportal/controlpoint/v1/users/add`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<UserAddResponseModel>;
+      })
+    );
+  }
+
+  /**
+   * @param requestModel requestModel
+   * @return OK
+   */
+  AddNewUserUsingPOST(requestModel: UserAddRequestModel): __Observable<UserAddResponseModel> {
+    return this.AddNewUserUsingPOSTResponse(requestModel).pipe(
+      __map(_r => _r.body as UserAddResponseModel)
     );
   }
 

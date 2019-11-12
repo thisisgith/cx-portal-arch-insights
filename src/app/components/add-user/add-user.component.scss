@@ -1,0 +1,84 @@
+@import "~src/variables.scss";
+
+.border-red {
+	border: 1px solid $status-red;
+}
+
+.body {
+	text-align: left;
+}
+
+.btn {
+	&--primary {
+		background-color: $cisco-blue !important;
+		border-color: $cisco-blue;
+		color: $white;
+
+		&:hover {
+			border-color: $cisco-blue;
+		}
+	}
+}
+
+.form-group__text {
+	input {
+		border: none;
+		border-bottom: 1px solid $light-gray-1;
+		background: $light-gray-background;
+
+		&:focus {
+			box-shadow: unset;
+		}
+	}
+}
+
+.cui-alert {
+	.alert.alert--danger {
+		border: 1px solid white !important;
+	}
+}
+
+:host ::ng-deep {
+	.dropdown-styling {
+		.form-group {
+			&.dropdown {
+				.form-group__text input {
+					border: none;
+					border-bottom: 1px solid $light-gray-1;
+					background: $light-gray-background;
+
+					&:focus {
+						box-shadow: unset;
+					}
+				}
+			}
+		}
+	}
+
+	.checkbox {
+		.checkbox__input {
+			position: initial;
+
+			&::after {
+				background-color: $cisco-blue;
+			}
+		}
+	}
+
+	.alert-styling {
+		.alert {
+			&.alert--danger {
+				border: 1px solid $white;
+				border-left-width: 45px;
+			}
+
+			&.alert.alert--danger .alert__icon {
+				color: $status-red;
+			}
+
+			a {
+				display: none;
+			}
+		}
+	}
+}

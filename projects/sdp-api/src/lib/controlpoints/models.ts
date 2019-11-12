@@ -55,3 +55,8 @@ export { HAMappingForPartnerCco } from './models/hamapping-for-partner-cco';
 export { InsightObject } from './models/insight-object';
 export { CSWRole } from './models/cswrole';
 export { CSWRoleUpdateResponse } from './models/cswrole-update-response';
+export { RolesAdded } from './models/roles-added';
+export { UpdatedUserResponseList } from './models/update-users-response-list';
+export { UserAddRequestModel } from './models/user-add-request-model';
+export { UserAddResponseModel } from './models/user-add-response-model';
+export { UserDetailsResponse } from './models/user-details-response';

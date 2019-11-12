@@ -11,6 +11,8 @@ import { catchError, finalize, map, switchMap, takeUntil, tap } from 'rxjs/opera
 import { ControlPointUserManagementAPIService, UserDetails } from '@sdp-api';
 import { SortableColumn, SortProps } from './user-mgmt.types';
 import { I18nPipe } from '@cisco-ngx/cui-pipes';
+import { CuiModalService } from '@cisco-ngx/cui-components';
+import { AddUserComponent } from '../add-user/add-user.component';
 
 /** Placeholder for saCompanyId */
 const companyId = '106200';
@@ -54,6 +56,7 @@ export class UserMgmtComponent implements AfterViewInit, OnDestroy {
 		private cdr: ChangeDetectorRef,
 		private i18n: I18nPipe,
 		private usersService: ControlPointUserManagementAPIService,
+		private cuiModalService: CuiModalService,
 	) { }
 
 	/**
@@ -115,6 +118,15 @@ export class UserMgmtComponent implements AfterViewInit, OnDestroy {
 	 */
 	public onUpdateClick () {
 		this.onUpdate.emit();
+	}
+
+	/**
+	 * Add User Button click handler
+	 */
+
+	public onAddUser () {
+		this.cuiModalService.showComponent(AddUserComponent, { }, 'small');
+
 	}
 
 	/**
