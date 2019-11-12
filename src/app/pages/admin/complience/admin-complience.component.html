@@ -38,7 +38,7 @@
 								<div class="col-md-2">
 								<div class="form-group">
 										<div class="form-group__text select">
-											<select id="select-type-basic" (change)="onPolicySelected($event.target.value)">
+											<select id="select-type-basic" (change)="onPolicySelected($event.target.value)" [(ngModel)]="selectedPolicy">
 												<option *ngFor="let policy of policies"
 												[value]="policy.name">
 												{{policy.name}}
@@ -51,11 +51,11 @@
 								</div>
 								<div class="col-md-10">
 								<div class="row flex-end dbl-padding-top">
-									<div class="col-md-1" *ngIf="selectedPolicy">
+									<div class="col-md-1" *ngIf="selectedPolicy !== 'select'">
 											<button class="btn btn--small btn--primary half-margin-top" (click)="savePolicyDetails()"
 											[innerText]="'_Save_' | i18n"></button>
 										</div>
-									<div class="col-md-2" *ngIf="selectedPolicy">
+									<div class="col-md-2" *ngIf="selectedPolicy !== 'select'">
 										<div class="form-group form-group--inline base-margin-bottom" *ngIf="toBeScanned">
 												<div class="subheader qtr-margin-bottom">Enable Scan
 														<sup>
@@ -94,7 +94,7 @@
 										</div>
 							</div>
 							</div>
-							<div *ngIf="selectedPolicy" class="device-tags-selection col-md-4">
+							<div *ngIf="selectedPolicy !== 'select'" class="device-tags-selection col-md-4">
 								<div class="form-group form-group--inline">
 									<label class="radio">
 										<input type="radio" name="inline-radio" [(ngModel)]="selectedDeviceTagType" 
@@ -148,7 +148,7 @@
 	</div>
 	<div class="modal__footer">
 		<button class="btn btn--primary" (click)="discardChangesOnPolicyChange()">Continue</button>
-		<button class="btn" (click)="saveChanges()">Cancel</button>
+		<button class="btn" (click)="onCancelPolicyChanges()">Cancel</button>
 	</div>
 </ng-template>
 

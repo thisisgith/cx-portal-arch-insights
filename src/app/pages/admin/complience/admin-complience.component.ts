@@ -43,7 +43,7 @@ export class AdminComplienceComponent implements OnInit {
 	public policies = [];
 	public leftSideTagsResponse: LeftTagResponse;
 	public rightSideTagsResponse: RightTagResponse;
-	public selectedPolicy = '';
+	public selectedPolicy = 'select';
 	public leftSideTags = [];
 	public rightSideTags = [];
 	public showAssetsComponent = false;
@@ -60,6 +60,7 @@ export class AdminComplienceComponent implements OnInit {
 
 	private user: User;
 	public selectedDeviceTagType = 'allDevices';
+	public isPolicyChanged: boolean;
 
 	constructor (
 		public cuiModalService: CuiModalService,
@@ -244,19 +245,12 @@ export class AdminComplienceComponent implements OnInit {
 	 * @returns response with success
 	 */
 
-	public onPolicySelected (policy) {
+	public onPolicySelected(policy) {
 		_.invoke(this.alert, 'hide');
-		if (policy !== 'select') {
-			if (this.selectedPolicy) {
-				this.cuiModalService.show(this.switchBetweenPolicy, 'small');
-			}
-			this.selectedPolicy = policy;
-			// this.filterDuplicates();
-		// this.showAssetsComponent = true;
-		} else {
-			this.showAssetsComponent = false;
+		if (policy !== 'select' && this.isPolicyChanged) {
+			this.cuiModalService.show(this.switchBetweenPolicy, 'small');
 		}
-	// this.onChangesDeviceTagType('allDevices');
+		this.isPolicyChanged = true;
 	}
 
 	/**
@@ -333,6 +327,14 @@ export class AdminComplienceComponent implements OnInit {
 	public discardChangesOnPolicyChange () {
 		this.onChangesDeviceTagType('allDevices');
 		this.filterDuplicates();
+		this.cuiModalService.hide();
+	}
+
+	/**
+	 * Function to keep updated policy changes
+	 */
+	public onCancelPolicyChanges () {
+		this.selectedPolicy = this.selectedPolicy === 'HIPAA' ? 'PCI' : 'HIPAA';
 		this.cuiModalService.hide();
 	}
 }

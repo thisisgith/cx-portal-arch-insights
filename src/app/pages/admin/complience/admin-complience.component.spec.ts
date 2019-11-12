@@ -11,7 +11,7 @@ import { RouteAuthService } from '@services';
 import { HttpErrorResponse } from '@angular/common/http';
 import { LogService } from '@cisco-ngx/cui-services';
 
-fdescribe('AdminComplienceComponent', () => {
+describe('AdminComplienceComponent', () => {
 	let component: AdminComplienceComponent;
 	let fixture: ComponentFixture<AdminComplienceComponent>;
 
@@ -68,7 +68,7 @@ fdescribe('AdminComplienceComponent', () => {
 			}];
 			component.toggleOptlnStatus();
 			expect(component.optlnStatus)
-			.toBeTruthy();
+				.toBeTruthy();
 		});
 
 		it('should not display modal if there is no tags', () => {
@@ -76,7 +76,7 @@ fdescribe('AdminComplienceComponent', () => {
 			component.leftSideTags = null;
 			component.toggleOptlnStatus();
 			expect(component.optlnStatus)
-			.toBe(component.optlnStatus);
+				.toBe(component.optlnStatus);
 		});
 	});
 
@@ -112,7 +112,7 @@ fdescribe('AdminComplienceComponent', () => {
 			};
 			component.filterDuplicates();
 			expect(component.leftSideTags)
-			.toBeDefined();
+				.toBeDefined();
 		});
 
 		it('should have rigth side tag response', () => {
@@ -147,7 +147,7 @@ fdescribe('AdminComplienceComponent', () => {
 			};
 			component.filterDuplicates();
 			expect(component.rightSideTags)
-			.toBeDefined();
+				.toBeDefined();
 		});
 	});
 
@@ -156,10 +156,10 @@ fdescribe('AdminComplienceComponent', () => {
 			let routeAuthService: RouteAuthService;
 			routeAuthService = TestBed.get(RouteAuthService);
 			spyOn(routeAuthService, 'updatePermissions').and
-			.callThrough();
+				.callThrough();
 			component.updatePermissions();
 			expect(routeAuthService.updatePermissions)
-			.toHaveBeenCalled();
+				.toHaveBeenCalled();
 		});
 
 		it('should handle failing api calls', fakeAsync(() => {
@@ -173,17 +173,17 @@ fdescribe('AdminComplienceComponent', () => {
 			logService = TestBed.get(LogService);
 
 			spyOn(logService, 'error').and
-			.callFake(() =>
-				null);
+				.callFake(() =>
+					null);
 			spyOn(routeAuthService, 'updatePermissions')
 				.and
 				.returnValue(throwError(new HttpErrorResponse(error)));
 			component.updatePermissions()
-			.subscribe(null,
-				err => {
-					expect(err.status)
-					.toEqual(404);
-				});
+				.subscribe(null,
+					err => {
+						expect(err.status)
+							.toEqual(404);
+					});
 		}));
 	});
 
@@ -197,11 +197,11 @@ fdescribe('AdminComplienceComponent', () => {
 					statusText: 'Resource not found',
 				})));
 			component.getLeftSideTags()
-			.subscribe(null,
-				err => {
-					expect(err.statusText)
-					.toEqual('Resource not found');
-				});
+				.subscribe(null,
+					err => {
+						expect(err.statusText)
+							.toEqual('Resource not found');
+					});
 		}));
 
 		it('should handle api failure of to get right side tags', fakeAsync(() => {
@@ -213,11 +213,11 @@ fdescribe('AdminComplienceComponent', () => {
 					statusText: 'Resource not found',
 				})));
 			component.getRightSideTags()
-			.subscribe(null,
-				err => {
-					expect(err.statusText)
-					.toEqual('Resource not found');
-				});
+				.subscribe(null,
+					err => {
+						expect(err.statusText)
+							.toEqual('Resource not found');
+					});
 		}));
 	});
 
@@ -225,65 +225,61 @@ fdescribe('AdminComplienceComponent', () => {
 		spyOn(component, 'updateOptInOutStatus');
 		component.discardChanges();
 		expect(component.optlnStatus)
-		.toBeFalsy();
+			.toBeFalsy();
 		expect(component.updateOptInOutStatus)
-		.toHaveBeenCalled();
+			.toHaveBeenCalled();
 	});
 
 	it('should save changes', () => {
 		spyOn(component, 'updateOptInOutStatus');
 		component.saveChanges();
 		expect(component.optlnStatus)
-		.toBeTruthy();
+			.toBeTruthy();
 		expect(component.updateOptInOutStatus)
-		.toHaveBeenCalled();
+			.toHaveBeenCalled();
 	});
 
 	it('should select policy', () => {
-		spyOn(component, 'filterDuplicates');
 		const policyName = 'HIPPA';
 		component.onPolicySelected(policyName);
-		expect(component.selectedPolicy)
-		.toBe(policyName);
-		expect(component.filterDuplicates)
-		.toHaveBeenCalled();
-		expect(component.showAssetsComponent)
-		.toBe(true);
+		expect(component.isPolicyChanged)
+		.toBeTruthy();
+
 	});
 	it('should not select policy', () => {
 		const policyName = 'select';
 		component.onPolicySelected(policyName);
 		expect(component.showAssetsComponent)
-		.toBe(false);
+			.toBe(false);
 	});
 
 	it('should save policy details', () => {
 		let assetTaggingService: AssetTaggingService;
 		assetTaggingService = TestBed.get(AssetTaggingService);
 		spyOn(assetTaggingService, 'getSelectedTags').and
-		.callFake(() =>
-			of([{
-				deviceCount: 1,
-				devices: [],
-				tagName: 'ABC',
-				tagValue: '111',
-			}]));
+			.callFake(() =>
+				of([{
+					deviceCount: 1,
+					devices: [],
+					tagName: 'ABC',
+					tagValue: '111',
+				}]));
 		component.savePolicyDetails();
 		assetTaggingService.getSelectedTags()
-		.subscribe(res => {
-			expect(component.saveDetails.body.tags)
-			.toEqual(res);
-		});
+			.subscribe(res => {
+				expect(component.saveDetails.body.tags)
+					.toEqual(res);
+			});
 	});
 
 	it('should update OptInOut Status', () => {
 		let assetTaggingService: AssetTaggingService;
 		assetTaggingService = TestBed.get(AssetTaggingService);
 		spyOn(assetTaggingService, 'updateOptStatus').and
-		.callThrough();
+			.callThrough();
 		component.updateOptInOutStatus();
 		expect(assetTaggingService.updateOptStatus)
-		.toHaveBeenCalled();
+			.toHaveBeenCalled();
 	});
 
 	it('should check for OptlnStatus', fakeAsync(() => {
@@ -295,11 +291,11 @@ fdescribe('AdminComplienceComponent', () => {
 				statusText: 'Resource not found',
 			})));
 		component.checkOptlnStatus()
-		.subscribe(null,
-			err => {
-				expect(err.status)
-				.toEqual(404);
-			});
+			.subscribe(null,
+				err => {
+					expect(err.status)
+						.toEqual(404);
+				});
 	}));
 
 	it('should handle error in get OptinOutStatus', fakeAsync(() => {
@@ -311,10 +307,47 @@ fdescribe('AdminComplienceComponent', () => {
 				statusText: 'Resource not found',
 			})));
 		component.getOptinOutStatus()
-		.subscribe(null,
-			res => {
-				expect(res.status)
-				.toEqual(404);
-			});
+			.subscribe(null,
+				res => {
+					expect(res.status)
+						.toEqual(404);
+				});
 	}));
+
+	describe('should update device tag', () => {
+		it('should not display asset tagging', () => {
+			component.selectedDeviceTagType = 'allDevices';
+			component.onChangesDeviceTagType();
+			expect(component.showAssetsComponent)
+				.toBeFalsy();
+		});
+
+		it('should display asset tagging', () => {
+			component.selectedDeviceTagType = 'specificDeviceTags';
+			component.onChangesDeviceTagType();
+			expect(component.showAssetsComponent)
+				.toBeTruthy();
+		});
+
+		it('should update device tag type', () => {
+			component.selectedDeviceTagType = 'allDevices';
+			component.onChangesDeviceTagType('allDevices');
+			expect(component.selectedDeviceTagType)
+				.toBe('allDevices');
+		});
+	});
+
+	it('should update selected policy to PCI', () => {
+		component.selectedPolicy = 'HIPAA';
+		component.onCancelPolicyChanges();
+		expect(component.selectedPolicy)
+			.toEqual('PCI');
+	});
+
+	it('should update selected policy to HIPAA', () => {
+		component.selectedPolicy = 'PCI';
+		component.onCancelPolicyChanges();
+		expect(component.selectedPolicy)
+			.toEqual('HIPAA');
+	});
 });
