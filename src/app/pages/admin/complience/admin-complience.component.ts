@@ -309,5 +309,6 @@ export class AdminComplienceComponent implements OnInit {
  */
 	public onChangesDeviceTagType () {
 		this.showAssetsComponent = this.selectedDeviceTagType === 'allDevices' ? false : true;
+		this.filterDuplicates();
 	}
 }
