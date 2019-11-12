@@ -1,7 +1,7 @@
 <div *ngIf="(!isError && !isLoading) else errorTemplate">
 	<cui-drawer projection="true" expanded="true" *ngIf="sdaHardwareGridData?.length > 0">
 		<div class="cui-drawer-label text-xlarge qtr-padding-top"
-			[innerText]="'_ArchitectureHardwareRecommendation_' | i18n">
+			[innerText]="'_ArchitectureSdaSupportedHardware_' | i18n">
 		</div>
 		<div class="cui-drawer-content">
 			<ng-container *ngTemplateOutlet="SDASupportedHardwareContent;context: { 
@@ -11,7 +11,7 @@
 	</cui-drawer>
 	<cui-drawer projection="true" expanded="true" *ngIf="sdaSoftwareGridData?.length > 0">
 		<div class="cui-drawer-label text-xlarge base-padding-top"
-			[innerText]="'_ArchitectureSoftwareRecommendation_' | i18n">
+			[innerText]="'_ArchitectureSdaSupportedSoftware_' | i18n">
 		</div>
 		<div class="cui-drawer-content">
 			<ng-container *ngTemplateOutlet="SDASupportedSoftwareContent;context: { 
@@ -57,18 +57,16 @@
 	<a class="qtr-padding-left" data-auto-id="linkSlideIn"
 		[innerText]="'_ArchitectureRecommendedRedirectLink_' | i18n" (click)="callOsvPage(sdaData)"></a>
 	<div class="base-margin-top panel recommended-color">
-		<span class="text-large" [innerText]="'_ArchitectureSdaSupportedSoftware_' | i18n"></span>
 		<cui-table [options]="softwareTableOptions" [data]="sdaSoftwareGridData"></cui-table>
 	</div>
 </ng-template>
 <ng-template #SDASupportedHardwareContent let-hardwareSdaData="sdaData" >
 	<div class="qtr-margin-top panel recommended-color" >
-		<span class="text-large" [innerText]="'_ArchitectureSdaSupportedHardware_' | i18n"></span>
 		<cui-table [options]="hardwareTableOptions" [data]="sdaHardwareGridData"></cui-table>
 	</div>
 </ng-template>
 <ng-template #SDAUnderlayRecommendationTemplate>
-		<cui-table [options]="nonOptimalLinksTableOptions" [data]="nonOptimalLinks"></cui-table>
+		<cui-table [options]="nonOptimalLinksTableOptions" [data]="nonOptimalLinks" *ngIf="nonOptimalLinks?.length > 0"></cui-table>
 		<cui-pager
 				*ngIf="nonOptimalLinks?.length"
 				[limit]="nonOptimalLinkTableLimit"

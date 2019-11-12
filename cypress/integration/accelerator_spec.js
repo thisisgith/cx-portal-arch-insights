@@ -1,6 +1,7 @@
 import MockService from '../support/mockService';
 
 const accMock = new MockService('ACCScenarios');
+const feedbackMock = new MockService('FeedbackScenarios');
 const solution = 'IBN';
 const useCase = 'Campus Network Assurance';
 const accScenario = accMock.getScenario('GET', `(ACC) ${solution}-${useCase}-Onboard`);
@@ -3536,6 +3537,193 @@ describe('Accelerator (ACC)', () => { // PBC-32
 							});
 					});
 			});
+		});
+	});
+
+	describe('US144494: Customer to provide feedback after ACC 1-1 session', () => {
+		beforeEach(() => {
+			// Force a hard refresh to reset the feedback data
+			cy.loadApp();
+			cy.wait('(ACC) IBN-Campus Network Assurance-Onboard');
+
+			// Switch to mock data with completed items
+			accMock.enable('(ACC) IBN-Campus Network Assurance-Onboard-twoCompleted');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ACC) IBN-Campus Network Assurance-Onboard-twoCompleted');
+
+			// Feedback is currently only available on View All cards
+			// So open the View All modal and ensure we're in card view
+			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
+			cy.getByAutoId('acc-card-view-btn').click();
+			cy.getByAutoId('ACCCard').should('exist');
+		});
+
+		afterEach(() => {
+			// Close the View All modal
+			cy.getByAutoId('ViewAllCloseModal').click();
+			cy.getByAutoId('ViewAllModal').should('not.exist');
+		});
+
+		after(() => {
+			// Switch back to the default mock data
+			feedbackMock.enable('(Lifecycle) Feedback POST');
+			feedbackMock.enable('(Lifecycle) Feedback PUT');
+			accMock.enable('(ACC) IBN-Campus Network Assurance-Onboard');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ACC) IBN-Campus Network Assurance-Onboard');
+		});
+
+		it('ACC Feedback form should have required fields', () => {
+			cy.getByAutoId('ACCCard').each($card => {
+				cy.wrap($card).within(() => {
+					cy.getByAutoId('thumbUpBtn').click();
+				});
+
+				cy.getByAutoId('FeedbackPopup')
+					.should('exist')
+					.within(() => {
+						cy.getByAutoId('FeedbackPopup-Title')
+							.should('have.text', i18n._FeedbackThanks_);
+						cy.getByAutoId('FeedbackPopup-Description')
+							.should('have.text', i18n._FeedbackMore_);
+						cy.getByAutoId('FeedbackPopup-Comments')
+							.should('exist');
+						// Character count only shows up if comments were entered
+						cy.getByAutoId('FeedbackPopup-Comments-Input')
+							.type('Automation Feedback');
+						cy.getByAutoId('FeedbackPopup-Comments-CharCount')
+							.should('contain', `${'Automation Feedback'.length} / 300`);
+
+						// Check Submit button exists, but don't click it
+						cy.getByAutoId('FeedbackPopup-Submit')
+							.should('exist');
+
+						// Close the feedback popup without submitting
+						cy.getByAutoId('FeedbackPopup-Close-Icon').click();
+					});
+			});
+		});
+
+		it('Comments field has a max length of 300 characters', () => {
+			cy.getByAutoId('ACCCard')
+				.first()
+				.within(() => {
+					cy.getByAutoId('thumbUpBtn').click();
+				});
+
+			cy.getByAutoId('FeedbackPopup')
+				.should('exist')
+				.within(() => {
+					// Comments field should only allow up to 300 characters
+					cy.getByAutoId('FeedbackPopup-Comments-Input')
+						.clear()
+						.type('a'.repeat(301));
+
+					// Field should only have ended up with 300 characters
+					cy.getByAutoId('FeedbackPopup-Comments-Input')
+						.invoke('val')
+						.then(text => {
+							expect(text.length).to.eq(300);
+						});
+
+					// Close the feedback popup
+					cy.getByAutoId('FeedbackPopup-Close-Icon').click();
+				});
+		});
+
+		it('Submitting feedback form should call API', () => {
+			// Setup a Cypress route to intercept the POST API call
+			cy.server();
+			cy.route({
+				method: 'POST',
+				url: '/api/customerportal/racetrack/v1/feedback/cxportal',
+				status: 200,
+				response: {
+					feedbackId: 'feedback-1',
+					comment: '',
+					context: '',
+					thumbs: 'UP',
+				},
+			}).as('feedbackPost');
+			cy.route({
+				method: 'PUT',
+				url: '/api/customerportal/racetrack/v1/feedback/cxportal/feedback-1',
+				status: 200,
+				response: 'Forced success from QA',
+			}).as('feedbackPut');
+			// Disable the default mock so Cypress can catch the request
+			feedbackMock.disable('(Lifecycle) Feedback POST');
+			feedbackMock.disable('(Lifecycle) Feedback PUT');
+
+			cy.getByAutoId('ACCCard')
+				.first()
+				.within(() => {
+					cy.getByAutoId('thumbUpBtn').click();
+				});
+
+			cy.wait('@feedbackPost')
+				.its('request.body')
+				.then(body => {
+					expect(body.comment).to.eq('');
+					expect(body.context.assetType).to.eq('ACC');
+					expect(body.context.customerId).to.eq('2431199');
+					expect(body.context.entityId).to.eq('111111');
+					expect(body.context.partnerId).to.eq('partner1');
+					expect(body.thumbs).to.eq('UP');
+				});
+
+			cy.getByAutoId('FeedbackPopup')
+				.should('exist')
+				.within(() => {
+					// Comments field should only allow up to 300 characters
+					cy.getByAutoId('FeedbackPopup-Comments-Input')
+						.clear()
+						.type('Automation Feedback');
+
+					// Submit the form
+					cy.getByAutoId('FeedbackPopup-Submit').click();
+				});
+
+			cy.wait('@feedbackPut')
+				.its('request.body')
+				.then(body => {
+					expect(body.comment).to.eq('Automation Feedback');
+					expect(body.context.assetType).to.eq('ACC');
+					expect(body.context.customerId).to.eq('2431199');
+					expect(body.context.entityId).to.eq('111111');
+					expect(body.context.partnerId).to.eq('partner1');
+					expect(body.thumbs).to.eq('UP');
+				});
+		});
+
+		it('Submitting feedback form should show thank you message', () => {
+			cy.getByAutoId('ACCCard')
+				.first()
+				.within(() => {
+					cy.getByAutoId('thumbUpBtn').click();
+				});
+
+			cy.getByAutoId('FeedbackPopup')
+				.should('exist')
+				.within(() => {
+					cy.getByAutoId('FeedbackPopup-Comments-Input')
+						.clear()
+						.type('Automation Feedback');
+
+					// Submit the form
+					cy.getByAutoId('FeedbackPopup-Submit').click();
+				});
+
+			// Verify the "Thank you" message is displayed with a "Close" button
+			cy.getByAutoId('FeedbackPopup-ThankYou').should('have.text', i18n._ThankYou_);
+			cy.getByAutoId('FeedbackPopup-Close').click();
+			cy.getByAutoId('FeedbackPopup').should('not.exist');
 		});
 	});
 });

@@ -174,7 +174,7 @@ export class ArchitectureReviewComponent implements OnInit {
 	public buildFilters () {
 		this.filters = [
 			{
-				key: 'sda',
+				key: 'overallCompliance',
 				loading: true,
 				selected: false,
 				seriesData: [],
@@ -182,7 +182,7 @@ export class ArchitectureReviewComponent implements OnInit {
 				title: '',
 			},
 			{
-				key: 'sdareadiness',
+				key: 'sdaCompliance',
 				loading: true,
 				selected: false,
 				seriesData: [],
@@ -190,7 +190,7 @@ export class ArchitectureReviewComponent implements OnInit {
 				title: '',
 			},
 			{
-				key: 'assurance',
+				key: 'assuranceCompliance',
 				loading: true,
 				selected: false,
 				seriesData: [],
@@ -198,7 +198,7 @@ export class ArchitectureReviewComponent implements OnInit {
 				title: '',
 			},
 			{
-				key: 'swim',
+				key: 'swimCompliance',
 				loading: true,
 				selected: false,
 				seriesData: [],
@@ -206,7 +206,7 @@ export class ArchitectureReviewComponent implements OnInit {
 				title: '',
 			},
 			{
-				key: 'pnp',
+				key: 'pnpCompliance',
 				loading: true,
 				selected: false,
 				seriesData: [],
@@ -285,11 +285,11 @@ export class ArchitectureReviewComponent implements OnInit {
 	 * @returns the edvisory counts
 	 */
 	public getDevicesCount () {
-		const exceptionFilter = _.find(this.filters, { key: 'sda' });
-		const sdaReadinessFilter = _.find(this.filters, { key: 'sdareadiness' });
-		const assuranceReadinessFilter = _.find(this.filters, { key: 'assurance' });
-		const swimReadinessDataFilter = _.find(this.filters, { key: 'swim' });
-		const pnpFilter = _.find(this.filters, { key: 'pnp' });
+		const exceptionFilter = _.find(this.filters, { key: 'overallCompliance' });
+		const sdaReadinessFilter = _.find(this.filters, { key: 'sdaCompliance' });
+		const assuranceReadinessFilter = _.find(this.filters, { key: 'assuranceCompliance' });
+		const swimReadinessDataFilter = _.find(this.filters, { key: 'swimCompliance' });
+		const pnpFilter = _.find(this.filters, { key: 'pnpCompliance' });
 
 		return this.architectureService.getSDAReadinessCount(this.params)
 			.pipe(

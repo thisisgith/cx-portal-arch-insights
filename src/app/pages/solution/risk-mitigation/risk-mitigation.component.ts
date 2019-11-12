@@ -34,8 +34,8 @@ import { AssetLinkInfo } from '@interfaces';
 export class RiskMitigationComponent {
 	public customerId: any;
 	public clearAllFilters = false;
-	public searchQueryInCrashGrid: String = '';
-	public searchQueryInHighCrashGrid: String = '';
+	public searchQueryInCrashGrid = '';
+	public searchQueryInHighCrashGrid = '';
 	public searchOptions = {
 		debounce: 1500,
 		max: 200,
@@ -197,6 +197,7 @@ export class RiskMitigationComponent {
 			this.filters[0].selected = false;
 		}
 		this.highCrashRiskParams.globalRiskRank = 'HIGH';
+		this.highCrashRiskParams.search = this.searchQueryInHighCrashGrid;
 		this.getFingerPrintDeviceDetails(this.highCrashRiskParams);
 		const params = _.pick(_.cloneDeep(this.highCrashRiskParams), [
 			'customerId',
@@ -474,6 +475,8 @@ export class RiskMitigationComponent {
 		return {
 			time,
 			customerId: this.customerId,
+			solution: this.selectedSolutionName,
+			useCase: this.selectedTechnologyName,
 			key: '',
 			search: searchText,
 			sortDirection: '',
@@ -527,7 +530,7 @@ export class RiskMitigationComponent {
 		} else {
 			this.searchQueryInHighCrashGrid = searchText;
 			this.highCrashRiskParams.page = 0;
-			this.highCrashRiskParams.search = searchText;
+			this.highCrashRiskParams.search = this.searchQueryInHighCrashGrid;
 			this.highCrashRiskParams.size = 10;
 			this.getFingerPrintDeviceDetails(this.highCrashRiskParams);
 		}
@@ -845,7 +848,6 @@ export class RiskMitigationComponent {
 	public onSubfilterSelect (subfilter: string, filter: Filter) {
 		this.resetFilters();
 		const sub = _.find(filter.seriesData, { filter: subfilter });
-		this.crashedAssetsCount = sub.value;
 		sub.selected = (sub) ? !sub.selected : '';
 		filter.selected = _.some(filter.seriesData, 'selected');
 		let filterSelected: string;
@@ -869,6 +871,7 @@ export class RiskMitigationComponent {
 		}
 		if (filter.key === 'advisories') {
 			this.getDeviceDetails(filterSelected);
+			this.crashedAssetsCount = sub.value;
 		} else {
 			this.highCrashRiskParams.globalRiskRank = subfilter;
 			this.getFingerPrintDeviceDetails(this.highCrashRiskParams);
@@ -882,13 +885,14 @@ export class RiskMitigationComponent {
 	public clearFilters () {
 		this.clearAllFilters = !this.clearAllFilters;
 		this.searchQueryInCrashGrid = '';
+		this.searchQueryInHighCrashGrid = '';
 		_.each(this.filters, (clearFilter: Filter) => {
 			_.each(clearFilter.seriesData, (currentFilter: { selected: boolean; }) => {
 				currentFilter.selected = false;
 			});
 		});
 		this.resetFilters();
-		this.getDeviceDetails('1');
+		this.onSearchQuery(this.searchQueryInHighCrashGrid);
 		const filter = _.find(this.filters, { key: 'advisories' });
 		if (filter) {
 			filter.seriesData[0].selected = true;
@@ -904,8 +908,6 @@ export class RiskMitigationComponent {
 	 * Function used to reset the filters
 	 */
 	public resetFilters () {
-		this.searchQueryInCrashGrid = '';
-		this.searchQueryInHighCrashGrid = '';
 		_.each(this.filters, (filter: Filter) => {
 			_.each(filter.seriesData, (currentFilter: { selected: boolean; }) => {
 				currentFilter.selected = false;

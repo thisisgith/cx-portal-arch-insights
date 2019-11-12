@@ -82,7 +82,7 @@ export class DnacDetailsComponent implements OnChanges {
 		if (data.length) {
 			_.each(data,
 				(object: {
-					collectionDate: any;
+					collectionTime: any;
 					noOfDevices: any;
 					noOfFabrics: any;
 					noOfWlc: any;
@@ -90,24 +90,24 @@ export class DnacDetailsComponent implements OnChanges {
 					noOfEndpoints: any;
 				}) => {
 					let tempArr = [];
-					tempArr.push(new Date(object.collectionDate));
-					tempArr.push(object.noOfDevices);
+					tempArr.push(object.collectionTime);
+					tempArr.push(Number(object.noOfDevices));
 					this.dataForSystemsGraph.push(tempArr);
 					tempArr = [];
 
-					tempArr.push(new Date(object.collectionDate));
-					tempArr.push(object.noOfFabrics);
+					tempArr.push(object.collectionTime);
+					tempArr.push(Number(object.noOfFabrics));
 					this.dataForFabricsGraph.push(tempArr);
 					tempArr = [];
 
-					tempArr.push(new Date(object.collectionDate));
-					tempArr.push(object.noOfWlc);
+					tempArr.push(object.collectionTime);
+					tempArr.push(Number(object.noOfWlc));
 					this.dataForWLCsGraph.push(tempArr);
 					tempArr = [];
 
-					tempArr.push(new Date(object.endpointsPeakTime));
-					tempArr.push(object.noOfEndpoints);
-					this.dataForWLCsGraph.push(tempArr);
+					tempArr.push(object.endpointsPeakTime);
+					tempArr.push(Number(object.noOfEndpoints));
+					this.dataForEndPointsGraph.push(tempArr);
 			  });
 		}
 	}

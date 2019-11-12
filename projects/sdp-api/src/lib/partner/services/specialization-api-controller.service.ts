@@ -47,7 +47,7 @@ class SpecializationApiControllerService extends __BaseService {
     if (params.Authorization != null) __headers = __headers.set('Authorization', params.Authorization.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/cxpp-partner-info/partnerInfo/v1/specialization`,
+      this.rootUrl + `/cxportal/cxpp-partner-info/partnerInfo/v1/specialization`,
       __body,
       {
         headers: __headers,
@@ -90,7 +90,7 @@ class SpecializationApiControllerService extends __BaseService {
     if (Authorization != null) __headers = __headers.set('Authorization', Authorization.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/cxpp-partner-info/partnerInfo/v1/specialization/architecture/content`,
+      this.rootUrl + `/cxportal/cxpp-partner-info/partnerInfo/v1/specialization/architecture/content`,
       __body,
       {
         headers: __headers,
@@ -128,7 +128,7 @@ class SpecializationApiControllerService extends __BaseService {
     if (Authorization != null) __headers = __headers.set('Authorization', Authorization.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/cxpp-partner-info/partnerInfo/v1/specialization/content`,
+      this.rootUrl + `/cxportal/cxpp-partner-info/partnerInfo/v1/specialization/content`,
       __body,
       {
         headers: __headers,
