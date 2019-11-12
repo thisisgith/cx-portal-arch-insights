@@ -56,6 +56,7 @@ export class AdminComplienceComponent implements OnInit {
 	public alert: any = { };
 
 	private user: User;
+	public selectedDeviceTagType = 'allDevices';
 
 	constructor (
 		public cuiModalService: CuiModalService,
@@ -301,5 +302,12 @@ export class AdminComplienceComponent implements OnInit {
 		}),
 	);
 
+	}
+
+/**
+ * Function to update option selected by user
+ */
+	public onChangesDeviceTagType () {
+		this.showAssetsComponent = this.selectedDeviceTagType === 'allDevices' ? false : true;
 	}
 }
