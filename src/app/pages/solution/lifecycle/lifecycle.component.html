@@ -611,7 +611,7 @@
 				title: data.sessions[0].title,
 				description: data.sessions[0].description,
 				item: data.sessions[0],
-				src: data.sessions[0].url || 'assets/img/solutions/defaultLifecycleImage.png',
+				src: data.sessions[0].url || getDefaultAccImg(data.sessions[0]),
 				autoid: 'recommendedACC'
 			}">
 		</ng-container>
