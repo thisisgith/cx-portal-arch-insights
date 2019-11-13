@@ -118,7 +118,7 @@ describe('AppComponent', () => {
 		});
 	});
 
-	fdescribe('UserResolve', () => {
+	describe('UserResolve', () => {
 		let userResolve: UserResolve;
 		let entitlementWrapperService: EntitlementWrapperService;
 		let orgUserService: OrgUserService;
