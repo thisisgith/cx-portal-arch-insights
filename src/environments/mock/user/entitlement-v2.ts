@@ -1,7 +1,7 @@
 import { UserEntitlement, OrgUserResponse } from '@sdp-api';
 
 /** CustomerId to return  */
-const customerId = '12345:0';
+const customerId = '12345';
 
 /** api for cx-entitlement-wrapper accounts call */
 const accountsApi = '/api/cxportal/cxpp-entitlement-wrapper/v1/entitlement/user/accounts?accountType=CUSTOMER';
