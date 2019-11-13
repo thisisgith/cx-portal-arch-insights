@@ -1,4 +1,4 @@
-<div class="text-dkgray-4" [innerText]="'_CP_SimilarSystems_' | i18n | uppercase"></div>
+<div class="text-large text-dkgray-4" [innerText]="'_CP_SimilarSystems_' | i18n | uppercase"></div>
 <div class="flex-fill base-padding-top">
 	<form [formGroup]="requestForm" class="row">
 		<div class="col-6">
@@ -46,6 +46,7 @@
 	</div>
 </ng-template>
 <ng-template #crashRiskTemplate let-item="celldata">
+	<p class="text-center">
 	<span
 	  [ngClass]="{
 		'text-success': item.globalRiskRank === 'LOW',
@@ -56,12 +57,17 @@
 	>
 	</span>
 	<span [innerText]="item.globalRiskRank"></span>
+	</p>
 </ng-template>
 <ng-template #compareTemplate let-item="celldata">
 	<div class="text-right">
 		<a (click)="item.toggleWell = !item.toggleWell" data-auto-id="CompareButton"
 		[innerText]="(item.toggleWell? '_CP_Close_': '_CP_Compare_' )| i18n | lowercase">	</a>
 	</div>
+</ng-template>
+
+<ng-template #crashRiskAlignmentTemplate let-item="celldata">
+	<p class="text-center" [innerText]="'_CP_Risk_' | i18n"></p>
 </ng-template>
 <ng-template #comparisonviewTemplate let-item="item">
 	<div class="text-left">

@@ -65,6 +65,8 @@ export class FpSimilarAssetsComponent {
 	private comparisonviewTemplate: TemplateRef<[]>;
 	@ViewChild('compareTemplate', { static: true })
 	private compareTemplate: TemplateRef<[]>;
+	@ViewChild('crashRiskAlignmentTemplate', { static: true })
+	private crashRiskAlignmentTemplate: TemplateRef<[]>;
 	private selectedSolutionName: string;
 	private selectedTechnologyName: string;
 
@@ -146,8 +148,8 @@ export class FpSimilarAssetsComponent {
 					width : '30%',
 				},
 				{
+					headerTemplate: this.crashRiskAlignmentTemplate,
 					key: 'riskScore',
-					name: I18n.get('_CP_Risk_'),
 					template: this.crashRiskTemplate,
 					width : '20%',
 				},
