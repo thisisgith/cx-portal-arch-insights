@@ -245,7 +245,7 @@ export class AdminComplienceComponent implements OnInit {
 	 * @returns response with success
 	 */
 
-	public onPolicySelected(policy) {
+	public onPolicySelected (policy) {
 		_.invoke(this.alert, 'hide');
 		if (policy !== 'select' && this.isPolicyChanged) {
 			this.cuiModalService.show(this.switchBetweenPolicy, 'small');
@@ -318,6 +318,7 @@ export class AdminComplienceComponent implements OnInit {
 			this.assetTaggingService.Tags = [];
 		} else {
 			this.showAssetsComponent = true;
+			this.filterDuplicates();
 		}
 	}
 
