@@ -124,11 +124,11 @@
 	<span [ngClass]="{
 		'text-success': item?.dnacCompliance === 'Yes',
 		'text-danger': item?.dnacCompliance === 'No',
-		'text-ocean': item?.dnacCompliance === 'NA'
+		'text-ocean': item?.dnacCompliance === 'NE'
 	}" class="qtr-margin-right icon-circle">
 	</span>
-	<span [innerText]="item?.dnacCompliance" *ngIf="item?.dnacCompliance !== 'NA'"></span>
-	<span *ngIf="item?.dnacCompliance === 'NA'" [innerText]="'_ArchitectureNotAvailable_' | i18n"></span>
+	<span [innerText]="item?.dnacCompliance" *ngIf="item?.dnacCompliance !== 'NE'"></span>
+	<span *ngIf="item?.dnacCompliance === 'NE'" [innerText]="'_ArchitectureNotAvailable_' | i18n"></span>
 </ng-template>
 
 <ng-template #sdaReady let-item="celldata">
@@ -136,12 +136,12 @@
 		'text--success': item?.sdaCompliance === 'Yes',
 		'text-danger': item?.sdaCompliance === 'No',
 		'text-warning': item?.sdaCompliance === 'Warning',
-		'text-ocean': item?.sdaCompliance === 'NA'
+		'text-ocean': item?.sdaCompliance === 'NE'
 	}" class="qtr-margin-right icon-circle">
 	</span>
 	<span *ngIf="item?.sdaCompliance == 'Warning'" [innerText]="'_ArchitectureYes_' | i18n"></span>
-	<span *ngIf="item?.sdaCompliance != 'Warning' && item?.sdaCompliance != 'NA'" [innerText]="item?.sdaCompliance"></span>
-	<span *ngIf="item?.sdaCompliance === 'NA'" [innerText]="'_ArchitectureNotAvailable_' | i18n"></span>
+	<span *ngIf="item?.sdaCompliance != 'Warning' && item?.sdaCompliance != 'NE'" [innerText]="item?.sdaCompliance"></span>
+	<span *ngIf="item?.sdaCompliance === 'NE'" [innerText]="'_ArchitectureNotAvailable_' | i18n"></span>
 </ng-template>
 
 
@@ -149,33 +149,33 @@
 	<span [ngClass]="{
 		'text-success': item?.assuranceCompliance === 'Yes',
 		'text-danger': item?.assuranceCompliance === 'No',
-		'text-ocean': item?.assuranceCompliance === 'NA'
+		'text-ocean': item?.assuranceCompliance === 'NE'
 	}" class="qtr-margin-right icon-circle">
 	</span>
-	<span *ngIf="item?.assuranceCompliance !== 'NA'" [innerText]="item?.assuranceCompliance"></span>
-	<span *ngIf="item?.assuranceCompliance === 'NA'" [innerText]="'_ArchitectureNotAvailable_' | i18n"></span>
+	<span *ngIf="item?.assuranceCompliance !== 'NE'" [innerText]="item?.assuranceCompliance"></span>
+	<span *ngIf="item?.assuranceCompliance === 'NE'" [innerText]="'_ArchitectureNotAvailable_' | i18n"></span>
 </ng-template>
 
 <ng-template #swimReady let-item="celldata">
 	<span [ngClass]="{
 		'text-success': item?.swimCompliance === 'Yes',
 		'text-danger': item?.swimCompliance === 'No',
-		'text-ocean': item?.swimCompliance === 'NA'
+		'text-ocean': item?.swimCompliance === 'NE'
 	}" class="qtr-margin-right icon-circle">
 	</span>
-	<span [innerText]="item?.swimCompliance"  *ngIf="item?.swimCompliance != 'NA'"></span>
-	<span *ngIf="item?.swimCompliance === 'NA'" [innerText]="'_ArchitectureNotAvailable_' | i18n"></span>
+	<span [innerText]="item?.swimCompliance"  *ngIf="item?.swimCompliance != 'NE'"></span>
+	<span *ngIf="item?.swimCompliance === 'NE'" [innerText]="'_ArchitectureNotAvailable_' | i18n"></span>
 </ng-template>
 
 <ng-template #pnpReady let-item="celldata">
 	<span [ngClass]="{
 		'text-success': item?.pnpCompliance === 'Yes',
 		'text-danger': item?.pnpCompliance === 'No',
-		'text-ocean': item?.pnpCompliance === 'NA'
+		'text-ocean': item?.pnpCompliance === 'NE'
 	}" class="qtr-margin-right icon-circle">
 	</span>
-	<span [innerText]="item?.pnpCompliance" *ngIf="item?.pnpCompliance != 'NA'"></span>
-	<span *ngIf="item?.pnpCompliance === 'NA'" [innerText]="'_ArchitectureNotAvailable_' | i18n"></span>
+	<span [innerText]="item?.pnpCompliance" *ngIf="item?.pnpCompliance != 'NE'"></span>
+	<span *ngIf="item?.pnpCompliance === 'NE'" [innerText]="'_ArchitectureNotAvailable_' | i18n"></span>
 	
 </ng-template>
 
