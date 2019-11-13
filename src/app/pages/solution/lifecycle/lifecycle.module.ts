@@ -12,7 +12,7 @@ import { AccRequestFormModule } from './acc-request-form/acc-request-form.module
 import { CgtRequestFormModule } from './cgt-request-form/cgt-request-form.module';
 import { CommunitiesModule } from './communities/communities.module';
 import { InlineSVGModule } from 'ng-inline-svg';
-import { ImageDefaultDirective } from '@directives/image-default.directive';
+import { ImageDefaultDirective } from '@directives';
 import { SessionFeedbackComponent } from './feedback/session-feedback.component';
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
