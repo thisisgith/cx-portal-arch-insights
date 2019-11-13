@@ -68,6 +68,7 @@ import {
 	SuccessPathScenarios,
 	SyslogScenarios,
 	VulnerabilityScenarios,
+	v2EntitlementScenarios,
 	FeedbackScenarios,
 } from './';
 
@@ -106,6 +107,7 @@ import {
 	IERegistrationResponseModel,
 	LicenseDataResponseModel,
 	MachineRecommendationsResponse,
+	OrgUserResponse,
 	PoliciesGroupByDayInAMonthModel,
 	ProfileRecommendationsResponse,
 	RacetrackResponse,
@@ -125,6 +127,7 @@ import {
 	SoftwareEOLResponse,
 	SoftwareEOLBulletinResponse,
 	SuccessPathsResponse,
+	UserEntitlement,
 	UserTraining,
 	VulnerabilityResponse,
 	InsightsResponse,
@@ -165,6 +168,7 @@ type ResponseBody = (
 	IERegistrationResponseModel |
 	LicenseDataResponseModel |
 	MachineRecommendationsResponse |
+	OrgUserResponse |
 	PoliciesGroupByDayInAMonthModel |
 	ProfileRecommendationsResponse |
 	RacetrackResponse |
@@ -186,6 +190,7 @@ type ResponseBody = (
 	SoftwareEOLBulletinResponse |
 	SoftwareEOLResponse |
 	SuccessPathsResponse |
+	UserEntitlement |
 	UserTraining[] |
 	VulnerabilityResponse |
 	InsightsResponse
@@ -304,6 +309,7 @@ export const mockSettings: MockSettings = {
 		SuccessPathScenarios,
 		SyslogScenarios,
 		VulnerabilityScenarios,
+		v2EntitlementScenarios,
 		FeedbackScenarios,
 	]),
 };

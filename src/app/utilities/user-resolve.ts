@@ -154,7 +154,7 @@ export class UserResolve implements Resolve<any> {
 				this.user.next(this.cachedUser);
 				const { cxLevel, useCase, solution } = _.get(this.cachedUser, 'service');
 
-				this.cxLevel.next(cxLevel);
+				this.cxLevel.next(Number(cxLevel));
 				this.useCase.next(useCase);
 				this.solution.next(solution);
 				this.role.next(_.get(userResponse, ['individualAccount', 'role']));

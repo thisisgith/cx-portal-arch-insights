@@ -1,6 +1,5 @@
-import { EntitledUser, ServiceInfoResponse, UserEntitlement } from '@sdp-api';
+import { EntitledUser, ServiceInfoResponse } from '@sdp-api';
 import * as _ from 'lodash-es';
-import { User } from '@interfaces';
 
 /** CustomerId to return  */
 const customerId = '2431199';
@@ -10,32 +9,6 @@ const userApi = '/api/customerportal/entitlement/v1/user';
 
 /** api for service-info */
 const serviceApi1 = `/api/customerportal/entitlement/v1/party/service-info/${customerId}`;
-
-const adminRole = {
-	roleName: 'AccountAdmin',
-	roleDisplayName: 'Smart Account Administrator',
-	tenant: 'SMARTACC',
-	tenantDisplayName: 'Smart Account Management',
-	attribType: null,
-	attribValue: null,
-	attribName: null,
-};
-
-const mockAccounts1: UserEntitlement = {
-	companyList: [{
-		companyName: 'CISCO USA',
-		companyId: 12345,
-		domainIdentifier: 'cisco-us',
-		accountType: 'CUSTOMER',
-		roleList: [adminRole],
-	}, {
-		companyName: 'CISCO CANADA',
-		companyId: 67890,
-		domainIdentifier: 'cisco-ca',
-		accountType: 'CUSTOMER',
-		roleList: [adminRole],
-	}],
-};
 
 /**
  * Mock body of user results
@@ -105,11 +78,8 @@ const mockServiceInfo: ServiceInfoResponse = [
 ];
 
 /** Our Default User */
-export const user: User = {
-	info: {
-		...mockUser1,
-		...mockAccounts1,
-	},
+export const user = {
+	info: mockUser1,
 	service: _.head(mockServiceInfo),
 };
 

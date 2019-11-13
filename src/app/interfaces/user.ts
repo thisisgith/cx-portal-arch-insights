@@ -1,4 +1,4 @@
-import { EntitledUser, ServiceInfo, UserEntitlement } from '@sdp-api';
+import { EntitledUser, UserEntitlement, OrgUserTeamAccount } from '@sdp-api';
 
 // TODO: Move to /constants when available
 export enum AccessLevel {
@@ -33,10 +33,31 @@ export interface SmartAccount {
 	roleList: Role[];
 }
 
+// TODO: Remove when backward-compatible user mapping is removed
+export interface MappedUser {
+	name: string;
+	customerId: string;
+	individual: {
+		name: string;
+		familyName: string;
+		emailAddress: string;
+		ccoId: string;
+		cxBUId: string;
+		role: string;
+	};
+	account: OrgUserTeamAccount;
+	subscribedSolutions: {
+		cxLevel: string;
+	};
+}
+
 /**
  * Interface representing our User
  */
 export interface User {
-	info: UserEntitlement & EntitledUser;
-	service: ServiceInfo;
+	info: UserEntitlement & EntitledUser & MappedUser;
+	service: {
+		serviceLineName?: string;
+		cxLevel?: string;
+	};
 }
