@@ -80,6 +80,11 @@ export class UserResolve implements Resolve<any> {
 		return this.dataCenter.asObservable();
 	}
 
+	/**
+	 * Update the currently active smart account, set it to local storage
+	 * and refresh the page
+	 * @param saId the new amart asccount id to be set
+	 */
 	public setSaId (saId: number) {
 		const smartAccount = _.find(_.get(this.cachedUser, ['info', 'companyList'], []), {
 			companyId: saId,
@@ -89,6 +94,7 @@ export class UserResolve implements Resolve<any> {
 			this.saId.next(saId);
 			this.customerId.next(`${saId}:0`);
 			window.localStorage.setItem('activeSmartAccount', `${saId}`);
+			window.location.reload();
 		}
 	}
 
