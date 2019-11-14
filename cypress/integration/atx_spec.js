@@ -3162,11 +3162,56 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			});
 
 			it('ATX filter "All" selection should unselect all other dropdown entries', () => {
+				// Only view within the View all selection of the ATX panel
+				cy.getByAutoId('ViewAllModal')
+					.within(() => {
+						// Open Partner dropdown
+						cy.getByAutoId('ViewAllModal-PartnerMultiFilter').click();
 
+						// Select other options that are not 'All' and save
+						for (let i = 1; i < partnerInfoBody.companyList.length; i += 2) {
+							cy.getByAutoId(`MultiSelect-ListItem${i}`).click();
+						}
+						cy.getByAutoId('MultiSelect-SaveButton').click();
+
+						// Reopen dropdown and select 'All'
+						cy.getByAutoId('ViewAllModal-PartnerMultiFilter').click();
+						cy.getByAutoId('MultiSelect-SelectAll').click();
+						cy.getByAutoId('MultiSelect-SaveButton').click();
+
+						// Loop through items in dropdown and confirm all other selections are not selected
+						for (let i = 1; i < partnerInfoBody.companyList.length; i += 2) {
+							cy.getByAutoId(`MultiSelect-ListItem${i}`)
+								.should('not.have.class', 'ms-dropdown__list__item--selected');
+						}
+					});
 			});
 
 			it('ATX filter entry selection should unselect the "All" entry', () => {
+				// Only view within the View all selection of the ATX panel
+				cy.getByAutoId('ViewAllModal')
+					.within(() => {
+						// Open the Partner Dropdown
+						cy.getByAutoId('ViewAllModal-PartnerMultiFilter').click();
 
+						// Select All and click Save
+						cy.getByAutoId('MultiSelect-SelectAll').click();
+						cy.getByAutoId('MultiSelect-SaveButton').click();
+
+						// Reopen the dropdown
+						cy.getByAutoId('ViewAllModal-PartnerMultiFilter').click();
+
+						// Select another option from the drop down and save
+						cy.getByAutoId('MultiSelect-ListItem1').click();
+						cy.getByAutoId('MultiSelect-SaveButton').click();
+
+						// Reopen dropdown
+						cy.getByAutoId('ViewAllModal-PartnerMultiFilter').click();
+
+						// Confirm the All option is not selected (check that the class isn't there)
+						cy.getByAutoId('MultiSelect-SelectAll')
+							.should('not.have.class', 'ms-dropdown__list__item--selected');
+					});
 			});
 
 			it('ATX filter "All" selection should call API with all available options', () => {
