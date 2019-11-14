@@ -140,9 +140,11 @@ export class AdminComplienceComponent implements OnInit {
 	 */
 
 	public toggleOptlnStatus () {
-		if (this.rightSideTags || this.leftSideTags) {
+		if (this.enableSaveButton) {
 			this.cuiModalService.show(this.confirmationModalTemplate, 'normal');
-			this.optlnStatus = true;
+		}else {
+			this.optlnStatus = false;
+			this.initializeDetails();
 		}
 	}
 	/**
@@ -154,6 +156,7 @@ export class AdminComplienceComponent implements OnInit {
 		this.updateOptInOutStatus();
 		this.initializeDetails();
 		this.cuiModalService.hide();
+		this.enableSaveButton = false;
 	}
 	/**
 	 * Function to save opt changes

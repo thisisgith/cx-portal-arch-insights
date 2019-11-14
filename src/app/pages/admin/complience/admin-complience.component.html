@@ -44,8 +44,7 @@
 										<div class="form-group__text select">
 											<select id="select-type-basic" (change)="onPolicySelected($event.target.value)" [(ngModel)]="saveDetails.body.policy">
 												<option *ngFor="let policy of policies"
-												[value]="policy.name">
-												{{policy.name}}
+											[value]="policy.name" [innerText]="policy.name">
 												</option>
 											</select>
 											<label for="select-type-basic" class="subheader"
@@ -109,7 +108,7 @@
 													</label>
 												</div>
 										</div>
-								<div class="col-2">
+								<div class="col-5">
 								<div class="row">
 									<div class="col-12 flex-end" *ngIf="saveDetails.body.policy != 'select'">
 											<button class="btn btn--small btn--primary half-margin-top" (click)="savePolicyDetails()"
