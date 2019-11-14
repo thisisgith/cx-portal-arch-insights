@@ -5,7 +5,7 @@ import {
 	UserService,
 } from '@sdp-api';
 import { User } from '@interfaces';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { AppStatusColorPipe } from './app-status-color.pipe';
 import { ResourceGaugeColorPipe } from './resource-gauge-color.pipe';
 
@@ -15,7 +15,6 @@ import { catchError, finalize, takeUntil } from 'rxjs/operators';
 import { I18n } from '@cisco-ngx/cui-utils';
 
 import * as _ from 'lodash-es';
-import {NavigationExtras, Router} from '@angular/router';
 
 enum SystemInfo {
 	OS_IMAGE = 0,
@@ -250,11 +249,11 @@ ${HDDSizeUnit}`;
 		return obj;
 	}
 
-	public navigateTosetup (){
-		let params: NavigationExtras = {queryParams: {fromAdmin : true}};
+	/**
+	 * Function to navigate to set up
+	 */
+	public navigateTosetup () {
+		const params: NavigationExtras = { queryParams: { fromAdmin: true } };
 		this.router.navigate(['/setup-ie'], params);
 	}
-	
-
-
 }
