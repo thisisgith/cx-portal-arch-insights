@@ -318,11 +318,11 @@ export class ArchitectureReviewComponent implements OnInit {
 						});
 					}
 
-					const NotAvailable = _.get(data, 'overallCompliance.NA');
+					const NotAvailable = _.get(data, 'overallCompliance.NE');
 
 					if (NotAvailable && NotAvailable > 0) {
 						series.push({
-							filter: 'NA',
+							filter: 'NE',
 							label: I18n.get('_ArchitectureNotAvailable_'),
 							selected: false,
 							value: NotAvailable,
@@ -333,7 +333,11 @@ export class ArchitectureReviewComponent implements OnInit {
 					exceptionFilter.loading = false;
 
 					const sdaSeriesData = [];
-					const sdaCompliant = _.get(data, 'sdaCompliance.Yes');
+					const sdaCompliant = _.get(data, 'sdaCompliance.Warning') ?
+										_.get(data, 'sdaCompliance.Yes') +
+										_.get(data, 'sdaCompliance.Warning') :
+										_.get(data, 'sdaCompliance.Yes');
+
 					if (sdaCompliant && sdaCompliant > 0) {
 						sdaSeriesData.push({
 							filter: 'Yes',
@@ -354,11 +358,11 @@ export class ArchitectureReviewComponent implements OnInit {
 						});
 					}
 
-					const sdaNotAvailable = _.get(data, 'sdaCompliance.NA');
+					const sdaNotAvailable = _.get(data, 'sdaCompliance.NE');
 
 					if (sdaNotAvailable && sdaNotAvailable > 0) {
 						sdaSeriesData.push({
-							filter: 'NA',
+							filter: 'NE',
 							label: I18n.get('_ArchitectureNotAvailable_'),
 							selected: false,
 							value: sdaNotAvailable,
@@ -391,11 +395,11 @@ export class ArchitectureReviewComponent implements OnInit {
 						});
 					}
 
-					const assuranceNotAvailable = _.get(data, 'assuranceCompliance.NA');
+					const assuranceNotAvailable = _.get(data, 'assuranceCompliance.NE');
 
 					if (assuranceNotAvailable && assuranceNotAvailable > 0) {
 						assuranceSeriesData.push({
-							filter: 'NA',
+							filter: 'NE',
 							label: I18n.get('_ArchitectureNotAvailable_'),
 							selected: false,
 							value: assuranceNotAvailable,
@@ -428,11 +432,11 @@ export class ArchitectureReviewComponent implements OnInit {
 						});
 					}
 
-					const swimNotAvailable = _.get(data, 'swimCompliance.NA');
+					const swimNotAvailable = _.get(data, 'swimCompliance.NE');
 
 					if (swimNotAvailable && swimNotAvailable > 0) {
 						swimReadinessData.push({
-							filter: 'NA',
+							filter: 'NE',
 							label: I18n.get('_ArchitectureNotAvailable_'),
 							selected: false,
 							value: swimNotAvailable,
@@ -465,11 +469,11 @@ export class ArchitectureReviewComponent implements OnInit {
 						});
 					}
 
-					const pnpNotAvailable = _.get(data, 'pnpCompliance.NA');
+					const pnpNotAvailable = _.get(data, 'pnpCompliance.NE');
 
 					if (pnpNotAvailable && pnpNotAvailable > 0) {
 						pnpReadinessData.push({
-							filter: 'NA',
+							filter: 'NE',
 							label: I18n.get('_ArchitectureNotAvailable_'),
 							selected: false,
 							value: pnpNotAvailable,

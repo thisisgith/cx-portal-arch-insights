@@ -391,7 +391,7 @@ const getSDAChartFilterCountResponseData = {
 		Yes: 2,
 	},
 	sdaCompliance: {
-		NA: 2,
+		NE: 3,
 		No: 4,
 		Warning: 1,
 		Yes: 2,
