@@ -1,4 +1,4 @@
-import { Component, ViewChild, TemplateRef, OnInit, OnDestroy } from '@angular/core';
+import { Component, ViewChild, TemplateRef, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router, ActivationEnd, NavigationEnd } from '@angular/router';
 
 import { CaseParams, CaseDetails, CaseService } from '@cui-x/services';
@@ -99,6 +99,7 @@ const durationOpenFilters = [
  */
 @Component({
 	styleUrls: ['./resolution.component.scss'],
+	encapsulation: ViewEncapsulation.None,
 	templateUrl: './resolution.component.html',
 })
 export class ResolutionComponent implements OnInit, OnDestroy {

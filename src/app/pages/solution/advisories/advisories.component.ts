@@ -5,6 +5,7 @@ import {
 	TemplateRef,
 	OnDestroy,
 	ElementRef,
+	ViewEncapsulation,
 } from '@angular/core';
 import { I18n } from '@cisco-ngx/cui-utils';
 import {
@@ -82,6 +83,7 @@ interface SelectedSubfilter {
  * Advisories Component
  */
 @Component({
+	encapsulation: ViewEncapsulation.None,
 	selector: 'app-advisories',
 	styleUrls: ['./advisories.component.scss'],
 	templateUrl: './advisories.component.html',

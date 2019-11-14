@@ -1,69 +1,81 @@
 @import '~cisco-ui/src/scss/utilities/_variables.scss';
-@import '../../../../mixins.scss';
+@import '~src/mixins.scss';
 
-.form-group__text {
-	.bugs-search,
-	.field-search,
-	.security-search {
-		@include filter-search;
-	}
-}
-
-.remove-shadow {
-	box-shadow: unset !important;
-}
-
-.dashed-border-bottom {
-	border-bottom: 1px dashed;
-}
-
-// used to align the icon-close in the filter bar
-.small-padding-bottom {
-	padding-bottom: 2px;
-}
-
-.full-border {
-	outline: 1px solid;
-	outline-offset: 2px;
-}
-
-.responsive-table {
-	min-height: 100px;
-}
-
-.curved-corners {
-	border-radius: 5px;
-}
-
-.card-content {
-	justify-content: space-between;
-	display: flex;
-	flex-direction: column;
-}
-
-.override-selected-z {
-	z-index: 100 !important;
-}
-
-.filter {
-	&__selected {
-		border-bottom: 4px solid $primary;
+// Note this style sheet is not encapsulated in the Angular code.
+// If you modify this and take things out of the part .advisories there may be unintended consequences
+.advisories {
+	.icon-chevron-down,
+	.icon-chevron-up {
+		margin-left: 5px;
 	}
 
-	&__not-selected {
-		border-bottom: 4px solid $white;
+	th:not(.sortable) {
+		cursor: default !important;
 	}
 
-	&__title {
-		position: absolute;
-		bottom: 0;
+	.form-group__text {
+		.bugs-search,
+		.field-search,
+		.security-search {
+			@include filter-search;
+		}
+	}
+
+	.remove-shadow {
+		box-shadow: unset !important;
+	}
+
+	.dashed-border-bottom {
+		border-bottom: 1px dashed;
+	}
+
+	// used to align the icon-close in the filter bar
+	.small-padding-bottom {
+		padding-bottom: 2px;
+	}
+
+	.full-border {
+		outline: 1px solid;
+		outline-offset: 2px;
+	}
+
+	.responsive-table {
+		min-height: 100px;
+	}
+
+	.curved-corners {
+		border-radius: 5px;
+	}
+
+	.card-content {
+		justify-content: space-between;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.override-selected-z {
+		z-index: 100 !important;
+	}
+
+	.filter {
+		&__selected {
+			border-bottom: 4px solid $primary;
+		}
+
+		&__not-selected {
+			border-bottom: 4px solid $white;
+		}
+
+		&__title {
+			position: absolute;
+			bottom: 0;
+		}
+	}
+
+	:host ::ng-deep {
+		.tabs > li > a {
+			padding-bottom: 5px !important;
+			padding-top: 5px !important;
+		}
 	}
 }
-
-:host ::ng-deep {
-	.tabs > li > a {
-		padding-bottom: 5px !important;
-		padding-top: 5px !important;
-	}
-}
-
