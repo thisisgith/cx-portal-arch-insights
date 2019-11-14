@@ -8,19 +8,13 @@
 	<div *ngIf="!loading && cpData?.length" class="container settings-container">
 		<div class="row">
 			<div class="col-lg-6" data-auto-id="settings.system.status">
-				<h5
-					class="base-margin-top half-margin-bottom settings__title"
-					data-auto-id="settings.system.status.label"
-					[innerText]="'_Status_' | i18n | uppercase"
-				></h5>
-				<div
-					class="panel settings-panel panel--bordered-top flex base-margin-right"
+				<h5 class="base-margin-top half-margin-bottom settings__title"
+					data-auto-id="settings.system.status.label" [innerText]="'_Status_' | i18n | uppercase"></h5>
+				<div class="panel settings-panel panel--bordered-top flex base-margin-right"
 					data-auto-id="settings.system.status.panel">
 					<div class="col-4">
 						<div [innerText]="'_CXCollector_' | i18n"></div>
-						<div
-							*ngIf="data.lastUploadDate"
-							class="text-small"
+						<div *ngIf="data.lastUploadDate" class="text-small"
 							[innerText]="'_LastDataSent_' | i18n:(data.lastUploadDate | fromNow)">
 						</div>
 					</div>
@@ -33,19 +27,20 @@
 								'Stopped': 'text-secondary',
 								'Error': 'text-danger',
 								'CrashLoopBackOff':'text-danger'
-							}[data.ieStatus]"
-						></span>
+							}[data.ieStatus]"></span>
 						<span [innerText]="data.ieStatus || ''"></span>
 						<!-- <div> -->
 						<!-- 	<span class="icon-circle text-success half-margin-right"></span> -->
 						<!-- 	<span>Connected</span> -->
 						<!-- </div> -->
 					</div>
-					
+
 				</div>
-				<div class="row"><div class="col-2"><a (click)="navigateTosetup()">Re-install </a></div>|<div class="col-5"><a> Change Password and Setting </a></div></div>
-				<div
-					*ngIf="data.dnac_details && data.dnac_details[0]"
+				<div class="row">
+					<div class="col-2"><a (click)="navigateTosetup()">Re-install </a></div>|<div class="col-5"><a>
+							Change Password and Setting </a></div>
+				</div>
+				<div *ngIf="data.dnac_details && data.dnac_details[0]"
 					class="panel settings-panel panel--bordered-top panel--bordered-bottom base-margin-right"
 					data-auto-id="settings.system.status.panel">
 					<div class="flex">
@@ -58,33 +53,28 @@
 							<span class="icon-circle half-margin-right" [ngClass]="{
 									'Reachable': 'text-success',
 									'Unreachable': 'text-danger'
-								}[data.dnac_details[0].status]"
-							></span>
+								}[data.dnac_details[0].status]"></span>
 							<span [innerText]="data.dnac_details[0].status || ''"></span>
 						</div>
 						<div *ngIf="data.dnac_details[0]?.additional_details?.error" class="col-3 text-right">
-							<a
-								data-auto-id="errorLink"
-								(click)="data.showError = !data.showError"
-								class="no-link-hover"
-							>
+							<a data-auto-id="errorLink" (click)="data.showError = !data.showError"
+								class="no-link-hover">
 								<span [innerText]="!data.showError
 										? ('_ErrorDetails_' | i18n)
-										: ('_HideErrorDetails_' | i18n)"
-								></span>
+										: ('_HideErrorDetails_' | i18n)"></span>
 								<span class="qtr-margin-left" [ngClass]="{
 										'icon-chevron-down': !data.showError,
 										'icon-chevron-up': data.showError
-									}"
-								></span>
+									}"></span>
 							</a>
 						</div>
 					</div>
 					<div heightTransition [heightTransitionExpanded]="data.showError">
-						<div class="base-padding-top half-padding-left" [innerText]="data.dnac_details[0]?.additional_details?.error">
+						<div class="base-padding-top half-padding-left"
+							[innerText]="data.dnac_details[0]?.additional_details?.error">
 						</div>
 					</div>
-					
+
 				</div>
 				<!-- <h5
 					class="half-margin-bottom settings__title settings__title--margin-top"
@@ -178,18 +168,10 @@
 			</div> -->
 		</div>
 	</div>
-	<div
-		*ngIf="loading"
-		class="absolute-center">
+	<div *ngIf="loading" class="absolute-center">
 		<cui-loader></cui-loader>
 	</div>
-	<div
-		class="absolute-center dbl-margin-top"
-		*ngIf="!loading && !cpData?.length"
-	>
-		<h2
-			class="dbl-margin-top"
-			[innerText]="'_NoResultsFound_' | i18n"
-		></h2>
+	<div class="absolute-center dbl-margin-top" *ngIf="!loading && !cpData?.length">
+		<h2 class="dbl-margin-top" [innerText]="'_NoResultsFound_' | i18n"></h2>
 	</div>
 </admin-wrapper>
