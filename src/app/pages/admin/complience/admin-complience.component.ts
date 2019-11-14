@@ -251,8 +251,22 @@ export class AdminComplienceComponent implements OnInit {
 				tag.devices = policyGroups.devices;
 				tag.deviceCount = policyGroups.deviceCount;
 			});
-		}
+			_.each(this.leftSideTags, tag => {
+				const duplicateTagIndex = this.rightSideTags.findIndex(rightSideTag => {
+					if(tag){
+						return tag.tagName === rightSideTag.tagName;
+					}
+				});
+				if(duplicateTagIndex !== -1) {
+					this.rightSideTags[duplicateTagIndex] = _.cloneDeep(tag);
+					this.leftSideTags
+					.splice(this.leftSideTags
+						.findIndex(leftSideTag => leftSideTag.tagName === tag.tagName), 1);
+				}
+				
+		});
 	}
+}
 	/**
 	 * Function to filter duplicates
 	 * @param policy type of policy selected
@@ -261,12 +275,13 @@ export class AdminComplienceComponent implements OnInit {
 
 	public onPolicySelected (policy) {
 		_.invoke(this.alert, 'hide');
+		this.triggerModal = 'policy';
 		if (policy !== 'select' && this.isPolicyChanged
 		&& this.saveDetails.body.policy !== 'select' && this.enableSaveButton) {
-			this.triggerModal = 'policy';
 			this.cuiModalService.show(this.switchBetweenPolicy, 'normal');
 		}
 		this.isPolicyChanged = true;
+		this.filterDuplicates();
 	}
 
 	/**
