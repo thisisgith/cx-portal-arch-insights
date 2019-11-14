@@ -14,7 +14,7 @@
 			[style.min-height]="rowHeight + 'px'"
 			(click)="toggleTagSelected(tag)"
 			data-auto-id="list.item">
-			<div class="col-1 tag-table">
+			<div class="col-1 flex flex-column text-left justify-center">
 				<input
 					class="text-xlarge"
 					type="checkbox"
@@ -22,7 +22,7 @@
 					[checked]="tag.selected">
 				<span class="checkbox__input"></span>
 			</div>
-			<div class="col-5 tag-table">
+			<div class="col-5 flex flex-column text-left justify-center">
 				<span [innerText]="'_AssetTaggingTagNameCount_' | i18n:tag?.tagName:tag?.deviceCount">
 				</span>
 			</div>
