@@ -246,14 +246,10 @@ export class AdminComplienceComponent implements OnInit {
 			const policyGroups = _.find(this.rightSideTagsResponse.policyGroups,
 				 { policyName: this.saveDetails.body.policy });
 			this.rightSideTags = _.cloneDeep(policyGroups.tags);
-			_.each(this.rightSideTags, (tag) => {
+			_.each(this.rightSideTags, tag => {
 				tag.devices = policyGroups.devices;
 				tag.deviceCount = policyGroups.deviceCount;
 			});
-
-			  console.log('Left side Tags:' + this.leftSideTags);
-			  console.log('Right side Tags:' + this.rightSideTags);
-
 		}
 	}
 	/**
@@ -368,7 +364,6 @@ export class AdminComplienceComponent implements OnInit {
 	public onCancelPolicyChanges () {
 		if (this.triggerModal === 'policy') {
 			this.selectedPolicy = this.selectedPolicy === 'HIPAA' ? 'PCI' : 'HIPAA';
-			console.log(this.selectedPolicy)
 		} else {
 			this.selectedDeviceTagType =
 				this.selectedDeviceTagType === 'allDevices' ?	'selectedTags' : 'allDevices';
