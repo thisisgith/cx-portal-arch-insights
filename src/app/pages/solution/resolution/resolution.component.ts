@@ -631,7 +631,20 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 					// Don't include status or severities in pie charts with no associated cases
 					_.set(filter, 'seriesData', _.filter(filter.seriesData, data => data.value));
 				}
-				_.set(filter, 'seriesData', [...filter.seriesData]);
+				if (filter.key === 'status' && filter.seriesData.length > 4) {
+					const sortDataByDesc = _.reverse(_.sortBy(filter.seriesData, 'value'));
+					const seriesData = _.slice(sortDataByDesc, 0, 3);
+					seriesData.push({
+						filter: _.join(_.map(_.slice(sortDataByDesc, 3), 'filter'), ','),
+						label: I18n.get('_Others_'),
+						selected: false,
+						value: _.reduce(_.map(_.slice(sortDataByDesc, 3), 'value'),
+						 (sum, val) =>  sum + val),
+					});
+					_.set(filter, 'seriesData', [...seriesData]);
+				} else {
+					_.set(filter, 'seriesData', [...filter.seriesData]);
+				}
 				_.set(filter, 'loading', false);
 			});
 			this.isLoading = false;

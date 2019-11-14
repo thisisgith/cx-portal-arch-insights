@@ -102,6 +102,8 @@ interface ComponentData {
 		certificationsUrl: string;
 		elearning?: ELearning[];
 		elearningUrl: string;
+		remotepracticelabs?: ELearning[];
+		remotepracticelabsUrl: string;
 		training?: ELearning[];
 		success?: SuccessPath[];
 		archetype?: string[];
@@ -315,6 +317,7 @@ export class LifecycleComponent implements OnDestroy {
 		learning: {
 			certificationsUrl: `${environment.learningLink}?type=certification`,
 			elearningUrl: `${environment.learningLink}?type=e-learning`,
+			remotepracticelabsUrl: `${environment.learningLink}?type=remotepracticelabs`,
 		},
 		params: {
 			customerId: '',
@@ -407,8 +410,12 @@ export class LifecycleComponent implements OnDestroy {
 		.subscribe((technology: RacetrackTechnology) => {
 			const currentSolution = this.componentData.params.solution;
 
-			const newTech = currentSolution;
-			if (newTech) {
+			const newSolution = currentSolution;
+			const newTech = (technology.name !== _.get(this.selectedTechnology, 'name'))
+				? true : false;
+			const newUsecaseAdoptPert = (technology.usecase_adoption_percentage !==
+				_.get(this.selectedTechnology, 'usecase_adoption_percentage')) ? true : false;
+			if (newSolution && newTech && newUsecaseAdoptPert) {
 				this.selectedTechnology = technology;
 
 				this.resetComponentData();
@@ -520,6 +527,7 @@ export class LifecycleComponent implements OnDestroy {
 			learning: {
 				certificationsUrl: `${environment.learningLink}?type=certification`,
 				elearningUrl: `${environment.learningLink}?type=e-learning`,
+				remotepracticelabsUrl: `${environment.learningLink}?type=remotepracticelabs`,
 			},
 			params: {
 				customerId: this.customerId,
@@ -1892,6 +1900,7 @@ export class LifecycleComponent implements OnDestroy {
 					_.set(this.componentData, ['learning', 'certifications'], []);
 					_.set(this.componentData, ['learning', 'elearning'], []);
 					_.set(this.componentData, ['learning', 'training'], []);
+					_.set(this.componentData, ['learning', 'remotepracticelabs'], []);
 
 					_.each(result.items, (item: ELearning) => {
 						switch (item.type) {
@@ -1913,6 +1922,14 @@ export class LifecycleComponent implements OnDestroy {
 							}
 							case 'Videos': {
 								this.componentData.learning.certifications.push(item);
+								break;
+							}
+							case 'Remote Learning Lab': {
+								const learningItem: ELearningModel = {
+									...item,
+									fixedRating: parseFloat(item.rating),
+								};
+								this.componentData.learning.remotepracticelabs.push(learningItem);
 								break;
 							}
 							default: {

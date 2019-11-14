@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subject, of, Observable } from 'rxjs';
-import { catchError, takeUntil, flatMap, mergeMap } from 'rxjs/operators';
+import { catchError, takeUntil, flatMap, mergeMap, debounceTime, tap } from 'rxjs/operators';
 
 import { caseSeverities, CaseRequestType } from '@classes';
 import { CaseOpenRequest } from '@interfaces';
@@ -63,6 +63,7 @@ export class CaseOpenComponent implements  CuiModalContent, OnInit, OnDestroy {
 	];
 	public descriptionMaxLength = 32000;
 	public titleMaxLength = 80;
+	public minLength = 5;
 	public caseForm = new FormGroup({
 		description: new FormControl('', [Validators.required,
 			Validators.maxLength(this.descriptionMaxLength)]),
@@ -110,6 +111,30 @@ export class CaseOpenComponent implements  CuiModalContent, OnInit, OnDestroy {
 			this.contractNumber = _.get(response, ['data', 0, 'contractNumber'], null);
 			this.contractLoading = false;
 		});
+
+		this.caseForm.controls.title.valueChanges.pipe(
+			tap(() => this.contractLoading = true),
+			debounceTime(2500))
+			.subscribe(value => {
+				if (this.caseForm.controls.title.dirty && value.length < 5) {
+					this.caseForm.controls.title.setErrors({ titleMin : true });
+				} else {
+					this.caseForm.controls.title.setErrors(null);
+					this.contractLoading = false;
+				}
+			});
+
+		this.caseForm.controls.description.valueChanges.pipe(
+			tap(() => this.contractLoading = true),
+			debounceTime(2500))
+			.subscribe(value => {
+				if (this.caseForm.controls.description.dirty && value.length < 5) {
+					this.caseForm.controls.description.setErrors({ descriptionMin : true });
+				} else {
+					this.caseForm.controls.description.setErrors(null);
+					this.contractLoading = false;
+				}
+			});
 	}
 
 	/**
