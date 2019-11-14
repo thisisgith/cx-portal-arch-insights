@@ -187,3 +187,11 @@
 		</pie-chart>
 	</div>
 </ng-template>
+
+<ng-template #deploymentStatusFilter let-filter="filter">
+	<div>
+		<pie-chart [width]="'255'" [height]="'130'" [seriesData]="filter.seriesData"
+			(subfilter)="onSubfilterSelect($event.filter, filter)">
+		</pie-chart>
+	</div>
+</ng-template>
