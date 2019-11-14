@@ -41,7 +41,9 @@
 						<!-- 	<span>Connected</span> -->
 						<!-- </div> -->
 					</div>
+					
 				</div>
+				<div class="row"><div class="col-2"><a (click)="navigateTosetup()">Re-install </a></div>|<div class="col-5"><a> Change Password and Setting </a></div></div>
 				<div
 					*ngIf="data.dnac_details && data.dnac_details[0]"
 					class="panel settings-panel panel--bordered-top panel--bordered-bottom base-margin-right"
@@ -82,6 +84,7 @@
 						<div class="base-padding-top half-padding-left" [innerText]="data.dnac_details[0]?.additional_details?.error">
 						</div>
 					</div>
+					
 				</div>
 				<!-- <h5
 					class="half-margin-bottom settings__title settings__title--margin-top"

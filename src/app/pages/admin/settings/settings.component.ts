@@ -15,6 +15,7 @@ import { catchError, finalize, takeUntil } from 'rxjs/operators';
 import { I18n } from '@cisco-ngx/cui-utils';
 
 import * as _ from 'lodash-es';
+import {NavigationExtras, Router} from '@angular/router';
 
 enum SystemInfo {
 	OS_IMAGE = 0,
@@ -99,6 +100,7 @@ export class SettingsComponent  implements OnInit {
 		private controlPointIEHealthStatusAPIService: ControlPointIEHealthStatusAPIService,
 		private route: ActivatedRoute,
 		private userService: UserService,
+		private router: Router,
 	) {
 		this.user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(this.user, ['info', 'customerId']);
@@ -247,4 +249,12 @@ ${HDDSizeUnit}`;
 
 		return obj;
 	}
+
+	public navigateTosetup (){
+		let params: NavigationExtras = {queryParams: {fromAdmin : true}};
+		this.router.navigate(['/setup-ie'], params);
+	}
+	
+
+
 }
