@@ -63,6 +63,7 @@ export class AdminComplienceComponent implements OnInit {
 	public selectedDeviceTagType = 'allDevices';
 	public isPolicyChanged: boolean;
 	public triggerModal = '';
+	public hideAssetTags = true;
 
 	constructor (
 		public cuiModalService: CuiModalService,
@@ -265,7 +266,7 @@ export class AdminComplienceComponent implements OnInit {
 	public onPolicySelected (policy) {
 		_.invoke(this.alert, 'hide');
 		if (policy !== 'select' && this.isPolicyChanged
-		&& this.saveDetails.body.policy !== 'select') {
+		&& this.saveDetails.body.policy !== 'select' && this.enableSaveButton) {
 			this.triggerModal = 'policy';
 			this.cuiModalService.show(this.switchBetweenPolicy, 'normal');
 		}
@@ -336,29 +337,38 @@ export class AdminComplienceComponent implements OnInit {
  * Function to update option selected by user
  * @param type selected type by user
  */
-	public onChangesDeviceTagType (type?) {
-		if (type) {
-			this.selectedDeviceTagType = type;
-		}
+	public onChangesDeviceTagType () {
 		this.triggerModal = 'scan';
-		this.cuiModalService.show(this.switchBetweenPolicy, 'normal');
+		if (this.enableSaveButton && this.selectedDeviceTagType === 'allDevices') {
+			this.cuiModalService.show(this.switchBetweenPolicy, 'normal');
+		} else if (!this.enableSaveButton && this.selectedDeviceTagType === 'allDevices') {
+			this.hideAssetTags = true;
+		} else if (this.selectedDeviceTagType === 'selectedTags') {
+			this.filterDuplicates();
+			this.hideAssetTags = false;
+		} else {
+			this.hideAssetTags = false;
+		}
 	}
 
 	/**
 	 * Function to discard selected policy change
 	 */
 	public discardChangesOnPolicyChange () {
+		this.hideAssetTags = true;
 		if (this.triggerModal === 'policy') {
-			this.onChangesDeviceTagType('allDevices');
+			this.onChangesDeviceTagType();
+			this.selectedDeviceTagType = 'allDevices';
+			this.hideAssetTags = true;
 			this.filterDuplicates();
 		} else if (this.selectedDeviceTagType === 'allDevices') {
 			this.showAssetsComponent = false;
 			this.assetTaggingService.Tags = [];
 		} else {
 			this.showAssetsComponent = true;
-			this.filterDuplicates();
 		}
-
+		this.filterDuplicates();
+		this.enableSaveButton = false;
 		this.cuiModalService.hide();
 	}
 
@@ -367,11 +377,10 @@ export class AdminComplienceComponent implements OnInit {
 	 */
 	public onCancelPolicyChanges () {
 		if (this.triggerModal === 'policy') {
-			this.selectedPolicy = this.selectedPolicy === 'HIPAA' ? 'PCI' : 'HIPAA';
-			console.log(this.selectedPolicy)
+			 this.saveDetails.body.policy =
+			 this.saveDetails.body.policy === ' HIPAA' ? 'PCI' : 'HIPAA';
 		} else {
-			this.selectedDeviceTagType =
-				this.selectedDeviceTagType === 'allDevices' ?	'selectedTags' : 'allDevices';
+			this.selectedDeviceTagType = 'selectedTags';
 		}
 		this.cuiModalService.hide();
 	}

@@ -42,7 +42,7 @@
 								<div class="col-md-2 half-margin-right">
 								<div class="form-group">
 										<div class="form-group__text select">
-											<select id="select-type-basic" (change)="onPolicySelected($event.target.value)" [(ngModel)]="selectedPolicy">
+											<select id="select-type-basic" (change)="onPolicySelected($event.target.value)" [(ngModel)]="saveDetails.body.policy">
 												<option *ngFor="let policy of policies"
 											[value]="policy.name" [innerText]="policy.name">
 												</option>
@@ -57,7 +57,7 @@
 										<div class="form-group">
 											<label class="radio" [ngClass]="{'disabled': saveDetails.body.policy=='select'}">
 												<input type="radio" name="radio-stacked" checked
-										value="allDevices" name="inline-radio" [(ngModel)]="selectedDeviceTagType" (change)="onChangesDeviceTagType()">
+										value="allDevices" name="inline-radio" [(ngModel)]="selectedDeviceTagType" (change)="onChangesDeviceTagType($event)">
 												<span class="radio__input"></span>
 												<span class="radio__label">All Inventory</span>
 											</label>
@@ -119,11 +119,9 @@
 							</div>
 						</div>
 					</div>
-				<div [hidden]= "selectedDeviceTagType == 'allDevices' || saveDetails.body.policy == 'select'">
+				<div [hidden]= "hideAssetTags || saveDetails.body.policy == 'select'">
 					<div class="text-large"  
 					[innerText]="'_AdminPolicyTaggingHeading_' | i18n"></div>
-			
-
 			<asset-tagging 
 				[tagListLeft]='leftSideTags' [tagListRight]='rightSideTags'
 				(updatedTags)="getUpdatedTags($event)"></asset-tagging>
