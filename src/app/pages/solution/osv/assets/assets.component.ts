@@ -134,7 +134,7 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 			filter += `deploymentStatus:${deploymentStatus.join(',')}`;
 		}
 		if (assetType.length === 1) {
-			filter += filter.length > 0 ? ";" : "";
+			filter += filter.length > 0 ? ';' : '';
 			filter += assetType.indexOf('assets_profile') > -1
 				? 'independent:no' : 'independent:yes';
 		}
