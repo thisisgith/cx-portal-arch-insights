@@ -405,6 +405,8 @@ describe('RiskMitigationComponent', () => {
 			key: '',
 			search: '',
 			sortDirection: '',
+			solution: 'IBN',
+			useCase: '',
 			time: '90d',
 		};
 		spyOn(component, 'getFilterDetailsForSearchQuery')

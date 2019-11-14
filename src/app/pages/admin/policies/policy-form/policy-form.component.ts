@@ -241,9 +241,7 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 				break;
 			}
 			case ModalTypes.editPolicy: {
-				if (this.ignorePolicyExists) {
-					this.timePeriods.options.pop();
-				}
+				this.timePeriods.options.pop();
 
 				this.setSelectors();
 
@@ -251,6 +249,8 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 				break;
 			}
 			case ModalTypes.editIgnorePolicy: {
+				this.timePeriods.options = [this.timePeriods.options.pop()];
+
 				this.editIgnorePolicy();
 				break;
 			}
@@ -439,7 +439,7 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 
 		this.leftListCall = function () {
 			const params: ControlPointDevicePolicyAPIService
-			.GetEligibleDevicesForGivenIgnorePolicyUsingGETParams = {
+			.GetDevicesForIgnorePolicyCreationUsingGETParams = {
 				customerId: this.customerId,
 				pageNumber: String(this.pageNumber),
 				policyId: _.get(this.policy, 'policyId'),

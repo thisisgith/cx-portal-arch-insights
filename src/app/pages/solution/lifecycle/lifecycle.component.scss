@@ -539,6 +539,7 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 	color: $text-light-gray;
 	font-size: 12px;
 	line-height: 16px;
+	flex-basis: 100%;
 }
 
 .cx-lifecycle-card--recommended-item {
@@ -551,6 +552,9 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 .cx-lifecycle-card--subheader {
 	margin-top: 22px;
 	margin-bottom: 16px;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
 
 	& > span.icon-certified,
 	& > span.icon-clipboard-md {
@@ -561,10 +565,20 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 
 	& > span.text-uppercase {
 		margin-left: 8px;
+		margin-right: auto;
 		color: $text-dark-gray-3;
 		font-size: 14px;
 		letter-spacing: -0.2px;
 		line-height: 18px;
+	}
+
+	.subheader-icon {
+		display: flex;
+		width: 16px;
+
+		::ng-deep svg {
+			width: 100%;
+		}
 	}
 }
 
