@@ -1,9 +1,12 @@
-.compare-em-dash::after {
-	content: " \2014";
-}
+:host {
+	.compare-em-dash::after {
+		content: " \2014";
+	}
 
-.compare-text-warp {
-	word-wrap: break-word;
-	overflow: scroll;
-	height: 200px;
+	.compare-text-warp {
+		word-break: break-all;
+		white-space: normal !important;
+		height: 200px;
+		overflow: scroll;
+	}
 }
