@@ -42,7 +42,7 @@
 								<div class="col-md-2 half-margin-right">
 								<div class="form-group">
 										<div class="form-group__text select">
-											<select id="select-type-basic" (change)="onPolicySelected($event.target.value)" [(ngModel)]="saveDetails.body.policy">
+											<select id="select-type-basic" (change)="onPolicySelected($event.target.value)" [(ngModel)]="selectedPolicy">
 												<option *ngFor="let policy of policies"
 											[value]="policy.name" [innerText]="policy.name">
 												</option>
@@ -153,7 +153,8 @@
 		<h6 class="modal__title">Selected Tags not saved</h6>
 	</div>
 	<div class="modal__body">
-		<p class="subtitle">Current policy group tags are not saved. Unsaved changes will be lost</p>
+		<p class="subtitle">Current policy group tags are not saved.</p>
+		<p> Unsaved changes will be lost</p>
 	</div>
 	<div class="modal__footer">
 		<button class="btn" (click)="onCancelPolicyChanges()">Cancel</button>

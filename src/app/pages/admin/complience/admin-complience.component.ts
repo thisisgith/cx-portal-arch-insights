@@ -62,6 +62,7 @@ export class AdminComplienceComponent implements OnInit {
 	private user: User;
 	public selectedDeviceTagType = 'allDevices';
 	public isPolicyChanged: boolean;
+	public triggerModal = '';
 
 	constructor (
 		public cuiModalService: CuiModalService,
@@ -96,7 +97,6 @@ export class AdminComplienceComponent implements OnInit {
 		this.checkOptlnStatus();
 		this.initializeDetails();
 	}
-
 
 	/**
 	 * initialize all the tag and policy details
@@ -142,7 +142,7 @@ export class AdminComplienceComponent implements OnInit {
 	public toggleOptlnStatus () {
 		if (this.enableSaveButton) {
 			this.cuiModalService.show(this.confirmationModalTemplate, 'normal');
-		}else {
+		} else {
 			this.optlnStatus = false;
 			this.initializeDetails();
 		}
@@ -266,15 +266,18 @@ export class AdminComplienceComponent implements OnInit {
 		_.invoke(this.alert, 'hide');
 		if (policy !== 'select' && this.isPolicyChanged
 		&& this.saveDetails.body.policy !== 'select') {
+			this.triggerModal = 'policy';
 			this.cuiModalService.show(this.switchBetweenPolicy, 'normal');
 		}
 		this.isPolicyChanged = true;
 	}
 
 	/**
-	 * Function can help in enabling and disabling the save button based on updated tags details
+	 * Function can help in enabling and disabling the save button,
+	 *  based on updated tags details
+	 * @param updateSavebuttonFlag it is a flag
 	 */
-	public getUpdatedTags(updateSavebuttonFlag){
+	public getUpdatedTags (updateSavebuttonFlag) {
 		this.enableSaveButton = updateSavebuttonFlag;
 	}
 
@@ -337,21 +340,25 @@ export class AdminComplienceComponent implements OnInit {
 		if (type) {
 			this.selectedDeviceTagType = type;
 		}
-		if (this.selectedDeviceTagType === 'allDevices') {
-			this.showAssetsComponent = false;
-			this.assetTaggingService.Tags = [];
-		} else {
-			this.showAssetsComponent = true;
-			this.filterDuplicates();
-		}
+		this.triggerModal = 'scan';
+		this.cuiModalService.show(this.switchBetweenPolicy, 'normal');
 	}
 
 	/**
 	 * Function to discard selected policy change
 	 */
 	public discardChangesOnPolicyChange () {
-		this.onChangesDeviceTagType('allDevices');
-		this.filterDuplicates();
+		if (this.triggerModal === 'policy') {
+			this.onChangesDeviceTagType('allDevices');
+			this.filterDuplicates();
+		} else if (this.selectedDeviceTagType === 'allDevices') {
+			this.showAssetsComponent = false;
+			this.assetTaggingService.Tags = [];
+		} else {
+			this.showAssetsComponent = true;
+			this.filterDuplicates();
+		}
+
 		this.cuiModalService.hide();
 	}
 
@@ -359,7 +366,13 @@ export class AdminComplienceComponent implements OnInit {
 	 * Function to keep updated policy changes
 	 */
 	public onCancelPolicyChanges () {
-		this.selectedPolicy = this.selectedPolicy === 'HIPAA' ? 'PCI' : 'HIPAA';
+		if (this.triggerModal === 'policy') {
+			this.selectedPolicy = this.selectedPolicy === 'HIPAA' ? 'PCI' : 'HIPAA';
+			console.log(this.selectedPolicy)
+		} else {
+			this.selectedDeviceTagType =
+				this.selectedDeviceTagType === 'allDevices' ?	'selectedTags' : 'allDevices';
+		}
 		this.cuiModalService.hide();
 	}
 }
