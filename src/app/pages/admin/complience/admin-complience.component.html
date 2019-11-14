@@ -12,7 +12,7 @@
 				<label class="switch">
 					<input type="checkbox" checked>
 					<span class="switch__input"></span>
-					<span class="switch__label">Yes</span>
+					<span class="switch__label">On</span>
 				</label>
 			</div>
 			<div class="form-group form-group--inline base-margin-bottom"
@@ -20,42 +20,59 @@
 					<label class="switch">
 						<input type="checkbox" >
 						<span class="switch__input"></span>
-						<span class="switch__label">No</span>
+						<span class="switch__label">Off</span>
 					</label>
 				</div>
 
 				<div class="row">
 					<div class="col-md-4">
-				<div class="form-group base-margin-bottom" [innerText]="'_AdminEnableRegulatoryComplienceNote_' | i18n"	></div>
+						<div class="alert alert--info">
+								<div class="alert__icon icon-info-outline"></div>
+							<div class="alert__message" [innerText]="'_AdminEnableRegulatoryComplienceNote_' | i18n">
+								</div>
+							</div>
 						</div>
 						</div>
 
 				<cui-alert [options]="alert"></cui-alert>
 
-				<div [hidden]= "!optlnStatus">
+				<div *ngIf="optlnStatus" class="base-margin-top">
 
-						<div class="row">
-								<div class="col-md-2">
+						<div class="row base-margin-bottom">
+								<div class="col-md-2 half-margin-right">
 								<div class="form-group">
 										<div class="form-group__text select">
-											<select id="select-type-basic" (change)="onPolicySelected($event.target.value)" [(ngModel)]="selectedPolicy">
+											<select id="select-type-basic" (change)="onPolicySelected($event.target.value)" [(ngModel)]="saveDetails.body.policy">
 												<option *ngFor="let policy of policies"
 												[value]="policy.name">
 												{{policy.name}}
 												</option>
 											</select>
-											<label for="select-type-basic"
+											<label for="select-type-basic" class="subheader"
 											[innerText]="'_AdminPolicy_' | i18n"></label>
 										</div>
 									</div>
 								</div>
-								<div class="col-md-10">
-								<div class="row flex-end dbl-padding-top">
-									<div class="col-md-1" *ngIf="selectedPolicy !== 'select'">
-											<button class="btn btn--small btn--primary half-margin-top" (click)="savePolicyDetails()"
-											[innerText]="'_Save_' | i18n"></button>
+								<div class="col-2">
+										<div class="subheader">Scan type</div>
+										<div class="form-group">
+											<label class="radio" [ngClass]="{'disabled': saveDetails.body.policy=='select'}">
+												<input type="radio" name="radio-stacked" checked
+										value="allDevices" name="inline-radio" [(ngModel)]="selectedDeviceTagType" (change)="onChangesDeviceTagType()">
+												<span class="radio__input"></span>
+												<span class="radio__label">All Inventory</span>
+											</label>
 										</div>
-									<div class="col-md-2" *ngIf="selectedPolicy !== 'select'">
+										<div class="form-group">
+												<label class="radio" [ngClass]="{'disabled': saveDetails.body.policy=='select'}">
+													<input type="radio" name="radio-stacked"
+										value="selectedTags" name="inline-radio" [(ngModel)]="selectedDeviceTagType" (change)="onChangesDeviceTagType()">
+													<span class="radio__input"></span>
+													<span class="radio__label">System Tags</span>
+												</label>
+											</div>
+								</div>
+								<div class="col-md-2" *ngIf="saveDetails.body.policy != 'select'">
 										<div class="form-group form-group--inline base-margin-bottom" *ngIf="toBeScanned">
 												<div class="subheader qtr-margin-bottom">Enable Scan
 														<sup>
@@ -92,33 +109,26 @@
 													</label>
 												</div>
 										</div>
+								<div class="col-2">
+								<div class="row">
+									<div class="col-12 flex-end" *ngIf="saveDetails.body.policy != 'select'">
+											<button class="btn btn--small btn--primary half-margin-top" (click)="savePolicyDetails()"
+											[innerText]="'_Save_' | i18n"
+											[ngClass]="{'disabled': !enableSaveButton}"></button>
+										</div>
 							</div>
-							</div>
-							<div *ngIf="selectedPolicy !== 'select'" class="device-tags-selection col-md-4">
-								<div class="form-group form-group--inline">
-									<label class="radio">
-										<input type="radio" name="inline-radio" [(ngModel)]="selectedDeviceTagType" 
-										value="allDevices" (change)="onChangesDeviceTagType()">
-										<span class="radio__input"></span>
-										<span class="radio__label hidden-xs">All Devices</span>
-									</label>
-								</div>
-								<div class="form-group form-group--inline">
-									<label class="radio">
-										<input type="radio" name="inline-radio" [(ngModel)]="selectedDeviceTagType"
-										 value="specificDeviceTags" (change)="onChangesDeviceTagType()">
-										<span class="radio__input"></span>
-										<span class="radio__label hidden-xs">Specific Device Tags</span>
-									</label>
-								</div>
 							</div>
 						</div>
 					</div>
-					<div class="text-large" [hidden]= "!optlnStatus || !showAssetsComponent" [innerText]="'_AdminPolicyTaggingHeading_' | i18n"></div>
-			</div>
+				<div [hidden]= "selectedDeviceTagType == 'allDevices' || saveDetails.body.policy == 'select'">
+					<div class="text-large"  
+					[innerText]="'_AdminPolicyTaggingHeading_' | i18n"></div>
+			
 
-			<asset-tagging [hidden]= "!optlnStatus || !showAssetsComponent" [tagListLeft]='leftSideTags' [tagListRight]='rightSideTags'></asset-tagging>
-
+			<asset-tagging 
+				[tagListLeft]='leftSideTags' [tagListRight]='rightSideTags'
+				(updatedTags)="getUpdatedTags($event)"></asset-tagging>
+			</div></div>
 	</div>
 </admin-wrapper>
 
@@ -127,13 +137,13 @@
 <ng-template #confirmationModalTemplate>
 	<a class="modal__close" (click)="cuiModalService.hide()"><span class="icon-close"></span></a>
 	<div class="modal__header">
-		<h4 class="modal__title">Are you sure you want to opt-out?</h4>
+		<h6 class="modal__title">Confirm Compliance Off</h6>
 	</div>
 	<div class="modal__body">
-		<p class="subtitle">If you opt-out all the mapping data will be deleted</p>
+		<p class="subtitle">All policy tagging and violation data will be permanently deleted</p>
 	</div>
 	<div class="modal__footer">
-		<button class="btn btn--primary" (click)="discardChanges()">Continue</button>
+		<button class="btn" (click)="discardChanges()">Delete Data</button>
 		<button class="btn" (click)="saveChanges()">Cancel</button>
 	</div>
 </ng-template>
@@ -141,14 +151,14 @@
 <ng-template #switchBetweenPolicy>
 	<a class="modal__close" (click)="cuiModalService.hide()"><span class="icon-close"></span></a>
 	<div class="modal__header">
-		<h4 class="modal__title">Are you sure you want to switch to other policy?</h4>
+		<h6 class="modal__title">Selected Tags not saved</h6>
 	</div>
 	<div class="modal__body">
-		<p class="subtitle">If you switch to other policy all the mapping data will be deleted</p>
+		<p class="subtitle">Current policy group tags are not saved. Unsaved changes will be lost</p>
 	</div>
 	<div class="modal__footer">
-		<button class="btn btn--primary" (click)="discardChangesOnPolicyChange()">Continue</button>
 		<button class="btn" (click)="onCancelPolicyChanges()">Cancel</button>
+		<button class="btn btn" (click)="discardChangesOnPolicyChange()">Continue without saving</button>
 	</div>
 </ng-template>
 

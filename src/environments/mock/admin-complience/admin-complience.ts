@@ -43,7 +43,7 @@ const rightSideResponse = {
 			
 		},
 		{
-			"policyName":"HIPPA",
+			"policyName":"HIPAA",
 			"devices":["D4","D5","D6"],
 			"toBeScanned":"false",
 			"tags":[

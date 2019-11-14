@@ -41,6 +41,7 @@ export class AdminComplienceComponent implements OnInit {
 	public loading = false;
 	public optlnStatus = false;
 	public policies = [];
+	public enableSaveButton: boolean;
 	public leftSideTagsResponse: LeftTagResponse;
 	public rightSideTagsResponse: RightTagResponse;
 	public selectedPolicy = 'select';
@@ -93,6 +94,18 @@ export class AdminComplienceComponent implements OnInit {
 			},
 		];
 		this.checkOptlnStatus();
+		this.initializeDetails();
+	}
+
+
+	/**
+	 * initialize all the tag and policy details
+	 */
+	public initializeDetails () {
+		this.saveDetails.body.policy = 'select';
+		this.saveDetails.body.tags = [];
+		this.saveDetails.body.toBeScanned = false;
+		this.selectedDeviceTagType = 'allDevices';
 	}
 
 	/**
@@ -128,7 +141,7 @@ export class AdminComplienceComponent implements OnInit {
 
 	public toggleOptlnStatus () {
 		if (this.rightSideTags || this.leftSideTags) {
-			this.cuiModalService.show(this.confirmationModalTemplate, 'small');
+			this.cuiModalService.show(this.confirmationModalTemplate, 'normal');
 			this.optlnStatus = true;
 		}
 	}
@@ -139,6 +152,7 @@ export class AdminComplienceComponent implements OnInit {
 	public discardChanges () {
 		this.optlnStatus = false;
 		this.updateOptInOutStatus();
+		this.initializeDetails();
 		this.cuiModalService.hide();
 	}
 	/**
@@ -227,7 +241,7 @@ export class AdminComplienceComponent implements OnInit {
 		}
 		if (this.rightSideTagsResponse.policyGroups) {
 			const policyGroups = _.find(this.rightSideTagsResponse.policyGroups,
-				 { policyName: this.selectedPolicy });
+				 { policyName: this.saveDetails.body.policy });
 			this.rightSideTags = _.cloneDeep(policyGroups.tags);
 			_.each(this.rightSideTags, (tag) => {
 				tag.devices = policyGroups.devices;
@@ -247,10 +261,18 @@ export class AdminComplienceComponent implements OnInit {
 
 	public onPolicySelected (policy) {
 		_.invoke(this.alert, 'hide');
-		if (policy !== 'select' && this.isPolicyChanged) {
-			this.cuiModalService.show(this.switchBetweenPolicy, 'small');
+		if (policy !== 'select' && this.isPolicyChanged
+		&& this.saveDetails.body.policy !== 'select') {
+			this.cuiModalService.show(this.switchBetweenPolicy, 'normal');
 		}
 		this.isPolicyChanged = true;
+	}
+
+	/**
+	 * Function can help in enabling and disabling the save button based on updated tags details
+	 */
+	public getUpdatedTags(updateSavebuttonFlag){
+		this.enableSaveButton = updateSavebuttonFlag;
 	}
 
 	/**
@@ -262,7 +284,6 @@ export class AdminComplienceComponent implements OnInit {
 		.pipe(
 			switchMap(tags => {
 				this.saveDetails.body.tags = tags;
-				this.saveDetails.body.policy = this.selectedPolicy;
 				this.saveDetails.body.toBeScanned = this.toBeScanned;
 				this.saveDetails.customerId = this.customerId;
 

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, Input, OnChanges } from '@angular/core';
+import { Component, OnDestroy, Input, OnChanges, Output, EventEmitter } from '@angular/core';
 import { Subject } from 'rxjs';
 import { LogService } from '@cisco-ngx/cui-services';
 import * as _ from 'lodash-es';
@@ -16,6 +16,7 @@ export class AssetTaggingComponent implements OnChanges, OnDestroy {
 
 	@Input() public tagListRight: Tags[] = [];
 	@Input() public tagListLeft: Tags[] = [];
+	@Output() public updatedTags: EventEmitter<any> = new EventEmitter<any>();
 	public leftTags = 'left';
 	public rightTags = 'right';
 	public allTagsSelectedRight = false;
@@ -148,6 +149,7 @@ export class AssetTaggingComponent implements OnChanges, OnDestroy {
 		this.tagListLeft = _.cloneDeep(this.tagListLeft);
 		this.tagListRight = _.cloneDeep(this.tagListRight);
 		this.handleLeftTagSelectionChanged();
+		this.updatedTags.emit(true);
 	}
 
 	/**
@@ -168,6 +170,7 @@ export class AssetTaggingComponent implements OnChanges, OnDestroy {
 		this.tagListRight = _.cloneDeep(this.tagListRight);
 		this.allTagsSelectedRight = false;
 		this.handleRightTagSelectionChanged();
+		this.updatedTags.emit(true);
 	}
 
 	/**
