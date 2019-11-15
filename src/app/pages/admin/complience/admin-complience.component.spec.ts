@@ -11,7 +11,7 @@ import { RouteAuthService } from '@services';
 import { HttpErrorResponse } from '@angular/common/http';
 import { LogService } from '@cisco-ngx/cui-services';
 
-fdescribe('AdminComplienceComponent', () => {
+describe('AdminComplienceComponent', () => {
 	let component: AdminComplienceComponent;
 	let fixture: ComponentFixture<AdminComplienceComponent>;
 

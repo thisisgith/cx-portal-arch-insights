@@ -4,9 +4,6 @@
 		<div class="row  panel panel--bordered flex">
 			<div class="col-md-8">
 				<div class="half-padding-top  text-large text-left text-uppercase">
-					<span>
-						Available:
-					</span>
 					<span
 						[innerText]="'_AssetTaggingTagsCount_' | i18n:((tagListLeft).length) "
 						data-auto-id="tagging.tagscount"></span>
@@ -61,9 +58,6 @@
 		<div class="row  panel panel--bordered flex">
 			<div class="col-md-8">
 				<div class="half-padding-top  text-large text-left text-uppercase">
-						<span>
-								Selected:
-						</span>
 					<span
 						[innerText]="'_AssetTaggingTagsCountSelected_' | i18n:((tagListRight).length) "
 						data-auto-id="tagging.tagscount"></span>
@@ -101,7 +95,7 @@
 	<div
 		class="row panel panel--bordered flex"
 	>
-		<div class="col-1 tag-table">
+		<div class="col-1 text-left">
 			<input class="text-xlarge"
 				type="checkbox"
 				(change)="toggleAllTagsSelected(tags, name)"
@@ -110,7 +104,7 @@
 			>
 			<span class="checkbox__input"></span>
 		</div>
-		<div class="col-5 tag-table text-bold">
+		<div class="col-5 text-left text-bold">
 			<span [innerText]="('_AssetTaggingTagName_' | i18n )"></span>
 		</div>
 	</div>
