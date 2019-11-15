@@ -253,20 +253,20 @@ export class AdminComplienceComponent implements OnInit {
 			});
 			_.each(this.leftSideTags, tag => {
 				const duplicateTagIndex = this.rightSideTags.findIndex(rightSideTag => {
-					if(tag){
+					if (tag) {
 						return tag.tagName === rightSideTag.tagName;
 					}
 				});
-				if(duplicateTagIndex !== -1) {
+				if (duplicateTagIndex !== -1) {
 					this.rightSideTags[duplicateTagIndex] = _.cloneDeep(tag);
 					this.leftSideTags
 					.splice(this.leftSideTags
 						.findIndex(leftSideTag => leftSideTag.tagName === tag.tagName), 1);
 				}
-				
-		});
+
+			});
+		}
 	}
-}
 	/**
 	 * Function to filter duplicates
 	 * @param policy type of policy selected
