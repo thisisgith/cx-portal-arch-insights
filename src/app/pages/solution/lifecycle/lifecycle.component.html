@@ -689,27 +689,38 @@
 <ng-template #learnPanel let-data="data">
 	<div *ngIf="data.elearning" data-auto-id="LearnPanel-ELearningBlock">
 		<ng-container *ngTemplateOutlet="learningBlock; context:
-			{ icon: 'clipboard-md',
+			{ iconUrl: '/assets/icons/lifecycle/icon-e-learning.svg',
 				title: '_ELearning_',
 				data: componentData.learning.elearning,
 				link: componentData.learning.elearningUrl }">
 		</ng-container>
-		<div class="divider"></div>
+		<div class="divider" *ngIf="data.certifications"></div>
 	</div>
 
 	<div *ngIf="data.certifications" data-auto-id="LearnPanel-CertificationsBlock">
 		<ng-container *ngTemplateOutlet="learningBlock; context:
-			{ icon: 'certified',
+			{ iconUrl: '/assets/icons/lifecycle/icon-certificate.svg',
 				title: '_Certifications_',
 				data: componentData.learning.certifications,
 				link: componentData.learning.certificationsUrl } ">
 		</ng-container>
+		<div class="divider" *ngIf="data.remotepracticelabs"></div>
+	</div>
+
+	<div *ngIf="data.remotepracticelabs" data-auto-id="LearnPanel-RemotePracticeLabsBlock">
+		<ng-container *ngTemplateOutlet="learningBlock; context:
+			{ iconUrl: '/assets/icons/lifecycle/icon-lab.svg',
+				title: '_RemotePracticeLabs_',
+				data: componentData.learning.remotepracticelabs,
+				link: componentData.learning.remotepracticelabsUrl } ">
+		</ng-container>
 	</div>
 </ng-template>
 
-<ng-template #learningBlock let-title="title" let-data="data" let-icon="icon" let-link="link">
+<ng-template #learningBlock let-title="title" let-data="data" let-icon="icon" let-link="link" let-iconUrl="iconUrl">
 	<div class="cx-lifecycle-card--subheader">
-		<span class="icon-{{ icon }}"></span>
+		<span *ngIf="icon" class="icon-{{ icon }}"></span>
+		<div *ngIf="iconUrl" class="subheader-icon" [inlineSVG]="iconUrl"></div>
 		<span class="text-uppercase" [innerText]="title | i18n"></span>
 		<div class="view-all pull-right toggle"
 			[ngClass]="{'hide': data?.length === 0}"

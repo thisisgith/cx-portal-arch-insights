@@ -230,12 +230,11 @@
 					<span class="text-info">&#62;</span>
 				</span>
 			</div>
-			<div class="divider"></div>
-			<div class="row">
+			<div class="row dbl-padding-top">
 				<div class="col-3">
 					<div class="row">
 						<div
-							class="col-12  text-bold"
+							class="col-12  text-bold text-uppercase text-small"
 							[innerText]="'_IPAddress_' | i18n | uppercase"
 						></div>
 						<div
@@ -247,7 +246,7 @@
 				<div class="col-3">
 					<div class="row">
 						<div
-							class="col-md-12 text-bold"
+							class="col-md-12 text-bold text-uppercase text-small"
 							[innerText]="'_SerialNumber_' | i18n | uppercase"
 						></div>
 						<div
@@ -258,7 +257,7 @@
 				</div>
 				<div class="col-6">
 					<div
-						class="col-md-12 text-bold"
+						class="col-md-12 text-bold text-uppercase text-small"
 						[innerText]="'_RMNumberOfCrashesInCrashHistory_' | i18n | uppercase"
 					></div>
 					<div
@@ -296,11 +295,13 @@
 				[innerText]="'_CP_FingerPrintDetailsFor_' | i18n"
 			></span>
 			<span class="qtr-margin-left">
+					<span class="text-info">&#60;</span>
 				<a
 					data-auto-id="selectedName"
 					[innerHTML]="selectedFingerPrintdata.deviceName"
 					(click) = "showAsset360 = true;"
 				></a>
+				<span class="text-info">&#62;</span>
 			</span>
 		</div>
 	</details-panel-header>

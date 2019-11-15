@@ -21,11 +21,10 @@ import { DefaultResponseModel } from '../models/default-response-model';
   providedIn: 'root',
 })
 class ControlPointDevicePolicyAPIService extends __BaseService {
-  static readonly getEligibleDevicesForGivenIgnorePolicyUsingGETPath = '/ignorepolicy/devices/eligible/{customerId}/{solution}/{useCase}/{policyId}/{pageNumber}/{rowsPerPage}';
+  static readonly getDevicesForIgnorePolicyCreationUsingGETPath = '/ignorepolicy/devices/eligible/{customerId}/{solution}/{useCase}/{policyId}/{pageNumber}/{rowsPerPage}';
   static readonly createIgnoreScanPolicyUsingPOSTPath = '/ignorepolicy';
   static readonly updateIgnoreScanPolicyUsingPATCHPath = '/ignorepolicy';
   static readonly getDevicesForGivenIgnorePolicyUsingGETPath = '/ignorepolicy/devices/existing/{customerId}/{policyId}/{pageNumber}/{rowsPerPage}';
-  static readonly getDevicesForIgnorePolicyCreationUsingGETPath = '/ignorepolicy/devices/{customerId}/{pageNumber}/{rowsPerPage}';
   static readonly getAllPolicyUsingGETPath = '/policies/{customerId}';
   static readonly getAllPolicyForGivenMonthUsingGETPath = '/policies/{customerId}/{month}/{year}';
   static readonly createDevicePolicyUsingPOSTPath = '/policy';
@@ -45,7 +44,7 @@ class ControlPointDevicePolicyAPIService extends __BaseService {
   }
 
   /**
-   * @param params The `ControlPointDevicePolicyAPIService.GetEligibleDevicesForGivenIgnorePolicyUsingGETParams` containing the following parameters:
+   * @param params The `ControlPointDevicePolicyAPIService.GetDevicesForIgnorePolicyCreationUsingGETParams` containing the following parameters:
    *
    * - `useCase`: useCase
    *
@@ -61,7 +60,7 @@ class ControlPointDevicePolicyAPIService extends __BaseService {
    *
    * @return OK
    */
-  getEligibleDevicesForGivenIgnorePolicyUsingGETResponse(params: ControlPointDevicePolicyAPIService.GetEligibleDevicesForGivenIgnorePolicyUsingGETParams): __Observable<__StrictHttpResponse<DeviceDetailsByPage>> {
+  getDevicesForIgnorePolicyCreationUsingGETResponse(params: ControlPointDevicePolicyAPIService.GetDevicesForIgnorePolicyCreationUsingGETParams): __Observable<__StrictHttpResponse<DeviceDetailsByPage>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
@@ -91,7 +90,7 @@ class ControlPointDevicePolicyAPIService extends __BaseService {
   }
 
   /**
-   * @param params The `ControlPointDevicePolicyAPIService.GetEligibleDevicesForGivenIgnorePolicyUsingGETParams` containing the following parameters:
+   * @param params The `ControlPointDevicePolicyAPIService.GetDevicesForIgnorePolicyCreationUsingGETParams` containing the following parameters:
    *
    * - `useCase`: useCase
    *
@@ -107,8 +106,8 @@ class ControlPointDevicePolicyAPIService extends __BaseService {
    *
    * @return OK
    */
-  getEligibleDevicesForGivenIgnorePolicyUsingGET(params: ControlPointDevicePolicyAPIService.GetEligibleDevicesForGivenIgnorePolicyUsingGETParams): __Observable<DeviceDetailsByPage> {
-    return this.getEligibleDevicesForGivenIgnorePolicyUsingGETResponse(params).pipe(
+  getDevicesForIgnorePolicyCreationUsingGET(params: ControlPointDevicePolicyAPIService.GetDevicesForIgnorePolicyCreationUsingGETParams): __Observable<DeviceDetailsByPage> {
+    return this.getDevicesForIgnorePolicyCreationUsingGETResponse(params).pipe(
       __map(_r => _r.body as DeviceDetailsByPage)
     );
   }
@@ -246,60 +245,6 @@ class ControlPointDevicePolicyAPIService extends __BaseService {
    */
   getDevicesForGivenIgnorePolicyUsingGET(params: ControlPointDevicePolicyAPIService.GetDevicesForGivenIgnorePolicyUsingGETParams): __Observable<DeviceDetailsByPage> {
     return this.getDevicesForGivenIgnorePolicyUsingGETResponse(params).pipe(
-      __map(_r => _r.body as DeviceDetailsByPage)
-    );
-  }
-
-  /**
-   * @param params The `ControlPointDevicePolicyAPIService.GetDevicesForIgnorePolicyCreationUsingGETParams` containing the following parameters:
-   *
-   * - `rowsPerPage`: rowsPerPage
-   *
-   * - `pageNumber`: pageNumber
-   *
-   * - `customerId`: customerId
-   *
-   * @return OK
-   */
-  getDevicesForIgnorePolicyCreationUsingGETResponse(params: ControlPointDevicePolicyAPIService.GetDevicesForIgnorePolicyCreationUsingGETParams): __Observable<__StrictHttpResponse<DeviceDetailsByPage>> {
-    let __params = this.newParams();
-    let __headers = new HttpHeaders();
-    let __body: any = null;
-
-
-
-
-    let req = new HttpRequest<any>(
-      'GET',
-      this.rootUrl + `/customerportal/controlpoint/v1/ignorepolicy/devices/${params.customerId}/${params.pageNumber}/${params.rowsPerPage}`,
-      __body,
-      {
-        headers: __headers,
-        params: __params,
-        responseType: 'json',
-      });
-
-    return this.http.request<any>(req).pipe(
-      __filter(_r => _r instanceof HttpResponse),
-      __map((_r) => {
-        return _r as __StrictHttpResponse<DeviceDetailsByPage>;
-      })
-    );
-  }
-
-  /**
-   * @param params The `ControlPointDevicePolicyAPIService.GetDevicesForIgnorePolicyCreationUsingGETParams` containing the following parameters:
-   *
-   * - `rowsPerPage`: rowsPerPage
-   *
-   * - `pageNumber`: pageNumber
-   *
-   * - `customerId`: customerId
-   *
-   * @return OK
-   */
-  getDevicesForIgnorePolicyCreationUsingGET(params: ControlPointDevicePolicyAPIService.GetDevicesForIgnorePolicyCreationUsingGETParams): __Observable<DeviceDetailsByPage> {
-    return this.getDevicesForIgnorePolicyCreationUsingGETResponse(params).pipe(
       __map(_r => _r.body as DeviceDetailsByPage)
     );
   }
@@ -801,9 +746,9 @@ class ControlPointDevicePolicyAPIService extends __BaseService {
 module ControlPointDevicePolicyAPIService {
 
   /**
-   * Parameters for getEligibleDevicesForGivenIgnorePolicyUsingGET
+   * Parameters for getDevicesForIgnorePolicyCreationUsingGET
    */
-  export interface GetEligibleDevicesForGivenIgnorePolicyUsingGETParams {
+  export interface GetDevicesForIgnorePolicyCreationUsingGETParams {
 
     /**
      * useCase
@@ -850,27 +795,6 @@ module ControlPointDevicePolicyAPIService {
      * policyId
      */
     policyId: string;
-
-    /**
-     * pageNumber
-     */
-    pageNumber: string;
-
-    /**
-     * customerId
-     */
-    customerId: string;
-  }
-
-  /**
-   * Parameters for getDevicesForIgnorePolicyCreationUsingGET
-   */
-  export interface GetDevicesForIgnorePolicyCreationUsingGETParams {
-
-    /**
-     * rowsPerPage
-     */
-    rowsPerPage: string;
 
     /**
      * pageNumber
