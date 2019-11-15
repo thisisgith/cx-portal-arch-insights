@@ -34,4 +34,3 @@ export { VisualFilterBarModule } from './visual-filter-bar/visual-filter-bar.mod
 export { VisualFilterBarComponent } from './visual-filter-bar/visual-filter-bar.component';
 export { AssetTaggingComponent, AssetTaggingModule } from './asset-tagging';
 export { MultiselectModule }  from './multiselect/multiselect.module';
-// export { AssetTaggingComponent, AssetTaggingModule } from './asset-tagging';

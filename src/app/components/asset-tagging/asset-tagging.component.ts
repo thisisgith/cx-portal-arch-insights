@@ -60,7 +60,7 @@ export class AssetTaggingComponent implements OnChanges, OnDestroy {
 	 * returns tag list w/o the select attribute
 	 * @returns any[]
 	 */
-	public getTagListNoSelect () {
+	public getUnselectedTags () {
 		return  _.map(this.tagListRight, item => {
 			const copy = _.cloneDeep(item);
 			delete copy.selected;
@@ -125,7 +125,7 @@ export class AssetTaggingComponent implements OnChanges, OnDestroy {
 	 * Submit the completed Collection Form
 	 */
 	public submit () {
-		this.postParams = this.getTagListNoSelect();
+		this.postParams = this.getUnselectedTags();
 
 		this.assetTaggingService.Tags = this.postParams;
 	}

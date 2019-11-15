@@ -75,7 +75,7 @@ describe('AssetTaggingComponent', () => {
 			tagValue: 'TID1',
 		}];
 
-		const tags = component.getTagListNoSelect();
+		const tags = component.getUnselectedTags();
 
 		expect(tags.selected)
 		.toBeUndefined();
