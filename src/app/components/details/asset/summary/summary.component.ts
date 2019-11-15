@@ -144,6 +144,7 @@ export class AssetDetailsSummaryComponent implements OnChanges, OnInit, OnDestro
 		.pipe(
 			map((response: AssetTaggingDeviceDetails) => {
 				this.tags = response.tags;
+				this.status.loading.tags = false;
 			}),
 			catchError(err => {
 				this.status.loading.tags = false;

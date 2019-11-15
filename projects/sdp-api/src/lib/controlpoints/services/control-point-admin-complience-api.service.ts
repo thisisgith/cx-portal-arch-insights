@@ -45,7 +45,7 @@ class ControlPointAdminComplienceService extends __BaseService {
     __headers = __headers.append("Content-Type", "application/json");
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + ControlPointAdminComplienceService.getLeftSideTagsResponsePath+'/'+param,
+      `${this.rootUrl + ControlPointAdminComplienceService.getLeftSideTagsResponsePath}/${param}`,
       __body,
       {
         headers: __headers,
@@ -84,7 +84,7 @@ class ControlPointAdminComplienceService extends __BaseService {
     __headers = __headers.append("Content-Type", "application/json");
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + ControlPointAdminComplienceService.getRightSideTagsResponsePath+'/'+param,
+      `${this.rootUrl + ControlPointAdminComplienceService.getRightSideTagsResponsePath}/${param}`,
       __body,
       {
         headers: __headers,

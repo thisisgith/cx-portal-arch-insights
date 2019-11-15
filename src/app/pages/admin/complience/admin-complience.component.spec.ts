@@ -74,9 +74,11 @@ describe('AdminComplienceComponent', () => {
 		it('should not display modal if there is no tags', () => {
 			component.rightSideTags = null;
 			component.leftSideTags = null;
+			component.optlnStatus = true;
+			component.enableSaveButton = false;
 			component.toggleOptlnStatus();
 			expect(component.optlnStatus)
-				.toBe(component.optlnStatus);
+				.toBeFalsy();
 		});
 	});
 

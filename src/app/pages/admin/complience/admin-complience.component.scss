@@ -1,3 +1,5 @@
+@import "~cisco-ui/src/scss/utilities/_variables.scss";
+
 :host {
 	.panel div {
 		word-wrap: break-word;
@@ -5,7 +7,7 @@
 
 	.AdminInputSelect {
 		width: 175px;
-		height: 35px;
+		height: $pagination-height-default;
 	}
 
 	.flex-end {

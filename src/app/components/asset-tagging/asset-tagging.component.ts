@@ -16,7 +16,7 @@ export class AssetTaggingComponent implements OnChanges, OnDestroy {
 
 	@Input() public tagListRight: Tags[] = [];
 	@Input() public tagListLeft: Tags[] = [];
-	@Output() public updatedTags: EventEmitter<any> = new EventEmitter<any>();
+	@Output() public updatedTags: EventEmitter<boolean> = new EventEmitter<boolean>();
 	public leftTags = 'left';
 	public rightTags = 'right';
 	public allTagsSelectedRight = false;
