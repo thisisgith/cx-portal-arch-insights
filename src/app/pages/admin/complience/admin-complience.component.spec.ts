@@ -11,7 +11,7 @@ import { RouteAuthService } from '@services';
 import { HttpErrorResponse } from '@angular/common/http';
 import { LogService } from '@cisco-ngx/cui-services';
 
-describe('AdminComplienceComponent', () => {
+fdescribe('AdminComplienceComponent', () => {
 	let component: AdminComplienceComponent;
 	let fixture: ComponentFixture<AdminComplienceComponent>;
 
@@ -47,28 +47,11 @@ describe('AdminComplienceComponent', () => {
 
 	describe('test toggleOptlnStatus', () => {
 		it('should display a modal if there is right side tags', () => {
-			component.leftSideTags = null;
-			component.rightSideTags = [{
-				deviceCount: 1,
-				devices: [],
-				tagName: 'Tag Name',
-				tagValue: '1',
-			}];
+			component.enableSaveButton = true;
 			component.toggleOptlnStatus();
 			expect(component.optlnStatus)
-				.toBeTruthy();
-		});
-		it('should display a modal if there is left side tags', () => {
-			component.rightSideTags = null;
-			component.leftSideTags = [{
-				deviceCount: 1,
-				devices: [],
-				tagName: 'Tag Name',
-				tagValue: '1',
-			}];
-			component.toggleOptlnStatus();
-			expect(component.optlnStatus)
-				.toBeTruthy();
+				.toEqual(component.optlnStatus);
+
 		});
 
 		it('should not display modal if there is no tags', () => {
@@ -82,7 +65,7 @@ describe('AdminComplienceComponent', () => {
 
 	describe('filter duplicates', () => {
 		it('should have left side tag response', () => {
-			component.selectedPolicy = 'HIPPA';
+			component.saveDetails.body.policy = 'HIPPA';
 			component.rightSideTags = [{
 				deviceCount: 5,
 				devices: 1,
@@ -103,10 +86,11 @@ describe('AdminComplienceComponent', () => {
 						tags: [{
 							deviceCount: 1,
 							devices: [],
-							tagName: 'Tag Name',
-							tagValue: '2',
+							tagName: 'ABC',
+							tagValue: '111',
 						}],
 						toBeScanned: true,
+
 					},
 				],
 			};
@@ -116,7 +100,7 @@ describe('AdminComplienceComponent', () => {
 		});
 
 		it('should have rigth side tag response', () => {
-			component.selectedPolicy = 'HIPPA';
+			component.saveDetails.body.policy = 'HIPPA';
 			component.rightSideTags = [{
 				deviceCount: 5,
 				devices: 1,
@@ -148,6 +132,53 @@ describe('AdminComplienceComponent', () => {
 			component.filterDuplicates();
 			expect(component.rightSideTags)
 				.toBeDefined();
+		});
+
+		it('should not have left side tag response', () => {
+			component.saveDetails.body.policy = 'HIPPA';
+			component.leftSideTagsResponse = {
+				tags: null,
+			};
+			component.rightSideTagsResponse = {
+				policyGroups: [
+					{
+						devices: [],
+						policyName: 'HIPPA',
+						tags: [{
+							deviceCount: 1,
+							devices: [],
+							tagName: 'ABC',
+							tagValue: '111',
+						}],
+						toBeScanned: true,
+
+					},
+				],
+			};
+			component.filterDuplicates();
+			expect(component.leftSideTags)
+				.toBe(component.leftSideTags);
+		});
+		it('should not have rigth side tag response', () => {
+			component.saveDetails.body.policy = 'HIPPA';
+			component.rightSideTags = [{
+				deviceCount: 5,
+				devices: 1,
+			}];
+			component.leftSideTagsResponse = {
+				tags: [{
+					deviceCount: 1,
+					devices: [],
+					tagName: 'ABC',
+					tagValue: '111',
+				}],
+			};
+			component.rightSideTagsResponse = {
+				policyGroups: null,
+			};
+			component.filterDuplicates();
+			expect(component.rightSideTags)
+				.toBe(component.rightSideTags);
 		});
 	});
 
@@ -239,20 +270,6 @@ describe('AdminComplienceComponent', () => {
 			.toHaveBeenCalled();
 	});
 
-	it('should select policy', () => {
-		const policyName = 'HIPPA';
-		component.onPolicySelected(policyName);
-		expect(component.isPolicyChanged)
-		.toBeTruthy();
-
-	});
-	it('should not select policy', () => {
-		const policyName = 'select';
-		component.onPolicySelected(policyName);
-		expect(component.showAssetsComponent)
-			.toBe(false);
-	});
-
 	it('should save policy details', () => {
 		let assetTaggingService: AssetTaggingService;
 		assetTaggingService = TestBed.get(AssetTaggingService);
@@ -315,39 +332,91 @@ describe('AdminComplienceComponent', () => {
 	}));
 
 	describe('should update device tag', () => {
-		it('should not display asset tagging', () => {
+		it('should display asset tagging', () => {
+			component.enableSaveButton = false;
 			component.selectedDeviceTagType = 'allDevices';
 			component.onChangesDeviceTagType();
-			expect(component.showAssetsComponent)
-				.toBeFalsy();
-		});
-
-		it('should display asset tagging', () => {
-			component.selectedDeviceTagType = 'specificDeviceTags';
-			component.onChangesDeviceTagType();
-			expect(component.showAssetsComponent)
+			expect(component.hideAssetTags)
 				.toBeTruthy();
 		});
 
-		it('should update device tag type', () => {
+		it('should not display asset tagging', () => {
+			component.enableSaveButton = true;
 			component.selectedDeviceTagType = 'allDevices';
-			component.onChangesDeviceTagType('allDevices');
-			expect(component.selectedDeviceTagType)
-				.toBe('allDevices');
+			component.onChangesDeviceTagType();
+			expect(component.hideAssetTags)
+				.toBe(component.hideAssetTags);
+		});
+
+		it('should update device tag type', () => {
+			component.enableSaveButton = false;
+			component.selectedDeviceTagType = null;
+			component.selectedDeviceTagType = 'selectedTags';
+			spyOn(component, 'filterDuplicates');
+			component.onChangesDeviceTagType();
+			expect(component.hideAssetTags)
+				.toBeFalsy();
+		});
+
+		it('should hide device tag template', () => {
+			component.enableSaveButton = false;
+			component.selectedDeviceTagType = null;
+			component.selectedDeviceTagType = null;
+			component.onChangesDeviceTagType();
+			expect(component.hideAssetTags)
+				.toBeFalsy();
 		});
 	});
 
-	it('should update selected policy to PCI', () => {
-		component.selectedPolicy = 'HIPAA';
+	it('should update selected device type', () => {
+		component.triggerModal = null;
+		component.saveDetails.body.policy = 'HIPAA';
 		component.onCancelPolicyChanges();
-		expect(component.selectedPolicy)
+		expect(component.selectedDeviceTagType)
+			.toEqual('selectedTags');
+	});
+
+	it('should update selected policy to PCI', () => {
+		component.triggerModal = 'policy';
+		component.saveDetails.body.policy = ' HIPAA';
+		component.onCancelPolicyChanges();
+		expect(component.saveDetails.body.policy)
 			.toEqual('PCI');
 	});
 
 	it('should update selected policy to HIPAA', () => {
-		component.selectedPolicy = 'PCI';
+		component.triggerModal = 'policy';
+		component.saveDetails.body.policy = 'PCI';
 		component.onCancelPolicyChanges();
-		expect(component.selectedPolicy)
+		expect(component.saveDetails.body.policy)
 			.toEqual('HIPAA');
+	});
+
+	it('should discard changes on policy change if there is policy', () => {
+		component.triggerModal = 'policy';
+		spyOn(component, 'filterDuplicates');
+		component.discardChangesOnPolicyChange();
+		expect(component.hideAssetTags)
+			.toBeTruthy();
+		expect(component.selectedDeviceTagType)
+			.toEqual('allDevices');
+	});
+
+	it('should discard changes on policy change if not have policy', () => {
+		component.triggerModal = null;
+		component.selectedDeviceTagType = 'allDevices';
+		spyOn(component, 'filterDuplicates');
+		component.discardChangesOnPolicyChange();
+		expect(component.showAssetsComponent)
+			.toBeFalsy();
+	});
+
+	it('should disaply asset tagging template', () => {
+		component.triggerModal = null;
+		component.selectedDeviceTagType = null;
+		spyOn(component, 'filterDuplicates');
+		component.discardChangesOnPolicyChange();
+		expect(component.showAssetsComponent)
+			.toBeTruthy();
 	});
 });
