@@ -1466,8 +1466,8 @@ export class LifecycleComponent implements OnDestroy {
 	 */
 	 public crossLaunch (crossLaunchUrl: string) {
 		if (crossLaunchUrl) {
-			window.open(`${crossLaunchUrl}&solution=${this.componentData.params.solution}
-			&usecase=${this.componentData.params.usecase}`, '_blank');
+			window.open(`${crossLaunchUrl}&solution=${this.componentData.params.solution}` +
+			`&usecase=${this.componentData.params.usecase}`, '_blank');
 		}
 		this.atxMoreClicked = false;
 	}
