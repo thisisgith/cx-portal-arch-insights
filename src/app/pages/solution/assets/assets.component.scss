@@ -1,9 +1,15 @@
 @import '~cisco-ui/src/scss/utilities/_variables.scss';
-@import '../../../../mixins.scss';
+@import '~src/mixins.scss';
 
 .icon-asset {
 	height: 20px;
 	width: 20px;
+}
+
+.assets-table {
+	th:not(.sortable) {
+		cursor: default !important;
+	}
 }
 
 .remove-shadow {

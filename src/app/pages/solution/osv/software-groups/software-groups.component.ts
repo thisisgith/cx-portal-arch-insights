@@ -153,6 +153,7 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 	 */
 	public getSoftwareGroups () {
 		this.status.isLoading = true;
+
 		return this.osvService.getSoftwareGroups(this.softwareGroupsParams)
 			.pipe(
 				map((response: SoftwareGroupsResponse) => {
