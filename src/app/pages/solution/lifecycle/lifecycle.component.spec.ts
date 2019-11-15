@@ -814,6 +814,21 @@ describe('LifecycleComponent', () => {
 				});
 		});
 
+		it('should filter Cisco items when CX Level 1', () => {
+			component.cxLevel = 1;
+			buildSpies();
+			sendParams();
+
+			fixture.detectChanges();
+
+			fixture.whenStable()
+				.then(() => {
+					expect(component.componentData.acc.sessions.length)
+						.toEqual(4);
+				});
+
+		});
+
 		it('should show the acc view-all modal', () => {
 			buildSpies();
 			sendParams();
