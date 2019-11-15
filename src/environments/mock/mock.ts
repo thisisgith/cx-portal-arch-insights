@@ -1,5 +1,6 @@
 import {
 	ACCScenarios,
+	AdminComplience,
 	ACCUserInfoScenarios,
 	ASDAcceptEulaScenarios,
 	ASDAcceptK9Scenarios,
@@ -234,6 +235,7 @@ interface MockSettings {
 export const mockSettings: MockSettings = {
 	mock: _.flatten([
 		ACCScenarios,
+		AdminComplience,
 		ACCUserInfoScenarios,
 		ASDAcceptEulaScenarios,
 		ASDAcceptK9Scenarios,
