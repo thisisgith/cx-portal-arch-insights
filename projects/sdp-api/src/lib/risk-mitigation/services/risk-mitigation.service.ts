@@ -97,11 +97,16 @@ class RiskMitigationService extends __BaseService {
 		let __body: any = null;
 		if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
 		if (params.solution != null) __params = __params.set('solution', params.solution.toString());
-
+		if(params.timePeriod){
+			__params = __params.set('timePeriod', params.timePeriod.toString());
+		 }
+		 if(params.searchQuery){
+			__params = __params.set('searchQuery', params.searchQuery.toString());
+		 }
 
 		let req = new HttpRequest<any>(
 			'GET',
-			this.rootUrl + `${RiskMitigationService.getDeviceDetailsPath}`+params.customerId + '?timePeriod=' + params.timePeriod,
+			this.rootUrl + `${RiskMitigationService.getDeviceDetailsPath}`+params.customerId,
 			__body,
 			{
 				headers: __headers,
@@ -123,12 +128,6 @@ class RiskMitigationService extends __BaseService {
 		let __body: any = null;
 		let req:any;
 
-		if(params.time){
-			__params = __params.set('timePeriod', params.time.toString());
-		 }
-		 if(params.search){
-			__params = __params.set('searchQuery', params.search.toString());
-		 }
 		if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
 		if (params.solution != null) __params = __params.set('solution', params.solution.toString());
 
@@ -222,7 +221,7 @@ class RiskMitigationService extends __BaseService {
 		__params = __params.set('customerId', params.customerId.toString())
 		__params = __params.set('useCase',params.useCase);
 		__params = __params.set('solution',params.solution);
-		
+
 		let __headers = new HttpHeaders();
 		let __body: any = null;
 		let req = new HttpRequest<any>(
@@ -288,13 +287,13 @@ class RiskMitigationService extends __BaseService {
 
 module RiskMitigationService {
 	export interface GetAssetsParams {
-		sortDirection: string;
-		key: string;
-		customerId: any;
-		neInstanceId: any;
-		timePeriod: string;
-		time: string;
-		search: string;
+		sortDirection?: string;
+		key?: string;
+		customerId?: any;
+		neInstanceId?: any;
+		timePeriod?: string;
+		time?: string;
+		searchQuery?: string;
 		solution?: string;
 		useCase?: string;
 	}

@@ -36,6 +36,8 @@ import {
 } from '../fingerprint-details/fingerprint-body/fingerprint-body.module';
 import { FingerprintDetailsModule } from '../fingerprint-details/fingerprint-details.module';
 import { InsightTabsModule } from 'src/app/components/insight-tabs/insight-tabs.module';
+import { CrashedSystemsGridModule } from './crashed-systems-grid/crashed-systems-grid.module';
+import { CrashRiskGridModule } from './crash-risk-grid/crash-risk-grid.module';
 
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
@@ -83,6 +85,8 @@ const childRoutes: Routes = [
 		InsightTabsModule,
 		TooltipModule,
 		PieChartModule,
+		CrashRiskGridModule,
+		CrashedSystemsGridModule,
 	],
 })
 export class RiskMitigationModule { }

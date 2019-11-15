@@ -1,0 +1,89 @@
+<div
+	*ngIf="
+		!highCrashRiskSystemsGridDetails.tableData.length &&
+		!crashRiskGridLoading
+	"
+>
+	<div class="text-center dbl-margin-top dbl-margin-bottom">
+		<div>
+			<span
+				class="text-muted text-xlarge"
+				[innerText]="'_NoResultsFound_' | i18n"
+				data-auto-id="NoResultsFoundTxt"
+			>
+			</span>
+		</div>
+	</div>
+</div>
+
+<cui-table
+	*ngIf="!crashRiskGridLoading && highCrashRiskSystemsGridDetails.tableData.length"
+	[options]="highCrashRiskAssetsGridOptions"
+	[data]="highCrashRiskSystemsGridDetails.tableData"
+	(onTableRowClicked)="connectToFpDetails($event)"
+	(onSortingChanged)="highCrashTableSorted($event)"
+	class="table--wrap not-close-360"
+></cui-table>
+<div class="section">
+	<cui-pager
+		*ngIf="highCrashRiskSystemsGridDetails.totalItems && !crashRiskGridLoading"
+		[page]="highCrashRiskSystemsGridDetails.tableOffset"
+		[limit]="highCrashRiskSystemsGridDetails.tableLimit"
+		[totalItems]="highCrashRiskSystemsGridDetails.totalItems"
+		(onPageChanged)="onHcrPagerUpdated($event)"
+	></cui-pager>
+</div>
+<div *ngIf="crashRiskGridLoading">
+	<cui-spinner></cui-spinner>
+</div>
+
+<ng-template #deviceNameTemplate let-item="celldata">
+	<span title="{{ item?.deviceName }}" [innerText]="item.deviceName"> </span>
+</ng-template>
+<ng-template #productIdTemplate let-item="celldata">
+	<span title="{{ item?.productId }}" [innerText]="item.productId"> </span>
+</ng-template>
+<ng-template #softwareVersionTemplate let-item="celldata">
+	<span
+		title="{{ item?.softwareVersion }}"
+		[innerText]="item.softwareVersion"
+	>
+	</span>
+</ng-template>
+<ng-template #softwareTypeTemplate let-item="celldata">
+	<span title="{{ item?.softwareType }}" [innerText]="item.softwareType">
+	</span>
+</ng-template>
+<ng-template #cardColors let-item="celldata">
+	<span
+		[ngClass]="{
+			'text-success': item.globalRiskRank === 'LOW',
+			'text-warning': item.globalRiskRank === 'MED',
+			'text-danger': item.globalRiskRank === 'HIGH'
+		}"
+		class="qtr-margin-right icon-circle"
+	>
+	</span>
+	<span [innerText]="item.globalRiskRank"></span>
+</ng-template>
+<ng-template #riskTooltipContentTemplate>
+	<span
+		[innerText]="'_CP_GlobalRiskRankToolTip_' | i18n"
+		class="text-small"
+	></span>
+</ng-template>
+<ng-template #riskTooltipTemplate>
+	<span [innerText]="'_CP_Risk_' | i18n"></span>
+	<sup
+		><div
+			tooltip
+			[tooltipTemplate]="riskTooltipContentTemplate"
+			class="icon-info-outline qtr-margin-left"
+			[tooltipMaxWidth]="200"
+		></div
+	></sup>
+</ng-template>
+<app-fingerprint-details
+	[selectedSystem]="selectedFingerPrintdata"
+	(close)="onPanelClose($event)"
+></app-fingerprint-details>
