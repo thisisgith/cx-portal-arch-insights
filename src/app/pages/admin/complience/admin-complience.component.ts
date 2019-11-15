@@ -263,7 +263,6 @@ export class AdminComplienceComponent implements OnInit {
 					.splice(this.leftSideTags
 						.findIndex(leftSideTag => leftSideTag.tagName === tag.tagName), 1);
 				}
-
 			});
 		}
 	}
