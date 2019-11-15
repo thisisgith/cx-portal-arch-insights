@@ -1342,7 +1342,7 @@
 	"_SupportName_": "Name",
 	"_SupportOriginURL_": "URL of page user was on when they clicked for support",
 	"_SupportPhone_": "Phone",
-	"_SupportPortalTopicList_": [ "CX Portal Support", "CX Collector Support", "Product or Service Inquiries", "Product or Service Upgrades", "Cisco Communities", "Cisco Learning", "Register for Ask the Expert", "Request an Accelerator", "Request an Expert", "Other" ],
+	"_SupportPortalTopicList_": [ "CX Portal Support", "CX Collector Support", "Product or Service Inquiries", "Product or Service Upgrades", "Cisco Communities", "Cisco Learning", "Ask the Experts", "Accelerators", "Other" ],
 	"_SupportResponse_": "You should receive a response at {0} within 1 business day.",
 	"_SupportSentBy_": "sent the following request:",
 	"_SupportSubmit_": "Submit",
