@@ -384,7 +384,7 @@
 	"_CP_FingerprintIntelligence_Error_": "Fingerprint Intelligence data not found.",
 	"_CP_FullDNA": "Full DNA",
 	"_CP_GlobalRiskRank_": "Global Risk Rank",
-	"_CP_GlobalRiskRankToolTip_":"High, Medium or Low indicates the level of risk, calculated by Cisco's machine learning, that a device is prone to crash. It is recommended that the software and configuration of the device should be updated to match a similar device with a lower risk.  The list of similar devices can be seen by clicking on the row.",
+	"_CP_GlobalRiskRankToolTip_":"High, Medium or Low indicates the level of risk, calculated by Cisco's machine learning, that a device is prone to crash. It is recommended that the software and configuration of the device should be updated to match a similar device with a lower risk.  The list of similar devices can be seen by clicking on the row. For some devices machine learning does not have enough data to analyze and are shown as Not Evaluated.",
 	"_CP_Group1_": "Group1",
 	"_CP_Group2_": "Group2",
 	"_CP_HardwareFoundInSimilarSystems_": "Hardware found in similar systems",
