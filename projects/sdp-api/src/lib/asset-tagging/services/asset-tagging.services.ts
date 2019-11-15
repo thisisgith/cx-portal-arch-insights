@@ -151,7 +151,7 @@ class AssetTaggingService extends __BaseService {
 		if (params.deviceId != null) __params = __params.set('deviceId', params.deviceId.toString());
 		let req = new HttpRequest<any>(
 			'GET',
-			this.rootUrl + `${AssetTaggingService.getAsset360TagsPath}`+'/'+ params.customerId.toString(),
+			this.rootUrl + `${AssetTaggingService.getAsset360TagsPath}`+'/'+ params.customerId,
 			__body,
 			{
 				headers: __headers,
