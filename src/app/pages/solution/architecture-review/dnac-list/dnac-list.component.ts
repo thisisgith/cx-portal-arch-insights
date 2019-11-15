@@ -79,7 +79,6 @@ export class DnacListComponent implements OnInit {
 	public ngOnInit () {
 		this.getCollectionId();
 		this.buildTable();
-		this.getCollectionId();
 	}
 
 	/**
