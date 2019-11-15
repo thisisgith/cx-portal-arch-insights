@@ -11,7 +11,7 @@ import { RouteAuthService } from '@services';
 import { HttpErrorResponse } from '@angular/common/http';
 import { LogService } from '@cisco-ngx/cui-services';
 
-fdescribe('AdminComplienceComponent', () => {
+describe('AdminComplienceComponent', () => {
 	let component: AdminComplienceComponent;
 	let fixture: ComponentFixture<AdminComplienceComponent>;
 
@@ -83,6 +83,7 @@ fdescribe('AdminComplienceComponent', () => {
 	describe('filter duplicates', () => {
 		it('should have left side tag response', () => {
 			component.selectedPolicy = 'HIPPA';
+			component.saveDetails.body.policy = 'HIPPA';
 			component.rightSideTags = [{
 				deviceCount: 5,
 				devices: 1,
@@ -117,6 +118,7 @@ fdescribe('AdminComplienceComponent', () => {
 
 		it('should have rigth side tag response', () => {
 			component.selectedPolicy = 'HIPPA';
+			component.saveDetails.body.policy = 'HIPPA';
 			component.rightSideTags = [{
 				deviceCount: 5,
 				devices: 1,
