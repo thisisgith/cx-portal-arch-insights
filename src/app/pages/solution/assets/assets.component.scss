@@ -38,6 +38,10 @@
 	}
 }
 
+.view__selected {
+	border-left: 4px solid #00bceb;
+}
+
 .curved-corners {
 	border-radius: 5px;
 }
@@ -93,4 +97,8 @@
 
 .form-group__text .assets-search {
 	@include filter-search;
+}
+
+.cursor {
+	cursor: pointer;
 }

@@ -2,14 +2,14 @@
 export interface SecurityAdvisory {
 
   /**
+   * Internally generated ID for a security advisory
+   */
+  advisoryId?: number;
+
+  /**
    * Unique identifier of a Cisco customer
    */
   customerId?: string;
-
-  /**
-   * The unique, generated ID of the network resource id
-   */
-  managedNeId?: string;
 
   /**
    * The unique, generated ID of the network element
@@ -47,9 +47,9 @@ export interface SecurityAdvisory {
   swVersion?: string;
 
   /**
-   * Internally generated ID for a security advisory
+   * The unique, generated ID of the network resource id
    */
-  advisoryId?: number;
+  managedNeId?: string;
 
   /**
    * The Cisco.com Title/Headline for the bulletin
@@ -70,4 +70,9 @@ export interface SecurityAdvisory {
    * When set to true (Y), it indicates that the PSIRT is publicly available. Otherwise it is internal use only to authorized users
    */
   publicReleaseIndicator?: 'Y' | 'N';
+  hostname?: string;
+  ipAddress?: string;
+  cxLevel?: string;
+  saId?: number;
+  vaId?: Array<number>;
 }

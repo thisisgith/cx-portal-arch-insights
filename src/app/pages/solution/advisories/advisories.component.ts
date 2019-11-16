@@ -469,6 +469,10 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 
 		this.activeIndex = _.findIndex(this.tabs, 'selected');
 
+		if (this.activeIndex === -1) {
+			this.selectTab(0);
+		}
+
 		this.buildSecurityAdvisoriesSubject();
 		this.buildFieldNoticesSubject();
 		this.buildBugsSubject();
@@ -497,7 +501,6 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 	/**
 	 * Builds the search debounce subscription for Security Advisories
 	 * @param tab tab to perform search
-	 * @returns Search Subscription
 	 */
 	private searchSubscription (tab) {
 		fromEvent(tab.searchInput.nativeElement, 'keyup')
@@ -632,7 +635,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 							filter: 'further-out',
 							filterValue: [`,${
 									_.get(furtherOut, 'toTimestampInMillis')}`],
-							label: _.toLower(I18n.get('_FurtherOut_')),
+							label: `> 90 ${I18n.get('_Days_')}`,
 							selected: false,
 							value: furtherOutValue,
 						});
@@ -722,7 +725,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 						filter: 'further-out',
 						filterValue: [`,${
 								_.get(furtherOut, 'toTimestampInMillis')}`],
-						label: _.toLower(I18n.get('_FurtherOut_')),
+						label: `> 90 ${I18n.get('_Days_')}`,
 						selected: false,
 						value: furtherOutValue,
 					});
