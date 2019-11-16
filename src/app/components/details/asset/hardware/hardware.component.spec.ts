@@ -1,8 +1,7 @@
 import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import {
-	AssetScenarios,
-	Mock,
+	MockAssetsData,
 	MockHardwareEOLResponse,
 	MockHardwareEOLBulletinsResponse,
 } from '@mock';
@@ -17,18 +16,6 @@ import * as _ from 'lodash-es';
 import { throwError, of } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { UserResolve } from '@utilities';
-
-/**
- * Will fetch the currently active response body from the mock object
- * @param mock the mock object
- * @param type the scenario type
- * @returns the body response
- */
-function getActiveBody (mock: Mock, type: string = 'GET') {
-	const active = _.find(mock.scenarios[type], 'selected') || _.head(mock.scenarios[type]);
-
-	return active.response.body;
-}
 
 describe('AssetDetailsHardwareComponent', () => {
 	let component: AssetDetailsHardwareComponent;
@@ -73,7 +60,7 @@ describe('AssetDetailsHardwareComponent', () => {
 	});
 
 	it('should handle failing api calls', done => {
-		const asset = getActiveBody(AssetScenarios[0]).data[0];
+		const asset = MockAssetsData[0];
 		component.asset = asset;
 
 		const error = {
@@ -132,7 +119,7 @@ describe('AssetDetailsHardwareComponent', () => {
 	});
 
 	it('should fetch the hardware information', done => {
-		const asset = getActiveBody(AssetScenarios[0]).data[0];
+		const asset = MockAssetsData[0];
 		component.asset = asset;
 
 		const mockEOLData = _.filter(MockHardwareEOLResponse.data,
@@ -176,7 +163,7 @@ describe('AssetDetailsHardwareComponent', () => {
 	});
 
 	it('should fetch timeline data', done => {
-		const asset = getActiveBody(AssetScenarios[0]).data[0];
+		const asset = MockAssetsData[0];
 		component.asset = asset;
 
 		const mockEOLData = _.filter(MockHardwareEOLResponse.data,
@@ -209,13 +196,14 @@ describe('AssetDetailsHardwareComponent', () => {
 				.toBeFalsy();
 
 			expect(component.timelineData.length)
-				.toBeTruthy();
+				.toEqual(0);
+
 			done();
 		});
 	});
 
 	it('should handle changing assets', () => {
-		const assets = getActiveBody(AssetScenarios[0]).data;
+		const assets = MockAssetsData;
 
 		const asset = assets[0];
 		const newAsset = assets[1];

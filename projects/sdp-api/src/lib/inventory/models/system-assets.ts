@@ -3,7 +3,7 @@ import { SystemAsset } from './system-asset';
 import { Pagination } from './pagination';
 
 /**
- * The systems in the inventory
+ * The system assets in the inventory
  */
 export interface SystemAssets {
   data: Array<SystemAsset>;

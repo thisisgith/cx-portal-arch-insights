@@ -288,9 +288,13 @@ class AssetTaggingService extends __BaseService {
 		let __headers = new HttpHeaders();
 		let __body: any = params.body;
 
+		let customerId = '';
+
+		if (params.customerId != null) customerId = params.customerId.toString();
+
 		let req = new HttpRequest<any>(
 			'POST',
-			this.rootUrl + `${AssetTaggingService.getPolicyMappingPath}`+'/'+ params.customerId.toString(),
+			this.rootUrl + `${AssetTaggingService.getPolicyMappingPath}/${customerId}`,
 			__body,
 			{
 				headers: __headers,

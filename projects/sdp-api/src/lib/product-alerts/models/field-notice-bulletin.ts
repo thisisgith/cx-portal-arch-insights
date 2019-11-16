@@ -2,14 +2,14 @@
 export interface FieldNoticeBulletin {
 
   /**
+   * Category of field notices
+   */
+  fieldNoticeType?: string;
+
+  /**
    * The Cisco.com bulletin number for Field Notices
    */
   fieldNoticeId?: number;
-
-  /**
-   * Status
-   */
-  status?: string;
 
   /**
    * The date when the bulletin was last revised and published to Cisco.com. GMT date format YYYY-MM-DD
@@ -37,7 +37,13 @@ export interface FieldNoticeBulletin {
   URL?: string;
 
   /**
-   * Category of field notices
+   * Status
    */
-  fieldNoticeType?: string;
+  status?: string;
+  problemDescription?: string;
+  background?: string;
+  problemSymptoms?: string;
+  workaround?: string;
+  hardwareLevels?: string;
+  upgradeProgram?: string;
 }

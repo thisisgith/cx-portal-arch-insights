@@ -4,7 +4,7 @@ import { HardwareEOLBulletinResponse } from '@sdp-api';
 const api = '/api/customerportal/product-alerts/v1/hardware-eol-bulletins';
 
 /** Default EoL Instance ID */
-const defaultInstanceId = '318969';
+const defaultInstanceId = 318969;
 
 /** The mock response for coverage counts */
 export const MockHardwareEOLBulletinsResponse: HardwareEOLBulletinResponse = {
@@ -2839,7 +2839,7 @@ export const MockHardwareEOLBulletinsResponse: HardwareEOLBulletinResponse = {
  * @param hwEolInstanceId hwEolInstanceId to filter on
  * @returns { HardwareEOLBulletinResponse[] } List of EoL bulletins
  */
-const mockResponse = (hwEolInstanceId: string) => ({
+const mockResponse = (hwEolInstanceId: number) => ({
 	data: [
 		MockHardwareEOLBulletinsResponse.data.find(
 			item => item.hwEolInstanceId === hwEolInstanceId,
