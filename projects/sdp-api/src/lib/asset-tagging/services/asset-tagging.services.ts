@@ -292,7 +292,7 @@ class AssetTaggingService extends __BaseService {
 		let customerId = params.body.customerId;
 
 		let req = new HttpRequest<any>(
-			'POST',
+			'PUT',
 			this.rootUrl + `${AssetTaggingService.getPolicyMappingPath}/${customerId}`,
 			__body,
 			{
