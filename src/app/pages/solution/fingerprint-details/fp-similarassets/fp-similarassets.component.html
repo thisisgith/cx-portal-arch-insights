@@ -65,7 +65,7 @@
 	</p>
 </ng-template>
 <ng-template #compareTemplate let-item="celldata">
-	<div class="text-right">
+	<div>
 		<a (click)="closeWell($event,item)" data-auto-id="CompareButton"
 		[innerText]="(item.toggleWell? '_CP_Close_': '_CP_Compare_' )| i18n | lowercase">	</a>
 	</div>
