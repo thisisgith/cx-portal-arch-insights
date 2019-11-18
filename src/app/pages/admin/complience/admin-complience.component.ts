@@ -301,14 +301,13 @@ export class AdminComplienceComponent implements OnInit {
 			switchMap(tags => {
 				this.saveDetails.body.tags = tags;
 				this.saveDetails.body.toBeScanned = this.toBeScanned;
-				this.saveDetails.customerId = this.customerId;
 				if (this.selectedDeviceTagType === 'allDevices') {
 					this.saveDetails.body.tags = [];
 				}
 
 				const params = {
 					body: this.saveDetails.body,
-					customerId: this.saveDetails.customerId,
+					customerId: this.customerId,
 					policy: this.saveDetails.body.policy,
 					tags: this.saveDetails.body.tags,
 					toBeScanned: this.saveDetails.body.toBeScanned,
