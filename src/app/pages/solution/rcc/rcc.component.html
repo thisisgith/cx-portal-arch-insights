@@ -261,8 +261,8 @@
 						<div data-auto-id="RccLastScan" class="dbl-margin-right">
 							<div class="text-small text-uppercase text-bold" [innerText]="'_RccAssetLastScan_' | i18n ">
 							</div>
-							<div [innerText]=" (lastScan | dateTime ) || ('_Never_' | i18n) ">
-							</div>
+							<div *ngIf="lastScan !== null" [innerText]="lastScan | dateTime"></div>
+							<div *ngIf="lastScan === null" [innerText]="'_Never_' | i18n"></div>
 						</div>
 					</div>
 				</div>
@@ -340,7 +340,10 @@
 </asset-details>
 
 <ng-template #lastScanTmpl let-item="celldata">
-	<span [attr.data-balloon]="item['lastScan'] | dateTime" data-balloon-pos="right">
+	<span *ngIf="lastScan !== null" [attr.data-balloon]="item['lastScan'] | dateTime" data-balloon-pos="right">
+		<span [innerText]="item['lastScan'] | fromNow"></span>
+	</span>
+	<span *ngIf="lastScan === null" [attr.data-balloon]="'_Never_' | i18n" data-balloon-pos="right">
 		<span [innerText]="item['lastScan'] | fromNow"></span>
 	</span>
 </ng-template>
