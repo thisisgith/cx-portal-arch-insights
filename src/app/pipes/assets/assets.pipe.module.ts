@@ -23,22 +23,18 @@ export class CanOpenCasePipe implements PipeTransform {
 	 * @param contractEndDate contract end date as ISO string
 	 * @returns boolean that indicates if a case may be opened
 	 */
-	public transform (asset: Asset, contractEndDate: string): boolean {
-		if (contractEndDate) {
-			const endDate = DateTime.fromISO(contractEndDate);
-			// If it's not expired or expired but within 90 days, allow to open
-			if ((endDate.diffNow('days').days > 0) ||
-			(Math.abs(endDate.diffNow('days').days) < 90)) {
-				return true;
-			}
-
-			return false;
-		}
-		if (asset && asset.supportCovered) {
-			return true;
-		}
-
-		return false;
+	public transform (asset: Asset): boolean {
+		// disable checking of grace period
+		// if (contractEndDate) {
+		// 	const endDate = DateTime.fromISO(contractEndDate);
+		// 	// If it's not expired or expired but within 90 days, allow to open
+		// 	if ((endDate.diffNow('days').days > 0) ||
+		// 	(Math.abs(endDate.diffNow('days').days) < 90)) {
+		// 		return true;
+		// 	}
+		// 	return false;
+		// }
+		return asset && asset.supportCovered;
 	}
 }
 
