@@ -289,7 +289,7 @@ class AssetTaggingService extends __BaseService {
 		let __body: any = params.body;
 		let __params = this.newParams();
 
-		let customerId = params.customerId;
+		let customerId = params.body.customerId;
 
 		let req = new HttpRequest<any>(
 			'POST',
@@ -394,16 +394,9 @@ module AssetTaggingService {
 	 */
 	export interface PostParams {
 		/**
-		 * Unique identifier of a Cisco customer.
-		 */
-		customerId: string;
-		/**
 		 * Contains the policy mapping
 		 */
 		body : PolicyMapping;
-		tags?: Array<Tags>;
-		policy?: string;
-		toBeScanned?: boolean;
 	}
 
 	export interface Tags {

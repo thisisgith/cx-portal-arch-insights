@@ -50,11 +50,11 @@ export class AdminComplienceComponent implements OnInit {
 	public rightSideTags = [];
 	public saveDetails: AssetTaggingService.PostParams = {
 		body: {
+			customerId: '',
 			policy: '',
 			tags: [],
 			toBeScanned : false,
 		},
-		customerId: '',
 	};
 	public toBeScanned = false;
 	public alert: any = { };
