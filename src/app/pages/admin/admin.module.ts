@@ -14,6 +14,7 @@ import { AdminAssetsComponent, AdminAssetsModule } from './assets';
 import { SettingsComponent, SettingsModule } from './settings';
 import { PoliciesComponent, PoliciesModule } from './policies';
 import { UsersComponent, UsersModule } from './users';
+import { AdminComplienceComponent, AdminComplienceModule } from './complience';
 
 import { environment } from '@environment';
 
@@ -24,6 +25,10 @@ const childRoutes: Routes = [
 	{
 		component: AdminAssetsComponent,
 		path: 'assets',
+	},
+	{
+		component: AdminComplienceComponent,
+		path: 'complience',
 	},
 	{
 		component: SettingsComponent,
@@ -59,6 +64,7 @@ const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 @NgModule({
 	imports: [
 		AdminAssetsModule,
+		AdminComplienceModule,
 		CommonModule,
 		ControlPointsModule,
 		ControlPointsModule.forRoot({ rootUrl }),

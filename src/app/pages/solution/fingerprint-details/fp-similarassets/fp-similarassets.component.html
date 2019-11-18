@@ -25,7 +25,12 @@
 </div>
 <div class="row flex">
 	<div *ngIf="!seriesDataLoading; else loadingTemplate" class="container" data-auto-id="similar-assets-table">
-		<cui-table [options]="tableOptions" [data]="similarDevicesData?.similarDevices" [limit]="size" [offset]="page"
+		<cui-table
+		[options]="tableOptions"
+		[data]="similarDevicesData?.similarDevices"
+		[limit]="size"
+		[offset]="page"
+		(onTableRowClicked)="ontoggleRowSelect($event)"
 			*ngIf="!noData; else noDataTemplate"></cui-table>
 	</div>
 	<!-- grid-section ends -->
@@ -60,8 +65,8 @@
 	</p>
 </ng-template>
 <ng-template #compareTemplate let-item="celldata">
-	<div class="text-right">
-		<a (click)="item.toggleWell = !item.toggleWell" data-auto-id="CompareButton"
+	<div>
+		<a (click)="closeWell($event,item)" data-auto-id="CompareButton"
 		[innerText]="(item.toggleWell? '_CP_Close_': '_CP_Compare_' )| i18n | lowercase">	</a>
 	</div>
 </ng-template>

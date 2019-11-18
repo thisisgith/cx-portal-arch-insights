@@ -313,3 +313,11 @@
 	color: #848587;
 }
 
+button.btn.btn-ctc {
+	background: $cisco-blue;
+	font-weight: $base-dl-label-font-weight !important;
+
+	&:hover {
+		background: $vibrant-blue;
+	}
+}

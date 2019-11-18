@@ -265,7 +265,7 @@
 			<div class="text-muted text-small " [innerText]="getProviderName(item)" attr.data-auto-id="{{ autoid }}-HoverModal-Provider"></div>
 			<div class="divider divider--compressed"></div>
 			<div class="atx-popover__description line-clamp" [innerText]="description" attr.data-auto-id="{{ autoid }}-HoverModal-Description"></div>
-			
+
 		</div>
 	</div>
 </ng-template>
@@ -329,7 +329,7 @@
 			<div class="text-muted text-small" [innerText]="getProviderName(item)" attr.data-auto-id="{{ autoid }}-HoverModal-Provider"></div>
 			<div class="divider divider--compressed"></div>
 			<div class="line-clamp acc-popover__description no-margin" [innerText]="description" attr.data-auto-id="{{ autoid }}-HoverModal-Description"></div>
-			
+
 			<div *ngIf="item && item.duration" class="learning-duration text-right text-muted flex-fluid half-margin-left" attr.data-auto-id="{{ autoid }}-HoverModal-Duration">
 				<span class="icon-clock icon-small qtr-margin-right" attr.data-auto-id="{{ autoid }}-HoverModal-DurationClock"></span>
 				<span [innerText]="item.duration"></span>
@@ -513,7 +513,7 @@
 				<h5 [innerText]="data.title" data-auto-id="atxScheduleCard-Title"></h5>
 			</div>
 			<div>
-				<a class="no-link closebtn"	
+				<a class="no-link closebtn"
 					(click)="closeViewSessions()"
 					data-auto-id="AtxScheduleCardClose">
 					<span class="icon-close icon-small"></span>
@@ -694,20 +694,20 @@
 				data: componentData.learning.elearning,
 				link: componentData.learning.elearningUrl }">
 		</ng-container>
-		<div class="divider" *ngIf="data.certifications"></div>
 	</div>
 
-	<div *ngIf="data.certifications" data-auto-id="LearnPanel-CertificationsBlock">
+	<div *ngIf="data.certifications && (cxLevel == 2 || cxLevel == 3)" data-auto-id="LearnPanel-CertificationsBlock">
+		<div class="divider"></div>
 		<ng-container *ngTemplateOutlet="learningBlock; context:
 			{ iconUrl: '/assets/icons/lifecycle/icon-certificate.svg',
 				title: '_Certifications_',
 				data: componentData.learning.certifications,
 				link: componentData.learning.certificationsUrl } ">
 		</ng-container>
-		<div class="divider" *ngIf="data.remotepracticelabs"></div>
 	</div>
 
-	<div *ngIf="data.remotepracticelabs" data-auto-id="LearnPanel-RemotePracticeLabsBlock">
+	<div *ngIf="data.remotepracticelabs && (cxLevel == 2 || cxLevel == 3)" data-auto-id="LearnPanel-RemotePracticeLabsBlock">
+		<div class="divider" *ngIf="data.remotepracticelabs"></div>
 		<ng-container *ngTemplateOutlet="learningBlock; context:
 			{ iconUrl: '/assets/icons/lifecycle/icon-lab.svg',
 				title: '_RemotePracticeLabs_',
@@ -848,9 +848,9 @@
 								(changed)="statusMultiFilter($event, 'ACC')">
 							</multiselect>
 						</ng-container>
-						<div class="base-margin-left" *ngIf="partnerList">
+						<div class="base-margin-left" *ngIf="accPartnerList">
 							<multiselect [name]="'_ContentProvider_' | i18n"
-								[items]="partnerList"
+								[items]="accPartnerList"
 								nameKey="companyName"
 								valueKey="companyId"
 								[defaultValues]="selectedPartnerFilterForACC"

@@ -17,7 +17,7 @@ export const MockSoftwareEOLResponse: SoftwareEOLResponse = {
 					"customerId": "2431199",
 					"managedNeId": "NA,FOC1544Y16T,WS-C2960S-24PS-L,NA",
 					"neInstanceId": "NA,FOC1544Y16T,WS-C2960S-24PS-L,NA",
-					"swEolInstanceId": "0",
+					"swEolInstanceId": 0,
 					"productId": "GLC-SX-MM,GLC-SX-MM-RGD,GLC-SX-MMD,GLC-T,SFP-GE-S,WS-G5484",
 					"equipmentType": "MODULE",
 					"bulletinHeadline": "string",

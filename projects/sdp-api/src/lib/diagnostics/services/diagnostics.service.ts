@@ -329,23 +329,21 @@ class DiagnosticsService extends __BaseService {
    *
    * - `title`: Security Advisory title
    *
-   * - `state`: State of the bugs
+   * - `swVersion`: The version of the softwareType running on the device
    *
    * - `solution`: The solution name, should be from the enum list of values
    *
-   * - `serialNumber`: A serial number is a unique number used for identification
+   * - `severity`: Severity of the Bug
    *
    * - `search`: Searchable fields - severity, title. Applied only when the length of this parameter is more than 3 characters.
    *
    * - `publishedOn`: The date on which the Advisory was published
    *
-   * - `lastUpdatedDateRange`: A date range in the format of <fromDateInMillis>,<toDateInMillis>. fromDateInMillis is inclusive and toDateInMillis is exclusive. <toDateInMillis> format supported to filter advisories having lastUpdatedDateRange till particular date. Use <fromDateInMillis> format to filter advisories having lastUpdatedDateRange from a particular date.
-   *
    * - `lastUpdated`: The date on which the Advisory was last updated. Currently this field in unavailable.
    *
-   * - `id`: ID of the Bug
+   * - `ipAddress`: A numerical label assigned to each device (For example, computer, printer) participating in a computer network that uses the Internet Protocol for communication
    *
-   * - `cdetsId`: ID of the Bug
+   * - `hostname`: Hostnames are human-readable nicknames that correspond to the address of a device connected to a network
    */
   headCriticalBugsResponse(params: DiagnosticsService.HeadCriticalBugsParams): __Observable<__StrictHttpResponse<null>> {
     let __params = this.newParams();
@@ -355,15 +353,14 @@ class DiagnosticsService extends __BaseService {
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
     if (params.title != null) __params = __params.set('title', params.title.toString());
-    (params.state || []).forEach(val => {if (val != null) __params = __params.append('state', val.toString())});
+    (params.swVersion || []).forEach(val => {if (val != null) __params = __params.append('swVersion', val.toString())});
     if (params.solution != null) __params = __params.set('solution', params.solution.toString());
-    (params.serialNumber || []).forEach(val => {if (val != null) __params = __params.append('serialNumber', val.toString())});
+    if (params.severity != null) __params = __params.set('severity', params.severity.toString());
     if (params.search != null) __params = __params.set('search', params.search.toString());
     if (params.publishedOn != null) __params = __params.set('publishedOn', params.publishedOn.toString());
-    (params.lastUpdatedDateRange || []).forEach(val => {if (val != null) __params = __params.append('lastUpdatedDateRange', val.toString())});
     if (params.lastUpdated != null) __params = __params.set('lastUpdated', params.lastUpdated.toString());
-    (params.id || []).forEach(val => {if (val != null) __params = __params.append('id', val.toString())});
-    (params.cdetsId || []).forEach(val => {if (val != null) __params = __params.append('cdetsId', val.toString())});
+    (params.ipAddress || []).forEach(val => {if (val != null) __params = __params.append('ipAddress', val.toString())});
+    (params.hostname || []).forEach(val => {if (val != null) __params = __params.append('hostname', val.toString())});
     let req = new HttpRequest<any>(
       'HEAD',
       this.rootUrl + `/customerportal/diagnostics/v1/critical-bugs`,
@@ -392,23 +389,21 @@ class DiagnosticsService extends __BaseService {
    *
    * - `title`: Security Advisory title
    *
-   * - `state`: State of the bugs
+   * - `swVersion`: The version of the softwareType running on the device
    *
    * - `solution`: The solution name, should be from the enum list of values
    *
-   * - `serialNumber`: A serial number is a unique number used for identification
+   * - `severity`: Severity of the Bug
    *
    * - `search`: Searchable fields - severity, title. Applied only when the length of this parameter is more than 3 characters.
    *
    * - `publishedOn`: The date on which the Advisory was published
    *
-   * - `lastUpdatedDateRange`: A date range in the format of <fromDateInMillis>,<toDateInMillis>. fromDateInMillis is inclusive and toDateInMillis is exclusive. <toDateInMillis> format supported to filter advisories having lastUpdatedDateRange till particular date. Use <fromDateInMillis> format to filter advisories having lastUpdatedDateRange from a particular date.
-   *
    * - `lastUpdated`: The date on which the Advisory was last updated. Currently this field in unavailable.
    *
-   * - `id`: ID of the Bug
+   * - `ipAddress`: A numerical label assigned to each device (For example, computer, printer) participating in a computer network that uses the Internet Protocol for communication
    *
-   * - `cdetsId`: ID of the Bug
+   * - `hostname`: Hostnames are human-readable nicknames that correspond to the address of a device connected to a network
    */
   headCriticalBugs(params: DiagnosticsService.HeadCriticalBugsParams): __Observable<null> {
     return this.headCriticalBugsResponse(params).pipe(
@@ -422,9 +417,13 @@ class DiagnosticsService extends __BaseService {
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
+   * - `vaId`: Smart Account Identifier. This Id defines the smart account admin unique identifier
+   *
    * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
    *
    * - `title`: Security Advisory title
+   *
+   * - `swVersion`: The version of the softwareType running on the device
    *
    * - `state`: State of the bugs
    *
@@ -432,9 +431,13 @@ class DiagnosticsService extends __BaseService {
    *
    * - `solution`: The solution name, should be from the enum list of values
    *
+   * - `severity`: Severity of the Bug
+   *
    * - `serialNumber`: A serial number is a unique number used for identification
    *
    * - `search`: Searchable fields - severity, title. Applied only when the length of this parameter is more than 3 characters.
+   *
+   * - `saId`: Smart Account Identifier. This Id defines the smart account admin unique identifier
    *
    * - `rows`: Number of rows of data per page
    *
@@ -442,13 +445,15 @@ class DiagnosticsService extends __BaseService {
    *
    * - `page`: The page number of the response
    *
-   * - `lastUpdatedDateRange`: A date range in the format of <fromDateInMillis>,<toDateInMillis>. fromDateInMillis is inclusive and toDateInMillis is exclusive. <toDateInMillis> format supported to filter advisories having lastUpdatedDateRange till particular date. Use <fromDateInMillis> format to filter advisories having lastUpdatedDateRange from a particular date.
-   *
    * - `lastUpdated`: The date on which the Advisory was last updated. Currently this field in unavailable.
    *
-   * - `id`: ID of the Bug
+   * - `ipAddress`: A numerical label assigned to each device (For example, computer, printer) participating in a computer network that uses the Internet Protocol for communication
+   *
+   * - `hostname`: Hostnames are human-readable nicknames that correspond to the address of a device connected to a network
    *
    * - `fields`: Requested fields in the response. Id field is by default
+   *
+   * - `cxLevel`: A customer support level
    *
    * - `cdetsId`: ID of the Bug
    *
@@ -460,20 +465,25 @@ class DiagnosticsService extends __BaseService {
     let __body: any = null;
 
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    (params.vaId || []).forEach(val => {if (val != null) __params = __params.append('vaId', val.toString())});
     if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
     if (params.title != null) __params = __params.set('title', params.title.toString());
+    (params.swVersion || []).forEach(val => {if (val != null) __params = __params.append('swVersion', val.toString())});
     (params.state || []).forEach(val => {if (val != null) __params = __params.append('state', val.toString())});
     (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
     if (params.solution != null) __params = __params.set('solution', params.solution.toString());
+    if (params.severity != null) __params = __params.set('severity', params.severity.toString());
     (params.serialNumber || []).forEach(val => {if (val != null) __params = __params.append('serialNumber', val.toString())});
     if (params.search != null) __params = __params.set('search', params.search.toString());
+    if (params.saId != null) __params = __params.set('saId', params.saId.toString());
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
     if (params.publishedOn != null) __params = __params.set('publishedOn', params.publishedOn.toString());
     if (params.page != null) __params = __params.set('page', params.page.toString());
-    (params.lastUpdatedDateRange || []).forEach(val => {if (val != null) __params = __params.append('lastUpdatedDateRange', val.toString())});
     if (params.lastUpdated != null) __params = __params.set('lastUpdated', params.lastUpdated.toString());
-    (params.id || []).forEach(val => {if (val != null) __params = __params.append('id', val.toString())});
+    (params.ipAddress || []).forEach(val => {if (val != null) __params = __params.append('ipAddress', val.toString())});
+    (params.hostname || []).forEach(val => {if (val != null) __params = __params.append('hostname', val.toString())});
     (params.fields || []).forEach(val => {if (val != null) __params = __params.append('fields', val.toString())});
+    if (params.cxLevel != null) __params = __params.set('cxLevel', params.cxLevel.toString());
     (params.cdetsId || []).forEach(val => {if (val != null) __params = __params.append('cdetsId', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
@@ -499,9 +509,13 @@ class DiagnosticsService extends __BaseService {
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
+   * - `vaId`: Smart Account Identifier. This Id defines the smart account admin unique identifier
+   *
    * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
    *
    * - `title`: Security Advisory title
+   *
+   * - `swVersion`: The version of the softwareType running on the device
    *
    * - `state`: State of the bugs
    *
@@ -509,9 +523,13 @@ class DiagnosticsService extends __BaseService {
    *
    * - `solution`: The solution name, should be from the enum list of values
    *
+   * - `severity`: Severity of the Bug
+   *
    * - `serialNumber`: A serial number is a unique number used for identification
    *
    * - `search`: Searchable fields - severity, title. Applied only when the length of this parameter is more than 3 characters.
+   *
+   * - `saId`: Smart Account Identifier. This Id defines the smart account admin unique identifier
    *
    * - `rows`: Number of rows of data per page
    *
@@ -519,13 +537,15 @@ class DiagnosticsService extends __BaseService {
    *
    * - `page`: The page number of the response
    *
-   * - `lastUpdatedDateRange`: A date range in the format of <fromDateInMillis>,<toDateInMillis>. fromDateInMillis is inclusive and toDateInMillis is exclusive. <toDateInMillis> format supported to filter advisories having lastUpdatedDateRange till particular date. Use <fromDateInMillis> format to filter advisories having lastUpdatedDateRange from a particular date.
-   *
    * - `lastUpdated`: The date on which the Advisory was last updated. Currently this field in unavailable.
    *
-   * - `id`: ID of the Bug
+   * - `ipAddress`: A numerical label assigned to each device (For example, computer, printer) participating in a computer network that uses the Internet Protocol for communication
+   *
+   * - `hostname`: Hostnames are human-readable nicknames that correspond to the address of a device connected to a network
    *
    * - `fields`: Requested fields in the response. Id field is by default
+   *
+   * - `cxLevel`: A customer support level
    *
    * - `cdetsId`: ID of the Bug
    *
@@ -715,9 +735,9 @@ module DiagnosticsService {
     title?: string;
 
     /**
-     * State of the bugs
+     * The version of the softwareType running on the device
      */
-    state?: Array<'new' | 'resolved' | 'verified' | 'duplicate' | 'closed'>;
+    swVersion?: Array<string>;
 
     /**
      * The solution name, should be from the enum list of values
@@ -725,9 +745,9 @@ module DiagnosticsService {
     solution?: string;
 
     /**
-     * A serial number is a unique number used for identification
+     * Severity of the Bug
      */
-    serialNumber?: Array<string>;
+    severity?: 'notice' | 'info' | 'warning' | 'ok' | 'error' | 'high' | 'low' | 'critical';
 
     /**
      * Searchable fields - severity, title. Applied only when the length of this parameter is more than 3 characters.
@@ -740,24 +760,19 @@ module DiagnosticsService {
     publishedOn?: string;
 
     /**
-     * A date range in the format of <fromDateInMillis>,<toDateInMillis>. fromDateInMillis is inclusive and toDateInMillis is exclusive. <toDateInMillis> format supported to filter advisories having lastUpdatedDateRange till particular date. Use <fromDateInMillis> format to filter advisories having lastUpdatedDateRange from a particular date.
-     */
-    lastUpdatedDateRange?: Array<string>;
-
-    /**
      * The date on which the Advisory was last updated. Currently this field in unavailable.
      */
     lastUpdated?: string;
 
     /**
-     * ID of the Bug
+     * A numerical label assigned to each device (For example, computer, printer) participating in a computer network that uses the Internet Protocol for communication
      */
-    id?: Array<string>;
+    ipAddress?: Array<string>;
 
     /**
-     * ID of the Bug
+     * Hostnames are human-readable nicknames that correspond to the address of a device connected to a network
      */
-    cdetsId?: Array<string>;
+    hostname?: Array<string>;
   }
 
   /**
@@ -771,6 +786,11 @@ module DiagnosticsService {
     customerId: string;
 
     /**
+     * Smart Account Identifier. This Id defines the smart account admin unique identifier
+     */
+    vaId?: Array<number>;
+
+    /**
      * Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
      */
     useCase?: string;
@@ -779,6 +799,11 @@ module DiagnosticsService {
      * Security Advisory title
      */
     title?: string;
+
+    /**
+     * The version of the softwareType running on the device
+     */
+    swVersion?: Array<string>;
 
     /**
      * State of the bugs
@@ -796,6 +821,11 @@ module DiagnosticsService {
     solution?: string;
 
     /**
+     * Severity of the Bug
+     */
+    severity?: 'notice' | 'info' | 'warning' | 'ok' | 'error' | 'high' | 'low' | 'critical';
+
+    /**
      * A serial number is a unique number used for identification
      */
     serialNumber?: Array<string>;
@@ -804,6 +834,11 @@ module DiagnosticsService {
      * Searchable fields - severity, title. Applied only when the length of this parameter is more than 3 characters.
      */
     search?: string;
+
+    /**
+     * Smart Account Identifier. This Id defines the smart account admin unique identifier
+     */
+    saId?: number;
 
     /**
      * Number of rows of data per page
@@ -821,24 +856,29 @@ module DiagnosticsService {
     page?: number;
 
     /**
-     * A date range in the format of <fromDateInMillis>,<toDateInMillis>. fromDateInMillis is inclusive and toDateInMillis is exclusive. <toDateInMillis> format supported to filter advisories having lastUpdatedDateRange till particular date. Use <fromDateInMillis> format to filter advisories having lastUpdatedDateRange from a particular date.
-     */
-    lastUpdatedDateRange?: Array<string>;
-
-    /**
      * The date on which the Advisory was last updated. Currently this field in unavailable.
      */
     lastUpdated?: string;
 
     /**
-     * ID of the Bug
+     * A numerical label assigned to each device (For example, computer, printer) participating in a computer network that uses the Internet Protocol for communication
      */
-    id?: Array<string>;
+    ipAddress?: Array<string>;
+
+    /**
+     * Hostnames are human-readable nicknames that correspond to the address of a device connected to a network
+     */
+    hostname?: Array<string>;
 
     /**
      * Requested fields in the response. Id field is by default
      */
     fields?: Array<string>;
+
+    /**
+     * A customer support level
+     */
+    cxLevel?: string;
 
     /**
      * ID of the Bug

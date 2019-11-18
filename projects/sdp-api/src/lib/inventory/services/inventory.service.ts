@@ -10,6 +10,8 @@ import { map as __map, filter as __filter } from 'rxjs/operators';
 import { Assets } from '../models/assets';
 import { AssetSummary } from '../models/asset-summary';
 import { SystemAssets } from '../models/system-assets';
+import { AssetSystemSummary } from '../models/asset-system-summary';
+import { HardwareAssets } from '../models/hardware-assets';
 import { HardwareResponse } from '../models/hardware-response';
 import { NetworkElementResponse } from '../models/network-element-response';
 import { SoftwareResponse } from '../models/software-response';
@@ -23,6 +25,9 @@ class InventoryService extends __BaseService {
   static readonly getAssetSummaryPath = '/assets/summary';
   static readonly headSystemAssetsPath = '/assets/system';
   static readonly getSystemAssetsPath = '/assets/system';
+  static readonly getAssetSystemSummaryPath = '/assets/system/summary';
+  static readonly headHardwareAssetsPath = '/assets/hardware';
+  static readonly getHardwareAssetsPath = '/assets/hardware';
   static readonly headHardwarePath = '/hardware';
   static readonly getHardwarePath = '/hardware';
   static readonly headNetworkElementsPath = '/network-elements';
@@ -395,6 +400,8 @@ class InventoryService extends __BaseService {
    * - `hasBugs`: Activates filter on assets having bugs. If multiple of these attributes are provided,  the last value would be considered. Values "true" or "1" are considered as boolean value  "True" and any other value is considered false. This filter is activated is attribute is present.
    *
    * - `cxLevel`: A customer support level
+   *
+   * - `coverage`: The coverage
    */
   headSystemAssetsResponse(params: InventoryService.HeadSystemAssetsParams): __Observable<__StrictHttpResponse<null>> {
     let __params = this.newParams();
@@ -411,6 +418,7 @@ class InventoryService extends __BaseService {
     if (params.hasFieldNotices != null) __params = __params.set('hasFieldNotices', params.hasFieldNotices.toString());
     if (params.hasBugs != null) __params = __params.set('hasBugs', params.hasBugs.toString());
     if (params.cxLevel != null) __params = __params.set('cxLevel', params.cxLevel.toString());
+    (params.coverage || []).forEach(val => {if (val != null) __params = __params.append('coverage', val.toString())});
     let req = new HttpRequest<any>(
       'HEAD',
       this.rootUrl + `/customerportal/inventory/v1/assets/system`,
@@ -452,6 +460,8 @@ class InventoryService extends __BaseService {
    * - `hasBugs`: Activates filter on assets having bugs. If multiple of these attributes are provided,  the last value would be considered. Values "true" or "1" are considered as boolean value  "True" and any other value is considered false. This filter is activated is attribute is present.
    *
    * - `cxLevel`: A customer support level
+   *
+   * - `coverage`: The coverage
    */
   headSystemAssets(params: InventoryService.HeadSystemAssetsParams): __Observable<null> {
     return this.headSystemAssetsResponse(params).pipe(
@@ -469,11 +479,15 @@ class InventoryService extends __BaseService {
    *
    * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
    *
+   * - `tagValue`: Tag Value
+   *
+   * - `tagName`: Tag Name
+   *
    * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
    *
    * - `solution`: The solution name, should be from the enum list of values
    *
-   * - `serialNumber`: Serial Number of the device
+   * - `serialNumber`: The serial number of the device
    *
    * - `search`: Searchable field - title. Applied only when the length of this parameter is more than 3 characters.
    *
@@ -489,9 +503,13 @@ class InventoryService extends __BaseService {
    *
    * - `productId`: Devices Product ID
    *
+   * - `productFamily`: Filter by device's product family
+   *
    * - `page`: The page number of the response
    *
    * - `osVersion`: Software Version of the device
+   *
+   * - `osType`: Software Name of the device
    *
    * - `neId`: Network Element Id
    *
@@ -503,6 +521,8 @@ class InventoryService extends __BaseService {
    *
    * - `hasSecurityAdvisories`: Activates filter on assets having security advisories. If multiple of these attributes are provided,  the last value would be considered. Values "true" or "1" are considered as boolean value  "True" and any other value is considered false. This filter is activated is attribute is present.
    *
+   * - `hasFieldNotices`:
+   *
    * - `hasBugs`: Activates filter on assets having bugs. If multiple of these attributes are provided,  the last value would be considered. Values "true" or "1" are considered as boolean value  "True" and any other value is considered false. This filter is activated is attribute is present.
    *
    * - `deviceName`: Hostname of the device
@@ -510,6 +530,8 @@ class InventoryService extends __BaseService {
    * - `cxLevel`: A customer support level
    *
    * - `criticalAdvisoryCount`: Filter by number of critical advisories
+   *
+   * - `coverage`: The coverage
    *
    * @return successful operation
    */
@@ -521,9 +543,11 @@ class InventoryService extends __BaseService {
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     (params.vaId || []).forEach(val => {if (val != null) __params = __params.append('vaId', val.toString())});
     if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
+    if (params.tagValue != null) __params = __params.set('tagValue', params.tagValue.toString());
+    if (params.tagName != null) __params = __params.set('tagName', params.tagName.toString());
     (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
     if (params.solution != null) __params = __params.set('solution', params.solution.toString());
-    if (params.serialNumber != null) __params = __params.set('serialNumber', params.serialNumber.toString());
+    (params.serialNumber || []).forEach(val => {if (val != null) __params = __params.append('serialNumber', val.toString())});
     if (params.search != null) __params = __params.set('search', params.search.toString());
     if (params.saId != null) __params = __params.set('saId', params.saId.toString());
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
@@ -531,17 +555,21 @@ class InventoryService extends __BaseService {
     if (params.productType != null) __params = __params.set('productType', params.productType.toString());
     if (params.productName != null) __params = __params.set('productName', params.productName.toString());
     if (params.productId != null) __params = __params.set('productId', params.productId.toString());
+    if (params.productFamily != null) __params = __params.set('productFamily', params.productFamily.toString());
     if (params.page != null) __params = __params.set('page', params.page.toString());
     if (params.osVersion != null) __params = __params.set('osVersion', params.osVersion.toString());
+    if (params.osType != null) __params = __params.set('osType', params.osType.toString());
     if (params.neId != null) __params = __params.set('neId', params.neId.toString());
     if (params.managedNeId != null) __params = __params.set('managedNeId', params.managedNeId.toString());
     if (params.isManagedNe != null) __params = __params.set('isManagedNe', params.isManagedNe.toString());
     if (params.ipAddress != null) __params = __params.set('ipAddress', params.ipAddress.toString());
     if (params.hasSecurityAdvisories != null) __params = __params.set('hasSecurityAdvisories', params.hasSecurityAdvisories.toString());
+    if (params.hasFieldNotices != null) __params = __params.set('hasFieldNotices', params.hasFieldNotices.toString());
     if (params.hasBugs != null) __params = __params.set('hasBugs', params.hasBugs.toString());
     if (params.deviceName != null) __params = __params.set('deviceName', params.deviceName.toString());
     if (params.cxLevel != null) __params = __params.set('cxLevel', params.cxLevel.toString());
     if (params.criticalAdvisoryCount != null) __params = __params.set('criticalAdvisoryCount', params.criticalAdvisoryCount.toString());
+    (params.coverage || []).forEach(val => {if (val != null) __params = __params.append('coverage', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
       this.rootUrl + `/customerportal/inventory/v1/assets/system`,
@@ -570,11 +598,15 @@ class InventoryService extends __BaseService {
    *
    * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
    *
+   * - `tagValue`: Tag Value
+   *
+   * - `tagName`: Tag Name
+   *
    * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
    *
    * - `solution`: The solution name, should be from the enum list of values
    *
-   * - `serialNumber`: Serial Number of the device
+   * - `serialNumber`: The serial number of the device
    *
    * - `search`: Searchable field - title. Applied only when the length of this parameter is more than 3 characters.
    *
@@ -590,9 +622,13 @@ class InventoryService extends __BaseService {
    *
    * - `productId`: Devices Product ID
    *
+   * - `productFamily`: Filter by device's product family
+   *
    * - `page`: The page number of the response
    *
    * - `osVersion`: Software Version of the device
+   *
+   * - `osType`: Software Name of the device
    *
    * - `neId`: Network Element Id
    *
@@ -604,6 +640,8 @@ class InventoryService extends __BaseService {
    *
    * - `hasSecurityAdvisories`: Activates filter on assets having security advisories. If multiple of these attributes are provided,  the last value would be considered. Values "true" or "1" are considered as boolean value  "True" and any other value is considered false. This filter is activated is attribute is present.
    *
+   * - `hasFieldNotices`:
+   *
    * - `hasBugs`: Activates filter on assets having bugs. If multiple of these attributes are provided,  the last value would be considered. Values "true" or "1" are considered as boolean value  "True" and any other value is considered false. This filter is activated is attribute is present.
    *
    * - `deviceName`: Hostname of the device
@@ -612,11 +650,357 @@ class InventoryService extends __BaseService {
    *
    * - `criticalAdvisoryCount`: Filter by number of critical advisories
    *
+   * - `coverage`: The coverage
+   *
    * @return successful operation
    */
   getSystemAssets(params: InventoryService.GetSystemAssetsParams): __Observable<SystemAssets> {
     return this.getSystemAssetsResponse(params).pipe(
       __map(_r => _r.body as SystemAssets)
+    );
+  }
+
+  /**
+   * API to get summary details of a system
+   * @param params The `InventoryService.GetAssetSystemSummaryParams` containing the following parameters:
+   *
+   * - `neId`: Network Element Id
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `vaId`: Virtual Account Identifier. This is a list of virtual account admin(s) unique identifier who is managing the designated list of customer network devices.
+   *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
+   * - `solution`: The solution name, should be from the enum list of values
+   *
+   * - `saId`: Smart Account Identifier. This id defines the smart account admin unique identifier
+   *
+   * - `cxLevel`: A customer support level
+   *
+   * @return successful operation
+   */
+  getAssetSystemSummaryResponse(params: InventoryService.GetAssetSystemSummaryParams): __Observable<__StrictHttpResponse<AssetSystemSummary>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    if (params.neId != null) __params = __params.set('neId', params.neId.toString());
+    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    (params.vaId || []).forEach(val => {if (val != null) __params = __params.append('vaId', val.toString())});
+    if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
+    if (params.solution != null) __params = __params.set('solution', params.solution.toString());
+    if (params.saId != null) __params = __params.set('saId', params.saId.toString());
+    if (params.cxLevel != null) __params = __params.set('cxLevel', params.cxLevel.toString());
+    let req = new HttpRequest<any>(
+      'GET',
+      this.rootUrl + `/customerportal/inventory/v1/assets/system/summary`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<AssetSystemSummary>;
+      })
+    );
+  }
+
+  /**
+   * API to get summary details of a system
+   * @param params The `InventoryService.GetAssetSystemSummaryParams` containing the following parameters:
+   *
+   * - `neId`: Network Element Id
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `vaId`: Virtual Account Identifier. This is a list of virtual account admin(s) unique identifier who is managing the designated list of customer network devices.
+   *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
+   * - `solution`: The solution name, should be from the enum list of values
+   *
+   * - `saId`: Smart Account Identifier. This id defines the smart account admin unique identifier
+   *
+   * - `cxLevel`: A customer support level
+   *
+   * @return successful operation
+   */
+  getAssetSystemSummary(params: InventoryService.GetAssetSystemSummaryParams): __Observable<AssetSystemSummary> {
+    return this.getAssetSystemSummaryResponse(params).pipe(
+      __map(_r => _r.body as AssetSystemSummary)
+    );
+  }
+
+  /**
+   * API to get all the hardware assets
+   * @param params The `InventoryService.HeadHardwareAssetsParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `vaId`: Virtual Account Identifier. This is a list of virtual account admin(s) unique identifier who is managing the designated list of customer network devices.
+   *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
+   * - `solution`: The solution name, should be from the enum list of values
+   *
+   * - `serialNumber`: Serial Number of the device
+   *
+   * - `search`: Searchable fields - deviceName, ipAddress, serialNumber, osVersion, role. Applied only when the length of this parameter is more than 3 characters.
+   *
+   * - `saId`: Smart Account Identifier. This id defines the smart account admin unique identifier
+   *
+   * - `productType`: Filter by device's product type
+   *
+   * - `productName`: Filter by device's product name
+   *
+   * - `productId`: Device's Product Id
+   *
+   * - `neId`: Network Element Id
+   *
+   * - `ipAddress`: IP Address of the device
+   *
+   * - `hwInstanceId`: Hardware Instance Id
+   *
+   * - `hasFieldNotices`:
+   *
+   * - `equipmentType`: Equipment Type
+   *
+   * - `deviceName`: Hostname of the device
+   *
+   * - `cxLevel`: A customer support level
+   */
+  headHardwareAssetsResponse(params: InventoryService.HeadHardwareAssetsParams): __Observable<__StrictHttpResponse<null>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    (params.vaId || []).forEach(val => {if (val != null) __params = __params.append('vaId', val.toString())});
+    if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
+    if (params.solution != null) __params = __params.set('solution', params.solution.toString());
+    if (params.serialNumber != null) __params = __params.set('serialNumber', params.serialNumber.toString());
+    if (params.search != null) __params = __params.set('search', params.search.toString());
+    if (params.saId != null) __params = __params.set('saId', params.saId.toString());
+    if (params.productType != null) __params = __params.set('productType', params.productType.toString());
+    if (params.productName != null) __params = __params.set('productName', params.productName.toString());
+    if (params.productId != null) __params = __params.set('productId', params.productId.toString());
+    if (params.neId != null) __params = __params.set('neId', params.neId.toString());
+    if (params.ipAddress != null) __params = __params.set('ipAddress', params.ipAddress.toString());
+    if (params.hwInstanceId != null) __params = __params.set('hwInstanceId', params.hwInstanceId.toString());
+    if (params.hasFieldNotices != null) __params = __params.set('hasFieldNotices', params.hasFieldNotices.toString());
+    if (params.equipmentType != null) __params = __params.set('equipmentType', params.equipmentType.toString());
+    if (params.deviceName != null) __params = __params.set('deviceName', params.deviceName.toString());
+    if (params.cxLevel != null) __params = __params.set('cxLevel', params.cxLevel.toString());
+    let req = new HttpRequest<any>(
+      'HEAD',
+      this.rootUrl + `/customerportal/inventory/v1/assets/hardware`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<null>;
+      })
+    );
+  }
+
+  /**
+   * API to get all the hardware assets
+   * @param params The `InventoryService.HeadHardwareAssetsParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `vaId`: Virtual Account Identifier. This is a list of virtual account admin(s) unique identifier who is managing the designated list of customer network devices.
+   *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
+   * - `solution`: The solution name, should be from the enum list of values
+   *
+   * - `serialNumber`: Serial Number of the device
+   *
+   * - `search`: Searchable fields - deviceName, ipAddress, serialNumber, osVersion, role. Applied only when the length of this parameter is more than 3 characters.
+   *
+   * - `saId`: Smart Account Identifier. This id defines the smart account admin unique identifier
+   *
+   * - `productType`: Filter by device's product type
+   *
+   * - `productName`: Filter by device's product name
+   *
+   * - `productId`: Device's Product Id
+   *
+   * - `neId`: Network Element Id
+   *
+   * - `ipAddress`: IP Address of the device
+   *
+   * - `hwInstanceId`: Hardware Instance Id
+   *
+   * - `hasFieldNotices`:
+   *
+   * - `equipmentType`: Equipment Type
+   *
+   * - `deviceName`: Hostname of the device
+   *
+   * - `cxLevel`: A customer support level
+   */
+  headHardwareAssets(params: InventoryService.HeadHardwareAssetsParams): __Observable<null> {
+    return this.headHardwareAssetsResponse(params).pipe(
+      __map(_r => _r.body as null)
+    );
+  }
+
+  /**
+   * API to get all the system assets
+   * @param params The `InventoryService.GetHardwareAssetsParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `vaId`: Virtual Account Identifier. This is a list of virtual account admin(s) unique identifier who is managing the designated list of customer network devices.
+   *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
+   * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
+   *
+   * - `solution`: The solution name, should be from the enum list of values
+   *
+   * - `serialNumber`: The serial number of the device
+   *
+   * - `search`: Searchable field - title. Applied only when the length of this parameter is more than 3 characters.
+   *
+   * - `saId`: Smart Account Identifier. This id defines the smart account admin unique identifier
+   *
+   * - `rows`: Number of rows of data per page
+   *
+   * - `productType`: Filter by device's product type
+   *
+   * - `productName`: Filter by device's product name
+   *
+   * - `productId`: Device's Product Id
+   *
+   * - `page`: The page number of the response
+   *
+   * - `neId`: Network Element Id
+   *
+   * - `lastDateOfSupportRange`: A date range in the format of <fromDateInMillis>,<toDateInMillis>. fromDateInMillis is inclusive and toDateInMillis is exclusive. <toDateInMillis> format supported to filter advisories having lastDateOfSupportRange till particular date. Use <fromDateInMillis> format to filter advisories having lastDateOfSupportRange from a particular date.
+   *
+   * - `ipAddress`: IP Address of the device
+   *
+   * - `hwInstanceId`: Hardware Instance Id
+   *
+   * - `hasFieldNotices`: Activates filter on assets having field notices.
+   *
+   * - `equipmentType`: Equipment Type
+   *
+   * - `deviceName`: Hostname of the device
+   *
+   * - `cxLevel`: A customer support level
+   *
+   * @return successful operation
+   */
+  getHardwareAssetsResponse(params: InventoryService.GetHardwareAssetsParams): __Observable<__StrictHttpResponse<HardwareAssets>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    (params.vaId || []).forEach(val => {if (val != null) __params = __params.append('vaId', val.toString())});
+    if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
+    (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
+    if (params.solution != null) __params = __params.set('solution', params.solution.toString());
+    (params.serialNumber || []).forEach(val => {if (val != null) __params = __params.append('serialNumber', val.toString())});
+    if (params.search != null) __params = __params.set('search', params.search.toString());
+    if (params.saId != null) __params = __params.set('saId', params.saId.toString());
+    if (params.rows != null) __params = __params.set('rows', params.rows.toString());
+    if (params.productType != null) __params = __params.set('productType', params.productType.toString());
+    if (params.productName != null) __params = __params.set('productName', params.productName.toString());
+    if (params.productId != null) __params = __params.set('productId', params.productId.toString());
+    if (params.page != null) __params = __params.set('page', params.page.toString());
+    if (params.neId != null) __params = __params.set('neId', params.neId.toString());
+    (params.lastDateOfSupportRange || []).forEach(val => {if (val != null) __params = __params.append('lastDateOfSupportRange', val.toString())});
+    if (params.ipAddress != null) __params = __params.set('ipAddress', params.ipAddress.toString());
+    if (params.hwInstanceId != null) __params = __params.set('hwInstanceId', params.hwInstanceId.toString());
+    if (params.hasFieldNotices != null) __params = __params.set('hasFieldNotices', params.hasFieldNotices.toString());
+    if (params.equipmentType != null) __params = __params.set('equipmentType', params.equipmentType.toString());
+    if (params.deviceName != null) __params = __params.set('deviceName', params.deviceName.toString());
+    if (params.cxLevel != null) __params = __params.set('cxLevel', params.cxLevel.toString());
+    let req = new HttpRequest<any>(
+      'GET',
+      this.rootUrl + `/customerportal/inventory/v1/assets/hardware`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<HardwareAssets>;
+      })
+    );
+  }
+
+  /**
+   * API to get all the system assets
+   * @param params The `InventoryService.GetHardwareAssetsParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `vaId`: Virtual Account Identifier. This is a list of virtual account admin(s) unique identifier who is managing the designated list of customer network devices.
+   *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
+   * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
+   *
+   * - `solution`: The solution name, should be from the enum list of values
+   *
+   * - `serialNumber`: The serial number of the device
+   *
+   * - `search`: Searchable field - title. Applied only when the length of this parameter is more than 3 characters.
+   *
+   * - `saId`: Smart Account Identifier. This id defines the smart account admin unique identifier
+   *
+   * - `rows`: Number of rows of data per page
+   *
+   * - `productType`: Filter by device's product type
+   *
+   * - `productName`: Filter by device's product name
+   *
+   * - `productId`: Device's Product Id
+   *
+   * - `page`: The page number of the response
+   *
+   * - `neId`: Network Element Id
+   *
+   * - `lastDateOfSupportRange`: A date range in the format of <fromDateInMillis>,<toDateInMillis>. fromDateInMillis is inclusive and toDateInMillis is exclusive. <toDateInMillis> format supported to filter advisories having lastDateOfSupportRange till particular date. Use <fromDateInMillis> format to filter advisories having lastDateOfSupportRange from a particular date.
+   *
+   * - `ipAddress`: IP Address of the device
+   *
+   * - `hwInstanceId`: Hardware Instance Id
+   *
+   * - `hasFieldNotices`: Activates filter on assets having field notices.
+   *
+   * - `equipmentType`: Equipment Type
+   *
+   * - `deviceName`: Hostname of the device
+   *
+   * - `cxLevel`: A customer support level
+   *
+   * @return successful operation
+   */
+  getHardwareAssets(params: InventoryService.GetHardwareAssetsParams): __Observable<HardwareAssets> {
+    return this.getHardwareAssetsResponse(params).pipe(
+      __map(_r => _r.body as HardwareAssets)
     );
   }
 
@@ -1521,6 +1905,11 @@ module InventoryService {
      * A customer support level
      */
     cxLevel?: string;
+
+    /**
+     * The coverage
+     */
+    coverage?: Array<'covered' | 'uncovered' | 'unknown' | 'expired'>;
   }
 
   /**
@@ -1544,6 +1933,16 @@ module InventoryService {
     useCase?: string;
 
     /**
+     * Tag Value
+     */
+    tagValue?: string;
+
+    /**
+     * Tag Name
+     */
+    tagName?: string;
+
+    /**
      * Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
      */
     sort?: Array<string>;
@@ -1554,9 +1953,9 @@ module InventoryService {
     solution?: string;
 
     /**
-     * Serial Number of the device
+     * The serial number of the device
      */
-    serialNumber?: string;
+    serialNumber?: Array<string>;
 
     /**
      * Searchable field - title. Applied only when the length of this parameter is more than 3 characters.
@@ -1594,6 +1993,11 @@ module InventoryService {
     productId?: string;
 
     /**
+     * Filter by device's product family
+     */
+    productFamily?: string;
+
+    /**
      * The page number of the response
      */
     page?: number;
@@ -1602,6 +2006,11 @@ module InventoryService {
      * Software Version of the device
      */
     osVersion?: string;
+
+    /**
+     * Software Name of the device
+     */
+    osType?: string;
 
     /**
      * Network Element Id
@@ -1627,6 +2036,7 @@ module InventoryService {
      * Activates filter on assets having security advisories. If multiple of these attributes are provided,  the last value would be considered. Values "true" or "1" are considered as boolean value  "True" and any other value is considered false. This filter is activated is attribute is present.
      */
     hasSecurityAdvisories?: string;
+    hasFieldNotices?: string;
 
     /**
      * Activates filter on assets having bugs. If multiple of these attributes are provided,  the last value would be considered. Values "true" or "1" are considered as boolean value  "True" and any other value is considered false. This filter is activated is attribute is present.
@@ -1647,6 +2057,250 @@ module InventoryService {
      * Filter by number of critical advisories
      */
     criticalAdvisoryCount?: string;
+
+    /**
+     * The coverage
+     */
+    coverage?: Array<'covered' | 'uncovered' | 'unknown' | 'expired'>;
+  }
+
+  /**
+   * Parameters for getAssetSystemSummary
+   */
+  export interface GetAssetSystemSummaryParams {
+
+    /**
+     * Network Element Id
+     */
+    neId: string;
+
+    /**
+     * Unique identifier of a Cisco customer.
+     */
+    customerId: string;
+
+    /**
+     * Virtual Account Identifier. This is a list of virtual account admin(s) unique identifier who is managing the designated list of customer network devices.
+     */
+    vaId?: Array<number>;
+
+    /**
+     * Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+     */
+    useCase?: string;
+
+    /**
+     * The solution name, should be from the enum list of values
+     */
+    solution?: string;
+
+    /**
+     * Smart Account Identifier. This id defines the smart account admin unique identifier
+     */
+    saId?: number;
+
+    /**
+     * A customer support level
+     */
+    cxLevel?: string;
+  }
+
+  /**
+   * Parameters for headHardwareAssets
+   */
+  export interface HeadHardwareAssetsParams {
+
+    /**
+     * Unique identifier of a Cisco customer.
+     */
+    customerId: string;
+
+    /**
+     * Virtual Account Identifier. This is a list of virtual account admin(s) unique identifier who is managing the designated list of customer network devices.
+     */
+    vaId?: Array<number>;
+
+    /**
+     * Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+     */
+    useCase?: string;
+
+    /**
+     * The solution name, should be from the enum list of values
+     */
+    solution?: string;
+
+    /**
+     * Serial Number of the device
+     */
+    serialNumber?: string;
+
+    /**
+     * Searchable fields - deviceName, ipAddress, serialNumber, osVersion, role. Applied only when the length of this parameter is more than 3 characters.
+     */
+    search?: string;
+
+    /**
+     * Smart Account Identifier. This id defines the smart account admin unique identifier
+     */
+    saId?: number;
+
+    /**
+     * Filter by device's product type
+     */
+    productType?: string;
+
+    /**
+     * Filter by device's product name
+     */
+    productName?: string;
+
+    /**
+     * Device's Product Id
+     */
+    productId?: string;
+
+    /**
+     * Network Element Id
+     */
+    neId?: string;
+
+    /**
+     * IP Address of the device
+     */
+    ipAddress?: string;
+
+    /**
+     * Hardware Instance Id
+     */
+    hwInstanceId?: string;
+    hasFieldNotices?: boolean;
+
+    /**
+     * Equipment Type
+     */
+    equipmentType?: string;
+
+    /**
+     * Hostname of the device
+     */
+    deviceName?: string;
+
+    /**
+     * A customer support level
+     */
+    cxLevel?: string;
+  }
+
+  /**
+   * Parameters for getHardwareAssets
+   */
+  export interface GetHardwareAssetsParams {
+
+    /**
+     * Unique identifier of a Cisco customer.
+     */
+    customerId: string;
+
+    /**
+     * Virtual Account Identifier. This is a list of virtual account admin(s) unique identifier who is managing the designated list of customer network devices.
+     */
+    vaId?: Array<number>;
+
+    /**
+     * Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+     */
+    useCase?: string;
+
+    /**
+     * Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
+     */
+    sort?: Array<string>;
+
+    /**
+     * The solution name, should be from the enum list of values
+     */
+    solution?: string;
+
+    /**
+     * The serial number of the device
+     */
+    serialNumber?: Array<string>;
+
+    /**
+     * Searchable field - title. Applied only when the length of this parameter is more than 3 characters.
+     */
+    search?: string;
+
+    /**
+     * Smart Account Identifier. This id defines the smart account admin unique identifier
+     */
+    saId?: number;
+
+    /**
+     * Number of rows of data per page
+     */
+    rows?: number;
+
+    /**
+     * Filter by device's product type
+     */
+    productType?: string;
+
+    /**
+     * Filter by device's product name
+     */
+    productName?: string;
+
+    /**
+     * Device's Product Id
+     */
+    productId?: string;
+
+    /**
+     * The page number of the response
+     */
+    page?: number;
+
+    /**
+     * Network Element Id
+     */
+    neId?: string;
+
+    /**
+     * A date range in the format of <fromDateInMillis>,<toDateInMillis>. fromDateInMillis is inclusive and toDateInMillis is exclusive. <toDateInMillis> format supported to filter advisories having lastDateOfSupportRange till particular date. Use <fromDateInMillis> format to filter advisories having lastDateOfSupportRange from a particular date.
+     */
+    lastDateOfSupportRange?: Array<string>;
+
+    /**
+     * IP Address of the device
+     */
+    ipAddress?: string;
+
+    /**
+     * Hardware Instance Id
+     */
+    hwInstanceId?: string;
+
+    /**
+     * Activates filter on assets having field notices.
+     */
+    hasFieldNotices?: boolean;
+
+    /**
+     * Equipment Type
+     */
+    equipmentType?: string;
+
+    /**
+     * Hostname of the device
+     */
+    deviceName?: string;
+
+    /**
+     * A customer support level
+     */
+    cxLevel?: string;
   }
 
   /**

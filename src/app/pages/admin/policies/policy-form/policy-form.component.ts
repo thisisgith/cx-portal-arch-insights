@@ -439,7 +439,7 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 
 		this.leftListCall = function () {
 			const params: ControlPointDevicePolicyAPIService
-			.GetEligibleDevicesForGivenIgnorePolicyUsingGETParams = {
+			.GetDevicesForIgnorePolicyCreationUsingGETParams = {
 				customerId: this.customerId,
 				pageNumber: String(this.pageNumber),
 				policyId: _.get(this.policy, 'policyId'),

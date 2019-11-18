@@ -168,8 +168,15 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 						const policyDesc =
 						_.get(assetPolicyDesc, ['policyDesc'], '')
 							.replace(/\&gt;/g, '>')
-							.replace(/\&lt;/g, '<');
+							.replace(/\&lt;/g, '<')
+							.replace(/\n/g, '<br>');
 						_.set(assetPolicyDesc, ['policyDesc'], policyDesc);
+						const ruleDesc =
+						_.get(assetPolicyDesc, ['ruleDesc'], '')
+							.replace(/\&gt;/g, '>')
+							.replace(/\&lt;/g, '<')
+							.replace(/\n/g, '<br>');
+						_.set(assetPolicyDesc, ['ruleDesc'], ruleDesc);
 					});
 					this.totalItems = this.rccAssetPolicyTableData.length;
 					if (this.rccAssetPolicyTableData.length > 0) {

@@ -178,6 +178,7 @@ export class LifecycleComponent implements OnDestroy {
 	public buId: string;
 	private user: User;
 	public partnerList: CompanyInfo [];
+	public accPartnerList: CompanyInfo [];
 	public totalAllowedGroupTrainings: number;
 	public selectedFilterForSB = '';
 	public selectedFilterForACC = '';
@@ -236,6 +237,8 @@ export class LifecycleComponent implements OnDestroy {
 	private timeout = 5000;
 	// Enable or disable CGT based on this flag
 	public enableCGT = false;
+	// Cisco ACC content is only shown for CX Levels 2/3
+	private ciscoAccLevels = [2, 3];
 
 	/**
 	 * The number of rows that Product Guides will request at a time.
@@ -1466,7 +1469,8 @@ export class LifecycleComponent implements OnDestroy {
 	 */
 	 public crossLaunch (crossLaunchUrl: string) {
 		if (crossLaunchUrl) {
-			window.open(crossLaunchUrl, '_blank');
+			window.open(`${crossLaunchUrl}&solution=${this.componentData.params.solution}` +
+			`&usecase=${this.componentData.params.usecase}`, '_blank');
 		}
 		this.atxMoreClicked = false;
 	}
@@ -1563,6 +1567,7 @@ export class LifecycleComponent implements OnDestroy {
 		if (!_.isEmpty(this.accStatusFilter)) {
 			_.set(params, 'status', this.accStatusFilter);
 		}
+
 		if (!_.isEmpty(this.selectedPartnerFilterForACC)) {
 			_.set(params, 'providerId', this.selectedPartnerFilterForACC);
 		}
@@ -1575,6 +1580,12 @@ export class LifecycleComponent implements OnDestroy {
 				};
 				_.remove(this.componentData.acc.sessions, (session: ACC) =>
 					!session.title && !session.description);
+
+				// Do not show cisco ACC's if incorrect CX level
+				if (!this.ciscoAccLevels.includes(this.cxLevel)) {
+					_.remove(this.componentData.acc.sessions, (session: ACC) =>
+						!session.providerInfo);
+				}
 
 				this.selectedACC = this.componentData.acc.sessions;
 				this.buildAccTable();
@@ -2415,6 +2426,13 @@ export class LifecycleComponent implements OnDestroy {
 			};
 			this.status.loading.partner = false;
 			this.partnerList = [ciscoCompanyInfo, ...result.companyList];
+			this.accPartnerList = [ciscoCompanyInfo, ...result.companyList];
+
+			if (!this.ciscoAccLevels.includes(this.cxLevel)) {
+				_.remove(this.accPartnerList, (partner: CompanyInfo) =>
+					partner.companyId === ciscoCompanyInfo.companyId);
+			}
+
 		},
 		err => {
 			this.status.loading.partner = false;

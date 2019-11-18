@@ -181,9 +181,7 @@ export class DevicesSdaComponent implements OnInit, OnChanges {
 	 this.architectureReviewService.getDevicesSDA(this.params)
 			.pipe(
 				takeUntil(this.destroy$),
-			)
-			.subscribe(
-				(results => {
+				map(results => {
 					const dnacDeviceDetails = results.dnacDeviceDetails;
 					this.sdaData = dnacDeviceDetails;
 					this.sdaSoftwareGridData = dnacDeviceDetails.sdaSupportedSoftware;
@@ -208,7 +206,8 @@ export class DevicesSdaComponent implements OnInit, OnChanges {
 
 					return of({ });
 				}),
-			);
+			)
+			.subscribe();
 	}
 	/**
 	 * This Function is used to build  software and hardware grid

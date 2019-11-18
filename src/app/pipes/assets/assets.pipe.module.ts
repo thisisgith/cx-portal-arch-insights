@@ -31,6 +31,7 @@ export class CanOpenCasePipe implements PipeTransform {
 			(Math.abs(endDate.diffNow('days').days) < 90)) {
 				return true;
 			}
+
 			return false;
 		}
 		if (asset && asset.supportCovered) {

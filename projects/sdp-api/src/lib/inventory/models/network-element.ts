@@ -13,6 +13,11 @@ export interface NetworkElement {
   customerId: string;
 
   /**
+   * The unique, generated ID of the network resource id
+   */
+  managedNeId?: string;
+
+  /**
    * The unique, generated ID of the network element
    */
   neInstanceId: string;
@@ -47,24 +52,20 @@ export interface NetworkElement {
   productFamily?: string;
 
   /**
-   * Refers to the validated product ID of the device. GMT date format YYYY-MM-DDTHH:MM:SS (Time is displayed in 24 hour format)
-   */
-  productId?: string;
-
-  /**
    * A broad classification of Cisco product that categorizes its function
    */
   productType?: string;
 
   /**
+   * Refers to the validated product ID of the device. GMT date format YYYY-MM-DDTHH:MM:SS (Time is displayed in 24 hour format)
+   */
+  productId?: string;
+
+  /**
    * Software Type identifies the specific type of software that is installed on this host/system
    */
   swType?: string;
-
-  /**
-   * The unique, generated ID of the network resource id
-   */
-  managedNeId?: string;
+  collectorId?: string;
   serialNumber?: string;
   systemUptime?: string;
   udiProductIdentifier?: string;
@@ -91,7 +92,7 @@ export interface NetworkElement {
    * The Image Name of the software on the Network Element
    */
   imageName?: string;
-  wfid?: string;
+  wfId?: string;
   solutionInfo?: Array<SolutionInfo>;
   cxLevel?: string;
   saId?: number;

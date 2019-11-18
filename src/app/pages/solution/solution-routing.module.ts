@@ -20,10 +20,15 @@ const routes: Routes = [
 			{
 				loadChildren: () => import('./assets/assets.module')
 					.then(m => m.AssetsModule),
-				path: 'assets',
+				path: 'assets/:view',
 				resolve: {
 					user: UserResolve,
 				},
+			},
+			{
+				path: 'assets',
+				pathMatch: 'full',
+				redirectTo: 'assets/system',
 			},
 			{
 				loadChildren: () => import('./security/security.module')
