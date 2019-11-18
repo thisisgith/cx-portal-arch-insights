@@ -735,6 +735,7 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 	 * Submit the completed Collection Form
 	 */
 	public onSubmit () {
+		this.loading = true;
 		this.submitCall()
 			.pipe(
 				catchError(err => {
@@ -746,6 +747,7 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 				takeUntil(this.destroyed$),
 			)
 			.subscribe(() => {
+				this.loading = false;
 				this.logger.debug('Submitted Policy Form');
 				this.submitted.emit(true);
 			});
