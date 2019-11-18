@@ -112,170 +112,97 @@
 	</div>
 	<div class="divider qtr-margin"></div>
 
-	<ng-template #advisoryFilter let-filter="filter">
-		<div [hidden]="onlyCrashes">
-			<risk-mitigation-column-chart
-				[resetChart]="clearAllFilters"
-				[seriesData]="filter.seriesData"
-				(subfilter)="onSubfilterSelect($event, filter)"
-			>
-			</risk-mitigation-column-chart>
-		</div>
-	</ng-template>
-
-	<ng-template #filterBar>
-		<div
-			class="row flex-center-vertical half-margin-top base-margin-bottom"
-		>
-			<div class="col-md-11 flex">
-				<span
-					class="flex flex-center-vertical filter-bar__title text-uppercase text-bold"
-					[innerText]="'_RMFiltered_' | i18n"
-				></span>
-				<ng-container *ngFor="let filter of selectedFilters">
-					<ng-container
-						*ngFor="
-							let subfilter of getSelectedSubFilters(filter.key)
-						"
-						><span
-							class="label filter-bar__item"
-							(click)="
-								onSubfilterSelect(subfilter.filter, filter)
-							"
-							attr.data-auto-id="FilterTag-{{ subfilter.filter }}"
-						>
-							<span
-								class="qtr-padding-right"
-								[innerText]="
-									(filter.key === 'advisories'
-										? '_RMTimeLast_'
-										: '_CP_RiskTag_'
-									) | i18n
-								"
-							></span>
-							<span
-								[innerHTML]="
-									subfilter.label
-										| slice: 0:subfilter.label.indexOf('(')
-								"
-							></span>
-							<span
-								class="icon-close"
-								(click)="clearFilters()"
-								data-auto-id="FilterBarClearAllFiltersIcon"
-							></span>
-						</span>
-					</ng-container>
-				</ng-container>
-			</div>
-			<div
-				class="col-md-1 flex flex-center flex-center-vertical filter-bar__clear"
-			>
-				<a
-					(click)="clearFilters()"
-					[innerText]="'_RMClearAll_' | i18n"
-					data-auto-id="FilterBarClearAllFilters"
-				>
-				</a>
-			</div>
-		</div>
-	</ng-template>
 	<app-crash-risk-grid
 		*ngIf="onlyCrashes"
-		[selectedFilter]="this.highCrashRiskParams.globalRiskRank"
+		[selectedFilter]="this.selectedCrashRiskFilter"
 		[selectedSolution]="selectedSolutionName"
 		[selectedTechnology]="selectedTechnologyName"
 		[searchQuery]="searchQueryInHighCrashGrid"
 		(paginationValue)="paginationValueDetails($event)"
 	></app-crash-risk-grid>
 	<app-crashed-systems-grid *ngIf="!onlyCrashes"
-	[selectedFilter]="selectedCrashedSystemsFilter"
-	[selectedSolution]="selectedSolutionName"
-	[selectedTechnology]="selectedTechnologyName"
-	[searchQuery]="searchQueryInCrashGrid"
-	(paginationValue)="paginationValueDetails($event)"
+		[selectedFilter]="selectedCrashedSystemsFilter"
+		[selectedSolution]="selectedSolutionName"
+		[selectedTechnology]="selectedTechnologyName"
+		[searchQuery]="searchQueryInCrashGrid"
+		(paginationValue)="paginationValueDetails($event)"
 	></app-crashed-systems-grid>
 </div>
 
-<ng-template #assetsWithCrashRisk>
-	<div
-		*ngIf="
-			!highCrashRiskAssetsGridDetails.tableData.length &&
-			!status.isLoading
-		"
+<ng-template #timeRangeFilterTemplate let-filter="filter">
+	<div [hidden]="onlyCrashes">
+		<column-chart *ngIf="filter?.seriesData?.length"
+		[seriesData]="filter.seriesData"
+		(subfilter)="onSubfilterSelect($event.filter, filter)">
+	</column-chart>
+	</div>
+</ng-template>
+
+<ng-template #riskScoreFilterTemplate let-filter="filter">
+	<pie-chart
+		[seriesData]="filter.seriesData"
+		(subfilter)="onSubfilterSelect($event.filter, filter, true)"
 	>
-		<div class="text-center dbl-margin-top dbl-margin-bottom">
-			<div>
-				<span
-					class="text-muted text-xlarge"
-					[innerText]="'_NoResultsFound_' | i18n"
-					data-auto-id="NoResultsFoundTxt"
-				>
-				</span>
-			</div>
+	</pie-chart>
+</ng-template>
+
+<ng-template #filterBar>
+	<div
+		class="row flex-center-vertical half-margin-top base-margin-bottom"
+	>
+		<div class="col-md-11 flex">
+			<span
+				class="flex flex-center-vertical filter-bar__title text-uppercase text-bold half-padding-right"
+				[innerText]="'_RMFiltered_' | i18n"
+			></span>
+			<ng-container *ngFor="let filter of selectedFilters">
+				<ng-container
+					*ngFor="
+						let subfilter of getSelectedSubFilters(filter.key)
+					"
+					><span
+						class="label filter-bar__item"
+						(click)="
+							onSubfilterSelect(subfilter.filter, filter)
+						"
+						attr.data-auto-id="FilterTag-{{ subfilter.filter }}"
+					>
+						<span
+							class="qtr-padding-right"
+							[innerText]="
+								(filter.key === 'timeRange'
+									? '_RMTimeLast_'
+									: '_CP_RiskTag_'
+								) | i18n
+							"
+						></span>
+						<span
+							[innerHTML]="
+								onlyCrashes? subfilter.filter: subfilter?.label
+							"
+						></span>
+						<span
+							class="icon-close"
+							(click)="clearFilters()"
+							data-auto-id="FilterBarClearAllFiltersIcon"
+						></span>
+					</span>
+				</ng-container>
+			</ng-container>
+		</div>
+		<div
+			class="col-md-1 flex flex-center flex-center-vertical filter-bar__clear"
+		>
+			<a
+				(click)="clearAllFilters()"
+				[innerText]="'_RMClearAll_' | i18n"
+				data-auto-id="FilterBarClearAllFilters"
+			>
+			</a>
 		</div>
 	</div>
-
-	<!-- <cui-table
-		[hidden]="
-			!highCrashRiskAssetsGridDetails.tableData.length || status.isLoading
-		"
-		[options]="highCrashRiskAssetsGridOptions"
-		[data]="highCrashRiskAssetsGridDetails.tableData"
-		(onTableRowClicked)="connectToFpDetails($event)"
-		(onSortingChanged)="highCrashTableSorted($event)"
-		class="table--wrap not-close-360"
-	></cui-table> -->
-	<div class="section" *ngIf="!status.isLoading">
-		<cui-pager
-			*ngIf="highCrashRiskAssetsGridDetails.totalItems"
-			[page]="highCrashRiskAssetsGridDetails.tableOffset"
-			[limit]="highCrashRiskAssetsGridDetails.tableLimit"
-			[totalItems]="highCrashRiskAssetsGridDetails.totalItems"
-			(onPageChanged)="onHcrPagerUpdated($event)"
-		></cui-pager>
-	</div>
 </ng-template>
 
-<ng-template #cardColors let-item="celldata">
-	<span
-		[ngClass]="{
-			'text-success': item.globalRiskRank === 'LOW',
-			'text-warning': item.globalRiskRank === 'MED',
-			'text-danger': item.globalRiskRank === 'HIGH'
-		}"
-		class="qtr-margin-right icon-circle"
-	>
-	</span>
-	<span [innerText]="item.globalRiskRank"></span>
-</ng-template>
-<ng-template #productFamilyTemplate let-item="celldata">
-	<span title="{{ item?.productFamily }}" [innerText]="item.productFamily">
-	</span>
-</ng-template>
-<ng-template #deviceNameTemplate let-item="celldata">
-	<span title="{{ item?.deviceName }}" [innerText]="item.deviceName"> </span>
-</ng-template>
-<ng-template #softwareTypeTemplate let-item="celldata">
-	<span title="{{ item?.softwareType }}" [innerText]="item.softwareType">
-	</span>
-</ng-template>
-<ng-template #softwareVersionTemplate let-item="celldata">
-	<span
-		title="{{ item?.softwareVersion }}"
-		[innerText]="item.softwareVersion"
-	>
-	</span>
-</ng-template>
-<ng-template #riskScoreTemplate let-item="celldata">
-	<span title="{{ item?.riskScore }}" [innerHTML]="item.riskScore"></span>
-</ng-template>
-<ng-template #resetReasonTemplate let-item="celldata">
-	<span title="{{ item?.resetReason }}" [innerHTML]="item.resetReason"></span>
-</ng-template>
-<ng-template #timeStampTemplate let-item="celldata">
-	<span title="{{ item?.timeStamp }}" [innerHTML]="item.timeStamp"></span>
-</ng-template>
 <ng-template #riskTooltipTemplate>
 	<span [innerText]="'_CP_Risk_' | i18n"></span>
 	<sup
@@ -287,22 +214,17 @@
 		></div
 	></sup>
 </ng-template>
+
 <ng-template #riskTooltipContentTemplate>
 	<span
 		[innerText]="'_CP_GlobalRiskRankToolTip_' | i18n"
 		class="text-small"
 	></span>
 </ng-template>
-<ng-template #riskScoreFilterTemplate let-filter="filter">
-	<pie-chart
-		[seriesData]="filter.seriesData"
-		(subfilter)="onSubfilterSelect($event.filter, filter, true)"
-	>
-	</pie-chart>
-</ng-template>
+
 <ng-template #crashSystemTooltipTemplate>
 	<div>
-		<span [innerText]="crashedAssetsCount"></span
+		<span class= "qtr-padding" [innerText]="crashedAssetsCount"></span
 		><span [innerText]="'_CP_CrashedSystems_' | i18n"></span>
 	</div>
 </ng-template>

@@ -42,6 +42,13 @@ export class CrashedSystemsGridComponent implements OnChanges {
 		limit: 10,
 		page: 0,
 	};
+	public first = 0;
+	public last = 2;
+	public isLoading: boolean;
+	public pageInfo = {
+		limit: 2,
+		page: 0,
+	};
 
 	@ViewChild('lastOccuranceTemplate', { static: true })
 	public lastOccuranceTemplate: TemplateRef<string>;
@@ -55,7 +62,6 @@ export class CrashedSystemsGridComponent implements OnChanges {
 	public neNameTemplate: TemplateRef<string>;
 	@ViewChild('productIdTemplate', { static: true })
 	public productIdTemplate: TemplateRef<string>;
-	isLoading: boolean;
 
 	constructor (
 		private riskMitigationService: RiskMitigationService,
@@ -68,11 +74,12 @@ export class CrashedSystemsGridComponent implements OnChanges {
 		this.customerId = _.get(user, ['info', 'customerId']);
 		this.crashedSystemsGridDetails = {
 			tableData: [],
-			tableLimit: 10,
+			tableLimit: 2,
 			tableOffset: 0,
 			totalItems: 0,
 		};
 		this.crashedSystemsGridInit();
+
 	}
 
 	/**
@@ -157,7 +164,6 @@ export class CrashedSystemsGridComponent implements OnChanges {
 	public getCrashedSystemDetails () {
 		const params = this.getCrashedSystemsParams();
 		this.isLoading = true;
-		// this.updatePagerDetails();
 
 		return this.riskMitigationService.getDeviceDetails(params)
 				.pipe(
@@ -167,7 +173,8 @@ export class CrashedSystemsGridComponent implements OnChanges {
 						this.crashedSystemsGridDetails.tableData = results.deviceDetails;
 						this.crashedSystemsGridDetails.totalItems = _.size(results.deviceDetails);
 						this.crashedSystemsGridDetails.tableOffset = 0;
-						this.updatePagerDetails();
+						this.onPagerUpdated(this.pageInfo);
+
 
 					}),
 					catchError(err => {
@@ -197,39 +204,25 @@ export class CrashedSystemsGridComponent implements OnChanges {
 		};
 	}
 	/**
-	 * Updates the crashed grid pagination details
-	 */
-	public updatePagerDetails () {
-		if (this.crashedSystemsGridDetails.totalItems) {
-			const first = (this.paginationParams.page * 10) + 1;
-			const last = (this.paginationParams.page * 10) +
-			this.paginationParams.limit;
-			this.crashPagination = `${first}-${last}`;
-		} else {
-			this.crashPagination = '0-0';
-		}
-		const paginationValueProp = {
-			itemRange: this.crashPagination,
-			totalItems: this.crashedSystemsGridDetails.totalItems,
-		};
-		this.paginationValue.emit(paginationValueProp);
-	}
-
-	/**
 	 * Function to update pagination
 	 * @param pageInfo will have the page info
 	 *
 	 */
+
 	public onPagerUpdated (pageInfo: any) {
 		this.crashedSystemsGridDetails.tableOffset = pageInfo.page;
-		this.updatePagerDetails();
+		this.first = (pageInfo.page * pageInfo.limit) + 1;
+		this.last = (pageInfo.page * pageInfo.limit) + 2 ;
+		if (this.last > this.crashedSystemsGridDetails.totalItems) {
+			this.last = this.crashedSystemsGridDetails.totalItems ;
+		}
+		this.crashPagination = `${this.first}-${this.last}`;
 		const paginationValueProp = {
 			itemRange: this.crashPagination,
 			totalItems: this.crashedSystemsGridDetails.totalItems,
 		};
 		this.paginationValue.emit(paginationValueProp);
-	}
-
+	 }
 	/**
 	 * Determines whether panel close on when grids open details of asset
 	 */

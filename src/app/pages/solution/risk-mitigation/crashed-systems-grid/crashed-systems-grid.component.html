@@ -57,6 +57,7 @@
 	</span>
 </ng-template>
 <app-crash-history-details
+	*ngIf="selectedSystem"
 	[selectedSystem]="selectedSystem"
 	(close)="onPanelClose($event)"
 ></app-crash-history-details>

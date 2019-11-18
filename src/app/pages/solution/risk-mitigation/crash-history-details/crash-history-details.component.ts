@@ -47,8 +47,8 @@ export class CrashHistoryDetailsComponent implements OnChanges, OnDestroy {
 	public softwareVersionTemplate: TemplateRef<string>;
 	@ViewChild('timeStampTemplate', { static: true })
 	public timeStampTemplate: TemplateRef<string>;
-	customerId: any;
-    crashHistoryParams: { customerId: any; neInstanceId: any; };
+	public customerId: any;
+	public crashHistoryParams: { customerId: any; neInstanceId: any; };
 
 	constructor (
 		private detailsPanelStackService: DetailsPanelStackService,

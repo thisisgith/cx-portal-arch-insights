@@ -10,6 +10,7 @@ import {
 	 TooltipModule,
 	 PieChartModule,
 	 AssetDetailsHeaderModule,
+	 ColumnChartModule,
 	 } from '@components';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import {
@@ -60,6 +61,9 @@ const childRoutes: Routes = [
 @NgModule({
 	declarations: [RiskMitigationComponent],
 	imports: [
+		AssetDetailsModule,
+		AssetDetailsHeaderModule,
+		CuiSpinnerModule,
 		CommonModule,
 		FormsModule,
 		DetailsPanelModule,
@@ -75,9 +79,7 @@ const childRoutes: Routes = [
 		CuiDropdownModule,
 		CuiLoaderModule,
 		CuiProgressbarModule,
-		AssetDetailsModule,
-		AssetDetailsHeaderModule,
-		CuiSpinnerModule,
+		ColumnChartModule,
 		FingerprintDetailsModule,
 		FingerprintHeaderModule,
 		FingerprintBodyModule,

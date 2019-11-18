@@ -29,8 +29,8 @@ import { AssetLinkInfo } from '@interfaces';
  */
 @Component({
 	selector: 'app-crash-risk-grid',
-	templateUrl: './crash-risk-grid.component.html',
 	styleUrls: ['./crash-risk-grid.component.scss'],
+	templateUrl: './crash-risk-grid.component.html',
 })
 export class CrashRiskGridComponent implements OnChanges {
 	@Input() public selectedFilter = '';

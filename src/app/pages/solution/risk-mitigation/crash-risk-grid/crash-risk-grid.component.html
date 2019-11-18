@@ -84,6 +84,7 @@
 	></sup>
 </ng-template>
 <app-fingerprint-details
+	*ngIf="selectedFingerPrintdata"
 	[selectedSystem]="selectedFingerPrintdata"
 	(close)="onPanelClose($event)"
 ></app-fingerprint-details>

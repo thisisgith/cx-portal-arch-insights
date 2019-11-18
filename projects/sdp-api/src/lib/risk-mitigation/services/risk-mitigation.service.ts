@@ -167,7 +167,9 @@ class RiskMitigationService extends __BaseService {
 		 if(params.sort && params.sort != ''){
 			__params = __params.set('sort', params.sort.toString());
 		 }
+		 if(params.globalRiskRank && params.globalRiskRank != ''){
 		 __params = __params.set('globalRiskRank', params.globalRiskRank);
+		 }
 		if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
 		if (params.solution != null) __params = __params.set('solution', params.solution.toString());
 
