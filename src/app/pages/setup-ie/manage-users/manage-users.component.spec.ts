@@ -6,6 +6,8 @@ import {
 } from '@angular/core/testing';
 import { ManageUsersComponent } from './manage-users.component';
 import { ManageUsersModule } from './manage-users.module';
+import { RouterTestingModule } from '@angular/router/testing';
+import { environment } from '@environment';
 
 describe('ManageUsersComponent', () => {
 	let component: ManageUsersComponent;
@@ -16,6 +18,10 @@ describe('ManageUsersComponent', () => {
 			imports: [
 				HttpClientTestingModule,
 				ManageUsersModule,
+				RouterTestingModule,
+			],
+			providers: [
+				{ provide: 'ENVIRONMENT', useValue: environment },
 			],
 		});
 	});

@@ -1,11 +1,13 @@
 import { configureTestSuite } from 'ng-bullet';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 import {
 	ComponentFixture,
 	TestBed,
 } from '@angular/core/testing';
 import { SelectRoleComponent } from './select-role.component';
 import { SelectRoleModule } from './select-role.module';
+import { environment } from '@environment';
 
 describe('SelectRoleComponent', () => {
 	let component: SelectRoleComponent;
@@ -16,7 +18,11 @@ describe('SelectRoleComponent', () => {
 		TestBed.configureTestingModule({
 			imports: [
 				HttpClientTestingModule,
+				RouterTestingModule,
 				SelectRoleModule,
+			],
+			providers: [
+				{ provide: 'ENVIRONMENT', useValue: environment },
 			],
 		});
 	});
@@ -24,6 +30,9 @@ describe('SelectRoleComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(SelectRoleComponent);
 		component = fixture.componentInstance;
+		component.user = {
+			roles: [],
+		};
 
 		fixture.detectChanges();
 	});
