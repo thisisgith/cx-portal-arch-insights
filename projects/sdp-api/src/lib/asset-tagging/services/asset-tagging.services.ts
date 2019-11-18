@@ -287,10 +287,9 @@ class AssetTaggingService extends __BaseService {
 	postPolicyMappingResponse (params: AssetTaggingService.PostParams): __Observable<__StrictHttpResponse<any>> {
 		let __headers = new HttpHeaders();
 		let __body: any = params.body;
+		let __params = this.newParams();
 
-		let customerId = '';
-
-		if (params.customerId != null) customerId = params.customerId.toString();
+		let customerId = params.customerId;
 
 		let req = new HttpRequest<any>(
 			'POST',
@@ -319,13 +318,16 @@ class AssetTaggingService extends __BaseService {
 	 * @return successful operation
 	 */
 	updateOptStatusResponse (params: AssetTaggingService.PutUpdateOptInParams): __Observable<__StrictHttpResponse<OptInOut>> {
-		let __headers = new HttpHeaders();
 		let __params = this.newParams();
+		let __headers = new HttpHeaders();
+		let __body: any = null;
 		if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
 		if (params.isRccOpted != null) __params = __params.set('isRccOpted', params.isRccOpted.toString());
+		
 		let req = new HttpRequest<any>(
 			'PUT',
 			this.rootUrl + `${AssetTaggingService.updateOptinStatus}`,
+			__body,
 			{
 				headers: __headers,
 				params: __params,
