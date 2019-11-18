@@ -277,12 +277,7 @@ describe('AdminComplienceComponent', () => {
 		assetTaggingService = TestBed.get(AssetTaggingService);
 		spyOn(assetTaggingService, 'getSelectedTags').and
 			.callFake(() =>
-				of([{
-					deviceCount: 1,
-					devices: [],
-					tagName: 'ABC',
-					tagValue: '111',
-				}]));
+				of([]));
 		component.savePolicyDetails();
 		assetTaggingService.getSelectedTags()
 			.subscribe(res => {
@@ -409,7 +404,7 @@ describe('AdminComplienceComponent', () => {
 		component.selectedDeviceTagType = 'allDevices';
 		spyOn(component, 'filterDuplicates');
 		component.discardChangesOnPolicyChange();
-		expect(component.showAssetsComponent)
+		expect(component.enableSaveButton)
 			.toBeFalsy();
 	});
 
@@ -418,7 +413,7 @@ describe('AdminComplienceComponent', () => {
 		component.selectedDeviceTagType = null;
 		spyOn(component, 'filterDuplicates');
 		component.discardChangesOnPolicyChange();
-		expect(component.showAssetsComponent)
-			.toBeTruthy();
+		expect(component.enableSaveButton)
+			.toBeFalsy();
 	});
 });
