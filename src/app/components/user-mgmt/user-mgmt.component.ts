@@ -6,14 +6,18 @@ import {
 	OnDestroy,
 	Output,
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { empty, Observable, Subject } from 'rxjs';
 import { catchError, finalize, map, switchMap, takeUntil, tap } from 'rxjs/operators';
-import { ControlPointUserManagementAPIService, UserDetails } from '@sdp-api';
+import {
+	ControlPointUserManagementAPIService,
+	UserDetails,
+	UserResponse,
+	UserUpdateResponseModel,
+} from '@sdp-api';
 import { SortableColumn, SortProps } from './user-mgmt.types';
 import { I18nPipe } from '@cisco-ngx/cui-pipes';
-
-/** Placeholder for saCompanyId */
-const companyId = '106200';
+import * as _ from 'lodash-es';
 
 /**
  * UserMgmtComponent
@@ -29,6 +33,8 @@ export class UserMgmtComponent implements AfterViewInit, OnDestroy {
 	private updateUsers$: Subject<UserDetails[]> = new Subject<UserDetails[]>();
 	public isLoading: boolean;
 	public numUsers = 0;
+	private user: UserResponse['data'];
+	private customerId: string;
 	public users$: Observable<UserDetails[]> = this.updateUsers$
 		.pipe(
 			switchMap(() => this.getUsers()),
@@ -53,8 +59,12 @@ export class UserMgmtComponent implements AfterViewInit, OnDestroy {
 	constructor (
 		private cdr: ChangeDetectorRef,
 		private i18n: I18nPipe,
+		private route: ActivatedRoute,
 		private usersService: ControlPointUserManagementAPIService,
-	) { }
+	) {
+		this.user = _.get(this.route, ['snapshot', 'data', 'user']);
+		this.customerId = _.get(this.user, ['info', 'customerId']);
+	}
 
 	/**
 	 * NgAfterViewInit
@@ -79,7 +89,10 @@ export class UserMgmtComponent implements AfterViewInit, OnDestroy {
 		this.isLoading = true;
 		this.cdr.detectChanges();
 
-		return this.usersService.getUserDetailsListForGivenSAUsingGET(companyId)
+		return this.usersService.getUserDetailsListForGivenSAUsingGET(
+			// this.customerId, TODO add this back
+			'106200',
+		)
 			.pipe(
 				finalize(() => {
 					this.isLoading = false;
@@ -161,7 +174,28 @@ export class UserMgmtComponent implements AfterViewInit, OnDestroy {
 			ccoId: user.ccoId,
 			isPartner: false,
 			roles: user.roles,
-			saCompanyId: companyId,
+			saCompanyId: this.customerId,
 		});
+	}
+
+	/**
+	 * Handles changing a user's role
+	 * @param obs - Observable<UserUpdateResponseModel>
+	 */
+	public changeRole (obs: Observable<UserUpdateResponseModel>) {
+		this.isLoading = true;
+		obs
+			.pipe(
+				finalize(() => {
+					this.updateUsers$.next();
+				}),
+				catchError(() => {
+					this.error.show = true;
+
+					return empty();
+				}),
+				takeUntil(this.destroyed$),
+			)
+			.subscribe();
 	}
 }

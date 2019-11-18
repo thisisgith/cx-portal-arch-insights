@@ -1,6 +1,11 @@
 <ng-container *ngIf="options$ | async as options">
 	<div *ngIf="expanded" class="panel panel--raised select-role-dropdown">
-		<div class="dropdown-option" *ngFor="let option of options; let i = index">
+		<div
+			class="dropdown-option"
+			*ngFor="let option of options; let i = index"
+			data-auto-id="dropdown-option"
+			(click)="handleClick(option)"
+		>
 			<div
 				class="dropdown-option__text"
 				[ngClass]="{
