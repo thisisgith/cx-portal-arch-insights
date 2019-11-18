@@ -152,7 +152,7 @@ export class FpSimilarAssetsComponent {
 					key: 'deviceId',
 					name: '',
 					template: this.compareTemplate,
-					width : '10%',
+					width : '15%',
 				},
 			],
 			rowWellColor: 'black',
@@ -252,6 +252,7 @@ export class FpSimilarAssetsComponent {
 			}
 		});
 		rowData.toggleWell = !rowData.toggleWell;
+		this.compareView = 'software';
 	}
 	/**
 	 * updateCompareView
