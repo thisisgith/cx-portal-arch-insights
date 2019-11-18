@@ -40,6 +40,7 @@ export class AdminComplienceComponent implements OnInit {
 	public errorMessage = '';
 	public loading = false;
 	public optlnStatus = false;
+	public filteredArray = [];
 	public policies = [];
 	public enableSaveButton: boolean;
 	public leftSideTagsResponse: LeftTagResponse;
@@ -47,7 +48,6 @@ export class AdminComplienceComponent implements OnInit {
 	public selectedPolicy = 'select';
 	public leftSideTags = [];
 	public rightSideTags = [];
-	public showAssetsComponent = false;
 	public saveDetails: AssetTaggingService.PostParams = {
 		body: {
 			policy: '',
@@ -115,7 +115,6 @@ export class AdminComplienceComponent implements OnInit {
 	 */
 	public checkOptlnStatus () {
 
-		this.optlnStatus = true;
 		forkJoin(
 			this.getOptinOutStatus(),
 			this.getLeftSideTags(),
@@ -251,19 +250,18 @@ export class AdminComplienceComponent implements OnInit {
 				tag.devices = policyGroups.devices;
 				tag.deviceCount = policyGroups.deviceCount;
 			});
-			_.each(this.leftSideTags, tag => {
-				const duplicateTagIndex = this.rightSideTags.findIndex(rightSideTag => {
-					if (tag) {
-						return tag.tagName === rightSideTag.tagName;
-					}
-				});
+			_.each(this.leftSideTags, (tag, i) => {
+				const duplicateTagIndex = this.rightSideTags.findIndex(rightSideTag =>
+					tag.tagName === rightSideTag.tagName);
 				if (duplicateTagIndex !== -1) {
 					this.rightSideTags[duplicateTagIndex] = _.cloneDeep(tag);
-					this.leftSideTags
-					.splice(this.leftSideTags
-						.findIndex(leftSideTag => leftSideTag.tagName === tag.tagName), 1);
+					this.filteredArray
+						.push(this.leftSideTags[i]);
 				}
 			});
+
+			this.leftSideTags = _.differenceWith(this.leftSideTags, this.filteredArray, _.isEqual);
+			this.filteredArray = [];
 		}
 	}
 	/**
@@ -303,13 +301,43 @@ export class AdminComplienceComponent implements OnInit {
 				this.saveDetails.body.tags = tags;
 				this.saveDetails.body.toBeScanned = this.toBeScanned;
 				this.saveDetails.customerId = this.customerId;
+				if (this.selectedDeviceTagType === 'allDevices') {
+					this.saveDetails.body.tags = [];
+				}
 
 				return this.assetTaggingService.postPolicyMapping(this.saveDetails);
 			}),
 			takeUntil(this.destroyed$))
-		.subscribe(() => _.invoke(this.alert, 'show',
-		I18n.get('_AssetsTaggingSavePolicyAlert_'), 'success'),
+		.subscribe(() => this.handleSaveSuccess(),
 					);
+	}
+
+	/**
+	 * handle success scenario on save
+	 */
+	public handleSaveSuccess () {
+		_.invoke(this.alert, 'show',
+		I18n.get('_AssetsTaggingSavePolicyAlert_'), 'success');
+		this.enableSaveButton = false;
+
+		/** Needs to save Right side tag details and
+		 * left side tag details
+		 */
+		if (this.saveDetails.body.tags.length) {
+			_.each(this.rightSideTagsResponse.policyGroups, policy => {
+				if (policy.policyName === this.saveDetails.body.policy) {
+					policy.tags = [];
+					_.each(this.rightSideTags, tag => {
+						const tempObj = {
+							tagName: tag.tagName,
+							tagValue: tag.tagValue,
+						};
+						policy.tags.push(tempObj);
+					});
+				}
+			});
+		}
+
 	}
 
 	/**
@@ -353,7 +381,7 @@ export class AdminComplienceComponent implements OnInit {
 			this.cuiModalService.show(this.switchBetweenPolicy, 'normal');
 		} else if (!this.enableSaveButton && this.selectedDeviceTagType === 'allDevices') {
 			this.hideAssetTags = true;
-		} else if (this.selectedDeviceTagType === 'selectedTags') {
+		} else if (this.selectedDeviceTagType === 'selectedTags' && this.enableSaveButton) {
 			this.filterDuplicates();
 			this.hideAssetTags = false;
 		} else {
@@ -372,10 +400,7 @@ export class AdminComplienceComponent implements OnInit {
 			this.hideAssetTags = true;
 			this.filterDuplicates();
 		} else if (this.selectedDeviceTagType === 'allDevices') {
-			this.showAssetsComponent = false;
 			this.assetTaggingService.Tags = [];
-		} else {
-			this.showAssetsComponent = true;
 		}
 		this.filterDuplicates();
 		this.enableSaveButton = false;

@@ -55,22 +55,6 @@ describe('TagListComponent', () => {
 		.toBeTruthy();
 	});
 
-	it('should run refresh', () => {
-		spyOn(component, 'refresh');
-		component.ngOnChanges();
-		expect(component.refresh)
-		.toHaveBeenCalled();
-	});
-
-	it('should handle list with no items', () => {
-		component.items = [];
-		component.refresh();
-		component.ngDoCheck();
-
-		expect(component.itemsInView.length)
-				.toBe(0);
-	});
-
 	it('should toggle selection for tag object', () => {
 		const tag = {
 			deviceCount: '3',
