@@ -399,6 +399,17 @@ module AssetTaggingService {
 		 * Contains the policy mapping
 		 */
 		body : PolicyMapping;
+		tags?: Array<Tags>;
+		policy?: string;
+		toBeScanned?: boolean;
+	}
+
+	export interface Tags {
+		tagName?: string;
+		tagValue?: string;
+		devices?: Array<string>;
+		deviceCount?: string;
+		selected ?: boolean;
 	}
 
 		/**

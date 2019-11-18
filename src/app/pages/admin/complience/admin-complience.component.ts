@@ -305,7 +305,15 @@ export class AdminComplienceComponent implements OnInit {
 					this.saveDetails.body.tags = [];
 				}
 
-				return this.assetTaggingService.postPolicyMapping(this.saveDetails);
+				const params = {
+					body: this.saveDetails.body,
+					customerId: this.saveDetails.customerId,
+					policy: this.saveDetails.body.policy,
+					tags: this.saveDetails.body.tags,
+					toBeScanned: this.saveDetails.body.toBeScanned,
+				};
+
+				return this.assetTaggingService.postPolicyMapping(params);
 			}),
 			takeUntil(this.destroyed$))
 		.subscribe(() => this.handleSaveSuccess(),
