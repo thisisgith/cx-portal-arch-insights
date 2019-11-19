@@ -200,17 +200,6 @@ describe('DevicesSdaComponent', () => {
 		component.ngOnChanges();
 	});
 
-	it('should check for error response for non optimal links', () => {
-		const error = {
-			status: 404,
-			statusText: 'Resource not found',
-		};
-		spyOn(architectureReviewService, 'getOptimalLinks')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-		component.ngOnChanges();
-	});
-
 	it('should call deviceDetails on change', () => {
 		spyOn(component, 'getCollectionId');
 		spyOn(component, 'getSolutionInfo');
