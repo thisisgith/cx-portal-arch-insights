@@ -116,6 +116,13 @@ const deviceDetails: any = {
     }]
 }
 
+const highCrashRiskGridDataEmpty:any= {
+    "customerId": "231215372",
+    "count": 0,
+    "crashPredicted": true,
+    "devices": []
+}
+
 const crashHistoryTable :any = {
 	customerId: 7293498,
 	deviceId: "NA,FOC2045X0WJ,WS-C3850-48U-L,NA",
@@ -276,5 +283,22 @@ export const RiskScenarios = [
 		},
 		url: `${assestApi}/role/device/count?customerId=${customerId}&useCase=Campus Network Assurance&solution=IBN`,
 		usecases: ['Use Case 7'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'HCR table Data',
+					response: {
+						body: highCrashRiskGridDataEmpty,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/crash-risk-devices/2431199?customerId=${customerId}&page=0&size=10&globalRiskRank=LOW&useCase=Campus Network Assurance&solution=IBN`,
+		usecases: ['Use Case 5'],
 	},
 ];
