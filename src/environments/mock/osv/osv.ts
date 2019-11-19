@@ -1202,9 +1202,10 @@ const mockSummaryResponse: SummaryResponse = {
 	},
 	assets: 964,
 	deployment: {
+		na: 10,
 		none: 364,
-		upgrade: 400,
 		production: 200,
+		upgrade: 400,
 	},
 	profiles: 441,
 	recommendations: {
