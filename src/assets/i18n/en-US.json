@@ -225,7 +225,7 @@
 	"_ArchitectureSwitchInterfaceText_": "Increase default MTU—The VXLAN header adds 50 and optionally 54 bytes of encapsulation overhead. Some Ethernet switches support a Maximum Transmission Unit (MTU) of 9216 while others may have an MTU of 9196 or smaller. Given that server MTUs typically go up to 9,000 bytes, enabling a network wide MTU of 9100 ensures that Ethernet jumbo frames can be transported without any fragmentation inside and outside of the fabric.",
 	"_ArchitectureSwitchRedundancy_": "Switch Redundancy",
 	"_ArchitectureSystemName_": "System Name",
-	"_ArchitectureSystems_": "Systems",
+	"_ArchitectureSystems_": "Systems (Level 3)",
 	"_ArchitectureSystems(SystemsPublishedLimit)_": "Systems/Published Limit",
 	"_ArchitectureSystemsAffected_": "Systems Affected",
 	"_ArchitectureSystemsTooltipContent_": "Displayed value is the systems as per the last data collection from DNAC",

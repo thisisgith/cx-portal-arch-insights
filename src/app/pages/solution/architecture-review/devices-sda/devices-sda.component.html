@@ -19,7 +19,7 @@
 			</ng-container>
 		</div>
 	</cui-drawer>
-	<cui-drawer expanded="true" projection="true">
+	<cui-drawer expanded="true" projection="true" *ngIf="showL3Switch === true ||showSwitchRedundency === true || showSwitchInterface === true ">
 		<div class="cui-drawer-label text-xlarge" [innerText]="'_ArchitectureUnderlayRecommendation_' | i18n">
 		</div>
 		<div class="cui-drawer-content">
@@ -38,19 +38,20 @@
 			<ng-container *ngTemplateOutlet="SDAUnderlayRecommendationTemplate">
 			</ng-container>
 		</div>
-	</cui-drawer>
+	</cui-drawer>	
+<span *ngIf="noApiData" class="text-muted text-xlarge "
+[innerText]="'_NoResultsFound_' | i18n"
+data-auto-id="NoResultsFoundTxt" >
+</span>
 </div>
 <ng-template #errorTemplate>
 		<div class="dbl-padding" *ngIf="isLoading">
 			<cui-spinner color="default" label=""></cui-spinner>
-		</div>
-	<div class="alert fade-and-slide-top text-left alert--danger" *ngIf="isError && !isLoading">
-		<div class="alert__icon icon-error-outline"></div>
-		<ng-container class="failed-criteria">
-			<div class="alert__message" [innerText]="'__ArchitectureErrorResults_' | i18n">
-			</div>
-		</ng-container>
-	</div>
+		</div>	
+			<span  *ngIf="isError && !isLoading" class="text-muted text-xlarge "
+						[innerText]="'_NoResultsFound_' | i18n"
+						data-auto-id="NoResultsFoundTxt" >
+			</span>
 </ng-template>
 <ng-template #SDASupportedSoftwareContent let-softwareSdaData="sdaData">
 	<span [innerText]="'_ArchitectureRecommendedMessage_' | i18n"></span>
