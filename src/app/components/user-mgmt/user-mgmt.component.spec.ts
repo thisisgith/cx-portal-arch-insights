@@ -39,6 +39,10 @@ describe('UserMgmtComponent', () => {
 			.toBeTruthy();
 	});
 
+	it('should open modal', () => {
+		component.onAddUser();
+	});
+
 	it('should run functions', () => {
 		component.setSort('companyName');
 		component.onUpdateClick();

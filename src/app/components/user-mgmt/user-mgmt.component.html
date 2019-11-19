@@ -17,9 +17,9 @@
 				</button>
 			</div>
 		</div>
-		<div class="add-user-btn flex text-info">
+		<div class="add-user-btn flex text-info" data-auto-id="add-user" (click)="onAddUser()" >
 			<div class="icon-add-contain half-margin-right"></div>
-			<div [innerText]="'_AddUser_' | i18n"></div>
+			<div [innerText]="'_AddUser_' | i18n" ></div>
 		</div>
 		<div class="flex text-small">
 			<div class="col-6" [innerText]="'_XSmartAccountUsers_' | i18n:numUsers"></div>
@@ -136,3 +136,4 @@
 	</div>
 	<div class="dbl-margin-bottom"></div>
 </div>
+<cui-modal></cui-modal>

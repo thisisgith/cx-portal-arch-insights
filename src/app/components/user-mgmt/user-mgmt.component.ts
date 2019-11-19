@@ -17,6 +17,8 @@ import {
 } from '@sdp-api';
 import { SortableColumn, SortProps } from './user-mgmt.types';
 import { I18nPipe } from '@cisco-ngx/cui-pipes';
+import { CuiModalService } from '@cisco-ngx/cui-components';
+import { AddUserComponent } from '../add-user/add-user.component';
 import * as _ from 'lodash-es';
 
 /**
@@ -61,6 +63,7 @@ export class UserMgmtComponent implements AfterViewInit, OnDestroy {
 		private i18n: I18nPipe,
 		private route: ActivatedRoute,
 		private usersService: ControlPointUserManagementAPIService,
+		private cuiModalService: CuiModalService,
 	) {
 		this.user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(this.user, ['info', 'customerId']);
@@ -128,6 +131,13 @@ export class UserMgmtComponent implements AfterViewInit, OnDestroy {
 	 */
 	public onUpdateClick () {
 		this.onUpdate.emit();
+	}
+
+	/**
+	 * Add User Button click handler
+	 */
+	public onAddUser () {
+		this.cuiModalService.showComponent(AddUserComponent, { }, 'small');
 	}
 
 	/**
