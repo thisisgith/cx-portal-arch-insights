@@ -37,19 +37,4 @@ describe('RolesService', () => {
 		expect(service)
 			.toBeTruthy();
 	}));
-
-	it('should share request', done => {
-		inject([RolesService], (service: RolesService) => {
-			service.roles
-				.toPromise()
-				.then(() => {
-					const roles = service.roles;
-					expect(roles)
-						.toBeDefined();
-					expect(getRolesSpy)
-						.toHaveBeenCalledTimes(1);
-					done();
-				});
-		})();
-	});
 });
