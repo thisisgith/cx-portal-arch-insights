@@ -356,7 +356,6 @@ export class AdminComplienceComponent implements OnInit {
 
 	}
 
-
 	/**
 	 * This Function is used to updateOptInOutStatus
 	 */
