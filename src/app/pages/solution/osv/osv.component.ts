@@ -72,6 +72,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 		{ key: 'production', label: I18n.get('_OsvInProduction_') },
 		{ key: 'upgrade', label: I18n.get('_Upgrade_') },
 		{ key: 'none', label: I18n.get('_OsvNone_') },
+		{ key: 'na', label: I18n.get('_OsvNA_') },
 	];
 	public selectedSolutionName;
 	public selectedTechnologyName;
