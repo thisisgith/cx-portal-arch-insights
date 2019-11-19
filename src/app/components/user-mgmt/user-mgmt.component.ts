@@ -173,7 +173,7 @@ export class UserMgmtComponent implements AfterViewInit, OnDestroy {
 		return this.usersService.deleteUserUsingDELETE({
 			ccoId: user.ccoId,
 			isPartner: false,
-			roles: user.roles,
+			rolesRemoved: user.roles,
 			saCompanyId: this.customerId,
 		});
 	}

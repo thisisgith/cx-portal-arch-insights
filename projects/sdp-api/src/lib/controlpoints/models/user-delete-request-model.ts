@@ -4,6 +4,6 @@ export interface UserDeleteRequestModel {
   ccoId?: string;
   haCompanyId?: string;
   isPartner?: boolean;
-  roles?: Array<CSWRole>;
+  rolesRemoved?: Array<CSWRole>;
   saCompanyId?: string;
 }
