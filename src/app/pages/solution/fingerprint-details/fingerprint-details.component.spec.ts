@@ -4,7 +4,7 @@ import { FingerprintDetailsComponent } from './fingerprint-details.component';
 import { FingerprintDetailsModule } from './fingerprint-details.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
-fdescribe('FingerprintDetailsComponent', () => {
+describe('FingerprintDetailsComponent', () => {
 	let component: FingerprintDetailsComponent;
 	let fixture: ComponentFixture<FingerprintDetailsComponent>;
 

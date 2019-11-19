@@ -119,7 +119,7 @@ export class CrashHistoryDetailsComponent implements OnChanges, OnDestroy {
 					name: I18n.get('_RMTimeStamp_'),
 					sortable: false,
 					template: this.timeStampTemplate,
-					width: '30%',
+					width: '40%',
 				},
 			],
 		});

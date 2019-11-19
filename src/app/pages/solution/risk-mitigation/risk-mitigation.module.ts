@@ -24,9 +24,6 @@ import {
 	CuiSpinnerModule,
 	CuiLoaderModule,
 } from '@cisco-ngx/cui-components';
-import {
-	RiskMitigationColumnChartModule,
-} from './risk-mitigation-column-chart/risk-mitigation-column-chart.module';
 import { RMModule } from '@sdp-api';
 import { environment } from '@environment';
 import {
@@ -69,7 +66,6 @@ const childRoutes: Routes = [
 		DetailsPanelModule,
 		RouterModule.forChild(childRoutes),
 		CuiTabsModule,
-		RiskMitigationColumnChartModule,
 		I18nPipeModule,
 		RMModule.forRoot({ rootUrl }),
 		CuiTableModule,

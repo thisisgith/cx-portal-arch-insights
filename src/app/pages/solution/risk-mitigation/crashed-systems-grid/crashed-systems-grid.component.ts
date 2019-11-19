@@ -23,7 +23,6 @@ import { of, Subject } from 'rxjs';
  */
 @Component({
 	selector: 'app-crashed-systems-grid',
-	styleUrls: ['./crashed-systems-grid.component.scss'],
 	templateUrl: './crashed-systems-grid.component.html',
 })
 export class CrashedSystemsGridComponent implements OnChanges {
@@ -74,7 +73,7 @@ export class CrashedSystemsGridComponent implements OnChanges {
 		this.customerId = _.get(user, ['info', 'customerId']);
 		this.crashedSystemsGridDetails = {
 			tableData: [],
-			tableLimit: 2,
+			tableLimit: 10,
 			tableOffset: 0,
 			totalItems: 0,
 		};
@@ -118,36 +117,42 @@ export class CrashedSystemsGridComponent implements OnChanges {
 					name: I18n.get('_RMAsset_'),
 					sortable: true,
 					template: this.neNameTemplate,
+					width: '18%',
 				},
 				{
 					key: 'productId',
 					name: I18n.get('_RMProductId_'),
 					sortable: true,
 					template: this.productIdTemplate,
+					width: '18%',
 				},
 				{
 					key: 'swType',
 					name: I18n.get('_RMSoftwareType_'),
 					sortable: true,
 					template: this.swTypeCrahsedTemplate,
+					width: '18%',
 				},
 				{
 					key: 'swVersion',
 					name: I18n.get('_RMSoftwareVersion_'),
 					sortable: true,
 					template: this.swVersionTemplate,
+					width: '10%',
 				},
 				{
 					key: 'firstOccurrence',
 					name: I18n.get('_RMFirstOccurance_'),
 					sortable: false,
 					template: this.firstOccuranceTemplate,
+					width: '18%',
 				},
 				{
 					key: 'lastOccurrence',
 					name: I18n.get('_RMLastOccurance_'),
 					sortable: false,
 					template: this.lastOccuranceTemplate,
+					width: '18%',
 				},
 			],
 			dynamicData: false,
@@ -212,7 +217,7 @@ export class CrashedSystemsGridComponent implements OnChanges {
 	public onPagerUpdated (pageInfo: any) {
 		this.crashedSystemsGridDetails.tableOffset = pageInfo.page;
 		this.first = (pageInfo.page * pageInfo.limit) + 1;
-		this.last = (pageInfo.page * pageInfo.limit) + 2 ;
+		this.last = (pageInfo.page * pageInfo.limit) + 10;
 		if (this.last > this.crashedSystemsGridDetails.totalItems) {
 			this.last = this.crashedSystemsGridDetails.totalItems ;
 		}

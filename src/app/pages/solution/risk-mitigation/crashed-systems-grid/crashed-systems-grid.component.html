@@ -1,17 +1,18 @@
-	 <div *ngIf="!crashedSystemsGridDetails.tableData.length && !isLoading">
-			<div class="text-center dbl-margin-top dbl-margin-bottom">
-				<div>
-					<span class="text-muted text-xlarge"
-						[innerText]="'_NoResultsFound_' | i18n"
-						data-auto-id="NoResultsFoundTxt" >
-					</span>
-				</div>
-
-			</div>
+<div *ngIf="!crashedSystemsGridDetails.tableData.length && !isLoading">
+	<div class="text-center dbl-margin-top dbl-margin-bottom">
+		<div>
+			<span
+				class="text-muted text-xlarge"
+				[innerText]="'_NoResultsFound_' | i18n"
+				data-auto-id="NoResultsFoundTxt"
+			>
+			</span>
 		</div>
+	</div>
+</div>
 
-
-<cui-table  *ngIf="crashedSystemsGridDetails.tableData.length"
+<cui-table
+	*ngIf="crashedSystemsGridDetails.tableData.length"
 	(onTableRowClicked)="selectedSystem = $event"
 	[data]="crashedSystemsGridDetails.tableData"
 	[limit]="crashedSystemsGridDetails.tableLimit"
@@ -33,32 +34,30 @@
 </div>
 
 <ng-template #lastOccuranceTemplate let-item="celldata">
-	<span title="{{ item?.lastOccurrence }}" [innerText]= "item.lastOccurrence">
+	<span title="{{ item?.lastOccurrence }}" [innerText]="item.lastOccurrence">
 	</span>
 </ng-template>
 <ng-template #firstOccuranceTemplate let-item="celldata">
-	<span title="{{ item?.firstOccurrence }}" [innerText]= "item.firstOccurrence">
+	<span
+		title="{{ item?.firstOccurrence }}"
+		[innerText]="item.firstOccurrence"
+	>
 	</span>
 </ng-template>
 <ng-template #swVersionTemplate let-item="celldata">
-	<span title="{{ item?.swVersion }}" [innerText]= "item.swVersion">
-	</span>
+	<span title="{{ item?.swVersion }}" [innerText]="item.swVersion"> </span>
 </ng-template>
 <ng-template #swTypeCrahsedTemplate let-item="celldata">
-	<span title="{{ item?.swType }}" [innerText]= "item.swType">
-	</span>
+	<span title="{{ item?.swType }}" [innerText]="item.swType"> </span>
 </ng-template>
 <ng-template #neNameTemplate let-item="celldata">
-	<span title="{{ item?.neName }}" [innerText]= "item.neName">
-	</span>
+	<span title="{{ item?.neName }}" [innerText]="item.neName"> </span>
 </ng-template>
 <ng-template #productIdTemplate let-item="celldata">
-	<span title="{{ item?.productId }}" [innerText]= "item.productId">
-	</span>
+	<span title="{{ item?.productId }}" [innerText]="item.productId"> </span>
 </ng-template>
 <app-crash-history-details
 	*ngIf="selectedSystem"
 	[selectedSystem]="selectedSystem"
 	(close)="onPanelClose($event)"
 ></app-crash-history-details>
-

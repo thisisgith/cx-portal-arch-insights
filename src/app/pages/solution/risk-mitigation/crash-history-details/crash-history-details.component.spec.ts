@@ -13,7 +13,7 @@ import { of } from 'rxjs';
 import { user, RiskScenarios } from '@mock';
 import { SimpleChange, SimpleChanges } from '@angular/core';
 
-fdescribe('CrashHistoryDetailsComponent', () => {
+describe('CrashHistoryDetailsComponent', () => {
 	let component: CrashHistoryDetailsComponent;
 	let fixture: ComponentFixture<CrashHistoryDetailsComponent>;
 	let riskMitigationService: RiskMitigationService;

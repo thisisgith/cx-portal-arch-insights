@@ -21,7 +21,7 @@ import { map, catchError, takeUntil } from 'rxjs/operators';
 import { Subject, of } from 'rxjs';
 import { LogService } from '@cisco-ngx/cui-services';
 import { AssetPanelLinkService } from '@services';
-import { ActivatedRoute} from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import * as _ from 'lodash-es';
 import { AssetLinkInfo } from '@interfaces';
 /**
@@ -29,7 +29,6 @@ import { AssetLinkInfo } from '@interfaces';
  */
 @Component({
 	selector: 'app-crash-risk-grid',
-	styleUrls: ['./crash-risk-grid.component.scss'],
 	templateUrl: './crash-risk-grid.component.html',
 })
 export class CrashRiskGridComponent implements OnChanges {
@@ -164,30 +163,35 @@ export class CrashRiskGridComponent implements OnChanges {
 					name: I18n.get('_RMAsset_'),
 					sortable: true,
 					template: this.deviceNameTemplate,
+					width: '25%',
 				},
 				{
 					key: 'productId',
 					name: I18n.get('_RMProductId_'),
 					sortable: true,
 					template: this.productIdTemplate,
+					width: '25%',
 				},
 				{
 					key: 'softwareType',
 					name: I18n.get('_RMSoftwareType_'),
 					sortable: true,
 					template: this.softwareTypeTemplate,
+					width: '25%',
 				},
 				{
 					key: 'softwareVersion',
 					name: I18n.get('_RMSoftwareVersion_'),
 					sortable: true,
 					template: this.softwareVersionTemplate,
+					width: '15%',
 				},
 				{
 					headerTemplate: this.riskTooltipTemplate,
 					key: 'globalRiskRank',
 					sortable: true,
 					template: this.cardColorsTemplate,
+					width: '10%',
 				},
 			],
 			dynamicData: true,
@@ -233,7 +237,7 @@ export class CrashRiskGridComponent implements OnChanges {
 	 * Initialize parameters for Crash-Risk Devices API request
 	 * @returns return the request parameters required for Crash-Risk_Devices API request
 	 */
-	public getCrashRiskDevicePrams () {
+	private getCrashRiskDevicePrams () {
 		return {
 			customerId: this.customerId,
 			globalRiskRank: this.selectedFilter,

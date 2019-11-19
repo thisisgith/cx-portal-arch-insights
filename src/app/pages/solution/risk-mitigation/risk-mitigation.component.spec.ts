@@ -14,7 +14,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { RiskMitigationService, HighCrashRiskDeviceCount } from '@sdp-api';
 import * as _ from 'lodash-es';
 
-fdescribe('RiskMitigationComponent', () => {
+describe('RiskMitigationComponent', () => {
 	let component: RiskMitigationComponent;
 	let fixture: ComponentFixture<RiskMitigationComponent>;
 	let riskMitigationService: RiskMitigationService;
@@ -162,48 +162,6 @@ fdescribe('RiskMitigationComponent', () => {
 			});
 	});
 
-	// it('Should get the device details', done => {
-	// 	spyOn(riskMitigationService, 'getDeviceDetails')
-	// 		.and
-	// 		.returnValue(of(RiskScenarios[2].scenarios.GET[0].response.body));
-	// 	component.ngOnInit();
-	// 	fixture.whenStable()
-	// 		.then(() => {
-	// 			fixture.detectChanges();
-	// 			expect(component.crashedAssetsGridDetails.tableData)
-	// 				.toBeDefined();
-	// 			done();
-	// 		});
-	// });
-
-	// it('Should get history of crashed device', done => {
-	// 	spyOn(riskMitigationService, 'getCrashHistoryForDevice')
-	// 		.and
-	// 		.returnValue(of(RiskScenarios[3].scenarios.GET[0].response.body));
-	// 	component.ngOnInit();
-	// 	fixture.whenStable()
-	// 		.then(() => {
-	// 			fixture.detectChanges();
-	// 			expect(component.crashedAssetsGridDetails.tableData)
-	// 				.toBeDefined();
-	// 			done();
-	// 		});
-	// });
-
-	// it('Should return the searched response', done => {
-	// 	spyOn(riskMitigationService, 'getSearchedData')
-	// 		.and
-	// 		.returnValue(of(RiskScenarios[2].scenarios.GET[0].response.body));
-	// 	component.ngOnInit();
-	// 	fixture.whenStable()
-	// 		.then(() => {
-	// 			fixture.detectChanges();
-	// 			expect(component.crashedAssetsGridDetails.tableData)
-	// 				.toBeDefined();
-	// 			done();
-	// 		});
-	// });
-
 	it('should test data supplied to render chart', () => {
 		const seriesData = {
 			customerId: '2431199',
@@ -242,14 +200,6 @@ fdescribe('RiskMitigationComponent', () => {
 			.toEqual(result);
 	});
 
-	// it('show Finger print details toggle', () => {
-	// 	expect(component.showFpDetails)
-	// 		.toBeFalsy();
-	// 	component.onFPDPanelClose();
-	// 	expect(component.showFpDetails)
-	// 		.toBeFalsy();
-	// });
-
 	it('show only crashes toggle', () => {
 		expect(component.onlyCrashes)
 			.toBeTruthy();
@@ -257,178 +207,6 @@ fdescribe('RiskMitigationComponent', () => {
 		expect(component.onlyCrashes)
 			.toBeFalsy();
 	});
-
-	// it('update pager on page update', () => {
-	// 	const pageinfo = {
-	// 		page: 1,
-	// 	};
-	// 	component.onPagerUpdated(pageinfo);
-	// 	expect(component.crashedAssetsGridDetails.tableOffset)
-	// 		.toBe(1);
-	// });
-
-	// it('check on high crash grid loaded', () => {
-	// 	component.ngOnInit();
-	// 	const param = {
-	// 		customerId: 324123,
-	// 		limit: 10,
-	// 		page: 2,
-	// 		search: '',
-	// 		size: 10,
-	// 		sort: 'abc.desc',
-	// 	};
-	// 	component.onHcrPagerUpdated(param);
-	// 	expect(component.highCrashRiskAssetsGridDetails.tableOffset)
-	// 		.toBe(2);
-	// 	expect(component.highCrashRiskAssetsGridDetails.tableLimit)
-	// 		.toBe(10);
-	// });
-
-	// it('should return selected key of filter', () => {
-	// 	component.ngOnInit();
-	// 	const key = 'advisories';
-	// 	let filter = component.getSelectedSubFilters(key);
-	// 	expect(filter)
-	// 	.toBeDefined();
-	// 	fixture.detectChanges();
-	// 	filter = component.getSelectedSubFilters('');
-	// 	expect(filter)
-	// 	.toBeUndefined();
-	// });
-
-	// it('should test high crash data params', () => {
-	// 	component.loadData();
-	// 	expect(component.highCrashRiskParams)
-	// 		.toBeDefined();
-	// });
-
-	// it('should show asset details', () => {
-	// 	expect(component.showAsset360)
-	// 		.toBeFalsy();
-	// 	component.redirectToAsset360();
-	// 	expect(component.showAsset360)
-	// 		.toBe(true);
-	// });
-
-	// it('on crashed table sorting change', () => {
-	// 	component.filters[0].seriesData = [
-	// 		{
-	// 			filter: 'Time: Last 24h',
-	// 			label: '24h',
-	// 			selected: true,
-	// 			value: 0,
-	// 		},
-	// 		{
-	// 			filter: 'Time: Last 7d',
-	// 			label: '7d',
-	// 			selected: false,
-	// 			value: 0,
-	// 		},
-	// 		{
-	// 			filter: 'Time: Last 30d',
-	// 			label: '30d',
-	// 			selected: false,
-	// 			value: 2,
-	// 		},
-	// 		{
-	// 			filter: 'Time: Last 90d',
-	// 			label: '90d',
-	// 			selected: false,
-	// 			value: 9,
-	// 		},
-	// 	];
-	// 	component.customerId = 12345;
-	// 	spyOn(riskMitigationService, 'getSearchedData')
-	// 		.and
-	// 		.returnValue(of(<any> { }));
-	// 	fixture.detectChanges();
-	// 	component.onTableSortingChanged({
-	// 		key: 'Key1',
-	// 		sortable: true,
-	// 		sortDirection: 'asc',
-	// 		value: 'Value1',
-	// 	});
-	// 	expect(riskMitigationService.getSearchedData)
-	// 		.toHaveBeenCalled();
-	// 	expect(riskMitigationService.getSearchedData)
-	// 		.toHaveBeenCalled();
-	// });
-
-	// it('should unset the selectedAsset', () => {
-	// 	component.onPanelClose();
-	// 	expect(component.selectedAsset.active)
-	// 		.toBeFalsy();
-	// 	expect(component.showAsset360)
-	// 		.toBeFalsy();
-	// });
-
-	// it('should set the selectedAsset', () => {
-	// 	component.onRowClicked({ active: true });
-	// 	expect(component.selectedAsset.active)
-	// 		.toBeTruthy();
-	// 	expect(component.showAsset360)
-	// 		.toBeFalsy();
-	// 	component.onRowClicked({ active: false });
-	// 	expect(component.selectedAsset.active)
-	// 		.toBeFalsy();
-	// });
-
-	// it('should unset the selectedAsset on panel close', () => {
-	// 	component.onPanelClose();
-	// 	expect(component.selectedAsset.active)
-	// 		.toBeFalsy();
-	// 	expect(component.showAsset360)
-	// 		.toBeFalsy();
-	// });
-
-	// it('should set the selectedFingerPrint data', () => {
-	// 	const asset = { test: 'test', active: true };
-	// 	component.connectToFpDetails(asset);
-	// 	expect(component.selectedFingerPrintdata)
-	// 		.toBeDefined();
-	// 	expect(component.showFpDetails)
-	// 		.toBeTruthy();
-	// });
-
-	// it('on searching a string', () => {
-	// 	component.onlyCrashes = false;
-	// 	const result = {
-	// 		customerId: 12323,
-	// 		key: '',
-	// 		search: '',
-	// 		sortDirection: '',
-	// 		solution: 'IBN',
-	// 		useCase: '',
-	// 		time: '90d',
-	// 	};
-	// 	spyOn(component, 'getFilterDetailsForSearchQuery')
-	// 		.and
-	// 		.returnValue(result);
-	// 	spyOn(component, 'searchInCrashedAssetsGrid');
-	// 	spyOn(component, 'getFingerPrintDeviceDetails');
-	// 	fixture.detectChanges();
-	// 	component.onSearchQuery('testString');
-	// 	expect(component.searchQueryInCrashGrid)
-	// 	.toEqual('testString');
-	// 	expect(component.getFilterDetailsForSearchQuery)
-	// 	.toHaveBeenCalled();
-	// 	expect(component.searchInCrashedAssetsGrid)
-	// 	.toHaveBeenCalled();
-	// 	fixture.detectChanges();
-	// 	component.onlyCrashes = true;
-	// 	component.onSearchQuery('testString');
-	// 	expect(component.searchQueryInHighCrashGrid)
-	// 	.toEqual('testString');
-	// 	expect(component.highCrashRiskParams.page)
-	// 	.toEqual(0);
-	// 	expect(component.highCrashRiskParams.search)
-	// 	.toEqual('testString');
-	// 	expect(component.highCrashRiskParams.size)
-	// 	.toEqual(10);
-	// 	expect(component.getFingerPrintDeviceDetails)
-	// 	.toHaveBeenCalled();
-
-	// });
 
 	it('should get filtered results on subfilter select', () => {
 		spyOn(component, 'resetFilters');
