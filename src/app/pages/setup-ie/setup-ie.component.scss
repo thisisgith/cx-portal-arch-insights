@@ -8,7 +8,7 @@
 
 	.cx-btn {
 		height: 40px !important;
-		background: #00bceb !important;
+		background: $accent-color1 !important;
 		color: #fff !important;
 		border-radius: 21px !important;
 		font-weight: 400 !important;
@@ -19,7 +19,7 @@
 		max-width: unset !important;
 
 		&:hover {
-			background: #227bb1 !important;
+			background: $default-link-color !important;
 		}
 
 		&:active,
@@ -37,7 +37,7 @@
 	}
 
 	.cx-text-gray {
-		color: #767676;
+		color: $text-dark-gray-2;
 	}
 
 
@@ -50,12 +50,12 @@
 			background: $light-gray-background !important;
 
 			&:hover {
-				border-bottom: 1px solid #227bb1 !important;
+				border-bottom: 1px solid $default-link-color !important;
 			}
 
 			&:active,
 			&:focus {
-				border-bottom-color: #00bceb !important;
+				border-bottom-color: $accent-color1 !important;
 			}
 		}
 

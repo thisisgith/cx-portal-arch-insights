@@ -10,7 +10,7 @@
 		border: none;
 		border-bottom: 1px solid #aeb8c1;
 		background: $light-gray-background;
-		color: #5d656c;
+		color: $secondary-and-button-text-color;
 
 		&:focus {
 			box-shadow: unset;
