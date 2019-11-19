@@ -33,17 +33,19 @@
 						[innerHTML]="crashedAssetsCount"
 					></div>
 					<div class="row">
-						<span class="text-large flex-center"
-						[innerText]="'_RMCrashedAssets_' | i18n"></span>
+						<span
+							class="text-large flex-center"
+							[innerText]="'_RMCrashedAssets_' | i18n"
+						></span>
 
-					<span
-						tooltip
-						[tooltipTemplate]="crashSystemTooltipTemplate"
-						class="icon-info half-margin"
-						[tooltipMaxWidth]="100"
-					>
-					</span>
-				</div>
+						<span
+							tooltip
+							[tooltipTemplate]="crashSystemTooltipTemplate"
+							class="icon-info half-margin"
+							[tooltipMaxWidth]="100"
+						>
+						</span>
+					</div>
 				</div>
 			</div>
 		</ng-template>
@@ -63,24 +65,27 @@
 		>
 			<span class="font15" [innerText]="'_RMAssets_' | i18n"></span>
 			<span
-				*ngIf="!paginationStatus"
+				*ngIf="!onlyCrashes"
 				[innerText]="
-					'_RMShowingXofYAssets_'
-						| i18n
-							: itemRange
-							: totalItems
+					'_RMShowingXofYAssets_' | i18n: itemRange:totalItems
 				"
 				class="qtr-margin-left text-small text-muted"
 				data-auto-id="ShowingAssetsCount"
 			>
 			</span>
 			<span
-				*ngIf="paginationStatus"
+				*ngIf="onlyCrashes && selectedCrashRiskFilter === 'HIGH'"
 				[innerHTML]="
-					'_RMRiskValuePagination_'
-						| i18n
-							: itemRange
-							: totalItems
+					'_RMRiskValuePagination_' | i18n: itemRange:totalItems
+				"
+				class="qtr-margin-left text-small text-muted"
+				data-auto-id="ShowingAssetsCount"
+			>
+			</span>
+			<span
+				*ngIf="onlyCrashes && selectedCrashRiskFilter !== 'HIGH'"
+				[innerHTML]="
+					'_RMShowingXofYAssets_' | i18n: itemRange:totalItems
 				"
 				class="qtr-margin-left text-small text-muted"
 				data-auto-id="ShowingAssetsCount"
@@ -104,7 +109,7 @@
 				[debounce]="searchOptions.debounce"
 				[compressed]="true"
 				[searchText]="searchQueryInHighCrashGrid"
-				(onUpdate)="searchQueryInCrashGrid=$event"
+				(onUpdate)="searchQueryInCrashGrid = $event"
 				class="risk-mitigation-search"
 			>
 			</cui-search>
@@ -120,7 +125,8 @@
 		[searchQuery]="searchQueryInHighCrashGrid"
 		(paginationValue)="paginationValueDetails($event)"
 	></app-crash-risk-grid>
-	<app-crashed-systems-grid *ngIf="!onlyCrashes"
+	<app-crashed-systems-grid
+		*ngIf="!onlyCrashes"
 		[selectedFilter]="selectedCrashedSystemsFilter"
 		[selectedSolution]="selectedSolutionName"
 		[selectedTechnology]="selectedTechnologyName"
@@ -131,10 +137,12 @@
 
 <ng-template #timeRangeFilterTemplate let-filter="filter">
 	<div [hidden]="onlyCrashes">
-		<column-chart *ngIf="filter?.seriesData?.length"
-		[seriesData]="filter.seriesData"
-		(subfilter)="onSubfilterSelect($event.filter, filter)">
-	</column-chart>
+		<column-chart
+			*ngIf="filter?.seriesData?.length"
+			[seriesData]="filter.seriesData"
+			(subfilter)="onSubfilterSelect($event.filter, filter)"
+		>
+		</column-chart>
 	</div>
 </ng-template>
 
@@ -147,9 +155,7 @@
 </ng-template>
 
 <ng-template #filterBar>
-	<div
-		class="row flex-center-vertical half-margin-top base-margin-bottom"
-	>
+	<div class="row flex-center-vertical half-margin-top base-margin-bottom">
 		<div class="col-md-11 flex">
 			<span
 				class="flex flex-center-vertical filter-bar__title text-uppercase text-bold half-padding-right"
@@ -157,14 +163,10 @@
 			></span>
 			<ng-container *ngFor="let filter of selectedFilters">
 				<ng-container
-					*ngFor="
-						let subfilter of getSelectedSubFilters(filter.key)
-					"
+					*ngFor="let subfilter of getSelectedSubFilters(filter.key)"
 					><span
 						class="label filter-bar__item"
-						(click)="
-							onSubfilterSelect(subfilter.filter, filter)
-						"
+						(click)="onSubfilterSelect(subfilter.filter, filter)"
 						attr.data-auto-id="FilterTag-{{ subfilter.filter }}"
 					>
 						<span
@@ -178,7 +180,9 @@
 						></span>
 						<span
 							[innerHTML]="
-								onlyCrashes? subfilter.filter: subfilter?.label
+								onlyCrashes
+									? subfilter.filter
+									: subfilter?.label
 							"
 						></span>
 						<span
@@ -224,7 +228,7 @@
 
 <ng-template #crashSystemTooltipTemplate>
 	<div>
-		<span class= "qtr-padding" [innerText]="crashedAssetsCount"></span
+		<span class="qtr-padding" [innerText]="crashedAssetsCount"></span
 		><span [innerText]="'_CP_CrashedSystems_' | i18n"></span>
 	</div>
 </ng-template>

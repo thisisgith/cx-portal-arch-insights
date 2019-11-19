@@ -2,17 +2,12 @@ import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { forkJoin, of, Subject } from 'rxjs';
 import { map, catchError, takeUntil } from 'rxjs/operators';
 import * as _ from 'lodash-es';
-import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { LogService } from '@cisco-ngx/cui-services';
-import { AssetPanelLinkService, RacetrackInfoService } from '@services';
+import { RacetrackInfoService } from '@services';
 import {
-	CrashHistoryDeviceCount,
 	RiskMitigationService,
-	HighCrashRiskPagination,
 	RmFilter as Filter,
-	RiskAsset,
-	HighCrashRiskDevices,
 	HighCrashRiskDeviceCount,
 	InventoryService,
 	HighCrashRiskDeviceTooltip,
@@ -26,7 +21,7 @@ import { ActivatedRoute } from '@angular/router';
  */
 @Component({
 	styleUrls: ['./risk-mitigation.component.scss'],
-	templateUrl: './risk-mitigation.component.html',
+	templateUrl: './risk-mitigation.component.html'
 })
 export class RiskMitigationComponent {
 	public customerId: any;
@@ -43,8 +38,7 @@ export class RiskMitigationComponent {
 	public crashedAssetsCount = 0;
 	public selectedSolutionName: string;
 	public selectedTechnologyName: string;
-	public totalAssetCount = 0 ;
-	public paginationStatus = false;
+	public totalAssetCount = 0;
 	public selectedCrashedSystemsFilter = '90';
 	public selectedCrashRiskFilter = 'HIGH';
 	public itemRange = '';
@@ -57,9 +51,9 @@ export class RiskMitigationComponent {
 	private destroy$ = new Subject();
 
 	@ViewChild('riskScoreFilterTemplate', { static: true })
-		public riskScoreFilterTemplate: TemplateRef<string>;
+	public riskScoreFilterTemplate: TemplateRef<string>;
 	@ViewChild('timeRangeFilterTemplate', { static: true })
-		private timeRangeFilterTemplate: TemplateRef<{ }>;
+	private timeRangeFilterTemplate: TemplateRef<{ }>;
 
 	constructor (
 		private riskMitigationService: RiskMitigationService,
@@ -77,23 +71,21 @@ export class RiskMitigationComponent {
 	 * OnInit lifecycle hook
 	 */
 	public ngOnInit () {
-		this.racetrackInfoService.getCurrentSolution()
-		.pipe(
-			takeUntil(this.destroy$),
-		)
-		.subscribe((solution: RacetrackSolution) => {
-			this.selectedSolutionName = _.get(solution, 'name');
-		});
+		this.racetrackInfoService
+			.getCurrentSolution()
+			.pipe(takeUntil(this.destroy$))
+			.subscribe((solution: RacetrackSolution) => {
+				this.selectedSolutionName = _.get(solution, 'name');
+			});
 
-		this.racetrackInfoService.getCurrentTechnology()
-		.pipe(
-			takeUntil(this.destroy$),
-		)
-		.subscribe((technology: RacetrackTechnology) => {
-			this.selectedTechnologyName = _.get(technology, 'name');
-			this.loadData();
-			this.getTotalAssetCount();
-		});
+		this.racetrackInfoService
+			.getCurrentTechnology()
+			.pipe(takeUntil(this.destroy$))
+			.subscribe((technology: RacetrackTechnology) => {
+				this.selectedTechnologyName = _.get(technology, 'name');
+				this.loadData();
+				this.getTotalAssetCount();
+			});
 
 		this.buildFilters();
 		this.loadData();
@@ -125,19 +117,22 @@ export class RiskMitigationComponent {
 			useCase: this.selectedTechnologyName,
 		};
 
-		return this.riskMitigationService.getHighCrashRiskDeviceCountData(params)
-				.pipe(
-					takeUntil(this.destroy$),
-					map((results: HighCrashRiskDeviceCount) => {
-						this.getRiskScore(results.crashRiskDeviceCount);
-					}),
-					catchError(err => {
-						this.logger.error('High Crash Assets : getHighCrashesDeviceData() ' +
-							`:: Error : (${err.status}) ${err.message}`);
+		return this.riskMitigationService
+			.getHighCrashRiskDeviceCountData(params)
+			.pipe(
+				takeUntil(this.destroy$),
+				map((results: HighCrashRiskDeviceCount) => {
+					this.getRiskScore(results.crashRiskDeviceCount);
+				}),
+				catchError(err => {
+					this.logger.error(
+						'High Crash Assets : getHighCrashesDeviceData() ' +
+							`:: Error : (${err.status}) ${err.message}`,
+					);
 
-						return of({ });
-					}),
-				);
+					return of({ });
+				}),
+			);
 	}
 
 	/**
@@ -155,20 +150,22 @@ export class RiskMitigationComponent {
 
 		return this.riskMitigationService.getAllCrashesData(params)
 			.pipe(
-				takeUntil(this.destroy$),
-				map((results: any) => {
-					const seriesData = this.marshallResultsObjectForGraph(results);
-					this.crashedAssetsCount = results.devicesCrashCount_90d;
-					this.getTimeRange(seriesData);
-				}),
-				catchError(err => {
-					this.crashedAssetsCount = undefined;
-					this.logger.error('Crash Assets : getAllCrashesData() ' +
-						`:: Error : (${err.status}) ${err.message}`);
+			takeUntil(this.destroy$),
+			map((results: any) => {
+				const seriesData = this.marshallResultsObjectForGraph(results);
+				this.crashedAssetsCount = results.devicesCrashCount_90d;
+				this.getTimeRange(seriesData);
+			}),
+			catchError(err => {
+				this.crashedAssetsCount = undefined;
+				this.logger.error(
+					'Crash Assets : getAllCrashesData() ' +
+						`:: Error : (${err.status}) ${err.message}`,
+				);
 
-					return of({ });
-				}),
-			);
+				return of({ });
+			}),
+		);
 	}
 
 	/**
@@ -177,7 +174,9 @@ export class RiskMitigationComponent {
 	 * @returns the array of filters
 	 */
 	public marshallResultsObjectForGraph (data: {
-		[x: string]: any; hasOwnProperty: (arg0: string) => void; }) {
+		[x: string]: any;
+		hasOwnProperty: (arg0: string) => void;
+	}) {
 		return [
 			{
 				filter: 'Time: Last 24h',
@@ -230,7 +229,6 @@ export class RiskMitigationComponent {
 	 */
 	private buildFilters () {
 		this.filters = [
-
 			{
 				key: 'timeRange',
 				loading: true,
@@ -243,9 +241,8 @@ export class RiskMitigationComponent {
 				loading: true,
 				seriesData: [],
 				template: this.riskScoreFilterTemplate,
-				title:  I18n.get('_CP_Risk_'),
+				title: I18n.get('_CP_Risk_'),
 			},
-
 		];
 	}
 
@@ -258,8 +255,9 @@ export class RiskMitigationComponent {
 	 */
 
 	public onSubfilterSelect (subfilter: string, filter: Filter) {
+		this.resetFilters();
 		const sub = _.find(filter.seriesData, { filter: subfilter });
-		sub.selected = (sub) ? !sub.selected : '';
+		sub.selected = sub ? !sub.selected : '';
 		filter.selected = _.some(filter.seriesData, 'selected');
 		let filterSelected: string;
 		switch (sub.filter) {
@@ -284,10 +282,6 @@ export class RiskMitigationComponent {
 			this.selectedCrashedSystemsFilter = filterSelected;
 		} else {
 			this.selectedCrashRiskFilter = subfilter;
-
-		}
-		if (subfilter === 'HIGH') {
-			this.paginationStatus = true;
 		}
 	}
 
@@ -298,10 +292,12 @@ export class RiskMitigationComponent {
 		this.searchQueryInCrashGrid = '';
 		this.searchQueryInHighCrashGrid = '';
 		this.resetFilters();
+		// TODO: Implement a better approach to handle the default filter value selection
 		const key = this.onlyCrashes ? 'riskScore' : 'timeRange';
 		const filter = _.find(this.filters, { key });
-		this.onlyCrashes ? _.set(filter, 'seriesData.0.selected', true) :
-		_.set(filter, 'seriesData.3.selected', true);
+		this.onlyCrashes
+			? _.set(filter, 'seriesData.0.selected', true)
+			: _.set(filter, 'seriesData.3.selected', true);
 		this.selectedFilters = [filter];
 	}
 
@@ -310,15 +306,9 @@ export class RiskMitigationComponent {
 	 */
 	public clearAllFilters () {
 		this.clearFilters();
-		// if (this.onlyCrashes) {
-			const filter = _.find(this.filters, { key: 'riskScore' });
-			_.set(filter, 'seriesData.0.selected', false);
-			this.selectedCrashRiskFilter = '';
-
-		// } else {
-		// 	const filter = _.find(this.filters, { key: 'timeRange' });
-		// 	this.onSubfilterSelect(filter[3].filter, filter);
-		// }
+		const filter = _.find(this.filters, { key: 'riskScore' });
+		_.set(filter, 'seriesData.0.selected', false);
+		this.selectedCrashRiskFilter = '';
 	}
 
 	/**
@@ -326,9 +316,12 @@ export class RiskMitigationComponent {
 	 */
 	public resetFilters () {
 		_.each(this.filters, (filter: Filter) => {
-			_.each(filter.seriesData, (currentFilter: { selected: boolean; }) => {
-				currentFilter.selected = false;
-			});
+			_.each(
+				filter.seriesData,
+				(currentFilter: { selected: boolean }) => {
+					_.set(currentFilter, 'selected', false);
+				},
+			);
 		});
 	}
 
@@ -342,7 +335,6 @@ export class RiskMitigationComponent {
 		if (filter) {
 			return _.filter(filter.seriesData, 'selected');
 		}
-
 	}
 	/**
 	 * Gets high crashes Risk Score  data
@@ -378,7 +370,6 @@ export class RiskMitigationComponent {
 				value: result.notEvaluated,
 			},
 		]);
-
 	}
 
 	/**
@@ -392,19 +383,23 @@ export class RiskMitigationComponent {
 			useCase: this.selectedTechnologyName,
 		};
 
-		return this.riskMitigationService.getTotalAssestCount(totalCountParams)
-		.pipe(
-			takeUntil(this.destroy$),
-			map(response => {
-				this.totalAssetCount = response.map(element => element.deviceCount)
-				.reduce((sum, value) => sum + value, 0);
-			}),
-			catchError(err => {
-				this.logger.error('Could not fetch results : getTotalAssestCount() ' +
-					`:: Error : (${err.status}) ${err.message}`);
+		return this.riskMitigationService
+			.getTotalAssestCount(totalCountParams)
+			.pipe(
+				takeUntil(this.destroy$),
+				map(response => {
+					this.totalAssetCount = response
+						.map(element => element.deviceCount)
+						.reduce((sum, value) => sum + value, 0);
+				}),
+				catchError(err => {
+					this.logger.error(
+						'Could not fetch results : getTotalAssestCount() ' +
+							`:: Error : (${err.status}) ${err.message}`,
+					);
 
-				return of({ });
-			}),
+					return of({ });
+				}),
 			);
 	}
 

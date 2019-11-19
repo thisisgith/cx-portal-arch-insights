@@ -4,7 +4,7 @@ import { FingerprintDetailsComponent } from './fingerprint-details.component';
 import { FingerprintDetailsModule } from './fingerprint-details.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
-describe('FingerprintDetailsComponent', () => {
+fdescribe('FingerprintDetailsComponent', () => {
 	let component: FingerprintDetailsComponent;
 	let fixture: ComponentFixture<FingerprintDetailsComponent>;
 
@@ -26,4 +26,19 @@ describe('FingerprintDetailsComponent', () => {
 			.toBeTruthy();
 	});
 
+	it('should unset the selected System', () => {
+		component.onPanelClose();
+		expect(component.selectedSystem)
+			.toBeFalsy();
+		expect(component.showAssetDetailsView)
+			.toBeFalsy();
+	});
+
+	it('should handle on panel hidden', () => {
+		const panelCloseSpy = spyOn(component, 'onAllPanelsClose');
+
+		component.handleHidden();
+		expect(panelCloseSpy)
+			.toHaveBeenCalled();
+	});
 });
