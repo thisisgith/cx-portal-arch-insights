@@ -48,6 +48,7 @@ export class AdminComplienceComponent implements OnInit {
 	public selectedPolicy = 'select';
 	public leftSideTags = [];
 	public rightSideTags = [];
+	public tagsFromAssetTagging: boolean;
 	public saveDetails: AssetTaggingService.PostParams = {
 		body: {
 			customerId: '',
@@ -234,6 +235,18 @@ export class AdminComplienceComponent implements OnInit {
 				}),
 			);
 	}
+
+	/**
+	 * Function to filter duplicates
+	 * @param event will have right sad tag details
+	 */
+	public checkRightSideTags (event) {
+		if (event.length) {
+			this.tagsFromAssetTagging = true;
+		} else {
+			this.tagsFromAssetTagging = false;
+		}
+	}
 	/**
 	 * Function to filter duplicates
 	 * @returns null
@@ -280,6 +293,9 @@ export class AdminComplienceComponent implements OnInit {
 		}
 		this.isPolicyChanged = true;
 		this.filterDuplicates();
+		if (this.rightSideTags.length) {
+			this.selectedDeviceTagType = 'selectedTags';
+		}
 	}
 
 	/**
@@ -324,6 +340,7 @@ export class AdminComplienceComponent implements OnInit {
 	 * handle success scenario on save
 	 */
 	public handleSaveSuccess () {
+		this.enableSaveButton = false;
 		_.invoke(this.alert, 'show',
 		I18n.get('_AssetsTaggingSavePolicyAlert_'), 'success');
 		this.enableSaveButton = false;
@@ -331,20 +348,11 @@ export class AdminComplienceComponent implements OnInit {
 		/** Needs to save Right side tag details and
 		 * left side tag details
 		 */
-		if (this.saveDetails.body.tags.length) {
-			_.each(this.rightSideTagsResponse.policyGroups, policy => {
-				if (policy.policyName === this.saveDetails.body.policy) {
-					policy.tags = [];
-					_.each(this.rightSideTags, tag => {
-						const tempObj = {
-							tagName: tag.tagName,
-							tagValue: tag.tagValue,
-						};
-						policy.tags.push(tempObj);
-					});
-				}
-			});
-		}
+		_.each(this.rightSideTagsResponse.policyGroups, policy => {
+			if (policy.policyName === this.saveDetails.body.policy) {
+				policy.tags = this.saveDetails.body.tags;
+			}
+		});
 
 	}
 
