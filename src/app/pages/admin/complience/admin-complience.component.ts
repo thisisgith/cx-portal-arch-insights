@@ -143,18 +143,11 @@ export class AdminComplienceComponent implements OnInit {
 	 */
 
 	public toggleOptlnStatus () {
-		if (this.optlnStatus && this.isOptlnStatusChanged) {
-			this.isOptlnStatusChanged = false;
-			forkJoin(
-				this.getLeftSideTags(),
-				this.getRightSideTags(),
-			)
-			.subscribe();
-
-		} else if (this.enableSaveButton) {
+		if (this.rightSideTags.length) {
 			this.cuiModalService.show(this.confirmationModalTemplate, 'normal');
 		} else {
 			this.optlnStatus = false;
+			this.updateOptInOutStatus();
 			this.initializeDetails();
 		}
 	}
@@ -345,8 +338,12 @@ export class AdminComplienceComponent implements OnInit {
 	 */
 	public handleSaveSuccess () {
 		this.enableSaveButton = false;
+		let alert = '_AssetsTaggingSavePolicyAlertDisabled_';
+		if (this.saveDetails.body.toBeScanned) {
+			alert = '_AssetsTaggingSavePolicyAlertEnabled_';
+		}
 		_.invoke(this.alert, 'show',
-		I18n.get('_AssetsTaggingSavePolicyAlert_'), 'success');
+		I18n.get(alert, this.saveDetails.body.policy), 'success');
 		this.enableSaveButton = false;
 
 		/** Needs to save Right side tag details and
@@ -370,6 +367,21 @@ export class AdminComplienceComponent implements OnInit {
 		};
 		this.assetTaggingService.updateOptStatus(params)
 		.subscribe();
+
+		if (!this.optlnStatus) {
+			this.assetTaggingService.deleteMapping(params)
+				.subscribe();
+		}
+
+		if (this.optlnStatus && this.isOptlnStatusChanged) {
+			this.isOptlnStatusChanged = false;
+			forkJoin(
+				this.getLeftSideTags(),
+				this.getRightSideTags(),
+			)
+			.subscribe();
+
+		}
 	}
 
 	/**
