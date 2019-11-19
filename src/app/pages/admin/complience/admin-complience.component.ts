@@ -264,6 +264,8 @@ export class AdminComplienceComponent implements OnInit {
 			const policyGroups = _.find(this.rightSideTagsResponse.policyGroups,
 				 { policyName: this.saveDetails.body.policy });
 			this.rightSideTags = _.cloneDeep(policyGroups.tags);
+			this.toBeScanned = policyGroups.toBeScanned;
+			this.selectedDeviceTagType = this.rightSideTags.length ? 'selectedTags' : 'allDevices';
 			_.each(this.rightSideTags, tag => {
 				tag.devices = policyGroups.devices;
 				tag.deviceCount = policyGroups.deviceCount;
