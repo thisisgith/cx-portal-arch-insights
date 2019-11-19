@@ -1,0 +1,68 @@
+<a class="modal__close" data-auto-id="addUSerHide" (click)="cuiModalService.hide()"><span class="icon-close"></span></a>
+<div class="modal-header">
+	<h2 class="modal-title" [innerText]="'_AddNewUser_' | i18n"></h2>
+</div>
+<div class="modal-body dbl-padding-left dbl-padding-right dbl-padding-top">
+	<div class="col-md-12">
+		<div class="form-group">
+			<div class="form-group__text">
+				<cui-alert class="alert-styling" [ngClass]="{'border-red':alert?.visible}" [options]="alert"></cui-alert>
+			</div>
+		</div>
+	</div>
+	<div id="spinner-container" *ngIf="isLoading">
+		<cui-spinner class="absolute-center"></cui-spinner>
+	</div>
+	<form [formGroup]="addUserForm">
+		<div class="col-md-12 base-padding-top">
+			<div class="form-group">
+				<div class="form-group__text">
+					<input id="input-ccoid" type="text" formControlName="ccoid">
+					<label for="input-layout-default" [innerText]="'_CCOID_' | i18n"></label>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-12 base-padding-top base-padding-bottom">
+			<div class="form-group">
+				<div class="form-group__text">
+					<input id="input-email" type="text" formControlName="email">
+					<label for="input-layout-default" [innerText]="'_Email_' | i18n"></label>
+				</div>
+			</div>
+		</div>
+		<!-- <div class="col-md-12 base-padding-top base-padding-bottom leftAlign">
+			<label class="checkbox">
+				<input type="checkbox" formControlName="PartnerCheckbox">
+				<span class="checkbox__input"></span>
+				<span class="checkbox__label hidden-xs" [innerText]="'_ThisUserIsAPartner_' | i18n"></span>
+			</label>
+		</div> -->
+		<div class="col-md-9 base-padding-bottom">
+			<div class="form-group">
+				<label for="role-title" data-auto-id="role" class="qtr-padding-bottom"
+					[innerText]="'_Role_' | i18n"></label>
+				<cui-select class="dropdown-styling" formControlName="title" #title id="role-title" [required]="true" [empty]="true"
+					[items]="items" [compressed]="false" optionsKey="role" optionsValue="role"></cui-select>
+			</div>
+		</div>
+		<div class="col-md-12 base-padding-top base-padding-bottom">
+			<label class="checkbox">
+				<input type="checkbox" formControlName="verifyCheckbox">
+				<span class="checkbox__input"></span>
+				<span class="checkbox__label hidden-xs" [innerText]="'_SmartAccountDeclaration_' | i18n"></span>
+			</label>
+		</div>
+		<!-- <div class="col-md-12 base-padding-top base-padding-bottom">
+			<label class="checkbox">
+				<input type="checkbox" formControlName="EmailCheckbox">
+				<span class="checkbox__input"></span>
+				<span class="checkbox__label hidden-xs" [innerText]="'_SendWelcomeEmail_' | i18n"></span>
+			</label>
+		</div> -->
+		<div class="col-md-12 base-padding-top">
+			<button class="btn btn--primary" data-auto-id="continue-btn" [innerText]="'_Continue_' | i18n"
+				(click)="onContinue()"
+				[disabled]="this.addUserForm.status === 'INVALID' || this.addUserForm.value['verifyCheckbox'] === false"></button>
+		</div>
+	</form>
+</div>

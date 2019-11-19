@@ -17,7 +17,15 @@ import {
 } from '@sdp-api';
 import { SortableColumn, SortProps } from './user-mgmt.types';
 import { I18nPipe } from '@cisco-ngx/cui-pipes';
+<<<<<<< HEAD
 import * as _ from 'lodash-es';
+=======
+import { CuiModalService } from '@cisco-ngx/cui-components';
+import { AddUserComponent } from '../add-user/add-user.component';
+
+/** Placeholder for saCompanyId */
+const companyId = '106200';
+>>>>>>> Adding new Sa User
 
 /**
  * UserMgmtComponent
@@ -61,10 +69,15 @@ export class UserMgmtComponent implements AfterViewInit, OnDestroy {
 		private i18n: I18nPipe,
 		private route: ActivatedRoute,
 		private usersService: ControlPointUserManagementAPIService,
+<<<<<<< HEAD
 	) {
 		this.user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(this.user, ['info', 'customerId']);
 	}
+=======
+		private cuiModalService: CuiModalService,
+	) { }
+>>>>>>> Adding new Sa User
 
 	/**
 	 * NgAfterViewInit
@@ -128,6 +141,15 @@ export class UserMgmtComponent implements AfterViewInit, OnDestroy {
 	 */
 	public onUpdateClick () {
 		this.onUpdate.emit();
+	}
+
+	/**
+	 * Add User Button click handler
+	 */
+
+	public onAddUser () {
+		this.cuiModalService.showComponent(AddUserComponent, { }, 'small');
+
 	}
 
 	/**
