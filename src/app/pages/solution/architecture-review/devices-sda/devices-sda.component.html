@@ -39,19 +39,19 @@
 			</ng-container>
 		</div>
 	</cui-drawer>	
-<span *ngIf="noApiData" class="text-muted text-xlarge "
-[innerText]="'_NoResultsFound_' | i18n"
-data-auto-id="NoResultsFoundTxt" >
-</span>
+	<div *ngIf="noApiData" class="text-muted text-center text-xlarge "
+		[innerText]="'_NoResultsFound_' | i18n"
+		data-auto-id="NoResultsFoundTxt" >
+	</div>
 </div>
 <ng-template #errorTemplate>
 		<div class="dbl-padding" *ngIf="isLoading">
 			<cui-spinner color="default" label=""></cui-spinner>
 		</div>	
-			<span  *ngIf="isError && !isLoading" class="text-muted text-xlarge "
+			<div  *ngIf="isError && !isLoading" class="text-muted text-center text-xlarge "
 						[innerText]="'_NoResultsFound_' | i18n"
 						data-auto-id="NoResultsFoundTxt" >
-			</span>
+			</div>
 </ng-template>
 <ng-template #SDASupportedSoftwareContent let-softwareSdaData="sdaData">
 	<span [innerText]="'_ArchitectureRecommendedMessage_' | i18n"></span>
