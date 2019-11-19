@@ -58,8 +58,12 @@
 </asset-details>
 
 <!-- Osv Fly-out View-->
-<app-software-group-detail *ngIf="selectedSoftwareGroup" [tabIndex]="tabIndex"
-	[(selectedSoftwareGroup)]="selectedSoftwareGroup" (close)="onOsvPanelClose()">
+<app-software-group-detail *ngIf="selectedSoftwareGroup" 
+	[tabIndex]="tabIndex"
+	[(selectedSoftwareGroup)]="selectedSoftwareGroup" 
+	(close)="onOsvPanelClose()"
+	[solution]="selectedSoftwareGroup.solution" 
+	[useCase]="selectedSoftwareGroup.useCase">
 </app-software-group-detail>
 
 <div class="row">
