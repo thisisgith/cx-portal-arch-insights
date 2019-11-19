@@ -27,7 +27,7 @@ import { LogService } from '@cisco-ngx/cui-services';
 	templateUrl: './crash-history-details.component.html',
 })
 export class CrashHistoryDetailsComponent implements OnChanges, OnDestroy {
-	@Input() public selectedSystem = '';
+	@Input() public selectedSystem: any;
 	@Output('close') public close = new EventEmitter<boolean>();
 	public fullscreen = false;
 	public showAssetDetailsView = false;
@@ -78,7 +78,7 @@ export class CrashHistoryDetailsComponent implements OnChanges, OnDestroy {
 	 */
 	public onPanelClose () {
 		this.detailsPanelStackService.reset();
-		this.selectedSystem = '';
+		this.selectedSystem = null;
 		this.close.emit(true);
 	}
 
@@ -87,7 +87,7 @@ export class CrashHistoryDetailsComponent implements OnChanges, OnDestroy {
 	 * @param hidden false if details slideout is open
 	 */
 	public handleHidden () {
-		this.selectedSystem = '';
+		this.selectedSystem = null;
 		this.onPanelClose();
 		this.onAllPanelsClose();
 	}
