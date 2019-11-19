@@ -25,7 +25,6 @@ export class AddUserComponent implements OnInit {
 	public addUserForm = new FormGroup({
 		ccoid: new FormControl('', [Validators.required]),
 		email: new FormControl('', [Validators.required]),
-		partnerCheckbox: new FormControl(false),
 		title: new FormControl('', [Validators.required]),
 		verifyCheckbox: new FormControl('', [Validators.required]),
 	});
@@ -49,6 +48,7 @@ export class AddUserComponent implements OnInit {
 	 *  NgOnInit
 	 */
 	public ngOnInit () {
+		this.alert.visible = false;
 		this.isLoading = false;
 		this.userService
 			.getListRolesForGivenUserUsingGET(this.saAccountId)
@@ -61,13 +61,6 @@ export class AddUserComponent implements OnInit {
 	 * Add User Component
 	 */
 	public onContinue () {
-		_.invoke(
-			this.alert,
-			'hide',
-			I18n.get('_CCOIDAndEmailDoNotMatch_'),
-			'danger',
-		);
-		this.alert.visible = false;
 		this.isLoading = true;
 		this.userDetails = {
 			ccoId: this.addUserForm.value.ccoid,
@@ -118,7 +111,7 @@ export class AddUserComponent implements OnInit {
 						'danger',
 					);
 					this.alert.visible = true;
-				  }
+				}
 			});
 	}
 }

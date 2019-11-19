@@ -14,7 +14,7 @@
 		<cui-spinner class="absolute-center"></cui-spinner>
 	</div>
 	<form [formGroup]="addUserForm">
-		<div class="col-md-12 base-padding-top">
+		<div class="col-md-12 base-padding-top base-padding-bottom">
 			<div class="form-group">
 				<div class="form-group__text">
 					<input id="input-ccoid" type="text" formControlName="ccoid">
@@ -37,7 +37,7 @@
 				<span class="checkbox__label hidden-xs" [innerText]="'_ThisUserIsAPartner_' | i18n"></span>
 			</label>
 		</div> -->
-		<div class="col-md-9 base-padding-bottom">
+		<div class="col-md-9 base-padding-top base-padding-bottom">
 			<div class="form-group">
 				<label for="role-title" data-auto-id="role" class="qtr-padding-bottom"
 					[innerText]="'_Role_' | i18n"></label>

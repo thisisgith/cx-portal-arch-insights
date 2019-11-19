@@ -21,9 +21,6 @@ import * as _ from 'lodash-es';
 import { CuiModalService } from '@cisco-ngx/cui-components';
 import { AddUserComponent } from '../add-user/add-user.component';
 
-/** Placeholder for saCompanyId */
-const companyId = '106200';
-
 /**
  * UserMgmtComponent
  */
@@ -139,10 +136,8 @@ export class UserMgmtComponent implements AfterViewInit, OnDestroy {
 	/**
 	 * Add User Button click handler
 	 */
-
 	public onAddUser () {
 		this.cuiModalService.showComponent(AddUserComponent, { }, 'small');
-
 	}
 
 	/**
