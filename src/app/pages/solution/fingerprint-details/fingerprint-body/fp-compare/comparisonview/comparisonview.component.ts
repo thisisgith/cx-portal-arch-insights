@@ -6,7 +6,8 @@ import { Subject } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import * as _ from 'lodash-es';
 import { I18n } from '@cisco-ngx/cui-utils';
-import { RacetrackInfoService } from '@services';
+import { RacetrackInfoService, AssetPanelLinkService } from '@services';
+import { AssetLinkInfo } from '@interfaces';
 
 /**
  * Comparisonview Component
@@ -35,9 +36,12 @@ export class ComparisonviewComponent {
 	public selectedAsset: any;
 	private selectedSolutionName: string;
 	private selectedTechnologyName: string;
+	public assetParams: any;
+	public assetLinkInfo: AssetLinkInfo = Object.create({ });
 
 	constructor (
 		private logger: LogService,
+		private assetPanelLinkService: AssetPanelLinkService,
 		public crashPreventionService: CrashPreventionService,
 		private route: ActivatedRoute,
 		private racetrackInfoService: RacetrackInfoService,
@@ -122,9 +126,20 @@ export class ComparisonviewComponent {
 	/**
 	 * showAssetDetails
 	 * @param selectedAsset selectAsset
+	 * @returns assetPanelLinkService
 	 */
 	public showAssetDetails (selectedAsset) {
-		this.selectedAsset = selectedAsset;
 		this.showAssetDetailsView = true;
+		this.assetParams = {
+			customerId: this.customerId,
+			serialNumber: [selectedAsset.serialNumber],
+		};
+
+		return this.assetPanelLinkService.getAssetLinkData(this.assetParams)
+		.pipe(takeUntil(this.destroy$))
+		.subscribe(response => {
+			this.assetLinkInfo.asset = _.get(response, [0, 'data', 0]);
+			this.assetLinkInfo.element = _.get(response, [1, 'data', 0]);
+		});
 	}
 }
