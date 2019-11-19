@@ -3,7 +3,7 @@
 	<div class="col-md-12">
 		<div class="row">
 			<div class="col-md-2 filter__selected">
-				<div class="row">
+				<div class="row" [ngClass]="{ 'disabled': showRunningBanner || !optInStatus}">
 					<div class="col-md-12 panel flex-center flex-fill filter assets-count"
 						data-auto-id="selectedView" (click)="selectedView('violation')" [ngClass]="{'text-primary': !isAssetView}">
 						<div class="flex-center dbl-padding-left dbl-padding-right font-size-32" [innerText]="policyViolationsTotalCount | number"></div>
@@ -90,6 +90,29 @@
 			</div>
 		</div>
 	</div>
+	<div class="panel panel--dkgray half-margin-top" *ngIf="!optInStatus && !loading">
+		<div class="row cx-no-dnac-container">
+			<div class="col-7">
+				<div class="flex-center">
+					<span class="cx-no-dnac-label">View Violations</span>
+					<span class="cx-no-dnac-status">Update settings to access inventory Regulatory Compliance data.</span>
+				</div>
+			</div>
+			<div class="flex-right base-margin-right">
+				<button class="btn btn--wide btn--primary flex-right text-uppercase text-bold" tabindex="0" [routerLink]="['/admin/complience']">COMPLIANCE SETTINGS</button>
+			</div>
+		</div>
+	</div>
+	<div class="panel panel--dkgray half-margin-top" *ngIf="showRunningBanner">
+		<div class="row cx-no-dnac-container">
+			<div class="col-7">
+				<div class="flex-center">
+					<span class="cx-no-dnac-label">Collecting Violations</span>
+					<span class="cx-no-dnac-status">Regulatory Compliance data will be available upon completion of next collection scheduled for [date/time]</span>
+				</div>
+			</div>
+		</div>
+	</div>
 	<div class="container qtr-margin-top no-padding" *ngIf="!isAssetView">
 		<div *ngIf="loading" class="base-margin-bottom">
 			<cui-spinner></cui-spinner>
@@ -105,7 +128,7 @@
 			*ngIf="!loading && policyViolationsGridData?.length > 0">
 		</cui-table>
 		<div class="text-center dbl-margin-top dbl-margin-bottom">
-			<div *ngIf="errorPolicyView">
+			<div *ngIf="errorPolicyView || (!optInStatus && !loading) || showRunningBanner">
 				<div class="text-muted text-xlarge " [innerText]="'_RccErrorViolationMessage_' | i18n" ></div>
 				<div class="text-muted text-small " [innerText]="'_RccErrorViolationListMessage_' | i18n" ></div>
 			</div>
@@ -135,7 +158,7 @@
 			*ngIf="!loading && tableAssetDataSample?.length > 0">
 		</cui-table>
 		<div class="text-center dbl-margin-top dbl-margin-bottom">
-			<div *ngIf="errorPolicyView">
+			<div *ngIf="errorPolicyView || (!optInStatus && !loading) || showRunningBanner">
 				<div class="text-muted text-xlarge " [innerText]="'_RccErrorAssetMessage_' | i18n" ></div>
 				<div class="text-muted text-small " [innerText]="'_RccErrorAssetListMessage_' | i18n" ></div>
 			</div>				
