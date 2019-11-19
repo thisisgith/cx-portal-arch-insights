@@ -607,7 +607,7 @@ describe('LifecycleComponent', () => {
 				.toBeFalsy();
 
 			const crossLaunchUrl = 'http://www.cisco.com';
-			const crossLaunchUrl1 = 'http://www.cisco.com&solution=IBN&usecase=Campus Network Assurance';
+			// const crossLaunchUrl1 = 'http://www.cisco.com&solution=IBN&usecase=Campus Network Assurance';
 			component.atxMoreClicked = true;
 
 			// Test crossLaunch()
@@ -618,7 +618,7 @@ describe('LifecycleComponent', () => {
 			fixture.detectChanges();
 
 			expect(window.open)
-				.toHaveBeenCalledWith(crossLaunchUrl1, '_blank');
+				.toHaveBeenCalledWith(crossLaunchUrl, '_blank');
 
 			// Test getAtxRegisterButton()
 			let data: AtxSchema;

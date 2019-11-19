@@ -526,7 +526,9 @@ export class LifecycleComponent implements OnDestroy {
 		this.componentData = {
 			learning: {
 				certificationsUrl: `${environment.learningLink}?type=certification`,
-				elearningUrl: `${environment.learningLink}?type=e-learning`,
+				elearningUrl: `${environment.learningLink}?type=e-learning
+				&solution=${this.componentData.params.solution}
+				&usecase=`,
 				remotepracticelabsUrl: `${environment.learningLink}?type=remotepracticelabs`,
 			},
 			params: {
@@ -1466,8 +1468,7 @@ export class LifecycleComponent implements OnDestroy {
 	 */
 	 public crossLaunch (crossLaunchUrl: string) {
 		if (crossLaunchUrl) {
-			window.open(`${crossLaunchUrl}&solution=${this.componentData.params.solution}` +
-			`&usecase=${this.componentData.params.usecase}`, '_blank');
+			window.open(crossLaunchUrl, '_blank');
 		}
 		this.atxMoreClicked = false;
 	}
