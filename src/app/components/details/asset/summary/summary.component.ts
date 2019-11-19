@@ -192,6 +192,7 @@ export class AssetDetailsSummaryComponent implements OnChanges, OnInit, OnDestro
 
 			const productId = _.get(this.asset, 'productId');
 			const hwInstanceId = _.get(this.asset, 'hwInstanceId');
+			const neInstanceId = _.get(this.asset, 'neId');
 
 			const obsBatch = [];
 
@@ -219,13 +220,12 @@ export class AssetDetailsSummaryComponent implements OnChanges, OnInit, OnDestro
 
 			this.assetTagsParams = {
 				customerId: this.customerId,
-				deviceId: productId,
+				deviceId: neInstanceId,
 			};
 
 			obsBatch.push(
-				this.fetchTagsData(),
+			this.fetchTagsData(),
 			);
-
 			this.hidden = false;
 			forkJoin(obsBatch)
 			.subscribe(() => {

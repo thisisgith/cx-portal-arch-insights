@@ -4,4 +4,5 @@ export interface PolicyMapping {
 	tags?: Array<Tags>;
 	policy?: string;
 	toBeScanned?: boolean;
+	customerId?: string;
 }

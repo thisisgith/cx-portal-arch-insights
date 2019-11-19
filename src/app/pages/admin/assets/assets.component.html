@@ -20,7 +20,7 @@
 		} as pagerData"
 		class="half-margin-top base-margin-bottom"
 	>
-		<cui-pager
+		<cui-pager *ngIf="pagerData?.pagination?.totalAssets"
 			[hidden]="pagerData.isLoadingAssets"
 			[page]="pagerData.pagination?.page - 1"
 			[limit]="10"

@@ -50,11 +50,11 @@ export class AdminComplienceComponent implements OnInit {
 	public rightSideTags = [];
 	public saveDetails: AssetTaggingService.PostParams = {
 		body: {
+			customerId: '',
 			policy: '',
 			tags: [],
 			toBeScanned : false,
 		},
-		customerId: '',
 	};
 	public toBeScanned = false;
 	public alert: any = { };
@@ -75,6 +75,7 @@ export class AdminComplienceComponent implements OnInit {
 	) {
 		this.user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(this.user, ['info', 'customerId']);
+		this.saveDetails.body.customerId = this.customerId;
 	}
 
 	/**
@@ -300,14 +301,13 @@ export class AdminComplienceComponent implements OnInit {
 			switchMap(tags => {
 				this.saveDetails.body.tags = tags;
 				this.saveDetails.body.toBeScanned = this.toBeScanned;
-				this.saveDetails.customerId = this.customerId;
 				if (this.selectedDeviceTagType === 'allDevices') {
 					this.saveDetails.body.tags = [];
 				}
 
 				const params = {
 					body: this.saveDetails.body,
-					customerId: this.saveDetails.customerId,
+					customerId: this.customerId,
 					policy: this.saveDetails.body.policy,
 					tags: this.saveDetails.body.tags,
 					toBeScanned: this.saveDetails.body.toBeScanned,
