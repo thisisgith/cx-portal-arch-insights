@@ -40,6 +40,7 @@ export class AdminComplienceComponent implements OnInit {
 	public errorMessage = '';
 	public loading = false;
 	public optlnStatus = false;
+	public isOptlnStatusChanged = false;
 	public filteredArray = [];
 	public policies = [];
 	public enableSaveButton: boolean;
@@ -142,7 +143,15 @@ export class AdminComplienceComponent implements OnInit {
 	 */
 
 	public toggleOptlnStatus () {
-		if (this.enableSaveButton) {
+		if (this.optlnStatus && this.isOptlnStatusChanged) {
+			this.isOptlnStatusChanged = false;
+			forkJoin(
+				this.getLeftSideTags(),
+				this.getRightSideTags(),
+			)
+			.subscribe();
+
+		} else if (this.enableSaveButton) {
 			this.cuiModalService.show(this.confirmationModalTemplate, 'normal');
 		} else {
 			this.optlnStatus = false;
@@ -155,6 +164,7 @@ export class AdminComplienceComponent implements OnInit {
 	 */
 	public discardChanges () {
 		this.optlnStatus = false;
+		this.isOptlnStatusChanged = true;
 		this.updateOptInOutStatus();
 		this.initializeDetails();
 		this.cuiModalService.hide();
@@ -241,6 +251,7 @@ export class AdminComplienceComponent implements OnInit {
 	 * @param event will have right sad tag details
 	 */
 	public checkRightSideTags (event) {
+		this.saveDetails.body.tags = event;
 		if (event.length) {
 			this.tagsFromAssetTagging = true;
 		} else {
@@ -312,28 +323,21 @@ export class AdminComplienceComponent implements OnInit {
 	 */
 	public savePolicyDetails () {
 
-		this.assetTaggingService.getSelectedTags()
-		.pipe(
-			switchMap(tags => {
-				this.saveDetails.body.tags = tags;
-				this.saveDetails.body.toBeScanned = this.toBeScanned;
-				if (this.selectedDeviceTagType === 'allDevices') {
-					this.saveDetails.body.tags = [];
-				}
+		this.saveDetails.body.toBeScanned = this.toBeScanned;
+		if (this.selectedDeviceTagType === 'allDevices') {
+			this.saveDetails.body.tags = [];
+		}
+		const params = {
+			body: this.saveDetails.body,
+			customerId: this.customerId,
+			policy: this.saveDetails.body.policy,
+			tags: this.saveDetails.body.tags,
+			toBeScanned: this.saveDetails.body.toBeScanned,
+		};
 
-				const params = {
-					body: this.saveDetails.body,
-					customerId: this.customerId,
-					policy: this.saveDetails.body.policy,
-					tags: this.saveDetails.body.tags,
-					toBeScanned: this.saveDetails.body.toBeScanned,
-				};
-
-				return this.assetTaggingService.postPolicyMapping(params);
-			}),
-			takeUntil(this.destroyed$))
-		.subscribe(() => this.handleSaveSuccess(),
-					);
+		this.assetTaggingService.postPolicyMapping(params)
+			.pipe(takeUntil(this.destroyed$))
+			.subscribe(() => this.handleSaveSuccess());
 	}
 
 	/**
