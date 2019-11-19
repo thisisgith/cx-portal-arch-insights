@@ -6,6 +6,8 @@ module.exports = {
 		'function-name': false,
 		'import-blacklist': false,
 		'no-unsafe-any': false,
+		'no-any': false,
+		'object-literal-sort-keys': false,
 
 		// WARNINGS
 		'adjacent-overload-signatures': {
@@ -17,17 +19,7 @@ module.exports = {
 		forin: {
 			severity: 'warning',
 		},
-		'object-literal-sort-keys': {
-			severity: 'warning',
-			options: [
-				'ignore-case',
-				'shorthand-first',
-			],
-		},
 		'newline-before-return': {
-			severity: 'warning',
-		},
-		'no-any': {
 			severity: 'warning',
 		},
 		radix: {
@@ -55,22 +47,20 @@ module.exports = {
 		'callable-types': true,
 		'class-name': true,
 		'comment-format': [true, 'check-space'],
-		'completed-docs': [
-			true,
-			'classes',
-			'functions',
-			'interfaces',
-			'methods',
-			'namespaces',
-			'types',
-			'variables',
-		],
+		'completed-docs': false,
 		curly: true,
 		'import-spacing': true,
 		indent: [true, 'tabs', 4],
 		'interface-over-type-literal': true,
 		'jsdoc-format': true,
 		'label-position': true,
+		'max-line-length': [
+			true,
+			{
+				limit: 140,
+				'check-regex': false,
+			},
+		],
 		'member-access': true,
 		'member-ordering': [
 			true,
@@ -144,8 +134,8 @@ module.exports = {
 		'ter-max-len': [
 			true,
 			{
-				code: 100,
-				comments: 100,
+				code: 140,
+				comments: 140,
 				ignoreImports: true,
 				ignoreUrls: true,
 				ignoreRegExpLiterals: true,
