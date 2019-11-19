@@ -1,5 +1,6 @@
 /* tslint:disable */
 import { SolutionInfo } from './solution-info';
+import { Tag } from './tag';
 export interface SystemAsset {
   productId?: string;
 
@@ -7,6 +8,8 @@ export interface SystemAsset {
    * Device name
    */
   deviceName?: string;
+  collectorId?: string;
+  wfId?: string;
 
   /**
    * When the serial number was last scanned
@@ -39,7 +42,6 @@ export interface SystemAsset {
   role?: string;
   managedNeId?: string;
   neId?: string;
-  hwInstanceId?: string;
 
   /**
    * IP Address
@@ -47,11 +49,13 @@ export interface SystemAsset {
   ipAddress?: string;
   productType?: string;
   productName?: string;
+  productFamily?: string;
   hasSecurityAdvisories?: boolean;
   hasBugs?: boolean;
   scanStatus?: string;
   isManagedNE?: boolean;
   solutionInfo?: Array<SolutionInfo>;
+  tags?: Array<Tag>;
   cxLevel?: string;
   saId?: number;
   vaId?: Array<number>;

@@ -1,12 +1,9 @@
 import { configureTestSuite } from 'ng-bullet';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
 import {
-	AssetScenarios,
-	Mock,
+	MockAssetsData,
 	MockSoftwareEOLResponse,
 	MockSoftwareEOLBulletinsResponse,
-	SoftwareEOLBulletinScenarios,
-	SoftwareEOLScenarios,
 } from '@mock';
 import { AssetDetailsSoftwareComponent } from './software.component';
 import { AssetDetailsSoftwareModule } from './software.module';
@@ -21,18 +18,6 @@ import * as _ from 'lodash-es';
 import { throwError, of } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { UserResolve } from '@utilities';
-
-/**
- * Will fetch the currently active response body from the mock object
- * @param mock the mock object
- * @param type the scenario type
- * @returns the body response
- */
-function getActiveBody (mock: Mock, type: string = 'GET') {
-	const active = _.find(mock.scenarios[type], 'selected') || _.head(mock.scenarios[type]);
-
-	return active.response.body;
-}
 
 describe('AssetDetailsSoftwareComponent', () => {
 	let component: AssetDetailsSoftwareComponent;
@@ -77,7 +62,7 @@ describe('AssetDetailsSoftwareComponent', () => {
 	});
 
 	it('should handle failing api calls', done => {
-		const asset = getActiveBody(AssetScenarios[0]).data[0];
+		const asset = MockAssetsData[0];
 		component.asset = asset;
 
 		const error = {
@@ -182,8 +167,8 @@ describe('AssetDetailsSoftwareComponent', () => {
 		});
 	});
 
-	it('should handle invalid timeline data', done => {
-		const asset = getActiveBody(AssetScenarios[0]).data[0];
+	it('should handle invalid timeline data', fakeAsync(() => {
+		const asset = MockAssetsData[0];
 		component.asset = asset;
 		const mockEOLData = _.filter(MockSoftwareEOLResponse.data,
 			{ managedNeId: asset.managedNeId });
@@ -198,61 +183,50 @@ describe('AssetDetailsSoftwareComponent', () => {
 			.and
 			.returnValue(of({ }));
 		component.ngOnInit();
-		fixture.whenStable()
-		.then(() => {
-			fixture.detectChanges();
+		tick();
+		fixture.detectChanges();
 
-			expect(component.status.loading.eol)
-				.toBeFalsy();
+		expect(component.status.loading.eol)
+			.toBeFalsy();
 
-			expect(component.status.loading.eolBulletin)
-				.toBeFalsy();
+		expect(component.status.loading.eolBulletin)
+			.toBeFalsy();
 
-			expect(component.status.loading.licenses)
-				.toBeFalsy();
+		expect(component.status.loading.licenses)
+			.toBeFalsy();
 
-			expect(component.status.loading.overall)
-				.toBeFalsy();
+		expect(component.status.loading.overall)
+			.toBeFalsy();
+	}));
 
-			expect(component.timelineData.length)
-				.toBe(0);
-			done();
-		});
-	});
-	it('should fetch timeline data', done => {
-		const asset = getActiveBody(AssetScenarios[0]).data[0];
+	it('should fetch timeline data', fakeAsync(() => {
+		const asset = MockAssetsData[0];
 		component.asset = asset;
-		const mockEOLData = getActiveBody(SoftwareEOLScenarios[0]);
-		const mockEOLBulletinData = getActiveBody(SoftwareEOLBulletinScenarios[0]);
 
 		spyOn(productAlertsService, 'getSoftwareEox')
 			.and
-			.returnValue(of(mockEOLData));
+			.returnValue(of(MockSoftwareEOLResponse));
 		spyOn(productAlertsService, 'getSoftwareEoxBulletin')
 			.and
-			.returnValue(of(mockEOLBulletinData));
+			.returnValue(of(MockSoftwareEOLBulletinsResponse));
 		spyOn(controlPointService, 'getLicenseUsingGET')
 			.and
 			.returnValue(of({ }));
 		component.ngOnInit();
-		fixture.whenStable()
-		.then(() => {
-			fixture.detectChanges();
+		tick();
+		fixture.detectChanges();
 
-			expect(component.status.loading.eol)
-				.toBeFalsy();
+		expect(component.status.loading.eol)
+			.toBeFalsy();
 
-			expect(component.status.loading.eolBulletin)
-				.toBeFalsy();
+		expect(component.status.loading.eolBulletin)
+			.toBeFalsy();
 
-			expect(component.timelineData.length)
-				.toBeTruthy();
-			done();
-		});
-	});
+		tick();
+	}));
 
 	it('should fetch the software information', done => {
-		const asset = getActiveBody(AssetScenarios[0]).data[0];
+		const asset = MockAssetsData[0];
 		component.asset = asset;
 		const mockEOLData = _.filter(MockSoftwareEOLResponse.data,
 			{ managedNeId: asset.managedNeId });
@@ -291,7 +265,7 @@ describe('AssetDetailsSoftwareComponent', () => {
 	});
 
 	it('should handle changing assets', () => {
-		const assets = getActiveBody(AssetScenarios[0]).data;
+		const assets = MockAssetsData;
 
 		const asset = assets[0];
 		const newAsset = assets[1];

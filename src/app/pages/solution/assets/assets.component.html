@@ -1,22 +1,37 @@
 <asset-details *ngIf="selectedAsset && selectedAsset.data"
 	[asset]="selectedAsset.data"
-	[element]="selectedAsset.element"
-	[serialNumber]="selectedAsset.data.serialNumber"
 	(close)="onPanelClose()"
 	(scanStatus)="handleScanStatus($event)">
 </asset-details>
 
-<div class="panel panel--bordered base-padding-left no-padding-bottom">
+<div class="panel panel--bordered no-padding-left no-padding-bottom">
 	<cui-alert [options]="alert"></cui-alert>
 	<cui-tabs inline="true">
 		<cui-tab [label]="'_Assets_' | i18n"
-			(click)="mainContent = 'assets'"
 			data-auto-id="AssetsTabButton">
-			<visual-filter-bar [filters]="filters" [filterCollapse]="filterCollapse"></visual-filter-bar>
+			<visual-filter-bar [filters]="selectedView.filters" [filterCollapse]="filterCollapse">
+				<ng-template #startingCard>
+					<div>
+						<div *ngFor="let view of views">
+							<div class="base-margin-top cursor"
+								[ngClass]="{
+									'view__selected half-padding-left qtr-margin-left': view.selected,
+									'text-dkgray-4 base-padding-left': !view.selected
+								}"
+								attr.data-auto-id="View-{{view.key}}"
+								(click)="!view.selected ? selectView(view) : null">
+								<span class="text-xlarge"
+									innerText="{{ view?.total || 0 }} {{ view?.title | i18n }}">
+								</span>
+							</div>
+						</div>
+					</div>
+				</ng-template>
+			</visual-filter-bar>
 		</cui-tab>
 		<ng-template cuiTabPost>
 			<visual-filter-toggle 
-				*ngIf="!status.isLoading && pagination"
+				*ngIf="!status.isLoading && selectedView.pagination"
 				data-auto-id="VisualFilterToggle"
 				(click)="filterCollapse = !filterCollapse"
 				[filterCollapse]="filterCollapse"
@@ -25,29 +40,30 @@
 	</cui-tabs>
 </div>
 
-<div *ngIf="mainContent === 'assets'" class="panel panel--bordered half-margin-top">
-	<ng-container *ngIf="filtered && !status.isLoading">
+<div class="panel panel--bordered half-margin-top">
+	<ng-container *ngIf="selectedView.filtered && !status.isLoading">
 		<ng-container *ngTemplateOutlet="filterBar"></ng-container>
 	</ng-container>
-	<div #tableContainer [ngStyle]="{ 'height': tableContainerHeight }">
+	<div #tableContainer [ngStyle]="{ 'height': selectedView.tableContainerHeight }">
 		<div>
-			<ng-container *ngIf="!status.isLoading && pagination">
+			<ng-container *ngIf="!status.isLoading && selectedView.pagination">
 				<ng-container *ngTemplateOutlet="titleBar"></ng-container>
 			</ng-container>
 			<no-dnac-header></no-dnac-header>
 			<ng-container *ngTemplateOutlet="tableAssets"></ng-container>
-			<div *ngIf="pagination && pagination.total" class="base-margin-top">
-				<cui-pager [page]="pagination.page - 1"
-					[limit]="pagination.rows"
-					[totalItems]="pagination.total || 0"
+			<div *ngIf="selectedView?.pagination && selectedView?.pagination.total" 				
+				class="base-margin-top">
+				<cui-pager [page]="selectedView.pagination.page - 1"
+					[limit]="selectedView.pagination.rows"
+					[totalItems]="selectedView.pagination.total || 0"
 					(onPageChanged)="onPageChanged($event)">
 				</cui-pager>
 			</div>
 		</div>
-		<div *ngIf="status.inventoryLoading">
+		<div *ngIf="selectedView.loading">
 			<cui-spinner></cui-spinner>
 		</div>
-		<div *ngIf="!inventory.length && !status.inventoryLoading">
+		<div *ngIf="!selectedView?.data?.length && !selectedView.loading">
 			<div class="text-center dbl-margin-top dbl-margin-bottom">
 				<div>
 					<span class="text-muted text-xlarge"
@@ -55,7 +71,7 @@
 						data-auto-id="NoResultsFoundTxt" >
 					</span>
 				</div>
-				<div *ngIf="filtered">
+				<div *ngIf="selectedView.filtered">
 					<a (click)="clearFilters()"
 						data-auto-id="NoResultsClearAll"
 						[innerText]="'_ClearAll_' | i18n">
@@ -70,8 +86,8 @@
 	<div class="row half-padding-bottom">
 		<div class="col-auto flex flex-fill">
 			<div class="flex-center-vertical">
-				<span [innerText]="'_Assets_' | i18n" class="text-large base-margin-left" *ngIf="!status.isLoading"></span>
-				<span *ngIf="!status.isLoading && pagination && pagination.total" [innerText]="'_ShowingXofYAssets_' | i18n:paginationCount:pagination.total"
+				<span [innerText]="selectedView?.title | i18n" class="text-large base-margin-left" *ngIf="!selectedView.loading"></span>
+				<span *ngIf="!selectedView.loading && selectedView?.pagination && selectedView.pagination.total" [innerText]="'_ShowingXofYZ_' | i18n:selectedView.paginationCount:selectedView.pagination.total:(selectedView.titleCount | i18n | lowercase)"
 					class="qtr-margin-left text-small text-muted"
 					data-auto-id="ShowingAssetsCount">
 				</span>
@@ -86,32 +102,16 @@
 		<div class="col-auto">
 			<div class="flex flex-fluid flex-right align-items-end">
 				<div class="flex-fill form-group input--compressed input--icon half-margin-right">
-					<form *ngIf="searchForm" [formGroup]="searchForm" novalidate>
-						<div class="form-group__text">
-							<input id="searchInput"
-								attr.data-auto-id="SearchInput"
-								class="assets-search"
-								type="text"
-								#searchInput
-								[maxlength]="searchOptions.max"
-								[pattern]="searchOptions.pattern"
-								formControlName="search"
-								placeholder="{{ '_Search_' | i18n }} {{ options?.title }}"
-								ngDefaultControl>
-							<button type="button" class="link">
-								<span class="icon-search"></span>
-							</button>
-						</div>
-					</form>
+					<ng-container *ngTemplateOutlet="selectedView.searchTemplate; context: { view: selectedView }"></ng-container>
 				</div>
 				<div class="btn-group btn-group--square half-margin-right titlebar__viewmode">
 					<button data-auto-id="list-view-btn" class="btn btn--small qtr-padding" 
-						[ngClass]="{ 'selected': view === 'list' }" (click)="selectView('list')">
-						<div inlineSVG="assets/icons/nav-tableline-off.svg"></div>
+						[ngClass]="{ 'selected': viewType === 'list' }" (click)="selectViewType('list')">
+						<img alt="{{ '_TableView_' | i18n }}" src="assets/icons/nav-tableline-off.svg">
 					</button>
 					<button data-auto-id="grid-view-btn" class="btn btn--small qtr-padding" 
-						[ngClass]="{ 'selected': view === 'grid' }" (click)="selectView('grid')">
-						<div inlineSVG="assets/icons/nav-card-off.svg"></div>
+						[ngClass]="{ 'selected': viewType === 'grid' }" (click)="selectViewType('grid')">
+						<img alt="{{ '_CardView_' | i18n }}" src="assets/icons/nav-card-off.svg">
 					</button>
 				</div>
 				<!-- Export options disabled until further notice -->
@@ -125,22 +125,22 @@
 </ng-template>
 
 <ng-template #tableAssets>
-	<div class="responsive-table not-close-360" *ngIf="assetsTable && inventory.length && (!view || view === 'list')">
+	<div class="responsive-table not-close-360 assets-table" *ngIf="selectedView.table && selectedView?.data?.length && (!viewType || viewType === 'list')">
 		<table class="table table--selectable table--compressed table--wrap table--lined table--hover table--nostripes" data-auto-id="AssetsTable">
 				<thead data-auto-id="AssetsTableHeader">
 					<tr>
 						<th>
 							<label class="checkbox">
 								<input type="checkbox"
-									[checked]="allAssetsSelected"
-									(click)="onAllSelect(!allAssetsSelected)"
+									[checked]="selectedView.allAssetsSelected"
+									(click)="onAllSelect(!selectedView.allAssetsSelected)"
 									data-auto-id="AllAssetSelect" />
 								<span class="checkbox__input"
 									data-auto-id="AllAssetSelectCheckbox">
 								</span>
 							</label>
 						</th>
-						<th attr.data-auto-id="InventoryHeader-{{ column.name }}" *ngFor="let column of assetsTable.columns"
+						<th attr.data-auto-id="InventoryHeader-{{ column.name }}" *ngFor="let column of selectedView.table.columns"
 							[ngClass]="{ 'sortable': column.sortable, 'sorted': column.sorting }"
 							(click)="onColumnSort(column)">
 							<span [innerText]="column.name"></span>
@@ -155,7 +155,7 @@
 					</tr>
 				</thead>
 				<tbody data-auto-id="AssetsTableBody">
-					<tr *ngFor="let item of inventory"
+					<tr *ngFor="let item of selectedView.data"
 						attr.data-auto-id="InventoryItem-{{ item.data.serialNumber }}"
 						[ngClass]="{ 'active': item.details }">
 						<td attr.data-auto-id="InventoryItemSelectTD-{{ item.data.serialNumber }}">
@@ -169,12 +169,12 @@
 								</span>
 							</label>
 						</td>
-						<td *ngFor="let column of assetsTable.columns"
+						<td *ngFor="let column of selectedView.table.columns"
 							[ngStyle]="{ 'width': column.width }"
 							attr.data-auto-id="InventoryItemClickHandler-{{ item.data.serialNumber }}"
 							(click)="column.click ? onClick($event, 'menu') : onClick($event, 'item', item)">
 							<ng-container *ngIf="column.template">
-								<ng-container *ngTemplateOutlet="column.template; context: { celldata: item.data, element: item.element, actions: item.actions }"></ng-container>
+								<ng-container *ngTemplateOutlet="column.template; context: { celldata: item.data, actions: item.actions }"></ng-container>
 							</ng-container>
 							<ng-container *ngIf="!column.template">
 								<span *ngIf="column.render" [innerHTML]="column.render(item.data)"
@@ -187,9 +187,9 @@
 				</tbody>
 		</table>
 	</div>
-	<div class="panel panel--ltgray base-padding-right base-padding-left" *ngIf="assetsTable && inventory.length && view === 'grid'">
+	<div class="panel panel--ltgray base-padding-right base-padding-left" *ngIf="selectedView?.table && selectedView?.data?.length && viewType === 'grid'">
 		<div class="row">
-			<div *ngFor="let item of inventory" class="col-md-2 half-margin-bottom half-margin-top flex">
+			<div *ngFor="let item of selectedView.data" class="col-md-2 half-margin-bottom half-margin-top flex">
 				<ng-container *ngTemplateOutlet="cardTemplate; context: { item: item }"></ng-container>
 			</div>
 		</div>
@@ -294,7 +294,7 @@
 					<span class="badge badge--tiny badge--success icon-check"></span>
 				</span>
 			</div>
-			<div *ngIf="item.actions.length">
+			<div *ngIf="item?.actions?.length">
 				<cui-dropdown
 					attr.data-auto-id="InventoryItem-{{ item.data?.serialNumber }}-dropdown"
 					[actions]="item.actions"
@@ -329,31 +329,32 @@
 
 <ng-template #criticalAdvisories let-celldata="celldata">
 	<div *ngIf="celldata.criticalAdvisories"
-		class="flex flex-fill flex-center">
-		<span class="label label--circle label--danger"
-			[innerText]="celldata.criticalAdvisories"
+		class="flex flex-fill flex-center-horizontal flex-center-vertical">
+		<span class="label label--circle label--danger label--tiny qtr-margin-right"
 			data-auto-id="CriticalAdvisoriesIcon">
 		</span>
+		<span [innerText]="celldata.criticalAdvisories"
+			data-auto-id="CriticalAdvisoriesNumber"></span>
 	</div>
 </ng-template>
 
-<ng-template #deviceTemplate let-celldata="celldata" let-element="element">
-	<span class="qtr-margin-right" *ngIf="element && getProductIcon(element)"
-		[title]="getProductTitle(element)">
+<ng-template #deviceTemplate let-celldata="celldata">
+	<span class="qtr-margin-right" *ngIf="getProductIcon(celldata)"
+		[title]="getProductTitle(celldata)">
 		<img alt="{{ '_AssetIcon_' | i18n }}"
 			class="icon-asset"
 			attr.data-auto-id="DeviceIcon-{{ celldata?.deviceName }}"
-			src="assets/img/assets/device-{{ getProductIcon(element) }}.svg">
+			src="assets/img/assets/device-{{ getProductIcon(celldata) }}.svg">
 	</span>
 	<span [innerText]="celldata.deviceName | truncate:true:50"
 		[title]="celldata.deviceName"
 		attr.data-auto-id="Device-{{celldata.serialNumber}}"
-		[ngClass]="{ 'name-align-left': (element && !getProductIcon(element)) || !element }">
+		[ngClass]="{ 'name-align-left': (!getProductIcon(celldata)) }">
 	</span>
 </ng-template>
 
 <ng-template #actionsTemplate let-celldata="celldata" let-actions="actions">
-	<cui-dropdown *ngIf="actions.length"
+	<cui-dropdown *ngIf="actions?.length"
 		[actions]="actions"
 		position="left"
 		icon="icon-more icon-medium text-muted rotate-90">
@@ -367,11 +368,17 @@
 	</span>
 </ng-template>
 
+<ng-template #productIdTemplate let-celldata="celldata">
+	<span [innerText]="celldata.productId ? celldata.productId : ('_NA_' | i18n)"
+		[title]="celldata.productFamily ? celldata.productFamily : ('_NA_' | i18n)">
+	</span>
+</ng-template>
+
 <ng-template #filterBar>
 	<div class="row flex-center-vertical half-margin-top base-margin-bottom">
 		<div class="col-md-11 flex">
 			<span class="flex flex-center-vertical base-margin-left half-margin-right filter-bar__title" [innerText]="'_Filtered_' | i18n"></span>
-			<ng-container *ngFor="let selectedSubfilter of selectedSubfilters">
+			<ng-container *ngFor="let selectedSubfilter of selectedView.selectedSubfilters">
 				<span class="label filter-bar__item"
 					(click)="onSubfilterSelect(selectedSubfilter.subfilter.filter, selectedSubfilter.filter)"
 					attr.data-auto-id="FilterTag-{{ selectedSubfilter.subfilter.filter }}">
@@ -389,15 +396,49 @@
 	</div>
 </ng-template>
 
-<!-- Templates for our Visual Filters for the Assets Tab -->
-<ng-template #totalFilter let-filter="filter">
-	<div class="dbl-padding-bottom"
-		(click)="clearFilters()"
-		data-auto-id="TotalVisualFilter"
-		[innerText]="filter.seriesData[0]?.value || 0">
-	</div>
+<ng-template #systemSearchTemplate let-view="view">
+	<form *ngIf="view.searchForm" [formGroup]="view.searchForm" novalidate>
+		<div class="form-group__text">
+			<input id="searchInput-System"
+				attr.data-auto-id="SearchInput-System"
+				class="assets-search"
+				type="text"
+				#systemSearchInput
+				[minlength]="searchOptions.min"
+				[maxlength]="searchOptions.max"
+				[pattern]="searchOptions.pattern"
+				formControlName="search"
+				placeholder="{{ '_Search_' | i18n }} {{ view?.searchLabel | i18n }}"
+				ngDefaultControl>
+			<button type="button" class="link">
+				<span class="icon-search"></span>
+			</button>
+		</div>
+	</form>
 </ng-template>
 
+<ng-template #hardwareSearchTemplate let-view="view">
+	<form *ngIf="view.searchForm" [formGroup]="view.searchForm" novalidate>
+		<div class="form-group__text">
+			<input id="searchInput-Hardware"
+				attr.data-auto-id="SearchInput-Hardware"
+				class="assets-search"
+				type="text"
+				#hardwareSearchInput
+				[minlength]="searchOptions.min"
+				[maxlength]="searchOptions.max"
+				[pattern]="searchOptions.pattern"
+				formControlName="search"
+				placeholder="{{ '_Search_' | i18n }} {{ view?.searchLabel | i18n }}"
+				ngDefaultControl>
+			<button type="button" class="link">
+				<span class="icon-search"></span>
+			</button>
+		</div>
+	</form>
+</ng-template>
+
+<!-- Templates for our Visual Filters for the Assets Tab -->
 <ng-template #bubbleChartFilter let-filter="filter">
 	<bubble-chart [seriesData]="filter.seriesData"
 		(subfilter)="onSubfilterSelect($event.filter, filter)">

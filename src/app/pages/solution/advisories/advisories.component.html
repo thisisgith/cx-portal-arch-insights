@@ -32,7 +32,7 @@
 
 <div #contentContainer
 	*ngIf="selectedTab"
-	class="panel panel--bordered half-margin-top"
+	class="panel panel--bordered half-margin-top advisories"
 	[ngStyle]="{ 'height': selectedTab.contentContainerHeight }">
 	<ng-container *ngIf="selectedTab.filtered && !selectedTab.loading">
 		<ng-container *ngTemplateOutlet="filterBar"></ng-container>
