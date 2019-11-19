@@ -1,9 +1,15 @@
 @import '~cisco-ui/src/scss/utilities/_variables.scss';
-@import '../../../../mixins.scss';
+@import '~src/mixins.scss';
 
 .icon-asset {
 	height: 20px;
 	width: 20px;
+}
+
+.assets-table {
+	th:not(.sortable) {
+		cursor: default !important;
+	}
 }
 
 .remove-shadow {
@@ -30,6 +36,10 @@
 	.name-align-left {
 		margin-left: 25px;
 	}
+}
+
+.view__selected {
+	border-left: 4px solid #00bceb;
 }
 
 .curved-corners {
@@ -87,4 +97,8 @@
 
 .form-group__text .assets-search {
 	@include filter-search;
+}
+
+.cursor {
+	cursor: pointer;
 }

@@ -16,20 +16,20 @@
 	th {
 		font-size: 12px;
 	}
+}
 
-	tbody {
-		tr {
-			td:last-child {
-				border-right: 1px solid #e4e4e4;
-			}
+::ng-deep {
+	.tabel .icon-chevron-down {
+		bottom: 1px;
+	}
 
-			td:first-child {
-				border-left: 1px solid #e4e4e4;
-			}
-		}
+	.table .icon-chevron-up {
+		bottom: 2px;
+		right: 30px;
+	}
 
-		tr:last-child {
-			border-bottom: 1px solid #e4e4e4;
-		}
+	.cui .link {
+		position: absolute;
+		right: 50px;
 	}
 }

@@ -1,4 +1,4 @@
-import { Component, ViewChild, TemplateRef, OnInit, OnDestroy } from '@angular/core';
+import { Component, ViewChild, TemplateRef, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router, ActivationEnd, NavigationEnd } from '@angular/router';
 
 import { CaseParams, CaseDetails, CaseService } from '@cui-x/services';
@@ -99,6 +99,7 @@ const durationOpenFilters = [
  */
 @Component({
 	styleUrls: ['./resolution.component.scss'],
+	encapsulation: ViewEncapsulation.None,
 	templateUrl: './resolution.component.html',
 })
 export class ResolutionComponent implements OnInit, OnDestroy {
@@ -631,7 +632,20 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 					// Don't include status or severities in pie charts with no associated cases
 					_.set(filter, 'seriesData', _.filter(filter.seriesData, data => data.value));
 				}
-				_.set(filter, 'seriesData', [...filter.seriesData]);
+				if (filter.key === 'status' && filter.seriesData.length > 4) {
+					const sortDataByDesc = _.reverse(_.sortBy(filter.seriesData, 'value'));
+					const seriesData = _.slice(sortDataByDesc, 0, 3);
+					seriesData.push({
+						filter: _.join(_.map(_.slice(sortDataByDesc, 3), 'filter'), ','),
+						label: I18n.get('_Others_'),
+						selected: false,
+						value: _.reduce(_.map(_.slice(sortDataByDesc, 3), 'value'),
+						 (sum, val) =>  sum + val),
+					});
+					_.set(filter, 'seriesData', [...seriesData]);
+				} else {
+					_.set(filter, 'seriesData', [...filter.seriesData]);
+				}
 				_.set(filter, 'loading', false);
 			});
 			this.isLoading = false;

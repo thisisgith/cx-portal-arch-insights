@@ -1,11 +1,13 @@
 import { configureTestSuite } from 'ng-bullet';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 import {
 	ComponentFixture,
 	TestBed,
 } from '@angular/core/testing';
 import { UserMgmtComponent } from './user-mgmt.component';
 import { UserMgmtModule } from './user-mgmt.module';
+import { environment } from '@environment';
 
 describe('UserMgmtComponent', () => {
 	let component: UserMgmtComponent;
@@ -16,7 +18,11 @@ describe('UserMgmtComponent', () => {
 		TestBed.configureTestingModule({
 			imports: [
 				HttpClientTestingModule,
+				RouterTestingModule,
 				UserMgmtModule,
+			],
+			providers: [
+				{ provide: 'ENVIRONMENT', useValue: environment },
 			],
 		});
 	});

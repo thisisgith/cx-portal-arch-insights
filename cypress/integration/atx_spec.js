@@ -2653,6 +2653,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 
 		after(() => {
 			// Switch back to the default mock data
+			feedbackMock.enable('(Lifecycle) Feedback POST');
 			feedbackMock.enable('(Lifecycle) Feedback PUT');
 			atxMock.enable('(ATX) IBN-Campus Network Assurance-Onboard');
 
@@ -2724,18 +2725,41 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			// Setup a Cypress route to intercept the POST API call
 			cy.server();
 			cy.route({
+				method: 'POST',
+				url: '/api/customerportal/racetrack/v1/feedback/cxportal',
+				status: 200,
+				response: {
+					feedbackId: 'feedback-1',
+					comment: '',
+					context: '',
+					thumbs: 'UP',
+				},
+			}).as('feedbackPost');
+			cy.route({
 				method: 'PUT',
 				url: '/api/customerportal/racetrack/v1/feedback/cxportal/feedback-1',
 				status: 200,
 				response: 'Forced success from QA',
 			}).as('feedbackPut');
 			// Disable the default mock so Cypress can catch the request
+			feedbackMock.disable('(Lifecycle) Feedback POST');
 			feedbackMock.disable('(Lifecycle) Feedback PUT');
 
 			cy.getByAutoId('ATXCard')
 				.first()
 				.within(() => {
 					cy.getByAutoId('thumbUpBtn').click();
+				});
+
+			cy.wait('@feedbackPost')
+				.its('request.body')
+				.then(body => {
+					expect(body.comment).to.eq('');
+					expect(body.context.assetType).to.eq('ATX');
+					expect(body.context.customerId).to.eq('2431199');
+					expect(body.context.entityId).to.eq('ATX1');
+					expect(body.context.partnerId).to.eq('partner1');
+					expect(body.thumbs).to.eq('UP');
 				});
 
 			cy.getByAutoId('FeedbackPopup')
@@ -2758,7 +2782,32 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 					expect(body.context.customerId).to.eq('2431199');
 					expect(body.context.entityId).to.eq('ATX1');
 					expect(body.context.partnerId).to.eq('partner1');
+					expect(body.thumbs).to.eq('UP');
 				});
+		});
+
+		it('Submitting feedback form should show thank you message', () => {
+			cy.getByAutoId('ATXCard')
+				.first()
+				.within(() => {
+					cy.getByAutoId('thumbUpBtn').click();
+				});
+
+			cy.getByAutoId('FeedbackPopup')
+				.should('exist')
+				.within(() => {
+					cy.getByAutoId('FeedbackPopup-Comments-Input')
+						.clear()
+						.type('Automation Feedback');
+
+					// Submit the form
+					cy.getByAutoId('FeedbackPopup-Submit').click();
+				});
+
+			// Verify the "Thank you" message is displayed with a "Close" button
+			cy.getByAutoId('FeedbackPopup-ThankYou').should('have.text', i18n._ThankYou_);
+			cy.getByAutoId('FeedbackPopup-Close').click();
+			cy.getByAutoId('FeedbackPopup').should('not.exist');
 		});
 	});
 
@@ -3113,11 +3162,56 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			});
 
 			it('ATX filter "All" selection should unselect all other dropdown entries', () => {
+				// Only view within the View all selection of the ATX panel
+				cy.getByAutoId('ViewAllModal')
+					.within(() => {
+						// Open Partner dropdown
+						cy.getByAutoId('ViewAllModal-PartnerMultiFilter').click();
 
+						// Select other options that are not 'All' and save
+						for (let i = 1; i < partnerInfoBody.companyList.length; i += 2) {
+							cy.getByAutoId(`MultiSelect-ListItem${i}`).click();
+						}
+						cy.getByAutoId('MultiSelect-SaveButton').click();
+
+						// Reopen dropdown and select 'All'
+						cy.getByAutoId('ViewAllModal-PartnerMultiFilter').click();
+						cy.getByAutoId('MultiSelect-SelectAll').click();
+						cy.getByAutoId('MultiSelect-SaveButton').click();
+
+						// Loop through items in dropdown and confirm all other selections are not selected
+						for (let i = 1; i < partnerInfoBody.companyList.length; i += 2) {
+							cy.getByAutoId(`MultiSelect-ListItem${i}`)
+								.should('not.have.class', 'ms-dropdown__list__item--selected');
+						}
+					});
 			});
 
 			it('ATX filter entry selection should unselect the "All" entry', () => {
+				// Only view within the View all selection of the ATX panel
+				cy.getByAutoId('ViewAllModal')
+					.within(() => {
+						// Open the Partner Dropdown
+						cy.getByAutoId('ViewAllModal-PartnerMultiFilter').click();
 
+						// Select All and click Save
+						cy.getByAutoId('MultiSelect-SelectAll').click();
+						cy.getByAutoId('MultiSelect-SaveButton').click();
+
+						// Reopen the dropdown
+						cy.getByAutoId('ViewAllModal-PartnerMultiFilter').click();
+
+						// Select another option from the drop down and save
+						cy.getByAutoId('MultiSelect-ListItem1').click();
+						cy.getByAutoId('MultiSelect-SaveButton').click();
+
+						// Reopen dropdown
+						cy.getByAutoId('ViewAllModal-PartnerMultiFilter').click();
+
+						// Confirm the All option is not selected (check that the class isn't there)
+						cy.getByAutoId('MultiSelect-SelectAll')
+							.should('not.have.class', 'ms-dropdown__list__item--selected');
+					});
 			});
 
 			it('ATX filter "All" selection should call API with all available options', () => {

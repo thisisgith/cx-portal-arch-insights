@@ -1,10 +1,17 @@
 <div class="text-center dbl-margin-top">
-	<section class="search-section">
-		<div class="qtr-margin-bottom text-small" [innerText]="'_CXPortalUserMgmtIsPoweredBySA_' | i18n"></div>
+	<section class="search-section" *ngIf="!isLoading">
+		<div
+			class="qtr-margin-bottom text-small"
+			[innerText]="'_CXPortalUserMgmtIsPoweredBySA_' | i18n"
+		></div>
 		<div class="form-group input--icon half-margin-bottom">
 			<div class="form-group__text">
-				<input [placeholder]="'_SearchUsers_' | i18n" data-auto-id="user-search" type="search"
-					[(ngModel)]="filter">
+				<input
+					[placeholder]="'_SearchUsers_' | i18n"
+					data-auto-id="user-search"
+					type="search"
+					[(ngModel)]="filter"
+				>
 				<button type="button" class="link">
 					<span class="icon-search"></span>
 				</button>
@@ -72,13 +79,20 @@
 					<td [innerText]="user.companyName || ''"></td>
 					<!-- <td [innerText]="user.saAccountName || 'Acme Corp'"></td> -->
 					<td class="role-cell">
-						<select-role [role]="user.roles[0]"></select-role>
+						<select-role
+							[user]="user"
+							(onSelect)="changeRole($event)"
+						></select-role>
 					</td>
 					<td>
-						<cui-dropdown icon="icon-more" position="left" [actions]="userDropdownOptions"
-							(actionSelected)="handleUserDropdownSelection($event, user)">
+						<cui-dropdown
+							*ngIf="user.roles?.length"
+							icon="icon-more"
+							position="left"
+							[actions]="userDropdownOptions"
+							(actionSelected)="handleUserDropdownSelection($event, user)"
+						>
 						</cui-dropdown>
-
 					</td>
 				</tr>
 			</tbody>
@@ -95,8 +109,6 @@
 	<div class="text-center dbl-margin-top xl-margin-bottom" *ngIf="isLoading">
 		<cui-loader [label]="'_Loading_' | i18n"></cui-loader>
 	</div>
-	<div class="xl-margin-top dbl-margin-bottom text-center">
-		<button class="btn disabled" [innerText]="'_Update_' | i18n" (click)="onUpdateClick()"
-			data-auto-id="update-btn"></button>
-	</div>
+	<div class="dbl-margin-bottom"></div>
 </div>
+<cui-modal></cui-modal>

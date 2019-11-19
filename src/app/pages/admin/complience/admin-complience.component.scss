@@ -1,0 +1,23 @@
+@import "~cisco-ui/src/scss/utilities/_variables.scss";
+
+:host {
+	.panel div {
+		word-wrap: break-word;
+	}
+
+	.AdminInputSelect {
+		width: 175px;
+		height: $pagination-height-default;
+	}
+
+	.flex-end {
+		display: flex;
+		flex-direction: row-reverse;
+	}
+
+	.device-tags-selection {
+		display: flex;
+		position: absolute;
+		top: 310px;
+	}
+}

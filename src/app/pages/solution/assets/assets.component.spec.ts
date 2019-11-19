@@ -23,11 +23,11 @@ import {
 	user,
 	Mock,
 	RacetrackScenarios,
-	AssetScenarios,
+	HardwareAssetScenarios,
+	SystemAssetScenarios,
 	ContractScenarios,
 	CoverageScenarios,
 	HardwareEOLCountScenarios,
-	NetworkScenarios,
 	RoleScenarios,
 	VulnerabilityScenarios,
 } from '@mock';
@@ -69,19 +69,26 @@ describe('AssetsComponent', () => {
 
 	const buildSpies = () => {
 		const countHeaders = new HttpHeaders().set('X-API-RESULT-COUNT', '4');
-		const assets = getActiveBody(AssetScenarios[5]);
-		spyOn(inventoryService, 'getAssets')
+		const hardwareAssets = getActiveBody(HardwareAssetScenarios[0]);
+		const systemAssets = getActiveBody(SystemAssetScenarios[0]);
+		spyOn(inventoryService, 'getHardwareAssets')
 			.and
-			.returnValue(of(assets));
-		spyOn(inventoryService, 'headAssetsResponse')
+			.returnValue(of(hardwareAssets));
+		spyOn(inventoryService, 'getSystemAssets')
+			.and
+			.returnValue(of(systemAssets));
+		spyOn(inventoryService, 'headHardwareAssetsResponse')
 			.and
 			.returnValue(of(new HttpResponse({
 				headers: countHeaders,
 				status: 200,
 			})));
-		spyOn(inventoryService, 'getNetworkElements')
+		spyOn(inventoryService, 'headSystemAssetsResponse')
 			.and
-			.returnValue(of(NetworkScenarios[1].scenarios.GET[0].response.body));
+			.returnValue(of(new HttpResponse({
+				headers: countHeaders,
+				status: 200,
+			})));
 		spyOn(inventoryService, 'getRoleCount')
 			.and
 			.returnValue(of(RoleScenarios[0].scenarios.GET[0].response.body));
@@ -115,7 +122,16 @@ describe('AssetsComponent', () => {
 					AssetsModule,
 					HttpClientTestingModule,
 					MicroMockModule,
-					RouterTestingModule,
+					RouterTestingModule.withRoutes([
+						{
+							component: AssetsComponent,
+							path: 'solution/assets/system',
+						},
+						{
+							component: AssetsComponent,
+							path: 'solution/assets/hardware',
+						},
+					]),
 				],
 				providers: [
 					{ provide: 'ENVIRONMENT', useValue: environment },
@@ -127,6 +143,7 @@ describe('AssetsComponent', () => {
 								data: {
 									user,
 								},
+								params: { view: 'system' },
 							},
 						},
 					},
@@ -154,10 +171,16 @@ describe('AssetsComponent', () => {
 				status: 404,
 				statusText: 'Resource not found',
 			};
-			spyOn(inventoryService, 'getAssets')
+			spyOn(inventoryService, 'getHardwareAssets')
 				.and
 				.returnValue(throwError(new HttpErrorResponse(error)));
-			spyOn(inventoryService, 'getNetworkElements')
+			spyOn(inventoryService, 'getSystemAssets')
+				.and
+				.returnValue(throwError(new HttpErrorResponse(error)));
+			spyOn(inventoryService, 'headHardwareAssetsResponse')
+				.and
+				.returnValue(throwError(new HttpErrorResponse(error)));
+			spyOn(inventoryService, 'headSystemAssetsResponse')
 				.and
 				.returnValue(throwError(new HttpErrorResponse(error)));
 			spyOn(inventoryService, 'getRoleCount')
@@ -179,17 +202,15 @@ describe('AssetsComponent', () => {
 			fixture.detectChanges();
 			tick(1000);
 			fixture.detectChanges();
-			expect(component.inventory.length)
-				.toBe(0);
-			expect(_.find(component.filters, { key: 'role' }).seriesData.length)
-				.toBe(0);
-			expect(_.find(component.filters, { key: 'advisories' }).seriesData.length)
-				.toBe(0);
 
-			// TODO: Re-enable when UX has been redesigned for LA
-			// expect(_.find(component.filters, { key: 'contractNumber' }).seriesData.length)
-			// 	.toBe(0);
-			expect(_.find(component.filters, { key: 'coverage' }).seriesData.length)
+			const selectedView = component.selectedView;
+			expect(_.get(selectedView, 'data', []).length)
+				.toBe(0);
+			expect(_.find(selectedView.filters, { key: 'role' }).seriesData.length)
+				.toBe(0);
+			expect(_.find(selectedView.filters, { key: 'advisories' }).seriesData.length)
+				.toBe(0);
+			expect(_.find(selectedView.filters, { key: 'coverage' }).seriesData.length)
 				.toBe(0);
 
 			fixture.destroy();
@@ -201,17 +222,14 @@ describe('AssetsComponent', () => {
 			fixture.detectChanges();
 			tick(1000);
 			fixture.detectChanges();
-			const totalFilter = _.find(component.filters, { key: 'total' });
-			const coverageFilter = _.find(component.filters, { key: 'coverage' });
 
-			expect(_.find(component.filters, 'selected'))
-				.toEqual(totalFilter);
+			const coverageFilter = _.find(component.selectedView.filters, { key: 'coverage' });
 
 			component.onSubfilterSelect('covered', coverageFilter);
 
 			fixture.detectChanges();
 
-			expect(_.filter(component.filters, 'selected'))
+			expect(_.filter(component.selectedView.filters, 'selected'))
 				.toContain(coverageFilter);
 
 			fixture.destroy();
@@ -222,15 +240,17 @@ describe('AssetsComponent', () => {
 			buildSpies();
 			fixture.detectChanges();
 			tick(1000);
+			component.selectView(component.getView('hardware'));
+			fixture.detectChanges();
 
-			const eoxFilter = _.find(component.filters, { key: 'eox' });
+			const eoxFilter = _.find(component.selectedView.filters, { key: 'eox' });
 
 			component.onSubfilterSelect('gt-0-lt-12-months', eoxFilter);
 			tick(1000);
 
 			fixture.detectChanges();
 
-			expect(_.get(component, ['assetParams', 'lastDateOfSupportRange'])[0])
+			expect(_.get(component.selectedView, ['params', 'lastDateOfSupportRange'])[0])
 				.toEqual('gt-0-lt-12-months');
 
 			component.onSubfilterSelect('gt-12-lt-24-months', eoxFilter);
@@ -238,21 +258,21 @@ describe('AssetsComponent', () => {
 
 			fixture.detectChanges();
 
-			expect(_.get(component, ['assetParams', 'lastDateOfSupportRange'])[0])
+			expect(_.get(component.selectedView, ['params', 'lastDateOfSupportRange'])[0])
 				.toEqual('gt-12-lt-24-months');
 
 			component.onSubfilterSelect('gt-24-lt-36-months', eoxFilter);
 			tick(1000);
 
 			fixture.detectChanges();
-			expect(_.get(component, ['assetParams', 'lastDateOfSupportRange'])[0])
+			expect(_.get(component.selectedView, ['params', 'lastDateOfSupportRange'])[0])
 				.toEqual('gt-24-lt-36-months');
 
 			component.onSubfilterSelect('gt-36-months', eoxFilter);
 			tick(1000);
 
 			fixture.detectChanges();
-			expect(_.get(component, ['assetParams', 'lastDateOfSupportRange'])[0])
+			expect(_.get(component.selectedView, ['params', 'lastDateOfSupportRange'])[0])
 				.toEqual('gt-36-months');
 
 			fixture.destroy();
@@ -264,33 +284,34 @@ describe('AssetsComponent', () => {
 			fixture.detectChanges();
 			tick(1000);
 			fixture.detectChanges();
-			const advisoriesFilter = _.find(component.filters, { key: 'advisories' });
+			const selectedView = component.selectedView;
+			const advisoriesFilter = _.find(selectedView.filters, { key: 'advisories' });
 
 			component.onSubfilterSelect('hasBugs', advisoriesFilter);
 			tick();
-			expect(_.get(component, ['assetParams', 'hasBugs']))
+			expect(_.get(selectedView, ['params', 'hasBugs']))
 				.toBeTruthy();
-			expect(_.get(component, ['assetParams', 'hasFieldNotices']))
+			expect(_.get(selectedView, ['params', 'hasFieldNotices']))
 				.toBeFalsy();
-			expect(_.get(component, ['assetParams', 'hasSecurityAdvisories']))
+			expect(_.get(selectedView, ['params', 'hasSecurityAdvisories']))
 				.toBeFalsy();
 
 			component.onSubfilterSelect('hasFieldNotices', advisoriesFilter);
 			tick();
-			expect(_.get(component, ['assetParams', 'hasBugs']))
+			expect(_.get(selectedView, ['params', 'hasBugs']))
 				.toBeFalsy();
-			expect(_.get(component, ['assetParams', 'hasFieldNotices']))
+			expect(_.get(selectedView, ['params', 'hasFieldNotices']))
 				.toBeTruthy();
-			expect(_.get(component, ['assetParams', 'hasSecurityAdvisories']))
+			expect(_.get(selectedView, ['params', 'hasSecurityAdvisories']))
 				.toBeFalsy();
 
 			component.onSubfilterSelect('hasSecurityAdvisories', advisoriesFilter);
 			tick();
-			expect(_.get(component, ['assetParams', 'hasBugs']))
+			expect(_.get(selectedView, ['params', 'hasBugs']))
 				.toBeFalsy();
-			expect(_.get(component, ['assetParams', 'hasFieldNotices']))
+			expect(_.get(selectedView, ['params', 'hasFieldNotices']))
 				.toBeFalsy();
-			expect(_.get(component, ['assetParams', 'hasSecurityAdvisories']))
+			expect(_.get(selectedView, ['params', 'hasSecurityAdvisories']))
 				.toBeTruthy();
 
 			fixture.destroy();
@@ -302,12 +323,12 @@ describe('AssetsComponent', () => {
 			fixture.detectChanges();
 			tick(1000);
 			fixture.detectChanges();
-			const coverageFilter = _.find(component.filters, { key: 'coverage' });
+			const coverageFilter = _.find(component.selectedView.filters, { key: 'coverage' });
 			component.onSubfilterSelect('covered', coverageFilter);
 
 			fixture.detectChanges();
 
-			expect(_.filter(component.filters, 'selected'))
+			expect(_.filter(component.selectedView.filters, 'selected'))
 				.toContain(coverageFilter);
 
 			const subfilter = _.find(coverageFilter.seriesData, { filter: 'covered' });
@@ -323,12 +344,12 @@ describe('AssetsComponent', () => {
 			buildSpies();
 			fixture.detectChanges();
 			tick(1000);
-			const coverageFilter = _.find(component.filters, { key: 'coverage' });
+			const coverageFilter = _.find(component.selectedView.filters, { key: 'coverage' });
 			component.onSubfilterSelect('covered', coverageFilter);
 
 			fixture.detectChanges();
 
-			expect(_.filter(component.filters, 'selected'))
+			expect(_.filter(component.selectedView.filters, 'selected'))
 				.toContain(coverageFilter);
 
 			let subfilter = _.find(coverageFilter.seriesData, { filter: 'covered' });
@@ -354,14 +375,14 @@ describe('AssetsComponent', () => {
 			fixture.detectChanges();
 			tick(1000);
 
-			expect(component.view)
+			expect(component.viewType)
 				.toBe('list');
 
-			component.selectView('grid');
+			component.selectViewType('grid');
 
 			fixture.detectChanges();
 
-			expect(component.view)
+			expect(component.viewType)
 				.toBe('grid');
 
 			fixture.destroy(); // Remove leftover "fromNow" timers
@@ -391,7 +412,7 @@ describe('AssetsComponent', () => {
 			component.clearSelectedFilters();
 			tick(1000);
 
-			expect(_.some(component.filters, 'selected'))
+			expect(_.some(component.selectedView.filters, 'selected'))
 				.toBeFalsy();
 
 			fixture.destroy();
@@ -402,9 +423,7 @@ describe('AssetsComponent', () => {
 			buildSpies();
 			fixture.detectChanges();
 			tick(1000);
-			const totalFilter = _.find(component.filters, { key: 'total' });
-			totalFilter.selected = false;
-			const coverageFilter = _.find(component.filters, { key: 'coverage' });
+			const coverageFilter = _.find(component.selectedView.filters, { key: 'coverage' });
 			coverageFilter.selected = true;
 			coverageFilter.seriesData = [
 				{
@@ -417,15 +436,12 @@ describe('AssetsComponent', () => {
 			component.clearFilters();
 			tick(1000);
 
-			_.each(_.omitBy(component.filters, { key: 'total' }), filter => {
+			_.each(component.selectedView.filters, filter => {
 				expect(filter.selected)
 					.toBeFalsy();
 				expect(_.some(filter.seriesData, 'selected'))
 					.toBeFalsy();
 			});
-
-			expect(totalFilter.selected)
-				.toBeTruthy();
 
 			fixture.destroy();
 			tick();
@@ -450,14 +466,14 @@ describe('AssetsComponent', () => {
 			fixture.detectChanges();
 			tick(1000);
 
-			expect(component.assetParams.search)
+			expect(component.selectedView.params.search)
 				.toBeFalsy();
-			component.searchForm.controls.search.setValue('query');
-			component.doSearch();
+			component.selectedView.searchForm.controls.search.setValue('query');
+			component.doSearch(component.selectedView);
 			tick(1000);
 			fixture.detectChanges();
 
-			expect(component.assetParams.search)
+			expect(component.selectedView.params.search)
 				.toBeTruthy();
 
 			fixture.destroy();
@@ -469,14 +485,14 @@ describe('AssetsComponent', () => {
 			fixture.detectChanges();
 			tick(1000);
 
-			expect(component.assetParams.search)
+			expect(component.selectedView.params.search)
 				.toBeFalsy();
-			component.searchForm.controls.search.setValue('');
-			component.doSearch();
+			component.selectedView.searchForm.controls.search.setValue('');
+			component.doSearch(component.selectedView);
 			tick(1000);
 			fixture.detectChanges();
 
-			expect(component.assetParams.search)
+			expect(component.selectedView.params.search)
 				.toBeFalsy();
 
 			fixture.destroy();
@@ -488,15 +504,15 @@ describe('AssetsComponent', () => {
 			fixture.detectChanges();
 			tick(1000);
 
-			_.set(component, ['assetParams', 'search'], 'search');
-			component.filtered = true;
-			component.searchForm.controls.search.setValue('');
+			_.set(component.selectedView, ['params', 'search'], 'search');
+			component.selectedView.filtered = true;
+			component.selectedView.searchForm.controls.search.setValue('');
 
-			component.doSearch();
+			component.doSearch(component.selectedView);
 			tick(1000);
 			fixture.detectChanges();
 
-			expect(_.get(component.assetParams, 'search'))
+			expect(_.get(component.selectedView.params, 'search'))
 				.toBeFalsy();
 
 			fixture.destroy();
@@ -507,30 +523,31 @@ describe('AssetsComponent', () => {
 			buildSpies();
 			fixture.detectChanges();
 			tick(1000);
-			component.filtered = false;
-			expect(component.assetsTable)
+			component.selectedView.filtered = false;
+			expect(component.selectedView.table)
 				.toBeTruthy();
-			const deviceNameCol = _.find(component.assetsTable.columns, { key: 'deviceName' });
+			const deviceNameCol =
+				_.find(component.selectedView.table.columns, { key: 'deviceName' });
 			deviceNameCol.sortable = false;
 			deviceNameCol.sorting = false;
 			deviceNameCol.sortDirection = 'asc';
-			const serialNumberCol = _.find(
-				component.assetsTable.columns, { key: 'serialNumber' },
+			const ipAddressCol = _.find(
+				component.selectedView.table.columns, { key: 'ipAddress' },
 			);
-			serialNumberCol.sorting = true;
-			serialNumberCol.sortDirection = 'desc';
+			ipAddressCol.sorting = true;
+			ipAddressCol.sortDirection = 'desc';
 
 			component.onColumnSort(deviceNameCol);
 			tick(1000);
-			expect(component.filtered)
+			expect(component.selectedView.filtered)
 				.toBeFalsy();
 			expect(deviceNameCol.sorting)
 				.toBeFalsy();
 			expect(deviceNameCol.sortDirection)
 				.toBe('asc');
-			expect(serialNumberCol.sorting)
+			expect(ipAddressCol.sorting)
 				.toBeTruthy();
-			expect(serialNumberCol.sortDirection)
+			expect(ipAddressCol.sortDirection)
 				.toBe('desc');
 			expect(_.get(component, ['params', 'sort']))
 				.toBeFalsy();
@@ -544,10 +561,10 @@ describe('AssetsComponent', () => {
 			fixture.detectChanges();
 			tick(1000);
 
-			_.set(component, ['assetParams', 'search'], 'search');
-			component.searchForm.setValue({ search: 'search' });
+			_.set(component.selectedView, ['params', 'search'], 'search');
+			component.selectedView.searchForm.setValue({ search: 'search' });
 
-			expect(_.get(component.assetParams, 'search'))
+			expect(_.get(component.selectedView.params, 'search'))
 				.toBe('search');
 
 			fixture.destroy();
@@ -558,28 +575,29 @@ describe('AssetsComponent', () => {
 			buildSpies();
 			fixture.detectChanges();
 			tick(1000);
-			component.filtered = false;
-			const deviceNameCol = _.find(component.assetsTable.columns, { key: 'deviceName' });
+			component.selectedView.filtered = false;
+			const deviceNameCol =
+				_.find(component.selectedView.table.columns, { key: 'deviceName' });
 			deviceNameCol.sorting = true;
-			const serialNumberCol = _.find(
-				component.assetsTable.columns, { key: 'serialNumber' },
+			const ipAddressCol = _.find(
+				component.selectedView.table.columns, { key: 'ipAddress' },
 			);
-			serialNumberCol.sorting = false;
-			serialNumberCol.sortDirection = 'desc';
+			ipAddressCol.sorting = false;
+			ipAddressCol.sortDirection = 'desc';
 
-			component.onColumnSort(serialNumberCol);
+			component.onColumnSort(ipAddressCol);
 			tick(1000);
 
 			expect(deviceNameCol.sorting)
 				.toBeFalsy();
 			expect(deviceNameCol.sortDirection)
-				.toBe('asc');
-			expect(serialNumberCol.sorting)
+				.toBe('desc');
+			expect(ipAddressCol.sorting)
 				.toBeTruthy();
-			expect(serialNumberCol.sortDirection)
+			expect(ipAddressCol.sortDirection)
 				.toBe('asc');
-			expect(_.get(component, ['assetParams', 'sort']))
-				.toEqual(['serialNumber:ASC']);
+			expect(_.get(component.selectedView, ['params', 'sort']))
+				.toEqual(['ipAddress:ASC']);
 
 			fixture.destroy();
 			tick();
@@ -588,7 +606,7 @@ describe('AssetsComponent', () => {
 		it('should create our pagination after results load', fakeAsync(() => {
 			buildSpies();
 
-			const assets = getActiveBody(AssetScenarios[5]);
+			const assets = getActiveBody(SystemAssetScenarios[0]);
 
 			fixture.detectChanges();
 			tick(1000);
@@ -597,56 +615,12 @@ describe('AssetsComponent', () => {
 			const first = (pagination.rows * (pagination.page - 1)) + 1;
 			const last = (pagination.rows * pagination.page);
 
-			expect(component.paginationCount)
+			expect(component.selectedView.paginationCount)
 				.toEqual(`${first}-${last}`);
 
 			fixture.destroy();
 			tick();
 		}));
-
-		it('should set the coverage filter if param selected', fakeAsync(() => {
-			buildSpies();
-			_.set(component.assetParams, 'coverage', ['covered']);
-			fixture.detectChanges();
-			tick(1000);
-
-			const coverageFilter = _.find(component.filters, { key: 'coverage' });
-
-			expect(_.filter(component.filters, 'selected'))
-				.toContain(coverageFilter);
-
-			fixture.destroy();
-			tick();
-		}));
-
-		it('should set the role filter if param selected', fakeAsync(() => {
-			buildSpies();
-			_.set(component.assetParams, 'role', ['ACCESS']);
-			fixture.detectChanges();
-			tick(1000);
-			const roleFilter = _.find(component.filters, { key: 'role' });
-
-			expect(_.filter(component.filters, 'selected'))
-				.toContain(roleFilter);
-
-			fixture.destroy();
-			tick();
-		}));
-
-		// TODO: Re-enable when UX has been redesigned for LA
-		// it('should set the contract filter if param selected', fakeAsync(() => {
-		// 	buildSpies();
-		// 	_.set(component.assetParams, 'contractNumber', ['UNKNOWN']);
-		// 	fixture.detectChanges();
-		// 	tick(1000);
-		// 	const contractFilter = _.find(component.filters, { key: 'contractNumber' });
-
-		// 	expect(_.filter(component.filters, 'selected'))
-		// 		.toContain(contractFilter);
-
-		// 	fixture.destroy();
-		// 	tick();
-		// }));
 
 		it('should set the appropriate device icon based on type', fakeAsync(() => {
 			const WLC: NetworkElement = {
@@ -707,7 +681,7 @@ describe('AssetsComponent', () => {
 			coverage: 'covered',
 			hasBugs: true,
 			lastDateOfSupportRange: 'gt-12-lt-24-months',
-			role: 'access',
+			role: 'ACCESS',
 		};
 
 		configureTestSuite(() => {
@@ -750,17 +724,40 @@ describe('AssetsComponent', () => {
 			fixture.detectChanges();
 			tick(1000);
 
-			// TODO: Re-enable when UX has been redesigned for LA
-			// expect(_.get(component.assetParams, 'contractNumber'))
-			// 	.toEqual(['1234']);
-			expect(_.get(component.assetParams, 'coverage'))
+			expect(_.get(component.selectedView.params, 'coverage'))
 				.toEqual(['covered']);
-			expect(_.get(component.assetParams, 'role'))
-				.toEqual(['access']);
-			expect(_.get(component.assetParams, 'hasBugs'))
+			expect(_.get(component.selectedView.params, 'role'))
+				.toEqual(['ACCESS']);
+			expect(_.get(component.selectedView.params, 'hasBugs'))
 				.toBe(true);
-			expect(_.get(component.assetParams, 'lastDateOfSupportRange'))
-				.toEqual(['gt-12-lt-24-months']);
+
+			fixture.destroy();
+			tick();
+		}));
+
+		it('should set the coverage filter if param selected', fakeAsync(() => {
+			buildSpies();
+			fixture.detectChanges();
+			_.set(component.selectedView.params, 'coverage', ['covered']);
+			tick(1000);
+			const coverageFilter = _.find(component.selectedView.filters, { key: 'coverage' });
+
+			expect(_.filter(component.selectedView.filters, 'selected'))
+				.toContain(coverageFilter);
+
+			fixture.destroy();
+			tick();
+		}));
+
+		it('should set the role filter if param selected', fakeAsync(() => {
+			buildSpies();
+			fixture.detectChanges();
+			_.set(component.selectedView.params, 'role', ['ACCESS']);
+			tick(1000);
+			const roleFilter = _.find(component.selectedView.filters, { key: 'role' });
+
+			expect(_.filter(component.selectedView.filters, 'selected'))
+				.toContain(roleFilter);
 
 			fixture.destroy();
 			tick();

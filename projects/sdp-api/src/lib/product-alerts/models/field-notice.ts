@@ -2,14 +2,14 @@
 export interface FieldNotice {
 
   /**
+   * The Cisco.com Title/Headline for the bulletin
+   */
+  bulletinTitle?: string;
+
+  /**
    * Unique identifier of a Cisco customer
    */
   customerId?: string;
-
-  /**
-   * The unique, generated ID of the network resource id
-   */
-  managedNeId?: string;
 
   /**
    * The unique, generated ID of the network element
@@ -52,9 +52,9 @@ export interface FieldNotice {
   fieldNoticeId?: number;
 
   /**
-   * The Cisco.com Title/Headline for the bulletin
+   * The unique, generated ID of the network resource id
    */
-  bulletinTitle?: string;
+  managedNeId?: string;
 
   /**
    * The vulnerability status of a Network element. Example:- Vulnerable, Potentially Vulnerable, Not Vulnerable
@@ -75,4 +75,10 @@ export interface FieldNotice {
    * The explanations about why the automation may need additional review by the customer
    */
   caveat?: string;
+  ipAddress?: string;
+  hostname?: string;
+  swVersion?: string;
+  cxLevel?: string;
+  saId?: number;
+  vaId?: Array<number>;
 }

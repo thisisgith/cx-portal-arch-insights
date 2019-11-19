@@ -65,6 +65,8 @@ export class FpSimilarAssetsComponent {
 	private comparisonviewTemplate: TemplateRef<[]>;
 	@ViewChild('compareTemplate', { static: true })
 	private compareTemplate: TemplateRef<[]>;
+	@ViewChild('crashRiskAlignmentTemplate', { static: true })
+	private crashRiskAlignmentTemplate: TemplateRef<[]>;
 	private selectedSolutionName: string;
 	private selectedTechnologyName: string;
 
@@ -127,17 +129,12 @@ export class FpSimilarAssetsComponent {
 	public similarDevicesGridInit () {
 		this.tableOptions = new CuiTableOptions({
 			bordered: true,
-			dynamicData: true,
-			singleSelect: false,
-			striped: true,
-			wrapText: true,
-			padding: 'compressed',
 			columns: [
 				{
 					key: 'deviceId',
 					name: I18n.get('_CP_SystemName_'),
 					template: this.assetTemplate,
-					width : '34%',
+					width : '35%',
 				},
 				{
 					key: 'similarityScore',
@@ -146,8 +143,8 @@ export class FpSimilarAssetsComponent {
 					width : '30%',
 				},
 				{
+					headerTemplate: this.crashRiskAlignmentTemplate,
 					key: 'riskScore',
-					name: I18n.get('_CP_Risk_'),
 					template: this.crashRiskTemplate,
 					width : '20%',
 				},
@@ -155,11 +152,16 @@ export class FpSimilarAssetsComponent {
 					key: 'deviceId',
 					name: '',
 					template: this.compareTemplate,
-					width : '10%',
+					width : '15%',
 				},
 			],
 			rowWellColor: 'black',
 			rowWellTemplate: this.comparisonviewTemplate,
+			dynamicData: true,
+			singleSelect: true,
+			striped: false,
+			wrapText: true,
+			padding: 'compressed',
 		});
 	}
 	/**
@@ -238,6 +240,19 @@ export class FpSimilarAssetsComponent {
 		if (tableRowData.active) {
 			this.selectedDevice2 = tableRowData;
 		}
+	}
+	/**
+	 * onTableRow click
+	 * @param rowData  table row
+	 */
+	public ontoggleRowSelect (rowData: any) {
+		_.map(_.get(this.similarDevicesData, 'similarDevices'), row => {
+			if (row.deviceId !== rowData.deviceId) {
+				row.toggleWell = false;
+			}
+		});
+		rowData.toggleWell = !rowData.toggleWell;
+		this.compareView = 'software';
 	}
 	/**
 	 * updateCompareView

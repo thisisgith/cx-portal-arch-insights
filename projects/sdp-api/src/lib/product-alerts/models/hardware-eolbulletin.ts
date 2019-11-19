@@ -2,14 +2,14 @@
 export interface HardwareEOLBulletin {
 
   /**
-   * The unique identifier for hardware end-of-life entry in a data store
+   * End of Bu Engineering Support Tac Date
    */
-  hwEolInstanceId?: string;
+  eoBuEngineeringSupportTacDate?: string;
 
   /**
-   * The Cisco.com bulletin number for an End-of-Life bulletin and Field Notices
+   * The unique identifier for hardware end-of-life entry in a data store
    */
-  bulletinNumber?: string;
+  hwEolInstanceId?: number;
 
   /**
    * Cisco product published at the time of EOL announcement
@@ -72,9 +72,9 @@ export interface HardwareEOLBulletin {
   eoSwMaintenanceReleasesDate?: string;
 
   /**
-   * End of Bu Engineering Support Tac Date
+   * The Cisco.com bulletin number for an End-of-Life bulletin and Field Notices
    */
-  eoBuEngineeringSupportTacDate?: string;
+  bulletinNumber?: string;
 
   /**
    * The last date to extend or renew a service contract for the product. GMT date format YYYY-MM-DD
@@ -100,7 +100,7 @@ export interface HardwareEOLBulletin {
    * The last date that Cisco Engineering may release a planned maintenance release or scheduled software remedy for a security vulnerability issue. GMT date format YYYY-MM-DD
    */
   eoVulnerabilitySecuritySupport?: string;
-  milestoneInfo?: Array<{currentHwEolMilestone?: string, nextHwEolMilestone?: string, currentHwEolMilestoneDate?: string, nextHwEolMilestoneDate?: string}>;
+  milestoneInfo?: Array<{hardwareEoXId?: string, bulletinNumber?: string, currentMilestoneRecord?: {currentMilestone?: string, currentMilestoneDate?: string}, nextMilestoneRecord?: {nextMilestone?: string, nextMilestoneDate?: string}, currentHwEolMilestone?: string, nextHwEolMilestone?: string, currentHwEolMilestoneDate?: string, nextHwEolMilestoneDate?: string}>;
 
   /**
    * Migration Pid

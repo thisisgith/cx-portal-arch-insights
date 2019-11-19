@@ -242,7 +242,7 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 					},
 					{
 						key: 'swVersion',
-						name: I18n.get('_Release_'),
+						name: I18n.get('_SoftwareRelease_'),
 						sortable: true,
 						template: this.softwareVersionColumn,
 						width: '300px',
@@ -266,7 +266,7 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 					},
 					{
 						key: 'swVersion',
-						name: I18n.get('_Release_'),
+						name: I18n.get('_SoftwareRelease_'),
 						sortable: true,
 						template: this.softwareVersionColumn,
 						width: '300px',
@@ -283,8 +283,6 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 						key: 'hostName',
 						name: I18n.get('_SystemName_'),
 						sortable: true,
-						sortDirection: 'asc',
-						sorting: true,
 						template: this.deviceColumn,
 						width: '300px',
 					},
@@ -298,6 +296,8 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 						key: 'productId',
 						name: I18n.get('_ProductID_'),
 						sortable: true,
+						sortDirection: 'asc',
+						sorting: true,
 						template: this.productIdColumn,
 					},
 					{
@@ -312,8 +312,6 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 						key: 'hostName',
 						name: I18n.get('_SystemName_'),
 						sortable: true,
-						sortDirection: 'asc',
-						sorting: true,
 						template: this.deviceColumn,
 						width: '300px',
 					},
@@ -327,8 +325,9 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 						key: 'productId',
 						name: I18n.get('_ProductID_'),
 						sortable: true,
+						sortDirection: 'asc',
+						sorting: true,
 						template: this.productIdColumn,
-						width: '300px',
 					},
 					{
 						key: 'serialNumber',
@@ -445,7 +444,7 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 				page: 1,
 				rows: 100,
 				solution: this.selectedSolutionName,
-				sort: ['hostName:ASC'],
+				sort: [this.type === 'field' ? 'productId:ASC' : 'hostName:ASC'],
 				useCase: this.selectedTechnologyName,
 			});
 

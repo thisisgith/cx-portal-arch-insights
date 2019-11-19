@@ -41,11 +41,51 @@ export class RouteAuthService {
 	}
 
 	/**
+	 * Update permission for Rcc value
+	 * @param customerId is a string
+	 * @param optlnStatus is accept
+	 * @returns Observable with response data.
+	 */
+	public updatePermissions (customerId: any, optlnStatus: any): __Observable<any> {
+		return this.updateHTTPGet<any>(
+			`${this.rootUrl}${this.rccPath}?` +
+			`customerId=${customerId}&isRccOpted=${optlnStatus}`)
+			.pipe(
+				__map(_r => _r.body),
+				__map(_r => this.hasRccPermission = _r),
+			);
+	}
+
+	/**
 	 * invoke HTTP get
 	 * @param url is a string
 	 * @returns Observable with response data.
 	 */
 	public invokeHTTPGet<T> (url: string): __Observable<any> {
+		const __headers = new HttpHeaders();
+		const __body: any = null;
+		const req = new HttpRequest<any>(
+			'GET',
+			url,
+			__body,
+			{
+				headers: __headers,
+				responseType: 'json',
+			});
+
+		return this.http.request<any>(req)
+		.pipe(
+			__filter(_r => _r instanceof HttpResponse),
+			__map(_r => (<StrictHttpResponse<T>> _r)),
+		);
+	}
+
+	/**
+	 * invoke HTTP get
+	 * @param url is a string
+	 * @returns Observable with response data.
+	 */
+	public updateHTTPGet<T> (url: string): __Observable<any> {
 		const __headers = new HttpHeaders();
 		const __body: any = null;
 		const req = new HttpRequest<any>(

@@ -7,6 +7,7 @@ import {
 } from '@angular/core/testing';
 import { UsersComponent } from './users.component';
 import { UsersModule } from './users.module';
+import { environment } from '@environment';
 
 describe('UsersComponent', () => {
 	let component: UsersComponent;
@@ -18,6 +19,9 @@ describe('UsersComponent', () => {
 				HttpClientTestingModule,
 				RouterTestingModule,
 				UsersModule,
+			],
+			providers: [
+				{ provide: 'ENVIRONMENT', useValue: environment },
 			],
 		});
 	});

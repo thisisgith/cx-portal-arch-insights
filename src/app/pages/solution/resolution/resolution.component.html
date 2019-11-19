@@ -25,7 +25,7 @@
 	</cui-tabs>
 </div>
 
-<div *ngIf="mainContent === 'cases'" class="panel panel--bordered half-margin-top">
+<div *ngIf="mainContent === 'cases'" class="panel panel--bordered half-margin-top problem-resolution">
 	<ng-container *ngIf="filtered">
 		<ng-container *ngTemplateOutlet="filterBar"></ng-container>
 	</ng-container>
@@ -103,7 +103,7 @@
 </ng-template>
 
 <ng-template #caseList>
-	<cui-table class="not-close-360" data-auto-id="caseListTable" (onTableRowClicked)="onTableRowClicked($event)"
+	<cui-table class="not-close-360 resolution-table" data-auto-id="caseListTable" (onTableRowClicked)="onTableRowClicked($event)"
 		[options]="caseListTableOptions" [data]="caseListData" (onSortingChanged)="onTableSortingChanged($event)">
 	</cui-table>
 	<cui-pager class="half-margin" *ngIf="paginationInfo.totalElements>caseParams.size" [page]="caseParams.page"

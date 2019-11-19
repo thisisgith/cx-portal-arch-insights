@@ -1,13 +1,13 @@
 /* tslint:disable */
 export interface SecurityAdvisoryInfo {
   id?: number;
+  severity?: string;
   title?: string;
   summary?: string;
-  url?: string;
   assetsImpacted?: number;
   assetsPotentiallyImpacted?: number;
   publishedOn?: string;
-  severity?: string;
   lastUpdated?: string;
   version?: number;
+  url?: string;
 }

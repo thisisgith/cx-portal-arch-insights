@@ -2,6 +2,11 @@
 export interface SoftwareEOL {
 
   /**
+   * The specific version of the software (Software Type) that is installed on the Network Element. Example:- 15.1(4)M4
+   */
+  swVersion?: string;
+
+  /**
    * Unique identifier of a Cisco customer
    */
   customerId?: string;
@@ -10,11 +15,6 @@ export interface SoftwareEOL {
    * The unique, generated ID of the network element
    */
   neInstanceId?: string;
-
-  /**
-   * The unique, generated ID of the network element
-   */
-  managedNeId?: string;
 
   /**
    * The alphanumeric identifier used by customers to order Cisco products. Examples:- CISCO2921/K9 ; WS-C3750X-24S-S ; WS-X6748-GE-TX
@@ -32,17 +32,20 @@ export interface SoftwareEOL {
   swType?: string;
 
   /**
-   * The specific version of the software (Software Type) that is installed on the Network Element. Example:- 15.1(4)M4
+   * The unique, generated ID of the network element
    */
-  swVersion?: string;
+  managedNeId?: string;
+
+  /**
+   * The unique identifier for software end-of-life entry in a data store
+   */
+  swEolInstanceId?: number;
 
   /**
    * The Cisco.com Title/Headline for the bulletin
    */
   bulletinHeadline?: string;
-
-  /**
-   * The unique identifier for software end-of-life entry in a data store
-   */
-  swEolInstanceId?: string;
+  cxLevel?: string;
+  saId?: number;
+  vaId?: Array<number>;
 }

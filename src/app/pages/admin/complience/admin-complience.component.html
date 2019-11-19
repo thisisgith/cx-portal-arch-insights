@@ -1,0 +1,175 @@
+<admin-wrapper>
+	<div class="panel">
+		<div class="dbl-padding-left dbl-padding-right">
+			<div class="text-xlarge text-uppercase base-margin-bottom"
+			[innerText]="'_AdminPolicyTagging_' | i18n">
+			</div>
+			<div class="text-medium base-margin-bottom"
+			[innerText]="'_AdminEnableRegulatoryComplience_' | i18n">
+			</div>
+			<div class="form-group form-group--inline base-margin-bottom"
+			*ngIf="optlnStatus" data-auto-id="toggleOptlnStatus" (click)="toggleOptlnStatus()">
+				<label class="switch">
+					<input type="checkbox" checked>
+					<span class="switch__input"></span>
+					<span class="switch__label"
+					[innerText]="'_AdminComplianceOn_' | i18n"></span>
+				</label>
+			</div>
+			<div class="form-group form-group--inline base-margin-bottom" data-auto-id="updateOptInOutStatus"
+			*ngIf="!optlnStatus" (click)="optlnStatus = !optlnStatus; updateOptInOutStatus();">
+					<label class="switch">
+						<input type="checkbox" >
+						<span class="switch__input"></span>
+						<span class="switch__label"
+						[innerText]="'_AdminComplianceOff_' | i18n"></span>
+					</label>
+				</div>
+
+				<div class="row">
+					<div class="col-md-4">
+						<div class="alert alert--info">
+								<div class="alert__icon icon-info-outline"></div>
+							<div class="alert__message" [innerText]="'_AdminEnableRegulatoryComplienceNote_' | i18n">
+								</div>
+							</div>
+						</div>
+						</div>
+			<div class="half-margin-top">
+				<cui-alert [options]="alert"></cui-alert>
+			</div>
+
+				<div *ngIf="optlnStatus" class="base-margin-top">
+
+						<div class="row base-margin-bottom">
+								<div class="col-md-2 half-margin-right">
+								<div class="form-group">
+										<div class="form-group__text select">
+											<select id="select-type-basic" (change)="onPolicySelected($event.target.value)" 
+											[(ngModel)]="saveDetails.body.policy" data-auto-id="PolicySelected">
+												<option *ngFor="let policy of policies"
+											[value]="policy.name" [innerText]="policy.name">
+												</option>
+											</select>
+											<label for="select-type-basic" class="subheader"
+											[innerText]="'_AdminPolicy_' | i18n"></label>
+										</div>
+									</div>
+								</div>
+								<div class="col-2">
+										<div class="subheader" [innerText]="'_AdminComplianceScanType_' | i18n"></div>
+										<div class="form-group">
+											<label class="radio" [ngClass]="{'disabled': saveDetails.body.policy=='select'}">
+												<input type="radio" name="radio-stacked" checked
+													value="allDevices" data-auto-id="AdminComplianceAllInventory"
+													[(ngModel)]="selectedDeviceTagType" (change)="onChangesDeviceTagType($event)">
+												<span class="radio__input"></span>
+												<span class="radio__label"  [innerText]="'_AdminComplianceAllInventory_' | i18n"></span>
+											</label>
+										</div>
+										<div class="form-group">
+												<label class="radio" [ngClass]="{'disabled': saveDetails.body.policy=='select'}">
+													<input type="radio" name="radio-stacked" data-auto-id="AdminComplianceSystemTags"
+										value="selectedTags" [(ngModel)]="selectedDeviceTagType" (change)="onChangesDeviceTagType()">
+													<span class="radio__input"></span>
+													<span class="radio__label" [innerText]="'_AdminComplianceSystemTags_' | i18n"></span>
+												</label>
+											</div>
+								</div>
+								<div class="col-md-2" *ngIf="saveDetails.body.policy != 'select'">
+										<div class="form-group form-group--inline base-margin-bottom" *ngIf="toBeScanned">
+												<div class="subheader qtr-margin-bottom"
+													[innerText]="'_AdminComplianceEnableScan_' | i18n">
+														<sup>
+																<div
+																	tooltip
+																	[tooltipTemplate]="policyTooltipContentTemplate"
+																	class="icon-info-outline"
+																	[tooltipMaxWidth]="200"
+																></div
+															></sup>
+												</div>
+
+												<label class="switch">
+													<input type="checkbox" data-auto-id="toBeScanned"
+													checked (click)="toBeScanned = !toBeScanned">
+													<span class="switch__input"></span>
+													<span class="switch__label" [innerText]="'_AdminComplianceYes_' | i18n"></span>
+												</label>
+											</div>
+											<div class="form-group form-group--inline base-margin-bottom" *ngIf="!toBeScanned">
+													<div class="subheader qtr-margin-bottom"
+														[innerText]="'_AdminComplianceEnableScan_' | i18n">
+															<sup>
+																	<div
+																		tooltip
+																		[tooltipTemplate]="policyTooltipContentTemplate"
+																		class="icon-info-outline"
+																		[tooltipMaxWidth]="200"
+																	></div
+																></sup>
+													</div>
+													<label class="switch">
+														<input type="checkbox" data-auto-id="toBeScanned2" (click)="toBeScanned = !toBeScanned">
+														<span class="switch__input"></span>
+														<span class="switch__label" [innerText]="'_AdminComplianceNo_' | i18n"></span>
+													</label>
+												</div>
+										</div>
+								<div class="col-5">
+								<div class="row">
+									<div class="col-12 flex-end" *ngIf="saveDetails.body.policy != 'select'">
+											<button class="btn btn--small btn--primary half-margin-top" data-auto-id="savePolicyDetails"
+											(click)="savePolicyDetails()"
+											[innerText]="'_Save_' | i18n"></button>
+										</div>
+							</div>
+							</div>
+						</div>
+					</div>
+				<div [hidden]= "hideAssetTags || saveDetails.body.policy == 'select'">
+					<div class="text-large"  
+					[innerText]="'_AdminPolicyTaggingHeading_' | i18n"></div>
+			<asset-tagging 
+				[tagListLeft]="leftSideTags" [tagListRight]="rightSideTags"
+				(updatedTags)="getUpdatedTags($event)"></asset-tagging>
+			</div></div>
+	</div>
+</admin-wrapper>
+
+<cui-modal></cui-modal>
+
+<ng-template #confirmationModalTemplate>
+	<a class="modal__close"  data-auto-id="cuiModalService.hide" (click)="cuiModalService.hide()"><span class="icon-close"></span></a>
+	<div class="modal__header">
+		<h6 class="modal__title" [innerText]="'_AdminComplianceConfirmationModalTitle_' | i18n"></h6>
+	</div>
+	<div class="modal__body">
+		<p class="subtitle" [innerText]="'_AdminComplianceConfirmationModalContent_' | i18n"></p>
+	</div>
+	<div class="modal__footer">
+		<button class="btn" data-auto-id="discardChanges" (click)="discardChanges()" [innerText]="'_AdminComplianceDeleteData_' | i18n"></button>
+		<button class="btn" data-auto-id="saveChanges" (click)="saveChanges()" [innerText]="'_AdminComplianceCancel_' | i18n"></button>
+	</div>
+</ng-template>
+
+<ng-template #switchBetweenPolicy>
+	<a class="modal__close" data-auto-id="cuiModalService.hide1" (click)="cuiModalService.hide()"><span class="icon-close"></span></a>
+	<div class="modal__header">
+		<h6 class="modal__title" [innerText]="'_AdminComplianceSwitchBetweenPolicyTitle_' | i18n"></h6>
+	</div>
+	<div class="modal__body">
+		<p class="subtitle" [innerText]="'_AdminComplianceSwitchBetweenPolicyContent_' | i18n"></p>
+	</div>
+	<div class="modal__footer">
+		<button class="btn" (click)="onCancelPolicyChanges()" data-auto-id="onCancelPolicyChanges"
+		[innerText]="'_AdminComplianceCancel_' | i18n"></button>
+		<button class="btn btn" (click)="discardChangesOnPolicyChange()" data-auto-id="discardChangesOnPolicyChange"
+		[innerText]="'_AdminComplianceContinue_' | i18n"></button>
+	</div>
+</ng-template>
+
+<ng-template #policyTooltipContentTemplate>
+	<span [innerText]="'_AdminComplianceToolTipContent_' | i18n"></span>
+</ng-template>
+
