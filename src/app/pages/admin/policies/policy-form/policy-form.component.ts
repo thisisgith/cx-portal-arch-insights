@@ -595,7 +595,7 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 	 * @returns copied object
 	 */
 	private jsonCopy (obj: any) {
-		return JSON.parse(JSON.stringify(obj));
+		return _.cloneDeep(obj);
 	}
 
 	/**
