@@ -136,6 +136,7 @@ export class ComparisonviewComponent {
 		};
 
 		return this.assetPanelLinkService.getAssetLinkData(this.assetParams)
+		.pipe(takeUntil(this.destroy$))
 		.subscribe(response => {
 			this.assetLinkInfo.asset = _.get(response, [0, 'data', 0]);
 			this.assetLinkInfo.element = _.get(response, [1, 'data', 0]);
