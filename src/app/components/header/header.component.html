@@ -180,13 +180,18 @@
 </ng-template>
 
 <ng-template #portalHelpDropdownTemplate>
-	<ng-container *ngFor="let link of portalHelpLinks">
-		<!-- TODO: This is the feedback link to cx-portal-support@cisco.com -->
-		<div class="text-muted text-small text-uppercase" [innerText]="'_PortalHelp_' | i18n"></div>
-		<div>
-			<a class="text-small" [innerText]="link.name" data-auto-id="portalHelp" (click)="openPortalSupport()"></a>
+	<div class="links">
+		<div class="links__title">{{ '_PortalHelp_' | i18n}}</div>
+		<div *ngFor="let link of portalHelpLinks">
+			<a class="links__support" [href]="link.url" target="_blank" [innerText]="link.name" data-auto-id="portalHelp"></a>
 		</div>
-	</ng-container>
+		<button class="link links__btn" (click)="openPortalSupport()" data-auto-id="portalSupport">{{'_PortalSupport_' | i18n}}</button>
+		<div class="divider links__divider"></div>
+		<div *ngFor="let vendorLink of vendorLinks">
+			<a class="links__vendor" [innerText]="vendorLink.name" [href]="vendorLink.url" target="_blank"
+			data-auto-id="portalHelp"></a>
+		</div>
+	</div>
 </ng-template>
 
 <ng-template #ciscoTeamDropdownTemplate>
