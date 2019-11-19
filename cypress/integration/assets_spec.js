@@ -74,10 +74,8 @@ describe('Assets', () => { // PBC-41
 			*/
 			const validate360 = asset => {
 				cy.get('[detailsPanelTitle]').should('have.text', asset.deviceName);
-				cy.getByAutoId('Asset360IPAddress')
-					.should('have.text', `IP Address${asset.ipAddress}`);
-				cy.getByAutoId('Asset360SerialNumber')
-					.should('have.text', `SN${asset.serialNumber}`);
+				cy.getByAutoId('Asset360SupportLevel')
+					.should('have.text', '2');
 				if (asset.lastScan) {
 					const scanTime = Cypress._.startCase(Cypress.moment(asset.lastScan).fromNow());
 					cy.getByAutoId('Asset360LastScan').should('have.text', `Last Scan${scanTime}`);
@@ -88,7 +86,7 @@ describe('Assets', () => { // PBC-41
 				cy.getByAutoId('Asset360OpenCaseBtn').should(haveVisibility); // PBC-339
 
 				// PBC-153
-				cy.getByAutoId('ProductId').should('have.text', asset.productId);
+				cy.getByAutoId('ProductFamily').should('have.text', asset.productFamily);
 				cy.getByAutoId('YouHaveInventory').should(
 					'have.text', `you have ${hwResponse.length} of these in your inventory`
 				);
@@ -177,8 +175,7 @@ describe('Assets', () => { // PBC-41
 
 			const serial = assetCards[0].serialNumber;
 			cy.getByAutoId(`Device-${serial}`).click();
-			cy.getByAutoId('Asset360SerialNumber').should('have.text', `SN${serial}`);
-			cy.getByAutoId('Asset360IPAddress').should('have.text', 'IP AddressN/A');
+			cy.getByAutoId('Asset360SupportLevel').should('have.text', '2');
 			cy.getByAutoId('CloseDetails').click().then(() => {
 				expect(advisoryAPI.called).to.eq(0); // PBC-353
 

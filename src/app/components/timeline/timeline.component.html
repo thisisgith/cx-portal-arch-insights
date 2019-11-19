@@ -34,7 +34,10 @@
 					pbc-timeline__timestamp--content-top
 					pbc-timeline__timestamp--today-top"
 			>
-				<div class="text-info" [innerText]="'_Today_' | i18n"></div>
+				<div [ngClass]="todayClass">
+					<span *ngIf="todayIcon" class="icon-{{ todayIcon }} qtr-margin-right"></span>
+					<span [innerText]="todayText || '_Today_' | i18n"></span>
+				</div>
 				<div class="pbc-timeline__timestamp--today-circle-top"></div>
 				<div
 					*ngIf="todayButtonText"
@@ -95,7 +98,10 @@
 				class="pbc-timeline__timestamp--content-bottom
 					pbc-timeline__timestamp--today-bottom"
 			>
-				<div class="text-info" [innerText]="'_Today_' | i18n"></div>
+				<div [ngClass]="todayClass">
+					<span *ngIf="todayIcon" class="icon-{{ todayIcon }} qtr-margin-right"></span>
+					<span [innerText]="todayText || '_Today_' | i18n"></span>
+				</div>
 				<div class="pbc-timeline__timestamp--today-circle-bottom"></div>
 				<div
 					*ngIf="todayButtonText"

@@ -15,3 +15,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Allowed CI audit to fail due to errors in:
 	- @apollo/configs > @compodoc/compodoc > @compodoc/ngd-transformer > dot (Not fixed yet)
 	- @angular-devkit/build-angular > node-sass > node-gyp > tar (Not fixed yet)
+
+
+
+# Changes
+###
+- Last Scan should be blank if there are no scans, not "Never"

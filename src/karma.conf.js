@@ -49,7 +49,7 @@ module.exports = config => {
 		browserConsoleLogOptions: {
 			terminal: false,
 		},
-		reporters: ['spec'],
+		reporters: ['dots'],
 		port: 9876,
 		colors: true,
 		logLevel: config.LOG_INFO,

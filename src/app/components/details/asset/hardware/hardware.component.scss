@@ -1,43 +1,13 @@
 @import '~cisco-ui/src/scss/utilities/_variables.scss';
+@import '~src/variables.scss';
 
-:host ::ng-deep {
-	.pbc-timeline {
-		margin: 0 !important;
-	}
-
-	.cui-drawer {
-		margin: 0 !important;
-	}
-
-	.panel {
-		padding-left: 0 !important;
-	}
-
-	small {
-		font-size: x-small;
-		font-style: italic;
-	}
+.hardware-component {
+	padding-top: $base-spacing;
+	padding-left: $base-spacing-half;
+	padding-right: $base-spacing-half;
 }
 
-%tr-shared {
-	border-bottom-style: solid;
-	border-bottom-color: $light-gray-3;
-}
-
-tr.th-row th {
-	@extend %tr-shared;
-
-	border-bottom-width: 2px;
-}
-
-tr.td-row td {
-	@extend %tr-shared;
-
-	border-bottom-width: 1px;
-}
-
-.custom-text-large {
-	// Workaround for PBC-624
-	// Can be removed if we migrate to cisco-ui@2.0.0 w/ text-size-*
-	font-size: 1.6rem !important;
+.icon-asset {
+	height: 20px;
+	width: 20px;
 }

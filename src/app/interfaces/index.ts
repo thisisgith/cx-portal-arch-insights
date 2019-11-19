@@ -31,6 +31,7 @@ export { Alert } from './alert';
 export { GeoCodeResponse, GeoCodeParams, GeoCodeFeature } from './geocode';
 export { Panel360 } from './Panel360';
 export { AssetLinkInfo } from './assetLinkInfo';
+export * from './asset';
 export {
 	CheckRoleLevelParams,
 	RoleListsAndLevel,

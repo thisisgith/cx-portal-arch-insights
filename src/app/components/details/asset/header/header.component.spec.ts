@@ -3,17 +3,10 @@ import {
 	async,
 	ComponentFixture,
 	TestBed,
-	tick,
-	fakeAsync,
-	discardPeriodicTasks,
 } from '@angular/core/testing';
 import {
-	AssetScenarios,
 	CaseScenarios,
-	Mock,
-	user,
-	MockAssetsData,
-	MockNetworkElements,
+	MockSystemAssetsData,
 } from '@mock';
 import { CaseService } from '@cui-x/services';
 import { of, throwError } from 'rxjs';
@@ -23,27 +16,11 @@ import { AssetDetailsHeaderComponent } from './header.component';
 import { AssetDetailsHeaderModule } from './header.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { NetworkDataGatewayService } from '@sdp-api';
-import { CuiModalService } from '@cisco-ngx/cui-components';
-
-/**
- * Will fetch the currently active response body from the mock object
- * @param mock the mock object
- * @param type the scenario type
- * @returns the body response
- */
-function getActiveBody (mock: Mock, type: string = 'GET') {
-	const active = _.find(mock.scenarios[type], 'selected') || _.head(mock.scenarios[type]);
-
-	return active.response.body;
-}
 
 describe('AssetDetailsHeaderComponent', () => {
 	let component: AssetDetailsHeaderComponent;
 	let fixture: ComponentFixture<AssetDetailsHeaderComponent>;
 	let caseService: CaseService;
-	let networkService: NetworkDataGatewayService;
-	let cuiModalService: CuiModalService;
 	let caseSpy;
 
 	/**
@@ -73,10 +50,7 @@ describe('AssetDetailsHeaderComponent', () => {
 	});
 
 	beforeEach(async(() => {
-
-		networkService = TestBed.get(NetworkDataGatewayService);
 		caseService = TestBed.get(CaseService);
-		cuiModalService = TestBed.get(CuiModalService);
 	}));
 
 	beforeEach(() => {
@@ -98,10 +72,9 @@ describe('AssetDetailsHeaderComponent', () => {
 				statusText: 'Resource not found',
 			})));
 
-		const deviceResponse = getActiveBody(AssetScenarios[0]);
-		const asset = _.cloneDeep(_.head(_.get(deviceResponse, 'data')));
+		const asset = MockSystemAssetsData[0];
 
-		component.asset = asset;
+		component.systemAsset = asset;
 
 		fixture.detectChanges();
 
@@ -141,7 +114,7 @@ describe('AssetDetailsHeaderComponent', () => {
 	});
 
 	it('should not fail when no serial number is present', () => {
-		component.asset = { };
+		component.systemAsset = { };
 
 		fixture.detectChanges();
 
@@ -152,10 +125,8 @@ describe('AssetDetailsHeaderComponent', () => {
 	it('should try and fetch cases if a serial number is present', () => {
 		buildSpies();
 
-		const deviceResponse = getActiveBody(AssetScenarios[0]);
-		const asset = _.cloneDeep(_.head(_.get(deviceResponse, 'data')));
-
-		component.asset = asset;
+		const asset = MockSystemAssetsData[0];
+		component.systemAsset = asset;
 
 		fixture.detectChanges();
 
@@ -166,14 +137,14 @@ describe('AssetDetailsHeaderComponent', () => {
 	it('should handle changing assets', () => {
 		buildSpies();
 
-		const asset = _.cloneDeep(MockAssetsData[0]);
-		const newAsset = _.cloneDeep(MockAssetsData[1]);
+		const asset = _.cloneDeep(MockSystemAssetsData[0]);
+		const newAsset = _.cloneDeep(MockSystemAssetsData[1]);
 
 		fixture.detectChanges();
 
-		component.asset = asset;
+		component.systemAsset = asset;
 		component.ngOnChanges({
-			asset: {
+			systemAsset: {
 				currentValue: asset,
 				firstChange: true,
 				isFirstChange: () => true,
@@ -182,12 +153,12 @@ describe('AssetDetailsHeaderComponent', () => {
 		});
 
 		fixture.detectChanges();
-		expect(component.asset.serialNumber)
-			.toEqual('FOC1544Y16T');
+		expect(component.systemAsset.serialNumber)
+			.toEqual('SAL1833YM7D');
 
-		component.asset = newAsset;
+		component.systemAsset = newAsset;
 		component.ngOnChanges({
-			asset: {
+			systemAsset: {
 				currentValue: newAsset,
 				firstChange: false,
 				isFirstChange: () => false,
@@ -195,268 +166,7 @@ describe('AssetDetailsHeaderComponent', () => {
 			},
 		});
 
-		expect(component.asset.serialNumber)
-			.toEqual('FOC1922S6JU');
-	});
-
-	it('should handle failure checking status on a device', done => {
-		component.asset = MockAssetsData[0];
-		component.element = MockNetworkElements[0];
-		component.customerId = user.info.customerId;
-
-		const error = {
-			status: 404,
-			statusText: 'Resource not found',
-		};
-		spyOn(caseService, 'read')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(networkService, 'getScanStatusBySerial')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-
-		fixture.detectChanges();
-
-		fixture.whenStable()
-		.then(() => {
-			fixture.detectChanges();
-
-			expect(component.status.loading.overall)
-				.toBeFalsy();
-
-			done();
-		});
-	});
-
-	it('should initiate a scan request', fakeAsync(() => {
-		component.asset = MockAssetsData[0];
-		component.element = MockNetworkElements[0];
-		component.customerId = user.info.customerId;
-
-		const error = {
-			status: 404,
-			statusText: 'Resource not found',
-		};
-		spyOn(caseService, 'read')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(networkService, 'getScanStatusBySerial')
-			.and
-			.returnValue(of([]));
-
-		spyOn(networkService, 'postDeviceTransactions')
-			.and
-			.returnValue(of([{
-				transactionId: 'fake',
-			}]));
-
-		spyOn(networkService, 'getScanStatusByTransaction')
-			.and
-			.returnValue(of({
-				status: 'SUCCESS',
-			}));
-
-		component.initiateScan();
-
-		tick(3000);
-
-		expect(component.status.scan.inProgress)
-			.toBeFalsy();
-
-		discardPeriodicTasks();
-	}));
-
-	it('should handle a failing initiation scan request without an id', () => {
-		component.asset = MockAssetsData[0];
-		component.element = MockNetworkElements[0];
-		component.customerId = user.info.customerId;
-
-		const error = {
-			status: 404,
-			statusText: 'Resource not found',
-		};
-		spyOn(caseService, 'read')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(networkService, 'getScanStatusBySerial')
-			.and
-			.returnValue(of([]));
-
-		spyOn(networkService, 'postDeviceTransactions')
-			.and
-			.returnValue(of([]));
-
-		component.initiateScan();
-
-		fixture.detectChanges();
-
-		expect(component.status.scan.inProgress)
-			.toBeFalsy();
-	});
-
-	it('should handle a failing initiation scan request', () => {
-		component.asset = MockAssetsData[0];
-		component.element = MockNetworkElements[0];
-		component.customerId = user.info.customerId;
-
-		const error = {
-			status: 404,
-			statusText: 'Resource not found',
-		};
-		spyOn(caseService, 'read')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(networkService, 'getScanStatusBySerial')
-			.and
-			.returnValue(of([]));
-
-		spyOn(networkService, 'postDeviceTransactions')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-
-		component.initiateScan();
-
-		fixture.detectChanges();
-
-		expect(component.status.scan.inProgress)
-			.toBeFalsy();
-	});
-
-	it('should check for a scan request on load - poll on inProgress', fakeAsync(() => {
-		component.asset = MockAssetsData[0];
-		component.element = MockNetworkElements[0];
-		component.customerId = user.info.customerId;
-
-		const error = {
-			status: 404,
-			statusText: 'Resource not found',
-		};
-		spyOn(caseService, 'read')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(networkService, 'getScanStatusBySerial')
-			.and
-			.returnValue(of([
-				{
-					status: 'IN_PROGRESS',
-					transactionId: 'fake',
-				},
-			]));
-		spyOn(networkService, 'getScanStatusByTransaction')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-
-		component.refresh();
-
-		tick(3000);
-
-		expect(component.status.scan.inProgress)
-			.toBeFalsy();
-
-		discardPeriodicTasks();
-	}));
-
-	it('should check for a scan request on load - poll on received', fakeAsync(() => {
-		component.asset = MockAssetsData[0];
-		component.element = MockNetworkElements[0];
-		component.customerId = user.info.customerId;
-
-		const error = {
-			status: 404,
-			statusText: 'Resource not found',
-		};
-		spyOn(caseService, 'read')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(networkService, 'getScanStatusBySerial')
-			.and
-			.returnValue(of([
-				{
-					status: 'RECEIVED',
-					transactionId: 'fake',
-				},
-			]));
-		spyOn(networkService, 'getScanStatusByTransaction')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-
-		component.refresh();
-
-		tick(3000);
-
-		expect(component.status.scan.inProgress)
-			.toBeFalsy();
-
-		discardPeriodicTasks();
-	}));
-
-	it('should check for a scan request on load - nothing on failure', fakeAsync(() => {
-		component.asset = MockAssetsData[0];
-		component.element = MockNetworkElements[0];
-		component.customerId = user.info.customerId;
-
-		const error = {
-			status: 404,
-			statusText: 'Resource not found',
-		};
-		spyOn(caseService, 'read')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(networkService, 'getScanStatusBySerial')
-			.and
-			.returnValue(of([
-				{
-					status: 'FAILURE',
-					transactionId: 'fake',
-				},
-			]));
-
-		component.refresh();
-
-		expect(component.status.scan.inProgress)
-			.toBeFalsy();
-	}));
-
-	it('should try and open a case and scan if not success', () => {
-		component.asset = MockAssetsData[0];
-		component.element = MockNetworkElements[0];
-		component.customerId = user.info.customerId;
-
-		spyOn(cuiModalService, 'showComponent')
-		.and
-		.returnValue(
-			of({ scanStatus: 'SUCCESS' })
-			.toPromise());
-
-		component.openCase();
-
-		expect(component.status.scan.inProgress)
-			.toBeFalsy();
-	});
-
-	it('should try and open a case and scan if not success', () => {
-		component.asset = MockAssetsData[0];
-		component.element = MockNetworkElements[0];
-		component.customerId = user.info.customerId;
-
-		spyOn(networkService, 'getScanStatusBySerial')
-		.and
-		.returnValue(of([
-			{
-				status: 'SUCCESS',
-				transactionId: 'fake',
-			},
-		]));
-
-		spyOn(cuiModalService, 'showComponent')
-		.and
-		.returnValue(
-			of({ scanStatus: 'IN_PROGRESS' })
-			.toPromise());
-
-		component.openCase();
-
-		expect(component.status.scan.inProgress)
-			.toBeFalsy();
+		expect(component.systemAsset.serialNumber)
+			.toEqual('FOC1610R0L4');
 	});
 });
