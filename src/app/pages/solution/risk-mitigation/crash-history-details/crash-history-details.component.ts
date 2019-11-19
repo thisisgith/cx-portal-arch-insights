@@ -7,7 +7,7 @@ import {
 	SimpleChanges,
 	ViewChild,
 	TemplateRef,
-    OnDestroy,
+	OnDestroy,
 } from '@angular/core';
 import { DetailsPanelStackService } from '@services';
 import * as _ from 'lodash-es';
@@ -24,8 +24,7 @@ import { LogService } from '@cisco-ngx/cui-services';
  */
 @Component({
 	selector: 'app-crash-history-details',
-	styleUrls: ['./crash-history-details.component.scss'],
-	templateUrl: './crash-history-details.component.html'
+	templateUrl: './crash-history-details.component.html',
 })
 export class CrashHistoryDetailsComponent implements OnChanges, OnDestroy {
 	@Input() public selectedSystem = '';

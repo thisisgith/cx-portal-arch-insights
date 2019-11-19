@@ -21,7 +21,7 @@ import { ActivatedRoute } from '@angular/router';
  */
 @Component({
 	styleUrls: ['./risk-mitigation.component.scss'],
-	templateUrl: './risk-mitigation.component.html'
+	templateUrl: './risk-mitigation.component.html',
 })
 export class RiskMitigationComponent {
 	public customerId: any;

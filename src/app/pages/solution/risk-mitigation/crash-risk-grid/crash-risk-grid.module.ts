@@ -12,7 +12,9 @@ import {
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { FingerprintDetailsModule } from '../../fingerprint-details/fingerprint-details.module';
 import { TooltipModule } from '@components';
-
+/**
+ * Crash Risk Grid Module
+ */
 @NgModule({
 	declarations: [CrashRiskGridComponent],
 	exports: [CrashRiskGridComponent],

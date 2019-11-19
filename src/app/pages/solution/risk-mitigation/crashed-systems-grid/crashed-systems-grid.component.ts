@@ -179,8 +179,6 @@ export class CrashedSystemsGridComponent implements OnChanges {
 						this.crashedSystemsGridDetails.totalItems = _.size(results.deviceDetails);
 						this.crashedSystemsGridDetails.tableOffset = 0;
 						this.onPagerUpdated(this.pageInfo);
-
-
 					}),
 					catchError(err => {
 						this.isLoading = false;
