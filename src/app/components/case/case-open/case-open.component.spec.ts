@@ -76,13 +76,13 @@ describe('CaseOpenComponent', () => {
 	}));
 
 	it('should expand', fakeAsync(() => {
-		component.caseForm.controls.description.setValue('a');
-		component.caseForm.controls.title.setValue('a');
+		component.caseForm.controls.description.setValue('abcde');
+		component.caseForm.controls.title.setValue('abcde');
+		tick(3000);
 		const button = template.query(
 			By.css('[data-auto-id="CaseOpenNextButton"]'),
 		);
 		button.nativeElement.click();
-		tick(2500);
 		expect(component.expand)
 			.toBeTruthy();
 	}));
@@ -91,13 +91,13 @@ describe('CaseOpenComponent', () => {
 		spyOn(caseService, 'createCase')
 			.and
 			.returnValue(of(CaseScenarios[9].scenarios.POST[0].response.body));
-		component.caseForm.controls.description.setValue('a');
-		component.caseForm.controls.title.setValue('a');
+		component.caseForm.controls.description.setValue('abcde');
+		component.caseForm.controls.title.setValue('abcde');
+		tick(3000);
 		const button = template.query(
 			By.css('[data-auto-id="CaseOpenNextButton"]'),
 		);
 		button.nativeElement.click();
-		tick(2500);
 		fixture.detectChanges(); // click next and expand
 		(<FormGroup> component.caseForm.controls.techInfo).controls.problemArea.setValue({
 			customerActivity: 'Operate',
