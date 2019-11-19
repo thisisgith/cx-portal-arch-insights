@@ -390,8 +390,7 @@ export class RegisterCollectorComponent implements OnDestroy, OnInit, SetupStep 
 								// continue to next screen after a second
 								this.route.queryParams.subscribe(params => {
 									if (params.fromAdmin) {
-										this.onStepComplete.emit();
-										this.router.navigate(['/setup-ie']);
+										this.router.navigate(['/admin/settings']);
 									} else {
 										this.onStepComplete.emit();
 									}
