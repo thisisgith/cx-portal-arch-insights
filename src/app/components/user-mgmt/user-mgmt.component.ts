@@ -17,9 +17,9 @@ import {
 } from '@sdp-api';
 import { SortableColumn, SortProps } from './user-mgmt.types';
 import { I18nPipe } from '@cisco-ngx/cui-pipes';
-import * as _ from 'lodash-es';
 import { CuiModalService } from '@cisco-ngx/cui-components';
 import { AddUserComponent } from '../add-user/add-user.component';
+import * as _ from 'lodash-es';
 
 /**
  * UserMgmtComponent
