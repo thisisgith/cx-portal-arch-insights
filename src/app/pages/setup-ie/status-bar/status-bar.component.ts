@@ -1,8 +1,9 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { SETUP_STATES } from '@classes';
 import { I18n } from '@cisco-ngx/cui-utils';
 import * as _ from 'lodash-es';
+import { ActivatedRoute } from '@angular/router';
 
 /**
  * Reference for a step to display in the status bar
@@ -22,51 +23,93 @@ export interface IESetupStatusBarStep {
 	styleUrls: ['./status-bar.component.scss'],
 	templateUrl: './status-bar.component.html',
 })
-export class IESetupWizardStatusBar {
+export class IESetupWizardStatusBar implements OnInit {
 	@Input() public state: SETUP_STATES;
-	public steps: IESetupStatusBarStep[] = [
-		{
-			iconActiveSrc: this.sanitizer
-				.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s1-on.png'),
-			iconInactiveSrc: this.sanitizer
-				.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s1-off.png'),
-			isActive: () => this.state === SETUP_STATES.INIT,
-			label: _.toUpper(I18n.get('_PrepareToSetupCXPortal_')),
-		},
-		{
-			iconActiveSrc: this.sanitizer
-				.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s2-on.png'),
-			iconInactiveSrc: this.sanitizer
-				.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s2-off.png'),
-			isActive: () => this.state === SETUP_STATES.INSTALL,
-			label: _.toUpper(I18n.get('_InstallCXCollectorOnVM_')),
-		},
-		{
-			iconActiveSrc: this.sanitizer
-				.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s3-on.png'),
-			iconInactiveSrc: this.sanitizer
-				.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s3-off.png'),
-			isActive: () => this.state === SETUP_STATES.CONNECT_COLLECTOR,
-			label: _.toUpper(I18n.get('_ConnectVMToBrowser_')),
-		},
-		{
-			iconActiveSrc: this.sanitizer
-				.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s4-on.png'),
-			iconInactiveSrc: this.sanitizer
-				.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s4-off.png'),
-			isActive: () => this.state === SETUP_STATES.CONFIGURE_COLLECTOR,
-			label: _.toUpper(I18n.get('_ConfigureCXCollector_')),
-		},
-		{
-			iconActiveSrc: this.sanitizer
-				.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s5-on.png'),
-			iconInactiveSrc: this.sanitizer
-				.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s5-off.png'),
-			isActive: () => this.state === SETUP_STATES.CONNECT_DNAC,
-			label: _.toUpper(I18n.get('_ConnectDNAToCXCollector_')),
-		},
-	];
+	public steps: IESetupStatusBarStep[];
 	constructor (
 		private sanitizer: DomSanitizer,
+		private activatedRoute: ActivatedRoute,
 	) {	}
+
+	/**
+	 *  on init function
+	 */
+	public ngOnInit (): void {
+		this.activatedRoute.queryParams.subscribe(params => {
+			if (params.fromAdmin) {
+				this.steps = [
+
+					{
+						iconActiveSrc: this.sanitizer
+							.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s2-on.png'),
+						iconInactiveSrc: this.sanitizer
+							.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s2-off.png'),
+						isActive: () => this.state === SETUP_STATES.INSTALL,
+						label: _.toUpper(I18n.get('_InstallCXCollectorOnVM_')),
+					},
+					{
+						iconActiveSrc: this.sanitizer
+							.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s3-on.png'),
+						iconInactiveSrc: this.sanitizer
+							.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s3-off.png'),
+						isActive: () => this.state === SETUP_STATES.CONNECT_COLLECTOR,
+						label: _.toUpper(I18n.get('_ConnectVMToBrowser_')),
+					},
+					{
+						iconActiveSrc: this.sanitizer
+							.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s4-on.png'),
+						iconInactiveSrc: this.sanitizer
+							.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s4-off.png'),
+						isActive: () => this.state === SETUP_STATES.CONFIGURE_COLLECTOR,
+						label: _.toUpper(I18n.get('_ConfigureCXCollector_')),
+					},
+
+				];
+
+			} else {
+				this.steps = [
+					{
+						iconActiveSrc: this.sanitizer
+							.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s1-on.png'),
+						iconInactiveSrc: this.sanitizer
+							.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s1-off.png'),
+						isActive: () => this.state === SETUP_STATES.INIT,
+						label: _.toUpper(I18n.get('_PrepareToSetupCXPortal_')),
+					},
+					{
+						iconActiveSrc: this.sanitizer
+							.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s2-on.png'),
+						iconInactiveSrc: this.sanitizer
+							.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s2-off.png'),
+						isActive: () => this.state === SETUP_STATES.INSTALL,
+						label: _.toUpper(I18n.get('_InstallCXCollectorOnVM_')),
+					},
+					{
+						iconActiveSrc: this.sanitizer
+							.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s3-on.png'),
+						iconInactiveSrc: this.sanitizer
+							.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s3-off.png'),
+						isActive: () => this.state === SETUP_STATES.CONNECT_COLLECTOR,
+						label: _.toUpper(I18n.get('_ConnectVMToBrowser_')),
+					},
+					{
+						iconActiveSrc: this.sanitizer
+							.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s4-on.png'),
+						iconInactiveSrc: this.sanitizer
+							.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s4-off.png'),
+						isActive: () => this.state === SETUP_STATES.CONFIGURE_COLLECTOR,
+						label: _.toUpper(I18n.get('_ConfigureCXCollector_')),
+					},
+					{
+						iconActiveSrc: this.sanitizer
+							.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s5-on.png'),
+						iconInactiveSrc: this.sanitizer
+							.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s5-off.png'),
+						isActive: () => this.state === SETUP_STATES.CONNECT_DNAC,
+						label: _.toUpper(I18n.get('_ConnectDNAToCXCollector_')),
+					},
+				];
+			}
+		});
+	}
 }

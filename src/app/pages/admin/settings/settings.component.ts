@@ -5,7 +5,7 @@ import {
 	UserService,
 } from '@sdp-api';
 import { User } from '@interfaces';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { AppStatusColorPipe } from './app-status-color.pipe';
 import { ResourceGaugeColorPipe } from './resource-gauge-color.pipe';
 
@@ -99,6 +99,7 @@ export class SettingsComponent  implements OnInit {
 		private controlPointIEHealthStatusAPIService: ControlPointIEHealthStatusAPIService,
 		private route: ActivatedRoute,
 		private userService: UserService,
+		private router: Router,
 	) {
 		this.user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(this.user, ['info', 'customerId']);
@@ -246,5 +247,13 @@ ${HDDSizeUnit}`;
 		}
 
 		return obj;
+	}
+
+	/**
+	 * Function to navigate to set up
+	 */
+	public navigateTosetup () {
+		const params: NavigationExtras = { queryParams: { fromAdmin: true } };
+		this.router.navigate(['/setup-ie'], params);
 	}
 }
