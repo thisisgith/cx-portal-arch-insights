@@ -62,7 +62,13 @@ describe('CrashRiskGridComponent', () => {
 		.toBeTruthy();
 	});
 
-	it('Should get the High Crash Risk devices grid data', () => {
+	it('Should get the High Crash Risk devices grid data', fakeAsync(() => {
+		const changes: SimpleChanges = {
+			selectedFilter: new SimpleChange({ }, { selectedFilter: 'Success' }, false),
+			selectedSolution: new SimpleChange({ }, { selectedSolution: 'Success' }, false),
+			selectedTechnology: new SimpleChange({ }, { selectedTechnology: 'Success' }, false),
+			serchQuery: new SimpleChange({ }, { serchQuery: 'Success' }, false),
+		};
 		spyOn(crashRiskGridService, 'getFingerPrintDeviceDetailsData')
 			.and
 			.returnValue(of(RiskScenarios[4].scenarios.GET[0].response.body));
@@ -77,14 +83,21 @@ describe('CrashRiskGridComponent', () => {
 			sort: 'asc',
 			useCase: 'Campus Network',
 		};
+		component.ngOnChanges(changes);
 		component.getFingerPrintDeviceDetails(test);
-
+		tick(1000);
 		fixture.detectChanges();
 		expect(component.highCrashRiskSystemsGridDetails.tableData)
-			.toBeDefined();
-	});
+		.toBeDefined();
+	}));
 
 	it('Should not set grid data when response is empty', fakeAsync(() => {
+		const changes: SimpleChanges = {
+			selectedFilter: new SimpleChange({ }, { selectedFilter: 'Success' }, false),
+			selectedSolution: new SimpleChange({ }, { selectedSolution: 'Success' }, false),
+			selectedTechnology: new SimpleChange({ }, { selectedTechnology: 'Success' }, false),
+			serchQuery: new SimpleChange({ }, { serchQuery: 'Success' }, false),
+		};
 		spyOn(crashRiskGridService, 'getFingerPrintDeviceDetailsData')
 			.and
 			.returnValue(of(RiskScenarios[8].scenarios.GET[0].response.body));
@@ -99,8 +112,9 @@ describe('CrashRiskGridComponent', () => {
 			sort: 'asc',
 			useCase: 'Campus Network',
 		};
+		component.ngOnChanges(changes);
 		component.getFingerPrintDeviceDetails(test);
-		tick(100);
+		tick(1000);
 		fixture.detectChanges();
 		expect(component.highCrashRiskSystemsGridDetails.totalItems)
 			.toBeFalsy();
