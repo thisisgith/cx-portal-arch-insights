@@ -118,12 +118,14 @@ export class AdminComplienceComponent implements OnInit {
 	 */
 	public checkOptlnStatus () {
 
-		forkJoin(
-			this.getOptinOutStatus(),
-			this.getLeftSideTags(),
-			this.getRightSideTags(),
-		)
-		.subscribe();
+		this.getOptinOutStatus()
+			.subscribe((results: any) => {
+				this.optlnStatus = results.data.rccOptInStatus;
+				if (this.optlnStatus) {
+					this.getLeftSideTags()
+						.subscribe();
+				}
+			});
 
 		return this.routeAuthService.checkPermissions(this.customerId)
 				.pipe(
@@ -143,12 +145,19 @@ export class AdminComplienceComponent implements OnInit {
 	 */
 
 	public toggleOptlnStatus () {
-		if (this.rightSideTags.length) {
+		this.optlnStatus = !this.optlnStatus;
+		if (!this.optlnStatus) {
 			this.cuiModalService.show(this.confirmationModalTemplate, 'normal');
 		} else {
-			this.optlnStatus = false;
-			this.updateOptInOutStatus();
-			this.initializeDetails();
+			const params = {
+				customerId: this.customerId,
+				isRccOpted: this.optlnStatus,
+			};
+			forkJoin(
+				this.assetTaggingService.updateOptStatus(params),
+				this.getLeftSideTags(),
+			)
+			.subscribe();
 		}
 	}
 	/**
@@ -158,7 +167,15 @@ export class AdminComplienceComponent implements OnInit {
 	public discardChanges () {
 		this.optlnStatus = false;
 		this.isOptlnStatusChanged = true;
-		this.updateOptInOutStatus();
+		const params = {
+			customerId: this.customerId,
+			isRccOpted: this.optlnStatus,
+		};
+		forkJoin(
+			this.assetTaggingService.updateOptStatus(params),
+			this.assetTaggingService.deleteMapping(params),
+		)
+		.subscribe();
 		this.initializeDetails();
 		this.cuiModalService.hide();
 		this.enableSaveButton = false;
@@ -169,7 +186,6 @@ export class AdminComplienceComponent implements OnInit {
 	 */
 	public saveChanges () {
 		this.optlnStatus = true;
-		this.updateOptInOutStatus();
 		this.cuiModalService.hide();
 	}
 	/**
@@ -185,9 +201,6 @@ export class AdminComplienceComponent implements OnInit {
 		return this.assetTaggingService.getOptInStatus(params)
 			.pipe(
 				takeUntil(this.destroyed$),
-				map((results: any) => {
-					this.optlnStatus = results.data.rccOptInStatus;
-				}),
 				catchError(err => {
 					this.logger.error('OptinStatus : getOptinOutStatus() ' +
 						`:: Error : (${err.status}) ${err.message}`);
