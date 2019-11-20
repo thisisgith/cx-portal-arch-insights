@@ -35,6 +35,7 @@ export class UserMgmtComponent implements AfterViewInit, OnDestroy {
 	private updateUsers$: Subject<UserDetails[]> = new Subject<UserDetails[]>();
 	public isLoading: boolean;
 	public numUsers = 0;
+	public numUsersWithRoles = 0;
 	private user: UserResponse['data'];
 	private customerId: string;
 	public users$: Observable<UserDetails[]> = this.updateUsers$
@@ -42,6 +43,8 @@ export class UserMgmtComponent implements AfterViewInit, OnDestroy {
 			switchMap(() => this.getUsers()),
 			map(response => response.data),
 			tap(users => this.numUsers = users.length),
+			tap(users => this.numUsersWithRoles = users
+					.filter(user => user.roles && user.roles.length > 0).length),
 		);
 	public sortProps: SortProps = {
 		column: 'firstName',

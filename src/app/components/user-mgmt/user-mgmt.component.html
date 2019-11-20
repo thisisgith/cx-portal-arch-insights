@@ -23,7 +23,10 @@
 		</div>
 		<div class="flex text-small">
 			<div class="col-6" [innerText]="'_XSmartAccountUsers_' | i18n:numUsers"></div>
-			<div class="col-6" [innerText]="'_XHaveAccessToCXPortal_' | i18n:numUsers"></div>
+			<div
+				class="col-6"
+				[innerText]="'_XHaveAccessToCXPortal_' | i18n:numUsersWithRoles"
+			></div>
 		</div>
 	</section>
 	<alert
@@ -118,6 +121,7 @@
 						</cui-dropdown>
 					</td>
 				</tr>
+				<tr class="spacer-row"></tr>
 			</tbody>
 		</table>
 		<div

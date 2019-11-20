@@ -37,6 +37,10 @@
 		transform: rotate(180deg);
 	}
 
+	.spacer-row {
+		height: 200px;
+	}
+
 	/* CiscoUI table styling override start */
 	// Chose to use specificity instead of importants
 	::ng-deep .table {
@@ -161,6 +165,5 @@
 			}
 		}
 	}
-
 	/* CiscoUI table styling override end */
 }
