@@ -537,21 +537,21 @@ class InventoryService extends __BaseService {
     if (params.search != null) __params = __params.set('search', params.search.toString());
     if (params.saId != null) __params = __params.set('saId', params.saId.toString());
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
-    if (params.role != null) __params = __params.set('role', params.role.toString());
-    if (params.productType != null) __params = __params.set('productType', params.productType.toString());
-    if (params.productName != null) __params = __params.set('productName', params.productName.toString());
-    if (params.productId != null) __params = __params.set('productId', params.productId.toString());
-    if (params.productFamily != null) __params = __params.set('productFamily', params.productFamily.toString());
+    (params.role || []).forEach(val => {if (val != null) __params = __params.append('role', val.toString())});
+    (params.productType || []).forEach(val => {if (val != null) __params = __params.append('productType', val.toString())});
+    (params.productName || []).forEach(val => {if (val != null) __params = __params.append('productName', val.toString())});
+    (params.productId || []).forEach(val => {if (val != null) __params = __params.append('productId', val.toString())});
+    (params.productFamily || []).forEach(val => {if (val != null) __params = __params.append('productFamily', val.toString())});
     if (params.page != null) __params = __params.set('page', params.page.toString());
-    if (params.osVersion != null) __params = __params.set('osVersion', params.osVersion.toString());
-    if (params.osType != null) __params = __params.set('osType', params.osType.toString());
-    if (params.neId != null) __params = __params.set('neId', params.neId.toString());
-    if (params.managedNeId != null) __params = __params.set('managedNeId', params.managedNeId.toString());
+    (params.osVersion || []).forEach(val => {if (val != null) __params = __params.append('osVersion', val.toString())});
+    (params.osType || []).forEach(val => {if (val != null) __params = __params.append('osType', val.toString())});
+    (params.neId || []).forEach(val => {if (val != null) __params = __params.append('neId', val.toString())});
+    (params.managedNeId || []).forEach(val => {if (val != null) __params = __params.append('managedNeId', val.toString())});
     if (params.isManagedNe != null) __params = __params.set('isManagedNe', params.isManagedNe.toString());
-    if (params.ipAddress != null) __params = __params.set('ipAddress', params.ipAddress.toString());
+    (params.ipAddress || []).forEach(val => {if (val != null) __params = __params.append('ipAddress', val.toString())});
     if (params.hasSecurityAdvisories != null) __params = __params.set('hasSecurityAdvisories', params.hasSecurityAdvisories.toString());
     if (params.hasBugs != null) __params = __params.set('hasBugs', params.hasBugs.toString());
-    if (params.deviceName != null) __params = __params.set('deviceName', params.deviceName.toString());
+    (params.deviceName || []).forEach(val => {if (val != null) __params = __params.append('deviceName', val.toString())});
     if (params.cxLevel != null) __params = __params.set('cxLevel', params.cxLevel.toString());
     if (params.criticalAdvisoryCount != null) __params = __params.set('criticalAdvisoryCount', params.criticalAdvisoryCount.toString());
     let req = new HttpRequest<any>(
@@ -1955,27 +1955,27 @@ module InventoryService {
     /**
      * Role of the device
      */
-    role?: string;
+    role?: Array<string>;
 
     /**
      * Filter by device's product type
      */
-    productType?: string;
+    productType?: Array<string>;
 
     /**
      * Filter by device's product name
      */
-    productName?: string;
+    productName?: Array<string>;
 
     /**
      * Devices Product ID
      */
-    productId?: string;
+    productId?: Array<string>;
 
     /**
      * Filter by device's product family
      */
-    productFamily?: string;
+    productFamily?: Array<string>;
 
     /**
      * The page number of the response
@@ -1985,22 +1985,22 @@ module InventoryService {
     /**
      * Software Version of the device
      */
-    osVersion?: string;
+    osVersion?: Array<string>;
 
     /**
      * Software Name of the device
      */
-    osType?: string;
+    osType?: Array<string>;
 
     /**
      * Network Element Id
      */
-    neId?: string;
+    neId?: Array<string>;
 
     /**
      * Devices Management Network Element ID
      */
-    managedNeId?: string;
+    managedNeId?: Array<string>;
 
     /**
      * Filter by managed Network Element
@@ -2010,7 +2010,7 @@ module InventoryService {
     /**
      * IP Address of the device
      */
-    ipAddress?: string;
+    ipAddress?: Array<string>;
 
     /**
      * Activates filter on assets having security advisories. If multiple of these attributes are provided,  the last value would be considered. Values "true" or "1" are considered as boolean value  "True" and any other value is considered false. This filter is activated is attribute is present.
@@ -2025,7 +2025,7 @@ module InventoryService {
     /**
      * Hostname of the device
      */
-    deviceName?: string;
+    deviceName?: Array<string>;
 
     /**
      * A customer support level
@@ -2107,7 +2107,7 @@ module InventoryService {
     /**
      * Serial Number of the device
      */
-    serialNumber?: string;
+    serialNumber?: any;
 
     /**
      * Searchable fields - deviceName, ipAddress, serialNumber, osVersion, role. Applied only when the length of this parameter is more than 3 characters.
@@ -2122,43 +2122,43 @@ module InventoryService {
     /**
      * Filter by device's product type
      */
-    productType?: string;
+    productType?: any;
 
     /**
      * Filter by device's product name
      */
-    productName?: string;
+    productName?: any;
 
     /**
      * Device's Product Id
      */
-    productId?: string;
+    productId?: any;
 
     /**
      * Network Element Id
      */
-    neId?: string;
+    neId?: any;
 
     /**
      * IP Address of the device
      */
-    ipAddress?: string;
+    ipAddress?: any;
 
     /**
      * Hardware Instance Id
      */
-    hwInstanceId?: string;
+    hwInstanceId?: any;
     hasFieldNotices?: boolean;
 
     /**
      * Equipment Type
      */
-    equipmentType?: string;
+    equipmentType?: any;
 
     /**
      * Hostname of the device
      */
-    deviceName?: string;
+    deviceName?: any;
 
     /**
      * A customer support level
@@ -2224,17 +2224,17 @@ module InventoryService {
     /**
      * Filter by device's product type
      */
-    productType?: string;
+    productType?: any;
 
     /**
      * Filter by device's product name
      */
-    productName?: string;
+    productName?: any;
 
     /**
      * Device's Product Id
      */
-    productId?: string;
+    productId?: any;
 
     /**
      * The page number of the response
@@ -2244,7 +2244,7 @@ module InventoryService {
     /**
      * Network Element Id
      */
-    neId?: string;
+    neId?: any;
 
     /**
      * A date range in the format of <fromDateInMillis>,<toDateInMillis>. fromDateInMillis is inclusive and toDateInMillis is exclusive. <toDateInMillis> format supported to filter advisories having lastDateOfSupportRange till particular date. Use <fromDateInMillis> format to filter advisories having lastDateOfSupportRange from a particular date.
@@ -2254,12 +2254,12 @@ module InventoryService {
     /**
      * IP Address of the device
      */
-    ipAddress?: string;
+    ipAddress?: any;
 
     /**
      * Hardware Instance Id
      */
-    hwInstanceId?: string;
+    hwInstanceId?: any;
 
     /**
      * Activates filter on assets having field notices.
@@ -2269,12 +2269,12 @@ module InventoryService {
     /**
      * Equipment Type
      */
-    equipmentType?: string;
+    equipmentType?: any;
 
     /**
      * Hostname of the device
      */
-    deviceName?: string;
+    deviceName?: any;
 
     /**
      * A customer support level

@@ -853,7 +853,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 			.pipe(
 				map((response: HttpResponse<null>) => {
 					totalFieldNoticesFilter.seriesData = [{
-						value: _.toNumber(response.headers.get('X-API-RESULT-COUNT')) || 0,
+						value: _.toNumber(_.invoke(response, 'headers.get', 'X-API-RESULT-COUNT')) || 0,
 					}];
 					totalFieldNoticesFilter.loading = false;
 				}),
@@ -874,7 +874,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 			.pipe(
 				map((response: HttpResponse<null>) => {
 					totalAdvisoryFilter.seriesData = [{
-						value: _.toNumber(response.headers.get('X-API-RESULT-COUNT')) || 0,
+						value: _.toNumber(_.invoke(response, 'headers.get', 'X-API-RESULT-COUNT')) || 0,
 					}];
 					totalAdvisoryFilter.loading = false;
 				}),
@@ -895,7 +895,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 			.pipe(
 				map((response: HttpResponse<null>) => {
 					totalBugsFilter.seriesData = [{
-						value: _.toNumber(response.headers.get('X-API-RESULT-COUNT')) || 0,
+						value: _.toNumber(_.invoke(response, 'headers.get', 'X-API-RESULT-COUNT')) || 0,
 					}];
 					totalBugsFilter.loading = false;
 				}),

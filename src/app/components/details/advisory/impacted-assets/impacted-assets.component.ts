@@ -11,14 +11,14 @@ import {
 import * as _ from 'lodash-es';
 import {
 	InventoryService,
-	Asset,
 	DiagnosticsService,
 	BugImpactedAssetsResponse,
-	NetworkElementResponse,
-	NetworkElement,
 	RacetrackTechnology,
 	RacetrackSolution,
-	Assets,
+	HardwareAsset,
+	SystemAsset,
+	HardwareAssets,
+	SystemAssets,
 } from '@sdp-api';
 import { LogService } from '@cisco-ngx/cui-services';
 import {
@@ -46,9 +46,9 @@ export interface AssetIds {
  * The interface for our output
  */
 export interface Impacted {
-	impacted: (Asset | NetworkElement)[];
-	potentiallyImpacted: (Asset | NetworkElement)[];
-	assets: Asset[];
+	impacted: SystemAsset[];
+	potentiallyImpacted: SystemAsset[];
+	assets: HardwareAsset[];
 }
 
 /**
@@ -77,14 +77,13 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 	public affectedTable: CuiTableOptions;
 	public potentiallyAffectedTable: CuiTableOptions;
 	public isLoading = false;
-	public potentiallyImpacted: (Asset | NetworkElement)[] = [];
-	public impacted: (Asset | NetworkElement)[] = [];
-	public impactedAssets: Asset[] = [];
-	public selectedAsset: Asset | NetworkElement;
+	public potentiallyImpacted: SystemAsset[] = [];
+	public impacted: SystemAsset[] = [];
+	public impactedAssets: HardwareAsset[] = [];
 	private params: {
 		bugAssets?: DiagnosticsService.GetCriticalBugsAssetsParams;
-		elements?: InventoryService.GetNetworkElementsParams;
-		assets?: InventoryService.GetAssetsParams;
+		system?: InventoryService.GetSystemAssetsParams;
+		assets?: InventoryService.GetHardwareAssetsParams;
 	};
 	public getProductIcon = getProductTypeImage;
 	public getProductTitle = getProductTypeTitle;
@@ -103,7 +102,7 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 	 * Fetches the network elements affected
 	 * @returns the observable
 	 */
-	private fetchNetworkElements () {
+	private fetchSystemAsset () {
 		this.isLoading = true;
 
 		this.impacted = [];
@@ -112,9 +111,9 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 		const impacted = _.get(this.assetIds, 'impacted', []);
 		const potentiallyImpacted = _.get(this.assetIds, 'potentiallyImpacted', []);
 
-		this.inventoryService.getNetworkElements(this.params.elements)
+		this.inventoryService.getSystemAssets(this.params.system)
 		.pipe(
-			mergeMap((response: NetworkElementResponse) => {
+			mergeMap((response: SystemAssets) => {
 				const data = _.get(response, 'data', []);
 
 				this.impacted =
@@ -129,7 +128,7 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 			}),
 			catchError(err => {
 				this.logger.error('advisory-details:impacted-assets.component : ' +
-				 `fetchNetworkElements() :: Error : (${err.status}) ${err.message}`);
+				 `fetchSystemAsset() :: Error : (${err.status}) ${err.message}`);
 
 				return of({ });
 			}),
@@ -158,9 +157,9 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 		}
 		_.set(this.params.assets, 'serialNumber', serials);
 
-		return this.inventoryService.getAssets(this.params.assets)
+		return this.inventoryService.getHardwareAssets(this.params.assets)
 		.pipe(
-			map((response: Assets) => {
+			map((response: HardwareAssets) => {
 				this.impactedAssets = _.get(response, 'data', []);
 			}),
 			catchError(err => {
@@ -226,7 +225,7 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 			case 'security':
 				const securityAffectedTableColumns = [
 					{
-						key: 'hostName',
+						key: 'deviceName',
 						name: I18n.get('_SystemName_'),
 						sortable: true,
 						sortDirection: 'asc',
@@ -250,7 +249,7 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 				];
 				const securityPotentiallyAffectedTableColumns = [
 					{
-						key: 'hostName',
+						key: 'deviceName',
 						name: I18n.get('_SystemName_'),
 						sortable: true,
 						sortDirection: 'asc',
@@ -280,7 +279,7 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 			case 'field':
 				const fieldAffectedTableColumns = [
 					{
-						key: 'hostName',
+						key: 'deviceName',
 						name: I18n.get('_SystemName_'),
 						sortable: true,
 						template: this.deviceColumn,
@@ -309,7 +308,7 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 				];
 				const fieldPotentiallyAffectedTableColumns = [
 					{
-						key: 'hostName',
+						key: 'deviceName',
 						name: I18n.get('_SystemName_'),
 						sortable: true,
 						template: this.deviceColumn,
@@ -415,14 +414,6 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 			useCase: this.selectedTechnologyName,
 		});
 
-		_.set(this.params, 'assets', {
-			customerId: this.customerId,
-			page: 1,
-			rows: 100,
-			solution: this.selectedSolutionName,
-			useCase: this.selectedTechnologyName,
-		});
-
 		if (this.type === 'bug' && this.id) {
 			_.set(this.params, 'bugAssets', {
 				cdetId: [this.id],
@@ -435,7 +426,7 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 
 			this.fetchBugAssets();
 		} else if (this.assetIds) {
-			_.set(this.params, 'elements', {
+			_.set(this.params, 'system', {
 				customerId: this.customerId,
 				managedNeId: _.concat(
 					_.get(this.assetIds, 'impacted', []),
@@ -444,11 +435,11 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 				page: 1,
 				rows: 100,
 				solution: this.selectedSolutionName,
-				sort: [this.type === 'field' ? 'productId:ASC' : 'hostName:ASC'],
+				sort: [this.type === 'field' ? 'productId:ASC' : 'deviceName:ASC'],
 				useCase: this.selectedTechnologyName,
 			});
 
-			this.fetchNetworkElements();
+			this.fetchSystemAsset();
 		}
 	}
 
@@ -457,13 +448,13 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 	 * @param options the selected column
 	 */
 	public onColumnSort (options: CuiTableColumnOption) {
-		_.set(this.params, [this.type === 'bug' ? 'bugAssets' : 'elements', 'sort'],
+		_.set(this.params, [this.type === 'bug' ? 'bugAssets' : 'system', 'sort'],
 			[`${options.key}:${options.sortDirection.toUpperCase()}`]);
 
 		if (this.type === 'bug') {
 			this.fetchBugAssets();
 		} else {
-			this.fetchNetworkElements();
+			this.fetchSystemAsset();
 		}
 	}
 

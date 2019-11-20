@@ -17,7 +17,7 @@ import * as _ from 'lodash-es';
 	styleUrls: ['./bar-chart.component.scss', '../tooltip/tooltip.scss'],
 	template: `
 		<div>
-			<div [chart]="chart"></div>
+			<div class="qtr-padding-bottom" [chart]="chart"></div>
 			<div class="hbar__divider"></div>
 		</div>
 	`,

@@ -14,11 +14,10 @@ import { Data as SecurityData } from './security/security-details.component';
 import { Data as FieldNoticeData } from './field-notice/field-notice-details.component';
 import { Data as BugData } from './bug/bug-details.component';
 import {
-	Asset,
 	CriticalBug,
 	FieldNoticeAdvisory,
-	NetworkElement,
 	SecurityAdvisoryInfo,
+	HardwareAsset,
 } from '@sdp-api';
 import { UserResolve } from '@utilities';
 import { takeUntil } from 'rxjs/operators';
@@ -41,7 +40,7 @@ export class AdvisoryDetailsComponent implements OnChanges, OnInit, OnDestroy, P
 
 	@Input('advisory') public advisory: CriticalBug | FieldNoticeAdvisory | SecurityAdvisoryInfo;
 	@Input('advisoryId') public advisoryId: string;
-	@Input('selectedAsset') public selectedAsset?: Asset;
+	@Input('selectedAsset') public selectedAsset?: HardwareAsset;
 	@Input('type') public type: AdvisoryType;
 	@Output('close') public close = new EventEmitter<boolean>();
 
@@ -54,7 +53,7 @@ export class AdvisoryDetailsComponent implements OnChanges, OnInit, OnDestroy, P
 
 	public hidden = true;
 	public fullscreen = false;
-	public impactedAssets: (Asset | NetworkElement)[];
+	public impactedAssets: HardwareAsset[];
 
 	constructor (
 		private userResolve: UserResolve,

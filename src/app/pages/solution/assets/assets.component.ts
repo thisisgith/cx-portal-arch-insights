@@ -148,7 +148,6 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	public views: View[];
 	public alert: any = { };
 	public bulkDropdown = false;
-	public selectedAssets: Item[] = [];
 	public visibleTemplate: TemplateRef<{ }>;
 	public filterCollapse = false;
 	private customerId: string;
@@ -246,7 +245,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 *
 	 */
 	public onSelectionChanged (selectedItems: Item[]) {
-		this.selectedAssets = selectedItems;
+		this.selectedView.selectedAssets = selectedItems;
 	}
 
 	/**
@@ -376,13 +375,13 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		return {
 			route,
 			filters: [
-				{
-					key: 'partner',
-					loading: true,
-					seriesData: [],
-					template: this.pieChartFilterTemplate,
-					title: I18n.get('_Partner_'),
-				},
+				// {
+				// 	key: 'partner',
+				// 	loading: true,
+				// 	seriesData: [],
+				// 	template: this.pieChartFilterTemplate,
+				// 	title: I18n.get('_Partner_'),
+				// },
 				{
 					key: 'advisories',
 					loading: true,
@@ -409,6 +408,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			searchLabel: '_Systems_',
 			searchTemplate: this.systemSearchTemplate,
 			selected: this.routeParam === route,
+			selectedAssets: [],
 			subject: new Subject(),
 			table: new CuiTableOptions({
 				bordered: true,
@@ -514,13 +514,13 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					template: this.pieChartFilterTemplate,
 					title: I18n.get('_Advisories_'),
 				},
-				{
-					key: 'partner',
-					loading: true,
-					seriesData: [],
-					template: this.pieChartFilterTemplate,
-					title: I18n.get('_Partner_'),
-				},
+				// {
+				// 	key: 'partner',
+				// 	loading: true,
+				// 	seriesData: [],
+				// 	template: this.pieChartFilterTemplate,
+				// 	title: I18n.get('_Partner_'),
+				// },
 				{
 					key: 'eox',
 					loading: true,
@@ -547,6 +547,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			searchLabel: '_HardwareComponents_',
 			searchTemplate: this.hardwareSearchTemplate,
 			selected: this.routeParam === route,
+			selectedAssets: [],
 			subject: new Subject(),
 			table: new CuiTableOptions({
 				bordered: true,
@@ -872,6 +873,15 @@ export class AssetsComponent implements OnInit, OnDestroy {
 
 				view.paginationCount = `${first}-${last}`;
 
+				if (this.selectOnLoad && this.selectedView.key === 'system') {
+					this.onAllSelect(true);
+					this.onSelectionChanged(_.map(this.selectedView.data, item => item));
+					if (this.selectedView.selectedAssets.length === 1) {
+						this.selectedAsset = this.selectedView.selectedAssets[0];
+						_.set(this.selectedView.data, [0, 'details', true]);
+					}
+				}
+
 				view.loading = false;
 				view.tableContainerHeight = undefined;
 			}),
@@ -977,19 +987,19 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	}
 
 	/**
-	 * TODO: Implement with Partner API
+	 * TODO: Implement with Partner API - Out for LA
 	 * Fetches the partner counts for the visual filter
 	 * @returns the partner counts
 	 */
-	private getPartnerCounts () {
-		const systemPartnerFilter = _.find(this.getView('system').filters, { key: 'partner' });
-		const hardwarePartnerFilter = _.find(this.getView('hardware').filters, { key: 'partner' });
+	// private getPartnerCounts () {
+	// 	const systemPartnerFilter = _.find(this.getView('system').filters, { key: 'partner' });
+	// 	const hardwarePartnerFilter = _.find(this.getView('hardware').filters, { key: 'partner' });
 
-		systemPartnerFilter.loading = false;
-		hardwarePartnerFilter.loading = false;
+	// 	systemPartnerFilter.loading = false;
+	// 	hardwarePartnerFilter.loading = false;
 
-		return of({ });
-	}
+	// 	return of({ });
+	// }
 
 	/**
 	 * Fetches the advisory counts for the systems visual filter
@@ -1102,8 +1112,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				})
 				.pipe(
 					map((response: HttpResponse<null>) => {
-						a.value = _.toNumber(response.headers.get('X-API-RESULT-COUNT'))
-							|| 0;
+						a.value = _.toNumber(_.invoke(response, 'headers.get', 'X-API-RESULT-COUNT')) || 0;
 					}),
 					catchError(err => {
 						this.logger.error('assets.component : getHardwareTypeCounts(): ' +
@@ -1257,8 +1266,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			})
 			.pipe(
 				map((response: HttpResponse<null>) => {
-					systemView.total = _.toNumber(response.headers.get('X-API-RESULT-COUNT'))
-						|| 0;
+					systemView.total = _.toNumber(_.invoke(response, 'headers.get', 'X-API-RESULT-COUNT')) || 0;
 				}),
 				catchError(err => {
 					this.logger.error('assets.component : fetchInventoryCount(): systems ' +
@@ -1274,8 +1282,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			})
 			.pipe(
 				map((response: HttpResponse<null>) => {
-					hardwareView.total = _.toNumber(response.headers.get('X-API-RESULT-COUNT'))
-						|| 0;
+					hardwareView.total = _.toNumber(_.invoke(response, 'headers.get', 'X-API-RESULT-COUNT')) || 0;
 				}),
 				catchError(err => {
 					this.logger.error('assets.component : fetchInventoryCount(): hardware ' +
@@ -1405,7 +1412,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			mergeMap(() =>
 				forkJoin(
 					this.getCoverageCounts(),
-					this.getPartnerCounts(),
+					// this.getPartnerCounts(),
 					this.getSystemAdvisoryCount(),
 					this.getHardwareTypeCounts(),
 					this.getRoleCounts(),

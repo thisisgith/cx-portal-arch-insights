@@ -10,9 +10,7 @@ import {
 } from '@angular/core';
 import * as _ from 'lodash-es';
 import {
-	Asset,
 	CriticalBug,
-	NetworkElement,
 	DiagnosticsService,
 	CriticalBugsResponse,
 	RacetrackSolution,
@@ -27,6 +25,8 @@ import {
 import { of, Subject } from 'rxjs';
 import { Alert } from '@interfaces';
 import { RacetrackInfoService } from '@services';
+import { Impacted } from '../impacted-assets/impacted-assets.component';
+import { I18n } from '@cisco-ngx/cui-utils';
 
 /** Data Interface */
 export interface Data {
@@ -48,10 +48,7 @@ export class BugDetailsComponent implements OnInit, OnChanges, OnDestroy {
 	@Input('customerId') public customerId: string;
 	@Output('details') public details = new EventEmitter<Data>();
 	@Output('alert') public alertMessage = new EventEmitter<Alert>();
-	@Output('assets') public assets = new EventEmitter<{
-		impacted: (Asset | NetworkElement)[];
-		potentiallyImpacted: (Asset | NetworkElement)[];
-	}>();
+	@Output('assets') public assets = new EventEmitter<Impacted>();
 
 	private params: DiagnosticsService.GetCriticalBugsParams;
 
@@ -68,6 +65,28 @@ export class BugDetailsComponent implements OnInit, OnChanges, OnDestroy {
 		private diagnosticsService: DiagnosticsService,
 		private racetrackInfoService: RacetrackInfoService,
 	) { }
+
+	/**
+	 * Returns the mapped CDET severity
+	 * @returns string
+	 */
+	public getCDETSeverity (): string {
+		const cdetSeverity: string = _.get(this.data, ['advisory', 'cdets', 'severity']);
+
+		let mapping;
+
+		switch (_.toNumber(cdetSeverity)) {
+			case 1: mapping = I18n.get('_Catastrophic_'); break;
+			case 2: mapping = I18n.get('_Severe_'); break;
+			case 3: mapping = I18n.get('_Moderate_'); break;
+			case 4: mapping = I18n.get('_Minor_'); break;
+			case 5: mapping = I18n.get('_Cosmetic_'); break;
+			case 6: mapping = I18n.get('_Enhancement_'); break;
+			default: mapping = I18n.get('_Issue_');
+		}
+
+		return `${cdetSeverity}-${mapping}`;
+	}
 
 	/**
 	 * Retrieves the bug

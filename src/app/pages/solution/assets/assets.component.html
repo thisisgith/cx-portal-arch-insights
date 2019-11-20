@@ -369,7 +369,7 @@
 
 <ng-template #productIdTemplate let-celldata="celldata">
 	<span [innerText]="celldata.productId ? celldata.productId : ('_NA_' | i18n)"
-		[title]="celldata.productFamily ? celldata.productFamily : ('_NA_' | i18n)">
+		[title]="celldata.productFamily || celldata.productId || ('_NA_' | i18n)">
 	</span>
 </ng-template>
 

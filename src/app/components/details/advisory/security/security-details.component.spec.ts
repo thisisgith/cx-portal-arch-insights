@@ -5,7 +5,7 @@ import { SecurityDetailsComponent } from './security-details.component';
 import { SecurityDetailsModule } from './security-details.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MicroMockModule } from '@cui-x-views/mock';
-import { ProductAlertsService, InventoryService } from '@sdp-api';
+import { ProductAlertsService } from '@sdp-api';
 import { environment } from '@environment';
 import { of, throwError } from 'rxjs';
 import * as _ from 'lodash-es';
@@ -37,7 +37,6 @@ describe('SecurityDetailsComponent', () => {
 	let component: SecurityDetailsComponent;
 	let fixture: ComponentFixture<SecurityDetailsComponent>;
 	let productAlertsService: ProductAlertsService;
-	let inventoryService: InventoryService;
 	let racetrackInfoService: RacetrackInfoService;
 
 	/**
@@ -69,7 +68,6 @@ describe('SecurityDetailsComponent', () => {
 
 	beforeEach(async(() => {
 		racetrackInfoService = TestBed.get(RacetrackInfoService);
-		inventoryService = TestBed.get(InventoryService);
 		productAlertsService = TestBed.get(ProductAlertsService);
 	}));
 
@@ -93,9 +91,6 @@ describe('SecurityDetailsComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(inventoryService, 'getAssets')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
 		spyOn(productAlertsService, 'getSecurityAdvisories')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
@@ -130,14 +125,6 @@ describe('SecurityDetailsComponent', () => {
 		component.advisory = MockAdvisorySecurityAdvisories[0];
 		component.id = _.toString(MockAdvisorySecurityAdvisories[0].id);
 		component.customerId = user.info.customerId;
-
-		const error = {
-			status: 404,
-			statusText: 'Resource not found',
-		};
-		spyOn(inventoryService, 'getAssets')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
 
 		spyOn(productAlertsService, 'getSecurityAdvisories')
 			.and

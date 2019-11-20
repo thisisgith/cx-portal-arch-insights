@@ -397,7 +397,7 @@ describe('AssetsComponent', () => {
 
 			fixture.detectChanges();
 
-			expect(component.selectedAssets.length)
+			expect(component.selectedView.selectedAssets.length)
 				.toBe(0);
 
 			fixture.destroy();

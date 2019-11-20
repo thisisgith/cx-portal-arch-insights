@@ -10,8 +10,6 @@ import {
 } from '@angular/core';
 import * as _ from 'lodash-es';
 import {
-	Asset,
-	NetworkElement,
 	ProductAlertsService,
 	SecurityAdvisoryResponse,
 	SecurityAdvisory,
@@ -30,7 +28,7 @@ import {
 	takeUntil,
 } from 'rxjs/operators';
 import { of, forkJoin, Subject } from 'rxjs';
-import { AssetIds } from '../impacted-assets/impacted-assets.component';
+import { AssetIds, Impacted } from '../impacted-assets/impacted-assets.component';
 import { Alert } from '@interfaces';
 import { RacetrackInfoService } from '@services';
 
@@ -57,10 +55,7 @@ export class SecurityDetailsComponent implements OnInit, OnChanges, OnDestroy {
 	@Input('customerId') public customerId: string;
 	@Output('details') public details = new EventEmitter<Data>();
 	@Output('alert') public alertMessage = new EventEmitter<Alert>();
-	@Output('assets') public assets = new EventEmitter<{
-		impacted: (Asset | NetworkElement)[];
-		potentiallyImpacted: (Asset | NetworkElement)[];
-	}>();
+	@Output('assets') public assets = new EventEmitter<Impacted>();
 
 	private params: {
 		advisory?: ProductAlertsService.GetAdvisoriesSecurityAdvisoriesParams;
