@@ -304,7 +304,7 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 				pageNumber: String(this.pageNumber),
 				rowsPerPage: String(this.rowsPerPage),
 				solution: _.get(this, 'solution.name', 'IBN'),
-				useCase: this.technology.name,
+				useCase: _.get(this, 'technology.name', 'Campus Software Image Management'),
 			};
 
 			return this.devicePolicyService.getDevicesForPolicyCreationUsingGET1(params);
@@ -347,7 +347,7 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 				pageNumber: String(this.pageNumber),
 				rowsPerPage: String(this.rowsPerPage),
 				solution: _.get(this, 'solution.name', 'IBN'),
-				useCase: this.technology.name,
+				useCase: _.get(this, 'technology.name', 'Campus Software Image Management'),
 			};
 
 			return this.devicePolicyService.getDevicesForIgnorePolicyCreationUsingGET(params);
@@ -384,7 +384,7 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 				pageNumber: String(this.pageNumber),
 				rowsPerPage: String(this.rowsPerPage),
 				solution: _.get(this, 'solution.name', 'IBN'),
-				useCase: this.technology.name,
+				useCase: _.get(this, 'technology.name', 'Campus Software Image Management'),
 			};
 
 			return this.devicePolicyService.getDevicesForPolicyCreationUsingGET1(params);
@@ -445,7 +445,7 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 				policyId: _.get(this.policy, 'policyId'),
 				rowsPerPage: String(this.rowsPerPage),
 				solution: _.get(this, 'solution.name', 'IBN'),
-				useCase: this.technology.name,
+				useCase: _.get(this, 'technology.name', 'Campus Software Image Management'),
 			};
 
 			return this.devicePolicyService.getEligibleDevicesForGivenIgnorePolicyUsingGET(params);
