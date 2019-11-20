@@ -131,7 +131,7 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 		const deploymentStatus = _.get(currentFilter, 'deploymentStatus', []);
 		let filter = '';
 		if (deploymentStatus.length > 0) {
-			filter += `deploymentStatus:${deploymentStatus.join(',')}`;
+			filter += `deployment:${deploymentStatus.join(',')}`;
 		}
 		if (assetType.length === 1) {
 			filter += filter.length > 0 ? ';' : '';
