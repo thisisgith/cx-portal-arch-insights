@@ -79,6 +79,7 @@ export class AdminComplienceComponent implements OnInit {
 	) {
 		this.user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(this.user, ['info', 'customerId']);
+		this.customerId = '217393752';
 		this.saveDetails.body.customerId = this.customerId;
 	}
 
@@ -448,7 +449,8 @@ export class AdminComplienceComponent implements OnInit {
 	public discardChangesOnPolicyChange () {
 		this.hideAssetTags = true;
 		if (this.triggerModal === 'policy') {
-			//this.onChangesDeviceTagType();
+			this.getRightSideTags()
+			.subscribe();
 			 this.selectedDeviceTagType = 'allDevices';
 			this.hideAssetTags = true;
 		} else if (this.selectedDeviceTagType === 'allDevices') {
@@ -462,6 +464,7 @@ export class AdminComplienceComponent implements OnInit {
 		});
 		this.leftSideTags = this.clonedLeftTags;
 		this.rightSideTags = this.clonedRightTags;
+
 		_.each(this.leftSideTags, (tag, i) => {
 			const duplicateTagIndex = this.rightSideTags.findIndex(rightSideTag =>
 				tag.tagName === rightSideTag.tagName);
