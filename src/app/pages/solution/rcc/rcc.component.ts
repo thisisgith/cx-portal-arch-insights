@@ -214,9 +214,9 @@ export class RccComponent implements OnInit, OnDestroy {
 		optInDetail({ customerId: this.customerId })
 		.pipe(takeUntil(this.destroy$))
 			.subscribe(status => {
-				this.optInStatus = status.data.rccOptInStatus;
-				this.currentRunStatus = status.data.currentRunStatus;
-				this.runOnce = status.data.runOnce;
+				this.optInStatus = _.get(status, ['data', 'rccOptInStatus']);
+				this.currentRunStatus = _.get(status, ['data', 'currentRunStatus']);
+				this.runOnce = _.get(status, ['data', 'runOnce']);
 				if (this.optInStatus && this.runOnce && this.currentRunStatus === 'COMPLETED') {
 					this.buildFilters();
 					this.getRCCData(this.violationGridObj);
