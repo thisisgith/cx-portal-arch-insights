@@ -291,15 +291,15 @@
 					<span class="icon-close"></span>
 				</a>
 			</div>
-			<div class="divider divider--compressed"></div>
-			<div class="line-clamp atx-more-popover__description" [innerText]="data.description" data-auto-id="atxMoreClickModal-Description"></div>
 			<div
-				class="text-muted text-small atx-more-popover__provider-name"
+				class="text-muted text-small"
 				[innerText]="getProviderName(data)"
 				*ngIf="getProviderName(data)"
 				data-auto-id="atxMoreClickModal-Provider"
 			></div>
-			<div class="atx-more-popover__button-container base-padding-top">
+			<div class="divider divider--compressed"></div>
+			<div class="line-clamp atx-more-popover__description" [innerText]="data.description" data-auto-id="atxMoreClickModal-Description"></div>
+			<div class="atx-more-popover__button-container">
 				<ng-container *ngTemplateOutlet="data?.sessions?.length > 0 ?
 					enabledViewSessionsButton : disabledViewSessionsButton; context: {
 						type: 'moreView'
@@ -527,7 +527,7 @@
 			<div class="line-clamp atx-more-popover__description text-left" [innerText]="data.description"
 				data-auto-id="atxMoreClickModal-Description"></div>
 			<ng-container *ngIf="data.status === 'scheduled' && scheduledAtxMap[data.atxId]">
-				<div class="cx-lifecycle-card--scheduled half-padding-bottom text-left">
+				<div class="cx-lifecycle-card--scheduled qtr-padding-bottom text-left">
 					<span class="icon-calendar" attr.data-auto-id="{{ autoid }}-Calendar"></span>
 					<span class="qtr-padding-left">
 						<span class="text-bold"
@@ -540,7 +540,7 @@
 				</div>
 			</ng-container>
 		</div>
-		<div class="atx-scheduler-one-line half-padding-top">
+		<div class="atx-scheduler-one-line">
 			<div>
 				<h6 class="text-left"
 					[innerText]="'_ChooseSession_' | i18n">
