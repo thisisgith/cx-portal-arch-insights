@@ -400,11 +400,10 @@ class AssetTaggingService extends __BaseService {
 		let __params = this.newParams();
 		let __headers = new HttpHeaders();
 		let __body: any = null;
-		if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
 		
 		let req = new HttpRequest<any>(
 			'DELETE',
-			this.rootUrl + `${AssetTaggingService.deleteMappingPath}`,
+			this.rootUrl + `${AssetTaggingService.deleteMappingPath}` + params.customerId,
 			__body,
 			{
 				headers: __headers,
