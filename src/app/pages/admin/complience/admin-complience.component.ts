@@ -10,7 +10,7 @@ import { User } from '@interfaces';
 import { ActivatedRoute } from '@angular/router';
 
 import { Subject, of, forkJoin } from 'rxjs';
-import { catchError, takeUntil, map, switchMap } from 'rxjs/operators';
+import { catchError, takeUntil, map } from 'rxjs/operators';
 import { RouteAuthService } from '@services';
 
 import * as _ from 'lodash-es';
