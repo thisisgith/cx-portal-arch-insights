@@ -64,10 +64,8 @@ export class CrashedSystemsGridComponent implements OnChanges {
 
 	constructor (
 		private riskMitigationService: RiskMitigationService,
-		private assetPanelLinkService: AssetPanelLinkService,
 		private logger: LogService,
 		private route: ActivatedRoute,
-		private racetrackInfoService: RacetrackInfoService,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);

@@ -88,7 +88,6 @@ export class RiskMitigationComponent {
 			});
 
 		this.buildFilters();
-		this.loadData();
 	}
 
 	/**
