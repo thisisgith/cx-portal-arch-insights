@@ -395,13 +395,9 @@ class InventoryService extends __BaseService {
    *
    * - `hasSecurityAdvisories`: Activates filter on assets having security advisories. If multiple of these attributes are provided,  the last value would be considered. Values "true" or "1" are considered as boolean value  "True" and any other value is considered false. This filter is activated is attribute is present.
    *
-   * - `hasFieldNotices`: Activates filter on assets having field notices. If multiple of these attributes are provided,  the last value would be considered. Values "true" or "1" are considered as boolean value  "True" and any other value is considered false. This filter is activated is attribute is present.
-   *
    * - `hasBugs`: Activates filter on assets having bugs. If multiple of these attributes are provided,  the last value would be considered. Values "true" or "1" are considered as boolean value  "True" and any other value is considered false. This filter is activated is attribute is present.
    *
    * - `cxLevel`: A customer support level
-   *
-   * - `coverage`: The coverage
    */
   headSystemAssetsResponse(params: InventoryService.HeadSystemAssetsParams): __Observable<__StrictHttpResponse<null>> {
     let __params = this.newParams();
@@ -415,10 +411,8 @@ class InventoryService extends __BaseService {
     if (params.search != null) __params = __params.set('search', params.search.toString());
     if (params.saId != null) __params = __params.set('saId', params.saId.toString());
     if (params.hasSecurityAdvisories != null) __params = __params.set('hasSecurityAdvisories', params.hasSecurityAdvisories.toString());
-    if (params.hasFieldNotices != null) __params = __params.set('hasFieldNotices', params.hasFieldNotices.toString());
     if (params.hasBugs != null) __params = __params.set('hasBugs', params.hasBugs.toString());
     if (params.cxLevel != null) __params = __params.set('cxLevel', params.cxLevel.toString());
-    (params.coverage || []).forEach(val => {if (val != null) __params = __params.append('coverage', val.toString())});
     let req = new HttpRequest<any>(
       'HEAD',
       this.rootUrl + `/customerportal/inventory/v1/assets/system`,
@@ -455,13 +449,9 @@ class InventoryService extends __BaseService {
    *
    * - `hasSecurityAdvisories`: Activates filter on assets having security advisories. If multiple of these attributes are provided,  the last value would be considered. Values "true" or "1" are considered as boolean value  "True" and any other value is considered false. This filter is activated is attribute is present.
    *
-   * - `hasFieldNotices`: Activates filter on assets having field notices. If multiple of these attributes are provided,  the last value would be considered. Values "true" or "1" are considered as boolean value  "True" and any other value is considered false. This filter is activated is attribute is present.
-   *
    * - `hasBugs`: Activates filter on assets having bugs. If multiple of these attributes are provided,  the last value would be considered. Values "true" or "1" are considered as boolean value  "True" and any other value is considered false. This filter is activated is attribute is present.
    *
    * - `cxLevel`: A customer support level
-   *
-   * - `coverage`: The coverage
    */
   headSystemAssets(params: InventoryService.HeadSystemAssetsParams): __Observable<null> {
     return this.headSystemAssetsResponse(params).pipe(
@@ -521,8 +511,6 @@ class InventoryService extends __BaseService {
    *
    * - `hasSecurityAdvisories`: Activates filter on assets having security advisories. If multiple of these attributes are provided,  the last value would be considered. Values "true" or "1" are considered as boolean value  "True" and any other value is considered false. This filter is activated is attribute is present.
    *
-   * - `hasFieldNotices`:
-   *
    * - `hasBugs`: Activates filter on assets having bugs. If multiple of these attributes are provided,  the last value would be considered. Values "true" or "1" are considered as boolean value  "True" and any other value is considered false. This filter is activated is attribute is present.
    *
    * - `deviceName`: Hostname of the device
@@ -530,8 +518,6 @@ class InventoryService extends __BaseService {
    * - `cxLevel`: A customer support level
    *
    * - `criticalAdvisoryCount`: Filter by number of critical advisories
-   *
-   * - `coverage`: The coverage
    *
    * @return successful operation
    */
@@ -564,12 +550,10 @@ class InventoryService extends __BaseService {
     if (params.isManagedNe != null) __params = __params.set('isManagedNe', params.isManagedNe.toString());
     if (params.ipAddress != null) __params = __params.set('ipAddress', params.ipAddress.toString());
     if (params.hasSecurityAdvisories != null) __params = __params.set('hasSecurityAdvisories', params.hasSecurityAdvisories.toString());
-    if (params.hasFieldNotices != null) __params = __params.set('hasFieldNotices', params.hasFieldNotices.toString());
     if (params.hasBugs != null) __params = __params.set('hasBugs', params.hasBugs.toString());
     if (params.deviceName != null) __params = __params.set('deviceName', params.deviceName.toString());
     if (params.cxLevel != null) __params = __params.set('cxLevel', params.cxLevel.toString());
     if (params.criticalAdvisoryCount != null) __params = __params.set('criticalAdvisoryCount', params.criticalAdvisoryCount.toString());
-    (params.coverage || []).forEach(val => {if (val != null) __params = __params.append('coverage', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
       this.rootUrl + `/customerportal/inventory/v1/assets/system`,
@@ -640,8 +624,6 @@ class InventoryService extends __BaseService {
    *
    * - `hasSecurityAdvisories`: Activates filter on assets having security advisories. If multiple of these attributes are provided,  the last value would be considered. Values "true" or "1" are considered as boolean value  "True" and any other value is considered false. This filter is activated is attribute is present.
    *
-   * - `hasFieldNotices`:
-   *
    * - `hasBugs`: Activates filter on assets having bugs. If multiple of these attributes are provided,  the last value would be considered. Values "true" or "1" are considered as boolean value  "True" and any other value is considered false. This filter is activated is attribute is present.
    *
    * - `deviceName`: Hostname of the device
@@ -649,8 +631,6 @@ class InventoryService extends __BaseService {
    * - `cxLevel`: A customer support level
    *
    * - `criticalAdvisoryCount`: Filter by number of critical advisories
-   *
-   * - `coverage`: The coverage
    *
    * @return successful operation
    */
@@ -773,6 +753,8 @@ class InventoryService extends __BaseService {
    * - `deviceName`: Hostname of the device
    *
    * - `cxLevel`: A customer support level
+   *
+   * - `coverage`: The coverage
    */
   headHardwareAssetsResponse(params: InventoryService.HeadHardwareAssetsParams): __Observable<__StrictHttpResponse<null>> {
     let __params = this.newParams();
@@ -796,6 +778,7 @@ class InventoryService extends __BaseService {
     if (params.equipmentType != null) __params = __params.set('equipmentType', params.equipmentType.toString());
     if (params.deviceName != null) __params = __params.set('deviceName', params.deviceName.toString());
     if (params.cxLevel != null) __params = __params.set('cxLevel', params.cxLevel.toString());
+    (params.coverage || []).forEach(val => {if (val != null) __params = __params.append('coverage', val.toString())});
     let req = new HttpRequest<any>(
       'HEAD',
       this.rootUrl + `/customerportal/inventory/v1/assets/hardware`,
@@ -851,6 +834,8 @@ class InventoryService extends __BaseService {
    * - `deviceName`: Hostname of the device
    *
    * - `cxLevel`: A customer support level
+   *
+   * - `coverage`: The coverage
    */
   headHardwareAssets(params: InventoryService.HeadHardwareAssetsParams): __Observable<null> {
     return this.headHardwareAssetsResponse(params).pipe(
@@ -904,6 +889,8 @@ class InventoryService extends __BaseService {
    *
    * - `cxLevel`: A customer support level
    *
+   * - `coverage`: The coverage
+   *
    * @return successful operation
    */
   getHardwareAssetsResponse(params: InventoryService.GetHardwareAssetsParams): __Observable<__StrictHttpResponse<HardwareAssets>> {
@@ -932,6 +919,7 @@ class InventoryService extends __BaseService {
     if (params.equipmentType != null) __params = __params.set('equipmentType', params.equipmentType.toString());
     if (params.deviceName != null) __params = __params.set('deviceName', params.deviceName.toString());
     if (params.cxLevel != null) __params = __params.set('cxLevel', params.cxLevel.toString());
+    (params.coverage || []).forEach(val => {if (val != null) __params = __params.append('coverage', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
       this.rootUrl + `/customerportal/inventory/v1/assets/hardware`,
@@ -995,6 +983,8 @@ class InventoryService extends __BaseService {
    * - `deviceName`: Hostname of the device
    *
    * - `cxLevel`: A customer support level
+   *
+   * - `coverage`: The coverage
    *
    * @return successful operation
    */
@@ -1892,11 +1882,6 @@ module InventoryService {
     hasSecurityAdvisories?: string;
 
     /**
-     * Activates filter on assets having field notices. If multiple of these attributes are provided,  the last value would be considered. Values "true" or "1" are considered as boolean value  "True" and any other value is considered false. This filter is activated is attribute is present.
-     */
-    hasFieldNotices?: string;
-
-    /**
      * Activates filter on assets having bugs. If multiple of these attributes are provided,  the last value would be considered. Values "true" or "1" are considered as boolean value  "True" and any other value is considered false. This filter is activated is attribute is present.
      */
     hasBugs?: string;
@@ -1905,11 +1890,6 @@ module InventoryService {
      * A customer support level
      */
     cxLevel?: string;
-
-    /**
-     * The coverage
-     */
-    coverage?: Array<'covered' | 'uncovered' | 'unknown' | 'expired'>;
   }
 
   /**
@@ -2036,7 +2016,6 @@ module InventoryService {
      * Activates filter on assets having security advisories. If multiple of these attributes are provided,  the last value would be considered. Values "true" or "1" are considered as boolean value  "True" and any other value is considered false. This filter is activated is attribute is present.
      */
     hasSecurityAdvisories?: string;
-    hasFieldNotices?: string;
 
     /**
      * Activates filter on assets having bugs. If multiple of these attributes are provided,  the last value would be considered. Values "true" or "1" are considered as boolean value  "True" and any other value is considered false. This filter is activated is attribute is present.
@@ -2057,11 +2036,6 @@ module InventoryService {
      * Filter by number of critical advisories
      */
     criticalAdvisoryCount?: string;
-
-    /**
-     * The coverage
-     */
-    coverage?: Array<'covered' | 'uncovered' | 'unknown' | 'expired'>;
   }
 
   /**
@@ -2190,6 +2164,11 @@ module InventoryService {
      * A customer support level
      */
     cxLevel?: string;
+
+    /**
+     * The coverage
+     */
+    coverage?: Array<'covered' | 'uncovered' | 'unknown' | 'expired'>;
   }
 
   /**
@@ -2301,6 +2280,11 @@ module InventoryService {
      * A customer support level
      */
     cxLevel?: string;
+
+    /**
+     * The coverage
+     */
+    coverage?: Array<'covered' | 'uncovered' | 'unknown' | 'expired'>;
   }
 
   /**
@@ -2539,12 +2523,12 @@ module InventoryService {
     /**
      * The unique, generated ID of the network element.
      */
-    neInstanceId?: Array<number>;
+    neInstanceId?: Array<string>;
 
     /**
      * Unique identifier of a Network Resource ID
      */
-    managedNeId?: Array<number>;
+    managedNeId?: Array<string>;
 
     /**
      * Software Type identifies the specific type of software that is installed on this host/system. Unit is bytes.

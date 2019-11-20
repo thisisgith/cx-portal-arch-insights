@@ -5,7 +5,7 @@ import { AssetDetailsModule } from './asset-details.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import {
 	user,
-	MockAssetsData,
+	MockSystemAssetsData,
 	RacetrackScenarios,
 	Mock,
 } from '@mock';
@@ -81,7 +81,7 @@ describe('AssetDetailsComponent', () => {
 	});
 
 	it('should emit on panel close', fakeAsync(() => {
-		component.asset = MockAssetsData[0];
+		component.asset = MockSystemAssetsData[0];
 
 		component.close
 		.subscribe(closeVar => {
@@ -93,7 +93,7 @@ describe('AssetDetailsComponent', () => {
 		});
 
 		expect(component.asset)
-			.toEqual(MockAssetsData[0]);
+			.toEqual(MockSystemAssetsData[0]);
 
 		component.onPanelClose();
 		tick();
@@ -123,11 +123,11 @@ describe('AssetDetailsComponent', () => {
 
 	it('should change assets', done => {
 		sendRacetrack();
-		component.asset = MockAssetsData[0];
+		component.asset = MockSystemAssetsData[0];
 
 		component.ngOnChanges({
 			asset: {
-				currentValue: MockAssetsData[0],
+				currentValue: MockSystemAssetsData[0],
 				firstChange: true,
 				isFirstChange: () => true,
 				previousValue: null,
@@ -135,23 +135,23 @@ describe('AssetDetailsComponent', () => {
 		});
 
 		expect(component.asset.deviceName)
-			.toEqual(MockAssetsData[0].deviceName);
+			.toEqual(MockSystemAssetsData[0].deviceName);
 
-		component.asset = MockAssetsData[1];
+		component.asset = MockSystemAssetsData[1];
 
 		component.ngOnChanges({
 			asset: {
-				currentValue: MockAssetsData[1],
+				currentValue: MockSystemAssetsData[1],
 				firstChange: false,
 				isFirstChange: () => false,
-				previousValue: MockAssetsData[0],
+				previousValue: MockSystemAssetsData[0],
 			},
 		});
 
 		fixture.whenStable()
 		.then(() => {
 			expect(component.asset.deviceName)
-				.toEqual(MockAssetsData[1].deviceName);
+				.toEqual(MockSystemAssetsData[1].deviceName);
 			done();
 		});
 	});
