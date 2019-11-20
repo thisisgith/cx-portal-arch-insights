@@ -65,7 +65,7 @@
 			font-size: 11px;
 			letter-spacing: -0.02px;
 			line-height: 12px;
-			color: #6c757d;
+			color: $gray-text-color;
 			margin-bottom: 4px;
 		}
 
@@ -94,7 +94,7 @@
 				border-bottom: 1px solid #aeb8c1;
 				border-radius: 0;
 				background: $light-gray-background;
-				color: #5d656c;
+				color: $secondary-and-button-text-color;
 				padding-left: 14px;
 
 				&:focus {
@@ -111,7 +111,7 @@
 			font-size: 13px;
 			// font-weight: 500; no 500 weight, 600 too thick, 400 too thin
 			line-height: 13px;
-			color: #394454;
+			color: $default-text-color;
 			margin-bottom: 5px;
 		}
 	}

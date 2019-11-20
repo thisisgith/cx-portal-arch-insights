@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AssetDetailsSummaryComponent } from './summary.component';
-import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
+import { I18nPipeModule, FromNowPipeModule } from '@cisco-ngx/cui-pipes';
 import { CuiTabsModule, CuiLoaderModule, CuiAlertModule } from '@cisco-ngx/cui-components';
-import { InventoryModule, AssetTaggingModules } from '@sdp-api';
+import { AssetTaggingModules, NetworkDataGatewayModule } from '@sdp-api';
 import { environment } from '@environment';
 import { AssetMapModule } from '../map/asset-map.module';
 
@@ -22,13 +22,14 @@ const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 	],
 	imports: [
 		AssetMapModule,
+		AssetTaggingModules.forRoot({ rootUrl }),
 		CommonModule,
 		CuiAlertModule,
 		CuiLoaderModule,
 		CuiTabsModule,
+		FromNowPipeModule,
 		I18nPipeModule,
-		AssetTaggingModules.forRoot({ rootUrl }),
-		InventoryModule.forRoot({ rootUrl }),
+		NetworkDataGatewayModule.forRoot({ rootUrl }),
 	],
 })
 export class AssetDetailsSummaryModule { }

@@ -1,18 +1,14 @@
-@import '../../../variables.scss';
-@import '../../../mixins.scss';
+@import '~src/variables.scss';
+@import '~src/mixins.scss';
 
-$cx-dropdown-max-width: 280px;
-$accent-light-gray-1: #8e8e8e;
-$text-light-gray-1: #6c757d;
-$text-light-gray-2: #5d656c;
-$text-dark-blue: #394454;
-$icon-light-gray-1: #bdc5cf;
 $icon-light-gray-2: #a5afbf;
 $icon-dark-gray-1: #6a80a5;
 $link-icon-hover: #98abc3;
 $separator-light-gray: #d9d9da;
 $divider-light-gray: #dfdede;
 $link-hover-background: #ecf4fc;
+
+$cx-dropdown-max-width: 280px;
 $text-xsmall: 10px;
 $text-larger: 19px;
 
@@ -108,7 +104,7 @@ $text-larger: 19px;
 
 .cx-header-label,
 .cx-user-label {
-	color: $text-light-gray-1;
+	color: $gray-text-color;
 	font-size: $small-font-size;
 }
 
@@ -145,10 +141,10 @@ $text-larger: 19px;
 
 .cx-header-icon {
 	margin-right: $base-spacing * 0.25;
-	color: $icon-light-gray-1;
+	color: $icon-light-gray;
 
 	&--small {
-		color: $icon-light-gray-1;
+		color: $icon-light-gray;
 		margin-right: $base-spacing * 0.25;
 		line-height: 18px;
 		font-size: 18px;
@@ -275,7 +271,7 @@ $text-larger: 19px;
 
 .cx-user-icon + span {
 	margin-left: 2px;
-	color: $text-light-gray-2;
+	color: $secondary-and-button-text-color;
 }
 
 .cx-team-member-icon {
@@ -300,7 +296,7 @@ $text-larger: 19px;
 }
 
 .text-muted {
-	color: $accent-light-gray-1;
+	color: $light-gray-text-color;
 	letter-spacing: -0.12px;
 	line-height: 14px;
 }
@@ -320,14 +316,14 @@ $text-larger: 19px;
 	line-height: 14px;
 
 	span {
-		color: $text-light-gray-2;
+		color: $secondary-and-button-text-color;
 		font-size: 14px;
 		line-height: 14px;
 	}
 }
 
 .cx-team-member--title {
-	color: $text-light-gray-2;
+	color: $secondary-and-button-text-color;
 	font-size: 11px;
 	line-height: 14px;
 }
@@ -350,7 +346,7 @@ $text-larger: 19px;
 
 		& + span {
 			margin-left: 8px;
-			color: $text-dark-blue;
+			color: $default-text-color;
 			line-height: 14px;
 		}
 	}
@@ -367,16 +363,16 @@ $text-larger: 19px;
 }
 
 .thumb--bordered {
-	border: 1px solid $icon-light-gray-1;
+	border: 1px solid $icon-light-gray;
 }
 
 .cx-user--full-name {
 	margin-bottom: 2px;
-	color: $text-light-gray-2;
+	color: $secondary-and-button-text-color;
 	font-size: 14px;
 
 	& + .text-xsmall {
-		color: $text-light-gray-2;
+		color: $secondary-and-button-text-color;
 		font-size: 10px;
 		line-height: 14px;
 	}
