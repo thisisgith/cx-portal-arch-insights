@@ -79,7 +79,6 @@ export class AdminComplienceComponent implements OnInit {
 	) {
 		this.user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(this.user, ['info', 'customerId']);
-		this.customerId = '217393752';
 		this.saveDetails.body.customerId = this.customerId;
 	}
 
