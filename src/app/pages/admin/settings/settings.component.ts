@@ -151,7 +151,7 @@ export class SettingsComponent implements OnInit {
 	 * @returns - string containing unit represented
 	 */
 	public getUnits (resourceVal: string) {
-		const results = resourceVal.match(/(\D+)/g);
+		const results = resourceVal && resourceVal.match(/(\D+)/g);
 
 		return results ? results[0] : undefined;
 	}
