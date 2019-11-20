@@ -439,7 +439,7 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 
 		this.leftListCall = function () {
 			const params: ControlPointDevicePolicyAPIService
-			.GetDevicesForIgnorePolicyCreationUsingGETParams = {
+			.GetEligibleDevicesForGivenIgnorePolicyUsingGETParams = {
 				customerId: this.customerId,
 				pageNumber: String(this.pageNumber),
 				policyId: _.get(this.policy, 'policyId'),
@@ -460,7 +460,8 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 				rowsPerPage: '9999',
 			};
 
-			return this.devicePolicyService.getDevicesForGivenIgnorePolicyUsingGET(params);
+			return this.devicePolicyService
+				.getEligibleDevicesForGivenIgnorePolicyUsingGET(params);
 		};
 
 		this.submitCall = function () {

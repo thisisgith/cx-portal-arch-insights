@@ -6,5 +6,5 @@ export { ControlPointIERegistrationAPIService } from './services/control-point-i
 export { ControlPointIEHealthStatusAPIService } from './services/control-point-iehealth-status-api.service';
 export { ControlPointLicenseAPIService } from './services/control-point-license-api.service';
 export { ControlPointAdminSettingsAPIService } from './services/control-point-admin-settings-api.service';
-export { ControlPointAdminComplienceService } from './services/control-point-admin-complience-api.service';
 export { ControlPointUserManagementAPIService } from './services/control-point-user-management-api.service';
+export { ControlPointAdminComplienceService } from './services/control-point-admin-complience-api.service';

@@ -10,7 +10,6 @@ import { ControlPointIERegistrationAPIService } from './services/control-point-i
 import { ControlPointIEHealthStatusAPIService } from './services/control-point-iehealth-status-api.service';
 import { ControlPointLicenseAPIService } from './services/control-point-license-api.service';
 import { ControlPointAdminSettingsAPIService } from './services/control-point-admin-settings-api.service';
-import { ControlPointAdminComplienceService } from './services/control-point-admin-complience-api.service';
 import { ControlPointUserManagementAPIService } from './services/control-point-user-management-api.service';
 
 /**
@@ -27,8 +26,6 @@ import { ControlPointUserManagementAPIService } from './services/control-point-u
     ControlPointIERegistrationAPIService,
     ControlPointIEHealthStatusAPIService,
     ControlPointLicenseAPIService,
-    ControlPointAdminSettingsAPIService,
-    ControlPointAdminComplienceService,
     ControlPointAdminSettingsAPIService,
     ControlPointUserManagementAPIService
   ],
