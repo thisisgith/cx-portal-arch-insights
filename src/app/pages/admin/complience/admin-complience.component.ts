@@ -245,6 +245,7 @@ export class AdminComplienceComponent implements OnInit {
 				takeUntil(this.destroyed$),
 				map((results: any) => {
 					this.rightSideTagsResponse = results;
+					this.filterDuplicates();
 				}),
 				catchError(err => {
 					this.logger.error('Tags : getRightSideTags() ' +
@@ -316,8 +317,8 @@ export class AdminComplienceComponent implements OnInit {
 
 		if (policy !== 'select') {
 			this.leftSideTags = this.clonedLeftTags;
-			this.getRightSideTags();
-			this.filterDuplicates();
+			this.getRightSideTags()
+				.subscribe();
 		}
 	}
 
