@@ -11,7 +11,7 @@ import * as _ from 'lodash-es';
 })
 export class FingerprintDetailsComponent implements OnChanges {
 
-	@Input() public selectedSystem = '';
+	@Input() public selectedSystem: any;
 	@Output('close') public close = new EventEmitter<boolean>();
 	public fullscreen = false;
 	public showAssetDetailsView = false;
@@ -33,7 +33,7 @@ export class FingerprintDetailsComponent implements OnChanges {
 	 */
 	public onPanelClose () {
 		this.detailsPanelStackService.reset();
-		this.selectedSystem = '';
+		this.selectedSystem = null;
 		this.close.emit(true);
 	}
 
@@ -42,7 +42,7 @@ export class FingerprintDetailsComponent implements OnChanges {
 	 * @param hidden false if details slideout is open
 	 */
 	public handleHidden () {
-		this.selectedSystem = '';
+		this.selectedSystem = null;
 		this.onPanelClose();
 		this.onAllPanelsClose();
 	}
