@@ -24,7 +24,7 @@ describe('RolesService', () => {
 		});
 
 		api = TestBed.get(ControlPointUserManagementAPIService);
-		getRolesSpy = spyOn(api, 'getListRolesForGivenUserUsingGET')
+		spyOn(api, 'getListRolesForGivenUserUsingGET')
 			.and
 			.returnValue(of({
 				saRoles: [],
