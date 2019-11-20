@@ -83,7 +83,7 @@
 						</div>
 						<div class="help-block text-danger flex" 
 							role="alert" *ngIf="invalidSearchInput || searchForm.invalid">
-							<span [innerText]="'_RccInvalidSearchInput_' | i18n" ></span>
+							<span [innerText]="'_RccInvalidSearchInput_' | i18n"></span>
 						</div>
 					</form>
 				</div>
@@ -94,12 +94,12 @@
 		<div class="row cx-no-dnac-container">
 			<div class="col-7">
 				<div class="flex-center">
-					<span class="cx-no-dnac-label">View Violations</span>
-					<span class="cx-no-dnac-status">Update settings to access inventory Regulatory Compliance data.</span>
+					<span class="cx-no-dnac-label" [innerText]="'_RccViewViolations_' | i18n"></span>
+					<span class="cx-no-dnac-status" [innerText]="'_RccupdateSettings_' | i18n"></span>
 				</div>
 			</div>
 			<div class="flex-right base-margin-right">
-				<button class="btn btn--wide btn--primary flex-right text-uppercase text-bold" tabindex="0" [routerLink]="['/admin/complience']">COMPLIANCE SETTINGS</button>
+				<button class="btn btn--wide btn--primary flex-right text-uppercase text-bold" tabindex="0" [routerLink]="['/admin/complience']" [innerText]="'_RccComplianceSettings_' | i18n"></button>
 			</div>
 		</div>
 	</div>
@@ -107,8 +107,8 @@
 		<div class="row cx-no-dnac-container">
 			<div class="col-7">
 				<div class="flex-center">
-					<span class="cx-no-dnac-label">Collecting Violations</span>
-					<span class="cx-no-dnac-status">Regulatory Compliance data will be available upon completion of next collection scheduled for [date/time]</span>
+					<span class="cx-no-dnac-label" [innerText]="'_RccCollectingViolations_' | i18n"></span>
+					<span class="cx-no-dnac-status" [innerText]="'_RccNextScheduleTime_' | i18n"></span>
 				</div>
 			</div>
 		</div>
