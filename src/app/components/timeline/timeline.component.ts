@@ -20,6 +20,9 @@ import { TimelineDatapoint, TimelineInternalDatapoint, TodayRelation } from '@in
 })
 export class TimelineComponent implements DoCheck, OnInit {
 	@Input() public data: (TimelineDatapoint)[] = [];
+	@Input() public todayText: string;
+	@Input() public todayClass = 'text-info';
+	@Input() public todayIcon: string;
 	@Input() public todayButtonText: string;
 	@Output() public todayButtonClick: EventEmitter<void> = new EventEmitter<void>();
 	public timestampsEven: TimelineInternalDatapoint[];

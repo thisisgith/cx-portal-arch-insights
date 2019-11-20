@@ -14,7 +14,6 @@ import { LogService } from '@cisco-ngx/cui-services';
 
 import * as _ from 'lodash-es';
 import {
-	Asset,
 	CriticalBug,
 	CriticalBugsResponse,
 	DiagnosticsService,
@@ -38,7 +37,7 @@ import {
 	switchMap,
 	takeUntil,
 } from 'rxjs/operators';
-import { AdvisoryType } from '@interfaces';
+import { AdvisoryType, ModSystemAsset, ModHardwareAsset } from '@interfaces';
 import { RacetrackInfoService } from '@services';
 
 /** Interface representing an advisory tab */
@@ -69,7 +68,8 @@ interface Tab {
 export class AssetDetailsAdvisoriesComponent
 	implements OnInit, OnChanges, OnDestroy {
 
-	@Input('asset') public asset: Asset;
+	@Input('systemAsset') public systemAsset: ModSystemAsset;
+	@Input('hardwareAsset') public hardwareAsset: ModHardwareAsset;
 	@Input('element') public element: NetworkElement;
 	@Input('customerId') public customerId: string;
 	@Input('reload') public reload: EventEmitter<boolean> = new EventEmitter();
@@ -346,8 +346,8 @@ export class AssetDetailsAdvisoriesComponent
 				moreLoading: false,
 				params: {
 					customerId: this.customerId,
-					hwInstanceId: _.get(this.asset, 'hwInstanceId') ?
-						[this.asset.hwInstanceId] : null,
+					hwInstanceId: _.get(this.hardwareAsset, 'hwInstanceId') ?
+						[this.hardwareAsset.hwInstanceId] : null,
 					page: 1,
 					rows: 10,
 					sort: ['lastUpdated:DESC'],
@@ -399,8 +399,8 @@ export class AssetDetailsAdvisoriesComponent
 					customerId: this.customerId,
 					page: 1,
 					rows: 10,
-					serialNumber: _.get(this.asset, 'serialNumber') ?
-						[this.asset.serialNumber] : null,
+					serialNumber: _.get(this.hardwareAsset, 'serialNumber') ?
+						[this.hardwareAsset.serialNumber] : null,
 					sort: ['severity:ASC'],
 				},
 				selected: false,
@@ -437,15 +437,6 @@ export class AssetDetailsAdvisoriesComponent
 							render: item =>
 								item.state ? _.capitalize(item.state) : I18n.get('_NA_'),
 							sortable: false,
-						},
-						{
-							autoId: 'BugLastUpdated',
-							name: I18n.get('_LastUpdated_'),
-							sortable: false,
-							sortDirection: 'desc',
-							sorting: true,
-							template: this.lastUpdatedTemplate,
-							width: '125px',
 						},
 					],
 					hover: true,
@@ -509,7 +500,7 @@ export class AssetDetailsAdvisoriesComponent
 	 * Refreshes and loads the date
 	 */
 	private refresh () {
-		if ((this.asset || this.element) && this.customerId) {
+		if ((this.hardwareAsset || this.element) && this.customerId) {
 			this.clear();
 			this.initializeTabs();
 			this.initializeData();
@@ -603,8 +594,8 @@ export class AssetDetailsAdvisoriesComponent
 	 * @param changes the changes detected
 	 */
 	public ngOnChanges (changes: SimpleChanges) {
-		const currentAsset = _.get(changes, ['asset', 'currentValue']);
-		if (currentAsset && !changes.asset.firstChange) {
+		const currentAsset = _.get(changes, ['hardwareAsset', 'currentValue']);
+		if (currentAsset && !changes.hardwareAsset.firstChange) {
 			this.refresh();
 		}
 	}

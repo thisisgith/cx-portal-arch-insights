@@ -16,12 +16,12 @@ export const MockFieldNotices: FieldNotice[] = [
 	/* tslint:disable */
 	{
 			"customerId": "2431199",
-			"managedNeId": "NA,FOC1922S6JU,WS-C2960X-24PS-L,NA",
-			"neInstanceId": "NA,FOC1922S6JU,WS-C2960X-24PS-L,NA",
-			"hwInstanceId": "FOC1922S6JU,WS-C2960X-24PS-L,NA,FOC1922S6JU,WS-C2960X-24PS-L,NA,NA",
+			"managedNeId": "NA,FOC2045X0WJ,WS-C2960X-24PS-L,NA",
+			"neInstanceId": "NA,FOC2045X0WJ,WS-C2960X-24PS-L,NA",
+			"hwInstanceId": "FOC2045X0WJ,WS-C3850-48U-L,NA,FOC2045X0WJ,WS-C3850-48U-L,NA,NA",
 			"productId": "WS-C2960X-24PS-L",
 			"swType": "IOS",
-			"serialNumber": "FOC1922S6JU",
+			"serialNumber": "FOC2045X0WJ",
 			"productFamily": "Cisco Catalyst 2960-X Series Switches",
 			"equipmentType": "CHASSIS",
 			"fieldNoticeId": 64134,

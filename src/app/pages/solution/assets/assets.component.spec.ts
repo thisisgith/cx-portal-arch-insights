@@ -210,8 +210,6 @@ describe('AssetsComponent', () => {
 				.toBe(0);
 			expect(_.find(selectedView.filters, { key: 'advisories' }).seriesData.length)
 				.toBe(0);
-			expect(_.find(selectedView.filters, { key: 'coverage' }).seriesData.length)
-				.toBe(0);
 
 			fixture.destroy();
 			tick();
@@ -223,14 +221,14 @@ describe('AssetsComponent', () => {
 			tick(1000);
 			fixture.detectChanges();
 
-			const coverageFilter = _.find(component.selectedView.filters, { key: 'coverage' });
+			const roleFilter = _.find(component.selectedView.filters, { key: 'role' });
 
-			component.onSubfilterSelect('covered', coverageFilter);
+			component.onSubfilterSelect('ACCESS', roleFilter);
 
 			fixture.detectChanges();
 
 			expect(_.filter(component.selectedView.filters, 'selected'))
-				.toContain(coverageFilter);
+				.toContain(roleFilter);
 
 			fixture.destroy();
 			tick();
@@ -318,20 +316,21 @@ describe('AssetsComponent', () => {
 			tick();
 		}));
 
-		it('should select a coverage subfilter', fakeAsync(() => {
+		it('should select a role subfilter', fakeAsync(() => {
 			buildSpies();
 			fixture.detectChanges();
 			tick(1000);
 			fixture.detectChanges();
-			const coverageFilter = _.find(component.selectedView.filters, { key: 'coverage' });
-			component.onSubfilterSelect('covered', coverageFilter);
+
+			const roleFilter = _.find(component.selectedView.filters, { key: 'role' });
+			component.onSubfilterSelect('ACCESS', roleFilter);
 
 			fixture.detectChanges();
 
 			expect(_.filter(component.selectedView.filters, 'selected'))
-				.toContain(coverageFilter);
+				.toContain(roleFilter);
 
-			const subfilter = _.find(coverageFilter.seriesData, { filter: 'covered' });
+			const subfilter = _.find(roleFilter.seriesData, { filter: 'ACCESS' });
 
 			expect(subfilter.selected)
 				.toBeTruthy();
@@ -344,24 +343,25 @@ describe('AssetsComponent', () => {
 			buildSpies();
 			fixture.detectChanges();
 			tick(1000);
-			const coverageFilter = _.find(component.selectedView.filters, { key: 'coverage' });
-			component.onSubfilterSelect('covered', coverageFilter);
+
+			const roleFilter = _.find(component.selectedView.filters, { key: 'role' });
+			component.onSubfilterSelect('ACCESS', roleFilter);
 
 			fixture.detectChanges();
 
 			expect(_.filter(component.selectedView.filters, 'selected'))
-				.toContain(coverageFilter);
+				.toContain(roleFilter);
 
-			let subfilter = _.find(coverageFilter.seriesData, { filter: 'covered' });
+			let subfilter = _.find(roleFilter.seriesData, { filter: 'ACCESS' });
 
 			expect(subfilter.selected)
 				.toBeTruthy();
 
-			component.onSubfilterSelect('covered', coverageFilter);
+			component.onSubfilterSelect('ACCESS', roleFilter);
 
 			fixture.detectChanges();
 
-			subfilter = _.find(coverageFilter.seriesData, { filter: 'covered' });
+			subfilter = _.find(roleFilter.seriesData, { filter: 'ACCESS' });
 
 			expect(subfilter.selected)
 				.toBeFalsy();
@@ -423,12 +423,13 @@ describe('AssetsComponent', () => {
 			buildSpies();
 			fixture.detectChanges();
 			tick(1000);
-			const coverageFilter = _.find(component.selectedView.filters, { key: 'coverage' });
-			coverageFilter.selected = true;
-			coverageFilter.seriesData = [
+			const roleFilter = _.find(component.selectedView.filters, { key: 'role' });
+
+			roleFilter.selected = true;
+			roleFilter.seriesData = [
 				{
-					filter: 'covered',
-					label: 'Covered',
+					filter: 'ACCESS',
+					label: 'Access',
 					selected: false,
 					value: 1,
 				},
@@ -724,8 +725,6 @@ describe('AssetsComponent', () => {
 			fixture.detectChanges();
 			tick(1000);
 
-			expect(_.get(component.selectedView.params, 'coverage'))
-				.toEqual(['covered']);
 			expect(_.get(component.selectedView.params, 'role'))
 				.toEqual(['ACCESS']);
 			expect(_.get(component.selectedView.params, 'hasBugs'))
@@ -735,15 +734,16 @@ describe('AssetsComponent', () => {
 			tick();
 		}));
 
-		it('should set the coverage filter if param selected', fakeAsync(() => {
+		it('should set the bug filter if param selected', fakeAsync(() => {
 			buildSpies();
 			fixture.detectChanges();
-			_.set(component.selectedView.params, 'coverage', ['covered']);
+			_.set(component.selectedView.params, 'advisories', ['hasBugs']);
 			tick(1000);
-			const coverageFilter = _.find(component.selectedView.filters, { key: 'coverage' });
+
+			const advisoryFilter = _.find(component.selectedView.filters, { key: 'advisories' });
 
 			expect(_.filter(component.selectedView.filters, 'selected'))
-				.toContain(coverageFilter);
+				.toContain(advisoryFilter);
 
 			fixture.destroy();
 			tick();

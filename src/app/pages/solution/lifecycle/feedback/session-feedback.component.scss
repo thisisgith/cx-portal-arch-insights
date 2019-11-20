@@ -1,3 +1,5 @@
+@import '~src/variables.scss';
+
 :host {
 	position: relative;
 	display: block;
@@ -42,8 +44,8 @@
 		textarea {
 			border: none;
 			border-bottom: 1px solid #aeb8c1;
-			background: #f4f6f8;
-			color: #5d656c;
+			background: $light-gray-background;
+			color: $secondary-and-button-text-color;
 			padding-left: 14px;
 
 			&:focus {
@@ -73,12 +75,12 @@
 
 a.btn {
 	background: #fff;
-	color: #bdc5cf;
-	border: 1px solid #bdc5cf;
+	color: $icon-light-gray;
+	border: 1px solid $icon-light-gray;
 
 	&:hover {
 		border: 1px solid rgba(#32c5ff, 0.25);
-		color: #00bceb;
+		color: $accent-color1;
 		background: #fff;
 	}
 }
@@ -86,7 +88,7 @@ a.btn {
 a.btn--selected {
 	border: 1px solid rgba(#32c5ff, 0.25);
 	pointer-events: none;
-	color: #00bceb;
+	color: $accent-color1;
 }
 
 %popup-tail {

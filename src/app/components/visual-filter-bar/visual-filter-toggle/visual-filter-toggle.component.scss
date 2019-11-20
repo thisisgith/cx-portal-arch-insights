@@ -1,3 +1,5 @@
+@import '~src/variables.scss';
+
 :host ::ng-deep svg {
 	width: 100%;
 }
@@ -7,6 +9,6 @@
 }
 
 span.icon-dropdown {
-	color: #bdc5cf;
+	color: $icon-light-gray;
 	margin-top: 2px;
 }

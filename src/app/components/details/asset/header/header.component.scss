@@ -1,13 +1,5 @@
 @import '~cisco-ui/src/scss/utilities/_variables.scss';
-
-$default-text-color: #5d656c;
-$secondary-text-color: #394454;
-$button-outline-color: #95d1d6;
-$button-outline-hover-color: #227bb1;
-$bookmark-white-outline-color: #c1d8e2;
-$bookmark-blue-outline-color: #5ddfff;
-$midnight-blue: #0d274d;
-$light-gray: #8e8e8e;
+@import '~src/variables.scss';
 
 :host {
 	.open-case-toggle-btn a {
@@ -17,7 +9,7 @@ $light-gray: #8e8e8e;
 }
 
 .asset__info {
-	color: $default-text-color;
+	color: $secondary-and-button-text-color;
 	font-size: 13px;
 
 	&__label::after {
