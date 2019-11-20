@@ -48,6 +48,8 @@ export class AdminComplienceComponent implements OnInit {
 	public rightSideTagsResponse: RightTagResponse;
 	public selectedPolicy = 'select';
 	public leftSideTags = [];
+	public clonedLeftTags = [];
+	public clonedRightTags = [];
 	public rightSideTags = [];
 	public tagsFromAssetTagging: boolean;
 	public saveDetails: AssetTaggingService.PostParams = {
@@ -221,6 +223,7 @@ export class AdminComplienceComponent implements OnInit {
 				takeUntil(this.destroyed$),
 				map((results: any) => {
 					this.leftSideTagsResponse = results;
+					this.clonedLeftTags = _.cloneDeep(this.leftSideTagsResponse.tags);
 				}),
 				catchError(err => {
 					this.logger.error('Left side tags : getLeftSideTags() ' +
@@ -270,19 +273,13 @@ export class AdminComplienceComponent implements OnInit {
 	 */
 
 	public filterDuplicates () {
-		if (this.leftSideTagsResponse.tags) {
-			this.leftSideTags = _.cloneDeep(this.leftSideTagsResponse.tags);
-		}
 		if (this.rightSideTagsResponse.policyGroups) {
 			const policyGroups = _.find(this.rightSideTagsResponse.policyGroups,
 				 { policyName: this.saveDetails.body.policy });
-			this.rightSideTags = _.cloneDeep(policyGroups.tags);
-			this.toBeScanned = policyGroups.toBeScanned;
+			this.rightSideTags = policyGroups.tags;
+			this.clonedRightTags = _.cloneDeep(this.rightSideTags);
+			this.toBeScanned = JSON.parse(policyGroups.toBeScanned);
 			this.selectedDeviceTagType = this.rightSideTags.length ? 'selectedTags' : 'allDevices';
-			_.each(this.rightSideTags, tag => {
-				tag.devices = policyGroups.devices;
-				tag.deviceCount = policyGroups.deviceCount;
-			});
 			_.each(this.leftSideTags, (tag, i) => {
 				const duplicateTagIndex = this.rightSideTags.findIndex(rightSideTag =>
 					tag.tagName === rightSideTag.tagName);
@@ -295,6 +292,7 @@ export class AdminComplienceComponent implements OnInit {
 
 			this.leftSideTags = _.differenceWith(this.leftSideTags, this.filteredArray, _.isEqual);
 			this.filteredArray = [];
+
 		}
 	}
 	/**
@@ -306,14 +304,20 @@ export class AdminComplienceComponent implements OnInit {
 	public onPolicySelected (policy) {
 		_.invoke(this.alert, 'hide');
 		this.triggerModal = 'policy';
-		if (policy !== 'select' && this.isPolicyChanged
-		&& this.saveDetails.body.policy !== 'select' && this.enableSaveButton) {
-			this.cuiModalService.show(this.switchBetweenPolicy, 'normal');
-		}
-		this.isPolicyChanged = true;
-		this.filterDuplicates();
-		if (this.rightSideTags.length) {
-			this.selectedDeviceTagType = 'selectedTags';
+		// if (policy !== 'select' && this.isPolicyChanged
+		// && this.saveDetails.body.policy !== 'select' && this.enableSaveButton) {
+		// 	this.cuiModalService.show(this.switchBetweenPolicy, 'normal');
+		// }
+		// this.isPolicyChanged = true;
+		// this.filterDuplicates();
+		// if (this.rightSideTags.length) {
+		// 	this.selectedDeviceTagType = 'selectedTags';
+		// }
+
+		if (policy !== 'select') {
+			this.leftSideTags = this.clonedLeftTags;
+			this.getRightSideTags();
+			this.filterDuplicates();
 		}
 	}
 
@@ -429,7 +433,7 @@ export class AdminComplienceComponent implements OnInit {
 		} else if (!this.enableSaveButton && this.selectedDeviceTagType === 'allDevices') {
 			this.hideAssetTags = true;
 		} else if (this.selectedDeviceTagType === 'selectedTags' && this.enableSaveButton) {
-			this.filterDuplicates();
+			//this.filterDuplicates();
 			this.hideAssetTags = false;
 		} else {
 			this.hideAssetTags = false;
@@ -445,13 +449,14 @@ export class AdminComplienceComponent implements OnInit {
 			this.onChangesDeviceTagType();
 			this.selectedDeviceTagType = 'allDevices';
 			this.hideAssetTags = true;
-			this.filterDuplicates();
 		} else if (this.selectedDeviceTagType === 'allDevices') {
 			this.assetTaggingService.Tags = [];
 		}
-		this.filterDuplicates();
+		this.leftSideTags = this.clonedLeftTags;
+		this.rightSideTags = this.clonedRightTags;
 		this.enableSaveButton = false;
 		this.cuiModalService.hide();
+		this.filterDuplicates();
 	}
 
 	/**

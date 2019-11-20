@@ -42,7 +42,7 @@
 	"_AdminComplianceOn_": "On",
 	"_AdminComplianceScanType_": "Scan Type",
 	"_AdminComplianceSwitchBetweenPolicyContent_":"Current policy group tags are not saved.\nUnsaved changes will be lost",
-	"_AdminComplianceSwitchBetweenPolicyTitle_":"Selected Tags not saved",
+	"_AdminComplianceSwitchBetweenPolicyTitle_":"Settings not saved",
 	"_AdminComplianceSystemTags_": "System Tags",
 	"_AdminComplianceToolTipContent_": "Policy level opt in/out will enable/disable policy rule execution on selected tags/devices",
 	"_AdminComplianceYes_": "Yes",
