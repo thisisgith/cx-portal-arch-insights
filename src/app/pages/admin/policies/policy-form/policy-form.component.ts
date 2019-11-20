@@ -303,7 +303,7 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 				customerId: this.customerId,
 				pageNumber: String(this.pageNumber),
 				rowsPerPage: String(this.rowsPerPage),
-				solution: this.solution.name,
+				solution: _.get(this, 'solution.name', 'IBN'),
 				useCase: this.technology.name,
 			};
 
@@ -346,7 +346,7 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 				customerId: this.customerId,
 				pageNumber: String(this.pageNumber),
 				rowsPerPage: String(this.rowsPerPage),
-				solution: this.solution.name,
+				solution: _.get(this, 'solution.name', 'IBN'),
 				useCase: this.technology.name,
 			};
 
@@ -383,7 +383,7 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 				customerId: this.customerId,
 				pageNumber: String(this.pageNumber),
 				rowsPerPage: String(this.rowsPerPage),
-				solution: this.solution.name,
+				solution: _.get(this, 'solution.name', 'IBN'),
 				useCase: this.technology.name,
 			};
 
@@ -444,7 +444,7 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 				pageNumber: String(this.pageNumber),
 				policyId: _.get(this.policy, 'policyId'),
 				rowsPerPage: String(this.rowsPerPage),
-				solution: this.solution.name,
+				solution: _.get(this, 'solution.name', 'IBN'),
 				useCase: this.technology.name,
 			};
 
