@@ -10,6 +10,7 @@ import {
 	 TooltipModule,
 	 PieChartModule,
 	 AssetDetailsHeaderModule,
+	 ColumnChartModule,
 	 } from '@components';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import {
@@ -23,9 +24,6 @@ import {
 	CuiSpinnerModule,
 	CuiLoaderModule,
 } from '@cisco-ngx/cui-components';
-import {
-	RiskMitigationColumnChartModule,
-} from './risk-mitigation-column-chart/risk-mitigation-column-chart.module';
 import { RMModule } from '@sdp-api';
 import { environment } from '@environment';
 import {
@@ -36,6 +34,8 @@ import {
 } from '../fingerprint-details/fingerprint-body/fingerprint-body.module';
 import { FingerprintDetailsModule } from '../fingerprint-details/fingerprint-details.module';
 import { InsightTabsModule } from 'src/app/components/insight-tabs/insight-tabs.module';
+import { CrashedSystemsGridModule } from './crashed-systems-grid/crashed-systems-grid.module';
+import { CrashRiskGridModule } from './crash-risk-grid/crash-risk-grid.module';
 
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
@@ -58,12 +58,14 @@ const childRoutes: Routes = [
 @NgModule({
 	declarations: [RiskMitigationComponent],
 	imports: [
+		AssetDetailsModule,
+		AssetDetailsHeaderModule,
+		CuiSpinnerModule,
 		CommonModule,
 		FormsModule,
 		DetailsPanelModule,
 		RouterModule.forChild(childRoutes),
 		CuiTabsModule,
-		RiskMitigationColumnChartModule,
 		I18nPipeModule,
 		RMModule.forRoot({ rootUrl }),
 		CuiTableModule,
@@ -73,9 +75,7 @@ const childRoutes: Routes = [
 		CuiDropdownModule,
 		CuiLoaderModule,
 		CuiProgressbarModule,
-		AssetDetailsModule,
-		AssetDetailsHeaderModule,
-		CuiSpinnerModule,
+		ColumnChartModule,
 		FingerprintDetailsModule,
 		FingerprintHeaderModule,
 		FingerprintBodyModule,
@@ -83,6 +83,8 @@ const childRoutes: Routes = [
 		InsightTabsModule,
 		TooltipModule,
 		PieChartModule,
+		CrashRiskGridModule,
+		CrashedSystemsGridModule,
 	],
 })
 export class RiskMitigationModule { }

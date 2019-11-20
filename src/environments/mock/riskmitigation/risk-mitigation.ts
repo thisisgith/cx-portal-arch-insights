@@ -1,10 +1,11 @@
 /* tslint:disable */
-import {CrashCount, HighCrashRiskDeviceCount, RiskAssets} from '@sdp-api';
+import {CrashCount, HighCrashRiskDeviceCount, RiskAssets, BarGraphValues} from '@sdp-api';
 
 /** Base of URL for SDP API */
 
 const api = '/api/customerportal/fingerprint/v1';
 const riskApi = '/api/customerportal/rmc/v1';
+const assestApi ='/api/customerportal/inventory/v1'
 
 /** Default Customer ID */
 const customerId = '2431199';
@@ -115,6 +116,13 @@ const deviceDetails: any = {
     }]
 }
 
+const highCrashRiskGridDataEmpty:any= {
+    "customerId": "231215372",
+    "count": 0,
+    "crashPredicted": true,
+    "devices": []
+}
+
 const crashHistoryTable :any = {
 	customerId: 7293498,
 	deviceId: "NA,FOC2045X0WJ,WS-C3850-48U-L,NA",
@@ -132,6 +140,11 @@ const crashHistoryTable :any = {
 	timeStamp: "August 01, 2019 10:23:54"
 		}
 	]}
+const totalCountValue:BarGraphValues[]= [
+	{"role":"ACCESS","deviceCount":17},
+	{"role":"BORDER ROUTER","deviceCount":9},
+	{"role":"CORE","deviceCount":2}
+]
 /** The scenarios */
 export const RiskScenarios = [
 	{
@@ -148,7 +161,7 @@ export const RiskScenarios = [
 				},
 			],
 		},
-		url: `${riskApi}/crash-count/${customerId}`,
+		url: `${riskApi}/crash-count/${customerId}?useCase=Campus Network Assurance&solution=IBN`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -216,7 +229,7 @@ export const RiskScenarios = [
 				},
 			],
 		},
-		url: `${api}/crash-risk-devices/2431199?customerId=2431199&page=0&size=10&globalRiskRank=HIGH&useCase=Campus Network Assurance&solution=IBN`,
+		url: `${api}/crash-risk-devices/2431199?customerId=${customerId}&page=0&size=10&globalRiskRank=HIGH&useCase=Campus Network Assurance&solution=IBN`,
 		usecases: ['Use Case 5'],
 	},
 	{
@@ -233,7 +246,7 @@ export const RiskScenarios = [
 				},
 			],
 		},
-		url: `${riskApi}/crash-detail/2431199?timePeriod=1&useCase=Campus Network Assurance&solution=IBN`,
+		url: `${riskApi}/crash-detail/${customerId}?timePeriod=1&useCase=Campus Network Assurance&solution=IBN`,
 		usecases: ['Use Case 6'],
 	},
 	{
@@ -250,7 +263,42 @@ export const RiskScenarios = [
 				},
 			],
 		},
-		url: `${riskApi}/device-frequent-crash-detail/2431199?deviceId=NA,FOC1544Y1AV,WS-C2960S-24PS-L,NA&useCase=Campus Network Assurance&solution=IBN`,
+		url: `${riskApi}/device-frequent-crash-detail/${customerId}?deviceId=NA,FOC1544Y1AV,WS-C2960S-24PS-L,NA&useCase=Campus Network Assurance&solution=IBN`,
 		usecases: ['Use Case 7'],
+	},
+
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'Total Assest Count',
+					response: {
+						body: totalCountValue,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${assestApi}/role/device/count?customerId=${customerId}&useCase=Campus Network Assurance&solution=IBN`,
+		usecases: ['Use Case 7'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'HCR table Data',
+					response: {
+						body: highCrashRiskGridDataEmpty,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/crash-risk-devices/2431199?customerId=${customerId}&page=0&size=10&globalRiskRank=LOW&useCase=Campus Network Assurance&solution=IBN`,
+		usecases: ['Use Case 5'],
 	},
 ];
