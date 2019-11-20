@@ -17,7 +17,7 @@
 				</label>
 			</div>
 			<div class="form-group form-group--inline base-margin-bottom" data-auto-id="updateOptInOutStatus"
-			*ngIf="!optlnStatus" (click)="optlnStatus = !optlnStatus; updateOptInOutStatus();">
+			*ngIf="!optlnStatus" (click)="toggleOptlnStatus()">
 					<label class="switch">
 						<input type="checkbox" >
 						<span class="switch__input"></span>
@@ -141,7 +141,7 @@
 <cui-modal></cui-modal>
 
 <ng-template #confirmationModalTemplate>
-	<a class="modal__close"  data-auto-id="cuiModalService.hide" (click)="cuiModalService.hide()"><span class="icon-close"></span></a>
+	<a class="modal__close"  data-auto-id="cuiModalService.hide" (click)="optlnStatus = !optlnStatus;cuiModalService.hide()"><span class="icon-close"></span></a>
 	<div class="modal__header">
 		<h6 class="modal__title" [innerText]="'_AdminComplianceConfirmationModalTitle_' | i18n"></h6>
 	</div>

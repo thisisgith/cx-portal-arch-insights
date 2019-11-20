@@ -53,7 +53,7 @@ const getAssociatedPolicyTags = {
 		},
 		{
 			devices: ['D4', 'D5', 'D6'],
-			policyName: 'HIPPA',
+			policyName: 'HIPAA',
 			tags: [
 				{
 					tagName: 'T3',
