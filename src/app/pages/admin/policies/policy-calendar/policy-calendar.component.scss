@@ -1,8 +1,9 @@
 @import '~cisco-ui/src/scss/utilities/_variables.scss';
+@import '~src/variables.scss';
 
 :host {
 	.calendar-title {
-		color: #6c757d;
+		color: $gray-text-color;
 		font-size: 15px;
 		font-weight: 300;
 		line-height: 12px;

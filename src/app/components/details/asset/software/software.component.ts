@@ -21,7 +21,6 @@ import {
 } from 'rxjs/operators';
 import { LogService } from '@cisco-ngx/cui-services';
 import {
-	Asset,
 	SoftwareEOLBulletin,
 	ProductAlertsService,
 	SoftwareEOLBulletinResponse,
@@ -32,7 +31,7 @@ import {
 	// LicenseDataResponseModel,
 	ControlPointLicenseAPIService,
 } from '@sdp-api';
-import { TimelineDatapoint } from '@interfaces';
+import { TimelineDatapoint, ModSystemAsset, ModHardwareAsset } from '@interfaces';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { UserResolve } from '@utilities';
 
@@ -82,7 +81,8 @@ const eolTimelineProperties: EolTimelineProperty[] = [
 })
 export class AssetDetailsSoftwareComponent implements OnInit, OnChanges, OnDestroy {
 
-	@Input('asset') public asset: Asset;
+	@Input('systemAsset') public systemAsset: ModSystemAsset;
+	@Input('hardwareAsset') public hardwareAsset: ModHardwareAsset;
 	@Input('customerId') public customerId: string;
 	@ViewChild('licensesTable', { static: true }) private licensesTableTemplate: TemplateRef<{ }>;
 	@ViewChild('statusTemplate', { static: true }) private licenseStatusTemplate: TemplateRef<{ }>;
@@ -229,13 +229,13 @@ export class AssetDetailsSoftwareComponent implements OnInit, OnChanges, OnDestr
 			}),
 			switchMap(() => {
 				const obsBatch = [];
-				const managedNeId = _.get(this.asset, 'managedNeId');
-				const hostName = _.get(this.asset, 'deviceName');
+				const managedNeId = _.get(this.systemAsset, 'managedNeId');
+				const hostName = _.get(this.systemAsset, 'deviceName');
 
-				if (_.get(this.asset, 'osVersion')) {
+				if (_.get(this.systemAsset, 'osVersion')) {
 					this.operatingSystem = {
-						type: _.get(this.asset, 'osType'),
-						version: _.get(this.asset, 'osVersion'),
+						type: _.get(this.systemAsset, 'osType'),
+						version: _.get(this.systemAsset, 'osVersion'),
 					};
 				}
 
@@ -336,8 +336,8 @@ export class AssetDetailsSoftwareComponent implements OnInit, OnChanges, OnDestr
 	 * @param changes the changes detected
 	 */
 	public ngOnChanges (changes: SimpleChanges) {
-		const currentAsset = _.get(changes, ['asset', 'currentValue']);
-		if (currentAsset && !changes.asset.firstChange) {
+		const currentAsset = _.get(changes, ['systemAsset', 'currentValue']);
+		if (currentAsset && !changes.systemAsset.firstChange) {
 			this.refresh$.next();
 		}
 	}

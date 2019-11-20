@@ -1,4 +1,4 @@
-@import '../../../../variables.scss';
+@import '~src/variables.scss';
 
 :host {
 	z-index: 1;
@@ -30,5 +30,5 @@
 }
 
 .cx-no-dnac-description {
-	color: #767676;
+	color: $text-dark-gray-2;
 }

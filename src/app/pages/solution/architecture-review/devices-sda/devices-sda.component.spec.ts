@@ -9,7 +9,7 @@ import { ActivatedRoute } from '@angular/router';
 import { MicroMockModule } from '@cui-x-views/mock';
 import { RouterTestingModule } from '@angular/router/testing';
 import { of, throwError } from 'rxjs';
-import { user, ArchitectureReviewScenarios } from '@mock';
+import { user } from '@mock';
 import { HttpErrorResponse } from '@angular/common/http';
 
 describe('DevicesSdaComponent', () => {
@@ -52,6 +52,7 @@ describe('DevicesSdaComponent', () => {
 		component = fixture.componentInstance;
 		component.deviceDetails = {
 			ipAddress: '192.168.46.100',
+			sdaNoOfMtuNonOptimalInterfaces: '2',
 		};
 		component.sdaSoftwareGridData = [];
 		fixture.detectChanges();
@@ -63,7 +64,7 @@ describe('DevicesSdaComponent', () => {
 	});
 
 	it('should fetch all data', () => {
-
+		component.showL3Switch = false;
 		const fakeResponse = {
 			 dnacDeviceDetails: {
 				dnacVersion: '1.2',
@@ -80,7 +81,7 @@ describe('DevicesSdaComponent', () => {
 							'Cisco Catalyst 9300 Series Switches'],
 				  },
 				],
-				sdaL3AccessEnabled: 'Yes',
+				sdaL3AccessEnabled: 'No',
 				sdaNoOfMtuNonOptimalInterfaces: 7,
 				sdaRedundantLinks: 'Yes',
 				sdaSoftwareSupported: [
@@ -116,18 +117,69 @@ describe('DevicesSdaComponent', () => {
 				serialNumber: 'KWC21420A6L',
 			},
 		};
+		const nonOptimalLinksResponse = {
+			dnacDeviceDetails: {
+				mtuNonOptimalLinks: [
+					{
+						destinationDevice: '78654',
+						destinationInterface: 'interface2',
+						linkId: 'link1',
+						linkStatus: 'UP',
+						mtuValue: 1300,
+						sourceDevice: '6767999',
+						sourceInterface: 'interface1',
+					},
+				],
+				totalCount: 2,
+			},
+		};
+
 		spyOn(architectureReviewService, 'getDevicesSDA')
 			.and
 			.returnValue(of(fakeResponse));
 		spyOn(architectureReviewService, 'getOptimalLinks')
 			.and
-			.returnValue(of(ArchitectureReviewScenarios[7].scenarios.GET[0].response.body));
+			.returnValue(of(nonOptimalLinksResponse));
 		component.ngOnChanges();
-		fakeResponse.dnacDeviceDetails.sdaL3AccessEnabled = '';
-		fakeResponse.dnacDeviceDetails.sdaRedundantLinks  = '';
-		fakeResponse.dnacDeviceDetails.sdaNoOfMtuNonOptimalInterfaces = 0;
+		fakeResponse.dnacDeviceDetails.sdaL3AccessEnabled = 'No';
+		fakeResponse.dnacDeviceDetails.sdaRedundantLinks  = 'Yes';
+		fakeResponse.dnacDeviceDetails.sdaNoOfMtuNonOptimalInterfaces = 2;
+		const dnacDeviceDetails = nonOptimalLinksResponse.dnacDeviceDetails;
 		fixture.detectChanges();
 		expect(component.nonOptimalLinks)
+		.toBeDefined();
+		component.nonOptimalLinks = dnacDeviceDetails.mtuNonOptimalLinks;
+		expect(component.showL3Switch)
+		.toBeTruthy();
+		expect(component.showSwitchRedundency)
+		.toBeTruthy();
+		expect(component.showSwitchInterface)
+		.toBeTruthy();
+		expect(component.noApiData)
+		.toBeFalsy();
+	});
+
+	it('should fetch  data for sdaL3AccessEnabled', () => {
+		component.showL3Switch = false;
+		const fakeResponse = {
+			 dnacDeviceDetails: {
+				sdaL3AccessEnabled: 'Yes',
+				sdaNoOfMtuNonOptimalInterfaces: 0,
+				sdaRedundantLinks: 'No',
+			},
+		};
+
+		spyOn(architectureReviewService, 'getDevicesSDA')
+			.and
+			.returnValue(of(fakeResponse));
+		component.ngOnChanges();
+		fixture.detectChanges();
+		expect(component.showL3Switch)
+		.toBeFalsy();
+	});
+	it('should redirect to osv page', () => {
+		component.callOsvPage();
+		expect(component.osvCriteriaToEmit)
 		.toBeDefined();
 	});
 
@@ -150,38 +202,36 @@ describe('DevicesSdaComponent', () => {
 
 	it('should call deviceDetails on change', () => {
 		spyOn(component, 'getCollectionId');
+		spyOn(component, 'getSolutionInfo');
+		spyOn(component, 'getSdaDeviceData');
+		spyOn(component, 'getOptimalLinks');
 		component.deviceDetails = {
 			ipAddress: '192.168.46.100',
+			sdaNoOfMtuNonOptimalInterfaces : '2',
 		};
 		component.ngOnChanges();
 		fixture.detectChanges();
 		expect(component.getCollectionId)
 			.toBeDefined();
+		expect(component.getSolutionInfo)
+			.toBeDefined();
+		expect(component.getSdaDeviceData)
+			.toHaveBeenCalled();
+		expect(component.getOptimalLinks)
+			.toHaveBeenCalled();
 	});
 
 	it('should call when deviceDetails on change is undefined', () => {
 		spyOn(component, 'getCollectionId');
+		spyOn(component, 'getSolutionInfo');
 		component.deviceDetails = undefined;
 		component.ngOnChanges();
 		fixture.detectChanges();
 		expect(component.getCollectionId)
 			.not
 			.toHaveBeenCalled();
-	});
-
-	it('should be called on error response on getting collectionId', () => {
-		spyOn(component, 'getCollectionId');
-		const error = {
-			status: 404,
-			statusText: 'Resource not found',
-		};
-		spyOn(architectureReviewService, 'getCollectionId')
-		.and
-		.returnValue(throwError(new HttpErrorResponse(error)));
-		fixture.detectChanges();
-		expect(component.getCollectionId)
+		expect(component.getSolutionInfo)
 			.not
 			.toHaveBeenCalled();
 	});
-
 });

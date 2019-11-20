@@ -1,4 +1,4 @@
-@import '../../../../../mixins.scss';
+@import '~src/mixins.scss';
 
 .form-group__text .cbp-rule-violation-search {
 	@include filter-search;

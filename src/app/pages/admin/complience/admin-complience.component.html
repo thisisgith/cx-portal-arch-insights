@@ -121,18 +121,19 @@
 									<div class="col-12 flex-end" *ngIf="saveDetails.body.policy != 'select'">
 											<button class="btn btn--small btn--primary half-margin-top" data-auto-id="savePolicyDetails"
 											(click)="savePolicyDetails()"
+											[ngClass]="{'disabled': selectedDeviceTagType=='selectedTags' && !tagsFromAssetTagging}"
 											[innerText]="'_Save_' | i18n"></button>
 										</div>
 							</div>
 							</div>
 						</div>
 					</div>
-				<div [hidden]= "hideAssetTags || saveDetails.body.policy == 'select'">
+				<div [hidden]= "saveDetails.body.policy == 'select' || selectedDeviceTagType == 'allDevices'">
 					<div class="text-large"  
 					[innerText]="'_AdminPolicyTaggingHeading_' | i18n"></div>
 			<asset-tagging 
 				[tagListLeft]="leftSideTags" [tagListRight]="rightSideTags"
-				(updatedTags)="getUpdatedTags($event)"></asset-tagging>
+				(updatedTags)="getUpdatedTags($event)" (tagsFromAssetTagging) = "checkRightSideTags($event)"></asset-tagging>
 			</div></div>
 	</div>
 </admin-wrapper>

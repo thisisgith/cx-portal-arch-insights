@@ -1,53 +1,44 @@
 <div class="asset details-header__content">
-	<div data-auto-id="Asset360IPAddress" class="asset__info flex-center-vertical">
-		<div class=" asset__info__label qtr-margin-right" [innerText]="'_IPAddress_' | i18n"></div>
-		<div innerText="{{ asset?.ipAddress || ('_NA_' | i18n) }}"></div>
-	</div>
-	<div data-auto-id="Asset360SerialNumber" class="asset__info flex-center-vertical">
-		<div class=" asset__info__label qtr-margin-right" [innerText]="'_SN_' | i18n"></div>
-		<div innerText="{{ asset?.serialNumber || ('_NA_' | i18n) }}"></div>
-	</div>
-	<div data-auto-id="Asset360LastScan" class="asset__info flex-center-vertical">
-		<div class=" asset__info__label qtr-margin-right" [innerText]="'_LastScan_' | i18n"></div>
-		<div [innerText]="asset?.lastScan ? (asset.lastScan | fromNow) : ('_Never_' | i18n)"
-			[title]="asset?.lastScan ? (asset.lastScan | dateTime) : ('_Never_' | i18n)">
+	<div class="row">
+		<div class="col-6">
+			<div data-auto-id="Asset360SupportLevel" class="col-12 asset__info flex-center-vertical">
+				<div class="asset__info__label qtr-margin-right" [innerText]="'_SupportLevel_' | i18n"></div>
+				<div [innerText]="systemAsset?.cxLevel || ('_NA_' | i18n)"></div>
+			</div>
+			<div data-auto-id="Asset360LastScan" class="col-12 asset__info flex-center-vertical">
+				<div class=" asset__info__label qtr-margin-right" [innerText]="'_LastScan_' | i18n"></div>
+				<div *ngIf="scanStatus.inProgress" class="flex-center-horizontal">
+					<span class="icon-refresh qtr-margin-right"></span>
+					<span [innerText]="'_Running_' | i18n"></span>
+				</div>
+				<div *ngIf="scanStatus.error" class="flex-center-horizontal">
+					<span class="icon-presence-end qtr-margin-right"></span>
+					<span [innerText]="'_Error_' | i18n"></span>
+				</div>
+				<div *ngIf="!scanStatus.inProgress && !scanStatus.error" class="flex-center-horizontal">
+					<span *ngIf="scanPolicy && systemAsset?.lastScan" class="icon-clock qtr-margin-right" [title]="('_Schedule_' | i18n) + ': ' + scanPolicy.schedule"></span>
+					<span [innerText]="systemAsset?.lastScan ? (systemAsset.lastScan | fromNow) : ('_NA_' | i18n)" [title]="systemAsset?.lastScan ? (systemAsset.lastScan | dateTime) : ''"></span>
+				</div>
+			</div>
 		</div>
-	</div>
-</div>
-<div class="row qtr-margin-top">
-	<div class="col-md-6 flex-center-vertical">
-		<div *ngIf="!status?.loading?.cases && openCases?.length > 0"
-			class="dropdown dropdown--tail open-case-toggle-btn"
-			(click)="toggleActiveCases()"
-			[ngClass]="{
-				'active': casesDropdownActive
-			}"
-			data-auto-id="ToggleActiveCases">
-			<a class="text-uppercase" innerText="{{ '_ViewOpenCases_' | i18n }} ({{ openCases.length }})"></a>
+		<div class="col-6">
+			<div class="flex flex-right">
+				<div *ngIf="!status?.loading?.cases && openCases?.length > 0"
+					class="dropdown dropdown--tail open-case-toggle-btn"
+					(click)="toggleActiveCases()"
+					[ngClass]="{
+						'active': casesDropdownActive
+					}"
+					data-auto-id="ToggleActiveCases">
+					<a class="text-uppercase" innerText="{{ '_ViewOpenCases_' | i18n }} ({{ openCases.length }})"></a>
+				</div>
+			</div>
 		</div>
-	</div>
-	<div class="col-md-6 text-right">
-		<button class="btn btn--primary text-uppercase"
-			[ngClass]="{
-				'active': status.scan.inProgress
-			}"
-			*ngIf="status.scan?.eligible"
-			(click)="initiateScan()"
-			data-auto-id="Asset360ScanBtn">
-			<span *ngIf="status.scan.inProgress" class="icon-animation spin qtr-margin-right"></span>
-			<span [innerText]="(status.scan.inProgress ? '_Scanning_' : '_Scan_') | i18n"></span>
-		</button>
-		<button class="btn btn--primary text-uppercase"
-			*ngIf="asset | canOpenCase"
-			[innerText]="'_OpenCase_' | i18n"
-			data-auto-id="Asset360OpenCaseBtn"
-			(click)="openCase()">
-		</button>
 	</div>
 </div>
 <div class="row">
 	<div class="col-md-12" [hidden]="!casesDropdownActive">
-		<app-open-cases [serial]="asset?.serialNumber" [openCases]="openCases"
+		<app-open-cases [serial]="systemAsset?.serialNumber" [openCases]="openCases"
 			(close)="toggleActiveCases()"></app-open-cases>
 	</div>
 </div>

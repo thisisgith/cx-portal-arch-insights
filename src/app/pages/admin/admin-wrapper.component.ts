@@ -26,6 +26,7 @@ export class AdminWrapperComponent implements OnInit {
 	private destroyed$: Subject<void> = new Subject<void>();
 	private user: User;
 	private customerId: string;
+	public cxLevel = 0;
 	public erroredAppsNum = 0;
 
 	constructor (
@@ -38,6 +39,7 @@ export class AdminWrapperComponent implements OnInit {
 		this.routerPath = _.get(this, 'route.snapshot.routeConfig.path', 'settings');
 		this.user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(this.user, ['info', 'customerId']);
+		this.cxLevel = _.get(this.user, ['service', 'cxLevel']);
 	}
 
 	/**

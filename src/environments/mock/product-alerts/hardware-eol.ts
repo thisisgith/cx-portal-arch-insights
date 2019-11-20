@@ -12,11 +12,11 @@ export const MockHardwareEOLResponse: HardwareEOLResponse = {
 	"data": [
 			{
 					"customerId": "2431199",
-					"managedNeId": "NA,FOC1544Y175,WS-C2960S-24PS-L,NA",
-					"neInstanceId": "NA,FOC1544Y175,WS-C2960S-24PS-L,NA",
-					"hwInstanceId": "AGA14401GVT,Unspecified,NA,NA,FOC1544Y175,WS-C2960S-24PS-L,NA",
-					"productId": "GLC-SX-MM,GLC-SX-MM-RGD,GLC-SX-MMD,GLC-T,SFP-GE-S,WS-G5484",
-					"equipmentType": "MODULE",
+					"managedNeId": "NA,FOC2045X0WJ,WS-C3850-48U-L,NA",
+					"neInstanceId": "NA,FOC2045X0WJ,WS-C3850-48U-L,NA",
+					"hwInstanceId": "FOC2045X0WJ,WS-C3850-48U-L,NA,FOC2045X0WJ,WS-C3850-48U-L,NA,NA",
+					"productId": "WS-C3850-48U-L",
+					"equipmentType": "CHASSIS",
 					"hwEolInstanceId": "318969",
 					"bulletinName": "Select Cisco 1000BASE-T SFP Modules"
 			},

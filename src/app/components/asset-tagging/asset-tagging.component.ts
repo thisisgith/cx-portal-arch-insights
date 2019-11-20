@@ -17,6 +17,7 @@ export class AssetTaggingComponent implements OnChanges, OnDestroy {
 	@Input() public tagListRight: Tags[] = [];
 	@Input() public tagListLeft: Tags[] = [];
 	@Output() public updatedTags: EventEmitter<boolean> = new EventEmitter<boolean>();
+	@Output() public tagsFromAssetTagging: EventEmitter<any> = new EventEmitter<any>();
 	public leftTags = 'left';
 	public rightTags = 'right';
 	public allTagsSelectedRight = false;
@@ -150,6 +151,7 @@ export class AssetTaggingComponent implements OnChanges, OnDestroy {
 		this.tagListRight = _.cloneDeep(this.tagListRight);
 		this.handleLeftTagSelectionChanged();
 		this.updatedTags.emit(true);
+		this.tagsFromAssetTagging.emit(this.tagListRight);
 	}
 
 	/**
@@ -171,6 +173,7 @@ export class AssetTaggingComponent implements OnChanges, OnDestroy {
 		this.allTagsSelectedRight = false;
 		this.handleRightTagSelectionChanged();
 		this.updatedTags.emit(true);
+		this.tagsFromAssetTagging.emit(this.tagListRight);
 	}
 
 	/**
