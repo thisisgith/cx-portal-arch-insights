@@ -156,10 +156,9 @@ export class AdminComplienceComponent implements OnInit {
 				customerId: this.customerId,
 				isRccOpted: this.optlnStatus,
 			};
-			forkJoin(
-				this.assetTaggingService.updateOptStatus(params),
-				this.getLeftSideTags(),
-			)
+			this.getLeftSideTags()
+			.subscribe();
+			this.assetTaggingService.updateOptStatus(params)
 			.subscribe();
 		}
 	}
@@ -453,8 +452,6 @@ export class AdminComplienceComponent implements OnInit {
 			.subscribe();
 			 this.selectedDeviceTagType = 'allDevices';
 			this.hideAssetTags = true;
-		} else if (this.selectedDeviceTagType === 'allDevices') {
-			//this.assetTaggingService.Tags = [];
 		}
 		_.each(this.clonedRightTags, tag => {
 			tag.selected = false;
