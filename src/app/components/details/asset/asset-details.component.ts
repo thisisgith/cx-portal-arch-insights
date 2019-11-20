@@ -187,7 +187,7 @@ export class AssetDetailsComponent implements OnDestroy, OnInit, Panel360 {
 			useCase: this.selectedTechnologyName,
 		};
 
-		const neId = _.get(this.asset, 'neId');
+		const neId = _.castArray(_.get(this.asset, 'neId'));
 
 		/**
 		 * First we have to fetch the system based on the neId,
@@ -205,7 +205,7 @@ export class AssetDetailsComponent implements OnDestroy, OnInit, Panel360 {
 				rows: 1,
 			}),
 			this.inventoryService.getAssetSystemSummary({
-				neId,
+				neId: _.head(neId),
 				customerId: this.customerId,
 			}),
 			this.inventoryService.getHardwareAssets({
