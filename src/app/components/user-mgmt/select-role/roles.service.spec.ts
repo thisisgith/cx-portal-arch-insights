@@ -9,6 +9,7 @@ import { of, asyncScheduler } from 'rxjs';
 
 describe('RolesService', () => {
 	let api: ControlPointUserManagementAPIService;
+	// let getRolesSpy: jasmine.Spy;
 
 	configureTestSuite(() => {
 		TestBed.configureTestingModule({
