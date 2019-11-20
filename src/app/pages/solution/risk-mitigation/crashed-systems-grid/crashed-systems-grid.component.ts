@@ -9,7 +9,6 @@ import {
 	EventEmitter,
 } from '@angular/core';
 import { RiskMitigationService, RiskAssets, RiskAsset } from '@sdp-api';
-import { AssetPanelLinkService, RacetrackInfoService } from '@services';
 import { LogService } from '@cisco-ngx/cui-services';
 import { ActivatedRoute } from '@angular/router';
 import * as _ from 'lodash-es';
