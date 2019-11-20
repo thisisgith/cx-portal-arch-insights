@@ -93,6 +93,7 @@ export class AddUserComponent implements OnInit {
 				this.addUserResponse = data;
 				if (data.status === 200) {
 				  if (data.updatedUserResponseList[0].status === 200) {
+					this.cuiModalService.onSuccess.emit(true);
 					this.cuiModalService.hide();
 				  } else if (data.updatedUserResponseList[0].status === 500) {
 					_.invoke(

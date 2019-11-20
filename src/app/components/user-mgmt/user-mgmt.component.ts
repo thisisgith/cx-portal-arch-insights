@@ -136,8 +136,11 @@ export class UserMgmtComponent implements AfterViewInit, OnDestroy {
 	/**
 	 * Add User Button click handler
 	 */
-	public onAddUser () {
-		this.cuiModalService.showComponent(AddUserComponent, { }, 'small');
+	public async onAddUser () {
+		const result = await this.cuiModalService.showComponent(AddUserComponent, { }, 'small');
+		if (result) {
+			this.updateUsers$.next();
+		}
 	}
 
 	/**

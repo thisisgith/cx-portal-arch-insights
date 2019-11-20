@@ -9,7 +9,7 @@ import { of, asyncScheduler } from 'rxjs';
 
 describe('RolesService', () => {
 	let api: ControlPointUserManagementAPIService;
-	let getRolesSpy: jasmine.Spy;
+	// let getRolesSpy: jasmine.Spy;
 
 	configureTestSuite(() => {
 		TestBed.configureTestingModule({
@@ -25,7 +25,7 @@ describe('RolesService', () => {
 		});
 
 		api = TestBed.get(ControlPointUserManagementAPIService);
-		getRolesSpy = spyOn(api, 'getListRolesForGivenUserUsingGET')
+		spyOn(api, 'getListRolesForGivenUserUsingGET')
 			.and
 			.returnValue(of({
 				saRoles: [],
