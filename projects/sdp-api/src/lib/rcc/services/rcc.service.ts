@@ -6,7 +6,7 @@ import { map as __map, filter as __filter } from 'rxjs/operators';
 import { Observable as __Observable } from 'rxjs';
 import { RccConfiguration as __Configuration } from "../rcc-configuration";
 import { StrictHttpResponse as __StrictHttpResponse } from '../../core/strict-http-response';
-import { RccData, RccPolicyViolationData, RccCustomer, violationGridParams, assetGridParams } from "../models/rcc-data";
+import { RccData, RccPolicyViolationData, RccCustomer, violationGridParams, assetGridParams, RccCustomerCollector } from "../models/rcc-data";
 import { RccGridData, RccAssetGridData } from './../models/rcc-grid-data';
 import { RccAssetDetails, RccAssetFilterReq, RccAssetSelectReq, RccAssetFilterResponse, RccAssetFilterDetailsResponse } from './../models/rcc-asset-details';
 
@@ -15,6 +15,7 @@ import { RccAssetDetails, RccAssetFilterReq, RccAssetSelectReq, RccAssetFilterRe
 })
 class RccService extends __BaseService {
 
+	static readonly optInDetail = '/customerportal/compliance/v1/service/optInDetail';
 	static readonly getViolationCount = '/customerportal/compliance/v1/service/summary-filters';
 	static readonly getAssetCount = '/customerportal/compliance/v1/service/severity-ostype-detail';
 	static readonly getGridData = '/customerportal/compliance/v1/service/violation-summary';
@@ -26,6 +27,15 @@ class RccService extends __BaseService {
 
 	constructor (config: __Configuration, http: HttpClient) {
 		super(config, http);
+	}
+	
+	optInDetail(queryParamMapObj: RccCustomer): __Observable<any> {
+		return this.invokeHTTPGet<RccData>(
+			`${this.rootUrl}${RccService.optInDetail}`,
+			queryParamMapObj)
+			.pipe(
+				__map(_r => _r.body)
+			);
 	}
 
 	getViolationCount(queryParamMapObj: RccCustomer): __Observable<any> {

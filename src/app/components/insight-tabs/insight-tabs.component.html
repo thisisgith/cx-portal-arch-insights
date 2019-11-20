@@ -11,6 +11,6 @@
 	</cui-tab-link>
 	<cui-tab-link *ngIf="(cxLevel === 3)" [url]="['/solution/insights/architecture']" [label]="'_ArchitectureConfiguration_' | i18n">
 	</cui-tab-link>
-	<cui-tab-link *ngIf="hasPermission" [url]="['/solution/insights/compliance']" [label]="'_Compliance_' | i18n">
+	<cui-tab-link *ngIf="(cxLevel > 1)" [url]="['/solution/insights/compliance']" [label]="'_Compliance_' | i18n">
 	</cui-tab-link>
 </cui-tabs-nav>

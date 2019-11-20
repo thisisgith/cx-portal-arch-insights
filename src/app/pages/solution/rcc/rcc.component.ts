@@ -36,6 +36,8 @@ import { AssetLinkInfo } from '@interfaces';
 })
 export class RccComponent implements OnInit, OnDestroy {
 	public customerId: string;
+	public cxLevel: string;
+	public userRole: string;
 	constructor (
 		private logger: LogService,
 		public RccTrackService: RccService,
@@ -47,6 +49,8 @@ export class RccComponent implements OnInit, OnDestroy {
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
+		this.cxLevel = _.get(user, ['service', 'cxLevel'], 0);
+		this.userRole = _.get(user, ['info', 'individual', 'role']);
 	}
 	get selectedFilters () {
 		return _.filter(this.filters, 'selected');
@@ -132,6 +136,12 @@ export class RccComponent implements OnInit, OnDestroy {
 	public noTableData = false;
 	public assetsConditionViolationsCount = 0;
 	public withViolationsAssetsCount;
+	public optInStatus = false;
+	public showRunningBanner = false;
+	public currentRunStatus = '';
+	public runOnce = false;
+	public collectorId = '';
+	public nextScheduleTime = '';
 	public alert: any = { };
 	public lastScan = '';
 	public searchOptions = {
@@ -181,19 +191,50 @@ export class RccComponent implements OnInit, OnDestroy {
 	 * ngOnInit method execution
 	 */
 	public ngOnInit () {
+		this.loading = true;
+		this.filterLoading = true;
 		this.assetsTotalCount = 0;
 		this.policyViolationsTotalCount = 0;
 		this.searched = true;
-		this.loadData();
 		this.view = 'violation';
+		this.loadData();
 		this.policyViolationsTableOptions = this.getPolicyViolationsTableOptions();
-		this.buildFilters();
-		this.getRCCData(this.violationGridObj);
-		this.getFiltersData();
+		this.assetLinkInfo = Object.create({ });
+		this.getOptInDetail();
 		this.searchForm = new FormGroup({
 			search: this.search,
 		});
-		this.assetLinkInfo = Object.create({ });
+	}
+	/**
+	 * to check the opt-in/opt-out status for loggedin user
+	 */
+	public getOptInDetail () {
+		this.loading = true;
+		this.RccTrackService.
+		optInDetail({ customerId: this.customerId })
+		.pipe(takeUntil(this.destroy$))
+			.subscribe(status => {
+				this.optInStatus = _.get(status, ['data', 'rccOptInStatus']);
+				this.currentRunStatus = _.get(status, ['data', 'currentRunStatus']);
+				this.runOnce = _.get(status, ['data', 'runOnce']);
+				if (this.optInStatus && this.runOnce && this.currentRunStatus === 'COMPLETED') {
+					this.buildFilters();
+					this.getRCCData(this.violationGridObj);
+					this.getFiltersData();
+				} else if (this.optInStatus && this.currentRunStatus !== 'COMPLETED') {
+					this.showRunningBanner = true;
+				}
+				this.filterLoading = false;
+				this.loading = false;
+			},
+			error => {
+				this.loading = false;
+				this.filterLoading = false;
+				this.logger.error(
+					'RccComponent : getOptInDetail() ' +
+				`:: Error : (${error.status}) ${error.message}`);
+			},
+		);
 	}
 	/**
 	 * to load data on page load

@@ -1,5 +1,6 @@
 @import "~cisco-ui/src/scss/utilities/_variables.scss";
 @import '~src/mixins.scss';
+@import '../no-dnac-header/no-dnac-header.component.scss';
 
 .filter {
 	&__selected {
