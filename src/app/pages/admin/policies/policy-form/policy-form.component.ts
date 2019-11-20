@@ -785,16 +785,15 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 				this.deviceListLeft = this.jsonCopy(_.get(response, 'data'));
 
 				const rightHwIds = _.map(this.deviceListRight, item =>
-					_.get(item, 'hwId'));
+					_.get(item, 'pk'));
 
 				for (let index = this.deviceListLeft.length - 1; index >= 0; index -= 1) {
-					const leftHwIds = _.get(this.deviceListLeft[index], 'hwId');
+					const leftHwIds = _.get(this.deviceListLeft[index], 'pk');
 
 					if (rightHwIds.includes(leftHwIds)) {
-						this.logger.debug(`already have hwId ${leftHwIds}`);
+						this.logger.debug(`already have pk ${leftHwIds}`);
 						this.deviceListLeft.splice(index, 1);
 					}
-
 				}
 
 				this.handleLeftDeviceSelectionChanged();
