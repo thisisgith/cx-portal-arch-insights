@@ -403,7 +403,7 @@ class AssetTaggingService extends __BaseService {
 		
 		let req = new HttpRequest<any>(
 			'DELETE',
-			this.rootUrl + `${AssetTaggingService.deleteMappingPath}` + params.customerId,
+			this.rootUrl + `${AssetTaggingService.deleteMappingPath}` +'/' + params.customerId,
 			__body,
 			{
 				headers: __headers,
