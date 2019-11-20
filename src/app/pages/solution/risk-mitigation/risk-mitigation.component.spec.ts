@@ -14,7 +14,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { RiskMitigationService, HighCrashRiskDeviceCount } from '@sdp-api';
 import * as _ from 'lodash-es';
 
-fdescribe('RiskMitigationComponent', () => {
+describe('RiskMitigationComponent', () => {
 	let component: RiskMitigationComponent;
 	let fixture: ComponentFixture<RiskMitigationComponent>;
 	let riskMitigationService: RiskMitigationService;
