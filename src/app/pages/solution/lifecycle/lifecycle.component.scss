@@ -489,6 +489,7 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 		.acc-popover__footer {
 			display: flex;
 			align-items: center;
+			padding-top: 10px;
 
 			.icon-clock,
 			.icon-check-outline {
@@ -1133,7 +1134,7 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 .cardpanel--openright,
 .listpanel--open {
 	box-shadow: $popover-box-shadow;
-	height: 415px;
+	height: 360px;
 	width: 500px;
 	position: absolute;
 	z-index: 3;
@@ -1569,11 +1570,12 @@ tr.td-row td {
 
 	.divider--compressed {
 		margin-top: 6px;
-		margin-bottom: 20px;
+		margin-bottom: 10px;
 	}
 
 	.atx-scheduler-description {
-		min-height: 120px;
+		min-height: 55px;
+		height: auto;
 	}
 
 	.atx-scheduler-one-line {
@@ -1608,7 +1610,7 @@ tr.td-row td {
 	.atx-scheduler__footer {
 		margin-top: 20px;
 		position: absolute;
-		bottom: 20px;
+		//bottom: 20px;
 
 		a:hover {
 			text-decoration: none;
@@ -1849,3 +1851,8 @@ polygon {
 	margin-bottom: 10px;
 }
 
+::ng-deep .hover-panel--moreATXList,
+.hover-panel--moreACCList,
+.hover-panel--recommendedATX {
+	min-height: auto !important;
+}
