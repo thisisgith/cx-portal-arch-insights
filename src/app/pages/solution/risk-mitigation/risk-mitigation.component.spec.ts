@@ -14,7 +14,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { RiskMitigationService, HighCrashRiskDeviceCount } from '@sdp-api';
 import * as _ from 'lodash-es';
 
-describe('RiskMitigationComponent', () => {
+fdescribe('RiskMitigationComponent', () => {
 	let component: RiskMitigationComponent;
 	let fixture: ComponentFixture<RiskMitigationComponent>;
 	let riskMitigationService: RiskMitigationService;
@@ -278,5 +278,102 @@ describe('RiskMitigationComponent', () => {
 		expect(component.selectedCrashRiskFilter)
 			.toBe('HIGH');
 	});
+	it('should set the Time range ', () => {
+		const timeRangeParam =  {
+			filter: 'Time: Last 24h',
+			label: '24h',
+			selected: false,
+			value: 20,
+		};
+		component.getTimeRange(timeRangeParam);
+		expect(component.selectedFilters)
+		.toBeDefined();
+	});
 
+	it('update pager details on page update', () => {
+		const pageinfo = {
+			itemRange: '1-10',
+			totalItems: '108',
+		};
+		component.paginationValueDetails(pageinfo);
+		expect(component.itemRange)
+			.toBe('1-10');
+		expect(component.totalItems)
+			.toBe('108');
+	});
+
+	it('Get the Total assest count ', () => {
+		spyOn(riskMitigationService, 'getTotalAssestCount')
+			.and
+			.returnValue(of(RiskScenarios[7].scenarios.GET[0].response.body));
+		expect(component.totalAssetCount)
+			.toBeDefined();
+	});
+
+	it('clear all filter values', () => {
+		component.clearAllFilters();
+		expect(component.selectedCrashRiskFilter)
+			.toBeFalsy();
+	});
+
+	it('should return the list of Selected filter', () => {
+		const key = 'timeRange';
+		component.filters = [
+			{
+				key: 'timeRange',
+				loading: true,
+				seriesData: [
+					{
+						filter: 'Time: Last 24h',
+						label: '24h',
+						selected: false,
+						value: 0,
+					},
+					{
+						filter: 'Time: Last 7d',
+						label: '7d',
+						selected: true,
+						value: 0,
+					},
+					{
+						filter: 'Time: Last 30d',
+						label: '30d',
+						selected: false,
+						value: 2,
+					},
+					{
+						filter: 'Time: Last 90d',
+						label: '90d',
+						selected: false,
+						value: 9,
+					},
+				],
+				template: this.timeRangeFilterTemplate,
+				title: 'TIME_Period',
+			},
+			{
+				key: 'riskScore',
+				loading: true,
+				seriesData: [],
+				template: this.riskScoreFilterTemplate,
+				title: 'Risk',
+			},
+		];
+		const selectedFilter = component.getSelectedSubFilters(key);
+		expect(selectedFilter[0].selected)
+		.toBeTruthy();
+	});
+
+	it('Load data for score cards', () => {
+		const assetsCountSpy = spyOn(component, 'getTotalAssetCount');
+		const crashesSpy = spyOn(component, 'getAllCrashesData');
+		const highCrashesSpy = spyOn(component, 'getHighCrashesDeviceData');
+		component.loadData();
+		expect(assetsCountSpy)
+			.toHaveBeenCalled();
+		expect(crashesSpy)
+			.toHaveBeenCalled();
+		expect(highCrashesSpy)
+			.toHaveBeenCalled();
+	});
 });
