@@ -315,10 +315,12 @@ export class AdminComplienceComponent implements OnInit {
 		// 	this.selectedDeviceTagType = 'selectedTags';
 		// }
 
-		if (policy !== 'select') {
+		if (policy !== 'select' && !this.enableSaveButton) {
 			this.leftSideTags = this.clonedLeftTags;
 			this.getRightSideTags()
 				.subscribe();
+		} else {
+			this.cuiModalService.show(this.switchBetweenPolicy, 'normal');
 		}
 	}
 
@@ -434,7 +436,6 @@ export class AdminComplienceComponent implements OnInit {
 		} else if (!this.enableSaveButton && this.selectedDeviceTagType === 'allDevices') {
 			this.hideAssetTags = true;
 		} else if (this.selectedDeviceTagType === 'selectedTags' && this.enableSaveButton) {
-			//this.filterDuplicates();
 			this.hideAssetTags = false;
 		} else {
 			this.hideAssetTags = false;
@@ -447,17 +448,34 @@ export class AdminComplienceComponent implements OnInit {
 	public discardChangesOnPolicyChange () {
 		this.hideAssetTags = true;
 		if (this.triggerModal === 'policy') {
-			this.onChangesDeviceTagType();
-			this.selectedDeviceTagType = 'allDevices';
+			//this.onChangesDeviceTagType();
+			 this.selectedDeviceTagType = 'allDevices';
 			this.hideAssetTags = true;
 		} else if (this.selectedDeviceTagType === 'allDevices') {
-			this.assetTaggingService.Tags = [];
+			//this.assetTaggingService.Tags = [];
 		}
+		_.each(this.clonedRightTags, tag => {
+			tag.selected = false;
+		});
+		_.each(this.clonedLeftTags, tag => {
+			tag.selected = false;
+		});
 		this.leftSideTags = this.clonedLeftTags;
 		this.rightSideTags = this.clonedRightTags;
+		_.each(this.leftSideTags, (tag, i) => {
+			const duplicateTagIndex = this.rightSideTags.findIndex(rightSideTag =>
+				tag.tagName === rightSideTag.tagName);
+			if (duplicateTagIndex !== -1) {
+				this.rightSideTags[duplicateTagIndex] = _.cloneDeep(tag);
+				this.filteredArray
+					.push(this.leftSideTags[i]);
+			}
+		});
+
+		this.leftSideTags = _.differenceWith(this.leftSideTags, this.filteredArray, _.isEqual);
+		this.filteredArray = [];
 		this.enableSaveButton = false;
 		this.cuiModalService.hide();
-		this.filterDuplicates();
 	}
 
 	/**
