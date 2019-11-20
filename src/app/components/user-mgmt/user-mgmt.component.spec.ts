@@ -7,6 +7,7 @@ import {
 } from '@angular/core/testing';
 import { UserMgmtComponent } from './user-mgmt.component';
 import { UserMgmtModule } from './user-mgmt.module';
+import { of } from 'rxjs';
 import { environment } from '@environment';
 
 describe('UserMgmtComponent', () => {
@@ -39,13 +40,12 @@ describe('UserMgmtComponent', () => {
 			.toBeTruthy();
 	});
 
-	it('should open modal', () => {
-		component.onAddUser();
-	});
-
 	it('should run functions', () => {
 		component.setSort('companyName');
 		component.onUpdateClick();
+		component.onAddUser();
+		component.handleUserDropdownSelection({ label: 'test' }, { });
+		component.changeRole(of(null));
 		expect(component.sortProps.column)
 			.toBe('companyName');
 		component.setSort('companyName');

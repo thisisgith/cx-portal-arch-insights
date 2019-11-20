@@ -31,7 +31,6 @@ import { EntitlementModule, RacetrackModule } from '@sdp-api';
 import { CaseOpenModule } from './components/case/case-open/case-open.module';
 import { CloseConfirmModule } from './components/case/case-open/close-confirm/close-confirm.module';
 import { ContactSupportModule } from './components/contact-support/contact-support.module';
-import { AddUserModule } from './components/add-user/add-user.module';
 import { CollapsibleModule } from './components/collapsible/collapsible.module';
 import { FeedbackModule } from './components/feedback/feedback.module';
 import { FeedbackComponent } from './components/feedback/feedback.component';
@@ -109,7 +108,6 @@ export function loadUserInfo (service: AppService) {
 		FeedbackFailedModule,
 		FeedbackSuccessModule,
 		UnauthorizedUserModule,
-		AddUserModule,
 	],
 	providers: [
 		AppService,
