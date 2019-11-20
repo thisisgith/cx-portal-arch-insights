@@ -254,6 +254,8 @@
 	"_AssetsTaggingSavePolicyAlert_":"Tags details are successfully saved",
 	"_AssetTagging_": "Tagging",
 	"_AssetTaggingEnableRegulatoryComplianceScanAcrossTheNetwork_":"Enable regulatory compliance scan across the network",
+	"_AssetsTaggingSavePolicyAlertDisabled_":"All settings are successfully saved for {0} policy group. Enable scan to initiate compliance evaluation",
+	"_AssetsTaggingSavePolicyAlertEnabled_":"All settings are successfully saved for {0} policy group.Compliance results will be available upon completion of the next scheduled collection",
 	"_AssetTaggingNoTagsInList_": "No Tags in List",
 	"_AssetTaggingTagName_": "Tag Name (Systems)",
 	"_AssetTaggingTagNameCount_": "{0} ({1})",
