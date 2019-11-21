@@ -2,7 +2,7 @@
 import { UpdatedUserResponseList } from "./update-users-response-list";
 export interface UserAddResponseModel {
     status?: number;
-    updatedUserResponseList?: Array<UpdatedUserResponseList>;
+    data?: Array<UpdatedUserResponseList>;
     message?: string;
   }
   
