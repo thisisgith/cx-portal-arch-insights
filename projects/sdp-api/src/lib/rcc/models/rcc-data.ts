@@ -79,6 +79,5 @@ export interface RccCustomer {
 }
 
 export interface RccCustomerCollector {
-    customerId: string,
-    collectorId: string 
+    customerId: string
 }

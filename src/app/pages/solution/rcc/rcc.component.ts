@@ -36,7 +36,7 @@ import { AssetLinkInfo } from '@interfaces';
 })
 export class RccComponent implements OnInit, OnDestroy {
 	public customerId: string;
-	public cxLevel: string;
+	public cxLevel: number;
 	public userRole: string;
 	constructor (
 		private logger: LogService,
@@ -136,7 +136,9 @@ export class RccComponent implements OnInit, OnDestroy {
 	public noTableData = false;
 	public assetsConditionViolationsCount = 0;
 	public withViolationsAssetsCount;
+	public showNoAccessMsg = false;
 	public optInStatus = false;
+	public scanEnabled = false;
 	public showRunningBanner = false;
 	public currentRunStatus = '';
 	public runOnce = false;
@@ -200,7 +202,13 @@ export class RccComponent implements OnInit, OnDestroy {
 		this.loadData();
 		this.policyViolationsTableOptions = this.getPolicyViolationsTableOptions();
 		this.assetLinkInfo = Object.create({ });
-		this.getOptInDetail();
+		if (this.cxLevel > 1) {
+			this.getOptInDetail();
+		} else {
+			this.loading = false;
+			this.filterLoading = false;
+			this.showNoAccessMsg = true;
+		}
 		this.searchForm = new FormGroup({
 			search: this.search,
 		});
@@ -221,17 +229,42 @@ export class RccComponent implements OnInit, OnDestroy {
 					this.buildFilters();
 					this.getRCCData(this.violationGridObj);
 					this.getFiltersData();
+					this.loading = false;
 				} else if (this.optInStatus && this.currentRunStatus !== 'COMPLETED') {
-					this.showRunningBanner = true;
+					this.getBannerTimeStamp();
+				} else {
+					this.loading = false;
 				}
 				this.filterLoading = false;
-				this.loading = false;
 			},
 			error => {
 				this.loading = false;
 				this.filterLoading = false;
 				this.logger.error(
 					'RccComponent : getOptInDetail() ' +
+				`:: Error : (${error.status}) ${error.message}`);
+			},
+		);
+	}
+	/**
+	 * to get the timestamp for next compliance run
+	 */
+	public getBannerTimeStamp () {
+		this.RccTrackService.
+		getScheduleTime({ customerId: this.customerId })
+		.pipe(takeUntil(this.destroy$))
+			.subscribe(response => {
+				if (response.status === 200 && response.message === 'success') {
+					this.nextScheduleTime = _.get(response.data[0], ['nextSchedule']);
+				}
+				this.showRunningBanner = true;
+				this.filterLoading = false;
+				this.loading = false;
+			},
+			error => {
+				this.loading = false;
+				this.logger.error(
+					'RccComponent : getBannerTimeStamp() ' +
 				`:: Error : (${error.status}) ${error.message}`);
 			},
 		);
