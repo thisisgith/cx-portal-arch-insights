@@ -93,7 +93,7 @@ export const defaults = {
 		inventory: '/api/v1/inventory',
 		partner: '/api/cxportal',
 	},
-	supportEmailLink: 'mailto:help@cisco.com',
+	supportEmailLink: 'mailto:cx-portal-support-nonprod@cisco.com',
 	typeaheadServiceOrigin: 'https://xresps-stage.cloudapps.cisco.com',
 	webexUrl: 'https://cisco.webex.com/meet/',
 	webexTeamsUrl: 'webexteams://im?email=',
