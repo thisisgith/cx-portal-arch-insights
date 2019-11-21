@@ -75,8 +75,6 @@ export * from './search/serialnumber';
 export * from './user/entitlement';
 export * from './architecture/architecture';
 
-export * from '../mock/afm/afm';
-
 export * from '../mock/architecture-review/architecture-review';
 
 export { ComparisonViewScenarios } from './crash-prevention/comparisonview';

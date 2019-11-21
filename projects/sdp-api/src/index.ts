@@ -76,10 +76,6 @@ export * from './lib/controlpoints/models/admin-complience';
 export * from './lib/controlpoints/models/left-tag-response';
 export * from './lib/controlpoints/models/policy-group';
 
-export * from './lib/afm/models';
-export * from './lib/afm/services';
-export * from './lib/afm/afm.module';
-
 export * from './lib/syslogs/models';
 export * from './lib/syslogs/services';
 export * from './lib/syslogs/syslogs-data.module';
