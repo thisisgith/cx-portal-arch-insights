@@ -22,13 +22,13 @@ const adminRole = {
 const accountsResponseMock: UserEntitlement = {
 	companyList: [{
 		companyName: 'CISCO USA',
-		companyId: 12345,
+		companyId: 67890,
 		domainIdentifier: 'cisco-us',
 		accountType: 'CUSTOMER',
 		roleList: [adminRole],
 	}, {
 		companyName: 'CISCO CANADA',
-		companyId: 67890,
+		companyId: 12345,
 		domainIdentifier: 'cisco-ca',
 		accountType: 'CUSTOMER',
 		roleList: [adminRole],
