@@ -168,10 +168,12 @@ export class RegisterCollectorComponent implements OnDestroy, OnInit, SetupStep 
 		oldPassword: new FormControl(null, [
 			Validators.required,
 			passwordValidator,
+			this.passwordsOldNewValidator.bind(this),
 		]),
 		password: new FormControl(null, [
 			Validators.required,
 			passwordValidator,
+			this.passwordsOldNewValidator.bind(this),
 		]),
 		passwordConf: new FormControl(null, [
 			Validators.required,
@@ -187,6 +189,38 @@ export class RegisterCollectorComponent implements OnDestroy, OnInit, SetupStep 
 		proxyUser: new FormControl(null),
 		// virtualAccount: new FormControl(null, [Validators.required]),
 	}, { validators: passwordsMatchValidator });
+
+	private destroyed$: Subject<void> = new Subject<void>();
+	private registrationFileUrl: string;
+	private registrationFile: Blob;
+	private user: UserResponse['data'];
+	private customerId: string;
+
+	/**
+	 * Checks if the oldPassword and password field are different
+	 * @param control the FormGroup
+	 * @returns validity
+	 */
+	private passwordsOldNewValidator (control: FormGroup) {
+		if (!this.accountForm) { return null; }
+		const password = this.accountForm.get('password');
+		const oldPassword = this.accountForm.get('oldPassword');
+		const errors: {
+			oldAndNewMatch?: { value: string },
+		} = { };
+		if (password.value === oldPassword.value) {
+			errors.oldAndNewMatch = { value: 'Old Password and New Password must be different' };
+		}
+		if (Object.entries((errors || { })).length) {
+			control.setErrors(errors);
+
+			return errors;
+		}
+
+		control.setErrors(null);
+
+		return null;
+	}
 	public get pwErrors () {
 		return this.accountForm.get('password').errors;
 	}
@@ -205,12 +239,6 @@ export class RegisterCollectorComponent implements OnDestroy, OnInit, SetupStep 
 	public get confControl () {
 		return this.accountForm.get('passwordConf');
 	}
-
-	private destroyed$: Subject<void> = new Subject<void>();
-	private registrationFileUrl: string;
-	private registrationFile: Blob;
-	private user: UserResponse['data'];
-	private customerId: string;
 
 	constructor (
 		@Inject('ENVIRONMENT') private env,
