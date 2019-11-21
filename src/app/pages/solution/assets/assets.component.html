@@ -318,15 +318,6 @@
 	</div>
 </ng-template>
 
-<ng-template #supportCoverage let-celldata="celldata">
-	<div class="flex flex-fill flex-center">
-		<span
-			*ngIf="celldata?.supportCovered" class="icon-check-outline icon-small text--success"
-			data-auto-id="SupportCoveredIcon">
-		</span>
-	</div>
-</ng-template>
-
 <ng-template #criticalAdvisories let-celldata="celldata">
 	<div *ngIf="celldata.criticalAdvisories"
 		class="flex flex-fill flex-center-horizontal flex-center-vertical">
@@ -339,15 +330,23 @@
 </ng-template>
 
 <ng-template #deviceTemplate let-celldata="celldata">
+	<span [innerText]="celldata.deviceName | truncate:true:50"
+		[title]="celldata.deviceName"
+		attr.data-auto-id="Device-{{celldata.serialNumber}}"
+		[ngClass]="{ 'name-align-left': (!getProductIcon(celldata)) }">
+	</span>
+</ng-template>
+
+<ng-template #productTypeTemplate let-celldata="celldata">
 	<span class="qtr-margin-right" *ngIf="getProductIcon(celldata)"
 		[title]="getProductTitle(celldata)">
 		<img alt="{{ '_AssetIcon_' | i18n }}"
 			class="icon-asset"
-			attr.data-auto-id="DeviceIcon-{{ celldata?.deviceName }}"
+			attr.data-auto-id="DeviceIcon-{{ celldata?.productType }}"
 			src="assets/img/assets/device-{{ getProductIcon(celldata) }}.svg">
 	</span>
-	<span [innerText]="celldata.deviceName | truncate:true:50"
-		[title]="celldata.deviceName"
+	<span [innerText]="celldata.productType | truncate:true:50"
+		[title]="celldata.productType"
 		attr.data-auto-id="Device-{{celldata.serialNumber}}"
 		[ngClass]="{ 'name-align-left': (!getProductIcon(celldata)) }">
 	</span>
@@ -370,7 +369,7 @@
 
 <ng-template #productIdTemplate let-celldata="celldata">
 	<span [innerText]="celldata.productId ? celldata.productId : ('_NA_' | i18n)"
-		[title]="celldata.productFamily ? celldata.productFamily : ('_NA_' | i18n)">
+		[title]="celldata.productFamily || celldata.productId || ('_NA_' | i18n)">
 	</span>
 </ng-template>
 

@@ -111,11 +111,11 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		private barChartFilterTemplate: TemplateRef<{ }>;
 
 	@ViewChild('deviceTemplate', { static: true }) private deviceTemplate: TemplateRef<{ }>;
+	@ViewChild('productTypeTemplate', { static: true })
+		private productTypeTemplate: TemplateRef<{ }>;
 	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
 	@ViewChild('lastScanTemplate', { static: true }) private lastScanTemplate: TemplateRef<{ }>;
 	@ViewChild('productIdTemplate', { static: true }) private productIdTemplate: TemplateRef<{ }>;
-	@ViewChild('supportCoverage', { static: true })
-		private supportCoverageTemplate: TemplateRef<{ }>;
 	@ViewChild('criticalAdvisories', { static: true })
 		private criticalAdvisoriesTemplate: TemplateRef<{ }>;
 
@@ -148,7 +148,6 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	public views: View[];
 	public alert: any = { };
 	public bulkDropdown = false;
-	public selectedAssets: Item[] = [];
 	public visibleTemplate: TemplateRef<{ }>;
 	public filterCollapse = false;
 	private customerId: string;
@@ -246,7 +245,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 *
 	 */
 	public onSelectionChanged (selectedItems: Item[]) {
-		this.selectedAssets = selectedItems;
+		this.selectedView.selectedAssets = selectedItems;
 	}
 
 	/**
@@ -376,20 +375,13 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		return {
 			route,
 			filters: [
-				{
-					key: 'coverage',
-					loading: true,
-					seriesData: [],
-					template: this.pieChartFilterTemplate,
-					title: I18n.get('_CoverageStatus_'),
-				},
-				{
-					key: 'partner',
-					loading: true,
-					seriesData: [],
-					template: this.pieChartFilterTemplate,
-					title: I18n.get('_Partner_'),
-				},
+				// {
+				// 	key: 'partner',
+				// 	loading: true,
+				// 	seriesData: [],
+				// 	template: this.pieChartFilterTemplate,
+				// 	title: I18n.get('_Partner_'),
+				// },
 				{
 					key: 'advisories',
 					loading: true,
@@ -416,6 +408,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			searchLabel: '_Systems_',
 			searchTemplate: this.systemSearchTemplate,
 			selected: this.routeParam === route,
+			selectedAssets: [],
 			subject: new Subject(),
 			table: new CuiTableOptions({
 				bordered: true,
@@ -423,7 +416,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					{
 						key: 'criticalAdvisories',
 						name: I18n.get('_CriticalAdvisories_'),
-						sortable: false,
+						sortable: true,
 						sortDirection: 'desc',
 						sorting: true,
 						template: this.criticalAdvisoriesTemplate,
@@ -508,19 +501,26 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			route,
 			filters: [
 				{
+					key: 'coverage',
+					loading: true,
+					seriesData: [],
+					template: this.pieChartFilterTemplate,
+					title: I18n.get('_CoverageStatus_'),
+				},
+				{
 					key: 'advisories',
 					loading: true,
 					seriesData: [],
 					template: this.pieChartFilterTemplate,
 					title: I18n.get('_Advisories_'),
 				},
-				{
-					key: 'partner',
-					loading: true,
-					seriesData: [],
-					template: this.pieChartFilterTemplate,
-					title: I18n.get('_Partner_'),
-				},
+				// {
+				// 	key: 'partner',
+				// 	loading: true,
+				// 	seriesData: [],
+				// 	template: this.pieChartFilterTemplate,
+				// 	title: I18n.get('_Partner_'),
+				// },
 				{
 					key: 'eox',
 					loading: true,
@@ -547,6 +547,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			searchLabel: '_HardwareComponents_',
 			searchTemplate: this.hardwareSearchTemplate,
 			selected: this.routeParam === route,
+			selectedAssets: [],
 			subject: new Subject(),
 			table: new CuiTableOptions({
 				bordered: true,
@@ -559,7 +560,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					},
 					{
 						key: 'deviceName',
-						name: I18n.get('_Hostname_'),
+						name: I18n.get('_SystemHostname_'),
 						sortable: true,
 						sortDirection: 'desc',
 						sorting: true,
@@ -575,7 +576,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 						key: 'productType',
 						name: I18n.get('_ProductType_'),
 						sortable: true,
-						value: 'productType',
+						template: this.productTypeTemplate,
 					},
 					{
 						key: 'equipmentType',
@@ -622,7 +623,8 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 * @param item the item we selected
 	 */
 	public onRowSelect (item: Item) {
-		this.selectedView.data.forEach((i: Item) => {
+		const selectedView = this.selectedView;
+		selectedView.data.forEach((i: Item) => {
 			if (i !== item) {
 				i.details = false;
 			}
@@ -871,6 +873,15 @@ export class AssetsComponent implements OnInit, OnDestroy {
 
 				view.paginationCount = `${first}-${last}`;
 
+				if (this.selectOnLoad && this.selectedView.key === 'system') {
+					this.onAllSelect(true);
+					this.onSelectionChanged(_.map(this.selectedView.data, item => item));
+					if (this.selectedView.selectedAssets.length === 1) {
+						this.selectedAsset = this.selectedView.selectedAssets[0];
+						_.set(this.selectedView.data, [0, 'details', true]);
+					}
+				}
+
 				view.loading = false;
 				view.tableContainerHeight = undefined;
 			}),
@@ -892,7 +903,8 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 */
 	private fetchHardware () {
 		const view = this.getView('hardware');
-		const params = _.omit(_.cloneDeep(view.params), ['lastDateOfSupportRange']);
+		const params = _.omit(_.cloneDeep(view.params),
+			['lastDateOfSupportRange', 'hasNoFieldNotices']);
 		const supportRange = _.get(view, ['params', 'lastDateOfSupportRange']);
 
 		if (supportRange) {
@@ -917,6 +929,10 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			}
 		}
 
+		if (_.get(view.params, 'hasNoFieldNotices')) {
+			params.hasFieldNotices = false;
+		}
+
 		return this.fetchInventory(view, params);
 	}
 
@@ -937,7 +953,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 * @returns the coverage counts observable
 	 */
 	private getCoverageCounts () {
-		const coverageFilter = _.find(this.getView('system').filters, { key: 'coverage' });
+		const coverageFilter = _.find(this.getView('hardware').filters, { key: 'coverage' });
 
 		return this.contractsService.getCoverageCounts({
 			customerId: this.customerId,
@@ -971,26 +987,30 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	}
 
 	/**
-	 * TODO: Implement with Partner API
+	 * TODO: Implement with Partner API - Out for LA
 	 * Fetches the partner counts for the visual filter
 	 * @returns the partner counts
 	 */
-	private getPartnerCounts () {
-		const systemPartnerFilter = _.find(this.getView('system').filters, { key: 'partner' });
-		const hardwarePartnerFilter = _.find(this.getView('hardware').filters, { key: 'partner' });
+	// private getPartnerCounts () {
+	// 	const systemPartnerFilter = _.find(this.getView('system').filters, { key: 'partner' });
+	// 	const hardwarePartnerFilter = _.find(this.getView('hardware').filters, { key: 'partner' });
 
-		systemPartnerFilter.loading = false;
-		hardwarePartnerFilter.loading = false;
+	// 	systemPartnerFilter.loading = false;
+	// 	hardwarePartnerFilter.loading = false;
 
-		return of({ });
-	}
+	// 	return of({ });
+	// }
 
 	/**
 	 * Fetches the advisory counts for the systems visual filter
 	 * @returns the advisory counts
 	 */
 	private getSystemAdvisoryCount () {
-		const advisoryFilter = _.find(this.getView('system').filters, { key: 'advisories' });
+		const systemAdvisoryFilter =
+			_.find(this.getView('system').filters, { key: 'advisories' });
+		const hardwareView = this.getView('hardware');
+		const hardwareAdvisoryFilter =
+			_.find(hardwareView.filters, { key: 'advisories' });
 
 		return this.productAlertsService.getVulnerabilityCounts({
 			customerId: this.customerId,
@@ -999,12 +1019,13 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		})
 		.pipe(
 			map((data: VulnerabilityResponse) => {
-				const series = [];
+				const systemSeries = [];
+				const hardwareSeries = [];
 
 				const bugs = _.get(data, 'bugs', 0);
 
 				if (bugs) {
-					series.push({
+					systemSeries.push({
 						filter: 'hasBugs',
 						label: I18n.get('_PriorityBugs_'),
 						selected: false,
@@ -1012,21 +1033,10 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					});
 				}
 
-				const notices = _.get(data, 'field-notices', 0);
-
-				if (notices) {
-					series.push({
-						filter: 'hasFieldNotices',
-						label: I18n.get('_FieldNotices_'),
-						selected: false,
-						value: notices,
-					});
-				}
-
 				const security = _.get(data, 'security-advisories', 0);
 
 				if (security) {
-					series.push({
+					systemSeries.push({
 						filter: 'hasSecurityAdvisories',
 						label: I18n.get('_SecurityAdvisories_'),
 						selected: false,
@@ -1034,62 +1044,36 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					});
 				}
 
-				advisoryFilter.seriesData = series;
-				advisoryFilter.loading = false;
-			}),
-			catchError(err => {
-				advisoryFilter.loading = false;
-				this.logger.error('assets.component : getAdvisoryCount() ' +
-					`:: Error : (${err.status}) ${err.message}`);
+				const notices = _.get(data, 'field-notices', 0);
 
-				return of({ });
-			}),
-		);
-	}
-
-	/**
-	 * Fetches the advisory counts for the hardware visual filter
-	 * @returns the advisory counts
-	 */
-	private getHardwareAdvisoryCount () {
-		const hardwareView = this.getView('hardware');
-		const advisoryFilter = _.find(hardwareView.filters, { key: 'advisories' });
-
-		return this.inventoryService.headHardwareAssetsResponse({
-			customerId: this.customerId,
-			hasFieldNotices: true,
-			solution: this.selectedSolutionName,
-			useCase: this.selectedTechnologyName,
-		})
-		.pipe(
-			map((response: HttpResponse<null>) => {
-				const fieldNotices = _.toNumber(response.headers.get('X-API-RESULT-COUNT'))
-				|| 0;
-
-				if (fieldNotices > 0 && fieldNotices !== hardwareView.total) {
-					advisoryFilter.seriesData.push(
+				if (notices && notices !== hardwareView.total) {
+					hardwareSeries.push(
 						{
 							filter: 'hasFieldNotices',
 							label: I18n.get('_FieldNotices_'),
 							selected: false,
-							value: fieldNotices,
+							value: notices,
 						},
 						{
 							filter: 'hasNoFieldNotices',
 							label: I18n.get('_None_'),
 							selected: false,
-							value: hardwareView.total - fieldNotices,
+							value: hardwareView.total - notices,
 						},
 					);
 				}
 
-				advisoryFilter.loading = false;
+				systemAdvisoryFilter.seriesData = systemSeries;
+				systemAdvisoryFilter.loading = false;
+
+				hardwareAdvisoryFilter.seriesData = hardwareSeries;
+				hardwareAdvisoryFilter.loading = false;
 			}),
 			catchError(err => {
-				this.logger.error('assets.component : getHardwareAdvisoryCount() ' +
-				`:: Error : (${err.status}) ${err.message}`);
-
-				advisoryFilter.loading = false;
+				systemAdvisoryFilter.loading = false;
+				hardwareAdvisoryFilter.loading = false;
+				this.logger.error('assets.component : getAdvisoryCount() ' +
+					`:: Error : (${err.status}) ${err.message}`);
 
 				return of({ });
 			}),
@@ -1106,13 +1090,13 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		const seriesData = [
 			{
 				filter: 'CHASSIS',
-				label: '_Chassis_',
+				label: I18n.get('_Chassis_'),
 				selected: false,
 				value: 0,
 			},
 			{
 				filter: 'MODULE',
-				label: '_Module_',
+				label: I18n.get('_Module_'),
 				selected: false,
 				value: 0,
 			},
@@ -1128,8 +1112,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				})
 				.pipe(
 					map((response: HttpResponse<null>) => {
-						a.value = _.toNumber(response.headers.get('X-API-RESULT-COUNT'))
-							|| 0;
+						a.value = _.toNumber(_.invoke(response, 'headers.get', 'X-API-RESULT-COUNT')) || 0;
 					}),
 					catchError(err => {
 						this.logger.error('assets.component : getHardwareTypeCounts(): ' +
@@ -1142,6 +1125,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		)
 		.pipe(
 			map(() => {
+				typeFilter.seriesData = seriesData;
 				typeFilter.loading = false;
 			}),
 		);
@@ -1282,8 +1266,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			})
 			.pipe(
 				map((response: HttpResponse<null>) => {
-					systemView.total = _.toNumber(response.headers.get('X-API-RESULT-COUNT'))
-						|| 0;
+					systemView.total = _.toNumber(_.invoke(response, 'headers.get', 'X-API-RESULT-COUNT')) || 0;
 				}),
 				catchError(err => {
 					this.logger.error('assets.component : fetchInventoryCount(): systems ' +
@@ -1299,8 +1282,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			})
 			.pipe(
 				map((response: HttpResponse<null>) => {
-					hardwareView.total = _.toNumber(response.headers.get('X-API-RESULT-COUNT'))
-						|| 0;
+					hardwareView.total = _.toNumber(_.invoke(response, 'headers.get', 'X-API-RESULT-COUNT')) || 0;
 				}),
 				catchError(err => {
 					this.logger.error('assets.component : fetchInventoryCount(): hardware ' +
@@ -1379,8 +1361,8 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					_.unset(params, [k]);
 				}
 			});
-			key = subfilter;
-			val = true;
+			key = (subfilter === 'hasNoFieldNotices') ? 'hasFieldNotices' : subfilter;
+			val = (subfilter === 'hasNoFieldNotices') ? false : true;
 		}
 
 		if (filter.selected) {
@@ -1430,9 +1412,8 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			mergeMap(() =>
 				forkJoin(
 					this.getCoverageCounts(),
-					this.getPartnerCounts(),
+					// this.getPartnerCounts(),
 					this.getSystemAdvisoryCount(),
-					this.getHardwareAdvisoryCount(),
 					this.getHardwareTypeCounts(),
 					this.getRoleCounts(),
 					this.getHardwareEOXCounts(),
@@ -1441,26 +1422,13 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				.pipe(
 					map(() => _.map(this.views, (view: View) => {
 						if (view.key === 'system') {
-							// TODO: Re-enable when UX has been redesigned for LA
-							// const contractNumber = _.get(view, ['params', 'contractNumber']);
-							// if (contractNumber) {
-							// 	this.selectSubFilters(view, contractNumber, 'contractNumber');
-							// }
-
 							const role = _.get(view, ['params', 'role']);
 							if (role) {
 								this.selectSubFilters(view, role, 'role');
 							}
 
-							const coverage = _.get(view, ['params', 'coverage']);
-							if (coverage) {
-								this.selectSubFilters(view, coverage, 'coverage');
-							}
-
 							if (_.get(view, ['params', 'hasBugs'])) {
 								this.selectSubFilters(view, ['hasBugs'], 'advisories');
-							} else if (_.get(view, ['params', 'hasFieldNotices'])) {
-								this.selectSubFilters(view, ['hasFieldNotices'], 'advisories');
 							} else if (_.get(view, ['params', 'hasSecurityAdvisories'])) {
 								this.selectSubFilters(view,
 									['hasSecurityAdvisories'], 'advisories');
@@ -1468,8 +1436,16 @@ export class AssetsComponent implements OnInit, OnDestroy {
 						}
 
 						if (view.key === 'hardware') {
-							if (_.get(view, ['params', 'hasFieldNotices'])) {
-								this.selectSubFilters(view, ['hasFieldNotices'], 'advisories');
+							const coverage = _.get(view, ['params', 'coverage']);
+							if (coverage) {
+								this.selectSubFilters(view, coverage, 'coverage');
+							}
+
+							const hasFieldNotices = _.get(view, ['params', 'hasFieldNotices']);
+							if (hasFieldNotices) {
+								const subFilter = (hasFieldNotices === 'false') ?
+									'hasNoFieldNotices' : 'hasFieldNotices';
+								this.selectSubFilters(view, [subFilter], 'advisories');
 							}
 
 							const supportRange = _.get(view, ['params', 'lastDateOfSupportRange']);
@@ -1539,35 +1515,28 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				view.params.page = (page < 1) ? 1 : page;
 			}
 
-			// TODO: Re-enable when UX has been redesigned for LA
-			// if (params.contractNumber) {
-			// 	this.assetParams.contractNumber = _.castArray(params.contractNumber);
-			// }
-
 			if (view.key === 'hardware') {
+				if (params.coverage) {
+					_.set(view.params, 'coverage', _.castArray(params.coverage));
+				}
+
 				if (params.lastDateOfSupportRange) {
 					_.set(view.params, 'lastDateOfSupportRange',
 						_.castArray(params.lastDateOfSupportRange));
 				}
 
 				if (params.hasFieldNotices) {
-					view.params.hasFieldNotices = params.hasFieldNotices;
+					_.set(view.params, 'hasFieldNotices', params.hasFieldNotices);
 				}
 			}
 
 			if (view.key === 'system') {
-				if (params.coverage) {
-					_.set(view.params, 'coverage', _.castArray(params.coverage));
-				}
-
 				if (params.role) {
 					_.set(view.params, 'role', _.castArray(params.role));
 				}
 
 				if (params.hasBugs) {
 					_.set(view.params, 'hasBugs', params.hasBugs);
-				} else if (params.hasFieldNotices) {
-					_.set(view.params, 'hasFieldNotices', params.hasFieldNotices);
 				} else if (params.hasSecurityAdvisories) {
 					_.set(view.params, 'hasSecurityAdvisories', params.hasSecurityAdvisories);
 				}

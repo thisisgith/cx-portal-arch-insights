@@ -1202,9 +1202,10 @@ const mockSummaryResponse: SummaryResponse = {
 	},
 	assets: 964,
 	deployment: {
+		na: 10,
 		none: 364,
-		upgrade: 400,
 		production: 200,
+		upgrade: 400,
 	},
 	profiles: 441,
 	recommendations: {
@@ -1442,7 +1443,7 @@ export const OSVScenarios = [
 			],
 		},
 		url: `${api}profileRecommendations?customerId=${customerId}&profileName=${assetId}` +
-				'&productFamily=Cisco Catalyst 9300 Series Switches',
+				'&productFamily=Cisco Catalyst 9300 Series Switches&profileId=7293498_NA',
 		usecases: ['Use Case 1'],
 	},
 	{

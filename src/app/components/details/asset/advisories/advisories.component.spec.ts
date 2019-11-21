@@ -1,7 +1,6 @@
 import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
 import {
-	AssetScenarios,
 	AdvisorySecurityAdvisoryScenarios,
 	FieldNoticeAdvisoryScenarios,
 	Mock,
@@ -9,6 +8,8 @@ import {
 	CriticalBugData,
 	MockNetworkElements,
 	RacetrackScenarios,
+	MockHardwareAssetsData,
+	MockSystemAssetsData,
 } from '@mock';
 import { AssetDetailsAdvisoriesComponent } from './advisories.component';
 import { AssetDetailsAdvisoriesModule } from './advisories.module';
@@ -90,7 +91,8 @@ describe('AssetDetailsAdvisoriesComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		component.asset = getActiveBody(AssetScenarios[0]).data[0];
+		component.hardwareAsset = MockHardwareAssetsData[0];
+		component.systemAsset = MockSystemAssetsData[0];
 		component.element = MockNetworkElements[0];
 		component.customerId = user.info.customerId;
 
@@ -128,7 +130,8 @@ describe('AssetDetailsAdvisoriesComponent', () => {
 	});
 
 	it('should attach results to the tabs data', done => {
-		component.asset = getActiveBody(AssetScenarios[0]).data[0];
+		component.hardwareAsset = MockHardwareAssetsData[0];
+		component.systemAsset = MockSystemAssetsData[0];
 		component.element = MockNetworkElements[0];
 		component.customerId = user.info.customerId;
 
@@ -161,7 +164,8 @@ describe('AssetDetailsAdvisoriesComponent', () => {
 	});
 
 	it('should set the selectedAdvisory when selecting a row', fakeAsync(() => {
-		component.asset = getActiveBody(AssetScenarios[0]).data[0];
+		component.hardwareAsset = MockHardwareAssetsData[0];
+		component.systemAsset = MockSystemAssetsData[0];
 		component.element = MockNetworkElements[0];
 		component.customerId = user.info.customerId;
 
@@ -223,7 +227,8 @@ describe('AssetDetailsAdvisoriesComponent', () => {
 	}));
 
 	it('should clear the advisory on panel close', done => {
-		component.asset = getActiveBody(AssetScenarios[0]).data[0];
+		component.hardwareAsset = MockHardwareAssetsData[0];
+		component.systemAsset = MockSystemAssetsData[0];
 		component.element = MockNetworkElements[0];
 		component.customerId = user.info.customerId;
 
@@ -268,14 +273,12 @@ describe('AssetDetailsAdvisoriesComponent', () => {
 	});
 
 	it('should handle changing assets', () => {
-		const assets = getActiveBody(AssetScenarios[0]).data;
+		const asset = MockHardwareAssetsData[0];
+		const newAsset = MockHardwareAssetsData[1];
 
-		const asset = assets[0];
-		const newAsset = assets[1];
-
-		component.asset = asset;
+		component.hardwareAsset = asset;
 		component.ngOnChanges({
-			asset: {
+			hardwareAsset: {
 				currentValue: asset,
 				firstChange: true,
 				isFirstChange: () => true,
@@ -286,12 +289,12 @@ describe('AssetDetailsAdvisoriesComponent', () => {
 		component.ngOnInit();
 		fixture.detectChanges();
 
-		expect(component.asset)
+		expect(component.hardwareAsset)
 			.toEqual(asset);
 
-		component.asset = newAsset;
+		component.hardwareAsset = newAsset;
 		component.ngOnChanges({
-			asset: {
+			hardwareAsset: {
 				currentValue: newAsset,
 				firstChange: false,
 				isFirstChange: () => false,
@@ -300,7 +303,7 @@ describe('AssetDetailsAdvisoriesComponent', () => {
 		});
 
 		fixture.detectChanges();
-		expect(component.asset)
+		expect(component.hardwareAsset)
 			.toEqual(newAsset);
 	});
 });

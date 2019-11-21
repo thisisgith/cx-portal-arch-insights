@@ -1,7 +1,7 @@
 /* tslint:disable */
 import { SolutionInfo } from './solution-info';
 export interface HardwareAsset {
-  productName?: string;
+  hasFieldNotices?: string;
   deviceName?: string;
   collectorId?: string;
   wfId?: string;
@@ -9,11 +9,12 @@ export interface HardwareAsset {
   serialNumber?: string;
   productId?: string;
   productType?: string;
+  productName?: string;
   ipAddress?: string;
-  hasFieldNotices?: string;
   equipmentType?: string;
   neId?: string;
   hwInstanceId?: string;
+  supportCovered?: boolean;
   solutionInfo?: Array<SolutionInfo>;
   cxLevel?: string;
   saId?: number;

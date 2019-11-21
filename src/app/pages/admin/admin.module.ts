@@ -28,7 +28,7 @@ const childRoutes: Routes = [
 	},
 	{
 		component: AdminComplienceComponent,
-		path: 'complience',
+		path: 'compliance',
 	},
 	{
 		component: SettingsComponent,

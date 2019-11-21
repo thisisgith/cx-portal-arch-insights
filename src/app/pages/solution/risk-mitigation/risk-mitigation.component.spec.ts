@@ -69,15 +69,9 @@ describe('RiskMitigationComponent', () => {
 	it('customerId should be present', () => {
 		expect(component.customerId)
 			.toBeDefined();
-		expect(component.crashHistoryGridOptions)
-			.toBeDefined();
-		expect(component.crashesAssetsGridOptions)
-			.toBeDefined();
-		expect(component.highCrashRiskAssetsGridOptions)
-			.toBeDefined();
 		expect(component.filters)
 			.toBeDefined();
-		const advisoryFilter = _.find(component.filters, { key: 'advisories' });
+		const advisoryFilter = _.find(component.filters, { key: 'timeRange' });
 		expect(advisoryFilter)
 			.toBeDefined();
 	});
@@ -95,9 +89,7 @@ describe('RiskMitigationComponent', () => {
 			.returnValue(of(<any> { devices: [], count: 100 }));
 		component.ngOnInit();
 		fixture.detectChanges();
-		expect(component.status.isLoading)
-			.toBeTruthy();
-		const advisoryFilter = _.find(component.filters, { key: 'advisories' });
+		const advisoryFilter = _.find(component.filters, { key: 'timeRange' });
 		expect(advisoryFilter.seriesData)
 			.toBeDefined();
 		expect(component.highCrashDeviceCount)
@@ -108,7 +100,7 @@ describe('RiskMitigationComponent', () => {
 	/**
 	 * @TODO: modify test to use UI
 	 */
-	it('should set undefined last 24hrs data when error in response', done => {
+	it('should set undefined last 90 days data when error in response', done => {
 		const error = {
 			status: 404,
 			statusText: 'Resource not found',
@@ -135,8 +127,8 @@ describe('RiskMitigationComponent', () => {
 		fixture.whenStable()
 			.then(() => {
 				fixture.detectChanges();
-				expect(component.last24hrsData)
-					.toBe('10');
+				expect(component.selectedCrashedSystemsFilter)
+					.toBe('90');
 				done();
 			});
 	});
@@ -149,8 +141,8 @@ describe('RiskMitigationComponent', () => {
 		fixture.whenStable()
 			.then(() => {
 				fixture.detectChanges();
-				expect(component.last24hrsData)
-					.toBe('10');
+				expect(component.selectedCrashedSystemsFilter)
+					.toBe('90');
 				done();
 			});
 	});
@@ -165,48 +157,6 @@ describe('RiskMitigationComponent', () => {
 			.then(() => {
 				fixture.detectChanges();
 				expect(component.highCrashDeviceCount)
-					.toBeDefined();
-				done();
-			});
-	});
-
-	it('Should get the device details', done => {
-		spyOn(riskMitigationService, 'getDeviceDetails')
-			.and
-			.returnValue(of(RiskScenarios[2].scenarios.GET[0].response.body));
-		component.ngOnInit();
-		fixture.whenStable()
-			.then(() => {
-				fixture.detectChanges();
-				expect(component.crashedAssetsGridDetails.tableData)
-					.toBeDefined();
-				done();
-			});
-	});
-
-	it('Should get history of crashed device', done => {
-		spyOn(riskMitigationService, 'getCrashHistoryForDevice')
-			.and
-			.returnValue(of(RiskScenarios[3].scenarios.GET[0].response.body));
-		component.ngOnInit();
-		fixture.whenStable()
-			.then(() => {
-				fixture.detectChanges();
-				expect(component.crashedAssetsGridDetails.tableData)
-					.toBeDefined();
-				done();
-			});
-	});
-
-	it('Should return the searched response', done => {
-		spyOn(riskMitigationService, 'getSearchedData')
-			.and
-			.returnValue(of(RiskScenarios[2].scenarios.GET[0].response.body));
-		component.ngOnInit();
-		fixture.whenStable()
-			.then(() => {
-				fixture.detectChanges();
-				expect(component.crashedAssetsGridDetails.tableData)
 					.toBeDefined();
 				done();
 			});
@@ -250,14 +200,6 @@ describe('RiskMitigationComponent', () => {
 			.toEqual(result);
 	});
 
-	it('show Finger print details toggle', () => {
-		expect(component.showFpDetails)
-			.toBeFalsy();
-		component.onFPDPanelClose();
-		expect(component.showFpDetails)
-			.toBeFalsy();
-	});
-
 	it('show only crashes toggle', () => {
 		expect(component.onlyCrashes)
 			.toBeTruthy();
@@ -266,239 +208,10 @@ describe('RiskMitigationComponent', () => {
 			.toBeFalsy();
 	});
 
-	it('update pager on page update', () => {
-		const pageinfo = {
-			page: 1,
-		};
-		component.onPagerUpdated(pageinfo);
-		expect(component.crashedAssetsGridDetails.tableOffset)
-			.toBe(1);
-	});
-
-	it('check on high crash grid loaded', () => {
-		component.ngOnInit();
-		const param = {
-			customerId: 324123,
-			limit: 10,
-			page: 2,
-			search: '',
-			size: 10,
-			sort: 'abc.desc',
-		};
-		component.onHcrPagerUpdated(param);
-		expect(component.highCrashRiskAssetsGridDetails.tableOffset)
-			.toBe(2);
-		expect(component.highCrashRiskAssetsGridDetails.tableLimit)
-			.toBe(10);
-	});
-
-	it('should return selected key of filter', () => {
-		component.ngOnInit();
-		const key = 'advisories';
-		let filter = component.getSelectedSubFilters(key);
-		expect(filter)
-		.toBeDefined();
-		fixture.detectChanges();
-		filter = component.getSelectedSubFilters('');
-		expect(filter)
-		.toBeUndefined();
-	});
-
-	it('should test high crash data params', () => {
-		component.loadData();
-		expect(component.highCrashRiskParams)
-			.toBeDefined();
-	});
-
-	it('should show asset details', () => {
-		expect(component.showAsset360)
-			.toBeFalsy();
-		component.redirectToAsset360();
-		expect(component.showAsset360)
-			.toBe(true);
-	});
-
-	it('on crashed table sorting change', () => {
-		component.filters[0].seriesData = [
-			{
-				filter: 'Time: Last 24h',
-				label: '24h',
-				selected: true,
-				value: 0,
-			},
-			{
-				filter: 'Time: Last 7d',
-				label: '7d',
-				selected: false,
-				value: 0,
-			},
-			{
-				filter: 'Time: Last 30d',
-				label: '30d',
-				selected: false,
-				value: 2,
-			},
-			{
-				filter: 'Time: Last 90d',
-				label: '90d',
-				selected: false,
-				value: 9,
-			},
-		];
-		component.customerId = 12345;
-		spyOn(riskMitigationService, 'getSearchedData')
-			.and
-			.returnValue(of(<any> { }));
-		fixture.detectChanges();
-		component.onTableSortingChanged({
-			key: 'Key1',
-			sortable: true,
-			sortDirection: 'asc',
-			value: 'Value1',
-		});
-		expect(riskMitigationService.getSearchedData)
-			.toHaveBeenCalled();
-		expect(riskMitigationService.getSearchedData)
-			.toHaveBeenCalled();
-	});
-
-	it('should unset the selectedAsset', () => {
-		component.onPanelClose();
-		expect(component.selectedAsset.active)
-			.toBeFalsy();
-		expect(component.showAsset360)
-			.toBeFalsy();
-	});
-
-	it('should set the selectedAsset', () => {
-		component.onRowClicked({ active: true });
-		expect(component.selectedAsset.active)
-			.toBeTruthy();
-		expect(component.showAsset360)
-			.toBeFalsy();
-		component.onRowClicked({ active: false });
-		expect(component.selectedAsset.active)
-			.toBeFalsy();
-	});
-
-	it('should unset the selectedAsset on panel close', () => {
-		component.onPanelClose();
-		expect(component.selectedAsset.active)
-			.toBeFalsy();
-		expect(component.showAsset360)
-			.toBeFalsy();
-	});
-
-	it('should set the selectedFingerPrint data', () => {
-		const asset = { test: 'test', active: true };
-		component.connectToFpDetails(asset);
-		expect(component.selectedFingerPrintdata)
-			.toBeDefined();
-		expect(component.showFpDetails)
-			.toBeTruthy();
-	});
-
-	it('on searching a string', () => {
-		component.onlyCrashes = false;
-		const result = {
-			customerId: 12323,
-			key: '',
-			search: '',
-			sortDirection: '',
-			solution: 'IBN',
-			useCase: '',
-			time: '90d',
-		};
-		spyOn(component, 'getFilterDetailsForSearchQuery')
-			.and
-			.returnValue(result);
-		spyOn(component, 'searchInCrashedAssetsGrid');
-		spyOn(component, 'getFingerPrintDeviceDetails');
-		fixture.detectChanges();
-		component.onSearchQuery('testString');
-		expect(component.searchQueryInCrashGrid)
-		.toEqual('testString');
-		expect(component.getFilterDetailsForSearchQuery)
-		.toHaveBeenCalled();
-		expect(component.searchInCrashedAssetsGrid)
-		.toHaveBeenCalled();
-		fixture.detectChanges();
-		component.onlyCrashes = true;
-		component.onSearchQuery('testString');
-		expect(component.searchQueryInHighCrashGrid)
-		.toEqual('testString');
-		expect(component.highCrashRiskParams.page)
-		.toEqual(0);
-		expect(component.highCrashRiskParams.search)
-		.toEqual('testString');
-		expect(component.highCrashRiskParams.size)
-		.toEqual(10);
-		expect(component.getFingerPrintDeviceDetails)
-		.toHaveBeenCalled();
-
-	});
-
-	it('should hide the fingerprint details on panel close', () => {
-		component.onFPDPanelClose();
-		expect(component.showFpDetails)
-			.toBeFalsy();
-	});
-
-	it('get filter details for search query', () => {
-		component.filters[0].seriesData = [
-			{
-				filter: 'Time: Last 24h',
-				label: '24h',
-				selected: false,
-				value: 0,
-			},
-			{
-				filter: 'Time: Last 7d',
-				label: '7d',
-				selected: true,
-				value: 0,
-			},
-			{
-				filter: 'Time: Last 30d',
-				label: '30d',
-				selected: false,
-				value: 2,
-			},
-			{
-				filter: 'Time: Last 90d',
-				label: '90d',
-				selected: false,
-				value: 9,
-			},
-		];
-		fixture.detectChanges();
-		expect(component.getFilterDetailsForSearchQuery('').time)
-			.toEqual('7');
-		component.filters[0].seriesData[1].selected = false;
-		component.filters[0].seriesData[2].selected = true;
-		fixture.detectChanges();
-		expect(component.getFilterDetailsForSearchQuery('').time)
-			.toEqual('30');
-		component.filters[0].seriesData[2].selected = false;
-		component.filters[0].seriesData[3].selected = true;
-		fixture.detectChanges();
-		expect(component.getFilterDetailsForSearchQuery('').time)
-			.toEqual('90');
-		component.filters[0].seriesData[2].selected = false;
-		component.filters[0].seriesData[3].selected = false;
-		fixture.detectChanges();
-		component.filters[0].seriesData[0].selected = false;
-		component.filters[0].seriesData[1].selected = false;
-		component.filters[0].seriesData[2].selected = false;
-		component.filters[0].seriesData[3].selected = false;
-		expect(component.getFilterDetailsForSearchQuery('').time)
-			.toEqual('1');
-	});
-
-	it('should get fitered results on subfilter select', () => {
+	it('should get filtered results on subfilter select', () => {
 		spyOn(component, 'resetFilters');
-		spyOn(component, 'getDeviceDetails');
-		const advisoryFilter = _.find(component.filters, { key: 'advisories' });
+		const advisoryFilter = _.find(component.filters, { key: 'timeRange' });
+		const riskScoreFilter = _.find(component.filters, { key: 'riskScore' });
 		component.filters[0].seriesData = [
 			{
 				filter: 'Time: Last 24h',
@@ -521,20 +234,146 @@ describe('RiskMitigationComponent', () => {
 			{
 				filter: 'Time: Last 90d',
 				label: '90d',
+				selected: false,
+				value: 9,
+			},
+		];
+		component.filters[1].seriesData = [
+			{
+				filter: 'HIGH',
+				label: 'HIGH',
+				selected: true,
+				value: 6,
+			},
+			{
+				filter: 'LOW',
+				label: 'LOW',
+				selected: false,
+				value: 100,
+			},
+			{
+				filter: 'MED',
+				label: 'MEDIUM',
+				selected: false,
+				value: 8,
+			},
+			{
+				filter: 'Not Evaluated',
+				label: 'Not Evaluated',
 				selected: false,
 				value: 9,
 			},
 		];
 		fixture.detectChanges();
 		component.onSubfilterSelect('Time: Last 90d', advisoryFilter);
-		expect(component.getDeviceDetails)
-			.toHaveBeenCalledWith('90');
+		expect(component.selectedCrashedSystemsFilter)
+			.toBe('90');
 		component.onSubfilterSelect('Time: Last 7d', advisoryFilter);
-		expect(component.getDeviceDetails)
-			.toHaveBeenCalledWith('7');
+		expect(component.selectedCrashedSystemsFilter)
+			.toBe('7');
 		component.onSubfilterSelect('Time: Last 30d', advisoryFilter);
-		expect(component.getDeviceDetails)
-			.toHaveBeenCalledWith('30');
+		expect(component.selectedCrashedSystemsFilter)
+			.toBe('30');
+		component.onSubfilterSelect('HIGH', riskScoreFilter);
+		expect(component.selectedCrashRiskFilter)
+			.toBe('HIGH');
+	});
+	it('should set the Time range ', () => {
+		const timeRangeParam =  {
+			filter: 'Time: Last 24h',
+			label: '24h',
+			selected: false,
+			value: 20,
+		};
+		component.getTimeRange(timeRangeParam);
+		expect(component.selectedFilters)
+		.toBeDefined();
 	});
 
+	it('update pager details on page update', () => {
+		const pageinfo = {
+			itemRange: '1-10',
+			totalItems: '108',
+		};
+		component.paginationValueDetails(pageinfo);
+		expect(component.itemRange)
+			.toBe('1-10');
+		expect(component.totalItems)
+			.toBe('108');
+	});
+
+	it('Get the Total assest count ', () => {
+		spyOn(riskMitigationService, 'getTotalAssestCount')
+			.and
+			.returnValue(of(RiskScenarios[7].scenarios.GET[0].response.body));
+		expect(component.totalAssetCount)
+			.toBeDefined();
+	});
+
+	it('clear all filter values', () => {
+		component.clearAllFilters();
+		expect(component.selectedCrashRiskFilter)
+			.toBeFalsy();
+	});
+
+	it('should return the list of Selected filter', () => {
+		const key = 'timeRange';
+		component.filters = [
+			{
+				key: 'timeRange',
+				loading: true,
+				seriesData: [
+					{
+						filter: 'Time: Last 24h',
+						label: '24h',
+						selected: false,
+						value: 0,
+					},
+					{
+						filter: 'Time: Last 7d',
+						label: '7d',
+						selected: true,
+						value: 0,
+					},
+					{
+						filter: 'Time: Last 30d',
+						label: '30d',
+						selected: false,
+						value: 2,
+					},
+					{
+						filter: 'Time: Last 90d',
+						label: '90d',
+						selected: false,
+						value: 9,
+					},
+				],
+				template: this.timeRangeFilterTemplate,
+				title: 'TIME_Period',
+			},
+			{
+				key: 'riskScore',
+				loading: true,
+				seriesData: [],
+				template: this.riskScoreFilterTemplate,
+				title: 'Risk',
+			},
+		];
+		const selectedFilter = component.getSelectedSubFilters(key);
+		expect(selectedFilter[0].selected)
+		.toBeTruthy();
+	});
+
+	it('Load data for score cards', () => {
+		const assetsCountSpy = spyOn(component, 'getTotalAssetCount');
+		const crashesSpy = spyOn(component, 'getAllCrashesData');
+		const highCrashesSpy = spyOn(component, 'getHighCrashesDeviceData');
+		component.loadData();
+		expect(assetsCountSpy)
+			.toHaveBeenCalled();
+		expect(crashesSpy)
+			.toHaveBeenCalled();
+		expect(highCrashesSpy)
+			.toHaveBeenCalled();
+	});
 });

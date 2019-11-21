@@ -55,7 +55,7 @@ describe('AdminComplienceComponent', () => {
 		});
 
 		it('should not display modal if there is no tags', () => {
-			component.rightSideTags = null;
+			component.rightSideTags = [];
 			component.leftSideTags = null;
 			component.optlnStatus = true;
 			component.enableSaveButton = false;
@@ -259,8 +259,6 @@ describe('AdminComplienceComponent', () => {
 		component.discardChanges();
 		expect(component.optlnStatus)
 			.toBeFalsy();
-		expect(component.updateOptInOutStatus)
-			.toHaveBeenCalled();
 	});
 
 	it('should save changes', () => {
@@ -268,8 +266,6 @@ describe('AdminComplienceComponent', () => {
 		component.saveChanges();
 		expect(component.optlnStatus)
 			.toBeTruthy();
-		expect(component.updateOptInOutStatus)
-			.toHaveBeenCalled();
 	});
 
 	it('should save policy details', () => {

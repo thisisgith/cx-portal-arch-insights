@@ -2,7 +2,7 @@
 import { SolutionInfo } from './solution-info';
 import { Tag } from './tag';
 export interface SystemAsset {
-  productId?: string;
+  productType?: string;
 
   /**
    * Device name
@@ -42,18 +42,19 @@ export interface SystemAsset {
   role?: string;
   managedNeId?: string;
   neId?: string;
+  productId?: string;
 
   /**
    * IP Address
    */
   ipAddress?: string;
-  productType?: string;
   productName?: string;
   productFamily?: string;
   hasSecurityAdvisories?: boolean;
   hasBugs?: boolean;
   scanStatus?: string;
   isManagedNE?: boolean;
+  supportCovered?: boolean;
   solutionInfo?: Array<SolutionInfo>;
   tags?: Array<Tag>;
   cxLevel?: string;

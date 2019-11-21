@@ -487,7 +487,7 @@ describe('General Spec', () => {
 
 			it('PBC-248 Serial Number intercept - View Device Details', () => {
 				cy.getByAutoId('viewDeviceButton').should('exist').click(); // PBC-248 specific
-				cy.getByAutoId('Asset360SerialNumber').should('exist'); // app360 panel opened
+				cy.getByAutoId('Asset360SupportLevel').should('exist'); // app360 panel opened
 				cy.getByAutoId('CloseDetails').should('exist').click();
 			});
 

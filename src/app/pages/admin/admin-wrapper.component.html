@@ -86,12 +86,12 @@
 				<span class="sidebar__item__label" [innerText]="'_System_' | i18n"></span>
 			</a>
 		</li>
-		<li class="sidebar__item"
-			[ngClass]="{ selected: routerPath === 'complience' }"
+		<li *ngIf="cxLevel > 1" class="sidebar__item"
+			[ngClass]="{ selected: routerPath === 'compliance' }"
 		>
 			<a
 				data-auto-id="sidebar.compliance"
-				[routerLink]="['/admin', 'complience']"
+				[routerLink]="['/admin', 'compliance']"
 			>
 				<span class="badge-wrapper">
 					<span tabindex="0"

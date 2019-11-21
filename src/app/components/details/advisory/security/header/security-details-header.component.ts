@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 import { CuiModalService } from '@cisco-ngx/cui-components';
 
-import { Asset, NetworkElement } from '@sdp-api';
+import { HardwareAsset } from '@sdp-api';
 import {
 	CaseOpenAdvisoriesComponent,
 } from '../../../../case/case-open/case-open-advisories/case-open-advisories.component';
@@ -22,8 +22,8 @@ export class SecurityDetailsHeaderComponent {
 	constructor (private cuiModalService: CuiModalService) { }
 
 	@Input('details') public details: SecurityData;
-	@Input('selectedAsset') public selectedAsset: Asset;
-	@Input('impactedAssets') public impactedAssets: (Asset | NetworkElement)[] = [];
+	@Input('selectedAsset') public selectedAsset: HardwareAsset;
+	@Input('impactedAssets') public impactedAssets: HardwareAsset[];
 
 	/**
 	 * Fires when user clicks "Open a Case" button

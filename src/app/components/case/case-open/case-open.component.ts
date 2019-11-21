@@ -113,26 +113,34 @@ export class CaseOpenComponent implements  CuiModalContent, OnInit, OnDestroy {
 		});
 
 		this.caseForm.controls.title.valueChanges.pipe(
-			tap(() => this.contractLoading = true),
-			debounceTime(2500))
-			.subscribe(value => {
-				if (this.caseForm.controls.title.dirty && value.length < 5) {
-					this.caseForm.controls.title.setErrors({ titleMin : true });
+			tap(() => {
+				if (_.trim(this.caseForm.controls.title.value).length < 5) {
+					this.contractLoading = true;
 				} else {
 					this.caseForm.controls.title.setErrors(null);
 					this.contractLoading = false;
 				}
+			}),
+			debounceTime(3000))
+			.subscribe(value => {
+				if (this.caseForm.controls.title.dirty && _.trim(value).length < 5) {
+					this.caseForm.controls.title.setErrors({ titleMin : true });
+				}
 			});
 
 		this.caseForm.controls.description.valueChanges.pipe(
-			tap(() => this.contractLoading = true),
-			debounceTime(2500))
-			.subscribe(value => {
-				if (this.caseForm.controls.description.dirty && value.length < 5) {
-					this.caseForm.controls.description.setErrors({ descriptionMin : true });
+			tap(() => {
+				if (_.trim(this.caseForm.controls.description.value).length < 5) {
+					this.contractLoading = true;
 				} else {
 					this.caseForm.controls.description.setErrors(null);
 					this.contractLoading = false;
+				}
+			}),
+			debounceTime(3000))
+			.subscribe(value => {
+				if (this.caseForm.controls.description.dirty && _.trim(value).length < 5) {
+					this.caseForm.controls.description.setErrors({ descriptionMin : true });
 				}
 			});
 	}

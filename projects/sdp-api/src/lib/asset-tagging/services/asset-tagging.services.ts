@@ -26,6 +26,8 @@ class AssetTaggingService extends __BaseService {
 	static readonly getPolicyMappingPath = '/customerportal/asset-tagging/v1/save-tag-policy-mapping-api';
 	static readonly getOptinStatus = '/customerportal/compliance/v1/service/checkOptInStatus';
 	static readonly updateOptinStatus = '/customerportal/compliance/v1/service/updateOptInStatus';
+	static readonly deleteMappingPath = '/customerportal/asset-tagging/v1/delete-mapped-policies-api';
+
 
 	private tags = new BehaviorSubject<any>({});
 
@@ -369,6 +371,51 @@ class AssetTaggingService extends __BaseService {
 	updateOptStatus (params: AssetTaggingService.PutUpdateOptInParams): __Observable<any> {
 		return this.updateOptStatusResponse(params).pipe(
 			__map(_r => _r.body as any)
+		);
+	}
+
+		/**
+	 * Submit the policy mapping.
+	 * @param params The `AssetTaggingService.PutUpdateOptInParams` containing the following parameters:
+	 *
+	 * - `customerId`: Unique identifier of a Cisco customer.
+	 * - `params` : Contains the Optin params
+	 *
+	 * @return successful operation
+	 */
+	deleteMapping (params: AssetTaggingService.GetParams): __Observable<any> {
+		return this.deleteMappingResponse(params).pipe(
+			__map(_r => _r.body as any)
+		);
+	}
+
+		/**
+	 * Submit the policy mapping.
+	 * @param params The `AssetTaggingService.GetParams` containing the following parameters:
+	 *
+	 * - `customerId`: Unique identifier of a Cisco customer.
+	 * @return successful operation
+	 */
+	deleteMappingResponse (params: AssetTaggingService.GetParams): __Observable<__StrictHttpResponse<any>> {
+		let __params = this.newParams();
+		let __headers = new HttpHeaders();
+		let __body: any = null;
+		
+		let req = new HttpRequest<any>(
+			'DELETE',
+			this.rootUrl + `${AssetTaggingService.deleteMappingPath}` +'/' + params.customerId,
+			__body,
+			{
+				headers: __headers,
+				params: __params,
+				responseType: 'json',
+			});
+
+		return this.http.request<any>(req).pipe(
+			__filter(_r => _r instanceof HttpResponse),
+			__map((_r) => {
+				return _r as __StrictHttpResponse<any>;
+			})
 		);
 	}
 }

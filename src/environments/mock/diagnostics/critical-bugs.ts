@@ -47,6 +47,23 @@ export const CriticalBugData: CriticalBug[] = [
 		"lastUpdated": "2019-07-20T10:57:34.255Z",
 		"assetsImpacted": 3
 	},
+	{
+		"id": "CSCvm55520",
+		"title": "This C9407R device running 16.8.1a is hitting Software Defect - CSCvm55520: C9407R - C9400-PWR-3200AC Power Supply goes into faulty state randomly ( \"n.a.\" )",
+		"hostname": "Device_6_0_1_1",
+		"ipAddress": "6.0.1.1",
+		"description": "This C9407R device running 16.8.1a <b>is hitting</b> defect <a href=\"https://tools.cisco.com/bugsearch/bug/CSCvm55520\" target=\"_blank\">CSCvm55520</a>: C9407R - C9400-PWR-3200AC Power Supply goes into faulty state randomly ( \"n.a.\" )<br/><b>Symptom:</b><br/>\"show power\" output displays one of the power supplies as \"faulty\" <br/><br/>In \"show platform hardware chassis power-supply detail al\" output, affected power supply shows \"No faults\".<br/>Physical inspection of power supply shows all LED are green and operational.<br/><br/>PS1     C9400-PWR-3200AC      AC    3200 W    active        good  good  good  good<br/>PS2     C9400-PWR-3200AC      AC    3200 W    active        good  good  good  good<br/>PS3     C9400-PWR-3200AC      AC    3200 W    standby       n.a.  n.a.  n.a.  n.a.<br/>PS4     C9400-PWR-3200AC      AC    n.a.        faulty        n.a.  n.a.  n.a.  n.a.<br/>!<br/><br/>C9400#show platform hardware chassis power-supply detail al<br/>Slot      Reg       Reg Value       Description                                                          <br/> --------- --------- --------------- ---------------------------------------------------------------------<br/> PS1       0xE7      0x00 0x00 0x00 No Faults                                                             <br/> PS2       0xE7      0x00 0x00 0x00 No Faults                                                            <br/> PS3       0xE7      0x00 0x00 0x00 No Faults                                                            <br/> PS4       0xE7      0x00 0x00 0x00 No Faults<br/><br/><b>Conditions:</b><br/>The issue can be seen due to small glitch in power line or due to quick on/off of power supply switch. This is a rare timing issue.<br/><br/><b>Workaround:</b><br/>&gt;Physical re-seat of affected power supply restores it.<br/><br/><br/><b>Integrated Releases:</b><br/>Gibraltar-16.11.1 16.6(5.47) 16.9.4 16.9(3.2) 16.11.1 16.11(0.174) 16.11.1s 16.12(0.64) Fuji-16.9.4 16.11.1b 16.11.1c 16.11.1a Gibraltar-16.11.1a Gibraltar-16.11.1c Gibraltar-16.11.1b 16.12.1c 16.6.6 16.12.1a Gibraltar-16.12.1s 16.12.1d Gibraltar-16.11.1s 16.11(0.175) 16.12.1b 16.12.1s Gibraltar-16.12.1a Gibraltar-16.12.1b Gibraltar-16.12.1d<br/>",
+		"state": "new",
+		"severity": "warning",
+		"publishedOn": "2019-09-26T23:48:16.658Z",
+		"lastUpdated": "2019-11-18T15:06:00.110Z",
+		"swVersion": "16.8.1a",
+		"assetsImpacted": 416,
+		"cdets": {
+				"headline": "C9407R - C9400-PWR-3200AC Power Supply goes into faulty state randomly ( \"n.a.\" )",
+				"severity": "3"
+		}
+}
 	/* tslint:enable */
 ];
 

@@ -17,7 +17,7 @@
 				</label>
 			</div>
 			<div class="form-group form-group--inline base-margin-bottom" data-auto-id="updateOptInOutStatus"
-			*ngIf="!optlnStatus" (click)="optlnStatus = !optlnStatus; updateOptInOutStatus();">
+			*ngIf="!optlnStatus" (click)="toggleOptlnStatus()">
 					<label class="switch">
 						<input type="checkbox" >
 						<span class="switch__input"></span>
@@ -121,18 +121,19 @@
 									<div class="col-12 flex-end" *ngIf="saveDetails.body.policy != 'select'">
 											<button class="btn btn--small btn--primary half-margin-top" data-auto-id="savePolicyDetails"
 											(click)="savePolicyDetails()"
+											[ngClass]="{'disabled': selectedDeviceTagType=='selectedTags' && !tagsFromAssetTagging}"
 											[innerText]="'_Save_' | i18n"></button>
 										</div>
 							</div>
 							</div>
 						</div>
 					</div>
-				<div [hidden]= "hideAssetTags || saveDetails.body.policy == 'select'">
+				<div [hidden]= "saveDetails.body.policy == 'select' || selectedDeviceTagType == 'allDevices'">
 					<div class="text-large"  
 					[innerText]="'_AdminPolicyTaggingHeading_' | i18n"></div>
 			<asset-tagging 
 				[tagListLeft]="leftSideTags" [tagListRight]="rightSideTags"
-				(updatedTags)="getUpdatedTags($event)"></asset-tagging>
+				(updatedTags)="getUpdatedTags($event)" (tagsFromAssetTagging) = "checkRightSideTags($event)"></asset-tagging>
 			</div></div>
 	</div>
 </admin-wrapper>
@@ -140,7 +141,7 @@
 <cui-modal></cui-modal>
 
 <ng-template #confirmationModalTemplate>
-	<a class="modal__close"  data-auto-id="cuiModalService.hide" (click)="cuiModalService.hide()"><span class="icon-close"></span></a>
+	<a class="modal__close"  data-auto-id="cuiModalService.hide" (click)="optlnStatus = !optlnStatus;cuiModalService.hide()"><span class="icon-close"></span></a>
 	<div class="modal__header">
 		<h6 class="modal__title" [innerText]="'_AdminComplianceConfirmationModalTitle_' | i18n"></h6>
 	</div>

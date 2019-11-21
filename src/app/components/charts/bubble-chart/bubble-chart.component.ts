@@ -59,9 +59,12 @@ export class BubbleChartComponent implements OnChanges {
 
 		this.chart = new Chart({
 			tooltip: {
-				useHTML: true,
 				backgroundColor: null,
 				borderWidth: 0,
+				footerFormat: '</div>',
+				headerFormat: '<div data-auto-id="{point.key}Tooltip">' +
+					'<span style="font-size: 10px">{point.key}</span><br/>',
+				useHTML: true,
 			},
 			chart: {
 				events: {

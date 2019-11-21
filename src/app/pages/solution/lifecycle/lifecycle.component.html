@@ -200,7 +200,7 @@
 			}">
 		</ng-container>
 	</ng-container>
-	<ng-container *ngIf="data.sessions.length">
+	<ng-container *ngIf="data.sessions.length > 1">
 		<ng-container *ngTemplateOutlet="more; context: { data: data.sessions, autoid: 'moreATXList' }"></ng-container>
 	</ng-container>
 	<ng-container *ngIf="atxMoreClicked && moreATXSelected">
@@ -291,15 +291,15 @@
 					<span class="icon-close"></span>
 				</a>
 			</div>
-			<div class="divider divider--compressed"></div>
-			<div class="line-clamp atx-more-popover__description" [innerText]="data.description" data-auto-id="atxMoreClickModal-Description"></div>
 			<div
-				class="text-muted text-small atx-more-popover__provider-name"
+				class="text-muted text-small"
 				[innerText]="getProviderName(data)"
 				*ngIf="getProviderName(data)"
 				data-auto-id="atxMoreClickModal-Provider"
 			></div>
-			<div class="atx-more-popover__button-container base-padding-top">
+			<div class="divider divider--compressed"></div>
+			<div class="line-clamp atx-more-popover__description" [innerText]="data.description" data-auto-id="atxMoreClickModal-Description"></div>
+			<div class="atx-more-popover__button-container">
 				<ng-container *ngTemplateOutlet="data?.sessions?.length > 0 ?
 					enabledViewSessionsButton : disabledViewSessionsButton; context: {
 						type: 'moreView'
@@ -527,7 +527,7 @@
 			<div class="line-clamp atx-more-popover__description text-left" [innerText]="data.description"
 				data-auto-id="atxMoreClickModal-Description"></div>
 			<ng-container *ngIf="data.status === 'scheduled' && scheduledAtxMap[data.atxId]">
-				<div class="cx-lifecycle-card--scheduled half-padding-bottom text-left">
+				<div class="cx-lifecycle-card--scheduled qtr-padding-bottom text-left">
 					<span class="icon-calendar" attr.data-auto-id="{{ autoid }}-Calendar"></span>
 					<span class="qtr-padding-left">
 						<span class="text-bold"
@@ -540,7 +540,7 @@
 				</div>
 			</ng-container>
 		</div>
-		<div class="atx-scheduler-one-line half-padding-top">
+		<div class="atx-scheduler-one-line">
 			<div>
 				<h6 class="text-left"
 					[innerText]="'_ChooseSession_' | i18n">
@@ -611,7 +611,7 @@
 				title: data.sessions[0].title,
 				description: data.sessions[0].description,
 				item: data.sessions[0],
-				src: data.sessions[0].url || 'assets/img/solutions/defaultLifecycleImage.png',
+				src: data.sessions[0].url || getDefaultAccImg(data.sessions[0]),
 				autoid: 'recommendedACC'
 			}">
 		</ng-container>
@@ -692,7 +692,7 @@
 			{ iconUrl: '/assets/icons/lifecycle/icon-e-learning.svg',
 				title: '_ELearning_',
 				data: componentData.learning.elearning,
-				link: componentData.learning.elearningUrl }">
+				link: componentData.learning.elearningUrl + componentData.params.usecase }">
 		</ng-container>
 	</div>
 
@@ -845,7 +845,8 @@
 							<multiselect [name]="'_Status_' | i18n"
 								[items]="accStatusOptions"
 								[defaultValues]="accStatusFilter"
-								(changed)="statusMultiFilter($event, 'ACC')">
+								(changed)="statusMultiFilter($event, 'ACC')"
+								data-auto-id="ViewAllModal-StatusMultiFilter">
 							</multiselect>
 						</ng-container>
 						<div class="base-margin-left" *ngIf="accPartnerList">
@@ -854,7 +855,8 @@
 								nameKey="companyName"
 								valueKey="companyId"
 								[defaultValues]="selectedPartnerFilterForACC"
-								(changed)="partnerMultiFilter($event, 'ACC')">
+								(changed)="partnerMultiFilter($event, 'ACC')"
+								data-auto-id="ViewAllModal-PartnerMultiFilter">
 							</multiselect>
 						</div>
 						<div class="text-right modal__body__view-toggle">

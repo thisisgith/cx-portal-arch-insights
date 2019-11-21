@@ -10,7 +10,7 @@ import { User } from '@interfaces';
 import { ActivatedRoute } from '@angular/router';
 
 import { Subject, of, forkJoin } from 'rxjs';
-import { catchError, takeUntil, map, switchMap } from 'rxjs/operators';
+import { catchError, takeUntil, map } from 'rxjs/operators';
 import { RouteAuthService } from '@services';
 
 import * as _ from 'lodash-es';
@@ -40,6 +40,7 @@ export class AdminComplienceComponent implements OnInit {
 	public errorMessage = '';
 	public loading = false;
 	public optlnStatus = false;
+	public isOptlnStatusChanged = false;
 	public filteredArray = [];
 	public policies = [];
 	public enableSaveButton: boolean;
@@ -47,7 +48,10 @@ export class AdminComplienceComponent implements OnInit {
 	public rightSideTagsResponse: RightTagResponse;
 	public selectedPolicy = 'select';
 	public leftSideTags = [];
+	public clonedLeftTags = [];
+	public clonedRightTags = [];
 	public rightSideTags = [];
+	public tagsFromAssetTagging: boolean;
 	public saveDetails: AssetTaggingService.PostParams = {
 		body: {
 			customerId: '',
@@ -116,12 +120,14 @@ export class AdminComplienceComponent implements OnInit {
 	 */
 	public checkOptlnStatus () {
 
-		forkJoin(
-			this.getOptinOutStatus(),
-			this.getLeftSideTags(),
-			this.getRightSideTags(),
-		)
-		.subscribe();
+		this.getOptinOutStatus()
+			.subscribe((results: any) => {
+				this.optlnStatus = results.data.rccOptInStatus;
+				if (this.optlnStatus) {
+					this.getLeftSideTags()
+						.subscribe();
+				}
+			});
 
 		return this.routeAuthService.checkPermissions(this.customerId)
 				.pipe(
@@ -141,11 +147,18 @@ export class AdminComplienceComponent implements OnInit {
 	 */
 
 	public toggleOptlnStatus () {
-		if (this.enableSaveButton) {
+		this.optlnStatus = !this.optlnStatus;
+		if (!this.optlnStatus) {
 			this.cuiModalService.show(this.confirmationModalTemplate, 'normal');
 		} else {
-			this.optlnStatus = false;
-			this.initializeDetails();
+			const params = {
+				customerId: this.customerId,
+				isRccOpted: this.optlnStatus,
+			};
+			this.getLeftSideTags()
+			.subscribe();
+			this.assetTaggingService.updateOptStatus(params)
+			.subscribe();
 		}
 	}
 	/**
@@ -154,7 +167,16 @@ export class AdminComplienceComponent implements OnInit {
 	 */
 	public discardChanges () {
 		this.optlnStatus = false;
-		this.updateOptInOutStatus();
+		this.isOptlnStatusChanged = true;
+		const params = {
+			customerId: this.customerId,
+			isRccOpted: this.optlnStatus,
+		};
+		forkJoin(
+			this.assetTaggingService.updateOptStatus(params),
+			this.assetTaggingService.deleteMapping(params),
+		)
+		.subscribe();
 		this.initializeDetails();
 		this.cuiModalService.hide();
 		this.enableSaveButton = false;
@@ -165,7 +187,6 @@ export class AdminComplienceComponent implements OnInit {
 	 */
 	public saveChanges () {
 		this.optlnStatus = true;
-		this.updateOptInOutStatus();
 		this.cuiModalService.hide();
 	}
 	/**
@@ -181,9 +202,6 @@ export class AdminComplienceComponent implements OnInit {
 		return this.assetTaggingService.getOptInStatus(params)
 			.pipe(
 				takeUntil(this.destroyed$),
-				map((results: any) => {
-					this.optlnStatus = results.data.rccOptInStatus;
-				}),
 				catchError(err => {
 					this.logger.error('OptinStatus : getOptinOutStatus() ' +
 						`:: Error : (${err.status}) ${err.message}`);
@@ -204,6 +222,7 @@ export class AdminComplienceComponent implements OnInit {
 				takeUntil(this.destroyed$),
 				map((results: any) => {
 					this.leftSideTagsResponse = results;
+					this.clonedLeftTags = _.cloneDeep(this.leftSideTagsResponse.tags);
 				}),
 				catchError(err => {
 					this.logger.error('Left side tags : getLeftSideTags() ' +
@@ -225,6 +244,7 @@ export class AdminComplienceComponent implements OnInit {
 				takeUntil(this.destroyed$),
 				map((results: any) => {
 					this.rightSideTagsResponse = results;
+					this.filterDuplicates();
 				}),
 				catchError(err => {
 					this.logger.error('Tags : getRightSideTags() ' +
@@ -234,35 +254,50 @@ export class AdminComplienceComponent implements OnInit {
 				}),
 			);
 	}
+
+	/**
+	 * Function to filter duplicates
+	 * @param event will have right sad tag details
+	 */
+	public checkRightSideTags (event) {
+		this.saveDetails.body.tags = event;
+		if (event.length) {
+			this.tagsFromAssetTagging = true;
+		} else {
+			this.tagsFromAssetTagging = false;
+		}
+	}
 	/**
 	 * Function to filter duplicates
 	 * @returns null
 	 */
 
 	public filterDuplicates () {
-		if (this.leftSideTagsResponse.tags) {
-			this.leftSideTags = _.cloneDeep(this.leftSideTagsResponse.tags);
-		}
 		if (this.rightSideTagsResponse.policyGroups) {
 			const policyGroups = _.find(this.rightSideTagsResponse.policyGroups,
 				 { policyName: this.saveDetails.body.policy });
-			this.rightSideTags = _.cloneDeep(policyGroups.tags);
-			_.each(this.rightSideTags, tag => {
-				tag.devices = policyGroups.devices;
-				tag.deviceCount = policyGroups.deviceCount;
-			});
-			_.each(this.leftSideTags, (tag, i) => {
-				const duplicateTagIndex = this.rightSideTags.findIndex(rightSideTag =>
-					tag.tagName === rightSideTag.tagName);
-				if (duplicateTagIndex !== -1) {
-					this.rightSideTags[duplicateTagIndex] = _.cloneDeep(tag);
-					this.filteredArray
-						.push(this.leftSideTags[i]);
-				}
-			});
+			if (policyGroups) {
+				this.rightSideTags = policyGroups.tags;
+				this.clonedRightTags = _.cloneDeep(this.rightSideTags);
+				this.toBeScanned = JSON.parse(policyGroups.toBeScanned);
+				this.selectedDeviceTagType = this.rightSideTags.length ? 'selectedTags' : 'allDevices';
+				_.each(this.leftSideTags, (tag, i) => {
+					const duplicateTagIndex = this.rightSideTags.findIndex(rightSideTag =>
+						tag.tagName === rightSideTag.tagName);
+					if (duplicateTagIndex !== -1) {
+						this.rightSideTags[duplicateTagIndex] = _.cloneDeep(tag);
+						this.filteredArray
+							.push(this.leftSideTags[i]);
+					}
+				});
 
-			this.leftSideTags = _.differenceWith(this.leftSideTags, this.filteredArray, _.isEqual);
-			this.filteredArray = [];
+				this.leftSideTags = _.differenceWith(this.leftSideTags, this.filteredArray, _.isEqual);
+				this.filteredArray = [];
+
+			} else {
+				this.rightSideTags  = [];
+				_.cloneDeep(this.rightSideTags);
+			}
 		}
 	}
 	/**
@@ -274,12 +309,23 @@ export class AdminComplienceComponent implements OnInit {
 	public onPolicySelected (policy) {
 		_.invoke(this.alert, 'hide');
 		this.triggerModal = 'policy';
-		if (policy !== 'select' && this.isPolicyChanged
-		&& this.saveDetails.body.policy !== 'select' && this.enableSaveButton) {
+		// if (policy !== 'select' && this.isPolicyChanged
+		// && this.saveDetails.body.policy !== 'select' && this.enableSaveButton) {
+		// 	this.cuiModalService.show(this.switchBetweenPolicy, 'normal');
+		// }
+		// this.isPolicyChanged = true;
+		// this.filterDuplicates();
+		// if (this.rightSideTags.length) {
+		// 	this.selectedDeviceTagType = 'selectedTags';
+		// }
+
+		if (policy !== 'select' && !this.enableSaveButton) {
+			this.leftSideTags = this.clonedLeftTags;
+			this.getRightSideTags()
+				.subscribe();
+		} else {
 			this.cuiModalService.show(this.switchBetweenPolicy, 'normal');
 		}
-		this.isPolicyChanged = true;
-		this.filterDuplicates();
 	}
 
 	/**
@@ -296,55 +342,44 @@ export class AdminComplienceComponent implements OnInit {
 	 */
 	public savePolicyDetails () {
 
-		this.assetTaggingService.getSelectedTags()
-		.pipe(
-			switchMap(tags => {
-				this.saveDetails.body.tags = tags;
-				this.saveDetails.body.toBeScanned = this.toBeScanned;
-				if (this.selectedDeviceTagType === 'allDevices') {
-					this.saveDetails.body.tags = [];
-				}
+		this.saveDetails.body.toBeScanned = this.toBeScanned;
+		if (this.selectedDeviceTagType === 'allDevices') {
+			this.saveDetails.body.tags = [];
+		}
+		const params = {
+			body: this.saveDetails.body,
+			customerId: this.customerId,
+			policy: this.saveDetails.body.policy,
+			tags: this.saveDetails.body.tags,
+			toBeScanned: this.saveDetails.body.toBeScanned,
+		};
 
-				const params = {
-					body: this.saveDetails.body,
-					customerId: this.customerId,
-					policy: this.saveDetails.body.policy,
-					tags: this.saveDetails.body.tags,
-					toBeScanned: this.saveDetails.body.toBeScanned,
-				};
-
-				return this.assetTaggingService.postPolicyMapping(params);
-			}),
-			takeUntil(this.destroyed$))
-		.subscribe(() => this.handleSaveSuccess(),
-					);
+		this.assetTaggingService.postPolicyMapping(params)
+			.pipe(takeUntil(this.destroyed$))
+			.subscribe(() => this.handleSaveSuccess());
 	}
 
 	/**
 	 * handle success scenario on save
 	 */
 	public handleSaveSuccess () {
+		this.enableSaveButton = false;
+		let alert = '_AssetsTaggingSavePolicyAlertDisabled_';
+		if (this.saveDetails.body.toBeScanned) {
+			alert = '_AssetsTaggingSavePolicyAlertEnabled_';
+		}
 		_.invoke(this.alert, 'show',
-		I18n.get('_AssetsTaggingSavePolicyAlert_'), 'success');
+		I18n.get(alert, this.saveDetails.body.policy), 'success');
 		this.enableSaveButton = false;
 
 		/** Needs to save Right side tag details and
 		 * left side tag details
 		 */
-		if (this.saveDetails.body.tags.length) {
-			_.each(this.rightSideTagsResponse.policyGroups, policy => {
-				if (policy.policyName === this.saveDetails.body.policy) {
-					policy.tags = [];
-					_.each(this.rightSideTags, tag => {
-						const tempObj = {
-							tagName: tag.tagName,
-							tagValue: tag.tagValue,
-						};
-						policy.tags.push(tempObj);
-					});
-				}
-			});
-		}
+		_.each(this.rightSideTagsResponse.policyGroups, policy => {
+			if (policy.policyName === this.saveDetails.body.policy) {
+				policy.tags = this.saveDetails.body.tags;
+			}
+		});
 
 	}
 
@@ -358,6 +393,21 @@ export class AdminComplienceComponent implements OnInit {
 		};
 		this.assetTaggingService.updateOptStatus(params)
 		.subscribe();
+
+		if (!this.optlnStatus) {
+			this.assetTaggingService.deleteMapping(params)
+				.subscribe();
+		}
+
+		if (this.optlnStatus && this.isOptlnStatusChanged) {
+			this.isOptlnStatusChanged = false;
+			forkJoin(
+				this.getLeftSideTags(),
+				this.getRightSideTags(),
+			)
+			.subscribe();
+
+		}
 	}
 
 	/**
@@ -390,7 +440,6 @@ export class AdminComplienceComponent implements OnInit {
 		} else if (!this.enableSaveButton && this.selectedDeviceTagType === 'allDevices') {
 			this.hideAssetTags = true;
 		} else if (this.selectedDeviceTagType === 'selectedTags' && this.enableSaveButton) {
-			this.filterDuplicates();
 			this.hideAssetTags = false;
 		} else {
 			this.hideAssetTags = false;
@@ -403,14 +452,32 @@ export class AdminComplienceComponent implements OnInit {
 	public discardChangesOnPolicyChange () {
 		this.hideAssetTags = true;
 		if (this.triggerModal === 'policy') {
-			this.onChangesDeviceTagType();
-			this.selectedDeviceTagType = 'allDevices';
+			this.getRightSideTags()
+			.subscribe();
+			 this.selectedDeviceTagType = 'allDevices';
 			this.hideAssetTags = true;
-			this.filterDuplicates();
-		} else if (this.selectedDeviceTagType === 'allDevices') {
-			this.assetTaggingService.Tags = [];
 		}
-		this.filterDuplicates();
+		_.each(this.clonedRightTags, tag => {
+			tag.selected = false;
+		});
+		_.each(this.clonedLeftTags, tag => {
+			tag.selected = false;
+		});
+		this.leftSideTags = this.clonedLeftTags;
+		this.rightSideTags = this.clonedRightTags;
+
+		_.each(this.leftSideTags, (tag, i) => {
+			const duplicateTagIndex = this.rightSideTags.findIndex(rightSideTag =>
+				tag.tagName === rightSideTag.tagName);
+			if (duplicateTagIndex !== -1) {
+				this.rightSideTags[duplicateTagIndex] = _.cloneDeep(tag);
+				this.filteredArray
+					.push(this.leftSideTags[i]);
+			}
+		});
+
+		this.leftSideTags = _.differenceWith(this.leftSideTags, this.filteredArray, _.isEqual);
+		this.filteredArray = [];
 		this.enableSaveButton = false;
 		this.cuiModalService.hide();
 	}

@@ -1,8 +1,5 @@
-@import '../../../variables.scss';
+@import '~src/variables.scss';
 
-$cx-accent-color-1: #00bceb;
-$cx-accent-color-2: #227bb1;
-$cx-gray-color-2: #6c757d;
 $cx-gray-color-4: #595b61;
 $cx-hover-color: rgba(#ecf4fc, 0.7);
 $cx-font-size-12: 12px;
@@ -254,7 +251,7 @@ $cx-font-size-24: 24px;
 	}
 
 	.group-label {
-		color: $cx-gray-color-2;
+		color: $gray-text-color;
 		font-size: $cx-font-size-12;
 		text-transform: uppercase;
 	}
@@ -274,7 +271,7 @@ $cx-font-size-24: 24px;
 			&:hover,
 			&:active,
 			&:focus {
-				color: $cx-accent-color-2;
+				color: $default-link-color;
 			}
 		}
 
@@ -293,7 +290,7 @@ $cx-font-size-24: 24px;
 
 			&.selected {
 				background-color: #ecf4fc !important;
-				color: $cx-accent-color-2 !important; // Required to override cui color
+				color: $default-link-color !important; // Required to override cui color
 
 				&::after {
 					font-size: $cx-font-size-18;
@@ -384,12 +381,12 @@ $cx-font-size-24: 24px;
 	border-spacing: 2px;
 	border-collapse: collapse;
 	margin-top: 20px;
-	color: #6c757d;
+	color: $gray-text-color;
 	position: relative;
 
 	.sortable:hover,
 	.sortable.sorted {
-		color: #227bb1;
+		color: $default-link-color;
 	}
 
 	.icon-chevron-down,
@@ -494,7 +491,7 @@ $cx-font-size-24: 24px;
 					}
 
 					&::after {
-						color: #00bceb;
+						color: $accent-color1;
 						font-size: 16px;
 					}
 				}

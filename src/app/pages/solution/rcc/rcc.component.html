@@ -3,7 +3,7 @@
 	<div class="col-md-12">
 		<div class="row">
 			<div class="col-md-2 filter__selected">
-				<div class="row">
+				<div class="row" [ngClass]="{ 'disabled': showRunningBanner || !optInStatus}">
 					<div class="col-md-12 panel flex-center flex-fill filter assets-count"
 						data-auto-id="selectedView" (click)="selectedView('violation')" [ngClass]="{'text-primary': !isAssetView}">
 						<div class="flex-center dbl-padding-left dbl-padding-right font-size-32" [innerText]="policyViolationsTotalCount | number"></div>
@@ -83,9 +83,51 @@
 						</div>
 						<div class="help-block text-danger flex" 
 							role="alert" *ngIf="invalidSearchInput || searchForm.invalid">
-							<span [innerText]="'_RccInvalidSearchInput_' | i18n" ></span>
+							<span [innerText]="'_RccInvalidSearchInput_' | i18n"></span>
 						</div>
 					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="panel panel--dkgray half-margin-top" *ngIf="showNoAccessMsg">
+		<div class="row cx-no-dnac-container">
+			<div class="half-padding-left">
+				<div class="flex-center">
+					<span class="cx-no-dnac-label" [innerText]="'_RccNoAccess_' | i18n"></span>
+					<span class="cx-no-dnac-status" [innerText]="'_RccNoAccessBannerMsg_' | i18n"></span>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="panel panel--dkgray half-margin-top" *ngIf="cxLevel > 1 && !loading && !optInStatus">
+		<div class="row cx-no-dnac-container" *ngIf="userRole !== 'admin'">
+			<div class="half-padding-left">
+				<div class="flex-center">
+					<span class="cx-no-dnac-label" [innerText]="'_RccNotAnAdmin_' | i18n"></span>
+					<span class="cx-no-dnac-status" [innerText]="'_RccNotAnAdminBannerMsg_' | i18n"></span>
+				</div>
+			</div>
+		</div>
+		<div class="row cx-no-dnac-container" *ngIf="userRole === 'admin'">
+			<div class="half-padding-left">
+				<div class="flex-center">
+					<span class="cx-no-dnac-label" [innerText]="'_RccViewViolations_' | i18n"></span>
+					<span class="cx-no-dnac-status" [innerText]="'_RccupdateSettings_' | i18n"></span>
+				</div>
+			</div>
+			<div class="flex-right base-margin-right">
+				<button class="btn btn--wide btn--primary flex-right text-uppercase text-bold" tabindex="0" [routerLink]="['/admin/compliance']" [innerText]="'_RccComplianceSettings_' | i18n"></button>
+			</div>
+		</div>
+	</div>
+	<div class="panel panel--dkgray half-margin-top" *ngIf="showRunningBanner">
+		<div class="row cx-no-dnac-container">
+			<div>
+				<div class="flex-center">
+					<span class="cx-no-dnac-label" [innerText]="'_RccCollectingViolations_' | i18n"></span>
+					<span class="cx-no-dnac-status" [innerText]="'_RccNextScheduleTime_' | i18n"></span>&nbsp;
+					<span [innerText]="nextScheduleTime">.</span>
 				</div>
 			</div>
 		</div>
@@ -105,12 +147,12 @@
 			*ngIf="!loading && policyViolationsGridData?.length > 0">
 		</cui-table>
 		<div class="text-center dbl-margin-top dbl-margin-bottom">
-			<div *ngIf="errorPolicyView">
+			<div *ngIf="errorPolicyView || (!optInStatus && !loading) || showRunningBanner">
 				<div class="text-muted text-xlarge " [innerText]="'_RccErrorViolationMessage_' | i18n" ></div>
 				<div class="text-muted text-small " [innerText]="'_RccErrorViolationListMessage_' | i18n" ></div>
 			</div>
-			<span *ngIf="!loading && noTableData" class="text-muted text-xlarge" [innerText]="'_RccNoDataAvailable_' | i18n"></span>
-		</div>	
+			<span *ngIf="!loading && noTableData" class="text-muted text-xlarge" [innerText]="'_RccNoViolationsAvailable_' | i18n"></span>
+		</div>
 		<div class="section">
 			<cui-pager *ngIf="!loading && policyViolationsGridData?.length > 0"
 				[page]="tableConfig?.tableOffset"
@@ -135,7 +177,7 @@
 			*ngIf="!loading && tableAssetDataSample?.length > 0">
 		</cui-table>
 		<div class="text-center dbl-margin-top dbl-margin-bottom">
-			<div *ngIf="errorPolicyView">
+			<div *ngIf="errorPolicyView || (!optInStatus && !loading) || showRunningBanner">
 				<div class="text-muted text-xlarge " [innerText]="'_RccErrorAssetMessage_' | i18n" ></div>
 				<div class="text-muted text-small " [innerText]="'_RccErrorAssetListMessage_' | i18n" ></div>
 			</div>				

@@ -303,8 +303,8 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 				customerId: this.customerId,
 				pageNumber: String(this.pageNumber),
 				rowsPerPage: String(this.rowsPerPage),
-				solution: this.solution.name,
-				useCase: this.technology.name,
+				solution: _.get(this, 'solution.name', 'IBN'),
+				useCase: _.get(this, 'technology.name', 'Campus Software Image Management'),
 			};
 
 			return this.devicePolicyService.getDevicesForPolicyCreationUsingGET1(params);
@@ -346,8 +346,8 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 				customerId: this.customerId,
 				pageNumber: String(this.pageNumber),
 				rowsPerPage: String(this.rowsPerPage),
-				solution: this.solution.name,
-				useCase: this.technology.name,
+				solution: _.get(this, 'solution.name', 'IBN'),
+				useCase: _.get(this, 'technology.name', 'Campus Software Image Management'),
 			};
 
 			return this.devicePolicyService.getDevicesForIgnorePolicyCreationUsingGET(params);
@@ -383,8 +383,8 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 				customerId: this.customerId,
 				pageNumber: String(this.pageNumber),
 				rowsPerPage: String(this.rowsPerPage),
-				solution: this.solution.name,
-				useCase: this.technology.name,
+				solution: _.get(this, 'solution.name', 'IBN'),
+				useCase: _.get(this, 'technology.name', 'Campus Software Image Management'),
 			};
 
 			return this.devicePolicyService.getDevicesForPolicyCreationUsingGET1(params);
@@ -439,13 +439,13 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 
 		this.leftListCall = function () {
 			const params: ControlPointDevicePolicyAPIService
-			.GetDevicesForIgnorePolicyCreationUsingGETParams = {
+			.GetEligibleDevicesForGivenIgnorePolicyUsingGETParams = {
 				customerId: this.customerId,
 				pageNumber: String(this.pageNumber),
 				policyId: _.get(this.policy, 'policyId'),
 				rowsPerPage: String(this.rowsPerPage),
-				solution: this.solution.name,
-				useCase: this.technology.name,
+				solution: _.get(this, 'solution.name', 'IBN'),
+				useCase: _.get(this, 'technology.name', 'Campus Software Image Management'),
 			};
 
 			return this.devicePolicyService.getEligibleDevicesForGivenIgnorePolicyUsingGET(params);
@@ -460,7 +460,8 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 				rowsPerPage: '9999',
 			};
 
-			return this.devicePolicyService.getDevicesForGivenIgnorePolicyUsingGET(params);
+			return this.devicePolicyService
+				.getEligibleDevicesForGivenIgnorePolicyUsingGET(params);
 		};
 
 		this.submitCall = function () {
@@ -595,7 +596,7 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 	 * @returns copied object
 	 */
 	private jsonCopy (obj: any) {
-		return JSON.parse(JSON.stringify(obj));
+		return _.cloneDeep(obj);
 	}
 
 	/**
@@ -785,16 +786,15 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 				this.deviceListLeft = this.jsonCopy(_.get(response, 'data'));
 
 				const rightHwIds = _.map(this.deviceListRight, item =>
-					_.get(item, 'hwId'));
+					_.get(item, 'pk'));
 
 				for (let index = this.deviceListLeft.length - 1; index >= 0; index -= 1) {
-					const leftHwIds = _.get(this.deviceListLeft[index], 'hwId');
+					const leftHwIds = _.get(this.deviceListLeft[index], 'pk');
 
 					if (rightHwIds.includes(leftHwIds)) {
-						this.logger.debug(`already have hwId ${leftHwIds}`);
+						this.logger.debug(`already have pk ${leftHwIds}`);
 						this.deviceListLeft.splice(index, 1);
 					}
-
 				}
 
 				this.handleLeftDeviceSelectionChanged();

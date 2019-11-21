@@ -1,5 +1,5 @@
 /* tslint:disable */
-import { ICType } from './ictype';
+import { CDET } from './cdet';
 export interface CriticalBug {
   severity?: 'notice' | 'info' | 'warning' | 'ok' | 'error' | 'high' | 'low' | 'critical';
   id?: string;
@@ -12,5 +12,5 @@ export interface CriticalBug {
   lastUpdated?: string;
   swVersion?: string;
   assetsImpacted?: number;
-  icType?: ICType;
+  cdets?: CDET;
 }
