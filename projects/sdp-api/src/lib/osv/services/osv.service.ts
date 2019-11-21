@@ -582,7 +582,8 @@ class OSVService extends __BaseService {
  	* Software Group Assets
  	* @param params The `OSVService.GetSoftwareGroupDetailsParam` containing the following parameters:
  	*
- 	* - `customerId`: Unique identifier of a Cisco customer.
+	* - `customerId`: Unique identifier of a Cisco customer.
+	* - `profileId`: unique identifier of software group
  	* - `profileName` : unique identifier of software group
  	* - `productFamily` : product family of software group
  	*
@@ -596,6 +597,7 @@ class OSVService extends __BaseService {
 		if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
 		__params = __params.set('profileName', params.profileName);
 		__params = __params.set('productFamily', params.productFamily);
+		__params = __params.set('profileId', params.profileId);
 		let req = new HttpRequest<any>(
 			'GET',
 			this.rootUrl + `${OSVService.getSoftwareGroupRecommendationPath}`,
@@ -618,6 +620,7 @@ class OSVService extends __BaseService {
 	 * Software Group Assets
 	 * @param params The `OSVService.GetSoftwareGroupDetailsParam` containing the following parameters:
 	 * - `customerId`: Unique identifier of a Cisco customer.
+	 * - `profileId`: unique identifier of software group
 	 * - `profileName` : unique identifier of software group
 	 * - `profileName` : product family of software gropu
 	 * @return successful operation
@@ -982,6 +985,10 @@ module OSVService {
 		 * Product Family of Selected Software Group 
 		 */
 		productFamily: string;
+		/**
+		 * profile id
+		 */
+		profileId:string;
 	}
 
 	/**
@@ -1031,7 +1038,7 @@ module OSVService {
 	 */
 	export interface UpdateProfileParams {
 		/**
-				 * Unique identifier of a Cisco customer.
+			* Unique identifier of a Cisco customer.
 				 */
 		customerId: string;
 		/**
@@ -1042,6 +1049,10 @@ module OSVService {
 		 * optimal version to be updated
 		 */
 		optimalVersion: string;
+		/**
+		 * profile id
+		 */
+		profileId: string;
 	}
 
 	/**
