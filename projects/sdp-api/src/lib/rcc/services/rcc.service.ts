@@ -16,6 +16,7 @@ import { RccAssetDetails, RccAssetFilterReq, RccAssetSelectReq, RccAssetFilterRe
 class RccService extends __BaseService {
 
 	static readonly optInDetail = '/customerportal/compliance/v1/service/optInDetail';
+	static readonly getScheduleTime = '/customerportal/controlpoint/v1/collectionPolicy/nextSchedule/{customerId}';
 	static readonly getViolationCount = '/customerportal/compliance/v1/service/summary-filters';
 	static readonly getAssetCount = '/customerportal/compliance/v1/service/severity-ostype-detail';
 	static readonly getGridData = '/customerportal/compliance/v1/service/violation-summary';
@@ -33,6 +34,16 @@ class RccService extends __BaseService {
 		return this.invokeHTTPGet<RccData>(
 			`${this.rootUrl}${RccService.optInDetail}`,
 			queryParamMapObj)
+			.pipe(
+				__map(_r => _r.body)
+			);
+	}
+
+	getScheduleTime(pathParam: RccCustomerCollector): __Observable<any> {
+		let url = this.appendPathParams(pathParam, RccService.getScheduleTime);
+		return this.invokeHTTPGet<RccData>(
+			`${this.rootUrl}${url}`,
+			{ })
 			.pipe(
 				__map(_r => _r.body)
 			);
@@ -150,6 +161,16 @@ class RccService extends __BaseService {
 			}
 		}
 		return __params;
+	}
+
+	public appendPathParams(pathParamMapObj: object, url: string) {
+		for (let item in pathParamMapObj) {
+			if (pathParamMapObj[item] !== null && pathParamMapObj[item] !== "") {
+				const key:string = "{" + item + "}"; 
+				url = url.replace(key, pathParamMapObj[item])
+			}
+		}
+		return url;
 	}
 }
 export { RccService };
