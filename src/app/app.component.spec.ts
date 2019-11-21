@@ -214,7 +214,7 @@ describe('AppComponent', () => {
 				userResolve.getCustomerId()
 				.subscribe((id: string) => {
 					expect(id)
-						.toEqual(`${mappedUser.info.customerId}:0`);
+						.toEqual(`${mappedUser.info.customerId}_0`);
 
 					done();
 				});
