@@ -184,6 +184,7 @@
 	"_ArchitectureNonCompliant_": "Non Compliant",
 	"_ArchitectureNotApplicable_": "Not Applicable",
 	"_ArchitectureNotAvailable_": "Not Evaluated",
+	"_ArchitectureNoWarningRecommendations_": "No Recommendations",
 	"_ArchitectureNoVisualFiltersToShow_": "No Visual Filters to display",
 	"_ArchitectureOverallReadiness_": "Overall Architecture",
 	"_ArchitecturePnpReady_": "Device Onboarding (PnP)",
