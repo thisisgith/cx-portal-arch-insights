@@ -296,7 +296,9 @@
 				<button class="cx-btn cx-btn--small cx-btn--primary text-uppercase qtr-margin-left"
 					attr.data-auto-id = "MoreATXWatchNow-{{ data.recordingURL }}"
 					[ngClass]="data?.recordingURL ? null : 'disabled'"
-					(click)="crossLaunch(data.recordingURL)"
+					(click)="openWatchNow({src: data.recordingURL,
+						title: data.title
+					})"
 					[innerText]="'_WatchNow_' | i18n">
 				</button>
 			</div>
@@ -388,7 +390,8 @@
 			<button class="cx-btn cx-btn--small cx-btn--primary text-uppercase"
 				data-auto-id = "recommendedATXWatchButton"
 				[ngClass]="componentData.atx?.recommended?.recordingURL ? null : 'disabled'"
-				(click)="crossLaunch(componentData.atx.recommended.recordingURL)"
+				(click)="openWatchNow({ src: componentData.atx.recommended.recordingURL,
+					title: componentData.atx.recommended.title})"
 				[innerText]="'_WatchNow_' | i18n">
 			</button>
 			<ng-container *ngIf="componentData?.atx?.recommended && recommendedAtxScheduleCardOpened">
@@ -1116,7 +1119,9 @@
 					<button class="cx-btn cx-btn--small cx-btn--primary text-uppercase"
 						attr.data-auto-id = "CardATXWatchNow-{{ item.recordingURL }}"
 						[ngClass]="item?.recordingURL ? null : 'disabled'"
-						(click)="crossLaunch(item.recordingURL)"
+						(click)="openWatchNow({src: item.recordingURL,
+							title: item.title
+						})"
 						[innerText]="'_WatchNow_' | i18n">
 					</button>
 				</div>
@@ -1536,7 +1541,9 @@
 		<button class="cx-btn cx-btn--small cx-btn--primary text-uppercase half-margin-left"
 			attr.data-auto-id = "ListATXWatchNow-{{ celldata.recordingURL }}"
 			[ngClass]="celldata?.recordingURL ? null : 'disabled'"
-			(click)="crossLaunch(celldata.recordingURL)"
+			(click)="openWatchNow({src: celldata.recordingURL,
+				title: celldata.title
+			})"
 			[innerText]="'_WatchNow_' | i18n">
 		</button>
 	</div>

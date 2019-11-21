@@ -40,10 +40,12 @@ import { map, catchError, takeUntil } from 'rxjs/operators';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { ActivatedRoute } from '@angular/router';
 import { User } from '@interfaces';
-import { CuiTableOptions } from '@cisco-ngx/cui-components';
+import { CuiTableOptions, CuiModalService } from '@cisco-ngx/cui-components';
 import { RacetrackInfoService } from '@services';
 import { environment } from '@environment';
 import { AssetType } from './feedback/session-feedback.component';
+
+import { AtxWatchModalComponent } from './atx-watch-modal/atx-watch-modal.component';
 
 /**
  * Interface representing success path and product guides modals
@@ -369,6 +371,7 @@ export class LifecycleComponent implements OnDestroy {
 		private route: ActivatedRoute,
 		private racetrackInfoService: RacetrackInfoService,
 		private partnerService: GenericApiControllerService,
+		private cuiModalService: CuiModalService,
 	) {
 		this.user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(this.user, ['info', 'customerId']);
@@ -2492,5 +2495,14 @@ export class LifecycleComponent implements OnDestroy {
 		const dmTemp = document.createElement('template');
 		dmTemp.innerHTML = txtString.trim();
 		return dmTemp.content.cloneNode(true).textContent;
+	}
+
+	/**
+	 * Open the Watch Now modal for atx
+	 * @param {string} src - The src url
+	 * @param {string} title - The title of the ATX entity
+	 */
+	public openWatchNow ({ src, title }: { src: string, title: string }) {
+		this.cuiModalService.showComponent(AtxWatchModalComponent, { src, title }, 'normal');
 	}
 }
