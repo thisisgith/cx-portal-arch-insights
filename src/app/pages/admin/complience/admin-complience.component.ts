@@ -79,6 +79,7 @@ export class AdminComplienceComponent implements OnInit {
 	) {
 		this.user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(this.user, ['info', 'customerId']);
+		this.customerId = '217393752';
 		this.saveDetails.body.customerId = this.customerId;
 	}
 
@@ -276,23 +277,28 @@ export class AdminComplienceComponent implements OnInit {
 		if (this.rightSideTagsResponse.policyGroups) {
 			const policyGroups = _.find(this.rightSideTagsResponse.policyGroups,
 				 { policyName: this.saveDetails.body.policy });
-			this.rightSideTags = policyGroups.tags;
-			this.clonedRightTags = _.cloneDeep(this.rightSideTags);
-			this.toBeScanned = JSON.parse(policyGroups.toBeScanned);
-			this.selectedDeviceTagType = this.rightSideTags.length ? 'selectedTags' : 'allDevices';
-			_.each(this.leftSideTags, (tag, i) => {
-				const duplicateTagIndex = this.rightSideTags.findIndex(rightSideTag =>
-					tag.tagName === rightSideTag.tagName);
-				if (duplicateTagIndex !== -1) {
-					this.rightSideTags[duplicateTagIndex] = _.cloneDeep(tag);
-					this.filteredArray
-						.push(this.leftSideTags[i]);
-				}
-			});
+			if (policyGroups) {
+				this.rightSideTags = policyGroups.tags;
+				this.clonedRightTags = _.cloneDeep(this.rightSideTags);
+				this.toBeScanned = JSON.parse(policyGroups.toBeScanned);
+				this.selectedDeviceTagType = this.rightSideTags.length ? 'selectedTags' : 'allDevices';
+				_.each(this.leftSideTags, (tag, i) => {
+					const duplicateTagIndex = this.rightSideTags.findIndex(rightSideTag =>
+						tag.tagName === rightSideTag.tagName);
+					if (duplicateTagIndex !== -1) {
+						this.rightSideTags[duplicateTagIndex] = _.cloneDeep(tag);
+						this.filteredArray
+							.push(this.leftSideTags[i]);
+					}
+				});
 
-			this.leftSideTags = _.differenceWith(this.leftSideTags, this.filteredArray, _.isEqual);
-			this.filteredArray = [];
+				this.leftSideTags = _.differenceWith(this.leftSideTags, this.filteredArray, _.isEqual);
+				this.filteredArray = [];
 
+			} else {
+				this.rightSideTags  = [];
+				_.cloneDeep(this.rightSideTags);
+			}
 		}
 	}
 	/**

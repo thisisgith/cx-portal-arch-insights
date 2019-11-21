@@ -26,7 +26,7 @@ class AssetTaggingService extends __BaseService {
 	static readonly getPolicyMappingPath = '/customerportal/asset-tagging/v1/save-tag-policy-mapping-api';
 	static readonly getOptinStatus = '/customerportal/compliance/v1/service/checkOptInStatus';
 	static readonly updateOptinStatus = '/customerportal/compliance/v1/service/updateOptInStatus';
-	static readonly deleteMappingPath = '/customerportal/compliance/v1/delete-mapped-policies-api';
+	static readonly deleteMappingPath = '/customerportal/asset-tagging/v1/delete-mapped-policies-api';
 
 
 	private tags = new BehaviorSubject<any>({});
