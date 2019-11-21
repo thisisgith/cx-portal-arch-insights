@@ -1,11 +1,11 @@
 
 import { Injectable } from '@angular/core';
 import { Resolve } from '@angular/router';
-import { EntitlementWrapperService, UserEntitlement, OrgUserService, OrgUserResponse } from '@sdp-api';
+import { EntitlementWrapperService, UserEntitlement, OrgUserService, OrgUserResponse, Company } from '@sdp-api';
 import { Observable, of, ReplaySubject } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import { LogService } from '@cisco-ngx/cui-services';
-import { User, SmartAccount } from '@interfaces';
+import { User } from '@interfaces';
 import * as _ from 'lodash-es';
 import { CuiModalService } from '@cisco-ngx/cui-components';
 import {
@@ -24,14 +24,13 @@ const DEFAULT_DATACENTER = 'usa';
 export class UserResolve implements Resolve<any> {
 
 	private cachedUser: User;
-	private smartAccount: SmartAccount;
+	private companyList: Company[];
+	private smartAccount: Company;
 	private customerId = new ReplaySubject<string>(1);
 	private user = new ReplaySubject<User>(1);
 	private saId = new ReplaySubject<number>(1);
 	private vaId = new ReplaySubject<number>(1);
 	private cxLevel = new ReplaySubject<number>(1);
-	private solution = new ReplaySubject<string>(1);
-	private useCase = new ReplaySubject<string>(1);
 	private role = new ReplaySubject<string>(1);
 	private dataCenter = new ReplaySubject<string>(1);
 
@@ -56,14 +55,6 @@ export class UserResolve implements Resolve<any> {
 		return this.cxLevel.asObservable();
 	}
 
-	public getSolution (): Observable<string> {
-		return this.solution.asObservable();
-	}
-
-	public getUseCase (): Observable<string> {
-		return this.useCase.asObservable();
-	}
-
 	public getRole (): Observable<string> {
 		return this.role.asObservable();
 	}
@@ -83,16 +74,20 @@ export class UserResolve implements Resolve<any> {
 	/**
 	 * Update the currently active smart account, set it to local storage
 	 * and refresh the page
-	 * @param saId the new amart asccount id to be set
+	 * @param saId the new smart asccount id to be set
 	 */
 	public setSaId (saId: number) {
+		if (this.smartAccount.companyId === saId) {
+			return;
+		}
+
 		const smartAccount = _.find(_.get(this.cachedUser, ['info', 'companyList'], []), {
 			companyId: saId,
 		});
 
 		if (smartAccount) {
 			this.saId.next(saId);
-			this.customerId.next(`${saId}:0`);
+			this.customerId.next(`${saId}_0`);
 			window.localStorage.setItem('activeSmartAccount', `${saId}`);
 			window.location.reload();
 		}
@@ -110,18 +105,19 @@ export class UserResolve implements Resolve<any> {
 		return this.entitlementWrapperService.userAccounts({ accountType: 'CUSTOMER' })
 		.pipe(
 			mergeMap((account: UserEntitlement) => {
+				this.companyList = _.sortBy(account.companyList, 'companyName');
 				const activeSmartAccountId = window.localStorage.getItem('activeSmartAccount');
 				if (activeSmartAccountId) {
-					this.smartAccount = _.find(_.get('account', 'companyList', []), {
-						companyId: activeSmartAccountId,
+					this.smartAccount = _.find(this.companyList, {
+						companyId: Number(activeSmartAccountId),
 					});
 				} else {
-					this.smartAccount = _.get(account, ['companyList', 0]);
+					this.smartAccount = _.get(this.companyList, 0, { });
 				}
 				const saId = _.get(this.smartAccount, 'companyId');
 				this.saId.next(saId);
 				this.vaId.next(0);
-				this.customerId.next(`${saId}:0`);
+				this.customerId.next(`${saId}_0`);
 
 				return this.getAccountInfo(account);
 			}),
@@ -146,23 +142,24 @@ export class UserResolve implements Resolve<any> {
 
 		return this.orgUserService.getUserV2({
 			saId,
-			customerId: `${saId}:0`,
+			customerId: `${saId}_0`,
 			vaId: 0,
 		})
 		.pipe(
 			map((userResponse: OrgUserResponse) => {
 				this.dataCenter.next(_.get(userResponse, ['dataCenter', 'dataCenter'], DEFAULT_DATACENTER));
 				this.cachedUser = {
-					info: this.mapUserResponse(accountResponse, userResponse),
+					info: {
+						...this.mapUserResponse(accountResponse, userResponse),
+						companyList: this.companyList,
+					},
 					service: _.get(userResponse, 'subscribedServiceLevel'),
 				};
 
 				this.user.next(this.cachedUser);
-				const { cxLevel, useCase, solution } = _.get(this.cachedUser, 'service');
+				const { cxLevel } = _.get(this.cachedUser, 'service');
 
 				this.cxLevel.next(Number(cxLevel));
-				this.useCase.next(useCase);
-				this.solution.next(solution);
 				this.role.next(_.get(userResponse, ['individualAccount', 'role']));
 
 				return this.cachedUser;
@@ -170,6 +167,7 @@ export class UserResolve implements Resolve<any> {
 			catchError(err => {
 				this.logger.error('user-resolve : getAccountInfo() ' +
 					`:: Error : (${err.status}) ${err.message}`);
+				this.cuiModalService.showComponent(UnauthorizedUserComponent, { });
 
 				return of(null);
 			}),

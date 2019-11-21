@@ -147,7 +147,7 @@ export const mappedUser = {
 /**
  * The scenarios
  */
-export const v2EntitlementScenarios = [
+export const V2EntitlementScenarios = [
 	{
 		scenarios: {
 			GET: [

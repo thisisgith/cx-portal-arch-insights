@@ -117,7 +117,7 @@ export class FeedbackComponent implements OnInit {
 
 		const email = {
 			body: this.generateBody(),
-			from: `${this.emailParams.from.split('@')[0]}-noreply@cisco.com`,
+			from: `noreply@cisco.com`,
 			htmlBody: false,
 			subject: this.emailParams.subject,
 			to: this.emailParams.to,

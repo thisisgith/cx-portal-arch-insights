@@ -67,8 +67,8 @@ import {
 	SoftwareEOLScenarios,
 	SuccessPathScenarios,
 	SyslogScenarios,
+	V2EntitlementScenarios,
 	VulnerabilityScenarios,
-	v2EntitlementScenarios,
 	FeedbackScenarios,
 } from './';
 
@@ -308,8 +308,8 @@ export const mockSettings: MockSettings = {
 		SoftwareEOLScenarios,
 		SuccessPathScenarios,
 		SyslogScenarios,
+		V2EntitlementScenarios,
 		VulnerabilityScenarios,
-		v2EntitlementScenarios,
 		FeedbackScenarios,
 	]),
 };

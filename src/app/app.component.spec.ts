@@ -131,22 +131,6 @@ describe('AppComponent', () => {
 				],
 				providers: [
 					UserResolve,
-					// {
-					// 	provide: EntitlementWrapperService,
-					// 	useValue: {
-					// 		userAccounts: () => new Observable<{ }>(observer => {
-					// 			observer.next(accountsResponseMock);
-					// 		}),
-					// 	},
-					// },
-					// {
-					// 	provide: OrgUserService,
-					// 	useValue: {
-					// 		getUserV2: () => new Observable<{ }>(observer => {
-					// 			observer.next(v2UserResponseMock);
-					// 		}),
-					// 	},
-					// },
 				],
 			})
 			.compileComponents();
