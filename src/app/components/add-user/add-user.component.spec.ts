@@ -78,8 +78,8 @@ describe('AddUserComponent', () => {
 
 	it('postAddUser Service to be called on success next', () => {
 		const dummyData: UserAddResponseModel = {
+			data : [{ status: 200 }],
 			status : 200,
-			updatedUserResponseList : [{ status: 200 }],
 		};
 		const cuiService = TestBed.get(CuiModalService);
 		spyOn(service, 'AddNewUserUsingPOST')
@@ -100,8 +100,8 @@ describe('AddUserComponent', () => {
 
 	it('alert to be visible on failure next', () => {
 		const dummyData: UserAddResponseModel = {
-			status : 200,
-			updatedUserResponseList : [{ status: 500 }],
+			data : [{ status: 500 }],
+			status : 500,
 		};
 		spyOn(service, 'AddNewUserUsingPOST')
 			.and
@@ -120,7 +120,7 @@ describe('AddUserComponent', () => {
 
 	it('alert to be visible on invalid credentials next', () => {
 		const dummyData: UserAddResponseModel = {
-			status : 4004,
+			status : 500,
 		};
 		spyOn(service, 'AddNewUserUsingPOST')
 			.and

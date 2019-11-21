@@ -70,7 +70,6 @@ export class AddUserComponent implements OnInit {
 			rolesAdded: [
 				{
 					role: this.addUserForm.value.title,
-					tenant: 'SMARTACC',
 				},
 			],
 			saAccountId: this.saAccountId,
@@ -88,30 +87,30 @@ export class AddUserComponent implements OnInit {
 					return empty();
 				}),
 			)
-			.subscribe(data => {
+			.subscribe(response => {
 				this.isLoading = false;
-				this.addUserResponse = data;
-				if (data.status === 200) {
-				  if (data.updatedUserResponseList[0].status === 200) {
+				this.addUserResponse = response;
+				if (response.status === 200) {
 					this.cuiModalService.onSuccess.emit(true);
 					this.cuiModalService.hide();
-				  } else if (data.updatedUserResponseList[0].status === 500) {
-					_.invoke(
-						this.alert,
-						'show',
-						I18n.get('_RoleAlreadyExists_'),
-						'danger',
-					);
-					this.alert.visible = true;
-				  }
-				} else {
-					_.invoke(
-						this.alert,
-						'show',
-						I18n.get('_CCOIDAndEmailDoNotMatch_'),
-						'danger',
-					);
-					this.alert.visible = true;
+				} else if (response.status === 500) {
+					if (response.data && response.data[0].status === 500) {
+						_.invoke(
+							this.alert,
+							'show',
+							I18n.get('_RoleAlreadyExists_'),
+							'danger',
+						);
+						this.alert.visible = true;
+					} else {
+						_.invoke(
+							this.alert,
+							'show',
+							I18n.get('_CCOIDAndEmailDoNotMatch_'),
+							'danger',
+						);
+						this.alert.visible = true;
+					}
 				}
 			});
 	}
