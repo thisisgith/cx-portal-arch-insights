@@ -110,7 +110,7 @@ export class UserResolve implements Resolve<any> {
 				if (activeSmartAccountId) {
 					this.smartAccount = _.find(this.companyList, {
 						companyId: Number(activeSmartAccountId),
-					});
+					}) || _.get(this.companyList, 0, { });
 				} else {
 					this.smartAccount = _.get(this.companyList, 0, { });
 				}

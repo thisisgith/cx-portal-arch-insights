@@ -123,7 +123,7 @@ describe('AppComponent', () => {
 		let entitlementWrapperService: EntitlementWrapperService;
 		let orgUserService: OrgUserService;
 
-		beforeEach(async(() => {
+		beforeEach(() => {
 			TestBed.configureTestingModule({
 				imports: [
 					RouterTestingModule,
@@ -134,9 +134,6 @@ describe('AppComponent', () => {
 				],
 			})
 			.compileComponents();
-		}));
-
-		beforeEach(() => {
 			fixture = TestBed.createComponent(AppComponent);
 			component = fixture.componentInstance;
 			router = fixture.debugElement.injector.get(Router);
@@ -287,6 +284,60 @@ describe('AppComponent', () => {
 				.subscribe();
 			});
 		});
+
+		it('should set the sa id', done => {
+			fixture.whenStable()
+			.then(() => {
+				userResolve.getSaId()
+				.subscribe((n: number) => {
+					expect(n)
+						.toEqual(mappedUser.info.companyList[0].companyId);
+
+					done();
+				});
+
+				userResolve.resolve()
+				.subscribe(() => {
+					userResolve.setSaId(mappedUser.info.companyList[0].companyId);
+					done();
+				});
+			});
+		});
+
+		it('should resolve the default sa id if invalid value is stored locally', done => {
+			window.localStorage.setItem('activeSmartAccount', 'abcde');
+			fixture.whenStable()
+			.then(() => {
+				userResolve.getSaId()
+				.subscribe((n: number) => {
+					expect(n)
+						.toEqual(mappedUser.info.companyList[0].companyId);
+					window.localStorage.removeItem('activeSmartAccount');
+
+					done();
+				});
+
+				userResolve.resolve()
+				.subscribe();
+			});
+		});
+
+		it('should resolve a valid sa id from local storage', done => {
+			window.localStorage.setItem('activeSmartAccount', `${mappedUser.info.companyList[1].companyId}`);
+			fixture.whenStable()
+			.then(() => {
+				userResolve.getSaId()
+				.subscribe((n: number) => {
+					expect(n)
+						.toEqual(mappedUser.info.companyList[1].companyId);
+					window.localStorage.removeItem('activeSmartAccount');
+					done();
+				});
+
+				userResolve.resolve()
+				.subscribe();
+			});
+		});
 	});
 
 	describe('General', () => {
@@ -356,6 +407,14 @@ describe('AppComponent', () => {
 			de = fixture.debugElement.query(By.directive(CuiModalComponent));
 			expect(de)
 				.toBeTruthy();
+		});
+
+		it('should attempt to load foreign language i18n if requested', () => {
+			service.loadI18n(true, 'es');
+		});
+
+		it('should append path to routeStack', () => {
+			service.addRouteToList('test/route/1');
 		});
 
 		it('should get last item from routeStack', () => {
