@@ -229,13 +229,12 @@ export class RccComponent implements OnInit, OnDestroy {
 					this.buildFilters();
 					this.getRCCData(this.violationGridObj);
 					this.getFiltersData();
-					this.loading = false;
 				} else if (this.optInStatus && this.currentRunStatus !== 'COMPLETED') {
 					this.getBannerTimeStamp();
 				} else {
 					this.loading = false;
+					this.filterLoading = false;
 				}
-				this.filterLoading = false;
 			},
 			error => {
 				this.loading = false;
@@ -243,6 +242,7 @@ export class RccComponent implements OnInit, OnDestroy {
 				this.logger.error(
 					'RccComponent : getOptInDetail() ' +
 				`:: Error : (${error.status}) ${error.message}`);
+				this.errorPolicyView = true;
 			},
 		);
 	}
