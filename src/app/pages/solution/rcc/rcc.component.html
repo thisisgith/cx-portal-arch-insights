@@ -126,9 +126,9 @@
 			<div>
 				<div class="flex-center">
 					<span class="cx-no-dnac-label" [innerText]="'_RccCollectingViolations_' | i18n"></span>
-					<span class="cx-no-dnac-status" [innerText]="'_RccNextScheduleTime_' | i18n"></span>&nbsp;
-					<span *ngIf="nextScheduleTime !== ''" class="cx-no-dnac-status" [innerText]="'_RccNextScheduleFor_' | i18n"></span>&nbsp;
-					<span *ngIf="nextScheduleTime !== ''" [innerText]="nextScheduleTime">.</span>
+					<span class="cx-no-dnac-status" [innerText]="'_RccNextScheduleTime_' | i18n"></span>
+					<span *ngIf="nextScheduleTime !== ''" class="cx-no-dnac-status qtr-margin-left" [innerText]="'_RccNextScheduleFor_' | i18n"></span>
+					<span class="qtr-margin-left" *ngIf="nextScheduleTime !== ''" [innerText]="nextScheduleTime">.</span>
 				</div>
 			</div>
 		</div>
