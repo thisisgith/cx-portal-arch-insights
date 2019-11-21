@@ -190,7 +190,8 @@ export class UserMgmtComponent implements AfterViewInit, OnDestroy {
 			ccoId: user.ccoId,
 			isPartner: false,
 			rolesRemoved: user.roles,
-			saCompanyId: this.customerId,
+			// saCompanyId: this.customerId,
+			saCompanyId: '106200',
 		});
 	}
 
