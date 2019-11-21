@@ -1443,7 +1443,7 @@ export const OSVScenarios = [
 			],
 		},
 		url: `${api}profileRecommendations?customerId=${customerId}&profileName=${assetId}` +
-				'&productFamily=Cisco Catalyst 9300 Series Switches',
+				'&productFamily=Cisco Catalyst 9300 Series Switches&profileId=7293498_NA',
 		usecases: ['Use Case 1'],
 	},
 	{
