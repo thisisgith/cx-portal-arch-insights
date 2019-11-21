@@ -54,6 +54,10 @@ export class HeaderComponent implements AfterViewChecked, OnInit, OnDestroy {
 		name: I18n.get('_GettingStarted_'),
 		url: 'https://www.cisco.com/c/dam/en/us/support/docs/cloud-systems-management/Cisco-CX-Collector/Collector_Overview.pdf',
 	}];
+	public releaseNotes = {
+		name: I18n.get('_ReleaseNotes_'),
+		url: 'https://www.cisco.com/c/dam/en/us/support/docs/cloud-systems-management/Cisco-CX-Collector/CX_Portal_Release_Notes.pdf',
+	};
 	public vendorLinks = [{
 		name: I18n.get('_TermsConditions_'),
 		url: 'https://www.cisco.com/c/en/us/about/legal/cloud-and-software/cloud-terms.html',
@@ -69,10 +73,6 @@ export class HeaderComponent implements AfterViewChecked, OnInit, OnDestroy {
 	{
 		name: I18n.get('_Trademarks_'),
 		url: 'https://www.cisco.com/c/en/us/about/legal/trademarks.html',
-	},
-	{
-		name: I18n.get('_ReleaseNotes_'),
-		url: 'https://www.cisco.com/c/dam/en/us/support/docs/cloud-systems-management/Cisco-CX-Collector/CX_Portal_Release_Notes.pdf',
 	}];
 	public profileLinks = [{
 		href: environment.manageProfileUrl,
