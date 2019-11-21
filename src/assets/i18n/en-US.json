@@ -148,7 +148,7 @@
 	"_ArchitectureCPUUsage_": "CPU Usage",
 	"_ArchitectureDescription_": "Description",
 	"_ArchitectureDeviceOnboardingReadiness_": "Device Onboarding",
-	"_ArchitectureDeviceRole_": "Role",
+	"_ArchitectureDeviceRole_": "Device Type",
 	"_ArchitectureDNAC_": "DNAC",
 	"_ArchitectureDnacDetailsForIP_": "Dnac Details For",
 	"_ArchitectureDNACIPAddress_": "DNAC IP",
