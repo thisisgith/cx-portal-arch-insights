@@ -1,5 +1,5 @@
 import { configureTestSuite } from 'ng-bullet';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -16,9 +16,10 @@ import { HeaderComponent } from './components/header/header.component';
 import { AppService } from './app.service';
 import { AppTestModule } from './app-test.module.spec';
 import { User } from '@interfaces';
-import { mappedUser } from '@mock';
-import { throwError } from 'rxjs';
+import { throwError, Observable } from 'rxjs';
 import { EntitlementWrapperService, OrgUserService } from '@sdp-api';
+import { mappedUser } from '@mock';
+
 
 describe('AppComponent', () => {
 	let component: AppComponent;
@@ -131,6 +132,22 @@ describe('AppComponent', () => {
 				],
 				providers: [
 					UserResolve,
+					// {
+					// 	provide: EntitlementWrapperService,
+					// 	useValue: {
+					// 		userAccounts: () => new Observable<{ }>(observer => {
+					// 			observer.next(accountsResponseMock);
+					// 		}),
+					// 	},
+					// },
+					// {
+					// 	provide: OrgUserService,
+					// 	useValue: {
+					// 		getUserV2: () => new Observable<{ }>(observer => {
+					// 			observer.next(v2UserResponseMock);
+					// 		}),
+					// 	},
+					// },
 				],
 			})
 			.compileComponents();
@@ -290,17 +307,27 @@ describe('AppComponent', () => {
 	});
 
 	describe('General', () => {
-		beforeEach(async(() => {
+		beforeEach(() => {
 			TestBed.configureTestingModule({
 				imports: [
 					RouterTestingModule,
 					AppModule,
 				],
+				providers: [
+					{
+						provide: UserResolve,
+						useValue: {
+							getUser: () => new Observable<{ }>(observer => {
+								observer.next(mappedUser);
+							}),
+							resolve: () => new Observable<{ }>(observer => {
+								observer.next(mappedUser);
+							}),
+						},
+					},
+				],
 			});
 			service = TestBed.get(AppService);
-		}));
-
-		beforeEach(() => {
 			fixture = TestBed.createComponent(AppComponent);
 			component = fixture.componentInstance;
 			router = fixture.debugElement.injector.get(Router);
@@ -346,21 +373,6 @@ describe('AppComponent', () => {
 			de = fixture.debugElement.query(By.directive(CuiModalComponent));
 			expect(de)
 				.toBeTruthy();
-		});
-
-		it('should not reload the i18n if already loaded', () => {
-			expect(service.i18nLoaded)
-				.toBeTruthy();
-
-			service.loadI18n();
-		});
-
-		it('should attempt to load foreign language i18n if requested', () => {
-			service.loadI18n(true, 'es');
-		});
-
-		it('should append path to routeStack', () => {
-			service.addRouteToList('test/route/1');
 		});
 
 		it('should get last item from routeStack', () => {
