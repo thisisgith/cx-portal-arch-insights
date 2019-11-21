@@ -1,5 +1,5 @@
 import { configureTestSuite } from 'ng-bullet';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -141,6 +141,10 @@ describe('AppComponent', () => {
 			entitlementWrapperService = TestBed.get(EntitlementWrapperService);
 			orgUserService = TestBed.get(OrgUserService);
 			fixture.detectChanges();
+		});
+
+		afterEach(() => {
+			window.localStorage.removeItem('activeSmartAccount');
 		});
 
 		it('should resolve to a user', done => {
@@ -312,7 +316,6 @@ describe('AppComponent', () => {
 				.subscribe((n: number) => {
 					expect(n)
 						.toEqual(mappedUser.info.companyList[0].companyId);
-					window.localStorage.removeItem('activeSmartAccount');
 
 					done();
 				});
@@ -330,7 +333,6 @@ describe('AppComponent', () => {
 				.subscribe((n: number) => {
 					expect(n)
 						.toEqual(mappedUser.info.companyList[1].companyId);
-					window.localStorage.removeItem('activeSmartAccount');
 					done();
 				});
 
