@@ -1,0 +1,110 @@
+<div>
+	<ng-container *ngTemplateOutlet="searchFilters"></ng-container>
+	<div class="divider qtr-margin-top"></div>
+	<ng-container *ngTemplateOutlet="faultsContent"></ng-container>
+</div>
+
+<ng-template #searchFilters>
+	<div class="row qtr-margin-top">
+		<div class="col-md-6 flex flex-fill">
+			<div class="flex-center-vertical">
+				<span [innerText]="'_FaultEvents_' | i18n" class="text-large"></span>
+				<span [innerText]="
+							'_FaultShowingXofYFaults_'
+								| i18n: paginationCount:totalCount
+					" class="qtr-margin-left text-medium text-muted" data-auto-id="ShowingAlarmCount">
+				</span>
+				<span class="base-margin-right base-margin-left">|</span>
+				<span [ngSwitch]="connectionStatus">
+					<span *ngSwitchCase="'Success'">
+						<span class="icon-check-outline icon-medium text-success">
+						</span>
+						<span [innerText]="'_FaultShwoingOnline_' | i18n"
+							class="qtr-margin-left text-large">
+						</span>
+					</span>
+					<span *ngSwitchCase="'Fail'">
+							<span class="icon-info-outline icon-medium text-muted">
+							</span>
+							<span
+								class="qtr-margin-left text-medium text-muted"
+								[innerText]="
+									'_FaultShwoingOfflineXminutes_'
+										| i18n : offlineTime
+								"
+							>
+							</span>
+						</span>
+				</span>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="flex flex-fluid flex-right">
+				<div class="col-auto">
+					<cui-search
+						placeholder="{{ '_Search_' | i18n }}"
+						[compressed]="true"
+						[debounce]="searchOptions.debounce"
+						(onUpdate)="onSearchUpdate($event)"
+						class="fault-component-search"
+					>
+					</cui-search>
+				</div>
+				<div>
+					<span [innerText]="'_FaultLastUpdatedXminutes_' | i18n : lastUpdateTime"
+						class="base-margin-right text-medium text-muted">
+					</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</ng-template>
+
+<ng-template #faultsContent>
+	<div *ngIf="loading" class="base-margin-bottom">
+		<cui-spinner></cui-spinner>
+	</div>
+	<div class="responsive-table" *ngIf="!loading">
+		<cui-table
+			class="no-close-360"
+			[options]="tableOptions"
+			[data]="tableData"
+			[limit]="tableLimit"
+			[offset]="tableOffset"
+			(onSortingChanged)="onTableSortingChanged($event)"
+			(onTableRowClicked)="connectToFaultDetails($event)"
+		>
+		</cui-table>
+		<div class="section">
+			<cui-pager
+				*ngIf="tableData.length"
+				[page]="tableOffset"
+				[limit]="tableLimit"
+				[totalItems]="totalCount"
+				(onPageChanged)="onPagerUpdated($event)"
+			></cui-pager>
+		</div>
+		<div *ngIf="tableData.length === 0">
+			<div
+				class="text-muted text-xlarge flex-center"
+				[innerText]="'_FaultNoResults_' | i18n"
+			></div>
+		</div>
+	</div>
+</ng-template>
+
+<ng-template #severityColors let-item="celldata">
+	<i class="icon-circle qtr-margin-right"
+		[ngClass]="{
+			'CRITICAL': 'text-danger',
+			'HIGH': 'text-warning',
+			'MEDIUM': 'text-warning-alt',
+			'LOW': 'text-success',
+			'INFORMATIONAL': 'text-muted'
+			}[item.faultSeverity | uppercase]"
+		>
+	</i>
+	<span [innerText]="item.faultSeverity | titlecase"></span>
+</ng-template>
+
+<cui-toast [autoHide]="true"></cui-toast>
