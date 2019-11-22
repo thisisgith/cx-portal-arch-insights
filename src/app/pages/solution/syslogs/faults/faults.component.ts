@@ -271,7 +271,7 @@ export class FaultsComponent implements OnInit, OnChanges {
 	public onShowSuccess (event) {
 		this.toasts.autoHide = 3000;
 		this.toasts.addToast('success', 'Event Type:',
-		`${event.icName}` +
-		' was successfully moved to ' + `${event.tacEnable}` + ' Faults');
+		I18n.get('_FaultXSuccess_', event.icName) +
+		I18n.get('_FaultsYMoved_', event.tacEnable));
 	}
 }
