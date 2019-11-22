@@ -102,7 +102,7 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 	public loadingListRight = false;
 	public error = false;
 	public errorMessage: string;
-
+	public isDeviceListEmpty: boolean;
 	public submitCall: Function;
 	public leftListCall: Function;
 	public rightListCall: Function;
@@ -461,7 +461,7 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 			};
 
 			return this.devicePolicyService
-				.getEligibleDevicesForGivenIgnorePolicyUsingGET(params);
+				.getDevicesForGivenIgnorePolicyUsingGET(params);
 		};
 
 		this.submitCall = function () {
@@ -784,7 +784,7 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 				this.totalRows = _.get(response, ['pagination', 'totalRows']);
 
 				this.deviceListLeft = this.jsonCopy(_.get(response, 'data'));
-
+				this.isDeviceListEmpty = this.deviceListLeft.length > 0;
 				const rightHwIds = _.map(this.deviceListRight, item =>
 					_.get(item, 'pk'));
 

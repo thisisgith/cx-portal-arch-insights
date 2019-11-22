@@ -46,7 +46,7 @@
 		<div
 			*ngIf="!loading && items?.length === 0"
 			class="absolute-center"
-			[innerText]="'_NoDevicesInList_' | i18n">
+			[innerText]="isDeviceListEmpty ? ('_DevicesPartofSelectedList_' | i18n) : ('_NoDevicesInList_' | i18n)">
 		</div>
 	</div>
 	<div class="

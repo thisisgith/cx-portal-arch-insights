@@ -241,6 +241,7 @@
 	<device-list
 		[items]="devices"
 		[loading]="loadingList"
+		[isDeviceListEmpty]="isDeviceListEmpty"
 		rowHeight="50"
 		(selectionEvent)="handleDeviceSelectionChanged(name)">
 	</device-list>
