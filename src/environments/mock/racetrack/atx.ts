@@ -40,7 +40,7 @@ const onboardItems = [
 			{
 				sessionId: 'Session2',
 				sessionStartDate: 1570852800000,
-				scheduled: true,
+				scheduled: false,
 				presenterName: 'Jakub Horbacewicz',
 				registrationURL: 'https://cisco.webex.com/cisco/onstage/g.php?MTID=ee54d58c50a23de754bd0616b5a21e9f1',
 			},
@@ -61,7 +61,7 @@ const onboardItems = [
 			{
 				sessionId: 'Session5',
 				sessionStartDate: 1576464400000,
-				scheduled: false,
+				scheduled: true,
 				presenterName: 'Jakub Horbacewicz',
 				registrationURL: 'https://cisco.webex.com/cisco/onstage/g.php?MTID=ec0bddbdce411e15f41eb5d991eb1d4b6',
 			},
@@ -622,7 +622,7 @@ export const CancelATXScenarios = [
 				},
 			],
 		},
-		url: `${api}/registration?sessionId=Session1&atxId=ATX1`,
+		url: `${api}/registration?sessionId=Session5&customerId=${customerId}&atxId=ATX1`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -638,7 +638,7 @@ export const CancelATXScenarios = [
 				},
 			],
 		},
-		url: `${api}/registration?sessionId=Session2&atxId=ATX1`,
+		url: `${api}/registration?sessionId=Session2&customerId=${customerId}&atxId=ATX1`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -654,7 +654,7 @@ export const CancelATXScenarios = [
 				},
 			],
 		},
-		url: `${api}/registration?sessionId=Session13&atxId=ATX3`,
+		url: `${api}/registration?sessionId=Session13&customerId=${customerId}&atxId=ATX3`,
 		usecases: ['Use Case 1'],
 	},
 ];
@@ -676,7 +676,7 @@ export const RegisterATXScenarios = [
 				},
 			],
 		},
-		url: `${api}/registration?sessionId=Session2&atxId=ATX1`,
+		url: `${api}/registration?sessionId=Session2&customerId=${customerId}&atxId=ATX1`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -692,7 +692,7 @@ export const RegisterATXScenarios = [
 				},
 			],
 		},
-		url: `${api}/registration?sessionId=Session7&atxId=ATX2`,
+		url: `${api}/registration?sessionId=Session7&customerId=${customerId}&atxId=ATX2`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -708,7 +708,7 @@ export const RegisterATXScenarios = [
 				},
 			],
 		},
-		url: `${api}/registration?sessionId=Session13&atxId=ATX3`,
+		url: `${api}/registration?sessionId=Session13&customerId=${customerId}&atxId=ATX3`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -724,7 +724,7 @@ export const RegisterATXScenarios = [
 				},
 			],
 		},
-		url: `${api}/registration?sessionId=Session1&atxId=ATX1`,
+		url: `${api}/registration?sessionId=Session1&customerId=${customerId}&atxId=ATX1`,
 		usecases: ['Use Case 1'],
 	},
 ];
