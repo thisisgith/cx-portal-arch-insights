@@ -1005,6 +1005,7 @@ export class LifecycleComponent implements OnDestroy {
 			window.atxLoading = true;
 		}
 		const params: RacetrackContentService.RegisterUserToAtxParams = {
+			customerId: this.customerId,
 			atxId: atx.atxId,
 			sessionId: ssId,
 		};
@@ -1042,6 +1043,7 @@ export class LifecycleComponent implements OnDestroy {
 			window.atxLoading = true;
 		}
 		const params: RacetrackContentService.CancelSessionATXParams = {
+			customerId: this.customerId,
 			atxId: atx.atxId,
 			sessionId: ssId,
 		};

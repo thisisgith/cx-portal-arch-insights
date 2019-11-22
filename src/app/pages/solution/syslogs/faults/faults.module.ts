@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { SyslogsDevicesComponent } from './syslogs-devices.component';
+import { FaultsComponent } from './faults.component';
 import { environment } from '@environment';
-import { SyslogsDataModule } from '@sdp-api';
+import { FaultDataModule } from '@sdp-api';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import {
 	CuiTabsModule,
@@ -11,23 +11,21 @@ import {
 	CuiPagerModule,
 	CuiDropdownModule,
 	CuiSpinnerModule,
+	CuiSearchModule,
+	CuiToastModule,
 } from '@cisco-ngx/cui-components';
-import { DetailsPanelModule, AssetDetailsModule, AssetDetailsHeaderModule } from '@components';
-import {
-	SyslogsDevicesDetailsModule,
-} from '../syslogs-devices-details/syslogs-devices-details.module';
 
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
  */
-const rootUrl = environment.sdpServiceOrigin;
+const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 
 /**
  * Module representing the Syslog component of the Solution Page
  */
 @NgModule({
-	declarations: [SyslogsDevicesComponent],
-	exports: [SyslogsDevicesComponent],
+	declarations: [FaultsComponent],
+	exports: [FaultsComponent],
 	imports: [
 		CommonModule,
 		FormsModule,
@@ -37,12 +35,10 @@ const rootUrl = environment.sdpServiceOrigin;
 		CuiTabsModule,
 		CuiTableModule,
 		CuiPagerModule,
-		SyslogsDataModule.forRoot({ rootUrl }),
-		DetailsPanelModule,
-		SyslogsDevicesDetailsModule,
-		AssetDetailsModule,
-		AssetDetailsHeaderModule,
+		CuiSearchModule,
+		CuiToastModule,
+		FaultDataModule.forRoot({ rootUrl }),
 		CuiSpinnerModule,
 	],
 })
-export class SyslogsDevicesModule { }
+export class FaultsModule { }

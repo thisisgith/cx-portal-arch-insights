@@ -1,5 +1,6 @@
 /* tslint:disable */
 import { HttpClient, HttpParameterCodec, HttpParams } from '@angular/common/http';
+import { FaultConfiguration } from './fault-configuration';
 
 /**
  * Custom parameter codec to correctly handle the plus sign in parameter
@@ -25,18 +26,11 @@ class ParameterCodec implements HttpParameterCodec {
 const PARAMETER_CODEC = new ParameterCodec();
 
 /**
- * Base configuration for API services
- */
-export class BaseConfiguration {
-  rootUrl: string = 'https://api.cisco.com';
-}
-
-/**
  * Base class for API services
  */
 export class BaseService {
   constructor(
-    protected config: BaseConfiguration,
+    protected config: FaultConfiguration,
     protected http: HttpClient
   ) {
   }

@@ -19,7 +19,6 @@ import {
 	VisualFilterBarModule,
 } from '@components';
 import { SyslogsMessagesModule } from './syslogs-messages/syslogs-messages.module';
-import { SyslogsDevicesModule } from './syslogs-devices/syslogs-devices.module';
 import { InsightTabsModule } from 'src/app/components/insight-tabs/insight-tabs.module';
 
 /**
@@ -55,7 +54,6 @@ const childRoutes: Routes = [
 		PieChartModule,
 		DetailsPanelModule,
 		SyslogsMessagesModule,
-		SyslogsDevicesModule,
 		ColumnChartModule,
 		VisualFilterBarModule,
 		InsightTabsModule,

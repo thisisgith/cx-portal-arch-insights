@@ -503,7 +503,7 @@ export const ACCScenarios = [
 				},
 			],
 		},
-		url: `${api}/${accId1}/request`,
+		url: `${api}/${accId4}/request?customerId=${customerId}`,
 		usecases: ['Use Case 1'],
 	},
 	{
