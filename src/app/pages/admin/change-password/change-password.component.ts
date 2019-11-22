@@ -109,8 +109,9 @@ export class ChangePasswordComponent implements OnDestroy {
 	public clickedProceed = false;
 	public isChangingPass = false;
 	public ipAddressLink: string;
-	public ipAddress: string;
+	public ipAddress: '';
 	public alert: any = { };
+	public errors: any = { };
 	public ipAddressForm = new FormGroup({
 		ipaddress : new FormControl('', [Validators.required, validateIpAddress]),
 	});
@@ -202,7 +203,7 @@ export class ChangePasswordComponent implements OnDestroy {
 	/**
 	 * Opens the given IP Address in a new tab
 	 */
-	private openIpAddressInNewTab () {
+	public openIpAddressInNewTab () {
 		this.clickedProceed = true;
 		this.pollIP();
 		window.open(`${this.ipAddressLink}/verified`, '_blank');
@@ -241,7 +242,8 @@ export class ChangePasswordComponent implements OnDestroy {
 		this.registerCollectorService.changePassword(pass, this.ipAddress)
 		.pipe(
 			catchError(err => {
-				if (err.status === 400) {
+				this.errors = err;
+				if (this.errors.status === 400) {
 					this.isChangingPass = false;
 					_.invoke(
 						this.alert,
