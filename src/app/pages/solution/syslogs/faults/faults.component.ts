@@ -2,7 +2,8 @@ import { Component, OnInit, TemplateRef,
 	ViewChild, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FaultService, FaultSearchParams,
 	FaultGridData, RacetrackSolution,
-	RacetrackTechnology } from '@sdp-api';
+	RacetrackTechnology,
+	FaultResponse} from '@sdp-api';
 import { UserResolve } from '@utilities';
 import { takeUntil, catchError } from 'rxjs/operators';
 import { Subject, of } from 'rxjs';
@@ -78,17 +79,19 @@ export class FaultsComponent implements OnInit, OnChanges {
 	 */
 	public ngOnInit () {
 		this.racetrackInfoService.getCurrentSolution()
+		.pipe(takeUntil(this.destroy$))
 		.subscribe((solution: RacetrackSolution) => {
 			this.searchParams.solution = _.get(solution, 'name');
 		});
 
 		this.racetrackInfoService.getCurrentTechnology()
+		.pipe(takeUntil(this.destroy$))
 		.subscribe((technology: RacetrackTechnology) => {
 			this.searchParams.useCase = _.get(technology, 'name');
+			this.getFaultData(this.searchParams);
 		});
 
 		this.buildTable();
-		this.getFaultData(this.searchParams);
 	}
 
 	/**
@@ -97,7 +100,8 @@ export class FaultsComponent implements OnInit, OnChanges {
 	 */
 	public ngOnChanges (changes: SimpleChanges) {
 		const currentFilter = _.get(changes, ['faultFilter', 'currentValue']);
-		if (currentFilter && !changes.faultFilter.firstChange) {
+		const firstChange = _.get(changes, ['faultFilter', 'firstChange']);
+		if (currentFilter && !firstChange) {
 			this.searchParams.tacEnabled =
 				(currentFilter.faults === this.FAULT_CONSTANT.DETECTED)
 				? this.FAULT_CONSTANT.INACTIVE : this.FAULT_CONSTANT.ACTIVE;
@@ -159,7 +163,7 @@ export class FaultsComponent implements OnInit, OnChanges {
 		this.loading = true;
 		this.faultService.getFaultDetails(searchParams)
 			.pipe(takeUntil(this.destroy$))
-			.subscribe(response => {
+			.subscribe((response: FaultResponse) => {
 				this.totalCount = response.count;
 				this.connectionStatus = response.afmStatus;
 				this.lastUpdateTime = response.lastUpdateTime;

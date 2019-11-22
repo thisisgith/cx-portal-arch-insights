@@ -1,3 +1,6 @@
+import { FaultResponse, FaultSummary, FaultAffectedSystems,
+	FaultFilterData, FaultIcSettings } from '@sdp-api';
+
 /**
  * API URL
  */
@@ -11,7 +14,7 @@ const apiIc = '/api/customerportal/afm/v1/fault/setIcSettings';
 /**
  * Fault response data
  */
-const getFaultData = {
+const getFaultData: FaultResponse = {
 	afmStatus: 'Fail',
 	count: 12,
 	lastUpdateTime: '3h : 15m : 33s ago',
@@ -120,7 +123,7 @@ const getFaultData = {
 /**
  * Fault Summary data
  */
-const getFaultSummaryData = {
+const getFaultSummaryData: FaultSummary = {
 	message: 'Success',
 	responseData: [
 		{
@@ -137,7 +140,7 @@ const getFaultSummaryData = {
 /**
  * Get Fault Affected Systems Data
  */
-const getFaultAffectedSystemData = {
+const getFaultAffectedSystemData: FaultAffectedSystems = {
 	count: 2,
 	message: 'Success',
 	responseData: [
@@ -165,7 +168,7 @@ const getFaultAffectedSystemData = {
 /**
  * Get Fault filter data
  */
-const getFaultFilterData = {
+const getFaultFilterData: FaultFilterData = {
 	message: 'Success',
 	responseData: [
 		{
@@ -175,8 +178,20 @@ const getFaultFilterData = {
 					value: '10101',
 				},
 			],
+			os: [
+				{
+					count: 1,
+					value: 'mac',
+				},
+			],
 		},
 		{
+			productId: [
+				{
+					count: 1,
+					value: '10101',
+				},
+			],
 			os: [
 				{
 					count: 1,
@@ -190,7 +205,7 @@ const getFaultFilterData = {
 /**
  * Get fault empty data
  */
-const getFaultEmptyData = {
+const getFaultEmptyData: FaultResponse = {
 	afmStatus: 'Fail',
 	count: 0,
 	lastUpdateTime: '',
@@ -202,13 +217,7 @@ const getFaultEmptyData = {
 /**
  * update Ic settings
  */
-const getUpdateIcSettings = {
-	aggregationsCount: null,
-	connectionStatus: null,
-	data: null,
-	eventInfo: null,
-	eventList: null,
-	pagination: null,
+const getUpdateIcSettings: FaultIcSettings = {
 	status: null,
 	statusCode: 'Ok',
 	statusMessage: 'Sucessfuly updated existing record',

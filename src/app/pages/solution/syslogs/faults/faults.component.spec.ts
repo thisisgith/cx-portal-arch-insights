@@ -10,6 +10,7 @@ import { FaultScenarios } from '@mock';
 import { SimpleChanges, SimpleChange } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { UserResolve } from '@utilities';
+import { RacetrackInfoService } from '@services';
 
 describe('FaultsComponent', () => {
 
@@ -17,6 +18,7 @@ describe('FaultsComponent', () => {
 	let fixture: ComponentFixture<FaultsComponent>;
 	let faultService: FaultService;
 	let userResolve: UserResolve;
+	let racetrackInfoService: RacetrackInfoService;
 
 	configureTestSuite(() => {
 		TestBed.configureTestingModule({
@@ -25,13 +27,14 @@ describe('FaultsComponent', () => {
 				HttpClientTestingModule,
 				RouterTestingModule,
 			],
-			providers: [FaultService, UserResolve],
+			providers: [FaultService, UserResolve, RacetrackInfoService],
 		});
 	});
 
 	beforeEach(() => {
 		faultService = TestBed.get(FaultService);
 		userResolve = TestBed.get(UserResolve);
+		racetrackInfoService = TestBed.get(RacetrackInfoService);
 		fixture = TestBed.createComponent(FaultsComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
@@ -43,11 +46,11 @@ describe('FaultsComponent', () => {
 	});
 
 	it('should build table on in it', () => {
-		spyOn(component, 'getFaultData')
+		spyOn(racetrackInfoService, 'getCurrentTechnology')
 			.and
 			.callThrough();
 		component.ngOnInit();
-		expect(component.getFaultData)
+		expect(racetrackInfoService.getCurrentTechnology)
 			.toHaveBeenCalled();
 	});
 
@@ -59,6 +62,9 @@ describe('FaultsComponent', () => {
 			faultFilter: new SimpleChange({ }, { faults: 'Detected' }, true),
 		};
 		component.ngOnChanges(firstChange);
+		expect(component.getFaultData)
+			.toHaveBeenCalledTimes(0);
+		fixture.detectChanges();
 		const changes: SimpleChanges = {
 			faultFilter: new SimpleChange({ }, { faults: 'Detected' }, false),
 		};
@@ -68,9 +74,9 @@ describe('FaultsComponent', () => {
 	});
 
 	it('should change to active on updating the filter', () => {
-		spyOn(component, 'getFaultData')
+		spyOn(faultService, 'getFaultDetails')
 			.and
-			.callThrough();
+			.returnValue(of<any>(FaultScenarios[0].scenarios.POST[0].response.body));
 		const changes: SimpleChanges = {
 			faultFilter: new SimpleChange({ }, { faults: 'Not Detected' }, false),
 		};
