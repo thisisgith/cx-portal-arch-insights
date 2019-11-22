@@ -2,8 +2,8 @@ import { Component, OnInit, TemplateRef,
 	ViewChild, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FaultService, FaultSearchParams,
 	FaultGridData, RacetrackSolution,
-	RacetrackTechnology,
-	FaultResponse} from '@sdp-api';
+	RacetrackTechnology, FaultResponse,
+} from '@sdp-api';
 import { UserResolve } from '@utilities';
 import { takeUntil, catchError } from 'rxjs/operators';
 import { Subject, of } from 'rxjs';
