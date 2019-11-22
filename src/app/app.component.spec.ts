@@ -1,5 +1,5 @@
 import { configureTestSuite } from 'ng-bullet';
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -154,9 +154,6 @@ describe('AppComponent', () => {
 
 					done();
 				});
-
-				userResolve.resolve()
-				.subscribe();
 			});
 		});
 
@@ -227,103 +224,101 @@ describe('AppComponent', () => {
 		it('should resolve a customerId', done => {
 			fixture.whenStable()
 			.then(() => {
-				userResolve.getCustomerId()
-				.subscribe((id: string) => {
-					expect(id)
-						.toEqual(`${mappedUser.info.customerId}_0`);
-
-					done();
-				});
-
 				userResolve.resolve()
-				.subscribe();
+				.subscribe(() => {
+					userResolve.getCustomerId()
+					.subscribe((id: string) => {
+						expect(id)
+							.toEqual(`${mappedUser.info.customerId}_0`);
+
+						done();
+					});
+				});
 			});
 		});
 
 		it('should resolve a cxLevel', done => {
 			fixture.whenStable()
 			.then(() => {
-				userResolve.getCXLevel()
-				.subscribe((n: number) => {
-					expect(n)
-						.toEqual(Number(mappedUser.service.cxLevel));
-
-					done();
-				});
-
 				userResolve.resolve()
-				.subscribe();
+				.subscribe(() => {
+					userResolve.getCXLevel()
+					.subscribe((n: number) => {
+						expect(n)
+							.toEqual(Number(mappedUser.service.cxLevel));
+
+						done();
+					});
+				});
 			});
 		});
 
 		it('should resolve a role', done => {
 			fixture.whenStable()
 			.then(() => {
-				userResolve.getRole()
-				.subscribe((s: string) => {
-					expect(s)
-						.toEqual(mappedUser.info.individualAccount.role);
-
-					done();
-				});
-
 				userResolve.resolve()
-				.subscribe();
+				.subscribe(() => {
+					userResolve.getRole()
+					.subscribe((s: string) => {
+						expect(s)
+							.toEqual(mappedUser.info.individualAccount.role);
+
+						done();
+					});
+				});
 			});
 		});
 
 		it('should resolve an sa id', done => {
 			fixture.whenStable()
 			.then(() => {
-				userResolve.getSaId()
-				.subscribe((n: number) => {
-					expect(n)
-						.toEqual(mappedUser.info.companyList[0].companyId);
-
-					done();
-				});
-
 				userResolve.resolve()
-				.subscribe();
+				.subscribe(() => {
+					userResolve.getSaId()
+					.subscribe((n: number) => {
+						expect(n)
+							.toEqual(mappedUser.info.companyList[0].companyId);
+
+						done();
+					});
+				});
 			});
 		});
 
 		it('should resolve a data center', done => {
 			fixture.whenStable()
 			.then(() => {
-				userResolve.getDataCenter()
-				.subscribe((s: string) => {
-					expect(s)
-						.toEqual(mappedUser.info.dataCenter.dataCenter);
-
-					done();
-				});
-
 				userResolve.resolve()
-				.subscribe();
+				.subscribe(() => {
+					userResolve.getDataCenter()
+					.subscribe((s: string) => {
+						expect(s)
+							.toEqual(mappedUser.info.dataCenter.dataCenter);
+
+						done();
+					});
+				});
 			});
 		});
 
 		it('should set the sa id', done => {
 			fixture.whenStable()
 			.then(() => {
-				userResolve.getSaId()
-				.subscribe((n: number) => {
-					expect(n)
-						.toEqual(mappedUser.info.companyList[0].companyId);
-
-					done();
-				});
-
 				userResolve.resolve()
 				.subscribe(() => {
 					userResolve.setSaId(mappedUser.info.companyList[0].companyId);
-					done();
+					userResolve.getSaId()
+					.subscribe((n: number) => {
+						expect(n)
+							.toEqual(mappedUser.info.companyList[0].companyId);
+
+						done();
+					});
 				});
 			});
 		});
 
-		it('should resolve a valid sa id from local storage', fakeAsync(() => {
+		it('should resolve a valid sa id from local storage', done => {
 			window.localStorage.setItem('activeSmartAccount', `${mappedUser.info.companyList[1].companyId}`);
 			fixture.whenStable()
 			.then(() => {
@@ -331,13 +326,13 @@ describe('AppComponent', () => {
 				.subscribe(() => {
 					userResolve.getSaId()
 					.subscribe((n: number) => {
-						tick();
 						expect(n)
 							.toEqual(mappedUser.info.companyList[1].companyId);
+						done();
 					});
 				});
 			});
-		}));
+		});
 	});
 
 	describe('General', () => {
