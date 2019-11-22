@@ -1,5 +1,5 @@
 import { configureTestSuite } from 'ng-bullet';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -18,7 +18,7 @@ import { AppTestModule } from './app-test.module.spec';
 import { User } from '@interfaces';
 import { throwError, Observable } from 'rxjs';
 import { EntitlementWrapperService, OrgUserService } from '@sdp-api';
-import { mappedUser } from '@mock';
+import { mappedUser, accountsResponseMock, v2UserResponseMock } from '@mock';
 
 describe('AppComponent', () => {
 	let component: AppComponent;
@@ -120,8 +120,6 @@ describe('AppComponent', () => {
 
 	describe('UserResolve', () => {
 		let userResolve: UserResolve;
-		let entitlementWrapperService: EntitlementWrapperService;
-		let orgUserService: OrgUserService;
 
 		beforeEach(() => {
 			TestBed.configureTestingModule({
@@ -131,6 +129,23 @@ describe('AppComponent', () => {
 				],
 				providers: [
 					UserResolve,
+					{
+						provide: EntitlementWrapperService,
+						useValue: {
+							userAccounts: () => new Observable<{ }>(observer => {
+								observer.next(accountsResponseMock);
+							}),
+						},
+					},
+					{
+						provide: OrgUserService,
+						useValue: {
+							getUserV2: () => new Observable<{ }>(observer => {
+								observer.next(v2UserResponseMock);
+							}),
+						},
+					},
+
 				],
 			})
 			.compileComponents();
@@ -138,12 +153,7 @@ describe('AppComponent', () => {
 			component = fixture.componentInstance;
 			router = fixture.debugElement.injector.get(Router);
 			userResolve = TestBed.get(UserResolve);
-			entitlementWrapperService = TestBed.get(EntitlementWrapperService);
-			orgUserService = TestBed.get(OrgUserService);
 			fixture.detectChanges();
-		});
-
-		afterEach(() => {
 			window.localStorage.removeItem('activeSmartAccount');
 		});
 
@@ -170,6 +180,8 @@ describe('AppComponent', () => {
 				.subscribe((u: User) => {
 					expect(u)
 						.toEqual(mappedUser);
+
+					done();
 				});
 
 				userResolve.resolve()
@@ -181,30 +193,6 @@ describe('AppComponent', () => {
 
 						done();
 					});
-				});
-			});
-		});
-
-		it('should fail gracefully when resolving', done => {
-			const error = {
-				status: 404,
-				statusText: 'Resource not found',
-			};
-			spyOn(entitlementWrapperService, 'userAccounts')
-				.and
-				.returnValue(throwError(error));
-			spyOn(orgUserService, 'getUserV2')
-				.and
-				.returnValue(throwError(error));
-
-			fixture.whenStable()
-			.then(() => {
-				userResolve.resolve()
-				.subscribe((u: User) => {
-					expect(u)
-						.toBeNull();
-
-					done();
 				});
 			});
 		});
@@ -292,55 +280,90 @@ describe('AppComponent', () => {
 		it('should set the sa id', done => {
 			fixture.whenStable()
 			.then(() => {
-				userResolve.getSaId()
-				.subscribe((n: number) => {
-					expect(n)
-						.toEqual(mappedUser.info.companyList[0].companyId);
-
-					done();
-				});
-
 				userResolve.resolve()
 				.subscribe(() => {
-					userResolve.setSaId(mappedUser.info.companyList[0].companyId);
-					done();
+					userResolve.setSaId(mappedUser.info.companyList[1].companyId);
+
+					userResolve.getSaId()
+					.subscribe((n: number) => {
+						expect(n)
+							.toEqual(mappedUser.info.companyList[1].companyId);
+
+						done();
+					});
 				});
-			});
-		});
-
-		it('should resolve the default sa id if invalid value is stored locally', done => {
-			window.localStorage.setItem('activeSmartAccount', 'abcde');
-			fixture.whenStable()
-			.then(() => {
-				userResolve.getSaId()
-				.subscribe((n: number) => {
-					expect(n)
-						.toEqual(mappedUser.info.companyList[0].companyId);
-
-					done();
-				});
-
-				userResolve.resolve()
-				.subscribe();
-			});
-		});
-
-		it('should resolve a valid sa id from local storage', done => {
-			window.localStorage.setItem('activeSmartAccount', `${mappedUser.info.companyList[1].companyId}`);
-			fixture.whenStable()
-			.then(() => {
-				userResolve.getSaId()
-				.subscribe((n: number) => {
-					expect(n)
-						.toEqual(mappedUser.info.companyList[1].companyId);
-					done();
-				});
-
-				userResolve.resolve()
-				.subscribe();
 			});
 		});
 	});
+
+	describe('UserResolve Error Scenarios', () => {
+		let userResolve: UserResolve;
+		let entitlementWrapperService: EntitlementWrapperService;
+		let orgUserService: OrgUserService;
+
+		beforeEach(() => {
+			TestBed.configureTestingModule({
+				imports: [
+					RouterTestingModule,
+					AppModule,
+				],
+				providers: [
+					UserResolve,
+				],
+			})
+			.compileComponents();
+			fixture = TestBed.createComponent(AppComponent);
+			component = fixture.componentInstance;
+			router = fixture.debugElement.injector.get(Router);
+			userResolve = TestBed.get(UserResolve);
+			entitlementWrapperService = TestBed.get(EntitlementWrapperService);
+			orgUserService = TestBed.get(OrgUserService);
+			fixture.detectChanges();
+		});
+
+		it('should fail gracefully when resolving userAccounts', done => {
+			const error = {
+				status: 404,
+				statusText: 'Resource not found',
+			};
+			spyOn(entitlementWrapperService, 'userAccounts')
+				.and
+				.returnValue(throwError(error));
+
+			fixture.whenStable()
+			.then(() => {
+				userResolve.resolve()
+				.subscribe((user: User) => {
+					expect(user)
+						.toBeNull();
+
+					done();
+				});
+			});
+		});
+
+		it('should fail gracefully when resolving getUserV2', done => {
+			const error = {
+				status: 404,
+				statusText: 'Resource not found',
+			};
+			spyOn(orgUserService, 'getUserV2')
+				.and
+				.returnValue(throwError(error));
+
+			fixture.whenStable()
+			.then(() => {
+				userResolve.resolve()
+				.subscribe((user: User) => {
+					expect(user)
+						.toBeNull();
+
+					done();
+				});
+			});
+		});
+	});
+
 
 	describe('General', () => {
 		beforeEach(() => {

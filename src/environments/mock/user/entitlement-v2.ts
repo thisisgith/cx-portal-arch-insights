@@ -19,7 +19,7 @@ const adminRole = {
 	attribName: null,
 };
 
-const accountsResponseMock: UserEntitlement = {
+export const accountsResponseMock: UserEntitlement = {
 	companyList: [{
 		companyName: 'CISCO CANADA',
 		companyId: 12345,
@@ -58,7 +58,7 @@ const accountsResponseMock: UserEntitlement = {
 	},
 };
 
-const v2UserResponseMock: OrgUserResponse = {
+export const v2UserResponseMock: OrgUserResponse = {
 	customerId,
 	orgName: 'CISCO',
 	cxBUId: 'qwerty',
