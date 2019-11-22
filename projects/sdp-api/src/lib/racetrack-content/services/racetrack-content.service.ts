@@ -156,6 +156,8 @@ class RacetrackContentService extends __BaseService {
    *
    * - `sessionId`: The SessionId of this Atx
    *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
    * - `atxId`: The Atx Identifier
    *
    * - `X-Mashery-Handshake`: Mashery user credential header
@@ -169,6 +171,7 @@ class RacetrackContentService extends __BaseService {
 
     __headers = __headers.append("Content-Type", "application/json");
     if (params.sessionId != null) __params = __params.set('sessionId', params.sessionId.toString());
+    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     if (params.atxId != null) __params = __params.set('atxId', params.atxId.toString());
     if (params.XMasheryHandshake != null) __headers = __headers.set('X-Mashery-Handshake', params.XMasheryHandshake.toString());
     let req = new HttpRequest<any>(
@@ -194,6 +197,8 @@ class RacetrackContentService extends __BaseService {
    *
    * - `sessionId`: The SessionId of this Atx
    *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
    * - `atxId`: The Atx Identifier
    *
    * - `X-Mashery-Handshake`: Mashery user credential header
@@ -211,6 +216,8 @@ class RacetrackContentService extends __BaseService {
    *
    * - `sessionId`: Id of the selected session to cancel
    *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
    * - `atxId`: Id of the selected ATX
    *
    * - `X-Mashery-Handshake`: Mashery user credential header
@@ -222,6 +229,7 @@ class RacetrackContentService extends __BaseService {
 
     __headers = __headers.append("Content-Type", "application/json");
     if (params.sessionId != null) __params = __params.set('sessionId', params.sessionId.toString());
+    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     if (params.atxId != null) __params = __params.set('atxId', params.atxId.toString());
     if (params.XMasheryHandshake != null) __headers = __headers.set('X-Mashery-Handshake', params.XMasheryHandshake.toString());
     let req = new HttpRequest<any>(
@@ -246,6 +254,8 @@ class RacetrackContentService extends __BaseService {
    * @param params The `RacetrackContentService.CancelSessionATXParams` containing the following parameters:
    *
    * - `sessionId`: Id of the selected session to cancel
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
    *
    * - `atxId`: Id of the selected ATX
    *
@@ -359,6 +369,8 @@ class RacetrackContentService extends __BaseService {
    *
    * - `request`: Payload to submit a 1:1 request with Cisco
    *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
    * - `accId`: Unique identifier of the accelerator for which 1:1 is requested.
    */
   requestACCResponse(params: RacetrackContentService.RequestACCParams): __Observable<__StrictHttpResponse<null>> {
@@ -368,6 +380,7 @@ class RacetrackContentService extends __BaseService {
 
     __headers = __headers.append("Content-Type", "application/json");
     __body = params.request;
+    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
 
     let req = new HttpRequest<any>(
       'POST',
@@ -392,6 +405,8 @@ class RacetrackContentService extends __BaseService {
    * @param params The `RacetrackContentService.RequestACCParams` containing the following parameters:
    *
    * - `request`: Payload to submit a 1:1 request with Cisco
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
    *
    * - `accId`: Unique identifier of the accelerator for which 1:1 is requested.
    */
@@ -1080,6 +1095,11 @@ module RacetrackContentService {
     sessionId: string;
 
     /**
+     * Unique identifier of a Cisco customer.
+     */
+    customerId: string;
+
+    /**
      * The Atx Identifier
      */
     atxId: string;
@@ -1099,6 +1119,11 @@ module RacetrackContentService {
      * Id of the selected session to cancel
      */
     sessionId: string;
+
+    /**
+     * Unique identifier of a Cisco customer.
+     */
+    customerId: string;
 
     /**
      * Id of the selected ATX
@@ -1181,6 +1206,11 @@ module RacetrackContentService {
      * Payload to submit a 1:1 request with Cisco
      */
     request: ACCRequestSessionSchema;
+
+    /**
+     * Unique identifier of a Cisco customer.
+     */
+    customerId: string;
 
     /**
      * Unique identifier of the accelerator for which 1:1 is requested.

@@ -49,6 +49,7 @@ export class RiskMitigationComponent {
 	public loading = false;
 	public loadingCrashesData = false;
 	private destroy$ = new Subject();
+	public defaultTimeRange = '90';
 
 	@ViewChild('riskScoreFilterTemplate', { static: true })
 	public riskScoreFilterTemplate: TemplateRef<string>;
@@ -295,8 +296,8 @@ export class RiskMitigationComponent {
 		const key = this.onlyCrashes ? 'riskScore' : 'timeRange';
 		const filter = _.find(this.filters, { key });
 		this.onlyCrashes
-			? _.set(filter, 'seriesData.0.selected', true)
-			: _.set(filter, 'seriesData.3.selected', true);
+			? _.set(filter, ['seriesData', '0', 'selected'], true)
+			: _.set(filter, ['seriesData', '3', 'selected'], true);
 		this.selectedFilters = [filter];
 	}
 
@@ -306,8 +307,9 @@ export class RiskMitigationComponent {
 	public clearAllFilters () {
 		this.clearFilters();
 		const filter = _.find(this.filters, { key: 'riskScore' });
-		_.set(filter, 'seriesData.0.selected', false);
+		_.set(filter, ['seriesData', '0', 'selected'], false);
 		this.selectedCrashRiskFilter = '';
+		this.selectedCrashedSystemsFilter = this.defaultTimeRange;
 	}
 
 	/**
@@ -351,16 +353,16 @@ export class RiskMitigationComponent {
 				value: result.high,
 			},
 			{
-				filter: 'LOW',
-				label: `${I18n.get('_Low_')}(${result.low})`,
-				selected: false,
-				value: result.low,
-			},
-			{
 				filter: 'MED',
 				label: `${I18n.get('_Medium_')}(${result.med})`,
 				selected: false,
 				value: result.med,
+			},
+			{
+				filter: 'LOW',
+				label: `${I18n.get('_Low_')}(${result.low})`,
+				selected: false,
+				value: result.low,
 			},
 			{
 				filter: 'Not Evaluated',

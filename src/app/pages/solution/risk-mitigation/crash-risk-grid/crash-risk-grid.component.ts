@@ -39,17 +39,11 @@ export class CrashRiskGridComponent implements OnChanges {
 	@Output() public paginationValue = new EventEmitter();
 	public highCrashRiskAssetsGridOptions: CuiTableOptions;
 
-	public highCrashRiskSystemsGridDetails = {
-		tableData: [],
-		tableLimit: 10,
-		tableOffset: 0,
-		totalItems: 0,
-	};
+	public highCrashRiskSystemsGridDetails: any;
 	public crashRiskGridLoading = false;
 	public highCrashRiskParams: HighCrashRiskPagination;
 	public hcrPagination;
 	private destroy$ = new Subject();
-	private logger: LogService;
 	public customerId: any;
 	public selectedFingerPrintdata: HighCrashRiskDevices;
 	public showFpDetails = false;
@@ -73,11 +67,24 @@ export class CrashRiskGridComponent implements OnChanges {
 		private riskMitigationService: RiskMitigationService,
 		private assetPanelLinkService: AssetPanelLinkService,
 		private route: ActivatedRoute,
+		private logger: LogService,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
+		this.initializeHCRGridParams();
 	}
 
+	/**
+	 * initializeHCRGridParams
+	 */
+	public initializeHCRGridParams () {
+		this.highCrashRiskSystemsGridDetails = {
+			tableData: [],
+			tableLimit: 10,
+			tableOffset: 0,
+			totalItems: 0,
+		};
+	}
 	/**
 	 * Read selected filter value
 	 * @param changes data of OnChages Object
@@ -139,7 +146,8 @@ export class CrashRiskGridComponent implements OnChanges {
 					this.paginationValue.emit(paginationValueProp);
 				}),
 				catchError(err => {
-					this.highCrashRiskSystemsGridDetails.tableData = [];
+					this.initializeHCRGridParams();
+					this.crashRiskGridLoading = false;
 					this.logger.error(
 						'Crash Assets : getFingerPrintDeviceDetails() ' +
 							`:: Error : (${err.status}) ${err.message}`,

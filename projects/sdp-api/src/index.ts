@@ -96,3 +96,7 @@ export * from './lib/partner/models/company-info-list';
 export * from './lib/partner/models/company-info';
 export * from './lib/partner/services';
 export * from './lib/partner/partner.module';
+
+export * from './lib/faults/models';
+export * from './lib/faults/services';
+export * from './lib/faults/fault-data.module';
