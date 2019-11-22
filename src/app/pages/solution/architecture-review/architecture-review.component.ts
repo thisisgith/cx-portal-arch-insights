@@ -281,13 +281,15 @@ export class ArchitectureReviewComponent implements OnInit {
 		};
 	}
 
-	public setSdaCompliantValue (obj:any) {
+	public setSdaCompliantValue (obj: any) {
 		let sdaCompliant = 0;
 
-		if (obj.hasOwnProperty('Yes') && obj.hasOwnProperty('No')) {
+		if (obj.hasOwnProperty('Yes') && obj.hasOwnProperty('Warning')) {
 			sdaCompliant = obj.Yes + obj.Warning;
-		} else  {
-			sdaCompliant = obj.Yes || obj.Warning;
+		} else if (obj.hasOwnProperty('Warning'))  {
+			sdaCompliant = obj.Warning;
+		} else {
+			sdaCompliant = obj.Yes;
 		}
 
 		return sdaCompliant;
