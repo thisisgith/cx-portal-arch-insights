@@ -549,6 +549,8 @@
 	"_ExpiredOn_": "Expired On",
 	"_ExportAll_": "Export All",
 	"_ExportSelected_": "Export Selected",
+	"_FaultXSuccess_": "{0} was successfully ",
+	"_FaultsYMoved_": "moved to {0}",
 	"_FailedToSubmitFeedbackForAdvisory_": "Failed attempting to submit feedback for advisory '{0}'. Internal error occurred. Please try again later.",
 	"_Favorite_": "Favorite",
 	"_Feedback_": "Feedback",

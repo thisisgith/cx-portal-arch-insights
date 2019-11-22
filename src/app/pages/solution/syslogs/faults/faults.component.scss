@@ -1,0 +1,10 @@
+@import "~cisco-ui/src/scss/utilities/_variables.scss";
+@import '~src/mixins.scss';
+
+.alert-background {
+	color: $accent-orange;
+}
+
+.fault-component-search ::ng-deep .form-group .form-group__text input {
+	@include filter-search;
+}
