@@ -16,6 +16,7 @@ import { PoliciesComponent, PoliciesModule } from './policies';
 import { AdminComplienceComponent, AdminComplienceModule } from './complience';
 
 import { environment } from '@environment';
+import { RouteGuard } from './route-guard';
 
 /**
  * Child routes for Settings Module for lazy loading
@@ -26,6 +27,7 @@ const childRoutes: Routes = [
 		path: 'assets',
 	},
 	{
+		canActivate: [RouteGuard],
 		component: AdminComplienceComponent,
 		path: 'compliance',
 	},

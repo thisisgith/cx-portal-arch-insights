@@ -156,8 +156,24 @@ export class AdminComplienceComponent implements OnInit {
 				isRccOpted: this.optlnStatus,
 			};
 			this.getLeftSideTags()
+			.pipe(
+				takeUntil(this.destroyed$),
+				catchError(() => {
+					this.handleError();
+
+					return of({ });
+				}),
+			)
 			.subscribe();
 			this.assetTaggingService.updateOptStatus(params)
+			.pipe(
+				takeUntil(this.destroyed$),
+				catchError(() => {
+					this.handleError();
+
+					return of({ });
+				}),
+			)
 			.subscribe();
 		}
 	}
@@ -175,6 +191,14 @@ export class AdminComplienceComponent implements OnInit {
 		forkJoin(
 			this.assetTaggingService.updateOptStatus(params),
 			this.assetTaggingService.deleteMapping(params),
+		)
+		.pipe(
+			takeUntil(this.destroyed$),
+			catchError(() => {
+				this.handleError();
+
+				return of({ });
+			}),
 		)
 		.subscribe();
 		this.initializeDetails();
@@ -205,6 +229,7 @@ export class AdminComplienceComponent implements OnInit {
 				catchError(err => {
 					this.logger.error('OptinStatus : getOptinOutStatus() ' +
 						`:: Error : (${err.status}) ${err.message}`);
+					this.handleError();
 
 					return of({ });
 				}),
@@ -246,9 +271,8 @@ export class AdminComplienceComponent implements OnInit {
 					this.rightSideTagsResponse = results;
 					this.filterDuplicates();
 				}),
-				catchError(err => {
-					this.logger.error('Tags : getRightSideTags() ' +
-						`:: Error : (${err.status}) ${err.message}`);
+				catchError(() => {
+					this.handleError();
 
 					return of({ });
 				}),
@@ -277,10 +301,10 @@ export class AdminComplienceComponent implements OnInit {
 			const policyGroups = _.find(this.rightSideTagsResponse.policyGroups,
 				 { policyName: this.saveDetails.body.policy });
 			if (policyGroups) {
+				this.selectedDeviceTagType = 'selectedTags';
 				this.rightSideTags = policyGroups.tags;
 				this.clonedRightTags = _.cloneDeep(this.rightSideTags);
 				this.toBeScanned = JSON.parse(policyGroups.toBeScanned);
-				this.selectedDeviceTagType = this.rightSideTags.length ? 'selectedTags' : 'allDevices';
 				_.each(this.leftSideTags, (tag, i) => {
 					const duplicateTagIndex = this.rightSideTags.findIndex(rightSideTag =>
 						tag.tagName === rightSideTag.tagName);
@@ -297,7 +321,13 @@ export class AdminComplienceComponent implements OnInit {
 			} else {
 				this.rightSideTags  = [];
 				_.cloneDeep(this.rightSideTags);
+				if (this.triggerModal !== 'scan') {
+					this.selectedDeviceTagType = 'allDevices';
+				}
+				this.toBeScanned = false;
 			}
+		} else {
+			this.toBeScanned = false;
 		}
 	}
 	/**
@@ -309,21 +339,13 @@ export class AdminComplienceComponent implements OnInit {
 	public onPolicySelected (policy) {
 		_.invoke(this.alert, 'hide');
 		this.triggerModal = 'policy';
-		// if (policy !== 'select' && this.isPolicyChanged
-		// && this.saveDetails.body.policy !== 'select' && this.enableSaveButton) {
-		// 	this.cuiModalService.show(this.switchBetweenPolicy, 'normal');
-		// }
-		// this.isPolicyChanged = true;
-		// this.filterDuplicates();
-		// if (this.rightSideTags.length) {
-		// 	this.selectedDeviceTagType = 'selectedTags';
-		// }
 
 		if (policy !== 'select' && !this.enableSaveButton) {
+			this.clonedLeftTags = _.cloneDeep(this.leftSideTagsResponse.tags);
 			this.leftSideTags = this.clonedLeftTags;
 			this.getRightSideTags()
 				.subscribe();
-		} else {
+		} else if (this.enableSaveButton) {
 			this.cuiModalService.show(this.switchBetweenPolicy, 'normal');
 		}
 	}
@@ -342,6 +364,8 @@ export class AdminComplienceComponent implements OnInit {
 	 */
 	public savePolicyDetails () {
 
+		_.invoke(this.alert, 'hide');
+
 		this.saveDetails.body.toBeScanned = this.toBeScanned;
 		if (this.selectedDeviceTagType === 'allDevices') {
 			this.saveDetails.body.tags = [];
@@ -355,8 +379,17 @@ export class AdminComplienceComponent implements OnInit {
 		};
 
 		this.assetTaggingService.postPolicyMapping(params)
-			.pipe(takeUntil(this.destroyed$))
-			.subscribe(() => this.handleSaveSuccess());
+			.pipe(takeUntil(this.destroyed$),
+			map(() => {
+				this.handleSaveSuccess();
+			}),
+				catchError(() => {
+					this.handleError();
+
+					return of({ });
+				}),
+			)
+			.subscribe();
 	}
 
 	/**
@@ -371,16 +404,6 @@ export class AdminComplienceComponent implements OnInit {
 		_.invoke(this.alert, 'show',
 		I18n.get(alert, this.saveDetails.body.policy), 'success');
 		this.enableSaveButton = false;
-
-		/** Needs to save Right side tag details and
-		 * left side tag details
-		 */
-		_.each(this.rightSideTagsResponse.policyGroups, policy => {
-			if (policy.policyName === this.saveDetails.body.policy) {
-				policy.tags = this.saveDetails.body.tags;
-			}
-		});
-
 	}
 
 	/**
@@ -411,6 +434,14 @@ export class AdminComplienceComponent implements OnInit {
 	}
 
 	/**
+	 * function to habdle error scenarios
+	 */
+
+	 public handleError () {
+		_.invoke(this.alert, 'show',
+		I18n.get('_OsvGenericError_', this.saveDetails.body.policy), 'danger');
+	 }
+	/**
 	 * Function to update permission
 	 * @returns subscribe of data
 	 */
@@ -422,6 +453,7 @@ export class AdminComplienceComponent implements OnInit {
 		catchError(err => {
 			this.logger.error('Update Permission : updatePermissions() ' +
 				`:: Error : (${err.status}) ${err.message}`);
+			this.handleError();
 
 			return of({ });
 		}),
@@ -434,6 +466,7 @@ export class AdminComplienceComponent implements OnInit {
  * @param type selected type by user
  */
 	public onChangesDeviceTagType () {
+		_.invoke(this.alert, 'hide');
 		this.triggerModal = 'scan';
 		if (this.enableSaveButton && this.selectedDeviceTagType === 'allDevices') {
 			this.cuiModalService.show(this.switchBetweenPolicy, 'normal');
@@ -443,6 +476,10 @@ export class AdminComplienceComponent implements OnInit {
 			this.hideAssetTags = false;
 		} else {
 			this.hideAssetTags = false;
+			this.tagsFromAssetTagging = false;
+			this.leftSideTags = _.cloneDeep(this.leftSideTagsResponse.tags);
+			this.getRightSideTags()
+			.subscribe();
 		}
 	}
 
@@ -452,32 +489,13 @@ export class AdminComplienceComponent implements OnInit {
 	public discardChangesOnPolicyChange () {
 		this.hideAssetTags = true;
 		if (this.triggerModal === 'policy') {
+			this.leftSideTags = _.cloneDeep(this.leftSideTagsResponse.tags);
 			this.getRightSideTags()
 			.subscribe();
-			 this.selectedDeviceTagType = 'allDevices';
 			this.hideAssetTags = true;
+		} else {
+			this.selectedDeviceTagType = 'allDevices';
 		}
-		_.each(this.clonedRightTags, tag => {
-			tag.selected = false;
-		});
-		_.each(this.clonedLeftTags, tag => {
-			tag.selected = false;
-		});
-		this.leftSideTags = this.clonedLeftTags;
-		this.rightSideTags = this.clonedRightTags;
-
-		_.each(this.leftSideTags, (tag, i) => {
-			const duplicateTagIndex = this.rightSideTags.findIndex(rightSideTag =>
-				tag.tagName === rightSideTag.tagName);
-			if (duplicateTagIndex !== -1) {
-				this.rightSideTags[duplicateTagIndex] = _.cloneDeep(tag);
-				this.filteredArray
-					.push(this.leftSideTags[i]);
-			}
-		});
-
-		this.leftSideTags = _.differenceWith(this.leftSideTags, this.filteredArray, _.isEqual);
-		this.filteredArray = [];
 		this.enableSaveButton = false;
 		this.cuiModalService.hide();
 	}
@@ -488,7 +506,7 @@ export class AdminComplienceComponent implements OnInit {
 	public onCancelPolicyChanges () {
 		if (this.triggerModal === 'policy') {
 			 this.saveDetails.body.policy =
-			 this.saveDetails.body.policy === ' HIPAA' ? 'PCI' : 'HIPAA';
+			 this.saveDetails.body.policy === 'HIPAA' ? 'PCI' : 'HIPAA';
 		} else {
 			this.selectedDeviceTagType = 'selectedTags';
 		}
