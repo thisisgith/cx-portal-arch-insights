@@ -7,7 +7,7 @@ import { ChnagePasswordModule } from './change-password.module';
 import { RegisterCollectorService } from '../../setup-ie/register-collector/register-collector.service';
 import { SetupIEService } from '../../setup-ie/setup-ie.service';
 
-fdescribe('ChangePasswordComponent', () => {
+describe('ChangePasswordComponent', () => {
 	let component: ChangePasswordComponent;
 	let fixture: ComponentFixture<ChangePasswordComponent>;
 	let setupService: SetupIEService;

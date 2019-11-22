@@ -28,7 +28,6 @@ export interface ChangePasswordParams {
 	new_password: string;
 }
 
-
 /**
  * Parameters for the installAndRegisterDNAC public method
  */
