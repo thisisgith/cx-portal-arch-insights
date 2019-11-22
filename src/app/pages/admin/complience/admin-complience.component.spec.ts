@@ -14,6 +14,7 @@ import { LogService } from '@cisco-ngx/cui-services';
 describe('AdminComplienceComponent', () => {
 	let component: AdminComplienceComponent;
 	let fixture: ComponentFixture<AdminComplienceComponent>;
+	let cuiModalService: CuiModalService;
 
 	configureTestSuite(() => {
 		TestBed.configureTestingModule({
@@ -106,6 +107,7 @@ describe('AdminComplienceComponent', () => {
 			component.rightSideTags = [{
 				deviceCount: 5,
 				devices: 1,
+				tags: [],
 			}];
 			component.leftSideTagsResponse = {
 				tags: [{
@@ -287,9 +289,69 @@ describe('AdminComplienceComponent', () => {
 		assetTaggingService = TestBed.get(AssetTaggingService);
 		spyOn(assetTaggingService, 'updateOptStatus').and
 			.callThrough();
+		spyOn(assetTaggingService, 'deleteMapping').and
+		.callThrough();
 		component.updateOptInOutStatus();
 		expect(assetTaggingService.updateOptStatus)
 			.toHaveBeenCalled();
+		fixture.detectChanges();
+		component.optlnStatus = true;
+		component.updateOptInOutStatus();
+		expect(assetTaggingService.deleteMapping)
+		.toHaveBeenCalled();
+
+		fixture.detectChanges();
+		component.optlnStatus = true;
+		component.isOptlnStatusChanged = true;
+		component.updateOptInOutStatus();
+		expect(component.isOptlnStatusChanged)
+		.toBeFalsy();
+
+		fixture.detectChanges();
+		component.enableSaveButton = true;
+		component.selectedDeviceTagType = 'allDevices';
+		cuiModalService = TestBed.get(CuiModalService);
+		spyOn(cuiModalService, 'show')
+		.and
+		.callThrough();
+		component.onChangesDeviceTagType();
+		expect(component.cuiModalService.show)
+		.toHaveBeenCalled();
+
+		fixture.detectChanges();
+		component.enableSaveButton = false;
+		component.selectedDeviceTagType = 'allDevices';
+		component.onChangesDeviceTagType();
+		expect(component.hideAssetTags)
+		.toBeTruthy();
+
+		fixture.detectChanges();
+		component.selectedDeviceTagType = 'selectedTags';
+		component.enableSaveButton = true;
+		component.onChangesDeviceTagType();
+		expect(component.hideAssetTags)
+		.toBeFalsy();
+
+		fixture.detectChanges();
+		component.selectedDeviceTagType = '';
+		component.leftSideTagsResponse = {
+			tags: [],
+		};
+		component.onChangesDeviceTagType();
+		expect(component.hideAssetTags)
+		.toBeFalsy();
+
+		fixture.detectChanges();
+		component.triggerModal = 'policy';
+		spyOn(component, 'getRightSideTags')
+		.and
+		.callThrough();
+		component.leftSideTagsResponse = {
+			tags: [],
+		};
+		component.discardChangesOnPolicyChange();
+		expect(component.getRightSideTags)
+		.toHaveBeenCalled();
 	});
 
 	it('should check for OptlnStatus', fakeAsync(() => {
@@ -324,43 +386,6 @@ describe('AdminComplienceComponent', () => {
 				});
 	}));
 
-	describe('should update device tag', () => {
-		it('should display asset tagging', () => {
-			component.enableSaveButton = false;
-			component.selectedDeviceTagType = 'allDevices';
-			component.onChangesDeviceTagType();
-			expect(component.hideAssetTags)
-				.toBeTruthy();
-		});
-
-		it('should not display asset tagging', () => {
-			component.enableSaveButton = true;
-			component.selectedDeviceTagType = 'allDevices';
-			component.onChangesDeviceTagType();
-			expect(component.hideAssetTags)
-				.toBe(component.hideAssetTags);
-		});
-
-		it('should update device tag type', () => {
-			component.enableSaveButton = false;
-			component.selectedDeviceTagType = null;
-			component.selectedDeviceTagType = 'selectedTags';
-			spyOn(component, 'filterDuplicates');
-			component.onChangesDeviceTagType();
-			expect(component.hideAssetTags)
-				.toBeFalsy();
-		});
-
-		it('should hide device tag template', () => {
-			component.enableSaveButton = false;
-			component.selectedDeviceTagType = null;
-			component.selectedDeviceTagType = null;
-			component.onChangesDeviceTagType();
-			expect(component.hideAssetTags)
-				.toBeFalsy();
-		});
-	});
-
 	it('should update selected device type', () => {
 		component.triggerModal = null;
 		component.saveDetails.body.policy = 'HIPAA';
@@ -374,7 +399,7 @@ describe('AdminComplienceComponent', () => {
 		component.saveDetails.body.policy = ' HIPAA';
 		component.onCancelPolicyChanges();
 		expect(component.saveDetails.body.policy)
-			.toEqual('PCI');
+			.toEqual('HIPAA');
 	});
 
 	it('should update selected policy to HIPAA', () => {
@@ -383,16 +408,6 @@ describe('AdminComplienceComponent', () => {
 		component.onCancelPolicyChanges();
 		expect(component.saveDetails.body.policy)
 			.toEqual('HIPAA');
-	});
-
-	it('should discard changes on policy change if there is policy', () => {
-		component.triggerModal = 'policy';
-		spyOn(component, 'filterDuplicates');
-		component.discardChangesOnPolicyChange();
-		expect(component.hideAssetTags)
-			.toBeTruthy();
-		expect(component.selectedDeviceTagType)
-			.toEqual('allDevices');
 	});
 
 	it('should discard changes on policy change if not have policy', () => {

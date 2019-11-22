@@ -491,6 +491,7 @@
 	"_DevicesCannotBeScanned_": "Devices cannot be scanned",
 	"_DevicesCovered_": "Devices Covered",
 	"_DeviceUnreachable_": "Device Unreachable",
+	"_DevicesPartofSelectedList_": "Devices are part of selected list",
 	"_DHCPIsSupported_": "An IP address will automatically be detected if DHCP is enabled in the VM environment. If not, you will need to have a free IPv4 address, Subnet mask, Default Gateway IP address, and DNS server IP address (optional).",
 	"_DiagnosticScan_": "Diagnostic Scan",
 	"_DiagnosticScans_": "Diagnostic Scans",
