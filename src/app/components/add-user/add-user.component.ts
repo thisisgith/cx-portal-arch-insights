@@ -98,7 +98,7 @@ export class AddUserComponent implements OnInit {
 						_.invoke(
 							this.alert,
 							'show',
-							I18n.get('_RoleAlreadyExists_'),
+							I18n.get('_UserAlreadyadded_'),
 							'danger',
 						);
 						this.alert.visible = true;
