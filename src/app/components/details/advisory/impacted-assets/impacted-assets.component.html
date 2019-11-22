@@ -38,15 +38,16 @@
 			attr.data-auto-id="DeviceIcon-{{ celldata?.hostName || celldata?.deviceName }}"
 			src="assets/img/assets/device-{{ getProductIcon(celldata) }}.svg">
 	</span>
-	<a *ngIf="celldata?.serialNumber"
-		[innerText]="celldata?.hostName | truncate:false:20"
-		[title]="celldata?.hostName"
-		[routerLink]="['/solution/assets']"
+	<a *ngIf="celldata?.serialNumber && celldata?.cxLevel"
+		[innerText]="(celldata?.deviceName || celldata?.hostName) | truncate:false:20"
+		[title]="celldata?.deviceName || celldata?.hostName"
+		[routerLink]="['/solution/assets/system']"
 		[queryParams]="{ serialNumber: celldata.serialNumber, select: true }">
 	</a>
-	<span *ngIf="!celldata?.serialNumber"
+	<span *ngIf="!celldata?.serialNumber || !celldata?.cxLevel"
 		[title]="celldata?.deviceName || celldata?.hostName || ('_NA_' | i18n)"
-		[innerText]="(celldata?.deviceName || celldata?.hostName || ('_NA_' | i18n)) | truncate:false:20">
+		[innerText]="(celldata?.deviceName || celldata?.hostName || ('_NA_' | i18n)) | truncate:false:20"
+	>
 	</span>
 </ng-template>
 

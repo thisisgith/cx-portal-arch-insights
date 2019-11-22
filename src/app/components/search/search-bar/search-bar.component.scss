@@ -1,10 +1,7 @@
-@import "~src/variables.scss";
-@import '../../../../mixins.scss';
+@import '~src/variables.scss';
+@import '~src/mixins.scss';
 
-$icon-light-gray: #bdc5cf;
 $search-bar-bg-color: $light-gray-background;
-$text-dark-blue: #394454;
-$placeholder-light-gray: #767676;
 
 .dropdown__menu {
 	max-height: 170px;
@@ -37,7 +34,7 @@ a {
 .cx-search-bar .form-group__text .cx-search-input {
 	min-height: 32px;
 	padding: 8px 5px 6px 33px;
-	color: $text-dark-blue;
+	color: $default-text-color;
 	background-color: $search-bar-bg-color;
 	border: none;
 	font-size: 12px;
@@ -45,7 +42,7 @@ a {
 	opacity: 0.81;
 
 	&::placeholder {
-		color: $placeholder-light-gray;
+		color: $text-dark-gray-2;
 		font-size: 12px;
 		font-style: normal;
 		letter-spacing: -0.34px;

@@ -14,7 +14,8 @@
 			"@pipes": ["src/app/pipes/index.ts"],
 			"@services": ["src/app/services/index.ts"],
 			"@utilities": ["src/app/utilities/index.ts"],
-			"@directives/*": ["src/app/directives/*"]
+			"@directives": ["src/app/directives/index.ts"],
+			"@constants/*": ["src/app/constants/*"]
 		},
 		"declaration": false,
 		"emitDecoratorMetadata": true,

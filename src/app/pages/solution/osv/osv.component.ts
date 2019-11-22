@@ -33,6 +33,8 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 		TemplateRef<{ }>;
 	@ViewChild('recommendationTypeFilter', { static: true })
 	private recommendationTypeFilterTemplate: TemplateRef<{ }>;
+	@ViewChild('deploymentStatusFilter', { static: true })
+	private deploymentStatusFilterTemplate: TemplateRef<{ }>;
 	public status = {
 		isLoading: true,
 	};
@@ -65,6 +67,12 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 	public recommendationMap = [
 		{ key: 'automated', label: I18n.get('_OsvAutomatedRecommended_') },
 		{ key: 'none', label: I18n.get('_OsvNone_') },
+	];
+	public deploymentMap = [
+		{ key: 'production', label: I18n.get('_OsvInProduction_') },
+		{ key: 'upgrade', label: I18n.get('_Upgrade_') },
+		{ key: 'none', label: I18n.get('_OsvNone_') },
+		{ key: 'na', label: I18n.get('_OsvNA_') },
 	];
 	public selectedSolutionName;
 	public selectedTechnologyName;
@@ -151,6 +159,15 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 				view: ['assets'],
 			},
 			{
+				key: 'deploymentStatus',
+				loading: true,
+				selected: false,
+				seriesData: [],
+				template: this.deploymentStatusFilterTemplate,
+				title: I18n.get('_OsvDeploymentStatus_'),
+				view: ['assets'],
+			},
+			{
 				key: 'recommendationType',
 				loading: true,
 				selected: true,
@@ -206,6 +223,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 		const totalAssetsFilter = _.find(this.allFilters, { key: 'totalAssets' });
 		const assetTypeFilter = _.find(this.allFilters, { key: 'assetType' });
 		const recommendationTypeFilter = _.find(this.allFilters, { key: 'recommendationType' });
+		const deploymentStatusFilter = _.find(this.allFilters, { key: 'deploymentStatus' });
 
 		return this.osvService.getSummary(this.summaryParams)
 			.pipe(
@@ -236,6 +254,19 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 								};
 							}
 						}));
+					deploymentStatusFilter.seriesData = _.compact(
+						_.map(response.deployment, (value: number, key: string) => {
+							if (value !== 0) {
+								const filteredDeploy = _.find(this.deploymentMap,
+									deployment => deployment.key === key);
+								return {
+									value,
+									filter: key,
+									label: filteredDeploy.label,
+									selected: false,
+								};
+							}
+						}));
 					recommendationTypeFilter.seriesData = _.compact(
 						_.map(response.recommendations, (value: number, key: string) => {
 							if (value !== 0) {
@@ -257,6 +288,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 					totalAssetsFilter.loading = false;
 					assetTypeFilter.loading = false;
 					recommendationTypeFilter.loading = false;
+					deploymentStatusFilter.loading = false;
 					this.view = 'swGroups';
 					totalAssetsFilter.seriesData = [{
 						assets: 0,

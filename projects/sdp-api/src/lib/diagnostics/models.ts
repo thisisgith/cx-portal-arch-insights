@@ -6,6 +6,7 @@ export { CriticalBugsCount } from './models/critical-bugs-count';
 export { CriticalBugsResponse } from './models/critical-bugs-response';
 export { Pagination as DiagnosticsPagination } from './models/pagination';
 export { CriticalBug } from './models/critical-bug';
+export { CDET } from './models/cdet';
 export { Command } from './models/command';
 export { ScanResult } from './models/scan-result';
 export { Remediation } from './models/remediation';

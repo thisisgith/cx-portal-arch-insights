@@ -212,9 +212,8 @@ const getSdaSupportedData = {
 		hostName: 'AP70F3.5A7E.44C8',
 		ipAddress: '192.168.46.100',
 		sdaL3AccessEnabled: 'Yes',
-
-		sdaNoOfMtuNonOptimalInterfaces: 7,
-		sdaRedundantLinks: 'Yes',
+		sdaNoOfMtuNonOptimalInterfaces: 0,
+		sdaRedundantLinks: 'No',
 		sdaSupportedHardware: [
 			{
 				deviceRole: 'controller',
@@ -391,7 +390,7 @@ const getSDAChartFilterCountResponseData = {
 		Yes: 2,
 	},
 	sdaCompliance: {
-		NA: 2,
+		NE: 3,
 		No: 4,
 		Warning: 1,
 		Yes: 2,

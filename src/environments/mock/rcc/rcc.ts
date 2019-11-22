@@ -92,6 +92,19 @@ const policyRuleDetails: any = {
 	status: 200,
 };
 
+/** The mock response for RCC optIn status data */
+const optInStatusData: any = {
+	data: {
+		data: {
+			currentRunStatus: '',
+			rccOptInStatus: true,
+			runOnce: false,
+		},
+		message: 'SUCCESS',
+		status: 200,
+	},
+};
+
 /** The mock response for violation grid data */
 const violationGridData: any = {
 	data: {
@@ -576,5 +589,22 @@ export const ComplianceScenarios = [
 		},
 		url: `${api}/policy-rule-details`,
 		usecases: ['Use Case 15'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'OptIn Status True',
+					response: {
+						body: optInStatusData,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/optInDetail/${customerId}`,
+		usecases: ['Use Case 16'],
 	},
 ];

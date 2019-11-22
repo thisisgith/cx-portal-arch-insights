@@ -1,4 +1,5 @@
 @import '~cisco-ui/src/scss/utilities/_variables.scss';
+@import '~src/variables.scss';
 
 :host {
 	button.btn.btn--wide {
@@ -14,13 +15,13 @@
 	}
 
 	button.btn.btn--secondary {
-		color: #394454;
+		color: $default-text-color;
 		font-size: 20px;
 		box-shadow: unset;
 		border: 1px solid #879eba;
 
 		&:hover {
-			background: #227bb1;
+			background: $default-link-color;
 			color: #fff;
 		}
 

@@ -8,7 +8,7 @@
 
 <!-- Submit Case form -->
 <div class="body">
-	<div class="row">
+	<div class="row dbl-margin-bottom">
 		<div class="col-lg-4 col-md-2"></div>
 		<div class="col-lg-4 col-md-8">
 			<ng-container *ngIf="!submitted; else submittedTemplate">
@@ -43,6 +43,8 @@
 											[max]="titleMaxLength"
 											displayAt="200">
 										</div>
+										<span *ngIf="caseForm.controls.title.dirty && caseForm.controls.title.invalid" 
+										class="text-right text-small text-danger" [innerText]="'_TitleError_' | i18n" ></span>
 									</div>
 								</dd>
 								<dt class="qtr-padding-bottom" [innerText]="'_DescribeTheProblem_' | i18n"></dt>
@@ -56,6 +58,8 @@
 											[max]="descriptionMaxLength"
 											displayAt="31000">
 										</div>
+										<span *ngIf="caseForm.controls.description.dirty && caseForm.controls.description.invalid"
+										class="text-right text-small text-danger" [innerText]="'_DescriptionError_' | i18n" ></span>
 									</div>
 								</dd>
 							</dl>
@@ -96,7 +100,7 @@
 							</div>
 						</form>
 					</div>
-					<div class="flex flex-row dbl-margin-top">
+					<div class="flex flex-row dbl-margin-top half-margin-bottom">
 						<!-- Button to expand the initial form -->
 						<button *ngIf="!expand"
 							class="cx-btn btn--small half-margin-right"

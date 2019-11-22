@@ -114,6 +114,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 		this.customerId = _.get(user, ['info', 'customerId']);
 		this.softwareGroupDetailsParams = {
 			customerId: this.customerId,
+			profileId: '',
 			productFamily: '',
 			profileName: '',
 		};
@@ -158,6 +159,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 			const profileName = _.get(this.selectedSoftwareGroup, 'profileName');
 			const profileId = _.get(this.selectedSoftwareGroup, 'id');
 			const productFamily = _.get(this.selectedSoftwareGroup, 'productFamily');
+			this.softwareGroupDetailsParams.profileId = profileId;
 			this.softwareGroupDetailsParams.profileName = profileName;
 			this.softwareGroupDetailsParams.productFamily = productFamily;
 
@@ -533,6 +535,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	public onAccept (acceptedVersion: string) {
 		const body = {
 			customerId: this.customerId,
+			profileId: this.selectedSoftwareGroup.id,
 			profileName: this.selectedSoftwareGroup.profileName,
 			optimalVersion: acceptedVersion,
 		};
@@ -556,6 +559,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	public onCancel () {
 		const body = {
 			customerId: this.customerId,
+			profileId: this.selectedSoftwareGroup.id,
 			profileName: this.selectedSoftwareGroup.profileName,
 			optimalVersion: this.actionData.version,
 		};

@@ -1,4 +1,4 @@
-@import '../../../../mixins.scss';
+@import '~src/mixins.scss';
 
 .mid-icon-place {
 	margin-top: 40%;
@@ -16,7 +16,7 @@
 }
 
 .filter__selected {
-	border-bottom: 4px solid #00bceb;
+	border-bottom: 4px solid $accent-color1;
 }
 
 .cursor {
@@ -29,4 +29,8 @@
 
 :host ::ng-deep .table {
 	@include table-ellipse;
+}
+
+.icon-info {
+	color: #c2d1e2;
 }

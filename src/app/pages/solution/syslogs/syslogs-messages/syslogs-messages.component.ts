@@ -13,7 +13,7 @@ import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { SyslogsService, SyslogGridData, SyslogFilter } from '@sdp-api';
 import { Subject, of, Subscription } from 'rxjs';
-import { takeUntil, catchError } from 'rxjs/operators';
+import { takeUntil, catchError, map } from 'rxjs/operators';
 import { I18n } from '@cisco-ngx/cui-utils';
 import * as _ from 'lodash-es';
 import { UserResolve } from '@utilities';
@@ -173,7 +173,17 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 		this.gridSubscripion = this.syslogsService
 			.getGridData(this.syslogsParams)
 			.pipe(
+				map(gridData => {
+					this.tableData = gridData;
+					this.totalItems = gridData.length;
+					this.tableEndIndex = 10;
+					if (this.tableEndIndex > this.totalItems) {
+						this.tableEndIndex = this.totalItems;
+					}
+					this.loading = false;
+				}),
 				catchError(err => {
+					this.loading = false;
 					this.logger.error('syslogs-details.component : getDeviceGridData() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
@@ -181,21 +191,7 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 				}),
 				takeUntil(this.destroy$),
 			)
-			.subscribe(gridData => {
-				this.tableData = gridData;
-				this.totalItems = gridData.length;
-				this.tableEndIndex = 10;
-				if (this.tableEndIndex > this.totalItems) {
-					this.tableEndIndex = this.totalItems;
-				}
-				this.loading = false;
-			}, catchError(err => {
-				this.loading = false;
-				this.logger.error('syslogs-details.component : getDeviceGridData() ' +
-					`:: Error : (${err.status}) ${err.message}`);
-
-				return of({ });
-			}));
+			.subscribe();
 	}
 
 	/**

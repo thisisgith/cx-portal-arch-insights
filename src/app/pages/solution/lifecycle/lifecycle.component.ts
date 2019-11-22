@@ -102,6 +102,8 @@ interface ComponentData {
 		certificationsUrl: string;
 		elearning?: ELearning[];
 		elearningUrl: string;
+		remotepracticelabs?: ELearning[];
+		remotepracticelabsUrl: string;
 		training?: ELearning[];
 		success?: SuccessPath[];
 		archetype?: string[];
@@ -176,6 +178,7 @@ export class LifecycleComponent implements OnDestroy {
 	public buId: string;
 	private user: User;
 	public partnerList: CompanyInfo [];
+	public accPartnerList: CompanyInfo [];
 	public totalAllowedGroupTrainings: number;
 	public selectedFilterForSB = '';
 	public selectedFilterForACC = '';
@@ -234,6 +237,8 @@ export class LifecycleComponent implements OnDestroy {
 	private timeout = 5000;
 	// Enable or disable CGT based on this flag
 	public enableCGT = false;
+	// Cisco ACC content is only shown for CX Levels 2/3
+	private ciscoAccLevels = [2, 3];
 
 	/**
 	 * The number of rows that Product Guides will request at a time.
@@ -269,10 +274,10 @@ export class LifecycleComponent implements OnDestroy {
 			name: I18n.get('_Recommended_'),
 			value: 'recommended',
 		},
-		// {
-		// 	name: I18n.get('_Requested_'),
-		// 	value: 'requested',
-		// },
+		{
+			name: I18n.get('_Requested_'),
+			value: 'requested',
+		},
 		{
 			name: I18n.get('_Scheduled_'),
 			value: 'scheduled',
@@ -315,6 +320,7 @@ export class LifecycleComponent implements OnDestroy {
 		learning: {
 			certificationsUrl: `${environment.learningLink}?type=certification`,
 			elearningUrl: `${environment.learningLink}?type=e-learning`,
+			remotepracticelabsUrl: `${environment.learningLink}?type=remotepracticelabs`,
 		},
 		params: {
 			customerId: '',
@@ -407,8 +413,12 @@ export class LifecycleComponent implements OnDestroy {
 		.subscribe((technology: RacetrackTechnology) => {
 			const currentSolution = this.componentData.params.solution;
 
-			const newTech = currentSolution;
-			if (newTech) {
+			const newSolution = currentSolution;
+			const newTech = (technology.name !== _.get(this.selectedTechnology, 'name'))
+				? true : false;
+			const newUsecaseAdoptPert = (technology.usecase_adoption_percentage !==
+				_.get(this.selectedTechnology, 'usecase_adoption_percentage')) ? true : false;
+			if (newSolution && newTech && newUsecaseAdoptPert) {
 				this.selectedTechnology = technology;
 
 				this.resetComponentData();
@@ -519,7 +529,10 @@ export class LifecycleComponent implements OnDestroy {
 		this.componentData = {
 			learning: {
 				certificationsUrl: `${environment.learningLink}?type=certification`,
-				elearningUrl: `${environment.learningLink}?type=e-learning`,
+				elearningUrl: `${environment.learningLink}?type=e-learning
+				&solution=${this.componentData.params.solution}
+				&usecase=`,
+				remotepracticelabsUrl: `${environment.learningLink}?type=remotepracticelabs`,
 			},
 			params: {
 				customerId: this.customerId,
@@ -1002,6 +1015,8 @@ export class LifecycleComponent implements OnDestroy {
 		this.contentService.registerUserToAtx(params)
 		.subscribe(() => {
 			this.status.loading.atx = false;
+			this.loadATX()
+				.subscribe();
 			if (window.Cypress) {
 				window.atxLoading = false;
 			}
@@ -1555,6 +1570,7 @@ export class LifecycleComponent implements OnDestroy {
 		if (!_.isEmpty(this.accStatusFilter)) {
 			_.set(params, 'status', this.accStatusFilter);
 		}
+
 		if (!_.isEmpty(this.selectedPartnerFilterForACC)) {
 			_.set(params, 'providerId', this.selectedPartnerFilterForACC);
 		}
@@ -1567,6 +1583,12 @@ export class LifecycleComponent implements OnDestroy {
 				};
 				_.remove(this.componentData.acc.sessions, (session: ACC) =>
 					!session.title && !session.description);
+
+				// Do not show cisco ACC's if incorrect CX level
+				if (!this.ciscoAccLevels.includes(this.cxLevel)) {
+					_.remove(this.componentData.acc.sessions, (session: ACC) =>
+						!session.providerInfo);
+				}
 
 				this.selectedACC = this.componentData.acc.sessions;
 				this.buildAccTable();
@@ -1892,6 +1914,7 @@ export class LifecycleComponent implements OnDestroy {
 					_.set(this.componentData, ['learning', 'certifications'], []);
 					_.set(this.componentData, ['learning', 'elearning'], []);
 					_.set(this.componentData, ['learning', 'training'], []);
+					_.set(this.componentData, ['learning', 'remotepracticelabs'], []);
 
 					_.each(result.items, (item: ELearning) => {
 						switch (item.type) {
@@ -1913,6 +1936,14 @@ export class LifecycleComponent implements OnDestroy {
 							}
 							case 'Videos': {
 								this.componentData.learning.certifications.push(item);
+								break;
+							}
+							case 'Remote Learning Lab': {
+								const learningItem: ELearningModel = {
+									...item,
+									fixedRating: parseFloat(item.rating),
+								};
+								this.componentData.learning.remotepracticelabs.push(learningItem);
 								break;
 							}
 							default: {
@@ -2398,6 +2429,13 @@ export class LifecycleComponent implements OnDestroy {
 			};
 			this.status.loading.partner = false;
 			this.partnerList = [ciscoCompanyInfo, ...result.companyList];
+			this.accPartnerList = [ciscoCompanyInfo, ...result.companyList];
+
+			if (!this.ciscoAccLevels.includes(this.cxLevel)) {
+				_.remove(this.accPartnerList, (partner: CompanyInfo) =>
+					partner.companyId === ciscoCompanyInfo.companyId);
+			}
+
 		},
 		err => {
 			this.status.loading.partner = false;

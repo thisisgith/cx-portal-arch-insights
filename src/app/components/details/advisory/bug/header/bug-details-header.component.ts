@@ -2,7 +2,7 @@ import {
 	Component,
 	Input,
 } from '@angular/core';
-import { Asset, NetworkElement } from '@sdp-api';
+import { HardwareAsset } from '@sdp-api';
 import { CuiModalService } from '@cisco-ngx/cui-components';
 import { Data as BugData } from '../bug-details.component';
 import {
@@ -22,8 +22,8 @@ export class BugDetailsHeaderComponent {
 	constructor (private cuiModalService: CuiModalService) { }
 
 	@Input('details') public details: BugData;
-	@Input('selectedAsset') public selectedAsset: Asset;
-	@Input('impactedAssets') public impactedAssets: (Asset | NetworkElement)[];
+	@Input('selectedAsset') public selectedAsset: HardwareAsset;
+	@Input('impactedAssets') public impactedAssets: HardwareAsset[];
 	public bugSearchToolURL = environment.bugSearchTool;
 
 	/**

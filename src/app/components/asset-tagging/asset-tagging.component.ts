@@ -1,0 +1,233 @@
+import { Component, OnDestroy, Input, OnChanges, Output, EventEmitter } from '@angular/core';
+import { Subject } from 'rxjs';
+import { LogService } from '@cisco-ngx/cui-services';
+import * as _ from 'lodash-es';
+import { Tags, AssetTaggingService } from '@sdp-api';
+
+/**
+ * Component for Asset Tagging
+ */
+@Component({
+	selector: 'asset-tagging',
+	styleUrls: ['./asset-tagging.component.scss'],
+	templateUrl: './asset-tagging.component.html',
+})
+export class AssetTaggingComponent implements OnChanges, OnDestroy {
+
+	@Input() public tagListRight: Tags[] = [];
+	@Input() public tagListLeft: Tags[] = [];
+	@Output() public updatedTags: EventEmitter<boolean> = new EventEmitter<boolean>();
+	@Output() public tagsFromAssetTagging: EventEmitter<any> = new EventEmitter<any>();
+	public leftTags = 'left';
+	public rightTags = 'right';
+	public allTagsSelectedRight = false;
+	public allTagsSelectedLeft = false;
+	public loadingListLeft = false;
+	public loadingListRight = false;
+	private destroyed$: Subject<void> = new Subject<void>();
+	public isOptin = true;
+	public policyGroups: string[] = [];
+	public totalRows = undefined;
+	public rowsPerPage = 10;
+	public selectedRowsRight = { };
+	public selectedRowsLeft = { };
+	public selectedRowsLeftCount = 0;
+	public selectedRowsRightCount = 0;
+	public leftSearchText = '';
+	public rightSearchText = '';
+	public error = false;
+	public success = false;
+	public successMessage = '';
+	public customerId: string;
+
+	public postParams: Tags [] = [];
+
+	constructor (
+		private logger: LogService,
+		public assetTaggingService: AssetTaggingService,
+	) {
+	}
+
+	/**
+	 * Used to detect the changes in input object and
+	 * Intialises the Tagging data if it is visible
+	 */
+	public ngOnChanges () {
+		this.handleLeftTagSelectionChanged();
+		this.handleRightTagSelectionChanged();
+	}
+
+	/**
+	 * returns tag list w/o the select attribute
+	 * @returns any[]
+	 */
+	public getUnselectedTags () {
+		return  _.map(this.tagListRight, item => {
+			const copy = _.cloneDeep(item);
+			delete copy.selected;
+
+			return copy;
+		});
+	}
+
+	/**
+	 * Toggles whether or not all Tags are selected
+	 * @param tags tag row
+	 * @param selectorName The designated name of the tag selector
+	 * firing this function off
+	 */
+	public toggleAllTagsSelected (
+		tags: Tags[],
+		selectorName: string) {
+
+		if (tags.length === 0) {
+			return;
+		}
+
+		let selected = false;
+		let searchText = '';
+
+		if (selectorName === this.leftTags) {
+			this.allTagsSelectedLeft = !this.allTagsSelectedLeft;
+			selected = this.allTagsSelectedLeft;
+			if (this.leftSearchText) {
+				searchText = this.leftSearchText;
+			}
+		} else if (selectorName === this.rightTags) {
+			this.allTagsSelectedRight = !this.allTagsSelectedRight;
+			selected = this.allTagsSelectedRight;
+			if (this.rightSearchText) {
+				searchText = this.rightSearchText;
+			}
+		}
+
+		for (let devNum = 0; devNum < tags.length; devNum += 1) {
+			if (searchText) {
+				const tagName = tags[devNum].tagName.toLowerCase();
+				if (searchText.indexOf(',') > -1) {
+					const searchTags = _.split(searchText, ',');
+					const isTagAvailable = searchTags.some(searchTag =>
+													tagName === searchTag.toLowerCase());
+					if (isTagAvailable) {
+						tags[devNum].selected = selected;
+					}
+				} else if (tagName.indexOf(searchText.toLowerCase()) > -1) {
+					tags[devNum].selected = selected;
+				}
+			} else {
+				tags[devNum].selected = selected;
+			}
+		}
+
+		this.handleTagSelectionChanged(selectorName);
+	}
+
+	/**
+	 * Submit the completed Collection Form
+	 */
+	public submit () {
+		this.postParams = this.getUnselectedTags();
+
+		this.assetTaggingService.Tags = this.postParams;
+	}
+
+	/**
+	 * Code for add button
+	 * Moves selected list items from left list to right list
+	 */
+	public add () {
+		for (let devNum = this.tagListLeft.length - 1; devNum >= 0; devNum -= 1) {
+			if (this.tagListLeft[devNum].selected) {
+				const deviceCopy = _.cloneDeep(this.tagListLeft[devNum]);
+				deviceCopy.selected = false;
+
+				this.tagListRight.push(deviceCopy);
+				this.tagListLeft.splice(devNum, 1);
+			}
+		}
+
+		this.allTagsSelectedLeft = false;
+		this.tagListLeft = _.cloneDeep(this.tagListLeft);
+		this.tagListRight = _.cloneDeep(this.tagListRight);
+		this.handleLeftTagSelectionChanged();
+		this.updatedTags.emit(true);
+		this.tagsFromAssetTagging.emit(this.tagListRight);
+	}
+
+	/**
+	 * Code for remove button
+	 * Moves selected list items from right list to left list
+	 */
+	public remove () {
+		for (let devNum = this.tagListRight.length - 1; devNum >= 0; devNum -= 1) {
+			if (this.tagListRight[devNum].selected) {
+				const deviceCopy = _.cloneDeep(this.tagListRight[devNum]);
+				deviceCopy.selected = false;
+
+				this.tagListLeft.push(deviceCopy);
+				this.tagListRight.splice(devNum, 1);
+			}
+		}
+		this.tagListLeft = _.cloneDeep(this.tagListLeft);
+		this.tagListRight = _.cloneDeep(this.tagListRight);
+		this.allTagsSelectedRight = false;
+		this.handleRightTagSelectionChanged();
+		this.updatedTags.emit(true);
+		this.tagsFromAssetTagging.emit(this.tagListRight);
+	}
+
+	/**
+	 * Handles when a tag list selection change has been detected.
+	 * Delegates to the correct function based on a selection made on the
+	 * left or the right.
+	 * @param selectorName The designated name of the tag selector firing
+	 * the event
+	 */
+	public handleTagSelectionChanged (selectorName: string) {
+		switch (selectorName) {
+			case this.leftTags:
+				this.handleLeftTagSelectionChanged();
+				break;
+			case this.rightTags:
+				this.handleRightTagSelectionChanged();
+				break;
+		}
+	}
+
+	/**
+	 * Handles all left tag selection changes
+	 */
+	public handleLeftTagSelectionChanged () {
+		this.selectedRowsLeftCount = _.filter(this.tagListLeft, ['selected', true]).length;
+		this.submit();
+	}
+
+	/**
+	 * Handles all right tag selection changes
+	 */
+	public handleRightTagSelectionChanged () {
+		this.selectedRowsRightCount = _.filter(this.tagListRight, ['selected', true]).length;
+		this.submit();
+	}
+
+	/**
+	 * This function to handle the searched tags
+	 * @param searchText it will have the searched tags
+	 * @param selectorName The designated name of the tag selector
+	 */
+	public onSearchQuery (searchText: string, selectorName: string) {
+		if (selectorName === this.leftTags) {
+			this.leftSearchText = searchText.trim();
+		} else {
+			this.rightSearchText = searchText.trim();
+		}
+	}
+
+	/**
+	 * ngOnDestroy
+	 */
+	public ngOnDestroy () {
+		this.destroyed$.next();
+		this.destroyed$.complete();
+	}
+}

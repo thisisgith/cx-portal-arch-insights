@@ -28,7 +28,7 @@ const PARAMETER_CODEC = new ParameterCodec();
  * Base configuration for API services
  */
 export class BaseConfiguration {
-  rootUrl: string = '//api.cisco.com';
+  rootUrl: string = '//cpp-api.sdp12-istg.csco.cloud';
 }
 
 /**

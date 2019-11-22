@@ -1,4 +1,5 @@
 @import "~cisco-ui/src/scss/utilities/_variables.scss";
+@import '~src/variables.scss';
 
 .dot {
 	height: 12px;
@@ -29,6 +30,6 @@
 
 :host {
 	.rma-toggle-btn a {
-		color: #5d656c !important;
+		color: $secondary-and-button-text-color !important;
 	}
 }

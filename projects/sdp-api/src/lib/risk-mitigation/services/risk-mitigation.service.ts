@@ -7,7 +7,7 @@ import { Observable as __Observable, from } from 'rxjs';
 import { map as __map, filter as __filter } from 'rxjs/operators';
 import { StrictHttpResponse as __StrictHttpResponse } from '../../core/strict-http-response';
 import { RiskAssets, CrashHistoryDeviceCount, CrashHistoryDeviceList } from '../models/risk-assets';
-import { HighCrashRisk, HighCrashRiskPagination, HighCrashRiskDeviceCount } from '../models/high-crash-risk';
+import { HighCrashRisk, HighCrashRiskPagination, HighCrashRiskDeviceCount, BarGraphValues } from '../models/high-crash-risk';
 import { CrashCount } from '../models/crash-count';
 
 @Injectable({
@@ -27,6 +27,9 @@ class RiskMitigationService extends __BaseService {
 		'/customerportal/fingerprint/v1/crash-risk-devices/';
 	static readonly getCrashHistoryForDevicePath =
 		'/customerportal/rmc/v1/device-frequent-crash-detail/';
+	static readonly getTotalAssestCountPath =
+		'/customerportal/inventory/v1/role/device/count'
+
 
 	constructor(
 		config: __Configuration,
@@ -94,11 +97,16 @@ class RiskMitigationService extends __BaseService {
 		let __body: any = null;
 		if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
 		if (params.solution != null) __params = __params.set('solution', params.solution.toString());
-
+		if(params.timePeriod){
+			__params = __params.set('timePeriod', params.timePeriod.toString());
+		 }
+		 if(params.searchQuery){
+			__params = __params.set('searchQuery', params.searchQuery.toString());
+		 }
 
 		let req = new HttpRequest<any>(
 			'GET',
-			this.rootUrl + `${RiskMitigationService.getDeviceDetailsPath}`+params.customerId + '?timePeriod=' + params.timePeriod,
+			this.rootUrl + `${RiskMitigationService.getDeviceDetailsPath}`+params.customerId,
 			__body,
 			{
 				headers: __headers,
@@ -120,12 +128,6 @@ class RiskMitigationService extends __BaseService {
 		let __body: any = null;
 		let req:any;
 
-		if(params.time){
-			__params = __params.set('timePeriod', params.time.toString());
-		 }
-		 if(params.search){
-			__params = __params.set('searchQuery', params.search.toString());
-		 }
 		if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
 		if (params.solution != null) __params = __params.set('solution', params.solution.toString());
 
@@ -165,7 +167,9 @@ class RiskMitigationService extends __BaseService {
 		 if(params.sort && params.sort != ''){
 			__params = __params.set('sort', params.sort.toString());
 		 }
+		 if(params.globalRiskRank && params.globalRiskRank != ''){
 		 __params = __params.set('globalRiskRank', params.globalRiskRank);
+		 }
 		if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
 		if (params.solution != null) __params = __params.set('solution', params.solution.toString());
 
@@ -214,6 +218,32 @@ class RiskMitigationService extends __BaseService {
 		);
 	}
 
+	getTotalAssestCountResponse(params: CrashHistoryDeviceCount): __Observable<__StrictHttpResponse<BarGraphValues >> {
+		let __params = this.newParams();
+		__params = __params.set('customerId', params.customerId.toString())
+		__params = __params.set('useCase',params.useCase);
+		__params = __params.set('solution',params.solution);
+
+		let __headers = new HttpHeaders();
+		let __body: any = null;
+		let req = new HttpRequest<any>(
+			'GET',
+			this.rootUrl + `${RiskMitigationService.getTotalAssestCountPath}`,
+			__body,
+			{
+				headers: __headers,
+				params: __params,
+				responseType: 'json',
+			});
+
+		return this.http.request<any>(req).pipe(
+			__filter(_r => _r instanceof HttpResponse),
+			__map((_r) => {
+				return _r as __StrictHttpResponse<BarGraphValues>;
+			})
+		);
+	}
+
 
 
 	getAllCrashesData(params: RiskMitigationService.GetAssetsParams): __Observable<CrashCount> {
@@ -249,17 +279,23 @@ class RiskMitigationService extends __BaseService {
 			__map(_r => _r.body as RiskAssets)
 		);
 	}
+	getTotalAssestCount(params: any): __Observable<BarGraphValues[] > {
+		return this.getTotalAssestCountResponse(params).pipe(
+			__map(_r => _r.body as BarGraphValues[] )
+		);
+	}
+
 }
 
 module RiskMitigationService {
 	export interface GetAssetsParams {
-		sortDirection: string;
-		key: string;
-		customerId: any;
-		neInstanceId: any;
-		timePeriod: string;
-		time: string;
-		search: string;
+		sortDirection?: string;
+		key?: string;
+		customerId?: any;
+		neInstanceId?: any;
+		timePeriod?: string;
+		time?: string;
+		searchQuery?: string;
 		solution?: string;
 		useCase?: string;
 	}

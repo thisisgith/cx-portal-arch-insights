@@ -25,7 +25,7 @@ class ControlPointDevicePolicyAPIService extends __BaseService {
   static readonly createIgnoreScanPolicyUsingPOSTPath = '/ignorepolicy';
   static readonly updateIgnoreScanPolicyUsingPATCHPath = '/ignorepolicy';
   static readonly getDevicesForGivenIgnorePolicyUsingGETPath = '/ignorepolicy/devices/existing/{customerId}/{policyId}/{pageNumber}/{rowsPerPage}';
-  static readonly getDevicesForIgnorePolicyCreationUsingGETPath = '/ignorepolicy/devices/{customerId}/{pageNumber}/{rowsPerPage}';
+  static readonly getDevicesForIgnorePolicyCreationUsingGETPath = '/ignorepolicy/devices/{customerId}/{solution}/{useCase}/{pageNumber}/{rowsPerPage}';
   static readonly getAllPolicyUsingGETPath = '/policies/{customerId}';
   static readonly getAllPolicyForGivenMonthUsingGETPath = '/policies/{customerId}/{month}/{year}';
   static readonly createDevicePolicyUsingPOSTPath = '/policy';
@@ -253,6 +253,10 @@ class ControlPointDevicePolicyAPIService extends __BaseService {
   /**
    * @param params The `ControlPointDevicePolicyAPIService.GetDevicesForIgnorePolicyCreationUsingGETParams` containing the following parameters:
    *
+   * - `useCase`: useCase
+   *
+   * - `solution`: solution
+   *
    * - `rowsPerPage`: rowsPerPage
    *
    * - `pageNumber`: pageNumber
@@ -269,9 +273,11 @@ class ControlPointDevicePolicyAPIService extends __BaseService {
 
 
 
+
+
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/customerportal/controlpoint/v1/ignorepolicy/devices/${params.customerId}/${params.pageNumber}/${params.rowsPerPage}`,
+      this.rootUrl + `/customerportal/controlpoint/v1/ignorepolicy/devices/${params.customerId}/${params.solution}/${params.useCase}/${params.pageNumber}/${params.rowsPerPage}`,
       __body,
       {
         headers: __headers,
@@ -289,6 +295,10 @@ class ControlPointDevicePolicyAPIService extends __BaseService {
 
   /**
    * @param params The `ControlPointDevicePolicyAPIService.GetDevicesForIgnorePolicyCreationUsingGETParams` containing the following parameters:
+   *
+   * - `useCase`: useCase
+   *
+   * - `solution`: solution
    *
    * - `rowsPerPage`: rowsPerPage
    *
@@ -866,6 +876,16 @@ module ControlPointDevicePolicyAPIService {
    * Parameters for getDevicesForIgnorePolicyCreationUsingGET
    */
   export interface GetDevicesForIgnorePolicyCreationUsingGETParams {
+
+    /**
+     * useCase
+     */
+    useCase: string;
+
+    /**
+     * solution
+     */
+    solution: string;
 
     /**
      * rowsPerPage

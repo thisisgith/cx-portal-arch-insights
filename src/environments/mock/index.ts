@@ -14,16 +14,20 @@ export * from './controlpoints/license';
 export * from './controlpoints/policies';
 export * from './controlpoints/devices';
 
+export * from './admin-complience/admin-complience';
+
 export * from './diagnostics/critical-bugs';
 export * from './diagnostics/critical-bugs-assets';
 
 export * from './insights/insights-counts';
 
-export * from './inventory/assets';
 export * from './inventory/asset-summary';
+export * from './inventory/assets';
+export * from './inventory/hardware-assets';
 export * from './inventory/hardware';
 export * from './inventory/network-elements';
 export * from './inventory/roles';
+export * from './inventory/system-assets';
 
 export { Mock } from './mock';
 

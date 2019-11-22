@@ -1,6 +1,6 @@
 /* tslint:disable */
 import { RoleDetails } from './role-details';
-import { VADetailsIntoES } from './vadetails-into-es';
+import { VADetailsForSAUser } from './vadetails-for-sauser';
 export interface UserUpdateRequest {
   lastName?: string;
   ccoId?: string;
@@ -10,10 +10,11 @@ export interface UserUpdateRequest {
   haAccountName?: string;
   isPartner?: boolean;
   customerId?: string;
-  roles?: Array<RoleDetails>;
+  rolesAdded?: Array<RoleDetails>;
+  rolesRemoved?: Array<RoleDetails>;
   saAccountId?: string;
   saAccountName?: string;
   updatedBy?: string;
   updatedTime?: string;
-  vaDetails?: Array<VADetailsIntoES>;
+  vaDetails?: Array<VADetailsForSAUser>;
 }

@@ -388,7 +388,13 @@ export class RegisterCollectorComponent implements OnDestroy, OnInit, SetupStep 
 							.pipe(takeUntil(this.destroyed$))
 							.subscribe(() => {
 								// continue to next screen after a second
-								this.onStepComplete.emit();
+								this.route.queryParams.subscribe(params => {
+									if (params.fromAdmin) {
+										this.router.navigate(['/admin/settings']);
+									} else {
+										this.onStepComplete.emit();
+									}
+								});
 							});
 
 						return false;

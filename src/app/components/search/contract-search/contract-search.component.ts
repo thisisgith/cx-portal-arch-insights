@@ -28,7 +28,7 @@ import { UserResolve } from '@utilities';
 enum StatusColorMap {
 	ACTIVE = 'text-success',
 	ENTERED = 'text-turquoise',
-	EXPIRED = 'text-muted',
+	EXPIRED = 'text-danger',
 	INACTIVE = 'text-muted',
 	OVERDUE = 'text-warning',
 	'QA HOLD' = 'text-warning-alt',

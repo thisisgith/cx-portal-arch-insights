@@ -13,6 +13,7 @@ import { CaseOpenModule } from './case-open.module';
 import { CaseService } from '@cui-x/services';
 import { RouterTestingModule } from '@angular/router/testing';
 import { UserResolve } from '@utilities';
+import { DebugElement } from '@angular/core';
 
 describe('CaseOpenComponent', () => {
 	let component: CaseOpenComponent;
@@ -20,6 +21,7 @@ describe('CaseOpenComponent', () => {
 	let cuiModalService: CuiModalService;
 	let caseService: CaseService;
 	let userResolve: UserResolve;
+	let template: DebugElement;
 
 	configureTestSuite(() => {
 		TestBed.configureTestingModule({
@@ -51,6 +53,7 @@ describe('CaseOpenComponent', () => {
 		cuiModalService = TestBed.get(CuiModalService);
 		caseService = TestBed.get(CaseService);
 		component = fixture.componentInstance;
+		template = fixture.debugElement;
 		component.data = {
 			asset: MockAssetsData[0],
 			element: MockNetworkElements[0],
@@ -65,7 +68,7 @@ describe('CaseOpenComponent', () => {
 
 	it('should prompt the user if they want to close', fakeAsync(() => {
 		spyOn(cuiModalService, 'showComponent');
-		const button = fixture.debugElement.query(By.css('a[data-auto-id="CaseOpenClose"]'));
+		const button = template.query(By.css('a[data-auto-id="CaseOpenClose"]'));
 		button.nativeElement.click();
 		tick();
 		expect(cuiModalService.showComponent)
@@ -73,13 +76,13 @@ describe('CaseOpenComponent', () => {
 	}));
 
 	it('should expand', fakeAsync(() => {
-		component.caseForm.controls.description.setValue('a');
-		component.caseForm.controls.title.setValue('a');
-		const button = fixture.debugElement.query(
+		component.caseForm.controls.description.setValue('abcde');
+		component.caseForm.controls.title.setValue('abcde');
+		tick(3000);
+		const button = template.query(
 			By.css('[data-auto-id="CaseOpenNextButton"]'),
 		);
 		button.nativeElement.click();
-		tick();
 		expect(component.expand)
 			.toBeTruthy();
 	}));
@@ -88,13 +91,13 @@ describe('CaseOpenComponent', () => {
 		spyOn(caseService, 'createCase')
 			.and
 			.returnValue(of(CaseScenarios[9].scenarios.POST[0].response.body));
-		component.caseForm.controls.description.setValue('a');
-		component.caseForm.controls.title.setValue('a');
-		const button = fixture.debugElement.query(
+		component.caseForm.controls.description.setValue('abcde');
+		component.caseForm.controls.title.setValue('abcde');
+		tick(3000);
+		const button = template.query(
 			By.css('[data-auto-id="CaseOpenNextButton"]'),
 		);
 		button.nativeElement.click();
-		tick();
 		fixture.detectChanges(); // click next and expand
 		(<FormGroup> component.caseForm.controls.techInfo).controls.problemArea.setValue({
 			customerActivity: 'Operate',
@@ -106,7 +109,7 @@ describe('CaseOpenComponent', () => {
 		(<FormGroup> component.caseForm.controls.techInfo).controls.technology.setValue('10');
 		(<FormGroup> component.caseForm.controls.techInfo).controls.subtech.setValue('33');
 		fixture.detectChanges(); // enable submit button
-		const submitButton = fixture.debugElement.query(
+		const submitButton = template.query(
 			By.css('[data-auto-id="CaseOpenSubmitButton"]'),
 		);
 		submitButton.nativeElement.click();
@@ -114,4 +117,10 @@ describe('CaseOpenComponent', () => {
 		expect(caseService.createCase)
 			.toHaveBeenCalled();
 	}));
+
+	it('should truthy contract loading', () => {
+		component.caseForm.controls.title.setValue('a');
+		expect(component.contractLoading)
+			.toBeTruthy();
+	});
 });

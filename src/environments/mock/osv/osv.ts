@@ -1018,7 +1018,7 @@ const mockAssets: AssetsResponse = {
 		{
 			alert: null,
 			customerId: 7293498,
-			deploymentStatus: 'None',
+			deploymentStatus: 'Production',
 			hostName: 'AIR-CT5760',
 			id: '7293498_NA,FOC1841V02P,AIR-CT5760,NA_AIR-CT5760_FOC1841V02P',
 			imageName: 'NA',
@@ -1037,7 +1037,7 @@ const mockAssets: AssetsResponse = {
 		{
 			alert: null,
 			customerId: 7293498,
-			deploymentStatus: 'None',
+			deploymentStatus: 'Upgrade',
 			hostName: 'AMS-AP3702-28',
 			id: '7293498_NA,FTX1927S1K5,AIR-CAP3702E-A-K9,NA_AIR-CAP3702E-A-K9_FTX1927S1K5',
 			imageName: 'NA',
@@ -1202,7 +1202,9 @@ const mockSummaryResponse: SummaryResponse = {
 	},
 	assets: 964,
 	deployment: {
-		none: 963,
+		na: 10,
+		none: 364,
+		production: 200,
 		upgrade: 400,
 	},
 	profiles: 441,
@@ -1441,7 +1443,7 @@ export const OSVScenarios = [
 			],
 		},
 		url: `${api}profileRecommendations?customerId=${customerId}&profileName=${assetId}` +
-				'&productFamily=Cisco Catalyst 9300 Series Switches',
+				'&productFamily=Cisco Catalyst 9300 Series Switches&profileId=7293498_NA',
 		usecases: ['Use Case 1'],
 	},
 	{

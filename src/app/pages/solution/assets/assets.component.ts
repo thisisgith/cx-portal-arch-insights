@@ -10,12 +10,7 @@ import { I18n } from '@cisco-ngx/cui-utils';
 import {
 	ContractsService,
 	InventoryService,
-	Asset,
-	Assets,
 	InventoryPagination as Pagination,
-	// TODO: Re-enable when UX has been redesigned for LA
-	// ContractCount,
-	// ContractDeviceCountsResponse,
 	RoleCount,
 	RoleCountResponse,
 	CoverageCountsResponse,
@@ -25,17 +20,19 @@ import {
 	TransactionRequest,
 	NetworkDataGatewayService,
 	ScanRequestResponse,
-	NetworkElementResponse,
-	NetworkElement,
 	TransactionStatusResponse,
 	RacetrackSolution,
 	RacetrackTechnology,
+	HardwareAsset,
+	SystemAsset,
+	SystemAssets,
+	HardwareAssets,
 } from '@sdp-api';
 import * as _ from 'lodash-es';
 import { CuiModalService, CuiTableOptions } from '@cisco-ngx/cui-components';
 import { LogService } from '@cisco-ngx/cui-services';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { forkJoin, fromEvent, of, Subject } from 'rxjs';
+import { forkJoin, fromEvent, of, Subject, Subscription } from 'rxjs';
 import {
 	map,
 	debounceTime,
@@ -57,9 +54,8 @@ import { HttpResponse } from '@angular/common/http';
  */
 interface Item {
 	actions?: any[];
-	data: Asset;
+	data: SystemAsset | HardwareAsset;
 	details?: boolean;
-	element?: NetworkElement;
 	selected?: boolean;
 }
 
@@ -67,6 +63,36 @@ interface Item {
 interface SelectedSubfilter {
 	filter: string;
 	subfilter: VisualFilter['seriesData'];
+}
+
+/** Interface representing our view */
+interface View {
+	allAssetsSelected?: boolean;
+	contentContainerHeight?: string;
+	data?: Item[];
+	filtered?: boolean;
+	filters: VisualFilter[];
+	key: string;
+	loading: boolean;
+	pagination?: Pagination;
+	paginationCount?: string;
+	params?: InventoryService.GetSystemAssetsParams | 	InventoryService.GetHardwareAssetsParams;
+	route: string;
+	searchForm?: FormGroup;
+	searchInput?: ElementRef;
+	searchLabel?: string;
+	searchSubscribe?: Subscription;
+	searchTemplate?: TemplateRef<{ }>;
+	selected?: boolean;
+	selectedAssets?: Item[];
+	selectedSubfilters?: SelectedSubfilter[];
+	subject?: Subject<{ }>;
+	table?: CuiTableOptions;
+	tableContainerHeight?: string;
+	template?: TemplateRef<{ }>;
+	title?: string;
+	titleCount?: string;
+	total?: number;
 }
 
 /**
@@ -77,8 +103,6 @@ interface SelectedSubfilter {
 	templateUrl: './assets.component.html',
 })
 export class AssetsComponent implements OnInit, OnDestroy {
-	@ViewChild('totalFilter', { static: true })
-		private totalFilterTemplate: TemplateRef<{ }>;
 	@ViewChild('bubbleChartFilter', { static: true })
 		private bubbleChartFilterTemplate: TemplateRef<{ }>;
 	@ViewChild('pieChartFilter', { static: true })
@@ -87,113 +111,84 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		private barChartFilterTemplate: TemplateRef<{ }>;
 
 	@ViewChild('deviceTemplate', { static: true }) private deviceTemplate: TemplateRef<{ }>;
+	@ViewChild('productTypeTemplate', { static: true })
+		private productTypeTemplate: TemplateRef<{ }>;
 	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
 	@ViewChild('lastScanTemplate', { static: true }) private lastScanTemplate: TemplateRef<{ }>;
-	@ViewChild('supportCoverage', { static: true })
-		private supportCoverageTemplate: TemplateRef<{ }>;
+	@ViewChild('productIdTemplate', { static: true }) private productIdTemplate: TemplateRef<{ }>;
 	@ViewChild('criticalAdvisories', { static: true })
 		private criticalAdvisoriesTemplate: TemplateRef<{ }>;
 
 	@ViewChild('tableContainer', { static: false }) private tableContainer: ElementRef;
 
-	private searchInput: ElementRef;
-	@ViewChild('searchInput', { static: false }) set content (content: ElementRef) {
+	@ViewChild('systemSearchTemplate', { static: true })
+	private systemSearchTemplate: TemplateRef<{ }>;
+	@ViewChild('hardwareSearchTemplate', { static: true })
+	private hardwareSearchTemplate: TemplateRef<{ }>;
+
+	@ViewChild('systemSearchInput', { static: false }) set systemContent (content: ElementRef) {
 		if (content) {
-			this.searchInput = content;
-			this.searchSubscription();
+			const view = this.getView('system');
+			view.searchInput = content;
+			this.searchSubscription(view);
 		}
 	}
 
-	public mainContent = 'assets';
+	@ViewChild('hardwareSearchInput', { static: false }) set hardwareContent (content: ElementRef) {
+		if (content) {
+			const view = this.getView('hardware');
+			view.searchInput = content;
+			this.searchSubscription(view);
+		}
+	}
+
+	@ViewChild('contentContainer', { static: false })
+	private contentContainer: ElementRef;
+
+	public views: View[];
 	public alert: any = { };
 	public bulkDropdown = false;
-	public selectedAssets: Item[] = [];
-	public filters: VisualFilter[];
 	public visibleTemplate: TemplateRef<{ }>;
 	public filterCollapse = false;
 	private customerId: string;
-	public assetParams: InventoryService.GetAssetsParams;
-	public contractCountParams: ContractsService.GetContractCountsParams;
-	public pagination: Pagination;
-	public paginationCount: string;
+	public contentContainerHeight: string;
 	public status = {
-		inventoryLoading: true,
 		isLoading: true,
 	};
-	public assetsTable: CuiTableOptions;
 	public searchOptions = {
 		debounce: 600,
 		max: 100,
 		min: 3,
 		pattern: /^[a-zA-Z0-9\s\-\/\(\).]*$/,
 	};
-	public searchForm = new FormGroup({
-		search: new FormControl('',
-			[
-				Validators.minLength(this.searchOptions.min),
-				Validators.maxLength(this.searchOptions.max),
-				Validators.pattern(this.searchOptions.pattern),
-			]),
-	});
 	private destroy$ = new Subject();
-	public tableContainerHeight: string;
-	public inventory: Item[] = [];
-	public assetsDropdown = false;
-	public allAssetsSelected = false;
-	public filtered = false;
-	private InventorySubject: Subject<{ }>;
 	private selectedSolutionName: string;
 	private selectedTechnologyName: string;
 
-	public view: 'list' | 'grid' = 'list';
+	public viewType: 'list' | 'grid' = 'list';
 	public selectOnLoad = false;
 	public selectedAsset: Item;
 	public fullscreen = false;
-	public selectedSubfilters: SelectedSubfilter[];
 	public getProductIcon = getProductTypeImage;
 	public getProductTitle = getProductTypeTitle;
+	private routeParam: string;
 
 	constructor (
 		private contractsService: ContractsService,
 		private cuiModalService: CuiModalService,
-		private logger: LogService,
+		private detailsPanelStackService: DetailsPanelStackService,
 		private inventoryService: InventoryService,
+		private logger: LogService,
+		private networkService: NetworkDataGatewayService,
 		private productAlertsService: ProductAlertsService,
+		private racetrackInfoService: RacetrackInfoService,
 		public route: ActivatedRoute,
 		public router: Router,
-		private networkService: NetworkDataGatewayService,
-		private detailsPanelStackService: DetailsPanelStackService,
-		private racetrackInfoService: RacetrackInfoService,
 	) {
+		this.routeParam = _.get(this.route, ['snapshot', 'params', 'view'], 'system');
+
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
-
-		this.assetParams = {
-			customerId: this.customerId,
-			page: 1,
-			rows: 10,
-			sort: ['deviceName:ASC'],
-		};
-
-		this.contractCountParams = {
-			customerId: this.customerId,
-		};
-	}
-
-	/**
-	 * Returns the number of selected rows
-	 * @returns the number of rows
-	 */
-	get selected (): number {
-		return _.sumBy(this.inventory, (item: Item) => item.selected ? 1 : 0) || 0;
-	}
-
-	/**
-	 * Returns the current selected visual filters
-	 * @returns the selected visual filters
-	 */
-	get selectedFilters () {
-		return _.filter(this.filters, 'selected');
 	}
 
 	/**
@@ -202,8 +197,8 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 */
 	get dropdownActions () {
 		return _.filter([
-			this.selected ? {
-				label: `${I18n.get('_ExportSelected_')} (${this.selected})`,
+			this.selectedView.selected ? {
+				label: `${I18n.get('_ExportSelected_')} (${this.selectedView.selected})`,
 			} : undefined,
 			{
 				label: I18n.get('_ExportAll_'),
@@ -212,63 +207,489 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	}
 
 	/**
-	 * Returns the row specific actions
-	 * @param item the row we're building our actions for
-	 * @returns the built actions
+	 * Returns the number of selected rows
+	 * @returns the number of rows
 	 */
-	public getRowActions (item: Item) {
-		return _.filter([
-			_.get(item, ['data', 'supportCovered'], false) ? {
-				label: I18n.get('_OpenSupportCase_'),
-				onClick: () => this.cuiModalService.showComponent(
-					CaseOpenComponent,
-					{ asset: item.data },
-					'fluid',
-				),
-			} : undefined,
-			_.get(item, ['element', 'isManagedNE'], false) ?
-				{
-					label: I18n.get('_Scan_'),
-					onClick: () => this.checkScan(item),
-				} : undefined,
-		]);
+	get selected (): number {
+		return _.sumBy(this.selectedView.data, (item: Item) => item.selected ? 1 : 0) || 0;
 	}
 
 	/**
-	 * Performs a check on the current scan status
-	 * @param item the row of the asset to scsan
+	 * Returns the current selected visual filters
+	 * @returns the selected visual filters
 	 */
-	public checkScan (item: Item) {
-		const getScanStatusParams: NetworkDataGatewayService.GetScanStatusBySerialParams = {
-			customerId: this.customerId,
-			productId: _.get(item, ['data', 'productId']),
-			serialNumber: _.get(item, ['data', 'serialNumber']),
+	get selectedFilters () {
+		return _.filter(this.selectedView.filters, 'selected');
+	}
+
+	/**
+	 * Returns the currently selected view
+	 * @returns the view
+	 */
+	get selectedView (): View {
+		return _.find(this.views, 'selected');
+	}
+
+	/**
+	 * Finds selected view from views array and returns it
+	 * @param key the key to match to the view
+	 * @returns the found view
+	 */
+	public getView (key: string): View {
+		return _.find(this.views, { key });
+	}
+
+	/**
+	 * Sets the list of selected asset table elements
+	 * @param selectedItems array of selected table elements
+	 *
+	 */
+	public onSelectionChanged (selectedItems: Item[]) {
+		this.selectedView.selectedAssets = selectedItems;
+	}
+
+	/**
+	 * Will adjust the browsers query params to preserve the current state
+	 */
+	private adjustQueryParams () {
+		const queryParams = _.omit(_.cloneDeep(this.selectedView.params),
+			['customerId', 'rows', 'solution', 'useCase']);
+		this.selectedView.filtered = !_.isEmpty(_.omit(queryParams, ['sort', 'page']));
+		this.router.navigate([`/solution/assets/${this.routeParam}`], {
+			queryParams,
+		});
+	}
+
+	/**
+	 * Sets the params for sorting
+	 * @param column column to set sorting
+	 */
+	public onColumnSort (column) {
+		if (column.sortable) {
+			this.selectedView.filtered = true;
+			_.each(this.selectedView.table.columns, c => {
+				c.sorting = false;
+			});
+			column.sorting = true;
+			column.sortDirection = column.sortDirection === 'asc' ? 'desc' : 'asc';
+			this.selectedView.params.sort = [`${column.key}:${column.sortDirection.toUpperCase()}`];
+			this.adjustQueryParams();
+			this.selectedView.subject.next();
+		}
+	}
+
+	/**
+	 * Handler for performing a search
+	 * @param view search string
+	 */
+	public doSearch (view: View) {
+		const query = view.searchForm.controls.search.value;
+		if (view.searchForm.valid && query) {
+			this.logger.debug(`assets.component :: doSearch():${view.key}`
+				+ `:: Searching for ${query}`);
+			_.set(view.params, 'search', query);
+			_.set(view.params, 'page', 1);
+			view.filtered = true;
+			this.adjustQueryParams();
+			view.subject.next();
+		} else if (!query && view.filtered) {
+			_.unset(view.params, 'search');
+			_.set(view.params, 'page', 1);
+			this.adjustQueryParams();
+			view.subject.next();
+		}
+	}
+
+	/**
+	 * Builds the search debounce subscription
+	 * @param view the view we're currently on
+	 */
+	private searchSubscription (view: View) {
+		fromEvent(view.searchInput.nativeElement, 'keyup')
+			.pipe(
+				map((evt: KeyboardEvent) => (<HTMLInputElement> evt.target).value),
+				debounceTime(this.searchOptions.debounce),
+				distinctUntilChanged(),
+				takeUntil(this.destroy$),
+			)
+			.subscribe(() => this.doSearch(view));
+	}
+
+	/**
+	 * Switches our selected view
+	 * @param view the view to select
+	 */
+	public selectView (view: View) {
+		_.each(this.views, (v: View) => {
+			v.selected = false;
+		});
+		view.selected = true;
+		this.routeParam = view.route;
+		this.adjustQueryParams();
+	}
+
+	/**
+	 * Returns the number of rows for the page
+	 * depending on the view
+	 * @returns number of rows
+	 */
+	private getRows () {
+		return this.viewType === 'list' ? 10 : 12;
+	}
+
+	/**
+	 * Page change handler
+	 * @param event the event emitted
+	 */
+	public onPageChanged (event) {
+		this.selectedView.params.page = (event.page + 1);
+		this.selectedView.allAssetsSelected = false;
+		this.adjustQueryParams();
+		this.selectedView.subject.next();
+	}
+
+	/**
+	 * Changes the view type to either list or grid
+	 * @param type view to set
+	 */
+	public selectViewType (type: 'list' | 'grid') {
+		if (this.viewType !== type) {
+			this.viewType = type;
+			window.sessionStorage.setItem('viewType', this.viewType);
+			const newRows = this.getRows();
+			this.selectedView.params.page =
+				Math.round(this.selectedView.params.page * this.selectedView.params.rows / newRows);
+			this.selectedView.params.rows = newRows;
+			this.adjustQueryParams();
+			this.selectedView.subject.next();
+		}
+	}
+
+	/**
+	 * Builds our System tab
+	 * @returns the system tab
+	 */
+	private systemView (): View {
+		const route = 'system';
+
+		return {
+			route,
+			filters: [
+				// {
+				// 	key: 'partner',
+				// 	loading: true,
+				// 	seriesData: [],
+				// 	template: this.pieChartFilterTemplate,
+				// 	title: I18n.get('_Partner_'),
+				// },
+				{
+					key: 'advisories',
+					loading: true,
+					seriesData: [],
+					template: this.barChartFilterTemplate,
+					title: I18n.get('_Advisories_'),
+				},
+				{
+					key: 'role',
+					loading: true,
+					seriesData: [],
+					template: this.bubbleChartFilterTemplate,
+					title: I18n.get('_Role_'),
+				},
+			],
+			key: 'system',
+			loading: true,
+			params: {
+				customerId: this.customerId,
+				page: 1,
+				rows: this.getRows(),
+				sort: ['criticalAdvisories:DESC'],
+			},
+			searchLabel: '_Systems_',
+			searchTemplate: this.systemSearchTemplate,
+			selected: this.routeParam === route,
+			selectedAssets: [],
+			subject: new Subject(),
+			table: new CuiTableOptions({
+				bordered: true,
+				columns: [
+					{
+						key: 'criticalAdvisories',
+						name: I18n.get('_CriticalAdvisories_'),
+						sortable: true,
+						sortDirection: 'desc',
+						sorting: true,
+						template: this.criticalAdvisoriesTemplate,
+						width: '150px',
+					},
+					{
+						key: 'deviceName',
+						name: I18n.get('_Hostname_'),
+						sortable: true,
+						template: this.deviceTemplate,
+					},
+					{
+						key: 'ipAddress',
+						name: I18n.get('_IPAddress_'),
+						sortable: true,
+						value: 'ipAddress',
+					},
+					{
+						key: 'productId',
+						name: I18n.get('_ProductID_'),
+						sortable: true,
+						template: this.productIdTemplate,
+					},
+					{
+						key: 'osType',
+						name: I18n.get('_SoftwareType_'),
+						sortable: true,
+						value: 'osType',
+					},
+					{
+						key: 'osVersion',
+						name: I18n.get('_SoftwareRelease_'),
+						sortable: true,
+						value: 'osVersion',
+					},
+					{
+						key: 'lastScan',
+						name: I18n.get('_LastScan_'),
+						sortable: true,
+						template: this.lastScanTemplate,
+						width: '100px',
+					},
+					{
+						key: 'cxLevel',
+						name: I18n.get('_SupportLevel_'),
+						render: item => item.cxLevel || I18n.get('_NA_'),
+						sortable: true,
+						value: 'cxLevel',
+						width: '115px',
+					},
+					{
+						click: true,
+						sortable: false,
+						template: this.actionsTemplate,
+						width: '50px',
+					},
+				],
+				dynamicData: true,
+				hover: true,
+				padding: 'compressed',
+				selectable: false,
+				singleSelect: true,
+				sortable: true,
+				striped: false,
+				tableSort: false,
+				wrapText: true,
+			}),
+			title: '_Systems_',
+			titleCount: '_Systems_',
+			total: 0,
 		};
-		const deviceName = _.get(item, ['data', 'deviceName']);
+	}
 
-		this.networkService.getScanStatusBySerial(getScanStatusParams)
-		.pipe(
-			mergeMap((response: ScanRequestResponse) => {
-				const inProgress = _.find(response, { status: 'IN_PROGRESS' });
-				const received = _.find(response, { status: 'RECEIVED' });
+	/**
+	 * Builds our Hardware tab
+	 * @returns the hardware tab
+	 */
+	private hardwareView (): View {
+		const route = 'hardware';
 
-				if (!inProgress && !received) {
-					return this.initiateScan(item);
-				}
-
-				this.alert.show(I18n.get('_ScanAlreadyInProgress_', deviceName), 'info');
-
-				return of();
+		return {
+			route,
+			filters: [
+				{
+					key: 'coverage',
+					loading: true,
+					seriesData: [],
+					template: this.pieChartFilterTemplate,
+					title: I18n.get('_CoverageStatus_'),
+				},
+				{
+					key: 'advisories',
+					loading: true,
+					seriesData: [],
+					template: this.pieChartFilterTemplate,
+					title: I18n.get('_Advisories_'),
+				},
+				// {
+				// 	key: 'partner',
+				// 	loading: true,
+				// 	seriesData: [],
+				// 	template: this.pieChartFilterTemplate,
+				// 	title: I18n.get('_Partner_'),
+				// },
+				{
+					key: 'eox',
+					loading: true,
+					seriesData: [],
+					template: this.barChartFilterTemplate,
+					title: I18n.get('_HardwareEndOfLife'),
+				},
+				{
+					key: 'equipmentType',
+					loading: true,
+					seriesData: [],
+					template: this.barChartFilterTemplate,
+					title: I18n.get('_HardwareType_'),
+				},
+			],
+			key: 'hardware',
+			loading: true,
+			params: {
+				customerId: this.customerId,
+				page: 1,
+				rows: this.getRows(),
+				sort: ['deviceName:DESC', 'productId:DESC'],
+			},
+			searchLabel: '_HardwareComponents_',
+			searchTemplate: this.hardwareSearchTemplate,
+			selected: this.routeParam === route,
+			selectedAssets: [],
+			subject: new Subject(),
+			table: new CuiTableOptions({
+				bordered: true,
+				columns: [
+					{
+						key: 'serialNumber',
+						name: I18n.get('_SerialNumber_'),
+						sortable: true,
+						value: 'serialNumber',
+					},
+					{
+						key: 'deviceName',
+						name: I18n.get('_SystemHostname_'),
+						sortable: true,
+						sortDirection: 'desc',
+						sorting: true,
+						value: 'deviceName',
+					},
+					{
+						key: 'productId',
+						name: I18n.get('_ProductID_'),
+						sortable: true,
+						template: this.productIdTemplate,
+					},
+					{
+						key: 'productType',
+						name: I18n.get('_ProductType_'),
+						sortable: true,
+						template: this.productTypeTemplate,
+					},
+					{
+						key: 'equipmentType',
+						name: I18n.get('_HardwareType_'),
+						render: item => _.startCase(_.toLower(_.get(item, 'equipmentType', ''))),
+						sortable: true,
+						value: 'equipmentType',
+					},
+					{
+						key: 'cxLevel',
+						name: I18n.get('_SupportLevel_'),
+						render: item => item.cxLevel || I18n.get('_NA_'),
+						sortable: true,
+						value: 'cxLevel',
+						width: '115px',
+					},
+					{
+						click: true,
+						sortable: false,
+						template: this.actionsTemplate,
+						width: '50px',
+					},
+				],
+				dynamicData: true,
+				hover: true,
+				padding: 'compressed',
+				selectable: false,
+				singleSelect: true,
+				sortable: true,
+				striped: false,
+				tableSort: false,
+				wrapText: true,
 			}),
-			catchError(err => {
-				this.alert.show(I18n.get('_UnableToInitiateScan_', deviceName), 'danger');
-				this.logger.error('assets.component : checkScan() ' +
-				`:: Error : (${err.status}) ${err.message}`);
+			title: '_Hardware_',
+			titleCount: '_HardwareComponents_',
+			total: 0,
+		};
+	}
 
-				return of();
-			}),
-		)
-		.subscribe();
+	/**
+	 * Function used to handle single row selection
+	 *
+	 * NOTE: Should only set the item.details, not item.selected
+	 * @param item the item we selected
+	 */
+	public onRowSelect (item: Item) {
+		const selectedView = this.selectedView;
+		selectedView.data.forEach((i: Item) => {
+			if (i !== item) {
+				i.details = false;
+			}
+		});
+		item.details = !item.details;
+		this.detailsPanelStackService.reset(item.details);
+		this.selectedAsset = item.details ? item : null;
+	}
+
+	/**
+	 * Function used to handle selecting/de-selecting all rows
+	 * @param selected boolean representing selecting all or selecting none
+	 */
+	public onAllSelect (selected: boolean) {
+		this.selectedView.data.forEach((i: Item) => {
+			i.selected = selected;
+		});
+
+		this.selectedView.allAssetsSelected = selected;
+	}
+
+	/**
+	 * Function used to clear the filters
+	 */
+	public clearFilters () {
+		const view = this.selectedView;
+		view.filtered = false;
+
+		_.each(view.filters, (filter: VisualFilter) => {
+			filter.selected = (filter.key === 'total') ? true : false;
+			_.each(filter.seriesData, f => {
+				f.selected = false;
+			});
+		});
+
+		view.params = _.assignIn(
+			_.pick(
+				_.cloneDeep(view.params), ['customerId', 'rows', 'sort']),
+				{ page: 1 });
+
+		view.selectedSubfilters = [];
+		view.searchForm.controls.search.setValue('');
+		view.allAssetsSelected = false;
+		this.adjustQueryParams();
+		view.subject.next();
+	}
+
+	/**
+	 * Will handle reloading data if our scan request has completed
+	 * @param transaction the transaction status of the completed or failed scan
+	 */
+	public handleScanStatus (transaction: TransactionStatusResponse) {
+		if (transaction.status === 'SUCCESS') {
+			forkJoin(
+				this.getSystemAdvisoryCount(),
+				this.fetchSystems(),
+			)
+			.subscribe(() => {
+				const view = this.getView('system');
+				const currentSerial = _.get(this.selectedAsset, ['data', 'serialNumber']);
+				const refreshed = _.find(view.data, (i: Item) =>
+					_.get(i, ['data', 'serialNumber']) === currentSerial);
+				this.onRowSelect(refreshed);
+			});
+		}
 	}
 
 	/**
@@ -313,521 +734,229 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	}
 
 	/**
-	 * Returns the selected sub filters
-	 * @param key the key to match to the filter
-	 * @returns the array of filters
+	 * Performs a check on the current scan status
+	 * @param item the row of the asset to scsan
 	 */
-	public getAllSelectedSubFilters () {
-		return _.reduce(this.filters, (memo, filter) => {
-			if (filter.seriesData.length) {
-				const selected = _.map(_.filter(filter.seriesData, 'selected'),
-				f => ({ filter, subfilter: f }));
+	public checkScan (item: Item) {
+		const getScanStatusParams: NetworkDataGatewayService.GetScanStatusBySerialParams = {
+			customerId: this.customerId,
+			productId: _.get(item, ['data', 'productId']),
+			serialNumber: _.get(item, ['data', 'serialNumber']),
+		};
+		const deviceName = _.get(item, ['data', 'deviceName']);
 
-				return _.concat(memo, selected);
-			}
-
-			return memo;
-		}, []);
-	}
-
-	/**
-	 * Unselects all selected visual filters
-	 */
-	public clearSelectedFilters () {
-		this.filters.forEach((f: VisualFilter) => {
-			f.selected = false;
-			_.each(f.seriesData, sd => {
-				sd.selected = false;
-			});
-		});
-
-		this.selectedSubfilters = [];
-		this.InventorySubject.next();
-	}
-
-	/**
-	 * Will adjust the browsers query params to preserve the current state
-	 */
-	private adjustQueryParams () {
-		const queryParams = _.omit(_.cloneDeep(this.assetParams),
-			['customerId', 'rows', 'solution', 'useCase']);
-		this.filtered = !_.isEmpty(_.omit(queryParams, ['sort', 'page']));
-		this.router.navigate([], {
-			queryParams,
-			relativeTo: this.route,
-		});
-	}
-
-	/**
-	 * Page change handler
-	 * @param event the event emitted
-	 */
-	public onPageChanged (event: any) {
-		this.assetParams.page = (event.page + 1);
-		this.allAssetsSelected = false;
-		this.adjustQueryParams();
-		this.InventorySubject.next();
-	}
-
-	/**
-	 * Called on 360 details panel close button click
-	 */
-	public onPanelClose () {
-		_.set(this.selectedAsset, 'details', false);
-		this.selectedAsset = null;
-	}
-
-	/**
-	 * Function used to select an item from our inventory
-	 * @param item the item we selected
-	 */
-	public onItemSelect (item: Item) {
-		item.selected = !item.selected;
-
-		this.allAssetsSelected = _.every(this.inventory, 'selected');
-	}
-
-	/**
-	 * Function used to handle single row selection
-	 *
-	 * NOTE: Should only set the item.details, not item.selected
-	 * @param item the item we selected
-	 */
-	public onRowSelect (item: Item) {
-		this.inventory.forEach((i: Item) => {
-			if (i !== item) {
-				i.details = false;
-			}
-		});
-		item.details = !item.details;
-		this.detailsPanelStackService.reset(item.details);
-		this.selectedAsset = item.details ? item : null;
-	}
-
-	/**
-	 * Function used to handle selecting/de-selecting all rows
-	 * @param selected boolean representing selecting all or selecting none
-	 */
-	public onAllSelect (selected: boolean) {
-		this.inventory.forEach((i: Item) => {
-			i.selected = selected;
-		});
-
-		this.allAssetsSelected = selected;
-	}
-
-	/**
-	 * Function used to clear the filters
-	 */
-	public clearFilters () {
-		this.filtered = false;
-
-		_.each(this.filters, (filter: VisualFilter) => {
-			filter.selected = (filter.key === 'total') ? true : false;
-			_.each(filter.seriesData, f => {
-				f.selected = false;
-			});
-		});
-
-		this.assetParams = _.assignIn(
-			_.pick(
-				_.cloneDeep(this.assetParams), ['customerId', 'rows', 'sort']),
-				{ page: 1 });
-
-		this.selectedSubfilters = [];
-		this.searchForm.controls.search.setValue('');
-		this.allAssetsSelected = false;
-		this.adjustQueryParams();
-		this.InventorySubject.next();
-	}
-
-	/**
-	 * Adds a subfilter to the given filer
-	 * @param subfilter the subfilter selected
-	 * @param filter the filter we selected the subfilter on
-	 * @param reload if we're reloading our assets
-	 */
-	public onSubfilterSelect (subfilter: string, filter: VisualFilter, reload: boolean = true) {
-		const sub = _.find(filter.seriesData, { filter: subfilter });
-
-		if (sub) {
-			const selected = !sub.selected;
-			_.each(filter.seriesData, (s: { selected: boolean }) => _.set(s, 'selected', false));
-			sub.selected = selected;
-		}
-
-		filter.selected = _.some(filter.seriesData, 'selected');
-
-		this.selectedSubfilters = this.getAllSelectedSubFilters();
-		const params = this.assetParams;
-		let val;
-		let key;
-		if (filter.key !== 'advisories' && filter.key !== 'eox') {
-			val =  _.map(_.filter(filter.seriesData, 'selected'), 'filter');
-			key = filter.key;
-		} else if (filter.key === 'eox') {
-			val = _.map(_.filter(filter.seriesData, 'selected'), 'filter');
-			key = 'lastDateOfSupportRange';
-		} else if (filter.key === 'advisories') {
-			_.each(params, (_v, k) => {
-				if (/has*/.test(k)) {
-					_.unset(params, [k]);
-				}
-			});
-			key = subfilter;
-			val = true;
-		}
-
-		if (filter.selected) {
-			_.set(params, [key], val);
-		} else {
-			_.unset(params, [key]);
-		}
-
-		this.assetParams.page = 1;
-
-		const totalFilter = _.find(this.filters, { key: 'total' });
-		if (filter.selected) {
-			totalFilter.selected = false;
-			this.filtered = true;
-		} else {
-			const total = _.reduce(this.filters, (memo, f) => {
-				if (!memo) {
-					return _.some(f.seriesData, 'selected');
-				}
-
-				return memo;
-			}, false);
-
-			totalFilter.selected = !total;
-			this.filtered = total;
-		}
-
-		if (reload) {
-			this.allAssetsSelected = false;
-			this.adjustQueryParams();
-			this.InventorySubject.next();
-		}
-	}
-
-	/**
-	 * Used to select which tab we want to view the data for
-	 * @param tab the tab we've clicked on
-	 * OnInit lifecycle hook
-	 */
-	public ngOnInit () {
-		if (window.Cypress) {
-			window.loading = true;
-		}
-
-		this.buildInventorySubject();
-		this.buildTable();
-		this.buildFilters();
-
-		const currentView = window.sessionStorage.getItem('view');
-		if (!currentView) {
-			window.sessionStorage.setItem('view', this.view);
-		} else {
-			this.view = <'list' | 'grid'> currentView;
-		}
-
-		this.assetParams.rows = this.getRows();
-
-		this.route.queryParams.subscribe(params => {
-			if (params.page) {
-				const page = _.toSafeInteger(params.page);
-				this.assetParams.page = (page < 1) ? 1 : page;
-			}
-
-			// TODO: Re-enable when UX has been redesigned for LA
-			// if (params.contractNumber) {
-			// 	this.assetParams.contractNumber = _.castArray(params.contractNumber);
-			// }
-
-			if (params.coverage) {
-				this.assetParams.coverage = _.castArray(params.coverage);
-			}
-
-			if (params.role) {
-				this.assetParams.role = _.castArray(params.role);
-			}
-
-			if (params.serialNumber) {
-				this.assetParams.serialNumber = _.castArray(params.serialNumber);
-			}
-
-			if (params.lastDateOfSupportRange) {
-				this.assetParams.lastDateOfSupportRange =
-					_.castArray(params.lastDateOfSupportRange);
-			}
-
-			if (params.hasBugs) {
-				this.assetParams.hasBugs = params.hasBugs;
-			} else if (params.hasFieldNotices) {
-				this.assetParams.hasFieldNotices = params.hasFieldNotices;
-			} else if (params.hasSecurityAdvisories) {
-				this.assetParams.hasSecurityAdvisories = params.hasSecurityAdvisories;
-			}
-
-			if (params.search &&
-				params.search.length >= this.searchOptions.min &&
-				params.search.length <= this.searchOptions.max &&
-				this.searchOptions.pattern.test(params.search)) {
-				this.assetParams.search = params.search;
-				this.searchForm.controls.search.setValue(params.search);
-			}
-
-			if (params.sort) {
-				const sort = _.split(params.sort, ':');
-				_.each(this.assetsTable.columns, c => {
-					if (sort.length === 2 &&
-							c.sortable &&
-							c.key &&
-							c.key.toLowerCase() === sort[0].toLowerCase()) {
-						c.sorting = true;
-						c.sortDirection = sort[1].toLowerCase();
-						this.assetParams.sort = _.castArray(`${sort[0]}:${sort[1].toUpperCase()}`);
-					} else {
-						c.sorting = false;
-					}
-				});
-			}
-
-			if (params.select) {
-				this.selectOnLoad = true;
-			}
-
-			this.filtered = !_.isEmpty(
-				_.omit(_.cloneDeep(this.assetParams), ['customerId', 'rows', 'page', 'sort']),
-			);
-			const totalFilter = _.find(this.filters, { key: 'total' });
-			totalFilter.selected = !this.filtered;
-		});
-
-		this.racetrackInfoService.getCurrentSolution()
+		this.networkService.getScanStatusBySerial(getScanStatusParams)
 		.pipe(
-			takeUntil(this.destroy$),
-		)
-		.subscribe((solution: RacetrackSolution) => {
-			this.selectedSolutionName = _.get(solution, 'name');
-			this.contractCountParams.solution = this.selectedSolutionName;
-		});
+			mergeMap((response: ScanRequestResponse) => {
+				const inProgress = _.find(response, { status: 'IN_PROGRESS' });
+				const received = _.find(response, { status: 'RECEIVED' });
 
-		this.racetrackInfoService.getCurrentTechnology()
-		.pipe(
-			takeUntil(this.destroy$),
-		)
-		.subscribe((technology: RacetrackTechnology) => {
-			if (this.selectedTechnologyName !== _.get(technology, 'name')) {
-				this.selectedTechnologyName = _.get(technology, 'name');
-				this.contractCountParams.useCase = this.selectedTechnologyName;
-				this.buildTable();
-				this.buildFilters();
-				this.loadData();
-			}
-		});
-	}
-
-	/**
-	 * Selects all the sub filters based on a list of parameters
-	 * @param params the array list of params
-	 * @param key the key to search for in the filters
-	 */
-	private selectSubFilters (params: string[], key: string) {
-		const filter = _.find(this.filters, { key });
-
-		if (filter) {
-			_.each(filter.seriesData, d => {
-				if (params.indexOf(d.filter) > -1) {
-					this.onSubfilterSelect(d.filter, filter, false);
-				}
-			});
-		}
-	}
-
-	/**
-	 * Function used to load all of the data
-	 */
-	private loadData () {
-		this.status.isLoading = true;
-		forkJoin(
-			this.getCoverageCounts(),
-			// TODO: Re-enable when UX has been redesigned for LA
-			// this.getContractCounts(),
-			this.getAdvisoryCount(),
-			this.getRoleCounts(),
-			this.getHardwareEOXCounts(),
-			this.getInventoryCounts(),
-		)
-		.pipe(
-			map(() => {
-				// TODO: Re-enable when UX has been redesigned for LA
-				// if (this.assetParams.contractNumber) {
-				// 	this.selectSubFilters(this.assetParams.contractNumber, 'contractNumber');
-				// }
-
-				if (this.assetParams.role) {
-					this.selectSubFilters(this.assetParams.role, 'role');
+				if (!inProgress && !received) {
+					return this.initiateScan(item);
 				}
 
-				if (this.assetParams.coverage) {
-					this.selectSubFilters(this.assetParams.coverage, 'coverage');
-				}
+				this.alert.show(I18n.get('_ScanAlreadyInProgress_', deviceName), 'info');
 
-				if (this.assetParams.hasBugs) {
-					this.selectSubFilters(['hasBugs'], 'advisories');
-				} else if (this.assetParams.hasFieldNotices) {
-					this.selectSubFilters(['hasFieldNotices'], 'advisories');
-				} else if (this.assetParams.hasSecurityAdvisories) {
-					this.selectSubFilters(['hasSecurityAdvisories'], 'advisories');
-				}
+				return of();
+			}),
+			catchError(err => {
+				this.alert.show(I18n.get('_UnableToInitiateScan_', deviceName), 'danger');
+				this.logger.error('assets.component : checkScan() ' +
+				`:: Error : (${err.status}) ${err.message}`);
 
-				if (this.assetParams.lastDateOfSupportRange) {
-					this.selectSubFilters(this.assetParams.lastDateOfSupportRange, 'eox');
-				}
-
-				return this.InventorySubject.next();
+				return of();
 			}),
 		)
-		.subscribe(() => {
-			this.status.isLoading = false;
+		.subscribe();
+	}
 
-			if (window.Cypress) {
-				window.loading = false;
+	/**
+	 * Returns the row specific actions
+	 * @param item the row we're building our actions for
+	 * @param view the view the actions are for
+	 * @returns the built actions
+	 */
+	public getRowActions (item: Item, view: View) {
+		const { cxLevel } = item.data;
+
+		return _.filter([
+			_.get(item, ['data', 'supportCovered'], false) ? {
+				label: I18n.get('_OpenSupportCase_'),
+				onClick: () => this.cuiModalService.showComponent(
+					CaseOpenComponent,
+					{ asset: item.data },
+					'fluid',
+				),
+			} : undefined,
+			(Number(cxLevel) > 0 && view.key === 'system' && _.get(item, ['data', 'isManagedNE'], false))
+			? {
+				label: I18n.get('_RunDiagnosticScan_'),
+				onClick: () => this.checkScan(item),
 			}
+			: undefined,
+		]);
+	}
 
-			this.logger.debug('assets.component : loadData() :: Finished Loading');
+	/**
+	 * Fetches the users system assets
+	 * @returns the system assets
+	 */
+	private fetchSystems () {
+		const view = this.getView('system');
+
+		return this.fetchInventory(view, _.cloneDeep(view.params));
+	}
+
+	/**
+	 * Builds our system subject for cancellable http requests
+	 */
+	private buildSystemSubject () {
+		this.getView('system').subject
+		.pipe(
+			switchMap(() => this.fetchSystems()),
+			takeUntil(this.destroy$),
+		)
+		.subscribe();
+	}
+
+	/**
+	 * Fetches the users inventory
+	 * @param view the view
+	 * @param params the query params
+	 * @returns the inventory
+	 */
+	private fetchInventory (view: View, params) {
+		view.loading = true;
+		view.pagination = null;
+
+		if (_.size(view.data) && this.contentContainer) {
+			view.contentContainerHeight =
+				`${this.contentContainer.nativeElement.offsetHeight}px`;
+		}
+		view.data = [];
+
+		params.solution = this.selectedSolutionName;
+		params.useCase = this.selectedTechnologyName;
+
+		_.each(params, (value, key) => {
+			if (_.isArray(value) && _.isEmpty(value)) {
+				_.unset(params, key);
+			}
 		});
+
+		const service = view.key === 'system' ? 'getSystemAssets' : 'getHardwareAssets';
+
+		return _.invoke(this.inventoryService, service, params)
+		.pipe(
+			map((results: SystemAssets | HardwareAssets) => {
+				const data = _.get(results, 'data', []);
+				data.forEach((a: SystemAsset | HardwareAsset) => {
+					const role = _.get(a, 'role');
+					if (role) {
+						_.set(a, 'role', _.startCase(_.toLower(role)));
+					}
+
+					a.criticalAdvisories = _.toSafeInteger(_.get(a, 'criticalAdvisories', 0));
+					const row = {
+						data: a,
+						details: false,
+						selected: false,
+					};
+					_.set(row, 'actions', this.getRowActions(row, view));
+					view.data.push(row);
+				});
+
+				view.pagination = results.Pagination;
+
+				const first = (view.pagination.rows * (view.pagination.page - 1)) + 1;
+				let last = (view.pagination.rows * view.pagination.page);
+				if (last > view.pagination.total) {
+					last = view.pagination.total;
+				}
+
+				view.paginationCount = `${first}-${last}`;
+
+				if (this.selectOnLoad && this.selectedView.key === 'system') {
+					this.onAllSelect(true);
+					this.onSelectionChanged(_.map(this.selectedView.data, item => item));
+					if (this.selectedView.selectedAssets.length === 1) {
+						this.selectedAsset = this.selectedView.selectedAssets[0];
+						_.set(this.selectedView.data, [0, 'details', true]);
+					}
+				}
+
+				view.loading = false;
+				view.tableContainerHeight = undefined;
+			}),
+			catchError(err => {
+				view.pagination = null;
+				view.paginationCount = null;
+				this.logger.error('assets.component : fetchInventory() ' +
+					`:: Error : (${err.status}) ${err.message}`);
+				view.loading = false;
+
+				return of({ });
+			}),
+		);
 	}
 
 	/**
-	 * Initializes our visual filters
-	 * @param tab the tab we're building the filters for
+	 * Fetches the users hardware assets
+	 * @returns the hardware assets
 	 */
-	private buildFilters () {
-		if (!this.filters) {
-			this.filters = [
-				{
-					key: 'total',
-					loading: true,
-					selected: true,
-					seriesData: [],
-					template: this.totalFilterTemplate,
-					title: I18n.get('_Total_'),
-				},
-				{
-					key: 'coverage',
-					loading: true,
-					seriesData: [],
-					template: this.pieChartFilterTemplate,
-					title: I18n.get('_CoverageStatus_'),
-				},
-				// TODO: Re-enable when UX has been redesigned for LA
-				// {
-				// 	key: 'contractNumber',
-				// 	loading: true,
-				// 	seriesData: [],
-				// 	template: this.pieChartFilterTemplate,
-				// 	title: I18n.get('_ContractNumber_'),
-				// },
-				{
-					key: 'advisories',
-					loading: true,
-					seriesData: [],
-					template: this.barChartFilterTemplate,
-					title: I18n.get('_Advisories_'),
-				},
-				{
-					key: 'eox',
-					loading: true,
-					seriesData: [],
-					template: this.barChartFilterTemplate,
-					title: I18n.get('_LastDateOfSupport_'),
-				},
-				{
-					key: 'role',
-					loading: true,
-					seriesData: [],
-					template: this.bubbleChartFilterTemplate,
-					title: I18n.get('_NetworkRole_'),
-				},
-			];
+	private fetchHardware () {
+		const view = this.getView('hardware');
+		const params = _.omit(_.cloneDeep(view.params),
+			['lastDateOfSupportRange', 'hasNoFieldNotices']);
+		const supportRange = _.get(view, ['params', 'lastDateOfSupportRange']);
+
+		if (supportRange) {
+			const rangeValue = _.head(supportRange);
+			const eoxFilter = _.find(view.filters, { key: 'eox' });
+			const rangeFilter = _.find(_.get(eoxFilter, 'seriesData', []),
+				{ filter: rangeValue });
+
+			if (rangeFilter && rangeFilter.filterValue) {
+				_.set(params, 'lastDateOfSupportRange', rangeFilter.filterValue);
+			} else {
+				_.unset(view.params, 'lastDateOfSupportRange');
+				this.adjustQueryParams();
+			}
 		}
-	}
 
-	/**
-	 * Handler for performing a search
-	 * @param query search string
-	 */
-	public doSearch () {
-		const query = this.searchForm.controls.search.value;
-		if (this.searchForm.valid && query) {
-			this.logger.debug(`assets.component :: doSearch() :: Searching for ${query}`);
-			_.set(this.assetParams, 'search', query);
-			_.set(this.assetParams, 'page', 1);
-			this.filtered = true;
-			this.adjustQueryParams();
-			this.InventorySubject.next();
-		} else if (!query && this.filtered) {
-			_.unset(this.assetParams, 'search');
-			_.set(this.assetParams, 'page', 1);
-			this.adjustQueryParams();
-			this.InventorySubject.next();
+		if (params.sort) {
+			const [field, dir] = _.split(params.sort[0], ':');
+
+			if (field.includes('deviceName')) {
+				params.sort.push(`productId:${dir}`);
+			}
 		}
+
+		if (_.get(view.params, 'hasNoFieldNotices')) {
+			params.hasFieldNotices = false;
+		}
+
+		return this.fetchInventory(view, params);
 	}
 
 	/**
-	 * Builds the search debounce subscription
+	 * Builds our hardware subject for cancellable http requests
 	 */
-	private searchSubscription () {
-		fromEvent(this.searchInput.nativeElement, 'keyup')
-			.pipe(
-				map((evt: KeyboardEvent) => (<HTMLInputElement> evt.target).value),
-				debounceTime(this.searchOptions.debounce),
-				distinctUntilChanged(),
-				takeUntil(this.destroy$),
-			)
-			.subscribe(() => this.doSearch());
+	private buildHardwareSubject () {
+		this.getView('hardware').subject
+		.pipe(
+			switchMap(() => this.fetchHardware()),
+			takeUntil(this.destroy$),
+		)
+		.subscribe();
 	}
-
-	/**
-	 * TODO: Re-enable when UX has been redesigned for LA
-	 * Disabling for EFT as part of CSCvr52422
-	 *
-	 * Fetches the contract counts for the visual filter
-	 * @returns the contract counts observable
-	 */
-	// private getContractCounts () {
-	// 	const contractFilter = _.find(this.filters, { key: 'contractNumber' });
-
-	// 	return this.contractsService.getContractCounts(this.contractCountParams)
-	// 	.pipe(
-	// 		map((data: ContractDeviceCountsResponse) => {
-	// 			contractFilter.seriesData = _.map(data, (d: ContractCount) => ({
-	// 				filter: d.contractNumber,
-	// 				label: _.capitalize(d.contractNumber),
-	// 				selected: false,
-	// 				value: d.deviceCount,
-	// 			}));
-
-	// 			contractFilter.loading = false;
-	// 		}),
-	// 		catchError(err => {
-	// 			contractFilter.loading = false;
-	// 			this.logger.error('assets.component : getContractCounts() ' +
-	// 				`:: Error : (${err.status}) ${err.message}`);
-
-	// 			return of({ });
-	// 		}),
-	// 	);
-	// }
 
 	/**
 	 * Fetches the coverage counts for the visual filter
 	 * @returns the coverage counts observable
 	 */
 	private getCoverageCounts () {
-		const coverageFilter = _.find(this.filters, { key: 'coverage' });
+		const coverageFilter = _.find(this.getView('hardware').filters, { key: 'coverage' });
 
 		return this.contractsService.getCoverageCounts({
 			customerId: this.customerId,
@@ -861,11 +990,30 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	}
 
 	/**
-	 * Fetches the advisory counts for the visual filter
+	 * TODO: Implement with Partner API - Out for LA
+	 * Fetches the partner counts for the visual filter
+	 * @returns the partner counts
+	 */
+	// private getPartnerCounts () {
+	// 	const systemPartnerFilter = _.find(this.getView('system').filters, { key: 'partner' });
+	// 	const hardwarePartnerFilter = _.find(this.getView('hardware').filters, { key: 'partner' });
+
+	// 	systemPartnerFilter.loading = false;
+	// 	hardwarePartnerFilter.loading = false;
+
+	// 	return of({ });
+	// }
+
+	/**
+	 * Fetches the advisory counts for the systems visual filter
 	 * @returns the advisory counts
 	 */
-	private getAdvisoryCount () {
-		const advisoryFilter = _.find(this.filters, { key: 'advisories' });
+	private getSystemAdvisoryCount () {
+		const systemAdvisoryFilter =
+			_.find(this.getView('system').filters, { key: 'advisories' });
+		const hardwareView = this.getView('hardware');
+		const hardwareAdvisoryFilter =
+			_.find(hardwareView.filters, { key: 'advisories' });
 
 		return this.productAlertsService.getVulnerabilityCounts({
 			customerId: this.customerId,
@@ -874,12 +1022,13 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		})
 		.pipe(
 			map((data: VulnerabilityResponse) => {
-				const series = [];
+				const systemSeries = [];
+				const hardwareSeries = [];
 
 				const bugs = _.get(data, 'bugs', 0);
 
 				if (bugs) {
-					series.push({
+					systemSeries.push({
 						filter: 'hasBugs',
 						label: I18n.get('_PriorityBugs_'),
 						selected: false,
@@ -887,21 +1036,10 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					});
 				}
 
-				const notices = _.get(data, 'field-notices', 0);
-
-				if (notices) {
-					series.push({
-						filter: 'hasFieldNotices',
-						label: I18n.get('_FieldNotices_'),
-						selected: false,
-						value: notices,
-					});
-				}
-
 				const security = _.get(data, 'security-advisories', 0);
 
 				if (security) {
-					series.push({
+					systemSeries.push({
 						filter: 'hasSecurityAdvisories',
 						label: I18n.get('_SecurityAdvisories_'),
 						selected: false,
@@ -909,11 +1047,34 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					});
 				}
 
-				advisoryFilter.seriesData = series;
-				advisoryFilter.loading = false;
+				const notices = _.get(data, 'field-notices', 0);
+
+				if (notices && notices !== hardwareView.total) {
+					hardwareSeries.push(
+						{
+							filter: 'hasFieldNotices',
+							label: I18n.get('_FieldNotices_'),
+							selected: false,
+							value: notices,
+						},
+						{
+							filter: 'hasNoFieldNotices',
+							label: I18n.get('_None_'),
+							selected: false,
+							value: hardwareView.total - notices,
+						},
+					);
+				}
+
+				systemAdvisoryFilter.seriesData = systemSeries;
+				systemAdvisoryFilter.loading = false;
+
+				hardwareAdvisoryFilter.seriesData = hardwareSeries;
+				hardwareAdvisoryFilter.loading = false;
 			}),
 			catchError(err => {
-				advisoryFilter.loading = false;
+				systemAdvisoryFilter.loading = false;
+				hardwareAdvisoryFilter.loading = false;
 				this.logger.error('assets.component : getAdvisoryCount() ' +
 					`:: Error : (${err.status}) ${err.message}`);
 
@@ -923,11 +1084,62 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	}
 
 	/**
+	 * Fetches the hardware type counts for the visual filter
+	 * @returns the hardware type counts
+	 */
+	private getHardwareTypeCounts () {
+		const typeFilter = _.find(this.getView('hardware').filters, { key: 'equipmentType' });
+
+		const seriesData = [
+			{
+				filter: 'CHASSIS',
+				label: I18n.get('_Chassis_'),
+				selected: false,
+				value: 0,
+			},
+			{
+				filter: 'MODULE',
+				label: I18n.get('_Module_'),
+				selected: false,
+				value: 0,
+			},
+		];
+
+		return forkJoin(
+			_.map(seriesData, a =>
+				this.inventoryService.headHardwareAssetsResponse({
+					customerId: this.customerId,
+					equipmentType: a.filter,
+					solution: this.selectedSolutionName,
+					useCase: this.selectedTechnologyName,
+				})
+				.pipe(
+					map((response: HttpResponse<null>) => {
+						a.value = _.toNumber(_.invoke(response, 'headers.get', 'X-API-RESULT-COUNT')) || 0;
+					}),
+					catchError(err => {
+						this.logger.error('assets.component : getHardwareTypeCounts(): ' +
+						`${a.filter} :: Error : (${err.status}) ${err.message}`);
+
+						return of({ });
+					}),
+				),
+			),
+		)
+		.pipe(
+			map(() => {
+				typeFilter.seriesData = seriesData;
+				typeFilter.loading = false;
+			}),
+		);
+	}
+
+	/**
 	 * Fetches the role counts for the visual filter
 	 * @returns the role counts
 	 */
 	private getRoleCounts () {
-		const roleFilter = _.find(this.filters, { key: 'role' });
+		const roleFilter = _.find(this.getView('system').filters, { key: 'role' });
 
 		return this.inventoryService.getRoleCount({
 			customerId: this.customerId,
@@ -955,151 +1167,11 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	}
 
 	/**
-	 * Will construct the assets table
-	 */
-	private buildTable () {
-		if (!this.assetsTable) {
-			this.assetsTable = new CuiTableOptions({
-				bordered: true,
-				columns: [
-					{
-						key: 'deviceName',
-						name: I18n.get('_Device_'),
-						sortable: true,
-						sortDirection: 'asc',
-						sorting: true,
-						template: this.deviceTemplate,
-					},
-					{
-						key: 'serialNumber',
-						name: I18n.get('_SerialNumber_'),
-						sortable: true,
-						value: 'serialNumber',
-					},
-					{
-						key: 'ipAddress',
-						name: I18n.get('_IPAddress_'),
-						sortable: true,
-						value: 'ipAddress',
-					},
-					{
-						key: 'criticalAdvisories',
-						name: I18n.get('_CriticalAdvisories_'),
-						sortable: false,
-						template: this.criticalAdvisoriesTemplate,
-					},
-					{
-						key: 'supportCovered',
-						name: I18n.get('_SupportCoverage_'),
-						sortable: false,
-						template: this.supportCoverageTemplate,
-					},
-					{
-						key: 'osType',
-						name: I18n.get('_SoftwareType_'),
-						sortable: true,
-						value: 'osType',
-					},
-					{
-						key: 'osVersion',
-						name: I18n.get('_SoftwareVersion_'),
-						sortable: true,
-						value: 'osVersion',
-					},
-					{
-						key: 'lastScan',
-						name: I18n.get('_LastScan_'),
-						sortable: false,
-						template: this.lastScanTemplate,
-						width: '100px',
-					},
-					{
-						key: 'role',
-						name: I18n.get('_Role_'),
-						render: item => _.startCase(_.toLower(item.role)),
-						sortable: true,
-						value: 'role',
-						width: '100px',
-					},
-					{
-						click: true,
-						sortable: false,
-						template: this.actionsTemplate,
-					},
-				],
-				dynamicData: true,
-				hover: true,
-				padding: 'compressed',
-				selectable: false,
-				singleSelect: true,
-				sortable: true,
-				striped: false,
-				tableSort: false,
-				wrapText: true,
-			});
-		}
-	}
-
-	/**
-	 * Fetches the count of the inventory
-	 * @returns the inventory count
-	 */
-	private getInventoryCounts () {
-		const totalFilter = _.find(this.filters, { key: 'total' });
-
-		const params = _.assignIn(
-			_.pick(
-				_.cloneDeep(this.assetParams), ['customerId']), {
-					solution: this.selectedSolutionName,
-					useCase: this.selectedTechnologyName,
-				});
-
-		return this.inventoryService.headAssetsResponse(params)
-		.pipe(
-			map((response: HttpResponse<null>) => {
-				const value = _.toNumber(response.headers.get('X-API-RESULT-COUNT')) || 0;
-
-				totalFilter.seriesData = [{
-					value,
-				}];
-
-				totalFilter.loading = false;
-			}),
-			catchError(err => {
-				this.logger.error('assets.component : fetchInventoryCount() ' +
-					`:: Error : (${err.status}) ${err.message}`);
-				totalFilter.loading = false;
-
-				return of({ });
-			}),
-		);
-	}
-
-	/**
-	 * Will handle reloading data if our scan request has completed
-	 * @param transaction the transaction status of the completed or failed scan
-	 */
-	public handleScanStatus (transaction: TransactionStatusResponse) {
-		if (transaction.status === 'SUCCESS') {
-			forkJoin(
-				this.getAdvisoryCount(),
-				this.fetchInventory(),
-			)
-			.subscribe(() => {
-				const currentSerial = _.get(this.selectedAsset, ['data', 'serialNumber']);
-				const refreshed = _.find(this.inventory, (i: Item) =>
-					_.get(i, ['data', 'serialNumber']) === currentSerial);
-				this.onRowSelect(refreshed);
-			});
-		}
-	}
-
-	/**
 	 * Fetches the hardware eox counts for the visual filter
 	 * @returns the counts
 	 */
 	private getHardwareEOXCounts () {
-		const eoxFilter = _.find(this.filters, { key: 'eox' });
+		const eoxFilter = _.find(this.getView('hardware').filters, { key: 'eox' });
 
 		return this.productAlertsService.getHardwareEolTopCount({
 			customerId: this.customerId,
@@ -1182,189 +1254,352 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	}
 
 	/**
-	 * Builds our inventory subject for cancellable http requests
+	 * Fetches the count of the inventory
+	 * @returns the inventory count
 	 */
-	private buildInventorySubject () {
-		this.InventorySubject = new Subject();
+	private getInventoryCounts () {
+		const systemView = this.getView('system');
+		const hardwareView = this.getView('hardware');
 
-		this.InventorySubject
-		.pipe(
-			switchMap(() => this.fetchInventory()),
-			takeUntil(this.destroy$),
-		)
-		.subscribe();
-	}
-
-	/**
-	 * Fetches the network elements
-	 * @param assets the assets to lookup
-	 * @returns the observable
-	 */
-	private fetchNetworkElements (assets: Assets) {
-		const params: InventoryService.GetNetworkElementsParams = {
-			customerId: this.customerId,
-			page: 1,
-			rows: this.getRows(),
-			serialNumber: _.map(assets.data, 'serialNumber'),
-			solution: this.selectedSolutionName,
-			useCase: this.selectedTechnologyName,
-		};
-
-		return this.inventoryService.getNetworkElements(params)
-		.pipe(
-			map((response: NetworkElementResponse) => response),
-			catchError(err => {
-				this.pagination = null;
-				this.paginationCount = null;
-				this.logger.error('assets.component : fetchNetworkElements() ' +
+		return forkJoin([
+			this.inventoryService.headSystemAssetsResponse({
+				customerId: this.customerId,
+				solution: this.selectedSolutionName,
+				useCase: this.selectedTechnologyName,
+			})
+			.pipe(
+				map((response: HttpResponse<null>) => {
+					systemView.total = _.toNumber(_.invoke(response, 'headers.get', 'X-API-RESULT-COUNT')) || 0;
+				}),
+				catchError(err => {
+					this.logger.error('assets.component : fetchInventoryCount(): systems ' +
 					`:: Error : (${err.status}) ${err.message}`);
-				this.status.inventoryLoading = false;
-				if (window.Cypress) {
-					window.inventoryLoading = false;
-				}
 
-				return of({ data: [] });
-			}),
-		)
-		.pipe(
-			map((response: NetworkElementResponse) => {
-				assets.data.forEach((a: Asset) => {
-					const element = _.find(
-						_.get(response, 'data', []), { serialNumber: a.serialNumber });
+					return of({ });
+				}),
+			),
+			this.inventoryService.headHardwareAssetsResponse({
+				customerId: this.customerId,
+				solution: this.selectedSolutionName,
+				useCase: this.selectedTechnologyName,
+			})
+			.pipe(
+				map((response: HttpResponse<null>) => {
+					hardwareView.total = _.toNumber(_.invoke(response, 'headers.get', 'X-API-RESULT-COUNT')) || 0;
+				}),
+				catchError(err => {
+					this.logger.error('assets.component : fetchInventoryCount(): hardware ' +
+					`:: Error : (${err.status}) ${err.message}`);
 
-					if (a.role) {
-						a.role = _.startCase(_.toLower(a.role));
-					}
-					a.criticalAdvisories = _.toSafeInteger(_.get(a, 'criticalAdvisories', 0));
-
-					const row = {
-						data: a,
-						details: false,
-						selected: false,
-					};
-
-					if (element) {
-						_.set(row, 'element', element);
-					}
-
-					_.set(row, 'actions', this.getRowActions(row));
-					this.inventory.push(row);
-				});
-				this.pagination = assets.Pagination;
-
-				const first = (this.pagination.rows * (this.pagination.page - 1)) + 1;
-				let last = (this.pagination.rows * this.pagination.page);
-				if (last > this.pagination.total) {
-					last = this.pagination.total;
-				}
-
-				this.paginationCount = `${first}-${last}`;
-
-				this.buildTable();
-
-				if (this.selectOnLoad) {
-					this.onAllSelect(true);
-					this.onSelectionChanged(_.map(this.inventory, item => item));
-					if (this.selectedAssets.length === 1) {
-						this.selectedAsset = this.selectedAssets[0];
-						_.set(this.inventory, [0, 'details', true]);
-					}
-				}
-
-				this.status.inventoryLoading = false;
-				this.tableContainerHeight = undefined;
-
-				if (window.Cypress) {
-					window.inventoryLoading = false;
-				}
-			}),
-		);
+					return of({ });
+				}),
+			),
+		]);
 	}
 
 	/**
-	 * Fetches the users inventory
-	 * @returns the inventory
+	 * Returns the selected sub filters
+	 * @param key the key to match to the filter
+	 * @returns the array of filters
 	 */
-	private fetchInventory () {
-		this.status.inventoryLoading = true;
-		if (window.Cypress) {
-			window.inventoryLoading = true;
-		}
+	public getAllSelectedSubFilters () {
+		return _.reduce(this.selectedView.filters, (memo, filter) => {
+			if (filter.seriesData.length) {
+				const selected = _.map(_.filter(filter.seriesData, 'selected'),
+				f => ({ filter, subfilter: f }));
 
-		if (_.size(this.inventory) && this.tableContainer) {
-			this.tableContainerHeight = `${this.tableContainer.nativeElement.offsetHeight}px`;
-		}
-
-		this.inventory = [];
-		this.pagination = null;
-
-		const assetParams = _.omit(_.cloneDeep(this.assetParams), ['lastDateOfSupportRange']);
-		assetParams.solution = this.selectedSolutionName;
-		assetParams.useCase = this.selectedTechnologyName;
-
-		if (this.assetParams.lastDateOfSupportRange) {
-			const rangeValue = _.head(this.assetParams.lastDateOfSupportRange);
-			const eoxFilter = _.find(this.filters, { key: 'eox' });
-			const rangeFilter = _.find(_.get(eoxFilter, 'seriesData', []),
-				{ filter: rangeValue });
-
-			if (rangeFilter && rangeFilter.filterValue) {
-				_.set(assetParams, 'lastDateOfSupportRange', rangeFilter.filterValue);
-			} else {
-				_.unset(this.assetParams, 'lastDateOfSupportRange');
-				this.adjustQueryParams();
+				return _.concat(memo, selected);
 			}
-		}
 
-		_.each(assetParams, (value, key) => {
-			if (_.isArray(value) && _.isEmpty(value)) {
-				_.unset(assetParams, key);
-			}
+			return memo;
+		}, []);
+	}
+
+	/**
+	 * Unselects all selected visual filters
+	 */
+	public clearSelectedFilters () {
+		this.selectedView.filters.forEach((f: VisualFilter) => {
+			f.selected = false;
+			_.each(f.seriesData, sd => {
+				sd.selected = false;
+			});
 		});
 
-		return this.inventoryService.getAssets(assetParams)
+		this.selectedView.selectedSubfilters = [];
+		this.selectedView.subject.next();
+	}
+
+	/**
+	 * Adds a subfilter to the given filer
+	 * @param subfilter the subfilter selected
+	 * @param filter the filter we selected the subfilter on
+	 * @param reload if we're reloading our assets
+	 */
+	public onSubfilterSelect (subfilter: string, filter: VisualFilter, reload: boolean = true) {
+		const view = this.selectedView;
+		const sub = _.find(filter.seriesData, { filter: subfilter });
+
+		if (sub) {
+			const selected = !sub.selected;
+			_.each(filter.seriesData, (s: { selected: boolean }) => _.set(s, 'selected', false));
+			sub.selected = selected;
+		}
+
+		filter.selected = _.some(filter.seriesData, 'selected');
+
+		view.selectedSubfilters = this.getAllSelectedSubFilters();
+		const params = view.params;
+		let val;
+		let key;
+		if (filter.key !== 'advisories' && filter.key !== 'eox') {
+			val =  _.map(_.filter(filter.seriesData, 'selected'), 'filter');
+			key = filter.key;
+		} else if (filter.key === 'eox') {
+			val = _.map(_.filter(filter.seriesData, 'selected'), 'filter');
+			key = 'lastDateOfSupportRange';
+		} else if (filter.key === 'advisories') {
+			_.each(params, (_v, k) => {
+				if (/has*/.test(k)) {
+					_.unset(params, [k]);
+				}
+			});
+			key = (subfilter === 'hasNoFieldNotices') ? 'hasFieldNotices' : subfilter;
+			val = (subfilter === 'hasNoFieldNotices') ? false : true;
+		}
+
+		if (filter.selected) {
+			_.set(params, [key], val);
+		} else {
+			_.unset(params, [key]);
+		}
+
+		view.params.page = 1;
+
+		if (filter.selected) {
+			view.filtered = true;
+		}
+
+		if (reload) {
+			this.selectedView.allAssetsSelected = false;
+			this.adjustQueryParams();
+			view.subject.next();
+		}
+	}
+
+	/**
+	 * Selects all the sub filters based on a list of parameters
+	 * @param view the view
+	 * @param params the array list of params
+	 * @param key the key to search for in the filters
+	 */
+	private selectSubFilters (view: View, params: string[], key: string) {
+		const filter = _.find(view.filters, { key });
+
+		if (filter) {
+			_.each(filter.seriesData, d => {
+				if (params.indexOf(d.filter) > -1) {
+					this.onSubfilterSelect(d.filter, filter, false);
+				}
+			});
+		}
+	}
+
+	/**
+	 * Function used to load all of the data
+	 */
+	private loadData () {
+		this.status.isLoading = true;
+		this.getInventoryCounts()
 		.pipe(
-			mergeMap((results: Assets) => this.fetchNetworkElements(results)),
-			catchError(err => {
-				this.pagination = null;
-				this.paginationCount = null;
-				this.logger.error('assets.component : fetchInventory() ' +
-					`:: Error : (${err.status}) ${err.message}`);
-				this.status.inventoryLoading = false;
-				if (window.Cypress) {
-					window.inventoryLoading = false;
+			mergeMap(() =>
+				forkJoin(
+					this.getCoverageCounts(),
+					// this.getPartnerCounts(),
+					this.getSystemAdvisoryCount(),
+					this.getHardwareTypeCounts(),
+					this.getRoleCounts(),
+					this.getHardwareEOXCounts(),
+					this.getInventoryCounts(),
+				)
+				.pipe(
+					map(() => _.map(this.views, (view: View) => {
+						if (view.key === 'system') {
+							const role = _.get(view, ['params', 'role']);
+							if (role) {
+								this.selectSubFilters(view, role, 'role');
+							}
+
+							if (_.get(view, ['params', 'hasBugs'])) {
+								this.selectSubFilters(view, ['hasBugs'], 'advisories');
+							} else if (_.get(view, ['params', 'hasSecurityAdvisories'])) {
+								this.selectSubFilters(view,
+									['hasSecurityAdvisories'], 'advisories');
+							}
+						}
+
+						if (view.key === 'hardware') {
+							const coverage = _.get(view, ['params', 'coverage']);
+							if (coverage) {
+								this.selectSubFilters(view, coverage, 'coverage');
+							}
+
+							const hasFieldNotices = _.get(view, ['params', 'hasFieldNotices']);
+							if (hasFieldNotices) {
+								const subFilter = (hasFieldNotices === 'false') ?
+									'hasNoFieldNotices' : 'hasFieldNotices';
+								this.selectSubFilters(view, [subFilter], 'advisories');
+							}
+
+							const supportRange = _.get(view, ['params', 'lastDateOfSupportRange']);
+							if (supportRange) {
+								this.selectSubFilters(view, supportRange, 'eox');
+							}
+						}
+						view.subject.next();
+					})),
+				),
+			),
+		)
+		.subscribe(() => {
+			this.status.isLoading = false;
+
+			if (window.Cypress) {
+				window.loading = false;
+			}
+
+			this.logger.debug('assets.component : loadData() :: Finished Loading');
+		});
+	}
+
+	/**
+	 * Component Initializer
+	 */
+	public ngOnInit () {
+		if (window.Cypress) {
+			window.loading = true;
+		}
+
+		const currentView = window.sessionStorage.getItem('viewType');
+		if (!currentView) {
+			window.sessionStorage.setItem('view', this.viewType);
+		} else {
+			this.viewType = <'list' | 'grid'> currentView;
+		}
+
+		this.views = [
+			this.systemView(),
+			this.hardwareView(),
+		];
+
+		_.each(this.views, (view: View) => {
+			view.searchForm = new FormGroup({
+				search: new FormControl('',
+					[
+						Validators.minLength(this.searchOptions.min),
+						Validators.maxLength(this.searchOptions.max),
+						Validators.pattern(this.searchOptions.pattern),
+					]),
+			});
+		});
+
+		if (!_.some(this.views, 'selected')) {
+			this.selectView(_.head(this.views));
+		}
+
+		this.buildSystemSubject();
+		this.buildHardwareSubject();
+
+		this.route.queryParams.subscribe(params => {
+			const view = this.selectedView;
+
+			if (params.page) {
+				const page = _.toSafeInteger(params.page);
+				view.params.page = (page < 1) ? 1 : page;
+			}
+
+			if (view.key === 'hardware') {
+				if (params.coverage) {
+					_.set(view.params, 'coverage', _.castArray(params.coverage));
 				}
 
-				return of({ });
-			}),
-		);
-	}
+				if (params.lastDateOfSupportRange) {
+					_.set(view.params, 'lastDateOfSupportRange',
+						_.castArray(params.lastDateOfSupportRange));
+				}
 
-	/**
-	 * Sets the list of selected asset table elements
-	 * @param selectedItems array of selected table elements
-	 *
-	 */
-	public onSelectionChanged (selectedItems: Item[]) {
-		this.selectedAssets = selectedItems;
-	}
+				if (params.hasFieldNotices) {
+					_.set(view.params, 'hasFieldNotices', params.hasFieldNotices);
+				}
+			}
 
-	/**
-	 * Sets the params for sorting
-	 * @param column column to set sorting
-	 */
-	public onColumnSort (column) {
-		if (column.sortable) {
-			this.filtered = true;
-			_.each(this.assetsTable.columns, c => {
-				c.sorting = false;
-			});
-			column.sorting = true;
-			column.sortDirection = column.sortDirection === 'asc' ? 'desc' : 'asc';
-			this.assetParams.sort = [`${column.key}:${column.sortDirection.toUpperCase()}`];
-			this.adjustQueryParams();
-			this.InventorySubject.next();
-		}
+			if (view.key === 'system') {
+				if (params.role) {
+					_.set(view.params, 'role', _.castArray(params.role));
+				}
+
+				if (params.hasBugs) {
+					_.set(view.params, 'hasBugs', params.hasBugs);
+				} else if (params.hasSecurityAdvisories) {
+					_.set(view.params, 'hasSecurityAdvisories', params.hasSecurityAdvisories);
+				}
+			}
+
+			if (params.serialNumber) {
+				view.params.serialNumber = _.castArray(params.serialNumber);
+			}
+
+			if (params.search &&
+				params.search.length >= this.searchOptions.min &&
+				params.search.length <= this.searchOptions.max &&
+				this.searchOptions.pattern.test(params.search)) {
+				view.params.search = params.search;
+				view.searchForm.controls.search.setValue(params.search);
+			}
+
+			if (params.sort) {
+				const sort = _.split(params.sort, ':');
+				_.each(view.table.columns, c => {
+					if (sort.length === 2 &&
+							c.sortable &&
+							c.key &&
+							c.key.toLowerCase() === sort[0].toLowerCase()) {
+						c.sorting = true;
+						c.sortDirection = sort[1].toLowerCase();
+						view.params.sort = _.castArray(`${sort[0]}:${sort[1].toUpperCase()}`);
+					} else {
+						c.sorting = false;
+					}
+				});
+			}
+
+			if (params.select) {
+				this.selectOnLoad = true;
+			}
+
+			view.filtered = !_.isEmpty(
+				_.omit(_.cloneDeep(view.params), ['customerId', 'rows', 'page', 'sort']),
+			);
+		});
+
+		this.racetrackInfoService.getCurrentSolution()
+		.pipe(
+			takeUntil(this.destroy$),
+		)
+		.subscribe((solution: RacetrackSolution) => {
+			this.selectedSolutionName = _.get(solution, 'name');
+		});
+
+		this.racetrackInfoService.getCurrentTechnology()
+		.pipe(
+			takeUntil(this.destroy$),
+		)
+		.subscribe((technology: RacetrackTechnology) => {
+			if (this.selectedTechnologyName !== _.get(technology, 'name')) {
+				this.selectedTechnologyName = _.get(technology, 'name');
+				this.loadData();
+			}
+		});
 	}
 
 	/**
@@ -1376,29 +1611,21 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	}
 
 	/**
-	 * Changes the view to either list or grid
-	 * @param view view to set
+	 * Called on 360 details panel close button click
 	 */
-	public selectView (view: 'list' | 'grid') {
-		if (this.view !== view) {
-			this.view = view;
-			window.sessionStorage.setItem('view', this.view);
-			const newRows = this.getRows();
-			this.assetParams.page =
-				Math.round(this.assetParams.page * this.assetParams.rows / newRows);
-			this.assetParams.rows = newRows;
-			this.adjustQueryParams();
-			this.InventorySubject.next();
-		}
+	public onPanelClose () {
+		_.set(this.selectedAsset, 'details', false);
+		this.selectedAsset = null;
 	}
 
 	/**
-	 * Returns the number of rows for the page
-	 * depending on the view
-	 * @returns number of rows
+	 * Function used to select an item from our inventory
+	 * @param item the item we selected
 	 */
-	private getRows () {
-		return this.view === 'list' ? 10 : 12;
+	public onItemSelect (item: Item) {
+		item.selected = !item.selected;
+
+		this.selectedView.allAssetsSelected = _.every(this.selectedView.data, 'selected');
 	}
 
 	/**

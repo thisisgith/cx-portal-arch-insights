@@ -1,25 +1,6 @@
 @import '~cisco-ui/src/scss/utilities/_variables.scss';
+@import '~src/variables.scss';
 
-$vibblue: #017cad;
-$background-color: #f2f5f9;
-$accent-dark-blue: #227bb1;
-$accent-light-blue: #00bceb;
-$text-default-color: #394454;
-$text-dark-gray: #5d656c;
-$text-blue-gray: #929bab;
-$text-dark-gray-2: #767676;
-$text-dark-gray-3: #6c757d;
-$text-light-gray: #8e8e8e;
-$icon-light-gray: #bdc5cf;
-$icon-light-gray-2: #7f7f86;
-$icon-green: #6abf4b;
-$bookmark-white-outline-color: #c1d8e2;
-$button-outline-color: #95d1d6;
-$border-light-gray: #e5e5e5;
-$border-dark-blue: #00a2cb;
-$divider-color: #e1e1e1;
-$bookmark-blue-outline-color: #5ddfff;
-$midnight-blue: #0d274d;
 $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 
 %ribbon {
@@ -37,7 +18,7 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 }
 
 %cx-lifecycle-card-link {
-	color: $text-default-color;
+	color: $default-text-color;
 	font-size: 13px;
 	line-height: 18px;
 
@@ -142,12 +123,12 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 
 	&--on {
 		color: $cisco-blue;
-		-webkit-text-stroke-color: #5ddfff;
+		-webkit-text-stroke-color: $bookmark-blue-outline-color;
 	}
 
 	&--off {
 		color: #fff;
-		-webkit-text-stroke-color: #c1d8e2;
+		-webkit-text-stroke-color: $bookmark-white-outline-color;
 	}
 }
 
@@ -156,12 +137,12 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 	font-size: 14px;
 
 	&--complete {
-		color: $text-default-color;
+		color: $default-text-color;
 	}
 }
 
 .actionname.selected {
-	background-color: $accent-light-blue;
+	background-color: $accent-color1;
 
 	.actionname__text {
 		color: #fff;
@@ -174,7 +155,7 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 
 .actionname:hover:not(.selected) {
 	.actionname__text {
-		color: $accent-dark-blue;
+		color: $accent-color1;
 	}
 }
 
@@ -201,7 +182,7 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 }
 
 .checkbox-complete::after {
-	color: $accent-light-blue !important;
+	color: $accent-color1 !important;
 	font-size: 18px !important;
 }
 
@@ -210,8 +191,8 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 	border: 0 !important;
 	border-color: transparent;
 	background: transparent !important;
-	border-bottom: 1px solid $text-light-gray !important;
-	color: $text-dark-gray !important;
+	border-bottom: 1px solid $light-gray-text-color !important;
+	color: $secondary-and-button-text-color !important;
 }
 
 :host ::ng-deep .progressbar__fill {
@@ -273,7 +254,7 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 			line-height: initial;
 			padding-right: 30px;
 			padding-left: 20px;
-			color: $midnight-blue;
+			color: $dark-text-color1;
 		}
 
 		&__body {
@@ -298,7 +279,7 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 			width: 100%;
 
 			span:not([class*="icon-"]) {
-				color: $text-default-color;
+				color: $default-text-color;
 			}
 
 			.divider {
@@ -342,7 +323,7 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 
 			a.btn--selected {
 				border: 1px solid rgba(#32c5ff, 0.25);
-				color: $accent-light-blue;
+				color: $accent-color1;
 				cursor: unset;
 			}
 		}
@@ -384,7 +365,7 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 	& + span {
 		display: inline-block;
 		margin-left: 7px;
-		color: $text-default-color;
+		color: $default-text-color;
 		font-size: 13px;
 		letter-spacing: -0.33px;
 		line-height: 17px;
@@ -394,7 +375,7 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 .cx-lifecycle-card--title {
 	position: relative;
 	display: inline-block;
-	color: $text-dark-gray;
+	color: $secondary-and-button-text-color;
 	font-size: 16px;
 	letter-spacing: -0.33px;
 	line-height: 18px;
@@ -493,7 +474,7 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 		.acc-popover__description {
 			font-size: 13px;
 			line-height: 17px;
-			color: $text-default-color;
+			color: $default-text-color;
 			padding-right: 28px;
 		}
 
@@ -508,6 +489,7 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 		.acc-popover__footer {
 			display: flex;
 			align-items: center;
+			padding-top: 10px;
 
 			.icon-clock,
 			.icon-check-outline {
@@ -525,9 +507,9 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 
 		.atx-popover__btn,
 		.acc-popover__btn {
-			border: 1px solid #95d1d6;
+			border: 1px solid $button-outline-color;
 			border-radius: 12.5px;
-			color: $text-dark-gray;
+			color: $secondary-and-button-text-color;
 			font-size: 12px;
 			line-height: 16px;
 			padding: 3px 12px;
@@ -536,9 +518,10 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 }
 
 .cx-lifecycle-card--subtitle {
-	color: $text-light-gray;
+	color: $light-gray-text-color;
 	font-size: 12px;
 	line-height: 16px;
+	flex-basis: 100%;
 }
 
 .cx-lifecycle-card--recommended-item {
@@ -551,6 +534,9 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 .cx-lifecycle-card--subheader {
 	margin-top: 22px;
 	margin-bottom: 16px;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
 
 	& > span.icon-certified,
 	& > span.icon-clipboard-md {
@@ -561,10 +547,20 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 
 	& > span.text-uppercase {
 		margin-left: 8px;
-		color: $text-dark-gray-3;
+		margin-right: auto;
+		color: $gray-text-color;
 		font-size: 14px;
 		letter-spacing: -0.2px;
 		line-height: 18px;
+	}
+
+	.subheader-icon {
+		display: flex;
+		width: 16px;
+
+		::ng-deep svg {
+			width: 100%;
+		}
 	}
 }
 
@@ -577,7 +573,7 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 
 .cx-lifecycle-card--scheduled {
 	margin: unset;
-	color: $text-default-color;
+	color: $default-text-color;
 	font-size: 13px;
 	line-height: 17px;
 }
@@ -597,11 +593,11 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 }
 
 .cx-lifecycle-card--cgt-session div.text-med {
-	color: $text-default-color;
+	color: $default-text-color;
 }
 
 .cx-lifecycle-card--cgt-session div.text-small {
-	color: $text-dark-gray-3;
+	color: $gray-text-color;
 }
 
 .list-view button {
@@ -635,11 +631,11 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 	}
 
 	span.text-medium {
-		color: $accent-dark-blue;
+		color: $default-link-color;
 	}
 
 	button {
-		color: $text-dark-gray;
+		color: $secondary-and-button-text-color;
 		box-shadow: inset 0 0 0 1px $button-outline-color;
 		width: 175px;
 	}
@@ -672,7 +668,7 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 		position: relative;
 
 		&:hover {
-			color: $accent-dark-blue;
+			color: $default-link-color;
 
 			.hover-panel {
 				display: block;
@@ -688,7 +684,7 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 						&__description {
 							font-size: 13px;
 							line-height: 19px;
-							color: $text-default-color;
+							color: $default-text-color;
 							padding-right: 28px;
 							margin-bottom: 18px;
 						}
@@ -742,14 +738,14 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 		span.text-small {
 			margin-top: 14px;
 			margin-left: 2px;
-			color: $text-light-gray;
+			color: $light-gray-text-color;
 			font-size: 10px !important;
 			line-height: 18px;
 		}
 
 		div.text-large {
 			padding-bottom: 16px;
-			color: $text-default-color;
+			color: $default-text-color;
 			font-size: 14px !important;
 			line-height: 20px !important;
 		}
@@ -772,14 +768,14 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 
 	.icon-play {
 		margin-left: 5px;
-		color: $accent-dark-blue;
+		color: $default-link-color;
 		font-size: 9px;
 		line-height: 14px;
 		transform: scaleX(0.625);
 	}
 
 	.text-med {
-		color: $accent-dark-blue;
+		color: $default-link-color;
 		font-size: 12px;
 		line-height: 18px;
 	}
@@ -800,14 +796,14 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 			> a {
 				padding: 0 5px 0 25px !important;
 				border: 0 !important;
-				color: $text-default-color !important;
+				color: $default-text-color !important;
 				font-size: 13px;
 
 				&.selected {
 					background-color: #ecf4fc !important;
 
 					&::after {
-						color: #00bceb;
+						color: $accent-color1;
 					}
 				}
 
@@ -826,9 +822,9 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 	.form-group .form-group__text input {
 		border: 0 !important;
 		background: transparent !important;
-		border-bottom: 1px solid $text-light-gray !important;
+		border-bottom: 1px solid $light-gray-text-color !important;
 		border-radius: 0 !important;
-		color: $text-default-color !important;
+		color: $default-text-color !important;
 		font-size: 13px;
 
 		&:focus {
@@ -841,11 +837,11 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 	}
 
 	.dropdown.active.form-group .form-group__text input {
-		border-bottom: 1px solid #00bceb !important;
+		border-bottom: 1px solid $accent-color1 !important;
 	}
 
 	label {
-		color: $text-dark-gray;
+		color: $secondary-and-button-text-color;
 		font-size: 12px;
 		position: absolute;
 		left: -55px;
@@ -871,7 +867,7 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 
 	&:hover {
 		.cx-text-default {
-			color: $accent-dark-blue;
+			color: $default-link-color;
 		}
 	}
 }
@@ -966,7 +962,7 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 
 	.list-view__col {
 		font-size: 13px;
-		color: $text-dark-gray;
+		color: $secondary-and-button-text-color;
 
 		&--highlight {
 			font-size: 14px;
@@ -1138,7 +1134,7 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 .cardpanel--openright,
 .listpanel--open {
 	box-shadow: $popover-box-shadow;
-	height: 415px;
+	height: 360px;
 	width: 500px;
 	position: absolute;
 	z-index: 3;
@@ -1200,13 +1196,13 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 
 .atx-more-popover {
 	&__title {
-		color: #6c757d;
+		color: $gray-text-color;
 		font-size: 16px;
 		line-height: 19px;
 	}
 
 	&__description {
-		color: $text-default-color;
+		color: $default-text-color;
 		font-size: 13px;
 		line-height: 17px;
 		padding-right: 30px;
@@ -1282,7 +1278,7 @@ tr.td-row td {
 .session-table {
 	display: block;
 	background-color: rgba(245, 246, 249, 0.33);
-	border: 1px solid #e1e1e1;
+	border: 1px solid $divider-color;
 	margin-right: 30px;
 	margin-top: 8px;
 	position: relative;
@@ -1299,7 +1295,7 @@ tr.td-row td {
 
 				td {
 					font-size: 11px;
-					color: #394454;
+					color: $default-text-color;
 					text-transform: uppercase;
 					padding: 4px 8px;
 				}
@@ -1334,7 +1330,7 @@ tr.td-row td {
 				}
 
 				td {
-					color: #394454;
+					color: $default-text-color;
 					padding: 4px 8px;
 					width: auto;
 					text-align: left;
@@ -1355,7 +1351,7 @@ tr.td-row td {
 					font-weight: bold;
 
 					&.icon {
-						color: $accent-light-blue;
+						color: $accent-color1;
 
 						.icon-check {
 							margin-top: -4px;
@@ -1424,7 +1420,7 @@ tr.td-row td {
 }
 
 .pitstop-checklist__reset-filter {
-	color: $accent-light-blue;
+	color: $accent-color1;
 }
 
 .finishline {
@@ -1568,17 +1564,18 @@ tr.td-row td {
 		&::before {
 			font-size: 13px !important;
 			line-height: 13px !important;
-			color: #929bab;
+			color: $text-blue-gray;
 		}
 	}
 
 	.divider--compressed {
 		margin-top: 6px;
-		margin-bottom: 20px;
+		margin-bottom: 10px;
 	}
 
 	.atx-scheduler-description {
-		min-height: 120px;
+		min-height: 55px;
+		height: auto;
 	}
 
 	.atx-scheduler-one-line {
@@ -1590,7 +1587,7 @@ tr.td-row td {
 		padding-right: 30px;
 
 		h6 {
-			color: #394454;
+			color: $default-text-color;
 			font-size: 14px;
 			line-height: 16px;
 			font-weight: normal;
@@ -1599,13 +1596,13 @@ tr.td-row td {
 		.icon-clock::before {
 			font-size: 12px !important;
 			line-height: 14px !important;
-			color: #929bab;
+			color: $text-blue-gray;
 			margin-right: 4px;
 		}
 
 		.text-xsmall {
 			line-height: 14px !important;
-			color: #929bab;
+			color: $text-blue-gray;
 			margin-left: 4px;
 		}
 	}
@@ -1613,7 +1610,7 @@ tr.td-row td {
 	.atx-scheduler__footer {
 		margin-top: 20px;
 		position: absolute;
-		bottom: 20px;
+		//bottom: 20px;
 
 		a:hover {
 			text-decoration: none;
@@ -1633,7 +1630,7 @@ tr.td-row td {
 			margin-right: 12px;
 
 			&--primary {
-				background: #00bceb;
+				background: $accent-color1;
 				color: white;
 			}
 		}
@@ -1656,7 +1653,7 @@ tr.td-row td {
 		.learning-popover__description {
 			font-size: 13px;
 			line-height: 19px;
-			color: $text-default-color;
+			color: $default-text-color;
 			padding-right: 28px;
 			min-height: 38px;
 		}
@@ -1695,7 +1692,7 @@ tr.td-row td {
 		.sb-popover__description {
 			font-size: 13px;
 			line-height: 19px;
-			color: $text-default-color;
+			color: $default-text-color;
 			padding-right: 28px;
 		}
 
@@ -1747,7 +1744,7 @@ tr.td-row td {
 		position: relative;
 
 		&:hover {
-			color: $accent-dark-blue !important;
+			color: $default-link-color !important;
 
 			.hover-panel {
 				display: block;
@@ -1756,7 +1753,7 @@ tr.td-row td {
 	}
 
 	.text-blue {
-		color: $text-default-color !important;
+		color: $default-text-color !important;
 		font-size: 13px;
 		letter-spacing: -0.33px;
 		line-height: 18px;
@@ -1854,3 +1851,8 @@ polygon {
 	margin-bottom: 10px;
 }
 
+::ng-deep .hover-panel--moreATXList,
+.hover-panel--moreACCList,
+.hover-panel--recommendedATX {
+	min-height: auto !important;
+}

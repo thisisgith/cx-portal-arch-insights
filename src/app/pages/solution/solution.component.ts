@@ -466,7 +466,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 			})
 			.pipe(
 				map((response: HttpResponse<null>) => {
-					fieldTotal = _.toNumber(response.headers.get('X-API-RESULT-COUNT')) || 0;
+					fieldTotal = _.toNumber(_.invoke(response, 'headers.get', 'X-API-RESULT-COUNT')) || 0;
 				}),
 				catchError(err => {
 					this.logger.error('solution.component : fetchAdvisoryCounts():field ' +
@@ -482,7 +482,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 			})
 			.pipe(
 				map((response: HttpResponse<null>) => {
-					advisoryTotal = _.toNumber(response.headers.get('X-API-RESULT-COUNT')) || 0;
+					advisoryTotal = _.toNumber(_.invoke(response, 'headers.get', 'X-API-RESULT-COUNT')) || 0;
 				}),
 				catchError(err => {
 					this.logger.error('solution.component : fetchAdvisoryCounts():security ' +
@@ -498,7 +498,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 			})
 			.pipe(
 				map((response: HttpResponse<null>) => {
-					bugsTotal = _.toNumber(response.headers.get('X-API-RESULT-COUNT')) || 0;
+					bugsTotal = _.toNumber(_.invoke(response, 'headers.get', 'X-API-RESULT-COUNT')) || 0;
 				}),
 				catchError(err => {
 					this.logger.error('solution.component : fetchAdvisoryCounts():bugs ' +

@@ -1,10 +1,14 @@
 import { configureTestSuite } from 'ng-bullet';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
 import {
-	AssetScenarios,
+	MockHardwareAssetsData,
+	MockSystemAssetsData,
+	RacetrackScenarios,
 	Mock,
+	MockFieldNotices,
 	MockHardwareEOLResponse,
 	MockHardwareEOLBulletinsResponse,
+	MockFieldNoticeBulletins,
 } from '@mock';
 import { AssetDetailsHardwareComponent } from './hardware.component';
 import { AssetDetailsHardwareModule } from './hardware.module';
@@ -12,11 +16,11 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MicroMockModule } from '@cui-x-views/mock';
 import { environment } from '@environment';
-import { InventoryService, ProductAlertsService } from '@sdp-api';
-import * as _ from 'lodash-es';
+import { ProductAlertsService } from '@sdp-api';
 import { throwError, of } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
-import { UserResolve } from '@utilities';
+import { RacetrackInfoService } from '@services';
+import * as _ from 'lodash-es';
 
 /**
  * Will fetch the currently active response body from the mock object
@@ -34,8 +38,20 @@ describe('AssetDetailsHardwareComponent', () => {
 	let component: AssetDetailsHardwareComponent;
 	let fixture: ComponentFixture<AssetDetailsHardwareComponent>;
 	let productAlertsService: ProductAlertsService;
-	let inventoryService: InventoryService;
-	let userResolve: UserResolve;
+	let racetrackInfoService: RacetrackInfoService;
+
+	/**
+	 * Sends our racetrack info
+	 */
+	const sendRacetrack = () => {
+		racetrackInfoService.sendRacetrack(getActiveBody(RacetrackScenarios[0]));
+		racetrackInfoService.sendCurrentSolution(
+			getActiveBody(RacetrackScenarios[0]).solutions[0],
+		);
+		racetrackInfoService.sendCurrentTechnology(
+			getActiveBody(RacetrackScenarios[0]).solutions[0].technologies[0],
+		);
+	};
 
 	configureTestSuite(() => {
 		TestBed.configureTestingModule({
@@ -52,13 +68,8 @@ describe('AssetDetailsHardwareComponent', () => {
 	});
 
 	beforeEach(async(() => {
-
-		inventoryService = TestBed.get(InventoryService);
+		racetrackInfoService = TestBed.get(RacetrackInfoService);
 		productAlertsService = TestBed.get(ProductAlertsService);
-		userResolve = TestBed.get(UserResolve);
-		spyOn(userResolve, 'getCustomerId')
-			.and
-			.returnValue(of('1234'));
 	}));
 
 	beforeEach(() => {
@@ -73,8 +84,13 @@ describe('AssetDetailsHardwareComponent', () => {
 	});
 
 	it('should handle failing api calls', done => {
-		const asset = getActiveBody(AssetScenarios[0]).data[0];
-		component.asset = asset;
+		const hardwareAsset = MockHardwareAssetsData[0];
+		component.hardwareAsset = hardwareAsset;
+
+		const systemAsset = MockSystemAssetsData[0];
+		component.systemAsset = systemAsset;
+
+		component.hardwareAssets = MockHardwareAssetsData;
 
 		const error = {
 			status: 404,
@@ -83,14 +99,18 @@ describe('AssetDetailsHardwareComponent', () => {
 		spyOn(productAlertsService, 'getHardwareEoxBulletin')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
-		const hardwareSpy = spyOn(productAlertsService, 'getHardwareEox')
+		spyOn(productAlertsService, 'getHardwareEox')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(inventoryService, 'getHardware')
+		spyOn(productAlertsService, 'getFieldNoticeBulletin')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+		spyOn(productAlertsService, 'getFieldNotice')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
 
 		component.ngOnInit();
+		sendRacetrack();
 
 		fixture.whenStable()
 		.then(() => {
@@ -100,28 +120,10 @@ describe('AssetDetailsHardwareComponent', () => {
 			expect(component.status.loading.eolBulletin)
 				.toBeFalsy();
 
-			expect(component.status.loading.modules)
+			expect(component.status.loading.fieldNotices)
 				.toBeFalsy();
 
-			expect(component.status.loading.overall)
-				.toBeFalsy();
-
-			done();
-		});
-		const mockEOLData = _.filter(MockHardwareEOLResponse.data,
-			{ managedNeId: asset.managedNeId });
-		hardwareSpy.and.returnValue(of({ data: mockEOLData }));
-		component.ngOnInit();
-
-		fixture.whenStable()
-		.then(() => {
-			expect(component.status.loading.eol)
-				.toBeFalsy();
-
-			expect(component.status.loading.eolBulletin)
-				.toBeFalsy();
-
-			expect(component.status.loading.modules)
+			expect(component.status.loading.fieldNoticeBulletins)
 				.toBeFalsy();
 
 			expect(component.status.loading.overall)
@@ -131,41 +133,48 @@ describe('AssetDetailsHardwareComponent', () => {
 		});
 	});
 
-	it('should fetch the hardware information', done => {
-		const asset = getActiveBody(AssetScenarios[0]).data[0];
-		component.asset = asset;
+	it('should handle failing bulletin data', done => {
+		const hardwareAsset = MockHardwareAssetsData[0];
+		component.hardwareAsset = hardwareAsset;
 
-		const mockEOLData = _.filter(MockHardwareEOLResponse.data,
-			{ managedNeId: asset.managedNeId });
-		const mockEOLBulletinData = _.filter(MockHardwareEOLBulletinsResponse.data,
-			{ hwEolInstanceId: _.head(mockEOLData).hwEolInstanceId });
+		const systemAsset = MockSystemAssetsData[0];
+		component.systemAsset = systemAsset;
+
+		component.hardwareAssets = MockHardwareAssetsData;
 
 		const error = {
 			status: 404,
 			statusText: 'Resource not found',
 		};
+
 		spyOn(productAlertsService, 'getHardwareEoxBulletin')
 			.and
-			.returnValue(of({ data: mockEOLBulletinData }));
+			.returnValue(throwError(new HttpErrorResponse(error)));
 		spyOn(productAlertsService, 'getHardwareEox')
 			.and
-			.returnValue(of({ data: mockEOLData }));
-		spyOn(inventoryService, 'getHardware')
+			.returnValue(of(MockHardwareEOLResponse));
+		spyOn(productAlertsService, 'getFieldNoticeBulletin')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
+		spyOn(productAlertsService, 'getFieldNotice')
+			.and
+			.returnValue(of({ data: MockFieldNotices }));
 
 		component.ngOnInit();
+		sendRacetrack();
+
 		fixture.whenStable()
 		.then(() => {
-			fixture.detectChanges();
-
 			expect(component.status.loading.eol)
 				.toBeFalsy();
 
 			expect(component.status.loading.eolBulletin)
 				.toBeFalsy();
 
-			expect(component.status.loading.modules)
+			expect(component.status.loading.fieldNotices)
+				.toBeFalsy();
+
+			expect(component.status.loading.fieldNoticeBulletins)
 				.toBeFalsy();
 
 			expect(component.status.loading.overall)
@@ -175,79 +184,149 @@ describe('AssetDetailsHardwareComponent', () => {
 		});
 	});
 
-	it('should fetch timeline data', done => {
-		const asset = getActiveBody(AssetScenarios[0]).data[0];
-		component.asset = asset;
+	it('should assign bulletins to the assets', fakeAsync(() => {
+		const hardwareAsset = MockHardwareAssetsData[0];
+		component.hardwareAsset = hardwareAsset;
 
-		const mockEOLData = _.filter(MockHardwareEOLResponse.data,
-			{ managedNeId: asset.managedNeId });
-		const mockEOLBulletinData = _.filter(MockHardwareEOLBulletinsResponse.data,
-			{ hwEolInstanceId: _.head(mockEOLData).hwEolInstanceId });
-		const error = {
-			status: 404,
-			statusText: 'Resource not found',
-		};
+		const systemAsset = MockSystemAssetsData[0];
+		component.systemAsset = systemAsset;
+
+		component.hardwareAssets = MockHardwareAssetsData;
+
 		spyOn(productAlertsService, 'getHardwareEoxBulletin')
 			.and
-			.returnValue(of({ data: mockEOLBulletinData }));
+			.returnValue(of(MockHardwareEOLBulletinsResponse));
 		spyOn(productAlertsService, 'getHardwareEox')
 			.and
-			.returnValue(of({ data: mockEOLData }));
-		spyOn(inventoryService, 'getHardware')
+			.returnValue(of(MockHardwareEOLResponse));
+		spyOn(productAlertsService, 'getFieldNoticeBulletin')
 			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
+			.returnValue(of({ data: MockFieldNoticeBulletins }));
+		spyOn(productAlertsService, 'getFieldNotice')
+			.and
+			.returnValue(of({ data: MockFieldNotices }));
+
+		fixture.detectChanges();
+		tick(1000);
 
 		component.ngOnInit();
+		sendRacetrack();
+
+		tick(1000);
+		fixture.detectChanges();
+
+		expect(component.status.loading.eol)
+			.toBeFalsy();
+
+		expect(component.status.loading.eolBulletin)
+			.toBeFalsy();
+
+		expect(component.status.loading.fieldNotices)
+			.toBeFalsy();
+
+		expect(component.status.loading.fieldNoticeBulletins)
+			.toBeFalsy();
+
+		expect(component.status.loading.overall)
+			.toBeFalsy();
+
+		const asset = _.find(component.hardwareAssets, { serialNumber: 'FOC2045X0WJ' });
+
+		expect(asset.fieldNotices.length)
+			.toEqual(1);
+
+		fixture.destroy();
+		tick();
+	}));
+
+	it('should open a well when function called', done => {
+		const hardwareAsset = MockHardwareAssetsData[0];
+		component.hardwareAsset = hardwareAsset;
+
+		const systemAsset = MockSystemAssetsData[0];
+		component.systemAsset = systemAsset;
+
+		component.hardwareAssets = MockHardwareAssetsData;
+
+		spyOn(productAlertsService, 'getHardwareEoxBulletin')
+			.and
+			.returnValue(of(MockHardwareEOLBulletinsResponse));
+		spyOn(productAlertsService, 'getHardwareEox')
+			.and
+			.returnValue(of(MockHardwareEOLResponse));
+		spyOn(productAlertsService, 'getFieldNoticeBulletin')
+			.and
+			.returnValue(of({ data: MockFieldNoticeBulletins }));
+		spyOn(productAlertsService, 'getFieldNotice')
+			.and
+			.returnValue(of({ data: MockFieldNotices }));
+
+		component.ngOnInit();
+		sendRacetrack();
+
 		fixture.whenStable()
 		.then(() => {
-			fixture.detectChanges();
-
 			expect(component.status.loading.eol)
 				.toBeFalsy();
 
 			expect(component.status.loading.eolBulletin)
 				.toBeFalsy();
 
-			expect(component.timelineData.length)
+			expect(component.status.loading.fieldNotices)
+				.toBeFalsy();
+
+			expect(component.status.loading.fieldNoticeBulletins)
+				.toBeFalsy();
+
+			expect(component.status.loading.overall)
+				.toBeFalsy();
+
+			expect(_.get(component.hardwareAssets[0], 'toggleWell'))
+				.toBeFalsy();
+
+			component.onRowSelect(component.hardwareAssets[0]);
+			fixture.detectChanges();
+
+			expect(_.get(component.hardwareAssets[0], 'toggleWell'))
 				.toBeTruthy();
+
 			done();
 		});
 	});
 
-	it('should handle changing assets', () => {
-		const assets = getActiveBody(AssetScenarios[0]).data;
+	it('should change assets', done => {
+		sendRacetrack();
 
-		const asset = assets[0];
-		const newAsset = assets[1];
+		component.hardwareAsset = MockHardwareAssetsData[0];
 
-		component.asset = asset;
 		component.ngOnChanges({
-			asset: {
-				currentValue: asset,
+			hardwareAsset: {
+				currentValue: MockHardwareAssetsData[0],
 				firstChange: true,
 				isFirstChange: () => true,
 				previousValue: null,
 			},
 		});
 
-		component.ngOnInit();
-		fixture.detectChanges();
+		expect(component.hardwareAsset.deviceName)
+			.toEqual(MockHardwareAssetsData[0].deviceName);
 
-		expect(component.asset)
-			.toEqual(asset);
+		component.hardwareAsset = MockHardwareAssetsData[1];
 
-		component.asset = newAsset;
 		component.ngOnChanges({
-			asset: {
-				currentValue: newAsset,
+			hardwareAsset: {
+				currentValue: MockHardwareAssetsData[1],
 				firstChange: false,
 				isFirstChange: () => false,
-				previousValue: asset,
+				previousValue: MockHardwareAssetsData[0],
 			},
 		});
 
-		fixture.detectChanges();
-		expect(component.asset)
-			.toEqual(newAsset);
+		fixture.whenStable()
+		.then(() => {
+			expect(component.hardwareAsset.deviceName)
+				.toEqual(MockHardwareAssetsData[1].deviceName);
+			done();
+		});
 	});
 });

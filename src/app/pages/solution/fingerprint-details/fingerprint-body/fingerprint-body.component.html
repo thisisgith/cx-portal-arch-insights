@@ -1,4 +1,4 @@
-<div class="base-margin">
+<div class="half-padding-right">
 	<div class="half-padding-bottom">
 		<cui-alert
 			[options]="alertFPSimilarAssets"
@@ -17,8 +17,6 @@
 		[ngClass]="{'hide': tabIndex !== 3}"
 	></cui-alert>
 	</div>
-	<cui-tabs id="fingerprint" [(activeTabIndex)]="tabIndex" alignment="left" tall="false">
-		<cui-tab [label]="'_CP_SimilarSystems_' | i18n | uppercase">
 			<app-fp-similarassets
 				[asset]="selectedAsset"
 				(devicesSelected)="showComparison($event)"
@@ -28,6 +26,4 @@
 						: alertFPSimilarAssets.hide()
 				"
 			></app-fp-similarassets>
-		</cui-tab>
-	</cui-tabs>
 </div>

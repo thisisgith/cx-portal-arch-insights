@@ -1,4 +1,5 @@
 /* tslint:disable */
+import { Tag } from './tag';
 import { SolutionInfo } from './solution-info';
 export interface HardwareInfo {
 
@@ -11,6 +12,11 @@ export interface HardwareInfo {
    * Unique identifier of a Cisco customer
    */
   customerId: string;
+
+  /**
+   * The unique, generated ID of the managed network element
+   */
+  managedNeId: string;
 
   /**
    * Hostnames are human-readable nicknames that correspond to the address of a device connected to a network
@@ -51,11 +57,7 @@ export interface HardwareInfo {
    * A single term that defines the physical nature of the product. This value is derived based on the following order of preference:- PCE, SNAS. Examples:- Firewall, Access Point
    */
   productType?: string;
-
-  /**
-   * The unique, generated ID of the managed network element
-   */
-  managedNeId: string;
+  collectorId?: string;
 
   /**
    * An indication of the general hardware type of the physical entity (e.g. CHASSIS, MODULE, POWER SUPPLY, POWERSUPPLY, FAN, IPPHONE, OTHER)
@@ -76,12 +78,8 @@ export interface HardwareInfo {
    * The version of the softwareType running on the managed NE
    */
   swVersion?: string;
-
-  /**
-   * The specific version of the software (Software Type) that is installed on the Network Element. Example:- 15.1(4)M4
-   */
-  tags?: Array<string>;
-  wfid?: string;
+  tags?: Array<Tag>;
+  wfId?: string;
   solutionInfo?: Array<SolutionInfo>;
   cxLevel?: string;
   saId?: number;

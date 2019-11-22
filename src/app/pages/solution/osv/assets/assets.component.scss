@@ -1,5 +1,11 @@
 @import '~cisco-ui/src/scss/utilities/_variables.scss';
 
+.assets-table {
+	th:not(.sortable) {
+		cursor: default !important;
+	}
+}
+
 .text-white {
 	color: $white !important;
 }
