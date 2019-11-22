@@ -14,6 +14,7 @@ import {
 
 // TODO: Move to /constants when available
 const DEFAULT_DATACENTER = 'usa';
+const INTERIM_VA_ID = 0;
 
 /**
  * Resolver to fetch our user
@@ -87,7 +88,7 @@ export class UserResolve implements Resolve<any> {
 
 		if (smartAccount) {
 			this.saId.next(saId);
-			this.customerId.next(`${saId}_0`);
+			this.customerId.next(`${saId}_${INTERIM_VA_ID}`);
 			window.localStorage.setItem('activeSmartAccount', `${saId}`);
 			window.location.reload();
 		}
@@ -117,7 +118,7 @@ export class UserResolve implements Resolve<any> {
 				const saId = _.get(this.smartAccount, 'companyId');
 				this.saId.next(saId);
 				this.vaId.next(0);
-				this.customerId.next(`${saId}_0`);
+				this.customerId.next(`${saId}_${INTERIM_VA_ID}`);
 
 				return this.getAccountInfo(account);
 			}),
@@ -142,7 +143,7 @@ export class UserResolve implements Resolve<any> {
 
 		return this.orgUserService.getUserV2({
 			saId,
-			customerId: `${saId}_0`,
+			customerId: `${saId}_${INTERIM_VA_ID}`,
 			vaId: 0,
 		})
 		.pipe(
