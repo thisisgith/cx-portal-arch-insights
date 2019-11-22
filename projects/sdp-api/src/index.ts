@@ -45,6 +45,14 @@ export * from './lib/entitlement/models';
 export * from './lib/entitlement/services';
 export * from './lib/entitlement/entitlement.module';
 
+export * from './lib/org-user/models';
+export * from './lib/org-user/services';
+export * from './lib/org-user/org-user.module';
+
+export * from './lib/entitlement-wrapper/models';
+export * from './lib/entitlement-wrapper/services';
+export * from './lib/entitlement-wrapper/entitlement-wrapper.module';
+
 export * from './lib/architecture/models';
 export * from './lib/architecture/services';
 export * from './lib/architecture/architecture.modules';

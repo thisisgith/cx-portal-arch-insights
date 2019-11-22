@@ -36,6 +36,8 @@ import { catchError, map, takeUntil } from 'rxjs/operators';
 import { Step } from '../../../../src/app/components/quick-tour/quick-tour.component';
 import { DetailsPanelStackService, UtilsService, RacetrackInfoService } from '@services';
 import { HttpResponse } from '@angular/common/http';
+import { SmartAccount } from '@interfaces';
+import { UserResolve } from '@utilities';
 
 /**
  * Interface representing a facet
@@ -59,7 +61,9 @@ interface Facet {
 	templateUrl: './solution.component.html',
 })
 export class SolutionComponent implements OnInit, OnDestroy {
-
+	public smartAccounts: SmartAccount[];
+	public activeSmartAccount: SmartAccount;
+	public showSmartAccountSelection: boolean;
 	public selectedFacet: Facet;
 	public selectedSolution: RacetrackSolution;
 	public selectedTechnology: RacetrackTechnology;
@@ -69,6 +73,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 
 	public status = {
 		dropdowns: {
+			smartAccount: false,
 			solution: false,
 			technology: false,
 		},
@@ -112,8 +117,19 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		private racetrackInfoService: RacetrackInfoService,
 		private detailsPanelStackService: DetailsPanelStackService,
 		private insightsCrashesService: InsightsCrashesService,
+		private userResolve: UserResolve,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
+		this.smartAccounts = _.get(user, ['info', 'companyList'], []);
+
+		this.userResolve.getSaId()
+		.subscribe((saId: number) => {
+			this.showSmartAccountSelection = this.smartAccounts.length > 1;
+			this.activeSmartAccount = _.find(this.smartAccounts, {
+				companyId: saId,
+			});
+		});
+
 		this.customerId = _.get(user, ['info', 'customerId']);
 		this.cxLevel = _.get(user, ['service', 'cxLevel'], 0);
 		this.eventsSubscribe = this.router.events.subscribe(
@@ -283,10 +299,6 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		return _.find(this.facets, (facet: Facet) => route.includes(facet.route));
 	}
 
-	/**
-	 * Change our technology
-	 * @param technology the technology
-	 */
 	public changeTechnology (technology: RacetrackTechnology) {
 		this.selectedTechnology = technology;
 		this.racetrackInfoService.sendCurrentTechnology(technology);
@@ -294,10 +306,6 @@ export class SolutionComponent implements OnInit, OnDestroy {
 				technology.usecase_adoption_percentage);
 	}
 
-	/**
-	 * Change the solution
-	 * @param solution the selected solution
-	 */
 	public changeSolution (solution: RacetrackSolution) {
 		this.selectedSolution = solution;
 		this.racetrackInfoService.sendCurrentSolution(solution);
@@ -307,6 +315,23 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		if (topTechnology) {
 			this.changeTechnology(topTechnology);
 		}
+	}
+
+	public changeSmartAccount (saId: number) {
+		this.userResolve.setSaId(saId);
+	}
+
+	/**
+	 * Update the dropdown information in status
+	 * @param selectedDropdown the selected dropdown option
+	 */
+	public changeDropdownSelection (selectedDropdown: 'smartAccount' | 'solution' | 'technology') {
+		this.status.dropdowns = {
+			smartAccount: false,
+			solution: false,
+			technology: false,
+			[selectedDropdown]: !this.status.dropdowns[selectedDropdown],
+		};
 	}
 
 	/**
@@ -771,6 +796,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	 */
 	 public async openFeedbackModal () {
 		await this.cuiModalService.showComponent(FeedbackComponent, {
+			saId: this.activeSmartAccount.companyId,
 			facet: this.selectedFacet.title,
 			pitstop: this.selectedTechnology.currentPitstop,
 			solution: this.selectedSolutionName,

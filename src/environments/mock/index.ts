@@ -73,6 +73,7 @@ export * from './search/search';
 export * from './search/serialnumber';
 
 export * from './user/entitlement';
+export * from './user/entitlement-v2';
 export * from './architecture/architecture';
 
 export * from '../mock/afm/afm';

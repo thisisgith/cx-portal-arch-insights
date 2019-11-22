@@ -71,6 +71,7 @@ import {
 	SuccessPathScenarios,
 	SyslogScenarios,
 	SystemAssetScenarios,
+	V2EntitlementScenarios,
 	VulnerabilityScenarios,
 } from './';
 
@@ -111,6 +112,7 @@ import {
 	InsightsResponse,
 	LicenseDataResponseModel,
 	MachineRecommendationsResponse,
+	OrgUserResponse,
 	PoliciesGroupByDayInAMonthModel,
 	ProfileRecommendationsResponse,
 	RacetrackResponse,
@@ -131,6 +133,7 @@ import {
 	SoftwareVersionsResponse,
 	SuccessPathsResponse,
 	SystemAssets,
+	UserEntitlement,
 	UserTraining,
 	VulnerabilityResponse,
 } from '@sdp-api';
@@ -171,6 +174,7 @@ type ResponseBody = (
 	IERegistrationResponseModel |
 	LicenseDataResponseModel |
 	MachineRecommendationsResponse |
+	OrgUserResponse |
 	PoliciesGroupByDayInAMonthModel |
 	ProfileRecommendationsResponse |
 	RacetrackResponse |
@@ -193,6 +197,7 @@ type ResponseBody = (
 	SoftwareEOLResponse |
 	SuccessPathsResponse |
 	SystemAssets |
+	UserEntitlement |
 	UserTraining[] |
 	VulnerabilityResponse |
 	InsightsResponse
@@ -314,6 +319,7 @@ export const mockSettings: MockSettings = {
 		SuccessPathScenarios,
 		SyslogScenarios,
 		SystemAssetScenarios,
+		V2EntitlementScenarios,
 		VulnerabilityScenarios,
 	]),
 };
