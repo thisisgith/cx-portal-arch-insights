@@ -234,49 +234,6 @@ describe('AssetsComponent', () => {
 			tick();
 		}));
 
-		it('should set query params for LDOS filter', fakeAsync(() => {
-			buildSpies();
-			fixture.detectChanges();
-			tick(1000);
-			component.selectView(component.getView('hardware'));
-			fixture.detectChanges();
-
-			const eoxFilter = _.find(component.selectedView.filters, { key: 'eox' });
-
-			component.onSubfilterSelect('gt-0-lt-12-months', eoxFilter);
-			tick(1000);
-
-			fixture.detectChanges();
-
-			expect(_.get(component.selectedView, ['params', 'lastDateOfSupportRange'])[0])
-				.toEqual('gt-0-lt-12-months');
-
-			component.onSubfilterSelect('gt-12-lt-24-months', eoxFilter);
-			tick(1000);
-
-			fixture.detectChanges();
-
-			expect(_.get(component.selectedView, ['params', 'lastDateOfSupportRange'])[0])
-				.toEqual('gt-12-lt-24-months');
-
-			component.onSubfilterSelect('gt-24-lt-36-months', eoxFilter);
-			tick(1000);
-
-			fixture.detectChanges();
-			expect(_.get(component.selectedView, ['params', 'lastDateOfSupportRange'])[0])
-				.toEqual('gt-24-lt-36-months');
-
-			component.onSubfilterSelect('gt-36-months', eoxFilter);
-			tick(1000);
-
-			fixture.detectChanges();
-			expect(_.get(component.selectedView, ['params', 'lastDateOfSupportRange'])[0])
-				.toEqual('gt-36-months');
-
-			fixture.destroy();
-			tick();
-		}));
-
 		it('should set query params for Advisories filter', fakeAsync(() => {
 			buildSpies();
 			fixture.detectChanges();
