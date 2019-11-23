@@ -157,7 +157,7 @@
 				<tbody data-auto-id="AssetsTableBody">
 					<tr *ngFor="let item of selectedView.data"
 						attr.data-auto-id="InventoryItem-{{ item.data.serialNumber }}"
-						[ngClass]="{ 'active': item.details }">
+						[ngClass]="{ 'active': item.details, 'row-disabled': !item.data.cxLevel }">
 						<td attr.data-auto-id="InventoryItemSelectTD-{{ item.data.serialNumber }}">
 							<label class="checkbox">
 								<input type="checkbox"
