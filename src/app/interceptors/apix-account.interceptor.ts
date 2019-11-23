@@ -156,7 +156,8 @@ export class ApixAccountInterceptor implements HttpInterceptor {
 		const qParams = { };
 
 		for (const key in accountInfo) {
-			if (!existingParams.includes(key.toLowerCase())) {
+			// TODO: Remove "customerid" check once incorect customerId removed from component calls
+			if (!existingParams.includes(key.toLowerCase()) || key.toLowerCase() === 'customerid') {
 				qParams[key] = accountInfo[key];
 			}
 		}
@@ -173,7 +174,8 @@ export class ApixAccountInterceptor implements HttpInterceptor {
 		const hParams = { };
 
 		for (const key in accountInfo) {
-			if (!existingHeaders.includes(key.toLowerCase())) {
+			// TODO: Remove "customerid" check once incorect customerId removed from component calls
+			if (!existingHeaders.includes(key.toLowerCase())  || key.toLowerCase() === 'customerid') {
 				hParams[key] = accountInfo[key];
 			}
 		}
