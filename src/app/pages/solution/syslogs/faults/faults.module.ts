@@ -14,6 +14,7 @@ import {
 	CuiSearchModule,
 	CuiToastModule,
 } from '@cisco-ngx/cui-components';
+import { FaultDetailsModule } from '../fault-details/fault-details.module';
 
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
@@ -39,6 +40,7 @@ const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 		CuiToastModule,
 		FaultDataModule.forRoot({ rootUrl }),
 		CuiSpinnerModule,
+		FaultDetailsModule,
 	],
 })
 export class FaultsModule { }
