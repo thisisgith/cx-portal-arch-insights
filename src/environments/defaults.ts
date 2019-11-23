@@ -88,8 +88,8 @@ export const defaults = {
 	sdpServiceOrigin: 'https://api-stage.cisco.com',
 	sdpServicePaths: {
 		contracts: '/api/v1/contracts',
-		controlpoints: '/api/customerportal/controlpoint',
 		customerportal: '/api/customerportal',
+		cxportal: '/api/cxportal',
 		inventory: '/api/v1/inventory',
 		partner: '/api/cxportal',
 	},

@@ -1,7 +1,6 @@
 import { EntitledUser, ServiceInfoResponse } from '@sdp-api';
-import { userRoles } from '@constants/user-roles';
+import { userRoles } from '@constants';
 import * as _ from 'lodash-es';
-import { User } from '@interfaces';
 
 /** CustomerId to return  */
 const customerId = '2431199';
@@ -81,7 +80,7 @@ const mockServiceInfo: ServiceInfoResponse = [
 ];
 
 /** Our Default User */
-export const user: User = {
+export const user = {
 	info: mockUser1,
 	service: _.head(mockServiceInfo),
 };

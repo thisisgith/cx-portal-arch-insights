@@ -1,5 +1,5 @@
 import { EntitlementRouteAuthService } from './entitlement-route-guard.service';
-import { userRoles } from '@constants/user-roles';
+import { userRoles } from '@constants';
 import { ActivatedRouteSnapshot } from '@angular/router';
 import { Observable } from 'rxjs';
 import { CheckRoleLevelReturn } from '@interfaces';
