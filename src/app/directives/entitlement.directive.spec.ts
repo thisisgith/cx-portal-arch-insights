@@ -3,7 +3,7 @@ import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { Component } from '@angular/core';
 import { EntitlementDirective } from './entitlement.directive';
 import { EntitlementUtilityService } from '../services/entitlement-utility.service';
-import { userRoles } from '@constants/user-roles';
+import { userRoles } from '@constants';
 import { Observable } from 'rxjs';
 import { RoleListsAndLevel, CheckRoleLevelReturn } from '../interfaces/entitlement';
 

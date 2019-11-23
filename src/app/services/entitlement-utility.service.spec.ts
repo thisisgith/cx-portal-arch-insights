@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { userRoles } from '@constants/user-roles';
+import { userRoles } from '@constants';
 import { EntitlementUtilityService } from './entitlement-utility.service';
 import { UserResolve } from '@utilities';
 import { Observable } from 'rxjs';
