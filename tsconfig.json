@@ -15,7 +15,7 @@
 			"@services": ["src/app/services/index.ts"],
 			"@utilities": ["src/app/utilities/index.ts"],
 			"@directives": ["src/app/directives/index.ts"],
-			"@constants/*": ["src/app/constants/*"]
+			"@constants": ["src/app/constants/index.ts"]
 		},
 		"declaration": false,
 		"emitDecoratorMetadata": true,

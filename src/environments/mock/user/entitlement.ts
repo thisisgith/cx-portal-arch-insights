@@ -1,5 +1,5 @@
 import { EntitledUser, ServiceInfoResponse } from '@sdp-api';
-import { userRoles } from '@constants/user-roles';
+import { userRoles } from '@constants';
 import * as _ from 'lodash-es';
 
 /** CustomerId to return  */
