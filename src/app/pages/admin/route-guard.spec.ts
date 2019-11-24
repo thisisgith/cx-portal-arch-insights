@@ -20,7 +20,7 @@ describe('RouteGuardGuard', () => {
 				RouteGuard,
 			],
 		})
-  .compileComponents();
+ 		 .compileComponents();
 	}));
 	beforeEach(() => {
 		userResolve = TestBed.get(UserResolve);
@@ -38,13 +38,14 @@ describe('RouteGuardGuard', () => {
 			},
 		};
 		spyOn(userResolve, 'getUser').and
-.returnValue(of(reponse));
+			.returnValue(of<any>(reponse));
 		guard.canActivate()
-.subscribe(res => {
-	expect(res)
-.toBeTruthy();
-});
+			.subscribe(res => {
+				expect(res)
+			.toBeTruthy();
+			});
 	});
+
 	it('should be falsy for cxlevel 1 and role admin..', () => {
 		const reponse = {
 			info: {
@@ -57,11 +58,12 @@ describe('RouteGuardGuard', () => {
 			},
 		};
 		spyOn(userResolve, 'getUser').and
-.returnValue(of(reponse));
+			.returnValue(of<any>(reponse));
 		guard.canActivate()
-.subscribe(res => {
-	expect(res)
-.toBeFalsy();
-});
+			.subscribe(res => {
+				expect(res)
+			.toBeFalsy();
+			});
 	});
+
 });
