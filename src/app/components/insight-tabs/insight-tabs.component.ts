@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouteAuthService } from 'src/app/services';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as _ from 'lodash-es';
-import { UserResolve } from '@utilities';
 import { LogService } from '@cisco-ngx/cui-services';
+import { map, catchError } from 'rxjs/operators';
+import { of, Subject } from 'rxjs';
 /**
  * Component representing a nav bar for insights pages
  */
@@ -12,18 +13,65 @@ import { LogService } from '@cisco-ngx/cui-services';
 	styleUrls: ['./insight-tabs.component.scss'],
 	templateUrl: './insight-tabs.component.html',
 })
-export class InsightTabsComponent {
+export class InsightTabsComponent implements OnInit {
 	public customerId;
+	public hasPermission = false;
 	public cxLevel: number;
+	public enableArchitectureTab: boolean;
+	public enableConfigurationTab: boolean;
+	public enableSystemEventsTab: boolean;
+	private destroy$ = new Subject();
 
 	constructor (
 		private logger: LogService,
 		private routeAuthService: RouteAuthService,
 		private router: Router,
-		private userResolve: UserResolve,
 		private route: ActivatedRoute,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.cxLevel = _.get(user, ['service', 'cxLevel'], 0);
+	}
+
+	/**
+	 * initialization hook
+	 */
+	public ngOnInit (): void {
+		this.canActivate();
+	}
+
+	/**
+	 * canActivate method execution
+	 * @returns can activate boolean value
+	 */
+	public canActivate () {
+		this.routeAuthService.checkArchitecturePermissions()
+			.pipe(
+				map((response: any) => {
+					if (response) {
+						this.enableArchitectureTab = _.get(response, 'architectureReviewUIEnabled');
+						this.enableConfigurationTab = _.get(response, 'configurationUIEnabled');
+						this.enableSystemEventsTab = _.get(response, 'syslogUIEnabled');
+					}
+				}),
+				catchError(err => {
+					this.enableArchitectureTab = true;
+					this.enableConfigurationTab = true;
+					this.enableSystemEventsTab = true;
+					this.logger.error('insights canActivate() ' +
+						`:: Error : (${err.status}) ${err.message}`);
+
+					return of();
+				}),
+			)
+			.subscribe();
+	}
+
+	/**
+	 * ngOnDestroy
+	 */
+
+	public ngOnDestroy () {
+		this.destroy$.next();
+		this.destroy$.complete();
 	}
 }

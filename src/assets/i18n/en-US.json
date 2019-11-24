@@ -181,6 +181,7 @@
 	"_ArchitectureSwitchRedundancy_": "Switch Redundancy",
 	"_ArchitectureSystemName_": "System Name",
 	"_ArchitectureSystems_": "Systems (Level 3)",
+	"_ArchitectureSystemsDetail_": "Systems",
 	"_ArchitectureSystems(SystemsPublishedLimit)_": "Systems/Published Limit",
 	"_ArchitectureSystemsAffected_": "Systems Affected",
 	"_ArchitectureSystemsTooltipContent_": "Displayed value is the systems as per the last data collection from DNAC",
