@@ -371,32 +371,41 @@ const getDevicesCountResponseData = {
 };
 
 /**
+ * Get the Devices count
+ */
+const tabsPermissionData = {
+	architectureReviewUIEnabled: false,
+	configurationUIEnabled: true,
+	syslogUIEnabled: true,
+};
+
+/**
  * Get the SDA Chart Filter count
  */
 const getSDAChartFilterCountResponseData = {
 	assuranceCompliance: {
-		NA: 1,
+		NE: 1,
 		No: 3,
 		Yes: 4,
 	},
 	overallCompliance: {
-		NA: 4,
+		NE: 4,
 		No: 4,
 		Yes: 4,
 	},
 	pnpCompliance: {
-		NA: 2,
+		NE: 2,
 		No: 4,
 		Yes: 2,
 	},
 	sdaCompliance: {
 		NE: 3,
-		No: 4,
+		No: 3,
 		Warning: 1,
 		Yes: 2,
 	},
 	swimCompliance: {
-		NA: 1,
+		NE: 1,
 		No: 3,
 		Yes: 6,
 	},
@@ -580,5 +589,22 @@ export const ArchitectureReviewScenarios = [
 		url: `${api}/dnac/sdaTrends?customerId=${customerId}` +
 		`&collectionId=${collectionId}&dnacIp=${dnacIp}&collectionDate=${collectionDate}`,
 		usecases: ['Use Case 10'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'permission',
+					response: {
+						body: tabsPermissionData,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/checkOptInStatus`,
+		usecases: ['Use Case 11'],
 	},
 ];
