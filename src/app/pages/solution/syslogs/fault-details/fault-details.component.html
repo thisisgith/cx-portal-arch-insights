@@ -30,18 +30,18 @@
 				<span [innerText]="fault.faultSeverity | titlecase"></span>
 			</div>
 		</div>
-		<div class="qtr-margin-top" *ngIf="tacEnable === FAULT_CONSTANT.ACTIVE">
+		<div class="qtr-margin-top" *ngIf="tacEnable?.toUpperCase() === FAULT_CONSTANT.ACTIVE">
 			<div data-auto-id="DisableCase" class="btn btn--primary" (click)="openConfirmation()"
 				[innerText]="'_FaultDisableCase_'|i18n">
 			</div>
 			<span class="text-primary qtr-margin-left" data-balloon-length="medium"
 					[attr.data-balloon]="'_FaultDisableCaseInfo_' | i18n"
 					data-auto-id="FaultToolTip" data-balloon-pos="right"
-					(click)="$event.stopPropagation();">
+					(click)="$event.stopPropagation()">
 					<i class="icon-info icon-small"></i>
 			</span>
 		</div>
-		<div class="qtr-margin-top" *ngIf="tacEnable === FAULT_CONSTANT.INACTIVE">
+		<div class="qtr-margin-top" *ngIf="tacEnable?.toUpperCase() === FAULT_CONSTANT.INACTIVE">
 			<div data-auto-id="EnableCase" class="btn btn--primary" (click)="openConfirmation()"
 				[innerText]="'_FaultEnableCase_'|i18n">
 			</div>
@@ -182,7 +182,7 @@
 </asset-details>
 
 <ng-template #caseNumber let-item="celldata">
-	<span *ngIf="item.tacCaseNo; else noTacCase"
+	<span *ngIf="item?.tacCaseNo; else noTacCase"
 		data-auto-id="CaseNumber"
 		class="text-primary cursor"
 		[innerText]="item.tacCaseNo"
@@ -194,12 +194,12 @@
 	<details-panel-header (close)="detailsClose()" [(fullscreen)]="fullscreen">
 		<div detailsPanelTitle class="text-xlarge"
 			[innerText]="'_RMACaseNumberTitle_' | i18n:selectedCase?.caseNumber"></div>
-		<!-- <app-case-details-header [case]="selectedCase" [caseDetails]="selectedDetails">
-		</app-case-details-header> -->
+		<app-case-details-header [case]="selectedCase" [caseDetails]="selectedDetails">
+		</app-case-details-header>
 	</details-panel-header>
-	<!-- <app-case-details [case]="selectedCase"
+	<app-case-details [case]="selectedCase"
 		[(caseDetails)]="selectedDetails">
-	</app-case-details> -->
+	</app-case-details>
 </details-panel>
 
 <ng-template #noTacCase>
@@ -208,7 +208,7 @@
 </ng-template>
 
 <ng-template #caseCreatedDate let-item="celldata">
-	<span *ngIf="item.tacCaseCreatedDate; else noTacCase"
+	<span *ngIf="item?.tacCaseCreatedDate; else noTacCase"
 		[innerText]="item.tacCaseCreatedDate"
 	></span>
 </ng-template>
