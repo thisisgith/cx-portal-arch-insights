@@ -28,7 +28,7 @@ import {
 import { I18n } from '@cisco-ngx/cui-utils';
 
 import * as _ from 'lodash-es';
-import { passwordValidator, passwordsMatchValidator, proxyHostValidator } from '../../../utilities/index';
+import { passwordValidator, passwordsMatchValidator, proxyHostValidator, passwordsOldNewValidator } from '../../../utilities/index';
 
 enum RegistrationError {
 	ADVANCED,
@@ -79,12 +79,12 @@ export class RegisterCollectorComponent implements OnDestroy, OnInit, SetupStep 
 		oldPassword: new FormControl(null, [
 			Validators.required,
 			passwordValidator,
-			this.passwordsOldNewValidator.bind(this),
+			passwordsOldNewValidator.bind(this),
 		]),
 		password: new FormControl(null, [
 			Validators.required,
 			passwordValidator,
-			this.passwordsOldNewValidator.bind(this),
+			passwordsOldNewValidator.bind(this),
 		]),
 		passwordConf: new FormControl(null, [
 			Validators.required,
@@ -107,31 +107,6 @@ export class RegisterCollectorComponent implements OnDestroy, OnInit, SetupStep 
 	private user: UserResponse['data'];
 	private customerId: string;
 
-	/**
-	 * Checks if the oldPassword and password field are different
-	 * @param control the FormGroup
-	 * @returns validity
-	 */
-	private passwordsOldNewValidator (control: FormGroup) {
-		if (!this.accountForm) { return null; }
-		const password = this.accountForm.get('password');
-		const oldPassword = this.accountForm.get('oldPassword');
-		const errors: {
-			oldAndNewMatch?: { value: string },
-		} = { };
-		if (password.value === oldPassword.value) {
-			errors.oldAndNewMatch = { value: 'Old Password and New Password must be different' };
-		}
-		if (Object.entries((errors || { })).length) {
-			control.setErrors(errors);
-
-			return errors;
-		}
-
-		control.setErrors(null);
-
-		return null;
-	}
 	public get pwErrors () {
 		return this.accountForm.get('password').errors;
 	}
