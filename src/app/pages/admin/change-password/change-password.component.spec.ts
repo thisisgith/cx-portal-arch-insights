@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ChangePasswordComponent } from './change-password.component';
-import { environment } from '../../../../environments/environment';
+import { environment } from '@environment';
 import { ChnagePasswordModule } from './change-password.module';
 import { RegisterCollectorService } from '../../setup-ie/register-collector/register-collector.service';
 import { SetupIEService } from '../../setup-ie/setup-ie.service';
@@ -34,6 +34,15 @@ describe('ChangePasswordComponent', () => {
 		fixture = TestBed.createComponent(ChangePasswordComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
+	});
+
+	it('should set values', () => {
+		component.accountForm.get('oldPassword')
+			.setValue('Admin@1234');
+		component.accountForm.get('password')
+			.setValue('Admin@123');
+		component.accountForm.get('passwordConf')
+			.setValue('Admin@123');
 	});
 
 	it('should validate password', () => {
@@ -76,6 +85,19 @@ describe('ChangePasswordComponent', () => {
 			.toHaveBeenCalled();
 	});
 
+	it('should not change password', () => {
+		const dummyData = { staus : 400 };
+		spyOn(registerService, 'changePassword')
+			.and
+			.returnValue(of(<any> dummyData));
+		component.onSubmit();
+		fixture.detectChanges();
+		expect(registerService.changePassword)
+			.toHaveBeenCalled();
+		expect(component.isChangingPass)
+			.toBeTruthy();
+	});
+
 	it('should create', () => {
 		expect(component)
 			.toBeTruthy();
@@ -86,17 +108,45 @@ describe('ChangePasswordComponent', () => {
 		fixture.detectChanges();
 	});
 
-	it('should continue', () => {
+	it('should continue with certificate', () => {
 		component.onContinue();
 		expect(component.isLoading)
 			.toBeTruthy();
 		expect(component.ipAddress)
 			.toBeDefined();
+		expect(component.changePas)
+			.toBeFalsy();
 	});
 
 	it('Open new tab', () => {
 		component.openIpAddressInNewTab();
 		expect(component.clickedProceed)
+			.toBeTruthy();
+	});
+
+	it('shold change pass if certficate is present', () => {
+		const dummyData = true;
+		spyOn(component, 'checkIPConnection')
+			.and
+			.returnValue(of(<boolean> dummyData));
+		component.onContinue();
+		fixture.detectChanges();
+		expect(component.checkIPConnection)
+			.toHaveBeenCalled();
+		expect(component.changePas)
+			.toBeTruthy();
+	});
+
+	it('shold instruct if certficate is not present', () => {
+		const dummyData = false;
+		spyOn(component, 'checkIPConnection')
+			.and
+			.returnValue(of(<boolean> dummyData));
+		component.onContinue();
+		fixture.detectChanges();
+		expect(component.checkIPConnection)
+			.toHaveBeenCalled();
+		expect(component.instruct)
 			.toBeTruthy();
 	});
 

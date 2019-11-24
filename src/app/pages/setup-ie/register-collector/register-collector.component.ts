@@ -28,6 +28,7 @@ import {
 import { I18n } from '@cisco-ngx/cui-utils';
 
 import * as _ from 'lodash-es';
+import { passwordValidator, passwordsMatchValidator, proxyHostValidator } from '../../../utilities/index';
 
 enum RegistrationError {
 	ADVANCED,
@@ -43,96 +44,6 @@ const registrationErrorMap = {
 	[RegistrationError.REGISTRATION]: I18n.get('_RegistrationError_'),
 	[RegistrationError.ADVANCED]: I18n.get('_RegistrationErrorAdvanced_'),
 };
-
-/**
- * Validator for password criteria
- * @param control - FormControl
- * @returns validity
- */
-function passwordValidator (control: FormControl) {
-	const currentValue = control.value;
-	if (!currentValue) { return null; }
-	const errors: {
-		needsLength?: { value: string },
-		needsLowercase?: { value: string },
-		needsNumber?: { value: string },
-		needsSpecialChar?: { value: string },
-		needsUppercase?: { value: string },
-	} = { };
-	if (currentValue.length < 8) {
-		errors.needsLength = { value: currentValue };
-	}
-	if (!/[A-Z]/.test(currentValue)) {
-		errors.needsUppercase = { value: currentValue };
-	}
-	if (!/[a-z]/.test(currentValue)) {
-		errors.needsLowercase = { value: currentValue };
-	}
-	if (!/\d/.test(currentValue)) {
-		errors.needsNumber = { value: currentValue };
-	}
-	if (!/\W/.test(currentValue)) {
-		errors.needsSpecialChar = { value: currentValue };
-	}
-	if (Object.entries((errors || { })).length) {
-		// if errors isn't empty, return it
-		return errors;
-	}
-
-	return null;
-}
-
-/**
- * Checks if the password and passwordConf field are equal
- * @param control the FormGroup
- * @returns validity
- */
-function passwordsMatchValidator (control: FormGroup) {
-	const password = control.get('password');
-	const passwordConf = control.get('passwordConf');
-	const errors: {
-		doesNotMatch?: { value: string },
-	} = { };
-	if (password.value !== passwordConf.value) {
-		errors.doesNotMatch = { value: 'Passwords do not match' };
-	}
-	if (Object.entries((errors || { })).length) {
-		passwordConf.setErrors(errors);
-
-		return errors;
-	}
-
-	passwordConf.setErrors(null);
-
-	return null;
-}
-
-/**
- * Validator for proxy host criteria
- * @param control - FormControl
- * @returns validity
- */
-function proxyHostValidator (control: FormControl) {
-	const currentValue = control.value;
-	if (!currentValue) { return null; }
-	const errors: {
-		invalidCharacters?: { value: string },
-	} = { };
-
-	const hostNameRegex = new RegExp('^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)'
-		+ '*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$');
-	const ipRegex = new RegExp('^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}'
-		+ '([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$');
-
-	if (!hostNameRegex.test(currentValue) && !ipRegex.test(currentValue)) {
-		errors.invalidCharacters = { value: currentValue };
-	}
-	if (Object.entries((errors || { })).length) {
-		return errors;
-	}
-
-	return null;
-}
 
 /**
  * Component for creating Intelligence Engine Account

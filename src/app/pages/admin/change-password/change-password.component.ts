@@ -1,96 +1,13 @@
 import { Component, OnDestroy } from '@angular/core';
 import { interval, Subject, of, empty } from 'rxjs';
 import { catchError, exhaustMap, map, takeUntil, takeWhile } from 'rxjs/operators';
-import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { SetupIEService } from '../../setup-ie/setup-ie.service';
 import * as _ from 'lodash-es';
 import {  Router } from '@angular/router';
 import { RegisterCollectorService, ChangePasswordParams } from '../../setup-ie/register-collector/register-collector.service';
 import { I18n } from '@cisco-ngx/cui-utils';
-
-/**
- * Checks if the password and passwordConf field are equal
- * @param control the FormGroup
- * @returns validity
- */
-function passwordsMatchValidator (control: FormGroup) {
-	const password = control.get('password');
-	const passwordConf = control.get('passwordConf');
-	const errors: {
-		doesNotMatch?: { value: string },
-	} = { };
-	if (password.value !== passwordConf.value) {
-		errors.doesNotMatch = { value: 'Passwords do not match' };
-	}
-	if (Object.entries((errors || { })).length) {
-		passwordConf.setErrors(errors);
-
-		return errors;
-	}
-
-	passwordConf.setErrors(null);
-
-	return null;
-}
-
-/**
- * Validator for password criteria
- * @param control - FormControl
- * @returns validity
- */
-function passwordValidator (control: FormControl) {
-	const currentValue = control.value;
-	if (!currentValue) { return null; }
-	const errors: {
-		needsLength?: { value: string },
-		needsLowercase?: { value: string },
-		needsNumber?: { value: string },
-		needsSpecialChar?: { value: string },
-		needsUppercase?: { value: string },
-	} = { };
-	if (currentValue.length < 8) {
-		errors.needsLength = { value: currentValue };
-	}
-	if (!/[A-Z]/.test(currentValue)) {
-		errors.needsUppercase = { value: currentValue };
-	}
-	if (!/[a-z]/.test(currentValue)) {
-		errors.needsLowercase = { value: currentValue };
-	}
-	if (!/\d/.test(currentValue)) {
-		errors.needsNumber = { value: currentValue };
-	}
-	if (!/\W/.test(currentValue)) {
-		errors.needsSpecialChar = { value: currentValue };
-	}
-	if (Object.entries((errors || { })).length) {
-		// if errors isn't empty, return it
-		return errors;
-	}
-
-	return null;
-}
-
-/**
- * Custom Validator for IP Address
- * @param control {AbstractControl}
- * @returns function
- */
-function validateIpAddress (control: AbstractControl) {
-	const error = { value: 'Invalid IP Address Error' };
-	const regexMatch = control.value
-		&& control.value.match(/(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/);
-	if (!regexMatch) { return error; }
-	let hasError = false;
-	regexMatch.slice(1, 5)
-		.forEach(elem => {
-			const num = parseInt(elem, 10);
-			if (isNaN(num) || num > 255) { hasError = true; }
-		});
-	if (hasError) { return error; }
-
-	return null;
-}
+import { validateIpAddress, passwordValidator, passwordsMatchValidator, passwordsOldNewValidator } from '../../../utilities/index';
 
 /**
  * Change Password component
@@ -121,10 +38,12 @@ export class ChangePasswordComponent implements OnDestroy {
 		oldPassword: new FormControl(null, [
 			Validators.required,
 			passwordValidator,
+			passwordsOldNewValidator.bind(this),
 		]),
 		password: new FormControl(null, [
 			Validators.required,
 			passwordValidator,
+			passwordsOldNewValidator.bind(this),
 		]),
 		passwordConf: new FormControl(null, [
 			Validators.required,
@@ -168,7 +87,7 @@ export class ChangePasswordComponent implements OnDestroy {
 	 * Checks IP Connection (resolves to false unless 200 is returned)
 	 * @returns Observable
 	 */
-	private checkIPConnection () {
+	public checkIPConnection () {
 		return this.setupService.ping(this.ipAddressLink)
 			.pipe(
 				map(() => {
@@ -248,7 +167,7 @@ export class ChangePasswordComponent implements OnDestroy {
 					_.invoke(
 						this.alert,
 						'show',
-						I18n.get('_InvalidPassword_'),
+						I18n.get('_InvalidOldPassword_'),
 						'danger');
 				}
 
