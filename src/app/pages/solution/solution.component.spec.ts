@@ -12,7 +12,7 @@ import { of, throwError } from 'rxjs';
 import { SolutionComponent } from './solution.component';
 import { SolutionModule } from './solution.module';
 import { RouterTestingModule } from '@angular/router/testing';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { LifecycleComponent } from './lifecycle/lifecycle.component';
 import { LifecycleModule } from './lifecycle/lifecycle.module';
 import { AssetsComponent } from './assets/assets.component';
@@ -24,6 +24,7 @@ import {
 	VulnerabilityScenarios,
 	CoverageScenarios,
 	Mock,
+	user as mockUser,
 } from '@mock';
 import * as _ from 'lodash-es';
 import {
@@ -36,6 +37,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AdvisoriesComponent } from './advisories/advisories.component';
 import { CaseService } from '@cui-x/services';
 import { UtilsService, RacetrackInfoService } from '@services';
+import { UserResolve } from '@utilities';
 
 /**
  * Will fetch the currently active response body from the mock object
@@ -53,14 +55,16 @@ describe('SolutionComponent', () => {
 	let component: SolutionComponent;
 	let fixture: ComponentFixture<SolutionComponent>;
 	let router: Router;
-	let racetrackInfoSpy;
 	let racetrackInfoService: RacetrackInfoService;
 	let racetrackService: RacetrackService;
 	let diagnosticsService: DiagnosticsService;
 	let caseService: CaseService;
 	let productAlertsService: ProductAlertsService;
 	let contractsService: ContractsService;
+	let userResolve: UserResolve;
 	let utils: UtilsService;
+
+	let racetrackInfoSpy;
 
 	/**
 	 * Restore spies
@@ -107,6 +111,18 @@ describe('SolutionComponent', () => {
 				]),
 				SolutionModule,
 			],
+			providers: [
+				{
+					provide: ActivatedRoute,
+					useValue: {
+						snapshot: {
+							data: {
+								user: mockUser,
+							},
+						},
+					},
+				},
+			],
 		});
 	});
 
@@ -125,6 +141,7 @@ describe('SolutionComponent', () => {
 		utils = TestBed.get(UtilsService);
 		localStorage.removeItem('quickTourFirstTime');
 		racetrackInfoService = TestBed.get(RacetrackInfoService);
+		userResolve = TestBed.get(UserResolve);
 		restoreSpies();
 	});
 
@@ -237,6 +254,31 @@ describe('SolutionComponent', () => {
 		expect(component.selectedTechnology.name)
 			.toEqual('Campus Network Segmentation');
 		discardPeriodicTasks();
+	}));
+
+	it('should change the active smart account', fakeAsync(() => {
+		spyOn(userResolve, 'setSaId');
+		component.changeSmartAccount(123);
+		tick();
+		expect(userResolve.setSaId)
+		.toHaveBeenCalledWith(123);
+	}));
+
+	it('should update the dropdown status', fakeAsync(() => {
+		expect(component.status.dropdowns)
+		.toEqual({
+			smartAccount: false,
+			solution: false,
+			technology: false,
+		});
+		component.changeDropdownSelection('smartAccount');
+		tick();
+		expect(component.status.dropdowns)
+		.toEqual({
+			smartAccount: true,
+			solution: false,
+			technology: false,
+		});
 	}));
 
 	it('should always call getCaseAndRMACount', fakeAsync(() => {
