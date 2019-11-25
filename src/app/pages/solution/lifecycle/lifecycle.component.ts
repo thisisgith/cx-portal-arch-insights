@@ -2187,6 +2187,10 @@ export class LifecycleComponent implements OnDestroy {
 			this.componentData.params.suggestedAction = nextAction ? nextAction.name : null;
 
 			if (pitstop) {
+				pitstop.pitstopActions.map(ptstopActn => {
+					ptstopActn.description = this.parseHtmlText(ptstopActn.description);
+					return ptstopActn;
+				});
 				this.currentPitActionsWithStatus = _.map(
 					pitstop.pitstopActions, (pitstopAction: RacetrackPitstopAction) =>
 						({
@@ -2465,5 +2469,15 @@ export class LifecycleComponent implements OnDestroy {
 			this.loadATX(),
 		)
 		.subscribe();
+	}
+	/**
+	 *  Ruturn the converted HTML text content
+	 *  @param txtString pitstopAction description
+	 *  @returns A html text content
+	 */
+	public parseHtmlText (txtString) {
+		const dmTemp = document.createElement('template');
+		dmTemp.innerHTML = txtString.trim();
+		return dmTemp.content.cloneNode(true).textContent;
 	}
 }
