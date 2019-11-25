@@ -528,11 +528,15 @@ export class LifecycleComponent implements OnDestroy {
 	private resetComponentData () {
 		this.componentData = {
 			learning: {
-				certificationsUrl: `${environment.learningLink}?type=certification`,
+				certificationsUrl: `${environment.learningLink}?type=certification
+				&solution=${this.componentData.params.solution}
+				&usecase=`,
 				elearningUrl: `${environment.learningLink}?type=e-learning
 				&solution=${this.componentData.params.solution}
 				&usecase=`,
-				remotepracticelabsUrl: `${environment.learningLink}?type=remotepracticelabs`,
+				remotepracticelabsUrl: `${environment.learningLink}?type=remotepracticelabs
+				&solution=${this.componentData.params.solution}
+				&usecase=`,
 			},
 			params: {
 				customerId: this.customerId,
