@@ -199,4 +199,22 @@ describe('SyslogsMessagesComponent', () => {
 		expect(component.getSyslogsData)
 				.toHaveBeenCalledTimes(1);
 	});
+	it('should call on enter function', () => {
+		spyOn(component, 'getSyslogsData')
+			.and
+			.callThrough();
+		const keyEvent = {
+			keyCode: 12,
+		};
+		component.keyDownFunction(keyEvent);
+		expect(component.getSyslogsData)
+			.toHaveBeenCalledTimes(0);
+
+		const event = {
+			keyCode: 13,
+		};
+		component.keyDownFunction(event);
+		expect(component.getSyslogsData)
+			.toHaveBeenCalledTimes(1);
+	});
 });

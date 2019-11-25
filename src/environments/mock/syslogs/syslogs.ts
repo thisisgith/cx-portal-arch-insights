@@ -10,8 +10,8 @@ const filterdetailsparams = '/syslogDetails';
 
 /** The mock response for syslogCount */
 const syslogCount: any = {
-	assetsCount: '5',
-	sysLogMsgCount: '10',
+	faultsCount: '10',
+	eventsCount: '5',
 };
 
 /** The mock data for syslogMessages */

@@ -31,7 +31,7 @@ class OSVService extends __BaseService {
 	static readonly getAssetsPath = '/customerportal/osv-ui/v1/assets';
 	static readonly updateProfilePath = '/customerportal/osv-ui/v1/updateProfile';
 	static readonly cancelUpdateProfilePath = '/customerportal/osv-ui/v1/cancelUpdateProfile';
-	static readonly getSoftwareGroupVersionsPath = '/customerportal/osv-ui/v1/profileVersions';
+static readonly getSoftwareGroupVersionsPath = '/customerportal/osv-ui/v1/profileVersions';
 	static readonly getSoftwareGroupAssetsPath = '/customerportal/osv-ui/v1/profileAssets';
 	static readonly getSoftwareGroupRecommendationPath = '/customerportal/osv-ui/v1/profileRecommendations';
 	static readonly getMachineRecommendationsPath = '/customerportal/osv-ui/v1/machineRecommendations';
@@ -61,8 +61,6 @@ class OSVService extends __BaseService {
 		let __body: any = null;
 
 		if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
-		if (params.solution != null) __params = __params.set('solution', params.solution.toString());
-		if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
 		let req = new HttpRequest<any>(
 			'GET',
 			this.rootUrl + `${OSVService.getSummaryPath}`,
@@ -125,9 +123,7 @@ class OSVService extends __BaseService {
 		if (params.sort != null) __params = __params.set('sort', params.sort.toString());
 		if (params.sortOrder != null) __params = __params.set('sortOrder', params.sortOrder.toString());
 		if (params.filter != null) __params = __params.set('filter', params.filter.toString());
-		if (params.search != null) __params = __params.set('search', params.search.toString());
-		if (params.solution != null) __params = __params.set('solution', params.solution.toString());
-		if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
+		if (params.search != null) __params = __params.set('search', params.search.toString());		
 		let req = new HttpRequest<any>(
 			'GET',
 			this.rootUrl + `${OSVService.getSoftwareGroupsPath}`,
@@ -193,9 +189,7 @@ class OSVService extends __BaseService {
 		if (params.pageSize != null) __params = __params.set('pageSize', params.pageSize.toString());
 		if (params.sort != null) __params = __params.set('sort', params.sort.toString());
 		if (params.sortOrder != null) __params = __params.set('sortOrder', params.sortOrder.toString());
-		if (params.search != null) __params = __params.set('search', params.search.toString());
-		if (params.solution != null) __params = __params.set('solution', params.solution.toString());
-		if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
+		if (params.search != null) __params = __params.set('search', params.search.toString());		
 		let req = new HttpRequest<any>(
 			'GET',
 			this.rootUrl + `${OSVService.getSoftwareVersionsPath}`,
@@ -321,9 +315,7 @@ class OSVService extends __BaseService {
 		if (params.sort != null) __params = __params.set('sort', params.sort.toString());
 		if (params.sortOrder != null) __params = __params.set('sortOrder', params.sortOrder.toString());
 		if (params.filter != null) __params = __params.set('filter', params.filter.toString());
-		if (params.search != null) __params = __params.set('search', params.search.toString());
-		if (params.solution != null) __params = __params.set('solution', params.solution.toString());
-		if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
+		if (params.search != null) __params = __params.set('search', params.search.toString());		
 
 		let req = new HttpRequest<any>(
 			'GET',

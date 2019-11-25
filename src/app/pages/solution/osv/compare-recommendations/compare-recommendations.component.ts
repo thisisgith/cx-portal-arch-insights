@@ -119,6 +119,7 @@ export class CompareRecommendationsComponent implements OnChanges {
 			totalOpen[value] = _.get(openBugs, value, 0) + _.get(newOpenBugs, value, 0);
 		});
 		const totalOpenCount = this.calculateExposed(totalOpen);
+
 		return { totalOpenCount, totalOpen };
 	}
 

@@ -30,7 +30,7 @@ describe('RouteGuardGuard', () => {
 		const reponse = {
 			info: {
 				individual : {
-					role : 'admin',
+					role : 'AccountAdmin',
 				},
 			},
 			service: {

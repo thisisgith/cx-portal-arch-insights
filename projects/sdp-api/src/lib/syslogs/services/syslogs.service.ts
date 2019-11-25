@@ -16,11 +16,6 @@ class SyslogsService extends __BaseService {
 	static readonly getSyslogCountPath = '/customerportal/syslog/v1/messages-assets/count';
 	static readonly getSysGridDataPath = '/customerportal/syslog/v1/syslogs';
 	static readonly getSysPanelGridDataPath = '/customerportal/syslog/v1/syslogDetails';
-	static readonly getDeviceGridDataPath = '/customerportal/syslog/v1/asset/details';
-	static readonly getSysPanelFilterPath = '/customerportal/syslog/v1/syslog-view/filters';
-	static readonly getsysPanelFilterGridPath = '/customerportal/syslog/v1/syslog-view/details';
-	static readonly getDevicePanelDetailsPath = '/customerportal/syslog/v1/asset/messages';
-	static readonly getDeviceHeaderDetailsPath = '/customerportal/syslog/v1/asset/viewDetails';
 	constructor (config: __Configuration, http: HttpClient) {
 		super(config, http);
 	}
@@ -115,7 +110,7 @@ class SyslogsService extends __BaseService {
 		  );
 
 	}
-	
+
 
 }
 
@@ -126,27 +121,27 @@ module SyslogsService {
 		 * Unique identifier of a Cisco customer.
 		 */
 		customerId?: string;
-	
+
 		/**
 		 * Number of rows of data per page
 		 */
 		size?: number;
-	
+
 		/**
 		 * The device role
 		 */
 		role?: Array<string>;
-	
+
 		/**
 		 * The page number of the response
 		 */
 		pageNo?: number;
-	
+
 		/**
 		 * The coverage
 		 */
 		coverage?: Array<'covered' | 'uncovered' | 'unknown' | 'expired'>;
-	
+
 		/**
 		 * The contract numbers
 		 */
