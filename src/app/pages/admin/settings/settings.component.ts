@@ -246,7 +246,7 @@ ${HDDSizeUnit}`;
 				this.insightTypeResp.insightConfigs.forEach(insightConf => {
 					if (insightConf.insightType === 'COMPLIANCE') {
 						this.regulatoryCompliance = insightConf;
-					} else {
+					} else if (insightConf.insightType === 'RPR') {
 						this.supportCaseInsightTypes.push(insightConf);
 					}
 				});
