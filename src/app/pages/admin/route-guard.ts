@@ -14,12 +14,14 @@ export class RouteGuard implements CanActivate {
 
 	public canActivate (): Observable<boolean> {
 
+		const admin = 'accountadmin';
+
 		return this.userResolve.getUser()
 			  .pipe(
 		map((user: User) => {
-			const isAdmin = (_.get(user, ['info', 'individual', 'role'])).toLowerCase() === 'admin';
+			const isAdmin = _.get(user, ['info', 'individual', 'role']);
 			const cxLevel = _.get(user, ['service', 'cxLevel']);
-			if (isAdmin && (cxLevel > 1)) {
+			if (isAdmin.toLowerCase() === admin && (cxLevel > 1)) {
 				return true;
 			}
 			this.router.navigate(['/admin/policies']);
