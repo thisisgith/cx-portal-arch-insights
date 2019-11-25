@@ -26,7 +26,7 @@ export class AdminWrapperComponent implements OnInit {
 	private destroyed$: Subject<void> = new Subject<void>();
 	private user: User;
 	private customerId: string;
-	public cxLevel = 0;
+	public isValidAdmin = false;
 	public erroredAppsNum = 0;
 
 	constructor (
@@ -39,7 +39,9 @@ export class AdminWrapperComponent implements OnInit {
 		this.routerPath = _.get(this, 'route.snapshot.routeConfig.path', 'settings');
 		this.user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(this.user, ['info', 'customerId']);
-		this.cxLevel = _.get(this.user, ['service', 'cxLevel']);
+		const cxLevel = _.get(this.user, ['service', 'cxLevel']);
+		const isAdmin = _.get(this.user, ['info', 'individual', 'role']);
+		this.isValidAdmin = (isAdmin === 'admin' && cxLevel > 1) ? true : false;
 	}
 
 	/**

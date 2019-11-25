@@ -12,6 +12,18 @@
 	}
 }
 
+.row-disabled {
+	background-color: transparent !important;
+
+	* {
+		cursor: default !important;
+	}
+
+	td .checkbox__input {
+		cursor: pointer !important;
+	}
+}
+
 .remove-shadow {
 	box-shadow: unset !important;
 }

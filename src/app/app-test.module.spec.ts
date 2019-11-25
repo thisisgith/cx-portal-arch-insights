@@ -14,7 +14,7 @@ import { AppService } from './app.service';
 import { ClientSSOModule } from '@cisco-ngx/cui-auth';
 
 import { environment } from '@environment';
-import { APIxInterceptor } from '@interceptors';
+import { ApixAuthInterceptor, ApixAccountInterceptor } from '@interceptors';
 
 import { Subject } from 'rxjs';
 
@@ -99,7 +99,8 @@ export class FakeHeaderComponent { }
 		},
 		{ provide: APP_BASE_HREF, useValue: environment.baseHref },
 		{ provide: 'ENVIRONMENT', useValue: environment },
-		{ provide: HTTP_INTERCEPTORS, useClass: APIxInterceptor, multi: true },
+		{ provide: HTTP_INTERCEPTORS, useClass: ApixAuthInterceptor, multi: true },
+		{ provide: HTTP_INTERCEPTORS, useClass: ApixAccountInterceptor, multi: true },
 		{
 			provide: Router,
 			useClass: MockRouter,
