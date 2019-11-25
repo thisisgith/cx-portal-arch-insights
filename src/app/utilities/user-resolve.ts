@@ -190,7 +190,7 @@ export class UserResolve implements Resolve<any> {
 			...accountResponse,
 			...userResponse,
 			name: smartAccount.companyName,
-			customerId: `${smartAccount.companyId}`,
+			customerId: `${smartAccount.companyId}_${INTERIM_VA_ID}`,
 			individual: {
 				name: accountUser.firstName,
 				familyName: accountUser.lastName,
