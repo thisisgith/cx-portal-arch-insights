@@ -112,7 +112,14 @@ export class SetupIeComponent implements AfterViewInit, OnInit, OnDestroy {
 	 */
 	private async promptToReuseCache () {
 		// this takes user back to last step they were on if a state exists in localStorage
-		const useSavedState = await this.cuiModalService.showComponent(ResetCacheModal, { });
+		let useSavedState: boolean;
+		this.route.queryParams.subscribe(async params => {
+			if (params.fromAdmin) {
+			 useSavedState = true;
+			} else {
+				useSavedState = await this.cuiModalService.showComponent(ResetCacheModal, { });
+			}
+		});
 		if (useSavedState) {
 			this.router.navigate([], {
 				queryParams: {
