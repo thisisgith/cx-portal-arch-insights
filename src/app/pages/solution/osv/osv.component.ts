@@ -69,9 +69,9 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 		{ key: 'none', label: I18n.get('_OsvNone_') },
 	];
 	public deploymentMap = [
-		{ key: 'production', label: I18n.get('_OsvInProduction_') },
-		{ key: 'upgrade', label: I18n.get('_Upgrade_') },
-		{ key: 'none', label: I18n.get('_OsvNone_') },
+		{ key: 'Production', label: I18n.get('_OsvInProduction_') },
+		{ key: 'Upgrade', label: I18n.get('_Upgrade_') },
+		{ key: 'None', label: I18n.get('_OsvNone_') },
 		{ key: 'NA', label: I18n.get('_OsvNA_') },
 	];
 	public selectedSolutionName;
@@ -260,7 +260,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 								return {
 									value,
 									filter: key,
-									label: filteredDeploy.label,
+									label: filteredDeploy ? filteredDeploy.label : '',
 									selected: false,
 								};
 							}
