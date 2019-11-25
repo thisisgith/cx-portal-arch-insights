@@ -208,6 +208,21 @@ describe('FaultDetailsComponent', () => {
 		component.connectToAsset('FCH2139V1B0');
 		expect(assetPanelLinkService.getAssetLinkData)
 			.toHaveBeenCalled();
+		expect(component.assetLinkInfo.asset.deviceName)
+			.toEqual('5520-1');
+	});
+
+	it('should throw error connecting to asset panel', () => {
+		const error = {
+			status: 404,
+			statusText: 'Resource not found',
+		};
+		spyOn(assetPanelLinkService, 'getAssetLinkData')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+		component.connectToAsset('FCH2139V1B0');
+		expect(assetPanelLinkService.getAssetLinkData)
+			.toHaveBeenCalled();
 	});
 
 	it('should connect to case details panel', () => {

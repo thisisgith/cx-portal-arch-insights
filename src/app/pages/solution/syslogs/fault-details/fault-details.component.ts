@@ -32,7 +32,7 @@ import {
 	FaultFilterData,
 	FaultSummary,
 } from '@sdp-api';
-import { takeUntil, catchError } from 'rxjs/operators';
+import { takeUntil, catchError, map } from 'rxjs/operators';
 import { Subject, of } from 'rxjs';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
@@ -174,10 +174,10 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 	 */
 	public getFaultSummaryDetails (searchParams: FaultSearchParams) {
 		this.faultService.getSummaryDetails(searchParams)
-			.pipe(takeUntil(this.destroy$))
-			.subscribe((response: FaultSummary) => {
+			.pipe(takeUntil(this.destroy$),
+			map((response: FaultSummary) => {
 				this.faultDetails = response.responseData;
-			},
+			}),
 			catchError(err => {
 				_.invoke(this.alert, 'show',  I18n.get('_FaultGenericError_'), 'danger');
 				this.logger.error(
@@ -185,7 +185,8 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 				`:: Error : (${err.status}) ${err.message}`);
 
 				return of({ });
-			}));
+			}))
+			.subscribe();
 	}
 
 	/**
@@ -196,12 +197,12 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 	public getAffectedSystemDetails (searchParams: FaultSearchParams) {
 		this.affectedSystemLoading = true;
 		this.faultService.getAffectedSystems(searchParams)
-			.pipe(takeUntil(this.destroy$))
-			.subscribe((response: FaultAffectedSystems) => {
+			.pipe(takeUntil(this.destroy$),
+			map((response: FaultAffectedSystems) => {
 				this.affectedCount = response.count;
 				this.faultAffectedDetails = response.responseData;
 				this.affectedSystemLoading = false;
-			},
+			}),
 			catchError(err => {
 				this.affectedSystemLoading = false;
 				_.invoke(this.alert, 'show',  I18n.get('_FaultGenericError_'), 'danger');
@@ -210,7 +211,8 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 				`:: Error : (${err.status}) ${err.message}`);
 
 				return of({ });
-			}));
+			}))
+			.subscribe();
 	}
 
 	/**
@@ -218,12 +220,12 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 	 */
 	public getFiltersData () {
 		this.faultService.getFaultFiltersData(this.searchParams)
-			.pipe(takeUntil(this.destroy$))
-			.subscribe((response: FaultFilterData) => {
+			.pipe(takeUntil(this.destroy$),
+			map((response: FaultFilterData) => {
 				this.productID = _.get(response, ['responseData', 0, 'productId']);
 				this.software = _.get(response, ['responseData', 1, 'os']);
 				this.loading = false;
-			},
+			}),
 			catchError(err => {
 				this.loading = false;
 				_.invoke(this.alert, 'show',  I18n.get('_FaultGenericError_'), 'danger');
@@ -232,7 +234,8 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 				`:: Error : (${err.status}) ${err.message}`);
 
 				return of({ });
-			}));
+			}))
+			.subscribe();
 	}
 
 	/**
@@ -352,11 +355,11 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 	 */
 	private getAssetLinkData (assetParams: InventoryService.GetAssetsParams) {
 		return this.assetPanelLinkService.getAssetLinkData(assetParams)
-			.pipe(takeUntil(this.destroy$))
-			.subscribe((response: any) => {
+			.pipe(takeUntil(this.destroy$),
+			map((response: AssetLinkInfo) => {
 				this.assetLinkInfo.asset = _.get(response, [0, 'data', 0]);
 				this.assetLinkInfo.element = _.get(response, [1, 'data', 0]);
-			},
+			}),
 			catchError(err => {
 				_.invoke(this.alert, 'show',  I18n.get('_FaultGenericError_'), 'danger');
 				this.logger.error(
@@ -364,7 +367,8 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 				`:: Error : (${err.status}) ${err.message}`);
 
 				return of({ });
-			}));
+			}))
+			.subscribe();
 	}
 
 	/**
@@ -401,11 +405,11 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 	 */
 	public updateIcSettings (searchIcParams: FaultICSearchParams) {
 		this.faultService.updateIcSettings(searchIcParams)
-			.pipe(takeUntil(this.destroy$))
-			.subscribe((response: FaultIcSettings) => {
+			.pipe(takeUntil(this.destroy$),
+			map((response: FaultIcSettings) => {
 				this.icSettingsResponse = response;
 				this.icSsttings();
-			},
+			}),
 			catchError(err => {
 				_.invoke(this.alert, 'show',  I18n.get('_FaultGenericError_'), 'danger');
 				this.logger.error(
@@ -413,7 +417,8 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 				`:: Error : (${err.status}) ${err.message}`);
 
 				return of({ });
-			}));
+			}))
+			.subscribe();
 	}
 
 	/**

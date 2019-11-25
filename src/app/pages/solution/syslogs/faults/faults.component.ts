@@ -6,13 +6,14 @@ import { FaultService, FaultSearchParams,
 	RacetrackTechnology, FaultResponse,
 } from '@sdp-api';
 import { UserResolve } from '@utilities';
-import { takeUntil, catchError } from 'rxjs/operators';
+import { takeUntil, catchError, map } from 'rxjs/operators';
 import { Subject, of } from 'rxjs';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { CuiTableOptions, CuiToastComponent } from '@cisco-ngx/cui-components';
 import * as _ from 'lodash-es';
 import { LogService } from '@cisco-ngx/cui-services';
 import { RacetrackInfoService } from '@services';
+import { HttpErrorResponse } from '@angular/common/http';
 
 /**
  * FaultsComponent which shows in Insight view for Fault Management
@@ -163,8 +164,8 @@ export class FaultsComponent implements OnInit, OnChanges, OnDestroy {
 	public getFaultData (searchParams: FaultSearchParams) {
 		this.loading = true;
 		this.faultService.getFaultDetails(searchParams)
-			.pipe(takeUntil(this.destroy$))
-			.subscribe((response: FaultResponse) => {
+			.pipe(takeUntil(this.destroy$),
+			map((response: FaultResponse) => {
 				this.totalCount = response.count;
 				this.connectionStatus = response.afmStatus;
 				this.lastUpdateTime = response.lastUpdateTime;
@@ -172,14 +173,15 @@ export class FaultsComponent implements OnInit, OnChanges, OnDestroy {
 				this.tableData = response.responseData;
 				this.preparePaginationHeader();
 				this.loading = false;
-			},
-			catchError(err => {
+			}),
+			catchError((err: HttpErrorResponse)  => {
 				this.logger.error(
 					'FaultsComponent : getFaultData() ' +
 				`:: Error : (${err.status}) ${err.message}`);
 
 				return of({ });
-			}));
+			}))
+			.subscribe();
 	}
 
 	/**
