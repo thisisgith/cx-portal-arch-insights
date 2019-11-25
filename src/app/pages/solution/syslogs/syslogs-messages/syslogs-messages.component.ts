@@ -29,6 +29,8 @@ import { DetailsPanelStackService } from '@services';
 })
 export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 	@Input() public sysFilter;
+	@Input() public solution;
+	@Input() public useCase;
 	public customerId;
 	public countSubscripion: Subscription;
 	public gridSubscripion: Subscription;

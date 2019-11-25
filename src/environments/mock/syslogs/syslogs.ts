@@ -1,7 +1,8 @@
 /** Base of URL for SDP API */
 
 const api = '/api/customerportal/syslog/v1';
-
+/** event count URL */
+const eventCountUrl = '/events-faults/count';
 /** softwareVersion Params */
 // tslint:disable-next-line: ter-max-len
 const messageParams = '/message/details?companyId=2431199&pageNo=1&size=10&severity=3&days=1&catalog=Cisco&includeMsgType=undefined&excludeMsgType=undefined&globalSearch=undefined';
@@ -26,8 +27,8 @@ const messageDetailsMockApi = '/syslog-view/details?days=1&msgType=INTERNAL&comp
 
 /** The mock response for syslogCount */
 const syslogCount: any = {
-	assetsCount: '5',
-	sysLogMsgCount: '10',
+	faultsCount: '10',
+	eventsCount: '5',
 };
 /** The mock url for syslog deatil header */
 const messageDetailHeaderUrl = 'deviceIp=172.16.44.17&customerId=7293498';
@@ -167,7 +168,7 @@ const messagegriddetailsresponse: any = {
 export const SyslogScenarios = [
 	{
 		scenarios: {
-			GET: [
+			POST: [
 				{
 					delay: 100,
 					description: 'Summary',
@@ -179,7 +180,7 @@ export const SyslogScenarios = [
 				},
 			],
 		},
-		url: `${api}/messages-assets/count?companyId=2431199`,
+		url: `${api}${eventCountUrl}`,
 		usecases: ['Use Case 1'],
 	},
 	{
