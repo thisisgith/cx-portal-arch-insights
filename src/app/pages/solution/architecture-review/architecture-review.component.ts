@@ -93,6 +93,7 @@ export class ArchitectureReviewComponent implements OnInit {
 	 */
 	public ngOnInit (): void {
 		this.getCollectionId();
+
 	}
 
 	/**
@@ -280,6 +281,20 @@ export class ArchitectureReviewComponent implements OnInit {
 		};
 	}
 
+	public setSdaCompliantValue (obj: any) {
+		let sdaCompliant = 0;
+
+		if (obj.hasOwnProperty('Yes') && obj.hasOwnProperty('Warning')) {
+			sdaCompliant = obj.Yes + obj.Warning;
+		} else if (obj.hasOwnProperty('Warning'))  {
+			sdaCompliant = obj.Warning;
+		} else {
+			sdaCompliant = obj.Yes;
+		}
+
+		return sdaCompliant;
+	}
+
 	/**
 	 * Fetches the exception counts for the visual filter
 	 * @returns the edvisory counts
@@ -333,10 +348,10 @@ export class ArchitectureReviewComponent implements OnInit {
 					exceptionFilter.loading = false;
 
 					const sdaSeriesData = [];
-					const sdaCompliant = _.get(data, 'sdaCompliance.Warning') ?
-										_.get(data, 'sdaCompliance.Yes') +
-										_.get(data, 'sdaCompliance.Warning') :
-										_.get(data, 'sdaCompliance.Yes');
+
+					const compliantValue = _.get(data, 'sdaCompliance');
+
+					const sdaCompliant = this.setSdaCompliantValue(compliantValue);
 
 					if (sdaCompliant && sdaCompliant > 0) {
 						sdaSeriesData.push({
