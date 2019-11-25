@@ -93,6 +93,7 @@ export class ArchitectureReviewComponent implements OnInit {
 	 */
 	public ngOnInit (): void {
 		this.getCollectionId();
+
 	}
 
 	/**
@@ -280,6 +281,20 @@ export class ArchitectureReviewComponent implements OnInit {
 		};
 	}
 
+	public setSdaCompliantValue (obj: any) {
+		let sdaCompliant = 0;
+
+		if (obj.hasOwnProperty('Yes') && obj.hasOwnProperty('Warning')) {
+			sdaCompliant = obj.Yes + obj.Warning;
+		} else if (obj.hasOwnProperty('Warning'))  {
+			sdaCompliant = obj.Warning;
+		} else {
+			sdaCompliant = obj.Yes;
+		}
+
+		return sdaCompliant;
+	}
+
 	/**
 	 * Fetches the exception counts for the visual filter
 	 * @returns the edvisory counts
@@ -304,6 +319,7 @@ export class ArchitectureReviewComponent implements OnInit {
 							label: I18n.get('_ArchitectureCompliant_'),
 							selected: false,
 							value: Compliant,
+							color: '#92dde4',
 						});
 					}
 
@@ -315,6 +331,7 @@ export class ArchitectureReviewComponent implements OnInit {
 							label: I18n.get('_ArchitectureNonCompliant_'),
 							selected: false,
 							value: NonCompliant,
+							color: '#8ab6d0',
 						});
 					}
 
@@ -326,6 +343,7 @@ export class ArchitectureReviewComponent implements OnInit {
 							label: I18n.get('_ArchitectureNotAvailable_'),
 							selected: false,
 							value: NotAvailable,
+							color: '#c8d4d7',
 						});
 					}
 
@@ -333,10 +351,10 @@ export class ArchitectureReviewComponent implements OnInit {
 					exceptionFilter.loading = false;
 
 					const sdaSeriesData = [];
-					const sdaCompliant = _.get(data, 'sdaCompliance.Warning') ?
-										_.get(data, 'sdaCompliance.Yes') +
-										_.get(data, 'sdaCompliance.Warning') :
-										_.get(data, 'sdaCompliance.Yes');
+
+					const compliantValue = _.get(data, 'sdaCompliance');
+
+					const sdaCompliant = this.setSdaCompliantValue(compliantValue);
 
 					if (sdaCompliant && sdaCompliant > 0) {
 						sdaSeriesData.push({
@@ -344,6 +362,7 @@ export class ArchitectureReviewComponent implements OnInit {
 							label: I18n.get('_ArchitectureCompliant_'),
 							selected: false,
 							value: sdaCompliant,
+							color: '#92dde4',
 						});
 					}
 
@@ -355,6 +374,7 @@ export class ArchitectureReviewComponent implements OnInit {
 							label: I18n.get('_ArchitectureNonCompliant_'),
 							selected: false,
 							value: sdaNonCompliant,
+							color: '#8ab6d0',
 						});
 					}
 
@@ -366,6 +386,7 @@ export class ArchitectureReviewComponent implements OnInit {
 							label: I18n.get('_ArchitectureNotAvailable_'),
 							selected: false,
 							value: sdaNotAvailable,
+							color:  '#c8d4d7',
 						});
 					}
 
@@ -381,6 +402,7 @@ export class ArchitectureReviewComponent implements OnInit {
 							label: I18n.get('_ArchitectureCompliant_'),
 							selected: false,
 							value: assuranceCompliant,
+							color: '#92dde4',
 						});
 					}
 
@@ -392,6 +414,7 @@ export class ArchitectureReviewComponent implements OnInit {
 							label: I18n.get('_ArchitectureNonCompliant_'),
 							selected: false,
 							value: assuranceNonCompliant,
+							color: '#8ab6d0',
 						});
 					}
 
@@ -403,6 +426,7 @@ export class ArchitectureReviewComponent implements OnInit {
 							label: I18n.get('_ArchitectureNotAvailable_'),
 							selected: false,
 							value: assuranceNotAvailable,
+							color: '#c8d4d7',
 						});
 					}
 
@@ -418,6 +442,7 @@ export class ArchitectureReviewComponent implements OnInit {
 							label: I18n.get('_ArchitectureCompliant_'),
 							selected: false,
 							value: swimCompliant,
+							color: '#92dde4',
 						});
 					}
 
@@ -429,6 +454,7 @@ export class ArchitectureReviewComponent implements OnInit {
 							label: I18n.get('_ArchitectureNonCompliant_'),
 							selected: false,
 							value: swimNonCompliant,
+							color: '#8ab6d0',
 						});
 					}
 
@@ -440,6 +466,7 @@ export class ArchitectureReviewComponent implements OnInit {
 							label: I18n.get('_ArchitectureNotAvailable_'),
 							selected: false,
 							value: swimNotAvailable,
+							color: '#c8d4d7',
 						});
 					}
 
@@ -455,6 +482,7 @@ export class ArchitectureReviewComponent implements OnInit {
 							label: I18n.get('_ArchitectureCompliant_'),
 							selected: false,
 							value: pnpCompliant,
+							color: '#92dde4',
 						});
 					}
 
@@ -466,6 +494,7 @@ export class ArchitectureReviewComponent implements OnInit {
 							label: I18n.get('_ArchitectureNonCompliant_'),
 							selected: false,
 							value: pnpNonCompliant,
+							color: '#8ab6d0',
 						});
 					}
 
@@ -477,6 +506,7 @@ export class ArchitectureReviewComponent implements OnInit {
 							label: I18n.get('_ArchitectureNotAvailable_'),
 							selected: false,
 							value: pnpNotAvailable,
+							color: '#c8d4d7',
 						});
 					}
 

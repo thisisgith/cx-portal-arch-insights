@@ -218,6 +218,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	 */
 	public fetchSoftwareGroupDetails () {
 		this.status.profileRecommendations = true;
+
 		return this.osvService.getSoftwareGroupRecommendations(this.softwareGroupDetailsParams)
 			.pipe(
 				map((response: ProfileRecommendationsResponse) => {
@@ -262,6 +263,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	 */
 	public getSoftwareGroupAssets () {
 		this.status.assetsLoading = true;
+
 		return this.osvService.getSoftwareGroupAssets(this.softwareGroupAssetsParams)
 			.pipe(
 				map((response: SoftwareGroupAssetsResponse) => {
@@ -296,6 +298,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	 */
 	public getSoftwareGroupVersions () {
 		this.status.versionsLoading = true;
+
 		return this.osvService.getSoftwareGroupVersions(this.softwareGroupVersionsParams)
 			.pipe(
 				map((response: SoftwareGroupVersionsResponse) => {
