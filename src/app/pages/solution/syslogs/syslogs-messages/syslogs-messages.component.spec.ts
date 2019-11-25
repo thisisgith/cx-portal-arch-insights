@@ -10,7 +10,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SyslogScenarios } from 'src/environments/mock/syslogs/syslogs';
 import { SimpleChanges, SimpleChange } from '@angular/core';
-fdescribe('SyslogsMessagesComponent', () => {
+describe('SyslogsMessagesComponent', () => {
 	let component: SyslogsMessagesComponent;
 	let fixture: ComponentFixture<SyslogsMessagesComponent>;
 	let syslogsService: SyslogsService;
@@ -58,6 +58,8 @@ fdescribe('SyslogsMessagesComponent', () => {
 		.and
 		.returnValue(of(SyslogScenarios[1].scenarios.POST[0].response.body));
 		component.ngOnInit();
+		expect(component.getSyslogsData)
+				.toHaveBeenCalled();
 		expect(component.totalItems)
 			.toEqual(11);
 	});
@@ -197,5 +199,4 @@ fdescribe('SyslogsMessagesComponent', () => {
 		expect(component.getSyslogsData)
 				.toHaveBeenCalledTimes(1);
 	});
-
 });

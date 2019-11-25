@@ -13,11 +13,10 @@ import { SyslogMessagesDetailsComponent } from './syslog-messages-details.compon
 import { SyslogMessagesDetailsModule } from './syslog-messages-details.module';
 import { SyslogScenarios } from 'src/environments/mock/syslogs/syslogs';
 
-fdescribe('SyslogMessagesDetailsComponent', () => {
+describe('SyslogMessagesDetailsComponent', () => {
 	let component: SyslogMessagesDetailsComponent;
 	let fixture: ComponentFixture<SyslogMessagesDetailsComponent>;
 	let syslogsService: SyslogsService;
-	const mockAsset: SyslogPanelGridData = Object.create({ });
 
 	configureTestSuite(() => {
 		TestBed.configureTestingModule({
@@ -79,17 +78,11 @@ fdescribe('SyslogMessagesDetailsComponent', () => {
 	});
 	it('Should get the syslog device message grid data', () => {
 		const param = {
-			active: true,
-			DeviceHost: '10.10.10.10',
-			ProductFamily: 'Cisco Catalyst 2960-S Series Switches',
-			ProductId: 'WS-C2960S-24PS-L',
-			SoftwareType: 'IOS',
-			SoftwareVersion: '12.2(53)SE2',
-			syslogCount: 6,
+			syslogId: '12345',
 		};
 		spyOn(syslogsService, 'getPanelGridData')
 			.and
-			.returnValue(of(SyslogScenarios[7].scenarios.GET[0].response.body));
+			.returnValue(of(SyslogScenarios[2].scenarios.POST[0].response.body));
 
 		const asset: SyslogPanelGridData = Object.create({ });
 		asset.count = 10;
@@ -100,25 +93,9 @@ fdescribe('SyslogMessagesDetailsComponent', () => {
 		component.customerId = '12345';
 		component.loadSyslogPaneldata(param);
 
-		expect(component.tableData)
-			.toBeDefined();
-	});
-	it('should set null values on request errors', done => {
-		const error = {
-			status: 404,
-			statusText: 'Resource not found',
-		};
-		spyOn(syslogsService, 'getPanelFilterGridData')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-		fixture.whenStable()
-			.then(() => {
-				fixture.detectChanges();
-				const messagegrid = [];
-				expect(component.tableData)
-					.toEqual(messagegrid);
-
-				done();
-			});
+		expect(component.tableData.length)
+			.toBeGreaterThan(0);
+		expect(component.count)
+			.toEqual(1);
 	});
 });

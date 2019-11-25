@@ -12,7 +12,7 @@
 		<div>
 			<form #f="ngForm" class="row" id="searchForm" (keydown)="keyDownFunction($event)">
 				<div class="col-4"></div>
-				<div class="col-2"></div> 
+				<div class="col-2"></div>
 				<div class="col-4">
 					<div class="form-group input--icon input--compressed">
 						<div class="form-group__text">
@@ -188,30 +188,30 @@
 				</div>
 			</div>
 		</div>
-		<div class="row">
-           <div class="col-3">
-			<button data-auto-id="CaseAddNote"
-					class="btn btn--primary text-uppercase"
-					[innerText]="'_SyslogstoAFM_' | i18n" (click)="toggleAddNote()">
-			</button>
-		   </div>
-		</div>
-		<div class="absolute add-notes base-padding-bottom base-padding-left base-padding-right" *ngIf='movetoAfmClicked'>
-			<p  [innerText]="'_SyslogsCategoryDescription_' | i18n"></p>
 			<div class="row">
-				<div class="col-4">
-					<cui-select label="{{'_SyslogCatalog_' | i18n}}" [required]="false" [empty]="true" [items]="items" [compressed]="true" [(ngModel)]="selection" (ngModelChange)="onSelection()" optionsKey="name" optionsValue="value"></cui-select>
+			<div class="col-3">
+				<button data-auto-id="CaseAddNote"
+						class="btn btn--primary text-uppercase"
+						[innerText]="'_SyslogstoAFM_' | i18n" (click)="toggleAddNote()">
+				</button>
+			</div>
+			</div>
+			<div class="absolute add-notes base-padding-bottom base-padding-left base-padding-right" *ngIf="movetoAfmClicked">
+				<p  [innerText]="'_SyslogsCategoryDescription_' | i18n"></p>
+				<div class="row">
+					<div class="col-4">
+						<cui-select label="{{'_SyslogCatalog_' | i18n}}" [required]="false" [empty]="true"></cui-select>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-2">
+						<button class="btn btn--ghost" [innerText]="'_SyslogsProceed_' | i18n"></button>
+					</div>
+					<div class="col-2">
+						<button class="btn btn--primary" [innerText]="'_SyslogsCancel_' | i18n"></button>
+					</div>
 				</div>
 			</div>
-			<div class="row">
-				<div class="col-2">
-					<button class="btn btn--ghost" (click)="moveToFaults()" [innerText]="'_SyslogsProceed_' | i18n"></button>
-				</div>
-				<div class="col-2">
-					<button class="btn btn--primary" [innerText]="'_SyslogsCancel_' | i18n"></button>
-				</div>
-			</div>
-		</div>
 		<div detailsPanelTitle class="text-xlarge"></div>
 	</details-panel-header>
 	<syslog-message-details

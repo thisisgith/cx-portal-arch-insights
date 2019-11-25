@@ -24,9 +24,11 @@
 		<div class="divider qtr-margin-top"></div>
 	</ng-container>
 	<div *ngIf="visualLabels[0].active">
-		<syslogs-details [sysFilter]="appliedFilters"></syslogs-details>
+		<app-faults [faultFilter]="appliedFilters"></app-faults>
 	</div>
 	<div *ngIf="visualLabels[1].active">
+		<syslogs-details [sysFilter]="appliedFilters" [solution]="solution" [useCase]="useCase"></syslogs-details>
+
 	</div>
 </div>
 
@@ -37,7 +39,7 @@
 	>
 	</column-chart>
 </ng-template>
-<ng-template #catalogFilter let-filter="filter">
+<ng-template #faultsFilter let-filter="filter">
 	<pie-chart
 		[seriesData]="filter.seriesData"
 		(subfilter)="onSubfilterSelect($event.filter, filter, true)"
@@ -51,7 +53,7 @@
 	>
 	</column-chart>
 </ng-template>
-<ng-template #assetFilter let-filter="filter">
+<ng-template #afmSeverityFilter let-filter="filter">
 			<pie-chart
 				[seriesData]="filter.seriesData"
 				(subfilter)="onSubfilterSelect($event.filter, filter,true)"

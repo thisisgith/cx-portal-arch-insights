@@ -29,6 +29,8 @@ import { DetailsPanelStackService } from '@services';
 })
 export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 	@Input() public sysFilter;
+	@Input() public solution;
+	@Input() public useCase;
 	public customerId;
 	public countSubscripion: Subscription;
 	public gridSubscripion: Subscription;
@@ -50,8 +52,6 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 	public tableStartIndex = 0;
 	public tableEndIndex = 10;
 	public showAssetDetails = false;
-	public useCase = '';
-	public solution = '';
 	public sortField = 'timeStamp';
 	public sortOrder = 'asc';
 	public movetoAfmClicked = false;

@@ -53,6 +53,8 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 	public panelDataParam = {
 		syslogId: '',
 	};
+	public count: number;
+
 	constructor (
 		private logger: LogService,
 		public syslogsService: SyslogsService,
@@ -112,6 +114,7 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 				.subscribe((data: SyslogPanelGridData) => {
 					this.loading = false;
 					this.tableData = data.responseData;
+					this.count = data.count;
 				});
 
 		}
