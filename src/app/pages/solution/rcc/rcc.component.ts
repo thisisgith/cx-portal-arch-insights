@@ -50,7 +50,7 @@ export class RccComponent implements OnInit, OnDestroy {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
 		this.cxLevel = _.get(user, ['service', 'cxLevel'], 0);
-		this.userRole = _.get(user, ['info', 'individual', 'role']);
+		this.userRole = _.get(user, ['info', 'companyList', 0, 'roleList', 0, 'roleName']);
 	}
 	get selectedFilters () {
 		return _.filter(this.filters, 'selected');
@@ -120,6 +120,8 @@ export class RccComponent implements OnInit, OnDestroy {
 		lastScan: '',
 		serialNumber: '',
 	};
+	public violationPolicyFilter = [];
+	public violationSeverityFilter = [];
 	public selectedAssetModal = false;
 	public openDeviceModal = false;
 	public rowData = { };
@@ -225,7 +227,7 @@ export class RccComponent implements OnInit, OnDestroy {
 				this.optInStatus = _.get(status, ['data', 'rccOptInStatus']);
 				this.currentRunStatus = _.get(status, ['data', 'currentRunStatus']);
 				this.runOnce = _.get(status, ['data', 'runOnce']);
-				if (this.optInStatus && this.runOnce && this.currentRunStatus === 'COMPLETED') {
+				if (this.optInStatus && this.currentRunStatus === 'COMPLETED') {
 					this.buildFilters();
 					this.getRCCData(this.violationGridObj);
 					this.getFiltersData();
@@ -458,8 +460,10 @@ export class RccComponent implements OnInit, OnDestroy {
 				const filterObjRes = filterData.data;
 				const policyFilter = _.find(this.filters, { key: 'policyGroup' });
 				policyFilter.seriesData = filterObjRes.policyFilters;
+				this.violationPolicyFilter = filterObjRes.policyFilters;
 				const severityFilter = _.find(this.filters, { key: 'severity' });
 				severityFilter.seriesData = filterObjRes.severityFilters;
+				this.violationSeverityFilter = filterObjRes.severityFilters;
 				this.assetsTotalCount = filterObjRes.assetCount;
 				this.policyViolationsTotalCount = filterObjRes.policyViolationCount;
 				this.filterLoading = false;
