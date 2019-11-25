@@ -17,8 +17,6 @@ describe('FaultDetailsComponent', () => {
 	let faultService: FaultService;
 	let detailsPanelStackService: DetailsPanelStackService;
 	let assetPanelLinkService: AssetPanelLinkService;
-	let racetrackInfoService: RacetrackInfoService;
-	let userResolve: UserResolve;
 
 	configureTestSuite(() => {
 		TestBed.configureTestingModule({
@@ -36,8 +34,6 @@ describe('FaultDetailsComponent', () => {
 		faultService = TestBed.get(FaultService);
 		detailsPanelStackService = TestBed.get(DetailsPanelStackService);
 		assetPanelLinkService = TestBed.get(AssetPanelLinkService);
-		racetrackInfoService = TestBed.get(RacetrackInfoService);
-		userResolve = TestBed.get(UserResolve);
 		fixture = TestBed.createComponent(FaultDetailsComponent);
 		component = fixture.componentInstance;
 		component.fault = {
@@ -56,25 +52,6 @@ describe('FaultDetailsComponent', () => {
 			.toBeTruthy();
 	});
 
-	it('should call constructor', () => {
-		spyOn(userResolve, 'getCustomerId')
-			.and
-			.returnValue(of<string>('2431199'));
-		TestBed.createComponent(FaultDetailsComponent);
-		fixture.detectChanges();
-		expect(userResolve.getCustomerId)
-			.toHaveBeenCalled();
-	});
-
-	it('should build the table on init', () => {
-		spyOn(racetrackInfoService, 'getCurrentTechnology')
-			.and
-			.callThrough();
-		component.ngOnInit();
-		expect(racetrackInfoService.getCurrentTechnology)
-			.toHaveBeenCalled();
-	});
-
 	it('should get the summary details', () => {
 		spyOn(faultService, 'getSummaryDetails')
 			.and
@@ -82,6 +59,8 @@ describe('FaultDetailsComponent', () => {
 		component.getFaultSummaryDetails(component.searchParams);
 		expect(faultService.getSummaryDetails)
 			.toHaveBeenCalled();
+		expect(component.faultDetails[0].severity)
+			.toEqual('2');
 	});
 
 	it('should throw an error in fault summary details', () => {
@@ -94,7 +73,7 @@ describe('FaultDetailsComponent', () => {
 			.returnValue(throwError(new HttpErrorResponse(error)));
 		component.getFaultSummaryDetails(component.searchParams);
 		expect(faultService.getSummaryDetails)
-				.toHaveBeenCalled();
+			.toHaveBeenCalled();
 	});
 
 	it('should get the affected systems', () => {
@@ -104,6 +83,8 @@ describe('FaultDetailsComponent', () => {
 		component.getAffectedSystemDetails(component.searchParams);
 		expect(faultService.getAffectedSystems)
 			.toHaveBeenCalled();
+		expect(component.affectedCount)
+			.toEqual(2);
 	});
 
 	it('should throw an error in fault affected systems', () => {
@@ -126,6 +107,8 @@ describe('FaultDetailsComponent', () => {
 		component.getFiltersData();
 		expect(faultService.getFaultFiltersData)
 			.toHaveBeenCalled();
+		expect(component.productID[0].value)
+			.toEqual('10101');
 	});
 
 	it('should throw an error in fault filter data', () => {

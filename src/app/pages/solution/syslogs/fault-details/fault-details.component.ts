@@ -6,6 +6,7 @@ import {
 	EventEmitter,
 	ViewChild,
 	TemplateRef,
+	OnDestroy,
 } from '@angular/core';
 import { LogService } from '@cisco-ngx/cui-services';
 import { UserResolve } from '@utilities';
@@ -47,7 +48,7 @@ import { CaseDetails } from '@cui-x/services';
 	styleUrls: ['./fault-details.component.scss'],
 	templateUrl: './fault-details.component.html',
 })
-export class FaultDetailsComponent implements OnInit, Panel360 {
+export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 
 	@Input() public fault: FaultGridData;
 	@Input() public tacEnable: string;
@@ -139,7 +140,6 @@ export class FaultDetailsComponent implements OnInit, Panel360 {
 			.subscribe((id: string) => {
 				this.searchParams.customerId = id;
 			});
-
 	}
 
 	/**
@@ -179,6 +179,7 @@ export class FaultDetailsComponent implements OnInit, Panel360 {
 				this.faultDetails = response.responseData;
 			},
 			catchError(err => {
+				_.invoke(this.alert, 'show',  I18n.get('_FaultGenericError_'), 'danger');
 				this.logger.error(
 					'FaultDetailsComponent : getFaultSummaryDetails() ' +
 				`:: Error : (${err.status}) ${err.message}`);
@@ -203,6 +204,7 @@ export class FaultDetailsComponent implements OnInit, Panel360 {
 			},
 			catchError(err => {
 				this.affectedSystemLoading = false;
+				_.invoke(this.alert, 'show',  I18n.get('_FaultGenericError_'), 'danger');
 				this.logger.error(
 					'FaultDetailsComponent : getAffectedSystemDetails() ' +
 				`:: Error : (${err.status}) ${err.message}`);
@@ -224,6 +226,7 @@ export class FaultDetailsComponent implements OnInit, Panel360 {
 			},
 			catchError(err => {
 				this.loading = false;
+				_.invoke(this.alert, 'show',  I18n.get('_FaultGenericError_'), 'danger');
 				this.logger.error(
 					'FaultDetailsComponent : getFiltersData() ' +
 				`:: Error : (${err.status}) ${err.message}`);
@@ -355,6 +358,7 @@ export class FaultDetailsComponent implements OnInit, Panel360 {
 				this.assetLinkInfo.element = _.get(response, [1, 'data', 0]);
 			},
 			catchError(err => {
+				_.invoke(this.alert, 'show',  I18n.get('_FaultGenericError_'), 'danger');
 				this.logger.error(
 					'FaultDetailsComponent : getAssetLinkData() ' +
 				`:: Error : (${err.status}) ${err.message}`);
@@ -403,6 +407,7 @@ export class FaultDetailsComponent implements OnInit, Panel360 {
 				this.icSsttings();
 			},
 			catchError(err => {
+				_.invoke(this.alert, 'show',  I18n.get('_FaultGenericError_'), 'danger');
 				this.logger.error(
 					'FaultDetailsComponent : updateIcSettings() ' +
 				`:: Error : (${err.status}) ${err.message}`);
@@ -461,6 +466,14 @@ export class FaultDetailsComponent implements OnInit, Panel360 {
 			default:
 				return 'systemName';
 		}
+	}
+
+	/**
+	 * OnDestroy Lifecycle Hook
+	 */
+	public ngOnDestroy () {
+		this.destroy$.next();
+		this.destroy$.complete();
 	}
 
 }

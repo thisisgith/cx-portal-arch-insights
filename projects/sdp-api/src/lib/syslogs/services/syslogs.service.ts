@@ -17,7 +17,7 @@ import { SyslogPanelIPSer } from '../models/syslogdeviceheaderdetails-data';
 	providedIn: 'root',
 })
 class SyslogsService extends __BaseService {
-	static readonly getSyslogCountPath = '/customerportal/syslog/v1/messages-assets/count';
+	static readonly getSyslogCountPath = '/customerportal/syslog/v1/events-faults/count';
 	static readonly getSysGridDataPath = '/customerportal/syslog/v1/message/details';
 	static readonly getDeviceGridDataPath = '/customerportal/syslog/v1/asset/details';
 	static readonly getSysPanelGridDataPath = '/customerportal/syslog/v1/syslog-view/details';
@@ -32,18 +32,15 @@ class SyslogsService extends __BaseService {
 	 * Syslogs count
 	 * @returns syslogcount
 	 */
-	public syslogsCount (customerId) {
-		let __params = this.newParams();
-		__params=__params.set('companyId',customerId);
+	public syslogsCount (countParams) {
 		let __headers = new HttpHeaders();
-		let __body: any = null;
+		let __body: any = countParams;
 		const req = new HttpRequest<any>(
-			'GET',
+			'POST',
 			this.rootUrl+ `${SyslogsService.getSyslogCountPath}`,
 			__body,
 			{
 			  headers: __headers,
-			  params: __params,
 			  responseType: 'json',
 			});
 
@@ -59,8 +56,8 @@ class SyslogsService extends __BaseService {
 	 * Gets syslogs count
 	 * @returns syslogs count
 	 */
-	public getSyslogsCount (customerId): __Observable<SyslogData> {
-		return this.syslogsCount(customerId).pipe(
+	public getSyslogsCount (countParams): __Observable<SyslogData> {
+		return this.syslogsCount(countParams).pipe(
 		  __map(_r => <SyslogData>_r.body),
 		);
 	  }
@@ -324,49 +321,65 @@ class SyslogsService extends __BaseService {
 }
 
 module SyslogsService {
-export interface GetSyslogsParams {
+	export interface GetSyslogsParams {
 
-	/**
-     * Unique identifier of a Cisco customer.
-     */
-	customerId?: string;
-
-	/**
-     * Number of rows of data per page
-     */
-	size?: number;
-
-	/**
-     * The device role
-     */
-	role?: Array<string>;
-
-	/**
-     * The page number of the response
-     */
-	pageNo?: number;
-
-	/**
-     * The coverage
-     */
-	coverage?: Array<'covered' | 'uncovered' | 'unknown' | 'expired'>;
-
-	/**
-     * The contract numbers
-     */
-	contractNumber?: Array<string>;
-	days?: number;
-	timeRange?:Array<string>;
-	severity?: number;
-	catalog?: string;
-	includeMsgType?: string;
-	excludeMsgType?: string;
-	asset?:string;
-	deviceHost?:string;
-	catalogList?:Array<string>;
-	severityList?:Array<string>;
-	search?:string;
-	assetList?:Array<string>;
-}
+		/**
+		 * Unique identifier of a Cisco customer.
+		 */
+		customerId?: string;
+	
+		/**
+		 * Number of rows of data per page
+		 */
+		size?: number;
+	
+		/**
+		 * The device role
+		 */
+		role?: Array<string>;
+	
+		/**
+		 * The page number of the response
+		 */
+		pageNo?: number;
+	
+		/**
+		 * The coverage
+		 */
+		coverage?: Array<'covered' | 'uncovered' | 'unknown' | 'expired'>;
+	
+		/**
+		 * The contract numbers
+		 */
+		/**
+		 * The contract numbers
+		 */
+		contractNumber?: Array<string>;
+		days?: number;
+		timeRange?:Array<string>;
+		syslogSeverity?: number;
+		catalog?: string;
+		asset?:string;
+		deviceHost?:string;
+		catalogList?:Array<string>;
+		severityList?:Array<string>;
+		afmSeverity?:string;
+		afmSeverityList?:Array<string>;
+		localSearch?:string;
+		assetList?:Array<string>;
+		systemFilter?: string;
+		sortField?: string;
+		sortOrder?: string;
+		vaId?: string;
+		contractLevel?: string;
+		useCase?: string;
+		solution?: string;
+		excludeMsgType?: string;
+		includeMsgType?: string;
+		severity?: number;
+		search?:string;
+		faults?:string;
+		faultsList?:Array<string>;
+	}
 }
 export { SyslogsService };

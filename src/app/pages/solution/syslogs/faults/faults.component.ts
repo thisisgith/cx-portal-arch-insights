@@ -1,5 +1,6 @@
 import { Component, OnInit, TemplateRef,
-	ViewChild, Input, OnChanges, SimpleChanges } from '@angular/core';
+	ViewChild, Input, OnChanges,
+	SimpleChanges, OnDestroy } from '@angular/core';
 import { FaultService, FaultSearchParams,
 	FaultGridData, RacetrackSolution,
 	RacetrackTechnology, FaultResponse,
@@ -24,7 +25,7 @@ import { RacetrackInfoService } from '@services';
 	styleUrls: ['./faults.component.scss'],
 	templateUrl: './faults.component.html',
 })
-export class FaultsComponent implements OnInit, OnChanges {
+export class FaultsComponent implements OnInit, OnChanges, OnDestroy {
 
 	@Input('faultFilter') public faultFilter;
 
@@ -274,4 +275,13 @@ export class FaultsComponent implements OnInit, OnChanges {
 		I18n.get('_FaultXSuccess_', event.icName) +
 		I18n.get('_FaultsYMoved_', event.tacEnable));
 	}
+
+	/**
+	 * OnDestroy Lifecycle Hook
+	 */
+	public ngOnDestroy () {
+		this.destroy$.next();
+		this.destroy$.complete();
+	}
+
 }
