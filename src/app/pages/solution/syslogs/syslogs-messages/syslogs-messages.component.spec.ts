@@ -54,6 +54,9 @@ describe('SyslogsMessagesComponent', () => {
 	});
 
 	it('Should get the syslog message grid data', () => {
+		spyOn(component, 'getSyslogsData')
+			.and
+			.callThrough();
 		spyOn(syslogsService, 'getGridData')
 		.and
 		.returnValue(of(SyslogScenarios[1].scenarios.POST[0].response.body));

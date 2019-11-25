@@ -9,7 +9,7 @@ import {
 	ProductFamily,
 	SyslogPanelGridData,
 } from '@sdp-api';
-import { catchError, takeUntil } from 'rxjs/operators';
+import { catchError, takeUntil, map } from 'rxjs/operators';
 import { of, Subject } from 'rxjs';
 import { UserResolve } from '@utilities';
 
@@ -102,6 +102,11 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 			this.syslogsService.getPanelGridData(this.panelDataParam)
 				.pipe(
 					takeUntil(this.destroy$),
+					map((data: SyslogPanelGridData) => {
+						this.loading = false;
+						this.tableData = data.responseData;
+						this.count = data.count;
+					}),
 					catchError(err => {
 						this.loading = false;
 						this.logger
@@ -111,11 +116,7 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 						return of({ });
 					}),
 				)
-				.subscribe((data: SyslogPanelGridData) => {
-					this.loading = false;
-					this.tableData = data.responseData;
-					this.count = data.count;
-				});
+				.subscribe();
 
 		}
 	}
