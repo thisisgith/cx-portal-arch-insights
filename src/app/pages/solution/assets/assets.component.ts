@@ -1631,9 +1631,15 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 */
 	public onClick ($event: Event, type: 'checkbox' | 'item' | 'menu', item?: Item) {
 		if ($event.defaultPrevented) {
-			// Event has already been handled
 			return;
 		}
+
+		if (item && !item.data.cxLevel) {
+			this.detailsPanelStackService.pop();
+
+			return;
+		}
+
 		switch (type) {
 			case 'checkbox':
 				this.onItemSelect(item);
