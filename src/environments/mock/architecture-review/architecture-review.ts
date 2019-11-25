@@ -374,7 +374,7 @@ const getDevicesCountResponseData = {
  * Get the Devices count
  */
 const tabsPermissionData = {
-	architectureReviewUIEnabled: false,
+	architectureReviewUIEnabled: true,
 	configurationUIEnabled: true,
 	syslogUIEnabled: true,
 };

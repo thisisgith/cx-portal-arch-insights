@@ -49,11 +49,11 @@ describe('InsightTabsComponent', () => {
 		);
 		component.canActivate();
 		expect(component.enableArchitectureTab)
-		.toBeTruthy();
+		.toBeFalsy();
 		expect(component.enableConfigurationTab)
-		.toBeTruthy();
+		.toBeFalsy();
 		expect(component.enableSystemEventsTab)
-		.toBeTruthy();
+		.toBeFalsy();
 	});
 
 	it('should call canActivate', () => {
