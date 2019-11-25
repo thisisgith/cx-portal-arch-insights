@@ -14,6 +14,7 @@ import { AdminAssetsComponent, AdminAssetsModule } from './assets';
 import { SettingsComponent, SettingsModule } from './settings';
 import { PoliciesComponent, PoliciesModule } from './policies';
 import { AdminComplienceComponent, AdminComplienceModule } from './complience';
+import { ChangePasswordComponent, ChnagePasswordModule } from './change-password';
 
 import { environment } from '@environment';
 import { RouteGuard } from './route-guard';
@@ -44,6 +45,10 @@ const childRoutes: Routes = [
 		path: 'policies',
 	},
 	{
+		component: ChangePasswordComponent,
+		path: 'changepassword',
+	},
+	{
 		path: '',
 		pathMatch: 'full',
 		redirectTo: 'settings',
@@ -64,6 +69,7 @@ const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 		CommonModule,
 		ControlPointsModule,
 		ControlPointsModule.forRoot({ rootUrl }),
+		ChnagePasswordModule,
 		CuiGaugeModule,
 		CuiLabelsModule,
 		CuiSidebarModule,
