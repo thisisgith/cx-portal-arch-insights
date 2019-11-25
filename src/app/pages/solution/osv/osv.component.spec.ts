@@ -248,19 +248,12 @@ describe('OptimalSoftwareVersionComponent', () => {
 		fixture.whenStable()
 		.then(() => {
 			racetrackInfoService
-				.sendCurrentSolution(
-					RacetrackScenarios[0].scenarios.GET[0].response.body.solutions[0],
-				);
-			fixture.detectChanges();
-			expect(component.refresh)
-				.toHaveBeenCalled();
-			racetrackInfoService
 				.sendCurrentTechnology(
 				RacetrackScenarios[0].scenarios.GET[0].response.body.solutions[0].technologies[1],
 				);
 			fixture.detectChanges();
 			expect(component.refresh)
-				.toHaveBeenCalledTimes(2);
+				.toHaveBeenCalled();
 			done();
 		});
 	});
