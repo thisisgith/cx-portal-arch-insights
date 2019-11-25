@@ -120,8 +120,6 @@ export class RccComponent implements OnInit, OnDestroy {
 		lastScan: '',
 		serialNumber: '',
 	};
-	public violationPolicyFilter = [];
-	public violationSeverityFilter = [];
 	public selectedAssetModal = false;
 	public openDeviceModal = false;
 	public rowData = { };
@@ -460,10 +458,8 @@ export class RccComponent implements OnInit, OnDestroy {
 				const filterObjRes = filterData.data;
 				const policyFilter = _.find(this.filters, { key: 'policyGroup' });
 				policyFilter.seriesData = filterObjRes.policyFilters;
-				this.violationPolicyFilter = filterObjRes.policyFilters;
 				const severityFilter = _.find(this.filters, { key: 'severity' });
 				severityFilter.seriesData = filterObjRes.severityFilters;
-				this.violationSeverityFilter = filterObjRes.severityFilters;
 				this.assetsTotalCount = filterObjRes.assetCount;
 				this.policyViolationsTotalCount = filterObjRes.policyViolationCount;
 				this.filterLoading = false;
