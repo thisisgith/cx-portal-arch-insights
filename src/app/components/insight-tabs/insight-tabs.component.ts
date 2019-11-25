@@ -17,9 +17,9 @@ export class InsightTabsComponent implements OnInit {
 	public customerId;
 	public hasPermission = false;
 	public cxLevel: number;
-	public enableArchitectureTab: boolean;
-	public enableConfigurationTab: boolean;
-	public enableSystemEventsTab: boolean;
+	public enableArchitectureTab = false;
+	public enableConfigurationTab = false;
+	public enableSystemEventsTab = false;
 	private destroy$ = new Subject();
 
 	constructor (
@@ -54,9 +54,9 @@ export class InsightTabsComponent implements OnInit {
 					}
 				}),
 				catchError(err => {
-					this.enableArchitectureTab = true;
-					this.enableConfigurationTab = true;
-					this.enableSystemEventsTab = true;
+					this.enableArchitectureTab = false;
+					this.enableConfigurationTab = false;
+					this.enableSystemEventsTab = false;
 					this.logger.error('insights canActivate() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
