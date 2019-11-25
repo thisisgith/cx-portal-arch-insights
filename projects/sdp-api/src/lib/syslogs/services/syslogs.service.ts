@@ -7,20 +7,20 @@ import { Observable as __Observable } from 'rxjs';
 import { SyslogsConfiguration as __Configuration } from '../syslogs-configuration';
 import { StrictHttpResponse as __StrictHttpResponse } from '../../core/strict-http-response';
 import { SyslogData } from '../models/syslog-data';
-import { SyslogGridData } from './../models/syslog-grid-data';
 import { SyslogPanelGridData } from './../models/syslogpanel-data';
 import { SyslogPanelFilterData } from '../models/syslogpanelfilter-data';
 import { SyslogDeviceData } from './../models/syslog-device-data';
 import { SyslogDevicePanelOuter } from '../models/syslogdevicepanel-data';
 import { SyslogPanelIPSer } from '../models/syslogdeviceheaderdetails-data';
+import { SyslogFullResponse } from '@sdp-api';
 @Injectable({
 	providedIn: 'root',
 })
 class SyslogsService extends __BaseService {
 	static readonly getSyslogCountPath = '/customerportal/syslog/v1/messages-assets/count';
-	static readonly getSysGridDataPath = '/customerportal/syslog/v1/message/details';
+	static readonly getSysGridDataPath = '/customerportal/syslog/v1/syslogs';
+	static readonly getSysPanelGridDataPath = '/customerportal/syslog/v1/syslogDetails';
 	static readonly getDeviceGridDataPath = '/customerportal/syslog/v1/asset/details';
-	static readonly getSysPanelGridDataPath = '/customerportal/syslog/v1/syslog-view/details';
 	static readonly getSysPanelFilterPath = '/customerportal/syslog/v1/syslog-view/filters';
 	static readonly getsysPanelFilterGridPath = '/customerportal/syslog/v1/syslog-view/details';
 	static readonly getDevicePanelDetailsPath = '/customerportal/syslog/v1/asset/messages';
@@ -71,37 +71,26 @@ class SyslogsService extends __BaseService {
 	 * @returns syslog grid data
 	 */
 	public sysGridData (syslogParams:SyslogsService.GetSyslogsParams) {
-		let __params = this.newParams();
-		__params=__params.set('companyId',syslogParams.customerId);
-		__params=__params.set('pageNo', <any>syslogParams.pageNo);
-		__params=__params.set('size',<any>syslogParams.size);
-		__params=__params.set('severity',<any>syslogParams.severity);
-		__params=__params.set('days',<any>syslogParams.days);
-		__params=__params.set('catalog',syslogParams.catalog);
-		__params=__params.set('includeMsgType',syslogParams.includeMsgType);
-		__params=__params.set('excludeMsgType',syslogParams.excludeMsgType);
-		__params=__params.set('globalSearch',syslogParams.search);
-		let __headers = new HttpHeaders();
-		const __body: any = null;
+        let __headers = new HttpHeaders();
+		const __body: any = syslogParams;
 		const req = new HttpRequest<any>(
-			'GET',
+			'POST',
 			this.rootUrl+ `${SyslogsService.getSysGridDataPath}`,
 			__body,
 			{
 			  headers: __headers,
-			  params: __params,
 			  responseType: 'json',
 			});
 		  return this.http.request<any>(req).pipe(
 			__filter(_r => _r instanceof HttpResponse),
 			__map((_r) => {
-			  return <__StrictHttpResponse<SyslogGridData[]>>_r;
+			  return <__StrictHttpResponse<SyslogFullResponse>>_r;
 			}),
 		  );
 	}
-	public getGridData (syslogParams): __Observable<SyslogGridData[]> {
+	public getGridData (syslogParams): __Observable<SyslogFullResponse> {
 		return this.sysGridData(syslogParams).pipe(
-		  __map(_r => <SyslogGridData[]> _r.body),
+		  __map(_r => <SyslogFullResponse> _r.body),
 		);
 	  }
 	  public deviceGridData (syslogParams:SyslogsService.GetSyslogsParams) {
@@ -141,21 +130,14 @@ class SyslogsService extends __BaseService {
 	 * Get  of syslogspanel service
 	 */
 	sysPanelGridData(syslogPanelParams){
-		let __params = this.newParams();
-		__params=__params.set('days',syslogPanelParams.selectedFilters.days);
-		__params=__params.set('msgType',syslogPanelParams.selectedRowData.MsgType);
-		__params=__params.set('companyId',syslogPanelParams.customerId);
-		__params=__params.set('catalog',syslogPanelParams.selectedFilters.catalog);
-
-        const __headers = new HttpHeaders();
-        const __body: any = null;
+	    const __headers = new HttpHeaders();
+        const __body: any = syslogPanelParams;
 		const req = new HttpRequest<any>(
-			'GET',
+			'POST',
 			this.rootUrl+ `${SyslogsService.getSysPanelGridDataPath}`,
 			__body,
 			{
 			  headers: __headers,
-			  params: __params,
 			  responseType: 'json',
 			});
 
@@ -354,19 +336,35 @@ export interface GetSyslogsParams {
 	/**
      * The contract numbers
      */
+	/**
+     * The contract numbers
+     */
 	contractNumber?: Array<string>;
 	days?: number;
 	timeRange?:Array<string>;
-	severity?: number;
+	syslogSeverity?: number;
 	catalog?: string;
-	includeMsgType?: string;
-	excludeMsgType?: string;
 	asset?:string;
 	deviceHost?:string;
 	catalogList?:Array<string>;
 	severityList?:Array<string>;
-	search?:string;
+	afmSeverity?:string;
+	afmSeverityList?:Array<string>;
+	localSearch?:string;
 	assetList?:Array<string>;
+	systemFilter?: string;
+	sortField?: string;
+	sortOrder?: string;
+	vaId?: string;
+	contractLevel?: string;
+	useCase?: string;
+	solution?: string;
+	excludeMsgType?: string;
+    includeMsgType?: string;
+	severity?: number;
+	search?:string;
+	faults?:string;
+	faultsList?:Array<string>;
 }
 }
 export { SyslogsService };

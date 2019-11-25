@@ -13,7 +13,7 @@ import { SyslogMessagesDetailsComponent } from './syslog-messages-details.compon
 import { SyslogMessagesDetailsModule } from './syslog-messages-details.module';
 import { SyslogScenarios } from 'src/environments/mock/syslogs/syslogs';
 
-describe('SyslogMessagesDetailsComponent', () => {
+fdescribe('SyslogMessagesDetailsComponent', () => {
 	let component: SyslogMessagesDetailsComponent;
 	let fixture: ComponentFixture<SyslogMessagesDetailsComponent>;
 	let syslogsService: SyslogsService;
@@ -103,19 +103,6 @@ describe('SyslogMessagesDetailsComponent', () => {
 		expect(component.tableData)
 			.toBeDefined();
 	});
-	it('Should get the syslog message details grid data After fileter', done => {
-		spyOn(syslogsService, 'getPanelFilterGridData')
-			.and
-			.returnValue(of(SyslogScenarios[5].scenarios.GET[0].response.body));
-		component.onSelection();
-		fixture.whenStable()
-			.then(() => {
-				fixture.detectChanges();
-				expect(component.tableData)
-					.toBeDefined();
-				done();
-			});
-	});
 	it('should set null values on request errors', done => {
 		const error = {
 			status: 404,
@@ -133,37 +120,5 @@ describe('SyslogMessagesDetailsComponent', () => {
 
 				done();
 			});
-	});
-
-	it('Should get the syslog message details filter values', done => {
-		const param = {
-			active: true,
-			DeviceHost: '10.10.10.10',
-			ProductFamily: 'Cisco Catalyst 2960-S Series Switches',
-			ProductId: 'WS-C2960S-24PS-L',
-			SoftwareType: 'IOS',
-			SoftwareVersion: '12.2(53)SE2',
-			syslogCount: 6,
-		};
-		spyOn(syslogsService, 'getPanelFilterData')
-			.and
-			.returnValue(of(SyslogScenarios[6].scenarios.GET[0].response.body));
-		mockAsset.count = 10;
-		component.asset = mockAsset;
-		component.loadSyslogPanelFilter(param);
-		fixture.detectChanges();
-		expect(component.softwareItems)
-			.toBeDefined();
-		done();
-	});
-
-	it('should update pager', () => {
-		component.onPagerUpdated({
-			page: 1,
-		});
-		expect(component.tableConfig.tableOffset)
-			.toEqual(1);
-		expect(component.paginationConfig.pageNum)
-			.toEqual(2);
 	});
 });

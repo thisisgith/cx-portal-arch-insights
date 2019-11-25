@@ -4,7 +4,7 @@ const api = '/api/customerportal/syslog/v1';
 
 /** softwareVersion Params */
 // tslint:disable-next-line: ter-max-len
-const messageParams = '/message/details?companyId=2431199&pageNo=1&size=10&severity=3&days=1&catalog=Cisco&includeMsgType=undefined&excludeMsgType=undefined&globalSearch=undefined';
+const messageParams = '/syslogs';
 /** AssetList params */
 // tslint:disable-next-line: ter-max-len
 const assetParamsMockData = '/asset/details?companyId=2431199&pageNo=1&size=10&severity=3&days=1&catalog=Cisco&asset=undefined&searchData=undefined';
@@ -13,7 +13,7 @@ const assetParamsMockData = '/asset/details?companyId=2431199&pageNo=1&size=10&s
 const devicemessageParams = 'companyId=2431199&fromSeverity=0&toSeverity=3&days=1&device=10.10.10.10&includeMsgType=&excludeMsgType=&catalog=Cisco';
 /** Syslog grid data after filter */
 // tslint:disable-next-line: ter-max-len
-const filterdetailsparams = 'syslog-view/details?days=90&msgType=CLNS-4-AUTH_FAIL&productFamily=&productId=WS-C2960S-24PS-L&severity=3&software=';
+const filterdetailsparams = '/syslogDetails';
 /** Syslog filters dropdown data */
 // tslint:disable-next-line: ter-max-len
 const filtergridparam = 'msgType=INTERNAL&filterTypes=ProductId%2CSoftwareType%2CProductFamily&companyId=2431199';
@@ -33,31 +33,116 @@ const syslogCount: any = {
 const messageDetailHeaderUrl = 'deviceIp=172.16.44.17&customerId=7293498';
 
 /** The mock data for syslogMessages */
-const syslogMessages: any = [
-	{
-		deviceCount: 1,
-		IcDesc: 'This is syslog message description',
-		MsgType: 'INTERNAL',
-		Recommendation: 'Perform the Required Action',
-		syslogMsgCount: 25,
-		SyslogSeverity: 3,
-	},
-	{
-		deviceCount: 1,
-		IcDesc: 'This is syslog message description',
-		MsgType: 'INTERNAL',
-		Recommendation: 'Perform the Required Action',
-		syslogMsgCount: 25,
-		SyslogSeverity: 3,
-	},
-	{
-		deviceCount: 1,
-		IcDesc: 'This is syslog message description',
-		MsgType: 'INTERNAL',
-		Recommendation: 'Perform the Required Action',
-		syslogMsgCount: 25,
-		SyslogSeverity: 3,
-	}];
+const syslogMessages: any = {
+	count: 11,
+	message: 'Success',
+	responseData: [
+		{
+			deviceHost: '10.126.77.250',
+			msgDesc: 'MPLS packet received on non MPLS enabled interface',
+			msgType: 'RP-6-REDMODE',
+			syslogId: 'qQGTOm4BrWkCTzuIUFLA',
+			syslogSeverity: 0,
+			timestamp: '2019-10-30T04:37:31.031-07:00',
+		},
+		{
+			deviceHost: '10.126.77.250',
+			msgDesc: 'MPLS packet received on non MPLS enabled interface',
+			msgType: 'RP-6-REDMODE',
+			syslogId: 'qQGTOm4BrWkCTzuIUFLA',
+			syslogSeverity: 1,
+			timestamp: '2019-10-30T04:37:31.031-07:00',
+		},
+		{
+			deviceHost: '10.126.77.250',
+			msgDesc: 'MPLS packet received on non MPLS enabled interface',
+			msgType: 'RP-6-REDMODE',
+			syslogId: 'qQGTOm4BrWkCTzuIUFLA',
+			syslogSeverity: 2,
+			timestamp: '2019-10-30T04:37:31.031-07:00',
+		},
+		{
+			deviceHost: '10.126.77.250',
+			msgDesc: 'MPLS packet received on non MPLS enabled interface',
+			msgType: 'RP-6-REDMODE',
+			syslogId: 'qQGTOm4BrWkCTzuIUFLA',
+			syslogSeverity: 3,
+			timestamp: '2019-10-30T04:37:31.031-07:00',
+		},
+		{
+			deviceHost: '10.126.77.250',
+			msgDesc: 'MPLS packet received on non MPLS enabled interface',
+			msgType: 'RP-6-REDMODE',
+			syslogId: 'qQGTOm4BrWkCTzuIUFLA',
+			syslogSeverity: 4,
+			timestamp: '2019-10-30T04:37:31.031-07:00',
+		},
+		{
+			deviceHost: '10.126.77.250',
+			msgDesc: 'MPLS packet received on non MPLS enabled interface',
+			msgType: 'RP-6-REDMODE',
+			syslogId: 'qQGTOm4BrWkCTzuIUFLA',
+			syslogSeverity: 5,
+			timestamp: '2019-10-30T04:37:31.031-07:00',
+		},
+		{
+			deviceHost: '10.126.77.250',
+			msgDesc: 'MPLS packet received on non MPLS enabled interface',
+			msgType: 'RP-6-REDMODE',
+			syslogId: 'qQGTOm4BrWkCTzuIUFLA',
+			syslogSeverity: 6,
+			timestamp: '2019-10-30T04:37:31.031-07:00',
+		},
+		{
+			deviceHost: '10.126.77.250',
+			msgDesc: 'MPLS packet received on non MPLS enabled interface',
+			msgType: 'RP-6-REDMODE',
+			syslogId: 'qQGTOm4BrWkCTzuIUFLA',
+			syslogSeverity: 7,
+			timestamp: '2019-10-30T04:37:31.031-07:00',
+		},
+		{
+			deviceHost: '10.126.77.250',
+			msgDesc: 'MPLS packet received on non MPLS enabled interface',
+			msgType: 'RP-6-REDMODE',
+			syslogId: 'qQGTOm4BrWkCTzuIUFLA',
+			syslogSeverity: 6,
+			timestamp: '2019-10-30T04:37:31.031-07:00',
+		},
+		{
+			deviceHost: '10.126.77.250',
+			msgDesc: 'MPLS packet received on non MPLS enabled interface',
+			msgType: 'RP-6-REDMODE',
+			syslogId: 'qQGTOm4BrWkCTzuIUFLA',
+			syslogSeverity: 7,
+			timestamp: '2019-10-30T04:37:31.031-07:00',
+		},
+		{
+			deviceHost: '10.126.77.250',
+			msgDesc: 'MPLS packet received on non MPLS enabled interface',
+			msgType: 'RP-6-REDMODE',
+			syslogId: 'qQGTOm4BrWkCTzuIUFLA',
+			syslogSeverity: 7,
+			timestamp: '2019-10-30T04:37:31.031-07:00',
+		},
+	],
+};
+/** The mock data for syslogDetail */
+const syslogDetail: any = {
+	count: 1,
+	message: 'Success',
+	responseData: [
+		{
+			deviceHost: '10.126.77.250',
+			icDesc: 'This message says the Operating redundancy mode',
+			msgDesc: 'MPLS packet received on non MPLS enabled interface - L3',
+			msgType: 'RP-6-REDMODE',
+			recommendation: 'The secondary has been reset and should reload back',
+			syslogSeverity: 0,
+		},
+	],
+
+};
 
 /** The mock data for syslogAssets */
 const syslogAssets: any = {
@@ -184,7 +269,7 @@ export const SyslogScenarios = [
 	},
 	{
 		scenarios: {
-			GET: [
+			POST: [
 				{
 					delay: 100,
 					description: 'Message Grid',
@@ -252,20 +337,20 @@ export const SyslogScenarios = [
 	},
 	{
 		scenarios: {
-			GET: [
+			POST: [
 				{
 					delay: 100,
 					description: 'Summary',
 					response: {
-						body: syslogAssets,
+						body: syslogDetail,
 						status: 200,
 					},
 					selected: true,
 				},
 			],
 		},
-		url: `${api}/syslog-view/details?/${filterdetailsparams}`,
-		usecases: ['Use Case 6'],
+		url: `${api}${filterdetailsparams}`,
+		usecases: ['Syslogs Details'],
 	},
 	{
 		scenarios: {

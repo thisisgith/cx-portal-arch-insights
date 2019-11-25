@@ -1,5 +1,5 @@
 export { SyslogData } from './models/syslog-data';
-export { SyslogGridData } from './models/syslog-grid-data';
+export { SyslogGridData, SyslogFullResponse } from './models/syslog-grid-data';
 export { SyslogPanelGridData } from './models/syslogpanel-data';
 export { DeviceDetailsdata, DeviceDetailsMsgData }  from './models/syslogpaneldetails-data';
 export { SyslogPanelFilterData, ResponseData } from './models/syslogpanelfilter-data';
