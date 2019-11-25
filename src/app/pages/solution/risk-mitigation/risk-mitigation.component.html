@@ -2,37 +2,45 @@
 	<insight-tabs></insight-tabs>
 	<visual-filter-bar [filters]="filters">
 		<ng-template #startingCard>
-			<div class="filter__selected">
-				<div
-					data-auto-id="highCrashCount"
-					class="base-margin-bottom qtr-margin-top cursor"
+			<div class="container flex flex-column series half-margin-top">
+				<div class="row flex series__border series__border--left half-margin-bottom"
 					(click)="getHighCrashesDeviceData()"
-					[ngClass]="{ 'text-primary': onlyCrashes }"
+					[ngClass]="{ 'series__border--highlight': onlyCrashes }"
+					data-auto-id="highCrashDeviceCount"
 				>
-					<div
-						class="text-huge flex-center dbl-padding-left dbl-padding-right"
-						[innerText]="highCrashDeviceCount"
-					></div>
-					<div
-						class="text-large flex-center"
-						[innerText]="'_RMHighCrashRiskAssets_' | i18n"
-					></div>
-				</div>
-				<div
-					data-auto-id="lastDayData"
-					class="half-margin-bottom qtr-margin-top cursor"
-					(click)="getAllCrashesData()"
-					[ngClass]="{ 'text-primary': !onlyCrashes }"
-				>
-					<div
-						class="text-huge flex-center dbl-padding-left dbl-padding-right"
-						[innerHTML]="crashedAssetsCount"
-					>
+					<div class="col-md-4 text-right">
+						<span class="series__data series__data--md"
+							[ngClass]="{ 'text-primary': onlyCrashes }"
+						>{{ highCrashDeviceCount }}
+						</span>
 					</div>
-					<div
-						class="text-large flex-center"
-						[innerText]="'_RMCrashedAssets_' | i18n"
-					></div>
+					<div class="col-md-8 text-left">
+						<span class="series__name series__name--md"
+							[ngClass]="{ 'text-primary': onlyCrashes }"
+						>{{ '_RMHighCrashRiskAssets_' | i18n }}
+						</span>
+					</div>
+				</div>
+
+				<div class="row flex series__border series__border--left half-margin-bottom"
+					(click)="getAllCrashesData()"
+					[ngClass]="{ 'series__border--highlight': !onlyCrashes }"
+					data-auto-id="crashedAssetsCount"
+				>
+					<div class="col-md-4 text-right"
+						data-auto-id="crashedAssetsCount"
+					>
+						<span class="series__data series__data--md"
+							[ngClass]="{ 'text-primary': !onlyCrashes }"
+						>{{ crashedAssetsCount }}
+						</span>
+					</div>
+					<div class="col-md-8 text-left">
+						<span class="series__name series__name--md"
+							[ngClass]="{ 'text-primary': !onlyCrashes }"
+						>{{ '_RMCrashedAssets_' | i18n }}
+						</span>
+					</div>
 				</div>
 			</div>
 		</ng-template>

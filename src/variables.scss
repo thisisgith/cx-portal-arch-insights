@@ -22,6 +22,13 @@ $accent-color1: #00bceb;
 $accent-color2: #92dde4;
 $info-icon-font-color: #c2d1e2;
 
+$filter-data-size-sm: 3.6rem;
+$filter-data-size-md: 4.2rem;
+$filter-data-size-lg: 6.5rem;
+
+$filter-name-size-sm: 1.2rem;
+$filter-name-size-md: 1.4rem;
+
 // Override cisco-ui variables
 $cui-resource-path: "../node_modules/cisco-ui/dist";
 $base-font-color: $default-text-color;

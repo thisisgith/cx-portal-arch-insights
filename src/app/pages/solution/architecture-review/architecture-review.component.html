@@ -2,20 +2,27 @@
 	<insight-tabs></insight-tabs>
 	<visual-filter-bar [filters]="filters">
 		<ng-template #startingCard>
-			<div
-				class="text-center"
+			<div class="container flex flex-column series"
 				(click)="clearFilters()"
 				data-auto-id="ClearFilters"
 			>
-				<div
-					*ngFor="let label of visualLabels; let i = index"
-					[ngClass]="{ visualSelected: label?.active === true }"
+				<div class="row flex series__border series__border--left half-margin-bottom"
+					*ngFor="let label of visualLabels"
 					(click)="selectVisualLabel(label)"
-					data-auto-id="SelectVisualLabelClick"
+					[ngClass]="{'series__border--highlight': label.active === true}"
+					data-auto-id="label?.label"
 				>
-					<h1 class="half-margin-top half-margin-bottom" [innerText]="label?.count">
-					</h1>
-					<div class="half-margin-bottom half-margin-top" [innerText]="label?.label">
+					<div class="col-md-6 text-right">
+						<span class="series__data series__data--md"
+							[ngClass]="{ 'text-primary': label?.active === true }"
+						>{{ label?.count }}
+						</span>
+					</div>
+					<div class="col-md-6 text-left">
+						<span class="series__name series_name--md"
+							[ngClass]="{ 'text-primary': label?.active === true }"
+						>{{ label?.label }}
+						</span>
 					</div>
 				</div>
 			</div>

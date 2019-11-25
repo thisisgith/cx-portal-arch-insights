@@ -1,4 +1,5 @@
 @import '../../../../mixins.scss';
+@import '~src/app/common-styles/visual-filter-series.scss';
 
 .mid-icon-place {
 	margin-top: 40%;
@@ -13,10 +14,6 @@
 
 .font15 {
 	font-size: 15px;
-}
-
-.filter__selected {
-	border-bottom: 4px solid #00bceb;
 }
 
 .cursor {
