@@ -118,7 +118,6 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 			)
 			.subscribe((solution: RacetrackSolution) => {
 				this.summaryParams.solution = _.get(solution, 'name');
-				this.refresh();
 			});
 
 		this.racetrackInfoService.getCurrentTechnology()
@@ -192,9 +191,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 	 * refesh data
 	 */
 	public refresh () {
-		if (this.summaryParams.solution.length > 0 && this.summaryParams.useCase.length > 0) {
-			this.loadData();
-		}
+		this.loadData();
 	}
 
 	/**
@@ -259,6 +256,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 							if (value !== 0) {
 								const filteredDeploy = _.find(this.deploymentMap,
 									deployment => deployment.key === key);
+
 								return {
 									value,
 									filter: key,
@@ -272,6 +270,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 							if (value !== 0) {
 								const filteredRecomm = _.find(this.recommendationMap,
 									recommendation => recommendation.key === key);
+
 								return {
 									value,
 									filter: key,
@@ -295,6 +294,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 						profiles: 0,
 						versions: 0,
 					}];
+
 					return of({ });
 				}),
 			);
