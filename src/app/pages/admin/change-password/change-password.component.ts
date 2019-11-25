@@ -7,7 +7,7 @@ import * as _ from 'lodash-es';
 import {  Router } from '@angular/router';
 import { RegisterCollectorService, ChangePasswordParams } from '../../setup-ie/register-collector/register-collector.service';
 import { I18n } from '@cisco-ngx/cui-utils';
-import { validateIpAddress, passwordValidator, passwordsMatchValidator, passwordsOldNewValidator } from '../../../utilities/index';
+import { validateIpAddress, passwordValidator, passwordsMatchValidator, passwordsOldNewValidator } from '@utilities';
 
 /**
  * Change Password component

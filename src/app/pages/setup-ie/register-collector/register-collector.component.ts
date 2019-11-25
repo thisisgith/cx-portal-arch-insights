@@ -28,7 +28,7 @@ import {
 import { I18n } from '@cisco-ngx/cui-utils';
 
 import * as _ from 'lodash-es';
-import { passwordValidator, passwordsMatchValidator, proxyHostValidator, passwordsOldNewValidator } from '../../../utilities/index';
+import { passwordValidator, passwordsMatchValidator, proxyHostValidator, passwordsOldNewValidator } from '@utilities';
 
 enum RegistrationError {
 	ADVANCED,

@@ -3,7 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SetupIEStateService } from '../../setup-ie-state.service';
 import { KEY_CODES } from '@classes';
-import { validateIpAddress } from '../../../../utilities/index';
+import { validateIpAddress } from '@utilities';
 
 /**
  * ConnectComponent
