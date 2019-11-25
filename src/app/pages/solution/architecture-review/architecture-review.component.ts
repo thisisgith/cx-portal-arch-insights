@@ -350,10 +350,8 @@ export class ArchitectureReviewComponent implements OnInit {
 					const sdaSeriesData = [];
 
 					const compliantValue = _.get(data, 'sdaCompliance');
-					console.log(compliantValue);
 
 					const sdaCompliant = this.setSdaCompliantValue(compliantValue);
-					console.log(sdaCompliant);
 
 					if (sdaCompliant && sdaCompliant > 0) {
 						sdaSeriesData.push({
