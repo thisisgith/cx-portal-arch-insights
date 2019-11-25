@@ -319,6 +319,7 @@ export class ArchitectureReviewComponent implements OnInit {
 							label: I18n.get('_ArchitectureCompliant_'),
 							selected: false,
 							value: Compliant,
+							color: '#92dde4',
 						});
 					}
 
@@ -330,6 +331,7 @@ export class ArchitectureReviewComponent implements OnInit {
 							label: I18n.get('_ArchitectureNonCompliant_'),
 							selected: false,
 							value: NonCompliant,
+							color: '#8ab6d0',
 						});
 					}
 
@@ -341,6 +343,7 @@ export class ArchitectureReviewComponent implements OnInit {
 							label: I18n.get('_ArchitectureNotAvailable_'),
 							selected: false,
 							value: NotAvailable,
+							color: '#c8d4d7',
 						});
 					}
 
@@ -359,6 +362,7 @@ export class ArchitectureReviewComponent implements OnInit {
 							label: I18n.get('_ArchitectureCompliant_'),
 							selected: false,
 							value: sdaCompliant,
+							color: '#92dde4',
 						});
 					}
 
@@ -370,6 +374,7 @@ export class ArchitectureReviewComponent implements OnInit {
 							label: I18n.get('_ArchitectureNonCompliant_'),
 							selected: false,
 							value: sdaNonCompliant,
+							color: '#8ab6d0',
 						});
 					}
 
@@ -381,6 +386,7 @@ export class ArchitectureReviewComponent implements OnInit {
 							label: I18n.get('_ArchitectureNotAvailable_'),
 							selected: false,
 							value: sdaNotAvailable,
+							color:  '#c8d4d7',
 						});
 					}
 
@@ -396,6 +402,7 @@ export class ArchitectureReviewComponent implements OnInit {
 							label: I18n.get('_ArchitectureCompliant_'),
 							selected: false,
 							value: assuranceCompliant,
+							color: '#92dde4',
 						});
 					}
 
@@ -407,6 +414,7 @@ export class ArchitectureReviewComponent implements OnInit {
 							label: I18n.get('_ArchitectureNonCompliant_'),
 							selected: false,
 							value: assuranceNonCompliant,
+							color: '#8ab6d0',
 						});
 					}
 
@@ -418,6 +426,7 @@ export class ArchitectureReviewComponent implements OnInit {
 							label: I18n.get('_ArchitectureNotAvailable_'),
 							selected: false,
 							value: assuranceNotAvailable,
+							color: '#c8d4d7',
 						});
 					}
 
@@ -433,6 +442,7 @@ export class ArchitectureReviewComponent implements OnInit {
 							label: I18n.get('_ArchitectureCompliant_'),
 							selected: false,
 							value: swimCompliant,
+							color: '#92dde4',
 						});
 					}
 
@@ -444,6 +454,7 @@ export class ArchitectureReviewComponent implements OnInit {
 							label: I18n.get('_ArchitectureNonCompliant_'),
 							selected: false,
 							value: swimNonCompliant,
+							color: '#8ab6d0',
 						});
 					}
 
@@ -455,6 +466,7 @@ export class ArchitectureReviewComponent implements OnInit {
 							label: I18n.get('_ArchitectureNotAvailable_'),
 							selected: false,
 							value: swimNotAvailable,
+							color: '#c8d4d7',
 						});
 					}
 
@@ -470,6 +482,7 @@ export class ArchitectureReviewComponent implements OnInit {
 							label: I18n.get('_ArchitectureCompliant_'),
 							selected: false,
 							value: pnpCompliant,
+							color: '#92dde4',
 						});
 					}
 
@@ -481,6 +494,7 @@ export class ArchitectureReviewComponent implements OnInit {
 							label: I18n.get('_ArchitectureNonCompliant_'),
 							selected: false,
 							value: pnpNonCompliant,
+							color: '#8ab6d0',
 						});
 					}
 
@@ -492,6 +506,7 @@ export class ArchitectureReviewComponent implements OnInit {
 							label: I18n.get('_ArchitectureNotAvailable_'),
 							selected: false,
 							value: pnpNotAvailable,
+							color: '#c8d4d7',
 						});
 					}
 

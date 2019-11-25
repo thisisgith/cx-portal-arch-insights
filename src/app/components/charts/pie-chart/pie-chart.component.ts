@@ -52,7 +52,7 @@ export class PieChartComponent implements OnChanges {
 	 */
 	private buildGraph () {
 		const data = _.map(this.seriesData, (d, index) => ({
-			color: _.get(this.seriesData.length <= 5 ?
+			color: d.color ? d.color : _.get(this.seriesData.length <= 5 ?
 				filterColors5Max : filterColors8Max, index, '#fff'),
 			id: d.label,
 			name: d.label,
@@ -167,8 +167,8 @@ export class PieChartComponent implements OnChanges {
 			}
 			if (seriesInfo.currentValue !== seriesInfo.previousValue) {
 				const data = _.map(seriesInfo.currentValue, (d, index) => ({
-					color: _.get(seriesInfo.currentValue.length <= 5 ?
-						filterColors5Max : filterColors8Max, index, '#fff'),
+					color: (d.color ? d.color : _.get(seriesInfo.currentValue.length <= 5 ?
+						filterColors5Max : filterColors8Max, index, '#fff')),
 					id: d.label,
 					name: d.label,
 					y: d.value,
