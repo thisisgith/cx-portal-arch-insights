@@ -65,6 +65,7 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 		timeRange: 1,
 	};
 	public noSyslogFilter = false;
+	public alert: any = { };
 	/**
 	 * Visual filters  of syslogs component
 	 */
@@ -144,6 +145,7 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 				this.visualLabels[1].count = counts.eventsCount;
 			}),
 			catchError(err => {
+				_.invoke(this.alert, 'show',  I18n.get('_SyslogsGenericError_'), 'danger');
 				this.logger.error('syslogs-devices.component : getDeviceGridData() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 

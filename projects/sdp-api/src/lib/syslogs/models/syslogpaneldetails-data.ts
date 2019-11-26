@@ -1,15 +1,12 @@
 /** Device Details Table Data
  */
 export interface DeviceDetailsdata {
-	msgCount: number;
-	MsgType: string;
-	DeviceId: string;
-	MsgDesc: string;
-	ProductId: number;
-	ProductFamily: string;
-	SoftwareType: string;
-	SoftwareVersion: string;
-	MessageDescObject: DeviceDetailsMsgData[];
+	deviceHost: string;
+	icDesc: string;
+	msgDesc: string;
+	msgType: string;
+	recommendation: string;
+	syslogSeverity: number;
 }
 
 /** Device Details Inner Table Data
