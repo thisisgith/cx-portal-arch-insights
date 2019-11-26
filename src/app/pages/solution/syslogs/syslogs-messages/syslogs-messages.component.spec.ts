@@ -3,14 +3,14 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SyslogsMessagesComponent } from './syslogs-messages.component';
 import { SyslogsMessagesModule } from './syslogs-messages.module';
-import { SyslogsService, SyslogFullResponse } from '@sdp-api';
+import { SyslogsService, SyslogResponseData } from '@sdp-api';
 import { throwError, of } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SyslogScenarios } from 'src/environments/mock/syslogs/syslogs';
 import { SimpleChanges, SimpleChange } from '@angular/core';
-describe('SyslogsMessagesComponent', () => {
+fdescribe('SyslogsMessagesComponent', () => {
 	let component: SyslogsMessagesComponent;
 	let fixture: ComponentFixture<SyslogsMessagesComponent>;
 	let syslogsService: SyslogsService;
@@ -68,7 +68,7 @@ describe('SyslogsMessagesComponent', () => {
 	});
 
 	it('should not get the syslog message grid data', () => {
-		const syslogMessagesCount: SyslogFullResponse = {
+		const syslogMessagesCount: SyslogResponseData = {
 			count: 0,
 			message: 'Success',
 			responseData: [],

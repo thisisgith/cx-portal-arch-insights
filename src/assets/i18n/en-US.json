@@ -1478,6 +1478,7 @@
 	"_SyslogsAfm_" :"Faults",
 	"_AfmAutomated_":"Automated Faults",
 	"_AfmDetected_":"Detected Faults",
+	"_SyslogsGenericError_": "Internal Error Occurred. Please try again later.",
 	"_System_": "System",
 	"_SystemHostname_": "System Hostname",
 	"_SystemInfo_": "System Info",

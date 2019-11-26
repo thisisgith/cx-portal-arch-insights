@@ -11,6 +11,7 @@ import {
 	CuiTableModule,
 	CuiPagerModule,
 	CuiDropdownModule,
+	CuiAlertModule,
 } from '@cisco-ngx/cui-components';
 import {
 	PieChartModule,
@@ -58,6 +59,7 @@ const childRoutes: Routes = [
 		VisualFilterBarModule,
 		InsightTabsModule,
 		FaultsModule,
+		CuiAlertModule,
 	],
 })
 export class SyslogsModule { }

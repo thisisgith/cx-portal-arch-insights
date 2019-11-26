@@ -8,7 +8,7 @@ import { SyslogsConfiguration as __Configuration } from '../syslogs-configuratio
 import { StrictHttpResponse as __StrictHttpResponse } from '../../core/strict-http-response';
 import { SyslogData } from '../models/syslog-data';
 import { SyslogPanelGridData } from './../models/syslogpanel-data';
-import { SyslogFullResponse } from '@sdp-api';
+import { SyslogResponseData } from '@sdp-api';
 @Injectable({
 	providedIn: 'root',
 })
@@ -72,13 +72,13 @@ class SyslogsService extends __BaseService {
 		  return this.http.request<any>(req).pipe(
 			__filter(_r => _r instanceof HttpResponse),
 			__map((_r) => {
-			  return <__StrictHttpResponse<SyslogFullResponse>>_r;
+			  return <__StrictHttpResponse<SyslogResponseData>>_r;
 			}),
 		  );
 	}
-	public getGridData (syslogParams): __Observable<SyslogFullResponse> {
+	public getGridData (syslogParams): __Observable<SyslogResponseData> {
 		return this.sysGridData(syslogParams).pipe(
-		  __map(_r => <SyslogFullResponse> _r.body),
+		  __map(_r => <SyslogResponseData> _r.body),
 		);
 	  }
 	  /**

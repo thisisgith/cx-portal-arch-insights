@@ -12,6 +12,8 @@ import {
 import { catchError, takeUntil, map } from 'rxjs/operators';
 import { of, Subject } from 'rxjs';
 import { UserResolve } from '@utilities';
+import * as _ from 'lodash-es';
+import { I18n } from '@cisco-ngx/cui-utils';
 
 /**
  * Syslogpanelgrid component
@@ -54,7 +56,7 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 		syslogId: '',
 	};
 	public count: number;
-
+	public alert: any = { };
 	constructor (
 		private logger: LogService,
 		public syslogsService: SyslogsService,
@@ -109,6 +111,7 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 					}),
 					catchError(err => {
 						this.loading = false;
+						_.invoke(this.alert, 'show',  I18n.get('_SyslogsGenericError_'), 'danger');
 						this.logger
 						.error('syslog-messages-details.component : getPanelGridData() ' +
 							`:: Error : (${err.status}) ${err.message}`);

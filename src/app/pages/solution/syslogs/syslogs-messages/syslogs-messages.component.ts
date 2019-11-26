@@ -11,7 +11,7 @@ import {
 
 import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
-import { SyslogsService, SyslogGridData, SyslogFilter, SyslogFullResponse } from '@sdp-api';
+import { SyslogsService, SyslogGridData, SyslogFilter, SyslogResponseData } from '@sdp-api';
 import { Subject, of, Subscription } from 'rxjs';
 import { takeUntil, catchError } from 'rxjs/operators';
 import { I18n } from '@cisco-ngx/cui-utils';
@@ -41,7 +41,7 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 	public tableOffset = 0;
 	public loading = false;
 	public totalItems = 0;
-	public syslogGridResponse: SyslogFullResponse;
+	public syslogGridResponse: SyslogResponseData;
 	public tableData: SyslogGridData[] = [];
 	public pageLimit = 10;
 	public pageNum = 1;
@@ -56,6 +56,7 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 	public sortOrder = 'asc';
 	public movetoAfmClicked = false;
 	public moveToFaultParams = { };
+	public alert: any = { };
 	constructor (
 		private logger: LogService,
 		public syslogsService: SyslogsService,
@@ -181,6 +182,7 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 				this.loading = false;
 			}, catchError(err => {
 				this.loading = false;
+				_.invoke(this.alert, 'show',  I18n.get('_SyslogsGenericError_'), 'danger');
 				this.logger.error('syslogs-details.component : getGridData() ' +
 					`:: Error : (${err.status}) ${err.message}`);
 

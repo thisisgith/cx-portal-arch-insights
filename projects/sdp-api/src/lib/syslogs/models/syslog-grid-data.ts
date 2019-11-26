@@ -1,7 +1,7 @@
 /**
  * Syslog complete resoponse
  */
-export interface SyslogFullResponse {
+export interface SyslogResponseData {
 	count?: number;
 	message?: string;
 	responseData: SyslogGridData[];
