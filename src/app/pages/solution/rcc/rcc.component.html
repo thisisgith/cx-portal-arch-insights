@@ -100,7 +100,7 @@
 			</div>
 		</div>
 	</div>
-	<ng-container *ngIf="cxLevel > 1">
+	<ng-container *auth="{ cxLevel: 2 }">
 		<div class="panel panel--dkgray half-margin-top" *ngIf="!loading && !optInStatus && !errorPolicyView">
 			<div class="row cx-no-dnac-container" *auth="authParamsRCCUser">
 				<div class="half-padding-left">
