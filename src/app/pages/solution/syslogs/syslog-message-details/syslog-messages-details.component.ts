@@ -8,13 +8,12 @@ import {
 	SoftwareList,
 	ProductFamily,
 	SyslogPanelGridData,
-	SyslogPanelFilterData,
 } from '@sdp-api';
-import { catchError, takeUntil } from 'rxjs/operators';
+import { catchError, takeUntil, map } from 'rxjs/operators';
 import { of, Subject } from 'rxjs';
-import { I18n } from '@cisco-ngx/cui-utils';
 import { UserResolve } from '@utilities';
-import { MarshalTableData } from '../syslogs.utils';
+import * as _ from 'lodash-es';
+import { I18n } from '@cisco-ngx/cui-utils';
 
 /**
  * Syslogpanelgrid component
@@ -46,44 +45,18 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 
 	public customerId;
 	public tableData: DeviceDetailsdata[] = [];
+	public fullResponse: SyslogPanelGridData;
 	public productIdItems: ProductId[];
 	public softwareItems: SoftwareList[];
 	public productFamily: ProductFamily[];
 	public pagerLimit = 5;
 	public destroy$ = new Subject();
 	public loading = false;
-	public tableConfig = {
-		tableLimit: 10,
-		tableOffset: 0,
-		totalItems: 10,
-	};
-	public paginationConfig = {
-		pageLimit: 10,
-		pageNum: 1,
-		pagerLimit: 10,
-	};
 	public panelDataParam = {
-		customerId: '',
-		selectedFilters: '',
-		selectedRowData: '',
+		syslogId: '',
 	};
-
-	public timePeriod: any[] = [{
-		name: I18n.get('_SyslogDay1_'),
-		value: 1,
-	},
-	{
-		name: I18n.get('_SyslogDays7_'),
-		value: 7,
-	},
-	{
-		name: I18n.get('_SyslogDays15_'),
-		value: 15,
-	},
-	{
-		name: I18n.get('_SyslogDays30_'),
-		value: 30,
-	}];
+	public count: number;
+	public alert: any = { };
 	constructor (
 		private logger: LogService,
 		public syslogsService: SyslogsService,
@@ -105,8 +78,6 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 	 */
 	public ngOnChanges () {
 		this.loadSyslogPaneldata(this.asset);
-		this.loadSyslogPanelFilter(this.asset);
-		this.selectDropDown.timePeriod = this.selectedFilter.days;
 	}
 
 	/**
@@ -115,114 +86,32 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 	 */
 
 	public ngOnInit () {
-		this.tableInitialization();
-		this.innerTableOptions = new CuiTableOptions({
-			bordered: false,
-			columns: [
-				{
-					key: 'serialNumber',
-					name: I18n.get('_SyslogNumber_'),
-				},
-				{
-					name: I18n.get('_Syslog_SyslogMessageText_'),
-					template: this.innerMessageType,
-				},
-				{
-					key: 'MessageCount',
-					name: I18n.get('_SyslogCount_'),
-
-				},
-			],
-			dynamicData: false,
-		});
+		this.loadSyslogPaneldata(this.asset);
+		// this.tableInitialization();
 	}
-	/**
-	 * Used to load the table grid
-	 * Cui table values
-	 */
-	public tableInitialization () {
-		this.tableOptions = new CuiTableOptions({
-			bordered: false,
-			columns: [
-				{
-					key: 'DeviceHost',
-					name: I18n.get('_SyslogSystemName_'),
-					sortable: true,
-				},
-				{
-					name: I18n.get('_ProductID_'),
-					sortable: true,
-					template: this.prodId,
-				},
-				{
-					key: 'SoftwareType',
-					name: I18n.get('_SyslogSoftware_'),
-					sortable: true,
-				},
-				{
-					key: 'SoftwareVersion',
-					name: I18n.get('_SyslogSoftwareVersion_'),
-					sortable: true,
-				},
-			],
-			dynamicData: false,
-			padding: 'regular',
-			rowWellColor: 'black',
-			rowWellTemplate : this.innerTableRef,
-			singleSelect: true,
-			striped: false,
-			wrapText: false,
-		});
-	}
-	/**
-	 * Used to  Filter the table grid
-	 */
-
-	public onSelection () {
-		this.loading = true;
-		this.tableData = [];
-		this.selectDropDown.assets = this.asset;
-		this.selectDropDown.selectedFilters = this.selectedFilter;
-		this.selectDropDown.customerId = this.customerId;
-		this.syslogsService
-			.getPanelFilterGridData(
-				this.selectDropDown)
-			.pipe(takeUntil(this.destroy$),
-			catchError(err => {
-				this.loading = false;
-				this.logger.error('syslog-messages-details.component : getPanelFilterGridData() ' +
-					`:: Error : (${err.status}) ${err.message}`);
-
-				return of({ });
-			}),
-			)
-			.subscribe((data: SyslogPanelGridData) => {
-				this.loading = false;
-				this.tableData = MarshalTableData.marshalTableDataForInerGrid(data.responseData);
-				this.tableConfig.totalItems = this.tableData.length;
-			});
-	}
-
 	/**
 	 * Used to  get the table grid
-	 * @param tableRowData gives table row info
+	 * @param asset gives table row info
 	 */
 
-	public loadSyslogPaneldata (tableRowData) {
+	public loadSyslogPaneldata (asset) {
 		this.loading = true;
-		this.tableData = [];
 		if (this.asset) {
 			this.panelDataParam = {
-				customerId: this.customerId,
-				selectedFilters: this.selectedFilter,
-				selectedRowData : tableRowData,
+				syslogId: asset.syslogId,
 			};
 
 			this.syslogsService.getPanelGridData(this.panelDataParam)
 				.pipe(
 					takeUntil(this.destroy$),
+					map((data: SyslogPanelGridData) => {
+						this.loading = false;
+						this.tableData = data.responseData;
+						this.count = data.count;
+					}),
 					catchError(err => {
 						this.loading = false;
+						_.invoke(this.alert, 'show',  I18n.get('_SyslogsGenericError_'), 'danger');
 						this.logger
 						.error('syslog-messages-details.component : getPanelGridData() ' +
 							`:: Error : (${err.status}) ${err.message}`);
@@ -230,53 +119,9 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 						return of({ });
 					}),
 				)
-				.subscribe((data: SyslogPanelGridData) => {
-					this.loading = false;
-					this.tableData = MarshalTableData
-					.marshalTableDataForInerGrid(data.responseData);
-					this.tableConfig.totalItems = this.tableData.length;
-				});
+				.subscribe();
 
 		}
-	}
-
-	/**
-	 * Used to  get the filter data grid
-	 * @param tableRowData gives table row info
-	 */
-
-	public loadSyslogPanelFilter (tableRowData) {
-		this.selectDropDown.productFamily = '';
-		this.selectDropDown.productID = '';
-		this.selectDropDown.Software = '';
-		if (this.asset) {
-			const paramFilterData = {
-				customerId: this.customerId,
-				selectedRowData : tableRowData,
-			};
-			this.syslogsService.getPanelFilterData(paramFilterData)
-				.pipe(takeUntil(this.destroy$),
-				catchError(err => {
-					this.logger.error('syslog-messages-details.component : getPanelFilterData() ' +
-						`:: Error : (${err.status}) ${err.message}`);
-
-					return of({ });
-				}),
-				)
-				.subscribe((data: SyslogPanelFilterData) => {
-					this.productFamily = data.responseData[2].ProductFamily;
-					this.productIdItems = data.responseData[0].ProductId;
-					this.softwareItems = data.responseData[1].SoftwareType;
-				});
-		}
-	}
-	/**
-	 * Determines whether pager updated on
-	 * @param pageInfo contains page info
-	 */
-	public onPagerUpdated (pageInfo: any) {
-		this.tableConfig.tableOffset = pageInfo.page;
-		this.paginationConfig.pageNum = pageInfo.page + 1;
 	}
 
 	/**

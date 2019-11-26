@@ -73,9 +73,8 @@ export * from './search/search';
 export * from './search/serialnumber';
 
 export * from './user/entitlement';
+export * from './user/entitlement-v2';
 export * from './architecture/architecture';
-
-export * from '../mock/afm/afm';
 
 export * from '../mock/architecture-review/architecture-review';
 
@@ -84,3 +83,5 @@ export { ComparisonViewScenarios } from './crash-prevention/comparisonview';
 export * from '../mock/service/asset-panel-link';
 export * from '../mock/syslogs/syslogs';
 export * from './asset-tagging/asset-tagging';
+
+export * from '../mock/fault/fault';

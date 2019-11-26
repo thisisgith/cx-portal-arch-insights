@@ -1,5 +1,5 @@
 import { configureTestSuite } from 'ng-bullet';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -16,9 +16,9 @@ import { HeaderComponent } from './components/header/header.component';
 import { AppService } from './app.service';
 import { AppTestModule } from './app-test.module.spec';
 import { User } from '@interfaces';
-import { user } from '@mock';
-import { throwError } from 'rxjs';
-import { EntitlementService } from '@sdp-api';
+import { throwError, Observable } from 'rxjs';
+import { EntitlementWrapperService, OrgUserService } from '@sdp-api';
+import { mappedUser } from '@mock';
 
 describe('AppComponent', () => {
 	let component: AppComponent;
@@ -120,9 +120,10 @@ describe('AppComponent', () => {
 
 	describe('UserResolve', () => {
 		let userResolve: UserResolve;
-		let entitlementService: EntitlementService;
+		let entitlementWrapperService: EntitlementWrapperService;
+		let orgUserService: OrgUserService;
 
-		beforeEach(async(() => {
+		beforeEach(() => {
 			TestBed.configureTestingModule({
 				imports: [
 					RouterTestingModule,
@@ -133,15 +134,14 @@ describe('AppComponent', () => {
 				],
 			})
 			.compileComponents();
-		}));
-
-		beforeEach(() => {
 			fixture = TestBed.createComponent(AppComponent);
 			component = fixture.componentInstance;
 			router = fixture.debugElement.injector.get(Router);
 			userResolve = TestBed.get(UserResolve);
-			entitlementService = TestBed.get(EntitlementService);
+			entitlementWrapperService = TestBed.get(EntitlementWrapperService);
+			orgUserService = TestBed.get(OrgUserService);
 			fixture.detectChanges();
+			window.localStorage.removeItem('activeSmartAccount');
 		});
 
 		it('should resolve to a user', done => {
@@ -150,13 +150,10 @@ describe('AppComponent', () => {
 				userResolve.getUser()
 				.subscribe((u: User) => {
 					expect(u)
-						.toEqual(user);
+						.toEqual(mappedUser);
 
 					done();
 				});
-
-				userResolve.resolve()
-				.subscribe();
 			});
 		});
 
@@ -166,7 +163,7 @@ describe('AppComponent', () => {
 				userResolve.getUser()
 				.subscribe((u: User) => {
 					expect(u)
-						.toEqual(user);
+						.toEqual(mappedUser);
 				});
 
 				userResolve.resolve()
@@ -174,7 +171,7 @@ describe('AppComponent', () => {
 					userResolve.resolve()
 					.subscribe((u: User) => {
 						expect(u)
-							.toEqual(user);
+							.toEqual(mappedUser);
 
 						done();
 					});
@@ -182,12 +179,33 @@ describe('AppComponent', () => {
 			});
 		});
 
-		it('should fail gracefully when resolving', done => {
+		it('should fail gracefully when resolving userAccounts', done => {
 			const error = {
 				status: 404,
 				statusText: 'Resource not found',
 			};
-			spyOn(entitlementService, 'getUser')
+			spyOn(entitlementWrapperService, 'userAccounts')
+				.and
+				.returnValue(throwError(error));
+
+			fixture.whenStable()
+			.then(() => {
+				userResolve.resolve()
+				.subscribe((u: User) => {
+					expect(u)
+						.toBeNull();
+
+					done();
+				});
+			});
+		});
+
+		it('should fail gracefully when resolving getUserV2', done => {
+			const error = {
+				status: 404,
+				statusText: 'Resource not found',
+			};
+			spyOn(orgUserService, 'getUserV2')
 				.and
 				.returnValue(throwError(error));
 
@@ -206,80 +224,139 @@ describe('AppComponent', () => {
 		it('should resolve a customerId', done => {
 			fixture.whenStable()
 			.then(() => {
-				userResolve.getCustomerId()
-				.subscribe((id: string) => {
-					expect(id)
-						.toEqual(user.info.customerId);
-
-					done();
-				});
-
 				userResolve.resolve()
-				.subscribe();
+				.subscribe(() => {
+					userResolve.getCustomerId()
+					.subscribe((id: string) => {
+						expect(id)
+							.toEqual(mappedUser.info.customerId);
+
+						done();
+					});
+				});
 			});
 		});
 
 		it('should resolve a cxLevel', done => {
 			fixture.whenStable()
 			.then(() => {
-				userResolve.getCXLevel()
-				.subscribe((s: number) => {
-					expect(s)
-						.toEqual(user.service.cxLevel);
-
-					done();
-				});
-
 				userResolve.resolve()
-				.subscribe();
+				.subscribe(() => {
+					userResolve.getCXLevel()
+					.subscribe((n: number) => {
+						expect(n)
+							.toEqual(Number(mappedUser.service.cxLevel));
+
+						done();
+					});
+				});
 			});
 		});
 
-		it('should resolve a solution', done => {
+		it('should resolve a role', done => {
 			fixture.whenStable()
 			.then(() => {
-				userResolve.getSolution()
-				.subscribe((s: string) => {
-					expect(s)
-						.toEqual(user.service.solution);
-
-					done();
-				});
-
 				userResolve.resolve()
-				.subscribe();
+				.subscribe(() => {
+					userResolve.getRole()
+					.subscribe((s: string) => {
+						expect(s)
+							.toEqual(mappedUser.info.individualAccount.role);
+
+						done();
+					});
+				});
 			});
 		});
 
-		it('should resolve a use case', done => {
+		it('should resolve an sa id', done => {
 			fixture.whenStable()
 			.then(() => {
-				userResolve.getUseCase()
-				.subscribe((s: string) => {
-					expect(s)
-						.toEqual(user.service.useCase);
-
-					done();
-				});
-
 				userResolve.resolve()
-				.subscribe();
+				.subscribe(() => {
+					userResolve.getSaId()
+					.subscribe((n: number) => {
+						expect(n)
+							.toEqual(mappedUser.info.companyList[0].companyId);
+
+						done();
+					});
+				});
+			});
+		});
+
+		it('should resolve a data center', done => {
+			fixture.whenStable()
+			.then(() => {
+				userResolve.resolve()
+				.subscribe(() => {
+					userResolve.getDataCenter()
+					.subscribe((s: string) => {
+						expect(s)
+							.toEqual(mappedUser.info.dataCenter.dataCenter);
+
+						done();
+					});
+				});
+			});
+		});
+
+		it('should set the sa id', done => {
+			fixture.whenStable()
+			.then(() => {
+				userResolve.resolve()
+				.subscribe(() => {
+					userResolve.setSaId(mappedUser.info.companyList[0].companyId);
+					userResolve.getSaId()
+					.subscribe((n: number) => {
+						expect(n)
+							.toEqual(mappedUser.info.companyList[0].companyId);
+
+						done();
+					});
+				});
+			});
+		});
+
+		it('should resolve a valid sa id from local storage', done => {
+			window.localStorage.setItem('activeSmartAccount', `${mappedUser.info.companyList[1].companyId}`);
+			fixture.whenStable()
+			.then(() => {
+				userResolve.resolve()
+				.subscribe(() => {
+					userResolve.getSaId()
+					.subscribe((n: number) => {
+						expect(n)
+							.toEqual(mappedUser.info.companyList[1].companyId);
+						done();
+					});
+				});
 			});
 		});
 	});
 
 	describe('General', () => {
-		beforeEach(async(() => {
+		beforeEach(() => {
 			TestBed.configureTestingModule({
 				imports: [
 					RouterTestingModule,
 					AppModule,
 				],
+				providers: [
+					{
+						provide: UserResolve,
+						useValue: {
+							getUser: () => new Observable<{ }>(observer => {
+								observer.next(mappedUser);
+							}),
+							resolve: () => new Observable<{ }>(observer => {
+								observer.next(mappedUser);
+							}),
+						},
+					},
+				],
 			});
 			service = TestBed.get(AppService);
-		}));
-
-		beforeEach(() => {
 			fixture = TestBed.createComponent(AppComponent);
 			component = fixture.componentInstance;
 			router = fixture.debugElement.injector.get(Router);
@@ -325,13 +402,6 @@ describe('AppComponent', () => {
 			de = fixture.debugElement.query(By.directive(CuiModalComponent));
 			expect(de)
 				.toBeTruthy();
-		});
-
-		it('should not reload the i18n if already loaded', () => {
-			expect(service.i18nLoaded)
-				.toBeTruthy();
-
-			service.loadI18n();
 		});
 
 		it('should attempt to load foreign language i18n if requested', () => {

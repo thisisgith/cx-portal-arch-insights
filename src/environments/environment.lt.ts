@@ -53,8 +53,8 @@ export const environment = {
 	sdpServiceOrigin: 'https://api-test.cisco.com',
 	sdpServicePaths: {
 		contracts: '/api/lt/v1/contracts',
-		controlpoints: '/api/lt/customerportal/controlpoint',
 		customerportal: '/api/lt/customerportal',
+		cxportal: '/api/cxportal',
 		inventory: '/api/lt/v1/inventory',
 		partner: '/api/lt/cxportal',
 	},

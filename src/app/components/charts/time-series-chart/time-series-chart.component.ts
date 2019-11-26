@@ -30,7 +30,7 @@ export class TimeSeriesChartComponent {
 		this.chart = new Chart({
 			chart: {
 				height: this.height,
-				marginBottom : 60,
+				marginBottom : 70,
 				marginLeft: 80,
 				width: this.width,
 			},

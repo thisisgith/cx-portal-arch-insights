@@ -1,12 +1,12 @@
 import { EntitlementRouteAuthService } from './entitlement-route-guard.service';
-import { userRoles } from '@constants/user-roles';
+import { UserRoles } from '@constants';
 import { ActivatedRouteSnapshot } from '@angular/router';
 import { Observable } from 'rxjs';
 import { CheckRoleLevelReturn } from '@interfaces';
 
 const testUser = {
 	cxLevel: 0,
-	role: userRoles.USER,
+	role: UserRoles.USER,
 };
 
 class MockRouter {
@@ -49,7 +49,7 @@ describe('EntitlementRouteAuthService', () => {
 		const rolesLevelRedirect = {
 			cxLevel: 0,
 			redirectUrl: '/',
-			whitelistRoles: [userRoles.USER],
+			whitelistRoles: [UserRoles.USER],
 		};
 
 		route.data = {
@@ -71,7 +71,7 @@ describe('EntitlementRouteAuthService', () => {
 		const rolesLevelRedirect = {
 			cxLevel: 3,
 			redirectUrl: '/',
-			whitelistRoles: [userRoles.ADMIN],
+			whitelistRoles: [UserRoles.ADMIN],
 		};
 
 		route.data = {
@@ -93,7 +93,7 @@ describe('EntitlementRouteAuthService', () => {
 		const rolesLevelRedirect = {
 			cxLevel: 3,
 			redirectUrl: '/',
-			whitelistRoles: [userRoles.ADMIN],
+			whitelistRoles: [UserRoles.ADMIN],
 		};
 
 		route.data = {
@@ -117,7 +117,7 @@ describe('EntitlementRouteAuthService', () => {
 		const rolesLevelRedirect = {
 			cxLevel: 3,
 			redirectUrl: '/',
-			blacklistRoles: [userRoles.USER],
+			blacklistRoles: [UserRoles.USER],
 		};
 
 		route.data = {

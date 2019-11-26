@@ -1,17 +1,13 @@
 import { configureTestSuite } from 'ng-bullet';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SyslogsMessagesComponent } from './syslogs-messages.component';
 import { SyslogsMessagesModule } from './syslogs-messages.module';
-import { SyslogsService } from '@sdp-api';
+import { SyslogsService, SyslogResponseData } from '@sdp-api';
 import { throwError, of } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { MicroMockModule } from '@cui-x-views/mock';
-import { environment } from '@environment';
-import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { user } from '@mock';
 import { SyslogScenarios } from 'src/environments/mock/syslogs/syslogs';
 import { SimpleChanges, SimpleChange } from '@angular/core';
 describe('SyslogsMessagesComponent', () => {
@@ -23,33 +19,15 @@ describe('SyslogsMessagesComponent', () => {
 			imports: [
 				SyslogsMessagesModule,
 				HttpClientTestingModule,
-				MicroMockModule,
 				RouterTestingModule,
 			],
-			providers: [
-				{ provide: 'ENVIRONMENT', useValue: environment },
-				{
-					provide: ActivatedRoute,
-					useValue: {
-						queryParams: of({ }),
-						snapshot: {
-							data: {
-								user,
-							},
-						},
-					},
-				},
-			],
+			providers: [SyslogsService],
 		});
 	});
 
-	beforeEach(async(() => {
-
-		syslogsService = TestBed.get(SyslogsService);
-	}));
-
 	beforeEach(() => {
 		window.localStorage.clear();
+		syslogsService = TestBed.get(SyslogsService);
 		fixture = TestBed.createComponent(SyslogsMessagesComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
@@ -59,7 +37,8 @@ describe('SyslogsMessagesComponent', () => {
 		expect(component)
 			.toBeTruthy();
 	});
-	it('should set null values on request errors', done => {
+
+	it('should set null values on request errors', () => {
 		const error = {
 			status: 404,
 			statusText: 'Resource not found',
@@ -67,101 +46,178 @@ describe('SyslogsMessagesComponent', () => {
 		spyOn(syslogsService, 'getGridData')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
-		fixture.whenStable()
-			.then(() => {
-				fixture.detectChanges();
-				const syslogMessageGrid = [];
-				expect(component.tableData)
-				.toEqual(syslogMessageGrid);
 
-				done();
-			});
+		fixture.detectChanges();
+		const syslogMessageGrid = [];
+		expect(component.tableData)
+				.toEqual(syslogMessageGrid);
 	});
-	it('Should get the syslog message grid data', done => {
+
+	it('Should get the syslog message grid data', () => {
+		spyOn(component, 'getSyslogsData')
+			.and
+			.callThrough();
 		spyOn(syslogsService, 'getGridData')
 		.and
-		.returnValue(of(SyslogScenarios[1].scenarios.GET[0].response.body));
+		.returnValue(of(SyslogScenarios[1].scenarios.POST[0].response.body));
 		component.ngOnInit();
-		fixture.whenStable()
-		.then(() => {
-			fixture.detectChanges();
-			expect(component.tableData.length)
-				.toBeGreaterThan(0);
-			done();
-		});
+		expect(component.getSyslogsData)
+				.toHaveBeenCalled();
+		expect(component.totalItems)
+			.toEqual(11);
 	});
-	it('should get selected table row data', done => {
-		fixture.whenStable()
-			.then(() => {
-				fixture.detectChanges();
-				const selectedRowData = {
-					active: true,
-					deviceCount: 1,
-					IcDesc: '',
-					MsgType: 'INTERNAL',
-					Recommendation: '',
-					syslogMsgCount: 25,
-					SyslogSeverity: 3,
-				};
-				component.onTableRowSelection(selectedRowData);
-				expect(selectedRowData.active)
+
+	it('should not get the syslog message grid data', () => {
+		const syslogMessagesCount: SyslogResponseData = {
+			count: 0,
+			message: 'Success',
+			responseData: [],
+		};
+
+		spyOn(syslogsService, 'getGridData')
+			.and
+			.returnValue(of(syslogMessagesCount));
+		component.ngOnInit();
+		expect(component.totalItems)
+			.toEqual(0);
+	});
+
+	it('should get selected table row data', () => {
+		fixture.detectChanges();
+		const selectedRowData = {
+			active: true,
+			deviceCount: 1,
+			IcDesc: '',
+			MsgType: 'INTERNAL',
+			Recommendation: '',
+			syslogMsgCount: 25,
+			SyslogSeverity: 3,
+		};
+		component.onTableRowSelection(selectedRowData);
+		expect(selectedRowData.active)
 				 .toBeTruthy();
 				 expect(component.selectedAsset)
 				 .toEqual(selectedRowData);
-				done();
-			});
+
 	});
-	it('should reset tableRow row data on panel close', done => {
-		fixture.whenStable()
-			.then(() => {
-				fixture.detectChanges();
-				component.onPanelClose();
-				expect(component.selectedAsset)
+
+	it('should reset tableRow row data on panel close', () => {
+		fixture.detectChanges();
+		component.onPanelClose();
+		expect(component.selectedAsset)
 				.toBeUndefined();
-				expect(component.showAssetPanel)
+		expect(component.showAssetPanel)
 				.toBeFalsy();
-				done();
-			});
 	});
-	it('should reset tableRow row data when clicking twice on table row', done => {
-		fixture.whenStable()
-			.then(() => {
-				fixture.detectChanges();
-				const selectedRowData = {
-					active: false,
-					deviceCount: 1,
-					IcDesc: '',
-					MsgType: 'INTERNAL',
-					Recommendation: '',
-					syslogMsgCount: 25,
-					SyslogSeverity: 3,
-				};
-				component.onTableRowSelection(selectedRowData);
-				 expect(component.selectedAsset)
-				 .toBeUndefined();
-				done();
-			});
+
+	it('should reset tableRow row data when clicking twice on table row', () => {
+		fixture.detectChanges();
+		const selectedRowData = {
+			active: false,
+			deviceCount: 1,
+			IcDesc: '',
+			MsgType: 'INTERNAL',
+			Recommendation: '',
+			syslogMsgCount: 25,
+			SyslogSeverity: 3,
+		};
+		component.onTableRowSelection(selectedRowData);
+		expect(component.selectedAsset)
+			.toBeUndefined();
 	});
 
 	it('should take currentFilter on changes', () => {
 		const changes: SimpleChanges = {
 			sysFilter: new SimpleChange(
 				{
-					asset: '',
-					catalog: 'Cisco',
+					afmSeverity: '',
+					faults : 'Automated',
 					severity: 3,
-					timeRange: 30,
+					timeRange: 1,
 				},
 				{
-					asset: '',
-					catalog: 'Cisco',
+					afmSeverity: '',
+					faults : 'Automated',
 					severity: 3,
-					timeRange: 30,
+					timeRange: 1,
 				}, false,
 			),
 		};
 		component.ngOnChanges(changes);
-		expect(component.syslogsParams.catalog)
-		.toEqual('Cisco');
+		expect(component.syslogsParams.syslogSeverity)
+			.toEqual(3);
+	});
+	it('should not take currentFilter changes', () => {
+		const changes: SimpleChanges = {
+			sysFilter: new SimpleChange(
+				{
+					afmSeverity: '',
+					faults : 'Automated',
+					severity: 0,
+					timeRange: 1,
+				},
+				{
+					afmSeverity: '',
+					faults : 'Automated',
+					severity: 0,
+					timeRange: 1,
+				}, true,
+			),
+		};
+		component.ngOnChanges(changes);
+		expect(component.syslogsParams.syslogSeverity)
+			.toEqual(0);
+	});
+
+	it('should call on enter function', () => {
+		spyOn(component, 'getSyslogsData')
+			.and
+			.callThrough();
+		const keyEvent = {
+			keyCode: 12,
+		};
+		component.keyDownFunction(keyEvent);
+		expect(component.getSyslogsData)
+			.toHaveBeenCalledTimes(0);
+
+		const event = {
+			keyCode: 13,
+		};
+		component.keyDownFunction(event);
+		expect(component.getSyslogsData)
+			.toHaveBeenCalledTimes(1);
+	});
+
+	it('should update pagination page value', () => {
+		spyOn(component, 'getSyslogsData')
+				.and
+				.callThrough();
+		const pageInfo = {
+			page: 2,
+			limit: 10,
+		};
+		component.onPagerUpdated(pageInfo);
+		expect(component.tableOffset)
+				.toEqual(2);
+		expect(component.getSyslogsData)
+				.toHaveBeenCalledTimes(1);
+	});
+	it('should call on enter function', () => {
+		spyOn(component, 'getSyslogsData')
+			.and
+			.callThrough();
+		const keyEvent = {
+			keyCode: 12,
+		};
+		component.keyDownFunction(keyEvent);
+		expect(component.getSyslogsData)
+			.toHaveBeenCalledTimes(0);
+
+		const event = {
+			keyCode: 13,
+		};
+		component.keyDownFunction(event);
+		expect(component.getSyslogsData)
+			.toHaveBeenCalledTimes(1);
 	});
 });

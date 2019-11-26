@@ -36,15 +36,11 @@
 							}[data.ieStatus]"
 						></span>
 						<span [innerText]="data.ieStatus || ''"></span>
-						<!-- <div> -->
-						<!-- 	<span class="icon-circle text-success half-margin-right"></span> -->
-						<!-- 	<span>Connected</span> -->
-						<!-- </div> -->
 					</div>
 					
 				</div>
 				<div class="row">
-					<div class="col-2"><a data-auto-id="redownload-collector" (click)="navigateTosetup()">Re-install </a></div>|<div class="col-5"><a data-auto-id="change-password"> Change Password and
+					<div class="col-2"><a data-auto-id="redownload-collector" (click)="navigateTosetup()">Re-install </a></div>|<div class="col-5"><a data-auto-id="change-password" [routerLink]="['/admin', 'changepassword']"> Change Password and
 							Setting </a></div>
 				</div>
 				<div
@@ -54,7 +50,6 @@
 					<div class="flex">
 						<div class="col-4">
 							<div [innerText]="'_CiscoDNACenter_' | i18n"></div>
-							<!-- <div class="text-small">Last data sent 6 min ago</div> -->
 						</div>
 						<div class="col-2" [innerText]="data.dnac_details[0].version || ''"></div>
 						<div class="col-3">
@@ -89,56 +84,6 @@
 					</div>
 					
 				</div>
-				<!-- <h5
-					class="half-margin-bottom settings__title settings__title--margin-top"
-					data-auto-id="settings.system.app.label"
-					[innerText]="'_Applications_' | i18n | uppercase"
-				></h5>
-				<div
-					*ngFor="let app of data.component_details; index as i"
-					data-auto-id="settings.system.app.panel">
-					<div class="
-						settings-panel
-						panel
-						panel--bordered-top
-						base-margin-right" [ngClass]="{
-							'panel--bordered-bottom': i === (data.component_details.length - 1)
-						}">
-						<div class="flex">
-							<div class="col-4" [innerText]="app.name || ''"></div>
-							<div class="col-2" [innerText]="app.version || ''"></div>
-							<div class="col-3">
-								<span
-									class="icon-circle half-margin-right"
-									[ngClass]="app.status | appStatusColor"
-								></span>
-								<span [innerText]="app.status || ''"></span>
-							</div>
-							<div
-								*ngIf="app.additional_details?.error"
-								class="col-3 text-right">
-								<a
-									data-auto-id="errorLink"
-									(click)="app.showError = !app.showError">
-									<span [innerText]="!app.showError
-											? ('_ErrorDetails_' | i18n)
-											: ('_HideErrorDetails_' | i18n)"
-									></span>
-									<span class="qtr-margin-left" [ngClass]="{
-											'icon-chevron-down': !app.showError,
-											'icon-chevron-up': app.showError
-										}"></span>
-								</a>
-							</div>
-						</div>
-						<div heightTransition [heightTransitionExpanded]="app.showError">
-							<div
-								class="half-padding-top base-padding-left settings__error"
-								[innerText]="app.additional_details?.error"
-							></div>
-						</div>
-					</div>
-				</div> -->
 			</div>
 
 			
@@ -154,7 +99,6 @@
 					<div class="row mb2" *ngFor="let insight of supportCaseInsightTypes">
 						<div class="col-md-9">
 							<span *ngIf="insight.insightType ==='RPR'"> Send device data to TAC for Rapid Problem Resolution cases </span>
-							<span *ngIf="insight.insightType ==='AFM'"> Automatically open a TAC support case for faults </span>
 						</div>
 						<div class="col-md-3">
 
@@ -171,76 +115,9 @@
 							</label>
 						</div>
 					</div>
-
-					<div class="row mb2 mt5" *ngIf="regulatoryCompliance">
-						<h6>Regulatory Compliance</h6>
-					</div>
-
-					<div class="row "  *ngIf="regulatoryCompliance">
-						<div class="col-md-9">
-							<span>Scan the network for regulatory compliance</span>
-						</div>
-						<div class="col-md-3">
-							<label class="switch">
-								<input
-									type="checkbox" [(ngModel)]="regulatoryCompliance.mode"
-									[checked]="regulatoryCompliance.mode"
-									(change)="insightModeChange(regulatoryCompliance.insightType, regulatoryCompliance.mode)"
-									[(disabled)]="isLoading"
-									data-auto-id="rc-checkbox"
-								>
-								<span class="switch__input"></span>
-								<span class="switch__label">Yes</span>
-							</label>
-						</div>
 				</div>
-				</div>
-
-
 
 				<!--Insight type code end-->
-
-
-
-			<!-- <div class="col-lg-3" data-auto-id="settings.system.usage">
-				<h5
-					class="base-margin-top half-margin-bottom settings__title"
-					data-auto-id="settings.system.usage.label"
-					[innerText]="'_SystemUtilization_' | i18n | uppercase"
-				></h5>
-				<div class="divider settings__divider"></div>
-				<div
-					*ngFor="let gauge of data.memoryUsage"
-					class="flex-center-vertical base-margin-bottom"
-					[attr.data-auto-id]="'usage-' + gauge.label">
-					<app-gauge
-						[percentage]="gauge.percentage"
-						[arcColor]="gauge.percentage | guageColor"
-						textColor="#243034"
-						[width]="82"
-					></app-gauge>
-					<div class="base-margin-left base-margin-bottom">
-						<div class="settings__system__title" [innerText]="gauge.label"></div>
-						<div *ngIf="gauge.value" [innerText]="gauge.value" class="settings__system__description"></div>
-					</div>
-				</div>
-			</div>
-			<div class="col-lg-3" data-auto-id="settings.system.info">
-				<h5
-					class="base-margin-top half-margin-bottom settings__title"
-					data-auto-id="settings.system.info.label"
-					[innerText]="'_SystemInfo_' | i18n | uppercase"
-				></h5>
-				<div class="divider settings__divider"></div>
-				<div
-					*ngFor="let info of data.systemInfo"
-					[attr.data-auto-id]="'info-' + info.label">
-					<div class="half-padding-top base-padding-bottom">
-						<div class="settings__info__title" [innerText]="info.label | uppercase"></div>
-						<div [innerText]="info.value"></div>
-					</div>
-				</div>
-			</div> -->
 		</div>
 	</div>
 	<div

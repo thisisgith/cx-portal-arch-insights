@@ -24,13 +24,6 @@ const routes: Routes = [
 					user: UserResolve,
 				},
 			}, {
-				loadChildren: () => import('../afm/afm.module')
-					.then(m => m.FaultManagementModule),
-				path: 'fault-management',
-				resolve: {
-					user: UserResolve,
-				},
-			}, {
 				loadChildren: () => import('../osv/osv.module')
 					.then(m => m.OptimalSoftwareVersionModule),
 				path: 'osv',

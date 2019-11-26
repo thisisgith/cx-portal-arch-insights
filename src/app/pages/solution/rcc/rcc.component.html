@@ -17,7 +17,7 @@
 				</div>
 			</div>
 			<div class="col-md-10 no-padding">
-				<div class="col-md-7 seperator-line half-margin-left flex-center" *ngIf="!errorPolicyView">
+				<div class="col-md-7 seperator-line half-margin-left flex-center" *ngIf="violationFilterShow || systemFilterShow">
 					<div class="flex flex-fluid" *ngIf="!filterLoading">
 						<ng-container *ngFor="let filter of filters">
 							<div attr.id="RccSelectVisualFilter-{{ filter?.key }}"
@@ -66,7 +66,7 @@
 			<span class="qtr-margin-left" [innerText]="(assetsConditionViolationsCount | number)  || ('_RccNoValue_' | i18n)"></span>
 			<span class="qtr-margin-left" [innerText]="'_RccConditionViolations_' | i18n"></span>
 		</div>
-		<div class="col-md-3" *ngIf="!errorPolicyView">
+		<div class="col-md-3" *ngIf="!errorPolicyView && !showNoAccessMsg && !showRunningBanner && optInStatus">
 			<div class="flex flex-fluid flex-right">
 				<div class="flex-fill form-group input--compressed input--icon half-margin-right">
 					<form [formGroup]="searchForm" novalidate id="searchForm" (keyup)="searchViolations($event,'input')" data-auto-id="searchViolations">
@@ -100,34 +100,36 @@
 			</div>
 		</div>
 	</div>
-	<div class="panel panel--dkgray half-margin-top" *ngIf="cxLevel > 1 && !loading && !optInStatus">
-		<div class="row cx-no-dnac-container" *ngIf="userRole !== 'admin'">
-			<div class="half-padding-left">
-				<div class="flex-center">
-					<span class="cx-no-dnac-label" [innerText]="'_RccNotAnAdmin_' | i18n"></span>
-					<span class="cx-no-dnac-status" [innerText]="'_RccNotAnAdminBannerMsg_' | i18n"></span>
+	<ng-container *auth="{ cxLevel: 2 }">
+		<div class="panel panel--dkgray half-margin-top" *ngIf="!loading && !optInStatus && !errorPolicyView">
+			<div class="row cx-no-dnac-container" *auth="authParamsRCCUser">
+				<div class="half-padding-left">
+					<div class="flex-center">
+						<span class="cx-no-dnac-label" [innerText]="'_RccViewViolations_' | i18n"></span>
+						<span class="cx-no-dnac-status" [innerText]="'_RccNotAnAdminBannerMsg_' | i18n"></span>
+					</div>
+				</div>
+			</div>
+			<div class="row cx-no-dnac-container" *auth="authParamsRCCAdmin">
+				<div class="half-padding-left">
+					<div class="flex-center">
+						<span class="cx-no-dnac-label" [innerText]="'_RccViewViolations_' | i18n"></span>
+						<span class="cx-no-dnac-status" [innerText]="'_RccupdateSettings_' | i18n"></span>
+					</div>
+				</div>
+				<div class="flex-right base-margin-right">
+					<button class="btn btn--wide btn--primary flex-right text-uppercase text-bold" tabindex="0" [routerLink]="['/admin/compliance']" [innerText]="'_RccComplianceSettings_' | i18n"></button>
 				</div>
 			</div>
 		</div>
-		<div class="row cx-no-dnac-container" *ngIf="userRole === 'admin'">
-			<div class="half-padding-left">
-				<div class="flex-center">
-					<span class="cx-no-dnac-label" [innerText]="'_RccViewViolations_' | i18n"></span>
-					<span class="cx-no-dnac-status" [innerText]="'_RccupdateSettings_' | i18n"></span>
-				</div>
-			</div>
-			<div class="flex-right base-margin-right">
-				<button class="btn btn--wide btn--primary flex-right text-uppercase text-bold" tabindex="0" [routerLink]="['/admin/compliance']" [innerText]="'_RccComplianceSettings_' | i18n"></button>
-			</div>
-		</div>
-	</div>
+	</ng-container>
 	<div class="panel panel--dkgray half-margin-top" *ngIf="showRunningBanner">
 		<div class="row cx-no-dnac-container">
 			<div>
 				<div class="flex-center">
-					<span class="cx-no-dnac-label" [innerText]="'_RccCollectingViolations_' | i18n"></span>
-					<span class="cx-no-dnac-status" [innerText]="'_RccNextScheduleTime_' | i18n"></span>&nbsp;
-					<span [innerText]="nextScheduleTime">.</span>
+					<span class="cx-no-dnac-label half-margin-right" [innerText]="'_RccCollectingViolations_' | i18n"></span>
+					<span class="cx-no-dnac-status" [innerText]="'_RccNextScheduleTime_' | i18n"></span>
+					<span class="qtr-margin-left" *ngIf="nextScheduleTime !== ''" [innerText]="nextScheduleTime">.</span>
 				</div>
 			</div>
 		</div>
@@ -151,7 +153,7 @@
 				<div class="text-muted text-xlarge " [innerText]="'_RccErrorViolationMessage_' | i18n" ></div>
 				<div class="text-muted text-small " [innerText]="'_RccErrorViolationListMessage_' | i18n" ></div>
 			</div>
-			<span *ngIf="!loading && noTableData" class="text-muted text-xlarge" [innerText]="'_RccNoViolationsAvailable_' | i18n"></span>
+			<span *ngIf="!loading && noTableData" class="text-muted text-xlarge" [innerText]="'_RccNoDataAvailable_' | i18n"></span>
 		</div>
 		<div class="section">
 			<cui-pager *ngIf="!loading && policyViolationsGridData?.length > 0"

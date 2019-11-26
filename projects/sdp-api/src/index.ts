@@ -45,6 +45,14 @@ export * from './lib/entitlement/models';
 export * from './lib/entitlement/services';
 export * from './lib/entitlement/entitlement.module';
 
+export * from './lib/org-user/models';
+export * from './lib/org-user/services';
+export * from './lib/org-user/org-user.module';
+
+export * from './lib/entitlement-wrapper/models';
+export * from './lib/entitlement-wrapper/services';
+export * from './lib/entitlement-wrapper/entitlement-wrapper.module';
+
 export * from './lib/architecture/models';
 export * from './lib/architecture/services';
 export * from './lib/architecture/architecture.modules';
@@ -76,10 +84,6 @@ export * from './lib/controlpoints/models/admin-complience';
 export * from './lib/controlpoints/models/left-tag-response';
 export * from './lib/controlpoints/models/policy-group';
 
-export * from './lib/afm/models';
-export * from './lib/afm/services';
-export * from './lib/afm/afm.module';
-
 export * from './lib/syslogs/models';
 export * from './lib/syslogs/services';
 export * from './lib/syslogs/syslogs-data.module';
@@ -100,3 +104,7 @@ export * from './lib/partner/models/company-info-list';
 export * from './lib/partner/models/company-info';
 export * from './lib/partner/services';
 export * from './lib/partner/partner.module';
+
+export * from './lib/faults/models';
+export * from './lib/faults/services';
+export * from './lib/faults/fault-data.module';

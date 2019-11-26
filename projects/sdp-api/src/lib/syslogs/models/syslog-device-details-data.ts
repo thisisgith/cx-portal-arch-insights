@@ -1,6 +1,6 @@
 /** Device Details Data
  */
-export interface SyslogDeviceDetailsdata {
+export interface SyslogDeviceDetailsData {
 	deviceId: string;
 	productFamily: string;
 	productId: string;

@@ -388,12 +388,16 @@ $text-larger: 19px;
 	}
 
 	&__support {
-		font-size: 14px;
+		font-size: 1.4rem;
 		margin-bottom: 7px;
+
+		&--relnotes {
+			margin-top: 8px;
+		}
 	}
 
 	&__vendor {
-		font-size: 12px;
+		font-size: 1.2rem;
 	}
 
 	&__divider {
@@ -403,7 +407,6 @@ $text-larger: 19px;
 
 	&__btn {
 		padding: unset;
-		color: #227bb1;
+		color: $default-link-color;
 	}
 }
-

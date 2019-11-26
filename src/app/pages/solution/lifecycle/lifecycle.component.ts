@@ -320,7 +320,7 @@ export class LifecycleComponent implements OnDestroy {
 		learning: {
 			certificationsUrl: `${environment.learningLink}?type=certification`,
 			elearningUrl: `${environment.learningLink}?type=e-learning`,
-			remotepracticelabsUrl: `${environment.learningLink}?type=remotepracticelabs`,
+			remotepracticelabsUrl: `${environment.learningLink}?type=remote_lab`,
 		},
 		params: {
 			customerId: '',
@@ -528,11 +528,15 @@ export class LifecycleComponent implements OnDestroy {
 	private resetComponentData () {
 		this.componentData = {
 			learning: {
-				certificationsUrl: `${environment.learningLink}?type=certification`,
+				certificationsUrl: `${environment.learningLink}?type=certification
+				&solution=${this.componentData.params.solution}
+				&usecase=`,
 				elearningUrl: `${environment.learningLink}?type=e-learning
 				&solution=${this.componentData.params.solution}
 				&usecase=`,
-				remotepracticelabsUrl: `${environment.learningLink}?type=remotepracticelabs`,
+				remotepracticelabsUrl: `${environment.learningLink}?type=remote_lab
+				&solution=${this.componentData.params.solution}
+				&usecase=`,
 			},
 			params: {
 				customerId: this.customerId,
@@ -1005,6 +1009,7 @@ export class LifecycleComponent implements OnDestroy {
 			window.atxLoading = true;
 		}
 		const params: RacetrackContentService.RegisterUserToAtxParams = {
+			customerId: this.customerId,
 			atxId: atx.atxId,
 			sessionId: ssId,
 		};
@@ -1042,6 +1047,7 @@ export class LifecycleComponent implements OnDestroy {
 			window.atxLoading = true;
 		}
 		const params: RacetrackContentService.CancelSessionATXParams = {
+			customerId: this.customerId,
 			atxId: atx.atxId,
 			sessionId: ssId,
 		};
@@ -2181,6 +2187,10 @@ export class LifecycleComponent implements OnDestroy {
 			this.componentData.params.suggestedAction = nextAction ? nextAction.name : null;
 
 			if (pitstop) {
+				pitstop.pitstopActions.map(ptstopActn => {
+					ptstopActn.description = this.parseHtmlText(ptstopActn.description);
+					return ptstopActn;
+				});
 				this.currentPitActionsWithStatus = _.map(
 					pitstop.pitstopActions, (pitstopAction: RacetrackPitstopAction) =>
 						({
@@ -2459,5 +2469,15 @@ export class LifecycleComponent implements OnDestroy {
 			this.loadATX(),
 		)
 		.subscribe();
+	}
+	/**
+	 *  Ruturn the converted HTML text content
+	 *  @param txtString pitstopAction description
+	 *  @returns A html text content
+	 */
+	public parseHtmlText (txtString) {
+		const dmTemp = document.createElement('template');
+		dmTemp.innerHTML = txtString.trim();
+		return dmTemp.content.cloneNode(true).textContent;
 	}
 }

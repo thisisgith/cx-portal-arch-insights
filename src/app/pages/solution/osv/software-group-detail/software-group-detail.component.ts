@@ -57,6 +57,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	@Output('close') public close = new EventEmitter<boolean>();
 	@Input() public solution;
 	@Input() public useCase;
+	@Output() public refreshSummary = new EventEmitter();
 
 	public status = {
 		profileRecommendations: true,
@@ -218,6 +219,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	 */
 	public fetchSoftwareGroupDetails () {
 		this.status.profileRecommendations = true;
+
 		return this.osvService.getSoftwareGroupRecommendations(this.softwareGroupDetailsParams)
 			.pipe(
 				map((response: ProfileRecommendationsResponse) => {
@@ -262,6 +264,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	 */
 	public getSoftwareGroupAssets () {
 		this.status.assetsLoading = true;
+
 		return this.osvService.getSoftwareGroupAssets(this.softwareGroupAssetsParams)
 			.pipe(
 				map((response: SoftwareGroupAssetsResponse) => {
@@ -296,6 +299,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	 */
 	public getSoftwareGroupVersions () {
 		this.status.versionsLoading = true;
+
 		return this.osvService.getSoftwareGroupVersions(this.softwareGroupVersionsParams)
 			.pipe(
 				map((response: SoftwareGroupVersionsResponse) => {
@@ -602,6 +606,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 			.subscribe();
 		}, 1000);
 		this.selectedSoftwareGroupChange.emit(this.selectedSoftwareGroup);
+		this.refreshSummary.emit();
 	}
 
 	/**

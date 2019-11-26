@@ -86,7 +86,7 @@
 				<span class="sidebar__item__label" [innerText]="'_System_' | i18n"></span>
 			</a>
 		</li>
-		<li *ngIf="cxLevel > 1" class="sidebar__item"
+		<li *ngIf="isValidAdmin" class="sidebar__item"
 			[ngClass]="{ selected: routerPath === 'compliance' }"
 		>
 			<a

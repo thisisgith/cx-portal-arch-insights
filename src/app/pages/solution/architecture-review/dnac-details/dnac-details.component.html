@@ -20,21 +20,21 @@
 	let-networkDevicesData="networkDevicesData" let-endPointsData="endPointsData"
 	let-isLoading="isLoading">
 			<div *ngIf="!isLoading">
-				<div class="row padding-bottom">
+				<div class="row ">
 						<time-series-chart [graphData]="dataForSystemsGraph"
-						[height]="350" [title]="'_ArchitectureSystems_' | i18n" 
-						[width]="350" [plotYaxisLine]="dnacDetails.devicesPublishedLimits"></time-series-chart>
+						[height]="360" [title]="'_ArchitectureSystems_' | i18n" 
+						[width]="360" [plotYaxisLine]="dnacDetails.devicesPublishedLimits"></time-series-chart>
 						<time-series-chart [graphData]="dataForFabricsGraph"
-						[height]="350" [title]="'_ArchitectureFabrics_' | i18n"
-						[width]="350" [plotYaxisLine]="dnacDetails.fabricsPublishedLimits"></time-series-chart>
+						[height]="360" [title]="'_ArchitectureFabrics_' | i18n"
+						[width]="360" [plotYaxisLine]="dnacDetails.fabricsPublishedLimits"></time-series-chart>
 				</div>	
 				<div class="row">
 						<time-series-chart [graphData]="dataForWLCsGraph"
-						[height]="350" [title]="'_ArchitectureWLCs_' | i18n"
-						[width]="350" [plotYaxisLine]="dnacDetails.wlcPublishedLimits"></time-series-chart>
+						[height]="360" [title]="'_ArchitectureWLCs_' | i18n"
+						[width]="360" [plotYaxisLine]="dnacDetails.wlcPublishedLimits"></time-series-chart>
 						<time-series-chart [graphData]="dataForEndPointsGraph"
-						[height]="350" [title]="'_ArchitectureEndPoints_' | i18n"
-						[width]="350" [plotYaxisLine]="dnacDetails.endpointsPublishedLimits"></time-series-chart>
+						[height]="360" [title]="'_ArchitectureEndPoints_' | i18n"
+						[width]="360" [plotYaxisLine]="dnacDetails.endpointsPublishedLimits"></time-series-chart>
 				</div>
 			</div>
 			<div class="base-margin-top" *ngIf="isLoading">

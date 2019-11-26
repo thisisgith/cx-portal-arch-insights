@@ -522,13 +522,6 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				// 	title: I18n.get('_Partner_'),
 				// },
 				{
-					key: 'eox',
-					loading: true,
-					seriesData: [],
-					template: this.barChartFilterTemplate,
-					title: I18n.get('_HardwareEndOfLife'),
-				},
-				{
 					key: 'equipmentType',
 					loading: true,
 					seriesData: [],
@@ -777,6 +770,8 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 * @returns the built actions
 	 */
 	public getRowActions (item: Item, view: View) {
+		const { cxLevel } = item.data;
+
 		return _.filter([
 			_.get(item, ['data', 'supportCovered'], false) ? {
 				label: I18n.get('_OpenSupportCase_'),
@@ -786,11 +781,12 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					'fluid',
 				),
 			} : undefined,
-			view.key === 'system' && _.get(item, ['data', 'isManagedNE'], false) ?
-				{
-					label: I18n.get('_RunDiagnosticScan_'),
-					onClick: () => this.checkScan(item),
-				} : undefined,
+			(Number(cxLevel) > 0 && view.key === 'system' && _.get(item, ['data', 'isManagedNE'], false))
+			? {
+				label: I18n.get('_RunDiagnosticScan_'),
+				onClick: () => this.checkScan(item),
+			}
+			: undefined,
 		]);
 	}
 
@@ -1416,7 +1412,6 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					this.getSystemAdvisoryCount(),
 					this.getHardwareTypeCounts(),
 					this.getRoleCounts(),
-					this.getHardwareEOXCounts(),
 					this.getInventoryCounts(),
 				)
 				.pipe(

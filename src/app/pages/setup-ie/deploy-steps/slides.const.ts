@@ -240,6 +240,16 @@ function getIESlides (ovaSelection: Selection) {
 				type: 'video',
 			});
 			break;
+		case Selection.MHYPERV:
+			slides.unshift({
+				buttonText: I18n.get('_IveDoneThis_'),
+				content: I18n.get('_SetupInstruction_13D_'),
+				src: 'assets/img/setup-ie/FinalMicrosoftHyper-v/13D_Start.mp4',
+				stepLabel: I18n.get('_CiscoCXCollector_'),
+				stepNum: 3,
+				type: 'video',
+			});
+			break;
 		default:
 	}
 
@@ -285,6 +295,108 @@ const syslogSlides: Slide[] = [
 ];
 
 /**
+ * Slides for Microsoft Hyper-V Installation
+ */
+const mHypervSlides: Slide[] = [
+	{
+		buttonText: I18n.get('_IveDoneThis_'),
+		content: I18n.get('_SetupInstruction_1D_'),
+		src: 'assets/img/setup-ie/FinalMicrosoftHyper-v/1D_Launch.mp4',
+		stepLabel: I18n.get('_VirtualMachine_'),
+		stepNum: 2,
+		type: 'video',
+	},
+	{
+		buttonText: I18n.get('_IveDoneThis_'),
+		content: I18n.get('_SetupInstruction_2D_'),
+		src: 'assets/img/setup-ie/FinalMicrosoftHyper-v/2D_Browse.mp4',
+		stepLabel: I18n.get('_VirtualMachine_'),
+		stepNum: 2,
+		type: 'video',
+	},
+	{
+		buttonText: I18n.get('_IveDoneThis_'),
+		content: I18n.get('_SetupInstruction_3D_'),
+		src: 'assets/img/setup-ie/FinalMicrosoftHyper-v/3D_Verify.mp4',
+		stepLabel: I18n.get('_VirtualMachine_'),
+		stepNum: 2,
+		type: 'video',
+	},
+	{
+		buttonText: I18n.get('_IveDoneThis_'),
+		content: I18n.get('_SetupInstruction_4D_'),
+		src: 'assets/img/setup-ie/FinalMicrosoftHyper-v/4D_Select.mp4',
+		stepLabel: I18n.get('_VirtualMachine_'),
+		stepNum: 2,
+		type: 'video',
+	},
+	{
+		buttonText: I18n.get('_IveDoneThis_'),
+		content: I18n.get('_SetupInstruction_5D_'),
+		src: 'assets/img/setup-ie/FinalMicrosoftHyper-v/5D_Verify.mp4',
+		stepLabel: I18n.get('_VirtualMachine_'),
+		stepNum: 2,
+		type: 'video',
+	},
+	{
+		buttonText: I18n.get('_IveDoneThis_'),
+		content: I18n.get('_SetupInstruction_6D_'),
+		src: 'assets/img/setup-ie/FinalMicrosoftHyper-v/6D_Verify.mp4',
+		stepLabel: I18n.get('_VirtualMachine_'),
+		stepNum: 2,
+		type: 'video',
+	},
+	{
+		buttonText: I18n.get('_IveDoneThis_'),
+		content: I18n.get('_SetupInstruction_7D_'),
+		src: 'assets/img/setup-ie/FinalMicrosoftHyper-v/7D_Confirm.mp4',
+		stepLabel: I18n.get('_VirtualMachine_'),
+		stepNum: 2,
+		type: 'video',
+	},
+	{
+		buttonText: I18n.get('_IveDoneThis_'),
+		content: I18n.get('_SetupInstruction_8D_'),
+		src: 'assets/img/setup-ie/FinalMicrosoftHyper-v/8D_Wait.mp4',
+		stepLabel: I18n.get('_VirtualMachine_'),
+		stepNum: 2,
+		type: 'video',
+	},
+	{
+		buttonText: I18n.get('_IveDoneThis_'),
+		content: I18n.get('_SetupInstruction_9D_'),
+		src: 'assets/img/setup-ie/FinalMicrosoftHyper-v/9D_When.mp4',
+		stepLabel: I18n.get('_VirtualMachine_'),
+		stepNum: 2,
+		type: 'video',
+	},
+	{
+		buttonText: I18n.get('_IveDoneThis_'),
+		content: I18n.get('_SetupInstruction_10D_'),
+		src: 'assets/img/setup-ie/FinalMicrosoftHyper-v/10D_Select.mp4',
+		stepLabel: I18n.get('_VirtualMachine_'),
+		stepNum: 2,
+		type: 'video',
+	},
+	{
+		buttonText: I18n.get('_IveDoneThis_'),
+		content: I18n.get('_SetupInstruction_11D_'),
+		src: 'assets/img/setup-ie/FinalMicrosoftHyper-v/11D_Change.mp4',
+		stepLabel: I18n.get('_VirtualMachine_'),
+		stepNum: 2,
+		type: 'video',
+	},
+	{
+		buttonText: I18n.get('_IveDoneThis_'),
+		content: I18n.get('_SetupInstruction_12D_'),
+		src: 'assets/img/setup-ie/FinalMicrosoftHyper-v/12D_Select.mp4',
+		stepLabel: I18n.get('_VirtualMachine_'),
+		stepNum: 2,
+		type: 'video',
+	},
+];
+
+/**
  * Returns an array of slides given a slideset name
  * @param slideset - name of the slide set
  * @param ovaSelection - ovaSelection query param
@@ -302,5 +414,7 @@ export function getSlides (slideset: SlideSet, ovaSelection?: Selection): Slide[
 			return ovaSlides;
 		case 'syslog':
 			return syslogSlides;
+		case 'mhyperv':
+			return mHypervSlides;
 	}
 }

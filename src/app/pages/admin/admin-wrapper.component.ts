@@ -24,10 +24,11 @@ import * as _ from 'lodash-es';
 export class AdminWrapperComponent implements OnInit {
 	public routerPath;
 	private destroyed$: Subject<void> = new Subject<void>();
-	private user: User;
+	public user: User;
 	private customerId: string;
-	public cxLevel = 0;
+	public isValidAdmin = false;
 	public erroredAppsNum = 0;
+	public admin = 'accountadmin';
 
 	constructor (
 		private router: Router,
@@ -39,7 +40,12 @@ export class AdminWrapperComponent implements OnInit {
 		this.routerPath = _.get(this, 'route.snapshot.routeConfig.path', 'settings');
 		this.user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(this.user, ['info', 'customerId']);
-		this.cxLevel = _.get(this.user, ['service', 'cxLevel']);
+		const cxLevel = _.get(this.user, ['service', 'cxLevel']);
+		const isAdmin = _.get(this.user, ['info', 'individual', 'role']);
+		if (isAdmin) {
+			this.isValidAdmin = (isAdmin.toLowerCase()
+			=== this.admin  && cxLevel > 1) ? true : false;
+		}
 	}
 
 	/**

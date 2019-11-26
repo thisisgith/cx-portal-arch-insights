@@ -8,12 +8,13 @@ import {
 
 import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
-import { SyslogsService, SyslogGridData, SyslogFilter } from '@sdp-api';
+import { SyslogsService, SyslogGridData, SyslogFilter, RacetrackSolution, RacetrackTechnology } from '@sdp-api';
 import { Subscription, Subject, forkJoin, of } from 'rxjs';
 import { map, takeUntil, catchError } from 'rxjs/operators';
 import { I18n } from '@cisco-ngx/cui-utils';
 import * as _ from 'lodash-es';
 import { UserResolve } from '@utilities';
+import { RacetrackInfoService } from '@services';
 
 /**
  * syslog Component
@@ -28,6 +29,7 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 		private logger: LogService,
 		public syslogsService: SyslogsService,
 		private userResolve: UserResolve,
+		private racetrackInfoService: RacetrackInfoService,
 	) {
 		this.userResolve.getCustomerId()
 			.pipe(
@@ -36,23 +38,10 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 			.subscribe((id: string) => {
 				this.customerId = id;
 			});
+
 	}
 	get selectedFilters () {
 		return _.filter(this.filters, 'selected');
-	}
-	get dropdownActions () {
-		return _.filter([
-			this.selected
-				? {
-					label: `${I18n.get('_ExportSelected_')} (${
-							this.selected
-						})`,
-				  }
-				: undefined,
-			{
-				label: I18n.get('_ExportAll_'),
-			},
-		]);
 	}
 	public customerId;
 	public countSubscripion: Subscription;
@@ -65,30 +54,29 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 	public pageNum = 1;
 	public severity = 3;
 	public timeRange = 1;
-	public catalog = 'Cisco';
-	public selectedAsset;
-	public showAssetPanel = false;
-	public fullscreen = false;
-	public width = 300;
+	public solution = '';
+	public useCase = '';
 	public view: 'syslogMessage' | 'syslogAsset' = 'syslogMessage';
+	public countParams = { };
 	public appliedFilters = {
-		asset: '',
-		catalog : 'Cisco',
-		severity: 3,
+		afmSeverity: '',
+		faults : 'Automated',
+		severity: 0,
 		timeRange: 1,
 	};
 	public noSyslogFilter = false;
+	public alert: any = { };
 	/**
 	 * Visual filters  of syslogs component
 	 */
 	@ViewChild('timeRangeFilter', { static: true })
 	private timeRangeFilterTemplate: TemplateRef<{ }>;
-	@ViewChild('catalogFilter', { static: true })
-	private catalogFilterTemplate: TemplateRef<{ }>;
+	@ViewChild('faultsFilter', { static: true })
+	private faultsFilterTemplate: TemplateRef<{ }>;
 	@ViewChild('severityFilter', { static: true })
 	private severityFilterTemplate: TemplateRef<{ }>;
-	 @ViewChild('assetFilter', { static: true })
-	 private assetFilterTemplate: TemplateRef<{ }>;
+	 @ViewChild('afmSeverityFilter', { static: true })
+	 private afmSeverityFilterTemplate: TemplateRef<{ }>;
 	private InventorySubject: Subject<{ }>;
 	public filters: SyslogFilter[];
 	public filtered = false;
@@ -98,11 +86,11 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 		isLoading: true,
 	};
 	public syslogsParams: SyslogsService.GetSyslogsParams = {
-		assetList: ['withSyslog'],
-		catalogList: ['Cisco'],
+		afmSeverityList: [''],
 		customerId: this.customerId,
+		faultsList: ['Automated'],
 		pageNo: this.pageNum,
-		severityList : ['3'],
+		severityList : ['0'],
 		size: this.pageLimit,
 		timeRange: ['1'],
 
@@ -110,12 +98,12 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 	public selected;
 	public visualLabels: any = [
 		{
-			active: true, count: null,
-			label: I18n.get('_SyslogTotalSyslogs_'),
+			active: true, count: '',
+			label: I18n.get('_SyslogsAfm_'),
 			route: 'Exceptions'},
 		{
-			active: false, count: null,
-			label: I18n.get('_SyslogTotalAssets_'),
+			active: false, count: '',
+			label: I18n.get('_Syslogs_'),
 			route: 'AssetsWithExceptions' },
 	];
 	private destroy$ = new Subject();
@@ -124,7 +112,15 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 	 * @returns grid and graph data
 	 */
 	public ngOnInit () {
-		this.fetchSyslogsCount();
+		this.racetrackInfoService.getCurrentSolution()
+		.subscribe((solution: RacetrackSolution) => {
+			this.solution = _.get(solution, 'name');
+		});
+		this.racetrackInfoService.getCurrentTechnology()
+		.subscribe((technology: RacetrackTechnology) => {
+			this.useCase = _.get(technology, 'name');
+			this.fetchSyslogsCount();
+		});
 		this.buildFilters();
 	}
 
@@ -132,20 +128,30 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 	 * Fetchs syslogs count
 	 */
 	public fetchSyslogsCount () {
+		this.countParams = {
+			contractLevel: '',
+			customerId: this.customerId,
+			solution: this.solution,
+			useCase: this.useCase,
+			vaId: '',
+
+		};
 		this.countSubscripion = this.syslogsService
-			.getSyslogsCount(this.customerId)
-			.pipe(takeUntil(this.destroy$))
-			.subscribe(counts => {
+			.getSyslogsCount(this.countParams)
+			.pipe(takeUntil(this.destroy$),
+			map((counts: any) => {
 				this.totalSyslogsCount = counts;
-				this.visualLabels[0].count = counts.sysLogMsgCount;
-				this.visualLabels[1].count = counts.assetsCount;
-			},
+				this.visualLabels[0].count = counts.faultsCount;
+				this.visualLabels[1].count = counts.eventsCount;
+			}),
 			catchError(err => {
+				_.invoke(this.alert, 'show',  I18n.get('_SyslogsGenericError_'), 'danger');
 				this.logger.error('syslogs-devices.component : getDeviceGridData() ' +
-					`:: Error : (${err.status}) ${err.message}`);
+						`:: Error : (${err.status}) ${err.message}`);
 
 				return of({ });
-			}));
+			}))
+			.subscribe();
 	}
 	/**
 	 * Gets time range count
@@ -183,22 +189,22 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 		]);
 	}
 	/**
-	 * Gets catalog counts
-	 * @returns  catalog graph data
+	 * Gets faults counts
+	 * @returns  faults graph data
 	 */
-	public getCatalogCounts () {
-		const catalogFilter = _.find(this.filters, { key: 'catalog' });
+	public getFaultsCounts () {
+		const faultsFilter = _.find(this.filters, { key: 'faults' });
 
-		return (catalogFilter.seriesData = [
+		return (faultsFilter.seriesData = [
 			{
-				filter: 'Cisco',
-				label: I18n.get('_SyslogCiscoCatalog_'),
+				filter: 'Automated',
+				label: I18n.get('_AfmAutomated_'),
 				selected: false,
 				value: 50,
 			},
 			{
-				filter: 'Others',
-				label: I18n.get('_SyslogOthers_'),
+				filter: 'Detected',
+				label: I18n.get('_AfmDetected_'),
 				selected: false,
 				value: 50,
 			},
@@ -263,24 +269,42 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 		]);
 	}
 	/**
-	 * Gets asset counts
-	 * @returns asset seriesdata
+	 * Gets severity counts
+	 * @returns servirity graph data
 	 */
-	public getAssetCounts () {
-		const assetFilter = _.find(this.filters, { key: 'asset' });
+	public getAfmSeverityCounts () {
+		const afmSeverityFilter = _.find(this.filters, { key: 'afmSeverity' });
 
-		return (assetFilter.seriesData = [
+		return (afmSeverityFilter.seriesData = [
 			{
-				filter: 'noSyslog',
-				label: I18n.get('_SyslogNoSyslog_'),
+				filter: 'Critical',
+				label: I18n.get('_SyslogCritical_'),
 				selected: false,
-				value: 50,
+				value: 20,
 			},
 			{
-				filter: 'withSyslog',
-				label: I18n.get('_SyslogWithSyslog_'),
+				filter: 'High',
+				label: I18n.get('_SyslogHigh_'),
 				selected: false,
-				value: 50,
+				value: 20,
+			},
+			{
+				filter: 'Medium',
+				label: I18n.get('_SyslogMedium_'),
+				selected: false,
+				value: 20,
+			},
+			{
+				filter: 'Low',
+				label: I18n.get('_SyslogLow_'),
+				selected: false,
+				value: 20,
+			},
+			{
+				filter: 'Informational',
+				label: I18n.get('_SyslogInfo_'),
+				selected: false,
+				value: 20,
 			},
 		]);
 	}
@@ -289,9 +313,46 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 	 */
 	private loadData () {
 		this.status.isLoading = true;
-		forkJoin(
+		if (this.visualLabels[0].active) {
+			this.appliedFilters.timeRange = 30;
+			this.appliedFilters.afmSeverity = '';
+			this.filters =
+			_.filter(this.filters, o =>  o.view[0] === 'afm' || o.key === 'timeRange');
+			forkJoin(
 			this.getTimeRangeCount(),
-			this.getCatalogCounts(),
+			this.getFaultsCounts(),
+			this.getAfmSeverityCounts(),
+		)
+			.pipe(
+				takeUntil(this.destroy$),
+				map(() => {
+					if (this.syslogsParams.faultsList) {
+						this.selectSubFilters(
+							this.syslogsParams.faultsList,
+							'faults',
+						);
+					}
+
+				}),
+			)
+			.subscribe(() => {
+				this.status.isLoading = false;
+
+				if (window.Cypress) {
+					window.loading = false;
+				}
+
+				this.logger.debug(
+					'assets.component : loadData() :: Finished Loading',
+				);
+			});
+		} else {
+			this.appliedFilters.timeRange = 30;
+			this.appliedFilters.severity = 0;
+			this.filters =
+			_.filter(this.filters, o =>  o.view[0] === 'syslog' || o.key === 'timeRange');
+			forkJoin(
+			this.getTimeRangeCount(),
 			this.getSeverityCounts(),
 		)
 			.pipe(
@@ -309,18 +370,6 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 							'severity',
 						);
 					}
-					if (this.syslogsParams.catalogList) {
-						this.selectSubFilters(
-							this.syslogsParams.catalogList,
-							'catalog',
-						);
-					}
-					if (this.syslogsParams.assetList && this.visualLabels[1].active) {
-						this.selectSubFilters(
-							this.syslogsParams.assetList,
-							'asset',
-						);
-					}
 
 				}),
 			)
@@ -335,6 +384,7 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 					'assets.component : loadData() :: Finished Loading',
 				);
 			});
+		}
 	}
 	/**
 	 * Builds filters
@@ -342,20 +392,20 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 	private buildFilters () {
 		this.filters = [
 			{
-				key: 'timeRange',
+				key: 'faults',
 				loading: true,
 				seriesData: [],
-				template: this.timeRangeFilterTemplate,
-				title: I18n.get('_Time Range_'),
-				view: ['syslogMessage', 'syslogAsset'],
+				template: this.faultsFilterTemplate,
+				title: I18n.get('_faults_'),
+				view: ['afm'],
 			},
 			{
-				key: 'catalog',
+				key: 'afmSeverity',
 				loading: true,
 				seriesData: [],
-				template: this.catalogFilterTemplate,
-				title: I18n.get('_Catalog_'),
-				view: ['syslogMessage', 'syslogAsset'],
+				template: this.afmSeverityFilterTemplate,
+				title: I18n.get('_Severity_'),
+				view: ['afm'],
 			},
 			{
 				key: 'severity',
@@ -363,7 +413,15 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 				seriesData: [],
 				template: this.severityFilterTemplate,
 				title: I18n.get('_Severity_'),
-				view: ['syslogMessage', 'syslogAsset'],
+				view: ['syslog'],
+			},
+			{
+				key: 'timeRange',
+				loading: true,
+				seriesData: [],
+				template: this.timeRangeFilterTemplate,
+				title: I18n.get('_Time Range_'),
+				view: ['syslog'],
 			},
 
 		];
@@ -376,14 +434,13 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 	 */
 	private selectSubFilters (params: string[], key: string) {
 		const filter = _.find(this.filters, { key });
-
-		if (filter) {
-			_.each(filter.seriesData, d => {
-				if (params.indexOf(d.filter) > -1) {
-					this.onSubfilterSelect(d.filter, filter, false);
-				}
-			});
-		}
+	   if (filter) {
+		_.each(filter.seriesData, d => {
+			if (params.indexOf(d.filter) > -1) {
+				this.onSubfilterSelect(d.filter, filter, false);
+			}
+		});
+	}
 	}
 
 	/**
@@ -415,24 +472,25 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 		if (filter.key === 'severity') {
 			this.appliedFilters.severity = +this.syslogsParams.severity[0];
 			if (isNaN(this.appliedFilters.severity)) {
-				this.appliedFilters.severity = 3;
+				this.appliedFilters.severity = 0;
 			}
 		} else if (filter.key === 'timeRange') {
 			this.appliedFilters.timeRange = +this.syslogsParams.timeRange[0];
-			if (isNaN(this.appliedFilters.timeRange)) {
+			if (isNaN(this.appliedFilters.timeRange) && this.visualLabels[0].active) {
+				this.appliedFilters.timeRange = 30;
+			} else if (isNaN(this.appliedFilters.timeRange) && this.visualLabels[1].active) {
 				this.appliedFilters.timeRange = 1;
 			}
-		} else if (filter.key === 'catalog') {
-			this.appliedFilters.catalog = this.syslogsParams.catalog[0];
-			if (!this.appliedFilters.catalog) {
-				this.appliedFilters.catalog = 'Cisco';
+		} else if (filter.key === 'faults') {
+			this.appliedFilters.faults = this.syslogsParams.faults[0];
+			if (!this.appliedFilters.faults) {
+				this.appliedFilters.faults = 'Automated';
 			}
-		} else if (filter.key === 'asset') {
-			this.appliedFilters.asset = this.syslogsParams.asset[0];
-			if (!this.appliedFilters.asset) {
-				this.appliedFilters.asset = '';
+		} else if (filter.key === 'afmSeverity') {
+			this.appliedFilters.afmSeverity = this.syslogsParams.afmSeverity[0];
+			if (!this.appliedFilters.afmSeverity) {
+				this.appliedFilters.afmSeverity = '';
 			}
-			this.noSyslogFilter = (this.appliedFilters.asset === 'noSyslog') ?  true : false;
 		}
 		this.appliedFilters = _.cloneDeep(this.appliedFilters);
 		filter.selected = _.some(filter.seriesData, 'selected');
@@ -445,19 +503,6 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 	public getSelectedSubFilters (key: string) {
 		const filter = _.find(this.filters, { key });
 		if (filter) {
-			const filterNoSyslog = _.find(this.filters, { key: 'catalog' });
-			filterNoSyslog.seriesData[0].selected = false;
-			filterNoSyslog.seriesData[1].selected = false;
-		 if (!this.noSyslogFilter) {
-			filterNoSyslog.seriesData[1].selected = true;
-
-			if (this.appliedFilters.catalog === 'Cisco') {
-				filterNoSyslog.seriesData[0].selected = true;
-				filterNoSyslog.seriesData[1].selected = false;
-			}
-
-		}
-
 			return _.filter(filter.seriesData, 'selected');
 		}
 	}
@@ -476,45 +521,21 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 
 		this.allAssetsSelected = false;
 		this.syslogsParams.timeRange = ['1'];
-		this.loadData();
-		if (this.visualLabels[0].active) {
-			this.appliedFilters = {
-				asset: '',
-				catalog: 'Cisco',
-				severity: 3,
-				timeRange: 1,
-			};
-	   } else {
-			this.appliedFilters.asset = 'withSyslog';
-	   }
+		this.buildFilters();
 	}
 	/**
 	 * Selects visual label
-	 * @param i contains visual label index
+	 * @param index contains visual label index
 	 */
-	public selectVisualLabel (i: number) {
-		 if (i === 0) {
+	public selectVisualLabel (index: number) {
+		 if (index === 0) {
 			this.visualLabels[0].active = true;
 			this.visualLabels[1].active = false;
-			if (this.filters.length === 4) {
-				this.filters.pop();
-			}
-			this.appliedFilters.asset = '';
 		} else {
 			this.visualLabels[0].active = false;
 			this.visualLabels[1].active = true;
-			if (this.filters.length === 3) {
-				this.filters.push({
-					key: 'asset',
-					loading: true,
-					seriesData: [],
-					template: this.assetFilterTemplate,
-					title: I18n.get('_SyslogSystem_'),
-					view: ['syslogMessage', 'syslogAsset'],
-				});
-		  }
-		  this.appliedFilters.asset = 'withSyslog';
-		  this.getAssetCounts();
+			this.appliedFilters.timeRange = 1;
+			this.appliedFilters.severity = 0;
 		}
 		this.clearFilters();
 	}
