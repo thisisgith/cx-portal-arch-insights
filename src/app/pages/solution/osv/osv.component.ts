@@ -470,4 +470,12 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 			this.onPanelClose();
 		}
 	}
+
+	/**
+	 * refesh summary counts on accept or cancel of recommendation
+	 */
+	public refreshSummary () {
+		this.loadData();
+	}
+
 }

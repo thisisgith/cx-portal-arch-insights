@@ -57,6 +57,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	@Output('close') public close = new EventEmitter<boolean>();
 	@Input() public solution;
 	@Input() public useCase;
+	@Output() public refreshSummary = new EventEmitter();
 
 	public status = {
 		profileRecommendations: true,
@@ -605,6 +606,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 			.subscribe();
 		}, 1000);
 		this.selectedSoftwareGroupChange.emit(this.selectedSoftwareGroup);
+		this.refreshSummary.emit();
 	}
 
 	/**
