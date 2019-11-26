@@ -522,6 +522,13 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				// 	title: I18n.get('_Partner_'),
 				// },
 				{
+					key: 'eox',
+					loading: true,
+					seriesData: [],
+					template: this.barChartFilterTemplate,
+					title: I18n.get('_HardwareEndOfLife'),
+				},
+				{
 					key: 'equipmentType',
 					loading: true,
 					seriesData: [],
@@ -1415,6 +1422,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					this.getSystemAdvisoryCount(),
 					this.getHardwareTypeCounts(),
 					this.getRoleCounts(),
+					this.getHardwareEOXCounts(),
 					this.getInventoryCounts(),
 				)
 				.pipe(
