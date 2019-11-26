@@ -2,14 +2,14 @@ import { configureTestSuite } from 'ng-bullet';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { Component } from '@angular/core';
 import { EntitlementDirective } from './entitlement.directive';
-import { EntitlementUtilityService } from '../services/entitlement-utility.service';
-import { userRoles } from '@constants';
+import { EntitlementUtilityService } from '../../services/entitlement-utility.service';
+import { UserRoles } from '@constants';
 import { Observable } from 'rxjs';
-import { RoleListsAndLevel, CheckRoleLevelReturn } from '../interfaces/entitlement';
+import { RoleListsAndLevel, CheckRoleLevelReturn } from '../../interfaces/entitlement';
 
 const testUser = {
 	cxLevel: 0,
-	role: userRoles.USER,
+	role: UserRoles.USER,
 };
 
 const template =  `
@@ -25,7 +25,7 @@ const template =  `
 })
 class TestComponentAuthorized {
 	public rolesAndLevel: RoleListsAndLevel = {
-		whitelistRoles: userRoles.USER,
+		whitelistRoles: UserRoles.USER,
 		cxLevel: 0,
 	};
 }
@@ -38,7 +38,7 @@ class TestComponentAuthorized {
 })
 class TestComponentUnAuthorizedWhitelist {
 	public rolesAndLevel: RoleListsAndLevel = {
-		whitelistRoles: userRoles.ADMIN,
+		whitelistRoles: UserRoles.ADMIN,
 		cxLevel: 2,
 	};
 }
@@ -48,7 +48,7 @@ class TestComponentUnAuthorizedWhitelist {
 })
 class TestComponentUnAuthorizedBlacklist {
 	public rolesAndLevel: RoleListsAndLevel = {
-		blacklistRoles: userRoles.USER,
+		blacklistRoles: UserRoles.USER,
 		cxLevel: 0,
 	};
 }
@@ -58,7 +58,7 @@ class TestComponentUnAuthorizedBlacklist {
 })
 class TestComponentAuthorizedBlacklist {
 	public rolesAndLevel: RoleListsAndLevel = {
-		blacklistRoles: userRoles.ADMIN,
+		blacklistRoles: UserRoles.ADMIN,
 		cxLevel: 0,
 	};
 }
@@ -71,7 +71,7 @@ class TestComponentAuthorizedBlacklist {
 })
 class TestComponentUnAuthorizedLevel {
 	public rolesAndLevel: RoleListsAndLevel = {
-		whitelistRoles: userRoles.USER,
+		whitelistRoles: UserRoles.USER,
 		cxLevel: 4,
 	};
 }
