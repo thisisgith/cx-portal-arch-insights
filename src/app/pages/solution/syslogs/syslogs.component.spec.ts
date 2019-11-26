@@ -10,7 +10,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SyslogScenarios } from 'src/environments/mock/syslogs/syslogs';
 import { RacetrackInfoService } from '@services';
-fdescribe('SyslogsComponent', () => {
+describe('SyslogsComponent', () => {
 	let component: SyslogsComponent;
 	let fixture: ComponentFixture<SyslogsComponent>;
 	let syslogsService: SyslogsService;

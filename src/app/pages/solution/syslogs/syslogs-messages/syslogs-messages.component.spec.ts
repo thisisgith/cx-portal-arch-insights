@@ -10,7 +10,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SyslogScenarios } from 'src/environments/mock/syslogs/syslogs';
 import { SimpleChanges, SimpleChange } from '@angular/core';
-fdescribe('SyslogsMessagesComponent', () => {
+describe('SyslogsMessagesComponent', () => {
 	let component: SyslogsMessagesComponent;
 	let fixture: ComponentFixture<SyslogsMessagesComponent>;
 	let syslogsService: SyslogsService;

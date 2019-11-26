@@ -13,7 +13,7 @@ import { SyslogMessagesDetailsComponent } from './syslog-messages-details.compon
 import { SyslogMessagesDetailsModule } from './syslog-messages-details.module';
 import { SyslogScenarios } from 'src/environments/mock/syslogs/syslogs';
 
-fdescribe('SyslogMessagesDetailsComponent', () => {
+describe('SyslogMessagesDetailsComponent', () => {
 	let component: SyslogMessagesDetailsComponent;
 	let fixture: ComponentFixture<SyslogMessagesDetailsComponent>;
 	let syslogsService: SyslogsService;
