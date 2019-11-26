@@ -120,8 +120,8 @@ export class RccComponent implements OnInit, OnDestroy {
 		lastScan: '',
 		serialNumber: '',
 	};
-	public violationPolicyFilter = [];
-	public violationSeverityFilter = [];
+	public violationFilterShow = false;
+	public systemFilterShow = false;
 	public selectedAssetModal = false;
 	public openDeviceModal = false;
 	public rowData = { };
@@ -460,10 +460,13 @@ export class RccComponent implements OnInit, OnDestroy {
 				const filterObjRes = filterData.data;
 				const policyFilter = _.find(this.filters, { key: 'policyGroup' });
 				policyFilter.seriesData = filterObjRes.policyFilters;
-				this.violationPolicyFilter = filterObjRes.policyFilters;
 				const severityFilter = _.find(this.filters, { key: 'severity' });
 				severityFilter.seriesData = filterObjRes.severityFilters;
-				this.violationSeverityFilter = filterObjRes.severityFilters;
+				if (policyFilter.seriesData.length || severityFilter.seriesData.length) {
+					this.violationFilterShow = true;
+				} else {
+					this.violationFilterShow = false;
+				}
 				this.assetsTotalCount = filterObjRes.assetCount;
 				this.policyViolationsTotalCount = filterObjRes.policyViolationCount;
 				this.filterLoading = false;
@@ -495,6 +498,11 @@ export class RccComponent implements OnInit, OnDestroy {
 				const filterObjRes = assetFilterData.data;
 				const assetSeverityFilter = _.find(this.filters, { key: 'assetSeverity' });
 				assetSeverityFilter.seriesData = filterObjRes.severityList;
+				if (assetSeverityFilter.seriesData.length) {
+					this.systemFilterShow = true;
+				} else {
+					this.systemFilterShow = false;
+				}
 				this.filterLoading = false;
 			},
 			error => {
