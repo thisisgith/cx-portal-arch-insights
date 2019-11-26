@@ -225,6 +225,7 @@ export class ArchitectureReviewComponent implements OnInit {
 	 * @param filter the filter we selected the subfilter on
 	 */
 	public onSubfilterSelect (subfilter: string, filter: VisualFilter) {
+
 		const sub = _.find(filter.seriesData, { filter: subfilter });
 		if (sub) {
 			sub.selected = !sub.selected;
@@ -358,7 +359,7 @@ export class ArchitectureReviewComponent implements OnInit {
 
 					if (sdaCompliant && sdaCompliant > 0) {
 						sdaSeriesData.push({
-							filter: 'Yes',
+							filter: 'Yes,Warning',
 							label: I18n.get('_ArchitectureCompliant_'),
 							selected: false,
 							value: sdaCompliant,
