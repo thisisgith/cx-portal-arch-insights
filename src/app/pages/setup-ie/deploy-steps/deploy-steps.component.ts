@@ -26,6 +26,7 @@ const tutorialTypeMap = {
 	syslog: I18n.get('_Syslog_'),
 	vbox: I18n.get('_VirtualBox_'),
 	vcenter: I18n.get('_VCenter_'),
+	mhyperv: I18n.get('_MHyperv_'),
 };
 
 /**
@@ -149,6 +150,9 @@ export class DeployStepsComponent implements SetupStep, OnChanges, OnDestroy, On
 				break;
 			case SlideSet.SYSLOG:
 				this.title = I18n.get('_SetupSyslogForwarding_');
+				break;
+			case SlideSet.MHYPERV:
+				this.title = I18n.get('_DeployHyperV_');
 				break;
 		}
 		this.setTutorialType();

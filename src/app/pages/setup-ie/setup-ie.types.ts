@@ -5,6 +5,7 @@ export enum Selection {
 	VBOX = 'vbox',
 	VCENTER = 'vcenter',
 	VSPHERE = 'vsphere',
+	MHYPERV = 'mhyperv',
 }
 
 /**
@@ -16,6 +17,7 @@ export enum SlideSet {
 	SYSLOG = 'syslog',
 	VBOX = 'vbox',
 	VCENTER = 'vcenter',
+	MHYPERV = 'mhyperv',
 }
 
 /**
