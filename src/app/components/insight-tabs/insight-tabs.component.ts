@@ -47,7 +47,7 @@ export class InsightTabsComponent implements OnInit {
 		this.routeAuthService.checkArchitecturePermissions()
 			.pipe(
 				map((response: any) => {
-					if (response) {
+					if (response && this.cxLevel > 1) {
 						this.enableArchitectureTab = _.get(response, 'architectureReviewUIEnabled');
 						this.enableConfigurationTab = _.get(response, 'configurationUIEnabled');
 						this.enableSystemEventsTab = _.get(response, 'syslogUIEnabled');

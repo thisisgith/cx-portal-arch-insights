@@ -67,6 +67,7 @@ describe('InsightTabsComponent', () => {
 		spyOn(routeAuthService, 'checkArchitecturePermissions')
 			.and
 			.returnValue(of(response));
+		component.cxLevel = 2;
 		component.canActivate();
 		expect(routeAuthService.checkArchitecturePermissions)
 			.toHaveBeenCalled();
