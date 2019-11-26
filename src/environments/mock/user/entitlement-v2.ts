@@ -128,6 +128,7 @@ export const mappedUser = {
 	info: {
 		...v2User.info,
 		customerId,
+		saId: smartAccountMock.companyId,
 		name: smartAccountMock.companyName,
 		individual: {
 			name: accountUserMock.firstName,
