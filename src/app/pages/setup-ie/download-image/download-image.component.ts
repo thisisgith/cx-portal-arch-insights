@@ -34,6 +34,7 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 	private destroyed$: Subject<void> = new Subject<void>();
 	private user: User;
 	private customerId: string;
+	private saId: string;
 	private downloadSessionId: string;
 	private metadataTransId: string;
 	private imageGuid: string;
@@ -79,6 +80,7 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 	) {
 		this.user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(this.user, ['info', 'customerId']);
+		this.saId = _.get(this.user, ['info', 'saId']);
 	}
 
 	/**
@@ -350,7 +352,7 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 			.createIERegistrationUsingPOST({
 				customerId: this.customerId,
 				datacenter: this.region,
-				saId: Number(this.customerId),
+				saId: Number(this.saId),
 				vaId: 0,
 			})
 			.pipe(

@@ -265,6 +265,7 @@ export class BugsDetailsComponent implements OnInit {
 					if (value !== 0) {
 						const filteredSeverity = _.filter(this.severityMap,
 							severity => severity.key === sevKey);
+
 						return {
 							value,
 							label: _.get(filteredSeverity, ['0', 'label']),
@@ -631,6 +632,7 @@ export class BugsDetailsComponent implements OnInit {
 		if (bug.hasDescription) {
 			bug.toggleWell = false;
 			bug.hasDescription = false;
+
 			return;
 		}
 		const recommendation = this.getCurrentTabData();
@@ -654,6 +656,7 @@ export class BugsDetailsComponent implements OnInit {
 		if (psirt.hasDescription) {
 			psirt.toggleWell = false;
 			psirt.hasDescription = false;
+
 			return;
 		}
 		const recommendation = this.getCurrentTabData();
@@ -723,6 +726,7 @@ export class BugsDetailsComponent implements OnInit {
 				this.logger.error('Bug Details ' +
 						`:: Error : (${err.status}) ${err.message}`);
 				this.status.isLoadingDetails = false;
+
 				return of({ });
 			}),
 		)
@@ -747,6 +751,7 @@ export class BugsDetailsComponent implements OnInit {
 				this.logger.error('Bug Details ' +
 						`:: Error : (${err.status}) ${err.message}`);
 				this.status.isLoadingDetails = false;
+
 				return of({ });
 			}),
 		)

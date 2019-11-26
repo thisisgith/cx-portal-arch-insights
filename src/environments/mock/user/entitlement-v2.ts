@@ -1,7 +1,8 @@
 import { UserEntitlement, OrgUserResponse } from '@sdp-api';
+import { UserRoles } from '@constants';
 
 /** CustomerId to return  */
-const customerId = '12345_0';
+const customerId = '2431199_0';
 
 /** api for cx-entitlement-wrapper accounts call */
 const accountsApi = '/api/cxportal/cxpp-entitlement-wrapper/v1/entitlement/user/accounts?accountType=CUSTOMER';
@@ -10,7 +11,7 @@ const accountsApi = '/api/cxportal/cxpp-entitlement-wrapper/v1/entitlement/user/
 const v2UserApi = '/api/cxportal/entitlement/v2/user';
 
 const adminRole = {
-	roleName: 'AccountAdmin',
+	roleName: UserRoles.ADMIN,
 	roleDisplayName: 'Smart Account Administrator',
 	tenant: 'SMARTACC',
 	tenantDisplayName: 'Smart Account Management',
@@ -22,7 +23,7 @@ const adminRole = {
 export const accountsResponseMock: UserEntitlement = {
 	companyList: [{
 		companyName: 'CISCO CANADA',
-		companyId: 12345,
+		companyId: 2431199,
 		domainIdentifier: 'cisco-ca',
 		accountType: 'CUSTOMER',
 		roleList: [adminRole],
@@ -64,9 +65,9 @@ export const v2UserResponseMock: OrgUserResponse = {
 	cxBUId: 'qwerty',
 	individualAccount: {
 		ccoId: 'abcde',
-		saId: '12345',
+		saId: '2431199',
 		vaId: '0',
-		role: 'ADMIN',
+		role: 'AccountAdmin',
 		userMethods: ['Administrator'],
 		cxBUId: 'qwerty1',
 	},
@@ -128,6 +129,7 @@ export const mappedUser = {
 	info: {
 		...v2User.info,
 		customerId,
+		saId: smartAccountMock.companyId,
 		name: smartAccountMock.companyName,
 		individual: {
 			name: accountUserMock.firstName,

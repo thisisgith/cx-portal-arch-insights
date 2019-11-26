@@ -25,6 +25,7 @@ import { FromNowPipe } from '@cisco-ngx/cui-pipes';
 import { ActivatedRoute } from '@angular/router';
 import { DetailsPanelStackService, AssetPanelLinkService } from '@services';
 import { AssetLinkInfo } from '@interfaces';
+import { UserRoles } from '@constants';
 
 /**
  * Main component for the RCC track
@@ -37,7 +38,13 @@ import { AssetLinkInfo } from '@interfaces';
 export class RccComponent implements OnInit, OnDestroy {
 	public customerId: string;
 	public cxLevel: number;
-	public userRole: string;
+	public authParamsRCCUser = {
+		blacklistRoles: UserRoles.ADMIN,
+	};
+	public authParamsRCCAdmin = {
+		whitelistRoles: UserRoles.ADMIN,
+	};
+
 	constructor (
 		private logger: LogService,
 		public RccTrackService: RccService,
@@ -50,7 +57,6 @@ export class RccComponent implements OnInit, OnDestroy {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
 		this.cxLevel = _.get(user, ['service', 'cxLevel'], 0);
-		this.userRole = _.get(user, ['info', 'individual', 'role']);
 	}
 	get selectedFilters () {
 		return _.filter(this.filters, 'selected');
@@ -120,6 +126,8 @@ export class RccComponent implements OnInit, OnDestroy {
 		lastScan: '',
 		serialNumber: '',
 	};
+	public violationFilterShow = false;
+	public systemFilterShow = false;
 	public selectedAssetModal = false;
 	public openDeviceModal = false;
 	public rowData = { };
@@ -225,7 +233,7 @@ export class RccComponent implements OnInit, OnDestroy {
 				this.optInStatus = _.get(status, ['data', 'rccOptInStatus']);
 				this.currentRunStatus = _.get(status, ['data', 'currentRunStatus']);
 				this.runOnce = _.get(status, ['data', 'runOnce']);
-				if (this.optInStatus && this.runOnce && this.currentRunStatus === 'COMPLETED') {
+				if (this.optInStatus && this.currentRunStatus === 'COMPLETED') {
 					this.buildFilters();
 					this.getRCCData(this.violationGridObj);
 					this.getFiltersData();
@@ -460,6 +468,11 @@ export class RccComponent implements OnInit, OnDestroy {
 				policyFilter.seriesData = filterObjRes.policyFilters;
 				const severityFilter = _.find(this.filters, { key: 'severity' });
 				severityFilter.seriesData = filterObjRes.severityFilters;
+				if (policyFilter.seriesData.length || severityFilter.seriesData.length) {
+					this.violationFilterShow = true;
+				} else {
+					this.violationFilterShow = false;
+				}
 				this.assetsTotalCount = filterObjRes.assetCount;
 				this.policyViolationsTotalCount = filterObjRes.policyViolationCount;
 				this.filterLoading = false;
@@ -491,6 +504,11 @@ export class RccComponent implements OnInit, OnDestroy {
 				const filterObjRes = assetFilterData.data;
 				const assetSeverityFilter = _.find(this.filters, { key: 'assetSeverity' });
 				assetSeverityFilter.seriesData = filterObjRes.severityList;
+				if (assetSeverityFilter.seriesData.length) {
+					this.systemFilterShow = true;
+				} else {
+					this.systemFilterShow = false;
+				}
 				this.filterLoading = false;
 			},
 			error => {
