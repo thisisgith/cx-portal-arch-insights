@@ -14,7 +14,7 @@
 	</asset-details>
 </details-panel>
 
-<app-software-group-detail [solution]="summaryParams.solution" [useCase]="summaryParams.useCase"
+<app-software-group-detail (refreshSummary)="refreshSummary()" [solution]="summaryParams.solution" [useCase]="summaryParams.useCase"
 	*ngIf="selectedSoftwareGroup" [tabIndex]="tabIndex" [(selectedSoftwareGroup)]="selectedSoftwareGroup"
 	(close)="onPanelClose()">
 </app-software-group-detail>
