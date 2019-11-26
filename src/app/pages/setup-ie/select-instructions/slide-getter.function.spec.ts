@@ -15,5 +15,9 @@ describe('SlideGetterFunction', () => {
 		expect(slides[0])
 			.not
 			.toBeNull();
+		slides = getSlides(Selection.MHYPERV);
+		expect(slides[0])
+			.not
+			.toBeNull();
 	});
 });
