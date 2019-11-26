@@ -17,7 +17,7 @@
 				</div>
 			</div>
 			<div class="col-md-10 no-padding">
-				<div class="col-md-7 seperator-line half-margin-left flex-center" *ngIf="!errorPolicyView">
+				<div class="col-md-7 seperator-line half-margin-left flex-center" *ngIf="violationPolicyFilter.length > 0 || violationSeverityFilter.length > 0">
 					<div class="flex flex-fluid" *ngIf="!filterLoading">
 						<ng-container *ngFor="let filter of filters">
 							<div attr.id="RccSelectVisualFilter-{{ filter?.key }}"
@@ -101,7 +101,7 @@
 		</div>
 	</div>
 	<div class="panel panel--dkgray half-margin-top" *ngIf="cxLevel > 1 && !loading && !optInStatus && !errorPolicyView">
-		<div class="row cx-no-dnac-container" *ngIf="userRole !== 'admin'">
+		<div class="row cx-no-dnac-container" *ngIf="userRole !== 'AccountAdmin'">
 			<div class="half-padding-left">
 				<div class="flex-center">
 					<span class="cx-no-dnac-label" [innerText]="'_RccNotAnAdmin_' | i18n"></span>
@@ -109,7 +109,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="row cx-no-dnac-container" *ngIf="userRole === 'admin'">
+		<div class="row cx-no-dnac-container" *ngIf="userRole === 'AccountAdmin'">
 			<div class="half-padding-left">
 				<div class="flex-center">
 					<span class="cx-no-dnac-label" [innerText]="'_RccViewViolations_' | i18n"></span>
