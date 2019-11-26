@@ -25,6 +25,7 @@ import { FromNowPipe } from '@cisco-ngx/cui-pipes';
 import { ActivatedRoute } from '@angular/router';
 import { DetailsPanelStackService, AssetPanelLinkService } from '@services';
 import { AssetLinkInfo } from '@interfaces';
+import { UserRoles } from '@constants';
 
 /**
  * Main component for the RCC track
@@ -37,7 +38,13 @@ import { AssetLinkInfo } from '@interfaces';
 export class RccComponent implements OnInit, OnDestroy {
 	public customerId: string;
 	public cxLevel: number;
-	public userRole: string;
+	public authParamsRCCUser = {
+		blacklistRoles: UserRoles.ADMIN,
+	};
+	public authParamsRCCAdmin = {
+		whitelistRoles: UserRoles.ADMIN,
+	};
+
 	constructor (
 		private logger: LogService,
 		public RccTrackService: RccService,
@@ -50,7 +57,6 @@ export class RccComponent implements OnInit, OnDestroy {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
 		this.cxLevel = _.get(user, ['service', 'cxLevel'], 0);
-		this.userRole = _.get(user, ['info', 'companyList', 0, 'roleList', 0, 'roleName']);
 	}
 	get selectedFilters () {
 		return _.filter(this.filters, 'selected');
