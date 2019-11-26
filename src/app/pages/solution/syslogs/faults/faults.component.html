@@ -107,4 +107,12 @@
 	<span [innerText]="item.faultSeverity | titlecase"></span>
 </ng-template>
 
+<fault-details
+	*ngIf="showFaultDetails"
+	[fault]="fault"
+	[tacEnable]="searchParams.tacEnabled"
+	(showFaultDetails)="onFaultPanelClose()"
+	(showSuccess)="onShowSuccess($event)"
+></fault-details>
+
 <cui-toast [autoHide]="true"></cui-toast>
