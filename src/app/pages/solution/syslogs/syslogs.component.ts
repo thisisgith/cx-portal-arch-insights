@@ -137,18 +137,19 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 		};
 		this.countSubscripion = this.syslogsService
 			.getSyslogsCount(this.countParams)
-			.pipe(takeUntil(this.destroy$))
-			.subscribe(counts => {
+			.pipe(takeUntil(this.destroy$),
+			map((counts: any) => {
 				this.totalSyslogsCount = counts;
 				this.visualLabels[0].count = counts.faultsCount;
 				this.visualLabels[1].count = counts.eventsCount;
-			},
+			}),
 			catchError(err => {
 				this.logger.error('syslogs-devices.component : getDeviceGridData() ' +
-					`:: Error : (${err.status}) ${err.message}`);
+						`:: Error : (${err.status}) ${err.message}`);
 
 				return of({ });
-			}));
+			}))
+			.subscribe();
 	}
 	/**
 	 * Gets time range count

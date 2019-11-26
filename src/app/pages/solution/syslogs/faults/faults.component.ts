@@ -1,17 +1,19 @@
 import { Component, OnInit, TemplateRef,
-	ViewChild, Input, OnChanges, SimpleChanges } from '@angular/core';
+	ViewChild, Input, OnChanges,
+	SimpleChanges, OnDestroy } from '@angular/core';
 import { FaultService, FaultSearchParams,
 	FaultGridData, RacetrackSolution,
 	RacetrackTechnology, FaultResponse,
 } from '@sdp-api';
 import { UserResolve } from '@utilities';
-import { takeUntil, catchError } from 'rxjs/operators';
+import { takeUntil, catchError, map } from 'rxjs/operators';
 import { Subject, of } from 'rxjs';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { CuiTableOptions, CuiToastComponent } from '@cisco-ngx/cui-components';
 import * as _ from 'lodash-es';
 import { LogService } from '@cisco-ngx/cui-services';
 import { RacetrackInfoService } from '@services';
+import { HttpErrorResponse } from '@angular/common/http';
 
 /**
  * FaultsComponent which shows in Insight view for Fault Management
@@ -24,7 +26,7 @@ import { RacetrackInfoService } from '@services';
 	styleUrls: ['./faults.component.scss'],
 	templateUrl: './faults.component.html',
 })
-export class FaultsComponent implements OnInit, OnChanges {
+export class FaultsComponent implements OnInit, OnChanges, OnDestroy {
 
 	@Input('faultFilter') public faultFilter;
 
@@ -162,8 +164,8 @@ export class FaultsComponent implements OnInit, OnChanges {
 	public getFaultData (searchParams: FaultSearchParams) {
 		this.loading = true;
 		this.faultService.getFaultDetails(searchParams)
-			.pipe(takeUntil(this.destroy$))
-			.subscribe((response: FaultResponse) => {
+			.pipe(takeUntil(this.destroy$),
+			map((response: FaultResponse) => {
 				this.totalCount = response.count;
 				this.connectionStatus = response.afmStatus;
 				this.lastUpdateTime = response.lastUpdateTime;
@@ -171,14 +173,15 @@ export class FaultsComponent implements OnInit, OnChanges {
 				this.tableData = response.responseData;
 				this.preparePaginationHeader();
 				this.loading = false;
-			},
-			catchError(err => {
+			}),
+			catchError((err: HttpErrorResponse)  => {
 				this.logger.error(
 					'FaultsComponent : getFaultData() ' +
 				`:: Error : (${err.status}) ${err.message}`);
 
 				return of({ });
-			}));
+			}))
+			.subscribe();
 	}
 
 	/**
@@ -274,4 +277,13 @@ export class FaultsComponent implements OnInit, OnChanges {
 		I18n.get('_FaultXSuccess_', event.icName) +
 		I18n.get('_FaultsYMoved_', event.tacEnable));
 	}
+
+	/**
+	 * OnDestroy Lifecycle Hook
+	 */
+	public ngOnDestroy () {
+		this.destroy$.next();
+		this.destroy$.complete();
+	}
+
 }
