@@ -66,10 +66,4 @@
 		<cui-loader color="muted"></cui-loader>
 	</div>
 </ng-template>
-
-<asset-details *ngIf="assetLinkInfo && showAssetDetailsView"
-    [asset]="assetLinkInfo?.asset"
-    [serialNumber]="assetLinkInfo?.asset?.serialNumber || assetLinkInfo?.element?.serialNumber"
-    [element]="assetLinkInfo?.element"
-        (close)="showAssetDetailsView = false">
-</asset-details>
+<asset-details *ngIf="showAssetDetailsView" [serialNumber]="selectedAsset.serialNumber" (close)="showAssetDetailsView = false"></asset-details>
