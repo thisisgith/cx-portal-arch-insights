@@ -760,6 +760,9 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				return of();
 			}),
 			catchError(err => {
+				if (err.status === 404) {
+					return this.initiateScan(item);
+				}
 				this.alert.show(I18n.get('_UnableToInitiateScan_', deviceName), 'danger');
 				this.logger.error('assets.component : checkScan() ' +
 				`:: Error : (${err.status}) ${err.message}`);
@@ -788,7 +791,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					'fluid',
 				),
 			} : undefined,
-			(Number(cxLevel) > 0 && view.key === 'system' && _.get(item, ['data', 'isManagedNE'], false))
+			(Number(cxLevel) > 1 && view.key === 'system' && _.get(item, ['data', 'isManagedNE'], false))
 			? {
 				label: I18n.get('_RunDiagnosticScan_'),
 				onClick: () => this.checkScan(item),

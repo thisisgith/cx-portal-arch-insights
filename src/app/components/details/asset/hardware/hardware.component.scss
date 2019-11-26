@@ -12,6 +12,18 @@
 	width: 20px;
 }
 
+.icon--size-16 {
+	line-height: 1.8rem !important;
+	font-size: 1.8rem !important;
+	color: #227bb1;
+}
+
+:host ::ng-deep .table--selectable > tbody > tr > td > a {
+	.icon-small {
+		display: none;
+	}
+}
+
 .adjust-eol-filter {
 	margin-left: -65px;
 }
