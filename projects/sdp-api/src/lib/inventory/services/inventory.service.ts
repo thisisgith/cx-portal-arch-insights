@@ -1585,7 +1585,7 @@ class InventoryService extends __BaseService {
     (params.role || []).forEach(val => {if (val != null) __params = __params.append('role', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/customerportal/inventory/v1/role/device/count`,
+      this.rootUrl + `/customerportal/inventory/v1/assets/system/roles/count`,
       __body,
       {
         headers: __headers,

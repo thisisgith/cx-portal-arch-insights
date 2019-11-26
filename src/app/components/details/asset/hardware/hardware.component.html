@@ -97,12 +97,14 @@
 				<span [innerText]="'_ApproachingLDOS_' | i18n:(item.eol.bulletin.lastDateOfSupport | fromNow)"></span>
 			</div>
 			<div class="col-12 flex" *ngIf="item?.eol?.timelineData && item.eol.timelineData.length">
-				<pbc-timeline class="no-margin"
-					[data]="item.eol.timelineData"
-					[todayText]="'_Youarehere_' | i18n"
-					[todayIcon]="item.eol.timelineTodayIcon"
-					[todayClass]="item.eol.timelineTodayClass">
-				</pbc-timeline>
+				<div class="adjust-eol-filter">
+					<pbc-timeline class="no-margin"
+						[data]="item.eol.timelineData"
+						[todayText]="'_Youarehere_' | i18n"
+						[todayIcon]="item.eol.timelineTodayIcon"
+						[todayClass]="item.eol.timelineTodayClass">
+					</pbc-timeline>
+				</div>
 			</div>
 		</div>
 	</div>
