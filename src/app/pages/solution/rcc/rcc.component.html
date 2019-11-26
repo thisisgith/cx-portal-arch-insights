@@ -66,7 +66,7 @@
 			<span class="qtr-margin-left" [innerText]="(assetsConditionViolationsCount | number)  || ('_RccNoValue_' | i18n)"></span>
 			<span class="qtr-margin-left" [innerText]="'_RccConditionViolations_' | i18n"></span>
 		</div>
-		<div class="col-md-3" *ngIf="!errorPolicyView">
+		<div class="col-md-3" *ngIf="!errorPolicyView && !showNoAccessMsg && !showRunningBanner && optInStatus">
 			<div class="flex flex-fluid flex-right">
 				<div class="flex-fill form-group input--compressed input--icon half-margin-right">
 					<form [formGroup]="searchForm" novalidate id="searchForm" (keyup)="searchViolations($event,'input')" data-auto-id="searchViolations">
@@ -100,7 +100,7 @@
 			</div>
 		</div>
 	</div>
-	<ng-container *auth="{ cxLevel: 2 }">
+	<ng-container *ngIf="cxLevel > 1">
 		<div class="panel panel--dkgray half-margin-top" *ngIf="!loading && !optInStatus && !errorPolicyView">
 			<div class="row cx-no-dnac-container" *auth="authParamsRCCUser">
 				<div class="half-padding-left">
