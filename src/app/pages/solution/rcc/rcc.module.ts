@@ -34,6 +34,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RccDataModule } from '@sdp-api';
 import { environment } from '@environment';
 import { InsightTabsModule } from 'src/app/components/insight-tabs/insight-tabs.module';
+import { EntitlementModule } from '@directives';
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
  */
@@ -52,7 +53,9 @@ const childRoutes: Routes = [
  * Module representing Rcc track
  */
 @NgModule({
-	declarations: [RccComponent],
+	declarations: [
+		RccComponent,
+	],
 	entryComponents: [RccAssetViolationDetailsComponent],
 	imports: [
 		CommonModule,
@@ -81,6 +84,7 @@ const childRoutes: Routes = [
 		TooltipModule,
 		NoDNACHeaderModule,
 		DateTimePipeModule,
+		EntitlementModule,
 	],
 })
 export class RccModule { }

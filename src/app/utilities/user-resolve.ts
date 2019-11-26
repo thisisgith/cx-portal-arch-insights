@@ -11,10 +11,7 @@ import { CuiModalService } from '@cisco-ngx/cui-components';
 import {
 	UnauthorizedUserComponent,
 } from '../components/unauthorized-user/unauthorized-user.component';
-
-// TODO: Move to /constants when available
-const DEFAULT_DATACENTER = 'usa';
-const INTERIM_VA_ID = 0;
+import { INTERIM_VA_ID, DEFAULT_DATACENTER } from '@constants';
 
 /**
  * Resolver to fetch our user
@@ -161,7 +158,7 @@ export class UserResolve implements Resolve<any> {
 				const { cxLevel } = _.get(this.cachedUser, 'service');
 
 				this.cxLevel.next(Number(cxLevel));
-				this.role.next(_.get(userResponse, ['individualAccount', 'role']));
+				this.role.next(_.get(this.smartAccount, ['roleList', 0, 'roleName']));
 
 				return this.cachedUser;
 			}),
@@ -198,7 +195,7 @@ export class UserResolve implements Resolve<any> {
 				emailAddress: accountUser.emailId,
 				ccoId: userResponse.individualAccount.ccoId,
 				cxBUId: userResponse.individualAccount.cxBUId,
-				role: userResponse.individualAccount.role,
+				role: _.get(smartAccount, ['roleList', 0, 'roleName']),
 			},
 			account: userResponse.account,
 			subscribedSolutions: {
