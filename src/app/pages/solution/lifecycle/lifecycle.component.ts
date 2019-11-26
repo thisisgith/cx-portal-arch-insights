@@ -320,7 +320,7 @@ export class LifecycleComponent implements OnDestroy {
 		learning: {
 			certificationsUrl: `${environment.learningLink}?type=certification`,
 			elearningUrl: `${environment.learningLink}?type=e-learning`,
-			remotepracticelabsUrl: `${environment.learningLink}?type=remotepracticelabs`,
+			remotepracticelabsUrl: `${environment.learningLink}?type=remote_lab`,
 		},
 		params: {
 			customerId: '',
@@ -534,7 +534,7 @@ export class LifecycleComponent implements OnDestroy {
 				elearningUrl: `${environment.learningLink}?type=e-learning
 				&solution=${this.componentData.params.solution}
 				&usecase=`,
-				remotepracticelabsUrl: `${environment.learningLink}?type=remotepracticelabs
+				remotepracticelabsUrl: `${environment.learningLink}?type=remote_lab
 				&solution=${this.componentData.params.solution}
 				&usecase=`,
 			},
