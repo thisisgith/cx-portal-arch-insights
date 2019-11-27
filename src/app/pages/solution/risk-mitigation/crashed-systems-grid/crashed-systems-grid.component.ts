@@ -98,7 +98,7 @@ export class CrashedSystemsGridComponent implements OnChanges {
 			['selectedFilter', 'currentValue'],
 			this.selectedFilter,
 		);
-		this.searchQuery = _.get(changes, ['searchQuery', 'currentValue'], '');
+		this.searchQuery = _.get(changes, ['searchQuery', 'currentValue'], this.searchQuery);
 		this.getCrashedSystemDetails();
 	}
 
@@ -211,7 +211,8 @@ export class CrashedSystemsGridComponent implements OnChanges {
 
 	public onPagerUpdated (pageInfo: any) {
 		this.crashedSystemsGridDetails.tableOffset = pageInfo.page;
-		this.first = (pageInfo.page * pageInfo.limit) + 1;
+		this.first = (this.crashedSystemsGridDetails.totalItems)
+		? ((pageInfo.page * pageInfo.limit) + 1) : 0;
 		this.last = (pageInfo.page * pageInfo.limit) + 10;
 		if (this.last > this.crashedSystemsGridDetails.totalItems) {
 			this.last = this.crashedSystemsGridDetails.totalItems ;
