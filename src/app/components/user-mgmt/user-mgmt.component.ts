@@ -20,6 +20,7 @@ import { I18nPipe } from '@cisco-ngx/cui-pipes';
 import { CuiModalService } from '@cisco-ngx/cui-components';
 import { AddUserComponent } from '../add-user/add-user.component';
 import * as _ from 'lodash-es';
+import { UserResolve } from '@utilities';
 
 /**
  * UserMgmtComponent
@@ -38,6 +39,7 @@ export class UserMgmtComponent implements AfterViewInit, OnDestroy {
 	public numUsersWithRoles = 0;
 	private user: UserResponse['data'];
 	private customerId: string;
+	private saAccountId: number;
 	public users$: Observable<UserDetails[]> = this.updateUsers$
 		.pipe(
 			switchMap(() => this.getUsers()),
@@ -67,9 +69,12 @@ export class UserMgmtComponent implements AfterViewInit, OnDestroy {
 		private route: ActivatedRoute,
 		private usersService: ControlPointUserManagementAPIService,
 		private cuiModalService: CuiModalService,
+		private userReslove: UserResolve,
 	) {
 		this.user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(this.user, ['info', 'customerId']);
+		this.userReslove.getSaId()
+		.subscribe(saId => this.saAccountId = saId);
 	}
 
 	/**
@@ -96,8 +101,7 @@ export class UserMgmtComponent implements AfterViewInit, OnDestroy {
 		this.cdr.detectChanges();
 
 		return this.usersService.getUserDetailsListForGivenSAUsingGET(
-			// this.customerId, TODO add this back
-			'106200',
+			this.customerId,
 		)
 			.pipe(
 				finalize(() => {
@@ -190,8 +194,7 @@ export class UserMgmtComponent implements AfterViewInit, OnDestroy {
 			ccoId: user.ccoId,
 			isPartner: false,
 			rolesRemoved: user.roles,
-			// saCompanyId: this.customerId,
-			saCompanyId: '106200',
+			saCompanyId: this.customerId,
 		});
 	}
 
