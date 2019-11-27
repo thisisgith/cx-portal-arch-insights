@@ -189,19 +189,6 @@
 		(click)="connectToCaseDetails(item.tacCaseNo)"></span>
 </ng-template>
 
-<details-panel *ngIf="selectedCase" [hidden]="!selectedCase"
-	(hiddenChange)="handleHidden($event)" [fullscreen]="fullscreen">
-	<details-panel-header (close)="detailsClose()" [(fullscreen)]="fullscreen">
-		<div detailsPanelTitle class="text-xlarge"
-			[innerText]="'_RMACaseNumberTitle_' | i18n:selectedCase?.caseNumber"></div>
-		<app-case-details-header [case]="selectedCase" [caseDetails]="selectedDetails">
-		</app-case-details-header>
-	</details-panel-header>
-	<app-case-details [case]="selectedCase"
-		[(caseDetails)]="selectedDetails">
-	</app-case-details>
-</details-panel>
-
 <ng-template #noTacCase>
 	<span [innerText]="'-'"
 	></span>

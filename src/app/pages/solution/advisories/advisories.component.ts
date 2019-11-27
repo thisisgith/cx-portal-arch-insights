@@ -161,6 +161,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 		}
 	}
 	@ViewChild('contentContainer', { static: false }) private contentContainer: ElementRef;
+	@ViewChild('borgBugSeverityTemplate', { static: true }) private borgBugSeverityTemplate: TemplateRef<{ }>;
 
 	constructor (
 		private diagnosticsService: DiagnosticsService,
@@ -418,6 +419,15 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 							sortDirection: 'asc',
 							sorting: true,
 							value: 'severity',
+						},
+						{
+							key: 'cdetsSeverity',
+							name: I18n.get('_BorgBugICSeverity_'),
+							sortable: true,
+							sortDirection: 'desc',
+							sorting: true,
+							template: this.borgBugSeverityTemplate,
+							value: 'cdetsSeverity',
 						},
 						{
 							key: 'title',
