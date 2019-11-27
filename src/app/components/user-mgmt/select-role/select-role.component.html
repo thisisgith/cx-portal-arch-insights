@@ -24,14 +24,14 @@
 		</div>
 	</div>
 </ng-container>
-<div *ngIf="role">
+<div>
 	<div>
 		<a
 			class="no-link-hover flex-center-vertical"
 			(click)="toggleExpanded()"
 			data-auto-id="select-role-link"
 		>
-			<span [innerText]="role.roleDisplayName"></span>
+			<span [innerText]="roleName"></span>
 			<span
 				*ngIf="!expanded"
 				class="text-xsmall half-margin-left icon-chevron-right"
@@ -44,6 +44,6 @@
 	</div>
 	<div
 		class="text-small"
-		[innerText]="role.roleDescription"
+		[innerText]="roleDescription"
 	></div>
 </div>
