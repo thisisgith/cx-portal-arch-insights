@@ -12,6 +12,7 @@ import { RolesService } from './roles.service';
 import { RoleDetails, UserDetails, UserUpdateResponseModel } from '@sdp-api';
 import { Observable } from 'rxjs';
 import * as _ from 'lodash-es';
+import { I18n } from '@cisco-ngx/cui-utils';
 
 /**
  * SelectRoleComponent
@@ -55,14 +56,9 @@ export class SelectRoleComponent implements OnInit {
 	 * NgOnInit
 	 */
 	public ngOnInit () {
-		if (this.user.roles[0]) {
-			this.role = this.user.roles[0];
-			this.roleName = this.user.roles[0].roleDisplayName;
-			this.roleDescription = this.user.roles[0].roleDescription;
-		} else {
-			this.roleName = 'Assign Role';
-			this.roleDescription = '';
-		}
+		this.roleName = _.get(this.user.roles, ['0', 'roleDisplayName'], I18n.get('_AssignRole_'));
+		this.roleDescription = _.get(this.user.roles, ['0', 'roleDescription'], '');
+		this.role = _.get(this.user.roles, ['0'], null);
 	}
 
 	/**

@@ -231,6 +231,7 @@
 	"_AssetTaggingTagNameCount_": "{0} ({1})",
 	"_AssetTaggingTagsCount_":"Available: {0} tags",
 	"_AssetTaggingTagsCountSelected_":"Selected: {0} tags",
+	"_AssignRole_": "Assign Role",
 	"_Assurance_": "Assurance",
 	"_At_": "At",
 	"_AttemptingToConnect_": "Attempting to connect to {0} ...",
