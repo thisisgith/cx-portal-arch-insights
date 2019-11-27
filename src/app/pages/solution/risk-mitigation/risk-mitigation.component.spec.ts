@@ -124,15 +124,19 @@ describe('RiskMitigationComponent', () => {
 		.and
 		.returnValue(throwError(new HttpErrorResponse(error)));
 		component.ngOnInit();
+		component.clearFilters();
 		fixture.whenStable()
 			.then(() => {
 				fixture.detectChanges();
 				expect(component.selectedCrashedSystemsFilter)
-					.toBe('90');
+					.toBe('1');
 				done();
 			});
 	});
 
+	/**
+	 * @TODO: modify test to Check Updated CrashedAssest Count
+	 */
 	it('Should get the last few days crash data', done => {
 		spyOn(riskMitigationService, 'getAllCrashesData')
 			.and
@@ -141,8 +145,8 @@ describe('RiskMitigationComponent', () => {
 		fixture.whenStable()
 			.then(() => {
 				fixture.detectChanges();
-				expect(component.selectedCrashedSystemsFilter)
-					.toBe('90');
+				expect(component.crashedAssetsCount)
+					.toBe(0);
 				done();
 			});
 	});

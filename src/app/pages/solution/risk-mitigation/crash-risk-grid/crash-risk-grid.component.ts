@@ -105,7 +105,7 @@ export class CrashRiskGridComponent implements OnChanges {
 			['selectedFilter', 'currentValue'],
 			this.selectedFilter,
 		);
-		this.searchQuery = _.get(changes, ['searchQuery', 'currentValue'], '');
+		this.searchQuery = _.get(changes, ['searchQuery', 'currentValue'], this.searchQuery);
 		this.highCrashRiskParams = this.getCrashRiskDevicePrams();
 		this.crashRiskGridInit();
 		this.getFingerPrintDeviceDetails(this.highCrashRiskParams);
