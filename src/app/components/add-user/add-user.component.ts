@@ -38,7 +38,7 @@ export class AddUserComponent implements OnInit {
 	public isLoading = false;
 	/**** PlaceHolder ****/
 	 public customerId: string;
-	public saAccountId: number;
+	public saAccountId: string;
 
 	constructor (
 		public cuiModalService: CuiModalService,
@@ -47,7 +47,7 @@ export class AddUserComponent implements OnInit {
 		private userReslove: UserResolve,
 	) {
 		this.userReslove.getSaId()
-		.subscribe(saId => this.saAccountId = saId);
+		.subscribe(saId => this.saAccountId = saId.toString());
 		this.userReslove.getCustomerId()
 		.subscribe(customerId => this.customerId = customerId);
 	}
@@ -80,7 +80,7 @@ export class AddUserComponent implements OnInit {
 					role: this.addUserForm.value.title,
 				},
 			],
-			saAccountId: this.saAccountId.toString(),
+			saAccountId: this.saAccountId,
 		};
 
 		this.userService
