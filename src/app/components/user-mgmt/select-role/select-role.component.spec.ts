@@ -10,7 +10,7 @@ import { SelectRoleModule } from './select-role.module';
 import { environment } from '@environment';
 import { RoleDetails } from '@sdp-api';
 
-describe('SelectRoleComponent', () => {
+fdescribe('SelectRoleComponent', () => {
 	let component: SelectRoleComponent;
 	let fixture: ComponentFixture<SelectRoleComponent>;
 	// let de: DebugElement;
