@@ -101,7 +101,7 @@ export class UserMgmtComponent implements AfterViewInit, OnDestroy {
 		this.cdr.detectChanges();
 
 		return this.usersService.getUserDetailsListForGivenSAUsingGET(
-			this.customerId,
+			this.saAccountId.toString(),
 		)
 			.pipe(
 				finalize(() => {
@@ -193,8 +193,9 @@ export class UserMgmtComponent implements AfterViewInit, OnDestroy {
 		return this.usersService.deleteUserUsingDELETE({
 			ccoId: user.ccoId,
 			isPartner: false,
+			customerId: this.customerId,
 			rolesRemoved: user.roles,
-			saCompanyId: this.customerId,
+			saCompanyId: this.saAccountId.toString(),
 		});
 	}
 
