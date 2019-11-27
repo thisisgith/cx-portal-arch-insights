@@ -114,3 +114,27 @@
 .cursor {
 	cursor: pointer;
 }
+
+.content-overflow {
+	overflow: visible;
+}
+
+.titlebar__viewmode .btn {
+	background: $white;
+	color: #6a80a5;
+	display: block;
+	width: 32px;
+	height: 30px;
+
+	&.selected {
+		background: #6a80a5;
+
+		::ng-deep svg g {
+			fill: $white;
+		}
+	}
+
+	&:hover:not(.selected) {
+		background: #ebf1f8;
+	}
+}
