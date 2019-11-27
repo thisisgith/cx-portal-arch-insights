@@ -120,7 +120,7 @@
 }
 
 .titlebar__viewmode .btn {
-	background: #fff;
+	background: $white;
 	color: #6a80a5;
 	display: block;
 	width: 32px;
@@ -130,7 +130,7 @@
 		background: #6a80a5;
 
 		::ng-deep svg g {
-			fill: #fff;
+			fill: $white;
 		}
 	}
 

@@ -760,7 +760,8 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				return of();
 			}),
 			catchError(err => {
-				if (err.status === 404) {
+				const cxLevel = _.get(item, ['data', 'cxLevel']);
+				if (cxLevel > 1) {
 					return this.initiateScan(item);
 				}
 				this.alert.show(I18n.get('_UnableToInitiateScan_', deviceName), 'danger');
