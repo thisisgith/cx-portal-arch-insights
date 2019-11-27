@@ -30,7 +30,7 @@
 			</visual-filter-bar>
 		</cui-tab>
 		<ng-template cuiTabPost>
-			<visual-filter-toggle 
+			<visual-filter-toggle
 				*ngIf="!status.isLoading && selectedView.pagination"
 				data-auto-id="VisualFilterToggle"
 				(click)="filterCollapse = !filterCollapse"
@@ -51,7 +51,7 @@
 			</ng-container>
 			<no-dnac-header></no-dnac-header>
 			<ng-container *ngTemplateOutlet="tableAssets"></ng-container>
-			<div *ngIf="selectedView?.pagination && selectedView?.pagination.total" 				
+			<div *ngIf="selectedView?.pagination && selectedView?.pagination.total"
 				class="base-margin-top">
 				<cui-pager [page]="selectedView.pagination.page - 1"
 					[limit]="selectedView.pagination.rows"
@@ -105,13 +105,13 @@
 					<ng-container *ngTemplateOutlet="selectedView.searchTemplate; context: { view: selectedView }"></ng-container>
 				</div>
 				<div class="btn-group btn-group--square half-margin-right titlebar__viewmode">
-					<button data-auto-id="list-view-btn" class="btn btn--small qtr-padding" 
-						[ngClass]="{ 'selected': viewType === 'list' }" (click)="selectViewType('list')">
-						<img alt="{{ '_TableView_' | i18n }}" src="assets/icons/nav-tableline-off.svg">
+					<button data-auto-id="list-view-btn" class="btn btn--small qtr-padding"
+							[ngClass]="{ 'selected': viewType === 'list' }" (click)="selectViewType('list')">
+						<div inlineSVG="assets/icons/nav-tableline-off.svg"></div>
 					</button>
-					<button data-auto-id="grid-view-btn" class="btn btn--small qtr-padding" 
-						[ngClass]="{ 'selected': viewType === 'grid' }" (click)="selectViewType('grid')">
-						<img alt="{{ '_CardView_' | i18n }}" src="assets/icons/nav-card-off.svg">
+					<button data-auto-id="grid-view-btn" class="btn btn--small qtr-padding"
+							[ngClass]="{ 'selected': viewType === 'grid' }" (click)="selectViewType('grid')">
+						<div inlineSVG="assets/icons/nav-card-off.svg"></div>
 					</button>
 				</div>
 				<!-- Export options disabled until further notice -->
@@ -125,7 +125,7 @@
 </ng-template>
 
 <ng-template #tableAssets>
-	<div class="responsive-table not-close-360 assets-table" *ngIf="selectedView.table && selectedView?.data?.length && (!viewType || viewType === 'list')">
+	<div class="responsive-table not-close-360 assets-table content-overflow" *ngIf="selectedView.table && selectedView?.data?.length && (!viewType || viewType === 'list')">
 		<table class="table table--selectable table--compressed table--wrap table--lined table--hover table--nostripes" data-auto-id="AssetsTable">
 				<thead data-auto-id="AssetsTableHeader">
 					<tr>
