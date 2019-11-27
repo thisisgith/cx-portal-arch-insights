@@ -60,7 +60,7 @@ describe('APIxAccountInterceptor', () => {
 
 	it('should call getUserInfo for a non-ignored SDP origin API', () => {
 		const req: HttpRequest<any> = {
-			url: 'https://api-stage.cisco.com/api/customerportal/racetrack/v1/atx',
+			url: 'https://api-stage.cisco.com/api/customerportal/inventory/v1/assets/system',
 			body: { },
 			headers: new HttpHeaders(),
 			reportProgress: true,
@@ -68,7 +68,7 @@ describe('APIxAccountInterceptor', () => {
 			responseType: 'json',
 			method: '1',
 			params: new HttpParams(),
-			urlWithParams: 'https://api-stage.cisco.com/api/customerportal/racetrack/v1/atx?customerId=12345',
+			urlWithParams: 'https://api-stage.cisco.com/api/customerportal/inventory/v1/assets/system?customerId=12345',
 			serializeBody: () => '',
 			detectContentTypeHeader: () => '',
 			clone: undefined,
