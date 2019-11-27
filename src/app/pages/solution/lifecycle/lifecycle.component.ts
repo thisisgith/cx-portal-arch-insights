@@ -1162,7 +1162,7 @@ export class LifecycleComponent implements OnDestroy {
 	 */
 	public completeAction (action: RacetrackPitstopAction) {
 		// Call racetrack API to complete an action
-		this.status.loading.racetrack = true;
+		this.status.loading.racetrack = false;
 		this.resetSelectStatus();
 		const actionUpdated: PitstopActionUpdateRequestObject = {
 			customerId: this.customerId,
