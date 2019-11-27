@@ -1,3 +1,9 @@
+@import "~src/variables.scss";
+
+.text-bold {
+	font-weight: $base-dl-label-font-weight;
+}
+
 :host {
 	.search-section {
 		margin: auto;
@@ -13,7 +19,7 @@
 	}
 
 	.role-cell {
-		max-width: 200px;
+		max-width: 500px;
 		white-space: normal;
 		overflow: visible;
 	}
@@ -44,6 +50,8 @@
 	/* CiscoUI table styling override start */
 	// Chose to use specificity instead of importants
 	::ng-deep .table {
+		width: 75vw;
+		margin: auto;
 		border: none;
 		border-spacing: 2px;
 		border-collapse: collapse;

@@ -12,6 +12,7 @@ import { RolesService } from './roles.service';
 import { RoleDetails, UserDetails, UserUpdateResponseModel } from '@sdp-api';
 import { Observable } from 'rxjs';
 import * as _ from 'lodash-es';
+import { I18n } from '@cisco-ngx/cui-utils';
 
 /**
  * SelectRoleComponent
@@ -28,6 +29,8 @@ export class SelectRoleComponent implements OnInit {
 	private customerId: string;
 	public role: RoleDetails;
 	public expanded = false;
+	public roleName: string;
+	public roleDescription: string;
 	public options$: Observable<RoleDetails[]> = this.roles.roles;
 
 	constructor (
@@ -53,7 +56,9 @@ export class SelectRoleComponent implements OnInit {
 	 * NgOnInit
 	 */
 	public ngOnInit () {
-		this.role = this.user.roles[0];
+		this.roleName = _.get(this.user.roles, ['0', 'roleDisplayName'], I18n.get('_AssignRole_'));
+		this.roleDescription = _.get(this.user.roles, ['0', 'roleDescription'], '');
+		this.role = _.get(this.user.roles, ['0'], null);
 	}
 
 	/**
@@ -68,17 +73,23 @@ export class SelectRoleComponent implements OnInit {
 	 * @param role - RoleDetails
 	 */
 	public handleClick (role: RoleDetails) {
-		if (role.roleDisplayName === this.role.roleDisplayName) {
+		if (role.roleDisplayName && role.roleDisplayName === this.roleName) {
 			return;
 		}
-		const updateRequest = this.roles.updateRole({
+		role.tenant = 'SMARTACC';
+		const userUpdate = {
 			...this.user,
 			customerId: this.customerId,
 			isPartner: false,
 			rolesAdded: [role],
-			rolesRemoved: [this.role],
+			rolesRemoved: [],
 			saAccountId: '106200', // TODO update this to be saId
-		});
+		};
+		if (this.role) {
+			this.role.tenant = 'SMARTACC';
+			userUpdate.rolesRemoved.push(this.role);
+		}
+		const updateRequest = this.roles.updateRole(userUpdate);
 		this.clickout();
 		this.onSelect.emit(updateRequest);
 	}
