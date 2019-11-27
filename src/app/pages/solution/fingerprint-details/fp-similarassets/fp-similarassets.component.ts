@@ -52,6 +52,7 @@ export class FpSimilarAssetsComponent {
 		similarityCriteria: ['softwares_features', Validators.required],
 	});
 	public similarDevicesData: SimilarDevicesList;
+	public globalRiskRankValue;
 	@Output() public devicesSelected: EventEmitter<any> = new EventEmitter<any>();
 	@Output() public reqError: EventEmitter<any> = new EventEmitter<any>();
 	public selectedDevice2: any;
@@ -100,7 +101,7 @@ export class FpSimilarAssetsComponent {
 		this.requestForm.valueChanges
 			.pipe(debounceTime(1000))
 			.subscribe(val => {
-				if (this.requestForm.valid) {
+				if (this.requestForm.valid && this.isValidState) {
 					this.page = 0;
 					this.loadSimilarDevicesData();
 				}
@@ -177,7 +178,8 @@ export class FpSimilarAssetsComponent {
 		this.deviceName = _.get(changes, ['asset', 'currentValue', 'deviceId']);
 		this.serialNumber = _.get(changes, ['asset', 'currentValue', 'deviceId']);
 		this.productId = _.get(changes, ['asset', 'currentValue', 'productId'], null);
-		if (!_.get(changes, ['asset', 'firstChange'], false) && this.asset) {
+		this.globalRiskRankValue = _.get(changes, ['asset', 'currentValue', 'globalRiskRank']);
+		if (!_.get(changes, ['asset', 'firstChange'], false) && this.asset && this.isValidState) {
 			this.loadSimilarDevicesData();
 		}
 	}
@@ -282,4 +284,10 @@ export class FpSimilarAssetsComponent {
 		this.destroyed$.next();
 		this.destroyed$.complete();
 	}
+
+	public get isValidState (): boolean {
+	 return this.globalRiskRankValue !== 'LOW' &&
+	  this.globalRiskRankValue !== 'Not Evaluated';
+	}
+
 }
