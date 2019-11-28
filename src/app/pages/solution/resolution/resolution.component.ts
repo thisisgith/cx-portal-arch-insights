@@ -955,6 +955,9 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 	 * @param event is a Case
 	 */
 	public onTableRowClicked (event: Case) {
+		if (this.showAsset360) {
+			this.showAsset360 = false;
+		}
 		if (event.caseNumber === _.get(this.selectedCase, 'caseNumber')) {
 			_.set(event, 'active', false);
 			this.selectedCase = null;

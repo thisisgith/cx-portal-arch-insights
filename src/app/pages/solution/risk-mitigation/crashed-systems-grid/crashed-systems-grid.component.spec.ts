@@ -68,7 +68,13 @@ describe('CrashedSystemsGridComponent', () => {
 		};
 		component.onPagerUpdated(pageInfo);
 		expect(component.first)
-		.toBe(11);
+		.toBe(0);
+		component.crashedSystemsGridDetails.totalItems = 10;
+		component.onPagerUpdated(pageInfo);
+		 expect(component.first)
+		 .toBe(11);
+		expect(component.last)
+		.toBe(10);
 	});
 
 	it('Should get the device details', () => {

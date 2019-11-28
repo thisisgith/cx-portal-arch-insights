@@ -31,7 +31,7 @@ export const environment = {
 	emailToID: 'cx-portal-support-nonprod@cisco.com',
 	feedbackToEmail: 'cxportal-feedback@cisco.com',
 	mapboxToken:
-	'pk.eyJ1IjoibWlzY2htaTIiLCJhIjoiY2p4eDl2ODVnMGpmODNkcDhsbG5nNXQ0YyJ9.vpfGffFASSUfANAU4Yvtxg',
+	'pk.eyJ1IjoibWljaGhhcnQiLCJhIjoiY2szaGtudW9oMGRvajNubmo1OWgxaG85NSJ9.wwXqdHQ4k-YTqUw1VMvayA',
 	mock: [],
 	myCase: 'https://mycase.cloudapps.cisco.com',
 	noAuthEndpoints: [
