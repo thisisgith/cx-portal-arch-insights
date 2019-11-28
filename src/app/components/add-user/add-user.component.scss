@@ -4,14 +4,6 @@
 	border: 1px solid $status-red;
 }
 
-.body {
-	text-align: left;
-}
-
-// .leftAlign {
-// 	text-align: left;
-// }
-
 .btn {
 	&--primary {
 		background-color: $cisco-blue !important;
@@ -38,7 +30,7 @@
 
 .cui-alert {
 	.alert.alert--danger {
-		border: 1px solid white !important;
+		border: 1px solid $white !important;
 	}
 }
 
