@@ -13,7 +13,7 @@ import { SyslogResponseData } from '@sdp-api';
 	providedIn: 'root',
 })
 class SyslogsService extends __BaseService {
-	static readonly getSyslogCountPath = '/customerportal/syslog/v1/messages-assets/count';
+	static readonly getSyslogCountPath = '/customerportal/syslog/v1/events-faults/count';
 	static readonly getSysGridDataPath = '/customerportal/syslog/v1/syslogs';
 	static readonly getSysPanelGridDataPath = '/customerportal/syslog/v1/syslogDetails';
 	constructor (config: __Configuration, http: HttpClient) {

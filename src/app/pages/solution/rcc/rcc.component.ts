@@ -233,12 +233,14 @@ export class RccComponent implements OnInit, OnDestroy {
 				this.optInStatus = _.get(status, ['data', 'rccOptInStatus']);
 				this.currentRunStatus = _.get(status, ['data', 'currentRunStatus']);
 				this.runOnce = _.get(status, ['data', 'runOnce']);
-				if (this.optInStatus && this.currentRunStatus === 'COMPLETED') {
-					this.buildFilters();
-					this.getRCCData(this.violationGridObj);
-					this.getFiltersData();
-				} else if (this.optInStatus && this.currentRunStatus !== 'COMPLETED') {
-					this.getBannerTimeStamp();
+				if (this.optInStatus) {
+					if (this.runOnce) {
+						this.buildFilters();
+						this.getRCCData(this.violationGridObj);
+						this.getFiltersData();
+					} else {
+						this.getBannerTimeStamp();
+					}
 				} else {
 					this.loading = false;
 					this.filterLoading = false;

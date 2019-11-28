@@ -42,7 +42,7 @@ export const environment = {
 			'b_cisco_dna_center_ug_1_4/b_cisco_dna_center_ug_1_4_chapter_01001.html',
 	},
 	mapboxToken:
-	'pk.eyJ1IjoibWlzY2htaTIiLCJhIjoiY2p4eDl2ODVnMGpmODNkcDhsbG5nNXQ0YyJ9.vpfGffFASSUfANAU4Yvtxg',
+	'pk.eyJ1IjoibWljaGhhcnQiLCJhIjoiY2szaGtvbnc1MGRxODNkcWc4a3dodWxjdSJ9.55emo88LB7ahEdrdkELIcQ',
 	production: true,
 	/**
 	 * sdpServiceOrigin MUST be explicitly declared in every single environment file,

@@ -39,8 +39,8 @@ export class RiskMitigationComponent {
 	public selectedSolutionName: string;
 	public selectedTechnologyName: string;
 	public totalAssetCount = 0;
-	public selectedCrashedSystemsFilter = '90';
-	public selectedCrashRiskFilter = 'HIGH';
+	public selectedCrashedSystemsFilter: string;
+	public selectedCrashRiskFilter: string;
 	public itemRange = '';
 	public totalItems = '';
 	public filters: Filter[];
@@ -49,7 +49,8 @@ export class RiskMitigationComponent {
 	public loading = false;
 	public loadingCrashesData = false;
 	private destroy$ = new Subject();
-	public defaultTimeRange = '90';
+	public defaultTimeRange = '1';
+	public defaultRiskState = 'HIGH';
 
 	@ViewChild('riskScoreFilterTemplate', { static: true })
 	public riskScoreFilterTemplate: TemplateRef<string>;
@@ -295,10 +296,10 @@ export class RiskMitigationComponent {
 		// TODO: Implement a better approach to handle the default filter value selection
 		const key = this.onlyCrashes ? 'riskScore' : 'timeRange';
 		const filter = _.find(this.filters, { key });
-		this.onlyCrashes
-			? _.set(filter, ['seriesData', '0', 'selected'], true)
-			: _.set(filter, ['seriesData', '3', 'selected'], true);
+		_.set(filter, ['seriesData', '0', 'selected'], true);
 		this.selectedFilters = [filter];
+		this.selectedCrashedSystemsFilter = this.defaultTimeRange;
+		this.selectedCrashRiskFilter = this.defaultRiskState;
 	}
 
 	/**
@@ -309,7 +310,6 @@ export class RiskMitigationComponent {
 		const filter = _.find(this.filters, { key: 'riskScore' });
 		_.set(filter, ['seriesData', '0', 'selected'], false);
 		this.selectedCrashRiskFilter = '';
-		this.selectedCrashedSystemsFilter = this.defaultTimeRange;
 	}
 
 	/**
@@ -366,7 +366,7 @@ export class RiskMitigationComponent {
 			},
 			{
 				filter: 'Not Evaluated',
-				label: `${I18n.get('_CP_NotEvaluated')}(${result.med})`,
+				label: `${I18n.get('_CP_NotEvaluated')}(${result.notEvaluated})`,
 				selected: false,
 				value: result.notEvaluated,
 			},
@@ -411,5 +411,12 @@ export class RiskMitigationComponent {
 	public paginationValueDetails (params: any) {
 		this.itemRange = params.itemRange;
 		this.totalItems = params.totalItems;
+	}
+	/**
+ 	* set OnlyCrashes based Grid selection
+ 	* @param param boolean value from template
+ 	*/
+	public switchGrid (param: boolean) {
+		this.onlyCrashes = param; this.clearFilters();
 	}
 }

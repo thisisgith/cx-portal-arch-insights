@@ -10,7 +10,7 @@
 				<div
 					data-auto-id="highCrashCount"
 					class="base-margin-bottom qtr-margin-top cursor"
-					(click)="getHighCrashesDeviceData()"
+					(click)="switchGrid(true)"
 					[ngClass]="{ 'text-primary': onlyCrashes }"
 				>
 					<div
@@ -25,7 +25,7 @@
 				<div
 					data-auto-id="lastDayData"
 					class="half-margin-bottom qtr-margin-top cursor"
-					(click)="getAllCrashesData()"
+					(click)="switchGrid(false)"
 					[ngClass]="{ 'text-primary': !onlyCrashes }"
 				>
 					<div
