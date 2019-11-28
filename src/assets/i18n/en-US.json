@@ -1638,5 +1638,9 @@
 	"_YoullNeedAHypervisor_": "You'll need a hypervisor to host CX Collector",
 	"_YoullNeedAnEnvironment_": "You'll need an environment that:",
 	"_YourImpactedDevices_": "Your Impacted Devices",
-	"_YourProducts_": "Your products, documentation & Learning Library resources"
+	"_YourProducts_": "Your products, documentation & Learning Library resources",
+	"_ConnectionFailed_": "Please verify the IP Address or Try agin later",
+	"_ChangePasswordSuccess_": "Password changed Successfully",
+	"_SuccessModal_": "Success Modal"
+
 }
