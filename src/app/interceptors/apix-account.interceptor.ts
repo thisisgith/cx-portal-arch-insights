@@ -26,15 +26,15 @@ enum UserInfoKey {
 export class ApixAccountInterceptor implements HttpInterceptor {
 	// TODO: Remove this when APIs become consistent / ignore unused params
 	private pathsToIgnore = [
-		new RegExp('/api/cxportal/entitlement/v2/user$'),
-		new RegExp('/api/cxportal/cxpp-partner-info/partnerInfo/v1/[^/]+/partners$'),
-		new RegExp('/api/customerportal/pitstop/v1/info$'),
-		new RegExp('api/cxportal/cxpp-entitlement-wrapper/v1/entitlement/user/accounts$'),
+		new RegExp('/cxportal/entitlement/v2/user$'),
+		new RegExp('/cxportal/cxpp-partner-info/partnerInfo/v1/[^/]+/partners$'),
+		new RegExp('/customerportal/pitstop/v1/info$'),
+		new RegExp('/cxportal/cxpp-entitlement-wrapper/v1/entitlement/user/accounts$'),
 	];
 
 	private assetsAPIs = [
-		new RegExp('/api/customerportal/inventory/v1/assets/hardware$'),
-		new RegExp('/api/customerportal/inventory/v1/assets/system$'),
+		new RegExp('/customerportal/inventory/v1/assets/hardware$'),
+		new RegExp('/customerportal/inventory/v1/assets/system$'),
 	];
 
 	constructor (
