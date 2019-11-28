@@ -68,7 +68,7 @@ describe('SelectRoleComponent', () => {
 		component.user.roles[0] = dummyData;
 		component.ngOnInit();
 		expect(component.roleName)
-			.toEqual('AssignRole');
+			.toEqual('Assign Role');
 
 	});
 
