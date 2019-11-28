@@ -30,6 +30,8 @@ export class ApixAccountInterceptor implements HttpInterceptor {
 		new RegExp('/cxportal/cxpp-partner-info/partnerInfo/v1/[^/]+/partners$'),
 		new RegExp('/customerportal/pitstop/v1/info$'),
 		new RegExp('/cxportal/cxpp-entitlement-wrapper/v1/entitlement/user/accounts$'),
+		new RegExp('/customerportal/search/v2/ciscoSearch$'),
+		new RegExp('/customerportal/search/v1/globalSearch$'),
 	];
 
 	private assetsAPIs = [
