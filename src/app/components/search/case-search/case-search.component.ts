@@ -77,6 +77,7 @@ implements OnInit, OnDestroy, OnChanges {
 	public lastNote: Note;
 
 	public rmaToolUrl = environment.rmaToolUrl;
+	public isAssetAvailable = false;
 
 	constructor (
 		private logger: LogService,
@@ -153,6 +154,9 @@ implements OnInit, OnDestroy, OnChanges {
 		.subscribe(hardware => {
 			this.case.hostName = _.get(hardware, ['data', 0, 'hostname']);
 			this.loadingHardware = false;
+			if (this.case.hostName) {
+				this.isAssetAvailable = true;
+			}
 		});
 
 		// Begin pipes

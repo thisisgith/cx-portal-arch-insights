@@ -1,9 +1,8 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
-import { InventoryService, HardwareAssets } from '@sdp-api';
+import { InventoryService } from '@sdp-api';
 import { UserResolve } from '@utilities';
-import { takeUntil, map, catchError, switchMap } from 'rxjs/operators';
-import { Subject, of } from 'rxjs';
-import { LogService } from '@cisco-ngx/cui-services';
+import { takeUntil, switchMap } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 import * as _ from 'lodash-es';
 
 /**
@@ -26,7 +25,6 @@ export class CaseSummaryComponent implements OnInit {
 	constructor (
 		private inventoryService: InventoryService,
 		private userResolve: UserResolve,
-		private logger: LogService,
 	) {
 		this.userResolve.getCustomerId()
 		.pipe(
@@ -37,6 +35,9 @@ export class CaseSummaryComponent implements OnInit {
 		});
 	}
 
+	/**
+	 * Initialization hook
+	 */
 	public ngOnInit () {
 		this.buildRefreshSubject();
 		this.refresh$.next();
@@ -51,7 +52,10 @@ export class CaseSummaryComponent implements OnInit {
 		}
 	}
 
-	private buildRefreshSubject() {
+	/**
+	 * Builds the refresh subject for cancellable http requests
+	 */
+	private buildRefreshSubject () {
 		this.refresh$
 		.pipe(
 			switchMap(() =>
@@ -60,20 +64,20 @@ export class CaseSummaryComponent implements OnInit {
 			takeUntil(this.destroy$),
 		)
 		.subscribe(asset => {
-			if (asset.data && asset.data.length > 0) {
+			var a = _.filter(asset.data, d => _.find(this.caseDetails.deviceName , f => f === d.hostname));
+			if (a.length > 0) {
 				this.isAssetAvailable = true;
 			}
-		})
+		});
 	}
 
 	/**
-	 * 
+	 * fetch asset details to check availability
+	 * @returns Observable
 	 */
 	private getAssetAvailability () {
-		return this.inventoryService.getHardwareAssets({
+		return this.inventoryService.getHardware({
 			customerId: this.customerId,
-			page: 1,
-			rows: 1,
 			serialNumber: [this.caseDetails.serialNumber],
 		});
 	}
