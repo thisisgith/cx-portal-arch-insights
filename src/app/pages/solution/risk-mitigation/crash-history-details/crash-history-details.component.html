@@ -12,21 +12,17 @@
 		<div class="half-margin-left">
 			<div class="text-xlarge">
 				<span
-					class="qtr-margin-left"
 					[innerText]="'_RMCrashHistoryFor_' | i18n"
 				></span>
-				<span class="qtr-margin-left">
-					<span class="text-info">&#60;</span>
+				<span class="half-margin-left">
 					<a
 						data-auto-id="selectedName"
 						(click)="showAssetDetailsView = true;"
 						[innerHTML]="selectedSystem?.neName"
 					></a>
-					<span class="text-info">&#62;</span>
 				</span>
 			</div>
-			<div class="divider"></div>
-			<div class="row">
+			<div class="row  dbl-margin-top">
 				<div class="col-3">
 					<div class="row">
 						<div
