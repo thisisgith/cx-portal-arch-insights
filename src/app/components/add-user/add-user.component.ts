@@ -36,8 +36,7 @@ export class AddUserComponent implements OnInit {
 	public isParntner = 'false';
 	public addUserResponse: UserAddResponseModel;
 	public isLoading = false;
-	/**** PlaceHolder ****/
-	 public customerId: string;
+	public customerId: string;
 	public saAccountId: string;
 
 	constructor (
@@ -59,7 +58,7 @@ export class AddUserComponent implements OnInit {
 		this.alert.visible = false;
 		this.isLoading = false;
 		this.userService
-			.getListRolesForGivenUserUsingGET(this.customerId)
+			.getListRolesForGivenUserUsingGET(this.saAccountId)
 			.subscribe(data => {
 				this.response = data;
 				this.items = this.response.saRoles;

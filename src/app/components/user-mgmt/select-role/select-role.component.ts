@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { RolesService } from './roles.service';
-import { RoleDetails, UserDetails, UserUpdateResponseModel } from '@sdp-api';
+import { RoleDetails, UserDetails, UserUpdateResponseModel, ControlPointUserManagementAPIService } from '@sdp-api';
 import { Observable } from 'rxjs';
 import * as _ from 'lodash-es';
 import { I18n } from '@cisco-ngx/cui-utils';
@@ -39,6 +39,7 @@ export class SelectRoleComponent implements OnInit {
 		private elem: ElementRef,
 		private roles: RolesService,
 		private route: ActivatedRoute,
+		private userService: ControlPointUserManagementAPIService,
 		private userReslove: UserResolve,
 	) {
 		this.customerId = _.get(this.route, ['snapshot', 'data', 'user', 'info', 'customerId']);
@@ -81,20 +82,30 @@ export class SelectRoleComponent implements OnInit {
 		if (role.roleDisplayName && role.roleDisplayName === this.roleName) {
 			return;
 		}
-		role.tenant = 'SMARTACC';
-		const userUpdate = {
-			...this.user,
-			customerId: this.customerId,
-			isPartner: false,
-			rolesAdded: [role],
-			rolesRemoved: [],
-			saAccountId: this.saAccountId.toString(),
-		};
+		let updateRequest;
 		if (this.role) {
 			this.role.tenant = 'SMARTACC';
-			userUpdate.rolesRemoved.push(this.role);
+			role.tenant = 'SMARTACC';
+			const userUpdate = {
+				...this.user,
+				customerId: this.customerId,
+				isPartner: false,
+				rolesAdded: [role],
+				rolesRemoved: [this.role],
+				saAccountId: this.saAccountId.toString(),
+			};
+			updateRequest = this.roles.updateRole(userUpdate);
+		} else {
+			const userUpdate = {
+				customerId: this.customerId,
+				saAccountId: this.saAccountId.toString(),
+				ccoId: this.user.ccoId,
+				email: this.user.emailAddress,
+				rolesAdded: [role],
+				isPartner: 'false',
+			};
+			updateRequest = this.userService.AddNewUserUsingPOST(userUpdate);
 		}
-		const updateRequest = this.roles.updateRole(userUpdate);
 		this.clickout();
 		this.onSelect.emit(updateRequest);
 	}
