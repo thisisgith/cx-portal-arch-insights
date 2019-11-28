@@ -100,6 +100,38 @@ describe('AdminComplienceComponent', () => {
 			component.filterDuplicates();
 			expect(component.leftSideTags)
 				.toBeDefined();
+			component.rightSideTagsResponse.policyGroups = [];
+			component.filterDuplicates();
+			expect(component.toBeScanned)
+			.toBeFalsy();
+			component.saveDetails.body.policy = '';
+			component.triggerModal = '';
+			component.filterDuplicates();
+			expect(component.toBeScanned)
+			.toBeFalsy();
+			expect(component.selectedDeviceTagType)
+			.toBe('allDevices');
+			component.checkRightSideTags([]);
+			expect(component.tagsFromAssetTagging)
+			.toBeFalsy();
+			component.checkRightSideTags([1, 2]);
+			expect(component.tagsFromAssetTagging)
+			.toBeTruthy();
+			component.rightSideTagsResponse.policyGroups = [
+				{
+					devices: [],
+					policyName: 'HIPPA',
+					tags: [],
+					toBeScanned: true,
+
+				},
+			];
+			component.saveDetails.body.policy = '';
+			component.filterDuplicates();
+			expect(component.toBeScanned)
+			.toBeFalsy();
+			expect(component.selectedDeviceTagType)
+			.toBe('allDevices');
 		});
 
 		it('should have rigth side tag response', () => {
@@ -136,6 +168,36 @@ describe('AdminComplienceComponent', () => {
 			component.filterDuplicates();
 			expect(component.rightSideTags)
 				.toBeDefined();
+		});
+
+		it('should call onPolicySelected on select change', () => {
+			component.rightSideTagsResponse = {
+				policyGroups: [
+					{
+						devices: [],
+						policyName: 'HIPPA',
+						tags: [{
+							deviceCount: 1,
+							devices: [],
+							tagName: 'ABC',
+							tagValue: '111',
+						}],
+						toBeScanned: true,
+					},
+				]};
+			component.enableSaveButton = false;
+			component.allInventorySelected = false;
+			component.leftSideTagsResponse = {
+				tags: [{
+					deviceCount: 1,
+					devices: [],
+					tagName: 'ABC',
+					tagValue: '111',
+				}],
+			};
+			component.onPolicySelected('HIPAA');
+			expect(component.leftSideTags)
+			.toBeDefined();
 		});
 
 		it('should not have left side tag response', () => {
@@ -257,10 +319,42 @@ describe('AdminComplienceComponent', () => {
 	});
 
 	it('should discard changes', () => {
-		spyOn(component, 'updateOptInOutStatus');
+		component.rightSideTagsResponse = {
+			policyGroups: [],
+		};
 		component.discardChanges();
 		expect(component.optlnStatus)
 			.toBeFalsy();
+	});
+
+	it('should handle success scenario', () => {
+		component.saveDetails.body.toBeScanned = true;
+		component.handleSaveSuccess();
+		component.saveDetails.body.toBeScanned = false;
+		component.handleSaveSuccess();
+		component.rightSideTagsResponse = {
+			policyGroups: [
+				{
+					devices: [],
+					policyName: 'HIPPA',
+					tags: [{
+						deviceCount: 1,
+						devices: [],
+						tagName: 'ABC',
+						tagValue: '111',
+					}],
+					toBeScanned: true,
+
+				},
+			],
+		};
+		component.toBeScanned = false;
+		component.saveDetails.body.policy = '';
+		component.handleSaveSuccess();
+		expect(component.rightSideTagsResponse.policyGroups[0].toBeScanned)
+		.toBeTruthy();
+		component.rightSideTagsResponse = { };
+		component.handleSaveSuccess();
 	});
 
 	it('should save changes', () => {

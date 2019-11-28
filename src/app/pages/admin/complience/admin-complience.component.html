@@ -92,7 +92,7 @@
 
 												<label class="switch">
 													<input type="checkbox" data-auto-id="toBeScanned"
-													checked (click)="toBeScanned = !toBeScanned">
+													checked (click)="enableDisableScan()">
 													<span class="switch__input"></span>
 													<span class="switch__label" [innerText]="'_AdminComplianceYes_' | i18n"></span>
 												</label>
@@ -110,7 +110,7 @@
 																></sup>
 													</div>
 													<label class="switch">
-														<input type="checkbox" data-auto-id="toBeScanned2" (click)="toBeScanned = !toBeScanned">
+														<input type="checkbox" data-auto-id="toBeScanned2" (click)="enableDisableScan()">
 														<span class="switch__input"></span>
 														<span class="switch__label" [innerText]="'_AdminComplianceNo_' | i18n"></span>
 													</label>
@@ -121,7 +121,7 @@
 									<div class="col-12 flex-end" *ngIf="saveDetails.body.policy != 'select'">
 											<button class="btn btn--small btn--primary half-margin-top" data-auto-id="savePolicyDetails"
 											(click)="savePolicyDetails()"
-											[ngClass]="{'disabled': selectedDeviceTagType=='selectedTags' && !tagsFromAssetTagging}"
+											[ngClass]="{'disabled': selectedDeviceTagType === 'selectedTags' && !tagsFromAssetTagging}"
 											[innerText]="'_Save_' | i18n"></button>
 										</div>
 							</div>
