@@ -13,6 +13,7 @@ import { RoleDetails, UserDetails, UserUpdateResponseModel, ControlPointUserMana
 import { Observable } from 'rxjs';
 import * as _ from 'lodash-es';
 import { I18n } from '@cisco-ngx/cui-utils';
+import { UserResolve } from '@utilities';
 
 /**
  * SelectRoleComponent
@@ -31,16 +32,19 @@ export class SelectRoleComponent implements OnInit {
 	public expanded = false;
 	public roleName: string;
 	public roleDescription: string;
-	public saAccountId = '104959';
 	public options$: Observable<RoleDetails[]> = this.roles.roles;
+	public saAccountId: number;
 
 	constructor (
 		private elem: ElementRef,
 		private roles: RolesService,
 		private route: ActivatedRoute,
 		private userService: ControlPointUserManagementAPIService,
+		private userReslove: UserResolve,
 	) {
 		this.customerId = _.get(this.route, ['snapshot', 'data', 'user', 'info', 'customerId']);
+		this.userReslove.getSaId()
+		.subscribe(saId => this.saAccountId = saId);
 	}
 
 	/**
@@ -88,13 +92,13 @@ export class SelectRoleComponent implements OnInit {
 				isPartner: false,
 				rolesAdded: [role],
 				rolesRemoved: [this.role],
-				saAccountId: '104959', // TODO update this to be saId
+				saAccountId: this.saAccountId.toString(),
 			};
 			updateRequest = this.roles.updateRole(userUpdate);
 		} else {
 			const userUpdate = {
 				customerId: this.customerId,
-				saAccountId: this.saAccountId,
+				saAccountId: this.saAccountId.toString(),
 				ccoId: this.user.ccoId,
 				email: this.user.emailAddress,
 				rolesAdded: [role],

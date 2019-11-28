@@ -12,6 +12,7 @@ import {
 	UserAddRequestModel,
 	UserAddResponseModel,
 } from '@sdp-api';
+import { UserResolve } from '@utilities';
 
 /**
  * Add User Component
@@ -35,14 +36,20 @@ export class AddUserComponent implements OnInit {
 	public isParntner = 'false';
 	public addUserResponse: UserAddResponseModel;
 	public isLoading = false;
-	/**** PlaceHolder ****/
-	public saAccountId = '106200';
+	public customerId: string;
+	public saAccountId: string;
 
 	constructor (
 		public cuiModalService: CuiModalService,
 		private userService: ControlPointUserManagementAPIService,
 		private logger: LogService,
-	) { }
+		private userReslove: UserResolve,
+	) {
+		this.userReslove.getSaId()
+		.subscribe(saId => this.saAccountId = saId.toString());
+		this.userReslove.getCustomerId()
+		.subscribe(customerId => this.customerId = customerId);
+	}
 
 	/**
 	 *  NgOnInit
@@ -64,7 +71,7 @@ export class AddUserComponent implements OnInit {
 		this.isLoading = true;
 		this.userDetails = {
 			ccoId: this.addUserForm.value.ccoid,
-			customerId: this.saAccountId,
+			customerId: this.customerId,
 			email: this.addUserForm.value.email,
 			isPartner: this.isParntner,
 			rolesAdded: [
