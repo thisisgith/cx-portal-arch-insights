@@ -28,7 +28,7 @@ import {
 } from '@sdp-api';
 import { catchError, takeUntil, finalize } from 'rxjs/operators';
 import { empty, Subject } from 'rxjs';
-import { RacetrackInfoService } from '../../../../services/racetrack-info';
+import { RacetrackInfoService } from '@services';
 
 import * as _ from 'lodash-es';
 
