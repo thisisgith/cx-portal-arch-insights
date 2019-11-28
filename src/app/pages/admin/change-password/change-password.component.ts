@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, ViewChild, TemplateRef } from '@angular/core';
 import { interval, Subject, of, empty } from 'rxjs';
 import { catchError, exhaustMap, map, takeUntil, takeWhile } from 'rxjs/operators';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
@@ -8,6 +8,7 @@ import {  Router } from '@angular/router';
 import { RegisterCollectorService, ChangePasswordParams } from '../../setup-ie/register-collector/register-collector.service';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { validateIpAddress, passwordValidator, passwordsMatchValidator, passwordsOldNewValidator } from '@utilities';
+import { CuiModalService } from '@cisco-ngx/cui-components';
 
 /**
  * Change Password component
@@ -19,7 +20,11 @@ import { validateIpAddress, passwordValidator, passwordsMatchValidator, password
 	templateUrl: './change-password.component.html',
 })
 export class ChangePasswordComponent implements OnDestroy {
+	@ViewChild('showConfirmationModal',
+	{ static: true }) private showConfirmationModal: TemplateRef<string>;
+
 	public isLoading = false;
+	public ipNotConnected = false;
 	public changePas = false;
 	public instruct = false;
 	public reachedIP = false;
@@ -33,6 +38,7 @@ export class ChangePasswordComponent implements OnDestroy {
 		ipaddress : new FormControl('', [Validators.required, validateIpAddress]),
 	});
 	private destroyed$: Subject<void> = new Subject<void>();
+	public count = 0;
 
 	public accountForm = new FormGroup({
 		oldPassword: new FormControl(null, [
@@ -54,6 +60,7 @@ export class ChangePasswordComponent implements OnDestroy {
 		private router: Router,
 		private setupService: SetupIEService,
 		private registerCollectorService: RegisterCollectorService,
+		private cuiModalService: CuiModalService,
 		) { }
 
 	public get pwErrors () {
@@ -135,10 +142,16 @@ export class ChangePasswordComponent implements OnDestroy {
 	private pollIP () {
 		interval(2000)
 			.pipe(
-				exhaustMap(() => this.checkIPConnection()),
-				takeWhile(connected => {
+				 exhaustMap(() => this.checkIPConnection()),
+				 takeWhile(connected => {
 					if (connected) {
 						this.changePas = true;
+					}
+					this.count = this.count + 1;
+					if (this.count === 3) {
+						this.ipNotConnected = true;
+						this.isLoading = false;
+						this.count = 0;
 					}
 
 					return !connected;
@@ -152,7 +165,6 @@ export class ChangePasswordComponent implements OnDestroy {
 	 * Submit Button Handler
 	 */
 	public onSubmit () {
-		this.isChangingPass = true;
 		const pass: ChangePasswordParams = {
 			new_password: this.accountForm.value.password,
 			old_password: this.accountForm.value.oldPassword,
@@ -163,7 +175,7 @@ export class ChangePasswordComponent implements OnDestroy {
 			catchError(err => {
 				this.errors = err;
 				if (this.errors.status === 400) {
-					this.isChangingPass = false;
+				 this.isChangingPass = false;
 					_.invoke(
 						this.alert,
 						'show',
@@ -176,8 +188,13 @@ export class ChangePasswordComponent implements OnDestroy {
 		)
 		.subscribe(response => {
 			if (/Credential changed/.test(response)) {
-				this.router.navigate(['/admin']);
+				this.cuiModalService.show(this.showConfirmationModal, 'normal');
 			}
 		});
+	}
+
+	public onConfirm () {
+		this.cuiModalService.hide();
+		this.router.navigate(['/admin']);
 	}
 }

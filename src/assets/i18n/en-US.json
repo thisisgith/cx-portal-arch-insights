@@ -1118,7 +1118,7 @@
 	"_RccNoValue_": "0",
 	"_RccOSName_": "OS Name",
 	"_RccOSNamePlaceHolder_": "Select OS Name",
-	"_RccPolicyCategoryTooltip_": "Logical grouping of policy rules by device configuration parameters",
+	"_RccPolicyCategoryTooltip_": "Logical grouping of policy rules by device configuration parameters.",
 	"_RccPolicyName_": "Policy Name",
 	"_RccPolicyNamePlaceHolder_": "Select Policy Name",
 	"_RccPolicyRegulatoryPlaceHolder_": "Select Regulatory Type",
@@ -1669,5 +1669,9 @@
 	"_YoullNeedAHypervisor_": "You'll need a hypervisor to host CX Collector",
 	"_YoullNeedAnEnvironment_": "You'll need an environment that:",
 	"_YourImpactedDevices_": "Your Impacted Devices",
-	"_YourProducts_": "Your products, documentation & Learning Library resources"
+	"_YourProducts_": "Your products, documentation & Learning Library resources",
+	"_ConnectionFailed_": "Please verify the IP Address or Try agin later",
+	"_ChangePasswordSuccess_": "Password changed Successfully",
+	"_SuccessModal_": "Success Modal"
+
 }
