@@ -8,6 +8,7 @@ import {
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import * as _ from 'lodash-es';
+import { UserResolve } from '@utilities';
 
 /**
  * Roles Service (share role options between SelectRoleComponent)
@@ -18,11 +19,16 @@ import * as _ from 'lodash-es';
 export class RolesService {
 	private _request: Observable<RoleDetails[]>;
 	private customerId: string;
+	private saAccountId: string;
 	constructor (
 		private route: ActivatedRoute,
 		private userService: ControlPointUserManagementAPIService,
+		private userResolve: UserResolve,
 	) {
 		this.customerId = _.get(this.route, ['snapshot', 'data', 'user', 'info', 'customerId']);
+		this.userResolve.getSaId()
+		.subscribe(saId => this.saAccountId = saId.toString());
+
 	}
 
 	/**
@@ -34,7 +40,7 @@ export class RolesService {
 		}
 
 		this._request = this.userService.getListRolesForGivenUserUsingGET(
-			this.customerId,
+			this.saAccountId,
 		)
 			.pipe(
 				map(response => [...response.saRoles/*, ...response.vaRoles*/]),
