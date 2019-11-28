@@ -34,8 +34,7 @@ export class RolesService {
 		}
 
 		this._request = this.userService.getListRolesForGivenUserUsingGET(
-			// this.customerId, TODO add this back
-			'106200',
+			this.customerId,
 		)
 			.pipe(
 				map(response => [...response.saRoles/*, ...response.vaRoles*/]),
