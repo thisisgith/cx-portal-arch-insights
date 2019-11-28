@@ -126,7 +126,7 @@
 </ng-template>
 
 <ng-template #expandTemplate let-celldata="celldata">
-		<span data-auto-id="expandIcon" [ngClass]="expandHardwareDetails ?'icon-chevron-up icon--size-16': 'icon-chevron-down icon--size-16'"
+		<span data-auto-id="expandIcon" [ngClass]="celldata.toggleWell ?'icon-chevron-up icon--size-16': 'icon-chevron-down icon--size-16'"
 			  (click)="onRowSelect($event)">
 		</span>
 </ng-template>
