@@ -36,9 +36,14 @@
 			class="absolute-center"
 		></cui-loader>
 		<div
-			*ngIf="!loading && items?.length === 0"
-			class="absolute-center"
-			[innerText]="'_AssetTaggingNoTagsInList_' | i18n">
+			*ngIf="!loading && items?.length === 0 && textForTagList==='selected'"
+			class="absolute-center text-muted text-xlarge"
+			[innerText]="'_AssetTaggingNoTagsInListSelected_' | i18n">
+		</div>
+		<div
+			*ngIf="!loading && items?.length === 0 && textForTagList==='available'"
+			class="absolute-center text-muted text-xlarge"
+			[innerText]="'_AssetTaggingNoTagsInListAvailable_' | i18n">
 		</div>
 	</div>
 	<div class="

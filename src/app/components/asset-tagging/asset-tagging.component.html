@@ -21,6 +21,7 @@
 		</div>
 		<ng-container *ngTemplateOutlet="tagTableTemplate; context: {
 								name: leftTags,
+								title: 'available',
 								tags: tagListLeft,
 								allTagsSelected: allTagsSelectedLeft,
 								loadingList: loadingListLeft,
@@ -76,6 +77,7 @@
 		</div>
 		<ng-container *ngTemplateOutlet="tagTableTemplate; context: {
 								name: rightTags,
+								title: 'selected',
 								tags: tagListRight,
 								allTagsSelected: allTagsSelectedRight,
 								loadingList: loadingListRight,
@@ -88,6 +90,7 @@
 <ng-template #tagTableTemplate
 	let-name="name"
 	let-tags="tags"
+	let-title="title"
 	let-allTagsSelected="allTagsSelected"
 	let-loadingList="loadingList"
 	let-searchText="searchText">
@@ -113,6 +116,7 @@
 		[loading]="loadingList"
 		[searchText]="searchText"
 		(selectionEvent)="handleTagSelectionChanged(name)"
+		[textForTagList]="title"
 		rowHeight="50">
 	</tag-list>
 </ng-template>
