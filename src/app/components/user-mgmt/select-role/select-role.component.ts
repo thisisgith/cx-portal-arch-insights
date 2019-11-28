@@ -13,6 +13,7 @@ import { RoleDetails, UserDetails, UserUpdateResponseModel } from '@sdp-api';
 import { Observable } from 'rxjs';
 import * as _ from 'lodash-es';
 import { I18n } from '@cisco-ngx/cui-utils';
+import { UserResolve } from '@utilities';
 
 /**
  * SelectRoleComponent
@@ -32,13 +33,17 @@ export class SelectRoleComponent implements OnInit {
 	public roleName: string;
 	public roleDescription: string;
 	public options$: Observable<RoleDetails[]> = this.roles.roles;
+	public saAccountId: number;
 
 	constructor (
 		private elem: ElementRef,
 		private roles: RolesService,
 		private route: ActivatedRoute,
+		private userReslove: UserResolve,
 	) {
 		this.customerId = _.get(this.route, ['snapshot', 'data', 'user', 'info', 'customerId']);
+		this.userReslove.getSaId()
+		.subscribe(saId => this.saAccountId = saId);
 	}
 
 	/**
@@ -83,7 +88,7 @@ export class SelectRoleComponent implements OnInit {
 			isPartner: false,
 			rolesAdded: [role],
 			rolesRemoved: [],
-			saAccountId: '106200', // TODO update this to be saId
+			saAccountId: this.saAccountId.toString(),
 		};
 		if (this.role) {
 			this.role.tenant = 'SMARTACC';
