@@ -424,7 +424,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					},
 					{
 						key: 'deviceName',
-						name: I18n.get('_Hostname_'),
+						name: I18n.get('_SystemName_'),
 						sortable: true,
 						template: this.deviceTemplate,
 					},
@@ -560,7 +560,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					},
 					{
 						key: 'deviceName',
-						name: I18n.get('_SystemHostname_'),
+						name: I18n.get('_SystemName_'),
 						sortable: true,
 						sortDirection: 'desc',
 						sorting: true,
