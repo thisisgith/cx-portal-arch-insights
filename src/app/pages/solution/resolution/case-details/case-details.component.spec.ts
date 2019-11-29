@@ -56,7 +56,7 @@ describe('CaseDetailsComponent', () => {
 		spyOn(caseService, 'fetchCaseDetails');
 		component.case = null;
 		fixture.detectChanges();
-		component.ngOnChanges({ });
+		component.ngOnChanges({});
 		expect(caseService.fetchCaseDetails)
 			.toHaveBeenCalledTimes(0);
 	});
@@ -145,4 +145,18 @@ describe('CaseDetailsComponent', () => {
 		fixture.destroy();
 		flush();
 	}));
+
+	it('set number of files count to 0 if case details errors out', () => {
+		const caseDetails = { result: { response: { getBrokerResponse: { error: '400' } } } };
+		component.populateCaseFilesList(caseDetails);
+		expect(component.numberOfFiles)
+			.toEqual(0);
+	});
+
+	it('set number of files count from case details response', () => {
+		const caseDetails = { result: { response: { getBrokerResponse: { downloadInfo: { noOfFiles: 4 } } } } };
+		component.populateCaseFilesList(caseDetails);
+		expect(component.numberOfFiles)
+			.toEqual(4);
+	});
 });
