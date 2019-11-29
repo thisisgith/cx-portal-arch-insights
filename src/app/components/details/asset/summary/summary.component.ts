@@ -297,8 +297,7 @@ export class AssetDetailsSummaryComponent implements OnChanges, OnInit, OnDestro
 				deviceId: _.get(this.hardwareAsset, 'neId'),
 			};
 
-			this.status.scan.eligible = _.get(this.systemAsset, 'isManagedNe', false) ?
-				true : false;
+			this.status.scan.eligible = _.get(this.systemAsset, 'isManagedNE', false);
 
 			this.hidden = false;
 
