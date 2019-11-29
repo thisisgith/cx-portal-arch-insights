@@ -86,6 +86,8 @@ export class TimeSeriesChartComponent {
 				visible: true,
 			},
 			yAxis: {
+				min: 0,
+				minRange: 0.01,
 				gridLineColor: 'transparent',
 				gridLineWidth: 0,
 				lineWidth: 1,
