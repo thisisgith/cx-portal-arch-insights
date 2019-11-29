@@ -10,43 +10,37 @@ const routes: Routes = [
 	{
 		children: [
 			{
-				loadChildren: () => import('../rcc/rcc.module')
-					.then(m => m.RccModule),
+				loadChildren: '../rcc/rcc.module#RccModule',
 				path: 'compliance',
 				resolve: {
 					user: UserResolve,
 				},
 			}, {
-				loadChildren: () => import('../risk-mitigation/risk-mitigation.module')
-					.then(m => m.RiskMitigationModule),
+				loadChildren: '../risk-mitigation/risk-mitigation.module#RiskMitigationModule',
 				path: 'risk-mitigation',
 				resolve: {
 					user: UserResolve,
 				},
 			}, {
-				loadChildren: () => import('../osv/osv.module')
-					.then(m => m.OptimalSoftwareVersionModule),
+				loadChildren: '../osv/osv.module#OptimalSoftwareVersionModule',
 				path: 'osv',
 				resolve: {
 					user: UserResolve,
 				},
 			}, {
-				loadChildren: () => import('../architecture/architecture.module')
-					.then(m => m.ArchitectureModule),
+				loadChildren: '../architecture/architecture.module#ArchitectureModule',
 				path: 'architecture',
 				resolve: {
 					user: UserResolve,
 				},
 			}, {
-				loadChildren: () => import('../syslogs/syslogs.module')
-					.then(m => m.SyslogsModule),
+				loadChildren: '../syslogs/syslogs.module#SyslogsModule',
 				path: 'syslogs',
 				resolve: {
 					user: UserResolve,
 				},
 			}, {
-				loadChildren: () => import('../architecture-review/architecture-review.module')
-					.then(m => m.ArchitectureReviewModule),
+				loadChildren: '../architecture-review/architecture-review.module#ArchitectureReviewModule',
 				path: 'architecture-review',
 				resolve: {
 					user: UserResolve,

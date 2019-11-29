@@ -7,11 +7,6 @@ import {
 	ImageDownloadUrlResponse,
 	MetadataResponse,
 } from '@interfaces';
-import {
-	ASDImageDownloadUrlScenarios,
-	ASDMetadataScenarios,
-	ASDTokenScenarios,
-} from '@mock';
 import * as _ from 'lodash-es';
 
 /** AuthTokenResponse Interface */
@@ -235,14 +230,28 @@ export class ASDAPIService {
 		caller: 'auth' | 'meta' | 'url',
 	): Observable<ASDResponse> {
 		if (!window.Cypress && this.env.ieSetup.mockASD) {
-			switch (caller) {
-				case 'auth':
-					return of(ASDTokenScenarios[0].scenarios.GET[0].response.body);
-				case 'meta':
-					return of(ASDMetadataScenarios[0].scenarios.GET[0].response.body);
-				case 'url':
-					return of(ASDImageDownloadUrlScenarios[0].scenarios.GET[2].response.body);
-			}
+			return new Observable<ASDResponse>(observer => {
+				// only import the whole @mock library if we are not in production
+				Promise.all([
+					import('src/environments/mock/asd/getImageDownloadUrl'),
+					import('src/environments/mock/asd/getMetadata'),
+					import('src/environments/mock/asd/getToken'),
+				])
+				.then(([
+					{ ASDImageDownloadUrlScenarios },
+					{ ASDMetadataScenarios },
+					{ ASDTokenScenarios },
+				]) => {
+					switch (caller) {
+						case 'auth':
+							return observer.next(ASDTokenScenarios[0].scenarios.GET[0].response.body);
+						case 'meta':
+							return observer.next(ASDMetadataScenarios[0].scenarios.GET[0].response.body);
+						case 'url':
+							return observer.next(ASDImageDownloadUrlScenarios[0].scenarios.GET[2].response.body);
+					}
+				});
+			});
 		}
 
 		return actual;
