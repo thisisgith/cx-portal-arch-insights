@@ -7,9 +7,9 @@ import { I18nPipeModule, FromNowPipeModule } from '@cisco-ngx/cui-pipes';
 import { FormsModule } from '@angular/forms';
 import { AddNoteModule } from '../case-details/add-note/add-note.module';
 import { RelatedRmaModule } from '../case-details/related-rma/related-rma.module';
+import { CSCModule } from '@cui-x-views/csc';
 import { DateTimePipeModule } from '@pipes';
 import { ApixAuthInterceptor } from '@interceptors';
-import { CSCModule } from '@cui-x-views/csc';
 
 /**
  * Case Details Header Module
@@ -26,10 +26,10 @@ import { CSCModule } from '@cui-x-views/csc';
 		AddNoteModule,
 		RelatedRmaModule,
 		CuiSpinnerModule,
+		CSCModule,
 		CuiModalModule,
 		FromNowPipeModule,
 		DateTimePipeModule,
-		CSCModule,
 	],
 	providers: [
 		{ provide: HTTP_INTERCEPTORS, useClass: ApixAuthInterceptor, multi: true },
