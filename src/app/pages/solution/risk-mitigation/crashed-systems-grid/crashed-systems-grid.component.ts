@@ -40,8 +40,8 @@ export class CrashedSystemsGridComponent implements OnChanges {
 		limit: 10,
 		page: 0,
 	};
-	public first = 0;
-	public last = 2;
+	public pageFirstRecord = 0;
+	public pageLastRecord = 10;
 	public isLoading: boolean;
 	public pageInfo = {
 		limit: 2,
@@ -166,6 +166,10 @@ export class CrashedSystemsGridComponent implements OnChanges {
 	public getCrashedSystemDetails () {
 		const params = this.getCrashedSystemsParams();
 		this.isLoading = true;
+		this.paginationValue.emit({
+			itemRange: '0-0',
+			totalItems: 0,
+		});
 
 		return this.riskMitigationService.getDeviceDetails(params)
 				.pipe(
@@ -211,13 +215,13 @@ export class CrashedSystemsGridComponent implements OnChanges {
 
 	public onPagerUpdated (pageInfo: any) {
 		this.crashedSystemsGridDetails.tableOffset = pageInfo.page;
-		this.first = (this.crashedSystemsGridDetails.totalItems)
+		this.pageFirstRecord = (this.crashedSystemsGridDetails.totalItems)
 		? ((pageInfo.page * pageInfo.limit) + 1) : 0;
-		this.last = (pageInfo.page * pageInfo.limit) + 10;
-		if (this.last > this.crashedSystemsGridDetails.totalItems) {
-			this.last = this.crashedSystemsGridDetails.totalItems ;
+		this.pageLastRecord = (pageInfo.page * pageInfo.limit) + 10;
+		if (this.pageLastRecord > this.crashedSystemsGridDetails.totalItems) {
+			this.pageLastRecord = this.crashedSystemsGridDetails.totalItems ;
 		}
-		this.crashPagination = `${this.first}-${this.last}`;
+		this.crashPagination = `${this.pageFirstRecord}-${this.pageLastRecord}`;
 		const paginationValueProp = {
 			itemRange: this.crashPagination,
 			totalItems: this.crashedSystemsGridDetails.totalItems,

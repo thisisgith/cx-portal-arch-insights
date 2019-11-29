@@ -181,9 +181,9 @@
 						<span
 							[innerHTML]="
 								onlyCrashes
-									? subfilter.filter
-									: subfilter?.label
-							"
+									? (subfilter.filter | titlecase)
+									: subfilter?.label "
+
 						></span>
 						<span
 							class="icon-close"

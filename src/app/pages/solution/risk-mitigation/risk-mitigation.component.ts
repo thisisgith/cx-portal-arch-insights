@@ -235,7 +235,8 @@ export class RiskMitigationComponent {
 				loading: true,
 				seriesData: [],
 				template: this.timeRangeFilterTemplate,
-				title: I18n.get('_RMTIMEPeriod_'),
+				title: I18n.get('_RMTimeRange_'),
+				selected: true,
 			},
 			{
 				key: 'riskScore',
@@ -243,6 +244,7 @@ export class RiskMitigationComponent {
 				seriesData: [],
 				template: this.riskScoreFilterTemplate,
 				title: I18n.get('_CP_Risk_'),
+				selected: true,
 			},
 		];
 	}
