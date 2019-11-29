@@ -9,7 +9,7 @@ import { CaseService } from '@cui-x/services';
 import { CaseDetailsService } from '@services';
 import { InventoryService } from '@sdp-api';
 
-fdescribe('CaseDetailsComponent', () => {
+describe('CaseDetailsComponent', () => {
 	let component: CaseDetailsComponent;
 	let fixture: ComponentFixture<CaseDetailsComponent>;
 	let caseService: CaseService;
