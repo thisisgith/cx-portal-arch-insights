@@ -2,7 +2,7 @@ import { UserEntitlement, OrgUserResponse } from '@sdp-api';
 import { UserRoles } from '@constants';
 
 /** CustomerId to return  */
-const customerId = '2431199';
+const customerId = '2431199_0';
 
 /** api for cx-entitlement-wrapper accounts call */
 const accountsApi = '/api/cxportal/cxpp-entitlement-wrapper/v1/entitlement/user/accounts?accountType=CUSTOMER';
