@@ -9,6 +9,7 @@ import { AddNoteModule } from '../case-details/add-note/add-note.module';
 import { RelatedRmaModule } from '../case-details/related-rma/related-rma.module';
 import { DateTimePipeModule } from '@pipes';
 import { ApixAuthInterceptor } from '@interceptors';
+import { CSCModule } from '@cui-x-views/csc';
 
 /**
  * Case Details Header Module
@@ -28,6 +29,7 @@ import { ApixAuthInterceptor } from '@interceptors';
 		CuiModalModule,
 		FromNowPipeModule,
 		DateTimePipeModule,
+		CSCModule,
 	],
 	providers: [
 		{ provide: HTTP_INTERCEPTORS, useClass: ApixAuthInterceptor, multi: true },

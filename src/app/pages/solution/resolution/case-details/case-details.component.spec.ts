@@ -56,7 +56,7 @@ describe('CaseDetailsComponent', () => {
 		spyOn(caseService, 'fetchCaseDetails');
 		component.case = null;
 		fixture.detectChanges();
-		component.ngOnChanges({});
+		component.ngOnChanges({ });
 		expect(caseService.fetchCaseDetails)
 			.toHaveBeenCalledTimes(0);
 	});

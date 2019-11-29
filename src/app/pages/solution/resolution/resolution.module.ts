@@ -22,7 +22,6 @@ import {
 import { I18nPipeModule, FromNowPipeModule } from '@cisco-ngx/cui-pipes';
 import { DetailsPanelModule } from 'src/app/components/details/panel/details-panel.module';
 import { DateTimePipeModule } from '@pipes';
-import { CSCModule } from '@cui-x-views/csc';
 
 /**
  * Child routes for Resolution Module for lazy loading
@@ -64,7 +63,6 @@ const childRoutes: Routes = [
 		VisualFilterBarModule,
 		DateTimePipeModule,
 		AssetDetailsModule,
-		CSCModule,
 	],
 })
 export class ResolutionModule { }
