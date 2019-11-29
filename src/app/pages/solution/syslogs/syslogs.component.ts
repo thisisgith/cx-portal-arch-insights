@@ -77,7 +77,6 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 	private severityFilterTemplate: TemplateRef<{ }>;
 	 @ViewChild('afmSeverityFilter', { static: true })
 	 private afmSeverityFilterTemplate: TemplateRef<{ }>;
-	private InventorySubject: Subject<{ }>;
 	public filters: SyslogFilter[];
 	public filtered = false;
 	public allAssetsSelected = false;

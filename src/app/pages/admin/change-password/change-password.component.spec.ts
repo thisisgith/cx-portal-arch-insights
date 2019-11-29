@@ -1,5 +1,5 @@
 import { configureTestSuite } from 'ng-bullet';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ChangePasswordComponent } from './change-password.component';
@@ -7,12 +7,17 @@ import { environment } from '@environment';
 import { ChnagePasswordModule } from './change-password.module';
 import { RegisterCollectorService } from '../../setup-ie/register-collector/register-collector.service';
 import { SetupIEService } from '../../setup-ie/setup-ie.service';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
+import {  Router } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 
 describe('ChangePasswordComponent', () => {
 	let component: ChangePasswordComponent;
 	let fixture: ComponentFixture<ChangePasswordComponent>;
 	let registerService: RegisterCollectorService;
+	const mockRouter = {
+		navigate: jasmine.createSpy('navigate'),
+	};
 
 	configureTestSuite(() => {
 		TestBed.configureTestingModule({
@@ -25,6 +30,7 @@ describe('ChangePasswordComponent', () => {
 				SetupIEService,
 				RegisterCollectorService,
 				{ provide: 'ENVIRONMENT', useValue: environment },
+				{ provide: Router, useValue: mockRouter },
 			],
 		});
 	});
@@ -95,7 +101,7 @@ describe('ChangePasswordComponent', () => {
 		expect(registerService.changePassword)
 			.toHaveBeenCalled();
 		expect(component.isChangingPass)
-			.toBeTruthy();
+			.toBeFalsy();
 	});
 
 	it('should create', () => {
@@ -150,4 +156,26 @@ describe('ChangePasswordComponent', () => {
 			.toBeTruthy();
 	});
 
+	it('shold redirect to admin setting', () => {
+		  component.onConfirm();
+		  expect(mockRouter.navigate)
+		  	.toHaveBeenCalledWith(['/admin']);
+	});
+
+	it('should handle api failure ', fakeAsync(() => {
+
+		spyOn(registerService, 'changePassword').and
+		.returnValue(throwError(new HttpErrorResponse({ status: 400,
+			statusText: 'Resource not found',
+		})));
+		component.onSubmit();
+		registerService.changePassword({ new_password: 'abc',
+			old_password: '123'}, '127.0.0.1')
+		.subscribe(null, err => {
+			expect(err.statusText)
+				 .toEqual('Resource not found');
+				 expect(component.isChangingPass)
+			.toBeFalsy();
+		});
+	}));
 });

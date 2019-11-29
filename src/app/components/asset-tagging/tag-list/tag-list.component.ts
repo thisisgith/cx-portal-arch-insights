@@ -19,6 +19,7 @@ export class TagListComponent {
 	@Input() public loading: true;
 	@Input() public searchText = '';
 	@Input() public isDisabled = false;
+	@Input() public textForTagList;
 	@Output() public selectionEvent = new EventEmitter<any>();
 	public startIndex = 0;
 	public endIndex = 0;

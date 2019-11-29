@@ -118,7 +118,6 @@ export class AssetDetailsHardwareComponent implements OnInit, OnChanges, OnDestr
 	private selectedTechnologyName: string;
 	public getProductIcon = getProductTypeImage;
 	public getProductTitle = getProductTypeTitle;
-	private expandHardwareDetails: boolean;
 
 	constructor (
 		private logger: LogService,
@@ -293,7 +292,6 @@ export class AssetDetailsHardwareComponent implements OnInit, OnChanges, OnDestr
 	public onRowSelect (row) {
 		row.active = false;
 		row.toggleWell = !row.toggleWell;
-		this.expandHardwareDetails = !this.expandHardwareDetails;
 	}
 
 	/**

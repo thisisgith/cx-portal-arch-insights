@@ -192,12 +192,4 @@ describe('TechFormComponent', () => {
 		expect(component.form.controls.subtech.value)
 			.toBeNull();
 	}));
-
-	it('should make isTechSuggestionSelected as true when suggestionSelected', fakeAsync(() => {
-		component.isTechSuggestionSelected = false;
-		component.suggestionSelected(true);
-		fixture.detectChanges();
-		expect(component.isTechSuggestionSelected)
-			.toBeTruthy();
-	}));
 });
