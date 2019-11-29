@@ -154,7 +154,8 @@ implements OnInit, OnDestroy, OnChanges {
 		.subscribe(hardware => {
 			this.case.hostName = _.get(hardware, ['data', 0, 'hostname']);
 			this.loadingHardware = false;
-			if (this.case.hostName) {
+			const assetDetails = _.get(hardware, 'data');
+			if (assetDetails && assetDetails.length > 0) {
 				this.isAssetAvailable = true;
 			}
 		});

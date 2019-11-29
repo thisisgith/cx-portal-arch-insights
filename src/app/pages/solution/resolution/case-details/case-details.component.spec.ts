@@ -1,18 +1,20 @@
 import { configureTestSuite } from 'ng-bullet';
-import { fakeAsync, tick, ComponentFixture, TestBed } from '@angular/core/testing';
+import { fakeAsync, tick, ComponentFixture, TestBed, flush } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { of } from 'rxjs';
-
+import { CaseScenarios, HardwareScenarios } from '@mock';
 import { CaseDetailsComponent } from './case-details.component';
 import { CaseDetailsModule } from './case-details.module';
 import { CaseService } from '@cui-x/services';
 import { CaseDetailsService } from '@services';
+import { InventoryService } from '@sdp-api';
 
-describe('CaseDetailsComponent', () => {
+fdescribe('CaseDetailsComponent', () => {
 	let component: CaseDetailsComponent;
 	let fixture: ComponentFixture<CaseDetailsComponent>;
 	let caseService: CaseService;
 	let caseDetailsService: CaseDetailsService;
+	let inventoryService: InventoryService;
 
 	configureTestSuite(() => {
 		TestBed.configureTestingModule({
@@ -26,6 +28,7 @@ describe('CaseDetailsComponent', () => {
 	beforeEach(() => {
 		caseService = TestBed.get(CaseService);
 		caseDetailsService = TestBed.get(CaseDetailsService);
+		inventoryService = TestBed.get(InventoryService);
 		fixture = TestBed.createComponent(CaseDetailsComponent);
 		component = fixture.componentInstance;
 		component.case = {
@@ -118,4 +121,28 @@ describe('CaseDetailsComponent', () => {
 			.toHaveBeenCalled();
 	});
 
+	it('should call all of the required APIs for the selected case', fakeAsync(() => {
+		component.case = { caseNumber: '680000001' };
+		spyOn(caseService, 'fetchCaseDetails')
+			.and
+			.returnValue(of(CaseScenarios[0].scenarios.GET[0].response.body));
+		spyOn(caseService, 'fetchCaseNotes')
+			.and
+			.returnValue(of(CaseScenarios[1].scenarios.GET[0].response.body));
+		spyOn(inventoryService, 'getHardware')
+			.and
+			.returnValue(of(HardwareScenarios[0].scenarios.GET[0].response.body));
+		component.refresh();
+		fixture.detectChanges();
+		tick(2500); // Wait for all requests to finish
+		expect(caseService.fetchCaseDetails)
+			.toHaveBeenCalled();
+		expect(caseService.fetchCaseNotes)
+			.toHaveBeenCalled();
+		expect(inventoryService.getHardware)
+			.toHaveBeenCalled();
+		// Close the fixture so the fromNow pipe stops
+		fixture.destroy();
+		flush();
+	}));
 });

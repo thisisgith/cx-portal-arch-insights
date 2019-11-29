@@ -8,7 +8,6 @@ import {
 	SimpleChanges,
 } from '@angular/core';
 import { CaseService, CaseDetails } from '@cui-x/services';
-import { RMAService } from '@services';
 import { CaseDetailsService } from 'src/app/services/case-details';
 import { Subject, forkJoin, of } from 'rxjs';
 import { LogService } from '@cisco-ngx/cui-services';
@@ -17,6 +16,8 @@ import { Case } from '@interfaces';
 import * as _ from 'lodash-es';
 import { CuiModalService } from '@cisco-ngx/cui-components';
 import { CSCUploadService } from '@cui-x-views/csc';
+import { UserResolve } from '@utilities';
+import { InventoryService } from '@sdp-api';
 
 /**
  * Case Details Component
@@ -41,12 +42,23 @@ export class CaseDetailsComponent implements OnInit, OnDestroy {
 	private destroy$ = new Subject();
 	private severity: string;
 	public numberOfFiles = 0;
+	public customerId: string;
+	public isAssetAvailable = false;
 
 	constructor (
-		private caseService: CaseService, private rmaService: RMAService,
+		private caseService: CaseService,
 		private caseDetailsService: CaseDetailsService, private logger: LogService,
 		private cuiModalService: CuiModalService, private cscService: CSCUploadService,
-	) { }
+		private inventoryService: InventoryService, private userResolve: UserResolve,
+	) {
+		this.userResolve.getCustomerId()
+		.pipe(
+			takeUntil(this.destroy$),
+		)
+		.subscribe((id: string) => {
+			this.customerId = id;
+		});
+	}
 
 	/**
 	 * Initialization hook
@@ -63,6 +75,7 @@ export class CaseDetailsComponent implements OnInit, OnDestroy {
 				this.getCaseDetails(),
 				this.getCaseNotes(),
 				this.caseDetailsService.getCaseFiles(this.case.caseNumber),
+				this.getAssetAvailability(),
 			)),
 			takeUntil(this.destroy$),
 		)
@@ -72,6 +85,10 @@ export class CaseDetailsComponent implements OnInit, OnDestroy {
 				this.caseDetailsChange.emit(this.caseDetails);
 				this.caseNotes = results[1];
 				this.populateCaseFilesList(results[2]);
+				const assetDetails = _.get(results[3], 'data');
+				if (assetDetails && assetDetails.length > 0) {
+					this.isAssetAvailable = true;
+				}
 			});
 
 		this.caseDetailsService.addNote$
@@ -178,6 +195,25 @@ export class CaseDetailsComponent implements OnInit, OnDestroy {
 					return of({ });
 				}),
 			);
+	}
+
+	/**
+	 * fetch asset details to check availability
+	 * @returns Observable
+	 */
+	public getAssetAvailability () {
+		return this.inventoryService.getHardware({
+			customerId: this.customerId,
+			serialNumber: [this.case.serialNumber],
+		})
+		.pipe(
+			catchError(err => {
+				this.logger.error('casedetails.component : getAssetAvailability() ' +
+					`:: Error : (${err.status}) ${err.message}`);
+
+				return of({ });
+			}),
+		);
 	}
 
 	/**
