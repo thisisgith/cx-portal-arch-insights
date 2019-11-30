@@ -50,10 +50,11 @@ import { CaseDetails } from '@cui-x/services';
 })
 export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 
-	@Input() public fault: FaultGridData;
-	@Input() public tacEnable: string;
-	@Output() public showFaultDetails = new EventEmitter();
-	@Output() public showSuccess = new EventEmitter();
+	@Input('fault') public fault: FaultGridData;
+	@Input('tacEnable') public tacEnable: string;
+	@Input('lastUpdateTime') public lastUpdateTime: string;
+	@Output('showFaultDetails') public showFaultDetails = new EventEmitter();
+	@Output('showSuccess') public showSuccess = new EventEmitter();
 
 	public searchParams: FaultSearchParams;
 	public searchIcParams: FaultICSearchParams;
@@ -105,7 +106,7 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 		AUTOMATED: 'Automated Faults',
 		DETECTED: 'Detected Faults',
 		FILTER_TYPE: 'productId,os',
-		INACTIVE: 'inactive',
+		INACTIVE: 'INACTIVE',
 		PRODUCT_ID: 'PRODUCTID',
 		SOFTWARE: 'SOFTWARE',
 		TIME: 'TIME',
@@ -147,7 +148,7 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 	 */
 	public ngOnInit () {
 		this.loading = true;
-		this.searchParams.eventType = this.fault.msgType;
+		this.searchParams.msgType = this.fault.msgType;
 		this.searchParams.tacEnabled = this.tacEnable;
 		this.searchParams.filterTypes = this.FAULT_CONSTANT.FILTER_TYPE;
 		this.racetrackInfoService.getCurrentSolution()
@@ -196,6 +197,7 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 	 */
 	public getAffectedSystemDetails (searchParams: FaultSearchParams) {
 		this.affectedSystemLoading = true;
+		this.searchParams.lastUpdateTime = this.lastUpdateTime;
 		this.faultService.getAffectedSystems(searchParams)
 			.pipe(takeUntil(this.destroy$),
 			map((response: FaultAffectedSystems) => {
