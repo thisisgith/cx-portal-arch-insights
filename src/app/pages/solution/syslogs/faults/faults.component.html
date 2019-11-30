@@ -111,6 +111,7 @@
 	*ngIf="showFaultDetails"
 	[fault]="fault"
 	[tacEnable]="searchParams.tacEnabled"
+	[lastUpdateTime]="lastUpdateDate"
 	(showFaultDetails)="onFaultPanelClose()"
 	(showSuccess)="onShowSuccess($event)"
 ></fault-details>
