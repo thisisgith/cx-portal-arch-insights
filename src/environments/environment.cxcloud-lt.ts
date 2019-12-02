@@ -48,7 +48,7 @@ export const environment = {
 			'b_cisco_dna_center_ug_1_4/b_cisco_dna_center_ug_1_4_chapter_01001.html',
 	},
 	mapboxToken:
-	'pk.eyJ1IjoibWlzY2htaTIiLCJhIjoiY2p4eDl2ODVnMGpmODNkcDhsbG5nNXQ0YyJ9.vpfGffFASSUfANAU4Yvtxg',
+	'pk.eyJ1IjoibWljaGhhcnQiLCJhIjoiY2szaGtudW9oMGRvajNubmo1OWgxaG85NSJ9.wwXqdHQ4k-YTqUw1VMvayA',
 	mock: [],
 	myCase: 'https://mycase2.cloudapps.cisco.com',
 	noAuthEndpoints: [

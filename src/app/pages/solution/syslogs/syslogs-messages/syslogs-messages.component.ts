@@ -157,7 +157,7 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 				},
 
 			],
-			dynamicData: false,
+			dynamicData: true,
 			singleSelect: true,
 			striped: false,
 		});
@@ -243,6 +243,7 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 		this.tableOffset = pageInfo.page;
 		this.tableStartIndex = (pageInfo.page * pageInfo.limit);
 		this.tableEndIndex = (pageInfo.page * pageInfo.limit) + 10;
+		this.syslogsParams.pageNo = pageInfo.page + 1;
 		this.getSyslogsData();
 	}
 	/**
@@ -253,7 +254,8 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 	 */
 	public onTableSortingChanged (event) {
 		this.sortField = this.getSortKey(event.name);
-		this.sortOrder = event.sortDirection;
+		this.syslogsParams.sortField = this.sortField;
+		this.syslogsParams.sortOrder = event.sortDirection;
 		this.getSyslogsData();
 	}
 
@@ -262,11 +264,11 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 			case 'Severity':
 				return 'syslogSeverity';
 			case 'Event Message':
-				return 'msgDesc';
+				return 'syslogMsgDesc';
 			case 'Systems':
 				return 'deviceHost';
 			case 'Date and Time':
-				return 'timestamp';
+				return 'timeStamp';
 			default:
 				return 'syslogSeverity';
 		}

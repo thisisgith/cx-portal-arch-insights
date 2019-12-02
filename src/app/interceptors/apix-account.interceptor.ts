@@ -15,13 +15,28 @@ export interface UserInformation {
 	params: any;
 }
 
+enum UserInfoKey {
+	SAID = 'saId',
+	CUSTOMERID = 'customerId',
+	USECASE = 'useCase',
+	SOLUTION = 'solution',
+	CXLEVEL = 'cxLevel',
+}
+
 export class ApixAccountInterceptor implements HttpInterceptor {
 	// TODO: Remove this when APIs become consistent / ignore unused params
 	private pathsToIgnore = [
-		new RegExp('/api/cxportal/entitlement/v2/user$'),
-		new RegExp('/api/cxportal/cxpp-partner-info/partnerInfo/v1/[^/]+/partners$'),
-		new RegExp('/api/customerportal/pitstop/v1/info$'),
-		new RegExp('api/cxportal/cxpp-entitlement-wrapper/v1/entitlement/user/accounts$'),
+		new RegExp('/cxportal/entitlement/v2/user$'),
+		new RegExp('/cxportal/cxpp-partner-info/partnerInfo/v1/[^/]+/partners$'),
+		new RegExp('/customerportal/pitstop/v1/info$'),
+		new RegExp('/cxportal/cxpp-entitlement-wrapper/v1/entitlement/user/accounts$'),
+		new RegExp('/customerportal/search/v2/ciscoSearch$'),
+		new RegExp('/customerportal/search/v1/globalSearch$'),
+	];
+
+	private assetsAPIs = [
+		new RegExp('/customerportal/inventory/v1/assets/hardware$'),
+		new RegExp('/customerportal/inventory/v1/assets/system$'),
 	];
 
 	constructor (
@@ -99,11 +114,11 @@ export class ApixAccountInterceptor implements HttpInterceptor {
 			);
 
 		return forkJoin({
-			saId: said$,
-			customerId: customerId$,
-			useCase: useCase$,
-			solution: solution$,
-			cxLevel: cxLevel$,
+			[UserInfoKey.SAID]: said$,
+			[UserInfoKey.CUSTOMERID]: customerId$,
+			[UserInfoKey.USECASE]: useCase$,
+			[UserInfoKey.SOLUTION]: solution$,
+			[UserInfoKey.CXLEVEL]: cxLevel$,
 		});
 	}
 
@@ -128,6 +143,7 @@ export class ApixAccountInterceptor implements HttpInterceptor {
 		return of(userInfo)
 		.pipe(
 			map(result => this.removeNonValueFields(result)),
+			map(tempResult => this.removeCxLevelAndSAID(tempResult, req)),
 			map(refinedResult => this.filterExistentParams(refinedResult, req)),
 			map(filteredResult => this.filterExistentHeaders(filteredResult, req)),
 		);
@@ -180,5 +196,19 @@ export class ApixAccountInterceptor implements HttpInterceptor {
 		userInfo.headers = hParams;
 
 		return userInfo;
+	}
+
+	private removeCxLevelAndSAID (userInfo: UserInformation, req: HttpRequest<any>) {
+		const accountInfo = userInfo.accountInfo;
+		const url = new URL(req.url, environment.origin);
+
+		if (!this.assetsAPIs.some(regex => regex.test(url.pathname))) {
+			return userInfo;
+		}
+
+		delete accountInfo[UserInfoKey.SAID];
+		delete accountInfo[UserInfoKey.CXLEVEL];
+
+		return accountInfo;
 	}
 }

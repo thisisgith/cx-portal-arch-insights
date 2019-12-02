@@ -1,11 +1,8 @@
 <admin-wrapper>
 	<div class="panel">
-		<div class="dbl-padding-left dbl-padding-right">
+		<div class="half-padding-left">
 			<div class="text-xlarge text-uppercase base-margin-bottom"
 			[innerText]="'_AdminPolicyTagging_' | i18n">
-			</div>
-			<div class="text-medium base-margin-bottom"
-			[innerText]="'_AdminEnableRegulatoryComplience_' | i18n">
 			</div>
 			<div class="form-group form-group--inline base-margin-bottom"
 			*ngIf="optlnStatus" data-auto-id="toggleOptlnStatus" (click)="toggleOptlnStatus()">
@@ -27,7 +24,7 @@
 				</div>
 
 				<div class="row">
-					<div class="col-md-4">
+					<div class="col-md-5">
 						<div class="alert alert--info">
 								<div class="alert__icon icon-info-outline"></div>
 							<div class="alert__message" [innerText]="'_AdminEnableRegulatoryComplienceNote_' | i18n">
@@ -92,7 +89,7 @@
 
 												<label class="switch">
 													<input type="checkbox" data-auto-id="toBeScanned"
-													checked (click)="toBeScanned = !toBeScanned">
+													checked (click)="enableDisableScan()">
 													<span class="switch__input"></span>
 													<span class="switch__label" [innerText]="'_AdminComplianceYes_' | i18n"></span>
 												</label>
@@ -110,7 +107,7 @@
 																></sup>
 													</div>
 													<label class="switch">
-														<input type="checkbox" data-auto-id="toBeScanned2" (click)="toBeScanned = !toBeScanned">
+														<input type="checkbox" data-auto-id="toBeScanned2" (click)="enableDisableScan()">
 														<span class="switch__input"></span>
 														<span class="switch__label" [innerText]="'_AdminComplianceNo_' | i18n"></span>
 													</label>
@@ -121,7 +118,7 @@
 									<div class="col-12 flex-end" *ngIf="saveDetails.body.policy != 'select'">
 											<button class="btn btn--small btn--primary half-margin-top" data-auto-id="savePolicyDetails"
 											(click)="savePolicyDetails()"
-											[ngClass]="{'disabled': selectedDeviceTagType=='selectedTags' && !tagsFromAssetTagging}"
+											[ngClass]="{'disabled': selectedDeviceTagType === 'selectedTags' && !tagsFromAssetTagging}"
 											[innerText]="'_Save_' | i18n"></button>
 										</div>
 							</div>

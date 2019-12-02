@@ -100,6 +100,7 @@ export class AssetDetailsHardwareComponent implements OnInit, OnChanges, OnDestr
 	@ViewChild('serialTemplate', { static: true }) private serialTemplate: TemplateRef<{ }>;
 	@ViewChild('hardwareComponent', { static: true }) private hardwareTemplate: TemplateRef<{ }>;
 	@ViewChild('productIDTemplate', { static: true }) private productIDTemplate: TemplateRef<{ }>;
+	@ViewChild('expandTemplate', { static: true }) private expandTemplate: TemplateRef<{ }>;
 
 	public status = {
 		loading: {
@@ -305,6 +306,15 @@ export class AssetDetailsHardwareComponent implements OnInit, OnChanges, OnDestr
 				this.hardwareTable = new CuiTableOptions({
 					bordered: false,
 					columns: [
+						{
+							key: 'expandAction',
+							name: '',
+							sortable: false,
+							sortDirection: 'asc',
+							sorting: false,
+							template: this.expandTemplate,
+							width: '40px',
+						},
 						{
 							key: 'equipmentType',
 							name: I18n.get('_Type_'),

@@ -7,6 +7,7 @@ export interface DeviceDetailsdata {
 	msgType: string;
 	recommendation: string;
 	syslogSeverity: number;
+	neInstanceId: string;
 }
 
 /** Device Details Inner Table Data

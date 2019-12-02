@@ -12,7 +12,7 @@
 	>
 		<div class="base-margin-bottom" detailsPanelTitle>
 			<span class="text-xlarge" [innerText]="'_FaultEventType_' | i18n"></span>
-			<span class="qtr-margin-left text-xlarge" [innerText]="fault?.title"></span>
+			<span class="qtr-margin-left text-xlarge" [innerText]="fault?.msgType"></span>
 		</div>
 		<div class="base-margin-bottom">
 			<div class="text-bold" [innerText]="'_FaultSeverity_' | i18n"></div>
@@ -30,7 +30,7 @@
 				<span [innerText]="fault.faultSeverity | titlecase"></span>
 			</div>
 		</div>
-		<div class="qtr-margin-top" *ngIf="tacEnable?.toUpperCase() === FAULT_CONSTANT.ACTIVE">
+		<div class="qtr-margin-top" *ngIf="(tacEnable | uppercase) === FAULT_CONSTANT.ACTIVE">
 			<div data-auto-id="DisableCase" class="btn btn--primary" (click)="openConfirmation()"
 				[innerText]="'_FaultDisableCase_'|i18n">
 			</div>
@@ -41,7 +41,7 @@
 					<i class="icon-info icon-small"></i>
 			</span>
 		</div>
-		<div class="qtr-margin-top" *ngIf="tacEnable?.toUpperCase() === FAULT_CONSTANT.INACTIVE">
+		<div class="qtr-margin-top" *ngIf="(tacEnable | uppercase) === FAULT_CONSTANT.INACTIVE">
 			<div data-auto-id="EnableCase" class="btn btn--primary" (click)="openConfirmation()"
 				[innerText]="'_FaultEnableCase_'|i18n">
 			</div>
@@ -188,19 +188,6 @@
 		[innerText]="item.tacCaseNo"
 		(click)="connectToCaseDetails(item.tacCaseNo)"></span>
 </ng-template>
-
-<details-panel *ngIf="selectedCase" [hidden]="!selectedCase"
-	(hiddenChange)="handleHidden($event)" [fullscreen]="fullscreen">
-	<details-panel-header (close)="detailsClose()" [(fullscreen)]="fullscreen">
-		<div detailsPanelTitle class="text-xlarge"
-			[innerText]="'_RMACaseNumberTitle_' | i18n:selectedCase?.caseNumber"></div>
-		<app-case-details-header [case]="selectedCase" [caseDetails]="selectedDetails">
-		</app-case-details-header>
-	</details-panel-header>
-	<app-case-details [case]="selectedCase"
-		[(caseDetails)]="selectedDetails">
-	</app-case-details>
-</details-panel>
 
 <ng-template #noTacCase>
 	<span [innerText]="'-'"

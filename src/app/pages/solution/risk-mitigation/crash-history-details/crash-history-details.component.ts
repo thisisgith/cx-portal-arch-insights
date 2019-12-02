@@ -57,7 +57,7 @@ export class CrashHistoryDetailsComponent implements OnChanges, OnDestroy {
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
-		this.crashHistoryGridInit();
+
 	}
 
 	/**
@@ -71,6 +71,7 @@ export class CrashHistoryDetailsComponent implements OnChanges, OnDestroy {
 			this.selectedSystem,
 		);
 		this.getCrashedDeviceHistory(this.selectedSystem);
+		this.crashHistoryGridInit();
 	}
 
 	/**

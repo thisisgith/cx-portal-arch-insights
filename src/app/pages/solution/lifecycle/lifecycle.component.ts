@@ -1014,7 +1014,7 @@ export class LifecycleComponent implements OnDestroy {
 			sessionId: ssId,
 		};
 		if (!atx.providerInfo) {
-			this.crossLaunch(session.registrationURL);
+			params.eventNumber = session.eventNumber;
 		}
 		this.closeViewSessions();
 		this.contentService.registerUserToAtx(params)
@@ -1041,7 +1041,8 @@ export class LifecycleComponent implements OnDestroy {
 	 * @param atx the session we've clicked on
 	 */
 	public cancelATXSession (atx: AtxSchema) {
-		const ssId = _.find(atx.sessions, { scheduled: true }).sessionId;
+		const scheduledSession = _.find(atx.sessions, { scheduled: true });
+		const ssId = scheduledSession.sessionId;
 		this.status.loading.atx = true;
 		if (window.Cypress) {
 			window.atxLoading = true;
@@ -1051,6 +1052,10 @@ export class LifecycleComponent implements OnDestroy {
 			atxId: atx.atxId,
 			sessionId: ssId,
 		};
+		if (!atx.providerInfo) {
+			const scheduledEventNumber =  scheduledSession.eventNumber;
+			params.eventNumber = scheduledEventNumber;
+		}
 		this.contentService.cancelSessionATX(params)
 		.subscribe(() => {
 			_.find(atx.sessions, { sessionId: ssId }).scheduled = false;
@@ -1164,7 +1169,7 @@ export class LifecycleComponent implements OnDestroy {
 	 */
 	public completeAction (action: RacetrackPitstopAction) {
 		// Call racetrack API to complete an action
-		this.status.loading.racetrack = true;
+		this.status.loading.racetrack = false;
 		this.resetSelectStatus();
 		const actionUpdated: PitstopActionUpdateRequestObject = {
 			customerId: this.customerId,
@@ -1569,7 +1574,9 @@ export class LifecycleComponent implements OnDestroy {
 		if (window.Cypress) {
 			window.accLoading = true;
 		}
-
+		this.componentData.acc = {
+			sessions: [],
+		};
 		const params = _.pick(this.componentData.params,
 				['customerId', 'solution', 'usecase', 'pitstop', 'suggestedAction', 'providerId']);
 
@@ -1584,10 +1591,8 @@ export class LifecycleComponent implements OnDestroy {
 		return this.contentService.getRacetrackACC(params)
 		.pipe(
 			map((result: ACCResponse) => {
-				this.componentData.acc = {
-					sessions: result.items,
-				};
-				_.remove(this.componentData.acc.sessions, (session: ACC) =>
+				this.componentData.acc.sessions = result.items;
+ 				_.remove(this.componentData.acc.sessions, (session: ACC) =>
 					!session.title && !session.description);
 
 				// Do not show cisco ACC's if incorrect CX level
@@ -1603,7 +1608,6 @@ export class LifecycleComponent implements OnDestroy {
 				if (window.Cypress) {
 					window.accLoading = false;
 				}
-
 				return result;
 			}),
 			catchError(err => {
@@ -1629,7 +1633,10 @@ export class LifecycleComponent implements OnDestroy {
 		if (window.Cypress) {
 			window.atxLoading = true;
 		}
-
+		this.componentData.atx = {
+			recommended: { },
+			sessions: [],
+		};
 		const params = _.pick(this.componentData.params,
 			['customerId', 'solution', 'usecase', 'pitstop', 'suggestedAction']);
 		if (!_.isEmpty(this.atxStatusFilter)) {
@@ -1642,12 +1649,9 @@ export class LifecycleComponent implements OnDestroy {
 		return this.contentService.getRacetrackATX(params)
 		.pipe(
 			map((result: ATXResponseModel) => {
-				this.componentData.atx = {
-					recommended: _.head(result.items),
-					sessions: result.items,
-				};
+				this.componentData.atx.recommended = _.head(result.items);
+				this.componentData.atx.sessions = result.items;
 				this.selectedATX = this.componentData.atx.sessions;
-
 				_.each(this.selectedATX, (atx: AtxSchema) => {
 					_.each(atx.sessions, (session: AtxSessionSchema) => {
 						if (session.scheduled) {
@@ -1910,18 +1914,16 @@ export class LifecycleComponent implements OnDestroy {
 		if (window.Cypress) {
 			window.elearningLoading = true;
 		}
-
+		_.set(this.componentData, ['learning', 'certifications'], []);
+		_.set(this.componentData, ['learning', 'elearning'], []);
+		_.set(this.componentData, ['learning', 'training'], []);
+		_.set(this.componentData, ['learning', 'remotepracticelabs'], []);
 		return this.contentService.getRacetrackElearning(
 			_.pick(this.componentData.params,
 			['customerId', 'solution', 'usecase', 'pitstop', 'rows', 'suggestedAction']))
 		.pipe(
 			map((result: ELearningResponse) => {
 				if (result.items.length) {
-					_.set(this.componentData, ['learning', 'certifications'], []);
-					_.set(this.componentData, ['learning', 'elearning'], []);
-					_.set(this.componentData, ['learning', 'training'], []);
-					_.set(this.componentData, ['learning', 'remotepracticelabs'], []);
-
 					_.each(result.items, (item: ELearning) => {
 						switch (item.type) {
 							case 'E-Learning': {
