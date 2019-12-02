@@ -43,6 +43,7 @@ export class FaultsComponent implements OnInit, OnChanges, OnDestroy {
 	public fault: FaultGridData;
 	public showFaultDetails = false;
 	public lastUpdateTime: string;
+	public lastUpdateDate: string;
 	public offlineTime: string;
 	public searchOptions = {
 		debounce: 1500,
@@ -169,6 +170,7 @@ export class FaultsComponent implements OnInit, OnChanges, OnDestroy {
 				this.totalCount = response.count;
 				this.connectionStatus = response.afmStatus;
 				this.lastUpdateTime = response.lastUpdateTime;
+				this.lastUpdateDate = response.lastUpdateDate;
 				this.offlineTime = response.offlineTime;
 				this.tableData = response.responseData;
 				this.preparePaginationHeader();
@@ -230,6 +232,7 @@ export class FaultsComponent implements OnInit, OnChanges, OnDestroy {
 	 */
 	public onPagerUpdated (pageInfo) {
 		this.searchParams.pageNo = pageInfo.page + 1;
+		this.tableOffset = pageInfo.page;
 		this.searchParams.size = this.tableLimit;
 		this.getFaultData(this.searchParams);
 	}
@@ -239,12 +242,12 @@ export class FaultsComponent implements OnInit, OnChanges, OnDestroy {
 	 */
 	private preparePaginationHeader () {
 		if (this.totalCount !== 0) {
-			const first = (this.tableLimit * (this.searchParams.pageNo - 1)) + 1;
-			let last = (this.tableLimit * this.searchParams.pageNo);
-			if (last > this.totalCount) {
-				last = this.totalCount;
+			const tableStartIndex = (this.tableLimit * (this.searchParams.pageNo - 1)) + 1;
+			let tableEndIndex = (this.tableLimit * this.searchParams.pageNo);
+			if (tableEndIndex > this.totalCount) {
+				tableEndIndex = this.totalCount;
 			}
-			this.paginationCount = `${first}-${last}`;
+			this.paginationCount = `${tableStartIndex}-${tableEndIndex}`;
 		} else {
 			this.paginationCount = '0-0';
 		}

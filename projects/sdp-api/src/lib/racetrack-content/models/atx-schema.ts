@@ -5,14 +5,14 @@ import { AtxSessionSchema } from './atx-session-schema';
 export interface AtxSchema {
 
   /**
+   * Duration of the session in seconds
+   */
+  duration?: number;
+
+  /**
    * Unique Id of the ATX Id
    */
   atxId?: string;
-
-  /**
-   * Is bookmark
-   */
-  bookmark?: boolean;
 
   /**
    * Description of the ATX
@@ -22,9 +22,9 @@ export interface AtxSchema {
   providerInfo?: ProviderSchema;
 
   /**
-   * Duration of the session in seconds
+   * Is bookmark
    */
-  duration?: number;
+  bookmark?: boolean;
 
   /**
    * URL of the image to be displayed

@@ -108,6 +108,9 @@ describe('caseSearchComponent', () => {
 			.toHaveBeenCalledWith(false);
 		expect(component.hide.emit)
 			.toHaveBeenCalledTimes(1);
+		// Close the fixture so the fromNow pipe stops
+		fixture.destroy();
+		flush();
 	}));
 
 	it('should hide on no case details', () => {
@@ -149,8 +152,12 @@ describe('caseSearchComponent', () => {
 			.returnValue(of(mockResponse));
 		component.ngOnChanges();
 		fixture.detectChanges();
+		tick();
 		expect(component.case.description)
 			.toBe(mockResponse.summary);
+		// Close the fixture so the fromNow pipe stops
+		fixture.destroy();
+		flush();
 	}));
 
 });

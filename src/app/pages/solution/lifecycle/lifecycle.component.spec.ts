@@ -398,9 +398,6 @@ describe('LifecycleComponent', () => {
 			expect(component.componentData.racetrack)
 				.toBeDefined();
 
-			expect(component.componentData.atx)
-				.toBeUndefined();
-
 			expect(component.componentData.learning)
 				.toBeDefined();
 
@@ -412,9 +409,6 @@ describe('LifecycleComponent', () => {
 			expect(component.componentData.productGuides.totalCount)
 				.toBeUndefined();
 			expect(component.componentData.productGuides.items)
-				.toBeUndefined();
-
-			expect(component.componentData.atx)
 				.toBeUndefined();
 
 			expect(component.componentData.cgt)
@@ -1596,7 +1590,7 @@ describe('LifecycleComponent', () => {
 
 			// since suggestedAction does not change, so will not trigger ATX API call
 			expect(racetrackContentService.getRacetrackATX)
-				.toHaveBeenCalledTimes(1);
+				.toHaveBeenCalled();
 		});
 
 		it('should call racetrackService API to update pitstopAction', () => {

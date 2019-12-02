@@ -235,6 +235,8 @@ export class LifecycleComponent implements OnDestroy {
 	private currentPitstopCompPert: string;
 	private showCompletionPopup = false;
 	private timeout = 5000;
+	// Enable or disable CheckList based on this flag
+	public enableCheckList = false;
 	// Enable or disable CGT based on this flag
 	public enableCGT = false;
 	// Cisco ACC content is only shown for CX Levels 2/3
@@ -539,7 +541,7 @@ export class LifecycleComponent implements OnDestroy {
 				&usecase=`,
 			},
 			params: {
-				customerId: this.customerId,
+				customerId: this.customerId.split('_')[0],
 				pitstop: '',
 				rows: 500,
 				solution: '',
@@ -1014,7 +1016,7 @@ export class LifecycleComponent implements OnDestroy {
 			sessionId: ssId,
 		};
 		if (!atx.providerInfo) {
-			this.crossLaunch(session.registrationURL);
+			params.eventNumber = session.eventNumber;
 		}
 		this.closeViewSessions();
 		this.contentService.registerUserToAtx(params)
@@ -1041,7 +1043,8 @@ export class LifecycleComponent implements OnDestroy {
 	 * @param atx the session we've clicked on
 	 */
 	public cancelATXSession (atx: AtxSchema) {
-		const ssId = _.find(atx.sessions, { scheduled: true }).sessionId;
+		const scheduledSession = _.find(atx.sessions, { scheduled: true });
+		const ssId = scheduledSession.sessionId;
 		this.status.loading.atx = true;
 		if (window.Cypress) {
 			window.atxLoading = true;
@@ -1051,6 +1054,10 @@ export class LifecycleComponent implements OnDestroy {
 			atxId: atx.atxId,
 			sessionId: ssId,
 		};
+		if (!atx.providerInfo) {
+			const scheduledEventNumber =  scheduledSession.eventNumber;
+			params.eventNumber = scheduledEventNumber;
+		}
 		this.contentService.cancelSessionATX(params)
 		.subscribe(() => {
 			_.find(atx.sessions, { sessionId: ssId }).scheduled = false;
@@ -1110,6 +1117,7 @@ export class LifecycleComponent implements OnDestroy {
 		// If suggestedAction changes, refresh ATX, ACC and others
 		if (this.componentData.params.suggestedAction !== actionWithStatus.action.name) {
 			this.componentData.params.suggestedAction = actionWithStatus.action.name;
+			this.enableCheckList = true;
 			this.loadLifecycleInfo();
 		}
 	}
@@ -1569,7 +1577,9 @@ export class LifecycleComponent implements OnDestroy {
 		if (window.Cypress) {
 			window.accLoading = true;
 		}
-
+		this.componentData.acc = {
+			sessions: [],
+		};
 		const params = _.pick(this.componentData.params,
 				['customerId', 'solution', 'usecase', 'pitstop', 'suggestedAction', 'providerId']);
 
@@ -1584,10 +1594,8 @@ export class LifecycleComponent implements OnDestroy {
 		return this.contentService.getRacetrackACC(params)
 		.pipe(
 			map((result: ACCResponse) => {
-				this.componentData.acc = {
-					sessions: result.items,
-				};
-				_.remove(this.componentData.acc.sessions, (session: ACC) =>
+				this.componentData.acc.sessions = result.items;
+ 				_.remove(this.componentData.acc.sessions, (session: ACC) =>
 					!session.title && !session.description);
 
 				// Do not show cisco ACC's if incorrect CX level
@@ -1603,7 +1611,6 @@ export class LifecycleComponent implements OnDestroy {
 				if (window.Cypress) {
 					window.accLoading = false;
 				}
-
 				return result;
 			}),
 			catchError(err => {
@@ -1629,7 +1636,10 @@ export class LifecycleComponent implements OnDestroy {
 		if (window.Cypress) {
 			window.atxLoading = true;
 		}
-
+		this.componentData.atx = {
+			recommended: { },
+			sessions: [],
+		};
 		const params = _.pick(this.componentData.params,
 			['customerId', 'solution', 'usecase', 'pitstop', 'suggestedAction']);
 		if (!_.isEmpty(this.atxStatusFilter)) {
@@ -1642,12 +1652,9 @@ export class LifecycleComponent implements OnDestroy {
 		return this.contentService.getRacetrackATX(params)
 		.pipe(
 			map((result: ATXResponseModel) => {
-				this.componentData.atx = {
-					recommended: _.head(result.items),
-					sessions: result.items,
-				};
+				this.componentData.atx.recommended = _.head(result.items);
+				this.componentData.atx.sessions = result.items;
 				this.selectedATX = this.componentData.atx.sessions;
-
 				_.each(this.selectedATX, (atx: AtxSchema) => {
 					_.each(atx.sessions, (session: AtxSessionSchema) => {
 						if (session.scheduled) {
@@ -1910,18 +1917,16 @@ export class LifecycleComponent implements OnDestroy {
 		if (window.Cypress) {
 			window.elearningLoading = true;
 		}
-
+		_.set(this.componentData, ['learning', 'certifications'], []);
+		_.set(this.componentData, ['learning', 'elearning'], []);
+		_.set(this.componentData, ['learning', 'training'], []);
+		_.set(this.componentData, ['learning', 'remotepracticelabs'], []);
 		return this.contentService.getRacetrackElearning(
 			_.pick(this.componentData.params,
 			['customerId', 'solution', 'usecase', 'pitstop', 'rows', 'suggestedAction']))
 		.pipe(
 			map((result: ELearningResponse) => {
 				if (result.items.length) {
-					_.set(this.componentData, ['learning', 'certifications'], []);
-					_.set(this.componentData, ['learning', 'elearning'], []);
-					_.set(this.componentData, ['learning', 'training'], []);
-					_.set(this.componentData, ['learning', 'remotepracticelabs'], []);
-
 					_.each(result.items, (item: ELearning) => {
 						switch (item.type) {
 							case 'E-Learning': {
@@ -2167,46 +2172,35 @@ export class LifecycleComponent implements OnDestroy {
 		if (stage === name) {
 			return;
 		}
-
 		if (this.componentData.params.solution && this.componentData.params.usecase) {
 			this.status.loading.racetrack = true;
-
-			const pitstop = _.find(
-				_.get(this.selectedTechnology, 'pitstops', []), (stop: RacetrackPitstop) =>
-				stop.name === stage);
-
+			const pitstop = _.find(_.get(this.selectedTechnology, 'pitstops', []), (stop: RacetrackPitstop) => stop.name === stage);
 			this.componentData.racetrack = {
 				pitstop,
 				stage,
 				actionsCompPercent: this.currentPitstopCompPert,
 			};
-
-			const nextAction = pitstop ? _.find(pitstop.pitstopActions, { isComplete: false })
-				: null;
-
-			this.componentData.params.suggestedAction = nextAction ? nextAction.name : null;
-
+			const nextAction = pitstop ? _.find(pitstop.pitstopActions, { isComplete: false }) : null;
+			this.componentData.params.suggestedAction = (this.enableCheckList && nextAction) ? nextAction.name : null;
 			if (pitstop) {
 				pitstop.pitstopActions.map(ptstopActn => {
 					ptstopActn.description = this.parseHtmlText(ptstopActn.description);
+
 					return ptstopActn;
 				});
 				this.currentPitActionsWithStatus = _.map(
 					pitstop.pitstopActions, (pitstopAction: RacetrackPitstopAction) =>
-						({
-							action: pitstopAction,
-							selected: false,
-						}));
+					({
+						action: pitstopAction,
+						selected: false,
+					}));
 				this.componentData.params.pitstop = pitstop.name;
 				this.stage.next(pitstop.name);
 			}
-
 			this.loadLifecycleInfo();
-
 			this.status.loading.racetrack = false;
 		}
 	}
-
 	/**
 	 * Returns the current pitStop
 	 * @returns the observable representing the pitstop

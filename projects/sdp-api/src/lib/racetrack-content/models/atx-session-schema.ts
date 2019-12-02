@@ -5,4 +5,5 @@ export interface AtxSessionSchema {
   scheduled?: boolean;
   sessionId?: string;
   sessionStartDate?: number;
+  eventNumber?: string;
 }

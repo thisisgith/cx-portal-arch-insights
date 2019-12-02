@@ -18,6 +18,7 @@ const getFaultData: FaultResponse = {
 	afmStatus: 'Fail',
 	count: 12,
 	lastUpdateTime: '3h : 15m : 33s ago',
+	lastUpdateDate: '',
 	message: 'Success',
 	offlineTime: '7Day(s) : 2h : 56m : 23s ago',
 	responseData: [
@@ -209,6 +210,7 @@ const getFaultEmptyData: FaultResponse = {
 	afmStatus: 'Fail',
 	count: 0,
 	lastUpdateTime: '',
+	lastUpdateDate: '',
 	message: 'Fail',
 	offlineTime: '',
 	responseData: [],
