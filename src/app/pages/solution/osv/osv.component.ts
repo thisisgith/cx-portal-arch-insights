@@ -228,6 +228,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 					totalAssetsFilter.loading = false;
 					assetTypeFilter.loading = false;
 					recommendationTypeFilter.loading = false;
+					deploymentStatusFilter.loading = false;
 					totalAssetsFilter.seriesData = [{
 						assets: response.assets,
 						profiles: response.profiles,
@@ -421,6 +422,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 				f.selected = false;
 			});
 		});
+		_.set(totalFilter, 'selected', true);
 		totalFilter.selected = true;
 		this.appliedFilters = {
 			assetType: '',
