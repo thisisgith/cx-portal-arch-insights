@@ -3,7 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FieldNoticeDetailsComponent } from './field-notice-details.component';
 import { FieldNoticeDetailsModule } from './field-notice-details.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ProductAlertsService, InventoryService } from '@sdp-api';
+import { ProductAlertsService } from '@sdp-api';
 import { environment } from '@environment';
 import { of, throwError } from 'rxjs';
 import * as _ from 'lodash-es';
@@ -35,7 +35,6 @@ describe('FieldNoticeDetailsComponent', () => {
 	let component: FieldNoticeDetailsComponent;
 	let fixture: ComponentFixture<FieldNoticeDetailsComponent>;
 	let productAlertsService: ProductAlertsService;
-	let inventoryService: InventoryService;
 	let racetrackInfoService: RacetrackInfoService;
 
 	/**
@@ -66,7 +65,6 @@ describe('FieldNoticeDetailsComponent', () => {
 
 	beforeEach(async(() => {
 		racetrackInfoService = TestBed.get(RacetrackInfoService);
-		inventoryService = TestBed.get(InventoryService);
 		productAlertsService = TestBed.get(ProductAlertsService);
 	}));
 
@@ -90,9 +88,6 @@ describe('FieldNoticeDetailsComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(inventoryService, 'getAssets')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
 		spyOn(productAlertsService, 'getFieldNotice')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
@@ -127,14 +122,6 @@ describe('FieldNoticeDetailsComponent', () => {
 		component.advisory = MockFieldNoticeAdvisories[0];
 		component.id = _.toString(MockFieldNoticeAdvisories[0].id);
 		component.customerId = user.info.customerId;
-
-		const error = {
-			status: 404,
-			statusText: 'Resource not found',
-		};
-		spyOn(inventoryService, 'getAssets')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
 
 		spyOn(productAlertsService, 'getFieldNotice')
 			.and

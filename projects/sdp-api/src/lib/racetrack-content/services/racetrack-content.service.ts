@@ -64,9 +64,13 @@ class RacetrackContentService extends __BaseService {
    *
    * - `suggestedAction`: suggestedAction for every Pitstop
    *
+   * - `status`: Comma separated values of status to filter ATXs.
+   *
    * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
    *
    * - `rows`: Number of rows of data per page.
+   *
+   * - `providerId`: Comma separated values of provider/partner Ids to filter ATXs.
    *
    * - `page`: Page number of the response
    *
@@ -86,8 +90,10 @@ class RacetrackContentService extends __BaseService {
     if (params.pitstop != null) __params = __params.set('pitstop', params.pitstop.toString());
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     if (params.suggestedAction != null) __params = __params.set('suggestedAction', params.suggestedAction.toString());
+    (params.status || []).forEach(val => {if (val != null) __params = __params.append('status', val.toString())});
     (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
+    (params.providerId || []).forEach(val => {if (val != null) __params = __params.append('providerId', val.toString())});
     if (params.page != null) __params = __params.set('page', params.page.toString());
     (params.fields || []).forEach(val => {if (val != null) __params = __params.append('fields', val.toString())});
     if (params.XMasheryHandshake != null) __headers = __headers.set('X-Mashery-Handshake', params.XMasheryHandshake.toString());
@@ -123,9 +129,13 @@ class RacetrackContentService extends __BaseService {
    *
    * - `suggestedAction`: suggestedAction for every Pitstop
    *
+   * - `status`: Comma separated values of status to filter ATXs.
+   *
    * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
    *
    * - `rows`: Number of rows of data per page.
+   *
+   * - `providerId`: Comma separated values of provider/partner Ids to filter ATXs.
    *
    * - `page`: Page number of the response
    *
@@ -146,7 +156,11 @@ class RacetrackContentService extends __BaseService {
    *
    * - `sessionId`: The SessionId of this Atx
    *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
    * - `atxId`: The Atx Identifier
+   *
+   * - `eventNumber`: The event number of this atx session
    *
    * - `X-Mashery-Handshake`: Mashery user credential header
    *
@@ -159,7 +173,9 @@ class RacetrackContentService extends __BaseService {
 
     __headers = __headers.append("Content-Type", "application/json");
     if (params.sessionId != null) __params = __params.set('sessionId', params.sessionId.toString());
+    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     if (params.atxId != null) __params = __params.set('atxId', params.atxId.toString());
+    if (params.eventNumber != null) __params = __params.set('eventNumber', params.eventNumber.toString());
     if (params.XMasheryHandshake != null) __headers = __headers.set('X-Mashery-Handshake', params.XMasheryHandshake.toString());
     let req = new HttpRequest<any>(
       'POST',
@@ -184,7 +200,11 @@ class RacetrackContentService extends __BaseService {
    *
    * - `sessionId`: The SessionId of this Atx
    *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
    * - `atxId`: The Atx Identifier
+   *
+   * - `eventNumber`: The event number of this atx session
    *
    * - `X-Mashery-Handshake`: Mashery user credential header
    *
@@ -201,7 +221,11 @@ class RacetrackContentService extends __BaseService {
    *
    * - `sessionId`: Id of the selected session to cancel
    *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
    * - `atxId`: Id of the selected ATX
+   *
+   * - `eventNumber`: The event number of this atx session
    *
    * - `X-Mashery-Handshake`: Mashery user credential header
    */
@@ -212,7 +236,9 @@ class RacetrackContentService extends __BaseService {
 
     __headers = __headers.append("Content-Type", "application/json");
     if (params.sessionId != null) __params = __params.set('sessionId', params.sessionId.toString());
+    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     if (params.atxId != null) __params = __params.set('atxId', params.atxId.toString());
+    if (params.eventNumber != null) __params = __params.set('eventNumber', params.eventNumber.toString());
     if (params.XMasheryHandshake != null) __headers = __headers.set('X-Mashery-Handshake', params.XMasheryHandshake.toString());
     let req = new HttpRequest<any>(
       'DELETE',
@@ -237,7 +263,11 @@ class RacetrackContentService extends __BaseService {
    *
    * - `sessionId`: Id of the selected session to cancel
    *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
    * - `atxId`: Id of the selected ATX
+   *
+   * - `eventNumber`: The event number of this atx session
    *
    * - `X-Mashery-Handshake`: Mashery user credential header
    */
@@ -349,6 +379,8 @@ class RacetrackContentService extends __BaseService {
    *
    * - `request`: Payload to submit a 1:1 request with Cisco
    *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
    * - `accId`: Unique identifier of the accelerator for which 1:1 is requested.
    */
   requestACCResponse(params: RacetrackContentService.RequestACCParams): __Observable<__StrictHttpResponse<null>> {
@@ -358,6 +390,7 @@ class RacetrackContentService extends __BaseService {
 
     __headers = __headers.append("Content-Type", "application/json");
     __body = params.request;
+    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
 
     let req = new HttpRequest<any>(
       'POST',
@@ -382,6 +415,8 @@ class RacetrackContentService extends __BaseService {
    * @param params The `RacetrackContentService.RequestACCParams` containing the following parameters:
    *
    * - `request`: Payload to submit a 1:1 request with Cisco
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
    *
    * - `accId`: Unique identifier of the accelerator for which 1:1 is requested.
    */
@@ -1024,6 +1059,11 @@ module RacetrackContentService {
     suggestedAction?: string;
 
     /**
+     * Comma separated values of status to filter ATXs.
+     */
+    status?: Array<'recommended' | 'requested' | 'scheduled' | 'in-progress' | 'completed'>;
+
+    /**
      * Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
      */
     sort?: Array<string>;
@@ -1032,6 +1072,11 @@ module RacetrackContentService {
      * Number of rows of data per page.
      */
     rows?: number;
+
+    /**
+     * Comma separated values of provider/partner Ids to filter ATXs.
+     */
+    providerId?: Array<string>;
 
     /**
      * Page number of the response
@@ -1060,9 +1105,19 @@ module RacetrackContentService {
     sessionId: string;
 
     /**
+     * Unique identifier of a Cisco customer.
+     */
+    customerId: string;
+
+    /**
      * The Atx Identifier
      */
     atxId: string;
+
+    /**
+     * The event number of this atx session
+     */
+    eventNumber?: string;
 
     /**
      * Mashery user credential header
@@ -1081,9 +1136,19 @@ module RacetrackContentService {
     sessionId: string;
 
     /**
+     * Unique identifier of a Cisco customer.
+     */
+    customerId: string;
+
+    /**
      * Id of the selected ATX
      */
     atxId: string;
+
+    /**
+     * The event number of this atx session
+     */
+    eventNumber?: string;
 
     /**
      * Mashery user credential header
@@ -1124,7 +1189,7 @@ module RacetrackContentService {
     /**
      * Comma separated values of status to filter ACCs.
      */
-    status?: Array<'Completed' | 'Recommended' | 'Scheduled' | 'Requested' | 'In Progress'>;
+    status?: Array<'recommended' | 'requested' | 'scheduled' | 'in-progress' | 'completed'>;
 
     /**
      * Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
@@ -1161,6 +1226,11 @@ module RacetrackContentService {
      * Payload to submit a 1:1 request with Cisco
      */
     request: ACCRequestSessionSchema;
+
+    /**
+     * Unique identifier of a Cisco customer.
+     */
+    customerId: string;
 
     /**
      * Unique identifier of the accelerator for which 1:1 is requested.

@@ -1,29 +1,36 @@
 import {
 	Component,
+	EventEmitter,
 	Input,
 	OnDestroy,
-	EventEmitter,
+	OnInit,
 	Output,
 	SimpleChanges,
-	OnInit,
 } from '@angular/core';
 import {
-	Asset,
-	Assets,
 	InventoryService,
 	NetworkElement,
 	NetworkElementResponse,
-	TransactionStatusResponse,
+	PolicyResponseModel,
 	RacetrackSolution,
 	RacetrackTechnology,
+	TransactionStatusResponse,
+	HardwareAsset,
+	SystemAsset,
+	AssetSummary,
+	Asset,
+	HardwareAssets,
 } from '@sdp-api';
 
 import { Subject, of, forkJoin } from 'rxjs';
 import {
-	takeUntil, catchError, map,
+	catchError,
+	map,
+	mergeMap,
+	takeUntil,
 } from 'rxjs/operators';
 import { UserResolve } from '@utilities';
-import { Alert, Panel360 } from '@interfaces';
+import { Alert, Panel360, ModSystemAsset, ModHardwareAsset } from '@interfaces';
 import * as _ from 'lodash-es';
 import { LogService } from '@cisco-ngx/cui-services';
 import { getProductTypeImage, getProductTypeTitle } from '@classes';
@@ -44,13 +51,14 @@ import { I18n } from '@cisco-ngx/cui-utils';
 export class AssetDetailsComponent implements OnDestroy, OnInit, Panel360 {
 
 	@Input('serialNumber') public serialNumber: string;
-	@Input('asset') public asset: Asset;
+	@Input('asset') public asset: Asset | SystemAsset | HardwareAsset;
 	@Input('element') public element: NetworkElement;
-	@Output('close') public close = new EventEmitter<boolean>();
-	@Output('scanStatus') public scanStatus = new EventEmitter<TransactionStatusResponse>();
-
+	@Input('scanPolicy') public scanPolicy: PolicyResponseModel;
 	@Input() public minWidth;
 	@Input() public fullscreenToggle;
+
+	@Output('close') public close = new EventEmitter<boolean>();
+	@Output('scanStatus') public scanStatus = new EventEmitter<TransactionStatusResponse>();
 
 	public alert: any = { };
 	public isLoading = false;
@@ -60,6 +68,15 @@ export class AssetDetailsComponent implements OnDestroy, OnInit, Panel360 {
 	public getProductIcon = getProductTypeImage;
 	public getProductTitle = getProductTypeTitle;
 	public advisoryReload: EventEmitter<boolean> = new EventEmitter();
+	public systemAsset: ModSystemAsset;
+	public hardwareAsset: ModHardwareAsset;
+	public hardwareAssets: ModHardwareAsset[];
+	// Change tab index to determine the currently opened tab
+	public tabIndex = 0;
+	public headerScanStatus: { error: boolean; inProgress: boolean; } = {
+		error: false, inProgress: false,
+	};
+
 	private destroyed$: Subject<void> = new Subject<void>();
 	private selectedSolutionName: string;
 	private selectedTechnologyName: string;
@@ -111,7 +128,12 @@ export class AssetDetailsComponent implements OnDestroy, OnInit, Panel360 {
 			this.asset = null;
 			this.isLoading = true;
 
-			this.fetchAsset()
+			this.headerScanStatus = {
+				error: false,
+				inProgress: false,
+			};
+
+			this.fetchSystem()
 			.subscribe(() => {
 				this.isLoading = false;
 
@@ -120,6 +142,16 @@ export class AssetDetailsComponent implements OnDestroy, OnInit, Panel360 {
 					this.asset = cachedAsset;
 				}
 			});
+		} else if (transaction.status === 'FAILURE') {
+			this.headerScanStatus = {
+				error: true,
+				inProgress: false,
+			};
+		} else {
+			this.headerScanStatus = {
+				error: false,
+				inProgress: true,
+			};
 		}
 	}
 
@@ -141,36 +173,89 @@ export class AssetDetailsComponent implements OnDestroy, OnInit, Panel360 {
 	}
 
 	/**
-	 * Fetches the asset
+	 * Fetches the system
 	 * @returns the observable
 	 */
-	private fetchAsset () {
-		if (this.asset) {
-			return of(this.asset);
+	private fetchSystem () {
+		if (!this.asset) {
+			return of({ });
 		}
 
-		return this.serialNumber ?
-			this.inventoryService.getAssets({
-				customerId: this.customerId,
+		const params = {
+			customerId: this.customerId,
+			solution: this.selectedSolutionName,
+			useCase: this.selectedTechnologyName,
+		};
+
+		const neId = _.castArray(_.get(this.asset, 'neId'));
+
+		/**
+		 * First we have to fetch the system based on the neId,
+		 * if our serial number matches we are a 'System' and stay
+		 * on the summary tab, else we redirect to the 'Hardware' tab,
+		 * then we fetch all of the hardware based on the neId.
+		 * After we have all of the hardware assets, we fetch the summary
+		 * information for all of the hardware.
+		 */
+		return forkJoin([
+			this.inventoryService.getSystemAssets({
+				...params,
+				neId,
 				page: 1,
 				rows: 1,
-				serialNumber: [this.serialNumber],
-				solution: this.selectedSolutionName,
-				useCase: this.selectedTechnologyName,
-			})
-			.pipe(
-				map((response: Assets) => {
-					const asset: Asset = _.head(response.data);
+			}),
+			this.inventoryService.getAssetSystemSummary({
+				neId: _.head(neId),
+				customerId: this.customerId,
+			}),
+			this.inventoryService.getHardwareAssets({
+				...params,
+				neId,
+				page: 1,
+				rows: 100,
+			}),
+			this.fetchNetworkElement(),
+		])
+		.pipe(
+			mergeMap(responses => {
+				this.systemAsset = _.head(responses[0].data);
+				this.systemAsset.summary = responses[1];
 
-					this.asset = asset ? asset : null;
-				}),
-				catchError(err => {
-					this.logger.error('asset-details.component : fetchAsset()' +
-						`:: Error : (${err.status}) ${err.message}`);
+				this.hardwareAssets = _.get(responses[2], 'data');
+				this.hardwareAsset = _.find(this.hardwareAssets,
+					{ serialNumber: _.get(this.systemAsset, 'serialNumber') });
 
-					return of({ });
-				}),
-			) : of({ });
+				const systemSn = _.get(this.systemAsset, 'serialNumber');
+				if (systemSn !== this.serialNumber) {
+					this.tabIndex = 1;
+				} else {
+					this.tabIndex = 0;
+				}
+
+				const observables = [];
+				this.hardwareAssets.forEach((asset: HardwareAsset) => {
+					observables.push(this.inventoryService.getAssetSummary({
+						customerId: this.customerId,
+						hwInstanceId: asset.hwInstanceId,
+					}));
+				});
+
+				return forkJoin(observables);
+			}),
+			map((response: AssetSummary[]) => {
+				this.hardwareAssets.forEach((asset: ModHardwareAsset) => {
+					asset.summary = _.find(response,
+						(as: AssetSummary) => as.hwInstanceId === asset.hwInstanceId,
+					);
+				});
+			}),
+			catchError(err => {
+				this.logger.error('asset-details.component : fetchSystem()' +
+					`:: Error : (${err.status}) ${err.message}`);
+
+				return of({ });
+			}),
+		);
 	}
 
 	/**
@@ -183,10 +268,10 @@ export class AssetDetailsComponent implements OnDestroy, OnInit, Panel360 {
 			return of(this.element);
 		}
 
-		return this.serialNumber ?
+		return this.asset.neId ?
 			this.inventoryService.getNetworkElements({
 				customerId: this.customerId,
-				serialNumber: [this.serialNumber],
+				managedNeId: [this.asset.neId],
 				solution: this.selectedSolutionName,
 				useCase: this.selectedTechnologyName,
 			})
@@ -206,13 +291,41 @@ export class AssetDetailsComponent implements OnDestroy, OnInit, Panel360 {
 	}
 
 	/**
+	 * Fetches our hardware asset if we come in with only a serial number
+	 * @returns the hardware asset
+	 */
+	private fetchAsset () {
+		return this.inventoryService.getHardwareAssets({
+			customerId: this.customerId,
+			page: 1,
+			rows: 1,
+			serialNumber: [this.serialNumber],
+		})
+		.pipe(
+			map((response: HardwareAssets) => {
+				const asset = _.head(response.data);
+
+				if (asset) {
+					this.asset = asset;
+				}
+			}),
+			catchError(err => {
+				this.logger.error('asset-details.component : fetchAsset()' +
+				`:: Error : (${err.status}) ${err.message}`);
+
+				return of({ });
+			}),
+		);
+	}
+
+	/**
 	 * Refreshes our data
 	 */
 	private refresh () {
 		this.isLoading = true;
 
 		// If our serial number and our asset/element don't match,
-		// we need to unset them so we can refetch them
+		// we need to unset them so we can re-fetch them
 		const assetSerial = _.get(this.asset, 'serialNumber');
 		const elementSerial = _.get(this.element, 'serialNumber');
 
@@ -228,17 +341,20 @@ export class AssetDetailsComponent implements OnDestroy, OnInit, Panel360 {
 			this.serialNumber = serial;
 		}
 
-		// Dont even try an fetch asset or NE if we don't have at least a serial number
+		// Don't even try an fetch asset or NE if we don't have at least a serial number
 		if (serial) {
-			forkJoin(
-				this.fetchAsset(),
-				this.fetchNetworkElement(),
+			const neId = _.get(this.asset, 'neId');
+
+			(neId ? of({ }) : this.fetchAsset())
+			.pipe(
+				mergeMap(() => this.fetchSystem()),
 			)
 			.subscribe(() => {
 				this.isLoading = false;
 
 				if (!this.serialNumber || !this.asset) {
 					// Have to force a cycle so that alert is instantiated correctly
+					// tslint:disable-next-line
 					setTimeout(() => {
 						this.handleAlert({
 							message: I18n.get('_UnableToRetrieveAssetDetails_'),

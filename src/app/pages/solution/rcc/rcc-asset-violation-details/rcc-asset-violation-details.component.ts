@@ -168,8 +168,15 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 						const policyDesc =
 						_.get(assetPolicyDesc, ['policyDesc'], '')
 							.replace(/\&gt;/g, '>')
-							.replace(/\&lt;/g, '<');
+							.replace(/\&lt;/g, '<')
+							.replace(/\n/g, '<br>');
 						_.set(assetPolicyDesc, ['policyDesc'], policyDesc);
+						const ruleDesc =
+						_.get(assetPolicyDesc, ['ruleDesc'], '')
+							.replace(/\&gt;/g, '>')
+							.replace(/\&lt;/g, '<')
+							.replace(/\n/g, '<br>');
+						_.set(assetPolicyDesc, ['ruleDesc'], ruleDesc);
 					});
 					this.totalItems = this.rccAssetPolicyTableData.length;
 					if (this.rccAssetPolicyTableData.length > 0) {
@@ -281,7 +288,7 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 			columns: [
 				{
 					key: 'ruleHighSeverity',
-					name: I18n.get('_RccAssetSeverity_'),
+					name: I18n.get('_RccHighestSeverity_'),
 					sortable: true,
 					template: this.assetSliderIconTemplate,
 					width: '20%',
@@ -301,7 +308,7 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 				},
 				{
 					key: 'violationCount',
-					name: I18n.get('_RccAssetViolationCount_'),
+					name: I18n.get('_RccRuleViolations_'),
 					sortable: false,
 					width: '3%',
 				},
@@ -338,7 +345,7 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 				},
 				{
 					key: 'suggestedFix',
-					name: I18n.get('_RccAssetSuggestedFix_'),
+					name: I18n.get('_RccRecommendation_'),
 					sortable: false,
 					template: this.suggestedFixTemplate,
 				},

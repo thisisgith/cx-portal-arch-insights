@@ -1,3 +1,5 @@
+@import '~src/variables.scss';
+
 :host {
 	.admin-container {
 		position: relative;
@@ -58,15 +60,15 @@
 
 		ul li.selected a {
 			box-shadow: unset;
-			border-right: 3px solid #00bceb;
+			border-right: 3px solid $accent-color1;
 			background-color: transparent;
 
 			.sidebar__item__label {
-				color: #00bceb;
+				color: $accent-color1;
 			}
 
 			.sidebar__item__icon ::ng-deep path {
-				fill: #00bceb;
+				fill: $accent-color1;
 			}
 		}
 	}

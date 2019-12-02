@@ -34,6 +34,7 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 	private destroyed$: Subject<void> = new Subject<void>();
 	private user: User;
 	private customerId: string;
+	private saId: string;
 	private downloadSessionId: string;
 	private metadataTransId: string;
 	private imageGuid: string;
@@ -47,6 +48,7 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 	public loading = false;
 	public view: 'connect' | 'pre-download' | 'k9' | 'k9-decline' | 'eula';
 	public didDecline = false;
+	public region: 'emea' | 'usa' = 'usa';
 
 	public k9Data: Partial<K9FormData> = { };
 	public eulaData: Partial<EulaFormData> = { };
@@ -78,6 +80,7 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 	) {
 		this.user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(this.user, ['info', 'customerId']);
+		this.saId = _.get(this.user, ['info', 'saId']);
 	}
 
 	/**
@@ -348,6 +351,9 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 		return this.controlPointsService
 			.createIERegistrationUsingPOST({
 				customerId: this.customerId,
+				datacenter: this.region,
+				saId: Number(this.saId),
+				vaId: 0,
 			})
 			.pipe(
 				finalize(() => this.loading = false),

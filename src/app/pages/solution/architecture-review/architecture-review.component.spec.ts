@@ -11,7 +11,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { MicroMockModule } from '@cui-x-views/mock';
 import { environment } from '@environment';
 import { ActivatedRoute } from '@angular/router';
-import { user } from '@mock';
+import { user, ArchitectureReviewScenarios } from '@mock';
 import { HttpErrorResponse } from '@angular/common/http';
 
 describe('ArchitectureReviewComponent', () => {
@@ -63,34 +63,6 @@ describe('ArchitectureReviewComponent', () => {
 	it('should call clear filters', () => {
 		component.clearFilters();
 		expect(component.filtered)
-			.toBeFalsy();
-	});
-
-	it('should call onsubfilterselect', () => {
-		mockVisualFilter.seriesData = [{
-			filter: 'high',
-			label: '',
-			selected: false,
-			value: 123,
-		},
-		];
-		mockVisualFilter.key = 'exception';
-		component.onSubfilterSelect('high', mockVisualFilter);
-		expect(mockVisualFilter.seriesData[0].selected)
-			.toBeTruthy();
-	});
-
-	it('should call selected filter onsubfilterselect', () => {
-		mockVisualFilter.seriesData = [{
-			filter: '',
-			label: '',
-			selected: false,
-			value: 123,
-		},
-		];
-		mockVisualFilter.key = 'exceptions';
-		component.onSubfilterSelect('high', mockVisualFilter);
-		expect(mockVisualFilter.seriesData[0].selected)
 			.toBeFalsy();
 	});
 
@@ -156,6 +128,25 @@ describe('ArchitectureReviewComponent', () => {
 				expect(subfilter.selected)
 					.toBeFalsy();
 			});
+	});
+
+	it('should call getSDAReadinessCount', () => {
+
+		spyOn(service, 'getSDAReadinessCount')
+			.and
+			.returnValue(of(ArchitectureReviewScenarios[6].scenarios.GET[0].response.body));
+		component.getDevicesCount();
+		expect(service.getSDAReadinessCount)
+			.toHaveBeenCalled();
+	});
+
+	it('should not call getSDAReadinessCount', () => {
+		spyOn(service, 'getSDAReadinessCount')
+			.and
+			.returnValue(of([]));
+		component.getDevicesCount();
+		expect(service.getSDAReadinessCount)
+			.toHaveBeenCalled();
 	});
 
 	it('should throw errors if data is empty', fakeAsync(() => {

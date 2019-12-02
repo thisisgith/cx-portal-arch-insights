@@ -45,6 +45,14 @@ export * from './lib/entitlement/models';
 export * from './lib/entitlement/services';
 export * from './lib/entitlement/entitlement.module';
 
+export * from './lib/org-user/models';
+export * from './lib/org-user/services';
+export * from './lib/org-user/org-user.module';
+
+export * from './lib/entitlement-wrapper/models';
+export * from './lib/entitlement-wrapper/services';
+export * from './lib/entitlement-wrapper/entitlement-wrapper.module';
+
 export * from './lib/architecture/models';
 export * from './lib/architecture/services';
 export * from './lib/architecture/architecture.modules';
@@ -72,9 +80,9 @@ export * from './lib/risk-mitigation/models';
 export * from './lib/risk-mitigation/services';
 export * from './lib/risk-mitigation/risk-mitigation.module';
 
-export * from './lib/afm/models';
-export * from './lib/afm/services';
-export * from './lib/afm/afm.module';
+export * from './lib/controlpoints/models/admin-complience';
+export * from './lib/controlpoints/models/left-tag-response';
+export * from './lib/controlpoints/models/policy-group';
 
 export * from './lib/syslogs/models';
 export * from './lib/syslogs/services';
@@ -87,3 +95,16 @@ export * from './lib/crash-prevention/crash-prevention.module';
 export * from './lib/insights/models';
 export * from './lib/insights/services';
 export * from './lib/insights/insights-crashes.module';
+
+export * from './lib/asset-tagging/models';
+export * from './lib/asset-tagging/services';
+export * from './lib/asset-tagging/asset-tagging.modules';
+
+export * from './lib/partner/models/company-info-list';
+export * from './lib/partner/models/company-info';
+export * from './lib/partner/services';
+export * from './lib/partner/partner.module';
+
+export * from './lib/faults/models';
+export * from './lib/faults/services';
+export * from './lib/faults/fault-data.module';

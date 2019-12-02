@@ -5,4 +5,5 @@ export interface params {
 	pageSize: number,
 	searchText: string,
 	severity: string,
+	collectionId: string,
   }

@@ -60,6 +60,23 @@ export function getSlides (selection: Selection) {
 					type: DeployStepsComponent,
 				},
 			];
+		case Selection.MHYPERV:
+			return [
+				{
+					inputs: {
+						slideSet: 'mhyperv',
+					},
+					state: SETUP_STATES.INSTALL,
+					type: DeployStepsComponent,
+				},
+				{
+					inputs: {
+						slideSet: 'ie',
+					},
+					state: SETUP_STATES.INSTALL,
+					type: DeployStepsComponent,
+				},
+			];
 		default:
 	}
 }

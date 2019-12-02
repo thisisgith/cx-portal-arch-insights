@@ -9,7 +9,7 @@ export interface HardwareEOLBulletin {
   /**
    * The unique identifier for hardware end-of-life entry in a data store
    */
-  hwEolInstanceId?: string;
+  hwEolInstanceId?: number;
 
   /**
    * Cisco product published at the time of EOL announcement
@@ -100,7 +100,7 @@ export interface HardwareEOLBulletin {
    * The last date that Cisco Engineering may release a planned maintenance release or scheduled software remedy for a security vulnerability issue. GMT date format YYYY-MM-DD
    */
   eoVulnerabilitySecuritySupport?: string;
-  milestoneInfo?: Array<{currentHwEolMilestone?: string, nextHwEolMilestone?: string, currentHwEolMilestoneDate?: string, nextHwEolMilestoneDate?: string}>;
+  milestoneInfo?: Array<{hardwareEoXId?: string, bulletinNumber?: string, currentMilestoneRecord?: {currentMilestone?: string, currentMilestoneDate?: string}, nextMilestoneRecord?: {nextMilestone?: string, nextMilestoneDate?: string}, currentHwEolMilestone?: string, nextHwEolMilestone?: string, currentHwEolMilestoneDate?: string, nextHwEolMilestoneDate?: string}>;
 
   /**
    * Migration Pid

@@ -99,8 +99,8 @@
 			<cui-table 
 				[limit]="recommendation.params.limit" 
 				[offset]="recommendation.params.offset"
-				[options]="bugsTable" 
-				(onTableRowClicked)="onBugRowSelect($event)" 
+				[options]="bugsTable"
+				(onTableRowClicked)="onBugRowSelect($event)"			
 				[data]="recommendation?.data.bugs">
 			</cui-table>
 		</div>
@@ -111,7 +111,7 @@
 			<cui-pager 
 				[page]="recommendation.params.offset" 
 				[limit]="recommendation.params.limit"
-				[totalItems]="recommendation.total || 0" 
+				[totalItems]="recommendation.total || 0"
 				(onPageChanged)="onPageChanged($event,recommendation)">
 			</cui-pager>
 		</div>
@@ -144,7 +144,7 @@
 				[limit]="recommendation.params.limit" 
 				[offset]="recommendation.params.offset"
 				[options]="psirtsTable" 
-				(onTableRowClicked)="onRowSelect($event)" 
+				(onTableRowClicked)="onPsirtRowSelect($event)"
 				[data]="recommendation.data.psirts" >
 			</cui-table>
 		</div>
@@ -207,11 +207,7 @@
 
 <ng-template #titleTemp let-item="celldata">
 	<span  [title]="item.title" >
-		<span [innerText]="item.title" ></span>
-		<img alt="{{ '_OsvOpenNewWindow_' | i18n }}" 
-			class="qtr-margin-left" 
-			attr.data-auto-id="OpenInNewWindow"
-			src="assets/icons/icon-open-new-window.svg">
+		<span [innerText]="item.title" ></span>		
 	</span>
 </ng-template>
 
@@ -220,15 +216,73 @@
 </ng-template>
 
 <ng-template #bugIdTemp let-item="celldata">
-	<span  [title]="item.id" [innerText]="item.id"></span>
-	<img alt="{{ '_OsvOpenNewWindow_' | i18n }}" 
-			class="qtr-margin-left" 
-			attr.data-auto-id="OpenInNewWindow"
-		src="assets/icons/icon-open-new-window.svg">
+	<span  [title]="item.id" [innerText]="item.id"></span>	
 </ng-template>
 
 <ng-template #noInformationAvailable>
 	<div *ngIf="params?.viewType == 'bug'" class="text-center text-xlarge dbl-margin-top">
 			<span [innerText]="'_OsvNoBugsInfoAvailable_' | i18n"></span>
+	</div>
+</ng-template>
+
+
+<ng-template #bugRowWellTemplate let-item="item">
+	<div class="text-center">
+		<cui-spinner *ngIf="status?.isLoadingDetails"></cui-spinner>
+	</div>
+	<div *ngIf="!status?.isLoadingDetails" class="details">
+		<div class="row no-margin">
+			<div class="col-md-9 base-margin-top">
+					<div [innerText]= "'_Title_' | i18n " class="text-bold" ></div>
+					<div [title]="item?.title" [innerText]="item?.title"></div>
+			</div>
+			<div class="col-md-3 base-margin-top" >
+				<button 
+					(click)="onBugDetailsClick(item)"
+					class="btn btn--secondary btn--small" 
+					attr.data-auto-id="ViewBugDetail">
+						<span [innerText] ="'_OsvViewDetails_' | i18n | uppercase"></span>
+						<img alt="{{ '_OsvOpenNewWindow_' | i18n }}" 
+							class="half-margin-left" 
+							attr.data-auto-id="OpenInNewWindow"
+							src="assets/icons/icon-open-new-window.svg">
+				</button>	
+			</div>
+		</div>
+		<div class="row no-margin">
+			<div class="col-md-12 base-margin-top text-bold" [innerText]= "'_Description_' | i18n "></div>
+			<div class="col-md-12 base-margin-top" [innerHTML]="item?.description"></div>
+		</div>	
+	</div>	
+</ng-template>
+
+
+<ng-template #psirtRowWellTemplate let-item="item">
+	<div class="text-center">
+		<cui-spinner *ngIf="status?.isLoadingDetails"></cui-spinner>
+	</div>
+	<div *ngIf="!status?.isLoadingDetails" class="details">
+		<div class="row no-margin">
+			<div class="col-md-9 base-margin-top">
+					<div [innerText]= "'_Title_' | i18n " class="text-bold" ></div>
+					<div [title]="item?.title" [innerText]="item?.title"></div>
+			</div>
+			<div class="col-md-3 base-margin-top" >
+				<button 
+					(click)="onPsirtDetailClick(item)"
+					class="btn btn--secondary btn--small" 
+					attr.data-auto-id="ViewBugDetail">
+						<span [innerText] ="'_OsvViewDetails_' | i18n | uppercase"></span>
+						<img alt="{{ '_OsvOpenNewWindow_' | i18n }}" 
+							class="half-margin-left" 
+							attr.data-auto-id="OpenInNewWindow"
+							src="assets/icons/icon-open-new-window.svg">
+				</button>	
+			</div>
+		</div>
+		<div class="row no-margin">
+			<div class="col-md-12 base-margin-top text-bold" [innerText]= "'_Description_' | i18n "></div>
+			<div class="col-md-12 base-margin-top" [innerHTML]="item?.description"></div>
+		</div>	
 	</div>
 </ng-template>

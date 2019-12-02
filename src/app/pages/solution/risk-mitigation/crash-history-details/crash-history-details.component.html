@@ -1,0 +1,81 @@
+<details-panel
+	*ngIf="selectedSystem?.active"
+	[hidden]="!selectedSystem"
+	(hiddenChange)="handleHidden($event)"
+	[fullscreen]="fullscreen"
+>
+	<details-panel-header
+		(close)="onPanelClose()"
+		[(fullscreen)]="fullscreen"
+		[fullscreenToggle]="false"
+	>
+		<div class="half-margin-left">
+			<div class="text-xlarge">
+				<span
+					[innerText]="'_RMCrashHistoryFor_' | i18n"
+				></span>
+				<span class="half-margin-left">
+					<a
+						data-auto-id="selectedName"
+						(click)="showAssetDetailsView = true;"
+						[innerHTML]="selectedSystem?.neName"
+					></a>
+				</span>
+			</div>
+			<div class="row  dbl-margin-top">
+				<div class="col-3">
+					<div class="row">
+						<div
+							class="col-12  text-bold"
+							[innerText]="'_IPAddress_' | i18n | uppercase"
+						></div>
+						<div
+							class="col-md-12"
+							[innerText]="selectedSystem?.ipAddress"
+						></div>
+					</div>
+				</div>
+				<div class="col-3">
+					<div class="row">
+						<div
+							class="col-md-12 text-bold"
+							[innerText]="'_SerialNumber_' | i18n | uppercase"
+						></div>
+						<div
+							class="col-md-12"
+							[innerText]="selectedSystem?.serialNumber"
+						></div>
+					</div>
+				</div>
+				<div class="col-6">
+					<div
+						class="col-md-12 text-bold"
+						[innerText]="
+							'_RMNumberOfCrashesInCrashHistory_'
+								| i18n
+								| uppercase
+						"
+					></div>
+					<div
+						class="col-md-12"
+						[innerText]="crashHistoryGridDetails?.tableData.length"
+					></div>
+				</div>
+			</div>
+		</div>
+	</details-panel-header>
+	<cui-table
+		*ngIf="!crashHistoryLoading"
+		[options]="crashHistoryGridOptions"
+		[data]="crashHistoryGridDetails.tableData"
+	></cui-table>
+	<cui-loader color="muted" *ngIf="crashHistoryLoading"></cui-loader>
+</details-panel>
+<asset-details *ngIf="showAssetDetailsView" [serialNumber]="selectedSystem?.serialNumber" (close)="showAssetDetailsView = false">
+</asset-details>
+<ng-template #resetReasonTemplate let-item="celldata">
+	<span title="{{ item?.resetReason }}" [innerHTML]="item.resetReason"></span>
+</ng-template>
+<ng-template #timeStampTemplate let-item="celldata">
+	<span title="{{ item?.timeStamp }}" [innerHTML]="item.timeStamp"></span>
+</ng-template>

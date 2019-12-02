@@ -9,21 +9,20 @@
 			</span>
 		</div>
 	</div>
-	<div class="col-md-6 text-right" >
-		<div *ngIf="cxLevel === 3">
-			<div [innerText]="'_CSNeedSoftwareRecommendation_' | i18n"></div>
-			<a  
-				(click)="contactSupport.emit()" 
-				class="recommedation-link text-primary"
-				data-auto-id="ContactExpert" 
-				[innerText]="'_CSRequestExpert_' | i18n">
-			</a>
+	<div class="col-md-6">
+		<div class="flex flex-fluid flex-right">
+			<cui-search 
+				placeholder="{{ '_Search_' | i18n }}" 
+				[debounce]="searchOptions.debounce"
+				[compressed]="true" 
+				(onUpdate)="onSearchQueryVersion($event)">
+			</cui-search>
 		</div>
 	</div>
 </div>
 <div class="divider qtr-margin-top"></div>
 <cui-alert [options]="alert"></cui-alert>
-<div *ngIf="versionsCount == 0" class="dbl-margin-top text-center text-xlarge dbl-margin-bottom">
+<div *ngIf="versionsCount == 0 || softwareVersions?.length === 0" class="dbl-margin-top text-center text-xlarge dbl-margin-bottom">
 	<span [innerText]="'_InsightsNoResultsFound_' | i18n"></span>
 </div>
 <ng-container *ngTemplateOutlet="tableSoftwareVersion"></ng-container>

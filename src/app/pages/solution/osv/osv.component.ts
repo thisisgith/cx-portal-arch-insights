@@ -5,14 +5,11 @@ import { LogService } from '@cisco-ngx/cui-services';
 import * as _ from 'lodash-es';
 import { takeUntil, map, catchError } from 'rxjs/operators';
 import {
-	OSVService, SummaryResponse, OSVAsset,
+	OSVService, SummaryResponse, OSVAsset, RacetrackSolution, RacetrackTechnology,
 } from '@sdp-api';
 import { ActivatedRoute } from '@angular/router';
 import { VisualFilter } from '@interfaces';
-import { CuiModalService } from '@cisco-ngx/cui-components';
-import {
-	ContactSupportComponent,
-} from 'src/app/components/contact-support/contact-support.component';
+import { RacetrackInfoService } from '@services';
 
 /**
  * Interface representing our visual filters
@@ -34,6 +31,10 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 		TemplateRef<{ }>;
 	@ViewChild('totalAssetsFilter', { static: true }) private totalAssetsFilterTemplate:
 		TemplateRef<{ }>;
+	@ViewChild('recommendationTypeFilter', { static: true })
+	private recommendationTypeFilterTemplate: TemplateRef<{ }>;
+	@ViewChild('deploymentStatusFilter', { static: true })
+	private deploymentStatusFilterTemplate: TemplateRef<{ }>;
 	public status = {
 		isLoading: true,
 	};
@@ -50,6 +51,8 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 	public appliedFilters = {
 		assetType: '',
 		deploymentStatus: [],
+		recommendationType: [],
+		recommendationStatus: [],
 	};
 	public assetGroupList: string[] = [];
 	public operationalPreferencesList: string[] = [];
@@ -61,15 +64,32 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 		profiles: 0,
 		versions: 0,
 	};
+	public recommendationMap = [
+		{ key: 'automated', label: I18n.get('_OsvAutomatedRecommended_') },
+		{ key: 'none', label: I18n.get('_OsvNone_') },
+	];
+	public deploymentMap = [
+		{ key: 'Production', label: I18n.get('_OsvInProduction_') },
+		{ key: 'Upgrade', label: I18n.get('_Upgrade_') },
+		{ key: 'None', label: I18n.get('_OsvNone_') },
+		{ key: 'NA', label: I18n.get('_OsvNA_') },
+	];
+	public selectedSolutionName;
+	public selectedTechnologyName;
+	public summaryParams: OSVService.GetSummaryParams = {
+		customerId: '',
+		solution: '',
+		useCase: '',
+	};
 
 	constructor (
 		private logger: LogService,
 		private osvService: OSVService,
 		private route: ActivatedRoute,
-		private cuiModalService: CuiModalService,
+		private racetrackInfoService: RacetrackInfoService,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
-		this.customerId = _.get(user, ['info', 'customerId']);
+		this.summaryParams.customerId = _.get(user, ['info', 'customerId']);
 		this.cxLevel = _.get(user, ['service', 'cxLevel'], 0);
 	}
 
@@ -92,7 +112,25 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 			this.doNotShowAgain = true;
 		}
 		this.buildFilters();
-		this.loadData();
+		this.racetrackInfoService.getCurrentSolution()
+			.pipe(
+				takeUntil(this.destroy$),
+			)
+			.subscribe((solution: RacetrackSolution) => {
+				this.summaryParams.solution = _.get(solution, 'name');
+			});
+
+		this.racetrackInfoService.getCurrentTechnology()
+			.pipe(
+				takeUntil(this.destroy$),
+			)
+			.subscribe((technology: RacetrackTechnology) => {
+				if (this.summaryParams.useCase !== _.get(technology, 'name')) {
+					this.summaryParams.useCase = _.get(technology, 'name');
+					this.refresh();
+				}
+			});
+		this.refresh();
 	}
 
 	/**
@@ -119,6 +157,24 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 				title: I18n.get('_OsvAssets_'),
 				view: ['assets'],
 			},
+			{
+				key: 'deploymentStatus',
+				loading: true,
+				selected: false,
+				seriesData: [],
+				template: this.deploymentStatusFilterTemplate,
+				title: I18n.get('_OsvDeploymentStatus_'),
+				view: ['assets'],
+			},
+			{
+				key: 'recommendationType',
+				loading: true,
+				selected: true,
+				seriesData: [],
+				template: this.recommendationTypeFilterTemplate,
+				title: I18n.get('_OsvRecommendations_'),
+				view: ['swGroups'],
+			},
 		];
 	}
 
@@ -129,6 +185,13 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 		this.filters = _.filter(this.allFilters, (filter: Filter) =>
 			_.indexOf(filter.view, this.view) > -1,
 		);
+	}
+
+	/**
+	 * refesh data
+	 */
+	public refresh () {
+		this.loadData();
 	}
 
 	/**
@@ -156,12 +219,15 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 
 		const totalAssetsFilter = _.find(this.allFilters, { key: 'totalAssets' });
 		const assetTypeFilter = _.find(this.allFilters, { key: 'assetType' });
+		const recommendationTypeFilter = _.find(this.allFilters, { key: 'recommendationType' });
+		const deploymentStatusFilter = _.find(this.allFilters, { key: 'deploymentStatus' });
 
-		return this.osvService.getSummary({ customerId: this.customerId })
+		return this.osvService.getSummary(this.summaryParams)
 			.pipe(
 				map((response: SummaryResponse) => {
 					totalAssetsFilter.loading = false;
 					assetTypeFilter.loading = false;
+					recommendationTypeFilter.loading = false;
 					totalAssetsFilter.seriesData = [{
 						assets: response.assets,
 						profiles: response.profiles,
@@ -185,19 +251,50 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 								};
 							}
 						}));
+					deploymentStatusFilter.seriesData = _.compact(
+						_.map(response.deployment, (value: number, key: string) => {
+							if (value !== 0) {
+								const filteredDeploy = _.find(this.deploymentMap,
+									deployment => deployment.key === key);
 
+								return {
+									value,
+									filter: key,
+									label: filteredDeploy ? filteredDeploy.label : '',
+									selected: false,
+								};
+							}
+						}));
+					recommendationTypeFilter.seriesData = _.compact(
+						_.map(response.recommendations, (value: number, key: string) => {
+							if (value !== 0) {
+								const filteredRecomm = _.find(this.recommendationMap,
+									recommendation => recommendation.key === key);
+
+								return {
+									value,
+									filter: key,
+									label: filteredRecomm.label,
+									selected: false,
+								};
+							}
+						}));
+					this.onSubfilterSelect('automated', recommendationTypeFilter);
 				}),
 				catchError(err => {
 					this.logger.error('OSV Summary : getSummary() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 					totalAssetsFilter.loading = false;
 					assetTypeFilter.loading = false;
+					recommendationTypeFilter.loading = false;
+					deploymentStatusFilter.loading = false;
 					this.view = 'swGroups';
 					totalAssetsFilter.seriesData = [{
 						assets: 0,
 						profiles: 0,
 						versions: 0,
 					}];
+
 					return of({ });
 				}),
 			);
@@ -235,6 +332,11 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 		if (this.view !== view) {
 			this.view = view;
 			this.reset();
+		}
+		this.clearFilters();
+		if (this.view === 'swGroups') {
+			const recommendationTypeFilter = _.find(this.allFilters, { key: 'recommendationType' });
+			this.onSubfilterSelect('automated', recommendationTypeFilter);
 		}
 		this.filterByView();
 	}
@@ -283,6 +385,10 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 			this.appliedFilters.assetType =
 				_.map(_.filter(filter.seriesData, 'selected'), 'filter');
 		}
+		if (filter.key === 'recommendationType') {
+			this.appliedFilters.recommendationType =
+				_.map(_.filter(filter.seriesData, 'selected'), 'filter');
+		}
 		this.appliedFilters = _.cloneDeep(this.appliedFilters);
 		const totalFilter = _.find(this.filters, { key: 'totalAssets' });
 		if (filter.selected) {
@@ -319,24 +425,16 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 		this.appliedFilters = {
 			assetType: '',
 			deploymentStatus: [],
+			recommendationType: [],
+			recommendationStatus: [],
 		};
-	}
-
-	/**
-	 * Open contact support modal
-	 */
-	public openContactSupport () {
-		this.cuiModalService.showComponent(ContactSupportComponent, { contactExpert: true });
 	}
 
 	/**
 	 * close all details panel
 	 */
 	public reset () {
-		this.appliedFilters = {
-			assetType: '',
-			deploymentStatus: [],
-		};
+		this.appliedFilters.assetType = '';
 		this.selectedAsset = null;
 		this.selectedSoftwareGroup = null;
 	}
@@ -372,4 +470,12 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 			this.onPanelClose();
 		}
 	}
+
+	/**
+	 * refesh summary counts on accept or cancel of recommendation
+	 */
+	public refreshSummary () {
+		this.loadData();
+	}
+
 }

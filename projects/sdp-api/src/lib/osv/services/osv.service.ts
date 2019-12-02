@@ -17,6 +17,8 @@ import { SoftwareGroupAssetsResponse } from '../models/software-group-asset-resp
 import { MachineRecommendationsResponse } from '../models/machine-recommendations-response';
 import { SoftwareGroup } from '../models/software-group';
 import { ProfileRecommendationsResponse } from '../models/profile-recommendations-response';
+import { OsvPsirt } from '../models/psrits';
+import { OsvBug } from '../models/bugs';
 
 @Injectable({
 	providedIn: 'root',
@@ -29,11 +31,13 @@ class OSVService extends __BaseService {
 	static readonly getAssetsPath = '/customerportal/osv-ui/v1/assets';
 	static readonly updateProfilePath = '/customerportal/osv-ui/v1/updateProfile';
 	static readonly cancelUpdateProfilePath = '/customerportal/osv-ui/v1/cancelUpdateProfile';
-	static readonly getSoftwareGroupVersionsPath = '/customerportal/osv-ui/v1/profileVersions';
+static readonly getSoftwareGroupVersionsPath = '/customerportal/osv-ui/v1/profileVersions';
 	static readonly getSoftwareGroupAssetsPath = '/customerportal/osv-ui/v1/profileAssets';
 	static readonly getSoftwareGroupRecommendationPath = '/customerportal/osv-ui/v1/profileRecommendations';
 	static readonly getMachineRecommendationsPath = '/customerportal/osv-ui/v1/machineRecommendations';
-
+	static readonly getPsirtDetailsPath = '/customerportal/osv-ui/v1/psirtDetail';
+	static readonly getBugDetailsPath = '/customerportal/osv-ui/v1/bugDetail';
+	
 	constructor (
 		config: __Configuration,
 		http: HttpClient
@@ -46,6 +50,8 @@ class OSVService extends __BaseService {
 	 * @param params The `OSVService.GetSummaryParams` containing the following parameters:
 	 *
 	 * - `customerId`: Unique identifier of a Cisco customer.
+	 * - `solution`: selected solution filter.
+	 * - `useCase`: selected useCase .
 	 *
 	 * @return successful operation
 	 */
@@ -78,6 +84,8 @@ class OSVService extends __BaseService {
 	 * @param params The `OSVService.GetSummaryParams` containing the following parameters:
 	 *
 	 * - `customerId`: Unique identifier of a Cisco customer.
+	 * - `solution`: selected solution
+	 * - `useCase`: selected useCase
 	 *
 	 * @return successful operation
 	 */
@@ -98,6 +106,9 @@ class OSVService extends __BaseService {
 	 * - `sort` : Sorting to be done on which column
 	 * - `sortOrder` : Sorting Order
 	 * - `filter`:	filter to be applied
+	 * - `search`:	search to be applied
+	 * - `solution` : solution filter selected
+	 * - `useCase` : useCase selected
 	 *
 	 * @return successful operation
 	 */
@@ -112,6 +123,7 @@ class OSVService extends __BaseService {
 		if (params.sort != null) __params = __params.set('sort', params.sort.toString());
 		if (params.sortOrder != null) __params = __params.set('sortOrder', params.sortOrder.toString());
 		if (params.filter != null) __params = __params.set('filter', params.filter.toString());
+		if (params.search != null) __params = __params.set('search', params.search.toString());		
 		let req = new HttpRequest<any>(
 			'GET',
 			this.rootUrl + `${OSVService.getSoftwareGroupsPath}`,
@@ -140,6 +152,10 @@ class OSVService extends __BaseService {
 	 * - `sort` : Sorting to be done on which column
 	 * - `sortOrder` : Sorting Order
 	 * - `filter`:	filter to be applied
+	 * - `search`:	search to be applied
+	 * - `solution` : solution filter selected
+	 * - `useCase` : useCase selected
+
 	 * @return successful operation
 	 */
 	getSoftwareGroups (params: OSVService.GetSoftwareGroupsParams): __Observable<SoftwareGroupsResponse> {
@@ -157,6 +173,10 @@ class OSVService extends __BaseService {
 	 * - `pageSize` : number of records to be fetched per page
 	 * - `sort` : Sorting to be done on which column
 	 * - `sortOrder` : Sorting Order
+	 * - `search` : search to be applied
+	 * - `solution` : solution filter selected
+	 * - `useCase` : useCase selected
+
 	 * @return successful operation
 	 */
 	getSoftwareVersionsResponse (params: OSVService.GetSoftwarVersionsParams): __Observable<__StrictHttpResponse<SoftwareVersionsResponse>> {
@@ -169,6 +189,7 @@ class OSVService extends __BaseService {
 		if (params.pageSize != null) __params = __params.set('pageSize', params.pageSize.toString());
 		if (params.sort != null) __params = __params.set('sort', params.sort.toString());
 		if (params.sortOrder != null) __params = __params.set('sortOrder', params.sortOrder.toString());
+		if (params.search != null) __params = __params.set('search', params.search.toString());		
 		let req = new HttpRequest<any>(
 			'GET',
 			this.rootUrl + `${OSVService.getSoftwareVersionsPath}`,
@@ -195,6 +216,10 @@ class OSVService extends __BaseService {
 	 * - `pageSize` : number of records to be fetched per page
 	 * - `sort` : Sorting to be done on which column
 	 * - `sortOrder` : Sorting Order
+	 * - `search` : search to be applied
+	 * - `solution` : solution filter selected
+	 * - `useCase` : useCase selected
+
 	 * @return successful operation
 	 */
 	getSoftwareVersions (params: OSVService.GetSoftwarVersionsParams): __Observable<SoftwareVersionsResponse> {
@@ -213,7 +238,7 @@ class OSVService extends __BaseService {
 	 * - `swType`: Software Type of Asset
 	 * - `swVersion`: Software Version of Asset
 	 * - `image`: image of the asset
-	 * - `postDate` : postDate 
+	 * - `postDate` : postDate
 	 * @return successful operation
 	 */
 	getAssetDetailsResponse (params: OSVService.GetAssetDetailsParams): __Observable<__StrictHttpResponse<AssetRecommendationsResponse>> {
@@ -274,6 +299,10 @@ class OSVService extends __BaseService {
 	 * - `sort` : Sorting to be done on which column
 	 * - `sortOrder` : Sorting Order
 	 * - `filter`:	filter to be applied	 * @return successful operation
+	 * - `search`:	search to be applied	 * @return successful operation
+ 	 * - `solution` : solution filter selected
+	 * - `useCase` : useCase selected
+
 	 */
 	getAssetsResponse (params: OSVService.GetAssetsParams): __Observable<__StrictHttpResponse<AssetsResponse>> {
 		let __params = this.newParams();
@@ -286,6 +315,7 @@ class OSVService extends __BaseService {
 		if (params.sort != null) __params = __params.set('sort', params.sort.toString());
 		if (params.sortOrder != null) __params = __params.set('sortOrder', params.sortOrder.toString());
 		if (params.filter != null) __params = __params.set('filter', params.filter.toString());
+		if (params.search != null) __params = __params.set('search', params.search.toString());		
 
 		let req = new HttpRequest<any>(
 			'GET',
@@ -314,6 +344,10 @@ class OSVService extends __BaseService {
 	 * - `sort` : Sorting to be done on which column
 	 * - `sortOrder` : Sorting Order
 	 * - `filter`:	filter to be applied	 * @return successful operation
+	 * - `search`:	search to be applied	 * @return successful operation
+	 * - `solution` : solution filter selected
+	 * - `useCase` : useCase selected
+
 	 */
 	getAssets (params: OSVService.GetAssetsParams): __Observable<AssetsResponse> {
 		return this.getAssetsResponse(params).pipe(
@@ -407,6 +441,8 @@ class OSVService extends __BaseService {
 	 * - `sortOrder` : sort order
 	 * - `pageIndex` : pageIndex
 	 * - `pageSize` : number of results per page
+	 * - `solution` : solution filter selected
+	 * - `useCase` : useCase selected
 	 * @return successful operation
 	 */
 	getSoftwareGroupVersionsResponse (params: OSVService.GetSoftwareGroupAssetsParams): __Observable<__StrictHttpResponse<SoftwareGroupVersionsResponse>> {
@@ -421,6 +457,8 @@ class OSVService extends __BaseService {
 		if (params.pageSize != null) __params = __params.set('pageSize', params.pageSize.toString());
 		if (params.sort != null) __params = __params.set('sort', params.sort.toString());
 		if (params.sortOrder != null) __params = __params.set('sortOrder', params.sortOrder.toString());
+		if (params.solution != null) __params = __params.set('solution', params.solution.toString());
+		if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
 		let req = new HttpRequest<any>(
 			'GET',
 			this.rootUrl + `${OSVService.getSoftwareGroupVersionsPath}`,
@@ -450,6 +488,9 @@ class OSVService extends __BaseService {
 	 * - `sortOrder` : sort order
 	 * - `pageIndex` : pageIndex
 	 * - `pageSize` : number of results per page
+     * - `solution` : solution filter selected
+	 * - `useCase` : useCase selected
+
 	 *
 	 * @return successful operation
 	 */
@@ -470,6 +511,9 @@ class OSVService extends __BaseService {
 	 * - `sortOrder` : sort order
 	 * - `pageIndex` : pageIndex
 	 * - `pageSize` : number of results per page
+	 * - `solution` : solution filter selected
+	 * - `useCase` : useCase selected
+
 	 *
 	 * @return successful operation
 	 */
@@ -485,6 +529,8 @@ class OSVService extends __BaseService {
 		if (params.pageSize != null) __params = __params.set('pageSize', params.pageSize.toString());
 		if (params.sort != null) __params = __params.set('sort', params.sort.toString());
 		if (params.sortOrder != null) __params = __params.set('sortOrder', params.sortOrder.toString());
+		if (params.solution != null) __params = __params.set('solution', params.solution.toString());
+		if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
 		let req = new HttpRequest<any>(
 			'GET',
 			this.rootUrl + `${OSVService.getSoftwareGroupAssetsPath}`,
@@ -512,7 +558,10 @@ class OSVService extends __BaseService {
 	 * - `sort` : sort column
 	 * - `sortOrder` : sort order
 	 * - `pageIndex` : pageIndex
-	 * - `pageSize` : number of results per page	 
+	 * - `pageSize` : number of results per page
+ 	 * - `solution` : solution filter selected
+	 * - `useCase` : useCase selected
+ 
 	 * @return successful operation
 	 */
 	getSoftwareGroupAssets (params: OSVService.GetSoftwareGroupAssetsParams): __Observable<SoftwareGroupAssetsResponse> {
@@ -525,8 +574,10 @@ class OSVService extends __BaseService {
  	* Software Group Assets
  	* @param params The `OSVService.GetSoftwareGroupDetailsParam` containing the following parameters:
  	*
- 	* - `customerId`: Unique identifier of a Cisco customer.
+	* - `customerId`: Unique identifier of a Cisco customer.
+	* - `profileId`: unique identifier of software group
  	* - `profileName` : unique identifier of software group
+ 	* - `productFamily` : product family of software group
  	*
  	* @return successful operation
  	*/
@@ -537,6 +588,8 @@ class OSVService extends __BaseService {
 
 		if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
 		__params = __params.set('profileName', params.profileName);
+		__params = __params.set('productFamily', params.productFamily);
+		__params = __params.set('profileId', params.profileId);
 		let req = new HttpRequest<any>(
 			'GET',
 			this.rootUrl + `${OSVService.getSoftwareGroupRecommendationPath}`,
@@ -559,7 +612,9 @@ class OSVService extends __BaseService {
 	 * Software Group Assets
 	 * @param params The `OSVService.GetSoftwareGroupDetailsParam` containing the following parameters:
 	 * - `customerId`: Unique identifier of a Cisco customer.
-	 * - `profileName` : unique identifier of software group	
+	 * - `profileId`: unique identifier of software group
+	 * - `profileName` : unique identifier of software group
+	 * - `profileName` : product family of software gropu
 	 * @return successful operation
 	 */
 	getSoftwareGroupRecommendations (params: OSVService.GetSoftwareGroupDetailsParam): __Observable<ProfileRecommendationsResponse> {
@@ -615,6 +670,94 @@ class OSVService extends __BaseService {
 		);
 	}
 
+   /**
+ 	* Psirt Details
+ 	* @param params The `OSVService.PristDetailsParams` containing the following parameters:
+ 	*
+ 	* - `psirtId `: Unique identifier of a Psirt.
+ 	*
+ 	* @return successful operation
+ 	*/
+	 getPsritDetailsResponse (params: OSVService.PristDetailsParams): __Observable<__StrictHttpResponse<OsvPsirt>> {
+		let __params = this.newParams();
+		let __headers = new HttpHeaders();
+		let __body: any = null;
+
+		if (params.psirtId != null) __params = __params.set('psirtId', params.psirtId.toString());
+		let req = new HttpRequest<any>(
+			'GET',
+			this.rootUrl + `${OSVService.getPsirtDetailsPath}`,
+			__body,
+			{
+				headers: __headers,
+				params: __params,
+				responseType: 'json',
+			});
+
+		return this.http.request<any>(req).pipe(
+			__filter(_r => _r instanceof HttpResponse),
+			__map((_r) => {
+				return _r as __StrictHttpResponse<OsvPsirt>;
+			})
+		);
+	}
+
+	/**
+	 * Psirt Details
+	 * @param params The `OSVService.PristDetailsParams` containing the following parameters:
+	 * - `customerId`: Unique identifier of a PSIRT.	
+	 * @return successful operation
+	 */
+	getPsirtDetails (params: OSVService.PristDetailsParams): __Observable<OsvPsirt> {
+		return this.getPsritDetailsResponse(params).pipe(
+			__map(_r => _r.body as OsvPsirt)
+		);
+	}
+
+   /**
+ 	* Bug Details
+ 	* @param params The `OSVService.BugDetailsParams` containing the following parameters:
+ 	*
+ 	* - `bugId `: Unique identifier of a Bug.
+ 	*
+ 	* @return successful operation
+ 	*/
+	 getBugDetailsResponse (params: OSVService.BugDetailsParams): __Observable<__StrictHttpResponse<OsvBug>> {
+		let __params = this.newParams();
+		let __headers = new HttpHeaders();
+		let __body: any = null;
+
+		if (params.bugId != null) __params = __params.set('bugId', params.bugId.toString());
+		let req = new HttpRequest<any>(
+			'GET',
+			this.rootUrl + `${OSVService.getBugDetailsPath}`,
+			__body,
+			{
+				headers: __headers,
+				params: __params,
+				responseType: 'json',
+			});
+
+		return this.http.request<any>(req).pipe(
+			__filter(_r => _r instanceof HttpResponse),
+			__map((_r) => {
+				return _r as __StrictHttpResponse<OsvBug>;
+			})
+		);
+	}
+
+	/**
+	 * Bug Details
+	 * @param params The `OSVService.BugDetailsParams` containing the following parameters:
+	 * - `customerId`: Unique identifier of a Bug.	
+	 * @return successful operation
+	 */
+	getBugDetails (params: OSVService.BugDetailsParams): __Observable<OsvBug> {
+		return this.getBugDetailsResponse(params).pipe(
+			__map(_r => _r.body as OsvBug)
+		);
+	}	
+
 }
 
 module OSVService {
@@ -626,6 +769,14 @@ module OSVService {
 		 * Unique identifier of a Cisco customer.
 		 */
 		customerId: string;
+		/**
+		 * selection solution filter.
+		 */
+		solution: string;
+		/**
+		 * selected useCase.
+		 */
+		useCase: string;
 	}
 
 	/**
@@ -646,8 +797,8 @@ module OSVService {
 		 */
 		pageSize: number;
 		/**
- * sort by field.
- */
+ 		 * sort by field.
+ 		 */
 		sort?: string;
 		/**
 		 * sortorder.
@@ -657,6 +808,18 @@ module OSVService {
 		 * filter.
 		 */
 		filter?: string;
+		/**
+		 * filter.
+		 */
+		search?: string;
+		/**
+		 * selection solution filter.
+		 */
+		solution: string;
+		/**
+		 * selected useCase.
+		 */
+		useCase: string;	
 	}
 
 	/**
@@ -684,6 +847,18 @@ module OSVService {
 		 * sortorder.
 		 */
 		sortOrder?: string;
+		/**
+		 * search.
+		 */
+		search?: string;
+		/**
+		 * selection solution filter.
+		 */
+		solution: string;
+		/**
+		 * selected useCase.
+		 */
+		useCase: string;
 	}
 
 
@@ -753,7 +928,18 @@ module OSVService {
 		 * filter.
 		 */
 		filter?: string;
-
+		/**
+		 * search.
+		 */
+		search?: string;
+		/**
+		 * selection solution filter.
+		 */
+		solution: string;
+		/**
+		 * selected useCase.
+		 */
+		useCase: string;
 	}
 
 	/**
@@ -787,6 +973,14 @@ module OSVService {
 		 * Unique identifier of a Software Group.
 		 */
 		profileName: string;
+		/**
+		 * Product Family of Selected Software Group 
+		 */
+		productFamily: string;
+		/**
+		 * profile id
+		 */
+		profileId:string;
 	}
 
 	/**
@@ -821,6 +1015,14 @@ module OSVService {
 		 * sortorder.
 		 */
 		sortOrder?: string;
+		/**
+		 * selection solution filter.
+		 */
+		solution: string;
+		/**
+		 * selected useCase.
+		 */
+		useCase: string;
 	}
 
 	/**
@@ -828,7 +1030,7 @@ module OSVService {
 	 */
 	export interface UpdateProfileParams {
 		/**
-				 * Unique identifier of a Cisco customer.
+			* Unique identifier of a Cisco customer.
 				 */
 		customerId: string;
 		/**
@@ -839,6 +1041,30 @@ module OSVService {
 		 * optimal version to be updated
 		 */
 		optimalVersion: string;
+		/**
+		 * profile id
+		 */
+		profileId: string;
+	}
+
+	/**
+	 * Parameters for psirt details
+	 */
+	export interface PristDetailsParams {
+		/**
+		 * Unique id of psirt.
+		 */
+		psirtId: string;		
+	}
+
+	/**
+	 * Parameters for bug details
+	 */
+	export interface BugDetailsParams {
+		/**
+		 * Unique id of bug.
+		 */
+		bugId: string;		
 	}
 }
 

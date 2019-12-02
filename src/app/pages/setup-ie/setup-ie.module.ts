@@ -31,6 +31,8 @@ import { ControlPointsModule } from '@sdp-api';
 import { AlertModule, ContactSupportModule } from '@components';
 import { environment } from '../../../environments/environment';
 import { SetupHelpComponent } from './help';
+import { ManageUsersModule } from './manage-users/manage-users.module';
+import { ManageUsersComponent } from './manage-users/manage-users.component';
 
 /**
  * SDP Root url for the apis
@@ -55,6 +57,7 @@ const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 		ConnectDNACenterComponent,
 		DeployStepsComponent,
 		DownloadImageComponent,
+		ManageUsersComponent,
 		NoDNACComponent,
 		RegisterCollectorComponent,
 		ResetCacheModal,
@@ -73,6 +76,7 @@ const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 		DeployStepsModule,
 		DownloadImageModule,
 		I18nPipeModule,
+		ManageUsersModule,
 		NoDNACModule,
 		ReactiveFormsModule,
 		RegisterCollectorModule,

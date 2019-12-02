@@ -203,6 +203,7 @@ export class AccRequestFormComponent implements OnDestroy, OnInit, OnDestroy {
 		};
 
 		const params: RacetrackContentService.RequestACCParams = {
+			customerId: this.customerId,
 			accId: this.accId,
 			request: requestSessionParams,
 		};

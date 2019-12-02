@@ -97,5 +97,17 @@ describe('DeployStepsComponent', () => {
 		expect(component.slides[0])
 			.not
 			.toBeNull();
+		_.set(component, 'inputs.slideSet', 'syslog');
+		component.slides = null;
+		component.ngOnChanges();
+		expect(component.slides[0])
+			.not
+			.toBeNull();
+		_.set(component, 'inputs.slideSet', 'mhyperv');
+		component.slides = null;
+		component.ngOnChanges();
+		expect(component.slides[0])
+			.not
+			.toBeNull();
 	});
 });

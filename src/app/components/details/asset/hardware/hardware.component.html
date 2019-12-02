@@ -1,66 +1,132 @@
-<cui-drawer projection="true" [expanded]="true" *ngIf="hardwareModules?.length">
-	<div class="cui-drawer-label custom-text-large" [innerText]="'_Modules_' | i18n | uppercase"></div>
-	<div class="cui-drawer-content" data-auto-id="HardwareModulesDrawer">
-		<ng-container *ngTemplateOutlet="table; context: { data: hardwareModules, options: hardwareModulesTable }"></ng-container>
-	</div>
-</cui-drawer>
+<div *ngIf="hardwareAssets?.length"
+	[innerText]="'_ShowingX-YofZHardwareComponents_' | i18n:1:hardwareAssets.length:hardwareAssets.length">
+</div>
 
-<cui-drawer projection="true" [expanded]="true" *ngIf="timelineData?.length">
-	<div class="cui-drawer-label custom-text-large" [innerText]="'_EndOfLife_' | i18n | uppercase"></div>
-	<div class="cui-drawer-content" data-auto-id="HardwareEOXDrawer">
-		<pbc-timeline class="no-margin" [data]="timelineData"></pbc-timeline>
-	</div>
-</cui-drawer>
+<cui-table *ngIf="hardwareTable && hardwareAssets?.length"
+	[options]="hardwareTable"
+	[data]="hardwareAssets"
+	(onTableRowClicked)="onRowSelect($event)">
+</cui-table>
 
-<cui-drawer projection="true" [expanded]="true" *ngIf="migrationData?.length">
-	<div class="cui-drawer-label custom-text-large" [innerText]="'_MigrationOptions_' | i18n | uppercase"></div>
-	<div class="cui-drawer-content" data-auto-id="HardwareMigrationDrawer">
-		<ng-container *ngTemplateOutlet="table; context: { data: migrationData, options: migrationTable }"></ng-container>
-	</div>
-</cui-drawer>
-
-<div class="flex-center" *ngIf="!timelineData?.length && !hardwareModules?.length">
+<div class="flex-center" *ngIf="!hardwareAssets?.length">
 	<span class="text-muted text-xlarge"
 		[innerText]="'_NoHardwareInformation_' | i18n"
-		data-auto-id="NoHardwareInformationText" >
+		data-auto-id="NoHardwareInformation">
 	</span>
 </div>
 
-<ng-template #table let-data="data" let-options="options">
-	<cui-table [options]="options"
-		class="hardware-table"
-		[data]="data">
-	</cui-table>
-</ng-template>
-
-<ng-template #migrationModel let-celldata="celldata">
-	<div *ngIf="celldata.migrationProductModel">
-		<span *ngIf="!celldata.migrationProductPageUrl"
-			[innerText]="celldata.migrationProductModel">
-		</span>
-		<a *ngIf="celldata.migrationProductPageUrl"
-			[href]="celldata.migrationProductPageUrl"
-			[innerText]="celldata.migrationProductModel"
-			target="_blank">
-		</a>
-	</div>
-	<div *ngIf="!celldata.migrationProductModel">
-		<span [innerText]="'_NA_' | i18n"></span>
-	</div>
-</ng-template>
-
-<!-- templates for table -->
 <ng-template #typeTemplate let-celldata="celldata">
-	<span [innerText]="celldata.productType ? celldata.productType : '_NA_' | i18n" data-auto-id="Type-Cell"></span>
+	<span class="qtr-margin-right" *ngIf="getProductIcon(celldata)"
+		[title]="getProductTitle(celldata)">
+		<img alt="{{ '_AssetIcon_' | i18n }}"
+			class="icon-asset"
+			attr.data-auto-id="DeviceIcon-{{ celldata?.productType }}"
+			src="assets/img/assets/device-{{ getProductIcon(celldata) }}.svg">
+	</span>
+	<span [innerText]="celldata.equipmentType ? (celldata.equipmentType | titlecase) : '_NA_' | i18n" data-auto-id="Type-Cell"></span>
 </ng-template>
 
-<ng-template #familyTemplate let-celldata="celldata">
-	<span
-		innerText="{{ (celldata.productFamily ? celldata.productFamily : '_NA_')| i18n}} / {{ (celldata.productId ? celldata.productId : '_NA_') | i18n }}"
-		data-auto-id="Product Family / ID-Cell">
+<ng-template #productIDTemplate let-celldata="celldata">
+	<span [innerText]="celldata.productId ? celldata.productId : ('_NA_' | i18n)"
+		[title]="celldata.productFamily ? celldata.productFamily : ('_NA_' | i18n)">
 	</span>
 </ng-template>
 
 <ng-template #serialTemplate let-celldata="celldata">
 	<span [innerText]="celldata.serialNumber || '_NA_' | i18n" data-auto-id="Serial Number-Cell"></span>
+</ng-template>
+
+<ng-template #hardwareComponent let-item="item">
+	<div class="hardware-component">
+		<div class="row">
+			<div class="col-6 flex flex-left text-uppercase" [innerText]="'_HardwareDetails_' | i18n"></div>
+			<div class="col-6 flex">
+				<button *ngIf="item | canOpenCase"
+					class="btn btn--primary text-uppercase flex-right"
+					[innerText]="'_OpenCase_' | i18n"
+					data-auto-id="Hardware360OpenCaseBtn"
+					(click)="openCase(item)">
+				</button>
+			</div>
+		</div>
+		<div class="row base-margin-top">
+			<div class="col-6">
+				<div class="row">
+					<div class="col-md-12">
+						<ng-container *ngTemplateOutlet="detailsData; context: {
+								title: '_ProductFamily_',
+								linkData: item?.summary?.productFamily
+							}">
+						</ng-container>
+					</div>
+					<div class="col-md-12 base-margin-top">
+						<ng-container *ngTemplateOutlet="detailsData; context: {
+								title: '_SupportLevel_',
+								linkData: (item?.summary?.contractNumber) ? (item?.cxLevel ? item.cxLevel + ' / ' : '') + ('_Contract_' | i18n) + ' #' + item?.summary?.contractNumber : ('_NA_' | i18n),
+								secondRowData: (item?.summary?.coverageEndDate) ? (item?.summary?.coverageEndDate | date:'MMM dd, yyyy') + ' (' + (item?.summary?.coverageEndDate | fromNow) + ')' : null
+							}">
+						</ng-container>
+					</div>
+				</div>
+			</div>
+			<div class="col-6">
+				<div class="col-md-12">
+					<ng-container *ngTemplateOutlet="detailsData; context: {
+							title: '_Warranty_',
+							linkData: (item?.summary?.warrantyEndDate) ? (item?.summary?.warrantyEndDate | date:'MMM dd, yyyy') + ' (' + (item?.summary?.warrantyEndDate | fromNow) + ')' : ('_NA_' | i18n)
+						}">
+					</ng-container>
+				</div>
+			</div>
+		</div>
+		<div class="row base-margin-top base-margin-bottom" *ngIf="item?.fieldNotices && item?.fieldNotices?.length">
+			<div class="col-12 text-uppercase" [innerText]="'_FieldNotices_' | i18n"></div>
+			<div *ngFor="let fieldNotice of item.fieldNotices" class="col-12 half-margin-top">
+				<div class="text-bold" innerText="FN {{ fieldNotice.fieldNoticeId }}"></div>
+				<div [innerText]="fieldNotice.bulletin.bulletinTitle"></div>
+			</div>
+		</div>
+		<div class="row base-margin-top base-margin-bottom" *ngIf="item.eol">
+			<div class="col-6 flex flex-left text-uppercase" [innerText]="'_EndOfLifeAnnouncement_' | i18n"></div>
+			<div class="col-6 flex">
+				<!-- TODO: Real migration options view -->
+			</div>
+			<div *ngIf="item?.eol?.ldosAnnouncement"
+				class="col-12 flex">
+				<span class="label label--circle label--tiny qtr-margin-right qtr-margin-top label--{{ item.eol.ldosAnnouncementLabel }}"></span>
+				<span [innerText]="'_ApproachingLDOS_' | i18n:(item.eol.bulletin.lastDateOfSupport | fromNow)"></span>
+			</div>
+			<div class="col-12 flex" *ngIf="item?.eol?.timelineData && item.eol.timelineData.length">
+				<div class="adjust-eol-filter">
+					<pbc-timeline class="no-margin"
+						[data]="item.eol.timelineData"
+						[todayText]="'_Youarehere_' | i18n"
+						[todayIcon]="item.eol.timelineTodayIcon"
+						[todayClass]="item.eol.timelineTodayClass">
+					</pbc-timeline>
+				</div>
+			</div>
+		</div>
+	</div>
+</ng-template>
+
+<ng-template #detailsData let-title="title" let-data="data" let-linkData="linkData" let-secondRowData="secondRowData">
+	<div class="row summary__details">
+		<div class="col-md-12 text-uppercase summary__details__title cx-text-gray" [innerText]="title | i18n" attr.data-auto-id="{{ title }}"></div>
+	</div>
+	<div class="row text-medium cx-text-default">
+		<div class="col-md-12" [innerText]="'_NA_' | i18n" *ngIf="!(data || linkData)" attr.data-auto-id="{{ title }}-N/A"></div>
+		<div class="col-md-12" *ngIf="linkData" attr.data-auto-id="{{ title }}-Link">
+			<span [innerText]="linkData"></span>
+		</div>
+		<div class="col-md-12 qtr-margin-top" *ngIf="secondRowData" attr.data-auto-id="{{ title }}-SecondRow">
+			<span [innerText]="secondRowData"></span>
+		</div>
+	</div>
+</ng-template>
+
+<ng-template #expandTemplate let-celldata="celldata">
+		<span data-auto-id="expandIcon" [ngClass]="celldata.toggleWell ?'icon-chevron-up icon--size-16': 'icon-chevron-down icon--size-16'"
+			  (click)="onRowSelect($event)">
+		</span>
 </ng-template>

@@ -11,14 +11,14 @@ import {
 import * as _ from 'lodash-es';
 import {
 	InventoryService,
-	Asset,
 	DiagnosticsService,
 	BugImpactedAssetsResponse,
-	NetworkElementResponse,
-	NetworkElement,
 	RacetrackTechnology,
 	RacetrackSolution,
-	Assets,
+	HardwareAsset,
+	SystemAsset,
+	HardwareAssets,
+	SystemAssets,
 } from '@sdp-api';
 import { LogService } from '@cisco-ngx/cui-services';
 import {
@@ -46,9 +46,9 @@ export interface AssetIds {
  * The interface for our output
  */
 export interface Impacted {
-	impacted: (Asset | NetworkElement)[];
-	potentiallyImpacted: (Asset | NetworkElement)[];
-	assets: Asset[];
+	impacted: SystemAsset[];
+	potentiallyImpacted: SystemAsset[];
+	assets: HardwareAsset[];
 }
 
 /**
@@ -69,20 +69,21 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 	@Output('assets') public assets = new EventEmitter<Impacted>();
 	@ViewChild('ipAddressColumn', null) public ipAddressColumn: TemplateRef<{ }>;
 	@ViewChild('deviceColumn', null) public deviceColumn: TemplateRef<{ }>;
+	@ViewChild('productIdColumn', null) public productIdColumn: TemplateRef<{ }>;
 	@ViewChild('versionColumn', null) public softwareVersionColumn: TemplateRef<{ }>;
+	@ViewChild('serialNumberColumn', null) public serialNumberColumn: TemplateRef<{ }>;
 	@ViewChild('recommendedVersionColumn', null) public recommendedVersionColumn: TemplateRef<{ }>;
 
 	public affectedTable: CuiTableOptions;
 	public potentiallyAffectedTable: CuiTableOptions;
 	public isLoading = false;
-	public potentiallyImpacted: (Asset | NetworkElement)[] = [];
-	public impacted: (Asset | NetworkElement)[] = [];
-	public impactedAssets: Asset[] = [];
-	public selectedAsset: Asset | NetworkElement;
+	public potentiallyImpacted: SystemAsset[] = [];
+	public impacted: SystemAsset[] = [];
+	public impactedAssets: HardwareAsset[] = [];
 	private params: {
 		bugAssets?: DiagnosticsService.GetCriticalBugsAssetsParams;
-		elements?: InventoryService.GetNetworkElementsParams;
-		assets?: InventoryService.GetAssetsParams;
+		system?: InventoryService.GetSystemAssetsParams;
+		assets?: InventoryService.GetHardwareAssetsParams;
 	};
 	public getProductIcon = getProductTypeImage;
 	public getProductTitle = getProductTypeTitle;
@@ -101,7 +102,7 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 	 * Fetches the network elements affected
 	 * @returns the observable
 	 */
-	private fetchNetworkElements () {
+	private fetchSystemAsset () {
 		this.isLoading = true;
 
 		this.impacted = [];
@@ -110,9 +111,9 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 		const impacted = _.get(this.assetIds, 'impacted', []);
 		const potentiallyImpacted = _.get(this.assetIds, 'potentiallyImpacted', []);
 
-		this.inventoryService.getNetworkElements(this.params.elements)
+		this.inventoryService.getSystemAssets(this.params.system)
 		.pipe(
-			mergeMap((response: NetworkElementResponse) => {
+			mergeMap((response: SystemAssets) => {
 				const data = _.get(response, 'data', []);
 
 				this.impacted =
@@ -127,7 +128,7 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 			}),
 			catchError(err => {
 				this.logger.error('advisory-details:impacted-assets.component : ' +
-				 `fetchNetworkElements() :: Error : (${err.status}) ${err.message}`);
+				 `fetchSystemAsset() :: Error : (${err.status}) ${err.message}`);
 
 				return of({ });
 			}),
@@ -156,9 +157,9 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 		}
 		_.set(this.params.assets, 'serialNumber', serials);
 
-		return this.inventoryService.getAssets(this.params.assets)
+		return this.inventoryService.getHardwareAssets(this.params.assets)
 		.pipe(
-			map((response: Assets) => {
+			map((response: HardwareAssets) => {
 				this.impactedAssets = _.get(response, 'data', []);
 			}),
 			catchError(err => {
@@ -212,21 +213,7 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 		this.params = { };
 		const defaultOptions = {
 			bordered: true,
-			columns: [
-				{
-					key: 'hostName',
-					name: I18n.get('_Device_'),
-					sortable: true,
-					sortDirection: 'asc',
-					sorting: true,
-					width: '300px',
-				},
-				{
-					key: 'ipAddress',
-					name: I18n.get('_IPAddress_'),
-					sortable: true,
-				},
-			],
+			columns: null,
 			padding: 'compressed',
 			striped: false,
 			wrapText: true,
@@ -234,56 +221,141 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 		const affectedOptions = _.cloneDeep(defaultOptions);
 		const potentiallyAffectedOptions = _.cloneDeep(defaultOptions);
 
-		// Setting the template for this column after cloneDeep to circumvent performance
-		// issues with recursively cloning the options object
-		const affectedHostName = _.find(affectedOptions.columns, { key: 'hostName' });
-		const potentiallyAffectedHostName =
-			_.find(potentiallyAffectedOptions.columns, { key: 'hostName' });
-		_.set(affectedHostName, 'template', this.deviceColumn);
-		_.set(potentiallyAffectedHostName, 'template', this.deviceColumn);
-		_.set(_.find(affectedOptions.columns, { key: 'ipAddress' }),
-			'template', this.ipAddressColumn);
-		_.set(_.find(potentiallyAffectedOptions.columns, { key: 'ipAddress' }),
-			'template', this.ipAddressColumn);
-		const affectedColumns = _.get(affectedOptions, 'columns');
-		const potentiallyAffectedColumns = _.get(potentiallyAffectedOptions, 'columns');
-
 		switch (this.type) {
 			case 'security':
-				const securityTableColumns = [
+				const securityAffectedTableColumns = [
 					{
-						key: 'swVersion',
-						name: I18n.get('_Release_'),
+						key: 'deviceName',
+						name: I18n.get('_SystemName_'),
 						sortable: true,
-						template: this.softwareVersionColumn,
+						sortDirection: 'asc',
+						sorting: true,
+						template: this.deviceColumn,
+						width: '300px',
 					},
 					{
-						key: 'recommendedVersion',
-						name: I18n.get('_RecommendedRelease_'),
-						sortable: false,
-						template: this.recommendedVersionColumn,
+						key: 'ipAddress',
+						name: I18n.get('_IPAddress_'),
+						sortable: true,
+						template: this.ipAddressColumn,
+					},
+					{
+						key: 'swVersion',
+						name: I18n.get('_SoftwareRelease_'),
+						sortable: true,
+						template: this.softwareVersionColumn,
+						width: '300px',
+					},
+				];
+				const securityPotentiallyAffectedTableColumns = [
+					{
+						key: 'deviceName',
+						name: I18n.get('_SystemName_'),
+						sortable: true,
+						sortDirection: 'asc',
+						sorting: true,
+						template: this.deviceColumn,
+						width: '300px',
+					},
+					{
+						key: 'ipAddress',
+						name: I18n.get('_IPAddress_'),
+						sortable: true,
+						template: this.ipAddressColumn,
+					},
+					{
+						key: 'swVersion',
+						name: I18n.get('_SoftwareRelease_'),
+						sortable: true,
+						template: this.softwareVersionColumn,
+						width: '300px',
 					},
 				];
 				// Concat the default columns with the extra columns
-				_.set(affectedOptions, 'columns',
-					_.concat(affectedColumns, securityTableColumns));
+				_.set(affectedOptions, 'columns', securityAffectedTableColumns);
 				_.set(potentiallyAffectedOptions, 'columns',
-					_.concat(potentiallyAffectedColumns, securityTableColumns));
-
-					// set names for hostName table header
-				_.set(_.find(affectedOptions.columns, { key: 'hostName' }),
-					'name', I18n.get('_System_'));
-				_.set(_.find(potentiallyAffectedOptions.columns, { key: 'hostName' }),
-					'name', I18n.get('_SystemName_'));
+					securityPotentiallyAffectedTableColumns);
 				break;
 			case 'field':
-				_.set(_.find(affectedOptions.columns, { key: 'hostName' }),
-					'name', I18n.get('_ProductID_'));
-				_.set(_.find(potentiallyAffectedOptions.columns, { key: 'hostName' }),
-					'name', I18n.get('_ProductID_'));
+				const fieldAffectedTableColumns = [
+					{
+						key: 'deviceName',
+						name: I18n.get('_SystemName_'),
+						sortable: true,
+						template: this.deviceColumn,
+						width: '300px',
+					},
+					{
+						key: 'ipAddress',
+						name: I18n.get('_IPAddress_'),
+						sortable: true,
+						template: this.ipAddressColumn,
+					},
+					{
+						key: 'productId',
+						name: I18n.get('_ProductID_'),
+						sortable: true,
+						sortDirection: 'asc',
+						sorting: true,
+						template: this.productIdColumn,
+					},
+					{
+						key: 'serialNumber',
+						name: I18n.get('_SerialNumber_'),
+						sortable: true,
+						template: this.serialNumberColumn,
+					},
+				];
+				const fieldPotentiallyAffectedTableColumns = [
+					{
+						key: 'deviceName',
+						name: I18n.get('_SystemName_'),
+						sortable: true,
+						template: this.deviceColumn,
+						width: '300px',
+					},
+					{
+						key: 'ipAddress',
+						name: I18n.get('_IPAddress_'),
+						sortable: true,
+						template: this.ipAddressColumn,
+					},
+					{
+						key: 'productId',
+						name: I18n.get('_ProductID_'),
+						sortable: true,
+						sortDirection: 'asc',
+						sorting: true,
+						template: this.productIdColumn,
+					},
+					{
+						key: 'serialNumber',
+						name: I18n.get('_SerialNumber_'),
+						sortable: true,
+						template: this.serialNumberColumn,
+					},
+				];
+				_.set(affectedOptions, 'columns', fieldAffectedTableColumns);
+				_.set(potentiallyAffectedOptions, 'columns',
+					fieldPotentiallyAffectedTableColumns);
 				break;
 			case 'bug':
-				const bugTableColumns = [
+				const bugAffectedTableColumns = [
+					{
+						key: 'hostName',
+						name: I18n.get('_Device_'),
+						sortable: true,
+						sortDirection: 'asc',
+						sorting: true,
+						template: this.deviceColumn,
+						width: '300px',
+					},
+					{
+						key: 'ipAddress',
+						name: I18n.get('_IPAddress_'),
+						sortable: true,
+						template: this.ipAddressColumn,
+					},
 					{
 						key: 'softwareVersion',
 						name: I18n.get('_Release_'),
@@ -297,22 +369,42 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 						template: this.recommendedVersionColumn,
 					},
 				];
-				_.set(affectedOptions, 'columns', _.concat(affectedColumns, bugTableColumns));
-				_.set(potentiallyAffectedOptions, 'columns',
-					_.concat(potentiallyAffectedColumns, securityTableColumns));
+				const bugPotentiallyAffectedTableColumns = [
+					{
+						key: 'hostName',
+						name: I18n.get('_Device_'),
+						sortable: true,
+						sortDirection: 'asc',
+						sorting: true,
+						template: this.deviceColumn,
+						width: '300px',
+					},
+					{
+						key: 'ipAddress',
+						name: I18n.get('_IPAddress_'),
+						sortable: true,
+						template: this.ipAddressColumn,
+					},
+					{
+						key: 'softwareVersion',
+						name: I18n.get('_Release_'),
+						sortable: true,
+						template: this.softwareVersionColumn,
+					},
+					{
+						key: 'recommendedVersion',
+						name: I18n.get('_RecommendedRelease_'),
+						sortable: false,
+						template: this.recommendedVersionColumn,
+					},
+				];
+				_.set(affectedOptions, 'columns', bugAffectedTableColumns);
+				_.set(potentiallyAffectedOptions, 'columns', bugPotentiallyAffectedTableColumns);
 				break;
 		}
 
 		this.affectedTable = new CuiTableOptions(affectedOptions);
 		this.potentiallyAffectedTable = new CuiTableOptions(potentiallyAffectedOptions);
-
-		_.set(this.params, 'assets', {
-			customerId: this.customerId,
-			page: 1,
-			rows: 100,
-			solution: this.selectedSolutionName,
-			useCase: this.selectedTechnologyName,
-		});
 
 		_.set(this.params, 'assets', {
 			customerId: this.customerId,
@@ -334,7 +426,7 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 
 			this.fetchBugAssets();
 		} else if (this.assetIds) {
-			_.set(this.params, 'elements', {
+			_.set(this.params, 'system', {
 				customerId: this.customerId,
 				managedNeId: _.concat(
 					_.get(this.assetIds, 'impacted', []),
@@ -343,11 +435,11 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 				page: 1,
 				rows: 100,
 				solution: this.selectedSolutionName,
-				sort: ['hostName:ASC'],
+				sort: [this.type === 'field' ? 'productId:ASC' : 'deviceName:ASC'],
 				useCase: this.selectedTechnologyName,
 			});
 
-			this.fetchNetworkElements();
+			this.fetchSystemAsset();
 		}
 	}
 
@@ -356,13 +448,13 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 	 * @param options the selected column
 	 */
 	public onColumnSort (options: CuiTableColumnOption) {
-		_.set(this.params, [this.type === 'bug' ? 'bugAssets' : 'elements', 'sort'],
+		_.set(this.params, [this.type === 'bug' ? 'bugAssets' : 'system', 'sort'],
 			[`${options.key}:${options.sortDirection.toUpperCase()}`]);
 
 		if (this.type === 'bug') {
 			this.fetchBugAssets();
 		} else {
-			this.fetchNetworkElements();
+			this.fetchSystemAsset();
 		}
 	}
 

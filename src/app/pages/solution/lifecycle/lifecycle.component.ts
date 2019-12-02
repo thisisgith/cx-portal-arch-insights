@@ -28,6 +28,9 @@ import {
 	ContractQuota,
 	UserTraining,
 	RacetrackResponse,
+	CompanyInfoList,
+	CompanyInfo,
+	GenericApiControllerService,
 } from '@sdp-api';
 
 import * as racetrackComponent from '../../../components/racetrack/racetrack.component';
@@ -54,6 +57,22 @@ interface SuccessPathsModel {
 	sort0Field: 'title' | 'type' | 'archetype' | 'bookmark';
 	sortDirection: 'asc' | 'desc';
 	totalCount?: number;
+}
+
+enum StatusValues {
+	'completed',
+	'recommended',
+	'scheduled',
+	'requested',
+	'in-progress',
+}
+
+/**
+ * Interface representing a status filter item
+ */
+interface StatusFilterItem {
+	key: string;
+	value: StatusValues;
 }
 
 /**
@@ -83,6 +102,8 @@ interface ComponentData {
 		certificationsUrl: string;
 		elearning?: ELearning[];
 		elearningUrl: string;
+		remotepracticelabs?: ELearning[];
+		remotepracticelabsUrl: string;
 		training?: ELearning[];
 		success?: SuccessPath[];
 		archetype?: string[];
@@ -156,15 +177,19 @@ export class LifecycleComponent implements OnDestroy {
 	public customerId: string;
 	public buId: string;
 	private user: User;
+	public partnerList: CompanyInfo [];
+	public accPartnerList: CompanyInfo [];
 	public totalAllowedGroupTrainings: number;
 	public selectedFilterForSB = '';
-	public selectedFilterForATX = '';
 	public selectedFilterForACC = '';
+	public selectedPartnerFilterForACC: string[];
+	public selectedPartnerFilter: string [];
+	public selectedPartnerFilterForATX: string[];
+	public atxStatusFilter: StatusValues[];
+	public accStatusFilter: StatusValues[];
 	public groupTrainingsAvailable = 0;
 	public selectedSuccessPaths: SuccessPath[];
 	public selectedScheduledATX: AtxSchema;
-	public atxCancelCoordinatesX = 0;
-	public atxCancelCoordinatesY = 0;
 	public eventXCoordinates = 0;
 	public eventYCoordinates = 0;
 	public eventClickedElement: HTMLElement;
@@ -211,7 +236,9 @@ export class LifecycleComponent implements OnDestroy {
 	private showCompletionPopup = false;
 	private timeout = 5000;
 	// Enable or disable CGT based on this flag
-	public enableCGT = true;
+	public enableCGT = false;
+	// Cisco ACC content is only shown for CX Levels 2/3
+	private ciscoAccLevels = [2, 3];
 
 	/**
 	 * The number of rows that Product Guides will request at a time.
@@ -221,16 +248,12 @@ export class LifecycleComponent implements OnDestroy {
 	public pgCategoryOptions: any [];
 	public accStatusOptions = [
 		{
-			name: I18n.get('_AllTitles_'),
-			value: 'allTitles',
-		},
-		{
 			name: I18n.get('_Recommended_'),
 			value: 'recommended',
 		},
 		{
-		 	name: I18n.get('_Requested_'),
-		 	value: 'requested',
+			name: I18n.get('_Requested_'),
+			value: 'requested',
 		},
 		{
 			name: I18n.get('_Scheduled_'),
@@ -243,30 +266,18 @@ export class LifecycleComponent implements OnDestroy {
 		{
 			name: I18n.get('_Completed_'),
 			value: 'completed',
-		},
-		{
-			name: I18n.get('_Bookmarked_'),
-			value: 'isBookmarked',
-		},
-		{
-			name: I18n.get('_NotBookmarked_'),
-			value: 'hasNotBookmarked',
 		},
 	];
 
 	public atxStatusOptions = [
 		{
-			name: I18n.get('_AllTitles_'),
-			value: 'allTitles',
-		},
-		{
 			name: I18n.get('_Recommended_'),
 			value: 'recommended',
 		},
-		// {
-		// 	name: I18n.get('_Requested_'),
-		// 	value: 'requested',
-		// },
+		{
+			name: I18n.get('_Requested_'),
+			value: 'requested',
+		},
 		{
 			name: I18n.get('_Scheduled_'),
 			value: 'scheduled',
@@ -278,14 +289,6 @@ export class LifecycleComponent implements OnDestroy {
 		{
 			name: I18n.get('_Completed_'),
 			value: 'completed',
-		},
-		{
-			name: I18n.get('_Bookmarked_'),
-			value: 'isBookmarked',
-		},
-		{
-			name: I18n.get('_NotBookmarked_'),
-			value: 'hasNotBookmarked',
 		},
 	];
 
@@ -299,6 +302,7 @@ export class LifecycleComponent implements OnDestroy {
 			bookmark: false,
 			cgt: false,
 			elearning: false,
+			partner: false,
 			productGuides: {
 				modal: false,
 				more: false,
@@ -316,6 +320,7 @@ export class LifecycleComponent implements OnDestroy {
 		learning: {
 			certificationsUrl: `${environment.learningLink}?type=certification`,
 			elearningUrl: `${environment.learningLink}?type=e-learning`,
+			remotepracticelabsUrl: `${environment.learningLink}?type=remote_lab`,
 		},
 		params: {
 			customerId: '',
@@ -348,18 +353,13 @@ export class LifecycleComponent implements OnDestroy {
 		return _.get(this.componentData, ['racetrack', 'actionsCompPercent'], I18n.get('_Start_'));
 	}
 
-	get defaultRecommendedATXImg () {
-		return (this.componentData.atx.recommended.providerInfo ?
-			'assets/img/solutions/ATX-default-image-1-556x308.png' :
-			'assets/img/solutions/defaultLifecycleImage.png');
-	}
-
 	constructor (
 		private logger: LogService,
 		private contentService: RacetrackContentService,
 		private racetrackService: RacetrackService,
 		private route: ActivatedRoute,
 		private racetrackInfoService: RacetrackInfoService,
+		private partnerService: GenericApiControllerService,
 	) {
 		this.user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(this.user, ['info', 'customerId']);
@@ -405,6 +405,7 @@ export class LifecycleComponent implements OnDestroy {
 			this.componentData.params.solution = _.get(solution, 'name');
 		});
 
+		this.getPartnerList();
 		this.racetrackInfoService.getCurrentTechnology()
 		.pipe(
 			takeUntil(this.destroy$),
@@ -412,8 +413,12 @@ export class LifecycleComponent implements OnDestroy {
 		.subscribe((technology: RacetrackTechnology) => {
 			const currentSolution = this.componentData.params.solution;
 
-			const newTech = currentSolution;
-			if (newTech) {
+			const newSolution = currentSolution;
+			const newTech = (technology.name !== _.get(this.selectedTechnology, 'name'))
+				? true : false;
+			const newUsecaseAdoptPert = (technology.usecase_adoption_percentage !==
+				_.get(this.selectedTechnology, 'usecase_adoption_percentage')) ? true : false;
+			if (newSolution && newTech && newUsecaseAdoptPert) {
 				this.selectedTechnology = technology;
 
 				this.resetComponentData();
@@ -523,8 +528,15 @@ export class LifecycleComponent implements OnDestroy {
 	private resetComponentData () {
 		this.componentData = {
 			learning: {
-				certificationsUrl: `${environment.learningLink}?type=certification`,
-				elearningUrl: `${environment.learningLink}?type=e-learning`,
+				certificationsUrl: `${environment.learningLink}?type=certification
+				&solution=${this.componentData.params.solution}
+				&usecase=`,
+				elearningUrl: `${environment.learningLink}?type=e-learning
+				&solution=${this.componentData.params.solution}
+				&usecase=`,
+				remotepracticelabsUrl: `${environment.learningLink}?type=remote_lab
+				&solution=${this.componentData.params.solution}
+				&usecase=`,
 			},
 			params: {
 				customerId: this.customerId,
@@ -542,6 +554,10 @@ export class LifecycleComponent implements OnDestroy {
 				sort0Field: 'title',
 			},
 		};
+		this.selectedPartnerFilter = [];
+		this.selectedPartnerFilterForATX = [];
+		this.selectedPartnerFilterForACC = [];
+		this.atxStatusFilter = [];
 	}
 
 	/**
@@ -993,16 +1009,19 @@ export class LifecycleComponent implements OnDestroy {
 			window.atxLoading = true;
 		}
 		const params: RacetrackContentService.RegisterUserToAtxParams = {
+			customerId: this.customerId,
 			atxId: atx.atxId,
 			sessionId: ssId,
 		};
 		if (!atx.providerInfo) {
-			this.crossLaunch(session.registrationURL);
+			params.eventNumber = session.eventNumber;
 		}
 		this.closeViewSessions();
 		this.contentService.registerUserToAtx(params)
 		.subscribe(() => {
 			this.status.loading.atx = false;
+			this.loadATX()
+				.subscribe();
 			if (window.Cypress) {
 				window.atxLoading = false;
 			}
@@ -1022,15 +1041,21 @@ export class LifecycleComponent implements OnDestroy {
 	 * @param atx the session we've clicked on
 	 */
 	public cancelATXSession (atx: AtxSchema) {
-		const ssId = _.find(atx.sessions, { scheduled: true }).sessionId;
+		const scheduledSession = _.find(atx.sessions, { scheduled: true });
+		const ssId = scheduledSession.sessionId;
 		this.status.loading.atx = true;
 		if (window.Cypress) {
 			window.atxLoading = true;
 		}
 		const params: RacetrackContentService.CancelSessionATXParams = {
+			customerId: this.customerId,
 			atxId: atx.atxId,
 			sessionId: ssId,
 		};
+		if (!atx.providerInfo) {
+			const scheduledEventNumber =  scheduledSession.eventNumber;
+			params.eventNumber = scheduledEventNumber;
+		}
 		this.contentService.cancelSessionATX(params)
 		.subscribe(() => {
 			_.find(atx.sessions, { sessionId: ssId }).scheduled = false;
@@ -1074,40 +1099,6 @@ export class LifecycleComponent implements OnDestroy {
 					() => undefined,
 					() => undefined,
 				);
-		}
-
-		if  (type === 'ACC') {
-			if (this.selectedFilterForACC === 'isBookmarked') {
-				this.selectedACC =
-				_.filter(this.componentData.acc.sessions, { bookmark: true });
-			} else if (this.selectedFilterForACC === 'hasNotBookmarked') {
-				this.selectedACC =
-				_.filter(this.componentData.acc.sessions, { bookmark: false });
-			} else {
-				this.selectedACC =
-					_.filter(this.componentData.acc.sessions,
-						{ status: this.selectedFilterForACC });
-			}
-			if (this.selectedFilterForACC === 'allTitles' || !this.selectedFilterForACC) {
-				this.selectedACC = this.componentData.acc.sessions;
-			}
-		}
-
-		if (type === 'ATX') {
-			if (this.selectedFilterForATX === 'isBookmarked') {
-				this.selectedATX =
-				_.filter(this.componentData.atx.sessions, { bookmark: true });
-			} else if (this.selectedFilterForATX === 'hasNotBookmarked') {
-				this.selectedATX =
-				_.filter(this.componentData.atx.sessions, { bookmark: false });
-			} else {
-				this.selectedATX =
-					_.filter(this.componentData.atx.sessions,
-						{ status: this.selectedFilterForATX });
-			}
-			if (this.selectedFilterForATX === 'allTitles' || !this.selectedFilterForATX) {
-				this.selectedATX = this.componentData.atx.sessions;
-			}
 		}
 	}
 
@@ -1178,7 +1169,7 @@ export class LifecycleComponent implements OnDestroy {
 	 */
 	public completeAction (action: RacetrackPitstopAction) {
 		// Call racetrack API to complete an action
-		this.status.loading.racetrack = true;
+		this.status.loading.racetrack = false;
 		this.resetSelectStatus();
 		const actionUpdated: PitstopActionUpdateRequestObject = {
 			customerId: this.customerId,
@@ -1583,18 +1574,32 @@ export class LifecycleComponent implements OnDestroy {
 		if (window.Cypress) {
 			window.accLoading = true;
 		}
+		this.componentData.acc = {
+			sessions: [],
+		};
+		const params = _.pick(this.componentData.params,
+				['customerId', 'solution', 'usecase', 'pitstop', 'suggestedAction', 'providerId']);
 
-		return this.contentService.getRacetrackACC(
-			_.pick(this.componentData.params,
-				['customerId', 'solution', 'usecase', 'pitstop', 'suggestedAction']))
+		if (!_.isEmpty(this.accStatusFilter)) {
+			_.set(params, 'status', this.accStatusFilter);
+		}
+
+		if (!_.isEmpty(this.selectedPartnerFilterForACC)) {
+			_.set(params, 'providerId', this.selectedPartnerFilterForACC);
+		}
+
+		return this.contentService.getRacetrackACC(params)
 		.pipe(
 			map((result: ACCResponse) => {
-				this.selectedFilterForACC = this.accStatusOptions[0].value;
-				this.componentData.acc = {
-					sessions: result.items,
-				};
-				_.remove(this.componentData.acc.sessions, (session: ACC) =>
+				this.componentData.acc.sessions = result.items;
+ 				_.remove(this.componentData.acc.sessions, (session: ACC) =>
 					!session.title && !session.description);
+
+				// Do not show cisco ACC's if incorrect CX level
+				if (!this.ciscoAccLevels.includes(this.cxLevel)) {
+					_.remove(this.componentData.acc.sessions, (session: ACC) =>
+						!session.providerInfo);
+				}
 
 				this.selectedACC = this.componentData.acc.sessions;
 				this.buildAccTable();
@@ -1603,7 +1608,6 @@ export class LifecycleComponent implements OnDestroy {
 				if (window.Cypress) {
 					window.accLoading = false;
 				}
-
 				return result;
 			}),
 			catchError(err => {
@@ -1629,19 +1633,25 @@ export class LifecycleComponent implements OnDestroy {
 		if (window.Cypress) {
 			window.atxLoading = true;
 		}
+		this.componentData.atx = {
+			recommended: { },
+			sessions: [],
+		};
+		const params = _.pick(this.componentData.params,
+			['customerId', 'solution', 'usecase', 'pitstop', 'suggestedAction']);
+		if (!_.isEmpty(this.atxStatusFilter)) {
+			_.set(params, 'status', this.atxStatusFilter);
+		}
+		if (!_.isEmpty(this.selectedPartnerFilterForATX)) {
+			_.set(params, 'providerId', this.selectedPartnerFilterForATX);
+		}
 
-		return this.contentService.getRacetrackATX(
-			_.pick(this.componentData.params,
-				['customerId', 'solution', 'usecase', 'pitstop', 'suggestedAction']))
+		return this.contentService.getRacetrackATX(params)
 		.pipe(
 			map((result: ATXResponseModel) => {
-				this.selectedFilterForATX = this.atxStatusOptions[0].value;
-				this.componentData.atx = {
-					recommended: _.head(result.items),
-					sessions: result.items,
-				};
+				this.componentData.atx.recommended = _.head(result.items);
+				this.componentData.atx.sessions = result.items;
 				this.selectedATX = this.componentData.atx.sessions;
-
 				_.each(this.selectedATX, (atx: AtxSchema) => {
 					_.each(atx.sessions, (session: AtxSessionSchema) => {
 						if (session.scheduled) {
@@ -1904,17 +1914,16 @@ export class LifecycleComponent implements OnDestroy {
 		if (window.Cypress) {
 			window.elearningLoading = true;
 		}
-
+		_.set(this.componentData, ['learning', 'certifications'], []);
+		_.set(this.componentData, ['learning', 'elearning'], []);
+		_.set(this.componentData, ['learning', 'training'], []);
+		_.set(this.componentData, ['learning', 'remotepracticelabs'], []);
 		return this.contentService.getRacetrackElearning(
 			_.pick(this.componentData.params,
 			['customerId', 'solution', 'usecase', 'pitstop', 'rows', 'suggestedAction']))
 		.pipe(
 			map((result: ELearningResponse) => {
 				if (result.items.length) {
-					_.set(this.componentData, ['learning', 'certifications'], []);
-					_.set(this.componentData, ['learning', 'elearning'], []);
-					_.set(this.componentData, ['learning', 'training'], []);
-
 					_.each(result.items, (item: ELearning) => {
 						switch (item.type) {
 							case 'E-Learning': {
@@ -1935,6 +1944,14 @@ export class LifecycleComponent implements OnDestroy {
 							}
 							case 'Videos': {
 								this.componentData.learning.certifications.push(item);
+								break;
+							}
+							case 'Remote Learning Lab': {
+								const learningItem: ELearningModel = {
+									...item,
+									fixedRating: parseFloat(item.rating),
+								};
+								this.componentData.learning.remotepracticelabs.push(learningItem);
 								break;
 							}
 							default: {
@@ -2172,6 +2189,10 @@ export class LifecycleComponent implements OnDestroy {
 			this.componentData.params.suggestedAction = nextAction ? nextAction.name : null;
 
 			if (pitstop) {
+				pitstop.pitstopActions.map(ptstopActn => {
+					ptstopActn.description = this.parseHtmlText(ptstopActn.description);
+					return ptstopActn;
+				});
 				this.currentPitActionsWithStatus = _.map(
 					pitstop.pitstopActions, (pitstopAction: RacetrackPitstopAction) =>
 						({
@@ -2295,6 +2316,46 @@ export class LifecycleComponent implements OnDestroy {
 	}
 
 	/**
+	 * Triggers the status filter for ACC or ATX items
+	 * @param selectedStatuses Selected statuses to filter on
+	 * @param type ATX or ACC
+	 */
+	public statusMultiFilter (selectedStatuses: StatusFilterItem[], type: 'ATX' | 'ACC') {
+		switch (type) {
+			case 'ACC':
+				this.accStatusFilter = _.map(selectedStatuses, 'value');
+				this.loadACC()
+					.subscribe();
+				break;
+			case 'ATX':
+				this.atxStatusFilter = _.map(selectedStatuses, 'value');
+				this.loadATX()
+					.subscribe();
+				break;
+		}
+	}
+
+	/**
+	 * Triggers the status filter for ACC or ATX items
+	 * @param selectedPartners Selected statuses to filter on
+	 * @param type ATX or ACC
+	 */
+	 public partnerMultiFilter (selectedPartners: CompanyInfo[], type: 'ATX' | 'ACC') {
+		switch (type) {
+			case 'ACC':
+				this.selectedPartnerFilterForACC = _.map(selectedPartners, 'companyId');
+				this.loadACC()
+					.subscribe();
+				break;
+			case 'ATX':
+				this.selectedPartnerFilterForATX = _.map(selectedPartners, 'companyId');
+				this.loadATX()
+					.subscribe();
+				break;
+		}
+	}
+
+	/**
 	 * Creates a request to load more content into the modal when the
 	 * user clicks the Load More button
 	 * @param type The type of modal currently open
@@ -2359,5 +2420,66 @@ export class LifecycleComponent implements OnDestroy {
 		return (atx.providerInfo ?
 			'assets/img/solutions/ATX-default-image-1-556x308.png' :
 			'assets/img/solutions/defaultLifecycleImage.png');
+	}
+
+	/**
+	 * get List of Partner List
+	 */
+	 public getPartnerList () {
+		this.status.loading.partner = true;
+
+		this.partnerService.getPartnerListUsingGET(this.customerId)
+		.subscribe((result: CompanyInfoList) => {
+			// user can filter for Cisco via partnerId: '0000'
+			// but partner portal does not send back Cisco in company list.
+			// Manually adding to results here. Maybe the more appropriate
+			// solution is to call a customerPortal wrapper of getPartners that
+			// adds Cisco in for us?
+			const ciscoCompanyInfo: CompanyInfo = {
+				companyId: '0000',
+				companyName: 'Cisco',
+			};
+			this.status.loading.partner = false;
+			this.partnerList = [ciscoCompanyInfo, ...result.companyList];
+			this.accPartnerList = [ciscoCompanyInfo, ...result.companyList];
+
+			if (!this.ciscoAccLevels.includes(this.cxLevel)) {
+				_.remove(this.accPartnerList, (partner: CompanyInfo) =>
+					partner.companyId === ciscoCompanyInfo.companyId);
+			}
+
+		},
+		err => {
+			this.status.loading.partner = false;
+			this.logger.error(`lifecycle.component : getPartnerList() :: Error  : (${
+				err.status}) ${err.message}`);
+		});
+	}
+
+	/**
+	 * Set providerId query data and reloads acc/atx
+	 * @param providers List of companyInfo to filter by
+	 */
+	public setProviderFilter (providers: CompanyInfo[]) {
+		const providerNames = providers.map(provider => provider.companyId);
+		this.selectedPartnerFilter = providerNames;
+		// overwrite individial ATX and ACC parter filter
+		this.selectedPartnerFilterForATX = providerNames;
+		this.selectedPartnerFilterForACC = providerNames;
+		forkJoin(
+			this.loadACC(),
+			this.loadATX(),
+		)
+		.subscribe();
+	}
+	/**
+	 *  Ruturn the converted HTML text content
+	 *  @param txtString pitstopAction description
+	 *  @returns A html text content
+	 */
+	public parseHtmlText (txtString) {
+		const dmTemp = document.createElement('template');
+		dmTemp.innerHTML = txtString.trim();
+		return dmTemp.content.cloneNode(true).textContent;
 	}
 }

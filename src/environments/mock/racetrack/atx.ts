@@ -9,6 +9,7 @@ const api = '/api/customerportal/racetrack/v1/atx';
 
 /** Default Customer ID */
 const customerId = '2431199';
+const customerId_v2 = '2431199_0';
 
 /** Onboard ATX */
 const onboardItems = [
@@ -25,7 +26,7 @@ const onboardItems = [
 			available: false,
 		},
 		providerInfo: {
-			id: 'partner1',
+			id: '293531',
 			logoURL: '',
 			name: 'Symantec',
 		},
@@ -40,7 +41,7 @@ const onboardItems = [
 			{
 				sessionId: 'Session2',
 				sessionStartDate: 1570852800000,
-				scheduled: true,
+				scheduled: false,
 				presenterName: 'Jakub Horbacewicz',
 				registrationURL: 'https://cisco.webex.com/cisco/onstage/g.php?MTID=ee54d58c50a23de754bd0616b5a21e9f1',
 			},
@@ -61,7 +62,7 @@ const onboardItems = [
 			{
 				sessionId: 'Session5',
 				sessionStartDate: 1576464400000,
-				scheduled: false,
+				scheduled: true,
 				presenterName: 'Jakub Horbacewicz',
 				registrationURL: 'https://cisco.webex.com/cisco/onstage/g.php?MTID=ec0bddbdce411e15f41eb5d991eb1d4b6',
 			},
@@ -89,9 +90,9 @@ const onboardItems = [
 			thumbs: 'UP',
 		},
 		providerInfo: {
-			id: 'partner1',
+			id: '293532',
 			logoURL: '',
-			name: 'Symantec',
+			name: 'Salesforce',
 		},
 		sessions: [
 			{
@@ -151,7 +152,7 @@ const onboardItems = [
 			available: false,
 		},
 		providerInfo: {
-			id: 'partner2',
+			id: '293533',
 			logoURL: '',
 			name: 'Logitec',
 		},
@@ -170,10 +171,11 @@ const onboardItems = [
 		title: 'Cisco DNA Center Project Plan Best Practices 3',
 		description: 'This is a high-level look at the things you should consider as you’re planning your Cisco DNA Center project, including subjects such as prerequisites for network devices',
 		imageURL: 'https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/atx/images/ATX-DNA-Center-Feature-Overview.png',
-		status: 'requested',
+		status: 'recommended',
 		recordingURL: 'https://tklcs.cloudapps.cisco.com/tklcs/TKLDownloadServlet?nodeRef=workspace://SpacesStore/310232f0-0a44-4286-a374-71edb71835ee&activityId=2&fileId=123051',
 		duration: 3600,
 		bookmark: false,
+		providerInfo: null,
 		sessions: [
 			{
 				sessionId: 'Session14',
@@ -181,6 +183,7 @@ const onboardItems = [
 				presenterName: 'Billy Manashi',
 				scheduled: false,
 				registrationURL: 'https://cisco.webex.com/cisco/onstage/g.php?MTID=edfcb532bb594518ca707aa19c3a55feb',
+				eventNumber: '12345678',
 			},
 		],
 	},
@@ -570,6 +573,47 @@ export const ATXScenarios = [
 			`pitstop=Onboard&customerId=${customerId}&suggestedAction=Onboard 2`,
 		usecases: ['Use Case 1'],
 	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 500,
+					description: '(ATX) IBN-Campus Network Assurance-Onboard-twoProviders(293531,293532)',
+					response: {
+						body: {
+							pitstop: 'Onboard',
+							solution: 'IBN',
+							usecase: 'Campus Network Assurance',
+							items: require('./atxMockData/twoProvidersOneAtx.json'),
+						},
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?usecase=Campus Network Assurance&solution=IBN&pitstop=Onboard&customerId=${customerId}&suggestedAction=Get to know Cisco DNA Center&providerId=293531&providerId=293532`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 500,
+					description: '(ATX) IBN-Campus Network Assurance-Onboard-With partner filter',
+					response: {
+						body: MockATX('IBN', 'Campus Network Assurance', 'Onboard', 'partnerFilter'),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?usecase=Campus Network Assurance&solution=IBN&` +
+			`pitstop=Onboard&customerId=${customerId}&suggestedAction=Get to know Cisco DNA Center&` +
+			'providerId=293531&providerId=293533',
+		usecases: ['Use Case 1'],
+	},
 ];
 
 /**
@@ -589,7 +633,7 @@ export const CancelATXScenarios = [
 				},
 			],
 		},
-		url: `${api}/registration?sessionId=Session1&atxId=ATX1`,
+		url: `${api}/registration?sessionId=Session5&customerId=${customerId}&atxId=ATX1`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -605,7 +649,7 @@ export const CancelATXScenarios = [
 				},
 			],
 		},
-		url: `${api}/registration?sessionId=Session2&atxId=ATX1`,
+		url: `${api}/registration?sessionId=Session2&customerId=${customerId}&atxId=ATX1`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -621,7 +665,7 @@ export const CancelATXScenarios = [
 				},
 			],
 		},
-		url: `${api}/registration?sessionId=Session13&atxId=ATX3`,
+		url: `${api}/registration?sessionId=Session13&customerId=${customerId}&atxId=ATX3`,
 		usecases: ['Use Case 1'],
 	},
 ];
@@ -643,7 +687,7 @@ export const RegisterATXScenarios = [
 				},
 			],
 		},
-		url: `${api}/registration?sessionId=Session2&atxId=ATX1`,
+		url: `${api}/registration?sessionId=Session2&customerId=${customerId}&atxId=ATX1`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -659,7 +703,7 @@ export const RegisterATXScenarios = [
 				},
 			],
 		},
-		url: `${api}/registration?sessionId=Session7&atxId=ATX2`,
+		url: `${api}/registration?sessionId=Session7&customerId=${customerId}&atxId=ATX2`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -675,7 +719,7 @@ export const RegisterATXScenarios = [
 				},
 			],
 		},
-		url: `${api}/registration?sessionId=Session13&atxId=ATX3`,
+		url: `${api}/registration?sessionId=Session13&customerId=${customerId}&atxId=ATX3`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -691,7 +735,24 @@ export const RegisterATXScenarios = [
 				},
 			],
 		},
-		url: `${api}/registration?sessionId=Session1&atxId=ATX1`,
+		url: `${api}/registration?sessionId=Session1&customerId=${customerId}&atxId=ATX1`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 500,
+					description: '(ATX) IBN-Campus Network Assurance-Onboard-EntitlementV2',
+					response: {
+						body: MockATX('IBN', 'Campus Network Assurance', 'Onboard'),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?usecase=Campus Network Assurance&solution=IBN&pitstop=Onboard&customerId=${customerId_v2}&suggestedAction=Get to know Cisco DNA Center`,
 		usecases: ['Use Case 1'],
 	},
 ];

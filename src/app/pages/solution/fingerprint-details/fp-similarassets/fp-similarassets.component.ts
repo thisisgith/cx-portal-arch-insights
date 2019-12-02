@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { LogService } from '@cisco-ngx/cui-services';
 import { Subject } from 'rxjs';
-import { FpIntelligenceService, SimilarDevicesList } from '@sdp-api';
+import { FpIntelligenceService, SimilarDevicesList, RacetrackSolution, RacetrackTechnology } from '@sdp-api';
 import {
 	FormGroup,
 	Validators,
@@ -21,6 +21,7 @@ import * as _ from 'lodash-es';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { ActivatedRoute } from '@angular/router';
+import { RacetrackInfoService } from '@services';
 
 /**
  * fp-similarassets component
@@ -32,20 +33,26 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class FpSimilarAssetsComponent {
 	@Input() public asset: any;
+	public deviceId1 = '';
+	public deviceId2 = '';
 	public customerId: string;
 	public deviceId: string;
+	public deviceName: string;
+	public serialNumber: string;
 	public productId: string;
+	public compareView: string;
 	private destroyed$: Subject<void> = new Subject<void>();
 	public tableOptions: CuiTableOptions;
 	public seriesDataLoading = false;
 	public page = 0;
-	public size = 5;
+	public size = 3;
 	public similarityCriteria = 'softwares_features';
 	public noData = false;
 	public requestForm: FormGroup = this.fb.group({
 		similarityCriteria: ['softwares_features', Validators.required],
 	});
 	public similarDevicesData: SimilarDevicesList;
+	public globalRiskRankValue;
 	@Output() public devicesSelected: EventEmitter<any> = new EventEmitter<any>();
 	@Output() public reqError: EventEmitter<any> = new EventEmitter<any>();
 	public selectedDevice2: any;
@@ -55,8 +62,14 @@ export class FpSimilarAssetsComponent {
 	private crashRiskTemplate: TemplateRef<[]>;
 	@ViewChild('similarityMatchTemplate', { static: true })
 	private similarityMatchTemplate: TemplateRef<[]>;
+	@ViewChild('comparisonviewTemplate', { static: true })
+	private comparisonviewTemplate: TemplateRef<[]>;
 	@ViewChild('compareTemplate', { static: true })
 	private compareTemplate: TemplateRef<[]>;
+	@ViewChild('crashRiskAlignmentTemplate', { static: true })
+	private crashRiskAlignmentTemplate: TemplateRef<[]>;
+	private selectedSolutionName: string;
+	private selectedTechnologyName: string;
 
 	constructor (
 		private userResolve: UserResolve,
@@ -64,10 +77,17 @@ export class FpSimilarAssetsComponent {
 		private logger: LogService,
 		private fb: FormBuilder,
 		private route: ActivatedRoute,
+		private racetrackInfoService: RacetrackInfoService,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
+		this.compareView = 'software';
 	}
+	public comparisonInfo = {
+		customerId: this.customerId,
+		deviceId1: ' ',
+		deviceId2: ' ',
+	};
 	/**
 	 * similarDeviceData
 	 */
@@ -81,12 +101,27 @@ export class FpSimilarAssetsComponent {
 		this.requestForm.valueChanges
 			.pipe(debounceTime(1000))
 			.subscribe(val => {
-				if (this.requestForm.valid) {
+				if (this.requestForm.valid && this.isValidState) {
 					this.page = 0;
 					this.loadSimilarDevicesData();
 				}
 				this.logger.info(val);
 			});
+		this.racetrackInfoService.getCurrentSolution()
+		.pipe(
+			takeUntil(this.destroyed$),
+		)
+		.subscribe((solution: RacetrackSolution) => {
+			this.selectedSolutionName = _.get(solution, 'name');
+		});
+
+		this.racetrackInfoService.getCurrentTechnology()
+		.pipe(
+			takeUntil(this.destroyed$),
+		)
+		.subscribe((technology: RacetrackTechnology) => {
+			this.selectedTechnologyName = _.get(technology, 'name');
+		});
 	}
 
 	/**
@@ -95,30 +130,43 @@ export class FpSimilarAssetsComponent {
 	public similarDevicesGridInit () {
 		this.tableOptions = new CuiTableOptions({
 			bordered: true,
-			dynamicData: true,
-			singleSelect: false,
-			striped: false,
-			padding: 'compressed',
 			columns: [
 				{
 					key: 'deviceId',
 					name: I18n.get('_CP_SystemName_'),
 					template: this.assetTemplate,
-					width : '40%',
+					sortable: false,
+					width : '35%',
 				},
 				{
 					key: 'similarityScore',
 					name: I18n.get('_CP_SimilarityMatch_'),
 					template: this.similarityMatchTemplate,
+					sortable: false,
 					width : '30%',
+				},
+				{
+					headerTemplate: this.crashRiskAlignmentTemplate,
+					key: 'riskScore',
+					template: this.crashRiskTemplate,
+					sortable: false,
+					width : '20%',
 				},
 				{
 					key: 'deviceId',
 					name: '',
 					template: this.compareTemplate,
-					width : '30%',
+					sortable: false,
+					width : '15%',
 				},
 			],
+			rowWellColor: 'black',
+			rowWellTemplate: this.comparisonviewTemplate,
+			dynamicData: true,
+			singleSelect: true,
+			striped: false,
+			wrapText: true,
+			padding: 'compressed',
 		});
 	}
 	/**
@@ -127,8 +175,11 @@ export class FpSimilarAssetsComponent {
 	 */
 	public ngOnChanges (changes: SimpleChanges): void {
 		this.deviceId = _.get(changes, ['asset', 'currentValue', 'deviceId'], null);
+		this.deviceName = _.get(changes, ['asset', 'currentValue', 'deviceId']);
+		this.serialNumber = _.get(changes, ['asset', 'currentValue', 'deviceId']);
 		this.productId = _.get(changes, ['asset', 'currentValue', 'productId'], null);
-		if (!_.get(changes, ['asset', 'firstChange'], false) && this.asset) {
+		this.globalRiskRankValue = _.get(changes, ['asset', 'currentValue', 'globalRiskRank']);
+		if (!_.get(changes, ['asset', 'firstChange'], false) && this.asset && this.isValidState) {
 			this.loadSimilarDevicesData();
 		}
 	}
@@ -141,6 +192,8 @@ export class FpSimilarAssetsComponent {
 		const similarDeviceParams = this.getSimilarDeviceParams(
 			this.requestForm.value,
 		);
+		similarDeviceParams.solution = this.selectedSolutionName;
+		similarDeviceParams.useCase = this.selectedTechnologyName;
 		this.fpIntelligenceService
 			.getSimilarDevices(similarDeviceParams)
 			.pipe(takeUntil(this.destroyed$))
@@ -194,27 +247,47 @@ export class FpSimilarAssetsComponent {
 			this.selectedDevice2 = tableRowData;
 		}
 	}
-
 	/**
-	 * Navigates to compare tab for device comparison
-	 * @param item comparison
-	 * @returns flase
+	 * onTableRow click
+	 * @param rowData  table row
 	 */
-	public showDeviceComparison (item) {
-		if (this.deviceId && item) {
-			this.devicesSelected.emit({
-				deviceId1: this.deviceId,
-				productId1: this.productId,
-				deviceId2: item.deviceId,
-				productId2: item.productId,
-			});
-		}
-
-		return false;
+	public ontoggleRowSelect (rowData: any) {
+		_.map(_.get(this.similarDevicesData, 'similarDevices'), row => {
+			if (row.deviceId !== rowData.deviceId) {
+				row.toggleWell = false;
+			}
+		});
+		rowData.toggleWell = !rowData.toggleWell;
+		this.compareView = 'software';
 	}
+	/**
+	 * updateCompareView
+	 * @param event tab click event
+	 * @param selectedTab  compareview
+	 */
+	public updateCompareView (event, selectedTab) {
+		if (selectedTab) {
+			this.compareView = selectedTab;
+			this.logger.info(event);
+		}
+	}
+	/**
+	 * On error event
+	 * @param errorMsg Error Message
+	 */
+	public showError (errorMsg) {
+		this.reqError.emit(errorMsg);
+	}
+
 	/** Function used to destroy the component */
 	public ngOnDestroy () {
 		this.destroyed$.next();
 		this.destroyed$.complete();
 	}
+
+	public get isValidState (): boolean {
+	 return this.globalRiskRankValue !== 'LOW' &&
+	  this.globalRiskRankValue !== 'Not Evaluated';
+	}
+
 }

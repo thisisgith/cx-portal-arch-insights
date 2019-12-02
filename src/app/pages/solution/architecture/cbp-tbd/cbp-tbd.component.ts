@@ -8,7 +8,7 @@ import {
 
 import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
-import { ArchitectureService, IException, IAsset } from '@sdp-api';
+import { ArchitectureService, IException, IAsset, ArchitectureReviewService } from '@sdp-api';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
@@ -35,6 +35,7 @@ export class CbpTbdComponent implements OnChanges {
 	public customerId = '';
 	public params: any = {
 		 body : [],
+		 collectionId: '',
 		 customerId: '',
 		page : 0,
 		pageSize : 10,
@@ -43,10 +44,12 @@ export class CbpTbdComponent implements OnChanges {
 
 	constructor (private logger: LogService,
 		private architectureService: ArchitectureService,
+		private architectureReviewService: ArchitectureReviewService,
 		private route: ActivatedRoute) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
 		this.params.customerId =  _.cloneDeep(this.customerId);
+		this.getCollectionId();
 	}
 
 	/**
@@ -63,6 +66,25 @@ export class CbpTbdComponent implements OnChanges {
 			this.getData();
 		}
 	}
+
+	/**
+	 * Method to fetch collectionId
+	 */
+
+	public getCollectionId () {
+		this.architectureReviewService.getCollectionId()
+		.pipe(
+			takeUntil(this.destroy$),
+		)
+		.subscribe(res => {
+			this.params.collectionId = _.get(res, 'collection.collectionId');
+		},
+		err => {
+			this.logger.error('Devices list Component View' +
+				'  : getCollectionId() ' +
+				`:: Error : (${err.status}) ${err.message}`);
+		});
+	 }
 	/**
 	 * Used for getting pageNumber Index and call the getdata function
 	 * @param pageInfo - The Object that contains pageNumber Index

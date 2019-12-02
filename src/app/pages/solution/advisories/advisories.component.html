@@ -1,39 +1,27 @@
-<advisory-details *ngIf="selectedAdvisory"
-	[advisoryId]="selectedAdvisory.id"
-	[advisory]="selectedAdvisory.advisory"
-	[type]="selectedAdvisory.type"
-	(close)="onPanelClose()">
+<advisory-details *ngIf="selectedAdvisory" [advisoryId]="selectedAdvisory.id" [advisory]="selectedAdvisory.advisory"
+				  [type]="selectedAdvisory.type" (close)="onPanelClose()">
 </advisory-details>
 
 <div class="panel panel--bordered base-padding-left no-padding-bottom">
-	<cui-tabs inline="true"
-		*ngIf="tabs.length"
-		[activeTabIndex]="activeIndex"
-		(activeTabIndexChange)="selectTab($event)">
+	<cui-tabs inline="true" *ngIf="tabs.length" [activeTabIndex]="activeIndex"
+			  (activeTabIndexChange)="selectTab($event)">
 
-		<cui-tab *ngFor="let tab of tabs"
-			[label]="tab.label"
-			[disabled]="tab.disabled">
+		<cui-tab *ngFor="let tab of tabs" [label]="tab.label" [disabled]="tab.disabled">
 			<ng-container *ngIf="selectedTab.filters.length">
 				<visual-filter-bar [filters]="tab.filters" [filterCollapse]="filterCollapse"></visual-filter-bar>
 			</ng-container>
 		</cui-tab>
 
 		<ng-template cuiTabPost>
-			<visual-filter-toggle
-				*ngIf="selectedTab.filters?.length && selectedTab.pagination"
-				data-auto-id="VisualFilterToggle"
-				(click)="filterCollapse = !filterCollapse"
-				[filterCollapse]="filterCollapse"
-				></visual-filter-toggle>
+			<visual-filter-toggle *ngIf="selectedTab.filters?.length && selectedTab.pagination"
+								  data-auto-id="VisualFilterToggle" (click)="filterCollapse = !filterCollapse"
+								  [filterCollapse]="filterCollapse"></visual-filter-toggle>
 		</ng-template>
 	</cui-tabs>
 </div>
 
-<div #contentContainer
-	*ngIf="selectedTab"
-	class="panel panel--bordered half-margin-top"
-	[ngStyle]="{ 'height': selectedTab.contentContainerHeight }">
+<div #contentContainer *ngIf="selectedTab" class="panel panel--bordered half-margin-top advisories"
+	 [ngStyle]="{ 'height': selectedTab.contentContainerHeight }">
 	<ng-container *ngIf="selectedTab.filtered && !selectedTab.loading">
 		<ng-container *ngTemplateOutlet="filterBar"></ng-container>
 	</ng-container>
@@ -42,35 +30,29 @@
 			<div class="flex-center-vertical base-margin-left">
 				<span [innerText]="selectedTab.label" class="text-large"></span>
 				<span *ngIf="selectedTab?.pagination && selectedTab.pagination.total > 0"
-					[innerText]="'_ShowingXofYZ_' | i18n:selectedTab.pagination.countStr:selectedTab.pagination.total:(selectedTab.label | lowercase)"
-					class="qtr-margin-left text-small text-muted"
-					attr.data-auto-id="Showing-{{ selectedTab.label }}-Count">
+					  [innerText]="'_ShowingXofYZ_' | i18n:selectedTab.pagination.countStr:selectedTab.pagination.total:(selectedTab.label | lowercase)"
+					  class="qtr-margin-left text-small text-muted"
+					  attr.data-auto-id="Showing-{{ selectedTab.label }}-Count">
 				</span>
 			</div>
 		</div>
 		<div class="col-auto">
 			<div class="flex flex-fluid">
 				<div class="flex-fill form-group input--compressed input--icon half-margin-right">
-					<ng-container *ngTemplateOutlet="selectedTab.searchTemplate; context: { tab: selectedTab }"></ng-container>
+					<ng-container *ngTemplateOutlet="selectedTab.searchTemplate; context: { tab: selectedTab }">
+					</ng-container>
 				</div>
 			</div>
 		</div>
 	</div>
 	<div *ngIf="!selectedTab.disabled">
 		<cui-table class="not-close-360" *ngIf="selectedTab.data?.length && selectedTab.options"
-			[options]="selectedTab.options"
-			[data]="selectedTab.data"
-			(onTableRowClicked)="onRowSelect($event)"
-			(onSortingChanged)="onColumnSort($event)"
-		>
+				   [options]="selectedTab.options" [data]="selectedTab.data" (onTableRowClicked)="onRowSelect($event)"
+				   (onSortingChanged)="onColumnSort($event)">
 		</cui-table>
-		<cui-pager
-			*ngIf="selectedTab.data.length && selectedTab.pagination?.total > 0"
-			class="base-padding"
-			[page]="selectedTab.pagination.page - 1"
-			[limit]="selectedTab.pagination.rows"
-			[totalItems]="selectedTab.pagination.total || 0"
-			(onPageChanged)="onPageChanged($event, selectedTab)">
+		<cui-pager *ngIf="selectedTab.data.length && selectedTab.pagination?.total > 0" class="base-padding"
+				   [page]="selectedTab.pagination.page - 1" [limit]="selectedTab.pagination.rows"
+				   [totalItems]="selectedTab.pagination.total || 0" (onPageChanged)="onPageChanged($event, selectedTab)">
 		</cui-pager>
 	</div>
 	<div *ngIf="selectedTab.loading" class="base-margin-top">
@@ -79,15 +61,12 @@
 	<div *ngIf="!selectedTab.data.length && !selectedTab.loading">
 		<div class="text-center dbl-margin-top dbl-margin-bottom">
 			<div>
-				<span class="text-muted text-xlarge"
-					[innerText]="'_NoResultsFound_' | i18n"
-					data-auto-id="NoResultsFoundTxt" >
+				<span class="text-muted text-xlarge" [innerText]="'_NoResultsFound_' | i18n"
+					  data-auto-id="NoResultsFoundTxt">
 				</span>
 			</div>
 			<div *ngIf="selectedTab.filtered">
-				<a (click)="clearFilters()"
-					data-auto-id="NoResultsClearAll"
-					[innerText]="'_ClearAll_' | i18n">
+				<a (click)="clearFilters()" data-auto-id="NoResultsClearAll" [innerText]="'_ClearAll_' | i18n">
 				</a>
 			</div>
 		</div>
@@ -97,61 +76,53 @@
 <ng-template #filterBar>
 	<div class="row flex-center-vertical half-margin-top base-margin-bottom">
 		<div class="col-md-11 flex">
-			<span class="flex flex-center-vertical base-margin-left half-margin-right filter-bar__title" [innerText]="'_Filtered_' | i18n"></span>
+			<span class="flex flex-center-vertical base-margin-left half-margin-right filter-bar__title"
+				  [innerText]="'_Filtered_' | i18n"></span>
 			<ng-container *ngFor="let selectedSubfilter of selectedTab.selectedSubfilters">
 				<span class="label filter-bar__item"
-					(click)="onSubfilterSelect(selectedSubfilter.subfilter.filter, selectedSubfilter.filter)"
-					attr.data-auto-id="FilterTag-{{ selectedSubfilter.subfilter.filter }}">
+					  (click)="onSubfilterSelect(selectedSubfilter.subfilter.filter, selectedSubfilter.filter)"
+					  attr.data-auto-id="FilterTag-{{ selectedSubfilter.subfilter.filter }}">
 					<span [innerText]="selectedSubfilter.subfilter.label"></span>
 					<span class="icon-close"></span>
 				</span>
 			</ng-container>
 		</div>
 		<div class="col-md-1 flex flex-center flex-center-vertical filter-bar__clear">
-			<a (click)="clearFilters()"
-				[innerText]="'_ClearAll_' | i18n"
-				data-auto-id="FilterBarClearAllFilters">
+			<a (click)="clearFilters()" [innerText]="'_ClearAll_' | i18n" data-auto-id="FilterBarClearAllFilters">
 			</a>
 		</div>
-</div>
+	</div>
 </ng-template>
 
 <!-- Templates for our Visual Filters -->
 <ng-template #totalFilter let-filter="filter">
-	<div class="dbl-padding-bottom"
-		(click)="clearFilters()"
-		data-auto-id="TotalVisualFilter"
-		[innerText]="filter.seriesData[0]?.value || 0">
+	<div class="dbl-padding-bottom" (click)="clearFilters()" data-auto-id="TotalVisualFilter"
+		 [innerText]="filter.seriesData[0]?.value || 0">
 	</div>
 </ng-template>
 
 <ng-template #pieChartFilter let-filter="filter">
-	<pie-chart *ngIf="filter?.seriesData?.length"
-		[seriesData]="filter.seriesData"
-		(subfilter)="onSubfilterSelect($event.filter, filter)">
+	<pie-chart *ngIf="filter?.seriesData?.length" [seriesData]="filter.seriesData"
+			   (subfilter)="onSubfilterSelect($event.filter, filter)">
 	</pie-chart>
 </ng-template>
 
 <ng-template #columnChartFilter let-filter="filter">
-	<column-chart *ngIf="filter?.seriesData?.length"
-		[seriesData]="filter.seriesData"
-		(subfilter)="onSubfilterSelect($event.filter, filter)">
+	<column-chart *ngIf="filter?.seriesData?.length" [seriesData]="filter.seriesData"
+				  (subfilter)="onSubfilterSelect($event.filter, filter)">
 	</column-chart>
 </ng-template>
 
 <!-- Templates for Security Advisories Content-->
 <ng-template #impactTemplate let-celldata="celldata">
 	<div class="text-nowrap">
-		<span
-			class="label label--circle label--tiny qtr-margin-right"
-			[ngClass]="{
+		<span class="label label--circle label--tiny qtr-margin-right" [ngClass]="{
 				'Critical': 'label--danger',
 				'High': 'label--warning',
 				'Medium': 'label--warning-alt',
 				'Low': 'label--info',
 				'Info': 'label--info'
-			}[celldata?.severity]"
-			data-auto-id="ImpactIcon">
+			}[celldata?.severity]" data-auto-id="ImpactIcon">
 		</span>
 		<span [innerText]="celldata?.severity || ('_NA_' | i18n)" data-auto-id="ImpactText"></span>
 	</div>
@@ -169,17 +140,10 @@
 <ng-template #securitySearchTemplate let-tab="tab">
 	<form *ngIf="tab.searchForm" [formGroup]="tab.searchForm" novalidate>
 		<div class="form-group__text">
-			<input id="searchInput-Security"
-				attr.data-auto-id="SearchInput-Security"
-				class="security-search"
-				type="text"
-				#securitySearchInput
-				[minlength]="searchOptions.min"
-				[maxlength]="searchOptions.max"
-				[pattern]="searchOptions.pattern"
-				formControlName="search"
-				placeholder="{{ '_Search_' | i18n }} {{ tab?.label }}"
-				ngDefaultControl>
+			<input id="searchInput-Security" attr.data-auto-id="SearchInput-Security" class="security-search"
+				   type="text" #securitySearchInput [minlength]="searchOptions.min" [maxlength]="searchOptions.max"
+				   [pattern]="searchOptions.pattern" formControlName="search"
+				   placeholder="{{ '_Search_' | i18n }} {{ tab?.label }}" ngDefaultControl>
 			<button type="button" class="link">
 				<span class="icon-search"></span>
 			</button>
@@ -190,17 +154,10 @@
 <ng-template #fieldSearchTemplate let-tab="tab">
 	<form *ngIf="tab.searchForm" [formGroup]="tab.searchForm" novalidate>
 		<div class="form-group__text">
-			<input id="searchInput-Field"
-				attr.data-auto-id="SearchInput-Field"
-				class="field-search"
-				type="text"
-				#fieldSearchInput
-				[minlength]="searchOptions.min"
-				[maxlength]="searchOptions.max"
-				[pattern]="searchOptions.pattern"
-				formControlName="search"
-				placeholder="{{ '_Search_' | i18n }} {{ tab?.label }}"
-				ngDefaultControl>
+			<input id="searchInput-Field" attr.data-auto-id="SearchInput-Field" class="field-search" type="text"
+				   #fieldSearchInput [minlength]="searchOptions.min" [maxlength]="searchOptions.max"
+				   [pattern]="searchOptions.pattern" formControlName="search"
+				   placeholder="{{ '_Search_' | i18n }} {{ tab?.label }}" ngDefaultControl>
 			<button type="button" class="link">
 				<span class="icon-search"></span>
 			</button>
@@ -211,17 +168,10 @@
 <ng-template #bugsSearchTemplate let-tab="tab">
 	<form *ngIf="tab.searchForm" [formGroup]="tab.searchForm" novalidate>
 		<div class="form-group__text">
-			<input id="searchInput-Bugs"
-				attr.data-auto-id="SearchInput-Bugs"
-				class="bugs-search"
-				type="text"
-				#bugsSearchInput
-				[minlength]="searchOptions.min"
-				[maxlength]="searchOptions.max"
-				[pattern]="searchOptions.pattern"
-				formControlName="search"
-				placeholder="{{ '_Search_' | i18n }} {{ tab?.label }}"
-				ngDefaultControl>
+			<input id="searchInput-Bugs" attr.data-auto-id="SearchInput-Bugs" class="bugs-search" type="text"
+				   #bugsSearchInput [minlength]="searchOptions.min" [maxlength]="searchOptions.max"
+				   [pattern]="searchOptions.pattern" formControlName="search"
+				   placeholder="{{ '_Search_' | i18n }} {{ tab?.label }}" ngDefaultControl>
 			<button type="button" class="link">
 				<span class="icon-search"></span>
 			</button>
@@ -231,10 +181,8 @@
 
 <ng-template #impactedAssetsTemplate let-celldata="celldata">
 	<div class="flex flex-fill flex-center">
-		<span
-			[innerText]="celldata?.assetsImpacted >= 0 ? celldata?.assetsImpacted : ('_NA_' | i18n)"
-			data-auto-id="ImpactedAssetsText"
-		></span>
+		<span [innerText]="celldata?.assetsImpacted >= 0 ? celldata?.assetsImpacted : ('_NA_' | i18n)"
+			  data-auto-id="ImpactedAssetsText"></span>
 	</div>
 </ng-template>
 
@@ -242,8 +190,7 @@
 	<div class="flex flex-fill flex-center">
 		<span
 			[innerText]="celldata?.assetsPotentiallyImpacted >= 0 ? celldata?.assetsPotentiallyImpacted : ('_NA_' | i18n)"
-			data-auto-id="PotentiallyImpactedAssetsText"
-		></span>
+			data-auto-id="PotentiallyImpactedAssetsText"></span>
 	</div>
 </ng-template>
 
@@ -265,20 +212,32 @@
 
 <ng-template #lastUpdatedTemplate let-celldata="celldata">
 	<div class="flex flex-fill flex-center">
-		<span *ngIf="celldata?.lastUpdated"
-			[innerText]="celldata.lastUpdated | fromNow"
-			[title]="celldata.lastUpdated | dateTime"
-			data-auto-id="LastUpdatedText">
+		<span *ngIf="celldata?.lastUpdated" [innerText]="celldata.lastUpdated | fromNow"
+			  [title]="celldata.lastUpdated | dateTime" data-auto-id="LastUpdatedText">
 		</span>
-		<span *ngIf="!celldata?.lastUpdated && celldata?.publishedOn"
-			[innerText]="celldata.publishedOn | fromNow"
-			[title]="celldata.publishedOn | dateTime"
-			data-auto-id="LastUpdatedText">
+		<span *ngIf="!celldata?.lastUpdated && celldata?.publishedOn" [innerText]="celldata.publishedOn | fromNow"
+			  [title]="celldata.publishedOn | dateTime" data-auto-id="LastUpdatedText">
 		</span>
-		<span *ngIf="!celldata?.lastUpdated && !celldata?.publishedOn"
-			[innerText]="'_Never_' | i18n"
-			[title]="'_Never_' | i18n"
-			data-auto-id="LastUpdatedText">
+		<span *ngIf="!celldata?.lastUpdated && !celldata?.publishedOn" [innerText]="'_Never_' | i18n"
+			  [title]="'_Never_' | i18n" data-auto-id="LastUpdatedText">
 		</span>
 	</div>
+</ng-template>
+
+<ng-template #borgBugSeverityTemplate let-celldata="celldata">
+	<span class="label label--circle label--tiny qtr-margin-right" [ngClass]="{ 'label--danger': '0' || '1', 'label--warning-alt': '2',
+					'label--warning': '3', 'label--info':'4' ||  '5' || '6' || '7'
+					}[celldata?.cdets?.severity]" data-auto-id="severityIcon">
+	</span>
+	<ng-container [ngSwitch]="celldata?.cdets?.severity">
+		<span data-auto-id="ImpactText" *ngSwitchCase="'0'" [innerText]="'_Critical_' | i18n"></span>
+		<span data-auto-id="ImpactText" *ngSwitchCase="'1'" [innerText]="'_Critical_' | i18n"></span>
+		<span data-auto-id="ImpactText" *ngSwitchCase="'2'" [innerText]="'_High_' | i18n"></span>
+		<span data-auto-id="ImpactText" *ngSwitchCase="'3'" [innerText]="'_Medium_' | i18n"></span>
+		<span data-auto-id="ImpactText" *ngSwitchCase="'4'" [innerText]="'_Low_' | i18n"></span>
+		<span data-auto-id="ImpactText" *ngSwitchCase="'5'" [innerText]="'_Low_' | i18n"></span>
+		<span data-auto-id="ImpactText" *ngSwitchCase="'6'" [innerText]="'_Info_' | i18n"></span>
+		<span data-auto-id="ImpactText" *ngSwitchCase="'7'" [innerText]="'_Info_' | i18n"></span>
+		<span data-auto-id="ImpactText" *ngSwitchDefault [innerText]="'_Unknown_' | i18n"></span>
+	</ng-container>
 </ng-template>

@@ -21,6 +21,14 @@ export interface InstallAndRegisterDNACParams {
 }
 
 /**
+ * Parameters for the Change Password public method
+ */
+export interface ChangePasswordParams {
+	old_password: string;
+	new_password: string;
+}
+
+/**
  * Parameters for the installAndRegisterDNAC public method
  */
 export interface RegisterParams {
@@ -117,6 +125,24 @@ export class RegisterCollectorService {
 				headers: {
 					Authorization: `Bearer ${token}`,
 				},
+			},
+		);
+	}
+
+	/**
+	 * Change Password of Collector
+	 * @param data ChangePasswordParams
+	 * @param CollectorIP Ip Address
+	 * @returns Observable
+	 */
+	public changePassword (data: ChangePasswordParams, CollectorIP: string) {
+
+		this.collectorIP = CollectorIP;
+
+		return this.http.post(
+			`https://${this.collectorIP}${this.baseUrl}changeCXCAdminCredential`,
+			data,
+			{ responseType: 'text',
 			},
 		);
 	}

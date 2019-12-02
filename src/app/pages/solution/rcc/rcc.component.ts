@@ -25,6 +25,7 @@ import { FromNowPipe } from '@cisco-ngx/cui-pipes';
 import { ActivatedRoute } from '@angular/router';
 import { DetailsPanelStackService, AssetPanelLinkService } from '@services';
 import { AssetLinkInfo } from '@interfaces';
+import { UserRoles } from '@constants';
 
 /**
  * Main component for the RCC track
@@ -36,6 +37,14 @@ import { AssetLinkInfo } from '@interfaces';
 })
 export class RccComponent implements OnInit, OnDestroy {
 	public customerId: string;
+	public cxLevel: number;
+	public authParamsRCCUser = {
+		blacklistRoles: UserRoles.ADMIN,
+	};
+	public authParamsRCCAdmin = {
+		whitelistRoles: UserRoles.ADMIN,
+	};
+
 	constructor (
 		private logger: LogService,
 		public RccTrackService: RccService,
@@ -47,6 +56,7 @@ export class RccComponent implements OnInit, OnDestroy {
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
+		this.cxLevel = _.get(user, ['service', 'cxLevel'], 0);
 	}
 	get selectedFilters () {
 		return _.filter(this.filters, 'selected');
@@ -103,11 +113,11 @@ export class RccComponent implements OnInit, OnDestroy {
 	public errorMessage = ' ';
 	public errorPolicyView = false;
 	public policyViolationInfo = {
-		policycategory: '',
-		policygroupid: '',
-		policyname: '',
-		ruleseverity: '',
-		ruletitle: '',
+		policyCategory: '',
+		policyGroupId: '',
+		policyName: '',
+		ruleSeverity: '',
+		ruleTitle: '',
 	};
 	public selectedViolationModal = false;
 	public selectedAssetData = {
@@ -116,6 +126,8 @@ export class RccComponent implements OnInit, OnDestroy {
 		lastScan: '',
 		serialNumber: '',
 	};
+	public violationFilterShow = false;
+	public systemFilterShow = false;
 	public selectedAssetModal = false;
 	public openDeviceModal = false;
 	public rowData = { };
@@ -132,12 +144,21 @@ export class RccComponent implements OnInit, OnDestroy {
 	public noTableData = false;
 	public assetsConditionViolationsCount = 0;
 	public withViolationsAssetsCount;
+	public showNoAccessMsg = false;
+	public optInStatus = false;
+	public scanEnabled = false;
+	public showRunningBanner = false;
+	public currentRunStatus = '';
+	public runOnce = false;
+	public collectorId = '';
+	public nextScheduleTime = '';
 	public alert: any = { };
+	public lastScan = '';
 	public searchOptions = {
 		debounce: 1500,
 		max: 100,
 		min: 2,
-		pattern: /^[a-zA-Z0-9_ ]*$/,
+		pattern: /^[a-zA-Z0-9\s\-\/\(\).]*$/,
 	};
 	public search: FormControl = new FormControl('');
 	public searchForm: FormGroup;
@@ -158,9 +179,13 @@ export class RccComponent implements OnInit, OnDestroy {
 	@ViewChild('policyFilter', { static: true }) private policyFilterTemplate: TemplateRef<{ }>;
 	@ViewChild('severityFilter', { static: true }) private severityFilterTemplate: TemplateRef<{ }>;
 	@ViewChild('severityColor', { static: true }) private severityColorTemplate: TemplateRef<{ }>;
+	@ViewChild('severityTemplate', { static: true }) private severityTemplate: TemplateRef<{ }>;
 	@ViewChild('ruletitleTemplate', { static: true }) private ruletitleTemplate: TemplateRef<{ }>;
-	@ViewChild('tableIcon', { static: true }) private tableIconTemplate: TemplateRef<{ }>;
-	@ViewChild('assetSlider', { read: ViewContainerRef, static: true })
+	@ViewChild('lastScanTmpl', { static: true }) public lastScanTemplate: TemplateRef<{ }>;
+	@ViewChild('policyCategoryTooltipTemplate', { static: true })
+	private policyCategoryTooltipTemplate: TemplateRef<string>;
+	@ViewChild('ruleViolationsTooltipTemplate', { static: true })
+	private ruleViolationsTooltipTemplate: TemplateRef<string>;
 	public entry: ViewContainerRef;
 	private InventorySubject: Subject<{ }>;
 	public filters: Filter[];
@@ -176,19 +201,83 @@ export class RccComponent implements OnInit, OnDestroy {
 	 * ngOnInit method execution
 	 */
 	public ngOnInit () {
+		this.loading = true;
+		this.filterLoading = true;
 		this.assetsTotalCount = 0;
 		this.policyViolationsTotalCount = 0;
 		this.searched = true;
-		this.loadData();
 		this.view = 'violation';
+		this.loadData();
 		this.policyViolationsTableOptions = this.getPolicyViolationsTableOptions();
-		this.buildFilters();
-		this.getRCCData(this.violationGridObj);
-		this.getFiltersData();
+		this.assetLinkInfo = Object.create({ });
+		if (this.cxLevel > 1) {
+			this.getOptInDetail();
+		} else {
+			this.loading = false;
+			this.filterLoading = false;
+			this.showNoAccessMsg = true;
+		}
 		this.searchForm = new FormGroup({
 			search: this.search,
 		});
-		this.assetLinkInfo = Object.create({ });
+	}
+	/**
+	 * to check the opt-in/opt-out status for loggedin user
+	 */
+	public getOptInDetail () {
+		this.loading = true;
+		this.RccTrackService.
+		optInDetail({ customerId: this.customerId })
+		.pipe(takeUntil(this.destroy$))
+			.subscribe(status => {
+				this.optInStatus = _.get(status, ['data', 'rccOptInStatus']);
+				this.currentRunStatus = _.get(status, ['data', 'currentRunStatus']);
+				this.runOnce = _.get(status, ['data', 'runOnce']);
+				if (this.optInStatus) {
+					if (this.runOnce) {
+						this.buildFilters();
+						this.getRCCData(this.violationGridObj);
+						this.getFiltersData();
+					} else {
+						this.getBannerTimeStamp();
+					}
+				} else {
+					this.loading = false;
+					this.filterLoading = false;
+				}
+			},
+			error => {
+				this.loading = false;
+				this.filterLoading = false;
+				this.logger.error(
+					'RccComponent : getOptInDetail() ' +
+				`:: Error : (${error.status}) ${error.message}`);
+				this.errorPolicyView = true;
+			},
+		);
+	}
+	/**
+	 * to get the timestamp for next compliance run
+	 */
+	public getBannerTimeStamp () {
+		this.RccTrackService.
+		getScheduleTime({ customerId: this.customerId })
+		.pipe(takeUntil(this.destroy$))
+			.subscribe(response => {
+				if (response.status === 200 && response.message === 'success') {
+					this.nextScheduleTime = _.get(response.data[0], ['nextSchedule']);
+				}
+				this.showRunningBanner = true;
+				this.filterLoading = false;
+				this.loading = false;
+			},
+			error => {
+				this.loading = false;
+				this.logger.error(
+					'RccComponent : getBannerTimeStamp() ' +
+				`:: Error : (${error.status}) ${error.message}`);
+			},
+		);
 	}
 	/**
 	 * to load data on page load
@@ -222,34 +311,37 @@ export class RccComponent implements OnInit, OnDestroy {
 			bordered: false,
 			columns: [
 				{
-					key: 'ruleseverity',
-					name: I18n.get('_RccSeverity_'),
+					key: 'ruleSeverity',
+					name: I18n.get('_RccHighestSeverity_'),
 					sortable: true,
 					template: this.severityColorTemplate,
+					width: '13%',
 				},
 				{
-					key: 'policygroupid',
+					key: 'policyGroupName',
 					name: I18n.get('_RccRegulatoryType_'),
 					sortable: true,
 				},
 				{
-					key: 'policycategory',
-					name: I18n.get('_RccCategory_'),
+					headerTemplate:  this.policyCategoryTooltipTemplate,
+					key: 'policyCategory',
 					sortable: true,
+					width: '10%',
 				},
 				{
-					key: 'ruletitle',
+					key: 'ruleTitle',
 					name: I18n.get('_RccRuleViolated_'),
 					sortable: true,
 					template: this.ruletitleTemplate,
 				},
 				{
-					key: 'violationcount',
-					name: I18n.get('_RccAssetViolations_'),
+					headerTemplate:  this.ruleViolationsTooltipTemplate,
+					key: 'violationCount',
 					sortable: true,
+					width: '14%',
 				},
 				{
-					key: 'impassetscount',
+					key: 'impAssetsCount',
 					name: I18n.get('_RccAffectedSystems_'),
 					sortable: true,
 				},
@@ -353,6 +445,7 @@ export class RccComponent implements OnInit, OnDestroy {
 	public onAssetRowClicked (rowData: any) {
 		this.rowData = rowData;
 		this.selectedAssetData = rowData;
+		this.lastScan = rowData.lastScan;
 		this.selectedAssetModal = true;
 		this.selectedViolationModal = false;
 		this.openDeviceModal = false;
@@ -377,6 +470,11 @@ export class RccComponent implements OnInit, OnDestroy {
 				policyFilter.seriesData = filterObjRes.policyFilters;
 				const severityFilter = _.find(this.filters, { key: 'severity' });
 				severityFilter.seriesData = filterObjRes.severityFilters;
+				if (policyFilter.seriesData.length || severityFilter.seriesData.length) {
+					this.violationFilterShow = true;
+				} else {
+					this.violationFilterShow = false;
+				}
 				this.assetsTotalCount = filterObjRes.assetCount;
 				this.policyViolationsTotalCount = filterObjRes.policyViolationCount;
 				this.filterLoading = false;
@@ -408,6 +506,11 @@ export class RccComponent implements OnInit, OnDestroy {
 				const filterObjRes = assetFilterData.data;
 				const assetSeverityFilter = _.find(this.filters, { key: 'assetSeverity' });
 				assetSeverityFilter.seriesData = filterObjRes.severityList;
+				if (assetSeverityFilter.seriesData.length) {
+					this.systemFilterShow = true;
+				} else {
+					this.systemFilterShow = false;
+				}
 				this.filterLoading = false;
 			},
 			error => {
@@ -482,8 +585,8 @@ export class RccComponent implements OnInit, OnDestroy {
 					width: '24%',
 				},
 				{
-					key: 'serialNumber',
-					name: I18n.get('_RccAssetSerialNumber_'),
+					key: 'ipAddress',
+					name: I18n.get('_RccAssetIpAddress_'),
 					sortable: true,
 				},
 				{
@@ -494,22 +597,27 @@ export class RccComponent implements OnInit, OnDestroy {
 				{
 					key: 'lastScan',
 					name: I18n.get('_RccAssetLastScan_'),
-					render: item => item.lastScan ?
-						this.fromNow.transform(item.lastScan) : I18n.get('_Never_'),
 					sortable: true,
 					sortKey: 'lastScan',
+					template: this.lastScanTemplate,
 				},
 				{
+					headerTemplate:  this.ruleViolationsTooltipTemplate,
 					key: 'violationCount',
-					name: I18n.get('_RccAssetViolations_'),
 					sortable: true,
-					template: this.tableIconTemplate,
+				},
+				{
+					key: 'severity',
+					name: I18n.get('_RccHighestViolationSeverity_'),
+					sortable: true,
+					template: this.severityTemplate,
 				},
 			],
 			dynamicData: false,
 			hover: true,
 			singleSelect: true,
 			striped: false,
+			wrapText: true,
 		});
 		this.buildAssetFilters();
 		// this.getRCCAssetData(this.assetGridObj);
@@ -532,7 +640,7 @@ export class RccComponent implements OnInit, OnDestroy {
 				loading: true,
 				seriesData: [],
 				template: this.severityFilterTemplate,
-				title: I18n.get('_RccSeverity_'),
+				title: I18n.get('_RccHighestSeverity_'),
 			},
 		];
 	}
@@ -546,7 +654,7 @@ export class RccComponent implements OnInit, OnDestroy {
 				loading: true,
 				seriesData: [],
 				template: this.severityFilterTemplate,
-				title: I18n.get('_RccAssetSeverity_'),
+				title: I18n.get('_RccHighestViolationSeverity_'),
 			},
 		];
 	}

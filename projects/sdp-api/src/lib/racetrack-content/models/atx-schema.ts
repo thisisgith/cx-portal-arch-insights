@@ -44,7 +44,7 @@ export interface AtxSchema {
   /**
    * Status of the ATX
    */
-  status?: 'completed' | 'recommended' | 'scheduled' | 'requested' | 'in-progress';
+  status?: 'recommended' | 'requested' | 'scheduled' | 'in-progress' | 'completed';
 
   /**
    * Title of the ATX

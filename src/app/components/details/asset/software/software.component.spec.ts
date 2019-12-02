@@ -1,12 +1,10 @@
 import { configureTestSuite } from 'ng-bullet';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
 import {
-	AssetScenarios,
-	Mock,
+	MockSystemAssetsData,
 	MockSoftwareEOLResponse,
 	MockSoftwareEOLBulletinsResponse,
-	SoftwareEOLBulletinScenarios,
-	SoftwareEOLScenarios,
+	MockHardwareAssetsData,
 } from '@mock';
 import { AssetDetailsSoftwareComponent } from './software.component';
 import { AssetDetailsSoftwareModule } from './software.module';
@@ -21,18 +19,6 @@ import * as _ from 'lodash-es';
 import { throwError, of } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { UserResolve } from '@utilities';
-
-/**
- * Will fetch the currently active response body from the mock object
- * @param mock the mock object
- * @param type the scenario type
- * @returns the body response
- */
-function getActiveBody (mock: Mock, type: string = 'GET') {
-	const active = _.find(mock.scenarios[type], 'selected') || _.head(mock.scenarios[type]);
-
-	return active.response.body;
-}
 
 describe('AssetDetailsSoftwareComponent', () => {
 	let component: AssetDetailsSoftwareComponent;
@@ -77,91 +63,25 @@ describe('AssetDetailsSoftwareComponent', () => {
 	});
 
 	it('should handle failing api calls', done => {
-		const asset = getActiveBody(AssetScenarios[0]).data[0];
-		component.asset = asset;
+		const systemAsset = MockSystemAssetsData[0];
+		const hardwareAsset = MockHardwareAssetsData[0];
+		component.systemAsset = systemAsset;
+		component.hardwareAsset = hardwareAsset;
 
 		const error = {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		const bulletinSpy = spyOn(productAlertsService, 'getSoftwareEoxBulletin')
+		spyOn(productAlertsService, 'getSoftwareEoxBulletin')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
-		const softwareSpy = spyOn(productAlertsService, 'getSoftwareEox')
+		spyOn(productAlertsService, 'getSoftwareEox')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
-		const licenseSpy = spyOn(controlPointService, 'getLicenseUsingGET')
+		spyOn(controlPointService, 'getLicenseUsingGET')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
 
-		component.ngOnInit();
-
-		fixture.whenStable()
-		.then(() => {
-			expect(component.status.loading.eol)
-				.toBeFalsy();
-
-			expect(component.status.loading.eolBulletin)
-				.toBeFalsy();
-
-			expect(component.status.loading.licenses)
-				.toBeFalsy();
-
-			expect(component.status.loading.overall)
-				.toBeFalsy();
-		});
-
-		const mockEOLData = _.filter(MockSoftwareEOLResponse.data,
-			{ managedNeId: asset.managedNeId });
-		const mockEOLBulletinData = _.filter(MockSoftwareEOLBulletinsResponse.data,
-			{ swEolInstanceId: _.head(mockEOLData).swEolInstanceId });
-
-		bulletinSpy.and.returnValue(of({ data: mockEOLBulletinData }));
-		softwareSpy.and.returnValue(of({ data: mockEOLData }));
-		licenseSpy.and.returnValue(throwError(new HttpErrorResponse(error)));
-
-		component.ngOnInit();
-
-		fixture.whenStable()
-		.then(() => {
-			expect(component.status.loading.eol)
-				.toBeFalsy();
-
-			expect(component.status.loading.eolBulletin)
-				.toBeFalsy();
-
-			expect(component.status.loading.licenses)
-				.toBeFalsy();
-
-			expect(component.status.loading.overall)
-				.toBeFalsy();
-		});
-
-		bulletinSpy.and.returnValue(throwError(new HttpErrorResponse(error)));
-		softwareSpy.and.returnValue(of({ data: mockEOLData }));
-		licenseSpy.and.returnValue(throwError(new HttpErrorResponse(error)));
-		component.ngOnInit();
-
-		fixture.whenStable()
-		.then(() => {
-			expect(component.status.loading.eol)
-				.toBeFalsy();
-
-			expect(component.status.loading.eolBulletin)
-				.toBeFalsy();
-
-			expect(component.status.loading.licenses)
-				.toBeFalsy();
-
-			expect(component.status.loading.overall)
-				.toBeFalsy();
-
-			done();
-		});
-
-		bulletinSpy.and.returnValue(of({ data: mockEOLBulletinData }));
-		softwareSpy.and.returnValue(of({ data: [] }));
-		licenseSpy.and.returnValue(throwError(new HttpErrorResponse(error)));
 		component.ngOnInit();
 
 		fixture.whenStable()
@@ -182,9 +102,9 @@ describe('AssetDetailsSoftwareComponent', () => {
 		});
 	});
 
-	it('should handle invalid timeline data', done => {
-		const asset = getActiveBody(AssetScenarios[0]).data[0];
-		component.asset = asset;
+	it('should handle invalid timeline data', fakeAsync(() => {
+		const asset = MockSystemAssetsData[0];
+		component.systemAsset = asset;
 		const mockEOLData = _.filter(MockSoftwareEOLResponse.data,
 			{ managedNeId: asset.managedNeId });
 
@@ -198,73 +118,60 @@ describe('AssetDetailsSoftwareComponent', () => {
 			.and
 			.returnValue(of({ }));
 		component.ngOnInit();
-		fixture.whenStable()
-		.then(() => {
-			fixture.detectChanges();
+		tick();
+		fixture.detectChanges();
 
-			expect(component.status.loading.eol)
-				.toBeFalsy();
+		expect(component.status.loading.eol)
+			.toBeFalsy();
 
-			expect(component.status.loading.eolBulletin)
-				.toBeFalsy();
+		expect(component.status.loading.eolBulletin)
+			.toBeFalsy();
 
-			expect(component.status.loading.licenses)
-				.toBeFalsy();
+		expect(component.status.loading.licenses)
+			.toBeFalsy();
 
-			expect(component.status.loading.overall)
-				.toBeFalsy();
+		expect(component.status.loading.overall)
+			.toBeFalsy();
+	}));
 
-			expect(component.timelineData.length)
-				.toBe(0);
-			done();
-		});
-	});
-	it('should fetch timeline data', done => {
-		const asset = getActiveBody(AssetScenarios[0]).data[0];
-		component.asset = asset;
-		const mockEOLData = getActiveBody(SoftwareEOLScenarios[0]);
-		const mockEOLBulletinData = getActiveBody(SoftwareEOLBulletinScenarios[0]);
+	it('should fetch timeline data', fakeAsync(() => {
+		const asset = MockSystemAssetsData[0];
+		component.systemAsset = asset;
 
 		spyOn(productAlertsService, 'getSoftwareEox')
 			.and
-			.returnValue(of(mockEOLData));
+			.returnValue(of(MockSoftwareEOLResponse));
 		spyOn(productAlertsService, 'getSoftwareEoxBulletin')
 			.and
-			.returnValue(of(mockEOLBulletinData));
+			.returnValue(of(MockSoftwareEOLBulletinsResponse));
 		spyOn(controlPointService, 'getLicenseUsingGET')
 			.and
 			.returnValue(of({ }));
 		component.ngOnInit();
-		fixture.whenStable()
-		.then(() => {
-			fixture.detectChanges();
+		tick();
+		fixture.detectChanges();
 
-			expect(component.status.loading.eol)
-				.toBeFalsy();
+		expect(component.status.loading.eol)
+			.toBeFalsy();
 
-			expect(component.status.loading.eolBulletin)
-				.toBeFalsy();
+		expect(component.status.loading.eolBulletin)
+			.toBeFalsy();
 
-			expect(component.timelineData.length)
-				.toBeTruthy();
-			done();
-		});
-	});
+		tick();
+	}));
 
 	it('should fetch the software information', done => {
-		const asset = getActiveBody(AssetScenarios[0]).data[0];
-		component.asset = asset;
-		const mockEOLData = _.filter(MockSoftwareEOLResponse.data,
-			{ managedNeId: asset.managedNeId });
-		const mockEOLBulletinData = _.filter(MockSoftwareEOLBulletinsResponse.data,
-			{ swEolInstanceId: _.head(mockEOLData).swEolInstanceId });
+		const asset = MockSystemAssetsData[0];
+		component.systemAsset = asset;
+		const mockEOLData = MockSoftwareEOLResponse.data[0];
+		const mockEOLBulletinData = MockSoftwareEOLBulletinsResponse.data[0];
 
 		spyOn(productAlertsService, 'getSoftwareEoxBulletin')
 			.and
-			.returnValue(of({ data: mockEOLBulletinData }));
+			.returnValue(of({ data: _.castArray(mockEOLBulletinData) }));
 		spyOn(productAlertsService, 'getSoftwareEox')
 			.and
-			.returnValue(of({ data: mockEOLData }));
+			.returnValue(of({ data: _.castArray(mockEOLData) }));
 		spyOn(controlPointService, 'getLicenseUsingGET')
 			.and
 			.returnValue(of({ }));
@@ -291,14 +198,14 @@ describe('AssetDetailsSoftwareComponent', () => {
 	});
 
 	it('should handle changing assets', () => {
-		const assets = getActiveBody(AssetScenarios[0]).data;
+		const assets = MockSystemAssetsData;
 
 		const asset = assets[0];
 		const newAsset = assets[1];
 
-		component.asset = asset;
+		component.systemAsset = asset;
 		component.ngOnChanges({
-			asset: {
+			systemAsset: {
 				currentValue: asset,
 				firstChange: true,
 				isFirstChange: () => true,
@@ -309,12 +216,12 @@ describe('AssetDetailsSoftwareComponent', () => {
 		component.ngOnInit();
 		fixture.detectChanges();
 
-		expect(component.asset)
+		expect(component.systemAsset)
 			.toEqual(asset);
 
-		component.asset = newAsset;
+		component.systemAsset = newAsset;
 		component.ngOnChanges({
-			asset: {
+			systemAsset: {
 				currentValue: newAsset,
 				firstChange: false,
 				isFirstChange: () => false,
@@ -323,7 +230,7 @@ describe('AssetDetailsSoftwareComponent', () => {
 		});
 
 		fixture.detectChanges();
-		expect(component.asset)
+		expect(component.systemAsset)
 			.toEqual(newAsset);
 	});
 });

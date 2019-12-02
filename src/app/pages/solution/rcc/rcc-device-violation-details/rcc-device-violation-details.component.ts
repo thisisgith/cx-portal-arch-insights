@@ -103,17 +103,17 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 		if (policyViolationInfo) {
 			this.queryParamMapObj = {
 				customerId: this.customerId,
-				policyCategory: this.policyViolationInfo.policycategory,
-				policyGroup: this.policyViolationInfo.policygroupid,
-				policyName: this.policyViolationInfo.policyid,
-				ruleName: this.policyViolationInfo.ruleid,
-				severity: this.policyViolationInfo.ruleseverity,
+				policyCategory: this.policyViolationInfo.policyCategory,
+				policyGroup: this.policyViolationInfo.policyGroupId,
+				policyName: this.policyViolationInfo.policyId,
+				ruleName: this.policyViolationInfo.ruleId,
+				severity: this.policyViolationInfo.ruleSeverity,
 			};
 			this.selectionObj = {
 				productFamily : '',
 				productModel : '',
 			};
-			this.impactedAssetsCount = this.policyViolationInfo.impassetscount;
+			this.impactedAssetsCount = this.policyViolationInfo.impAssetsCount;
 			this.loadData();
 			this.errorResult = false;
 			_.invoke(this.alert, 'hide');
@@ -132,7 +132,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 			this.rccTrackService
 				.getRccViolationDetailsData(
 				{
-					violationCount: this.policyViolationInfo.violationcount,
+					violationCount: this.policyViolationInfo.violationCount,
 					...this.queryParamMapObj,
 				}),
 		)
@@ -145,10 +145,18 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 					this.rccUtilService.getSelectableData(
 						policyRuleDetails.data.deviceFilterDetails);
 					this.policyRuleData = policyRuleDetails.data;
-					const policyDesc = _.get(policyRuleDetails, ['data', 'policy', 'desc'], '')
+					const policyDesc = _.get(policyRuleDetails,
+						['data', 'policy', 'desc'], '')
 						.replace(/\&gt;/g, '>')
-						.replace(/\&lt;/g, '<');
+						.replace(/\&lt;/g, '<')
+						.replace(/\n/g, '<br>');
 					_.set(this.policyRuleData, ['policy', 'desc'], policyDesc);
+					const ruleDesc = _.get(policyRuleDetails,
+						['data', 'rule', 'desc'], '')
+						.replace(/\&gt;/g, '>')
+						.replace(/\&lt;/g, '<')
+						.replace(/\n/g, '<br>');
+					_.set(this.policyRuleData, ['rule', 'desc'], ruleDesc);
 				}
 				if (violationDetails.data && _.size(violationDetails.data) > 0) {
 					this.impactedDeviceDetails = violationDetails.data.impactedAssets;
@@ -220,7 +228,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 				},
 				{
 					key: 'violationCount',
-					name: I18n.get('_RccAssetViolations_'),
+					name: I18n.get('_RccRuleViolations_'),
 					sortable: false,
 				},
 			],
@@ -261,8 +269,8 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 					template: this.violationAgeTemplate,
 				},
 				{
-					key: 'suggestedfix',
-					name: I18n.get('_RccAssetSuggestedFix_'),
+					key: 'suggestedFix',
+					name: I18n.get('_RccRecommendation_'),
 					sortable: false,
 					template: this.suggestedFixTemplate,
 				},
@@ -281,7 +289,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 		this.impactedDeviceDetails = [];
 		this.tableConfig.totalItems = 0;
 		const newQueryParamMapObj = { violationCount:
-			this.policyViolationInfo.violationcount, ...this.queryParamMapObj };
+			this.policyViolationInfo.violationCount, ...this.queryParamMapObj };
 		_.each(this.selectionObj,
 			(value, key) => {
 				if (value !== null && value !== '') { newQueryParamMapObj[key] = value; }

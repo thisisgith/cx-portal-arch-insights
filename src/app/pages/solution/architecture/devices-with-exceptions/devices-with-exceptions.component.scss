@@ -1,4 +1,4 @@
-@import '../../../../../mixins.scss';
+@import '~src/mixins.scss';
 
 .form-group__text .devices-with-exceptions-search {
 	@include filter-search;

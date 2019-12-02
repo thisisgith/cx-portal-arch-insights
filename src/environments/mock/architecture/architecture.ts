@@ -14,6 +14,12 @@ const getCBPRulesCount = {
 	TotalCounts: 205,
 };
 
+/**
+ * collectionId for mock response
+ */
+
+const collectionId = '9ecf600a-d38b-4aed-9a34-ace3ca733e31';
+
 /** This is a mock data for getAssetsExceptionsCount  */
 const getAssetsExceptionsCount = {
 	TotalCounts: 7,
@@ -263,7 +269,7 @@ export const ArchitectureScenarios = [
 				},
 			],
 		},
-		url: `${api}/assets/exceptions/count?customerId=${customerId}`,
+		url: `${api}/assets/exceptions/count?customerId=${customerId}&collectionId=${collectionId}`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -280,7 +286,7 @@ export const ArchitectureScenarios = [
 				},
 			],
 		},
-		url: `${api}/cbprules/count?customerId=${customerId}`,
+		url: `${api}/cbprules/count?customerId=${customerId}&collectionId=${collectionId}`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -297,7 +303,8 @@ export const ArchitectureScenarios = [
 				},
 			],
 		},
-		url: `${api}/cbprules?page=0&pageSize=10&severity=&customerId=${customerId}&searchText=`,
+		url: `${api}/cbprules?page=0&pageSize=10&severity=` +
+		`&customerId=${customerId}&collectionId=${collectionId}&searchText=`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -314,7 +321,8 @@ export const ArchitectureScenarios = [
 				},
 			],
 		},
-		url: `${api}/assets/exceptions?page=0&pageSize=10&customerId=${customerId}&searchText=`,
+		url: `${api}/assets/exceptions?page=0&pageSize=10` +
+		`&customerId=${customerId}&collectionId=${collectionId}&searchText=`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -331,7 +339,8 @@ export const ArchitectureScenarios = [
 				},
 			],
 		},
-		url: `${api}/assets/exceptions/devicedetails?page=0&pageSize=10&customerId=${customerId}`,
+		url: `${api}/assets/exceptions/devicedetails?page=0&pageSize=10` +
+		`&customerId=${customerId}&collectionId=${collectionId}`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -348,7 +357,8 @@ export const ArchitectureScenarios = [
 				},
 			],
 		},
-		url: `${api}/cbprules/exceptiondetails?page=0&pageSize=10&customerId=${customerId}`,
+		url: `${api}/cbprules/exceptiondetails?page=0&pageSize=10` +
+		`&customerId=${customerId}&collectionId=${collectionId}`,
 		usecases: ['Use Case 1'],
 	},
 ];

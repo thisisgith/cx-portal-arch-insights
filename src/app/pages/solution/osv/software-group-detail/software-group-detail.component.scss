@@ -1,12 +1,16 @@
 @import '~cisco-ui/src/scss/utilities/_variables.scss';
 @import 'src/mixins.scss';
 
+.responsive-table {
+	overflow: unset;
+}
+
 ::ng-deep {
 	#assetDetailTabs &.tabs {
 		box-shadow: 0 -2px 0 $light-gray-3 inset !important;
 
 		> li {
-			margin: 0 50px 0 0 !important;
+			margin: 0 30px 0 0 !important;
 			height: unset;
 		}
 	}
@@ -24,4 +28,15 @@
 
 .color-transparent {
 	color: transparent;
+}
+
+.summary {
+	max-height: 200px;
+	overflow: auto;
+}
+
+tr.expert-recommendation-summary {
+	&::after {
+		border-bottom: transparent;
+	}
 }

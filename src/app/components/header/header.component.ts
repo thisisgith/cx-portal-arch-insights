@@ -51,9 +51,17 @@ export class HeaderComponent implements AfterViewChecked, OnInit, OnDestroy {
 	// }];
 	// TODO: Portal Support is feedback
 	public portalHelpLinks = [{
-		name: I18n.get('_GettingStarted_'),
+		name: I18n.get('_portalQuickTour_'),
+		url: 'https://video.cisco.com/detail/video/5778425545001/unboxing-dna-center-appliance-for-assurance-and-sd-access-%E2%80%93-quick-start-video?autoStart=true&q=DNAC',
+	},
+	{
+		name: I18n.get('_cxCollectorOverview_'),
 		url: 'https://www.cisco.com/c/dam/en/us/support/docs/cloud-systems-management/Cisco-CX-Collector/Collector_Overview.pdf',
 	}];
+	public releaseNotes = {
+		name: I18n.get('_ReleaseNotes_'),
+		url: 'https://www.cisco.com/c/dam/en/us/support/docs/cloud-systems-management/Cisco-CX-Collector/CX_Portal_Release_Notes.pdf',
+	};
 	public vendorLinks = [{
 		name: I18n.get('_TermsConditions_'),
 		url: 'https://www.cisco.com/c/en/us/about/legal/cloud-and-software/cloud-terms.html',
@@ -69,10 +77,6 @@ export class HeaderComponent implements AfterViewChecked, OnInit, OnDestroy {
 	{
 		name: I18n.get('_Trademarks_'),
 		url: 'https://www.cisco.com/c/en/us/about/legal/trademarks.html',
-	},
-	{
-		name: I18n.get('_ReleaseNotes_'),
-		url: 'https://www.cisco.com/c/dam/en/us/support/docs/cloud-systems-management/Cisco-CX-Collector/CX_Portal_Release_Notes.pdf',
 	}];
 	public profileLinks = [{
 		href: environment.manageProfileUrl,
@@ -100,11 +104,14 @@ export class HeaderComponent implements AfterViewChecked, OnInit, OnDestroy {
 			takeUntil(this.destroyed$),
 		)
 		.subscribe((user: User) => {
-			this.name = _.get(user, ['info', 'individual', 'name'], '');
-			const lastName = _.get(user, ['info', 'individual', 'familyName'], '');
+			// Note: The following values must use the || pipe, and not
+			// the fallback in _.get, because empty values are null
+			// and _.get treats null as a value
+			this.name = _.get(user, ['info', 'individual', 'name']) || '';
+			const lastName = _.get(user, ['info', 'individual', 'familyName']) || '';
 			this.fullName = `${this.name} ${lastName}`;
-			this.email = _.get(user, ['info', 'individual', 'emailAddress'], '');
-			this.cxLevel = _.get(user, ['service', 'cxLevel'], 0);
+			this.email = _.get(user, ['info', 'individual', 'emailAddress']) || '';
+			this.cxLevel = _.get(user, ['service', 'cxLevel']) || 0;
 			this.team = _.cloneDeep(_.get(user, ['info', 'account', 'team'], []));
 			this.team.forEach(member => {
 				_.set(
@@ -114,7 +121,7 @@ export class HeaderComponent implements AfterViewChecked, OnInit, OnDestroy {
 				);
 			});
 			if (!this.userImage || this.initials === '??') {
-				this.initials = `${_.head(this.name)}${_.head(lastName)}`;
+				this.initials = `${_.head(this.name) || ''}${_.head(lastName) || ''}`;
 				this.updateProfileImage();
 			}
 		});
@@ -155,10 +162,10 @@ export class HeaderComponent implements AfterViewChecked, OnInit, OnDestroy {
 	}
 
 	/**
-	 * open support modal.
+	 * Open contact support modal small
 	 */
 	public openPortalSupport () {
-		this.cuiModalService.showComponent(ContactSupportComponent, { });
+		this.cuiModalService.showComponent(ContactSupportComponent, { }, 'small');
 	}
 
 	/**

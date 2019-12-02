@@ -31,7 +31,7 @@ const violationDetails: any = {
 				age: 0,
 				message: 'AAA authentication login method configured to ask Username/Password.',
 				severity: 'P3',
-				suggestedfix: '',
+				suggestedFix: '',
 			},
 		  ],
 		},
@@ -92,21 +92,34 @@ const policyRuleDetails: any = {
 	status: 200,
 };
 
+/** The mock response for RCC optIn status data */
+const optInStatusData: any = {
+	data: {
+		data: {
+			currentRunStatus: '',
+			rccOptInStatus: true,
+			runOnce: false,
+		},
+		message: 'SUCCESS',
+		status: 200,
+	},
+};
+
 /** The mock response for violation grid data */
 const violationGridData: any = {
 	data: {
 		customerId: '7293498',
 		impassetscount: 7,
 		summary: [{
-			impassetscount: 7,
-			policycategory: 'AAA Services',
-			policygroupid: 'PCI_IOS_XE_GROUP',
-			policyid: '_AAA_Authentication__Login__IOSXE_',
-			policyname: 'AAA Authentication - Login [ IOS-XE ]',
-			ruleid: '_All_authentication_methods_should_ask_Username_And_Password__IOSXE_',
-			ruleseverity: 'P3',
-			ruletitle: 'All authentication methods should ask Username And Password [ IOS-XE ]',
-			violationcount: 7,
+			impAssetsCount: 7,
+			policyCategory: 'AAA Services',
+			policyGroupId: 'PCI_IOS_XE_GROUP',
+			policyId: '_AAA_Authentication__Login__IOSXE_',
+			policyName: 'AAA Authentication - Login [ IOS-XE ]',
+			ruleId: '_All_authentication_methods_should_ask_Username_And_Password__IOSXE_',
+			ruleSeverity: 'P3',
+			ruleTitle: 'All authentication methods should ask Username And Password [ IOS-XE ]',
+			violationCount: 7,
 		}],
 		violationcount: 77,
 	},
@@ -217,12 +230,12 @@ const rccViolationDetailsData: any = {
 				age: 0,
 				message: 'NTP Servers are not configured',
 				severity: 'P1',
-				suggestedfix: '',
+				suggestedFix: '',
 			}, {
 				age: 0,
 				message: 'NTP Servers are not configured',
 				severity: 'P3',
-				suggestedfix: '',
+				suggestedFix: '',
 			}],
 		}],
 		impactedAssetsCount: 1,
@@ -576,5 +589,22 @@ export const ComplianceScenarios = [
 		},
 		url: `${api}/policy-rule-details`,
 		usecases: ['Use Case 15'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'OptIn Status True',
+					response: {
+						body: optInStatusData,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/optInDetail/${customerId}`,
+		usecases: ['Use Case 16'],
 	},
 ];

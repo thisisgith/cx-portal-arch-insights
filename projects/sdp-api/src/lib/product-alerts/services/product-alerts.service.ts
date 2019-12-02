@@ -1068,6 +1068,8 @@ class ProductAlertsService extends __BaseService {
    *
    * - `vulnerabilityStatus`: The vulnerability status of a Network element. For Example:- Vulnerable, Potentially Vulnerable, and Not Vulnerable.
    *
+   * - `vaId`: Smart Account Identifier. This Id defines the smart account admin unique identifier
+   *
    * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
    *
    * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
@@ -1075,6 +1077,8 @@ class ProductAlertsService extends __BaseService {
    * - `solution`: The solution name, should be from the enum list of values
    *
    * - `serialNumber`: The recognized/validated Serial Number
+   *
+   * - `saId`: Smart Account Identifier. This Id defines the smart account admin unique identifier
    *
    * - `rows`: Number of rows of data per page.
    *
@@ -1090,6 +1094,8 @@ class ProductAlertsService extends __BaseService {
    *
    * - `equipmentType`: The equipment type, ie CHASSIS
    *
+   * - `cxLevel`: A customer support level
+   *
    * @return successful operation
    */
   getFieldNoticeResponse(params: ProductAlertsService.GetFieldNoticeParams): __Observable<__StrictHttpResponse<FieldNoticeResponse>> {
@@ -1099,10 +1105,12 @@ class ProductAlertsService extends __BaseService {
 
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     (params.vulnerabilityStatus || []).forEach(val => {if (val != null) __params = __params.append('vulnerabilityStatus', val.toString())});
+    (params.vaId || []).forEach(val => {if (val != null) __params = __params.append('vaId', val.toString())});
     if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
     (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
     if (params.solution != null) __params = __params.set('solution', params.solution.toString());
     (params.serialNumber || []).forEach(val => {if (val != null) __params = __params.append('serialNumber', val.toString())});
+    if (params.saId != null) __params = __params.set('saId', params.saId.toString());
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
     if (params.page != null) __params = __params.set('page', params.page.toString());
     (params.neInstanceId || []).forEach(val => {if (val != null) __params = __params.append('neInstanceId', val.toString())});
@@ -1110,6 +1118,7 @@ class ProductAlertsService extends __BaseService {
     (params.fields || []).forEach(val => {if (val != null) __params = __params.append('fields', val.toString())});
     (params.fieldNoticeId || []).forEach(val => {if (val != null) __params = __params.append('fieldNoticeId', val.toString())});
     (params.equipmentType || []).forEach(val => {if (val != null) __params = __params.append('equipmentType', val.toString())});
+    if (params.cxLevel != null) __params = __params.set('cxLevel', params.cxLevel.toString());
     let req = new HttpRequest<any>(
       'GET',
       this.rootUrl + `/customerportal/product-alerts/v1/field-notices`,
@@ -1138,6 +1147,8 @@ class ProductAlertsService extends __BaseService {
    *
    * - `vulnerabilityStatus`: The vulnerability status of a Network element. For Example:- Vulnerable, Potentially Vulnerable, and Not Vulnerable.
    *
+   * - `vaId`: Smart Account Identifier. This Id defines the smart account admin unique identifier
+   *
    * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
    *
    * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
@@ -1145,6 +1156,8 @@ class ProductAlertsService extends __BaseService {
    * - `solution`: The solution name, should be from the enum list of values
    *
    * - `serialNumber`: The recognized/validated Serial Number
+   *
+   * - `saId`: Smart Account Identifier. This Id defines the smart account admin unique identifier
    *
    * - `rows`: Number of rows of data per page.
    *
@@ -1160,6 +1173,8 @@ class ProductAlertsService extends __BaseService {
    *
    * - `equipmentType`: The equipment type, ie CHASSIS
    *
+   * - `cxLevel`: A customer support level
+   *
    * @return successful operation
    */
   getFieldNotice(params: ProductAlertsService.GetFieldNoticeParams): __Observable<FieldNoticeResponse> {
@@ -1170,19 +1185,14 @@ class ProductAlertsService extends __BaseService {
 
   /**
    * Fetches meta information about the field notices API.
-   * @param params The `ProductAlertsService.HeadFieldNoticeBulletinsParams` containing the following parameters:
-   *
-   * - `customerId`: Unique identifier of a Cisco customer.
-   *
-   * - `rows`: Number of rows of data per page.
+   * @param customerId Unique identifier of a Cisco customer.
    */
-  headFieldNoticeBulletinsResponse(params: ProductAlertsService.HeadFieldNoticeBulletinsParams): __Observable<__StrictHttpResponse<null>> {
+  headFieldNoticeBulletinsResponse(customerId: string): __Observable<__StrictHttpResponse<null>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
 
-    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
-    if (params.rows != null) __params = __params.set('rows', params.rows.toString());
+    if (customerId != null) __params = __params.set('customerId', customerId.toString());
     let req = new HttpRequest<any>(
       'HEAD',
       this.rootUrl + `/customerportal/product-alerts/v1/field-notice-bulletins`,
@@ -1203,14 +1213,10 @@ class ProductAlertsService extends __BaseService {
 
   /**
    * Fetches meta information about the field notices API.
-   * @param params The `ProductAlertsService.HeadFieldNoticeBulletinsParams` containing the following parameters:
-   *
-   * - `customerId`: Unique identifier of a Cisco customer.
-   *
-   * - `rows`: Number of rows of data per page.
+   * @param customerId Unique identifier of a Cisco customer.
    */
-  headFieldNoticeBulletins(params: ProductAlertsService.HeadFieldNoticeBulletinsParams): __Observable<null> {
-    return this.headFieldNoticeBulletinsResponse(params).pipe(
+  headFieldNoticeBulletins(customerId: string): __Observable<null> {
+    return this.headFieldNoticeBulletinsResponse(customerId).pipe(
       __map(_r => _r.body as null)
     );
   }
@@ -1362,29 +1368,29 @@ class ProductAlertsService extends __BaseService {
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
+   * - `vaId`: Smart Account Identifier. This Id defines the smart account admin unique identifier
+   *
    * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
    *
-   * - `url`: URL of the Security Advisory
+   * - `url`: URL of the Field Notice
+   *
+   * - `title`: Field notice title
    *
    * - `solution`: The solution name, should be from the enum list of values
    *
    * - `search`: Searchable fields - title. Applied only when the length of this parameter is more than 3 characters.
    *
-   * - `publishedOn`: The date on which the Advisory was published
+   * - `saId`: Smart Account Identifier. This Id defines the smart account admin unique identifier
    *
-   * - `neInstanceId`: The unique, generated ID of the network element
-   *
-   * - `managedNeId`: Physical|logical hierarchy of the product (chassis to card, server to client, etc.)
+   * - `publishedOn`: The date on which the Field Notice was published.
    *
    * - `lastUpdatedDateRange`: A date range in the format of <fromDateInMillis>,<toDateInMillis>. fromDateInMillis is inclusive and toDateInMillis is exclusive. <toDateInMillis> format supported to filter advisories having lastUpdatedDateRange till particular date. Use <fromDateInMillis> format to filter advisories having lastUpdatedDateRange from a particular date.
    *
-   * - `lastUpdated`: The date on which the Advisory was last updated. Currently this field in unavailable.
+   * - `lastUpdated`: The date on which the Field Notice was last updated.
    *
-   * - `id`:
+   * - `hwInstanceId`: The unique identifier for hardware entry in a datastore
    *
-   * - `hwInstanceId`: Physical|logical hierarchy of the product (chassis to card, server to client, etc.)
-   *
-   * - `fieldNoticeId`: The Cisco.com bulletin number for Field Notices
+   * - `cxLevel`: A customer support level
    */
   headAdvisoriesFieldNoticesResponse(params: ProductAlertsService.HeadAdvisoriesFieldNoticesParams): __Observable<__StrictHttpResponse<null>> {
     let __params = this.newParams();
@@ -1392,18 +1398,18 @@ class ProductAlertsService extends __BaseService {
     let __body: any = null;
 
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    (params.vaId || []).forEach(val => {if (val != null) __params = __params.append('vaId', val.toString())});
     if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
     if (params.url != null) __params = __params.set('url', params.url.toString());
+    if (params.title != null) __params = __params.set('title', params.title.toString());
     if (params.solution != null) __params = __params.set('solution', params.solution.toString());
     if (params.search != null) __params = __params.set('search', params.search.toString());
+    if (params.saId != null) __params = __params.set('saId', params.saId.toString());
     if (params.publishedOn != null) __params = __params.set('publishedOn', params.publishedOn.toString());
-    (params.neInstanceId || []).forEach(val => {if (val != null) __params = __params.append('neInstanceId', val.toString())});
-    (params.managedNeId || []).forEach(val => {if (val != null) __params = __params.append('managedNeId', val.toString())});
     (params.lastUpdatedDateRange || []).forEach(val => {if (val != null) __params = __params.append('lastUpdatedDateRange', val.toString())});
     if (params.lastUpdated != null) __params = __params.set('lastUpdated', params.lastUpdated.toString());
-    (params.id || []).forEach(val => {if (val != null) __params = __params.append('id', val.toString())});
     (params.hwInstanceId || []).forEach(val => {if (val != null) __params = __params.append('hwInstanceId', val.toString())});
-    (params.fieldNoticeId || []).forEach(val => {if (val != null) __params = __params.append('fieldNoticeId', val.toString())});
+    if (params.cxLevel != null) __params = __params.set('cxLevel', params.cxLevel.toString());
     let req = new HttpRequest<any>(
       'HEAD',
       this.rootUrl + `/customerportal/product-alerts/v1/advisories-field-notices`,
@@ -1428,29 +1434,29 @@ class ProductAlertsService extends __BaseService {
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
+   * - `vaId`: Smart Account Identifier. This Id defines the smart account admin unique identifier
+   *
    * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
    *
-   * - `url`: URL of the Security Advisory
+   * - `url`: URL of the Field Notice
+   *
+   * - `title`: Field notice title
    *
    * - `solution`: The solution name, should be from the enum list of values
    *
    * - `search`: Searchable fields - title. Applied only when the length of this parameter is more than 3 characters.
    *
-   * - `publishedOn`: The date on which the Advisory was published
+   * - `saId`: Smart Account Identifier. This Id defines the smart account admin unique identifier
    *
-   * - `neInstanceId`: The unique, generated ID of the network element
-   *
-   * - `managedNeId`: Physical|logical hierarchy of the product (chassis to card, server to client, etc.)
+   * - `publishedOn`: The date on which the Field Notice was published.
    *
    * - `lastUpdatedDateRange`: A date range in the format of <fromDateInMillis>,<toDateInMillis>. fromDateInMillis is inclusive and toDateInMillis is exclusive. <toDateInMillis> format supported to filter advisories having lastUpdatedDateRange till particular date. Use <fromDateInMillis> format to filter advisories having lastUpdatedDateRange from a particular date.
    *
-   * - `lastUpdated`: The date on which the Advisory was last updated. Currently this field in unavailable.
+   * - `lastUpdated`: The date on which the Field Notice was last updated.
    *
-   * - `id`:
+   * - `hwInstanceId`: The unique identifier for hardware entry in a datastore
    *
-   * - `hwInstanceId`: Physical|logical hierarchy of the product (chassis to card, server to client, etc.)
-   *
-   * - `fieldNoticeId`: The Cisco.com bulletin number for Field Notices
+   * - `cxLevel`: A customer support level
    */
   headAdvisoriesFieldNotices(params: ProductAlertsService.HeadAdvisoriesFieldNoticesParams): __Observable<null> {
     return this.headAdvisoriesFieldNoticesResponse(params).pipe(
@@ -1464,15 +1470,21 @@ class ProductAlertsService extends __BaseService {
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
+   * - `vaId`: Smart Account Identifier. This Id defines the smart account admin unique identifier
+   *
    * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
    *
    * - `url`: URL of the Security Advisory
+   *
+   * - `title`: Field notice title
    *
    * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
    *
    * - `solution`: The solution name, should be from the enum list of values
    *
    * - `search`: Searchable fields - title. Applied only when the length of this parameter is more than 3 characters.
+   *
+   * - `saId`: Smart Account Identifier. This Id defines the smart account admin unique identifier
    *
    * - `rows`: Number of rows of data per page.
    *
@@ -1488,13 +1500,13 @@ class ProductAlertsService extends __BaseService {
    *
    * - `lastUpdated`: The date on which the Advisory was last updated. Currently this field in unavailable.
    *
-   * - `id`:
-   *
    * - `hwInstanceId`: Physical|logical hierarchy of the product (chassis to card, server to client, etc.)
    *
    * - `fields`: Requested fields in the response.
    *
    * - `fieldNoticeId`: The Cisco.com bulletin number for Field Notices
+   *
+   * - `cxLevel`: A customer support level
    *
    * @return successful operation
    */
@@ -1504,11 +1516,14 @@ class ProductAlertsService extends __BaseService {
     let __body: any = null;
 
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    (params.vaId || []).forEach(val => {if (val != null) __params = __params.append('vaId', val.toString())});
     if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
     if (params.url != null) __params = __params.set('url', params.url.toString());
+    if (params.title != null) __params = __params.set('title', params.title.toString());
     (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
     if (params.solution != null) __params = __params.set('solution', params.solution.toString());
     if (params.search != null) __params = __params.set('search', params.search.toString());
+    if (params.saId != null) __params = __params.set('saId', params.saId.toString());
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
     if (params.publishedOn != null) __params = __params.set('publishedOn', params.publishedOn.toString());
     if (params.page != null) __params = __params.set('page', params.page.toString());
@@ -1516,10 +1531,10 @@ class ProductAlertsService extends __BaseService {
     (params.managedNeId || []).forEach(val => {if (val != null) __params = __params.append('managedNeId', val.toString())});
     (params.lastUpdatedDateRange || []).forEach(val => {if (val != null) __params = __params.append('lastUpdatedDateRange', val.toString())});
     if (params.lastUpdated != null) __params = __params.set('lastUpdated', params.lastUpdated.toString());
-    (params.id || []).forEach(val => {if (val != null) __params = __params.append('id', val.toString())});
     (params.hwInstanceId || []).forEach(val => {if (val != null) __params = __params.append('hwInstanceId', val.toString())});
     (params.fields || []).forEach(val => {if (val != null) __params = __params.append('fields', val.toString())});
     (params.fieldNoticeId || []).forEach(val => {if (val != null) __params = __params.append('fieldNoticeId', val.toString())});
+    if (params.cxLevel != null) __params = __params.set('cxLevel', params.cxLevel.toString());
     let req = new HttpRequest<any>(
       'GET',
       this.rootUrl + `/customerportal/product-alerts/v1/advisories-field-notices`,
@@ -1544,15 +1559,21 @@ class ProductAlertsService extends __BaseService {
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
+   * - `vaId`: Smart Account Identifier. This Id defines the smart account admin unique identifier
+   *
    * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
    *
    * - `url`: URL of the Security Advisory
+   *
+   * - `title`: Field notice title
    *
    * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
    *
    * - `solution`: The solution name, should be from the enum list of values
    *
    * - `search`: Searchable fields - title. Applied only when the length of this parameter is more than 3 characters.
+   *
+   * - `saId`: Smart Account Identifier. This Id defines the smart account admin unique identifier
    *
    * - `rows`: Number of rows of data per page.
    *
@@ -1568,13 +1589,13 @@ class ProductAlertsService extends __BaseService {
    *
    * - `lastUpdated`: The date on which the Advisory was last updated. Currently this field in unavailable.
    *
-   * - `id`:
-   *
    * - `hwInstanceId`: Physical|logical hierarchy of the product (chassis to card, server to client, etc.)
    *
    * - `fields`: Requested fields in the response.
    *
    * - `fieldNoticeId`: The Cisco.com bulletin number for Field Notices
+   *
+   * - `cxLevel`: A customer support level
    *
    * @return successful operation
    */
@@ -2789,6 +2810,11 @@ module ProductAlertsService {
     vulnerabilityStatus?: Array<string>;
 
     /**
+     * Smart Account Identifier. This Id defines the smart account admin unique identifier
+     */
+    vaId?: Array<number>;
+
+    /**
      * Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
      */
     useCase?: string;
@@ -2807,6 +2833,11 @@ module ProductAlertsService {
      * The recognized/validated Serial Number
      */
     serialNumber?: Array<string>;
+
+    /**
+     * Smart Account Identifier. This Id defines the smart account admin unique identifier
+     */
+    saId?: number;
 
     /**
      * Number of rows of data per page.
@@ -2842,22 +2873,11 @@ module ProductAlertsService {
      * The equipment type, ie CHASSIS
      */
     equipmentType?: Array<string>;
-  }
-
-  /**
-   * Parameters for headFieldNoticeBulletins
-   */
-  export interface HeadFieldNoticeBulletinsParams {
 
     /**
-     * Unique identifier of a Cisco customer.
+     * A customer support level
      */
-    customerId: string;
-
-    /**
-     * Number of rows of data per page.
-     */
-    rows?: number;
+    cxLevel?: string;
   }
 
   /**
@@ -2938,14 +2958,24 @@ module ProductAlertsService {
     customerId: string;
 
     /**
+     * Smart Account Identifier. This Id defines the smart account admin unique identifier
+     */
+    vaId?: Array<number>;
+
+    /**
      * Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
      */
     useCase?: string;
 
     /**
-     * URL of the Security Advisory
+     * URL of the Field Notice
      */
     url?: string;
+
+    /**
+     * Field notice title
+     */
+    title?: string;
 
     /**
      * The solution name, should be from the enum list of values
@@ -2958,19 +2988,14 @@ module ProductAlertsService {
     search?: string;
 
     /**
-     * The date on which the Advisory was published
+     * Smart Account Identifier. This Id defines the smart account admin unique identifier
+     */
+    saId?: number;
+
+    /**
+     * The date on which the Field Notice was published.
      */
     publishedOn?: string;
-
-    /**
-     * The unique, generated ID of the network element
-     */
-    neInstanceId?: Array<string>;
-
-    /**
-     * Physical|logical hierarchy of the product (chassis to card, server to client, etc.)
-     */
-    managedNeId?: Array<string>;
 
     /**
      * A date range in the format of <fromDateInMillis>,<toDateInMillis>. fromDateInMillis is inclusive and toDateInMillis is exclusive. <toDateInMillis> format supported to filter advisories having lastUpdatedDateRange till particular date. Use <fromDateInMillis> format to filter advisories having lastUpdatedDateRange from a particular date.
@@ -2978,20 +3003,19 @@ module ProductAlertsService {
     lastUpdatedDateRange?: Array<string>;
 
     /**
-     * The date on which the Advisory was last updated. Currently this field in unavailable.
+     * The date on which the Field Notice was last updated.
      */
     lastUpdated?: string;
-    id?: Array<string>;
 
     /**
-     * Physical|logical hierarchy of the product (chassis to card, server to client, etc.)
+     * The unique identifier for hardware entry in a datastore
      */
     hwInstanceId?: Array<string>;
 
     /**
-     * The Cisco.com bulletin number for Field Notices
+     * A customer support level
      */
-    fieldNoticeId?: Array<number>;
+    cxLevel?: string;
   }
 
   /**
@@ -3005,6 +3029,11 @@ module ProductAlertsService {
     customerId: string;
 
     /**
+     * Smart Account Identifier. This Id defines the smart account admin unique identifier
+     */
+    vaId?: Array<number>;
+
+    /**
      * Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
      */
     useCase?: string;
@@ -3013,6 +3042,11 @@ module ProductAlertsService {
      * URL of the Security Advisory
      */
     url?: string;
+
+    /**
+     * Field notice title
+     */
+    title?: string;
 
     /**
      * Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
@@ -3028,6 +3062,11 @@ module ProductAlertsService {
      * Searchable fields - title. Applied only when the length of this parameter is more than 3 characters.
      */
     search?: string;
+
+    /**
+     * Smart Account Identifier. This Id defines the smart account admin unique identifier
+     */
+    saId?: number;
 
     /**
      * Number of rows of data per page.
@@ -3063,7 +3102,6 @@ module ProductAlertsService {
      * The date on which the Advisory was last updated. Currently this field in unavailable.
      */
     lastUpdated?: string;
-    id?: Array<string>;
 
     /**
      * Physical|logical hierarchy of the product (chassis to card, server to client, etc.)
@@ -3079,6 +3117,11 @@ module ProductAlertsService {
      * The Cisco.com bulletin number for Field Notices
      */
     fieldNoticeId?: Array<number>;
+
+    /**
+     * A customer support level
+     */
+    cxLevel?: string;
   }
 
   /**

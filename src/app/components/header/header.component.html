@@ -183,13 +183,34 @@
 	<div class="links">
 		<div class="links__title">{{ '_PortalHelp_' | i18n}}</div>
 		<div *ngFor="let link of portalHelpLinks">
-			<a class="links__support" [href]="link.url" target="_blank" [innerText]="link.name" data-auto-id="portalHelp"></a>
+			<a class="links__support" 
+				[href]="link.url"
+				target="_blank"
+				[innerText]="link.name" 
+				data-auto-id="portalHelp"
+			></a>
 		</div>
-		<button class="link links__btn" (click)="openPortalSupport()" data-auto-id="portalSupport">{{'_PortalSupport_' | i18n}}</button>
+		<button class="link links__btn"
+			(click)="openPortalSupport()"
+			data-auto-id="portalSupport"
+		>{{'_PortalSupport_' | i18n}}
+		</button>
+		<div>
+			<a class="links__support links__support--relnotes" 
+				[href]="releaseNotes.url"
+				target="_blank"
+				[innerText]="releaseNotes.name"
+				data-auto-id="release-notes"
+			></a>
+		</div>
 		<div class="divider links__divider"></div>
 		<div *ngFor="let vendorLink of vendorLinks">
-			<a class="links__vendor" [innerText]="vendorLink.name" [href]="vendorLink.url" target="_blank"
-			data-auto-id="portalHelp"></a>
+			<a class="links__vendor"
+				[innerText]="vendorLink.name"
+				[href]="vendorLink.url"
+				target="_blank"
+				data-auto-id="vendor-links"
+			></a>
 		</div>
 	</div>
 </ng-template>

@@ -153,6 +153,15 @@ describe('FpSimilarassetsComponent', () => {
 			});
 	});
 
+	it('should check reError emit', () => {
+		spyOn(component.reqError, 'emit');
+		const errorMsg = 'error';
+		component.showError(errorMsg);
+		fixture.detectChanges();
+		expect(component.reqError.emit)
+		.toHaveBeenCalled();
+	});
+
 	it('Should return the response', done => {
 		spyOn(fpIntelligenceService, 'getSimilarDevices')
 			.and

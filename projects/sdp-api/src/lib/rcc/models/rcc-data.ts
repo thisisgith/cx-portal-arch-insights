@@ -77,3 +77,7 @@ export interface RccPolicyViolationData {
 export interface RccCustomer {
     customerId: string 
 }
+
+export interface RccCustomerCollector {
+    customerId: string
+}

@@ -58,14 +58,14 @@ describe('RccDeviceViolationDetailsComponent', () => {
 		component.policyViolationInfo = {
 			active: true,
 			impassets: 7,
-			policycategory: 'Audit and Management',
-			policygroupid: 'PCI_IOS_XE_GROUP',
-			policyid: '_Terminal_Access__IOSXE_',
-			policyname: 'Terminal Access [ IOS-XE ]',
-			ruleid: '_Check_Login_Authentication_on_terminal_lines__IOSXE_',
-			ruleseverity: 'P3',
-			ruletitle: 'Check Login Authentication on terminal lines [ IOS-XE ]',
-			violationcount: 7,
+			policyCategory: 'Audit and Management',
+			policyGroupId: 'PCI_IOS_XE_GROUP',
+			policyId: '_Terminal_Access__IOSXE_',
+			policyName: 'Terminal Access [ IOS-XE ]',
+			ruleId: '_Check_Login_Authentication_on_terminal_lines__IOSXE_',
+			ruleSeverity: 'P3',
+			ruleTitle: 'Check Login Authentication on terminal lines [ IOS-XE ]',
+			violationCount: 7,
 		};
 
 		component.queryParamMapObj = {
@@ -158,10 +158,10 @@ describe('RccDeviceViolationDetailsComponent', () => {
 		const changes = {
 			policyViolationInfo: {
 				currentValue: {
-					policycategory: '',
-					policygroupid: '',
-					policyname: '',
-					ruletitle: '',
+					policyCategory: '',
+					policyGroupId: '',
+					policyName: '',
+					ruleTitle: '',
 				},
 				firstChange: true,
 				isFirstChange: () => false,
@@ -189,10 +189,10 @@ describe('RccDeviceViolationDetailsComponent', () => {
 		const changes = {
 			policyViolationInfo: {
 				currentValue: {
-					policycategory: '',
-					policygroupid: '',
-					policyname: '',
-					ruletitle: '',
+					policyCategory: '',
+					policyGroupId: '',
+					policyName: '',
+					ruleTitle: '',
 				},
 				firstChange: true,
 				isFirstChange: () => false,

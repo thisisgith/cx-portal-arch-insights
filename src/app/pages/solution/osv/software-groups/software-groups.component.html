@@ -10,21 +10,20 @@
 			</span>
 		</div>
 	</div>
-	<div class="col-md-6 text-right">
-		<div *ngIf="cxLevel === 3">
-			<div [innerText]="'_CSNeedSoftwareRecommendation_' | i18n"></div>
-			<a 
-				(click)="contactSupport.emit()" 
-				class="recommedation-link text-primary" 
-				data-auto-id="ContactExpert"
-				[innerText]="'_CSRequestExpert_' | i18n">
-			</a>
+	<div class="col-md-6">
+			<div class="flex flex-fluid flex-right">
+				<cui-search 
+					placeholder="{{ '_Search_' | i18n }}" 
+					[debounce]="searchOptions.debounce" 
+					[compressed]="true"
+					(onUpdate)="onSearchQuery($event)">
+				</cui-search>	
 		</div>
 	</div>
 </div>
 <div class="divider qtr-margin-top"></div>
 <cui-alert [options]="alert"></cui-alert>
-<div *ngIf="softwareGroupsCount == 0" class="dbl-margin-top text-center text-xlarge dbl-margin-bottom">
+<div *ngIf="softwareGroupsCount == 0 || softwareGroups?.length === 0" class="dbl-margin-top text-center text-xlarge dbl-margin-bottom">
 	<span [innerText]="'_InsightsNoResultsFound_' | i18n"></span>
 </div>
 <ng-container *ngTemplateOutlet="tableSoftwareGroups"></ng-container>
@@ -41,7 +40,7 @@
 </div>
 
 <ng-template #tableSoftwareGroups>
-	<div class="responsive-table not-close-360" *ngIf="!status.isLoading && softwareGroupsTable && softwareGroups?.length">
+	<div class="responsive-table not-close-360 software-groups-table" *ngIf="!status.isLoading && softwareGroupsTable && softwareGroups?.length">
 		<table class="table table--selectable table--compressed table--wrap table--lined table--hover table--nostripes">
 			<thead>
 				<tr>
@@ -88,23 +87,9 @@
 	</div>
 </ng-template>
 
-<ng-template #recommendationsTemplate let-item="celldata">
-	<div *ngIf="item.recommendationCount && item.recommendationCount > 0 ;else noRecommendationsTemp">
-		<span class="badge-wrapper">
-			<span class="icon-lightbulb icon-small"></span>
-			<span class="badge badge--blue text-white" [innerText]="item.recommendationCount"></span>
-		</span>
-		<span class="base-margin-left" [innerText]="'_OsvAvailable_' | i18n"></span>
-	</div>
+<ng-template #recommendationsTemplate let-item="celldata">	
+	<span class="qtr-margin-left" [innerText]="item.recommendation | titlecase"></span>
 </ng-template>
-<ng-template #noRecommendationsTemp>
-	<span class="badge-wrapper">
-		<span class="icon-lightbulb icon-small color-transparent"></span>
-		<span class="badge badge--blue text-white color-transparent"></span>
-	</span>
-	<span class="base-margin-left" [innerText]="'_OsvNone_' | i18n"></span>
-</ng-template>
-
 
 <ng-template #actionsTemplate let-item="celldata" let-actions="actions">
 	<cui-dropdown 

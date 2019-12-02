@@ -3,7 +3,7 @@
 	<div class="col-md-12">
 		<div class="row">
 			<div class="col-md-2 filter__selected">
-				<div class="row">
+				<div class="row" [ngClass]="{ 'disabled': showRunningBanner || !optInStatus}">
 					<div class="col-md-12 panel flex-center flex-fill filter assets-count"
 						data-auto-id="selectedView" (click)="selectedView('violation')" [ngClass]="{'text-primary': !isAssetView}">
 						<div class="flex-center dbl-padding-left dbl-padding-right font-size-32" [innerText]="policyViolationsTotalCount | number"></div>
@@ -17,7 +17,7 @@
 				</div>
 			</div>
 			<div class="col-md-10 no-padding">
-				<div class="col-md-7 seperator-line half-margin-left flex-center" *ngIf="!errorPolicyView && !noTableData">
+				<div class="col-md-7 seperator-line half-margin-left flex-center" *ngIf="violationFilterShow || systemFilterShow">
 					<div class="flex flex-fluid" *ngIf="!filterLoading">
 						<ng-container *ngFor="let filter of filters">
 							<div attr.id="RccSelectVisualFilter-{{ filter?.key }}"
@@ -66,7 +66,7 @@
 			<span class="qtr-margin-left" [innerText]="(assetsConditionViolationsCount | number)  || ('_RccNoValue_' | i18n)"></span>
 			<span class="qtr-margin-left" [innerText]="'_RccConditionViolations_' | i18n"></span>
 		</div>
-		<div class="col-md-3" *ngIf="!errorPolicyView">
+		<div class="col-md-3" *ngIf="!errorPolicyView && !showNoAccessMsg && !showRunningBanner && optInStatus">
 			<div class="flex flex-fluid flex-right">
 				<div class="flex-fill form-group input--compressed input--icon half-margin-right">
 					<form [formGroup]="searchForm" novalidate id="searchForm" (keyup)="searchViolations($event,'input')" data-auto-id="searchViolations">
@@ -83,9 +83,53 @@
 						</div>
 						<div class="help-block text-danger flex" 
 							role="alert" *ngIf="invalidSearchInput || searchForm.invalid">
-							<span [innerText]="'_RccInvalidSearchInput_' | i18n" ></span>
+							<span [innerText]="'_RccInvalidSearchInput_' | i18n"></span>
 						</div>
 					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="panel panel--dkgray half-margin-top" *ngIf="showNoAccessMsg">
+		<div class="row cx-no-dnac-container">
+			<div class="half-padding-left">
+				<div class="flex-center">
+					<span class="cx-no-dnac-label" [innerText]="'_RccNoAccess_' | i18n"></span>
+					<span class="cx-no-dnac-status" [innerText]="'_RccNoAccessBannerMsg_' | i18n"></span>
+				</div>
+			</div>
+		</div>
+	</div>
+	<ng-container *auth="{ cxLevel: 2 }">
+		<div class="panel panel--dkgray half-margin-top" *ngIf="!loading && !optInStatus && !errorPolicyView">
+			<div class="row cx-no-dnac-container" *auth="authParamsRCCUser">
+				<div class="half-padding-left">
+					<div class="flex-center">
+						<span class="cx-no-dnac-label" [innerText]="'_RccViewViolations_' | i18n"></span>
+						<span class="cx-no-dnac-status" [innerText]="'_RccNotAnAdminBannerMsg_' | i18n"></span>
+					</div>
+				</div>
+			</div>
+			<div class="row cx-no-dnac-container" *auth="authParamsRCCAdmin">
+				<div class="half-padding-left">
+					<div class="flex-center">
+						<span class="cx-no-dnac-label" [innerText]="'_RccViewViolations_' | i18n"></span>
+						<span class="cx-no-dnac-status" [innerText]="'_RccupdateSettings_' | i18n"></span>
+					</div>
+				</div>
+				<div class="flex-right base-margin-right">
+					<button class="btn btn--wide btn--primary flex-right text-uppercase text-bold" tabindex="0" [routerLink]="['/admin/compliance']" [innerText]="'_RccComplianceSettings_' | i18n"></button>
+				</div>
+			</div>
+		</div>
+	</ng-container>
+	<div class="panel panel--dkgray half-margin-top" *ngIf="showRunningBanner">
+		<div class="row cx-no-dnac-container">
+			<div>
+				<div class="flex-center">
+					<span class="cx-no-dnac-label half-margin-right" [innerText]="'_RccCollectingViolations_' | i18n"></span>
+					<span class="cx-no-dnac-status" [innerText]="'_RccNextScheduleTime_' | i18n"></span>
+					<span class="qtr-margin-left" [innerText]="nextScheduleTime"></span>
 				</div>
 			</div>
 		</div>
@@ -105,12 +149,12 @@
 			*ngIf="!loading && policyViolationsGridData?.length > 0">
 		</cui-table>
 		<div class="text-center dbl-margin-top dbl-margin-bottom">
-			<div *ngIf="errorPolicyView">
+			<div *ngIf="errorPolicyView || (!optInStatus && !loading) || showRunningBanner">
 				<div class="text-muted text-xlarge " [innerText]="'_RccErrorViolationMessage_' | i18n" ></div>
 				<div class="text-muted text-small " [innerText]="'_RccErrorViolationListMessage_' | i18n" ></div>
 			</div>
 			<span *ngIf="!loading && noTableData" class="text-muted text-xlarge" [innerText]="'_RccNoDataAvailable_' | i18n"></span>
-		</div>	
+		</div>
 		<div class="section">
 			<cui-pager *ngIf="!loading && policyViolationsGridData?.length > 0"
 				[page]="tableConfig?.tableOffset"
@@ -135,7 +179,7 @@
 			*ngIf="!loading && tableAssetDataSample?.length > 0">
 		</cui-table>
 		<div class="text-center dbl-margin-top dbl-margin-bottom">
-			<div *ngIf="errorPolicyView">
+			<div *ngIf="errorPolicyView || (!optInStatus && !loading) || showRunningBanner">
 				<div class="text-muted text-xlarge " [innerText]="'_RccErrorAssetMessage_' | i18n" ></div>
 				<div class="text-muted text-small " [innerText]="'_RccErrorAssetListMessage_' | i18n" ></div>
 			</div>				
@@ -191,7 +235,7 @@
 			[fullscreenToggle]="true">
 			<div detailsPanelTitle>
 				<span class="text-xlarge" 
-					[innerText]="'_RccRuleViolatedArg_' | i18n:policyViolationInfo?.ruletitle || ('_NA_' | i18n)">
+					[innerText]="'_RccRuleViolatedArg_' | i18n:policyViolationInfo?.ruleTitle || ('_NA_' | i18n)">
 				</span>
 			</div>
 			<div class="row ">
@@ -200,18 +244,18 @@
 						<div data-auto-id="RccRegulatoryType" class="dbl-margin-right">
 							<div class="text-small text-bold" [innerText]="'_RccRegulatoryType_' | i18n">
 							</div>
-							<div [innerText]="policyViolationInfo?.policygroupid || ('_NA_' | i18n)"></div>
+							<div [innerText]="policyViolationInfo?.policyGroupName || ('_NA_' | i18n)"></div>
 						</div>
 						<div data-auto-id="RccCategory" class="dbl-margin-right">
 							<div class="text-small text-bold" [innerText]="'_RccCategory_' | i18n">
 							</div>
-							<div [innerText]="policyViolationInfo?.policycategory || ('_NA_' | i18n) "></div>
+							<div [innerText]="policyViolationInfo?.policyCategory || ('_NA_' | i18n) "></div>
 						</div>
 						<div data-auto-id="highestSeverity" class="dbl-margin-right">
-							<div class="text-small text-bold" [innerText]="'_HighestSeverity_' | i18n">
+							<div class="text-small text-bold" [innerText]="'_RccHighestSeverity_' | i18n">
 							</div>
 							<div>
-								<i *ngIf="policyViolationInfo?.ruleseverity" 
+								<i *ngIf="policyViolationInfo?.ruleSeverity" 
 									class="qtr-margin-right icon-circle" 
 									iconSize="default" 
 									[ngClass]="{
@@ -220,8 +264,8 @@
 										'P3': 'text-warning-alt',
 										'P4': 'text-success',
 										'P5': 'text-muted'
-									}[policyViolationInfo?.ruleseverity]"></i>
-								<span [innerText]="policyViolationInfo?.ruleseverity  || ('_NA_' | i18n) "></span>
+									}[policyViolationInfo?.ruleSeverity]"></i>
+								<span [innerText]="policyViolationInfo?.ruleSeverity  || ('_NA_' | i18n) "></span>
 							</div>
 						</div>
 					</div>
@@ -258,11 +302,11 @@
 							</div>
 							<div [innerText]="selectedAssetData?.serialNumber || ('_NA_' | i18n)"></div>
 						</div>
-						<div data-auto-id="RccSerialNumber" class="dbl-margin-right">
+						<div data-auto-id="RccLastScan" class="dbl-margin-right">
 							<div class="text-small text-uppercase text-bold" [innerText]="'_RccAssetLastScan_' | i18n ">
 							</div>
-							<div [innerText]=" (selectedAssetData?.lastScan| date:'yyyy MMM dd' ) || ('_Never_' | i18n) ">
-							</div>
+							<div *ngIf="lastScan !== null" [innerText]="lastScan | dateTime"></div>
+							<div *ngIf="lastScan === null" [innerText]="'_Never_' | i18n"></div>
 						</div>
 					</div>
 				</div>
@@ -275,7 +319,7 @@
 	<ng-template #severityColor let-item="celldata">
 		<i class="qtr-margin-right icon-circle"
 			iconSize="default"
-			*ngIf="item?.ruleseverity"
+			*ngIf="item?.ruleSeverity"
 			[ngClass]="
 			{
 				'P1': 'text-danger',
@@ -283,12 +327,11 @@
 				'P3': 'text-warning-alt',
 				'P4': 'text-success',
 				'P5': 'text-muted'
-			}[item?.ruleseverity]">
+			}[item?.ruleSeverity]">
 		</i>
-		<span [innerHTML]="item?.ruleseverity"></span>
+		<span [innerHTML]="item?.ruleSeverity"></span>
 	</ng-template>
-
-	<ng-template #tableIcon let-item="celldata">
+	<ng-template #severityTemplate let-item="celldata">
 		<i class="qtr-margin-right icon-circle"
 			iconSize="default"
 			*ngIf="item?.severity"
@@ -300,12 +343,35 @@
 				'P5': 'text-muted'
 			}[item?.severity]">
 		</i>
-		<span [innerHTML]="item?.violationCount"></span>
+		<span [innerHTML]="item?.severity"></span>
 	</ng-template>
 
 	<ng-template #ruletitleTemplate let-item="celldata">
-		<div [innerHTML]="item?.ruletitle"></div>
+		<div [innerHTML]="item?.ruleTitle"></div>
 	</ng-template>
+	<ng-template #policyCategoryTooltipTemplate>
+		<span [innerText]="'_RccCategory_' | i18n"></span>
+		<span tooltip 
+			[tooltipTemplate]="policyCategoryTooltipContentTemplate" 
+			class="icon-info-outline qtr-margin-left" 
+			[tooltipMaxWidth]="200">
+		</span>
+	</ng-template>
+	<ng-template #policyCategoryTooltipContentTemplate>
+		<span [innerText]="'_RccPolicyCategoryTooltip_' | i18n" class="text-small"></span>
+	</ng-template>
+	<ng-template #ruleViolationsTooltipTemplate>
+		<span [innerText]="'_RccRuleViolations_' | i18n"></span>
+		<span tooltip 
+			[tooltipTemplate]="ruleViolationsTooltipContentTemplate" 
+			class="icon-info-outline qtr-margin-left" 
+			[tooltipMaxWidth]="200">
+		</span>
+	</ng-template>
+	<ng-template #ruleViolationsTooltipContentTemplate>
+		<span [innerText]="'_RccRuleViolationsTooltip_' | i18n" class="text-small"></span>
+	</ng-template>
+	
 </div>
 <!-- App Details slide-out -->
 <asset-details *ngIf="openDeviceModal && (assetLinkInfo?.asset || assetLinkInfo?.asset?.serialNumber)"
@@ -316,3 +382,12 @@
 	[minWidth]="'900px'"
 	[fullscreenToggle]="'true'">
 </asset-details>
+
+<ng-template #lastScanTmpl let-item="celldata">
+	<span *ngIf="lastScan !== null" [attr.data-balloon]="item['lastScan'] | dateTime" data-balloon-pos="right">
+		<span [innerText]="item['lastScan'] | fromNow"></span>
+	</span>
+	<span *ngIf="lastScan === null" [attr.data-balloon]="'_Never_' | i18n" data-balloon-pos="right">
+		<span [innerText]="item['lastScan'] | fromNow"></span>
+	</span>
+</ng-template>

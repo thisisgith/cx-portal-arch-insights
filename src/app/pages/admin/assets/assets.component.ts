@@ -112,7 +112,7 @@ export class AdminAssetsComponent implements AfterViewInit, OnDestroy, OnInit {
 				switchMap(() => this.service
 					.getDevicesUsingGET({
 						customerId: this.customerId,
-						pageNumber: String(this.state.page),
+						pageNumber: String(this.state.page || 1),
 						rowsPerPage: '10',
 						solution: _.get(this, 'solution.name'),
 						useCase: _.get(this, 'technology.name'),

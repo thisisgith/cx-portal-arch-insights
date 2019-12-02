@@ -10,10 +10,10 @@ import {
 	user,
 	CriticalBugData,
 	CriticalBugAssetsScenarios,
-	MockNetworkElements,
 	Mock,
 	RacetrackScenarios,
-	MockAssetsData,
+	MockSystemAssetsData,
+	MockHardwareAssetsData,
 } from '@mock';
 import * as _ from 'lodash-es';
 import { DiagnosticsService, InventoryService } from '@sdp-api';
@@ -95,9 +95,9 @@ describe('AdvisoryImpactedAssetsComponent', () => {
 			.and
 			.returnValue(of({ data }));
 
-		spyOn(inventoryService, 'getAssets')
+		spyOn(inventoryService, 'getHardwareAssets')
 			.and
-			.returnValue(of({ data: MockAssetsData }));
+			.returnValue(of({ data: MockHardwareAssetsData }));
 
 		component.ngOnInit();
 		sendRacetrack();
@@ -122,19 +122,19 @@ describe('AdvisoryImpactedAssetsComponent', () => {
 		component.customerId = user.info.customerId;
 		component.assetIds = {
 			impacted: [
-				'NA,FOC1844X089,WS-C3850-24S,NA',
+				'NA,SAL1833YM7D,N9K-C9396PX,NA',
 			],
 		};
 
-		const data = _.filter(MockNetworkElements,
-			{ managedNeId: 'NA,FOC1844X089,WS-C3850-24S,NA' });
-		spyOn(inventoryService, 'getNetworkElements')
+		const data = _.filter(MockSystemAssetsData,
+			{ managedNeId: 'NA,SAL1833YM7D,N9K-C9396PX,NA' });
+		spyOn(inventoryService, 'getSystemAssets')
 			.and
 			.returnValue(of({ data }));
 
-		spyOn(inventoryService, 'getAssets')
+		spyOn(inventoryService, 'getHardwareAssets')
 			.and
-			.returnValue(of({ data: MockAssetsData }));
+			.returnValue(of({ data: MockHardwareAssetsData }));
 
 		component.ngOnInit();
 		sendRacetrack();
@@ -159,7 +159,7 @@ describe('AdvisoryImpactedAssetsComponent', () => {
 		component.customerId = user.info.customerId;
 		component.assetIds = {
 			impacted: [
-				'NA,FOC1844X089,WS-C3850-24S,NA',
+				'NA,SAL1833YM7D,N9K-C9396PX,NA',
 			],
 		};
 
@@ -167,10 +167,10 @@ describe('AdvisoryImpactedAssetsComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(inventoryService, 'getNetworkElements')
+		spyOn(inventoryService, 'getSystemAssets')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(inventoryService, 'getAssets')
+		spyOn(inventoryService, 'getHardwareAssets')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
 
@@ -202,7 +202,7 @@ describe('AdvisoryImpactedAssetsComponent', () => {
 		spyOn(diagnosticsService, 'getCriticalBugsAssets')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(inventoryService, 'getAssets')
+		spyOn(inventoryService, 'getHardwareAssets')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
 

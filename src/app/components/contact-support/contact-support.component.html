@@ -2,21 +2,23 @@
 		class="icon-close"></span></a>
 <ng-container *ngIf="!toggle; else messageSentTemplate" class="dbl-padding-left dbl-padding-right">
 	<div class="modal-header">
-		<h1 class="modal-title" [innerText]="modalHeading"></h1>
+		<h2 class="modal-title" [innerText]="modalHeading"></h2>
 	</div>
 	<div *ngIf="loading" class="dbl-margin-top dbl-margin-bottom">
-			<cui-spinner color="default" ></cui-spinner>
-		</div>
+		<cui-spinner color="default" ></cui-spinner>
+	</div>
 	<div *ngIf="!loading" class="modal-body dbl-padding-left dbl-padding-right dbl-padding-top">
 		<form [formGroup]="supportForm" novalidate>
 			<div class="col-md-12">
 				<div class="form-group">
-					<div class="form-group__text">
-						<label for="support-title" data-auto-id="supportTopic" class="text-bold qtr-padding-bottom"
-							[innerText]="'_SupportTopic_' | i18n"></label>
-						<cui-select formControlName="title" #title id="support-title" [required]="true" [empty]="true"
-							[items]="items" placeholder="Select" [compressed]="false" optionsKey="name"
-							optionsValue="value"></cui-select>
+					<div class="support-dropdown-menu">
+						<div class="form-group__text">
+							<label for="support-title" data-auto-id="supportTopic" class="text-bold qtr-padding-bottom"
+								[innerText]="'_SupportTopic_' | i18n"></label>
+							<cui-select formControlName="title" #title id="support-title" [required]="true" [empty]="true"
+							    [items]="items" [placeholder]="'_SelectForCustomerSupport_' | i18n" [compressed]="false" optionsKey="name"
+								optionsValue="value"></cui-select>
+						</div>
 					</div>
 				</div>
 			</div>

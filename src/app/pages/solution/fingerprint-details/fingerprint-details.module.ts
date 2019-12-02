@@ -4,7 +4,7 @@ import { FingerprintDetailsComponent } from './fingerprint-details.component';
 import { FingerprintHeaderModule } from './fingerprint-header/fingerprint-header.module';
 import { FingerprintBodyModule } from './fingerprint-body/fingerprint-body.module';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
-import { DetailsPanelModule } from '@components';
+import { DetailsPanelModule, AssetDetailsModule } from '@components';
 
 /**
  * fingerprint-details Module
@@ -18,6 +18,7 @@ import { DetailsPanelModule } from '@components';
 		FingerprintBodyModule,
 		I18nPipeModule,
 		DetailsPanelModule,
+		AssetDetailsModule,
 	],
 })
 export class FingerprintDetailsModule { }

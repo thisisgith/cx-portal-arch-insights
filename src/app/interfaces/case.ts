@@ -41,6 +41,10 @@ export interface Case {
 	trackingNumber?: string;
 	/** Device Name */
 	deviceName?: string;
+	/** Contact Email */
+	contactEmail?: string;
+	/** Owner Email */
+	ownerEmail?: string;
 }
 
 /**

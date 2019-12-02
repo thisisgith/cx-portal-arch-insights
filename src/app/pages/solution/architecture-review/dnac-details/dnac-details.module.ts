@@ -8,7 +8,7 @@ import {
 	CuiLoaderModule,
 	CuiSpinnerModule,
 } from '@cisco-ngx/cui-components';
-import { BulletChartModule } from '@components';
+import { BulletChartModule, TimeSeriesChartModule } from '@components';
 
 /** Module representing the Devices Tabs and Details Module */
 @NgModule({
@@ -22,6 +22,7 @@ import { BulletChartModule } from '@components';
 		I18nPipeModule,
 		CuiSpinnerModule,
 		BulletChartModule,
+		TimeSeriesChartModule,
 	],
 })
 export class DnacDetailsModule { }

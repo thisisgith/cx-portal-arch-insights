@@ -1,10 +1,22 @@
-@import '../../../../../mixins.scss';
+@import '~src/mixins.scss';
+@import '~cisco-ui/src/scss/utilities/_variables.scss';
 
 .transparent-style {
 	opacity: 0;
 }
 
+.failed-criteria {
+	background: $white;
+}
+
+.icon-warning-outline {
+	color: $warning;
+}
 
 .form-group__text .devices-list-search {
 	@include filter-search;
+}
+
+div.half-padding-bottom > .alert.fade-and-slide-top.text-left.alert--warning {
+	background: $white;
 }

@@ -1,4 +1,4 @@
-import { Component, ViewChild, TemplateRef, OnInit, OnDestroy } from '@angular/core';
+import { Component, ViewChild, TemplateRef, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router, ActivationEnd, NavigationEnd } from '@angular/router';
 
 import { CaseParams, CaseDetails, CaseService } from '@cui-x/services';
@@ -95,63 +95,11 @@ const durationOpenFilters = [
 ];
 
 /**
- * Array of default data for the last updated filter
- */
-const defaultLastUpdatedFilterData: FilterData[] =
-_.map(lastUpdatedFilters, fields => ({
-	barLabel: fields.barLabel,
-	filter: _.pick(fields, ['lastUpdateFrom', 'lastUpdateTo']),
-	label: fields.label,
-	selected: false,
-	value: 0,
-}));
-
-/**
- * Array of default data for the duration open filter
- */
-const defaultDurationOpenFilterData: FilterData[] =
-_.map(durationOpenFilters, fields => ({
-	barLabel: fields.barLabel,
-	filter: _.pick(fields, ['dateCreatedFrom', 'dateCreatedTo']),
-	label: fields.label,
-	selected: false,
-	value: 0,
-}));
-
-/**
- * Array of default data for the severity filter
- */
-const defaultRmaFilterData: FilterData[] =
-_.map(['No RMAs', 'With RMAs'], label => ({
-	label,
-	filter: label === 'No RMAs' ? 'F' : 'T',
-	selected: false,
-	value: 0,
-}));
-
-/**
- * All of the default filter values stored in a map.
- * This will be used to initialize each filter when the new data is fetched and accumulated
- */
-const defaultFiltersData = {
-	durationOpen: defaultDurationOpenFilterData,
-	lastUpdated: defaultLastUpdatedFilterData,
-	rma: defaultRmaFilterData,
-	severity: [],
-	status: [],
-	total: [{
-		filter: null,
-		label: null,
-		selected: true,
-		value: 0,
-	}],
-};
-
-/**
  * Resolution Component
  */
 @Component({
 	styleUrls: ['./resolution.component.scss'],
+	encapsulation: ViewEncapsulation.None,
 	templateUrl: './resolution.component.html',
 })
 export class ResolutionComponent implements OnInit, OnDestroy {
@@ -201,6 +149,59 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 	public customerId: string;
 	public serialNumber: string;
 	public showAsset360 = false;
+
+	/**
+	 * Array of default data for the last updated filter
+	 */
+	public defaultLastUpdatedFilterData: FilterData[] =
+	_.map(lastUpdatedFilters, fields => ({
+		barLabel: fields.barLabel,
+		filter: _.pick(fields, ['lastUpdateFrom', 'lastUpdateTo']),
+		label: fields.label,
+		selected: false,
+		value: 0,
+	}));
+
+	/**
+	 * Array of default data for the duration open filter
+	 */
+	public defaultDurationOpenFilterData: FilterData[] =
+	_.map(durationOpenFilters, fields => ({
+		barLabel: fields.barLabel,
+		filter: _.pick(fields, ['dateCreatedFrom', 'dateCreatedTo']),
+		label: fields.label,
+		selected: false,
+		value: 0,
+	}));
+
+	/**
+	 * Array of default data for the severity filter
+	 */
+	public defaultRmaFilterData: FilterData[] =
+	_.map(['No RMAs', 'With RMAs'], label => ({
+		label,
+		filter: label === 'No RMAs' ? 'F' : 'T',
+		selected: false,
+		value: 0,
+	}));
+
+	/**
+	 * All of the default filter values stored in a map.
+	 * This will be used to initialize each filter when the new data is fetched and accumulated
+	 */
+	public defaultFiltersData = {
+		durationOpen: this.defaultDurationOpenFilterData,
+		lastUpdated: this.defaultLastUpdatedFilterData,
+		rma: this.defaultRmaFilterData,
+		severity: [],
+		status: [],
+		total: [{
+			filter: null,
+			label: null,
+			selected: true,
+			value: 0,
+		}],
+	};
 
 	constructor (
 		private logger: LogService,
@@ -325,13 +326,15 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 		}
 
 		if (params.lastUpdated) {
-			const filter = _.find(defaultLastUpdatedFilterData, { label: params.lastUpdated })
+			const filter = _.find(this.defaultLastUpdatedFilterData,
+				{ label: params.lastUpdated })
 				.filter;
 			_.assign(this.caseParams, ...filter);
 		}
 
 		if (params.durationOpen) {
-			const filter = _.find(defaultDurationOpenFilterData, { label: params.durationOpen })
+			const filter = _.find(this.defaultDurationOpenFilterData,
+				{ label: params.durationOpen })
 				.filter;
 			_.assign(this.caseParams, ...filter);
 		}
@@ -362,42 +365,42 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 				key: 'total',
 				loading: true,
 				selected: true,
-				seriesData: defaultFiltersData.total,
+				seriesData: this.defaultFiltersData.total,
 				template: this.totalFilterTemplate,
 				title: I18n.get('_Total_'),
 			},
 			{
 				key: 'status',
 				loading: true,
-				seriesData: defaultFiltersData.status,
+				seriesData: this.defaultFiltersData.status,
 				template: this.pieChartFilterTemplate,
 				title: I18n.get('_Status_'),
 			},
 			{
 				key: 'severity',
 				loading: true,
-				seriesData: defaultFiltersData.severity,
+				seriesData: this.defaultFiltersData.severity,
 				template: this.pieChartFilterTemplate,
 				title: I18n.get('_Severity_'),
 			},
 			{
 				key: 'lastUpdated',
 				loading: true,
-				seriesData: defaultFiltersData.lastUpdated,
+				seriesData: this.defaultFiltersData.lastUpdated,
 				template: this.columnChartFilterTemplate,
 				title: I18n.get('_RMACaseUpdatedDate_'),
 			},
 			{
 				key: 'durationOpen',
 				loading: true,
-				seriesData: defaultFiltersData.durationOpen,
+				seriesData: this.defaultFiltersData.durationOpen,
 				template: this.columnChartFilterTemplate,
 				title: I18n.get('_TotalTimeOpen_'),
 			},
 			{
 				key: 'rma',
 				loading: true,
-				seriesData: defaultFiltersData.rma,
+				seriesData: this.defaultFiltersData.rma,
 				template: this.barChartFilterTemplate,
 				title: I18n.get('_RMAs_'),
 			},
@@ -416,7 +419,7 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 						this.onSubfilterSelect(data.label, filter, false);
 					}
 				} else if (filter.key === 'lastUpdated') {
-					const subFilter = _.find(defaultLastUpdatedFilterData,
+					const subFilter = _.find(this.defaultLastUpdatedFilterData,
 						{ label: data.label })
 						.filter;
 					// Extra DateTime object to protect from undefined values
@@ -428,7 +431,7 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 						this.onSubfilterSelect(data.label, filter, false);
 					}
 				} else if (filter.key === 'durationOpen') {
-					const subFilter = _.find(defaultDurationOpenFilterData,
+					const subFilter = _.find(this.defaultDurationOpenFilterData,
 						{ label: data.label })
 						.filter;
 					// Extra DateTime object to protect from undefined values
@@ -555,7 +558,7 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 			const rmaFilter = _.find(this.filters, { key: 'rma' });
 			_.each(this.filters, filter => {
 				if (filter.key !== 'total') {
-					filter.seriesData = defaultFiltersData[filter.key];
+					filter.seriesData = this.defaultFiltersData[filter.key];
 				}
 			});
 
@@ -629,7 +632,20 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 					// Don't include status or severities in pie charts with no associated cases
 					_.set(filter, 'seriesData', _.filter(filter.seriesData, data => data.value));
 				}
-				_.set(filter, 'seriesData', [...filter.seriesData]);
+				if (filter.key === 'status' && filter.seriesData.length > 4) {
+					const sortDataByDesc = _.reverse(_.sortBy(filter.seriesData, 'value'));
+					const seriesData = _.slice(sortDataByDesc, 0, 3);
+					seriesData.push({
+						filter: _.join(_.map(_.slice(sortDataByDesc, 3), 'filter'), ','),
+						label: I18n.get('_Others_'),
+						selected: false,
+						value: _.reduce(_.map(_.slice(sortDataByDesc, 3), 'value'),
+						 (sum, val) =>  sum + val),
+					});
+					_.set(filter, 'seriesData', [...seriesData]);
+				} else {
+					_.set(filter, 'seriesData', [...filter.seriesData]);
+				}
 				_.set(filter, 'loading', false);
 			});
 			this.isLoading = false;
@@ -939,6 +955,9 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 	 * @param event is a Case
 	 */
 	public onTableRowClicked (event: Case) {
+		if (this.showAsset360) {
+			this.showAsset360 = false;
+		}
 		if (event.caseNumber === _.get(this.selectedCase, 'caseNumber')) {
 			_.set(event, 'active', false);
 			this.selectedCase = null;

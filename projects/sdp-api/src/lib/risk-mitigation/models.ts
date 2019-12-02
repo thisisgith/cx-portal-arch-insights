@@ -11,6 +11,8 @@ export {
 	HighCrashRiskDevices,
 	HighCrashRiskPagination,
 	HighCrashRiskDeviceCount,
+	HighCrashRiskDeviceTooltip,
+	BarGraphValues,
 } from './models/high-crash-risk';
 export { Filter as RmFilter } from './models/filter';
 export { CrashCount } from './models/crash-count';

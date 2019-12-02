@@ -16,9 +16,9 @@ export const environment = {
 	origin,
 	auth: {
 		accountUrl: `${origin}/ws/account/v2/`,
-		ciscoTokenUrl: `${origin}/ws/oauth/v3/token/cisco`,
-		referUrl: `${origin}/ws/oauth/v3/sso/`,
-		tokenUrl: `${origin}/ws/oauth/v3/token/cway/35ae50e6ff5843f59183da19cc44245d`,
+		ciscoTokenUrl: `${origin}/ws/oauth/v4/token/cisco`,
+		referUrl: `${origin}/ws/oauth/v4/sso/`,
+		tokenUrl: `${origin}/ws/oauth/v4/token/cway/35ae50e6ff5843f59183da19cc44245d`,
 	},
 	baseHref: '/portal/',
 	emailToID: 'cx-portal-support-nonprod@cisco.com',
@@ -42,7 +42,7 @@ export const environment = {
 			'b_cisco_dna_center_ug_1_4/b_cisco_dna_center_ug_1_4_chapter_01001.html',
 	},
 	mapboxToken:
-	'pk.eyJ1IjoibWlzY2htaTIiLCJhIjoiY2p4eDl2ODVnMGpmODNkcDhsbG5nNXQ0YyJ9.vpfGffFASSUfANAU4Yvtxg',
+	'pk.eyJ1IjoibWljaGhhcnQiLCJhIjoiY2szaGtvbnc1MGRxODNkcWc4a3dodWxjdSJ9.55emo88LB7ahEdrdkELIcQ',
 	production: true,
 	/**
 	 * sdpServiceOrigin MUST be explicitly declared in every single environment file,
@@ -52,8 +52,9 @@ export const environment = {
 	sdpServiceOrigin: 'https://api-stage.cisco.com',
 	sdpServicePaths: {
 		contracts: '/api/v1/contracts',
-		controlpoints: '/api/customerportal/controlpoint',
 		customerportal: '/api/customerportal',
+		cxportal: '/api/cxportal',
 		inventory: '/api/v1/inventory',
+		partner: '/api/cxportal',
 	},
 };

@@ -1,11 +1,3 @@
-<div class="row base-margin-top">
-	<div class="col-md-12">
-		<div class="container base-margin-top">
-			<div class="text-bold text-uppercase" [innerText]="('_ArchitectureDescription_' | i18n)"></div>
-			<div [innerText]="cbpDetails?.description" ></div>
-		</div>
-	</div>
-</div>
 
 <div class="row base-margin-top">
 	<div class="col-md-12">
@@ -42,7 +34,7 @@
 				</span>
 			</div>
 			<div class="base-margin-top" *ngIf="!isLoading && totalItems > 0">
-				<span [innerText]="'_ArchitectureExceptions_' | i18n" class="text-large"></span>
+				<span [innerText]="'_ArchitectureSystemsDetail_' | i18n" class="text-large"></span>
 				<span class="qtr-margin-left text-small text-muted" 
 			[innerText]="'_ArchitectureShowingXofYTotalItems_' | i18n:(tableStartIndex+1):tableEndIndex:totalItems">
 
