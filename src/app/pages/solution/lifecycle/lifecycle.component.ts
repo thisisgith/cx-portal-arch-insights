@@ -1014,7 +1014,7 @@ export class LifecycleComponent implements OnDestroy {
 			sessionId: ssId,
 		};
 		if (!atx.providerInfo) {
-			this.crossLaunch(session.registrationURL);
+			params.eventNumber = session.eventNumber;
 		}
 		this.closeViewSessions();
 		this.contentService.registerUserToAtx(params)
@@ -1041,7 +1041,8 @@ export class LifecycleComponent implements OnDestroy {
 	 * @param atx the session we've clicked on
 	 */
 	public cancelATXSession (atx: AtxSchema) {
-		const ssId = _.find(atx.sessions, { scheduled: true }).sessionId;
+		const scheduledSession = _.find(atx.sessions, { scheduled: true });
+		const ssId = scheduledSession.sessionId;
 		this.status.loading.atx = true;
 		if (window.Cypress) {
 			window.atxLoading = true;
@@ -1051,6 +1052,10 @@ export class LifecycleComponent implements OnDestroy {
 			atxId: atx.atxId,
 			sessionId: ssId,
 		};
+		if (!atx.providerInfo) {
+			const scheduledEventNumber =  scheduledSession.eventNumber;
+			params.eventNumber = scheduledEventNumber;
+		}
 		this.contentService.cancelSessionATX(params)
 		.subscribe(() => {
 			_.find(atx.sessions, { sessionId: ssId }).scheduled = false;

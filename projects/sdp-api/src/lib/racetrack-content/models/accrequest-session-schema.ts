@@ -3,14 +3,14 @@ import { ACCSessionAttendees } from './accsession-attendees';
 export interface ACCRequestSessionSchema {
 
   /**
+   * Preferred language for meetings/working sessions
+   */
+  preferredLanguage?: string;
+
+  /**
    * Title of the accelerator.
    */
   accTitle?: string;
-
-  /**
-   * list of additional attendees for the requested session.
-   */
-  additionalAttendees?: Array<ACCSessionAttendees>;
 
   /**
    * Expected business outcomes of the requested session.
@@ -38,9 +38,9 @@ export interface ACCRequestSessionSchema {
   pitstop?: string;
 
   /**
-   * Preferred language for meetings/working sessions
+   * list of additional attendees for the requested session.
    */
-  preferredLanguage?: string;
+  additionalAttendees?: Array<ACCSessionAttendees>;
 
   /**
    * Prefered time for meetings/working sessions (morning | afternoon)

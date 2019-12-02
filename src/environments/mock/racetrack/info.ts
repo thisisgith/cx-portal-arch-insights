@@ -5,6 +5,7 @@ const api = '/api/customerportal/pitstop/v1/info';
 
 /** Default Customer ID */
 const customerId = '2431199';
+const customerId_v2 = '2431199_0';
 
 /**
  * Stuff
@@ -1089,6 +1090,23 @@ export const RacetrackScenarios = [
 			],
 		},
 		url: `${api}?customerId=${customerId}`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(Racetrack) IBN-Assurance-Onboard-EntitlementV2',
+					response: {
+						body: MockRacetrack('ibn', 'assurance', 'Onboard', ''),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?customerId=${customerId_v2}`,
 		usecases: ['Use Case 1'],
 	},
 ];

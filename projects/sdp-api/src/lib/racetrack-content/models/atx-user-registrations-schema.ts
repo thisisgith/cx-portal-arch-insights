@@ -31,6 +31,11 @@ export interface AtxUserRegistrationsSchema {
   sessionId?: string;
 
   /**
+   * The event number of this atx session
+   */
+  eventNumber?: string;
+
+  /**
    * The Registration status
    */
   transactionType?: 'requested' | 'scheduled' | 'cancelled' | 'completed';

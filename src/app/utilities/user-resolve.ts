@@ -11,7 +11,7 @@ import { CuiModalService } from '@cisco-ngx/cui-components';
 import {
 	UnauthorizedUserComponent,
 } from '../components/unauthorized-user/unauthorized-user.component';
-import { DEFAULT_DATACENTER } from '@constants';
+import { INTERIM_VA_ID, DEFAULT_DATACENTER } from '@constants';
 
 /**
  * Resolver to fetch our user
@@ -85,7 +85,7 @@ export class UserResolve implements Resolve<any> {
 
 		if (smartAccount) {
 			this.saId.next(saId);
-			this.customerId.next(`${saId}`);
+			this.customerId.next(`${saId}_${INTERIM_VA_ID}`);
 			window.localStorage.setItem('activeSmartAccount', `${saId}`);
 			window.location.reload();
 		}
@@ -115,7 +115,7 @@ export class UserResolve implements Resolve<any> {
 				const saId = _.get(this.smartAccount, 'companyId');
 				this.saId.next(saId);
 				this.vaId.next(0);
-				this.customerId.next(`${saId}`);
+				this.customerId.next(`${saId}_${INTERIM_VA_ID}`);
 
 				return this.getAccountInfo(account);
 			}),
@@ -140,7 +140,7 @@ export class UserResolve implements Resolve<any> {
 
 		return this.orgUserService.getUserV2({
 			saId,
-			customerId: `${saId}`,
+			customerId: `${saId}_${INTERIM_VA_ID}`,
 			vaId: 0,
 		})
 		.pipe(
@@ -188,7 +188,7 @@ export class UserResolve implements Resolve<any> {
 			...userResponse,
 			name: smartAccount.companyName,
 			saId: smartAccount.companyId,
-			customerId: `${smartAccount.companyId}`,
+			customerId: `${smartAccount.companyId}_${INTERIM_VA_ID}`,
 			individual: {
 				name: accountUser.firstName,
 				familyName: accountUser.lastName,

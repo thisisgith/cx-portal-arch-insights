@@ -26,6 +26,8 @@ export interface FaultSearchParams {
 	days?: number;
 	filterTypes?: string;
 	faultSeverity?: string;
+	lastUpdateTime?: string;
+	msgType?: string;
 }
 
 /**
@@ -49,6 +51,7 @@ export interface FaultResponse {
 	afmStatus: string;
 	count: number;
 	lastUpdateTime: string;
+	lastUpdateDate: string;
 	offlineTime: string;
 	message: string;
 	responseData: FaultGridData[];
