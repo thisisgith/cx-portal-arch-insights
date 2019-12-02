@@ -1599,7 +1599,7 @@ export class LifecycleComponent implements OnDestroy {
 					!session.title && !session.description);
 
 				// Do not show cisco ACC's if incorrect CX level
-				if (!this.ciscoAccLevels.includes(this.cxLevel)) {
+				if (!this.ciscoAccLevels.includes(Number(this.cxLevel))) {
 					_.remove(this.componentData.acc.sessions, (session: ACC) =>
 						!session.providerInfo);
 				}
