@@ -9,6 +9,7 @@ const api = '/api/customerportal/racetrack/v1/atx';
 
 /** Default Customer ID */
 const customerId = '2431199';
+const customerId_v2 = '2431199_0';
 
 /** Onboard ATX */
 const onboardItems = [
@@ -170,7 +171,7 @@ const onboardItems = [
 		title: 'Cisco DNA Center Project Plan Best Practices 3',
 		description: 'This is a high-level look at the things you should consider as you’re planning your Cisco DNA Center project, including subjects such as prerequisites for network devices',
 		imageURL: 'https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/atx/images/ATX-DNA-Center-Feature-Overview.png',
-		status: 'requested',
+		status: 'recommended',
 		recordingURL: 'https://tklcs.cloudapps.cisco.com/tklcs/TKLDownloadServlet?nodeRef=workspace://SpacesStore/310232f0-0a44-4286-a374-71edb71835ee&activityId=2&fileId=123051',
 		duration: 3600,
 		bookmark: false,
@@ -182,6 +183,7 @@ const onboardItems = [
 				presenterName: 'Billy Manashi',
 				scheduled: false,
 				registrationURL: 'https://cisco.webex.com/cisco/onstage/g.php?MTID=edfcb532bb594518ca707aa19c3a55feb',
+				eventNumber: '12345678',
 			},
 		],
 	},
@@ -725,6 +727,23 @@ export const RegisterATXScenarios = [
 			],
 		},
 		url: `${api}/registration?sessionId=Session1&customerId=${customerId}&atxId=ATX1`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 500,
+					description: '(ATX) IBN-Campus Network Assurance-Onboard-EntitlementV2',
+					response: {
+						body: MockATX('IBN', 'Campus Network Assurance', 'Onboard'),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?usecase=Campus Network Assurance&solution=IBN&pitstop=Onboard&customerId=${customerId_v2}&suggestedAction=Get to know Cisco DNA Center`,
 		usecases: ['Use Case 1'],
 	},
 ];

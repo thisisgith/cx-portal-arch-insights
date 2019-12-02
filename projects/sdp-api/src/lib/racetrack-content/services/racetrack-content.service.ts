@@ -160,6 +160,8 @@ class RacetrackContentService extends __BaseService {
    *
    * - `atxId`: The Atx Identifier
    *
+   * - `eventNumber`: The event number of this atx session
+   *
    * - `X-Mashery-Handshake`: Mashery user credential header
    *
    * @return Successfully registered
@@ -173,6 +175,7 @@ class RacetrackContentService extends __BaseService {
     if (params.sessionId != null) __params = __params.set('sessionId', params.sessionId.toString());
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     if (params.atxId != null) __params = __params.set('atxId', params.atxId.toString());
+    if (params.eventNumber != null) __params = __params.set('eventNumber', params.eventNumber.toString());
     if (params.XMasheryHandshake != null) __headers = __headers.set('X-Mashery-Handshake', params.XMasheryHandshake.toString());
     let req = new HttpRequest<any>(
       'POST',
@@ -201,6 +204,8 @@ class RacetrackContentService extends __BaseService {
    *
    * - `atxId`: The Atx Identifier
    *
+   * - `eventNumber`: The event number of this atx session
+   *
    * - `X-Mashery-Handshake`: Mashery user credential header
    *
    * @return Successfully registered
@@ -220,6 +225,8 @@ class RacetrackContentService extends __BaseService {
    *
    * - `atxId`: Id of the selected ATX
    *
+   * - `eventNumber`: The event number of this atx session
+   *
    * - `X-Mashery-Handshake`: Mashery user credential header
    */
   cancelSessionATXResponse(params: RacetrackContentService.CancelSessionATXParams): __Observable<__StrictHttpResponse<null>> {
@@ -231,6 +238,7 @@ class RacetrackContentService extends __BaseService {
     if (params.sessionId != null) __params = __params.set('sessionId', params.sessionId.toString());
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     if (params.atxId != null) __params = __params.set('atxId', params.atxId.toString());
+    if (params.eventNumber != null) __params = __params.set('eventNumber', params.eventNumber.toString());
     if (params.XMasheryHandshake != null) __headers = __headers.set('X-Mashery-Handshake', params.XMasheryHandshake.toString());
     let req = new HttpRequest<any>(
       'DELETE',
@@ -258,6 +266,8 @@ class RacetrackContentService extends __BaseService {
    * - `customerId`: Unique identifier of a Cisco customer.
    *
    * - `atxId`: Id of the selected ATX
+   *
+   * - `eventNumber`: The event number of this atx session
    *
    * - `X-Mashery-Handshake`: Mashery user credential header
    */
@@ -1105,6 +1115,11 @@ module RacetrackContentService {
     atxId: string;
 
     /**
+     * The event number of this atx session
+     */
+    eventNumber?: string;
+
+    /**
      * Mashery user credential header
      */
     XMasheryHandshake?: string;
@@ -1129,6 +1144,11 @@ module RacetrackContentService {
      * Id of the selected ATX
      */
     atxId: string;
+
+    /**
+     * The event number of this atx session
+     */
+    eventNumber?: string;
 
     /**
      * Mashery user credential header
