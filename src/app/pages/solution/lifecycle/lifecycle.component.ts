@@ -541,7 +541,7 @@ export class LifecycleComponent implements OnDestroy {
 				&usecase=`,
 			},
 			params: {
-				customerId: this.customerId,
+				customerId: this.customerId.split('_')[0],
 				pitstop: '',
 				rows: 500,
 				solution: '',
