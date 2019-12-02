@@ -32,5 +32,10 @@ export function getButtonList (): EnvButtonRef[] {
 			title: I18n.get('_OracleVirtualBox_'),
 			version: '5.2.30',
 		},
+		{
+			key: 'mhyperv',
+			title: I18n.get('_MicrosoftHyper-V_'),
+			version: '',
+		},
 	];
 }

@@ -1,25 +1,26 @@
 import {
 	ACCScenarios,
+	AdminComplience,
 	ACCUserInfoScenarios,
+	ActionScenarios,
+	AdvisorySecurityAdvisoryScenarios,
+	ArchitectureReviewScenarios,
+	ArchitectureScenarios,
 	ASDAcceptEulaScenarios,
 	ASDAcceptK9Scenarios,
 	ASDImageDownloadUrlScenarios,
 	ASDMetadataScenarios,
 	ASDTokenScenarios,
-	ATXScenarios,
-	ActionScenarios,
-	AdvisorySecurityAdvisoryScenarios,
-	AfmScenarios,
-	ArchitectureReviewScenarios,
-	ArchitectureScenarios,
 	AssetLinkScenarios,
 	AssetScenarios,
 	AssetSummaryScenarios,
+	AssetTaggingScenarios,
+	ATXScenarios,
 	BookmarkScenarios,
-	CGTScenarios,
 	CalendarScenarios,
 	CancelATXScenarios,
 	CaseScenarios,
+	CGTScenarios,
 	ComparisonViewScenarios,
 	ComplianceScenarios,
 	ContractScenarios,
@@ -28,15 +29,18 @@ import {
 	CreateRegistrationScenarios,
 	CriticalBugAssetsScenarios,
 	CriticalBugScenarios,
-	DNACStatusScenarios,
 	DevicePoliciesScenarios,
 	DeviceScenarios,
+	DNACStatusScenarios,
 	ELearningScenarios,
 	EntitlementScenarios,
+	FaultScenarios,
+	FeedbackScenarios,
 	FieldNoticeAdvisoryScenarios,
 	FieldNoticeBulletinScenarios,
 	FieldNoticeCountScenarios,
 	FieldNoticeScenarios,
+	HardwareAssetScenarios,
 	HardwareEOLBulletinScenarios,
 	HardwareEOLCountScenarios,
 	HardwareEOLScenarios,
@@ -46,12 +50,13 @@ import {
 	LicenseScenarios,
 	NetworkScenarios,
 	OSVScenarios,
+	PartnerInfoScenarios,
 	PolicesScenarios,
-	RCCScenarios,
-	RMAScenarios,
 	RacetrackScenarios,
+	RCCScenarios,
 	RegisterATXScenarios,
 	RiskScenarios,
+	RMAScenarios,
 	RoleScenarios,
 	SearchScenarios,
 	SecurityAdvisoryBulletinScenarios,
@@ -65,8 +70,9 @@ import {
 	SoftwareEOLScenarios,
 	SuccessPathScenarios,
 	SyslogScenarios,
+	SystemAssetScenarios,
+	V2EntitlementScenarios,
 	VulnerabilityScenarios,
-	FeedbackScenarios,
 } from './';
 
 import { HttpHeaders } from '@angular/common/http';
@@ -75,19 +81,20 @@ import * as _ from 'lodash-es';
 import {
 	ACCResponse,
 	ACCUserInfoSchema,
-	ATXResponseModel,
 	AdvisoriesByLastUpdatedCount,
-	Assets,
 	AssetRecommendationsResponse,
+	Assets,
+	ATXResponseModel,
 	BugImpactedAssetsResponse,
 	CDCSearchResponse,
-	CSDFResponseModel,
 	CommunitiesResponse,
+	CompanyInfoList,
 	ContractQuota,
 	CoverageCountsResponse,
 	CoverageResponse,
 	CriticalBugsCount,
 	CriticalBugsResponse,
+	CSDFResponseModel,
 	DeviceContractResponse,
 	ELearningResponse,
 	EntitledUser,
@@ -96,13 +103,16 @@ import {
 	FieldNoticeResponse,
 	FieldNoticeUpdatedResponse,
 	GroupTrainingEntitySchema,
+	HardwareAssets,
 	HardwareEOLBulletinResponse,
 	HardwareEOLCountResponse,
 	HardwareEOLResponse,
 	HardwareResponse,
 	IERegistrationResponseModel,
+	InsightsResponse,
 	LicenseDataResponseModel,
 	MachineRecommendationsResponse,
+	OrgUserResponse,
 	PoliciesGroupByDayInAMonthModel,
 	ProfileRecommendationsResponse,
 	RacetrackResponse,
@@ -115,16 +125,17 @@ import {
 	SecurityAdvisorySeverityCountResponse,
 	SecurityAdvisorySummary,
 	ServiceInfoResponse,
+	SoftwareEOLBulletinResponse,
+	SoftwareEOLResponse,
 	SoftwareGroupAssetsResponse,
 	SoftwareGroupsResponse,
 	SoftwareGroupVersionsResponse,
 	SoftwareVersionsResponse,
-	SoftwareEOLResponse,
-	SoftwareEOLBulletinResponse,
 	SuccessPathsResponse,
+	SystemAssets,
+	UserEntitlement,
 	UserTraining,
 	VulnerabilityResponse,
-	InsightsResponse,
 } from '@sdp-api';
 
 import { RMAResponse } from '@interfaces';
@@ -140,6 +151,7 @@ type ResponseBody = (
 	ATXResponseModel |
 	CDCSearchResponse |
 	CommunitiesResponse |
+	CompanyInfoList |
 	ContractQuota[] |
 	CoverageCountsResponse |
 	CoverageResponse |
@@ -154,6 +166,7 @@ type ResponseBody = (
 	FieldNoticeResponse |
 	FieldNoticeUpdatedResponse |
 	GroupTrainingEntitySchema |
+	HardwareAssets |
 	HardwareEOLBulletinResponse |
 	HardwareEOLCountResponse |
 	HardwareEOLResponse |
@@ -161,6 +174,7 @@ type ResponseBody = (
 	IERegistrationResponseModel |
 	LicenseDataResponseModel |
 	MachineRecommendationsResponse |
+	OrgUserResponse |
 	PoliciesGroupByDayInAMonthModel |
 	ProfileRecommendationsResponse |
 	RacetrackResponse |
@@ -182,6 +196,8 @@ type ResponseBody = (
 	SoftwareEOLBulletinResponse |
 	SoftwareEOLResponse |
 	SuccessPathsResponse |
+	SystemAssets |
+	UserEntitlement |
 	UserTraining[] |
 	VulnerabilityResponse |
 	InsightsResponse
@@ -230,26 +246,27 @@ interface MockSettings {
 export const mockSettings: MockSettings = {
 	mock: _.flatten([
 		ACCScenarios,
+		AdminComplience,
 		ACCUserInfoScenarios,
+		ActionScenarios,
+		AdvisorySecurityAdvisoryScenarios,
+		ArchitectureReviewScenarios,
+		ArchitectureScenarios,
 		ASDAcceptEulaScenarios,
 		ASDAcceptK9Scenarios,
 		ASDImageDownloadUrlScenarios,
 		ASDMetadataScenarios,
 		ASDTokenScenarios,
-		ATXScenarios,
-		ActionScenarios,
-		AdvisorySecurityAdvisoryScenarios,
-		AfmScenarios,
-		ArchitectureReviewScenarios,
-		ArchitectureScenarios,
 		AssetLinkScenarios,
 		AssetScenarios,
 		AssetSummaryScenarios,
+		AssetTaggingScenarios,
+		ATXScenarios,
 		BookmarkScenarios,
-		CGTScenarios,
 		CalendarScenarios,
 		CancelATXScenarios,
 		CaseScenarios,
+		CGTScenarios,
 		ComparisonViewScenarios,
 		ComplianceScenarios,
 		ContractScenarios,
@@ -258,15 +275,18 @@ export const mockSettings: MockSettings = {
 		CreateRegistrationScenarios,
 		CriticalBugAssetsScenarios,
 		CriticalBugScenarios,
-		DNACStatusScenarios,
 		DevicePoliciesScenarios,
 		DeviceScenarios,
+		DNACStatusScenarios,
 		ELearningScenarios,
 		EntitlementScenarios,
+		FaultScenarios,
+		FeedbackScenarios,
 		FieldNoticeAdvisoryScenarios,
 		FieldNoticeBulletinScenarios,
 		FieldNoticeCountScenarios,
 		FieldNoticeScenarios,
+		HardwareAssetScenarios,
 		HardwareEOLBulletinScenarios,
 		HardwareEOLCountScenarios,
 		HardwareEOLScenarios,
@@ -276,13 +296,14 @@ export const mockSettings: MockSettings = {
 		LicenseScenarios,
 		NetworkScenarios,
 		OSVScenarios,
+		PartnerInfoScenarios,
 		PolicesScenarios,
-		RCCScenarios,
-		RMAScenarios,
-		RMAScenarios,
 		RacetrackScenarios,
+		RCCScenarios,
 		RegisterATXScenarios,
 		RiskScenarios,
+		RMAScenarios,
+		RMAScenarios,
 		RoleScenarios,
 		SearchScenarios,
 		SecurityAdvisoryBulletinScenarios,
@@ -297,7 +318,8 @@ export const mockSettings: MockSettings = {
 		SoftwareEOLScenarios,
 		SuccessPathScenarios,
 		SyslogScenarios,
+		SystemAssetScenarios,
+		V2EntitlementScenarios,
 		VulnerabilityScenarios,
-		FeedbackScenarios,
 	]),
 };

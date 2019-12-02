@@ -186,7 +186,7 @@
 	</div>
 	<div class="row qtr-margin-top">
 		<div class="col-md-7">
-				<button class="btn btn--small btn--secondary text-uppercase" data-auto-id="viewDeviceButton"
+				<button class="btn btn--small text-uppercase btn-ctc" data-auto-id="viewDeviceButton"
 					(click)="onViewDetails(serialNumber.query)" [innerText]="'_ViewDeviceDetails_' | i18n"></button>
 				<button class="btn btn--small btn--secondary text-uppercase" data-auto-id="openCaseButton"
 					*ngIf="assetData | canOpenCase:contractData?.expirationDate"

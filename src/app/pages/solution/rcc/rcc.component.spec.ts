@@ -69,6 +69,21 @@ describe('RccComponent', () => {
 	/**
 	 * @TODO: modify test to use UI
 	 */
+	it('should get the RCC optInStatus true', () => {
+		spyOn(rccService, 'optInDetail')
+			.and
+			.returnValue(of(ComplianceScenarios[0].scenarios.GET[0].response.body.rccOptInStatus));
+		component.ngOnInit();
+		fixture.whenStable()
+			.then(() => {
+				fixture.detectChanges();
+				expect(component.optInStatus)
+					.toBeDefined();
+				expect(component.optInStatus)
+					.toEqual(ComplianceScenarios[15].scenarios.GET[0].response.body);
+			});
+	});
+
 	it('should get the violation grid data success', () => {
 		spyOn(rccService, 'getGridData')
 			.and
@@ -153,24 +168,6 @@ describe('RccComponent', () => {
 			.toBeFalsy();
 	});
 
-	it('should clear all the selected filters', () => {
-		mockFilter.seriesData = [{
-			filter: 'severity',
-			label: 'string',
-			selected: true,
-			value: 13,
-		}, {
-			filter: 'osType',
-			label: 'string',
-			selected: false,
-			value: 13,
-		}];
-		component.filters[0].seriesData = mockFilter.seriesData;
-		component.clearFilters();
-		expect(component.filters[0].seriesData[0].selected)
-			.toBeFalsy();
-	});
-
 	it('should search in violation grid data success', () => {
 		const tableCofig = {
 			tableLimit: 10,
@@ -235,19 +232,6 @@ describe('RccComponent', () => {
 		component.openDevicePage(serialNumber);
 		expect(component.openDeviceModal)
 			.toBeTruthy();
-	});
-
-	it('should get the selected sub filters list', () => {
-		const key = '';
-		component.getSelectedSubFilters(key);
-		expect(component.filters)
-			.toBeTruthy();
-	});
-
-	it('should get the selected sub filters list with key', () => {
-		const key = 'policyGroup';
-		expect(component.getSelectedSubFilters(key))
-			.toEqual([]);
 	});
 
 	it('Should invoke onTableSortingChanged and assign tableOffset to 0', () => {
@@ -329,29 +313,6 @@ describe('RccComponent', () => {
 		fixture.detectChanges();
 		expect(component.violationGridObj.severity)
 			.toEqual(mockFilter.seriesData[0].filter);
-	});
-
-	it('should invoke with severity filter value null', () => {
-		mockFilter.key = 'severity';
-		mockFilter.selected = true;
-		mockFilter.seriesData = [{
-			filter: 'severity',
-			label: 'string',
-			selected: true,
-			value: 13,
-		}, {
-			filter: 'osType',
-			label: 'string',
-			selected: false,
-			value: 13,
-		}];
-		component.filters[0].selected = true;
-		component.filters[0].seriesData = mockFilter.seriesData;
-		fixture.detectChanges();
-		component.onSubfilterSelect('severity', mockFilter, false);
-		fixture.detectChanges();
-		expect(component.violationGridObj.severity)
-			.toBeNull();
 	});
 
 	it('should invoke with assetOsType filter selected value', () => {
@@ -666,29 +627,6 @@ describe('RccComponent', () => {
 		component.searchViolations(event, 'input');
 		expect(component.tableConfig.tableOffset)
 			.toEqual(0);
-	});
-
-	it('should invoke with severity filter value null', () => {
-		mockFilter.key = 'severity';
-		mockFilter.selected = true;
-		mockFilter.seriesData = [{
-			filter: 'severity',
-			label: 'string',
-			selected: true,
-			value: 13,
-		}, {
-			filter: 'osType',
-			label: 'string',
-			selected: false,
-			value: 13,
-		}];
-		component.filters[0].selected = true;
-		component.filters[0].seriesData = mockFilter.seriesData;
-		fixture.detectChanges();
-		component.onSubfilterSelect('severity', mockFilter, false);
-		fixture.detectChanges();
-		expect(component.violationGridObj.severity)
-			.toBeNull();
 	});
 
 	it('should call onSubfilterSelect ', () => {

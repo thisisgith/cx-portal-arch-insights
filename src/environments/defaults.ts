@@ -11,9 +11,9 @@ export const defaults = {
 	origin,
 	auth: {
 		accountUrl: `${origin}/ws/account/v2/`,
-		ciscoTokenUrl: `${origin}/ws/oauth/v3/token/cisco`,
-		referUrl: `${origin}/ws/oauth/v3/sso/`,
-		tokenUrl: `${origin}/ws/oauth/v3/token/cway/35ae50e6ff5843f59183da19cc44245d`,
+		ciscoTokenUrl: `${origin}/ws/oauth/v4/token/cisco`,
+		referUrl: `${origin}/ws/oauth/v4/sso/`,
+		tokenUrl: `${origin}/ws/oauth/v4/token/cway/35ae50e6ff5843f59183da19cc44245d`,
 	},
 	baseHref: '/portal/',
 	bugSearchTool: 'https://bst.cloudapps.cisco.com/bugsearch/bug/',
@@ -50,7 +50,7 @@ export const defaults = {
 			'_engine-release/ie/Insight_Engine_1.0/ubuntu/103/CXC_1.0_Build-103.ova',
 		imageDownloadRetries: 6,
 		mockASD: true,
-		mockRegistration: true,
+		mockRegistration: false,
 		pingURL: '/ie-commonapi/services/version',
 		telemetryGuideUrl: 'https://www-author3.cisco.com/c/en/us/td/docs/cloud-systems-' +
 			'management/network-automation-and-management/dna-center/1-4/user_guide/' +
@@ -88,11 +88,12 @@ export const defaults = {
 	sdpServiceOrigin: 'https://api-stage.cisco.com',
 	sdpServicePaths: {
 		contracts: '/api/v1/contracts',
-		controlpoints: '/api/customerportal/controlpoint',
 		customerportal: '/api/customerportal',
+		cxportal: '/api/cxportal',
 		inventory: '/api/v1/inventory',
+		partner: '/api/cxportal',
 	},
-	supportEmailLink: 'mailto:help@cisco.com',
+	supportEmailLink: 'mailto:cx-portal-support-nonprod@cisco.com',
 	typeaheadServiceOrigin: 'https://xresps-stage.cloudapps.cisco.com',
 	webexUrl: 'https://cisco.webex.com/meet/',
 	webexTeamsUrl: 'webexteams://im?email=',

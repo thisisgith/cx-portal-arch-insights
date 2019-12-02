@@ -1,10 +1,19 @@
 /**
+ * Syslog complete resoponse
+ */
+export interface SyslogResponseData {
+	count?: number;
+	message?: string;
+	responseData: SyslogGridData[];
+}
+
+/**
  * Syslog grid data
  */
 export interface SyslogGridData {
 	msgType: string;
-	Severity: string;
-	MsgDesc: string;
-	recommendetion: string;
-	icDesc: string;
+	severity: number;
+	deviceHost: string;
+	timestamp: string;
+	id: string;
 }

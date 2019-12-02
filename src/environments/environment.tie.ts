@@ -13,9 +13,9 @@ export const environment = {
 	origin,
 	auth: {
 		accountUrl: `${origin}/ws/account/v2/`,
-		ciscoTokenUrl: `${origin}/ws/oauth/v3/token/cisco`,
-		referUrl: `${origin}/ws/oauth/v3/sso/`,
-		tokenUrl: `${origin}/ws/oauth/v3/token/cway/35ae50e6ff5843f59183da19cc44245d`,
+		ciscoTokenUrl: `${origin}/ws/oauth/v4/token/cisco`,
+		referUrl: `${origin}/ws/oauth/v4/sso/`,
+		tokenUrl: `${origin}/ws/oauth/v4/token/cway/35ae50e6ff5843f59183da19cc44245d`,
 	},
 	baseHref: '/portal/',
 	csc: {
@@ -70,9 +70,10 @@ export const environment = {
 	sdpServiceOrigin: 'https://api-stage.cisco.com',
 	sdpServicePaths: {
 		contracts: '/api/v1/contracts',
-		controlpoints: '/api/customerportal/controlpoint',
 		customerportal: '/api/customerportal',
+		cxportal: '/api/cxportal',
 		inventory: '/api/v1/inventory',
+		partner: '/api/cxportal',
 	},
 	typeaheadServiceOrigin: 'https://xresps.cloudapps.cisco.com',
 };

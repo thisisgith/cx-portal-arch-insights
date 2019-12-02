@@ -1,3 +1,5 @@
+@import '~src/variables.scss';
+
 .content-wrapper > div.content {
-	background: #ebeef2;
+	background: $site-bg-color;
 }

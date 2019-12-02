@@ -1,11 +1,15 @@
 export { RoleCountResponse } from './models/role-count-response';
 export { RoleCount } from './models/role-count';
 export { SystemAssets } from './models/system-assets';
+export { HardwareAssets } from './models/hardware-assets';
 export { Assets } from './models/assets';
 export { SystemAsset } from './models/system-asset';
+export { HardwareAsset } from './models/hardware-asset';
+export { Tag } from './models/tag';
 export { Asset } from './models/asset';
 export { SolutionInfo } from './models/solution-info';
 export { AssetSummary } from './models/asset-summary';
+export { AssetSystemSummary } from './models/asset-system-summary';
 export { HardwareResponse } from './models/hardware-response';
 export { HardwareInfo } from './models/hardware-info';
 export { NetworkElementResponse } from './models/network-element-response';

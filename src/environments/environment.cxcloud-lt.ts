@@ -13,9 +13,9 @@ export const environment = {
 	origin,
 	auth: {
 		accountUrl: `${origin}/ws/account/v2/`,
-		ciscoTokenUrl: `${origin}/ws/oauth/v3/token/cisco`,
-		referUrl: `${origin}/ws/oauth/v3/sso/`,
-		tokenUrl: `${origin}/ws/oauth/v3/token/cway/35ae50e6ff5843f59183da19cc44245d`,
+		ciscoTokenUrl: `${origin}/ws/oauth/v4/token/cisco`,
+		referUrl: `${origin}/ws/oauth/v4/sso/`,
+		tokenUrl: `${origin}/ws/oauth/v4/token/cway/35ae50e6ff5843f59183da19cc44245d`,
 	},
 	baseHref: '/portal/',
 	csc: {
@@ -48,7 +48,7 @@ export const environment = {
 			'b_cisco_dna_center_ug_1_4/b_cisco_dna_center_ug_1_4_chapter_01001.html',
 	},
 	mapboxToken:
-	'pk.eyJ1IjoibWlzY2htaTIiLCJhIjoiY2p4eDl2ODVnMGpmODNkcDhsbG5nNXQ0YyJ9.vpfGffFASSUfANAU4Yvtxg',
+	'pk.eyJ1IjoibWljaGhhcnQiLCJhIjoiY2szaGtudW9oMGRvajNubmo1OWgxaG85NSJ9.wwXqdHQ4k-YTqUw1VMvayA',
 	mock: [],
 	myCase: 'https://mycase2.cloudapps.cisco.com',
 	noAuthEndpoints: [
@@ -70,9 +70,10 @@ export const environment = {
 	sdpServiceOrigin: 'https://api-stage.cisco.com',
 	sdpServicePaths: {
 		contracts: '/api/lt/v1/contracts',
-		controlpoints: '/api/lt/customerportal/controlpoint',
 		customerportal: '/api/lt/customerportal',
+		cxportal: '/api/cxportal',
 		inventory: '/api/lt/v1/inventory',
+		partner: '/api/lt/cxportal',
 		registration: '/api/stg/customerportal',
 	},
 	typeaheadServiceOrigin: 'https://xresps.cloudapps.cisco.com',

@@ -11,6 +11,7 @@ import {
 	CuiTableModule,
 	CuiPagerModule,
 	CuiDropdownModule,
+	CuiAlertModule,
 } from '@cisco-ngx/cui-components';
 import {
 	PieChartModule,
@@ -19,9 +20,8 @@ import {
 	VisualFilterBarModule,
 } from '@components';
 import { SyslogsMessagesModule } from './syslogs-messages/syslogs-messages.module';
-import { SyslogsDevicesModule } from './syslogs-devices/syslogs-devices.module';
 import { InsightTabsModule } from 'src/app/components/insight-tabs/insight-tabs.module';
-
+import { FaultsModule } from './faults/faults.module';
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
  */
@@ -55,10 +55,11 @@ const childRoutes: Routes = [
 		PieChartModule,
 		DetailsPanelModule,
 		SyslogsMessagesModule,
-		SyslogsDevicesModule,
 		ColumnChartModule,
 		VisualFilterBarModule,
 		InsightTabsModule,
+		FaultsModule,
+		CuiAlertModule,
 	],
 })
 export class SyslogsModule { }

@@ -41,7 +41,9 @@ class CrashPreventionService extends __BaseService {
     let __body: any = null;
 
     __params = __params.set('deviceId1', params.deviceId1);
-    __params = __params.set('deviceId2', params.deviceId2);
+	__params = __params.set('deviceId2', params.deviceId2);
+	if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
+	if (params.solution != null) __params = __params.set('solution', params.solution.toString());
 
     let req = new HttpRequest<any>(
       'GET',
@@ -72,7 +74,10 @@ class CrashPreventionService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
-    let pfURL: string = '';
+	let pfURL: string = '';
+
+	if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
+	if (params.solution != null) __params = __params.set('solution', params.solution.toString());
     if (params.customerId != null && params.customerId != '') {
       pfURL = this.rootUrl + `${CrashPreventionService.getDeviceInfoPath}` + params.customerId + '/' + btoa(params.deviceId) + '/';
     }
@@ -81,7 +86,8 @@ class CrashPreventionService extends __BaseService {
       pfURL,
       __body,
       {
-        headers: __headers,
+		headers: __headers,
+		params: __params,
         responseType: 'json',
       });
 
@@ -209,7 +215,9 @@ module CrashPreventionService {
      */
     customerId: string;
     deviceId1: string;
-    deviceId2: string;
+	deviceId2: string;
+	solution?: string;
+	useCase?: string;
   }
 
   /**
@@ -220,7 +228,9 @@ module CrashPreventionService {
      * Unique identifier of a Cisco customer.
      */
     customerId: string;
-    deviceId?: any;
+	deviceId?: any;
+	solution?: string;
+	useCase?: string;
   }
   export interface GetProductFamilyParams {
     /**

@@ -1,7 +1,7 @@
 
 import { Injectable } from '@angular/core';
 import { Resolve } from '@angular/router';
-import { EntitlementService, EntitledUser, ServiceInfoResponse } from '@sdp-api';
+import { EntitlementWrapperService, UserEntitlement, OrgUserService, OrgUserResponse, Company } from '@sdp-api';
 import { Observable, of, ReplaySubject } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import { LogService } from '@cisco-ngx/cui-services';
@@ -11,6 +11,7 @@ import { CuiModalService } from '@cisco-ngx/cui-components';
 import {
 	UnauthorizedUserComponent,
 } from '../components/unauthorized-user/unauthorized-user.component';
+import { INTERIM_VA_ID, DEFAULT_DATACENTER } from '@constants';
 
 /**
  * Resolver to fetch our user
@@ -21,56 +22,73 @@ import {
 export class UserResolve implements Resolve<any> {
 
 	private cachedUser: User;
+	private companyList: Company[];
+	private smartAccount: Company;
 	private customerId = new ReplaySubject<string>(1);
 	private user = new ReplaySubject<User>(1);
+	private saId = new ReplaySubject<number>(1);
+	private vaId = new ReplaySubject<number>(1);
 	private cxLevel = new ReplaySubject<number>(1);
-	private solution = new ReplaySubject<string>(1);
-	private useCase = new ReplaySubject<string>(1);
+	private role = new ReplaySubject<string>(1);
+	private dataCenter = new ReplaySubject<string>(1);
 
 	constructor (
 		private cuiModalService: CuiModalService,
-		private entitlementService: EntitlementService,
+		private entitlementWrapperService: EntitlementWrapperService,
+		private orgUserService: OrgUserService,
 		private logger: LogService,
-	) { }
+	) {
+		this.dataCenter.next(DEFAULT_DATACENTER);
+	}
 
-	/**
-	 * Returns the current customerId
-	 * @returns the observable representing the customerId
-	 */
 	public getCustomerId (): Observable<string> {
 		return this.customerId.asObservable();
 	}
 
-	/**
-	 * Returns the current user object
-	 * @returns the observable representing the user
-	 */
 	public getUser (): Observable<User> {
 		return this.user.asObservable();
 	}
 
-	/**
-	 * Returns the current cx level
-	 * @returns the observable representing the cx level
-	 */
 	public getCXLevel (): Observable<number> {
 		return this.cxLevel.asObservable();
 	}
 
-	/**
-	 * Returns the current solution
-	 * @returns the observable representing the solution
-	 */
-	public getSolution (): Observable<string> {
-		return this.solution.asObservable();
+	public getRole (): Observable<string> {
+		return this.role.asObservable();
+	}
+
+	public getSaId (): Observable<number> {
+		return this.saId.asObservable();
+	}
+
+	public getVaId (): Observable<number> {
+		return this.vaId.asObservable();
+	}
+
+	public getDataCenter (): Observable<string> {
+		return this.dataCenter.asObservable();
 	}
 
 	/**
-	 * Returns the current use case
-	 * @returns the observable representing the use case
+	 * Update the currently active smart account, set it to local storage
+	 * and refresh the page
+	 * @param saId the new smart asccount id to be set
 	 */
-	public getUseCase (): Observable<string> {
-		return this.useCase.asObservable();
+	public setSaId (saId: number) {
+		if (this.smartAccount.companyId === saId) {
+			return;
+		}
+
+		const smartAccount = _.find(_.get(this.cachedUser, ['info', 'companyList'], []), {
+			companyId: saId,
+		});
+
+		if (smartAccount) {
+			this.saId.next(saId);
+			this.customerId.next(`${saId}_${INTERIM_VA_ID}`);
+			window.localStorage.setItem('activeSmartAccount', `${saId}`);
+			window.location.reload();
+		}
 	}
 
 	/**
@@ -82,12 +100,24 @@ export class UserResolve implements Resolve<any> {
 			return of(this.cachedUser);
 		}
 
-		return this.entitlementService.getUser()
+		return this.entitlementWrapperService.userAccounts({ accountType: 'CUSTOMER' })
 		.pipe(
-			mergeMap((user: EntitledUser) => {
-				this.customerId.next(_.get(user, 'customerId'));
+			mergeMap((account: UserEntitlement) => {
+				this.companyList = _.sortBy(account.companyList, 'companyName');
+				const activeSmartAccountId = window.localStorage.getItem('activeSmartAccount');
+				if (activeSmartAccountId) {
+					this.smartAccount = _.find(this.companyList, {
+						companyId: Number(activeSmartAccountId),
+					}) || _.get(this.companyList, 0, { });
+				} else {
+					this.smartAccount = _.get(this.companyList, 0, { });
+				}
+				const saId = _.get(this.smartAccount, 'companyId');
+				this.saId.next(saId);
+				this.vaId.next(0);
+				this.customerId.next(`${saId}_${INTERIM_VA_ID}`);
 
-				return this.getServiceInfo(user);
+				return this.getAccountInfo(account);
 			}),
 			catchError(err => {
 				this.logger.error('user-resolve : loadUser() ' +
@@ -100,35 +130,77 @@ export class UserResolve implements Resolve<any> {
 	}
 
 	/**
-	 * Fetches the service info for the user
-	 * @param user the user to fetch the service info for
+	 * Fetches additional user info for the account
+	 * @param accountResponse the user account to fetch additional info for
 	 * @returns the user
 	 */
-	private getServiceInfo (user: EntitledUser):
+	private getAccountInfo (accountResponse: UserEntitlement):
 		Observable<User> {
-		return this.entitlementService.getServiceInfo(_.get(user, 'customerId'))
+		const saId = _.get(this.smartAccount, 'companyId');
+
+		return this.orgUserService.getUserV2({
+			saId,
+			customerId: `${saId}_${INTERIM_VA_ID}`,
+			vaId: 0,
+		})
 		.pipe(
-			map((response: ServiceInfoResponse) => {
+			map((userResponse: OrgUserResponse) => {
+				this.dataCenter.next(_.get(userResponse, ['dataCenter', 'dataCenter'], DEFAULT_DATACENTER));
 				this.cachedUser = {
-					info: user,
-					service: _.head(response),
+					info: {
+						...this.mapUserResponse(accountResponse, userResponse),
+						companyList: this.companyList,
+					},
+					service: _.get(userResponse, 'subscribedServiceLevel'),
 				};
 
 				this.user.next(this.cachedUser);
-				const { cxLevel, useCase, solution } = _.get(this.cachedUser, 'service');
+				const { cxLevel } = _.get(this.cachedUser, 'service');
 
-				this.cxLevel.next(cxLevel);
-				this.useCase.next(useCase);
-				this.solution.next(solution);
+				this.cxLevel.next(Number(cxLevel));
+				this.role.next(_.get(this.smartAccount, ['roleList', 0, 'roleName']));
 
 				return this.cachedUser;
 			}),
 			catchError(err => {
-				this.logger.error('user-resolve : getServiceInfo() ' +
+				this.logger.error('user-resolve : getAccountInfo() ' +
 					`:: Error : (${err.status}) ${err.message}`);
+				this.cuiModalService.showComponent(UnauthorizedUserComponent, { });
 
 				return of(null);
 			}),
 		);
+	}
+
+	/**
+	 * Temporary method to keep user response backward-compatible.
+	 * Maps data from `accounts` and `v2/user` APIs to match the old user obj.
+	 * @param accountResponse the response from `/accounts`
+	 * @param userResponse the response from `v2/user`
+	 * @returns the user
+	 */
+	private mapUserResponse (accountResponse: UserEntitlement, userResponse: OrgUserResponse) {
+		const smartAccount = this.smartAccount;
+		const accountUser = _.get(accountResponse, 'user', { });
+
+		return {
+			...accountResponse,
+			...userResponse,
+			name: smartAccount.companyName,
+			saId: smartAccount.companyId,
+			customerId: `${smartAccount.companyId}_${INTERIM_VA_ID}`,
+			individual: {
+				name: accountUser.firstName,
+				familyName: accountUser.lastName,
+				emailAddress: accountUser.emailId,
+				ccoId: userResponse.individualAccount.ccoId,
+				cxBUId: userResponse.individualAccount.cxBUId,
+				role: _.get(smartAccount, ['roleList', 0, 'roleName']),
+			},
+			account: userResponse.account,
+			subscribedSolutions: {
+				cxLevel: _.get(userResponse, ['subscribedServiceLevel', 'cxLevel']),
+			},
+		};
 	}
 }

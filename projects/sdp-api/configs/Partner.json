@@ -1,0 +1,24 @@
+{
+	"$schema": "../../../node_modules/@apollo/ng-swagger-gen/ng-swagger-gen-schema.json",
+	"swagger": "../../node_modules/@swagger/cx-portal/swagger/Partner.yaml",
+	"output": "src/lib/partner",
+	"outputCore": "../core",
+	"prefix": "Partner",
+	"ignoreUnusedModels": true,
+	"minParamsForContainer": 2,
+	"sortParams": "desc",
+	"defaultTag": "Partner",
+	"replaceTags": {
+		"Partner API Services": "Partner"
+	},
+	"modelsExportAs": {
+		"ErrorResponse": "PartnerErrorResponse"
+	},
+	"removeStaleFiles": true,
+	"modelIndex": true,
+	"serviceIndex": true,
+	"apiModule": true,
+	"enumModule": true,
+	"generateExamples": true,
+	"camelCase": false
+}

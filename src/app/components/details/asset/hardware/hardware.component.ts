@@ -1,39 +1,48 @@
 import {
 	Component,
 	Input,
-	OnInit,
-	ViewChild,
-	TemplateRef,
-	SimpleChanges,
 	OnChanges,
 	OnDestroy,
+	OnInit,
+	SimpleChanges,
+	TemplateRef,
+	ViewChild,
 } from '@angular/core';
 import { I18n } from '@cisco-ngx/cui-utils';
 import * as _ from 'lodash-es';
-import { forkJoin, of, Subject } from 'rxjs';
+import { of, Subject, forkJoin } from 'rxjs';
 import {
-	map,
 	catchError,
+	map,
 	mergeMap,
-	takeUntil,
-	tap,
 	switchMap,
+	takeUntil,
 } from 'rxjs/operators';
 import { LogService } from '@cisco-ngx/cui-services';
+import { DateTime } from 'luxon';
+import { CaseOpenComponent } from '../../../case/case-open/case-open.component';
+import { CuiModalService, CuiTableOptions } from '@cisco-ngx/cui-components';
 import {
-	Asset,
+	HardwareEOL,
 	HardwareEOLBulletin,
-	ProductAlertsService,
 	HardwareEOLBulletinResponse,
 	HardwareEOLResponse,
-	HardwareEOL,
-	InventoryService,
-	HardwareInfo,
-	HardwareResponse,
+	NetworkElement,
+	ProductAlertsService,
+	FieldNoticeResponse,
+	RacetrackSolution,
+	RacetrackTechnology,
+	FieldNotice,
+	FieldNoticeBulletin,
 } from '@sdp-api';
-import { TimelineDatapoint } from '@interfaces';
-import { CuiTableOptions } from '@cisco-ngx/cui-components';
-import { UserResolve } from '@utilities';
+import {
+	TimelineDatapoint,
+	ModSystemAsset,
+	ModHardwareAsset,
+	ModFieldNotice,
+} from '@interfaces';
+import { RacetrackInfoService } from '@services';
+import { getProductTypeImage, getProductTypeTitle } from '@classes';
 
 /** Interface for displaying a property of the HardwareEOLBulletin object */
 interface EolTimelineProperty {
@@ -58,16 +67,12 @@ const eolTimelineProperties: EolTimelineProperty[] = [
 		propertyName: 'lastShipDate',
 	},
 	{
-		label: '_EndOfRoutineFailureAnalysis_',
-		propertyName: 'eoRoutineFailureAnalysisDate',
+		label: '_EndOfSoftwareMaintenance_',
+		propertyName: 'eoSwMaintenanceReleasesDate',
 	},
 	{
-		label: '_EndOfNewServiceAttach_',
-		propertyName: 'eoNewServiceAttachmentDate',
-	},
-	{
-		label: '_EndOfServiceContractRenewal_',
-		propertyName: 'eoServiceContractRenewalDate',
+		label: '_EndOfVulnerabilitySecuritySupport_',
+		propertyName: 'eoVulnerabilitySecuritySupport',
 	},
 	{
 		label: '_LastDateOfSupport_',
@@ -85,49 +90,43 @@ const eolTimelineProperties: EolTimelineProperty[] = [
 })
 export class AssetDetailsHardwareComponent implements OnInit, OnChanges, OnDestroy {
 
-	@Input('asset') public asset: Asset;
 	@Input('customerId') public customerId: string;
+	@Input('element') public element: NetworkElement;
+	@Input('systemAsset') public systemAsset: ModSystemAsset;
+	@Input('hardwareAsset') public hardwareAsset: ModHardwareAsset;
+	@Input('hardwareAssets') public hardwareAssets: ModHardwareAsset[];
 	@ViewChild('migrationModel', { static: true }) private migrationModelTemplate: TemplateRef<{ }>;
 	@ViewChild('typeTemplate', { static: true }) private typeTemplate: TemplateRef<{ }>;
-	@ViewChild('familyTemplate', { static: true }) private familyTemplate: TemplateRef<{ }>;
 	@ViewChild('serialTemplate', { static: true }) private serialTemplate: TemplateRef<{ }>;
+	@ViewChild('hardwareComponent', { static: true }) private hardwareTemplate: TemplateRef<{ }>;
+	@ViewChild('productIDTemplate', { static: true }) private productIDTemplate: TemplateRef<{ }>;
+	@ViewChild('expandTemplate', { static: true }) private expandTemplate: TemplateRef<{ }>;
 
 	public status = {
 		loading: {
 			eol: false,
 			eolBulletin: false,
-			modules: false,
+			fieldNoticeBulletins: false,
+			fieldNotices: false,
 			overall: false,
 		},
 	};
 
-	private hardwareBulletinParams: ProductAlertsService.GetHardwareEoxBulletinParams;
-	private hardwareEOLParams: ProductAlertsService.GetHardwareEoxParams;
-	private moduleParams: InventoryService.GetHardwareParams;
-	public eolData: HardwareEOL;
-	public eolBulletinData: HardwareEOLBulletin;
 	private destroyed$: Subject<void> = new Subject<void>();
 	private refresh$: Subject<void>;
+	private selectedSolutionName: string;
+	private selectedTechnologyName: string;
+	public getProductIcon = getProductTypeImage;
+	public getProductTitle = getProductTypeTitle;
 
 	constructor (
 		private logger: LogService,
-		private inventoryService: InventoryService,
+		private cuiModalService: CuiModalService,
 		private productAlertsService: ProductAlertsService,
-		private userResolve: UserResolve,
+		private racetrackInfoService: RacetrackInfoService,
 	) { }
 
-	public hardwareModules: HardwareInfo[];
-	public hardwareModulesTable: CuiTableOptions;
-	public migrationTable: CuiTableOptions;
-	public timelineData: TimelineDatapoint[] = [];
-	public migrationData: {
-		migrationPid?: string;
-		migrationProductDataUrl?: string;
-		migrationProductModel?: string;
-		migrationProductPageUrl?: string;
-		migrationProductSeries?: string;
-		migrationPromotionText?: string;
-	}[];
+	public hardwareTable: CuiTableOptions;
 
 	/**
 	 * Fetch the eol bulletin data for the selected asset
@@ -136,31 +135,22 @@ export class AssetDetailsHardwareComponent implements OnInit, OnChanges, OnDestr
 	private fetchEOLBulletinData () {
 		this.status.loading.eolBulletin = true;
 
-		return this.productAlertsService.getHardwareEoxBulletin(this.hardwareBulletinParams)
+		const params: ProductAlertsService.GetHardwareEoxBulletinParams = {
+			hwEolInstanceId: _.uniq(_.map(this.hardwareAssets, 'eol.hwEolInstanceId')),
+		};
+
+		return this.productAlertsService.getHardwareEoxBulletin(params)
 		.pipe(
 			map((response: HardwareEOLBulletinResponse) => {
-				this.eolBulletinData = _.head(_.get(response, 'data', []));
+				_.each(this.hardwareAssets, (asset: ModHardwareAsset) => {
+					const bulletin = _.find(response.data, (eol: HardwareEOLBulletin) =>
+						_.toString(_.get(eol, 'hwEolInstanceId', ''))
+							=== _.get(asset, ['eol', 'hwEolInstanceId']));
 
-				if (_.get(this.eolBulletinData, 'migrationPid')) {
-					const {
-						migrationPid,
-						migrationProductDataUrl,
-						migrationProductModel,
-						migrationProductPageUrl,
-						migrationProductSeries,
-						migrationPromotionText,
-					} = _.get(this, 'eolBulletinData');
-					this.migrationData = [
-						{
-							migrationPid,
-							migrationProductDataUrl,
-							migrationProductModel,
-							migrationProductPageUrl,
-							migrationProductSeries,
-							migrationPromotionText,
-						},
-					];
-				}
+					if (bulletin) {
+						_.set(asset, ['eol', 'bulletin'], bulletin);
+					}
+				});
 
 				this.status.loading.eolBulletin = false;
 
@@ -183,23 +173,24 @@ export class AssetDetailsHardwareComponent implements OnInit, OnChanges, OnDestr
 	private fetchEOLData () {
 		this.status.loading.eol = true;
 
-		return this.productAlertsService.getHardwareEox(this.hardwareEOLParams)
+		const params: ProductAlertsService.GetHardwareEoxParams = {
+			customerId: this.customerId,
+			hwInstanceId: _.map(this.hardwareAssets, 'hwInstanceId'),
+			page: 1,
+			rows: 100,
+		};
+
+		return this.productAlertsService.getHardwareEox(params)
 		.pipe(
 			mergeMap((response: HardwareEOLResponse) => {
-				this.eolData = _.head(_.get(response, 'data', []));
+				_.each(this.hardwareAssets, (asset: ModHardwareAsset) => {
+					asset.eol = _.find(response.data, (eol: HardwareEOL) =>
+						eol.hwInstanceId === asset.hwInstanceId);
+				});
 
 				this.status.loading.eol = false;
 
-				const instanceId = _.get(this, ['eolData', 'hwEolInstanceId']);
-				if (instanceId) {
-					this.hardwareBulletinParams = {
-						hwEolInstanceId: [instanceId],
-					};
-
-					return this.fetchEOLBulletinData();
-				}
-
-				return of({ });
+				return this.fetchEOLBulletinData();
 			}),
 			catchError(err => {
 				this.status.loading.eol = false;
@@ -212,25 +203,95 @@ export class AssetDetailsHardwareComponent implements OnInit, OnChanges, OnDestr
 	}
 
 	/**
-	 * Fetches the module data for the selected asset
-	 * @returns module data
+	 * Fetches the field notice bulletins for all of the hardware
+	 * @returns the field notice bulletins
 	 */
-	private fetchModuleData () {
-		this.status.loading.modules = true;
+	private fetchFieldNoticeBulletins () {
+		this.status.loading.fieldNoticeBulletins = true;
 
-		return this.inventoryService.getHardware(this.moduleParams)
+		const fieldNotices = _.flatMap(this.hardwareAssets, 'fieldNotices');
+
+		const params: ProductAlertsService.GetFieldNoticeBulletinParams = {
+			fieldNoticeId: _.uniq(_.map(fieldNotices, 'fieldNoticeId')),
+			page: 1,
+			rows: 100,
+		};
+
+		return this.productAlertsService.getFieldNoticeBulletin(params)
 		.pipe(
-			map((response: HardwareResponse) => {
-				this.hardwareModules = _.get(response, 'data', []);
+			map((response: FieldNoticeResponse) => {
+				_.each(this.hardwareAssets, (asset: ModHardwareAsset) => {
+					_.each(asset.fieldNotices, (fn: ModFieldNotice) => {
+						const bulletin = _.find(response.data, (fnb: FieldNoticeBulletin) =>
+						fn.fieldNoticeId === fnb.fieldNoticeId);
+
+						if (bulletin) {
+							const splitTitle = _.split(bulletin.bulletinTitle, ' - ');
+							_.pullAt(splitTitle, [0]);
+							bulletin.bulletinTitle = _.join(splitTitle, ' - ');
+							fn.bulletin = bulletin;
+						}
+					});
+				});
+
+				this.status.loading.fieldNoticeBulletins = false;
 			}),
 			catchError(err => {
-				this.status.loading.modules = false;
-				this.logger.error('hardware.component : fetchModuleData() ' +
+				this.status.loading.fieldNoticeBulletins = false;
+				this.logger.error('hardware.component : fetchFieldNoticeBulletins() ' +
 					`:: Error : (${err.status}) ${err.message}`);
 
 				return of({ });
 			}),
 		);
+	}
+
+	/**
+	 * Fetches the field notices for all of the hardware
+	 * @returns field notices
+	 */
+	private fetchFieldNotices () {
+		this.status.loading.fieldNotices = true;
+
+		const params: ProductAlertsService.GetFieldNoticeParams = {
+			customerId: this.customerId,
+			page: 1,
+			rows: 100,
+			serialNumber: _.map(this.hardwareAssets, 'serialNumber'),
+			solution: this.selectedSolutionName,
+			useCase: this.selectedTechnologyName,
+			vulnerabilityStatus: ['POTVUL', 'VUL'],
+		};
+
+		return this.productAlertsService.getFieldNotice(params)
+		.pipe(
+			mergeMap((response: FieldNoticeResponse) => {
+				_.each(this.hardwareAssets, (asset: ModHardwareAsset) => {
+					asset.fieldNotices = _.filter(response.data, (fn: FieldNotice) =>
+						fn.hwInstanceId === asset.hwInstanceId);
+				});
+
+				this.status.loading.fieldNotices = false;
+
+				return this.fetchFieldNoticeBulletins();
+			}),
+			catchError(err => {
+				this.status.loading.fieldNotices = false;
+				this.logger.error('hardware.component : fetchFieldNotices() ' +
+					`:: Error : (${err.status}) ${err.message}`);
+
+				return of({ });
+			}),
+		);
+	}
+
+	/**
+	 * Handler for selecting row
+	 * @param row the row selected
+	 */
+	public onRowSelect (row) {
+		row.active = false;
+		row.toggleWell = !row.toggleWell;
 	}
 
 	/**
@@ -241,105 +302,64 @@ export class AssetDetailsHardwareComponent implements OnInit, OnChanges, OnDestr
 
 		this.refresh$
 		.pipe(
-			tap(() => {
-				this.hardwareModules = null;
-				this.hardwareModulesTable = null;
-				this.eolData = null;
-				this.eolBulletinData = null;
-				this.timelineData = null;
-				this.migrationData = null;
-				this.migrationTable = null;
-			}),
 			switchMap(() => {
-				const obsBatch = [];
-				const hwInstanceId = _.get(this.asset, 'hwInstanceId');
+				this.hardwareTable = new CuiTableOptions({
+					bordered: false,
+					columns: [
+						{
+							key: 'expandAction',
+							name: '',
+							sortable: false,
+							sortDirection: 'asc',
+							sorting: false,
+							template: this.expandTemplate,
+							width: '40px',
+						},
+						{
+							key: 'equipmentType',
+							name: I18n.get('_Type_'),
+							sortable: true,
+							sortDirection: 'asc',
+							sorting: true,
+							template: this.typeTemplate,
+							width: '100px',
+						},
+						{
+							key: 'serialNumber',
+							name: I18n.get('_SerialNumber_'),
+							sortable: true,
+							template: this.serialTemplate,
+						},
+						{
+							key: 'productId',
+							name: I18n.get('_ProductID_'),
+							sortable: true,
+							template: this.productIDTemplate,
+						},
+						{
+							key: 'cxLevel',
+							name: I18n.get('_SupportLevel_'),
+							render: item => item.cxLevel || I18n.get('_NA_'),
+							sortable: true,
+						},
+					],
+					padding: 'compressed',
+					rowWellColor: '#f4f6f8',
+					rowWellTemplate: this.hardwareTemplate,
+					selectable: false,
+					singleSelect: true,
+					striped: false,
+					wrapText: true,
+				});
 
-				if (hwInstanceId) {
-					this.hardwareEOLParams = {
-						customerId: this.customerId,
-						hwInstanceId: [hwInstanceId],
-					};
+				const sortColumn = _.find(this.hardwareTable.columns, 'sorting');
+				this.hardwareAssets = _.orderBy(this.hardwareAssets,
+					[sortColumn.key], [sortColumn.sortDirection]);
 
-					obsBatch.push(this.fetchEOLData());
-
-					this.moduleParams = {
-						containingHwId: [hwInstanceId],
-						customerId: this.customerId,
-						equipmentType: ['MODULE'],
-					};
-
-					this.hardwareModulesTable = new CuiTableOptions({
-						bordered: false,
-						columns: [
-							{
-								key: 'productType',
-								name: I18n.get('_Type_'),
-								sortable: false,
-								template: this.typeTemplate,
-							},
-							{
-								key: 'productFamily',
-								name: `${I18n.get('_ProductFamily_')} / ${I18n.get('_ID_')}`,
-								sortable: false,
-								template: this.familyTemplate,
-								width: '50%',
-							},
-							{
-								key: 'serialNumber',
-								name: I18n.get('_SerialNumber_'),
-								sortable: false,
-								template: this.serialTemplate,
-							},
-						],
-						padding: 'compressed',
-						striped: false,
-						wrapText: true,
-					});
-
-					this.migrationTable = new CuiTableOptions({
-						bordered: false,
-						columns: [
-							// {
-							// 	key: 'migrationProductModel',
-							// 	name: I18n.get('_ProductModel_'),
-							// 	sortable: false,
-							// 	template: this.migrationModelTemplate,
-							// 	width: '150px',
-							// },
-							// {
-							// 	key: 'migrationProductSeries',
-							// 	name: I18n.get('_ProductSeries_'),
-							// 	render: item =>
-							// 		item.migrationProductSeries ?
-							// 		item.migrationProductSeries : I18n.get('_NA_'),
-							// 	sortable: false,
-							// },
-							{
-								key: 'migrationPid',
-								name: `${I18n.get('_ProductID_')}`,
-								render: item =>
-									item.migrationPid ?
-									item.migrationPid : I18n.get('_NA_'),
-								sortable: false,
-							},
-							{
-								name: `${I18n.get('_SerialNumber_')}`,
-								sortable: false,
-							},
-							{
-								name: `${I18n.get('_IPAddress_')}`,
-								sortable: false,
-							},
-						],
-						padding: 'compressed',
-						striped: false,
-						wrapText: true,
-					});
-
-					obsBatch.push(this.fetchModuleData());
-				}
-
-				return forkJoin(obsBatch);
+				return forkJoin([
+					this.fetchEOLData(),
+					this.fetchFieldNotices(),
+				]);
 			}),
 			takeUntil(this.destroyed$),
 		)
@@ -351,17 +371,37 @@ export class AssetDetailsHardwareComponent implements OnInit, OnChanges, OnDestr
 	}
 
 	/**
+	 * On "Open a Case" button pop up "Open Case" component
+	 * @param hardwareAsset the hardware to open the case on
+	 */
+	public openCase (hardwareAsset: ModHardwareAsset) {
+		this.cuiModalService.showComponent(CaseOpenComponent,
+			{ asset: hardwareAsset, element: this.element }, 'fluid');
+	 }
+
+	/**
 	 * Initializes the component
 	 */
 	public ngOnInit (): void {
 		this.buildRefreshSubject();
-		this.userResolve.getCustomerId()
+
+		this.racetrackInfoService.getCurrentSolution()
 		.pipe(
 			takeUntil(this.destroyed$),
 		)
-		.subscribe((id: string) => {
-			this.customerId = id;
-			this.refresh$.next();
+		.subscribe((solution: RacetrackSolution) => {
+			this.selectedSolutionName = _.get(solution, 'name');
+		});
+
+		this.racetrackInfoService.getCurrentTechnology()
+		.pipe(
+			takeUntil(this.destroyed$),
+		)
+		.subscribe((technology: RacetrackTechnology) => {
+			if (this.selectedTechnologyName !== _.get(technology, 'name')) {
+				this.selectedTechnologyName = _.get(technology, 'name');
+				this.refresh$.next();
+			}
 		});
 	}
 
@@ -378,8 +418,8 @@ export class AssetDetailsHardwareComponent implements OnInit, OnChanges, OnDestr
 	 * @param changes the changes detected
 	 */
 	public ngOnChanges (changes: SimpleChanges) {
-		const currentAsset = _.get(changes, ['asset', 'currentValue']);
-		if (currentAsset && !changes.asset.firstChange) {
+		const currentAsset = _.get(changes, ['hardwareAsset', 'currentValue']);
+		if (currentAsset && !changes.hardwareAsset.firstChange) {
 			this.refresh$.next();
 		}
 	}
@@ -388,26 +428,56 @@ export class AssetDetailsHardwareComponent implements OnInit, OnChanges, OnDestr
 	 * Sets the timeline data
 	 */
 	private setTimelineData () {
-		this.timelineData = [];
-		eolTimelineProperties.forEach(property => {
-			const propertyName = _.get(property, 'propertyName', '');
-			const label = _.get(property, 'label', '');
-			const urlName = _.get(property, 'urlName');
-			const value: string = _.get(this.eolBulletinData, propertyName, '');
-			const url: string = _.get(this.eolBulletinData, urlName);
+		_.each(this.hardwareAssets, (asset: ModHardwareAsset) => {
+			if (!_.isEmpty(_.get(asset, ['eol', 'bulletin']))) {
+				_.set(asset, ['eol', 'timelineData'], []);
 
-			if (value) {
-				const data: TimelineDatapoint = {
-					date: new Date(value),
-					subTitle: new Date(value).toDateString(),
-					title: I18n.get(label),
-				};
+				eolTimelineProperties.forEach(property => {
+					const propertyName = _.get(property, 'propertyName', '');
+					const label = _.get(property, 'label', '');
+					const urlName = _.get(property, 'urlName');
+					const value: string = _.get(asset, ['eol', 'bulletin', propertyName], '');
+					const url: string = _.get(asset, ['eol', 'bulletin', urlName]);
 
-				if (url) {
-					data.url = url;
+					if (value) {
+						const data: TimelineDatapoint = {
+							date: new Date(value),
+							subTitle: new Date(value).toDateString(),
+							title: I18n.get(label),
+						};
+
+						if (url) {
+							data.url = url;
+						}
+
+						asset.eol.timelineData.push(data);
+					}
+				});
+
+				const lastDateOfSupport = _.get(asset.eol,
+					['bulletin', 'lastDateOfSupport']);
+				let todayClass;
+				let todayIcon = 'warning';
+
+				if (lastDateOfSupport) {
+					const ldosTime = DateTime.fromISO(lastDateOfSupport);
+
+					if (ldosTime.diffNow('months').months < 6) {
+						todayClass = 'label label--danger';
+						_.set(asset, ['eol', 'ldosAnnouncement'], true);
+						_.set(asset, ['eol', 'ldosAnnouncementLabel'], 'danger');
+					} else if (ldosTime.diffNow('months').months < 12) {
+						todayClass = 'label label--warning-alt';
+						_.set(asset, ['eol', 'ldosAnnouncement'], true);
+						_.set(asset, ['eol', 'ldosAnnouncementLabel'], 'warning-alt');
+					} else {
+						todayClass = 'label label--info';
+						_.set(asset, ['eol', 'ldosAnnouncement'], false);
+						todayIcon = null;
+					}
 				}
-
-				this.timelineData.push(data);
+				_.set(asset, ['eol', 'timelineTodayIcon'], todayIcon);
+				_.set(asset, ['eol', 'timelineTodayClass'], todayClass);
 			}
 		});
 	}

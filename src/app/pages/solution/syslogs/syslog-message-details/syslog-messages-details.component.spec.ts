@@ -17,7 +17,6 @@ describe('SyslogMessagesDetailsComponent', () => {
 	let component: SyslogMessagesDetailsComponent;
 	let fixture: ComponentFixture<SyslogMessagesDetailsComponent>;
 	let syslogsService: SyslogsService;
-	const mockAsset: SyslogPanelGridData = Object.create({ });
 
 	configureTestSuite(() => {
 		TestBed.configureTestingModule({
@@ -79,17 +78,11 @@ describe('SyslogMessagesDetailsComponent', () => {
 	});
 	it('Should get the syslog device message grid data', () => {
 		const param = {
-			active: true,
-			DeviceHost: '10.10.10.10',
-			ProductFamily: 'Cisco Catalyst 2960-S Series Switches',
-			ProductId: 'WS-C2960S-24PS-L',
-			SoftwareType: 'IOS',
-			SoftwareVersion: '12.2(53)SE2',
-			syslogCount: 6,
+			syslogId: '12345',
 		};
 		spyOn(syslogsService, 'getPanelGridData')
 			.and
-			.returnValue(of(SyslogScenarios[7].scenarios.GET[0].response.body));
+			.returnValue(of(SyslogScenarios[2].scenarios.POST[0].response.body));
 
 		const asset: SyslogPanelGridData = Object.create({ });
 		asset.count = 10;
@@ -100,70 +93,9 @@ describe('SyslogMessagesDetailsComponent', () => {
 		component.customerId = '12345';
 		component.loadSyslogPaneldata(param);
 
-		expect(component.tableData)
-			.toBeDefined();
-	});
-	it('Should get the syslog message details grid data After fileter', done => {
-		spyOn(syslogsService, 'getPanelFilterGridData')
-			.and
-			.returnValue(of(SyslogScenarios[5].scenarios.GET[0].response.body));
-		component.onSelection();
-		fixture.whenStable()
-			.then(() => {
-				fixture.detectChanges();
-				expect(component.tableData)
-					.toBeDefined();
-				done();
-			});
-	});
-	it('should set null values on request errors', done => {
-		const error = {
-			status: 404,
-			statusText: 'Resource not found',
-		};
-		spyOn(syslogsService, 'getPanelFilterGridData')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-		fixture.whenStable()
-			.then(() => {
-				fixture.detectChanges();
-				const messagegrid = [];
-				expect(component.tableData)
-					.toEqual(messagegrid);
-
-				done();
-			});
-	});
-
-	it('Should get the syslog message details filter values', done => {
-		const param = {
-			active: true,
-			DeviceHost: '10.10.10.10',
-			ProductFamily: 'Cisco Catalyst 2960-S Series Switches',
-			ProductId: 'WS-C2960S-24PS-L',
-			SoftwareType: 'IOS',
-			SoftwareVersion: '12.2(53)SE2',
-			syslogCount: 6,
-		};
-		spyOn(syslogsService, 'getPanelFilterData')
-			.and
-			.returnValue(of(SyslogScenarios[6].scenarios.GET[0].response.body));
-		mockAsset.count = 10;
-		component.asset = mockAsset;
-		component.loadSyslogPanelFilter(param);
-		fixture.detectChanges();
-		expect(component.softwareItems)
-			.toBeDefined();
-		done();
-	});
-
-	it('should update pager', () => {
-		component.onPagerUpdated({
-			page: 1,
-		});
-		expect(component.tableConfig.tableOffset)
+		expect(component.tableData.length)
+			.toBeGreaterThan(0);
+		expect(component.count)
 			.toEqual(1);
-		expect(component.paginationConfig.pageNum)
-			.toEqual(2);
 	});
 });

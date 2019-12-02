@@ -2,9 +2,9 @@
 export interface SecurityAdvisory {
 
   /**
-   * This refers to the OS running on the managed network element. For example:- IOS, IOS-XE, NxOS
+   * Internally generated ID for a security advisory
    */
-  swType?: string;
+  advisoryId?: number;
 
   /**
    * Unique identifier of a Cisco customer
@@ -37,9 +37,9 @@ export interface SecurityAdvisory {
   equipmentType?: string;
 
   /**
-   * The unique, generated ID of the network resource id
+   * This refers to the OS running on the managed network element. For example:- IOS, IOS-XE, NxOS
    */
-  managedNeId?: string;
+  swType?: string;
 
   /**
    * The version of the softwareType running on the managed NE
@@ -47,9 +47,9 @@ export interface SecurityAdvisory {
   swVersion?: string;
 
   /**
-   * Internally generated ID for a security advisory
+   * The unique, generated ID of the network resource id
    */
-  advisoryId?: number;
+  managedNeId?: string;
 
   /**
    * The Cisco.com Title/Headline for the bulletin
@@ -70,4 +70,9 @@ export interface SecurityAdvisory {
    * When set to true (Y), it indicates that the PSIRT is publicly available. Otherwise it is internal use only to authorized users
    */
   publicReleaseIndicator?: 'Y' | 'N';
+  hostname?: string;
+  ipAddress?: string;
+  cxLevel?: string;
+  saId?: number;
+  vaId?: Array<number>;
 }

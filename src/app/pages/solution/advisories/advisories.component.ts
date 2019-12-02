@@ -5,6 +5,7 @@ import {
 	TemplateRef,
 	OnDestroy,
 	ElementRef,
+	ViewEncapsulation,
 } from '@angular/core';
 import { I18n } from '@cisco-ngx/cui-utils';
 import {
@@ -82,6 +83,7 @@ interface SelectedSubfilter {
  * Advisories Component
  */
 @Component({
+	encapsulation: ViewEncapsulation.None,
 	selector: 'app-advisories',
 	styleUrls: ['./advisories.component.scss'],
 	templateUrl: './advisories.component.html',
@@ -159,6 +161,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 		}
 	}
 	@ViewChild('contentContainer', { static: false }) private contentContainer: ElementRef;
+	@ViewChild('borgBugSeverityTemplate', { static: true }) private borgBugSeverityTemplate: TemplateRef<{ }>;
 
 	constructor (
 		private diagnosticsService: DiagnosticsService,
@@ -341,12 +344,6 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 							value: 'title',
 						},
 						{
-							key: 'version',
-							name: I18n.get('_Version_'),
-							sortable: true,
-							template: this.versionTemplate,
-						},
-						{
 							key: 'lastUpdated',
 							name: I18n.get('_Updated_'),
 							sortable: true,
@@ -424,6 +421,15 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 							value: 'severity',
 						},
 						{
+							key: 'cdetsSeverity',
+							name: I18n.get('_BorgBugICSeverity_'),
+							sortable: true,
+							sortDirection: 'desc',
+							sorting: true,
+							template: this.borgBugSeverityTemplate,
+							value: 'cdetsSeverity',
+						},
+						{
 							key: 'title',
 							name: I18n.get('_Title_'),
 							sortable: true,
@@ -473,6 +479,10 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 
 		this.activeIndex = _.findIndex(this.tabs, 'selected');
 
+		if (this.activeIndex === -1) {
+			this.selectTab(0);
+		}
+
 		this.buildSecurityAdvisoriesSubject();
 		this.buildFieldNoticesSubject();
 		this.buildBugsSubject();
@@ -501,7 +511,6 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 	/**
 	 * Builds the search debounce subscription for Security Advisories
 	 * @param tab tab to perform search
-	 * @returns Search Subscription
 	 */
 	private searchSubscription (tab) {
 		fromEvent(tab.searchInput.nativeElement, 'keyup')
@@ -636,7 +645,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 							filter: 'further-out',
 							filterValue: [`,${
 									_.get(furtherOut, 'toTimestampInMillis')}`],
-							label: _.toLower(I18n.get('_FurtherOut_')),
+							label: `> 90 ${I18n.get('_Days_')}`,
 							selected: false,
 							value: furtherOutValue,
 						});
@@ -726,7 +735,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 						filter: 'further-out',
 						filterValue: [`,${
 								_.get(furtherOut, 'toTimestampInMillis')}`],
-						label: _.toLower(I18n.get('_FurtherOut_')),
+						label: `> 90 ${I18n.get('_Days_')}`,
 						selected: false,
 						value: furtherOutValue,
 					});
@@ -854,7 +863,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 			.pipe(
 				map((response: HttpResponse<null>) => {
 					totalFieldNoticesFilter.seriesData = [{
-						value: _.toNumber(response.headers.get('X-API-RESULT-COUNT')) || 0,
+						value: _.toNumber(_.invoke(response, 'headers.get', 'X-API-RESULT-COUNT')) || 0,
 					}];
 					totalFieldNoticesFilter.loading = false;
 				}),
@@ -875,7 +884,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 			.pipe(
 				map((response: HttpResponse<null>) => {
 					totalAdvisoryFilter.seriesData = [{
-						value: _.toNumber(response.headers.get('X-API-RESULT-COUNT')) || 0,
+						value: _.toNumber(_.invoke(response, 'headers.get', 'X-API-RESULT-COUNT')) || 0,
 					}];
 					totalAdvisoryFilter.loading = false;
 				}),
@@ -896,7 +905,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 			.pipe(
 				map((response: HttpResponse<null>) => {
 					totalBugsFilter.seriesData = [{
-						value: _.toNumber(response.headers.get('X-API-RESULT-COUNT')) || 0,
+						value: _.toNumber(_.invoke(response, 'headers.get', 'X-API-RESULT-COUNT')) || 0,
 					}];
 					totalBugsFilter.loading = false;
 				}),

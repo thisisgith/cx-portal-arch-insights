@@ -1,4 +1,5 @@
 @import '~cisco-ui/src/scss/utilities/_variables.scss';
+@import '~src/variables.scss';
 
 %tr-shared {
 	border-bottom-style: solid;
@@ -30,11 +31,11 @@ tr.td-row::after {
 	border-spacing: 2px;
 	border-collapse: collapse;
 	margin-top: 20px;
-	color: #6c757d;
+	color: $gray-text-color;
 
 	.sortable:hover,
 	.sortable.sorted {
-		color: #227bb1;
+		color: $default-link-color;
 	}
 
 	.icon-chevron-down,
@@ -139,7 +140,7 @@ tr.td-row::after {
 					}
 
 					&::after {
-						color: #00bceb;
+						color: $accent-color1;
 						font-size: 16px;
 					}
 				}

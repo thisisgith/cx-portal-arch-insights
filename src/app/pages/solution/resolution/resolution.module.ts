@@ -18,6 +18,7 @@ import {
 	CuiTabsModule,
 	CuiPagerModule,
 	CuiSpinnerModule,
+	CuiModalModule,
 } from '@cisco-ngx/cui-components';
 import { I18nPipeModule, FromNowPipeModule } from '@cisco-ngx/cui-pipes';
 import { DetailsPanelModule } from 'src/app/components/details/panel/details-panel.module';
@@ -48,18 +49,14 @@ const childRoutes: Routes = [
 		ReactiveFormsModule,
 		CaseDetailsModule,
 		CaseDetailsHeaderModule,
-		CaseDetailsModule,
-		CommonModule,
+		CuiModalModule,
 		CuiPagerModule,
 		CuiSpinnerModule,
 		CuiTableModule,
 		CuiTabsModule,
 		DetailsPanelModule,
-		FormsModule,
 		I18nPipeModule,
 		FromNowPipeModule,
-		ReactiveFormsModule,
-		RouterModule.forChild(childRoutes),
 		VisualFilterBarModule,
 		DateTimePipeModule,
 		AssetDetailsModule,

@@ -1,4 +1,4 @@
-@import './variables.scss';
+@import '~src/variables.scss';
 @import "~mapbox-gl/dist/mapbox-gl.css";
 @import '~cisco-ui/src/scss/cui-standard.scss';
 
@@ -33,19 +33,19 @@
 }
 
 .cx-text-default {
-	color: #394454;
+	color: $default-text-color;
 }
 
 .cx-text-secondary {
-	color: #5d656c;
+	color: $secondary-and-button-text-color;
 }
 
 .cx-text-gray {
-	color: #6c757d;
+	color: $gray-text-color;
 }
 
 .cx-text-light-gray {
-	color: #8e8e8e;
+	color: $light-gray-text-color;
 }
 
 // custom CXP button
@@ -63,9 +63,9 @@
 	);
 	@include btn-color(
 		$color: #fff !important,
-		$background: #00bceb,
-		$background-disabled: #00bceb,
-		$background-hover: #227bb1,
+		$background: $accent-color1,
+		$background-disabled: $accent-color1,
+		$background-hover: $default-link-color,
 		$background-active: #176899,
 		$background-focus: #176899
 	);
@@ -82,19 +82,19 @@
 
 	&--primary {
 		@include btn-color(
-			$color: #5d656c !important,
-			$color-hover: #394454 !important,
-			$color-active: #394454 !important,
+			$color: $secondary-and-button-text-color !important,
+			$color-hover: $default-text-color !important,
+			$color-active: $default-text-color !important,
 			$color-focus: #176899 !important,
 			$background: #fff,
 			$background-disabled: #fff,
 			$background-hover: #cdeaec,
-			$background-active: #95d1d6,
+			$background-active: $button-outline-color,
 			$background-focus: #cdeaec,
-			$border-disabled: #95d1d6
+			$border-disabled: $button-outline-color
 		);
 
-		box-shadow: 0 0 0 1px #95d1d6;
+		box-shadow: 0 0 0 1px $button-outline-color;
 
 		&.focus,
 		&:focus {
@@ -104,21 +104,21 @@
 
 	&--secondary {
 		@include btn-color(
-			$color: #00bceb !important,
+			$color: $accent-color1 !important,
 			$background: #fff,
 			$background-disabled: #fff,
 			$background-hover: #fff,
 			$background-active: #fff,
 			$background-focus: #fff,
-			$border-disabled: #00bceb
+			$border-disabled: $accent-color1
 		);
 
-		box-shadow: 0 0 0 1px #00bceb;
+		box-shadow: 0 0 0 1px $accent-color1;
 
 		&.hover,
 		&:hover {
-			box-shadow: 0 0 0 1px #227bb1;
-			color: #227bb1 !important;
+			box-shadow: 0 0 0 1px $default-link-color;
+			color: $default-link-color !important;
 		}
 
 		&.active,
@@ -176,13 +176,13 @@
 
 		&.disabled {
 			background-color: transparent;
-			color: #8e8e8e;
+			color: $light-gray-text-color;
 			opacity: 0.6;
 		}
 	}
 
 	&.active > a {
-		background: #00bceb;
+		background: $accent-color1;
 		font-weight: bold;
 		border-color: transparent;
 		box-shadow: none;
@@ -209,8 +209,8 @@
 .cui .nav-tabs > li:hover > a,
 .cui ul.tabs > li.active > a,
 .cui ul.tabs > li:hover > a {
-	box-shadow: 0 -2px 0 #00bceb inset;
-	color: var(--accent-color1, #00bceb);
+	box-shadow: 0 -2px 0 $accent-color1 inset;
+	color: $accent-color1;
 }
 
 .cui .pagination > li + li {
@@ -241,7 +241,7 @@
 }
 
 .cui .label--info {
-	background: #64bbe3;
+	background: $link-font-color;
 	color: #39393b;
 }
 
@@ -313,3 +313,11 @@
 	color: #848587;
 }
 
+button.btn.btn-ctc {
+	background: $cisco-blue;
+	font-weight: $base-dl-label-font-weight !important;
+
+	&:hover {
+		background: $vibrant-blue;
+	}
+}

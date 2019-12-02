@@ -28,7 +28,7 @@ import {
 } from '@sdp-api';
 import { catchError, takeUntil, finalize } from 'rxjs/operators';
 import { empty, Subject } from 'rxjs';
-import { RacetrackInfoService } from '../../../../services/racetrack-info';
+import { RacetrackInfoService } from '@services';
 
 import * as _ from 'lodash-es';
 
@@ -102,7 +102,7 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 	public loadingListRight = false;
 	public error = false;
 	public errorMessage: string;
-
+	public isDeviceListEmpty: boolean;
 	public submitCall: Function;
 	public leftListCall: Function;
 	public rightListCall: Function;
@@ -303,8 +303,8 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 				customerId: this.customerId,
 				pageNumber: String(this.pageNumber),
 				rowsPerPage: String(this.rowsPerPage),
-				solution: this.solution.name,
-				useCase: this.technology.name,
+				solution: _.get(this, 'solution.name', 'IBN'),
+				useCase: _.get(this, 'technology.name', 'Campus Software Image Management'),
 			};
 
 			return this.devicePolicyService.getDevicesForPolicyCreationUsingGET1(params);
@@ -346,8 +346,8 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 				customerId: this.customerId,
 				pageNumber: String(this.pageNumber),
 				rowsPerPage: String(this.rowsPerPage),
-				solution: this.solution.name,
-				useCase: this.technology.name,
+				solution: _.get(this, 'solution.name', 'IBN'),
+				useCase: _.get(this, 'technology.name', 'Campus Software Image Management'),
 			};
 
 			return this.devicePolicyService.getDevicesForIgnorePolicyCreationUsingGET(params);
@@ -383,8 +383,8 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 				customerId: this.customerId,
 				pageNumber: String(this.pageNumber),
 				rowsPerPage: String(this.rowsPerPage),
-				solution: this.solution.name,
-				useCase: this.technology.name,
+				solution: _.get(this, 'solution.name', 'IBN'),
+				useCase: _.get(this, 'technology.name', 'Campus Software Image Management'),
 			};
 
 			return this.devicePolicyService.getDevicesForPolicyCreationUsingGET1(params);
@@ -444,8 +444,8 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 				pageNumber: String(this.pageNumber),
 				policyId: _.get(this.policy, 'policyId'),
 				rowsPerPage: String(this.rowsPerPage),
-				solution: this.solution.name,
-				useCase: this.technology.name,
+				solution: _.get(this, 'solution.name', 'IBN'),
+				useCase: _.get(this, 'technology.name', 'Campus Software Image Management'),
 			};
 
 			return this.devicePolicyService.getEligibleDevicesForGivenIgnorePolicyUsingGET(params);
@@ -460,7 +460,8 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 				rowsPerPage: '9999',
 			};
 
-			return this.devicePolicyService.getDevicesForGivenIgnorePolicyUsingGET(params);
+			return this.devicePolicyService
+				.getDevicesForGivenIgnorePolicyUsingGET(params);
 		};
 
 		this.submitCall = function () {
@@ -595,7 +596,7 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 	 * @returns copied object
 	 */
 	private jsonCopy (obj: any) {
-		return JSON.parse(JSON.stringify(obj));
+		return _.cloneDeep(obj);
 	}
 
 	/**
@@ -735,6 +736,7 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 	 * Submit the completed Collection Form
 	 */
 	public onSubmit () {
+		this.loading = true;
 		this.submitCall()
 			.pipe(
 				catchError(err => {
@@ -746,6 +748,7 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 				takeUntil(this.destroyed$),
 			)
 			.subscribe(() => {
+				this.loading = false;
 				this.logger.debug('Submitted Policy Form');
 				this.submitted.emit(true);
 			});
@@ -781,18 +784,17 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 				this.totalRows = _.get(response, ['pagination', 'totalRows']);
 
 				this.deviceListLeft = this.jsonCopy(_.get(response, 'data'));
-
+				this.isDeviceListEmpty = this.deviceListLeft.length > 0;
 				const rightHwIds = _.map(this.deviceListRight, item =>
-					_.get(item, 'hwId'));
+					_.get(item, 'pk'));
 
 				for (let index = this.deviceListLeft.length - 1; index >= 0; index -= 1) {
-					const leftHwIds = _.get(this.deviceListLeft[index], 'hwId');
+					const leftHwIds = _.get(this.deviceListLeft[index], 'pk');
 
 					if (rightHwIds.includes(leftHwIds)) {
-						this.logger.debug(`already have hwId ${leftHwIds}`);
+						this.logger.debug(`already have pk ${leftHwIds}`);
 						this.deviceListLeft.splice(index, 1);
 					}
-
 				}
 
 				this.handleLeftDeviceSelectionChanged();

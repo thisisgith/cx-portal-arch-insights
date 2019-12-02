@@ -43,6 +43,9 @@
 								<li
 									*ngIf="oldPwErrors.needsNumber"
 									[innerText]="'_MissingNumerical_' | i18n"></li>
+								<li
+									*ngIf="oldPwErrors.oldAndNewMatch"
+									[innerText]="oldPwErrors.oldAndNewMatch.value"></li>
 							</ul>
 						</ng-container>
 					</div>
@@ -76,6 +79,9 @@
 								<li
 									*ngIf="pwErrors.needsNumber"
 									[innerText]="'_MissingNumerical_' | i18n"></li>
+								<li
+									*ngIf="pwErrors.oldAndNewMatch"
+									[innerText]="pwErrors.oldAndNewMatch.value"></li>
 							</ul>
 						</ng-container>
 					</div>

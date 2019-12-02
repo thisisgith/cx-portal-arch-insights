@@ -1,29 +1,9 @@
 import { Component, EventEmitter, HostListener, OnInit, Output } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SetupIEStateService } from '../../setup-ie-state.service';
 import { KEY_CODES } from '@classes';
-
-/**
- * Custom Validator for IP Address
- * @param control {AbstractControl}
- * @returns function
- */
-function validateIpAddress (control: AbstractControl) {
-	const error = { value: 'Invalid IP Address Error' };
-	const regexMatch = control.value
-		&& control.value.match(/(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/);
-	if (!regexMatch) { return error; }
-	let hasError = false;
-	regexMatch.slice(1, 5)
-		.forEach(elem => {
-			const num = parseInt(elem, 10);
-			if (isNaN(num) || num > 255) { hasError = true; }
-		});
-	if (hasError) { return error; }
-
-	return null;
-}
+import { validateIpAddress } from '@utilities';
 
 /**
  * ConnectComponent

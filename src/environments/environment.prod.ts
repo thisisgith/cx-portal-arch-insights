@@ -13,9 +13,9 @@ export const environment = {
 	origin,
 	auth: {
 		accountUrl: `${origin}/ws/account/v2/`,
-		ciscoTokenUrl: `${origin}/ws/oauth/v3/token/cisco`,
-		referUrl: `${origin}/ws/oauth/v3/sso/`,
-		tokenUrl: `${origin}/ws/oauth/v3/token/cway/` +
+		ciscoTokenUrl: `${origin}/ws/oauth/v4/token/cisco`,
+		referUrl: `${origin}/ws/oauth/v4/sso/`,
+		tokenUrl: `${origin}/ws/oauth/v4/token/cway/` +
 			'e4f602992449cdb1d4aea2df5849f7d6ebd4280c1c8e1398fcfec534422533b8',
 	},
 	baseHref: '/portal/',
@@ -82,9 +82,10 @@ export const environment = {
 	sdpServiceOrigin: 'https://api.cisco.com',
 	sdpServicePaths: {
 		contracts: '/api/usa/v1/contracts',
-		controlpoints: '/api/usa/customerportal/controlpoint',
 		customerportal: '/api/usa/customerportal',
+		cxportal: '/api/cxportal',
 		inventory: '/api/usa/v1/inventory',
+		partner: '/api/usa/cxportal',
 	},
 	// ClientSSOInterceptor: No auth token for the typeahead url
 	typeaheadServiceOrigin: 'https://xresps.cloudapps.cisco.com',

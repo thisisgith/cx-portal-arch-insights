@@ -1,0 +1,14 @@
+<div class="text-center">
+	<div [innerText]="'_CXPortalTeam_' | i18n"
+		class="xl-margin-top base-margin-bottom step-title">
+	</div>
+	<user-mgmt (onUpdate)="continue()"></user-mgmt>
+	<div class="flex-center">
+		<button
+			data-auto-id="next-slide-btn"
+			class="btn cx-btn base-margin-right"
+			[innerText]="'_Continue_' | i18n"
+			(click)="continue()">
+		</button>
+	</div>
+</div>

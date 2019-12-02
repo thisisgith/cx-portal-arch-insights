@@ -2,9 +2,9 @@
 export interface FieldNotice {
 
   /**
-   * The name of a group of products derived from a common product platform
+   * The Cisco.com Title/Headline for the bulletin
    */
-  productFamily?: string;
+  bulletinTitle?: string;
 
   /**
    * Unique identifier of a Cisco customer
@@ -37,9 +37,9 @@ export interface FieldNotice {
   serialNumber?: string;
 
   /**
-   * The unique, generated ID of the network resource id
+   * The name of a group of products derived from a common product platform
    */
-  managedNeId?: string;
+  productFamily?: string;
 
   /**
    * A broad classification of Cisco product that categorizes its function.Examples :- OTHER, CHASIS, MODULE, POWERSUPPLY, FAN, IPPHONE
@@ -52,9 +52,9 @@ export interface FieldNotice {
   fieldNoticeId?: number;
 
   /**
-   * The Cisco.com Title/Headline for the bulletin
+   * The unique, generated ID of the network resource id
    */
-  bulletinTitle?: string;
+  managedNeId?: string;
 
   /**
    * The vulnerability status of a Network element. Example:- Vulnerable, Potentially Vulnerable, Not Vulnerable
@@ -75,4 +75,10 @@ export interface FieldNotice {
    * The explanations about why the automation may need additional review by the customer
    */
   caveat?: string;
+  ipAddress?: string;
+  hostname?: string;
+  swVersion?: string;
+  cxLevel?: string;
+  saId?: number;
+  vaId?: Array<number>;
 }

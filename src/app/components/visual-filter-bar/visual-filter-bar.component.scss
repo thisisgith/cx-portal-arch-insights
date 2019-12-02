@@ -1,5 +1,6 @@
 /* SCSS Component File */
 @import '~cisco-ui/src/scss/utilities/_variables.scss';
+@import '~src/variables.scss';
 
 .filter {
 	&__selected {
@@ -94,7 +95,7 @@
 
 .visual-filter__card__title {
 	margin-top: 5px;
-	color: var(--default-text-color, #394454);
+	color: $default-text-color;
 	font-size: 12px;
 	font-weight: 400;
 	line-height: 20px;

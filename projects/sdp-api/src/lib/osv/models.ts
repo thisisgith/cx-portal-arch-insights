@@ -18,3 +18,6 @@ export { MachineRecommendations } from './models/machine-recommendations'
 export { MachineRecommendationsResponse } from './models/machine-recommendations-response'
 export { OsvSeverity } from './models/osv-severity';
 export { ProfileRecommendationsResponse } from './models/profile-recommendations-response';
+export { RecommendationTypeCount } from './models/recommendation-type-count';
+export { RecommendationStatusCount } from './models/recommendation-status-count';
+export { ExpertRecommendations } from './models/expert-recommendations';

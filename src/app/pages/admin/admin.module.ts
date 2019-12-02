@@ -13,8 +13,12 @@ import { ControlPointsModule } from '@sdp-api';
 import { AdminAssetsComponent, AdminAssetsModule } from './assets';
 import { SettingsComponent, SettingsModule } from './settings';
 import { PoliciesComponent, PoliciesModule } from './policies';
+import { UsersComponent, UsersModule } from './users';
+import { AdminComplienceComponent, AdminComplienceModule } from './complience';
+import { ChangePasswordComponent, ChnagePasswordModule } from './change-password';
 
 import { environment } from '@environment';
+import { RouteGuard } from './route-guard';
 
 /**
  * Child routes for Settings Module for lazy loading
@@ -23,6 +27,11 @@ const childRoutes: Routes = [
 	{
 		component: AdminAssetsComponent,
 		path: 'assets',
+	},
+	{
+		canActivate: [RouteGuard],
+		component: AdminComplienceComponent,
+		path: 'compliance',
 	},
 	{
 		component: SettingsComponent,
@@ -35,6 +44,14 @@ const childRoutes: Routes = [
 	{
 		component: PoliciesComponent,
 		path: 'policies',
+	},
+	{
+		component: ChangePasswordComponent,
+		path: 'changepassword',
+	},
+	{
+		component: UsersComponent,
+		path: 'users',
 	},
 	{
 		path: '',
@@ -54,9 +71,11 @@ const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 @NgModule({
 	imports: [
 		AdminAssetsModule,
+		AdminComplienceModule,
 		CommonModule,
 		ControlPointsModule,
 		ControlPointsModule.forRoot({ rootUrl }),
+		ChnagePasswordModule,
 		CuiGaugeModule,
 		CuiLabelsModule,
 		CuiSidebarModule,
@@ -65,6 +84,7 @@ const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 		PoliciesModule,
 		RouterModule.forChild(childRoutes),
 		SettingsModule,
+		UsersModule,
 	],
 })
 export class AdminModule { }

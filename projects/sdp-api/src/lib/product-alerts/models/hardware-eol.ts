@@ -2,14 +2,14 @@
 export interface HardwareEOL {
 
   /**
+   * An indication of the general hardware type of the physical entity (e.g. CHASSIS, MODULE, POWER SUPPLY, POWERSUPPLY, FAN, IPPHONE, OTHER)
+   */
+  equipmentType?: string;
+
+  /**
    * Unique identifier of a Cisco customer
    */
   customerId?: string;
-
-  /**
-   * The unique, generated ID of the managed network element
-   */
-  managedNeId?: string;
 
   /**
    * The unique, generated ID of the network element
@@ -27,9 +27,9 @@ export interface HardwareEOL {
   productId?: string;
 
   /**
-   * An indication of the general hardware type of the physical entity (e.g. CHASSIS, MODULE, POWER SUPPLY, POWERSUPPLY, FAN, IPPHONE, OTHER)
+   * The unique, generated ID of the managed network element
    */
-  equipmentType?: string;
+  managedNeId?: string;
 
   /**
    * The unique identifier for hardware end-of-life entry in a data store
@@ -40,4 +40,7 @@ export interface HardwareEOL {
    * Bulletin Name
    */
   bulletinName?: string;
+  cxLevel?: string;
+  saId?: number;
+  vaId?: Array<number>;
 }

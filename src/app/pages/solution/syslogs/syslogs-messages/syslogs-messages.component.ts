@@ -11,7 +11,7 @@ import {
 
 import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
-import { SyslogsService, SyslogGridData, SyslogFilter } from '@sdp-api';
+import { SyslogsService, SyslogGridData, SyslogFilter, SyslogResponseData } from '@sdp-api';
 import { Subject, of, Subscription } from 'rxjs';
 import { takeUntil, catchError } from 'rxjs/operators';
 import { I18n } from '@cisco-ngx/cui-utils';
@@ -29,6 +29,8 @@ import { DetailsPanelStackService } from '@services';
 })
 export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 	@Input() public sysFilter;
+	@Input() public solution;
+	@Input() public useCase;
 	public customerId;
 	public countSubscripion: Subscription;
 	public gridSubscripion: Subscription;
@@ -39,12 +41,10 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 	public tableOffset = 0;
 	public loading = false;
 	public totalItems = 0;
+	public syslogGridResponse: SyslogResponseData;
 	public tableData: SyslogGridData[] = [];
 	public pageLimit = 10;
 	public pageNum = 1;
-	public msgInclude = '';
-	public msgExclude = '';
-	public lastMsgType;
 	public selectedAsset;
 	public showAssetPanel = false;
 	public fullscreen = false;
@@ -52,12 +52,17 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 	public tableStartIndex = 0;
 	public tableEndIndex = 10;
 	public showAssetDetails = false;
+	public sortField = 'timeStamp';
+	public sortOrder = 'asc';
+	public movetoAfmClicked = false;
+	public moveToFaultParams = { };
+	public alert: any = { };
 	constructor (
 		private logger: LogService,
 		public syslogsService: SyslogsService,
 		private userResolve: UserResolve,
 		private detailsPanelStackService: DetailsPanelStackService,
-	) {
+		) {
 		this.userResolve.getCustomerId()
 		.pipe(
 		takeUntil(this.destroy$),
@@ -66,22 +71,26 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 			this.customerId = id;
 		});
 		this.syslogsParams = {
-			catalog: 'Cisco',
+			contractLevel: '',
 			customerId: this.customerId,
 			days: 1,
-			excludeMsgType: this.msgExclude,
-			includeMsgType: this.msgInclude,
-			pageNo: this.pageNum,
-			search: this.searchVal,
-			severity: 3,
-			size: this.pageLimit,
+			localSearch: '',
+			pageNo : 1,
+			size : 10,
+			solution: this.solution,
+			sortField: this.sortField,
+			sortOrder : this.sortOrder,
+			syslogSeverity : 0,
+			systemFilter: '',
+			useCase: this.useCase,
+			vaId: '',
 		};
 	}
 	/**
 	 * grid column template of syslogs grid
 	 */
-	@ViewChild('icdecTemplate', { static: true }) private icDecTemplate: TemplateRef<any>;
-	@ViewChild('actionTemplate', { static: true }) private actionTemplate: TemplateRef<any>;
+	@ViewChild('severityColors', { static: true }) public severityColorsTemplate: TemplateRef<{ }>;
+	@ViewChild('dateFilter', { static: true }) public dateFilterTemplate: TemplateRef<{ }>;
 	public filters: SyslogFilter[];
 	public filtered = false;
 	public allAssetsSelected = false;
@@ -103,17 +112,8 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 	public ngOnChanges (changes: SimpleChanges) {
 		const currentFilter = _.get(changes, ['sysFilter', 'currentValue']);
 		if (currentFilter && !changes.sysFilter.firstChange) {
-			this.syslogsParams = {
-				catalog: currentFilter.catalog,
-				customerId: this.customerId,
-				days: currentFilter.timeRange,
-				excludeMsgType: this.msgExclude.toUpperCase(),
-				includeMsgType: this.msgInclude.toUpperCase(),
-				pageNo: this.pageNum,
-				search: this.searchVal,
-				severity: currentFilter.severity,
-				size: this.pageLimit,
-			};
+			this.syslogsParams.syslogSeverity = currentFilter.severity;
+			this.syslogsParams.days = currentFilter.timeRange;
 			this.getSyslogsData();
 		}
 
@@ -134,31 +134,30 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 			bordered: false,
 			columns: [
 				{
-					key: 'SyslogSeverity',
+					key: 'syslogSeverity',
 					name: I18n.get('_Severity_'),
+					sortable: true,
+					template: this.severityColorsTemplate,
+				},
+				{
+					key: 'msgDesc',
+					name: I18n.get('_SyslogsEventMessage_'),
 					sortable: true,
 				},
 				{
-					key: 'IcDesc',
-					name: I18n.get('_SyslogDescription_'),
+					key: 'deviceHost',
+					name: I18n.get('_SyslogSystem_'),
 					sortable: true,
-					template: this.icDecTemplate,
 
 				},
 				{
-					key: 'deviceCount',
-					name: I18n.get('_SyslogAffectedSystems_'),
+					name: I18n.get('_SyslogsDate_'),
 					sortable: true,
-				},
-				{
-					key: 'Recommendation',
-					name: I18n.get('_SyslogRecommendation_'),
-					sortable: true,
-					template: this.actionTemplate,
+					template: this.dateFilterTemplate,
 				},
 
 			],
-			dynamicData: false,
+			dynamicData: true,
 			singleSelect: true,
 			striped: false,
 		});
@@ -172,18 +171,10 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 		this.tableData = [];
 		this.gridSubscripion = this.syslogsService
 			.getGridData(this.syslogsParams)
-			.pipe(
-				catchError(err => {
-					this.logger.error('syslogs-details.component : getDeviceGridData() ' +
-						`:: Error : (${err.status}) ${err.message}`);
-
-					return of([]);
-				}),
-				takeUntil(this.destroy$),
-			)
+			.pipe(takeUntil(this.destroy$))
 			.subscribe(gridData => {
-				this.tableData = gridData;
-				this.totalItems = gridData.length;
+				this.tableData = gridData.responseData;
+				this.totalItems = gridData.count;
 				this.tableEndIndex = 10;
 				if (this.tableEndIndex > this.totalItems) {
 					this.tableEndIndex = this.totalItems;
@@ -191,7 +182,8 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 				this.loading = false;
 			}, catchError(err => {
 				this.loading = false;
-				this.logger.error('syslogs-details.component : getDeviceGridData() ' +
+				_.invoke(this.alert, 'show',  I18n.get('_SyslogsGenericError_'), 'danger');
+				this.logger.error('syslogs-details.component : getGridData() ' +
 					`:: Error : (${err.status}) ${err.message}`);
 
 				return of({ });
@@ -204,9 +196,7 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 	 */
 	public keyDownFunction (event) {
 		if (event.keyCode === 13) {
-			this.syslogsParams.includeMsgType = this.msgInclude.toUpperCase();
-			this.syslogsParams.excludeMsgType = this.msgExclude.toUpperCase();
-			this.syslogsParams.search = this.searchVal;
+			this.syslogsParams.localSearch = this.searchVal;
 			this.getSyslogsData();
 		}
 	}
@@ -253,9 +243,42 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 		this.tableOffset = pageInfo.page;
 		this.tableStartIndex = (pageInfo.page * pageInfo.limit);
 		this.tableEndIndex = (pageInfo.page * pageInfo.limit) + 10;
-		if (this.tableEndIndex > this.totalItems) {
-			this.tableEndIndex = this.totalItems;
+		this.syslogsParams.pageNo = pageInfo.page + 1;
+		this.getSyslogsData();
+	}
+	/**
+	 * this will sort the records absed on column
+	 *
+	 * @param event - click event CuiTableOptions column info
+	 * @memberof SyslogsMessageComponent
+	 */
+	public onTableSortingChanged (event) {
+		this.sortField = this.getSortKey(event.name);
+		this.syslogsParams.sortField = this.sortField;
+		this.syslogsParams.sortOrder = event.sortDirection;
+		this.getSyslogsData();
+	}
+
+	private getSortKey = sortKey => {
+		switch (sortKey) {
+			case 'Severity':
+				return 'syslogSeverity';
+			case 'Event Message':
+				return 'syslogMsgDesc';
+			case 'Systems':
+				return 'deviceHost';
+			case 'Date and Time':
+				return 'timeStamp';
+			default:
+				return 'syslogSeverity';
 		}
+	}
+
+	/**
+	 * toggles add note section
+	 */
+	public toggleAddNote () {
+		this.movetoAfmClicked = !this.movetoAfmClicked;
 	}
 	/**
 	 * on destroy

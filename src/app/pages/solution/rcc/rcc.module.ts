@@ -5,7 +5,8 @@ import {
 	RccAssetViolationDetailsComponent,
 } from './rcc-asset-violation-details/rcc-asset-violation-details.component';
 import { RouterModule, Routes } from '@angular/router';
-import { RemoveInvalidTagsPipeModule } from '@pipes';
+import { RemoveInvalidTagsPipeModule, DateTimePipeModule } from '@pipes';
+import { NoDNACHeaderModule } from '../no-dnac-header/no-dnac-header.module';
 import {
 	CuiTableModule,
 	CuiPagerModule,
@@ -27,11 +28,13 @@ import { PieChartModule,
 		DetailsPanelModule,
 		VisualFilterBarModule,
 		AssetDetailsModule,
+		TooltipModule,
 	} from '@components';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RccDataModule } from '@sdp-api';
 import { environment } from '@environment';
 import { InsightTabsModule } from 'src/app/components/insight-tabs/insight-tabs.module';
+import { EntitlementModule } from '@directives';
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
  */
@@ -50,7 +53,9 @@ const childRoutes: Routes = [
  * Module representing Rcc track
  */
 @NgModule({
-	declarations: [RccComponent],
+	declarations: [
+		RccComponent,
+	],
 	entryComponents: [RccAssetViolationDetailsComponent],
 	imports: [
 		CommonModule,
@@ -76,6 +81,10 @@ const childRoutes: Routes = [
 		AssetDetailsModule,
 		InsightTabsModule,
 		RemoveInvalidTagsPipeModule,
+		TooltipModule,
+		NoDNACHeaderModule,
+		DateTimePipeModule,
+		EntitlementModule,
 	],
 })
 export class RccModule { }

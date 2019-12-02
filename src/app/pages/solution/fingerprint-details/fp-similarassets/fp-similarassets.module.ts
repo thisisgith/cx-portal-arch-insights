@@ -7,6 +7,7 @@ import { CuiTableModule, CuiPagerModule,
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { environment } from '@environment';
 import { CrashPreventionModule } from '@sdp-api';
+import { ComparisonviewModule } from '../fingerprint-body/fp-compare/comparisonview/comparisonview.module';
 
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
@@ -23,6 +24,7 @@ const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 		CommonModule,
 		FormsModule,
 		ReactiveFormsModule,
+		ComparisonviewModule,
 		CuiTableModule,
 		CuiPagerModule,
 		CuiLoaderModule,

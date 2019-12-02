@@ -2,7 +2,7 @@
 <div class="row">
 	<div class="col-4">
 		<div class="container">
-			<span [innerText]="'_Syslogs_' | i18n" class="text-large"></span>
+			<span [innerText]="'_SyslogEvent_' | i18n" class="text-large"></span>
 			<span class="qtr-margin-left text-small text-muted" *ngIf="tableData.length > 0"
 				[innerText]="'_SyslogShowingXofYMessages_' | i18n:(tableStartIndex + 1):tableEndIndex:totalItems">
 			</span>
@@ -11,32 +11,8 @@
 	<div class="col-8">
 		<div>
 			<form #f="ngForm" class="row" id="searchForm" (keydown)="keyDownFunction($event)">
-				<div class="col-4">
-					<div class="form-group input--icon input--compressed">
-						<div class="form-group__text">
-							<input data-auto-id="includeMsg" #includeMsg="ngModel" [(ngModel)]="msgInclude"
-								name="includeMsg" type="text" class="form-control" placeholder="{{
-									'_SyslogIncludeMessage_' | i18n
-								}}" />
-							<button type="button" class="link" tabindex="-1">
-								<span class="icon-search"></span>
-							</button>
-						</div>
-					</div>
-				</div>
-				<div class="col-4">
-					<div class="form-group input--icon input--compressed">
-						<div class="form-group__text">
-							<input data-auto-id="excludeMsg" #excludeMsg="ngModel" [(ngModel)]="msgExclude"
-								name="excludeMsg" type="text" class="form-control"
-								placeholder="{{ 'ExcludeMessage' | i18n }}" />
-
-							<button type="button" class="link" tabindex="-1">
-								<span class="icon-search"></span>
-							</button>
-						</div>
-					</div>
-				</div> 
+				<div class="col-4"></div>
+				<div class="col-2"></div>
 				<div class="col-4">
 					<div class="form-group input--icon input--compressed">
 						<div class="form-group__text">
@@ -99,6 +75,47 @@
 	<div class="syslog-column" title="{{ item.Recommendation }}" [innerText]="item.Recommendation">
 	</div>
 </ng-template>
+<ng-template #severityColors let-item="celldata">
+		<div [ngSwitch]="item.syslogSeverity">
+			<span *ngSwitchCase="'0'">
+				<span class="qtr-margin-right icon-circle text-danger"></span>
+				<span [innerText]="'_SyslogEmergency_' | i18n"></span>
+			</span>
+			<span *ngSwitchCase="'1'">
+				<span class="qtr-margin-right icon-circle text-danger"></span>
+				<span [innerText]="'_SyslogAlert_' | i18n"></span>
+			</span>
+			<span *ngSwitchCase="'2'">
+				<span class="qtr-margin-right icon-circle text-warning"></span>
+				<span [innerText]="'_SyslogCriticalSev_' | i18n"></span>
+			</span>
+			<span *ngSwitchCase="'3'">
+				<span class="qtr-margin-right icon-circle text-warning"></span>
+				<span [innerText]="'_SyslogError_' | i18n"></span>
+			</span>
+			<span *ngSwitchCase="'4'">
+				<span class="qtr-margin-right icon-circle text-warning-alt"></span>
+				<span [innerText]="'_SyslogWarning_' | i18n"></span>
+			</span>
+			<span *ngSwitchCase="'5'">
+					<span class="qtr-margin-right icon-circle text-muted"></span>
+					<span [innerText]="'_SyslogNotice_' | i18n"></span>
+			</span>
+			<span *ngSwitchCase="'6'">
+					<span class="qtr-margin-right icon-circle text-muted"></span>
+					<span [innerText]="'_SyslogInfoSev_' | i18n"></span>
+			</span>
+			<span *ngSwitchCase="'7'">
+					<span class="qtr-margin-right icon-circle text-muted"></span>
+					<span [innerText]="'_SyslogDebug_' | i18n"></span>
+			</span>
+		</div>
+</ng-template>
+<ng-template #dateFilter let-item="celldata">
+			<span
+				[innerText]="item.timestamp | date: 'MM/dd/yyyy HH:mm:ss'"
+			></span>
+</ng-template>
 
 <details-panel
 	*ngIf="selectedAsset"
@@ -112,47 +129,89 @@
 		[(fullscreen)]="fullscreen"
 		[fullscreenToggle]="false"
 	>
-		<div class="row">
+		<div class="row base-padding-bottom">
 			<div class="col-md-12">
 				<div class="text-xlarge">
 					<span [innerText]="'_SyslogMessageType_' | i18n"></span>
-					<span [innerText]="selectedAsset.MsgType "> </span>
+					<span [innerText]="selectedAsset.msgType "> </span>
 				</div>
 			</div>
 		</div>
-		<div class="row">
+		<div class="row base-padding-bottom">
 			<div class="col-md-2">
 				<div class="row">
-					<div class="col-md-12" [innerText]="'Severity'"></div>
-					<div 
-						class="col-md-12">
-	<i class="icon-circle" 
-						 	[ngClass]="{
-							'0': 'text-danger',
-							'1': 'text-danger',
-							'2': 'text-warning',
-							'3': 'text-warning-alt',
-							'4': 'text-warning-alt',
-							'5': 'text-primary',
-							'6': 'text-primary',
-							'7': 'text-primary'
-						}[selectedAsset?.SyslogSeverity]"
-						>
-					</i> 
-						<span [innerText]="selectedAsset.SyslogSeverity"></span>
-				</div>
+					<div class="col-md-12" [innerText]="'_Severity_' | i18n"></div>
+					<div [ngSwitch]="selectedAsset.syslogSeverity">
+							<span *ngSwitchCase="'0'">
+								<span class="qtr-margin-right icon-circle text-danger"></span>
+								<span [innerText]="'_SyslogEmergency_' | i18n"></span>
+							</span>
+							<span *ngSwitchCase="'1'">
+								<span class="qtr-margin-right icon-circle text-danger"></span>
+								<span [innerText]="'_SyslogAlert_' | i18n"></span>
+							</span>
+							<span *ngSwitchCase="'2'">
+								<span class="qtr-margin-right icon-circle text-warning"></span>
+								<span [innerText]="'_SyslogCritical_' | i18n"></span>
+							</span>
+							<span *ngSwitchCase="'3'">
+								<span class="qtr-margin-right icon-circle text-warning"></span>
+								<span [innerText]="'_SyslogError_' | i18n"></span>
+							</span>
+							<span *ngSwitchCase="'4'">
+								<span class="qtr-margin-right icon-circle text-warning-alt"></span>
+								<span [innerText]="'_SyslogWarning_' | i18n"></span>
+							</span>
+							<span *ngSwitchCase="'5'">
+									<span class="qtr-margin-right icon-circle text-muted"></span>
+									<span [innerText]="'_SyslogNotice_' | i18n"></span>
+							</span>
+							<span *ngSwitchCase="'6'">
+									<span class="qtr-margin-right icon-circle text-muted"></span>
+									<span [innerText]="'_SyslogInfo_' | i18n"></span>
+							</span>
+							<span *ngSwitchCase="'7'">
+									<span class="qtr-margin-right icon-circle text-muted"></span>
+									<span [innerText]="'_SyslogDebug_' | i18n"></span>
+							</span>
+						</div>
 				</div>
 			</div>
-			<div class="col-md-3">
+
+			<div class="col-md-8">
 				<div class="row">
-					<div class="col-md-12" [innerText]="'Syslog Count'"></div>
+					<div class="col-md-12" [innerText]="'_SyslogSystem_' | i18n"></div>
 					<div
 						class="col-md-12"
-						[innerText]="selectedAsset.syslogMsgCount"
+						[innerText]="selectedAsset.deviceHost"
 					></div>
 				</div>
 			</div>
 		</div>
+			<div class="row">
+			<div class="col-3">
+				<button data-auto-id="CaseAddNote"
+						class="btn btn--primary text-uppercase"
+						[innerText]="'_SyslogstoAFM_' | i18n" (click)="toggleAddNote()">
+				</button>
+			</div>
+			</div>
+			<div class="absolute add-notes base-padding-bottom base-padding-left base-padding-right" *ngIf="movetoAfmClicked">
+				<p  [innerText]="'_SyslogsCategoryDescription_' | i18n"></p>
+				<div class="row">
+					<div class="col-4">
+						<cui-select label="{{'_SyslogCatalog_' | i18n}}" [required]="false" [empty]="true"></cui-select>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-2">
+						<button class="btn btn--ghost" [innerText]="'_SyslogsProceed_' | i18n"></button>
+					</div>
+					<div class="col-2">
+						<button class="btn btn--primary" [innerText]="'_SyslogsCancel_' | i18n"></button>
+					</div>
+				</div>
+			</div>
 		<div detailsPanelTitle class="text-xlarge"></div>
 	</details-panel-header>
 	<syslog-message-details

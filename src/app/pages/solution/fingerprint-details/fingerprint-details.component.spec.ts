@@ -26,4 +26,19 @@ describe('FingerprintDetailsComponent', () => {
 			.toBeTruthy();
 	});
 
+	it('should unset the selected System', () => {
+		component.onPanelClose();
+		expect(component.selectedSystem)
+			.toBeFalsy();
+		expect(component.showAssetDetailsView)
+			.toBeFalsy();
+	});
+
+	it('should handle on panel hidden', () => {
+		const panelCloseSpy = spyOn(component, 'onAllPanelsClose');
+
+		component.handleHidden();
+		expect(panelCloseSpy)
+			.toHaveBeenCalled();
+	});
 });

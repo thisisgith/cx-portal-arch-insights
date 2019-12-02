@@ -1,3 +1,5 @@
+@import '~src/variables.scss';
+
 :host {
 	.panel div {
 		word-wrap: break-word;
@@ -9,7 +11,7 @@
 
 	.policies {
 		&__title {
-			color: #6c757d;
+			color: $gray-text-color;
 			font-size: 15px;
 			font-weight: 300;
 			line-height: 12px;
@@ -29,7 +31,7 @@
 				align-items: center;
 
 				.icon-blocked {
-					color: #bdc5cf;
+					color: $icon-light-gray;
 					font-weight: bold;
 				}
 			}

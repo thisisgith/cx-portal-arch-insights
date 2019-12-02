@@ -1,55 +1,36 @@
 import { configureTestSuite } from 'ng-bullet';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SyslogsComponent } from './syslogs.component';
 import { SyslogsModule } from './syslogs.module';
 import { SyslogsService } from '@sdp-api';
 import { throwError, of } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
-import * as _ from 'lodash-es';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { MicroMockModule } from '@cui-x-views/mock';
-import { environment } from '@environment';
-import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { user } from '@mock';
 import { SyslogScenarios } from 'src/environments/mock/syslogs/syslogs';
+import { RacetrackInfoService } from '@services';
 describe('SyslogsComponent', () => {
 	let component: SyslogsComponent;
 	let fixture: ComponentFixture<SyslogsComponent>;
 	let syslogsService: SyslogsService;
+	let racetrackInfoService: RacetrackInfoService;
+
 	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				SyslogsModule,
 				HttpClientTestingModule,
-				MicroMockModule,
 				RouterTestingModule,
 			],
-			providers: [
-				{ provide: 'ENVIRONMENT', useValue: environment },
-				{
-					provide: ActivatedRoute,
-					useValue: {
-						queryParams: of({ }),
-						snapshot: {
-							data: {
-								user,
-							},
-						},
-					},
-				},
-			],
+			providers: [SyslogsService, RacetrackInfoService],
 		});
 	});
 
-	beforeEach(async(() => {
-
-		syslogsService = TestBed.get(SyslogsService);
-	}));
-
 	beforeEach(() => {
 		window.localStorage.clear();
+		syslogsService = TestBed.get(SyslogsService);
+		racetrackInfoService = TestBed.get(RacetrackInfoService);
 		fixture = TestBed.createComponent(SyslogsComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
@@ -59,7 +40,18 @@ describe('SyslogsComponent', () => {
 		expect(component)
 			.toBeTruthy();
 	});
-	it('should set null values on request errors', done => {
+
+	it('should set count values on request success', () => {
+		spyOn(syslogsService, 'getSyslogsCount')
+			.and
+			.returnValue(of(SyslogScenarios[0].scenarios.POST[0].response.body));
+		component.fetchSyslogsCount();
+
+		expect(syslogsService.getSyslogsCount)
+			.toHaveBeenCalled();
+	});
+
+	it('should set null values on request errors', () => {
 		const error = {
 			status: 404,
 			statusText: 'Resource not found',
@@ -67,95 +59,34 @@ describe('SyslogsComponent', () => {
 		spyOn(syslogsService, 'getSyslogsCount')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
-		fixture.whenStable()
-			.then(() => {
-				fixture.detectChanges();
+		component.fetchSyslogsCount();
 
-				expect(component.visualLabels[0].count)
-				.toBe(null);
-				expect(component.visualLabels[1].count)
-				.toBe(null);
-				done();
-			});
+		expect(syslogsService.getSyslogsCount)
+			.toHaveBeenCalled();
 	});
-	it('Should get the syslog message count data', done => {
-		spyOn(syslogsService, 'getSyslogsCount')
+
+	it('Should get the syslog message count data', () => {
+		spyOn(racetrackInfoService, 'getCurrentTechnology')
 		.and
-		.returnValue(of(SyslogScenarios[0].scenarios.GET[0].response.body));
+		.callThrough();
 		component.ngOnInit();
-		fixture.whenStable()
-		.then(() => {
-			fixture.detectChanges();
-			expect(component.visualLabels[0].count)
-				.toBe('10');
-			expect(component.visualLabels[1].count)
-				.toBe('5');
-			done();
-		});
+		expect(racetrackInfoService.getCurrentTechnology)
+			.toHaveBeenCalled();
 	});
 
-	it('should clear the filters on clear button', done => {
-		fixture.whenStable()
-			.then(() => {
-				fixture.detectChanges();
-				const timeRangeFilter = _.find(component.filters,
-					{ key: 'timeRange' });
-				component.onSubfilterSelect('1', timeRangeFilter, true);
-				const severityFilter = _.find(component.filters,
-					{ key: 'severity' });
-				component.onSubfilterSelect('3', severityFilter, true);
-				const catalogFilter = _.find(component.filters,
-					{ key: 'catalog' });
-				component.onSubfilterSelect('Cisco', catalogFilter, true);
-				fixture.detectChanges();
-
-				expect(_.filter(component.filters, 'selected'))
-					.toContain(timeRangeFilter);
-				expect(_.filter(component.filters, 'selected'))
-					.toContain(severityFilter);
-				expect(_.filter(component.filters, 'selected'))
-					.toContain(catalogFilter);
-				const subfilter = _.find(timeRangeFilter.seriesData, { filter: '1' });
-				const subfilterSeverity = _.find(severityFilter.seriesData, { filter: '3' });
-				const subfilterCatalog = _.find(catalogFilter.seriesData, { filter: 'Cisco' });
-				expect(subfilter.selected)
+	it('should SyslogMessage tab active', () => {
+		fixture.detectChanges();
+		const index = 0;
+		component.selectVisualLabel(index);
+		expect(component.visualLabels[0].active)
 					.toBeTruthy();
-				expect(subfilterSeverity.selected)
-					.toBeTruthy();
-				expect(subfilterCatalog.selected)
-					.toBeTruthy();
-				component.clearFilters();
-				fixture.detectChanges();
-
-				expect(subfilter.selected)
-					.toBeFalsy();
-				expect(subfilterSeverity.selected)
-					.toBeFalsy();
-				expect(subfilterCatalog.selected)
-					.toBeFalsy();
-				done();
-			});
 	});
-	it('should SyslogMessage tab active', done => {
-		fixture.whenStable()
-			.then(() => {
-				fixture.detectChanges();
-				const index = 0;
-				component.selectVisualLabel(index);
-				expect(component.visualLabels[0].active)
+
+	it('should AssetTab tab active', () => {
+		fixture.detectChanges();
+		const index = 1;
+		component.selectVisualLabel(index);
+		expect(component.visualLabels[1].active)
 					.toBeTruthy();
-				done();
-			});
-	});
-	it('should AssetTab tab active', done => {
-		fixture.whenStable()
-			.then(() => {
-				fixture.detectChanges();
-				const index = 1;
-				component.selectVisualLabel(index);
-				expect(component.visualLabels[1].active)
-					.toBeTruthy();
-				done();
-			});
 	});
 });

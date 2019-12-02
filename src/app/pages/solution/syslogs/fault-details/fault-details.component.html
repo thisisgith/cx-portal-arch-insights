@@ -1,0 +1,201 @@
+<details-panel
+	[hidden]="!showFaultDetails"
+	(hiddenChange)="handleHidden($event)"
+	[fullscreen]="fullscreen"
+	id="details-panel"
+>
+	<details-panel-header
+		(close)="onAllPanelsClose()"
+		(back)="onPanelBack()"
+		[(fullscreen)]="fullscreen"
+		[fullscreenToggle]="true"
+	>
+		<div class="base-margin-bottom" detailsPanelTitle>
+			<span class="text-xlarge" [innerText]="'_FaultEventType_' | i18n"></span>
+			<span class="qtr-margin-left text-xlarge" [innerText]="fault?.msgType"></span>
+		</div>
+		<div class="base-margin-bottom">
+			<div class="text-bold" [innerText]="'_FaultSeverity_' | i18n"></div>
+			<div>
+				<i class="icon-circle qtr-margin-right"
+					[ngClass]="{
+						'CRITICAL': 'text-danger',
+						'HIGH': 'text-warning',
+						'MEDIUM': 'text-warning-alt',
+						'LOW': 'text-success',
+						'INFORMATIONAL': 'text-muted'
+						}[fault.faultSeverity | uppercase]"
+					>
+				</i>
+				<span [innerText]="fault.faultSeverity | titlecase"></span>
+			</div>
+		</div>
+		<div class="qtr-margin-top" *ngIf="(tacEnable | uppercase) === FAULT_CONSTANT.ACTIVE">
+			<div data-auto-id="DisableCase" class="btn btn--primary" (click)="openConfirmation()"
+				[innerText]="'_FaultDisableCase_'|i18n">
+			</div>
+			<span class="text-primary qtr-margin-left" data-balloon-length="medium"
+					[attr.data-balloon]="'_FaultDisableCaseInfo_' | i18n"
+					data-auto-id="FaultToolTip" data-balloon-pos="right"
+					(click)="$event.stopPropagation()">
+					<i class="icon-info icon-small"></i>
+			</span>
+		</div>
+		<div class="qtr-margin-top" *ngIf="(tacEnable | uppercase) === FAULT_CONSTANT.INACTIVE">
+			<div data-auto-id="EnableCase" class="btn btn--primary" (click)="openConfirmation()"
+				[innerText]="'_FaultEnableCase_'|i18n">
+			</div>
+			<span class="text-primary qtr-margin-left" data-balloon-length="medium"
+					[attr.data-balloon]="'_FaultEnableCaseInfo_' | i18n"
+					data-auto-id="FaultToolTip" data-balloon-pos="right"
+					(click)="$event.stopPropagation();">
+					<i class="icon-info icon-small"></i>
+			</span>
+		</div>
+		<div class="qtr-margin-top">
+			<cui-alert [options]="alert" ></cui-alert>
+		</div>
+	</details-panel-header>
+	<div *ngIf="loading" class="base-margin-bottom">
+		<cui-spinner></cui-spinner>
+	</div>
+	<cui-tabs id="detailTabs" *ngIf="!loading">
+		<cui-tab *ngIf="faultDetails" [label]="'_FaultSummary_' | i18n | uppercase">
+			<div
+				class="text-bold base-margin-top"
+				[innerText]="'_FaultDescription_' | i18n | uppercase"
+			></div>
+			<div
+				innerText="{{
+					faultDetails[0]?.description || ('_NA_' | i18n)
+				}}"
+			></div>
+			<div
+				class="text-bold base-margin-top"
+				[innerText]="'_FaultImpact_' | i18n | uppercase"
+			></div>
+			<div
+				innerText="{{ faultDetails[0]?.impact || ('_NA_' | i18n) }}"
+			></div>
+			<div
+				class="text-bold base-margin-top"
+				[innerText]="'_FaultRecommendation_' | i18n | uppercase"
+			></div>
+			<div
+				innerText="{{
+					faultDetails[0]?.remediation || ('_NA_' | i18n)
+				}}"
+			></div>
+		</cui-tab>
+		<cui-tab [label]="'_FaultAffectedSystemsX_' | i18n :affectedCount| uppercase">
+			<div class="dbl-margin-top text-muted text-large">
+				<span [innerText]="'_FaultTotalCaseCount_' | i18n"></span>
+				<span [innerText]="fault?.tacCount"></span>
+			</div>
+			<div class="text-uppercase text-bold dbl-margin-top half-margin-bottom">
+					<span [innerText]="'_FaultFilter_' | i18n "></span>
+			</div>
+			<div class="row half-margin-bottom ">
+				<div class="col-4">
+					<cui-select
+						data-auto-id="productID"
+						label="{{'_FaultProductId_' | i18n}}"
+						placeholder="Select Product Id"
+						optionsKey="value"
+						optionsValue="value"
+						[(ngModel)]="searchParams.productId"
+						(ngModelChange)="onSelection($event,FAULT_CONSTANT.PRODUCT_ID)"
+						[items]="productID"
+						[empty]="true">
+					</cui-select>
+				</div>
+				<div class="col-4">
+					<cui-select
+						placeholder="Select Software Type"
+						data-auto-id="Software"
+						label="{{'_FaultSoftware_' | i18n}}"
+						optionsKey="value"
+						optionsValue="value"
+						(ngModelChange)="onSelection($event,FAULT_CONSTANT.SOFTWARE)"
+						[(ngModel)]="searchParams.software"
+						[items]="software"
+						[empty]="true">
+					</cui-select>
+				</div>
+				<div class="col-4">
+					<cui-select
+						placeholder="Select Time Range"
+						data-auto-id="timePeriod"
+						label="{{'_FaultTimeRange_' | i18n}}"
+						(ngModelChange)="onSelection($event,FAULT_CONSTANT.TIME)"
+						[(ngModel)]="searchParams.days"
+						[items]="timeRange"
+						optionsKey="name"
+						optionsValue="value">
+					</cui-select>
+				</div>
+			</div>
+			<div *ngIf="affectedSystemLoading" class="base-margin-bottom">
+				<cui-spinner></cui-spinner>
+			</div>
+			<div class="responsive-table" *ngIf="!affectedSystemLoading">
+				<cui-table
+					[options]="tableOptions"
+					[data]="faultAffectedDetails"
+					[limit]="tableLimit"
+					[offset]="tableOffset"
+					(onSortingChanged)="onTableSortingChanged($event)"
+				>
+				</cui-table>
+				<div class="section">
+					<cui-pager *ngIf="faultAffectedDetails.length"
+						[page]="tableOffset"
+						[limit]="tableLimit"
+						[totalItems]="affectedCount"
+						(onPageChanged)="onPagerUpdated($event)"
+					></cui-pager>
+				</div>
+				<div *ngIf="faultAffectedDetails.length === 0">
+					<div
+						class="text-muted text-xlarge flex-center"
+						[innerText]="'_FaultNoResults_' | i18n"
+					></div>
+				</div>
+			</div>
+		</cui-tab>
+	</cui-tabs>
+</details-panel>
+
+<ng-template #systemName let-item="celldata">
+	<span data-auto-id="SystemName"
+		class="text-primary cursor"
+		[innerText]="item.systemName"
+		(click)="connectToAsset(item.serialNumber)"></span>
+</ng-template>
+
+<asset-details *ngIf="selectedAsset"
+	[asset]="assetLinkInfo?.asset"
+	[serialNumber]="assetLinkInfo?.asset?.serialNumber"
+	[element]="assetLinkInfo?.element"
+	(close)="onPanelClose()"
+>
+</asset-details>
+
+<ng-template #caseNumber let-item="celldata">
+	<span *ngIf="item?.tacCaseNo; else noTacCase"
+		data-auto-id="CaseNumber"
+		class="text-primary cursor"
+		[innerText]="item.tacCaseNo"
+		(click)="connectToCaseDetails(item.tacCaseNo)"></span>
+</ng-template>
+
+<ng-template #noTacCase>
+	<span [innerText]="'-'"
+	></span>
+</ng-template>
+
+<ng-template #caseCreatedDate let-item="celldata">
+	<span *ngIf="item?.tacCaseCreatedDate; else noTacCase"
+		[innerText]="item.tacCaseCreatedDate"
+	></span>
+</ng-template>

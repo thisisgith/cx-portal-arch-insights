@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { DevicesWithExceptionsComponent } from './devices-with-exceptions.component';
 import { CuiTableModule, CuiPagerModule, CuiSpinnerModule,
 	CuiDropdownModule } from '@cisco-ngx/cui-components';
-import { ArchitectureModules } from '@sdp-api';
+import { ArchitectureModules, ArchitectureReviewModules } from '@sdp-api';
 import { environment } from '@environment';
 import { AssetDetailsModule, DetailsPanelModule, AssetDetailsHeaderModule } from '@components';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
@@ -33,6 +33,7 @@ const rootUrl = environment.sdpServiceOrigin;
 		AssetDetailsModule,
 		FormsModule,
 		ArchitectureModules.forRoot({ rootUrl }),
+		ArchitectureReviewModules.forRoot({ rootUrl }),
 	],
 })
 export class DevicesWithExceptionsModule { }

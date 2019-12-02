@@ -24,6 +24,7 @@ export class DeviceListComponent {
 	@Input() public rowHeight = 50;
 	@Input() public items: DeviceListRow[];
 	@Input() public loading: true;
+	@Input() public isDeviceListEmpty: boolean;
 	@Output() public selectionEvent = new EventEmitter<DeviceListRow>();
 	public itemsInView: DeviceListRow[];
 	public startIndex = 0;

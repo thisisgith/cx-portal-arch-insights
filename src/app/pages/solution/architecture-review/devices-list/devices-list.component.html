@@ -1,98 +1,110 @@
 <!-- App Details 360 slide-out -->
-<details-panel *ngIf="deviceDetails" [hidden]="!deviceDetails" (hiddenChange)="handleHidden($event)" 
- [fullscreen]="fullscreen" [minWidth] = "'900px'" (deviceInfo)="getDeviceInfo($event)">
+<details-panel *ngIf="deviceDetails" [hidden]="!deviceDetails" (hiddenChange)="handleHidden($event)"
+	[fullscreen]="fullscreen" [minWidth]="'900px'" (deviceInfo)="getDeviceInfo($event)">
 	<details-panel-header (close)="onPanelClose()" [(fullscreen)]="fullscreen" [fullscreenToggle]="false">
 		<div detailsPanelTitle class="text-xlarge">
 			<span [innerText]="('_ArchitectureArchitectureReviewFor_' | i18n)">
 			</span>
-			<a  
-				data-auto-id="openAssetsView" 
-				(click)="openDeviceView(deviceDetails)"
-				class="qtr-margin-left" 
+			<a data-auto-id="openAssetsView" (click)="openDeviceView(deviceDetails)" class="qtr-margin-left"
 				[innerText]="deviceDetails?.hostName">
 			</a>
 		</div>
 		<div class="row ">
-			<div class="col-md-12 base-margin-top">
+			<div class="col-md-12 base-margin-top text-large">
 				<div>
-					<span class="text-large" innerText="{{ ('_ArchitectureIP_' | i18n) + ' : '}}">
+					<span innerText="{{ ('_ArchitectureIP_' | i18n) + ' : '}}">
 					</span>
-					<span class="text-large" innerText="{{ deviceInfoMessage?.ipAddress }}"></span>
+					<span innerText="{{ deviceDetails?.ipAddress }}"></span>
 				</div>
-				<div class="qtr-padding-bottom">
-					<span class="text-large" innerText="{{ ('_ArchitectureSN_' | i18n) + ' : '}}">
+				<div class="half-margin-top">
+					<span innerText="{{ ('_ArchitectureSN_' | i18n) + ' : '}}">
 					</span>
-					<span class="text-large" innerText="{{ deviceInfoMessage?.serialNumber }}"></span>
+					<span innerText="{{ deviceDetails?.serialNumber }}"></span>
 				</div>
-				<div *ngFor="let failedCriterias of failedCriteriaMessages" class="qtr-padding-top">
-						<span class="icon-warning-outline text-warning qtr-margin-right"></span>
-						<span class="qtr-margin-left text-muted text-small" [innerText]="failedCriterias"></span>
+				<div class="half-margin-top">
+					<span innerText="{{ ('_ArchitectureSoftwareType_' | i18n) + ' : '}}">
+					</span>
+					<span innerText="{{ deviceDetails?.softwareType }}"></span>
+				</div>
+				<div class="half-margin-top base-padding-bottom">
+					<span innerText="{{ ('_ArchitectureDeviceRole_' | i18n) + ' : '}}">
+					</span>
+					<span innerText="{{ deviceDetails?.currentDeviceRole }}"></span>
+				</div>
+				<div class="half-padding-bottom">
+					<div class="alert fade-and-slide-top text-left alert--warning" *ngIf="failedCriteriaMessages?.length > 0">
+						<div class="alert__icon icon-warning-outline"></div>
+						<ng-container class="failed-criteria">
+							<div class="alert__message">
+								<div *ngFor="let failedCriterias of failedCriteriaMessages" class="qtr-padding-top">
+									<span class="qtr-margin-left text-muted text-small"
+										[innerText]="failedCriterias"></span>
+								</div>
+							</div>
+						</ng-container>
+					</div>
 				</div>
 			</div>
 		</div>
 	</details-panel-header>
-	<devices-sda (failedCriteriaToEmit)="getfailedCriteriaMessage($event)" [deviceDetails]="deviceDetails" (deviceInfoToEmit)="getDeviceInfo($event)"></devices-sda>
+	<devices-sda (osvCriteriaToEmit)="openOsvSoftwarePanel($event)"
+		(failedCriteriaToEmit)="getfailedCriteriaMessage($event)" [deviceDetails]="deviceDetails"
+		(deviceInfoToEmit)="getDeviceInfo($event)"></devices-sda>
 </details-panel>
 
 <!-- Asset 360 Fly-out View-->
-<asset-details *ngIf="selectedAsset" 
-	[asset]="assetLinkInfo?.asset"
-	[serialNumber]="assetLinkInfo?.asset?.serialNumber"
-	[element]="assetLinkInfo?.element"
-	(close)="closeDeviceView()">
+<asset-details *ngIf="selectedAsset" [asset]="assetLinkInfo?.asset" [serialNumber]="assetLinkInfo?.asset?.serialNumber"
+	[element]="assetLinkInfo?.element" (close)="closeDeviceView()">
 </asset-details>
-	
+
+<!-- Osv Fly-out View-->
+<app-software-group-detail *ngIf="selectedSoftwareGroup" 
+	[tabIndex]="tabIndex"
+	[(selectedSoftwareGroup)]="selectedSoftwareGroup" 
+	(close)="onOsvPanelClose()"
+	[solution]="selectedSoftwareGroup.solution" 
+	[useCase]="selectedSoftwareGroup.useCase">
+</app-software-group-detail>
+
 <div class="row">
-		<div class="col-md-4">
-			<div class="container" *ngIf="dnacDeviceDetails?.length > 0">
-				<span [innerText]="'_ArchitectureSystems_' | i18n" class="text-large"></span>
-				<span class="qtr-margin-left text-small text-muted"
-					[innerText]="'_ArchitectureShowingXofYTotalItems_' | i18n:(tableStartIndex+1):tableEndIndex:totalItems">
-				</span>
-			</div>
+	<div class="col-md-4">
+		<div class="container" *ngIf="dnacDeviceDetails?.length > 0">
+			<span [innerText]="'_ArchitectureSystems_' | i18n" class="text-large"></span>
+			<span class="qtr-margin-left text-small text-muted"
+				[innerText]="'_ArchitectureShowingXofYTotalItems_' | i18n:(tableStartIndex+1):tableEndIndex:totalItems">
+			</span>
 		</div>
-		<div class="col-md-8">
-				<div>
-					<form
-						#f="ngForm"
-						class="row flex flex-fluid flex-right qtr-margin-right"
-						id="searchForm"
-						(keyup)="textFilter($event)"
-					>
-						<div class="qtr-padding-top">
-							<div class="container">
-								<span [innerText]="'_ArchitectureUpdated_' | i18n" class="text-large"></span>
-								<span class="qtr-margin-left text-large"
-								[innerText]="lastCollectionTime"></span>
-							</div>
-						</div>
-						<div>
-							<div class="flex-fill form-group input--compressed input--icon half-margin-right">
-								<div class="form-group__text">
-									<input
-										data-auto-id="globalSearch"
-										#globalSearch="ngModel"
-										[(ngModel)]="searchText"
-										name="globalSearch"
-										type="text"
-										class="form-control devices-list-search"
-										placeholder="{{ '_ArchitectureSearch_' | i18n }}"
-									/>
-									<button type="button" class="link" tabindex="-1">
-										<span class="icon-search"></span>
-									</button>
-								</div>
-							</div>
-						</div>
-					</form>
+	</div>
+	<div class="col-md-8">
+		<div>
+			<form #f="ngForm" class="row flex flex-fluid flex-right qtr-margin-right" id="searchForm"
+				(keyup)="textFilter($event)">
+				<div class="qtr-padding-top">
+					<div class="container">
+						<span [innerText]="'_ArchitectureUpdated_' | i18n" class="text-large"></span>
+						<span class="qtr-margin-left text-large" [innerText]="lastCollectionTime"></span>
+					</div>
 				</div>
-			</div>
+				<div>
+					<div class="flex-fill form-group input--compressed input--icon half-margin-right">
+						<div class="form-group__text">
+							<input data-auto-id="globalSearch" #globalSearch="ngModel" [(ngModel)]="searchText"
+								name="globalSearch" type="text" class="form-control devices-list-search"
+								placeholder="{{ '_ArchitectureSearch_' | i18n }}" />
+							<button type="button" class="link" tabindex="-1">
+								<span class="icon-search"></span>
+							</button>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
 </div>
 <div class="divider no-qtr-margin"></div>
 
 <div class="panel">
-	<cui-table *ngIf="!isLoading && totalItems"
-		[options]="tableOptions" [data]="dnacDeviceDetails"
+	<cui-table *ngIf="!isLoading && totalItems" [options]="tableOptions" [data]="dnacDeviceDetails"
 		(onTableRowClicked)="onTableRowClicked($event)"></cui-table>
 	<div class="section" *ngIf="totalItems">
 		<cui-pager *ngIf="!isLoading" [page]="paramsType?.page" [limit]="paramsType?.pageSize" [totalItems]="totalItems"
@@ -104,87 +116,81 @@
 	<div *ngIf="!dnacDeviceDetails?.length && !isLoading">
 		<div class="text-center dbl-margin-top dbl-margin-bottom">
 			<div>
-				<span class="text-muted text-xlarge"
-					[innerText]="'_NoResultsFound_' | i18n"
-					data-auto-id="NoResultsFoundTxt" >
+				<span class="text-muted text-xlarge" [innerText]="'_NoResultsFound_' | i18n"
+					data-auto-id="NoResultsFoundTxt">
 				</span>
 			</div>
 		</div>
 	</div>
 </div>
+
+<ng-template #dnac let-item="celldata">
+	<span [ngClass]="{
+		'text-success': item?.dnacCompliance === 'Yes',
+		'text-danger': item?.dnacCompliance === 'No',
+		'text-ocean': item?.dnacCompliance === 'NE'
+	}" class="qtr-margin-right icon-circle">
+	</span>
+	<span [innerText]="item?.dnacCompliance" *ngIf="item?.dnacCompliance !== 'NE'"></span>
+	<span *ngIf="item?.dnacCompliance === 'NE'" [innerText]="'_ArchitectureNotAvailable_' | i18n"></span>
+</ng-template>
+
 <ng-template #sdaReady let-item="celldata">
-	<span
-	[ngClass]="{
+	<span [ngClass]="{
 		'text--success': item?.sdaCompliance === 'Yes',
 		'text-danger': item?.sdaCompliance === 'No',
 		'text-warning': item?.sdaCompliance === 'Warning',
-		'transparent-style': item?.sdaCompliance === 'NA'
-	}"
-	class="qtr-margin-right icon-circle">
+		'text-ocean': item?.sdaCompliance === 'NE'
+	}" class="qtr-margin-right icon-circle">
 	</span>
 	<span *ngIf="item?.sdaCompliance == 'Warning'" [innerText]="'_ArchitectureYes_' | i18n"></span>
-	<span *ngIf="item?.sdaCompliance != 'Warning'" [innerText]="item?.sdaCompliance"></span>
+	<span *ngIf="item?.sdaCompliance != 'Warning' && item?.sdaCompliance != 'NE'" [innerText]="item?.sdaCompliance"></span>
+	<span *ngIf="item?.sdaCompliance === 'NE'" [innerText]="'_ArchitectureNotAvailable_' | i18n"></span>
 </ng-template>
 
 
 <ng-template #assuranceReady let-item="celldata">
-	<span
-	[ngClass]="{
+	<span [ngClass]="{
 		'text-success': item?.assuranceCompliance === 'Yes',
 		'text-danger': item?.assuranceCompliance === 'No',
-		'transparent-style': item?.assuranceCompliance === 'NA'
-	}"
-	 class="qtr-margin-right icon-circle">
+		'text-ocean': item?.assuranceCompliance === 'NE'
+	}" class="qtr-margin-right icon-circle">
 	</span>
-	<span [innerText]="item?.assuranceCompliance"></span>
+	<span *ngIf="item?.assuranceCompliance !== 'NE'" [innerText]="item?.assuranceCompliance"></span>
+	<span *ngIf="item?.assuranceCompliance === 'NE'" [innerText]="'_ArchitectureNotAvailable_' | i18n"></span>
 </ng-template>
 
 <ng-template #swimReady let-item="celldata">
-	<span
-	[ngClass]="{
+	<span [ngClass]="{
 		'text-success': item?.swimCompliance === 'Yes',
 		'text-danger': item?.swimCompliance === 'No',
-		'transparent-style': item?.swimCompliance === 'NA'
-	}"
-	 class="qtr-margin-right icon-circle">
+		'text-ocean': item?.swimCompliance === 'NE'
+	}" class="qtr-margin-right icon-circle">
 	</span>
-	<span [innerText]="item?.swimCompliance"></span>
+	<span [innerText]="item?.swimCompliance"  *ngIf="item?.swimCompliance != 'NE'"></span>
+	<span *ngIf="item?.swimCompliance === 'NE'" [innerText]="'_ArchitectureNotAvailable_' | i18n"></span>
 </ng-template>
 
 <ng-template #pnpReady let-item="celldata">
-	<span
-	[ngClass]="{
+	<span [ngClass]="{
 		'text-success': item?.pnpCompliance === 'Yes',
 		'text-danger': item?.pnpCompliance === 'No',
-		'transparent-style': item?.pnpCompliance === 'NA'
-	}"
-	 class="qtr-margin-right icon-circle">
+		'text-ocean': item?.pnpCompliance === 'NE'
+	}" class="qtr-margin-right icon-circle">
 	</span>
-	<span [innerText]="item?.pnpCompliance"></span>
+	<span [innerText]="item?.pnpCompliance" *ngIf="item?.pnpCompliance != 'NE'"></span>
+	<span *ngIf="item?.pnpCompliance === 'NE'" [innerText]="'_ArchitectureNotAvailable_' | i18n"></span>
+	
 </ng-template>
 
 <ng-template #productId let-item="celldata">
-	<span
-	[ngClass]="{
-		'transparent-style': item?.hardwarePidCompliant === 'Yes',
-		'icon-warning-outline': item?.hardwarePidCompliant === 'No',
-		'text-warning': item?.hardwarePidCompliant === 'No'	
-	}"
-	 class="qtr-margin-right icon-circle">
-	</span>
-	<span [innerText]="item?.productId"></span>
+	<span *ngIf="item?.hardwarePidCompliant === 'No'"
+		class="icon-warning-outline"></span>
+	<span class="qtr-margin-left" [innerText]="item?.productId"></span>
 </ng-template>
 
 <ng-template #softwareVersion let-item="celldata">
-	<span
-	[ngClass]="{
-		'transparent-style': item?.softwareVersionCompliant === 'Yes',
-		'icon-warning-outline': item?.softwareVersionCompliant === 'No',
-		'text-warning': item?.softwareVersionCompliant === 'No'	
-	}"
-	 class="qtr-margin-right icon-circle">
-	</span>
-	<span [innerText]="item?.softwareVersion"></span>
+	<span *ngIf="item?.softwareVersionCompliant === 'No' || item?.softwareTypeCompliant === 'No'"
+		class="icon-warning-outline"></span>
+	<span class="qtr-margin-left" [innerText]="item?.softwareVersion"></span>
 </ng-template>
-
-

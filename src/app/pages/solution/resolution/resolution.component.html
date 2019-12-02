@@ -25,13 +25,13 @@
 	</cui-tabs>
 </div>
 
-<div *ngIf="mainContent === 'cases'" class="panel panel--bordered half-margin-top">
+<div *ngIf="mainContent === 'cases'" class="panel panel--bordered half-margin-top problem-resolution">
 	<ng-container *ngIf="filtered">
 		<ng-container *ngTemplateOutlet="filterBar"></ng-container>
 	</ng-container>
 	<div class="row align-items-center justify-content-between">
 		<div class="col-auto text-large">
-			<span data-auto-id="caseListHeader" [innerText]="'_OpenCases_' | i18n"
+			<span data-auto-id="caseListHeader" [innerText]="'_AllYourOpenCases_' | i18n"
 				class="base-margin-left base-margin-right"></span>
 			<span *ngIf="caseListData?.length==0" class="text-muted text-medium"
 				data-auto-id="rmaShowingXcasesHeader"
@@ -103,7 +103,7 @@
 </ng-template>
 
 <ng-template #caseList>
-	<cui-table class="not-close-360" data-auto-id="caseListTable" (onTableRowClicked)="onTableRowClicked($event)"
+	<cui-table class="not-close-360 resolution-table" data-auto-id="caseListTable" (onTableRowClicked)="onTableRowClicked($event)"
 		[options]="caseListTableOptions" [data]="caseListData" (onSortingChanged)="onTableSortingChanged($event)">
 	</cui-table>
 	<cui-pager class="half-margin" *ngIf="paginationInfo.totalElements>caseParams.size" [page]="caseParams.page"
@@ -172,3 +172,4 @@
 	[element]="assetLinkInfo?.element"
 	(close)="showAsset360 = false">
 </asset-details>
+<cui-modal></cui-modal>

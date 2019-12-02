@@ -68,6 +68,7 @@ const childRoutes: Routes = [
 		FormsModule,
 		FromNowPipeModule,
 		I18nPipeModule,
+		InlineSVGModule.forRoot({ baseUrl: '/' }),
 		InventoryModule.forRoot({ rootUrl }),
 		NetworkDataGatewayModule.forRoot({ rootUrl }),
 		NoDNACHeaderModule,
@@ -77,7 +78,6 @@ const childRoutes: Routes = [
 		RouterModule.forChild(childRoutes),
 		TruncatePipeModule,
 		VisualFilterBarModule,
-		InlineSVGModule.forRoot({ baseUrl: '/' }),
 	],
 })
 export class AssetsModule { }

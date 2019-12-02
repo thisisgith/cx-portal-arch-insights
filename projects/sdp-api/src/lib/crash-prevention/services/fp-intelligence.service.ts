@@ -38,7 +38,10 @@ class FpIntelligenceService extends __BaseService {
         let __body: any = null;
         __params = __params.set('similarityCriteria',params.similarityCriteria);
         __params = __params.set('page',params.page.toString());
-        __params = __params.set('size',params.size.toString());
+		__params = __params.set('size',params.size.toString());
+		if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
+		if (params.solution != null) __params = __params.set('solution', params.solution.toString());
+
         let req = new HttpRequest<any>(
             'GET',
             this.rootUrl + FpIntelligenceService.getSimilarDevicesPath + `${params.customerId}/`+ btoa(params.deviceId),
@@ -143,7 +146,9 @@ module FpIntelligenceService {
         deviceCount?: number;
         similarityCriteria: string;
         page?: number;
-        size?: number;
+		size?: number;
+		solution?: string;
+		useCase?: string;
     }
 
 }

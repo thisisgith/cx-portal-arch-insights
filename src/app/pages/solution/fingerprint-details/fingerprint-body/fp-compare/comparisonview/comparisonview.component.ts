@@ -1,11 +1,13 @@
 import { Component, Input, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { LogService } from '@cisco-ngx/cui-services';
-import { Icomparison, CrashPreventionService } from '@sdp-api';
+import { Icomparison, CrashPreventionService, RacetrackSolution, RacetrackTechnology } from '@sdp-api';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import * as _ from 'lodash-es';
 import { I18n } from '@cisco-ngx/cui-utils';
+import { RacetrackInfoService, AssetPanelLinkService } from '@services';
+import { AssetLinkInfo } from '@interfaces';
 
 /**
  * Comparisonview Component
@@ -32,10 +34,17 @@ export class ComparisonviewComponent {
 	@Output() public reqError: EventEmitter<any> = new EventEmitter<any>();
 	public showAssetDetailsView = false;
 	public selectedAsset: any;
+	private selectedSolutionName: string;
+	private selectedTechnologyName: string;
+	public assetParams: any;
+	public assetLinkInfo: AssetLinkInfo = Object.create({ });
+
 	constructor (
 		private logger: LogService,
+		private assetPanelLinkService: AssetPanelLinkService,
 		public crashPreventionService: CrashPreventionService,
 		private route: ActivatedRoute,
+		private racetrackInfoService: RacetrackInfoService,
 		) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
@@ -56,6 +65,8 @@ export class ComparisonviewComponent {
 			customerId: this.customerId,
 			deviceId1: _.get(this.deviceA, 'deviceId', null),
 			deviceId2: _.get(this.deviceB, 'deviceId', null),
+			solution: this.selectedSolutionName,
+			useCase: this.selectedTechnologyName,
 		};
 	}
 
@@ -67,6 +78,21 @@ export class ComparisonviewComponent {
 		this.compareView = _.get(changes, ['compareView', 'currentValue'], this.compareView);
 		this.deviceA = _.get(changes, ['deviceA', 'currentValue'], this.deviceA);
 		this.deviceB = _.get(changes, ['deviceB', 'currentValue'], this.deviceB);
+		this.racetrackInfoService.getCurrentSolution()
+		.pipe(
+			takeUntil(this.destroy$),
+		)
+		.subscribe((solution: RacetrackSolution) => {
+			this.selectedSolutionName = _.get(solution, 'name');
+		});
+
+		this.racetrackInfoService.getCurrentTechnology()
+		.pipe(
+			takeUntil(this.destroy$),
+		)
+		.subscribe((technology: RacetrackTechnology) => {
+			this.selectedTechnologyName = _.get(technology, 'name');
+		});
 		if (_.get(changes, ['deviceA', 'currentValue'], false) ||
 		 _.get(changes, ['deviceB', 'currentValue'], false)) {
 			this.loadData();
@@ -100,6 +126,7 @@ export class ComparisonviewComponent {
 	/**
 	 * showAssetDetails
 	 * @param selectedAsset selectAsset
+	 * @returns assetPanelLinkService
 	 */
 	public showAssetDetails (selectedAsset) {
 		this.selectedAsset = selectedAsset;

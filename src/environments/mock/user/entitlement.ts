@@ -1,6 +1,6 @@
 import { EntitledUser, ServiceInfoResponse } from '@sdp-api';
+import { UserRoles } from '@constants';
 import * as _ from 'lodash-es';
-import { User } from '@interfaces';
 
 /** CustomerId to return  */
 const customerId = '2431199';
@@ -22,7 +22,7 @@ const mockUser1: EntitledUser = {
 		emailAddress: 'fakeCco@cisco.com',
 		familyName: 'Test',
 		name: 'Demo',
-		role: 'admin',
+		role: UserRoles.ADMIN,
 	},
 	name: 'Test User',
 	account: {
@@ -63,6 +63,7 @@ const mockUser1: EntitledUser = {
  */
 const mockUser2 = Object.assign({ }, mockUser1);
 mockUser2.customerId = '92736491';
+mockUser2.individual.role = UserRoles.USER;
 
 /** api for service-info 2 */
 const serviceApi2 = `/api/customerportal/entitlement/v1/party/service-info/${mockUser2.customerId}`;
@@ -79,9 +80,15 @@ const mockServiceInfo: ServiceInfoResponse = [
 ];
 
 /** Our Default User */
-export const user: User = {
+export const user = {
 	info: mockUser1,
 	service: _.head(mockServiceInfo),
+};
+
+/** User with different customer id and role and level */
+export const user2 = {
+	info: mockUser2,
+	service: Object.assign({ }, _.head(mockServiceInfo), { cxLevel: 1 }),
 };
 
 /**

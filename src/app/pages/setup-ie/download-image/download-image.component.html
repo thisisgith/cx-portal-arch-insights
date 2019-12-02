@@ -37,6 +37,25 @@
 	<div 
 		*ngIf="!loading && view === 'pre-download'"
 	>
+		<div class="region-select xl-margin-bottom">
+			<h3 [innerText]="'_SecureDataStorage_' | i18n"></h3>
+			<div [innerText]="'_WhereShouldWeSecurelyStoreYourData_' | i18n"></div>
+			<div class="form-group base-margin-top">
+				<div class="form-group__text select">
+					<select
+						data-auto-id="select-region"
+						[(ngModel)]="region"> 
+						<option
+							value="emea"
+							[innerText]="'_Europe(Amsterdam)_' | i18n"></option>
+						<option
+							value="usa"
+							[innerText]="'_UnitedStates_' | i18n"
+						></option>
+					</select>
+				</div>
+			</div>
+		</div>
 		<h6
 			class="xl-margin-bottom"
 			[innerText]="'_DownloadTheOVAFile_' | i18n"

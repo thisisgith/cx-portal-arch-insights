@@ -1,5 +1,4 @@
-@import '../../../../mixins.scss';
-@import '~src/app/common-styles/visual-filter-series.scss';
+@import '~src/mixins.scss';
 
 .mid-icon-place {
 	margin-top: 40%;
@@ -16,6 +15,10 @@
 	font-size: 15px;
 }
 
+.filter__selected {
+	border-bottom: 4px solid $accent-color1;
+}
+
 .cursor {
 	cursor: pointer;
 }
@@ -26,4 +29,8 @@
 
 :host ::ng-deep .table {
 	@include table-ellipse;
+}
+
+.icon-info {
+	color: #c2d1e2;
 }

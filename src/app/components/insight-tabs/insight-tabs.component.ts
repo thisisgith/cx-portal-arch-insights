@@ -2,10 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { RouteAuthService } from 'src/app/services';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as _ from 'lodash-es';
-import { UserResolve } from '@utilities';
 import { LogService } from '@cisco-ngx/cui-services';
-import { flatMap, map, catchError } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
+import { of, Subject } from 'rxjs';
 /**
  * Component representing a nav bar for insights pages
  */
@@ -18,12 +17,15 @@ export class InsightTabsComponent implements OnInit {
 	public customerId;
 	public hasPermission = false;
 	public cxLevel: number;
+	public enableArchitectureTab = false;
+	public enableConfigurationTab = false;
+	public enableSystemEventsTab = false;
+	private destroy$ = new Subject();
 
 	constructor (
 		private logger: LogService,
 		private routeAuthService: RouteAuthService,
 		private router: Router,
-		private userResolve: UserResolve,
 		private route: ActivatedRoute,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
@@ -42,20 +44,19 @@ export class InsightTabsComponent implements OnInit {
 	 * @returns can activate boolean value
 	 */
 	public canActivate () {
-		this.userResolve.getCustomerId()
-			.pipe(flatMap(id => this.routeAuthService.checkPermissions(id)),
-				map((response: boolean) => {
-
-					if (response) {
-						this.hasPermission = response;
-					} else if (this.router.url === '/solution/insights/compliance') {
-						this.router.navigateByUrl('/solution/insights/osv');
+		this.routeAuthService.checkArchitecturePermissions()
+			.pipe(
+				map((response: any) => {
+					if (response && this.cxLevel > 1) {
+						this.enableArchitectureTab = _.get(response, 'architectureReviewUIEnabled');
+						this.enableConfigurationTab = _.get(response, 'configurationUIEnabled');
+						this.enableSystemEventsTab = _.get(response, 'syslogUIEnabled');
 					}
 				}),
 				catchError(err => {
-					if (this.router.url === '/solution/insights/compliance') {
-						this.router.navigateByUrl('/solution/insights/osv');
-					}
+					this.enableArchitectureTab = false;
+					this.enableConfigurationTab = false;
+					this.enableSystemEventsTab = false;
 					this.logger.error('insights canActivate() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
@@ -63,5 +64,14 @@ export class InsightTabsComponent implements OnInit {
 				}),
 			)
 			.subscribe();
+	}
+
+	/**
+	 * ngOnDestroy
+	 */
+
+	public ngOnDestroy () {
+		this.destroy$.next();
+		this.destroy$.complete();
 	}
 }

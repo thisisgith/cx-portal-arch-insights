@@ -5,50 +5,64 @@ import {
 	OnInit,
 	SimpleChanges,
 	OnDestroy,
+	EventEmitter,
+	Output,
 } from '@angular/core';
 import {
-	InventoryService,
-	Asset,
-	HardwareResponse,
-	AssetSummary,
+	AssetTaggingService,
+	AssetTaggingDeviceDetails,
+	Tags,
+	NetworkDataGatewayService,
+	TransactionStatusResponse,
+	ScanRequestResponse,
+	TransactionRequest,
+	TransactionRequestResponse,
+	Transaction,
 } from '@sdp-api';
-
+import { I18n } from '@cisco-ngx/cui-utils';
 import * as _ from 'lodash-es';
 import { LogService } from '@cisco-ngx/cui-services';
-import { forkJoin, of, Subject } from 'rxjs';
+import { of, Subject, forkJoin } from 'rxjs';
 import {
 	map,
 	catchError,
+	takeUntil,
+	mergeMap,
+	delay,
 } from 'rxjs/operators';
+import { Alert, ModHardwareAsset, ModSystemAsset } from '@interfaces';
 
 /**
  * Asset Details Component
  */
 @Component({
 	selector: 'asset-details-summary',
+	styleUrls: ['./summary.component.scss'],
 	templateUrl: './summary.component.html',
 })
 
 export class AssetDetailsSummaryComponent implements OnChanges, OnInit, OnDestroy {
 
-	@Input('asset') public asset: Asset;
 	@Input('customerId') public customerId: string;
+	@Input('systemAsset') public systemAsset: ModSystemAsset;
+	@Input('hardwareAsset') public hardwareAsset: ModHardwareAsset;
+	@Output('alert') public alertMessage = new EventEmitter<Alert>();
+	@Output('scanStatus') public scanStatus = new EventEmitter<TransactionStatusResponse>();
 
-	public assetData: AssetSummary;
 	public warrantyStatus: 'Covered' | 'Uncovered';
+	public tags: Tags[];
 
-	private assetSummaryParams: InventoryService.GetAssetSummaryParams;
-	private hardwareParams: InventoryService.GetHardwareParams;
+	private assetTagsParams: AssetTaggingService.GetParams;
 
 	public status = {
 		loading: {
-			asset: false,
-			hardware: false,
 			overall: false,
+			tags: false,
 		},
-	};
-	public componentData = {
-		numberInInventory: 0,
+		scan: {
+			eligible: false,
+			inProgress: false,
+		},
 	};
 	public hidden = true;
 	public fullscreen = false;
@@ -56,45 +70,161 @@ export class AssetDetailsSummaryComponent implements OnChanges, OnInit, OnDestro
 
 	constructor (
 		private logger: LogService,
-		private inventoryService: InventoryService,
+		private assetTaggingService: AssetTaggingService,
+		private networkService: NetworkDataGatewayService,
 	) { }
-
-	/**
-	 * Determines whether a date has passed
-	 * @param dateString expiration date as a string
-	 * @returns true if the date is in the past, false otherwise
-	 */
-	public isExpired (dateString: string) {
-		const date = new Date(dateString);
-
-		return date.getTime() < new Date().getTime();
-	}
 
 	/**
 	 * Resets data fields
 	 */
 	private clear () {
-		this.componentData.numberInInventory = 0;
-		this.assetData = null;
+		this.tags = null;
 	}
 
 	/**
-	 * Fetches the summary data for the asset
-	 * @returns the asset info
+	 * Checks for a current scan status on an asset
+	 * @returns the observable
 	 */
-	private fetchAssetData () {
-		this.status.loading.asset = true;
+	private checkScanStatus () {
+		if (!this.status.scan.eligible) {
+			return of({ });
+		}
 
-		return this.inventoryService.getAssetSummary(this.assetSummaryParams)
+		const getScanStatusParams: NetworkDataGatewayService.GetScanStatusBySerialParams = {
+			customerId: this.customerId,
+			productId: this.systemAsset.productId,
+			serialNumber: this.systemAsset.serialNumber,
+		};
+
+		return this.networkService.getScanStatusBySerial(getScanStatusParams)
 		.pipe(
-			map((response: AssetSummary) => {
-				this.assetData = response;
-				this.warrantyStatus = this.isExpired(this.assetData.warrantyEndDate)
-					? 'Uncovered' : 'Covered';
+			takeUntil(this.destroyed$),
+			mergeMap((response: ScanRequestResponse) => {
+				const scan = _.head(response);
+				const status = _.get(scan, 'status', '');
+				const inProgress = (
+					status === 'IN_PROGRESS' ||
+					status === 'RECEIVED' ||
+					status === 'ACCEPTED'
+				);
+
+				if (scan && scan.transactionId && inProgress) {
+					_.set(this.status, ['scan', 'inProgress'], true);
+
+					this.alertMessage.emit({
+						message: I18n.get('_ScanningCurrentlyInProgress_'),
+						severity: 'info',
+					});
+
+					return this.scanPolling({
+						customerId: this.customerId,
+						transactionId: scan.transactionId,
+					});
+				}
+
+				return of({ });
 			}),
 			catchError(err => {
-				this.status.loading.asset = false;
-				this.logger.error('details.component : fetchAssetData()' +
+				this.logger.error('asset-details:header.component : checkScanStatus() ' +
+				`:: Error : (${err.status}) ${err.message}`);
+
+				return of({ });
+			}),
+		);
+	}
+
+	/**
+	 * Initiates a scan
+	 */
+	public initiateScan () {
+		const request: TransactionRequest = {
+			customerId: this.customerId,
+			neCount: 1,
+			requestBody: {
+				deviceOptions: 'LIST',
+				devices: [{
+					hostname: this.systemAsset.deviceName,
+					ipAddress: this.systemAsset.ipAddress,
+					productId: this.systemAsset.productId,
+					serialNumber: this.systemAsset.serialNumber,
+				}],
+			},
+			requestType: 'PEC',
+			transactionType: 'SCAN',
+		};
+
+		if (!_.get(this.status, ['scan', 'inProgress'], false)) {
+			this.networkService.postDeviceTransactions(request)
+			.pipe(
+				takeUntil(this.destroyed$),
+				mergeMap((response: TransactionRequestResponse) => {
+					const transaction: Transaction = _.head(response);
+
+					if (_.get(transaction, 'transactionId')) {
+						_.set(this.status, ['scan', 'inProgress'], true);
+
+						return this.scanPolling(transaction);
+					}
+
+					return of({ });
+				}),
+				catchError(err => {
+					this.alertMessage.emit({
+						message: I18n.get('_UnableToInitiateScan_', this.systemAsset.deviceName),
+						severity: 'danger',
+					});
+
+					this.logger.error('asset-details:header.component : initiateScan() ' +
+						`:: Error : (${err.status}) ${err.message}`);
+
+					return of({ });
+				}),
+			)
+			.subscribe();
+		}
+	}
+
+	/**
+	 * Initiate Polling
+	 * @param transaction the transaction
+	 * @returns the observable
+	 */
+	private scanPolling (transaction: Transaction) {
+		return this.networkService.getScanStatusByTransaction({
+			customerId: this.customerId,
+			transactionId: transaction.transactionId,
+		})
+		.pipe(
+			delay(3000),
+			takeUntil(this.destroyed$),
+			mergeMap((response: TransactionStatusResponse) => {
+				const status = _.get(response, 'status');
+
+				if (status && status === 'SUCCESS' || status === 'FAILURE') {
+					this.alertMessage.emit({
+						message: status === 'SUCCESS' ?
+							I18n.get('_ScanningHasCompleted_') : I18n.get('_ScanningHasFailed_'),
+						severity: status === 'SUCCESS' ? 'success' : 'danger',
+					});
+
+					_.set(this.status, ['scan', 'inProgress'], false);
+
+					this.scanStatus.emit(response);
+
+					return of({ });
+				}
+
+				return this.scanPolling(transaction);
+			}),
+			catchError(err => {
+				this.alertMessage.emit({
+					message: I18n.get('_UnableToInitiateScan_', this.systemAsset.deviceName),
+					severity: 'danger',
+				});
+
+				_.set(this.status, ['scan', 'inProgress'], false);
+
+				this.logger.error('asset-details:header.component : initiatePolling() ' +
 					`:: Error : (${err.status}) ${err.message}`);
 
 				return of({ });
@@ -103,21 +233,21 @@ export class AssetDetailsSummaryComponent implements OnChanges, OnInit, OnDestro
 	}
 
 	/**
-	 * Fetch the hardware data for the selected asset
-	 * @returns the hardware data
+	 * Fetches the summary data for the asset
+	 * @returns the tags info
 	 */
-	private fetchHardwareData () {
-		this.status.loading.hardware = true;
+	private fetchTagsData () {
+		this.status.loading.tags = true;
 
-		return this.inventoryService.getHardware(this.hardwareParams)
+		return this.assetTaggingService.getAsset360Tags(this.assetTagsParams)
 		.pipe(
-			map((response: HardwareResponse) => {
-				this.componentData.numberInInventory = _.get(response, ['Pagination', 'total'], 1);
-				this.status.loading.hardware = false;
+			map((response: AssetTaggingDeviceDetails) => {
+				this.tags = response.tags;
+				this.status.loading.tags = false;
 			}),
 			catchError(err => {
-				this.status.loading.hardware = false;
-				this.logger.error('asset-details : summary.component : fetchHardwareData() ' +
+				this.status.loading.tags = false;
+				this.logger.error('details.component : fetchTagsData()' +
 					`:: Error : (${err.status}) ${err.message}`);
 
 				return of({ });
@@ -130,8 +260,11 @@ export class AssetDetailsSummaryComponent implements OnChanges, OnInit, OnDestro
 	 * @param changes the changes detected
 	 */
 	public ngOnChanges (changes: SimpleChanges) {
-		const currentAsset = _.get(changes, ['asset', 'currentValue']);
-		if (currentAsset && !changes.asset.firstChange) {
+		const currentSystemAsset = _.get(changes, ['systemAsset', 'currentValue']);
+		const currentHardwareAsset = _.get(changes, ['hardwareAsset', 'currentValue']);
+		if (currentSystemAsset && !changes.systemAsset.firstChange) {
+			this.refresh();
+		} else if (currentHardwareAsset && !changes.hardwareAsset.firstChange) {
 			this.refresh();
 		}
 	}
@@ -155,39 +288,23 @@ export class AssetDetailsSummaryComponent implements OnChanges, OnInit, OnDestro
 	 * Refreshes the component
 	 */
 	public refresh () {
-		if (this.asset) {
+		if (this.hardwareAsset) {
 			this.clear();
 			this.status.loading.overall = true;
 
-			const productId = _.get(this.asset, 'productId');
-			const hwInstanceId = _.get(this.asset, 'hwInstanceId');
+			this.assetTagsParams = {
+				customerId: this.customerId,
+				deviceId: _.get(this.hardwareAsset, 'neId'),
+			};
 
-			const obsBatch = [];
-
-			if (productId) {
-				this.hardwareParams = {
-					customerId: this.customerId,
-					page: 1,
-					productId: [productId],
-					rows: 1,
-				};
-
-				obsBatch.push(this.fetchHardwareData());
-			}
-
-			if (hwInstanceId) {
-				this.assetSummaryParams = {
-					hwInstanceId,
-					customerId: this.customerId,
-				};
-
-				obsBatch.push(
-					this.fetchAssetData(),
-				);
-			}
+			this.status.scan.eligible = _.get(this.systemAsset, 'isManagedNE', false);
 
 			this.hidden = false;
-			forkJoin(obsBatch)
+
+			forkJoin(
+				this.fetchTagsData(),
+				this.checkScanStatus(),
+			)
 			.subscribe(() => {
 				this.status.loading.overall = false;
 			});

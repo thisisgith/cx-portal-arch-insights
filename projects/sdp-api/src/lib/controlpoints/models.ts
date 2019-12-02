@@ -1,9 +1,7 @@
 export { AdditionalDetails } from './models/additional-details';
 export { CSDFResponseModel } from './models/csdfresponse-model';
 export { CollectionPolicyResponseModel } from './models/collection-policy-response-model';
-export {
-	CollectionPolicyUpdateRequestModel,
-} from './models/collection-policy-update-request-model';
+export { CollectionPolicyUpdateRequestModel } from './models/collection-policy-update-request-model';
 export { ComponentDetails } from './models/component-details';
 export { DefaultResponseModel } from './models/default-response-model';
 export { DeviceConnectivityAndEligibility } from './models/device-connectivity-and-eligibility';
@@ -20,18 +18,47 @@ export { IEHealthStatusResponseModel } from './models/iehealth-status-response-m
 export { IERegistrationRequestModel } from './models/ieregistration-request-model';
 export { IERegistrationResponseModel } from './models/ieregistration-response-model';
 export { IESetupCompletionResponseModel } from './models/iesetup-completion-response-model';
-export {
-	IESetupCompletionUpdateRequestModel,
-} from './models/iesetup-completion-update-request-model';
+export { IESetupCompletionUpdateRequestModel } from './models/iesetup-completion-update-request-model';
 export { IgnorePolicyRequestModel } from './models/ignore-policy-request-model';
 export { IgnorePolicyUpdateRequestModel } from './models/ignore-policy-update-request-model';
-export { InsightObject } from './models/insight-object';
 export { LicenseData } from './models/license-data';
 export { LicenseDataResponseModel } from './models/license-data-response-model';
 export { OSDetails } from './models/osdetails';
 export { Pagination } from './models/pagination';
+export { PartnerViewsForVA } from './models/partner-views-for-va';
 export { PoliciesGroupByDayInAMonthModel } from './models/policies-group-by-day-in-amonth-model';
 export { PolicyResponseModel } from './models/policy-response-model';
 export { SystemDetails } from './models/system-details';
+export { UserCompanyDetails } from './models/user-company-details';
+export { UserDeleteRequestModel } from './models/user-delete-request-model';
+export { UserDetails } from './models/user-details';
 export { UserPreferenceRequestModel } from './models/user-preference-request-model';
 export { UserPreferenceResponseModel } from './models/user-preference-response-model';
+export { UserRoleDetails } from './models/user-role-details';
+export { UserUpdateRequest } from './models/user-update-request';
+export { UserUpdateResponseModel } from './models/user-update-response-model';
+export { UserValidationRequestModel } from './models/user-validation-request-model';
+export { UserValidationResponseModel } from './models/user-validation-response-model';
+export { VADetails } from './models/vadetails';
+export { VADetailsForSAUser } from './models/vadetails-for-sauser';
+export { VADetailsIntoES } from './models/vadetails-into-es';
+export { VADetailsResponseModel } from './models/vadetails-response-model';
+export { PartnerViewDetails } from './models/partner-view-details';
+export { PartnerViewDetailsResponseModel } from './models/partner-view-details-response-model';
+export { PartnerViews } from './models/partner-views';
+export { RoleDetails } from './models/role-details';
+export { RoleDetailsResponseModel } from './models/role-details-response-model';
+export { SADetails } from './models/sadetails';
+export { SAMappingForPartnerCCO } from './models/samapping-for-partner-cco';
+export { SAMappingForPartnerCCOResponseModel } from './models/samapping-for-partner-ccoresponse-model';
+export { SAUserResponseModel } from './models/sauser-response-model';
+export { HADetailsResponseModel } from './models/hadetails-response-model';
+export { HAMappingForPartnerCco } from './models/hamapping-for-partner-cco';
+export { InsightObject } from './models/insight-object';
+export { CSWRole } from './models/cswrole';
+export { CSWRoleUpdateResponse } from './models/cswrole-update-response';
+export { RolesAdded } from './models/roles-added';
+export { UpdatedUserResponseList } from './models/update-users-response-list';
+export { UserAddRequestModel } from './models/user-add-request-model';
+export { UserAddResponseModel } from './models/user-add-response-model';
+export { UserDetailsResponse } from './models/user-details-response';

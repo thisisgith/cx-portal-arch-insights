@@ -1,0 +1,19 @@
+@import '~src/variables.scss';
+
+.device-name {
+	font-weight: 300;
+}
+
+.install-location-title {
+	font-size: 13px;
+}
+
+.install-location-icon {
+	color: $icon-light-gray;
+	line-height: 20px;
+	font-size: 20px;
+}
+
+.custom-tag-color {
+	color: #d0699b;
+}

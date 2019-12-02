@@ -14,16 +14,20 @@ export * from './controlpoints/license';
 export * from './controlpoints/policies';
 export * from './controlpoints/devices';
 
+export * from './admin-complience/admin-complience';
+
 export * from './diagnostics/critical-bugs';
 export * from './diagnostics/critical-bugs-assets';
 
 export * from './insights/insights-counts';
 
-export * from './inventory/assets';
 export * from './inventory/asset-summary';
+export * from './inventory/assets';
+export * from './inventory/hardware-assets';
 export * from './inventory/hardware';
 export * from './inventory/network-elements';
 export * from './inventory/roles';
+export * from './inventory/system-assets';
 
 export { Mock } from './mock';
 
@@ -57,6 +61,7 @@ export * from './racetrack/elearning';
 export * from './racetrack/info';
 export * from './racetrack/successPaths';
 export * from './racetrack/feedback';
+export * from './partner/partnerInfo';
 
 export * from './rcc/rcc';
 export * from './rcc/rcc-asset';
@@ -68,9 +73,8 @@ export * from './search/search';
 export * from './search/serialnumber';
 
 export * from './user/entitlement';
+export * from './user/entitlement-v2';
 export * from './architecture/architecture';
-
-export * from '../mock/afm/afm';
 
 export * from '../mock/architecture-review/architecture-review';
 
@@ -78,3 +82,6 @@ export { ComparisonViewScenarios } from './crash-prevention/comparisonview';
 
 export * from '../mock/service/asset-panel-link';
 export * from '../mock/syslogs/syslogs';
+export * from './asset-tagging/asset-tagging';
+
+export * from '../mock/fault/fault';
