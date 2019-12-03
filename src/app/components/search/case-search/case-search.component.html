@@ -36,8 +36,11 @@
 							data-auto-id="caseCreated" [innerText]="'_Created_' | i18n"></span>
 					</dt>
 					<dd>
-						<span *ngIf="case?.opened; else unavailable"
-							[innerText]="case.opened | dateTime"></span>
+						<span *ngIf="case?.opened; else unavailable">
+							<span [attr.data-balloon]="case?.opened | dateTime" data-balloon-pos="right" data-auto-id="CaseCreatedDate">
+								<span [innerText]="case?.opened| fromNow"></span>
+							</span>
+						</span>
 					</dd>
 					<dt>
 						<span class="subheading text-small text-uppercase"

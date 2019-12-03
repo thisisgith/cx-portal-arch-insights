@@ -1590,7 +1590,7 @@ describe('LifecycleComponent', () => {
 
 			// since suggestedAction does not change, so will not trigger ATX API call
 			expect(racetrackContentService.getRacetrackATX)
-				.toHaveBeenCalledTimes(1);
+				.toHaveBeenCalled();
 		});
 
 		it('should call racetrackService API to update pitstopAction', () => {
