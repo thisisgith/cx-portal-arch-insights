@@ -118,7 +118,7 @@
 								</div>
 							</div>
 							<div *ngIf="type === 'editCollection'" class="col-md-6">
-								<span [innerText]="'Created: ' + (policy.createdDate | date:'MMM dd, yyyy')"></span>
+								<span [innerText]="'Created: ' + (policy && policy.createdDate | date:'MMM dd, yyyy')"></span>
 							</div>
 						</div>
 						<div class="row dbl-padding-left dbl-padding-right base-padding-top full-width">
