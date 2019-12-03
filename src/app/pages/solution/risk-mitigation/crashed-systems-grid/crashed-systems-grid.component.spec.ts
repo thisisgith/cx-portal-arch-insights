@@ -67,13 +67,13 @@ describe('CrashedSystemsGridComponent', () => {
 			page: 1,
 		};
 		component.onPagerUpdated(pageInfo);
-		expect(component.first)
+		expect(component.pageFirstRecord)
 		.toBe(0);
 		component.crashedSystemsGridDetails.totalItems = 10;
 		component.onPagerUpdated(pageInfo);
-		 expect(component.first)
+		 expect(component.pageFirstRecord)
 		 .toBe(11);
-		expect(component.last)
+		expect(component.pageLastRecord)
 		.toBe(10);
 	});
 

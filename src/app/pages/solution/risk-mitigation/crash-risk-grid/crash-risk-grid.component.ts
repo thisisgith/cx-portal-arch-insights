@@ -119,6 +119,10 @@ export class CrashRiskGridComponent implements OnChanges {
 
 	public getFingerPrintDeviceDetails (param: HighCrashRiskPagination) {
 		this.crashRiskGridLoading = true;
+		this.paginationValue.emit({
+			itemRange: '0-0',
+			totalItems: 0,
+		});
 
 		return this.riskMitigationService
 			.getFingerPrintDeviceDetailsData(param)
@@ -133,16 +137,18 @@ export class CrashRiskGridComponent implements OnChanges {
 					this.highCrashRiskSystemsGridDetails.tableOffset =
 						param.page;
 
-					const first = this.highCrashRiskSystemsGridDetails.totalItems
+					const pageFirstRecord = this.highCrashRiskSystemsGridDetails.totalItems
 						? this.highCrashRiskParams.page * 10 + 1
 						: this.highCrashRiskParams.page;
-					const last =
+					const pageLastRecord =
 						this.highCrashRiskParams.page * 10 +
 						this.highCrashRiskSystemsGridDetails.tableData.length;
+
 					const paginationValueProp = {
-						itemRange: `${first}-${last}`,
+						itemRange: `${pageFirstRecord}-${pageLastRecord}`,
 						totalItems: this.highCrashRiskSystemsGridDetails.totalItems,
 					};
+
 					this.paginationValue.emit(paginationValueProp);
 				}),
 				catchError(err => {
@@ -185,7 +191,7 @@ export class CrashRiskGridComponent implements OnChanges {
 					name: I18n.get('_RMSoftwareType_'),
 					sortable: true,
 					template: this.softwareTypeTemplate,
-					width: '25%',
+					width: '20%',
 				},
 				{
 					key: 'softwareVersion',
@@ -199,7 +205,7 @@ export class CrashRiskGridComponent implements OnChanges {
 					key: 'globalRiskRank',
 					sortable: true,
 					template: this.cardColorsTemplate,
-					width: '10%',
+					width: '15%',
 				},
 			],
 			dynamicData: true,
