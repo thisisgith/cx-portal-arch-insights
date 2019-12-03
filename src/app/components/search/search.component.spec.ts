@@ -1,5 +1,5 @@
 import { configureTestSuite } from 'ng-bullet';
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
 import { SearchComponent } from './search.component';
 import { SearchModule } from './search.module';
 import { CaseService } from '@cui-x/services';
@@ -100,6 +100,7 @@ describe('SearchComponent', () => {
 			.toEqual({ query: 'FOC1544Y16T' });
 		expect(component.searchContext)
 			.toEqual('serialno');
+		flush();
 	}));
 
 	it('should show special search', () => {

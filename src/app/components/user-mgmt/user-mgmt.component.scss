@@ -37,6 +37,11 @@
 
 	.responsive-table {
 		max-height: 450px;
+		overflow: hidden;
+	}
+
+	.responsive-table:hover {
+		overflow-y: scroll;
 	}
 
 	.flipped {

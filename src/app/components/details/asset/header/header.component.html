@@ -17,7 +17,7 @@
 				</div>
 				<div *ngIf="!scanStatus.inProgress && !scanStatus.error" class="flex-center-horizontal">
 					<span *ngIf="scanPolicy && systemAsset?.lastScan" class="icon-clock qtr-margin-right" [title]="('_Schedule_' | i18n) + ': ' + scanPolicy.schedule"></span>
-					<span [innerText]="systemAsset?.lastScan ? (systemAsset.lastScan | fromNow) : ('_NA_' | i18n)" [title]="systemAsset?.lastScan ? (systemAsset.lastScan | dateTime) : ''"></span>
+					<span [innerText]="systemAsset?.lastScan ? (systemAsset.lastScan | fromNow) : ('_Never_' | i18n)" [title]="systemAsset?.lastScan ? (systemAsset.lastScan | dateTime) : ''"></span>
 				</div>
 			</div>
 		</div>
