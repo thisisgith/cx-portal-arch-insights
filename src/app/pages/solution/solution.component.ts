@@ -296,7 +296,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	 * @returns the facet
 	 */
 	private getFacetFromRoute (route: string) {
-		return _.find(this.facets, (facet: Facet) => route.includes(facet.route));
+		return route ? _.find(this.facets, (facet: Facet) => route.includes(facet.route)) : this.facets[0];
 	}
 
 	public changeTechnology (technology: RacetrackTechnology) {
@@ -778,9 +778,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	public async ngAfterViewInit () {
 		this.calculateStep1();
 		this.calculateStep2();
-		if (this.activeRoute) {
-			this.selectFacet(this.getFacetFromRoute(this.activeRoute));
-		}
+		this.selectFacet(this.getFacetFromRoute(this.activeRoute));
 	}
 
 	/**
