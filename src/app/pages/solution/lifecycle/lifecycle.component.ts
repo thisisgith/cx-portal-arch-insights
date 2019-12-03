@@ -365,7 +365,7 @@ export class LifecycleComponent implements OnDestroy {
 	) {
 		this.user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(this.user, ['info', 'customerId']);
-		this.buId = _.get(this.user, ['info', 'individual', 'cxBUId']);
+		this.buId = _.get(this.user, ['info', 'cxBUId']);
 		this.cxLevel = _.get(this.user, ['service', 'cxLevel'], 0);
 		const currentSBView = window.sessionStorage.getItem('cxportal.cisco.com:lifecycle:sbview');
 		if (!currentSBView) {
@@ -1599,7 +1599,7 @@ export class LifecycleComponent implements OnDestroy {
 					!session.title && !session.description);
 
 				// Do not show cisco ACC's if incorrect CX level
-				if (!this.ciscoAccLevels.includes(this.cxLevel)) {
+				if (!this.ciscoAccLevels.includes(Number(this.cxLevel))) {
 					_.remove(this.componentData.acc.sessions, (session: ACC) =>
 						!session.providerInfo);
 				}
