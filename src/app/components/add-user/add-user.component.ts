@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { LogService } from '@cisco-ngx/cui-services';
-import { catchError } from 'rxjs/operators';
-import { empty } from 'rxjs';
+import { catchError, takeUntil } from 'rxjs/operators';
+import { empty, Subject } from 'rxjs';
 import { CuiModalService } from '@cisco-ngx/cui-components';
 import * as _ from 'lodash-es';
 import { I18n } from '@cisco-ngx/cui-utils';
@@ -22,7 +22,7 @@ import { UserResolve } from '@utilities';
 	styleUrls: ['./add-user.component.scss'],
 	templateUrl: './add-user.component.html',
 })
-export class AddUserComponent implements OnInit {
+export class AddUserComponent implements OnInit, OnDestroy {
 	public addUserForm = new FormGroup({
 		ccoid: new FormControl('', [Validators.required]),
 		email: new FormControl('', [Validators.required]),
@@ -32,6 +32,7 @@ export class AddUserComponent implements OnInit {
 	public alert: any = { };
 	public response: any;
 	public items: RoleDetails[];
+	private destroyed$: Subject<void> = new Subject<void>();
 	public userDetails: UserAddRequestModel;
 	public isParntner = 'false';
 	public addUserResponse: UserAddResponseModel;
@@ -46,8 +47,10 @@ export class AddUserComponent implements OnInit {
 		private userReslove: UserResolve,
 	) {
 		this.userReslove.getSaId()
+		.pipe(takeUntil(this.destroyed$))
 		.subscribe(saId => this.saAccountId = saId.toString());
 		this.userReslove.getCustomerId()
+		.pipe(takeUntil(this.destroyed$))
 		.subscribe(customerId => this.customerId = customerId);
 	}
 
@@ -57,13 +60,25 @@ export class AddUserComponent implements OnInit {
 	public ngOnInit () {
 		this.alert.visible = false;
 		this.isLoading = false;
+		document.getElementById('input-ccoid')
+			.focus();
 		this.userService
 			.getListRolesForGivenUserUsingGET(this.saAccountId)
+			.pipe(takeUntil(this.destroyed$))
 			.subscribe(data => {
 				this.response = data;
 				this.items = this.response.saRoles;
 			});
 	}
+
+	/**
+	 *  NgOnDestroy
+	 */
+	public ngOnDestroy () {
+		this.destroyed$.next();
+		this.destroyed$.complete();
+	}
+
 	/**
 	 * Add User Component
 	 */
@@ -93,6 +108,7 @@ export class AddUserComponent implements OnInit {
 
 					return empty();
 				}),
+				takeUntil(this.destroyed$),
 			)
 			.subscribe(response => {
 				this.isLoading = false;

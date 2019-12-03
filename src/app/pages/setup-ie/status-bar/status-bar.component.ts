@@ -29,95 +29,98 @@ export class IESetupWizardStatusBar implements OnInit {
 	constructor (
 		private sanitizer: DomSanitizer,
 		private activatedRoute: ActivatedRoute,
-	) {	}
-
+	) { }
+	public isFromAdmin = false;
 	/**
 	 *  on init function
 	 */
 	public ngOnInit (): void {
-		this.activatedRoute.queryParams.subscribe(params => {
+		this.activatedRoute.queryParams.subscribe(params  => {
 			if (params.fromAdmin) {
-				this.steps = [
-
-					{
-						iconActiveSrc: this.sanitizer
-							.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s2-on.png'),
-						iconInactiveSrc: this.sanitizer
-							.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s2-off.png'),
-						isActive: () => this.state === SETUP_STATES.INSTALL,
-						label: _.toUpper(I18n.get('_InstallCXCollectorOnVM_')),
-					},
-					{
-						iconActiveSrc: this.sanitizer
-							.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s3-on.png'),
-						iconInactiveSrc: this.sanitizer
-							.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s3-off.png'),
-						isActive: () => this.state === SETUP_STATES.CONNECT_COLLECTOR,
-						label: _.toUpper(I18n.get('_ConnectVMToBrowser_')),
-					},
-					{
-						iconActiveSrc: this.sanitizer
-							.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s4-on.png'),
-						iconInactiveSrc: this.sanitizer
-							.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s4-off.png'),
-						isActive: () => this.state === SETUP_STATES.CONFIGURE_COLLECTOR,
-						label: _.toUpper(I18n.get('_ConfigureCXCollector_')),
-					},
-
-				];
-
-			} else {
-				this.steps = [
-					{
-						iconActiveSrc: this.sanitizer
-							.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s1-on.png'),
-						iconInactiveSrc: this.sanitizer
-							.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s1-off.png'),
-						isActive: () => this.state === SETUP_STATES.INIT,
-						label: _.toUpper(I18n.get('_PrepareToSetupCXPortal_')),
-					},
-					{
-						iconActiveSrc: this.sanitizer
-							.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s2-on.png'),
-						iconInactiveSrc: this.sanitizer
-							.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s2-off.png'),
-						isActive: () => this.state === SETUP_STATES.INSTALL,
-						label: _.toUpper(I18n.get('_InstallCXCollectorOnVM_')),
-					},
-					{
-						iconActiveSrc: this.sanitizer
-							.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s3-on.png'),
-						iconInactiveSrc: this.sanitizer
-							.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s3-off.png'),
-						isActive: () => this.state === SETUP_STATES.CONNECT_COLLECTOR,
-						label: _.toUpper(I18n.get('_ConnectVMToBrowser_')),
-					},
-					{
-						iconActiveSrc: this.sanitizer
-							.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s4-on.png'),
-						iconInactiveSrc: this.sanitizer
-							.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s4-off.png'),
-						isActive: () => this.state === SETUP_STATES.CONFIGURE_COLLECTOR,
-						label: _.toUpper(I18n.get('_ConfigureCXCollector_')),
-					},
-					{
-						iconActiveSrc: this.sanitizer
-							.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s5-on.png'),
-						iconInactiveSrc: this.sanitizer
-							.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s5-off.png'),
-						isActive: () => this.state === SETUP_STATES.CONNECT_DNAC,
-						label: _.toUpper(I18n.get('_ConnectDNAToCXCollector_')),
-					},
-					{
-						iconActiveSrc: this.sanitizer
-						.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s6-on.png'),
-						iconInactiveSrc: this.sanitizer
-						.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s6-off.png'),
-						isActive: () => this.state === SETUP_STATES.MANAGE_USERS,
-						label: _.toUpper(I18n.get('_AddUsersToCXPortal_')),
-					},
-				];
+				this.isFromAdmin = true;
 			}
 		});
+		if (this.isFromAdmin) {
+			this.steps = [
+
+				{
+					iconActiveSrc: this.sanitizer
+						.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s2-on.png'),
+					iconInactiveSrc: this.sanitizer
+						.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s2-off.png'),
+					isActive: () => this.state === SETUP_STATES.INSTALL,
+					label: _.toUpper(I18n.get('_InstallCXCollectorOnVM_')),
+				},
+				{
+					iconActiveSrc: this.sanitizer
+						.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s3-on.png'),
+					iconInactiveSrc: this.sanitizer
+						.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s3-off.png'),
+					isActive: () => this.state === SETUP_STATES.CONNECT_COLLECTOR,
+					label: _.toUpper(I18n.get('_ConnectVMToBrowser_')),
+				},
+				{
+					iconActiveSrc: this.sanitizer
+						.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s4-on.png'),
+					iconInactiveSrc: this.sanitizer
+						.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s4-off.png'),
+					isActive: () => this.state === SETUP_STATES.CONFIGURE_COLLECTOR,
+					label: _.toUpper(I18n.get('_ConfigureCXCollector_')),
+				},
+
+			];
+
+		} else {
+			this.steps = [
+				{
+					iconActiveSrc: this.sanitizer
+						.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s1-on.png'),
+					iconInactiveSrc: this.sanitizer
+						.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s1-off.png'),
+					isActive: () => this.state === SETUP_STATES.INIT,
+					label: _.toUpper(I18n.get('_PrepareToSetupCXPortal_')),
+				},
+				{
+					iconActiveSrc: this.sanitizer
+						.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s2-on.png'),
+					iconInactiveSrc: this.sanitizer
+						.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s2-off.png'),
+					isActive: () => this.state === SETUP_STATES.INSTALL,
+					label: _.toUpper(I18n.get('_InstallCXCollectorOnVM_')),
+				},
+				{
+					iconActiveSrc: this.sanitizer
+						.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s3-on.png'),
+					iconInactiveSrc: this.sanitizer
+						.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s3-off.png'),
+					isActive: () => this.state === SETUP_STATES.CONNECT_COLLECTOR,
+					label: _.toUpper(I18n.get('_ConnectVMToBrowser_')),
+				},
+				{
+					iconActiveSrc: this.sanitizer
+						.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s4-on.png'),
+					iconInactiveSrc: this.sanitizer
+						.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s4-off.png'),
+					isActive: () => this.state === SETUP_STATES.CONFIGURE_COLLECTOR,
+					label: _.toUpper(I18n.get('_ConfigureCXCollector_')),
+				},
+				{
+					iconActiveSrc: this.sanitizer
+						.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s5-on.png'),
+					iconInactiveSrc: this.sanitizer
+						.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s5-off.png'),
+					isActive: () => this.state === SETUP_STATES.CONNECT_DNAC,
+					label: _.toUpper(I18n.get('_ConnectDNAToCXCollector_')),
+				},
+				{
+					iconActiveSrc: this.sanitizer
+						.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s6-on.png'),
+					iconInactiveSrc: this.sanitizer
+						.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s6-off.png'),
+					isActive: () => this.state === SETUP_STATES.MANAGE_USERS,
+					label: _.toUpper(I18n.get('_AddUsersToCXPortal_')),
+				},
+			];
+		}
 	}
 }

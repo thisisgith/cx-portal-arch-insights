@@ -63,6 +63,12 @@
 	}
 }
 
+:host ::ng-deep {
+	&.changeWidth {
+		width: 54vw;
+	}
+}
+
 .icon-asset {
 	height: 24px;
 }

@@ -306,31 +306,28 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 	 */
 	public getRowActions (softwareGroup: SoftwareGroup) {
 		return _.filter([
-			_.get(softwareGroup, 'recommendation') === 'automated' ? {
+			{
 				label: I18n.get('_OsvViewAutomatedRecommendations_'),
 				onClick: () => {
 					this.openSoftwareGroupDetails(0, softwareGroup);
 				},
-			} : undefined,
+			},
 			{
 				label: I18n.get('_OsvViewSoftwareVersionSummary_'),
 				onClick: () => {
-					const tabIndex = _.get(softwareGroup, 'recommendation') === 'automated' ? 1 : 0;
-					this.openSoftwareGroupDetails(tabIndex, softwareGroup);
+					this.openSoftwareGroupDetails(1, softwareGroup);
 				},
 			},
 			{
 				label: I18n.get('_OsvViewAssets_'),
 				onClick: () => {
-					const tabIndex = _.get(softwareGroup, 'recommendation') === 'automated' ? 2 : 1;
-					this.openSoftwareGroupDetails(tabIndex, softwareGroup);
+					this.openSoftwareGroupDetails(2, softwareGroup);
 				},
 			},
 			{
 				label: I18n.get('_OsvViewVersions_'),
 				onClick: () => {
-					const tabIndex = _.get(softwareGroup, 'recommendation') === 'automated' ? 3 : 2;
-					this.openSoftwareGroupDetails(tabIndex, softwareGroup);
+					this.openSoftwareGroupDetails(3, softwareGroup);
 				},
 			},
 		]);

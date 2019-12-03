@@ -194,7 +194,7 @@ export class UserResolve implements Resolve<any> {
 				familyName: accountUser.lastName,
 				emailAddress: accountUser.emailId,
 				ccoId: userResponse.individualAccount.ccoId,
-				cxBUId: userResponse.individualAccount.cxBUId,
+				cxBUId: userResponse.cxBUId,
 				role: _.get(smartAccount, ['roleList', 0, 'roleName']),
 			},
 			account: userResponse.account,

@@ -52,7 +52,7 @@
 
 <ng-template #softwareGroupDetails>
 	<cui-tabs *ngIf="!showDetails; else detailsTemplate"  id="assetDetailTabs" [(activeTabIndex)]="tabIndex">		
-		<cui-tab *ngIf="selectedSoftwareGroup?.recommendation === 'automated'" [label]="'_OsvAutomatedRecommendations_' | i18n | uppercase">
+		<cui-tab [label]="'_OsvAutomatedRecommendations_' | i18n | uppercase">
 			<div class="base-margin-top">
 				<cui-spinner *ngIf="status.isLoading"></cui-spinner>
 				<ng-container *ngTemplateOutlet="compareRecommendationsTemp"></ng-container>

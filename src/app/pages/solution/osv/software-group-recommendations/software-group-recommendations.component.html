@@ -93,7 +93,7 @@
 	<div class="row flex align-items-center" *ngIf="item.name != 'profile current'">
 		<div class="col-4">
 			<span *ngIf="item.swVersion != 'NA'" [innerText]="item.swVersion"></span>
-			<span *ngIf="item.swVersion == 'NA'" [innerText]="'' | i18n"></span>
+			<span *ngIf="item.swVersion == 'NA'" [innerText]="'_OsvNotAvailable_' | i18n"></span>
 		</div>
 		<div class="col-8">
 			<div class="recommendation-label label label--large qtr-margin-left qtr-margin-top"
