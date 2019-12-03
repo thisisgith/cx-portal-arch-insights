@@ -34,3 +34,7 @@
 .icon-info {
 	color: #c2d1e2;
 }
+
+.colon-symbol::after {
+	content:"\003A"
+}

@@ -219,7 +219,7 @@ export class CrashedSystemsGridComponent implements OnChanges {
 		? ((pageInfo.page * pageInfo.limit) + 1) : 0;
 		this.pageLastRecord = (pageInfo.page * pageInfo.limit) + 10;
 		if (this.pageLastRecord > this.crashedSystemsGridDetails.totalItems) {
-			this.pageLastRecord = this.crashedSystemsGridDetails.totalItems ;
+			this.pageLastRecord = this.crashedSystemsGridDetails.totalItems;
 		}
 		this.crashPagination = `${this.pageFirstRecord}-${this.pageLastRecord}`;
 		const paginationValueProp = {
