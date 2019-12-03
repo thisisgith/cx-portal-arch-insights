@@ -420,7 +420,7 @@ export class LifecycleComponent implements OnDestroy {
 				? true : false;
 			const newUsecaseAdoptPert = (technology.usecase_adoption_percentage !==
 				_.get(this.selectedTechnology, 'usecase_adoption_percentage')) ? true : false;
-			if (newSolution && newTech && newUsecaseAdoptPert) {
+			if (newSolution && newTech || newUsecaseAdoptPert) {
 				this.selectedTechnology = technology;
 
 				this.resetComponentData();
