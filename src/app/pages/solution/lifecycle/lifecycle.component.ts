@@ -2435,7 +2435,7 @@ export class LifecycleComponent implements OnDestroy {
 			this.partnerList = [ciscoCompanyInfo, ...result.companyList];
 			this.accPartnerList = [ciscoCompanyInfo, ...result.companyList];
 
-			if (!this.ciscoAccLevels.includes(this.cxLevel)) {
+			if (!this.ciscoAccLevels.includes(Number(this.cxLevel))) {
 				_.remove(this.accPartnerList, (partner: CompanyInfo) =>
 					partner.companyId === ciscoCompanyInfo.companyId);
 			}
