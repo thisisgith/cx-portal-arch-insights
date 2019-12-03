@@ -217,6 +217,11 @@ export class UserMgmtComponent implements AfterViewInit, OnDestroy {
 				}),
 				takeUntil(this.destroyed$),
 			)
-			.subscribe();
+			.subscribe(response => {
+				if (response.status === 500) {
+					this.error.text = _.get(response.data, ['0', 'errMsg'], response.message);
+					this.error.show = true;
+				}
+			});
 	}
 }

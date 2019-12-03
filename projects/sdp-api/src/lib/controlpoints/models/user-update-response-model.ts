@@ -4,5 +4,5 @@ export interface UserUpdateResponseModel {
   errors?: Array<string>;
   message?: string;
   status?: number;
-  updatedUserResponseList?: Array<CSWRoleUpdateResponse>;
+  data?: Array<CSWRoleUpdateResponse>;
 }

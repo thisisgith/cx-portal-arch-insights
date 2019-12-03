@@ -39,7 +39,7 @@
 					</ng-container>
 					<ng-container *ngTemplateOutlet="panel; context: {
 							template: learnPanel,
-							title: '_Learn_',
+							title: '_Learning_',
 							loading: (status.loading.elearning && !status.loading.success),
 							data: componentData.learning
 						}">
@@ -58,7 +58,7 @@
 				<div class="col-md-4">
 					<ng-container *ngTemplateOutlet="panel; context: {
 							template: accPanel,
-							title: '_Accelerator_',
+							title: '_Accelerators_',
 							loading: status.loading.acc,
 							data: componentData.acc,
 							viewAllLabel: '_ViewAll_',
@@ -700,7 +700,7 @@
 		<div class="divider"></div>
 		<ng-container *ngTemplateOutlet="learningBlock; context:
 			{ iconUrl: '/assets/icons/lifecycle/icon-certificate.svg',
-				title: '_Certifications_',
+				title: '_CertificationPrep_',
 				data: componentData.learning.certifications,
 				link: componentData.learning.certificationsUrl + componentData.params.usecase } ">
 		</ng-container>

@@ -235,6 +235,8 @@ export class LifecycleComponent implements OnDestroy {
 	private currentPitstopCompPert: string;
 	private showCompletionPopup = false;
 	private timeout = 5000;
+	// Enable or disable CheckList based on this flag
+	public enableCheckList = false;
 	// Enable or disable CGT based on this flag
 	public enableCGT = false;
 	// Cisco ACC content is only shown for CX Levels 2/3
@@ -363,7 +365,7 @@ export class LifecycleComponent implements OnDestroy {
 	) {
 		this.user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(this.user, ['info', 'customerId']);
-		this.buId = _.get(this.user, ['info', 'individual', 'cxBUId']);
+		this.buId = _.get(this.user, ['info', 'cxBUId']);
 		this.cxLevel = _.get(this.user, ['service', 'cxLevel'], 0);
 		const currentSBView = window.sessionStorage.getItem('cxportal.cisco.com:lifecycle:sbview');
 		if (!currentSBView) {
@@ -539,7 +541,7 @@ export class LifecycleComponent implements OnDestroy {
 				&usecase=`,
 			},
 			params: {
-				customerId: this.customerId,
+				customerId: this.customerId.split('_')[0],
 				pitstop: '',
 				rows: 500,
 				solution: '',
@@ -1115,6 +1117,7 @@ export class LifecycleComponent implements OnDestroy {
 		// If suggestedAction changes, refresh ATX, ACC and others
 		if (this.componentData.params.suggestedAction !== actionWithStatus.action.name) {
 			this.componentData.params.suggestedAction = actionWithStatus.action.name;
+			this.enableCheckList = true;
 			this.loadLifecycleInfo();
 		}
 	}
@@ -1596,7 +1599,7 @@ export class LifecycleComponent implements OnDestroy {
 					!session.title && !session.description);
 
 				// Do not show cisco ACC's if incorrect CX level
-				if (!this.ciscoAccLevels.includes(this.cxLevel)) {
+				if (!this.ciscoAccLevels.includes(Number(this.cxLevel))) {
 					_.remove(this.componentData.acc.sessions, (session: ACC) =>
 						!session.providerInfo);
 				}
@@ -2169,25 +2172,16 @@ export class LifecycleComponent implements OnDestroy {
 		if (stage === name) {
 			return;
 		}
-
 		if (this.componentData.params.solution && this.componentData.params.usecase) {
 			this.status.loading.racetrack = true;
-
-			const pitstop = _.find(
-				_.get(this.selectedTechnology, 'pitstops', []), (stop: RacetrackPitstop) =>
-				stop.name === stage);
-
+			const pitstop = _.find(_.get(this.selectedTechnology, 'pitstops', []), (stop: RacetrackPitstop) => stop.name === stage);
 			this.componentData.racetrack = {
 				pitstop,
 				stage,
 				actionsCompPercent: this.currentPitstopCompPert,
 			};
-
-			const nextAction = pitstop ? _.find(pitstop.pitstopActions, { isComplete: false })
-				: null;
-
-			this.componentData.params.suggestedAction = nextAction ? nextAction.name : null;
-
+			const nextAction = pitstop ? _.find(pitstop.pitstopActions, { isComplete: false }) : null;
+			this.componentData.params.suggestedAction = (this.enableCheckList && nextAction) ? nextAction.name : null;
 			if (pitstop) {
 				pitstop.pitstopActions.map(ptstopActn => {
 					ptstopActn.description = this.parseHtmlText(ptstopActn.description);
@@ -2195,20 +2189,17 @@ export class LifecycleComponent implements OnDestroy {
 				});
 				this.currentPitActionsWithStatus = _.map(
 					pitstop.pitstopActions, (pitstopAction: RacetrackPitstopAction) =>
-						({
-							action: pitstopAction,
-							selected: false,
-						}));
+					({
+						action: pitstopAction,
+						selected: false,
+					}));
 				this.componentData.params.pitstop = pitstop.name;
 				this.stage.next(pitstop.name);
 			}
-
 			this.loadLifecycleInfo();
-
 			this.status.loading.racetrack = false;
 		}
 	}
-
 	/**
 	 * Returns the current pitStop
 	 * @returns the observable representing the pitstop

@@ -74,6 +74,7 @@ export class RegisterCollectorComponent implements OnDestroy, OnInit, SetupStep 
 		I18n.get('_ConnectionWithCiscoEstablished_'),
 	];
 	public currentStep = 0;
+	public isFromAdmin = false;
 
 	public accountForm = new FormGroup({
 		oldPassword: new FormControl(null, [
@@ -200,6 +201,11 @@ export class RegisterCollectorComponent implements OnDestroy, OnInit, SetupStep 
 	 */
 	public onSubmit () {
 		// this.onContinue();
+		this.route.queryParams.subscribe(params => {
+			if (params.fromAdmin) {
+				this.isFromAdmin = true;
+			}
+		});
 		const formValues = this.accountForm.value;
 		this.registering = true;
 		this.registerService
@@ -302,13 +308,11 @@ export class RegisterCollectorComponent implements OnDestroy, OnInit, SetupStep 
 							.pipe(takeUntil(this.destroyed$))
 							.subscribe(() => {
 								// continue to next screen after a second
-								this.route.queryParams.subscribe(params => {
-									if (params.fromAdmin) {
-										this.router.navigate(['/admin/settings']);
-									} else {
-										this.onStepComplete.emit();
-									}
-								});
+								if (this.isFromAdmin) {
+									this.router.navigate(['/admin/settings']);
+								} else {
+									this.onStepComplete.emit();
+								}
 							});
 
 						return false;
