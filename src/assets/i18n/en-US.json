@@ -1673,6 +1673,7 @@
 	"_YourProducts_": "Your products, documentation & Learning Library resources",
 	"_ConnectionFailed_": "Please verify the IP Address or Try agin later",
 	"_ChangePasswordSuccess_": "Password changed Successfully",
-	"_SuccessModal_": "Success Modal"
+	"_SuccessModal_": "Success Modal",
+	"_ReInstall_": "Re-install"
 
 }
