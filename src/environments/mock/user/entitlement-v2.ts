@@ -136,7 +136,7 @@ export const mappedUser = {
 			familyName: accountUserMock.lastName,
 			emailAddress: accountUserMock.emailId,
 			ccoId: v2UserResponseMock.individualAccount.ccoId,
-			cxBUId: v2UserResponseMock.individualAccount.cxBUId,
+			cxBUId: v2UserResponseMock.cxBUId,
 			role: v2UserResponseMock.individualAccount.role,
 		},
 		account: v2UserResponseMock.account,
