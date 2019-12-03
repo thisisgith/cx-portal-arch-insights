@@ -45,6 +45,7 @@ export class FaultsComponent implements OnInit, OnChanges, OnDestroy {
 	public lastUpdateTime: string;
 	public lastUpdateDate: string;
 	public offlineTime: string;
+	public alert: any = { };
 	public searchOptions = {
 		debounce: 1500,
 		max: 100,
@@ -177,6 +178,8 @@ export class FaultsComponent implements OnInit, OnChanges, OnDestroy {
 				this.loading = false;
 			}),
 			catchError((err: HttpErrorResponse)  => {
+				this.loading = false;
+				_.invoke(this.alert, 'show',  I18n.get('_FaultGenericError_'), 'danger');
 				this.logger.error(
 					'FaultsComponent : getFaultData() ' +
 				`:: Error : (${err.status}) ${err.message}`);
@@ -279,6 +282,7 @@ export class FaultsComponent implements OnInit, OnChanges, OnDestroy {
 		this.toasts.addToast('success', 'Event Type:',
 		I18n.get('_FaultXSuccess_', event.icName) +
 		I18n.get('_FaultsYMoved_', event.tacEnable));
+		this.getFaultData(this.searchParams);
 	}
 
 	/**

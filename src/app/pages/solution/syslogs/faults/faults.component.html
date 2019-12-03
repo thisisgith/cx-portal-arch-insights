@@ -1,6 +1,8 @@
 <div>
 	<ng-container *ngTemplateOutlet="searchFilters"></ng-container>
-	<div class="divider qtr-margin-top"></div>
+	<div class="divider qtr-margin-top">
+		<cui-alert [options]="alert" ></cui-alert>
+	</div>
 	<ng-container *ngTemplateOutlet="faultsContent"></ng-container>
 </div>
 
@@ -66,6 +68,7 @@
 	</div>
 	<div class="responsive-table" *ngIf="!loading">
 		<cui-table
+			*ngIf="tableData?.length"
 			class="no-close-360"
 			[options]="tableOptions"
 			[data]="tableData"
@@ -74,7 +77,8 @@
 			(onSortingChanged)="onTableSortingChanged($event)"
 			(onTableRowClicked)="connectToFaultDetails($event)"
 		>
-		</cui-table>
+		</cui-table
+		>
 		<div class="section">
 			<cui-pager
 				*ngIf="tableData?.length"
@@ -110,7 +114,7 @@
 <fault-details
 	*ngIf="showFaultDetails"
 	[fault]="fault"
-	[tacEnable]="searchParams.tacEnabled"
+	[faultParams]="searchParams"
 	[lastUpdateTime]="lastUpdateDate"
 	(showFaultDetails)="onFaultPanelClose()"
 	(showSuccess)="onShowSuccess($event)"
