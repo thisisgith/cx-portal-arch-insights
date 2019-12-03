@@ -368,7 +368,7 @@ export class LifecycleComponent implements OnDestroy {
 		this.customerId = _.get(this.user, ['info', 'customerId']);
 		this.buId = _.get(this.user, ['info', 'cxBUId']);
 		this.cxLevel = _.get(this.user, ['service', 'cxLevel'], 0);
-		this.saId = _.get(this.user, ['info', 'saId'])
+		this.saId = _.get(this.user, ['info', 'saId'], '')
 			.toString();
 		const currentSBView = window.sessionStorage.getItem('cxportal.cisco.com:lifecycle:sbview');
 		if (!currentSBView) {
