@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { Component, TemplateRef, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { forkJoin, of, Subject } from 'rxjs';
 import { map, catchError, takeUntil } from 'rxjs/operators';
 import * as _ from 'lodash-es';
@@ -23,7 +23,7 @@ import { ActivatedRoute } from '@angular/router';
 	styleUrls: ['./risk-mitigation.component.scss'],
 	templateUrl: './risk-mitigation.component.html',
 })
-export class RiskMitigationComponent {
+export class RiskMitigationComponent implements AfterViewInit {
 	public customerId: any;
 	public searchQueryInCrashGrid = '';
 	public searchQueryInHighCrashGrid = '';
@@ -62,6 +62,7 @@ export class RiskMitigationComponent {
 		private logger: LogService,
 		private route: ActivatedRoute,
 		private racetrackInfoService: RacetrackInfoService,
+		private crd: ChangeDetectorRef,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
@@ -235,7 +236,8 @@ export class RiskMitigationComponent {
 				loading: true,
 				seriesData: [],
 				template: this.timeRangeFilterTemplate,
-				title: I18n.get('_RMTIMEPeriod_'),
+				title: I18n.get('_RMTimeRange_'),
+				selected: true,
 			},
 			{
 				key: 'riskScore',
@@ -243,6 +245,7 @@ export class RiskMitigationComponent {
 				seriesData: [],
 				template: this.riskScoreFilterTemplate,
 				title: I18n.get('_CP_Risk_'),
+				selected: true,
 			},
 		];
 	}
@@ -418,5 +421,11 @@ export class RiskMitigationComponent {
  	*/
 	public switchGrid (param: boolean) {
 		this.onlyCrashes = param; this.clearFilters();
+	}
+	/**
+	 * Refreshes pagination count after view init
+	 */
+	public ngAfterViewInit () {
+		this.crd.detectChanges();
 	}
 }
