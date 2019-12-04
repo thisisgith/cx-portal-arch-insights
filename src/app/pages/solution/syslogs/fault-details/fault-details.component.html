@@ -10,12 +10,12 @@
 		[(fullscreen)]="fullscreen"
 		[fullscreenToggle]="true"
 	>
-		<div class="base-margin-bottom" detailsPanelTitle>
-			<span class="text-xlarge" [innerText]="'_FaultEventType_' | i18n"></span>
-			<span class="qtr-margin-left text-xlarge" [innerText]="fault?.msgType"></span>
+		<div class="base-margin-bottom text-xlarge" detailsPanelTitle>
+			<span [innerText]="'_FaultEventType_' | i18n"></span>
+			<span class="qtr-margin-left" [innerText]="fault?.title"></span>
 		</div>
 		<div class="base-margin-bottom">
-			<div class="text-bold" [innerText]="'_FaultSeverity_' | i18n"></div>
+			<div class="text-bold" [innerText]="'_FaultSeverity_' | i18n | uppercase"></div>
 			<div>
 				<i class="icon-circle qtr-margin-right"
 					[ngClass]="{
@@ -30,7 +30,7 @@
 				<span [innerText]="fault.faultSeverity | titlecase"></span>
 			</div>
 		</div>
-		<div class="qtr-margin-top" *ngIf="(tacEnable | uppercase) === FAULT_CONSTANT.ACTIVE">
+		<div class="qtr-margin-top" *ngIf="(faultParams?.tacEnabled | uppercase) === FAULT_CONSTANT.ACTIVE">
 			<div data-auto-id="DisableCase" class="btn btn--primary" (click)="openConfirmation()"
 				[innerText]="'_FaultDisableCase_'|i18n">
 			</div>
@@ -41,7 +41,7 @@
 					<i class="icon-info icon-small"></i>
 			</span>
 		</div>
-		<div class="qtr-margin-top" *ngIf="(tacEnable | uppercase) === FAULT_CONSTANT.INACTIVE">
+		<div class="qtr-margin-top" *ngIf="(faultParams?.tacEnabled | uppercase) === FAULT_CONSTANT.INACTIVE">
 			<div data-auto-id="EnableCase" class="btn btn--primary" (click)="openConfirmation()"
 				[innerText]="'_FaultEnableCase_'|i18n">
 			</div>
@@ -125,7 +125,7 @@
 				<div class="col-4">
 					<cui-select
 						placeholder="Select Time Range"
-						data-auto-id="timePeriod"
+						data-auto-id="timeRange"
 						label="{{'_FaultTimeRange_' | i18n}}"
 						(ngModelChange)="onSelection($event,FAULT_CONSTANT.TIME)"
 						[(ngModel)]="searchParams.days"
@@ -140,6 +140,7 @@
 			</div>
 			<div class="responsive-table" *ngIf="!affectedSystemLoading">
 				<cui-table
+					*ngIf="faultAffectedDetails.length"
 					[options]="tableOptions"
 					[data]="faultAffectedDetails"
 					[limit]="tableLimit"
@@ -168,15 +169,16 @@
 
 <ng-template #systemName let-item="celldata">
 	<span data-auto-id="SystemName"
+		*ngIf="item?.systemName; else noTacCase"
 		class="text-primary cursor"
-		[innerText]="item.systemName"
+		[innerText]="item?.systemName"
 		(click)="connectToAsset(item.serialNumber)"></span>
 </ng-template>
 
 <asset-details *ngIf="selectedAsset"
 	[asset]="assetLinkInfo?.asset"
-	[serialNumber]="assetLinkInfo?.asset?.serialNumber"
-	[element]="assetLinkInfo?.element"
+    [element]="assetLinkInfo?.element"
+	[serialNumber]="serialNumber"
 	(close)="onPanelClose()"
 >
 </asset-details>
@@ -197,5 +199,17 @@
 <ng-template #caseCreatedDate let-item="celldata">
 	<span *ngIf="item?.tacCaseCreatedDate; else noTacCase"
 		[innerText]="item.tacCaseCreatedDate"
+	></span>
+</ng-template>
+
+<ng-template #productId let-item="celldata">
+	<span *ngIf="item?.productId; else noTacCase"
+		[innerText]="item.productId"
+	></span>
+</ng-template>
+
+<ng-template #softwareType let-item="celldata">
+	<span *ngIf="item?.softwareType; else noTacCase"
+		[innerText]="item.softwareType"
 	></span>
 </ng-template>
