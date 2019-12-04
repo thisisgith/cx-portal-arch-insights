@@ -106,7 +106,7 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 		ACTIVE: 'ACTIVE',
 		AUTOMATED: 'Automated Faults',
 		DETECTED: 'Detected Faults',
-		FILTER_TYPE: 'productId,os',
+		FILTER_TYPE: 'productId,swType',
 		INACTIVE: 'INACTIVE',
 		PRODUCT_ID: 'PRODUCTID',
 		SOFTWARE: 'SOFTWARE',
@@ -172,6 +172,7 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 			this.getFiltersData();
 		});
 
+		this.detailsPanelStackService.push(this);
 		this.buildTable();
 	}
 
@@ -403,7 +404,7 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 	public openConfirmation () {
 		this.searchIcParams.syslogsignature = this.fault.msgType;
 		this.searchIcParams.enable =
-			(this.faultParams.tacEnabled.toUpperCase() === this.FAULT_CONSTANT.ACTIVE) ? true : false;
+			(this.faultParams.tacEnabled.toUpperCase() === this.FAULT_CONSTANT.ACTIVE) ? false : true;
 		this.updateIcSettings(this.searchIcParams);
 	}
 
@@ -469,17 +470,17 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 	private getSortKey = sortKey => {
 		switch (sortKey) {
 			case 'System Name':
-				return 'systemName';
+				return 'hostName';
 			case 'Product ID':
 				return 'productId';
 			case 'Software Type':
-				return 'softwareType';
+				return 'os';
 			case 'Case Number':
 				return 'tacCaseNo';
 			case 'Date and Time':
-				return 'tacCaseCreatedDate';
+				return 'taccaseCreatedDate';
 			default:
-				return 'systemName';
+				return 'hostName';
 		}
 	}
 
