@@ -450,19 +450,25 @@
 			</ng-container>
 		</ng-container>
 		<ng-container *ngIf="item.status === 'in-progress'">
-			<div>
+			<div class="item-status">
 				<span class="icon-clock" attr.data-auto-id="{{ autoid }}-In-Progress-Icon"></span>
 				<span [innerText]="'_SessionInProgress_' | i18n" attr.data-auto-id="{{ autoid }}-In-Progress"></span>
 			</div>
 		</ng-container>
+		<ng-container *ngIf="item.status === 'scheduled'">
+				<div class="item-status">
+					<span class="icon-calendar" attr.data-auto-id="{{ autoid }}-In-Progress-Icon"></span>
+					<span [innerText]="'_Scheduled_' | i18n" attr.data-auto-id="{{ autoid }}-In-Progress"></span>
+				</div>
+			</ng-container>
 		<ng-container *ngIf="item.status === 'requested'">
-			<div>
+			<div class="item-status">
 				<span class="icon-check-outline" attr.data-auto-id="{{ autoid }}-Requested-Icon"></span>
 				<span [innerText]="'_Requested_' | i18n" attr.data-auto-id="{{ autoid }}-Requested"></span>
 			</div>
 		</ng-container>
 		<ng-container *ngIf="item.status === 'completed'">
-			<div>
+			<div class="item-status">
 				<span class="icon-certified" attr.data-auto-id="{{ autoid }}-Checkmark"></span>
 				<span [innerText]="'_Completed_' | i18n" attr.data-auto-id="{{ autoid }}-Completed"></span>
 			</div>
@@ -1161,12 +1167,14 @@
 		<div class="card__footer atx__card__footer">
 			<div class="card_footer_item" data-auto-id="ACCCardFooter">
 				<div class="atx__card__status text-left base-padding-left base-padding-right flex-middle">
+					<span class="icon-calendar half-padding-right" *ngIf="item.status === 'scheduled'"></span>
 					<span class="icon-certified half-padding-right" *ngIf="item.status === 'completed'"></span>
 					<span class="icon-clock half-padding-right" *ngIf="item.status === 'in-progress'"></span>
 					<span class="icon-check-outline half-padding-right" *ngIf="item.status === 'requested'"></span>
 					<span class="text-medium" [innerText]="'_Completed_' | i18n" *ngIf="item.status === 'completed'"></span>
 					<span class="text-medium" [innerText]="'_SessionInProgress_' | i18n" *ngIf="item.status === 'in-progress'"></span>
 					<span class="text-medium" [innerText]="'_Requested_' | i18n" *ngIf="item.status === 'requested'"></span>
+					<span class="text-medium" [innerText]="'_Scheduled_' | i18n" *ngIf="item.status === 'scheduled'"></span>
 					<div class="atx__card__feedback" *ngIf="item.status === 'completed'">
 						<session-feedback
 							[type]="AssetType.ACC"
