@@ -176,6 +176,7 @@ export class LifecycleComponent implements OnDestroy {
 	public sessionSelected: AtxSessionSchema = null;
 	public customerId: string;
 	public buId: string;
+	public saId: string;
 	private user: User;
 	public partnerList: CompanyInfo [];
 	public accPartnerList: CompanyInfo [];
@@ -367,6 +368,8 @@ export class LifecycleComponent implements OnDestroy {
 		this.customerId = _.get(this.user, ['info', 'customerId']);
 		this.buId = _.get(this.user, ['info', 'cxBUId']);
 		this.cxLevel = _.get(this.user, ['service', 'cxLevel'], 0);
+		this.saId = _.get(this.user, ['info', 'saId'], '')
+			.toString();
 		const currentSBView = window.sessionStorage.getItem('cxportal.cisco.com:lifecycle:sbview');
 		if (!currentSBView) {
 			window.sessionStorage.setItem('cxportal.cisco.com:lifecycle:sbview', this.sbview);
@@ -420,7 +423,7 @@ export class LifecycleComponent implements OnDestroy {
 				? true : false;
 			const newUsecaseAdoptPert = (technology.usecase_adoption_percentage !==
 				_.get(this.selectedTechnology, 'usecase_adoption_percentage')) ? true : false;
-			if (newSolution && newTech && newUsecaseAdoptPert) {
+			if (newSolution && newTech || newUsecaseAdoptPert) {
 				this.selectedTechnology = technology;
 
 				this.resetComponentData();
@@ -2418,8 +2421,7 @@ export class LifecycleComponent implements OnDestroy {
 	 */
 	 public getPartnerList () {
 		this.status.loading.partner = true;
-
-		this.partnerService.getPartnerListUsingGET(this.customerId)
+		this.partnerService.getPartnerListUsingGET(this.saId)
 		.subscribe((result: CompanyInfoList) => {
 			// user can filter for Cisco via partnerId: '0000'
 			// but partner portal does not send back Cisco in company list.
@@ -2434,7 +2436,7 @@ export class LifecycleComponent implements OnDestroy {
 			this.partnerList = [ciscoCompanyInfo, ...result.companyList];
 			this.accPartnerList = [ciscoCompanyInfo, ...result.companyList];
 
-			if (!this.ciscoAccLevels.includes(this.cxLevel)) {
+			if (!this.ciscoAccLevels.includes(Number(this.cxLevel))) {
 				_.remove(this.accPartnerList, (partner: CompanyInfo) =>
 					partner.companyId === ciscoCompanyInfo.companyId);
 			}

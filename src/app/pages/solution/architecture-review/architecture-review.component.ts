@@ -336,11 +336,11 @@ export class ArchitectureReviewComponent implements OnInit {
 						});
 					}
 
-					const NotAvailable = _.get(data, 'overallCompliance.NE');
+					const NotAvailable = _.get(data, 'overallCompliance.Not Evaluated');
 
 					if (NotAvailable && NotAvailable > 0) {
 						series.push({
-							filter: 'NE',
+							filter: 'Not Evaluated',
 							label: I18n.get('_ArchitectureNotAvailable_'),
 							selected: false,
 							value: NotAvailable,
@@ -379,11 +379,11 @@ export class ArchitectureReviewComponent implements OnInit {
 						});
 					}
 
-					const sdaNotAvailable = _.get(data, 'sdaCompliance.NE');
+					const sdaNotAvailable = _.get(data, 'sdaCompliance.Not Evaluated');
 
 					if (sdaNotAvailable && sdaNotAvailable > 0) {
 						sdaSeriesData.push({
-							filter: 'NE',
+							filter: 'Not Evaluated',
 							label: I18n.get('_ArchitectureNotAvailable_'),
 							selected: false,
 							value: sdaNotAvailable,
@@ -419,11 +419,11 @@ export class ArchitectureReviewComponent implements OnInit {
 						});
 					}
 
-					const assuranceNotAvailable = _.get(data, 'assuranceCompliance.NE');
+					const assuranceNotAvailable = _.get(data, 'assuranceCompliance.Not Evaluated');
 
 					if (assuranceNotAvailable && assuranceNotAvailable > 0) {
 						assuranceSeriesData.push({
-							filter: 'NE',
+							filter: 'Not Evaluated',
 							label: I18n.get('_ArchitectureNotAvailable_'),
 							selected: false,
 							value: assuranceNotAvailable,
@@ -459,11 +459,11 @@ export class ArchitectureReviewComponent implements OnInit {
 						});
 					}
 
-					const swimNotAvailable = _.get(data, 'swimCompliance.NE');
+					const swimNotAvailable = _.get(data, 'swimCompliance.Not Evaluated');
 
 					if (swimNotAvailable && swimNotAvailable > 0) {
 						swimReadinessData.push({
-							filter: 'NE',
+							filter: 'Not Evaluated',
 							label: I18n.get('_ArchitectureNotAvailable_'),
 							selected: false,
 							value: swimNotAvailable,
@@ -499,11 +499,11 @@ export class ArchitectureReviewComponent implements OnInit {
 						});
 					}
 
-					const pnpNotAvailable = _.get(data, 'pnpCompliance.NE');
+					const pnpNotAvailable = _.get(data, 'pnpCompliance.Not Evaluated');
 
 					if (pnpNotAvailable && pnpNotAvailable > 0) {
 						pnpReadinessData.push({
-							filter: 'NE',
+							filter: 'Not Evaluated',
 							label: I18n.get('_ArchitectureNotAvailable_'),
 							selected: false,
 							value: pnpNotAvailable,

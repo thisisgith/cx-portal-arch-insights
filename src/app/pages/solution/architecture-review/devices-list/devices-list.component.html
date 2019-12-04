@@ -128,11 +128,10 @@
 	<span [ngClass]="{
 		'text-success': item?.dnacCompliance === 'Yes',
 		'text-danger': item?.dnacCompliance === 'No',
-		'text-ocean': item?.dnacCompliance === 'NE'
+		'text-ocean': item?.dnacCompliance === 'Not Evaluated'
 	}" class="qtr-margin-right icon-circle">
 	</span>
-	<span [innerText]="item?.dnacCompliance" *ngIf="item?.dnacCompliance !== 'NE'"></span>
-	<span *ngIf="item?.dnacCompliance === 'NE'" [innerText]="'_ArchitectureNotAvailable_' | i18n"></span>
+	<span [innerText]="item?.dnacCompliance"></span>
 </ng-template>
 
 <ng-template #sdaReady let-item="celldata">
@@ -140,7 +139,7 @@
 		'text--success': item?.sdaCompliance === 'Yes',
 		'text-danger': item?.sdaCompliance === 'No',
 		'text-warning': item?.sdaCompliance === 'Warning',
-		'text-ocean': item?.sdaCompliance === 'NE'
+		'text-ocean': item?.sdaCompliance === 'Not Evaluated'
 	}" class="qtr-margin-right icon-circle">
 	</span>
 	<span *ngIf="item?.sdaCompliance == 'Warning'" [innerText]="'_ArchitectureYes_' | i18n"></span>
@@ -153,7 +152,7 @@
 	<span [ngClass]="{
 		'text-success': item?.assuranceCompliance === 'Yes',
 		'text-danger': item?.assuranceCompliance === 'No',
-		'text-ocean': item?.assuranceCompliance === 'NE'
+		'text-ocean': item?.assuranceCompliance === 'Not Evaluated'
 	}" class="qtr-margin-right icon-circle">
 	</span>
 	<span *ngIf="item?.assuranceCompliance !== 'NE'" [innerText]="item?.assuranceCompliance"></span>
@@ -164,7 +163,7 @@
 	<span [ngClass]="{
 		'text-success': item?.swimCompliance === 'Yes',
 		'text-danger': item?.swimCompliance === 'No',
-		'text-ocean': item?.swimCompliance === 'NE'
+		'text-ocean': item?.swimCompliance === 'Not Evaluated'
 	}" class="qtr-margin-right icon-circle">
 	</span>
 	<span [innerText]="item?.swimCompliance"  *ngIf="item?.swimCompliance != 'NE'"></span>
@@ -175,7 +174,7 @@
 	<span [ngClass]="{
 		'text-success': item?.pnpCompliance === 'Yes',
 		'text-danger': item?.pnpCompliance === 'No',
-		'text-ocean': item?.pnpCompliance === 'NE'
+		'text-ocean': item?.pnpCompliance === 'Not Evaluated'
 	}" class="qtr-margin-right icon-circle">
 	</span>
 	<span [innerText]="item?.pnpCompliance" *ngIf="item?.pnpCompliance != 'NE'"></span>

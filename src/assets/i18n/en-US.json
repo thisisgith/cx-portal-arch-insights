@@ -656,7 +656,7 @@
 	"_GetInfoSettingUpDNAC_": "Get information about setting up Cisco DNA Center",
 	"_GetStarted_": "Get Started",
 	"_GetSupport_": "Get Support",
-	"_cxCollectorOverview_": "CX Collector Overview",
+	"_collectorOverview_": "Collector Overview",
 	"_portalQuickTour_": "Portal Quick Tour (Video)",
 	"_GovernmentEntity_": "Government entity, military entity, or defense contractor",
 	"_HandOffToCisco_": "Hand off to Cisco",
@@ -1264,8 +1264,7 @@
 	"_RMShowingXofYAssets_": "Showing {0} of {1} systems",
 	"_RMSoftwareType_": "Software Type",
 	"_RMSoftwareVersion_": "Software Release",
-	"_RMTimeLast_": "Time Period:",
-	"_RMTIMEPeriod_": "TIME PERIOD",
+	"_RMTimeRange_": "Time Range",
 	"_RMTimeStamp_": "Date And Time",
 	"_Role_": "Role",
 	"_RoutingAndSwitching_": "Routing and Switching",
@@ -1675,6 +1674,7 @@
 	"_YourProducts_": "Your products, documentation & Learning Library resources",
 	"_ConnectionFailed_": "Please verify the IP Address or Try agin later",
 	"_ChangePasswordSuccess_": "Password changed Successfully",
-	"_SuccessModal_": "Success Modal"
+	"_SuccessModal_": "Success Modal",
+	"_ReInstall_": "Re-install"
 
 }
