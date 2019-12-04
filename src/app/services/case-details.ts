@@ -13,6 +13,8 @@ import { environment } from '@environment';
 export class CaseDetailsService {
 	private _addNoteSource = new BehaviorSubject<boolean>(false);
 	public addNote$ = this._addNoteSource.asObservable();
+	private _caseCountModified = new BehaviorSubject<boolean>(false);
+	public caseCount$ = this._caseCountModified.asObservable();
 	private caseFilesUrl = `${environment.origin}${environment.csc.fileList}`;
 
 	constructor (
@@ -25,6 +27,14 @@ export class CaseDetailsService {
 	 */
 	public refreshNotesList (refresh) {
 		this._addNoteSource.next(refresh);
+	}
+
+	/**
+	 * case count changed
+	 * @param refresh true if case count is changed
+	 */
+	public refreshCaseCount (refresh: boolean) {
+		this._caseCountModified.next(refresh);
 	}
 
 	/**
