@@ -421,9 +421,7 @@ export class LifecycleComponent implements OnDestroy {
 			const newSolution = currentSolution;
 			const newTech = (technology.name !== _.get(this.selectedTechnology, 'name'))
 				? true : false;
-			const newUsecaseAdoptPert = (technology.usecase_adoption_percentage !==
-				_.get(this.selectedTechnology, 'usecase_adoption_percentage')) ? true : false;
-			if (newSolution && newTech || newUsecaseAdoptPert) {
+			if (newSolution && newTech) {
 				this.selectedTechnology = technology;
 
 				this.resetComponentData();
@@ -1281,7 +1279,7 @@ export class LifecycleComponent implements OnDestroy {
 	 * @returns pertage string
 	 */
 	private convertPercentage (pitstop: RacetrackPitstop) {
-		const start = I18n.get('_Start_');
+		const start = '0%';
 		if (pitstop) {
 			const pct = _.get(pitstop, 'pitstop_adoption_percentage');
 			if (!_.isNil(pct)) {
