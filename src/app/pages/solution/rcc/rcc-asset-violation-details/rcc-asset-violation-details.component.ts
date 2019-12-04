@@ -217,6 +217,21 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 					const assetViolationsResponse = assetViolations;
 					if (assetViolationsResponse) {
 						this.rccAssetPolicyTableData = assetViolations.data.violation;
+						this.rccAssetPolicyTableData = assetViolations.data.violation;
+						this.rccAssetPolicyTableData.forEach(assetPolicyDesc => {
+							const policyDesc =
+							_.get(assetPolicyDesc, ['policyDesc'], '')
+								.replace(/\&gt;/g, '>')
+								.replace(/\&lt;/g, '<')
+								.replace(/\n/g, '<br>');
+							_.set(assetPolicyDesc, ['policyDesc'], policyDesc);
+							const ruleDesc =
+							_.get(assetPolicyDesc, ['ruleDesc'], '')
+								.replace(/\&gt;/g, '>')
+								.replace(/\&lt;/g, '<')
+								.replace(/\n/g, '<br>');
+							_.set(assetPolicyDesc, ['ruleDesc'], ruleDesc);
+						});
 						if (this.rccAssetPolicyTableData) {
 							this.totalItems = _.size(this.rccAssetPolicyTableData);
 						}
