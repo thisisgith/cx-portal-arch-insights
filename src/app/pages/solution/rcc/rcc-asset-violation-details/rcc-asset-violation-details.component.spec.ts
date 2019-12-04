@@ -1,5 +1,5 @@
 import { configureTestSuite } from 'ng-bullet';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { RccAssetViolationDetailsComponent } from './rcc-asset-violation-details.component';
 import { RccAssetViolationDetailsModule } from './rcc-asset-violation-details.module';
 import { throwError, of } from 'rxjs';
@@ -53,12 +53,11 @@ describe('RccAssetViolationDetailsComponent', () => {
 		component.selectedAssetData.serialNumber = 'FCW2246E0PB';
 		fixture.detectChanges();
 	});
-
 	it('should create', () => {
 		expect(component)
 			.toBeTruthy();
 	});
-	it('should load filter and table grid data and display', () => {
+	it('should load filter and table grid data and display', fakeAsync(() => {
 		spyOn(rccAssetDetailsService, 'getAssetSummaryData')
 			.and
 			.returnValue(of(RCCScenarios[1].scenarios.GET[0].response.body));
@@ -71,6 +70,7 @@ describe('RccAssetViolationDetailsComponent', () => {
 			pageIndex: 0,
 			pageSize: 10,
 			policyGroupName: '',
+			policyName: '',
 			serialNumber: 'FCW2246E0PB',
 			severity: '',
 			sortBy: '',
@@ -78,20 +78,20 @@ describe('RccAssetViolationDetailsComponent', () => {
 		};
 		component.customerId = '7293498';
 		component.selectedAssetData = { serialNumber: 'FCW2246E0PB' };
-		fixture.detectChanges();
 		component.loadData();
+		tick();
 		expect(component.rccAssetPolicyTableData)
 			.toBeDefined();
 		expect(component.totalItems)
 			.toBeDefined();
-
-	});
-	it('should select value from policygroup and load table data', () => {
+	}));
+	it('should select value from policygroup and load table data', fakeAsync(() => {
 		component.assetRowParams = {
 			customerId: '7293498',
 			pageIndex: 0,
 			pageSize: 10,
 			policyGroupName: '',
+			policyName: '',
 			serialNumber: 'FCW2246E0PB',
 			severity: '',
 			sortBy: '',
@@ -101,76 +101,47 @@ describe('RccAssetViolationDetailsComponent', () => {
 			.and
 			.returnValue(of(RCCScenarios[1].scenarios.GET[0].response.body));
 		component.onPolicyGroupSelection(component.assetRowParams);
-		fixture.whenStable()
-			.then(() => {
-				fixture.detectChanges();
-				expect(component.rccAssetPolicyTableData)
-					.toBeDefined();
-			});
-	});
-	it('should select value from policy severity and load table data', () => {
+		tick();
+		expect(component.rccAssetPolicyTableData)
+			.toBeDefined();
+	}));
+	it('should select value from policy severity and load table data', fakeAsync(() => {
 		component.assetRowParams = {
 			customerId: '7293498',
 			pageIndex: 0,
 			pageSize: 10,
 			policyGroupName: '',
+			policyName: '',
 			serialNumber: 'FCW2246E0PB',
 			severity: '',
 			sortBy: '',
 			sortOrder: '',
 		};
+		tick();
 		component.onPolicySeveritySelection(component.assetRowParams);
 		spyOn(rccAssetDetailsService, 'getAssetSummaryData')
 			.and
 			.returnValue(of(RCCScenarios[1].scenarios.GET[0].response.body));
 		expect(component.rccAssetPolicyTableData)
 			.toBeDefined();
-	});
-	it('should be used to check on ng on changes', () => {
-		expect(component.selectedAssetData)
-			.toBeDefined();
-		component.selectedAssetData = { serialNumber: 'FCW2246E0PB' };
-	});
-	it('should be called on asset information get updated', () => {
-		component.selectedAssetData = { serialNumber: 'FCW2246E0PB' };
-		const selectedPreviousAssetData = { serialNumber: 'FCW2246E0P9' };
-		component.ngOnChanges({
-			selectedAssetData: {
-				currentValue: component.selectedAssetData,
-				firstChange: false,
-				isFirstChange: () => false,
-				previousValue: selectedPreviousAssetData,
-			},
-		});
-		expect(component.loadData());
-		spyOn(rccAssetDetailsService, 'getAssetSummaryData')
-			.and
-			.returnValue(of(RCCScenarios[1].scenarios.GET[0].response.body));
-		fixture.whenStable()
-			.then(() => {
-				expect(component.rccAssetPolicyTableData)
-					.toBeDefined();
-			});
-
-	});
+	}));
 	it('to be called on table sorting changed', () => {
 		component.onTableSortingChanged();
 		expect(component.tableOffset)
 			.toEqual(0);
 	});
-
-	it('to be called on getAssetPolicyGridData', () => {
+	it('to be called on getAssetPolicyGridData', fakeAsync(() => {
 		component.assetRowParams = {
 			customerId: '7293498',
 			pageIndex: 0,
 			pageSize: 10,
 			policyGroupName: '',
+			policyName: '',
 			serialNumber: 'FCW2246E0PB',
 			severity: '',
 			sortBy: '',
 			sortOrder: '',
 		};
-
 		const error = {
 			status: 404,
 			statusText: 'Resource not found',
@@ -178,20 +149,20 @@ describe('RccAssetViolationDetailsComponent', () => {
 		spyOn(rccAssetDetailsService, 'getAssetSummaryData')
 		.and
 		.returnValue(throwError(new HttpErrorResponse(error)));
+		tick();
 		component.getAssetPolicyGridData();
 		expect(component.errorResult)
 			.toBeTruthy();
 		expect(component.isLoading)
 			.toBeFalsy();
-	});
+	}));
 
 	it('should invoke onPageIndexChange method', () => {
 		component.onPolicyAssetPagerUpdated({ page: 1, limit : 10 });
 		expect(component.tableOffset)
 			.toEqual(1);
 	});
-
-	it('Should invoke api with error', () => {
+	it('Should invoke api with error', fakeAsync(() => {
 		const error = {
 			status: 404,
 			statusText: 'Resource not found',
@@ -207,16 +178,18 @@ describe('RccAssetViolationDetailsComponent', () => {
 			pageIndex: 0,
 			pageSize: 10,
 			policyGroupName: '',
+			policyName: '',
 			serialNumber: 'FCW2246E0PB',
 			severity: '',
 			sortBy: '',
 			sortOrder: '',
 		};
 		component.loadData();
+		tick();
 		expect(component.rccAssetPolicyTableData)
 			.toEqual([]);
-	});
-	it('should be called on asset information get updated', () => {
+	}));
+	it('should be called on asset information get updated', fakeAsync(() => {
 		component.selectedAssetData = { serialNumber: 'FCW2246E0PB' };
 		const selectedPreviousAssetData = { serialNumber: 'FCW2246E0P9' };
 		component.ngOnChanges({
@@ -228,7 +201,120 @@ describe('RccAssetViolationDetailsComponent', () => {
 			},
 		});
 		spyOn(component, 'loadData');
+		tick();
 		expect(component.loadData)
 			.toHaveBeenCalledTimes(0);
-	});
+	}));
+	it('Should get the api data ngonchanges empty info data', fakeAsync(() => {
+		const changes = {
+			selectedAssetData: {
+				currentValue: undefined,
+				firstChange: false,
+				isFirstChange: () => false,
+				previousValue: undefined,
+			},
+		};
+		component.ngOnChanges(changes);
+		tick();
+		expect(component.assetRowParams)
+			.toBeUndefined();
+	}));
+	it('Should get the empty data on api call', fakeAsync(() => {
+		component.assetRowParams = {
+			customerId: '7293498',
+			pageIndex: 0,
+			pageSize: 10,
+			policyGroupName: '',
+			policyName: '',
+			serialNumber: 'FCW2246E0PB',
+			severity: '',
+			sortBy: '',
+			sortOrder: '',
+		};
+		const emptyViolationDataDetails: any = {
+			data: { },
+			error: null,
+			message: 'SUCCESS',
+			status: 200,
+		};
+		const emptyAssetDataDetails: any = {
+			data: null,
+			error: null,
+			message: 'SUCCESS',
+			status: 200,
+		};
+		spyOn(rccAssetDetailsService, 'getAssetSummaryData')
+			.and
+			.returnValue(of(emptyAssetDataDetails));
+		spyOn(rccAssetDetailsService, 'getRccAssetFilterData')
+			.and
+			.returnValue(of(emptyViolationDataDetails));
+		component.loadData();
+		tick();
+		expect(component.initialLoading)
+			.toBeFalsy();
+	}));
+	it('Should get the empty data on policyname policygroup severity', fakeAsync(() => {
+		expect(component.getAssetPolicyGridData());
+		component.assetRowParams = {
+			customerId: '7293498',
+			pageIndex: 0,
+			pageSize: 10,
+			policyGroupName: '',
+			policyName: '',
+			serialNumber: 'FCW2246E0PB',
+			severity: '',
+			sortBy: '',
+			sortOrder: '',
+		};
+		const emptyViolationDataDetails: any = {
+			data: {
+				policygroupname : null,
+				policyname : undefined,
+				rulehighseverity : null,
+			},
+			error: null,
+			message: 'SUCCESS',
+			status: 200,
+		};
+		const emptyAssetDataDetails: any = {
+			data: {
+				violation: [],
+			},
+			error: null,
+			message: 'SUCCESS',
+			status: 200,
+		};
+		spyOn(rccAssetDetailsService, 'getAssetSummaryData')
+			.and
+			.returnValue(of(emptyAssetDataDetails));
+		spyOn(rccAssetDetailsService, 'getRccAssetFilterData')
+			.and
+			.returnValue(of(emptyViolationDataDetails));
+		component.loadData();
+		tick();
+		expect(component.tableOffset)
+			.toEqual(0);
+	}));
+	it('should  called on load of empty table grid data ', fakeAsync(() =>  {
+		component.assetRowParams = {
+			customerId: '7293498',
+			pageIndex: 0,
+			pageSize: 10,
+			policyGroupName: '',
+			policyName: 'HIPPA',
+			serialNumber: 'FCW2246E0PB',
+			severity: '',
+			sortBy: '',
+			sortOrder: '',
+		};
+		const assetViolations = undefined;
+		spyOn(rccAssetDetailsService, 'getAssetSummaryData')
+			.and
+			.returnValue(of(assetViolations));
+		tick();
+		component.getAssetPolicyGridData();
+		expect(component.tableOffset)
+			.toEqual(0);
+	}));
 });
