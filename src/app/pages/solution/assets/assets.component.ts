@@ -46,7 +46,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { VisualFilter } from '@interfaces';
 import { CaseOpenComponent } from '@components';
 import { getProductTypeImage, getProductTypeTitle } from '@classes';
-import { DetailsPanelStackService, RacetrackInfoService } from '@services';
+import { DetailsPanelStackService, RacetrackInfoService, CaseDetailsService } from '@services';
 import { HttpResponse } from '@angular/common/http';
 
 /**
@@ -184,6 +184,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		private racetrackInfoService: RacetrackInfoService,
 		public route: ActivatedRoute,
 		public router: Router,
+		private caseDetailsService: CaseDetailsService,
 	) {
 		this.routeParam = _.get(this.route, ['snapshot', 'params', 'view'], 'system');
 
@@ -1612,6 +1613,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	public ngOnDestroy () {
 		this.destroy$.next();
 		this.destroy$.complete();
+		this.caseDetailsService.refreshCaseCount(false);
 	}
 
 	/**
