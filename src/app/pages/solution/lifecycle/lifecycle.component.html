@@ -238,21 +238,12 @@
 	<div class="panel hover-panel hover-panel--{{ autoid }}" attr.data-auto-id="{{ autoid }}-HoverModal">
 		<div class="popover-tail"></div>
 		<div class="flex flex-column">
-			<h6 class="learning-popover__title title-line-clamp" [innerText]="title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
-			<div class="divider divider--compressed"></div>
-			<div *ngIf="item && item.fixedRating" class="half-margin-bottom">
-				<cui-rating [rating]="item.fixedRating" [alt]="true" [noClick]="true" size="small" attr.data-auto-id="{{ autoid }}-HoverModal-Rating"></cui-rating>
-			</div>
 			<div class="line-clamp learning-popover__description" [innerText]="description" attr.data-auto-id="{{ autoid }}-HoverModal-Description"></div>
-			<div *ngIf="item && item.duration" class="learning-popover__footer" attr.data-auto-id="{{ autoid }}-HoverModal-Duration">
-				<span class="icon--svg" inlineSVG="assets/icons/icon-matrics-timer.svg" attr.data-auto-id="{{ autoid }}-HoverModal-DurationClock"></span>
-				<span class="learning-popover__footer__text" [innerText]="item.duration"></span>
-			</div>
 		</div>
 	</div>
 </ng-template>
 
-<ng-template #atxHover let-title="title" let-description="description" let-autoid="autoid" let-item="item">
+<ng-template #atxHover let-description="description" let-autoid="autoid" let-item="item">
 	<div class="panel hover-panel hover-panel--{{ autoid }}" *ngIf="!atxScheduleCardOpened && !atxMoreClicked" attr.data-auto-id="{{ autoid }}-HoverModal">
 		<div class="popover-tail popover-tail--left"></div>
 		<div class="flex flex-column max-height">
@@ -261,9 +252,6 @@
 				(click)="updateBookmark(item, 'ATX')"
 				attr.data-auto-id="{{ autoid }}-HoverModal-BookmarkRibbon">
 			</div>
-			<h6 class="atx-popover__title title-line-clamp" [innerText]="title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
-			<div class="text-muted text-small " [innerText]="getProviderName(item)" attr.data-auto-id="{{ autoid }}-HoverModal-Provider"></div>
-			<div class="divider divider--compressed"></div>
 			<div class="atx-popover__description line-clamp" [innerText]="description" attr.data-auto-id="{{ autoid }}-HoverModal-Description"></div>
 
 		</div>
@@ -325,15 +313,7 @@
 				[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__white'"
 				attr.data-auto-id="{{ autoid }}-HoverModal-BookmarkRibbon">
 			</div>
-			<h6 class="acc-popover__title title-line-clamp" [innerText]="title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
-			<div class="text-muted text-small" [innerText]="getProviderName(item)" attr.data-auto-id="{{ autoid }}-HoverModal-Provider"></div>
-			<div class="divider divider--compressed"></div>
 			<div class="line-clamp acc-popover__description no-margin" [innerText]="description" attr.data-auto-id="{{ autoid }}-HoverModal-Description"></div>
-
-			<div *ngIf="item && item.duration" class="learning-duration text-right text-muted flex-fluid half-margin-left" attr.data-auto-id="{{ autoid }}-HoverModal-Duration">
-				<span class="icon-clock icon-small qtr-margin-right" attr.data-auto-id="{{ autoid }}-HoverModal-DurationClock"></span>
-				<span [innerText]="item.duration"></span>
-			</div>
 			<div *ngIf= "item.status.toLowerCase()==='recommended'">
 				<ng-container *ngTemplateOutlet="!notCurrentPitstop ? enabledAccButton : disabledAccButton; context: {
 					accId: item.accId,
@@ -343,17 +323,6 @@
 					dataAutoId: 'Request1on1ACCButton'
 					}">
 				</ng-container>
-			</div>
-			<div class="text-left acc-popover__footer" *ngIf="autoid==='moreACCList' && item.status.toLowerCase()==='in-progress'" attr.data-auto-id="{{ autoid }}-HoverModal-In-Progress">
-				<span class="icon-clock qtr-margin-right" attr.data-auto-id="{{ autoid }}-In-Progress-Icon"></span>
-				<span class="acc-popover__footer__text" [innerText]="'_SessionInProgress_' | i18n" attr.data-auto-id="{{ autoid }}-In-Progress"></span>
-			</div>
-			<div class="text-left acc-popover__footer" *ngIf="autoid==='moreACCList' && item.status.toLowerCase()==='requested'" attr.data-auto-id="{{ autoid }}-HoverModal-Requested">
-				<span class="icon-check-outline qtr-margin-right" attr.data-auto-id="{{ autoid }}-HoverModal-Requested-Icon"></span>
-				<span class="acc-popover__footer__text" [innerText]="'_Requested_' | i18n" attr.data-auto-id="{{ autoid }}-In-Progress"></span>
-			</div>
-			<div class="text-left text-success acc-popover__footer" *ngIf="autoid==='moreACCList' && item.status.toLowerCase()==='completed'" attr.data-auto-id="{{ autoid }}-HoverModal-CompletedMessage">
-				<span class="acc-popover__footer__text" [innerText]="'_Completed_' | i18n"></span>
 			</div>
 		</div>
 	</div>
@@ -647,7 +616,6 @@
 							</ng-container>
 							<ng-container *ngIf="autoid==='moreATXList'">
 								<ng-container *ngTemplateOutlet="atxHover; context: {
-									title: item.title,
 									description: item.description,
 									item: item,
 									autoid: 'moreATXList'
@@ -783,24 +751,7 @@
 					[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__white'"
 					attr.data-auto-id="{{ autoid }}-HoverModal-BookmarkRibbon">
 				</div>
-				<h6 class="sb-popover__title title-line-clamp" [innerText]="item.title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
-				<div class="divider divider--compressed"></div>
 				<div class="sb-desc-line-clamp sb-popover__description" [innerText]="item.description" attr.data-auto-id="{{ autoid }}-HoverModal-Description"></div>
-				<div class="sb-popover__footer">
-					<div>
-						<a class="no-link successbytes-type-link" data-auto-id="successlink" target="_blank" rel="noopener noreferrer" [href]="item.url">
-							<ng-container *ngTemplateOutlet="itemTypeIcons; context: {
-								item: item,
-								autoid: 'SuccessBytesHoverBlock'
-							}">
-							</ng-container>
-						</a>
-					</div>
-					<div *ngIf="item && item.duration" class="learning-duration" attr.data-auto-id="{{ autoid }}-HoverModal-Duration">
-						<span class="icon--svg" inlineSVG="assets/icons/icon-matrics-timer.svg" attr.data-auto-id="{{ autoid }}-HoverModal-DurationClock"></span>
-						<span [innerText]="item.duration" class="sb-popover__footer__text"></span>
-					</div>
-				</div>
 			</div>
 		</div>
 </ng-template>
@@ -1695,7 +1646,6 @@
 			<div id="viewAllTable-item" class="panel small-panel">
 				<div class="no-margin cx-text-default" [innerText]="celldata.title" attr.data-auto-id="{{ type }}-Title"></div>
 				<ng-container *ngTemplateOutlet="atxHover; context: {
-					title: celldata.title,
 					description: celldata.description,
 					item: celldata,
 					autoid: 'viewAllTable'

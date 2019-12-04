@@ -33,19 +33,19 @@
 			</a>
 		</li>
 		<li class="sidebar__item"
-			[ngClass]="{ selected: routerPath === 'assets' }"
+			[ngClass]="{ selected: routerPath === 'users' }"
 		>
 			<a
-				data-auto-id="sidebar.assets"
-				[routerLink]="['/admin', 'assets']"
+				data-auto-id="sidebar.users"
+				[routerLink]="['/admin', 'users']"
 			>
 				<span class="badge-wrapper">
 					<span tabindex="0"
-						attr.data-auto-id="AdminSidebar-AssetsIcon">
-						<span class="icon-devices text-noselect"></span>
+						attr.data-auto-id="AdminSidebar-UsersIcon">
+						<span class="icon-profile-settings text-noselect"></span>
 					</span>
 				</span>
-				<span class="sidebar__item__label" [innerText]="'_Assets_' | i18n"></span>
+				<span class="sidebar__item__label" [innerText]="'_Users_' | i18n"></span>
 			</a>
 		</li>
 		<li class="sidebar__item"
