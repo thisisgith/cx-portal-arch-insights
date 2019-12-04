@@ -34,7 +34,7 @@ import { FeedbackComponent } from '../../components/feedback/feedback.component'
 import { CuiModalService } from '@cisco-ngx/cui-components';
 import { catchError, map, takeUntil } from 'rxjs/operators';
 import { Step } from '../../../../src/app/components/quick-tour/quick-tour.component';
-import { DetailsPanelStackService, UtilsService, RacetrackInfoService } from '@services';
+import { DetailsPanelStackService, UtilsService, RacetrackInfoService, CaseDetailsService } from '@services';
 import { HttpResponse } from '@angular/common/http';
 import { SmartAccount } from '@interfaces';
 import { UserResolve } from '@utilities';
@@ -118,6 +118,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		private detailsPanelStackService: DetailsPanelStackService,
 		private insightsCrashesService: InsightsCrashesService,
 		private userResolve: UserResolve,
+		private caseDetailsService: CaseDetailsService,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.smartAccounts = _.get(user, ['info', 'companyList'], []);
@@ -759,6 +760,15 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		this.fetchSolutions();
 		this.refreshQuickTour();
 		this.collapseFeedbackTab();
+
+		this.caseDetailsService.caseCount$
+			.subscribe((data: boolean) => {
+				if (data && this.destroy$) {
+					this.getCaseAndRMACount()
+						.pipe(takeUntil(this.destroy$))
+						.subscribe();
+				}
+			});
 	}
 
 	/**
