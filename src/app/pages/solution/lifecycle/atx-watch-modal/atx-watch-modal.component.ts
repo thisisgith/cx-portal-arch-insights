@@ -1,10 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { CuiModalService } from '@cisco-ngx/cui-components';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import playerLoader from '@brightcove/player-loader';
+import { LogService } from '@cisco-ngx/cui-services';
 
 interface AtxWatchData {
-	src: string;
+	src: BrightcovePlayerData;
 	title?: string;
+}
+
+export interface BrightcovePlayerData {
+	playerId: string;
+	accountId: string;
+	videoId: string;
 }
 
 @Component({
@@ -12,22 +19,47 @@ interface AtxWatchData {
 	styleUrls: ['./atx-watch-modal.component.scss'],
 	templateUrl: './atx-watch-modal.component.html',
 })
-export class AtxWatchModalComponent implements OnInit {
+export class AtxWatchModalComponent implements OnInit, AfterViewInit {
+	@ViewChild('videoPlayer', { static: false }) public videoPlayerRef: ElementRef;
 	public data: AtxWatchData;
-
-	public src: SafeResourceUrl = '';
-	public title;
+	public playerId: string;
+	public accountId: string;
+	public videoId: string;
 
 	constructor (
-		private cuiModalService: CuiModalService,
-		private sanitizer: DomSanitizer,
+		public cuiModalService: CuiModalService,
+		private logger: LogService,
 	) { }
 
 	/**
-	 * Lifecycle On Init. Set src based on passed-in data
+	 * Lifecycle On Init. Set player info based on passed-in data
 	 */
 	public ngOnInit () {
-		this.src = this.sanitizer.bypassSecurityTrustResourceUrl(this.data.src);
-		this.title = this.data.title || '';
+		const videoInfo: BrightcovePlayerData = this.data.src;
+		if (videoInfo) {
+			this.playerId = videoInfo.playerId;
+			this.accountId = videoInfo.accountId;
+			this.videoId = videoInfo.videoId;
+		}
+	}
+
+	/**
+	 * Lifecycle After view init. Load the brightcove player and autoplay
+	 */
+	public ngAfterViewInit () {
+		playerLoader({
+			refNode: this.videoPlayerRef.nativeElement,
+			refNodeInsert: 'append',
+			playerId: this.playerId,
+			accountId: this.accountId,
+			videoId: this.videoId,
+		})
+		.then(success => {
+			const player = success.ref;
+			player.on('loadedmetadata', player.play);
+		})
+		.catch(err => {
+			this.logger.error(`atx-watch-modal.component : brightcoverPlayerLoader :: Error - ${err}`);
+		});
 	}
 }

@@ -1,4 +1,4 @@
-<div class="title" [innerText]="title"></div>
+<div class="title" [innerText]="data.title"></div>
 <a class="modal__close" (click)="cuiModalService.hide()" data-auto-id="closeModalIcon">
 	<span
 		class="icon-close"
@@ -7,8 +7,5 @@
 		(keydown.enter)="cuiModalService.hide()">
 	</span>
 </a>
-<iframe [src]="src"
-	height="100%"
-	width="100%"
-	allowfullscreen
-	frameborder="0"></iframe>
+
+<div class="video-player" #videoPlayer></div>

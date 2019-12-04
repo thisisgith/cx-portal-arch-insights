@@ -1,5 +1,4 @@
 :host {
-	height: 500px;
 	display: block;
 }
 
@@ -7,4 +6,15 @@ span.close-button {
 	position: absolute;
 	top: 20px;
 	right: 20px;
+}
+
+.video-player {
+	height: 100%;
+	width: 100%;
+}
+
+::ng-deep .video-js {
+	position: relative;
+	width: 640px;
+	height: 360px;
 }
