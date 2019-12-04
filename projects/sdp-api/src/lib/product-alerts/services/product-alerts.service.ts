@@ -86,7 +86,7 @@ class ProductAlertsService extends __BaseService {
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
     if (params.solution != null) __params = __params.set('solution', params.solution.toString());
-    (params.serialNumber || []).forEach(val => {if (val != null) __params = __params.append('serialNumber', val.toString())});
+    (params.serialNumber || []).forEach(val => {if (val != null) __params = __params.append('search', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
       this.rootUrl + `/customerportal/product-alerts/v1/vulnerabilities/count`,
