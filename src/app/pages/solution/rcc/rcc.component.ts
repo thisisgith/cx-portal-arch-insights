@@ -466,7 +466,7 @@ export class RccComponent implements OnInit, Panel360 , OnDestroy {
 		this.selectedViolationModal = true;
 		this.selectedAssetModal = false;
 		this.openDeviceModal = false;
-		this.detailsPanelStackService.push(this);
+		this.detailsPanelStackService.reset();
 	}
 	/**
 	 * Gets row selected
@@ -480,7 +480,7 @@ export class RccComponent implements OnInit, Panel360 , OnDestroy {
 		this.selectedAssetModal = true;
 		this.selectedViolationModal = false;
 		this.openDeviceModal = false;
-		this.detailsPanelStackService.push(this);
+		this.detailsPanelStackService.reset();
 	}
 	/**
 	 * Gets selected sub filters
