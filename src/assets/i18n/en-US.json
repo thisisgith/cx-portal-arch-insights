@@ -622,7 +622,7 @@
 	"_FaultDays30_": "30 days",
 	"_FaultDays7_": "7 days",
 	"_FaultSoftware_": "Software Type",
-	"_FaultTimeRange_": "Time Period",
+	"_FaultTimeRange_": "Time Range",
 	"_FaultGenericError_": "Internal Error Occurred. Please try again later.",
 	"_FailedToSubmitFeedbackForAdvisory_": "Failed attempting to submit feedback for advisory '{0}'. Internal error occurred. Please try again later.",
 	"_Favorite_": "Favorite",
