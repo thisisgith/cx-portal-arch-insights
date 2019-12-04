@@ -933,7 +933,7 @@ export class RccComponent implements OnInit, Panel360 , OnDestroy {
 	 * @param hidden false if details slideout is open
 	 * @param model current model
 	 */
-	public handleHidden (hidden: boolean, model: string) {
+	public handleHidden (hidden: boolean) {
 		if (hidden) {
 			this.onPanelClose();
 		}

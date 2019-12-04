@@ -645,16 +645,14 @@ describe('RccComponent', () => {
 	});
 
 	it('should called on close with true', () => {
-		const view = 'selectedViolationModal';
 		spyOn(component, 'onPanelClose');
-		component.handleHidden(true, view);
+		component.handleHidden(true);
 		expect(component.onPanelClose)
 			.toHaveBeenCalled();
 	});
 
 	it('should called on close with false', () => {
-		const view = 'selectedViolationModal';
-		component.handleHidden(false, view);
+		component.handleHidden(false);
 		spyOn(component, 'onPanelClose');
 		expect(component.onPanelClose)
 			.toHaveBeenCalledTimes(0);

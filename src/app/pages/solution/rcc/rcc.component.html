@@ -231,7 +231,7 @@
 	</ng-template>
 	<!-- App Details 360 slide-out -->
 	<details-panel *ngIf="selectedViolationModal" [hidden]="!selectedViolationModal"
-	 (hiddenChange)="handleHidden($event, 'selectedViolationModal')" 
+	 (hiddenChange)="handleHidden($event)" 
 	 [fullscreen]="slideinFullScreen.violationFullScreen" [minWidth]="'900px'">
 		<details-panel-header 
 		(close)="onAllPanelsClose('selectedViolationModal');slideinFullScreen.violationFullScreen = false" 
@@ -283,7 +283,7 @@
 	</details-panel>
 
 	<details-panel *ngIf="selectedAssetModal" [hidden]="!selectedAssetModal" 
-	(hiddenChange)="handleHidden($event, 'selectedAssetModal')" 
+	(hiddenChange)="handleHidden($event)" 
 	[fullscreen]="slideinFullScreen.assetsFullScreen" 
 	[minWidth]="'900px'">
 		<details-panel-header 
