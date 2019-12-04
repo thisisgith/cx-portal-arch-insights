@@ -230,8 +230,12 @@
 		</div>
 	</ng-template>
 	<!-- App Details 360 slide-out -->
-	<details-panel *ngIf="selectedViolationModal" [hidden]="!selectedViolationModal" (hiddenChange)="handleHidden($event, 'selectedViolationModal')" [fullscreen]="slideinFullScreen.violationFullScreen" [minWidth]="'900px'">
-		<details-panel-header (close)="onPanelClose('selectedViolationModal');slideinFullScreen.violationFullScreen = false" [(fullscreen)]="slideinFullScreen.violationFullScreen"
+	<details-panel *ngIf="selectedViolationModal" [hidden]="!selectedViolationModal"
+	 (hiddenChange)="handleHidden($event, 'selectedViolationModal')" 
+	 [fullscreen]="slideinFullScreen.violationFullScreen" [minWidth]="'900px'">
+		<details-panel-header 
+		(close)="onAllPanelsClose('selectedViolationModal');slideinFullScreen.violationFullScreen = false" 
+		[(fullscreen)]="slideinFullScreen.violationFullScreen" (back)="onPanelBack()"
 			[fullscreenToggle]="true">
 			<div detailsPanelTitle>
 				<span class="text-xlarge" 
@@ -278,8 +282,13 @@
 		</app-rcc-device-violation-details>
 	</details-panel>
 
-	<details-panel *ngIf="selectedAssetModal" [hidden]="!selectedAssetModal" (hiddenChange)="handleHidden($event, 'selectedAssetModal')" [fullscreen]="slideinFullScreen.assetsFullScreen" [minWidth]="'900px'">
-		<details-panel-header (close)="onPanelClose('selectedAssetModal');slideinFullScreen.assetsFullScreen = false" [(fullscreen)]="slideinFullScreen.assetsFullScreen"
+	<details-panel *ngIf="selectedAssetModal" [hidden]="!selectedAssetModal" 
+	(hiddenChange)="handleHidden($event, 'selectedAssetModal')" 
+	[fullscreen]="slideinFullScreen.assetsFullScreen" 
+	[minWidth]="'900px'">
+		<details-panel-header 
+		(close)="onAllPanelsClose('selectedAssetModal');slideinFullScreen.assetsFullScreen = false"
+		 [(fullscreen)]="slideinFullScreen.assetsFullScreen" (back)="onPanelBack()"
 			[fullscreenToggle]="true">
 			<div detailsPanelTitle>
 				<span class="text-xlarge" [innerText]="('_RccViolationsFor_' | i18n)"></span>
@@ -378,7 +387,7 @@
 	[asset]="assetLinkInfo?.asset"
 	[serialNumber]="selectedAssetSerial"
 	[element]="assetLinkInfo?.element"
-	(close)="onPanelClose('openDeviceModal')"
+	(close)="onPanelClose()"
 	[minWidth]="'900px'"
 	[fullscreenToggle]="'true'">
 </asset-details>

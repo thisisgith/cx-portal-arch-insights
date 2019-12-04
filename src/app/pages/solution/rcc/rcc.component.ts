@@ -26,7 +26,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { FromNowPipe } from '@cisco-ngx/cui-pipes';
 import { ActivatedRoute } from '@angular/router';
 import { DetailsPanelStackService, AssetPanelLinkService, RacetrackInfoService } from '@services';
-import { AssetLinkInfo } from '@interfaces';
+import { AssetLinkInfo, Panel360 } from '@interfaces';
 import { UserRoles } from '@constants';
 
 /**
@@ -37,7 +37,7 @@ import { UserRoles } from '@constants';
 	styleUrls: ['./rcc.component.scss'],
 	templateUrl: './rcc.component.html',
 })
-export class RccComponent implements OnInit, OnDestroy {
+export class RccComponent implements OnInit, Panel360 , OnDestroy {
 	public customerId: string;
 	public cxLevel: number;
 	public authParamsRCCUser = {
@@ -239,6 +239,7 @@ export class RccComponent implements OnInit, OnDestroy {
 				}
 			}
 		});
+		this.detailsPanelStackService.push(this);
 	}
 	/**
 	 * to check the opt-in/opt-out status for loggedin user
@@ -465,6 +466,7 @@ export class RccComponent implements OnInit, OnDestroy {
 		this.selectedViolationModal = true;
 		this.selectedAssetModal = false;
 		this.openDeviceModal = false;
+		this.detailsPanelStackService.push(this);
 	}
 	/**
 	 * Gets row selected
@@ -478,6 +480,7 @@ export class RccComponent implements OnInit, OnDestroy {
 		this.selectedAssetModal = true;
 		this.selectedViolationModal = false;
 		this.openDeviceModal = false;
+		this.detailsPanelStackService.push(this);
 	}
 	/**
 	 * Gets selected sub filters
@@ -913,9 +916,16 @@ export class RccComponent implements OnInit, OnDestroy {
 	 * method to close slider
 	 * @param model is the selected slider name
 	 */
-	public onPanelClose (model: string) {
-		_.set(this, [model, 'active'] , false);
-		this[model] = null;
+	public onAllPanelsClose () {
+		this.selectedAssetModal = false;
+		this.selectedViolationModal = false;
+		this.detailsPanelStackService.reset();
+	}
+	/**
+	 * Removes the 360 panel from the stack when the back button is pressed
+	 */
+	public onPanelBack () {
+		this.detailsPanelStackService.pop();
 	}
 
 	/**
@@ -925,10 +935,15 @@ export class RccComponent implements OnInit, OnDestroy {
 	 */
 	public handleHidden (hidden: boolean, model: string) {
 		if (hidden) {
-			this.onPanelClose(model);
+			this.onPanelClose();
 		}
 	}
-
+	/**
+	 * to close the panel
+	 */
+	public onPanelClose () {
+		this.openDeviceModal = false;
+	}
 	/**
 	 * destroy method to kill the services
 	 */
@@ -941,6 +956,7 @@ export class RccComponent implements OnInit, OnDestroy {
 	 * @param serialNumber is serial number of device
 	 */
 	public openDevicePage (serialNumber: string) {
+		this.detailsPanelStackService.push(this);
 		this.assetParams = {
 			customerId: this.customerId,
 			serialNumber: [serialNumber],
