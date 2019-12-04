@@ -4,7 +4,7 @@ import { UserResolve } from '@utilities';
 import { mergeMap, take, map } from 'rxjs/operators';
 import { environment } from '@environment';
 import { ApixIdentityService } from './apix-identity.service';
-import { OriginType } from '@constants';
+import { OriginType, UserInfoKey } from '@constants';
 import { LogService } from '@cisco-ngx/cui-services';
 import * as _ from 'lodash-es';
 import { RacetrackInfoService } from '@services';
@@ -13,14 +13,6 @@ export interface UserInformation {
 	accountInfo: any;
 	headers: any;
 	params: any;
-}
-
-enum UserInfoKey {
-	SAID = 'saId',
-	CUSTOMERID = 'customerId',
-	USECASE = 'useCase',
-	SOLUTION = 'solution',
-	CXLEVEL = 'cxLevel',
 }
 
 export class ApixAccountInterceptor implements HttpInterceptor {
@@ -101,7 +93,10 @@ export class ApixAccountInterceptor implements HttpInterceptor {
 		const customerId$ = this.userResolve.getCustomerId()
 			.pipe(take(1));
 		const cxLevel$ = this.userResolve.getCXLevel()
-			.pipe(take(1));
+			.pipe(
+				take(1),
+				map(val => val.toString()),
+			);
 		const useCase$ = this.racetrackInfoService.getCurrentTechnology()
 			.pipe(
 				take(1),
