@@ -1,7 +1,7 @@
 @import '~cisco-ui/src/scss/utilities/_variables.scss';
 @import '~src/variables.scss';
 
-$popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
+$popover-box-shadow: 0 2px 4px 0 rgba(252, 220, 220, 0.14), 0 3px 4px 0 rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
 
 %ribbon {
 	position: absolute;
@@ -404,10 +404,9 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 	z-index: 1;
 	background-color: $white;
 	border-radius: 5px;
-	min-height: 200px;
 	width: 400px;
 	padding: 20px 0 25px 28px;
-	top: -92px;
+	top: -35px;
 	left: -420px;
 
 	.popover-tail {
@@ -472,7 +471,7 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 
 		.atx-popover__description,
 		.acc-popover__description {
-			font-size: 13px;
+			font-size: 1.2rem;
 			line-height: 17px;
 			color: $default-text-color;
 			padding-right: 28px;
@@ -682,7 +681,7 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 						}
 
 						&__description {
-							font-size: 13px;
+							font-size: 1.2rem;
 							line-height: 19px;
 							color: $default-text-color;
 							padding-right: 28px;
@@ -1651,7 +1650,7 @@ tr.td-row td {
 		}
 
 		.learning-popover__description {
-			font-size: 13px;
+			font-size: 1.2rem;
 			line-height: 19px;
 			color: $default-text-color;
 			padding-right: 28px;
@@ -1690,7 +1689,7 @@ tr.td-row td {
 		}
 
 		.sb-popover__description {
-			font-size: 13px;
+			font-size: 1.2rem;
 			line-height: 19px;
 			color: $default-text-color;
 			padding-right: 28px;
