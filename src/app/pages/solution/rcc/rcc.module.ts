@@ -18,6 +18,7 @@ import {
 	CuiAlertModule,
 } from '@cisco-ngx/cui-components';
 import { I18nPipeModule, FromNowPipeModule } from '@cisco-ngx/cui-pipes';
+import { SharedModule } from 'src/app/shared/shared.module';
 import {
 	RccAssetViolationDetailsModule,
 } from './rcc-asset-violation-details/rcc-asset-violation-details.module';
@@ -34,7 +35,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RccDataModule } from '@sdp-api';
 import { environment } from '@environment';
 import { InsightTabsModule } from 'src/app/components/insight-tabs/insight-tabs.module';
-import { EntitlementModule } from '@directives';
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
  */
@@ -84,7 +84,7 @@ const childRoutes: Routes = [
 		TooltipModule,
 		NoDNACHeaderModule,
 		DateTimePipeModule,
-		EntitlementModule,
+		SharedModule,
 	],
 })
 export class RccModule { }

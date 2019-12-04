@@ -79,7 +79,10 @@
 			</span>
 			<!-- Settings and Help -->
 			<span class="v-separator hidden-md hidden-sm hidden-xs"></span>
-			<span class="cx-header-links cx-header-links--settings hidden-md hidden-sm hidden-xs">
+			<span 
+				class="cx-header-links cx-header-links--settings hidden-md hidden-sm hidden-xs"
+				*auth="{ whitelistRoles: settingsWhitelist }"
+			>
 				<div data-auto-id="Admin" [title]="'_Admin_' | i18n" [routerLink]="['admin']">
 					<span inlineSVG="/assets/icons/icon-settings.svg"
 						class="cx-header-icon text-xlarge flex-center no-margin"></span>

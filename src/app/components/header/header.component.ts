@@ -21,6 +21,7 @@ import * as _ from 'lodash-es';
 import { CuiModalService } from '@cisco-ngx/cui-components';
 import { ContactSupportComponent } from '../contact-support/contact-support.component';
 import { I18n } from '@cisco-ngx/cui-utils';
+import { UserRoles } from '@constants';
 
 /**
  * Main Header Component
@@ -44,6 +45,8 @@ export class HeaderComponent implements AfterViewChecked, OnInit, OnDestroy {
 	public team: any[];
 	public webexUrl = environment.webexUrl;
 	public webexTeamsUrl = environment.webexTeamsUrl;
+	public settingsWhitelist = [UserRoles.ADMIN];
+
 	// TODO: Quick Help is not in the August release
 	// public quickHelpLinks = [{
 	// 	name: 'Open a Support Case',

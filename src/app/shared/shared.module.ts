@@ -1,19 +1,16 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { EntitlementDirective } from './entitlement.directive';
+import { EntitlementDirective } from '@directives';
 
-/**
- * TimelineComponent Module
- */
 @NgModule({
 	declarations: [
-		EntitlementDirective,
-	],
-	exports: [
 		EntitlementDirective,
 	],
 	imports: [
 		CommonModule,
 	],
+	exports: [
+		EntitlementDirective,
+	],
 })
-export class EntitlementModule { }
+export class SharedModule { }
