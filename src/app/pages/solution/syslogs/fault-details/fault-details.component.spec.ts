@@ -44,6 +44,31 @@ describe('FaultDetailsComponent', () => {
 			tacCount: 1,
 			title: 'Title',
 		};
+		component.faultParams = {
+			contractLevel: '',
+			customerId: '',
+			fromDate: '',
+			toDate: '',
+			syslogSeverity: '',
+			systemFilter: '',
+			localSearch: '',
+			sortField: '',
+			sortOrder: '',
+			pageNo: 0,
+			vaId: '',
+			useCase: '',
+			solution: '',
+			size: 0,
+			eventType: '',
+			software: '',
+			productId: '',
+			tacEnabled: 'active',
+			days: 30,
+			filterTypes: '',
+			faultSeverity: '',
+			lastUpdateTime: '',
+			msgType: '',
+		};
 		fixture.detectChanges();
 	});
 
@@ -241,7 +266,7 @@ describe('FaultDetailsComponent', () => {
 		spyOn(faultService, 'updateIcSettings')
 			.and
 			.returnValue(of<any>(FaultScenarios[5].scenarios.POST[0].response.body));
-		component.tacEnable = 'active';
+		component.searchParams.tacEnabled = 'active';
 		component.openConfirmation();
 		expect(faultService.updateIcSettings)
 			.toHaveBeenCalled();
@@ -251,7 +276,7 @@ describe('FaultDetailsComponent', () => {
 		spyOn(faultService, 'updateIcSettings')
 			.and
 			.returnValue(of<any>(FaultScenarios[5].scenarios.POST[0].response.body));
-		component.tacEnable = 'inactive';
+		component.searchParams.tacEnabled = 'inactive';
 		component.openConfirmation();
 		expect(faultService.updateIcSettings)
 			.toHaveBeenCalled();

@@ -13,6 +13,7 @@ import {
 	CuiSpinnerModule,
 	CuiSearchModule,
 	CuiToastModule,
+	CuiAlertModule,
 } from '@cisco-ngx/cui-components';
 import { FaultDetailsModule } from '../fault-details/fault-details.module';
 
@@ -38,6 +39,7 @@ const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 		CuiPagerModule,
 		CuiSearchModule,
 		CuiToastModule,
+		CuiAlertModule,
 		FaultDataModule.forRoot({ rootUrl }),
 		CuiSpinnerModule,
 		FaultDetailsModule,

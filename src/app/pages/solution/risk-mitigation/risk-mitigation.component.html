@@ -170,20 +170,20 @@
 						attr.data-auto-id="FilterTag-{{ subfilter?.filter }}"
 					>
 						<span
-							class="qtr-padding-right"
+							class="qtr-padding-right colon-symbol"
 							[innerText]="
 								(filter.key === 'timeRange'
-									? '_RMTimeLast_'
-									: '_CP_RiskTag_'
+									? '_RMTimeRange_'
+									: '_CP_Risk_'
 								) | i18n
 							"
-						></span>
+							></span>
 						<span
 							[innerHTML]="
 								onlyCrashes
-									? subfilter.filter
-									: subfilter?.label
-							"
+									? (subfilter.filter | titlecase)
+									: subfilter?.label "
+
 						></span>
 						<span
 							class="icon-close"

@@ -71,6 +71,18 @@ export class ComparisonviewComponent {
 	}
 
 	/**
+	 * updateCompareView
+	 * @param event tab click event
+	 * @param selectedTab  compareview
+	 */
+	public updateCompareView (event, selectedTab) {
+		if (selectedTab) {
+			this.compareView = selectedTab;
+			this.logger.info(event);
+		}
+	}
+
+	/**
 	 * Handle the cache
 	 * @param changes containes changes details
 	 */

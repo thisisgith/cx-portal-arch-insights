@@ -64,7 +64,7 @@
 		class="qtr-margin-right icon-circle"
 	>
 	</span>
-	<span [innerText]="item.globalRiskRank"></span>
+	<span [innerText]="item.globalRiskRank | titlecase"></span>
 </ng-template>
 <ng-template #riskTooltipContentTemplate>
 	<span
