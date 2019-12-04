@@ -14,6 +14,8 @@ import {
 	assetGridParams,
 	Filter,
 	InventoryService,
+	RacetrackSolution,
+	RacetrackTechnology,
 } from '@sdp-api';
 import { UserResolve } from '@utilities';
 import { Subject } from 'rxjs';
@@ -23,7 +25,7 @@ import * as _ from 'lodash-es';
 import { FormControl, FormGroup } from '@angular/forms';
 import { FromNowPipe } from '@cisco-ngx/cui-pipes';
 import { ActivatedRoute } from '@angular/router';
-import { DetailsPanelStackService, AssetPanelLinkService } from '@services';
+import { DetailsPanelStackService, AssetPanelLinkService, RacetrackInfoService } from '@services';
 import { AssetLinkInfo } from '@interfaces';
 import { UserRoles } from '@constants';
 
@@ -53,6 +55,7 @@ export class RccComponent implements OnInit, OnDestroy {
 		private route: ActivatedRoute,
 		private detailsPanelStackService: DetailsPanelStackService,
 		private assetPanelLinkService: AssetPanelLinkService,
+		private racetrackInfoService: RacetrackInfoService,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
@@ -86,6 +89,8 @@ export class RccComponent implements OnInit, OnDestroy {
 	};
 	public loading = false;
 	public filterLoading = false;
+	public selectedSolutionName: string;
+	public selectedUseCaseName: string;
 	public tableData: RccGridData;
 	public policyViolationsGridData: RccGridDataSample[] = [];
 	public tableAssetData: RccAssetGridData;
@@ -133,8 +138,6 @@ export class RccComponent implements OnInit, OnDestroy {
 	public rowData = { };
 	public filterObj = [];
 	public assetFilterObj = [];
-	public filterObjData = { };
-	public assetFilterObjData = { };
 	public isAssetView = false;
 	public typeaheadItems: [];
 	public defaultTypeaheadItems: [];
@@ -157,8 +160,8 @@ export class RccComponent implements OnInit, OnDestroy {
 	public searchOptions = {
 		debounce: 1500,
 		max: 100,
-		min: 2,
-		pattern: /^[a-zA-Z0-9\s\-\/\(\).]*$/,
+		min: 1,
+		pattern: /^[a-zA-Z0-9\s\-\/\[\]\(\).]*$/,
 	};
 	public search: FormControl = new FormControl('');
 	public searchForm: FormGroup;
@@ -210,21 +213,47 @@ export class RccComponent implements OnInit, OnDestroy {
 		this.loadData();
 		this.policyViolationsTableOptions = this.getPolicyViolationsTableOptions();
 		this.assetLinkInfo = Object.create({ });
-		if (this.cxLevel > 1) {
-			this.getOptInDetail();
-		} else {
-			this.loading = false;
-			this.filterLoading = false;
-			this.showNoAccessMsg = true;
-		}
 		this.searchForm = new FormGroup({
 			search: this.search,
+		});
+		this.racetrackInfoService.getCurrentSolution()
+		.pipe(
+			takeUntil(this.destroy$),
+		)
+		.subscribe((solution: RacetrackSolution) => {
+			this.selectedSolutionName = _.get(solution, 'name');
+		});
+		this.racetrackInfoService.getCurrentTechnology()
+		.pipe(
+			takeUntil(this.destroy$),
+		)
+		.subscribe((technology: RacetrackTechnology) => {
+			if (this.selectedUseCaseName !== _.get(technology, 'name')) {
+				this.selectedUseCaseName = _.get(technology, 'name');
+				if (this.cxLevel > 1) {
+					this.getOptInDetail();
+				} else {
+					this.loading = false;
+					this.filterLoading = false;
+					this.showNoAccessMsg = true;
+				}
+			}
 		});
 	}
 	/**
 	 * to check the opt-in/opt-out status for loggedin user
 	 */
 	public getOptInDetail () {
+		this.assetsTotalCount = 0;
+		this.policyViolationsTotalCount = 0;
+		this.isAssetView = false;
+		this.optInStatus = false;
+		this.runOnce = false;
+		this.showRunningBanner = false;
+		this.policyViolationsGridData = [];
+		this.tableAssetDataSample = [];
+		this.filterObj = [];
+		this.assetFilterObj = [];
 		this.loading = true;
 		this.RccTrackService.
 		optInDetail({ customerId: this.customerId })
@@ -669,7 +698,7 @@ export class RccComponent implements OnInit, OnDestroy {
 		_.invoke(this.alert, 'hide');
 		const searchInput = this.searchInput.trim();
 		if (this.searchForm.invalid ||
-				(!_.isEmpty(searchInput) && searchInput.length < 2)) {
+				(!_.isEmpty(searchInput) && searchInput.length < 1)) {
 			this.invalidSearchInput = true;
 
 			return;
@@ -841,7 +870,7 @@ export class RccComponent implements OnInit, OnDestroy {
 		if (this.prevSearchText.toLowerCase() === searchInput
 		.toLowerCase()) { return; }
 		if (((event && event.keyCode && event.keyCode === 13) ||
-			type === 'search') && (searchInput.length < 2)) {
+			type === 'search') && (searchInput.length < 1)) {
 			this.searchInput = searchInput;
 			this.invalidSearchInput = true;
 

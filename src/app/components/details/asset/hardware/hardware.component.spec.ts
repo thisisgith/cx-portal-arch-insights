@@ -282,13 +282,13 @@ describe('AssetDetailsHardwareComponent', () => {
 				.toBeFalsy();
 
 			expect(_.get(component.hardwareAssets[0], 'toggleWell'))
-				.toBeFalsy();
+				.toBeTruthy();
 
 			component.onRowSelect(component.hardwareAssets[0]);
 			fixture.detectChanges();
 
 			expect(_.get(component.hardwareAssets[0], 'toggleWell'))
-				.toBeTruthy();
+				.toBeFalsy();
 
 			done();
 		});

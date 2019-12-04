@@ -39,7 +39,6 @@ export interface FaultSearchParams {
 export interface FaultICSearchParams {
 	syslogsignature: string;
 	enable: boolean;
-	sa_Id: number;
 }
 
 /**

@@ -17,6 +17,7 @@ import { Subject, of, Observable } from 'rxjs';
 import { catchError, takeUntil, flatMap } from 'rxjs/operators';
 import { CaseOpenData } from '../caseOpenData';
 import { TechFormComponent } from '../tech-form/tech-form.component';
+import { CaseDetailsService } from '@services';
 
 import * as _ from 'lodash-es';
 import { UserResolve } from '@utilities';
@@ -84,6 +85,7 @@ export class CaseOpenAdvisoriesComponent
 		private logger: LogService,
 		private profileService: ProfileService,
 		private userResolve: UserResolve,
+		private caseDetailsService: CaseDetailsService,
 	) {
 	}
 
@@ -176,6 +178,7 @@ export class CaseOpenAdvisoriesComponent
 	 * OnDestroy Lifecycle Hook
 	 */
 	public ngOnDestroy () {
+		this.caseDetailsService.refreshCaseCount(false);
 		this.destroy$.next();
 		this.destroy$.complete();
 	}
@@ -293,6 +296,7 @@ export class CaseOpenAdvisoriesComponent
 				};
 			}
 			this.submitted = true;
+			this.caseDetailsService.refreshCaseCount(true);
 		});
 	}
 

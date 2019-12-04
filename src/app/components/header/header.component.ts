@@ -55,7 +55,7 @@ export class HeaderComponent implements AfterViewChecked, OnInit, OnDestroy {
 		url: 'https://video.cisco.com/detail/video/5778425545001/unboxing-dna-center-appliance-for-assurance-and-sd-access-%E2%80%93-quick-start-video?autoStart=true&q=DNAC',
 	},
 	{
-		name: I18n.get('_cxCollectorOverview_'),
+		name: I18n.get('_collectorOverview_'),
 		url: 'https://www.cisco.com/c/dam/en/us/support/docs/cloud-systems-management/Cisco-CX-Collector/Collector_Overview.pdf',
 	}];
 	public releaseNotes = {

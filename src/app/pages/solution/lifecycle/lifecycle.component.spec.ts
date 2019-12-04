@@ -1020,12 +1020,6 @@ describe('LifecycleComponent', () => {
 			de = fixture.debugElement.query(By.css('.hover-panel--successbytes'));
 			expect(de)
 				.toBeTruthy();
-
-			// check if there is atleast one icon in the hover block
-			de = de.query(By.css('div .type.text-left'))
-				.query(By.css('span[class^="icon-"]'));
-			expect(de)
-				.toBeTruthy();
 		});
 
 		it('should set bookmark on clicking the icon in hover panel', () => {

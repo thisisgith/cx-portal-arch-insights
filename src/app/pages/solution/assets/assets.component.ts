@@ -46,7 +46,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { VisualFilter } from '@interfaces';
 import { CaseOpenComponent } from '@components';
 import { getProductTypeImage, getProductTypeTitle } from '@classes';
-import { DetailsPanelStackService, RacetrackInfoService } from '@services';
+import { DetailsPanelStackService, RacetrackInfoService, CaseDetailsService } from '@services';
 import { HttpResponse } from '@angular/common/http';
 
 /**
@@ -184,6 +184,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		private racetrackInfoService: RacetrackInfoService,
 		public route: ActivatedRoute,
 		public router: Router,
+		private caseDetailsService: CaseDetailsService,
 	) {
 		this.routeParam = _.get(this.route, ['snapshot', 'params', 'view'], 'system');
 
@@ -526,7 +527,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					loading: true,
 					seriesData: [],
 					template: this.barChartFilterTemplate,
-					title: I18n.get('_HardwareEndOfLife'),
+					title: I18n.get('_LastDateOfSupport_'),
 				},
 				{
 					key: 'equipmentType',
@@ -761,7 +762,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			}),
 			catchError(err => {
 				const cxLevel = _.get(item, ['data', 'cxLevel']);
-				if (cxLevel > 1 && err.status === 404) {
+				if (cxLevel > 0 && err.status === 404) {
 					return this.initiateScan(item);
 				}
 				this.alert.show(I18n.get('_UnableToInitiateScan_', deviceName), 'danger');
@@ -792,7 +793,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					'fluid',
 				),
 			} : undefined,
-			(Number(cxLevel) > 1 && view.key === 'system' && _.get(item, ['data', 'isManagedNE'], false))
+			(Number(cxLevel) > 0 && view.key === 'system' && _.get(item, ['data', 'isManagedNE'], false))
 			? {
 				label: I18n.get('_RunDiagnosticScan_'),
 				onClick: () => this.checkScan(item),
@@ -1195,7 +1196,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 						filterValue: [`${
 							_.get(sub12, 'fromTimestampInMillis')},${
 								_.get(sub12, 'toTimestampInMillis')}`],
-						label: `< 12 ${_.lowerCase(I18n.get('_Months_'))}`,
+						label: `next 12 ${_.lowerCase(I18n.get('_Months_'))}`,
 						selected: false,
 						value: sub12Value,
 					});
@@ -1225,7 +1226,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 						filterValue: [`${
 							_.get(sub36, 'fromTimestampInMillis')},${
 								_.get(sub36, 'toTimestampInMillis')}`],
-						label: `25 - 36 ${_.lowerCase(I18n.get('_Months_'))}`,
+						label: `24 - 36 ${_.lowerCase(I18n.get('_Months_'))}`,
 						selected: false,
 						value: sub36Value,
 					});
@@ -1238,7 +1239,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					series.push({
 						filter: 'gt-36-months',
 						filterValue: [`${_.get(sub36, 'fromTimestampInMillis')}`],
-						label: `> 36 ${_.lowerCase(I18n.get('_Months_'))}`,
+						label: `36+ ${_.lowerCase(I18n.get('_Months_'))}`,
 						selected: false,
 						value: gt36Value,
 					});
@@ -1612,6 +1613,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	public ngOnDestroy () {
 		this.destroy$.next();
 		this.destroy$.complete();
+		this.caseDetailsService.refreshCaseCount(false);
 	}
 
 	/**

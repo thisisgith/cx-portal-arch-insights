@@ -12,6 +12,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 export class CaseSummaryComponent {
 	@Input() public caseDetails: any;
 	@Output() public showAssetDetails: EventEmitter<{ }> = new EventEmitter<{ }>();
+	@Input() public isAssetAvailable: boolean;
 
 	/**
 	 * Used for Opening the Asset 360 View the data

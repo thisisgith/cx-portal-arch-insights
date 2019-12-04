@@ -1,108 +1,103 @@
-import { TestBed, inject } from '@angular/core/testing';
-
-import { RMAService, APIxService } from '@services';
-import { InventoryModule, InventoryService } from '@sdp-api';
+import { TestBed } from '@angular/core/testing';
+import { APIxService } from '@services';
 import { ApixAuthInterceptor } from './apix-auth.interceptor';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { environment } from '@environment';
-import { RMAScenarios, HardwareScenarios, user } from '@mock';
-import { AsyncSubject } from 'rxjs';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { from, Observable } from 'rxjs';
+import { HttpRequest, HttpHeaders, HttpParams, HttpHandler, HttpEvent } from '@angular/common/http';
+import { ApixIdentityService } from './apix-identity.service';
+import { OriginType } from '@constants';
 
 describe('APIxAuthIntercetptor', () => {
-	const testRmaNumber = '800000000';
-	const rmaUrl = `${environment.rmaServiceOrigin}${environment.rmaServicePaths.returns}/rma_numbers/${testRmaNumber}`;
+	const req: HttpRequest<any> = {
+		url: 'url',
+		body: { },
+		headers: new HttpHeaders(),
+		reportProgress: true,
+		withCredentials: false,
+		responseType: 'json',
+		method: '1',
+		params: new HttpParams(),
+		urlWithParams: 'url',
+		serializeBody: () => '',
+		detectContentTypeHeader: () => '',
+		clone: () => Object.assign({ }, req),
+	};
 
-	const sdpUrl = `${environment.sdpServiceOrigin}${environment.sdpServiceBasePath}/customerportal/inventory/v1/hardware?` +
-		`customerId=${user.info.customerId}`;
+	const next: HttpHandler = {
+		handle: () => new Observable<HttpEvent<any>>(),
+	};
+
+	const SDP_TOKEN_VALUE = '12345';
+	const RMA_TOKEN_VALUE = '54321';
+
+	let apixAuthInterceptor: ApixAuthInterceptor;
+	let apixIdentityService: ApixIdentityService;
 	let apixService: APIxService;
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				HttpClientTestingModule,
-				InventoryModule.forRoot({
-					rootUrl: environment.sdpServiceOrigin + environment.sdpServiceBasePath,
-				}),
 			],
 			providers: [
-				RMAService,
-				APIxService,
+				ApixAuthInterceptor,
 				{
-					multi: true,
-					provide: HTTP_INTERCEPTORS,
-					useClass: ApixAuthInterceptor,
+					provide: ApixIdentityService,
+					useValue: {
+						testOrigin: (_url: any) => OriginType.SDP,
+					},
+				},
+				{
+					provide: APIxService,
+					useValue: {
+						getToken: (_clientId: string) => from([SDP_TOKEN_VALUE]),
+					},
 				},
 			],
 		});
+		apixAuthInterceptor = TestBed.get(ApixAuthInterceptor);
+		apixIdentityService = TestBed.get(ApixIdentityService);
 		apixService = TestBed.get(APIxService);
-		apixService.tokens[environment.rmaServiceClientId] = {
-			dateCreated: Date.now(),
-			expiration: '3599',
-			subject: <AsyncSubject<string>> new AsyncSubject(),
-		};
-		apixService.tokens[environment.rmaServiceClientId].subject.next('rma_auth_token');
-		apixService.tokens[environment.rmaServiceClientId].subject.complete();
-		apixService.tokens[environment.sdpServiceClientId] = {
-			dateCreated: Date.now(),
-			expiration: '3599',
-			subject: <AsyncSubject<string>> new AsyncSubject(),
-		};
-		apixService.tokens[environment.sdpServiceClientId].subject.next('sdp_auth_token');
-		apixService.tokens[environment.sdpServiceClientId].subject.complete();
 	});
 
-	it('should attach a token to an RMA APIx http request', inject(
-		[RMAService, HttpTestingController],
-		(rmaService: RMAService, httpMock: HttpTestingController) => {
-			const successfulResponse = RMAScenarios[0].scenarios.GET[0].response.body;
-			rmaService.getByNumber(testRmaNumber)
-				.subscribe();
+	it('should attach auth token for SDP origin APIs', () => {
+		spyOn(req, 'clone');
+		const retValue = {
+			headers: new HttpHeaders().set('authorization', `Bearer ${SDP_TOKEN_VALUE}`),
+		};
+		apixAuthInterceptor.intercept(req, next)
+		.subscribe();
 
-			const req = httpMock.expectOne(rmaUrl);
-			expect(req.request.headers.has('Authorization'))
-				.toEqual(true);
-			expect(req.request.headers.get('Authorization'))
-				.toEqual('Bearer rma_auth_token');
+		expect(req.clone)
+			.toHaveBeenCalledWith(retValue);
+	});
 
-			req.flush(successfulResponse);
-		}),
-	);
+	it('should attach auth token for RMA origin APIs', () => {
+		apixIdentityService.testOrigin = (_url: any) => OriginType.RMA;
+		apixService.getToken = (_clientId: string) => from([RMA_TOKEN_VALUE]);
 
-	it('should attach a token to an SDP APIx http request', inject(
-		[InventoryService, HttpTestingController],
-		(inventoryService: InventoryService, httpMock: HttpTestingController) => {
-			const successfulResponse = HardwareScenarios[0].scenarios.GET[0].response.body;
+		spyOn(req, 'clone');
+		const retValue = {
+			headers: new HttpHeaders().set('authorization', `Bearer ${RMA_TOKEN_VALUE}`),
+		};
+		apixAuthInterceptor.intercept(req, next)
+		.subscribe();
 
-			inventoryService.getHardware({ customerId: user.info.customerId })
-				.subscribe();
+		expect(req.clone)
+			.toHaveBeenCalledWith(retValue);
+	});
 
-			const req = httpMock.expectOne(sdpUrl);
-			expect(req.request.headers.has('Authorization'))
-				.toEqual(true);
-			expect(req.request.headers.get('Authorization'))
-				.toEqual('Bearer sdp_auth_token');
+	it('should ignore non-SDP / non-RMA origin API requests', () => {
+		apixIdentityService.testOrigin = (_url: any) => OriginType.NONE;
 
-			req.flush(successfulResponse);
-		}),
-	);
+		spyOn(next, 'handle')
+			.and
+			.callThrough();
 
-	it('should not attach a token to a non-APIx request', inject(
-		[HttpTestingController],
-		(httpMock: HttpTestingController) => {
-			const successfulResponse = {
-				expiration: '3599',
-				token: 'success',
-			};
+		apixAuthInterceptor.intercept(req, next)
+		.subscribe();
 
-			apixService.getToken('fakeId')
-				.subscribe();
-
-			const req = httpMock.expectOne(`${environment.auth.ciscoTokenUrl}/fakeId`);
-			expect(req.request.headers.has('Authorization'))
-				.toEqual(false);
-
-			req.flush(successfulResponse);
-		}),
-	);
+		expect(next.handle)
+			.toHaveBeenCalledWith(req);
+	});
 });

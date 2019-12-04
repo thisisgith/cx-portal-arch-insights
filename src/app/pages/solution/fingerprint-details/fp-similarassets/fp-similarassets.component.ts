@@ -260,17 +260,7 @@ export class FpSimilarAssetsComponent {
 		rowData.toggleWell = !rowData.toggleWell;
 		this.compareView = 'software';
 	}
-	/**
-	 * updateCompareView
-	 * @param event tab click event
-	 * @param selectedTab  compareview
-	 */
-	public updateCompareView (event, selectedTab) {
-		if (selectedTab) {
-			this.compareView = selectedTab;
-			this.logger.info(event);
-		}
-	}
+
 	/**
 	 * On error event
 	 * @param errorMsg Error Message
