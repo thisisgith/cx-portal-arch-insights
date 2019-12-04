@@ -219,14 +219,6 @@ describe('RccComponent', () => {
 			.toBeTruthy();
 	});
 
-	it('should close the panel', () => {
-		const model = 'selectedModel';
-		component[model] = false;
-		component.onPanelClose(model);
-		expect(component[model])
-			.toEqual(null);
-	});
-
 	it('should call openDevicePage', () => {
 		const serialNumber = 'sn232';
 		component.openDevicePage(serialNumber);
