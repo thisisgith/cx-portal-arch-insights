@@ -58,24 +58,6 @@ describe('SyslogMessagesDetailsComponent', () => {
 		expect(component)
 			.toBeTruthy();
 	});
-	it('should set null values on request errors', done => {
-		const error = {
-			status: 404,
-			statusText: 'Resource not found',
-		};
-		spyOn(syslogsService, 'getPanelGridData')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-		fixture.whenStable()
-			.then(() => {
-				fixture.detectChanges();
-				const messagegrid = [];
-				expect(component.tableData)
-					.toEqual(messagegrid);
-
-				done();
-			});
-	});
 	it('Should get the syslog device message grid data', () => {
 		const param = {
 			syslogId: '12345',
@@ -97,5 +79,86 @@ describe('SyslogMessagesDetailsComponent', () => {
 			.toBeGreaterThan(0);
 		expect(component.count)
 			.toEqual(1);
+	});
+
+	it('should set null values on request error', () => {
+		 const error = {
+			status: 404,
+			statusText: 'Resource not found',
+		 };
+		spyOn(syslogsService, 'getPanelGridData')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+
+		component.asset = {
+			syslogId: '12345',
+		};
+		component.loadSyslogPaneldata(component.asset);
+		expect(syslogsService.getPanelGridData)
+			.toHaveBeenCalled();
+		expect(component.count)
+			.toBeUndefined();
+	});
+	it('should close all panel', () => {
+		component.onPanelClose();
+		expect(component.showSyslogsDetails)
+			.toBeDefined();
+	});
+	it('should get all category', () => {
+		spyOn(syslogsService, 'getSyslogsCategoryList')
+		.and
+		.returnValue(of(SyslogScenarios[3].scenarios.GET[0].response.body));
+		component.getCategoryList();
+		expect(syslogsService.getSyslogsCategoryList)
+		.toHaveBeenCalled();
+		expect(component.categoryList.length)
+		.toBeGreaterThan(0);
+	});
+
+	it('should set null values on request errors', () => {
+		const error = {
+			status: 404,
+			statusText: 'Resource not found',
+		};
+		spyOn(syslogsService, 'getSyslogsCategoryList')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+		component.getCategoryList();
+		expect(syslogsService.getSyslogsCategoryList)
+				.toHaveBeenCalled();
+		expect(component.categoryList)
+				.toBeUndefined();
+	});
+
+	it('should hide the details panel', () => {
+		const hidden = false;
+		component.handleHidden(hidden);
+		const hiddenTrue = true;
+		component.handleHidden(hiddenTrue);
+		expect(component.showAssetDetails)
+			.toBeFalsy();
+	});
+
+	it('should toogle dropdown on button click', () => {
+		component.movetoAfmClicked = true;
+		component.togglePushToFaults();
+		expect(component.movetoAfmClicked)
+		.toBeFalsy();
+		expect(component.selectedCategory)
+		.toEqual('');
+	});
+
+	it('Should Call the syslog categoryList data', () => {
+		spyOn(component, 'getCategoryList')
+			.and
+			.callThrough();
+		spyOn(syslogsService, 'getSyslogsCategoryList')
+		.and
+		.returnValue(of(SyslogScenarios[3].scenarios.GET[0].response.body));
+		component.ngOnChanges();
+		expect(component.getCategoryList)
+				.toHaveBeenCalled();
+		expect(component.categoryList.length)
+				.toBeGreaterThan(0);
 	});
 });

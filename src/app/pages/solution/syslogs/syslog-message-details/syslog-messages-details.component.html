@@ -1,10 +1,120 @@
-<div class="text-uppercase text-bold half-margin-bottom">
-	<span [innerText]="'_SyslogDetailedDescription_' | i18n" class="text-large"></span>
-</div>
-<span [innerText]="tableData[0]?.msgDesc"></span>
-<div>
-	<div class="text-uppercase text-bold half-margin-top half-margin-bottom">
-		<span [innerText]="'_SyslogRecommendations_' | i18n" class="text-large"></span>
+
+<details-panel
+*ngIf="showSyslogsDetails"
+[hidden]="!asset"
+(hiddenChange)="handleHidden($event)"
+[fullscreen]="fullscreen"
+[minWidth]="'900px'"
+>
+<details-panel-header
+	(close)="onPanelClose()"
+	[(fullscreen)]="fullscreen"
+	[fullscreenToggle]="false"
+>
+	<div class="row base-padding-bottom">
+		<div class="col-md-12">
+			<div class="text-xlarge">
+				<span [innerText]="'_SyslogMessageType_' | i18n"></span>
+				<span [innerText]="asset?.msgType "> </span>
+			</div>
+		</div>
 	</div>
-	<span [innerText]="tableData[0]?.recommendation"></span>
+	<div class="row base-padding-bottom">
+		<div class="col-md-2">
+			<div class="row">
+				<div class="col-md-12 text-bold" [innerText]="'_Severity_' | i18n"></div>
+				<div [ngSwitch]="asset?.syslogSeverity">
+						<span *ngSwitchCase="'0'">
+							<span class="qtr-margin-right icon-circle text-danger"></span>
+							<span [innerText]="'_SyslogEmergency_' | i18n"></span>
+						</span>
+						<span *ngSwitchCase="'1'">
+							<span class="qtr-margin-right icon-circle text-danger"></span>
+							<span [innerText]="'_SyslogAlert_' | i18n"></span>
+						</span>
+						<span *ngSwitchCase="'2'">
+							<span class="qtr-margin-right icon-circle text-warning"></span>
+							<span [innerText]="'_SyslogCritical_' | i18n"></span>
+						</span>
+						<span *ngSwitchCase="'3'">
+							<span class="qtr-margin-right icon-circle text-warning"></span>
+							<span [innerText]="'_SyslogError_' | i18n"></span>
+						</span>
+						<span *ngSwitchCase="'4'">
+							<span class="qtr-margin-right icon-circle text-warning-alt"></span>
+							<span [innerText]="'_SyslogWarning_' | i18n"></span>
+						</span>
+						<span *ngSwitchCase="'5'">
+								<span class="qtr-margin-right icon-circle text-muted"></span>
+								<span [innerText]="'_SyslogNotice_' | i18n"></span>
+						</span>
+						<span *ngSwitchCase="'6'">
+								<span class="qtr-margin-right icon-circle text-muted"></span>
+								<span [innerText]="'_SyslogInfo_' | i18n"></span>
+						</span>
+						<span *ngSwitchCase="'7'">
+								<span class="qtr-margin-right icon-circle text-muted"></span>
+								<span [innerText]="'_SyslogDebug_' | i18n"></span>
+						</span>
+					</div>
+			</div>
+		</div>
+
+		<div class="col-md-8">
+			<div class="row">
+				<div class="col-md-12 text-bold" [innerText]="'_SyslogSystem_' | i18n"></div>
+				<div
+					class="col-md-12"
+					[innerText]="asset?.deviceHost"
+				></div>
+			</div>
+		</div>
+	</div>
+		<div class="row push-to-afm">
+		<div class="col-4">
+			<button data-auto-id="CaseAddNote" type="button"
+					class="btn btn--primary text-uppercase"
+					[innerText]="'_SyslogstoAFM_' | i18n" (click)="togglePushToFaults()">
+			</button>
+			<span class="text-primary qtr-margin-left" data-balloon-length="medium"
+					[attr.data-balloon]="'_SyslogsTooltip_' | i18n"
+					data-auto-id="syslogsToolTip" data-balloon-pos="right"
+					(click)="$event.stopPropagation()">
+					<i class="icon-info icon-small"></i>
+			</span>
+		</div>
+
+		<div class="absolute add-notes base-padding-bottom base-padding-left base-padding-right" *ngIf="movetoAfmClicked">
+			<div class="half-margin-top" >
+			<span [innerText]="'_SyslogsCategoryDescription_' | i18n"></span>
+		</div>
+			<div class="row">
+				<div class="col-4">
+					<cui-select label="{{'_SyslogCatalog_' | i18n}}"  [required]="false" [empty]="false" [items]="categoryList" [compressed]="true" [(ngModel)]="selectedCategory"  optionsKey="name" optionsValue="value" data-auto-id="syslogsCategory"></cui-select>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-2">
+					<button class="btn btn--ghost" [innerText]="'_SyslogsProceed_' | i18n" (click)= "moveToFault()" data-auto-id="syslogs-to-faults"></button>
+				</div>
+				<div class="col-2">
+					<button class="btn btn--primary" [innerText]="'_SyslogsCancel_' | i18n" (click)= "togglePushToFaults()" data-auto-id="syslogs-cancel"></button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div detailsPanelTitle class="text-xlarge"></div>
+</details-panel-header>
+<div class="text-uppercase text-bold half-margin-bottom">
+		<span [innerText]="'_SyslogDetailedDescription_' | i18n" class="text-large"></span>
+		</div>
+		<span [innerText]="tableData[0]?.msgDesc"></span>
+		<div>
+		<div class="text-uppercase text-bold half-margin-top half-margin-bottom">
+			<span [innerText]="'_SyslogRecommendations_' | i18n" class="text-large"></span>
+		</div>
+		<span [innerText]="tableData[0]?.recommendation"></span>
 </div>
+</details-panel>
+
+

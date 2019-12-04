@@ -13,6 +13,7 @@ import {
 	CuiSpinnerModule,
 	CuiSelectModule,
 	CuiAlertModule,
+	CuiToastModule,
 } from '@cisco-ngx/cui-components';
 import { DetailsPanelModule, AssetDetailsModule, AssetDetailsHeaderModule } from '@components';
 import { SyslogMessagesDetailsModule,
@@ -48,6 +49,7 @@ const rootUrl = environment.sdpServiceOrigin;
 		CuiSpinnerModule,
 		CuiSelectModule,
 		CuiAlertModule,
+		CuiToastModule,
 	],
 })
 export class SyslogsMessagesModule { }
