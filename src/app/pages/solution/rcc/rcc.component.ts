@@ -160,7 +160,7 @@ export class RccComponent implements OnInit, OnDestroy {
 	public searchOptions = {
 		debounce: 1500,
 		max: 100,
-		min: 2,
+		min: 1,
 		pattern: /^[a-zA-Z0-9\s\-\/\[\]\(\).]*$/,
 	};
 	public search: FormControl = new FormControl('');
@@ -698,7 +698,7 @@ export class RccComponent implements OnInit, OnDestroy {
 		_.invoke(this.alert, 'hide');
 		const searchInput = this.searchInput.trim();
 		if (this.searchForm.invalid ||
-				(!_.isEmpty(searchInput) && searchInput.length < 2)) {
+				(!_.isEmpty(searchInput) && searchInput.length < 1)) {
 			this.invalidSearchInput = true;
 
 			return;
@@ -870,7 +870,7 @@ export class RccComponent implements OnInit, OnDestroy {
 		if (this.prevSearchText.toLowerCase() === searchInput
 		.toLowerCase()) { return; }
 		if (((event && event.keyCode && event.keyCode === 13) ||
-			type === 'search') && (searchInput.length < 2)) {
+			type === 'search') && (searchInput.length < 1)) {
 			this.searchInput = searchInput;
 			this.invalidSearchInput = true;
 
