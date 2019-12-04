@@ -611,7 +611,7 @@ describe('RccComponent', () => {
 		fixture.detectChanges();
 		component.searchViolations(event, 'search');
 		expect(component.invalidSearchInput)
-			.toBeTruthy();
+			.toBeFalsy();
 	});
 
 	it('should invoke searchViolations with invalid form keycode 65', () => {
