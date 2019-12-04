@@ -19,4 +19,6 @@ export interface HardwareAsset {
   cxLevel?: string;
   saId?: number;
   vaId?: Array<number>;
+  toggleWell?: boolean;
+
 }
