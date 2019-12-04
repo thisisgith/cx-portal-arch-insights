@@ -421,7 +421,10 @@ export class LifecycleComponent implements OnDestroy {
 			const newSolution = currentSolution;
 			const newTech = (technology.name !== _.get(this.selectedTechnology, 'name'))
 				? true : false;
-			if (newSolution && newTech) {
+			const newUsecaseAdoptPert = (technology.usecase_adoption_percentage !==
+				_.get(this.selectedTechnology, 'usecase_adoption_percentage')) ? true : false;
+
+			if (newSolution && newTech || newUsecaseAdoptPert) {
 				this.selectedTechnology = technology;
 
 				this.resetComponentData();
