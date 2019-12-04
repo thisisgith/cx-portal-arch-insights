@@ -1,4 +1,7 @@
-<asset-details *ngIf="selectedAsset && selectedAsset.data" [asset]="selectedAsset.data" (close)="onPanelClose()"
+<asset-details *ngIf="selectedAsset && selectedAsset.data"
+	[asset]="selectedAsset.data"
+	(close)="onPanelClose()"
+	[selectedView]="selectedView"
 	(scanStatus)="handleScanStatus($event)">
 </asset-details>
 
