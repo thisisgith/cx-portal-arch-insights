@@ -12,7 +12,7 @@ import { environment } from '@environment';
 import { ActivatedRoute } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 
-describe('RccAssetViolationDetailsComponent', () => {
+fdescribe('RccAssetViolationDetailsComponent', () => {
 	let component: RccAssetViolationDetailsComponent;
 	let fixture: ComponentFixture<RccAssetViolationDetailsComponent>;
 	let rccAssetDetailsService: RccService;
@@ -130,7 +130,7 @@ describe('RccAssetViolationDetailsComponent', () => {
 		expect(component.tableOffset)
 			.toEqual(0);
 	});
-	it('to be called on getAssetPolicyGridData', fakeAsync(() => {
+	it('to be called on getAssetPolicyGridData, to make error result as true and to make the loading false', fakeAsync(() => {
 		component.assetRowParams = {
 			customerId: '7293498',
 			pageIndex: 0,
@@ -162,7 +162,7 @@ describe('RccAssetViolationDetailsComponent', () => {
 		expect(component.tableOffset)
 			.toEqual(1);
 	});
-	it('Should invoke api with error', fakeAsync(() => {
+	it('Should invoke api with error, to make the table data empty on API error response', fakeAsync(() => {
 		const error = {
 			status: 404,
 			statusText: 'Resource not found',
@@ -219,7 +219,7 @@ describe('RccAssetViolationDetailsComponent', () => {
 		expect(component.assetRowParams)
 			.toBeUndefined();
 	}));
-	it('Should get the empty data on api call', fakeAsync(() => {
+	it('Should get the empty data on api call and to make initial Loading false on API empty response', fakeAsync(() => {
 		component.assetRowParams = {
 			customerId: '7293498',
 			pageIndex: 0,
@@ -254,7 +254,7 @@ describe('RccAssetViolationDetailsComponent', () => {
 		expect(component.initialLoading)
 			.toBeFalsy();
 	}));
-	it('Should get the empty data on policyname policygroup severity', fakeAsync(() => {
+	it('Should reset table offset to 0 when asset policy grid data API returns empty response', fakeAsync(() => {
 		expect(component.getAssetPolicyGridData());
 		component.assetRowParams = {
 			customerId: '7293498',
@@ -296,7 +296,7 @@ describe('RccAssetViolationDetailsComponent', () => {
 		expect(component.tableOffset)
 			.toEqual(0);
 	}));
-	it('should  called on load of empty table grid data ', fakeAsync(() =>  {
+	it('Should reset table offset to 0 when asset summary API returns empty response', fakeAsync(() =>  {
 		component.assetRowParams = {
 			customerId: '7293498',
 			pageIndex: 0,
