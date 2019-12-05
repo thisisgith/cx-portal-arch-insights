@@ -105,6 +105,60 @@ class ProductAlertsService extends __BaseService {
     );
   }
 
+  getHardwareVulnerabilityCountsResponse(params: ProductAlertsService.GetVulnerabilityCountsParams): __Observable<__StrictHttpResponse<VulnerabilityResponse>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
+    if (params.solution != null) __params = __params.set('solution', params.solution.toString());
+    (params.serialNumber || []).forEach(val => {if (val != null) __params = __params.append('search', val.toString())});
+    let req = new HttpRequest<any>(
+      'GET',
+      this.rootUrl + `/customerportal/product-alerts/v1/assets/hardware/vulnerabilities/count`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<VulnerabilityResponse>;
+      })
+    );
+  }
+
+  getSystemVulnerabilityCountsResponse(params: ProductAlertsService.GetVulnerabilityCountsParams): __Observable<__StrictHttpResponse<VulnerabilityResponse>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
+    if (params.solution != null) __params = __params.set('solution', params.solution.toString());
+    (params.serialNumber || []).forEach(val => {if (val != null) __params = __params.append('search', val.toString())});
+    let req = new HttpRequest<any>(
+      'GET',
+      this.rootUrl + `/customerportal/product-alerts/v1/assets/system/vulnerabilities/count`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<VulnerabilityResponse>;
+      })
+    );
+  }
+
   /**
    * The Vulnerabilities count API retrieves counts for product vulnerabilities. This includes counts for security advisories, field notices, and bugs.
    * @param params The `ProductAlertsService.GetVulnerabilityCountsParams` containing the following parameters:
@@ -121,6 +175,18 @@ class ProductAlertsService extends __BaseService {
    */
   getVulnerabilityCounts(params: ProductAlertsService.GetVulnerabilityCountsParams): __Observable<VulnerabilityResponse> {
     return this.getVulnerabilityCountsResponse(params).pipe(
+      __map(_r => _r.body as VulnerabilityResponse)
+    );
+  }
+
+  getHardwareVulnerabilityCounts(params: ProductAlertsService.GetVulnerabilityCountsParams): __Observable<VulnerabilityResponse> {
+    return this.getHardwareVulnerabilityCountsResponse(params).pipe(
+      __map(_r => _r.body as VulnerabilityResponse)
+    );
+  }
+
+  getSystemVulnerabilityCounts(params: ProductAlertsService.GetVulnerabilityCountsParams): __Observable<VulnerabilityResponse> {
+    return this.getSystemVulnerabilityCountsResponse(params).pipe(
       __map(_r => _r.body as VulnerabilityResponse)
     );
   }
