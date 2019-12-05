@@ -429,7 +429,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 				const total = _.reduce(counts, (memo, value) => (memo + value), 0);
 
 				assetsFacet.data = {
-					gaugePercent: ((covered / total) * 100),
+					gaugePercent: total === 0 ? 0 : ((covered / total) * 100),
 				};
 
 				assetsFacet.loading = false;
