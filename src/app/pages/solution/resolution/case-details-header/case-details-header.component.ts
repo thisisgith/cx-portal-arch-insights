@@ -81,6 +81,22 @@ export class CaseDetailsHeaderComponent {
 	}
 
 	/**
+	 * get the description based on severity
+	 * @param severity of case
+	 * @returns void
+	 */
+	public getSeverityDescr (severity: string) {
+		const severityInt = parseInt(severity, 10);
+
+		if (Object.keys(caseSeverities)
+		.includes(severity)) {
+			return caseSeverities[severityInt].getCreateName();
+		}
+
+		return '';
+	}
+
+	/**
 	 * toggles add note section
 	 */
 	public toggleAddNote () {

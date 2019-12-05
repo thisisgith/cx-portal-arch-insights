@@ -8,7 +8,7 @@ export {
 	FaultSummaryDetails,
 	FaultFilter,
 	FaultFilterData,
-	FaultOS,
+	FaultSwType,
 	FaultProductId,
 	FaultICSearchParams,
 	FaultIcSettings,
