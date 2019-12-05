@@ -86,9 +86,7 @@ export class CaseDetailsComponent implements OnInit, OnDestroy {
 				this.caseNotes = results[1];
 				this.populateCaseFilesList(results[2]);
 				const assetDetails = _.get(results[3], 'data');
-				if (assetDetails && assetDetails.length > 0) {
-					this.isAssetAvailable = true;
-				}
+				this.isAssetAvailable = (assetDetails && assetDetails.length > 0) ? true : false;
 			});
 
 		this.caseDetailsService.addNote$
