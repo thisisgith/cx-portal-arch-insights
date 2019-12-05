@@ -421,7 +421,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 						sortDirection: 'desc',
 						sorting: true,
 						template: this.criticalAdvisoriesTemplate,
-						width: '150px',
+						width: '155px',
 					},
 					{
 						key: 'deviceName',
@@ -633,18 +633,6 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		item.details = !item.details;
 		this.detailsPanelStackService.reset(item.details);
 		this.selectedAsset = item.details ? item : null;
-	}
-
-	/**
-	 * Function used to handle selecting/de-selecting all rows
-	 * @param selected boolean representing selecting all or selecting none
-	 */
-	public onAllSelect (selected: boolean) {
-		this.selectedView.data.forEach((i: Item) => {
-			i.selected = selected;
-		});
-
-		this.selectedView.allAssetsSelected = selected;
 	}
 
 	/**
@@ -882,7 +870,6 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				view.paginationCount = `${first}-${last}`;
 
 				if (this.selectOnLoad && this.selectedView.key === 'system') {
-					this.onAllSelect(true);
 					this.onSelectionChanged(_.map(this.selectedView.data, item => item));
 					if (this.selectedView.selectedAssets.length === 1) {
 						this.selectedAsset = this.selectedView.selectedAssets[0];
@@ -1625,22 +1612,12 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	}
 
 	/**
-	 * Function used to select an item from our inventory
-	 * @param item the item we selected
-	 */
-	public onItemSelect (item: Item) {
-		item.selected = !item.selected;
-
-		this.selectedView.allAssetsSelected = _.every(this.selectedView.data, 'selected');
-	}
-
-	/**
 	 * Click handler logic for the asset list
 	 * @param {Event} $event Click event
-	 * @param {string} type Click target type (checkbox, item, or menu)
+	 * @param {string} type Click target type (item, or menu)
 	 * @param {Item} [item] Targeted item
 	 */
-	public onClick ($event: Event, type: 'checkbox' | 'item' | 'menu', item?: Item) {
+	public onClick ($event: Event, type: 'item' | 'menu', item?: Item) {
 		if ($event.defaultPrevented) {
 			return;
 		}
@@ -1652,10 +1629,6 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		}
 
 		switch (type) {
-			case 'checkbox':
-				this.onItemSelect(item);
-				// Don't mark event as handled so table row checkbox still works
-				break;
 			case 'item':
 				this.onRowSelect(item);
 				$event.preventDefault(); // mark this event as handled

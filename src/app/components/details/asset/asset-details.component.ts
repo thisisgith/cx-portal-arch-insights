@@ -77,6 +77,7 @@ export class AssetDetailsComponent implements OnDestroy, OnInit, Panel360 {
 	public headerScanStatus: { error: boolean; inProgress: boolean; } = {
 		error: false, inProgress: false,
 	};
+	public screenWidth = window.innerWidth;
 
 	private destroyed$: Subject<void> = new Subject<void>();
 	private selectedSolutionName: string;
