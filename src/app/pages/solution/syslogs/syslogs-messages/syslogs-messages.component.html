@@ -12,7 +12,7 @@
 		<div>
 			<form #f="ngForm" class="row" id="searchForm" (keydown)="keyDownFunction($event)">
 				<div class="col-4"></div>
-				<div class="col-2"></div>
+				<div class="col-4"></div>
 				<div class="col-4">
 					<div class="form-group input--icon input--compressed">
 						<div class="form-group__text">
@@ -116,106 +116,12 @@
 				[innerText]="item.timestamp | date: 'MM/dd/yyyy HH:mm:ss'"
 			></span>
 </ng-template>
-
-<details-panel
-	*ngIf="selectedAsset"
-	[hidden]="!selectedAsset"
-	(hiddenChange)="handleHidden($event)"
-	[fullscreen]="fullscreen"
-	[minWidth]="'900px'"
->
-	<details-panel-header
-		(close)="onPanelClose()"
-		[(fullscreen)]="fullscreen"
-		[fullscreenToggle]="false"
-	>
-		<div class="row base-padding-bottom">
-			<div class="col-md-12">
-				<div class="text-xlarge">
-					<span [innerText]="'_SyslogMessageType_' | i18n"></span>
-					<span [innerText]="selectedAsset.msgType "> </span>
-				</div>
-			</div>
-		</div>
-		<div class="row base-padding-bottom">
-			<div class="col-md-2">
-				<div class="row">
-					<div class="col-md-12" [innerText]="'_Severity_' | i18n"></div>
-					<div [ngSwitch]="selectedAsset.syslogSeverity">
-							<span *ngSwitchCase="'0'">
-								<span class="qtr-margin-right icon-circle text-danger"></span>
-								<span [innerText]="'_SyslogEmergency_' | i18n"></span>
-							</span>
-							<span *ngSwitchCase="'1'">
-								<span class="qtr-margin-right icon-circle text-danger"></span>
-								<span [innerText]="'_SyslogAlert_' | i18n"></span>
-							</span>
-							<span *ngSwitchCase="'2'">
-								<span class="qtr-margin-right icon-circle text-warning"></span>
-								<span [innerText]="'_SyslogCritical_' | i18n"></span>
-							</span>
-							<span *ngSwitchCase="'3'">
-								<span class="qtr-margin-right icon-circle text-warning"></span>
-								<span [innerText]="'_SyslogError_' | i18n"></span>
-							</span>
-							<span *ngSwitchCase="'4'">
-								<span class="qtr-margin-right icon-circle text-warning-alt"></span>
-								<span [innerText]="'_SyslogWarning_' | i18n"></span>
-							</span>
-							<span *ngSwitchCase="'5'">
-									<span class="qtr-margin-right icon-circle text-muted"></span>
-									<span [innerText]="'_SyslogNotice_' | i18n"></span>
-							</span>
-							<span *ngSwitchCase="'6'">
-									<span class="qtr-margin-right icon-circle text-muted"></span>
-									<span [innerText]="'_SyslogInfo_' | i18n"></span>
-							</span>
-							<span *ngSwitchCase="'7'">
-									<span class="qtr-margin-right icon-circle text-muted"></span>
-									<span [innerText]="'_SyslogDebug_' | i18n"></span>
-							</span>
-						</div>
-				</div>
-			</div>
-
-			<div class="col-md-8">
-				<div class="row">
-					<div class="col-md-12" [innerText]="'_SyslogSystem_' | i18n"></div>
-					<div
-						class="col-md-12"
-						[innerText]="selectedAsset.deviceHost"
-					></div>
-				</div>
-			</div>
-		</div>
-			<div class="row">
-			<div class="col-3">
-				<button data-auto-id="CaseAddNote"
-						class="btn btn--primary text-uppercase"
-						[innerText]="'_SyslogstoAFM_' | i18n" (click)="toggleAddNote()">
-				</button>
-			</div>
-			</div>
-			<div class="absolute add-notes base-padding-bottom base-padding-left base-padding-right" *ngIf="movetoAfmClicked">
-				<p  [innerText]="'_SyslogsCategoryDescription_' | i18n"></p>
-				<div class="row">
-					<div class="col-4">
-						<cui-select label="{{'_SyslogCatalog_' | i18n}}" [required]="false" [empty]="true"></cui-select>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-2">
-						<button class="btn btn--ghost" [innerText]="'_SyslogsProceed_' | i18n"></button>
-					</div>
-					<div class="col-2">
-						<button class="btn btn--primary" [innerText]="'_SyslogsCancel_' | i18n"></button>
-					</div>
-				</div>
-			</div>
-		<div detailsPanelTitle class="text-xlarge"></div>
-	</details-panel-header>
-	<syslog-message-details
+<syslog-message-details
+   *ngIf="showSyslogsDetails"
+    (showSyslogsDetails)="onSyslogPanelClose()"
 		[asset]="selectedAsset"
 		[selectedFilter]="syslogsParams"
+		(showSuccess)="onShowSuccess($event)"
 	></syslog-message-details>
-</details-panel>
+
+<cui-toast [autoHide]="true"></cui-toast>
