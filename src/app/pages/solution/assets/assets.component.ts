@@ -376,13 +376,6 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		return {
 			route,
 			filters: [
-				// {
-				// 	key: 'partner',
-				// 	loading: true,
-				// 	seriesData: [],
-				// 	template: this.pieChartFilterTemplate,
-				// 	title: I18n.get('_Partner_'),
-				// },
 				{
 					key: 'advisories',
 					loading: true,
@@ -515,13 +508,6 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					template: this.pieChartFilterTemplate,
 					title: I18n.get('_Advisories_'),
 				},
-				// {
-				// 	key: 'partner',
-				// 	loading: true,
-				// 	seriesData: [],
-				// 	template: this.pieChartFilterTemplate,
-				// 	title: I18n.get('_Partner_'),
-				// },
 				{
 					key: 'eox',
 					loading: true,
@@ -982,21 +968,6 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	}
 
 	/**
-	 * TODO: Implement with Partner API - Out for LA
-	 * Fetches the partner counts for the visual filter
-	 * @returns the partner counts
-	 */
-	// private getPartnerCounts () {
-	// 	const systemPartnerFilter = _.find(this.getView('system').filters, { key: 'partner' });
-	// 	const hardwarePartnerFilter = _.find(this.getView('hardware').filters, { key: 'partner' });
-
-	// 	systemPartnerFilter.loading = false;
-	// 	hardwarePartnerFilter.loading = false;
-
-	// 	return of({ });
-	// }
-
-	/**
 	 * Fetches the advisory counts for the systems visual filter
 	 * @returns the advisory counts
 	 */
@@ -1421,7 +1392,6 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			mergeMap(() =>
 				forkJoin(
 					this.getCoverageCounts(),
-					// this.getPartnerCounts(),
 					this.getSystemAdvisoryCount(),
 					this.getHardwareAdvisoryCount(),
 					this.getHardwareTypeCounts(),
@@ -1603,6 +1573,12 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		)
 		.subscribe((technology: RacetrackTechnology) => {
 			if (this.selectedTechnologyName !== _.get(technology, 'name')) {
+				// If a previously selected technology exists and is different than the currently selected one,
+				// update the current page on the query params to `1`
+				if (this.selectedTechnologyName) {
+					this.selectedView.params.page = 1;
+					this.adjustQueryParams();
+				}
 				this.selectedTechnologyName = _.get(technology, 'name');
 				this.loadData();
 			}

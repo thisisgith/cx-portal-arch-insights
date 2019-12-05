@@ -752,6 +752,18 @@ describe('AssetsComponent', () => {
 			tick();
 		}));
 
+		it('should reset the page params to 1 when usecase is changed', () => {
+			buildSpies();
+			fixture.detectChanges();
+			component.selectedView.params.page = 3;
+
+			const racetrack = getActiveBody(RacetrackScenarios[0]);
+			racetrackInfoService.sendCurrentTechnology(racetrack.solutions[0].technologies[1]);
+
+			expect(component.selectedView.params.page)
+				.toBe(1);
+		});
+
 		it('should set the role filter if param selected', fakeAsync(() => {
 			buildSpies();
 			fixture.detectChanges();
