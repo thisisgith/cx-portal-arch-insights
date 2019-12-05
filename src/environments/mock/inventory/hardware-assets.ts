@@ -24,6 +24,7 @@ export const MockHardwareAssetsData: HardwareAsset[] = [
 		"equipmentType": "CHASSIS",
 		"neId": "NA,FOC2045X0WJ,WS-C3850-48U-L,NA",
 		"hwInstanceId": "FOC2045X0WJ,WS-C3850-48U-L,NA,FOC2045X0WJ,WS-C3850-48U-L,NA,NA",
+		"toggleWell":true,
 		"solutionInfo": [
 			{
 				"useCase": "Campus Network Segmentation",
