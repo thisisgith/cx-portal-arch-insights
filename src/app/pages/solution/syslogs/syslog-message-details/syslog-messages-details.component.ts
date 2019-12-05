@@ -1,4 +1,5 @@
-import { Component, Input, OnChanges, OnDestroy, ViewChild, TemplateRef, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, ViewChild, TemplateRef, Output, EventEmitter, OnInit,
+} from '@angular/core';
 import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import {
@@ -10,14 +11,15 @@ import {
 	SyslogPanelGridData,
 	SyslogCategoryList,
 	PushToFaultResponse,
+	SyslogCategoryData,
 } from '@sdp-api';
 import { catchError, takeUntil, map } from 'rxjs/operators';
 import { of, Subject } from 'rxjs';
 import { UserResolve } from '@utilities';
 import * as _ from 'lodash-es';
 import { I18n } from '@cisco-ngx/cui-utils';
-import { DetailsPanelStackService } from './../../../../services/details-panel.service';
 import { User } from '@interfaces';
+import { DetailsPanelStackService } from '@services';
 
 /**
  * Syslogpanelgrid component
@@ -28,7 +30,7 @@ import { User } from '@interfaces';
 	styleUrls: ['./syslog-messages-details.component.scss'],
 	templateUrl: './syslog-messages-details.component.html',
 })
-export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
+export class SyslogMessagesDetailsComponent implements OnInit, OnChanges, OnDestroy {
 	@Input('asset') public asset: any;
 	@ViewChild('innerTableRef', { static: true }) public innerTableRef: TemplateRef<{ }>;
 	@ViewChild('prodFamily', { static: true }) public prodFamily: TemplateRef<{ }>;
@@ -167,7 +169,7 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 		this.syslogsService
 		.getSyslogsCategoryList()
 		.pipe(takeUntil(this.destroy$),
-		map(responseList => {
+		map((responseList: SyslogCategoryData) => {
 			this.categoryList = responseList.responseData;
 			this.loading = false;
 		}), catchError(err => {
@@ -200,7 +202,7 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 		this.syslogsService
 		.getPushToFaultsInfo(this.moveToFaultParams)
 		.pipe(takeUntil(this.destroy$))
-		.subscribe(responseList => {
+		.subscribe((responseList: PushToFaultResponse) => {
 			this.moveToFaultsResponse = responseList;
 			this.loading = false;
 			this.togglePushToFaults();

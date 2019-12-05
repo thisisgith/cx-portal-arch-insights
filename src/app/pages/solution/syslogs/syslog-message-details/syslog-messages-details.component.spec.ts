@@ -101,8 +101,8 @@ describe('SyslogMessagesDetailsComponent', () => {
 	});
 	it('should close all panel', () => {
 		component.onPanelClose();
-		expect(component.showSyslogsDetails)
-			.toBeDefined();
+		expect(component.showAssetPanel)
+			.toBeFalsy();
 	});
 	it('should get all category', () => {
 		spyOn(syslogsService, 'getSyslogsCategoryList')
