@@ -175,7 +175,7 @@
 	<div class="panel panel--ltgray base-padding-right base-padding-left"
 		*ngIf="selectedView?.table && selectedView?.data?.length && viewType === 'grid'">
 		<div class="row">
-			<div *ngFor="let item of selectedView.data" class="col-md-3 half-margin-bottom half-margin-top flex">
+			<div *ngFor="let item of selectedView.data" class="col-md-3 card-width half-margin-bottom half-margin-top flex">
 				<ng-container *ngTemplateOutlet="cardTemplate; context: { item: item }"></ng-container>
 			</div>
 		</div>
