@@ -19,6 +19,7 @@ import { ChangePasswordComponent, ChnagePasswordModule } from './change-password
 
 import { environment } from '@environment';
 import { RouteGuard } from './route-guard';
+import {CanDeactivateGuard} from '@sdp-api';
 
 /**
  * Child routes for Settings Module for lazy loading
@@ -32,6 +33,7 @@ const childRoutes: Routes = [
 		canActivate: [RouteGuard],
 		component: AdminComplienceComponent,
 		path: 'compliance',
+		canDeactivate: [CanDeactivateGuard]
 	},
 	{
 		component: SettingsComponent,
@@ -86,5 +88,6 @@ const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 		SettingsModule,
 		UsersModule,
 	],
+	providers:[CanDeactivateGuard]
 })
 export class AdminModule { }
