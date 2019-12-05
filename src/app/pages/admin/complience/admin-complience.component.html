@@ -45,7 +45,7 @@
 											<select id="select-type-basic" (change)="onPolicySelected($event.target.value)" 
 											[(ngModel)]="saveDetails.body.policy" data-auto-id="PolicySelected">
 												<option *ngFor="let policy of policies"
-											[value]="policy.name" [innerText]="policy.name">
+											[value]="policy" [innerText]="policy">
 												</option>
 											</select>
 											<label for="select-type-basic" class="subheader"

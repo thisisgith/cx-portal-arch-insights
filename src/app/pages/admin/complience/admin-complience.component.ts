@@ -1,16 +1,18 @@
-import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef} from '@angular/core';
 import {
 	ControlPointAdminComplienceService,
 	RightTagResponse,
 	LeftTagResponse,
 	AssetTaggingService,
 	CanDeactivateGuard,
+	PolicyGroupDetails,
+	DeactivationGuarded
 } from '@sdp-api';
 
 import { User } from '@interfaces';
 import { ActivatedRoute } from '@angular/router';
 
-import { Subject, of, forkJoin ,Observable} from 'rxjs';
+import { Subject, of, forkJoin, Observable } from 'rxjs';
 import { catchError, takeUntil, map } from 'rxjs/operators';
 import { RouteAuthService } from '@services';
 
@@ -18,7 +20,6 @@ import * as _ from 'lodash-es';
 import { LogService } from '@cisco-ngx/cui-services';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { CuiModalService } from '@cisco-ngx/cui-components';
-import {DeactivationGuarded} from '@sdp-api';
 
 /**
  * Main Settings component
@@ -28,7 +29,7 @@ import {DeactivationGuarded} from '@sdp-api';
 	styleUrls: ['./admin-complience.component.scss'],
 	templateUrl: './admin-complience.component.html',
 })
-export class AdminComplienceComponent implements OnInit ,DeactivationGuarded{
+export class AdminComplienceComponent implements OnInit, DeactivationGuarded{
 	@ViewChild('confirmationModalTemplate',
 	{ static: true }) private confirmationModalTemplate: TemplateRef<string>;
 
@@ -38,6 +39,7 @@ export class AdminComplienceComponent implements OnInit ,DeactivationGuarded{
 	@ViewChild('switchBetweenCompliance',
 	{ static: true }) private switchBetweenCompliance: TemplateRef<string>;
 	returnValue: boolean | Observable<boolean>;
+
 	private destroyed$: Subject<void> = new Subject<void>();
 	private customerId: string;
 	public accepted = false;
@@ -51,6 +53,7 @@ export class AdminComplienceComponent implements OnInit ,DeactivationGuarded{
 	public enableSaveButton: boolean;
 	public leftSideTagsResponse: LeftTagResponse;
 	public rightSideTagsResponse: RightTagResponse;
+	public policyGroupDetails: PolicyGroupDetails;
 	public selectedPolicy = 'select';
 	public leftSideTags = [];
 	public clonedLeftTags = [];
@@ -92,21 +95,7 @@ export class AdminComplienceComponent implements OnInit ,DeactivationGuarded{
 	/**
 	 * Function which instanstiates the settings page to the initial view
 	 */
-	public ngOnInit () {
-		this.policies = [
-			{
-				name: 'select',
-				value: true,
-			},
-			{
-				name: 'HIPAA',
-				value: false,
-			},
-			{
-				name: 'PCI',
-				value: false,
-			},
-		];
+	public ngOnInit () {   
 		this.checkOptlnStatus();
 		this.initializeDetails();
 	}
@@ -131,6 +120,8 @@ export class AdminComplienceComponent implements OnInit ,DeactivationGuarded{
 			.subscribe((results: any) => {
 				this.optlnStatus = results.data.rccOptInStatus;
 				if (this.optlnStatus) {
+					this.getPolicies()
+					.subscribe();
 					this.getLeftSideTags()
 						.subscribe();
 				}
@@ -245,6 +236,30 @@ export class AdminComplienceComponent implements OnInit ,DeactivationGuarded{
 			);
 
 	}
+
+	/**
+	 * Function to get policies
+	 * @returns policies data
+	 */
+
+	 public getPolicies() {
+
+		  return this.controlPointAdminComplienceService.getPolicies(this.customerId)
+		        .pipe(
+					takeUntil(this.destroyed$),
+					map((results: any) => {	
+					   this.policyGroupDetails = results;
+					   this.policies = _.cloneDeep(this.policyGroupDetails.policyGroup);
+					}),
+					catchError(err => {
+						this.logger.error('Policies : getPolicies()' +
+							 `:: Error : (${err.status}) ${err.message}`);
+							 
+						return of({ });	 
+					})
+				);
+	 }
+
 	/**
 	 * Function to get left side tags
 	 * @returns tags data
@@ -587,19 +602,18 @@ export class AdminComplienceComponent implements OnInit ,DeactivationGuarded{
 			this.selectedDeviceTagType = 'selectedTags';
 		}
 		this.cuiModalService.hide();
-		
 	}
 	/**
  	* Function to show Confirmation pop up when leaving compliance tap
  	*/
-	canDeactivate(): boolean | Observable<boolean> | Promise<boolean> {
+	 canDeactivate(): boolean | Observable<boolean> | Promise<boolean> {
 		if(this.selectedDeviceTagType === 'selectedTags' || this.toBeScanned===true){
 			this.cuiModalService.show(this.switchBetweenCompliance, 'normal');
 		}
 		return this.canDeactGuard.navigateAwaySelection$;
 	  }
 
-	/**
+	  /**
  	* Function to continue without changes in compliance
  	*/
 	public continueWithoutChange(choice:boolean):void{
