@@ -215,7 +215,7 @@ export class FaultsComponent implements OnInit, OnChanges, OnDestroy {
 				return 'category';
 			case 'Title':
 				return 'title';
-			case 'Systems Affected':
+			case 'Affected Systems':
 				return 'systemCount';
 			case 'Created Cases':
 				return 'tacCount';

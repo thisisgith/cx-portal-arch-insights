@@ -610,7 +610,7 @@
 	"_FaultDateAndTime": "Date and Time",
 	"_FaultNoResults_": "No Results Found",
 	"_FaultLastUpdatedXminutes_": "Last Updated : {0}",
-	"_FaultTotalCaseCount_": "Total Cases Created -",
+	"_FaultTotalCaseCount_": "Total Cases Created - ",
 	"_FaultFilter_": "Filter",
 	"_FaultDisableCase_": "Disable Case Automation",
 	"_FaultEnableCase_": "Enable Case Automation",
