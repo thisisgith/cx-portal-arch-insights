@@ -57,4 +57,5 @@ export const environment = {
 		inventory: '/api/v1/inventory',
 		partner: '/api/cxportal',
 	},
+	learningLink: 'https://qa.cte.systems/cx/#/',
 };
