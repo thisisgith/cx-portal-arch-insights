@@ -1016,11 +1016,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	private getSystemAdvisoryCount () {
 		const systemAdvisoryFilter =
 			_.find(this.getView('system').filters, { key: 'advisories' });
-		const hardwareView = this.getView('hardware');
-		const hardwareAdvisoryFilter =
-			_.find(hardwareView.filters, { key: 'advisories' });
-
-		return this.productAlertsService.getVulnerabilityCounts({
+		return this.productAlertsService.getSystemVulnerabilityCounts({
 			customerId: this.customerId,
 			solution: this.selectedSolutionName,
 			useCase: this.selectedTechnologyName,
@@ -1028,8 +1024,6 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		.pipe(
 			map((data: VulnerabilityResponse) => {
 				const systemSeries = [];
-				const hardwareSeries = [];
-
 				const bugs = _.get(data, 'bugs', 0);
 
 				if (bugs) {
@@ -1051,6 +1045,31 @@ export class AssetsComponent implements OnInit, OnDestroy {
 						value: security,
 					});
 				}
+				systemAdvisoryFilter.seriesData = systemSeries;
+				systemAdvisoryFilter.loading = false;
+			}),
+			catchError(err => {
+				systemAdvisoryFilter.loading = false;
+				this.logger.error('assets.component : getAdvisoryCount() ' +
+					`:: Error : (${err.status}) ${err.message}`);
+
+				return of({ });
+			}),
+		);
+	}
+	private getHardwareAdvisoryCount () {
+		const hardwareView = this.getView('hardware');
+		const hardwareAdvisoryFilter =
+			_.find(hardwareView.filters, { key: 'advisories' });
+
+		return this.productAlertsService.getHardwareVulnerabilityCounts({
+			customerId: this.customerId,
+			solution: this.selectedSolutionName,
+			useCase: this.selectedTechnologyName,
+		})
+		.pipe(
+			map((data: VulnerabilityResponse) => {
+				const hardwareSeries = [];
 
 				const notices = _.get(data, 'field-notices', 0);
 
@@ -1070,15 +1089,10 @@ export class AssetsComponent implements OnInit, OnDestroy {
 						},
 					);
 				}
-
-				systemAdvisoryFilter.seriesData = systemSeries;
-				systemAdvisoryFilter.loading = false;
-
 				hardwareAdvisoryFilter.seriesData = hardwareSeries;
 				hardwareAdvisoryFilter.loading = false;
 			}),
 			catchError(err => {
-				systemAdvisoryFilter.loading = false;
 				hardwareAdvisoryFilter.loading = false;
 				this.logger.error('assets.component : getAdvisoryCount() ' +
 					`:: Error : (${err.status}) ${err.message}`);
@@ -1422,6 +1436,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					this.getCoverageCounts(),
 					// this.getPartnerCounts(),
 					this.getSystemAdvisoryCount(),
+					this.getHardwareAdvisoryCount(),
 					this.getHardwareTypeCounts(),
 					this.getRoleCounts(),
 					this.getHardwareEOXCounts(),
