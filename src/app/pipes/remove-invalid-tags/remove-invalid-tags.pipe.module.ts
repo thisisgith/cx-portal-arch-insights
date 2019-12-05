@@ -15,8 +15,8 @@ export class RemoveInvalidTagsPipe implements PipeTransform {
 	 */
 	public transform (value) {
 		if (value) {
- 		let trueHtml = value.replace(/<beg/g, '&lt;beg');
-			trueHtml = trueHtml.replace(/<end/g, '&lt;end');
+ 			let trueHtml = value.replace(/</g, '&lt;');
+			trueHtml = trueHtml.replace(/>/g, '&gt;');
 
 			return trueHtml;
 		}
