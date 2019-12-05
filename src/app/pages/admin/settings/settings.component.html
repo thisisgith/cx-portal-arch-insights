@@ -21,7 +21,7 @@
 						<div
 							*ngIf="data.lastUploadDate"
 							class="text-small"
-							[innerText]="'_LastDataSent_' | i18n:(data.lastUploadDate | fromNow)">
+							[innerText]="'_LastDataSent_' | i18n:(data.lastUploadDate | fromNow)" [title]="data.lastUploadDate | dateTime">
 						</div>
 					</div>
 					<div class="col-2" [innerText]="data.ieVersion || ''"></div>
