@@ -140,7 +140,7 @@ describe('FaultsComponent', () => {
 			.toHaveBeenCalledTimes(3);
 
 		const eventsystemAffected = {
-			name: 'Systems Affected',
+			name: 'Affected Systems',
 			sortDirection: 'asc',
 		};
 		component.onTableSortingChanged(eventsystemAffected);

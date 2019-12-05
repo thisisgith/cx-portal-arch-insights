@@ -440,7 +440,7 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 		} else {
 			this.faultIcSettings.icName = this.searchIcParams.syslogsignature;
 			this.faultIcSettings.tacEnable = this.searchIcParams.enable
-				? this.FAULT_CONSTANT.DETECTED : this.FAULT_CONSTANT.AUTOMATED;
+				? this.FAULT_CONSTANT.AUTOMATED : this.FAULT_CONSTANT.DETECTED;
 			this.showSuccess.emit(this.faultIcSettings);
 			this.onAllPanelsClose();
 		}
@@ -474,7 +474,7 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 			case 'Product ID':
 				return 'productId';
 			case 'Software Type':
-				return 'os';
+				return 'swType';
 			case 'Case Number':
 				return 'tacCaseNo';
 			case 'Date and Time':
