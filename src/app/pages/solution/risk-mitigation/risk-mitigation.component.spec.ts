@@ -369,15 +369,14 @@ describe('RiskMitigationComponent', () => {
 	});
 
 	it('Load data for score cards', () => {
-		const assetsCountSpy = spyOn(component, 'getTotalAssetCount');
-		const crashesSpy = spyOn(component, 'getAllCrashesData');
-		const highCrashesSpy = spyOn(component, 'getHighCrashesDeviceData');
+		const assetsCountSpy = spyOn(component, 'getTotalAssetCount')
+		.and
+			.callThrough();
+		spyOn(riskMitigationService, 'getTotalAssestCount')
+			.and
+			.returnValue(of(RiskScenarios[7].scenarios.GET[0].response.body));
 		component.loadData();
 		expect(assetsCountSpy)
-			.toHaveBeenCalled();
-		expect(crashesSpy)
-			.toHaveBeenCalled();
-		expect(highCrashesSpy)
 			.toHaveBeenCalled();
 	});
 });
