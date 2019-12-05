@@ -100,7 +100,6 @@ describe('SyslogsMessagesComponent', () => {
 	});
 
 	it('should reset tableRow row data on panel close', () => {
-		fixture.detectChanges();
 		component.onSyslogPanelClose();
 		expect(component.selectedAsset)
 				.toBeUndefined();
@@ -109,7 +108,6 @@ describe('SyslogsMessagesComponent', () => {
 	});
 
 	it('should reset tableRow row data when clicking twice on table row', () => {
-		fixture.detectChanges();
 		const selectedRowData = {
 			active: false,
 			deviceCount: 1,

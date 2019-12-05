@@ -56,6 +56,8 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 	public timeRange = 1;
 	public solution = '';
 	public useCase = '';
+	public title = '';
+	public faultFlag = true;
 	public view: 'syslogMessage' | 'syslogAsset' = 'syslogMessage';
 	public countParams = { };
 	public appliedFilters = {
@@ -501,6 +503,7 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 	 */
 	public getSelectedSubFilters (key: string) {
 		const filter = _.find(this.filters, { key });
+		this.title = _.get(filter, 'title');
 		if (filter) {
 			return _.filter(filter.seriesData, 'selected');
 		}
@@ -528,9 +531,11 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 	 */
 	public selectVisualLabel (index: number) {
 		 if (index === 0) {
+			this.faultFlag = true;
 			this.visualLabels[0].active = true;
 			this.visualLabels[1].active = false;
 		} else {
+			this.faultFlag = false;
 			this.visualLabels[0].active = false;
 			this.visualLabels[1].active = true;
 			this.appliedFilters.timeRange = 1;
@@ -544,5 +549,23 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 	public ngOnDestroy () {
 		this.destroy$.next();
 		this.destroy$.complete();
+	}
+
+	/**
+	 * On subfilter close
+	 * @param event subfilter
+	 */
+	public onSubfilterClose (event) {
+		const eventKey = _.get(event, 'key');
+		if (this.faultFlag && (eventKey === 'afmSeverity' || eventKey === 'timeRange')) {
+			const filter = _.find(this.filters, { key: eventKey });
+			_.each(filter.seriesData, f => {
+				f.selected = false;
+			});
+			(eventKey === 'afmSeverity') ?
+				this.appliedFilters.afmSeverity = '' : this.appliedFilters.timeRange = 30;
+			this.appliedFilters = _.cloneDeep(this.appliedFilters);
+		   	filter.selected = _.some(filter.seriesData, 'selected');
+		}
 	}
 }
