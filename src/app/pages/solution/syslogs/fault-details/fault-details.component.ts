@@ -438,7 +438,7 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 		if (this.icSettingsResponse.statusCode.toUpperCase() !== 'OK') {
 			_.invoke(this.alert, 'show', this.icSettingsResponse.statusMessage, 'danger');
 		} else {
-			this.faultIcSettings.icName = this.searchIcParams.syslogsignature;
+			this.faultIcSettings.icName = this.fault.title;
 			this.faultIcSettings.tacEnable = this.searchIcParams.enable
 				? this.FAULT_CONSTANT.AUTOMATED : this.FAULT_CONSTANT.DETECTED;
 			this.showSuccess.emit(this.faultIcSettings);
