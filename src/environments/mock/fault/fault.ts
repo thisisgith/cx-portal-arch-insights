@@ -179,7 +179,7 @@ const getFaultFilterData: FaultFilterData = {
 					value: '10101',
 				},
 			],
-			os: [
+			swType: [
 				{
 					count: 1,
 					value: 'mac',
@@ -193,7 +193,7 @@ const getFaultFilterData: FaultFilterData = {
 					value: '10101',
 				},
 			],
-			os: [
+			swType: [
 				{
 					count: 1,
 					value: 'mac',

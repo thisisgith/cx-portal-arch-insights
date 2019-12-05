@@ -23,7 +23,7 @@ import {
 	FaultAffectedSystemDetails,
 	InventoryService,
 	FaultProductId,
-	FaultOS,
+	FaultSwType,
 	RacetrackSolution,
 	RacetrackTechnology,
 	FaultICSearchParams,
@@ -75,7 +75,7 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 	public affectedSystemLoading = false;
 	public alert: any = { };
 	public productID: FaultProductId[];
-	public software: FaultOS[];
+	public software: FaultSwType[];
 	public serialNumber: string;
 	public icSettingsResponse: FaultIcSettings;
 	public timeRange: any[] = [
@@ -233,7 +233,7 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 			.pipe(takeUntil(this.destroy$),
 			map((response: FaultFilterData) => {
 				this.productID = _.get(response, ['responseData', 0, 'productId']);
-				this.software = _.get(response, ['responseData', 1, 'os']);
+				this.software = _.get(response, ['responseData', 1, 'swType']);
 				this.loading = false;
 			}),
 			catchError(err => {

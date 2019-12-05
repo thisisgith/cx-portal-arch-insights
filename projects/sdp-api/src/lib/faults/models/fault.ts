@@ -142,7 +142,7 @@ export interface FaultAffectedSystemDetails {
  */
 export interface FaultFilter {
 	productId: FaultProductId[];
-	os: FaultOS[];
+	swType: FaultSwType[];
 }
 
 /**
@@ -162,7 +162,7 @@ export interface FaultProductId {
  * @exports
  * @interface FaultOS
  */
-export interface FaultOS {
+export interface FaultSwType {
 	value: string;
 	count: number;
 }
