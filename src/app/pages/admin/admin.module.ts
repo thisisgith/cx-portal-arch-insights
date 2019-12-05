@@ -9,18 +9,15 @@ import {
 } from '@cisco-ngx/cui-components';
 import { CommonModule } from '@angular/common';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
-import { ControlPointsModule } from '@sdp-api';
+import { ControlPointsModule, CanDeactivateGuard } from '@sdp-api';
 import { AdminAssetsComponent, AdminAssetsModule } from './assets';
 import { SettingsComponent, SettingsModule } from './settings';
 import { PoliciesComponent, PoliciesModule } from './policies';
 import { UsersComponent, UsersModule } from './users';
 import { AdminComplienceComponent, AdminComplienceModule } from './complience';
 import { ChangePasswordComponent, ChnagePasswordModule } from './change-password';
-
 import { environment } from '@environment';
 import { RouteGuard } from './route-guard';
-import {CanDeactivateGuard} from '@sdp-api';
-
 /**
  * Child routes for Settings Module for lazy loading
  */
@@ -33,7 +30,7 @@ const childRoutes: Routes = [
 		canActivate: [RouteGuard],
 		component: AdminComplienceComponent,
 		path: 'compliance',
-		canDeactivate: [CanDeactivateGuard]
+		canDeactivate: [CanDeactivateGuard],
 	},
 	{
 		component: SettingsComponent,
@@ -88,6 +85,6 @@ const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 		SettingsModule,
 		UsersModule,
 	],
-	providers:[CanDeactivateGuard]
+	providers: [CanDeactivateGuard],
 })
 export class AdminModule { }
