@@ -224,8 +224,6 @@ export class CrashedSystemsGridComponent implements OnChanges {
 		};
 		this.paginationValue.emit(paginationValueProp);
 	 }
-
-
 	/**
 	 * This will sort the records absed on column
 	 *
@@ -234,10 +232,10 @@ export class CrashedSystemsGridComponent implements OnChanges {
 	 */
 	public onTableSortingChanged (event) {
 		this.isLoading = true;
-		this.sort(event, this.crashesSystemsGridOptions.columns, this.crashedSystemsGridDetails.tableData);
+		this.sortTableData(event, this.crashesSystemsGridOptions.columns, this.crashedSystemsGridDetails.tableData);
 		setTimeout(() => {
 			this.isLoading = false;
-		}, 100);
+		}, 1000);
 	}
 
 	/**
@@ -247,7 +245,7 @@ export class CrashedSystemsGridComponent implements OnChanges {
 	 * @param tableData The data to sort
 	 * @returns sortDataByField
 	 */
-	public sort (sortField: SortableField, allFields: SortableField[], tableData: any[]) {
+	public sortTableData (sortField: any, allFields: SortableField[], tableData: any[]) {
 		if (!sortField.sortable) {
 			return tableData;
 		}
@@ -272,7 +270,6 @@ export class CrashedSystemsGridComponent implements OnChanges {
 
 				return valA.toLowerCase() > valB.toLowerCase() ? 1 : valA.toLowerCase() < valB.toLowerCase() ? -1 : 0;
 			}
-			this.crashedSystemsGridDetails.tableData = tableData;
 		});
 	}
 	/**
