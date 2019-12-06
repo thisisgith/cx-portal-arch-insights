@@ -272,7 +272,9 @@ export class CrashedSystemsGridComponent implements OnChanges {
 				const valB = typeof b[sortField.key] !== 'boolean' ?
 						b[sortField.key] : b[sortField.key] ? 0 : 1;
 
-				return valA.toLowerCase() > valB.toLowerCase() ? 1 : valA.toLowerCase() < valB.toLowerCase() ? -1 : 0;
+				return (valA && valB)  ?
+				(valA.toLowerCase() > valB.toLowerCase() ? 1 : valA.toLowerCase() < valB.toLowerCase() ? -1 : 0)
+				: 0;
 			}
 		});
 	}
