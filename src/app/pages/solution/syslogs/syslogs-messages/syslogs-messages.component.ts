@@ -111,6 +111,8 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 		if (currentFilter && !changes.sysFilter.firstChange) {
 			this.syslogsParams.syslogSeverity = currentFilter.severity;
 			this.syslogsParams.days = currentFilter.timeRange;
+			this.syslogsParams.pageNo = 1;
+			this.tableOffset = 0;
 			this.getSyslogsData();
 		}
 
@@ -172,6 +174,7 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 			  map((gridData: SyslogResponseData) => {
 				this.tableData = gridData.responseData;
 				this.totalItems = gridData.count;
+				this.tableStartIndex = (this.tableOffset * 10) + 1;
 				this.tableEndIndex = (this.tableLimit * this.syslogsParams.pageNo);
 				if (this.tableEndIndex > this.totalItems) {
 					this.tableEndIndex = this.totalItems;
@@ -232,6 +235,8 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 		this.sortField = this.getSortKey(event.name);
 		this.syslogsParams.sortField = this.sortField;
 		this.syslogsParams.sortOrder = event.sortDirection;
+		this.syslogsParams.pageNo = 1;
+		this.tableOffset = 0;
 		this.getSyslogsData();
 	}
 
