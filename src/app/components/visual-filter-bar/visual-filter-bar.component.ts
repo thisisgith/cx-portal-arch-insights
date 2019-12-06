@@ -25,7 +25,6 @@ export class VisualFilterBarComponent implements AfterViewChecked, OnInit {
 	@ViewChild('carousel', { static: false }) public carouselRef: ElementRef;
 	@Input() public filters: VisualFilter[];
 	@Input() public filterCollapse = false;
-	public isOverflowing = false;
 	/* starting index for the carousel. If no custom card is provided,
 	we fill that static slot with the first card,
 	so the carousel starts at the 2nd one (index 1) */
@@ -50,13 +49,6 @@ export class VisualFilterBarComponent implements AfterViewChecked, OnInit {
 		/* Don't do anything if filters are hidden */
 		if (!this.carouselRef) {
 			return;
-		}
-		const element = this.carouselRef.nativeElement;
-		const oldValue = this.isOverflowing;
-		this.isOverflowing = (element.scrollWidth > element.clientWidth);
-		// Only trigger extra change detection when the value has actually changed
-		if (this.isOverflowing !== oldValue) {
-			this.cdr.detectChanges();
 		}
 	}
 
