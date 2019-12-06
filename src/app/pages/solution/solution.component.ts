@@ -429,7 +429,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 				const total = _.reduce(counts, (memo, value) => (memo + value), 0);
 
 				assetsFacet.data = {
-					gaugePercent: ((covered / total) * 100),
+					gaugePercent: total === 0 ? 0 : ((covered / total) * 100),
 				};
 
 				assetsFacet.loading = false;
@@ -820,5 +820,13 @@ export class SolutionComponent implements OnInit, OnDestroy {
 			document.getElementById('slideout').classList
 				.remove('expand-on-load');
 		}, { once: true, capture: true });
+	}
+
+	/**
+	 * Close the dropdowns if clicked outside of the dropdown
+	 * @param clickedOutsideDropdown clicked outside of the dropdown
+	 */
+	public clickOutsideDropdown (clickedOutsideDropdown: 'smartAccount' | 'solution' | 'technology') {
+		this.status.dropdowns[clickedOutsideDropdown] = false;
 	}
 }

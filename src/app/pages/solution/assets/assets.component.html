@@ -119,14 +119,6 @@
 			data-auto-id="AssetsTable">
 			<thead data-auto-id="AssetsTableHeader">
 				<tr>
-					<th>
-						<label class="checkbox">
-							<input type="checkbox" [checked]="selectedView.allAssetsSelected"
-								(click)="onAllSelect(!selectedView.allAssetsSelected)" data-auto-id="AllAssetSelect" />
-							<span class="checkbox__input" data-auto-id="AllAssetSelectCheckbox">
-							</span>
-						</label>
-					</th>
 					<th attr.data-auto-id="InventoryHeader-{{ column.name }}"
 						*ngFor="let column of selectedView.table.columns"
 						[ngClass]="{ 'sortable': column.sortable, 'sorted': column.sorting }"
@@ -144,15 +136,6 @@
 				<tr *ngFor="let item of selectedView.data"
 					attr.data-auto-id="InventoryItem-{{ item.data.serialNumber }}"
 					[ngClass]="{ 'active': item.details, 'row-disabled': !item.data.cxLevel }">
-					<td attr.data-auto-id="InventoryItemSelectTD-{{ item.data.serialNumber }}">
-						<label class="checkbox">
-							<input type="checkbox" [checked]="item.selected" (click)="onClick($event, 'checkbox', item)"
-								attr.data-auto-id="InventoryItemSelect-{{ item.data.serialNumber }}" />
-							<span class="checkbox__input"
-								attr.data-auto-id="InventoryItemCheckbox-{{ item.data.serialNumber }}">
-							</span>
-						</label>
-					</td>
 					<td *ngFor="let column of selectedView.table.columns" [ngStyle]="{ 'width': column.width }"
 						attr.data-auto-id="InventoryItemClickHandler-{{ item.data.serialNumber }}"
 						(click)="column.click ? onClick($event, 'menu') : onClick($event, 'item', item)">
@@ -175,7 +158,7 @@
 	<div class="panel panel--ltgray base-padding-right base-padding-left"
 		*ngIf="selectedView?.table && selectedView?.data?.length && viewType === 'grid'">
 		<div class="row">
-			<div *ngFor="let item of selectedView.data" class="col-md-3 half-margin-bottom half-margin-top flex">
+			<div *ngFor="let item of selectedView.data" class="col-md-3 card-width half-margin-bottom half-margin-top flex">
 				<ng-container *ngTemplateOutlet="cardTemplate; context: { item: item }"></ng-container>
 			</div>
 		</div>
