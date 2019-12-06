@@ -30,7 +30,6 @@ export class ColumnChartComponent implements OnChanges {
 	private buildGraph () {
 		const data = [];
 		const categories = [];
-		let  previousPoint;
 		_.each(this.seriesData, d => {
 			data.push({
 				color: '#92dde4',
@@ -81,9 +80,7 @@ export class ColumnChartComponent implements OnChanges {
 					cursor: 'pointer',
 					point: {
 						events: {
-							click: event => {
-								this.selectSubfilter(event);
-							},
+							click: event => this.selectSubfilter(event),
 						},
 					},
 				},
