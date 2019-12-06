@@ -1542,6 +1542,7 @@
 	"_SyslogstoAFM_" : "Move to Faults",
 	"_SyslogSuccessMessage_" : "{0} was successfully moved to fault monitoring status",
 	"_SyslogsGenericError_": "Internal Error Occurred. Please try again later.",
+	"_SystemEvents_": "System Events",
 	"_System_": "System",
 	"_SystemHostname_": "System Hostname",
 	"_SystemInfo_": "System Info",

@@ -14,7 +14,7 @@ describe('Insights Spec', () => {
 		it('PBC-635 Verify Insights Tab for cxlevel 3', () => {
 			// Since svorma1 user is cxlevel 3 - it will see all items below
 			cy.getByAutoId('ConfigurationTabNav').should('exist');
-			cy.getByAutoId('SyslogsTabNav').should('exist').should('contain', i18n._Syslogs_);
+			cy.getByAutoId('SyslogsTabNav').should('exist').should('contain', i18n._SystemEvents_);
 			cy.getByAutoId('Architecture ReviewTabNav').should('exist');
 			cy.getByAutoId('SoftwareTabNav').click({ force: true });
 			cy.getByAutoId('ContactExpert').should('exist').should('contain', i18n._CSRequestExpert_);

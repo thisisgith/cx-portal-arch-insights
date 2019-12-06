@@ -821,4 +821,12 @@ export class SolutionComponent implements OnInit, OnDestroy {
 				.remove('expand-on-load');
 		}, { once: true, capture: true });
 	}
+
+	/**
+	 * Close the dropdowns if clicked outside of the dropdown
+	 * @param clickedOutsideDropdown clicked outside of the dropdown
+	 */
+	public clickOutsideDropdown (clickedOutsideDropdown: 'smartAccount' | 'solution' | 'technology') {
+		this.status.dropdowns[clickedOutsideDropdown] = false;
+	}
 }
