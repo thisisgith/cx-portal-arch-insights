@@ -160,6 +160,18 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 				}
 				if (violationDetails.data && _.size(violationDetails.data) > 0) {
 					this.impactedDeviceDetails = violationDetails.data.impactedAssets;
+					if (this.impactedDeviceDetails) {
+						this.impactedDeviceDetails.forEach(assetPolicyDesc => {
+							const assetPolicyDescription = assetPolicyDesc.violations;
+							assetPolicyDescription.forEach(deviceSuggestedFix => {
+								const suggestedFix =
+								_.get(deviceSuggestedFix, ['suggestedFix'], '')
+								.replace(/</g, '&lt;')
+								.replace(/>/g, '&gt;');
+								_.set(deviceSuggestedFix, ['suggestedFix'], suggestedFix);
+							});
+						});
+					}
 					this.tableConfig.totalItems = this.impactedDeviceDetails.length;
 					if (this.impactedDeviceDetails.length > 0) {
 						this.apiNoData = false;
@@ -229,7 +241,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 				{
 					key: 'violationCount',
 					name: I18n.get('_RccRuleViolations_'),
-					sortable: false,
+					sortable: true,
 				},
 			],
 			dynamicData: false,
@@ -302,6 +314,18 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 		.subscribe(violationDetails => {
 			this.tableConfig.tableOffset = 0;
 			this.impactedDeviceDetails = violationDetails.data.impactedAssets;
+			if (this.impactedDeviceDetails) {
+				this.impactedDeviceDetails.forEach(assetPolicyDesc => {
+					const assetPolicyDescription = assetPolicyDesc.violations;
+					assetPolicyDescription.forEach(deviceSuggestedFix => {
+						const suggestedFix =
+						_.get(deviceSuggestedFix, ['suggestedFix'], '')
+							.replace(/</g, '&lt;')
+							.replace(/>/g, '&gt;');
+						_.set(deviceSuggestedFix, ['suggestedFix'], suggestedFix);
+					});
+				});
+			}
 			this.selectionLoading = false;
 			this.errorResult = false;
 			this.tableConfig.totalItems = this.impactedDeviceDetails.length;

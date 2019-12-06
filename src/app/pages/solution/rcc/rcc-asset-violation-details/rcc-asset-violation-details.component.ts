@@ -177,6 +177,14 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 							.replace(/\&lt;/g, '<')
 							.replace(/\n/g, '<br>');
 						_.set(assetPolicyDesc, ['ruleDesc'], ruleDesc);
+						const assetPolicyDescription = assetPolicyDesc.conditionList;
+						assetPolicyDescription.forEach(deviceSuggestedFix => {
+							const suggestedFix =
+							_.get(deviceSuggestedFix, ['suggestedFix'], '')
+							.replace(/</g, '&lt;')
+							.replace(/>/g, '&gt;');
+							_.set(deviceSuggestedFix, ['suggestedFix'], suggestedFix);
+						});
 					});
 					this.totalItems = this.rccAssetPolicyTableData.length;
 					if (this.rccAssetPolicyTableData.length > 0) {
@@ -231,6 +239,14 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 								.replace(/\&lt;/g, '<')
 								.replace(/\n/g, '<br>');
 							_.set(assetPolicyDesc, ['ruleDesc'], ruleDesc);
+							const assetPolicyDescription = assetPolicyDesc.conditionList;
+							assetPolicyDescription.forEach(deviceSuggestedFix => {
+								const suggestedFix =
+								_.get(deviceSuggestedFix, ['suggestedFix'], '')
+									.replace(/</g, '&lt;')
+									.replace(/>/g, '&gt;');
+								_.set(deviceSuggestedFix, ['suggestedFix'], suggestedFix);
+							});
 						});
 						if (this.rccAssetPolicyTableData) {
 							this.totalItems = _.size(this.rccAssetPolicyTableData);
@@ -324,7 +340,7 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 				{
 					key: 'violationCount',
 					name: I18n.get('_RccRuleViolations_'),
-					sortable: false,
+					sortable: true,
 					width: '3%',
 				},
 			],
