@@ -47,6 +47,7 @@ export const environment = {
 			'management/network-automation-and-management/dna-center/1-4/user_guide/' +
 			'b_cisco_dna_center_ug_1_4/b_cisco_dna_center_ug_1_4_chapter_01001.html',
 	},
+	learningLink: 'https://qa.cte.systems/cx/#/',
 	mapboxToken:
 	'pk.eyJ1IjoibWljaGhhcnQiLCJhIjoiY2szaGtvbnc1MGRxODNkcWc4a3dodWxjdSJ9.55emo88LB7ahEdrdkELIcQ',
 	mock: [],
