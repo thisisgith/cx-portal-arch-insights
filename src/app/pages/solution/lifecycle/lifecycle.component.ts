@@ -248,7 +248,13 @@ export class LifecycleComponent implements OnDestroy {
 	 */
 	public readonly pgNumRows = 40;
 	public categoryOptions: any [];
-	public pgCategoryOptions: any [];
+	public productGuidesCopy: SuccessPath [];
+	public pgCategoryOptions: any [] = [
+		{
+			name: 'Not selected',
+			value: 'Not selected',
+		},
+	];
 	public accStatusOptions = [
 		{
 			name: I18n.get('_Recommended_'),
@@ -980,6 +986,8 @@ export class LifecycleComponent implements OnDestroy {
 		this.moreATXSelected = null;
 		this.atxMoreClicked = false;
 		this.sessionSelected = null;
+		this.selectedFilterForPG = '';
+		this.componentData.productGuides.filter = '';
 	}
 
 	/**
@@ -1099,12 +1107,20 @@ export class LifecycleComponent implements OnDestroy {
 		}
 
 		if (type === 'PG') {
-			// Swallow the responses.
-			this.loadProductGuides()
-				.subscribe(
-					() => undefined,
-					() => undefined,
-				);
+			this.filterProductGuides();
+		}
+	}
+
+	/**
+	 * Filters the product guides
+	 */
+	private filterProductGuides () {
+		if (this.selectedFilterForPG && this.selectedFilterForPG !== 'Not selected') {
+			this.componentData.productGuides.items =
+				_.filter(this.productGuidesCopy,
+					{ archetype: this.selectedFilterForPG });
+		} else {
+			this.componentData.productGuides.items = this.productGuidesCopy;
 		}
 	}
 
@@ -1693,8 +1709,8 @@ export class LifecycleComponent implements OnDestroy {
 	 * Retrieves the current filter for Product Guides.
 	 */
 	private get selectedFilterForPG () {
-		if (this.componentData.productGuides.filter === 'Not selected') {
-			return '';
+		if (!this.componentData.productGuides.filter) {
+			return 'Not selected';
 		}
 
 		return this.componentData.productGuides.filter;
@@ -1741,6 +1757,7 @@ export class LifecycleComponent implements OnDestroy {
 			map((result: SuccessPathsResponse) => {
 				if (result.items) {
 					_.set(this.componentData.productGuides, ['items'], result.items);
+					this.productGuidesCopy = this.componentData.productGuides.items;
 					const resultItems = _.uniq(_.map(result.items, 'archetype'));
 					_.set(this.componentData.productGuides, ['archetypes'],
 						resultItems);
@@ -1751,7 +1768,6 @@ export class LifecycleComponent implements OnDestroy {
 							name: item,
 							value: item,
 						}));
-					this.selectedFilterForPG = this.pgCategoryOptions[0].value;
 				}
 				const totalCount: number = _.get(result, ['totalCount']);
 				_.set(this.componentData.productGuides, ['totalCount'], totalCount);
@@ -1823,9 +1839,10 @@ export class LifecycleComponent implements OnDestroy {
 				map((result: SuccessPathsResponse) => {
 					if (result.items) {
 						const newItemsList
-							= _.concat(this.componentData.productGuides.items,
+							= _.concat(this.productGuidesCopy,
 								result.items);
-						this.componentData.productGuides.items = newItemsList;
+						this.productGuidesCopy = newItemsList;
+						this.filterProductGuides();
 					}
 
 					this.status.loading.productGuides.more = false;
