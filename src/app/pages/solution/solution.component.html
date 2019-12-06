@@ -71,7 +71,7 @@
 					[ngClass]="{'active': status.dropdowns.smartAccount }"
 					(click)="changeDropdownSelection('smartAccount')"
 				>
-					<a class="text-color-dkgray text-size-18" [innerText]="activeSmartAccount.companyName"></a>
+					<a appClickOutside (clickOutside)="clickOutsideDropdown('smartAccount')" class="text-color-dkgray text-size-18" [innerText]="activeSmartAccount.companyName"></a>
 					<div class="dropdown__menu">
 						<a *ngFor="let smartAccount of smartAccounts"
 							attr.data-auto-id="SmartAccountDropdown-{{ smartAccount.companyName }}"
@@ -92,7 +92,7 @@
 					[ngClass]="{'active': status.dropdowns.solution }"
 					(click)="changeDropdownSelection('solution')"
 				>
-					<a class="text-color-dkgray text-size-18" [innerText]="selectedSolution.name"></a>
+					<a appClickOutside (clickOutside)="clickOutsideDropdown('solution')" class="text-color-dkgray text-size-18" [innerText]="selectedSolution.name"></a>
 					<div class="dropdown__menu">
 						<a
 							*ngFor="let solution of solutions"
@@ -121,7 +121,7 @@
 					[ngClass]="{'active': status.dropdowns.technology }"
 					(click)="changeDropdownSelection('technology')"
 				>
-					<a class="text-color-dkgray text-size-18" [innerText]="selectedTechnology.name">
+					<a appClickOutside (clickOutside)="clickOutsideDropdown('technology')" class="text-color-dkgray text-size-18" [innerText]="selectedTechnology.name">
 					</a>
 					<div class="dropdown__menu">
 						<a *ngFor="let technology of technologies"
