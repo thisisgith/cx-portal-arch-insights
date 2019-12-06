@@ -244,17 +244,30 @@ export class RccComponent implements OnInit, OnDestroy {
 	 * to check the opt-in/opt-out status for loggedin user
 	 */
 	public getOptInDetail () {
+		this.loading = true;
+		this.filterLoading = true;
 		this.assetsTotalCount = 0;
 		this.policyViolationsTotalCount = 0;
 		this.isAssetView = false;
 		this.optInStatus = false;
 		this.runOnce = false;
 		this.showRunningBanner = false;
+		this.violationGridObj.policyType = null;
+		this.violationGridObj.severity = null;
+		this.allAssetsSelected = false;
+		this.searchStr = null;
+		this.searchInput = '';
+		this.assetGridObj.osType = null;
+		this.assetGridObj.severity = null;
+		this.assetGridObj.searchParam = null;
+		this.violationGridObj.search = null;
+		this.violationGridObj.pageIndex = 1;
+		this.violationGridObj.sortName = null;
+		this.violationGridObj.sortOrder = null;
 		this.policyViolationsGridData = [];
 		this.tableAssetDataSample = [];
 		this.filterObj = [];
 		this.assetFilterObj = [];
-		this.loading = true;
 		this.RccTrackService.
 		optInDetail({ customerId: this.customerId })
 		.pipe(takeUntil(this.destroy$))
