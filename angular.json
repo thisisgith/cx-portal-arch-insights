@@ -7,19 +7,16 @@
 			"schematics": {},
 			"architect": {
 				"build": {
-					"builder": "@angular-devkit/build-angular:browser",
+					"builder": "@angular-builders/custom-webpack:browser",
 					"configurations": {
 						"production": {
 							"aot": true,
-							"budgets": [
-								{
-									"maximumError": "10mb",
-									"maximumWarning": "2mb",
-									"type": "initial"
-								}
-							],
-							"fileReplacements": [
-								{
+							"budgets": [{
+								"maximumError": "10mb",
+								"maximumWarning": "2mb",
+								"type": "initial"
+							}],
+							"fileReplacements": [{
 									"replace": "src/environments/environment.ts",
 									"with": "src/environments/environment.prod.ts"
 								},
@@ -54,15 +51,12 @@
 						},
 						"stage": {
 							"aot": true,
-							"budgets": [
-								{
-									"maximumError": "10mb",
-									"maximumWarning": "2mb",
-									"type": "initial"
-								}
-							],
-							"fileReplacements": [
-								{
+							"budgets": [{
+								"maximumError": "10mb",
+								"maximumWarning": "2mb",
+								"type": "initial"
+							}],
+							"fileReplacements": [{
 									"replace": "src/environments/environment.ts",
 									"with": "src/environments/environment.stage.ts"
 								},
@@ -94,15 +88,12 @@
 						},
 						"tie": {
 							"aot": true,
-							"budgets": [
-								{
-									"maximumError": "10mb",
-									"maximumWarning": "2mb",
-									"type": "initial"
-								}
-							],
-							"fileReplacements": [
-								{
+							"budgets": [{
+								"maximumError": "10mb",
+								"maximumWarning": "2mb",
+								"type": "initial"
+							}],
+							"fileReplacements": [{
 									"replace": "src/environments/environment.ts",
 									"with": "src/environments/environment.tie.ts"
 								},
@@ -137,15 +128,12 @@
 						},
 						"cxportal-qa": {
 							"aot": true,
-							"budgets": [
-								{
-									"maximumError": "10mb",
-									"maximumWarning": "2mb",
-									"type": "initial"
-								}
-							],
-							"fileReplacements": [
-								{
+							"budgets": [{
+								"maximumError": "10mb",
+								"maximumWarning": "2mb",
+								"type": "initial"
+							}],
+							"fileReplacements": [{
 									"replace": "src/environments/environment.ts",
 									"with": "src/environments/environment.cxcloud-qa.ts"
 								},
@@ -177,15 +165,12 @@
 						},
 						"cxportal-lt": {
 							"aot": true,
-							"budgets": [
-								{
-									"maximumError": "10mb",
-									"maximumWarning": "2mb",
-									"type": "initial"
-								}
-							],
-							"fileReplacements": [
-								{
+							"budgets": [{
+								"maximumError": "10mb",
+								"maximumWarning": "2mb",
+								"type": "initial"
+							}],
+							"fileReplacements": [{
 									"replace": "src/environments/environment.ts",
 									"with": "src/environments/environment.cxcloud-lt.ts"
 								},
@@ -217,6 +202,12 @@
 						}
 					},
 					"options": {
+						"customWebpackConfig": {
+							"path": "./webpack.config.js",
+							"mergeStrategies": {
+								"module.rules": "prepend"
+							}
+						},
 						"assets": [
 							"src/favicon.png",
 							"src/assets"
@@ -301,7 +292,7 @@
 						"tsConfig": "projects/sdp-api/tsconfig.lib.json",
 						"project": "projects/sdp-api/ng-package.json"
 					},
-				"configurations": {
+					"configurations": {
 						"production": {
 							"project": "projects/sdp-api/ng-package.json"
 						}
