@@ -162,7 +162,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 	}
 	@ViewChild('contentContainer', { static: false }) private contentContainer: ElementRef;
 	@ViewChild('borgBugSeverityTemplate', { static: true }) private borgBugSeverityTemplate: TemplateRef<{ }>;
-
+	@ViewChild('cdetsHealineTemplate', { static: true }) private cdetsHealineTemplate: TemplateRef<{ }>;
 	constructor (
 		private diagnosticsService: DiagnosticsService,
 		private logger: LogService,
@@ -433,6 +433,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 							key: 'title',
 							name: I18n.get('_Title_'),
 							sortable: true,
+							template: this.cdetsHealineTemplate,
 							value: 'title',
 						},
 						{
