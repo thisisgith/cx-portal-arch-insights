@@ -57,6 +57,7 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 	public errorResult = false;
 	public alert: any = { };
 	private destroy$ = new Subject();
+	public suggestedFix = [];
 	@Input() public selectedAssetData: any;
 	public assetModalFilter: RccAssetSelectReq;
 	@ViewChild('assetRowWellTemplate', { static: true })
@@ -178,13 +179,7 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 							.replace(/\n/g, '<br>');
 						_.set(assetPolicyDesc, ['ruleDesc'], ruleDesc);
 						const assetPolicyDescription = assetPolicyDesc.conditionList;
-						assetPolicyDescription.forEach(deviceSuggestedFix => {
-							const suggestedFix =
-							_.get(deviceSuggestedFix, ['suggestedFix'], '')
-							.replace(/</g, '&lt;')
-							.replace(/>/g, '&gt;');
-							_.set(deviceSuggestedFix, ['suggestedFix'], suggestedFix);
-						});
+						this.getFormattedRec(assetPolicyDescription);
 					});
 					this.totalItems = this.rccAssetPolicyTableData.length;
 					if (this.rccAssetPolicyTableData.length > 0) {
@@ -204,6 +199,24 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 						'rcc-asset-violation-details.component : loadData() ' +
 					`:: Error : (${error.status}) ${error.message}`);
 				});
+	}
+	/**
+	 * To be called on policy group selection
+	 * @param value array contains the suggested fix field
+	 * @returns formatted suggested fix value
+	 */
+	public getFormattedRec (value) {
+		if (value) {
+			value.forEach(deviceSuggestedFix => {
+				this.suggestedFix =
+				_.get(deviceSuggestedFix, ['suggestedFix'], '')
+				.replace(/</g, '&lt;')
+				.replace(/>/g, '&gt;');
+				_.set(deviceSuggestedFix, ['suggestedFix'], this.suggestedFix);
+			});
+		}
+
+		return this.suggestedFix;
 	}
 	/**
 	 * method to return table information
@@ -240,13 +253,7 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 								.replace(/\n/g, '<br>');
 							_.set(assetPolicyDesc, ['ruleDesc'], ruleDesc);
 							const assetPolicyDescription = assetPolicyDesc.conditionList;
-							assetPolicyDescription.forEach(deviceSuggestedFix => {
-								const suggestedFix =
-								_.get(deviceSuggestedFix, ['suggestedFix'], '')
-									.replace(/</g, '&lt;')
-									.replace(/>/g, '&gt;');
-								_.set(deviceSuggestedFix, ['suggestedFix'], suggestedFix);
-							});
+							this.getFormattedRec(assetPolicyDescription);
 						});
 						if (this.rccAssetPolicyTableData) {
 							this.totalItems = _.size(this.rccAssetPolicyTableData);

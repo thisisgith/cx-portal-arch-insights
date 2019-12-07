@@ -46,6 +46,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 	public impactedDeviceDetails = [];
 	public tableColumnHeaders = [];
 	public violationsDetailsTableColumnHeaders = [];
+	public suggestedFix = [];
 	@Input() public selectedViolationData: any;
 	@Input('policyViolationInfo') public policyViolationInfo: any;
 	@ViewChild('policyRowWellTemplate', { static: true })
@@ -163,13 +164,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 					if (this.impactedDeviceDetails) {
 						this.impactedDeviceDetails.forEach(assetPolicyDesc => {
 							const assetPolicyDescription = assetPolicyDesc.violations;
-							assetPolicyDescription.forEach(deviceSuggestedFix => {
-								const suggestedFix =
-								_.get(deviceSuggestedFix, ['suggestedFix'], '')
-								.replace(/</g, '&lt;')
-								.replace(/>/g, '&gt;');
-								_.set(deviceSuggestedFix, ['suggestedFix'], suggestedFix);
-							});
+							this.getFormattedRec(assetPolicyDescription);
 						});
 					}
 					this.tableConfig.totalItems = this.impactedDeviceDetails.length;
@@ -189,6 +184,24 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 					'RccDeviceViolationDetailsComponent : loadData() ' +
 				`:: Error : (${error.status}) ${error.message}`);
 			});
+	}
+	/**
+	 * To be called on policy group selection
+	 * @param value array contains the suggested fix field
+	 * @returns formatted suggested fix value
+	 */
+	public getFormattedRec (value) {
+		if (value) {
+			value.forEach(deviceSuggestedFix => {
+				this.suggestedFix =
+				_.get(deviceSuggestedFix, ['suggestedFix'], '')
+				.replace(/</g, '&lt;')
+				.replace(/>/g, '&gt;');
+				_.set(deviceSuggestedFix, ['suggestedFix'], this.suggestedFix);
+			});
+		}
+
+		return this.suggestedFix;
 	}
 	/**
 	 * OnInit lifecycle hook
@@ -317,13 +330,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 			if (this.impactedDeviceDetails) {
 				this.impactedDeviceDetails.forEach(assetPolicyDesc => {
 					const assetPolicyDescription = assetPolicyDesc.violations;
-					assetPolicyDescription.forEach(deviceSuggestedFix => {
-						const suggestedFix =
-						_.get(deviceSuggestedFix, ['suggestedFix'], '')
-							.replace(/</g, '&lt;')
-							.replace(/>/g, '&gt;');
-						_.set(deviceSuggestedFix, ['suggestedFix'], suggestedFix);
-					});
+					this.getFormattedRec(assetPolicyDescription);
 				});
 			}
 			this.selectionLoading = false;
