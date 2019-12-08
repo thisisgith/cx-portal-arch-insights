@@ -27,12 +27,11 @@ export class ApixAccountInterceptor implements HttpInterceptor {
 	];
 
 	private pathsToExcludeCxLevelAndSaId = [
-		new RegExp('/(customerportal|cxportal)/inventory/v1/assets/hardware$'),
-		new RegExp('/(customerportal|cxportal)/inventory/v1/assets/system$'),
-		new RegExp('/(customerportal|cxportal)/ndgw/v1/device/connectivity/status/[^/]+/[^/]+$'),
-		new RegExp('/(customerportal|cxportal)/ndgw/v1/device/scan-request/status/[^/]+/[^/]+$'),
-		new RegExp('/(customerportal|cxportal)/ndgw/v1/device/transactions/status/[^/]+/[^/]+$'),
+		new RegExp('/(customerportal|cxportal)/inventory/'),
+		new RegExp('/(customerportal|cxportal)/contracts/'),
+		new RegExp('/(customerportal|cxportal)/product-alerts/'),
 		new RegExp('/(customerportal|cxportal)/diagnostics/'),
+		new RegExp('/(customerportal|cxportal)/ndgw/'),
 	];
 
 	constructor (
