@@ -1,4 +1,4 @@
-@import '~src/variables.scss';
+@import "~src/variables.scss";
 
 .device-name {
 	font-weight: 300;
@@ -15,5 +15,24 @@
 }
 
 .custom-tag-color {
-	color: #d0699b;
+	color: #fff;
 }
+
+.custom-tag-style {
+	background-color: #98abc3;
+	height: 40px;
+	display: inline-block;
+	line-height: 2.5em;
+
+	&::after {
+		border-left: 20px solid #98abc3;
+		content: "";
+		position: absolute;
+		border-bottom: 20px solid transparent;
+		border-top: 20px solid transparent;
+		height: 0;
+		width: 0;
+		margin-right: 0;
+	}
+}
+

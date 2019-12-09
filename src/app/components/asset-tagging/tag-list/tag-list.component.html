@@ -42,8 +42,10 @@
 		</div>
 		<div
 			*ngIf="!loading && items?.length === 0 && textForTagList==='available'"
-			class="absolute-center text-muted text-xlarge"
-			[innerText]="'_AssetTaggingNoTagsInListAvailable_' | i18n">
+			class="absolute-center text-muted "
+			>
+			<p class="text-xlarge" [innerText]="'_AssetTaggingNoTagsInListAvailable_' | i18n"></p>
+			<p class="innerText" [innerText]="'_AssetTaggingNoTagsInListAvailableContent_' | i18n"></p>
 		</div>
 	</div>
 	<div class="
