@@ -270,6 +270,8 @@ export class RccComponent implements OnInit, OnDestroy {
 		this.tableAssetDataSample = [];
 		this.filterObj = [];
 		this.assetFilterObj = [];
+		this.tableConfig.totalItems = 0;
+		this.tableConfig.tableOffset = 0;
 		this.RccTrackService.
 		optInDetail({ customerId: this.customerId })
 		.pipe(takeUntil(this.destroy$))
