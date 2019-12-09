@@ -35,7 +35,11 @@ export const CriticalBugData: CriticalBug[] = [
 		"severity": "critical",
 		"publishedOn": "2019-07-10T07:37:34.993Z",
 		"lastUpdated": "2019-07-15T10:57:34.255Z",
-		"assetsImpacted": 2
+		"assetsImpacted": 2,
+		"cdets": {
+			"headline": "C9407R - C9400-PWR-3200AC Power Supply goes into faulty state randomly ( \"n.a.\" )",
+			"severity": "3"
+		}
 	},
 	{
 		"id": "CSCva61927",
@@ -45,7 +49,11 @@ export const CriticalBugData: CriticalBug[] = [
 		"severity": "info",
 		"publishedOn": "2019-07-18T07:37:34.993Z",
 		"lastUpdated": "2019-07-20T10:57:34.255Z",
-		"assetsImpacted": 3
+		"assetsImpacted": 3,
+		"cdets": {
+			"headline": "C9407R - C9400-PWR-3200AC Power Supply goes into faulty state randomly ( \"n.a.\" )",
+			"severity": "3"
+		}
 	},
 	{
 		"id": "CSCvm55520",

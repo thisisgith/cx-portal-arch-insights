@@ -12,12 +12,13 @@
 </div>
 
 <cui-table
-	*ngIf="crashedSystemsGridDetails.tableData.length"
+	*ngIf="crashedSystemsGridDetails.tableData.length &&  !isLoading"
 	(onTableRowClicked)="selectedSystem = $event"
 	[data]="crashedSystemsGridDetails.tableData"
 	[limit]="crashedSystemsGridDetails.tableLimit"
 	[offset]="crashedSystemsGridDetails.tableOffset"
 	[options]="crashesSystemsGridOptions"
+	(onSortingChanged)="onTableSortingChanged($event)"
 	class="table--wrap not-close-360"
 ></cui-table>
 <div class="section" *ngIf="!isLoading">

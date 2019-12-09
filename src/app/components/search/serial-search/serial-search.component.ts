@@ -210,13 +210,15 @@ implements OnInit, OnChanges, OnDestroy {
 		)
 		.subscribe(response => {
 			this.loadingContract = false;
+			const orderedContracts = _.reverse(_.sortBy(_.get(response, ['data']),
+				contract => new Date(_.get(contract, ['contractEndDate']))));
 			this.contractData = {
-				contractNum: _.get(response, ['data', 0, 'contractNumber'], null),
+				contractNum: _.get(orderedContracts, [0, 'contractNumber'], null),
 				coverageStatus: this.coveragePipe.transform(
-					_.get(response, ['data', 0, 'contractEndDate'], null),
+					_.get(orderedContracts, [0, 'contractEndDate'], null),
 				),
-				cxLevel: _.get(response, ['data', 0, 'cxLevel'], null),
-				expirationDate: _.get(response, ['data', 0, 'contractEndDate'], null),
+				cxLevel: _.get(orderedContracts, [0, 'cxLevel'], null),
+				expirationDate: _.get(orderedContracts, [0, 'contractEndDate'], null),
 			};
 		});
 		/** Alerts Data Refresh */

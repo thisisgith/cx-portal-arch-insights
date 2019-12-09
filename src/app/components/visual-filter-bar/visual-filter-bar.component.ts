@@ -1,5 +1,4 @@
 import {
-	AfterViewChecked,
 	ChangeDetectorRef,
 	ContentChild,
 	Component,
@@ -20,7 +19,7 @@ import { VisualFilter } from '@interfaces';
 	styleUrls: ['./visual-filter-bar.component.scss'],
 	templateUrl: './visual-filter-bar.component.html',
 })
-export class VisualFilterBarComponent implements AfterViewChecked, OnInit {
+export class VisualFilterBarComponent implements OnInit {
 	@ContentChild('startingCard', { static: true }) public customCard: TemplateRef<any>;
 	@ViewChild('carousel', { static: false }) public carouselRef: ElementRef;
 	@Input() public filters: VisualFilter[];
@@ -40,15 +39,6 @@ export class VisualFilterBarComponent implements AfterViewChecked, OnInit {
 	public ngOnInit () {
 		if (this.customCard) {
 			this.startIndex = 0;
-		}
-	}
-	/**
-	 * AfterViewChecked lifecycle hook
-	 */
-	public ngAfterViewChecked () {
-		/* Don't do anything if filters are hidden */
-		if (!this.carouselRef) {
-			return;
 		}
 	}
 
