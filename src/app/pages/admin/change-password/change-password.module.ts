@@ -10,6 +10,7 @@ import {
 	CuiLoaderModule,
 	CuiSpinnerModule,
 	CuiAlertModule,
+	CuiModalModule,
 
 } from '@cisco-ngx/cui-components';
 import { HeightTransitionModule } from '@components';
@@ -25,6 +26,7 @@ import { HeightTransitionModule } from '@components';
 	imports: [
 		CommonModule,
 		CuiLoaderModule,
+		CuiModalModule,
 		CuiSpinnerModule,
 		CuiAlertModule,
 		HeightTransitionModule,

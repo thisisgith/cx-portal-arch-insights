@@ -1,6 +1,6 @@
 <div class="row" *ngIf="deviceData">
 	<div class="flex base-margin-top col-md-12 ">
-		<div data-auto-id="ipAddress" class="col-md-2">
+		<div data-auto-id="ipAddress" class="col-md-3">
 			<div class="text-bold text-uppercase text-small" [innerText]="'_CP_IpAddress_' | i18n"></div>
 			<div [innerHTML]="deviceData.ipAddress"></div>
 		</div>
@@ -26,12 +26,14 @@
 						<span class="icon-circle"></span>
 					</div>
 				<div class=" col-md-6 no-padding-right">
-					<span [innerHTML]="deviceData.globalRiskRank | titlecase"></span>
+					<span [innerHTML]="
+					deviceData.globalRiskRank === 'MED'
+					?('_Medium_' | i18n):deviceData.globalRiskRank  | titlecase"></span>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
 <ng-template #riskTooltipContentTemplate>
-	<span [innerText]="'_CP_GlobalRiskRankToolTip_' | i18n" class="text-small"></span>
+		<span [innerText]="'_CP_GlobalRiskRankToolTip_' | i18n" class="text-small"></span>
 </ng-template>

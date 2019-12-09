@@ -9,13 +9,14 @@ import {
 	EventEmitter,
 } from '@angular/core';
 import { RiskMitigationService, RiskAssets, RiskAsset } from '@sdp-api';
-import { LogService } from '@cisco-ngx/cui-services';
+import { LogService, SortableField } from '@cisco-ngx/cui-services';
 import { ActivatedRoute } from '@angular/router';
 import * as _ from 'lodash-es';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
-import { takeUntil, map, catchError } from 'rxjs/operators';
+import { takeUntil, catchError, switchMap } from 'rxjs/operators';
 import { of, Subject } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
 
 /**
  * Show the grid of Crashed Systems data
@@ -43,6 +44,7 @@ export class CrashedSystemsGridComponent implements OnChanges {
 	public pageFirstRecord = 0;
 	public pageLastRecord = 10;
 	public isLoading: boolean;
+	public alert = { };
 	public pageInfo = {
 		limit: 2,
 		page: 0,
@@ -152,7 +154,7 @@ export class CrashedSystemsGridComponent implements OnChanges {
 					width: '18%',
 				},
 			],
-			dynamicData: false,
+			dynamicData: true,
 			hover: true,
 			singleSelect: true,
 			striped: false,
@@ -170,19 +172,26 @@ export class CrashedSystemsGridComponent implements OnChanges {
 			itemRange: '0-0',
 			totalItems: 0,
 		});
+		_.invoke(this.alert, 'hide', I18n.get('_RccErrorResults_'), 'danger');
 
 		return this.riskMitigationService.getDeviceDetails(params)
 				.pipe(
 					takeUntil(this.destroy$),
-					map((results: RiskAssets) => {
+					switchMap((results: RiskAssets) => {
 						this.isLoading = false;
 						this.crashedSystemsGridDetails.tableData = results.deviceDetails;
 						this.crashedSystemsGridDetails.totalItems = _.size(results.deviceDetails);
 						this.crashedSystemsGridDetails.tableOffset = 0;
 						this.onPagerUpdated(this.pageInfo);
+
+						return of(results);
 					}),
-					catchError(err => {
+					catchError((err: HttpErrorResponse) => {
 						this.isLoading = false;
+						if (err.status >= 500) {
+							_.invoke(this.alert, 'show', I18n.get('_RccErrorResults_'), 'danger');
+
+						}
 						this.crashedSystemsGridDetails.tableData = [];
 						this.logger.error('Crash Assets : getDeviceDetails() ' +
 							`:: Error : (${err.status}) ${err.message}`);
@@ -228,6 +237,56 @@ export class CrashedSystemsGridComponent implements OnChanges {
 		};
 		this.paginationValue.emit(paginationValueProp);
 	 }
+	/**
+	 * This will sort the records absed on column
+	 *
+	 * @param event - click event CuiTableOptions column info
+	 * @memberof FaultsComponent
+	 */
+	public onTableSortingChanged (event) {
+		this.isLoading = true;
+		this.sortTableData(event, this.crashesSystemsGridOptions.columns, this.crashedSystemsGridDetails.tableData);
+		setTimeout(() => {
+			this.isLoading = false;
+		}, 1000);
+	}
+
+	/**
+	 * Sorts a data set by a field
+	 * @param sortField The field to sort by
+	 * @param allFields All sortable fields
+	 * @param tableData The data to sort
+	 * @returns sortDataByField
+	 */
+	public sortTableData (sortField: any, allFields: SortableField[], tableData: any[]) {
+		if (!sortField.sortable) {
+			return tableData;
+		}
+
+		const sortDirection = sortField.sortDirection;
+		for (const column of allFields) {
+			column.sorting = false;
+			column.sortDirection = 'desc';
+		}
+		sortField.sorting = true;
+		sortField.sortDirection = sortDirection;
+
+		return this.sortDataByField(sortField, tableData);
+	}
+	public sortDataByField (sortField, tableData: any[]) {
+		return tableData.sort((a, b) => {
+			if (sortField.sortDirection === 'asc' && sortField.key) {
+				const valA = typeof a[sortField.key] !== 'boolean' ?
+						a[sortField.key] : a[sortField.key] ? 0 : 1;
+				const valB = typeof b[sortField.key] !== 'boolean' ?
+						b[sortField.key] : b[sortField.key] ? 0 : 1;
+
+				return (valA && valB)  ?
+				(valA.toLowerCase() > valB.toLowerCase() ? 1 : valA.toLowerCase() < valB.toLowerCase() ? -1 : 0)
+				: 0;
+			}
+		});
+	}
 	/**
 	 * Determines whether panel close on when grids open details of asset
 	 */

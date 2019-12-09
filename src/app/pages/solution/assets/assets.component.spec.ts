@@ -92,7 +92,10 @@ describe('AssetsComponent', () => {
 		spyOn(inventoryService, 'getRoleCount')
 			.and
 			.returnValue(of(RoleScenarios[0].scenarios.GET[0].response.body));
-		spyOn(productAlertsService, 'getVulnerabilityCounts')
+		spyOn(productAlertsService, 'getSystemVulnerabilityCounts')
+			.and
+			.returnValue(of(VulnerabilityScenarios[0].scenarios.GET[0].response.body));
+		spyOn(productAlertsService, 'getHardwareVulnerabilityCounts')
 			.and
 			.returnValue(of(VulnerabilityScenarios[0].scenarios.GET[0].response.body));
 		spyOn(contractsService, 'getContractCounts')
@@ -691,7 +694,16 @@ describe('AssetsComponent', () => {
 					AssetsModule,
 					HttpClientTestingModule,
 					MicroMockModule,
-					RouterTestingModule,
+					RouterTestingModule.withRoutes([
+						{
+							component: AssetsComponent,
+							path: 'solution/assets/system',
+						},
+						{
+							component: AssetsComponent,
+							path: 'solution/assets/hardware',
+						},
+					]),
 				],
 				providers: [
 					{ provide: 'ENVIRONMENT', useValue: environment },

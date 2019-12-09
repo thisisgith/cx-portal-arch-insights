@@ -166,6 +166,19 @@
 		[innerText]="'_AdminComplianceContinue_' | i18n"></button>
 	</div>
 </ng-template>
+<ng-template #switchBetweenCompliance>
+	<a class="modal__close" data-auto-id="cuiModalService.hide1" (click)="cuiModalService.hide()"><span class="icon-close"></span></a>
+	<div class="modal__header">
+		<h6 class="modal__title" [innerText]="'_AdminComplianceSwitchBetweenPolicyTitle_' | i18n"></h6>
+	</div>
+	<div class="modal__body">
+		<p class="subtitle" [innerText]="'_AdminComplianceSwitchBetweenPolicyContent_' | i18n"></p>
+	</div>
+	<div class="modal__footer">
+		<button class="btn" data-auto-id="continueWithoutChange" (click)="continueWithoutChange(true)" [innerText]="'__Continue__' | i18n"></button>
+		<button class="btn" data-auto-id="continueWithoutChange" (click)="continueWithoutChange(false)" [innerText]="'_AdminComplianceCancel_' | i18n"></button>
+</div>
+</ng-template>
 
 <ng-template #policyTooltipContentTemplate>
 	<span [innerText]="'_AdminComplianceToolTipContent_' | i18n"></span>

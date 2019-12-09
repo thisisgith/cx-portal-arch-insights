@@ -3,7 +3,7 @@
 	<div class="col-md-12">
 		<div class="row">
 			<div class="col-md-2 filter__selected">
-				<div class="row" [ngClass]="{ 'disabled': showRunningBanner || !optInStatus}">
+				<div class="row" [ngClass]="{ 'disabled': showRunningBanner || !optInStatus || loading}">
 					<div class="col-md-12 panel flex-center flex-fill filter assets-count"
 						data-auto-id="selectedView" (click)="selectedView('violation')" [ngClass]="{'text-primary': !isAssetView}">
 						<div class="flex-center dbl-padding-left dbl-padding-right font-size-32" [innerText]="policyViolationsTotalCount | number"></div>
@@ -128,8 +128,8 @@
 			<div>
 				<div class="flex-center">
 					<span class="cx-no-dnac-label half-margin-right" [innerText]="'_RccCollectingViolations_' | i18n"></span>
-					<span class="cx-no-dnac-status" [innerText]="'_RccNextScheduleTime_' | i18n"></span>
-					<span class="qtr-margin-left" [innerText]="nextScheduleTime"></span>
+					<span class="cx-no-dnac-status font-size-13" [innerText]="'_RccNextScheduleTime_' | i18n"></span>
+					<span class="qtr-margin-left font-size-13" [innerText]="nextScheduleTime | dateTime"></span>
 				</div>
 			</div>
 		</div>

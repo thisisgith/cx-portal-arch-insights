@@ -86,9 +86,7 @@ export class CaseDetailsComponent implements OnInit, OnDestroy {
 				this.caseNotes = results[1];
 				this.populateCaseFilesList(results[2]);
 				const assetDetails = _.get(results[3], 'data');
-				if (assetDetails && assetDetails.length > 0) {
-					this.isAssetAvailable = true;
-				}
+				this.isAssetAvailable = (assetDetails && assetDetails.length > 0) ? true : false;
 			});
 
 		this.caseDetailsService.addNote$
@@ -202,18 +200,24 @@ export class CaseDetailsComponent implements OnInit, OnDestroy {
 	 * @returns Observable
 	 */
 	public getAssetAvailability () {
-		return this.inventoryService.getHardware({
-			customerId: this.customerId,
-			serialNumber: [this.case.serialNumber],
-		})
-		.pipe(
-			catchError(err => {
-				this.logger.error('casedetails.component : getAssetAvailability() ' +
-					`:: Error : (${err.status}) ${err.message}`);
+		const assetSerialNumber = (this.case && ((this.case.serialNumber) ? this.case.serialNumber : this.case.deviceName));
+		if (assetSerialNumber) {
 
-				return of({ });
-			}),
-		);
+			return this.inventoryService.getHardware({
+				customerId: this.customerId,
+				serialNumber: [assetSerialNumber],
+			})
+			.pipe(
+				catchError(err => {
+					this.logger.error('casedetails.component : getAssetAvailability() ' +
+						`:: Error : (${err.status}) ${err.message}`);
+
+					return of({ });
+				}),
+			);
+		}
+
+		return of({ });
 	}
 
 	/**

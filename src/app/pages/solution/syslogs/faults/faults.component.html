@@ -9,7 +9,7 @@
 <ng-template #searchFilters>
 	<div class="row qtr-margin-top">
 		<div class="col-md-6 flex flex-fill">
-			<div class="flex-center-vertical">
+			<div class="flex-center-vertical container">
 				<span [innerText]="'_FaultEvents_' | i18n" class="text-large"></span>
 				<span [innerText]="
 							'_FaultShowingXofYFaults_'
@@ -53,7 +53,9 @@
 					</cui-search>
 				</div>
 				<div>
-					<span [innerText]="'_FaultLastUpdatedXminutes_' | i18n : lastUpdateTime"
+					<span
+						*ngIf="lastUpdateTime"
+						[innerText]="'_FaultLastUpdatedXminutes_' | i18n : lastUpdateTime"
 						class="base-margin-right text-medium text-muted">
 					</span>
 				</div>

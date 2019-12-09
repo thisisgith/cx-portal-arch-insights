@@ -111,8 +111,14 @@ export class FaultsComponent implements OnInit, OnChanges, OnDestroy {
 				? this.FAULT_CONSTANT.INACTIVE : this.FAULT_CONSTANT.ACTIVE;
 			this.searchParams.faultSeverity = currentFilter.afmSeverity;
 			this.searchParams.days = currentFilter.timeRange;
+			this.resetPage();
 			this.getFaultData(this.searchParams);
 		}
+	}
+
+	private resetPage () {
+		this.searchParams.pageNo = 1;
+		this.tableOffset = 0;
 	}
 
 	/**
@@ -209,7 +215,7 @@ export class FaultsComponent implements OnInit, OnChanges, OnDestroy {
 				return 'category';
 			case 'Title':
 				return 'title';
-			case 'Systems Affected':
+			case 'Affected Systems':
 				return 'systemCount';
 			case 'Created Cases':
 				return 'tacCount';
@@ -268,8 +274,8 @@ export class FaultsComponent implements OnInit, OnChanges, OnDestroy {
 	 * @param event search text
 	 */
 	public onSearchUpdate (event) {
+		this.resetPage();
 		this.searchParams.localSearch = event;
-		this.searchParams.pageNo = 1;
 		this.getFaultData(this.searchParams);
 	}
 
