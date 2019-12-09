@@ -187,6 +187,8 @@ export class RccComponent implements OnInit, OnDestroy {
 	@ViewChild('lastScanTmpl', { static: true }) public lastScanTemplate: TemplateRef<{ }>;
 	@ViewChild('policyCategoryTooltipTemplate', { static: true })
 	private policyCategoryTooltipTemplate: TemplateRef<string>;
+	@ViewChild('policySeverityTooltipTemplate', { static: true })
+	private policySeverityTooltipTemplate: TemplateRef<string>;
 	@ViewChild('ruleViolationsTooltipTemplate', { static: true })
 	private ruleViolationsTooltipTemplate: TemplateRef<string>;
 	public entry: ViewContainerRef;
@@ -353,11 +355,11 @@ export class RccComponent implements OnInit, OnDestroy {
 			bordered: false,
 			columns: [
 				{
+					headerTemplate:  this.policySeverityTooltipTemplate,
 					key: 'ruleSeverity',
-					name: I18n.get('_RccHighestSeverity_'),
 					sortable: true,
 					template: this.severityColorTemplate,
-					width: '13%',
+					width: '15%',
 				},
 				{
 					key: 'policyGroupName',
@@ -649,8 +651,8 @@ export class RccComponent implements OnInit, OnDestroy {
 					sortable: true,
 				},
 				{
+					headerTemplate:  this.policySeverityTooltipTemplate,
 					key: 'severity',
-					name: I18n.get('_RccHighestViolationSeverity_'),
 					sortable: true,
 					template: this.severityTemplate,
 				},
@@ -696,7 +698,7 @@ export class RccComponent implements OnInit, OnDestroy {
 				loading: true,
 				seriesData: [],
 				template: this.severityFilterTemplate,
-				title: I18n.get('_RccHighestViolationSeverity_'),
+				title: I18n.get('_RccHighestSeverity_'),
 			},
 		];
 	}

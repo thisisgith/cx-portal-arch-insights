@@ -349,6 +349,14 @@
 	<ng-template #ruletitleTemplate let-item="celldata">
 		<div [innerHTML]="item?.ruleTitle"></div>
 	</ng-template>
+	<ng-template #policySeverityTooltipTemplate>
+		<span [innerText]="'_RccHighestSeverity_' | i18n"></span>
+		<span tooltip 
+			[tooltipTemplate]="policySeverityTooltipContentTemplate" 
+			class="icon-info-outline qtr-margin-left" 
+			[tooltipMaxWidth]="200">
+		</span>
+	</ng-template>
 	<ng-template #policyCategoryTooltipTemplate>
 		<span [innerText]="'_RccCategory_' | i18n"></span>
 		<span tooltip 
@@ -356,6 +364,9 @@
 			class="icon-info-outline qtr-margin-left" 
 			[tooltipMaxWidth]="200">
 		</span>
+	</ng-template>
+	<ng-template #policySeverityTooltipContentTemplate>
+		<span [innerText]="'_RccPolicySeverityTooltip_' | i18n" class="text-small"></span>
 	</ng-template>
 	<ng-template #policyCategoryTooltipContentTemplate>
 		<span [innerText]="'_RccPolicyCategoryTooltip_' | i18n" class="text-small"></span>
