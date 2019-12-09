@@ -462,7 +462,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					},
 					{
 						key: 'cxLevel',
-						name: I18n.get('_SupportLevel_'),
+						name: I18n.get('_CXLevel_'),
 						render: item => item.cxLevel || I18n.get('_NA_'),
 						sortable: true,
 						value: 'cxLevel',
@@ -588,7 +588,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					},
 					{
 						key: 'cxLevel',
-						name: I18n.get('_SupportLevel_'),
+						name: I18n.get('_CXLevel_'),
 						render: item => item.cxLevel || I18n.get('_NA_'),
 						sortable: true,
 						value: 'cxLevel',
@@ -1105,7 +1105,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			},
 			{
 				filter: 'MODULE',
-				label: I18n.get('_Module_'),
+				label: I18n.get('_Modules_'),
 				selected: false,
 				value: 0,
 			},

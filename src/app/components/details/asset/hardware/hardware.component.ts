@@ -338,7 +338,7 @@ export class AssetDetailsHardwareComponent implements OnInit, OnChanges, OnDestr
 						},
 						{
 							key: 'cxLevel',
-							name: I18n.get('_SupportLevel_'),
+							name: I18n.get('_CXLevel_'),
 							render: item => item.cxLevel || I18n.get('_NA_'),
 							sortable: true,
 						},
