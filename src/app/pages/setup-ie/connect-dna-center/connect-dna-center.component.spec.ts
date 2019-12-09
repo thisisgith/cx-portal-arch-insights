@@ -65,7 +65,7 @@ describe('ConnectDNACenterComponent', () => {
 					{ provide: 'ENVIRONMENT', useValue: environment },
 					{ provide: ActivatedRoute, useValue: {
 						params: of(null),
-						queryParams: of(null),
+						queryParams: of({ fromAdmin : false }),
 						snapshot: {
 							queryParams: { collectorIP: '127.0.0.1' },
 						},
