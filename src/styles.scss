@@ -196,6 +196,7 @@
 	font-size: 14px;
 	padding: 0 !important;
 }
+
 /** Handling the tabs for 100% resolution */
 
 @media screen and (min-width: $screen-lg-min) {
@@ -203,7 +204,7 @@
 		font-size: 14px;
 		padding: 1px 0 !important;
 	}
-  }
+}
 
 .cui .nav-tabs > li,
 .cui ul.tabs > li {
