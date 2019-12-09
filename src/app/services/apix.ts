@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { AsyncSubject, Observable } from 'rxjs';
-import { mergeMap } from 'rxjs/operators';
+import { mergeMap, switchMap } from 'rxjs/operators';
 import { environment } from '@environment';
 
 /**
@@ -62,6 +62,40 @@ export class APIxService {
 				token.dateCreated = Date.now();
 
 				return token.subject;
+			}));
+	}
+
+	/**
+	 * Fetch a cway bearer token.
+	 * @returns Observable
+	 */
+	public fetchCwayToken (): Observable<string> {
+		const tokenObj = <AsyncSubject<string>> new AsyncSubject();
+
+		return this.http.get(
+			`${environment.auth.tokenUrl}`)
+			.pipe(switchMap((response: any) => {
+				tokenObj.next(response.token);
+				tokenObj.complete();
+
+				return tokenObj;
+			}));
+	}
+
+	/**
+	 * Accounts API call
+	 * @returns Observable
+	 */
+	public fetchAccountInfo (): Observable<{ }> {
+		const accountInfoObj = <AsyncSubject<{ }>> new AsyncSubject();
+
+		return this.http.get(
+			`${environment.auth.accountUrl}`)
+			.pipe(switchMap((response: any) => {
+				accountInfoObj.next(response);
+				accountInfoObj.complete();
+
+				return accountInfoObj;
 			}));
 	}
 

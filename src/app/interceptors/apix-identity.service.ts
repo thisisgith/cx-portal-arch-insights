@@ -7,6 +7,7 @@ import { environment } from '@environment';
 	providedIn: 'root',
 })
 export class ApixIdentityService {
+	private apolloRegex: RegExp;
 	private originRegex: RegExp;
 	private sdpRegex: RegExp;
 	private rmaRegex: RegExp;
@@ -39,6 +40,10 @@ export class ApixIdentityService {
 			_.values(environment.rmaServicePaths)
 			.join('|^')
 		}`);
+		this.apolloRegex = new RegExp(`^${
+			_.values(environment.apolloServicePaths)
+			.join('|^')
+		}`);
 	}
 
 	public testOrigin (url): OriginType {
@@ -49,6 +54,9 @@ export class ApixIdentityService {
 			if (this.rmaRegex.test(url.pathname)) {
 				return OriginType.RMA;
 			}
+		}
+		if (this.apolloRegex.test(url.pathname)) {
+			return OriginType.APOLLO;
 		}
 
 		return OriginType.NONE;
