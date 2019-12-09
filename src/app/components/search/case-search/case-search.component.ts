@@ -331,7 +331,7 @@ implements OnInit, OnDestroy, OnChanges {
 	public onViewCase (casenum?: string) {
 		this.router.navigate(
 			['solution/resolution'],
-			{ queryParams: { case: casenum } },
+			{ queryParams: { case: casenum, serialNumber: this.case.serialNumber, deviceName: this.case.deviceName } },
 		);
 		this.searchService.close();
 	}

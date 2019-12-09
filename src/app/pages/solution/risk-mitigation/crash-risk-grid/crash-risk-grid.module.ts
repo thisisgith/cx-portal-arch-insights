@@ -8,7 +8,8 @@ import {
 	CuiSpinnerModule,
 	CuiSelectModule,
 	CuiDrawersModule,
-	CuiDropdownModule } from '@cisco-ngx/cui-components';
+	CuiDropdownModule,
+	CuiAlertModule } from '@cisco-ngx/cui-components';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { FingerprintDetailsModule } from '../../fingerprint-details/fingerprint-details.module';
 import { TooltipModule } from '@components';
@@ -30,6 +31,7 @@ import { TooltipModule } from '@components';
 		FingerprintDetailsModule,
 		TooltipModule,
 		CuiDropdownModule,
+		CuiAlertModule,
 	],
 })
 export class CrashRiskGridModule { }

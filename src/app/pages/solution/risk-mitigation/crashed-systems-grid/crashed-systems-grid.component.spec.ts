@@ -109,4 +109,55 @@ describe('CrashedSystemsGridComponent', () => {
 		expect(fetchDataSpy)
 			.toHaveBeenCalled();
 	});
+
+	it('should call onTableSortingChanged ', () => {
+		spyOn(crashRiskGridService, 'getDeviceDetails').and
+		.callThrough();
+		component.onTableSortingChanged({ });
+	});
+
+	it('should call sortDataByField', () => {
+
+		const sortObj = {
+			sortable: true,
+			sorting: false,
+			sortKey: 'lastDate',
+			sortDirection: 'asc',
+			render: undefined,
+			key: 'neName',
+		};
+		const tableData = [{
+			active: true,
+			crashCount: 1,
+			firstOccurrence: 'November 08, 2019 17:05:47',
+			ipAddress: '10.11.16.2',
+			lastOccurrence: 'November 08, 2019 17:05:47',
+			neInstanceId: 'NA,JAB052404SP,AIR-AP3802I-B-K9,NA',
+			neName: 'AMS-AP3802-24',
+			productFamily: 'Cisco Aironet 3800 Series Access Points',
+			productId: 'AIR-AP3802I-B-K9',
+			serialNumber: 'JAB052404SP',
+			swType: 'AP-COS',
+			swVersion: '8.8.120.0',
+		}, {
+			active: false,
+			crashCount: 1,
+			firstOccurrence: 'October 08, 2019 21:37:44',
+			ipAddress: '10.30.17.13',
+			lastOccurrence: 'October 08, 2019 21:37:44',
+			neInstanceId: 'NA,ABC06340046,AIR-AP3802I-B-K9,NA',
+			neName: 'LA1-AP3802-11',
+			productFamily: 'Cisco Aironet 3800 Series Access Points',
+			productId: 'AIR-AP3802I-B-K9',
+			serialNumber: 'ABC06340046',
+			swType: 'AP-COS',
+			swVersion: '8.8.120.0',
+		}];
+		spyOn(component, 'sortTableData').and
+			.callThrough();
+		component.sortTableData(sortObj, [sortObj], tableData);
+		expect(component.sortTableData)
+			.toHaveBeenCalled();
+	});
+
 });

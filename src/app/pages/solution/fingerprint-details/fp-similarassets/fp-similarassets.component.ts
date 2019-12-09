@@ -150,14 +150,14 @@ export class FpSimilarAssetsComponent {
 					key: 'riskScore',
 					template: this.crashRiskTemplate,
 					sortable: false,
-					width : '20%',
+					width : '16%',
 				},
 				{
 					key: 'deviceId',
 					name: '',
 					template: this.compareTemplate,
 					sortable: false,
-					width : '15%',
+					width : '20%',
 				},
 			],
 			rowWellColor: 'black',
@@ -255,9 +255,10 @@ export class FpSimilarAssetsComponent {
 		_.map(_.get(this.similarDevicesData, 'similarDevices'), row => {
 			if (row.deviceId !== rowData.deviceId) {
 				row.toggleWell = false;
+			} else {
+				rowData.toggleWell = !rowData.toggleWell;
 			}
 		});
-		rowData.toggleWell = !rowData.toggleWell;
 		this.compareView = 'software';
 	}
 

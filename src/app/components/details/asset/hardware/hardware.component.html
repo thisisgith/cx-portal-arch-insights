@@ -61,7 +61,7 @@
 					</div>
 					<div class="col-md-12 base-margin-top">
 						<ng-container *ngTemplateOutlet="detailsData; context: {
-								title: '_SupportLevel_',
+								title: '_SupportCoverage_',
 								linkData: (item?.summary?.contractNumber) ? (item?.cxLevel ? item.cxLevel + ' / ' : '') + ('_Contract_' | i18n) + ' #' + item?.summary?.contractNumber : ('_NA_' | i18n),
 								secondRowData: (item?.summary?.coverageEndDate) ? (item?.summary?.coverageEndDate | date:'MMM dd, yyyy') + ' (' + (item?.summary?.coverageEndDate | fromNow) + ')' : null
 							}">
@@ -126,7 +126,7 @@
 </ng-template>
 
 <ng-template #expandTemplate let-celldata="celldata">
-		<span data-auto-id="expandIcon" [ngClass]="celldata.toggleWell ?'icon-chevron-up icon--size-16': 'icon-chevron-down icon--size-16'"
+		<span data-auto-id="expandIcon" [ngClass]="celldata.toggleWell ?'icon-chevron-down icon--size-16': 'icon-chevron-up icon--size-16'"
 			  (click)="onRowSelect($event)">
 		</span>
 </ng-template>

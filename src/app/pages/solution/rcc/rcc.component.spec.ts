@@ -219,14 +219,6 @@ describe('RccComponent', () => {
 			.toBeTruthy();
 	});
 
-	it('should close the panel', () => {
-		const model = 'selectedModel';
-		component[model] = false;
-		component.onPanelClose(model);
-		expect(component[model])
-			.toEqual(null);
-	});
-
 	it('should call openDevicePage', () => {
 		const serialNumber = 'sn232';
 		component.openDevicePage(serialNumber);
@@ -381,7 +373,7 @@ describe('RccComponent', () => {
 		component.onSubfilterSelect('others', mockFilter, false);
 		fixture.detectChanges();
 		expect(component.invalidSearchInput)
-			.toBeTruthy();
+			.toBeFalsy();
 	});
 
 	it('should invoke searchViolations with keycode 8', () => {
@@ -411,7 +403,7 @@ describe('RccComponent', () => {
 		};
 		component.searchViolations(event, 'input');
 		expect(component.invalidSearchInput)
-			.toBeTruthy();
+			.toBeFalsy();
 	});
 
 	it('should invoke searchViolations with keycode 8 and search with search input', () => {
@@ -611,7 +603,7 @@ describe('RccComponent', () => {
 		fixture.detectChanges();
 		component.searchViolations(event, 'search');
 		expect(component.invalidSearchInput)
-			.toBeTruthy();
+			.toBeFalsy();
 	});
 
 	it('should invoke searchViolations with invalid form keycode 65', () => {
@@ -645,16 +637,14 @@ describe('RccComponent', () => {
 	});
 
 	it('should called on close with true', () => {
-		const view = 'selectedViolationModal';
 		spyOn(component, 'onPanelClose');
-		component.handleHidden(true, view);
+		component.handleHidden(true);
 		expect(component.onPanelClose)
 			.toHaveBeenCalled();
 	});
 
 	it('should called on close with false', () => {
-		const view = 'selectedViolationModal';
-		component.handleHidden(false, view);
+		component.handleHidden(false);
 		spyOn(component, 'onPanelClose');
 		expect(component.onPanelClose)
 			.toHaveBeenCalledTimes(0);

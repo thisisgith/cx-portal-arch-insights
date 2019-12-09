@@ -1,13 +1,15 @@
 /** Base of URL for SDP API */
-
 const api = '/api/customerportal/syslog/v1';
 /** event count URL */
 const eventCountUrl = '/events-faults/count';
-/** softwareVersion URL */
+/** Syslogs Grid URL */
 const messageParams = '/syslogs';
 /** syslogsMessage details URL */
 const filterdetailsparams = '/syslogDetails';
-
+/** getCategory URL */
+const categoryListParams = '/findallCategory';
+/** MovetoFaults URL */
+const moveToFaultsParams = '/afm/v1/fault/pushtoAFM';
 /** The mock response for syslogCount */
 const syslogCount: any = {
 	faultsCount: '10',
@@ -125,6 +127,19 @@ const syslogDetail: any = {
 	],
 
 };
+/** The mock data for syslogDetail */
+const categoryListData: any = {
+	message: 'Success',
+	responseData: [
+			{ name: 'Management', value: 'Management' },
+			{ name: 'Forwarding', value: 'Forwarding' },
+	],
+};
+/** The mock response for pushToFault */
+const pushToFaultResponse: any = {
+	statusCode: 'OK',
+	statusMessage: 'Signature is pushed from Syslog to AFM',
+};
 /** SyslogScenarios */
 export const SyslogScenarios = [
 	{
@@ -177,5 +192,39 @@ export const SyslogScenarios = [
 		},
 		url: `${api}${filterdetailsparams}`,
 		usecases: ['Syslogs Details'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'CategoryList',
+					response: {
+						body: categoryListData,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}${categoryListParams}`,
+		usecases: ['CategoryList'],
+	},
+	{
+		scenarios: {
+			POST: [
+				{
+					delay: 100,
+					description: 'Push To Fault',
+					response: {
+						body: pushToFaultResponse,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${moveToFaultsParams}`,
+		usecases: ['Push To Fault'],
 	},
 ];

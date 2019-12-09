@@ -56,6 +56,7 @@ export class AssetDetailsComponent implements OnDestroy, OnInit, Panel360 {
 	@Input('scanPolicy') public scanPolicy: PolicyResponseModel;
 	@Input() public minWidth;
 	@Input() public fullscreenToggle;
+	@Input() public selectedView;
 
 	@Output('close') public close = new EventEmitter<boolean>();
 	@Output('scanStatus') public scanStatus = new EventEmitter<TransactionStatusResponse>();
@@ -76,6 +77,7 @@ export class AssetDetailsComponent implements OnDestroy, OnInit, Panel360 {
 	public headerScanStatus: { error: boolean; inProgress: boolean; } = {
 		error: false, inProgress: false,
 	};
+	public screenWidth = window.innerWidth;
 
 	private destroyed$: Subject<void> = new Subject<void>();
 	private selectedSolutionName: string;
@@ -231,7 +233,7 @@ export class AssetDetailsComponent implements OnDestroy, OnInit, Panel360 {
 				} else {
 					this.tabIndex = 0;
 				}
-
+				this.tabIndex = (this.selectedView.key === 'system') ? 0 : 1;
 				const observables = [];
 				this.hardwareAssets.forEach((asset: HardwareAsset) => {
 					observables.push(this.inventoryService.getAssetSummary({
@@ -239,7 +241,6 @@ export class AssetDetailsComponent implements OnDestroy, OnInit, Panel360 {
 						hwInstanceId: asset.hwInstanceId,
 					}));
 				});
-
 				return forkJoin(observables);
 			}),
 			map((response: AssetSummary[]) => {

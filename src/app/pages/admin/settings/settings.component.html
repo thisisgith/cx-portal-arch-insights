@@ -21,7 +21,7 @@
 						<div
 							*ngIf="data.lastUploadDate"
 							class="text-small"
-							[innerText]="'_LastDataSent_' | i18n:(data.lastUploadDate | fromNow)">
+							[innerText]="'_LastDataSent_' | i18n:(data.lastUploadDate | fromNow)" [title]="data.lastUploadDate | dateTime">
 						</div>
 					</div>
 					<div class="col-2" [innerText]="data.ieVersion || ''"></div>
@@ -40,7 +40,7 @@
 					
 				</div>
 				<div class="row">
-					<div class="col-2" *ngIf="ieSetupCompleted"><a data-auto-id="redownload-collector" (click)="navigateTosetup()" [innerText]="'_ReInstall_' | i18n"></a>&nbsp; |</div><div class="col-5"><a data-auto-id="change-password" [routerLink]="['/admin', 'changepassword']" [innerText]="'_ChangePassword&Settings_' | i18n"></a></div>
+					<div class="col-2" *ngIf="ieSetupCompleted"><a data-auto-id="redownload-collector" (click)="navigateTosetup()" [innerText]="'_ReInstall_' | i18n"></a> |</div><div class="col-5"><a data-auto-id="change-password" [routerLink]="['/admin', 'collectorchangepassword']" [innerText]="'_ChangePassword&Settings_' | i18n"></a></div>
 				</div>
 				<div
 					*ngIf="data.dnac_details && data.dnac_details[0]"
@@ -80,6 +80,11 @@
 					<div heightTransition [heightTransitionExpanded]="data.showError">
 						<div class="base-padding-top half-padding-left" [innerText]="data.dnac_details[0]?.additional_details?.error">
 						</div>
+					</div>
+					<div>
+						<div class="col-5"><a data-auto-id="change-dnac-password"
+								[routerLink]="['/admin', 'dnacchangecred']"
+								[innerText]="'_ChangeCredentials_' | i18n"></a></div>
 					</div>
 					
 				</div>

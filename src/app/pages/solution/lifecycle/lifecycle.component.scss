@@ -355,13 +355,15 @@ $popover-box-shadow: 0 2px 4px 0 rgba(252, 220, 220, 0.14), 0 3px 4px 0 rgba(0, 
 	font-size: 17px;
 }
 
+.cx-lifecycle-card--recommended .item-status {
+	display: flex;
+	align-items: center;
+}
 
 .cx-lifecycle-card--recommended .icon-check-outline,
+.cx-lifecycle-card--recommended .icon-calendar,
 .cx-lifecycle-card--recommended .icon-clock,
 .cx-lifecycle-card--recommended .icon-certified {
-	position: relative;
-	bottom: 3px;
-
 	& + span {
 		display: inline-block;
 		margin-left: 7px;

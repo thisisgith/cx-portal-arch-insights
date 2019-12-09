@@ -9,6 +9,7 @@ import { StrictHttpResponse as __StrictHttpResponse } from '../../core/strict-ht
 import { SyslogData } from '../models/syslog-data';
 import { SyslogPanelGridData } from './../models/syslogpanel-data';
 import { SyslogResponseData } from '@sdp-api';
+import { SyslogCategoryData, PushToFaultResponse } from './../models/syslog-category-data';
 @Injectable({
 	providedIn: 'root',
 })
@@ -16,6 +17,9 @@ class SyslogsService extends __BaseService {
 	static readonly getSyslogCountPath = '/customerportal/syslog/v1/events-faults/count';
 	static readonly getSysGridDataPath = '/customerportal/syslog/v1/syslogs';
 	static readonly getSysPanelGridDataPath = '/customerportal/syslog/v1/syslogDetails';
+	static readonly getCategoryDataPath = '/customerportal/syslog/v1/findallCategory';
+	static readonly getMoveToFaultsPath = '/customerportal/afm/v1/fault/pushtoAFM';
+
 	constructor (config: __Configuration, http: HttpClient) {
 		super(config, http);
 	}
@@ -110,7 +114,64 @@ class SyslogsService extends __BaseService {
 		  );
 
 	}
+/**
+	 * Get Category service
+	 */
+	syslogscategoryList(){
+	    const __headers = new HttpHeaders();
+        const __body: any = null;
+		const req = new HttpRequest<any>(
+			'GET',
+			this.rootUrl+ `${SyslogsService.getCategoryDataPath}`,
+			__body,
+			{
+			  headers: __headers,
+			  responseType: 'json',
+			});
 
+			return this.http.request<any>(req).pipe(
+				__filter(_r => _r instanceof HttpResponse),
+				__map((_r) => {
+				  return _r as __StrictHttpResponse<SyslogCategoryData>;
+				})
+			  );
+		}
+
+	getSyslogsCategoryList():  __Observable<SyslogCategoryData>{
+		return this.syslogscategoryList().pipe(
+			__map(_r => _r.body as SyslogCategoryData)
+		  );
+
+	}
+	 /**
+	 * Get  of syslogspanel service
+	 */
+	pushToFaults(syslogPanelParams){
+	    const __headers = new HttpHeaders();
+        const __body: any = syslogPanelParams;
+		const req = new HttpRequest<any>(
+			'POST',
+			this.rootUrl+ `${SyslogsService.getMoveToFaultsPath}`,
+			__body,
+			{
+			  headers: __headers,
+			  responseType: 'json',
+			});
+
+			return this.http.request<any>(req).pipe(
+				__filter(_r => _r instanceof HttpResponse),
+				__map((_r) => {
+				  return _r as __StrictHttpResponse<PushToFaultResponse>;
+				})
+			  );
+		}
+
+	getPushToFaultsInfo(syslogPanelParams):  __Observable<PushToFaultResponse>{
+		return this.pushToFaults(syslogPanelParams).pipe(
+			__map(_r => _r.body as PushToFaultResponse)
+		  );
+
+	}
 
 }
 

@@ -181,13 +181,14 @@
 						<span
 							[innerHTML]="
 								onlyCrashes
-									? (subfilter.filter | titlecase)
+									? (subfilter.filter==='MED'
+									?('_Medium_'|i18n):subfilter.filter | titlecase)
 									: subfilter?.label "
 
 						></span>
 						<span
 							class="icon-close"
-							(click)="clearFilters()"
+							(click)="clearFilters(subfilter)"
 							data-auto-id="FilterBarClearAllFiltersIcon"
 						></span>
 					</span>

@@ -39,6 +39,7 @@ import {
 } from './components/feedback/feedback-success/feedback-success.module';
 import { UnauthorizedUserModule } from './components/unauthorized-user/unauthorized-user.module';
 import { ApixAuthInterceptor, ApixAccountInterceptor } from '@interceptors';
+import { EntitlementRouteAuthService } from '@services';
 
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
@@ -113,6 +114,7 @@ export function loadUserInfo (service: AppService) {
 	],
 	providers: [
 		AppService,
+		EntitlementRouteAuthService,
 		LogService,
 		{ provide: HTTP_INTERCEPTORS, useClass: ApixAuthInterceptor, multi: true },
 		{ provide: HTTP_INTERCEPTORS, useClass: ApixAccountInterceptor, multi: true },

@@ -45,6 +45,7 @@ export class FaultsComponent implements OnInit, OnChanges, OnDestroy {
 	public lastUpdateTime: string;
 	public lastUpdateDate: string;
 	public offlineTime: string;
+	public alert: any = { };
 	public searchOptions = {
 		debounce: 1500,
 		max: 100,
@@ -110,8 +111,14 @@ export class FaultsComponent implements OnInit, OnChanges, OnDestroy {
 				? this.FAULT_CONSTANT.INACTIVE : this.FAULT_CONSTANT.ACTIVE;
 			this.searchParams.faultSeverity = currentFilter.afmSeverity;
 			this.searchParams.days = currentFilter.timeRange;
+			this.resetPage();
 			this.getFaultData(this.searchParams);
 		}
+	}
+
+	private resetPage () {
+		this.searchParams.pageNo = 1;
+		this.tableOffset = 0;
 	}
 
 	/**
@@ -122,6 +129,7 @@ export class FaultsComponent implements OnInit, OnChanges, OnDestroy {
 			bordered: false,
 			columns: [
 				{
+					key: 'faultSeverity',
 					name: I18n.get('_FaultSeverity_'),
 					sortable: true,
 					template: this.severityColorsTemplate,
@@ -147,7 +155,7 @@ export class FaultsComponent implements OnInit, OnChanges, OnDestroy {
 					sortable: true,
 				},
 			],
-			dynamicData: true,
+			dynamicData: false,
 			hover: true,
 			padding: 'loose',
 			selectable: false,
@@ -177,6 +185,8 @@ export class FaultsComponent implements OnInit, OnChanges, OnDestroy {
 				this.loading = false;
 			}),
 			catchError((err: HttpErrorResponse)  => {
+				this.loading = false;
+				_.invoke(this.alert, 'show',  I18n.get('_FaultGenericError_'), 'danger');
 				this.logger.error(
 					'FaultsComponent : getFaultData() ' +
 				`:: Error : (${err.status}) ${err.message}`);
@@ -184,35 +194,6 @@ export class FaultsComponent implements OnInit, OnChanges, OnDestroy {
 				return of({ });
 			}))
 			.subscribe();
-	}
-
-	/**
-	 * This will sort the records absed on column
-	 *
-	 * @param event - click event CuiTableOptions column info
-	 * @memberof FaultsComponent
-	 */
-	public onTableSortingChanged (event) {
-		this.searchParams.sortField = this.getSortKey(event.name);
-		this.searchParams.sortOrder = event.sortDirection;
-		this.getFaultData(this.searchParams);
-	}
-
-	private getSortKey = sortKey => {
-		switch (sortKey) {
-			case 'Severity':
-				return 'faultSeverity';
-			case 'Category':
-				return 'category';
-			case 'Title':
-				return 'title';
-			case 'Systems Affected':
-				return 'systemCount';
-			case 'Created Cases':
-				return 'tacCount';
-			default:
-				return 'title';
-		}
 	}
 
 	/**
@@ -234,7 +215,7 @@ export class FaultsComponent implements OnInit, OnChanges, OnDestroy {
 		this.searchParams.pageNo = pageInfo.page + 1;
 		this.tableOffset = pageInfo.page;
 		this.searchParams.size = this.tableLimit;
-		this.getFaultData(this.searchParams);
+		this.preparePaginationHeader();
 	}
 
 	/**
@@ -265,8 +246,8 @@ export class FaultsComponent implements OnInit, OnChanges, OnDestroy {
 	 * @param event search text
 	 */
 	public onSearchUpdate (event) {
+		this.resetPage();
 		this.searchParams.localSearch = event;
-		this.searchParams.pageNo = 1;
 		this.getFaultData(this.searchParams);
 	}
 
@@ -279,6 +260,7 @@ export class FaultsComponent implements OnInit, OnChanges, OnDestroy {
 		this.toasts.addToast('success', 'Event Type:',
 		I18n.get('_FaultXSuccess_', event.icName) +
 		I18n.get('_FaultsYMoved_', event.tacEnable));
+		this.getFaultData(this.searchParams);
 	}
 
 	/**
