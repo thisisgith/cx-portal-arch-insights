@@ -36,7 +36,8 @@ These commit message standards are inspired but adapted from the following sourc
 The commit title must not exceed 80 characters.
 
 #### Grammar
-The imperative mood must be used throughout the commit description, e.g. "Add the README" instead of "Adds the README".  A good test for this is to complete the sentence: "Applying this commit will..."
+Please use proper grammer, including correct spelling and capitalization. The imperative mood must be used throughout the commit description, e.g. "Add the README" instead of "Adds the README".  A good test for this is to complete the sentence: "Applying this commit will...".
+
 
 #### Format
 All commit messages must be structured as follows:
