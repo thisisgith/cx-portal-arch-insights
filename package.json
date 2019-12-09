@@ -4,6 +4,7 @@
 	"scripts": {
 		"ng": "ng",
 		"start": "ng serve",
+		"start:dev": "./utils/scripts/select-dev-env.sh",
 		"start:background": "npm start & npx wait-on http-get://localhost:4200",
 		"deploy": "npx ngdeploy dev --vn --source='src'",
 		"deploy:qa": "npx ngdeploy qa -vn --source='src' --gzip --ng-build=\"--aot\"",
