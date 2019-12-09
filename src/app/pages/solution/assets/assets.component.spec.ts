@@ -694,7 +694,16 @@ describe('AssetsComponent', () => {
 					AssetsModule,
 					HttpClientTestingModule,
 					MicroMockModule,
-					RouterTestingModule,
+					RouterTestingModule.withRoutes([
+						{
+							component: AssetsComponent,
+							path: 'solution/assets/system',
+						},
+						{
+							component: AssetsComponent,
+							path: 'solution/assets/hardware',
+						},
+					]),
 				],
 				providers: [
 					{ provide: 'ENVIRONMENT', useValue: environment },

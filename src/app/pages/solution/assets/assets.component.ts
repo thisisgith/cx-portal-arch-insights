@@ -1415,6 +1415,8 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 * Function used to load all of the data
 	 */
 	private loadData () {
+		this.selectedView.params.page = 1;
+		this.adjustQueryParams();
 		this.status.isLoading = true;
 		this.getInventoryCounts()
 		.pipe(
