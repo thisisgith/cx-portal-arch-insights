@@ -211,7 +211,8 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 				this.suggestedFix =
 				_.get(deviceSuggestedFix, ['suggestedFix'], '')
 				.replace(/</g, '&lt;')
-				.replace(/>/g, '&gt;');
+				.replace(/>/g, '&gt;')
+				.replace(/\n/g, '<br>');
 				_.set(deviceSuggestedFix, ['suggestedFix'], this.suggestedFix);
 			});
 		}

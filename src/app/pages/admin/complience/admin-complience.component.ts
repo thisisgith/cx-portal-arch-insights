@@ -49,7 +49,7 @@ export class AdminComplienceComponent implements OnInit , DeactivationGuarded {
 	public enableSaveButton: boolean;
 	public leftSideTagsResponse: LeftTagResponse;
 	public rightSideTagsResponse: RightTagResponse;
-	public selectedPolicy = 'select';
+	public selectedPolicy = 'Select';
 	public leftSideTags = [];
 	public clonedLeftTags = [];
 	public clonedRightTags = [];
@@ -93,7 +93,7 @@ export class AdminComplienceComponent implements OnInit , DeactivationGuarded {
 	public ngOnInit () {
 		this.policies = [
 			{
-				name: 'select',
+				name: 'Select',
 				value: true,
 			},
 			{
@@ -113,7 +113,7 @@ export class AdminComplienceComponent implements OnInit , DeactivationGuarded {
 	 * initialize all the tag and policy details
 	 */
 	public initializeDetails () {
-		this.saveDetails.body.policy = 'select';
+		this.saveDetails.body.policy = 'Select';
 		this.saveDetails.body.tags = [];
 		this.saveDetails.body.toBeScanned = false;
 		this.selectedDeviceTagType = 'allDevices';
@@ -381,14 +381,14 @@ export class AdminComplienceComponent implements OnInit , DeactivationGuarded {
 				showModalFlag = true;
 			}
 		}
-		if (policy !== 'select' && !this.enableSaveButton && !this.allInventorySelected && !showModalFlag) {
+		if (policy !== 'Select' && !this.enableSaveButton && !this.allInventorySelected && !showModalFlag) {
 			if (this.leftSideTagsResponse) {
 				this.clonedLeftTags = _.cloneDeep(this.leftSideTagsResponse.tags);
 				this.leftSideTags = this.clonedLeftTags;
 				this.getRightSideTags()
 					.subscribe();
 			}
-		} else if (policy !== 'select' && this.allInventorySelected && this.rightSideTags.length || showModalFlag) {
+		} else if (policy !== 'Select' && this.allInventorySelected && this.rightSideTags.length || showModalFlag) {
 			this.cuiModalService.show(this.switchBetweenPolicy, 'normal');
 		} else if (this.enableSaveButton) {
 			this.cuiModalService.show(this.switchBetweenPolicy, 'normal');
