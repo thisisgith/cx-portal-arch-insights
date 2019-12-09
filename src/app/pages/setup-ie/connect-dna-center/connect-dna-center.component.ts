@@ -50,7 +50,7 @@ export class ConnectDNACenterComponent implements OnInit, SetupStep {
 
 	private destroyed$: Subject<void> = new Subject<void>();
 
-	constructor(
+	constructor (
 		@Inject('ENVIRONMENT') private env,
 		private cpService: ControlPointIERegistrationAPIService,
 		private route: ActivatedRoute,
@@ -68,8 +68,8 @@ export class ConnectDNACenterComponent implements OnInit, SetupStep {
 	/**
 	 * NgOnInit
 	 */
-	public ngOnInit() {
-		const state = this.state.getState() || {};
+	public ngOnInit () {
+		const state = this.state.getState() || { };
 		this.activatedRoute.queryParams.subscribe(params => {
 			if (params.fromAdmin) {
 				this.isFromAdmin = true;
@@ -115,7 +115,7 @@ export class ConnectDNACenterComponent implements OnInit, SetupStep {
 	/**
 	 * Submit the completed form
 	 */
-	public onSubmit() {
+	public onSubmit () {
 		this.error = false;
 		this.passwordError = false;
 		this.loading = true;
@@ -200,7 +200,7 @@ export class ConnectDNACenterComponent implements OnInit, SetupStep {
 	 * @param event incoming keyboard event
 	 */
 	@HostListener('window:keyup', ['$event'])
-	public keyEvent(event: KeyboardEvent) {
+	public keyEvent (event: KeyboardEvent) {
 		if (
 			event.keyCode === KEY_CODES.ENTER
 			&& this.accountForm.valid
@@ -214,7 +214,7 @@ export class ConnectDNACenterComponent implements OnInit, SetupStep {
 	 * Make API Call to register DNAC
 	 * @returns Observable
 	 */
-	public register() {
+	public register () {
 		return this.registerService
 			.installAndRegisterDNAC({
 				dnacIP: this.accountForm.get('ipAddress').value,
@@ -227,7 +227,7 @@ export class ConnectDNACenterComponent implements OnInit, SetupStep {
 	 * Gets a new Auth Token
 	 * @returns Observable
 	 */
-	public reAuthorize() {
+	public reAuthorize () {
 		return this.registerService
 			.getAuthToken({
 				password: this.credsForm.get('password').value,
@@ -235,7 +235,7 @@ export class ConnectDNACenterComponent implements OnInit, SetupStep {
 			})
 			.pipe(
 				map(response => {
-					const state = this.state.getState() || {};
+					const state = this.state.getState() || { };
 					state.collectorToken = response;
 					this.state.setState(state);
 
