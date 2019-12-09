@@ -5,6 +5,7 @@ import {
 	CuiTableModule,
 	CuiPagerModule,
 	CuiSpinnerModule,
+	CuiAlertModule,
 } from '@cisco-ngx/cui-components';
 import { RMModule } from '@sdp-api';
 import { environment } from '@environment';
@@ -29,6 +30,7 @@ const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 		CuiPagerModule,
 		CuiSpinnerModule,
 		I18nPipeModule,
+		CuiAlertModule,
 		RMModule.forRoot({ rootUrl }),
 	],
 

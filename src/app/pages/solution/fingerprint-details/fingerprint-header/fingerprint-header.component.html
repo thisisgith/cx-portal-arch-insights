@@ -26,7 +26,9 @@
 						<span class="icon-circle"></span>
 					</div>
 				<div class=" col-md-6 no-padding-right">
-					<span [innerHTML]="deviceData.globalRiskRank | titlecase"></span>
+					<span [innerHTML]="
+					deviceData.globalRiskRank === 'MED'
+					?('_Medium_' | i18n):deviceData.globalRiskRank  | titlecase"></span>
 				</div>
 			</div>
 		</div>

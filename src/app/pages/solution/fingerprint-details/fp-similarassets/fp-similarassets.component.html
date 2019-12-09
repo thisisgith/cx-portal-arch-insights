@@ -97,7 +97,10 @@
 			class="qtr-margin-right icon-circle"
 		>
 		</span>
-		<span [innerText]="item.globalRiskRank | titlecase"></span>
+		<span [innerText]="
+		item.globalRiskRank === 'MED'
+		?('_Medium_' | i18n):item.globalRiskRank | titlecase">
+	</span>
 	</p>
 </ng-template>
 <ng-template #compareTemplate let-item="celldata">

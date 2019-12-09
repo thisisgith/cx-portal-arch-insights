@@ -14,8 +14,9 @@ import { ActivatedRoute } from '@angular/router';
 import * as _ from 'lodash-es';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
-import { takeUntil, map, catchError } from 'rxjs/operators';
+import { takeUntil, catchError, switchMap } from 'rxjs/operators';
 import { of, Subject } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
 
 /**
  * Show the grid of Crashed Systems data
@@ -43,6 +44,7 @@ export class CrashedSystemsGridComponent implements OnChanges {
 	public pageFirstRecord = 0;
 	public pageLastRecord = 10;
 	public isLoading: boolean;
+	public alert = { };
 	public pageInfo = {
 		limit: 2,
 		page: 0,
@@ -170,19 +172,26 @@ export class CrashedSystemsGridComponent implements OnChanges {
 			itemRange: '0-0',
 			totalItems: 0,
 		});
+		_.invoke(this.alert, 'hide', I18n.get('_RccErrorResults_'), 'danger');
 
 		return this.riskMitigationService.getDeviceDetails(params)
 				.pipe(
 					takeUntil(this.destroy$),
-					map((results: RiskAssets) => {
+					switchMap((results: RiskAssets) => {
 						this.isLoading = false;
 						this.crashedSystemsGridDetails.tableData = results.deviceDetails;
 						this.crashedSystemsGridDetails.totalItems = _.size(results.deviceDetails);
 						this.crashedSystemsGridDetails.tableOffset = 0;
 						this.onPagerUpdated(this.pageInfo);
+
+						return of(results);
 					}),
-					catchError(err => {
+					catchError((err: HttpErrorResponse) => {
 						this.isLoading = false;
+						if (err.status >= 500) {
+							_.invoke(this.alert, 'show', I18n.get('_RccErrorResults_'), 'danger');
+
+						}
 						this.crashedSystemsGridDetails.tableData = [];
 						this.logger.error('Crash Assets : getDeviceDetails() ' +
 							`:: Error : (${err.status}) ${err.message}`);
