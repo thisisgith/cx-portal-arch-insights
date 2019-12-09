@@ -1,4 +1,7 @@
-<div *ngIf="!crashedSystemsGridDetails.tableData.length && !isLoading">
+<div class="qtr-margin-top">
+	<cui-alert [options]="alert" ></cui-alert>
+</div>
+<div *ngIf="!crashedSystemsGridDetails?.tableData.length && !isLoading">
 	<div class="text-center dbl-margin-top dbl-margin-bottom">
 		<div>
 			<span
@@ -12,24 +15,22 @@
 </div>
 
 <cui-table
-	*ngIf="crashedSystemsGridDetails.tableData.length &&  !isLoading"
+	*ngIf="crashedSystemsGridDetails?.tableData?.length && !isLoading"
 	(onTableRowClicked)="selectedSystem = $event"
-	[data]="crashedSystemsGridDetails.tableData"
-	[limit]="crashedSystemsGridDetails.tableLimit"
+	[data]="crashedSystemsGridDetails?.tableData"
+	[limit]="crashedSystemsGridDetails?.tableLimit"
 	[offset]="crashedSystemsGridDetails.tableOffset"
 	[options]="crashesSystemsGridOptions"
 	(onSortingChanged)="onTableSortingChanged($event)"
 	class="table--wrap not-close-360"
 ></cui-table>
-<div class="section" *ngIf="!isLoading">
 	<cui-pager
-		*ngIf="crashedSystemsGridDetails.tableData.length"
-		[page]="crashedSystemsGridDetails.tableOffset"
-		[limit]="crashedSystemsGridDetails.tableLimit"
-		[totalItems]="crashedSystemsGridDetails.totalItems"
+		*ngIf="crashedSystemsGridDetails?.tableData?.length && !isLoading"
+		[page]="crashedSystemsGridDetails?.tableOffset"
+		[limit]="crashedSystemsGridDetails?.tableLimit"
+		[totalItems]="crashedSystemsGridDetails?.totalItems"
 		(onPageChanged)="onPagerUpdated($event)"
 	></cui-pager>
-</div>
 <div *ngIf="isLoading">
 	<cui-spinner></cui-spinner>
 </div>
