@@ -31,6 +31,7 @@ export class ConnectDNACenterComponent implements OnInit, SetupStep {
 	public loading: boolean;
 	public promptForCreds: boolean;
 	private customerId: string;
+	public isFromAdmin = false;
 
 	public accountForm = new FormGroup({
 		ipAddress: new FormControl(null, [
@@ -58,6 +59,7 @@ export class ConnectDNACenterComponent implements OnInit, SetupStep {
 		private setupService: SetupIEService,
 		private state: SetupIEStateService,
 		private utils: UtilsService,
+		private activatedRoute: ActivatedRoute,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
@@ -68,6 +70,11 @@ export class ConnectDNACenterComponent implements OnInit, SetupStep {
 	 */
 	public ngOnInit () {
 		const state = this.state.getState() || { };
+		this.activatedRoute.queryParams.subscribe(params => {
+			if (params.fromAdmin) {
+				this.isFromAdmin = true;
+			}
+		});
 		if (!state.collectorIP) {
 			// if no ip, check the queryParams
 			const collectorIP = this.route.snapshot.queryParams.collectorIP;
@@ -102,7 +109,7 @@ export class ConnectDNACenterComponent implements OnInit, SetupStep {
 	 * Handle user clicking Add another Cisco DNA Center deployment
 	 */
 	// public addAnotherDeployment () {
-		// TODO: this method
+	// TODO: this method
 	// }
 
 	/**
@@ -132,7 +139,11 @@ export class ConnectDNACenterComponent implements OnInit, SetupStep {
 						})
 						.pipe(
 							catchError(() => {
-								this.onStepComplete.emit(); // continue even if an error occurs
+								if (this.isFromAdmin) {
+									this.router.navigate(['/admin/settings']);
+								} else {
+									this.onStepComplete.emit();
+								} // continue even if an error occurs
 
 								return empty();
 							}),
@@ -140,7 +151,11 @@ export class ConnectDNACenterComponent implements OnInit, SetupStep {
 					takeUntil(this.destroyed$),
 				)
 				.subscribe(() => {
-					this.onStepComplete.emit();
+					if (this.isFromAdmin) {
+						this.router.navigate(['/admin/settings']);
+					} else {
+						this.onStepComplete.emit();
+					}
 				});
 		} else {
 			this.register()
@@ -159,7 +174,11 @@ export class ConnectDNACenterComponent implements OnInit, SetupStep {
 						})
 						.pipe(
 							catchError(() => {
-								this.onStepComplete.emit(); // continue even if an error occurs
+								if (this.isFromAdmin) {
+									this.router.navigate(['/admin/settings']);
+								} else {
+									this.onStepComplete.emit();
+								} // continue even if an error occurs
 
 								return empty();
 							}),
@@ -167,7 +186,11 @@ export class ConnectDNACenterComponent implements OnInit, SetupStep {
 					takeUntil(this.destroyed$),
 				)
 				.subscribe(() => {
-					this.onStepComplete.emit();
+					if (this.isFromAdmin) {
+						this.router.navigate(['/admin/settings']);
+					} else {
+						this.onStepComplete.emit();
+					}
 				});
 		}
 	}
