@@ -19,6 +19,7 @@ import { User } from '@interfaces';
 import { throwError, Observable } from 'rxjs';
 import { EntitlementWrapperService, OrgUserService } from '@sdp-api';
 import { mappedUser } from '@mock';
+import { UserRoles } from '@constants';
 
 describe('AppComponent', () => {
 	let component: AppComponent;
@@ -328,6 +329,23 @@ describe('AppComponent', () => {
 					.subscribe((n: number) => {
 						expect(n)
 							.toEqual(mappedUser.info.companyList[1].companyId);
+						done();
+					});
+				});
+			});
+		});
+
+		it('should prioritize `admin` over `user` and resolve the role', done => {
+			window.localStorage.setItem('activeSmartAccount', `${mappedUser.info.companyList[1].companyId}`);
+			fixture.whenStable()
+			.then(() => {
+				userResolve.resolve()
+				.subscribe(() => {
+					userResolve.getRole()
+					.subscribe((s: string) => {
+						expect(s)
+							.toEqual(UserRoles.ADMIN);
+
 						done();
 					});
 				});
