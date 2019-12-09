@@ -935,7 +935,7 @@ export class RccComponent implements OnInit, Panel360 , OnDestroy {
 	 */
 	public handleHidden (hidden: boolean) {
 		if (hidden) {
-			this.onPanelClose();
+			this.onAllPanelsClose();
 		}
 	}
 	/**
