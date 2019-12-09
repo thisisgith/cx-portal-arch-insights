@@ -57,6 +57,7 @@
 	"_AdminEnableRegulatoryComplience_": "Enable regulatory compliance scan across the network",
 	"_AdminEnableRegulatoryComplienceNote_": "Regulatory Compliance provides insights and analytics designed to assist Customer with decisions and actions regarding regulatory compliance.",
 	"_AdminPolicy_": "Policy Group",
+	"_AdminPolicySelect_": "Select",
 	"_AdminPolicyTagging_": "REGULATORY COMPLIANCE",
 	"_AdminPolicyTaggingHeading_": "Select Tags for Policy Group",
 	"_AdminSettings_": "Admin Settings",

@@ -21,10 +21,9 @@ export class RouteGuard implements CanActivate {
 		map((user: User) => {
 			const isAdmin = _.get(user, ['info', 'individual', 'role']);
 			const cxLevel = _.get(user, ['service', 'cxLevel']);
-			// if (isAdmin.toLowerCase() === admin && (cxLevel > 1)) {
-			// 	return true;
-			// }
-			return true;
+			 if (isAdmin.toLowerCase() === admin && (cxLevel > 1)) {
+			 	return true;
+			 }
 			this.router.navigate(['/admin/policies']);
 
 		}),

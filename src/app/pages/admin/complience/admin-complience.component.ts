@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, TemplateRef} from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import {
 	ControlPointAdminComplienceService,
 	RightTagResponse,
@@ -6,8 +6,7 @@ import {
 	AssetTaggingService,
 	CanDeactivateGuard,
 	PolicyGroupDetails,
-	DeactivationGuarded
-} from '@sdp-api';
+	DeactivationGuarded } from '@sdp-api';
 
 import { User } from '@interfaces';
 import { ActivatedRoute } from '@angular/router';
@@ -29,7 +28,7 @@ import { CuiModalService } from '@cisco-ngx/cui-components';
 	styleUrls: ['./admin-complience.component.scss'],
 	templateUrl: './admin-complience.component.html',
 })
-export class AdminComplienceComponent implements OnInit, DeactivationGuarded{
+export class AdminComplienceComponent implements OnInit, DeactivationGuarded {
 	@ViewChild('confirmationModalTemplate',
 	{ static: true }) private confirmationModalTemplate: TemplateRef<string>;
 
@@ -38,7 +37,7 @@ export class AdminComplienceComponent implements OnInit, DeactivationGuarded{
 
 	@ViewChild('switchBetweenCompliance',
 	{ static: true }) private switchBetweenCompliance: TemplateRef<string>;
-	returnValue: boolean | Observable<boolean>;
+	public returnValue: boolean | Observable<boolean>;
 
 	private destroyed$: Subject<void> = new Subject<void>();
 	private customerId: string;
@@ -77,6 +76,7 @@ export class AdminComplienceComponent implements OnInit, DeactivationGuarded{
 	public triggerModal = '';
 	public hideAssetTags = true;
 	public allInventorySelected: boolean;
+	public defaultValue = 'Select';
 
 	constructor (
 		public cuiModalService: CuiModalService,
@@ -85,7 +85,7 @@ export class AdminComplienceComponent implements OnInit, DeactivationGuarded{
 		private route: ActivatedRoute,
 		private logger: LogService,
 		private routeAuthService: RouteAuthService,
-		private canDeactGuard:CanDeactivateGuard,
+		private canDeactGuard: CanDeactivateGuard,
 	) {
 		this.user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(this.user, ['info', 'customerId']);
@@ -95,7 +95,7 @@ export class AdminComplienceComponent implements OnInit, DeactivationGuarded{
 	/**
 	 * Function which instanstiates the settings page to the initial view
 	 */
-	public ngOnInit () {   
+	public ngOnInit () {
 		this.checkOptlnStatus();
 		this.initializeDetails();
 	}
@@ -104,7 +104,7 @@ export class AdminComplienceComponent implements OnInit, DeactivationGuarded{
 	 * initialize all the tag and policy details
 	 */
 	public initializeDetails () {
-		this.saveDetails.body.policy = 'select';
+		this.saveDetails.body.policy = 'Select';
 		this.saveDetails.body.tags = [];
 		this.saveDetails.body.toBeScanned = false;
 		this.selectedDeviceTagType = 'allDevices';
@@ -242,22 +242,22 @@ export class AdminComplienceComponent implements OnInit, DeactivationGuarded{
 	 * @returns policies data
 	 */
 
-	 public getPolicies() {
+	 public getPolicies () {
 
 		  return this.controlPointAdminComplienceService.getPolicies(this.customerId)
-		        .pipe(
-					takeUntil(this.destroyed$),
-					map((results: any) => {	
-					   this.policyGroupDetails = results;
-					   this.policies = _.cloneDeep(this.policyGroupDetails.policyGroup);
-					}),
-					catchError(err => {
-						this.logger.error('Policies : getPolicies()' +
-							 `:: Error : (${err.status}) ${err.message}`);
-							 
-						return of({ });	 
-					})
-				);
+		  .pipe(
+			  takeUntil(this.destroyed$),
+			  map((results: any) => {
+				  this.policyGroupDetails = results;
+				  this.policies = _.cloneDeep(this.policyGroupDetails.policyGroup);
+			}),
+			catchError(err => {
+				this.logger.error('Policies : getPolicies()' +
+				`:: Error : (${err.status}) ${err.message}`);
+
+				return of({ });
+			}),
+			);
 	 }
 
 	/**
@@ -603,20 +603,25 @@ export class AdminComplienceComponent implements OnInit, DeactivationGuarded{
 		}
 		this.cuiModalService.hide();
 	}
-	/**
- 	* Function to show Confirmation pop up when leaving compliance tap
- 	*/
-	 canDeactivate(): boolean | Observable<boolean> | Promise<boolean> {
-		if(this.selectedDeviceTagType === 'selectedTags' || this.toBeScanned===true){
+
+	  /**
+	   * Function to show Confirmation pop up when leaving compliance tap
+	   *  @param choice switchBetweenCompliance
+	   * @returns navigateAwaySelection
+	   */
+	 public canDeactivate (): boolean | Observable<boolean> | Promise<boolean> {
+		if (this.selectedDeviceTagType === 'selectedTags' || this.toBeScanned) {
 			this.cuiModalService.show(this.switchBetweenCompliance, 'normal');
 		}
+
 		return this.canDeactGuard.navigateAwaySelection$;
 	  }
 
-	  /**
- 	* Function to continue without changes in compliance
- 	*/
-	public continueWithoutChange(choice:boolean):void{
+	 /**
+	  * Function to continue without changes in compliance
+	  * @param choice navigateAwaySelection
+	  */
+	public continueWithoutChange (choice: boolean): void {
 		this.canDeactGuard.navigateAwaySelection$.next(choice);
 		this.cuiModalService.hide();
 	}
