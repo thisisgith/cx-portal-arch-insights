@@ -11,16 +11,72 @@ $cx-font-size-24: 24px;
 	background-color: #fff;
 }
 
-.km {
+.facet-navigation__items__wrapper {
+	flex-shrink: 1;
+	padding: 0 2rem;
+	overflow: hidden;
+	scroll-behavior: smooth;
+}
+
+.facet-navigation__link {
+	display: flex;
+	flex-flow: column nowrap;
+	position: relative;
+	width: 312px;
+	height: 146px;
+	border: none;
+	-webkit-appearance: none;
+	border-left: 1px solid #c2c2c2;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	box-sizing: border-box;
+	margin: 0.4rem;
+
+	&--selected {
+		box-shadow: 0 10px 17px 0 rgba(0, 0, 0, 0.2);
+		clip-path: polygon(-20% 0%, 120% 0%, 120% 120%, -20% 120%);
+
+		p {
+			color: $accent-color1;
+		}
+	}
+}
+
+.facet-navigation {
 	display: grid;
 	margin: 0;
 	grid-template-columns: auto auto auto;
 	justify-content: center;
 	background-color: #fff;
 	grid-template-rows: max-content;
+
+	&__left,
+	&__right {
+		background: none;
+		border: none;
+
+		@extend %facet-navigation__nav-btn;
+	}
+
+	&__items {
+		justify-content: center;
+		display: inline-flex;
+		margin: 0;
+	}
+
+	&__list-item {
+		list-style: none;
+
+		&:last-child {
+			.facet-navigation__link {
+				border-right: 1px solid #c2c2c2;
+			}
+		}
+	}
 }
 
-%km__nav-btn {
+%facet-navigation__nav-btn {
 	display: flex;
 	height: 100%;
 	max-height: 146px;
@@ -45,52 +101,7 @@ $cx-font-size-24: 24px;
 	}
 }
 
-.km__left {
-	@extend %km__nav-btn;
-}
-
-.km__right {
-	@extend %km__nav-btn;
-}
-
-.km__items__wrapper {
-	flex-shrink: 1;
-	padding: 0 2rem;
-	overflow: hidden;
-	scroll-behavior: smooth;
-}
-
-.km__items {
-	justify-content: center;
-	display: inline-flex;
-}
-
-.km__items__item {
-	display: flex;
-	flex-flow: column nowrap;
-	position: relative;
-	width: 312px;
-	height: 146px;
-	border-left: 1px solid #c2c2c2;
-	align-items: center;
-	justify-content: center;
-	cursor: pointer;
-
-	&:last-child {
-		border-right: 1px solid #c2c2c2;
-	}
-
-	&--selected {
-		box-shadow: 0 10px 17px 0 rgba(0, 0, 0, 0.2);
-		clip-path: polygon(-20% 0%, 120% 0%, 120% 120%, -20% 120%);
-
-		p {
-			color: $accent-color1;
-		}
-	}
-}
-
-.km__items__item__label {
+.facet-navigation__items__item__label {
 	margin: 0;
 	color: $default-text-color;
 	font-size: 14px;
