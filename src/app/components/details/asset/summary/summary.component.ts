@@ -51,6 +51,7 @@ export class AssetDetailsSummaryComponent implements OnChanges, OnInit, OnDestro
 
 	public warrantyStatus: 'Covered' | 'Uncovered';
 	public tags: Tags[];
+	public lastScan: string;
 
 	private assetTagsParams: AssetTaggingService.GetParams;
 
@@ -58,6 +59,7 @@ export class AssetDetailsSummaryComponent implements OnChanges, OnInit, OnDestro
 		loading: {
 			overall: false,
 			tags: false,
+			action: false,
 		},
 		scan: {
 			eligible: false,
@@ -102,6 +104,7 @@ export class AssetDetailsSummaryComponent implements OnChanges, OnInit, OnDestro
 			mergeMap((response: ScanRequestResponse) => {
 				const scan = _.head(response);
 				const status = _.get(scan, 'status', '');
+				this.lastScan = _.get(scan, 'status', '');
 				const inProgress = (
 					status === 'IN_PROGRESS' ||
 					status === 'RECEIVED' ||
@@ -137,6 +140,7 @@ export class AssetDetailsSummaryComponent implements OnChanges, OnInit, OnDestro
 	 * Initiates a scan
 	 */
 	public initiateScan () {
+		this.status.loading.action = true;
 		const request: TransactionRequest = {
 			customerId: this.customerId,
 			neCount: 1,
@@ -158,6 +162,7 @@ export class AssetDetailsSummaryComponent implements OnChanges, OnInit, OnDestro
 			.pipe(
 				takeUntil(this.destroyed$),
 				mergeMap((response: TransactionRequestResponse) => {
+					this.status.loading.action = false;
 					const transaction: Transaction = _.head(response);
 
 					if (_.get(transaction, 'transactionId')) {
@@ -169,6 +174,7 @@ export class AssetDetailsSummaryComponent implements OnChanges, OnInit, OnDestro
 					return of({ });
 				}),
 				catchError(err => {
+					this.status.loading.action = false;
 					this.alertMessage.emit({
 						message: I18n.get('_UnableToInitiateScan_', this.systemAsset.deviceName),
 						severity: 'danger',
@@ -199,7 +205,7 @@ export class AssetDetailsSummaryComponent implements OnChanges, OnInit, OnDestro
 			takeUntil(this.destroyed$),
 			mergeMap((response: TransactionStatusResponse) => {
 				const status = _.get(response, 'status');
-
+				this.lastScan = _.get(response, 'status');
 				if (status && status === 'SUCCESS' || status === 'FAILURE') {
 					this.alertMessage.emit({
 						message: status === 'SUCCESS' ?

@@ -708,7 +708,6 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		.pipe(
 			map(() => {
 				this.alert.show(I18n.get('_ScanInitiated_', deviceName), 'info');
-				this.onRowSelect(item);
 
 				return of();
 			}),
@@ -1003,6 +1002,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	private getSystemAdvisoryCount () {
 		const systemAdvisoryFilter =
 			_.find(this.getView('system').filters, { key: 'advisories' });
+
 		return this.productAlertsService.getSystemVulnerabilityCounts({
 			customerId: this.customerId,
 			solution: this.selectedSolutionName,
