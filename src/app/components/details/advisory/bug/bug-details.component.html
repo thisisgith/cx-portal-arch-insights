@@ -23,7 +23,7 @@
 		<div class="base-margin-top base-margin-bottom descriptionHeight">
 			<ng-container *ngTemplateOutlet="detailText; context: {
 					title: ('_Title_' | i18n),
-					text: data?.advisory?.title
+					text: data?.advisory?.cdets.headline
 				}">
 			</ng-container>
 			<ng-container *ngIf="data?.advisory?.cdets?.severity">
