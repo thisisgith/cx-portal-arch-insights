@@ -155,7 +155,7 @@
 	<span [innerText]="item?.severity"></span>
 </ng-template>
 <ng-template #suggestedFixTemplate let-item="celldata">
-	<div [innerHTML]="item?.suggestedFix | removeInvalidTags: item?.suggestedFix"></div>
+	<div [innerHTML]="item?.suggestedFix"></div>
 </ng-template>
 <ng-template #messageFixTemplate let-item="celldata">
 	<div [innerHTML]="item?.message"></div>
