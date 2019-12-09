@@ -219,14 +219,6 @@ describe('RccComponent', () => {
 			.toBeTruthy();
 	});
 
-	it('should close the panel', () => {
-		const model = 'selectedModel';
-		component[model] = false;
-		component.onPanelClose(model);
-		expect(component[model])
-			.toEqual(null);
-	});
-
 	it('should call openDevicePage', () => {
 		const serialNumber = 'sn232';
 		component.openDevicePage(serialNumber);
@@ -645,16 +637,14 @@ describe('RccComponent', () => {
 	});
 
 	it('should called on close with true', () => {
-		const view = 'selectedViolationModal';
 		spyOn(component, 'onPanelClose');
-		component.handleHidden(true, view);
+		component.handleHidden(true);
 		expect(component.onPanelClose)
 			.toHaveBeenCalled();
 	});
 
 	it('should called on close with false', () => {
-		const view = 'selectedViolationModal';
-		component.handleHidden(false, view);
+		component.handleHidden(false);
 		spyOn(component, 'onPanelClose');
 		expect(component.onPanelClose)
 			.toHaveBeenCalledTimes(0);
