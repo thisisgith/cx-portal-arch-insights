@@ -177,6 +177,14 @@ implements OnInit, OnChanges, OnDestroy {
 
 				return;
 			}
+
+			/** temporary till hostname search is introduced */
+			if (this.serialNumber.query.toUpperCase() !== this.assetData.serialNumber.toUpperCase()) {
+				this.hide.emit(true);
+
+				return;
+			}
+
 			this.data.currentVersion = this.assetData.osVersion;
 			this.data.ipAddress = this.assetData.ipAddress;
 			this.data.lastScan = this.assetData.lastScan;
