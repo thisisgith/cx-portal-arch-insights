@@ -30,19 +30,29 @@ const userRole = {
 	attribName: null,
 };
 
+const partnerRole = {
+	roleName: UserRoles.PARTNER,
+	roleDisplayName: 'Smart Account Partner',
+	tenant: 'SMARTACCPARTNER',
+	tenantDisplayName: 'Smart Account Management Partner',
+	attribType: null,
+	attribValue: null,
+	attribName: null,
+};
+
 export const accountsResponseMock: UserEntitlement = {
 	companyList: [{
 		companyName: 'CISCO CANADA',
 		companyId: 2431199,
 		domainIdentifier: 'cisco-ca',
 		accountType: 'CUSTOMER',
-		roleList: [adminRole, userRole],
+		roleList: [userRole, adminRole, partnerRole],
 	}, {
 		companyName: 'CISCO USA',
 		companyId: 67890,
 		domainIdentifier: 'cisco-us',
 		accountType: 'CUSTOMER',
-		roleList: [userRole, adminRole],
+		roleList: [adminRole, userRole],
 	}],
 	env: 'dev',
 	internalAssignableRoleList: [adminRole],

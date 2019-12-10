@@ -161,7 +161,7 @@ export class UserResolve implements Resolve<any> {
 				const { cxLevel } = _.get(this.cachedUser, 'service');
 				this.cxLevel.next(Number(cxLevel));
 
-				this.roleList = this.getSortedRoleList(this.smartAccount.roleList);
+				this.roleList = this.getRefinedRoleList(this.smartAccount.roleList);
 				this.role.next(_.get(this.roleList, [0, 'roleName']));
 
 				return this.cachedUser;
@@ -176,18 +176,20 @@ export class UserResolve implements Resolve<any> {
 		);
 	}
 
-	private getSortedRoleList (roleList: Role[]) {
+	/**
+	 * Filter the invalid roles out and sort the valid ones by priority
+	 * @param roleList the array of roles
+	 * @returns the refined roleList
+	 */
+	private getRefinedRoleList (roleList: Role[]) {
 		if (roleList.length < 1) {
 			return [];
 		}
 
-		const priorityOrder = [UserRoles.ADMIN, UserRoles.USER];
+		const priorityOrder: Role['roleName'][] = [UserRoles.ADMIN, UserRoles.USER];
+		const roleListFiltered = roleList.filter(role => priorityOrder.includes(role.roleName));
 
-		return _.sortBy(roleList, role => {
-			const roleIndex = _.indexOf(priorityOrder, role.roleName);
-
-			return (roleIndex >= 0) ? roleIndex : roleList.length;
-		});
+		return _.sortBy(roleListFiltered, role => priorityOrder.indexOf(role.roleName));
 	}
 
 	/**

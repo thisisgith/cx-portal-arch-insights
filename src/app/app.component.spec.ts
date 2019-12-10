@@ -335,8 +335,7 @@ describe('AppComponent', () => {
 			});
 		});
 
-		it('should prioritize `admin` over `user` and resolve the role', done => {
-			window.localStorage.setItem('activeSmartAccount', `${mappedUser.info.companyList[1].companyId}`);
+		it('should refine the roleList resolve the role', done => {
 			fixture.whenStable()
 			.then(() => {
 				userResolve.resolve()
