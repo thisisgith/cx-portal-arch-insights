@@ -4,7 +4,7 @@ import { UserResolve } from '@utilities';
 import { mergeMap, take, map } from 'rxjs/operators';
 import { environment } from '@environment';
 import { ApixIdentityService } from './apix-identity.service';
-import { OriginType } from '@constants';
+import { OriginType, UserInfoKey } from '@constants';
 import { LogService } from '@cisco-ngx/cui-services';
 import * as _ from 'lodash-es';
 import { RacetrackInfoService } from '@services';
@@ -15,28 +15,23 @@ export interface UserInformation {
 	params: any;
 }
 
-enum UserInfoKey {
-	SAID = 'saId',
-	CUSTOMERID = 'customerId',
-	USECASE = 'useCase',
-	SOLUTION = 'solution',
-	CXLEVEL = 'cxLevel',
-}
-
 export class ApixAccountInterceptor implements HttpInterceptor {
 	// TODO: Remove this when APIs become consistent / ignore unused params
 	private pathsToIgnore = [
-		new RegExp('/cxportal/entitlement/v2/user$'),
-		new RegExp('/cxportal/cxpp-partner-info/partnerInfo/v1/[^/]+/partners$'),
-		new RegExp('/customerportal/pitstop/v1/info$'),
-		new RegExp('/cxportal/cxpp-entitlement-wrapper/v1/entitlement/user/accounts$'),
-		new RegExp('/customerportal/search/v2/ciscoSearch$'),
-		new RegExp('/customerportal/search/v1/globalSearch$'),
+		new RegExp('/(customerportal|cxportal)/entitlement/v2/user$'),
+		new RegExp('/(customerportal|cxportal)/cxpp-partner-info/partnerInfo/v1/[^/]+/partners$'),
+		new RegExp('/(customerportal|cxportal)/pitstop/v1/info$'),
+		new RegExp('/(customerportal|cxportal)/cxpp-entitlement-wrapper/v1/entitlement/user/accounts$'),
+		new RegExp('/(customerportal|cxportal)/search/v2/ciscoSearch$'),
+		new RegExp('/(customerportal|cxportal)/search/v1/globalSearch$'),
 	];
 
-	private assetsAPIs = [
-		new RegExp('/customerportal/inventory/v1/assets/hardware$'),
-		new RegExp('/customerportal/inventory/v1/assets/system$'),
+	private pathsToExcludeCxLevelAndSaId = [
+		new RegExp('/(customerportal|cxportal)/inventory/'),
+		new RegExp('/(customerportal|cxportal)/contracts/'),
+		new RegExp('/(customerportal|cxportal)/product-alerts/'),
+		new RegExp('/(customerportal|cxportal)/diagnostics/'),
+		new RegExp('/(customerportal|cxportal)/ndgw/'),
 	];
 
 	constructor (
@@ -101,7 +96,10 @@ export class ApixAccountInterceptor implements HttpInterceptor {
 		const customerId$ = this.userResolve.getCustomerId()
 			.pipe(take(1));
 		const cxLevel$ = this.userResolve.getCXLevel()
-			.pipe(take(1));
+			.pipe(
+				take(1),
+				map(val => val.toString()),
+			);
 		const useCase$ = this.racetrackInfoService.getCurrentTechnology()
 			.pipe(
 				take(1),
@@ -143,7 +141,7 @@ export class ApixAccountInterceptor implements HttpInterceptor {
 		return of(userInfo)
 		.pipe(
 			map(result => this.removeNonValueFields(result)),
-			map(tempResult => this.removeCxLevelAndSAID(tempResult, req)),
+			map(tempResult => this.removeCxLevelAndSaId(tempResult, req)),
 			map(refinedResult => this.filterExistentParams(refinedResult, req)),
 			map(filteredResult => this.filterExistentHeaders(filteredResult, req)),
 		);
@@ -198,11 +196,11 @@ export class ApixAccountInterceptor implements HttpInterceptor {
 		return userInfo;
 	}
 
-	private removeCxLevelAndSAID (userInfo: UserInformation, req: HttpRequest<any>) {
+	private removeCxLevelAndSaId (userInfo: UserInformation, req: HttpRequest<any>) {
 		const accountInfo = userInfo.accountInfo;
 		const url = new URL(req.url, environment.origin);
 
-		if (!this.assetsAPIs.some(regex => regex.test(url.pathname))) {
+		if (!this.pathsToExcludeCxLevelAndSaId.some(regex => regex.test(url.pathname))) {
 			return userInfo;
 		}
 

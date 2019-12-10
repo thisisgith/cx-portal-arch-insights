@@ -23,7 +23,7 @@ import {
 	FaultAffectedSystemDetails,
 	InventoryService,
 	FaultProductId,
-	FaultOS,
+	FaultSwType,
 	RacetrackSolution,
 	RacetrackTechnology,
 	FaultICSearchParams,
@@ -75,7 +75,7 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 	public affectedSystemLoading = false;
 	public alert: any = { };
 	public productID: FaultProductId[];
-	public software: FaultOS[];
+	public software: FaultSwType[];
 	public serialNumber: string;
 	public icSettingsResponse: FaultIcSettings;
 	public paginationCount;
@@ -107,7 +107,7 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 		ACTIVE: 'ACTIVE',
 		AUTOMATED: 'Automated Faults',
 		DETECTED: 'Detected Faults',
-		FILTER_TYPE: 'productId,os',
+		FILTER_TYPE: 'productId,swType',
 		INACTIVE: 'INACTIVE',
 		PRODUCT_ID: 'PRODUCTID',
 		SOFTWARE: 'SOFTWARE',
@@ -174,6 +174,7 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 			this.getFiltersData();
 		});
 
+		this.detailsPanelStackService.push(this);
 		this.buildTable();
 	}
 
@@ -251,7 +252,7 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 			.pipe(takeUntil(this.destroy$),
 			map((response: FaultFilterData) => {
 				this.productID = _.get(response, ['responseData', 0, 'productId']);
-				this.software = _.get(response, ['responseData', 1, 'os']);
+				this.software = _.get(response, ['responseData', 1, 'swType']);
 				this.loading = false;
 			}),
 			catchError(err => {
@@ -427,7 +428,7 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 	public openConfirmation () {
 		this.searchIcParams.syslogsignature = this.fault.msgType;
 		this.searchIcParams.enable =
-			(this.faultParams.tacEnabled.toUpperCase() === this.FAULT_CONSTANT.ACTIVE) ? true : false;
+			(this.faultParams.tacEnabled.toUpperCase() === this.FAULT_CONSTANT.ACTIVE) ? false : true;
 		this.updateIcSettings(this.searchIcParams);
 	}
 
@@ -461,9 +462,9 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 		if (this.icSettingsResponse.statusCode.toUpperCase() !== 'OK') {
 			_.invoke(this.alert, 'show', this.icSettingsResponse.statusMessage, 'danger');
 		} else {
-			this.faultIcSettings.icName = this.searchIcParams.syslogsignature;
+			this.faultIcSettings.icName = this.fault.title;
 			this.faultIcSettings.tacEnable = this.searchIcParams.enable
-				? this.FAULT_CONSTANT.DETECTED : this.FAULT_CONSTANT.AUTOMATED;
+				? this.FAULT_CONSTANT.AUTOMATED : this.FAULT_CONSTANT.DETECTED;
 			this.showSuccess.emit(this.faultIcSettings);
 			this.onAllPanelsClose();
 		}
@@ -493,17 +494,17 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 	private getSortKey = sortKey => {
 		switch (sortKey) {
 			case 'System Name':
-				return 'systemName';
+				return 'hostName';
 			case 'Product ID':
 				return 'productId';
 			case 'Software Type':
-				return 'softwareType';
+				return 'swType';
 			case 'Case Number':
 				return 'tacCaseNo';
 			case 'Date and Time':
-				return 'tacCaseCreatedDate';
+				return 'taccaseCreatedDate';
 			default:
-				return 'systemName';
+				return 'hostName';
 		}
 	}
 

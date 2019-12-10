@@ -154,12 +154,18 @@ export class SetupIeComponent implements AfterViewInit, OnInit, OnDestroy {
 			.subscribe(params => {
 				const compKey = params.compKey;
 				const ovaSelection = params.ovaSelection;
-
+				this.isFromAdmin = params.fromAdmin;
 				this.setOvaSelection(ovaSelection);
 
 				let shouldReuseComponent = false;
 				if (isNaN(compKey)) {
-					this.currentStep = 0;
+					// if redirected from admin setting page, then it should go to second step
+					if (this.isFromAdmin) {
+						this.currentStep = 1;
+						this.savedState = { };
+					} else {
+						this.currentStep = 0;
+					}
 				} else if (compKey >= this.steps.length) {
 					// if compKey is greater than last step, go to last
 					this.currentStep = this.steps.length - 1;

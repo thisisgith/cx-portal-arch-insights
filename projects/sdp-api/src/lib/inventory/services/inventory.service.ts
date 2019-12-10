@@ -221,7 +221,7 @@ class InventoryService extends __BaseService {
     if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
     (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
     if (params.solution != null) __params = __params.set('solution', params.solution.toString());
-    (params.serialNumber || []).forEach(val => {if (val != null) __params = __params.append('serialNumber', val.toString())});
+    (params.serialNumber || []).forEach(val => {if (val != null) __params = __params.append('search', val.toString())});
     if (params.search != null) __params = __params.set('search', params.search.toString());
     if (params.saId != null) __params = __params.set('saId', params.saId.toString());
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
@@ -1111,7 +1111,7 @@ class InventoryService extends __BaseService {
     if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
     (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
     if (params.solution != null) __params = __params.set('solution', params.solution.toString());
-    (params.serialNumber || []).forEach(val => {if (val != null) __params = __params.append('serialNumber', val.toString())});
+    (params.serialNumber || []).forEach(val => {if (val != null) __params = __params.append('search', val.toString())});
     if (params.saId != null) __params = __params.set('saId', params.saId.toString());
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
     (params.productId || []).forEach(val => {if (val != null) __params = __params.append('productId', val.toString())});

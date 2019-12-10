@@ -1,3 +1,6 @@
+<div class="qtr-margin-top">
+	<cui-alert [options]="alert" ></cui-alert>
+</div>
 <div
 	*ngIf="
 		!highCrashRiskSystemsGridDetails.tableData.length &&
@@ -17,18 +20,18 @@
 </div>
 
 <cui-table
-	*ngIf="!crashRiskGridLoading && highCrashRiskSystemsGridDetails.tableData.length"
+	*ngIf="!crashRiskGridLoading && highCrashRiskSystemsGridDetails?.tableData?.length"
 	[options]="highCrashRiskAssetsGridOptions"
-	[data]="highCrashRiskSystemsGridDetails.tableData"
+	[data]="highCrashRiskSystemsGridDetails?.tableData"
 	(onTableRowClicked)="connectToFpDetails($event)"
 	(onSortingChanged)="highCrashTableSorted($event)"
 	class="table--wrap not-close-360"
 ></cui-table>
 <div class="section">
 	<cui-pager
-		*ngIf="highCrashRiskSystemsGridDetails.totalItems && !crashRiskGridLoading"
-		[page]="highCrashRiskSystemsGridDetails.tableOffset"
-		[limit]="highCrashRiskSystemsGridDetails.tableLimit"
+		*ngIf="highCrashRiskSystemsGridDetails?.totalItems && !crashRiskGridLoading"
+		[page]="highCrashRiskSystemsGridDetails?.tableOffset"
+		[limit]="highCrashRiskSystemsGridDetails?.tableLimit"
 		[totalItems]="highCrashRiskSystemsGridDetails.totalItems"
 		(onPageChanged)="onHcrPagerUpdated($event)"
 	></cui-pager>
@@ -64,7 +67,10 @@
 		class="qtr-margin-right icon-circle"
 	>
 	</span>
-	<span [innerText]="item.globalRiskRank | titlecase"></span>
+	<span [innerText]="
+	item.globalRiskRank === 'MED'
+	 ?('_Medium_' | i18n)
+	 :item.globalRiskRank  | titlecase "></span>
 </ng-template>
 <ng-template #riskTooltipContentTemplate>
 	<span

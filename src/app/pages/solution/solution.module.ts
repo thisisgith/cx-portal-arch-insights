@@ -22,6 +22,7 @@ import {
 	GaugeModule,
 	MultiGaugeModule,
 } from '@components';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
@@ -56,6 +57,7 @@ const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 		RacetrackModule.forRoot({ rootUrl }),
 		InsightsCrashesModule.forRoot({ rootUrl }),
 		SolutionRoutingModule,
+		SharedModule,
 	],
 })
 export class SolutionModule { }

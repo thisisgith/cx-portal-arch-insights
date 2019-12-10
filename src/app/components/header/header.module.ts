@@ -8,6 +8,7 @@ import { SearchModule } from '../search/search.module';
 import { HttpClientModule } from '@angular/common/http';
 import { MicroMockModule } from '@cui-x-views/mock';
 import { InlineSVGModule } from 'ng-inline-svg';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 /**
  * Module representing the Header Component
@@ -24,6 +25,7 @@ import { InlineSVGModule } from 'ng-inline-svg';
 		RouterModule,
 		SearchModule,
 		InlineSVGModule.forRoot({ baseUrl: '/' }),
+		SharedModule,
 	],
 })
 export class HeaderModule { }

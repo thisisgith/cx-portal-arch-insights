@@ -1020,12 +1020,6 @@ describe('LifecycleComponent', () => {
 			de = fixture.debugElement.query(By.css('.hover-panel--successbytes'));
 			expect(de)
 				.toBeTruthy();
-
-			// check if there is atleast one icon in the hover block
-			de = de.query(By.css('div .type.text-left'))
-				.query(By.css('span[class^="icon-"]'));
-			expect(de)
-				.toBeTruthy();
 		});
 
 		it('should set bookmark on clicking the icon in hover panel', () => {
@@ -1204,25 +1198,7 @@ describe('LifecycleComponent', () => {
 
 			// Ensure that new items were not appended like a Load More.
 			expect(component.componentData.productGuides.items.length)
-				.toBe(10);
-
-			// Force an error response.
-			racetrackSPSpy.and
-				.returnValue(throwError(new HttpErrorResponse({
-					status: 500,
-					statusText: 'Internal server error',
-				})));
-
-			component.selectFilter('PG');
-			fixture.detectChanges();
-
-			// Ensure that sort and filter options have been reset.
-			expect(component.componentData.productGuides.sortDirection)
-				.toBe('asc');
-			expect(component.componentData.productGuides.sort0Field)
-				.toBe('title');
-			expect(component.componentData.productGuides.filter)
-				.toBe('');
+				.toBe(2);
 		});
 
 		it('should load more content when requested and error out gracefully', () => {
@@ -1368,7 +1344,7 @@ describe('LifecycleComponent', () => {
 			component.selectFilter('PG');
 			fixture.detectChanges();
 			expect(component.componentData.productGuides.items.length)
-				.toEqual(10);
+				.toEqual(2);
 
 			component.onSort('title', 'asc', 'PG');
 			fixture.detectChanges();

@@ -176,6 +176,7 @@ export class LifecycleComponent implements OnDestroy {
 	public sessionSelected: AtxSessionSchema = null;
 	public customerId: string;
 	public buId: string;
+	public saId: string;
 	private user: User;
 	public partnerList: CompanyInfo [];
 	public accPartnerList: CompanyInfo [];
@@ -247,7 +248,13 @@ export class LifecycleComponent implements OnDestroy {
 	 */
 	public readonly pgNumRows = 40;
 	public categoryOptions: any [];
-	public pgCategoryOptions: any [];
+	public productGuidesCopy: SuccessPath [];
+	public pgCategoryOptions: any [] = [
+		{
+			name: 'Not selected',
+			value: 'Not selected',
+		},
+	];
 	public accStatusOptions = [
 		{
 			name: I18n.get('_Recommended_'),
@@ -367,6 +374,8 @@ export class LifecycleComponent implements OnDestroy {
 		this.customerId = _.get(this.user, ['info', 'customerId']);
 		this.buId = _.get(this.user, ['info', 'cxBUId']);
 		this.cxLevel = _.get(this.user, ['service', 'cxLevel'], 0);
+		this.saId = _.get(this.user, ['info', 'saId'], '')
+			.toString();
 		const currentSBView = window.sessionStorage.getItem('cxportal.cisco.com:lifecycle:sbview');
 		if (!currentSBView) {
 			window.sessionStorage.setItem('cxportal.cisco.com:lifecycle:sbview', this.sbview);
@@ -420,7 +429,8 @@ export class LifecycleComponent implements OnDestroy {
 				? true : false;
 			const newUsecaseAdoptPert = (technology.usecase_adoption_percentage !==
 				_.get(this.selectedTechnology, 'usecase_adoption_percentage')) ? true : false;
-			if (newSolution && newTech && newUsecaseAdoptPert) {
+
+			if (newSolution && newTech || newUsecaseAdoptPert) {
 				this.selectedTechnology = technology;
 
 				this.resetComponentData();
@@ -541,7 +551,7 @@ export class LifecycleComponent implements OnDestroy {
 				&usecase=`,
 			},
 			params: {
-				customerId: this.customerId.split('_')[0],
+				customerId: this.customerId,
 				pitstop: '',
 				rows: 500,
 				solution: '',
@@ -976,6 +986,8 @@ export class LifecycleComponent implements OnDestroy {
 		this.moreATXSelected = null;
 		this.atxMoreClicked = false;
 		this.sessionSelected = null;
+		this.selectedFilterForPG = '';
+		this.componentData.productGuides.filter = '';
 	}
 
 	/**
@@ -1095,12 +1107,20 @@ export class LifecycleComponent implements OnDestroy {
 		}
 
 		if (type === 'PG') {
-			// Swallow the responses.
-			this.loadProductGuides()
-				.subscribe(
-					() => undefined,
-					() => undefined,
-				);
+			this.filterProductGuides();
+		}
+	}
+
+	/**
+	 * Filters the product guides
+	 */
+	private filterProductGuides () {
+		if (this.selectedFilterForPG && this.selectedFilterForPG !== 'Not selected') {
+			this.componentData.productGuides.items =
+				_.filter(this.productGuidesCopy,
+					{ archetype: this.selectedFilterForPG });
+		} else {
+			this.componentData.productGuides.items = this.productGuidesCopy;
 		}
 	}
 
@@ -1278,7 +1298,7 @@ export class LifecycleComponent implements OnDestroy {
 	 * @returns pertage string
 	 */
 	private convertPercentage (pitstop: RacetrackPitstop) {
-		const start = I18n.get('_Start_');
+		const start = '0%';
 		if (pitstop) {
 			const pct = _.get(pitstop, 'pitstop_adoption_percentage');
 			if (!_.isNil(pct)) {
@@ -1689,8 +1709,8 @@ export class LifecycleComponent implements OnDestroy {
 	 * Retrieves the current filter for Product Guides.
 	 */
 	private get selectedFilterForPG () {
-		if (this.componentData.productGuides.filter === 'Not selected') {
-			return '';
+		if (!this.componentData.productGuides.filter) {
+			return 'Not selected';
 		}
 
 		return this.componentData.productGuides.filter;
@@ -1737,6 +1757,7 @@ export class LifecycleComponent implements OnDestroy {
 			map((result: SuccessPathsResponse) => {
 				if (result.items) {
 					_.set(this.componentData.productGuides, ['items'], result.items);
+					this.productGuidesCopy = this.componentData.productGuides.items;
 					const resultItems = _.uniq(_.map(result.items, 'archetype'));
 					_.set(this.componentData.productGuides, ['archetypes'],
 						resultItems);
@@ -1747,7 +1768,6 @@ export class LifecycleComponent implements OnDestroy {
 							name: item,
 							value: item,
 						}));
-					this.selectedFilterForPG = this.pgCategoryOptions[0].value;
 				}
 				const totalCount: number = _.get(result, ['totalCount']);
 				_.set(this.componentData.productGuides, ['totalCount'], totalCount);
@@ -1819,9 +1839,10 @@ export class LifecycleComponent implements OnDestroy {
 				map((result: SuccessPathsResponse) => {
 					if (result.items) {
 						const newItemsList
-							= _.concat(this.componentData.productGuides.items,
+							= _.concat(this.productGuidesCopy,
 								result.items);
-						this.componentData.productGuides.items = newItemsList;
+						this.productGuidesCopy = newItemsList;
+						this.filterProductGuides();
 					}
 
 					this.status.loading.productGuides.more = false;
@@ -2419,8 +2440,7 @@ export class LifecycleComponent implements OnDestroy {
 	 */
 	 public getPartnerList () {
 		this.status.loading.partner = true;
-
-		this.partnerService.getPartnerListUsingGET(this.customerId)
+		this.partnerService.getPartnerListUsingGET(this.saId)
 		.subscribe((result: CompanyInfoList) => {
 			// user can filter for Cisco via partnerId: '0000'
 			// but partner portal does not send back Cisco in company list.
@@ -2435,7 +2455,7 @@ export class LifecycleComponent implements OnDestroy {
 			this.partnerList = [ciscoCompanyInfo, ...result.companyList];
 			this.accPartnerList = [ciscoCompanyInfo, ...result.companyList];
 
-			if (!this.ciscoAccLevels.includes(this.cxLevel)) {
+			if (!this.ciscoAccLevels.includes(Number(this.cxLevel))) {
 				_.remove(this.accPartnerList, (partner: CompanyInfo) =>
 					partner.companyId === ciscoCompanyInfo.companyId);
 			}

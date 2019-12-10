@@ -3,13 +3,14 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SyslogsComponent } from './syslogs.component';
 import { SyslogsModule } from './syslogs.module';
-import { SyslogsService } from '@sdp-api';
+import { SyslogsService, SyslogFilter } from '@sdp-api';
 import { throwError, of } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SyslogScenarios } from 'src/environments/mock/syslogs/syslogs';
 import { RacetrackInfoService } from '@services';
+
 describe('SyslogsComponent', () => {
 	let component: SyslogsComponent;
 	let fixture: ComponentFixture<SyslogsComponent>;
@@ -75,7 +76,6 @@ describe('SyslogsComponent', () => {
 	});
 
 	it('should SyslogMessage tab active', () => {
-		fixture.detectChanges();
 		const index = 0;
 		component.selectVisualLabel(index);
 		expect(component.visualLabels[0].active)
@@ -83,10 +83,55 @@ describe('SyslogsComponent', () => {
 	});
 
 	it('should AssetTab tab active', () => {
-		fixture.detectChanges();
 		const index = 1;
 		component.selectVisualLabel(index);
 		expect(component.visualLabels[1].active)
 					.toBeTruthy();
 	});
+
+	it('should close on subfilter select', () => {
+		const event = {
+			key : 'Severity',
+		};
+		component.onSubfilterClose(event);
+		expect(component.faultFlag)
+			.toBeTruthy();
+
+		const afmEvent = {
+			key : 'afmSeverity',
+		};
+		component.onSubfilterClose(afmEvent);
+		expect(component.appliedFilters.afmSeverity)
+			.toEqual('');
+	});
+
+	it('should close on subfilter time range select', () => {
+		const afmEvent = {
+			key : 'timeRange',
+		};
+		component.onSubfilterClose(afmEvent);
+		expect(component.appliedFilters.timeRange)
+			.toEqual(30);
+	});
+
+	it('should select the filters', () => {
+		let filter: SyslogFilter = Object.create({ });
+		filter = {
+			key: 'afmSeverity',
+			selected: false,
+			title: 'severity',
+			loading: false,
+			seriesData: [{
+				filter: 'afmSeverity',
+				label: 'string',
+				selected: false,
+				value: 1,
+			}],
+			view: [],
+		};
+		component.onSubfilterSelect('afmSeverity', filter, true);
+		expect(component.appliedFilters.afmSeverity)
+			.toEqual('afmSeverity');
+	});
+
 });

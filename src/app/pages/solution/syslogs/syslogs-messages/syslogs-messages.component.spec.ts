@@ -46,11 +46,9 @@ describe('SyslogsMessagesComponent', () => {
 		spyOn(syslogsService, 'getGridData')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
-
-		fixture.detectChanges();
-		const syslogMessageGrid = [];
-		expect(component.tableData)
-				.toEqual(syslogMessageGrid);
+		component.getSyslogsData();
+		expect(syslogsService.getGridData)
+				.toHaveBeenCalled();
 	});
 
 	it('Should get the syslog message grid data', () => {
@@ -102,16 +100,14 @@ describe('SyslogsMessagesComponent', () => {
 	});
 
 	it('should reset tableRow row data on panel close', () => {
-		fixture.detectChanges();
-		component.onPanelClose();
+		component.onSyslogPanelClose();
 		expect(component.selectedAsset)
 				.toBeUndefined();
-		expect(component.showAssetPanel)
+		expect(component.showSyslogsDetails)
 				.toBeFalsy();
 	});
 
 	it('should reset tableRow row data when clicking twice on table row', () => {
-		fixture.detectChanges();
 		const selectedRowData = {
 			active: false,
 			deviceCount: 1,
@@ -219,5 +215,57 @@ describe('SyslogsMessagesComponent', () => {
 		component.keyDownFunction(event);
 		expect(component.getSyslogsData)
 			.toHaveBeenCalledTimes(1);
+	});
+	it('should sort the table', () => {
+		spyOn(syslogsService, 'getGridData')
+			.and
+			.returnValue(of<any>(SyslogScenarios[1].scenarios.POST[0].response.body));
+		const eventSeverity = {
+			name: 'Severity',
+			sortDirection: 'asc',
+		};
+		component.onTableSortingChanged(eventSeverity);
+		expect(syslogsService.getGridData)
+			.toHaveBeenCalledTimes(1);
+
+		const eventMessage = {
+			name: 'Event Message',
+			sortDirection: 'asc',
+		};
+		component.onTableSortingChanged(eventMessage);
+		expect(syslogsService.getGridData)
+			.toHaveBeenCalledTimes(2);
+
+		const eventSystems = {
+			name: 'Systems',
+			sortDirection: 'asc',
+		};
+		component.onTableSortingChanged(eventSystems);
+		expect(syslogsService.getGridData)
+			.toHaveBeenCalledTimes(3);
+
+		const eventDate = {
+			name: 'Date and Time',
+			sortDirection: 'asc',
+		};
+		component.onTableSortingChanged(eventDate);
+		expect(syslogsService.getGridData)
+			.toHaveBeenCalledTimes(4);
+
+		const eventAutoCreatedCases = {
+			name: 'Created Cases',
+			sortDirection: 'asc',
+		};
+		component.onTableSortingChanged(eventAutoCreatedCases);
+		expect(syslogsService.getGridData)
+			.toHaveBeenCalledTimes(5);
+
+		const eventDefault = {
+			name: 'default',
+			sortDirection: 'asc',
+		};
+		component.onTableSortingChanged(eventDefault);
+		expect(syslogsService.getGridData)
+			.toHaveBeenCalledTimes(6);
 	});
 });

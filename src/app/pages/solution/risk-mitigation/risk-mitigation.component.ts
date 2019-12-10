@@ -291,8 +291,9 @@ export class RiskMitigationComponent implements AfterViewInit {
 
 	/**
 	 * Function used to clear the filters
+	 * @param selectedFilter selected filter to be cleared
 	 */
-	public clearFilters () {
+	public clearFilters (selectedFilter?: any) {
 		this.searchQueryInCrashGrid = '';
 		this.searchQueryInHighCrashGrid = '';
 		this.resetFilters();
@@ -302,7 +303,12 @@ export class RiskMitigationComponent implements AfterViewInit {
 		_.set(filter, ['seriesData', '0', 'selected'], true);
 		this.selectedFilters = [filter];
 		this.selectedCrashedSystemsFilter = this.defaultTimeRange;
-		this.selectedCrashRiskFilter = this.defaultRiskState;
+		if (_.get(selectedFilter, 'filter') === this.defaultRiskState) {
+			this.selectedCrashRiskFilter = '';
+			selectedFilter.selected = false;
+		} else {
+			this.selectedCrashRiskFilter = this.defaultRiskState;
+		}
 	}
 
 	/**

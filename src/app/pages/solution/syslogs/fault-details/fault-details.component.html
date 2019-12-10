@@ -3,6 +3,7 @@
 	(hiddenChange)="handleHidden($event)"
 	[fullscreen]="fullscreen"
 	id="details-panel"
+	[minWidth]="'900px'"
 >
 	<details-panel-header
 		(close)="onAllPanelsClose()"
@@ -87,7 +88,7 @@
 				}}"
 			></div>
 		</cui-tab>
-		<cui-tab [label]="'_FaultAffectedSystemsX_' | i18n :affectedCount| uppercase">
+		<cui-tab [label]="'_FaultAffectedSystemsX_' | i18n : fault?.systemCount| uppercase">
 			<div class="dbl-margin-top text-muted text-large">
 				<span [innerText]="'_FaultTotalCaseCount_' | i18n"></span>
 				<span [innerText]="fault?.tacCount"></span>

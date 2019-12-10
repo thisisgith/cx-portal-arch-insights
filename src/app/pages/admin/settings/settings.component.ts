@@ -4,6 +4,7 @@ import {
 	ControlPointAdminSettingsAPIService,
 	IEHealthStatusResponseModel,
 	UserService,
+	ControlPointIERegistrationAPIService,
 } from '@sdp-api';
 import { User } from '@interfaces';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
@@ -16,6 +17,7 @@ import { catchError, finalize, takeUntil } from 'rxjs/operators';
 import { I18n } from '@cisco-ngx/cui-utils';
 
 import * as _ from 'lodash-es';
+import { SetupIEStateService } from '../../setup-ie/setup-ie-state.service';
 
 enum SystemInfo {
 	OS_IMAGE = 0,
@@ -97,6 +99,7 @@ export class SettingsComponent implements OnInit {
 	public supportCaseInsightTypes = [];
 	public regulatoryCompliance: object;
 	public isLoading = false;
+	public ieSetupCompleted = false;
 
 	private user: User;
 
@@ -106,6 +109,8 @@ export class SettingsComponent implements OnInit {
 		private userService: UserService,
 		private controlPointInsightTypeAPIService: ControlPointAdminSettingsAPIService,
 		private router: Router,
+		private cpService: ControlPointIERegistrationAPIService,
+		private state: SetupIEStateService,
 	) {
 		this.user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(this.user, ['info', 'customerId']);
@@ -251,6 +256,14 @@ ${HDDSizeUnit}`;
 					}
 				});
 			});
+		this.cpService.getIESetupCompletionStatusUsingGET(this.customerId)
+			.pipe(
+				catchError(() => empty()),
+				takeUntil(this.destroyed$),
+			)
+			.subscribe(res => {
+				this.ieSetupCompleted = res.ieSetupCompleted;
+			});
 	}
 
 	/**
@@ -313,6 +326,7 @@ ${HDDSizeUnit}`;
 	 * Function to navigate to set up
 	 */
 	public navigateTosetup () {
+		this.state.clearState();
 		const params: NavigationExtras = { queryParams: { fromAdmin: true } };
 		this.router.navigate(['/setup-ie'], params);
 	}

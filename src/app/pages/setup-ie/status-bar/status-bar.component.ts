@@ -67,6 +67,14 @@ export class IESetupWizardStatusBar implements OnInit {
 					isActive: () => this.state === SETUP_STATES.CONFIGURE_COLLECTOR,
 					label: _.toUpper(I18n.get('_ConfigureCXCollector_')),
 				},
+				{
+					iconActiveSrc: this.sanitizer
+						.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s5-on.png'),
+					iconInactiveSrc: this.sanitizer
+						.bypassSecurityTrustResourceUrl('assets/img/setup-ie/nav/s5-off.png'),
+					isActive: () => this.state === SETUP_STATES.CONNECT_DNAC,
+					label: _.toUpper(I18n.get('_ConnectDNAToCXCollector_')),
+				},
 
 			];
 

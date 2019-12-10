@@ -8,3 +8,7 @@
 .fault-component-search ::ng-deep .form-group .form-group__text input {
 	@include filter-search;
 }
+
+:host ::ng-deep .table {
+	@include table-ellipse;
+}

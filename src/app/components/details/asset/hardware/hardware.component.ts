@@ -338,7 +338,7 @@ export class AssetDetailsHardwareComponent implements OnInit, OnChanges, OnDestr
 						},
 						{
 							key: 'cxLevel',
-							name: I18n.get('_SupportLevel_'),
+							name: I18n.get('_CXLevel_'),
 							render: item => item.cxLevel || I18n.get('_NA_'),
 							sortable: true,
 						},
@@ -355,13 +355,14 @@ export class AssetDetailsHardwareComponent implements OnInit, OnChanges, OnDestr
 				const sortColumn = _.find(this.hardwareTable.columns, 'sorting');
 				this.hardwareAssets = _.orderBy(this.hardwareAssets,
 					[sortColumn.key], [sortColumn.sortDirection]);
+				_.set(this.hardwareAssets, '0.toggleWell', true);
 
 				return forkJoin([
 					this.fetchEOLData(),
 					this.fetchFieldNotices(),
 				]);
 			}),
-			takeUntil(this.destroyed$),
+				takeUntil(this.destroyed$),
 		)
 		.subscribe(() => {
 			this.status.loading.overall = false;

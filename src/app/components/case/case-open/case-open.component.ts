@@ -21,6 +21,7 @@ import { TechFormComponent } from './tech-form/tech-form.component';
 
 import * as _ from 'lodash-es';
 import { UserResolve } from '@utilities';
+import { CaseDetailsService } from '@services';
 
 /**
  * Component for opening a new case in CSOne for a device
@@ -89,6 +90,7 @@ export class CaseOpenComponent implements  CuiModalContent, OnInit, OnDestroy {
 		private profileService: ProfileService,
 		private contractsService: ContractsService,
 		private userResolve: UserResolve,
+		private caseDetailsService: CaseDetailsService,
 	) {
 	}
 
@@ -149,6 +151,7 @@ export class CaseOpenComponent implements  CuiModalContent, OnInit, OnDestroy {
 	 * OnDestroy lifecycle hook
 	 */
 	public ngOnDestroy () {
+		this.caseDetailsService.refreshCaseCount(false);
 		this.destroy$.next();
 		this.destroy$.complete();
 	}
@@ -277,6 +280,7 @@ export class CaseOpenComponent implements  CuiModalContent, OnInit, OnDestroy {
 		)
 		.subscribe(() => {
 			this.submitted = true;
+			this.caseDetailsService.refreshCaseCount(true);
 		});
 	}
 
