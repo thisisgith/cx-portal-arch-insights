@@ -200,9 +200,8 @@
 /** Handling the tabs for 100% resolution */
 
 @media screen and (min-width: $screen-lg-min) {
-	.tab__heading {
-		font-size: 14px;
-		padding: 1px 0 !important;
+	.tab__heading > span {
+		line-height: normal;
 	}
 }
 
