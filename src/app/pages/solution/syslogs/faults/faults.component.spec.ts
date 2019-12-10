@@ -111,59 +111,6 @@ describe('FaultsComponent', () => {
 			.toHaveBeenCalled();
 	});
 
-	it('should sort the table', () => {
-		spyOn(faultService, 'getFaultDetails')
-			.and
-			.returnValue(of<any>(FaultScenarios[0].scenarios.POST[0].response.body));
-		const eventSeverity = {
-			name: 'Severity',
-			sortDirection: 'asc',
-		};
-		component.onTableSortingChanged(eventSeverity);
-		expect(faultService.getFaultDetails)
-			.toHaveBeenCalledTimes(1);
-
-		const eventCategory = {
-			name: 'Category',
-			sortDirection: 'asc',
-		};
-		component.onTableSortingChanged(eventCategory);
-		expect(faultService.getFaultDetails)
-			.toHaveBeenCalledTimes(2);
-
-		const eventTitle = {
-			name: 'Title',
-			sortDirection: 'asc',
-		};
-		component.onTableSortingChanged(eventTitle);
-		expect(faultService.getFaultDetails)
-			.toHaveBeenCalledTimes(3);
-
-		const eventsystemAffected = {
-			name: 'Systems Affected',
-			sortDirection: 'asc',
-		};
-		component.onTableSortingChanged(eventsystemAffected);
-		expect(faultService.getFaultDetails)
-			.toHaveBeenCalledTimes(4);
-
-		const eventAutoCreatedCases = {
-			name: 'Created Cases',
-			sortDirection: 'asc',
-		};
-		component.onTableSortingChanged(eventAutoCreatedCases);
-		expect(faultService.getFaultDetails)
-			.toHaveBeenCalledTimes(5);
-
-		const eventDefault = {
-			name: 'default',
-			sortDirection: 'asc',
-		};
-		component.onTableSortingChanged(eventDefault);
-		expect(faultService.getFaultDetails)
-			.toHaveBeenCalledTimes(6);
-	});
-
 	it('should connect to fault detrails', () => {
 		const fault = {
 			category: 'Environment',

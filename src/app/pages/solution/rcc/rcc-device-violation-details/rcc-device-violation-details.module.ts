@@ -11,7 +11,6 @@ import {
 } from '@cisco-ngx/cui-components';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
-import { RemoveInvalidTagsPipeModule } from '@pipes';
 /**
  * Module representing Rcc track
  */
@@ -29,7 +28,6 @@ import { RemoveInvalidTagsPipeModule } from '@pipes';
 		FormsModule,
 		I18nPipeModule,
 		ReactiveFormsModule,
-		RemoveInvalidTagsPipeModule,
 	],
 })
 export class RccDeviceViolationDetailsModule { }

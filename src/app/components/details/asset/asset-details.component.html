@@ -6,7 +6,7 @@
 	<details-panel-header (close)="onAllPanelsClose()"
 		(back)="onPanelBack()"
 		[(fullscreen)]="fullscreen"
-		[fullscreenToggle]="fullscreenToggle">
+		[fullscreenToggle]="screenWidth > 1024 ? true : false">
 		<asset-details-header *ngIf="!isLoading"
 			[systemAsset]="systemAsset"
 			[hardwareAsset]="hardwareAsset"

@@ -26,7 +26,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { FromNowPipe } from '@cisco-ngx/cui-pipes';
 import { ActivatedRoute } from '@angular/router';
 import { DetailsPanelStackService, AssetPanelLinkService, RacetrackInfoService } from '@services';
-import { AssetLinkInfo } from '@interfaces';
+import { AssetLinkInfo, Panel360 } from '@interfaces';
 import { UserRoles } from '@constants';
 
 /**
@@ -37,7 +37,7 @@ import { UserRoles } from '@constants';
 	styleUrls: ['./rcc.component.scss'],
 	templateUrl: './rcc.component.html',
 })
-export class RccComponent implements OnInit, OnDestroy {
+export class RccComponent implements OnInit, Panel360 , OnDestroy {
 	public customerId: string;
 	public cxLevel: number;
 	public authParamsRCCUser = {
@@ -187,6 +187,8 @@ export class RccComponent implements OnInit, OnDestroy {
 	@ViewChild('lastScanTmpl', { static: true }) public lastScanTemplate: TemplateRef<{ }>;
 	@ViewChild('policyCategoryTooltipTemplate', { static: true })
 	private policyCategoryTooltipTemplate: TemplateRef<string>;
+	@ViewChild('policySeverityTooltipTemplate', { static: true })
+	private policySeverityTooltipTemplate: TemplateRef<string>;
 	@ViewChild('ruleViolationsTooltipTemplate', { static: true })
 	private ruleViolationsTooltipTemplate: TemplateRef<string>;
 	public entry: ViewContainerRef;
@@ -239,22 +241,38 @@ export class RccComponent implements OnInit, OnDestroy {
 				}
 			}
 		});
+		this.detailsPanelStackService.push(this);
 	}
 	/**
 	 * to check the opt-in/opt-out status for loggedin user
 	 */
 	public getOptInDetail () {
+		this.loading = true;
+		this.filterLoading = true;
 		this.assetsTotalCount = 0;
 		this.policyViolationsTotalCount = 0;
 		this.isAssetView = false;
 		this.optInStatus = false;
 		this.runOnce = false;
 		this.showRunningBanner = false;
+		this.violationGridObj.policyType = null;
+		this.violationGridObj.severity = null;
+		this.allAssetsSelected = false;
+		this.searchStr = null;
+		this.searchInput = '';
+		this.assetGridObj.osType = null;
+		this.assetGridObj.severity = null;
+		this.assetGridObj.searchParam = null;
+		this.violationGridObj.search = null;
+		this.violationGridObj.pageIndex = 1;
+		this.violationGridObj.sortName = null;
+		this.violationGridObj.sortOrder = null;
 		this.policyViolationsGridData = [];
 		this.tableAssetDataSample = [];
 		this.filterObj = [];
 		this.assetFilterObj = [];
-		this.loading = true;
+		this.tableConfig.totalItems = 0;
+		this.tableConfig.tableOffset = 0;
 		this.RccTrackService.
 		optInDetail({ customerId: this.customerId })
 		.pipe(takeUntil(this.destroy$))
@@ -340,11 +358,11 @@ export class RccComponent implements OnInit, OnDestroy {
 			bordered: false,
 			columns: [
 				{
+					headerTemplate:  this.policySeverityTooltipTemplate,
 					key: 'ruleSeverity',
-					name: I18n.get('_RccHighestSeverity_'),
 					sortable: true,
 					template: this.severityColorTemplate,
-					width: '13%',
+					width: '15%',
 				},
 				{
 					key: 'policyGroupName',
@@ -465,6 +483,7 @@ export class RccComponent implements OnInit, OnDestroy {
 		this.selectedViolationModal = true;
 		this.selectedAssetModal = false;
 		this.openDeviceModal = false;
+		this.detailsPanelStackService.reset();
 	}
 	/**
 	 * Gets row selected
@@ -478,6 +497,7 @@ export class RccComponent implements OnInit, OnDestroy {
 		this.selectedAssetModal = true;
 		this.selectedViolationModal = false;
 		this.openDeviceModal = false;
+		this.detailsPanelStackService.reset();
 	}
 	/**
 	 * Gets selected sub filters
@@ -636,8 +656,8 @@ export class RccComponent implements OnInit, OnDestroy {
 					sortable: true,
 				},
 				{
+					headerTemplate:  this.policySeverityTooltipTemplate,
 					key: 'severity',
-					name: I18n.get('_RccHighestViolationSeverity_'),
 					sortable: true,
 					template: this.severityTemplate,
 				},
@@ -683,7 +703,7 @@ export class RccComponent implements OnInit, OnDestroy {
 				loading: true,
 				seriesData: [],
 				template: this.severityFilterTemplate,
-				title: I18n.get('_RccHighestViolationSeverity_'),
+				title: I18n.get('_RccHighestSeverity_'),
 			},
 		];
 	}
@@ -913,9 +933,16 @@ export class RccComponent implements OnInit, OnDestroy {
 	 * method to close slider
 	 * @param model is the selected slider name
 	 */
-	public onPanelClose (model: string) {
-		_.set(this, [model, 'active'] , false);
-		this[model] = null;
+	public onAllPanelsClose () {
+		this.selectedAssetModal = false;
+		this.selectedViolationModal = false;
+		this.detailsPanelStackService.reset();
+	}
+	/**
+	 * Removes the 360 panel from the stack when the back button is pressed
+	 */
+	public onPanelBack () {
+		this.detailsPanelStackService.pop();
 	}
 
 	/**
@@ -923,12 +950,17 @@ export class RccComponent implements OnInit, OnDestroy {
 	 * @param hidden false if details slideout is open
 	 * @param model current model
 	 */
-	public handleHidden (hidden: boolean, model: string) {
+	public handleHidden (hidden: boolean) {
 		if (hidden) {
-			this.onPanelClose(model);
+			this.onAllPanelsClose();
 		}
 	}
-
+	/**
+	 * to close the panel
+	 */
+	public onPanelClose () {
+		this.openDeviceModal = false;
+	}
 	/**
 	 * destroy method to kill the services
 	 */
@@ -941,6 +973,7 @@ export class RccComponent implements OnInit, OnDestroy {
 	 * @param serialNumber is serial number of device
 	 */
 	public openDevicePage (serialNumber: string) {
+		this.detailsPanelStackService.push(this);
 		this.assetParams = {
 			customerId: this.customerId,
 			serialNumber: [serialNumber],

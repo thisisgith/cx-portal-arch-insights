@@ -71,7 +71,7 @@ export const environment = {
 		returns: '/return/v1.0/returns',
 	},
 	rmaToolUrl: 'https://ibpm.cisco.com/rma/home',
-	sdpServiceBasePath: '/api/usa',
+	sdpServiceBasePath: `/api/${defaults.datacenterStub}`,
 	sdpServiceClientId: '3t4uvkxxnpps49vcc4qsafuc',
 	sdAccessCommunitiesPath: 'software-defined-access-sd',
 	/**
@@ -81,11 +81,11 @@ export const environment = {
 	 */
 	sdpServiceOrigin: 'https://api.cisco.com',
 	sdpServicePaths: {
-		contracts: '/api/usa/v1/contracts',
-		customerportal: '/api/usa/customerportal',
-		cxportal: '/api/cxportal',
-		inventory: '/api/usa/v1/inventory',
-		partner: '/api/usa/cxportal',
+		contracts: `/api/${defaults.datacenterStub}/v1/contracts`,
+		customerportal: `/api/${defaults.datacenterStub}/customerportal`,
+		cxportal: `/api/${defaults.datacenterStub}/cxportal`,
+		inventory: `/api/${defaults.datacenterStub}/v1/inventory`,
+		partner: `/api/${defaults.datacenterStub}/cxportal`,
 	},
 	// ClientSSOInterceptor: No auth token for the typeahead url
 	typeaheadServiceOrigin: 'https://xresps.cloudapps.cisco.com',

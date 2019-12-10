@@ -10,10 +10,10 @@ import {
 } from '@angular/core';
 
 import { LogService } from '@cisco-ngx/cui-services';
-import { CuiTableOptions } from '@cisco-ngx/cui-components';
+import { CuiTableOptions, CuiToastComponent } from '@cisco-ngx/cui-components';
 import { SyslogsService, SyslogGridData, SyslogFilter, SyslogResponseData } from '@sdp-api';
 import { Subject, of, Subscription } from 'rxjs';
-import { takeUntil, catchError } from 'rxjs/operators';
+import { takeUntil, catchError, map } from 'rxjs/operators';
 import { I18n } from '@cisco-ngx/cui-utils';
 import * as _ from 'lodash-es';
 import { UserResolve } from '@utilities';
@@ -46,17 +46,14 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 	public pageLimit = 10;
 	public pageNum = 1;
 	public selectedAsset;
-	public showAssetPanel = false;
-	public fullscreen = false;
 	public searchVal = '';
 	public tableStartIndex = 0;
 	public tableEndIndex = 10;
-	public showAssetDetails = false;
 	public sortField = 'timeStamp';
 	public sortOrder = 'asc';
-	public movetoAfmClicked = false;
-	public moveToFaultParams = { };
 	public alert: any = { };
+	public showSyslogsDetails = false;
+	@ViewChild(CuiToastComponent, { static: true }) public toasts: CuiToastComponent;
 	constructor (
 		private logger: LogService,
 		public syslogsService: SyslogsService,
@@ -114,6 +111,8 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 		if (currentFilter && !changes.sysFilter.firstChange) {
 			this.syslogsParams.syslogSeverity = currentFilter.severity;
 			this.syslogsParams.days = currentFilter.timeRange;
+			this.syslogsParams.pageNo = 1;
+			this.tableOffset = 0;
 			this.getSyslogsData();
 		}
 
@@ -171,23 +170,25 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 		this.tableData = [];
 		this.gridSubscripion = this.syslogsService
 			.getGridData(this.syslogsParams)
-			.pipe(takeUntil(this.destroy$))
-			.subscribe(gridData => {
+			.pipe(takeUntil(this.destroy$),
+			  map((gridData: SyslogResponseData) => {
 				this.tableData = gridData.responseData;
 				this.totalItems = gridData.count;
-				this.tableEndIndex = 10;
+				this.tableStartIndex = (this.tableOffset * 10) + 1;
+				this.tableEndIndex = (this.tableLimit * this.syslogsParams.pageNo);
 				if (this.tableEndIndex > this.totalItems) {
 					this.tableEndIndex = this.totalItems;
 				}
 				this.loading = false;
-			}, catchError(err => {
+			}), catchError(err => {
 				this.loading = false;
 				_.invoke(this.alert, 'show',  I18n.get('_SyslogsGenericError_'), 'danger');
 				this.logger.error('syslogs-details.component : getGridData() ' +
 					`:: Error : (${err.status}) ${err.message}`);
 
 				return of({ });
-			}));
+			}))
+			.subscribe();
 	}
 
 	/**
@@ -211,30 +212,8 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 		} else {
 			this.selectedAsset = undefined;
 		}
-
+		this.showSyslogsDetails = true;
 	}
-
-	/**
-	 * Determines whether panel close on
-	 */
-	public onPanelClose () {
-		this.detailsPanelStackService.reset();
-		_.set(this.selectedAsset, 'active', false);
-		this.selectedAsset = undefined;
-		this.showAssetPanel = false;
-		this.showAssetDetails = false;
-	}
-
-	/**
-	 * Handles the hidden event from details-panel
-	 * @param hidden false if details slideout is open
-	 */
-	public handleHidden (hidden: boolean) {
-		if (hidden) {
-			this.onPanelClose();
-		}
-	}
-
 	/**
 	 * Determines whether pager updated on
 	 * @param pageInfo contains page info
@@ -256,6 +235,8 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 		this.sortField = this.getSortKey(event.name);
 		this.syslogsParams.sortField = this.sortField;
 		this.syslogsParams.sortOrder = event.sortDirection;
+		this.syslogsParams.pageNo = 1;
+		this.tableOffset = 0;
 		this.getSyslogsData();
 	}
 
@@ -273,12 +254,21 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 				return 'syslogSeverity';
 		}
 	}
+	/**
+	 * Close syslogs panel
+	 */
+	public onSyslogPanelClose () {
+		this.showSyslogsDetails = false;
+	}
 
 	/**
-	 * toggles add note section
+	 * Success toast
+	 * @param event event
 	 */
-	public toggleAddNote () {
-		this.movetoAfmClicked = !this.movetoAfmClicked;
+	public onShowSuccess (event) {
+		this.toasts.autoHide = 3000;
+		this.toasts.addToast('success', 'Event Type:',
+		I18n.get('_SyslogSuccessMessage_', event));
 	}
 	/**
 	 * on destroy

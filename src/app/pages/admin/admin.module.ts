@@ -16,10 +16,9 @@ import { PoliciesComponent, PoliciesModule } from './policies';
 import { UsersComponent, UsersModule } from './users';
 import { AdminComplienceComponent, AdminComplienceModule } from './complience';
 import { ChangePasswordComponent, ChnagePasswordModule } from './change-password';
-
+import { ChangeDNACCredentialsComponent, ChangeDNACCredentialsModule } from './change-dnac-credentials';
 import { environment } from '@environment';
 import { RouteGuard } from './route-guard';
-
 /**
  * Child routes for Settings Module for lazy loading
  */
@@ -48,7 +47,11 @@ const childRoutes: Routes = [
 	},
 	{
 		component: ChangePasswordComponent,
-		path: 'changepassword',
+		path: 'collectorchangepassword',
+	},
+	{
+		component: ChangeDNACCredentialsComponent,
+		path: 'dnacchangecred',
 	},
 	{
 		component: UsersComponent,
@@ -76,6 +79,7 @@ const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 		CommonModule,
 		ControlPointsModule,
 		ControlPointsModule.forRoot({ rootUrl }),
+		ChangeDNACCredentialsModule,
 		ChnagePasswordModule,
 		CuiGaugeModule,
 		CuiLabelsModule,

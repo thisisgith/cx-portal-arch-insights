@@ -277,6 +277,8 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 		if (params.case) {
 			this.selectedCase = {
 				caseNumber: params.case,
+				deviceName: params.deviceName,
+				serialNumber: params.serialNumber,
 			};
 			if (this.searchCasesForm) {
 				this.searchCasesForm.patchValue(params.case);
