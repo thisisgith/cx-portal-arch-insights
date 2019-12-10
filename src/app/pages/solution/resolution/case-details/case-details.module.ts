@@ -14,7 +14,7 @@ import { CaseSummaryModule } from './case-summary/case-summary.module';
 import { CaseNotesModule } from './case-notes/case-notes.module';
 import { CaseFilesModule } from './case-files/case-files.module';
 import { CSCModule } from '@cui-x-views/csc';
-import { ApixAuthInterceptor, ApixAccountInterceptor } from '@interceptors';
+import { ApixAuthInterceptor, ApixAccountInterceptor, ApixDatacenterInterceptor } from '@interceptors';
 
 /**
  * Case Details Module
@@ -39,6 +39,7 @@ import { ApixAuthInterceptor, ApixAccountInterceptor } from '@interceptors';
 	providers: [
 		{ provide: HTTP_INTERCEPTORS, useClass: ApixAuthInterceptor, multi: true },
 		{ provide: HTTP_INTERCEPTORS, useClass: ApixAccountInterceptor, multi: true },
+		{ provide: HTTP_INTERCEPTORS, useClass: ApixDatacenterInterceptor, multi: true },
 	],
 })
 export class CaseDetailsModule { }
