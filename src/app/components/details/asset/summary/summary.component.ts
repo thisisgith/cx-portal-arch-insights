@@ -51,8 +51,6 @@ export class AssetDetailsSummaryComponent implements OnChanges, OnInit, OnDestro
 
 	public warrantyStatus: 'Covered' | 'Uncovered';
 	public tags: Tags[];
-	public lastScan: string;
-
 	private assetTagsParams: AssetTaggingService.GetParams;
 
 	public status = {
@@ -104,7 +102,6 @@ export class AssetDetailsSummaryComponent implements OnChanges, OnInit, OnDestro
 			mergeMap((response: ScanRequestResponse) => {
 				const scan = _.head(response);
 				const status = _.get(scan, 'status', '');
-				this.lastScan = _.get(scan, 'status', '');
 				const inProgress = (
 					status === 'IN_PROGRESS' ||
 					status === 'RECEIVED' ||
@@ -205,7 +202,6 @@ export class AssetDetailsSummaryComponent implements OnChanges, OnInit, OnDestro
 			takeUntil(this.destroyed$),
 			mergeMap((response: TransactionStatusResponse) => {
 				const status = _.get(response, 'status');
-				this.lastScan = _.get(response, 'status');
 				if (status && status === 'SUCCESS' || status === 'FAILURE') {
 					this.alertMessage.emit({
 						message: status === 'SUCCESS' ?
@@ -302,8 +298,7 @@ export class AssetDetailsSummaryComponent implements OnChanges, OnInit, OnDestro
 				customerId: this.customerId,
 				deviceId: _.get(this.hardwareAsset, 'neId'),
 			};
-
-			this.status.scan.eligible = _.get(this.systemAsset, 'isManagedNE', false);
+			this.status.scan.eligible = _.get(this.systemAsset, 'isScanCapable', false);
 
 			this.hidden = false;
 

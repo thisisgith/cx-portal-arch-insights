@@ -29,14 +29,6 @@
 				<span *ngIf="status.scan.inProgress || status.loading.action" class="icon-animation spin qtr-margin-right"></span>
 				<span [innerText]="((status.scan.inProgress || status.loading.action) ? '_Scanning_' : '_RunDiagnosticScan_') | i18n"></span>
 			</button>
-			<div *ngIf="lastScan===('SUCCESS' || 'FAILURE')" class="half-padding-left qtr-padding-top text-small">
-				<span [ngClass]="{'icon-check-outline text-success': lastScan=='SUCCESS',
-					'icon-error text-danger':lastScan=='FAILURE' }"></span>
-				<ng-container [ngSwitch]="lastScan">
-					<span class="qtr-padding-left" data-auto-id="ImpactText" *ngSwitchCase="'SUCCESS'" [innerText]="'_ScanSucceeded_' | i18n"></span>
-					<span class="qtr-padding-left" data-auto-id="ImpactText" *ngSwitchCase="'FAILURE'" [innerText]="'_ScanFailed_' | i18n"></span>
-				</ng-container>
-			</div>
 		</div>
 	</div>
 </div>
