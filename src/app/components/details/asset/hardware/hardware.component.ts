@@ -356,6 +356,7 @@ export class AssetDetailsHardwareComponent implements OnInit, OnChanges, OnDestr
 				this.hardwareAssets = _.orderBy(this.hardwareAssets,
 					[sortColumn.key], [sortColumn.sortDirection]);
 				_.set(this.hardwareAssets, '0.toggleWell', true);
+
 				return forkJoin([
 					this.fetchEOLData(),
 					this.fetchFieldNotices(),

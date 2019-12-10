@@ -83,7 +83,7 @@
 			<div class="col-12 text-uppercase" [innerText]="'_FieldNotices_' | i18n"></div>
 			<div *ngFor="let fieldNotice of item.fieldNotices" class="col-12 half-margin-top">
 				<div class="text-bold" innerText="FN {{ fieldNotice.fieldNoticeId }}"></div>
-				<div [innerText]="fieldNotice.bulletin.bulletinTitle"></div>
+				<div [innerText]="fieldNotice.bulletin?.bulletinTitle"></div>
 			</div>
 		</div>
 		<div class="row base-margin-top base-margin-bottom" *ngIf="item.eol">

@@ -51,13 +51,13 @@ export class AssetDetailsSummaryComponent implements OnChanges, OnInit, OnDestro
 
 	public warrantyStatus: 'Covered' | 'Uncovered';
 	public tags: Tags[];
-
 	private assetTagsParams: AssetTaggingService.GetParams;
 
 	public status = {
 		loading: {
 			overall: false,
 			tags: false,
+			action: false,
 		},
 		scan: {
 			eligible: false,
@@ -137,6 +137,7 @@ export class AssetDetailsSummaryComponent implements OnChanges, OnInit, OnDestro
 	 * Initiates a scan
 	 */
 	public initiateScan () {
+		this.status.loading.action = true;
 		const request: TransactionRequest = {
 			customerId: this.customerId,
 			neCount: 1,
@@ -158,6 +159,7 @@ export class AssetDetailsSummaryComponent implements OnChanges, OnInit, OnDestro
 			.pipe(
 				takeUntil(this.destroyed$),
 				mergeMap((response: TransactionRequestResponse) => {
+					this.status.loading.action = false;
 					const transaction: Transaction = _.head(response);
 
 					if (_.get(transaction, 'transactionId')) {
@@ -169,6 +171,7 @@ export class AssetDetailsSummaryComponent implements OnChanges, OnInit, OnDestro
 					return of({ });
 				}),
 				catchError(err => {
+					this.status.loading.action = false;
 					this.alertMessage.emit({
 						message: I18n.get('_UnableToInitiateScan_', this.systemAsset.deviceName),
 						severity: 'danger',
@@ -199,7 +202,6 @@ export class AssetDetailsSummaryComponent implements OnChanges, OnInit, OnDestro
 			takeUntil(this.destroyed$),
 			mergeMap((response: TransactionStatusResponse) => {
 				const status = _.get(response, 'status');
-
 				if (status && status === 'SUCCESS' || status === 'FAILURE') {
 					this.alertMessage.emit({
 						message: status === 'SUCCESS' ?
@@ -296,8 +298,7 @@ export class AssetDetailsSummaryComponent implements OnChanges, OnInit, OnDestro
 				customerId: this.customerId,
 				deviceId: _.get(this.hardwareAsset, 'neId'),
 			};
-
-			this.status.scan.eligible = _.get(this.systemAsset, 'isManagedNE', false);
+			this.status.scan.eligible = _.get(this.systemAsset, 'isScanCapable', false);
 
 			this.hidden = false;
 
