@@ -78,6 +78,7 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 	public software: FaultOS[];
 	public serialNumber: string;
 	public icSettingsResponse: FaultIcSettings;
+	public paginationCount;
 	public timeRange: any[] = [
 		{
 			name: I18n.get('_FaultDay1_'),
@@ -146,6 +147,7 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 			.subscribe((id: string) => {
 				this.searchParams.customerId = id;
 			});
+		this.searchParams.pageNo = 1;
 	}
 
 	/**
@@ -210,6 +212,7 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 			map((response: FaultAffectedSystems) => {
 				this.affectedCount = response.count;
 				this.faultAffectedDetails = response.responseData;
+				this.preparePaginationHeader();
 				this.affectedSystemLoading = false;
 			}),
 			catchError(err => {
@@ -222,6 +225,22 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 				return of({ });
 			}))
 			.subscribe();
+	}
+
+	/**
+	 * it will prepare Pagination header to show from which to which records showing
+	 */
+	private preparePaginationHeader () {
+		if (this.affectedCount !== 0) {
+			const tableStartIndex = (this.tableLimit * (this.searchParams.pageNo - 1)) + 1;
+			let tableEndIndex = (this.tableLimit * this.searchParams.pageNo);
+			if (tableEndIndex > this.affectedCount) {
+				tableEndIndex = this.affectedCount;
+			}
+			this.paginationCount = `${tableStartIndex}-${tableEndIndex}`;
+		} else {
+			this.paginationCount = '0-0';
+		}
 	}
 
 	/**
@@ -258,26 +277,31 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 					name: I18n.get('_FaultSystemName_'),
 					sortable: true,
 					template: this.systemNameTemplate,
+					width: '30%',
 				},
 				{
 					name: I18n.get('_FaultProductId_'),
 					sortable: true,
 					template: this.productIdTemplate,
+					width: '14%',
 				},
 				{
 					name: I18n.get('_FaultSoftwareType_'),
 					sortable: true,
 					template: this.softwareTypeTemplate,
+					width: '18%',
 				},
 				{
 					name: I18n.get('_FaultCaseNumber_'),
 					sortable: true,
 					template: this.caseNumberTemplate,
+					width: '16%',
 				},
 				{
 					name: I18n.get('_FaultDateAndTime'),
 					sortable: true,
 					template: this.caseCreatedDateTemplate,
+					width: '22%',
 				},
 			],
 			dynamicData: true,
