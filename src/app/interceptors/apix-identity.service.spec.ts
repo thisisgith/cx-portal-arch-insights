@@ -4,7 +4,7 @@ import { ApixIdentityService } from './apix-identity.service';
 import { TestBed, getTestBed } from '@angular/core/testing';
 import { OriginType } from '@constants';
 
-describe('APIxIdentityService', () => {
+describe('ApixIdentityService', () => {
 	const testRmaNumber = '800000000';
 	const rmaUrl = `${environment.rmaServiceOrigin}${environment.rmaServicePaths.returns}/rma_numbers/${testRmaNumber}`;
 
