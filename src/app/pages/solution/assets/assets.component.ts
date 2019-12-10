@@ -708,7 +708,6 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		.pipe(
 			map(() => {
 				this.alert.show(I18n.get('_ScanInitiated_', deviceName), 'info');
-				this.onRowSelect(item);
 
 				return of();
 			}),
@@ -749,8 +748,8 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				return of();
 			}),
 			catchError(err => {
-				const cxLevel = _.get(item, ['data', 'cxLevel']);
-				if (cxLevel > 0 && err.status === 404) {
+				const isScanCapable = _.get(item, ['data', 'isScanCapable']);
+				if (isScanCapable && err.status === 404) {
 					return this.initiateScan(item);
 				}
 				this.alert.show(I18n.get('_UnableToInitiateScan_', deviceName), 'danger');
@@ -770,7 +769,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 * @returns the built actions
 	 */
 	public getRowActions (item: Item, view: View) {
-		const { cxLevel } = item.data;
+		const isScanCapable = _.get(item, ['data', 'isScanCapable'], false);
 
 		return _.filter([
 			_.get(item, ['data', 'supportCovered'], false) ? {
@@ -781,7 +780,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					'fluid',
 				),
 			} : undefined,
-			(Number(cxLevel) > 0 && view.key === 'system' && _.get(item, ['data', 'isManagedNE'], false))
+			(isScanCapable && view.key === 'system')
 			? {
 				label: I18n.get('_RunDiagnosticScan_'),
 				onClick: () => this.checkScan(item),
@@ -1003,6 +1002,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	private getSystemAdvisoryCount () {
 		const systemAdvisoryFilter =
 			_.find(this.getView('system').filters, { key: 'advisories' });
+
 		return this.productAlertsService.getSystemVulnerabilityCounts({
 			customerId: this.customerId,
 			solution: this.selectedSolutionName,
