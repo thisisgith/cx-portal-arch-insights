@@ -29,6 +29,16 @@ export interface ChangePasswordParams {
 }
 
 /**
+ * Parameters for the Change DNAC Credentials public method
+ */
+export interface ChangeDNACCredentialsParams {
+	type: string;
+	ipAddress: string;
+	username: string;
+	password: string;
+}
+
+/**
  * Parameters for the installAndRegisterDNAC public method
  */
 export interface RegisterParams {
@@ -137,12 +147,53 @@ export class RegisterCollectorService {
 	 */
 	public changePassword (data: ChangePasswordParams, CollectorIP: string) {
 
-		this.collectorIP = CollectorIP;
-
 		return this.http.post(
-			`https://${this.collectorIP}${this.baseUrl}changeCXCAdminCredential`,
+			`https://${CollectorIP}${this.baseUrl}changeCXCAdminCredential`,
 			data,
 			{ responseType: 'text',
+			},
+		);
+	}
+
+	/**
+	 * Change Credentials of DNAC
+	 * @param data ChangeDNACCredentials
+	 * @param CollectorIP Ip Address
+	 * @param token for authorization
+	 * @returns Observable
+	 */
+	public changeDNACCredentials (data: [ChangeDNACCredentialsParams], CollectorIP: string, token: string) {
+
+		return this.http.put(
+			`https://${CollectorIP}${this.baseUrl}updateControllers`,
+			data,
+			{
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+				responseType: 'text',
+			},
+		);
+	}
+
+	/**
+	 * Get Authorization token for Day N
+	 * @param CollectorIP IP address for Collector
+	 * @param CollPassword password for Collector
+	 * @returns Observable
+	 */
+	public getAuthTokenDayN (CollectorIP: string, CollPassword: string) {
+
+		const body = {
+			userId: 'cxcadmin',
+			password: CollPassword,
+		};
+
+		return this.http.post(
+			`https://${CollectorIP}${this.baseUrl}authToken`,
+			body,
+			{
+				responseType: 'text',
 			},
 		);
 	}

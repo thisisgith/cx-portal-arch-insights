@@ -20,14 +20,14 @@
 			</div>
 		</div>
 		<div class="base-margin-top" *ngIf="status?.scan?.eligible && systemAsset.cxLevel > 0">
-			<button class="btn btn--primary text-uppercase"
+				<button class="btn btn--primary text-uppercase"
 				[ngClass]="{
-					'active': status.scan.inProgress
+					'active': (status.scan.inProgress || status.loading.action)
 				}"
 				(click)="initiateScan()"
 				data-auto-id="Asset360ScanBtn">
-				<span *ngIf="status.scan.inProgress" class="icon-animation spin qtr-margin-right"></span>
-				<span [innerText]="(status.scan.inProgress ? '_Scanning_' : '_RunDiagnosticScan_') | i18n"></span>
+				<span *ngIf="status.scan.inProgress || status.loading.action" class="icon-animation spin qtr-margin-right"></span>
+				<span [innerText]="((status.scan.inProgress || status.loading.action) ? '_Scanning_' : '_RunDiagnosticScan_') | i18n"></span>
 			</button>
 		</div>
 	</div>

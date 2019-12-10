@@ -358,11 +358,11 @@ export class RccComponent implements OnInit, Panel360 , OnDestroy {
 			bordered: false,
 			columns: [
 				{
-					headerTemplate:  this.policySeverityTooltipTemplate,
 					key: 'ruleSeverity',
+					name: I18n.get('_RccHighestSeverity_'),
 					sortable: true,
 					template: this.severityColorTemplate,
-					width: '15%',
+					width: '13%',
 				},
 				{
 					key: 'policyGroupName',

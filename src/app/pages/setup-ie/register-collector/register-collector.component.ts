@@ -308,11 +308,12 @@ export class RegisterCollectorComponent implements OnDestroy, OnInit, SetupStep 
 							.pipe(takeUntil(this.destroyed$))
 							.subscribe(() => {
 								// continue to next screen after a second
-								if (this.isFromAdmin) {
-									this.router.navigate(['/admin/settings']);
-								} else {
-									this.onStepComplete.emit();
-								}
+								// if (this.isFromAdmin) {
+								// 	this.router.navigate(['/admin/settings']);
+								// } else {
+								// 	this.onStepComplete.emit();
+								// }
+								this.onStepComplete.emit();
 							});
 
 						return false;
@@ -338,7 +339,7 @@ export class RegisterCollectorComponent implements OnDestroy, OnInit, SetupStep 
 		return this.registerService
 			// if an error comes up, try to get a new auth token
 			.getAuthToken({
-				password: this.accountForm.get('password').value,
+				password: this.accountForm.get('oldPassword').value,
 				userId: 'cxcadmin',
 			})
 			.pipe(
