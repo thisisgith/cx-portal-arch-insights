@@ -2,6 +2,7 @@
  * Default Origin
  */
 const origin = 'https://crue-dev-1.cisco.com';
+const datacenterStub = 'REGION';
 
 /**
  * Contains default configurations to be used to import into other environment files,
@@ -9,6 +10,7 @@ const origin = 'https://crue-dev-1.cisco.com';
  */
 export const defaults = {
 	origin,
+	datacenterStub,
 	auth: {
 		accountUrl: `${origin}/ws/account/v2/`,
 		ciscoTokenUrl: `${origin}/ws/oauth/v4/token/cisco`,
