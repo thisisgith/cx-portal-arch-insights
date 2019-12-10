@@ -84,7 +84,7 @@ export class BulletChartComponent implements OnChanges {
 				text: '',
 			},
 			xAxis: {
-				categories: [`<span style="font-size: 13px; font-weight: bold">
+				categories: [`<span style="font-size: 1.3rem; font-weight: bold">
 					${this.seriesData.xLabel}</span>`],
 				gridLineWidth: 0,
 			},
@@ -120,7 +120,7 @@ export class BulletChartComponent implements OnChanges {
 			}
 			if (seriesInfo.currentValue !== seriesInfo.previousValue) {
 				this.chart.ref.xAxis[0].update({ categories:
-				[`<span style="font-size: 13px; font-weight: bold">
+				[`<span style="font-size: 1.3rem; font-weight: bold">
 				${seriesInfo.currentValue.xLabel}</span>`] }, false);
 				const data = [{
 					target: seriesInfo.currentValue.target,

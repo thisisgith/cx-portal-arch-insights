@@ -37,15 +37,15 @@ a {
 	color: $default-text-color;
 	background-color: $search-bar-bg-color;
 	border: none;
-	font-size: 12px;
-	letter-spacing: -0.34px;
+	font-size: 1.2rem;
+	letter-spacing: -0.034rem;
 	opacity: 0.81;
 
 	&::placeholder {
 		color: $text-dark-gray-2;
-		font-size: 12px;
+		font-size: 1.2rem;
 		font-style: normal;
-		letter-spacing: -0.34px;
+		letter-spacing: -0.034rem;
 		opacity: 0.81;
 	}
 
@@ -76,7 +76,7 @@ a {
 .cx-search-bar-word-break {
 	height: auto !important;
 	padding: 6px 40px 6px 10px !important;
-	line-height: 23px !important;
+	line-height: 2.3rem !important;
 	white-space: normal !important;
 	word-break: break-word;
 }

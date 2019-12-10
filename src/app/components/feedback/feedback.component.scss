@@ -40,19 +40,19 @@ $primary-lighter: #1ad6ff;
 
 :host .modal {
 	&__header .modal__title {
-		font-size: 37px;
+		font-size: 3.7rem;
 		font-weight: 300;
 	}
 
 	&__header .modal__close .icon-close {
-		font-size: 18px;
+		font-size: 1.8rem;
 	}
 }
 
 .modal__body {
 	.modal {
 		&__question {
-			font-size: 15px;
+			font-size: 1.5rem;
 			font-weight: 500;
 		}
 

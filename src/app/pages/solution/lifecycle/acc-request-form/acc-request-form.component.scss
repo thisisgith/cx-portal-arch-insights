@@ -51,15 +51,15 @@
 
 .request-modal {
 	&__title {
-		font-size: 32px;
-		line-height: 32px;
-		letter-spacing: 0.3px;
+		font-size: 3.2rem;
+		line-height: 3.2rem;
+		letter-spacing: 0.03rem;
 		font-weight: 300;
 	}
 
 	&__acc-title {
-		font-size: 18px;
-		line-height: 21px;
+		font-size: 1.8rem;
+		line-height: 2.1rem;
 		margin-top: 28px;
 		margin-bottom: 24px;
 	}
@@ -69,9 +69,9 @@
 		padding-top: 32px;
 
 		&__heading {
-			font-size: 11px;
-			letter-spacing: -0.02px;
-			line-height: 12px;
+			font-size: 1.1rem;
+			letter-spacing: -0.002rem;
+			line-height: 1.2rem;
 			color: $gray-text-color;
 			margin-bottom: 4px;
 		}
@@ -115,9 +115,8 @@
 		}
 
 		.form-label {
-			font-size: 13px;
-			// font-weight: 500; no 500 weight, 600 too thick, 400 too thin
-			line-height: 13px;
+			font-size: 1.3rem;
+			line-height: 1.3rem;
 			color: $default-text-color;
 			margin-bottom: 5px;
 		}

@@ -386,7 +386,7 @@ export class RacetrackComponent implements OnInit {
 			.attr('font-weight', 600)
 			.attr('font-style', 'oblique')
 			.attr('fill', '#535e6b')
-			.attr('font-size', 20)
+			.attr('font-size', '2rem')
 			.attr('transform', `translate(10, ${selectedLabelHeight / 2 + 8})`);
 
 		this.stageLabels = labelsEnter.append('text')
@@ -399,7 +399,7 @@ export class RacetrackComponent implements OnInit {
 					translate(${[points[dist].x + d.label.x, points[dist].y + d.label.y]})`;
 			})
 			.attr('text-anchor', d => d.label.anchor)
-			.attr('font-size', '22px')
+			.attr('font-size', '2.2rem')
 			.attr('fill', '#535e6b')
 			.style('font-family', 'Arial')
 			.style('cursor', 'pointer')
@@ -450,7 +450,7 @@ export class RacetrackComponent implements OnInit {
 				.text(d => d.stage)
 				.attr('transform', d => d.transform)
 				.attr('fill', '#8e8e8e')
-				.attr('font-size', '19')
+				.attr('font-size', '1.9rem')
 				.attr('opacity', 0);
 
 		this.refreshLabels();

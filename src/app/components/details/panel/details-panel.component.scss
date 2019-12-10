@@ -16,7 +16,7 @@
 
 				> a {
 					text-transform: uppercase;
-					font-size: 13px;
+					font-size: 1.3rem;
 					padding-bottom: 7px !important;
 					padding-top: 5px !important;
 					color: $gray-text-color;
@@ -57,7 +57,7 @@
 		}
 
 		.icon--mid {
-			font-size: 24px;
+			font-size: 2.4rem;
 		}
 
 		.btn.btn--tiny {
@@ -94,8 +94,8 @@
 			border: none !important;
 			color: #fff !important;
 			height: 28px !important;
-			line-height: 28px !important;
-			font-size: 13px !important;
+			line-height: 2.8rem !important;
+			font-size: 1.3rem !important;
 			font-family: "CiscoSans Bold", sans-serif !important;
 			background-color: $accent-color1 !important;
 
@@ -184,12 +184,12 @@
 
 			&--small {
 				height: 25px !important;
-				line-height: 25px !important;
+				line-height: 2.5rem !important;
 			}
 
 			&--large {
 				height: 42px !important;
-				line-height: 42px !important;
+				line-height: 4.2rem !important;
 			}
 		}
 
@@ -198,7 +198,7 @@
 			box-shadow: inset 0 0 0 1px #c8d4d7;
 			background-color: #fff !important;
 			font-family: "CiscoSans Regular", sans-serif !important;
-			font-size: 13px !important;
+			font-size: 1.3rem !important;
 			border: none !important;
 			height: 25px !important;
 
@@ -233,16 +233,16 @@
 
 		.content__title {
 			color: $gray-text-color;
-			font-size: 16px;
+			font-size: 1.6rem;
 		}
 
 		.content__text {
 			color: $default-text-color;
-			font-size: 14px;
+			font-size: 1.4rem;
 		}
 
 		.header__text {
-			font-size: 13px;
+			font-size: 1.3rem;
 			color: $secondary-and-button-text-color;
 		}
 
