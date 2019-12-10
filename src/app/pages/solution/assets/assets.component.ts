@@ -46,7 +46,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { VisualFilter } from '@interfaces';
 import { CaseOpenComponent } from '@components';
 import { getProductTypeImage, getProductTypeTitle } from '@classes';
-import { DetailsPanelStackService, RacetrackInfoService } from '@services';
+import { DetailsPanelStackService, RacetrackInfoService, CaseDetailsService } from '@services';
 import { HttpResponse } from '@angular/common/http';
 
 /**
@@ -184,6 +184,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		private racetrackInfoService: RacetrackInfoService,
 		public route: ActivatedRoute,
 		public router: Router,
+		private caseDetailsService: CaseDetailsService,
 	) {
 		this.routeParam = _.get(this.route, ['snapshot', 'params', 'view'], 'system');
 
@@ -420,7 +421,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 						sortDirection: 'desc',
 						sorting: true,
 						template: this.criticalAdvisoriesTemplate,
-						width: '150px',
+						width: '155px',
 					},
 					{
 						key: 'deviceName',
@@ -526,7 +527,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					loading: true,
 					seriesData: [],
 					template: this.barChartFilterTemplate,
-					title: I18n.get('_HardwareEndOfLife'),
+					title: I18n.get('_LastDateOfSupport_'),
 				},
 				{
 					key: 'equipmentType',
@@ -632,18 +633,6 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		item.details = !item.details;
 		this.detailsPanelStackService.reset(item.details);
 		this.selectedAsset = item.details ? item : null;
-	}
-
-	/**
-	 * Function used to handle selecting/de-selecting all rows
-	 * @param selected boolean representing selecting all or selecting none
-	 */
-	public onAllSelect (selected: boolean) {
-		this.selectedView.data.forEach((i: Item) => {
-			i.selected = selected;
-		});
-
-		this.selectedView.allAssetsSelected = selected;
 	}
 
 	/**
@@ -761,7 +750,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			}),
 			catchError(err => {
 				const cxLevel = _.get(item, ['data', 'cxLevel']);
-				if (cxLevel > 1 && err.status === 404) {
+				if (cxLevel > 0 && err.status === 404) {
 					return this.initiateScan(item);
 				}
 				this.alert.show(I18n.get('_UnableToInitiateScan_', deviceName), 'danger');
@@ -792,7 +781,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					'fluid',
 				),
 			} : undefined,
-			(Number(cxLevel) > 1 && view.key === 'system' && _.get(item, ['data', 'isManagedNE'], false))
+			(Number(cxLevel) > 0 && view.key === 'system' && _.get(item, ['data', 'isManagedNE'], false))
 			? {
 				label: I18n.get('_RunDiagnosticScan_'),
 				onClick: () => this.checkScan(item),
@@ -881,7 +870,6 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				view.paginationCount = `${first}-${last}`;
 
 				if (this.selectOnLoad && this.selectedView.key === 'system') {
-					this.onAllSelect(true);
 					this.onSelectionChanged(_.map(this.selectedView.data, item => item));
 					if (this.selectedView.selectedAssets.length === 1) {
 						this.selectedAsset = this.selectedView.selectedAssets[0];
@@ -1015,11 +1003,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	private getSystemAdvisoryCount () {
 		const systemAdvisoryFilter =
 			_.find(this.getView('system').filters, { key: 'advisories' });
-		const hardwareView = this.getView('hardware');
-		const hardwareAdvisoryFilter =
-			_.find(hardwareView.filters, { key: 'advisories' });
-
-		return this.productAlertsService.getVulnerabilityCounts({
+		return this.productAlertsService.getSystemVulnerabilityCounts({
 			customerId: this.customerId,
 			solution: this.selectedSolutionName,
 			useCase: this.selectedTechnologyName,
@@ -1027,8 +1011,6 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		.pipe(
 			map((data: VulnerabilityResponse) => {
 				const systemSeries = [];
-				const hardwareSeries = [];
-
 				const bugs = _.get(data, 'bugs', 0);
 
 				if (bugs) {
@@ -1050,6 +1032,31 @@ export class AssetsComponent implements OnInit, OnDestroy {
 						value: security,
 					});
 				}
+				systemAdvisoryFilter.seriesData = systemSeries;
+				systemAdvisoryFilter.loading = false;
+			}),
+			catchError(err => {
+				systemAdvisoryFilter.loading = false;
+				this.logger.error('assets.component : getAdvisoryCount() ' +
+					`:: Error : (${err.status}) ${err.message}`);
+
+				return of({ });
+			}),
+		);
+	}
+	private getHardwareAdvisoryCount () {
+		const hardwareView = this.getView('hardware');
+		const hardwareAdvisoryFilter =
+			_.find(hardwareView.filters, { key: 'advisories' });
+
+		return this.productAlertsService.getHardwareVulnerabilityCounts({
+			customerId: this.customerId,
+			solution: this.selectedSolutionName,
+			useCase: this.selectedTechnologyName,
+		})
+		.pipe(
+			map((data: VulnerabilityResponse) => {
+				const hardwareSeries = [];
 
 				const notices = _.get(data, 'field-notices', 0);
 
@@ -1069,15 +1076,10 @@ export class AssetsComponent implements OnInit, OnDestroy {
 						},
 					);
 				}
-
-				systemAdvisoryFilter.seriesData = systemSeries;
-				systemAdvisoryFilter.loading = false;
-
 				hardwareAdvisoryFilter.seriesData = hardwareSeries;
 				hardwareAdvisoryFilter.loading = false;
 			}),
 			catchError(err => {
-				systemAdvisoryFilter.loading = false;
 				hardwareAdvisoryFilter.loading = false;
 				this.logger.error('assets.component : getAdvisoryCount() ' +
 					`:: Error : (${err.status}) ${err.message}`);
@@ -1195,7 +1197,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 						filterValue: [`${
 							_.get(sub12, 'fromTimestampInMillis')},${
 								_.get(sub12, 'toTimestampInMillis')}`],
-						label: `< 12 ${_.lowerCase(I18n.get('_Months_'))}`,
+						label: `next 12 ${_.lowerCase(I18n.get('_Months_'))}`,
 						selected: false,
 						value: sub12Value,
 					});
@@ -1225,7 +1227,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 						filterValue: [`${
 							_.get(sub36, 'fromTimestampInMillis')},${
 								_.get(sub36, 'toTimestampInMillis')}`],
-						label: `25 - 36 ${_.lowerCase(I18n.get('_Months_'))}`,
+						label: `24 - 36 ${_.lowerCase(I18n.get('_Months_'))}`,
 						selected: false,
 						value: sub36Value,
 					});
@@ -1238,7 +1240,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					series.push({
 						filter: 'gt-36-months',
 						filterValue: [`${_.get(sub36, 'fromTimestampInMillis')}`],
-						label: `> 36 ${_.lowerCase(I18n.get('_Months_'))}`,
+						label: `36+ ${_.lowerCase(I18n.get('_Months_'))}`,
 						selected: false,
 						value: gt36Value,
 					});
@@ -1421,6 +1423,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					this.getCoverageCounts(),
 					// this.getPartnerCounts(),
 					this.getSystemAdvisoryCount(),
+					this.getHardwareAdvisoryCount(),
 					this.getHardwareTypeCounts(),
 					this.getRoleCounts(),
 					this.getHardwareEOXCounts(),
@@ -1612,6 +1615,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	public ngOnDestroy () {
 		this.destroy$.next();
 		this.destroy$.complete();
+		this.caseDetailsService.refreshCaseCount(false);
 	}
 
 	/**
@@ -1623,22 +1627,12 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	}
 
 	/**
-	 * Function used to select an item from our inventory
-	 * @param item the item we selected
-	 */
-	public onItemSelect (item: Item) {
-		item.selected = !item.selected;
-
-		this.selectedView.allAssetsSelected = _.every(this.selectedView.data, 'selected');
-	}
-
-	/**
 	 * Click handler logic for the asset list
 	 * @param {Event} $event Click event
-	 * @param {string} type Click target type (checkbox, item, or menu)
+	 * @param {string} type Click target type (item, or menu)
 	 * @param {Item} [item] Targeted item
 	 */
-	public onClick ($event: Event, type: 'checkbox' | 'item' | 'menu', item?: Item) {
+	public onClick ($event: Event, type: 'item' | 'menu', item?: Item) {
 		if ($event.defaultPrevented) {
 			return;
 		}
@@ -1650,10 +1644,6 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		}
 
 		switch (type) {
-			case 'checkbox':
-				this.onItemSelect(item);
-				// Don't mark event as handled so table row checkbox still works
-				break;
 			case 'item':
 				this.onRowSelect(item);
 				$event.preventDefault(); // mark this event as handled

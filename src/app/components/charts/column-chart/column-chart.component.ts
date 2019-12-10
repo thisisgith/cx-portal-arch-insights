@@ -88,11 +88,18 @@ export class ColumnChartComponent implements OnChanges {
 			series: [
 				{
 					data,
+					allowPointSelect: true,
 					enableMouseTracking: !this.loading,
 					minPointLength: 5,
 					name: '',
 					opacity: this.loading ? 0.5 : 1,
 					showInLegend: false,
+					states: {
+						select: {
+							borderColor: 'none',
+							color: '#00bceb',
+						},
+					},
 					type: undefined,
 				},
 			],
@@ -106,6 +113,7 @@ export class ColumnChartComponent implements OnChanges {
 				useHTML: true,
 				backgroundColor: null,
 				borderWidth: 0,
+				followPointer: true,
 			},
 			xAxis: {
 				categories,

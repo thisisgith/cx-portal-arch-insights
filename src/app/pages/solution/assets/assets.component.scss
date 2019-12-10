@@ -80,6 +80,10 @@
 	min-height: 120px;
 }
 
+.card-width {
+	max-width: 20%;
+}
+
 .filter {
 	&__selected {
 		border-bottom: 4px solid $primary;
@@ -137,4 +141,8 @@
 	&:hover:not(.selected) {
 		background: #ebf1f8;
 	}
+}
+
+.row-padding {
+	padding-left: 15px;
 }

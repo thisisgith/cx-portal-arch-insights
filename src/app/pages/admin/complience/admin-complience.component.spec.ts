@@ -5,7 +5,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { AdminComplienceComponent } from './admin-complience.component';
 import { AdminComplienceModule } from './admin-complience.module';
 import { CuiModalService } from '@cisco-ngx/cui-components';
-import { AssetTaggingService, ControlPointAdminComplienceService } from '@sdp-api';
+import { AssetTaggingService, ControlPointAdminComplienceService , CanDeactivateGuard } from '@sdp-api';
 import { of, throwError } from 'rxjs';
 import { RouteAuthService } from '@services';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -31,6 +31,7 @@ describe('AdminComplienceComponent', () => {
 				ControlPointAdminComplienceService,
 				RouteAuthService,
 				LogService,
+				CanDeactivateGuard,
 			],
 		});
 	});

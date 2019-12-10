@@ -45,6 +45,7 @@ export class FaultsComponent implements OnInit, OnChanges, OnDestroy {
 	public lastUpdateTime: string;
 	public lastUpdateDate: string;
 	public offlineTime: string;
+	public alert: any = { };
 	public searchOptions = {
 		debounce: 1500,
 		max: 100,
@@ -110,8 +111,14 @@ export class FaultsComponent implements OnInit, OnChanges, OnDestroy {
 				? this.FAULT_CONSTANT.INACTIVE : this.FAULT_CONSTANT.ACTIVE;
 			this.searchParams.faultSeverity = currentFilter.afmSeverity;
 			this.searchParams.days = currentFilter.timeRange;
+			this.resetPage();
 			this.getFaultData(this.searchParams);
 		}
+	}
+
+	private resetPage () {
+		this.searchParams.pageNo = 1;
+		this.tableOffset = 0;
 	}
 
 	/**
@@ -177,6 +184,8 @@ export class FaultsComponent implements OnInit, OnChanges, OnDestroy {
 				this.loading = false;
 			}),
 			catchError((err: HttpErrorResponse)  => {
+				this.loading = false;
+				_.invoke(this.alert, 'show',  I18n.get('_FaultGenericError_'), 'danger');
 				this.logger.error(
 					'FaultsComponent : getFaultData() ' +
 				`:: Error : (${err.status}) ${err.message}`);
@@ -206,7 +215,7 @@ export class FaultsComponent implements OnInit, OnChanges, OnDestroy {
 				return 'category';
 			case 'Title':
 				return 'title';
-			case 'Systems Affected':
+			case 'Affected Systems':
 				return 'systemCount';
 			case 'Created Cases':
 				return 'tacCount';
@@ -265,8 +274,8 @@ export class FaultsComponent implements OnInit, OnChanges, OnDestroy {
 	 * @param event search text
 	 */
 	public onSearchUpdate (event) {
+		this.resetPage();
 		this.searchParams.localSearch = event;
-		this.searchParams.pageNo = 1;
 		this.getFaultData(this.searchParams);
 	}
 
@@ -279,6 +288,7 @@ export class FaultsComponent implements OnInit, OnChanges, OnDestroy {
 		this.toasts.addToast('success', 'Event Type:',
 		I18n.get('_FaultXSuccess_', event.icName) +
 		I18n.get('_FaultsYMoved_', event.tacEnable));
+		this.getFaultData(this.searchParams);
 	}
 
 	/**

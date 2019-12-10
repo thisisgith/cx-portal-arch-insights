@@ -1,13 +1,15 @@
 <div>
 	<ng-container *ngTemplateOutlet="searchFilters"></ng-container>
-	<div class="divider qtr-margin-top"></div>
+	<div class="divider qtr-margin-top">
+		<cui-alert [options]="alert" ></cui-alert>
+	</div>
 	<ng-container *ngTemplateOutlet="faultsContent"></ng-container>
 </div>
 
 <ng-template #searchFilters>
 	<div class="row qtr-margin-top">
 		<div class="col-md-6 flex flex-fill">
-			<div class="flex-center-vertical">
+			<div class="flex-center-vertical container">
 				<span [innerText]="'_FaultEvents_' | i18n" class="text-large"></span>
 				<span [innerText]="
 							'_FaultShowingXofYFaults_'
@@ -51,7 +53,9 @@
 					</cui-search>
 				</div>
 				<div>
-					<span [innerText]="'_FaultLastUpdatedXminutes_' | i18n : lastUpdateTime"
+					<span
+						*ngIf="lastUpdateTime"
+						[innerText]="'_FaultLastUpdatedXminutes_' | i18n : lastUpdateTime"
 						class="base-margin-right text-medium text-muted">
 					</span>
 				</div>
@@ -66,6 +70,7 @@
 	</div>
 	<div class="responsive-table" *ngIf="!loading">
 		<cui-table
+			*ngIf="tableData?.length"
 			class="no-close-360"
 			[options]="tableOptions"
 			[data]="tableData"
@@ -74,7 +79,8 @@
 			(onSortingChanged)="onTableSortingChanged($event)"
 			(onTableRowClicked)="connectToFaultDetails($event)"
 		>
-		</cui-table>
+		</cui-table
+		>
 		<div class="section">
 			<cui-pager
 				*ngIf="tableData?.length"
@@ -110,7 +116,7 @@
 <fault-details
 	*ngIf="showFaultDetails"
 	[fault]="fault"
-	[tacEnable]="searchParams.tacEnabled"
+	[faultParams]="searchParams"
 	[lastUpdateTime]="lastUpdateDate"
 	(showFaultDetails)="onFaultPanelClose()"
 	(showSuccess)="onShowSuccess($event)"

@@ -381,7 +381,7 @@ describe('RccComponent', () => {
 		component.onSubfilterSelect('others', mockFilter, false);
 		fixture.detectChanges();
 		expect(component.invalidSearchInput)
-			.toBeTruthy();
+			.toBeFalsy();
 	});
 
 	it('should invoke searchViolations with keycode 8', () => {
@@ -411,7 +411,7 @@ describe('RccComponent', () => {
 		};
 		component.searchViolations(event, 'input');
 		expect(component.invalidSearchInput)
-			.toBeTruthy();
+			.toBeFalsy();
 	});
 
 	it('should invoke searchViolations with keycode 8 and search with search input', () => {
@@ -611,7 +611,7 @@ describe('RccComponent', () => {
 		fixture.detectChanges();
 		component.searchViolations(event, 'search');
 		expect(component.invalidSearchInput)
-			.toBeTruthy();
+			.toBeFalsy();
 	});
 
 	it('should invoke searchViolations with invalid form keycode 65', () => {

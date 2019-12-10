@@ -39,7 +39,6 @@ export interface FaultSearchParams {
 export interface FaultICSearchParams {
 	syslogsignature: string;
 	enable: boolean;
-	sa_Id: number;
 }
 
 /**
@@ -143,7 +142,7 @@ export interface FaultAffectedSystemDetails {
  */
 export interface FaultFilter {
 	productId: FaultProductId[];
-	os: FaultOS[];
+	swType: FaultSwType[];
 }
 
 /**
@@ -163,7 +162,7 @@ export interface FaultProductId {
  * @exports
  * @interface FaultOS
  */
-export interface FaultOS {
+export interface FaultSwType {
 	value: string;
 	count: number;
 }

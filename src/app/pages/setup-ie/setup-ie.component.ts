@@ -125,9 +125,6 @@ export class SetupIeComponent implements AfterViewInit, OnInit, OnDestroy {
 		// this takes user back to last step they were on if a state exists in localStorage
 		let useSavedState: boolean;
 		useSavedState = (this.isFromAdmin) ? true : await this.cuiModalService.showComponent(ResetCacheModal, { });
-		if (this.isFromAdmin && this.savedState.compKey > 3) {
-			this.savedState.compKey = 3;
-		}
 		if (useSavedState) {
 			this.router.navigate([], {
 				queryParams: {
@@ -162,9 +159,13 @@ export class SetupIeComponent implements AfterViewInit, OnInit, OnDestroy {
 
 				let shouldReuseComponent = false;
 				if (isNaN(compKey)) {
-					this.currentStep = (this.isFromAdmin) ? 1 : 0;
-				} else if (this.isFromAdmin && compKey >= 3) {
-					this.currentStep = 3;
+					// if redirected from admin setting page, then it should go to second step
+					if (this.isFromAdmin) {
+						this.currentStep = 1;
+						this.savedState = { };
+					} else {
+						this.currentStep = 0;
+					}
 				} else if (compKey >= this.steps.length) {
 					// if compKey is greater than last step, go to last
 					this.currentStep = this.steps.length - 1;

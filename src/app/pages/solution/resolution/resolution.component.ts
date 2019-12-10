@@ -17,7 +17,7 @@ import { DateTime } from 'luxon';
 import { caseSeverities } from '@classes';
 import { AssetLinkInfo, Case, VisualFilter } from '@interfaces';
 import { environment } from '@environment';
-import { AssetPanelLinkService, DetailsPanelStackService } from '@services';
+import { AssetPanelLinkService, DetailsPanelStackService, CaseDetailsService } from '@services';
 import { UserResolve } from '@utilities';
 
 /**
@@ -150,58 +150,10 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 	public serialNumber: string;
 	public showAsset360 = false;
 
-	/**
-	 * Array of default data for the last updated filter
-	 */
-	public defaultLastUpdatedFilterData: FilterData[] =
-	_.map(lastUpdatedFilters, fields => ({
-		barLabel: fields.barLabel,
-		filter: _.pick(fields, ['lastUpdateFrom', 'lastUpdateTo']),
-		label: fields.label,
-		selected: false,
-		value: 0,
-	}));
-
-	/**
-	 * Array of default data for the duration open filter
-	 */
-	public defaultDurationOpenFilterData: FilterData[] =
-	_.map(durationOpenFilters, fields => ({
-		barLabel: fields.barLabel,
-		filter: _.pick(fields, ['dateCreatedFrom', 'dateCreatedTo']),
-		label: fields.label,
-		selected: false,
-		value: 0,
-	}));
-
-	/**
-	 * Array of default data for the severity filter
-	 */
-	public defaultRmaFilterData: FilterData[] =
-	_.map(['No RMAs', 'With RMAs'], label => ({
-		label,
-		filter: label === 'No RMAs' ? 'F' : 'T',
-		selected: false,
-		value: 0,
-	}));
-
-	/**
-	 * All of the default filter values stored in a map.
-	 * This will be used to initialize each filter when the new data is fetched and accumulated
-	 */
-	public defaultFiltersData = {
-		durationOpen: this.defaultDurationOpenFilterData,
-		lastUpdated: this.defaultLastUpdatedFilterData,
-		rma: this.defaultRmaFilterData,
-		severity: [],
-		status: [],
-		total: [{
-			filter: null,
-			label: null,
-			selected: true,
-			value: 0,
-		}],
-	};
+	public defaultLastUpdatedFilterData: FilterData[];
+	public defaultDurationOpenFilterData: FilterData[];
+	public defaultRmaFilterData: FilterData[];
+	public defaultFiltersData: any;
 
 	constructor (
 		private logger: LogService,
@@ -212,6 +164,7 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 		private assetPanelLinkService: AssetPanelLinkService,
 		private userResolve: UserResolve,
 		private detailsPanelStackService: DetailsPanelStackService,
+		private caseDetailsService: CaseDetailsService,
 	) {
 		this.userResolve.getCustomerId()
 		.pipe(takeUntil(this.destroy$))
@@ -231,6 +184,7 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 
 	/** ngOnInit */
 	public ngOnInit () {
+		this.initializeFilterVariables();
 		this.searchCasesForm = this.formBuilder.group({
 			caseNo: ['',
 				[Validators.pattern('^[0-9]+$'), Validators.minLength(9), Validators.maxLength(9)],
@@ -300,6 +254,19 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 		this.initializeFilters();
 		this.buildRefreshSubject();
 		this.refresh$.next();
+
+		this.caseDetailsService.caseCount$
+			.pipe(takeUntil(this.destroy$))
+			.subscribe((data: boolean) => {
+				// calling functions again based on subject value
+				if (data && this.destroy$) {
+					this.initializeFilterVariables();
+					this.initializeFilters();
+					this.builtFilters = false;
+					this.buildRefreshSubject();
+					this.refresh$.next();
+				}
+			});
 	}
 
 	/**
@@ -310,6 +277,8 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 		if (params.case) {
 			this.selectedCase = {
 				caseNumber: params.case,
+				deviceName: params.deviceName,
+				serialNumber: params.serialNumber,
 			};
 			if (this.searchCasesForm) {
 				this.searchCasesForm.patchValue(params.case);
@@ -1015,11 +984,68 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 	}
 
 	/**
+	 * Initializing visual filter variables on every page load and case creation
+	 */
+
+	public initializeFilterVariables () {
+		/**
+	 	* Array of default data for the last updated filter
+	 	*/
+		 this.defaultLastUpdatedFilterData = _.map(lastUpdatedFilters, fields => ({
+			barLabel: fields.barLabel,
+			filter: _.pick(fields, ['lastUpdateFrom', 'lastUpdateTo']),
+			label: fields.label,
+			selected: false,
+			value: 0,
+		}));
+
+		/**
+	 	* Array of default data for the duration open filter
+		 */
+		 this.defaultDurationOpenFilterData = _.map(durationOpenFilters, fields => ({
+			barLabel: fields.barLabel,
+			filter: _.pick(fields, ['dateCreatedFrom', 'dateCreatedTo']),
+			label: fields.label,
+			selected: false,
+			value: 0,
+		}));
+
+		/**
+	 	* Array of default data for the severity filter
+		 */
+		this.defaultRmaFilterData = _.map(['No RMAs', 'With RMAs'], label => ({
+			label,
+			filter: label === 'No RMAs' ? 'F' : 'T',
+			selected: false,
+			value: 0,
+		}));
+
+		/**
+		 * All of the default filter values stored in a map.
+		 * This will be used to initialize each filter when the new data is fetched and accumulated
+		 */
+		this.defaultFiltersData = {
+			durationOpen: this.defaultDurationOpenFilterData,
+			lastUpdated: this.defaultLastUpdatedFilterData,
+			rma: this.defaultRmaFilterData,
+			severity: [],
+			status: [],
+			total: [{
+				filter: null,
+				label: null,
+				selected: true,
+				value: 0,
+			}],
+		};
+	}
+
+	/**
 	 * OnDestroy lifecycle hook
 	 */
 	public ngOnDestroy () {
 		this.destroy$.next();
 		this.destroy$.complete();
+		this.caseDetailsService.refreshCaseCount(false);
 	}
 
 }

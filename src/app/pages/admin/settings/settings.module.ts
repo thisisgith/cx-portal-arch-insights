@@ -9,6 +9,7 @@ import { AppStatusColorPipe } from './app-status-color.pipe';
 import { ResourceGaugeColorPipe } from './resource-gauge-color.pipe';
 import { ControlPointsModule, UserModule } from '@sdp-api';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { DateTimePipeModule } from '@pipes';
 
 import {
 	CuiLoaderModule,
@@ -40,6 +41,7 @@ const imports = [
 	RouterModule,
 	FormsModule,
 	ReactiveFormsModule,
+	DateTimePipeModule,
 	UserModule.forRoot({ rootUrl }),
 ];
 
