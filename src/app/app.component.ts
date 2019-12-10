@@ -24,6 +24,10 @@ import * as _ from 'lodash-es';
 	selector: 'app-root',
 	styleUrls: ['./app.component.scss'],
 	templateUrl: './app.component.html',
+	host: {
+		'(document:click)': 'onClickDocument($event)',
+		'(document:keydown)': 'onKeyboardNavDocument($event)',
+	},
 })
 export class AppComponent {
 
@@ -33,6 +37,8 @@ export class AppComponent {
 	public status = {
 		loading: true,
 	};
+
+	public keyboardNavigationAccessed = false;
 
 	constructor (
 		private router: Router,
@@ -87,5 +93,23 @@ export class AppComponent {
 				}
 			}
 		});
+	}
+
+	public onClickDocument () {
+		this.keyboardNavigationAccessed = false;
+	}
+
+	public onKeyboardNavDocument (event: KeyboardEvent) {
+		const keysForNavigation = [
+			'Tab',
+			'ArrowDown',
+			'ArrowRight',
+			'ArrowLeft',
+			'ArrowUp',
+		];
+
+		if (keysForNavigation.includes(event.key)) {
+			this.keyboardNavigationAccessed = true;
+		}
 	}
 }
