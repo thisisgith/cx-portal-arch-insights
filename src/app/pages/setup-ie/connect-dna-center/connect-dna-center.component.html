@@ -108,7 +108,10 @@
 						class="btn cx-btn base-margin-right"
 						type="submit"
 						[disabled]="accountForm.invalid"
-						[innerText]="'_Continue_' | i18n | uppercase">
+						[innerText]="'_Continue_' | i18n | uppercase" *ngIf="!isFromAdmin">
+					</button>
+					<button class="btn cx-btn base-margin-right" *ngIf="isFromAdmin" [innerText]="'_IE_StartUsingCXPortal_' | i18n"
+						type="submit" [disabled]="accountForm.invalid">
 					</button>
 					<span [innerText]="'_PressEnter_' | i18n" class="text-medium text-uppercase">
 					</span>
