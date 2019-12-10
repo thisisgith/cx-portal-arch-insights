@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, TemplateRef } from '@angular/core';
 import {
 	ControlPointAdminComplienceService,
 	RightTagResponse,
@@ -28,7 +28,7 @@ import { CuiModalService } from '@cisco-ngx/cui-components';
 	styleUrls: ['./admin-complience.component.scss'],
 	templateUrl: './admin-complience.component.html',
 })
-export class AdminComplienceComponent implements OnInit , DeactivationGuarded {
+export class AdminComplienceComponent implements OnInit , DeactivationGuarded, OnDestroy {
 	@ViewChild('confirmationModalTemplate',
 	{ static: true }) private confirmationModalTemplate: TemplateRef<string>;
 
@@ -622,5 +622,13 @@ export class AdminComplienceComponent implements OnInit , DeactivationGuarded {
 	public continueWithoutChange (choice: boolean): void {
 		this.canDeactGuard.navigateAwaySelection$.next(choice);
 		this.cuiModalService.hide();
+	}
+
+	/**
+	 * NgOnDestroy
+	 */
+	public ngOnDestroy () {
+		this.destroyed$.next();
+		this.destroyed$.complete();
 	}
 }
