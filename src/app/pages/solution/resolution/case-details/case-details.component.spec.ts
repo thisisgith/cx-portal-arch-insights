@@ -122,7 +122,7 @@ describe('CaseDetailsComponent', () => {
 	});
 
 	it('should call all of the required APIs for the selected case', fakeAsync(() => {
-		component.case = { caseNumber: '680000001' };
+		component.case = { caseNumber: '680000001', deviceName: 'LA1-AP4800-1',  serialNumber: 'FOX1306GBAD' };
 		spyOn(caseService, 'fetchCaseDetails')
 			.and
 			.returnValue(of(CaseScenarios[0].scenarios.GET[0].response.body));

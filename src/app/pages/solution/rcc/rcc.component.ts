@@ -160,8 +160,8 @@ export class RccComponent implements OnInit, OnDestroy {
 	public searchOptions = {
 		debounce: 1500,
 		max: 100,
-		min: 2,
-		pattern: /^[a-zA-Z0-9\s\-\/\(\).]*$/,
+		min: 1,
+		pattern: /^[a-zA-Z0-9\s\-\/\[\]\(\).]*$/,
 	};
 	public search: FormControl = new FormControl('');
 	public searchForm: FormGroup;
@@ -244,17 +244,30 @@ export class RccComponent implements OnInit, OnDestroy {
 	 * to check the opt-in/opt-out status for loggedin user
 	 */
 	public getOptInDetail () {
+		this.loading = true;
+		this.filterLoading = true;
 		this.assetsTotalCount = 0;
 		this.policyViolationsTotalCount = 0;
 		this.isAssetView = false;
 		this.optInStatus = false;
 		this.runOnce = false;
 		this.showRunningBanner = false;
+		this.violationGridObj.policyType = null;
+		this.violationGridObj.severity = null;
+		this.allAssetsSelected = false;
+		this.searchStr = null;
+		this.searchInput = '';
+		this.assetGridObj.osType = null;
+		this.assetGridObj.severity = null;
+		this.assetGridObj.searchParam = null;
+		this.violationGridObj.search = null;
+		this.violationGridObj.pageIndex = 1;
+		this.violationGridObj.sortName = null;
+		this.violationGridObj.sortOrder = null;
 		this.policyViolationsGridData = [];
 		this.tableAssetDataSample = [];
 		this.filterObj = [];
 		this.assetFilterObj = [];
-		this.loading = true;
 		this.RccTrackService.
 		optInDetail({ customerId: this.customerId })
 		.pipe(takeUntil(this.destroy$))
@@ -698,7 +711,7 @@ export class RccComponent implements OnInit, OnDestroy {
 		_.invoke(this.alert, 'hide');
 		const searchInput = this.searchInput.trim();
 		if (this.searchForm.invalid ||
-				(!_.isEmpty(searchInput) && searchInput.length < 2)) {
+				(!_.isEmpty(searchInput) && searchInput.length < 1)) {
 			this.invalidSearchInput = true;
 
 			return;
@@ -870,7 +883,7 @@ export class RccComponent implements OnInit, OnDestroy {
 		if (this.prevSearchText.toLowerCase() === searchInput
 		.toLowerCase()) { return; }
 		if (((event && event.keyCode && event.keyCode === 13) ||
-			type === 'search') && (searchInput.length < 2)) {
+			type === 'search') && (searchInput.length < 1)) {
 			this.searchInput = searchInput;
 			this.invalidSearchInput = true;
 

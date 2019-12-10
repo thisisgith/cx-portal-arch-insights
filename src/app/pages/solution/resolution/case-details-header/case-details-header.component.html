@@ -12,7 +12,7 @@
 						data-auto-id="CaseDetailsSeverity"
 						[innerText]="caseDetails?.priority? ('S'+ caseDetails.priority): ''"></span>
 					<span class="qtr-padding-left"
-						[innerText]="caseDetails?.requestType"
+						[innerText]="getSeverityDescr(caseDetails?.priority)"
 						data-auto-id="CaseDetailsRequestType"></span>
 				</div>
 			</div>

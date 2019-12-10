@@ -131,7 +131,7 @@ describe('ResolutionComponent', () => {
 		router.navigate(
 			[],
 			{
-				queryParams: { case: '688296392', serial: 'FOX1306GBAD' },
+				queryParams: { case: '688296392', serial: 'FOX1306GBAD', deviceName: 'LA1-AP4800-1',  serialNumber: 'FOX1306GBAD' },
 				relativeTo: component.route,
 			},
 		);
@@ -140,6 +140,8 @@ describe('ResolutionComponent', () => {
 		expect(component.selectedCase)
 			.toEqual({
 				caseNumber: '688296392',
+				deviceName: 'LA1-AP4800-1',
+				serialNumber: 'FOX1306GBAD',
 			});
 		expect(component.caseParams.serialNumbers)
 			.toEqual('FOX1306GBAD');

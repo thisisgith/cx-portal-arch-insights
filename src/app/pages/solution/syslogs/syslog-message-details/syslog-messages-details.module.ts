@@ -11,6 +11,7 @@ import {
 	CuiAlertModule,
 } from '@cisco-ngx/cui-components';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
+import { DetailsPanelModule, AssetDetailsModule, AssetDetailsHeaderModule } from '@components';
 
 /**
  * Ng module
@@ -28,6 +29,9 @@ import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 		I18nPipeModule,
 		CuiSpinnerModule,
 		CuiAlertModule,
+		DetailsPanelModule,
+		AssetDetailsModule,
+		AssetDetailsHeaderModule,
 	],
 })
 export class SyslogMessagesDetailsModule { }

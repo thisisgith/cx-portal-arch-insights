@@ -13,3 +13,4 @@ export { SyslogDevicePanelData, SyslogDevicePanelOuter } from './models/syslogde
 export { SyslogGridResponseData } from './models/syslog-gridresponse-data';
 export { DeviceMessageDescObject } from './models/syslogdevicepanelmessageobject-data';
 export { SyslogPanelIPSer } from './models/syslogdeviceheaderdetails-data';
+export { SyslogCategoryData, SyslogCategoryList, PushToFaultResponse } from './models/syslog-category-data';

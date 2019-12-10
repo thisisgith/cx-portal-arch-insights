@@ -10,6 +10,7 @@ import { user } from '@mock';
 
 import { HeaderComponent } from './header.component';
 import { HeaderModule } from './header.module';
+import { EntitlementDirective } from '@directives';
 
 describe('HeaderComponent', () => {
 	let component: HeaderComponent;
@@ -18,14 +19,16 @@ describe('HeaderComponent', () => {
 
 	configureTestSuite(() => {
 		TestBed.configureTestingModule({
+			providers: [
+				EntitlementService,
+			],
 			imports: [
 				HeaderModule,
 				RouterTestingModule,
 			],
-			providers: [
-				EntitlementService,
-			],
 		});
+
+		TestBed.overrideDirective(EntitlementDirective, { });
 	});
 
 	beforeEach(() => {

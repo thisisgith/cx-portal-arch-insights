@@ -23,7 +23,7 @@ import {
 	FaultAffectedSystemDetails,
 	InventoryService,
 	FaultProductId,
-	FaultOS,
+	FaultSwType,
 	RacetrackSolution,
 	RacetrackTechnology,
 	FaultICSearchParams,
@@ -51,7 +51,7 @@ import { CaseDetails } from '@cui-x/services';
 export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 
 	@Input('fault') public fault: FaultGridData;
-	@Input('tacEnable') public tacEnable: string;
+	@Input('faultParams') public faultParams: FaultSearchParams;
 	@Input('lastUpdateTime') public lastUpdateTime: string;
 	@Output('showFaultDetails') public showFaultDetails = new EventEmitter();
 	@Output('showSuccess') public showSuccess = new EventEmitter();
@@ -75,7 +75,8 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 	public affectedSystemLoading = false;
 	public alert: any = { };
 	public productID: FaultProductId[];
-	public software: FaultOS[];
+	public software: FaultSwType[];
+	public serialNumber: string;
 	public icSettingsResponse: FaultIcSettings;
 	public timeRange: any[] = [
 		{
@@ -105,7 +106,7 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 		ACTIVE: 'ACTIVE',
 		AUTOMATED: 'Automated Faults',
 		DETECTED: 'Detected Faults',
-		FILTER_TYPE: 'productId,os',
+		FILTER_TYPE: 'productId,swType',
 		INACTIVE: 'INACTIVE',
 		PRODUCT_ID: 'PRODUCTID',
 		SOFTWARE: 'SOFTWARE',
@@ -119,6 +120,10 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 
 	@ViewChild('systemName', { static: true })
 		public systemNameTemplate: TemplateRef<{ }>;
+	@ViewChild('productId', { static: true })
+	public productIdTemplate: TemplateRef<{ }>;
+	@ViewChild('softwareType', { static: true })
+		public softwareTypeTemplate: TemplateRef<{ }>;
 	@ViewChild('caseNumber', { static: true })
 		public caseNumberTemplate: TemplateRef<{ }>;
 	@ViewChild('caseCreatedDate', { static: true })
@@ -149,7 +154,9 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 	public ngOnInit () {
 		this.loading = true;
 		this.searchParams.msgType = this.fault.msgType;
-		this.searchParams.tacEnabled = this.tacEnable;
+		this.searchParams.tacEnabled = this.faultParams.tacEnabled;
+		this.searchParams.faultSeverity = this.faultParams.faultSeverity;
+		this.searchParams.days = this.faultParams.days;
 		this.searchParams.filterTypes = this.FAULT_CONSTANT.FILTER_TYPE;
 		this.racetrackInfoService.getCurrentSolution()
 		.pipe(takeUntil(this.destroy$))
@@ -165,6 +172,7 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 			this.getFiltersData();
 		});
 
+		this.detailsPanelStackService.push(this);
 		this.buildTable();
 	}
 
@@ -225,7 +233,7 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 			.pipe(takeUntil(this.destroy$),
 			map((response: FaultFilterData) => {
 				this.productID = _.get(response, ['responseData', 0, 'productId']);
-				this.software = _.get(response, ['responseData', 1, 'os']);
+				this.software = _.get(response, ['responseData', 1, 'swType']);
 				this.loading = false;
 			}),
 			catchError(err => {
@@ -253,14 +261,14 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 					template: this.systemNameTemplate,
 				},
 				{
-					key: 'productId',
 					name: I18n.get('_FaultProductId_'),
 					sortable: true,
+					template: this.productIdTemplate,
 				},
 				{
-					key: 'softwareType',
 					name: I18n.get('_FaultSoftwareType_'),
 					sortable: true,
+					template: this.softwareTypeTemplate,
 				},
 				{
 					name: I18n.get('_FaultCaseNumber_'),
@@ -340,6 +348,7 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 	 * @param serialnumber string
 	 */
 	public connectToAsset (serialnumber) {
+		this.serialNumber = serialnumber;
 		this.assetParams = {
 			customerId: this.searchParams.customerId,
 			serialNumber: [serialnumber],
@@ -395,8 +404,7 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 	public openConfirmation () {
 		this.searchIcParams.syslogsignature = this.fault.msgType;
 		this.searchIcParams.enable =
-			(this.tacEnable.toUpperCase() === this.FAULT_CONSTANT.ACTIVE) ? true : false;
-		this.searchIcParams.sa_Id = +this.searchParams.customerId;
+			(this.faultParams.tacEnabled.toUpperCase() === this.FAULT_CONSTANT.ACTIVE) ? false : true;
 		this.updateIcSettings(this.searchIcParams);
 	}
 
@@ -430,9 +438,9 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 		if (this.icSettingsResponse.statusCode.toUpperCase() !== 'OK') {
 			_.invoke(this.alert, 'show', this.icSettingsResponse.statusMessage, 'danger');
 		} else {
-			this.faultIcSettings.icName = this.searchIcParams.syslogsignature;
+			this.faultIcSettings.icName = this.fault.title;
 			this.faultIcSettings.tacEnable = this.searchIcParams.enable
-				? this.FAULT_CONSTANT.DETECTED : this.FAULT_CONSTANT.AUTOMATED;
+				? this.FAULT_CONSTANT.AUTOMATED : this.FAULT_CONSTANT.DETECTED;
 			this.showSuccess.emit(this.faultIcSettings);
 			this.onAllPanelsClose();
 		}
@@ -444,6 +452,7 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 	 */
 	public onPagerUpdated (pageInfo) {
 		this.searchParams.pageNo = pageInfo.page + 1;
+		this.tableOffset = pageInfo.page;
 		this.searchParams.size = this.tableLimit;
 		this.getAffectedSystemDetails(this.searchParams);
 	}
@@ -461,17 +470,17 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 	private getSortKey = sortKey => {
 		switch (sortKey) {
 			case 'System Name':
-				return 'systemName';
+				return 'hostName';
 			case 'Product ID':
 				return 'productId';
 			case 'Software Type':
-				return 'softwareType';
+				return 'swType';
 			case 'Case Number':
 				return 'tacCaseNo';
 			case 'Date and Time':
-				return 'tacCaseCreatedDate';
+				return 'taccaseCreatedDate';
 			default:
-				return 'systemName';
+				return 'hostName';
 		}
 	}
 

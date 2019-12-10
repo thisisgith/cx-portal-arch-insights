@@ -4,7 +4,7 @@ import {
 	TemplateRef,
 	OnDestroy,
 	ElementRef,
- } from '@angular/core';
+} from '@angular/core';
 import { LogService } from '@cisco-ngx/cui-services';
 
 import {
@@ -178,13 +178,13 @@ export class LifecycleComponent implements OnDestroy {
 	public buId: string;
 	public saId: string;
 	private user: User;
-	public partnerList: CompanyInfo [];
-	public accPartnerList: CompanyInfo [];
+	public partnerList: CompanyInfo[];
+	public accPartnerList: CompanyInfo[];
 	public totalAllowedGroupTrainings: number;
 	public selectedFilterForSB = '';
 	public selectedFilterForACC = '';
 	public selectedPartnerFilterForACC: string[];
-	public selectedPartnerFilter: string [];
+	public selectedPartnerFilter: string[];
 	public selectedPartnerFilterForATX: string[];
 	public atxStatusFilter: StatusValues[];
 	public accStatusFilter: StatusValues[];
@@ -247,8 +247,14 @@ export class LifecycleComponent implements OnDestroy {
 	 * The number of rows that Product Guides will request at a time.
 	 */
 	public readonly pgNumRows = 40;
-	public categoryOptions: any [];
-	public pgCategoryOptions: any [];
+	public categoryOptions: any[];
+	public productGuidesCopy: SuccessPath[];
+	public pgCategoryOptions: any[] = [
+		{
+			name: 'Not selected',
+			value: 'Not selected',
+		},
+	];
 	public accStatusOptions = [
 		{
 			name: I18n.get('_Recommended_'),
@@ -402,48 +408,48 @@ export class LifecycleComponent implements OnDestroy {
 		}
 
 		this.racetrackInfoService.getCurrentSolution()
-		.pipe(
-			takeUntil(this.destroy$),
-		)
-		.subscribe((solution: RacetrackSolution) => {
-			this.selectedSolution = solution;
-			this.componentData.params.solution = _.get(solution, 'name');
-		});
+			.pipe(
+				takeUntil(this.destroy$),
+			)
+			.subscribe((solution: RacetrackSolution) => {
+				this.selectedSolution = solution;
+				this.componentData.params.solution = _.get(solution, 'name');
+			});
 
 		this.getPartnerList();
 		this.racetrackInfoService.getCurrentTechnology()
-		.pipe(
-			takeUntil(this.destroy$),
-		)
-		.subscribe((technology: RacetrackTechnology) => {
-			const currentSolution = this.componentData.params.solution;
+			.pipe(
+				takeUntil(this.destroy$),
+			)
+			.subscribe((technology: RacetrackTechnology) => {
+				const currentSolution = this.componentData.params.solution;
 
-			const newSolution = currentSolution;
-			const newTech = (technology.name !== _.get(this.selectedTechnology, 'name'))
-				? true : false;
-			const newUsecaseAdoptPert = (technology.usecase_adoption_percentage !==
-				_.get(this.selectedTechnology, 'usecase_adoption_percentage')) ? true : false;
-			if (newSolution && newTech || newUsecaseAdoptPert) {
-				this.selectedTechnology = technology;
+				const newSolution = currentSolution;
+				const newTech = (technology.name !== _.get(this.selectedTechnology, 'name'))
+					? true : false;
+				const newUsecaseAdoptPert = (technology.usecase_adoption_percentage !==
+					_.get(this.selectedTechnology, 'usecase_adoption_percentage')) ? true : false;
+				if (newSolution && newTech || newUsecaseAdoptPert) {
+					this.selectedTechnology = technology;
 
-				this.resetComponentData();
+					this.resetComponentData();
 
-				this.componentData.params.usecase = _.get(technology, 'name');
-				this.componentData.params.solution = currentSolution;
-				this.currentWorkingPitstop = _.get(this.selectedTechnology, 'currentPitstop');
-				const currentPitstop = _.find(
-					_.get(this.selectedTechnology, 'pitstops', []), (stop: RacetrackPitstop) =>
-					stop.name === this.currentWorkingPitstop);
-				this.currentPitstopCompPert =
-					this.convertPercentage(currentPitstop);
+					this.componentData.params.usecase = _.get(technology, 'name');
+					this.componentData.params.solution = currentSolution;
+					this.currentWorkingPitstop = _.get(this.selectedTechnology, 'currentPitstop');
+					const currentPitstop = _.find(
+						_.get(this.selectedTechnology, 'pitstops', []), (stop: RacetrackPitstop) =>
+						stop.name === this.currentWorkingPitstop);
+					this.currentPitstopCompPert =
+						this.convertPercentage(currentPitstop);
 
-				let viewingIndex = racetrackComponent.stages
-					.indexOf(this.currentWorkingPitstop) + 1;
-				if (viewingIndex === racetrackComponent.stages.length) { viewingIndex = 0; }
-				this.currentViewingPitstop = racetrackComponent.stages[viewingIndex];
-				this.getLifecycleInfo(this.currentWorkingPitstop);
-			}
-		});
+					let viewingIndex = racetrackComponent.stages
+						.indexOf(this.currentWorkingPitstop) + 1;
+					if (viewingIndex === racetrackComponent.stages.length) { viewingIndex = 0; }
+					this.currentViewingPitstop = racetrackComponent.stages[viewingIndex];
+					this.getLifecycleInfo(this.currentWorkingPitstop);
+				}
+			});
 	}
 
 	/**
@@ -544,7 +550,7 @@ export class LifecycleComponent implements OnDestroy {
 				&usecase=`,
 			},
 			params: {
-				customerId: this.customerId.split('_')[0],
+				customerId: _.get(_.split(this.customerId, '_'), '0'),
 				pitstop: '',
 				rows: 500,
 				solution: '',
@@ -789,7 +795,7 @@ export class LifecycleComponent implements OnDestroy {
 	 */
 	public onSort (key: string, sortDirection: string, type: string) {
 		const sortColumn = table => {
-			const clickedColumn = _.find(table.columns, { sortKey: key  });
+			const clickedColumn = _.find(table.columns, { sortKey: key });
 			for (const col of table.columns) {
 				col.sorting = false;
 				if (col !== clickedColumn) {
@@ -979,6 +985,8 @@ export class LifecycleComponent implements OnDestroy {
 		this.moreATXSelected = null;
 		this.atxMoreClicked = false;
 		this.sessionSelected = null;
+		this.selectedFilterForPG = '';
+		this.componentData.productGuides.filter = '';
 	}
 
 	/**
@@ -1023,22 +1031,22 @@ export class LifecycleComponent implements OnDestroy {
 		}
 		this.closeViewSessions();
 		this.contentService.registerUserToAtx(params)
-		.subscribe(() => {
-			this.status.loading.atx = false;
-			this.loadATX()
-				.subscribe();
-			if (window.Cypress) {
-				window.atxLoading = false;
-			}
-		},
-		err => {
-			this.status.loading.atx = false;
-			if (window.Cypress) {
-				window.atxLoading = false;
-			}
-			this.logger.error(`lifecycle.component : registerATXSession() :: Error  : (${
-				err.status}) ${err.message}`);
-		});
+			.subscribe(() => {
+				this.status.loading.atx = false;
+				this.loadATX()
+					.subscribe();
+				if (window.Cypress) {
+					window.atxLoading = false;
+				}
+			},
+				err => {
+					this.status.loading.atx = false;
+					if (window.Cypress) {
+						window.atxLoading = false;
+					}
+					this.logger.error(`lifecycle.component : registerATXSession() :: Error  : (${
+						err.status}) ${err.message}`);
+				});
 	}
 
 	/**
@@ -1058,29 +1066,29 @@ export class LifecycleComponent implements OnDestroy {
 			sessionId: ssId,
 		};
 		if (!atx.providerInfo) {
-			const scheduledEventNumber =  scheduledSession.eventNumber;
+			const scheduledEventNumber = scheduledSession.eventNumber;
 			params.eventNumber = scheduledEventNumber;
 		}
 		this.contentService.cancelSessionATX(params)
-		.subscribe(() => {
-			_.find(atx.sessions, { sessionId: ssId }).scheduled = false;
-			atx.status = 'recommended';
-			this.atxScheduleCardOpened = false;
-			this.recommendedAtxScheduleCardOpened = false;
-			this.sessionSelected = null;
-			this.status.loading.atx = false;
-			if (window.Cypress) {
-				window.atxLoading = false;
-			}
-		},
-		err => {
-			this.status.loading.acc = false;
-			if (window.Cypress) {
-				window.accLoading = false;
-			}
-			this.logger.error(`lifecycle.component : cancelATXSession() :: Error  : (${
-				err.status}) ${err.message}`);
-		});
+			.subscribe(() => {
+				_.find(atx.sessions, { sessionId: ssId }).scheduled = false;
+				atx.status = 'recommended';
+				this.atxScheduleCardOpened = false;
+				this.recommendedAtxScheduleCardOpened = false;
+				this.sessionSelected = null;
+				this.status.loading.atx = false;
+				if (window.Cypress) {
+					window.atxLoading = false;
+				}
+			},
+				err => {
+					this.status.loading.acc = false;
+					if (window.Cypress) {
+						window.accLoading = false;
+					}
+					this.logger.error(`lifecycle.component : cancelATXSession() :: Error  : (${
+						err.status}) ${err.message}`);
+				});
 	}
 
 	/**
@@ -1098,12 +1106,20 @@ export class LifecycleComponent implements OnDestroy {
 		}
 
 		if (type === 'PG') {
-			// Swallow the responses.
-			this.loadProductGuides()
-				.subscribe(
-					() => undefined,
-					() => undefined,
-				);
+			this.filterProductGuides();
+		}
+	}
+
+	/**
+	 * Filters the product guides
+	 */
+	private filterProductGuides () {
+		if (this.selectedFilterForPG && this.selectedFilterForPG !== 'Not selected') {
+			this.componentData.productGuides.items =
+				_.filter(this.productGuidesCopy,
+					{ archetype: this.selectedFilterForPG });
+		} else {
+			this.componentData.productGuides.items = this.productGuidesCopy;
 		}
 	}
 
@@ -1188,26 +1204,26 @@ export class LifecycleComponent implements OnDestroy {
 		};
 
 		this.racetrackService.updatePitstopAction(actionUpdated)
-		.subscribe(() => {
-			this.status.loading.racetrack = false;
+			.subscribe(() => {
+				this.status.loading.racetrack = false;
 
-			if (this.calculatePercentage(this.componentData.racetrack.pitstop) === 1) {
-				this.showCompletionPopup = true;
-				this.panelBottomPaddingNeededForMessage = true;
-				setTimeout(() => {
-					this.showCompletionPopup = false;
-					this.panelBottomPaddingNeededForMessage = false;
-				}, this.timeout);
-			}
-			// Need to call getRacetrackInfo to get the latest data
-			this.getRacetrackInfo();
-		},
-		err => {
-			this.status.loading.racetrack = false;
-			this.logger.error(`lifecycle.component : completeAction() :: Error  : (${
-				err.status}) ${err.message}`);
-			this.getRacetrackInfo();
-		});
+				if (this.calculatePercentage(this.componentData.racetrack.pitstop) === 1) {
+					this.showCompletionPopup = true;
+					this.panelBottomPaddingNeededForMessage = true;
+					setTimeout(() => {
+						this.showCompletionPopup = false;
+						this.panelBottomPaddingNeededForMessage = false;
+					}, this.timeout);
+				}
+				// Need to call getRacetrackInfo to get the latest data
+				this.getRacetrackInfo();
+			},
+				err => {
+					this.status.loading.racetrack = false;
+					this.logger.error(`lifecycle.component : completeAction() :: Error  : (${
+						err.status}) ${err.message}`);
+					this.getRacetrackInfo();
+				});
 	}
 
 	/**
@@ -1215,7 +1231,7 @@ export class LifecycleComponent implements OnDestroy {
 	 */
 	public resetFilter () {
 		this.resetSelectStatus();
-		const nextAction =  _.find(this.componentData.racetrack.pitstop.pitstopActions,
+		const nextAction = _.find(this.componentData.racetrack.pitstop.pitstopActions,
 			{ isComplete: false });
 		const actionName = nextAction ? nextAction.name : null;
 		if (this.componentData.params.suggestedAction !== actionName) {
@@ -1243,27 +1259,27 @@ export class LifecycleComponent implements OnDestroy {
 		// The selected technologies currentPitstop parameter updates once all actions are complete
 		// refresh the racetrack info to get those new changes
 		this.racetrackService.getRacetrack(params)
-		.subscribe((results: RacetrackResponse) => {
-			const responseSolution: RacetrackSolution = _.find(
-				_.get(results, 'solutions', []), (solution: RacetrackSolution) =>
-				solution.name === this.selectedSolution.name);
+			.subscribe((results: RacetrackResponse) => {
+				const responseSolution: RacetrackSolution = _.find(
+					_.get(results, 'solutions', []), (solution: RacetrackSolution) =>
+					solution.name === this.selectedSolution.name);
 
-			const responseTechnology: RacetrackTechnology = _.find(
-				_.get(responseSolution, 'technologies', []), (tech: RacetrackTechnology) =>
-				tech.name === this.selectedTechnology.name);
+				const responseTechnology: RacetrackTechnology = _.find(
+					_.get(responseSolution, 'technologies', []), (tech: RacetrackTechnology) =>
+					tech.name === this.selectedTechnology.name);
 
-			if (responseTechnology) {
-				this.racetrackInfoService.sendCurrentTechnology(responseTechnology);
-				if (responseTechnology.usecase_adoption_percentage) {
-					this.racetrackInfoService.sendCurrentAdoptionPercentage(
-						responseTechnology.usecase_adoption_percentage);
+				if (responseTechnology) {
+					this.racetrackInfoService.sendCurrentTechnology(responseTechnology);
+					if (responseTechnology.usecase_adoption_percentage) {
+						this.racetrackInfoService.sendCurrentAdoptionPercentage(
+							responseTechnology.usecase_adoption_percentage);
+					}
 				}
-			}
-		},
-		err => {
-			this.logger.error('lifecycle.component : getRacetrackInfo() ' +
-				`:: Error : (${err.status}) ${err.message}`);
-		});
+			},
+				err => {
+					this.logger.error('lifecycle.component : getRacetrackInfo() ' +
+						`:: Error : (${err.status}) ${err.message}`);
+				});
 	}
 
 	/**
@@ -1281,7 +1297,7 @@ export class LifecycleComponent implements OnDestroy {
 	 * @returns pertage string
 	 */
 	private convertPercentage (pitstop: RacetrackPitstop) {
-		const start = I18n.get('_Start_');
+		const start = '0%';
 		if (pitstop) {
 			const pct = _.get(pitstop, 'pitstop_adoption_percentage');
 			if (!_.isNil(pct)) {
@@ -1297,7 +1313,7 @@ export class LifecycleComponent implements OnDestroy {
 	 * @param pitstop the current pitstop
 	 * @returns pertage number
 	 */
-	 private calculatePercentage (pitstop: RacetrackPitstop) {
+	private calculatePercentage (pitstop: RacetrackPitstop) {
 		let pct = 0;
 		if (pitstop) {
 			// locally manual calculate percentage
@@ -1318,8 +1334,8 @@ export class LifecycleComponent implements OnDestroy {
 	 * @param item bookmark item object
 	 * @param inputCategory string of the category type
 	 */
-	 public updateBookmark (item: ACC | AtxSchema | SuccessPath,
-			inputCategory: 'ACC' | 'ATX' | 'SB' | 'PG') {
+	public updateBookmark (item: ACC | AtxSchema | SuccessPath,
+		inputCategory: 'ACC' | 'ATX' | 'SB' | 'PG') {
 		let bookmark;
 		let id;
 		let lifecycleCategory: 'ACC' | 'ATX' | 'SB';
@@ -1362,23 +1378,23 @@ export class LifecycleComponent implements OnDestroy {
 		};
 
 		this.contentService.updateBookmark(params)
-		.subscribe(() => {
-			item.bookmark = !item.bookmark;
-			this.status.loading.bookmark = false;
-			if (window.Cypress) {
-				window.elearningLoading = false;
-			}
-		},
-		err => {
-			this.status.loading.bookmark = false;
-			if (window.Cypress) {
-				window.elearningLoading = false;
-			}
-			this.logger.error(`lifecycle.component : updateBookmark() :: Error  : (${
-				err.status}) ${err.message}`);
-		});
+			.subscribe(() => {
+				item.bookmark = !item.bookmark;
+				this.status.loading.bookmark = false;
+				if (window.Cypress) {
+					window.elearningLoading = false;
+				}
+			},
+				err => {
+					this.status.loading.bookmark = false;
+					if (window.Cypress) {
+						window.elearningLoading = false;
+					}
+					this.logger.error(`lifecycle.component : updateBookmark() :: Error  : (${
+						err.status}) ${err.message}`);
+				});
 
-	 }
+	}
 
 	/**
 	 * Gets the scroll coordinates for viewAll Modal
@@ -1403,7 +1419,7 @@ export class LifecycleComponent implements OnDestroy {
 	 * @param moreList HTMLElement
 	 * @param panel string
 	 */
-	 public getMoreCoordinates (moreList: HTMLElement, panel: string) {
+	public getMoreCoordinates (moreList: HTMLElement, panel: string) {
 		if (_.isEqual(panel, 'moreATXList') &&
 			!this.atxScheduleCardOpened && !this.atxMoreClicked) {
 			this.moreXCoordinates = moreList.offsetWidth;
@@ -1414,7 +1430,7 @@ export class LifecycleComponent implements OnDestroy {
 	/**
 	 * Changes the atxScheduleCardOpened flag and adds value to moreATXSelected
 	 */
-	 public atxMoreViewSessions () {
+	public atxMoreViewSessions () {
 		this.atxScheduleCardOpened = true;
 		this.recommendedAtxScheduleCardOpened = false;
 		this.atxMoreClicked = false;
@@ -1426,8 +1442,8 @@ export class LifecycleComponent implements OnDestroy {
 	 * @param panel string
 	 * @param moreList HTMLElement (optional)
 	 */
-	 public atxMoreSelect (item: AtxSchema, panel: string, moreList?: HTMLElement) {
-		 if (!this.atxMoreClicked && _.isEqual(panel, 'moreATXList')) {
+	public atxMoreSelect (item: AtxSchema, panel: string, moreList?: HTMLElement) {
+		if (!this.atxMoreClicked && _.isEqual(panel, 'moreATXList')) {
 			this.atxScheduleCardOpened = false;
 			// deals with moreCoordinates not being re-evaluated when viewSessions
 			// is open on another more select instance
@@ -1437,25 +1453,25 @@ export class LifecycleComponent implements OnDestroy {
 			this.recommendedAtxScheduleCardOpened = false;
 			this.moreATXSelected = item;
 			this.atxMoreClicked = true;
-		 }
+		}
 	}
 
 	/**
 	 * Changes the recommendedAtxScheduleCardOpened flag
 	 */
-	 public recommendedATXViewSessions () {
+	public recommendedATXViewSessions () {
 		if (!this.recommendedAtxScheduleCardOpened) {
-			 this.recommendedAtxScheduleCardOpened = true;
-			 this.atxScheduleCardOpened = false;
-			 this.componentData.atx.interested = null;
-			 this.atxMoreClicked = false;
+			this.recommendedAtxScheduleCardOpened = true;
+			this.atxScheduleCardOpened = false;
+			this.componentData.atx.interested = null;
+			this.atxMoreClicked = false;
 		}
 	}
 
 	/**
 	 * Changes the atxScheduleCardOpened flags to false to close the popupmodal
 	 */
-	 public closeViewSessions () {
+	public closeViewSessions () {
 		this.atxScheduleCardOpened = false;
 		this.recommendedAtxScheduleCardOpened = false;
 		this.selectSession({ });
@@ -1476,7 +1492,7 @@ export class LifecycleComponent implements OnDestroy {
 	 * Get the panel styles based on button coordinates
 	 * @param atxMoreClick HTMLElement
 	 */
-	 public getATXMorePanel (atxMoreClick: HTMLElement) {
+	public getATXMorePanel (atxMoreClick: HTMLElement) {
 		const _div = atxMoreClick;
 		if (this.atxMoreClicked && this.moreATXSelected && !this.atxScheduleCardOpened) {
 			_div.style.left = `${this.moreXCoordinates}px`;
@@ -1488,7 +1504,7 @@ export class LifecycleComponent implements OnDestroy {
 	 * Opens the given URL in a new tab
 	 * @param crossLaunchUrl string
 	 */
-	 public crossLaunch (crossLaunchUrl: string) {
+	public crossLaunch (crossLaunchUrl: string) {
 		if (crossLaunchUrl) {
 			window.open(crossLaunchUrl, '_blank');
 		}
@@ -1500,7 +1516,7 @@ export class LifecycleComponent implements OnDestroy {
 	 * @param data AtxSchema
 	 * @returns button string
 	 */
-	 public getAtxRegisterButton (data: AtxSchema) {
+	public getAtxRegisterButton (data: AtxSchema) {
 		let button: string;
 		button = '';
 		let sessionSelected = false;
@@ -1548,7 +1564,7 @@ export class LifecycleComponent implements OnDestroy {
 					const rect = this.eventClickedElement.getBoundingClientRect();
 					const ht = this.eventClickedElement.scrollHeight;
 
-					_div.style.left = `${(rect.left - _div.scrollWidth) - 110 }px`;
+					_div.style.left = `${(rect.left - _div.scrollWidth) - 110}px`;
 					_div.style.top = `${(rect.top + (ht / 2))
 						+ this.scrollY - atxPopupListViewAdjustPx - this.appHeaderHeight}px`;
 					panel = 'panel listpanel--open';
@@ -1584,7 +1600,7 @@ export class LifecycleComponent implements OnDestroy {
 			sessions: [],
 		};
 		const params = _.pick(this.componentData.params,
-				['customerId', 'solution', 'usecase', 'pitstop', 'suggestedAction', 'providerId']);
+			['customerId', 'solution', 'usecase', 'pitstop', 'suggestedAction', 'providerId']);
 
 		if (!_.isEmpty(this.accStatusFilter)) {
 			_.set(params, 'status', this.accStatusFilter);
@@ -1595,38 +1611,38 @@ export class LifecycleComponent implements OnDestroy {
 		}
 
 		return this.contentService.getRacetrackACC(params)
-		.pipe(
-			map((result: ACCResponse) => {
-				this.componentData.acc.sessions = result.items;
- 				_.remove(this.componentData.acc.sessions, (session: ACC) =>
-					!session.title && !session.description);
-
-				// Do not show cisco ACC's if incorrect CX level
-				if (!this.ciscoAccLevels.includes(Number(this.cxLevel))) {
+			.pipe(
+				map((result: ACCResponse) => {
+					this.componentData.acc.sessions = result.items;
 					_.remove(this.componentData.acc.sessions, (session: ACC) =>
-						!session.providerInfo);
-				}
+						!session.title && !session.description);
 
-				this.selectedACC = this.componentData.acc.sessions;
-				this.buildAccTable();
+					// Do not show cisco ACC's if incorrect CX level
+					if (!this.ciscoAccLevels.includes(Number(this.cxLevel))) {
+						_.remove(this.componentData.acc.sessions, (session: ACC) =>
+							!session.providerInfo);
+					}
 
-				this.status.loading.acc = false;
-				if (window.Cypress) {
-					window.accLoading = false;
-				}
-				return result;
-			}),
-			catchError(err => {
-				this.status.loading.acc = false;
-				if (window.Cypress) {
-					window.accLoading = false;
-				}
-				this.logger.error(`lifecycle.component : loadACC() :: Error : (${
-					err.status}) ${err.message}`);
+					this.selectedACC = this.componentData.acc.sessions;
+					this.buildAccTable();
 
-				return of({ });
-			}),
-		);
+					this.status.loading.acc = false;
+					if (window.Cypress) {
+						window.accLoading = false;
+					}
+					return result;
+				}),
+				catchError(err => {
+					this.status.loading.acc = false;
+					if (window.Cypress) {
+						window.accLoading = false;
+					}
+					this.logger.error(`lifecycle.component : loadACC() :: Error : (${
+						err.status}) ${err.message}`);
+
+					return of({ });
+				}),
+			);
 	}
 
 	/**
@@ -1653,47 +1669,47 @@ export class LifecycleComponent implements OnDestroy {
 		}
 
 		return this.contentService.getRacetrackATX(params)
-		.pipe(
-			map((result: ATXResponseModel) => {
-				this.componentData.atx.recommended = _.head(result.items);
-				this.componentData.atx.sessions = result.items;
-				this.selectedATX = this.componentData.atx.sessions;
-				_.each(this.selectedATX, (atx: AtxSchema) => {
-					_.each(atx.sessions, (session: AtxSessionSchema) => {
-						if (session.scheduled) {
-							this.scheduledAtxMap[atx.atxId] = session;
-						}
+			.pipe(
+				map((result: ATXResponseModel) => {
+					this.componentData.atx.recommended = _.head(result.items);
+					this.componentData.atx.sessions = result.items;
+					this.selectedATX = this.componentData.atx.sessions;
+					_.each(this.selectedATX, (atx: AtxSchema) => {
+						_.each(atx.sessions, (session: AtxSessionSchema) => {
+							if (session.scheduled) {
+								this.scheduledAtxMap[atx.atxId] = session;
+							}
+						});
 					});
-				});
 
-				this.buildAtxTable();
+					this.buildAtxTable();
 
-				this.status.loading.atx = false;
-				if (window.Cypress) {
-					window.atxLoading = false;
-				}
+					this.status.loading.atx = false;
+					if (window.Cypress) {
+						window.atxLoading = false;
+					}
 
-				return result;
-			}),
-			catchError(err => {
-				this.status.loading.atx = false;
-				if (window.Cypress) {
-					window.atxLoading = false;
-				}
-				this.logger.error(`lifecycle.component : loadATX() :: Error : (${
-				err.status}) ${err.message}`);
+					return result;
+				}),
+				catchError(err => {
+					this.status.loading.atx = false;
+					if (window.Cypress) {
+						window.atxLoading = false;
+					}
+					this.logger.error(`lifecycle.component : loadATX() :: Error : (${
+						err.status}) ${err.message}`);
 
-				return of({ });
-			}),
-		);
+					return of({ });
+				}),
+			);
 	}
 
 	/**
 	 * Retrieves the current filter for Product Guides.
 	 */
 	private get selectedFilterForPG () {
-		if (this.componentData.productGuides.filter === 'Not selected') {
-			return '';
+		if (!this.componentData.productGuides.filter) {
+			return 'Not selected';
 		}
 
 		return this.componentData.productGuides.filter;
@@ -1736,48 +1752,48 @@ export class LifecycleComponent implements OnDestroy {
 
 		return this.contentService.getRacetrackSuccessPaths(
 			_.assign(componentParams, pgParams))
-		.pipe(
-			map((result: SuccessPathsResponse) => {
-				if (result.items) {
-					_.set(this.componentData.productGuides, ['items'], result.items);
-					const resultItems = _.uniq(_.map(result.items, 'archetype'));
-					_.set(this.componentData.productGuides, ['archetypes'],
-						resultItems);
-					this.componentData.productGuides.archetypes.unshift('Not selected');
-					this.pgCategoryOptions = _.map(
-						this.componentData.productGuides.archetypes,
-						item => ({
-							name: item,
-							value: item,
-						}));
-					this.selectedFilterForPG = this.pgCategoryOptions[0].value;
-				}
-				const totalCount: number = _.get(result, ['totalCount']);
-				_.set(this.componentData.productGuides, ['totalCount'], totalCount);
+			.pipe(
+				map((result: SuccessPathsResponse) => {
+					if (result.items) {
+						_.set(this.componentData.productGuides, ['items'], result.items);
+						this.productGuidesCopy = this.componentData.productGuides.items;
+						const resultItems = _.uniq(_.map(result.items, 'archetype'));
+						_.set(this.componentData.productGuides, ['archetypes'],
+							resultItems);
+						this.componentData.productGuides.archetypes.unshift('Not selected');
+						this.pgCategoryOptions = _.map(
+							this.componentData.productGuides.archetypes,
+							item => ({
+								name: item,
+								value: item,
+							}));
+					}
+					const totalCount: number = _.get(result, ['totalCount']);
+					_.set(this.componentData.productGuides, ['totalCount'], totalCount);
 
-				this.prepareProductGuides();
-				this.status.loading.productGuides.modal = false;
-				this.status.error.productGuides = false;
-				if (window.Cypress) {
-					window.productGuidesLoading = false;
-				}
+					this.prepareProductGuides();
+					this.status.loading.productGuides.modal = false;
+					this.status.error.productGuides = false;
+					if (window.Cypress) {
+						window.productGuidesLoading = false;
+					}
 
-				return result;
-			}),
-			catchError(err => {
-				// Clear out the user-configurable options so that the user can't get
-				// themselves stuck.
-				this.clearProductGuidesOptions();
-				this.status.loading.productGuides.modal = false;
-				if (window.Cypress) {
-					window.productGuidesLoading = false;
-				}
-				this.logger.error(`lifecycle.component : loadProductGuides() :: Error : (${
-					err.status}) ${err.message}`);
+					return result;
+				}),
+				catchError(err => {
+					// Clear out the user-configurable options so that the user can't get
+					// themselves stuck.
+					this.clearProductGuidesOptions();
+					this.status.loading.productGuides.modal = false;
+					if (window.Cypress) {
+						window.productGuidesLoading = false;
+					}
+					this.logger.error(`lifecycle.component : loadProductGuides() :: Error : (${
+						err.status}) ${err.message}`);
 
-				return throwError(err);
-			}),
-		);
+					return throwError(err);
+				}),
+			);
 	}
 
 	/**
@@ -1818,41 +1834,42 @@ export class LifecycleComponent implements OnDestroy {
 
 			return this.contentService.getRacetrackSuccessPaths(
 				_.assign(componentParams, pgParams))
-			.pipe(
-				map((result: SuccessPathsResponse) => {
-					if (result.items) {
-						const newItemsList
-							= _.concat(this.componentData.productGuides.items,
-								result.items);
-						this.componentData.productGuides.items = newItemsList;
-					}
+				.pipe(
+					map((result: SuccessPathsResponse) => {
+						if (result.items) {
+							const newItemsList
+								= _.concat(this.productGuidesCopy,
+									result.items);
+							this.productGuidesCopy = newItemsList;
+							this.filterProductGuides();
+						}
 
-					this.status.loading.productGuides.more = false;
-					this.status.error.productGuides = false;
-					if (window.Cypress) {
-						window.productGuidesLoading = false;
-					}
+						this.status.loading.productGuides.more = false;
+						this.status.error.productGuides = false;
+						if (window.Cypress) {
+							window.productGuidesLoading = false;
+						}
 
-					// If successful, increase stored page.
-					this.componentData.productGuides.currentPage = incPage;
+						// If successful, increase stored page.
+						this.componentData.productGuides.currentPage = incPage;
 
-					return result;
-				}),
-				catchError(err => {
-					// Clear out the user-configurable options so that the user can't get
-					// themselves stuck.
-					this.clearProductGuidesOptions();
-					this.status.loading.productGuides.more = false;
-					this.status.error.productGuides = true;
-					if (window.Cypress) {
-						window.productGuidesLoading = false;
-					}
-					this.logger.error(`lifecycle.component : loadMoreProductGuides() :: Error : (${
-						err.status}) ${err.message}`);
+						return result;
+					}),
+					catchError(err => {
+						// Clear out the user-configurable options so that the user can't get
+						// themselves stuck.
+						this.clearProductGuidesOptions();
+						this.status.loading.productGuides.more = false;
+						this.status.error.productGuides = true;
+						if (window.Cypress) {
+							window.productGuidesLoading = false;
+						}
+						this.logger.error(`lifecycle.component : loadMoreProductGuides() :: Error : (${
+							err.status}) ${err.message}`);
 
-					return of({ });
-				}),
-			);
+						return of({ });
+					}),
+				);
 		}
 
 		this.logger.warn('lifecycle.component : loadMoreProductGuides() :: Warning : '
@@ -1874,41 +1891,41 @@ export class LifecycleComponent implements OnDestroy {
 		return this.contentService.getRacetrackSuccessPaths(
 			_.pick(this.componentData.params,
 				['customerId', 'solution', 'usecase', 'pitstop', 'rows', 'suggestedAction']))
-		.pipe(
-			map((result: SuccessPathsResponse) => {
-				if (result.items.length) {
-					_.set(this.componentData, ['learning', 'success'], result.items);
-					const resultItems = _.uniq(_.map(result.items, 'archetype'));
-					_.set(this.componentData, ['learning', 'archetype'], resultItems);
-					this.componentData.learning.archetype.unshift('Not selected');
-					this.selectedSuccessPaths = this.componentData.learning.success;
-					this.categoryOptions =
-						_.map(this.componentData.learning.archetype, item => ({
-							name: item,
-							value: item,
-						}));
-					this.selectedFilterForSB = this.categoryOptions[0].value;
-				}
+			.pipe(
+				map((result: SuccessPathsResponse) => {
+					if (result.items.length) {
+						_.set(this.componentData, ['learning', 'success'], result.items);
+						const resultItems = _.uniq(_.map(result.items, 'archetype'));
+						_.set(this.componentData, ['learning', 'archetype'], resultItems);
+						this.componentData.learning.archetype.unshift('Not selected');
+						this.selectedSuccessPaths = this.componentData.learning.success;
+						this.categoryOptions =
+							_.map(this.componentData.learning.archetype, item => ({
+								name: item,
+								value: item,
+							}));
+						this.selectedFilterForSB = this.categoryOptions[0].value;
+					}
 
-				this.buildSBTable();
-				this.status.loading.success = false;
-				if (window.Cypress) {
-					window.successPathsLoading = false;
-				}
+					this.buildSBTable();
+					this.status.loading.success = false;
+					if (window.Cypress) {
+						window.successPathsLoading = false;
+					}
 
-				return result;
-			}),
-			catchError(err => {
-				this.status.loading.success = false;
-				if (window.Cypress) {
-					window.successPathsLoading = false;
-				}
-				this.logger.error(`lifecycle.component : loadSuccessPaths() :: Error : (${
-					err.status}) ${err.message}`);
+					return result;
+				}),
+				catchError(err => {
+					this.status.loading.success = false;
+					if (window.Cypress) {
+						window.successPathsLoading = false;
+					}
+					this.logger.error(`lifecycle.component : loadSuccessPaths() :: Error : (${
+						err.status}) ${err.message}`);
 
-				return of({ });
-			}),
-		);
+					return of({ });
+				}),
+			);
 	}
 
 	/**
@@ -1926,73 +1943,73 @@ export class LifecycleComponent implements OnDestroy {
 		_.set(this.componentData, ['learning', 'remotepracticelabs'], []);
 		return this.contentService.getRacetrackElearning(
 			_.pick(this.componentData.params,
-			['customerId', 'solution', 'usecase', 'pitstop', 'rows', 'suggestedAction']))
-		.pipe(
-			map((result: ELearningResponse) => {
-				if (result.items.length) {
-					_.each(result.items, (item: ELearning) => {
-						switch (item.type) {
-							case 'E-Learning': {
-								const learningItem: ELearningModel = {
-									...item,
-									fixedRating: parseFloat(item.rating),
-								};
-								this.componentData.learning.elearning.push(learningItem);
-								break;
+				['customerId', 'solution', 'usecase', 'pitstop', 'rows', 'suggestedAction']))
+			.pipe(
+				map((result: ELearningResponse) => {
+					if (result.items.length) {
+						_.each(result.items, (item: ELearning) => {
+							switch (item.type) {
+								case 'E-Learning': {
+									const learningItem: ELearningModel = {
+										...item,
+										fixedRating: parseFloat(item.rating),
+									};
+									this.componentData.learning.elearning.push(learningItem);
+									break;
+								}
+								case 'Certification': {
+									const learningItem: ELearningModel = {
+										...item,
+										fixedRating: parseFloat(item.rating),
+									};
+									this.componentData.learning.certifications.push(learningItem);
+									break;
+								}
+								case 'Videos': {
+									this.componentData.learning.certifications.push(item);
+									break;
+								}
+								case 'Remote Learning Lab': {
+									const learningItem: ELearningModel = {
+										...item,
+										fixedRating: parseFloat(item.rating),
+									};
+									this.componentData.learning.remotepracticelabs.push(learningItem);
+									break;
+								}
+								default: {
+									this.componentData.learning.training.push(item);
+									break;
+								}
 							}
-							case 'Certification': {
-								const learningItem: ELearningModel = {
-									...item,
-									fixedRating: parseFloat(item.rating),
-								};
-								this.componentData.learning.certifications.push(learningItem);
-								break;
-							}
-							case 'Videos': {
-								this.componentData.learning.certifications.push(item);
-								break;
-							}
-							case 'Remote Learning Lab': {
-								const learningItem: ELearningModel = {
-									...item,
-									fixedRating: parseFloat(item.rating),
-								};
-								this.componentData.learning.remotepracticelabs.push(learningItem);
-								break;
-							}
-							default: {
-								this.componentData.learning.training.push(item);
-								break;
-							}
-						}
-					});
-					// To do order the list by ranking
-					this.componentData.learning.elearning =
-						_.orderBy(this.componentData.learning.elearning, ['ranking', 'asc']);
-					this.componentData.learning.certifications =
-						_.orderBy(this.componentData.learning.certifications, ['ranking', 'asc']);
-					this.componentData.learning.training =
-						_.orderBy(this.componentData.learning.training, ['ranking', 'asc']);
-				}
+						});
+						// To do order the list by ranking
+						this.componentData.learning.elearning =
+							_.orderBy(this.componentData.learning.elearning, ['ranking', 'asc']);
+						this.componentData.learning.certifications =
+							_.orderBy(this.componentData.learning.certifications, ['ranking', 'asc']);
+						this.componentData.learning.training =
+							_.orderBy(this.componentData.learning.training, ['ranking', 'asc']);
+					}
 
-				this.status.loading.elearning = false;
-				if (window.Cypress) {
-					window.elearningLoading = false;
-				}
+					this.status.loading.elearning = false;
+					if (window.Cypress) {
+						window.elearningLoading = false;
+					}
 
-				return result;
-			}),
-			catchError(err => {
-				this.status.loading.elearning = false;
-				if (window.Cypress) {
-					window.elearningLoading = false;
-				}
-				this.logger.error(`lifecycle.component : loadELearning() :: Error : (${
-					err.status}) ${err.message}`);
+					return result;
+				}),
+				catchError(err => {
+					this.status.loading.elearning = false;
+					if (window.Cypress) {
+						window.elearningLoading = false;
+					}
+					this.logger.error(`lifecycle.component : loadELearning() :: Error : (${
+						err.status}) ${err.message}`);
 
-				return of({ });
-			}),
-		);
+					return of({ });
+				}),
+			);
 	}
 
 	/**
@@ -2024,127 +2041,127 @@ export class LifecycleComponent implements OnDestroy {
 
 			return this.contentService.getTrainingQuotas(
 				_.pick(this.componentData.params, ['customerId']))
-			.pipe(
-				map((result: ContractQuota[]) => {
-					this.status.loading.cgt = false;
-					if (window.Cypress) {
-						window.cgtLoading = false;
-					}
-					this.totalAllowedGroupTrainings = _.size(result) * 2;
-					_.each(result, training => {
-						if (new Date(_.get(training, 'contract_end_date')).getFullYear() ===
-							new Date().getFullYear()) {
-							this.usedTrainings = _.union(this.usedTrainings, [{
-								contract_number: _.get(training, 'tsa_contract_no'),
-								end_date: _.get(training, 'contract_end_date'),
-								used_sessions: _.get(training, 'closed_ilt_courses_inprocess'),
-							}]);
-							trainigsInProcess += _.get(training, 'closed_ilt_courses_inprocess');
-						} else {
-							this.usedTrainings = _.union(this.usedTrainings, [{
-								contract_number: _.get(training, 'tsa_contract_no'),
-								end_date: _.get(training, 'contract_end_date'),
-								used_sessions: 0,
-							}]);
+				.pipe(
+					map((result: ContractQuota[]) => {
+						this.status.loading.cgt = false;
+						if (window.Cypress) {
+							window.cgtLoading = false;
 						}
-					});
-					this.contentService.getCompletedTrainings(
-						_.pick(this.componentData.params, ['customerId']))
-						.pipe(
-							catchError(err => {
-								this.logger.error(`lifecycle.component : loadCGT() :
+						this.totalAllowedGroupTrainings = _.size(result) * 2;
+						_.each(result, training => {
+							if (new Date(_.get(training, 'contract_end_date')).getFullYear() ===
+								new Date().getFullYear()) {
+								this.usedTrainings = _.union(this.usedTrainings, [{
+									contract_number: _.get(training, 'tsa_contract_no'),
+									end_date: _.get(training, 'contract_end_date'),
+									used_sessions: _.get(training, 'closed_ilt_courses_inprocess'),
+								}]);
+								trainigsInProcess += _.get(training, 'closed_ilt_courses_inprocess');
+							} else {
+								this.usedTrainings = _.union(this.usedTrainings, [{
+									contract_number: _.get(training, 'tsa_contract_no'),
+									end_date: _.get(training, 'contract_end_date'),
+									used_sessions: 0,
+								}]);
+							}
+						});
+						this.contentService.getCompletedTrainings(
+							_.pick(this.componentData.params, ['customerId']))
+							.pipe(
+								catchError(err => {
+									this.logger.error(`lifecycle.component : loadCGT() :
 								getCompletedTrainings() :: Error : (${err.status}) ${err.message}`);
 
-								return of({ });
-							}),
-						)
-						.subscribe(response => {
-							this.completedTrainingsList = response;
-							_.each(this.completedTrainingsList, completedTraining => {
-								if (new Date(_.get(completedTraining, 'end_date')).getFullYear() ===
-									new Date().getFullYear()) {
-									_.each(this.usedTrainings, training => {
-										if (_.get(completedTraining, 'contract_number') ===
-											_.get(training, 'contract_number')) {
-											training.used_sessions = training.used_sessions + 1;
-										}
-									});
-									trainigsCompleted = trainigsCompleted + 1;
-								}
-								startDate = `${
-									monthNames[new Date(_.get(completedTraining, 'start_date'))
-									.getMonth()]
-								} ${new Date(_.get(completedTraining, 'start_date')).getUTCDate()}`;
-								startDate += _.isEqual(
-									new Date(_.get(completedTraining, 'start_date'))
-										.getUTCFullYear(),
-									new Date(_.get(completedTraining, 'end_date'))
-										.getUTCFullYear()) ?
-									'' : ` ${
+									return of({ });
+								}),
+							)
+							.subscribe(response => {
+								this.completedTrainingsList = response;
+								_.each(this.completedTrainingsList, completedTraining => {
+									if (new Date(_.get(completedTraining, 'end_date')).getFullYear() ===
+										new Date().getFullYear()) {
+										_.each(this.usedTrainings, training => {
+											if (_.get(completedTraining, 'contract_number') ===
+												_.get(training, 'contract_number')) {
+												training.used_sessions = training.used_sessions + 1;
+											}
+										});
+										trainigsCompleted = trainigsCompleted + 1;
+									}
+									startDate = `${
+										monthNames[new Date(_.get(completedTraining, 'start_date'))
+											.getMonth()]
+										} ${new Date(_.get(completedTraining, 'start_date')).getUTCDate()}`;
+									startDate += _.isEqual(
+										new Date(_.get(completedTraining, 'start_date'))
+											.getUTCFullYear(),
+										new Date(_.get(completedTraining, 'end_date'))
+											.getUTCFullYear()) ?
+										'' : ` ${
 										new Date(_.get(completedTraining, 'start_date'))
 											.getUTCFullYear()
-									}`;
-								endDate = _.isEqual(
-									monthNames[new Date(_.get(completedTraining, 'start_date'))
-									.getMonth()],
-									monthNames[new Date(_.get(completedTraining, 'end_date'))
-									.getMonth()]) ? '' : `${
+										}`;
+									endDate = _.isEqual(
+										monthNames[new Date(_.get(completedTraining, 'start_date'))
+											.getMonth()],
 										monthNames[new Date(_.get(completedTraining, 'end_date'))
-										.getMonth()]
-									} `;
-								endDate += new Date(_.get(completedTraining, 'end_date'))
-									.getUTCDate();
-								endDate += _.isEqual(
-									new Date(_.get(completedTraining, 'start_date'))
-										.getUTCFullYear(),
-									new Date(_.get(completedTraining, 'end_date'))
-										.getUTCFullYear()) ?
-									`, ${
+											.getMonth()]) ? '' : `${
+										monthNames[new Date(_.get(completedTraining, 'end_date'))
+											.getMonth()]
+										} `;
+									endDate += new Date(_.get(completedTraining, 'end_date'))
+										.getUTCDate();
+									endDate += _.isEqual(
+										new Date(_.get(completedTraining, 'start_date'))
+											.getUTCFullYear(),
+										new Date(_.get(completedTraining, 'end_date'))
+											.getUTCFullYear()) ?
+										`, ${
 										new Date(_.get(completedTraining, 'end_date'))
 											.getUTCFullYear()
-									}` : ` ${
+										}` : ` ${
 										new Date(_.get(completedTraining, 'end_date'))
 											.getUTCFullYear()
-									}`;
-								trainingDuration = `${startDate}-${endDate}`;
-								trainingLocation = `with ${
-									_.get(completedTraining, 'instructors')
-								}, ${
-									_.get(completedTraining, 'city')
-								}, ${
-									_.get(completedTraining, 'country')
-								}`;
-								trainingData = {
-									trainingDuration,
-									trainingLocation,
+										}`;
+									trainingDuration = `${startDate}-${endDate}`;
+									trainingLocation = `with ${
+										_.get(completedTraining, 'instructors')
+										}, ${
+										_.get(completedTraining, 'city')
+										}, ${
+										_.get(completedTraining, 'country')
+										}`;
+									trainingData = {
+										trainingDuration,
+										trainingLocation,
+									};
+									completedTrainingData =
+										_.union(completedTrainingData, [trainingData]);
+								});
+								this.groupTrainingsAvailable = this.totalAllowedGroupTrainings -
+									(trainigsCompleted + trainigsInProcess);
+								this.groupTrainingsAvailable = this.groupTrainingsAvailable > 0 ?
+									this.groupTrainingsAvailable : 0;
+								this.componentData.cgt = {
+									sessions: completedTrainingData,
+									trainingsAvailable: this.groupTrainingsAvailable,
+									usedTrainings: this.usedTrainings,
 								};
-								completedTrainingData =
-									_.union(completedTrainingData, [trainingData]);
+
+								return result;
 							});
-							this.groupTrainingsAvailable = this.totalAllowedGroupTrainings -
-								(trainigsCompleted + trainigsInProcess);
-							this.groupTrainingsAvailable = this.groupTrainingsAvailable > 0 ?
-								this.groupTrainingsAvailable : 0;
-							this.componentData.cgt = {
-								sessions: completedTrainingData,
-								trainingsAvailable: this.groupTrainingsAvailable,
-								usedTrainings: this.usedTrainings,
-							};
+					}),
+					catchError(err => {
+						this.status.loading.cgt = false;
+						if (window.Cypress) {
+							window.cgtLoading = false;
+						}
+						this.logger.error(`lifecycle.component : loadCGT() :: Error : (${
+							err.status}) ${err.message}`);
 
-							return result;
-						});
-				}),
-				catchError(err => {
-					this.status.loading.cgt = false;
-					if (window.Cypress) {
-						window.cgtLoading = false;
-					}
-					this.logger.error(`lifecycle.component : loadCGT() :: Error : (${
-						err.status}) ${err.message}`);
-
-					return of({ });
-				}),
-			);
+						return of({ });
+					}),
+				);
 		}
 
 		return of({ });
@@ -2161,7 +2178,7 @@ export class LifecycleComponent implements OnDestroy {
 			this.loadSuccessPaths(),
 			this.loadCGT(),
 		)
-		.subscribe();
+			.subscribe();
 	}
 
 	/**
@@ -2207,7 +2224,7 @@ export class LifecycleComponent implements OnDestroy {
 	 * Returns the current pitStop
 	 * @returns the observable representing the pitstop
 	 */
-	public getCurrentPitstop (): Observable<string>  {
+	public getCurrentPitstop (): Observable<string> {
 		return this.stage.asObservable();
 	}
 
@@ -2334,7 +2351,7 @@ export class LifecycleComponent implements OnDestroy {
 	 * @param selectedPartners Selected statuses to filter on
 	 * @param type ATX or ACC
 	 */
-	 public partnerMultiFilter (selectedPartners: CompanyInfo[], type: 'ATX' | 'ACC') {
+	public partnerMultiFilter (selectedPartners: CompanyInfo[], type: 'ATX' | 'ACC') {
 		switch (type) {
 			case 'ACC':
 				this.selectedPartnerFilterForACC = _.map(selectedPartners, 'companyId');
@@ -2419,34 +2436,34 @@ export class LifecycleComponent implements OnDestroy {
 	/**
 	 * get List of Partner List
 	 */
-	 public getPartnerList () {
+	public getPartnerList () {
 		this.status.loading.partner = true;
 		this.partnerService.getPartnerListUsingGET(this.saId)
-		.subscribe((result: CompanyInfoList) => {
-			// user can filter for Cisco via partnerId: '0000'
-			// but partner portal does not send back Cisco in company list.
-			// Manually adding to results here. Maybe the more appropriate
-			// solution is to call a customerPortal wrapper of getPartners that
-			// adds Cisco in for us?
-			const ciscoCompanyInfo: CompanyInfo = {
-				companyId: '0000',
-				companyName: 'Cisco',
-			};
-			this.status.loading.partner = false;
-			this.partnerList = [ciscoCompanyInfo, ...result.companyList];
-			this.accPartnerList = [ciscoCompanyInfo, ...result.companyList];
+			.subscribe((result: CompanyInfoList) => {
+				// user can filter for Cisco via partnerId: '0000'
+				// but partner portal does not send back Cisco in company list.
+				// Manually adding to results here. Maybe the more appropriate
+				// solution is to call a customerPortal wrapper of getPartners that
+				// adds Cisco in for us?
+				const ciscoCompanyInfo: CompanyInfo = {
+					companyId: '0000',
+					companyName: 'Cisco',
+				};
+				this.status.loading.partner = false;
+				this.partnerList = [ciscoCompanyInfo, ...result.companyList];
+				this.accPartnerList = [ciscoCompanyInfo, ...result.companyList];
 
-			if (!this.ciscoAccLevels.includes(Number(this.cxLevel))) {
-				_.remove(this.accPartnerList, (partner: CompanyInfo) =>
-					partner.companyId === ciscoCompanyInfo.companyId);
-			}
+				if (!this.ciscoAccLevels.includes(Number(this.cxLevel))) {
+					_.remove(this.accPartnerList, (partner: CompanyInfo) =>
+						partner.companyId === ciscoCompanyInfo.companyId);
+				}
 
-		},
-		err => {
-			this.status.loading.partner = false;
-			this.logger.error(`lifecycle.component : getPartnerList() :: Error  : (${
-				err.status}) ${err.message}`);
-		});
+			},
+				err => {
+					this.status.loading.partner = false;
+					this.logger.error(`lifecycle.component : getPartnerList() :: Error  : (${
+						err.status}) ${err.message}`);
+				});
 	}
 
 	/**
@@ -2463,7 +2480,7 @@ export class LifecycleComponent implements OnDestroy {
 			this.loadACC(),
 			this.loadATX(),
 		)
-		.subscribe();
+			.subscribe();
 	}
 	/**
 	 *  Ruturn the converted HTML text content

@@ -118,12 +118,21 @@ export class AddUserComponent implements OnInit, OnDestroy {
 					this.cuiModalService.hide();
 				} else if (response.status === 500) {
 					if (response.data && response.data[0].status === 500) {
-						_.invoke(
-							this.alert,
-							'show',
-							I18n.get('_UserAlreadyadded_'),
-							'danger',
-						);
+						if (/CSC_ABAC_021/.test(response.data[0].errCode)) {
+							_.invoke(
+								this.alert,
+								'show',
+								I18n.get('_UserAlreadyadded_'),
+								'danger',
+							);
+						} else {
+							_.invoke(
+								this.alert,
+								'show',
+								response.data[0].errMsg,
+								'danger',
+							);
+						}
 						this.alert.visible = true;
 					} else {
 						_.invoke(

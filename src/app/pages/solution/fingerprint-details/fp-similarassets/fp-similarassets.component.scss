@@ -17,19 +17,3 @@
 		font-size: 12px;
 	}
 }
-
-::ng-deep {
-	.tabel .icon-chevron-down {
-		bottom: 1px;
-	}
-
-	.table .icon-chevron-up {
-		bottom: 2px;
-		right: 30px;
-	}
-
-	.cui .link {
-		position: absolute;
-		right: 28px;
-	}
-}
