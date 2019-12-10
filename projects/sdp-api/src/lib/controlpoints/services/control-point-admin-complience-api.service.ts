@@ -1,11 +1,12 @@
 /* tslint:disable */
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams, HttpRequest, HttpResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpRequest, HttpResponse, HttpHeaders } from '@angular/common/http';
 import { BaseService as __BaseService } from '../../core/base-service';
 import { ControlPointsConfiguration as __Configuration } from '../control-points-configuration';
 import { StrictHttpResponse as __StrictHttpResponse } from '../../core/strict-http-response';
 import { Observable as __Observable } from 'rxjs';
 import { map as __map, filter as __filter } from 'rxjs/operators';
+import { PolicyGroupDetails } from '@sdp-api';
 import { stat } from 'fs';
 
 @Injectable({
@@ -15,6 +16,9 @@ class ControlPointAdminComplienceService extends __BaseService {
 
     static readonly getLeftSideTagsResponsePath = '/customerportal/asset-tagging/v1/tag-to-device-api';
     static getRightSideTagsResponsePath = '/customerportal/asset-tagging/v1/tag-policy-mapping-api';
+    static getPoliciesResponsePath = '/customerportal/asset-tagging/v1/all-policies-api';
+    public policyGroupDetails: PolicyGroupDetails;
+    
   constructor(
     config: __Configuration,
     http: HttpClient
@@ -100,6 +104,44 @@ class ControlPointAdminComplienceService extends __BaseService {
     );
   }
 
+  /**
+   * @param requestModel requestModel
+   * @return OK
+   */
+  getPolicies(param):__Observable<PolicyGroupDetails>{
+     return this.getPoliciesResponse(param).pipe(
+       __map(_r => _r.body as PolicyGroupDetails)
+     )
+  }
+
+  /**
+   * @param requestModel requestModel
+   * @return OK
+   */
+  getPoliciesResponse(param):__Observable<__StrictHttpResponse<PolicyGroupDetails>>{
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body:any = null;
+    
+
+    __headers = __headers.append("Content-Type","application/json")
+    let req = new HttpRequest<any>(
+      'GET',
+      `${this.rootUrl + ControlPointAdminComplienceService.getPoliciesResponsePath}/${param}`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json'
+      });
+
+      return this.http.request<any>(req).pipe(
+        __filter(_r => _r instanceof HttpResponse),
+        __map((_r) => {
+          return _r as __StrictHttpResponse<PolicyGroupDetails>;
+        })
+      );
+  }
 }
 
 module ControlPointAdminSettingsAPIService {
