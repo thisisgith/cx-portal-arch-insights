@@ -146,13 +146,13 @@ export class FaultsComponent implements OnInit, OnChanges, OnDestroy {
 					name: I18n.get('_FaultTitle_'),
 					sortable: true,
 					title: 'title',
-					width: '60%',
+					width: '58%',
 				},
 				{
 					key: 'systemCount',
 					name: I18n.get('_FaultAffectedSystems_'),
 					sortable: true,
-					width: '10%',
+					width: '12%',
 				},
 				{
 					key: 'tacCount',
