@@ -343,7 +343,7 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 				const bugAffectedTableColumns = [
 					{
 						key: 'hostName',
-						name: I18n.get('_Device_'),
+						name: I18n.get('_SystemName_'),
 						sortable: true,
 						sortDirection: 'asc',
 						sorting: true,
@@ -358,21 +358,15 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 					},
 					{
 						key: 'softwareVersion',
-						name: I18n.get('_Release_'),
+						name: I18n.get('_SoftwareRelease_'),
 						sortable: true,
 						template: this.softwareVersionColumn,
-					},
-					{
-						key: 'recommendedVersion',
-						name: I18n.get('_RecommendedRelease_'),
-						sortable: false,
-						template: this.recommendedVersionColumn,
 					},
 				];
 				const bugPotentiallyAffectedTableColumns = [
 					{
 						key: 'hostName',
-						name: I18n.get('_Device_'),
+						name: I18n.get('_SystemName_'),
 						sortable: true,
 						sortDirection: 'asc',
 						sorting: true,
@@ -387,15 +381,9 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 					},
 					{
 						key: 'softwareVersion',
-						name: I18n.get('_Release_'),
+						name: I18n.get('_SoftwareRelease_'),
 						sortable: true,
 						template: this.softwareVersionColumn,
-					},
-					{
-						key: 'recommendedVersion',
-						name: I18n.get('_RecommendedRelease_'),
-						sortable: false,
-						template: this.recommendedVersionColumn,
 					},
 				];
 				_.set(affectedOptions, 'columns', bugAffectedTableColumns);
