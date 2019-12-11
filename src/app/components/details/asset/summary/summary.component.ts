@@ -52,6 +52,7 @@ export class AssetDetailsSummaryComponent implements OnChanges, OnInit, OnDestro
 	public warrantyStatus: 'Covered' | 'Uncovered';
 	public tags: Tags[];
 	private assetTagsParams: AssetTaggingService.GetParams;
+	private isScanSuccess: boolean;
 
 	public status = {
 		loading: {
@@ -202,7 +203,8 @@ export class AssetDetailsSummaryComponent implements OnChanges, OnInit, OnDestro
 			takeUntil(this.destroyed$),
 			mergeMap((response: TransactionStatusResponse) => {
 				const status = _.get(response, 'status');
-				if (status && status === 'SUCCESS' || status === 'FAILURE') {
+				if (status === 'SUCCESS' || status === 'FAILURE') {
+					this.isScanSuccess = (status === 'SUCCESS') ? true : false;
 					this.alertMessage.emit({
 						message: status === 'SUCCESS' ?
 							I18n.get('_ScanningHasCompleted_') : I18n.get('_ScanningHasFailed_'),
@@ -264,9 +266,10 @@ export class AssetDetailsSummaryComponent implements OnChanges, OnInit, OnDestro
 	public ngOnChanges (changes: SimpleChanges) {
 		const currentSystemAsset = _.get(changes, ['systemAsset', 'currentValue']);
 		const currentHardwareAsset = _.get(changes, ['hardwareAsset', 'currentValue']);
-		if (currentSystemAsset && !changes.systemAsset.firstChange) {
-			this.refresh();
-		} else if (currentHardwareAsset && !changes.hardwareAsset.firstChange) {
+		if (this.isScanSuccess) {
+			this.status.scan.inProgress = false;
+		} else if ((currentSystemAsset && !changes.systemAsset.firstChange) || (currentHardwareAsset &&
+			!changes.hardwareAsset.firstChange)) {
 			this.refresh();
 		}
 	}
