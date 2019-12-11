@@ -670,7 +670,7 @@
 		</ng-container>
 	</div>
 
-	<div *ngIf="data.certifications && (cxLevel == 2 || cxLevel == 3)" data-auto-id="LearnPanel-CertificationsBlock">
+	<div *ngIf="data.certifications" data-auto-id="LearnPanel-CertificationsBlock">
 		<div class="divider"></div>
 		<ng-container *ngTemplateOutlet="learningBlock; context:
 			{ iconUrl: '/assets/icons/lifecycle/icon-certificate.svg',
@@ -680,7 +680,7 @@
 		</ng-container>
 	</div>
 
-	<div *ngIf="data.remotepracticelabs && (cxLevel == 2 || cxLevel == 3)" data-auto-id="LearnPanel-RemotePracticeLabsBlock">
+	<div *ngIf="data.remotepracticelabs" data-auto-id="LearnPanel-RemotePracticeLabsBlock">
 		<div class="divider" *ngIf="data.remotepracticelabs"></div>
 		<ng-container *ngTemplateOutlet="learningBlock; context:
 			{ iconUrl: '/assets/icons/lifecycle/icon-lab.svg',
