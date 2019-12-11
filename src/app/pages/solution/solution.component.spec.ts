@@ -394,4 +394,14 @@ describe('SolutionComponent', () => {
 			.toEqual({ gaugePercent: 7.920792079207921 });
 		discardPeriodicTasks();
 	}));
+
+	it('should call getCaseAndRMACount on fetchCaseAndRmaCountOnRefresh()', fakeAsync(() => {
+		spyOn(component, 'getCaseAndRMACount')
+			.and
+			.returnValue(of({ }));
+		component.fetchCaseAndRmaCountOnRefresh();
+		fixture.detectChanges();
+		expect(component.getCaseAndRMACount)
+			.toHaveBeenCalled();
+	}));
 });

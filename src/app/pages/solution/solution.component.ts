@@ -234,6 +234,8 @@ export class SolutionComponent implements OnInit, OnDestroy {
 			if (facet.route && this.activeRoute !== facet.route) {
 				this.activeRoute = facet.route;
 				if (navigate) {
+					// calling case service on every Prob-Res tile click
+					if (facet.key === 'resolution') { this.fetchCaseAndRmaCountOnRefresh(); }
 					this.router.navigate([facet.route]);
 				}
 			}
@@ -774,9 +776,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		this.caseDetailsService.caseCount$
 			.subscribe((data: boolean) => {
 				if (data && this.destroy$) {
-					this.getCaseAndRMACount()
-						.pipe(takeUntil(this.destroy$))
-						.subscribe();
+					this.fetchCaseAndRmaCountOnRefresh();
 				}
 			});
 	}
@@ -838,5 +838,20 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	 */
 	public clickOutsideDropdown (clickedOutsideDropdown: 'smartAccount' | 'solution' | 'technology') {
 		this.status.dropdowns[clickedOutsideDropdown] = false;
+	}
+
+	/**
+	 * calling fetchCaseAndRmaCountOnRefresh on case creation and when routed to Problem-Resolution tile
+	 */
+	public fetchCaseAndRmaCountOnRefresh () {
+		this.getCaseAndRMACount()
+			.pipe(catchError(err => {
+				this.logger.error('solution.component : fetchCaseAndRmaCountOnRefresh() ' +
+				`:: Error : (${err.status}) ${err.message}`);
+
+				return of({  });
+			}),
+			takeUntil(this.destroy$))
+			.subscribe();
 	}
 }
