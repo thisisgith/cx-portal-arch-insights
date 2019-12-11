@@ -1,6 +1,7 @@
 @import '~src/variables.scss';
 @import "~mapbox-gl/dist/mapbox-gl.css";
 @import '~cisco-ui/src/scss/cui-standard.scss';
+@import '~src/mixins.scss';
 
 /* XL Margins */
 
@@ -194,6 +195,14 @@
 .tab__heading {
 	font-size: 14px;
 	padding: 0 !important;
+}
+
+/** Handling the tabs for 100% resolution */
+
+@media screen and (min-width: $screen-lg-min) {
+	.tab__heading > span {
+		line-height: normal;
+	}
 }
 
 .cui .nav-tabs > li,

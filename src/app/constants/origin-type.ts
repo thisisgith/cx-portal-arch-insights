@@ -1,4 +1,5 @@
 export enum OriginType {
+	APOLLO = 'apollo',
 	SDP = 'sdp',
 	RMA = 'rma',
 	NONE = 'none',

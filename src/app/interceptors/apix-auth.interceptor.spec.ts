@@ -2,8 +2,8 @@ import { TestBed } from '@angular/core/testing';
 import { APIxService } from '@services';
 import { ApixAuthInterceptor } from './apix-auth.interceptor';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { from, Observable } from 'rxjs';
-import { HttpRequest, HttpHeaders, HttpParams, HttpHandler, HttpEvent } from '@angular/common/http';
+import { from, Observable, throwError } from 'rxjs';
+import { HttpRequest, HttpHeaders, HttpParams, HttpHandler, HttpEvent, HttpErrorResponse } from '@angular/common/http';
 import { ApixIdentityService } from './apix-identity.service';
 import { OriginType } from '@constants';
 
@@ -89,7 +89,6 @@ describe('APIxAuthIntercetptor', () => {
 
 	it('should ignore non-SDP / non-RMA origin API requests', () => {
 		apixIdentityService.testOrigin = (_url: any) => OriginType.NONE;
-
 		spyOn(next, 'handle')
 			.and
 			.callThrough();
@@ -99,5 +98,16 @@ describe('APIxAuthIntercetptor', () => {
 
 		expect(next.handle)
 			.toHaveBeenCalledWith(req);
+	});
+
+	it('should call apollo origin API requests', () => {
+		apixAuthInterceptor.cwayToken = 'Bearer 764535';
+		apixAuthInterceptor.isRefershingCwayToken = true;
+		apixIdentityService.testOrigin = (_url: any) => OriginType.APOLLO;
+		spyOn(next, 'handle')
+			.and
+			.returnValue(throwError(new HttpErrorResponse({ status: 401 })));
+		apixAuthInterceptor.intercept(req, next)
+		.subscribe();
 	});
 });

@@ -11,7 +11,7 @@ import { CaseService, CaseDetails } from '@cui-x/services';
 import { CaseDetailsService } from 'src/app/services/case-details';
 import { Subject, forkJoin, of } from 'rxjs';
 import { LogService } from '@cisco-ngx/cui-services';
-import { tap, switchMap, takeUntil, catchError, filter } from 'rxjs/operators';
+import { tap, switchMap, takeUntil, catchError, filter, map } from 'rxjs/operators';
 import { Case } from '@interfaces';
 import * as _ from 'lodash-es';
 import { CuiModalService } from '@cisco-ngx/cui-components';
@@ -72,7 +72,7 @@ export class CaseDetailsComponent implements OnInit, OnDestroy {
 				this.numberOfFiles = 0;
 			}),
 			switchMap(() => forkJoin(
-				this.getCaseDetails(),
+				 this.getCaseDetails(),
 				this.getCaseNotes(),
 				this.caseDetailsService.getCaseFiles(this.case.caseNumber),
 				this.getAssetAvailability(),
@@ -169,7 +169,8 @@ export class CaseDetailsComponent implements OnInit, OnDestroy {
 	 */
 	public getCaseDetails () {
 		return this.caseService.fetchCaseDetails(this.case.caseNumber)
-			.pipe(
+		.pipe(
+				map((res: any) => res),
 				catchError(err => {
 					this.logger.error('casedetails.component : getCaseDetails() ' +
 						`:: Error : (${err.status}) ${err.message}`);
@@ -186,6 +187,7 @@ export class CaseDetailsComponent implements OnInit, OnDestroy {
 	public getCaseNotes () {
 		return this.caseService.fetchCaseNotes(this.case.caseNumber, true)
 			.pipe(
+				map((res: any) => res),
 				catchError(err => {
 					this.logger.error('casedetails.component : getCaseNotes() ' +
 						`:: Error : (${err.status}) ${err.message}`);
