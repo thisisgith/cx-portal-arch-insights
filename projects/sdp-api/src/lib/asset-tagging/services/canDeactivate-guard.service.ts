@@ -11,6 +11,6 @@ export class CanDeactivateGuard implements CanDeactivate<DeactivationGuarded> {
    * @returns boolean value
    */
 	public canDeactivate (component: DeactivationGuarded): Observable<boolean> | Promise<boolean> | boolean {
-	  return component.canDeactivate ? component.canDeactivate() : true;
+	  return component.canDeactivate() ? component.canDeactivate() : true;
 	}
 }
