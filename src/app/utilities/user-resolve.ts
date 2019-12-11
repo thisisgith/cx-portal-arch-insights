@@ -215,7 +215,7 @@ export class UserResolve implements Resolve<any> {
 				emailAddress: accountUser.emailId,
 				ccoId: userResponse.individualAccount.ccoId,
 				cxBUId: userResponse.cxBUId,
-				role: userResponse.individualAccount.role,
+				role: _.get(this.getRefinedRoleList(this.smartAccount.roleList), ['0', 'roleName']),
 			},
 			account: userResponse.account,
 			subscribedSolutions: {
