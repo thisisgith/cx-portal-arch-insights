@@ -117,12 +117,12 @@ export class AdminComplienceComponent implements OnInit , DeactivationGuarded, O
 		this.getOptinOutStatus()
 			.subscribe((results: any) => {
 				this.optlnStatus = results.data.rccOptInStatus;
-				if (this.optlnStatus) {
-					this.getPolicies()
+				// if (this.optlnStatus) {
+				this.getPolicies()
 					.subscribe();
-					this.getLeftSideTags()
+				this.getLeftSideTags()
 						.subscribe();
-				}
+				// }
 			});
 
 		return this.routeAuthService.checkPermissions(this.customerId)
