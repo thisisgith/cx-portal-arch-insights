@@ -161,7 +161,7 @@ export class SetupIeComponent implements AfterViewInit, OnInit, OnDestroy {
 				if (isNaN(compKey)) {
 					// if redirected from admin setting page, then it should go to second step
 					if (this.isFromAdmin) {
-						this.currentStep = 1;
+						this.currentStep = params.collectorIP ? 2 : 1;
 						this.savedState = { };
 					} else {
 						this.currentStep = 0;
