@@ -137,22 +137,27 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 					name: I18n.get('_Severity_'),
 					sortable: true,
 					template: this.severityColorsTemplate,
+					width: '10%',
 				},
 				{
 					key: 'msgDesc',
 					name: I18n.get('_SyslogsEventMessage_'),
 					sortable: true,
+					title: 'msgDesc',
+					width: '55%',
 				},
 				{
 					key: 'deviceHost',
 					name: I18n.get('_SyslogSystem_'),
 					sortable: true,
+					width: '20%',
 
 				},
 				{
 					name: I18n.get('_SyslogsDate_'),
 					sortable: true,
 					template: this.dateFilterTemplate,
+					width: '15%',
 				},
 
 			],

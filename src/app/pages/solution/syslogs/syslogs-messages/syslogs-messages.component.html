@@ -3,7 +3,7 @@
 	<div class="col-4">
 		<div class="container">
 			<span [innerText]="'_SyslogEvent_' | i18n" class="text-large"></span>
-			<span class="qtr-margin-left text-small text-muted" *ngIf="tableData.length > 0"
+			<span class="qtr-margin-left text-medium text-muted" *ngIf="tableData.length > 0"
 				[innerText]="'_SyslogShowingXofYMessages_' | i18n:(tableStartIndex):tableEndIndex:totalItems">
 			</span>
 		</div>
@@ -29,6 +29,7 @@
 	</div>
 
 </div>
+<div class="divider qtr-margin-top"></div>
 <div class="container base-margin-top" data-auto-id="syslog-message-table" *ngIf="tableData.length && !loading">
 	<cui-table
 		class="not-close-360"

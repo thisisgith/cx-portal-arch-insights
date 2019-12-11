@@ -139,6 +139,13 @@
 			<div *ngIf="affectedSystemLoading" class="base-margin-bottom">
 				<cui-spinner></cui-spinner>
 			</div>
+			<div *ngIf="faultAffectedDetails.length" class="base-margin-top">
+				<span [innerText]="
+							'_FaultShowingXofYSystems_'
+								| i18n: paginationCount:affectedCount
+					" class="qtr-margin-left text-medium text-muted" data-auto-id="ShowingAlarmCount">
+				</span>
+			</div>
 			<div class="responsive-table" *ngIf="!affectedSystemLoading">
 				<cui-table
 					*ngIf="faultAffectedDetails.length"
@@ -171,6 +178,7 @@
 <ng-template #systemName let-item="celldata">
 	<span data-auto-id="SystemName"
 		*ngIf="item?.systemName; else noTacCase"
+		[title] ="item.systemName"
 		class="text-primary cursor"
 		[innerText]="item?.systemName"
 		(click)="connectToAsset(item.serialNumber)"></span>
@@ -180,6 +188,7 @@
 	[asset]="assetLinkInfo?.asset"
     [element]="assetLinkInfo?.element"
 	[serialNumber]="serialNumber"
+	[minWidth]="'900px'"
 	(close)="onPanelClose()"
 >
 </asset-details>
@@ -193,7 +202,8 @@
 </ng-template>
 
 <details-panel *ngIf="selectedCase" [hidden]="!selectedCase"
-	(hiddenChange)="handleHidden($event)" [fullscreen]="fullscreen">
+	(hiddenChange)="handleHidden($event)" [fullscreen]="fullscreen"
+	[minWidth]="'900px'">
 	<details-panel-header (close)="detailsClose()" [(fullscreen)]="fullscreen">
 		<div detailsPanelTitle class="text-xlarge"
 			[innerText]="'_RMACaseNumberTitle_' | i18n:selectedCase?.caseNumber"></div>
