@@ -604,6 +604,7 @@
 	"_FaultSystemName_": "System Name",
 	"_FaultProductId_": "Product ID",
 	"_FaultSoftwareType_": "Software Type",
+	"_FaultStatus_": "Status",
 	"_FaultCaseNumber_": "Case Number",
 	"_FaultDateAndTime": "Date and Time",
 	"_FaultNoResults_": "No Results Found",
