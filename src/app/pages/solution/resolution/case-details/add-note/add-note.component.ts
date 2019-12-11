@@ -7,6 +7,8 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { ProfileService } from '@cisco-ngx/cui-auth';
 
+import * as _ from 'lodash-es';
+
 /**
  * Add Notes Component
  */
@@ -47,6 +49,16 @@ export class AddNoteComponent {
 		this.notesForm = new FormGroup({
 			description: this.description,
 			title: this.title,
+		});
+		this.notesForm.controls.title.valueChanges.subscribe(value => {
+			if (this.notesForm.controls.title.dirty && _.trim(value).length === 0) {
+				this.notesForm.controls.title.setErrors({ titleEmpty : true });
+			}
+		});
+		this.notesForm.controls.description.valueChanges.subscribe(value => {
+			if (this.notesForm.controls.description.dirty && _.trim(value).length === 0) {
+				this.notesForm.controls.description.setErrors({ descriptionEmpty : true });
+			}
 		});
 	}
 
