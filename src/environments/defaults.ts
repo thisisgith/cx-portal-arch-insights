@@ -11,6 +11,11 @@ const datacenterStub = 'REGION';
 export const defaults = {
 	origin,
 	datacenterStub,
+	apolloServicePaths: {
+		cases: '/ws/cases',
+		csc: '/ws/csc',
+		accounts: '/ws/account',
+	},
 	auth: {
 		accountUrl: `${origin}/ws/account/v2/`,
 		ciscoTokenUrl: `${origin}/ws/oauth/v4/token/cisco`,
