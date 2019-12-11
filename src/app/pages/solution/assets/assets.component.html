@@ -166,146 +166,144 @@
 </ng-template>
 
 <ng-template #cardTemplate let-item="item">
-	<div class="card curved-corners container-fluid card-content" [ngClass]="{ 'card__selected': item.selected }"
-		attr.data-auto-id="InventoryItem-{{ item.data?.serialNumber }}" (click)="onClick($event, 'checkbox', item)">
-
-		<div class="card__header">
-			<div class="card__title flex-center card-title-height">
-				<a attr.data-auto-id="Device-{{ item.data?.serialNumber }}" class="text-large text-center"
-					[innerText]="item.data?.deviceName | truncate:true:18" [title]="item.data?.deviceName"
-					(click)="onClick($event, 'item', item)">
-				</a>
-			</div>
-			<div class="flex-center text-center">
-				<span *ngIf="item.data?.productName" [innerText]="item.data?.productName | truncate:true:30"
-					[title]="item.data?.productName" attr.data-auto-id="ProductName-{{ item.data?.serialNumber }}">
-				</span>
-			</div>
-		</div>
-
-		<div class="card__body no-margin">
-
-			<!-- TODO: ngIf's using literal values until source of image is confirmed -->
-			<div class="flex-center half-margin-bottom">
-				<!-- <img *ngIf="false" attr.data-auto-id="DeviceImg-{{ item.data?.serialNumber }}" [src]="" alt=""/> -->
-				<span *ngIf="true" attr.data-auto-id="DeviceImg-{{ item.data?.serialNumber }}"
-					class="col-md-6 text-muted text-center text-uppercase text-wrap-normal"
-					[innerText]="'_NoPhotoAvailable_' | i18n">
-				</span>
-			</div>
-
-			<div class="row text-small">
-				<div class="row">
-					<div class="col-md-6">
-						<div class="row">
-							<div class="col-md-12 row-padding" *ngIf="selectedView.key==='system'">
-								<div class="text-uppercase text-left no-padding text-dkgray-4"
-									[innerText]="'_IPAddress_' | i18n"></div>
-								<div [innerText]="(item.data?.ipAddress || ('_NA_' | i18n)) | truncate:true:15"
-									[title]="(item.data?.ipAddress || ('_NA_' | i18n))"
-									attr.data-auto-id="IPAddress-{{ item.data?.serialNumber }}"></div>
-							</div>
-							<div class="col-md-12 row-padding" *ngIf="selectedView.key==='hardware'">
-								<div class="text-uppercase text-left no-padding text-dkgray-4"
-									[innerText]="'_ProductID_' | i18n"></div>
-								<div [innerText]="(item.data?.productId || ('_NA_' | i18n)) | truncate:true:15"
-									[title]="(item.data?.productId || ('_NA_' | i18n))"
-									attr.data-auto-id="productId-{{ item.data?.productId }}"></div>
-							</div>
-							<div class="col-md-12 row-padding qtr-padding-top" *ngIf="selectedView.key==='system'">
-								<div class="text-uppercase text-left no-padding text-dkgray-4"
-									[innerText]="'_LastScan_' | i18n"></div>
-								<div class="no-padding"
-									[innerText]="(item.data?.lastScan ? (item.data.lastScan | fromNow) : ('_Never_' | i18n)) | truncate:true:15"
-									[title]="(item.data?.lastScan ? (item.data.lastScan | dateTime) : ('_Never_' | i18n))"
-									attr.data-auto-id="LastScan-{{ item.data?.lastScan }}">
-								</div>
-							</div>
-							<div class="col-md-12 row-padding qtr-padding-top" *ngIf="selectedView.key==='hardware'">
-								<div class="text-uppercase text-left no-padding text-dkgray-4"
-									[innerText]="'_HardwareType_' | i18n"></div>
-								<div class="text-lowercase"
-									[innerText]="(item.data?.equipmentType || ('_NA_' | i18n)) | truncate:true:15"
-									[title]="(item.data?.equipmentType || ('_NA_' | i18n))"
-									attr.data-auto-id="equipmentType-{{ item.data?.equipmentType }}">
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-6">
-						<div class="row">
-							<div class="col-md-12" *ngIf="selectedView.key==='system'">
-								<div class="text-uppercase text-left no-padding text-dkgray-4"
-									[innerText]="'_Software_' | i18n"></div>
-								<div attr.data-auto-id="osType-{{ item.data?.osType }}">
-									<span class="qtr-padding-right" [innerText]="item.data?.osType || ('_NA_' | i18n)"
-										attr.data-auto-id="{{ item.data?.osType }}-osType"></span>
-									<span *ngIf="item.data?.osTypen" [innerText]="item.data?.osVersion"
-										attr.data-auto-id="{{ item.data?.osVersion }}-osVersion"></span>
-								</div>
-							</div>
-							<div class="col-md-12" *ngIf="selectedView.key==='hardware'">
-								<div class="text-uppercase text-left no-padding text-dkgray-4"
-									[innerText]="'_ProductType_' | i18n"></div>
-								<div [innerText]="(item.data?.productType || ('_NA_' | i18n)) | truncate:true:15"
-									[title]="(item.data?.productType || ('_NA_' | i18n))"
-									attr.data-auto-id="productType-{{ item.data?.productType }}">
-								</div>
-							</div>
-							<div class="col-md-12 qtr-padding-top">
-								<div class="text-uppercase text-left no-padding text-dkgray-4"
-									[innerText]="'_CXLevel_' | i18n"></div>
-								<div [innerText]="(item.data?.cxLevel || ('_NA_' | i18n)) | truncate:true:13"
-									[title]="(item.data?.cxLevel || ('_NA_' | i18n))"
-									attr.data-auto-id="cxLevel-{{ item.data?.cxLevel }}">
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-12">
-						<div class="row">
-							<div class="col-md-12 row-padding qtr-padding-top">
-								<div class="text-uppercase text-left no-padding text-dkgray-4"
-									[innerText]="'_SerialNumber_' | i18n"></div>
-								<div class="col-md-6 no-padding"
-									[innerText]="(item.data?.serialNumber || ('_NA_' | i18n)) | truncate:true:13"
-									[title]="(item.data?.serialNumber || ('_NA_' | i18n))"
-									attr.data-auto-id="SerialNumber-{{ item.data?.serialNumber }}">
-								</div>
-							</div>
-						</div>
-					</div>
+	<div class="card curved-corners container-fluid card-content" 
+		[ngClass]="{ 'card__selected': item.selected }" 
+		attr.data-auto-id="InventoryItem-{{ item.data?.serialNumber }}" 
+		(click)="onClick($event, 'checkbox', item)">
+			<div class="card__header no-margin">
+				<div class="card__title text-left card-title-height">
+					<a attr.data-auto-id="Device-{{ item.data?.serialNumber }}" 
+						class="text-large"
+						[innerText]="item.data?.deviceName | truncate:true:18" 
+						[title]="item.data?.deviceName"
+						(click)="onClick($event, 'item', item)">
+					</a>
+				</div>
+				<div class="text-left" *ngIf="item.data?.productName">
+					<span [innerText]="item.data?.productName | truncate:true:30"
+						[title]="item.data?.productName" 
+						attr.data-auto-id="ProductName-{{ item.data?.serialNumber }}">
+					</span>
 				</div>
 			</div>
-		</div>
 
-		<div class="card__footer justify-content-between override-selected-z base-margin-top"
-			*ngIf="selectedView.key==='system'">
-			<div>
-				<span *ngIf="item.data?.criticalAdvisories" class="badge-wrapper base-margin-right">
-					<span tabindex="0" data-balloon-indigo [attr.data-balloon]="'_CriticalAdvisories_' | i18n"
-						data-balloon-pos="down" attr.data-auto-id="AdvisoryIcon-{{ item.data?.serialNumber }}">
-						<span class="icon-alert icon-small text-dkgray-4 text-noselect"></span>
+			<div class="card__body no-margin">
+				<!-- TODO: ngIf's using literal values until source of image is confirmed -->
+				<!-- <div class="flex-center half-margin-bottom">
+					<img *ngIf="false" attr.data-auto-id="DeviceImg-{{ item.data?.serialNumber }}" [src]="" alt=""/> 
+					<span *ngIf="true" attr.data-auto-id="DeviceImg-{{ item.data?.serialNumber }}"
+						class="col-md-6 text-muted text-center text-uppercase text-wrap-normal"
+						[innerText]="'_NoPhotoAvailable_' | i18n">
 					</span>
-					<span class="badge badge--tiny badge--danger" [innerText]="item.data?.criticalAdvisories"
-						attr.data-auto-id="AdvisoryCount-{{ item.data?.serialNumber }}">
-					</span>
-				</span>
-				<span *ngIf="item.data?.supportCovered" class="badge-wrapper">
-					<span tabindex="0" data-balloon-indigo [attr.data-balloon]="'_SupportCoverage_' | i18n"
-						data-balloon-pos="down" attr.data-auto-id="CoveredIcon-{{ item.data?.serialNumber }}">
-						<span class="icon-headset icon-small text-dkgray-4"></span>
-					</span>
-					<span class="badge badge--tiny badge--success icon-check"></span>
-				</span>
+				</div> -->
+				<div class="row text-small">
+					<div class="col-md-12 row-padding qtr-padding-top" *ngIf="selectedView.key==='system'">
+						<div class="text-uppercase text-left no-padding text-dkgray-4"
+							[innerText]="'_IPAddress_' | i18n"></div>
+						<div [innerText]="(item.data?.ipAddress || ('_NA_' | i18n)) | truncate:true:15"
+							[title]="(item.data?.ipAddress || ('_NA_' | i18n))"
+							attr.data-auto-id="IPAddress-{{ item.data?.serialNumber }}"></div>
+					</div>
+					<div *ngIf="item.data?.productId" class="col-md-12 row-padding qtr-padding-top">
+						<div class="text-uppercase text-left no-padding text-dkgray-4"
+							[innerText]="'_ProductID_' | i18n"></div>
+						<div [innerText]="(item.data?.productId || ('_NA_' | i18n)) | truncate:true:15"
+							[title]="(item.data?.productId || ('_NA_' | i18n))"
+							attr.data-auto-id="productId-{{ item.data?.productId }}"></div>
+					</div>
+					<div class="col-md-12 row-padding qtr-padding-top" *ngIf="selectedView.key==='hardware'">
+						<div class="text-uppercase text-left no-padding text-dkgray-4"
+							[innerText]="'_HardwareType_' | i18n"></div>
+						<div class="text-lowercase"
+							[innerText]="(item.data?.equipmentType || ('_NA_' | i18n)) | truncate:true:15"
+							[title]="(item.data?.equipmentType || ('_NA_' | i18n))"
+							attr.data-auto-id="equipmentType-{{ item.data?.equipmentType }}">
+						</div>
+					</div>
+					<div class="col-md-12 row-padding qtr-padding-top" *ngIf="selectedView.key==='system'">
+						<div class="text-uppercase text-left no-padding text-dkgray-4"
+							[innerText]="'_SoftwareType_' | i18n"></div>
+						<div class="text-uppercase"
+							[innerText]="item.data?.osType || ('_NA_' | i18n)| truncate:true:15"
+							[title]="(item.data?.osType || ('_NA_' | i18n))"
+							attr.data-auto-id="{{ item.data?.osType }}-osType">
+						</div>
+					</div>
+					<div class="col-md-12 row-padding qtr-padding-top" *ngIf="selectedView.key==='system'">
+						<div class="text-uppercase text-left no-padding text-dkgray-4"
+							[innerText]="'_SoftwareRelease_' | i18n"></div>
+						<div class="text-lowercase"
+							[innerText]="item.data?.osVersion || ('_NA_' | i18n)| truncate:true:15"
+							[title]="(item.data?.osVersion || ('_NA_' | i18n))"
+							attr.data-auto-id="{{ item.data?.osVersion }}-osVersion">
+						</div>
+					</div>
+					<div class="col-md-12 row-padding qtr-padding-top" *ngIf="selectedView.key==='hardware'">
+						<div class="text-uppercase text-left no-padding text-dkgray-4"
+							[innerText]="'_ProductType_' | i18n"></div>
+						<div [innerText]="(item.data?.productType || ('_NA_' | i18n)) | truncate:true:15"
+							[title]="(item.data?.productType || ('_NA_' | i18n))"
+							attr.data-auto-id="productType-{{ item.data?.productType }}">
+						</div>
+					</div>
+					<div class="col-md-12 row-padding qtr-padding-top" *ngIf="selectedView.key==='system'">
+						<div class="text-uppercase text-left no-padding text-dkgray-4"
+							[innerText]="'_LastScan_' | i18n"></div>
+						<div class="no-padding"
+							[innerText]="(item.data?.lastScan ? (item.data.lastScan | fromNow) : ('_Never_' | i18n)) | truncate:true:15"
+							[title]="(item.data?.lastScan ? (item.data.lastScan | dateTime) : ('_Never_' | i18n))"
+							attr.data-auto-id="LastScan-{{ item.data?.lastScan }}">
+						</div>
+					</div>
+					<div class="col-md-12 row-padding qtr-padding-top" *ngIf="selectedView.key==='hardware'">
+						<div class="text-uppercase text-left no-padding text-dkgray-4"
+							[innerText]="'_SerialNumber_' | i18n"></div>
+						<div class="col-md-6 no-padding"
+							[innerText]="(item.data?.serialNumber || ('_NA_' | i18n)) | truncate:true:13"
+							[title]="(item.data?.serialNumber || ('_NA_' | i18n))"
+							attr.data-auto-id="SerialNumber-{{ item.data?.serialNumber }}">
+						</div>
+					</div>  
+				</div>
 			</div>
-			<div *ngIf="item?.actions?.length">
-				<cui-dropdown attr.data-auto-id="InventoryItem-{{ item.data?.serialNumber }}-dropdown"
-					[actions]="item.actions" icon="icon-more icon-small text-muted rotate-90"
-					(click)="onClick($event, 'menu')">
-				</cui-dropdown>
+
+			<div class="card__footer justify-content-between override-selected-z base-margin-top"
+				*ngIf="selectedView.key==='system'">
+				<div>
+					<span *ngIf="item.data?.criticalAdvisories">
+						<span tabindex="0" data-balloon-indigo [attr.data-balloon]="'_CriticalAdvisories_' | i18n"
+							data-balloon-pos="down" 
+							attr.data-auto-id="AdvisoryIcon-{{ item.data?.serialNumber }}">
+							<span class="label label--circle label--danger label--tiny qtr-margin-right"></span>
+						</span>
+						<span class="qtr-padding-right" 
+							[innerText]="item.data?.criticalAdvisories  + ' | '"
+							attr.data-auto-id="AdvisoryCount-{{ item.data?.serialNumber }}">
+						</span>
+					</span>
+					<span *ngIf="item.data?.supportCovered" class="badge-wrapper">
+						<span tabindex="0" data-balloon-indigo [attr.data-balloon]="'_SupportCoverage_' | i18n"
+							data-balloon-pos="down" 
+							attr.data-auto-id="CoveredIcon-{{ item.data?.serialNumber }}">
+							<span class="icon-headset text-dkgray-4"></span>
+						</span>
+						<span class="badge badge--tiny badge--success icon-check"></span>
+					</span>
+					<span class="text-left no-padding qtr-padding-right"
+						[innerText]="'_CXLevel_' | i18n"></span>
+					<span [innerText]="(item.data?.cxLevel || ('_NA_' | i18n)) | truncate:true:13"
+						[title]="(item.data?.cxLevel || ('_NA_' | i18n))"
+						attr.data-auto-id="cxLevel-{{ item.data?.cxLevel }}">
+					</span>
+				</div>
+				<div *ngIf="item?.actions?.length">
+					<cui-dropdown attr.data-auto-id="InventoryItem-{{ item.data?.serialNumber }}-dropdown"
+						[actions]="item.actions" 
+						icon="icon-more icon-small text-muted rotate-90"
+						(click)="onClick($event, 'menu')">
+					</cui-dropdown>
+				</div>
 			</div>
-		</div>
 	</div>
 </ng-template>
 
