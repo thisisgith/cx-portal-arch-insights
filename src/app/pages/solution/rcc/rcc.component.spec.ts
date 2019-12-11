@@ -122,20 +122,6 @@ describe('RccComponent', () => {
 			.toBeDefined();
 	});
 
-	it('should fetch selected row details on click of violation grid row', () => {
-		const violationInfo = { };
-		component.onViolationRowClicked(violationInfo);
-		expect(component.selectedViolationModal)
-			.toBeTruthy();
-	});
-
-	it('should fetch selected row details on click of asset grid row', () => {
-		const assetInfo = { };
-		component.onAssetRowClicked(assetInfo);
-		expect(component.selectedAssetModal)
-			.toBeTruthy();
-	});
-
 	it('on violation grid pagination selection', () => {
 		const pageInfo = { };
 		component.onPagerUpdated(pageInfo);

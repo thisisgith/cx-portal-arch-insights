@@ -960,6 +960,7 @@ export class RccComponent implements OnInit, Panel360 , OnDestroy {
 	 */
 	public onPanelClose () {
 		this.openDeviceModal = false;
+		this.detailsPanelStackService.pop();
 	}
 	/**
 	 * destroy method to kill the services
