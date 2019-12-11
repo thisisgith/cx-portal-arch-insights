@@ -1518,8 +1518,7 @@ export class LifecycleComponent implements OnDestroy {
 	 * @returns button string
 	 */
 	 public getAtxRegisterButton (data: AtxSchema) {
-		let button: string;
-		button = '';
+		let button = '';
 		let sessionSelected = false;
 		if (_.get(data, 'providerInfo')) {
 			sessionSelected = this.sessionSelected ? true : false;
