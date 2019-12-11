@@ -3,3 +3,16 @@
 .content-wrapper > div.content {
 	background: $site-bg-color;
 }
+
+.content-wrapper {
+	::ng-deep *:focus {
+		outline: none !important;
+	}
+}
+
+// a11y
+.content-wrapper.content-wrapper--keyboard-accessible {
+	::ng-deep *:focus {
+		outline: $default-link-hover-color 4px solid !important;
+	}
+}

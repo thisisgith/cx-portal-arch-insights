@@ -330,3 +330,15 @@ button.btn.btn-ctc {
 		background: $vibrant-blue;
 	}
 }
+
+.sr-only {
+	position: absolute;
+	left: -2000rem;
+	border: none;
+	width: 1px;
+	height: 0;
+	overflow: hidden;
+	padding: 0;
+	margin: 0;
+	clip: rect(1px, 1px, 1px, 1px);
+}

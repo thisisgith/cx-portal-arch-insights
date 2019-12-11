@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, combineLatest } from 'rxjs';
 import { UserResolve } from '@utilities';
 import {
 	CheckRoleLevelParams,
@@ -7,7 +7,7 @@ import {
 	CheckRoleLevelReturn,
 	CheckListTypeReturn,
 } from '@interfaces';
-import { map } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 
 enum entitlementUtilParamConstants {
 	ARRAY = 'Array',
@@ -166,20 +166,23 @@ export class EntitlementUtilityService {
 	public getUserCheckLevelAndRole (roleLevel: RoleListsAndLevel = { }): Observable<CheckRoleLevelReturn> {
 		const { whitelistRoles, blacklistRoles, cxLevel } = roleLevel;
 
-		return this.userResolve.getUser()
-			.pipe(
-				map(getUser => {
-					const { info: { individual: { role: userRole = '' } }, service: { cxLevel: userLevel } } = getUser;
-					const isAuthorized = this.checkRoleAndLevel({
-						cxLevel,
-						whitelistRoles,
-						blacklistRoles,
-						userRole,
-						userLevel: userLevel && Number(userLevel),
-					});
+		return combineLatest(
+			this.userResolve.getCXLevel(),
+			this.userResolve.getRole(),
+		)
+		.pipe(
+			take(1),
+			map(([userLevel, userRole]) => {
+				const isAuthorized = this.checkRoleAndLevel({
+					cxLevel,
+					whitelistRoles,
+					blacklistRoles,
+					userRole,
+					userLevel: userLevel && Number(userLevel),
+				});
 
-					return { isAuthorized, role: userRole };
-				}),
-			);
+				return { isAuthorized, role: userRole };
+			}),
+		);
 	}
 }

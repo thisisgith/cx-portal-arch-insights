@@ -4,16 +4,8 @@ import { EntitlementUtilityService } from './entitlement-utility.service';
 import { UserResolve } from '@utilities';
 import { Observable } from 'rxjs';
 
-const testUser = {
-	info: {
-		individual: {
-			role: UserRoles.ADMIN,
-		},
-	},
-	service: {
-		cxLevel: 3,
-	},
-};
+const testCxLevel = 3;
+const testRole = UserRoles.ADMIN;
 
 describe('EntitlementUtilityService', () => {
 	let service: EntitlementUtilityService;
@@ -23,8 +15,11 @@ describe('EntitlementUtilityService', () => {
 			providers: [{
 				provide: UserResolve,
 				useValue: {
-					getUser: () => new Observable<{ }>(observer => {
-						observer.next(testUser);
+					getCXLevel: () => new Observable<{ }>(observer => {
+						observer.next(testCxLevel);
+					}),
+					getRole: () => new Observable<{ }>(observer => {
+						observer.next(testRole);
 					}),
 				},
 			}],
@@ -148,8 +143,8 @@ describe('EntitlementUtilityService', () => {
 	});
 
 	it('should have called checkRoleAndLevel', done => {
-		const whitelistRoles = testUser.info.individual.role;
-		const { cxLevel } = testUser.service;
+		const whitelistRoles = testRole;
+		const cxLevel = testCxLevel;
 
 		spyOn(service, 'checkRoleAndLevel');
 
@@ -165,8 +160,8 @@ describe('EntitlementUtilityService', () => {
 	});
 
 	it('should return get user and return authorized or unauthorized for whitelistRoles', done => {
-		const whitelistRoles = testUser.info.individual.role;
-		const { cxLevel } = testUser.service;
+		const whitelistRoles = testRole;
+		const cxLevel = testCxLevel;
 
 		const subscription = service.getUserCheckLevelAndRole({ whitelistRoles, cxLevel });
 		subscription.subscribe(
@@ -180,7 +175,7 @@ describe('EntitlementUtilityService', () => {
 	});
 
 	it('should return get user and return unauthorized for blacklisted role', done => {
-		const blacklistRoles = testUser.info.individual.role;
+		const blacklistRoles = testRole;
 
 		const subscription = service.getUserCheckLevelAndRole({ blacklistRoles });
 		subscription.subscribe(
@@ -209,7 +204,7 @@ describe('EntitlementUtilityService', () => {
 	});
 
 	it('should return get user and return unauthorized for blacklisted role as user in array', done => {
-		const blacklistRoles = [UserRoles.PARTNER, testUser.info.individual.role];
+		const blacklistRoles = [UserRoles.PARTNER, testRole];
 		const cxLevel = 0;
 
 		const subscription = service.getUserCheckLevelAndRole({ blacklistRoles, cxLevel });

@@ -50,6 +50,7 @@ interface Facet {
 	route: string;
 	selected?: boolean;
 	template: TemplateRef<{ }>;
+	srOnlyTemplate?: TemplateRef<{ }>;
 	title: string;
 }
 
@@ -95,11 +96,14 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	private destroy$ = new Subject();
 	public cxLevel: number;
 
-	@ViewChild('kmWrapper', { static: true }) private kmWrapperRef: ElementRef;
+	@ViewChild('facetNavigationWrapper', { static: true }) private facetNavigationWrapperRef: ElementRef;
 	@ViewChild('advisoriesFacet', { static: true }) public advisoriesTemplate: TemplateRef<{ }>;
+	@ViewChild('advisoriesSrOnly', { static: true }) public advisoriesSrOnly: TemplateRef<{ }>;
 	@ViewChild('assetsFacet', { static: true }) public assetsTemplate: TemplateRef<{ }>;
 	@ViewChild('lifecycleFacet', { static: true }) public lifecycleTemplate: TemplateRef<{ }>;
+	@ViewChild('percentageGaugeSrOnly', { static: true }) public percentageGaugeSrOnly: TemplateRef<{ }>;
 	@ViewChild('resolutionFacet', { static: true }) public resolutionTemplate: TemplateRef<{ }>;
+	@ViewChild('resolutionSrOnly', { static: true }) public resolutionSrOnlyTemplate: TemplateRef<{ }>;
 	@ViewChild('insightsFacet', { static: true }) public insightsTemplate: TemplateRef<{ }>;
 	@ViewChild('content', { static: true }) private contentContainer: ElementRef;
 
@@ -176,9 +180,9 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	 * @param {number} shift The direction and magnitude of shift.
 	 */
 	public shiftCarousel (shift) {
-		const wrapper = this.kmWrapperRef.nativeElement;
-		const itemWidth = wrapper.querySelector('.km__items__item').offsetWidth;
-		wrapper.scrollTo(wrapper.scrollLeft + (shift * itemWidth), 0);
+		const wrapper = this.facetNavigationWrapperRef.nativeElement;
+		const itemWidth = wrapper.querySelector('.facet-navigation__list-item').offsetWidth;
+		wrapper.scrollTo(wrapper.scrollLeft + (shift * itemWidth) + 32, 0);
 	}
 
 	/**
@@ -186,10 +190,10 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	 * @param {Element} target the target key metric element
 	 */
 	public repositionCarousel (target) {
-		const wrapper = this.kmWrapperRef.nativeElement;
+		const wrapper = this.facetNavigationWrapperRef.nativeElement;
 		const wrapperBounds = wrapper.getBoundingClientRect();
 		const targetBounds = target.getBoundingClientRect();
-		const itemWidth = wrapper.querySelector('.km__items__item').offsetWidth;
+		const itemWidth = wrapper.querySelector('.facet-navigation__list-item').offsetWidth;
 
 		if (targetBounds.left < wrapperBounds.left) {
 			wrapper.scrollTo(wrapper.scrollLeft - itemWidth, 0);
@@ -213,9 +217,9 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	 */
 	public selectFacet (facet: Facet, navigate = false) {
 		if (facet) {
-			this.facets.forEach((f: Facet) => {
-				if (f !== facet) {
-					f.selected = false;
+			this.facets.forEach((otherFacet: Facet) => {
+				if (otherFacet !== facet) {
+					otherFacet.selected = false;
 				}
 			});
 
@@ -224,8 +228,9 @@ export class SolutionComponent implements OnInit, OnDestroy {
 
 			facet.selected = true;
 			this.selectedFacet = facet;
-			this.quickTourActive = facet.key === 'lifecycle' && (this.quickTourFirstTime ||
-			_.isNil(this.quickTourFirstTime));
+			this.quickTourActive = facet.key === 'lifecycle'
+				&& (this.quickTourFirstTime || _.isNil(this.quickTourFirstTime));
+
 			if (facet.route && this.activeRoute !== facet.route) {
 				this.activeRoute = facet.route;
 				if (navigate) {
@@ -257,6 +262,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 				loading: false,
 				route: '/solution/lifecycle',
 				template: this.lifecycleTemplate,
+				srOnlyTemplate: this.percentageGaugeSrOnly,
 				title: I18n.get('_Lifecycle_'),
 			},
 			{
@@ -265,6 +271,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 				loading: true,
 				route: '/solution/assets',
 				template: this.assetsTemplate,
+				srOnlyTemplate: this.percentageGaugeSrOnly,
 				title: I18n.get('_Assets&Coverage_'),
 			},
 			{
@@ -272,6 +279,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 				loading: true,
 				route: '/solution/advisories',
 				template: this.advisoriesTemplate,
+				srOnlyTemplate: this.advisoriesSrOnly,
 				title: I18n.get('_Advisories_'),
 			},
 			{
@@ -279,6 +287,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 				loading: true,
 				route: '/solution/resolution',
 				template: this.resolutionTemplate,
+				srOnlyTemplate: this.resolutionSrOnlyTemplate,
 				title: I18n.get('_ProblemResolution_'),
 			},
 			{
@@ -286,6 +295,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 				loading: false,
 				route: '/solution/insights',
 				template: this.insightsTemplate,
+				srOnlyTemplate: this.percentageGaugeSrOnly,
 				title: I18n.get('_Insights_'),
 			},
 		];
