@@ -60,7 +60,6 @@
 
 .card-content {
 	justify-content: space-between;
-	display: flex;
 	flex-direction: column;
 }
 
@@ -69,7 +68,7 @@
 }
 
 .card__header {
-	min-height: 75px;
+	min-height: 15px;
 }
 
 .card__footer {
@@ -145,4 +144,11 @@
 
 .row-padding {
 	padding-left: 15px;
+}
+
+.label--circle.label--tiny {
+	width: 12px;
+	height: 12px;
+	min-width: 10px;
+	min-height: 10px;
 }

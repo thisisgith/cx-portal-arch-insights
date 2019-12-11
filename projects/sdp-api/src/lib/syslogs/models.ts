@@ -1,4 +1,14 @@
-export { SyslogData } from './models/syslog-data';
+export {
+	SyslogData,
+	SyslogsSeverityResponse,
+	SyslogsTimeRangeResponse,
+	FaultSeverityResponse,
+	FaultStateResponse,
+	SyslogsSeverity,
+	SyslogsTimeRange,
+	FaultSeverity,
+	FaultState,
+} from './models/syslog-data';
 export { SyslogGridData, SyslogResponseData } from './models/syslog-grid-data';
 export { SyslogPanelGridData } from './models/syslogpanel-data';
 export { DeviceDetailsdata, DeviceDetailsMsgData }  from './models/syslogpaneldetails-data';

@@ -134,4 +134,44 @@ describe('SyslogsComponent', () => {
 			.toEqual('afmSeverity');
 	});
 
+	it('should get Fault graph count values on request success', () => {
+		spyOn(syslogsService, 'getFaultTimeRangeData')
+			.and
+			.returnValue(of(SyslogScenarios[9].scenarios.POST[0].response.body));
+		spyOn(syslogsService, 'getFaultStateData')
+			.and
+			.returnValue(of(SyslogScenarios[8].scenarios.POST[0].response.body));
+		spyOn(syslogsService, 'getFaultSeverityData')
+			.and
+			.returnValue(of(SyslogScenarios[7].scenarios.POST[0].response.body));
+		component.visualLabels[0].active = true;
+		component.loadData();
+		fixture.detectChanges();
+		expect(syslogsService.getFaultTimeRangeData)
+		.toHaveBeenCalled();
+		expect(syslogsService.getFaultStateData)
+		.toHaveBeenCalled();
+		expect(syslogsService.getFaultSeverityData)
+		.toHaveBeenCalled();
+		expect(component.faultSeverityCount.low)
+		.toEqual(2);
+	});
+
+	it('should get syslog graph count values on request success', () => {
+		spyOn(syslogsService, 'getSyslogTimeRangeData')
+			.and
+			.returnValue(of(SyslogScenarios[6].scenarios.POST[0].response.body));
+		spyOn(syslogsService, 'getSyslogSeverityData')
+			.and
+			.returnValue(of(SyslogScenarios[5].scenarios.POST[0].response.body));
+		component.visualLabels[0].active = false;
+		component.loadData();
+		fixture.detectChanges();
+		expect(syslogsService.getSyslogTimeRangeData)
+		.toHaveBeenCalled();
+		expect(syslogsService.getSyslogSeverityData)
+		.toHaveBeenCalled();
+		expect(component.syslogSeverityCount.syslogSeverity4)
+		.toEqual(50);
+	});
 });
