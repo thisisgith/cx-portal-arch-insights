@@ -19,6 +19,10 @@ import { User } from '@interfaces';
 import { throwError, Observable } from 'rxjs';
 import { EntitlementWrapperService, OrgUserService } from '@sdp-api';
 import { mappedUser } from '@mock';
+import { UserRoles } from '@constants';
+
+const testCxLevel = mappedUser.info.subscribedSolutions.cxLevel;
+const testRole = mappedUser.info.individual.role;
 
 describe('AppComponent', () => {
 	let component: AppComponent;
@@ -333,6 +337,22 @@ describe('AppComponent', () => {
 				});
 			});
 		});
+
+		it('should refine the roleList resolve the role', done => {
+			fixture.whenStable()
+			.then(() => {
+				userResolve.resolve()
+				.subscribe(() => {
+					userResolve.getRole()
+					.subscribe((s: string) => {
+						expect(s)
+							.toEqual(UserRoles.ADMIN);
+
+						done();
+					});
+				});
+			});
+		});
 	});
 
 	describe('General', () => {
@@ -348,6 +368,12 @@ describe('AppComponent', () => {
 						useValue: {
 							getUser: () => new Observable<{ }>(observer => {
 								observer.next(mappedUser);
+							}),
+							getCXLevel: () => new Observable<{ }>(observer => {
+								observer.next(testCxLevel);
+							}),
+							getRole: () => new Observable<{ }>(observer => {
+								observer.next(testRole);
 							}),
 							resolve: () => new Observable<{ }>(observer => {
 								observer.next(mappedUser);

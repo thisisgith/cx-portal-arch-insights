@@ -1,7 +1,7 @@
 
 import { Injectable } from '@angular/core';
 import { Resolve } from '@angular/router';
-import { EntitlementWrapperService, UserEntitlement, OrgUserService, OrgUserResponse, Company } from '@sdp-api';
+import { EntitlementWrapperService, UserEntitlement, OrgUserService, OrgUserResponse, Company, Role } from '@sdp-api';
 import { Observable, of, ReplaySubject } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import { LogService } from '@cisco-ngx/cui-services';
@@ -11,7 +11,7 @@ import { CuiModalService } from '@cisco-ngx/cui-components';
 import {
 	UnauthorizedUserComponent,
 } from '../components/unauthorized-user/unauthorized-user.component';
-import { INTERIM_VA_ID, DEFAULT_DATACENTER } from '@constants';
+import { INTERIM_VA_ID, DEFAULT_DATACENTER, UserRoles } from '@constants';
 
 /**
  * Resolver to fetch our user
@@ -31,6 +31,8 @@ export class UserResolve implements Resolve<any> {
 	private cxLevel = new ReplaySubject<number>(1);
 	private role = new ReplaySubject<string>(1);
 	private dataCenter = new ReplaySubject<string>(1);
+	// TODO: Remove `roleList` when `mapUserResponse` logic is deprecated
+	private roleList = new ReplaySubject<Role[]>(1);
 
 	constructor (
 		private cuiModalService: CuiModalService,
@@ -104,6 +106,7 @@ export class UserResolve implements Resolve<any> {
 		.pipe(
 			mergeMap((account: UserEntitlement) => {
 				this.companyList = _.sortBy(account.companyList, 'companyName');
+
 				const activeSmartAccountId = window.localStorage.getItem('activeSmartAccount');
 				if (activeSmartAccountId) {
 					this.smartAccount = _.find(this.companyList, {
@@ -156,9 +159,10 @@ export class UserResolve implements Resolve<any> {
 
 				this.user.next(this.cachedUser);
 				const { cxLevel } = _.get(this.cachedUser, 'service');
-
 				this.cxLevel.next(Number(cxLevel));
-				this.role.next(_.get(this.smartAccount, ['roleList', 0, 'roleName']));
+
+				this.roleList = this.getRefinedRoleList(this.smartAccount.roleList);
+				this.role.next(_.get(this.roleList, [0, 'roleName']));
 
 				return this.cachedUser;
 			}),
@@ -170,6 +174,22 @@ export class UserResolve implements Resolve<any> {
 				return of(null);
 			}),
 		);
+	}
+
+	/**
+	 * Filter the invalid roles out and sort the valid ones by priority
+	 * @param roleList the array of roles
+	 * @returns the refined roleList
+	 */
+	private getRefinedRoleList (roleList: Role[]) {
+		if (roleList.length < 1) {
+			return [];
+		}
+
+		const priorityOrder: Role['roleName'][] = [UserRoles.ADMIN, UserRoles.USER];
+		const roleListFiltered = roleList.filter(role => priorityOrder.includes(role.roleName));
+
+		return _.sortBy(roleListFiltered, role => priorityOrder.indexOf(role.roleName));
 	}
 
 	/**
@@ -195,7 +215,7 @@ export class UserResolve implements Resolve<any> {
 				emailAddress: accountUser.emailId,
 				ccoId: userResponse.individualAccount.ccoId,
 				cxBUId: userResponse.cxBUId,
-				role: _.get(smartAccount, ['roleList', 0, 'roleName']),
+				role: _.get(this.getRefinedRoleList(this.smartAccount.roleList), ['0', 'roleName']),
 			},
 			account: userResponse.account,
 			subscribedSolutions: {

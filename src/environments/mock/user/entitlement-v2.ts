@@ -20,19 +20,39 @@ const adminRole = {
 	attribName: null,
 };
 
+const userRole = {
+	roleName: UserRoles.USER,
+	roleDisplayName: 'Smart Account USER',
+	tenant: 'SMARTACCUSER',
+	tenantDisplayName: 'Smart Account Management User',
+	attribType: null,
+	attribValue: null,
+	attribName: null,
+};
+
+const partnerRole = {
+	roleName: UserRoles.PARTNER,
+	roleDisplayName: 'Smart Account Partner',
+	tenant: 'SMARTACCPARTNER',
+	tenantDisplayName: 'Smart Account Management Partner',
+	attribType: null,
+	attribValue: null,
+	attribName: null,
+};
+
 export const accountsResponseMock: UserEntitlement = {
 	companyList: [{
 		companyName: 'CISCO CANADA',
 		companyId: 2431199,
 		domainIdentifier: 'cisco-ca',
 		accountType: 'CUSTOMER',
-		roleList: [adminRole],
+		roleList: [userRole, adminRole, partnerRole],
 	}, {
 		companyName: 'CISCO USA',
 		companyId: 67890,
 		domainIdentifier: 'cisco-us',
 		accountType: 'CUSTOMER',
-		roleList: [adminRole],
+		roleList: [adminRole, userRole],
 	}],
 	env: 'dev',
 	internalAssignableRoleList: [adminRole],
@@ -67,9 +87,8 @@ export const v2UserResponseMock: OrgUserResponse = {
 		ccoId: 'abcde',
 		saId: '2431199',
 		vaId: '0',
-		role: 'AccountAdmin',
+		role: UserRoles.ADMIN,
 		userMethods: ['Administrator'],
-		cxBUId: 'qwerty1',
 	},
 	account: {
 		team: [{

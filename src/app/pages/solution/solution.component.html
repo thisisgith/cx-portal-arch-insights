@@ -12,33 +12,44 @@
 				</div>
 			</div>
 		</div>
-		<div class="km" #km>
-			<div
-				class="km__left"
+		<div class="facet-navigation" #facetNavigation>
+			<button
+				class="facet-navigation__left"
 				inlineSVG="assets/icons/icon-metrics-arrow-left.svg"
 				(click)="shiftCarousel(-2)"
-				data-auto-id="carousel-left">
-			</div>
-			<div class="km__items__wrapper" #kmWrapper>
-				<div class="km__items">
+				data-auto-id="carousel-left"
+				aria-label="Move Carosuel left"
+			>
+			</button>
+			<nav class="facet-navigation__items__wrapper" #facetNavigationWrapper>
+				<ul class="facet-navigation__items">
 					<ng-container *ngFor="let facet of facets; index as i">
-						<div
-							[id]="facet.key"
-							attr.data-auto-id="Facet-{{ facet.title }}"
-							(click)="selectFacet(facet, true)"
-							class="km__items__item"
-							[class.km__items__item--selected]="facet.selected">
-							<ng-container *ngTemplateOutlet="facet.template; context: { facet: facet }"></ng-container>
-						</div>
+						<li 
+							class="facet-navigation__list-item"
+							[class.facet-navigation__list-item--selected]="facet.selected"
+						>
+							<ng-container *ngTemplateOutlet="facet?.srOnlyTemplate; context: { facet: facet }"></ng-container>
+							<button
+								[id]="facet.key"
+								attr.data-auto-id="Facet-{{ facet.title }}"
+								(click)="selectFacet(facet, true)"
+								class="facet-navigation__link"
+								[class.facet-navigation__link--selected]="facet.selected"
+								role="link"
+							>
+								<ng-container *ngTemplateOutlet="facet.template; context: { facet: facet }"></ng-container>
+							</button>
+						</li>
 					</ng-container>
-				</div>
-			</div>
-			<div
-				class="km__right"
+				</ul>
+			</nav>
+			<button
+				class="facet-navigation__right"
 				inlineSVG="assets/icons/icon-metrics-arrow-right.svg"
 				(click)="shiftCarousel(2)"
 				data-auto-id="carousel-right"
-			></div>
+				aria-label="Move Carosuel right"
+			></button>
 		</div>
 	</div>
 
@@ -137,37 +148,32 @@
 	</div>
 </ng-template>
 
-<ng-template #facetPanel>
-	<div
-		*ngFor="let facet of facets; index as i"
-		attr.data-auto-id="Facet-{{ facet.title }}"
-		(click)="selectFacet(facet, true)"
-		class="flex flex-column panel panel--bordered-right flex-fill"
-		[ngClass]="{
-			'panel--bordered-left': i === 0,
-			'facet--selected': facet.selected
-		}"
-	>
-		<div class="flex-fluid flex-center base-margin-bottom">
-			<ng-container *ngTemplateOutlet="facet.template; context: { facet: facet }"></ng-container>
-		</div>
-	</div>
+<ng-template #percentageGaugeSrOnly let-facet="facet">
+	<p class="sr-only">
+		{{ facet?.label }}
+		&ensp;
+		{{ facet?.data?.gaugePercent || 0 }}%
+	</p>
 </ng-template>
 
 <ng-template #lifecycleFacet let-facet="facet">
-	<app-gauge
-		class="kmii__detailed__graphic"
-		textColor="#243034"
-		[arcColor]="facet?.selected ? '#00bceb' : '#92dde4'"
-		[percentage]="facet?.data?.gaugePercent || 0"
-		[label]="facet?.label"
-		data-auto-id="LifecycleAdoptionProgress">
-	</app-gauge>
-	<p class="km__items__item__label" [innerText]="facet?.title | uppercase"></p>
-	<div
-		class="kmii__border"
-		[class.kmii__border--selected]="facet?.selected">
-	</div>
+		<app-gauge
+			class="kmii__detailed__graphic"
+			textColor="#243034"
+			[arcColor]="facet?.selected ? '#00bceb' : '#92dde4'"
+			[percentage]="facet?.data?.gaugePercent || 0"
+			[label]="facet?.label"
+			data-auto-id="LifecycleAdoptionProgress"
+			aria-hidden="true"
+		>
+		</app-gauge>
+		<span class="facet-navigation__items__item__label" [innerText]="facet?.title | uppercase"></span>
+		<div
+			class="kmii__border"
+			[class.kmii__border--selected]="facet?.selected"
+			aria-hidden="true"
+		>
+		</div>
 </ng-template>
 
 <ng-template #assetsFacet let-facet="facet">
@@ -176,21 +182,33 @@
 		textColor="#243034"
 		[arcColor]="facet?.selected ? '#00bceb' : '#92dde4'"
 		[percentage]="facet?.data?.gaugePercent || 0"
-		[label]="facet?.label">
+		[label]="facet?.label"
+		aria-hidden="true"
+	>
 	</app-gauge>
-	<p class="km__items__item__label" [innerText]="facet?.title | uppercase"></p>
+	<span class="facet-navigation__items__item__label" [innerText]="facet?.title | uppercase"></span>
 	<div
 		class="kmii__border"
-		[class.kmii__border--selected]="facet?.selected">
+		[class.kmii__border--selected]="facet?.selected"
+		aria-hidden="true"
+	>
 	</div>
 </ng-template>
 
 <ng-template #insightsFacet let-facet="facet">
-	<div *ngIf="facet?.loading" class="base-padding">
+	<div 
+		*ngIf="facet?.loading" 
+		class="base-padding"
+		aria-hidden="true"
+	>
 		<cui-spinner></cui-spinner>
 	</div>
 	<div class="kmii__detailed" *ngIf="!facet?.loading">
-		<div class="kmii__insights" *ngIf="!facet?.isError">
+		<div 
+			class="kmii__insights" 
+			*ngIf="!facet?.isError"
+			aria-hidden="true"
+		>
 			<span
 				*ngIf="(cxLevel > 1)"
 				class="kmii__insights__num"
@@ -223,21 +241,48 @@
 			class="kmii__insights__title"
 			*ngIf="facet?.isError"
 			[innerText]="'_InsightsNoResultsFound_' | i18n"
+			aria-hidden="true"
 		>
 		</div>
+		<app-gauge
+			textColor="#243034"
+			[arcColor]="facet?.selected ? '#00bceb' : '#92dde4'"
+			[percentage]="0"
+			[label]=""
+			*ngIf="!facet?.loading && cxLevel < 2 && !facet?.seriesData?.optedIn"
+			aria-hidden="true"
+		>
+		</app-gauge>
+		<span class="facet-navigation__items__item__label" [innerText]="facet?.title | uppercase"></span>
+		<div
+			class="kmii__border"
+			[class.kmii__border--selected]="facet?.selected"
+			aria-hidden="true"
+		></div>
 	</div>
-	<app-gauge
-		textColor="#243034"
-		[arcColor]="facet?.selected ? '#00bceb' : '#92dde4'"
-		[percentage]="0"
-		[label]=""
-		*ngIf="!facet?.loading && cxLevel < 2 && !facet?.seriesData?.optedIn">
-	</app-gauge>
-	<p class="km__items__item__label" [innerText]="facet?.title | uppercase"></p>
-	<div
-		class="kmii__border"
-		[class.kmii__border--selected]="facet?.selected"
-	></div>
+</ng-template>
+
+<ng-template #advisoriesSrOnly let-facet="facet">
+	<p 
+		class="sr-only"
+		*ngIf="!facet?.seriesData"
+	>
+		{{ '_NoOpenAdvisories_' | i18n }}
+	</p>
+	<p 
+		class="sr-only"
+		*ngIf="facet?.seriesData"
+	>
+		<ng-container *ngFor="let data of facet?.seriesData">
+			<span >
+				{{ data.value }}
+				&ensp;
+				{{ data.label }}
+			</span>
+			<br />
+		</ng-container>
+	</p>
+
 </ng-template>
 
 <ng-template #advisoriesFacet let-facet="facet">
@@ -249,27 +294,50 @@
 			[data]="facet?.seriesData"
 			[selected]="facet?.selected"
 			[idx]="advisoryIndex"
+			aria-hidden="true"
 		>
 		</app-multi-gauge>
 		<div
 			*ngIf="!facet?.seriesData"
 			class="text-muted flex-center text-large base-padding-left base-padding-right dbl-padding-top dbl-padding-bottom"
-			[innerText]="'_NoOpenAdvisories_' | i18n">
+			[innerText]="'_NoOpenAdvisories_' | i18n"
+			aria-hidden="true"
+		>
 		</div>
 	</div>
-	<div *ngIf="facet?.loading" class="base-padding">
+	<div 
+		*ngIf="facet?.loading" 
+		class="base-padding"
+		aria-hidden="true"
+	>
 		<cui-spinner></cui-spinner>
 	</div>
-	<p class="km__items__item__label" [innerText]="facet?.title | uppercase"></p>
+	<span class="facet-navigation__items__item__label" [innerText]="facet?.title | uppercase"></span>
 	<div
 		class="kmii__border"
 		[class.kmii__border--selected]="facet?.selected"
+		aria-hidden="true"
 	></div>
+</ng-template>
+
+<ng-template #resolutionSrOnly let-facet="facet">
+		<p class="sr-only">
+			{{ casesCount || 0 }}
+			&ensp;
+			{{ '_OpenCases_' | i18n }}
+			<br/>
+			{{ RMACount || 0 }}
+			&ensp;
+			{{ '_WithRMAs_' | i18n }}
+		</p>
 </ng-template>
 
 <ng-template #resolutionFacet let-facet="facet">
 	<!-- TODO: Cases track needs to get trend data to draw the trend chart here -->
-	<div class="kmii__detailed">
+	<div 
+		class="kmii__detailed"
+		aria-hidden="true"
+	>
 		<div class="text-left">
 			<div class="kmii__resolution__item">
 				<div
@@ -289,10 +357,15 @@
 			</div>
 		</div>
 	</div>
-	<p class="km__items__item__label" [innerText]="facet?.title | uppercase"></p>
+	<span 
+		class="facet-navigation__items__item__label" 
+		[innerText]="facet?.title | uppercase"
+	></span>
 	<div
 		class="kmii__border"
-		[class.kmii__border--selected]="facet?.selected">
+		[class.kmii__border--selected]="facet?.selected"
+		aria-hidden="true"
+	>
 	</div>
 </ng-template>
 
