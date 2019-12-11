@@ -69,19 +69,28 @@
 <ng-template #impact let-celldata="celldata">
 	<span class="label label--circle label--tiny qtr-margin-right"
 		[ngClass]="{
-				'Critical': 'label--danger',
-				'High': 'label--warning-alt',
-				'Medium': 'label--warning',
-				'Low': 'label--info',
-				'Info': 'label--info'
+			'critical': 'label--danger',
+			'error': 'label--danger',
+			'high': 'label--warning-alt',
+			'medium': 'label--warning',
+			'warning': 'label--warning',
+			'low': 'label--info',
+			'info': 'label--info',
+			'notice': 'label--info',
+			'ok': 'label--info'
 		}[celldata.severity]"
 		data-auto-id="ImpactIcon">
 	</span>
 	<ng-container [ngSwitch]="celldata.severity">
-		<span data-auto-id="ImpactText" *ngSwitchCase="'Critical'" [innerText]="'_Critical_' | i18n"></span>
-		<span data-auto-id="ImpactText" *ngSwitchCase="'High'" [innerText]="'_High_' | i18n"></span>
-		<span data-auto-id="ImpactText" *ngSwitchCase="'Medium'" [innerText]="'_Medium_' | i18n"></span>
-		<span data-auto-id="ImpactText" *ngSwitchCase="'Low'" [innerText]="'_Low_' | i18n"></span>
+		<span data-auto-id="ImpactText" *ngSwitchCase="'critical'" [innerText]="'_Critical_' | i18n"></span>
+		<span data-auto-id="ImpactText" *ngSwitchCase="'error'" [innerText]="'_Error_' | i18n"></span>
+		<span data-auto-id="ImpactText" *ngSwitchCase="'high'" [innerText]="'_High_' | i18n"></span>
+		<span data-auto-id="ImpactText" *ngSwitchCase="'medium'" [innerText]="'_Medium_' | i18n"></span>
+		<span data-auto-id="ImpactText" *ngSwitchCase="'warning'" [innerText]="'_Warning_' | i18n"></span>
+		<span data-auto-id="ImpactText" *ngSwitchCase="'low'" [innerText]="'_Low_' | i18n"></span>
+		<span data-auto-id="ImpactText" *ngSwitchCase="'info'" [innerText]="'_Info_' | i18n"></span>
+		<span data-auto-id="ImpactText" *ngSwitchCase="'notice'" [innerText]="'_Notice_' | i18n"></span>
+		<span data-auto-id="ImpactText" *ngSwitchCase="'ok'" [innerText]="'_Ok_' | i18n"></span>
 		<span data-auto-id="ImpactText" *ngSwitchDefault [innerText]="'_Unknown_' | i18n"></span>
 	</ng-container>
 </ng-template>
