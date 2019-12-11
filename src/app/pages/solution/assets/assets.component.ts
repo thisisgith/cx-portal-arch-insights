@@ -544,6 +544,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 						name: I18n.get('_SerialNumber_'),
 						sortable: true,
 						value: 'serialNumber',
+						width: '150px',
 					},
 					{
 						key: 'deviceName',
