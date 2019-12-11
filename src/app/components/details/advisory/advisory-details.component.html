@@ -2,7 +2,7 @@
 	<details-panel-header (close)="onAllPanelsClose()"
 		(back)="onPanelBack()"
 		[(fullscreen)]="fullscreen"
-		[fullscreenToggle]="false">
+		[fullscreenToggle]="screenWidth > 1024 ? true : false">
 		<ng-container *ngIf="details">
 			<security-details-header *ngIf="type === 'security'"
 				[details]="details"

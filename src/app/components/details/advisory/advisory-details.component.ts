@@ -54,6 +54,7 @@ export class AdvisoryDetailsComponent implements OnChanges, OnInit, OnDestroy, P
 	public hidden = true;
 	public fullscreen = false;
 	public impactedAssets: HardwareAsset[];
+	public screenWidth = window.innerWidth;
 
 	constructor (
 		private userResolve: UserResolve,
