@@ -162,6 +162,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 	}
 	@ViewChild('contentContainer', { static: false }) private contentContainer: ElementRef;
 	@ViewChild('borgBugSeverityTemplate', { static: true }) private borgBugSeverityTemplate: TemplateRef<{ }>;
+	@ViewChild('bugIcSeverityTemplate', { static: true }) private bugIcSeverityTemplate: TemplateRef<{ }>;
 	@ViewChild('cdetsHealineTemplate', { static: true }) private cdetsHealineTemplate: TemplateRef<{ }>;
 	constructor (
 		private diagnosticsService: DiagnosticsService,
@@ -402,15 +403,6 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 					bordered: true,
 					columns: [
 						{
-							key: 'id',
-							name: I18n.get('_BugID_'),
-							render: item => item.id || I18n.get('_NA_'),
-							sortable: true,
-							sorting: false,
-							value: 'id',
-							width: '100px',
-						},
-						{
 							key: 'severity',
 							name: I18n.get('_Severity_'),
 							render: item =>
@@ -418,20 +410,22 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 							sortable: true,
 							sortDirection: 'asc',
 							sorting: true,
+							template: this.bugIcSeverityTemplate,
 							value: 'severity',
+							width: '150px',
 						},
 						{
-							key: 'cdetsSeverity',
-							name: I18n.get('_BorgBugICSeverity_'),
+							key: 'id',
+							name: I18n.get('_BugID_'),
+							render: item => item.id || I18n.get('_NA_'),
 							sortable: true,
-							sortDirection: 'desc',
-							sorting: true,
-							template: this.borgBugSeverityTemplate,
-							value: 'cdetsSeverity',
+							sorting: false,
+							value: 'id',
+							width: '200px',
 						},
 						{
 							key: 'title',
-							name: I18n.get('_Title_'),
+							name: I18n.get('_BugTitle_'),
 							sortable: true,
 							template: this.cdetsHealineTemplate,
 							value: 'title',

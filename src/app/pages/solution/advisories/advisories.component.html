@@ -224,6 +224,37 @@
 	</div>
 </ng-template>
 
+<ng-template #bugIcSeverityTemplate let-celldata="celldata">
+	<span *ngIf="celldata?.severity"
+		class="label label--circle label--tiny qtr-margin-right"
+		[ngClass]="{
+			'critical': 'label--danger',
+			'error': 'label--danger',
+			'high': 'label--warning-alt',
+			'medium': 'label--warning',
+			'warning': 'label--warning',
+			'low': 'label--info',
+			'info': 'label--info',
+			'notice': 'label--info',
+			'ok': 'label--info'
+		}[celldata?.severity]"
+		data-auto-id="BugDetailsSeverityIcon">
+	</span>
+	<ng-container [ngSwitch]="celldata?.severity">
+		<span data-auto-id="ImpactText" *ngSwitchCase="'critical'" [innerText]="'_Critical_' | i18n"></span>
+		<span data-auto-id="ImpactText" *ngSwitchCase="'error'" [innerText]="'_Error_' | i18n"></span>
+		<span data-auto-id="ImpactText" *ngSwitchCase="'high'" [innerText]="'_High_' | i18n"></span>
+		<span data-auto-id="ImpactText" *ngSwitchCase="'medium'" [innerText]="'_Medium_' | i18n"></span>
+		<span data-auto-id="ImpactText" *ngSwitchCase="'warning'" [innerText]="'_Warning_' | i18n"></span>
+		<span data-auto-id="ImpactText" *ngSwitchCase="'low'" [innerText]="'_Low_' | i18n"></span>
+		<span data-auto-id="ImpactText" *ngSwitchCase="'info'" [innerText]="'_Info_' | i18n"></span>
+		<span data-auto-id="ImpactText" *ngSwitchCase="'notice'" [innerText]="'_Notice_' | i18n"></span>
+		<span data-auto-id="ImpactText" *ngSwitchCase="'ok'" [innerText]="'_Ok_' | i18n"></span>
+		<span data-auto-id="ImpactText" *ngSwitchDefault [innerText]="'_Unknown_' | i18n"></span>
+	</ng-container>
+</ng-template>
+
+
 <ng-template #borgBugSeverityTemplate let-celldata="celldata">
 	<span class="label label--circle label--tiny qtr-margin-right" [ngClass]="{ 'label--danger': '0' || '1', 'label--warning-alt': '2',
 					'label--warning': '3', 'label--info':'4' ||  '5' || '6' || '7'
