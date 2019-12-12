@@ -230,7 +230,7 @@ export class AssetDetailsComponent implements OnDestroy, OnInit, Panel360 {
 				} else {
 					this.tabIndex = 0;
 				}
-				this.tabIndex = (this.selectedView.key === 'system') ? 0 : 1;
+				this.tabIndex = (_.get(this.selectedView, ['key'], null) === 'system') ? 0 : 1;
 				const observables = [];
 				this.hardwareAssets.forEach((asset: HardwareAsset) => {
 					observables.push(this.inventoryService.getAssetSummary({
