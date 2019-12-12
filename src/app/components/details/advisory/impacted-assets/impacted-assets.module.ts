@@ -4,7 +4,7 @@ import { AdvisoryImpactedAssetsComponent } from './impacted-assets.component';
 import { InventoryModule, DiagnosticsModule } from '@sdp-api';
 import { environment } from '@environment';
 import { I18nPipeModule, TruncatePipeModule } from '@cisco-ngx/cui-pipes';
-import { CuiTableModule, CuiSpinnerModule } from '@cisco-ngx/cui-components';
+import { CuiTableModule, CuiSpinnerModule, CuiPagerModule } from '@cisco-ngx/cui-components';
 import { RouterModule } from '@angular/router';
 
 /**
@@ -29,6 +29,7 @@ const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 		I18nPipeModule,
 		RouterModule,
 		TruncatePipeModule,
+		CuiPagerModule,
 	],
 })
 export class AdvisoryImpactedAssetsModule { }

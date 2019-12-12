@@ -19,6 +19,7 @@ import {
 	SystemAsset,
 	HardwareAssets,
 	SystemAssets,
+	DiagnosticsPagination,
 } from '@sdp-api';
 import { LogService } from '@cisco-ngx/cui-services';
 import {
@@ -67,12 +68,12 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 	@Input('customerId') public customerId: string;
 	@Output('impactedCount') public impactedCount = new EventEmitter<number>();
 	@Output('assets') public assets = new EventEmitter<Impacted>();
-	@ViewChild('ipAddressColumn', null) public ipAddressColumn: TemplateRef<{ }>;
-	@ViewChild('deviceColumn', null) public deviceColumn: TemplateRef<{ }>;
-	@ViewChild('productIdColumn', null) public productIdColumn: TemplateRef<{ }>;
-	@ViewChild('versionColumn', null) public softwareVersionColumn: TemplateRef<{ }>;
-	@ViewChild('serialNumberColumn', null) public serialNumberColumn: TemplateRef<{ }>;
-	@ViewChild('recommendedVersionColumn', null) public recommendedVersionColumn: TemplateRef<{ }>;
+	@ViewChild('ipAddressColumn', null) public ipAddressColumn: TemplateRef<{}>;
+	@ViewChild('deviceColumn', null) public deviceColumn: TemplateRef<{}>;
+	@ViewChild('productIdColumn', null) public productIdColumn: TemplateRef<{}>;
+	@ViewChild('versionColumn', null) public softwareVersionColumn: TemplateRef<{}>;
+	@ViewChild('serialNumberColumn', null) public serialNumberColumn: TemplateRef<{}>;
+	@ViewChild('recommendedVersionColumn', null) public recommendedVersionColumn: TemplateRef<{}>;
 
 	public affectedTable: CuiTableOptions;
 	public potentiallyAffectedTable: CuiTableOptions;
@@ -90,6 +91,8 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 	private selectedSolutionName: string;
 	private selectedTechnologyName: string;
 	private destroyed$: Subject<void> = new Subject<void>();
+	public pagination?: DiagnosticsPagination;
+	public paginationCount="";
 
 	constructor (
 		private logger: LogService,
@@ -112,36 +115,36 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 		const potentiallyImpacted = _.get(this.assetIds, 'potentiallyImpacted', []);
 
 		this.inventoryService.getSystemAssets(this.params.system)
-		.pipe(
-			mergeMap((response: SystemAssets) => {
-				const data = _.get(response, 'data', []);
+			.pipe(
+				mergeMap((response: SystemAssets) => {
+					const data = _.get(response, 'data', []);
 
-				this.impacted =
-					_.filter(data,
-						x => _.includes(impacted, _.get(x, 'managedNeId'))) || [];
+					this.impacted =
+						_.filter(data,
+							x => _.includes(impacted, _.get(x, 'managedNeId'))) || [];
 
-				this.potentiallyImpacted =
-					_.filter(data,
-						x => _.includes(potentiallyImpacted, _.get(x, 'managedNeId'))) || [];
+					this.potentiallyImpacted =
+						_.filter(data,
+							x => _.includes(potentiallyImpacted, _.get(x, 'managedNeId'))) || [];
 
-				return this.fetchAssets();
-			}),
-			catchError(err => {
-				this.logger.error('advisory-details:impacted-assets.component : ' +
-				 `fetchSystemAsset() :: Error : (${err.status}) ${err.message}`);
+					return this.fetchAssets();
+				}),
+				catchError(err => {
+					this.logger.error('advisory-details:impacted-assets.component : ' +
+						`fetchSystemAsset() :: Error : (${err.status}) ${err.message}`);
 
-				return of({ });
-			}),
-		)
-		.subscribe(() => {
-			this.assets.emit({
-				assets: this.impactedAssets,
-				impacted: this.impacted,
-				potentiallyImpacted: this.potentiallyImpacted,
+					return of({});
+				}),
+			)
+			.subscribe(() => {
+				this.assets.emit({
+					assets: this.impactedAssets,
+					impacted: this.impacted,
+					potentiallyImpacted: this.potentiallyImpacted,
+				});
+				this.impactedCount.emit(this.impacted.length + this.potentiallyImpacted.length);
+				this.isLoading = false;
 			});
-			this.impactedCount.emit(this.impacted.length + this.potentiallyImpacted.length);
-			this.isLoading = false;
-		});
 	}
 
 	/**
@@ -153,22 +156,22 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 			_.map(_.concat(this.impacted, this.potentiallyImpacted), 'serialNumber'));
 
 		if (!serials.length) {
-			return of({ });
+			return of({});
 		}
 		_.set(this.params.assets, 'serialNumber', serials);
 
 		return this.inventoryService.getHardwareAssets(this.params.assets)
-		.pipe(
-			map((response: HardwareAssets) => {
-				this.impactedAssets = _.get(response, 'data', []);
-			}),
-			catchError(err => {
-				this.logger.error('advisory-details:impacted-assets.component : fetchAssets() ' +
-					`:: Error : (${err.status}) ${err.message}`);
+			.pipe(
+				map((response: HardwareAssets) => {
+					this.impactedAssets = _.get(response, 'data', []);
+				}),
+				catchError(err => {
+					this.logger.error('advisory-details:impacted-assets.component : fetchAssets() ' +
+						`:: Error : (${err.status}) ${err.message}`);
 
-				return of({ });
-			}),
-		);
+					return of({});
+				}),
+			);
 
 	}
 
@@ -182,35 +185,43 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 		this.potentiallyImpacted = [];
 
 		this.diagnosticsService.getCriticalBugsAssets(this.params.bugAssets)
-		.pipe(
-			mergeMap((response: BugImpactedAssetsResponse) => {
-				this.impacted = _.get(response, 'data', []);
+			.pipe(
+				mergeMap((response: BugImpactedAssetsResponse) => {
+					this.impacted = _.get(response, 'data', []);
+					this.pagination = _.get(response, 'Pagination');					
+					const first = (this.pagination.rows * (this.pagination.page - 1)) + 1;
+					let last = (this.pagination.rows * this.pagination.page);
+					if (last > this.pagination.total) {
+						last = this.pagination.total;
+					}
 
-				return this.fetchAssets();
-			}),
-			catchError(err => {
-				this.logger.error('advisory-details:impacted-assets.component : getAssets() ' +
-					`:: Error : (${err.status}) ${err.message}`);
+					this.paginationCount = `${first}-${last}`;
 
-				return of({ });
-			}),
-		)
-		.subscribe(() => {
-			this.impactedCount.emit(this.impacted.length + this.potentiallyImpacted.length);
-			this.assets.emit({
-				assets: this.impactedAssets,
-				impacted: this.impacted,
-				potentiallyImpacted: this.potentiallyImpacted,
+					return this.fetchAssets();
+				}),
+				catchError(err => {
+					this.logger.error('advisory-details:impacted-assets.component : getAssets() ' +
+						`:: Error : (${err.status}) ${err.message}`);
+
+					return of({});
+				}),
+			)
+			.subscribe(() => {
+				this.impactedCount.emit(this.impacted.length + this.potentiallyImpacted.length);
+				this.assets.emit({
+					assets: this.impactedAssets,
+					impacted: this.impacted,
+					potentiallyImpacted: this.potentiallyImpacted,
+				});
+				this.isLoading = false;
 			});
-			this.isLoading = false;
-		});
 	}
 
 	/**
 	 * refreshes the component
 	 */
 	public refresh () {
-		this.params = { };
+		this.params = {};
 		const defaultOptions = {
 			bordered: true,
 			columns: null,
@@ -407,7 +418,7 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 				cdetId: [this.id],
 				customerId: this.customerId,
 				page: 1,
-				rows: 100,
+				rows: 10,
 				solution: this.selectedSolutionName,
 				useCase: this.selectedTechnologyName,
 			});
@@ -451,23 +462,23 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 	 */
 	public ngOnInit () {
 		this.racetrackInfoService.getCurrentSolution()
-		.pipe(
-			takeUntil(this.destroyed$),
-		)
-		.subscribe((solution: RacetrackSolution) => {
-			this.selectedSolutionName = _.get(solution, 'name');
-		});
+			.pipe(
+				takeUntil(this.destroyed$),
+			)
+			.subscribe((solution: RacetrackSolution) => {
+				this.selectedSolutionName = _.get(solution, 'name');
+			});
 
 		this.racetrackInfoService.getCurrentTechnology()
-		.pipe(
-			takeUntil(this.destroyed$),
-		)
-		.subscribe((technology: RacetrackTechnology) => {
-			if (this.selectedTechnologyName !== _.get(technology, 'name')) {
-				this.selectedTechnologyName = _.get(technology, 'name');
-				this.refresh();
-			}
-		});
+			.pipe(
+				takeUntil(this.destroyed$),
+			)
+			.subscribe((technology: RacetrackTechnology) => {
+				if (this.selectedTechnologyName !== _.get(technology, 'name')) {
+					this.selectedTechnologyName = _.get(technology, 'name');
+					this.refresh();
+				}
+			});
 	}
 
 	/**
@@ -485,5 +496,14 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 	public ngOnDestroy () {
 		this.destroyed$.next();
 		this.destroyed$.complete();
+	}
+
+	/**
+ * Page change handler
+ * @param event the event emitted
+ */
+	public onPageChanged (event: any) {
+		this.params.bugAssets.page = event.page + 1;
+		this.fetchBugAssets();
 	}
 }
