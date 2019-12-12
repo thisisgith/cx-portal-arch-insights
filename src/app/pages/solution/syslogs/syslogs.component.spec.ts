@@ -123,6 +123,7 @@ describe('SyslogsComponent', () => {
 			loading: false,
 			seriesData: [{
 				filter: 'afmSeverity',
+				filterName: '',
 				label: 'string',
 				selected: false,
 				value: 1,
