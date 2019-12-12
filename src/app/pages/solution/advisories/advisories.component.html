@@ -8,7 +8,7 @@
 
 		<cui-tab *ngFor="let tab of tabs" [label]="tab.label" [disabled]="tab.disabled">
 			<ng-container *ngIf="selectedTab.filters.length">
-				<visual-filter-bar [filters]="tab.filters" [filterCollapse]="filterCollapse"></visual-filter-bar>
+				<visual-filter-bar [hideCarouselArrow]="tab.hideCarouselArrow" [filters]="tab.filters" [filterCollapse]="filterCollapse"></visual-filter-bar>
 			</ng-container>
 		</cui-tab>
 

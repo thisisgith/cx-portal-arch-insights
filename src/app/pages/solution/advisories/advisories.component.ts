@@ -50,6 +50,7 @@ interface Tab {
 		FieldNoticeAdvisory[] |
 		CriticalBug[];
 	disabled?: boolean;
+	hideCarouselArrow: boolean;
 	key: string;
 	label: string;
 	loading: boolean;
@@ -243,6 +244,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 						title: I18n.get('_Updated_'),
 					},
 				],
+				hideCarouselArrow: false,
 				key: 'security',
 				label: I18n.get('_SecurityAdvisories_'),
 				loading: true,
@@ -323,6 +325,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 						title: I18n.get('_Updated_'),
 					},
 				],
+				hideCarouselArrow: false,
 				key: 'field',
 				label: I18n.get('_FieldNotices_'),
 				loading: true,
@@ -396,6 +399,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 						title: I18n.get('_Total_'),
 					},
 				],
+				hideCarouselArrow: true,
 				key: 'bug',
 				label: I18n.get('_PriorityBugs_'),
 				loading: true,
