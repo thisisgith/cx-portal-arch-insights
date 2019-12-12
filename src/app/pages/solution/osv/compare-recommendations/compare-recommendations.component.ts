@@ -35,6 +35,8 @@ export class CompareRecommendationsComponent implements OnChanges {
 		M: I18n.get('_OsvM_'),
 		L: I18n.get('_OsvL_'),
 	};
+	public showNoBugsMessage  = false;
+	public noBugsMessage = '';
 
 	/**
 	 * lifecycle hook
@@ -86,6 +88,14 @@ export class CompareRecommendationsComponent implements OnChanges {
 		this.machineRecommendations = _.filter(recommendations,
 			(recomm: MachineRecommendations) => recomm.name !== 'profile current');
 		this.sortData(this.machineRecommendations);
+		let recommdationsBugCount = 0;
+		_.forEach(this.machineRecommendations, (recomm: MachineRecommendations) => {
+			recommdationsBugCount += _.get(recomm , ['bugs'], []).length;
+		});
+		if (recommdationsBugCount === 0) {
+			this.showNoBugsMessage = true;
+			this.noBugsMessage = `0 ${I18n.get('_Bugs_')}`;
+		}
 	}
 
 	/**
