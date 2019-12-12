@@ -41,4 +41,10 @@ describe('FingerprintDetailsComponent', () => {
 		expect(panelCloseSpy)
 			.toHaveBeenCalled();
 	});
+
+	it('should close all panel', () => {
+		component.onAllPanelsClose();
+		expect(component.showAssetDetailsView)
+			.toBeDefined();
+	});
 });
