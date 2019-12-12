@@ -100,7 +100,7 @@ export class OpenCasesComponent {
 	public onClickCase (caseId: string) {
 		this.router.navigate(
 			['solution/resolution'],
-			{ queryParams: { case: caseId, serial: this.serial } },
+			{ queryParams: { case: caseId, serialNumber: this.serial } },
 		);
 	}
 
