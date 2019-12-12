@@ -16,7 +16,7 @@ import {
 const api = '/api/customerportal/osv-ui/v1/';
 
 /** Default Customer ID */
-const customerId = '2431199';
+const customerId = '2431199_0';
 
 /** Mock pid */
 const pid = 'AIR-CT5520-K9';
@@ -402,7 +402,7 @@ const mockMachineRecommendations: MachineRecommendationsResponse = [
 	{
 		bugs: [
 			{
-				id: 'CSCvr05056',
+				id: 'CSCvp81190',
 				severity: 'High',
 				source: 'SLM',
 				status: 'RESOLVED',
@@ -1278,7 +1278,7 @@ export const OSVScenarios = [
 				},
 			],
 		},
-		url: `${api}summary?customerId=${customerId}&solution=IBN&useCase=Campus Network Assurance`,
+		url: `${api}summary?customerId=${customerId}`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -1296,8 +1296,7 @@ export const OSVScenarios = [
 			],
 		},
 		url: `${api}profiles?customerId=${customerId}${sgParams}` +
-			'&filter=recommendationType:automated&search=' +
-			'&solution=IBN&useCase=Campus Network Assurance',
+			'&filter=recommendationType:automated&search=',
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -1315,7 +1314,7 @@ export const OSVScenarios = [
 			],
 		},
 		url: `${api}versions?customerId=${customerId}${svParams}` +
-			'&search=&solution=IBN&useCase=Campus Network Assurance',
+			'&search=',
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -1332,7 +1331,7 @@ export const OSVScenarios = [
 				},
 			],
 		},
-		url: `${api}assetDetails?customerId=2431199&profileName=${assetId}&pid=${pid}` +
+		url: `${api}assetDetails?customerId=${customerId}&profileName=${assetId}&pid=${pid}` +
 			`&pf=${pf}&swType=IOS&swVersion=8&image=NA&postDate=null`,
 		usecases: ['Use Case 1'],
 	},
@@ -1351,7 +1350,7 @@ export const OSVScenarios = [
 			],
 		},
 		url: `${api}assets?customerId=${customerId}${assetParams}` +
-			'&search=&solution=IBN&useCase=Campus Network Assurance',
+			'&search=',
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -1369,7 +1368,7 @@ export const OSVScenarios = [
 			],
 		},
 		url: `${api}assets?customerId=${customerId}${assetParams}` +
-			'&search=&solution=IBN&useCase=Campus Network Assurance',
+			'&search=',
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -1386,8 +1385,7 @@ export const OSVScenarios = [
 				},
 			],
 		},
-		url: `${api}versions?customerId=${customerId}${svParams}` +
-			'&solution=IBN&useCase=Campus Network Assurance',
+		url: `${api}versions?customerId=${customerId}${svParams}`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -1404,9 +1402,8 @@ export const OSVScenarios = [
 				},
 			],
 		},
-		url: `${api}profileAssets?customerId=2431199&id=7293498_NA` +
-			`&profileName=7293498_NA${sgAssetsParams}` +
-			'&solution=IBN&useCase=Campus Network Assurance',
+		url: `${api}profileAssets?customerId=${customerId}&id=7293498_NA` +
+			`&profileName=7293498_NA${sgAssetsParams}`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -1423,9 +1420,8 @@ export const OSVScenarios = [
 				},
 			],
 		},
-		url: `${api}profileVersions?customerId=2431199&id=7293498_NA` +
-			`&profileName=7293498_NA${sgVerParams}` +
-			'&solution=IBN&useCase=Campus Network Assurance',
+		url: `${api}profileVersions?customerId=${customerId}&id=7293498_NA` +
+			`&profileName=7293498_NA${sgVerParams}`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -1467,7 +1463,7 @@ export const OSVScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 200,
+					delay: 4000,
 					description: 'Bug Details',
 					response: {
 						body: mockBugDetails,
@@ -1477,7 +1473,7 @@ export const OSVScenarios = [
 				},
 			],
 		},
-		url: `${api}bugDetail?bugId=CSCvr05056`,
+		url: `${api}bugDetail?bugId=CSCvp81190`,
 		usecases: ['Use Case 1'],
 	},
 	{

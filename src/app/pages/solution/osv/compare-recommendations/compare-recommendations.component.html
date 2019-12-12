@@ -68,7 +68,21 @@
 			<!-- bugs -->
 			<tr id="bugs-details"  data-auto-id="ShowBugDetails">
 				<td (click)="showDetailsView('bug',0)" data-auto-id="ShowBugDetailsCurrentReleasesTab" class=" first-column-width headingClass no-border-bottom no-border-top text-large  text-primary"
-					[innerText]="'_Bugs_' | i18n">
+					>
+					<div [innerText]="'_Bugs_' | i18n"></div>
+					<div
+						*ngIf="showNoBugsMessage"
+						class="half-margin-top"
+						tooltip
+						[tooltipTemplate]="noBugsTemplate"						
+						[tooltipMaxWidth]="200">
+						<div *ngIf="showNoBugsMessage"
+							class="alert qtr-padding alert--warning fade-and-slide-top text-left">
+								<div class="alert_icon icon-warning-outline icon-small"></div>
+								<div class="text-medium" [innerText]="noBugsMessage"></div>
+						</div>
+					</div>
+					
 				</td>
 				<td (click)="showDetailsView('bug',0)" data-auto-id="ShowBugDetailsCurrentReleasesTab" class="recommendation-current">
 					<div class="base-margin-bottom"
@@ -170,4 +184,8 @@
 <ng-template #notAvailable >
 	<div data-auto-id="BugsNotAvailable" [ngClass]="{'base-padding-top':!fullscreen}" [innerText]="'_OsvNotAvailable_' | i18n">	
 	</div>
+</ng-template>
+
+<ng-template #noBugsTemplate>
+	<span [innerText]="'_OsvNoBugsMessage_' | i18n"></span>
 </ng-template>

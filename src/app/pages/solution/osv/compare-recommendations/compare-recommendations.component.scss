@@ -55,3 +55,11 @@ tr#bugs-details:hover {
 .responsive-table {
 	overflow: unset;
 }
+
+.alert_icon {
+	color: $white;
+	position: absolute;
+	left: -36px;
+	font-size: 24px;
+	top: 0;
+}
