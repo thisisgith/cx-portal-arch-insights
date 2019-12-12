@@ -33,10 +33,10 @@ These commit message standards are inspired but adapted from the following sourc
 - http://karma-runner.github.io/3.0/dev/git-commit-msg.html
 
 #### Length
-The commit title must not exceed 80 characters.
+The commit title and body lines must not exceed 80 characters.
 
 #### Grammar
-Please use proper grammer, including correct spelling and capitalization. The imperative mood must be used throughout the commit description, e.g. "Add the README" instead of "Adds the README".  A good test for this is to complete the sentence: "Applying this commit will...".
+Please use proper grammer, including correct spelling and capitalization. The past tense should be used with your message title. "Added error logs for server...". This way when looking through the git history it will read like a history. If in the commit body you have to use an unrecognized word or file name please use \`backticks\` to avoid the spell checker flagging that word. 
 
 
 #### Format
