@@ -79,7 +79,7 @@ describe('CaseSubmittedComponent', () => {
 		button.nativeElement.click();
 		tick();
 		expect(location.path())
-			.toEqual('/solution/resolution?case=686350456');
+			.toEqual('/solution/resolution?case=686350456&serialNumber=1234');
 	}));
 
 	it('should not build table if there is only one asset', () => {

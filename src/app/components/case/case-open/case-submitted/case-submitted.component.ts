@@ -81,7 +81,7 @@ export class CaseSubmittedComponent {
 	 */
 	public async onViewCase () {
 		await this.router.navigate(['/solution/resolution'], {
-			queryParams: { case: this.caseData.caseNum },
+			queryParams: { case: this.caseData.caseNum, serialNumber: (this.assets && this.assets[0] && this.assets[0].serialNumber) },
 		});
 		this.close();
 	}
