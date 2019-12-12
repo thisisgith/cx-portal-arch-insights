@@ -6,6 +6,7 @@ import { CuiModalService, CuiTableOptions } from '@cisco-ngx/cui-components';
 import { Asset, NetworkElement } from '@sdp-api';
 import { CaseOpenData } from '../caseOpenData';
 import { I18n } from '@cisco-ngx/cui-utils';
+import { SearchService } from '@services';
 
 /**
  * Component to display view after a Case Open submit. Either with success message
@@ -28,6 +29,7 @@ export class CaseSubmittedComponent {
 	constructor (
 		public cuiModalService: CuiModalService,
 		private router: Router,
+		private searchService: SearchService,
 	) { }
 
 	/**
@@ -84,5 +86,6 @@ export class CaseSubmittedComponent {
 			queryParams: { case: this.caseData.caseNum, serialNumber: (this.assets && this.assets[0] && this.assets[0].serialNumber) },
 		});
 		this.close();
+		this.searchService.close();
 	}
 }
