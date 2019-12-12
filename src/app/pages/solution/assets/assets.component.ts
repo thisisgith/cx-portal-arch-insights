@@ -335,7 +335,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 * @returns number of rows
 	 */
 	private getRows () {
-		return this.viewType === 'list' ? 10 : 12;
+		return this.viewType === 'list' ? 10 : 10;
 	}
 
 	/**
