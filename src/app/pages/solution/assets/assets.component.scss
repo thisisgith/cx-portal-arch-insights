@@ -60,6 +60,7 @@
 
 .card-content {
 	justify-content: space-between;
+	display: flex;
 	flex-direction: column;
 }
 
@@ -143,7 +144,7 @@
 }
 
 .row-padding {
-	padding-left: 15px;
+	padding-left: 10px;
 }
 
 .label--circle.label--tiny {
