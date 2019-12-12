@@ -49,6 +49,7 @@ export class TechFormComponent implements OnInit, OnChanges, OnDestroy {
 	public displayAll = false;
 	public displaySuggestions = true;
 	public recommendedTechs: CaseClassifyResponse['predictions'];
+	public predictedSubTech = '';
 
 	private refreshProblemArea$ = new Subject<CaseRequestType>();
 	private refreshSubtech$ = new Subject<string>();
@@ -179,6 +180,10 @@ export class TechFormComponent implements OnInit, OnChanges, OnDestroy {
 		.subscribe(result => {
 			this.loadingSubtech = false;
 			this.subtechOptions = result.subTechList;
+			if (this.displaySuggestions && !_.isEmpty(_.trim(this.predictedSubTech))) {
+				const clonedSubTechOptions = _.cloneDeep(this.subtechOptions);
+				this.form.controls.subtech.setValue(_.filter(clonedSubTechOptions, ['subTechName', this.predictedSubTech])[0]);
+			}
 		});
 
 		this.form.controls.technology.valueChanges.pipe(
@@ -317,10 +322,7 @@ export class TechFormComponent implements OnInit, OnChanges, OnDestroy {
 						_id: value.tech.id,
 						techName: value.tech.name,
 					});
-					this.fetchSubtechByName(value.sub_tech.name)
-					.pipe(takeUntil(this.destroy$))
-					.subscribe(response =>
-						this.form.controls.subtech.setValue(response.subTech));
+					this.predictedSubTech = value.sub_tech.name;
 				} else {
 					this.form.controls.technology.setValue(null);
 					this.form.controls.subtech.setValue(null);
@@ -353,19 +355,4 @@ export class TechFormComponent implements OnInit, OnChanges, OnDestroy {
 		);
 	}
 
-	/**
-	 * Fetches the subtech matching a specific name.
-	 * @param subTechName The name of the subtech to fetch.
-	 * @returns observable with results.
-	 */
-	private fetchSubtechByName (subTechName: string) {
-		return this.caseService.fetchSubTechByName(subTechName)
-			.pipe(
-				catchError(err => {
-					this.logger.error(`Fetch Subtech :: Error ${err}`);
-
-					return of(null);
-				}),
-			);
-	}
 }
