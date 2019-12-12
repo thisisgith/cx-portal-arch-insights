@@ -21,8 +21,6 @@
 </div>
 
 <ng-template #deviceTable let-title="title" let-devices="devices" let-options="options">
-	<!-- <div class="row text-bold text-small text-dkgray-4 qtr-margin-left dbl-margin-top"
-		innerText="{{ title | i18n | uppercase }} ({{ devices.length }})"></div>  -->
 	<div [innerText]="'_PriorityBugsShowingXofYAffectedSystems_' | i18n:paginationCount:pagination?.total"></div>
 	<div class="impactedTable">
 		<cui-table class="qtr-margin-top" [options]="options" [data]="devices"

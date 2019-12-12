@@ -189,14 +189,14 @@ export const CriticalBugAssetsScenarios = [
 					delay: 200,
 					description: 'Critical Bug CSCto03123 Assets',
 					response: {
-						body: MockData(10, 2),
+						body: MockData(15, 2),
 						status: 200,
 					},
 					selected: true,
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&cdetId=CSCto03123&useCase=Campus Network Assurance&solution=IBN&rows=10&page=2`,
+		url: `${api}?customerId=${customerId}&cdetId=CSCto03123&useCase=Campus Network Assurance&solution=IBN&rows=15&page=1`,
 		usecases: ['Use Case 1'],
 	},
 	{

@@ -144,7 +144,7 @@ export const CriticalBugScenarios = [
 					delay: 0,
 					description: 'Critical Bug State Counts - Unreachable',
 					response: {
-						body: {},
+						body: { },
 						status: 503,
 					},
 					selected: false,
@@ -243,7 +243,7 @@ export const CriticalBugScenarios = [
 					delay: 0,
 					description: 'Critical Bugs - Unreachable',
 					response: {
-						body: {},
+						body: { },
 						status: 503,
 					},
 					selected: false,
