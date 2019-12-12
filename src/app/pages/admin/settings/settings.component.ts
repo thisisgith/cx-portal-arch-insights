@@ -18,6 +18,7 @@ import { I18n } from '@cisco-ngx/cui-utils';
 
 import * as _ from 'lodash-es';
 import { SetupIEStateService } from '../../setup-ie/setup-ie-state.service';
+import * as moment from 'moment';
 
 enum SystemInfo {
 	OS_IMAGE = 0,
@@ -100,6 +101,7 @@ export class SettingsComponent implements OnInit {
 	public regulatoryCompliance: object;
 	public isLoading = false;
 	public ieSetupCompleted = false;
+	public lastDataSentStatus: string;
 
 	private user: User;
 
@@ -216,6 +218,7 @@ ${HDDSizeUnit}`;
 			_.get(os_details, 'kubeletVersion');
 
 		this.data.lastUploadDate = _.get(this, 'cpData[0].lastUploadDate');
+		this.getlastUploadDate();
 		this.data.ieStatus = _.get(this, 'cpData[0].ieStatus');
 		this.data.ieVersion = _.get(this, 'cpData[0].ie_version');
 		this.prefixWithV(this.data, 'ieVersion');
@@ -329,5 +332,23 @@ ${HDDSizeUnit}`;
 		this.state.clearState();
 		const params: NavigationExtras = { queryParams: { fromAdmin: true } };
 		this.router.navigate(['/setup-ie'], params);
+	}
+
+	/**
+	 * Function to get last Upload timestamps
+	 */
+	public getlastUploadDate () {
+		const lastUploadDate = moment(this.data.lastUploadDate);
+		const currentUTCTime = moment((new Date()).toUTCString())
+		.utc()
+		.format('YYYY-MM-DDTHH:mm:ss.SSSS');
+		const timeDifferenceinHours = moment(currentUTCTime)
+		.diff(lastUploadDate, 'hours');
+		const timeDifferenceinMinutes = moment(currentUTCTime)
+		.diff(lastUploadDate, 'minutes');
+		this.lastDataSentStatus = timeDifferenceinHours > 24 ? `${moment(currentUTCTime)
+		.diff(lastUploadDate, 'days')} days ago` : timeDifferenceinHours === 0 ?
+		 `${timeDifferenceinMinutes} minutes ago` : `${timeDifferenceinHours} hours ago`;
+
 	}
 }

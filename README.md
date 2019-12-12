@@ -34,6 +34,10 @@ Run `npm run lint` to lint the project.
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
 
 # NOTES
+### Communication Channel and General Guidelines for the CXCP development team
+If you are new to the team, please request to be added in our Webex Teams space  **CXCP: All UI Devs**
+All the general guidelines for the CXCP development team are on this [Confluence Space](https://confluence-eng-sjc1.cisco.com/conf/display/CXD/CX+Dev+Team)
+
 ### Files to Update Upon CUI Change
 
 Current version of CUI is at 1.3.5.

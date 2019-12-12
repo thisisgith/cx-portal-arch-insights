@@ -8,10 +8,7 @@
 			'col-md-6': false,
 			'col-md-12': true
 		}">
-		<div *ngIf="status.loading.overall">
-			<cui-loader></cui-loader>
-		</div>
-		<div *ngIf="!status.loading.overall">
+		<div *ngIf="systemAsset">
 			<div class="text-xlarge cx-text-default device-name" [innerText]="systemAsset?.productFamily || hardwareAsset?.summary?.productFamily" data-auto-id="ProductFamily"></div>
 			<div data-auto-id="YouHaveInventory"
 				class="text-small qtr-margin-top cx-text-gray"

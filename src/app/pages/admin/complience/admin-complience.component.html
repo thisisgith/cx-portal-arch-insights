@@ -42,9 +42,8 @@
 								<div class="col-md-2 half-margin-right">
 								<div class="form-group">
 										<div class="form-group__text select">
-											<select id="select-type-basic" (change)="onPolicySelected($event.target.value)" 
-											[(ngModel)]="saveDetails.body.policy" data-auto-id="PolicySelected">
-											<option [value]="'_AdminPolicySelect_'" [innerText]="'_AdminPolicySelect_' | i18n"></option> 	
+											<select id="select-type-basic" (change)="onPolicySelected(saveDetails.body.policy)" 
+											[(ngModel)]="saveDetails.body.policy" data-auto-id="PolicySelected">	
 											<option *ngFor="let policy of policies"
 											[value]="policy" [innerText]="policy">
 												</option>

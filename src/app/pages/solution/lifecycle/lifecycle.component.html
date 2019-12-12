@@ -499,8 +499,8 @@
 		</div>
 		<div class="divider divider--compressed"></div>
 		<div class="atx-scheduler-description">
-			<div class="line-clamp atx-more-popover__description text-left" [innerText]="data.description"
-				data-auto-id="atxMoreClickModal-Description"></div>
+			<p class="line-clamp atx-more-popover__description text-left" [innerText]="data.description"
+				data-auto-id="atxMoreClickModal-Description"></p>
 			<ng-container *ngIf="data.status === 'scheduled' && scheduledAtxMap[data.atxId]">
 				<div class="cx-lifecycle-card--scheduled qtr-padding-bottom text-left">
 					<span class="icon-calendar" attr.data-auto-id="{{ autoid }}-Calendar"></span>
@@ -543,13 +543,13 @@
 						(click)="selectSession(session)"
 						[ngClass]="{
 							'active': sessionSelected?.sessionStartDate === session.sessionStartDate,
-							'scheduled': session.scheduled
+							'scheduled': sessionSelected?.sessionId === session.sessionId
 						}">
 						<td class="text-size-14 icon">
-							<span class="icon-check" *ngIf="session.scheduled"></span>
+							<span class="icon-check" *ngIf="sessionSelected?.sessionId === session.sessionId"></span>
 						</td>
-						<td class="no-padding-left"
-							innerText="{{session.sessionStartDate | date:'EEE MMM d, y'}}"></td>
+						<td class="no-padding-left"><span class="session-date"
+							innerText="{{session.sessionStartDate | date:'EEE MMM d, y'}}"></span></td>
 						<td innerText="{{session.sessionStartDate | date:'shortTime'}}"></td>
 						<td [innerText]="session.presenterName"></td>
 					</tr>

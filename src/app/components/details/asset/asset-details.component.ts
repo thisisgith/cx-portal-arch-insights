@@ -128,7 +128,6 @@ export class AssetDetailsComponent implements OnDestroy, OnInit, Panel360 {
 
 			const cachedAsset = _.cloneDeep(this.asset);
 			this.asset = null;
-			this.isLoading = true;
 
 			this.headerScanStatus = {
 				error: false,
@@ -137,8 +136,6 @@ export class AssetDetailsComponent implements OnDestroy, OnInit, Panel360 {
 
 			this.fetchSystem()
 			.subscribe(() => {
-				this.isLoading = false;
-
 				if (!this.asset) {
 					// In case our refresh fails, use our previously found asset
 					this.asset = cachedAsset;
@@ -241,6 +238,7 @@ export class AssetDetailsComponent implements OnDestroy, OnInit, Panel360 {
 						hwInstanceId: asset.hwInstanceId,
 					}));
 				});
+
 				return forkJoin(observables);
 			}),
 			map((response: AssetSummary[]) => {
@@ -410,7 +408,6 @@ export class AssetDetailsComponent implements OnDestroy, OnInit, Panel360 {
 			if (currentAsset && !currentSerial) {
 				this.serialNumber = _.get(currentAsset, 'serialNumber');
 			}
-			_.invoke(this.alert, 'hide');
 			this.refresh();
 		}
 	}

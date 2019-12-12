@@ -61,7 +61,7 @@ export class AdminComplienceComponent implements OnInit , DeactivationGuarded, O
 	public saveDetails: AssetTaggingService.PostParams = {
 		body: {
 			customerId: '',
-			policy: '',
+			policy: 'select',
 			tags: [],
 			toBeScanned : false,
 		},
@@ -103,9 +103,8 @@ export class AdminComplienceComponent implements OnInit , DeactivationGuarded, O
 	 * initialize all the tag and policy details
 	 */
 	public initializeDetails () {
-		this.saveDetails.body.policy = 'Select';
+		this.saveDetails.body.policy = 'select';
 		this.saveDetails.body.tags = [];
-		this.saveDetails.body.toBeScanned = false;
 		this.selectedDeviceTagType = 'allDevices';
 	}
 
@@ -118,12 +117,12 @@ export class AdminComplienceComponent implements OnInit , DeactivationGuarded, O
 		this.getOptinOutStatus()
 			.subscribe((results: any) => {
 				this.optlnStatus = results.data.rccOptInStatus;
-				if (this.optlnStatus) {
-					this.getPolicies()
+				// if (this.optlnStatus) {
+				this.getPolicies()
 					.subscribe();
-					this.getLeftSideTags()
+				this.getLeftSideTags()
 						.subscribe();
-				}
+				// }
 			});
 
 		return this.routeAuthService.checkPermissions(this.customerId)
@@ -187,7 +186,6 @@ export class AdminComplienceComponent implements OnInit , DeactivationGuarded, O
 		};
 		forkJoin(
 			this.assetTaggingService.updateOptStatus(params),
-			this.assetTaggingService.deleteMapping(params),
 		)
 		.pipe(
 			takeUntil(this.destroyed$),
@@ -202,7 +200,6 @@ export class AdminComplienceComponent implements OnInit , DeactivationGuarded, O
 		this.cuiModalService.hide();
 		this.toBeScanned = false;
 		this.enableSaveButton = false;
-		this.rightSideTagsResponse.policyGroups = [];
 	}
 	/**
 	 * Function to save opt changes
@@ -249,6 +246,7 @@ export class AdminComplienceComponent implements OnInit , DeactivationGuarded, O
 			  map((results: any) => {
 				  this.policyGroupDetails = results;
 				  this.policies = _.cloneDeep(this.policyGroupDetails.policyGroup);
+				  this.policies.unshift('select');
 			}),
 			catchError(err => {
 				this.logger.error('Policies : getPolicies()' +
@@ -385,7 +383,7 @@ export class AdminComplienceComponent implements OnInit , DeactivationGuarded, O
 		this.triggerModal = 'policy';
 		let showModalFlag = false;
 		this.tagsFromAssetTagging = true;
-		if (this.rightSideTagsResponse && this.rightSideTagsResponse.policyGroups) {
+		if (this.rightSideTagsResponse && this.rightSideTagsResponse.policyGroups && policy !== 'select') {
 			const previousPolicy = policy === 'HIPAA' ? 'PCI' : 'HIPAA';
 			const policyGroup = _.find(this.rightSideTagsResponse.policyGroups,
 				{ policyName: previousPolicy });
@@ -397,14 +395,14 @@ export class AdminComplienceComponent implements OnInit , DeactivationGuarded, O
 				showModalFlag = true;
 			}
 		}
-		if (policy !== 'Select' && !this.enableSaveButton && !this.allInventorySelected && !showModalFlag) {
+		if (policy !== 'select' && !this.enableSaveButton && !this.allInventorySelected && !showModalFlag) {
 			if (this.leftSideTagsResponse) {
 				this.clonedLeftTags = _.cloneDeep(this.leftSideTagsResponse.tags);
 				this.leftSideTags = this.clonedLeftTags;
 				this.getRightSideTags()
 					.subscribe();
 			}
-		} else if (policy !== 'Select' && this.allInventorySelected && this.rightSideTags.length || showModalFlag) {
+		} else if (policy !== 'select' && this.allInventorySelected && this.rightSideTags.length || showModalFlag) {
 			this.cuiModalService.show(this.switchBetweenPolicy, 'normal');
 		} else if (this.enableSaveButton) {
 			this.cuiModalService.show(this.switchBetweenPolicy, 'normal');
@@ -608,11 +606,11 @@ export class AdminComplienceComponent implements OnInit , DeactivationGuarded, O
 	 * @returns with popup
 	 */
 	public canDeactivate (): boolean | Observable <boolean> | Promise <boolean> {
-		if (this.selectedDeviceTagType === 'selectedTags' || this.toBeScanned) {
+		if (this.enableSaveButton) {
 			this.cuiModalService.show(this.switchBetweenCompliance, 'normal');
-		}
 
-		return this.canDeactGuard.navigateAwaySelection$;
+			return this.canDeactGuard.navigateAwaySelection$;
+		}
 	  }
 
 	/**
