@@ -47,7 +47,7 @@ describe('OpenCasesComponent', () => {
 		expect(component.router.navigate)
 			.toHaveBeenCalledWith(
 				['solution/resolution'],
-				{ queryParams: { case: '688296392', serial: 'FOX1306GBAD' } },
+				{ queryParams: { case: '688296392', serialNumber: 'FOX1306GBAD' } },
 			);
 	});
 });

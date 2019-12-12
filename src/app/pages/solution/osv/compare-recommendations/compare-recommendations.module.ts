@@ -7,7 +7,7 @@ import {
 	CuiDropdownModule,
 } from '@cisco-ngx/cui-components';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
-import { BarChartModule } from '@components';
+import { BarChartModule, TooltipModule } from '@components';
 import { CompareRecommendationsComponent } from './compare-recommendations.component';
 
 /**
@@ -24,6 +24,7 @@ import { CompareRecommendationsComponent } from './compare-recommendations.compo
 		BarChartModule,
 		CuiAlertModule,
 		CuiDropdownModule,
+		TooltipModule,
 	],
 })
 export class CompareRecommendationsModule { }

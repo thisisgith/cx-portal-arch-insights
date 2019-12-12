@@ -10,6 +10,7 @@ import { CaseService } from '@cui-x/services';
 import { TechFormComponent } from './tech-form.component';
 import { TechFormModule } from './tech-form.module';
 import { CaseRequestType } from '@classes';
+import { By } from '@angular/platform-browser';
 
 /**
  * Wrapper Component for testing
@@ -138,38 +139,22 @@ describe('TechFormComponent', () => {
 			.toEqual(1);
 	}));
 
-	it('should update tech/subtech form values when a suggested one is picked', fakeAsync(() => {
-		spyOn(caseService, 'fetchSubTechByName')
-			.and
-			.returnValue(
-				of({
-					subTech: {
-						_id: '1941',
-						subTechName: 'Adaptive Security Appliance (ASA) non-VPN problem',
-						techId: '54',
-					},
-				}),
-			);
+	it('should define predictedSubTech when a suggested one is picked', fakeAsync(() => {
 		component.form.controls.suggestedTech.setValue({
 			sub_tech: {
-				id: '1941',
-				name: 'Adaptive Security Appliance (ASA) non-VPN problem',
-				probab: 0.482,
+				id: '2875',
+				name: 'Sourcefire Defense Center / FireSIGHT Management Center',
+				probab: 0.339,
 			},
 			tech: {
-				id: '54',
-				name:
-				'Security - Network Firewalls and Intrusion Prevention Systems',
-				probab: 0.482,
+				id: '62',
+				name: 'Security - Management',
+				probab: 0.339,
 			},
 		});
-		tick();
-		expect(component.form.controls.subtech.value)
-			.toEqual({
-				_id: '1941',
-				subTechName: 'Adaptive Security Appliance (ASA) non-VPN problem',
-				techId: '54',
-			});
+		fixture.detectChanges();
+		expect(component.predictedSubTech)
+			.toBe('Sourcefire Defense Center / FireSIGHT Management Center');
 	}));
 
 	it('should nullify tech/subtech when suggested value is cleared.', fakeAsync(() => {
@@ -192,4 +177,51 @@ describe('TechFormComponent', () => {
 		expect(component.form.controls.subtech.value)
 			.toBeNull();
 	}));
+
+	it('should call onSeeAll() on seeAlloptions click', () => {
+		spyOn(component, 'onSeeAll');
+		const button = fixture.debugElement.query(By.css('a[data-auto-id="SeeAllTechs"]'));
+		button.nativeElement.click();
+
+		expect(component.onSeeAll)
+			.toHaveBeenCalled();
+	});
+
+	it('should falsy displaySuggestion on seeAll', () => {
+		component.displaySuggestions = true;
+		component.onSeeAll();
+
+		fixture.detectChanges();
+		expect(component.displaySuggestions)
+			.toBeFalsy();
+	});
+
+	it('should call refreshPredictions', () => {
+		spyOn(component, 'refreshPredictions');
+		component.displayAll = true;
+		component.onRefreshSuggestions();
+		fixture.detectChanges();
+
+		expect(component.displayAll)
+			.toBeFalsy();
+		expect(component.form.controls.suggestedTech.value)
+			.toBeNull();
+		expect(component.refreshPredictions)
+			.toHaveBeenCalled();
+	});
+
+	it('should display suggestion on collapsing showAll', () => {
+		component.displaySuggestions = false;
+		component.displayAll = false;
+		component.showAllCollapse();
+
+		fixture.detectChanges();
+		expect(component.displaySuggestions)
+			.toBeTruthy();
+
+		component.showSuggestionsCollapse();
+		fixture.detectChanges();
+		expect(component.displayAll)
+			.toBeTruthy();
+	});
 });

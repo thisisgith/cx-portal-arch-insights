@@ -286,8 +286,8 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 			_.set(this.caseParams, 'caseNumbers', params.case);
 		}
 
-		if (params.serial) {
-			_.set(this.caseParams, 'serialNumbers', params.serial);
+		if (params.serialNumber) {
+			_.set(this.caseParams, 'serialNumbers', params.serialNumber);
 		}
 
 		if (params.filter) {

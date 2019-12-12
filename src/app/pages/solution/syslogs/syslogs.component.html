@@ -75,8 +75,9 @@
 						attr.data-auto-id="FilterTag-{{ subfilter.filter }}"
 						(click)="onSubfilterClose(filter)"
 					>
-						<span [innerText]="'_SyslogTitleX_' | i18n : title : subfilter.label | titlecase"></span>
-						<span *ngIf="faultFlag && (filter.key === 'afmSeverity' || filter.key === 'timeRange')" class="icon-close"></span>
+						<span [innerText]="'_SyslogTitleX_' | i18n : title : subfilter.filterName | titlecase"></span>
+						<span *ngIf="(faultFlag && (filter.key === 'afmSeverity' || filter.key === 'timeRange'))
+							|| filter.key === 'severity'" class="icon-close"></span>
 					</span>
 				</ng-container>
 			</ng-container>

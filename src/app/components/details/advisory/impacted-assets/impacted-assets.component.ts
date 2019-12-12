@@ -240,7 +240,7 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 						template: this.ipAddressColumn,
 					},
 					{
-						key: 'swVersion',
+						key: 'osVersion',
 						name: I18n.get('_SoftwareRelease_'),
 						sortable: true,
 						template: this.softwareVersionColumn,
@@ -264,7 +264,7 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 						template: this.ipAddressColumn,
 					},
 					{
-						key: 'swVersion',
+						key: 'osVersion',
 						name: I18n.get('_SoftwareRelease_'),
 						sortable: true,
 						template: this.softwareVersionColumn,
