@@ -58,6 +58,7 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 		firstName: new FormControl(),
 		lastName: new FormControl(),
 	});
+	public downloadImageType: string;
 
 	/**
 	 * Whether or not the CONTINUE button should be disabled
@@ -264,12 +265,10 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 					const images = _.get(response, 'metadata_response.metadata_mdfid_list[0]' +
 						'.software_response_list[0].platform_list[0]' +
 						'.release_list[0].image_details');
-					const nonDeletedImages = _.filter(images, { is_deleted: 'N' });
-					this.imageGuid = _.get(
-						nonDeletedImages,
-						// gets latest non-deleted image
-						`[${nonDeletedImages.length - 1}].image_guid`,
-					);
+					// const nonDeletedImages = _.filter(images, { is_deleted: 'N' });
+					const nonDeletedImages = _.filter(images, image =>  image.is_deleted === 'N' && image.image_guid !== 'null' );
+					this.imageGuid = _.map(nonDeletedImages, ele =>  ele.image_guid)
+					.toString();
 				}),
 			);
 	}
@@ -379,11 +378,20 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 						response,
 						'download_info_list[0].asd_download_url_exception.length',
 					);
+					const download_info_list = _.get(response, 'download_info_list');
+					const selectedDownloadTypeURL = _.find(download_info_list, a => {
+						 if (this.downloadImageType === 'ova' && a.image_full_name.includes('.ova')) {
+							 return a;
+						 }
+						 if (this.downloadImageType === 'vhd' && a.image_full_name.includes('.zip')) {
+							return a;
+						 }
+					});
 					if (!hasError) {
 						const url = decodeURIComponent(
 							// disabling cloud_url temporarily because of prod auth issue
 							// _.get(response, 'download_info_list[0].cloud_url') ||
-							_.get(response, 'download_info_list[0].download_url'),
+							_.get(selectedDownloadTypeURL, 'download_url'),
 						);
 						if (url) {
 							if (/[?]/.test(url)) {
@@ -424,5 +432,12 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 				}),
 				takeUntil(this.destroyed$),
 			);
+	}
+
+	/**
+	 * @param imageType Selected image type to download
+	 */
+	public selectImageType (imageType: string) {
+		this.downloadImageType = imageType;
 	}
 }

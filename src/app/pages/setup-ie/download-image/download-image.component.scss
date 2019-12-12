@@ -1,4 +1,5 @@
 @import '~cisco-ui/src/scss/utilities/_variables.scss';
+@import '~src/variables.scss';
 
 :host {
 	::ng-deep .checkbox__input {
@@ -15,5 +16,35 @@
 	.region-select {
 		max-width: 350px;
 		margin: auto;
+	}
+
+	button.btn.btn--wide {
+		border-radius: 3px;
+		margin-left: 0;
+		width: 250px;
+		margin-top: 6px;
+		padding: 15px;
+		text-align: center;
+		white-space: normal;
+		line-height: $base-spacing;
+		height: unset;
+	}
+
+	button.btn.btn--secondary {
+		color: $default-text-color;
+		font-size: 20px;
+		box-shadow: unset;
+		border: 1px solid #879eba;
+
+		&:hover {
+			background: $default-link-color;
+			color: #fff;
+		}
+
+		&:active,
+		&:focus {
+			background: #016a94;
+			color: #fff;
+		}
 	}
 }

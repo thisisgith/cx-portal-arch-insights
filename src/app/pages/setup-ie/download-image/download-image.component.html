@@ -60,11 +60,28 @@
 			class="xl-margin-bottom"
 			[innerText]="'_DownloadTheOVAFile_' | i18n"
 		></h6>
+		<!-- <div>
+		<button (click)="selectImageType('ova')">OVA</button>
+		<button (click)="selectImageType('vhd')">VHD</button>
+		</div> -->
+		<div class="text-center">
+			<div class="flex flex-center-horizontal half-margin-bottom">
+				<button
+				class="btn btn--wide btn--secondary half-margin-right" 
+				(click)="selectImageType('ova')"
+				>OVA</button>
+				<button 
+				class="btn btn--wide btn--secondary half-margin-right" 
+				(click)="selectImageType('vhd')"
+				>VHD</button>
+			</div>
+		</div>
 		
 		<button
 			data-auto-id="download-image-btn"
 			[innerText]="'_DownloadImage_' | i18n | uppercase"
 			class="btn cx-btn"
+			[disabled]="!downloadImageType"
 			(click)="onDownload()"
 		>
 		</button>
