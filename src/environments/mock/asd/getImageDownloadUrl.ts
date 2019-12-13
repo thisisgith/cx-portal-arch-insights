@@ -406,7 +406,7 @@ const mockData3 = {
 			token: null,
         },
         {
-			download_url: 'http://engci-maven-master.cisco.com/artifactory/services-cf-insight_engine-release/ie/Insight_Engine_1.0/ubuntu/150/CXC_1.0_Build-150-1.zip',
+			download_url: 'http://engci-maven.cisco.com/artifactory/services-cf-group/ie/Insight_Engine_1.0/ubuntu/150/CXC_1.0_Build-150-1.zip',
 			image_guid: '68C7706DB6C727B4C70B0D5F4EFFFF64EDD5C1C8',
 			image_full_name: 'Test_dummy.zip',
 			asd_download_url_exception: [],
