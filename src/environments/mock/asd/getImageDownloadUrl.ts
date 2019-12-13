@@ -406,10 +406,6 @@ const mockData3 = {
 			token: null,
         },
         {
-			// download_url:  'https: //dl.cisco.com/pcgi-bin/swdld/download.cgi?dwnld_code' +
-			// 	'=xhMnkw8Z-oFltDf3axOpBevQIwhNuMOKDsxTEc2t2pV-kWmprHKHpL_sw' +
-			// 	'zsIkRMaK5rZeKt8QjhAx7xyw7oGKDQoZ6-B04shD5gjp1m7z_I0Tw' +
-			// 	'CVZ1XhB22eRCABCOU1BTZL41njHvlNfJzExcRNkE3LxQ3yQSGMlyEN3-zeKqk',
 			download_url: 'http://engci-maven-master.cisco.com/artifactory/services-cf-insight_engine-release/ie/Insight_Engine_1.0/ubuntu/150/CXC_1.0_Build-150-1.zip',
 			image_guid: '68C7706DB6C727B4C70B0D5F4EFFFF64EDD5C1C8',
 			image_full_name: 'Test_dummy.zip',

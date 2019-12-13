@@ -381,10 +381,10 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 					);
 					const download_info_list = _.get(response, 'download_info_list');
 					const selectedDownloadTypeURL = _.find(download_info_list, downloadURL => {
-						 if (this.downloadImageType === 'ova' && downloadURL.image_full_name.includes('.ova')) {
+						 if (this.downloadImageType === 'ova' && (/^.*\.(ova)$/.test(downloadURL.image_full_name))) {
 							 return downloadURL;
 						 }
-						 if (this.downloadImageType === 'vhd' && downloadURL.image_full_name.includes('.zip')) {
+						 if (this.downloadImageType === 'vhd' && (/^.*\.(zip)$/.test(downloadURL.image_full_name))) {
 							return downloadURL;
 						 }
 					});
