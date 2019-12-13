@@ -81,11 +81,12 @@ $text-larger: 1.9rem;
 .header-bar__main {
 	margin-right: unset;
 
-	& .header-heading h5 {
+	& .header-heading h1 {
 		margin-right: 25px;
 		font-size: 1.7rem;
 		letter-spacing: -0.03rem;
 		line-height: 2.3rem;
+		font-weight: 300;
 	}
 }
 
@@ -112,31 +113,6 @@ $text-larger: 1.9rem;
 	font-size: 1.2rem;
 	letter-spacing: -0.034rem;
 	line-height: 1.6rem;
-}
-
-.cx-header-links {
-	position: relative;
-	display: flex;
-	flex-direction: column;
-	height: 38px;
-	margin-right: 15px;
-	align-items: center;
-	justify-content: center;
-	cursor: pointer;
-	user-select: none;
-	text-decoration: unset !important;
-
-	&--active {
-		@extend %cx-header-links--color;
-	}
-
-	&:hover {
-		@extend %cx-header-links--color;
-	}
-
-	&:focus {
-		@extend %cx-header-links--color;
-	}
 }
 
 .cx-header-icon {
@@ -170,85 +146,112 @@ $text-larger: 1.9rem;
 	line-height: 1.4rem;
 }
 
-.cx-header-links--learning {
-	margin-right: 70px;
-}
+.cx-header-links {
+	@include button-reset;
 
-.cx-header-links--portal-help {
-	margin-right: unset;
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	height: 38px;
+	margin-right: 15px;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	user-select: none;
+	text-decoration: unset !important;
 
-	a.text-small {
-		margin-top: 10px;
+	&--settings {
+		margin-right: 15px;
 	}
 
-	.cx-header-arrow {
-		bottom: 0;
-	}
+	&--more {
+		margin-right: unset;
+		width: 3px;
 
-	::ng-deep .cx-header-dropdown {
-		left: 45px;
-	}
-}
-
-.cx-header-links--mock {
-	margin-right: unset;
-
-	a.text-small {
-		margin-top: 10px;
-	}
-
-	::ng-deep .cx-header-dropdown {
-		left: 40px;
-	}
-}
-
-.cx-header-links--teams {
-	a.text-small {
-		margin-left: 8px;
-		padding: unset;
-		line-height: unset;
-
-		&:hover {
-			background-color: unset;
-			text-decoration: underline;
+		::ng-deep .cx-header-dropdown {
+			left: 13px;
 		}
 	}
 
-	::ng-deep .cx-header-dropdown {
-		left: 98px;
-	}
-}
-
-.cx-header-links--user {
-	a {
-		@extend %cx-dropdown-link;
+	&--learning {
+		margin-right: 70px;
 	}
 
-	.cx-user-icon + .cx-header-arrow {
-		bottom: 0;
+	&--active {
+		@extend %cx-header-links--color;
 	}
 
-	::ng-deep .cx-header-dropdown {
-		left: 60px;
+	&:hover {
+		@extend %cx-header-links--color;
+	}
 
-		@media only screen and (max-width: 991px) {
+	&:focus {
+		@extend %cx-header-links--color;
+	}
+
+	&--portal-help {
+		margin-right: unset;
+
+		a.text-small {
+			margin-top: 10px;
+		}
+
+		.cx-header-arrow {
+			bottom: 0;
+		}
+
+		::ng-deep .cx-header-dropdown {
+			left: 45px;
+		}
+	}
+
+	&--user {
+		.cx-user-icon + .cx-header-arrow {
+			bottom: 0;
+		}
+	}
+
+	&--mock {
+		margin-right: unset;
+
+		a.text-small {
+			margin-top: 10px;
+		}
+
+		::ng-deep .cx-header-dropdown {
 			left: 40px;
 		}
 	}
-}
 
-.cx-header-links--settings {
-	margin-right: 15px;
-}
+	&--teams {
+		::ng-deep .cx-header-dropdown {
+			left: 98px;
+		}
 
-.cx-header-links--more {
-	margin-right: unset;
-	width: 3px;
+		.pull-right ::ng-deep .cx-header-dropdown {
+			max-width: none;
+			width: 320px;
+			padding-left: 20px;
+			padding-right: 20px;
+		}
+	}
 
-	::ng-deep .cx-header-dropdown {
-		left: 13px;
+	&--user,
+	&--teams {
+		+ .pull-right ::ng-deep .cx-header-dropdown {
+			.cx-dropdown-close {
+				@include button-reset;
+
+				cursor: pointer;
+			}
+
+			a {
+				@extend %cx-dropdown-link;
+			}
+		}
 	}
 }
+
 
 .cx-search-button {
 	cursor: pointer;

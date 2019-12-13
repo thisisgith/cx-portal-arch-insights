@@ -61,13 +61,12 @@
 <ng-template #breadcrumbs>
 	<div class="container">
 		<div class="cs flex flex-fluid flex-center-vertical">
-			<div
+			<button
 				data-auto-id="HomeButton"
 				class="cs__home"
 				inlineSVG="assets/icons/icon-home.svg"
 				(click)="goHome()"
-			>
-			</div>
+			></button>
 			<div
 				class="cs__next-icon"
 				inlineSVG="assets/icons/icon-arrow-breadcrumb.svg"
@@ -80,17 +79,28 @@
 					class="dropdown"
 					data-auto-id="SmartAccountDropdown"
 					[ngClass]="{'active': status.dropdowns.smartAccount }"
-					(click)="changeDropdownSelection('smartAccount')"
 				>
-					<a appClickOutside (clickOutside)="clickOutsideDropdown('smartAccount')" class="text-color-dkgray text-size-18" [innerText]="activeSmartAccount.companyName"></a>
+					<button 
+						appClickOutside 
+						(clickOutside)="clickOutsideDropdown('smartAccount')"
+						(click)="changeDropdownSelection('smartAccount')"
+						class="text-color-dkgray text-size-18" 
+						[innerText]="activeSmartAccount.companyName"
+						data-auto-id="SmartAccountDropdown--button"
+					></button>
 					<div class="dropdown__menu">
-						<a *ngFor="let smartAccount of smartAccounts"
+						<span class="sr-only">
+							{{ '_RefreshPage_' | i18n }}
+						</span>
+						<button
+						 	*ngFor="let smartAccount of smartAccounts"
 							attr.data-auto-id="SmartAccountDropdown-{{ smartAccount.companyName }}"
 							(click)="changeSmartAccount(smartAccount.companyId)"
 							[ngClass]="{'selected': activeSmartAccount.companyName === smartAccount.companyName}"
+							class="dropdown__menu-button"
 						>
 							{{ smartAccount.companyName }}
-						</a>
+					</button>
 					</div>
 				</div>
 			</div>
@@ -101,21 +111,27 @@
 					class="dropdown"
 					data-auto-id="SolutionDropdown"
 					[ngClass]="{'active': status.dropdowns.solution }"
-					(click)="changeDropdownSelection('solution')"
 				>
-					<a appClickOutside (clickOutside)="clickOutsideDropdown('solution')" class="text-color-dkgray text-size-18" [innerText]="selectedSolution.name"></a>
+					<button 
+						appClickOutside 
+						(clickOutside)="clickOutsideDropdown('solution')" 
+						(click)="changeDropdownSelection('solution')"
+						class="text-color-dkgray text-size-18" 
+						[innerText]="selectedSolution.name"
+						data-auto-id="SolutionDropdown--button"
+					></button>
 					<div class="dropdown__menu">
-						<a
+						<button
 							*ngFor="let solution of solutions"
 							attr.data-auto-id="SolutionDropdown-{{ solution.name }}"
-							class="text-uppercase"
 							(click)="changeSolution(solution)"
+							class="dropdown__menu-button text-uppercase"
 							[ngClass]="{
 								'selected': selectedSolution.name === solution.name
 							}"
 							[innerText]="solution.name"
 						>
-						</a>
+						</button>
 					</div>
 				</div>
 			</div>
@@ -130,17 +146,24 @@
 					class="dropdown"
 					data-auto-id="UseCaseDropdown"
 					[ngClass]="{'active': status.dropdowns.technology }"
-					(click)="changeDropdownSelection('technology')"
+					
 				>
-					<a appClickOutside (clickOutside)="clickOutsideDropdown('technology')" class="text-color-dkgray text-size-18" [innerText]="selectedTechnology.name">
-					</a>
+					<button 
+						appClickOutside 
+						(clickOutside)="clickOutsideDropdown('technology')" 
+						class="text-color-dkgray text-size-18" 
+						[innerText]="selectedTechnology.name"
+						(click)="changeDropdownSelection('technology')"
+						data-auto-id="UseCaseDropdown--button"
+					></button>
 					<div class="dropdown__menu">
-						<a *ngFor="let technology of technologies"
+						<button *ngFor="let technology of technologies"
 							attr.data-auto-id="TechnologyDropdown-{{ technology.name }}"
 							(click)="changeTechnology(technology)"
 							[ngClass]="{ 'selected': selectedTechnology.name === technology.name }"
-							[innerText]="technology.name">
-						</a>
+							[innerText]="technology.name"
+							class="dropdown__menu-button"
+						></button>
 					</div>
 				</div>
 			</div>
