@@ -293,24 +293,28 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 		return (timeRangeFilter.seriesData = [
 			{
 				filter: '1',
+				filterName: I18n.get('_SyslogDay1_'),
 				label: I18n.get('_SyslogDay1_'),
 				selected: false,
 				value: timeRangeCount.days_1,
 			},
 			{
 				filter: '7',
+				filterName: I18n.get('_SyslogDays7_'),
 				label: I18n.get('_SyslogDays7_'),
 				selected: false,
 				value: timeRangeCount.days_7,
 			},
 			{
 				filter: '15',
+				filterName: I18n.get('_SyslogDays15_'),
 				label: I18n.get('_SyslogDays15_'),
 				selected: false,
 				value: timeRangeCount.days_15,
 			},
 			{
 				filter: '30',
+				filterName: I18n.get('_SyslogDays30_'),
 				label: I18n.get('_SyslogDays30_'),
 				selected: false,
 				value: timeRangeCount.days_30,
@@ -329,12 +333,14 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 		return (faultsFilter.seriesData = [
 			{
 				filter: 'Automated',
+				filterName: I18n.get('_AfmAutomated_'),
 				label: `${I18n.get('_AfmAutomated_')}(${stateCount.Active})`,
 				selected: false,
 				value: stateCount.Active,
 			},
 			{
 				filter: 'Detected',
+				filterName: I18n.get('_AfmDetected_'),
 				label: `${I18n.get('_AfmDetected_')}(${stateCount.Inactive})`,
 				selected: false,
 				value: stateCount.Inactive,
@@ -353,48 +359,56 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 		return (severityFilter.seriesData = [
 			{
 				filter: '0',
+				filterName: I18n.get('_SyslogSeverity0_'),
 				label: I18n.get('_SyslogSeverity0_'),
 				selected: false,
 				value: severityCount.syslogSeverity0,
 			},
 			{
 				filter: '1',
+				filterName: I18n.get('_SyslogSeverity1_'),
 				label: I18n.get('_SyslogSeverity1_'),
 				selected: false,
 				value: severityCount.syslogSeverity1,
 			},
 			{
 				filter: '2',
+				filterName: I18n.get('_SyslogSeverity2_'),
 				label: I18n.get('_SyslogSeverity2_'),
 				selected: false,
 				value: severityCount.syslogSeverity2,
 			},
 			{
 				filter: '3',
+				filterName: I18n.get('_SyslogSeverity3_'),
 				label: I18n.get('_SyslogSeverity3_'),
 				selected: false,
 				value: severityCount.syslogSeverity3,
 			},
 			{
 				filter: '4',
+				filterName: I18n.get('_SyslogSeverity4_'),
 				label: I18n.get('_SyslogSeverity4_'),
 				selected: false,
 				value: severityCount.syslogSeverity4,
 			},
 			{
 				filter: '5',
+				filterName: I18n.get('_SyslogSeverity5_'),
 				label: I18n.get('_SyslogSeverity5_'),
 				selected: false,
 				value: severityCount.syslogSeverity5,
 			},
 			{
 				filter: '6',
+				filterName: I18n.get('_SyslogSeverity6_'),
 				label: I18n.get('_SyslogSeverity6_'),
 				selected: false,
 				value: severityCount.syslogSeverity6,
 			},
 			{
 				filter: '7',
+				filterName: I18n.get('_SyslogSeverity7_'),
 				label: I18n.get('_SyslogSeverity7_'),
 				selected: false,
 				value: severityCount.syslogSeverity7,
@@ -413,30 +427,35 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 		return (afmSeverityFilter.seriesData = [
 			{
 				filter: 'Critical',
+				filterName: I18n.get('_SyslogCritical_'),
 				label: `${I18n.get('_SyslogCritical_')}(${afmSeverity.critical})`,
 				selected: false,
 				value: afmSeverity.critical,
 			},
 			{
 				filter: 'High',
+				filterName: I18n.get('_SyslogHigh_'),
 				label: `${I18n.get('_SyslogHigh_')}(${afmSeverity.high})`,
 				selected: false,
 				value: afmSeverity.high,
 			},
 			{
 				filter: 'Medium',
+				filterName: I18n.get('_SyslogMedium_'),
 				label: `${I18n.get('_SyslogMedium_')}(${afmSeverity.medium})`,
 				selected: false,
 				value: afmSeverity.medium,
 			},
 			{
 				filter: 'Low',
+				filterName: I18n.get('_SyslogLow_'),
 				label: `${I18n.get('_SyslogLow_')}(${afmSeverity.low})`,
 				selected: false,
 				value: afmSeverity.low,
 			},
 			{
 				filter: 'Informational',
+				filterName: I18n.get('_SyslogInfo_'),
 				label: `${I18n.get('_SyslogInfo_')}(${afmSeverity.information})`,
 				selected: false,
 				value: afmSeverity.information,
@@ -687,13 +706,16 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 	 */
 	public onSubfilterClose (event) {
 		const eventKey = _.get(event, 'key');
-		if (this.faultFlag && (eventKey === 'afmSeverity' || eventKey === 'timeRange')) {
+		if (eventKey === 'severity' || (this.faultFlag
+				&& (eventKey === 'afmSeverity' || eventKey === 'timeRange'))) {
 			const filter = _.find(this.filters, { key: eventKey });
 			_.each(filter.seriesData, f => {
 				f.selected = false;
 			});
-			(eventKey === 'afmSeverity') ?
-				this.appliedFilters.afmSeverity = '' : this.appliedFilters.timeRange = 30;
+			(this.faultFlag) ? (eventKey === 'afmSeverity') ?
+				this.appliedFilters.afmSeverity = '' : this.appliedFilters.timeRange = 30
+				: this.appliedFilters.severity = null;
+
 			this.appliedFilters = _.cloneDeep(this.appliedFilters);
 		   	filter.selected = _.some(filter.seriesData, 'selected');
 		}

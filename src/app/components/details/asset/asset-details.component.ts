@@ -78,6 +78,7 @@ export class AssetDetailsComponent implements OnDestroy, OnInit, Panel360 {
 		error: false, inProgress: false,
 	};
 	public screenWidth = window.innerWidth;
+	public isScanSuccess: boolean;
 
 	private destroyed$: Subject<void> = new Subject<void>();
 	private selectedSolutionName: string;
@@ -123,7 +124,7 @@ export class AssetDetailsComponent implements OnDestroy, OnInit, Panel360 {
 	public handleScanStatus (transaction: TransactionStatusResponse) {
 		if (transaction.status === 'SUCCESS') {
 			this.advisoryReload.next(true);
-
+			this.isScanSuccess = true;
 			this.scanStatus.emit(transaction);
 
 			const cachedAsset = _.cloneDeep(this.asset);
@@ -230,7 +231,7 @@ export class AssetDetailsComponent implements OnDestroy, OnInit, Panel360 {
 				} else {
 					this.tabIndex = 0;
 				}
-				this.tabIndex = (this.selectedView.key === 'system') ? 0 : 1;
+				this.tabIndex = (_.get(this.selectedView, ['key'], null) === 'system') ? 0 : 1;
 				const observables = [];
 				this.hardwareAssets.forEach((asset: HardwareAsset) => {
 					observables.push(this.inventoryService.getAssetSummary({
@@ -321,7 +322,8 @@ export class AssetDetailsComponent implements OnDestroy, OnInit, Panel360 {
 	 * Refreshes our data
 	 */
 	private refresh () {
-		this.isLoading = true;
+		// do not show loader if scan is completed
+		this.isLoading = this.isScanSuccess ? false : true;
 
 		// If our serial number and our asset/element don't match,
 		// we need to unset them so we can re-fetch them

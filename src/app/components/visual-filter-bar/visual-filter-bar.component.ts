@@ -24,6 +24,7 @@ export class VisualFilterBarComponent implements OnInit {
 	@ViewChild('carousel', { static: false }) public carouselRef: ElementRef;
 	@Input() public filters: VisualFilter[];
 	@Input() public filterCollapse = false;
+	@Input() public hideCarouselArrow = false;
 	/* starting index for the carousel. If no custom card is provided,
 	we fill that static slot with the first card,
 	so the carousel starts at the 2nd one (index 1) */
