@@ -529,7 +529,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				customerId: this.customerId,
 				page: 1,
 				rows: this.getRows(),
-				sort: ['deviceName:DESC', 'productId:DESC'],
+				sort: ['deviceName:DESC', 'equipmentType:ASC', 'productId:DESC'],
 			},
 			searchLabel: '_HardwareComponents_',
 			searchTemplate: this.hardwareSearchTemplate,
