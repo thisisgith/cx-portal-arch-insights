@@ -64,11 +64,13 @@
 		<div class="text-center half-margin-top">
 			<div class="flex flex-center-horizontal half-margin-bottom">
 				<button
+				data-auto-id="download-ova-image"
 				[innerText]="'_OVA_Button_' | i18n"
 				class="btn btn--wide btn--secondary half-margin-right" 
 				(click)="selectImageType('ova')"
 				></button>
 				<button 
+				data-auto-id="download-hyper-v-image"
 				[innerText]="'_Hyper_V_Button_' | i18n"
 				class="btn btn--wide btn--secondary half-margin-right" 
 				(click)="selectImageType('vhd')"

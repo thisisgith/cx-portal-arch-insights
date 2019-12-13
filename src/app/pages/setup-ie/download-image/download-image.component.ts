@@ -268,7 +268,7 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 						'.software_response_list[0].platform_list[0]' +
 						'.release_list[0].image_details');
 					// const nonDeletedImages = _.filter(images, { is_deleted: 'N' });
-					const nonDeletedImages = _.filter(images, image =>  image.is_deleted === 'N' && image.image_guid !== 'null' );
+					const nonDeletedImages = _.filter(images, image =>  image.is_deleted === 'N' && image.image_guid !== 'null');
 					this.imageGuid = _.map(nonDeletedImages, ele =>  ele.image_guid)
 					.toString();
 				}),
