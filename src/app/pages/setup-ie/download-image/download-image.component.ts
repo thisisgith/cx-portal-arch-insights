@@ -174,7 +174,9 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 				mergeMap(() => this.commenceDownload()),
 			)
 			.subscribe(() => {
+				this.loading = false;
 				this.view = 'connect';
+				this.downloadImageType = null;
 			});
 	}
 
@@ -355,7 +357,6 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 				vaId: 0,
 			})
 			.pipe(
-				finalize(() => this.loading = false),
 				catchError(() => {
 					this.showError(I18n.get('_AnErrorOccurredDuringDownload_'));
 
@@ -379,12 +380,12 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 						'download_info_list[0].asd_download_url_exception.length',
 					);
 					const download_info_list = _.get(response, 'download_info_list');
-					const selectedDownloadTypeURL = _.find(download_info_list, a => {
+					const selectedDownloadTypeURL = _.find(download_info_list, downloadURL => {
 						 if (this.downloadImageType === 'ova' && a.image_full_name.includes('.ova')) {
-							 return a;
+							 return downloadURL;
 						 }
 						 if (this.downloadImageType === 'vhd' && a.image_full_name.includes('.zip')) {
-							return a;
+							return downloadURL;
 						 }
 					});
 					if (!hasError) {
