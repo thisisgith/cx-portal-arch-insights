@@ -158,6 +158,9 @@ describe('CrashedSystemsGridComponent', () => {
 		component.sortTableData(sortObj, [sortObj], tableData);
 		expect(component.sortTableData)
 			.toHaveBeenCalled();
+		sortObj.sortDirection = 'desc';
+		component.sortTableData(sortObj, [sortObj], tableData);
+		expect(component.sortTableData)
+					.toHaveBeenCalled();
 	});
-
 });

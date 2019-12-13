@@ -7,9 +7,10 @@ import { FpIntelligenceService } from '@sdp-api';
 import { environment } from '@environment';
 import { ActivatedRoute } from '@angular/router';
 import { user, ComparisonViewScenarios } from '@mock';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SimpleChanges, SimpleChange } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 
 describe('FpSimilarassetsComponent', () => {
 	let component: FpSimilarAssetsComponent;
@@ -175,5 +176,21 @@ describe('FpSimilarassetsComponent', () => {
 				done();
 			});
 	});
-
+	it('should call asset api and return error response', () => {
+		component.comparisonInfo = null;
+		component.seriesDataLoading = true ;
+		const error = {
+			status: 404,
+			statusText: 'Resource not found',
+		};
+		spyOn(fpIntelligenceService, 'getSimilarDevices')
+		.and
+		.returnValue(throwError(new HttpErrorResponse(error)));
+		fixture.detectChanges();
+		component.loadSimilarDevicesData();
+		expect(component.seriesDataLoading)
+		.toBeFalsy();
+		expect(component.noData)
+		.toBeTruthy();
+	});
 });

@@ -8,7 +8,7 @@ import * as _ from 'lodash-es';
 import { HttpHeaders } from '@angular/common/http';
 
 /** The customerId */
-const customerId = '2431199';
+const customerId = '2431199_0';
 
 /** base API for user info */
 const api = '/api/customerportal/diagnostics/v1/critical-bugs';
@@ -68,10 +68,10 @@ export const CriticalBugData: CriticalBug[] = [
 		"swVersion": "16.8.1a",
 		"assetsImpacted": 416,
 		"cdets": {
-				"headline": "C9407R - C9400-PWR-3200AC Power Supply goes into faulty state randomly ( \"n.a.\" )",
-				"severity": "3"
+			"headline": "C9407R - C9400-PWR-3200AC Power Supply goes into faulty state randomly ( \"n.a.\" )",
+			"severity": "3"
 		}
-}
+	}
 	/* tslint:enable */
 ];
 

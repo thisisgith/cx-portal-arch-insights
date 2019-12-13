@@ -1211,7 +1211,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				if (gt36Value) {
 					series.push({
 						filter: 'gt-36-months',
-						filterValue: [`${_.get(sub36, 'fromTimestampInMillis')}`],
+						filterValue: [`${_.get(gt36, 'fromTimestampInMillis')}`],
 						label: `36+ ${_.lowerCase(I18n.get('_Months_'))}`,
 						selected: false,
 						value: gt36Value,
