@@ -361,13 +361,19 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 						sortDirection: 'asc',
 						sorting: true,
 						template: this.deviceColumn,
-						width: '300px',
+						width: '225px',
 					},
 					{
 						key: 'ipAddress',
 						name: I18n.get('_IPAddress_'),
 						sortable: true,
 						template: this.ipAddressColumn,
+					},
+					{
+						key: 'productId',
+						name: I18n.get('_ProductID_'),
+						sortable: true,
+						template: this.productIdColumn,
 					},
 					{
 						key: 'softwareVersion',
@@ -391,6 +397,12 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 						name: I18n.get('_IPAddress_'),
 						sortable: true,
 						template: this.ipAddressColumn,
+					},
+					{
+						key: 'productId',
+						name: I18n.get('_ProductID_'),
+						sortable: true,
+						template: this.productIdColumn,
 					},
 					{
 						key: 'softwareVersion',
