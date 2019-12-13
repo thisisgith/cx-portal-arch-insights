@@ -462,8 +462,11 @@ export class AssetDetailsHardwareComponent implements OnInit, OnChanges, OnDestr
 
 				if (lastDateOfSupport) {
 					const ldosTime = DateTime.fromISO(lastDateOfSupport);
-
-					if (ldosTime.diffNow('months').months < 6) {
+					if (ldosTime.diffNow('months').months < 0) {
+						todayClass = 'label label--danger';
+						_.set(asset, ['eol', 'lastSupportDataPassed'], true);
+						_.set(asset, ['eol', 'lastSupportDataPassedLabel'], 'danger');
+					} else if (ldosTime.diffNow('months').months < 6) {
 						todayClass = 'label label--danger';
 						_.set(asset, ['eol', 'ldosAnnouncement'], true);
 						_.set(asset, ['eol', 'ldosAnnouncementLabel'], 'danger');
