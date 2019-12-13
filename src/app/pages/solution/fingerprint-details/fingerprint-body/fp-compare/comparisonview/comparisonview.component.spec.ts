@@ -204,5 +204,9 @@ describe('ComparisonviewComponent', () => {
 		component.loadData();
 		expect(component.compareviewLoading)
 		.toBeFalsy();
+		expect(component.softwareData)
+		.toBeNull();
+		expect(component.featuresData)
+		.toBeNull();
 	});
 });

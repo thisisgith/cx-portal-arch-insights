@@ -3,10 +3,12 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FingerprintDetailsComponent } from './fingerprint-details.component';
 import { FingerprintDetailsModule } from './fingerprint-details.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { DetailsPanelStackService } from '@services';
 
 describe('FingerprintDetailsComponent', () => {
 	let component: FingerprintDetailsComponent;
 	let fixture: ComponentFixture<FingerprintDetailsComponent>;
+	let detailsPanelStackService: DetailsPanelStackService;
 
 	configureTestSuite(() => {
 		TestBed.configureTestingModule({
@@ -17,6 +19,7 @@ describe('FingerprintDetailsComponent', () => {
 	});
 
 	beforeEach(() => {
+		detailsPanelStackService = TestBed.get(DetailsPanelStackService);
 		fixture = TestBed.createComponent(FingerprintDetailsComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
@@ -42,9 +45,10 @@ describe('FingerprintDetailsComponent', () => {
 			.toHaveBeenCalled();
 	});
 
-	it('should close all panel', () => {
+	it('should reset stack service', () => {
+		spyOn(detailsPanelStackService, 'reset');
 		component.onAllPanelsClose();
-		expect(component.showAssetDetailsView)
-			.toBeDefined();
+		expect(detailsPanelStackService.reset)
+			.toHaveBeenCalled();
 	});
 });

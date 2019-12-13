@@ -190,5 +190,7 @@ describe('FpSimilarassetsComponent', () => {
 		component.loadSimilarDevicesData();
 		expect(component.seriesDataLoading)
 		.toBeFalsy();
+		expect(component.noData)
+		.toBeTruthy();
 	});
 });
