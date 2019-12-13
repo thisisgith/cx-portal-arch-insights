@@ -12,7 +12,7 @@ import { SimpleChanges, SimpleChange } from '@angular/core';
 import { environment } from '@environment';
 import { ActivatedRoute } from '@angular/router';
 
-describe('CrashedSystemsGridComponent', () => {
+fdescribe('CrashedSystemsGridComponent', () => {
 	let component: CrashedSystemsGridComponent;
 	let fixture: ComponentFixture<CrashedSystemsGridComponent>;
 	let crashRiskGridService: RiskMitigationService;
@@ -158,6 +158,9 @@ describe('CrashedSystemsGridComponent', () => {
 		component.sortTableData(sortObj, [sortObj], tableData);
 		expect(component.sortTableData)
 			.toHaveBeenCalled();
+		sortObj.sortDirection = 'desc';
+		component.sortTableData(sortObj, [sortObj], tableData);
+		expect(component.sortTableData)
+					.toHaveBeenCalled();
 	});
-
 });
