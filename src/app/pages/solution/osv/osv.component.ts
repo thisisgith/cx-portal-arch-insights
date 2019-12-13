@@ -237,6 +237,9 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 					this.dataCounts.assets = response.assets;
 					this.dataCounts.profiles = response.profiles;
 					this.dataCounts.versions = response.versions;
+					if (response.profiles === 0) {
+						this.showProfileInfo = false;
+					}
 					this.decideView(response);
 					this.filterByView();
 					assetTypeFilter.seriesData = _.compact(
