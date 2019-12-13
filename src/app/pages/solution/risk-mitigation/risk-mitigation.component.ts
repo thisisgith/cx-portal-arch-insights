@@ -87,7 +87,6 @@ export class RiskMitigationComponent implements AfterViewInit {
 			.subscribe((technology: RacetrackTechnology) => {
 				this.selectedTechnologyName = _.get(technology, 'name');
 				this.loadData();
-				this.getTotalAssetCount();
 			});
 
 		this.buildFilters();
@@ -124,14 +123,7 @@ export class RiskMitigationComponent implements AfterViewInit {
 			.pipe(
 				takeUntil(this.destroy$),
 				map((results: HighCrashRiskDeviceCount) => {
-					const catalogFilter = _.find(this.filters, { key: 'riskScore' });
-					const isEmpty = Object.values(results.crashRiskDeviceCount)
-					.every(x => (x === 0));
-					if (isEmpty) {
-						catalogFilter.loading = false;
-					} else {
-						this.getRiskScore(results.crashRiskDeviceCount);
-					}
+					this.getRiskScore(results.crashRiskDeviceCount);
 				}),
 				catchError(err => {
 					this.logger.error(
@@ -360,6 +352,11 @@ export class RiskMitigationComponent implements AfterViewInit {
 	 */
 	public getRiskScore (result: HighCrashRiskDeviceTooltip) {
 		const catalogFilter = _.find(this.filters, { key: 'riskScore' });
+		const isEmpty = Object.values(result)
+		.every(x => (x === 0));
+		if (isEmpty) {
+			this.filters = _.filter(this.filters, filter => filter.key !== 'riskScore');
+		}
 
 		return (catalogFilter.seriesData = [
 			{
