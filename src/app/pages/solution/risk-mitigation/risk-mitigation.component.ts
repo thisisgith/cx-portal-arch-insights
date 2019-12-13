@@ -124,7 +124,14 @@ export class RiskMitigationComponent implements AfterViewInit {
 			.pipe(
 				takeUntil(this.destroy$),
 				map((results: HighCrashRiskDeviceCount) => {
-					this.getRiskScore(results.crashRiskDeviceCount);
+					const catalogFilter = _.find(this.filters, { key: 'riskScore' });
+					const isEmpty = Object.values(results.crashRiskDeviceCount)
+					.every(x => (x === 0));
+					if (isEmpty) {
+						catalogFilter.loading = false;
+					} else {
+						this.getRiskScore(results.crashRiskDeviceCount);
+					}
 				}),
 				catchError(err => {
 					this.logger.error(
