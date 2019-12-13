@@ -588,6 +588,7 @@
 	"_FaultAffectedSystems_": "Affected Systems",
 	"_FaultEvents_": "Events",
 	"_FaultShowingXofYFaults_": "Showing {0} of {1} Faults",
+	"_PriorityBugsShowingXofYAffectedSystems_": "Showing {0} of {1} affected systems",
 	"_FaultShowingXofYSystems_": "Showing {0} of {1} Systems",
 	"_FaultXSuccess_": "{0} was successfully ",
 	"_FaultsYMoved_": "moved to {0}",
