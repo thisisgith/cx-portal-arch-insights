@@ -12,7 +12,7 @@ import { SimpleChanges, SimpleChange } from '@angular/core';
 import { environment } from '@environment';
 import { ActivatedRoute } from '@angular/router';
 
-fdescribe('CrashedSystemsGridComponent', () => {
+describe('CrashedSystemsGridComponent', () => {
 	let component: CrashedSystemsGridComponent;
 	let fixture: ComponentFixture<CrashedSystemsGridComponent>;
 	let crashRiskGridService: RiskMitigationService;
