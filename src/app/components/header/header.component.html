@@ -178,7 +178,7 @@
 		</span>
 	</div>
 	<div *ngFor="let link of profileLinks" class="text-small">
-		<a [innerText]="link.name" [href]="link.href"></a>
+		<a [target]="link.target" [innerText]="link.name" [href]="link.href"></a>
 	</div>
 </ng-template>
 
