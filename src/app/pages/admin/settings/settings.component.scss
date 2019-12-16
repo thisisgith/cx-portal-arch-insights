@@ -18,7 +18,7 @@
 			padding-right: 0;
 
 			span {
-				line-height: 21px;
+				line-height: 2.1rem;
 			}
 		}
 	}
@@ -26,9 +26,9 @@
 	.settings {
 		&__title {
 			color: $gray-text-color;
-			font-size: 15px;
+			font-size: 1.5rem;
 			font-weight: 300;
-			line-height: 12px;
+			line-height: 1.2rem;
 			text-transform: uppercase;
 
 			&--margin-top {
@@ -39,7 +39,7 @@
 		&__error {
 			border-left: 2px solid #e2231a;
 			color: $text-dark-gray-2;
-			line-height: 22px;
+			line-height: 2.2rem;
 		}
 
 		&__divider {
@@ -50,25 +50,25 @@
 
 		&__system {
 			&__title {
-				font-size: 14px;
+				font-size: 1.4rem;
 				color: $default-text-color;
-				line-height: 18px;
+				line-height: 1.8rem;
 			}
 
 			&__description {
 				margin-top: 2px;
-				font-size: 13px;
+				font-size: 1.3rem;
 				color: $text-dark-gray-2;
-				line-height: 22px;
+				line-height: 2.2rem;
 			}
 		}
 
 		&__info {
 			&__title {
-				font-size: 11px;
+				font-size: 1.1rem;
 				color: $gray-text-color;
-				letter-spacing: -0.02px;
-				line-height: 12px;
+				letter-spacing: -0.002rem;
+				line-height: 1.2rem;
 				margin-bottom: 4px;
 			}
 		}

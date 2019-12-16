@@ -63,7 +63,7 @@ export class BubbleChartComponent implements OnChanges {
 				borderWidth: 0,
 				footerFormat: '</div>',
 				headerFormat: '<div data-auto-id="{point.key}Tooltip">' +
-					'<span style="font-size: 10px">{point.key}</span><br/>',
+					'<span style="font-size: 1rem">{point.key}</span><br/>',
 				useHTML: true,
 			},
 			chart: {
