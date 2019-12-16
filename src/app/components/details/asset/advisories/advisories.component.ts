@@ -77,6 +77,9 @@ export class AssetDetailsAdvisoriesComponent
 	@ViewChild('fieldNoticeID', { static: true }) private fieldNoticeIDTemplate: TemplateRef<{ }>;
 	@ViewChild('bugID', { static: true }) private bugIDTemplate: TemplateRef<{ }>;
 	@ViewChild('lastUpdated', { static: true }) private lastUpdatedTemplate: TemplateRef<{ }>;
+	@ViewChild('cdetsHealine', { static: true }) private cdetsHeadline: TemplateRef<{ }>;
+	@ViewChild('cdetsStatusTemplate', { static: true }) private cdetsStatusTemplate: TemplateRef<{ }>;
+	@ViewChild('severityTemplate', { static: true }) private severityTemplate: TemplateRef<{ }>;
 
 	public tabs: Tab[];
 	public isLoading = true;
@@ -414,7 +417,7 @@ export class AssetDetailsAdvisoriesComponent
 							sortable: true,
 							template: this.bugIDTemplate,
 							value: 'id',
-							width: '100px',
+							width: '110px',
 						},
 						{
 							key: 'severity',
@@ -422,20 +425,21 @@ export class AssetDetailsAdvisoriesComponent
 							sortable: true,
 							sortDirection: 'asc',
 							sorting: true,
-							template: this.impactTemplate,
+							template: this.severityTemplate,
 							value: 'severity',
+							width: '110px',
 						},
 						{
 							key: 'title',
 							name: I18n.get('_Title_'),
 							sortable: true,
+							template: this.cdetsHeadline,
 							value: 'title',
 						},
 						{
 							key: 'state',
 							name: I18n.get('_Status_'),
-							render: item =>
-								item.state ? _.capitalize(item.state) : I18n.get('_NA_'),
+							template: this.cdetsStatusTemplate,
 							sortable: false,
 						},
 					],
