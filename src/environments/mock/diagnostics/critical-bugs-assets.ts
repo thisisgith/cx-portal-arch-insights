@@ -6,7 +6,7 @@ import {
 import * as _ from 'lodash-es';
 
 /** The customerId */
-const customerId = '2431199';
+const customerId = '2431199_0';
 
 /** base API for user info */
 const api = '/api/customerportal/diagnostics/v1/critical-bugs/assets';
@@ -21,6 +21,106 @@ export const MockBugAssets: ImpactedAsset[] = [
 	},
 	{
 		"hostName": "C6708",
+		"ipAddress": "10.3.1.4",
+		"softwareVersion": "1.3"
+	},
+	{
+		"hostName": "C6709",
+		"ipAddress": "10.3.1.4",
+		"softwareVersion": "1.3"
+	},
+	{
+		"hostName": "C6710",
+		"ipAddress": "10.3.1.4",
+		"softwareVersion": "1.3"
+	},
+	{
+		"hostName": "C6711",
+		"ipAddress": "10.3.1.4",
+		"softwareVersion": "1.3"
+	},
+	{
+		"hostName": "C6712",
+		"ipAddress": "10.3.1.4",
+		"softwareVersion": "1.3"
+	},
+	{
+		"hostName": "C6713",
+		"ipAddress": "10.3.1.4",
+		"softwareVersion": "1.3"
+	},
+	{
+		"hostName": "C6714",
+		"ipAddress": "10.3.1.4",
+		"softwareVersion": "1.3"
+	},
+	{
+		"hostName": "C6715",
+		"ipAddress": "10.3.1.4",
+		"softwareVersion": "1.3"
+	},
+	{
+		"hostName": "C6716",
+		"ipAddress": "10.3.1.4",
+		"softwareVersion": "1.3"
+	},
+	{
+		"hostName": "C6717",
+		"ipAddress": "10.3.1.4",
+		"softwareVersion": "1.3"
+	},
+	{
+		"hostName": "C6718",
+		"ipAddress": "10.3.1.4",
+		"softwareVersion": "1.3"
+	},
+	{
+		"hostName": "C6719",
+		"ipAddress": "10.3.1.4",
+		"softwareVersion": "1.3"
+	},
+	{
+		"hostName": "C6720",
+		"ipAddress": "10.3.1.4",
+		"softwareVersion": "1.3"
+	},
+	{
+		"hostName": "C6721",
+		"ipAddress": "10.3.1.4",
+		"softwareVersion": "1.3"
+	},
+	{
+		"hostName": "C6722",
+		"ipAddress": "10.3.1.4",
+		"softwareVersion": "1.3"
+	},
+	{
+		"hostName": "C6723",
+		"ipAddress": "10.3.1.4",
+		"softwareVersion": "1.3"
+	},
+	{
+		"hostName": "C6724",
+		"ipAddress": "10.3.1.4",
+		"softwareVersion": "1.3"
+	},
+	{
+		"hostName": "C6725",
+		"ipAddress": "10.3.1.4",
+		"softwareVersion": "1.3"
+	},
+	{
+		"hostName": "C6726",
+		"ipAddress": "10.3.1.4",
+		"softwareVersion": "1.3"
+	},
+	{
+		"hostName": "C6727",
+		"ipAddress": "10.3.1.4",
+		"softwareVersion": "1.3"
+	},
+	{
+		"hostName": "C6728",
 		"ipAddress": "10.3.1.4",
 		"softwareVersion": "1.3"
 	}
@@ -79,7 +179,24 @@ export const CriticalBugAssetsScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&cdetId=CSCto03123&rows=100&page=1`,
+		url: `${api}?customerId=${customerId}&cdetId=CSCto03123&useCase=Campus Network Assurance&solution=IBN&rows=10&page=1`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 200,
+					description: 'Critical Bug CSCto03123 Assets',
+					response: {
+						body: MockData(15, 2),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?customerId=${customerId}&cdetId=CSCto03123&useCase=Campus Network Assurance&solution=IBN&rows=15&page=1`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -96,7 +213,7 @@ export const CriticalBugAssetsScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&cdetId=CSCva61927&rows=100&page=1`,
+		url: `${api}?customerId=${customerId}&cdetId=CSCva61927&useCase=Campus Network Assurance&solution=IBN&rows=10&page=1`,
 		usecases: ['Use Case 1'],
 	},
 ];

@@ -78,6 +78,8 @@ export class BugsDetailsComponent implements OnInit {
 	public hasRecommendation1: boolean;
 	public hasRecommendation2: boolean;
 	public hasRecommendation3: boolean;
+	public timeoutId;
+	public showLoadingMessage = false;
 
 	constructor (private osvService: OSVService,
 		private logger: LogService) {
@@ -714,15 +716,22 @@ export class BugsDetailsComponent implements OnInit {
 	 */
 	public getBugDetails (bug: any) {
 		this.status.isLoadingDetails = true;
+		this.timeoutId = setTimeout(() => {
+			this.showLoadingMessage = true;
+		}, 5000);
 		this.osvService.getBugDetails({ bugId: bug.id })
 		.pipe(
 			takeUntil(this.destroy$),
 			map((response: any) => {
+				this.showLoadingMessage = false;
+				clearTimeout(this.timeoutId);
 				let description  = _.get(response, ['description'], '');
 				description = description.replace(/\n/g, '<br>');
 				bug.description = description ;
 			}),
 			catchError(err => {
+				this.showLoadingMessage = false;
+				clearTimeout(this.timeoutId);
 				this.logger.error('Bug Details ' +
 						`:: Error : (${err.status}) ${err.message}`);
 				this.status.isLoadingDetails = false;

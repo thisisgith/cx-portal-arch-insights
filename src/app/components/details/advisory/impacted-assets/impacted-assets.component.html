@@ -1,59 +1,58 @@
 <div *ngIf="impacted?.length || potentiallyImpacted?.length">
 	<ng-container *ngIf="impacted?.length">
-		<ng-container *ngTemplateOutlet="deviceTable; context: { devices: impacted, options: affectedTable, title: '_Affected_' }"></ng-container>
+		<ng-container
+			*ngTemplateOutlet="deviceTable; context: { devices: impacted, options: affectedTable, title: '_Affected_' }">
+		</ng-container>
 	</ng-container>
 
 	<ng-container *ngIf="potentiallyImpacted?.length">
-		<ng-container *ngTemplateOutlet="deviceTable; context: { devices: potentiallyImpacted, options: potentiallyAffectedTable, title: '_PotentiallyAffected_' }"></ng-container>
+		<ng-container
+			*ngTemplateOutlet="deviceTable; context: { devices: potentiallyImpacted, options: potentiallyAffectedTable, title: '_PotentiallyAffected_' }">
+		</ng-container>
 	</ng-container>
 </div>
 
-<div *ngIf="!(impacted?.length || potentiallyImpacted?.length) && !isLoading"
-	class="flex-center">
+<div *ngIf="!(impacted?.length || potentiallyImpacted?.length) && !isLoading" class="flex-center">
 	<span class="text-xlarge" [innerText]="'_NoImpactedAssetsFound_' | i18n"></span>
 </div>
 
 <div *ngIf="isLoading" class="flex-center">
 	<cui-spinner></cui-spinner>
 </div>
-	
+
 <ng-template #deviceTable let-title="title" let-devices="devices" let-options="options">
-	<div class="row text-bold text-small text-dkgray-4 qtr-margin-left dbl-margin-top"
-		innerText="{{ title | i18n | uppercase }} ({{ devices.length }})"></div> 
+	<div [innerText]="'_PriorityBugsShowingXofYAffectedSystems_' | i18n:paginationCount:pagination?.total"></div>
 	<div class="impactedTable">
-		<cui-table class="qtr-margin-top"
-			[options]="options"
-			[data]="devices"
+		<cui-table class="qtr-margin-top" [options]="options" [data]="devices"
 			(onSortingChanged)="onColumnSort($event)">
 		</cui-table>
+		<div *ngIf="pagination" class="base-margin-top">
+			<cui-pager [page]="pagination.page - 1" [limit]="pagination.rows" [totalItems]="pagination.total || 0"
+				(onPageChanged)="onPageChanged($event)">
+			</cui-pager>
+		</div>
 	</div>
 </ng-template>
 
 <ng-template #deviceColumn let-celldata="celldata">
-	<span class="qtr-margin-right"
-		[title]="getProductTitle(celldata)"
-		*ngIf="getProductIcon(celldata)">
-		<img alt="{{ '_AssetIcon_' | i18n }}"
-			class="icon-asset"
+	<span class="qtr-margin-right" [title]="getProductTitle(celldata)" *ngIf="getProductIcon(celldata)">
+		<img alt="{{ '_AssetIcon_' | i18n }}" class="icon-asset"
 			attr.data-auto-id="DeviceIcon-{{ celldata?.hostName || celldata?.deviceName }}"
 			src="assets/img/assets/device-{{ getProductIcon(celldata) }}.svg">
 	</span>
-	<a *ngIf="celldata?.serialNumber && celldata?.cxLevel"
+	<a *ngIf="celldata?.serialNumber"
 		[innerText]="(celldata?.deviceName || celldata?.hostName) | truncate:false:20"
-		[title]="celldata?.deviceName || celldata?.hostName"
-		[routerLink]="['/solution/assets/system']"
+		[title]="celldata?.deviceName || celldata?.hostName" [routerLink]="['/solution/assets/system']"
 		[queryParams]="{ serialNumber: celldata.serialNumber, select: true }">
 	</a>
-	<span *ngIf="!celldata?.serialNumber || !celldata?.cxLevel"
+	<span *ngIf="!celldata?.serialNumber"
 		[title]="celldata?.deviceName || celldata?.hostName || ('_NA_' | i18n)"
-		[innerText]="(celldata?.deviceName || celldata?.hostName || ('_NA_' | i18n)) | truncate:false:20"
-	>
+		[innerText]="(celldata?.deviceName || celldata?.hostName || ('_NA_' | i18n)) | truncate:false:20">
 	</span>
 </ng-template>
 
 <ng-template #productIdColumn let-celldata="celldata">
-	<span
-		[title]="celldata?.productId || ('_NA_' | i18n)"
+	<span [title]="celldata?.productId || ('_NA_' | i18n)"
 		[innerText]="(celldata?.productId || ('_NA_' | i18n)) | truncate:false:20">
 	</span>
 </ng-template>
@@ -69,23 +68,18 @@
 </ng-template>
 
 <ng-template #ipAddressColumn let-celldata="celldata">
-	<span [title]="celldata?.ipAddress || ('_NA_' | i18n)"
-		[innerText]="celldata?.ipAddress || ('_NA_' | i18n)">
+	<span [title]="celldata?.ipAddress || ('_NA_' | i18n)" [innerText]="celldata?.ipAddress || ('_NA_' | i18n)">
 	</span>
 </ng-template>
 
 <ng-template #serialNumberColumn let-celldata="celldata">
-	<span [title]="celldata?.serialNumber || ('_NA_' | i18n)"
-		[innerText]="celldata?.serialNumber || ('_NA_' | i18n)">
+	<span [title]="celldata?.serialNumber || ('_NA_' | i18n)" [innerText]="celldata?.serialNumber || ('_NA_' | i18n)">
 	</span>
 </ng-template>
 
 <ng-template #recommendedVersionColumn let-celldata="celldata">
 	<!-- TODO: update once it's possible to retrieve the recommended version -->
-	<span
-		[title]="'_NA_' | i18n"
-		[innerText]="'_NA_' | i18n">
+	<span [title]="'_NA_' | i18n" [innerText]="'_NA_' | i18n">
 	</span>
 	<!-- <a><span *ngIf="celldata.recommendedVersion" [innerText]="celldata.recommendedVersion"></span></a> -->
 </ng-template>
-	

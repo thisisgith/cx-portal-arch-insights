@@ -130,6 +130,7 @@ export interface FaultAffectedSystemDetails {
 	serialNumber: string;
 	productId: string;
 	softwareType: string;
+	srStatus: string;
 	tacCaseNo: string;
 	alarmCreatedDate: string;
 	tacCaseCreatedDate: string;

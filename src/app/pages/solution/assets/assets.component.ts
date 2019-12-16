@@ -335,7 +335,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 * @returns number of rows
 	 */
 	private getRows () {
-		return this.viewType === 'list' ? 10 : 12;
+		return this.viewType === 'list' ? 10 : 10;
 	}
 
 	/**
@@ -529,7 +529,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				customerId: this.customerId,
 				page: 1,
 				rows: this.getRows(),
-				sort: ['deviceName:DESC', 'productId:DESC'],
+				sort: ['deviceName:DESC', 'equipmentType:ASC', 'productId:DESC'],
 			},
 			searchLabel: '_HardwareComponents_',
 			searchTemplate: this.hardwareSearchTemplate,
@@ -1211,7 +1211,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				if (gt36Value) {
 					series.push({
 						filter: 'gt-36-months',
-						filterValue: [`${_.get(sub36, 'fromTimestampInMillis')}`],
+						filterValue: [`${_.get(gt36, 'fromTimestampInMillis')}`],
 						label: `36+ ${_.lowerCase(I18n.get('_Months_'))}`,
 						selected: false,
 						value: gt36Value,

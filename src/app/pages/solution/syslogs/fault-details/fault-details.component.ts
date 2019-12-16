@@ -125,6 +125,8 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 	public productIdTemplate: TemplateRef<{ }>;
 	@ViewChild('softwareType', { static: true })
 		public softwareTypeTemplate: TemplateRef<{ }>;
+	@ViewChild('status', { static: true })
+		public statusTemplate: TemplateRef<{ }>;
 	@ViewChild('caseNumber', { static: true })
 		public caseNumberTemplate: TemplateRef<{ }>;
 	@ViewChild('caseCreatedDate', { static: true })
@@ -278,7 +280,7 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 					name: I18n.get('_FaultSystemName_'),
 					sortable: true,
 					template: this.systemNameTemplate,
-					width: '30%',
+					width: '27%',
 				},
 				{
 					name: I18n.get('_FaultProductId_'),
@@ -290,19 +292,25 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 					name: I18n.get('_FaultSoftwareType_'),
 					sortable: true,
 					template: this.softwareTypeTemplate,
-					width: '18%',
+					width: '15%',
+				},
+				{
+					name: I18n.get('_FaultStatus_'),
+					sortable: true,
+					template: this.statusTemplate,
+					width: '10%',
 				},
 				{
 					name: I18n.get('_FaultCaseNumber_'),
 					sortable: true,
 					template: this.caseNumberTemplate,
-					width: '16%',
+					width: '14%',
 				},
 				{
 					name: I18n.get('_FaultDateAndTime'),
 					sortable: true,
 					template: this.caseCreatedDateTemplate,
-					width: '22%',
+					width: '20%',
 				},
 			],
 			dynamicData: true,
@@ -369,13 +377,13 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 	/**
 	 * Connect to Asset details panel
 	 *
-	 * @param serialnumber string
+	 * @param serialNumber string
 	 */
-	public connectToAsset (serialnumber) {
-		this.serialNumber = serialnumber;
+	public connectToAsset (serialNumber) {
+		this.serialNumber = serialNumber;
 		this.assetParams = {
 			customerId: this.searchParams.customerId,
-			serialNumber: [serialnumber],
+			serialNumber: [serialNumber],
 			solution: this.searchParams.solution,
 			useCase: this.searchParams.useCase,
 		};

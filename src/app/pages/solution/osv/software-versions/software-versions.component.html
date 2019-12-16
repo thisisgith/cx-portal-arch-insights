@@ -1,15 +1,22 @@
 <div class="row">
 	<div class="col-md-6 flex flex-fill" >
-		<div class="flex-center-vertical" *ngIf="pagination && softwareVersions?.length > 0">
+		<div class="flex-center-vertical" >
 			<span [innerText]="'_OsvSoftwareVersions_' | i18n" class="text-large"></span>
 			<span 
+				*ngIf="pagination && softwareVersions?.length > 0"
 				[innerText]="'_OsvShowingXofYSoftwareVersions_' | i18n:paginationCount:pagination.total"
+				class="qtr-margin-left text-small text-muted" 
+				data-auto-id="ShowingAssetsCount">
+			</span>
+			<span 
+				*ngIf="versionsCount === 0"
+				[innerText]="'_OsvShowingXSoftwareVersions_' | i18n:0"
 				class="qtr-margin-left text-small text-muted" 
 				data-auto-id="ShowingAssetsCount">
 			</span>
 		</div>
 	</div>
-	<div class="col-md-6">
+	<div class="col-md-6" *ngIf="pagination && softwareVersions?.length > 0">
 		<div class="flex flex-fluid flex-right">
 			<cui-search 
 				placeholder="{{ '_Search_' | i18n }}" 
@@ -23,7 +30,7 @@
 <div class="divider qtr-margin-top"></div>
 <cui-alert [options]="alert"></cui-alert>
 <div *ngIf="versionsCount == 0 || softwareVersions?.length === 0" class="dbl-margin-top text-center text-xlarge dbl-margin-bottom">
-	<span [innerText]="'_InsightsNoResultsFound_' | i18n"></span>
+	<span [innerText]="'_OsvNoSoftwareReleases_' | i18n"></span>
 </div>
 <ng-container *ngTemplateOutlet="tableSoftwareVersion"></ng-container>
 <div *ngIf="pagination && softwareVersions?.length > 0" class="base-margin-top">

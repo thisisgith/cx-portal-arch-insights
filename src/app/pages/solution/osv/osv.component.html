@@ -21,7 +21,7 @@
 
 <div class="panel panel--bordered base-padding-left base-padding-top no-padding-bottom">
 	<insight-tabs></insight-tabs>
-	<visual-filter-bar *ngIf="!status.isLoading" [filters]="filters"></visual-filter-bar>
+	<visual-filter-bar hideCarouselArrow="true" *ngIf="!status.isLoading" [filters]="filters"></visual-filter-bar>
 	<div *ngIf="status.isLoading">
 		<cui-spinner></cui-spinner>
 	</div>

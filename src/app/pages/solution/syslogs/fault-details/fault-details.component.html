@@ -3,7 +3,7 @@
 	(hiddenChange)="handleHidden($event)"
 	[fullscreen]="fullscreen"
 	id="details-panel"
-	[minWidth]="'900px'"
+	[minWidth]="'992px'"
 >
 	<details-panel-header
 		(close)="onAllPanelsClose()"
@@ -188,7 +188,7 @@
 	[asset]="assetLinkInfo?.asset"
     [element]="assetLinkInfo?.element"
 	[serialNumber]="serialNumber"
-	[minWidth]="'900px'"
+	[minWidth]="'992px'"
 	(close)="onPanelClose()"
 >
 </asset-details>
@@ -203,7 +203,7 @@
 
 <details-panel *ngIf="selectedCase" [hidden]="!selectedCase"
 	(hiddenChange)="handleHidden($event)" [fullscreen]="fullscreen"
-	[minWidth]="'900px'">
+	[minWidth]="'992px'">
 	<details-panel-header (close)="detailsClose()" [(fullscreen)]="fullscreen">
 		<div detailsPanelTitle class="text-xlarge"
 			[innerText]="'_RMACaseNumberTitle_' | i18n:selectedCase?.caseNumber"></div>
@@ -223,6 +223,12 @@
 <ng-template #caseCreatedDate let-item="celldata">
 	<span *ngIf="item?.tacCaseCreatedDate; else noTacCase"
 		[innerText]="item.tacCaseCreatedDate"
+	></span>
+</ng-template>
+
+<ng-template #status let-item="celldata">
+	<span *ngIf="item?.srStatus; else noTacCase"
+		[innerText]="item.srStatus"
 	></span>
 </ng-template>
 

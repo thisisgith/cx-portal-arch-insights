@@ -267,10 +267,9 @@
 				</div>
 			</div>
 
-			<div class="card__footer justify-content-between override-selected-z base-margin-top"
-				*ngIf="selectedView.key==='system'">
+			<div class="card__footer justify-content-between override-selected-z base-margin-top">
 				<div>
-					<span *ngIf="item.data?.criticalAdvisories">
+					<span *ngIf="selectedView.key==='system' && item.data?.criticalAdvisories">
 						<span tabindex="0" data-balloon-indigo [attr.data-balloon]="'_CriticalAdvisories_' | i18n"
 							data-balloon-pos="down" 
 							attr.data-auto-id="AdvisoryIcon-{{ item.data?.serialNumber }}">
@@ -281,11 +280,11 @@
 							attr.data-auto-id="AdvisoryCount-{{ item.data?.serialNumber }}">
 						</span>
 					</span>
-					<span *ngIf="item.data?.supportCovered" class="badge-wrapper">
+					<span *ngIf="selectedView.key==='system' && item.data?.supportCovered" class="badge-wrapper">
 						<span tabindex="0" data-balloon-indigo [attr.data-balloon]="'_SupportCoverage_' | i18n"
 							data-balloon-pos="down" 
 							attr.data-auto-id="CoveredIcon-{{ item.data?.serialNumber }}">
-							<span class="icon-headset text-dkgray-4"></span>
+							<span class="icon-headset text-dkgray-4 qtr-padding-right"></span>
 						</span>
 						<span class="badge badge--tiny badge--success icon-check"></span>
 					</span>

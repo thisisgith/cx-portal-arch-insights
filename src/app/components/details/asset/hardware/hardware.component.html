@@ -91,11 +91,17 @@
 			<div class="col-6 flex">
 				<!-- TODO: Real migration options view -->
 			</div>
-			<div *ngIf="item?.eol?.ldosAnnouncement"
+			<div *ngIf="item?.eol?.lastSupportDataPassed; else  eolAnnouncement" 
 				class="col-12 flex">
-				<span class="label label--circle label--tiny qtr-margin-right qtr-margin-top label--{{ item.eol.ldosAnnouncementLabel }}"></span>
-				<span [innerText]="'_ApproachingLDOS_' | i18n:(item.eol.bulletin.lastDateOfSupport | fromNow)"></span>
+				<span class="label label--circle label--tiny qtr-margin-right qtr-margin-top label--{{ item.eol.lastSupportDataPassedLabel }}"></span>
+				<span [innerText]="'_PastLastDateOfSupport_' | i18n"></span>
 			</div>
+			<ng-template #eolAnnouncement >
+				<ng-container *ngIf="item?.eol?.ldosAnnouncement" class="col-12 flex">
+					<span class="label label--circle label--tiny qtr-margin-right qtr-margin-top label--{{ item.eol.ldosAnnouncementLabel }}"></span>
+					<span [innerText]="'_ApproachingLDOS_' | i18n:(item.eol.bulletin.lastDateOfSupport | fromNow)"></span>
+				</ng-container>
+			</ng-template>
 			<div class="col-12 flex" *ngIf="item?.eol?.timelineData && item.eol.timelineData.length">
 				<div class="adjust-eol-filter">
 					<pbc-timeline class="no-margin"

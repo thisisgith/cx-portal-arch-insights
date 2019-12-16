@@ -245,10 +245,12 @@ export class CrashedSystemsGridComponent implements OnChanges {
 	 */
 	public onTableSortingChanged (event) {
 		this.isLoading = true;
-		this.sortTableData(event, this.crashesSystemsGridOptions.columns, this.crashedSystemsGridDetails.tableData);
-		setTimeout(() => {
-			this.isLoading = false;
-		}, 1000);
+		this.crashedSystemsGridDetails.tableData = this.sortTableData(
+			event,
+			this.crashesSystemsGridOptions.columns,
+			this.crashedSystemsGridDetails.tableData,
+			);
+		this.isLoading = false;
 	}
 
 	/**
@@ -273,6 +275,7 @@ export class CrashedSystemsGridComponent implements OnChanges {
 
 		return this.sortDataByField(sortField, tableData);
 	}
+
 	public sortDataByField (sortField, tableData: any[]) {
 		return tableData.sort((a, b) => {
 			if (sortField.sortDirection === 'asc' && sortField.key) {
@@ -285,6 +288,17 @@ export class CrashedSystemsGridComponent implements OnChanges {
 				(valA.toLowerCase() > valB.toLowerCase() ? 1 : valA.toLowerCase() < valB.toLowerCase() ? -1 : 0)
 				: 0;
 			}
+			if (sortField.sortDirection === 'desc' && sortField.key) {
+				const valA = typeof a[sortField.key] !== 'boolean' ?
+					a[sortField.key] : a[sortField.key] ? 0 : 1;
+				const valB = typeof b[sortField.key] !== 'boolean' ?
+					b[sortField.key] : b[sortField.key] ? 0 : 1;
+
+				return (valA && valB)  ?
+				(valA.toLowerCase() < valB.toLowerCase() ? 1 : valA.toLowerCase() > valB.toLowerCase() ? -1 : 0)
+				: 0;
+			}
+
 		});
 	}
 	/**

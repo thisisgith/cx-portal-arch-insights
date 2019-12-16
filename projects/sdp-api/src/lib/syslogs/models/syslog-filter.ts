@@ -10,6 +10,7 @@ export interface SyslogFilter {
 	title: string;
 	loading: boolean;
 	seriesData: {
+		filterName: string;
 		filter: string;
 		label: string;
 		selected: boolean;
