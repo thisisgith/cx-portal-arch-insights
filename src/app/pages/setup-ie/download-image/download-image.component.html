@@ -68,12 +68,14 @@
 				[innerText]="'_OVA_Button_' | i18n"
 				class="btn btn--wide btn--secondary half-margin-right" 
 				(click)="selectImageType('ova')"
+				[ngClass]="{'active-btn': downloadImageType === 'ova'}"
 				></button>
 				<button 
 				data-auto-id="download-hyper-v-image"
 				[innerText]="'_Hyper_V_Button_' | i18n"
 				class="btn btn--wide btn--secondary half-margin-right" 
 				(click)="selectImageType('vhd')"
+				[ngClass]="{'active-btn': downloadImageType === 'vhd'}"
 				>VHD</button>
 			</div>
 		</div>
