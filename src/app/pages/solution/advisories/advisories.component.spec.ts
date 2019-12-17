@@ -298,7 +298,7 @@ describe('AdvisoriesComponent', () => {
 			component.selectTab(_.findIndex(component.tabs, { key: 'security' }));
 
 			const tab = component.selectedTab;
-			component.onSubfilterSelect('critical', _.find(tab.filters, { key: 'severity' }));
+			component.onSubfilterSelect('Critical', _.find(tab.filters, { key: 'severity' }));
 
 			fixture.detectChanges();
 			tick(1000);
