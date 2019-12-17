@@ -3,11 +3,12 @@
 	[hidden]="!selectedSystem"
 	(hiddenChange)="handleHidden($event)"
 	[fullscreen]="fullscreen"
+	[minWidth]="'900px'"
 >
 	<details-panel-header
 		(close)="onPanelClose()"
 		[(fullscreen)]="fullscreen"
-		[fullscreenToggle]="false"
+		[fullscreenToggle]="true"
 	>
 		<div class="half-margin-left">
 			<div class="text-xlarge">
