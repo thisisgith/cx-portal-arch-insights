@@ -317,6 +317,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		this.racetrackInfoService.sendCurrentTechnology(technology);
 		this.racetrackInfoService.sendCurrentAdoptionPercentage(
 				technology.usecase_adoption_percentage);
+		window.localStorage.setItem('activeTechnology', technology.name);
 	}
 
 	public changeSolution (solution: RacetrackSolution) {
