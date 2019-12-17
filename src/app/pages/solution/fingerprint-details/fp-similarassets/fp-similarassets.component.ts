@@ -48,6 +48,7 @@ export class FpSimilarAssetsComponent {
 	public size = 3;
 	public similarityCriteria = 'softwares_features';
 	public noData = false;
+	public error = false;
 	public requestForm: FormGroup = this.fb.group({
 		similarityCriteria: ['softwares_features', Validators.required],
 	});
@@ -212,6 +213,7 @@ export class FpSimilarAssetsComponent {
 				err => {
 					this.seriesDataLoading = false;
 					this.noData = true;
+					this.error = true;
 					this.reqError.emit(I18n.get('_CP_SimilarAssets_Error_'));
 					this.logger.error(err);
 				},
