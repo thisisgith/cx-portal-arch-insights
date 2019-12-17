@@ -15,7 +15,6 @@ import { CaseScenarios } from '@mock';
 import * as _ from 'lodash-es';
 import { AssetPanelLinkService, CaseDetailsService } from '@services';
 import { UserResolve } from '@utilities';
-
 describe('ResolutionComponent', () => {
 	let service: CaseService;
 	let component: ResolutionComponent;
@@ -40,9 +39,8 @@ describe('ResolutionComponent', () => {
 		assetService = TestBed.get(AssetPanelLinkService);
 		userResolve = TestBed.get(UserResolve);
 		caseDetailsService = TestBed.get(CaseDetailsService);
-		spyOn(service, 'read')
-			.and
-			.returnValue(of(CaseScenarios[4].scenarios.GET[0].response.body));
+		jest.spyOn(service, 'read')
+			.mockReturnValue(of(CaseScenarios[4].scenarios.GET[0].response.body));
 		fixture = TestBed.createComponent(ResolutionComponent);
 		component = fixture.componentInstance;
 		router = TestBed.get(Router);
@@ -55,9 +53,8 @@ describe('ResolutionComponent', () => {
 	});
 
 	it('should create', () => {
-		spyOn(userResolve, 'getCustomerId')
-			.and
-			.returnValue(of('104959_0'));
+		jest.spyOn(userResolve, 'getCustomerId')
+			.mockReturnValue(of('104959_0'));
 		const comp_dummy = TestBed.createComponent(ResolutionComponent);
 		const comp_dummy_instance = comp_dummy.componentInstance;
 		comp_dummy.detectChanges();
@@ -71,9 +68,7 @@ describe('ResolutionComponent', () => {
 	});
 
 	it('should refresh on sort', () => {
-		spyOn(component, 'getCaseList')
-			.and
-			.callThrough();
+		jest.spyOn(component, 'getCaseList');
 		component.onTableSortingChanged({
 			key: 'Key1',
 			value: 'Value1',
@@ -83,9 +78,7 @@ describe('ResolutionComponent', () => {
 	});
 
 	it('should refresh on page change', () => {
-		spyOn(component, 'getCaseList')
-			.and
-			.callThrough();
+		jest.spyOn(component, 'getCaseList');
 		component.onPagerUpdated({ page: 2 });
 		expect(component.getCaseList)
 			.toHaveBeenCalled();
@@ -284,9 +277,8 @@ describe('ResolutionComponent', () => {
 			customerId: '2431199',
 			serialNumber: ['FCH2139V1B0'],
 		};
-		spyOn(assetService, 'getAssetLinkData')
-			.and
-			.returnValue(of({ }));
+		jest.spyOn(assetService, 'getAssetLinkData')
+			.mockReturnValue(of({ }));
 		component.showAssetDetails(params);
 		expect(assetService.getAssetLinkData)
 			.toHaveBeenCalled();
@@ -296,15 +288,14 @@ describe('ResolutionComponent', () => {
 			page: 5,
 			search: 'FCH2139V1B0',
 		};
-		spyOn(component, 'getCaseDetailsInfo').and
-		.callThrough();
+		jest.spyOn(component, 'getCaseDetailsInfo');
 		component.getCaseDetailsInfo(params);
 		expect(component.getCaseDetailsInfo)
 			.toHaveBeenCalled();
 	});
 
 	it('should reinitialize filters when caseCount emits true', () => {
-		spyOn(component, 'initializeFilterVariables');
+		jest.spyOn(component, 'initializeFilterVariables');
 		caseDetailsService.refreshCaseCount(true);
 		caseDetailsService.caseCount$.subscribe(() => {
 			expect(component.initializeFilterVariables)
@@ -313,7 +304,7 @@ describe('ResolutionComponent', () => {
 	});
 
 	it('should call searchCaseNumber on clearsearch', () => {
-		spyOn(component, 'searchCaseNumber');
+		jest.spyOn(component, 'searchCaseNumber');
 		component.clearSearch();
 		fixture.detectChanges();
 		expect(component.searchCasesForm.value.caseNo)

@@ -111,9 +111,8 @@ describe('RccDeviceViolationDetailsComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(rccTrackService, 'getRccViolationDetailsData')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(rccTrackService, 'getRccViolationDetailsData')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
 		component.onSelection();
 		tick();
 		expect(component.impactedDeviceDetails)
@@ -125,9 +124,8 @@ describe('RccDeviceViolationDetailsComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(rccTrackService, 'getRccViolationDetailsData')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(rccTrackService, 'getRccViolationDetailsData')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
 		component.loadData();
 		tick();
 		expect(component.errorResult)
@@ -139,9 +137,8 @@ describe('RccDeviceViolationDetailsComponent', () => {
 			productFamily: 'C2300',
 			productModel: 'WS-C2300',
 		};
-		spyOn(rccTrackService, 'getRccViolationDetailsData')
-			.and
-			.returnValue(of(ComplianceScenarios[6].scenarios.GET[0].response.body));
+		jest.spyOn(rccTrackService, 'getRccViolationDetailsData')
+			.mockReturnValue(of(ComplianceScenarios[6].scenarios.GET[0].response.body));
 		component.onSelection();
 		tick();
 		expect(component.impactedDeviceDetails)
@@ -149,12 +146,10 @@ describe('RccDeviceViolationDetailsComponent', () => {
 	}));
 
 	it('Should get the api data on ngonchanges method', fakeAsync(() => {
-		spyOn(rccTrackService, 'getRccViolationDetailsData')
-			.and
-			.returnValue(of(ComplianceScenarios[6].scenarios.GET[0].response.body));
-		spyOn(rccTrackService, 'getRccPolicyRuleDetailsData')
-			.and
-			.returnValue(of(ComplianceScenarios[7].scenarios.GET[0].response.body));
+		jest.spyOn(rccTrackService, 'getRccViolationDetailsData')
+			.mockReturnValue(of(ComplianceScenarios[6].scenarios.GET[0].response.body));
+		jest.spyOn(rccTrackService, 'getRccPolicyRuleDetailsData')
+			.mockReturnValue(of(ComplianceScenarios[7].scenarios.GET[0].response.body));
 		const changes = {
 			policyViolationInfo: {
 				currentValue: {
@@ -180,12 +175,10 @@ describe('RccDeviceViolationDetailsComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(rccTrackService, 'getRccViolationDetailsData')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(rccTrackService, 'getRccPolicyRuleDetailsData')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(rccTrackService, 'getRccViolationDetailsData')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(rccTrackService, 'getRccPolicyRuleDetailsData')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
 		const changes = {
 			policyViolationInfo: {
 				currentValue: {
@@ -224,12 +217,10 @@ describe('RccDeviceViolationDetailsComponent', () => {
 
 	it('Should invoke getRccViolationDetailsData api and return empty decive list ',
 	fakeAsync(() => {
-		spyOn(rccTrackService, 'getRccViolationDetailsData')
-			.and
-			.returnValue(of(ComplianceScenarios[9].scenarios.GET[0].response.body));
-		spyOn(rccTrackService, 'getRccPolicyRuleDetailsData')
-			.and
-			.returnValue(of(ComplianceScenarios[14].scenarios.GET[0].response.body));
+		jest.spyOn(rccTrackService, 'getRccViolationDetailsData')
+			.mockReturnValue(of(ComplianceScenarios[9].scenarios.GET[0].response.body));
+		jest.spyOn(rccTrackService, 'getRccPolicyRuleDetailsData')
+			.mockReturnValue(of(ComplianceScenarios[14].scenarios.GET[0].response.body));
 		component.loadData();
 		tick();
 		fixture.detectChanges();
@@ -238,4 +229,5 @@ describe('RccDeviceViolationDetailsComponent', () => {
 		expect(component.impactedDeviceDetails)
 			.toEqual([]);
 	}));
+
 });

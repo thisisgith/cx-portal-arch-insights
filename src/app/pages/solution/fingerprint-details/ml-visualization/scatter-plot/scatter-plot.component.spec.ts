@@ -16,7 +16,6 @@ import * as drag from 'highcharts/modules/draggable-points';
 import * as highcharts3d from 'highcharts/highcharts-3d.src';
 import { By } from '@angular/platform-browser';
 import { scatterPlotDevices } from 'src/environments/mock/crash-prevention/comparisonview';
-
 describe('ScatterPlotComponent', () => {
 	let component: ScatterPlotComponent;
 	let fixture: ComponentFixture<ScatterPlotComponent>;
@@ -58,7 +57,7 @@ describe('ScatterPlotComponent', () => {
 	});
 
 	it('should rebuild graph on ngOnChanges', () => {
-		spyOn(component, 'updateChart');
+		jest.spyOn(component, 'updateChart');
 		component.ngOnChanges({
 			dataPoints: {
 				currentValue: scatterPlotDevices,
@@ -74,7 +73,7 @@ describe('ScatterPlotComponent', () => {
 	});
 
 	it('should not build graph on ngOnChanges', () => {
-		spyOn(component, 'buildGraph');
+		jest.spyOn(component, 'buildGraph');
 		component.ngOnChanges({
 			dataPoints: null,
 			selectedDevice: null,
@@ -87,7 +86,7 @@ describe('ScatterPlotComponent', () => {
 
 	it('should updateDevice in the scatter plot', () => {
 		component.buildGraph();
-		spyOn(component, 'updateSelectedDeviceBySearch');
+		jest.spyOn(component, 'updateSelectedDeviceBySearch');
 		component.ngOnChanges({
 			dataPoints: null,
 			selectedDevice: {
@@ -105,7 +104,7 @@ describe('ScatterPlotComponent', () => {
 	it('should select zoom mode in Scatter Plot', fakeAsync(() => {
 		component.dataPoints = scatterPlotDevices;
 		component.buildGraph();
-		spyOn(component, 'changeChartNavigation');
+		jest.spyOn(component, 'changeChartNavigation');
 		const button = fixture.debugElement.query(
 			By.css('[data-auto-id="ChartZoom"]'),
 		);
@@ -116,7 +115,7 @@ describe('ScatterPlotComponent', () => {
 	}));
 
 	it('should select the deviceId in the scatter plot', () => {
-		spyOn(component, 'updateSelectedDeviceBySearch');
+		jest.spyOn(component, 'updateSelectedDeviceBySearch');
 		component.buildGraph();
 		component.ngOnInit();
 		fixture.whenStable();
@@ -146,7 +145,7 @@ describe('ScatterPlotComponent', () => {
 				previousValue: null,
 			},
 		});
-		spyOn(component, 'register');
+		jest.spyOn(component, 'register');
 		component.ngAfterViewInit();
 		fixture.detectChanges();
 		expect(component.register)
@@ -155,7 +154,7 @@ describe('ScatterPlotComponent', () => {
 
 	it('should select rotate mode in Scatter Plot', fakeAsync(() => {
 		component.dataPoints = scatterPlotDevices;
-		spyOn(component, 'changeChartNavigation');
+		jest.spyOn(component, 'changeChartNavigation');
 		fixture.detectChanges();
 		const button = fixture.debugElement.query(
 			By.css('[data-auto-id="RotateChart"]'),

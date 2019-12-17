@@ -49,7 +49,7 @@ export const SoftwareEOLBulletinScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 350,
+					delay: 44,
 					description: 'Software EOL Bulletins',
 					response: {
 						body: MockSoftwareEOLBulletinsResponse,
@@ -67,7 +67,7 @@ export const SoftwareEOLBulletinScenarios = [
 					selected: false,
 				},
 				{
-					delay: 250,
+					delay: 38,
 					description: 'Software EOL Bulletins - Missing fields',
 					response: {
 						body: { data: [

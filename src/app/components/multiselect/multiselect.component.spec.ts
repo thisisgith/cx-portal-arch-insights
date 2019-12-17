@@ -69,7 +69,7 @@ describe('MultiselectComponent', () => {
 	it('should handle save', () => {
 		component.dropdownActive = true;
 		component.selectedIndices = [0];
-		spyOn(component.changed, 'emit');
+		jest.spyOn(component.changed, 'emit');
 
 		component.save();
 
@@ -98,4 +98,5 @@ describe('MultiselectComponent', () => {
 		expect(component.selectedIndices.length)
 			.toBeGreaterThanOrEqual(1);
 	});
+
 });

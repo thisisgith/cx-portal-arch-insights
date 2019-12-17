@@ -84,4 +84,5 @@ describe('BulletChartComponent', () => {
 		expect(component.loading)
 			.toBeFalsy();
 	});
+
 });

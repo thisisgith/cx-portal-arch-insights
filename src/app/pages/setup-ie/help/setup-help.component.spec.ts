@@ -37,4 +37,5 @@ describe('SetupHelpComponent', () => {
 		expect(component)
 			.toBeTruthy();
 	});
+
 });

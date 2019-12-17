@@ -1007,7 +1007,7 @@ export const RacetrackScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 250,
+					delay: 38,
 					description: '(Racetrack) IBN-Assurance-Onboard',
 					response: {
 						body: MockRacetrack('ibn', 'assurance', 'Onboard', ''),
@@ -1016,7 +1016,7 @@ export const RacetrackScenarios = [
 					selected: true,
 				},
 				{
-					delay: Math.floor(Math.random() * 2000) + 250,
+					delay: 38,
 					description: '(Racetrack) IBN-Assurance-Implement',
 					response: {
 						body: MockRacetrack('ibn', 'assurance', 'Implement', ''),
@@ -1025,7 +1025,7 @@ export const RacetrackScenarios = [
 					selected: false,
 				},
 				{
-					delay: Math.floor(Math.random() * 2000) + 250,
+					delay: 38,
 					description: '(Racetrack) IBN-Assurance-Use',
 					response: {
 						body: MockRacetrack('ibn', 'assurance', 'Use', ''),
@@ -1034,7 +1034,7 @@ export const RacetrackScenarios = [
 					selected: false,
 				},
 				{
-					delay: Math.floor(Math.random() * 2000) + 250,
+					delay: 38,
 					description: '(Racetrack) IBN-Assurance-Engage',
 					response: {
 						body: MockRacetrack('ibn', 'assurance', 'Engage', ''),
@@ -1043,7 +1043,7 @@ export const RacetrackScenarios = [
 					selected: false,
 				},
 				{
-					delay: Math.floor(Math.random() * 2000) + 250,
+					delay: 38,
 					description: '(Racetrack) IBN-Assurance-Adopt',
 					response: {
 						body: MockRacetrack('ibn', 'assurance', 'Adopt', ''),
@@ -1052,7 +1052,7 @@ export const RacetrackScenarios = [
 					selected: false,
 				},
 				{
-					delay: Math.floor(Math.random() * 2000) + 250,
+					delay: 38,
 					description: '(Racetrack) IBN-Assurance-Optimize',
 					response: {
 						body: MockRacetrack('ibn', 'assurance', 'Optimize', ''),
@@ -1061,7 +1061,7 @@ export const RacetrackScenarios = [
 					selected: false,
 				},
 				{
-					delay: Math.floor(Math.random() * 2000) + 250,
+					delay: 38,
 					description: '(Racetrack) IBN-Assurance-Onboard-allManualCheckable',
 					response: {
 						body: MockRacetrack('ibn', 'assurance', 'Onboard', 'allManualCheckable'),
@@ -1070,7 +1070,7 @@ export const RacetrackScenarios = [
 					selected: false,
 				},
 				{
-					delay: Math.floor(Math.random() * 2000) + 250,
+					delay: 38,
 					description: '(Racetrack) IBN-Assurance-Onboard-allCompleted',
 					response: {
 						body: MockRacetrack('ibn', 'assurance', 'Onboard', 'allCompleted'),
@@ -1079,7 +1079,7 @@ export const RacetrackScenarios = [
 					selected: false,
 				},
 				{
-					delay: Math.floor(Math.random() * 2000) + 250,
+					delay: 38,
 					description: '(Racetrack) IBN-Assurance-Onboard-noPitstopActions',
 					response: {
 						body: MockRacetrack('ibn', 'assurance', 'Onboard', 'noPitstopActions'),
@@ -1096,7 +1096,7 @@ export const RacetrackScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 250,
+					delay: 38,
 					description: '(Racetrack) IBN-Assurance-Onboard-EntitlementV2',
 					response: {
 						body: MockRacetrack('ibn', 'assurance', 'Onboard', ''),

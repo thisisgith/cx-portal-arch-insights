@@ -2853,7 +2853,7 @@ export const HardwareEOLBulletinScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 350,
+					delay: 44,
 					description: 'Hardware EOL Bulletins',
 					response: {
 						body: mockResponse(defaultInstanceId),
@@ -2862,7 +2862,7 @@ export const HardwareEOLBulletinScenarios = [
 					selected: true,
 				},
 				{
-					delay: 350,
+					delay: 44,
 					description: 'Empty Hardware EOL Bulletins',
 					response: {
 						body: { data: [] },

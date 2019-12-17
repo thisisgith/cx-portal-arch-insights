@@ -37,4 +37,5 @@ describe('ManageUsersComponent', () => {
 		expect(component)
 			.toBeTruthy();
 	});
+
 });

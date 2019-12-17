@@ -92,4 +92,5 @@ describe('AssetsStateService', () => {
 			.toBe('table');
 		updateSub.unsubscribe();
 	})));
+
 });

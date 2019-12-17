@@ -197,7 +197,7 @@ export const SyslogScenarios = [
 		scenarios: {
 			POST: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Summary',
 					response: {
 						body: syslogCount,
@@ -214,7 +214,7 @@ export const SyslogScenarios = [
 		scenarios: {
 			POST: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Message Grid',
 					response: {
 						body: syslogMessages,
@@ -231,7 +231,7 @@ export const SyslogScenarios = [
 		scenarios: {
 			POST: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Summary',
 					response: {
 						body: syslogDetail,
@@ -248,7 +248,7 @@ export const SyslogScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'CategoryList',
 					response: {
 						body: categoryListData,
@@ -265,7 +265,7 @@ export const SyslogScenarios = [
 		scenarios: {
 			POST: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Push To Fault',
 					response: {
 						body: pushToFaultResponse,
@@ -282,7 +282,7 @@ export const SyslogScenarios = [
 		scenarios: {
 			POST: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Syslogs severity',
 					response: {
 						body: syslogServerityCount,
@@ -299,7 +299,7 @@ export const SyslogScenarios = [
 		scenarios: {
 			POST: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Syslogs timeRange',
 					response: {
 						body: timeRangeCount,
@@ -316,7 +316,7 @@ export const SyslogScenarios = [
 		scenarios: {
 			POST: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Fault Severity',
 					response: {
 						body: faultSeverityCount,
@@ -333,7 +333,7 @@ export const SyslogScenarios = [
 		scenarios: {
 			POST: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Fault State',
 					response: {
 						body: faultStateCount,
@@ -350,7 +350,7 @@ export const SyslogScenarios = [
 		scenarios: {
 			POST: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Fault timeRange',
 					response: {
 						body: timeRangeCount,

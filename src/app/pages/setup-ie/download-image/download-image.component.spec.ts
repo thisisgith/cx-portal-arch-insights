@@ -20,12 +20,12 @@ describe('DownloadImageComponent', () => {
 	let asdService: ASDAPIService;
 	let cpService: ControlPointIERegistrationAPIService;
 	let router: Router;
-	let regSpy: jasmine.Spy;
-	let getMetadataSpy: jasmine.Spy;
-	let getDownloadUrlSpy: jasmine.Spy;
-	let acceptEULASpy: jasmine.Spy;
-	let acceptK9Spy: jasmine.Spy;
-	let routerNavigateSpy: jasmine.Spy;
+	let regSpy;
+	let getMetadataSpy;
+	let getDownloadUrlSpy;
+	let acceptEULASpy;
+	let acceptK9Spy;
+	let routerNavigateSpy;
 	let stateService: SetupIEStateService;
 
 	configureTestSuite(() => {
@@ -45,24 +45,18 @@ describe('DownloadImageComponent', () => {
 		asdService = TestBed.get(ASDAPIService);
 		cpService = TestBed.get(ControlPointIERegistrationAPIService);
 		router = TestBed.get(Router);
-		regSpy = spyOn(cpService, 'createIERegistrationUsingPOST')
-			.and
-			.returnValue(of(null));
-		getMetadataSpy = spyOn(asdService, 'getMetadata')
-			.and
-			.returnValue(of(ASDMetadataScenarios[0].scenarios.GET[0].response.body));
-		getDownloadUrlSpy = spyOn(asdService, 'getDownloadURL')
-			.and
-			.returnValue(of(ASDImageDownloadUrlScenarios[0].scenarios.GET[0].response.body));
-		acceptEULASpy = spyOn(asdService, 'acceptEULA')
-			.and
-			.returnValue(of(null));
-		acceptK9Spy = spyOn(asdService, 'acceptK9')
-			.and
-			.returnValue(of(null));
-		routerNavigateSpy = spyOn(router, 'navigate')
-			.and
-			.returnValue(Promise.resolve(null));
+		regSpy = jest.spyOn(cpService, 'createIERegistrationUsingPOST')
+			.mockReturnValue(of(null));
+		getMetadataSpy = jest.spyOn(asdService, 'getMetadata')
+			.mockReturnValue(of(ASDMetadataScenarios[0].scenarios.GET[0].response.body));
+		getDownloadUrlSpy = jest.spyOn(asdService, 'getDownloadURL')
+			.mockReturnValue(of(ASDImageDownloadUrlScenarios[0].scenarios.GET[0].response.body));
+		acceptEULASpy = jest.spyOn(asdService, 'acceptEULA')
+			.mockReturnValue(of(null));
+		acceptK9Spy = jest.spyOn(asdService, 'acceptK9')
+			.mockReturnValue(of(null));
+		routerNavigateSpy = jest.spyOn(router, 'navigate')
+			.mockReturnValue(Promise.resolve(null));
 	}));
 
 	beforeEach(() => {
@@ -108,10 +102,9 @@ describe('DownloadImageComponent', () => {
 	});
 
 	it('should show errors', () => {
-		regSpy.and
-			.returnValue(throwError(new HttpErrorResponse({
-				status: 404,
-			})));
+		regSpy.mockReturnValue(throwError(new HttpErrorResponse({
+			status: 404,
+		})));
 		component.onDownload();
 		fixture.detectChanges();
 		expect(regSpy)
@@ -123,8 +116,7 @@ describe('DownloadImageComponent', () => {
 	it('should continue', () => {
 		const sub = component.onStepComplete
 			.subscribe(() => {
-				expect()
-					.nothing();
+				expect.anything();
 				sub.unsubscribe();
 			});
 		component.continue();

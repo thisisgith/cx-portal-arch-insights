@@ -9,7 +9,6 @@ import { CaseService } from '@cui-x/services';
 import { CaseDetailsService } from '@services';
 import { InventoryService } from '@sdp-api';
 import { ActivatedRoute } from '@angular/router';
-
 describe('CaseDetailsComponent', () => {
 	let component: CaseDetailsComponent;
 	let fixture: ComponentFixture<CaseDetailsComponent>;
@@ -57,9 +56,8 @@ describe('CaseDetailsComponent', () => {
 	});
 
 	it('should refresh notes when one is added', fakeAsync(() => {
-		spyOn(caseService, 'fetchCaseNotes')
-			.and
-			.returnValue(of([]));
+		jest.spyOn(caseService, 'fetchCaseNotes')
+			.mockReturnValue(of([]));
 		caseDetailsService.refreshNotesList(true);
 		tick();
 		expect(caseService.fetchCaseNotes)
@@ -67,7 +65,7 @@ describe('CaseDetailsComponent', () => {
 	}));
 
 	it('shouldn\'t refresh if no case is selected', () => {
-		spyOn(caseService, 'fetchCaseDetails');
+		jest.spyOn(caseService, 'fetchCaseDetails');
 		component.case = null;
 		fixture.detectChanges();
 		component.ngOnChanges({ });
@@ -129,7 +127,7 @@ describe('CaseDetailsComponent', () => {
 			technologyName: 'Application Networking Services',
 		};
 		component.caseDetails = caseDetailsObj;
-		spyOn(component.showAssetDetails, 'emit');
+		jest.spyOn(component.showAssetDetails, 'emit');
 		component.showAssetDetailsView();
 		expect(component.showAssetDetails.emit)
 			.toHaveBeenCalled();
@@ -137,15 +135,12 @@ describe('CaseDetailsComponent', () => {
 
 	it('should call all of the required APIs for the selected case', fakeAsync(() => {
 		component.case = { caseNumber: '680000001', deviceName: 'LA1-AP4800-1',  serialNumber: 'FOX1306GBAD' };
-		spyOn(caseService, 'fetchCaseDetails')
-			.and
-			.returnValue(of(CaseScenarios[0].scenarios.GET[0].response.body));
-		spyOn(caseService, 'fetchCaseNotes')
-			.and
-			.returnValue(of(CaseScenarios[1].scenarios.GET[0].response.body));
-		spyOn(inventoryService, 'getHardware')
-			.and
-			.returnValue(of(HardwareScenarios[0].scenarios.GET[0].response.body));
+		jest.spyOn(caseService, 'fetchCaseDetails')
+			.mockReturnValue(of(CaseScenarios[0].scenarios.GET[0].response.body));
+		jest.spyOn(caseService, 'fetchCaseNotes')
+			.mockReturnValue(of(CaseScenarios[1].scenarios.GET[0].response.body));
+		jest.spyOn(inventoryService, 'getHardware')
+			.mockReturnValue(of(HardwareScenarios[0].scenarios.GET[0].response.body));
 		component.refresh();
 		fixture.detectChanges();
 		tick(2500); // Wait for all requests to finish
@@ -174,4 +169,5 @@ describe('CaseDetailsComponent', () => {
 		expect(component.numberOfFiles)
 			.toEqual(3);
 	});
+
 });

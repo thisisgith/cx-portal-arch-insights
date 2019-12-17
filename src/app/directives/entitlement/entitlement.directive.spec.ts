@@ -179,4 +179,5 @@ describe('EntitlementDirective', () => {
 		expect(element.innerHTML)
 			.toContain('Authorized');
 	});
+
 });

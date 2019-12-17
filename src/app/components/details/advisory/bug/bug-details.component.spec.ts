@@ -11,7 +11,6 @@ import { of } from 'rxjs';
 import { RacetrackInfoService } from '@services';
 import * as _ from 'lodash-es';
 import { RouterTestingModule } from '@angular/router/testing';
-
 /**
  * Will fetch the currently active response body from the mock object
  * @param mock the mock object
@@ -110,9 +109,8 @@ describe('BugDetailsComponent', () => {
 	});
 
 	it('should load the bug if only id passed', () => {
-		spyOn(diagnosticsService, 'getCriticalBugs')
-			.and
-			.returnValue(of({ data: [CriticalBugData[0]] }));
+		jest.spyOn(diagnosticsService, 'getCriticalBugs')
+			.mockReturnValue(of({ data: [CriticalBugData[0]] }));
 
 		component.id = CriticalBugData[0].id;
 		component.customerId = user.info.customerId;
@@ -165,4 +163,5 @@ describe('BugDetailsComponent', () => {
 				advisory: CriticalBugData[1],
 			});
 	});
+
 });

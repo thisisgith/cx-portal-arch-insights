@@ -565,7 +565,7 @@ export const FieldNoticeBulletinScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 350,
+					delay: 44,
 					description: 'Field Notice Bulletins',
 					response: {
 						body: MockNotices(10, 1),
@@ -574,7 +574,7 @@ export const FieldNoticeBulletinScenarios = [
 					selected: true,
 				},
 				{
-					delay: 250,
+					delay: 38,
 					description: 'Field Notice Bulletins - Unreachable',
 					response: {
 						body: { },
@@ -591,7 +591,7 @@ export const FieldNoticeBulletinScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 350,
+					delay: 44,
 					description: 'Field Notice Bulletins with id\'s',
 					response: {
 						body: MockNotices(null, null, [64134, 63718, 63722,

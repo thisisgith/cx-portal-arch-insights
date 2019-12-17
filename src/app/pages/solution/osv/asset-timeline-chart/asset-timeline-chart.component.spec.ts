@@ -7,7 +7,6 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { OSVScenarios } from '@mock';
 import * as _ from 'lodash-es';
 import { MicroMockModule } from '@cui-x-views/mock';
-
 describe('AssetTimelineChartComponent', () => {
 	let component: AssetTimelineChartComponent;
 	let fixture: ComponentFixture<AssetTimelineChartComponent>;
@@ -33,7 +32,7 @@ describe('AssetTimelineChartComponent', () => {
 	});
 
 	it('should build graph on OnInit only if data is not null', () => {
-		spyOn(component, 'buildGraph');
+		jest.spyOn(component, 'buildGraph');
 		component.ngOnInit();
 		fixture.detectChanges();
 		expect(component.chart)
@@ -51,7 +50,8 @@ describe('AssetTimelineChartComponent', () => {
 	});
 
 	it(' build graph should be called if the assetRecommendations change', fakeAsync(() => {
-		spyOn(component, 'buildGraph');
+		jest.spyOn(component, 'buildGraph')
+			.mockReturnThis();
 		const assetRecommendations = <any> OSVScenarios[3].scenarios.GET[0].response.body;
 		component.ngOnChanges({
 			assetDetails: {
@@ -85,4 +85,5 @@ describe('AssetTimelineChartComponent', () => {
 		expect(_.get(formattedData, ['0', 'x']))
 			.toBeDefined();
 	});
+
 });

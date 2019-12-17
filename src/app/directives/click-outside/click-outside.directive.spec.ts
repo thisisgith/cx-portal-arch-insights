@@ -61,4 +61,5 @@ describe('ClickOutsideDirective', () => {
 		expect(activeValueBeforeClick)
 		.toBe(!component.active);
 	}));
+
 });

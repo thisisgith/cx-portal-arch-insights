@@ -15,7 +15,7 @@ describe('PolicyCalendarComponent', () => {
 	let component: PolicyCalendarComponent;
 	let fixture: ComponentFixture<PolicyCalendarComponent>;
 	let cpService: ControlPointDevicePolicyAPIService;
-	let getMonthSpy: jasmine.Spy;
+	let getMonthSpy;
 
 	configureTestSuite(() => {
 		TestBed.configureTestingModule({
@@ -29,9 +29,8 @@ describe('PolicyCalendarComponent', () => {
 
 	beforeEach(async(() => {
 		cpService = TestBed.get(ControlPointDevicePolicyAPIService);
-		getMonthSpy = spyOn(cpService, 'getAllPolicyForGivenMonthUsingGET')
-			.and
-			.returnValue(of(CalendarScenarios[0].scenarios.GET[0].response.body));
+		getMonthSpy = jest.spyOn(cpService, 'getAllPolicyForGivenMonthUsingGET')
+			.mockReturnValue(of(CalendarScenarios[0].scenarios.GET[0].response.body));
 	}));
 
 	beforeEach(() => {
@@ -60,12 +59,12 @@ describe('PolicyCalendarComponent', () => {
 	}));
 
 	it('should catch http error', () => {
-		getMonthSpy.and
-			.returnValue(throwError(new HttpErrorResponse({
-				status: 404,
-			})));
+		getMonthSpy.mockReturnValue(throwError(new HttpErrorResponse({
+			status: 404,
+		})));
 		component.nextMonth();
 		expect(getMonthSpy)
 			.toHaveBeenCalled();
 	});
+
 });

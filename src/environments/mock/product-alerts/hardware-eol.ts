@@ -4602,7 +4602,7 @@ export const HardwareEOLScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 350,
+					delay: 44,
 					description: 'Hardware EOL',
 					response: {
 						body: MockHardwareEOLResponse,

@@ -42,9 +42,8 @@ describe('InsightTabsComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(routeAuthService, 'checkArchitecturePermissions')
-			.and
-			.returnValue(
+		jest.spyOn(routeAuthService, 'checkArchitecturePermissions')
+			.mockReturnValue(
 				throwError(new HttpErrorResponse(error)),
 		);
 		component.canActivate();
@@ -64,9 +63,8 @@ describe('InsightTabsComponent', () => {
 			syslogUIEnabled: true,
 		};
 
-		spyOn(routeAuthService, 'checkArchitecturePermissions')
-			.and
-			.returnValue(of(response));
+		jest.spyOn(routeAuthService, 'checkArchitecturePermissions')
+			.mockReturnValue(of(response));
 		component.cxLevel = 2;
 		component.canActivate();
 		expect(routeAuthService.checkArchitecturePermissions)
@@ -83,11 +81,11 @@ describe('InsightTabsComponent', () => {
 
 		const response = null;
 
-		spyOn(routeAuthService, 'checkArchitecturePermissions')
-			.and
-			.returnValue(of(response));
+		jest.spyOn(routeAuthService, 'checkArchitecturePermissions')
+			.mockReturnValue(of(response));
 		component.canActivate();
 		expect(routeAuthService.checkArchitecturePermissions)
 			.toHaveBeenCalled();
 	});
+
 });

@@ -24,4 +24,5 @@ describe('CollapsibleComponent', () => {
 		expect(component)
 			.toBeTruthy();
 	});
+
 });

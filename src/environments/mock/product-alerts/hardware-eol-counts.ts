@@ -28,7 +28,7 @@ export const HardwareEOLCountScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Advisory Counts',
 					response: {
 						body: mockAdvisoryCounts,

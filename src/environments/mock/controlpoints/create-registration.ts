@@ -21,7 +21,7 @@ export const CreateRegistrationScenarios = [
 		scenarios: {
 			POST: [
 				{
-					delay: 500,
+					delay: 30,
 					description: 'Call to create registration file',
 					response: {
 						body: mockData,

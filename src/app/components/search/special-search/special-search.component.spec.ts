@@ -24,4 +24,5 @@ describe('SpecialSearchComponent', () => {
 		expect(component)
 			.toBeTruthy();
 	});
+
 });

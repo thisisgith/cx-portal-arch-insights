@@ -24,4 +24,5 @@ describe('UnauthorizedUserComponent', () => {
 		expect(component)
 			.toBeTruthy();
 	});
+
 });

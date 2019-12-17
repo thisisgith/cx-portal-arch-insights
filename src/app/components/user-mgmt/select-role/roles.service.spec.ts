@@ -9,7 +9,6 @@ import { of, asyncScheduler } from 'rxjs';
 
 describe('RolesService', () => {
 	let api: ControlPointUserManagementAPIService;
-	// let getRolesSpy: jasmine.Spy;
 
 	configureTestSuite(() => {
 		TestBed.configureTestingModule({
@@ -25,9 +24,8 @@ describe('RolesService', () => {
 		});
 
 		api = TestBed.get(ControlPointUserManagementAPIService);
-		spyOn(api, 'getListRolesForGivenUserUsingGET')
-			.and
-			.returnValue(of({
+		jest.spyOn(api, 'getListRolesForGivenUserUsingGET')
+			.mockReturnValue(of({
 				saRoles: [],
 				vaRoles: [],
 			}, asyncScheduler));
@@ -37,4 +35,5 @@ describe('RolesService', () => {
 		expect(service)
 			.toBeTruthy();
 	}));
+
 });

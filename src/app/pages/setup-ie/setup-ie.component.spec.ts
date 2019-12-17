@@ -18,7 +18,7 @@ describe('SetupIeComponent', () => {
 	let fixture: ComponentFixture<SetupIeComponent>;
 	let stateService: SetupIEStateService;
 	let modalService: CuiModalService;
-	let modalSpy: jasmine.Spy;
+	let modalSpy;
 	let router: Router;
 	let utils: UtilsService;
 
@@ -42,9 +42,8 @@ describe('SetupIeComponent', () => {
 		stateService = TestBed.get(SetupIEStateService);
 		stateService.clearState();
 		modalService = TestBed.get(CuiModalService);
-		modalSpy = spyOn(modalService, 'showComponent')
-			.and
-			.returnValue(new Promise(resolve => resolve()));
+		modalSpy = jest.spyOn(modalService, 'showComponent')
+			.mockReturnValue(new Promise(resolve => resolve()));
 		utils = TestBed.get(UtilsService);
 		localStorage.removeItem(environment.ieSetup.DNAC_LS_KEY);
 	}));
@@ -61,8 +60,7 @@ describe('SetupIeComponent', () => {
 	});
 
 	it('should prompt to reuse cache if there is a saved state', () => {
-		modalSpy.and
-			.returnValue(new Promise(resolve => resolve(true)));
+		modalSpy.mockReturnValue(new Promise(resolve => resolve(true)));
 		stateService.setState({
 			compKey: 1,
 			ovaSelection: 'vbox',
@@ -136,4 +134,5 @@ describe('SetupIeComponent', () => {
 		expect(component.steps.length)
 			.toBe(10);
 	}));
+
 });

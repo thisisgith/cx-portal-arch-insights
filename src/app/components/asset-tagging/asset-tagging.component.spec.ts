@@ -57,8 +57,8 @@ describe('AssetTaggingComponent', () => {
 
 	it(`should call handleLeftTagSelectionChanged and
 		 handleLeftTagSelectionChanged methods`, () => {
-		spyOn(component, 'handleLeftTagSelectionChanged');
-		spyOn(component, 'handleRightTagSelectionChanged');
+		jest.spyOn(component, 'handleLeftTagSelectionChanged');
+		jest.spyOn(component, 'handleRightTagSelectionChanged');
 		component.ngOnChanges();
 		expect(component.handleLeftTagSelectionChanged)
 			.toHaveBeenCalled();
@@ -147,8 +147,8 @@ describe('AssetTaggingComponent', () => {
 	});
 
 	it('should handle tag selection method based on selectorName', () => {
-		spyOn(component, 'handleLeftTagSelectionChanged');
-		spyOn(component, 'handleRightTagSelectionChanged');
+		jest.spyOn(component, 'handleLeftTagSelectionChanged');
+		jest.spyOn(component, 'handleRightTagSelectionChanged');
 
 		component.handleTagSelectionChanged(component.leftTags);
 		expect(component.handleLeftTagSelectionChanged)
@@ -203,7 +203,7 @@ describe('AssetTaggingComponent', () => {
 
 	it('should not call handleTagSelectionChanged if not tags are present', () => {
 		const tags =  [];
-		spyOn(component, 'handleTagSelectionChanged');
+		jest.spyOn(component, 'handleTagSelectionChanged');
 		component.toggleAllTagsSelected(tags, component.leftTags);
 		expect(component.handleTagSelectionChanged)
 		.not
@@ -226,7 +226,7 @@ describe('AssetTaggingComponent', () => {
 		}];
 		component.leftSearchText = 'T1';
 
-		spyOn(component, 'handleTagSelectionChanged');
+		jest.spyOn(component, 'handleTagSelectionChanged');
 		component.toggleAllTagsSelected(tags, component.leftTags);
 		expect(component.handleTagSelectionChanged)
 		.toHaveBeenCalled();
@@ -269,7 +269,7 @@ describe('AssetTaggingComponent', () => {
 		}];
 		component.rightSearchText = 'T1';
 
-		spyOn(component, 'handleTagSelectionChanged');
+		jest.spyOn(component, 'handleTagSelectionChanged');
 		component.toggleAllTagsSelected(tags, component.rightTags);
 		expect(component.handleTagSelectionChanged)
 		.toHaveBeenCalled();

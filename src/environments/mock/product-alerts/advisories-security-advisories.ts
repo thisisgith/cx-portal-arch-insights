@@ -131,7 +131,7 @@ export const AdvisorySecurityAdvisoryScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 350,
+					delay: 44,
 					description: 'Advisory Security Advisories',
 					response: {
 						body: MockData(10, 1),
@@ -140,7 +140,7 @@ export const AdvisorySecurityAdvisoryScenarios = [
 					selected: true,
 				},
 				{
-					delay: 250,
+					delay: 38,
 					description: 'Advisory Security Advisories - Unreachable',
 					response: {
 						body: { },
@@ -149,7 +149,7 @@ export const AdvisorySecurityAdvisoryScenarios = [
 					selected: false,
 				},
 				{
-					delay: 250,
+					delay: 38,
 					description: 'Advisory Security Advisories - Page 1',
 					response: {
 						body: MockData(10, 1),
@@ -167,7 +167,7 @@ export const AdvisorySecurityAdvisoryScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 250,
+					delay: 38,
 					description: 'Advisory Security Advisories - Page 2',
 					response: {
 						body: MockData(10, 2, 3),
@@ -185,7 +185,7 @@ export const AdvisorySecurityAdvisoryScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 250,
+					delay: 38,
 					description: 'Advisory Security Advisories - Page 3',
 					response: {
 						body: MockData(10, 3, 3),
@@ -203,7 +203,7 @@ export const AdvisorySecurityAdvisoryScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 350,
+					delay: 44,
 					description: 'Advisory Security Advisories for Asset',
 					response: {
 						body: MockData(10, 1, 1),
@@ -221,7 +221,7 @@ export const AdvisorySecurityAdvisoryScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 350,
+					delay: 44,
 					description: 'Security Advisories for FOC1544Y16T',
 					response: {
 						body: MockData(10, 1, 1),
@@ -238,7 +238,7 @@ export const AdvisorySecurityAdvisoryScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 350,
+					delay: 44,
 					description: 'Security Advisories for FOC1544Y16T - Page 2',
 					response: {
 						body: MockData(10, 2, 1),
@@ -255,7 +255,7 @@ export const AdvisorySecurityAdvisoryScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 350,
+					delay: 44,
 					description: 'Advisory Security Advisories for 360 overlay',
 					response: {
 						body: MockData(10, 1, 1),
@@ -273,7 +273,7 @@ export const AdvisorySecurityAdvisoryScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 250,
+					delay: 38,
 					description: 'Advisory Security Advisories - Count',
 					response: {
 						body: MockData(1, 1),
@@ -291,7 +291,7 @@ export const AdvisorySecurityAdvisoryScenarios = [
 					selected: false,
 				},
 				{
-					delay: 250,
+					delay: 38,
 					description: 'Advisory Security Advisories - Count Missing Keys',
 					response: {
 						body: MockData(1, 1).data,

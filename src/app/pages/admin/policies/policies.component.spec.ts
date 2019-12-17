@@ -20,7 +20,7 @@ describe('PoliciesComponent', () => {
 	let fixture: ComponentFixture<PoliciesComponent>;
 
 	const locationStub = {
-		back: jasmine.createSpy('back'),
+		back: jest.fn(),
 	};
 
 	configureTestSuite(() => {
@@ -95,13 +95,13 @@ describe('PoliciesComponent', () => {
 			schedule: '0 0 6 * * *',
 		}];
 
-		spyOn(component, 'getPoliciesData')
-			.and
-			.returnValue(of(response));
+		jest.spyOn(component, 'getPoliciesData')
+			.mockReturnValue(of(response));
 
 		component.collectionRequestSubmit(true);
 
 		expect(component.getPoliciesData)
 			.toHaveBeenCalled();
 	});
+
 });

@@ -1,5 +1,5 @@
 import { configureTestSuite } from 'ng-bullet';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
@@ -14,9 +14,8 @@ describe('ResetCacheModal', () => {
 	let fixture: ComponentFixture<ResetCacheModal>;
 	let stateService: SetupIEStateService;
 	let modalService: CuiModalService;
-	let clearStateSpy: jasmine.Spy;
-	let modalHideSpy: jasmine.Spy;
-
+	let modalSpy: any;
+	let clearStateSpy: any;
 	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			declarations: [ResetCacheModal],
@@ -31,16 +30,13 @@ describe('ResetCacheModal', () => {
 		});
 	});
 
-	beforeEach(async(() => {
-		stateService = TestBed.get(SetupIEStateService);
-		modalService = TestBed.get(CuiModalService);
-		clearStateSpy = spyOn(stateService, 'clearState')
-			.and
-			.returnValue();
-		modalHideSpy = spyOn(modalService, 'hide');
-	}));
-
 	beforeEach(() => {
+		stateService = TestBed.get(SetupIEStateService);
+		stateService.clearState();
+		clearStateSpy = jest.spyOn(stateService, 'clearState');
+		modalService = TestBed.get(CuiModalService);
+		modalSpy = jest.spyOn(modalService, 'hide');
+		localStorage.removeItem(environment.ieSetup.DNAC_LS_KEY);
 		fixture = TestBed.createComponent(ResetCacheModal);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
@@ -53,7 +49,7 @@ describe('ResetCacheModal', () => {
 
 	it('should close', () => {
 		component.continue();
-		expect(modalHideSpy)
+		expect(modalSpy)
 			.toHaveBeenCalled();
 	});
 
@@ -62,4 +58,5 @@ describe('ResetCacheModal', () => {
 		expect(clearStateSpy)
 			.toHaveBeenCalled();
 	});
+
 });

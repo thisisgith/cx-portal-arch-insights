@@ -44,9 +44,8 @@ describe('ContactSupportComponent', () => {
 
 	beforeEach(() => {
 		userResolve = TestBed.get(UserResolve);
-		spyOn(userResolve, 'getCustomerId')
-			.and
-			.returnValue(of(user.info.customerId));
+		jest.spyOn(userResolve, 'getCustomerId')
+			.mockReturnValue(of(user.info.customerId));
 		fixture = TestBed.createComponent(ContactSupportComponent);
 		service = TestBed.get(EmailControllerService);
 		component = fixture.componentInstance;
@@ -64,9 +63,8 @@ describe('ContactSupportComponent', () => {
 	});
 
 	it('should send a email request', () => {
-		spyOn(service, 'sendEmail')
-			.and
-			.returnValue(of(
+		jest.spyOn(service, 'sendEmail')
+			.mockReturnValue(of(
 				'Email Sent',
 			));
 		const title = component.supportForm.controls.title;
@@ -91,9 +89,8 @@ describe('ContactSupportComponent', () => {
 			statusText: 'Resource not found',
 		};
 
-		spyOn(service, 'sendEmail')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(service, 'sendEmail')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
 
 		const title = component.supportForm.controls.title;
 		expect(title.valid)
@@ -114,16 +111,15 @@ describe('ContactSupportComponent', () => {
 	});
 
 	it('should fetch list of portal support topics on init', () => {
-		spyOn(component, 'getTopicList');
+		jest.spyOn(component, 'getTopicList');
 		component.ngOnInit();
 		expect(component.getTopicList)
 			.toHaveBeenCalled();
 	});
 
 	it('should not call the contact support service if form is invalid', () => {
-		spyOn(service, 'contactSupport')
-			.and
-			.returnValue(of(<any> { }));
+		jest.spyOn(service, 'contactSupport')
+			.mockReturnValue(of(<any> { }));
 		component.ngOnInit();
 		fixture.detectChanges();
 		component.sendSupportEmail();
@@ -132,9 +128,8 @@ describe('ContactSupportComponent', () => {
 	});
 
 	it('should not call the sendEmail service if form is invalid', () => {
-		spyOn(service, 'sendEmail')
-			.and
-			.returnValue(of(<any> { }));
+		jest.spyOn(service, 'sendEmail')
+			.mockReturnValue(of(<any> { }));
 		component.ngOnInit();
 		fixture.detectChanges();
 		component.submitMessage();
@@ -148,9 +143,8 @@ describe('ContactSupportComponent', () => {
 			statusText: 'Resource not found',
 		};
 
-		spyOn(service, 'contactSupport')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(service, 'contactSupport')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
 
 		component.ngOnInit();
 		fixture.detectChanges();
@@ -177,9 +171,8 @@ describe('ContactSupportComponent', () => {
 	});
 
 	it('should handle the contactSupport api response', () => {
-		spyOn(service, 'contactSupport')
-			.and
-			.returnValue(of(<any> {
+		jest.spyOn(service, 'contactSupport')
+			.mockReturnValue(of(<any> {
 				status: 'success',
 			}));
 
@@ -206,4 +199,5 @@ describe('ContactSupportComponent', () => {
 		expect(component.success)
 			.toBeTruthy();
 	});
+
 });

@@ -259,7 +259,7 @@ export const ArchitectureScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Get Count Of Assets with Exceptions',
 					response: {
 						body: getAssetsExceptionsCount,
@@ -276,7 +276,7 @@ export const ArchitectureScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Get Count Of CBP Rules',
 					response: {
 						body: getCBPRulesCount,
@@ -293,7 +293,7 @@ export const ArchitectureScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'list All CBP Rules',
 					response: {
 						body: listAllCBPRules,
@@ -311,7 +311,7 @@ export const ArchitectureScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'List All the Assets',
 					response: {
 						body: listAllAssets,
@@ -329,7 +329,7 @@ export const ArchitectureScenarios = [
 		scenarios: {
 			POST: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'List All the Device details',
 					response: {
 						body: listExceptionsDeviceDetails,
@@ -347,7 +347,7 @@ export const ArchitectureScenarios = [
 		scenarios: {
 			POST: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'List All CBP Device details',
 					response: {
 						body: listCBPExceptionDetails,

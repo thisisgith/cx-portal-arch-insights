@@ -362,7 +362,7 @@ export const HealthStatusScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 500,
+					delay: 30,
 					description: 'Call to get health-status',
 					response: {
 						body: [mockData],
@@ -371,7 +371,7 @@ export const HealthStatusScenarios = [
 					selected: true,
 				},
 				{
-					delay: 500,
+					delay: 30,
 					description: 'Call to get health-status (dnac unreachable)',
 					response: {
 						body: [dnacUnreachableMockData],
@@ -380,7 +380,7 @@ export const HealthStatusScenarios = [
 					selected: true,
 				},
 				{
-					delay: 500,
+					delay: 30,
 					description: 'Health-Status - Failure',
 					response: {
 						body: '',

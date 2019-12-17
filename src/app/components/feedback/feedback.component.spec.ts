@@ -100,9 +100,8 @@ describe('FeedbackComponent', () => {
 	}));
 
 	it('should send email response', () => {
-		spyOn(emailControllerService, 'sendEmail')
-			.and
-			.returnValue(of('Email Sent'));
+		jest.spyOn(emailControllerService, 'sendEmail')
+			.mockReturnValue(of('Email Sent'));
 		expect(component.feedbackForm.valid)
 			.toBeFalsy();
 
@@ -118,4 +117,5 @@ describe('FeedbackComponent', () => {
 		expect(emailControllerService.sendEmail)
 			.toHaveBeenCalled();
 	});
+
 });

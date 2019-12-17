@@ -92,9 +92,8 @@ describe('FingerprintHeaderComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(crashPreventionService, 'getDeviceInfo')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(crashPreventionService, 'getDeviceInfo')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
 		fixture.whenStable()
 			.then(() => {
 				fixture.detectChanges();
@@ -107,9 +106,8 @@ describe('FingerprintHeaderComponent', () => {
 	 * device Information response
 	 */
 	it('Should return the searched response', () => {
-		spyOn(crashPreventionService, 'getDeviceInfo')
-			.and
-			.returnValue(of(ComparisonViewScenarios[3].scenarios.GET[0].response.body));
+		jest.spyOn(crashPreventionService, 'getDeviceInfo')
+			.mockReturnValue(of(ComparisonViewScenarios[3].scenarios.GET[0].response.body));
 		fixture.detectChanges();
 		expect(component.deviceData)
 			.toBeDefined();
@@ -119,8 +117,7 @@ describe('FingerprintHeaderComponent', () => {
 		const fakeInput: SimpleChanges = {
 			asset: new SimpleChange(null, { customerId: 'Hello', deviceId: 'Hello' }, true),
 		};
-		const spy = spyOn(crashPreventionService, 'getDeviceInfo').and
-			.callThrough();
+		const spy = jest.spyOn(crashPreventionService, 'getDeviceInfo');
 		component.ngOnChanges(fakeInput);
 		expect(component.deviceDetails.deviceId)
 			.toBeDefined();
@@ -134,8 +131,7 @@ describe('FingerprintHeaderComponent', () => {
 		const fakeInput: SimpleChanges = {
 			asset: null,
 		};
-		const spy = spyOn(crashPreventionService, 'getDeviceInfo').and
-			.callThrough();
+		const spy = jest.spyOn(crashPreventionService, 'getDeviceInfo');
 		component.ngOnChanges(fakeInput);
 		expect(spy)
 			.toHaveBeenCalledTimes(0);

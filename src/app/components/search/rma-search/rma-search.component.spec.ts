@@ -38,9 +38,8 @@ describe('RMASearchComponent', () => {
 	});
 
 	it('should use service to get RMA based on input number', () => {
-		spyOn(service, 'getByNumber')
-			.and
-			.returnValue(of(RMAScenarios[0].scenarios.GET[0].response.body));
+		jest.spyOn(service, 'getByNumber')
+			.mockReturnValue(of(RMAScenarios[0].scenarios.GET[0].response.body));
 		component.rmaNumber = { query: defaultRmaNumber };
 		component.ngOnChanges();
 		fixture.detectChanges();
@@ -49,10 +48,9 @@ describe('RMASearchComponent', () => {
 	});
 
 	it('should emit a hide event if no RMA has been found', () => {
-		spyOn(service, 'getByNumber')
-			.and
-			.returnValue(of(RMAScenarios[0].scenarios.GET[3].response.body));
-		spyOn(component.hide, 'emit');
+		jest.spyOn(service, 'getByNumber')
+			.mockReturnValue(of(RMAScenarios[0].scenarios.GET[3].response.body));
+		jest.spyOn(component.hide, 'emit');
 		component.rmaNumber = { query: '8000000001' };
 		component.ngOnChanges();
 		fixture.detectChanges();
@@ -61,13 +59,12 @@ describe('RMASearchComponent', () => {
 	});
 
 	it('should emit a hide event on error', () => {
-		spyOn(service, 'getByNumber')
-			.and
-			.returnValue(throwError(new HttpErrorResponse({
+		jest.spyOn(service, 'getByNumber')
+			.mockReturnValue(throwError(new HttpErrorResponse({
 				status: 404,
 				statusText: 'Resource not found',
 			})));
-		spyOn(component.hide, 'emit');
+		jest.spyOn(component.hide, 'emit');
 		component.rmaNumber = { query: '8000000001' };
 		component.ngOnChanges();
 		fixture.detectChanges();
@@ -77,10 +74,9 @@ describe('RMASearchComponent', () => {
 
 	it(`should emit a toggleGeneralSearch event when first created to hide general search,
 	and a second time if there is a product description to search for`, () => {
-		spyOn(service, 'getByNumber')
-			.and
-			.returnValue(of(RMAScenarios[0].scenarios.GET[0].response.body));
-		spyOn(component.toggleGeneralSearch, 'emit');
+		jest.spyOn(service, 'getByNumber')
+			.mockReturnValue(of(RMAScenarios[0].scenarios.GET[0].response.body));
+		jest.spyOn(component.toggleGeneralSearch, 'emit');
 		component.rmaNumber = { query: defaultRmaNumber };
 		component.ngOnChanges();
 		fixture.detectChanges();

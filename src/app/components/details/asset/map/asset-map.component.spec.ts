@@ -109,9 +109,8 @@ describe('AssetMap', () => {
 	});
 
 	it('should attempt to geocode the input address', fakeAsync(() => {
-		const spy = spyOn(service, 'forwardLookup')
-			.and
-			.returnValue(of(geocode));
+		const spy = jest.spyOn(service, 'forwardLookup')
+			.mockReturnValue(of(geocode));
 		component.assetSummary = MockAssetSummaryData;
 		component.ngOnInit();
 		tick();
@@ -128,4 +127,5 @@ describe('AssetMap', () => {
 		expect(component.displayAddress.line1)
 			.toEqual(MockAssetSummaryData.installAddress1);
 	}));
+
 });

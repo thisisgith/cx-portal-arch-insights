@@ -43,8 +43,8 @@ describe('DetailsPanelHeaderComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(WrapperComponent);
 		component = fixture.componentInstance.header;
-		spyOn(component.close, 'emit');
-		spyOn(component.fullscreenChange, 'emit');
+		jest.spyOn(component.close, 'emit');
+		jest.spyOn(component.fullscreenChange, 'emit');
 		fixture.detectChanges();
 	});
 
@@ -72,4 +72,5 @@ describe('DetailsPanelHeaderComponent', () => {
 		expect(component.close.emit)
 			.toHaveBeenCalledWith(true);
 	}));
+
 });

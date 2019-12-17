@@ -427,7 +427,7 @@ export const ArchitectureReviewScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Get DNAC List',
 					response: {
 						body: getDnacList,
@@ -445,7 +445,7 @@ export const ArchitectureReviewScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Devices SDA Response',
 					response: {
 						body: getDevicesSDAResponseData,
@@ -463,7 +463,7 @@ export const ArchitectureReviewScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Bullet Chart Details',
 					response: {
 						body: getDNACDetails,
@@ -480,7 +480,7 @@ export const ArchitectureReviewScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'DNAC Count',
 					response: {
 						body: getDNACCountResponseData,
@@ -497,7 +497,7 @@ export const ArchitectureReviewScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Devices Count',
 					response: {
 						body: getDevicesCountResponseData,
@@ -514,7 +514,7 @@ export const ArchitectureReviewScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'SDA Chart Filter Count',
 					response: {
 						body: getSDAChartFilterCountResponseData,
@@ -532,7 +532,7 @@ export const ArchitectureReviewScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'SDA Data',
 					response: {
 						body: getSdaSupportedData,
@@ -550,7 +550,7 @@ export const ArchitectureReviewScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Non Optimal Links',
 					response: {
 						body: nonOptimalLinksResponse,
@@ -568,7 +568,7 @@ export const ArchitectureReviewScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'collection Id',
 					response: {
 						body: collectionIdResponse,
@@ -585,7 +585,7 @@ export const ArchitectureReviewScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'collection Id',
 					response: {
 						body: dnacScaleResponse,
@@ -603,7 +603,7 @@ export const ArchitectureReviewScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'permission',
 					response: {
 						body: tabsPermissionData,

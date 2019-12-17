@@ -43,21 +43,17 @@ describe('SyslogsMessagesComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(syslogsService, 'getGridData')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(syslogsService, 'getGridData')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
 		component.getSyslogsData();
 		expect(syslogsService.getGridData)
 				.toHaveBeenCalled();
 	});
 
 	it('Should get the syslog message grid data', () => {
-		spyOn(component, 'getSyslogsData')
-			.and
-			.callThrough();
-		spyOn(syslogsService, 'getGridData')
-		.and
-		.returnValue(of(SyslogScenarios[1].scenarios.POST[0].response.body));
+		jest.spyOn(component, 'getSyslogsData');
+		jest.spyOn(syslogsService, 'getGridData')
+		.mockReturnValue(of(SyslogScenarios[1].scenarios.POST[0].response.body));
 		component.ngOnInit();
 		expect(component.getSyslogsData)
 				.toHaveBeenCalled();
@@ -72,9 +68,8 @@ describe('SyslogsMessagesComponent', () => {
 			responseData: [],
 		};
 
-		spyOn(syslogsService, 'getGridData')
-			.and
-			.returnValue(of(syslogMessagesCount));
+		jest.spyOn(syslogsService, 'getGridData')
+			.mockReturnValue(of(syslogMessagesCount));
 		component.ngOnInit();
 		expect(component.totalItems)
 			.toEqual(0);
@@ -166,9 +161,7 @@ describe('SyslogsMessagesComponent', () => {
 	});
 
 	it('should call on enter function', () => {
-		spyOn(component, 'getSyslogsData')
-			.and
-			.callThrough();
+		jest.spyOn(component, 'getSyslogsData');
 		const keyEvent = {
 			keyCode: 12,
 		};
@@ -185,9 +178,7 @@ describe('SyslogsMessagesComponent', () => {
 	});
 
 	it('should update pagination page value', () => {
-		spyOn(component, 'getSyslogsData')
-				.and
-				.callThrough();
+		jest.spyOn(component, 'getSyslogsData');
 		const pageInfo = {
 			page: 2,
 			limit: 10,
@@ -199,9 +190,7 @@ describe('SyslogsMessagesComponent', () => {
 				.toHaveBeenCalledTimes(1);
 	});
 	it('should call on enter function', () => {
-		spyOn(component, 'getSyslogsData')
-			.and
-			.callThrough();
+		jest.spyOn(component, 'getSyslogsData');
 		const keyEvent = {
 			keyCode: 12,
 		};
@@ -217,9 +206,8 @@ describe('SyslogsMessagesComponent', () => {
 			.toHaveBeenCalledTimes(1);
 	});
 	it('should sort the table', () => {
-		spyOn(syslogsService, 'getGridData')
-			.and
-			.returnValue(of<any>(SyslogScenarios[1].scenarios.POST[0].response.body));
+		jest.spyOn(syslogsService, 'getGridData')
+			.mockReturnValue(of<any>(SyslogScenarios[1].scenarios.POST[0].response.body));
 		const eventSeverity = {
 			name: 'Severity',
 			sortDirection: 'asc',
@@ -268,4 +256,5 @@ describe('SyslogsMessagesComponent', () => {
 		expect(syslogsService.getGridData)
 			.toHaveBeenCalledTimes(6);
 	});
+
 });

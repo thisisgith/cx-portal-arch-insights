@@ -24,7 +24,7 @@ export const DNACStatusScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 500,
+					delay: 30,
 					description: 'dnacInstalled true',
 					response: {
 						body: mockData,
@@ -33,7 +33,7 @@ export const DNACStatusScenarios = [
 					selected: true,
 				},
 				{
-					delay: 500,
+					delay: 30,
 					description: 'dnacInstalled false',
 					response: {
 						body: mockData2,

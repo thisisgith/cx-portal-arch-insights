@@ -24,4 +24,5 @@ describe('FeedbackSuccessComponent', () => {
 		expect(component)
 			.toBeTruthy();
 	});
+
 });

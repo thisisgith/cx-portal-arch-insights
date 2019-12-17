@@ -64,9 +64,8 @@ describe('CbpRuleViolationComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(service, 'getCBPSeverityList')
-			.and
-			.returnValue(
+		jest.spyOn(service, 'getCBPSeverityList')
+			.mockReturnValue(
 				throwError(new HttpErrorResponse(error)),
 			);
 		component.ngOnInit();
@@ -115,9 +114,8 @@ describe('CbpRuleViolationComponent', () => {
 	});
 
 	it('should reload the data on filter change', () => {
-		spyOn(service, 'getCBPSeverityList')
-			.and
-			.returnValue(of({ TotalCounts: 1000, BPRulesDetails: [] }));
+		jest.spyOn(service, 'getCBPSeverityList')
+			.mockReturnValue(of({ TotalCounts: 1000, BPRulesDetails: [] }));
 		component.ngOnChanges({
 			filters: {
 				currentValue: { exceptions: [], isClearAllSelected: true },
@@ -137,9 +135,8 @@ describe('CbpRuleViolationComponent', () => {
 
 	it('should not reload the data on filter change if first change', () => {
 		component.searchText = 'airios';
-		spyOn(service, 'getCBPSeverityList')
-			.and
-			.returnValue(of({ TotalCounts: 1000, BPRulesDetails: [] }));
+		jest.spyOn(service, 'getCBPSeverityList')
+			.mockReturnValue(of({ TotalCounts: 1000, BPRulesDetails: [] }));
 		component.ngOnChanges({
 			filters: {
 				currentValue: { isClearAllSelected: false },
@@ -157,14 +154,14 @@ describe('CbpRuleViolationComponent', () => {
 
 	});
 	it('should call onpanelclose', () => {
-		spyOn(component, 'onPanelClose');
+		jest.spyOn(component, 'onPanelClose');
 		const hidden = true;
 		component.handleHidden(hidden);
 		expect(component.onPanelClose)
 			.toHaveBeenCalled();
 	});
 	it('should not call onpanelclose', () => {
-		spyOn(component, 'onPanelClose');
+		jest.spyOn(component, 'onPanelClose');
 		const hidden = false;
 		component.handleHidden(hidden);
 		expect(component.onPanelClose)
@@ -173,7 +170,7 @@ describe('CbpRuleViolationComponent', () => {
 	});
 	it('should not trigger search function', () => {
 		const enterKeyCode = 10;
-		spyOn(component, 'getCBPRulesData');
+		jest.spyOn(component, 'getCBPRulesData');
 		component.searchText = 'airios';
 		component.textFilter(enterKeyCode);
 		expect(component.getCBPRulesData)
@@ -190,4 +187,5 @@ describe('CbpRuleViolationComponent', () => {
 		expect(component.cbpRuleExceptions.length)
 			.toEqual(0);
 	});
+
 });

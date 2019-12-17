@@ -70,7 +70,7 @@ export const CoverageScenarios = [
 		scenarios: {
 			HEAD: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Coverage',
 					response: {
 						headers: new HttpHeaders({
@@ -89,7 +89,7 @@ export const CoverageScenarios = [
 		scenarios: {
 			HEAD: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'HEAD Coverage 93425688',
 					response: {
 						headers: new HttpHeaders({
@@ -109,7 +109,7 @@ export const CoverageScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Coverage Counts',
 					response: {
 						body: mockCoverageCounts,
@@ -118,7 +118,7 @@ export const CoverageScenarios = [
 					selected: true,
 				},
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Coverage - Empty Body',
 					response: {
 						body: { },
@@ -127,7 +127,7 @@ export const CoverageScenarios = [
 					selected: false,
 				},
 				{
-					delay: 500,
+					delay: 30,
 					description: 'Coverage 500 Failure',
 					response: {
 						status: 500,
@@ -136,7 +136,7 @@ export const CoverageScenarios = [
 					selected: false,
 				},
 				{
-					delay: 500,
+					delay: 30,
 					description: 'Coverage < 1%',
 					response: {
 						body: {
@@ -158,7 +158,7 @@ export const CoverageScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Coverage',
 					response: {
 						body: coverageResponse,
@@ -167,7 +167,7 @@ export const CoverageScenarios = [
 					selected: true,
 				},
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Not Covered',
 					response: {
 						body: { data: [] },
@@ -176,7 +176,7 @@ export const CoverageScenarios = [
 					selected: false,
 				},
 				{
-					delay: 100,
+					delay: 30,
 					description: 'No keys',
 					response: {
 						body: {
@@ -194,7 +194,7 @@ export const CoverageScenarios = [
 					selected: false,
 				},
 				{
-					delay: 100,
+					delay: 30,
 					description: 'No dates',
 					response: {
 						body: {
@@ -212,7 +212,7 @@ export const CoverageScenarios = [
 					selected: false,
 				},
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Null keys',
 					response: {
 						body: {
@@ -232,7 +232,7 @@ export const CoverageScenarios = [
 					selected: false,
 				},
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Null dates',
 					response: {
 						body: {
@@ -261,7 +261,7 @@ export const CoverageScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'GET Coverage 93425688',
 					response: {
 						body: coverageResponse,

@@ -386,7 +386,7 @@
 					}
 				},
 				"test": {
-					"builder": "@angular-devkit/build-angular:karma",
+					"builder": "@angular-builders/jest:run",
 					"options": {
 						"assets": [
 							"src/favicon.png",
@@ -411,7 +411,9 @@
 							"./src/app/components/user-mgmt/select-role/roles.service.ts",
 							"./src/app/components/user-mgmt/user-mgmt-sort.pipe.ts",
 							"./src/app/components/user-mgmt/user-mgmt-filter.pipe.ts"
-						]
+						],
+					"no-cache": true,
+					"reporters": ["jest-junit"]
 					}
 				}
 			},

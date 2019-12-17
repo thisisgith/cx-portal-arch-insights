@@ -20,4 +20,5 @@ describe('SlideGetterFunction', () => {
 			.not
 			.toBeNull();
 	});
+
 });

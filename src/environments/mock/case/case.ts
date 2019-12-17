@@ -999,7 +999,7 @@ export const CaseScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Case Details',
 					response: {
 						body: caseDetailsResponse,
@@ -1017,7 +1017,7 @@ export const CaseScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 150,
+					delay: 33,
 					description: 'Case Notes',
 					response: {
 						body: caseNotesResponse,
@@ -1035,7 +1035,7 @@ export const CaseScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 200,
+					delay: 35,
 					description: 'Case Summary',
 					response: {
 						body: caseSummaryResponse,
@@ -1053,7 +1053,7 @@ export const CaseScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Case Details',
 					response: {
 						body: caseDetailsResponseAlt,
@@ -1070,7 +1070,7 @@ export const CaseScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 200,
+					delay: 35,
 					description: 'Case List p1',
 					response: {
 						body: caseListResponse1,
@@ -1088,7 +1088,7 @@ export const CaseScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 200,
+					delay: 35,
 					description: 'Case List p2',
 					response: {
 						body: caseListResponse2,
@@ -1106,7 +1106,7 @@ export const CaseScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 200,
+					delay: 35,
 					description: 'Case List single',
 					response: {
 						body: caseListResponseSingle,
@@ -1124,7 +1124,7 @@ export const CaseScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 200,
+					delay: 35,
 					description: 'Cases for SN FHK1045Y01E',
 					response: {
 						body: caseListResponse1,
@@ -1142,7 +1142,7 @@ export const CaseScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 200,
+					delay: 35,
 					description: 'Cases for SN FOC1544Y16T',
 					response: {
 						body: caseListResponse1,
@@ -1160,7 +1160,7 @@ export const CaseScenarios = [
 		scenarios: {
 			POST: [
 				{
-					delay: 500,
+					delay: 30,
 					description: 'Cases Create Response',
 					response: {
 						body: caseCreatedResponse,
@@ -1178,7 +1178,7 @@ export const CaseScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 50,
+					delay: 25,
 					description: 'Case Counts',
 					response: {
 						body: allCaseCountResponse,
@@ -1196,7 +1196,7 @@ export const CaseScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 150,
+					delay: 33,
 					description: 'Get Case Visual Filters',
 					response: {
 						body: caseListAll,
@@ -1232,7 +1232,7 @@ export const CaseScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Case Files',
 					response: {
 						body: caseFilesResponse,

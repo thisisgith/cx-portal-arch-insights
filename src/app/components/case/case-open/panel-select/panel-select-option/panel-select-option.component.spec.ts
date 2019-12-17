@@ -23,4 +23,5 @@ describe('PanelSelectOptionComponent', () => {
 		expect(component)
 			.toBeTruthy();
 	});
+
 });

@@ -28,8 +28,7 @@ describe('K9DeclineComponent', () => {
 
 	it('should emit cancel event', async(() => {
 		const sub = component.onCancel.subscribe(() => {
-			expect()
-				.nothing();
+			expect.anything();
 			sub.unsubscribe();
 		});
 		component.cancel();
@@ -37,8 +36,7 @@ describe('K9DeclineComponent', () => {
 
 	it('should emit continue event', async(() => {
 		const sub = component.onContinue.subscribe(() => {
-			expect()
-				.nothing();
+			expect.anything();
 			sub.unsubscribe();
 		});
 		component.continue();

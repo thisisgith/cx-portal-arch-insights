@@ -30,4 +30,5 @@ describe('ResourceGaugeColorPipe', () => {
 		expect(gaugeColor)
 			.toBe('#000');
 	});
+
 });

@@ -265,7 +265,7 @@ export const ELearningScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 800,
+					delay: 58,
 					description: '(E-Learning) IBN-Campus Network Assurance-Onboard',
 					response: {
 						body: MockELearning('IBN', 'Campus Network Assurance', 'Onboard'),
@@ -274,7 +274,7 @@ export const ELearningScenarios = [
 					selected: true,
 				},
 				{
-					delay: Math.floor(Math.random() * 2000) + 800,
+					delay: 58,
 					description: '(E-Learning) IBN-Campus Network Assurance-Onboard-noProgress',
 					response: {
 						body: MockELearning('IBN', 'Campus Network Assurance', 'Onboard',
@@ -284,7 +284,7 @@ export const ELearningScenarios = [
 					selected: false,
 				},
 				{
-					delay: Math.floor(Math.random() * 2000) + 800,
+					delay: 58,
 					description:
 						'(E-Learning) IBN-Campus Network Assurance-Onboard-progress25Percent',
 					response: {
@@ -295,7 +295,7 @@ export const ELearningScenarios = [
 					selected: false,
 				},
 				{
-					delay: Math.floor(Math.random() * 2000) + 800,
+					delay: 58,
 					description:
 						'(E-Learning) IBN-Campus Network Assurance-Onboard-progress50Percent',
 					response: {
@@ -306,7 +306,7 @@ export const ELearningScenarios = [
 					selected: false,
 				},
 				{
-					delay: Math.floor(Math.random() * 2000) + 800,
+					delay: 58,
 					description:
 						'(E-Learning) IBN-Campus Network Assurance-Onboard-progress75Percent',
 					response: {
@@ -317,7 +317,7 @@ export const ELearningScenarios = [
 					selected: false,
 				},
 				{
-					delay: Math.floor(Math.random() * 2000) + 800,
+					delay: 58,
 					description:
 						'(E-Learning) IBN-Campus Network Assurance-Onboard-progress100Percent',
 					response: {
@@ -338,7 +338,7 @@ export const ELearningScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 800,
+					delay: 58,
 					description: '(E-Learning) IBN-Campus Network Segmentation-Onboard',
 					response: {
 						body: MockELearning('IBN', 'Campus Network Segmentation', 'Onboard'),
@@ -356,7 +356,7 @@ export const ELearningScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 250,
+					delay: 38,
 					description: '(E-Learning) IBN-Scalable Access Policy-Onboard',
 					response: {
 						body: MockELearning('IBN', 'Scalable Access Policy', 'Onboard'),
@@ -374,7 +374,7 @@ export const ELearningScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 250,
+					delay: 38,
 					description: '(E-Learning) IBN-Network Device Onboarding-Onboard',
 					response: {
 						body: MockELearning('IBN', 'Network Device Onboarding', 'Onboard'),
@@ -392,7 +392,7 @@ export const ELearningScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 250,
+					delay: 38,
 					description: '(E-Learning) IBN-Campus Software Image Management-Onboard',
 					response: {
 						body: MockELearning('IBN', 'Campus Software Image Management', 'Onboard'),

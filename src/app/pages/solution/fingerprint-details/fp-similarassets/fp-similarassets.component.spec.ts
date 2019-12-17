@@ -11,7 +11,6 @@ import { of, throwError } from 'rxjs';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SimpleChanges, SimpleChange } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
-
 describe('FpSimilarassetsComponent', () => {
 	let component: FpSimilarAssetsComponent;
 	let fixture: ComponentFixture<FpSimilarAssetsComponent>;
@@ -55,8 +54,7 @@ describe('FpSimilarassetsComponent', () => {
 	});
 
 	it('should define tableOption on ngOnInit', () => {
-		const spy = spyOn(fpIntelligenceService, 'getSimilarDevices').and
-			.callThrough();
+		const spy = jest.spyOn(fpIntelligenceService, 'getSimilarDevices');
 		component.ngOnInit();
 		fixture.detectChanges();
 		expect(component.tableOptions)
@@ -74,8 +72,7 @@ describe('FpSimilarassetsComponent', () => {
 		const fakeInput: SimpleChanges = {
 			asset: new SimpleChange(null, { productId: 'TestProdID', deviceId: 'TestID' }, false),
 		};
-		const spy = spyOn(fpIntelligenceService, 'getSimilarDevices').and
-			.callThrough();
+		const spy = jest.spyOn(fpIntelligenceService, 'getSimilarDevices');
 		component.ngOnChanges(fakeInput);
 		fixture.whenStable()
 		.then(() => {
@@ -97,8 +94,7 @@ describe('FpSimilarassetsComponent', () => {
 		const fakeInput: SimpleChanges = {
 			asset: null,
 		};
-		const spy = spyOn(fpIntelligenceService, 'getSimilarDevices').and
-			.callThrough();
+		const spy = jest.spyOn(fpIntelligenceService, 'getSimilarDevices');
 		component.ngOnChanges(fakeInput);
 		expect(spy)
 			.toHaveBeenCalledTimes(0);
@@ -130,9 +126,8 @@ describe('FpSimilarassetsComponent', () => {
 	it('should not load data if form is invalid', fakeAsync(() => {
 		component.requestForm.setValue({
 			similarityCriteria: null});
-		spyOn(fpIntelligenceService, 'getSimilarDevices')
-			.and
-			.returnValue(of(ComparisonViewScenarios[4].scenarios.GET[0].response.body));
+		jest.spyOn(fpIntelligenceService, 'getSimilarDevices')
+			.mockReturnValue(of(ComparisonViewScenarios[4].scenarios.GET[0].response.body));
 		component.ngOnInit();
 		tick(1000);
 		fixture.detectChanges();
@@ -141,9 +136,8 @@ describe('FpSimilarassetsComponent', () => {
 	}));
 
 	it('should not load data if response contains empty values', done => {
-		spyOn(fpIntelligenceService, 'getSimilarDevices')
-		.and
-		.returnValue(of(ComparisonViewScenarios[8].scenarios.GET[0].response.body));
+		jest.spyOn(fpIntelligenceService, 'getSimilarDevices')
+		.mockReturnValue(of(ComparisonViewScenarios[8].scenarios.GET[0].response.body));
 		component.ngOnInit();
 		fixture.whenStable()
 			.then(() => {
@@ -155,7 +149,7 @@ describe('FpSimilarassetsComponent', () => {
 	});
 
 	it('should check reError emit', () => {
-		spyOn(component.reqError, 'emit');
+		jest.spyOn(component.reqError, 'emit');
 		const errorMsg = 'error';
 		component.showError(errorMsg);
 		fixture.detectChanges();
@@ -164,9 +158,8 @@ describe('FpSimilarassetsComponent', () => {
 	});
 
 	it('Should return the response', done => {
-		spyOn(fpIntelligenceService, 'getSimilarDevices')
-			.and
-			.returnValue(of(ComparisonViewScenarios[7].scenarios.GET[0].response.body));
+		jest.spyOn(fpIntelligenceService, 'getSimilarDevices')
+			.mockReturnValue(of(ComparisonViewScenarios[7].scenarios.GET[0].response.body));
 		component.ngOnInit();
 		fixture.whenStable()
 			.then(() => {
@@ -183,9 +176,8 @@ describe('FpSimilarassetsComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(fpIntelligenceService, 'getSimilarDevices')
-		.and
-		.returnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(fpIntelligenceService, 'getSimilarDevices')
+		.mockReturnValue(throwError(new HttpErrorResponse(error)));
 		fixture.detectChanges();
 		component.loadSimilarDevicesData();
 		expect(component.seriesDataLoading)
@@ -193,4 +185,5 @@ describe('FpSimilarassetsComponent', () => {
 		expect(component.noData)
 		.toBeTruthy();
 	});
+
 });

@@ -47,7 +47,6 @@ describe('HeightTransitionDirective', () => {
 		fixture.detectChanges();
 		de = fixture.debugElement.query(By.css('#target'));
 		expect(de.styles.height)
-			.not
 			.toBe('0px');
 	});
 
@@ -56,7 +55,6 @@ describe('HeightTransitionDirective', () => {
 		fixture.detectChanges();
 		de = fixture.debugElement.query(By.css('#target'));
 		expect(de.styles.height)
-			.not
 			.toBe('0px');
 		component.expanded = false;
 		fixture.detectChanges();
@@ -65,4 +63,5 @@ describe('HeightTransitionDirective', () => {
 		expect(de.styles.height)
 			.toBe('0px');
 	}));
+
 });

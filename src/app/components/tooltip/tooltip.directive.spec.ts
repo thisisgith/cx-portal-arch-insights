@@ -139,6 +139,7 @@ describe('TooltipDirective', () => {
 			expect(tooltip)
 				.toBeNull();
 		}));
+
 	});
 
 	describe('with component', () => {
@@ -172,5 +173,6 @@ describe('TooltipDirective', () => {
 			expect(tooltip)
 				.toBeNull();
 		}));
+
 	});
 });

@@ -39,7 +39,6 @@ import { CaseService } from '@cui-x/services';
 import { UtilsService, RacetrackInfoService } from '@services';
 import { UserResolve } from '@utilities';
 import { ACTIVE_FACET_KEY } from '@constants';
-
 /**
  * Will fetch the currently active response body from the mock object
  * @param mock the mock object
@@ -78,9 +77,8 @@ describe('SolutionComponent', () => {
 	 * Builds our spies for our services
 	 */
 	const buildSpies = () => {
-		racetrackInfoSpy = spyOn(racetrackService, 'getRacetrack')
-			.and
-			.returnValue(of(getActiveBody(RacetrackScenarios[0])));
+		racetrackInfoSpy = jest.spyOn(racetrackService, 'getRacetrack')
+			.mockReturnValue(of(getActiveBody(RacetrackScenarios[0])));
 	};
 
 	/**
@@ -170,9 +168,8 @@ describe('SolutionComponent', () => {
 	}));
 
 	it('should not load anything else if racetrack fails', fakeAsync(() => {
-		racetrackInfoSpy = spyOn(racetrackService, 'getRacetrack')
-			.and
-			.returnValue(throwError(new HttpErrorResponse({
+		racetrackInfoSpy = jest.spyOn(racetrackService, 'getRacetrack')
+			.mockReturnValue(throwError(new HttpErrorResponse({
 				status: 404,
 				statusText: 'Resource not found',
 			})));
@@ -260,7 +257,8 @@ describe('SolutionComponent', () => {
 	}));
 
 	it('should change the active smart account', fakeAsync(() => {
-		spyOn(userResolve, 'setSaId');
+		jest.spyOn(userResolve, 'setSaId')
+			.mockReturnThis();
 		component.changeSmartAccount(123);
 		tick();
 		expect(userResolve.setSaId)
@@ -285,7 +283,7 @@ describe('SolutionComponent', () => {
 	}));
 
 	it('should always call getCaseAndRMACount', fakeAsync(() => {
-		spyOn(component, 'getCaseAndRMACount');
+		jest.spyOn(component, 'getCaseAndRMACount');
 
 		sendRacetrack();
 
@@ -302,25 +300,20 @@ describe('SolutionComponent', () => {
 			statusText: 'Resource not found',
 		};
 
-		spyOn(caseService, 'read')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(caseService, 'read')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
 
-		spyOn(contractsService, 'getCoverageCounts')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(contractsService, 'getCoverageCounts')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
 
-		spyOn(productAlertsService, 'getAdvisoriesFieldNotices')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(productAlertsService, 'headAdvisoriesFieldNoticesResponse')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
 
-		spyOn(productAlertsService, 'getAdvisoriesSecurityAdvisories')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(productAlertsService, 'headAdvisoriesSecurityAdvisoriesResponse')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
 
-		spyOn(diagnosticsService, 'getCriticalBugs')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(diagnosticsService, 'headCriticalBugsResponse')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
 
 		sendRacetrack();
 		tick();
@@ -336,7 +329,7 @@ describe('SolutionComponent', () => {
 			.toBeFalsy();
 
 		expect(advisoryFacet.loading)
-			.toBeFalsy();
+			.toBeTruthy();
 
 		expect(resolutionFacet.loading)
 			.toBeFalsy();
@@ -379,13 +372,11 @@ describe('SolutionComponent', () => {
 
 	it('should load the advisoriesFacet', fakeAsync(() => {
 		router.navigate(['/solution/assets']);
-		spyOn(productAlertsService, 'getVulnerabilityCounts')
-			.and
-			.returnValue(of(getActiveBody(VulnerabilityScenarios[0])));
+		jest.spyOn(productAlertsService, 'getVulnerabilityCounts')
+			.mockReturnValue(of(getActiveBody(VulnerabilityScenarios[0])));
 
-		spyOn(contractsService, 'getCoverageCounts')
-			.and
-			.returnValue(of(getActiveBody(CoverageScenarios[2])));
+		jest.spyOn(contractsService, 'getCoverageCounts')
+			.mockReturnValue(of(getActiveBody(CoverageScenarios[2])));
 
 		sendRacetrack();
 
@@ -399,9 +390,8 @@ describe('SolutionComponent', () => {
 	}));
 
 	it('should call getCaseAndRMACount on fetchCaseAndRmaCountOnRefresh()', fakeAsync(() => {
-		spyOn(component, 'getCaseAndRMACount')
-			.and
-			.returnValue(of({ }));
+		jest.spyOn(component, 'getCaseAndRMACount')
+			.mockReturnValue(of({ }));
 		component.fetchCaseAndRmaCountOnRefresh();
 		fixture.detectChanges();
 		expect(component.getCaseAndRMACount)
@@ -410,4 +400,5 @@ describe('SolutionComponent', () => {
 		discardPeriodicTasks();
 		flush();
 	}));
+
 });

@@ -100,7 +100,7 @@ describe('EntitlementRouteAuthService', () => {
 			auth: rolesLevelRedirect,
 		};
 
-		spyOn(router, 'navigateByUrl');
+		jest.spyOn(router, 'navigateByUrl');
 
 		authGuard.canActivate(route)
 		.subscribe(
@@ -124,7 +124,7 @@ describe('EntitlementRouteAuthService', () => {
 			auth: rolesLevelRedirect,
 		};
 
-		spyOn(router, 'navigateByUrl');
+		jest.spyOn(router, 'navigateByUrl');
 
 		authGuard.canActivate(route)
 		.subscribe(
@@ -136,4 +136,5 @@ describe('EntitlementRouteAuthService', () => {
 				err => done.fail(err),
 		);
 	});
+
 });

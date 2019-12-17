@@ -11,7 +11,6 @@ import { CrashedSystemsGridModule } from './crashed-systems-grid.module';
 import { SimpleChanges, SimpleChange } from '@angular/core';
 import { environment } from '@environment';
 import { ActivatedRoute } from '@angular/router';
-
 describe('CrashedSystemsGridComponent', () => {
 	let component: CrashedSystemsGridComponent;
 	let fixture: ComponentFixture<CrashedSystemsGridComponent>;
@@ -78,9 +77,8 @@ describe('CrashedSystemsGridComponent', () => {
 	});
 
 	it('Should get the device details', () => {
-		spyOn(crashRiskGridService, 'getDeviceDetails')
-		.and
-		.returnValue(of(RiskScenarios[2].scenarios.GET[0].response.body));
+		jest.spyOn(crashRiskGridService, 'getDeviceDetails')
+		.mockReturnValue(of(RiskScenarios[2].scenarios.GET[0].response.body));
 		component.getCrashedSystemDetails();
 		fixture.detectChanges();
 		expect(component.crashedSystemsGridDetails.tableData)
@@ -89,16 +87,15 @@ describe('CrashedSystemsGridComponent', () => {
 	});
 
 	it('should close the panal', () => {
-		spyOn(crashRiskGridService, 'getDeviceDetails')
-			.and
-			.returnValue(of(RiskScenarios[0].scenarios.GET[0].response.body));
+		jest.spyOn(crashRiskGridService, 'getDeviceDetails')
+			.mockReturnValue(of(RiskScenarios[0].scenarios.GET[0].response.body));
 		fixture.detectChanges();
 		component.onPanelClose();
 		expect(component.selectedSystem)
 			.toBeNull();
 	});
 	it('should change status on Onchanges', () => {
-		const fetchDataSpy = spyOn(component, 'getCrashedSystemDetails');
+		const fetchDataSpy = jest.spyOn(component, 'getCrashedSystemDetails');
 		const changes: SimpleChanges = {
 			selectedFilter: new SimpleChange({ }, { selectedFilter: 'Success' }, false),
 			selectedSolution: new SimpleChange({ }, { selectedSolution: 'Success' }, false),
@@ -111,8 +108,7 @@ describe('CrashedSystemsGridComponent', () => {
 	});
 
 	it('should call onTableSortingChanged ', () => {
-		spyOn(crashRiskGridService, 'getDeviceDetails').and
-		.callThrough();
+		jest.spyOn(crashRiskGridService, 'getDeviceDetails');
 		component.onTableSortingChanged({ });
 	});
 
@@ -153,8 +149,7 @@ describe('CrashedSystemsGridComponent', () => {
 			swType: 'AP-COS',
 			swVersion: '8.8.120.0',
 		}];
-		spyOn(component, 'sortTableData').and
-			.callThrough();
+		jest.spyOn(component, 'sortTableData');
 		component.sortTableData(sortObj, [sortObj], tableData);
 		expect(component.sortTableData)
 			.toHaveBeenCalled();
@@ -163,4 +158,5 @@ describe('CrashedSystemsGridComponent', () => {
 		expect(component.sortTableData)
 					.toHaveBeenCalled();
 	});
+
 });

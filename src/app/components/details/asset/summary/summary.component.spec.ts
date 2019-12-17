@@ -74,12 +74,10 @@ describe('AssetDetailsSummaryComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(assetTaggingService, 'getAsset360Tags')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(networkService, 'getScanStatusBySerial')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(assetTaggingService, 'getAsset360Tags')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(networkService, 'getScanStatusBySerial')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
 
 		fixture.detectChanges();
 
@@ -103,22 +101,18 @@ describe('AssetDetailsSummaryComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(assetTaggingService, 'getAsset360Tags')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(networkService, 'getScanStatusBySerial')
-			.and
-			.returnValue(of([]));
+		jest.spyOn(assetTaggingService, 'getAsset360Tags')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(networkService, 'getScanStatusBySerial')
+			.mockReturnValue(of([]));
 
-		spyOn(networkService, 'postDeviceTransactions')
-			.and
-			.returnValue(of([{
+		jest.spyOn(networkService, 'postDeviceTransactions')
+			.mockReturnValue(of([{
 				transactionId: 'fake',
 			}]));
 
-		spyOn(networkService, 'getScanStatusByTransaction')
-			.and
-			.returnValue(of({
+		jest.spyOn(networkService, 'getScanStatusByTransaction')
+			.mockReturnValue(of({
 				status: 'SUCCESS',
 			}));
 
@@ -141,16 +135,13 @@ describe('AssetDetailsSummaryComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(assetTaggingService, 'getAsset360Tags')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(networkService, 'getScanStatusBySerial')
-			.and
-			.returnValue(of([]));
+		jest.spyOn(assetTaggingService, 'getAsset360Tags')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(networkService, 'getScanStatusBySerial')
+			.mockReturnValue(of([]));
 
-		spyOn(networkService, 'postDeviceTransactions')
-			.and
-			.returnValue(of([]));
+		jest.spyOn(networkService, 'postDeviceTransactions')
+			.mockReturnValue(of([]));
 
 		component.initiateScan();
 
@@ -169,16 +160,13 @@ describe('AssetDetailsSummaryComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(assetTaggingService, 'getAsset360Tags')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(networkService, 'getScanStatusBySerial')
-			.and
-			.returnValue(of([]));
+		jest.spyOn(assetTaggingService, 'getAsset360Tags')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(networkService, 'getScanStatusBySerial')
+			.mockReturnValue(of([]));
 
-		spyOn(networkService, 'postDeviceTransactions')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(networkService, 'postDeviceTransactions')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
 
 		component.initiateScan();
 
@@ -197,20 +185,17 @@ describe('AssetDetailsSummaryComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(assetTaggingService, 'getAsset360Tags')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(networkService, 'getScanStatusBySerial')
-			.and
-			.returnValue(of([
+		jest.spyOn(assetTaggingService, 'getAsset360Tags')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(networkService, 'getScanStatusBySerial')
+			.mockReturnValue(of([
 				{
 					status: 'IN_PROGRESS',
 					transactionId: 'fake',
 				},
 			]));
-		spyOn(networkService, 'getScanStatusByTransaction')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(networkService, 'getScanStatusByTransaction')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
 
 		component.refresh();
 
@@ -231,20 +216,17 @@ describe('AssetDetailsSummaryComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(assetTaggingService, 'getAsset360Tags')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(networkService, 'getScanStatusBySerial')
-			.and
-			.returnValue(of([
+		jest.spyOn(assetTaggingService, 'getAsset360Tags')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(networkService, 'getScanStatusBySerial')
+			.mockReturnValue(of([
 				{
 					status: 'RECEIVED',
 					transactionId: 'fake',
 				},
 			]));
-		spyOn(networkService, 'getScanStatusByTransaction')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(networkService, 'getScanStatusByTransaction')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
 
 		component.refresh();
 
@@ -265,12 +247,10 @@ describe('AssetDetailsSummaryComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(assetTaggingService, 'getAsset360Tags')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(networkService, 'getScanStatusBySerial')
-			.and
-			.returnValue(of([
+		jest.spyOn(assetTaggingService, 'getAsset360Tags')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(networkService, 'getScanStatusBySerial')
+			.mockReturnValue(of([
 				{
 					status: 'FAILURE',
 					transactionId: 'fake',
@@ -353,4 +333,5 @@ describe('AssetDetailsSummaryComponent', () => {
 			done();
 		});
 	});
+
 });

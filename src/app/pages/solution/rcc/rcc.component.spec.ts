@@ -14,7 +14,6 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { RccService, Filter } from '@sdp-api';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { AssetPanelLinkService } from '@services';
-
 describe('RccComponent', () => {
 	let component: RccComponent;
 	let fixture: ComponentFixture<RccComponent>;
@@ -70,9 +69,8 @@ describe('RccComponent', () => {
 	 * @TODO: modify test to use UI
 	 */
 	it('should get the RCC optInStatus true', () => {
-		spyOn(rccService, 'optInDetail')
-			.and
-			.returnValue(of(ComplianceScenarios[0].scenarios.GET[0].response.body.rccOptInStatus));
+		jest.spyOn(rccService, 'optInDetail')
+			.mockReturnValue(of(ComplianceScenarios[0].scenarios.GET[0].response.body.rccOptInStatus));
 		component.ngOnInit();
 		fixture.whenStable()
 			.then(() => {
@@ -85,9 +83,8 @@ describe('RccComponent', () => {
 	});
 
 	it('should get the violation grid data success', () => {
-		spyOn(rccService, 'getGridData')
-			.and
-			.returnValue(of(ComplianceScenarios[0].scenarios.GET[0].response.body));
+		jest.spyOn(rccService, 'getGridData')
+			.mockReturnValue(of(ComplianceScenarios[0].scenarios.GET[0].response.body));
 		component.ngOnInit();
 		fixture.whenStable()
 			.then(() => {
@@ -100,9 +97,8 @@ describe('RccComponent', () => {
 	});
 
 	it('Should return the violation filter data', () => {
-		spyOn(rccService, 'getViolationCount')
-			.and
-			.returnValue(of(ComplianceScenarios[4].scenarios.GET[0].response.body));
+		jest.spyOn(rccService, 'getViolationCount')
+			.mockReturnValue(of(ComplianceScenarios[4].scenarios.GET[0].response.body));
 		component.ngOnInit();
 		fixture.whenStable()
 			.then(() => {
@@ -113,9 +109,8 @@ describe('RccComponent', () => {
 	});
 
 	it('Should return the asset filter data', () => {
-		spyOn(rccService, 'getAssetCount')
-			.and
-			.returnValue(of(ComplianceScenarios[5].scenarios.GET[0].response.body));
+		jest.spyOn(rccService, 'getAssetCount')
+			.mockReturnValue(of(ComplianceScenarios[5].scenarios.GET[0].response.body));
 		component.selectedAssetView(component.view);
 		fixture.detectChanges();
 		expect(component.assetFilterObj)
@@ -182,7 +177,7 @@ describe('RccComponent', () => {
 
 	it('should invoke clearSearchInput method empty', () => {
 		component.searchInput = '';
-		spyOn(component, 'searchViolations');
+		jest.spyOn(component, 'searchViolations');
 		component.clearSearchInput();
 		fixture.detectChanges();
 		expect(component.searchViolations)
@@ -191,7 +186,7 @@ describe('RccComponent', () => {
 
 	it('should invoke clearSearchInput method with search input', () => {
 		component.searchInput = 'Test';
-		spyOn(component, 'searchViolations');
+		jest.spyOn(component, 'searchViolations');
 		component.clearSearchInput();
 		fixture.detectChanges();
 		expect(component.searchViolations)
@@ -455,9 +450,8 @@ describe('RccComponent', () => {
 			search: 'HIPAA',
 			severity: 'P1',
 		};
-		spyOn(rccService, 'getGridData')
-			.and
-			.returnValue(of(ComplianceScenarios[10].scenarios.GET[0].response.body));
+		jest.spyOn(rccService, 'getGridData')
+			.mockReturnValue(of(ComplianceScenarios[10].scenarios.GET[0].response.body));
 		component.getRCCData(violationGridObj);
 		expect(component.noTableData)
 			.toBeTruthy();
@@ -477,9 +471,8 @@ describe('RccComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(rccService, 'getGridData')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(rccService, 'getGridData')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
 		component.getRCCData(violationGridObj);
 		expect(component.errorPolicyView)
 			.toBeTruthy();
@@ -499,9 +492,8 @@ describe('RccComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(rccService, 'getAssetGridData')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(rccService, 'getAssetGridData')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
 		component.getRCCAssetData(violationGridObj);
 		expect(component.errorPolicyView)
 			.toBeTruthy();
@@ -512,9 +504,8 @@ describe('RccComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(rccService, 'getViolationCount')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(rccService, 'getViolationCount')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
 		component.getFiltersData();
 		expect(component.loading)
 			.toBeTruthy();
@@ -525,9 +516,8 @@ describe('RccComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(rccService, 'getAssetCount')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(rccService, 'getAssetCount')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
 		component.getAssetFiltersData();
 		expect(component.loading)
 			.toBeTruthy();
@@ -543,9 +533,8 @@ describe('RccComponent', () => {
 			searchParam: 'HIPAA',
 			severity: 'P1',
 		};
-		spyOn(rccService, 'getAssetGridData')
-			.and
-			.returnValue(of(ComplianceScenarios[12].scenarios.GET[0].response.body));
+		jest.spyOn(rccService, 'getAssetGridData')
+			.mockReturnValue(of(ComplianceScenarios[12].scenarios.GET[0].response.body));
 		component.getRCCAssetData(violationGridObj);
 		expect(component.errorPolicyView)
 			.toBeFalsy();
@@ -561,9 +550,8 @@ describe('RccComponent', () => {
 			searchParam: 'HIPAA',
 			severity: 'P1',
 		};
-		spyOn(rccService, 'getAssetGridData')
-			.and
-			.returnValue(of(ComplianceScenarios[13].scenarios.GET[0].response.body));
+		jest.spyOn(rccService, 'getAssetGridData')
+			.mockReturnValue(of(ComplianceScenarios[13].scenarios.GET[0].response.body));
 		component.getRCCAssetData(violationGridObj);
 		expect(component.noTableData)
 			.toBeTruthy();
@@ -623,7 +611,8 @@ describe('RccComponent', () => {
 	});
 
 	it('should called on close with true', () => {
-		spyOn(component, 'onPanelClose');
+		jest.spyOn(component, 'onPanelClose')
+			.mockReturnThis();
 		component.handleHidden(true);
 		expect(component.onPanelClose)
 			.toHaveBeenCalled();
@@ -631,7 +620,7 @@ describe('RccComponent', () => {
 
 	it('should called on close with false', () => {
 		component.handleHidden(false);
-		spyOn(component, 'onPanelClose');
+		jest.spyOn(component, 'onPanelClose');
 		expect(component.onPanelClose)
 			.toHaveBeenCalledTimes(0);
 	});
@@ -666,9 +655,8 @@ describe('RccComponent', () => {
 	it('should call asset api and fetch data', () => {
 		const data = [{ }, { }];
 		const serialNumber = 'FCW2246E0PB';
-		spyOn(assetPanelLinkService, 'getAssetLinkData')
-		.and
-		.returnValue(of(data));
+		jest.spyOn(assetPanelLinkService, 'getAssetLinkData')
+		.mockReturnValue(of(data));
 		fixture.detectChanges();
 		component.openDevicePage(serialNumber);
 	});
@@ -680,10 +668,10 @@ describe('RccComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(assetPanelLinkService, 'getAssetLinkData')
-		.and
-		.returnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(assetPanelLinkService, 'getAssetLinkData')
+		.mockReturnValue(throwError(new HttpErrorResponse(error)));
 		fixture.detectChanges();
 		component.openDevicePage(serialNumber);
 	});
+
 });

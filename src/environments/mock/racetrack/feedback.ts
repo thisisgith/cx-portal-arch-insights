@@ -11,7 +11,7 @@ export const FeedbackScenarios = [
 		scenarios: {
 			POST: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(Lifecycle) Feedback POST',
 					response: {
 						body: {
@@ -33,7 +33,7 @@ export const FeedbackScenarios = [
 		scenarios: {
 			PUT: [
 				{
-					delay: Math.floor(Math.random() * 2000),
+					delay: 35,
 					description: '(Lifecycle) Feedback PUT',
 					response: {
 						body:  {

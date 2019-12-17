@@ -69,9 +69,8 @@ describe('AdminWrapperComponent', () => {
 			HealthStatusScenarios[0].scenarios.GET[0].response.body;
 
 		it('should call api', () => {
-			spyOn(component, 'getIEHealthStatusData')
-				.and
-				.returnValue(of(response));
+			jest.spyOn(component, 'getIEHealthStatusData')
+				.mockReturnValue(of(response));
 
 			component.ngOnInit();
 
@@ -130,5 +129,6 @@ describe('AdminWrapperComponent', () => {
 			expect(component.erroredAppsNum)
 				.toBe(4);
 		});
+
 	});
 });

@@ -11,7 +11,6 @@ import { of, throwError } from 'rxjs';
 import { user, ComparisonViewScenarios } from '@mock';
 import { CrashPreventionService } from '@sdp-api';
 import { HttpErrorResponse } from '@angular/common/http';
-
 describe('ComparisonviewComponent', () => {
 	let component: ComparisonviewComponent;
 	let fixture: ComponentFixture<ComparisonviewComponent>;
@@ -66,9 +65,8 @@ describe('ComparisonviewComponent', () => {
 		};
 		component.deviceA = 'NA,FOC1727V051,AIR-CT5760,NA';
 		component.deviceB = 'NA,FOC1727V051,AIR-CT5760,NA';
-		spyOn(crashPreventionService, 'getComparison')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(crashPreventionService, 'getComparison')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
 		component.ngOnInit();
 		fixture.whenStable()
 			.then(() => {
@@ -80,9 +78,8 @@ describe('ComparisonviewComponent', () => {
 			});
 	});
 	it('Should return the searched features response', done => {
-		spyOn(crashPreventionService, 'getComparison')
-			.and
-			.returnValue(of(ComparisonViewScenarios[2].scenarios.GET[0].response.body));
+		jest.spyOn(crashPreventionService, 'getComparison')
+			.mockReturnValue(of(ComparisonViewScenarios[2].scenarios.GET[0].response.body));
 		component.ngOnInit();
 		fixture.whenStable()
 			.then(() => {
@@ -96,9 +93,8 @@ describe('ComparisonviewComponent', () => {
 	});
 
 	it('should check for ngOnchanges in comparison view component', () => {
-		spyOn(crashPreventionService, 'getComparison')
-			.and
-			.returnValue(of(<any> []));
+		jest.spyOn(crashPreventionService, 'getComparison')
+			.mockReturnValue(of(<any> []));
 		component.ngOnChanges({
 			deviceA: {
 				currentValue: 'Device_123',
@@ -113,9 +109,8 @@ describe('ComparisonviewComponent', () => {
 	});
 
 	it('should not load data if device IDs are not available', () => {
-		spyOn(crashPreventionService, 'getComparison')
-			.and
-			.returnValue(of(<any> []));
+		jest.spyOn(crashPreventionService, 'getComparison')
+			.mockReturnValue(of(<any> []));
 		component.ngOnChanges({
 			deviceA: {
 				currentValue: null,
@@ -197,9 +192,8 @@ describe('ComparisonviewComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(crashPreventionService, 'getComparison')
-		.and
-		.returnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(crashPreventionService, 'getComparison')
+		.mockReturnValue(throwError(new HttpErrorResponse(error)));
 		fixture.detectChanges();
 		component.loadData();
 		expect(component.compareviewLoading)
@@ -209,4 +203,5 @@ describe('ComparisonviewComponent', () => {
 		expect(component.featuresData)
 		.toBeNull();
 	});
+
 });

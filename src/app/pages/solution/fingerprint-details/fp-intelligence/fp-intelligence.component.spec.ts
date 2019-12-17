@@ -70,9 +70,8 @@ describe('FpIntelligenceComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(fpIntelligenceService, 'getSimilarDevicesDistribution')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(fpIntelligenceService, 'getSimilarDevicesDistribution')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
 		component.ngOnInit();
 		fixture.whenStable()
 			.then(() => {
@@ -88,10 +87,10 @@ describe('FpIntelligenceComponent', () => {
 			deviceCount: 50,
 			minMatch: 50 ,
 			similarityCriteria: 'fingerprint'});
-		spyOn(component, 'updateSeriesData');
-		spyOn(fpIntelligenceService, 'getSimilarDevicesDistribution')
-			.and
-			.returnValue(of(ComparisonViewScenarios[4].scenarios.GET[0].response.body));
+		jest.spyOn(component, 'updateSeriesData')
+			.mockReturnThis();
+		jest.spyOn(fpIntelligenceService, 'getSimilarDevicesDistribution')
+			.mockReturnValue(of(ComparisonViewScenarios[4].scenarios.GET[0].response.body));
 		component.ngOnInit();
 		tick(1000);
 		fixture.detectChanges();
@@ -100,9 +99,8 @@ describe('FpIntelligenceComponent', () => {
 	}));
 
 	it('should resolve a customerId', done => {
-		spyOn(userResolve, 'getCustomerId')
-			.and
-			.returnValue(of('12345'));
+		jest.spyOn(userResolve, 'getCustomerId')
+			.mockReturnValue(of('12345'));
 		component.ngOnInit();
 		fixture.whenStable()
 			.then(() => {
@@ -155,9 +153,8 @@ describe('FpIntelligenceComponent', () => {
 			deviceCount: 50,
 			minMatch: 50 ,
 			similarityCriteria: 'fingerprint'});
-		spyOn(fpIntelligenceService, 'getSimilarDevicesDistribution')
-		.and
-		.returnValue(of(ComparisonViewScenarios[6].scenarios.GET[0].response.body));
+		jest.spyOn(fpIntelligenceService, 'getSimilarDevicesDistribution')
+		.mockReturnValue(of(ComparisonViewScenarios[6].scenarios.GET[0].response.body));
 		component.ngOnInit();
 		tick(1000);
 		fixture.detectChanges();
@@ -170,9 +167,8 @@ describe('FpIntelligenceComponent', () => {
 			deviceCount: 50,
 			minMatch: -1 ,
 			similarityCriteria: 'fingerprint'});
-		spyOn(fpIntelligenceService, 'getSimilarDevices')
-			.and
-			.returnValue(of(ComparisonViewScenarios[4].scenarios.GET[0].response.body));
+		jest.spyOn(fpIntelligenceService, 'getSimilarDevices')
+			.mockReturnValue(of(ComparisonViewScenarios[4].scenarios.GET[0].response.body));
 		component.ngOnInit();
 		tick(1000);
 		fixture.detectChanges();
@@ -184,8 +180,7 @@ describe('FpIntelligenceComponent', () => {
 		let fakeInput: SimpleChanges = {
 			asset: new SimpleChange(null, { deviceId: 'TestID' }, false),
 		};
-		const spy = spyOn(fpIntelligenceService, 'getSimilarDevicesDistribution').and
-			.callThrough();
+		const spy = jest.spyOn(fpIntelligenceService, 'getSimilarDevicesDistribution');
 		component.ngOnChanges(fakeInput);
 		fixture.whenStable()
 		.then(() => {
@@ -207,4 +202,5 @@ describe('FpIntelligenceComponent', () => {
 				.toHaveBeenCalled();
 		});
 	});
+
 });

@@ -28,8 +28,7 @@ describe('EULAFormComponent', () => {
 
 	it('should emit download event', async(() => {
 		const sub = component.onDownload.subscribe(() => {
-			expect()
-				.nothing();
+			expect.anything();
 			sub.unsubscribe();
 		});
 		component.onDownloadImage();

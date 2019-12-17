@@ -223,7 +223,7 @@ export const V2EntitlementScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Entitlement Wrapper Accounts Call',
 					response: {
 						body: accountsResponseMock,
@@ -240,7 +240,7 @@ export const V2EntitlementScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Entitlement v2 User Call',
 					response: {
 						body: v2UserResponseMock,

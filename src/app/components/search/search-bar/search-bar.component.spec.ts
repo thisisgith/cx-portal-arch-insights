@@ -32,7 +32,7 @@ describe('SearchBarComponent', () => {
 		service = TestBed.get(SearchService);
 		fixture = TestBed.createComponent(SearchBarComponent);
 		component = fixture.componentInstance;
-		spyOn(component.searchChange, 'emit');
+		jest.spyOn(component.searchChange, 'emit');
 		fixture.detectChanges();
 	});
 
@@ -48,9 +48,8 @@ describe('SearchBarComponent', () => {
 	});
 
 	it('should call typahead search', fakeAsync(() => {
-		spyOn(service, 'fetchTypeahead')
-			.and
-			.returnValue(of(mockResponse));
+		jest.spyOn(service, 'fetchTypeahead')
+			.mockReturnValue(of(mockResponse));
 		const input = fixture.debugElement.query(By.css('input'));
 		input.nativeElement.value = 'Test1';
 		input.nativeElement.dispatchEvent(new Event('input'));
@@ -66,9 +65,8 @@ describe('SearchBarComponent', () => {
 	}));
 
 	it('should show no options on empty search', fakeAsync(() => {
-		spyOn(service, 'fetchTypeahead')
-			.and
-			.returnValue(of({ }));
+		jest.spyOn(service, 'fetchTypeahead')
+			.mockReturnValue(of({ }));
 		const input = fixture.debugElement.query(By.css('input'));
 		input.nativeElement.value = 'Test1';
 		input.nativeElement.dispatchEvent(new Event('input'));
@@ -80,9 +78,8 @@ describe('SearchBarComponent', () => {
 	}));
 
 	it('should show options after typing', fakeAsync(() => {
-		spyOn(service, 'fetchTypeahead')
-			.and
-			.returnValue(of(mockResponse));
+		jest.spyOn(service, 'fetchTypeahead')
+			.mockReturnValue(of(mockResponse));
 		const input = fixture.debugElement.query(By.css('input'));
 		input.nativeElement.value = 'Test';
 		input.nativeElement.dispatchEvent(new Event('input'));
@@ -108,7 +105,7 @@ describe('SearchBarComponent', () => {
 	}));
 
 	it('should select on Enter', fakeAsync(() => {
-		spyOn(component, 'onSearchSelect');
+		jest.spyOn(component, 'onSearchSelect');
 		const input = fixture.debugElement.query(By.css('input'));
 		input.nativeElement.dispatchEvent(new Event('focus'));
 		component.searchText = 'Test';
@@ -127,7 +124,7 @@ describe('SearchBarComponent', () => {
 	}));
 
 	it('should select on pressing enter on a typeahead option', fakeAsync(() => {
-		spyOn(component, 'onSearchSelect');
+		jest.spyOn(component, 'onSearchSelect');
 		const input = fixture.debugElement.query(By.css('input'));
 		input.nativeElement.dispatchEvent(new Event('focus'));
 		fixture.detectChanges();
@@ -152,7 +149,7 @@ describe('SearchBarComponent', () => {
 	}));
 
 	it('should select on clicking a typeahead option', fakeAsync(() => {
-		spyOn(component, 'clickHandler');
+		jest.spyOn(component, 'clickHandler');
 		const input = fixture.debugElement.query(By.css('input'));
 		input.nativeElement.dispatchEvent(new Event('focus'));
 		fixture.detectChanges();

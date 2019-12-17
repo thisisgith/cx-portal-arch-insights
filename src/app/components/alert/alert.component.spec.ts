@@ -41,4 +41,5 @@ describe('AlertComponent', () => {
 		expect(de.styles.height)
 			.toBe('0px');
 	}));
+
 });

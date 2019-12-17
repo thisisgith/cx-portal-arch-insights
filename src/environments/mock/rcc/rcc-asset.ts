@@ -66,7 +66,7 @@ export const RCCScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'AssetFilterSummary',
 					response: {
 						body: assetPolicyFilterInfo,
@@ -83,7 +83,7 @@ export const RCCScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'AssetViolationSummary',
 					response: {
 						body: assetViolationSummaryTableData,

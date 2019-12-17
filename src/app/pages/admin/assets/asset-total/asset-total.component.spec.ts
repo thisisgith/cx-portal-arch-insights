@@ -38,4 +38,5 @@ describe('AdminAssetsTotalComponent', () => {
 			.toBeTruthy();
 		component.ngOnDestroy();
 	});
+
 });

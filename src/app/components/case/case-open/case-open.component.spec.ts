@@ -45,9 +45,8 @@ describe('CaseOpenComponent', () => {
 
 	beforeEach(() => {
 		userResolve = TestBed.get(UserResolve);
-		spyOn(userResolve, 'getCustomerId')
-			.and
-			.returnValue(of(user.info.customerId));
+		jest.spyOn(userResolve, 'getCustomerId')
+			.mockReturnValue(of(user.info.customerId));
 
 		fixture = TestBed.createComponent(CaseOpenComponent);
 		cuiModalService = TestBed.get(CuiModalService);
@@ -67,7 +66,7 @@ describe('CaseOpenComponent', () => {
 	});
 
 	it('should prompt the user if they want to close', fakeAsync(() => {
-		spyOn(cuiModalService, 'showComponent');
+		jest.spyOn(cuiModalService, 'showComponent');
 		const button = template.query(By.css('a[data-auto-id="CaseOpenClose"]'));
 		button.nativeElement.click();
 		tick();
@@ -88,9 +87,8 @@ describe('CaseOpenComponent', () => {
 	}));
 
 	it('should submit', fakeAsync(() => {
-		spyOn(caseService, 'createCase')
-			.and
-			.returnValue(of(CaseScenarios[9].scenarios.POST[0].response.body));
+		jest.spyOn(caseService, 'createCase')
+			.mockReturnValue(of(CaseScenarios[9].scenarios.POST[0].response.body));
 		component.caseForm.controls.description.setValue('abcde');
 		component.caseForm.controls.title.setValue('abcde');
 		tick(3000);
@@ -123,4 +121,5 @@ describe('CaseOpenComponent', () => {
 		expect(component.contractLoading)
 			.toBeTruthy();
 	});
+
 });

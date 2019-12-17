@@ -24,4 +24,5 @@ describe('FieldNoticeDetailsHeaderComponent', () => {
 		expect(component)
 			.toBeTruthy();
 	});
+
 });

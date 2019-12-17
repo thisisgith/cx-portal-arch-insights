@@ -729,7 +729,7 @@ export const HardwareAssetScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Hardware Assets Page 1',
 					response: {
 						body: MockHardwareAssets(10, 1),

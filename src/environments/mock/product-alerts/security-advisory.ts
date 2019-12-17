@@ -2137,7 +2137,7 @@ export const SecurityAdvisoryScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 350,
+					delay: 44,
 					description: 'Security Advisories',
 					response: {
 						body: MockAdvisory(MockSecurityAdvisories),
@@ -2154,7 +2154,7 @@ export const SecurityAdvisoryScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 350,
+					delay: 44,
 					description: 'Security Advisories for Asset',
 					response: {
 						body: MockAdvisory(mockAdvisoryAsset),
@@ -2172,7 +2172,7 @@ export const SecurityAdvisoryScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 350,
+					delay: 44,
 					description: 'Security Advisories for advisory ID 485',
 					response: {
 						body: MockAdvisory(_.filter(MockSecurityAdvisories, { advisoryId: 485 })),
@@ -2190,7 +2190,7 @@ export const SecurityAdvisoryScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 350,
+					delay: 44,
 					description: 'Security Advisories for advisory ID 1074',
 					response: {
 						body: MockAdvisory(_.filter(MockSecurityAdvisories, { advisoryId: 1074 })),

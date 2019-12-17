@@ -43,15 +43,13 @@ describe('AccRequestFormComponent', () => {
 	};
 
 	const buildSpies = () => {
-		accUserInfoSpy = spyOn(contentService, 'getACCUserInfo')
-			.and
-			.returnValue(of(getActiveBody(ACCUserInfoScenarios[0])));
+		accUserInfoSpy = jest.spyOn(contentService, 'getACCUserInfo')
+			.mockReturnValue(of(getActiveBody(ACCUserInfoScenarios[0])));
 	};
 
 	const buildUserInfoFailureSpy = () => {
-		requestAccSpy = spyOn(contentService, 'getACCUserInfo')
-			.and
-			.returnValue(throwError(new HttpErrorResponse({
+		requestAccSpy = jest.spyOn(contentService, 'getACCUserInfo')
+			.mockReturnValue(throwError(new HttpErrorResponse({
 				status: 500,
 			})));
 	};

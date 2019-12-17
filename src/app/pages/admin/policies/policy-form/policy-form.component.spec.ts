@@ -20,7 +20,7 @@ describe('PolicyFormComponent', () => {
 	let fixture: ComponentFixture<PolicyFormComponent>;
 
 	const locationStub = {
-		back: jasmine.createSpy('back'),
+		back: jest.fn(),
 	};
 
 	configureTestSuite(() => {
@@ -62,7 +62,7 @@ describe('PolicyFormComponent', () => {
 		};
 
 		it('call editCollection', () => {
-			spyOn(component, 'editCollection');
+			jest.spyOn(component, 'editCollection');
 
 			component.type = 'editCollection';
 			component.policy = policy;
@@ -73,7 +73,7 @@ describe('PolicyFormComponent', () => {
 		});
 
 		it('call newPolicy', () => {
-			spyOn(component, 'newPolicy');
+			jest.spyOn(component, 'newPolicy');
 
 			component.type = 'newPolicy';
 			component.ngOnInit();
@@ -83,7 +83,7 @@ describe('PolicyFormComponent', () => {
 		});
 
 		it('call editPolicy', () => {
-			spyOn(component, 'editPolicy');
+			jest.spyOn(component, 'editPolicy');
 
 			component.type = 'editPolicy';
 			component.policy = policy;
@@ -94,7 +94,7 @@ describe('PolicyFormComponent', () => {
 		});
 
 		it('call editIgnorePolicy', () => {
-			spyOn(component, 'editIgnorePolicy');
+			jest.spyOn(component, 'editIgnorePolicy');
 
 			component.type = 'editIgnorePolicy';
 			component.ngOnInit();
@@ -102,6 +102,7 @@ describe('PolicyFormComponent', () => {
 			expect(component.editIgnorePolicy)
 				.toHaveBeenCalled();
 		});
+
 	});
 
 	describe('main functions should run', () => {
@@ -122,9 +123,8 @@ describe('PolicyFormComponent', () => {
 			component.policy = policy;
 			component.editCollection();
 
-			spyOn(component.collectionService, 'updateCollectionPolicyUsingPATCH')
-				.and
-				.returnValue(of(response));
+			jest.spyOn(component.collectionService, 'updateCollectionPolicyUsingPATCH')
+				.mockReturnValue(of(response));
 
 			component.onSubmit();
 
@@ -140,9 +140,8 @@ describe('PolicyFormComponent', () => {
 
 			component.newPolicy();
 
-			spyOn(component.devicePolicyService, 'createDevicePolicyUsingPOST')
-				.and
-				.returnValue(of(response));
+			jest.spyOn(component.devicePolicyService, 'createDevicePolicyUsingPOST')
+				.mockReturnValue(of(response));
 
 			component.onSubmit();
 
@@ -162,9 +161,8 @@ describe('PolicyFormComponent', () => {
 
 			component.editPolicy();
 
-			spyOn(component.devicePolicyService, 'updateDevicePolicyUsingPATCH')
-				.and
-				.returnValue(of(response));
+			jest.spyOn(component.devicePolicyService, 'updateDevicePolicyUsingPATCH')
+				.mockReturnValue(of(response));
 
 			component.onSubmit();
 
@@ -175,6 +173,7 @@ describe('PolicyFormComponent', () => {
 		it('editIgnorePolicy', () => {
 			component.editIgnorePolicy();
 		});
+
 	});
 
 	describe('should change with time period changes', () => {
@@ -187,7 +186,7 @@ describe('PolicyFormComponent', () => {
 					timePeriod: 'never',
 				},
 			);
-			spyOn(component, 'newIgnorePolicy');
+			jest.spyOn(component, 'newIgnorePolicy');
 			component.type = 'newPolicy';
 			component.timePeriodChange();
 
@@ -204,7 +203,7 @@ describe('PolicyFormComponent', () => {
 					timePeriod: 'monthly',
 				},
 			);
-			spyOn(component, 'newPolicy');
+			jest.spyOn(component, 'newPolicy');
 
 			component.type = 'newIgnorePolicy';
 			component.timePeriodChange();
@@ -222,7 +221,7 @@ describe('PolicyFormComponent', () => {
 					timePeriod: 'never',
 				},
 			);
-			spyOn(component, 'editIgnorePolicy');
+			jest.spyOn(component, 'editIgnorePolicy');
 			component.type = 'editPolicy';
 			component.timePeriodChange();
 
@@ -239,7 +238,7 @@ describe('PolicyFormComponent', () => {
 					timePeriod: 'monthly',
 				},
 			);
-			spyOn(component, 'editPolicy');
+			jest.spyOn(component, 'editPolicy');
 
 			component.type = 'editIgnorePolicy';
 			component.timePeriodChange();
@@ -297,6 +296,7 @@ describe('PolicyFormComponent', () => {
 			expect(component.timePeriod)
 				.toBe('never');
 		});
+
 	});
 
 	describe('should edit device lists with inputs', () => {
@@ -384,7 +384,7 @@ describe('PolicyFormComponent', () => {
 		});
 
 		it('paginator', () => {
-			spyOn(component, 'onLeftListCall');
+			jest.spyOn(component, 'onLeftListCall');
 
 			const pageInfo = {
 				page: 0,
@@ -412,6 +412,7 @@ describe('PolicyFormComponent', () => {
 			expect(devList[0].selected)
 				.toBeUndefined();
 		});
+
 	});
 
 	describe('should handle schedules', () => {
@@ -442,17 +443,19 @@ describe('PolicyFormComponent', () => {
 			expect(schedule)
 				.toBe(false);
 		});
+
 	});
 
 	describe('should handle form closes', () => {
 		it('closeRequestForm', () => {
 			component.closeRequestForm();
 		});
+
 	});
 
 	describe('should handle page changes', () => {
 		it('onPageChanged', () => {
-			spyOn(component, 'onLeftListCall');
+			jest.spyOn(component, 'onLeftListCall');
 
 			const pageInfo = {
 				page: 0,
@@ -466,6 +469,7 @@ describe('PolicyFormComponent', () => {
 			expect(component.onLeftListCall)
 				.toHaveBeenCalled();
 		});
+
 	});
 
 	describe('should handle converting hours and min in time strings', () => {
@@ -508,5 +512,6 @@ describe('PolicyFormComponent', () => {
 			expect(component.hourmins.selected)
 				.toBe('0 18');
 		});
+
 	});
 });

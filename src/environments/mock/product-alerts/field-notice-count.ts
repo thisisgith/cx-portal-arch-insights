@@ -42,7 +42,7 @@ export const FieldNoticeCountScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 200,
+					delay: 35,
 					description: 'Field Notice Update Counts',
 					response: {
 						body: mockCounts,

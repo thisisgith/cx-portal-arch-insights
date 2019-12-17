@@ -129,7 +129,7 @@ describe('TimelineComponent', () => {
 	it('should emit an event when "Today Button" is clicked', async(() => {
 		component.data = allTimelineData;
 		component.todayButtonText = 'Click Here';
-		spyOn(component.todayButtonClick, 'emit');
+		jest.spyOn(component.todayButtonClick, 'emit');
 		fixture.detectChanges();
 		const button = fixture.debugElement.query(By.css('button'));
 		button.nativeElement.dispatchEvent(new Event('click'));
@@ -143,4 +143,5 @@ describe('TimelineComponent', () => {
 		expect(de)
 			.toBeNull();
 	});
+
 });

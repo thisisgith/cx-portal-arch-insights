@@ -8,7 +8,6 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MicroMockModule } from '@cui-x-views/mock';
 import * as _ from 'lodash-es';
-
 describe('BugsDetailsComponent', () => {
 	let component: BugsDetailsComponent;
 	let fixture: ComponentFixture<BugsDetailsComponent>;

@@ -34,7 +34,7 @@ export const SoftwareEOLScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 350,
+					delay: 44,
 					description: 'Software EOL',
 					response: {
 						body: MockSoftwareEOLResponse,

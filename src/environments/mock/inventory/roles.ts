@@ -32,7 +32,7 @@ export const RoleScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Role Count',
 					response: {
 						body: mockRoleCounts,

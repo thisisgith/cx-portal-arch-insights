@@ -37,10 +37,10 @@ describe('SelectInstructionsComponent', () => {
 	it('should select', () => {
 		const sub = component.onStepComplete
 			.subscribe(() => {
-				expect()
-					.nothing();
+				expect.anything();
 				sub.unsubscribe();
 			});
 		component.onSelect(Selection.VBOX);
 	});
+
 });

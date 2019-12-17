@@ -67,7 +67,7 @@ describe('CaseSubmittedComponent', () => {
 	});
 
 	it('should close', fakeAsync(() => {
-		spyOn(cuiModalService, 'hide');
+		jest.spyOn(cuiModalService, 'hide');
 		const button = fixture.debugElement.query(By.css('[data-auto-id="CaseOpenDoneButton"]'));
 		button.nativeElement.click();
 		tick();
@@ -84,7 +84,7 @@ describe('CaseSubmittedComponent', () => {
 	}));
 
 	it('should not build table if there is only one asset', () => {
-		spyOn(component, 'buildAssetsTable');
+		jest.spyOn(component, 'buildAssetsTable');
 		expect(component.buildAssetsTable)
 			.toHaveBeenCalledTimes(0);
 	});
@@ -98,9 +98,10 @@ describe('CaseSubmittedComponent', () => {
 				serialNumber: '5678',
 			},
 		];
-		spyOn(component, 'buildAssetsTable');
+		jest.spyOn(component, 'buildAssetsTable');
 		component.ngOnInit();
 		expect(component.buildAssetsTable)
 			.toHaveBeenCalled();
 	});
+
 });

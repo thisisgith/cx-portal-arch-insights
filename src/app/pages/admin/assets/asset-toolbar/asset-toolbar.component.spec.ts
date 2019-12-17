@@ -43,4 +43,5 @@ describe('AdminAssetsToolbarComponent', () => {
 		expect(state.view)
 			.toBe('grid');
 	});
+
 });

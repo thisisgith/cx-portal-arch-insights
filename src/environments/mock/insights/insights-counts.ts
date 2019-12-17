@@ -21,7 +21,7 @@ export const InsightsScenarios = [
 		scenarios: {
 			GET:
 			{
-				delay: 100,
+				delay: 30,
 				description: 'Insights Counts',
 				response: {
 					body: mockInsightsCounts,

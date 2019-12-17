@@ -217,7 +217,7 @@ export const SuccessPathScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(SP) IBN-Campus Network Assurance-Onboard',
 					response: {
 						body: MockSP('IBN', 'Campus Network Assurance', 'Onboard'),
@@ -235,7 +235,7 @@ export const SuccessPathScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(SP) IBN-Campus Network Segmentation-Onboard',
 					response: {
 						body: MockSP('IBN', 'Campus Network Segmentation', 'Onboard'),
@@ -253,7 +253,7 @@ export const SuccessPathScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(SP) IBN-Scalable Access Policy-Onboard',
 					response: {
 						body: MockSP('IBN', 'Scalable Accesss Policy', 'Onboard'),
@@ -271,7 +271,7 @@ export const SuccessPathScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(SP) IBN-Network Device Onboarding-Onboard',
 					response: {
 						body: MockSP('IBN', 'Network Device Onboarding', 'Onboard'),
@@ -289,7 +289,7 @@ export const SuccessPathScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(SP) IBN-Campus Software Image Management-Onboard',
 					response: {
 						body: MockSP('IBN', 'Campus Software Image Management', 'Onboard'),
@@ -307,7 +307,7 @@ export const SuccessPathScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: 'Product Guides IBN - Campus Network Assurance',
 					response: {
 						body: MockProductGuides('IBN', 'Campus Network Assurance',
@@ -317,7 +317,7 @@ export const SuccessPathScenarios = [
 					selected: true,
 				},
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: 'Product Guides IBN - Campus Network Assurance - twoBookmarked',
 					response: {
 						body: MockProductGuides('IBN', 'Campus Network Assurance',
@@ -327,7 +327,7 @@ export const SuccessPathScenarios = [
 					selected: false,
 				},
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: 'Product Guides IBN - Campus Network Assurance - twoUnbookmarked',
 					response: {
 						body: MockProductGuides('IBN', 'Campus Network Assurance',
@@ -346,7 +346,7 @@ export const SuccessPathScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: 'Product Guides IBN - Network Device Onboarding',
 					response: {
 						body: MockProductGuides('IBN', 'Network Device Onboarding',
@@ -365,7 +365,7 @@ export const SuccessPathScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: 'Product Guides IBN - Campus Software Image Management',
 					response: {
 						body: MockProductGuides('IBN', 'Campus Software Image Management',
@@ -384,7 +384,7 @@ export const SuccessPathScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: 'Product Guides IBN - Campus Network Segmentation',
 					response: {
 						body: MockProductGuides('IBN', 'Campus Network Segmentation',
@@ -403,7 +403,7 @@ export const SuccessPathScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: 'Product Guides IBN - Scalable Access Policy',
 					response: {
 						body: MockProductGuides('IBN', 'Scalable Access Policy',
@@ -422,7 +422,7 @@ export const SuccessPathScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 250,
+					delay: 38,
 					description: 'Product Guides IBN - Unit test-friendly mock data',
 					response: {
 						body: MockProductGuides('IBN', 'Campus Network Assurance'),

@@ -7,7 +7,6 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { SoftwareGroupRecommendationsModule } from './software-group-recommendations.module';
 import { MicroMockModule } from '@cui-x-views/mock';
 import { OSVScenarios } from '@mock';
-
 describe('SoftwareGroupRecommendationsComponent', () => {
 	let component: SoftwareGroupRecommendationsComponent;
 	let fixture: ComponentFixture<SoftwareGroupRecommendationsComponent>;
@@ -52,4 +51,5 @@ describe('SoftwareGroupRecommendationsComponent', () => {
 		expect(component.groupRecommendationsTable)
 			.toBeDefined();
 	});
+
 });

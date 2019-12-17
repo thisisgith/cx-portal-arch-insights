@@ -17,13 +17,12 @@ describe('ConnectCollectorComponent', () => {
 	let component: ConnectCollectorComponent;
 	let fixture: ComponentFixture<ConnectCollectorComponent>;
 	let setupService: SetupIEService;
-	let pingSpy: jasmine.Spy;
+	let pingSpy;
 	let stateService: SetupIEStateService;
 
 	const setupSpies = () => {
-		pingSpy = spyOn(setupService, 'ping')
-			.and
-			.returnValue(throwError(new HttpErrorResponse({
+		pingSpy = jest.spyOn(setupService, 'ping')
+			.mockReturnValue(throwError(new HttpErrorResponse({
 				status: 404,
 				statusText: 'Resource not found',
 			})));
@@ -98,13 +97,10 @@ describe('ConnectCollectorComponent', () => {
 		const sub = component.onStepComplete
 			.subscribe(() => {
 				sub.unsubscribe();
-				expect()
-					.nothing();
+				expect.anything();
 			});
 		restoreSpies();
-		pingSpy
-			.and
-			.returnValue(of(''));
+		pingSpy.mockReturnValue(of(''));
 		component.accountForm.get('ipAddress')
 			.setValue('127.0.0.1');
 		component.onSubmit();
@@ -116,17 +112,15 @@ describe('ConnectCollectorComponent', () => {
 			.subscribe(() => {
 				sub.unsubscribe();
 				alert('here');
-				expect()
-					.nothing();
+				expect.anything();
 			});
 		component.accountForm.get('ipAddress')
 			.setValue('127.0.0.1');
 		component.onSubmit();
 		fixture.detectChanges();
-		pingSpy
-			.and
-			.returnValue(of(''));
+		pingSpy.mockReturnValue(of(''));
 		tick(2001);
 
 	}));
+
 });

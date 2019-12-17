@@ -12,7 +12,6 @@ import { ActivatedRoute } from '@angular/router';
 import { user, ArchitectureReviewScenarios } from '@mock';
 import { SimpleChanges, SimpleChange } from '@angular/core';
 import { AssetPanelLinkService } from '@services';
-
 describe('DevicesListComponent', () => {
 	let component: DevicesListComponent;
 	let fixture: ComponentFixture<DevicesListComponent>;
@@ -124,9 +123,8 @@ describe('DevicesListComponent', () => {
 			customerId: '7293498',
 			serialNumber: 'LA1-AP3802-21',
 		};
-		spyOn(assetService, 'getAssetLinkData')
-			.and
-			.returnValue(of({ }));
+		jest.spyOn(assetService, 'getAssetLinkData')
+			.mockReturnValue(of({ }));
 		component.openDeviceView(item);
 		expect(assetService.getAssetLinkData)
 			.toHaveBeenCalled();
@@ -139,9 +137,8 @@ describe('DevicesListComponent', () => {
 	});
 
 	it('should get the Devices data' , () => {
-		spyOn(service, 'getDevicesList')
-			.and
-			.returnValue(of(ArchitectureReviewScenarios[0].scenarios.GET[0].response.body));
+		jest.spyOn(service, 'getDevicesList')
+			.mockReturnValue(of(ArchitectureReviewScenarios[0].scenarios.GET[0].response.body));
 
 		component.getDevicesList();
 		expect(service.getDevicesList)
@@ -153,9 +150,8 @@ describe('DevicesListComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(service, 'getDevicesList')
-			.and
-			.returnValue(
+		jest.spyOn(service, 'getDevicesList')
+			.mockReturnValue(
 				throwError(new HttpErrorResponse(error)),
 		);
 		component.getDevicesList();
@@ -175,14 +171,14 @@ describe('DevicesListComponent', () => {
 	});
 
 	it('should call onpanelclose', () => {
-		spyOn(component, 'onPanelClose');
+		jest.spyOn(component, 'onPanelClose');
 		const hidden = true;
 		component.handleHidden(hidden);
 		expect(component.onPanelClose)
 			.toHaveBeenCalled();
 	});
 	it('should not call onpanelclose', () => {
-		spyOn(component, 'onPanelClose');
+		jest.spyOn(component, 'onPanelClose');
 		const hidden = false;
 		component.handleHidden(hidden);
 		expect(component.onPanelClose)
@@ -191,7 +187,7 @@ describe('DevicesListComponent', () => {
 	});
 	it('should not trigger search function', () => {
 		const enterKeyCode = 10;
-		spyOn(component, 'getDevicesList');
+		jest.spyOn(component, 'getDevicesList');
 		component.searchText = 'airios';
 		component.textFilter(enterKeyCode);
 		expect(component.getDevicesList)

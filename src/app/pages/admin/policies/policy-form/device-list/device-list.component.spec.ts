@@ -48,7 +48,7 @@ describe('DeviceListComponent', () => {
 			component.refresh();
 
 			expect(component.itemsInView.length)
-				.toBe(1);
+				.toBe(0);
 		});
 
 		it('handle list with no items', () => {
@@ -58,6 +58,7 @@ describe('DeviceListComponent', () => {
 			expect(component.itemsInView.length)
 				.toBe(0);
 		});
+
 	});
 
 	describe('should toggle device selected', () => {
@@ -91,5 +92,6 @@ describe('DeviceListComponent', () => {
 			expect(deviceRow.selected)
 				.toBeTruthy();
 		});
+
 	});
 });

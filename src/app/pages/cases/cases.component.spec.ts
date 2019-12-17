@@ -54,5 +54,6 @@ describe('CasesComponent', () => {
 			expect(de)
 				.toBeTruthy();
 		});
+
 	});
 });

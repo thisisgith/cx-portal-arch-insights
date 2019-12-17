@@ -10,7 +10,6 @@ import { of, throwError } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AssetPanelLinkService, DetailsPanelStackService, RacetrackInfoService } from '@services';
 import { UserResolve } from '@utilities';
-
 describe('FaultDetailsComponent', () => {
 	let component: FaultDetailsComponent;
 	let fixture: ComponentFixture<FaultDetailsComponent>;
@@ -78,9 +77,8 @@ describe('FaultDetailsComponent', () => {
 	});
 
 	it('should get the summary details', () => {
-		spyOn(faultService, 'getSummaryDetails')
-			.and
-			.returnValue(of<any>(FaultScenarios[1].scenarios.POST[0].response.body));
+		jest.spyOn(faultService, 'getSummaryDetails')
+			.mockReturnValue(of<any>(FaultScenarios[1].scenarios.POST[0].response.body));
 		component.getFaultSummaryDetails(component.searchParams);
 		expect(faultService.getSummaryDetails)
 			.toHaveBeenCalled();
@@ -93,18 +91,16 @@ describe('FaultDetailsComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(faultService, 'getSummaryDetails')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(faultService, 'getSummaryDetails')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
 		component.getFaultSummaryDetails(component.searchParams);
 		expect(faultService.getSummaryDetails)
 			.toHaveBeenCalled();
 	});
 
 	it('should get the affected systems', () => {
-		spyOn(faultService, 'getAffectedSystems')
-			.and
-			.returnValue(of<any>(FaultScenarios[2].scenarios.POST[0].response.body));
+		jest.spyOn(faultService, 'getAffectedSystems')
+			.mockReturnValue(of<any>(FaultScenarios[2].scenarios.POST[0].response.body));
 		component.getAffectedSystemDetails(component.searchParams);
 		expect(faultService.getAffectedSystems)
 			.toHaveBeenCalled();
@@ -117,18 +113,16 @@ describe('FaultDetailsComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(faultService, 'getAffectedSystems')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(faultService, 'getAffectedSystems')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
 		component.getAffectedSystemDetails(component.searchParams);
 		expect(faultService.getAffectedSystems)
 				.toHaveBeenCalled();
 	});
 
 	it('should get the fault filter data', () => {
-		spyOn(faultService, 'getFaultFiltersData')
-			.and
-			.returnValue(of<any>(FaultScenarios[3].scenarios.POST[0].response.body));
+		jest.spyOn(faultService, 'getFaultFiltersData')
+			.mockReturnValue(of<any>(FaultScenarios[3].scenarios.POST[0].response.body));
 		component.getFiltersData();
 		expect(faultService.getFaultFiltersData)
 			.toHaveBeenCalled();
@@ -141,9 +135,8 @@ describe('FaultDetailsComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(faultService, 'getFaultFiltersData')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(faultService, 'getFaultFiltersData')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
 		component.getFiltersData();
 		expect(faultService.getFaultFiltersData)
 				.toHaveBeenCalled();
@@ -165,34 +158,31 @@ describe('FaultDetailsComponent', () => {
 	});
 
 	it('should back the details panel', () => {
-		spyOn(detailsPanelStackService, 'pop');
+		jest.spyOn(detailsPanelStackService, 'pop');
 		component.onPanelBack();
 		expect(detailsPanelStackService.pop)
 			.toHaveBeenCalled();
 	});
 
 	it('should update grid on product id filter selection', () => {
-		spyOn(faultService, 'getAffectedSystems')
-			.and
-			.returnValue(of<any>(FaultScenarios[2].scenarios.POST[0].response.body));
+		jest.spyOn(faultService, 'getAffectedSystems')
+			.mockReturnValue(of<any>(FaultScenarios[2].scenarios.POST[0].response.body));
 		component.onSelection('1001', 'productId');
 		expect(faultService.getAffectedSystems)
 			.toHaveBeenCalled();
 	});
 
 	it('should update grid on software filter selection', () => {
-		spyOn(faultService, 'getAffectedSystems')
-			.and
-			.returnValue(of<any>(FaultScenarios[2].scenarios.POST[0].response.body));
+		jest.spyOn(faultService, 'getAffectedSystems')
+			.mockReturnValue(of<any>(FaultScenarios[2].scenarios.POST[0].response.body));
 		component.onSelection('1001', 'software');
 		expect(faultService.getAffectedSystems)
 			.toHaveBeenCalled();
 	});
 
 	it('should update grid on days filter selection', () => {
-		spyOn(faultService, 'getAffectedSystems')
-			.and
-			.returnValue(of<any>(FaultScenarios[2].scenarios.POST[0].response.body));
+		jest.spyOn(faultService, 'getAffectedSystems')
+			.mockReturnValue(of<any>(FaultScenarios[2].scenarios.POST[0].response.body));
 		component.onSelection('1001', 'days');
 		expect(faultService.getAffectedSystems)
 			.toHaveBeenCalled();
@@ -227,9 +217,8 @@ describe('FaultDetailsComponent', () => {
 				],
 			},
 		];
-		spyOn(assetPanelLinkService, 'getAssetLinkData')
-			.and
-			.returnValue(of(assetLinkResponse));
+		jest.spyOn(assetPanelLinkService, 'getAssetLinkData')
+			.mockReturnValue(of(assetLinkResponse));
 		component.connectToAsset('FCH2139V1B0');
 		expect(assetPanelLinkService.getAssetLinkData)
 			.toHaveBeenCalled();
@@ -242,9 +231,8 @@ describe('FaultDetailsComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(assetPanelLinkService, 'getAssetLinkData')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(assetPanelLinkService, 'getAssetLinkData')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
 		component.connectToAsset('FCH2139V1B0');
 		expect(assetPanelLinkService.getAssetLinkData)
 			.toHaveBeenCalled();
@@ -263,9 +251,8 @@ describe('FaultDetailsComponent', () => {
 	});
 
 	it('should open confirmation toast', () => {
-		spyOn(faultService, 'updateIcSettings')
-			.and
-			.returnValue(of<any>(FaultScenarios[5].scenarios.POST[0].response.body));
+		jest.spyOn(faultService, 'updateIcSettings')
+			.mockReturnValue(of<any>(FaultScenarios[5].scenarios.POST[0].response.body));
 		component.searchParams.tacEnabled = 'active';
 		component.openConfirmation();
 		expect(faultService.updateIcSettings)
@@ -273,9 +260,8 @@ describe('FaultDetailsComponent', () => {
 	});
 
 	it('should open toasft for automated faults', () => {
-		spyOn(faultService, 'updateIcSettings')
-			.and
-			.returnValue(of<any>(FaultScenarios[5].scenarios.POST[0].response.body));
+		jest.spyOn(faultService, 'updateIcSettings')
+			.mockReturnValue(of<any>(FaultScenarios[5].scenarios.POST[0].response.body));
 		component.searchParams.tacEnabled = 'inactive';
 		component.openConfirmation();
 		expect(faultService.updateIcSettings)
@@ -288,9 +274,8 @@ describe('FaultDetailsComponent', () => {
 			statusCode: 'Failed',
 			statusMessage: 'Failed tp update the record',
 		};
-		spyOn(faultService, 'updateIcSettings')
-			.and
-			.returnValue(of<any>(response));
+		jest.spyOn(faultService, 'updateIcSettings')
+			.mockReturnValue(of<any>(response));
 		component.updateIcSettings(component.searchIcParams);
 		expect(faultService.updateIcSettings)
 			.toHaveBeenCalled();
@@ -301,9 +286,8 @@ describe('FaultDetailsComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(faultService, 'updateIcSettings')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(faultService, 'updateIcSettings')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
 		component.updateIcSettings(component.searchIcParams);
 		expect(faultService.updateIcSettings)
 			.toHaveBeenCalled();
@@ -313,18 +297,14 @@ describe('FaultDetailsComponent', () => {
 		const pageInfo = {
 			page: 2,
 		};
-		spyOn(component, 'getAffectedSystemDetails')
-			.and
-			.callThrough();
+		jest.spyOn(component, 'getAffectedSystemDetails');
 		component.onPagerUpdated(pageInfo);
 		expect(component.searchParams.pageNo)
 			.toEqual(3);
 	});
 
 	it('should call affected system on changes of table sorting', () => {
-		spyOn(component, 'getAffectedSystemDetails')
-			.and
-			.callThrough();
+		jest.spyOn(component, 'getAffectedSystemDetails');
 		const eventSystem = {
 			name: 'System Name',
 		};

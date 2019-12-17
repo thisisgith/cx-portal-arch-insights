@@ -60,9 +60,8 @@ describe('DnacListComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(service, 'getDnacList')
-			.and
-			.returnValue(
+		jest.spyOn(service, 'getDnacList')
+			.mockReturnValue(
 				throwError(new HttpErrorResponse(error)),
 			);
 		component.getDnacList();
@@ -116,9 +115,8 @@ describe('DnacListComponent', () => {
 	it('should call getDnacList service with null', () => {
 		component.isLoading = true;
 		component.totalItems = 5;
-		const spy = spyOn(service, 'getDnacList')
-			.and
-			.returnValue(of(null));
+		const spy = jest.spyOn(service, 'getDnacList')
+			.mockReturnValue(of(null));
 		component.getDnacList();
 		fixture.whenStable()
 			.then(() => {
@@ -135,9 +133,8 @@ describe('DnacListComponent', () => {
 	it('should call getDnacList service with object', () => {
 		component.isLoading = true;
 		component.totalItems = 5;
-		const spy = spyOn(service, 'getDnacList')
-			.and
-			.returnValue(of({
+		const spy = jest.spyOn(service, 'getDnacList')
+			.mockReturnValue(of({
 				dnacDetails: [{ active: true, customerId: 'xyz' }],
 				TotalCounts: 10,
 			}));
@@ -168,14 +165,14 @@ describe('DnacListComponent', () => {
 	});
 
 	it('should call onpanelclose', () => {
-		spyOn(component, 'onPanelClose');
+		jest.spyOn(component, 'onPanelClose');
 		const hidden = true;
 		component.handleHidden(hidden);
 		expect(component.onPanelClose)
 			.toHaveBeenCalled();
 	});
 	it('should not call onpanelclose', () => {
-		spyOn(component, 'onPanelClose');
+		jest.spyOn(component, 'onPanelClose');
 		const hidden = false;
 		component.handleHidden(hidden);
 		expect(component.onPanelClose)
@@ -184,7 +181,7 @@ describe('DnacListComponent', () => {
 	});
 	it('should not trigger search function', () => {
 		const enterKeyCode = 10;
-		spyOn(component, 'getDnacList');
+		jest.spyOn(component, 'getDnacList');
 		component.searchText = 'airios';
 		component.textFilter(enterKeyCode);
 		expect(component.getDnacList)

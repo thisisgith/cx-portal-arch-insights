@@ -2738,7 +2738,7 @@ export const FieldNoticeScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 350,
+					delay: 44,
 					description: 'Field Notices Advisories',
 					response: {
 						body: MockNotices(),
@@ -2756,7 +2756,7 @@ export const FieldNoticeScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 350,
+					delay: 44,
 					description: 'Field Notices Advisories - Page 1',
 					response: {
 						body: MockNotices(10, 1),
@@ -2774,7 +2774,7 @@ export const FieldNoticeScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 350,
+					delay: 44,
 					description: 'Field Notices Advisories - Page 2',
 					response: {
 						body: MockNotices(10, 2),
@@ -2792,7 +2792,7 @@ export const FieldNoticeScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 350,
+					delay: 44,
 					description: 'Field Notices Advisories - Page 3',
 					response: {
 						body: MockNotices(10, 3),
@@ -2810,7 +2810,7 @@ export const FieldNoticeScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 350,
+					delay: 44,
 					description: 'Field Notices for FOC1544Y16T',
 					response: {
 						body: MockNotices(10, 1),

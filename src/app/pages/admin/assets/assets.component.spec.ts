@@ -16,7 +16,7 @@ describe('AdminAssetsComponent', () => {
 	let component: AdminAssetsComponent;
 	let fixture: ComponentFixture<AdminAssetsComponent>;
 	let api: ControlPointDeviceDiscoveryAPIService;
-	let getAssetsSpy: jasmine.Spy;
+	let getAssetsSpy;
 	let state: AssetsState;
 
 	beforeEach(async(() => {
@@ -31,9 +31,8 @@ describe('AdminAssetsComponent', () => {
 
 		api = TestBed.get(ControlPointDeviceDiscoveryAPIService);
 		state = TestBed.get(AssetsState);
-		getAssetsSpy = spyOn(api, 'getDevicesUsingGET')
-			.and
-			.returnValue(of(ControlpointAssetsScenarios[0].scenarios.GET[0].response.body));
+		getAssetsSpy = jest.spyOn(api, 'getDevicesUsingGET')
+			.mockReturnValue(of(ControlpointAssetsScenarios[0].scenarios.GET[0].response.body));
 	}));
 
 	beforeEach(() => {
@@ -55,10 +54,9 @@ describe('AdminAssetsComponent', () => {
 	}));
 
 	it('should set loading status to false on error', fakeAsync(() => {
-		getAssetsSpy.and
-			.returnValue(throwError(new HttpErrorResponse({
-				status: 404,
-			})));
+		getAssetsSpy.mockReturnValue(throwError(new HttpErrorResponse({
+			status: 404,
+		})));
 		component.ngAfterViewInit();
 		tick(1000);
 		expect(state.isLoadingAssets)
@@ -70,4 +68,5 @@ describe('AdminAssetsComponent', () => {
 		expect(state.page)
 			.toBe(3);
 	}));
+
 });

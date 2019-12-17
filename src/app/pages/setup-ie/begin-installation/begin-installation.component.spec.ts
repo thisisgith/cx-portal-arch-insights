@@ -34,8 +34,7 @@ describe('BeginInstallationComponent', () => {
 	it('should go to next step', fakeAsync(() => {
 		const sub = component.onStepComplete
 			.subscribe(() => {
-				expect()
-					.nothing();
+				expect.anything();
 				sub.unsubscribe();
 			});
 		component.onBegin();
@@ -44,11 +43,11 @@ describe('BeginInstallationComponent', () => {
 	it('should go to next step on Enter keypress', fakeAsync(() => {
 		const sub = component.onStepComplete
 			.subscribe(() => {
-				expect()
-					.nothing();
+				expect.anything();
 				sub.unsubscribe();
 			});
 		component.keyEvent(<any> { keyCode: 0 });
 		component.keyEvent(<any> { keyCode: 13 });
 	}));
+
 });

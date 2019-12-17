@@ -94,5 +94,4 @@ describe('NoDNACHeaderComponent', () => {
 		expect(cpService.getIESetupCompletionStatusUsingGET)
 		.toHaveBeenCalled();
 	});
-
 });

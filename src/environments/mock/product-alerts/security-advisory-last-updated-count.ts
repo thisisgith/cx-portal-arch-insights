@@ -36,7 +36,7 @@ export const SecurityAdvisoryLastUpdatedCountScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Mock Last Updated Count',
 					response: {
 						body: mockCount,

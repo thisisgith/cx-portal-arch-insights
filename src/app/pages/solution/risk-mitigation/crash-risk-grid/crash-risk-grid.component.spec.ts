@@ -11,7 +11,6 @@ import { environment } from '@environment';
 import { ActivatedRoute } from '@angular/router';
 import { user, RiskScenarios } from '@mock';
 import { LogService } from '@cisco-ngx/cui-services';
-
 describe('CrashRiskGridComponent', () => {
 	let component: CrashRiskGridComponent;
 	let fixture: ComponentFixture<CrashRiskGridComponent>;
@@ -69,9 +68,8 @@ describe('CrashRiskGridComponent', () => {
 			selectedTechnology: new SimpleChange({ }, { selectedTechnology: 'Success' }, false),
 			serchQuery: new SimpleChange({ }, { serchQuery: 'Success' }, false),
 		};
-		spyOn(crashRiskGridService, 'getFingerPrintDeviceDetailsData')
-			.and
-			.returnValue(of(RiskScenarios[4].scenarios.GET[0].response.body));
+		jest.spyOn(crashRiskGridService, 'getFingerPrintDeviceDetailsData')
+			.mockReturnValue(of(RiskScenarios[4].scenarios.GET[0].response.body));
 		const test: HighCrashRiskPagination = {
 			customerId: 2431199 ,
 			globalRiskRank: 'IBN',
@@ -98,9 +96,8 @@ describe('CrashRiskGridComponent', () => {
 			selectedTechnology: new SimpleChange({ }, { selectedTechnology: 'Success' }, false),
 			serchQuery: new SimpleChange({ }, { serchQuery: 'Success' }, false),
 		};
-		spyOn(crashRiskGridService, 'getFingerPrintDeviceDetailsData')
-			.and
-			.returnValue(of(RiskScenarios[8].scenarios.GET[0].response.body));
+		jest.spyOn(crashRiskGridService, 'getFingerPrintDeviceDetailsData')
+			.mockReturnValue(of(RiskScenarios[8].scenarios.GET[0].response.body));
 		const test: HighCrashRiskPagination = {
 			customerId: 2431199 ,
 			globalRiskRank: 'LOW',
@@ -196,7 +193,7 @@ describe('CrashRiskGridComponent', () => {
 			size: 0,
 			sort: '',
 		};
-		const fpDataSpy = spyOn(component, 'getFingerPrintDeviceDetails');
+		const fpDataSpy = jest.spyOn(component, 'getFingerPrintDeviceDetails');
 		component.highCrashTableSorted({
 			key: 'globalRiskRank',
 			sortDirection: 'ASC',

@@ -112,7 +112,7 @@ export const AssetSummaryScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Asset Summary By NeId',
 					response: {
 						body: MockAssetSummaryData,
@@ -130,7 +130,7 @@ export const AssetSummaryScenarios = [
 					selected: false,
 				},
 				{
-					delay: 100,
+					delay: 30,
 					description: 'No keys',
 					response: {
 						body: {
@@ -147,7 +147,7 @@ export const AssetSummaryScenarios = [
 					selected: false,
 				},
 				{
-					delay: 100,
+					delay: 30,
 					description: 'No dates',
 					response: {
 						body: {
@@ -164,7 +164,7 @@ export const AssetSummaryScenarios = [
 					selected: false,
 				},
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Null keys',
 					response: {
 						body: {
@@ -183,7 +183,7 @@ export const AssetSummaryScenarios = [
 					selected: false,
 				},
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Null dates',
 					response: {
 						body: {
@@ -203,7 +203,7 @@ export const AssetSummaryScenarios = [
 					selected: false,
 				},
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Not Covered',
 					response: {
 						body: { data: [] },

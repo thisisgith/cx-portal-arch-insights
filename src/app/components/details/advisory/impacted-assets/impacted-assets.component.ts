@@ -130,6 +130,7 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 						_.filter(data,
 							x => _.includes(impacted, _.get(x, 'managedNeId'))) || [];
 					this.pagination = this.buildPagination(_.get(response, 'Pagination'));
+
 					return this.fetchAssets();
 				}),
 				catchError(err => {
@@ -197,6 +198,7 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 				mergeMap((response: BugImpactedAssetsResponse) => {
 					this.impacted = _.get(response, 'data', []);
 					this.pagination = this.buildPagination(_.get(response, 'Pagination'));
+
 					return this.fetchAssets();
 				}),
 				catchError(err => {

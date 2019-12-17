@@ -79,9 +79,8 @@ describe('AdvisoryFeedbackComponent', () => {
 			statusText: 'Resource not found',
 		};
 
-		spyOn(feedbackService, 'postAdvisoryFeedback')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(feedbackService, 'postAdvisoryFeedback')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
 		component.type = 'bug';
 		component.customerId = user.info.customerId;
 		component.feedbackForm.controls.feedback.setValue('Testing');
@@ -104,9 +103,8 @@ describe('AdvisoryFeedbackComponent', () => {
 	});
 
 	it('should emit a success message on successful field notice calls', done => {
-		spyOn(feedbackService, 'postAdvisoryFeedback')
-			.and
-			.returnValue(of('success'));
+		jest.spyOn(feedbackService, 'postAdvisoryFeedback')
+			.mockReturnValue(of('success'));
 
 		component.type = 'field';
 		component.customerId = user.info.customerId;
@@ -128,9 +126,8 @@ describe('AdvisoryFeedbackComponent', () => {
 	});
 
 	it('should emit a success message on successful security advisory calls', done => {
-		spyOn(feedbackService, 'postAdvisoryFeedback')
-			.and
-			.returnValue(of('success'));
+		jest.spyOn(feedbackService, 'postAdvisoryFeedback')
+			.mockReturnValue(of('success'));
 
 		component.type = 'security';
 		component.customerId = user.info.customerId;
@@ -150,4 +147,5 @@ describe('AdvisoryFeedbackComponent', () => {
 		component.submitFeedback();
 		fixture.detectChanges();
 	});
+
 });

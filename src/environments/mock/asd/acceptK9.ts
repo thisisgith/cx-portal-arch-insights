@@ -20,7 +20,7 @@ export const ASDAcceptK9Scenarios = [
 		scenarios: {
 			POST: [
 				{
-					delay: 500,
+					delay: 30,
 					description: 'Accept K9 Agreement',
 					response: {
 						body: mockData,

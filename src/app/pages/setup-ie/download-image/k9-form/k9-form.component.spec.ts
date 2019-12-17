@@ -28,8 +28,7 @@ describe('K9FormComponent', () => {
 
 	it('should emit decline event', async(() => {
 		const sub = component.onDecline.subscribe(() => {
-			expect()
-				.nothing();
+			expect.anything();
 			sub.unsubscribe();
 		});
 		component.decline();
@@ -37,8 +36,7 @@ describe('K9FormComponent', () => {
 
 	it('should emit accept event', async(() => {
 		const sub = component.onAccept.subscribe(() => {
-			expect()
-				.nothing();
+			expect.anything();
 			sub.unsubscribe();
 		});
 		component.accept();

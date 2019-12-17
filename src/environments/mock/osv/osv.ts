@@ -1388,7 +1388,7 @@ export const OSVScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Summary',
 					response: {
 						body: mockSummaryResponse,
@@ -1405,7 +1405,7 @@ export const OSVScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 200,
+					delay: 35,
 					description: 'Software Groups',
 					response: {
 						body: mockSoftwareGroups,
@@ -1423,7 +1423,7 @@ export const OSVScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 200,
+					delay: 35,
 					description: 'Software Versions',
 					response: {
 						body: mockSoftwareVersions,
@@ -1441,7 +1441,7 @@ export const OSVScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 200,
+					delay: 35,
 					description: 'Basic Recommendations',
 					response: {
 						body: mockBasicRecommendations,
@@ -1459,7 +1459,7 @@ export const OSVScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 200,
+					delay: 35,
 					description: 'Basic Assets List',
 					response: {
 						body: mockAssets,
@@ -1477,7 +1477,7 @@ export const OSVScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 200,
+					delay: 35,
 					description: 'Basic Assets List',
 					response: {
 						body: mockAssets1,
@@ -1495,7 +1495,7 @@ export const OSVScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 200,
+					delay: 35,
 					description: 'Software Versions',
 					response: {
 						body: mockSoftwareVersions1,
@@ -1512,7 +1512,7 @@ export const OSVScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 1000,
+					delay: 40,
 					description: 'Software Group Assets',
 					response: {
 						body: mockSoftwareGroupAssets,
@@ -1530,7 +1530,7 @@ export const OSVScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Software Group Versions',
 					response: {
 						body: mockSoftwareGroupVersions,
@@ -1548,7 +1548,7 @@ export const OSVScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 200,
+					delay: 35,
 					description: 'Software Profile Recommendations',
 					response: {
 						body: mockSoftwareGroupRecommendations,
@@ -1566,7 +1566,7 @@ export const OSVScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 200,
+					delay: 35,
 					description: 'Machine Recommendations',
 					response: {
 						body: mockMachineRecommendations,
@@ -1583,7 +1583,7 @@ export const OSVScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 4000,
+					delay: 48,
 					description: 'Bug Details',
 					response: {
 						body: mockBugDetails,
@@ -1600,7 +1600,7 @@ export const OSVScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 200,
+					delay: 35,
 					description: 'Psirt Details',
 					response: {
 						body: mockPsirtDetail,

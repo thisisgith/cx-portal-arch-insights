@@ -190,7 +190,7 @@ export const RMAScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: 'RMA with one replacement part',
 					response: {
 						body: MockRMA(),
@@ -199,7 +199,7 @@ export const RMAScenarios = [
 					selected: true,
 				},
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: 'RMA with no replacement parts',
 					response: {
 						body: MockRMA({ devices: 0 }),
@@ -208,7 +208,7 @@ export const RMAScenarios = [
 					selected: false,
 				},
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: 'RMA with four replacement parts',
 					response: {
 						body: MockRMA({ devices: 4 }),
@@ -217,7 +217,7 @@ export const RMAScenarios = [
 					selected: false,
 				},
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: 'Internal Error',
 					response: {
 						body: error,
@@ -234,7 +234,7 @@ export const RMAScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 500,
+					delay: 30,
 					description: 'No records - 88346235',
 					response: {
 						body: noRecords,
@@ -251,7 +251,7 @@ export const RMAScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 500,
+					delay: 30,
 					description: 'Records for 88346234',
 					response: {
 						body:  MockRMA({ devices: 1, rmaNo: 88346234 }),

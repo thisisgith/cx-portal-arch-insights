@@ -4,7 +4,6 @@ import { CancelConfirmComponent } from './cancel-confirm.component';
 import { CancelConfirmModule } from './cancel-confirm.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CuiModalService } from '@cisco-ngx/cui-components';
-
 describe('CancelConfirmComponent', () => {
 	let component: CancelConfirmComponent;
 	let fixture: ComponentFixture<CancelConfirmComponent>;
@@ -32,16 +31,17 @@ describe('CancelConfirmComponent', () => {
 	});
 
 	it('should remove the pop on cancel', () => {
-		spyOn(cuiModalService, 'pop');
+		jest.spyOn(cuiModalService, 'pop');
 		component.back();
 		expect(cuiModalService.pop)
 			.toHaveBeenCalled();
 	});
 
 	it('should emit onCancel on continue', () => {
-		spyOn(cuiModalService.onCancel, 'next');
+		jest.spyOn(cuiModalService.onCancel, 'next');
 		component.close();
 		expect(cuiModalService.onCancel.next)
 			.toHaveBeenCalled();
 	});
+
 });

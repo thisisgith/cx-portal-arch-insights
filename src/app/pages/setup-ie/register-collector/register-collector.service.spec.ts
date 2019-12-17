@@ -115,4 +115,5 @@ describe('RegisterCollectorService', () => {
 				req.flush('token');
 			}),
 	);
+
 });

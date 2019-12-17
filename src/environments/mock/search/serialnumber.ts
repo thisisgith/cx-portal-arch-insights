@@ -117,7 +117,7 @@ export const SerialNumberScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: 'HW Response for SN Search',
 					response: {
 						body: mockHWResponse,
@@ -134,7 +134,7 @@ export const SerialNumberScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: 'Contract Response for SN Search',
 					response: {
 						body: mockContractResponse,
@@ -151,7 +151,7 @@ export const SerialNumberScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: 'Vulnerability Response for SN Search',
 					response: {
 						body: mockVulnerabilityResponse,
@@ -168,7 +168,7 @@ export const SerialNumberScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: 'Asset Response for SN Search',
 					response: {
 						body: mockAssetResponse,

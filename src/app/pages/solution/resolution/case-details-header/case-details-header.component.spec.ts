@@ -74,9 +74,8 @@ describe('CaseDetailsHeaderComponent', () => {
 	});
 
 	it('should call rma details for multiple RMA numbers', () => {
-		spyOn(service, 'getByNumber')
-			.and
-			.returnValue(of(null));
+		jest.spyOn(service, 'getByNumber')
+			.mockReturnValue(of(null));
 		component.rmaStrings = ['800000000', '800000001'];
 		component.getRMADetails();
 		expect(service.getByNumber)
@@ -113,9 +112,8 @@ describe('CaseDetailsHeaderComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(service, 'getByNumber')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(service, 'getByNumber')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
 
 		component.getRMADetails();
 		fixture.detectChanges();
@@ -174,7 +172,8 @@ describe('CaseDetailsHeaderComponent', () => {
 
 	it('should open attach file modal', fakeAsync(() => {
 		component.case.caseNumber = '92511831';
-		spyOn(cuiModalService, 'showComponent');
+		jest.spyOn(cuiModalService, 'showComponent')
+			.mockReturnThis();
 		component.toggleAddFile();
 
 		expect(cuiModalService.showComponent)
@@ -183,4 +182,5 @@ describe('CaseDetailsHeaderComponent', () => {
 				options: { descriptionValue: 'single', categoryReq: false },
 			});
 	}));
+
 });
