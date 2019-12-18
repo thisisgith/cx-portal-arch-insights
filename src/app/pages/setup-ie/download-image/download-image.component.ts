@@ -35,7 +35,7 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 	private user: User;
 	private customerId: string;
 	private saId: string;
-	private downloadSessionId: string;
+	public downloadSessionId: string;
 	private metadataTransId: string;
 	private imageGuid: string;
 
@@ -116,7 +116,7 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 	/**
 	 * Resets the Views
 	 */
-	private resetViews () {
+	public resetViews () {
 		const state = this.state.getState();
 		if (state.compKey > 1) {
 			this.view = 'connect';
@@ -294,7 +294,7 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 	 * Gets the download URL and sets local variables
 	 * @returns Observable
 	 */
-	private getDownloadURL () {
+	public getDownloadURL () {
 		return this.asdService
 			.getDownloadURL(this.metadataTransId, this.imageGuid)
 			.pipe(
@@ -371,7 +371,7 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 	 * Commence Download
 	 * @returns Observable
 	 */
-	private commenceDownload () {
+	public commenceDownload () {
 		return this.getDownloadURL()
 			.pipe(
 				finalize(() => this.loading = false),
