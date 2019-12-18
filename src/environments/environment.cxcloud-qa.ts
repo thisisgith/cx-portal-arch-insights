@@ -62,7 +62,7 @@ export const environment = {
 		returns: '/return/v1.0/returns',
 	},
 	rmaToolUrl: 'https://ibpm-stage.cisco.com/rma-qa3/home',
-	sdpServiceBasePath: '/api',
+	sdpServiceBasePath: `/api/${defaults.datacenterStub}`,
 	sdpServiceClientId: '4jr3csg78pg7ws7gwvj82sfa',
 	/**
 	 * sdpServiceOrigin MUST be explicitly declared in every single environment file,
@@ -70,11 +70,12 @@ export const environment = {
 	 */
 	sdpServiceOrigin: 'https://api-stage.cisco.com',
 	sdpServicePaths: {
-		contracts: '/api/v1/contracts',
-		customerportal: '/api/customerportal',
-		cxportal: '/api/cxportal',
-		inventory: '/api/v1/inventory',
-		partner: '/api/cxportal',
+		contracts: `/api/${defaults.datacenterStub}/v1/contracts`,
+		customerportal: `/api/${defaults.datacenterStub}/customerportal`,
+		cxportal: `/api/${defaults.datacenterStub}/cxportal`,
+		inventory: `/api/${defaults.datacenterStub}/v1/inventory`,
+		partner: `/api/${defaults.datacenterStub}/cxportal`,
+		cp: '/api/usa',
 	},
 	typeaheadServiceOrigin: 'https://xresps.cloudapps.cisco.com',
 };

@@ -75,6 +75,7 @@ export const environment = {
 		inventory: '/api/lt/v1/inventory',
 		partner: '/api/lt/cxportal',
 		registration: '/api/stg/customerportal',
+		cp: '/api/usa',
 	},
 	typeaheadServiceOrigin: 'https://xresps.cloudapps.cisco.com',
 };

@@ -4,13 +4,13 @@
 :host {
 	.open-case-toggle-btn a {
 		color: #465f7e;
-		font-size: 13px;
+		font-size: 1.3rem;
 	}
 }
 
 .asset__info {
 	color: $secondary-and-button-text-color;
-	font-size: 13px;
+	font-size: 1.3rem;
 
 	&__label::after {
 		content: '\003a';

@@ -112,12 +112,14 @@
 
 <ng-template #tagsData let-title="title" let-tags="tags">
 	<div class="row summary__details">
-		<div class="col-md-12 text-uppercase custom-tag-color" [innerText]="title | i18n" attr.data-auto-id="{{ title }}"></div>
+		<div class="col-md-12 text-uppercase summary__details__title cx-text-gray" [innerText]="title | i18n" attr.data-auto-id="{{ title }}"></div>
 	</div>
 	<div class="row">
-		<div class="custom-tags half-margin" *ngFor="let tag of tags">
-			<span class="custom-tag-color text-center qtr-padding-left custom-tag-style" [innerText]="tag?.tagName">
+		<div class="custom-tags custom-margin" *ngFor="let tag of tags">
+			<span class="custom-tag-color qtr-padding-left custom-tag-style" [innerText]="tag?.tagName">
+
 			</span>
 		</div>
 	</div>
 </ng-template>
+

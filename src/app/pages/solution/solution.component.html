@@ -210,6 +210,7 @@
 			aria-hidden="true"
 		>
 			<span
+				[ngClass]="{'font-30': facet?.seriesData?.totalCnt > 999}"
 				*ngIf="(cxLevel > 1)"
 				class="kmii__insights__num"
 				[class.kmii__insights__num--selected]="facet?.selected"
@@ -217,15 +218,15 @@
 			>
 			</span>
 			<div class="kmii__insights__title">
-				<div *ngIf="facet?.seriesData?.optedIn">
+				<div class="text-left" *ngIf="facet?.seriesData?.optedIn && facet?.seriesData?.runOnce">
 					<span [innerText]="facet?.seriesData?.complianceIssueCnt"></span>
 					<span class="qtr-padding-left" [innerText]="'_InsightsComplianceIssues_' | i18n"></span>
 				</div>
-				<div *ngIf="(cxLevel > 1)">
+				<div class="text-left" *ngIf="(cxLevel > 1)">
 					<span [innerText]="facet?.seriesData?.predictedCrashCnt"></span>
 					<span class="qtr-padding-left" [innerText]="'_InsightsPredictedCrashes_' | i18n"></span>
 				</div>
-				<div *ngIf="(cxLevel > 1)">
+				<div class="text-left" *ngIf="(cxLevel > 1)">
 					<span [innerText]="facet?.seriesData?.recentCrashCnt"></span>
 					<span class="qtr-padding-left" [innerText]="'_InsightsRecentCrashes_' | i18n"></span>
 				</div>

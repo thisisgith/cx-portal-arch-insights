@@ -32,6 +32,7 @@ export class ApixAccountInterceptor implements HttpInterceptor {
 		new RegExp('/(customerportal|cxportal)/product-alerts/'),
 		new RegExp('/(customerportal|cxportal)/diagnostics/'),
 		new RegExp('/(customerportal|cxportal)/ndgw/'),
+		new RegExp('/(customerportal|cxportal)/racetrack/v1/elearning'),
 	];
 
 	constructor (

@@ -5,34 +5,38 @@
 }
 
 .install-location-title {
-	font-size: 13px;
+	font-size: 1.3rem;
 }
 
 .install-location-icon {
 	color: $icon-light-gray;
-	line-height: 20px;
-	font-size: 20px;
+	line-height: 2rem;
+	font-size: 2rem;
 }
 
 .custom-tag-color {
 	color: #fff;
 }
 
-.custom-tag-style {
-	background-color: #98abc3;
-	height: 40px;
-	display: inline-block;
-	line-height: 2.5em;
-
-	&::after {
-		border-left: 20px solid #98abc3;
-		content: "";
-		position: absolute;
-		border-bottom: 20px solid transparent;
-		border-top: 20px solid transparent;
-		height: 0;
-		width: 0;
-		margin-right: 0;
-	}
+.custom-margin {
+	margin-right: 0.5em;
+	padding-left: 13px;
 }
 
+.custom-tag-style {
+	background-color: #98abc3;
+	height: 20px;
+	display: inline-block;
+	line-height: 1.5em;
+	font-size: 11px;
+
+	&::after {
+		border-left: 13px solid #98abc3;
+		content: "";
+		position: absolute;
+		border-bottom: 10px solid transparent;
+		border-top: 10px solid transparent;
+		height: 0;
+		width: 0;
+	}
+}

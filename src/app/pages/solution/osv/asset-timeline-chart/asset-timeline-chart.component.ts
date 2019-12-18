@@ -105,7 +105,7 @@ export class AssetTimelineChartComponent implements OnInit, OnChanges {
 							const versionLabels = name.split('/');
 							_.map(versionLabels, (versionName, index) => {
 								format += `<span
-									style='cursor:pointer;font-weight: bold;font-size:14px'>
+									style='cursor:pointer;font-weight: bold;font-size:1.4rem'>
 									${versionName}`;
 								if (index !== versionLabels.length - 1) {
 									format += ',';
@@ -113,17 +113,17 @@ export class AssetTimelineChartComponent implements OnInit, OnChanges {
 								format += '</span><br/>';
 							});
 							format += `
-								<span style='cursor:pointer;font-weight: normal;;font-size:11px'>
+								<span style='cursor:pointer;font-weight: normal;;font-size:1.1rem'>
 									${this['point'].label}
 								</span>
 								<br/>
-								<span style='cursor:pointer;font-weight: normal;;font-size:11px'>
+								<span style='cursor:pointer;font-weight: normal;;font-size:1.1rem'>
 									${this['point'].releaseDate}
 								</span>
 									<br/>
 							</span>`;
 							if (this['point'].accepted) {
-								format += '<span style=";font-size:12px;font-weight:bold';
+								format += '<span style=";font-size:1.2rem;font-weight:bold';
 								format += 'color:#6ebe4a">Accepted</span>';
 							}
 							/* tslint:enable:no-string-literal object-literal-shorthand */
@@ -157,7 +157,7 @@ export class AssetTimelineChartComponent implements OnInit, OnChanges {
 				borderColor: '#39393b',
 				enabled: true,
 				/* tslint:disable-next-line:ter-max-len */
-				headerFormat: '<span style="font-size:12px;font-weight:bold;">{point.key}</span><br/>',
+				headerFormat: '<span style="font-size:1.2rem;font-weight:bold;">{point.key}</span><br/>',
 				pointFormat: '{point.info}',
 				style: {
 					color: '#fff',
