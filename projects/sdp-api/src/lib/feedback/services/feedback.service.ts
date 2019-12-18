@@ -33,7 +33,7 @@ class FeedbackService extends __BaseService {
     __body = feedbackRequest;
     let req = new HttpRequest<any>(
       'POST',
-      this.rootUrl + `/customerportal/feedback/v1/device/submit`,
+      this.rootUrl + `/customerportal/ndgw-feedback/v1/device/submit`,
       __body,
       {
         headers: __headers,
