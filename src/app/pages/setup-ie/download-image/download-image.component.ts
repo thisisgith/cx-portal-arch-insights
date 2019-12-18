@@ -160,7 +160,8 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 				takeUntil(this.destroyed$),
 			)
 			.subscribe(() => {
-				this.onDownload();
+				this.view = 'pre-download';
+				this.loading = false;
 			});
 	}
 
