@@ -218,7 +218,7 @@
 			>
 			</span>
 			<div class="kmii__insights__title">
-				<div class="text-left" *ngIf="facet?.seriesData?.optedIn">
+				<div class="text-left" *ngIf="facet?.seriesData?.optedIn && facet?.seriesData?.runOnce">
 					<span [innerText]="facet?.seriesData?.complianceIssueCnt"></span>
 					<span class="qtr-padding-left" [innerText]="'_InsightsComplianceIssues_' | i18n"></span>
 				</div>
