@@ -1,66 +1,32 @@
-<div
-	class="text-large text-dkgray-4"
-	[innerText]="'_CP_SimilarSystems_' | i18n | uppercase"
-></div>
-<div
-	*ngIf="isValidState; else noDataTemplate"
-	class="flex-fill base-padding-top"
->
+<div class="text-large text-dkgray-4" [innerText]="'_CP_SimilarSystems_' | i18n | uppercase"></div>
+<div *ngIf="isValidState; else noDataTemplate" class="flex-fill base-padding-top">
 	<form [formGroup]="requestForm" class="row">
-		<div class="col-6 col-sm-12">
-			<div
-				class="text-medium half-padding-bottom text-color-black"
-				[innerText]="'_CP_SimilarityCriteria_' | i18n"
-			></div>
+		<div *ngIf="!similarAssetError" class="col-6 col-sm-12">
+			<div class="text-medium half-padding-bottom text-color-black"
+				[innerText]="'_CP_SimilarityCriteria_' | i18n"></div>
 			<div class="form-group form-group--inline">
 				<label class="radio">
-					<input
-						type="radio"
-						formControlName="similarityCriteria"
-						value="softwares_features"
-						[(ngModel)]="similarityCriteria"
-						data-auto-id="SimilarityCriteriaFingerprint"
-					/>
+					<input type="radio" formControlName="similarityCriteria" value="softwares_features"
+						[(ngModel)]="similarityCriteria" data-auto-id="SimilarityCriteriaFingerprint" />
 					<span class="radio__input"></span>
-					<span
-						class="radio__label hidden-xs"
-						[innerText]="'_CP_FeaturesHardwareandSoftware_' | i18n"
-					></span>
+					<span class="radio__label hidden-xs" [innerText]="'_CP_FeaturesHardwareandSoftware_' | i18n"></span>
 				</label>
 			</div>
 			<div class="form-group form-group--inline">
 				<label class="radio">
-					<input
-						type="radio"
-						formControlName="similarityCriteria"
-						value="features"
-						[(ngModel)]="similarityCriteria"
-						data-auto-id="SimilarityCriteriaFeatures"
-					/>
+					<input type="radio" formControlName="similarityCriteria" value="features"
+						[(ngModel)]="similarityCriteria" data-auto-id="SimilarityCriteriaFeatures" />
 					<span class="radio__input"></span>
-					<span
-						class="radio__label hidden-xs"
-						[innerText]="'_CP_FeaturesOnly_' | i18n"
-					></span>
+					<span class="radio__label hidden-xs" [innerText]="'_CP_FeaturesOnly_' | i18n"></span>
 				</label>
 			</div>
 		</div>
 	</form>
 </div>
 <div class="row flex" *ngIf="isValidState">
-	<div
-		*ngIf="!seriesDataLoading; else loadingTemplate"
-		class="container"
-		data-auto-id="similar-assets-table"
-	>
-		<cui-table
-			[options]="tableOptions"
-			[data]="similarDevicesData?.similarDevices"
-			[limit]="size"
-			[offset]="page"
-			(onTableRowClicked)="ontoggleRowSelect($event)"
-			*ngIf="!noData; else noDataTemplate"
-		></cui-table>
+	<div *ngIf="!seriesDataLoading; else loadingTemplate" class="container" data-auto-id="similar-assets-table">
+		<cui-table [options]="tableOptions" [data]="similarDevicesData?.similarDevices" [limit]="size" [offset]="page"
+			(onTableRowClicked)="ontoggleRowSelect($event)" *ngIf="!noData; else noDataTemplate"></cui-table>
 	</div>
 	<!-- grid-section ends -->
 </div>
@@ -72,52 +38,39 @@
 </ng-template>
 <ng-template #similarityMatchTemplate let-item="celldata">
 	<div class="base-padding-right">
-	<div
-		class="progressbar"
-		[attr.data-percentage]="item.similarityScore | number: '1.0-0'"
-	>
-		<div class="progressbar__fill"></div>
-		<div
-			class="progressbar__label text-right text-small"
-			[innerText]="
+		<div class="progressbar" [attr.data-percentage]="item.similarityScore | number: '1.0-0'">
+			<div class="progressbar__fill"></div>
+			<div class="progressbar__label text-right text-small" [innerText]="
 				'_CP_Match'
 					| i18n: (item.similarityScore / 100 | percent: '2.2-4')
-			"
-		></div>
-	</div>
+			"></div>
+		</div>
 	</div>
 </ng-template>
 <ng-template #crashRiskTemplate let-item="celldata">
 	<p class="text-left">
-		<span
-			[ngClass]="{
+		<span [ngClass]="{
 				'text-success': item.globalRiskRank === 'LOW',
 				'text-warning': item.globalRiskRank === 'MED',
 				'text-danger': item.globalRiskRank === 'HIGH',
 				'text-default': item.globalRiskRank === 'NotEvaluated'
-			}"
-			class="qtr-margin-right icon-circle"
-		>
+			}" class="qtr-margin-right icon-circle">
 		</span>
 		<span [innerText]="
 		item.globalRiskRank === 'MED'
 		?('_Medium_' | i18n):item.globalRiskRank | titlecase">
-	</span>
+		</span>
 	</p>
 </ng-template>
 <ng-template #compareTemplate let-item="celldata">
 	<span>
-		<a
-		data-auto-id="CompareButton"
-		[innerText]="(item.toggleWell ? '_CP_Close_' : '_CP_Compare_')| i18n | lowercase"
-		>
+		<a data-auto-id="CompareButton"
+			[innerText]="(item.toggleWell ? '_CP_Close_' : '_CP_Compare_')| i18n | lowercase">
 		</a>
 	</span>
 	<span class="qtr-padding-left">
-		<a
-		data-auto-id="CompareButton"
-		[ngClass]="item.toggleWell ?'icon-chevron-up icon--size-20': 'icon-chevron-down icon--size-20'"
-		>
+		<a data-auto-id="CompareButton"
+			[ngClass]="item.toggleWell ?'icon-chevron-up icon--size-20': 'icon-chevron-down icon--size-20'">
 		</a>
 	</span>
 </ng-template>
@@ -127,34 +80,20 @@
 </ng-template>
 <ng-template #comparisonviewTemplate let-item="item">
 	<div class="text-left">
-		<app-comparisonview
-			[compareView]="compareView"
-			[deviceA]="asset"
-			[deviceB]="item"
-			(reqError)="showError($event)"
-		>
+		<app-comparisonview [compareView]="compareView" [deviceA]="asset" [deviceB]="item"
+			(reqError)="showError($event)">
 		</app-comparisonview>
 	</div>
 </ng-template>
 <ng-template #noDataTemplate>
 	<div class="section text-center text-large text-dkgray-4">
-		<span
-			*ngIf="globalRiskRankValue === 'LOW'"
-			class="text-center dbl-padding-top"
-			[innerText]="'_CP_NoResultsFoundLow_' | i18n"
-		></span>
-		<span
-			*ngIf="
-				globalRiskRankValue === 'MED' || globalRiskRankValue === 'HIGH'
-			"
-			class="text-center dbl-padding-top"
-			[innerText]="'_CP_NoResultsFound_' | i18n"
-		></span>
-		<span
-			*ngIf="globalRiskRankValue === 'Not Evaluated'"
-			class="text-center dbl-padding-top"
-			[innerText]="'_CP_NoResultsFoundNE_' | i18n"
-		></span>
+		<span *ngIf="globalRiskRankValue === 'LOW'" class="text-center dbl-padding-top"
+			[innerText]="'_CP_NoResultsFoundLow_' | i18n"></span>
+		<span *ngIf="
+			(globalRiskRankValue === 'MED' || globalRiskRankValue === 'HIGH') && !similarAssetError
+			" class="text-center dbl-padding-top" [innerText]="'_CP_NoResultsFound_' | i18n"></span>
+		<span *ngIf="globalRiskRankValue === 'Not Evaluated'" class="text-center dbl-padding-top"
+			[innerText]="'_CP_NoResultsFoundNE_' | i18n"></span>
 	</div>
 </ng-template>
 <ng-template #loadingTemplate>
@@ -162,3 +101,7 @@
 		<cui-loader color="muted"></cui-loader>
 	</div>
 </ng-template>
+<div *ngIf="similarAssetError"
+	class="text-muted text-center text-xlarge " [innerText]="'_NoResultsFound_' | i18n"
+	data-auto-id="NoResultsFoundTxt">
+</div>
