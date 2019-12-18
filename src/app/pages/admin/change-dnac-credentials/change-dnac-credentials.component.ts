@@ -123,7 +123,7 @@ export class ChangeDNACCredentialsComponent implements OnDestroy {
 					this.changeCred = true;
 					const inter = interval(0)
 					.pipe(
-						map(()=> {
+						map(() => {
 							this.focusIP();
 							inter.unsubscribe();
 						}),
