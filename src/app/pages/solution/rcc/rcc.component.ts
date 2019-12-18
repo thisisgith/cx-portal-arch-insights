@@ -151,7 +151,6 @@ export class RccComponent implements OnInit, Panel360 , OnDestroy {
 	public optInStatus = false;
 	public scanEnabled = false;
 	public showRunningBanner = false;
-	public currentRunStatus = '';
 	public runOnce = false;
 	public collectorId = '';
 	public nextScheduleTime = '';
@@ -251,6 +250,20 @@ export class RccComponent implements OnInit, Panel360 , OnDestroy {
 		this.filterLoading = true;
 		this.assetsTotalCount = 0;
 		this.policyViolationsTotalCount = 0;
+		this.violationFilterShow = false;
+		this.systemFilterShow = false;
+		this.conditionViolations = 0;
+		this.conditionViolationsAssetCount = 0;
+		this.withViolationsAssetsCount = 0;
+		this.assetsConditionViolationsCount = 0;
+		if (this.filters) {
+			_.each(this.filters, (filter: Filter) => {
+				filter.selected = false;
+				_.each(filter.seriesData, f => {
+					f.selected = false;
+				});
+			});
+		}
 		this.isAssetView = false;
 		this.optInStatus = false;
 		this.runOnce = false;
@@ -278,7 +291,6 @@ export class RccComponent implements OnInit, Panel360 , OnDestroy {
 		.pipe(takeUntil(this.destroy$))
 			.subscribe(status => {
 				this.optInStatus = _.get(status, ['data', 'rccOptInStatus']);
-				this.currentRunStatus = _.get(status, ['data', 'currentRunStatus']);
 				this.runOnce = _.get(status, ['data', 'runOnce']);
 				if (this.optInStatus) {
 					if (this.runOnce) {
