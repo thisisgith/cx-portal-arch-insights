@@ -198,7 +198,6 @@ export class AdminComplienceComponent implements OnInit , DeactivationGuarded, O
 		.subscribe();
 		this.initializeDetails();
 		this.cuiModalService.hide();
-		this.toBeScanned = false;
 		this.enableSaveButton = false;
 	}
 	/**

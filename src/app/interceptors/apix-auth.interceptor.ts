@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpErrorResponse } from '@angular/common/http';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, throwError } from 'rxjs';
 import { mergeMap, switchMap, filter, take, finalize, catchError } from 'rxjs/operators';
 import { LogService } from '@cisco-ngx/cui-services';
 import { APIxService } from '@services';
@@ -150,7 +150,7 @@ export class ApixAuthInterceptor implements HttpInterceptor {
 										));
 						}
 
-						return Observable.throw(err);
+						return throwError(err);
 					},
 					));
 		}

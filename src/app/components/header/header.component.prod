@@ -82,9 +82,11 @@ export class HeaderComponent implements AfterViewChecked, OnInit, OnDestroy {
 	}];
 	public profileLinks = [{
 		href: environment.manageProfileUrl,
+		target: '_blank',
 		name: 'Manage Profile',
 	}, {
 		href: environment.logoutUrl,
+		target: '_self',
 		name: 'Log Out',
 	}];
 	public communityLink = environment.communityLink;

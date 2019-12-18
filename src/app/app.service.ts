@@ -4,7 +4,7 @@ import { Observable, of, forkJoin } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { I18n, Language } from '@cisco-ngx/cui-utils';
 import { LogService } from '@cisco-ngx/cui-services';
-import { RacetrackResponse, RacetrackService } from '@sdp-api';
+import { RacetrackResponse, RacetrackService, RacetrackSolution, RacetrackTechnology } from '@sdp-api';
 import { RacetrackInfoService } from '@services';
 import { UserResolve } from '@utilities';
 
@@ -87,6 +87,24 @@ export class AppService {
 		);
 	}
 
+	private setTechnology (topSolution: RacetrackSolution) {
+		const activeTechnology: string = window.localStorage.getItem('activeTechnology');
+		const topTechnology: RacetrackTechnology = _.head(_.get(topSolution, 'technologies', []));
+		let selectedTechnology: RacetrackTechnology = topTechnology;
+
+		if (activeTechnology) {
+			selectedTechnology = _.find(topSolution.technologies, {
+				name: activeTechnology,
+			}) || topTechnology;
+		}
+		if (selectedTechnology) {
+			this.racetrackInfoService.sendCurrentTechnology(selectedTechnology);
+			this.racetrackInfoService.sendCurrentAdoptionPercentage(
+				selectedTechnology.usecase_adoption_percentage);
+			window.localStorage.setItem('activeTechnology', selectedTechnology.name);
+		}
+	}
+
 	/**
 	 * Fetch the current racetrack, solution and technology at application start
 	 * (selects first from list for each)
@@ -100,12 +118,7 @@ export class AppService {
 			const solutions = results.solutions;
 			const topSolution = _.head(solutions);
 			this.racetrackInfoService.sendCurrentSolution(topSolution);
-			const topTechnology = _.head(_.get(topSolution, 'technologies', []));
-			if (topTechnology) {
-				this.racetrackInfoService.sendCurrentTechnology(topTechnology);
-				this.racetrackInfoService.sendCurrentAdoptionPercentage(
-					topTechnology.usecase_adoption_percentage);
-			}
+			this.setTechnology(topSolution);
 		},
 		err => {
 			this.logger.error('app.service : initializeRacetrack() ' +
