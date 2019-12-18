@@ -540,7 +540,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 				impactFilter.seriesData = _.compact(_.map(data, (count, severity) => {
 					if (count) {
 						return {
-							filter: severity,
+							filter: I18n.get(`_${_.startCase(severity)}_`),
 							label: I18n.get(`_${_.startCase(severity)}_`),
 							selected: false,
 							value: count,

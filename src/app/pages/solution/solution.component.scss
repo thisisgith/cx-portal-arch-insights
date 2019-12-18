@@ -157,6 +157,10 @@ $cx-font-size-24: 2.4rem;
 	&--selected {
 		color: $accent-color1;
 	}
+
+	&.font-30 {
+		font-size: 30px;
+	}
 }
 
 .kmii__insights__title {

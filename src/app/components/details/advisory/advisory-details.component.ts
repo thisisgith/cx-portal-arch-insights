@@ -35,6 +35,7 @@ import { Impacted } from './impacted-assets/impacted-assets.component';
 	},
 	selector: 'advisory-details',
 	templateUrl: './advisory-details.component.html',
+	styles: ['#advisoriesDetailPanel { min-width: 54%; }'],
 })
 export class AdvisoryDetailsComponent implements OnChanges, OnInit, OnDestroy, Panel360 {
 
