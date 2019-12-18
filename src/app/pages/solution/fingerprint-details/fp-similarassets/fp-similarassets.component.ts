@@ -48,6 +48,7 @@ export class FpSimilarAssetsComponent {
 	public size = 3;
 	public similarityCriteria = 'softwares_features';
 	public noData = false;
+	public similarAssetError = false;
 	public requestForm: FormGroup = this.fb.group({
 		similarityCriteria: ['softwares_features', Validators.required],
 	});
@@ -55,6 +56,7 @@ export class FpSimilarAssetsComponent {
 	public globalRiskRankValue;
 	@Output() public devicesSelected: EventEmitter<any> = new EventEmitter<any>();
 	@Output() public reqError: EventEmitter<any> = new EventEmitter<any>();
+	public alert = { };
 	public selectedDevice2: any;
 	@ViewChild('assetTemplate', { static: true })
 	private assetTemplate: TemplateRef<[]>;
@@ -212,7 +214,13 @@ export class FpSimilarAssetsComponent {
 				err => {
 					this.seriesDataLoading = false;
 					this.noData = true;
-					this.reqError.emit(I18n.get('_CP_SimilarAssets_Error_'));
+					this.similarAssetError = true;
+					if (err.status >= 500) {
+						this.reqError.emit(I18n.get('_CP_SimilarAssetsserverError_'));
+
+					} else {
+						this.reqError.emit(I18n.get('_CP_SimilarAssets_Error_'));
+					}
 					this.logger.error(err);
 				},
 				() => (this.seriesDataLoading = false),

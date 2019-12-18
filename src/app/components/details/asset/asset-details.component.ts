@@ -323,8 +323,12 @@ export class AssetDetailsComponent implements OnDestroy, OnInit, Panel360 {
 	 */
 	private refresh () {
 		// do not show loader if scan is completed
-		this.isLoading = this.isScanSuccess ? false : true;
-
+		if (this.isScanSuccess) {
+			this.isLoading = false;
+		} else {
+			this.isLoading = true;
+			_.invoke(this.alert, 'hide');
+		}
 		// If our serial number and our asset/element don't match,
 		// we need to unset them so we can re-fetch them
 		const assetSerial = _.get(this.asset, 'serialNumber');
@@ -406,7 +410,6 @@ export class AssetDetailsComponent implements OnDestroy, OnInit, Panel360 {
 
 		if ((currentAsset && !changes.asset.firstChange) ||
 			(currentSerial && !changes.serialNumber.firstChange)) {
-
 			if (currentAsset && !currentSerial) {
 				this.serialNumber = _.get(currentAsset, 'serialNumber');
 			}
