@@ -78,7 +78,6 @@ export class AssetDetailsAdvisoriesComponent
 	@ViewChild('bugID', { static: true }) private bugIDTemplate: TemplateRef<{ }>;
 	@ViewChild('lastUpdated', { static: true }) private lastUpdatedTemplate: TemplateRef<{ }>;
 	@ViewChild('cdetsHealine', { static: true }) private cdetsHeadline: TemplateRef<{ }>;
-	@ViewChild('cdetsStatusTemplate', { static: true }) private cdetsStatusTemplate: TemplateRef<{ }>;
 	@ViewChild('severityTemplate', { static: true }) private severityTemplate: TemplateRef<{ }>;
 
 	public tabs: Tab[];
@@ -435,12 +434,6 @@ export class AssetDetailsAdvisoriesComponent
 							sortable: true,
 							template: this.cdetsHeadline,
 							value: 'title',
-						},
-						{
-							key: 'state',
-							name: I18n.get('_Status_'),
-							template: this.cdetsStatusTemplate,
-							sortable: false,
 						},
 					],
 					hover: true,
