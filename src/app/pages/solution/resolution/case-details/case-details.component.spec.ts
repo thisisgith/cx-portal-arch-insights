@@ -10,7 +10,7 @@ import { CaseDetailsService } from '@services';
 import { InventoryService } from '@sdp-api';
 import { ActivatedRoute } from '@angular/router';
 
-describe('CaseDetailsComponent', () => {
+fdescribe('CaseDetailsComponent', () => {
 	let component: CaseDetailsComponent;
 	let fixture: ComponentFixture<CaseDetailsComponent>;
 	let caseService: CaseService;
@@ -168,9 +168,9 @@ describe('CaseDetailsComponent', () => {
 	});
 
 	it('set number of files count from case details response', () => {
-		const caseDetails = { result: { response: { getBrokerResponse: { downloadInfo: { noOfFiles: 4, fileDetail: [] } } } } };
+		const caseDetails = { result: { response: { getBrokerResponse: { downloadInfo: { noOfFiles: 4, fileDetail: [{}, {}, {}] } } } } };
 		component.populateCaseFilesList(caseDetails);
 		expect(component.numberOfFiles)
-			.toEqual(4);
+			.toEqual(3);
 	});
 });
