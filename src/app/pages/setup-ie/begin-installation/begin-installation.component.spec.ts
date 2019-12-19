@@ -48,7 +48,7 @@ describe('BeginInstallationComponent', () => {
 					.nothing();
 				sub.unsubscribe();
 			});
-		component.keyEvent(<any>{ keyCode: 0 });
-		component.keyEvent(<any>{ keyCode: 13 });
+		component.keyEvent(<any> { keyCode: 0 });
+		component.keyEvent(<any> { keyCode: 13 });
 	}));
 });
