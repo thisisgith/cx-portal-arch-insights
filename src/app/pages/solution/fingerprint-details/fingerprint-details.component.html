@@ -1,5 +1,6 @@
 <!-- App Details 360 slide-out -->
-<details-panel *ngIf="selectedSystem?.active" [hidden]="!selectedSystem" (hiddenChange)="handleHidden($event)"[minWidth]="'900px'" [fullscreen]="fullscreen">
+<details-panel *ngIf="selectedSystem?.active" [hidden]="!selectedSystem" (hiddenChange)="handleHidden($event)"
+	[minWidth]="'900px'" [fullscreen]="fullscreen">
 	<details-panel-header (close)="onPanelClose()" [(fullscreen)]="fullscreen" [fullscreenToggle]="true">
 		<app-fingerprint-header [asset]="selectedSystem"></app-fingerprint-header>
 		<div detailsPanelTitle class="text-xlarge">
@@ -8,8 +9,8 @@
 				<a
 					data-auto-id="selectedName"
 					[innerHTML]="selectedSystem?.deviceName"
-					(click) = "showAssetDetailsView = true;"
-				></a>
+					(click)="showAssetDetailsView = true;"
+					></a>
 			</span>
 		</div>
 	</details-panel-header>
