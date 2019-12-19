@@ -6,6 +6,7 @@ import {
 	ViewChild,
 	ElementRef,
 	SimpleChanges,
+	OnDestroy,
 } from '@angular/core';
 import { format } from 'd3-format';
 import { interpolate } from 'd3-interpolate';
@@ -26,7 +27,7 @@ const d3 = { format, select, arc, transition, active, easeLinear, interpolate };
 	selector: 'app-gauge',
 	templateUrl: './gauge.component.html',
 })
-export class GaugeComponent implements OnInit, OnChanges {
+export class GaugeComponent implements OnInit, OnChanges, OnDestroy {
 	@Input() private percentage: number;
 	@Input() private width?: number;
 	@Input() private textColor?: string = null;
@@ -78,6 +79,12 @@ export class GaugeComponent implements OnInit, OnChanges {
 		if (changes.collecting && !changes.collecting.firstChange) {
 			this.drawGauge();
 		}
+	}
+
+	public ngOnDestroy (): void {
+		this.meter.select('.collectingIndicator')
+			.transition('infinite')
+			.remove();
 	}
 
 	/**
@@ -132,10 +139,10 @@ export class GaugeComponent implements OnInit, OnChanges {
 			.attr('stroke-dashoffset', function () {
 				return this.getTotalLength();
 			})
-			.transition()
+			.transition('infinite')
 				.ease(d3.easeLinear)
 				.on('start', function repeat () {
-					d3.active(this)
+					d3.active(this, 'infinite')
 						.duration(2000)
 						.attr('stroke-dashoffset', 0)
 					.on('end', function () {
