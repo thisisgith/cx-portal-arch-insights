@@ -98,6 +98,14 @@ export class ChangeDNACCredentialsComponent implements OnDestroy {
 	}
 
 	/**
+	 * Focus Collector IP Address Handler
+	 */
+	public focusIP () {
+		document.getElementById('collector-password')
+			.focus();
+	}
+
+	/**
 	 * Continue Button Handler
 	 */
 	public onContinue () {
@@ -110,9 +118,17 @@ export class ChangeDNACCredentialsComponent implements OnDestroy {
 		this.checkIPConnection()
 			.pipe(takeUntil(this.destroyed$))
 			.subscribe(hasCert => {
-				this.isLoading = false;
 				if (hasCert) {
+					this.isLoading = false;
 					this.changeCred = true;
+					const inter = interval(0)
+					.pipe(
+						map(() => {
+							this.focusIP();
+							inter.unsubscribe();
+						}),
+					)
+					.subscribe();
 				} else {
 					this.instruct = true;
 				}
@@ -140,6 +156,7 @@ export class ChangeDNACCredentialsComponent implements OnDestroy {
 				takeWhile(connected => {
 					if (connected) {
 						this.changeCred = true;
+						this.focusIP();
 					}
 					this.count = this.count + 1;
 					if (this.count === 3) {
@@ -178,6 +195,7 @@ export class ChangeDNACCredentialsComponent implements OnDestroy {
 						I18n.get('_InvalidCXCollectorPassword_'),
 						'danger');
 					this.isLoading = false;
+					this.focusIP();
 
 					return empty();
 				}),
@@ -205,6 +223,7 @@ export class ChangeDNACCredentialsComponent implements OnDestroy {
 						this.errors.message,
 						'danger');
 					this.isLoading = false;
+					this.focusIP();
 
 					return empty();
 				}),
@@ -224,6 +243,7 @@ export class ChangeDNACCredentialsComponent implements OnDestroy {
 						responseData[0].message,
 						'danger');
 					this.isLoading = false;
+					this.focusIP();
 				}
 			});
 	}
