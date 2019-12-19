@@ -111,6 +111,7 @@ export class AdminWrapperComponent implements OnInit {
 			lastRoute = this.appService.popRoute();
 			lastRoute = lastRoute ? lastRoute : '';
 		}
+
 		if (lastRoute.includes('setup-ie')) {
 			lastRoute = '';
 		}
