@@ -1,7 +1,7 @@
 <div class="text-large text-dkgray-4" [innerText]="'_CP_SimilarSystems_' | i18n | uppercase"></div>
 <div *ngIf="isValidState; else noDataTemplate" class="flex-fill base-padding-top">
 	<form [formGroup]="requestForm" class="row">
-		<div *ngIf="!similarAssetError" class="col-6 col-sm-12">
+		<div [ngClass]="{'hide': similarAssetError}" class="col-6 col-sm-12">
 			<div class="text-medium half-padding-bottom text-color-black"
 				[innerText]="'_CP_SimilarityCriteria_' | i18n"></div>
 			<div class="form-group form-group--inline">
