@@ -295,10 +295,8 @@
 				</ng-container>
 				<button class="cx-btn cx-btn--small cx-btn--primary text-uppercase qtr-margin-left"
 					attr.data-auto-id = "MoreATXWatchNow-{{ data.videoURL?.videoId }}"
-					[ngClass]="data?.videoURL ? null : 'disabled'"
-					(click)="openWatchNow({src: data.videoURL,
-						title: data.title
-					})"
+					[ngClass]="data?.videoURL || (data?.providerInfo && data?.recordingURL) ? null : 'disabled'"
+					(click)="openWatchNow(data)"
 					[innerText]="'_WatchNow_' | i18n">
 				</button>
 			</div>
@@ -389,9 +387,9 @@
 			</ng-container>
 			<button class="cx-btn cx-btn--small cx-btn--primary text-uppercase"
 				data-auto-id = "recommendedATXWatchButton"
-				[ngClass]="componentData.atx?.recommended?.videoURL ? null : 'disabled'"
-				(click)="openWatchNow({ src: componentData.atx.recommended.videoURL,
-					title: componentData.atx.recommended.title})"
+				[ngClass]="componentData.atx?.recommended?.videoURL || 
+					(componentData.atx?.recommended?.providerInfo && componentData.atx?.recommended?.recordingURL) ? null : 'disabled'"
+				(click)="openWatchNow(componentData.atx.recommended)"
 				[innerText]="'_WatchNow_' | i18n">
 			</button>
 			<ng-container *ngIf="componentData?.atx?.recommended && recommendedAtxScheduleCardOpened">
@@ -1118,10 +1116,8 @@
 					</ng-container>
 					<button class="cx-btn cx-btn--small cx-btn--primary text-uppercase"
 						attr.data-auto-id = "CardATXWatchNow-{{ item.videoURL?.videoId }}"
-						[ngClass]="item?.videoURL ? null : 'disabled'"
-						(click)="openWatchNow({src: item.videoURL,
-							title: item.title
-						})"
+						[ngClass]="item?.videoURL || (item?.providerInfo && item?.recordingURL) ? null : 'disabled'"
+						(click)="openWatchNow(item)"
 						[innerText]="'_WatchNow_' | i18n">
 					</button>
 				</div>
@@ -1540,10 +1536,8 @@
 		</ng-container>
 		<button class="cx-btn cx-btn--small cx-btn--primary text-uppercase half-margin-left"
 			attr.data-auto-id = "ListATXWatchNow-{{ celldata.videoURL?.videoId }}"
-			[ngClass]="celldata?.videoURL ? null : 'disabled'"
-			(click)="openWatchNow({src: celldata.videoURL,
-				title: celldata.title
-			})"
+			[ngClass]="celldata?.videoURL || (celldata?.providerInfo && celldata?.recordingURL) ? null : 'disabled'"
+			(click)="openWatchNow(celldata)"
 			[innerText]="'_WatchNow_' | i18n">
 		</button>
 	</div>
