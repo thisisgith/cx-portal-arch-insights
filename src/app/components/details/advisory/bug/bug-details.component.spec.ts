@@ -10,6 +10,7 @@ import { DiagnosticsService } from '@sdp-api';
 import { of } from 'rxjs';
 import { RacetrackInfoService } from '@services';
 import * as _ from 'lodash-es';
+import { RouterTestingModule } from '@angular/router/testing';
 
 /**
  * Will fetch the currently active response body from the mock object
@@ -48,6 +49,7 @@ describe('BugDetailsComponent', () => {
 				MicroMockModule,
 				BugDetailsModule,
 				HttpClientTestingModule,
+				RouterTestingModule,
 			],
 			providers: [
 				{ provide: 'ENVIRONMENT', useValue: environment },

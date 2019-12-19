@@ -16,7 +16,7 @@
 			</span>
 		</div>
 	</div>
-	<div class="col-md-6" *ngIf="pagination && softwareVersions?.length > 0">
+	<div class="col-md-6" *ngIf="(pagination && softwareVersions?.length > 0) || (softwareVersionsParams?.search?.length > 0)">
 		<div class="flex flex-fluid flex-right">
 			<cui-search 
 				placeholder="{{ '_Search_' | i18n }}" 

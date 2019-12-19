@@ -14,6 +14,7 @@ export class FingerprintDetailsComponent implements OnChanges {
 	@Input() public selectedSystem: any;
 	@Output('close') public close = new EventEmitter<boolean>();
 	public fullscreen = false;
+	public fullScreenToggle = true;
 	public showAssetDetailsView = false;
 
 	constructor (

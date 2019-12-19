@@ -13,7 +13,8 @@ import { ResolutionModule } from './resolution.module';
 import { CaseScenarios } from '@mock';
 
 import * as _ from 'lodash-es';
-import { AssetPanelLinkService } from '@services';
+import { AssetPanelLinkService, CaseDetailsService } from '@services';
+import { UserResolve } from '@utilities';
 
 describe('ResolutionComponent', () => {
 	let service: CaseService;
@@ -21,6 +22,8 @@ describe('ResolutionComponent', () => {
 	let fixture: ComponentFixture<ResolutionComponent>;
 	let router: Router;
 	let assetService: AssetPanelLinkService;
+	let userResolve: UserResolve;
+	let caseDetailsService: CaseDetailsService;
 
 	configureTestSuite(() => {
 		TestBed.configureTestingModule({
@@ -35,6 +38,8 @@ describe('ResolutionComponent', () => {
 	beforeEach(() => {
 		service = TestBed.get(CaseService);
 		assetService = TestBed.get(AssetPanelLinkService);
+		userResolve = TestBed.get(UserResolve);
+		caseDetailsService = TestBed.get(CaseDetailsService);
 		spyOn(service, 'read')
 			.and
 			.returnValue(of(CaseScenarios[4].scenarios.GET[0].response.body));
@@ -47,6 +52,17 @@ describe('ResolutionComponent', () => {
 	it('should create', () => {
 		expect(component)
 			.toBeTruthy();
+	});
+
+	it('should create', () => {
+		spyOn(userResolve, 'getCustomerId')
+			.and
+			.returnValue(of('104959_0'));
+		const comp_dummy = TestBed.createComponent(ResolutionComponent);
+		const comp_dummy_instance = comp_dummy.componentInstance;
+		comp_dummy.detectChanges();
+		expect(comp_dummy_instance.customerId)
+			.toBe('104959_0');
 	});
 
 	it('should call case list on init', () => {
@@ -287,4 +303,22 @@ describe('ResolutionComponent', () => {
 			.toHaveBeenCalled();
 	});
 
+	it('should reinitialize filters when caseCount emits true', () => {
+		spyOn(component, 'initializeFilterVariables');
+		caseDetailsService.refreshCaseCount(true);
+		caseDetailsService.caseCount$.subscribe(() => {
+			expect(component.initializeFilterVariables)
+				.toHaveBeenCalled();
+		});
+	});
+
+	it('should call searchCaseNumber on clearsearch', () => {
+		spyOn(component, 'searchCaseNumber');
+		component.clearSearch();
+		fixture.detectChanges();
+		expect(component.searchCasesForm.value.caseNo)
+			.toBe('');
+		expect(component.searchCaseNumber)
+			.toHaveBeenCalledTimes(1);
+	});
 });
