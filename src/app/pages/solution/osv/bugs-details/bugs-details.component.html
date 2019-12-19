@@ -75,7 +75,7 @@
 
 <ng-template #bugsTableTemp let-recommendation="recommendation">
 	<div class="base-margin-top">
-		<div *ngIf="recommendation?.data?.bugs?.length > 0" class="qtr-margin-top row">
+		<div *ngIf="(recommendation?.data?.bugs?.length > 0) ||  (recommendation?.params?.search?.length > 0)" class="qtr-margin-top row">
 			<div class="col-md-9 flex flex-fill">
 				<div class="flex-center-vertical">
 					<span [innerText]="'_Bugs_' | i18n" class="text-large"></span>
