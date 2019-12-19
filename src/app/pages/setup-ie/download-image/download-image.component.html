@@ -60,11 +60,31 @@
 			class="xl-margin-bottom"
 			[innerText]="'_DownloadTheOVAFile_' | i18n"
 		></h6>
+		<h4 [innerText]="'_FileFormat_'| i18n"></h4>
+		<div class="text-center half-margin-top">
+			<div class="flex flex-center-horizontal half-margin-bottom">
+				<button
+				data-auto-id="download-ova-image"
+				[innerText]="'_OVA_Button_' | i18n"
+				class="btn btn--wide btn--secondary half-margin-right" 
+				(click)="selectImageType('ova')"
+				[ngClass]="{'active-btn': downloadImageType === 'ova'}"
+				></button>
+				<button 
+				data-auto-id="download-hyper-v-image"
+				[innerText]="'_Hyper_V_Button_' | i18n"
+				class="btn btn--wide btn--secondary half-margin-right" 
+				(click)="selectImageType('vhd')"
+				[ngClass]="{'active-btn': downloadImageType === 'vhd'}"
+				></button>
+			</div>
+		</div>
 		
 		<button
 			data-auto-id="download-image-btn"
-			[innerText]="'_DownloadImage_' | i18n | uppercase"
-			class="btn cx-btn"
+			[innerText]="'_Download_' | i18n | uppercase"
+			class="btn cx-btn dbl-margin-top"
+			[disabled]="!downloadImageType"
 			(click)="onDownload()"
 		>
 		</button>
