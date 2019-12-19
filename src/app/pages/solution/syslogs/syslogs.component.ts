@@ -86,6 +86,7 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 	public faultSeverityCount: FaultSeverity;
 	public faultStateCount: FaultState;
 	public faultTimeRangeCount: SyslogsTimeRange;
+
 	/**
 	 * Visual filters  of syslogs component
 	 */
@@ -95,8 +96,8 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 	private faultsFilterTemplate: TemplateRef<{ }>;
 	@ViewChild('severityFilter', { static: true })
 	private severityFilterTemplate: TemplateRef<{ }>;
-	 @ViewChild('afmSeverityFilter', { static: true })
-	 private afmSeverityFilterTemplate: TemplateRef<{ }>;
+	@ViewChild('afmSeverityFilter', { static: true })
+	private afmSeverityFilterTemplate: TemplateRef<{ }>;
 	public filters: SyslogFilter[];
 	public filtered = false;
 	public allAssetsSelected = false;
@@ -139,8 +140,8 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 		.subscribe((technology: RacetrackTechnology) => {
 			this.useCase = _.get(technology, 'name');
 			this.fetchSyslogsCount();
+			this.buildFilters();
 		});
-		this.buildFilters();
 	}
 
 	/**
@@ -248,7 +249,10 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 			.pipe(takeUntil(this.destroy$),
 			map((counts: FaultStateResponse) => {
 				this.faultStateCount = counts.filterCounts;
-				this.getFaultsCounts(counts.filterCounts);
+				if (!this.faultStateCount.Active) {
+					this.faultStateCount.Active = 0;
+				}
+				this.getFaultsCounts(this.faultStateCount);
 
 			}),
 			catchError(err => {
@@ -454,11 +458,11 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 				value: afmSeverity.low,
 			},
 			{
-				filter: 'Informational',
+				filter: 'Info',
 				filterName: I18n.get('_SyslogInfo_'),
-				label: `${I18n.get('_SyslogInfo_')}(${afmSeverity.information})`,
+				label: `${I18n.get('_SyslogInfo_')}(${afmSeverity.info})`,
 				selected: false,
-				value: afmSeverity.information,
+				value: afmSeverity.info,
 			},
 		]);
 	}
