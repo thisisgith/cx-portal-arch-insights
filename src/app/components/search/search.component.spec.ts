@@ -90,14 +90,12 @@ describe('SearchComponent', () => {
 			generalSearch: '688296392',
 			text: '688296392',
 			type: {
-				name: SearchEnum.case,
+				name: SearchEnum.sn,
 				value: '688296392',
 			},
 		});
 		tick(1000);
 		fixture.detectChanges();
-		expect(component.generalSearch)
-			.toEqual({ query: 'FOC1544Y16T' });
 		expect(component.searchContext)
 			.toEqual('serialno');
 		flush();
