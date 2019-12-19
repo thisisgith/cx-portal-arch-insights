@@ -286,7 +286,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 			},
 			{
 				key: 'resolution',
-				loading: true,
+				loading: false,
 				route: '/solution/resolution',
 				template: this.resolutionTemplate,
 				srOnlyTemplate: this.resolutionSrOnlyTemplate,
@@ -604,6 +604,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	 */
 	public getCaseAndRMACount () {
 		const resolutionFacet = _.find(this.facets, { key: 'resolution' });
+		resolutionFacet.loading = true;
 		const params = {
 			nocache: Date.now(),
 			page: 0,
@@ -618,6 +619,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 			.pipe(
 				catchError(err => {
 					this.logger.error(`Case Data :: Case Count :: Error ${err}`);
+					resolutionFacet.loading = false;
 
 					return of(null);
 				}),
@@ -633,6 +635,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 					this.logger.error(`RMA Data :: RMA Count :: Error ${err}`);
 					this.casesCount = 0;
 					this.RMACount = 0;
+					resolutionFacet.loading = false;
 
 					return of(null);
 				}),
@@ -647,6 +650,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 			}),
 			catchError(err => {
 				this.logger.error(`RMA Data :: Case and RMA Count :: Error ${err}`);
+				resolutionFacet.loading = false;
 
 				return of(null);
 			}),
