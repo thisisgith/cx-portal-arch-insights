@@ -24,7 +24,7 @@ export class InsightTabsComponent implements OnInit {
 	private switchUrl = ['/solution/insights/syslogs',
 		'/solution/insights/architecture-review',
 		'/solution/insights/architecture'];
-	public activeUrl:string;
+	public activeUrl: string;
 
 	constructor (
 		private logger: LogService,
