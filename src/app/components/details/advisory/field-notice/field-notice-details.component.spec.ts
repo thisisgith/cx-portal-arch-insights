@@ -18,6 +18,7 @@ import {
 import { HttpErrorResponse } from '@angular/common/http';
 import { MicroMockModule } from '@cui-x-views/mock';
 import { RacetrackInfoService } from '@services';
+import { RouterTestingModule } from '@angular/router/testing';
 
 /**
  * Will fetch the currently active response body from the mock object
@@ -56,6 +57,7 @@ describe('FieldNoticeDetailsComponent', () => {
 				FieldNoticeDetailsModule,
 				HttpClientTestingModule,
 				MicroMockModule,
+				RouterTestingModule,
 			],
 			providers: [
 				{ provide: 'ENVIRONMENT', useValue: environment },
