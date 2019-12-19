@@ -6,7 +6,7 @@ import { configureTestSuite } from 'ng-bullet';
 import { BeginInstallationComponent } from './begin-installation.component';
 import { BeginInstallationModule } from './begin-installation.module';
 
-fdescribe('BeginInstallationComponent', () => {
+describe('BeginInstallationComponent', () => {
 	let component: BeginInstallationComponent;
 	let fixture: ComponentFixture<BeginInstallationComponent>;
 
@@ -48,7 +48,7 @@ fdescribe('BeginInstallationComponent', () => {
 					.nothing();
 				sub.unsubscribe();
 			});
-		component.keyEvent(<any> { keyCode: 0 });
-		component.keyEvent(<any> { keyCode: 13 });
+		component.keyEvent(<any>{ keyCode: 0 });
+		component.keyEvent(<any>{ keyCode: 13 });
 	}));
 });
