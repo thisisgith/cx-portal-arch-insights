@@ -62,7 +62,7 @@ export interface FaultSeverity {
 	high: number;
 	medium: number;
 	low: number;
-	information: number;
+	info: number;
 }
 
 /**

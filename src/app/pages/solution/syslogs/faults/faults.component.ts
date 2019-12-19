@@ -33,7 +33,7 @@ export class FaultsComponent implements OnInit, OnChanges, OnDestroy {
 	public searchParams: FaultSearchParams;
 	private destroy$ = new Subject();
 	public tableOptions: CuiTableOptions;
-	public tableData: FaultGridData[];
+	public tableData: FaultGridData[] = [];
 	public tableLimit = 10;
 	public tableOffset = 0;
 	public loading = false;
@@ -186,7 +186,7 @@ export class FaultsComponent implements OnInit, OnChanges, OnDestroy {
 				this.lastUpdateTime = response.lastUpdateTime;
 				this.lastUpdateDate = response.lastUpdateDate;
 				this.offlineTime = response.offlineTime;
-				this.tableData = response.responseData;
+				this.tableSort(response.responseData);
 				this.preparePaginationHeader();
 				this.loading = false;
 			}),
@@ -200,6 +200,19 @@ export class FaultsComponent implements OnInit, OnChanges, OnDestroy {
 				return of({ });
 			}))
 			.subscribe();
+	}
+
+	/**
+	 * Custom table sort
+	 * @param tableData FaultGridData[]
+	 * @returns tableData
+	 */
+	private tableSort (tableData: FaultGridData[]) {
+		this.tableData = _.filter(tableData, ['faultSeverity', 'Critical']);
+		this.tableData = _.concat(this.tableData, _.filter(tableData, ['faultSeverity', 'High']));
+		this.tableData = _.concat(this.tableData, _.filter(tableData, ['faultSeverity', 'Medium']));
+		this.tableData = _.concat(this.tableData, _.filter(tableData, ['faultSeverity', 'Low']));
+		this.tableData = _.concat(this.tableData, _.filter(tableData, ['faultSeverity', 'Info']));
 	}
 
 	/**
