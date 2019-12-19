@@ -126,7 +126,7 @@ export class CaseFilesComponent implements OnInit, OnChanges {
 	 */
 	public ngOnChanges (changes: SimpleChanges) {
 		const filesData = _.get(changes, ['caseFilesData', 'currentValue']);
-		if (Object.keys(filesData).length > 0) {
+		if (filesData && Object.keys(filesData).length > 0) {
 			this.caseFilesData = filesData;
 			this.caseFiles = _.get(this.caseFilesData, ['fileDetail']);
 			if (!(this.caseFiles instanceof Array)) {

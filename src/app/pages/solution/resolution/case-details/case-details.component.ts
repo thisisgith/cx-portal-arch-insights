@@ -17,7 +17,8 @@ import * as _ from 'lodash-es';
 import { CuiModalService } from '@cisco-ngx/cui-components';
 import { CSCUploadService } from '@cui-x-views/csc';
 import { UserResolve } from '@utilities';
-import { InventoryService } from '@sdp-api';
+import { InventoryService, RacetrackSolution, RacetrackTechnology } from '@sdp-api';
+import { RacetrackInfoService } from '@services';
 
 /**
  * Case Details Component
@@ -44,12 +45,15 @@ export class CaseDetailsComponent implements OnInit, OnDestroy {
 	public numberOfFiles = 0;
 	public customerId: string;
 	public isAssetAvailable = false;
+	private selectedSolutionName: string;
+	private selectedTechnologyName: string;
 
 	constructor (
 		private caseService: CaseService,
 		private caseDetailsService: CaseDetailsService, private logger: LogService,
 		private cuiModalService: CuiModalService, private cscService: CSCUploadService,
 		private inventoryService: InventoryService, private userResolve: UserResolve,
+		private racetrackInfoService: RacetrackInfoService,
 	) {
 		this.userResolve.getCustomerId()
 		.pipe(
@@ -64,6 +68,31 @@ export class CaseDetailsComponent implements OnInit, OnDestroy {
 	 * Initialization hook
 	 */
 	public ngOnInit () {
+		this.buildRefreshSubject();
+		this.racetrackInfoService.getCurrentSolution()
+			.pipe(
+				takeUntil(this.destroy$),
+			)
+			.subscribe((solution: RacetrackSolution) => {
+				this.selectedSolutionName = _.get(solution, 'name');
+			});
+
+		this.racetrackInfoService.getCurrentTechnology()
+			.pipe(
+				takeUntil(this.destroy$),
+			)
+			.subscribe((technology: RacetrackTechnology) => {
+				if (this.selectedTechnologyName !== _.get(technology, 'name')) {
+					this.selectedTechnologyName = _.get(technology, 'name');
+				}
+				this.refresh();
+			});
+	}
+
+	/**
+	 * Refreshes the eox data
+	 */
+	private buildRefreshSubject () {
 		this.caseDetailsService.refreshNotesList(false);
 		this.refresh$.pipe(
 			tap(() => {
@@ -134,8 +163,6 @@ export class CaseDetailsComponent implements OnInit, OnDestroy {
 			.subscribe(res => {
 				this.severity = res.severity;
 			});
-
-		this.refresh();
 	}
 
 	/**
@@ -207,6 +234,8 @@ export class CaseDetailsComponent implements OnInit, OnDestroy {
 
 			return this.inventoryService.getHardware({
 				customerId: this.customerId,
+				solution: this.selectedSolutionName,
+				useCase: this.selectedTechnologyName,
 				serialNumber: [assetSerialNumber],
 			})
 			.pipe(
