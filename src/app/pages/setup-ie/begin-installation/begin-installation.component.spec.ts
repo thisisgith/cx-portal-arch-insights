@@ -1,17 +1,22 @@
-import { configureTestSuite } from 'ng-bullet';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { configureTestSuite } from 'ng-bullet';
 
 import { BeginInstallationComponent } from './begin-installation.component';
 import { BeginInstallationModule } from './begin-installation.module';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 
-describe('BeginInstallationComponent', () => {
+fdescribe('BeginInstallationComponent', () => {
 	let component: BeginInstallationComponent;
 	let fixture: ComponentFixture<BeginInstallationComponent>;
 
 	configureTestSuite(() => {
 		TestBed.configureTestingModule({
-			imports: [BeginInstallationModule, HttpClientTestingModule],
+			imports: [
+				BeginInstallationModule,
+				HttpClientTestingModule,
+				RouterTestingModule,
+			],
 		});
 	});
 
