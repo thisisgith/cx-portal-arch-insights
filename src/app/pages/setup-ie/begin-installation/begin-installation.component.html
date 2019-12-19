@@ -146,16 +146,27 @@
 	<!-- 	</div> -->
 	<!-- </section> -->
 
-	<div class="flex-center dbl-margin-top">
-		<button
-			data-auto-id="get-started-btn"
-			class="btn cx-btn base-margin-right"
-			[innerText]="'_Continue_' | i18n | uppercase"
-			(click)="onBegin()">
-		</button>
-
-		<span [innerText]="'_PressEnter_' | i18n"
-			class="text-medium text-uppercase cx-text-gray">
-		</span>
+	<div class="dbl-margin-top">
+			<div class="row">
+				<div class="col-6 text-right">
+					<div class="section__title--inline">
+						<button data-auto-id="get-started-btn"
+							class="btn cx-btn base-margin-right"
+							[innerText]="'_Continue_' | i18n | uppercase"
+							(click)="onBegin()">
+						</button>
+						<div [innerText]="'_PressEnter_' | i18n"
+							class="text-medium text-uppercase cx-text-gray text-center base-margin-right qtr-padding-top">
+						</div>
+					</div>
+				</div>
+				<div class="col-6 text-left">
+					<button data-auto-id="cancel-btn"
+						class="btn btn--secondary base-margin-right"
+						[innerText]="'_Cancel_' | i18n | uppercase"
+						[routerLink]="['/']">
+					</button>
+				</div>
+			</div>
 	</div>
 </div>
