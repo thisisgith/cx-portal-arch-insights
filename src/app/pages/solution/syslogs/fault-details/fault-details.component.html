@@ -97,7 +97,7 @@
 					<span [innerText]="'_FaultFilter_' | i18n "></span>
 			</div>
 			<div class="row half-margin-bottom ">
-				<div class="col-4">
+				<div class="col-3">
 					<cui-select
 						data-auto-id="productID"
 						label="{{'_FaultProductId_' | i18n}}"
@@ -110,7 +110,7 @@
 						[empty]="true">
 					</cui-select>
 				</div>
-				<div class="col-4">
+				<div class="col-3">
 					<cui-select
 						placeholder="Select Software Type"
 						data-auto-id="Software"
@@ -123,7 +123,19 @@
 						[empty]="true">
 					</cui-select>
 				</div>
-				<div class="col-4">
+				<div class="col-3">
+					<cui-select
+						placeholder="Select Status"
+						data-auto-id="status"
+						label="{{'_FaultStatus_' | i18n}}"
+						(ngModelChange)="onSelection($event,FAULT_CONSTANT.STATUS)"
+						[(ngModel)]="searchParams.srStatus"
+						[items]="srStatus"
+						optionsKey="name"
+						optionsValue="value">
+					</cui-select>
+				</div>
+				<div class="col-3">
 					<cui-select
 						placeholder="Select Time Range"
 						data-auto-id="timeRange"
@@ -233,7 +245,7 @@
 </ng-template>
 
 <ng-template #productId let-item="celldata">
-	<span *ngIf="item?.productId; else noTacCase"
+	<span *ngIf="item?.productId; else noTacCase" [title]="item.productId"
 		[innerText]="item.productId"
 	></span>
 </ng-template>

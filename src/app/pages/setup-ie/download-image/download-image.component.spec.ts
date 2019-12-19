@@ -156,4 +156,30 @@ describe('DownloadImageComponent', () => {
 		expect(routerNavigateSpy)
 			.toHaveBeenCalled();
 	});
+
+	it('should reset view', () => {
+		stateService.setState({
+			compKey: 3,
+		});
+		component.resetViews();
+		expect(component.view)
+		.toEqual('connect');
+	});
+
+	it('should download ova image', () => {
+		component.commenceDownload();
+		component.getDownloadURL()
+			.subscribe(res => {
+				expect(res)
+				.toBeDefined();
+			});
+	});
+
+	it('should call commenceDownload', () => {
+		component.commenceDownload()
+		.subscribe(res => {
+			expect(res)
+			.toBeDefined();
+		});
+	});
 });

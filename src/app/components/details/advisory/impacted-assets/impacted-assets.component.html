@@ -1,13 +1,13 @@
 <div *ngIf="impacted?.length || potentiallyImpacted?.length">
 	<ng-container *ngIf="impacted?.length">
 		<ng-container
-			*ngTemplateOutlet="deviceTable; context: { devices: impacted, options: affectedTable, title: '_Affected_' }">
+			*ngTemplateOutlet="deviceTable; context: { devices: impacted, options: affectedTable, pagedata: pagination, title: '_Affected_' }">
 		</ng-container>
 	</ng-container>
 
 	<ng-container *ngIf="potentiallyImpacted?.length">
 		<ng-container
-			*ngTemplateOutlet="deviceTable; context: { devices: potentiallyImpacted, options: potentiallyAffectedTable, title: '_PotentiallyAffected_' }">
+			*ngTemplateOutlet="deviceTable; context: { devices: potentiallyImpacted, options: potentiallyAffectedTable, pagedata: pagination, title: '_PotentiallyAffected_' }">
 		</ng-container>
 	</ng-container>
 </div>
@@ -20,17 +20,15 @@
 	<cui-spinner></cui-spinner>
 </div>
 
-<ng-template #deviceTable let-title="title" let-devices="devices" let-options="options">
-	<div [innerText]="'_PriorityBugsShowingXofYAffectedSystems_' | i18n:paginationCount:pagination?.total"></div>
+<ng-template #deviceTable let-title="title" let-devices="devices" let-options="options" let-pagedata="pagedata">
+	<div [innerText]="'_PriorityBugsShowingXofYAffectedSystems_' | i18n:pagination.countStr:pagination?.total"></div>
 	<div class="impactedTable">
 		<cui-table class="qtr-margin-top" [options]="options" [data]="devices"
 			(onSortingChanged)="onColumnSort($event)">
 		</cui-table>
-		<div *ngIf="pagination" class="base-margin-top">
-			<cui-pager [page]="pagination.page - 1" [limit]="pagination.rows" [totalItems]="pagination.total || 0"
-				(onPageChanged)="onPageChanged($event)">
-			</cui-pager>
-		</div>
+		<cui-pager *ngIf="pagedata?.total > 0" [page]="pagedata.page - 1" [limit]="pagedata.rows"
+			[totalItems]="pagedata.total || 0" (onPageChanged)="onPageChanged($event, type)">
+		</cui-pager>
 	</div>
 </ng-template>
 

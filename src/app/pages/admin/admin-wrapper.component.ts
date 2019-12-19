@@ -112,6 +112,10 @@ export class AdminWrapperComponent implements OnInit {
 			lastRoute = lastRoute ? lastRoute : '';
 		}
 
+		if (lastRoute.includes('setup-ie')) {
+			lastRoute = '';
+		}
+
 		this.router.navigateByUrl(lastRoute);
 	}
 }

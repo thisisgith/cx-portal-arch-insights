@@ -4,6 +4,7 @@
 export interface SyslogResponseData {
 	count?: number;
 	message?: string;
+	lastUpdateTime?: string;
 	responseData: SyslogGridData[];
 }
 

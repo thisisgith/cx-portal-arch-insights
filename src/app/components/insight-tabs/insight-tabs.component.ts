@@ -56,6 +56,8 @@ export class InsightTabsComponent implements OnInit {
 						this.enableArchitectureTab = _.get(response, 'architectureReviewUIEnabled');
 						this.enableConfigurationTab = _.get(response, 'configurationUIEnabled');
 						this.enableSystemEventsTab = _.get(response, 'syslogUIEnabled');
+					} else {
+						this.router.navigate(['/solution/insights/osv']);
 					}
 
 					this.switchUrl.forEach(url => {

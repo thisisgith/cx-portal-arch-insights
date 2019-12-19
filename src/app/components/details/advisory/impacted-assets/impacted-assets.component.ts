@@ -92,7 +92,6 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 	private selectedTechnologyName: string;
 	private destroyed$: Subject<void> = new Subject<void>();
 	public pagination?: DiagnosticsPagination;
-	public paginationCount ;
 
 	constructor (
 		private logger: LogService,
@@ -126,10 +125,13 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 					this.potentiallyImpacted =
 						_.filter(data,
 							x => _.includes(potentiallyImpacted, _.get(x, 'managedNeId'))) || [];
-
+					this.pagination = this.buildPagination(_.get(response, 'Pagination'));
 					return this.fetchAssets();
 				}),
 				catchError(err => {
+					this.pagination = {
+						total: 0,
+					};
 					this.logger.error('advisory-details:impacted-assets.component : ' +
 						`fetchSystemAsset() :: Error : (${err.status}) ${err.message}`);
 
@@ -142,7 +144,8 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 					impacted: this.impacted,
 					potentiallyImpacted: this.potentiallyImpacted,
 				});
-				this.impactedCount.emit(this.impacted.length + this.potentiallyImpacted.length);
+				// this.impactedCount.emit(this.impacted.length + this.potentiallyImpacted.length);
+				this.impactedCount.emit(this.pagination.total);
 				this.isLoading = false;
 			});
 	}
@@ -164,6 +167,7 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 			.pipe(
 				map((response: HardwareAssets) => {
 					this.impactedAssets = _.get(response, 'data', []);
+
 				}),
 				catchError(err => {
 					this.logger.error('advisory-details:impacted-assets.component : fetchAssets() ' +
@@ -188,14 +192,7 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 			.pipe(
 				mergeMap((response: BugImpactedAssetsResponse) => {
 					this.impacted = _.get(response, 'data', []);
-					this.pagination = _.get(response, 'Pagination');
-					let last = (this.pagination.rows * this.pagination.page);
-					if (last > this.pagination.total) {
-						last = this.pagination.total;
-					}
-
-					this.paginationCount = last;
-
+					this.pagination = this.buildPagination(_.get(response, 'Pagination'));
 					return this.fetchAssets();
 				}),
 				catchError(err => {
@@ -244,7 +241,7 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 						sortDirection: 'asc',
 						sorting: true,
 						template: this.deviceColumn,
-						width: '300px',
+						width: '225px',
 					},
 					{
 						key: 'ipAddress',
@@ -253,11 +250,16 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 						template: this.ipAddressColumn,
 					},
 					{
+						key: 'productId',
+						name: I18n.get('_ProductID_'),
+						sortable: true,
+						template: this.productIdColumn,
+					},
+					{
 						key: 'osVersion',
 						name: I18n.get('_SoftwareRelease_'),
 						sortable: true,
 						template: this.softwareVersionColumn,
-						width: '300px',
 					},
 				];
 				const securityPotentiallyAffectedTableColumns = [
@@ -268,7 +270,7 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 						sortDirection: 'asc',
 						sorting: true,
 						template: this.deviceColumn,
-						width: '300px',
+						width: '225px',
 					},
 					{
 						key: 'ipAddress',
@@ -277,11 +279,16 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 						template: this.ipAddressColumn,
 					},
 					{
+						key: 'productId',
+						name: I18n.get('_ProductID_'),
+						sortable: true,
+						template: this.productIdColumn,
+					},
+					{
 						key: 'osVersion',
 						name: I18n.get('_SoftwareRelease_'),
 						sortable: true,
 						template: this.softwareVersionColumn,
-						width: '300px',
 					},
 				];
 				// Concat the default columns with the extra columns
@@ -296,7 +303,7 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 						name: I18n.get('_SystemName_'),
 						sortable: true,
 						template: this.deviceColumn,
-						width: '300px',
+						width: '225px',
 					},
 					{
 						key: 'ipAddress',
@@ -325,7 +332,7 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 						name: I18n.get('_SystemName_'),
 						sortable: true,
 						template: this.deviceColumn,
-						width: '300px',
+						width: '225px',
 					},
 					{
 						key: 'ipAddress',
@@ -390,7 +397,7 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 						sortDirection: 'asc',
 						sorting: true,
 						template: this.deviceColumn,
-						width: '300px',
+						width: '225px',
 					},
 					{
 						key: 'ipAddress',
@@ -514,10 +521,37 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 
 	/**
 	 * Page change handler
- 	* @param event the event emitted
+	 * @param event the event emitted
+	 * @param type the type of advisory
  	*/
-	public onPageChanged (event: any) {
-		this.params.bugAssets.page = event.page + 1;
-		this.fetchBugAssets();
+	public onPageChanged (event: any, type: any) {
+		if (type === 'bug') {
+			this.params.bugAssets.page = event.page + 1;
+			this.fetchBugAssets();
+		} else if (type === 'field') {
+			this.params.system.page = event.page + 1;
+			this.fetchSystemAsset();
+		} else {
+			this.params.system.page = event.page + 1;
+			this.fetchSystemAsset();
+		}
+	}
+
+	private buildPagination (
+		pagination: DiagnosticsPagination) {
+		const rows = _.get(pagination, 'rows', 15);
+		const page = _.get(pagination, 'page', 1);
+		const total = _.get(pagination, 'total', 0);
+		let last = (rows * page);
+		if (last > total) {
+			last = total;
+		}
+
+		return {
+			page,
+			rows,
+			total,
+			countStr: last,
+		};
 	}
 }
