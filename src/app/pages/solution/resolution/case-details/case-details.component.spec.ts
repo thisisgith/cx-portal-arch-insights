@@ -10,7 +10,7 @@ import { CaseDetailsService } from '@services';
 import { InventoryService } from '@sdp-api';
 import { ActivatedRoute } from '@angular/router';
 
-fdescribe('CaseDetailsComponent', () => {
+describe('CaseDetailsComponent', () => {
 	let component: CaseDetailsComponent;
 	let fixture: ComponentFixture<CaseDetailsComponent>;
 	let caseService: CaseService;
