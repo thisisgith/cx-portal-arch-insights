@@ -16,6 +16,11 @@
   - [Merge Requests](#merge-requests)
     - [Single-Commit](#single-commit)
     - [Multi-Commit](#multi-commit)
+- [Coding Standards](#coding-standards)
+	- [HTML](#html)
+	- [Javascript/Typescript](#javascripttypescript)
+	- [SCSS & CSS](#scss-css)
+	- [A11y](#a11y)
 
 ## Mock Data
 Any change that adds new functionality or modifies existing functionality *must* add or modify mock data.  Merge requests that do not include mock data will be rejected.
@@ -169,3 +174,130 @@ Cons:
 - Difficult to see what was changed with revision commits
 - Extended review of one commit can block merging of an unrelated commit
 - Bumpier git history
+
+
+## Coding Standards
+This page defines the code styling guidelines that must be followed within CX frontend development.  This is a living document, so please feel free to make a pull request if there is inconsistent or missing information.
+
+> Note: Any changes to a project's TSLint configuration should be propagated back to this document, and all other projects' TSLint configurations should be updated to match. The overall TSLint config file can be found here [in the lint config file](./utils/lint/ts/index.js)
+
+### HTML
+All HTML should be valid markup. Meaning all tags should have a closing tag (unless it is self-closing). Element ID's should only be used once per page. Best Practices should be followed, and allow for best practices when considering `a11y`. They are as following:
+
+
+- Semantic HTML practices should always be followed.
+- An `<a />` tag should always have an HREF and should never be used as a button simply to inherit the style. HREFS should never be blank.
+- `<div />`s and `<span />`s are the elements of last resort. All other semantic elements should be considered before their use. They are meaningless semantically.
+- `<div />`s should never contain text alone. There are text elements for this.
+- `<div />`s should never have user interactive events attached to them. OnClicks, should be reserved for interactive elements like `<button />`s.
+-  As a coding style convention we are using the one attribute per line style of JSX and more closely AirBnB's config. 
+References to the style can be found here on the [AirBnb website](https://airbnb.io/javascript/react/#alignment) The reason for this is that it lends itself to greater reability and easier maintenance by other developers.
+
+*Example:*
+```
+// Bad practice
+<button (click)="clickOnThing()" [ngClass]="{ 'button--disabled': thing.disabled }" [innerText]="button.text"
+></button>
+
+// Good practice
+<button 
+  (click)="clickOnThing()"
+  [ngClass]="{ 'button--disabled': thing.disabled }"
+  [innerText]="button.text"
+>
+  {{ text }}
+</button>
+
+// Good Practice
+<button class="one-attribute-okay">
+  {{ text }}
+</button>
+```
+
+
+- Element IDs should almost never be used. Use classes instead. This will allow for reusability. Conditions where classes should be used are in the cases of Form elements needing labels and the use of anchors in documents to be linked to by a url or and HREF.
+
+
+### Javascript/Typescript
+All type script should be linted by TSLint. We use the basic `tslint-config-airbnb` with some modifications. The config is a port of the AirBnB style guide for Javascript which can be viewed here on the [AirBnB website](https://github.com/airbnb/javascript). To view them all in detail you can do so here in the [Linting config file](./utils/lint/ts/index.js). Some common rules that were modified are:
+
+- No trailing white spaces. This helps in Git diffs as whitespace changes will not show a change.
+- Always have a trailing comma. Again this helps in Git diffs as only one line will look to be changed if another property is added.
+- Do not include unneeded docs. Some docs don’t add value and are a pain to develop to read and to maintain. This in turn means it’s up to code reviewers to request docs when it is necessary. Basically if you need to reread a method more than once or you go “huh” then maybe a doc is needed (or even better request something cleaner).
+- Line length should be below 140 characters. This is an extreme in most cases you can aim for under 100.
+*Example:*
+```
+// Bad practice
+if (this.thingTruthy() && helloVar == 6 || this.otherThingFalsy() && helloVar == 8 || this.nothingFalsy()) {
+    ...
+  }
+// Good practice
+if (this.thingTruthy() && helloVar == 6
+  || this.otherThingFalsy() && helloVar == 8
+  || this.nothingFalsy() && !goodByeVar) {
+    ...
+}
+
+// Cleaner practice -- though please use more descriptive naming
+const conditionOne = this.thingTruthy() && helloVar == 6;
+const conditionTwo = this.otherThingFalsy() && helloVar == 8;
+const conditionThree = this.nothingFalsy() && !goodByeVar;
+
+if (conditionOne || conditionTwo || conditionThree) {
+  ...
+}
+```
+
+Other things to keep in mind:
+- File sizes should be kept between **<800 lines**. Eight hundred being the top limit and should be considered huge. **Aim for 250-500**.
+- All variables, properties, parameters, methods and functions should have human readable names. This will allow for better readability and maintainability. You may know at the time what these things will mean but three months from now you probably won't. Just imagine how the next developer will have to decipher it. If you see this in code review please ask for a clean human reabable name.
+```
+// Bad practice and unreadable
+const namelessNonsense = thing.map(b => {
+  const c = { ...b };
+  let w = c.m + c.d;
+  c.x = w / c.y;
+  return c.
+});
+```
+
+### SCSS & CSS
+We are implementing and using BEM. The Block-Element-Modifier (BEM) specification for naming CSS classes.  The default format for this convention is `.block__element--modifier`. You can see the standard from the creators here on the official [BEM website](https://en.bem.info/methodology/quick-start/). Although we have Angular's scoped styles BEM is a naming convention we prefer.
+
+Some common problems people have are nesting Elements based on the DOM. This is not good practice and recommended against in the docs above and specifically here on the official [BEM website](https://en.bem.info/methodology/html/#nesting-of-elements).
+
+BEM is not BEEEEEEEM
+
+Some General SCSS/CSS best practices are:
+- **!important** is the worst thing you can do to a stylesheet. If a project is littered with **!important**s It will soon become maintainable. **!important** is your very last option and everytime it is implemented it should be understood as `Tech Debt`
+- IDs should not be used unless specifically needed for a page anchor tag or a form element for a label.
+*In both of the above cases class specificity should be a better option.
+- Nesting of SCSS provides better readbaility and less code to try to decipher for the next developer. If we are using proper BEM and specific naming conventions (and proper components in small file sizes) the name of the block should be an easy enough identifier to find in the code. In the best case one file per component and one file per SCSS with one BEM Block.
+
+```
+.hello-component {
+  flex: 1;
+
+    &__title {
+      color: red;
+
+      &--highlight {
+        color: blue;
+      }
+    }
+
+    &__description {
+      color: black;
+    }
+}
+```
+- The use of `@mixin` is preffered over `@extends`
+
+### A11y
+Accessibility **(A11y)** should be considered in all of the development process. Cisco and the CX team are implementing the WCAG 2.0 AA standards. You can read more about it on the [WCAG website](https://www.w3.org/WAI/standards-guidelines/wcag/).
+
+Some basic standards are:
+- Keyboard navigation is a must. 
+- Visual indicators cannot rely on colour alone.
+- You should never disable the `:focus` visual indicator on an element totally.
+There are many many more. If you need training on Accessibility please contact your lead. But a good place to start would be this [video tutorial on Accessibility](https://www.pluralsight.com/courses/web-accessibility-meeting-guidelines)

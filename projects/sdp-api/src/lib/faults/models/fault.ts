@@ -28,6 +28,7 @@ export interface FaultSearchParams {
 	faultSeverity?: string;
 	lastUpdateTime?: string;
 	msgType?: string;
+	srStatus?: string;
 }
 
 /**

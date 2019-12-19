@@ -8,26 +8,27 @@
 			</span>
 		</div>
 	</div>
-	<div class="col-8">
-		<div>
+	<div class="col-8 flex flex-fluid flex-right">
+		<div class="col-auto">
 			<form #f="ngForm" class="row" id="searchForm" (keydown)="keyDownFunction($event)">
-				<div class="col-4"></div>
-				<div class="col-4"></div>
-				<div class="col-4">
-					<div class="form-group input--icon input--compressed">
-						<div class="form-group__text">
-							<input data-auto-id="search" #search="ngModel" [(ngModel)]="searchVal" name="search"
-								type="text" class="form-control" placeholder="{{ '_SyslogSearch_' | i18n }}" />
-							<button type="button" class="link" tabindex="-1">
-								<span class="icon-search"></span>
-							</button>
-						</div>
+				<div class="form-group input--icon input--compressed">
+					<div class="form-group__text">
+						<input data-auto-id="search" #search="ngModel" [(ngModel)]="searchVal" name="search"
+							type="text" class="form-control" placeholder="{{ '_SyslogSearch_' | i18n }}" />
+						<button type="button" class="link" tabindex="-1">
+							<span class="icon-search"></span>
+						</button>
 					</div>
 				</div>
 			</form>
 		</div>
+		<div>
+			<span *ngIf="lastUpdateTime"
+				[innerText]="'_FaultLastUpdatedXminutes_' | i18n : lastUpdateTime"
+				class="base-margin-right text-medium text-muted">
+			</span>
+		</div>
 	</div>
-
 </div>
 <div class="divider qtr-margin-top"></div>
 <div class="container base-margin-top" data-auto-id="syslog-message-table" *ngIf="tableData.length && !loading">

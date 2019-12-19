@@ -96,6 +96,20 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 			name: I18n.get('_FaultDays30_'),
 			value: 30,
 		}];
+	public srStatus: any[] = [
+		{
+			name: I18n.get('_FaultOpen_'),
+			value: 'Open',
+		},
+		{
+			name: I18n.get('_FaultClosed_'),
+			value: 'Closed',
+		},
+		{
+			name: I18n.get('_FaultNoTacCase_'),
+			value: 'Empty',
+		},
+	];
 
 	public selectDropDown = {
 		productID: '',
@@ -111,6 +125,7 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 		INACTIVE: 'INACTIVE',
 		PRODUCT_ID: 'PRODUCTID',
 		SOFTWARE: 'SOFTWARE',
+		STATUS: 'STATUS',
 		TIME: 'TIME',
 	};
 
@@ -122,7 +137,7 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 	@ViewChild('systemName', { static: true })
 		public systemNameTemplate: TemplateRef<{ }>;
 	@ViewChild('productId', { static: true })
-	public productIdTemplate: TemplateRef<{ }>;
+		public productIdTemplate: TemplateRef<{ }>;
 	@ViewChild('softwareType', { static: true })
 		public softwareTypeTemplate: TemplateRef<{ }>;
 	@ViewChild('status', { static: true })
@@ -280,13 +295,13 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 					name: I18n.get('_FaultSystemName_'),
 					sortable: true,
 					template: this.systemNameTemplate,
-					width: '27%',
+					width: '20%',
 				},
 				{
 					name: I18n.get('_FaultProductId_'),
 					sortable: true,
 					template: this.productIdTemplate,
-					width: '14%',
+					width: '20%',
 				},
 				{
 					name: I18n.get('_FaultSoftwareType_'),
@@ -304,7 +319,7 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 					name: I18n.get('_FaultCaseNumber_'),
 					sortable: true,
 					template: this.caseNumberTemplate,
-					width: '14%',
+					width: '15%',
 				},
 				{
 					name: I18n.get('_FaultDateAndTime'),
@@ -368,8 +383,10 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 			this.searchParams.productId = event;
 		} else if (paramType.toUpperCase() === this.FAULT_CONSTANT.SOFTWARE) {
 			this.searchParams.software = event;
-		} else {
+		} else if (paramType.toUpperCase() === this.FAULT_CONSTANT.TIME) {
 			this.searchParams.days = event;
+		} else {
+			this.searchParams.srStatus = '';
 		}
 		this.getAffectedSystemDetails(this.searchParams);
 	}

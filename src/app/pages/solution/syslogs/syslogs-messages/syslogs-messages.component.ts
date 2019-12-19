@@ -50,9 +50,11 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 	public tableStartIndex = 0;
 	public tableEndIndex = 10;
 	public sortField = 'timeStamp';
-	public sortOrder = 'asc';
+	public sortOrder = 'desc';
 	public alert: any = { };
 	public showSyslogsDetails = false;
+	public lastUpdateTime: string;
+
 	@ViewChild(CuiToastComponent, { static: true }) public toasts: CuiToastComponent;
 	constructor (
 		private logger: LogService,
@@ -108,6 +110,7 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 	 */
 	public ngOnChanges (changes: SimpleChanges) {
 		const currentFilter = _.get(changes, ['sysFilter', 'currentValue']);
+		const useCaseChange = _.get(changes, ['useCase', 'previousValue']);
 		if (currentFilter && !changes.sysFilter.firstChange) {
 			this.syslogsParams.syslogSeverity = currentFilter.severity;
 			this.syslogsParams.days = currentFilter.timeRange;
@@ -115,7 +118,9 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 			this.tableOffset = 0;
 			this.getSyslogsData();
 		}
-
+		if (useCaseChange) {
+			this.getSyslogsData();
+		}
 	}
 	/**
 	 * initilize grid and graph
@@ -179,6 +184,7 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 			  map((gridData: SyslogResponseData) => {
 				this.tableData = gridData.responseData;
 				this.totalItems = gridData.count;
+				this.lastUpdateTime = gridData.lastUpdateTime;
 				this.tableStartIndex = (this.tableOffset * 10) + 1;
 				this.tableEndIndex = (this.tableLimit * this.syslogsParams.pageNo);
 				if (this.tableEndIndex > this.totalItems) {
@@ -251,7 +257,7 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 				return 'syslogSeverity';
 			case 'Event Message':
 				return 'syslogMsgDesc';
-			case 'Systems':
+			case 'System':
 				return 'deviceHost';
 			case 'Date and Time':
 				return 'timeStamp';

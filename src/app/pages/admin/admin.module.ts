@@ -51,7 +51,7 @@ const childRoutes: Routes = [
 	},
 	{
 		component: ChangeDNACCredentialsComponent,
-		path: 'dnacchangecred',
+		path: 'dnacUpdateCred',
 	},
 	{
 		component: UsersComponent,
