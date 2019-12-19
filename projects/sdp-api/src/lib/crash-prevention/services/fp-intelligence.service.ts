@@ -36,9 +36,9 @@ class FpIntelligenceService extends __BaseService {
         let __params = this.newParams();
         let __headers = new HttpHeaders();
         let __body: any = null;
-        __params = __params.set('similarityCriteria',params.similarityCriteria);
-        __params = __params.set('page',params.page.toString());
-		__params = __params.set('size',params.size.toString());
+		if( params.similarityCriteria != null)__params =__params.set('similarityCriteria',params.similarityCriteria);
+		if(params.size != null) __params = __params.set('size',params.size.toString());
+		if(params.page != null) __params= __params.set('page',params.page.toString());
 		if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
 		if (params.solution != null) __params = __params.set('solution', params.solution.toString());
 
