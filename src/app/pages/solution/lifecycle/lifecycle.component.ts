@@ -2499,10 +2499,19 @@ export class LifecycleComponent implements OnDestroy {
 
 	/**
 	 * Open the Watch Now modal for atx
-	 * @param {string} src - The src url
-	 * @param {string} title - The title of the ATX entity
+	 * @param {AtxSchema} atx - The overarching atx
+	 * Should change param type from 'any' to AtxSchema when the sdp api gets updated to include 'videoURL'
 	 */
-	public openWatchNow ({ src, title }: { src: string, title: string }) {
-		this.cuiModalService.showComponent(AtxWatchModalComponent, { src, title }, 'normal');
+	public openWatchNow (atx: any) {
+		// cross launch if partner atx
+		if (atx.providerInfo) {
+			this.crossLaunch(atx.recordingURL);
+			return;
+		}
+		const atxWatchData = {
+			src: atx.videoURL,
+			title: atx.title,
+		};
+		this.cuiModalService.showComponent(AtxWatchModalComponent, atxWatchData, 'normal');
 	}
 }
