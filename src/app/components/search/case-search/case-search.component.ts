@@ -1,14 +1,16 @@
-import { Component, Input, OnInit, OnDestroy, OnChanges,
-	Output, EventEmitter, forwardRef } from '@angular/core';
+import {
+	Component, Input, OnInit, OnDestroy, OnChanges,
+	Output, EventEmitter, forwardRef,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { CaseService } from '@cui-x/services';
-import { InventoryService, HardwareResponse } from '@sdp-api';
+import { InventoryService, HardwareResponse, RacetrackSolution, RacetrackTechnology } from '@sdp-api';
 import { Case, Note, SearchContext, SearchQuery } from '@interfaces';
 import { LogService } from '@cisco-ngx/cui-services';
 import { Subject, of, Observable } from 'rxjs';
 import { tap, takeUntil, switchMap, catchError } from 'rxjs/operators';
 import { SpecialSearchComponent } from '../special-search/special-search.component';
-import { SearchService } from '@services';
+import { SearchService, RacetrackInfoService } from '@services';
 import { environment } from '@environment';
 
 import * as _ from 'lodash-es';
@@ -37,13 +39,14 @@ enum StatusIconMap {
 	providers: [{
 		provide: SpecialSearchComponent,
 		useExisting: forwardRef(() => CaseSearchComponent,
-	)}],
+		),
+	}],
 	selector: 'app-case-search',
 	styleUrls: ['./case-search.component.scss'],
 	templateUrl: './case-search.component.html',
 })
 export class CaseSearchComponent extends SpecialSearchComponent
-implements OnInit, OnDestroy, OnChanges {
+	implements OnInit, OnDestroy, OnChanges {
 	@Input('caseNumber') public caseNumber: SearchQuery;
 	@Output('hide') public hide = new EventEmitter<boolean>();
 	/** Emitter to show or hide general search */
@@ -78,6 +81,8 @@ implements OnInit, OnDestroy, OnChanges {
 
 	public rmaToolUrl = environment.rmaToolUrl;
 	public isAssetAvailable = false;
+	private selectedSolutionName: string;
+	private selectedTechnologyName: string;
 
 	constructor (
 		private logger: LogService,
@@ -86,21 +91,48 @@ implements OnInit, OnDestroy, OnChanges {
 		private router: Router,
 		private searchService: SearchService,
 		private userResolve: UserResolve,
-		) {
+		private racetrackInfoService: RacetrackInfoService,
+	) {
 		super();
 		this.userResolve.getCustomerId()
-		.pipe(
-			takeUntil(this.destroyed$),
-		)
-		.subscribe((id: string) => {
-			this.customerId = id;
-		});
+			.pipe(
+				takeUntil(this.destroyed$),
+			)
+			.subscribe((id: string) => {
+				this.customerId = id;
+			});
 	}
 
 	/**
 	 * OnInit lifecycle hook.
 	 */
 	public ngOnInit () {
+		this.buildRefreshSubject();
+		this.racetrackInfoService.getCurrentSolution()
+			.pipe(
+				takeUntil(this.destroy$),
+			)
+			.subscribe((solution: RacetrackSolution) => {
+				this.selectedSolutionName = _.get(solution, 'name');
+			});
+
+		this.racetrackInfoService.getCurrentTechnology()
+			.pipe(
+				takeUntil(this.destroy$),
+			)
+			.subscribe((technology: RacetrackTechnology) => {
+				if (this.selectedTechnologyName !== _.get(technology, 'name')) {
+					this.selectedTechnologyName = _.get(technology, 'name');
+				}
+				// Begin pipes
+				this.refresh$.next();
+			});
+	}
+
+	/**
+	 * Refreshes the eox data
+	 */
+	private buildRefreshSubject () {
 		// Set up pipes:
 		// Case Details
 		this.refresh$.pipe(
@@ -112,56 +144,53 @@ implements OnInit, OnDestroy, OnChanges {
 			switchMap(() => this.getCaseDetails(this.caseNumber.query)),
 			takeUntil(this.destroy$),
 		)
-		.subscribe(caseDetails => {
-			if (caseDetails && caseDetails.caseNumber) {
-				this.setCaseDetails(caseDetails);
-				this.loading = false;
-				this.toggleGeneralSearch.emit({
-					context: SearchContext.serialno,
-					hide: false,
-					searchString: this.case.serialNumber,
-				});
-			} else {
-				this.toggleGeneralSearch.emit({ hide: false });
-				this.hide.emit(true);
-			}
-		});
+			.subscribe(caseDetails => {
+				if (caseDetails && caseDetails.caseNumber) {
+					this.setCaseDetails(caseDetails);
+					this.loading = false;
+					this.toggleGeneralSearch.emit({
+						context: SearchContext.serialno,
+						hide: false,
+						searchString: this.case.serialNumber,
+					});
+				} else {
+					this.toggleGeneralSearch.emit({ hide: false });
+					this.hide.emit(true);
+				}
+			});
 		// Case Notes
 		this.refresh$.pipe(
 			tap(() => this.loadingNotes = true),
 			switchMap(() => this.getCaseNotes(this.caseNumber.query)),
 			takeUntil(this.destroy$),
 		)
-		.subscribe(noteList => {
-			this.setCaseNotes(noteList);
-			this.loadingNotes = false;
-		});
+			.subscribe(noteList => {
+				this.setCaseNotes(noteList);
+				this.loadingNotes = false;
+			});
 		// Case Summary
 		this.refresh$.pipe(
 			tap(() => this.loadingSummary = true),
 			switchMap(() => this.getCaseSummary(this.caseNumber.query)),
 			takeUntil(this.destroy$),
 		)
-		.subscribe(caseSummary => {
-			this.case.tacEngineer = _.get(caseSummary, ['content', 0, 'caseOwner']);
-			this.loadingSummary = false;
-		});
+			.subscribe(caseSummary => {
+				this.case.tacEngineer = _.get(caseSummary, ['content', 0, 'caseOwner']);
+				this.loadingSummary = false;
+			});
 		// Hardware - Tied to serial number from Case Details
 		this.serialNumber$.pipe(
 			switchMap(() => this.getHardware(this.customerId, this.serialNumber)),
 			takeUntil(this.destroy$),
 		)
-		.subscribe(hardware => {
-			this.case.hostName = _.get(hardware, ['data', 0, 'hostname']);
-			this.loadingHardware = false;
-			const assetDetails = _.get(hardware, 'data');
-			if (assetDetails && assetDetails.length > 0) {
-				this.isAssetAvailable = true;
-			}
-		});
-
-		// Begin pipes
-		this.refresh$.next();
+			.subscribe(hardware => {
+				this.case.hostName = _.get(hardware, ['data', 0, 'hostname']);
+				this.loadingHardware = false;
+				const assetDetails = _.get(hardware, 'data');
+				if (assetDetails && assetDetails.length > 0) {
+					this.isAssetAvailable = true;
+				}
+			});
 	}
 
 	/**
@@ -187,13 +216,13 @@ implements OnInit, OnDestroy, OnChanges {
 	 */
 	public getCaseDetails (caseNumber: string): Observable<any> {
 		return this.caseService.fetchCaseDetails(caseNumber)
-		.pipe(
-			catchError(err => {
-				this.logger.error(`Case Details :: ${caseNumber} :: Error ${JSON.stringify(err)}`);
+			.pipe(
+				catchError(err => {
+					this.logger.error(`Case Details :: ${caseNumber} :: Error ${JSON.stringify(err)}`);
 
-				return of(null);
-			}),
-		);
+					return of(null);
+				}),
+			);
 	}
 
 	/**
@@ -220,7 +249,7 @@ implements OnInit, OnDestroy, OnChanges {
 		}
 		if (caseDetails.rmaNumber) {
 			this.case.relatedRmas = caseDetails.rmaNumber.split(',')
-			.map(rmaNumber => rmaNumber.trim());
+				.map(rmaNumber => rmaNumber.trim());
 		}
 		if (caseDetails.serialNumber) {
 			this.case.serialNumber = caseDetails.serialNumber;
@@ -250,22 +279,22 @@ implements OnInit, OnDestroy, OnChanges {
 	 * @param caseNumber Case number to fetch notes for.
 	 * @returns Observable with response data.
 	 */
-	 public getCaseNotes (caseNumber: string): Observable<Note[]> {
+	public getCaseNotes (caseNumber: string): Observable<Note[]> {
 		return this.caseService.fetchCaseNotes(this.caseNumber.query)
-		.pipe(
-			catchError(err => {
-				this.logger.error(`Case Notes :: ${caseNumber} :: Error ${JSON.stringify(err)}`);
+			.pipe(
+				catchError(err => {
+					this.logger.error(`Case Notes :: ${caseNumber} :: Error ${JSON.stringify(err)}`);
 
-				return of(null);
-			}),
-		);
+					return of(null);
+				}),
+			);
 	}
 
 	/**
 	 * Sets the noteList in the component's case object using the result from getCaseNotes().
 	 * @param noteList Case notes to set in the component's case object.
 	 */
-	 public setCaseNotes (noteList: Note[]) {
+	public setCaseNotes (noteList: Note[]) {
 		if (_.has(noteList, '[0]')) {
 			this.case.noteList = noteList;
 			let lastDate = 0;
@@ -292,13 +321,13 @@ implements OnInit, OnDestroy, OnChanges {
 			size: 1,
 			sort: 'caseNumber,ASC',
 		})
-		.pipe(
-			catchError(err => {
-				this.logger.error(`Case Summary :: ${caseNumber} :: Error ${JSON.stringify(err)}`);
+			.pipe(
+				catchError(err => {
+					this.logger.error(`Case Summary :: ${caseNumber} :: Error ${JSON.stringify(err)}`);
 
-				return of(null);
-			}),
-		);
+					return of(null);
+				}),
+			);
 	}
 
 	/**
@@ -307,20 +336,22 @@ implements OnInit, OnDestroy, OnChanges {
 	 * @param serialNumber Serial number associated with the case.
 	 * @returns Observable with response data.
 	 */
-	 public getHardware (customerId: string, serialNumber: string):
-	 							Observable<HardwareResponse> {
+	public getHardware (customerId: string, serialNumber: string):
+		Observable<HardwareResponse> {
 		return this.inventoryService.getHardware({
 			customerId: this.customerId,
+			solution: this.selectedSolutionName,
+			useCase: this.selectedTechnologyName,
 			serialNumber: [this.case.serialNumber],
 		})
-		.pipe(
-			catchError(err => {
-				this.logger.error(`Case Hardware :: Customer ${customerId} & \
+			.pipe(
+				catchError(err => {
+					this.logger.error(`Case Hardware :: Customer ${customerId} & \
 				Serial Number ${serialNumber} :: Error ${JSON.stringify(err)}`);
 
-				return of(null);
-			}),
-		);
+					return of(null);
+				}),
+			);
 	}
 
 	/**
@@ -341,8 +372,10 @@ implements OnInit, OnDestroy, OnChanges {
 	 */
 	public openAssetDetailsView () {
 		if (this.customerId && this.case && this.case.serialNumber) {
-			this.showAssetDetails.emit({ customerId: this.customerId,
-				serialNumber : this.case.serialNumber });
+			this.showAssetDetails.emit({
+				customerId: this.customerId,
+				serialNumber: this.case.serialNumber,
+			});
 		}
 	}
 }
