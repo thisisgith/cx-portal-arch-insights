@@ -34,6 +34,7 @@ import { I18n } from '@cisco-ngx/cui-utils';
 import { AdvisoryType } from '@interfaces';
 import { getProductTypeImage, getProductTypeTitle } from '@classes';
 import { RacetrackInfoService } from '@services';
+import { Router } from '@angular/router';
 
 /**
  * The interface for impacted asset ids utilizing managedNeId
@@ -98,6 +99,7 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 		private inventoryService: InventoryService,
 		private diagnosticsService: DiagnosticsService,
 		private racetrackInfoService: RacetrackInfoService,
+		private router: Router,
 	) { }
 
 	/**
@@ -535,6 +537,16 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 			this.params.system.page = event.page + 1;
 			this.fetchSystemAsset();
 		}
+	}
+
+	public openSystemDetails (serialNumber: string) {
+		const queryParams = { serialNumber, select: true, assetsViewOpen: false };
+		if (window.location.pathname.indexOf('assets/system') > -1) {
+			queryParams.assetsViewOpen = true;
+		}
+		this.router.navigate(['/solution/assets/system'], {
+			queryParams,
+		});
 	}
 
 	private buildPagination (

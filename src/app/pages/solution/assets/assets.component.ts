@@ -1560,6 +1560,10 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			view.filtered = !_.isEmpty(
 				_.omit(_.cloneDeep(view.params), ['customerId', 'rows', 'page', 'sort']),
 			);
+
+			if (params.assetsViewOpen) {
+				this.loadData();
+			}
 		});
 
 		this.racetrackInfoService.getCurrentSolution()
