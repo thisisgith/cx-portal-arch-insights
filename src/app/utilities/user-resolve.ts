@@ -148,7 +148,15 @@ export class UserResolve implements Resolve<any> {
 		})
 		.pipe(
 			map((userResponse: OrgUserResponse) => {
-				this.dataCenter.next(_.get(userResponse, ['dataCenter', 'dataCenter'], DEFAULT_DATACENTER));
+				let dataCenterValue = _.get(userResponse, ['dataCenter', 'dataCenter'], DEFAULT_DATACENTER);
+
+				// handle null value when a new user logined in
+				if (_.isNull(dataCenterValue)) {
+					dataCenterValue = DEFAULT_DATACENTER;
+				}
+
+				this.dataCenter.next(dataCenterValue);
+
 				this.cachedUser = {
 					info: {
 						...this.mapUserResponse(accountResponse, userResponse),

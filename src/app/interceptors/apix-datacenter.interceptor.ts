@@ -31,11 +31,6 @@ export class ApixDatacenterInterceptor implements HttpInterceptor {
 		.pipe(
 			take(1),
 			mergeMap(dcLocation => {
-				// this if conditions should be removed once backend fix is in place
-				if (dcLocation === 'Not Configured') {
-					return next.handle(req);
-				}
-
 				const request = req.clone({
 					url: req.url.replace(environment.datacenterStub, dcLocation),
 				});
