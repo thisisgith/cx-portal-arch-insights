@@ -1633,6 +1633,7 @@ export class LifecycleComponent implements OnDestroy {
 				if (window.Cypress) {
 					window.accLoading = false;
 				}
+
 				return result;
 			}),
 			catchError(err => {
@@ -1678,6 +1679,7 @@ export class LifecycleComponent implements OnDestroy {
 				this.componentData.atx.sessions = result.items;
 				this.selectedATX = this.componentData.atx.sessions;
 				_.each(this.selectedATX, (atx: AtxSchema) => {
+					atx.recordingURL = decodeURIComponent(atx.recordingURL);
 					_.each(atx.sessions, (session: AtxSessionSchema) => {
 						if (session.scheduled) {
 							this.scheduledAtxMap[atx.atxId] = session;
@@ -1944,6 +1946,7 @@ export class LifecycleComponent implements OnDestroy {
 		_.set(this.componentData, ['learning', 'elearning'], []);
 		_.set(this.componentData, ['learning', 'training'], []);
 		_.set(this.componentData, ['learning', 'remotepracticelabs'], []);
+
 		return this.contentService.getRacetrackElearning(
 			_.pick(this.componentData.params,
 			['customerId', 'solution', 'usecase', 'pitstop', 'rows', 'suggestedAction']))
@@ -2494,6 +2497,7 @@ export class LifecycleComponent implements OnDestroy {
 	public parseHtmlText (txtString) {
 		const dmTemp = document.createElement('template');
 		dmTemp.innerHTML = txtString.trim();
+
 		return dmTemp.content.cloneNode(true).textContent;
 	}
 
@@ -2506,6 +2510,7 @@ export class LifecycleComponent implements OnDestroy {
 		// cross launch if partner atx
 		if (atx.providerInfo) {
 			this.crossLaunch(atx.recordingURL);
+
 			return;
 		}
 		const atxWatchData = {
