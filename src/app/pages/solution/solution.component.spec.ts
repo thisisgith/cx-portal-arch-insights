@@ -403,5 +403,8 @@ describe('SolutionComponent', () => {
 		fixture.detectChanges();
 		expect(component.getCaseAndRMACount)
 			.toHaveBeenCalled();
+
+		discardPeriodicTasks();
+		flush();
 	}));
 });

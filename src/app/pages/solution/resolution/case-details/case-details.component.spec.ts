@@ -168,9 +168,10 @@ describe('CaseDetailsComponent', () => {
 	});
 
 	it('set number of files count from case details response', () => {
-		const caseDetails = { result: { response: { getBrokerResponse: { downloadInfo: { noOfFiles: 4 } } } } };
+		const caseDetails = { result: { response: { getBrokerResponse: { downloadInfo: { noOfFiles: 4,
+			fileDetail: [{ }, { }, { }] } } } } };
 		component.populateCaseFilesList(caseDetails);
 		expect(component.numberOfFiles)
-			.toEqual(4);
+			.toEqual(3);
 	});
 });
