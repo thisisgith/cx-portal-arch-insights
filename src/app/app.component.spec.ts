@@ -19,7 +19,7 @@ import { User } from '@interfaces';
 import { throwError, Observable } from 'rxjs';
 import { EntitlementWrapperService, OrgUserService } from '@sdp-api';
 import { mappedUser } from '@mock';
-import { UserRoles } from '@constants';
+import { ACTIVE_SMART_ACCOUNT_KEY, UserRoles } from '@constants';
 
 const testCxLevel = mappedUser.info.subscribedSolutions.cxLevel;
 const testRole = mappedUser.info.individual.role;
@@ -145,7 +145,7 @@ describe('AppComponent', () => {
 			entitlementWrapperService = TestBed.get(EntitlementWrapperService);
 			orgUserService = TestBed.get(OrgUserService);
 			fixture.detectChanges();
-			window.localStorage.removeItem('activeSmartAccount');
+			window.localStorage.removeItem(ACTIVE_SMART_ACCOUNT_KEY);
 		});
 
 		it('should resolve to a user', done => {
@@ -323,7 +323,7 @@ describe('AppComponent', () => {
 		});
 
 		it('should resolve a valid sa id from local storage', done => {
-			window.localStorage.setItem('activeSmartAccount', `${mappedUser.info.companyList[1].companyId}`);
+			window.localStorage.setItem(ACTIVE_SMART_ACCOUNT_KEY, `${mappedUser.info.companyList[1].companyId}`);
 			fixture.whenStable()
 			.then(() => {
 				userResolve.resolve()
