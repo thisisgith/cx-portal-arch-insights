@@ -38,6 +38,7 @@ import {
 	FeedbackSuccessModule,
 } from './components/feedback/feedback-success/feedback-success.module';
 import { UnauthorizedUserModule } from './components/unauthorized-user/unauthorized-user.module';
+import { SmartAccountSelectionModule } from './components/smart-account-selection/smart-account-selection.module';
 import { EntitlementRouteAuthService } from '@services';
 import { ApixAuthInterceptor, ApixAccountInterceptor, ApixDatacenterInterceptor } from '@interceptors';
 
@@ -111,6 +112,7 @@ export function loadUserInfo (service: AppService) {
 		FeedbackFailedModule,
 		FeedbackSuccessModule,
 		UnauthorizedUserModule,
+		SmartAccountSelectionModule,
 	],
 	providers: [
 		AppService,

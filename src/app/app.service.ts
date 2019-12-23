@@ -7,6 +7,7 @@ import { LogService } from '@cisco-ngx/cui-services';
 import { RacetrackResponse, RacetrackService, RacetrackSolution, RacetrackTechnology } from '@sdp-api';
 import { RacetrackInfoService } from '@services';
 import { UserResolve } from '@utilities';
+import { ACTIVE_TECHNOLOGY_KEY } from '@constants';
 
 import * as _ from 'lodash-es';
 
@@ -88,7 +89,7 @@ export class AppService {
 	}
 
 	private setTechnology (topSolution: RacetrackSolution) {
-		const activeTechnology: string = window.localStorage.getItem('activeTechnology');
+		const activeTechnology: string = window.localStorage.getItem(ACTIVE_TECHNOLOGY_KEY);
 		const topTechnology: RacetrackTechnology = _.head(_.get(topSolution, 'technologies', []));
 		let selectedTechnology: RacetrackTechnology = topTechnology;
 
@@ -101,7 +102,7 @@ export class AppService {
 			this.racetrackInfoService.sendCurrentTechnology(selectedTechnology);
 			this.racetrackInfoService.sendCurrentAdoptionPercentage(
 				selectedTechnology.usecase_adoption_percentage);
-			window.localStorage.setItem('activeTechnology', selectedTechnology.name);
+			window.localStorage.setItem(ACTIVE_TECHNOLOGY_KEY, selectedTechnology.name);
 		}
 	}
 

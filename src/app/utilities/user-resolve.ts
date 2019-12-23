@@ -11,7 +11,8 @@ import { CuiModalService } from '@cisco-ngx/cui-components';
 import {
 	UnauthorizedUserComponent,
 } from '../components/unauthorized-user/unauthorized-user.component';
-import { INTERIM_VA_ID, DEFAULT_DATACENTER, UserRoles } from '@constants';
+import { SmartAccountSelectionComponent } from '../components/smart-account-selection/smart-account-selection.component';
+import { INTERIM_VA_ID, DEFAULT_DATACENTER, ACTIVE_SMART_ACCOUNT_KEY, UserRoles } from '@constants';
 
 /**
  * Resolver to fetch our user
@@ -88,7 +89,7 @@ export class UserResolve implements Resolve<any> {
 		if (smartAccount) {
 			this.saId.next(saId);
 			this.customerId.next(`${saId}_${INTERIM_VA_ID}`);
-			window.localStorage.setItem('activeSmartAccount', `${saId}`);
+			window.localStorage.setItem(ACTIVE_SMART_ACCOUNT_KEY, `${saId}`);
 			window.location.reload();
 		}
 	}
@@ -107,7 +108,7 @@ export class UserResolve implements Resolve<any> {
 			mergeMap((account: UserEntitlement) => {
 				this.companyList = _.sortBy(account.companyList, 'companyName');
 
-				const activeSmartAccountId = window.localStorage.getItem('activeSmartAccount');
+				const activeSmartAccountId = window.localStorage.getItem(ACTIVE_SMART_ACCOUNT_KEY);
 				if (activeSmartAccountId) {
 					this.smartAccount = _.find(this.companyList, {
 						companyId: Number(activeSmartAccountId),
@@ -175,9 +176,14 @@ export class UserResolve implements Resolve<any> {
 				return this.cachedUser;
 			}),
 			catchError(err => {
+				window.localStorage.removeItem(ACTIVE_SMART_ACCOUNT_KEY);
 				this.logger.error('user-resolve : getAccountInfo() ' +
 					`:: Error : (${err.status}) ${err.message}`);
-				this.cuiModalService.showComponent(UnauthorizedUserComponent, { });
+				this.cuiModalService.showComponent(SmartAccountSelectionComponent, {
+					smartAccounts: this.companyList,
+					selectedSmartAccount: this.smartAccount,
+					isError: true,
+				});
 
 				return of(null);
 			}),

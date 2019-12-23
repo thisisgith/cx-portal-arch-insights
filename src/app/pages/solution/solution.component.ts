@@ -38,6 +38,7 @@ import { DetailsPanelStackService, UtilsService, RacetrackInfoService, CaseDetai
 import { HttpResponse } from '@angular/common/http';
 import { SmartAccount } from '@interfaces';
 import { UserResolve } from '@utilities';
+import { ACTIVE_TECHNOLOGY_KEY } from '@constants';
 
 /**
  * Interface representing a facet
@@ -317,7 +318,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		this.racetrackInfoService.sendCurrentTechnology(technology);
 		this.racetrackInfoService.sendCurrentAdoptionPercentage(
 				technology.usecase_adoption_percentage);
-		window.localStorage.setItem('activeTechnology', technology.name);
+		window.localStorage.setItem(ACTIVE_TECHNOLOGY_KEY, technology.name);
 	}
 
 	public changeSolution (solution: RacetrackSolution) {
