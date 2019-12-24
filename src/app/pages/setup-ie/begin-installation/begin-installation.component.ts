@@ -12,12 +12,20 @@ import { KEY_CODES } from '@classes';
 })
 export class BeginInstallationComponent implements SetupStep {
 	@Output('onStepComplete') public onStepComplete = new EventEmitter<void>();
+	public collectorOverviewLink = 'https://www.cisco.com/c/dam/en/us/support/docs/cloud-systems-management/Cisco-CX-Collector/Collector_Overview.pdf';
 
 	/**
 	 * Fired when "Begin Installation" is clicked
 	 */
 	public onBegin () {
 		this.onStepComplete.emit();
+	}
+
+	/**
+	 * Opens a new tab to view Collector Overview
+	 */
+	public openCollectorOverview () {
+		window.open(this.collectorOverviewLink, '_blank');
 	}
 
 	/**

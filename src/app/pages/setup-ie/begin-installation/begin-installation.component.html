@@ -42,7 +42,7 @@
 			<div class="base-margin-bottom text-large">
 				<span [innerText]="'_OtherNotesOnCXCollector_' | i18n"></span>
 			</div>
-			<div class="flex-center xl-margin-bottom">
+			<div class="flex-center">
 				<ul class="flex-fluid">
 					<li [innerText]="'_DHCPIsSupported_' | i18n"></li>
 					<li [innerText]="'_OnlyIPv4IsSupported_' | i18n"></li>
@@ -64,10 +64,10 @@
 			<!-- 	<li class="base-margin-top" [innerText]="'_Day0_Setup_8_' | i18n"></li> -->
 			<!-- 	<li class="base-margin-top" [innerText]="'_Day0_Setup_9_' | i18n"></li> -->
 			<!-- </ul> -->
-			<!-- <a routerLink="solution" class="base-margin-top"> -->
-			<!-- 	<span class="icon-help-outline qtr-margin-right"></span> -->
-			<!-- 	<span [innerText]="'_Day0_Setup_10_' | i18n"></span> -->
-			<!-- </a> -->
+			<a (click)="openCollectorOverview()" class="base-margin-top">
+                <span class="icon-help-outline qtr-margin-right"></span>
+                <span [innerText]="'_Day0_Setup_10_' | i18n"></span>
+            </a>
 		</div>
 	</section>
 
