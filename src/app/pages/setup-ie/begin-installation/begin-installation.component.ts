@@ -1,6 +1,7 @@
 import { Component, HostListener, EventEmitter, Output } from '@angular/core';
 import { SetupStep } from '@interfaces';
 import { KEY_CODES } from '@classes';
+import { environment } from '@environment';
 
 /**
  * Component to prompt beginning of IE installation
@@ -12,7 +13,7 @@ import { KEY_CODES } from '@classes';
 })
 export class BeginInstallationComponent implements SetupStep {
 	@Output('onStepComplete') public onStepComplete = new EventEmitter<void>();
-	public collectorOverviewLink = 'https://www.cisco.com/c/dam/en/us/support/docs/cloud-systems-management/Cisco-CX-Collector/Collector_Overview.pdf';
+	public collectorOverviewLink = environment.collectorOverview;
 
 	/**
 	 * Fired when "Begin Installation" is clicked

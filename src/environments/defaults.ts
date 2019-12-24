@@ -11,6 +11,7 @@ const datacenterStub = 'REGION';
 export const defaults = {
 	origin,
 	datacenterStub,
+	collectorOverview : 'https://www.cisco.com/c/dam/en/us/support/docs/cloud-systems-management/Cisco-CX-Collector/Collector_Overview.pdf',
 	apolloServicePaths: {
 		cases: '/ws/cases',
 		csc: '/ws/csc',
