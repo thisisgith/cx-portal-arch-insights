@@ -419,7 +419,7 @@
 			<img *ngIf="item.providerInfo?.logoURL" class="table-img-width provider_icon" alt="'_Placeholder_' | i18n"
 				[src]="item.providerInfo?.logoURL" attr.data-auto-id="{{ autoid }}-ProviderLogo">
 			<span *ngIf="!item.providerInfo?.logoURL && item.providerInfo?.name" class="text-bold text-medium provider_icon"
-				[innerText]="item.providerInfo?.name" attr.data-auto-id="{{ autoid }}-ProviderText"></span>
+			attr.data-auto-id="{{ autoid }}-ProviderText"></span>
 		</ng-container>
 		<img class="max-width" alt="'_Placeholder_' | i18n" [src]="src" attr.data-auto-id="{{ autoid }}-Image">
 	</div>
@@ -428,8 +428,13 @@
 			<span class="icon-flagged" attr.data-auto-id="{{ autoid }}-Flag"></span>
 			<span class="text-small" [innerText]="'_Recommended_' | i18n"></span>
 		</div>
+		<p 
+		class="text-bold text-medium qtr-padding-bottom"
+		[innerText]="item.providerInfo?.name" 
+		attr.data-auto-id="{{ autoid }}-ProviderText">
+		</p>
 		<p
-			class="cx-lifecycle-card__title"
+			class="cx-lifecycle-card__title qtr-padding-right"
 			attr.data-auto-id="{{ autoid }}-Title">
 			{{ item.title }}
 			<ng-container *ngTemplateOutlet="hoverTemplate; context: {
@@ -1145,7 +1150,6 @@
 					data-auto-id="ACCCard-ProviderLogo"/>
 				<span *ngIf="!item.providerInfo.logoURL  && item.providerInfo?.name"
 					class="acc__card__logo"
-					[innerText]="item.providerInfo.name"
 					data-auto-id="ACCCard-ProviderText"
 				></span>
 			</ng-container>
@@ -1161,7 +1165,7 @@
 			data-auto-id="ACCCardRibbon">
 		</div>
 		<div class="card__header atx__card__header text-left title-line-clamp"
-			*ngIf="item && item.title" [innerText]="item.title" data-auto-id="ACCCardTitle">
+			*ngIf="item && item.title" [innerText]="item.providerInfo?.name" data-auto-id="ACCCardTitle">
 		</div>
 		<div class="card__body atx__card__body text-left desc-line-clamp no-margin-bottom" *ngIf="item && item.description"
 			[innerText]="item.description" data-auto-id="ACCCardDescription"></div>
