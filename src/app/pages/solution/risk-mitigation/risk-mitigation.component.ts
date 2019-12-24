@@ -85,8 +85,10 @@ export class RiskMitigationComponent implements AfterViewInit {
 			.getCurrentTechnology()
 			.pipe(takeUntil(this.destroy$))
 			.subscribe((technology: RacetrackTechnology) => {
-				this.selectedTechnologyName = _.get(technology, 'name');
-				this.loadData();
+				if (_.get(technology, 'name') !== this.selectedTechnologyName) {
+					this.selectedTechnologyName = _.get(technology, 'name');
+					this.loadData();
+				}
 			});
 
 		this.buildFilters();
