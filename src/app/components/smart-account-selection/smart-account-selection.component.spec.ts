@@ -28,4 +28,45 @@ describe('SmartAccountSelectionComponent', () => {
 		expect(component)
 			.toBeTruthy();
 	});
+
+	describe('when a selected smart account is received along-with an error', () => {
+		it('should set `accountWithError`', () => {
+			component.data = {
+				smartAccounts: [],
+				selectedSmartAccount: {
+					companyName: 'ABC',
+				},
+				isError: true,
+			};
+			component.ngOnInit();
+			expect(component.accountWithError)
+			.toEqual('ABC');
+		});
+	});
+
+	describe('when a selected smart account is received without an error', () => {
+		it('should not set `accountWithError`', () => {
+			component.data = {
+				smartAccounts: [],
+				isError: true,
+			};
+			component.ngOnInit();
+			expect(component.accountWithError)
+			.toEqual('');
+		});
+	});
+
+	describe('when a selected smart account is not received along-with an error', () => {
+		it('should not set `accountWithError`', () => {
+			component.data = {
+				smartAccounts: [],
+				selectedSmartAccount: {
+					companyName: 'ABC',
+				},
+			};
+			component.ngOnInit();
+			expect(component.accountWithError)
+			.toBeUndefined();
+		});
+	});
 });
