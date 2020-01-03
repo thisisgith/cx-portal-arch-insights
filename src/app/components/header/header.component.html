@@ -75,6 +75,7 @@
 					[title]="'_CiscoTeam_' | i18n" 
 					[hidden]="!searchBreakpointShow(445, true)" 
 					data-auto-id="HeaderCiscoTeamButton"
+					aria-haspopup="true"
 				>
 					<div class="flex-center">
 						<ng-container *ngFor="let member of team; let i = index">
@@ -118,6 +119,7 @@
 					(click)="toggleDropdown(portalHelpDropdown, portalHelp)" 
 					[title]="'_PortalHelp_' | i18n" 
 					data-auto-id="HeaderPortalHelpButton"
+					aria-haspopup="true"
 				>
 					<span class="sr-only">
 						{{ '_PortalHelp_' | i18n }}
@@ -235,10 +237,13 @@
 				data-auto-id="portalHelp"
 			></a>
 		</div>
-		<button class="link links__btn"
+		<button 
+			class="link links__btn"
 			(click)="openPortalSupport()"
 			data-auto-id="portalSupport"
-		>{{'_PortalSupport_' | i18n}}
+			aria-haspopup="true"
+		>
+			{{'_PortalSupport_' | i18n}}
 		</button>
 		<div>
 			<a class="links__support links__support--relnotes" 

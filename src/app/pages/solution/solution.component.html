@@ -1,4 +1,5 @@
-<quick-tour *ngIf="quickTourActive" [steps]="quickTourSteps"></quick-tour>
+<quick-tour [steps]="quickTourSteps"></quick-tour>
+<!-- <quick-tour *ngIf="quickTourActive" [steps]="quickTourSteps"></quick-tour>-->
 <div class="page-container">
 	<div>
 		<div class="cx-breadcrumb-bar">
@@ -87,6 +88,7 @@
 						class="text-color-dkgray text-size-18" 
 						[innerText]="activeSmartAccount.companyName"
 						data-auto-id="SmartAccountDropdown--button"
+						aria-haspopup="true"
 					></button>
 					<div class="dropdown__menu">
 						<span class="sr-only">
@@ -119,6 +121,7 @@
 						class="text-color-dkgray text-size-18" 
 						[innerText]="selectedSolution.name"
 						data-auto-id="SolutionDropdown--button"
+						aria-haspopup="true"
 					></button>
 					<div class="dropdown__menu">
 						<button
@@ -155,6 +158,7 @@
 						[innerText]="selectedTechnology.name"
 						(click)="changeDropdownSelection('technology')"
 						data-auto-id="UseCaseDropdown--button"
+						aria-haspopup="true"
 					></button>
 					<div class="dropdown__menu">
 						<button *ngFor="let technology of technologies"

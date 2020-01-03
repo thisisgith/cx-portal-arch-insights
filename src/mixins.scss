@@ -50,6 +50,13 @@ $screen-xxl-min: 1440px;
 	cursor: pointer;
 }
 
+@mixin keyboard-focus-outline () {
+	outline: $focus-outline 0.3rem solid !important;
+	-moz-box-shadow: 0 0 0.7rem $focus-outline !important;
+	-webkit-box-shadow: 0 0 0.7rem $focus-outline !important;
+	box-shadow: 0 0 0.7rem $focus-outline !important;
+}
+
 @mixin filter-search {
 	border: 0;
 	border-bottom: 1px solid #ced0d3;
