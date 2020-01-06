@@ -11,6 +11,7 @@ export class ApixIdentityService {
 	private originRegex: RegExp;
 	private sdpRegex: RegExp;
 	private rmaRegex: RegExp;
+	private pitRegex: RegExp;
 
 	constructor () {
 		const sdpServiceOrigin = environment.sdpServiceOrigin &&
@@ -44,6 +45,7 @@ export class ApixIdentityService {
 			_.values(environment.apolloServicePaths)
 			.join('|^')
 		}`);
+		this.pitRegex = new RegExp('/(customerportal|cxportal)/pitstop/v1/info$');
 	}
 
 	public testOrigin (url): OriginType {
@@ -53,6 +55,9 @@ export class ApixIdentityService {
 			}
 			if (this.rmaRegex.test(url.pathname)) {
 				return OriginType.RMA;
+			}
+			if (this.pitRegex.test(url.pathname)) {
+				return OriginType.PITSTOP;
 			}
 		}
 		if (this.apolloRegex.test(url.pathname)) {
