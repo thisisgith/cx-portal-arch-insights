@@ -122,7 +122,10 @@
 			[innerText]="'_ChecklistDesc_' | i18n"></p>
 		<div *ngFor="let action of currentPitActionsWithStatus" class="form-group form-group select" data-auto-id="pitstopAction">
 			<div class="actionname flex-center-vertical qtr-padding" [ngClass]="{selected: action.selected}">
-				<div class="half-margin-right flex-center-vertical">
+				<div class="half-margin-right flex-center-vertical"
+					[attr.data-balloon]="!action.action.manualCheckAllowed ? ('_ChecklistManualNotAllowed_' | i18n) : null"
+					data-balloon-pos="right"
+					data-balloon-length="large">
 					<label class="checkbox"
 						[ngClass]="{'disabled': currentWorkingPitstop !== currentPitstop.name || !action.action.manualCheckAllowed }"
 						data-auto-id="pitstopCheckboxLabel">

@@ -278,6 +278,7 @@
 	"_Chassis_": "Chassis",
 	"_CheckList_": "CheckList",
 	"_ChecklistDesc_": "Complete this list to advance on the track",
+	"_ChecklistManualNotAllowed_": "Task not eligible for manual update. Task is updated via telemetry automation or by Customer Success Manager.",
 	"_CheckYourSpelling_": "Check your spelling",
 	"_ChooseSession_": "Choose Session",
 	"_CircuitLabel_": "CX Circuit Overview",
