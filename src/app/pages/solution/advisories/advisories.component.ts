@@ -165,7 +165,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 	@ViewChild('borgBugSeverityTemplate', { static: true }) private borgBugSeverityTemplate: TemplateRef<{ }>;
 	@ViewChild('bugIcSeverityTemplate', { static: true }) private bugIcSeverityTemplate: TemplateRef<{ }>;
 	@ViewChild('assetImpactedTooltipTemplate', { static: true }) private assetImpactedTooltipTemplate: TemplateRef<{ }>;
-	@ViewChild('assetImpactedFieldNoticeTooltipTemplate', { static: true }) private assetImpactedFieldNoticeTooltipTemplate: TemplateRef<{ }>;
+	@ViewChild('fieldNoticeTooltipTemplate', { static: true }) private fieldNoticeTooltipTemplate: TemplateRef<{ }>;
 	@ViewChild('cdetsHealineTemplate', { static: true }) private cdetsHealineTemplate: TemplateRef<{ }>;
 	constructor (
 		private diagnosticsService: DiagnosticsService,
@@ -361,7 +361,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 							template: this.impactedAssetsTemplate,
 						},
 						{
-							headerTemplate: this.assetImpactedFieldNoticeTooltipTemplate,
+							headerTemplate: this.fieldNoticeTooltipTemplate,
 							key: 'assetsPotentiallyImpacted',
 							sortable: true,
 							template: this.potentiallyImpactedAssetsTemplate,
