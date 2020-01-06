@@ -13,6 +13,9 @@
 // a11y
 .content-wrapper.content-wrapper--keyboard-accessible {
 	::ng-deep *:focus {
-		outline: $default-link-hover-color 4px solid !important;
+		outline: $focus-outline 0.3rem solid !important;
+		-moz-box-shadow: 0 0 0.7rem $focus-outline !important;
+		-webkit-box-shadow: 0 0 0.7rem $focus-outline !important;
+		box-shadow: 0 0 0.7rem $focus-outline !important;
 	}
 }

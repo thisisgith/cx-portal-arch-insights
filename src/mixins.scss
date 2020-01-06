@@ -37,6 +37,18 @@ $screen-xxl-min: 1440px;
 	}
 }
 
+@mixin button-reset () {
+	background: transparent;
+	border: none;
+	box-shadow: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	margin: 0;
+	padding: 0;
+	width: auto;
+	line-height: normal;
+}
+
 @mixin filter-search {
 	border: 0;
 	border-bottom: 1px solid #ced0d3;
