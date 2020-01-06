@@ -94,6 +94,10 @@ export class TooltipComponent implements AfterViewInit, AfterContentInit {
 				.then(() => {
 					this.loadComponent();
 				});
+		} else {
+			
+			this.checkForOverflow();
+			this.cdr.detectChanges();
 		}
 	}
 
@@ -108,7 +112,12 @@ export class TooltipComponent implements AfterViewInit, AfterContentInit {
 		const totalHeight = tooltipHeight + this.positionY;
 		if (totalWidth >= window.innerWidth) {
 			// corrects overflow for right side of the page
-			this.positionX = this.positionX - tooltipWidth - this.OFFSET;
+			if(!this.component) {
+				this.positionX = this.positionX - this.OFFSET - 10;
+			}
+			else {
+				this.positionX = this.positionX - tooltipWidth - this.OFFSET - 10;
+			}
 		}
 		if (totalHeight >= window.innerHeight) {
 			// corrects overflow for bottom of the page
