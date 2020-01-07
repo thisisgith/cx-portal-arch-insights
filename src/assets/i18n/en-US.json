@@ -710,6 +710,8 @@
 	"_ImpactedAsset_": "Impacted Asset",
 	"_ImpactedAssets_": "Impacted Assets",
 	"_IMPACTEDASSETS_": "IMPACTED ASSETS",
+	"_ImpactedAssetsTooltip_": "Potentially affected means the Advisory may or may not be applicable and manual verification is recommended.",
+	"_ImpactedAssetsFieldNoticeTooltip_": "Potentially affected means the Field Notice may or may not be applicable and manual verification is recommended.",
 	"_ImpactedReleases_": "Impacted Releases",
 	"_ImplementDescription_": "you will begin to deploy your Cisco solutions and integrate them within existing infrastructure",
 	"_IncludeMessage_": "Include Message",

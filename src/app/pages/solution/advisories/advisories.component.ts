@@ -164,6 +164,8 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 	@ViewChild('contentContainer', { static: false }) private contentContainer: ElementRef;
 	@ViewChild('borgBugSeverityTemplate', { static: true }) private borgBugSeverityTemplate: TemplateRef<{ }>;
 	@ViewChild('bugIcSeverityTemplate', { static: true }) private bugIcSeverityTemplate: TemplateRef<{ }>;
+	@ViewChild('assetImpactedTooltipTemplate', { static: true }) private assetImpactedTooltipTemplate: TemplateRef<{ }>;
+	@ViewChild('fieldNoticeTooltipTemplate', { static: true }) private fieldNoticeTooltipTemplate: TemplateRef<{ }>;
 	@ViewChild('cdetsHealineTemplate', { static: true }) private cdetsHealineTemplate: TemplateRef<{ }>;
 	constructor (
 		private diagnosticsService: DiagnosticsService,
@@ -279,9 +281,8 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 							template: this.lastUpdatedTemplate,
 						},
 						{
+							headerTemplate: this.assetImpactedTooltipTemplate,
 							key: 'assetsImpacted',
-							name: `${I18n.get('_AffectedSystems_')}
-								(${I18n.get('_PotentiallyAffected_')})`,
 							sortable: true,
 							template: this.impactedCountTemplate,
 						},
@@ -360,8 +361,8 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 							template: this.impactedAssetsTemplate,
 						},
 						{
+							headerTemplate: this.fieldNoticeTooltipTemplate,
 							key: 'assetsPotentiallyImpacted',
-							name: I18n.get('_PotentiallyAffectedHardware_'),
 							sortable: true,
 							template: this.potentiallyImpactedAssetsTemplate,
 						},
