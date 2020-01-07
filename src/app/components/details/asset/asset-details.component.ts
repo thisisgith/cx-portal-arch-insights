@@ -223,7 +223,7 @@ export class AssetDetailsComponent implements OnDestroy, OnInit, Panel360 {
 
 				this.hardwareAssets = _.get(responses[2], 'data');
 				this.hardwareAsset = _.find(this.hardwareAssets,
-					{ serialNumber: _.get(this.systemAsset, 'serialNumber') });
+					{ serialNumber: _.get(this.asset, 'serialNumber') });
 
 				const systemSn = _.get(this.systemAsset, 'serialNumber');
 				if (systemSn !== this.serialNumber) {
