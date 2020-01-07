@@ -3,14 +3,10 @@ const { promisify } = require('util');
 const exec = promisify(require('child_process').exec);
 const { extendLexicon, extendVocabulary } = require('./extendLexiconVocabulary');
 const colors = require('colors/safe');
-const SpellChecker = require('spellchecker');
 const path = require('path');
 
 const { CI_DEFAULT_BRANCH, CI_MERGE_REQUEST_TARGET_BRANCH_NAME } = process.env;
 const [argBranch] = process.argv.slice(2);
-
-const spellChecker = new SpellChecker.Spellchecker();
-spellChecker.setSpellcheckerType(SpellChecker.ALWAYS_USE_SYSTEM);
 
 const diffBranch = CI_MERGE_REQUEST_TARGET_BRANCH_NAME 
 	|| CI_DEFAULT_BRANCH 
@@ -113,16 +109,9 @@ function verifyDescription (description, bodyAndTitleText) {
 	const lexer = new Lexer();
 	const firstWord = lexer.lex(description)[0];
 	const tags = getAllTags(firstWord);
-	extendVocabulary(spellChecker);
-
-	const misspelledWords = bodyAndTitleText.split(' ').filter(word => {
-		return spellChecker.isMisspelled(word) && word.split('')[0] !== '`';
-	});
 
 	if (tags.every(tag =>  tag !== 'VBD')) {
 		return new Error(`First word of description, '${firstWord}' (tags: ${tags}), does not appear to be a verb in the past tense.\nThis is so the commit log can read like a history.`);
-	} else if (misspelledWords.length) {
-		return new Error(`There appears to be a spelling mistake${misspelledWords.length > 1 ? 's' : ''}.\nMisspelled: ${misspelledWords.join(', ')}.\n\nHint: If you need to use a file name or unrecognizable word please put in backticks. \`\``);
 	}
 }
 

@@ -139,7 +139,6 @@
 		"pos": "^0.4.2",
 		"protractor": "~5.4.0",
 		"pubsub-js": "^1.6.1",
-		"spellchecker": "^3.7.0",
 		"stylelint": "^10.1.0",
 		"stylelint-config-recommended": "^2.2.0",
 		"stylelint-config-standard": "^18.3.0",
