@@ -677,10 +677,12 @@ export class SolutionComponent implements OnInit, OnDestroy {
 			},
 			{
 				arrows: 1,
-				data: { },
+				data: {
+					active: true,
+				},
 				description: I18n.get('_QuickTourStep3Description_'),
 				maxWidth: 300,
-				relative: true,
+				relative: false,
 				stepIndex: 2,
 				stepPos: 'bottom',
 				title: I18n.get('_QuickTourStep3Title_'),
@@ -706,41 +708,50 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	 */
 	@HostListener('window:resize')
 	public refreshQuickTour () {
-		this.calculateStep1();
-		this.calculateStep2();
+		this.calculateSteps();
 	}
 
-	/**
-	 * Calculates the position and dimensions of the second Quick Tour Step
-	 */
-	private calculateStep1 () {
+	private calculateStep1 (colRatio, offsetTop, offsetWidth) {
 		const step = _.find(this.quickTourSteps, { stepIndex: 0 });
-		const offsetLeft = this.contentContainer.nativeElement.offsetLeft;
-		const offsetTop = this.contentContainer.nativeElement.offsetTop;
-		const offsetWidth = this.contentContainer.nativeElement.offsetWidth;
-		const colRatio = 3 / 12;
 		const arrowOffset = 20;
-		step.data.left = offsetLeft + offsetWidth * colRatio - arrowOffset;
+		step.data.left = offsetWidth * colRatio - arrowOffset;
 		step.data.top = offsetTop + 150;
 		step.data.active = true;
 		step.width = offsetWidth * colRatio * 2;
 	}
 
-	/**
-	 * Calculates the position and dimensions of the second Quick Tour Step
-	 */
-	private calculateStep2 () {
+	private calculateStep2 (colRatio, offsetTop, offsetWidth, offsetHeight) {
 		const step = _.find(this.quickTourSteps, { stepIndex: 1 });
-		const offsetLeft = this.contentContainer.nativeElement.offsetLeft;
-		const offsetTop = this.contentContainer.nativeElement.offsetTop;
-		const offsetWidth = this.contentContainer.nativeElement.offsetWidth;
-		const offsetHeight = this.contentContainer.nativeElement.offsetHeight;
-		const colRatio = 3 / 12;
 		const center = colRatio * 2.5;
-		step.data.left = offsetLeft + offsetWidth * center;
+		step.data.left = offsetWidth * center;
 		step.data.top = offsetTop + offsetHeight * 0.4;
 		step.data.active = true;
 		step.width = offsetWidth * colRatio * 2;
+	}
+
+	private calculateStep3 (colRatio, offsetTop, offsetWidth) {
+		// Step 3 points to the Assets Facet card on top. So, unlike Step 1 and Step 2,
+		// the position is always constant.
+		const leftPos = 564;
+		const step = _.find(this.quickTourSteps, { stepIndex: 2 });
+		step.data.left = leftPos;
+		step.data.top = offsetTop * 0.75;
+		step.data.active = true;
+		step.width = offsetWidth * colRatio * 2;
+	}
+
+	/**
+	 * Calculates the offsets for the positions of quick guide tour steps.
+	 * Each individual step calculation method is then called with these offset values.
+	 */
+	private calculateSteps () {
+		const offsetTop = this.contentContainer.nativeElement.offsetTop;
+		const offsetWidth = this.contentContainer.nativeElement.offsetWidth;
+		const offsetHeight = this.contentContainer.nativeElement.offsetHeight;
+		const colRatio = 0.25;
+		this.calculateStep1(colRatio, offsetTop, offsetWidth);
+		this.calculateStep2(colRatio, offsetTop, offsetWidth, offsetHeight);
+		this.calculateStep3(colRatio, offsetTop, offsetWidth);
 	}
 
 	/**
@@ -802,8 +813,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	 * Detects changes to the view after init
 	 */
 	public async ngAfterViewInit () {
-		this.calculateStep1();
-		this.calculateStep2();
+		this.calculateSteps();
 		this.selectFacet(this.getFacetFromRoute(this.activeRoute));
 	}
 
