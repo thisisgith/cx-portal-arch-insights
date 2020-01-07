@@ -63,6 +63,13 @@
 				[innerText]="'_Next_' | i18n"
 				(click)="nextStep()"
 			></button>
+			<a 
+				attr.data-auto-id="NextButton-Step-{{ step.stepIndex }}"
+				*ngIf="step.stepIndex === lastIndex"
+				class="btn override-button text-uppercase"
+				href="/portal/setup-ie"
+				[innerText]="'_SetUpCollector_' | i18n"
+			></a>
 		</div>
 	</div>
 </ng-template>
