@@ -91,6 +91,7 @@ describe('AssetDetailsHardwareComponent', () => {
 		component.systemAsset = systemAsset;
 
 		component.hardwareAssets = MockHardwareAssetsData;
+		component.selectedAsset = MockHardwareAssetsData[0];
 
 		const error = {
 			status: 404,
@@ -141,6 +142,7 @@ describe('AssetDetailsHardwareComponent', () => {
 		component.systemAsset = systemAsset;
 
 		component.hardwareAssets = MockHardwareAssetsData;
+		component.selectedAsset = MockHardwareAssetsData[0];
 
 		const error = {
 			status: 404,
@@ -192,6 +194,8 @@ describe('AssetDetailsHardwareComponent', () => {
 		component.systemAsset = systemAsset;
 
 		component.hardwareAssets = MockHardwareAssetsData;
+
+		component.selectedAsset = MockHardwareAssetsData[0];
 
 		spyOn(productAlertsService, 'getHardwareEoxBulletin')
 			.and
@@ -247,6 +251,7 @@ describe('AssetDetailsHardwareComponent', () => {
 		component.systemAsset = systemAsset;
 
 		component.hardwareAssets = MockHardwareAssetsData;
+		component.selectedAsset = MockHardwareAssetsData[0];
 
 		spyOn(productAlertsService, 'getHardwareEoxBulletin')
 			.and

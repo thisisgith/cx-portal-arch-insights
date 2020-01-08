@@ -92,6 +92,7 @@ export class AssetDetailsHardwareComponent implements OnInit, OnChanges, OnDestr
 
 	@Input('customerId') public customerId: string;
 	@Input('element') public element: NetworkElement;
+	@Input('selectedAsset') public selectedAsset;
 	@Input('systemAsset') public systemAsset: ModSystemAsset;
 	@Input('hardwareAsset') public hardwareAsset: ModHardwareAsset;
 	@Input('hardwareAssets') public hardwareAssets: ModHardwareAsset[];
@@ -355,8 +356,7 @@ export class AssetDetailsHardwareComponent implements OnInit, OnChanges, OnDestr
 				const sortColumn = _.find(this.hardwareTable.columns, 'sorting');
 				this.hardwareAssets = _.orderBy(this.hardwareAssets,
 					[sortColumn.key], [sortColumn.sortDirection]);
-				_.set(this.hardwareAssets, '0.toggleWell', true);
-
+				this.fetchElementSelected();
 				return forkJoin([
 					this.fetchEOLData(),
 					this.fetchFieldNotices(),
@@ -371,6 +371,15 @@ export class AssetDetailsHardwareComponent implements OnInit, OnChanges, OnDestr
 		});
 	}
 
+	public fetchElementSelected () {
+		if (this.hardwareAssets.length > 1) {
+			this.hardwareAssets.map((currentElement, index) =>
+			 this.selectedAsset.hwInstanceId === currentElement.hwInstanceId ?
+			 _.set(this.hardwareAssets[index], 'toggleWell', true) : _.set(this.hardwareAssets[index], 'toggleWell', false));
+		} else {
+			 _.set(this.hardwareAssets[0], 'toggleWell', true);
+		}
+	}
 	/**
 	 * On "Open a Case" button pop up "Open Case" component
 	 * @param hardwareAsset the hardware to open the case on
@@ -385,7 +394,6 @@ export class AssetDetailsHardwareComponent implements OnInit, OnChanges, OnDestr
 	 */
 	public ngOnInit (): void {
 		this.buildRefreshSubject();
-
 		this.racetrackInfoService.getCurrentSolution()
 		.pipe(
 			takeUntil(this.destroyed$),
