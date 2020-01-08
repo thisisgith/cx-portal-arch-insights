@@ -48,8 +48,6 @@ describe('SmartAccountSelectionComponent', () => {
 			.toEqual(I18n.get('_SmartAccountSelectionErrorMultiple_', 'ABC'));
 			expect(component.showSmartAccounts)
 			.toBeTruthy();
-			expect(component.showLogOutBtn)
-			.toBeFalsy();
 		});
 	});
 

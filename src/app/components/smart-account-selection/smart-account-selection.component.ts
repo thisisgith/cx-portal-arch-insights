@@ -23,7 +23,6 @@ export class SmartAccountSelectionComponent implements OnInit {
 	};
 	public errorMsg: string;
 	public showSmartAccounts = false;
-	public showLogOutBtn = true;
 	public logOutUrl = environment.logoutUrl;
 
 	public ngOnInit () {
@@ -33,7 +32,6 @@ export class SmartAccountSelectionComponent implements OnInit {
 			if (smartAccountsLen > 1) {
 				this.errorMsg = I18n.get('_SmartAccountSelectionErrorMultiple_', selectedSmartAccount);
 				this.showSmartAccounts = true;
-				this.showLogOutBtn = false;
 			} else if (smartAccountsLen === 1) {
 				this.errorMsg = I18n.get('_SmartAccountSelectionErrorSingle_', selectedSmartAccount);
 			} else {
