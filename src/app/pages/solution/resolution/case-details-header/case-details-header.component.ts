@@ -151,7 +151,7 @@ export class CaseDetailsHeaderComponent {
 						const newRecord = {
 							returns: {
 								RmaRecord:
-									[{ rmaNo: Number(rmaNum.trim()) }],
+									[{ rmaNo: Number(rmaNum.trim()), apiError: true }],
 							},
 						};
 						return of(newRecord);
