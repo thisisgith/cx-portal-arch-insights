@@ -75,14 +75,10 @@ export class APIxService {
 		return this.http.get(
 			`${environment.auth.tokenUrl}`)
 			.pipe(switchMap((response: any) => {
-				if (response && response.token && response.loggedIn) {
-					tokenObj.next(response.token);
-					tokenObj.complete();
+				tokenObj.next(response.token);
+				tokenObj.complete();
 
-					return tokenObj;
-				}
-
-				window.location.assign(environment.logoutUrl);
+				return tokenObj;
 			}));
 	}
 
