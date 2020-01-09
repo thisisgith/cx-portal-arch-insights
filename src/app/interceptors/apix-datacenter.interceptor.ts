@@ -4,7 +4,7 @@ import { UserResolve } from '../utilities/user-resolve';
 import { mergeMap, take } from 'rxjs/operators';
 import { environment } from '@environment';
 import { ApixIdentityService } from './apix-identity.service';
-import { OriginType } from '@constants';
+import { OriginType, DEFAULT_DATACENTER } from '@constants';
 
 export class ApixDatacenterInterceptor implements HttpInterceptor {
 
@@ -22,6 +22,14 @@ export class ApixDatacenterInterceptor implements HttpInterceptor {
 	 */
 	public intercept (req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 		const url = new URL(req.url, environment.origin);
+
+		if (this.apixIdentityService.testOrigin(url) === OriginType.PITSTOP) {
+			const request = req.clone({
+				url: req.url.replace(environment.datacenterStub, DEFAULT_DATACENTER),
+			});
+
+			return next.handle(request);
+		}
 
 		if (this.apixIdentityService.testOrigin(url) !== OriginType.SDP) {
 			return next.handle(req);

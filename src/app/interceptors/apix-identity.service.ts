@@ -50,14 +50,14 @@ export class ApixIdentityService {
 
 	public testOrigin (url): OriginType {
 		if (this.originRegex.test(url.origin)) {
+			if (this.pitRegex.test(url.pathname)) {
+				return OriginType.PITSTOP;
+			}
 			if (this.sdpRegex.test(url.pathname)) {
 				return OriginType.SDP;
 			}
 			if (this.rmaRegex.test(url.pathname)) {
 				return OriginType.RMA;
-			}
-			if (this.pitRegex.test(url.pathname)) {
-				return OriginType.PITSTOP;
 			}
 		}
 		if (this.apolloRegex.test(url.pathname)) {
