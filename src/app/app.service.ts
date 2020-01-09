@@ -122,6 +122,7 @@ export class AppService {
 			this.setTechnology(topSolution);
 		},
 		err => {
+			this.racetrackInfoService.sendPitStopApiFailure(err);
 			this.logger.error('app.service : initializeRacetrack() ' +
 				`:: Error : (${err.status}) ${err.message}`);
 		});

@@ -3,7 +3,12 @@ import { CommonModule } from '@angular/common';
 import { InlineSVGModule } from 'ng-inline-svg';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { SolutionComponent } from './solution.component';
-import { CuiGaugeModule, CuiSpinnerModule, CuiModalModule } from '@cisco-ngx/cui-components';
+import {
+	CuiGaugeModule,
+	CuiSpinnerModule,
+	CuiModalModule,
+	CuiAlertModule,
+} from '@cisco-ngx/cui-components';
 import { SolutionRoutingModule } from './solution-routing.module';
 import {
 	ContractsModule,
@@ -61,6 +66,7 @@ const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 		InsightsCrashesModule.forRoot({ rootUrl }),
 		SolutionRoutingModule,
 		SharedModule,
+		CuiAlertModule,
 	],
 })
 export class SolutionModule { }

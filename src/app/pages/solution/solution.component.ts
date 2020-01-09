@@ -7,6 +7,7 @@ import {
 	HostListener,
 	ElementRef,
 	ChangeDetectorRef,
+	AfterViewInit,
 } from '@angular/core';
 import { I18n } from '@cisco-ngx/cui-utils';
 import {
@@ -62,7 +63,7 @@ interface Facet {
 	styleUrls: ['./solution.component.scss'],
 	templateUrl: './solution.component.html',
 })
-export class SolutionComponent implements OnInit, OnDestroy {
+export class SolutionComponent implements OnInit, OnDestroy, AfterViewInit {
 	public smartAccounts: SmartAccount[];
 	public activeSmartAccount: SmartAccount;
 	public showSmartAccountSelection: boolean;
@@ -96,6 +97,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	private quickTourFirstTime: boolean;
 	private destroy$ = new Subject();
 	public cxLevel: number;
+	public alert: any = { };
 
 	@ViewChild('facetNavigationWrapper', { static: true }) private facetNavigationWrapperRef: ElementRef;
 	@ViewChild('advisoriesFacet', { static: true }) public advisoriesTemplate: TemplateRef<{ }>;
@@ -815,6 +817,14 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	public async ngAfterViewInit () {
 		this.calculateSteps();
 		this.selectFacet(this.getFacetFromRoute(this.activeRoute));
+		this.racetrackInfoService.getPitStopApiFailure()
+		.pipe(
+			map(() => {
+				this.alert.show(I18n.get('_PitStopApiFailureMessage_'), 'danger');
+			}),
+			takeUntil(this.destroy$),
+		)
+		.subscribe();
 	}
 
 	/**
