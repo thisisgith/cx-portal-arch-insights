@@ -546,6 +546,7 @@
 	"_Duplicate_": "Duplicate",
 	"_DuringXStage_": "During <span class='text-bold text-primary'>{0}</span>, ",
 	"_EasternTime/US_": "Eastern Time/US",
+	"_EdgeBrowserNotSupported_":"Edge browser is currently not supported to perform the CX Collector setup. You may continue the setup using Chrome, Firefox or Safari browser.",
 	"_Edit_": "Edit",
 	"_EditAssetTags_": "Edit Tags on ({0}) Assets",
 	"_EitherOfTheFollowingHypervisors_": "Either of the following hypervisors:",

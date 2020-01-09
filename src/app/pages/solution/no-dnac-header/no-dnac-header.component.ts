@@ -12,6 +12,7 @@ import { UtilsService, RacetrackInfoService } from '@services';
 import { empty, Subject } from 'rxjs';
 import { catchError, takeUntil, map } from 'rxjs/operators';
 import * as _ from 'lodash-es';
+import { IS_IE_OR_EDGE } from '@constants';
 
 /**
  * Panel for displaying sub-header content
@@ -36,6 +37,7 @@ export class NoDNACHeaderComponent implements OnDestroy, OnInit {
 	private selectedTechnologyName: string;
 	private destroyed$: Subject<void> = new Subject<void>();
 	private pitStopApiFailure = false;
+	private isIEOrEdge = IS_IE_OR_EDGE;
 	@ViewChild('continueSetupButton', { static: false }) set button (button: ElementRef) {
 		if (button) {
 			this.continueSetupButton = button;
