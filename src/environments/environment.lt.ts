@@ -31,7 +31,7 @@ export const environment = {
 	emailToID: 'cx-portal-support-nonprod@cisco.com',
 	feedbackToEmail: 'cxportal-feedback@cisco.com',
 	mapboxToken:
-	'pk.eyJ1IjoibWljaGhhcnQiLCJhIjoiY2szaGtudW9oMGRvajNubmo1OWgxaG85NSJ9.wwXqdHQ4k-YTqUw1VMvayA',
+		'pk.eyJ1IjoibWljaGhhcnQiLCJhIjoiY2szaGtudW9oMGRvajNubmo1OWgxaG85NSJ9.wwXqdHQ4k-YTqUw1VMvayA',
 	mock: [],
 	myCase: 'https://mycase.cloudapps.cisco.com',
 	noAuthEndpoints: [
@@ -44,7 +44,7 @@ export const environment = {
 		returns: '/return/v1.0/returns',
 	},
 	rmaToolUrl: 'https://ibpm.cisco.com/rma/home',
-	sdpServiceBasePath: '/api/lt',
+	sdpServiceBasePath: `/api/lt/${defaults.datacenterStub}`,
 	sdpServiceClientId: 'ejw4cbpvp3s8cyh4ry8qcnff',
 	/**
 	 * sdpServiceOrigin MUST be explicitly declared in every single environment file,
@@ -52,11 +52,11 @@ export const environment = {
 	 */
 	sdpServiceOrigin: 'https://api-test.cisco.com',
 	sdpServicePaths: {
-		contracts: '/api/lt/v1/contracts',
-		customerportal: '/api/lt/customerportal',
-		cxportal: '/api/cxportal',
-		inventory: '/api/lt/v1/inventory',
-		partner: '/api/lt/cxportal',
+		contracts: `/api/lt/${defaults.datacenterStub}/v1/contracts`,
+		customerportal: `/api/lt/${defaults.datacenterStub}/customerportal`,
+		cxportal: `/api/${defaults.datacenterStub}cxportal`,
+		inventory: `/api/lt/${defaults.datacenterStub}/v1/inventory`,
+		partner: `/api/lt/${defaults.datacenterStub}/cxportal`,
 		cp: '/api/usa',
 	},
 	typeaheadServiceOrigin: 'https://xresps.cloudapps.cisco.com',
