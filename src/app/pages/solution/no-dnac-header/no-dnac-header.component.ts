@@ -10,7 +10,7 @@ import {
 } from '@sdp-api';
 import { UtilsService, RacetrackInfoService } from '@services';
 import { empty, Subject } from 'rxjs';
-import { catchError, takeUntil } from 'rxjs/operators';
+import { catchError, takeUntil, map } from 'rxjs/operators';
 import * as _ from 'lodash-es';
 
 /**
@@ -35,6 +35,7 @@ export class NoDNACHeaderComponent implements OnDestroy, OnInit {
 	private selectedSolutionName: string;
 	private selectedTechnologyName: string;
 	private destroyed$: Subject<void> = new Subject<void>();
+	private pitStopApiFailure = false;
 	@ViewChild('continueSetupButton', { static: false }) set button (button: ElementRef) {
 		if (button) {
 			this.continueSetupButton = button;
@@ -78,6 +79,15 @@ export class NoDNACHeaderComponent implements OnDestroy, OnInit {
 	 * NgOnInit
 	 */
 	public ngOnInit () {
+		this.racetrackInfoService.getPitStopApiFailure()
+		.pipe(
+			map(() => {
+				this.pitStopApiFailure = true;
+			}),
+			takeUntil(this.destroyed$),
+		)
+		.subscribe();
+
 		this.racetrackInfoService.getCurrentSolution()
 		.pipe(
 			takeUntil(this.destroyed$),

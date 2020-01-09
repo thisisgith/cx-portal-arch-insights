@@ -13,6 +13,7 @@
 		</div>
 		<div class="flex-right base-margin-right">
 			<button
+				[disabled] ="pitStopApiFailure"
 				#continueSetupButton
 				class="btn btn--wide btn--primary flex-right text-uppercase text-bold"
 				[innerText]="'_ContinueSetup_' | i18n"
