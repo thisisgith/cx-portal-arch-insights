@@ -109,7 +109,7 @@ export class SettingsComponent implements OnInit {
 
 	private user: User;
 	public params: NavigationExtras;
-	private isIEOrEdge = IS_IE_OR_EDGE;
+	public isIEOrEdge = IS_IE_OR_EDGE;
 
 	constructor (
 		private cuiModalService: CuiModalService,

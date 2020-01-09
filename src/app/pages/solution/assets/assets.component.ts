@@ -173,7 +173,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	public getProductIcon = getProductTypeImage;
 	public getProductTitle = getProductTypeTitle;
 	private routeParam: string;
-	private isIEOrEdge = IS_IE_OR_EDGE;
+	public isIEOrEdge = IS_IE_OR_EDGE;
 	constructor (
 		private contractsService: ContractsService,
 		private cuiModalService: CuiModalService,

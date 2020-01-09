@@ -37,7 +37,7 @@ export class NoDNACHeaderComponent implements OnDestroy, OnInit {
 	private selectedTechnologyName: string;
 	private destroyed$: Subject<void> = new Subject<void>();
 	private pitStopApiFailure = false;
-	private isIEOrEdge = IS_IE_OR_EDGE;
+	public isIEOrEdge = IS_IE_OR_EDGE;
 	@ViewChild('continueSetupButton', { static: false }) set button (button: ElementRef) {
 		if (button) {
 			this.continueSetupButton = button;
