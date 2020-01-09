@@ -4,7 +4,7 @@ import { RoleCountResponse } from '@sdp-api';
 const api = '/api/customerportal/inventory/v1/role/device/count';
 
 /** Default Customer ID */
-const customerId = '2431199';
+const customerId = '2431199_0';
 
 /** The mock response for role counts */
 const mockRoleCounts: RoleCountResponse = [

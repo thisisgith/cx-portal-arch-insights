@@ -12,6 +12,7 @@ import {
 	InventoryService,
 	InventoryPagination as Pagination,
 	RoleCount,
+	ProductTypeCount,
 	RoleCountResponse,
 	CoverageCountsResponse,
 	ProductAlertsService,
@@ -50,7 +51,6 @@ import { getProductTypeImage, getProductTypeTitle } from '@classes';
 import { DetailsPanelStackService, RacetrackInfoService, CaseDetailsService } from '@services';
 import { HttpResponse } from '@angular/common/http';
 import { IS_IE_OR_EDGE } from '@constants';
-
 /**
  * Interface representing an item of our inventory in our assets table
  */
@@ -1101,60 +1101,13 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		.pipe(
 			map((data: ProductTypeResponse) => {
 				
-				const hardwareSeries = [];
-
-				const data1  =  {
-					"router" : 40,
-					"switches" : 50,
-					"cables" :10,
-					"Modules" : 20,
-
-				};
-
-				const router = _.get(data1, 'router', 0);
-
-				if (router) {
-					hardwareSeries.push({
-						filter: 'Router',
-						label: I18n.get('_routers_'),
-						selected: false,
-						value: router,
-					});
-				}
-
-				const switches = _.get(data1, 'switches', 0);
-
-				if (switches) {
-					hardwareSeries.push({
-						filter: 'Switches',
-						label: I18n.get('_Switches_'),
-						selected: false,
-						value: switches,
-					});
-				}
-
-				const cables = _.get(data1, 'cables', 0);
-
-				if(cables) {
-					hardwareSeries.push({
-						filter: 'Cables',
-						label: I18n.get('_Cables_'),
-						selected: false,
-						value: cables,
-					});
-				}
-
-				const modules = _.get(data1, 'Modules', 0);
-
-				if(modules) {
-					hardwareSeries.push({
-						filter: 'Modules',
-						label: I18n.get('_Modules_'),
-						selected: false,
-						value: modules,
-					});
-				}
-				hardwareProductTypeFilter.seriesData = hardwareSeries;
+				hardwareProductTypeFilter.seriesData = _.map(data, (d: ProductTypeCount) => ({
+					
+					filter: d.ProductType,
+					label: d.ProductType,
+					selected: false,
+					value: d.count,
+				}));
 				hardwareProductTypeFilter.loading = false;
 			}),
 			catchError(err => {
@@ -1180,67 +1133,19 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		.pipe(
 			map((data: ProductTypeResponse) => {
 				
-				const systemSeries = [];
-
-				const data1  =  {
-					"wireless" : 40,
-					"switches" : 50,
-					"cables" :10,
-					"Modules" : 20,
-
-				};
-
-				const wireless = _.get(data1, 'wireless', 0);
-
-				if (wireless) {
-					systemSeries.push({
-						filter: 'Wireless',
-						label: I18n.get('_Wireless_'),
-						selected: false,
-						value: wireless,
-					});
-				}
-
-				const switches = _.get(data1, 'switches', 0);
-
-				if (switches) {
-					systemSeries.push({
-						filter: 'Switches',
-						label: I18n.get('_Switches_'),
-						selected: false,
-						value: switches,
-					});
-				}
-
-				const cables = _.get(data1, 'cables', 0);
-
-				if(cables) {
-					systemSeries.push({
-						filter: 'Cables',
-						label: I18n.get('_Cables_'),
-						selected: false,
-						value: cables,
-					});
-				}
-
-				const modules = _.get(data1, 'Modules', 0);
-
-				if(modules) {
-					systemSeries.push({
-						filter: 'Modules',
-						label: I18n.get('_Modules_'),
-						selected: false,
-						value: modules,
-					});
-				}
-				systemProductTypeFilter.seriesData = systemSeries;
+				systemProductTypeFilter.seriesData = _.map(data, (d: ProductTypeCount) => ({
+					
+					filter: d.ProductType,
+					label: d.ProductType,
+					selected: false,
+					value: d.count,
+				}));
 				systemProductTypeFilter.loading = false;
 			}),
 			catchError(err => {
 				systemProductTypeFilter.loading = false;
 				this.logger.error('assets.component : getAdvisoryCount() ' +
 					`:: Error : (${err.status}) ${err.message}`);
-
 				return of({ });
 			}),
 		);
@@ -1530,19 +1435,18 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			key = (subfilter === 'hasNoFieldNotices') ? 'hasFieldNotices' : subfilter;
 			val = (subfilter === 'hasNoFieldNotices') ? false : true;
 		}
-
 		if (filter.selected) {
 			_.set(params, [key], val);
 		} else {
 			_.unset(params, [key]);
 		}
-
+		
 		view.params.page = 1;
 
 		if (filter.selected) {
 			view.filtered = true;
 		}
-
+		
 		if (reload) {
 			this.selectedView.allAssetsSelected = false;
 			this.adjustQueryParams();
@@ -1597,6 +1501,11 @@ export class AssetsComponent implements OnInit, OnDestroy {
 								this.selectSubFilters(view, role, 'role');
 							}
 
+							const productType = _.get(view, ['params', 'productType']);
+							if(productType) {
+								this.selectSubFilters(view, productType, 'productType' );
+							}
+
 							if (_.get(view, ['params', 'hasBugs'])) {
 								this.selectSubFilters(view, ['hasBugs'], 'advisories');
 							} else if (_.get(view, ['params', 'hasSecurityAdvisories'])) {
@@ -1609,6 +1518,11 @@ export class AssetsComponent implements OnInit, OnDestroy {
 							const coverage = _.get(view, ['params', 'coverage']);
 							if (coverage) {
 								this.selectSubFilters(view, coverage, 'coverage');
+							}
+
+							const productType = _.get(view, ['params', 'productType']);
+							if(productType) {
+								this.selectSubFilters(view, productType, 'productType' );
 							}
 
 							const hasFieldNotices = _.get(view, ['params', 'hasFieldNotices']);
@@ -1698,11 +1612,19 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				if (params.hasFieldNotices) {
 					_.set(view.params, 'hasFieldNotices', params.hasFieldNotices);
 				}
+
+				if (params.productType) {
+					_.set(view.params, 'productType', _.castArray(params.productType));
+				}
 			}
 
 			if (view.key === 'system') {
 				if (params.role) {
 					_.set(view.params, 'role', _.castArray(params.role));
+				}
+
+				if (params.productType) {
+					_.set(view.params, 'productType', _.castArray(params.productType));
 				}
 
 				if (params.hasBugs) {
@@ -1711,7 +1633,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					_.set(view.params, 'hasSecurityAdvisories', params.hasSecurityAdvisories);
 				}
 			}
-
+			
 			if (params.serialNumber) {
 				view.params.serialNumber = _.castArray(params.serialNumber);
 			}

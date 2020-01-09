@@ -7,7 +7,7 @@ import * as _ from 'lodash-es';
 const api = '/api/customerportal/inventory/v1/network-elements';
 
 /** Default Customer ID */
-const customerId = '2431199';
+const customerId = '2431199_0';
 
 /** Serial Number filter based on the mocked asset list
  * @param {number} count Number of serial numbers to filter on

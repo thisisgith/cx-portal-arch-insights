@@ -1622,12 +1622,10 @@ class InventoryService extends __BaseService {
     let __body: any = null;
 
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
-    if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
-    if (params.solution != null) __params = __params.set('solution', params.solution.toString());
     
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/customerportal/inventory/v1/assets/system/roles/count`,
+      this.rootUrl + `/customerportal/inventory/v1/assets/system/products/count`,
       __body,
       {
         headers: __headers,

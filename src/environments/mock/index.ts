@@ -85,3 +85,5 @@ export * from '../mock/syslogs/syslogs';
 export * from './asset-tagging/asset-tagging';
 
 export * from '../mock/fault/fault';
+
+export * from './inventory/product-type-count';

@@ -5,7 +5,7 @@ import * as _ from 'lodash-es';
 const api = '/api/customerportal/inventory/v1/assets/hardware';
 
 /** Default Customer ID */
-const customerId = '2431199';
+const customerId = '2431199_0';
 
 /** Mock data for Network Elements API Results */
 export const MockHardwareAssetsData: HardwareAsset[] = [
