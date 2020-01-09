@@ -137,4 +137,17 @@
 			[innerText]="'_NoResultsFound_' | i18n"
 		></h2>
 	</div>
+	<ng-template #collectorReinstallModal>
+		<a class="modal__close" data-auto-id="addUSerHide" (click)="cuiModalService.hide()"><span class="icon-close"></span></a>
+		<div class="modal__body">
+			<p class="subtitle" [innerText]="'_PreviousCollectorShouldbeUninstalled_' | i18n"></p>
+		</div>
+		<div class="modal__footer">
+			<button class="btn btn--primary" (click)="onContinue()" data-auto-id="reinstall"
+				[innerText]="'_Continue_' | i18n | uppercase"></button>
+				<button class="btn" (click)="cuiModalService.hide()" data-auto-id="cancelRedirect"
+				[innerText]="'_Cancel_' | i18n | uppercase"></button>
+		</div>
+	</ng-template>
+	<cui-modal></cui-modal>
 </admin-wrapper>

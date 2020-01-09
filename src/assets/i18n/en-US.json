@@ -1060,6 +1060,7 @@
 	"_PreferredTimeMeeting_": "Preferred Meeting Time",
 	"_PrepareToSetUpCXPortal_": "Prepare to Set Up CX Portal",
 	"_PreRequisites_": "Pre-Requisites",
+	"_PreviousCollectorShouldbeUninstalled_": "Reinstalling CX Collector requires manually uninstalling the existing CX Collector. Once uninstallation is completed, click on continue to start a new installation of CX Collector. Please note reinstallation would remove existing collection data.",
 	"_Prerequisites_": "Prerequisites",
 	"_Presenter_": "Presenter",
 	"_PressEnter_": "press ENTER",
