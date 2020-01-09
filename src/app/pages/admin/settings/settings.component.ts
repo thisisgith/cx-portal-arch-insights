@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import {
 	ControlPointIEHealthStatusAPIService,
 	ControlPointAdminSettingsAPIService,
@@ -19,6 +19,7 @@ import { I18n } from '@cisco-ngx/cui-utils';
 import * as _ from 'lodash-es';
 import { SetupIEStateService } from '../../setup-ie/setup-ie-state.service';
 import * as moment from 'moment';
+import { CuiModalService } from '@cisco-ngx/cui-components';
 
 enum SystemInfo {
 	OS_IMAGE = 0,
@@ -46,6 +47,8 @@ enum MemoryUsage {
 	templateUrl: './settings.component.html',
 })
 export class SettingsComponent implements OnInit {
+	@ViewChild('collectorReinstallModal',
+		{ static: true }) private collectorReinstallModal: TemplateRef<string>;
 	private destroyed$: Subject<void> = new Subject<void>();
 	public cpData: IEHealthStatusResponseModel[];
 	private customerId: string;
@@ -104,8 +107,10 @@ export class SettingsComponent implements OnInit {
 	public lastDataSentStatus: string;
 
 	private user: User;
+	public params: NavigationExtras;
 
 	constructor (
+		private cuiModalService: CuiModalService,
 		private controlPointIEHealthStatusAPIService: ControlPointIEHealthStatusAPIService,
 		private route: ActivatedRoute,
 		private userService: UserService,
@@ -330,8 +335,8 @@ ${HDDSizeUnit}`;
 	 */
 	public navigateTosetup () {
 		this.state.clearState();
-		const params: NavigationExtras = { queryParams: { fromAdmin: true } };
-		this.router.navigate(['/setup-ie'], params);
+		this.params = { queryParams: { fromAdmin: true } };
+		this.cuiModalService.show(this.collectorReinstallModal, 'normal');
 	}
 
 	/**
@@ -351,4 +356,13 @@ ${HDDSizeUnit}`;
 		 `${timeDifferenceinMinutes} minutes ago` : `${timeDifferenceinHours} hours ago`;
 
 	}
+
+	/**
+	 * Function to continue to setup
+	 */
+	public onContinue () {
+		this.router.navigate(['/setup-ie'], this.params);
+
+	}
+
 }

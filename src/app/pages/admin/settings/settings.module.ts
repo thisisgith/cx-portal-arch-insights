@@ -15,6 +15,7 @@ import {
 	CuiLoaderModule,
 	CuiSidebarModule,
 	CuiSpinnerModule,
+	CuiModalModule,
 } from '@cisco-ngx/cui-components';
 
 import { environment } from '@environment';
@@ -43,6 +44,7 @@ const imports = [
 	ReactiveFormsModule,
 	DateTimePipeModule,
 	UserModule.forRoot({ rootUrl }),
+	CuiModalModule,
 ];
 
 /**
