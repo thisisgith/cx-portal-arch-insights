@@ -48,6 +48,7 @@ import { CaseOpenComponent } from '@components';
 import { getProductTypeImage, getProductTypeTitle } from '@classes';
 import { DetailsPanelStackService, RacetrackInfoService, CaseDetailsService } from '@services';
 import { HttpResponse } from '@angular/common/http';
+import { IS_IE_OR_EDGE } from '@constants';
 
 /**
  * Interface representing an item of our inventory in our assets table
@@ -172,7 +173,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	public getProductIcon = getProductTypeImage;
 	public getProductTitle = getProductTypeTitle;
 	private routeParam: string;
-
+	public isIEOrEdge = IS_IE_OR_EDGE;
 	constructor (
 		private contractsService: ContractsService,
 		private cuiModalService: CuiModalService,

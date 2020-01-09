@@ -41,6 +41,12 @@
 			<ng-container *ngIf="!status.isLoading && selectedView.pagination">
 				<ng-container *ngTemplateOutlet="titleBar"></ng-container>
 			</ng-container>
+			<div class="col-auto flex-fill" *ngIf="isIEOrEdge">
+				<div class="alert alert--warning">
+					<div class="alert__icon icon-warning-outline"></div>
+					<div class="alert__message" [innerText]="'_EdgeBrowserNotSupported_'| i18n"></div>
+				</div>
+			</div>
 			<no-dnac-header></no-dnac-header>
 			<ng-container *ngTemplateOutlet="tableAssets"></ng-container>
 			<div *ngIf="selectedView?.pagination && selectedView?.pagination.total" class="base-margin-top">

@@ -20,6 +20,7 @@ import * as _ from 'lodash-es';
 import { SetupIEStateService } from '../../setup-ie/setup-ie-state.service';
 import * as moment from 'moment';
 import { CuiModalService } from '@cisco-ngx/cui-components';
+import { IS_IE_OR_EDGE } from '@constants';
 
 enum SystemInfo {
 	OS_IMAGE = 0,
@@ -108,6 +109,7 @@ export class SettingsComponent implements OnInit {
 
 	private user: User;
 	public params: NavigationExtras;
+	public isIEOrEdge = IS_IE_OR_EDGE;
 
 	constructor (
 		private cuiModalService: CuiModalService,

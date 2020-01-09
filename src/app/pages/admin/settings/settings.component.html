@@ -40,7 +40,13 @@
 					
 				</div>
 				<div class="row">
-					<div class="col-2" *ngIf="ieSetupCompleted"><a data-auto-id="redownload-collector" (click)="navigateTosetup()" [innerText]="'_ReInstall_' | i18n"></a> |</div><div class="col-5"><a data-auto-id="change-password" [routerLink]="['/admin', 'collectorchangepassword']" [innerText]="'_ChangePassword&Settings_' | i18n"></a></div>
+					<div class="col-2" *ngIf="ieSetupCompleted"><a data-auto-id="redownload-collector" [ngClass]="{ 'link--disabled': isIEOrEdge }" (click)="navigateTosetup()" [innerText]="'_ReInstall_' | i18n"></a> |</div><div class="col-5"><a data-auto-id="change-password" [routerLink]="['/admin', 'collectorchangepassword']" [innerText]="'_ChangePassword&Settings_' | i18n"></a></div>
+					<div class="col-auto flex-fill" *ngIf="isIEOrEdge">
+						<div class="alert alert--warning">
+							<div class="alert__icon icon-warning-outline"></div>
+							<div class="alert__message" [innerText]="'_EdgeBrowserNotSupported_'| i18n"></div>
+						</div>
+					</div>
 				</div>
 				<div
 					*ngIf="data.dnac_details && data.dnac_details[0]"
