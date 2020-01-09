@@ -2509,13 +2509,14 @@ export class LifecycleComponent implements OnDestroy {
 	 * Should change param type from 'any' to AtxSchema when the sdp api gets updated to include 'videoURL'
 	 */
 	public openWatchNow (event: MouseEvent, atx: any) {
-		if (!atx.videoURL || !(atx.providerInfo && atx.recordingURL)) {
+		if (!(atx.videoURL || (atx.providerInfo && atx.recordingURL))) {
 			if (event) {
 				event.stopPropagation();
 			}
 
 			return;
 		}
+
 		// cross launch if partner atx
 		if (atx.providerInfo) {
 			this.crossLaunch(event, atx.recordingURL);
