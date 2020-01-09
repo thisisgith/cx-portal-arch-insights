@@ -17,6 +17,7 @@ import {
 	ProductAlertsService,
 	HardwareEOLCountResponse,
 	VulnerabilityResponse,
+	ProductTypeResponse,
 	TransactionRequest,
 	NetworkDataGatewayService,
 	ScanRequestResponse,
@@ -391,6 +392,13 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					template: this.bubbleChartFilterTemplate,
 					title: I18n.get('_Role_'),
 				},
+				{
+					key: 'productType',
+					loading: true,
+					seriesData: [],
+					template: this.pieChartFilterTemplate,
+					title: I18n.get('_ProductType_'),
+				}
 			],
 			key: 'system',
 			loading: true,
@@ -523,6 +531,13 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					template: this.barChartFilterTemplate,
 					title: I18n.get('_HardwareType_'),
 				},
+				{
+					key: 'productType',
+					loading: true,
+					seriesData: [],
+					template: this.pieChartFilterTemplate,
+					title: I18n.get('_ProductType_'),
+				}
 			],
 			key: 'hardware',
 			loading: true,
@@ -1073,6 +1088,164 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		);
 	}
 
+	private getHardwareProductTypeCount () {
+		const hardwareView = this.getView('hardware');
+		const hardwareProductTypeFilter =
+			_.find(hardwareView.filters, { key: 'productType' });
+
+		return this.inventoryService.getHardwareProductTypeCount({
+			customerId: this.customerId,
+			solution: this.selectedSolutionName,
+			useCase: this.selectedTechnologyName,
+		})
+		.pipe(
+			map((data: ProductTypeResponse) => {
+				
+				const hardwareSeries = [];
+
+				const data1  =  {
+					"router" : 40,
+					"switches" : 50,
+					"cables" :10,
+					"Modules" : 20,
+
+				};
+
+				const router = _.get(data1, 'router', 0);
+
+				if (router) {
+					hardwareSeries.push({
+						filter: 'Router',
+						label: I18n.get('_routers_'),
+						selected: false,
+						value: router,
+					});
+				}
+
+				const switches = _.get(data1, 'switches', 0);
+
+				if (switches) {
+					hardwareSeries.push({
+						filter: 'Switches',
+						label: I18n.get('_Switches_'),
+						selected: false,
+						value: switches,
+					});
+				}
+
+				const cables = _.get(data1, 'cables', 0);
+
+				if(cables) {
+					hardwareSeries.push({
+						filter: 'Cables',
+						label: I18n.get('_Cables_'),
+						selected: false,
+						value: cables,
+					});
+				}
+
+				const modules = _.get(data1, 'Modules', 0);
+
+				if(modules) {
+					hardwareSeries.push({
+						filter: 'Modules',
+						label: I18n.get('_Modules_'),
+						selected: false,
+						value: modules,
+					});
+				}
+				hardwareProductTypeFilter.seriesData = hardwareSeries;
+				hardwareProductTypeFilter.loading = false;
+			}),
+			catchError(err => {
+				hardwareProductTypeFilter.loading = false;
+				this.logger.error('assets.component : getAdvisoryCount() ' +
+					`:: Error : (${err.status}) ${err.message}`);
+
+				return of({ });
+			}),
+		);
+	}
+
+	private getSystemProductTypeCount () {
+		const systemView = this.getView('system');
+		const systemProductTypeFilter =
+			_.find(systemView.filters, { key: 'productType' });
+
+		return this.inventoryService.getHardwareProductTypeCount({
+			customerId: this.customerId,
+			solution: this.selectedSolutionName,
+			useCase: this.selectedTechnologyName,
+		})
+		.pipe(
+			map((data: ProductTypeResponse) => {
+				
+				const systemSeries = [];
+
+				const data1  =  {
+					"wireless" : 40,
+					"switches" : 50,
+					"cables" :10,
+					"Modules" : 20,
+
+				};
+
+				const wireless = _.get(data1, 'wireless', 0);
+
+				if (wireless) {
+					systemSeries.push({
+						filter: 'Wireless',
+						label: I18n.get('_Wireless_'),
+						selected: false,
+						value: wireless,
+					});
+				}
+
+				const switches = _.get(data1, 'switches', 0);
+
+				if (switches) {
+					systemSeries.push({
+						filter: 'Switches',
+						label: I18n.get('_Switches_'),
+						selected: false,
+						value: switches,
+					});
+				}
+
+				const cables = _.get(data1, 'cables', 0);
+
+				if(cables) {
+					systemSeries.push({
+						filter: 'Cables',
+						label: I18n.get('_Cables_'),
+						selected: false,
+						value: cables,
+					});
+				}
+
+				const modules = _.get(data1, 'Modules', 0);
+
+				if(modules) {
+					systemSeries.push({
+						filter: 'Modules',
+						label: I18n.get('_Modules_'),
+						selected: false,
+						value: modules,
+					});
+				}
+				systemProductTypeFilter.seriesData = systemSeries;
+				systemProductTypeFilter.loading = false;
+			}),
+			catchError(err => {
+				systemProductTypeFilter.loading = false;
+				this.logger.error('assets.component : getAdvisoryCount() ' +
+					`:: Error : (${err.status}) ${err.message}`);
+
+				return of({ });
+			}),
+		);
+	}
+
 	/**
 	 * Fetches the hardware type counts for the visual filter
 	 * @returns the hardware type counts
@@ -1413,6 +1586,8 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					this.getRoleCounts(),
 					this.getHardwareEOXCounts(),
 					this.getInventoryCounts(),
+					this.getHardwareProductTypeCount(),
+					this.getSystemProductTypeCount(),
 				)
 				.pipe(
 					map(() => _.map(this.views, (view: View) => {
