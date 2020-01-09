@@ -71,7 +71,7 @@ export class ApixAuthInterceptor implements HttpInterceptor {
 			}))
 				.pipe(
 					catchError((err: HttpErrorResponse) => {
-						if (err.status === 401 || err.status === 500) {
+						if (err.status === 401) {
 							/**
 							 * Once the API call is failed with the status 401/500 error then fetch the latest token
 							 */
