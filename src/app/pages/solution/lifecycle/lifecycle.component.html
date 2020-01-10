@@ -356,7 +356,7 @@
 			<img *ngIf="item.providerInfo?.logoURL" class="table-img-width provider_icon" alt="'_Placeholder_' | i18n"
 				[src]="item.providerInfo?.logoURL" attr.data-auto-id="{{ autoid }}-ProviderLogo">
 			<span *ngIf="!item.providerInfo?.logoURL && item.providerInfo?.name" class="text-bold text-medium provider_icon"
-				[innerText]="item.providerInfo?.name" attr.data-auto-id="{{ autoid }}-ProviderText"></span>
+				attr.data-auto-id="{{ autoid }}-ProviderText"></span>
 		</ng-container>
 	</div>
 	<div class="cx-lifecycle-card cx-lifecycle-card--recommended">
@@ -364,7 +364,12 @@
 			<span class="icon-flagged" attr.data-auto-id="{{ autoid }}-Flag"></span>
 			<span class="text-small" [innerText]="'_Recommended_' | i18n"></span>
 		</div>
-		<p class="text-capitalize cx-lifecycle-card__title"
+		<p *ngIf="item.providerInfo?.name"
+		class="text-bold text-medium qtr-padding-bottom"
+		[innerText]="item.providerInfo?.name" 
+		attr.data-auto-id="{{ autoid }}-ProviderText">
+		</p>
+		<p class="text-capitalize cx-lifecycle-card__title qtr-padding-right"
 			attr.data-auto-id="{{ autoid }}-Title">
 			{{ title }}
 			<ng-container *ngTemplateOutlet="hoverTemplate; context: {
@@ -435,7 +440,7 @@
 			<span class="icon-flagged" attr.data-auto-id="{{ autoid }}-Flag"></span>
 			<span class="text-small" [innerText]="'_Recommended_' | i18n"></span>
 		</div>
-		<p 
+		<p *ngIf="item.providerInfo?.name"
 		class="text-bold text-medium qtr-padding-bottom"
 		[innerText]="item.providerInfo?.name" 
 		attr.data-auto-id="{{ autoid }}-ProviderText">
@@ -1085,7 +1090,6 @@
 					data-auto-id="ATXCard-PartnerLogo"/>
 				<span *ngIf="!item.providerInfo.logoURL && item.providerInfo.name"
 					class="atx__card__logo"
-					[innerText]="item.providerInfo.name"
 				></span>
 			</ng-container>
 		</div>
@@ -1102,7 +1106,7 @@
 		</div>
 		<div class="card__header atx__card__header text-left title-line-clamp"
 			*ngIf="item && item.title"
-			[innerText]="item.title"
+			[innerText]="item.providerInfo?.name"
 			data-auto-id="ATXCardTitle">
 		</div>
 		<div class="card__body atx__card__body text-left desc-line-clamp" *ngIf="item && item.description" [innerText]="item.description" data-auto-id="ATXCard-Description"></div>
