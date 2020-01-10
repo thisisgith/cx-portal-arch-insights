@@ -22,6 +22,7 @@ import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { ActivatedRoute } from '@angular/router';
 import { RacetrackInfoService } from '@services';
+import { RiskScoreComponent } from './risk-score/risk-score.component';
 
 /**
  * fp-similarassets component
@@ -72,6 +73,7 @@ export class FpSimilarAssetsComponent {
 	private crashRiskAlignmentTemplate: TemplateRef<[]>;
 	private selectedSolutionName: string;
 	private selectedTechnologyName: string;
+	public riskScoreComponent = RiskScoreComponent;
 
 	constructor (
 		private userResolve: UserResolve,
