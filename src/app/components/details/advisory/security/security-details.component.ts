@@ -64,6 +64,7 @@ export class SecurityDetailsComponent implements OnInit, OnChanges, OnDestroy {
 	};
 
 	public impactedCount = 0;
+	public potentiallyImpactedCount = 0;
 	public activeTab = 0;
 	public data: Data = { };
 	public isLoading = false;
