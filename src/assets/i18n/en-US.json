@@ -1039,7 +1039,7 @@
 	"_OVA_OpenTheConsole_": "Open the console. Select the virtual machine you just deployed.",
 	"_OVA_VerifyTheFile_": "Verify the file is correct. Then click \"Next.\"",
 	"_OVA_WaitForComplete_": "Wait for the deployment to complete. This may take a few minutes.",
-	"_PitStopApiFailureMessage_":"There are no Smart Accounts associated with your user account. Please contact your account administrator.",
+	"_PitStopApiFailureMessage_":"There are no Smart Accounts associated with your user account. Please contact your Customer Success Executive for help if you do not see pit stop data.",
 	"_PacificTime/US_": "Pacific Time/US",
 	"_Partner_": "Partner",
 	"_Password_": "Password",
