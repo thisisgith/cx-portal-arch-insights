@@ -281,10 +281,14 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 							template: this.lastUpdatedTemplate,
 						},
 						{
-							headerTemplate: this.assetImpactedTooltipTemplate,
 							key: 'assetsImpacted',
+							name: I18n.get('_AffectedSystems_'),
 							sortable: true,
-							template: this.impactedCountTemplate,
+						},
+						{
+							headerTemplate: this.assetImpactedTooltipTemplate,
+							key: 'assetsPotentiallyImpacted',
+							sortable: true,
 						},
 					],
 					dynamicData: true,
