@@ -119,7 +119,7 @@
 
 <ng-template #psirtTableTemp let-recommendation="recommendation">
 	<div class="base-margin-top">
-		<div *ngIf="recommendation?.data?.psirts?.length > 0" class="qtr-margin-top row">
+		<div *ngIf="(recommendation?.data?.psirts?.length > 0) ||  (recommendation?.params?.search?.length > 0)" class="qtr-margin-top row">
 			<div class="col-md-9 flex flex-fill">
 				<div class="flex-center-vertical">
 					<span [innerText]="'_SecurityAdvisories_' | i18n" class="text-large"></span>
@@ -131,7 +131,7 @@
 			</div>
 			<div class="col-md-3">
 				<div class="flex flex-fluid flex-right">
-					<cui-search placeholder="{{ '_Search_' | i18n }}" [debounce]="searchOptions.debounce"
+					<cui-search  [searchText]="recommendation.params?.search" placeholder="{{ '_Search_' | i18n }}" [debounce]="searchOptions.debounce"
 						[compressed]="true" (onUpdate)="onSearchQuery($event)">
 					</cui-search>
 				</div>

@@ -279,12 +279,12 @@ export class BugsDetailsComponent implements OnInit {
 			_.set(severityFilter, 'seriesData', severityFilterSeriesData);
 			if (viewType === 'bug') {
 				stateFilter.seriesData =
-					this.populateStateFilter(_.get(recommendation, ['data', 'openBugsCount']),
+					this.populateStateFilter(recommendation, _.get(recommendation, ['data', 'openBugsCount']),
 						_.get(recommendation, ['data', 'newOpenBugsCount']),
 						_.get(recommendation, ['data', 'resolvedBugsCount']));
 			} else {
 				stateFilter.seriesData =
-					this.populateStateFilter(_.get(recommendation, ['data', 'openPsirtCount']),
+					this.populateStateFilter(recommendation, _.get(recommendation, ['data', 'openPsirtCount']),
 						_.get(recommendation, ['data', 'newOpenPsirtCount']),
 						_.get(recommendation, ['data', 'psirtResolvedCount']));
 			}
@@ -296,28 +296,42 @@ export class BugsDetailsComponent implements OnInit {
 
 	/**
 	 * populate state filters
+	 * @param recommendation machine recommendation
 	 * @param exposedCount  number of bugs exposed
 	 * @param newExposedCount  number of newly exposed bugs
 	 * @param resolvedCount number of bugs fixed
 	 * @returns the series data for state filters
 	 */
-	private populateStateFilter (exposedCount: number, newExposedCount: number,
+	private populateStateFilter (recommendation, exposedCount: number, newExposedCount: number,
 		resolvedCount: number) {
 		const seriesData = [];
-		if (exposedCount > 0 || newExposedCount > 0 || resolvedCount > 0) {
+		if (exposedCount > 0) {
 			seriesData.push({
 				value: exposedCount,
 				filter: 'Exposed',
 				label: I18n.get('_OsvExposed_'),
-				selected: true,
+				selected: recommendation.name !== 'profile current' ? true : false,
 			});
+		} else {
+			recommendation.appliedFilters.stateFilter  = ['New_Exposed'];
+		}
 
+		if (newExposedCount > 0) {
 			seriesData.push({
 				value: newExposedCount,
 				filter: 'New_Exposed',
 				label: I18n.get('_OsvNewExposed_'),
-				selected: true,
+				selected: recommendation.name !== 'profile current' ? true : false,
 			});
+		} else {
+			recommendation.appliedFilters.stateFilter  = ['Exposed'];
+		}
+
+		if (newExposedCount === 0 && exposedCount === 0) {
+			recommendation.appliedFilters.stateFilter = [];
+		}
+
+		if (resolvedCount > 0) {
 
 			seriesData.push({
 				value: resolvedCount,
