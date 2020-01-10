@@ -113,8 +113,6 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 		this.potentiallyImpacted = [];
 
 		const impacted = _.get(this.assetIds, 'impacted', []);
-		const potentiallyImpacted = _.get(this.assetIds, 'potentiallyImpacted', []);
-
 		this.inventoryService.getSystemAssets(this.params.system)
 			.pipe(
 				mergeMap((response: SystemAssets) => {
@@ -123,10 +121,6 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 					this.impacted =
 						_.filter(data,
 							x => _.includes(impacted, _.get(x, 'managedNeId'))) || [];
-
-					this.potentiallyImpacted =
-						_.filter(data,
-							x => _.includes(potentiallyImpacted, _.get(x, 'managedNeId'))) || [];
 					this.pagination = this.buildPagination(_.get(response, 'Pagination'));
 					return this.fetchAssets();
 				}),
@@ -147,7 +141,7 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 					potentiallyImpacted: this.potentiallyImpacted,
 				});
 				// this.impactedCount.emit(this.impacted.length + this.potentiallyImpacted.length);
-				this.impactedCount.emit(this.pagination.total);
+				this.impactedCount.emit(this.impacted.length);
 				this.isLoading = false;
 			});
 	}
@@ -450,10 +444,7 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 		} else if (this.assetIds) {
 			_.set(this.params, 'system', {
 				customerId: this.customerId,
-				managedNeId: _.concat(
-					_.get(this.assetIds, 'impacted', []),
-					_.get(this.assetIds, 'potentiallyImpacted', []),
-				),
+				managedNeId: _.get(this.assetIds, 'impacted', []),
 				page: 1,
 				rows: 100,
 				solution: this.selectedSolutionName,
