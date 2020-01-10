@@ -111,14 +111,14 @@ const mockPsirtDetail = {
 	\r\ntriggering a reload of the affected device.\r\n<p>Cisco has released software
 	updates that address this vulnerability. There are no workarounds that address this
 	vulnerability.</p>\r\n<p>This advisory is available at the following link:<br />\r\n
-	<a href=\"https://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/
-	cisco-sa-20180926-cdp-memleak\">https://tools.cisco.com/security/center/content/
+	<a href=\'https://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/
+	cisco-sa-20180926-cdp-memleak\'>https://tools.cisco.com/security/center/content/
 	CiscoSecurityAdvisory/cisco-sa-20180926-cdp-memleak</a></p>\r\nThis advisory is
 	part of the September 26, 2018, release of the Cisco IOS and IOS XE Software
 	Security Advisory Bundled Publication, which includes 12 Cisco Security Advisories
 	that describe 13 vulnerabilities. For a complete list of the advisories and links
-	to them, see <a href=\"http://tools.cisco.com/security/center/viewErp.x?alertId
-	=ERP-69981\">Cisco Event Response: September 2018 Semiannual Cisco IOS and IOS
+	to them, see <a href=\'http://tools.cisco.com/security/center/viewErp.x?alertId
+	=ERP-69981\'>Cisco Event Response: September 2018 Semiannual Cisco IOS and IOS
 	XE Software Security Advisory Bundled Publication</a>`,
 };
 
@@ -219,21 +219,80 @@ const mockMachineRecommendations: MachineRecommendationsResponse = [
 				status: 'Fixed',
 			},
 		],
-		bugSeverity: {
+		osType: 'IOS-XE',
+		name: 'Recommendation #1',
+		release: '16.9.4',
+		postDate: '25 August 2019',
+		score: 1231,
+		expectedProfileRisk: 0.5,
+		psirts: [
+			{
+				status: 'RESOLVED',
+				psirtId: 'cisco-sa-20180328-smi',
+				severity: 'High',
+				title: 'Cisco IOS and IOS XE Software Smart Install Denial of Service Vulnerability',
+			},
+			{
+				status: 'RESOLVED',
+				psirtId: 'cisco-sa-20180328-smi2',
+				severity: 'Critical',
+				title: 'Cisco IOS and IOS XE Software Smart Install Remote Code Execution Vulnerability',
+			},
+			{
+				status: 'RESOLVED',
+				psirtId: 'cisco-sa-20180926-sm1t3e3',
+				severity: 'High',
+				title: 'Cisco IOS and IOS XE Software SM-1T3/E3 Service Module Denial of Service Vulnerability',
+			},
+			{
+				status: 'RESOLVED',
+				psirtId: 'cisco-sa-20180328-qos',
+				severity: 'Critical',
+				title: 'Cisco IOS and IOS XE Software Quality of Service Remote Code Execution Vulnerability',
+			},
+			{
+				status: 'RESOLVED',
+				psirtId: 'cisco-sa-20180926-iosxe-cmdinj',
+				severity: 'High',
+				title: 'Cisco IOS XE Software Command Injection Vulnerabilities',
+			},
+			{
+				status: 'RESOLVED',
+				psirtId: 'cisco-sa-20180328-xepriv',
+				severity: 'High',
+				title: 'Cisco IOS XE Software Web UI Remote Access Privilege Escalation Vulnerability',
+			},
+			{
+				status: 'RESOLVED',
+				psirtId: 'cisco-sa-20180926-cdp-memleak',
+				severity: 'High',
+				title: 'Cisco IOS XE Software Cisco Discovery Protocol Memory Leak Vulnerability',
+			},
+		],
+		psirtSeverity: {
 			RESOLVED: {
-				H: 39,
-				L: 2,
-				M: 44,
+				H: 7,
+				L: 0,
+				M: 0,
 			},
 		},
-		expectedProfileRisk: 64,
-		name: 'Recommendation #1',
-		osType: 'IOS-XE',
-		postDate: '04 September 2019',
-		psirts: [],
-		psirtSeverity: { },
-		release: '17.1.1EFT',
-		score: 122.5,
+		bugSeverity: {
+			RESOLVED: {
+				H: 364,
+				L: 0,
+				M: 227,
+			},
+			NEW_OPEN: {
+				H: 24,
+				L: 0,
+				M: 16,
+			},
+			OPEN: {
+				H: 12,
+				L: 0,
+				M: 13,
+			},
+		},
 	},
 	{
 		bugs: [
@@ -242,12 +301,14 @@ const mockMachineRecommendations: MachineRecommendationsResponse = [
 				severity: 'High',
 				source: 'SLM',
 				status: 'Fixed',
+				title: 'Sint nisi excepteur sunt enim cillum veniam enim.',
 			},
 			{
 				id: 'CSCvr08961',
 				severity: 'High',
 				source: 'SLM',
 				status: 'Fixed',
+				title: 'Consectetur adipisicing irure mollit quis laboris aute.',
 			},
 			{
 				id: 'CSCvq98433',
@@ -315,22 +376,93 @@ const mockMachineRecommendations: MachineRecommendationsResponse = [
 				source: 'SLM',
 				status: 'Fixed',
 			},
+			{
+				id: 'CSCva38503',
+				severity: 'High',
+				source: 'SLM',
+				status: 'Fixed',
+			},
+			{
+				id: 'CSCvq97906',
+				severity: 'Medium',
+				source: 'SLM',
+				status: 'Fixed',
+			},
 		],
-		bugSeverity: {
+		osType: 'IOS-XE',
+		name: 'Recommendation #2',
+		release: '16.9.4',
+		postDate: '25 August 2019',
+		score: 1231,
+		expectedProfileRisk: 0.5,
+		psirts: [
+			{
+				status: 'RESOLVED',
+				psirtId: 'cisco-sa-20180328-smi',
+				severity: 'High',
+				title: 'Cisco IOS and IOS XE Software Smart Install Denial of Service Vulnerability',
+			},
+			{
+				status: 'RESOLVED',
+				psirtId: 'cisco-sa-20180328-smi2',
+				severity: 'Critical',
+				title: 'Cisco IOS and IOS XE Software Smart Install Remote Code Execution Vulnerability',
+			},
+			{
+				status: 'RESOLVED',
+				psirtId: 'cisco-sa-20180926-sm1t3e3',
+				severity: 'High',
+				title: 'Cisco IOS and IOS XE Software SM-1T3/E3 Service Module Denial of Service Vulnerability',
+			},
+			{
+				status: 'RESOLVED',
+				psirtId: 'cisco-sa-20180328-qos',
+				severity: 'Critical',
+				title: 'Cisco IOS and IOS XE Software Quality of Service Remote Code Execution Vulnerability',
+			},
+			{
+				status: 'RESOLVED',
+				psirtId: 'cisco-sa-20180926-iosxe-cmdinj',
+				severity: 'High',
+				title: 'Cisco IOS XE Software Command Injection Vulnerabilities',
+			},
+			{
+				status: 'RESOLVED',
+				psirtId: 'cisco-sa-20180328-xepriv',
+				severity: 'High',
+				title: 'Cisco IOS XE Software Web UI Remote Access Privilege Escalation Vulnerability',
+			},
+			{
+				status: 'RESOLVED',
+				psirtId: 'cisco-sa-20180926-cdp-memleak',
+				severity: 'High',
+				title: 'Cisco IOS XE Software Cisco Discovery Protocol Memory Leak Vulnerability',
+			},
+		],
+		psirtSeverity: {
 			RESOLVED: {
-				H: 39,
-				L: 2,
-				M: 44,
+				H: 7,
+				L: 0,
+				M: 0,
 			},
 		},
-		expectedProfileRisk: 64,
-		name: 'Recommendation #2',
-		osType: 'IOS-XE',
-		postDate: '01 November 2018',
-		psirts: [],
-		psirtSeverity: { },
-		release: '16.6.4a',
-		score: 122.5,
+		bugSeverity: {
+			RESOLVED: {
+				H: 364,
+				L: 0,
+				M: 227,
+			},
+			NEW_OPEN: {
+				H: 24,
+				L: 0,
+				M: 16,
+			},
+			OPEN: {
+				H: 12,
+				L: 0,
+				M: 13,
+			},
+		},
 	},
 	{
 		bugs: [
@@ -339,12 +471,14 @@ const mockMachineRecommendations: MachineRecommendationsResponse = [
 				severity: 'High',
 				source: 'SLM',
 				status: 'Fixed',
+				title: 'Sint nisi excepteur sunt enim cillum veniam enim.',
 			},
 			{
 				id: 'CSCvr08961',
 				severity: 'High',
 				source: 'SLM',
 				status: 'Fixed',
+				title: 'Consectetur adipisicing irure mollit quis laboris aute.',
 			},
 			{
 				id: 'CSCvq98433',
@@ -382,22 +516,123 @@ const mockMachineRecommendations: MachineRecommendationsResponse = [
 				source: 'SLM',
 				status: 'Fixed',
 			},
+			{
+				id: 'CSCvq62439',
+				severity: 'High',
+				source: 'SLM',
+				status: 'Fixed',
+			},
+			{
+				id: 'CSCvq94679',
+				severity: 'Medium',
+				source: 'SLM',
+				status: 'Fixed',
+			},
+			{
+				id: 'CSCvq95645',
+				severity: 'Medium',
+				source: 'SLM',
+				status: 'Fixed',
+			},
+			{
+				id: 'CSCvq79315',
+				severity: 'Medium',
+				source: 'SLM',
+				status: 'Fixed',
+			},
+			{
+				id: 'CSCvr09093',
+				severity: 'Medium',
+				source: 'SLM',
+				status: 'Fixed',
+			},
+			{
+				id: 'CSCva38503',
+				severity: 'High',
+				source: 'SLM',
+				status: 'Fixed',
+			},
+			{
+				id: 'CSCvq97906',
+				severity: 'Medium',
+				source: 'SLM',
+				status: 'Fixed',
+			},
 		],
-		bugSeverity: {
+		osType: 'IOS-XE',
+		name: 'Recommendation #3',
+		release: '16.9.4',
+		postDate: '25 August 2019',
+		score: 1231,
+		expectedProfileRisk: 0.5,
+		psirts: [
+			{
+				status: 'RESOLVED',
+				psirtId: 'cisco-sa-20180328-smi',
+				severity: 'High',
+				title: 'Cisco IOS and IOS XE Software Smart Install Denial of Service Vulnerability',
+			},
+			{
+				status: 'RESOLVED',
+				psirtId: 'cisco-sa-20180328-smi2',
+				severity: 'Critical',
+				title: 'Cisco IOS and IOS XE Software Smart Install Remote Code Execution Vulnerability',
+			},
+			{
+				status: 'RESOLVED',
+				psirtId: 'cisco-sa-20180926-sm1t3e3',
+				severity: 'High',
+				title: 'Cisco IOS and IOS XE Software SM-1T3/E3 Service Module Denial of Service Vulnerability',
+			},
+			{
+				status: 'RESOLVED',
+				psirtId: 'cisco-sa-20180328-qos',
+				severity: 'Critical',
+				title: 'Cisco IOS and IOS XE Software Quality of Service Remote Code Execution Vulnerability',
+			},
+			{
+				status: 'RESOLVED',
+				psirtId: 'cisco-sa-20180926-iosxe-cmdinj',
+				severity: 'High',
+				title: 'Cisco IOS XE Software Command Injection Vulnerabilities',
+			},
+			{
+				status: 'RESOLVED',
+				psirtId: 'cisco-sa-20180328-xepriv',
+				severity: 'High',
+				title: 'Cisco IOS XE Software Web UI Remote Access Privilege Escalation Vulnerability',
+			},
+			{
+				status: 'RESOLVED',
+				psirtId: 'cisco-sa-20180926-cdp-memleak',
+				severity: 'High',
+				title: 'Cisco IOS XE Software Cisco Discovery Protocol Memory Leak Vulnerability',
+			},
+		],
+		psirtSeverity: {
 			RESOLVED: {
-				H: 39,
-				L: 2,
-				M: 44,
+				H: 7,
+				L: 0,
+				M: 0,
 			},
 		},
-		expectedProfileRisk: 64,
-		name: 'Recommendation #3',
-		osType: 'IOS-XE',
-		postDate: '06 April 2018',
-		psirts: [],
-		psirtSeverity: { },
-		release: '16.8.1a',
-		score: 122.5,
+		bugSeverity: {
+			RESOLVED: {
+				H: 364,
+				L: 0,
+				M: 227,
+			},
+			NEW_OPEN: {
+				H: 24,
+				L: 0,
+				M: 16,
+			},
+			OPEN: {
+				H: 12,
+				L: 0,
+				M: 13,
+			},
+		},
 	},
 	{
 		bugs: [
@@ -464,53 +699,70 @@ const mockMachineRecommendations: MachineRecommendationsResponse = [
 				status: 'Fixed',
 			},
 		],
-		bugsExposed: 10,
-		bugSeverity: {
-			OPEN: {
-				H: 39,
-				L: 2,
-				M: 44,
-			},
-			RESOLVED: {
-				H: 10,
-				L: 5,
-				M: 4,
-			},
-		},
-		expectedProfileRisk: 138.5,
 		name: 'profile current',
-		osType: 'IOS-XE',
+		release: '16.6.1',
 		postDate: null,
-		psirtExposed: 5,
-		psirtResolvedCount: 10,
+		score: 0,
+		expectedProfileRisk: 0.5,
+		osType: '',
 		psirts: [
 			{
-				psirtId: 'CSCvr08842',
+				status: 'OPEN',
+				psirtId: 'cisco-sa-20180328-smi',
 				severity: 'High',
-				status: 'Fixed',
-				title: 'Laboris laboris cupidatat eiusmod Lorem esse velit',
+				title: 'Cisco IOS and IOS XE Software Smart Install Denial of Service Vulnerability',
 			},
 			{
-				psirtId: 'CSCvr08843',
-				severity: 'Medium',
-				status: 'Fixed',
-				title: 'Anim laboris aute fugiat enim dolor nulla ipsum ex amet labore.',
+				status: 'OPEN',
+				psirtId: 'cisco-sa-20180328-smi2',
+				severity: 'High',
+				title: 'Cisco IOS and IOS XE Software Smart Install Remote Code Execution Vulnerability',
+			},
+			{
+				status: 'OPEN',
+				psirtId: 'cisco-sa-20180926-sm1t3e3',
+				severity: 'High',
+				title: 'Cisco IOS and IOS XE Software SM-1T3/E3 Service Module Denial of Service Vulnerability',
+			},
+			{
+				status: 'OPEN',
+				psirtId: 'cisco-sa-20180328-qos',
+				severity: 'High',
+				title: 'Cisco IOS and IOS XE Software Quality of Service Remote Code Execution Vulnerability',
+			},
+			{
+				status: 'OPEN',
+				psirtId: 'cisco-sa-20180926-iosxe-cmdinj',
+				severity: 'High',
+				title: 'Cisco IOS XE Software Command Injection Vulnerabilities',
+			},
+			{
+				status: 'OPEN',
+				psirtId: 'cisco-sa-20180328-xepriv',
+				severity: 'High',
+				title: 'Cisco IOS XE Software Web UI Remote Access Privilege Escalation Vulnerability',
+			},
+			{
+				status: 'OPEN',
+				psirtId: 'cisco-sa-20180926-cdp-memleak',
+				severity: 'High',
+				title: 'Cisco IOS XE Software Cisco Discovery Protocol Memory Leak Vulnerability',
 			},
 		],
-		psirtSeverity: { },
-		totalBugsSeverity: {
-			H: 1,
-			M: 2,
-			L: 0,
+		psirtSeverity: {
+			OPEN: {
+				H: 7,
+				L: 0,
+				M: 0,
+			},
 		},
-		totalPsirtsSeverity: {
-			H: 1,
-			M: 2,
-			L: 0,
+		bugSeverity: {
+			OPEN: {
+				H: 376,
+				L: 0,
+				M: 240,
+			},
 		},
-		release: '16.9.2,16.9.2,16.9.2,16.9.2',
-		resolvedBugsCount: 10,
-		score: 0,
 	},
 ];
 
@@ -1439,7 +1691,7 @@ export const OSVScenarios = [
 			],
 		},
 		url: `${api}profileRecommendations?customerId=${customerId}&profileName=${assetId}` +
-				'&productFamily=Cisco Catalyst 9300 Series Switches&profileId=7293498_NA',
+			'&productFamily=Cisco Catalyst 9300 Series Switches&profileId=7293498_NA',
 		usecases: ['Use Case 1'],
 	},
 	{
