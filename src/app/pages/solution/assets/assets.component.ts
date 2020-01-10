@@ -398,7 +398,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				customerId: this.customerId,
 				page: 1,
 				rows: this.getRows(),
-				sort: ['criticalAdvisories:DESC'],
+				sort: ['criticalAdvisories:DESC', 'deviceName:ASC'],
 			},
 			searchLabel: '_Systems_',
 			searchTemplate: this.systemSearchTemplate,
