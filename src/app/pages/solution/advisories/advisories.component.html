@@ -238,14 +238,14 @@
 		data-auto-id="BugDetailsSeverityIcon">
 	</span>
 	<ng-container [ngSwitch]="celldata?.severityLabel">
-		
+
 		<span data-auto-id="ImpactText" *ngSwitchCase="'Critical'" [innerText]="'_Critical_' | i18n"></span>
 		<span data-auto-id="ImpactText" *ngSwitchCase="'High'" [innerText]="'_High_' | i18n"></span>
 		<span data-auto-id="ImpactText" *ngSwitchCase="'Medium'" [innerText]="'_Medium_' | i18n"></span>
 		<span data-auto-id="ImpactText" *ngSwitchCase="'Low'" [innerText]="'_Low_' | i18n"></span>
 		<span data-auto-id="ImpactText" *ngSwitchCase="'Info'" [innerText]="'_Info_' | i18n"></span>
 		<span data-auto-id="ImpactText" *ngSwitchDefault [innerText]="'_Unknown_' | i18n"></span>
-		
+
 	</ng-container>
 </ng-template>
 
@@ -273,10 +273,7 @@
 </ng-template>
 
 <ng-template #assetImpactedTooltipTemplate>
-	<span [innerText]="'_AffectedSystems_' | i18n"></span>
-	<span [innerText]="'('"></span>
 	<span [innerText]="'_PotentiallyAffected_' | i18n"></span>
-	<span [innerText]="')'"></span>
 	<span tooltip
 		[tooltipTemplate]="assetImpactedTooltipContentTemplate"
 		class="icon-info-outline qtr-margin-left"
