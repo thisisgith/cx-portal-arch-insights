@@ -1068,6 +1068,13 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 				tab.pagination = this.buildPagination(_.get(response, 'Pagination', { }));
 				tab.loading = false;
 				_.unset(tab, 'contentContainerHeight');
+
+				/* browser headers.get X-API-RESULT-COUNT is not supported in IE-Edge */
+				const fieldTab = _.find(this.tabs, { key: 'field' });
+				const totalFieldFilter = _.find(fieldTab.filters, { key: 'total' });
+				totalFieldFilter.seriesData = [{
+					value: _.toNumber(_.get(response, ['Pagination', 'total'], 0)) || 0,
+				}];
 			}),
 			catchError(err => {
 				tab.pagination = null;
@@ -1105,6 +1112,13 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 				tab.pagination = this.buildPagination(_.get(response, 'Pagination', { }));
 				tab.loading = false;
 				_.unset(tab, 'contentContainerHeight');
+
+				/* browser headers.get X-API-RESULT-COUNT is not supported in IE-Edge */
+				const bugTab = _.find(this.tabs, { key: 'bug' });
+				const totalBugFilter = _.find(bugTab.filters, { key: 'total' });
+				totalBugFilter.seriesData = [{
+					value: _.toNumber(_.get(response, ['Pagination', 'total'], 0)) || 0,
+				}];
 			}),
 			catchError(err => {
 				tab.pagination = null;
@@ -1166,6 +1180,13 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 					tab.pagination = this.buildPagination(_.get(response, 'Pagination', { }));
 					tab.loading = false;
 					_.unset(tab, 'contentContainerHeight');
+
+					/* browser headers.get X-API-RESULT-COUNT is not supported in IE-Edge */
+					const securityTab = _.find(this.tabs, { key: 'security' });
+					const totalAdvisoryFilter = _.find(securityTab.filters, { key: 'total' });
+					totalAdvisoryFilter.seriesData = [{
+						value: _.toNumber(_.get(response, ['Pagination', 'total'], 0)) || 0,
+					}];
 				}),
 				catchError(err => {
 					tab.pagination = null;
