@@ -1493,4 +1493,4 @@ export const OSVScenarios = [
 		url: `${api}psirtDetail?psirtId=CSCvr08842`,
 		usecases: ['Use Case 1'],
 	},
-];	
+];
