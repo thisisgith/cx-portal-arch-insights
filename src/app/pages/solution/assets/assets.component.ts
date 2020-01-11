@@ -830,6 +830,9 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		.pipe(
 			map((results: SystemAssets | HardwareAssets) => {
 				const data = _.get(results, 'data', []);
+				const systemView = this.getView('system');
+				const hardwareView = this.getView('hardware');
+
 				data.forEach((a: SystemAsset | HardwareAsset) => {
 					const role = _.get(a, 'role');
 					if (role) {
@@ -847,6 +850,14 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				});
 
 				view.pagination = results.Pagination;
+
+				/* browser headers.get X-API-RESULT-COUNT is not supported in IE-Edge */
+				if (view.key === 'system') {
+					systemView.total = _.toNumber(_.get(view, ['pagination', 'total'], 0)) || 0;
+				}
+				if (view.key === 'hardware') {
+					hardwareView.total = _.toNumber(_.get(view, ['pagination', 'total'], 0)) || 0;
+				}
 
 				const first = (view.pagination.rows * (view.pagination.page - 1)) + 1;
 				let last = (view.pagination.rows * view.pagination.page);
