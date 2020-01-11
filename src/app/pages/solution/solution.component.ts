@@ -821,6 +821,8 @@ export class SolutionComponent implements OnInit, OnDestroy, AfterViewInit {
 		.pipe(
 			map(() => {
 				this.alert.show(I18n.get('_PitStopApiFailureMessage_'), 'danger');
+				const advisoryFacet = _.find(this.facets, { key: 'advisories' });
+				advisoryFacet.loading = false;
 			}),
 			takeUntil(this.destroy$),
 		)

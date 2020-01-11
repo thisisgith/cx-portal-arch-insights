@@ -1575,6 +1575,17 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			this.selectedSolutionName = _.get(solution, 'name');
 		});
 
+		this.racetrackInfoService.getPitStopApiFailure()
+		.pipe(
+			map(() => {
+				this.status.isLoading = false;
+				const view = this.getView('system');
+				view.loading = false;
+			}),
+			takeUntil(this.destroy$),
+		)
+		.subscribe();
+
 		this.racetrackInfoService.getCurrentTechnology()
 		.pipe(
 			takeUntil(this.destroy$),
