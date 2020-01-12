@@ -10,7 +10,6 @@ import {
 	AdvisoryImpactedAssetsModule,
 } from '../impacted-assets/impacted-assets.module';
 import { AdvisoryFeedbackModule } from '../feedback/feedback.module';
-import { PotentiallyImpactedAssetsModule } from '../potentially-impacted-assets/potentially-impacted.module';
 
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
@@ -35,7 +34,6 @@ const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 		I18nPipeModule,
 		ProductAlertsModule.forRoot({ rootUrl }),
 		SecurityDetailsHeaderModule,
-		PotentiallyImpactedAssetsModule,
 	],
 })
 export class SecurityDetailsModule { }

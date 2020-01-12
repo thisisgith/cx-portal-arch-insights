@@ -29,17 +29,17 @@
 <ng-template #deviceColumn let-celldata="celldata">
 	<span class="qtr-margin-right" [title]="getProductTitle(celldata)" *ngIf="getProductIcon(celldata)">
 		<img alt="{{ '_AssetIcon_' | i18n }}" class="icon-asset"
-			attr.data-auto-id="DeviceIcon-{{ celldata?.hostName || celldata?.deviceName }}"
+			attr.data-auto-id="DeviceIcon-{{ celldata?.hostname || celldata?.deviceName || celldata?.hostName }}"
 			src="assets/img/assets/device-{{ getProductIcon(celldata) }}.svg">
 	</span>
-	<a *ngIf="celldata?.serialNumber" data-auto-id="celldata.deviceName"
-		[innerText]="(celldata?.deviceName || celldata?.hostName) | truncate:false:20"
-		[title]="celldata?.deviceName || celldata?.hostName" 
+	<a *ngIf="celldata?.serialNumber" data-auto-id="celldata?.deviceName || celldata?.hostname || celldata?.hostName"
+		[innerText]="(celldata?.deviceName || celldata?.hostname || celldata?.hostName) | truncate:false:20"
+		[title]="celldata?.deviceName || celldata?.hostname || celldata?.hostName" 
 		(click)="openSystemDetails(celldata.serialNumber)">
 	</a>
 	<span *ngIf="!celldata?.serialNumber"
-		[title]="celldata?.deviceName || celldata?.hostName || ('_NA_' | i18n)"
-		[innerText]="(celldata?.deviceName || celldata?.hostName || ('_NA_' | i18n)) | truncate:false:20">
+		[title]="celldata?.deviceName || celldata?.hostname || celldata?.hostName|| ('_NA_' | i18n)"
+		[innerText]="(celldata?.deviceName || celldata?.hostname || celldata?.hostName || ('_NA_' | i18n)) | truncate:false:20">
 	</span>
 </ng-template>
 
