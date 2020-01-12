@@ -5,14 +5,33 @@
 		<ng-container *ngTemplateOutlet="summary"></ng-container>
 	</cui-tab>
 	<cui-tab label="{{ '_AffectedHardware_' | i18n | uppercase }} ({{ impactedCount }})"
-		[disabled]="!impactedCount || impactedCount === 0"
-		*ngIf="data?.assetIds?.impacted || data?.assetIds?.potentiallyImpacted">
+		[disabled]="!impactedCount || impactedCount === 0">
 		<div class="half-margin-top">
 			<advisory-impacted-assets
+				*ngIf="!this.isLoading"
+				vulnerability="VUL"
 				type="field"
+				[affectedSystems]="affectedSystems"
+				[advisory]="advisory"
 				[customerId]="customerId"
 				[assetIds]="data.assetIds"
 				(impactedCount)="impactedCount = $event"
+				(assets)="assets.emit($event)">
+			</advisory-impacted-assets>
+		</div>
+	</cui-tab>
+	<cui-tab label="{{ '_PotentiallyAffected_' | i18n | uppercase }} ({{ potentiallyImpactedCount }})"
+	[disabled]="!potentiallyImpactedCount || potentiallyImpactedCount === 0">
+		<div class="half-margin-top">
+			<advisory-impacted-assets
+				*ngIf="!this.isLoading"
+				vulnerability="POTVUL"
+				type="field"
+				[affectedSystems]="affectedSystems"
+				[advisory]="advisory"
+				[customerId]="customerId"
+				[assetIds]="data.assetIds"
+				(impactedCount)="potentiallyImpactedCount = $event"
 				(assets)="assets.emit($event)">
 			</advisory-impacted-assets>
 		</div>

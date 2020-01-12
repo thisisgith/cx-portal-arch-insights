@@ -11,7 +11,6 @@ import {
 import * as _ from 'lodash-es';
 import {
 	ProductAlertsService,
-	SecurityAdvisoryResponse,
 	SecurityAdvisory,
 	SecurityAdvisoryBulletin,
 	SecurityAdvisoryBulletinResponse,
@@ -19,16 +18,19 @@ import {
 	SecurityAdvisoriesResponse,
 	RacetrackSolution,
 	RacetrackTechnology,
+	InventoryService,
+	HardwareAssets,
+	HardwareAsset,
 } from '@sdp-api';
 import { LogService } from '@cisco-ngx/cui-services';
 import {
 	map,
-	mergeMap,
 	catchError,
 	takeUntil,
+	mergeMap,
 } from 'rxjs/operators';
 import { of, forkJoin, Subject } from 'rxjs';
-import { AssetIds, Impacted } from '../impacted-assets/impacted-assets.component';
+import { AssetIds } from '../impacted-assets/impacted-assets.component';
 import { Alert } from '@interfaces';
 import { RacetrackInfoService } from '@services';
 
@@ -38,6 +40,13 @@ export interface Data {
 	notice?: SecurityAdvisory;
 	bulletin?: SecurityAdvisoryBulletin;
 	assetIds?: AssetIds;
+}
+
+/**
+ * The interface for our output
+ */
+export interface Impacted {
+	assets: HardwareAsset[];
 }
 
 /**
@@ -56,11 +65,13 @@ export class SecurityDetailsComponent implements OnInit, OnChanges, OnDestroy {
 	@Output('details') public details = new EventEmitter<Data>();
 	@Output('alert') public alertMessage = new EventEmitter<Alert>();
 	@Output('assets') public assets = new EventEmitter<Impacted>();
+	public impactedAssets: HardwareAsset[] = [];
 
 	private params: {
 		advisory?: ProductAlertsService.GetAdvisoriesSecurityAdvisoriesParams;
 		notice?: ProductAlertsService.GetSecurityAdvisoriesParams;
 		bulletin?: ProductAlertsService.GetPSIRTBulletinParams;
+		assets?: InventoryService.GetHardwareAssetsParams;
 	};
 
 	public impactedCount = 0;
@@ -71,8 +82,10 @@ export class SecurityDetailsComponent implements OnInit, OnChanges, OnDestroy {
 	private destroyed$: Subject<void> = new Subject<void>();
 	private selectedSolutionName: string;
 	private selectedTechnologyName: string;
+	public affectedSystems = [];
 
 	constructor (
+		private inventoryService: InventoryService,
 		private logger: LogService,
 		private productAlertsService: ProductAlertsService,
 		private racetrackInfoService: RacetrackInfoService,
@@ -98,38 +111,33 @@ export class SecurityDetailsComponent implements OnInit, OnChanges, OnDestroy {
 	}
 
 	/**
-	 * Retrieves the security advisories
-	 * @returns the data
+	 * Fetches our advisory
+	 * @returns the observable
 	 */
-	private getSecurityAdvisory () {
-		return this.productAlertsService.getSecurityAdvisories(this.params.notice)
-		.pipe(
-			mergeMap((response: SecurityAdvisoryResponse) => {
-				const data = _.get(response, 'data', []);
-				_.set(this.data, 'notice', _.head(data));
+	private getAffectedSystemSupportCoverage () {
+		const supportCoverageParams = {
+			customerId: this.customerId,
+			advisoryId: [_.toSafeInteger(this.id)],
+			vulnerabilityStatus: ['POTVUL', 'VUL'],
+		};
+		return this.productAlertsService.getAdvisoryAffectedSystemSupportCoverage(supportCoverageParams)
+			.pipe(
+				mergeMap(response => {
+					this.affectedSystems = response || [];
+					const supportedSystems = _.filter(this.affectedSystems, 'supportCovered');
+					if (_.size(supportedSystems)) {
+						return this.fetchHardwareAssets(supportedSystems);
+					}
 
-				const vulAdvisories = _.filter(data, { vulnerabilityStatus: 'VUL' }) || [];
-				const vulIds = _.compact(_.map(vulAdvisories, 'managedNeId')) || [];
+					return of({ });
+				}),
+				catchError(err => {
+					this.logger.error('security-details.component : getAffectedSystemSupportCoverage() ' +
+						`:: Error : (${err.status}) ${err.message}`);
 
-				if (vulIds.length) {
-					_.set(this.data, ['assetIds', 'impacted'], vulIds);
-				}
-				const potVulAdvisories = _.filter(data, { vulnerabilityStatus: 'POTVUL' }) || [];
-				const potVulIds = _.compact(_.map(potVulAdvisories, 'managedNeId')) || [];
-
-				if (potVulIds.length) {
-					_.set(this.data, ['assetIds', 'potentiallyImpacted'], potVulIds);
-				}
-
-				return this.getSecurityAdvisoryBulletin();
-			}),
-			catchError(err => {
-				this.logger.error('security-details.component : getSecurityAdvisory() ' +
-					`:: Error : (${err.status}) ${err.message}`);
-
-				return of({ });
-			}),
-		);
+					return of({ });
+				}),
+			);
 	}
 
 	/**
@@ -172,13 +180,13 @@ export class SecurityDetailsComponent implements OnInit, OnChanges, OnDestroy {
 				notice: {
 					advisoryId: [_.toSafeInteger(this.id)],
 					customerId: this.customerId,
-					equipmentType: ['CHASSIS'],
 					solution: this.selectedSolutionName,
 					useCase: this.selectedTechnologyName,
 					vulnerabilityStatus: ['POTVUL', 'VUL'],
 				},
 			};
-			obsBatch.push(this.getSecurityAdvisory());
+			obsBatch.push(this.getSecurityAdvisoryBulletin());
+			obsBatch.push(this.getAffectedSystemSupportCoverage());
 
 			if (this.advisory) {
 				_.set(this.data, 'advisory', this.advisory);
@@ -242,5 +250,43 @@ export class SecurityDetailsComponent implements OnInit, OnChanges, OnDestroy {
 	public ngOnDestroy () {
 		this.destroyed$.next();
 		this.destroyed$.complete();
+	}
+
+	/**
+	 * Fetches the hardware assets from /assets api
+	 * @param supportedSystems systems for which support is covered
+	 * @returns the observable
+	 */
+	private fetchHardwareAssets (supportedSystems) {
+		_.set(this.params, 'assets', {
+			customerId: this.customerId,
+			page: 1,
+			rows: 100,
+			solution: this.selectedSolutionName,
+			useCase: this.selectedTechnologyName,
+		});
+		const serials = _.uniq(
+			_.map(supportedSystems, 'serialNumber'));
+
+		if (!serials.length) {
+			return of({ });
+		}
+		_.set(this.params.assets, 'serialNumber', serials);
+
+		return this.inventoryService.getHardwareAssets(this.params.assets)
+			.pipe(
+				map((response: HardwareAssets) => {
+					this.impactedAssets = _.get(response, 'data', []);
+					this.assets.emit({ assets: this.impactedAssets });
+
+				}),
+				catchError(err => {
+					this.logger.error('advisory-details:impacted-assets.component : fetchAssets() ' +
+						`:: Error : (${err.status}) ${err.message}`);
+
+					return of({ });
+				}),
+			);
+
 	}
 }

@@ -10,8 +10,11 @@
 		[disabled]="!impactedCount || impactedCount === 0">
 		<div class="half-margin-top">
 			<advisory-impacted-assets
-				*ngIf="data?.assetIds?.impacted"
+				*ngIf="!this.isLoading"
 				type="security"
+				vulnerability="VUL"
+				[affectedSystems]="affectedSystems"
+				[advisory]="advisory"
 				[customerId]="customerId"
 				[assetIds]="data.assetIds"
 				(impactedCount)="impactedCount = $event"
@@ -22,12 +25,17 @@
 	<cui-tab label="{{ '_PotentiallyAffected_' | i18n | uppercase }} ({{ potentiallyImpactedCount }})"
 	[disabled]="!potentiallyImpactedCount || potentiallyImpactedCount === 0">
 		<div class="half-margin-top">
-			<potentially-impacted-assets
-				*ngIf="data?.assetIds?.potentiallyImpacted"
+			<advisory-impacted-assets
+				*ngIf="!this.isLoading"
+				type="security"
+				vulnerability="POTVUL"
+				[affectedSystems]="affectedSystems"
+				[advisory]="advisory"
 				[customerId]="customerId"
 				[assetIds]="data.assetIds"
-				(potentiallyImpactedCount)="potentiallyImpactedCount = $event">
-			</potentially-impacted-assets>
+				(impactedCount)="potentiallyImpactedCount = $event"
+				(assets)="assets.emit($event)">
+			</advisory-impacted-assets>
 		</div>
 	</cui-tab>
 </cui-tabs>

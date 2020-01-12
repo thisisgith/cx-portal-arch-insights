@@ -1067,6 +1067,110 @@ class ProductAlertsService extends __BaseService {
     );
   }
 
+   /**
+   * Security advisories and their details against all assets for a customer are returned.
+   * @param params The `ProductAlertsService.GetAdvisoriesSecurityAdvisoriesParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `advisoryId`:
+   *
+   * @return successful operation
+   */
+  getAdvisoryAffectedSystemSupportCoverageResponse(params: any): __Observable<__StrictHttpResponse<any>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    (params.advisoryId || []).forEach(val => {if (val != null) __params = __params.append('advisoryId', val.toString())});
+    (params.vulnerabilityStatus || []).forEach(val => {if (val != null) __params = __params.append('vulnerabilityStatus', val.toString())});
+    let req = new HttpRequest<any>(
+      'GET',
+      this.rootUrl + `/customerportal/product-alerts/v1/security-advisories/support-coverage`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<any>;
+      })
+    );
+  }
+
+  /**
+   * Security advisories and their details against all assets for a customer are returned.
+   * @param params The `ProductAlertsService.GetAdvisoriesSecurityAdvisoriesParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `advisoryId`:
+   *
+   * @return successful operation
+   */
+  getAdvisoryAffectedSystemSupportCoverage(params): __Observable<any> {
+    return this.getAdvisoryAffectedSystemSupportCoverageResponse(params).pipe(
+      __map(_r => _r.body as any)
+    );
+  }
+
+     /**
+   * Security advisories and their details against all assets for a customer are returned.
+   * @param params The `ProductAlertsService.GetAdvisoriesSecurityAdvisoriesParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `fieldNoticeId`:
+   *
+   * @return successful operation
+   */
+  getFNAffectedSystemSupportCoverageResponse(params: any): __Observable<__StrictHttpResponse<any>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    (params.fieldNoticeId || []).forEach(val => {if (val != null) __params = __params.append('fieldNoticeId', val.toString())});
+    (params.vulnerabilityStatus || []).forEach(val => {if (val != null) __params = __params.append('vulnerabilityStatus', val.toString())});
+    let req = new HttpRequest<any>(
+      'GET',
+      this.rootUrl + `/customerportal/product-alerts/v1/field-notices/support-coverage`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<any>;
+      })
+    );
+  }
+
+  /**
+   * Security advisories and their details against all assets for a customer are returned.
+   * @param params The `ProductAlertsService.GetAdvisoriesSecurityAdvisoriesParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `fieldNoticeId`:
+   *
+   * @return successful operation
+   */
+  getFNAffectedSystemSupportCoverage(params): __Observable<any> {
+    return this.getFNAffectedSystemSupportCoverageResponse(params).pipe(
+      __map(_r => _r.body as any)
+    );
+  }
+
   /**
    * Fetches meta information about the field-notices API.
    * @param params The `ProductAlertsService.HeadFieldNoticesParams` containing the following parameters:
