@@ -54,7 +54,8 @@ export const environment = {
 	sdpServicePaths: {
 		contracts: `/api/lt/${defaults.datacenterStub}/v1/contracts`,
 		customerportal: `/api/lt/${defaults.datacenterStub}/customerportal`,
-		cxportal: `/api/${defaults.datacenterStub}cxportal`,
+		customerportalNoRegion: '/api/lt/customerportal',
+		cxportal: `/api/${defaults.datacenterStub}/cxportal`,
 		inventory: `/api/lt/${defaults.datacenterStub}/v1/inventory`,
 		partner: `/api/lt/${defaults.datacenterStub}/cxportal`,
 		cp: '/api/usa',
