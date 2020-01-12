@@ -23,8 +23,8 @@
 <cui-spinner *ngIf="status.isLoading"></cui-spinner>
 
 <ng-template #details let-recommendation="recommendation">	
-	<visual-filter-bar *ngIf="((params?.viewType === 'bug' && recommendation?.data?.bugs?.length > 0) || ( params?.viewType === 'psirt' && recommendation?.data?.psirts?.length > 0 ))" [filters]="recommendation.filters"></visual-filter-bar>
-	<ng-container *ngIf="recommendation.filtered && ((params?.viewType === 'bug' && recommendation?.data?.bugs?.length > 0) || ( params?.viewType === 'psirt' && recommendation?.data?.psirts?.length > 0 ))">
+	<visual-filter-bar *ngIf="((params?.viewType === 'bug' && recommendation?.actualData?.bugs?.length > 0) || ( params?.viewType === 'psirt' && recommendation?.actualData?.psirts?.length > 0 ))" [filters]="recommendation.filters"></visual-filter-bar>
+	<ng-container *ngIf="recommendation.filtered && ((params?.viewType === 'bug' && recommendation?.actualData?.bugs?.length > 0) || ( params?.viewType === 'psirt' && recommendation?.actualData?.psirts?.length > 0 ))">
 		<div class="divider half-margin-top qtr-margin-bottom"></div>
 		<ng-container *ngTemplateOutlet="filterBar;context:{recommendation:recommendation}"></ng-container>
 	</ng-container>
@@ -75,7 +75,7 @@
 
 <ng-template #bugsTableTemp let-recommendation="recommendation">
 	<div class="base-margin-top">
-		<div *ngIf="(recommendation?.data?.bugs?.length > 0) ||  (recommendation?.params?.search?.length > 0)" class="qtr-margin-top row">
+		<div *ngIf="(recommendation?.actualData?.bugs?.length > 0) ||  (recommendation?.params?.search?.length > 0)" class="qtr-margin-top row">
 			<div class="col-md-9 flex flex-fill">
 				<div class="flex-center-vertical">
 					<span [innerText]="'_Bugs_' | i18n" class="text-large"></span>
@@ -119,7 +119,7 @@
 
 <ng-template #psirtTableTemp let-recommendation="recommendation">
 	<div class="base-margin-top">
-		<div *ngIf="(recommendation?.data?.psirts?.length > 0) ||  (recommendation?.params?.search?.length > 0)" class="qtr-margin-top row">
+		<div *ngIf="(recommendation?.actualData?.psirts?.length > 0) ||  (recommendation?.params?.search?.length > 0)" class="qtr-margin-top row">
 			<div class="col-md-9 flex flex-fill">
 				<div class="flex-center-vertical">
 					<span [innerText]="'_SecurityAdvisories_' | i18n" class="text-large"></span>
