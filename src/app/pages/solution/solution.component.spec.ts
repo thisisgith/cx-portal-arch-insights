@@ -307,15 +307,15 @@ describe('SolutionComponent', () => {
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
 
-		spyOn(productAlertsService, 'headAdvisoriesFieldNoticesResponse')
+		spyOn(productAlertsService, 'getAdvisoriesFieldNotices')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
 
-		spyOn(productAlertsService, 'headAdvisoriesSecurityAdvisoriesResponse')
+		spyOn(productAlertsService, 'getAdvisoriesSecurityAdvisories')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
 
-		spyOn(diagnosticsService, 'headCriticalBugsResponse')
+		spyOn(diagnosticsService, 'getCriticalBugs')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
 
