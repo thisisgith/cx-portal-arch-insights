@@ -1264,6 +1264,7 @@ export class LifecycleComponent implements OnDestroy {
 		// refresh the racetrack info to get those new changes
 		this.racetrackService.getRacetrack(params)
 		.subscribe((results: RacetrackResponse) => {
+			this.racetrackInfoService.sendRacetrack(results);
 			const responseSolution: RacetrackSolution = _.find(
 				_.get(results, 'solutions', []), (solution: RacetrackSolution) =>
 				solution.name === this.selectedSolution.name);
