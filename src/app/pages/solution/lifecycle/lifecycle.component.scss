@@ -462,6 +462,7 @@ $popover-box-shadow: 0 2px 4px 0 rgba(252, 220, 220, 0.14), 0 3px 4px 0 rgba(0, 
 	&--moreATXList,
 	&--moreACCList,
 	&--recommendedATX,
+	&--recommendedACC,
 	&--viewAllTable {
 		padding: 22px 0 22px 28px;
 
@@ -482,6 +483,10 @@ $popover-box-shadow: 0 2px 4px 0 rgba(252, 220, 220, 0.14), 0 3px 4px 0 rgba(0, 
 
 		.acc-popover__description {
 			margin-bottom: 18px;
+		}
+
+		.acc-popover__datasheet {
+			margin: 1rem 0;
 		}
 
 		.atx-popover__footer {

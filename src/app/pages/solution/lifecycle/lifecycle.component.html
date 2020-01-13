@@ -312,13 +312,20 @@
 <ng-template #accHover let-autoid="autoid" let-title="title" let-description="description" let-item="item">
 	<div class="panel hover-panel hover-panel--{{ autoid }}" attr.data-auto-id="{{ autoid }}-HoverModal">
 		<div class="popover-tail"></div>
-		<div class="flex flex-column max-height">
+		<div class="flex flex-column max-height flex-align-start">
 			<div class="icon-bookmark ribbon--hover"
 				(click)="updateBookmark(item, 'ACC')"
 				[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__white'"
 				attr.data-auto-id="{{ autoid }}-HoverModal-BookmarkRibbon">
 			</div>
 			<div class="line-clamp acc-popover__description no-margin" [innerText]="description" attr.data-auto-id="{{ autoid }}-HoverModal-Description"></div>
+			<a class="acc-popover__datasheet"
+				href="{{ item.datasheetURL }}" 
+				(click)="crossLaunch($event, item.datasheetURL)"
+				*ngIf="item.datasheetURL"
+				attr.data-auto-id="{{ autoid }}-HoverModal-Datasheet"
+				[innerText]="'_ViewDatasheet_' | i18n"
+			></a>
 			<div *ngIf= "item.status.toLowerCase()==='recommended'">
 				<ng-container *ngTemplateOutlet="!notCurrentPitstop ? enabledAccButton : disabledAccButton; context: {
 					accId: item.accId,
