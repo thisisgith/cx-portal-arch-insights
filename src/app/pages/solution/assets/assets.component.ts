@@ -768,7 +768,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					'fluid',
 				),
 			} : undefined,
-			(isScanCapable && view.key === 'system')
+			(isScanCapable && view.key === 'system' && Number(item.data.cxLevel) >= 1)
 			? {
 				label: I18n.get('_RunDiagnosticScan_'),
 				onClick: () => this.checkScan(item),
