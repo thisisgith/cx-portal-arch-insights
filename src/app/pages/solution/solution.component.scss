@@ -410,6 +410,11 @@ $cx-font-size-24: 2.4rem;
 	box-shadow: 0 2px 5px #dbdbdb;
 }
 
+.period::after {
+	content: ".";
+	display: block;
+}
+
 /* CiscoUI table styling override start */
 // Chose to use specificity instead of importants
 :host ::ng-deep .table {

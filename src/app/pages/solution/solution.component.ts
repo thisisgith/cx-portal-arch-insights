@@ -42,6 +42,7 @@ import { DetailsPanelStackService, UtilsService, RacetrackInfoService, CaseDetai
 import { SmartAccount } from '@interfaces';
 import { UserResolve } from '@utilities';
 import { ACTIVE_TECHNOLOGY_KEY } from '@constants';
+import { ContactSupportComponent } from '../../components/contact-support/contact-support.component';
 
 /**
  * Interface representing a facet
@@ -100,6 +101,7 @@ export class SolutionComponent implements OnInit, OnDestroy, AfterViewInit {
 	private destroy$ = new Subject();
 	public cxLevel: number;
 	public alert: any = { };
+	public showErrorMessage = false;
 
 	@ViewChild('facetNavigationWrapper', { static: true }) private facetNavigationWrapperRef: ElementRef;
 	@ViewChild('advisoriesFacet', { static: true }) public advisoriesTemplate: TemplateRef<{ }>;
@@ -670,6 +672,13 @@ export class SolutionComponent implements OnInit, OnDestroy, AfterViewInit {
 	}
 
 	/**
+	 * Open contact support modal small
+	 */
+	public openPortalSupport () {
+		this.cuiModalService.showComponent(ContactSupportComponent, { }, 'small');
+	}
+
+	/**
 	 * Initialize the Quick Tour
 	 */
 	private initializeQuickTour () {
@@ -828,9 +837,9 @@ export class SolutionComponent implements OnInit, OnDestroy, AfterViewInit {
 		this.racetrackInfoService.getPitStopApiFailure()
 		.pipe(
 			map(() => {
-				this.alert.show(I18n.get('_PitStopApiFailureMessage_'), 'danger');
 				const advisoryFacet = _.find(this.facets, { key: 'advisories' });
 				advisoryFacet.loading = false;
+				this.showErrorMessage = true;
 			}),
 			takeUntil(this.destroy$),
 		)

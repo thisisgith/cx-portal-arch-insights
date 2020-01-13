@@ -758,7 +758,6 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 */
 	public getRowActions (item: Item, view: View) {
 		const isScanCapable = _.get(item, ['data', 'isScanCapable'], false);
-
 		return _.filter([
 			_.get(item, ['data', 'supportCovered'], false) ? {
 				label: I18n.get('_OpenSupportCase_'),
