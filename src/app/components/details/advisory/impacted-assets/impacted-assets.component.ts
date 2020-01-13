@@ -267,8 +267,12 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 				];
 				// Concat the default columns with the extra columns
 				_.set(affectedOptions, 'columns', securityAffectedTableColumns);
+				const advisoryId = _.get(this.advisory, 'id');
+				if (!this.id) {
+					this.id = advisoryId;
+				}
 				this.params.notice = {
-					advisoryId: [_.toSafeInteger(_.get(this.advisory, 'id'))],
+					advisoryId: [_.toSafeInteger(this.id)],
 					customerId: this.customerId,
 					solution: this.selectedSolutionName,
 					useCase: this.selectedTechnologyName,
@@ -309,9 +313,13 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 					},
 				];
 				_.set(affectedOptions, 'columns', fieldAffectedTableColumns);
+				const fieldNoticeId = _.get(this.advisory, 'id');
+				if (!this.id) {
+					this.id = fieldNoticeId;
+				}
 				this.params.notice = {
 					customerId: this.customerId,
-					fieldNoticeId: [_.toSafeInteger(_.get(this.advisory, 'id'))],
+					fieldNoticeId: [_.toSafeInteger(this.id)],
 					solution: this.selectedSolutionName,
 					useCase: this.selectedTechnologyName,
 					vulnerabilityStatus: [this.vulnerability],
