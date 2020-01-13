@@ -87,7 +87,7 @@ export const environment = {
 		cxportal: `/api/${defaults.datacenterStub}/cxportal`,
 		inventory: `/api/${defaults.datacenterStub}/v1/inventory`,
 		partner: `/api/${defaults.datacenterStub}/cxportal`,
-		cp: '/api/usa',
+		cp: `/api/${defaults.datacenterStub}`,
 	},
 	// ClientSSOInterceptor: No auth token for the typeahead url
 	typeaheadServiceOrigin: 'https://xresps.cloudapps.cisco.com',

@@ -101,6 +101,7 @@ export const defaults = {
 		inventory: '/api/v1/inventory',
 		partner: '/api/cxportal',
 		cp: '/api/usa',
+		emea: '/api/emea',
 	},
 	supportEmailLink: 'mailto:cx-portal-support-nonprod@cisco.com',
 	typeaheadServiceOrigin: 'https://xresps-stage.cloudapps.cisco.com',
