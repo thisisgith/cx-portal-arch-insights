@@ -28,6 +28,9 @@ import {
 	ProductAlertsService,
 	InsightsCrashesService,
 	DiagnosticsService,
+	SecurityAdvisoriesResponse,
+	CriticalBugsResponse,
+	FieldNoticeAdvisoryResponse,
 } from '@sdp-api';
 import { CaseService } from '@cui-x/services';
 import { LogService } from '@cisco-ngx/cui-services';
@@ -36,7 +39,6 @@ import { CuiModalService } from '@cisco-ngx/cui-components';
 import { catchError, map, takeUntil } from 'rxjs/operators';
 import { Step } from '../../../../src/app/components/quick-tour/quick-tour.component';
 import { DetailsPanelStackService, UtilsService, RacetrackInfoService, CaseDetailsService } from '@services';
-import { HttpResponse } from '@angular/common/http';
 import { SmartAccount } from '@interfaces';
 import { UserResolve } from '@utilities';
 import { ACTIVE_TECHNOLOGY_KEY } from '@constants';
@@ -476,14 +478,16 @@ export class SolutionComponent implements OnInit, OnDestroy, AfterViewInit {
 		let fieldTotal = 0;
 
 		return forkJoin([
-			this.productAlertsService.headAdvisoriesFieldNoticesResponse({
+			this.productAlertsService.getAdvisoriesFieldNotices({
 				customerId: this.customerId,
 				solution: this.selectedSolutionName,
 				useCase: this.selectedTechnologyName,
+				rows: 1,
+				page: 1,
 			})
 			.pipe(
-				map((response: HttpResponse<null>) => {
-					fieldTotal = _.toNumber(_.invoke(response, 'headers.get', 'X-API-RESULT-COUNT')) || 0;
+				map((response: FieldNoticeAdvisoryResponse) => {
+					fieldTotal = _.toNumber(_.get(response, ['Pagination', 'total'], 0)) || 0;
 				}),
 				catchError(err => {
 					this.logger.error('solution.component : fetchAdvisoryCounts():field ' +
@@ -492,14 +496,16 @@ export class SolutionComponent implements OnInit, OnDestroy, AfterViewInit {
 					return of({ });
 				}),
 			),
-			this.productAlertsService.headAdvisoriesSecurityAdvisoriesResponse({
+			this.productAlertsService.getAdvisoriesSecurityAdvisories({
 				customerId: this.customerId,
 				solution: this.selectedSolutionName,
 				useCase: this.selectedTechnologyName,
+				page: 1,
+				rows: 1,
 			})
 			.pipe(
-				map((response: HttpResponse<null>) => {
-					advisoryTotal = _.toNumber(_.invoke(response, 'headers.get', 'X-API-RESULT-COUNT')) || 0;
+				map((response: SecurityAdvisoriesResponse) => {
+					advisoryTotal = _.toNumber(_.get(response, ['Pagination', 'total'], 0)) || 0;
 				}),
 				catchError(err => {
 					this.logger.error('solution.component : fetchAdvisoryCounts():security ' +
@@ -508,14 +514,16 @@ export class SolutionComponent implements OnInit, OnDestroy, AfterViewInit {
 					return of({ });
 				}),
 			),
-			this.diagnosticsService.headCriticalBugsResponse({
+			this.diagnosticsService.getCriticalBugs({
 				customerId: this.customerId,
 				solution: this.selectedSolutionName,
 				useCase: this.selectedTechnologyName,
+				rows: 1,
+				page: 1,
 			})
 			.pipe(
-				map((response: HttpResponse<null>) => {
-					bugsTotal = _.toNumber(_.invoke(response, 'headers.get', 'X-API-RESULT-COUNT')) || 0;
+				map((response: CriticalBugsResponse) => {
+					bugsTotal = _.toNumber(_.get(response, ['Pagination', 'total'], 0)) || 0;
 				}),
 				catchError(err => {
 					this.logger.error('solution.component : fetchAdvisoryCounts():bugs ' +
