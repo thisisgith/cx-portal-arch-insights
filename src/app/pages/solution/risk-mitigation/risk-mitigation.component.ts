@@ -90,7 +90,7 @@ export class RiskMitigationComponent implements AfterViewInit {
 					this.loadData();
 				}
 			});
-
+		this.buildFilters();
 	}
 
 	/**
