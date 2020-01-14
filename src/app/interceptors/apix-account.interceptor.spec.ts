@@ -73,6 +73,7 @@ describe('APIxAccountInterceptor', () => {
 								name: SOLUTION_VALUE,
 							},
 						]),
+						getPitStopApiFailure: () => from([]),
 					},
 				},
 			],

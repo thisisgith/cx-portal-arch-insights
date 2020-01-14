@@ -35,7 +35,7 @@
 	<a *ngIf="celldata?.serialNumber" data-auto-id="celldata?.deviceName || celldata?.hostname || celldata?.hostName"
 		[innerText]="(celldata?.deviceName || celldata?.hostname || celldata?.hostName) | truncate:false:20"
 		[title]="celldata?.deviceName || celldata?.hostname || celldata?.hostName" 
-		(click)="openSystemDetails(celldata.serialNumber)">
+		(click)="openSystemDetails(celldata)">
 	</a>
 	<span *ngIf="!celldata?.serialNumber"
 		[title]="celldata?.deviceName || celldata?.hostname || celldata?.hostName|| ('_NA_' | i18n)"

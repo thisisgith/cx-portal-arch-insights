@@ -41,7 +41,13 @@ export class ApixAccountInterceptor implements HttpInterceptor {
 		private racetrackInfoService: RacetrackInfoService,
 		private logger: LogService,
 	) {
-
+		this.racetrackInfoService.getPitStopApiFailure()
+		.pipe(
+			map(() => {
+				this.pathsToIgnore.push(new RegExp('/(customerportal|cxportal)/email/v1/send$'));
+			}),
+		)
+		.subscribe();
 	}
 
 	/**

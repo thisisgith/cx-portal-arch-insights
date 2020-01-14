@@ -528,12 +528,13 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 		}
 	}
 
-	public openSystemDetails (serialNumber: string) {
-		const queryParams = { serialNumber, select: true, assetsViewOpen: false };
+	public openSystemDetails (cellData) {
+		const queryParams = { serialNumber: cellData.serialNumber, select: true, assetsViewOpen: false };
 		if (window.location.pathname.indexOf('assets/system') > -1) {
 			queryParams.assetsViewOpen = true;
 		}
-		this.router.navigate(['/solution/assets/system'], {
+		const path = cellData.productType === 'Modules' ? '/solution/assets/hardware' : '/solution/assets/system';
+		this.router.navigate([path], {
 			queryParams,
 		});
 	}
