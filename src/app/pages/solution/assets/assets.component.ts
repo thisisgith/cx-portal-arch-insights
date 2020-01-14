@@ -1125,7 +1125,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		const systemProductTypeFilter =
 			_.find(systemView.filters, { key: 'productType' });
 
-		return this.inventoryService.getHardwareProductTypeCount({
+		return this.inventoryService.getSystemProductTypeCount({
 			customerId: this.customerId,
 			solution: this.selectedSolutionName,
 			useCase: this.selectedTechnologyName,

@@ -1,7 +1,7 @@
 import { ProductTypeResponse } from "@sdp-api";
 
 /** Base of URL for SDP API */
-const api = '/api/customerportal/inventory/v1/assets/system/productType/count';
+const api = '/api/customerportal/inventory/v1/assets/hardware/productType/count';
 
 /** Default Customer ID */
 const customerId = '2431199_0';
@@ -26,13 +26,17 @@ const mockHardwareProductCount: ProductTypeResponse =
 			count: 9,
 			ProductType: 'Wireless',
 		},
+		{
+			count: 18,
+			ProductType: 'Cables',
+		}
 	];
 	
 	
 
 
 /** The scenarios */
-export const ProductTypeScenarios = [
+export const HardwareProductTypeScenarios = [
 	{
 		scenarios: {
 			GET: [

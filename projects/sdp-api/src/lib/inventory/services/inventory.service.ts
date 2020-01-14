@@ -1625,7 +1625,32 @@ class InventoryService extends __BaseService {
     
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/customerportal/inventory/v1/assets/system/products/count`,
+      this.rootUrl + `/customerportal/inventory/v1/assets/hardware/productType/count`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<ProductTypeResponse>;
+      })
+    );
+  }
+
+  getSystemProductTypeCountResponse(params: InventoryService.GetProductTypeCountParams): __Observable<__StrictHttpResponse<ProductTypeResponse>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    
+    let req = new HttpRequest<any>(
+      'GET',
+      this.rootUrl + `/customerportal/inventory/v1/assets/system/productType/count`,
       __body,
       {
         headers: __headers,
@@ -1667,8 +1692,10 @@ class InventoryService extends __BaseService {
     );
   }
 
-  getSystemProductTypeCount() {
-
+  getSystemProductTypeCount(params: InventoryService.GetProductTypeCountParams): __Observable<ProductTypeResponse> {
+    return this.getSystemProductTypeCountResponse(params).pipe(
+      __map(_r => _r.body as ProductTypeResponse)
+    );
   }
 
 
