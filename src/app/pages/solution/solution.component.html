@@ -168,8 +168,15 @@
 				</div>
 			</div>
 		</div>
-		<div class="base-padding-bottom">
-			<cui-alert [options]="alert"></cui-alert>
+		<div class="base-padding-bottom" *ngIf="showErrorMessage">
+			
+			<div class="alert alert--warning">
+				<div class="alert__icon icon-warning-outline"></div>
+				<div class="alert__message">
+					<span [innerText]="'_PitStopApiFailureMessage_' | i18n"></span>
+					<button class="link links__btn text-blue period" (click)="openPortalSupport()" data-auto-id="portalSupport" [innerText]="'_ClickHere_' | i18n"></button>
+				</div>
+			</div>
 		</div>
 	</div>
 </ng-template>
