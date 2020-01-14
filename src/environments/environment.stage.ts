@@ -58,6 +58,8 @@ export const environment = {
 		inventory: `/api/${defaults.datacenterStub}/v1/inventory`,
 		partner: `/api/${defaults.datacenterStub}/cxportal`,
 		cp: `/api/${defaults.datacenterStub}`,
+		usa: '/api/usa',
+		emea: '/api/emea',
 	},
 	learningLink: 'https://qa.cte.systems/cx/#/',
 };

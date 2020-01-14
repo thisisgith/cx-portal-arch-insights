@@ -100,7 +100,7 @@ export const defaults = {
 		cxportal: '/api/cxportal',
 		inventory: '/api/v1/inventory',
 		partner: '/api/cxportal',
-		cp: '/api/usa',
+		usa: '/api/usa',
 		emea: '/api/emea',
 	},
 	supportEmailLink: 'mailto:cx-portal-support-nonprod@cisco.com',
