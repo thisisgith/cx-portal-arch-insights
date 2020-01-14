@@ -1,0 +1,9 @@
+@import '~src/mixins.scss';
+
+svg#racetrack-composite *:focus {
+	outline-width: 1.2rem !important;
+
+	&.stage {
+		outline-width: 2rem !important;
+	}
+}

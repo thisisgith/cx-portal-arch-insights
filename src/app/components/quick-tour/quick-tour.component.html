@@ -7,6 +7,7 @@
 
 <ng-template #stepTemplate let-step="step">
 	<div
+		aria-live="assertive"
 		*ngIf="step.data?.active"
 		class="step-container"
 		[ngStyle]="{
@@ -36,15 +37,17 @@
 						attr.data-auto-id="Dot-{{ i }}-Step-{{ step.stepIndex }}"
 						[ngClass]="{ 'current-dot': i === currentIndex }"
 						class="dot"
+						attr.aria-label="{{ '_StepX_' | i18n:step.stepIndex }}"
 						>
 					</span>
 				</ng-container>
 			</div>
-			<div
+			<button
 				attr.data-auto-id="CloseButton-Step-{{ step.stepIndex }}"
-				class="icon-close"
+				class="icon-button-close"
 				(click)="open = false"
-			></div>
+				attr.aria-label="{{ '_Close_' | i18n }}"
+			></button>
 		</div>
 		<div class="step-content qtr-margin">
 			<div

@@ -792,6 +792,8 @@
 	"_MonthlyOnDate_": "Monthly on {0}",
 	"_MoreDetails_": "The more details, the better",
 	"_Morning_": "Morning",
+	"_MoveRacecarBackwards_": "Move to the previous step",
+	"_MoveRacecarForwards_": "Move to the next step",
 	"_Multiple_": "Multiple",
 	"_MustBeNumChars_": "Must be at least {0} characters",
 	"_MyEnvironment_": "My Environment",
