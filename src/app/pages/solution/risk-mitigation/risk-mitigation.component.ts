@@ -91,13 +91,13 @@ export class RiskMitigationComponent implements AfterViewInit {
 				}
 			});
 
-		this.buildFilters();
 	}
 
 	/**
 	 * Load data of risk details
 	 */
 	public loadData () {
+		this.buildFilters();
 		forkJoin(
 			this.getTotalAssetCount(),
 			this.getAllCrashesData(),
