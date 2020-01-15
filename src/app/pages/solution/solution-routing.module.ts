@@ -10,16 +10,14 @@ const routes: Routes = [
 	{
 		children: [
 			{
-				loadChildren: () => import('./lifecycle/lifecycle.module')
-					.then(m => m.LifecycleModule),
+				loadChildren: './lifecycle/lifecycle.module#LifecycleModule',
 				path: 'lifecycle',
 				resolve: {
 					user: UserResolve,
 				},
 			},
 			{
-				loadChildren: () => import('./assets/assets.module')
-					.then(m => m.AssetsModule),
+				loadChildren: './assets/assets.module#AssetsModule',
 				path: 'assets/:view',
 				resolve: {
 					user: UserResolve,
@@ -31,8 +29,7 @@ const routes: Routes = [
 				redirectTo: 'assets/system',
 			},
 			{
-				loadChildren: () => import('./security/security.module')
-					.then(m => m.SecurityModule),
+				loadChildren: './security/security.module#SecurityModule',
 				path: 'security',
 				resolve: {
 					user: UserResolve,
@@ -44,24 +41,21 @@ const routes: Routes = [
 				redirectTo: 'advisories/security',
 			},
 			{
-				loadChildren: () => import('./advisories/advisories.module')
-					.then(m => m.AdvisoriesModule),
+				loadChildren: './advisories/advisories.module#AdvisoriesModule',
 				path: 'advisories/:advisory',
 				resolve: {
 					user: UserResolve,
 				},
 			},
 			{
-				loadChildren: () => import('./resolution/resolution.module')
-					.then(m => m.ResolutionModule),
+				loadChildren: './resolution/resolution.module#ResolutionModule',
 				path: 'resolution',
 				resolve: {
 					user: UserResolve,
 				},
 			},
 			{
-				loadChildren: () => import('./insights/insights.module')
-					.then(m => m.InsightsModule),
+				loadChildren: './insights/insights.module#InsightsModule',
 				path: 'insights',
 				resolve: {
 					user: UserResolve,
