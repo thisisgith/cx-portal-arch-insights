@@ -45,7 +45,7 @@ export class HeaderComponent implements AfterViewChecked, OnInit, OnDestroy {
 	public team: any[];
 	public webexUrl = environment.webexUrl;
 	public webexTeamsUrl = environment.webexTeamsUrl;
-	public settingsWhitelist = [UserRoles.ADMIN];
+	public settingsWhitelist = [UserRoles.SA_ADMIN];
 
 	// TODO: Quick Help is not in the August release
 	// public quickHelpLinks = [{

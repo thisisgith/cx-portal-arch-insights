@@ -9,7 +9,7 @@ import { RoleListsAndLevel, CheckRoleLevelReturn } from '../../interfaces/entitl
 
 const testUser = {
 	cxLevel: 0,
-	role: UserRoles.USER,
+	role: UserRoles.SA_FULLUSER,
 };
 
 const template =  `
@@ -25,7 +25,7 @@ const template =  `
 })
 class TestComponentAuthorized {
 	public rolesAndLevel: RoleListsAndLevel = {
-		whitelistRoles: UserRoles.USER,
+		whitelistRoles: UserRoles.SA_FULLUSER,
 		cxLevel: 0,
 	};
 }
@@ -38,7 +38,7 @@ class TestComponentAuthorized {
 })
 class TestComponentUnAuthorizedWhitelist {
 	public rolesAndLevel: RoleListsAndLevel = {
-		whitelistRoles: UserRoles.ADMIN,
+		whitelistRoles: UserRoles.SA_ADMIN,
 		cxLevel: 2,
 	};
 }
@@ -48,7 +48,7 @@ class TestComponentUnAuthorizedWhitelist {
 })
 class TestComponentUnAuthorizedBlacklist {
 	public rolesAndLevel: RoleListsAndLevel = {
-		blacklistRoles: UserRoles.USER,
+		blacklistRoles: UserRoles.SA_FULLUSER,
 		cxLevel: 0,
 	};
 }
@@ -58,7 +58,7 @@ class TestComponentUnAuthorizedBlacklist {
 })
 class TestComponentAuthorizedBlacklist {
 	public rolesAndLevel: RoleListsAndLevel = {
-		blacklistRoles: UserRoles.ADMIN,
+		blacklistRoles: UserRoles.SA_ADMIN,
 		cxLevel: 0,
 	};
 }
@@ -71,7 +71,7 @@ class TestComponentAuthorizedBlacklist {
 })
 class TestComponentUnAuthorizedLevel {
 	public rolesAndLevel: RoleListsAndLevel = {
-		whitelistRoles: UserRoles.USER,
+		whitelistRoles: UserRoles.SA_FULLUSER,
 		cxLevel: 4,
 	};
 }
