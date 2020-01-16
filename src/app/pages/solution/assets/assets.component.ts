@@ -866,7 +866,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 
 				view.paginationCount = `${first}-${last}`;
 
-				if (this.selectOnLoad && this.selectedView.key === 'system') {
+				if (this.selectOnLoad) {
 					this.onSelectionChanged(_.map(this.selectedView.data, item => item));
 					if (this.selectedView.selectedAssets.length === 1) {
 						this.selectedAsset = this.selectedView.selectedAssets[0];
