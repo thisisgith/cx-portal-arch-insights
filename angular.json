@@ -330,11 +330,7 @@
 						},
 						"assets": [
 							"src/favicon.png",
-							{
-                "glob": "**/*",
-                "input": "src/assets",
-                "output": "/"
-              }
+							"src/assets"
 						],
 						"es5BrowserSupport": true,
 						"index": "src/index.html",

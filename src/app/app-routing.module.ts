@@ -11,7 +11,8 @@ import { UserRoles } from '@constants';
 const routes: Routes = [
 	{
 		canActivate: [ClientSSOGuard, EntitlementRouteAuthService],
-		loadChildren: './pages/admin/admin.module#AdminModule',
+		loadChildren: () => import('./pages/admin/admin.module')
+			.then(m => m.AdminModule),
 		path: 'admin',
 		resolve: {
 			user: UserResolve,
@@ -24,13 +25,15 @@ const routes: Routes = [
 		},
 	},
 	{
-		loadChildren: './pages/cases/cases.module#CasesModule',
+		loadChildren: () => import('./pages/cases/cases.module')
+			.then(m => m.CasesModule),
 		path: 'cases',
 		pathMatch: 'full',
 	},
 	{
 		canActivate: [ClientSSOGuard],
-		loadChildren: './pages/setup-ie/setup-ie.module#SetupIeModule',
+		loadChildren: () => import('./pages/setup-ie/setup-ie.module')
+		 	.then(m => m.SetupIeModule),
 		path: 'setup-ie',
 		resolve: {
 			user: UserResolve,
@@ -38,7 +41,8 @@ const routes: Routes = [
 	},
 	{
 		canActivate: [ClientSSOGuard],
-		loadChildren: './pages/solution/solution.module#SolutionModule',
+		loadChildren: () => import('./pages/solution/solution.module')
+			.then(m => m.SolutionModule),
 		path: 'solution',
 		resolve: {
 			user: UserResolve,
