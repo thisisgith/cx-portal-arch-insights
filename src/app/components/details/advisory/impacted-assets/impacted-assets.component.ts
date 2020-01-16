@@ -533,7 +533,7 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 		if (window.location.pathname.indexOf('assets/system') > -1) {
 			queryParams.assetsViewOpen = true;
 		}
-		const path = cellData.productType === 'Modules' ? '/solution/assets/hardware' : '/solution/assets/system';
+		const path = this.type === 'field' ? '/solution/assets/hardware' : '/solution/assets/system';
 		this.router.navigate([path], {
 			queryParams,
 		});
