@@ -1,4 +1,4 @@
-import { ProductTypeResponse } from "@sdp-api";
+import { ProductTypeResponse } from '@sdp-api';
 
 /** Base of URL for SDP API */
 const api = '/api/customerportal/inventory/v1/assets/hardware/productType/count';
@@ -7,33 +7,28 @@ const api = '/api/customerportal/inventory/v1/assets/hardware/productType/count'
 const customerId = '2431199_0';
 
 /** The mock response for role counts */
-const mockHardwareProductCount: ProductTypeResponse = 
-	
-	[
-		{
-			count: 10,
-			ProductType: 'Routers',
-		},
-		{
-			count: 25,
-			ProductType: 'Switches',
-		},
-		{
-			count: 13,
-			ProductType: 'Modules',
-		},
-		{
-			count: 9,
-			ProductType: 'Wireless',
-		},
-		{
-			count: 18,
-			ProductType: 'Cables',
-		}
-	];
-	
-	
-
+const mockHardwareProductCount: ProductTypeResponse = [
+	{
+		count: 10,
+		ProductType: 'Routers',
+	},
+	{
+		count: 25,
+		ProductType: 'Switches',
+	},
+	{
+		count: 13,
+		ProductType: 'Modules',
+	},
+	{
+		count: 9,
+		ProductType: 'Wireless',
+	},
+	{
+		count: 18,
+		ProductType: 'Cables',
+	},
+];
 
 /** The scenarios */
 export const HardwareProductTypeScenarios = [

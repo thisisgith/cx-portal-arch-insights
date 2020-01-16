@@ -30,6 +30,9 @@ import {
 	HardwareEOLCountScenarios,
 	RoleScenarios,
 	VulnerabilityScenarios,
+	ProductTypeScenarios,
+	HardwareProductTypeScenarios,
+
 } from '@mock';
 import { RacetrackInfoService } from '@services';
 
@@ -45,7 +48,7 @@ function getActiveBody (mock: Mock, type: string = 'GET') {
 	return active.response.body;
 }
 
-describe('AssetsComponent', () => {
+fdescribe('AssetsComponent', () => {
 	let component: AssetsComponent;
 	let fixture: ComponentFixture<AssetsComponent>;
 
@@ -114,11 +117,16 @@ describe('AssetsComponent', () => {
 		spyOn(productAlertsService, 'getHardwareEolTopCount')
 			.and
 			.returnValue(of(HardwareEOLCountScenarios[0].scenarios.GET[0].response.body));
-
+		spyOn(inventoryService, 'getHardwareProductTypeCount')
+			.and
+			.returnValue(of(HardwareProductTypeScenarios[0].scenarios.GET[0].response.body));
+		spyOn(inventoryService, 'getSystemProductTypeCount')
+			.and
+			.returnValue(of(ProductTypeScenarios[0].scenarios.GET[0].response.body));
 		sendRacetrack();
 	};
 
-	describe('Without Query Params', () => {
+	fdescribe('Without Query Params', () => {
 		configureTestSuite(() => {
 			TestBed.configureTestingModule({
 				imports: [
@@ -169,7 +177,7 @@ describe('AssetsComponent', () => {
 				.toBeTruthy();
 		});
 
-		it('should set null values on request errors', fakeAsync(() => {
+		it('should set null values on request errors', () => {
 			const error = {
 				status: 404,
 				statusText: 'Resource not found',
@@ -192,6 +200,12 @@ describe('AssetsComponent', () => {
 			spyOn(productAlertsService, 'getVulnerabilityCounts')
 				.and
 				.returnValue(throwError(new HttpErrorResponse(error)));
+			spyOn(productAlertsService, 'getSystemVulnerabilityCounts')
+				.and
+				.returnValue(throwError(new HttpErrorResponse(error)));
+			spyOn(productAlertsService, 'getHardwareVulnerabilityCounts')
+				.and
+				.returnValue(throwError(new HttpErrorResponse(error)));
 			spyOn(contractsService, 'getContractCounts')
 				.and
 				.returnValue(throwError(new HttpErrorResponse(error)));
@@ -201,11 +215,17 @@ describe('AssetsComponent', () => {
 			spyOn(productAlertsService, 'getHardwareEolTopCount')
 				.and
 				.returnValue(throwError(new HttpErrorResponse(error)));
-
+			spyOn(inventoryService, 'getHardwareProductTypeCount')
+				.and
+				.returnValue(throwError(new HttpErrorResponse(error)));
+			spyOn(inventoryService, 'getSystemProductTypeCount')
+				.and
+				.returnValue(throwError(new HttpErrorResponse(error)));
 			fixture.detectChanges();
-			tick(1000);
+			component.ngOnInit();
 			fixture.detectChanges();
-
+			sendRacetrack();
+			fixture.detectChanges();
 			const selectedView = component.selectedView;
 			expect(_.get(selectedView, 'data', []).length)
 				.toBe(0);
@@ -213,10 +233,9 @@ describe('AssetsComponent', () => {
 				.toBe(0);
 			expect(_.find(selectedView.filters, { key: 'advisories' }).seriesData.length)
 				.toBe(0);
-
-			fixture.destroy();
-			tick();
-		}));
+			expect(_.find(selectedView.filters, { key: 'productType' }).seriesData.length)
+				.toBe(0);
+		});
 
 		it('should switch active filters', fakeAsync(() => {
 			buildSpies();
@@ -232,6 +251,25 @@ describe('AssetsComponent', () => {
 
 			expect(_.filter(component.selectedView.filters, 'selected'))
 				.toContain(roleFilter);
+
+			fixture.destroy();
+			tick();
+		}));
+
+		it('should switch active filters', fakeAsync(() => {
+			buildSpies();
+			fixture.detectChanges();
+			tick(1000);
+			fixture.detectChanges();
+
+			const hardwareProductTypeFilter = _.find(component.selectedView.filters, { key: 'productType' });
+
+			component.onSubfilterSelect('Modules', hardwareProductTypeFilter);
+
+			fixture.detectChanges();
+
+			expect(_.filter(component.selectedView.filters, 'selected'))
+				.toContain(hardwareProductTypeFilter);
 
 			fixture.destroy();
 			tick();
@@ -318,7 +356,6 @@ describe('AssetsComponent', () => {
 			fixture.destroy();
 			tick();
 		}));
-
 		it('should select a role subfilter', fakeAsync(() => {
 			buildSpies();
 			fixture.detectChanges();
@@ -334,6 +371,29 @@ describe('AssetsComponent', () => {
 				.toContain(roleFilter);
 
 			const subfilter = _.find(roleFilter.seriesData, { filter: 'ACCESS' });
+
+			expect(subfilter.selected)
+				.toBeTruthy();
+
+			fixture.destroy();
+			tick();
+		}));
+
+		it('should select a productType subfilter', fakeAsync(() => {
+			buildSpies();
+			fixture.detectChanges();
+			tick(1000);
+			fixture.detectChanges();
+
+			const hardwareProductTypeFilter = _.find(component.selectedView.filters, { key: 'productType' });
+			component.onSubfilterSelect('Modules', hardwareProductTypeFilter);
+
+			fixture.detectChanges();
+
+			expect(_.filter(component.selectedView.filters, 'selected'))
+				.toContain(hardwareProductTypeFilter);
+
+			const subfilter = _.find(hardwareProductTypeFilter.seriesData, { filter: 'Modules' });
 
 			expect(subfilter.selected)
 				.toBeTruthy();
@@ -365,6 +425,37 @@ describe('AssetsComponent', () => {
 			fixture.detectChanges();
 
 			subfilter = _.find(roleFilter.seriesData, { filter: 'ACCESS' });
+
+			expect(subfilter.selected)
+				.toBeFalsy();
+
+			fixture.destroy();
+			tick();
+		}));
+
+		it('should clear the filter when selecting the same subfilter twice', fakeAsync(() => {
+			buildSpies();
+			fixture.detectChanges();
+			tick(1000);
+
+			const hardwareProductTypeFilter = _.find(component.selectedView.filters, { key: 'productType' });
+			component.onSubfilterSelect('Modules', hardwareProductTypeFilter);
+
+			fixture.detectChanges();
+
+			expect(_.filter(component.selectedView.filters, 'selected'))
+				.toContain(hardwareProductTypeFilter);
+
+			let subfilter = _.find(hardwareProductTypeFilter.seriesData, { filter: 'Modules' });
+
+			expect(subfilter.selected)
+				.toBeTruthy();
+
+			component.onSubfilterSelect('Modules', hardwareProductTypeFilter);
+
+			fixture.detectChanges();
+
+			subfilter = _.find(hardwareProductTypeFilter.seriesData, { filter: 'Modules' });
 
 			expect(subfilter.selected)
 				.toBeFalsy();
@@ -433,6 +524,35 @@ describe('AssetsComponent', () => {
 				{
 					filter: 'ACCESS',
 					label: 'Access',
+					selected: false,
+					value: 1,
+				},
+			];
+			component.clearFilters();
+			tick(1000);
+
+			_.each(component.selectedView.filters, filter => {
+				expect(filter.selected)
+					.toBeFalsy();
+				expect(_.some(filter.seriesData, 'selected'))
+					.toBeFalsy();
+			});
+
+			fixture.destroy();
+			tick();
+		}));
+
+		it('should clear filters', fakeAsync(() => {
+			buildSpies();
+			fixture.detectChanges();
+			tick(1000);
+			const hardwareProductTypeFilter = _.find(component.selectedView.filters, { key: 'productType' });
+
+			hardwareProductTypeFilter.selected = true;
+			hardwareProductTypeFilter.seriesData = [
+				{
+					filter: 'Modules',
+					label: 'Modules',
 					selected: false,
 					value: 1,
 				},
@@ -679,13 +799,14 @@ describe('AssetsComponent', () => {
 		}));
 	});
 
-	describe('With Query Params', () => {
+	fdescribe('With Query Params', () => {
 		const queryParams = {
 			contractNumber: '1234',
 			coverage: 'covered',
 			hasBugs: true,
 			lastDateOfSupportRange: 'gt-12-lt-24-months',
 			role: 'ACCESS',
+			productType: 'Modules',
 		};
 
 		configureTestSuite(() => {
@@ -756,6 +877,21 @@ describe('AssetsComponent', () => {
 
 			expect(_.filter(component.selectedView.filters, 'selected'))
 				.toContain(advisoryFilter);
+
+			fixture.destroy();
+			tick();
+		}));
+
+		it('should set the modules filter if param selected', fakeAsync(() => {
+			buildSpies();
+			fixture.detectChanges();
+			_.set(component.selectedView.params, 'productType', ['Modules']);
+			tick(1000);
+
+			const hardwareProductTypeFilter = _.find(component.selectedView.filters, { key: 'productType' });
+
+			expect(_.filter(component.selectedView.filters, 'selected'))
+				.toContain(hardwareProductTypeFilter);
 
 			fixture.destroy();
 			tick();

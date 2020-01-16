@@ -398,7 +398,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					seriesData: [],
 					template: this.pieChartFilterTemplate,
 					title: I18n.get('_ProductType_'),
-				}
+				},
 			],
 			key: 'system',
 			loading: true,
@@ -537,7 +537,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					seriesData: [],
 					template: this.pieChartFilterTemplate,
 					title: I18n.get('_ProductType_'),
-				}
+				},
 			],
 			key: 'hardware',
 			loading: true,
@@ -1100,9 +1100,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		})
 		.pipe(
 			map((data: ProductTypeResponse) => {
-				
 				hardwareProductTypeFilter.seriesData = _.map(data, (d: ProductTypeCount) => ({
-					
 					filter: d.ProductType,
 					label: d.ProductType,
 					selected: false,
@@ -1112,7 +1110,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			}),
 			catchError(err => {
 				hardwareProductTypeFilter.loading = false;
-				this.logger.error('assets.component : getAdvisoryCount() ' +
+				this.logger.error('assets.component : getHardwareProductTypeCount() ' +
 					`:: Error : (${err.status}) ${err.message}`);
 
 				return of({ });
@@ -1132,9 +1130,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		})
 		.pipe(
 			map((data: ProductTypeResponse) => {
-				
 				systemProductTypeFilter.seriesData = _.map(data, (d: ProductTypeCount) => ({
-					
 					filter: d.ProductType,
 					label: d.ProductType,
 					selected: false,
@@ -1144,7 +1140,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			}),
 			catchError(err => {
 				systemProductTypeFilter.loading = false;
-				this.logger.error('assets.component : getAdvisoryCount() ' +
+				this.logger.error('assets.component : getSystemProductTypeCount() ' +
 					`:: Error : (${err.status}) ${err.message}`);
 				return of({ });
 			}),
@@ -1440,13 +1436,10 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		} else {
 			_.unset(params, [key]);
 		}
-		
 		view.params.page = 1;
-
 		if (filter.selected) {
 			view.filtered = true;
 		}
-		
 		if (reload) {
 			this.selectedView.allAssetsSelected = false;
 			this.adjustQueryParams();
@@ -1502,8 +1495,8 @@ export class AssetsComponent implements OnInit, OnDestroy {
 							}
 
 							const productType = _.get(view, ['params', 'productType']);
-							if(productType) {
-								this.selectSubFilters(view, productType, 'productType' );
+							if (productType) {
+								this.selectSubFilters(view, productType, 'productType');
 							}
 
 							if (_.get(view, ['params', 'hasBugs'])) {
@@ -1521,8 +1514,8 @@ export class AssetsComponent implements OnInit, OnDestroy {
 							}
 
 							const productType = _.get(view, ['params', 'productType']);
-							if(productType) {
-								this.selectSubFilters(view, productType, 'productType' );
+							if (productType) {
+								this.selectSubFilters(view, productType, 'productType');
 							}
 
 							const hasFieldNotices = _.get(view, ['params', 'hasFieldNotices']);
@@ -1633,7 +1626,6 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					_.set(view.params, 'hasSecurityAdvisories', params.hasSecurityAdvisories);
 				}
 			}
-			
 			if (params.serialNumber) {
 				view.params.serialNumber = _.castArray(params.serialNumber);
 			}
