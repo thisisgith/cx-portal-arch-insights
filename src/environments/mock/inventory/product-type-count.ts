@@ -9,20 +9,20 @@ const customerId = '2431199_0';
 /** The mock response for role counts */
 const mockHardwareProductCount: ProductTypeResponse = [
 	{
-		count: 10,
-		ProductType: 'Routers',
+		deviceCount: 10,
+		productType: 'Routers',
 	},
 	{
-		count: 25,
-		ProductType: 'Switches',
+		deviceCount: 25,
+		productType: 'Switches',
 	},
 	{
-		count: 13,
-		ProductType: 'Modules',
+		deviceCount: 13,
+		productType: 'Modules',
 	},
 	{
-		count: 9,
-		ProductType: 'Wireless',
+		deviceCount: 9,
+		productType: 'Wireless',
 	},
 ];
 

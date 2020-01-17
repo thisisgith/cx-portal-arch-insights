@@ -16,6 +16,7 @@ import {
 	ProductAlertsService,
 	ContractsService,
 	NetworkElement,
+	NetworkDataGatewayService,
 } from '@sdp-api';
 import { throwError, of } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
@@ -48,7 +49,7 @@ function getActiveBody (mock: Mock, type: string = 'GET') {
 	return active.response.body;
 }
 
-fdescribe('AssetsComponent', () => {
+describe('AssetsComponent', () => {
 	let component: AssetsComponent;
 	let fixture: ComponentFixture<AssetsComponent>;
 
@@ -56,6 +57,7 @@ fdescribe('AssetsComponent', () => {
 	let productAlertsService: ProductAlertsService;
 	let contractsService: ContractsService;
 	let racetrackInfoService: RacetrackInfoService;
+	let networkDataGatewayService: NetworkDataGatewayService;
 
 	/**
 	 * Sends our racetrack info
@@ -123,10 +125,28 @@ fdescribe('AssetsComponent', () => {
 		spyOn(inventoryService, 'getSystemProductTypeCount')
 			.and
 			.returnValue(of(ProductTypeScenarios[0].scenarios.GET[0].response.body));
+		spyOn(networkDataGatewayService, 'postDeviceTransactions')
+			.and
+			.returnValue(of([]));
+		spyOn(networkDataGatewayService, 'getScanStatusBySerial')
+			.and
+			.returnValue(of([
+				{
+					customerId: '2431199',
+					transactionId: 'cd2e25ce-649f-483c-afa4-8664c4be277d',
+					status: 'IN_PROGRESS',
+				},
+				{
+					customerId: '2431199',
+					transactionId: 'cd2e25ce-649f-483c-afa4-8664c4be277d',
+					status: 'FAILURE',
+				},
+			]));
+
 		sendRacetrack();
 	};
 
-	fdescribe('Without Query Params', () => {
+	describe('Without Query Params for systems', () => {
 		configureTestSuite(() => {
 			TestBed.configureTestingModule({
 				imports: [
@@ -168,6 +188,8 @@ fdescribe('AssetsComponent', () => {
 			productAlertsService = TestBed.get(ProductAlertsService);
 			contractsService = TestBed.get(ContractsService);
 			racetrackInfoService = TestBed.get(RacetrackInfoService);
+			networkDataGatewayService = TestBed.get(NetworkDataGatewayService);
+
 			fixture = TestBed.createComponent(AssetsComponent);
 			component = fixture.componentInstance;
 		});
@@ -797,16 +819,141 @@ fdescribe('AssetsComponent', () => {
 			fixture.destroy();
 			tick();
 		}));
+
+		it('should check scan status on checkScan call', fakeAsync(() => {
+			buildSpies();
+
+			fixture.detectChanges();
+			tick(1000);
+			const assets = getActiveBody(SystemAssetScenarios[0]);
+			component.checkScan(assets.data[0]);
+			expect(networkDataGatewayService.getScanStatusBySerial)
+			.toHaveBeenCalled();
+			expect(networkDataGatewayService.postDeviceTransactions)
+			.toHaveBeenCalledTimes(0);
+			expect(networkDataGatewayService.postDeviceTransactions)
+			.toHaveBeenCalledTimes(0);
+			fixture.destroy();
+			tick();
+		}));
 	});
 
-	fdescribe('With Query Params', () => {
+	describe('With Query Params for hardware', () => {
 		const queryParams = {
 			contractNumber: '1234',
 			coverage: 'covered',
+			hasFieldNotices: 'true',
+			lastDateOfSupportRange: 'gt-12-lt-24-months',
+			productType: 'Modules',
+			equipmentType: 'MODULE',
+			serialNumber: '1233',
+			search: 'Routers',
+			sort: 'productId',
+		};
+
+		configureTestSuite(() => {
+			TestBed.configureTestingModule({
+				imports: [
+					AssetsModule,
+					HttpClientTestingModule,
+					MicroMockModule,
+					RouterTestingModule.withRoutes([
+						{
+							component: AssetsComponent,
+							path: 'solution/assets/system',
+						},
+						{
+							component: AssetsComponent,
+							path: 'solution/assets/hardware',
+						},
+					]),
+				],
+				providers: [
+					{ provide: 'ENVIRONMENT', useValue: environment },
+					{
+						provide: ActivatedRoute,
+						useValue: {
+							queryParams: of(queryParams),
+							snapshot: {
+								data: {
+									user,
+								},
+								params: { view: 'hardware' },
+							},
+						},
+					},
+				],
+			});
+		});
+
+		beforeEach(() => {
+			window.sessionStorage.clear();
+			inventoryService = TestBed.get(InventoryService);
+			productAlertsService = TestBed.get(ProductAlertsService);
+			contractsService = TestBed.get(ContractsService);
+			racetrackInfoService = TestBed.get(RacetrackInfoService);
+			fixture = TestBed.createComponent(AssetsComponent);
+			component = fixture.componentInstance;
+		});
+
+		it('should set the bug filter if param selected', fakeAsync(() => {
+			buildSpies();
+			fixture.detectChanges();
+			_.set(component.selectedView.params, 'advisories', ['hasBugs']);
+			tick(1000);
+
+			const advisoryFilter = _.find(component.selectedView.filters, { key: 'advisories' });
+
+			expect(_.filter(component.selectedView.filters, 'selected'))
+				.toContain(advisoryFilter);
+
+			fixture.destroy();
+			tick();
+		}));
+
+		it('should set the modules filter if param selected', fakeAsync(() => {
+			buildSpies();
+			fixture.detectChanges();
+			_.set(component.selectedView.params, 'productType', ['Modules']);
+			tick(1000);
+
+			const hardwareProductTypeFilter = _.find(component.selectedView.filters, { key: 'productType' });
+
+			expect(_.filter(component.selectedView.filters, 'selected'))
+				.toContain(hardwareProductTypeFilter);
+
+			fixture.destroy();
+			tick();
+		}));
+		it('should set update page number on pageChanged', fakeAsync(() => {
+			buildSpies();
+			fixture.detectChanges();
+			tick(1000);
+			component.onPageChanged({ page: 2 });
+			expect(component.selectedView.params.page)
+			.toEqual(3);
+			expect(inventoryService.getHardwareAssets)
+			.toHaveBeenCalled();
+			fixture.destroy();
+			tick();
+		}));
+	});
+
+	describe('With Query Params', () => {
+		const queryParams = {
+			page: 1,
+			contractNumber: '1234',
+			coverage: 'covered',
+			hasSecurityAdvisories: true,
 			hasBugs: true,
 			lastDateOfSupportRange: 'gt-12-lt-24-months',
 			role: 'ACCESS',
 			productType: 'Modules',
+			sort: ['criticalAdvisories:DESC', 'deviceName:ASC'],
+			sortable: true,
+			select: true,
+			assetsViewOpen: true,
+
 		};
 
 		configureTestSuite(() => {

@@ -1101,10 +1101,10 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		.pipe(
 			map((data: ProductTypeResponse) => {
 				hardwareProductTypeFilter.seriesData = _.map(data, (d: ProductTypeCount) => ({
-					filter: d.ProductType,
-					label: d.ProductType,
+					filter: d.productType,
+					label: d.productType,
 					selected: false,
-					value: d.count,
+					value: d.deviceCount,
 				}));
 				hardwareProductTypeFilter.loading = false;
 			}),
@@ -1131,10 +1131,10 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		.pipe(
 			map((data: ProductTypeResponse) => {
 				systemProductTypeFilter.seriesData = _.map(data, (d: ProductTypeCount) => ({
-					filter: d.ProductType,
-					label: d.ProductType,
+					filter: d.productType,
+					label: d.productType,
 					selected: false,
-					value: d.count,
+					value: d.deviceCount,
 				}));
 				systemProductTypeFilter.loading = false;
 			}),
