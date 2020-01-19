@@ -11,7 +11,7 @@ const accountsApi = '/api/cxportal/cxpp-entitlement-wrapper/v1/entitlement/user/
 const v2UserApi = '/api/cxportal/entitlement/v2/user';
 
 const adminRole = {
-	roleName: UserRoles.ADMIN,
+	roleName: UserRoles.SA_ADMIN,
 	roleDisplayName: 'Smart Account Administrator',
 	tenant: 'SMARTACC',
 	tenantDisplayName: 'Smart Account Management',
@@ -21,7 +21,7 @@ const adminRole = {
 };
 
 const userRole = {
-	roleName: UserRoles.USER,
+	roleName: UserRoles.SA_FULLUSER,
 	roleDisplayName: 'Smart Account USER',
 	tenant: 'SMARTACCUSER',
 	tenantDisplayName: 'Smart Account Management User',
@@ -30,15 +30,15 @@ const userRole = {
 	attribName: null,
 };
 
-const partnerRole = {
-	roleName: UserRoles.PARTNER,
-	roleDisplayName: 'Smart Account Partner',
-	tenant: 'SMARTACCPARTNER',
-	tenantDisplayName: 'Smart Account Management Partner',
-	attribType: null,
-	attribValue: null,
-	attribName: null,
-};
+// const partnerRole = {
+// 	roleName: UserRoles.PARTNER,
+// 	roleDisplayName: 'Smart Account Partner',
+// 	tenant: 'SMARTACCPARTNER',
+// 	tenantDisplayName: 'Smart Account Management Partner',
+// 	attribType: null,
+// 	attribValue: null,
+// 	attribName: null,
+// };
 
 export const accountsResponseMock: UserEntitlement = {
 	companyList: [{
@@ -46,7 +46,7 @@ export const accountsResponseMock: UserEntitlement = {
 		companyId: 2431199,
 		domainIdentifier: 'cisco-ca',
 		accountType: 'CUSTOMER',
-		roleList: [userRole, adminRole, partnerRole],
+		roleList: [adminRole, userRole],
 	}, {
 		companyName: 'CISCO USA',
 		companyId: 67890,
@@ -79,15 +79,15 @@ export const accountsResponseMock: UserEntitlement = {
 	},
 };
 
-export const v2UserResponseMock: OrgUserResponse = {
+export const v2UserResponseMock: OrgUserResponse[] = [{
 	customerId,
 	orgName: 'CISCO',
 	cxBUId: 'qwerty',
 	individualAccount: {
 		ccoId: 'abcde',
 		saId: '2431199',
-		vaId: '0',
-		role: UserRoles.ADMIN,
+		vaId: null,
+		role: UserRoles.SA_ADMIN,
 		userMethods: ['Administrator'],
 	},
 	account: {
@@ -129,15 +129,65 @@ export const v2UserResponseMock: OrgUserResponse = {
 		dataCenter: 'usa',
 		apiDoman: 'cisco-us',
 	},
-};
+}, {
+	customerId,
+	orgName: 'CISCO',
+	cxBUId: 'qwerty',
+	individualAccount: {
+		ccoId: 'abcde',
+		saId: '67890',
+		vaId: null,
+		role: UserRoles.SA_ADMIN,
+		userMethods: ['Administrator'],
+	},
+	account: {
+		team: [{
+			ccoId: 'agonzales',
+			emailAddress: 'agonzales@cisco.com',
+			familyName: 'Gonzales',
+			name: 'Ann',
+			phone: '+1-333-333-3333',
+			title: 'Customer Sales Specialist',
+		}, {
+			ccoId: 'mcho',
+			emailAddress: 'mcho@cisco.com',
+			familyName: 'Cho',
+			name: 'Michael',
+			phone: '+1-333-333-3333',
+			title: 'High Touch Operations Manager Very Long title (HTOM)',
+		}, {
+			ccoId: 'db',
+			emailAddress: 'db@cisco.com',
+			familyName: 'Brian',
+			name: 'Dan',
+			phone: '+1-333-333-3333',
+			title: 'High Touch Operations Manager',
+		}, {
+			ccoId: 'drwho',
+			emailAddress: 'drwho@cisco.com',
+			familyName: 'Doctor',
+			name: 'The',
+			phone: '+1-333-333-3333',
+			title: 'Time Lord',
+		}],
+	},
+	subscribedServiceLevel: {
+		serviceLineName: 'ABC',
+		cxLevel: '1',
+	},
+	dataCenter: {
+		dataCenter: 'usa',
+		apiDoman: 'cisco-us',
+	},
+}];
 
 /** Our Default User */
 export const v2User = {
 	info: {
 		...accountsResponseMock,
-		...v2UserResponseMock,
+		...v2UserResponseMock[0],
 	},
-	service: v2UserResponseMock.subscribedServiceLevel,
+	service: v2UserResponseMock[0].subscribedServiceLevel,
 };
 
 const smartAccountMock = accountsResponseMock.companyList[0];
@@ -154,13 +204,13 @@ export const mappedUser = {
 			name: accountUserMock.firstName,
 			familyName: accountUserMock.lastName,
 			emailAddress: accountUserMock.emailId,
-			ccoId: v2UserResponseMock.individualAccount.ccoId,
-			cxBUId: v2UserResponseMock.cxBUId,
-			role: v2UserResponseMock.individualAccount.role,
+			ccoId: v2UserResponseMock[0].individualAccount.ccoId,
+			cxBUId: v2UserResponseMock[0].cxBUId,
+			role: v2UserResponseMock[0].individualAccount.role,
 		},
-		account: v2UserResponseMock.account,
+		account: v2UserResponseMock[0].account,
 		subscribedSolutions: {
-			cxLevel: v2UserResponseMock.subscribedServiceLevel.cxLevel,
+			cxLevel: v2UserResponseMock[0].subscribedServiceLevel.cxLevel,
 		},
 	},
 };

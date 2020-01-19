@@ -6,7 +6,7 @@ import { CheckRoleLevelReturn } from '@interfaces';
 
 const testUser = {
 	cxLevel: 0,
-	role: UserRoles.USER,
+	role: UserRoles.SA_FULLUSER,
 };
 
 class MockRouter {
@@ -49,7 +49,7 @@ describe('EntitlementRouteAuthService', () => {
 		const rolesLevelRedirect = {
 			cxLevel: 0,
 			redirectUrl: '/',
-			whitelistRoles: [UserRoles.USER],
+			whitelistRoles: [UserRoles.SA_FULLUSER],
 		};
 
 		route.data = {
@@ -71,7 +71,7 @@ describe('EntitlementRouteAuthService', () => {
 		const rolesLevelRedirect = {
 			cxLevel: 3,
 			redirectUrl: '/',
-			whitelistRoles: [UserRoles.ADMIN],
+			whitelistRoles: [UserRoles.SA_ADMIN],
 		};
 
 		route.data = {
@@ -93,7 +93,7 @@ describe('EntitlementRouteAuthService', () => {
 		const rolesLevelRedirect = {
 			cxLevel: 3,
 			redirectUrl: '/',
-			whitelistRoles: [UserRoles.ADMIN],
+			whitelistRoles: [UserRoles.SA_ADMIN],
 		};
 
 		route.data = {
@@ -117,7 +117,7 @@ describe('EntitlementRouteAuthService', () => {
 		const rolesLevelRedirect = {
 			cxLevel: 3,
 			redirectUrl: '/',
-			blacklistRoles: [UserRoles.USER],
+			blacklistRoles: [UserRoles.SA_FULLUSER],
 		};
 
 		route.data = {

@@ -41,7 +41,7 @@ module.exports = {
 
 		// ERRORS
 		align: true,
-		'arrow-return-shorthand': [true, 'multiline'],
+		'arrow-return-shorthand': true,
 		'ban-comma-operator': true,
 		'ban-ts-ignore': true,
 		'callable-types': true,
@@ -122,7 +122,7 @@ module.exports = {
 		],
 		semicolon: [true, 'always'],
 		'space-before-function-paren': true,
-		'ter-arrow-body-style': [true, 'as-needed'],
+		'ter-arrow-body-style': false,
 		'ter-arrow-parens': [true, 'as-needed'],
 		'ter-indent': [
 			true,

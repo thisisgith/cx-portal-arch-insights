@@ -2,16 +2,16 @@
 import { Injectable } from '@angular/core';
 import { Resolve } from '@angular/router';
 import { EntitlementWrapperService, UserEntitlement, OrgUserService, OrgUserResponse, Company, Role } from '@sdp-api';
-import { Observable, of, ReplaySubject } from 'rxjs';
-import { catchError, map, mergeMap } from 'rxjs/operators';
+import { Observable, of, ReplaySubject, throwError, forkJoin } from 'rxjs';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { LogService } from '@cisco-ngx/cui-services';
 import { User } from '@interfaces';
 import * as _ from 'lodash-es';
 import { CuiModalService } from '@cisco-ngx/cui-components';
+import { I18n } from '@cisco-ngx/cui-utils';
 import {
 	UnauthorizedUserComponent,
 } from '../components/unauthorized-user/unauthorized-user.component';
-import { SmartAccountSelectionComponent } from '../components/smart-account-selection/smart-account-selection.component';
 import { INTERIM_VA_ID, DEFAULT_DATACENTER, ACTIVE_SMART_ACCOUNT_KEY, UserRoles } from '@constants';
 
 /**
@@ -33,7 +33,7 @@ export class UserResolve implements Resolve<any> {
 	private role = new ReplaySubject<string>(1);
 	private dataCenter = new ReplaySubject<string>(1);
 	// TODO: Remove `roleList` when `mapUserResponse` logic is deprecated
-	private roleList = new ReplaySubject<Role[]>(1);
+	private roleList: Role[] = [];
 
 	constructor (
 		private cuiModalService: CuiModalService,
@@ -105,9 +105,58 @@ export class UserResolve implements Resolve<any> {
 
 		return this.entitlementWrapperService.userAccounts({ accountType: 'CUSTOMER' })
 		.pipe(
-			mergeMap((account: UserEntitlement) => {
-				this.companyList = _.sortBy(account.companyList, 'companyName');
+			catchError(err => {
+				this.logger.error(`Failed fetching account information: ${err.message}`);
+				this.cuiModalService.showComponent(UnauthorizedUserComponent, {
+					message: I18n.get('_FailedAccountFetch_'),
+				});
+				err._modalShown = true;
 
+				return throwError(err);
+			}),
+			switchMap((account: UserEntitlement) => {
+				let saIdVaIdPairs = account.companyList.map(company => {
+					return company.roleList.map(role => {
+						return { saId: company.companyId, vaId: role.attribValue || 0 };
+					});
+				});
+				saIdVaIdPairs = _.flatten(saIdVaIdPairs);
+
+				return forkJoin([
+					of(account),
+					this.orgUserService.getUserV2({
+						CXContext: JSON.stringify(saIdVaIdPairs),
+						customerId: null,
+						saId: null,
+						vaId: null,
+					}),
+				]);
+			}),
+			catchError(err => {
+				if (!err._modalShown) {
+					this.logger.error(`Failed fetching filtered list of user details: ${err.message}`);
+					this.cuiModalService.showComponent(UnauthorizedUserComponent, {
+						message: I18n.get('_FailedUserDetailsFetch_'),
+					});
+				}
+
+				return throwError(err);
+			}),
+			map(([account, validUsers]: [UserEntitlement, OrgUserResponse[]]) => {
+				account.companyList = this.getRefinedCompanyList(account.companyList, validUsers);
+				this.companyList = account.companyList;
+
+				if (account.companyList.length === 0) {
+					this.logger.error('Failed finding a company with valid roles');
+					this.cuiModalService.showComponent(UnauthorizedUserComponent, {
+						message: I18n.get('_FailedAccountFilter_'),
+					});
+
+					throw new Error(I18n.get('_FailedAccountFilter_'));
+				}
+
+				// select the active smart account, but with vaId hardcoded to 0 for LA, as the backend APIs do not support non-zero vaIds
+				// for LA.  The vaId will be set properly post-LA
 				const activeSmartAccountId = window.localStorage.getItem(ACTIVE_SMART_ACCOUNT_KEY);
 				if (activeSmartAccountId) {
 					this.smartAccount = _.find(this.companyList, {
@@ -116,17 +165,46 @@ export class UserResolve implements Resolve<any> {
 				} else {
 					this.smartAccount = _.get(this.companyList, 0, { });
 				}
-				const saId = _.get(this.smartAccount, 'companyId');
-				this.saId.next(saId);
-				this.vaId.next(0);
-				this.customerId.next(`${saId}_${INTERIM_VA_ID}`);
 
-				return this.getAccountInfo(account);
+				const currentSaId = _.get(this.smartAccount, 'companyId');
+				this.saId.next(currentSaId);
+				this.vaId.next(0);
+				this.customerId.next(`${currentSaId}_${INTERIM_VA_ID}`);
+
+				this.roleList = this.smartAccount.roleList;
+				const currentRole = this.roleList[0];
+				const currentRoleDetails = validUsers.find(validUser => {
+					return (
+						validUser.individualAccount.saId === currentSaId.toString() &&
+						validUser.individualAccount.vaId === currentRole.attribValue
+					);
+				});
+				this.role.next(currentRole.roleName);
+
+				let dataCenterValue = _.get(currentRoleDetails, ['dataCenter', 'dataCenter'], DEFAULT_DATACENTER);
+				// handle null value when a new user logined in
+				if (_.isNull(dataCenterValue)) {
+					dataCenterValue = DEFAULT_DATACENTER;
+				}
+				this.dataCenter.next(dataCenterValue);
+
+				this.cachedUser = {
+					info: {
+						...this.mapUserResponse(account, currentRoleDetails),
+						companyList: this.companyList,
+					},
+					service: _.get(currentRoleDetails, 'subscribedServiceLevel'),
+				};
+
+				this.user.next(this.cachedUser);
+				const { cxLevel } = _.get(this.cachedUser, 'service');
+				this.cxLevel.next(Number(cxLevel));
+
+				return this.cachedUser;
 			}),
 			catchError(err => {
 				this.logger.error('user-resolve : loadUser() ' +
 					`:: Error : (${err.status}) ${err.message}`);
-				this.cuiModalService.showComponent(UnauthorizedUserComponent, { });
 
 				return of(null);
 			}),
@@ -134,60 +212,41 @@ export class UserResolve implements Resolve<any> {
 	}
 
 	/**
-	 * Fetches additional user info for the account
-	 * @param accountResponse the user account to fetch additional info for
-	 * @returns the user
+	 * Filter the invalid companies out and sort alphabetically by company name
+	 * @param companyList the array of roles
+	 * @param validUsers the array of valid users returned by /v2/user
+	 * @returns the refined companyList
 	 */
-	private getAccountInfo (accountResponse: UserEntitlement):
-		Observable<User> {
-		const saId = _.get(this.smartAccount, 'companyId');
+	private getRefinedCompanyList (companyList: Company[], validUsers: OrgUserResponse[]): Company[] {
+		const validSaIdVaIdPairs = validUsers.map(user => {
+			return {
+				saId: user.individualAccount.saId,
+				vaId: user.individualAccount.vaId,
+			};
+		});
 
-		return this.orgUserService.getUserV2({
-			saId,
-			customerId: `${saId}_${INTERIM_VA_ID}`,
-			vaId: 0,
-		})
-		.pipe(
-			map((userResponse: OrgUserResponse) => {
-				let dataCenterValue = _.get(userResponse, ['dataCenter', 'dataCenter'], DEFAULT_DATACENTER);
+		// filter out SAs (companies) that were not returned from /v2/user
+		let companyListFiltered = companyList.filter(company => {
+			return validSaIdVaIdPairs.some(({ saId }) => company.companyId.toString() === saId);
+		});
 
-				// handle null value when a new user logined in
-				if (_.isNull(dataCenterValue)) {
-					dataCenterValue = DEFAULT_DATACENTER;
-				}
-
-				this.dataCenter.next(dataCenterValue);
-
-				this.cachedUser = {
-					info: {
-						...this.mapUserResponse(accountResponse, userResponse),
-						companyList: this.companyList,
-					},
-					service: _.get(userResponse, 'subscribedServiceLevel'),
-				};
-
-				this.user.next(this.cachedUser);
-				const { cxLevel } = _.get(this.cachedUser, 'service');
-				this.cxLevel.next(Number(cxLevel));
-
-				this.roleList = this.getRefinedRoleList(this.smartAccount.roleList);
-				this.role.next(_.get(this.roleList, [0, 'roleName']));
-
-				return this.cachedUser;
-			}),
-			catchError(err => {
-				window.localStorage.removeItem(ACTIVE_SMART_ACCOUNT_KEY);
-				this.logger.error('user-resolve : getAccountInfo() ' +
-					`:: Error : (${err.status}) ${err.message}`);
-				this.cuiModalService.showComponent(SmartAccountSelectionComponent, {
-					smartAccounts: this.companyList,
-					selectedSmartAccount: this.smartAccount,
-					isError: true,
+		// filter out roles (SA or VA roles) that:
+		//   1. are not returned from /v2/user
+		//   2. are not valid roles for this release
+		companyListFiltered.forEach(company => {
+			company.roleList = company.roleList.filter(role => {
+				return validSaIdVaIdPairs.some(({ saId, vaId }) => {
+					return company.companyId.toString() === saId && role.attribValue === vaId;
 				});
+			});
 
-				return of(null);
-			}),
-		);
+			company.roleList = this.getRefinedRoleList(company.roleList);
+		});
+
+		// an company is invalid if it has no valid roles
+		companyListFiltered = companyListFiltered.filter(company => company.roleList.length > 0);
+
+		return _.sortBy(companyListFiltered, 'companyName');
 	}
 
 	/**
@@ -195,12 +254,18 @@ export class UserResolve implements Resolve<any> {
 	 * @param roleList the array of roles
 	 * @returns the refined roleList
 	 */
-	private getRefinedRoleList (roleList: Role[]) {
+	private getRefinedRoleList (roleList: Role[]): Role[] {
 		if (roleList.length < 1) {
 			return [];
 		}
 
-		const priorityOrder: Role['roleName'][] = [UserRoles.ADMIN, UserRoles.USER];
+		const priorityOrder: string[] = [
+			UserRoles.SA_ADMIN,
+			UserRoles.VA_ADMIN,
+			UserRoles.SA_FULLUSER,
+			UserRoles.VA_FULLUSER,
+		];
+
 		const roleListFiltered = roleList.filter(role => priorityOrder.includes(role.roleName));
 
 		return _.sortBy(roleListFiltered, role => priorityOrder.indexOf(role.roleName));
@@ -229,7 +294,7 @@ export class UserResolve implements Resolve<any> {
 				emailAddress: accountUser.emailId,
 				ccoId: userResponse.individualAccount.ccoId,
 				cxBUId: userResponse.cxBUId,
-				role: _.get(this.getRefinedRoleList(this.smartAccount.roleList), ['0', 'roleName']),
+				role: _.get(this.smartAccount.roleList, ['0', 'roleName']),
 			},
 			account: userResponse.account,
 			subscribedSolutions: {
