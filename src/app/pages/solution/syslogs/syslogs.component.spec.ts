@@ -245,7 +245,7 @@ describe('SyslogsComponent', () => {
 		];
 		component.onSubfilterClose(afmEvent);
 		expect(component.appliedFilters.timeRange)
-			.toEqual(30);
+			.toEqual(1);
 	});
 
 	it('should select the filters', () => {

@@ -76,7 +76,7 @@
 						(click)="onSubfilterClose(filter)"
 					>
 						<span [innerText]="'_SyslogTitleX_' | i18n : title : subfilter.filterName | titlecase"></span>
-						<span *ngIf="(faultFlag && (filter.key === 'afmSeverity' || filter.key === 'timeRange'))
+						<span *ngIf="(faultFlag && (filter.key === 'afmSeverity'))
 							|| filter.key === 'severity'" class="icon-close"></span>
 					</span>
 				</ng-container>
