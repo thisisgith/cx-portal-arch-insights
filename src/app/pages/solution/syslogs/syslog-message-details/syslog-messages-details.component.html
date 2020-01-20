@@ -95,7 +95,7 @@
 			</div>
 			<div class="row half-padding">
 				<div class="col-2">
-					<button class="btn btn--ghost" [innerText]="'_SyslogsProceed_' | i18n" (click)= "moveToFault()" data-auto-id="syslogs-to-faults"></button>
+					<button class="btn btn--ghost" [innerText]="'_SyslogsProceed_' | i18n" (click)= "moveToFault()" data-auto-id="syslogs-to-faults" [disabled] = "!selectedCategory"></button>
 				</div>
 				<div class="col-2">
 					<button class="btn btn--primary" [innerText]="'_SyslogsCancel_' | i18n" (click)= "togglePushToFaults()" data-auto-id="syslogs-cancel"></button>

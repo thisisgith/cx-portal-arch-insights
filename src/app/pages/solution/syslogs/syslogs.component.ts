@@ -474,6 +474,7 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 		if (this.visualLabels[0].active) {
 			this.appliedFilters.timeRange = 30;
 			this.appliedFilters.afmSeverity = '';
+			this.syslogsParams.timeRange = ['30'];
 			this.filters =
 			_.filter(this.filters, o =>  o.view[0] === 'afm' || o.key === 'timeRange');
 			forkJoin(
@@ -490,6 +491,12 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 							'faults',
 						);
 					}
+					if (this.syslogsParams.timeRange) {
+						this.selectSubFilters(
+							this.syslogsParams.timeRange,
+							'timeRange',
+						);
+					}
 
 				}),
 			)
@@ -503,6 +510,7 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 		} else {
 			this.appliedFilters.timeRange = 30;
 			this.appliedFilters.severity = 0;
+			this.syslogsParams.timeRange = ['1'];
 			this.filters =
 			_.filter(this.filters, o =>  o.view[0] === 'syslog' || o.key === 'timeRange');
 			forkJoin(
@@ -711,7 +719,7 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 	public onSubfilterClose (event) {
 		const eventKey = _.get(event, 'key');
 		if (eventKey === 'severity' || (this.faultFlag
-				&& (eventKey === 'afmSeverity' || eventKey === 'timeRange'))) {
+				&& (eventKey === 'afmSeverity'))) {
 			const filter = _.find(this.filters, { key: eventKey });
 			_.each(filter.seriesData, f => {
 				f.selected = false;
