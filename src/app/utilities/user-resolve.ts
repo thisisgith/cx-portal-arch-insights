@@ -2,7 +2,7 @@
 import { Injectable } from '@angular/core';
 import { Resolve } from '@angular/router';
 import { EntitlementWrapperService, UserEntitlement, OrgUserService, OrgUserResponse, Company, Role } from '@sdp-api';
-import { Observable, of, ReplaySubject, throwError, forkJoin } from 'rxjs';
+import { Observable, of, ReplaySubject, throwError, forkJoin, BehaviorSubject } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { LogService } from '@cisco-ngx/cui-services';
 import { User } from '@interfaces';
@@ -32,8 +32,11 @@ export class UserResolve implements Resolve<any> {
 	private cxLevel = new ReplaySubject<number>(1);
 	private role = new ReplaySubject<string>(1);
 	private dataCenter = new ReplaySubject<string>(1);
+	private userSelectedDataCenter = new ReplaySubject<string>(1);
+	private isUserCompletedStep = new BehaviorSubject<boolean>(false);
 	// TODO: Remove `roleList` when `mapUserResponse` logic is deprecated
 	private roleList: Role[] = [];
+	public isIEsetupCompleted: boolean;
 
 	constructor (
 		private cuiModalService: CuiModalService,
@@ -42,6 +45,7 @@ export class UserResolve implements Resolve<any> {
 		private logger: LogService,
 	) {
 		this.dataCenter.next(DEFAULT_DATACENTER);
+		this.userSelectedDataCenter.next(DEFAULT_DATACENTER);
 	}
 
 	public getCustomerId (): Observable<string> {
@@ -72,6 +76,25 @@ export class UserResolve implements Resolve<any> {
 		return this.dataCenter.asObservable();
 	}
 
+	// public setDataCenter (dataCenter: string) {
+	// 	this.dataCenter.next(dataCenter);
+	// }
+
+	public setUserSelectedDataCenter (dataCenter: string) {
+		this.userSelectedDataCenter.next(dataCenter);
+	}
+
+	public getUserSelectedDataCenter (): Observable<string> {
+		return this.userSelectedDataCenter.asObservable();
+	}
+
+	public setUserSteps (steps: boolean) {
+		this.isUserCompletedStep.next(steps);
+	}
+
+	public getUserSteps (): Observable<boolean> {
+		return this.isUserCompletedStep.asObservable();
+	}
 	/**
 	 * Update the currently active smart account, set it to local storage
 	 * and refresh the page

@@ -45,6 +45,7 @@ describe('ApixDatacenterInterceptor', () => {
 					provide: UserResolve,
 					useValue: {
 						getDataCenter: () => from([regionValue]),
+						getUserSelectedDataCenter: () => from([regionValue]),
 					},
 				},
 				{
