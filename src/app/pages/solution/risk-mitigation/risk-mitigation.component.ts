@@ -66,6 +66,7 @@ export class RiskMitigationComponent implements AfterViewInit {
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
+		this.selectedCrashRiskFilter = this.defaultRiskState;
 	}
 
 	/**

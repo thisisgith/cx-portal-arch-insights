@@ -187,6 +187,10 @@ export class CrashedSystemsGridComponent implements OnChanges {
 						return of(results);
 					}),
 					catchError((err: HttpErrorResponse) => {
+						this.paginationValue.emit({
+							itemRange: '0-0',
+							totalItems: 0,
+						});
 						this.isLoading = false;
 						if (err.status >= 500) {
 							_.invoke(this.alert, 'show', I18n.get('_RccErrorResults_'), 'danger');
