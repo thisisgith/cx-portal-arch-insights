@@ -13,8 +13,10 @@ import {
 	HighCrashRiskDeviceTooltip,
 	RacetrackSolution,
 	RacetrackTechnology,
+	IStatus,
 } from '@sdp-api';
 import { ActivatedRoute } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 
 /**
  * Risk mitigation component
@@ -43,7 +45,7 @@ export class RiskMitigationComponent implements AfterViewInit {
 	public selectedCrashRiskFilter: string;
 	public itemRange = '';
 	public totalItems = '';
-	public filters: Filter[];
+	public filters: any;
 	public onlyCrashes = true;
 	public highCrashDeviceCount = 0;
 	public loading = false;
@@ -51,7 +53,12 @@ export class RiskMitigationComponent implements AfterViewInit {
 	private destroy$ = new Subject();
 	public defaultTimeRange = '1';
 	public defaultRiskState = 'HIGH';
+	public status: IStatus = { inventoryLoading: true, isLoading: true };
+	public get selectedViewFilters (): [] {
+		const selectedView = this.onlyCrashes ? 'crashedSystems' : 'crashRiskSystems';
 
+		return _.find(this.filters, { view: selectedView });
+	}
 	@ViewChild('riskScoreFilterTemplate', { static: true })
 	public riskScoreFilterTemplate: TemplateRef<string>;
 	@ViewChild('timeRangeFilterTemplate', { static: true })
@@ -98,13 +105,16 @@ export class RiskMitigationComponent implements AfterViewInit {
 	 * Load data of risk details
 	 */
 	public loadData () {
+		this.status.isLoading = true;
 		this.buildFilters();
 		forkJoin(
 			this.getTotalAssetCount(),
 			this.getAllCrashesData(),
 			this.getHighCrashesDeviceData(),
 		)
-		.subscribe();
+		.subscribe(() => {
+			this.status.isLoading = false;
+		});
 	}
 
 	/**
@@ -128,7 +138,8 @@ export class RiskMitigationComponent implements AfterViewInit {
 				map((results: HighCrashRiskDeviceCount) => {
 					this.getRiskScore(results.crashRiskDeviceCount);
 				}),
-				catchError(err => {
+				catchError((err: HttpErrorResponse) => {
+					this.filters = _.filter(this.filters, filter => filter.key !== 'riskScore');
 					this.logger.error(
 						'High Crash Assets : getHighCrashesDeviceData() ' +
 							`:: Error : (${err.status}) ${err.message}`,
@@ -160,7 +171,8 @@ export class RiskMitigationComponent implements AfterViewInit {
 				this.crashedAssetsCount = results.devicesCrashCount_90d;
 				this.getTimeRange(seriesData);
 			}),
-			catchError(err => {
+			catchError((err: HttpErrorResponse) => {
+				this.filters = _.filter(this.filters, filter => filter.key !== 'timeRange');
 				this.crashedAssetsCount = undefined;
 				this.logger.error(
 					'Crash Assets : getAllCrashesData() ' +
@@ -240,6 +252,7 @@ export class RiskMitigationComponent implements AfterViewInit {
 				template: this.timeRangeFilterTemplate,
 				title: I18n.get('_RMTimeRange_'),
 				selected: true,
+				view: ['crashedSystems'],
 			},
 			{
 				key: 'riskScore',
@@ -248,6 +261,7 @@ export class RiskMitigationComponent implements AfterViewInit {
 				template: this.riskScoreFilterTemplate,
 				title: I18n.get('_CP_Risk_'),
 				selected: true,
+				view: ['crashRiskSystems'],
 			},
 		];
 	}
