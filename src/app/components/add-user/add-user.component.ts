@@ -43,7 +43,7 @@ export class AddUserComponent implements OnInit, OnDestroy {
 	public customerId: string;
 	public saAccountId: string;
 	public role: string;
-	public roleObject: any;
+	public roleObject: any = { };
 	public active: boolean;
 
 	constructor (
