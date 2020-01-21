@@ -55,9 +55,11 @@ export class RiskMitigationComponent implements AfterViewInit {
 	public defaultRiskState = 'HIGH';
 	public status: IStatus = { inventoryLoading: true, isLoading: true };
 	public get selectedViewFilters (): [] {
-		const selectedView = this.onlyCrashes ? 'crashedSystems' : 'crashRiskSystems';
+		const selectedView = this.onlyCrashes ? 'crashRiskSystems' : 'crashedSystems';
 
-		return _.find(this.filters, { view: selectedView });
+		return _.filter(this.filters, (filter: Filter) =>
+		_.indexOf(filter.view, selectedView) > -1,
+		);
 	}
 	@ViewChild('riskScoreFilterTemplate', { static: true })
 	public riskScoreFilterTemplate: TemplateRef<string>;
@@ -424,6 +426,7 @@ export class RiskMitigationComponent implements AfterViewInit {
 						.reduce((sum, value) => sum + value, 0);
 				}),
 				catchError(err => {
+					this.totalAssetCount = undefined;
 					this.logger.error(
 						'Could not fetch results : getTotalAssestCount() ' +
 							`:: Error : (${err.status}) ${err.message}`,
