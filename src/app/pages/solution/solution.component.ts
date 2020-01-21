@@ -803,6 +803,7 @@ export class SolutionComponent implements OnInit, OnDestroy, AfterViewInit {
 	 * OnInit Functionality
 	 */
 	public ngOnInit () {
+		_.invoke(window, 'addToMap', 'id', _.get(window, ['cisco', 'user', '_id']));
 		this.initializeQuickTour();
 		this.initializeFacets();
 		this.fetchSolutions();
