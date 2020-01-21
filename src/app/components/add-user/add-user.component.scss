@@ -35,7 +35,7 @@
 }
 
 .role-input-background {
-	border: none !important ;
+	border: none !important;
 	border-bottom: 1px solid $light-gray-1 !important;
 	background: $light-gray-background !important;
 }
@@ -49,11 +49,11 @@
 }
 
 ::ng-deep .dropdown__menu a {
-    word-wrap: break-word !important;
-    white-space: normal !important;
-    line-height: 1.5em !important;
-    padding: 10px 5px !important;
-    height: auto !important;
+	word-wrap: break-word !important;
+	white-space: normal !important;
+	line-height: 1.5em !important;
+	padding: 10px 5px !important;
+	height: auto !important;
 }
 
 :host ::ng-deep {
