@@ -6,6 +6,8 @@ export interface UserAddRequestModel {
     ccoId?: string;
     email?: string;
     rolesAdded?: Array<RolesAdded>;     
-    isPartner?: string;
+	isPartner?: string;
+	type_1?: string;
+	value_1?: string;
 
 }
