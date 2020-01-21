@@ -98,12 +98,12 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 		}];
 	public srStatus: any[] = [
 		{
-			name: I18n.get('_FaultOpen_'),
-			value: 'Open',
+			name: I18n.get('_FaultSuccess_'),
+			value: 'Success',
 		},
 		{
-			name: I18n.get('_FaultClosed_'),
-			value: 'Closed',
+			name: I18n.get('_FaultFailed_'),
+			value: 'Failed',
 		},
 		{
 			name: I18n.get('_FaultNoTacCase_'),
@@ -386,7 +386,7 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 		} else if (paramType.toUpperCase() === this.FAULT_CONSTANT.TIME) {
 			this.searchParams.days = event;
 		} else {
-			this.searchParams.srStatus = '';
+			this.searchParams.srStatus = (event === 'Empty') ? '' : event;
 		}
 		this.getAffectedSystemDetails(this.searchParams);
 	}
@@ -524,10 +524,12 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 				return 'productId';
 			case 'Software Type':
 				return 'swType';
+			case 'Status':
+				return 'srStatus';
 			case 'Case Number':
 				return 'tacCaseNo';
 			case 'Date and Time':
-				return 'taccaseCreatedDate';
+				return 'tacCaseCreatedDate';
 			default:
 				return 'hostName';
 		}
