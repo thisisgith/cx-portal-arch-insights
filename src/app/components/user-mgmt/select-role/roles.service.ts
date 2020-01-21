@@ -34,6 +34,7 @@ export class RolesService {
 
 	/**
 	 * Gets cached roles if present
+	 * @returns SA Roles
 	 */
 	public roles () {
 		if (this._requestRoles) {
@@ -53,6 +54,7 @@ export class RolesService {
 
 	/**
 	 * Gets cached roles if present
+	 * @returns VAroles
 	 */
 	public vaRoles () {
 		if (this._requestVARoles) {

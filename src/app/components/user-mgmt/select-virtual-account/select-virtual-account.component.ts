@@ -4,15 +4,9 @@ import {
 	EventEmitter,
 	HostListener,
 	Input,
-	OnInit,
 	Output,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { RoleDetails, UserDetails, UserUpdateResponseModel, ControlPointUserManagementAPIService } from '@sdp-api';
-import { Observable } from 'rxjs';
-import * as _ from 'lodash-es';
-import { I18n } from '@cisco-ngx/cui-utils';
-import { UserResolve } from '@utilities';
+import { RoleDetails, UserDetails } from '@sdp-api';
 
 /**
  * SelectRoleComponent
@@ -57,7 +51,7 @@ export class SelectVirtualAccountComponent {
 
 	/**
 	 * Handles clicking a role option
-	 * @param role - RoleDetails
+	 * @param virutalAccount - RoleDetails
 	 */
 	public handleClick (virutalAccount: any) {
 		this.clickout();

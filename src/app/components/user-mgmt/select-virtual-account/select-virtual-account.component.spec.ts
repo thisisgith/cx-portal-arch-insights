@@ -42,7 +42,6 @@ describe('SelectVirtualAccountComponent', () => {
 			.toBeTruthy();
 	});
 
-
 	it('handle click when clicked on same role', () => {
 		const dummyData: RoleDetails = {
 			role: 'test',
