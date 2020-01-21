@@ -14,7 +14,7 @@ import { Observable } from 'rxjs';
 import * as _ from 'lodash-es';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { UserResolve } from '@utilities';
-import { map, takeUntil } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 /**
  * SelectRoleComponent
@@ -66,7 +66,7 @@ export class SelectRoleComponent implements OnInit {
 	 * NgOnInit
 	 */
 	public ngOnInit () {
-		if (_.get(this.user,'selectedVirtualAccount')) {
+		if (_.get(this.user, 'selectedVirtualAccount')) {
 			this.roleName = 'Select';
 			this.roleDescription = null;
 		} else {
@@ -79,22 +79,24 @@ export class SelectRoleComponent implements OnInit {
 
 	private fetchRoles () {
 		const service = this.roleType === 'saRole' ? 'roles' : 'vaRoles';
-		return _.invoke(this.rolesService, service, {})
+
+		return _.invoke(this.rolesService, service, { })
 			.pipe(
 				map((response: RoleDetails[]) => {
 					this.roles = response;
-				})
+				}),
 			)
 			.subscribe();
 	}
 
 	private filterRoles () {
 		this.roles = _.filter(this.allRoles, role => {
-			if (_.get(this.user,['selectedVirtualAccount'])) {
+			if (_.get(this.user, ['selectedVirtualAccount'])) {
 				return role.type === 'vaRole';
-			} else {
-				return role.type === 'saRole';
 			}
+
+			return role.type === 'saRole';
+
 		});
 	}
 
@@ -113,9 +115,9 @@ export class SelectRoleComponent implements OnInit {
 		if (role.roleDisplayName && role.roleDisplayName === this.roleName) {
 			return;
 		}
-		if(this.roleType === 'vaRole') {
+		if (this.roleType === 'vaRole') {
 			role.type_1 =  'VirtualAccount';
-			role.value_1 =  _.get(this.user,['selectedVirtualAccount','virtual_account_id']);
+			role.value_1 =  _.get(this.user, ['selectedVirtualAccount', 'virtual_account_id']);
 		}
 		let updateRequest;
 		if (this.role) {

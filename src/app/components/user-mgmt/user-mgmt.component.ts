@@ -95,7 +95,8 @@ export class UserMgmtComponent implements OnInit, AfterViewInit, OnDestroy {
 					.pipe(
 						switchMap(() => this.getUsers()),
 						map(response => {
-							this.allUsers = response.data.splice(0,1);
+							this.allUsers = response.data;
+
 							return this.allUsers;
 						}),
 						tap(users => this.numUsers = users.length),
@@ -184,7 +185,7 @@ export class UserMgmtComponent implements OnInit, AfterViewInit, OnDestroy {
 	 * Add User Button click handler
 	 */
 	public async onAddUser () {
-		const result = await this.cuiModalService.showComponent(AddUserComponent, {}, 'small');
+		const result = await this.cuiModalService.showComponent(AddUserComponent, { }, 'small');
 		if (result) {
 			this.updateUsers$.next();
 		}
@@ -267,6 +268,7 @@ export class UserMgmtComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	public getRoleType (user) {
 		const role = _.get(user.roles, ['0'], null);
+
 		return role.type_1 ? 'vaRole' : 'saRole';
 	}
 

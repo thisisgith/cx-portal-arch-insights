@@ -27,11 +27,23 @@
 				[innerText]="'_XSmartAccountUsers_' | i18n:numUsers"></div>
 			<div class="col-6"
 				[innerText]="'_XHaveAccessToCXPortal_' | i18n:numUsersWithRoles"></div>
+			
 		</div>
+		
 	</section>
+	
 	<alert [title]="error.text"
 		[(visible)]="error.show">
 	</alert>
+	<div class="dbl-margin-top text-info">
+		<div class="row">
+			<div class="col-6 text-right">
+			</div>
+			<div class="col-6 text-left">
+				<div class="icon-help-alt" [innerText]="'_UserInfo_' | i18n"  ></div>
+			</div>
+		</div>
+	</div>
 	<div class="responsive-table"
 		*ngIf="allUsers?.length > 0">
 		<table class="
@@ -68,7 +80,7 @@
 									&& sortProps.dir === 'desc'
 							}"></span>
 					</th>
-					<th>Virtual Accounts</th>
+					<th [innerText]="'_VirtualAccount_' | i18n"></th>
 					<!-- <th [innerText]="'_SmartAccount_' | i18n"></th> -->
 					<th [innerText]="'_Role_' | i18n"></th>
 					<th></th>
