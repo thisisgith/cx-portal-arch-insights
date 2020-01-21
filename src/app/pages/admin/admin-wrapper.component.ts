@@ -11,6 +11,8 @@ import { empty, Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
 
 import * as _ from 'lodash-es';
+import { UserResolve } from '@utilities';
+import { DEFAULT_DATACENTER } from '@constants';
 
 /**
  * Admin Component
@@ -36,6 +38,7 @@ export class AdminWrapperComponent implements OnInit {
 		public appService: AppService,
 		private controlPointIEHealthStatusAPIService: ControlPointIEHealthStatusAPIService,
 		private appStatusColorPipe: AppStatusColorPipe,
+		private userResolve: UserResolve,
 	) {
 		this.routerPath = _.get(this, 'route.snapshot.routeConfig.path', 'settings');
 		this.user = _.get(this.route, ['snapshot', 'data', 'user']);
@@ -46,6 +49,15 @@ export class AdminWrapperComponent implements OnInit {
 			this.isValidAdmin = (isAdmin.toLowerCase()
 			=== this.admin  && cxLevel > 1) ? true : false;
 		}
+		this.userResolve.getUserSteps()
+		.pipe(
+			takeUntil(this.destroyed$),
+		)
+		.subscribe(step => {
+			if (!step) {
+				this.userResolve.setUserSelectedDataCenter(DEFAULT_DATACENTER);
+			}
+		});
 	}
 
 	/**

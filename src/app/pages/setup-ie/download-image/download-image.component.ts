@@ -18,6 +18,7 @@ import * as _ from 'lodash-es';
 
 import { K9FormData } from './k9-form/k9-form.component';
 import { EulaFormData } from './eula-form/eula-form.component';
+import { UserResolve } from '@utilities';
 
 /**
  * Component to prompt user to download OVA image
@@ -78,6 +79,7 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 		private router: Router,
 		private state: SetupIEStateService,
 		private utils: UtilsService,
+		private userResolve: UserResolve,
 	) {
 		this.user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(this.user, ['info', 'customerId']);
@@ -170,6 +172,7 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 	 */
 	public onDownload () {
 		this.loading = true;
+		this.userResolve.setUserSelectedDataCenter(this.region);
 		this.createRegistration()
 			.pipe(
 				mergeMap(() => this.commenceDownload()),
