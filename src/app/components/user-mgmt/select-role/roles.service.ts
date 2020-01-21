@@ -17,7 +17,8 @@ import { UserResolve } from '@utilities';
 	providedIn: 'root',
 })
 export class RolesService {
-	private _request: Observable<RoleDetails[]>;
+	private _requestRoles: Observable<RoleDetails[]>;
+	private _requestVARoles: Observable<RoleDetails[]>;
 	private customerId: string;
 	private saAccountId: string;
 	constructor (
@@ -27,27 +28,46 @@ export class RolesService {
 	) {
 		this.customerId = _.get(this.route, ['snapshot', 'data', 'user', 'info', 'customerId']);
 		this.userResolve.getSaId()
-		.subscribe(saId => this.saAccountId = saId.toString());
+			.subscribe(saId => this.saAccountId = saId.toString());
 
 	}
 
 	/**
 	 * Gets cached roles if present
 	 */
-	get roles () {
-		if (this._request) {
-			return this._request;
+	public roles () {
+		if (this._requestRoles) {
+			return this._requestRoles;
 		}
 
-		this._request = this.userService.getListRolesForGivenUserUsingGET(
+		this._requestRoles = this.userService.getListRolesForGivenUserUsingGET(
 			this.saAccountId,
 		)
 			.pipe(
-				map(response => [...response.saRoles/*, ...response.vaRoles*/]),
+				map(response => [...response.saRoles]),
 				shareReplay(1),
 			);
 
-		return this._request;
+		return this._requestRoles;
+	}
+
+	/**
+	 * Gets cached roles if present
+	 */
+	public vaRoles () {
+		if (this._requestVARoles) {
+			return this._requestVARoles;
+		}
+
+		this._requestVARoles = this.userService.getListRolesForGivenUserUsingGET(
+			this.saAccountId,
+		)
+			.pipe(
+				map(response => [...response.saVaRoles]),
+				shareReplay(1),
+			);
+
+		return this._requestVARoles;
 	}
 
 	/**

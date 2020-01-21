@@ -14,6 +14,7 @@ import { Observable } from 'rxjs';
 import * as _ from 'lodash-es';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { UserResolve } from '@utilities';
+import { map, takeUntil } from 'rxjs/operators';
 
 /**
  * SelectRoleComponent
@@ -25,26 +26,29 @@ import { UserResolve } from '@utilities';
 })
 export class SelectRoleComponent implements OnInit {
 	@Input() public user: UserDetails;
+	@Input() public roleType: string;
 	@Output() public onSelect: EventEmitter<Observable<UserUpdateResponseModel>> =
 		new EventEmitter<Observable<UserUpdateResponseModel>>();
 	private customerId: string;
 	public role: RoleDetails;
+	public roles: RoleDetails[];
+	public allRoles: RoleDetails[];
 	public expanded = false;
 	public roleName: string;
 	public roleDescription: string;
-	public options$: Observable<RoleDetails[]> = this.roles.roles;
+	// public options$: Observable<RoleDetails[]> = this.rolesService.roles;
 	public saAccountId: number;
 
 	constructor (
 		private elem: ElementRef,
-		private roles: RolesService,
+		private rolesService: RolesService,
 		private route: ActivatedRoute,
 		private userService: ControlPointUserManagementAPIService,
 		private userReslove: UserResolve,
 	) {
 		this.customerId = _.get(this.route, ['snapshot', 'data', 'user', 'info', 'customerId']);
 		this.userReslove.getSaId()
-		.subscribe(saId => this.saAccountId = saId);
+			.subscribe(saId => this.saAccountId = saId);
 	}
 
 	/**
@@ -62,9 +66,36 @@ export class SelectRoleComponent implements OnInit {
 	 * NgOnInit
 	 */
 	public ngOnInit () {
-		this.roleName = _.get(this.user.roles, ['0', 'roleDisplayName'], I18n.get('_AssignRole_'));
-		this.roleDescription = _.get(this.user.roles, ['0', 'roleDescription'], '');
+		if (_.get(this.user,'selectedVirtualAccount')) {
+			this.roleName = 'Select';
+			this.roleDescription = null;
+		} else {
+			this.roleName = _.get(this.user.roles, ['0', 'roleDisplayName'], I18n.get('_AssignRole_'));
+			this.roleDescription = _.get(this.user.roles, ['0', 'roleDescription'], '');
+		}
 		this.role = _.get(this.user.roles, ['0'], null);
+		this.fetchRoles();
+	}
+
+	private fetchRoles () {
+		const service = this.roleType === 'saRole' ? 'roles' : 'vaRoles';
+		return _.invoke(this.rolesService, service, {})
+			.pipe(
+				map((response: RoleDetails[]) => {
+					this.roles = response;
+				})
+			)
+			.subscribe();
+	}
+
+	private filterRoles () {
+		this.roles = _.filter(this.allRoles, role => {
+			if (_.get(this.user,['selectedVirtualAccount'])) {
+				return role.type === 'vaRole';
+			} else {
+				return role.type === 'saRole';
+			}
+		});
 	}
 
 	/**
@@ -82,6 +113,10 @@ export class SelectRoleComponent implements OnInit {
 		if (role.roleDisplayName && role.roleDisplayName === this.roleName) {
 			return;
 		}
+		if(this.roleType === 'vaRole') {
+			role.type_1 =  'VirtualAccount';
+			role.value_1 =  _.get(this.user,['selectedVirtualAccount','virtual_account_id']);
+		}
 		let updateRequest;
 		if (this.role) {
 			this.role.tenant = 'SMARTACC';
@@ -94,7 +129,7 @@ export class SelectRoleComponent implements OnInit {
 				rolesRemoved: [this.role],
 				saAccountId: this.saAccountId.toString(),
 			};
-			updateRequest = this.roles.updateRole(userUpdate);
+			updateRequest = this.rolesService.updateRole(userUpdate);
 		} else {
 			const userUpdate = {
 				customerId: this.customerId,

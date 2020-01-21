@@ -1,0 +1,27 @@
+:host {
+	position: relative;
+
+	.select-role-dropdown {
+		position: absolute;
+		top: 22px;
+		left: -100px;
+		z-index: 1000;
+		width: 250px;
+		padding: 0;
+
+		.dropdown-option {
+			&:hover,
+			.active {
+				background: #d9f0f9;
+			}
+
+			&__text {
+				padding: 10px;
+			}
+
+			.divider {
+				margin: 0;
+			}
+		}
+	}
+}

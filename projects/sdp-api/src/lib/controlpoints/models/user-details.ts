@@ -10,4 +10,5 @@ export interface UserDetails {
   lastName?: string;
   status?: string;
   roles?: Array<RoleDetails>;
+  selectedVirtualAccount?: any;
 }
