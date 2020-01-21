@@ -55,11 +55,11 @@
 				<div class="row">
 					<div class="col-md-12">
 						<div class="form-group dropdown" [ngClass]="{ 'active': active }">
-							<div class="form-group__text select" (click)="roleToggle()">
-								<input class="role-input-background" #title [(ngModel)]="role" [ngModelOptions]="{standalone: true}">
+							<div data-auto-id="role-dropdown" class="form-group__text select" (click)="roleToggle()">
+								<input data-auto-id="role-dropdown-input" class="role-input-background" #title [(ngModel)]="role" [ngModelOptions]="{standalone: true}">
 							</div>
 							<div class="dropdown__menu">
-								<a *ngFor="let item of items; let i=index;" (click)="selectRole(item, i)" [ngClass]="{ 'selected': item.selected }">
+								<a data-auto-id="role-dropdown-options" *ngFor="let item of items; let i=index;" (click)="selectRole(item, i)" [ngClass]="{ 'selected': item.selected }">
 									<div class="role-header-text">{{item?.roleDisplayName}} </div>
 									<div class="role-description-text">{{item?.roleDescription}} </div >
 								</a>
