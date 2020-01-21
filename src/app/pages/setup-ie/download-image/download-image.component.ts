@@ -113,6 +113,7 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 					this.state.setState(state);
 				}
 			});
+		this.userResolve.setUserSteps(false);
 	}
 
 	/**

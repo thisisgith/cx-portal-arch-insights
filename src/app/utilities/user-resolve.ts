@@ -210,6 +210,7 @@ export class UserResolve implements Resolve<any> {
 					dataCenterValue = DEFAULT_DATACENTER;
 				}
 				this.dataCenter.next(dataCenterValue);
+				this.userSelectedDataCenter.next(dataCenterValue);
 
 				this.cachedUser = {
 					info: {

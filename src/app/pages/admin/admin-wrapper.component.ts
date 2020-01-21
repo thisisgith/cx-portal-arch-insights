@@ -8,11 +8,10 @@ import { AppService } from 'src/app/app.service';
 import { AppStatusColorPipe } from './settings/app-status-color.pipe';
 
 import { empty, Subject } from 'rxjs';
-import { catchError, takeUntil } from 'rxjs/operators';
+import { catchError, takeUntil, switchMap } from 'rxjs/operators';
 
 import * as _ from 'lodash-es';
 import { UserResolve } from '@utilities';
-import { DEFAULT_DATACENTER } from '@constants';
 
 /**
  * Admin Component
@@ -31,6 +30,7 @@ export class AdminWrapperComponent implements OnInit {
 	public isValidAdmin = false;
 	public erroredAppsNum = 0;
 	public admin = 'accountadmin';
+	private dataCenter: string;
 
 	constructor (
 		private router: Router,
@@ -49,13 +49,17 @@ export class AdminWrapperComponent implements OnInit {
 			this.isValidAdmin = (isAdmin.toLowerCase()
 			=== this.admin  && cxLevel > 1) ? true : false;
 		}
-		this.userResolve.getUserSteps()
+		this.userResolve.getDataCenter()
 		.pipe(
-			takeUntil(this.destroyed$),
+			switchMap(dataCenter => {
+				this.dataCenter = dataCenter;
+
+				return this.userResolve.getUserSteps();
+			}),
 		)
 		.subscribe(step => {
 			if (!step) {
-				this.userResolve.setUserSelectedDataCenter(DEFAULT_DATACENTER);
+				this.userResolve.setUserSelectedDataCenter(this.dataCenter);
 			}
 		});
 	}
