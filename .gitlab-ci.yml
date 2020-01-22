@@ -41,13 +41,13 @@ lint:
     - npm run lint:cypress
     - npm run lint:sdp
 
-commit linting:
-  stage: static
+#commit linting:
+  #stage: static
   # only on merge requests cannot be removed here or else the target branch will be incorrect
-  only:
-    - merge_requests
-  script:
-    - npm run lint:commit:message
+  #only:
+  #  - merge_requests
+  #script:
+  #  - npm run lint:commit:message
 
 # run our test:ci process for the commit
 unit:
