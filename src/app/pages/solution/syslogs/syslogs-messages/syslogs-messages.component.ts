@@ -115,7 +115,7 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 	public ngOnChanges (changes: SimpleChanges) {
 		const currentFilter = _.get(changes, ['sysFilter', 'currentValue']);
 		const useCaseChange = _.get(changes, ['useCase', 'previousValue']);
-		const clear = _.get(changes, ['clearSearch', 'currentValue']);
+		const clear = _.get(changes, ['searchVal', 'currentValue']);
 
 		if (currentFilter && !changes.sysFilter.firstChange) {
 			this.syslogsParams.syslogSeverity = currentFilter.severity;
