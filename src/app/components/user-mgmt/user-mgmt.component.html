@@ -35,14 +35,8 @@
 	<alert [title]="error.text"
 		[(visible)]="error.show">
 	</alert>
-	<div class="dbl-margin-top text-info">
-		<div class="row">
-			<div class="col-6 text-right">
-			</div>
-			<div class="col-6 text-left">
-				<div class="icon-help-alt" [innerText]="'_UserInfo_' | i18n"  ></div>
-			</div>
-		</div>
+	<div class="dbl-margin-top text-info text-center">
+		<div class="icon-help-alt" [innerText]="'_UserInfo_' | i18n"></div>
 	</div>
 	<div class="responsive-table"
 		*ngIf="allUsers?.length > 0">

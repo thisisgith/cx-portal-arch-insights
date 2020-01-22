@@ -115,6 +115,16 @@ export class UserMgmtComponent implements OnInit, AfterViewInit, OnDestroy {
 			.pipe(takeUntil(this.destroyed$))
 			.subscribe(response => {
 				this.items = _.get(response, 'data', []);
+				this.allUsers.forEach(selUser => {
+					if (selUser.isSelected) {
+						delete selUser.isSelected;
+					}
+					this.items.forEach(selItem => {
+						if (selItem.virtual_account_id === selUser.roles[0].value_1) {
+							selUser.selectedVirtualAccount = selItem;
+						}
+					});
+				});
 			});
 	}
 
@@ -263,6 +273,7 @@ export class UserMgmtComponent implements OnInit, AfterViewInit, OnDestroy {
 					this.error.text = _.get(response.data, ['0', 'errMsg'], response.message);
 					this.error.show = true;
 				}
+				this.getVirtualAccounts();
 			});
 	}
 
@@ -275,6 +286,7 @@ export class UserMgmtComponent implements OnInit, AfterViewInit, OnDestroy {
 	public onSelection (event: any) {
 		const selectedUser = _.find(this.allUsers, user => user.ccoId === event.user.ccoId);
 		selectedUser.selectedVirtualAccount = event.selectedVirtualAccount;
+		selectedUser.isSelected = true;
 		this.allUsers = _.cloneDeep(this.allUsers);
 	}
 }

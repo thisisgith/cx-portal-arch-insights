@@ -66,7 +66,7 @@ export class SelectRoleComponent implements OnInit {
 	 * NgOnInit
 	 */
 	public ngOnInit () {
-		if (_.get(this.user, 'selectedVirtualAccount')) {
+		if (_.get(this.user, 'isSelected')) {
 			this.roleName = 'Select';
 			this.roleDescription = null;
 		} else {
