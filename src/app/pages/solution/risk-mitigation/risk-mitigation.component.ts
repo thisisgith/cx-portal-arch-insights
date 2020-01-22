@@ -45,7 +45,7 @@ export class RiskMitigationComponent implements AfterViewInit {
 	public selectedCrashRiskFilter: string;
 	public itemRange = '';
 	public totalItems = '';
-	public filters: any;
+	public filters: Filter[];
 	public onlyCrashes = true;
 	public highCrashDeviceCount = 0;
 	public loading = false;
@@ -53,7 +53,7 @@ export class RiskMitigationComponent implements AfterViewInit {
 	private destroy$ = new Subject();
 	public defaultTimeRange = '1';
 	public defaultRiskState = 'HIGH';
-	public status: IStatus = { inventoryLoading: true, isLoading: true };
+	public status: IStatus = { isLoading: true };
 	public get selectedViewFilters (): [] {
 		const selectedView = this.onlyCrashes ? 'crashRiskSystems' : 'crashedSystems';
 
@@ -237,6 +237,11 @@ export class RiskMitigationComponent implements AfterViewInit {
 	 */
 	public getTimeRange (data) {
 		const timeRangeFilter = _.find(this.filters, { key: 'timeRange' });
+		const isEmpty = Object.values(data)
+		.every(x => (_.get(x, 'value') === 0));
+		if (isEmpty) {
+			this.filters = _.filter(this.filters, filter => filter.key !== 'timeRange');
+		}
 		timeRangeFilter.seriesData = data;
 		this.selectedFilters = this.filters;
 	}
