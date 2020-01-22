@@ -15,4 +15,5 @@ export interface Filter {
 		selected: boolean,
 		value: number,
 	}[];
+	view?: string[],
 }
