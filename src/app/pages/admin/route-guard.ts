@@ -5,23 +5,22 @@ import { UserResolve } from '@utilities';
 import { User } from '@interfaces';
 import * as _ from 'lodash-es';
 import { map, catchError } from 'rxjs/operators';
+import { UserRoles } from '@constants';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class RouteGuard implements CanActivate {
+	public settingsWhitelist = [UserRoles.SA_ADMIN, UserRoles.VA_ADMIN];
 	constructor (private userResolve: UserResolve, private router: Router) { }
 
 	public canActivate (): Observable<boolean> {
 
-		const admin = 'accountadmin';
-
 		return this.userResolve.getUser()
 			  .pipe(
 		map((user: User) => {
-			const isAdmin = _.get(user, ['info', 'individual', 'role']);
 			const cxLevel = _.get(user, ['service', 'cxLevel']);
-			 if (isAdmin.toLowerCase() === admin && (cxLevel > 1)) {
+			 if ({ whitelistRoles: this.settingsWhitelist } && (cxLevel > 1)) {
 			 	return true;
 			 }
 			this.router.navigate(['/admin/policies']);
