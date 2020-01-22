@@ -12,6 +12,7 @@ import { catchError, takeUntil, switchMap } from 'rxjs/operators';
 
 import * as _ from 'lodash-es';
 import { UserResolve } from '@utilities';
+import { UserRoles } from '@constants';
 
 /**
  * Admin Component
@@ -31,6 +32,7 @@ export class AdminWrapperComponent implements OnInit {
 	public erroredAppsNum = 0;
 	public admin = 'accountadmin';
 	private dataCenter: string;
+	public settingsWhitelist = [UserRoles.SA_ADMIN, UserRoles.VA_ADMIN];
 
 	constructor (
 		private router: Router,
@@ -44,11 +46,9 @@ export class AdminWrapperComponent implements OnInit {
 		this.user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(this.user, ['info', 'customerId']);
 		const cxLevel = _.get(this.user, ['service', 'cxLevel']);
-		const isAdmin = _.get(this.user, ['info', 'individual', 'role']);
-		if (isAdmin) {
-			this.isValidAdmin = (isAdmin.toLowerCase()
-			=== this.admin  && cxLevel > 1) ? true : false;
-		}
+
+		this.isValidAdmin = ({ whitelistRoles: this.settingsWhitelist }  && cxLevel > 1) ? true : false;
+
 		this.userResolve.getDataCenter()
 		.pipe(
 			switchMap(dataCenter => {
