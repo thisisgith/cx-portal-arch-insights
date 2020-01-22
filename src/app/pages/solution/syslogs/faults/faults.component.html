@@ -47,6 +47,7 @@
 						placeholder="{{ '_Search_' | i18n }}"
 						[compressed]="true"
 						[debounce]="searchOptions.debounce"
+						[searchText]="searchQueryInFaultGrid"
 						(onUpdate)="onSearchUpdate($event)"
 						class="fault-component-search"
 					>

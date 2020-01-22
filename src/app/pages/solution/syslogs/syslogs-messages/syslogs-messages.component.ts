@@ -7,6 +7,8 @@ import {
 	OnChanges,
 	SimpleChanges,
 	Input,
+	Output,
+	EventEmitter,
 } from '@angular/core';
 
 import { LogService } from '@cisco-ngx/cui-services';
@@ -31,6 +33,9 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 	@Input() public sysFilter;
 	@Input() public solution;
 	@Input() public useCase;
+	@Input() public searchVal;
+	@Output() public  searchUpdate = new EventEmitter();
+
 	public customerId;
 	public countSubscripion: Subscription;
 	public gridSubscripion: Subscription;
@@ -46,7 +51,6 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 	public pageLimit = 10;
 	public pageNum = 1;
 	public selectedAsset;
-	public searchVal = '';
 	public tableStartIndex = 0;
 	public tableEndIndex = 10;
 	public sortField = 'timeStamp';
@@ -111,6 +115,8 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 	public ngOnChanges (changes: SimpleChanges) {
 		const currentFilter = _.get(changes, ['sysFilter', 'currentValue']);
 		const useCaseChange = _.get(changes, ['useCase', 'previousValue']);
+		const clear = _.get(changes, ['clearSearch', 'currentValue']);
+
 		if (currentFilter && !changes.sysFilter.firstChange) {
 			this.syslogsParams.syslogSeverity = currentFilter.severity;
 			this.syslogsParams.days = currentFilter.timeRange;
@@ -121,6 +127,9 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 		if (useCaseChange) {
 			this.getSyslogsData();
 		}
+		if (clear === '') {
+			this.searchVal = '';
+		}
 	}
 	/**
 	 * initilize grid and graph
@@ -129,6 +138,7 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 	public ngOnInit () {
 		this.messageGridInit();
 		this.getSyslogsData();
+		this.searchVal = '';
 	}
 	/**
 	 * Messages grid init
@@ -208,6 +218,7 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 	 */
 	public keyDownFunction (event) {
 		if (event.keyCode === 13) {
+			this.searchUpdate.emit(this.searchVal);
 			this.syslogsParams.localSearch = this.searchVal;
 			this.getSyslogsData();
 		}
