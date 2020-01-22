@@ -5,6 +5,7 @@ import {
   ControlPointUserManagementAPIService,
   UserAddResponseModel,
   RoleDetailsResponseModel,
+  VADetailsResponseModel,
 } from '@sdp-api';
 import { CuiModalService } from '@cisco-ngx/cui-components';
 import { AddUserModule } from './add-user.module';
@@ -54,7 +55,7 @@ describe('AddUserComponent', () => {
 				type_1 : 'test',
 				value_1 : 'test',
 			}],
-			vaRoles : [{
+			saVaRoles : [{
 				role : 'test',
 				roleDescription : 'test',
 				roleDisplayName : 'test',
@@ -74,6 +75,26 @@ describe('AddUserComponent', () => {
 			.toBe(dummyData);
 		expect(component.items)
 			.toBe(dummyData.saRoles);
+	});
+
+	it('Populate Virtual Account Dropdown', () => {
+		const dummyData: VADetailsResponseModel = {
+			status: 200,
+			totalRows: 1,
+			data: [{
+				virtual_account_id: '123',
+				name: 'test',
+			}],
+		};
+		spyOn(service, 'getVAListForGivenSACUsingGET')
+			.and
+			.returnValue(of(<VADetailsResponseModel> (dummyData)));
+		component.ngOnInit();
+		fixture.detectChanges();
+		expect(service.getVAListForGivenSACUsingGET)
+			.toHaveBeenCalled();
+		expect(component.itemsVa)
+			.toBe(dummyData.data);
 	});
 
 	it('postAddUser Service to be called on success next', () => {

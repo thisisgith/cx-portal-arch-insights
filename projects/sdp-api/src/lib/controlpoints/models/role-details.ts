@@ -6,4 +6,5 @@ export interface RoleDetails {
   tenant?: string;
   type_1?: string;
   value_1?: string;
+  type?:string;
 }

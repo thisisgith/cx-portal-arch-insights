@@ -5,6 +5,7 @@ import {
 	EventEmitter,
 	OnDestroy,
 	Output,
+	OnInit,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { empty, Observable, Subject } from 'rxjs';
@@ -14,6 +15,9 @@ import {
 	UserDetails,
 	UserResponse,
 	UserUpdateResponseModel,
+	VADetailsResponseModel,
+	RoleDetails,
+	VADetails,
 } from '@sdp-api';
 import { SortableColumn, SortProps } from './user-mgmt.types';
 import { I18nPipe } from '@cisco-ngx/cui-pipes';
@@ -30,24 +34,25 @@ import { UserResolve } from '@utilities';
 	styleUrls: ['./user-mgmt.component.scss'],
 	templateUrl: './user-mgmt.component.html',
 })
-export class UserMgmtComponent implements AfterViewInit, OnDestroy {
+export class UserMgmtComponent implements OnInit, AfterViewInit, OnDestroy {
 	@Output() private onUpdate = new EventEmitter<void>();
+	@Output() public onSelect: EventEmitter<Observable<UserUpdateResponseModel>> =
+		new EventEmitter<Observable<UserUpdateResponseModel>>();
+	public userDetails: UserDetails;
+	public virtualAccountName = '';
 	private destroyed$: Subject<void> = new Subject<void>();
 	private updateUsers$: Subject<UserDetails[]> = new Subject<UserDetails[]>();
+	public response: VADetailsResponseModel;
+	public saVaRoles: RoleDetails[];
 	public isLoading: boolean;
 	public numUsers = 0;
 	public numUsersWithRoles = 0;
 	private user: UserResponse['data'];
 	private customerId: string;
 	private saAccountId: number;
-	public users$: Observable<UserDetails[]> = this.updateUsers$
-		.pipe(
-			switchMap(() => this.getUsers()),
-			map(response => response.data),
-			tap(users => this.numUsers = users.length),
-			tap(users => this.numUsersWithRoles = users
-					.filter(user => user.roles && user.roles.length > 0).length),
-		);
+	public vaAccountId: string;
+	public allUsers: UserDetails[];
+	public items: VADetails[];
 	public sortProps: SortProps = {
 		column: 'firstName',
 		dir: 'asc',
@@ -74,7 +79,53 @@ export class UserMgmtComponent implements AfterViewInit, OnDestroy {
 		this.user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(this.user, ['info', 'customerId']);
 		this.userReslove.getSaId()
-		.subscribe(saId => this.saAccountId = saId);
+			.subscribe(saId => this.saAccountId = saId);
+	}
+	public ngOnInit () {
+		this.user = _.get(this.route, ['snapshot', 'data', 'user']);
+		this.customerId = _.get(this.user, ['info', 'customerId']);
+		// this.vaAccountId = _.get(this.userDetails.roles , ['value_1'], null);
+		// this.vaAccountId = 105660;
+		// tslint:disable-next-line:no-console
+		this.userReslove.getSaId()
+			.subscribe(saId => {
+				this.saAccountId = saId;
+				this.getVirtualAccounts();
+				this.updateUsers$
+					.pipe(
+						switchMap(() => this.getUsers()),
+						map(response => {
+							this.allUsers = response.data;
+
+							return this.allUsers;
+						}),
+						tap(users => this.numUsers = users.length),
+						tap(users => this.numUsersWithRoles = users
+							.filter(user => user.roles && user.roles.length > 0).length),
+					)
+					.subscribe();
+				this.updateUsers$
+					.next();
+			});
+	}
+
+	private getVirtualAccounts () {
+		this.usersService
+			.getVAListForGivenSACUsingGET(this.saAccountId.toString())
+			.pipe(takeUntil(this.destroyed$))
+			.subscribe(response => {
+				this.items = _.get(response, 'data', []);
+				this.allUsers.forEach(selUser => {
+					if (selUser.isSelected) {
+						delete selUser.isSelected;
+					}
+					this.items.forEach(selItem => {
+						if (selItem.virtual_account_id === selUser.roles[0].value_1) {
+							selUser.selectedVirtualAccount = selItem;
+						}
+					});
+				});
+			});
 	}
 
 	/**
@@ -222,6 +273,20 @@ export class UserMgmtComponent implements AfterViewInit, OnDestroy {
 					this.error.text = _.get(response.data, ['0', 'errMsg'], response.message);
 					this.error.show = true;
 				}
+				this.getVirtualAccounts();
 			});
+	}
+
+	public getRoleType (user) {
+		const role = _.get(user.roles, ['0'], null);
+
+		return role.type_1 ? 'vaRole' : 'saRole';
+	}
+
+	public onSelection (event: any) {
+		const selectedUser = _.find(this.allUsers, user => user.ccoId === event.user.ccoId);
+		selectedUser.selectedVirtualAccount = event.selectedVirtualAccount;
+		selectedUser.isSelected = true;
+		this.allUsers = _.cloneDeep(this.allUsers);
 	}
 }

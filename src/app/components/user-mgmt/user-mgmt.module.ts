@@ -13,6 +13,7 @@ import { UserMgmtSortPipe } from './user-mgmt-sort.pipe';
 import { UserMgmtFilterPipe } from './user-mgmt-filter.pipe';
 import { AlertModule } from '../alert/alert.module';
 import { AddUserModule } from '../add-user/add-user.module';
+import { SelectVirtualAccountModule } from './select-virtual-account/select-virtual-account.module';
 
 /**
  * UserMgmtModule
@@ -34,6 +35,7 @@ import { AddUserModule } from '../add-user/add-user.module';
 		FormsModule,
 		I18nPipeModule,
 		SelectRoleModule,
+		SelectVirtualAccountModule,
 	],
 })
 export class UserMgmtModule { }

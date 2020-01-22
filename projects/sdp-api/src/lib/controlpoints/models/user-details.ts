@@ -1,6 +1,7 @@
 /* tslint:disable */
 import { RoleDetails } from './role-details';
 export interface UserDetails {
+	isSelected?: any;
   accessLevel?: string;
   address?: string;
   ccoId?: string;
@@ -10,4 +11,5 @@ export interface UserDetails {
   lastName?: string;
   status?: string;
   roles?: Array<RoleDetails>;
+  selectedVirtualAccount?: any;
 }
