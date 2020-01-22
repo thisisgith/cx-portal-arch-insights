@@ -12,7 +12,8 @@ import { UtilsService, RacetrackInfoService } from '@services';
 import { empty, Subject } from 'rxjs';
 import { catchError, takeUntil, map } from 'rxjs/operators';
 import * as _ from 'lodash-es';
-import { IS_IE_OR_EDGE } from '@constants';
+import { IS_IE_OR_EDGE, UserRoles } from '@constants';
+import { UserResolve } from '@utilities';
 
 /**
  * Panel for displaying sub-header content
@@ -38,6 +39,8 @@ export class NoDNACHeaderComponent implements OnDestroy, OnInit {
 	private destroyed$: Subject<void> = new Subject<void>();
 	private pitStopApiFailure = false;
 	public isIEOrEdge = IS_IE_OR_EDGE;
+	public userAdminRole = [UserRoles.SA_ADMIN, UserRoles.VA_ADMIN];
+
 	@ViewChild('continueSetupButton', { static: false }) set button (button: ElementRef) {
 		if (button) {
 			this.continueSetupButton = button;
@@ -46,7 +49,7 @@ export class NoDNACHeaderComponent implements OnDestroy, OnInit {
 	}
 
 	@HostBinding('class.invisible') get isInvisible () {
-		return (!this.noDNAC && this.hasCXCollector) || this.forceHidden;
+		return (!{ whitelistRoles: this.userAdminRole }) || (!this.noDNAC && this.hasCXCollector) || this.forceHidden;
 	}
 	constructor (
 		@Inject('ENVIRONMENT') private env,
@@ -54,6 +57,7 @@ export class NoDNACHeaderComponent implements OnDestroy, OnInit {
 		private route: ActivatedRoute,
 		private utils: UtilsService,
 		private racetrackInfoService: RacetrackInfoService,
+		private userResolve: UserResolve,
 	) {
 		if (window.Cypress) {
 			this.forceHidden = _.get(window, 'Cypress.hideDNACHeader', false);
