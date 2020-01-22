@@ -28,7 +28,7 @@ export class UserResolve implements Resolve<any> {
 	private customerId = new ReplaySubject<string>(1);
 	private user = new ReplaySubject<User>(1);
 	private saId = new ReplaySubject<number>(1);
-	private vaId = new ReplaySubject<number>(1);
+	private vaId = new ReplaySubject<string>(1);
 	private cxLevel = new ReplaySubject<number>(1);
 	private role = new ReplaySubject<string>(1);
 	private dataCenter = new ReplaySubject<string>(1);
@@ -68,7 +68,7 @@ export class UserResolve implements Resolve<any> {
 		return this.saId.asObservable();
 	}
 
-	public getVaId (): Observable<number> {
+	public getVaId (): Observable<string> {
 		return this.vaId.asObservable();
 	}
 
@@ -178,8 +178,6 @@ export class UserResolve implements Resolve<any> {
 					throw new Error(I18n.get('_FailedAccountFilter_'));
 				}
 
-				// select the active smart account, but with vaId hardcoded to 0 for LA, as the backend APIs do not support non-zero vaIds
-				// for LA.  The vaId will be set properly post-LA
 				const activeSmartAccountId = window.localStorage.getItem(ACTIVE_SMART_ACCOUNT_KEY);
 				if (activeSmartAccountId) {
 					this.smartAccount = _.find(this.companyList, {
@@ -191,7 +189,6 @@ export class UserResolve implements Resolve<any> {
 
 				const currentSaId = _.get(this.smartAccount, 'companyId');
 				this.saId.next(currentSaId);
-				this.vaId.next(0);
 				this.customerId.next(`${currentSaId}_${INTERIM_VA_ID}`);
 
 				this.roleList = this.smartAccount.roleList;
@@ -203,6 +200,7 @@ export class UserResolve implements Resolve<any> {
 					);
 				});
 				this.role.next(currentRole.roleName);
+				this.vaId.next(currentRoleDetails.individualAccount.vaId || INTERIM_VA_ID.toString());
 
 				let dataCenterValue = _.get(currentRoleDetails, ['dataCenter', 'dataCenter'], DEFAULT_DATACENTER);
 				// handle null value when a new user logined in

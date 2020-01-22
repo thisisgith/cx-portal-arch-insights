@@ -10,6 +10,7 @@ import { UserResolve } from '@utilities';
 
 describe('APIxAccountInterceptor', () => {
 	const SAID_VALUE = '12345';
+	const VAID_VALUE = '0';
 	const CUSTOMERID_VALUE = '12345_0';
 	const USECASE_VALUE = 'Campus Connect';
 	const SOLUTION_VALUE = 'IBN';
@@ -56,6 +57,7 @@ describe('APIxAccountInterceptor', () => {
 					provide: UserResolve,
 					useValue: {
 						getSaId: () => from([SAID_VALUE]),
+						getVaId: () => from([VAID_VALUE]),
 						getCustomerId: () => from([CUSTOMERID_VALUE]),
 						getCXLevel: () => from([CXLEVEL_VALUE]),
 					},
