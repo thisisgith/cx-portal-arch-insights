@@ -14,6 +14,7 @@ import {
 	VADetails,
 } from '@sdp-api';
 import { UserResolve } from '@utilities';
+import { VIRTUAL_ACCOUNT } from '@constants';
 
 /**
  * Add User Component
@@ -36,7 +37,7 @@ export class AddUserComponent implements OnInit, OnDestroy {
 	public itemsVa: VADetails[];
 	private destroyed$: Subject<void> = new Subject<void>();
 	public userDetails: UserAddRequestModel;
-	public isPartnerUser = false;
+	public isVAUser = false;
 	public isParntner = 'false';
 	public addUserResponse: UserAddResponseModel;
 	public isLoading = false;
@@ -105,10 +106,10 @@ export class AddUserComponent implements OnInit, OnDestroy {
 				this.items = [];
 				this.active = false;
 				if (val) {
-					this.isPartnerUser = true;
+					this.isVAUser = true;
 					this.items = this.response.saVaRoles;
 				} else {
-					this.isPartnerUser = false;
+					this.isVAUser = false;
 					this.items = this.response.saRoles;
 				}
 			});
@@ -131,9 +132,9 @@ export class AddUserComponent implements OnInit, OnDestroy {
 			],
 			saAccountId: this.saAccountId,
 		};
-		if (this.isPartnerUser) {
-			this.userDetails.type_1 = 'VirtualAccount';
-			this.userDetails.value_1 = this.addUserForm.value.virtualAccount;
+		if (this.isVAUser) {
+			this.userDetails.rolesAdded[0].type_1 = VIRTUAL_ACCOUNT;
+			this.userDetails.rolesAdded[0].value_1 = this.addUserForm.value.virtualAccount;
 		}
 
 		this.userService

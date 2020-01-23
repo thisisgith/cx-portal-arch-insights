@@ -1,13 +1,11 @@
 /* tslint:disable */
-import { RolesAdded } from "./roles-added";
+import { RoleDetails } from "./role-details";
 export interface UserAddRequestModel {
     customerId?: string;
     saAccountId?: string;
     ccoId?: string;
     email?: string;
-    rolesAdded?: Array<RolesAdded>;     
+    rolesAdded?: Array<RoleDetails>;     
 	isPartner?: string;
-	type_1?: string;
-	value_1?: string;
 
 }

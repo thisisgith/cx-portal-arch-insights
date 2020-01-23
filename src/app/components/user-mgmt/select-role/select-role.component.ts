@@ -15,6 +15,7 @@ import * as _ from 'lodash-es';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { UserResolve } from '@utilities';
 import { map } from 'rxjs/operators';
+import { VIRTUAL_ACCOUNT } from '@constants';
 
 /**
  * SelectRoleComponent
@@ -116,7 +117,7 @@ export class SelectRoleComponent implements OnInit {
 			return;
 		}
 		if (this.roleType === 'vaRole') {
-			role.type_1 =  'VirtualAccount';
+			role.type_1 =  VIRTUAL_ACCOUNT;
 			role.value_1 =  _.get(this.user, ['selectedVirtualAccount', 'virtual_account_id']);
 		}
 		let updateRequest;
