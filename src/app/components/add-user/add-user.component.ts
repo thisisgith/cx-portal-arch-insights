@@ -14,7 +14,7 @@ import {
 	VADetails,
 } from '@sdp-api';
 import { UserResolve } from '@utilities';
-import { vaAccount } from '@constants';
+import { VIRTUAL_ACCOUNT } from '@constants';
 
 /**
  * Add User Component
@@ -133,7 +133,7 @@ export class AddUserComponent implements OnInit, OnDestroy {
 			saAccountId: this.saAccountId,
 		};
 		if (this.isVAUser) {
-			this.userDetails.rolesAdded[0].type_1 = vaAccount;
+			this.userDetails.rolesAdded[0].type_1 = VIRTUAL_ACCOUNT;
 			this.userDetails.rolesAdded[0].value_1 = this.addUserForm.value.virtualAccount;
 		}
 
