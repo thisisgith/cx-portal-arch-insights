@@ -225,6 +225,8 @@ const mockMachineRecommendations: MachineRecommendationsResponse = [
 				L: 2,
 				M: 44,
 			},
+			
+
 		},
 		expectedProfileRisk: 64,
 		name: 'Recommendation #1',

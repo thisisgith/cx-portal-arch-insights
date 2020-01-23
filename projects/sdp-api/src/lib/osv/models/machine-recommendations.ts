@@ -17,19 +17,25 @@ export interface MachineRecommendations {
 	bugFixed?: number;
 	bugsExposed?: number;
 	psirtExposed?: number;
+	fieldsExposed?: number;
 	psirtFixed?: number;
 	bugSeverity: OsvSeverityTypes;
 	psirtSeverity: OsvSeverityTypes;
 	bugSeriesData?: [],
 	psirtSeriesData?: [],
+	fieldsSeriesData?: [],
 	acceptedDate?: string;
 	expectedProfileRisk?: any;
 	resolvedBugsCount?: number;
+	resolvedFieldsCount?: number;
 	psirtResolvedCount?: number;
 	totalBugsSeverity? : any;
 	totalPsirtsSeverity? : any;
+	totalFieldsSeverity?: any;
 	openBugsCount?: number;
+	openFieldsCount?: number;
 	newOpenBugsCount?: number;
+	newOpenFieldsCount?: number;
 	openPsirtCount?: number;
 	newOpenPsirtCount?: number;
 }

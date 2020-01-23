@@ -14,6 +14,7 @@ import { MachineRecommendations, OSVService } from '@sdp-api';
 import { environment } from '@environment';
 import { Subject, of } from 'rxjs';
 import { takeUntil, catchError, map } from 'rxjs/operators';
+import { IfStmt } from '@angular/compiler';
 /**
  * Interface representing our visual filters
  */
@@ -40,8 +41,12 @@ export class BugsDetailsComponent implements OnInit {
 	public severityFilterTemplate: TemplateRef<{ }>;
 	@ViewChild('stateTemplate', { static: true })
 	public stateTemplate: TemplateRef<{ }>;
+	@ViewChild('firstPublished', { static: true })
+	public firstPublished: TemplateRef<{ }>;
 	@ViewChild('updatedDateTemp', { static: true })
 	public updatedDateTemp: TemplateRef<{ }>;
+	@ViewChild('updatedDateFieldTemp', { static: true })
+	public updatedDateFieldTemp: TemplateRef<{ }>;
 	@ViewChild('impactTemp', { static: true })
 	public impactTemp: TemplateRef<{ }>;
 	@ViewChild('titleTemp', { static: true })
@@ -54,6 +59,12 @@ export class BugsDetailsComponent implements OnInit {
 		public bugRowWellTemplate: TemplateRef<{ }>;
 	@ViewChild('psirtRowWellTemplate', { static: true })
 		public psirtRowWellTemplate: TemplateRef<{ }>;
+	@ViewChild('fieldRowWellTemplate', { static: true })
+		public fieldRowWellTemplate: TemplateRef<{ }>;	
+	@ViewChild('fieldIdTemp', { static: true })
+		public fieldIdTemp: TemplateRef<{ }>;
+	@ViewChild('fieldTitleTemp', { static: true })
+		public fieldTitleTemp: TemplateRef<{ }>;
 	private destroy$ = new Subject();
 
 	public filters: Filter[];
@@ -64,6 +75,7 @@ export class BugsDetailsComponent implements OnInit {
 	};
 	public bugsTable: CuiTableOptions;
 	public psirtsTable: CuiTableOptions;
+	public fieldTable: CuiTableOptions;
 	public detailsData: any;
 	public filtered = false;
 	public searchOptions = {
@@ -148,6 +160,56 @@ export class BugsDetailsComponent implements OnInit {
 				striped: false,
 				wrapText: true,
 			});
+		} else 	if (!this.fieldTable && _.get(this.params, 'viewType') === 'field') {
+			this.fieldTable = new CuiTableOptions({
+				bordered: true,
+				columns: [
+					{
+						key: 'id',
+						name: I18n.get('_OsvFieldId_'),
+						sortable: true,
+						template: this.fieldIdTemp,
+						width: '20%',
+					},
+					{
+						key: 'title',
+						name: I18n.get('_Title_'),
+						sortable: false,
+						template: this.fieldTitleTemp,
+						width: '35%',
+					},
+					{
+						key: 'firstPublished',
+						name: I18n.get('_firstPublished_'),
+						sortable: true,
+						template: this.firstPublished,
+						width: '15%',
+					},
+					{
+						key: 'lastUpadted',
+						name: I18n.get('_lastUpdated_'),
+						sortable: true,
+						template: this.updatedDateFieldTemp,
+						width: '15%',
+					},
+					{
+						key: 'status',
+						name: I18n.get('_State_'),
+						sortable: false,
+						template: this.stateTemplate,
+						width: '15%',
+					}
+				],
+				dynamicData: false,
+				rowWellTemplate: this.fieldRowWellTemplate,
+				hover: true,
+				padding: 'compressed',
+				selectable: false,
+				singleSelect: true,
+				sortable: true,
+				striped: false,
+				wrapText: true,
+			});
 		} else if (!this.psirtsTable && _.get(this.params, 'viewType') === 'psirt') {
 			this.psirtsTable = new CuiTableOptions({
 				bordered: true,
@@ -208,8 +270,9 @@ export class BugsDetailsComponent implements OnInit {
 	public populatePaginationInfo () {
 		const viewType = _.get(this.params, 'viewType');
 		_.map(this.detailsData, (recommendation: any) => {
+
 			const data = viewType === 'bug' ? _.get(recommendation, ['data', 'bugs'], []) :
-				_.get(recommendation, ['data', 'psirts'], []);
+			viewType === 'psirts' ? _.get(recommendation, ['data', 'psirts'], []) : _.get(recommendation, ['data', 'fns'], []);
 
 			const offset = _.get(recommendation, ['params', 'offset']);
 			let first = (this.numberOfRows * ((offset + 1) - 1)) + 1;
@@ -243,13 +306,14 @@ export class BugsDetailsComponent implements OnInit {
 					showTotal: true,
 					selectedView: 'exposed',
 					total: viewType === 'bug' ?
-						_.get(recommendation, ['data', 'bugs'], []).length :
-						_.get(recommendation, ['data', 'psirts'], []).length,
+						_.get(recommendation, ['data', 'bugs'], []).length : viewType === 'psirts' ?
+						_.get(recommendation, ['data', 'psirts'], []).length : _.get(recommendation, ['data', 'fns'], []).length,
 					exposed: viewType === 'bug' ?
 						_.get(recommendation, ['data', 'openBugsCount'])
-						+ _.get(recommendation, ['data', 'newOpenBugsCount']) :
+						+ _.get(recommendation, ['data', 'newOpenBugsCount']) : viewType === 'psirts' ?
 						_.get(recommendation, ['data', 'openPsirtCount'])
-						+ _.get(recommendation, ['data', 'newOpenPsirtCount']),
+						+ _.get(recommendation, ['data', 'newOpenPsirtCount']) : _.get(recommendation, ['data', 'openFieldsCount'])
+						+ _.get(recommendation, ['data', 'newOpenFieldsCount'])
 				},
 			];
 			recommendation.showNoInfoAvailable = false;
@@ -262,6 +326,7 @@ export class BugsDetailsComponent implements OnInit {
 			const severityFilterData = viewType === 'bug' ?
 				_.get(recommendation, ['data', 'totalBugsSeverity']) :
 				_.get(recommendation, ['data', 'totalPsirtsSeverity']);
+
 			const severityFilterSeriesData = _.compact(
 				_.map(severityFilterData, (value: number, sevKey: string) => {
 					if (value !== 0) {
@@ -282,6 +347,11 @@ export class BugsDetailsComponent implements OnInit {
 					this.populateStateFilter(_.get(recommendation, ['data', 'openBugsCount']),
 						_.get(recommendation, ['data', 'newOpenBugsCount']),
 						_.get(recommendation, ['data', 'resolvedBugsCount']));
+			}else if (viewType === 'field') {
+				stateFilter.seriesData =
+					this.populateStateFilter(_.get(recommendation, ['data', 'openFieldsCount']),
+						_.get(recommendation, ['data', 'newOpenFieldsCount']),
+						_.get(recommendation, ['data', 'resolvedFieldsCount']));
 			} else {
 				stateFilter.seriesData =
 					this.populateStateFilter(_.get(recommendation, ['data', 'openPsirtCount']),
@@ -364,6 +434,7 @@ export class BugsDetailsComponent implements OnInit {
 	 * setting the default for the details page
 	 */
 	public setDefaultData () {
+		const viewType = _.get(this.params, 'viewType');
 		this.hasRecommendation1 = _.filter(this.data,
 			(recomm: MachineRecommendations) => recomm.name === 'Recommendation #1');
 		this.hasRecommendation2 = _.find(this.data,
@@ -481,8 +552,8 @@ export class BugsDetailsComponent implements OnInit {
 		const actualData = _.cloneDeep(_.get(_.filter(this.data,
 			(recomm: MachineRecommendations) => recomm.name === recommendation.name), 0));
 		const viewType = _.get(this.params, 'viewType');
-		const data = viewType === 'bug' ? actualData.bugs :
-			actualData.psirts;
+		const data = viewType === 'bug' ? actualData.bugs : viewType === 'psirts' ? 
+			actualData.psirts : actualData.fns;
 		const stateFilters = recommendation.appliedFilters.state;
 		const severityFilters = recommendation.appliedFilters.severity;
 		let filteredData = data;
@@ -508,7 +579,12 @@ export class BugsDetailsComponent implements OnInit {
 					severityFilters.indexOf(recomm.severity) > -1,
 				);
 			}
-			if (searchedText.length > 0) {
+			if (searchedText.length > 0 && viewType === 'field') {
+				filteredData = _.filter(filteredData, recomm =>
+					_.includes(_.toLower(recomm.fnId), searchedText) ||
+					_.includes(_.toLower(recomm.title), searchedText),
+				);
+			} else  {
 				filteredData = _.filter(filteredData, recomm =>
 					_.includes(_.toLower(recomm.id), searchedText) ||
 					_.includes(_.toLower(recomm.title), searchedText),
@@ -516,8 +592,9 @@ export class BugsDetailsComponent implements OnInit {
 			}
 		}
 
-		viewType === 'bug' ? recommendation.data.bugs = filteredData :
-			recommendation.data.psirts = filteredData;
+		viewType === 'bug' ? recommendation.data.bugs = filteredData : viewType === 'psirts' ? 
+			recommendation.data.psirts = filteredData : recommendation.data.fns = filteredData;
+	
 		recommendation.params.offset = 0;
 		this.populatePaginationInfo();
 		setTimeout(() => {
@@ -571,8 +648,8 @@ export class BugsDetailsComponent implements OnInit {
 		const actualData = _.get(_.filter(this.data,
 			(recomm: MachineRecommendations) => recomm.name === recommendation.name), 0);
 		const viewType = _.get(this.params, 'viewType');
-		viewType === 'bug' ? recommendation.data.bugs = actualData.bugs :
-			recommendation.data.psirts = actualData.psirts;
+		viewType === 'bug' ? recommendation.data.bugs = actualData.bugs : viewType === 'psirts' ?
+			recommendation.data.psirts = actualData.psirts : recommendation.data.fns = actualData.fns;
 		recommendation.params.offset = 0;
 		if (recommendation.name !== 'profile current') {
 			_.set(totalFilter, ['seriesData', '0', 'selectedView'], 'total');
@@ -620,7 +697,7 @@ export class BugsDetailsComponent implements OnInit {
 	 * Handler for performing a search
 	 * @param query search string
 	 */
-	public onSearchQuery (query?: string) {
+	public onSearchQuery (query?: string) { 
 		const recommendation = this.getCurrentTabData();
 		recommendation.params.search = query;
 		this.setFilter(recommendation);
@@ -650,6 +727,7 @@ export class BugsDetailsComponent implements OnInit {
 		}
 	}
 
+
 	/**
 	 * onTableRow click
 	 * @param psirt  table row
@@ -675,6 +753,31 @@ export class BugsDetailsComponent implements OnInit {
 	}
 
 	/**
+	 * onTableRow click
+	 * @param bug  table row
+	 */
+	public onFieldRowSelect (field: any) {
+		if (field.hasDescription) {
+			field.toggleWell = false;
+			field.hasDescription = false;
+
+			return;
+		}
+		const recommendation = this.getCurrentTabData();
+		const data = recommendation.data.fns;
+		_.map(data, row => {
+			row.toggleWell = false;
+			row.hasDescription = false;
+		});
+		field.toggleWell = true;
+		field.hasDescription = true;
+		if (field.toggleWell) {
+			this.getFieldDetails(field);
+		}
+	}
+
+
+	/**
 	 * OnPsirt Details click
 	 * @param row  table row
 	 */
@@ -689,6 +792,15 @@ export class BugsDetailsComponent implements OnInit {
 	public onBugDetailsClick (row: any) {
 		const url = `${environment.bugSearchTool}${row.id}`;
 		window.open(`${url}`, '_blank');
+	}
+
+
+	/**
+	 * Onfield Details click
+	 * @param row  table row
+	 */
+	public onFieldDetailsClick (row: any) {
+		window.open(`${row.url}`, '_blank');
 	}
 
 	/**
@@ -758,6 +870,43 @@ export class BugsDetailsComponent implements OnInit {
 			}),
 			catchError(err => {
 				this.logger.error('Bug Details ' +
+						`:: Error : (${err.status}) ${err.message}`);
+				this.status.isLoadingDetails = false;
+
+				return of({ });
+			}),
+		)
+		.subscribe(() => {
+			this.status.isLoadingDetails = false;
+		});
+	}
+
+
+	/**
+	 * get field details
+	 * @param bug data row
+	 */
+	public getFieldDetails (field: any) {
+		this.status.isLoadingDetails = true;
+		this.timeoutId = setTimeout(() => {
+			this.showLoadingMessage = true;
+		}, 5000);
+		this.osvService.getFieldDetails({ fnId: field.fnId })
+		.pipe(
+			takeUntil(this.destroy$),
+			map((response: any) => {
+				this.showLoadingMessage = false;
+				clearTimeout(this.timeoutId);
+				let description  = _.get(response.fnSummary, ['problemDescription'], '');
+				description = description.replace(/\n/g, '<br>');
+				field.description = description;
+				let fieldUrl  = _.get(response.fnSummary, ['url'], '');
+				field.url = fieldUrl;
+			}),
+			catchError(err => {
+				this.showLoadingMessage = false;
+				clearTimeout(this.timeoutId);
+				this.logger.error('Field Details ' +
 						`:: Error : (${err.status}) ${err.message}`);
 				this.status.isLoadingDetails = false;
 

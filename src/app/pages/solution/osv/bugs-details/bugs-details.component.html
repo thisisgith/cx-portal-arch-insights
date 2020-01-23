@@ -23,8 +23,8 @@
 <cui-spinner *ngIf="status.isLoading"></cui-spinner>
 
 <ng-template #details let-recommendation="recommendation">	
-	<visual-filter-bar *ngIf="((params?.viewType === 'bug' && recommendation?.data?.bugs?.length > 0) || ( params?.viewType === 'psirt' && recommendation?.data?.psirts?.length > 0 ))" [filters]="recommendation.filters"></visual-filter-bar>
-	<ng-container *ngIf="recommendation.filtered && ((params?.viewType === 'bug' && recommendation?.data?.bugs?.length > 0) || ( params?.viewType === 'psirt' && recommendation?.data?.psirts?.length > 0 ))">
+	<visual-filter-bar *ngIf="((params?.viewType === 'bug' && recommendation?.data?.bugs?.length > 0) || (params?.viewType === 'field' && recommendation?.data?.fns?.length > 0) || ( params?.viewType === 'psirt' && recommendation?.data?.psirts?.length > 0 ))" [filters]="recommendation.filters"></visual-filter-bar>
+	<ng-container *ngIf="recommendation.filtered && ((params?.viewType === 'bug' && recommendation?.data?.bugs?.length > 0) || (params?.viewType === 'field' && recommendation?.data?.fns?.length > 0) || ( params?.viewType === 'psirt' && recommendation?.data?.psirts?.length > 0 ))">
 		<div class="divider half-margin-top qtr-margin-bottom"></div>
 		<ng-container *ngTemplateOutlet="filterBar;context:{recommendation:recommendation}"></ng-container>
 	</ng-container>
@@ -33,6 +33,10 @@
 	</ng-container>
 	<ng-container *ngIf="params?.viewType === 'psirt'">
 		<ng-container *ngTemplateOutlet="psirtTableTemp;context:{recommendation:recommendation}"></ng-container>
+	</ng-container>
+	<!--field notices-->
+	<ng-container *ngIf="params?.viewType === 'field'">
+		<ng-container *ngTemplateOutlet="fieldTableTemp;context:{recommendation:recommendation}"></ng-container>
 	</ng-container>
 </ng-template>
 
@@ -161,6 +165,53 @@
 	</div>
 </ng-template>
 
+<!--field notice-->
+
+<ng-template #fieldTableTemp let-recommendation="recommendation">
+	<div class="base-margin-top">
+		<div *ngIf="(recommendation?.data?.fns?.length > 0) ||  (recommendation?.params?.search?.length > 0)" class="qtr-margin-top row">
+			<div class="col-md-9 flex flex-fill">
+				<div class="flex-center-vertical">
+					<span [innerText]="'_FieldsNotices_' | i18n" class="text-large"></span>
+					<span
+						[innerText]="'_OsvShowingXofYFns_' | i18n:recommendation.paginationCount:recommendation.total"
+						class="qtr-margin-left text-small text-muted" data-auto-id="ShowingBugsCount">
+					</span>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<div class="flex flex-fluid flex-right">
+					<cui-search placeholder="{{ '_Search_' | i18n }}" [searchText]="recommendation.params?.search" [debounce]="searchOptions.debounce"
+						[compressed]="true" (onUpdate)="onSearchQuery($event)">
+					</cui-search>
+				</div>
+			</div>
+		</div>
+		<cui-spinner *ngIf="status.isFiltering"></cui-spinner>
+		<div *ngIf="!status.isFiltering && fieldTable && recommendation.data?.fns && recommendation.data.fns.length > 0">
+			<cui-table 
+				[limit]="recommendation.params.limit" 
+				[offset]="recommendation.params.offset"
+				[options]="fieldTable"
+				(onTableRowClicked)="onFieldRowSelect($event)"			
+				[data]="recommendation?.data.fns">
+			</cui-table>
+		</div>
+		<div *ngIf="recommendation.data?.fns.length === 0" class="text-center text-xlarge dbl-margin-top">
+	<span [innerText]="'_OsvNoFieldsFound_' | i18n"></span>
+		</div>
+		<div class="base-margin-top" *ngIf="recommendation?.total > 0">
+			<cui-pager 
+				[page]="recommendation.params.offset" 
+				[limit]="recommendation.params.limit"
+				[totalItems]="recommendation.total || 0"
+				(onPageChanged)="onPageChanged($event,recommendation)">
+			</cui-pager>
+		</div>
+	</div>
+</ng-template>
+
+
 <ng-template #filterBar let-recommendation="recommendation">
 	<div class="row qtr-margin-top qtr-margin-bottom">
 		<div class="col-md-1 flex flex-center-vertical">
@@ -216,6 +267,24 @@
 
 <ng-template #bugIdTemp let-item="celldata">
 	<span  [title]="item.id" [innerText]="item.id"></span>	
+</ng-template>
+
+<!--field notices-->
+
+<ng-template #fieldTitleTemp let-item="celldata">
+	<span [title]="item.title" [innerText]="item.title"></span>
+</ng-template>
+
+<ng-template #fieldIdTemp let-item="celldata">
+	<span  [title]="item.fnId" [innerText]="item.fnId"></span>	
+</ng-template>
+
+<ng-template #firstPublished let-item="celldata">
+	<span  [title]="item.firstPublishedDate" [innerText]="item.firstPublishedDate"></span>	
+</ng-template>
+
+<ng-template #updatedDateFieldTemp let-item="celldata">
+	<span *ngIf="item.lastUpdatedDate" [innerText]="item.lastUpdatedDate | date:medium"></span>
 </ng-template>
 
 <ng-template #noInformationAvailable>
@@ -288,4 +357,51 @@
 			<div class="col-md-12 base-margin-top" [innerHTML]="item?.description"></div>
 		</div>	
 	</div>
+</ng-template>
+
+<!-- filed notice-->
+
+<ng-template #fieldRowWellTemplate let-item="item">
+	<div class="flex-center-horizontal">
+		<cui-spinner *ngIf="status?.isLoadingDetails"></cui-spinner>
+		<div class="half-padding-top half-margin-left" *ngIf="status?.isLoadingDetails && showLoadingMessage">
+			<div [innerText]="'_OsvWaitingMessage_' | i18n"></div>
+			<div [innerText]="'_OsvContinueWaiting_' | i18n"></div>
+		</div>
+	</div>
+	<div *ngIf="!status?.isLoadingDetails" class="fieldDeatils">
+		<div class="row no-margin">
+			<div class="col-md-9 base-margin-top">
+					<div [innerText]= "'_Title_' | i18n " class="text-bold" ></div>
+					<div [title]="item?.title" [innerText]="item?.title"></div>
+			</div>
+			<div class="col-md-3 base-margin-top" >
+				<button 
+					(click)="onFieldDetailsClick(item)"
+					class="btn btn--secondary btn--small" 
+					attr.data-auto-id="ViewBugDetail">
+						<span [innerText] ="'_OsvViewDetails_' | i18n | uppercase"></span>
+						<img alt="{{ '_OsvOpenNewWindow_' | i18n }}" 
+							class="half-margin-left" 
+							attr.data-auto-id="OpenInNewWindow"
+							src="assets/icons/icon-open-new-window.svg">
+				</button>	
+			</div>
+		</div>
+		<div class="row no-margin">
+			<div class="col-md-12 base-margin-top text-bold" [innerText]= "'_Description_' | i18n "></div>
+			<div class="col-md-12 base-margin-top" [innerHTML]="item?.description"></div>
+		</div>
+		
+		<div class="row no-margin">
+			<div class="col-md-12 base-margin-top" [innerText]= "'_fieldUrl_' | i18n "></div>
+			<div class="col-md-12 base-margin-top" >
+				<a 
+				(click)="onFieldDetailsClick(item)"
+				class="text-small" 
+				[innerHTML]="item?.url">
+			</a>
+			</div>
+		</div>
+	</div>	
 </ng-template>

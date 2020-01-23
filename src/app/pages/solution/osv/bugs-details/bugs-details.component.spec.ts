@@ -55,7 +55,7 @@ describe('BugsDetailsComponent', () => {
 			.toBeDefined();
 	});
 
-	it('should switch active filters for bugs', () => {
+	it('should switch active filters for bugs and field notices', () => {
 		const sgRecommendations = <any> OSVScenarios[9].scenarios.GET[0].response.body;
 		component.data = sgRecommendations.recommendationSummaries;
 		component.params = { viewType: 'bug' };
@@ -120,6 +120,11 @@ describe('BugsDetailsComponent', () => {
 		fixture.detectChanges();
 		expect(component.psirtsTable)
 			.toBeDefined();
+		component.params = { viewType: 'field' };
+		component.ngOnInit();
+		fixture.detectChanges();
+		expect(component.fieldTable)
+			.toBeDefined();		
 	});
 
 });

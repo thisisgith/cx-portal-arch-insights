@@ -1705,6 +1705,12 @@
 	"_ConnectionFailed_": "Please verify the IP Address or Try agin later",
 	"_ChangePasswordSuccess_": "Password changed successfully",
 	"_SuccessModal_": "Success Modal",
-	"_ReInstall_": "Re-install"
-
+	"_ReInstall_": "Re-install",
+	"_FieldsNotices_": "Field Notices",
+	"_OsvFieldId_": "ID",
+	"_OsvNoFieldsFound_":"No FNs Found",
+	"_firstPublished_": "First Published",
+	"_lastUpdated_":"Last Updated",
+	"_fieldUrl_": "This Advisory is avaliable in the following link",
+    "_OsvNoFieldsMessage_":"Field Notices count is 0 because the product is either not supported or the system is undergoing refresh. Please try again later."
 }

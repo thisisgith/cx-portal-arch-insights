@@ -37,10 +37,11 @@
 		<span class=" qtr-margin-left text-xlarge" [innerText]="'|'"></span>
 		<span class="base-margin-left text-xlarge" *ngIf="detailsParams.viewType == 'bug'"  [innerText]="'_Bugs_' | i18n"></span>
 		<span class="base-margin-left text-xlarge" *ngIf="detailsParams.viewType == 'psirt'" [innerText]="'_SecurityAdvisories_' | i18n"></span>
+        <span class="base-margin-left text-xlarge" *ngIf="detailsParams.viewType == 'field'"  [innerText]="'_FieldsNotices_' | i18n"></span>
 	</div>
 </ng-template>
 
-<!-- bugs and psirts details template -->
+<!-- bugs, field,  and psirts details template -->
 <ng-template #detailsTemplate>
 	<app-bugs-details 
 		[fullscreen]="fullscreen"

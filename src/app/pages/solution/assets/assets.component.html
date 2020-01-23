@@ -415,8 +415,8 @@
 
 <!-- Templates for our Visual Filters for the Assets Tab -->
 <ng-template #bubbleChartFilter let-filter="filter">
-	<bubble-chart [seriesData]="filter.seriesData" (subfilter)="onSubfilterSelect($event.filter, filter)">
-	</bubble-chart>
+	<bar-chart [seriesData]="filter.seriesData" (subfilter)="onSubfilterSelect($event.filter, filter)">
+	</bar-chart>
 </ng-template>
 
 <ng-template #pieChartFilter let-filter="filter">
