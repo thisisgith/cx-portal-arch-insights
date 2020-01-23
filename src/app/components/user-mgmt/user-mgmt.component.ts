@@ -6,7 +6,6 @@ import {
 	OnDestroy,
 	Output,
 	OnInit,
-	ViewChild, TemplateRef,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { empty, Observable, Subject, forkJoin } from 'rxjs';
