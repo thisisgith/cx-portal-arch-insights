@@ -396,7 +396,7 @@
 		<div class="row no-margin">
 			<div class="col-md-12 base-margin-top" [innerText]= "'_fieldUrl_' | i18n "></div>
 			<div class="col-md-12 base-margin-top" >
-				<a 
+				<a data-auto-id="field-row-click"
 				(click)="onFieldDetailsClick(item)"
 				class="text-small" 
 				[innerHTML]="item?.url">
