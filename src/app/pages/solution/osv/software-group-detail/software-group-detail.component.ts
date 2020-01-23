@@ -118,6 +118,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 			profileId: '',
 			productFamily: '',
 			profileName: '',
+			productId: '',
 		};
 		this.softwareGroupAssetsParams = {
 			customerId: this.customerId,

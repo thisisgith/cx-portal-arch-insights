@@ -120,11 +120,7 @@ describe('BugsDetailsComponent', () => {
 		fixture.detectChanges();
 		expect(component.psirtsTable)
 			.toBeDefined();
-		component.params = { viewType: 'field' };
-		component.ngOnInit();
-		fixture.detectChanges();
-		expect(component.fieldTable)
-			.toBeDefined();		
+		
 	});
 
 });
