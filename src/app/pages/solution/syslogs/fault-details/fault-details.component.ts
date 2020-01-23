@@ -98,12 +98,12 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 		}];
 	public srStatus: any[] = [
 		{
-			name: I18n.get('_FaultOpen_'),
-			value: 'Open',
+			name: I18n.get('_FaultSuccess_'),
+			value: 'Success',
 		},
 		{
-			name: I18n.get('_FaultClosed_'),
-			value: 'Closed',
+			name: I18n.get('_FaultFailed_'),
+			value: 'Failed',
 		},
 		{
 			name: I18n.get('_FaultNoTacCase_'),
@@ -223,6 +223,8 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 	 * @param searchParams FaultSearchParams
 	 */
 	public getAffectedSystemDetails (searchParams: FaultSearchParams) {
+		this.searchParams.srStatus =
+			(this.searchParams.srStatus === 'Empty') ? '' : this.searchParams.srStatus;
 		this.affectedSystemLoading = true;
 		this.searchParams.lastUpdateTime = this.lastUpdateTime;
 		this.faultService.getAffectedSystems(searchParams)
@@ -295,7 +297,7 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 					name: I18n.get('_FaultSystemName_'),
 					sortable: true,
 					template: this.systemNameTemplate,
-					width: '20%',
+					width: '18%',
 				},
 				{
 					name: I18n.get('_FaultProductId_'),
@@ -307,7 +309,7 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 					name: I18n.get('_FaultSoftwareType_'),
 					sortable: true,
 					template: this.softwareTypeTemplate,
-					width: '15%',
+					width: '16%',
 				},
 				{
 					name: I18n.get('_FaultStatus_'),
@@ -319,7 +321,7 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 					name: I18n.get('_FaultCaseNumber_'),
 					sortable: true,
 					template: this.caseNumberTemplate,
-					width: '15%',
+					width: '16%',
 				},
 				{
 					name: I18n.get('_FaultDateAndTime'),
@@ -386,8 +388,10 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 		} else if (paramType.toUpperCase() === this.FAULT_CONSTANT.TIME) {
 			this.searchParams.days = event;
 		} else {
-			this.searchParams.srStatus = '';
+			this.searchParams.srStatus = (event === 'Empty') ? '' : event;
 		}
+		this.searchParams.pageNo = 1;
+		this.tableOffset = 0;
 		this.getAffectedSystemDetails(this.searchParams);
 	}
 
@@ -524,6 +528,8 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 				return 'productId';
 			case 'Software Type':
 				return 'swType';
+			case 'Status':
+				return 'srStatus';
 			case 'Case Number':
 				return 'tacCaseNo';
 			case 'Date and Time':

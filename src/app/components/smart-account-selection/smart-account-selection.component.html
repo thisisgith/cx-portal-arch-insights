@@ -1,20 +1,27 @@
 <div class="modal__dialog">
-	<div class="modal__header">
+	<div *ngIf="showSmartAccounts" class="modal__header">
 		<h2>{{ '_SmartAccountSelection_' | i18n }}</h2>
 	</div>
 	<div class="modal__body">
-		<span *ngIf="accountWithError" ngClass="text-danger">
-			{{ '_SmartAccountSelectionError_' | i18n : accountWithError }}
+		<span *ngIf="errorMsg" ngClass="text-danger">
+			{{ errorMsg }}
 		</span>
-		<span *ngIf="!accountWithError">
-			{{ '_SmartAccountSelectionSubject_' | i18n }}
-		</span>
-		<ul class="list list--highlight half-margin-top">
-			<li *ngFor="let smartAccount of data.smartAccounts"
-				attr.data-auto-id="SmartAccountDropdown-{{ smartAccount.companyName }}"
-				(click)="selectSmartAccount(smartAccount.companyId)">
-				<h6 class="panel panel--bordered text-left">{{ smartAccount.companyName }}</h6>
-			</li>
-		</ul>
+		<div *ngIf="showSmartAccounts">
+			<ul *ngIf="showSmartAccounts" class="list list--highlight half-margin-top">
+				<li *ngFor="let smartAccount of data.smartAccounts"
+					attr.data-auto-id="SmartAccountDropdown-{{ smartAccount.companyName }}"
+					(click)="selectSmartAccount(smartAccount.companyId)">
+					<h6 class="panel panel--bordered text-left">{{ smartAccount.companyName }}</h6>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<div class="modal__footer">
+		<a 
+			attr.data-auto-id="SA-Selection-Modal-LogOut"
+			class="btn override-button text-uppercase"
+			href="{{logOutUrl}}"
+			[innerText]="'_LogOut_' | i18n"
+		></a>
 	</div>
 </div>

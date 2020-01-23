@@ -56,7 +56,7 @@ export class CompareRecommendationsComponent implements OnChanges {
 	 * @param recommendations machine recommendations
 	 */
 	public formatData (recommendations) {
-		_.map(recommendations, (recommendation: MachineRecommendations) => { 
+		_.map(recommendations, (recommendation: MachineRecommendations) => {
 			const openBugs = _.get(recommendation, ['bugSeverity', 'OPEN']);
 			const newOpenBugs = _.get(recommendation, ['bugSeverity', 'NEW_OPEN']);
 			const resolvedBugs = _.get(recommendation, ['bugSeverity', 'RESOLVED']);

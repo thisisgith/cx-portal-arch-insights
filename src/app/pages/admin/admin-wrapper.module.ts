@@ -6,6 +6,7 @@ import { AdminWrapperComponent } from './admin-wrapper.component';
 import { CuiSidebarModule, CuiSpinnerModule } from '@cisco-ngx/cui-components';
 import { RouterModule } from '@angular/router';
 import { InlineSVGModule } from 'ng-inline-svg';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 /**
  * Main Settings module
@@ -22,6 +23,7 @@ import { InlineSVGModule } from 'ng-inline-svg';
 		CuiSidebarModule,
 		CuiSpinnerModule,
 		RouterModule,
+		SharedModule,
 	],
 })
 export class AdminWrapperModule { }

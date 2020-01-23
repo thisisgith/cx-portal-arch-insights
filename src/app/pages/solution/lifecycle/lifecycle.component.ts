@@ -1264,6 +1264,7 @@ export class LifecycleComponent implements OnDestroy {
 		// refresh the racetrack info to get those new changes
 		this.racetrackService.getRacetrack(params)
 		.subscribe((results: RacetrackResponse) => {
+			this.racetrackInfoService.sendRacetrack(results);
 			const responseSolution: RacetrackSolution = _.find(
 				_.get(results, 'solutions', []), (solution: RacetrackSolution) =>
 				solution.name === this.selectedSolution.name);
@@ -1506,10 +1507,15 @@ export class LifecycleComponent implements OnDestroy {
 
 	/**
 	 * Opens the given URL in a new tab
+	 * @param [event] Event
 	 * @param crossLaunchUrl string
 	 */
-	 public crossLaunch (crossLaunchUrl: string) {
-		if (crossLaunchUrl) {
+	 public crossLaunch (event: MouseEvent, crossLaunchUrl: string) {
+		if (event) {
+			event.preventDefault();
+		 }
+
+		 if (crossLaunchUrl) {
 			window.open(crossLaunchUrl, '_blank');
 		}
 		this.atxMoreClicked = false;
@@ -1633,7 +1639,6 @@ export class LifecycleComponent implements OnDestroy {
 				if (window.Cypress) {
 					window.accLoading = false;
 				}
-
 				return result;
 			}),
 			catchError(err => {
@@ -1679,7 +1684,6 @@ export class LifecycleComponent implements OnDestroy {
 				this.componentData.atx.sessions = result.items;
 				this.selectedATX = this.componentData.atx.sessions;
 				_.each(this.selectedATX, (atx: AtxSchema) => {
-					atx.recordingURL = decodeURIComponent(atx.recordingURL);
 					_.each(atx.sessions, (session: AtxSessionSchema) => {
 						if (session.scheduled) {
 							this.scheduledAtxMap[atx.atxId] = session;
@@ -1946,7 +1950,6 @@ export class LifecycleComponent implements OnDestroy {
 		_.set(this.componentData, ['learning', 'elearning'], []);
 		_.set(this.componentData, ['learning', 'training'], []);
 		_.set(this.componentData, ['learning', 'remotepracticelabs'], []);
-
 		return this.contentService.getRacetrackElearning(
 			_.pick(this.componentData.params,
 			['customerId', 'solution', 'usecase', 'pitstop', 'rows', 'suggestedAction']))
@@ -2497,20 +2500,27 @@ export class LifecycleComponent implements OnDestroy {
 	public parseHtmlText (txtString) {
 		const dmTemp = document.createElement('template');
 		dmTemp.innerHTML = txtString.trim();
-
 		return dmTemp.content.cloneNode(true).textContent;
 	}
 
 	/**
 	 * Open the Watch Now modal for atx
+	 * @param [event] Event
 	 * @param {AtxSchema} atx - The overarching atx
 	 * Should change param type from 'any' to AtxSchema when the sdp api gets updated to include 'videoURL'
 	 */
-	public openWatchNow (atx: any) {
+	public openWatchNow (event: MouseEvent, atx: any) {
+		if (!(atx.videoURL || (atx.providerInfo && atx.recordingURL))) {
+			if (event) {
+				event.stopPropagation();
+			}
+
+			return;
+		}
+
 		// cross launch if partner atx
 		if (atx.providerInfo) {
-			this.crossLaunch(atx.recordingURL);
-
+			this.crossLaunch(event, atx.recordingURL);
 			return;
 		}
 		const atxWatchData = {

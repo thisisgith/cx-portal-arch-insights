@@ -11,7 +11,7 @@ const datacenterStub = 'REGION';
 export const defaults = {
 	origin,
 	datacenterStub,
-	collectorOverview : 'https://www.cisco.com/c/dam/en/us/support/docs/cloud-systems-management/Cisco-CX-Collector/Collector_Overview.pdf',
+	collectorOverview: 'https://www.cisco.com/c/dam/en/us/support/docs/cloud-systems-management/Cisco-CX-Collector/Collector_Overview.pdf',
 	apolloServicePaths: {
 		cases: '/ws/cases',
 		csc: '/ws/csc',
@@ -70,7 +70,7 @@ export const defaults = {
 	mapboxForwardGeocodePath: '/geocoding/v5/mapbox.places',
 	mapboxHost: 'https://api.mapbox.com',
 	mapboxToken:
-	'pk.eyJ1IjoibWlzY2htaTIiLCJhIjoiY2p4eDl2ODVnMGpmODNkcDhsbG5nNXQ0YyJ9.vpfGffFASSUfANAU4Yvtxg',
+		'pk.eyJ1IjoibWlzY2htaTIiLCJhIjoiY2p4eDl2ODVnMGpmODNkcDhsbG5nNXQ0YyJ9.vpfGffFASSUfANAU4Yvtxg',
 	myCase: 'https://mycase2.cloudapps.cisco.com',
 	// ClientSSOInterceptor: No auth token for the typeahead url
 	noAuthEndpoints: [
@@ -100,7 +100,8 @@ export const defaults = {
 		cxportal: '/api/cxportal',
 		inventory: '/api/v1/inventory',
 		partner: '/api/cxportal',
-		cp: '/api/usa',
+		usa: '/api/usa',
+		emea: '/api/emea',
 	},
 	supportEmailLink: 'mailto:cx-portal-support-nonprod@cisco.com',
 	typeaheadServiceOrigin: 'https://xresps-stage.cloudapps.cisco.com',

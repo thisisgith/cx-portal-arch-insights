@@ -22,7 +22,7 @@ const mockUser1: EntitledUser = {
 		emailAddress: 'fakeCco@cisco.com',
 		familyName: 'Test',
 		name: 'Demo',
-		role: UserRoles.ADMIN,
+		role: UserRoles.SA_ADMIN,
 	},
 	name: 'Test User',
 	account: {
@@ -63,7 +63,7 @@ const mockUser1: EntitledUser = {
  */
 const mockUser2 = Object.assign({ }, mockUser1);
 mockUser2.customerId = '92736491';
-mockUser2.individual.role = UserRoles.USER;
+mockUser2.individual.role = UserRoles.SA_FULLUSER;
 
 /** api for service-info 2 */
 const serviceApi2 = `/api/customerportal/entitlement/v1/party/service-info/${mockUser2.customerId}`;

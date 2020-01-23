@@ -111,14 +111,14 @@ const mockPsirtDetail = {
 	\r\ntriggering a reload of the affected device.\r\n<p>Cisco has released software
 	updates that address this vulnerability. There are no workarounds that address this
 	vulnerability.</p>\r\n<p>This advisory is available at the following link:<br />\r\n
-	<a href=\"https://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/
-	cisco-sa-20180926-cdp-memleak\">https://tools.cisco.com/security/center/content/
+	<a href=\'https://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/
+	cisco-sa-20180926-cdp-memleak\'>https://tools.cisco.com/security/center/content/
 	CiscoSecurityAdvisory/cisco-sa-20180926-cdp-memleak</a></p>\r\nThis advisory is
 	part of the September 26, 2018, release of the Cisco IOS and IOS XE Software
 	Security Advisory Bundled Publication, which includes 12 Cisco Security Advisories
 	that describe 13 vulnerabilities. For a complete list of the advisories and links
-	to them, see <a href=\"http://tools.cisco.com/security/center/viewErp.x?alertId
-	=ERP-69981\">Cisco Event Response: September 2018 Semiannual Cisco IOS and IOS
+	to them, see <a href=\'http://tools.cisco.com/security/center/viewErp.x?alertId
+	=ERP-69981\'>Cisco Event Response: September 2018 Semiannual Cisco IOS and IOS
 	XE Software Security Advisory Bundled Publication</a>`,
 };
 
@@ -1439,7 +1439,7 @@ export const OSVScenarios = [
 			],
 		},
 		url: `${api}profileRecommendations?customerId=${customerId}&profileName=${assetId}` +
-				'&productFamily=Cisco Catalyst 9300 Series Switches&profileId=7293498_NA',
+			'&productFamily=Cisco Catalyst 9300 Series Switches&profileId=7293498_NA',
 		usecases: ['Use Case 1'],
 	},
 	{

@@ -19,7 +19,7 @@ const routes: Routes = [
 		},
 		data: {
 			auth: {
-				whitelistRoles: UserRoles.ADMIN,
+				whitelistRoles: [UserRoles.SA_ADMIN, UserRoles.VA_ADMIN],
 				redirectUrl: '/solution',
 			},
 		},

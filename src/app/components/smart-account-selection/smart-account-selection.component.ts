@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { get } from 'lodash-es';
 
+import { environment } from '@environment';
+import { I18n } from '@cisco-ngx/cui-utils';
 import { Company } from '@sdp-api';
 import { ACTIVE_SMART_ACCOUNT_KEY } from '@constants';
 
@@ -19,10 +21,23 @@ export class SmartAccountSelectionComponent implements OnInit {
 	} = {
 		smartAccounts: [],
 	};
-	public accountWithError: string;
+	public errorMsg: string;
+	public showSmartAccounts = false;
+	public logOutUrl = environment.logoutUrl;
 
 	public ngOnInit () {
-		this.accountWithError = this.data.isError && get(this.data, 'selectedSmartAccount.companyName', '');
+		if (this.data.isError) {
+			const selectedSmartAccount = get(this.data, 'selectedSmartAccount.companyName', '');
+			const smartAccountsLen = this.data.smartAccounts.length;
+			if (smartAccountsLen > 1) {
+				this.errorMsg = I18n.get('_SmartAccountSelectionErrorMultiple_', selectedSmartAccount);
+				this.showSmartAccounts = true;
+			} else if (smartAccountsLen === 1) {
+				this.errorMsg = I18n.get('_SmartAccountSelectionErrorSingle_', selectedSmartAccount);
+			} else {
+				this.errorMsg = I18n.get('_SmartAccountSelectionErrorEmpty_');
+			}
+		}
 	}
 
 	public selectSmartAccount (saId: number) {

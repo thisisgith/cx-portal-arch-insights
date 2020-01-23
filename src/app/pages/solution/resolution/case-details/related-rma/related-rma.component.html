@@ -26,7 +26,8 @@
 	</div>
 </ng-template>
 <ng-template #caseRmaNoTemplate let-item="celldata">
-	<a target="_blank" rel="noopener noreferrer" data-auto-id="CaseRmaOpenUrlLink"
+	<a *ngIf="!item.apiError" target="_blank" rel="noopener noreferrer" data-auto-id="CaseRmaOpenUrlLink"
 		href="{{rmaToolUrl}}/?&OrderNumber={{item.rmaNo}}" [innerText]="item.rmaNo">
 	</a>
+	<p *ngIf="item.apiError" [innerText]="item.rmaNo"></p>
 </ng-template>

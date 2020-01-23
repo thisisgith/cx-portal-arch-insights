@@ -1,6 +1,6 @@
 import { Component, OnInit, TemplateRef,
 	ViewChild, Input, OnChanges,
-	SimpleChanges, OnDestroy } from '@angular/core';
+	SimpleChanges, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { FaultService, FaultSearchParams,
 	FaultGridData, RacetrackSolution,
 	RacetrackTechnology, FaultResponse,
@@ -29,6 +29,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 export class FaultsComponent implements OnInit, OnChanges, OnDestroy {
 
 	@Input('faultFilter') public faultFilter;
+	@Input('clearSearch') public searchQueryInFaultGrid;
+	@Output('searchUpdate') public searchUpdate = new EventEmitter();
 
 	public searchParams: FaultSearchParams;
 	private destroy$ = new Subject();
@@ -94,8 +96,7 @@ export class FaultsComponent implements OnInit, OnChanges, OnDestroy {
 			this.searchParams.useCase = _.get(technology, 'name');
 			this.getFaultData(this.searchParams);
 		});
-
-		this.buildTable();
+		this.searchQueryInFaultGrid = '';
 	}
 
 	/**
@@ -105,6 +106,8 @@ export class FaultsComponent implements OnInit, OnChanges, OnDestroy {
 	public ngOnChanges (changes: SimpleChanges) {
 		const currentFilter = _.get(changes, ['faultFilter', 'currentValue']);
 		const firstChange = _.get(changes, ['faultFilter', 'firstChange']);
+		const clear = _.get(changes, ['searchQueryInFaultGrid', 'currentValue']);
+
 		if (currentFilter && !firstChange) {
 			this.searchParams.tacEnabled =
 				(currentFilter.faults === this.FAULT_CONSTANT.DETECTED)
@@ -113,6 +116,9 @@ export class FaultsComponent implements OnInit, OnChanges, OnDestroy {
 			this.searchParams.days = currentFilter.timeRange;
 			this.resetPage();
 			this.getFaultData(this.searchParams);
+		}
+		if (clear === '') {
+			this.searchQueryInFaultGrid = '';
 		}
 	}
 
@@ -178,6 +184,7 @@ export class FaultsComponent implements OnInit, OnChanges, OnDestroy {
 	 */
 	public getFaultData (searchParams: FaultSearchParams) {
 		this.loading = true;
+		this.buildTable();
 		this.faultService.getFaultDetails(searchParams)
 			.pipe(takeUntil(this.destroy$),
 			map((response: FaultResponse) => {
@@ -265,6 +272,7 @@ export class FaultsComponent implements OnInit, OnChanges, OnDestroy {
 	 * @param event search text
 	 */
 	public onSearchUpdate (event) {
+		this.searchUpdate.emit(event);
 		this.resetPage();
 		this.searchParams.localSearch = event;
 		this.getFaultData(this.searchParams);

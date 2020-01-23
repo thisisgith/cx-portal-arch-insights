@@ -83,3 +83,8 @@
 	margin-top: 5%;
 }
 
+a.link--disabled {
+	cursor: unset;
+	pointer-events: none;
+}
+

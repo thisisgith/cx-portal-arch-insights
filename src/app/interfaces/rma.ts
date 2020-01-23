@@ -70,6 +70,7 @@ export interface RMARecord {
 	status: string;
 	orderDate: string;
 	caseId: string;
+	apiError?: boolean;
 	requestedShipDate: string;
 	originator: string;
 	allowPartialShipment: string;

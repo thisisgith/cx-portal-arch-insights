@@ -12,6 +12,15 @@ export class RacetrackInfoService {
 	private currentSolution = new ReplaySubject<RacetrackSolution>(1);
 	public racetrack = new ReplaySubject<RacetrackResponse>(1);
 	private currentAdoptionPercentage = new ReplaySubject<number>(1);
+	public pitStopApiFailure = new ReplaySubject<any>(1);
+
+	/**
+	 * Returns the error when smartsheet for pitstop is not updated
+	 * @returns the observable representing the error
+	 */
+	public getPitStopApiFailure (): Observable<any> {
+		return this.pitStopApiFailure.asObservable();
+	}
 
 	/**
 	 * Returns the currently selected solution
@@ -75,5 +84,13 @@ export class RacetrackInfoService {
 	 */
 	public sendCurrentAdoptionPercentage (adoptionPercentage: number) {
 		this.currentAdoptionPercentage.next(adoptionPercentage);
+	}
+
+	/**
+	 * Sends out the error message when smartsheet for pitstop is not updated
+	 * @param err  error received from api
+	 */
+	public sendPitStopApiFailure (err: any) {
+		this.pitStopApiFailure.next(err);
 	}
 }

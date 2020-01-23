@@ -346,7 +346,7 @@ describe('AppComponent', () => {
 					userResolve.getRole()
 					.subscribe((s: string) => {
 						expect(s)
-							.toEqual(UserRoles.ADMIN);
+							.toEqual(UserRoles.SA_ADMIN);
 
 						done();
 					});

@@ -8,6 +8,8 @@ import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { environment } from '@environment';
 import { CrashPreventionModule } from '@sdp-api';
 import { ComparisonviewModule } from '../fingerprint-body/fp-compare/comparisonview/comparisonview.module';
+import { TooltipModule } from '@components';
+import { RiskScoreComponent } from './risk-score/risk-score.component';
 
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
@@ -18,7 +20,8 @@ const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 	 * FpSimilarAssetsComponent
 	 */
 @NgModule({
-	declarations: [FpSimilarAssetsComponent],
+	declarations: [FpSimilarAssetsComponent, RiskScoreComponent],
+	entryComponents: [RiskScoreComponent],
 	exports: [FpSimilarAssetsComponent],
 	imports: [
 		CommonModule,
@@ -31,6 +34,7 @@ const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 		CuiProgressbarModule,
 		I18nPipeModule,
 		CrashPreventionModule.forRoot({ rootUrl }),
+		TooltipModule,
 	],
 })
 export class FpSimilarAssetsModule { }

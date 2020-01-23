@@ -48,15 +48,18 @@ export const environment = {
 	 * sdpServiceOrigin MUST be explicitly declared in every single environment file,
 	 * because it is used inside of a module forRoot() call
 	 */
-	sdpServiceBasePath: '/api',
+	sdpServiceBasePath: `/api/${defaults.datacenterStub}`,
 	sdpServiceOrigin: 'https://api-stage.cisco.com',
 	sdpServicePaths: {
-		contracts: '/api/v1/contracts',
-		customerportal: '/api/customerportal',
-		cxportal: '/api/cxportal',
-		inventory: '/api/v1/inventory',
-		partner: '/api/cxportal',
-		cp: '/api/usa',
+		contracts: `/api/${defaults.datacenterStub}/v1/contracts`,
+		customerportal: `/api/${defaults.datacenterStub}/customerportal`,
+		customerportalNoRegion: '/api/customerportal',
+		cxportal: `/api/${defaults.datacenterStub}/cxportal`,
+		inventory: `/api/${defaults.datacenterStub}/v1/inventory`,
+		partner: `/api/${defaults.datacenterStub}/cxportal`,
+		cp: `/api/${defaults.datacenterStub}`,
+		usa: '/api/usa',
+		emea: '/api/emea',
 	},
 	learningLink: 'https://qa.cte.systems/cx/#/',
 };

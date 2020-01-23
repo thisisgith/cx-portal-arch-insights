@@ -120,7 +120,6 @@ describe('BugsDetailsComponent', () => {
 		fixture.detectChanges();
 		expect(component.psirtsTable)
 			.toBeDefined();
-		
 	});
 
 });

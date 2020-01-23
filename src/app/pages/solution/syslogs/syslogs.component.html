@@ -23,11 +23,20 @@
 		<div class="divider qtr-margin-top"></div>
 	</ng-container>
 	<div *ngIf="visualLabels[0].active">
-		<app-faults [faultFilter]="appliedFilters"></app-faults>
+		<app-faults
+			[faultFilter]="appliedFilters"
+			[clearSearch]="searchQueryInGrid"
+			(searchUpdate)="onSearchUpdate($event)">
+		</app-faults>
 	</div>
 	<div *ngIf="visualLabels[1].active">
-		<syslogs-details [sysFilter]="appliedFilters" [solution]="solution" [useCase]="useCase"></syslogs-details>
-
+		<syslogs-details
+			[sysFilter]="appliedFilters"
+			[solution]="solution"
+			[useCase]="useCase"
+			[searchVal]="searchQueryInGrid"
+			(searchUpdate)="onSearchUpdate($event)">
+		</syslogs-details>
 	</div>
 </div>
 
@@ -76,7 +85,7 @@
 						(click)="onSubfilterClose(filter)"
 					>
 						<span [innerText]="'_SyslogTitleX_' | i18n : title : subfilter.filterName | titlecase"></span>
-						<span *ngIf="(faultFlag && (filter.key === 'afmSeverity' || filter.key === 'timeRange'))
+						<span *ngIf="(faultFlag && (filter.key === 'afmSeverity'))
 							|| filter.key === 'severity'" class="icon-close"></span>
 					</span>
 				</ng-container>

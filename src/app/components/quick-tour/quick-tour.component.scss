@@ -1,4 +1,5 @@
 @import '~cisco-ui/src/scss/utilities/_variables.scss';
+@import '~src/mixins.scss';
 
 .step {
 	&-container {
@@ -46,6 +47,33 @@
 	width: 15px;
 	height: 15px;
 	transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.icon-button-close {
+	@include button-reset;
+
+	color: white;
+	display: inline-block;
+	font-family: "cui-font", sans-serif;
+	font-size: inherit;
+	font-style: normal;
+	font-weight: normal;
+	text-decoration: inherit;
+	text-transform: none;
+	text-rendering: optimizeLegibility;
+	vertical-align: middle;
+	text-indent: 0.05rem;
+	-webkit-font-smoothing: antialiased;
+	cursor: pointer;
+	position: relative;
+
+	&::before {
+		display: inline-block;
+		text-decoration: none;
+		content: "";
+		position: relative;
+		top: -2px;
+	}
 }
 
 .dot {

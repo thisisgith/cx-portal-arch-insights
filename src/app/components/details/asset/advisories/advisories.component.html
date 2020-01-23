@@ -114,65 +114,27 @@
 </ng-template>
 
 <ng-template #severityTemplate let-celldata="celldata">
-	<span class="label label--circle label--tiny qtr-margin-right"
+	<span *ngIf="celldata?.severityLabel"
+		class="label label--circle label--tiny qtr-margin-right"
 		[ngClass]="{
-			'0': 'label--danger',
-			'1': 'label--danger',
-			'2': 'label--warning-alt',
-			'3': 'label--warning',
-			'4': 'label--info',
-			'5': 'label--info',
-			'6': 'label--info',
-			'7': 'label--info',
+			
 			'Critical': 'label--danger',
-			'critical': 'label--danger',
-			'Error': 'label--danger',
-			'error': 'label--danger',
-			'High': 'label--warning-alt',
-			'high': 'label--warning-alt',
-			'Medium': 'label--warning',
-			'medium': 'label--warning',
-			'Warning': 'label--warning',
-			'warning': 'label--warning',
+			'High': 'label--warning',
+			'Medium': 'label--warning-alt',
 			'Low': 'label--info',
-			'low': 'label--info',
-			'Info': 'label--info',
-			'info': 'label--info',
-			'Notice': 'label--info',
-			'notice': 'label--info',
-			'Ok': 'label--info',
-			'ok': 'label--info'
-		}[celldata.cdets.severity]"
-		data-auto-id="ImpactIcon">
+			'Info': 'label--info'
+		}[celldata?.severityLabel]"
+		data-auto-id="BugDetailsSeverityIcon">
 	</span>
-	<ng-container [ngSwitch]="celldata.cdets.severity">
-		<span data-auto-id="ImpactText" *ngSwitchCase="'0'" [innerText]="'_Critical_' | i18n"></span>
-		<span data-auto-id="ImpactText" *ngSwitchCase="'1'" [innerText]="'_Critical_' | i18n"></span>
-		<span data-auto-id="ImpactText" *ngSwitchCase="'2'" [innerText]="'_High_' | i18n"></span>
-		<span data-auto-id="ImpactText" *ngSwitchCase="'3'" [innerText]="'_Medium_' | i18n"></span>
-		<span data-auto-id="ImpactText" *ngSwitchCase="'4'" [innerText]="'_Low_' | i18n"></span>
-		<span data-auto-id="ImpactText" *ngSwitchCase="'5'" [innerText]="'_Low_' | i18n"></span>
-		<span data-auto-id="ImpactText" *ngSwitchCase="'6'" [innerText]="'_Info_' | i18n"></span>
-		<span data-auto-id="ImpactText" *ngSwitchCase="'7'" [innerText]="'_Info_' | i18n"></span>
+	<ng-container [ngSwitch]="celldata?.severityLabel">
+
 		<span data-auto-id="ImpactText" *ngSwitchCase="'Critical'" [innerText]="'_Critical_' | i18n"></span>
-		<span data-auto-id="ImpactText" *ngSwitchCase="'critical'" [innerText]="'_Critical_' | i18n"></span>
-		<span data-auto-id="ImpactText" *ngSwitchCase="'Error'" [innerText]="'_Error_' | i18n"></span>
-		<span data-auto-id="ImpactText" *ngSwitchCase="'error'" [innerText]="'_Error_' | i18n"></span>
 		<span data-auto-id="ImpactText" *ngSwitchCase="'High'" [innerText]="'_High_' | i18n"></span>
-		<span data-auto-id="ImpactText" *ngSwitchCase="'high'" [innerText]="'_High_' | i18n"></span>
 		<span data-auto-id="ImpactText" *ngSwitchCase="'Medium'" [innerText]="'_Medium_' | i18n"></span>
-		<span data-auto-id="ImpactText" *ngSwitchCase="'medium'" [innerText]="'_Medium_' | i18n"></span>
-		<span data-auto-id="ImpactText" *ngSwitchCase="'Warning'" [innerText]="'_Warning_' | i18n"></span>
-		<span data-auto-id="ImpactText" *ngSwitchCase="'warning'" [innerText]="'_Warning_' | i18n"></span>
 		<span data-auto-id="ImpactText" *ngSwitchCase="'Low'" [innerText]="'_Low_' | i18n"></span>
-		<span data-auto-id="ImpactText" *ngSwitchCase="'low'" [innerText]="'_Low_' | i18n"></span>
 		<span data-auto-id="ImpactText" *ngSwitchCase="'Info'" [innerText]="'_Info_' | i18n"></span>
-		<span data-auto-id="ImpactText" *ngSwitchCase="'info'" [innerText]="'_Info_' | i18n"></span>
-		<span data-auto-id="ImpactText" *ngSwitchCase="'Notice'" [innerText]="'_Notice_' | i18n"></span>
-		<span data-auto-id="ImpactText" *ngSwitchCase="'notice'" [innerText]="'_Notice_' | i18n"></span>
-		<span data-auto-id="ImpactText" *ngSwitchCase="'Ok'" [innerText]="'_Ok_' | i18n"></span>
-		<span data-auto-id="ImpactText" *ngSwitchCase="'ok'" [innerText]="'_Ok_' | i18n"></span>
 		<span data-auto-id="ImpactText" *ngSwitchDefault [innerText]="'_Unknown_' | i18n"></span>
+
 	</ng-container>
 </ng-template>
 

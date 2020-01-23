@@ -1,6 +1,13 @@
 <div class="racetrack-container">
 	<svg id="racetrack-composite" viewBox="0 0 600 300">
-		<g id="racetrack-left" transform="translate(-10, 135)" data-auto-id="Racetrack-LeftArrow">
+		<g 
+			id="racetrack-left" 
+			transform="translate(-10, 135)" 
+			data-auto-id="Racetrack-LeftArrow"
+			tabindex="0"
+			attr.aria-label="{{ '_MoveRacecarBackwards_' | i18n }}"
+			role="button"
+		>
 			<circle
 				r="20"
 				cx="25"
@@ -14,7 +21,14 @@
 				</g>
 			</svg>
 		</g>
-		<g id="racetrack-right" transform="translate(555, 135)" data-auto-id="Racetrack-RightArrow">
+		<g 
+			id="racetrack-right" 
+			transform="translate(555, 135)" 
+			data-auto-id="Racetrack-RightArrow"
+			tabindex="0"
+			attr.aria-label="{{ '_MoveRacecarForwards_' | i18n }}"
+			role="button"
+		>
 			<circle
 				r="20"
 				cx="25"

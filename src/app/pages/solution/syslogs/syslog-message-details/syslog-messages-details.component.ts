@@ -201,21 +201,22 @@ export class SyslogMessagesDetailsComponent implements OnInit, OnChanges, OnDest
 		this.loading = true;
 		this.syslogsService
 		.getPushToFaultsInfo(this.moveToFaultParams)
-		.pipe(takeUntil(this.destroy$))
-		.subscribe((responseList: PushToFaultResponse) => {
+		.pipe(takeUntil(this.destroy$),
+		map((responseList: PushToFaultResponse) => {
 			this.moveToFaultsResponse = responseList;
 			this.loading = false;
 			this.togglePushToFaults();
 			this.showSuccess.emit(this.asset.msgType);
 			this.onPanelClose();
-		}, catchError(err => {
+		}), catchError(err => {
 			this.loading = false;
 			_.invoke(this.alert, 'show',  I18n.get('_SyslogsGenericError_'), 'danger');
 			this.logger.error('syslogs-messagedetails.component : getGridData() ' +
 				`:: Error : (${err.status}) ${err.message}`);
 
 			return of({ });
-		}));
+		}))
+		.subscribe();
 	}
 
  /**

@@ -14,7 +14,7 @@ import { MachineRecommendations, OSVService } from '@sdp-api';
 import { environment } from '@environment';
 import { Subject, of } from 'rxjs';
 import { takeUntil, catchError, map } from 'rxjs/operators';
-import { IfStmt } from '@angular/compiler';
+
 /**
  * Interface representing our visual filters
  */
@@ -56,17 +56,16 @@ export class BugsDetailsComponent implements OnInit {
 	@ViewChild('bugTitleTemp', { static: true })
 	public bugTitleTemp: TemplateRef<{ }>;
 	@ViewChild('bugRowWellTemplate', { static: true })
-		public bugRowWellTemplate: TemplateRef<{ }>;
+	public bugRowWellTemplate: TemplateRef<{ }>;
 	@ViewChild('psirtRowWellTemplate', { static: true })
-		public psirtRowWellTemplate: TemplateRef<{ }>;
+	public psirtRowWellTemplate: TemplateRef<{ }>;
 	@ViewChild('fieldRowWellTemplate', { static: true })
-		public fieldRowWellTemplate: TemplateRef<{ }>;	
+	public fieldRowWellTemplate: TemplateRef<{ }>;
 	@ViewChild('fieldIdTemp', { static: true })
-		public fieldIdTemp: TemplateRef<{ }>;
+	public fieldIdTemp: TemplateRef<{ }>;
 	@ViewChild('fieldTitleTemp', { static: true })
-		public fieldTitleTemp: TemplateRef<{ }>;
+	public fieldTitleTemp: TemplateRef<{ }>;
 	private destroy$ = new Subject();
-
 	public filters: Filter[];
 	public status = {
 		isLoading: true,
@@ -198,7 +197,7 @@ export class BugsDetailsComponent implements OnInit {
 						sortable: false,
 						template: this.stateTemplate,
 						width: '15%',
-					}
+					},
 				],
 				dynamicData: false,
 				rowWellTemplate: this.fieldRowWellTemplate,
@@ -313,7 +312,7 @@ export class BugsDetailsComponent implements OnInit {
 						+ _.get(recommendation, ['data', 'newOpenBugsCount']) : viewType === 'psirts' ?
 						_.get(recommendation, ['data', 'openPsirtCount'])
 						+ _.get(recommendation, ['data', 'newOpenPsirtCount']) : _.get(recommendation, ['data', 'openFieldsCount'])
-						+ _.get(recommendation, ['data', 'newOpenFieldsCount'])
+						+ _.get(recommendation, ['data', 'newOpenFieldsCount']),
 				},
 			];
 			recommendation.showNoInfoAvailable = false;
@@ -344,19 +343,17 @@ export class BugsDetailsComponent implements OnInit {
 			_.set(severityFilter, 'seriesData', severityFilterSeriesData);
 			if (viewType === 'bug') {
 				stateFilter.seriesData =
-					this.populateStateFilter(_.get(recommendation, ['data', 'openBugsCount']),
+					this.populateStateFilter(recommendation, _.get(recommendation, ['data', 'openBugsCount']),
 						_.get(recommendation, ['data', 'newOpenBugsCount']),
 						_.get(recommendation, ['data', 'resolvedBugsCount']));
-			}else if (viewType === 'field') {
-				stateFilter.seriesData =
-					this.populateStateFilter(_.get(recommendation, ['data', 'openFieldsCount']),
-						_.get(recommendation, ['data', 'newOpenFieldsCount']),
-						_.get(recommendation, ['data', 'resolvedFieldsCount']));
+			} else if (viewType === 'psirt') {
+				stateFilter.seriesData = this.populateStateFilter(recommendation, _.get(recommendation, ['data', 'openPsirtCount']),
+				_.get(recommendation, ['data', 'newOpenPsirtCount']),
+				_.get(recommendation, ['data', 'psirtResolvedCount']));
 			} else {
-				stateFilter.seriesData =
-					this.populateStateFilter(_.get(recommendation, ['data', 'openPsirtCount']),
-						_.get(recommendation, ['data', 'newOpenPsirtCount']),
-						_.get(recommendation, ['data', 'psirtResolvedCount']));
+				stateFilter.seriesData = this.populateStateFilter(recommendation, _.get(recommendation, ['data', 'openFieldsCount']),
+				_.get(recommendation, ['data', 'newOpenFieldCount']),
+				_.get(recommendation, ['data', 'fieldResolvedCount']));
 			}
 			if (recommendation.name !== 'profile current' && recommendation.data) {
 				this.setFilter(recommendation);
@@ -366,28 +363,42 @@ export class BugsDetailsComponent implements OnInit {
 
 	/**
 	 * populate state filters
+	 * @param recommendation machine recommendation
 	 * @param exposedCount  number of bugs exposed
 	 * @param newExposedCount  number of newly exposed bugs
 	 * @param resolvedCount number of bugs fixed
 	 * @returns the series data for state filters
 	 */
-	private populateStateFilter (exposedCount: number, newExposedCount: number,
+	private populateStateFilter (recommendation, exposedCount: number, newExposedCount: number,
 		resolvedCount: number) {
 		const seriesData = [];
-		if (exposedCount > 0 || newExposedCount > 0 || resolvedCount > 0) {
+		if (exposedCount > 0) {
 			seriesData.push({
 				value: exposedCount,
 				filter: 'Exposed',
 				label: I18n.get('_OsvExposed_'),
-				selected: true,
+				selected: recommendation.name !== 'profile current' ? true : false,
 			});
+		} else {
+			recommendation.appliedFilters.stateFilter  = ['New_Exposed'];
+		}
 
+		if (newExposedCount > 0) {
 			seriesData.push({
 				value: newExposedCount,
 				filter: 'New_Exposed',
 				label: I18n.get('_OsvNewExposed_'),
-				selected: true,
+				selected: recommendation.name !== 'profile current' ? true : false,
 			});
+		} else {
+			recommendation.appliedFilters.stateFilter  = ['Exposed'];
+		}
+
+		if (newExposedCount === 0 && exposedCount === 0) {
+			recommendation.appliedFilters.stateFilter = [];
+		}
+
+		if (resolvedCount > 0) {
 
 			seriesData.push({
 				value: resolvedCount,
@@ -434,7 +445,6 @@ export class BugsDetailsComponent implements OnInit {
 	 * setting the default for the details page
 	 */
 	public setDefaultData () {
-		const viewType = _.get(this.params, 'viewType');
 		this.hasRecommendation1 = _.filter(this.data,
 			(recomm: MachineRecommendations) => recomm.name === 'Recommendation #1');
 		this.hasRecommendation2 = _.find(this.data,
@@ -457,6 +467,8 @@ export class BugsDetailsComponent implements OnInit {
 				name: 'profile current',
 				params: _.cloneDeep(params),
 				filters: _.cloneDeep(this.filters),
+				actualData: _.cloneDeep(_.get(_.filter(this.data,
+					(recomm: MachineRecommendations) => recomm.name === 'profile current'), 0)),
 				data: _.cloneDeep(_.get(_.filter(this.data,
 					(recomm: MachineRecommendations) => recomm.name === 'profile current'), 0)),
 				paginationCount: '',
@@ -472,6 +484,8 @@ export class BugsDetailsComponent implements OnInit {
 				filters: _.cloneDeep(this.filters),
 				data: _.cloneDeep(_.get(_.filter(this.data,
 					(recomm: MachineRecommendations) => recomm.name === 'Recommendation #1'), 0)),
+				actualData: _.cloneDeep(_.get(_.filter(this.data,
+					(recomm: MachineRecommendations) => recomm.name === 'Recommendation #1'), 0)),
 				paginationCount: '',
 				filtered: true,
 				appliedFilters: _.cloneDeep(appliedFilters),
@@ -482,6 +496,8 @@ export class BugsDetailsComponent implements OnInit {
 				filters: _.cloneDeep(this.filters),
 				data: _.cloneDeep(_.get(_.filter(this.data,
 					(recomm: MachineRecommendations) => recomm.name === 'Recommendation #2'), 0)),
+				actualData: _.cloneDeep(_.get(_.filter(this.data,
+					(recomm: MachineRecommendations) => recomm.name === 'Recommendation #2'), 0)),
 				paginationCount: '',
 				filtered: true,
 				appliedFilters: _.cloneDeep(appliedFilters),
@@ -491,6 +507,8 @@ export class BugsDetailsComponent implements OnInit {
 				params: _.cloneDeep(params),
 				filters: _.cloneDeep(this.filters),
 				data: _.cloneDeep(_.get(_.filter(this.data,
+					(recomm: MachineRecommendations) => recomm.name === 'Recommendation #3'), 0)),
+				actualData: _.cloneDeep(_.get(_.filter(this.data,
 					(recomm: MachineRecommendations) => recomm.name === 'Recommendation #3'), 0)),
 				paginationCount: '',
 				filtered: true,
@@ -552,8 +570,7 @@ export class BugsDetailsComponent implements OnInit {
 		const actualData = _.cloneDeep(_.get(_.filter(this.data,
 			(recomm: MachineRecommendations) => recomm.name === recommendation.name), 0));
 		const viewType = _.get(this.params, 'viewType');
-		const data = viewType === 'bug' ? actualData.bugs : viewType === 'psirts' ? 
-			actualData.psirts : actualData.fns;
+		const data = viewType === 'bug' ? actualData.bugs : viewType === 'psirts' ? actualData.psirts : actualData.fns;
 		const stateFilters = recommendation.appliedFilters.state;
 		const severityFilters = recommendation.appliedFilters.severity;
 		let filteredData = data;
@@ -592,9 +609,8 @@ export class BugsDetailsComponent implements OnInit {
 			}
 		}
 
-		viewType === 'bug' ? recommendation.data.bugs = filteredData : viewType === 'psirts' ? 
-			recommendation.data.psirts = filteredData : recommendation.data.fns = filteredData;
-	
+		viewType === 'bug' ? recommendation.data.bugs = filteredData : viewType === 'psirts' ?
+		recommendation.data.psirts = filteredData : recommendation.data.fns = filteredData;
 		recommendation.params.offset = 0;
 		this.populatePaginationInfo();
 		setTimeout(() => {
@@ -672,7 +688,6 @@ export class BugsDetailsComponent implements OnInit {
 
 		return [];
 	}
-
 	/**
 	 * Returns the current selected visual filters
 	 * @param recommendation  data of currently displayed recommendation
@@ -682,7 +697,6 @@ export class BugsDetailsComponent implements OnInit {
 
 		return _.filter(recommendation.filters, 'selected');
 	}
-
 	/**
 	 * get data based on page index changes
 	 * @param event contains pageindex details
@@ -692,17 +706,15 @@ export class BugsDetailsComponent implements OnInit {
 		recommendation.params.offset = event.page;
 		this.populatePaginationInfo();
 	}
-
 	/**
 	 * Handler for performing a search
 	 * @param query search string
 	 */
-	public onSearchQuery (query?: string) { 
+	public onSearchQuery (query?: string) {
 		const recommendation = this.getCurrentTabData();
 		recommendation.params.search = query;
 		this.setFilter(recommendation);
 	}
-
 	/**
 	 * onTableRow click
 	 * @param bug  table row
@@ -726,8 +738,6 @@ export class BugsDetailsComponent implements OnInit {
 			this.getBugDetails(bug);
 		}
 	}
-
-
 	/**
 	 * onTableRow click
 	 * @param psirt  table row
@@ -751,10 +761,9 @@ export class BugsDetailsComponent implements OnInit {
 			this.getPsirtDetails(psirt);
 		}
 	}
-
 	/**
 	 * onTableRow click
-	 * @param bug  table row
+	 * @param field  table row
 	 */
 	public onFieldRowSelect (field: any) {
 		if (field.hasDescription) {
@@ -775,8 +784,6 @@ export class BugsDetailsComponent implements OnInit {
 			this.getFieldDetails(field);
 		}
 	}
-
-
 	/**
 	 * OnPsirt Details click
 	 * @param row  table row
@@ -784,7 +791,6 @@ export class BugsDetailsComponent implements OnInit {
 	public onPsirtDetailClick (row: any) {
 		window.open(`${row.url}`, '_blank');
 	}
-
 	/**
 	 * OnBug Details click
 	 * @param row  table row
@@ -793,8 +799,6 @@ export class BugsDetailsComponent implements OnInit {
 		const url = `${environment.bugSearchTool}${row.id}`;
 		window.open(`${url}`, '_blank');
 	}
-
-
 	/**
 	 * Onfield Details click
 	 * @param row  table row
@@ -802,7 +806,6 @@ export class BugsDetailsComponent implements OnInit {
 	public onFieldDetailsClick (row: any) {
 		window.open(`${row.url}`, '_blank');
 	}
-
 	/**
 	 * filterData based on the selected view
 	 * @param type view type
@@ -821,7 +824,6 @@ export class BugsDetailsComponent implements OnInit {
 			this.onSubfilterSelect('New_Exposed', stateFilter);
 		}
 	}
-
 	/**
 	 * get bug details
 	 * @param bug data row
@@ -855,7 +857,6 @@ export class BugsDetailsComponent implements OnInit {
 			this.status.isLoadingDetails = false;
 		});
 	}
-
 	/**
 	 * get psirt details
 	 * @param psirt data row
@@ -880,11 +881,9 @@ export class BugsDetailsComponent implements OnInit {
 			this.status.isLoadingDetails = false;
 		});
 	}
-
-
 	/**
 	 * get field details
-	 * @param bug data row
+	 * @param field data row
 	 */
 	public getFieldDetails (field: any) {
 		this.status.isLoadingDetails = true;
@@ -900,7 +899,7 @@ export class BugsDetailsComponent implements OnInit {
 				let description  = _.get(response.fnSummary, ['problemDescription'], '');
 				description = description.replace(/\n/g, '<br>');
 				field.description = description;
-				let fieldUrl  = _.get(response.fnSummary, ['url'], '');
+				const fieldUrl  = _.get(response.fnSummary, ['url'], '');
 				field.url = fieldUrl;
 			}),
 			catchError(err => {
@@ -917,7 +916,6 @@ export class BugsDetailsComponent implements OnInit {
 			this.status.isLoadingDetails = false;
 		});
 	}
-
 	/**
 	 * OnDestroy lifecycle hook
 	 */

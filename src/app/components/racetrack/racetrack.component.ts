@@ -5,6 +5,8 @@ import {
 	SimpleChanges,
 	Output,
 	EventEmitter,
+	ViewEncapsulation,
+	HostListener,
 } from '@angular/core';
 import { PlatformLocation } from '@angular/common';
 import * as d3 from 'd3-selection';
@@ -82,6 +84,8 @@ export const stages = [
 @Component({
 	selector: 'app-racetrack',
 	templateUrl: './racetrack.component.html',
+	styleUrls: ['./racetrack.component.scss'],
+	encapsulation: ViewEncapsulation.None,
 })
 export class RacetrackComponent implements OnInit {
 	public racecar: d3.SVGElement;
@@ -101,6 +105,10 @@ export class RacetrackComponent implements OnInit {
 	public stages: string[];
 	public points: DOMPoint[];
 	public current: string;
+	private keyCodesForInteractivity = [
+		'Enter',
+		' ',
+	];
 
 	@Input('stage') public stage: string;
 	@Input('currentStage') public currentStage: string;
@@ -271,6 +279,9 @@ export class RacetrackComponent implements OnInit {
 				.style('cursor', 'pointer')
 				.attr('fill', 'white')
 				.attr('r', 5)
+				.attr('tabindex', 0)
+				.attr('role', 'button')
+				.attr('aria-label', name => name)
 				.attr('cx', name => {
 					const dist = this.stageMap[name].distance;
 
@@ -285,35 +296,21 @@ export class RacetrackComponent implements OnInit {
 					this.track.attr('transform'))
 				.attr('data-auto-id', name => `Racetrack-Point-${name}`)
 				.raise()
+				.on('keydown', (d, i, nodes) => {
+					if (this.keyCodesForInteractivity.includes(d3.event.key)) {
+						d3.event.preventDefault();
+						this.zoomToStage(d, false);
+					}
+					this.fadeTextin(d, i, nodes);
+				})
 				.on('click', d =>  {
 					this.zoomToStage(d, false);
 				})
 				.on('mouseenter', (d, i, nodes) => {
-					if (d === this.currentStage) {
-						return;
-					}
-
-					if (stages.indexOf(d) > stages.indexOf(this.currentStage)) {
-						d3.select(nodes[i])
-							.transition()
-							.duration(50)
-							.attr('fill', '#14bdf4');
-					}
-
-					this.stageLabels.filter(dd => dd.name === d)
-						.style('font-weight', 'bold');
+					this.fadeTextin(d, i, nodes);
 				})
 				.on('mouseleave', (d, i, nodes) => {
-					if (d === this.current) {
-						return;
-					}
-
-					d3.select(nodes[i])
-						.transition()
-						.duration(50)
-						.attr('fill', 'white');
-
-					this.stageLabels.style('font-weight', 'normal');
+					this.fadeTextOut(d, i, nodes);
 				});
 
 		const labelsEnter = d3.select(this.track.node().parentNode)
@@ -497,15 +494,63 @@ export class RacetrackComponent implements OnInit {
 		// set up left and right arrow functionality
 		svg.select('#racetrack-left')
 			.style('cursor', 'pointer')
-			.on('click', () => this.zoomToPrevious());
+			.on('click', () => this.zoomToPrevious())
+			.on('keydown', () => {
+				if (this.keyCodesForInteractivity.includes(d3.event.key)) {
+					this.zoomToPrevious();
+				}
+			});
+
 		svg.select('#racetrack-right')
 			.style('cursor', 'pointer')
-			.on('click', () => this.zoomToNext());
+			.on('click', () => this.zoomToNext())
+			.on('keydown', () => {
+				if (this.keyCodesForInteractivity.includes(d3.event.key)) {
+					this.zoomToNext();
+				}
+			});
 
 		racecar.style('cursor', 'pointer')
 			.on('click', () => this.zoomToStage(this.currentStage, false));
 		// customer has already purchased, starts at onboarding
 		this.zoomToStage(this.stage, true);
+	}
+
+	@HostListener('keydown', ['$event.key'])
+	private keyboardNavigationActivated (key) {
+		if (key === 'Tab') {
+			d3.selectAll('.stage-label')
+			.attr('opacity', 1);
+		}
+	}
+
+ 	private fadeTextin (d, i, nodes) {
+		if (d === this.currentStage) {
+			return;
+		}
+
+		if (stages.indexOf(d) > stages.indexOf(this.currentStage)) {
+			d3.select(nodes[i])
+				.transition()
+				.duration(50)
+				.attr('fill', '#14bdf4');
+		}
+
+		this.stageLabels.filter(dd => dd.name === d)
+			.style('font-weight', 'bold');
+	}
+
+	private fadeTextOut (d, i, nodes) {
+		if (d === this.current) {
+			return;
+		}
+
+		d3.select(nodes[i])
+			.transition()
+			.duration(50)
+			.attr('fill', 'white');
+
+		this.stageLabels.style('font-weight', 'normal');
 	}
 
 	/**

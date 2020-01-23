@@ -83,10 +83,13 @@ export const environment = {
 	sdpServicePaths: {
 		contracts: `/api/${defaults.datacenterStub}/v1/contracts`,
 		customerportal: `/api/${defaults.datacenterStub}/customerportal`,
+		customerportalNoRegion: '/api/customerportal',
 		cxportal: `/api/${defaults.datacenterStub}/cxportal`,
 		inventory: `/api/${defaults.datacenterStub}/v1/inventory`,
 		partner: `/api/${defaults.datacenterStub}/cxportal`,
-		cp: '/api/usa',
+		cp: `/api/${defaults.datacenterStub}`,
+		usa: '/api/usa',
+		emea: '/api/emea',
 	},
 	// ClientSSOInterceptor: No auth token for the typeahead url
 	typeaheadServiceOrigin: 'https://xresps.cloudapps.cisco.com',

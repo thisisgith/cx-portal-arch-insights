@@ -73,6 +73,7 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 	public faultFlag = true;
 	public view: 'syslogMessage' | 'syslogAsset' = 'syslogMessage';
 	public countParams = { };
+	public searchQueryInGrid: string;
 	public appliedFilters = {
 		afmSeverity: '',
 		faults : 'Automated',
@@ -474,6 +475,7 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 		if (this.visualLabels[0].active) {
 			this.appliedFilters.timeRange = 30;
 			this.appliedFilters.afmSeverity = '';
+			this.syslogsParams.timeRange = ['30'];
 			this.filters =
 			_.filter(this.filters, o =>  o.view[0] === 'afm' || o.key === 'timeRange');
 			forkJoin(
@@ -490,6 +492,12 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 							'faults',
 						);
 					}
+					if (this.syslogsParams.timeRange) {
+						this.selectSubFilters(
+							this.syslogsParams.timeRange,
+							'timeRange',
+						);
+					}
 
 				}),
 			)
@@ -503,6 +511,7 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 		} else {
 			this.appliedFilters.timeRange = 30;
 			this.appliedFilters.severity = 0;
+			this.syslogsParams.timeRange = ['1'];
 			this.filters =
 			_.filter(this.filters, o =>  o.view[0] === 'syslog' || o.key === 'timeRange');
 			forkJoin(
@@ -665,6 +674,7 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 	 * Clears filters
 	 */
 	public clearFilters () {
+		this.searchQueryInGrid = '';
 		this.filtered = false;
 		this.noSyslogFilter = false;
 		_.each(this.filters, (filter: SyslogFilter) => {
@@ -678,6 +688,17 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 		this.syslogsParams.timeRange = ['1'];
 		this.buildFilters();
 	}
+
+	/**
+	 * On search updates the search param
+	 * @param event string
+	 */
+	public onSearchUpdate (event) {
+		if (event) {
+			this.searchQueryInGrid = event;
+		}
+	}
+
 	/**
 	 * Selects visual label
 	 * @param index contains visual label index
@@ -711,7 +732,7 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 	public onSubfilterClose (event) {
 		const eventKey = _.get(event, 'key');
 		if (eventKey === 'severity' || (this.faultFlag
-				&& (eventKey === 'afmSeverity' || eventKey === 'timeRange'))) {
+				&& (eventKey === 'afmSeverity'))) {
 			const filter = _.find(this.filters, { key: eventKey });
 			_.each(filter.seriesData, f => {
 				f.selected = false;

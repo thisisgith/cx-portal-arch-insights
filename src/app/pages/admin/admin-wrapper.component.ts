@@ -8,9 +8,11 @@ import { AppService } from 'src/app/app.service';
 import { AppStatusColorPipe } from './settings/app-status-color.pipe';
 
 import { empty, Subject } from 'rxjs';
-import { catchError, takeUntil } from 'rxjs/operators';
+import { catchError, takeUntil, switchMap } from 'rxjs/operators';
 
 import * as _ from 'lodash-es';
+import { UserResolve } from '@utilities';
+import { UserRoles } from '@constants';
 
 /**
  * Admin Component
@@ -29,6 +31,8 @@ export class AdminWrapperComponent implements OnInit {
 	public isValidAdmin = false;
 	public erroredAppsNum = 0;
 	public admin = 'accountadmin';
+	private dataCenter: string;
+	public settingsWhitelist = [UserRoles.SA_ADMIN, UserRoles.VA_ADMIN];
 
 	constructor (
 		private router: Router,
@@ -36,16 +40,28 @@ export class AdminWrapperComponent implements OnInit {
 		public appService: AppService,
 		private controlPointIEHealthStatusAPIService: ControlPointIEHealthStatusAPIService,
 		private appStatusColorPipe: AppStatusColorPipe,
+		private userResolve: UserResolve,
 	) {
 		this.routerPath = _.get(this, 'route.snapshot.routeConfig.path', 'settings');
 		this.user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(this.user, ['info', 'customerId']);
 		const cxLevel = _.get(this.user, ['service', 'cxLevel']);
-		const isAdmin = _.get(this.user, ['info', 'individual', 'role']);
-		if (isAdmin) {
-			this.isValidAdmin = (isAdmin.toLowerCase()
-			=== this.admin  && cxLevel > 1) ? true : false;
-		}
+
+		this.isValidAdmin = ({ whitelistRoles: this.settingsWhitelist }  && cxLevel > 1) ? true : false;
+
+		this.userResolve.getDataCenter()
+		.pipe(
+			switchMap(dataCenter => {
+				this.dataCenter = dataCenter;
+
+				return this.userResolve.getUserSteps();
+			}),
+		)
+		.subscribe(step => {
+			if (!step) {
+				this.userResolve.setUserSelectedDataCenter(this.dataCenter);
+			}
+		});
 	}
 
 	/**

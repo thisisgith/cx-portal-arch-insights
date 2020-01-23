@@ -41,10 +41,10 @@ export class RccComponent implements OnInit, Panel360 , OnDestroy {
 	public customerId: string;
 	public cxLevel: number;
 	public authParamsRCCUser = {
-		blacklistRoles: UserRoles.ADMIN,
+		blacklistRoles: UserRoles.SA_ADMIN,
 	};
 	public authParamsRCCAdmin = {
-		whitelistRoles: UserRoles.ADMIN,
+		whitelistRoles: UserRoles.SA_ADMIN,
 	};
 
 	constructor (
