@@ -134,7 +134,7 @@ export class UserMgmtComponent implements OnInit, AfterViewInit, OnDestroy {
 				delete selUser.isSelected;
 			}
 			this.items.forEach(selItem => {
-				if (selItem.virtual_account_id === selUser.roles[0].value_1) {
+				if ((Array.isArray(selUser.roles) && selUser.roles.length) && selItem.virtual_account_id === selUser.roles[0].value_1) {
 					selUser.selectedVirtualAccount = selItem;
 				}
 			});
@@ -305,6 +305,9 @@ export class UserMgmtComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	public getRoleType (user) {
 		const role = _.get(user.roles, ['0'], null);
+		if (!role) {
+			return 'saRole';
+		}
 
 		return role.type_1 ? 'vaRole' : 'saRole';
 	}
