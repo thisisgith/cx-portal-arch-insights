@@ -23,8 +23,8 @@
 <cui-spinner *ngIf="status.isLoading"></cui-spinner>
 
 <ng-template #details let-recommendation="recommendation">	
-	<visual-filter-bar *ngIf="((params?.viewType === 'bug' && recommendation?.actualData?.bugs?.length > 0) || ( params?.viewType === 'psirt' && recommendation?.actualData?.psirts?.length > 0 ))" [filters]="recommendation.filters"></visual-filter-bar>
-	<ng-container *ngIf="recommendation.filtered && ((params?.viewType === 'bug' && recommendation?.actualData?.bugs?.length > 0) || ( params?.viewType === 'psirt' && recommendation?.actualData?.psirts?.length > 0 ))">
+	<visual-filter-bar *ngIf="((params?.viewType === 'bug' && recommendation?.actualData?.bugs?.length > 0) || (params?.viewType === 'field' && recommendation?.actualData?.fns?.length > 0) || ( params?.viewType === 'psirt' && recommendation?.actualData?.psirts?.length > 0 ))" [filters]="recommendation.filters"></visual-filter-bar>
+	<ng-container *ngIf="recommendation.filtered && ((params?.viewType === 'bug' && recommendation?.actualData?.bugs?.length > 0) || (params?.viewType === 'field' && recommendation?.actualData?.fns?.length > 0) || ( params?.viewType === 'psirt' && recommendation?.actualData?.psirts?.length > 0 ))">
 		<div class="divider half-margin-top qtr-margin-bottom"></div>
 		<ng-container *ngTemplateOutlet="filterBar;context:{recommendation:recommendation}"></ng-container>
 	</ng-container>
