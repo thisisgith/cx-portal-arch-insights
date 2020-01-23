@@ -14,6 +14,7 @@ import { UserMgmtFilterPipe } from './user-mgmt-filter.pipe';
 import { AlertModule } from '../alert/alert.module';
 import { AddUserModule } from '../add-user/add-user.module';
 import { SelectVirtualAccountModule } from './select-virtual-account/select-virtual-account.module';
+import { TooltipModule } from '../tooltip/tooltip.module';
 
 /**
  * UserMgmtModule
@@ -36,6 +37,7 @@ import { SelectVirtualAccountModule } from './select-virtual-account/select-virt
 		I18nPipeModule,
 		SelectRoleModule,
 		SelectVirtualAccountModule,
+		TooltipModule,
 	],
 })
 export class UserMgmtModule { }
