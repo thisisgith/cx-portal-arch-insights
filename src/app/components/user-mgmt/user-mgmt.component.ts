@@ -220,13 +220,6 @@ export class UserMgmtComponent implements OnInit, AfterViewInit, OnDestroy {
 		const result = await this.cuiModalService.showComponent(AddUserComponent, { }, 'small');
 		if (result) {
 			this.update();
-			_.invoke(
-				this.alert,
-				'show',
-				`${result} ${this.i18n.transform('_UserAddedSuccessfully_')}`,
-				'success',
-			);
-			this.alert.visible = true;
 		}
 	}
 
@@ -324,11 +317,6 @@ export class UserMgmtComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	public onSelection (event: any) {
 		const selectedUser = _.find(this.allUsers, user => user.ccoId === event.user.ccoId);
-		const getVA = _.get(selectedUser, 'selectedVirtualAccount');
-
-		if (getVA && selectedUser.selectedVirtualAccount.name === event.selectedVirtualAccount.name) {
-			return false;
-		}
 		selectedUser.selectedVirtualAccount = event.selectedVirtualAccount;
 		selectedUser.isSelected = true;
 		this.allUsers = _.cloneDeep(this.allUsers);
