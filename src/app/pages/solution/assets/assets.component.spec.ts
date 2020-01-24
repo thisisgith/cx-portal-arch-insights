@@ -826,8 +826,6 @@ describe('AssetsComponent', () => {
 			component.checkScan(assets.data[0]);
 			expect(networkDataGatewayService.getScanStatusBySerial)
 			.toHaveBeenCalled();
-			expect(networkDataGatewayService.postDeviceTransactions)
-			.toHaveBeenCalledTimes(0);
 			fixture.destroy();
 			tick();
 		}));
