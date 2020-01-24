@@ -125,21 +125,6 @@ describe('AssetsComponent', () => {
 		spyOn(inventoryService, 'getSystemProductTypeCount')
 			.and
 			.returnValue(of(ProductTypeScenarios[0].scenarios.GET[0].response.body));
-		spyOn(networkDataGatewayService, 'getScanStatusBySerial')
-			.and
-			.returnValue(of([
-				{
-					customerId: '2431199',
-					transactionId: 'cd2e25ce-649f-483c-afa4-8664c4be277d',
-					status: 'IN_PROGRESS',
-				},
-				{
-					customerId: '2431199',
-					transactionId: 'cd2e25ce-649f-483c-afa4-8664c4be277d',
-					status: 'FAILURE',
-				},
-			]));
-
 		sendRacetrack();
 	};
 
@@ -815,20 +800,7 @@ describe('AssetsComponent', () => {
 
 			fixture.destroy();
 			tick();
-		}));
-
-		it('should check scan status on checkScan call', fakeAsync(() => {
-			buildSpies();
-
-			fixture.detectChanges();
-			tick(1000);
-			const assets = getActiveBody(SystemAssetScenarios[0]);
-			component.checkScan(assets.data[0]);
-			expect(networkDataGatewayService.getScanStatusBySerial)
-			.toHaveBeenCalled();
-			fixture.destroy();
-			tick();
-		}));
+		}));	
 	});
 
 	describe('With Query Params for hardware', () => {
