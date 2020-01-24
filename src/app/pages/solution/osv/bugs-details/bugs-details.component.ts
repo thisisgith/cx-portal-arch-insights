@@ -194,7 +194,7 @@ export class BugsDetailsComponent implements OnInit {
 					{
 						key: 'status',
 						name: I18n.get('_State_'),
-						sortable: false,
+						sortable: true,
 						template: this.stateTemplate,
 						width: '15%',
 					},
