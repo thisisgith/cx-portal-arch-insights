@@ -39,6 +39,10 @@
 			></div>
 		</div>
 	</section>
+	<div class="text-center base-margin-bottom base-margin-top">
+		<cui-alert [options]="alert"></cui-alert>
+	</div>
+
 
 	<alert [title]="error.text" [(visible)]="error.show"> </alert>
 	<div class="responsive-table" *ngIf="allUsers?.length > 0">
