@@ -45,6 +45,7 @@ import {
 	HardwareEOLCountScenarios,
 	HardwareEOLScenarios,
 	HardwareScenarios,
+	HardwareProductTypeScenarios,
 	HealthStatusScenarios,
 	InsightsScenarios,
 	LicenseScenarios,
@@ -52,6 +53,7 @@ import {
 	OSVScenarios,
 	PartnerInfoScenarios,
 	PolicesScenarios,
+	ProductTypeScenarios,
 	RacetrackScenarios,
 	RCCScenarios,
 	RegisterATXScenarios,
@@ -115,6 +117,7 @@ import {
 	OrgUserResponse,
 	PoliciesGroupByDayInAMonthModel,
 	ProfileRecommendationsResponse,
+	ProductTypeResponse,
 	RacetrackResponse,
 	RccAssetFilterResponse,
 	RoleCountResponse,
@@ -177,6 +180,7 @@ type ResponseBody = (
 	OrgUserResponse |
 	PoliciesGroupByDayInAMonthModel |
 	ProfileRecommendationsResponse |
+	ProductTypeResponse |
 	RacetrackResponse |
 	RMAResponse |
 	RoleCountResponse |
@@ -290,6 +294,7 @@ export const mockSettings: MockSettings = {
 		HardwareEOLBulletinScenarios,
 		HardwareEOLCountScenarios,
 		HardwareEOLScenarios,
+		HardwareProductTypeScenarios,
 		HardwareScenarios,
 		HealthStatusScenarios,
 		InsightsScenarios,
@@ -298,6 +303,7 @@ export const mockSettings: MockSettings = {
 		OSVScenarios,
 		PartnerInfoScenarios,
 		PolicesScenarios,
+		ProductTypeScenarios,
 		RacetrackScenarios,
 		RCCScenarios,
 		RegisterATXScenarios,

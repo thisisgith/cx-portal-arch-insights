@@ -18,3 +18,6 @@ export { Pagination as InventoryPagination } from './models/pagination';
 export { SoftwareResponse } from './models/software-response';
 export { SoftwareInfo } from './models/software-info';
 export { ErrorResponse as InventoryErrorResponse } from './models/error-response';
+export { ProductTypeResponse } from './models/productType-response';
+export { ProductTypeCount } from './models/productType-count';
+

@@ -16,6 +16,7 @@ import { HardwareResponse } from '../models/hardware-response';
 import { NetworkElementResponse } from '../models/network-element-response';
 import { SoftwareResponse } from '../models/software-response';
 import { RoleCountResponse } from '../models/role-count-response';
+import { ProductTypeResponse } from '../models/productType-response';
 @Injectable({
   providedIn: 'root',
 })
@@ -1602,6 +1603,72 @@ class InventoryService extends __BaseService {
   }
 
   /**
+   * Returns the count of each product type for hardware view.
+   * @param params The `InventoryService.GetProductTypeCountParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+   *
+   * - `solution`: The solution name, should be from the enum list of values
+   *
+   * @return successful operation
+   */
+  getHardwareProductTypeCountResponse(params: InventoryService.GetProductTypeCountParams): __Observable<__StrictHttpResponse<ProductTypeResponse>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
+    if (params.solution != null) __params = __params.set('solution', params.solution.toString());
+    
+    let req = new HttpRequest<any>(
+      'GET',
+      this.rootUrl + `/customerportal/inventory/v1/assets/hardware/productType/count`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<ProductTypeResponse>;
+      })
+    );
+  }
+
+  getSystemProductTypeCountResponse(params: InventoryService.GetProductTypeCountParams): __Observable<__StrictHttpResponse<ProductTypeResponse>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    if (params.useCase != null) __params = __params.set('useCase', params.useCase.toString());
+    if (params.solution != null) __params = __params.set('solution', params.solution.toString());
+    
+    let req = new HttpRequest<any>(
+      'GET',
+      this.rootUrl + `/customerportal/inventory/v1/assets/system/productType/count`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<ProductTypeResponse>;
+      })
+    );
+  }
+
+  /**
    * The Device roles set by DNAC.
    * @param params The `InventoryService.GetRoleCountParams` containing the following parameters:
    *
@@ -1620,6 +1687,20 @@ class InventoryService extends __BaseService {
       __map(_r => _r.body as RoleCountResponse)
     );
   }
+
+  getHardwareProductTypeCount(params: InventoryService.GetProductTypeCountParams): __Observable<ProductTypeResponse> {
+    return this.getHardwareProductTypeCountResponse(params).pipe(
+      __map(_r => _r.body as ProductTypeResponse)
+    );
+  }
+
+  getSystemProductTypeCount(params: InventoryService.GetProductTypeCountParams): __Observable<ProductTypeResponse> {
+    return this.getSystemProductTypeCountResponse(params).pipe(
+      __map(_r => _r.body as ProductTypeResponse)
+    );
+  }
+
+
 }
 
 module InventoryService {
@@ -2667,6 +2748,27 @@ module InventoryService {
      * The device role
      */
     role?: Array<string>;
+  }
+
+  /**
+   * Parameters for getProductTypeCount
+   */
+  export interface GetProductTypeCountParams {
+
+    /**
+     * Unique identifier of a Cisco customer.
+     */
+    customerId: string;
+
+    /**
+     * Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
+     */
+    useCase?: string;
+
+    /**
+     * The solution name, should be from the enum list of values
+     */
+    solution?: string;
   }
 }
 

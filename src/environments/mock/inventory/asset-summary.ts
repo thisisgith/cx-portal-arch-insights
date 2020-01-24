@@ -4,7 +4,7 @@ import { AssetSummary } from '@sdp-api';
 const api = '/api/customerportal/inventory/v1/assets/summary';
 
 /** Default Customer ID */
-const customerId = '2431199';
+const customerId = '2431199_0';
 
 /** Default Hardware Instance ID */
 const hwInstanceId = 'FOC1544Y16T,WS-C2960S-24PS-L,NA,FOC1544Y16T,WS-C2960S-24PS-L,NA,NA';
