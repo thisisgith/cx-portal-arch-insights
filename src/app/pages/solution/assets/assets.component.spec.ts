@@ -16,7 +16,6 @@ import {
 	ProductAlertsService,
 	ContractsService,
 	NetworkElement,
-	NetworkDataGatewayService,
 } from '@sdp-api';
 import { throwError, of } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
@@ -168,8 +167,6 @@ describe('AssetsComponent', () => {
 			productAlertsService = TestBed.get(ProductAlertsService);
 			contractsService = TestBed.get(ContractsService);
 			racetrackInfoService = TestBed.get(RacetrackInfoService);
-			networkDataGatewayService = TestBed.get(NetworkDataGatewayService);
-
 			fixture = TestBed.createComponent(AssetsComponent);
 			component = fixture.componentInstance;
 		});
