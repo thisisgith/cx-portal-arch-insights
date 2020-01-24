@@ -57,8 +57,6 @@ describe('AssetsComponent', () => {
 	let productAlertsService: ProductAlertsService;
 	let contractsService: ContractsService;
 	let racetrackInfoService: RacetrackInfoService;
-	let networkDataGatewayService: NetworkDataGatewayService;
-
 	/**
 	 * Sends our racetrack info
 	 */
@@ -800,7 +798,7 @@ describe('AssetsComponent', () => {
 
 			fixture.destroy();
 			tick();
-		}));	
+		}));
 	});
 
 	describe('With Query Params for hardware', () => {
