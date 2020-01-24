@@ -1603,16 +1603,14 @@ class InventoryService extends __BaseService {
   }
 
   /**
-   * The Device roles set by DNAC.
-   * @param params The `InventoryService.GetRoleCountParams` containing the following parameters:
+   * Returns the count of each product type for hardware view.
+   * @param params The `InventoryService.GetProductTypeCountParams` containing the following parameters:
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
    * - `useCase`: Usecase value could be as exact or in values ( network-assurance | device-onboarding | sw-image-management | network-segmentation | access-policy )
    *
    * - `solution`: The solution name, should be from the enum list of values
-   *
-   * - `role`: The device role
    *
    * @return successful operation
    */
