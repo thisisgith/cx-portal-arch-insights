@@ -49,7 +49,7 @@ function getActiveBody (mock: Mock, type: string = 'GET') {
 	return active.response.body;
 }
 
-describe('AssetsComponent', () => {
+fdescribe('AssetsComponent', () => {
 	let component: AssetsComponent;
 	let fixture: ComponentFixture<AssetsComponent>;
 
@@ -125,9 +125,6 @@ describe('AssetsComponent', () => {
 		spyOn(inventoryService, 'getSystemProductTypeCount')
 			.and
 			.returnValue(of(ProductTypeScenarios[0].scenarios.GET[0].response.body));
-		spyOn(networkDataGatewayService, 'postDeviceTransactions')
-			.and
-			.returnValue(of([]));
 		spyOn(networkDataGatewayService, 'getScanStatusBySerial')
 			.and
 			.returnValue(of([
@@ -146,7 +143,7 @@ describe('AssetsComponent', () => {
 		sendRacetrack();
 	};
 
-	describe('Without Query Params for systems', () => {
+	fdescribe('Without Query Params for systems', () => {
 		configureTestSuite(() => {
 			TestBed.configureTestingModule({
 				imports: [
@@ -831,14 +828,12 @@ describe('AssetsComponent', () => {
 			.toHaveBeenCalled();
 			expect(networkDataGatewayService.postDeviceTransactions)
 			.toHaveBeenCalledTimes(0);
-			expect(networkDataGatewayService.postDeviceTransactions)
-			.toHaveBeenCalledTimes(0);
 			fixture.destroy();
 			tick();
 		}));
 	});
 
-	describe('With Query Params for hardware', () => {
+	fdescribe('With Query Params for hardware', () => {
 		const queryParams = {
 			contractNumber: '1234',
 			coverage: 'covered',
@@ -939,7 +934,7 @@ describe('AssetsComponent', () => {
 		}));
 	});
 
-	describe('With Query Params', () => {
+	fdescribe('With Query Params', () => {
 		const queryParams = {
 			page: 1,
 			contractNumber: '1234',
