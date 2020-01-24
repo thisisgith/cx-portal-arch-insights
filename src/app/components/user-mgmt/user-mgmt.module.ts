@@ -6,6 +6,7 @@ import {
 	CuiDropdownModule,
 	CuiLoaderModule,
 	CuiModalModule,
+	CuiAlertModule,
 } from '@cisco-ngx/cui-components';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { SelectRoleModule } from './select-role/select-role.module';
@@ -30,6 +31,7 @@ import { TooltipModule } from '../tooltip/tooltip.module';
 		AlertModule,
 		AddUserModule,
 		CommonModule,
+		CuiAlertModule,
 		CuiDropdownModule,
 		CuiLoaderModule,
 		CuiModalModule,

@@ -154,7 +154,7 @@ export class AddUserComponent implements OnInit, OnDestroy {
 				this.isLoading = false;
 				this.addUserResponse = response;
 				if (response.status === 200) {
-					this.cuiModalService.onSuccess.emit(true);
+					this.cuiModalService.onSuccess.emit(this.addUserForm.value.ccoid);
 					this.cuiModalService.hide();
 				} else if (response.status === 500) {
 					if (response.data && response.data[0].status === 500) {

@@ -38,6 +38,7 @@ export class UserMgmtComponent implements OnInit, AfterViewInit, OnDestroy {
 	@Output() private onUpdate = new EventEmitter<void>();
 	@Output() public onSelect: EventEmitter<Observable<UserUpdateResponseModel>> =
 		new EventEmitter<Observable<UserUpdateResponseModel>>();
+	public alert: any = { };
 	public userDetails: UserDetails;
 	public virtualAccountName = '';
 	private destroyed$: Subject<void> = new Subject<void>();
@@ -82,6 +83,7 @@ export class UserMgmtComponent implements OnInit, AfterViewInit, OnDestroy {
 			.subscribe(saId => this.saAccountId = saId.toString());
 	}
 	public ngOnInit () {
+		this.alert.visible = false;
 		this.user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(this.user, ['info', 'customerId']);
 		// this.vaAccountId = _.get(this.userDetails.roles , ['value_1'], null);
@@ -218,6 +220,13 @@ export class UserMgmtComponent implements OnInit, AfterViewInit, OnDestroy {
 		const result = await this.cuiModalService.showComponent(AddUserComponent, { }, 'small');
 		if (result) {
 			this.update();
+			_.invoke(
+				this.alert,
+				'show',
+				`${result} ${this.i18n.transform('_UserAddedSuccessfully_')}`,
+				'success',
+			);
+			this.alert.visible = true;
 		}
 	}
 
