@@ -281,6 +281,7 @@ export class UserMgmtComponent implements OnInit, AfterViewInit, OnDestroy {
 	 */
 	public changeRole (obs: Observable<UserUpdateResponseModel>) {
 		this.isLoading = true;
+
 		obs
 			.pipe(
 				finalize(() => {
@@ -314,6 +315,11 @@ export class UserMgmtComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	public onSelection (event: any) {
 		const selectedUser = _.find(this.allUsers, user => user.ccoId === event.user.ccoId);
+		const getVA = _.get(selectedUser, 'selectedVirtualAccount');
+
+		if (getVA && selectedUser.selectedVirtualAccount.name === event.selectedVirtualAccount.name) {
+			return false;
+		}
 		selectedUser.selectedVirtualAccount = event.selectedVirtualAccount;
 		selectedUser.isSelected = true;
 		this.allUsers = _.cloneDeep(this.allUsers);
