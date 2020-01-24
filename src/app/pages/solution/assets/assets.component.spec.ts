@@ -49,7 +49,7 @@ function getActiveBody (mock: Mock, type: string = 'GET') {
 	return active.response.body;
 }
 
-fdescribe('AssetsComponent', () => {
+describe('AssetsComponent', () => {
 	let component: AssetsComponent;
 	let fixture: ComponentFixture<AssetsComponent>;
 
@@ -143,7 +143,7 @@ fdescribe('AssetsComponent', () => {
 		sendRacetrack();
 	};
 
-	fdescribe('Without Query Params for systems', () => {
+	describe('Without Query Params for systems', () => {
 		configureTestSuite(() => {
 			TestBed.configureTestingModule({
 				imports: [
@@ -833,7 +833,7 @@ fdescribe('AssetsComponent', () => {
 		}));
 	});
 
-	fdescribe('With Query Params for hardware', () => {
+	describe('With Query Params for hardware', () => {
 		const queryParams = {
 			contractNumber: '1234',
 			coverage: 'covered',
@@ -934,7 +934,7 @@ fdescribe('AssetsComponent', () => {
 		}));
 	});
 
-	fdescribe('With Query Params', () => {
+	describe('With Query Params', () => {
 		const queryParams = {
 			page: 1,
 			contractNumber: '1234',
