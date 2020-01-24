@@ -77,8 +77,8 @@ export const environment = {
 		partner: `/api/lt/${defaults.datacenterStub}/cxportal`,
 		registration: `/api/stg/${defaults.datacenterStub}/customerportal`,
 		cp: `/api/${defaults.datacenterStub}`,
-		usa: '/api/usa',
-		emea: '/api/emea',
+		usa: '/api/lt/usa',
+		emea: '/api/lt/emea',
 	},
 	typeaheadServiceOrigin: 'https://xresps.cloudapps.cisco.com',
 };
