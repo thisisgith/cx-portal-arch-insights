@@ -148,18 +148,18 @@ export class MultiGaugeComponent implements OnInit, OnChanges {
 		valuesEnter.append('div')
 			.style('font-family', 'CiscoSans')
 			.style('font-weight', '400')
-			.style('line-height', d => d.label.length > 15 ? '12px' : '20px')
+			.style('line-height', d => d.label.length > 15 ? '1.2rem' : '2rem')
 			.style('color', (_, i) => i === this.idx && this.selected ? '#00bceb' : '#6c757d')
-			.style('font-size', '12px')
+			.style('font-size', '1.2rem')
 			.text(d => d.label.includes('Critical') ? 'Bugs' : d.label);
 
 		valuesEnter.append('div')
 			.style('font-family', 'CiscoSans')
 			.style('font-weight', '300')
-			.style('line-height', d => d.label.length > 15 ? '25px' : '20px')
-			.style('letter-spacing', '0.72px')
+			.style('line-height', d => d.label.length > 15 ? '2.5rem' : '2rem')
+			.style('letter-spacing', '0.072rem')
 			.style('color', (_, i) => i === this.idx && this.selected ? '#00bceb' : '#243034')
-			.style('font-size', '15px')
+			.style('font-size', '1.5rem')
 			.text(d => d3.format('.0f')(d.value))
 			.attr('data-auto-id', d => `${d.label}Point`);
 

@@ -13,7 +13,6 @@ import {
 	user,
 	MockAdvisorySecurityAdvisories,
 	MockSecurityAdvisoryBulletins,
-	MockSecurityAdvisories,
 	RacetrackScenarios,
 	Mock,
 } from '@mock';
@@ -91,10 +90,11 @@ describe('SecurityDetailsComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(productAlertsService, 'getSecurityAdvisories')
+		spyOn(productAlertsService, 'getPSIRTBulletin')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(productAlertsService, 'getPSIRTBulletin')
+
+		spyOn(productAlertsService, 'getAdvisoryAffectedSystemSupportCoverage')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
 
@@ -106,9 +106,6 @@ describe('SecurityDetailsComponent', () => {
 				.toEqual({
 					advisory: MockAdvisorySecurityAdvisories[0],
 				});
-
-			expect(d)
-				.toEqual(component.data);
 
 			done();
 		});
@@ -119,23 +116,19 @@ describe('SecurityDetailsComponent', () => {
 	});
 
 	it('should fetch the advisory information given an advisory', done => {
-		const mockAdvisories = _.filter(MockSecurityAdvisories,
-			{ advisoryId: MockAdvisorySecurityAdvisories[0].id });
 
 		component.advisory = MockAdvisorySecurityAdvisories[0];
 		component.id = _.toString(MockAdvisorySecurityAdvisories[0].id);
 		component.customerId = user.info.customerId;
-
-		spyOn(productAlertsService, 'getSecurityAdvisories')
-			.and
-			.returnValue(of({ data: mockAdvisories }));
 
 		const bulletins = _.filter(MockSecurityAdvisoryBulletins,
 			{ securityAdvisoryInstanceId: MockAdvisorySecurityAdvisories[0].id });
 		spyOn(productAlertsService, 'getPSIRTBulletin')
 			.and
 			.returnValue(of({ data: bulletins }));
-
+		spyOn(productAlertsService, 'getAdvisoryAffectedSystemSupportCoverage')
+			.and
+			.returnValue(of([]));
 		component.details
 		.subscribe(d => {
 			fixture.detectChanges();
@@ -143,13 +136,8 @@ describe('SecurityDetailsComponent', () => {
 			expect(d)
 				.toEqual({
 					advisory: MockAdvisorySecurityAdvisories[0],
-					assetIds: component.data.assetIds,
 					bulletin: _.head(bulletins),
-					notice: _.head(mockAdvisories),
 				});
-
-			expect(d)
-				.toEqual(component.data);
 
 			done();
 		});

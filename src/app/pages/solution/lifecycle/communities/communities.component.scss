@@ -18,9 +18,9 @@
 	display: inline-block;
 	padding-bottom: 19px;
 	color: $secondary-and-button-text-color;
-	font-size: 16px;
-	letter-spacing: -0.33px;
-	line-height: 18px;
+	font-size: 1.6rem;
+	letter-spacing: -0.033rem;
+	line-height: 1.8rem;
 
 	&::after {
 		position: absolute;
@@ -35,9 +35,9 @@
 
 .cx-lifecycle-card--link {
 	color: $default-text-color;
-	font-size: 14px;
-	letter-spacing: 0.51px;
-	line-height: 25px;
+	font-size: 1.4rem;
+	letter-spacing: 0.051rem;
+	line-height: 2.5rem;
 
 	&:hover {
 		color: $base-link-color;
@@ -48,7 +48,7 @@
 	width: 16px;
 	padding: unset;
 	color: $icon-light-gray;
-	font-size: 15px;
+	font-size: 1.5rem;
 }
 
 .flex-custom-vertical {

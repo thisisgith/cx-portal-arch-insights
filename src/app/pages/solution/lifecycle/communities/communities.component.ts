@@ -145,11 +145,12 @@ export class CommunitiesComponent implements OnDestroy {
 
 	/**
 	 * Opens the given URL in a new tab
+	 * @param event Event
 	 * @param crossLaunchUrl string
 	 */
-	 public crossLaunch (crossLaunchUrl: string) {
+	 public crossLaunch (event: MouseEvent, crossLaunchUrl: string) {
 		if (crossLaunchUrl) {
-			this.lifecycle.crossLaunch(crossLaunchUrl);
+			this.lifecycle.crossLaunch(event, crossLaunchUrl);
 		}
 	}
 

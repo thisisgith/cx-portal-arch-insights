@@ -2,6 +2,7 @@
  * Default Origin
  */
 const origin = 'https://crue-dev-1.cisco.com';
+const datacenterStub = 'REGION';
 
 /**
  * Contains default configurations to be used to import into other environment files,
@@ -9,6 +10,13 @@ const origin = 'https://crue-dev-1.cisco.com';
  */
 export const defaults = {
 	origin,
+	datacenterStub,
+	collectorOverview: 'https://www.cisco.com/c/dam/en/us/support/docs/cloud-systems-management/Cisco-CX-Collector/Collector_Overview.pdf',
+	apolloServicePaths: {
+		cases: '/ws/cases',
+		csc: '/ws/csc',
+		accounts: '/ws/account',
+	},
 	auth: {
 		accountUrl: `${origin}/ws/account/v2/`,
 		ciscoTokenUrl: `${origin}/ws/oauth/v4/token/cisco`,
@@ -62,7 +70,7 @@ export const defaults = {
 	mapboxForwardGeocodePath: '/geocoding/v5/mapbox.places',
 	mapboxHost: 'https://api.mapbox.com',
 	mapboxToken:
-	'pk.eyJ1IjoibWlzY2htaTIiLCJhIjoiY2p4eDl2ODVnMGpmODNkcDhsbG5nNXQ0YyJ9.vpfGffFASSUfANAU4Yvtxg',
+		'pk.eyJ1IjoibWlzY2htaTIiLCJhIjoiY2p4eDl2ODVnMGpmODNkcDhsbG5nNXQ0YyJ9.vpfGffFASSUfANAU4Yvtxg',
 	myCase: 'https://mycase2.cloudapps.cisco.com',
 	// ClientSSOInterceptor: No auth token for the typeahead url
 	noAuthEndpoints: [
@@ -92,6 +100,8 @@ export const defaults = {
 		cxportal: '/api/cxportal',
 		inventory: '/api/v1/inventory',
 		partner: '/api/cxportal',
+		usa: '/api/usa',
+		emea: '/api/emea',
 	},
 	supportEmailLink: 'mailto:cx-portal-support-nonprod@cisco.com',
 	typeaheadServiceOrigin: 'https://xresps-stage.cloudapps.cisco.com',

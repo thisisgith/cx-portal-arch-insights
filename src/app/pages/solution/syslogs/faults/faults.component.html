@@ -47,6 +47,7 @@
 						placeholder="{{ '_Search_' | i18n }}"
 						[compressed]="true"
 						[debounce]="searchOptions.debounce"
+						[searchText]="searchQueryInFaultGrid"
 						(onUpdate)="onSearchUpdate($event)"
 						class="fault-component-search"
 					>
@@ -76,7 +77,6 @@
 			[data]="tableData"
 			[limit]="tableLimit"
 			[offset]="tableOffset"
-			(onSortingChanged)="onTableSortingChanged($event)"
 			(onTableRowClicked)="connectToFaultDetails($event)"
 		>
 		</cui-table

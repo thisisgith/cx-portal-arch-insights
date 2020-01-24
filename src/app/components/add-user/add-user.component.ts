@@ -11,8 +11,10 @@ import {
 	RoleDetails,
 	UserAddRequestModel,
 	UserAddResponseModel,
+	VADetails,
 } from '@sdp-api';
 import { UserResolve } from '@utilities';
+import { VIRTUAL_ACCOUNT } from '@constants';
 
 /**
  * Add User Component
@@ -25,20 +27,25 @@ import { UserResolve } from '@utilities';
 export class AddUserComponent implements OnInit, OnDestroy {
 	public addUserForm = new FormGroup({
 		ccoid: new FormControl('', [Validators.required]),
-		email: new FormControl('', [Validators.required]),
-		title: new FormControl('', [Validators.required]),
+		email: new FormControl('', [Validators.required, Validators.email]),
+		virtualAccount: new FormControl('', []),
 		verifyCheckbox: new FormControl('', [Validators.required]),
 	});
 	public alert: any = { };
 	public response: any;
 	public items: RoleDetails[];
+	public itemsVa: VADetails[];
 	private destroyed$: Subject<void> = new Subject<void>();
 	public userDetails: UserAddRequestModel;
+	public isVAUser = false;
 	public isParntner = 'false';
 	public addUserResponse: UserAddResponseModel;
 	public isLoading = false;
 	public customerId: string;
 	public saAccountId: string;
+	public role: string;
+	public roleObject: any = { };
+	public active: boolean;
 
 	constructor (
 		public cuiModalService: CuiModalService,
@@ -47,11 +54,11 @@ export class AddUserComponent implements OnInit, OnDestroy {
 		private userReslove: UserResolve,
 	) {
 		this.userReslove.getSaId()
-		.pipe(takeUntil(this.destroyed$))
-		.subscribe(saId => this.saAccountId = saId.toString());
+			.pipe(takeUntil(this.destroyed$))
+			.subscribe(saId => this.saAccountId = saId.toString());
 		this.userReslove.getCustomerId()
-		.pipe(takeUntil(this.destroyed$))
-		.subscribe(customerId => this.customerId = customerId);
+			.pipe(takeUntil(this.destroyed$))
+			.subscribe(customerId => this.customerId = customerId);
 	}
 
 	/**
@@ -61,7 +68,7 @@ export class AddUserComponent implements OnInit, OnDestroy {
 		this.alert.visible = false;
 		this.isLoading = false;
 		document.getElementById('input-ccoid')
-			.focus();
+		.focus();
 		this.userService
 			.getListRolesForGivenUserUsingGET(this.saAccountId)
 			.pipe(takeUntil(this.destroyed$))
@@ -69,6 +76,14 @@ export class AddUserComponent implements OnInit, OnDestroy {
 				this.response = data;
 				this.items = this.response.saRoles;
 			});
+		this.userService
+			.getVAListForGivenSACUsingGET(this.saAccountId)
+			.pipe(takeUntil(this.destroyed$))
+			.subscribe(data => {
+				const response: any = data;
+				this.itemsVa = response.data;
+			});
+		this.onFormChanges();
 	}
 
 	/**
@@ -80,7 +95,28 @@ export class AddUserComponent implements OnInit, OnDestroy {
 	}
 
 	/**
-	 * Add User Component
+	 *  Called on changes in form
+	 */
+	public onFormChanges () {
+		this.addUserForm
+			.get('virtualAccount')
+			.valueChanges
+			.pipe(takeUntil(this.destroyed$))
+			.subscribe(val => {
+				this.items = [];
+				this.active = false;
+				if (val) {
+					this.isVAUser = true;
+					this.items = this.response.saVaRoles;
+				} else {
+					this.isVAUser = false;
+					this.items = this.response.saRoles;
+				}
+			});
+	}
+
+	/**
+	 * on Continue Function
 	 */
 	public onContinue () {
 		this.isLoading = true;
@@ -91,11 +127,15 @@ export class AddUserComponent implements OnInit, OnDestroy {
 			isPartner: this.isParntner,
 			rolesAdded: [
 				{
-					role: this.addUserForm.value.title,
+					role: this.roleObject.role,
 				},
 			],
 			saAccountId: this.saAccountId,
 		};
+		if (this.isVAUser) {
+			this.userDetails.rolesAdded[0].type_1 = VIRTUAL_ACCOUNT;
+			this.userDetails.rolesAdded[0].value_1 = this.addUserForm.value.virtualAccount;
+		}
 
 		this.userService
 			.AddNewUserUsingPOST(this.userDetails)
@@ -114,7 +154,7 @@ export class AddUserComponent implements OnInit, OnDestroy {
 				this.isLoading = false;
 				this.addUserResponse = response;
 				if (response.status === 200) {
-					this.cuiModalService.onSuccess.emit(true);
+					this.cuiModalService.onSuccess.emit(this.addUserForm.value.ccoid);
 					this.cuiModalService.hide();
 				} else if (response.status === 500) {
 					if (response.data && response.data[0].status === 500) {
@@ -145,5 +185,41 @@ export class AddUserComponent implements OnInit, OnDestroy {
 					}
 				}
 			});
+	}
+
+	/**
+	 * Method to handle toggle of Role dropdown
+	 */
+	public roleToggle () {
+		this.active = !this.active;
+	}
+
+	/**
+	 * Method to handle Role selection
+	 * @param val role value
+	 * @param index role index
+	 */
+	public selectRole (val, index) {
+		this.items.forEach((data: any, i) => {
+			if (i === index) {
+				data.selected = true;
+			} else {
+				data.selected = false;
+			}
+		});
+		this.role = val.roleDisplayName;
+		this.roleObject = val;
+		this.active = false;
+	}
+
+	/**
+	 * Method to clear Role dropdown for VA
+	 */
+	public onVirtualAccountSelected () {
+		this.role = null;
+		this.items.forEach((val: any) => {
+			val.selected = false;
+		});
+
 	}
 }

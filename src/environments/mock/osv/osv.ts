@@ -16,7 +16,7 @@ import {
 const api = '/api/customerportal/osv-ui/v1/';
 
 /** Default Customer ID */
-const customerId = '2431199';
+const customerId = '2431199_0';
 
 /** Mock pid */
 const pid = 'AIR-CT5520-K9';
@@ -111,14 +111,14 @@ const mockPsirtDetail = {
 	\r\ntriggering a reload of the affected device.\r\n<p>Cisco has released software
 	updates that address this vulnerability. There are no workarounds that address this
 	vulnerability.</p>\r\n<p>This advisory is available at the following link:<br />\r\n
-	<a href=\"https://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/
-	cisco-sa-20180926-cdp-memleak\">https://tools.cisco.com/security/center/content/
+	<a href=\'https://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/
+	cisco-sa-20180926-cdp-memleak\'>https://tools.cisco.com/security/center/content/
 	CiscoSecurityAdvisory/cisco-sa-20180926-cdp-memleak</a></p>\r\nThis advisory is
 	part of the September 26, 2018, release of the Cisco IOS and IOS XE Software
 	Security Advisory Bundled Publication, which includes 12 Cisco Security Advisories
 	that describe 13 vulnerabilities. For a complete list of the advisories and links
-	to them, see <a href=\"http://tools.cisco.com/security/center/viewErp.x?alertId
-	=ERP-69981\">Cisco Event Response: September 2018 Semiannual Cisco IOS and IOS
+	to them, see <a href=\'http://tools.cisco.com/security/center/viewErp.x?alertId
+	=ERP-69981\'>Cisco Event Response: September 2018 Semiannual Cisco IOS and IOS
 	XE Software Security Advisory Bundled Publication</a>`,
 };
 
@@ -402,7 +402,7 @@ const mockMachineRecommendations: MachineRecommendationsResponse = [
 	{
 		bugs: [
 			{
-				id: 'CSCvr05056',
+				id: 'CSCvp81190',
 				severity: 'High',
 				source: 'SLM',
 				status: 'RESOLVED',
@@ -1278,7 +1278,7 @@ export const OSVScenarios = [
 				},
 			],
 		},
-		url: `${api}summary?customerId=${customerId}&solution=IBN&useCase=Campus Network Assurance`,
+		url: `${api}summary?customerId=${customerId}`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -1296,8 +1296,7 @@ export const OSVScenarios = [
 			],
 		},
 		url: `${api}profiles?customerId=${customerId}${sgParams}` +
-			'&filter=recommendationType:automated&search=' +
-			'&solution=IBN&useCase=Campus Network Assurance',
+			'&filter=recommendationType:automated&search=',
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -1315,7 +1314,7 @@ export const OSVScenarios = [
 			],
 		},
 		url: `${api}versions?customerId=${customerId}${svParams}` +
-			'&search=&solution=IBN&useCase=Campus Network Assurance',
+			'&search=',
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -1332,7 +1331,7 @@ export const OSVScenarios = [
 				},
 			],
 		},
-		url: `${api}assetDetails?customerId=2431199&profileName=${assetId}&pid=${pid}` +
+		url: `${api}assetDetails?customerId=${customerId}&profileName=${assetId}&pid=${pid}` +
 			`&pf=${pf}&swType=IOS&swVersion=8&image=NA&postDate=null`,
 		usecases: ['Use Case 1'],
 	},
@@ -1351,7 +1350,7 @@ export const OSVScenarios = [
 			],
 		},
 		url: `${api}assets?customerId=${customerId}${assetParams}` +
-			'&search=&solution=IBN&useCase=Campus Network Assurance',
+			'&search=',
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -1369,7 +1368,7 @@ export const OSVScenarios = [
 			],
 		},
 		url: `${api}assets?customerId=${customerId}${assetParams}` +
-			'&search=&solution=IBN&useCase=Campus Network Assurance',
+			'&search=',
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -1386,8 +1385,7 @@ export const OSVScenarios = [
 				},
 			],
 		},
-		url: `${api}versions?customerId=${customerId}${svParams}` +
-			'&solution=IBN&useCase=Campus Network Assurance',
+		url: `${api}versions?customerId=${customerId}${svParams}`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -1404,9 +1402,8 @@ export const OSVScenarios = [
 				},
 			],
 		},
-		url: `${api}profileAssets?customerId=2431199&id=7293498_NA` +
-			`&profileName=7293498_NA${sgAssetsParams}` +
-			'&solution=IBN&useCase=Campus Network Assurance',
+		url: `${api}profileAssets?customerId=${customerId}&id=7293498_NA` +
+			`&profileName=7293498_NA${sgAssetsParams}`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -1423,9 +1420,8 @@ export const OSVScenarios = [
 				},
 			],
 		},
-		url: `${api}profileVersions?customerId=2431199&id=7293498_NA` +
-			`&profileName=7293498_NA${sgVerParams}` +
-			'&solution=IBN&useCase=Campus Network Assurance',
+		url: `${api}profileVersions?customerId=${customerId}&id=7293498_NA` +
+			`&profileName=7293498_NA${sgVerParams}`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -1443,7 +1439,7 @@ export const OSVScenarios = [
 			],
 		},
 		url: `${api}profileRecommendations?customerId=${customerId}&profileName=${assetId}` +
-				'&productFamily=Cisco Catalyst 9300 Series Switches&profileId=7293498_NA',
+			'&productFamily=Cisco Catalyst 9300 Series Switches&profileId=7293498_NA',
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -1467,7 +1463,7 @@ export const OSVScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 200,
+					delay: 4000,
 					description: 'Bug Details',
 					response: {
 						body: mockBugDetails,
@@ -1477,7 +1473,7 @@ export const OSVScenarios = [
 				},
 			],
 		},
-		url: `${api}bugDetail?bugId=CSCvr05056`,
+		url: `${api}bugDetail?bugId=CSCvp81190`,
 		usecases: ['Use Case 1'],
 	},
 	{

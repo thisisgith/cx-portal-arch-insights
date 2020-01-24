@@ -5,22 +5,25 @@
 			<span>:</span>
 		</div>
 		<div>
-			<span *ngIf="details?.advisory?.severity"
+			<span *ngIf="details?.advisory?.severityLabel"
 				class="label label--circle label--tiny qtr-margin-right"
 				[ngClass]="{
-					'critical': 'label--danger',
-					'error': 'label--danger',
-					'high': 'label--warning-alt',
-					'medium': 'label--warning',
-					'warning': 'label--warning',
-					'low': 'label--info',
-					'info': 'label--info',
-					'notice': 'label--info',
-					'ok': 'label--info'
-				}[details?.advisory?.severity]"
+					'Critical': 'label--danger',
+					'High': 'label--warning',
+					'Medium': 'label--warning-alt',
+					'Low': 'label--info',
+					'Info': 'label--info'
+				}[details?.advisory?.severityLabel]"
 				data-auto-id="BugDetailsSeverityIcon">
 			</span>
-			<span [innerText]="details?.advisory?.severity || ('_NA_' | i18n)" class="text-capitalize header__text" data-auto-id="BugDetailsSeverityText"></span>
+			<ng-container [ngSwitch]="details?.advisory?.severityLabel">
+					<span data-auto-id="ImpactText" *ngSwitchCase="'Critical'" [innerText]="'_Critical_' | i18n"></span>
+					<span data-auto-id="ImpactText" *ngSwitchCase="'High'" [innerText]="'_High_' | i18n"></span>
+					<span data-auto-id="ImpactText" *ngSwitchCase="'Medium'" [innerText]="'_Medium_' | i18n"></span>
+					<span data-auto-id="ImpactText" *ngSwitchCase="'Low'" [innerText]="'_Low_' | i18n"></span>
+					<span data-auto-id="ImpactText" *ngSwitchCase="'Info'" [innerText]="'_Info_' | i18n"></span>
+					<span data-auto-id="ImpactText" *ngSwitchDefault [innerText]="'_Unknown_' | i18n"></span>
+			</ng-container>
 		</div>
 	</div>
 

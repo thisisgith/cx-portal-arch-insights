@@ -19,6 +19,10 @@ import { User } from '@interfaces';
 import { throwError, Observable } from 'rxjs';
 import { EntitlementWrapperService, OrgUserService } from '@sdp-api';
 import { mappedUser } from '@mock';
+import { ACTIVE_SMART_ACCOUNT_KEY, UserRoles } from '@constants';
+
+const testCxLevel = mappedUser.info.subscribedSolutions.cxLevel;
+const testRole = mappedUser.info.individual.role;
 
 describe('AppComponent', () => {
 	let component: AppComponent;
@@ -141,7 +145,7 @@ describe('AppComponent', () => {
 			entitlementWrapperService = TestBed.get(EntitlementWrapperService);
 			orgUserService = TestBed.get(OrgUserService);
 			fixture.detectChanges();
-			window.localStorage.removeItem('activeSmartAccount');
+			window.localStorage.removeItem(ACTIVE_SMART_ACCOUNT_KEY);
 		});
 
 		it('should resolve to a user', done => {
@@ -319,7 +323,7 @@ describe('AppComponent', () => {
 		});
 
 		it('should resolve a valid sa id from local storage', done => {
-			window.localStorage.setItem('activeSmartAccount', `${mappedUser.info.companyList[1].companyId}`);
+			window.localStorage.setItem(ACTIVE_SMART_ACCOUNT_KEY, `${mappedUser.info.companyList[1].companyId}`);
 			fixture.whenStable()
 			.then(() => {
 				userResolve.resolve()
@@ -328,6 +332,22 @@ describe('AppComponent', () => {
 					.subscribe((n: number) => {
 						expect(n)
 							.toEqual(mappedUser.info.companyList[1].companyId);
+						done();
+					});
+				});
+			});
+		});
+
+		it('should refine the roleList resolve the role', done => {
+			fixture.whenStable()
+			.then(() => {
+				userResolve.resolve()
+				.subscribe(() => {
+					userResolve.getRole()
+					.subscribe((s: string) => {
+						expect(s)
+							.toEqual(UserRoles.SA_ADMIN);
+
 						done();
 					});
 				});
@@ -348,6 +368,12 @@ describe('AppComponent', () => {
 						useValue: {
 							getUser: () => new Observable<{ }>(observer => {
 								observer.next(mappedUser);
+							}),
+							getCXLevel: () => new Observable<{ }>(observer => {
+								observer.next(testCxLevel);
+							}),
+							getRole: () => new Observable<{ }>(observer => {
+								observer.next(testRole);
 							}),
 							resolve: () => new Observable<{ }>(observer => {
 								observer.next(mappedUser);

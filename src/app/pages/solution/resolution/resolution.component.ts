@@ -266,6 +266,10 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 					this.buildRefreshSubject();
 					this.refresh$.next();
 				}
+			}, err => {
+				this.isLoading = false;
+				this.logger.error('resolution.component : OnInit - ' +
+									 `:: Error : (${err.status}) ${err.message}`);
 			});
 	}
 
@@ -286,8 +290,8 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 			_.set(this.caseParams, 'caseNumbers', params.case);
 		}
 
-		if (params.serial) {
-			_.set(this.caseParams, 'serialNumbers', params.serial);
+		if (params.serialNumber) {
+			_.set(this.caseParams, 'serialNumbers', params.serialNumber);
 		}
 
 		if (params.filter) {
@@ -498,7 +502,7 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 	 */
 	private getFilterData (totalCases) {
 		const totalFilter = _.find(this.filters, { key: 'total' });
-		totalFilter.seriesData = [{ value: totalCases }];
+		if (totalCases) { totalFilter.seriesData = [{ value: totalCases }]; }
 
 		const requestParamSet = [];
 		let currentPage = 0;
@@ -514,123 +518,125 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 			casesRemaining -= environment.csone.maxCasesPerRequest;
 		}
 
-		forkJoin(
-			_.map(requestParamSet, params => this.caseService.read(params)),
-		)
-		.subscribe(responses => {
-			const cases = _.flatMap(responses, response => _.get(response, 'content', []));
-			// Get all of the filters (except for the total filter) and reset their data
-			const statusFilter = _.find(this.filters, { key: 'status' });
-			const severityFilter = _.find(this.filters, { key: 'severity' });
-			const lastUpdateFilter = _.find(this.filters, { key: 'lastUpdated' });
-			const durationOpenFilter = _.find(this.filters, { key: 'durationOpen' });
-			const rmaFilter = _.find(this.filters, { key: 'rma' });
-			_.each(this.filters, filter => {
-				if (filter.key !== 'total') {
-					filter.seriesData = this.defaultFiltersData[filter.key];
-				}
-			});
-
-			// Iterate through cases to sum values for all subfilters
-			_.each(cases, caseFields => {
-				// Status (dynamic so we don't have to maintain a list of possible statuses)
-				const statusSubfilter = _.find(statusFilter.seriesData,
-					{ filter: caseFields.status });
-				if (!statusSubfilter) {
-					statusFilter.seriesData.push({
-						filter: caseFields.status,
-						label: caseFields.status,
-						selected: false,
-						value: 1,
-					});
-				} else {
-					statusSubfilter.value += 1;
-				}
-				// Severity
-				const severitySubfilter = _.find(severityFilter.seriesData,
-					{ filter: caseFields.priority });
-				if (!severitySubfilter) {
-					severityFilter.seriesData.push({
-						filter: caseFields.priority,
-						label: `S${caseFields.priority}`,
-						selected: false,
-						value: 1,
-					});
-				} else {
-					severitySubfilter.value += 1;
-				}
-				// Last Updated
-				const lastUpdate = DateTime.fromISO(caseFields.lastModifiedDate);
-				const lastUpdateSubfilter = _.find(lastUpdateFilter.seriesData, seriesData => {
-					const filterLastUpdateFrom = DateTime.fromISO(seriesData.filter.lastUpdateFrom);
-					const filterLastUpdateTo = DateTime.fromISO(seriesData.filter.lastUpdateTo);
-					if ((filterLastUpdateFrom && lastUpdate <= filterLastUpdateFrom) ||
-						(filterLastUpdateTo && lastUpdate > filterLastUpdateTo)) {
-						return false;
+		if (!_.isEmpty(requestParamSet)) {
+			forkJoin(
+				_.map(requestParamSet, params => this.caseService.read(params)),
+			)
+			.subscribe(responses => {
+				const cases = _.flatMap(responses, response => _.get(response, 'content', []));
+				// Get all of the filters (except for the total filter) and reset their data
+				const statusFilter = _.find(this.filters, { key: 'status' });
+				const severityFilter = _.find(this.filters, { key: 'severity' });
+				const lastUpdateFilter = _.find(this.filters, { key: 'lastUpdated' });
+				const durationOpenFilter = _.find(this.filters, { key: 'durationOpen' });
+				const rmaFilter = _.find(this.filters, { key: 'rma' });
+				_.each(this.filters, filter => {
+					if (filter.key !== 'total') {
+						filter.seriesData = this.defaultFiltersData[filter.key];
 					}
-
-					return true;
 				});
-				lastUpdateSubfilter.value += 1;
-				// Duration Open
-				const durationOpen = DateTime.fromISO(caseFields.createdDate);
-				const durationOpenSubfilter = _.find(durationOpenFilter.seriesData, seriesData => {
-					const filterOpenFrom = DateTime.fromISO(seriesData.filter.dateCreatedFrom);
-					const filterOpenTo = DateTime.fromISO(seriesData.filter.dateCreatedTo);
-					if ((filterOpenFrom && durationOpen <= filterOpenFrom) ||
-						(filterOpenTo && durationOpen > filterOpenTo)) {
-						return false;
+
+				// Iterate through cases to sum values for all subfilters
+				_.each(cases, caseFields => {
+					// Status (dynamic so we don't have to maintain a list of possible statuses)
+					const statusSubfilter = _.find(statusFilter.seriesData,
+						{ filter: caseFields.status });
+					if (!statusSubfilter) {
+						statusFilter.seriesData.push({
+							filter: caseFields.status,
+							label: caseFields.status,
+							selected: false,
+							value: 1,
+						});
+					} else {
+						statusSubfilter.value += 1;
 					}
+					// Severity
+					const severitySubfilter = _.find(severityFilter.seriesData,
+						{ filter: caseFields.priority });
+					if (!severitySubfilter) {
+						severityFilter.seriesData.push({
+							filter: caseFields.priority,
+							label: `S${caseFields.priority}`,
+							selected: false,
+							value: 1,
+						});
+					} else {
+						severitySubfilter.value += 1;
+					}
+					// Last Updated
+					const lastUpdate = DateTime.fromISO(caseFields.lastModifiedDate);
+					const lastUpdateSubfilter = _.find(lastUpdateFilter.seriesData, seriesData => {
+						const filterLastUpdateFrom = DateTime.fromISO(seriesData.filter.lastUpdateFrom);
+						const filterLastUpdateTo = DateTime.fromISO(seriesData.filter.lastUpdateTo);
+						if ((filterLastUpdateFrom && lastUpdate <= filterLastUpdateFrom) ||
+							(filterLastUpdateTo && lastUpdate > filterLastUpdateTo)) {
+							return false;
+						}
 
-					return true;
-				});
-				durationOpenSubfilter.value += 1;
-				// RMA
-				const rmaSubfilter = _.find(rmaFilter.seriesData,
-					seriesData => caseFields.rmaNumber ?
-					seriesData.filter === 'T' : seriesData.filter === 'F');
-				rmaSubfilter.value += 1;
-			});
-
-			// Order severities (S1, S2, S3, S4)
-			severityFilter.seriesData = _.sortBy(severityFilter.seriesData,
-				seriesData => seriesData.filter);
-
-			_.each(this.filters, filter => {
-				if (_.includes(['status', 'severity'], filter.key)) {
-					// Don't include status or severities in pie charts with no associated cases
-					_.set(filter, 'seriesData', _.filter(filter.seriesData, data => data.value));
-				}
-				if (filter.key === 'status' && filter.seriesData.length > 4) {
-					const sortDataByDesc = _.reverse(_.sortBy(filter.seriesData, 'value'));
-					const seriesData = _.slice(sortDataByDesc, 0, 3);
-					seriesData.push({
-						filter: _.join(_.map(_.slice(sortDataByDesc, 3), 'filter'), ','),
-						label: I18n.get('_Others_'),
-						selected: false,
-						value: _.reduce(_.map(_.slice(sortDataByDesc, 3), 'value'),
-						 (sum, val) =>  sum + val),
+						return true;
 					});
-					_.set(filter, 'seriesData', [...seriesData]);
-				} else {
-					_.set(filter, 'seriesData', [...filter.seriesData]);
-				}
-				_.set(filter, 'loading', false);
-			});
-			this.isLoading = false;
+					lastUpdateSubfilter.value += 1;
+					// Duration Open
+					const durationOpen = DateTime.fromISO(caseFields.createdDate);
+					const durationOpenSubfilter = _.find(durationOpenFilter.seriesData, seriesData => {
+						const filterOpenFrom = DateTime.fromISO(seriesData.filter.dateCreatedFrom);
+						const filterOpenTo = DateTime.fromISO(seriesData.filter.dateCreatedTo);
+						if ((filterOpenFrom && durationOpen <= filterOpenFrom) ||
+							(filterOpenTo && durationOpen > filterOpenTo)) {
+							return false;
+						}
 
-			if (window.Cypress) {
-				window.loading = false;
-			}
-			this.logger.debug('resolution.component : getFilterData() :: Finished getting data');
-		}, err => {
-			this.isLoading = false;
-			if (window.Cypress) {
-				window.loading = false;
-			}
-			this.logger.error('resolution.component : getFilterData() - ' +
-								 `:: Error : (${err.status}) ${err.message}`);
-		});
+						return true;
+					});
+					durationOpenSubfilter.value += 1;
+					// RMA
+					const rmaSubfilter = _.find(rmaFilter.seriesData,
+						seriesData => caseFields.rmaNumber ?
+						seriesData.filter === 'T' : seriesData.filter === 'F');
+					rmaSubfilter.value += 1;
+				});
+
+				// Order severities (S1, S2, S3, S4)
+				severityFilter.seriesData = _.sortBy(severityFilter.seriesData,
+					seriesData => seriesData.filter);
+
+				_.each(this.filters, filter => {
+					if (_.includes(['status', 'severity'], filter.key)) {
+						// Don't include status or severities in pie charts with no associated cases
+						_.set(filter, 'seriesData', _.filter(filter.seriesData, data => data.value));
+					}
+					if (filter.key === 'status' && filter.seriesData.length > 4) {
+						const sortDataByDesc = _.reverse(_.sortBy(filter.seriesData, 'value'));
+						const seriesData = _.slice(sortDataByDesc, 0, 3);
+						seriesData.push({
+							filter: _.join(_.map(_.slice(sortDataByDesc, 3), 'filter'), ','),
+							label: I18n.get('_Others_'),
+							selected: false,
+							value: _.reduce(_.map(_.slice(sortDataByDesc, 3), 'value'),
+							 (sum, val) =>  sum + val),
+						});
+						_.set(filter, 'seriesData', [...seriesData]);
+					} else {
+						_.set(filter, 'seriesData', [...filter.seriesData]);
+					}
+					_.set(filter, 'loading', false);
+				});
+				this.isLoading = false;
+
+				if (window.Cypress) {
+					window.loading = false;
+				}
+				this.logger.debug('resolution.component : getFilterData() :: Finished getting data');
+			}, err => {
+				this.isLoading = false;
+				if (window.Cypress) {
+					window.loading = false;
+				}
+				this.logger.error('resolution.component : getFilterData() - ' +
+									 `:: Error : (${err.status}) ${err.message}`);
+			});
+		} else { this.isLoading = false; }
 	}
 
 	/**

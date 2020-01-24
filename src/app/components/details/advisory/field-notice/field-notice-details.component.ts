@@ -12,23 +12,25 @@ import * as _ from 'lodash-es';
 import {
 	FieldNotice,
 	FieldNoticeBulletin,
-	FieldNoticeResponse,
 	FieldNoticeBulletinResponse,
 	ProductAlertsService,
 	FieldNoticeAdvisory,
 	FieldNoticeAdvisoryResponse,
 	RacetrackTechnology,
 	RacetrackSolution,
+	InventoryService,
+	HardwareAssets,
+	HardwareAsset,
 } from '@sdp-api';
 import { LogService } from '@cisco-ngx/cui-services';
 import {
 	map,
-	mergeMap,
 	catchError,
 	takeUntil,
+	mergeMap,
 } from 'rxjs/operators';
 import { of, forkJoin, Subject } from 'rxjs';
-import { AssetIds, Impacted } from '../impacted-assets/impacted-assets.component';
+import { AssetIds } from '../impacted-assets/impacted-assets.component';
 import { Alert } from '@interfaces';
 import { RacetrackInfoService } from '@services';
 
@@ -38,6 +40,13 @@ export interface Data {
 	bulletin?: FieldNoticeBulletin;
 	advisory?: FieldNoticeAdvisory;
 	assetIds?: AssetIds;
+}
+
+/**
+ * The interface for our output
+ */
+export interface Impacted {
+	assets: HardwareAsset[];
 }
 
 /**
@@ -61,56 +70,25 @@ export class FieldNoticeDetailsComponent implements OnInit, OnChanges, OnDestroy
 		advisory?: ProductAlertsService.GetAdvisoriesFieldNoticesParams;
 		notice?: ProductAlertsService.GetFieldNoticeParams;
 		bulletin?: ProductAlertsService.GetFieldNoticeBulletinParams;
+		assets?: InventoryService.GetHardwareAssetsParams;
 	};
-
+	public impactedAssets: HardwareAsset[] = [];
 	public impactedCount = 0;
+	public potentiallyImpactedCount = 0;
 	public activeTab = 0;
 	public data: Data = { };
 	public isLoading = false;
 	private destroyed$: Subject<void> = new Subject<void>();
 	private selectedSolutionName: string;
 	private selectedTechnologyName: string;
+	public affectedSystems = [];
 
 	constructor (
+		private inventoryService: InventoryService,
 		private logger: LogService,
 		private productAlertsService: ProductAlertsService,
 		private racetrackInfoService: RacetrackInfoService,
 	) { }
-
-	/**
-	 * Retrieves the field notices
-	 * @returns the data
-	 */
-	private getFieldNotice () {
-		return this.productAlertsService.getFieldNotice(this.params.notice)
-		.pipe(
-			mergeMap((response: FieldNoticeResponse) => {
-				const data = _.get(response, 'data', []);
-				_.set(this.data, 'notice', _.head(data));
-
-				const vulFieldNotices = _.filter(data, { vulnerabilityStatus: 'VUL' }) || [];
-				const vulIds = _.compact(_.map(vulFieldNotices, 'managedNeId')) || [];
-
-				if (vulIds.length) {
-					_.set(this.data, ['assetIds', 'impacted'], vulIds);
-				}
-				const potVulFieldNotices = _.filter(data, { vulnerabilityStatus: 'POTVUL' }) || [];
-				const potVulIds = _.compact(_.map(potVulFieldNotices, 'managedNeId')) || [];
-
-				if (potVulIds.length) {
-					_.set(this.data, ['assetIds', 'potentiallyImpacted'], potVulIds);
-				}
-
-				return this.getFieldNoticeBulletin();
-			}),
-			catchError(err => {
-				this.logger.error('field-notice-details.component : getFieldNotice() ' +
-					`:: Error : (${err.status}) ${err.message}`);
-
-				return of({ });
-			}),
-		);
-	}
 
 	/**
 	 * Retrieves the field notice bulletins
@@ -178,7 +156,8 @@ export class FieldNoticeDetailsComponent implements OnInit, OnChanges, OnDestroy
 					vulnerabilityStatus: ['POTVUL', 'VUL'],
 				},
 			};
-			obsBatch.push(this.getFieldNotice());
+			obsBatch.push(this.getFieldNoticeBulletin());
+			obsBatch.push(this.getAffectedSystemSupportCoverage());
 
 			if (this.advisory) {
 				_.set(this.data, 'advisory', this.advisory);
@@ -245,5 +224,74 @@ export class FieldNoticeDetailsComponent implements OnInit, OnChanges, OnDestroy
 	public ngOnDestroy () {
 		this.destroyed$.next();
 		this.destroyed$.complete();
+	}
+
+	/**
+	 * Fetches our advisory
+	 * @returns the observable
+	 */
+	private getAffectedSystemSupportCoverage () {
+		const supportCoverageParams = {
+			customerId: this.customerId,
+			fieldNoticeId: [_.toSafeInteger(this.id)],
+			vulnerabilityStatus: ['POTVUL', 'VUL'],
+		};
+
+		return this.productAlertsService.getFNAffectedSystemSupportCoverage(supportCoverageParams)
+			.pipe(
+				mergeMap(response => {
+					this.affectedSystems = response || [];
+					const supportedSystems = _.filter(this.affectedSystems, 'supportCovered');
+					if (_.size(supportedSystems)) {
+						return this.fetchHardwareAssets(supportedSystems);
+					}
+
+					return of({ });
+				}),
+				catchError(err => {
+					this.logger.error('field-notice.component : getAffectedSystemSupportCoverage() ' +
+						`:: Error : (${err.status}) ${err.message}`);
+
+					return of({ });
+				}),
+			);
+	}
+
+	/**
+	 * Fetches the hardware assets from /assets api
+	 * @param supportedSystems systems where support coverage is true
+	 * @returns the observable
+	 */
+	private fetchHardwareAssets (supportedSystems) {
+		_.set(this.params, 'assets', {
+			customerId: this.customerId,
+			page: 1,
+			rows: 100,
+			solution: this.selectedSolutionName,
+			useCase: this.selectedTechnologyName,
+		});
+		const serials = _.uniq(
+			_.map(supportedSystems, 'serialNumber'));
+
+		if (!serials.length) {
+			return of({ });
+		}
+		_.set(this.params.assets, 'serialNumber', serials);
+
+		return this.inventoryService.getHardwareAssets(this.params.assets)
+			.pipe(
+				map((response: HardwareAssets) => {
+					this.impactedAssets = _.get(response, 'data', []);
+					this.assets.emit({ assets: this.impactedAssets });
+
+				}),
+				catchError(err => {
+					this.logger.error('advisory-details:impacted-assets.component : fetchAssets() ' +
+						`:: Error : (${err.status}) ${err.message}`);
+
+					return of({ });
+				}),
+			);
+
 	}
 }

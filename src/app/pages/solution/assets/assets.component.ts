@@ -48,6 +48,7 @@ import { CaseOpenComponent } from '@components';
 import { getProductTypeImage, getProductTypeTitle } from '@classes';
 import { DetailsPanelStackService, RacetrackInfoService, CaseDetailsService } from '@services';
 import { HttpResponse } from '@angular/common/http';
+import { IS_IE_OR_EDGE } from '@constants';
 
 /**
  * Interface representing an item of our inventory in our assets table
@@ -159,7 +160,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		debounce: 600,
 		max: 100,
 		min: 3,
-		pattern: /^[a-zA-Z0-9\s\-\/\(\).]*$/,
+		pattern: /^[a-zA-Z0-9\s\-\/\(\)._=+@%!#$^*{}]*$/,
 	};
 	private destroy$ = new Subject();
 	private selectedSolutionName: string;
@@ -172,7 +173,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	public getProductIcon = getProductTypeImage;
 	public getProductTitle = getProductTypeTitle;
 	private routeParam: string;
-
+	public isIEOrEdge = IS_IE_OR_EDGE;
 	constructor (
 		private contractsService: ContractsService,
 		private cuiModalService: CuiModalService,
@@ -335,7 +336,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 * @returns number of rows
 	 */
 	private getRows () {
-		return this.viewType === 'list' ? 10 : 12;
+		return this.viewType === 'list' ? 10 : 10;
 	}
 
 	/**
@@ -376,13 +377,6 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		return {
 			route,
 			filters: [
-				// {
-				// 	key: 'partner',
-				// 	loading: true,
-				// 	seriesData: [],
-				// 	template: this.pieChartFilterTemplate,
-				// 	title: I18n.get('_Partner_'),
-				// },
 				{
 					key: 'advisories',
 					loading: true,
@@ -404,7 +398,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				customerId: this.customerId,
 				page: 1,
 				rows: this.getRows(),
-				sort: ['criticalAdvisories:DESC'],
+				sort: ['criticalAdvisories:DESC', 'deviceName:ASC'],
 			},
 			searchLabel: '_Systems_',
 			searchTemplate: this.systemSearchTemplate,
@@ -462,7 +456,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					},
 					{
 						key: 'cxLevel',
-						name: I18n.get('_SupportLevel_'),
+						name: I18n.get('_CXLevel_'),
 						render: item => item.cxLevel || I18n.get('_NA_'),
 						sortable: true,
 						value: 'cxLevel',
@@ -515,13 +509,6 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					template: this.pieChartFilterTemplate,
 					title: I18n.get('_Advisories_'),
 				},
-				// {
-				// 	key: 'partner',
-				// 	loading: true,
-				// 	seriesData: [],
-				// 	template: this.pieChartFilterTemplate,
-				// 	title: I18n.get('_Partner_'),
-				// },
 				{
 					key: 'eox',
 					loading: true,
@@ -543,7 +530,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				customerId: this.customerId,
 				page: 1,
 				rows: this.getRows(),
-				sort: ['deviceName:DESC', 'productId:DESC'],
+				sort: ['deviceName:ASC', 'equipmentType:ASC', 'productId:ASC'],
 			},
 			searchLabel: '_HardwareComponents_',
 			searchTemplate: this.hardwareSearchTemplate,
@@ -558,12 +545,13 @@ export class AssetsComponent implements OnInit, OnDestroy {
 						name: I18n.get('_SerialNumber_'),
 						sortable: true,
 						value: 'serialNumber',
+						width: '150px',
 					},
 					{
 						key: 'deviceName',
 						name: I18n.get('_SystemName_'),
 						sortable: true,
-						sortDirection: 'desc',
+						sortDirection: 'asc',
 						sorting: true,
 						value: 'deviceName',
 					},
@@ -588,7 +576,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					},
 					{
 						key: 'cxLevel',
-						name: I18n.get('_SupportLevel_'),
+						name: I18n.get('_CXLevel_'),
 						render: item => item.cxLevel || I18n.get('_NA_'),
 						sortable: true,
 						value: 'cxLevel',
@@ -708,7 +696,6 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		.pipe(
 			map(() => {
 				this.alert.show(I18n.get('_ScanInitiated_', deviceName), 'info');
-				this.onRowSelect(item);
 
 				return of();
 			}),
@@ -749,8 +736,8 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				return of();
 			}),
 			catchError(err => {
-				const cxLevel = _.get(item, ['data', 'cxLevel']);
-				if (cxLevel > 0 && err.status === 404) {
+				const isScanCapable = _.get(item, ['data', 'isScanCapable']);
+				if (isScanCapable && err.status === 404) {
 					return this.initiateScan(item);
 				}
 				this.alert.show(I18n.get('_UnableToInitiateScan_', deviceName), 'danger');
@@ -770,7 +757,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 * @returns the built actions
 	 */
 	public getRowActions (item: Item, view: View) {
-		const { cxLevel } = item.data;
+		const isScanCapable = _.get(item, ['data', 'isScanCapable'], false);
 
 		return _.filter([
 			_.get(item, ['data', 'supportCovered'], false) ? {
@@ -781,7 +768,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					'fluid',
 				),
 			} : undefined,
-			(Number(cxLevel) > 0 && view.key === 'system' && _.get(item, ['data', 'isManagedNE'], false))
+			(isScanCapable && view.key === 'system' && Number(item.data.cxLevel) >= 1)
 			? {
 				label: I18n.get('_RunDiagnosticScan_'),
 				onClick: () => this.checkScan(item),
@@ -843,6 +830,9 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		.pipe(
 			map((results: SystemAssets | HardwareAssets) => {
 				const data = _.get(results, 'data', []);
+				const systemView = this.getView('system');
+				const hardwareView = this.getView('hardware');
+
 				data.forEach((a: SystemAsset | HardwareAsset) => {
 					const role = _.get(a, 'role');
 					if (role) {
@@ -861,6 +851,14 @@ export class AssetsComponent implements OnInit, OnDestroy {
 
 				view.pagination = results.Pagination;
 
+				/* browser headers.get X-API-RESULT-COUNT is not supported in IE-Edge */
+				if (view.key === 'system') {
+					systemView.total = _.toNumber(_.get(view, ['pagination', 'total'], 0)) || 0;
+				}
+				if (view.key === 'hardware') {
+					hardwareView.total = _.toNumber(_.get(view, ['pagination', 'total'], 0)) || 0;
+				}
+
 				const first = (view.pagination.rows * (view.pagination.page - 1)) + 1;
 				let last = (view.pagination.rows * view.pagination.page);
 				if (last > view.pagination.total) {
@@ -869,7 +867,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 
 				view.paginationCount = `${first}-${last}`;
 
-				if (this.selectOnLoad && this.selectedView.key === 'system') {
+				if (this.selectOnLoad) {
 					this.onSelectionChanged(_.map(this.selectedView.data, item => item));
 					if (this.selectedView.selectedAssets.length === 1) {
 						this.selectedAsset = this.selectedView.selectedAssets[0];
@@ -982,27 +980,13 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	}
 
 	/**
-	 * TODO: Implement with Partner API - Out for LA
-	 * Fetches the partner counts for the visual filter
-	 * @returns the partner counts
-	 */
-	// private getPartnerCounts () {
-	// 	const systemPartnerFilter = _.find(this.getView('system').filters, { key: 'partner' });
-	// 	const hardwarePartnerFilter = _.find(this.getView('hardware').filters, { key: 'partner' });
-
-	// 	systemPartnerFilter.loading = false;
-	// 	hardwarePartnerFilter.loading = false;
-
-	// 	return of({ });
-	// }
-
-	/**
 	 * Fetches the advisory counts for the systems visual filter
 	 * @returns the advisory counts
 	 */
 	private getSystemAdvisoryCount () {
 		const systemAdvisoryFilter =
 			_.find(this.getView('system').filters, { key: 'advisories' });
+
 		return this.productAlertsService.getSystemVulnerabilityCounts({
 			customerId: this.customerId,
 			solution: this.selectedSolutionName,
@@ -1105,7 +1089,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			},
 			{
 				filter: 'MODULE',
-				label: I18n.get('_Module_'),
+				label: I18n.get('_Modules_'),
 				selected: false,
 				value: 0,
 			},
@@ -1239,7 +1223,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				if (gt36Value) {
 					series.push({
 						filter: 'gt-36-months',
-						filterValue: [`${_.get(sub36, 'fromTimestampInMillis')}`],
+						filterValue: [`${_.get(gt36, 'fromTimestampInMillis')}`],
 						label: `36+ ${_.lowerCase(I18n.get('_Months_'))}`,
 						selected: false,
 						value: gt36Value,
@@ -1415,13 +1399,14 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 * Function used to load all of the data
 	 */
 	private loadData () {
+		this.selectedView.params.page = 1;
+		this.adjustQueryParams();
 		this.status.isLoading = true;
 		this.getInventoryCounts()
 		.pipe(
 			mergeMap(() =>
 				forkJoin(
 					this.getCoverageCounts(),
-					// this.getPartnerCounts(),
 					this.getSystemAdvisoryCount(),
 					this.getHardwareAdvisoryCount(),
 					this.getHardwareTypeCounts(),
@@ -1587,6 +1572,10 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			view.filtered = !_.isEmpty(
 				_.omit(_.cloneDeep(view.params), ['customerId', 'rows', 'page', 'sort']),
 			);
+
+			if (params.assetsViewOpen) {
+				this.loadData();
+			}
 		});
 
 		this.racetrackInfoService.getCurrentSolution()
@@ -1597,12 +1586,29 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			this.selectedSolutionName = _.get(solution, 'name');
 		});
 
+		this.racetrackInfoService.getPitStopApiFailure()
+		.pipe(
+			map(() => {
+				this.status.isLoading = false;
+				const view = this.getView('system');
+				view.loading = false;
+			}),
+			takeUntil(this.destroy$),
+		)
+		.subscribe();
+
 		this.racetrackInfoService.getCurrentTechnology()
 		.pipe(
 			takeUntil(this.destroy$),
 		)
 		.subscribe((technology: RacetrackTechnology) => {
 			if (this.selectedTechnologyName !== _.get(technology, 'name')) {
+				// If a previously selected technology exists and is different than the currently selected one,
+				// update the current page on the query params to `1`
+				if (this.selectedTechnologyName) {
+					this.selectedView.params.page = 1;
+					this.adjustQueryParams();
+				}
 				this.selectedTechnologyName = _.get(technology, 'name');
 				this.loadData();
 			}

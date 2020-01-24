@@ -1,0 +1,11 @@
+<div class="title" [innerText]="data.title"></div>
+<a class="modal__close" (click)="cuiModalService.hide()" data-auto-id="closeModalIcon">
+	<span
+		class="icon-close"
+		tabindex="0"
+		role="button"
+		(keydown.enter)="cuiModalService.hide()">
+	</span>
+</a>
+
+<div class="video-player" #videoPlayer></div>

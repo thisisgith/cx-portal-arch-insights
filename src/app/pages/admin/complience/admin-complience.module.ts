@@ -13,6 +13,7 @@ import {
 	CuiSpinnerModule,
 	CuiModalModule,
 	CuiAlertModule,
+	CuiSelectModule,
 
 } from '@cisco-ngx/cui-components';
 
@@ -40,6 +41,7 @@ const imports = [
 	AssetTaggingModule,
 	CuiModalModule,
 	CuiAlertModule,
+	CuiSelectModule,
 	TooltipModule,
 	FormsModule,
 	UserModule.forRoot({ rootUrl }),

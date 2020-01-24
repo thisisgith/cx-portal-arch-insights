@@ -3,6 +3,7 @@
 	(hiddenChange)="handleHidden($event)"
 	[fullscreen]="fullscreen"
 	id="details-panel"
+	[minWidth]="'992px'"
 >
 	<details-panel-header
 		(close)="onAllPanelsClose()"
@@ -96,7 +97,7 @@
 					<span [innerText]="'_FaultFilter_' | i18n "></span>
 			</div>
 			<div class="row half-margin-bottom ">
-				<div class="col-4">
+				<div class="col-3">
 					<cui-select
 						data-auto-id="productID"
 						label="{{'_FaultProductId_' | i18n}}"
@@ -109,7 +110,7 @@
 						[empty]="true">
 					</cui-select>
 				</div>
-				<div class="col-4">
+				<div class="col-3">
 					<cui-select
 						placeholder="Select Software Type"
 						data-auto-id="Software"
@@ -122,7 +123,20 @@
 						[empty]="true">
 					</cui-select>
 				</div>
-				<div class="col-4">
+				<div class="col-3">
+					<cui-select
+						placeholder="Select Status"
+						data-auto-id="status"
+						label="{{'_FaultStatus_' | i18n}}"
+						(ngModelChange)="onSelection($event,FAULT_CONSTANT.STATUS)"
+						[(ngModel)]="searchParams.srStatus"
+						[items]="srStatus"
+						optionsKey="name"
+						optionsValue="value"
+						[empty]="true">
+					</cui-select>
+				</div>
+				<div class="col-3">
 					<cui-select
 						placeholder="Select Time Range"
 						data-auto-id="timeRange"
@@ -137,6 +151,13 @@
 			</div>
 			<div *ngIf="affectedSystemLoading" class="base-margin-bottom">
 				<cui-spinner></cui-spinner>
+			</div>
+			<div *ngIf="faultAffectedDetails.length" class="base-margin-top">
+				<span [innerText]="
+							'_FaultShowingXofYSystems_'
+								| i18n: paginationCount:affectedCount
+					" class="qtr-margin-left text-medium text-muted" data-auto-id="ShowingAlarmCount">
+				</span>
 			</div>
 			<div class="responsive-table" *ngIf="!affectedSystemLoading">
 				<cui-table
@@ -170,6 +191,7 @@
 <ng-template #systemName let-item="celldata">
 	<span data-auto-id="SystemName"
 		*ngIf="item?.systemName; else noTacCase"
+		[title] ="item.systemName"
 		class="text-primary cursor"
 		[innerText]="item?.systemName"
 		(click)="connectToAsset(item.serialNumber)"></span>
@@ -179,6 +201,7 @@
 	[asset]="assetLinkInfo?.asset"
     [element]="assetLinkInfo?.element"
 	[serialNumber]="serialNumber"
+	[minWidth]="'992px'"
 	(close)="onPanelClose()"
 >
 </asset-details>
@@ -191,6 +214,20 @@
 		(click)="connectToCaseDetails(item.tacCaseNo)"></span>
 </ng-template>
 
+<details-panel *ngIf="selectedCase" [hidden]="!selectedCase"
+	(hiddenChange)="handleHidden($event)" [fullscreen]="fullscreen"
+	[minWidth]="'992px'">
+	<details-panel-header (close)="detailsClose()" [(fullscreen)]="fullscreen">
+		<div detailsPanelTitle class="text-xlarge"
+			[innerText]="'_RMACaseNumberTitle_' | i18n:selectedCase?.caseNumber"></div>
+		<app-case-details-header [case]="selectedCase" [caseDetails]="selectedDetails">
+		</app-case-details-header>
+	</details-panel-header>
+	<app-case-details [case]="selectedCase"
+		[(caseDetails)]="selectedDetails">
+	</app-case-details>
+</details-panel>
+
 <ng-template #noTacCase>
 	<span [innerText]="'-'"
 	></span>
@@ -202,8 +239,14 @@
 	></span>
 </ng-template>
 
+<ng-template #status let-item="celldata">
+	<span *ngIf="item?.srStatus; else noTacCase"
+		[innerText]="item.srStatus"
+	></span>
+</ng-template>
+
 <ng-template #productId let-item="celldata">
-	<span *ngIf="item?.productId; else noTacCase"
+	<span *ngIf="item?.productId; else noTacCase" [title]="item.productId"
 		[innerText]="item.productId"
 	></span>
 </ng-template>

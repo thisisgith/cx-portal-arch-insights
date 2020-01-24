@@ -78,6 +78,7 @@ export class AssetDetailsComponent implements OnDestroy, OnInit, Panel360 {
 		error: false, inProgress: false,
 	};
 	public screenWidth = window.innerWidth;
+	public isScanSuccess: boolean;
 
 	private destroyed$: Subject<void> = new Subject<void>();
 	private selectedSolutionName: string;
@@ -123,12 +124,11 @@ export class AssetDetailsComponent implements OnDestroy, OnInit, Panel360 {
 	public handleScanStatus (transaction: TransactionStatusResponse) {
 		if (transaction.status === 'SUCCESS') {
 			this.advisoryReload.next(true);
-
+			this.isScanSuccess = true;
 			this.scanStatus.emit(transaction);
 
 			const cachedAsset = _.cloneDeep(this.asset);
 			this.asset = null;
-			this.isLoading = true;
 
 			this.headerScanStatus = {
 				error: false,
@@ -137,8 +137,6 @@ export class AssetDetailsComponent implements OnDestroy, OnInit, Panel360 {
 
 			this.fetchSystem()
 			.subscribe(() => {
-				this.isLoading = false;
-
 				if (!this.asset) {
 					// In case our refresh fails, use our previously found asset
 					this.asset = cachedAsset;
@@ -225,7 +223,7 @@ export class AssetDetailsComponent implements OnDestroy, OnInit, Panel360 {
 
 				this.hardwareAssets = _.get(responses[2], 'data');
 				this.hardwareAsset = _.find(this.hardwareAssets,
-					{ serialNumber: _.get(this.systemAsset, 'serialNumber') });
+					{ serialNumber: _.get(this.asset, 'serialNumber') });
 
 				const systemSn = _.get(this.systemAsset, 'serialNumber');
 				if (systemSn !== this.serialNumber) {
@@ -233,7 +231,7 @@ export class AssetDetailsComponent implements OnDestroy, OnInit, Panel360 {
 				} else {
 					this.tabIndex = 0;
 				}
-				this.tabIndex = (this.selectedView.key === 'system') ? 0 : 1;
+				this.tabIndex = (_.get(this.selectedView, ['key'], null) === 'system') ? 0 : 1;
 				const observables = [];
 				this.hardwareAssets.forEach((asset: HardwareAsset) => {
 					observables.push(this.inventoryService.getAssetSummary({
@@ -241,6 +239,7 @@ export class AssetDetailsComponent implements OnDestroy, OnInit, Panel360 {
 						hwInstanceId: asset.hwInstanceId,
 					}));
 				});
+
 				return forkJoin(observables);
 			}),
 			map((response: AssetSummary[]) => {
@@ -323,8 +322,13 @@ export class AssetDetailsComponent implements OnDestroy, OnInit, Panel360 {
 	 * Refreshes our data
 	 */
 	private refresh () {
-		this.isLoading = true;
-
+		// do not show loader if scan is completed
+		if (this.isScanSuccess) {
+			this.isLoading = false;
+		} else {
+			this.isLoading = true;
+			_.invoke(this.alert, 'hide');
+		}
 		// If our serial number and our asset/element don't match,
 		// we need to unset them so we can re-fetch them
 		const assetSerial = _.get(this.asset, 'serialNumber');
@@ -406,11 +410,9 @@ export class AssetDetailsComponent implements OnDestroy, OnInit, Panel360 {
 
 		if ((currentAsset && !changes.asset.firstChange) ||
 			(currentSerial && !changes.serialNumber.firstChange)) {
-
 			if (currentAsset && !currentSerial) {
 				this.serialNumber = _.get(currentAsset, 'serialNumber');
 			}
-			_.invoke(this.alert, 'hide');
 			this.refresh();
 		}
 	}

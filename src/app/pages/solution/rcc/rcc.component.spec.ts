@@ -122,20 +122,6 @@ describe('RccComponent', () => {
 			.toBeDefined();
 	});
 
-	it('should fetch selected row details on click of violation grid row', () => {
-		const violationInfo = { };
-		component.onViolationRowClicked(violationInfo);
-		expect(component.selectedViolationModal)
-			.toBeTruthy();
-	});
-
-	it('should fetch selected row details on click of asset grid row', () => {
-		const assetInfo = { };
-		component.onAssetRowClicked(assetInfo);
-		expect(component.selectedAssetModal)
-			.toBeTruthy();
-	});
-
 	it('on violation grid pagination selection', () => {
 		const pageInfo = { };
 		component.onPagerUpdated(pageInfo);
@@ -217,14 +203,6 @@ describe('RccComponent', () => {
 		component.openSlider(selData);
 		expect(component.selectedAsset)
 			.toBeTruthy();
-	});
-
-	it('should close the panel', () => {
-		const model = 'selectedModel';
-		component[model] = false;
-		component.onPanelClose(model);
-		expect(component[model])
-			.toEqual(null);
 	});
 
 	it('should call openDevicePage', () => {
@@ -645,16 +623,14 @@ describe('RccComponent', () => {
 	});
 
 	it('should called on close with true', () => {
-		const view = 'selectedViolationModal';
 		spyOn(component, 'onPanelClose');
-		component.handleHidden(true, view);
+		component.handleHidden(true);
 		expect(component.onPanelClose)
 			.toHaveBeenCalled();
 	});
 
 	it('should called on close with false', () => {
-		const view = 'selectedViolationModal';
-		component.handleHidden(false, view);
+		component.handleHidden(false);
 		spyOn(component, 'onPanelClose');
 		expect(component.onPanelClose)
 			.toHaveBeenCalledTimes(0);

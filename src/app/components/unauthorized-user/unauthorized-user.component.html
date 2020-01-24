@@ -8,7 +8,7 @@
 </div>
 <h1 [innerText]="'_UnauthorizedUser_' | i18n"></h1>
 <div class="dbl-margin-top">
-	<span [innerText]="'_UnauthorizedUserNoAccess_' | i18n"></span>
+	<span [innerText]="data.message || ('_UnauthorizedUserNoAccess_' | i18n)"></span>
 </div>
 <div class="flex-center-horizontal dbl-margin-top">
 	<a class="btn btn--primary half-margin-right"

@@ -13,8 +13,10 @@ import {
 	HighCrashRiskDeviceTooltip,
 	RacetrackSolution,
 	RacetrackTechnology,
+	IStatus,
 } from '@sdp-api';
 import { ActivatedRoute } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 
 /**
  * Risk mitigation component
@@ -51,7 +53,14 @@ export class RiskMitigationComponent implements AfterViewInit {
 	private destroy$ = new Subject();
 	public defaultTimeRange = '1';
 	public defaultRiskState = 'HIGH';
+	public status: IStatus = { isLoading: true };
+	public get selectedViewFilters (): [] {
+		const selectedView = this.onlyCrashes ? 'crashRiskSystems' : 'crashedSystems';
 
+		return _.filter(this.filters, (filter: Filter) =>
+		_.indexOf(filter.view, selectedView) > -1,
+		);
+	}
 	@ViewChild('riskScoreFilterTemplate', { static: true })
 	public riskScoreFilterTemplate: TemplateRef<string>;
 	@ViewChild('timeRangeFilterTemplate', { static: true })
@@ -66,6 +75,7 @@ export class RiskMitigationComponent implements AfterViewInit {
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
+		this.selectedCrashRiskFilter = this.defaultRiskState;
 	}
 
 	/**
@@ -85,11 +95,11 @@ export class RiskMitigationComponent implements AfterViewInit {
 			.getCurrentTechnology()
 			.pipe(takeUntil(this.destroy$))
 			.subscribe((technology: RacetrackTechnology) => {
-				this.selectedTechnologyName = _.get(technology, 'name');
-				this.loadData();
-				this.getTotalAssetCount();
+				if (_.get(technology, 'name') !== this.selectedTechnologyName) {
+					this.selectedTechnologyName = _.get(technology, 'name');
+					this.loadData();
+				}
 			});
-
 		this.buildFilters();
 	}
 
@@ -97,12 +107,16 @@ export class RiskMitigationComponent implements AfterViewInit {
 	 * Load data of risk details
 	 */
 	public loadData () {
+		this.status.isLoading = true;
+		this.buildFilters();
 		forkJoin(
 			this.getTotalAssetCount(),
 			this.getAllCrashesData(),
 			this.getHighCrashesDeviceData(),
 		)
-		.subscribe();
+		.subscribe(() => {
+			this.status.isLoading = false;
+		});
 	}
 
 	/**
@@ -126,7 +140,8 @@ export class RiskMitigationComponent implements AfterViewInit {
 				map((results: HighCrashRiskDeviceCount) => {
 					this.getRiskScore(results.crashRiskDeviceCount);
 				}),
-				catchError(err => {
+				catchError((err: HttpErrorResponse) => {
+					this.filters = _.filter(this.filters, filter => filter.key !== 'riskScore');
 					this.logger.error(
 						'High Crash Assets : getHighCrashesDeviceData() ' +
 							`:: Error : (${err.status}) ${err.message}`,
@@ -158,7 +173,8 @@ export class RiskMitigationComponent implements AfterViewInit {
 				this.crashedAssetsCount = results.devicesCrashCount_90d;
 				this.getTimeRange(seriesData);
 			}),
-			catchError(err => {
+			catchError((err: HttpErrorResponse) => {
+				this.filters = _.filter(this.filters, filter => filter.key !== 'timeRange');
 				this.crashedAssetsCount = undefined;
 				this.logger.error(
 					'Crash Assets : getAllCrashesData() ' +
@@ -221,6 +237,11 @@ export class RiskMitigationComponent implements AfterViewInit {
 	 */
 	public getTimeRange (data) {
 		const timeRangeFilter = _.find(this.filters, { key: 'timeRange' });
+		const isEmpty = Object.values(data)
+		.every(x => (_.get(x, 'value') === 0));
+		if (isEmpty) {
+			this.filters = _.filter(this.filters, filter => filter.key !== 'timeRange');
+		}
 		timeRangeFilter.seriesData = data;
 		this.selectedFilters = this.filters;
 	}
@@ -238,6 +259,7 @@ export class RiskMitigationComponent implements AfterViewInit {
 				template: this.timeRangeFilterTemplate,
 				title: I18n.get('_RMTimeRange_'),
 				selected: true,
+				view: ['crashedSystems'],
 			},
 			{
 				key: 'riskScore',
@@ -246,6 +268,7 @@ export class RiskMitigationComponent implements AfterViewInit {
 				template: this.riskScoreFilterTemplate,
 				title: I18n.get('_CP_Risk_'),
 				selected: true,
+				view: ['crashRiskSystems'],
 			},
 		];
 	}
@@ -353,6 +376,11 @@ export class RiskMitigationComponent implements AfterViewInit {
 	 */
 	public getRiskScore (result: HighCrashRiskDeviceTooltip) {
 		const catalogFilter = _.find(this.filters, { key: 'riskScore' });
+		const isEmpty = Object.values(result)
+		.every(x => (x === 0));
+		if (isEmpty) {
+			this.filters = _.filter(this.filters, filter => filter.key !== 'riskScore');
+		}
 
 		return (catalogFilter.seriesData = [
 			{
@@ -403,6 +431,7 @@ export class RiskMitigationComponent implements AfterViewInit {
 						.reduce((sum, value) => sum + value, 0);
 				}),
 				catchError(err => {
+					this.totalAssetCount = undefined;
 					this.logger.error(
 						'Could not fetch results : getTotalAssestCount() ' +
 							`:: Error : (${err.status}) ${err.message}`,

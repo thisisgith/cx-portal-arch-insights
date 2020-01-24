@@ -7,6 +7,8 @@ import {
 	OnChanges,
 	SimpleChanges,
 	Input,
+	Output,
+	EventEmitter,
 } from '@angular/core';
 
 import { LogService } from '@cisco-ngx/cui-services';
@@ -31,6 +33,9 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 	@Input() public sysFilter;
 	@Input() public solution;
 	@Input() public useCase;
+	@Input() public searchVal;
+	@Output() public  searchUpdate = new EventEmitter();
+
 	public customerId;
 	public countSubscripion: Subscription;
 	public gridSubscripion: Subscription;
@@ -46,38 +51,39 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 	public pageLimit = 10;
 	public pageNum = 1;
 	public selectedAsset;
-	public searchVal = '';
 	public tableStartIndex = 0;
 	public tableEndIndex = 10;
 	public sortField = 'timeStamp';
-	public sortOrder = 'asc';
+	public sortOrder = 'desc';
 	public alert: any = { };
 	public showSyslogsDetails = false;
+	public lastUpdateTime: string;
+
 	@ViewChild(CuiToastComponent, { static: true }) public toasts: CuiToastComponent;
 	constructor (
 		private logger: LogService,
 		public syslogsService: SyslogsService,
 		private userResolve: UserResolve,
 		private detailsPanelStackService: DetailsPanelStackService,
-	) {
+		) {
 		this.userResolve.getCustomerId()
-			.pipe(
-				takeUntil(this.destroy$),
-			)
-			.subscribe((id: string) => {
-				this.customerId = id;
-			});
+		.pipe(
+		takeUntil(this.destroy$),
+		)
+		.subscribe((id: string) => {
+			this.customerId = id;
+		});
 		this.syslogsParams = {
 			contractLevel: '',
 			customerId: this.customerId,
 			days: 1,
 			localSearch: '',
-			pageNo: 1,
-			size: 10,
+			pageNo : 1,
+			size : 10,
 			solution: this.solution,
 			sortField: this.sortField,
-			sortOrder: this.sortOrder,
-			syslogSeverity: 0,
+			sortOrder : this.sortOrder,
+			syslogSeverity : 0,
 			systemFilter: '',
 			useCase: this.useCase,
 			vaId: '',
@@ -108,6 +114,9 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 	 */
 	public ngOnChanges (changes: SimpleChanges) {
 		const currentFilter = _.get(changes, ['sysFilter', 'currentValue']);
+		const useCaseChange = _.get(changes, ['useCase', 'previousValue']);
+		const clear = _.get(changes, ['searchVal', 'currentValue']);
+
 		if (currentFilter && !changes.sysFilter.firstChange) {
 			this.syslogsParams.syslogSeverity = currentFilter.severity;
 			this.syslogsParams.days = currentFilter.timeRange;
@@ -115,7 +124,12 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 			this.tableOffset = 0;
 			this.getSyslogsData();
 		}
-
+		if (useCaseChange) {
+			this.getSyslogsData();
+		}
+		if (!clear) {
+			this.syslogsParams.localSearch = '';
+		}
 	}
 	/**
 	 * initilize grid and graph
@@ -124,6 +138,7 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 	public ngOnInit () {
 		this.messageGridInit();
 		this.getSyslogsData();
+		this.searchVal = '';
 	}
 	/**
 	 * Messages grid init
@@ -137,22 +152,27 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 					name: I18n.get('_Severity_'),
 					sortable: true,
 					template: this.severityColorsTemplate,
+					width: '10%',
 				},
 				{
 					key: 'msgDesc',
 					name: I18n.get('_SyslogsEventMessage_'),
 					sortable: true,
+					title: 'msgDesc',
+					width: '55%',
 				},
 				{
 					key: 'deviceHost',
 					name: I18n.get('_SyslogSystem_'),
 					sortable: true,
+					width: '20%',
 
 				},
 				{
 					name: I18n.get('_SyslogsDate_'),
 					sortable: true,
 					template: this.dateFilterTemplate,
+					width: '15%',
 				},
 
 			],
@@ -171,23 +191,24 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 		this.gridSubscripion = this.syslogsService
 			.getGridData(this.syslogsParams)
 			.pipe(takeUntil(this.destroy$),
-				map((gridData: SyslogResponseData) => {
-					this.tableData = gridData.responseData;
-					this.totalItems = gridData.count;
-					this.tableStartIndex = (this.tableOffset * 10) + 1;
-					this.tableEndIndex = (this.tableLimit * this.syslogsParams.pageNo);
-					if (this.tableEndIndex > this.totalItems) {
-						this.tableEndIndex = this.totalItems;
-					}
-					this.loading = false;
-				}), catchError(err => {
-					this.loading = false;
-					_.invoke(this.alert, 'show', I18n.get('_SyslogsGenericError_'), 'danger');
-					this.logger.error('syslogs-details.component : getGridData() ' +
-						`:: Error : (${err.status}) ${err.message}`);
+			  map((gridData: SyslogResponseData) => {
+				this.tableData = gridData.responseData;
+				this.totalItems = gridData.count;
+				this.lastUpdateTime = gridData.lastUpdateTime;
+				this.tableStartIndex = (this.tableOffset * 10) + 1;
+				this.tableEndIndex = (this.tableLimit * this.syslogsParams.pageNo);
+				if (this.tableEndIndex > this.totalItems) {
+					this.tableEndIndex = this.totalItems;
+				}
+				this.loading = false;
+			}), catchError(err => {
+				this.loading = false;
+				_.invoke(this.alert, 'show',  I18n.get('_SyslogsGenericError_'), 'danger');
+				this.logger.error('syslogs-details.component : getGridData() ' +
+					`:: Error : (${err.status}) ${err.message}`);
 
-					return of({ });
-				}))
+				return of({ });
+			}))
 			.subscribe();
 	}
 
@@ -197,6 +218,7 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 	 */
 	public keyDownFunction (event) {
 		if (event.keyCode === 13) {
+			this.searchUpdate.emit(this.searchVal);
 			this.syslogsParams.localSearch = this.searchVal;
 			this.getSyslogsData();
 		}
@@ -246,7 +268,7 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 				return 'syslogSeverity';
 			case 'Event Message':
 				return 'syslogMsgDesc';
-			case 'Systems':
+			case 'System':
 				return 'deviceHost';
 			case 'Date and Time':
 				return 'timeStamp';
@@ -268,9 +290,8 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 	public onShowSuccess (event) {
 		this.toasts.autoHide = 3000;
 		this.toasts.addToast('success', 'Event Type:',
-			I18n.get('_SyslogSuccessMessage_', event));
+		I18n.get('_SyslogSuccessMessage_', event));
 	}
-
 	/**
 	 * on destroy
 	 */

@@ -4,16 +4,8 @@ import { EntitlementUtilityService } from './entitlement-utility.service';
 import { UserResolve } from '@utilities';
 import { Observable } from 'rxjs';
 
-const testUser = {
-	info: {
-		individual: {
-			role: UserRoles.ADMIN,
-		},
-	},
-	service: {
-		cxLevel: 3,
-	},
-};
+const testCxLevel = 3;
+const testRole = UserRoles.SA_ADMIN;
 
 describe('EntitlementUtilityService', () => {
 	let service: EntitlementUtilityService;
@@ -23,8 +15,11 @@ describe('EntitlementUtilityService', () => {
 			providers: [{
 				provide: UserResolve,
 				useValue: {
-					getUser: () => new Observable<{ }>(observer => {
-						observer.next(testUser);
+					getCXLevel: () => new Observable<{ }>(observer => {
+						observer.next(testCxLevel);
+					}),
+					getRole: () => new Observable<{ }>(observer => {
+						observer.next(testRole);
 					}),
 				},
 			}],
@@ -39,8 +34,8 @@ describe('EntitlementUtilityService', () => {
 
 	it('should allow a userRole checked against an authorized role string', () => {
 		const authorized = service.checkRoleAndLevel({
-			whitelistRoles: UserRoles.ADMIN,
-			userRole: UserRoles.ADMIN,
+			whitelistRoles: UserRoles.SA_ADMIN,
+			userRole: UserRoles.SA_ADMIN,
 		});
 		expect(authorized)
 			.toEqual(true);
@@ -49,8 +44,8 @@ describe('EntitlementUtilityService', () => {
 	it(`should disallow a string with an unauthorized
 		userRole checked against an authorized role string`, () => {
 		const authorized = service.checkRoleAndLevel({
-			whitelistRoles: UserRoles.ADMIN,
-			userRole: UserRoles.USER,
+			whitelistRoles: UserRoles.SA_ADMIN,
+			userRole: UserRoles.SA_FULLUSER,
 		});
 		expect(authorized)
 			.toEqual(false);
@@ -58,8 +53,8 @@ describe('EntitlementUtilityService', () => {
 
 	it('should allow a userRole checked against an authorized roles array', () => {
 		const authorized = service.checkRoleAndLevel({
-			whitelistRoles: [UserRoles.ADMIN, UserRoles.USER],
-			userRole: UserRoles.ADMIN,
+			whitelistRoles: [UserRoles.SA_ADMIN, UserRoles.SA_FULLUSER],
+			userRole: UserRoles.SA_ADMIN,
 		});
 		expect(authorized)
 			.toEqual(true);
@@ -67,8 +62,8 @@ describe('EntitlementUtilityService', () => {
 
 	it('should disallow an unauthorized userRole checked against an authorized roles array', () => {
 		const authorized = service.checkRoleAndLevel({
-			whitelistRoles: [UserRoles.PARTNER, UserRoles.ADMIN],
-			userRole: UserRoles.USER,
+			whitelistRoles: [UserRoles.PARTNER, UserRoles.SA_ADMIN],
+			userRole: UserRoles.SA_FULLUSER,
 		});
 		expect(authorized)
 			.toEqual(false);
@@ -105,9 +100,9 @@ describe('EntitlementUtilityService', () => {
 		and allowed userRole against and authorized role`, () => {
 		const authorized = service.checkRoleAndLevel({
 			cxLevel: 1,
-			whitelistRoles: UserRoles.ADMIN,
+			whitelistRoles: UserRoles.SA_ADMIN,
 			userLevel: 3,
-			userRole: UserRoles.ADMIN,
+			userRole: UserRoles.SA_ADMIN,
 		});
 		expect(authorized)
 			.toEqual(true);
@@ -117,9 +112,9 @@ describe('EntitlementUtilityService', () => {
 		and an unauthorized userRole against and authorized role`, () => {
 		const authorized = service.checkRoleAndLevel({
 			cxLevel: 1,
-			whitelistRoles: UserRoles.USER,
+			whitelistRoles: UserRoles.SA_FULLUSER,
 			userLevel: 3,
-			userRole: UserRoles.ADMIN,
+			userRole: UserRoles.SA_ADMIN,
 		});
 		expect(authorized)
 			.toEqual(false);
@@ -128,9 +123,9 @@ describe('EntitlementUtilityService', () => {
 	it('should disallow a userLevel against an authorized cx level, and allowed userRole against and authorized role', () => {
 		const authorized = service.checkRoleAndLevel({
 			cxLevel: 1,
-			whitelistRoles: UserRoles.ADMIN,
+			whitelistRoles: UserRoles.SA_ADMIN,
 			userLevel: 0,
-			userRole: UserRoles.ADMIN,
+			userRole: UserRoles.SA_ADMIN,
 		});
 		expect(authorized)
 			.toEqual(false);
@@ -139,17 +134,17 @@ describe('EntitlementUtilityService', () => {
 	it('should disallow a lower userLevel against an authorized cx level, and unauthorized userRole against and authorized role', () => {
 		const authorized = service.checkRoleAndLevel({
 			cxLevel: 1,
-			whitelistRoles: UserRoles.ADMIN,
+			whitelistRoles: UserRoles.SA_ADMIN,
 			userLevel: 0,
-			userRole: UserRoles.USER,
+			userRole: UserRoles.SA_FULLUSER,
 		});
 		expect(authorized)
 			.toEqual(false);
 	});
 
 	it('should have called checkRoleAndLevel', done => {
-		const whitelistRoles = testUser.info.individual.role;
-		const { cxLevel } = testUser.service;
+		const whitelistRoles = testRole;
+		const cxLevel = testCxLevel;
 
 		spyOn(service, 'checkRoleAndLevel');
 
@@ -165,8 +160,8 @@ describe('EntitlementUtilityService', () => {
 	});
 
 	it('should return get user and return authorized or unauthorized for whitelistRoles', done => {
-		const whitelistRoles = testUser.info.individual.role;
-		const { cxLevel } = testUser.service;
+		const whitelistRoles = testRole;
+		const cxLevel = testCxLevel;
 
 		const subscription = service.getUserCheckLevelAndRole({ whitelistRoles, cxLevel });
 		subscription.subscribe(
@@ -180,7 +175,7 @@ describe('EntitlementUtilityService', () => {
 	});
 
 	it('should return get user and return unauthorized for blacklisted role', done => {
-		const blacklistRoles = testUser.info.individual.role;
+		const blacklistRoles = testRole;
 
 		const subscription = service.getUserCheckLevelAndRole({ blacklistRoles });
 		subscription.subscribe(
@@ -209,7 +204,7 @@ describe('EntitlementUtilityService', () => {
 	});
 
 	it('should return get user and return unauthorized for blacklisted role as user in array', done => {
-		const blacklistRoles = [UserRoles.PARTNER, testUser.info.individual.role];
+		const blacklistRoles = [UserRoles.PARTNER, testRole];
 		const cxLevel = 0;
 
 		const subscription = service.getUserCheckLevelAndRole({ blacklistRoles, cxLevel });
@@ -254,8 +249,8 @@ describe('EntitlementUtilityService', () => {
 	});
 
 	it('should throw an error if both whitelistRoles and blacklistRoles are provided',  done => {
-		const whitelistRoles = UserRoles.ADMIN;
-		const blacklistRoles = UserRoles.USER;
+		const whitelistRoles = UserRoles.SA_ADMIN;
+		const blacklistRoles = UserRoles.SA_FULLUSER;
 
 		service.getUserCheckLevelAndRole({ whitelistRoles, blacklistRoles })
 		.subscribe(

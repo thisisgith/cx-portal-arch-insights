@@ -607,7 +607,7 @@ describe('LifecycleComponent', () => {
 			spyOn(component, 'closeViewSessions');
 			spyOn(window, 'open');
 
-			component.crossLaunch(crossLaunchUrl);
+			component.crossLaunch(document.createEvent('MouseEvent'), crossLaunchUrl);
 			fixture.detectChanges();
 
 			expect(window.open)

@@ -78,6 +78,8 @@ export class BugsDetailsComponent implements OnInit {
 	public hasRecommendation1: boolean;
 	public hasRecommendation2: boolean;
 	public hasRecommendation3: boolean;
+	public timeoutId;
+	public showLoadingMessage = false;
 
 	constructor (private osvService: OSVService,
 		private logger: LogService) {
@@ -277,12 +279,12 @@ export class BugsDetailsComponent implements OnInit {
 			_.set(severityFilter, 'seriesData', severityFilterSeriesData);
 			if (viewType === 'bug') {
 				stateFilter.seriesData =
-					this.populateStateFilter(_.get(recommendation, ['data', 'openBugsCount']),
+					this.populateStateFilter(recommendation, _.get(recommendation, ['data', 'openBugsCount']),
 						_.get(recommendation, ['data', 'newOpenBugsCount']),
 						_.get(recommendation, ['data', 'resolvedBugsCount']));
 			} else {
 				stateFilter.seriesData =
-					this.populateStateFilter(_.get(recommendation, ['data', 'openPsirtCount']),
+					this.populateStateFilter(recommendation, _.get(recommendation, ['data', 'openPsirtCount']),
 						_.get(recommendation, ['data', 'newOpenPsirtCount']),
 						_.get(recommendation, ['data', 'psirtResolvedCount']));
 			}
@@ -294,28 +296,42 @@ export class BugsDetailsComponent implements OnInit {
 
 	/**
 	 * populate state filters
+	 * @param recommendation machine recommendation
 	 * @param exposedCount  number of bugs exposed
 	 * @param newExposedCount  number of newly exposed bugs
 	 * @param resolvedCount number of bugs fixed
 	 * @returns the series data for state filters
 	 */
-	private populateStateFilter (exposedCount: number, newExposedCount: number,
+	private populateStateFilter (recommendation, exposedCount: number, newExposedCount: number,
 		resolvedCount: number) {
 		const seriesData = [];
-		if (exposedCount > 0 || newExposedCount > 0 || resolvedCount > 0) {
+		if (exposedCount > 0) {
 			seriesData.push({
 				value: exposedCount,
 				filter: 'Exposed',
 				label: I18n.get('_OsvExposed_'),
-				selected: true,
+				selected: recommendation.name !== 'profile current' ? true : false,
 			});
+		} else {
+			recommendation.appliedFilters.stateFilter  = ['New_Exposed'];
+		}
 
+		if (newExposedCount > 0) {
 			seriesData.push({
 				value: newExposedCount,
 				filter: 'New_Exposed',
 				label: I18n.get('_OsvNewExposed_'),
-				selected: true,
+				selected: recommendation.name !== 'profile current' ? true : false,
 			});
+		} else {
+			recommendation.appliedFilters.stateFilter  = ['Exposed'];
+		}
+
+		if (newExposedCount === 0 && exposedCount === 0) {
+			recommendation.appliedFilters.stateFilter = [];
+		}
+
+		if (resolvedCount > 0) {
 
 			seriesData.push({
 				value: resolvedCount,
@@ -384,6 +400,8 @@ export class BugsDetailsComponent implements OnInit {
 				name: 'profile current',
 				params: _.cloneDeep(params),
 				filters: _.cloneDeep(this.filters),
+				actualData: _.cloneDeep(_.get(_.filter(this.data,
+					(recomm: MachineRecommendations) => recomm.name === 'profile current'), 0)),
 				data: _.cloneDeep(_.get(_.filter(this.data,
 					(recomm: MachineRecommendations) => recomm.name === 'profile current'), 0)),
 				paginationCount: '',
@@ -399,6 +417,8 @@ export class BugsDetailsComponent implements OnInit {
 				filters: _.cloneDeep(this.filters),
 				data: _.cloneDeep(_.get(_.filter(this.data,
 					(recomm: MachineRecommendations) => recomm.name === 'Recommendation #1'), 0)),
+				actualData: _.cloneDeep(_.get(_.filter(this.data,
+					(recomm: MachineRecommendations) => recomm.name === 'Recommendation #1'), 0)),
 				paginationCount: '',
 				filtered: true,
 				appliedFilters: _.cloneDeep(appliedFilters),
@@ -409,6 +429,8 @@ export class BugsDetailsComponent implements OnInit {
 				filters: _.cloneDeep(this.filters),
 				data: _.cloneDeep(_.get(_.filter(this.data,
 					(recomm: MachineRecommendations) => recomm.name === 'Recommendation #2'), 0)),
+				actualData: _.cloneDeep(_.get(_.filter(this.data,
+					(recomm: MachineRecommendations) => recomm.name === 'Recommendation #2'), 0)),
 				paginationCount: '',
 				filtered: true,
 				appliedFilters: _.cloneDeep(appliedFilters),
@@ -418,6 +440,8 @@ export class BugsDetailsComponent implements OnInit {
 				params: _.cloneDeep(params),
 				filters: _.cloneDeep(this.filters),
 				data: _.cloneDeep(_.get(_.filter(this.data,
+					(recomm: MachineRecommendations) => recomm.name === 'Recommendation #3'), 0)),
+				actualData: _.cloneDeep(_.get(_.filter(this.data,
 					(recomm: MachineRecommendations) => recomm.name === 'Recommendation #3'), 0)),
 				paginationCount: '',
 				filtered: true,
@@ -714,15 +738,22 @@ export class BugsDetailsComponent implements OnInit {
 	 */
 	public getBugDetails (bug: any) {
 		this.status.isLoadingDetails = true;
+		this.timeoutId = setTimeout(() => {
+			this.showLoadingMessage = true;
+		}, 5000);
 		this.osvService.getBugDetails({ bugId: bug.id })
 		.pipe(
 			takeUntil(this.destroy$),
 			map((response: any) => {
+				this.showLoadingMessage = false;
+				clearTimeout(this.timeoutId);
 				let description  = _.get(response, ['description'], '');
 				description = description.replace(/\n/g, '<br>');
 				bug.description = description ;
 			}),
 			catchError(err => {
+				this.showLoadingMessage = false;
+				clearTimeout(this.timeoutId);
 				this.logger.error('Bug Details ' +
 						`:: Error : (${err.status}) ${err.message}`);
 				this.status.isLoadingDetails = false;

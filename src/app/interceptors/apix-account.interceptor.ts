@@ -32,6 +32,20 @@ export class ApixAccountInterceptor implements HttpInterceptor {
 		new RegExp('/(customerportal|cxportal)/product-alerts/'),
 		new RegExp('/(customerportal|cxportal)/diagnostics/'),
 		new RegExp('/(customerportal|cxportal)/ndgw/'),
+		new RegExp('/(customerportal|cxportal)/racetrack/v1/elearning'),
+	];
+
+	private pathsToIncludeVaId = [
+		new RegExp('/(customerportal|cxportal)/racetrack/v1/acc'),
+		new RegExp('/(customerportal|cxportal)/racetrack/v1/atx'),
+		new RegExp('/(customerportal|cxportal)/racetrack/v1/successPaths'),
+		new RegExp('/(customerportal|cxportal)/controlpoint/v1/users/add$'),
+		new RegExp('/(customerportal|cxportal)/controlpoint/v1/users/delete$'),
+		new RegExp('/(customerportal|cxportal)/controlpoint/v1/users/roles/[^/]+$'),
+		new RegExp('/(customerportal|cxportal)/controlpoint/v1/users/sa/[^/]+$'),
+		new RegExp('/(customerportal|cxportal)/controlpoint/v1/users/va/[^/]+$'),
+		new RegExp('/(customerportal|cxportal)/controlpoint/v1/users/samapping/[^/]+$'),
+		new RegExp('/(customerportal|cxportal)/controlpoint/v1/users/update/role$'),
 	];
 
 	constructor (
@@ -40,7 +54,13 @@ export class ApixAccountInterceptor implements HttpInterceptor {
 		private racetrackInfoService: RacetrackInfoService,
 		private logger: LogService,
 	) {
-
+		this.racetrackInfoService.getPitStopApiFailure()
+		.pipe(
+			map(() => {
+				this.pathsToIgnore.push(new RegExp('/(customerportal|cxportal)/email/v1/send$'));
+			}),
+		)
+		.subscribe();
 	}
 
 	/**
@@ -93,6 +113,8 @@ export class ApixAccountInterceptor implements HttpInterceptor {
 	private getAccountInfo (): Observable<any> {
 		const said$ = this.userResolve.getSaId()
 			.pipe(take(1));
+		const vaid$ = this.userResolve.getVaId()
+			.pipe(take(1));
 		const customerId$ = this.userResolve.getCustomerId()
 			.pipe(take(1));
 		const cxLevel$ = this.userResolve.getCXLevel()
@@ -113,6 +135,7 @@ export class ApixAccountInterceptor implements HttpInterceptor {
 
 		return forkJoin({
 			[UserInfoKey.SAID]: said$,
+			[UserInfoKey.VAID]: vaid$,
 			[UserInfoKey.CUSTOMERID]: customerId$,
 			[UserInfoKey.USECASE]: useCase$,
 			[UserInfoKey.SOLUTION]: solution$,
@@ -141,9 +164,10 @@ export class ApixAccountInterceptor implements HttpInterceptor {
 		return of(userInfo)
 		.pipe(
 			map(result => this.removeNonValueFields(result)),
-			map(tempResult => this.removeCxLevelAndSaId(tempResult, req)),
-			map(refinedResult => this.filterExistentParams(refinedResult, req)),
-			map(filteredResult => this.filterExistentHeaders(filteredResult, req)),
+			map(result => this.removeCxLevelAndSaId(result, req)),
+			map(result => this.removeVaId(result, req)),
+			map(result => this.filterExistentParams(result, req)),
+			map(result => this.filterExistentHeaders(result, req)),
 		);
 	}
 
@@ -200,13 +224,21 @@ export class ApixAccountInterceptor implements HttpInterceptor {
 		const accountInfo = userInfo.accountInfo;
 		const url = new URL(req.url, environment.origin);
 
-		if (!this.pathsToExcludeCxLevelAndSaId.some(regex => regex.test(url.pathname))) {
-			return userInfo;
+		if (this.pathsToExcludeCxLevelAndSaId.some(regex => regex.test(url.pathname))) {
+			delete accountInfo[UserInfoKey.SAID];
+			delete accountInfo[UserInfoKey.CXLEVEL];
 		}
 
-		delete accountInfo[UserInfoKey.SAID];
-		delete accountInfo[UserInfoKey.CXLEVEL];
+		return userInfo;
+	}
 
-		return accountInfo;
+	private removeVaId (userInfo: UserInformation, req: HttpRequest<any>) {
+		const url = new URL(req.url, environment.origin);
+
+		if (!this.pathsToIncludeVaId.some(regex => regex.test(url.pathname))) {
+			delete userInfo.accountInfo[UserInfoKey.VAID];
+		}
+
+		return userInfo;
 	}
 }

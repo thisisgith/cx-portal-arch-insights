@@ -4,7 +4,7 @@
 [hidden]="!asset"
 (hiddenChange)="handleHidden($event)"
 [fullscreen]="fullscreen"
-[minWidth]="'900px'"
+[minWidth]="'992px'"
 >
 <details-panel-header
 	(close)="onPanelClose()"
@@ -14,7 +14,7 @@
 	<div class="row base-padding-bottom">
 		<div class="col-md-12">
 			<div class="text-xlarge">
-				<span [innerText]="'_SyslogMessageType_' | i18n"></span>
+				<span [innerText]="'_SyslogEventType_' | i18n"></span>
 				<span [innerText]="asset?.msgType "> </span>
 			</div>
 		</div>
@@ -23,7 +23,7 @@
 		<div class="col-md-2">
 			<div class="row">
 				<div class="col-md-12 text-bold" [innerText]="'_Severity_' | i18n"></div>
-				<div [ngSwitch]="asset?.syslogSeverity">
+				<div [ngSwitch]="asset?.syslogSeverity" class="half-margin-left">
 						<span *ngSwitchCase="'0'">
 							<span class="qtr-margin-right icon-circle text-danger"></span>
 							<span [innerText]="'_SyslogEmergency_' | i18n"></span>
@@ -95,7 +95,7 @@
 			</div>
 			<div class="row half-padding">
 				<div class="col-2">
-					<button class="btn btn--ghost" [innerText]="'_SyslogsProceed_' | i18n" (click)= "moveToFault()" data-auto-id="syslogs-to-faults"></button>
+					<button class="btn btn--ghost" [innerText]="'_SyslogsProceed_' | i18n" (click)= "moveToFault()" data-auto-id="syslogs-to-faults" [disabled] = "!selectedCategory"></button>
 				</div>
 				<div class="col-2">
 					<button class="btn btn--primary" [innerText]="'_SyslogsCancel_' | i18n" (click)= "togglePushToFaults()" data-auto-id="syslogs-cancel"></button>
@@ -108,7 +108,7 @@
 <div class="text-uppercase text-bold half-margin-bottom">
 		<span [innerText]="'_SyslogDetailedDescription_' | i18n" class="text-large"></span>
 		</div>
-		<span [innerText]="tableData[0]?.msgDesc"></span>
+		<span [innerText]="tableData[0]?.icDesc"></span>
 		<div>
 		<div class="text-uppercase text-bold half-margin-top half-margin-bottom">
 			<span [innerText]="'_SyslogRecommendations_' | i18n" class="text-large"></span>

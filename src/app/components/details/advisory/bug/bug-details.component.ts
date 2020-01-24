@@ -85,7 +85,7 @@ export class BugDetailsComponent implements OnInit, OnChanges, OnDestroy {
 			default: mapping = I18n.get('_Issue_');
 		}
 
-		return `${cdetSeverity}-${mapping}`;
+		return `${cdetSeverity} ${mapping}`;
 	}
 
 	/**

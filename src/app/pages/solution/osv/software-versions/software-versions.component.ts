@@ -185,12 +185,16 @@ export class SoftwareVersionsComponent implements OnInit, OnDestroy, OnChanges {
 						key: 'profileAssetCount',
 						name: I18n.get('_OsvAssetsOfSoftwareProfilesCount_'),
 						sortable: true,
+						render: item =>
+							!_.isNull(item.profileAssetCount) ? item.profileAssetCount : 0,
 						width: '20%',
 					},
 					{
 						key: 'assetCount',
 						name: I18n.get('_OsvIndependentAssetsCount_'),
 						sortable: true,
+						render: item =>
+							!_.isNull(item.assetCount) ? item.assetCount : 0,
 						width: '20%',
 					},
 				],

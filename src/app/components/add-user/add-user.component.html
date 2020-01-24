@@ -2,6 +2,7 @@
 <div class="modal-header">
 	<h2 class="modal-title" [innerText]="'_AddNewUser_' | i18n"></h2>
 </div>
+
 <div class="modal-body dbl-padding-left dbl-padding-right dbl-padding-top text-left">
 	<div class="col-md-12">
 		<div class="form-group">
@@ -39,12 +40,36 @@
 		</div> -->
 		<div class="col-md-9 base-padding-top base-padding-bottom">
 			<div class="form-group">
-				<label for="role-title" data-auto-id="role" class="qtr-padding-bottom"
-					[innerText]="'_Role_' | i18n"></label>
-				<cui-select class="dropdown-styling" formControlName="title" #title id="role-title" [required]="true" [empty]="true"
-					[items]="items" [compressed]="false" optionsKey="roleDisplayName" optionsValue="role"></cui-select>
+				<label for="virtual-account" data-auto-id="virtualAccount" class="qtr-padding-bottom"
+					[innerText]="'_VirtualAccount_' | i18n"></label>
+				<cui-select class="dropdown-styling" formControlName="virtualAccount" #title id="virtual-account" [empty]="true"
+					[items]="itemsVa" [compressed]="false" optionsKey="name" optionsValue="virtual_account_id" (ngModelChange)="onVirtualAccountSelected()"></cui-select>
 			</div>
 		</div>
+
+		
+		<div class="col-md-9 base-padding-top base-padding-bottom">
+			<div class="form-group">
+				<label for="role-title" data-auto-id="role" class="qtr-padding-bottom"
+					[innerText]="'_Role_' | i18n"></label>
+				<div class="row">
+					<div class="col-md-12">
+						<div class="form-group dropdown" [ngClass]="{ 'active': active }">
+							<div data-auto-id="role-dropdown" class="form-group__text select" (click)="roleToggle()">
+								<input data-auto-id="role-dropdown-input" class="role-input-background" #title [(ngModel)]="role" [ngModelOptions]="{standalone: true}">
+							</div>
+							<div class="dropdown__menu">
+								<a data-auto-id="role-dropdown-options" *ngFor="let item of items; let i=index;" (click)="selectRole(item, i)" [ngClass]="{ 'selected': item.selected }">
+									<div class="role-header-text">{{item?.roleDisplayName}} </div>
+									<div class="role-description-text">{{item?.roleDescription}} </div >
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
 		<div class="col-md-12 base-padding-top base-padding-bottom">
 			<label class="checkbox">
 				<input type="checkbox" formControlName="verifyCheckbox">
@@ -62,7 +87,7 @@
 		<div class="col-md-12 base-padding-top text-center">
 			<button class="btn btn--primary" data-auto-id="continue-btn" [innerText]="'_Continue_' | i18n"
 				(click)="onContinue()"
-				[disabled]="this.addUserForm.status === 'INVALID' || this.addUserForm.value['verifyCheckbox'] === false"></button>
+				[disabled]="this.addUserForm.status === 'INVALID' || this.addUserForm.value['verifyCheckbox'] === false || !role"></button>
 		</div>
 	</form>
 </div>

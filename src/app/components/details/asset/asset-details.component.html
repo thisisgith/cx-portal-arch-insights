@@ -65,7 +65,8 @@
 					[systemAsset]="systemAsset"
 					[hardwareAsset]="hardwareAsset"
 					[hardwareAssets]="hardwareAssets"
-					[element]="element">
+					[element]="element"
+					[selectedAsset]="asset">
 				</asset-details-hardware>
 			</div>
 		</cui-tab>
@@ -79,7 +80,7 @@
 			</div>
 		</cui-tab>
 		<cui-tab [label]="'_Advisories_' | i18n | uppercase">
-			<div class="half-margin-top">
+			<div class="base-margin-top">
 				<asset-details-advisories *ngIf="hardwareAsset || element"
 					[systemAsset]="systemAsset"
 					[hardwareAsset]="hardwareAsset"

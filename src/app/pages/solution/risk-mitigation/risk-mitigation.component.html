@@ -3,7 +3,7 @@
 >
 	<insight-tabs></insight-tabs>
 	<visual-filter-bar
-		[filters]="onlyCrashes ? (filters | slice: 1) : (filters | slice: 0:1)"
+	[filters]="selectedViewFilters"
 	>
 		<ng-template #startingCard>
 			<div class="filter__selected">
@@ -15,7 +15,7 @@
 				>
 					<div
 						class="text-huge flex-center dbl-padding-left dbl-padding-right"
-						[innerText]="totalAssetCount"
+						[innerHTML]="totalAssetCount"
 					></div>
 					<div
 						class="text-large flex-center"
@@ -138,20 +138,29 @@
 <ng-template #timeRangeFilterTemplate let-filter="filter">
 	<div [hidden]="onlyCrashes">
 		<column-chart
-			*ngIf="filter?.seriesData?.length"
+			*ngIf="!status?.isLoading && filter?.seriesData?.length"
 			[seriesData]="filter.seriesData"
 			(subfilter)="onSubfilterSelect($event.filter, filter)"
 		>
 		</column-chart>
+		<div class="base-margin-top" *ngIf="status?.isLoading">
+			<cui-spinner></cui-spinner>
+		</div>
 	</div>
 </ng-template>
 
 <ng-template #riskScoreFilterTemplate let-filter="filter">
-	<pie-chart
-		[seriesData]="filter.seriesData"
-		(subfilter)="onSubfilterSelect($event.filter, filter, true)"
-	>
-	</pie-chart>
+	<div [hidden]="!onlyCrashes">
+		<pie-chart
+			*ngIf="!status?.isLoading"
+			[seriesData]="filter.seriesData"
+			(subfilter)="onSubfilterSelect($event.filter, filter, true)"
+		>
+		</pie-chart>
+		<div class="base-margin-top" *ngIf="status?.isLoading">
+			<cui-spinner></cui-spinner>
+		</div>
+	</div>
 </ng-template>
 
 <ng-template #filterBar>
@@ -181,7 +190,8 @@
 						<span
 							[innerHTML]="
 								onlyCrashes
-									? (subfilter.filter | titlecase)
+									? (subfilter.filter==='MED'
+									?('_Medium_'|i18n):subfilter.filter | titlecase)
 									: subfilter?.label "
 
 						></span>

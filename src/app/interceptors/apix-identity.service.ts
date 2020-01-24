@@ -7,9 +7,11 @@ import { environment } from '@environment';
 	providedIn: 'root',
 })
 export class ApixIdentityService {
+	private apolloRegex: RegExp;
 	private originRegex: RegExp;
 	private sdpRegex: RegExp;
 	private rmaRegex: RegExp;
+	private pitRegex: RegExp;
 
 	constructor () {
 		const sdpServiceOrigin = environment.sdpServiceOrigin &&
@@ -39,16 +41,27 @@ export class ApixIdentityService {
 			_.values(environment.rmaServicePaths)
 			.join('|^')
 		}`);
+		this.apolloRegex = new RegExp(`^${
+			_.values(environment.apolloServicePaths)
+			.join('|^')
+		}`);
+		this.pitRegex = new RegExp('/(customerportal|cxportal)/pitstop/v1/info$');
 	}
 
 	public testOrigin (url): OriginType {
 		if (this.originRegex.test(url.origin)) {
+			if (this.pitRegex.test(url.pathname)) {
+				return OriginType.PITSTOP;
+			}
 			if (this.sdpRegex.test(url.pathname)) {
 				return OriginType.SDP;
 			}
 			if (this.rmaRegex.test(url.pathname)) {
 				return OriginType.RMA;
 			}
+		}
+		if (this.apolloRegex.test(url.pathname)) {
+			return OriginType.APOLLO;
 		}
 
 		return OriginType.NONE;

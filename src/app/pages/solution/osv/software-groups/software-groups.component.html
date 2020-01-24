@@ -1,16 +1,22 @@
 <div class="row">
 	<div class="col-md-6 flex flex-fill">
-		<div class="flex-center-vertical" *ngIf="pagination && softwareGroups?.length > 0">
+		<div class="flex-center-vertical">
 			<span [innerText]="'_OsvSoftwareGroups_' | i18n" class="text-large"></span>
 			<span 
-				*ngIf="pagination"
+				*ngIf="pagination && softwareGroups?.length > 0"
 				[innerText]="'_OsvShowingXofYSoftwareGroups_' | i18n:paginationCount:pagination.total"
+				class="qtr-margin-left text-small text-muted" 
+				data-auto-id="ShowingSoftwareGroupsCount">
+			</span>
+			<span 
+				*ngIf="softwareGroupsCount === 0"
+				[innerText]="'_OsvShowingXSoftwareGroups_' | i18n:0"
 				class="qtr-margin-left text-small text-muted" 
 				data-auto-id="ShowingSoftwareGroupsCount">
 			</span>
 		</div>
 	</div>
-	<div class="col-md-6">
+	<div class="col-md-6" *ngIf="(pagination && softwareGroups?.length > 0) || (softwareGroupsParams.search.length > 0)">
 			<div class="flex flex-fluid flex-right">
 				<cui-search 
 					placeholder="{{ '_Search_' | i18n }}" 
@@ -24,7 +30,7 @@
 <div class="divider qtr-margin-top"></div>
 <cui-alert [options]="alert"></cui-alert>
 <div *ngIf="softwareGroupsCount == 0 || softwareGroups?.length === 0" class="dbl-margin-top text-center text-xlarge dbl-margin-bottom">
-	<span [innerText]="'_InsightsNoResultsFound_' | i18n"></span>
+	<span [innerText]="'_OsvNoSoftwareGroups_' | i18n"></span>
 </div>
 <ng-container *ngTemplateOutlet="tableSoftwareGroups"></ng-container>
 <div *ngIf="pagination && softwareGroups?.length > 0" class="software-pagination base-margin-top">

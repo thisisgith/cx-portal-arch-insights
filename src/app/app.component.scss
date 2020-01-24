@@ -1,5 +1,19 @@
 @import '~src/variables.scss';
+@import '~src/mixins.scss';
 
 .content-wrapper > div.content {
 	background: $site-bg-color;
+}
+
+.content-wrapper {
+	::ng-deep *:focus {
+		outline: none !important;
+	}
+}
+
+// a11y
+.content-wrapper.content-wrapper--keyboard-accessible {
+	::ng-deep *:focus {
+		@include keyboard-focus-outline;
+	}
 }

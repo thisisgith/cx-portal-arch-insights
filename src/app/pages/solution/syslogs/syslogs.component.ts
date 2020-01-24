@@ -8,7 +8,20 @@ import {
 
 import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
-import { SyslogsService, SyslogGridData, SyslogFilter, RacetrackSolution, RacetrackTechnology } from '@sdp-api';
+import { SyslogsService,
+		SyslogGridData,
+		SyslogFilter,
+	 	RacetrackSolution,
+	 	RacetrackTechnology,
+		SyslogsSeverity,
+		SyslogsTimeRange,
+		FaultSeverity,
+		FaultState,
+		SyslogsSeverityResponse,
+		SyslogsTimeRangeResponse,
+		FaultSeverityResponse,
+		FaultStateResponse,
+	} from '@sdp-api';
 import { Subscription, Subject, forkJoin, of } from 'rxjs';
 import { map, takeUntil, catchError } from 'rxjs/operators';
 import { I18n } from '@cisco-ngx/cui-utils';
@@ -60,6 +73,7 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 	public faultFlag = true;
 	public view: 'syslogMessage' | 'syslogAsset' = 'syslogMessage';
 	public countParams = { };
+	public searchQueryInGrid: string;
 	public appliedFilters = {
 		afmSeverity: '',
 		faults : 'Automated',
@@ -68,6 +82,12 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 	};
 	public noSyslogFilter = false;
 	public alert: any = { };
+	public syslogSeverityCount: SyslogsSeverity;
+	public syslogTimeRangeCount: SyslogsTimeRange;
+	public faultSeverityCount: FaultSeverity;
+	public faultStateCount: FaultState;
+	public faultTimeRangeCount: SyslogsTimeRange;
+
 	/**
 	 * Visual filters  of syslogs component
 	 */
@@ -77,8 +97,8 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 	private faultsFilterTemplate: TemplateRef<{ }>;
 	@ViewChild('severityFilter', { static: true })
 	private severityFilterTemplate: TemplateRef<{ }>;
-	 @ViewChild('afmSeverityFilter', { static: true })
-	 private afmSeverityFilterTemplate: TemplateRef<{ }>;
+	@ViewChild('afmSeverityFilter', { static: true })
+	private afmSeverityFilterTemplate: TemplateRef<{ }>;
 	public filters: SyslogFilter[];
 	public filtered = false;
 	public allAssetsSelected = false;
@@ -121,8 +141,8 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 		.subscribe((technology: RacetrackTechnology) => {
 			this.useCase = _.get(technology, 'name');
 			this.fetchSyslogsCount();
+			this.buildFilters();
 		});
-		this.buildFilters();
 	}
 
 	/**
@@ -154,175 +174,314 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 			}))
 			.subscribe();
 	}
+
 	/**
-	 * Gets time range count
-	 * @returns time range filter
+	 * Gets SyslogsSeverityCount
+	 * @returns  the SyslogsSeverityCount data
 	 */
-	public getTimeRangeCount () {
+	public fetchSyslogsSeverityCount () {
+		return this.syslogsService
+			.getSyslogSeverityData()
+			.pipe(takeUntil(this.destroy$),
+			map((counts: SyslogsSeverityResponse) => {
+				this.syslogSeverityCount = counts.filterCounts;
+				this.getSeverityCounts(counts.filterCounts);
+
+			}),
+			catchError(err => {
+				_.invoke(this.alert, 'show',  I18n.get('_SyslogsGenericError_'), 'danger');
+				this.logger.error('syslogs-devices.component : getDeviceGridData() ' +
+						`:: Error : (${err.status}) ${err.message}`);
+
+				return of({ });
+			}));
+	}
+
+	/**
+	 * Gets SyslogsTimeRangeCount
+	 * @returns  the SyslogsTimeRangeCount data
+	 */
+	public fetchSyslogsTimeRangeCount () {
+		return this.syslogsService
+			.getSyslogTimeRangeData()
+			.pipe(takeUntil(this.destroy$),
+			map((counts: SyslogsTimeRangeResponse) => {
+				this.syslogTimeRangeCount = counts.filterCounts;
+				this.getTimeRangeCount(counts.filterCounts);
+
+			}),
+			catchError(err => {
+				_.invoke(this.alert, 'show',  I18n.get('_SyslogsGenericError_'), 'danger');
+				this.logger.error('syslogs-devices.component : getDeviceGridData() ' +
+						`:: Error : (${err.status}) ${err.message}`);
+
+				return of({ });
+			}));
+	}
+
+	/**
+	 * Gets FaultSeverityCount
+	 * @returns  the FaultSeverityCount data
+	 */
+	public fetchFaultSeverityCount () {
+		return this.syslogsService
+			.getFaultSeverityData()
+			.pipe(takeUntil(this.destroy$),
+			map((counts: FaultSeverityResponse) => {
+				this.faultSeverityCount = counts.filterCounts;
+				this.getAfmSeverityCounts(counts.filterCounts);
+
+			}),
+			catchError(err => {
+				_.invoke(this.alert, 'show',  I18n.get('_SyslogsGenericError_'), 'danger');
+				this.logger.error('Fault-devices.component : getDeviceGridData() ' +
+						`:: Error : (${err.status}) ${err.message}`);
+
+				return of({ });
+			}));
+	}
+	/**
+	 * Gets FaultStateCount
+	 * @returns  the FaultStateCount data
+	 */
+	public fetchFaultStateCount () {
+		return this.syslogsService
+			.getFaultStateData()
+			.pipe(takeUntil(this.destroy$),
+			map((counts: FaultStateResponse) => {
+				this.faultStateCount = counts.filterCounts;
+				if (!this.faultStateCount.Active) {
+					this.faultStateCount.Active = 0;
+				}
+				this.getFaultsCounts(this.faultStateCount);
+
+			}),
+			catchError(err => {
+				_.invoke(this.alert, 'show',  I18n.get('_SyslogsGenericError_'), 'danger');
+				this.logger.error('Fault-devices.component : getDeviceGridData() ' +
+						`:: Error : (${err.status}) ${err.message}`);
+
+				return of({ });
+			}));
+	}
+
+	/**
+	 * Gets FaultStateCount
+	 * @returns  the FaultStateCount data
+	 */
+	public fetchFaultTimeRangeCount () {
+		return this.syslogsService
+			.getFaultTimeRangeData()
+			.pipe(takeUntil(this.destroy$),
+			map((counts: SyslogsTimeRangeResponse) => {
+				this.faultTimeRangeCount = counts.filterCounts;
+				this.getTimeRangeCount(counts.filterCounts);
+
+			}),
+			catchError(err => {
+				_.invoke(this.alert, 'show',  I18n.get('_SyslogsGenericError_'), 'danger');
+				this.logger.error('Fault-devices.component : getDeviceGridData() ' +
+						`:: Error : (${err.status}) ${err.message}`);
+
+				return of({ });
+			}));
+	}
+
+	/**
+	 * Gets timeRangeCount counts
+	 * @param timeRangeCount will have timeRangeCount
+	 * @returns timeRange filter data
+	 */
+	public getTimeRangeCount (timeRangeCount) {
 		const timeRangeFilter = _.find(this.filters, { key: 'timeRange' });
 
 		return (timeRangeFilter.seriesData = [
 			{
 				filter: '1',
+				filterName: I18n.get('_SyslogDay1_'),
 				label: I18n.get('_SyslogDay1_'),
 				selected: false,
-				value: 10,
+				value: timeRangeCount.days_1,
 			},
 			{
 				filter: '7',
+				filterName: I18n.get('_SyslogDays7_'),
 				label: I18n.get('_SyslogDays7_'),
 				selected: false,
-				value: 15,
+				value: timeRangeCount.days_7,
 			},
 			{
 				filter: '15',
+				filterName: I18n.get('_SyslogDays15_'),
 				label: I18n.get('_SyslogDays15_'),
 				selected: false,
-				value: 20,
+				value: timeRangeCount.days_15,
 			},
 			{
 				filter: '30',
+				filterName: I18n.get('_SyslogDays30_'),
 				label: I18n.get('_SyslogDays30_'),
 				selected: false,
-				value: 25,
+				value: timeRangeCount.days_30,
 			},
 
 		]);
 	}
 	/**
 	 * Gets faults counts
+	 * @param stateCount will have stateCount
 	 * @returns  faults graph data
 	 */
-	public getFaultsCounts () {
+	public getFaultsCounts (stateCount) {
 		const faultsFilter = _.find(this.filters, { key: 'faults' });
 
 		return (faultsFilter.seriesData = [
 			{
 				filter: 'Automated',
-				label: I18n.get('_AfmAutomated_'),
+				filterName: I18n.get('_AfmAutomated_'),
+				label: `${I18n.get('_AfmAutomated_')}(${stateCount.Active})`,
 				selected: false,
-				value: 50,
+				value: stateCount.Active,
 			},
 			{
 				filter: 'Detected',
-				label: I18n.get('_AfmDetected_'),
+				filterName: I18n.get('_AfmDetected_'),
+				label: `${I18n.get('_AfmDetected_')}(${stateCount.Inactive})`,
 				selected: false,
-				value: 50,
+				value: stateCount.Inactive,
 			},
 		]);
 	}
+
 	/**
 	 * Gets severity counts
-	 * @returns servirity graph data
+	 * @param severityCount will have severity count
+	 * @returns severity filter data
 	 */
-	public getSeverityCounts () {
+	public getSeverityCounts (severityCount) {
 		const severityFilter = _.find(this.filters, { key: 'severity' });
 
 		return (severityFilter.seriesData = [
 			{
 				filter: '0',
+				filterName: I18n.get('_SyslogSeverity0_'),
 				label: I18n.get('_SyslogSeverity0_'),
 				selected: false,
-				value: 10,
+				value: severityCount.syslogSeverity0,
 			},
 			{
 				filter: '1',
+				filterName: I18n.get('_SyslogSeverity1_'),
 				label: I18n.get('_SyslogSeverity1_'),
 				selected: false,
-				value: 15,
+				value: severityCount.syslogSeverity1,
 			},
 			{
 				filter: '2',
+				filterName: I18n.get('_SyslogSeverity2_'),
 				label: I18n.get('_SyslogSeverity2_'),
 				selected: false,
-				value: 20,
+				value: severityCount.syslogSeverity2,
 			},
 			{
 				filter: '3',
+				filterName: I18n.get('_SyslogSeverity3_'),
 				label: I18n.get('_SyslogSeverity3_'),
 				selected: false,
-				value: 25,
+				value: severityCount.syslogSeverity3,
 			},
 			{
 				filter: '4',
+				filterName: I18n.get('_SyslogSeverity4_'),
 				label: I18n.get('_SyslogSeverity4_'),
 				selected: false,
-				value: 30,
+				value: severityCount.syslogSeverity4,
 			},
 			{
 				filter: '5',
+				filterName: I18n.get('_SyslogSeverity5_'),
 				label: I18n.get('_SyslogSeverity5_'),
 				selected: false,
-				value: 35,
+				value: severityCount.syslogSeverity5,
 			},
 			{
 				filter: '6',
+				filterName: I18n.get('_SyslogSeverity6_'),
 				label: I18n.get('_SyslogSeverity6_'),
 				selected: false,
-				value: 40,
+				value: severityCount.syslogSeverity6,
 			},
 			{
 				filter: '7',
+				filterName: I18n.get('_SyslogSeverity7_'),
 				label: I18n.get('_SyslogSeverity7_'),
 				selected: false,
-				value: 45,
+				value: severityCount.syslogSeverity7,
 			},
 		]);
 	}
+
 	/**
 	 * Gets severity counts
-	 * @returns servirity graph data
+	 * @param afmSeverity will have severity count
+	 * @returns severity filter data
 	 */
-	public getAfmSeverityCounts () {
+	public getAfmSeverityCounts (afmSeverity) {
 		const afmSeverityFilter = _.find(this.filters, { key: 'afmSeverity' });
 
 		return (afmSeverityFilter.seriesData = [
 			{
 				filter: 'Critical',
-				label: I18n.get('_SyslogCritical_'),
+				filterName: I18n.get('_SyslogCritical_'),
+				label: `${I18n.get('_SyslogCritical_')}(${afmSeverity.critical})`,
 				selected: false,
-				value: 20,
+				value: afmSeverity.critical,
 			},
 			{
 				filter: 'High',
-				label: I18n.get('_SyslogHigh_'),
+				filterName: I18n.get('_SyslogHigh_'),
+				label: `${I18n.get('_SyslogHigh_')}(${afmSeverity.high})`,
 				selected: false,
-				value: 20,
+				value: afmSeverity.high,
 			},
 			{
 				filter: 'Medium',
-				label: I18n.get('_SyslogMedium_'),
+				filterName: I18n.get('_SyslogMedium_'),
+				label: `${I18n.get('_SyslogMedium_')}(${afmSeverity.medium})`,
 				selected: false,
-				value: 20,
+				value: afmSeverity.medium,
 			},
 			{
 				filter: 'Low',
-				label: I18n.get('_SyslogLow_'),
+				filterName: I18n.get('_SyslogLow_'),
+				label: `${I18n.get('_SyslogLow_')}(${afmSeverity.low})`,
 				selected: false,
-				value: 20,
+				value: afmSeverity.low,
 			},
 			{
-				filter: 'Informational',
-				label: I18n.get('_SyslogInfo_'),
+				filter: 'Info',
+				filterName: I18n.get('_SyslogInfo_'),
+				label: `${I18n.get('_SyslogInfo_')}(${afmSeverity.info})`,
 				selected: false,
-				value: 20,
+				value: afmSeverity.info,
 			},
 		]);
 	}
 	/**
 	 * Loads data
 	 */
-	private loadData () {
+	public loadData () {
 		this.status.isLoading = true;
 		if (this.visualLabels[0].active) {
 			this.appliedFilters.timeRange = 30;
 			this.appliedFilters.afmSeverity = '';
+			this.syslogsParams.timeRange = ['30'];
 			this.filters =
 			_.filter(this.filters, o =>  o.view[0] === 'afm' || o.key === 'timeRange');
 			forkJoin(
-			this.getTimeRangeCount(),
-			this.getFaultsCounts(),
-			this.getAfmSeverityCounts(),
+			this.fetchFaultTimeRangeCount(),
+			this.fetchFaultStateCount(),
+			this.fetchFaultSeverityCount(),
 		)
 			.pipe(
 				takeUntil(this.destroy$),
@@ -333,15 +492,17 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 							'faults',
 						);
 					}
+					if (this.syslogsParams.timeRange) {
+						this.selectSubFilters(
+							this.syslogsParams.timeRange,
+							'timeRange',
+						);
+					}
 
 				}),
 			)
 			.subscribe(() => {
 				this.status.isLoading = false;
-
-				if (window.Cypress) {
-					window.loading = false;
-				}
 
 				this.logger.debug(
 					'assets.component : loadData() :: Finished Loading',
@@ -350,12 +511,13 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 		} else {
 			this.appliedFilters.timeRange = 30;
 			this.appliedFilters.severity = 0;
+			this.syslogsParams.timeRange = ['1'];
 			this.filters =
 			_.filter(this.filters, o =>  o.view[0] === 'syslog' || o.key === 'timeRange');
 			forkJoin(
-			this.getTimeRangeCount(),
-			this.getSeverityCounts(),
-		)
+			this.fetchSyslogsTimeRangeCount(),
+			this.fetchSyslogsSeverityCount(),
+			)
 			.pipe(
 				takeUntil(this.destroy$),
 				map(() => {
@@ -512,6 +674,7 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 	 * Clears filters
 	 */
 	public clearFilters () {
+		this.searchQueryInGrid = '';
 		this.filtered = false;
 		this.noSyslogFilter = false;
 		_.each(this.filters, (filter: SyslogFilter) => {
@@ -525,6 +688,17 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 		this.syslogsParams.timeRange = ['1'];
 		this.buildFilters();
 	}
+
+	/**
+	 * On search updates the search param
+	 * @param event string
+	 */
+	public onSearchUpdate (event) {
+		if (event) {
+			this.searchQueryInGrid = event;
+		}
+	}
+
 	/**
 	 * Selects visual label
 	 * @param index contains visual label index
@@ -557,13 +731,16 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 	 */
 	public onSubfilterClose (event) {
 		const eventKey = _.get(event, 'key');
-		if (this.faultFlag && (eventKey === 'afmSeverity' || eventKey === 'timeRange')) {
+		if (eventKey === 'severity' || (this.faultFlag
+				&& (eventKey === 'afmSeverity'))) {
 			const filter = _.find(this.filters, { key: eventKey });
 			_.each(filter.seriesData, f => {
 				f.selected = false;
 			});
-			(eventKey === 'afmSeverity') ?
-				this.appliedFilters.afmSeverity = '' : this.appliedFilters.timeRange = 30;
+			(this.faultFlag) ? (eventKey === 'afmSeverity') ?
+				this.appliedFilters.afmSeverity = '' : this.appliedFilters.timeRange = 30
+				: this.appliedFilters.severity = null;
+
 			this.appliedFilters = _.cloneDeep(this.appliedFilters);
 		   	filter.selected = _.some(filter.seriesData, 'selected');
 		}

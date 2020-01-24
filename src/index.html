@@ -8,15 +8,51 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="icon" type="image/x-icon" href="favicon.png">
 	</head>
-	<body class="cui cui--animated">
-		<app-root class="animated">
-			<div class="absolute-center">
-				<div class="loading-spinner loading-spinner--blue">
-					<div class="wrapper">
-						<div class="wheel"></div>
-					</div>
+<body class="cui cui--animated">
+	<app-root class="animated">
+		<div class="absolute-center">
+			<div class="loading-spinner loading-spinner--blue">
+				<div class="wrapper">
+					<div class="wheel"></div>
 				</div>
 			</div>
-		</app-root>
-	</body>
+		</div>
+	</app-root>
+	<script charset="UTF-8">
+		window['adrum-start-time'] = new Date().getTime();
+
+		var jsonData = {};
+		function addToMap(key, value) {
+			value = value || '';
+			jsonData[key] = value.toString();
+		}
+
+		function getJsonData() {
+			return jsonData;
+		}
+
+		window['adrum-config'] = {
+			userEventInfo: {
+				"Ajax": function (context) {
+					return {
+						userData: getJsonData()
+					}
+				}
+			}
+		};
+
+		(function (config) {
+			config.appKey = 'AD-AAB-AAU-MRZ';
+			config.adrumExtUrlHttp = 'http://cdn.appdynamics.com';
+			config.adrumExtUrlHttps = 'https://cdn.appdynamics.com';
+			config.beaconUrlHttp = 'http://col.eum-appdynamics.com';
+			config.beaconUrlHttps = 'https://col.eum-appdynamics.com';
+			config.xd = { enable: true };
+			config.spa = {
+				"spa2": true
+			};
+		})(window['adrum-config'] || (window['adrum-config'] = {}));
+	</script>
+	<script src="https://cdn.appdynamics.com/adrum/adrum-4.5.12.2461.js"></script>
+</body>
 </html>

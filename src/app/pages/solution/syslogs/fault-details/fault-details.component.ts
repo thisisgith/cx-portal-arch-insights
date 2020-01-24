@@ -78,6 +78,7 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 	public software: FaultSwType[];
 	public serialNumber: string;
 	public icSettingsResponse: FaultIcSettings;
+	public paginationCount;
 	public timeRange: any[] = [
 		{
 			name: I18n.get('_FaultDay1_'),
@@ -95,6 +96,20 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 			name: I18n.get('_FaultDays30_'),
 			value: 30,
 		}];
+	public srStatus: any[] = [
+		{
+			name: I18n.get('_FaultSuccess_'),
+			value: 'Success',
+		},
+		{
+			name: I18n.get('_FaultFailed_'),
+			value: 'Failed',
+		},
+		{
+			name: I18n.get('_FaultNoTacCase_'),
+			value: 'Empty',
+		},
+	];
 
 	public selectDropDown = {
 		productID: '',
@@ -110,6 +125,7 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 		INACTIVE: 'INACTIVE',
 		PRODUCT_ID: 'PRODUCTID',
 		SOFTWARE: 'SOFTWARE',
+		STATUS: 'STATUS',
 		TIME: 'TIME',
 	};
 
@@ -121,9 +137,11 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 	@ViewChild('systemName', { static: true })
 		public systemNameTemplate: TemplateRef<{ }>;
 	@ViewChild('productId', { static: true })
-	public productIdTemplate: TemplateRef<{ }>;
+		public productIdTemplate: TemplateRef<{ }>;
 	@ViewChild('softwareType', { static: true })
 		public softwareTypeTemplate: TemplateRef<{ }>;
+	@ViewChild('status', { static: true })
+		public statusTemplate: TemplateRef<{ }>;
 	@ViewChild('caseNumber', { static: true })
 		public caseNumberTemplate: TemplateRef<{ }>;
 	@ViewChild('caseCreatedDate', { static: true })
@@ -146,6 +164,7 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 			.subscribe((id: string) => {
 				this.searchParams.customerId = id;
 			});
+		this.searchParams.pageNo = 1;
 	}
 
 	/**
@@ -204,6 +223,8 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 	 * @param searchParams FaultSearchParams
 	 */
 	public getAffectedSystemDetails (searchParams: FaultSearchParams) {
+		this.searchParams.srStatus =
+			(this.searchParams.srStatus === 'Empty') ? '' : this.searchParams.srStatus;
 		this.affectedSystemLoading = true;
 		this.searchParams.lastUpdateTime = this.lastUpdateTime;
 		this.faultService.getAffectedSystems(searchParams)
@@ -211,6 +232,7 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 			map((response: FaultAffectedSystems) => {
 				this.affectedCount = response.count;
 				this.faultAffectedDetails = response.responseData;
+				this.preparePaginationHeader();
 				this.affectedSystemLoading = false;
 			}),
 			catchError(err => {
@@ -223,6 +245,22 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 				return of({ });
 			}))
 			.subscribe();
+	}
+
+	/**
+	 * it will prepare Pagination header to show from which to which records showing
+	 */
+	private preparePaginationHeader () {
+		if (this.affectedCount !== 0) {
+			const tableStartIndex = (this.tableLimit * (this.searchParams.pageNo - 1)) + 1;
+			let tableEndIndex = (this.tableLimit * this.searchParams.pageNo);
+			if (tableEndIndex > this.affectedCount) {
+				tableEndIndex = this.affectedCount;
+			}
+			this.paginationCount = `${tableStartIndex}-${tableEndIndex}`;
+		} else {
+			this.paginationCount = '0-0';
+		}
 	}
 
 	/**
@@ -259,26 +297,37 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 					name: I18n.get('_FaultSystemName_'),
 					sortable: true,
 					template: this.systemNameTemplate,
+					width: '18%',
 				},
 				{
 					name: I18n.get('_FaultProductId_'),
 					sortable: true,
 					template: this.productIdTemplate,
+					width: '20%',
 				},
 				{
 					name: I18n.get('_FaultSoftwareType_'),
 					sortable: true,
 					template: this.softwareTypeTemplate,
+					width: '16%',
+				},
+				{
+					name: I18n.get('_FaultStatus_'),
+					sortable: true,
+					template: this.statusTemplate,
+					width: '10%',
 				},
 				{
 					name: I18n.get('_FaultCaseNumber_'),
 					sortable: true,
 					template: this.caseNumberTemplate,
+					width: '16%',
 				},
 				{
 					name: I18n.get('_FaultDateAndTime'),
 					sortable: true,
 					template: this.caseCreatedDateTemplate,
+					width: '20%',
 				},
 			],
 			dynamicData: true,
@@ -336,22 +385,26 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 			this.searchParams.productId = event;
 		} else if (paramType.toUpperCase() === this.FAULT_CONSTANT.SOFTWARE) {
 			this.searchParams.software = event;
-		} else {
+		} else if (paramType.toUpperCase() === this.FAULT_CONSTANT.TIME) {
 			this.searchParams.days = event;
+		} else {
+			this.searchParams.srStatus = (event === 'Empty') ? '' : event;
 		}
+		this.searchParams.pageNo = 1;
+		this.tableOffset = 0;
 		this.getAffectedSystemDetails(this.searchParams);
 	}
 
 	/**
 	 * Connect to Asset details panel
 	 *
-	 * @param serialnumber string
+	 * @param serialNumber string
 	 */
-	public connectToAsset (serialnumber) {
-		this.serialNumber = serialnumber;
+	public connectToAsset (serialNumber) {
+		this.serialNumber = serialNumber;
 		this.assetParams = {
 			customerId: this.searchParams.customerId,
-			serialNumber: [serialnumber],
+			serialNumber: [serialNumber],
 			solution: this.searchParams.solution,
 			useCase: this.searchParams.useCase,
 		};
@@ -475,6 +528,8 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 				return 'productId';
 			case 'Software Type':
 				return 'swType';
+			case 'Status':
+				return 'srStatus';
 			case 'Case Number':
 				return 'tacCaseNo';
 			case 'Date and Time':

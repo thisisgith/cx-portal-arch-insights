@@ -1,6 +1,6 @@
 import { Component, OnInit, TemplateRef,
 	ViewChild, Input, OnChanges,
-	SimpleChanges, OnDestroy } from '@angular/core';
+	SimpleChanges, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { FaultService, FaultSearchParams,
 	FaultGridData, RacetrackSolution,
 	RacetrackTechnology, FaultResponse,
@@ -29,11 +29,13 @@ import { HttpErrorResponse } from '@angular/common/http';
 export class FaultsComponent implements OnInit, OnChanges, OnDestroy {
 
 	@Input('faultFilter') public faultFilter;
+	@Input('clearSearch') public searchQueryInFaultGrid;
+	@Output('searchUpdate') public searchUpdate = new EventEmitter();
 
 	public searchParams: FaultSearchParams;
 	private destroy$ = new Subject();
 	public tableOptions: CuiTableOptions;
-	public tableData: FaultGridData[];
+	public tableData: FaultGridData[] = [];
 	public tableLimit = 10;
 	public tableOffset = 0;
 	public loading = false;
@@ -94,8 +96,7 @@ export class FaultsComponent implements OnInit, OnChanges, OnDestroy {
 			this.searchParams.useCase = _.get(technology, 'name');
 			this.getFaultData(this.searchParams);
 		});
-
-		this.buildTable();
+		this.searchQueryInFaultGrid = '';
 	}
 
 	/**
@@ -105,6 +106,8 @@ export class FaultsComponent implements OnInit, OnChanges, OnDestroy {
 	public ngOnChanges (changes: SimpleChanges) {
 		const currentFilter = _.get(changes, ['faultFilter', 'currentValue']);
 		const firstChange = _.get(changes, ['faultFilter', 'firstChange']);
+		const clear = _.get(changes, ['searchQueryInFaultGrid', 'currentValue']);
+
 		if (currentFilter && !firstChange) {
 			this.searchParams.tacEnabled =
 				(currentFilter.faults === this.FAULT_CONSTANT.DETECTED)
@@ -113,6 +116,10 @@ export class FaultsComponent implements OnInit, OnChanges, OnDestroy {
 			this.searchParams.days = currentFilter.timeRange;
 			this.resetPage();
 			this.getFaultData(this.searchParams);
+		}
+		if (!clear) {
+			this.searchQueryInFaultGrid = '';
+			this.searchParams.localSearch = '';
 		}
 	}
 
@@ -129,32 +136,39 @@ export class FaultsComponent implements OnInit, OnChanges, OnDestroy {
 			bordered: false,
 			columns: [
 				{
+					key: 'faultSeverity',
 					name: I18n.get('_FaultSeverity_'),
 					sortable: true,
 					template: this.severityColorsTemplate,
+					width: '10%',
 				},
 				{
 					key: 'category',
 					name: I18n.get('_FaultCategory_'),
 					sortable: true,
+					width: '10%',
 				},
 				{
 					key: 'title',
 					name: I18n.get('_FaultTitle_'),
 					sortable: true,
+					title: 'title',
+					width: '58%',
 				},
 				{
 					key: 'systemCount',
 					name: I18n.get('_FaultAffectedSystems_'),
 					sortable: true,
+					width: '12%',
 				},
 				{
 					key: 'tacCount',
 					name: I18n.get('_FaultCreatedCases_'),
 					sortable: true,
+					width: '10%',
 				},
 			],
-			dynamicData: true,
+			dynamicData: false,
 			hover: true,
 			padding: 'loose',
 			selectable: false,
@@ -171,6 +185,7 @@ export class FaultsComponent implements OnInit, OnChanges, OnDestroy {
 	 */
 	public getFaultData (searchParams: FaultSearchParams) {
 		this.loading = true;
+		this.buildTable();
 		this.faultService.getFaultDetails(searchParams)
 			.pipe(takeUntil(this.destroy$),
 			map((response: FaultResponse) => {
@@ -179,7 +194,7 @@ export class FaultsComponent implements OnInit, OnChanges, OnDestroy {
 				this.lastUpdateTime = response.lastUpdateTime;
 				this.lastUpdateDate = response.lastUpdateDate;
 				this.offlineTime = response.offlineTime;
-				this.tableData = response.responseData;
+				this.tableSort(response.responseData);
 				this.preparePaginationHeader();
 				this.loading = false;
 			}),
@@ -196,32 +211,16 @@ export class FaultsComponent implements OnInit, OnChanges, OnDestroy {
 	}
 
 	/**
-	 * This will sort the records absed on column
-	 *
-	 * @param event - click event CuiTableOptions column info
-	 * @memberof FaultsComponent
+	 * Custom table sort
+	 * @param tableData FaultGridData[]
+	 * @returns tableData
 	 */
-	public onTableSortingChanged (event) {
-		this.searchParams.sortField = this.getSortKey(event.name);
-		this.searchParams.sortOrder = event.sortDirection;
-		this.getFaultData(this.searchParams);
-	}
-
-	private getSortKey = sortKey => {
-		switch (sortKey) {
-			case 'Severity':
-				return 'faultSeverity';
-			case 'Category':
-				return 'category';
-			case 'Title':
-				return 'title';
-			case 'Affected Systems':
-				return 'systemCount';
-			case 'Created Cases':
-				return 'tacCount';
-			default:
-				return 'title';
-		}
+	private tableSort (tableData: FaultGridData[]) {
+		this.tableData = _.filter(tableData, ['faultSeverity', 'Critical']);
+		this.tableData = _.concat(this.tableData, _.filter(tableData, ['faultSeverity', 'High']));
+		this.tableData = _.concat(this.tableData, _.filter(tableData, ['faultSeverity', 'Medium']));
+		this.tableData = _.concat(this.tableData, _.filter(tableData, ['faultSeverity', 'Low']));
+		this.tableData = _.concat(this.tableData, _.filter(tableData, ['faultSeverity', 'Info']));
 	}
 
 	/**
@@ -243,7 +242,7 @@ export class FaultsComponent implements OnInit, OnChanges, OnDestroy {
 		this.searchParams.pageNo = pageInfo.page + 1;
 		this.tableOffset = pageInfo.page;
 		this.searchParams.size = this.tableLimit;
-		this.getFaultData(this.searchParams);
+		this.preparePaginationHeader();
 	}
 
 	/**
@@ -274,6 +273,7 @@ export class FaultsComponent implements OnInit, OnChanges, OnDestroy {
 	 * @param event search text
 	 */
 	public onSearchUpdate (event) {
+		this.searchUpdate.emit(event);
 		this.resetPage();
 		this.searchParams.localSearch = event;
 		this.getFaultData(this.searchParams);

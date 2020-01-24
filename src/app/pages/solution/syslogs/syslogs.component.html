@@ -2,25 +2,17 @@
 	<insight-tabs></insight-tabs>
 	<visual-filter-bar [filters]="filters">
 		<ng-template #startingCard>
-			<div class="container flex flex-column series">
-				<div class="row toggle flex series__border series__border--left half-margin-bottom"
-					*ngFor="let label of visualLabels; let i=index"
-					data-auto-id="label?.label"
+			<div
+				class="text-center panel"
+			>
+				<div
+					*ngFor="let label of visualLabels; let i = index" data-auto-id="visualLabel"
+					class="toggle"
+					[ngClass]="{ 'visual-selected' : label.active == true }"
 					(click)="selectVisualLabel(i)"
-					[ngClass]="{ 'series__border--highlight' : label.active === true }"
 				>
-					<div class="col-md-4 text-right">
-						<span class="series__data series__data--md"
-							[ngClass]="{ 'text-primary' : label.active === true }"
-						>{{ label?.count }}
-						</span>
-					</div>
-					<div class="col-md-8 text-left">
-						<span class="series__name series__name--md"
-							[ngClass]="{ 'text-primary' : label.active === true }"
-						>{{ label?.label }}
-						</span>
-					</div>
+					<div class="text-huge flex-center dbl-padding-left dbl-padding-right" [innerText]="label.count"></div>
+					<div class="text-large flex-center dbl-padding-left dbl-padding-right half-margin-bottom" [innerText]="label.label"></div>
 				</div>
 			</div>
 		</ng-template>
@@ -32,11 +24,20 @@
 		<div class="divider qtr-margin-top"></div>
 	</ng-container>
 	<div *ngIf="visualLabels[0].active">
-		<app-faults [faultFilter]="appliedFilters"></app-faults>
+		<app-faults
+			[faultFilter]="appliedFilters"
+			[clearSearch]="searchQueryInGrid"
+			(searchUpdate)="onSearchUpdate($event)">
+		</app-faults>
 	</div>
 	<div *ngIf="visualLabels[1].active">
-		<syslogs-details [sysFilter]="appliedFilters" [solution]="solution" [useCase]="useCase"></syslogs-details>
-
+		<syslogs-details
+			[sysFilter]="appliedFilters"
+			[solution]="solution"
+			[useCase]="useCase"
+			[searchVal]="searchQueryInGrid"
+			(searchUpdate)="onSearchUpdate($event)">
+		</syslogs-details>
 	</div>
 </div>
 
@@ -84,8 +85,9 @@
 						attr.data-auto-id="FilterTag-{{ subfilter.filter }}"
 						(click)="onSubfilterClose(filter)"
 					>
-						<span [innerText]="'_SyslogTitleX_' | i18n : title : subfilter.label | titlecase"></span>
-						<span *ngIf="faultFlag && (filter.key === 'afmSeverity' || filter.key === 'timeRange')" class="icon-close"></span>
+						<span [innerText]="'_SyslogTitleX_' | i18n : title : subfilter.filterName | titlecase"></span>
+						<span *ngIf="(faultFlag && (filter.key === 'afmSeverity'))
+							|| filter.key === 'severity'" class="icon-close"></span>
 					</span>
 				</ng-container>
 			</ng-container>

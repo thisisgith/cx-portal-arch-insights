@@ -50,6 +50,7 @@ interface Tab {
 		FieldNoticeAdvisory[] |
 		CriticalBug[];
 	disabled?: boolean;
+	hideCarouselArrow: boolean;
 	key: string;
 	label: string;
 	loading: boolean;
@@ -162,7 +163,10 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 	}
 	@ViewChild('contentContainer', { static: false }) private contentContainer: ElementRef;
 	@ViewChild('borgBugSeverityTemplate', { static: true }) private borgBugSeverityTemplate: TemplateRef<{ }>;
-
+	@ViewChild('bugIcSeverityTemplate', { static: true }) private bugIcSeverityTemplate: TemplateRef<{ }>;
+	@ViewChild('assetImpactedTooltipTemplate', { static: true }) private assetImpactedTooltipTemplate: TemplateRef<{ }>;
+	@ViewChild('fieldNoticeTooltipTemplate', { static: true }) private fieldNoticeTooltipTemplate: TemplateRef<{ }>;
+	@ViewChild('cdetsHealineTemplate', { static: true }) private cdetsHealineTemplate: TemplateRef<{ }>;
 	constructor (
 		private diagnosticsService: DiagnosticsService,
 		private logger: LogService,
@@ -242,6 +246,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 						title: I18n.get('_Updated_'),
 					},
 				],
+				hideCarouselArrow: false,
 				key: 'security',
 				label: I18n.get('_SecurityAdvisories_'),
 				loading: true,
@@ -277,10 +282,13 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 						},
 						{
 							key: 'assetsImpacted',
-							name: `${I18n.get('_AffectedSystems_')}
-								(${I18n.get('_PotentiallyAffected_')})`,
+							name: I18n.get('_AffectedSystems_'),
 							sortable: true,
-							template: this.impactedCountTemplate,
+						},
+						{
+							headerTemplate: this.assetImpactedTooltipTemplate,
+							key: 'assetsPotentiallyImpacted',
+							sortable: true,
 						},
 					],
 					dynamicData: true,
@@ -322,6 +330,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 						title: I18n.get('_Updated_'),
 					},
 				],
+				hideCarouselArrow: false,
 				key: 'field',
 				label: I18n.get('_FieldNotices_'),
 				loading: true,
@@ -356,8 +365,8 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 							template: this.impactedAssetsTemplate,
 						},
 						{
+							headerTemplate: this.fieldNoticeTooltipTemplate,
 							key: 'assetsPotentiallyImpacted',
-							name: I18n.get('_PotentiallyAffectedHardware_'),
 							sortable: true,
 							template: this.potentiallyImpactedAssetsTemplate,
 						},
@@ -395,21 +404,13 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 						title: I18n.get('_Total_'),
 					},
 				],
+				hideCarouselArrow: true,
 				key: 'bug',
 				label: I18n.get('_PriorityBugs_'),
 				loading: true,
 				options: new CuiTableOptions({
 					bordered: true,
 					columns: [
-						{
-							key: 'id',
-							name: I18n.get('_BugID_'),
-							render: item => item.id || I18n.get('_NA_'),
-							sortable: true,
-							sorting: false,
-							value: 'id',
-							width: '100px',
-						},
 						{
 							key: 'severity',
 							name: I18n.get('_Severity_'),
@@ -418,21 +419,24 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 							sortable: true,
 							sortDirection: 'asc',
 							sorting: true,
+							template: this.bugIcSeverityTemplate,
 							value: 'severity',
+							width: '150px',
 						},
 						{
-							key: 'cdetsSeverity',
-							name: I18n.get('_BorgBugICSeverity_'),
+							key: 'id',
+							name: I18n.get('_BugID_'),
+							render: item => item.id || I18n.get('_NA_'),
 							sortable: true,
-							sortDirection: 'desc',
-							sorting: true,
-							template: this.borgBugSeverityTemplate,
-							value: 'cdetsSeverity',
+							sorting: false,
+							value: 'id',
+							width: '200px',
 						},
 						{
 							key: 'title',
-							name: I18n.get('_Title_'),
+							name: I18n.get('_BugTitle_'),
 							sortable: true,
+							template: this.cdetsHealineTemplate,
 							value: 'title',
 						},
 						{
@@ -541,7 +545,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 				impactFilter.seriesData = _.compact(_.map(data, (count, severity) => {
 					if (count) {
 						return {
-							filter: severity,
+							filter: I18n.get(`_${_.startCase(severity)}_`),
 							label: I18n.get(`_${_.startCase(severity)}_`),
 							selected: false,
 							value: count,
@@ -1064,6 +1068,13 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 				tab.pagination = this.buildPagination(_.get(response, 'Pagination', { }));
 				tab.loading = false;
 				_.unset(tab, 'contentContainerHeight');
+
+				/* browser headers.get X-API-RESULT-COUNT is not supported in IE-Edge */
+				const fieldTab = _.find(this.tabs, { key: 'field' });
+				const totalFieldFilter = _.find(fieldTab.filters, { key: 'total' });
+				totalFieldFilter.seriesData = [{
+					value: _.toNumber(_.get(response, ['Pagination', 'total'], 0)) || 0,
+				}];
 			}),
 			catchError(err => {
 				tab.pagination = null;
@@ -1101,6 +1112,13 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 				tab.pagination = this.buildPagination(_.get(response, 'Pagination', { }));
 				tab.loading = false;
 				_.unset(tab, 'contentContainerHeight');
+
+				/* browser headers.get X-API-RESULT-COUNT is not supported in IE-Edge */
+				const bugTab = _.find(this.tabs, { key: 'bug' });
+				const totalBugFilter = _.find(bugTab.filters, { key: 'total' });
+				totalBugFilter.seriesData = [{
+					value: _.toNumber(_.get(response, ['Pagination', 'total'], 0)) || 0,
+				}];
 			}),
 			catchError(err => {
 				tab.pagination = null;
@@ -1162,6 +1180,13 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 					tab.pagination = this.buildPagination(_.get(response, 'Pagination', { }));
 					tab.loading = false;
 					_.unset(tab, 'contentContainerHeight');
+
+					/* browser headers.get X-API-RESULT-COUNT is not supported in IE-Edge */
+					const securityTab = _.find(this.tabs, { key: 'security' });
+					const totalAdvisoryFilter = _.find(securityTab.filters, { key: 'total' });
+					totalAdvisoryFilter.seriesData = [{
+						value: _.toNumber(_.get(response, ['Pagination', 'total'], 0)) || 0,
+					}];
 				}),
 				catchError(err => {
 					tab.pagination = null;

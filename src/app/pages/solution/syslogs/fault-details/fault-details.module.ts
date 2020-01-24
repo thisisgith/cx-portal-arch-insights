@@ -12,6 +12,8 @@ import {
 } from '@cisco-ngx/cui-components';
 import { FormsModule } from '@angular/forms';
 import { DetailsPanelModule, AssetDetailsModule } from '@components';
+import { CaseDetailsModule } from '../../resolution/case-details/case-details.module';
+import { CaseDetailsHeaderModule } from '../../resolution/case-details-header/case-details-header.module';
 
 /**
  * This is fault details panal module
@@ -31,6 +33,8 @@ import { DetailsPanelModule, AssetDetailsModule } from '@components';
 		FormsModule,
 		DetailsPanelModule,
 		AssetDetailsModule,
+		CaseDetailsModule,
+		CaseDetailsHeaderModule,
 	],
 })
 export class FaultDetailsModule { }

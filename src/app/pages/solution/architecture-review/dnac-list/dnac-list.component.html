@@ -124,6 +124,15 @@
 	<span [innerText]="'_ArchitectureWlcTooltipContent_' | i18n" class="text-small"></span>
 </ng-template>
 
+<ng-template #accessPointsTooltipTemplate>
+	<span [innerText]="'_ArchitectureAccessPoints(AccessPointsPublishedLimit)_' | i18n"></span>
+	<sup><div tooltip [tooltipTemplate]="accessPointsTooltipContentTemplate" class="icon-info-outline qtr-margin-left" [tooltipMaxWidth]="200"></div></sup>
+</ng-template>
+
+<ng-template #accessPointsTooltipContentTemplate>
+	<span [innerText]="'_ArchitectureAccessPointTooltipContent_' | i18n" class="text-small"></span>
+</ng-template>
+
 <ng-template #endPointsTemplate let-item="celldata">
 	<span [ngClass]="setIndicators(item.endpointsPublishedPercentage)" class="qtr-margin-right icon-circle">
 	</span>
@@ -142,5 +151,12 @@
 	<span [ngClass]="setIndicators(item.wlcPublishedPercentage)" class="qtr-margin-right icon-circle">
 	</span>
 	<span [innerText]="getWlcTemplate(item)">
+	</span>
+</ng-template>
+
+<ng-template #accessPointsTemplate let-item="celldata">
+	<span [ngClass]="setIndicators(item.accessPointsPublishedPercentage)" class="qtr-margin-right icon-circle">
+	</span>
+	<span [innerText]="getAccessPointsTemplate(item)">
 	</span>
 </ng-template>

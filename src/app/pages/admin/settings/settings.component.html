@@ -21,7 +21,7 @@
 						<div
 							*ngIf="data.lastUploadDate"
 							class="text-small"
-							[innerText]="'_LastDataSent_' | i18n:(data.lastUploadDate | fromNow)" [title]="data.lastUploadDate | dateTime">
+							[innerText]="'_LastDataSent_' | i18n:(lastDataSentStatus)">
 						</div>
 					</div>
 					<div class="col-2" [innerText]="data.ieVersion || ''"></div>
@@ -37,10 +37,16 @@
 						></span>
 						<span [innerText]="data.ieStatus || ''"></span>
 					</div>
-					
+
 				</div>
 				<div class="row">
-					<div class="col-2" *ngIf="ieSetupCompleted"><a data-auto-id="redownload-collector" (click)="navigateTosetup()" [innerText]="'_ReInstall_' | i18n"></a> |</div><div class="col-5"><a data-auto-id="change-password" [routerLink]="['/admin', 'changepassword']" [innerText]="'_ChangePassword&Settings_' | i18n"></a></div>
+					<div class="col-2" *ngIf="ieSetupCompleted"><a data-auto-id="redownload-collector" [ngClass]="{ 'link--disabled': isIEOrEdge }" (click)="navigateTosetup()" [innerText]="'_ReInstall_' | i18n"></a> |</div><div class="col-5"><a data-auto-id="change-password" [routerLink]="['/admin', 'collectorchangepassword']" [innerText]="'_ChangePassword&Settings_' | i18n"></a></div>
+					<div class="col-auto flex-fill" *ngIf="isIEOrEdge">
+						<div class="alert alert--warning">
+							<div class="alert__icon icon-warning-outline"></div>
+							<div class="alert__message" [innerText]="'_EdgeBrowserNotSupported_'| i18n"></div>
+						</div>
+					</div>
 				</div>
 				<div
 					*ngIf="data.dnac_details && data.dnac_details[0]"
@@ -81,11 +87,15 @@
 						<div class="base-padding-top half-padding-left" [innerText]="data.dnac_details[0]?.additional_details?.error">
 						</div>
 					</div>
-					
+				</div>
+				<div>
+					<div class="col-5 hide"><a data-auto-id="change-dnac-password"
+							[routerLink]="['/admin', 'dnacUpdateCred']"
+							[innerText]="'_UpdateCredentials_' | i18n"></a></div>
 				</div>
 			</div>
 
-			
+
 				<!--Insight type code start-->
 
 
@@ -102,7 +112,7 @@
 						<div class="col-md-3">
 
 							<label class="switch">
-								<input type="checkbox" 
+								<input type="checkbox"
 									[(ngModel)]="insight.mode"
 									[checked]="insight.mode"
 									(change)="insightModeChange(insight.insightType, insight.mode)"
@@ -133,4 +143,24 @@
 			[innerText]="'_NoResultsFound_' | i18n"
 		></h2>
 	</div>
+	<ng-template #collectorReinstallModal>
+		<a class="modal__close" data-auto-id="addUSerHide" (click)="cuiModalService.hide()"><span class="icon-close"></span></a>
+		<div class="modal__body">
+			<div class="alert alert--warning">
+				<div class="alert__icon icon-warning-outline"></div>
+				<div class="alert__message text-left">
+					<h4 [innerText]="'_ReInstall_' | i18n"></h4>
+					<div [innerText]="'_PreviousCollectorShouldbeUninstalled_' | i18n"></div>
+				</div>
+			</div>
+			<p class="subtitle" ></p>
+		</div>
+		<div class="modal__footer">
+			<button class="btn btn--primary" (click)="onContinue()" data-auto-id="reinstall"
+				[innerText]="'_Continue_' | i18n | uppercase"></button>
+				<button class="btn" (click)="cuiModalService.hide()" data-auto-id="cancelRedirect"
+				[innerText]="'_Cancel_' | i18n | uppercase"></button>
+		</div>
+	</ng-template>
+	<cui-modal></cui-modal>
 </admin-wrapper>

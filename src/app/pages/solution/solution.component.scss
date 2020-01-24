@@ -1,26 +1,87 @@
 @import '~src/variables.scss';
+@import '~src/mixins.scss';
 
 $cx-gray-color-4: #595b61;
 $cx-hover-color: rgba(#ecf4fc, 0.7);
-$cx-font-size-12: 12px;
-$cx-font-size-16: 16px;
-$cx-font-size-18: 18px;
-$cx-font-size-24: 24px;
+$cx-font-size-12: 1.2rem;
+$cx-font-size-16: 1.6rem;
+$cx-font-size-18: 1.8rem;
+$cx-font-size-24: 2.4rem;
 
 .cx-breadcrumb-bar {
 	background-color: #fff;
 }
 
-.km {
+.facet-navigation__items__wrapper {
+	flex-shrink: 1;
+	padding: 0 2rem;
+	overflow: hidden;
+	scroll-behavior: smooth;
+}
+
+.facet-navigation__link {
+	display: flex;
+	flex-flow: column nowrap;
+	position: relative;
+	width: 312px;
+	height: 146px;
+	border: none;
+	-webkit-appearance: none;
+	border-left: 1px solid #c2c2c2;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	box-sizing: border-box;
+	background-color: transparent;
+
+	&--selected {
+		box-shadow: 0 10px 17px 0 rgba(0, 0, 0, 0.2);
+		clip-path: polygon(-20% 0%, 120% 0%, 120% 120%, -20% 120%);
+
+		p {
+			color: $accent-color1;
+		}
+	}
+
+	&:focus {
+		outline-offset: -4px;
+	}
+}
+
+.facet-navigation {
 	display: grid;
 	margin: 0;
 	grid-template-columns: auto auto auto;
 	justify-content: center;
 	background-color: #fff;
 	grid-template-rows: max-content;
+
+	&__left,
+	&__right {
+		background: none;
+		border: none;
+
+		@extend %facet-navigation__nav-btn;
+	}
+
+	&__items {
+		justify-content: center;
+		display: inline-flex;
+		margin: 0;
+	}
+
+	&__list-item {
+		list-style: none;
+
+		&:last-child {
+			.facet-navigation__link {
+				border-right: 1px solid #c2c2c2;
+			}
+		}
+	}
 }
 
-%km__nav-btn {
+%facet-navigation__nav-btn {
 	display: flex;
 	height: 100%;
 	max-height: 146px;
@@ -45,55 +106,10 @@ $cx-font-size-24: 24px;
 	}
 }
 
-.km__left {
-	@extend %km__nav-btn;
-}
-
-.km__right {
-	@extend %km__nav-btn;
-}
-
-.km__items__wrapper {
-	flex-shrink: 1;
-	padding: 0 2rem;
-	overflow: hidden;
-	scroll-behavior: smooth;
-}
-
-.km__items {
-	justify-content: center;
-	display: inline-flex;
-}
-
-.km__items__item {
-	display: flex;
-	flex-flow: column nowrap;
-	position: relative;
-	width: 312px;
-	height: 146px;
-	border-left: 1px solid #c2c2c2;
-	align-items: center;
-	justify-content: center;
-	cursor: pointer;
-
-	&:last-child {
-		border-right: 1px solid #c2c2c2;
-	}
-
-	&--selected {
-		box-shadow: 0 10px 17px 0 rgba(0, 0, 0, 0.2);
-		clip-path: polygon(-20% 0%, 120% 0%, 120% 120%, -20% 120%);
-
-		p {
-			color: $accent-color1;
-		}
-	}
-}
-
-.km__items__item__label {
+.facet-navigation__items__item__label {
 	margin: 0;
 	color: $default-text-color;
-	font-size: 14px;
+	font-size: 1.4rem;
 	font-weight: normal;
 	text-transform: uppercase;
 }
@@ -136,22 +152,26 @@ $cx-font-size-24: 24px;
 .kmii__insights__num {
 	margin-right: 5px;
 	color: $black-text-color;
-	font-size: 46px;
+	font-size: 4.6rem;
 	font-weight: 300;
 
 	&--selected {
 		color: $accent-color1;
 	}
+
+	&.font-30 {
+		font-size: 30px;
+	}
 }
 
 .kmii__insights__title {
 	color: $gray-text-color;
-	font-size: 14px;
+	font-size: 1.4rem;
 }
 
 .kmii__insights__change {
 	color: $gray-text-color;
-	font-size: 16px;
+	font-size: 1.6rem;
 	text-align: center;
 }
 
@@ -178,8 +198,8 @@ $cx-font-size-24: 24px;
 }
 
 .kmii__resolution__label {
-	font-size: 10px;
-	line-height: 12px;
+	font-size: 1rem;
+	line-height: 1.2rem;
 	color: $gray-text-color;
 	width: 20px;
 	margin-right: 10px;
@@ -191,9 +211,9 @@ $cx-font-size-24: 24px;
 
 .kmii_resolution__value {
 	color: $black-text-color;
-	font-size: 26px;
+	font-size: 2.6rem;
 	font-weight: 200;
-	line-height: 12px;
+	line-height: 1.2rem;
 
 	&--selected {
 		color: $accent-color1;
@@ -201,19 +221,19 @@ $cx-font-size-24: 24px;
 }
 
 /* Context Selector styling start */
-
 .cs {
 	display: flex;
 	align-items: center;
 	padding: 20px;
 
 	&__home {
+		@include button-reset;
+
 		width: 26px;
 		height: 25px;
 		display: flex;
 		align-items: center;
 		outline: none;
-		cursor: pointer;
 
 		::ng-deep svg {
 			width: 26px;
@@ -245,8 +265,8 @@ $cx-font-size-24: 24px;
 
 	&__context__label {
 		color: $gray-text-color;
-		font-size: 12px;
-		line-height: 14px;
+		font-size: 1.2rem;
+		line-height: 1.4rem;
 		text-transform: uppercase;
 	}
 
@@ -257,14 +277,18 @@ $cx-font-size-24: 24px;
 	}
 
 	.dropdown {
-		> a {
+		> button {
+			@include button-reset;
+
+			cursor: pointer;
 			color: $cx-gray-color-4;
 			font-size: $cx-font-size-18;
 
 			&::after {
 				content: "\25be";
 				font-size: $cx-font-size-24;
-				top: -4px;
+				position: relative;
+				right: -0.5rem;
 				transition: none;
 			}
 
@@ -276,26 +300,39 @@ $cx-font-size-24: 24px;
 		}
 
 		&.active {
-			> a::after {
-				top: 4px;
+			> button::after {
+				transform: rotate(180deg);
+				display: inline-block;
+				top: 0.4rem;
 			}
 		}
 
-		.dropdown__menu a {
+		&__menu-button {
+			@include button-reset;
+
 			border: 0 none;
-			padding: 10px 20px 10px 40px;
 			height: unset;
 			line-height: unset;
 			font-size: $cx-font-size-16;
+			text-align: left;
+			width: 100%;
+			position: relative;
+			display: inline-flex;
+			white-space: nowrap;
+			padding: 10px 20px 10px 40px;
 
 			&.selected {
-				background-color: #ecf4fc !important;
-				color: $default-link-color !important; // Required to override cui color
+				background-color: #ecf4fc;
+				color: $default-link-color;
+				position: relative;
 
-				&::after {
+				&::before {
+					font-family: cui-font, sans-serif;
 					font-size: $cx-font-size-18;
 					left: 10px;
 					right: unset;
+					content: "";
+					position: absolute;
 				}
 			}
 
@@ -317,7 +354,7 @@ $cx-font-size-24: 24px;
 }
 
 .icon--mid {
-	font-size: 24px;
+	font-size: 2.4rem;
 }
 
 .clickable {
@@ -347,7 +384,7 @@ $cx-font-size-24: 24px;
 }
 
 .problem-resolution-tab-content {
-	font-size: 26px;
+	font-size: 2.6rem;
 	line-height: 0;
 	padding: 20px;
 }
@@ -373,10 +410,14 @@ $cx-font-size-24: 24px;
 	box-shadow: 0 2px 5px #dbdbdb;
 }
 
+.period::after {
+	content: ".";
+	display: block;
+}
+
 /* CiscoUI table styling override start */
 // Chose to use specificity instead of importants
 :host ::ng-deep .table {
-	cursor: pointer;
 	border: none;
 	border-spacing: 2px;
 	border-collapse: collapse;
@@ -394,7 +435,7 @@ $cx-font-size-24: 24px;
 		width: 10px;
 		height: 7px;
 		position: relative;
-		font-size: 10px;
+		font-size: 1rem;
 
 		&::before {
 			display: inline-block;
@@ -492,7 +533,7 @@ $cx-font-size-24: 24px;
 
 					&::after {
 						color: $accent-color1;
-						font-size: 16px;
+						font-size: 1.6rem;
 					}
 				}
 			}
@@ -524,19 +565,19 @@ $cx-font-size-24: 24px;
 
 :host ::ng-deep .filter-bar {
 	&__title {
-		font-size: 14px;
-		line-height: 16px;
+		font-size: 1.4rem;
+		line-height: 1.6rem;
 	}
 
 	&__item {
 		background: #6a80a5;
 		border-radius: 4px;
-		font-size: 14px;
-		line-height: 16px;
+		font-size: 1.4rem;
+		line-height: 1.6rem;
 	}
 
 	&__clear {
-		font-size: 12px;
+		font-size: 1.2rem;
 	}
 }
 
@@ -552,6 +593,6 @@ $cx-font-size-24: 24px;
 	}
 
 	.modal__close .icon-close {
-		font-size: 20px;
+		font-size: 2rem;
 	}
 }

@@ -21,6 +21,11 @@ export class InsightTabsComponent implements OnInit {
 	public enableConfigurationTab = false;
 	public enableSystemEventsTab = false;
 	private destroy$ = new Subject();
+	private switchUrl = ['/solution/insights/syslogs',
+		'/solution/insights/architecture-review',
+		'/solution/insights/architecture'];
+	public activeUrl: string;
+	public showTab = false;
 
 	constructor (
 		private logger: LogService,
@@ -37,6 +42,7 @@ export class InsightTabsComponent implements OnInit {
 	 */
 	public ngOnInit (): void {
 		this.canActivate();
+		this.activeUrl = this.router.url;
 	}
 
 	/**
@@ -51,6 +57,12 @@ export class InsightTabsComponent implements OnInit {
 						this.enableArchitectureTab = _.get(response, 'architectureReviewUIEnabled');
 						this.enableConfigurationTab = _.get(response, 'configurationUIEnabled');
 						this.enableSystemEventsTab = _.get(response, 'syslogUIEnabled');
+					} else {
+						this.switchUrl.forEach(url => {
+							if (url === this.activeUrl) {
+								this.router.navigate(['/solution/insights/osv']);
+							}
+						});
 					}
 				}),
 				catchError(err => {

@@ -42,7 +42,7 @@
 			<div class="base-margin-bottom text-large">
 				<span [innerText]="'_OtherNotesOnCXCollector_' | i18n"></span>
 			</div>
-			<div class="flex-center xl-margin-bottom">
+			<div class="flex-center">
 				<ul class="flex-fluid">
 					<li [innerText]="'_DHCPIsSupported_' | i18n"></li>
 					<li [innerText]="'_OnlyIPv4IsSupported_' | i18n"></li>
@@ -64,10 +64,10 @@
 			<!-- 	<li class="base-margin-top" [innerText]="'_Day0_Setup_8_' | i18n"></li> -->
 			<!-- 	<li class="base-margin-top" [innerText]="'_Day0_Setup_9_' | i18n"></li> -->
 			<!-- </ul> -->
-			<!-- <a routerLink="solution" class="base-margin-top"> -->
-			<!-- 	<span class="icon-help-outline qtr-margin-right"></span> -->
-			<!-- 	<span [innerText]="'_Day0_Setup_10_' | i18n"></span> -->
-			<!-- </a> -->
+			<a (click)="openCollectorOverview()" data-auto-id="collector-overview-link" class="base-margin-top">
+				<span class="icon-help-outline qtr-margin-right"></span>
+				<span [innerText]="'_Day0_Setup_10_' | i18n"></span>
+			</a>
 		</div>
 	</section>
 
@@ -146,16 +146,27 @@
 	<!-- 	</div> -->
 	<!-- </section> -->
 
-	<div class="flex-center dbl-margin-top">
-		<button
-			data-auto-id="get-started-btn"
-			class="btn cx-btn base-margin-right"
-			[innerText]="'_Continue_' | i18n | uppercase"
-			(click)="onBegin()">
-		</button>
-
-		<span [innerText]="'_PressEnter_' | i18n"
-			class="text-medium text-uppercase cx-text-gray">
-		</span>
+	<div class="dbl-margin-top">
+			<div class="row">
+				<div class="col-6 text-right">
+					<div class="section__title--inline">
+						<button data-auto-id="get-started-btn"
+							class="btn cx-btn base-margin-right"
+							[innerText]="'_Continue_' | i18n | uppercase"
+							(click)="onBegin()">
+						</button>
+						<div [innerText]="'_PressEnter_' | i18n"
+							class="text-medium text-uppercase cx-text-gray text-center base-margin-right qtr-padding-top">
+						</div>
+					</div>
+				</div>
+				<div class="col-6 text-left">
+					<button data-auto-id="cancel-btn"
+						class="btn btn--secondary base-margin-right"
+						[innerText]="'_Cancel_' | i18n | uppercase"
+						[routerLink]="['/']">
+					</button>
+				</div>
+			</div>
 	</div>
 </div>

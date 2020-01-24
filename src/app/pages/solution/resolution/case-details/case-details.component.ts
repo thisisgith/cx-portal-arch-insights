@@ -11,13 +11,14 @@ import { CaseService, CaseDetails } from '@cui-x/services';
 import { CaseDetailsService } from 'src/app/services/case-details';
 import { Subject, forkJoin, of } from 'rxjs';
 import { LogService } from '@cisco-ngx/cui-services';
-import { tap, switchMap, takeUntil, catchError, filter } from 'rxjs/operators';
+import { tap, switchMap, takeUntil, catchError, filter, map } from 'rxjs/operators';
 import { Case } from '@interfaces';
 import * as _ from 'lodash-es';
 import { CuiModalService } from '@cisco-ngx/cui-components';
 import { CSCUploadService } from '@cui-x-views/csc';
 import { UserResolve } from '@utilities';
-import { InventoryService } from '@sdp-api';
+import { InventoryService, RacetrackSolution, RacetrackTechnology } from '@sdp-api';
+import { RacetrackInfoService } from '@services';
 
 /**
  * Case Details Component
@@ -44,12 +45,15 @@ export class CaseDetailsComponent implements OnInit, OnDestroy {
 	public numberOfFiles = 0;
 	public customerId: string;
 	public isAssetAvailable = false;
+	private selectedSolutionName: string;
+	private selectedTechnologyName: string;
 
 	constructor (
 		private caseService: CaseService,
 		private caseDetailsService: CaseDetailsService, private logger: LogService,
 		private cuiModalService: CuiModalService, private cscService: CSCUploadService,
 		private inventoryService: InventoryService, private userResolve: UserResolve,
+		private racetrackInfoService: RacetrackInfoService,
 	) {
 		this.userResolve.getCustomerId()
 		.pipe(
@@ -64,6 +68,31 @@ export class CaseDetailsComponent implements OnInit, OnDestroy {
 	 * Initialization hook
 	 */
 	public ngOnInit () {
+		this.buildRefreshSubject();
+		this.racetrackInfoService.getCurrentSolution()
+			.pipe(
+				takeUntil(this.destroy$),
+			)
+			.subscribe((solution: RacetrackSolution) => {
+				this.selectedSolutionName = _.get(solution, 'name');
+			});
+
+		this.racetrackInfoService.getCurrentTechnology()
+			.pipe(
+				takeUntil(this.destroy$),
+			)
+			.subscribe((technology: RacetrackTechnology) => {
+				if (this.selectedTechnologyName !== _.get(technology, 'name')) {
+					this.selectedTechnologyName = _.get(technology, 'name');
+				}
+				this.refresh();
+			});
+	}
+
+	/**
+	 * Refreshes the eox data
+	 */
+	private buildRefreshSubject () {
 		this.caseDetailsService.refreshNotesList(false);
 		this.refresh$.pipe(
 			tap(() => {
@@ -72,7 +101,7 @@ export class CaseDetailsComponent implements OnInit, OnDestroy {
 				this.numberOfFiles = 0;
 			}),
 			switchMap(() => forkJoin(
-				this.getCaseDetails(),
+				 this.getCaseDetails(),
 				this.getCaseNotes(),
 				this.caseDetailsService.getCaseFiles(this.case.caseNumber),
 				this.getAssetAvailability(),
@@ -134,8 +163,6 @@ export class CaseDetailsComponent implements OnInit, OnDestroy {
 			.subscribe(res => {
 				this.severity = res.severity;
 			});
-
-		this.refresh();
 	}
 
 	/**
@@ -159,7 +186,7 @@ export class CaseDetailsComponent implements OnInit, OnDestroy {
 		} else {
 			this.caseFiles = _.get(result,
 				['result', 'response', 'getBrokerResponse', 'downloadInfo'], []);
-			this.numberOfFiles = _.get(this.caseFiles, 'noOfFiles');
+			this.numberOfFiles = _.get(this.caseFiles, 'fileDetail').length;
 		}
 	}
 
@@ -169,7 +196,8 @@ export class CaseDetailsComponent implements OnInit, OnDestroy {
 	 */
 	public getCaseDetails () {
 		return this.caseService.fetchCaseDetails(this.case.caseNumber)
-			.pipe(
+		.pipe(
+				map((res: any) => res),
 				catchError(err => {
 					this.logger.error('casedetails.component : getCaseDetails() ' +
 						`:: Error : (${err.status}) ${err.message}`);
@@ -186,6 +214,7 @@ export class CaseDetailsComponent implements OnInit, OnDestroy {
 	public getCaseNotes () {
 		return this.caseService.fetchCaseNotes(this.case.caseNumber, true)
 			.pipe(
+				map((res: any) => res),
 				catchError(err => {
 					this.logger.error('casedetails.component : getCaseNotes() ' +
 						`:: Error : (${err.status}) ${err.message}`);
@@ -205,6 +234,8 @@ export class CaseDetailsComponent implements OnInit, OnDestroy {
 
 			return this.inventoryService.getHardware({
 				customerId: this.customerId,
+				solution: this.selectedSolutionName,
+				useCase: this.selectedTechnologyName,
 				serialNumber: [assetSerialNumber],
 			})
 			.pipe(

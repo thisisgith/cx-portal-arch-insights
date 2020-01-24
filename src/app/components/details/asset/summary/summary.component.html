@@ -8,10 +8,7 @@
 			'col-md-6': false,
 			'col-md-12': true
 		}">
-		<div *ngIf="status.loading.overall">
-			<cui-loader></cui-loader>
-		</div>
-		<div *ngIf="!status.loading.overall">
+		<div *ngIf="systemAsset">
 			<div class="text-xlarge cx-text-default device-name" [innerText]="systemAsset?.productFamily || hardwareAsset?.summary?.productFamily" data-auto-id="ProductFamily"></div>
 			<div data-auto-id="YouHaveInventory"
 				class="text-small qtr-margin-top cx-text-gray"
@@ -20,14 +17,14 @@
 			</div>
 		</div>
 		<div class="base-margin-top" *ngIf="status?.scan?.eligible && systemAsset.cxLevel > 0">
-			<button class="btn btn--primary text-uppercase"
+				<button class="btn btn--primary text-uppercase"
 				[ngClass]="{
-					'active': status.scan.inProgress
+					'active': (status.scan.inProgress || status.loading.action)
 				}"
 				(click)="initiateScan()"
 				data-auto-id="Asset360ScanBtn">
-				<span *ngIf="status.scan.inProgress" class="icon-animation spin qtr-margin-right"></span>
-				<span [innerText]="(status.scan.inProgress ? '_Scanning_' : '_RunDiagnosticScan_') | i18n"></span>
+				<span *ngIf="status.scan.inProgress || status.loading.action" class="icon-animation spin qtr-margin-right"></span>
+				<span [innerText]="((status.scan.inProgress || status.loading.action) ? '_Scanning_' : '_RunDiagnosticScan_') | i18n"></span>
 			</button>
 		</div>
 	</div>
@@ -115,12 +112,14 @@
 
 <ng-template #tagsData let-title="title" let-tags="tags">
 	<div class="row summary__details">
-		<div class="col-md-12 text-uppercase custom-tag-color" [innerText]="title | i18n" attr.data-auto-id="{{ title }}"></div>
+		<div class="col-md-12 text-uppercase summary__details__title cx-text-gray" [innerText]="title | i18n" attr.data-auto-id="{{ title }}"></div>
 	</div>
 	<div class="row">
-		<div class="label label--light half-margin-left" *ngFor="let tag of tags">
-			<span class="custom-tag-color text-center" [innerText]="tag?.tagName">
+		<div class="custom-tags custom-margin" *ngFor="let tag of tags">
+			<span class="custom-tag-color qtr-padding-left custom-tag-style" [innerText]="tag?.tagName">
+
 			</span>
 		</div>
 	</div>
 </ng-template>
+

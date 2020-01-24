@@ -1,6 +1,12 @@
 <header class="header header--compressed">
 	<div class="header-bar flex-center-sm container-fluid">
-		<a class="header-bar__logo hidden-xs" href="/" target="_blank" data-auto-id="HeaderCiscoLink">
+		<a 
+			class="header-bar__logo hidden-xs" 
+			href="https://www.cisco.com" 
+			target="_blank" 
+			data-auto-id="HeaderCiscoLink"
+			title="{{ '_CiscoLogo_' | i18n }}"
+		>
 			<span class="icon-cisco"></span>
 		</a>
 		<div class="header-bar__main">
@@ -43,7 +49,16 @@
 			</span>
 			<span class="v-separator" *ngIf="searchBreakpointShow(445, true)"></span> -->
 			<!-- User Profile -->
-			<span #userProfile class="cx-header-links cx-header-links--user" [ngClass]="{ 'cx-header-links--active': userProfile.active }" (click)="toggleDropdown(userProfileDropdown, userProfile)" [title]="'_UserProfile_' | i18n" [hidden]="!searchBreakpointShow(445, true)" data-auto-id="HeaderUserProfileButton">
+			<section>
+				<button 
+					#userProfile 
+					class="cx-header-links cx-header-links--user" 
+					[ngClass]="{ 'cx-header-links--active': userProfile.active }" 
+					(click)="toggleDropdown(userProfileDropdown, userProfile)" 
+					[title]="'_UserProfile_' | i18n" 
+					[hidden]="!searchBreakpointShow(445, true)" 
+					data-auto-id="HeaderUserProfileButton"
+				>				
 				<div class="flex-center">
 					<img class="cx-user-icon thumb thumb--bordered" [src]="userImage" alt="{{ '_UserProfile_' | i18n }}" (error)="updateProfileImage()">
 					<span class="cx-header-arrow qtr-margin-left hidden-lg hidden-xl hidden-xxl" [ngClass]="{ 'rotate-180': userProfile.active }">&#9662;</span>
@@ -52,15 +67,24 @@
 					<span class="cx-user-label text-center" [innerText]="'_HiX_' | i18n:name"></span>
 					<span class="cx-header-arrow qtr-margin-left" [ngClass]="{ 'rotate-180': userProfile.active }">&#9662;</span>
 				</div>
+			</button>
 				<div class="pull-right">
 					<header-dropdown #userProfileDropdown (click)="$event.stopPropagation();" (toggle)="userProfile.active = $event;" data-auto-id="HeaderUserProfileDropdown">
 						<ng-container *ngTemplateOutlet="userProfileDropdownTemplate"></ng-container>
 					</header-dropdown>
 				</div>
-			</span>
+			</section>
 			<!-- Cisco Team -->
 			<span *ngIf="team?.length" class="v-separator hidden-md hidden-sm hidden-xs"></span>
-			<span #ciscoTeam *ngIf="team?.length" class="cx-header-links cx-header-links--teams hidden-md hidden-sm hidden-xs" [ngClass]="{ 'cx-header-links--active': ciscoTeam.active }" (click)="toggleDropdown(ciscoTeamDropdown, ciscoTeam)" [title]="'_CiscoTeam_' | i18n" [hidden]="!searchBreakpointShow(445, true)" data-auto-id="HeaderCiscoTeamButton">
+			<section *ngIf="team?.length" >
+				<button #ciscoTeam 
+					class="cx-header-links cx-header-links--teams hidden-md hidden-sm hidden-xs" 
+					[ngClass]="{ 'cx-header-links--active': ciscoTeam.active }" 
+					(click)="toggleDropdown(ciscoTeamDropdown, ciscoTeam)" 
+					[title]="'_CiscoTeam_' | i18n" 
+					[hidden]="!searchBreakpointShow(445, true)" 
+					data-auto-id="HeaderCiscoTeamButton"
+				>				
 				<div class="flex-center">
 					<ng-container *ngFor="let member of team; let i = index">
 						<img *ngIf="i < 3" class="cx-user-icon thumb thumb--bordered" [src]="member.image" alt="{{ '_CiscoTeam_' | i18n }}">
@@ -71,35 +95,62 @@
 					<span class="cx-user-label text-center" [innerText]="'_CiscoTeam_' | i18n"></span>
 					<span class="cx-header-arrow qtr-margin-left" [ngClass]="{ 'rotate-180': ciscoTeam.active }">&#9662;</span>
 				</div>
+			</button>
 				<div class="pull-right">
 					<header-dropdown #ciscoTeamDropdown (click)="$event.stopPropagation();" (toggle)="ciscoTeam.active = $event;" data-auto-id="HeaderCiscoTeamDropdown">
 						<ng-container *ngTemplateOutlet="ciscoTeamDropdownTemplate"></ng-container>
 					</header-dropdown>
 				</div>
-			</span>
+			</section>
 			<!-- Settings and Help -->
 			<span class="v-separator hidden-md hidden-sm hidden-xs"></span>
 			<span 
 				class="cx-header-links cx-header-links--settings hidden-md hidden-sm hidden-xs"
 				*auth="{ whitelistRoles: settingsWhitelist }"
 			>
-				<div data-auto-id="Admin" [title]="'_Admin_' | i18n" [routerLink]="['admin']">
-					<span inlineSVG="/assets/icons/icon-settings.svg"
-						class="cx-header-icon text-xlarge flex-center no-margin"></span>
-				</div>
+			<a 
+			data-auto-id="Admin" 
+			[title]="'_Admin_' | i18n" 
+			[routerLink]="['admin']"
+		>
+			<span 
+				inlineSVG="/assets/icons/icon-settings.svg"
+				class="cx-header-icon text-xlarge flex-center no-margin"
+			></span>
+		</a>
 			</span>
-			<span #portalHelp class="cx-header-links cx-header-links--portal-help hidden-md hidden-sm hidden-xs" [ngClass]="{ 'cx-header-links--active': portalHelp.active }" (click)="toggleDropdown(portalHelpDropdown, portalHelp)" [title]="'_PortalHelp_' | i18n" data-auto-id="HeaderPortalHelpButton">
-				<div>
-					<span class="cx-header-icon text-xlarge icon-help-alt" [ngClass]="{ 'text-primary': portalHelp.active }"></span>
-					<span></span>
-					<span class="cx-header-arrow" [ngClass]="{ 'rotate-180': portalHelp.active }">&#9662;</span>
-				</div>
+			<section>
+				<button 
+					#portalHelp 
+					class="cx-header-links cx-header-links--portal-help hidden-md hidden-sm hidden-xs" 
+					[ngClass]="{ 'cx-header-links--active': portalHelp.active }" 
+					(click)="toggleDropdown(portalHelpDropdown, portalHelp)" 
+					[title]="'_PortalHelp_' | i18n" 
+					data-auto-id="HeaderPortalHelpButton"
+				>
+					<span class="sr-only">
+						{{ '_PortalHelp_' | i18n }}
+					</span>
+					<div>
+						<span 
+							class="cx-header-icon text-xlarge icon-help-alt" 
+							[ngClass]="{ 'text-primary': portalHelp.active }"
+						></span>
+						<span></span>
+						<span 
+							class="cx-header-arrow" 
+							[ngClass]="{ 'rotate-180': portalHelp.active }"
+						>
+							&#9662;
+						</span>
+					</div>
+				</button>
 				<div class="pull-right">
 					<header-dropdown #portalHelpDropdown (click)="$event.stopPropagation();" (toggle)="portalHelp.active = $event;" data-auto-id="HeaderPortalHelpDropdown">
 						<ng-container *ngTemplateOutlet="portalHelpDropdownTemplate"></ng-container>
 					</header-dropdown>
 				</div>
-			</span>
+			</section>
 			<span #menuButton *ngIf="searchBreakpointShow(445)" class="cx-header-links cx-header-links--more hidden-lg hidden-xl" (click)="toggleDropdown(menuButtonDropdown, menuButton)" data-auto-id="HeaderMenuButton">
 				<span class="cx-header-icon icon-more rotate-90" [ngClass]="{ 'text-primary': menuButton.active }"></span>
 				<div class="pull-right">
@@ -157,18 +208,44 @@
 		</span>
 	</div>
 	<div *ngFor="let link of profileLinks" class="text-small">
-		<a [innerText]="link.name" [href]="link.href"></a>
+		<a [target]="link.target" [innerText]="link.name" [href]="link.href"></a>
 	</div>
 </ng-template>
 
 <ng-template #portalHelpDropdownTemplate>
-	<ng-container *ngFor="let link of portalHelpLinks">
-		<!-- TODO: This is the feedback link to cx-portal-support@cisco.com -->
-		<div class="text-muted text-small text-uppercase" [innerText]="'_PortalHelp_' | i18n"></div>
-		<div>
-			<a class="text-small" [innerText]="link.name" data-auto-id="portalHelp" (click)="openPortalSupport()"></a>
+	<div class="links">
+		<div class="links__title">{{ '_PortalHelp_' | i18n}}</div>
+		<div *ngFor="let link of portalHelpLinks">
+			<a class="links__support" 
+				[href]="link.url"
+				target="_blank"
+				[innerText]="link.name" 
+				data-auto-id="portalHelp"
+			></a>
 		</div>
-	</ng-container>
+		<button class="link links__btn"
+			(click)="openPortalSupport()"
+			data-auto-id="portalSupport"
+		>{{'_PortalSupport_' | i18n}}
+		</button>
+		<div>
+			<a class="links__support links__support--relnotes" 
+				[href]="releaseNotes.url"
+				target="_blank"
+				[innerText]="releaseNotes.name"
+				data-auto-id="release-notes"
+			></a>
+		</div>
+		<div class="divider links__divider"></div>
+		<div *ngFor="let vendorLink of vendorLinks">
+			<a class="links__vendor"
+				[innerText]="vendorLink.name"
+				[href]="vendorLink.url"
+				target="_blank"
+				data-auto-id="vendor-links"
+			></a>
+		</div>
+	</div>
 </ng-template>
 
 <ng-template #ciscoTeamDropdownTemplate>

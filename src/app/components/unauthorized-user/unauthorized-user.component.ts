@@ -7,4 +7,8 @@ import { Component } from '@angular/core';
 	selector: 'app-unauthorized-user',
 	templateUrl: './unauthorized-user.component.html',
 })
-export class UnauthorizedUserComponent { }
+export class UnauthorizedUserComponent {
+	public data: {
+		message?: string,
+	} = { };
+}

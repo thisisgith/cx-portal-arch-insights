@@ -1,5 +1,6 @@
 @import '~cisco-ui/src/scss/utilities/_variables.scss';
 @import '~src/variables.scss';
+@import '~src/mixins.scss';
 
 $popover-box-shadow: 0 2px 4px 0 rgba(252, 220, 220, 0.14), 0 3px 4px 0 rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
 
@@ -7,7 +8,7 @@ $popover-box-shadow: 0 2px 4px 0 rgba(252, 220, 220, 0.14), 0 3px 4px 0 rgba(0, 
 	position: absolute;
 	top: 0;
 	right: 11px;
-	font-size: 21px;
+	font-size: 2.1rem;
 }
 
 %ribbon__outline {
@@ -19,8 +20,8 @@ $popover-box-shadow: 0 2px 4px 0 rgba(252, 220, 220, 0.14), 0 3px 4px 0 rgba(0, 
 
 %cx-lifecycle-card-link {
 	color: $default-text-color;
-	font-size: 13px;
-	line-height: 18px;
+	font-size: 1.3rem;
+	line-height: 1.8rem;
 
 	&:hover {
 		color: $base-link-color;
@@ -49,13 +50,13 @@ $popover-box-shadow: 0 2px 4px 0 rgba(252, 220, 220, 0.14), 0 3px 4px 0 rgba(0, 
 :host ::ng-deep .modal__header {
 	&__title {
 		font-weight: 300;
-		letter-spacing: 0.3px;
-		font-size: 32px;
-		line-height: 32px;
+		letter-spacing: 0.03rem;
+		font-size: 3.2rem;
+		line-height: 3.2rem;
 	}
 
 	&__description {
-		font-size: 13px;
+		font-size: 1.3rem;
 	}
 }
 
@@ -67,7 +68,7 @@ $popover-box-shadow: 0 2px 4px 0 rgba(252, 220, 220, 0.14), 0 3px 4px 0 rgba(0, 
 
 	&__topics {
 		flex-grow: 1;
-		font-size: 15px;
+		font-size: 1.5rem;
 	}
 
 	&__filter {
@@ -134,7 +135,7 @@ $popover-box-shadow: 0 2px 4px 0 rgba(252, 220, 220, 0.14), 0 3px 4px 0 rgba(0, 
 
 .actionname__text {
 	flex-grow: 1;
-	font-size: 14px;
+	font-size: 1.4rem;
 
 	&--complete {
 		color: $default-text-color;
@@ -173,6 +174,12 @@ $popover-box-shadow: 0 2px 4px 0 rgba(252, 220, 220, 0.14), 0 3px 4px 0 rgba(0, 
 	}
 }
 
+:host ::ng-deep input:focus ~ .checkbox__input {
+	&::before {
+		@include keyboard-focus-outline;
+	}
+}
+
 .actionname.selected .checkbox input:checked ~ .checkbox__input::before {
 	background: transparent !important;
 }
@@ -183,7 +190,7 @@ $popover-box-shadow: 0 2px 4px 0 rgba(252, 220, 220, 0.14), 0 3px 4px 0 rgba(0, 
 
 .checkbox-complete::after {
 	color: $accent-color1 !important;
-	font-size: 18px !important;
+	font-size: 1.8rem !important;
 }
 
 :host ::ng-deep .lifecycle-filter input,
@@ -207,13 +214,13 @@ $popover-box-shadow: 0 2px 4px 0 rgba(252, 220, 220, 0.14), 0 3px 4px 0 rgba(0, 
 	margin-bottom: 10px;
 
 	a {
-		letter-spacing: -0.33px;
+		letter-spacing: -0.033rem;
 
 		@extend %cx-lifecycle-card-link;
 	}
 
 	span {
-		letter-spacing: -0.19px;
+		letter-spacing: -0.019rem;
 
 		@extend %cx-lifecycle-card-link;
 	}
@@ -262,15 +269,15 @@ $popover-box-shadow: 0 2px 4px 0 rgba(252, 220, 220, 0.14), 0 3px 4px 0 rgba(0, 
 			padding-left: 20px;
 			overflow: scroll;
 			margin: 15px 0 15px 0;
-			font-size: 13px;
-			line-height: 17px;
+			font-size: 1.3rem;
+			line-height: 1.7rem;
 		}
 
 		&__label {
-			line-height: 10px;
+			line-height: 1rem;
 
 			span {
-				font-size: 10px !important;
+				font-size: 1rem !important;
 			}
 		}
 
@@ -352,7 +359,7 @@ $popover-box-shadow: 0 2px 4px 0 rgba(252, 220, 220, 0.14), 0 3px 4px 0 rgba(0, 
 .cx-lifecycle-card .icon-certified {
 	height: 17px;
 	padding: unset;
-	font-size: 17px;
+	font-size: 1.7rem;
 }
 
 .cx-lifecycle-card--recommended .item-status {
@@ -368,9 +375,9 @@ $popover-box-shadow: 0 2px 4px 0 rgba(252, 220, 220, 0.14), 0 3px 4px 0 rgba(0, 
 		display: inline-block;
 		margin-left: 7px;
 		color: $default-text-color;
-		font-size: 13px;
-		letter-spacing: -0.33px;
-		line-height: 17px;
+		font-size: 1.3rem;
+		letter-spacing: -0.033rem;
+		line-height: 1.7rem;
 	}
 }
 
@@ -378,9 +385,9 @@ $popover-box-shadow: 0 2px 4px 0 rgba(252, 220, 220, 0.14), 0 3px 4px 0 rgba(0, 
 	position: relative;
 	display: inline-block;
 	color: $secondary-and-button-text-color;
-	font-size: 16px;
-	letter-spacing: -0.33px;
-	line-height: 18px;
+	font-size: 1.6rem;
+	letter-spacing: -0.033rem;
+	line-height: 1.8rem;
 
 	&::after {
 		position: absolute;
@@ -395,8 +402,8 @@ $popover-box-shadow: 0 2px 4px 0 rgba(252, 220, 220, 0.14), 0 3px 4px 0 rgba(0, 
 
 .icon-communities + .cx-lifecycle-card--title {
 	color: $text-dark-gray-2;
-	font-size: 14px;
-	letter-spacing: -0.2px;
+	font-size: 1.4rem;
+	letter-spacing: -0.02rem;
 }
 
 .hover-panel {
@@ -420,7 +427,7 @@ $popover-box-shadow: 0 2px 4px 0 rgba(252, 220, 220, 0.14), 0 3px 4px 0 rgba(0, 
 	}
 
 	.icon {
-		font-size: 15px;
+		font-size: 1.5rem;
 		color: $icon-light-gray;
 
 		&--svg {
@@ -461,26 +468,31 @@ $popover-box-shadow: 0 2px 4px 0 rgba(252, 220, 220, 0.14), 0 3px 4px 0 rgba(0, 
 	&--moreATXList,
 	&--moreACCList,
 	&--recommendedATX,
+	&--recommendedACC,
 	&--viewAllTable {
 		padding: 22px 0 22px 28px;
 
 		.atx-popover__title,
 		.acc-popover__title {
 			color: $text-dark-gray-2;
-			font-size: 16px;
-			line-height: 19px;
+			font-size: 1.6rem;
+			line-height: 1.9rem;
 		}
 
 		.atx-popover__description,
 		.acc-popover__description {
 			font-size: 1.2rem;
-			line-height: 17px;
+			line-height: 1.7rem;
 			color: $default-text-color;
 			padding-right: 28px;
 		}
 
 		.acc-popover__description {
 			margin-bottom: 18px;
+		}
+
+		.acc-popover__datasheet {
+			margin: 1rem 0;
 		}
 
 		.atx-popover__footer {
@@ -494,15 +506,15 @@ $popover-box-shadow: 0 2px 4px 0 rgba(252, 220, 220, 0.14), 0 3px 4px 0 rgba(0, 
 
 			.icon-clock,
 			.icon-check-outline {
-				font-size: 10px;
+				font-size: 1rem;
 				color: $icon-light-gray;
 				height: unset;
 			}
 
 			&__text {
-				font-size: 10px;
+				font-size: 1rem;
 				color: $text-blue-gray;
-				letter-spacing: 0.07px;
+				letter-spacing: 0.007rem;
 			}
 		}
 
@@ -511,8 +523,8 @@ $popover-box-shadow: 0 2px 4px 0 rgba(252, 220, 220, 0.14), 0 3px 4px 0 rgba(0, 
 			border: 1px solid $button-outline-color;
 			border-radius: 12.5px;
 			color: $secondary-and-button-text-color;
-			font-size: 12px;
-			line-height: 16px;
+			font-size: 1.2rem;
+			line-height: 1.6rem;
 			padding: 3px 12px;
 		}
 	}
@@ -520,8 +532,8 @@ $popover-box-shadow: 0 2px 4px 0 rgba(252, 220, 220, 0.14), 0 3px 4px 0 rgba(0, 
 
 .cx-lifecycle-card--subtitle {
 	color: $light-gray-text-color;
-	font-size: 12px;
-	line-height: 16px;
+	font-size: 1.2rem;
+	line-height: 1.6rem;
 	flex-basis: 100%;
 }
 
@@ -542,17 +554,17 @@ $popover-box-shadow: 0 2px 4px 0 rgba(252, 220, 220, 0.14), 0 3px 4px 0 rgba(0, 
 	& > span.icon-certified,
 	& > span.icon-clipboard-md {
 		color: $icon-light-gray-2;
-		font-size: 14px;
-		line-height: 14px;
+		font-size: 1.4rem;
+		line-height: 1.4rem;
 	}
 
 	& > span.text-uppercase {
 		margin-left: 8px;
 		margin-right: auto;
 		color: $gray-text-color;
-		font-size: 14px;
-		letter-spacing: -0.2px;
-		line-height: 18px;
+		font-size: 1.4rem;
+		letter-spacing: -0.02rem;
+		line-height: 1.8rem;
 	}
 
 	.subheader-icon {
@@ -567,16 +579,16 @@ $popover-box-shadow: 0 2px 4px 0 rgba(252, 220, 220, 0.14), 0 3px 4px 0 rgba(0, 
 
 .cx-lifecycle-card--more {
 	color: $text-dark-gray-2;
-	font-size: 12px;
-	letter-spacing: 0.43px;
-	line-height: 18px;
+	font-size: 1.2rem;
+	letter-spacing: 0.043rem;
+	line-height: 1.8rem;
 }
 
 .cx-lifecycle-card--scheduled {
 	margin: unset;
 	color: $default-text-color;
-	font-size: 13px;
-	line-height: 17px;
+	font-size: 1.3rem;
+	line-height: 1.7rem;
 }
 
 .cx-lifecycle-card--cgt-session div.row {
@@ -589,8 +601,8 @@ $popover-box-shadow: 0 2px 4px 0 rgba(252, 220, 220, 0.14), 0 3px 4px 0 rgba(0, 
 
 .cx-lifecycle-card--cgt-session div.text-med,
 .cx-lifecycle-card--cgt-session div.text-small {
-	font-size: 13px;
-	line-height: 13px;
+	font-size: 1.3rem;
+	line-height: 1.3rem;
 }
 
 .cx-lifecycle-card--cgt-session div.text-med {
@@ -664,7 +676,7 @@ $popover-box-shadow: 0 2px 4px 0 rgba(252, 220, 220, 0.14), 0 3px 4px 0 rgba(0, 
 
 	&__title {
 		display: inline-block;
-		font-size: 14px;
+		font-size: 1.4rem;
 		margin: 5px 0;
 		position: relative;
 
@@ -678,13 +690,13 @@ $popover-box-shadow: 0 2px 4px 0 rgba(252, 220, 220, 0.14), 0 3px 4px 0 rgba(0, 
 					.acc-popover {
 						&__title {
 							color: $text-dark-gray-2;
-							font-size: 16px;
-							line-height: 19px;
+							font-size: 1.6rem;
+							line-height: 1.9rem;
 						}
 
 						&__description {
 							font-size: 1.2rem;
-							line-height: 19px;
+							line-height: 1.9rem;
 							color: $default-text-color;
 							padding-right: 28px;
 							margin-bottom: 18px;
@@ -704,9 +716,9 @@ $popover-box-shadow: 0 2px 4px 0 rgba(252, 220, 220, 0.14), 0 3px 4px 0 rgba(0, 
 			color: $dark-gray-2;
 			border: 1px solid $button-outline-color;
 			border-radius: 12px;
-			font-size: 12px;
-			letter-spacing: 0.1px;
-			line-height: 17px;
+			font-size: 1.2rem;
+			letter-spacing: 0.01rem;
+			line-height: 1.7rem;
 			box-shadow: unset;
 		}
 
@@ -716,20 +728,20 @@ $popover-box-shadow: 0 2px 4px 0 rgba(252, 220, 220, 0.14), 0 3px 4px 0 rgba(0, 
 
 		.icon-flagged {
 			color: $icon-light-gray-2;
-			font-size: 8px;
+			font-size: 0.8rem;
 		}
 
 		.icon-communities {
 			margin-right: 7px;
 			padding: unset;
 			color: $icon-light-gray-2;
-			font-size: 14px;
-			line-height: 14px;
+			font-size: 1.4rem;
+			line-height: 1.4rem;
 		}
 
 		.icon-calendar {
 			padding: unset;
-			font-size: 16px;
+			font-size: 1.6rem;
 		}
 
 		img {
@@ -740,15 +752,15 @@ $popover-box-shadow: 0 2px 4px 0 rgba(252, 220, 220, 0.14), 0 3px 4px 0 rgba(0, 
 			margin-top: 14px;
 			margin-left: 2px;
 			color: $light-gray-text-color;
-			font-size: 10px !important;
-			line-height: 18px;
+			font-size: 1rem !important;
+			line-height: 1.8rem;
 		}
 
 		div.text-large {
 			padding-bottom: 16px;
 			color: $default-text-color;
-			font-size: 14px !important;
-			line-height: 20px !important;
+			font-size: 1.4rem !important;
+			line-height: 2rem !important;
 		}
 
 		.force-flex {
@@ -770,15 +782,15 @@ $popover-box-shadow: 0 2px 4px 0 rgba(252, 220, 220, 0.14), 0 3px 4px 0 rgba(0, 
 	.icon-play {
 		margin-left: 5px;
 		color: $default-link-color;
-		font-size: 9px;
-		line-height: 14px;
+		font-size: 0.9rem;
+		line-height: 1.4rem;
 		transform: scaleX(0.625);
 	}
 
 	.text-med {
 		color: $default-link-color;
-		font-size: 12px;
-		line-height: 18px;
+		font-size: 1.2rem;
+		line-height: 1.8rem;
 	}
 }
 
@@ -798,7 +810,7 @@ $popover-box-shadow: 0 2px 4px 0 rgba(252, 220, 220, 0.14), 0 3px 4px 0 rgba(0, 
 				padding: 0 5px 0 25px !important;
 				border: 0 !important;
 				color: $default-text-color !important;
-				font-size: 13px;
+				font-size: 1.3rem;
 
 				&.selected {
 					background-color: #ecf4fc !important;
@@ -810,7 +822,7 @@ $popover-box-shadow: 0 2px 4px 0 rgba(252, 220, 220, 0.14), 0 3px 4px 0 rgba(0, 
 
 				&::after {
 					left: 5px;
-					font-size: 16px;
+					font-size: 1.6rem;
 				}
 
 				&:hover {
@@ -826,7 +838,7 @@ $popover-box-shadow: 0 2px 4px 0 rgba(252, 220, 220, 0.14), 0 3px 4px 0 rgba(0, 
 		border-bottom: 1px solid $light-gray-text-color !important;
 		border-radius: 0 !important;
 		color: $default-text-color !important;
-		font-size: 13px;
+		font-size: 1.3rem;
 
 		&:focus {
 			box-shadow: none;
@@ -843,7 +855,7 @@ $popover-box-shadow: 0 2px 4px 0 rgba(252, 220, 220, 0.14), 0 3px 4px 0 rgba(0, 
 
 	label {
 		color: $secondary-and-button-text-color;
-		font-size: 12px;
+		font-size: 1.2rem;
 		position: absolute;
 		left: -55px;
 		margin: 0;
@@ -859,7 +871,7 @@ $popover-box-shadow: 0 2px 4px 0 rgba(252, 220, 220, 0.14), 0 3px 4px 0 rgba(0, 
 }
 
 .card_footer_item span[class*="icon-"] {
-	font-size: 18px;
+	font-size: 1.8rem;
 }
 
 .small-panel {
@@ -880,7 +892,7 @@ $popover-box-shadow: 0 2px 4px 0 rgba(252, 220, 220, 0.14), 0 3px 4px 0 rgba(0, 
 		height: 280px;
 
 		&__archetype {
-			font-size: 10px;
+			font-size: 1rem;
 			padding: 0 30px 0 20px;
 			margin-top: 25px;
 		}
@@ -892,14 +904,14 @@ $popover-box-shadow: 0 2px 4px 0 rgba(252, 220, 220, 0.14), 0 3px 4px 0 rgba(0, 
 		&__header {
 			@extend .atx__card__header;
 
-			font-size: 16px;
+			font-size: 1.6rem;
 			margin-bottom: 8px;
 		}
 
 		&__body {
 			@extend .atx__card__body;
 
-			font-size: 12px;
+			font-size: 1.2rem;
 			margin: 8px 0;
 		}
 
@@ -922,11 +934,11 @@ $popover-box-shadow: 0 2px 4px 0 rgba(252, 220, 220, 0.14), 0 3px 4px 0 rgba(0, 
 				margin-right: 15px;
 
 				span {
-					font-size: 11px;
+					font-size: 1.1rem;
 					color: $icon-light-gray;
 
 					&[class*="icon-"] {
-						font-size: 14px;
+						font-size: 1.4rem;
 					}
 				}
 			}
@@ -962,16 +974,16 @@ $popover-box-shadow: 0 2px 4px 0 rgba(252, 220, 220, 0.14), 0 3px 4px 0 rgba(0, 
 	cursor: default;
 
 	.list-view__col {
-		font-size: 13px;
+		font-size: 1.3rem;
 		color: $secondary-and-button-text-color;
 
 		&--highlight {
-			font-size: 14px;
+			font-size: 1.4rem;
 			font-weight: bold;
 		}
 
 		.icon {
-			font-size: 18px;
+			font-size: 1.8rem;
 			color: $icon-light-gray;
 			margin-top: -3px;
 
@@ -1004,8 +1016,8 @@ $popover-box-shadow: 0 2px 4px 0 rgba(252, 220, 220, 0.14), 0 3px 4px 0 rgba(0, 
 		box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.14);
 
 		&__header {
-			font-size: 11px !important;
-			line-height: 11px;
+			font-size: 1.1rem !important;
+			line-height: 1.1rem;
 		}
 
 		&__image {
@@ -1124,7 +1136,7 @@ $popover-box-shadow: 0 2px 4px 0 rgba(252, 220, 220, 0.14), 0 3px 4px 0 rgba(0, 
 	background-color: $white;
 
 	.message {
-		line-height: 25px;
+		line-height: 2.5rem;
 		width: 320px;
 		margin-left: 40px;
 	}
@@ -1135,7 +1147,6 @@ $popover-box-shadow: 0 2px 4px 0 rgba(252, 220, 220, 0.14), 0 3px 4px 0 rgba(0, 
 .cardpanel--openright,
 .listpanel--open {
 	box-shadow: $popover-box-shadow;
-	height: 360px;
 	width: 500px;
 	position: absolute;
 	z-index: 3;
@@ -1179,7 +1190,7 @@ $popover-box-shadow: 0 2px 4px 0 rgba(252, 220, 220, 0.14), 0 3px 4px 0 rgba(0, 
 	}
 
 	.icon-bookmark {
-		font-size: 21px;
+		font-size: 2.1rem;
 		right: 45px;
 	}
 
@@ -1190,7 +1201,7 @@ $popover-box-shadow: 0 2px 4px 0 rgba(252, 220, 220, 0.14), 0 3px 4px 0 rgba(0, 
 
 		.icon-close {
 			color: #b4b6b8;
-			font-size: 15px;
+			font-size: 1.5rem;
 		}
 	}
 }
@@ -1198,14 +1209,14 @@ $popover-box-shadow: 0 2px 4px 0 rgba(252, 220, 220, 0.14), 0 3px 4px 0 rgba(0, 
 .atx-more-popover {
 	&__title {
 		color: $gray-text-color;
-		font-size: 16px;
-		line-height: 19px;
+		font-size: 1.6rem;
+		line-height: 1.9rem;
 	}
 
 	&__description {
 		color: $default-text-color;
-		font-size: 13px;
-		line-height: 17px;
+		font-size: 1.3rem;
+		line-height: 1.7rem;
 		padding-right: 30px;
 	}
 
@@ -1286,7 +1297,6 @@ tr.td-row td {
 
 	.table {
 		margin-top: 0;
-		cursor: pointer;
 
 		thead {
 			display: block;
@@ -1295,7 +1305,7 @@ tr.td-row td {
 				height: 28px;
 
 				td {
-					font-size: 11px;
+					font-size: 1.1rem;
 					color: $default-text-color;
 					text-transform: uppercase;
 					padding: 4px 8px;
@@ -1308,7 +1318,7 @@ tr.td-row td {
 			}
 
 			.table__head-spacer {
-				width: 172px;
+				width: 177px;
 			}
 		}
 
@@ -1321,6 +1331,7 @@ tr.td-row td {
 				height: 28px;
 				padding: 0;
 				width: 100%;
+				cursor: pointer;
 
 				&::after {
 					display: none;
@@ -1335,13 +1346,23 @@ tr.td-row td {
 					padding: 4px 8px;
 					width: auto;
 					text-align: left;
-					font-size: 13px;
-					line-height: 13px;
-					letter-spacing: -0.03px;
+					font-size: 1.3rem;
+					line-height: 1.3rem;
+					letter-spacing: -0.003rem;
 					border: 0;
 					overflow: hidden;
 					text-overflow: ellipsis;
 					white-space: nowrap;
+
+					span.session-date {
+						width: 112px;
+						display: block;
+					}
+
+					&:first-of-type {
+						display: block;
+						width: 30px;
+					}
 
 					&:last-of-type {
 						width: 100%;
@@ -1350,6 +1371,11 @@ tr.td-row td {
 
 				&.scheduled td {
 					font-weight: bold;
+
+					&:first-of-type {
+						display: table-cell;
+						width: auto;
+					}
 
 					&.icon {
 						color: $accent-color1;
@@ -1383,6 +1409,10 @@ tr.td-row td {
 	height: 20px;
 }
 
+.checklist-description {
+	font-size: 1.2rem;
+}
+
 .pitstop-title {
 	float: left;
 	width: 33%;
@@ -1406,14 +1436,14 @@ tr.td-row td {
 
 .pitstop-checklist p {
 	font-weight: 300;
-	line-height: 16px;
+	line-height: 1.6rem;
 }
 
 .pitstop-checklist__title {
 	display: flex;
 	align-items: flex-start;
-	font-size: 16px;
-	line-height: 20px;
+	font-size: 1.6rem;
+	line-height: 2rem;
 }
 
 .pitstop-checklist__flag {
@@ -1428,6 +1458,10 @@ tr.td-row td {
 	max-width: 15px;
 	height: 30px;
 	width: 10%;
+}
+
+.race-track-description {
+	font-size: 1.4rem;
 }
 
 .ribbon {
@@ -1552,9 +1586,9 @@ tr.td-row td {
 	}
 
 	#atxtitle h5 {
-		font-size: 16px;
+		font-size: 1.6rem;
 		color: $text-dark-gray-2;
-		line-height: 19px;
+		line-height: 1.9rem;
 	}
 
 	.icon-close {
@@ -1563,8 +1597,8 @@ tr.td-row td {
 		right: 15px;
 
 		&::before {
-			font-size: 13px !important;
-			line-height: 13px !important;
+			font-size: 1.3rem !important;
+			line-height: 1.3rem !important;
 			color: $text-blue-gray;
 		}
 	}
@@ -1589,20 +1623,20 @@ tr.td-row td {
 
 		h6 {
 			color: $default-text-color;
-			font-size: 14px;
-			line-height: 16px;
+			font-size: 1.3rem;
+			line-height: 1.6rem;
 			font-weight: normal;
 		}
 
 		.icon-clock::before {
-			font-size: 12px !important;
-			line-height: 14px !important;
+			font-size: 1.2rem !important;
+			line-height: 1.4rem !important;
 			color: $text-blue-gray;
 			margin-right: 4px;
 		}
 
 		.text-xsmall {
-			line-height: 14px !important;
+			line-height: 1.4rem !important;
 			color: $text-blue-gray;
 			margin-left: 4px;
 		}
@@ -1610,8 +1644,6 @@ tr.td-row td {
 
 	.atx-scheduler__footer {
 		margin-top: 20px;
-		position: absolute;
-		//bottom: 20px;
 
 		a:hover {
 			text-decoration: none;
@@ -1624,9 +1656,9 @@ tr.td-row td {
 			display: flex;
 			justify-content: center;
 			align-items: center;
-			font-size: 13px;
+			font-size: 1.3rem;
 			font-weight: bold;
-			line-height: 18px;
+			line-height: 1.8rem;
 			text-transform: uppercase;
 			margin-right: 12px;
 
@@ -1647,13 +1679,13 @@ tr.td-row td {
 
 		.learning-popover__title {
 			color: $text-dark-gray-2;
-			font-size: 16px;
-			line-height: 19px;
+			font-size: 1.6rem;
+			line-height: 1.9rem;
 		}
 
 		.learning-popover__description {
 			font-size: 1.2rem;
-			line-height: 19px;
+			line-height: 1.9rem;
 			color: $default-text-color;
 			padding-right: 28px;
 			min-height: 38px;
@@ -1666,15 +1698,15 @@ tr.td-row td {
 			padding-right: 28px;
 
 			.icon-clock {
-				font-size: 10px;
+				font-size: 1rem;
 				color: $icon-light-gray;
 			}
 
 			&__text {
-				font-size: 10px;
+				font-size: 1rem;
 				color: $text-blue-gray;
 				margin-top: 3px;
-				letter-spacing: 0.07px;
+				letter-spacing: 0.007rem;
 			}
 		}
 	}
@@ -1686,13 +1718,13 @@ tr.td-row td {
 	&--successbytes {
 		.sb-popover__title {
 			color: $text-dark-gray-2;
-			font-size: 16px;
-			line-height: 19px;
+			font-size: 1.6rem;
+			line-height: 1.9rem;
 		}
 
 		.sb-popover__description {
 			font-size: 1.2rem;
-			line-height: 19px;
+			line-height: 1.9rem;
 			color: $default-text-color;
 			padding-right: 28px;
 		}
@@ -1709,7 +1741,7 @@ tr.td-row td {
 				align-items: center;
 
 				.icon-clock {
-					font-size: 10px;
+					font-size: 1rem;
 					color: $icon-light-gray;
 				}
 			}
@@ -1719,17 +1751,17 @@ tr.td-row td {
 				.icon-play-contained,
 				.icon-file-pdf-o,
 				.icon-document {
-					font-size: 10px;
+					font-size: 1rem;
 					color: $icon-light-gray;
 				}
 			}
 
 			.item-type__text,
 			&__text {
-				font-size: 10px;
+				font-size: 1rem;
 				color: $text-blue-gray;
-				letter-spacing: 0.07px;
-				line-height: 14px;
+				letter-spacing: 0.007rem;
+				line-height: 1.4rem;
 				margin-top: 3px;
 			}
 		}
@@ -1755,9 +1787,9 @@ tr.td-row td {
 
 	.text-blue {
 		color: $default-text-color !important;
-		font-size: 13px;
-		letter-spacing: -0.33px;
-		line-height: 18px;
+		font-size: 1.3rem;
+		letter-spacing: -0.033rem;
+		line-height: 1.8rem;
 	}
 
 	&:last-of-type {
@@ -1803,7 +1835,7 @@ polygon {
 	text-align: center;
 	font-style: italic;
 	font-style: bold;
-	font-size: 20px;
+	font-size: 2rem;
 	fill: white;
 }
 
@@ -1811,15 +1843,9 @@ polygon {
 	height: 100%;
 }
 
-// leave the following here, just in case we will use this style
-// ::ng-deep .cui .dropdown__menu a.selected {
-// 	color:$vibblue !important;
-// 	background-color: transparent !important;
-// }
-
 .bookmark-column .icon-bookmark {
-	font-size: 20px;
-	line-height: 20px;
+	font-size: 2rem;
+	line-height: 2rem;
 	cursor: pointer;
 }
 
@@ -1856,4 +1882,8 @@ polygon {
 .hover-panel--moreACCList,
 .hover-panel--recommendedATX {
 	min-height: auto !important;
+}
+
+.button-reset {
+	@include button-reset();
 }

@@ -1,16 +1,18 @@
-import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, TemplateRef } from '@angular/core';
 import {
 	ControlPointAdminComplienceService,
 	RightTagResponse,
 	LeftTagResponse,
 	AssetTaggingService,
 	CanDeactivateGuard,
-	DeactivationGuarded,
-} from '@sdp-api';
+	PolicyGroupDetails,
+	DeactivationGuarded } from '@sdp-api';
 
 import { User } from '@interfaces';
 import { ActivatedRoute } from '@angular/router';
-import { Subject, of, forkJoin , Observable } from 'rxjs';
+
+import { Subject, of, forkJoin, Observable } from 'rxjs';
+
 import { catchError, takeUntil, map } from 'rxjs/operators';
 import { RouteAuthService } from '@services';
 
@@ -26,7 +28,7 @@ import { CuiModalService } from '@cisco-ngx/cui-components';
 	styleUrls: ['./admin-complience.component.scss'],
 	templateUrl: './admin-complience.component.html',
 })
-export class AdminComplienceComponent implements OnInit , DeactivationGuarded {
+export class AdminComplienceComponent implements OnInit , DeactivationGuarded, OnDestroy {
 	@ViewChild('confirmationModalTemplate',
 	{ static: true }) private confirmationModalTemplate: TemplateRef<string>;
 
@@ -49,6 +51,7 @@ export class AdminComplienceComponent implements OnInit , DeactivationGuarded {
 	public enableSaveButton: boolean;
 	public leftSideTagsResponse: LeftTagResponse;
 	public rightSideTagsResponse: RightTagResponse;
+	public policyGroupDetails: PolicyGroupDetails;
 	public selectedPolicy = 'select';
 	public leftSideTags = [];
 	public clonedLeftTags = [];
@@ -58,7 +61,7 @@ export class AdminComplienceComponent implements OnInit , DeactivationGuarded {
 	public saveDetails: AssetTaggingService.PostParams = {
 		body: {
 			customerId: '',
-			policy: '',
+			policy: 'select',
 			tags: [],
 			toBeScanned : false,
 		},
@@ -72,6 +75,7 @@ export class AdminComplienceComponent implements OnInit , DeactivationGuarded {
 	public triggerModal = '';
 	public hideAssetTags = true;
 	public allInventorySelected: boolean;
+	public defaultValue = 'Select';
 
 	constructor (
 		public cuiModalService: CuiModalService,
@@ -91,20 +95,6 @@ export class AdminComplienceComponent implements OnInit , DeactivationGuarded {
 	 * Function which instanstiates the settings page to the initial view
 	 */
 	public ngOnInit () {
-		this.policies = [
-			{
-				name: 'select',
-				value: true,
-			},
-			{
-				name: 'HIPAA',
-				value: false,
-			},
-			{
-				name: 'PCI',
-				value: false,
-			},
-		];
 		this.checkOptlnStatus();
 		this.initializeDetails();
 	}
@@ -115,7 +105,6 @@ export class AdminComplienceComponent implements OnInit , DeactivationGuarded {
 	public initializeDetails () {
 		this.saveDetails.body.policy = 'select';
 		this.saveDetails.body.tags = [];
-		this.saveDetails.body.toBeScanned = false;
 		this.selectedDeviceTagType = 'allDevices';
 	}
 
@@ -128,10 +117,12 @@ export class AdminComplienceComponent implements OnInit , DeactivationGuarded {
 		this.getOptinOutStatus()
 			.subscribe((results: any) => {
 				this.optlnStatus = results.data.rccOptInStatus;
-				if (this.optlnStatus) {
-					this.getLeftSideTags()
+				// if (this.optlnStatus) {
+				this.getPolicies()
+					.subscribe();
+				this.getLeftSideTags()
 						.subscribe();
-				}
+				// }
 			});
 
 		return this.routeAuthService.checkPermissions(this.customerId)
@@ -195,7 +186,6 @@ export class AdminComplienceComponent implements OnInit , DeactivationGuarded {
 		};
 		forkJoin(
 			this.assetTaggingService.updateOptStatus(params),
-			this.assetTaggingService.deleteMapping(params),
 		)
 		.pipe(
 			takeUntil(this.destroyed$),
@@ -208,9 +198,7 @@ export class AdminComplienceComponent implements OnInit , DeactivationGuarded {
 		.subscribe();
 		this.initializeDetails();
 		this.cuiModalService.hide();
-		this.toBeScanned = false;
 		this.enableSaveButton = false;
-		this.rightSideTagsResponse.policyGroups = [];
 	}
 	/**
 	 * Function to save opt changes
@@ -243,6 +231,31 @@ export class AdminComplienceComponent implements OnInit , DeactivationGuarded {
 			);
 
 	}
+
+	/**
+	 * Function to get policies
+	 * @returns policies data
+	 */
+
+	 public getPolicies () {
+
+		  return this.controlPointAdminComplienceService.getPolicies(this.customerId)
+		  .pipe(
+			  takeUntil(this.destroyed$),
+			  map((results: any) => {
+				  this.policyGroupDetails = results;
+				  this.policies = _.cloneDeep(this.policyGroupDetails.policyGroup);
+				  this.policies.unshift('select');
+			}),
+			catchError(err => {
+				this.logger.error('Policies : getPolicies()' +
+				`:: Error : (${err.status}) ${err.message}`);
+
+				return of({ });
+			}),
+			);
+	 }
+
 	/**
 	 * Function to get left side tags
 	 * @returns tags data
@@ -369,7 +382,7 @@ export class AdminComplienceComponent implements OnInit , DeactivationGuarded {
 		this.triggerModal = 'policy';
 		let showModalFlag = false;
 		this.tagsFromAssetTagging = true;
-		if (this.rightSideTagsResponse && this.rightSideTagsResponse.policyGroups) {
+		if (this.rightSideTagsResponse && this.rightSideTagsResponse.policyGroups && policy !== 'select') {
 			const previousPolicy = policy === 'HIPAA' ? 'PCI' : 'HIPAA';
 			const policyGroup = _.find(this.rightSideTagsResponse.policyGroups,
 				{ policyName: previousPolicy });
@@ -592,11 +605,11 @@ export class AdminComplienceComponent implements OnInit , DeactivationGuarded {
 	 * @returns with popup
 	 */
 	public canDeactivate (): boolean | Observable <boolean> | Promise <boolean> {
-		if (this.selectedDeviceTagType === 'selectedTags' || this.toBeScanned) {
+		if (this.enableSaveButton) {
 			this.cuiModalService.show(this.switchBetweenCompliance, 'normal');
-		}
 
-		return this.canDeactGuard.navigateAwaySelection$;
+			return this.canDeactGuard.navigateAwaySelection$;
+		}
 	  }
 
 	/**
@@ -606,5 +619,13 @@ export class AdminComplienceComponent implements OnInit , DeactivationGuarded {
 	public continueWithoutChange (choice: boolean): void {
 		this.canDeactGuard.navigateAwaySelection$.next(choice);
 		this.cuiModalService.hide();
+	}
+
+	/**
+	 * NgOnDestroy
+	 */
+	public ngOnDestroy () {
+		this.destroyed$.next();
+		this.destroyed$.complete();
 	}
 }

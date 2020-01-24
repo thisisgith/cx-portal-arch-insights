@@ -143,8 +143,7 @@
 	}" class="qtr-margin-right icon-circle">
 	</span>
 	<span *ngIf="item?.sdaCompliance == 'Warning'" [innerText]="'_ArchitectureYes_' | i18n"></span>
-	<span *ngIf="item?.sdaCompliance != 'Warning' && item?.sdaCompliance != 'NE'" [innerText]="item?.sdaCompliance"></span>
-	<span *ngIf="item?.sdaCompliance === 'NE'" [innerText]="'_ArchitectureNotAvailable_' | i18n"></span>
+	<span *ngIf="item?.sdaCompliance != 'Warning'" [innerText]="item?.sdaCompliance"></span>
 </ng-template>
 
 
@@ -155,8 +154,7 @@
 		'text-ocean': item?.assuranceCompliance === 'Not Evaluated'
 	}" class="qtr-margin-right icon-circle">
 	</span>
-	<span *ngIf="item?.assuranceCompliance !== 'NE'" [innerText]="item?.assuranceCompliance"></span>
-	<span *ngIf="item?.assuranceCompliance === 'NE'" [innerText]="'_ArchitectureNotAvailable_' | i18n"></span>
+	<span [innerText]="item?.assuranceCompliance"></span>
 </ng-template>
 
 <ng-template #swimReady let-item="celldata">
@@ -166,8 +164,7 @@
 		'text-ocean': item?.swimCompliance === 'Not Evaluated'
 	}" class="qtr-margin-right icon-circle">
 	</span>
-	<span [innerText]="item?.swimCompliance"  *ngIf="item?.swimCompliance != 'NE'"></span>
-	<span *ngIf="item?.swimCompliance === 'NE'" [innerText]="'_ArchitectureNotAvailable_' | i18n"></span>
+	<span [innerText]="item?.swimCompliance"></span>
 </ng-template>
 
 <ng-template #pnpReady let-item="celldata">
@@ -177,9 +174,7 @@
 		'text-ocean': item?.pnpCompliance === 'Not Evaluated'
 	}" class="qtr-margin-right icon-circle">
 	</span>
-	<span [innerText]="item?.pnpCompliance" *ngIf="item?.pnpCompliance != 'NE'"></span>
-	<span *ngIf="item?.pnpCompliance === 'NE'" [innerText]="'_ArchitectureNotAvailable_' | i18n"></span>
-	
+	<span [innerText]="item?.pnpCompliance"></span>
 </ng-template>
 
 <ng-template #productId let-item="celldata">

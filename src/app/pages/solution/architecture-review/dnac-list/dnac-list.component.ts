@@ -64,6 +64,8 @@ export class DnacListComponent implements OnInit {
 	private fabricsTemplate: TemplateRef<{ }>;
 	@ViewChild('wlcTemplate', { static: true })
 	private wlcTemplate: TemplateRef<{ }>;
+	@ViewChild('accessPointsTemplate', { static: true })
+	private accessPointsTemplate: TemplateRef<{ }>;
 	@ViewChild('devicesTooltipTemplate', { static: true })
 	private devicesTooltipTemplate: TemplateRef<{ }>;
 	@ViewChild('fabricsTooltipTemplate', { static: true })
@@ -72,6 +74,8 @@ export class DnacListComponent implements OnInit {
 	private wlcsTooltipTemplate: TemplateRef<{ }>;
 	@ViewChild('endPointsTooltipTemplate', { static: true })
 	private endPointsTooltipTemplate: TemplateRef<{ }>;
+	@ViewChild('accessPointsTooltipTemplate', { static: true })
+	private accessPointsTooltipTemplate: TemplateRef<{ }>;
 
 	/**
 	 * used to Intialize Table options
@@ -117,37 +121,46 @@ export class DnacListComponent implements OnInit {
 					key: 'dnacIpaddress',
 					name: I18n.get('_ArchitectureDNACIPAddress_'),
 					sortable: false,
+					width: '9%',
 				},
 				{
 					key: 'dnacVersion',
 					name: I18n.get('_ArchitectureDNACVersion_'),
 					sortable: false,
+					width: '6%',
 				},
 				{
 					headerTemplate: this.devicesTooltipTemplate,
 					sortable: false,
 					template : this.devicesTemplate,
-					width : '17%',
+					width : '16%',
 				},
 				{
 					headerTemplate : this.fabricsTooltipTemplate,
 					sortable: false,
 					template : this.fabricsTemplate,
-					width : '17%',
+					width : '16%',
 				},
 				{
 					headerTemplate : this.wlcsTooltipTemplate,
 					name: I18n.get('_ArchitectureWLC(WLCPublishedLimit)_'),
 					sortable: false,
 					template : this.wlcTemplate,
-					width : '17%',
+					width : '16%',
+				},
+				{
+					headerTemplate : this.accessPointsTooltipTemplate,
+					name: I18n.get('_ArchitectureAccessPoints(AccessPointsPublishedLimit)_'),
+					sortable: false,
+					template : this.accessPointsTemplate,
+					width : '16%',
 				},
 				{
 					headerTemplate : this.endPointsTooltipTemplate,
 					name: I18n.get('_ArchitectureEndPoints(EndPublishedLimit)_'),
 					sortable: false,
 					template : this.endPointsTemplate,
-					width : '17%',
+					width : '15%',
 				},
 			],
 			singleSelect: true,
@@ -298,6 +311,15 @@ export class DnacListComponent implements OnInit {
 	 */
 	public getWlcTemplate (item) {
 		return `${item.noOfWlc }/${item.wlcPublishedLimits}`;
+	}
+	/**
+	 * This function is used to concate the noOfAccessPoints and AccessPointsPublishedLimits
+	 * in specific format
+	 * @param item - Contains dnac info
+	 * @returns - Returns the formatted string
+	 */
+	public getAccessPointsTemplate (item) {
+		return `${item.noOfAccessPoints }/${item.accessPointsPublishedLimits}`;
 	}
 
 }

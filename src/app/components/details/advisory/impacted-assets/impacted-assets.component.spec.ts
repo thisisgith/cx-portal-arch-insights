@@ -12,11 +12,11 @@ import {
 	CriticalBugAssetsScenarios,
 	Mock,
 	RacetrackScenarios,
-	MockSystemAssetsData,
 	MockHardwareAssetsData,
+	MockSecurityAdvisories,
 } from '@mock';
 import * as _ from 'lodash-es';
-import { DiagnosticsService, InventoryService } from '@sdp-api';
+import { DiagnosticsService, InventoryService, ProductAlertsService } from '@sdp-api';
 import { throwError, of } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { RacetrackInfoService } from '@services';
@@ -39,6 +39,7 @@ describe('AdvisoryImpactedAssetsComponent', () => {
 	let diagnosticsService: DiagnosticsService;
 	let inventoryService: InventoryService;
 	let racetrackInfoService: RacetrackInfoService;
+	let productAlertsService: ProductAlertsService;
 
 	/**
 	 * Sends our racetrack info
@@ -71,6 +72,7 @@ describe('AdvisoryImpactedAssetsComponent', () => {
 		racetrackInfoService = TestBed.get(RacetrackInfoService);
 		inventoryService = TestBed.get(InventoryService);
 		diagnosticsService = TestBed.get(DiagnosticsService);
+		productAlertsService = TestBed.get(ProductAlertsService);
 	}));
 
 	beforeEach(() => {
@@ -120,21 +122,11 @@ describe('AdvisoryImpactedAssetsComponent', () => {
 
 	it('should fetch assets for an advisory', done => {
 		component.customerId = user.info.customerId;
-		component.assetIds = {
-			impacted: [
-				'NA,SAL1833YM7D,N9K-C9396PX,NA',
-			],
-		};
-
-		const data = _.filter(MockSystemAssetsData,
-			{ managedNeId: 'NA,SAL1833YM7D,N9K-C9396PX,NA' });
-		spyOn(inventoryService, 'getSystemAssets')
+		component.type = 'security';
+		component.vulnerability = 'VUL';
+		spyOn(productAlertsService, 'getSecurityAdvisories')
 			.and
-			.returnValue(of({ data }));
-
-		spyOn(inventoryService, 'getHardwareAssets')
-			.and
-			.returnValue(of({ data: MockHardwareAssetsData }));
+			.returnValue(of({ data: MockSecurityAdvisories }));
 
 		component.ngOnInit();
 		sendRacetrack();
@@ -146,10 +138,7 @@ describe('AdvisoryImpactedAssetsComponent', () => {
 				.toBeFalsy();
 
 			expect(component.impacted.length)
-				.toEqual(data.length);
-
-			expect(component.impacted)
-				.toEqual(data);
+				.toEqual(MockSecurityAdvisories.length);
 
 			done();
 		});
@@ -157,23 +146,16 @@ describe('AdvisoryImpactedAssetsComponent', () => {
 
 	it('should handle failing api calls for advisories', done => {
 		component.customerId = user.info.customerId;
-		component.assetIds = {
-			impacted: [
-				'NA,SAL1833YM7D,N9K-C9396PX,NA',
-			],
-		};
+		component.type = 'security';
+		component.vulnerability = 'VUL';
 
 		const error = {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(inventoryService, 'getSystemAssets')
+		spyOn(productAlertsService, 'getSecurityAdvisories')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(inventoryService, 'getHardwareAssets')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-
 		component.ngOnInit();
 		sendRacetrack();
 		fixture.detectChanges();

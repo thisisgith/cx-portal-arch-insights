@@ -42,10 +42,10 @@
 								<div class="col-md-2 half-margin-right">
 								<div class="form-group">
 										<div class="form-group__text select">
-											<select id="select-type-basic" (change)="onPolicySelected($event.target.value)" 
-											[(ngModel)]="saveDetails.body.policy" data-auto-id="PolicySelected">
-												<option *ngFor="let policy of policies"
-											[value]="policy.name" [innerText]="policy.name">
+											<select id="select-type-basic" (change)="onPolicySelected(saveDetails.body.policy)" 
+											[(ngModel)]="saveDetails.body.policy" data-auto-id="PolicySelected">	
+											<option *ngFor="let policy of policies"
+											[value]="policy" [innerText]="policy">
 												</option>
 											</select>
 											<label for="select-type-basic" class="subheader"
@@ -146,8 +146,8 @@
 		<p class="subtitle" [innerText]="'_AdminComplianceConfirmationModalContent_' | i18n"></p>
 	</div>
 	<div class="modal__footer">
-		<button class="btn" data-auto-id="discardChanges" (click)="discardChanges()" [innerText]="'_AdminComplianceDeleteData_' | i18n"></button>
-		<button class="btn" data-auto-id="saveChanges" (click)="saveChanges()" [innerText]="'_AdminComplianceCancel_' | i18n"></button>
+		<button class="btn" data-auto-id="discardChanges" (click)="discardChanges()" [innerText]="'_AdminComplianceYes_' | i18n"></button>
+		<button class="btn" data-auto-id="saveChanges" (click)="saveChanges()" [innerText]="'_AdminComplianceNo_' | i18n"></button>
 	</div>
 </ng-template>
 

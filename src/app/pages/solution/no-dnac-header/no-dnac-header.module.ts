@@ -5,6 +5,7 @@ import { NoDNACHeaderComponent } from './no-dnac-header.component';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { ControlPointsModule } from '@sdp-api';
 import { environment } from '@environment';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 /** SDP API rootUrl */
 const rootUrl = `${environment.sdpServiceOrigin}${environment.sdpServiceBasePath}`;
@@ -20,6 +21,7 @@ const rootUrl = `${environment.sdpServiceOrigin}${environment.sdpServiceBasePath
 		I18nPipeModule,
 		ControlPointsModule.forRoot({ rootUrl }),
 		RouterModule,
+		SharedModule,
 	],
 })
 export class NoDNACHeaderModule { }

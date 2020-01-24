@@ -17,13 +17,14 @@ import {
 	HighCrashRiskDevices,
 	InventoryService,
 } from '@sdp-api';
-import { map, catchError, takeUntil } from 'rxjs/operators';
+import { catchError, takeUntil, switchMap } from 'rxjs/operators';
 import { Subject, of } from 'rxjs';
 import { LogService } from '@cisco-ngx/cui-services';
 import { AssetPanelLinkService } from '@services';
 import { ActivatedRoute } from '@angular/router';
 import * as _ from 'lodash-es';
 import { AssetLinkInfo } from '@interfaces';
+import { HttpErrorResponse } from '@angular/common/http';
 /**
  * High Crash Risk Grid Component
  */
@@ -49,6 +50,7 @@ export class CrashRiskGridComponent implements OnChanges {
 	public showFpDetails = false;
 	public assetLinkInfo: AssetLinkInfo = Object.create({ });
 	public assetParams: InventoryService.GetAssetsParams;
+	public alert = { };
 
 	@ViewChild('deviceNameTemplate', { static: true })
 	public deviceNameTemplate: TemplateRef<string>;
@@ -123,12 +125,13 @@ export class CrashRiskGridComponent implements OnChanges {
 			itemRange: '0-0',
 			totalItems: 0,
 		});
+		_.invoke(this.alert, 'hide', I18n.get('_RccErrorResults_'), 'danger');
 
 		return this.riskMitigationService
 			.getFingerPrintDeviceDetailsData(param)
 			.pipe(
 				takeUntil(this.destroy$),
-				map((results: HighCrashRisk) => {
+				switchMap((results: HighCrashRisk) => {
 					this.crashRiskGridLoading = false;
 					this.highCrashRiskSystemsGridDetails.tableData =
 						results.devices;
@@ -150,9 +153,18 @@ export class CrashRiskGridComponent implements OnChanges {
 					};
 
 					this.paginationValue.emit(paginationValueProp);
+
+					return of(results);
 				}),
-				catchError(err => {
+				catchError((err: HttpErrorResponse) => {
+					this.paginationValue.emit({
+						itemRange: '0-0',
+						totalItems: 0,
+					});
 					this.initializeHCRGridParams();
+					if (err.status >= 500) {
+						_.invoke(this.alert, 'show', I18n.get('_RccErrorResults_'), 'danger');
+					}
 					this.crashRiskGridLoading = false;
 					this.logger.error(
 						'Crash Assets : getFingerPrintDeviceDetails() ' +

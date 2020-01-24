@@ -1,6 +1,7 @@
 import { Component, HostListener, EventEmitter, Output } from '@angular/core';
 import { SetupStep } from '@interfaces';
 import { KEY_CODES } from '@classes';
+import { environment } from '@environment';
 
 /**
  * Component to prompt beginning of IE installation
@@ -12,12 +13,20 @@ import { KEY_CODES } from '@classes';
 })
 export class BeginInstallationComponent implements SetupStep {
 	@Output('onStepComplete') public onStepComplete = new EventEmitter<void>();
+	public collectorOverviewLink = environment.collectorOverview;
 
 	/**
 	 * Fired when "Begin Installation" is clicked
 	 */
 	public onBegin () {
 		this.onStepComplete.emit();
+	}
+
+	/**
+	 * Opens a new tab to view Collector Overview
+	 */
+	public openCollectorOverview () {
+		window.open(this.collectorOverviewLink, '_blank');
 	}
 
 	/**

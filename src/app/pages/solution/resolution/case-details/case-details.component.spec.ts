@@ -2,12 +2,13 @@ import { configureTestSuite } from 'ng-bullet';
 import { fakeAsync, tick, ComponentFixture, TestBed, flush } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { of } from 'rxjs';
-import { CaseScenarios, HardwareScenarios } from '@mock';
+import { CaseScenarios, HardwareScenarios, user } from '@mock';
 import { CaseDetailsComponent } from './case-details.component';
 import { CaseDetailsModule } from './case-details.module';
 import { CaseService } from '@cui-x/services';
 import { CaseDetailsService } from '@services';
 import { InventoryService } from '@sdp-api';
+import { ActivatedRoute } from '@angular/router';
 
 describe('CaseDetailsComponent', () => {
 	let component: CaseDetailsComponent;
@@ -21,6 +22,19 @@ describe('CaseDetailsComponent', () => {
 			imports: [
 				CaseDetailsModule,
 				HttpClientTestingModule,
+			],
+			providers: [
+				{
+					provide: ActivatedRoute,
+					useValue: {
+						queryParams: of({ }),
+						snapshot: {
+							data: {
+								user,
+							},
+						},
+					},
+				},
 			],
 		});
 	});
@@ -154,9 +168,10 @@ describe('CaseDetailsComponent', () => {
 	});
 
 	it('set number of files count from case details response', () => {
-		const caseDetails = { result: { response: { getBrokerResponse: { downloadInfo: { noOfFiles: 4 } } } } };
+		const caseDetails = { result: { response: { getBrokerResponse: { downloadInfo: { noOfFiles: 4,
+			fileDetail: [{ }, { }, { }] } } } } };
 		component.populateCaseFilesList(caseDetails);
 		expect(component.numberOfFiles)
-			.toEqual(4);
+			.toEqual(3);
 	});
 });

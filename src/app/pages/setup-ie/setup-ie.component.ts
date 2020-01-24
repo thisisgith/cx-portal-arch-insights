@@ -35,6 +35,7 @@ import { NoDNACComponent } from './no-dnac/no-dnac.component';
 import { ManageUsersComponent } from './manage-users/manage-users.component';
 import { ControlPointIERegistrationAPIService } from '@sdp-api';
 import * as _ from 'lodash-es';
+import { UserResolve } from '@utilities';
 
 /**
  * Default initial steps
@@ -97,6 +98,7 @@ export class SetupIeComponent implements AfterViewInit, OnInit, OnDestroy {
 		private setupService: SetupIEService,
 		private state: SetupIEStateService,
 		private utils: UtilsService,
+		private userResolve: UserResolve,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
@@ -161,7 +163,7 @@ export class SetupIeComponent implements AfterViewInit, OnInit, OnDestroy {
 				if (isNaN(compKey)) {
 					// if redirected from admin setting page, then it should go to second step
 					if (this.isFromAdmin) {
-						this.currentStep = 1;
+						this.currentStep = params.collectorIP ? 2 : 1;
 						this.savedState = { };
 					} else {
 						this.currentStep = 0;
@@ -252,7 +254,14 @@ export class SetupIeComponent implements AfterViewInit, OnInit, OnDestroy {
 					queryParamsHandling: 'merge',
 				});
 			} else {
+				// need to check whether data center is getting updated or not from user service
+ 				// this.userResolve.getUserSelectedDataCenter()
+				// .pipe(
+				// 	takeUntil(this.destroy$),
+				// )
+				// .subscribe(dataCenter => this.userResolve.setDataCenter(dataCenter));
 				// reached last step, route to home
+				this.userResolve.setUserSteps(true);
 				this.router.navigate(['/'], {
 					queryParams: { },
 				});

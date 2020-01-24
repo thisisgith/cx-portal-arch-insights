@@ -9,13 +9,13 @@ $divider-light-gray: #dfdede;
 $link-hover-background: #ecf4fc;
 
 $cx-dropdown-max-width: 280px;
-$text-xsmall: 10px;
-$text-larger: 19px;
+$text-xsmall: 1rem;
+$text-larger: 1.9rem;
 
 %cx-dropdown-menu-item {
 	padding: 0 20px;
-	font-size: 13px !important;
-	line-height: 34px;
+	font-size: 1.3rem !important;
+	line-height: 3.4rem;
 }
 
 %cx-dropdown-link {
@@ -81,11 +81,12 @@ $text-larger: 19px;
 .header-bar__main {
 	margin-right: unset;
 
-	& .header-heading h5 {
+	& .header-heading h1 {
 		margin-right: 25px;
-		font-size: 17px;
-		letter-spacing: -0.3px;
-		line-height: 23px;
+		font-size: 1.7rem;
+		letter-spacing: -0.03rem;
+		line-height: 2.3rem;
+		font-weight: 300;
 	}
 }
 
@@ -97,7 +98,7 @@ $text-larger: 19px;
 .cx-user-label--container {
 	display: flex;
 	margin-top: 2px;
-	line-height: 14px;
+	line-height: 1.4rem;
 	align-items: center;
 	justify-content: center;
 }
@@ -105,16 +106,49 @@ $text-larger: 19px;
 .cx-header-label,
 .cx-user-label {
 	color: $gray-text-color;
-	font-size: $small-font-size;
+	font-size: 1.2rem;
 }
 
 .header-bar__main .cx-header-label {
-	font-size: 12px;
-	letter-spacing: -0.34px;
-	line-height: 16px;
+	font-size: 1.2rem;
+	letter-spacing: -0.034rem;
+	line-height: 1.6rem;
+}
+
+.cx-header-icon {
+	margin-right: $base-spacing * 0.25;
+	color: $icon-light-gray;
+
+	&--small {
+		color: $icon-light-gray;
+		margin-right: $base-spacing * 0.25;
+		line-height: 1.8rem;
+		font-size: 1.8rem;
+	}
+}
+
+.cx-header-arrow {
+	display: inline-block;
+	transition: transform 0.2s ease-in-out;
+	color: $secondary-and-button-text-color;
+	font-size: 1.1rem;
+}
+
+.header-toolbar .cx-header-links .cx-user-label {
+	letter-spacing: -0.018rem;
+	font-size: 1rem;
+	line-height: 1.4rem;
+}
+
+.header-toolbar .cx-header-arrow {
+	position: relative;
+	bottom: 1px;
+	line-height: 1.4rem;
 }
 
 .cx-header-links {
+	@include button-reset;
+
 	position: relative;
 	display: flex;
 	flex-direction: column;
@@ -125,6 +159,23 @@ $text-larger: 19px;
 	cursor: pointer;
 	user-select: none;
 	text-decoration: unset !important;
+
+	&--settings {
+		margin-right: 15px;
+	}
+
+	&--more {
+		margin-right: unset;
+		width: 3px;
+
+		::ng-deep .cx-header-dropdown {
+			left: 13px;
+		}
+	}
+
+	&--learning {
+		margin-right: 70px;
+	}
 
 	&--active {
 		@extend %cx-header-links--color;
@@ -137,118 +188,70 @@ $text-larger: 19px;
 	&:focus {
 		@extend %cx-header-links--color;
 	}
-}
 
-.cx-header-icon {
-	margin-right: $base-spacing * 0.25;
-	color: $icon-light-gray;
+	&--portal-help {
+		margin-right: unset;
 
-	&--small {
-		color: $icon-light-gray;
-		margin-right: $base-spacing * 0.25;
-		line-height: 18px;
-		font-size: 18px;
-	}
-}
+		a.text-small {
+			margin-top: 10px;
+		}
 
-.cx-header-arrow {
-	display: inline-block;
-	transition: transform 0.2s ease-in-out;
-	color: $secondary-and-button-text-color;
-	font-size: 11px;
-}
+		.cx-header-arrow {
+			bottom: 0;
+		}
 
-.header-toolbar .cx-header-links .cx-user-label {
-	letter-spacing: -0.18px;
-	font-size: $text-xsmall;
-	line-height: 14px;
-}
-
-.header-toolbar .cx-header-arrow {
-	position: relative;
-	bottom: 1px;
-	line-height: 14px;
-}
-
-.cx-header-links--learning {
-	margin-right: 70px;
-}
-
-.cx-header-links--portal-help {
-	margin-right: unset;
-
-	a.text-small {
-		margin-top: 10px;
-	}
-
-	.cx-header-arrow {
-		bottom: 0;
-	}
-
-	::ng-deep .cx-header-dropdown {
-		left: 45px;
-	}
-}
-
-.cx-header-links--mock {
-	margin-right: unset;
-
-	a.text-small {
-		margin-top: 10px;
-	}
-
-	::ng-deep .cx-header-dropdown {
-		left: 40px;
-	}
-}
-
-.cx-header-links--teams {
-	a.text-small {
-		margin-left: 8px;
-		padding: unset;
-		line-height: unset;
-
-		&:hover {
-			background-color: unset;
-			text-decoration: underline;
+		::ng-deep .cx-header-dropdown {
+			left: 45px;
 		}
 	}
 
-	::ng-deep .cx-header-dropdown {
-		left: 98px;
-	}
-}
-
-.cx-header-links--user {
-	a {
-		@extend %cx-dropdown-link;
+	&--user {
+		.cx-user-icon + .cx-header-arrow {
+			bottom: 0;
+		}
 	}
 
-	.cx-user-icon + .cx-header-arrow {
-		bottom: 0;
-	}
+	&--mock {
+		margin-right: unset;
 
-	::ng-deep .cx-header-dropdown {
-		left: 60px;
+		a.text-small {
+			margin-top: 10px;
+		}
 
-		@media only screen and (max-width: 991px) {
+		::ng-deep .cx-header-dropdown {
 			left: 40px;
 		}
 	}
-}
 
-.cx-header-links--settings {
-	margin-right: 15px;
-}
+	&--teams {
+		::ng-deep .cx-header-dropdown {
+			left: 98px;
+		}
 
-.cx-header-links--more {
-	margin-right: unset;
-	width: 3px;
+		.pull-right ::ng-deep .cx-header-dropdown {
+			max-width: none;
+			width: 320px;
+			padding-left: 20px;
+			padding-right: 20px;
+		}
+	}
 
-	::ng-deep .cx-header-dropdown {
-		left: 13px;
+	&--user,
+	&--teams {
+		+ .pull-right ::ng-deep .cx-header-dropdown {
+			.cx-dropdown-close {
+				@include button-reset;
+
+				cursor: pointer;
+			}
+
+			a {
+				@extend %cx-dropdown-link;
+			}
+		}
 	}
 }
+
 
 .cx-search-button {
 	cursor: pointer;
@@ -287,7 +290,7 @@ $text-larger: 19px;
 }
 
 .icon-help-alt {
-	font-size: 22px;
+	font-size: 2.2rem;
 }
 
 .cx-team-member-info {
@@ -297,8 +300,8 @@ $text-larger: 19px;
 
 .text-muted {
 	color: $light-gray-text-color;
-	letter-spacing: -0.12px;
-	line-height: 14px;
+	letter-spacing: -0.012rem;
+	line-height: 1.4rem;
 }
 
 .cx-cisco-team-dropdown {
@@ -307,30 +310,30 @@ $text-larger: 19px;
 
 	.text-muted {
 		margin-bottom: 18px;
-		line-height: 16px;
+		line-height: 1.6rem;
 	}
 }
 
 .cx-team-member--full-name {
 	margin-bottom: 2px;
-	line-height: 14px;
+	line-height: 1.4rem;
 
 	span {
 		color: $secondary-and-button-text-color;
-		font-size: 14px;
-		line-height: 14px;
+		font-size: 1.4rem;
+		line-height: 1.4rem;
 	}
 }
 
 .cx-team-member--title {
 	color: $secondary-and-button-text-color;
-	font-size: 11px;
-	line-height: 14px;
+	font-size: 1.1rem;
+	line-height: 1.4rem;
 }
 
 .cx-team-member--contact {
 	margin-top: 22px;
-	line-height: 14px;
+	line-height: 1.4rem;
 
 	span {
 		color: $icon-dark-gray-1;
@@ -339,7 +342,7 @@ $text-larger: 19px;
 
 .cx-team-member--phone {
 	margin-top: 17px;
-	line-height: 14px;
+	line-height: 1.4rem;
 
 	.icon-mobile-phone {
 		color: $icon-dark-gray-1;
@@ -347,7 +350,7 @@ $text-larger: 19px;
 		& + span {
 			margin-left: 8px;
 			color: $default-text-color;
-			line-height: 14px;
+			line-height: 1.4rem;
 		}
 	}
 }
@@ -369,12 +372,12 @@ $text-larger: 19px;
 .cx-user--full-name {
 	margin-bottom: 2px;
 	color: $secondary-and-button-text-color;
-	font-size: 14px;
+	font-size: 1.4rem;
 
 	& + .text-xsmall {
 		color: $secondary-and-button-text-color;
-		font-size: 10px;
-		line-height: 14px;
+		font-size: 1rem;
+		line-height: 1.4rem;
 	}
 }
 

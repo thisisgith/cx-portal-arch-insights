@@ -4,10 +4,10 @@ import { fakeAsync, tick, ComponentFixture, TestBed } from '@angular/core/testin
 import { RouterTestingModule } from '@angular/router/testing';
 import { Location } from '@angular/common';
 import { By } from '@angular/platform-browser';
-
 import { CuiModalService } from '@cisco-ngx/cui-components';
 import { CaseSubmittedComponent } from './case-submitted.component';
 import { CaseSubmittedModule } from './case-submitted.module';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 /** Test Component for Routing */
 @Component({
@@ -31,6 +31,7 @@ describe('CaseSubmittedComponent', () => {
 				}]),
 
 				CaseSubmittedModule,
+				HttpClientTestingModule,
 			],
 		});
 	});
@@ -79,7 +80,7 @@ describe('CaseSubmittedComponent', () => {
 		button.nativeElement.click();
 		tick();
 		expect(location.path())
-			.toEqual('/solution/resolution?case=686350456');
+			.toEqual('/solution/resolution?case=686350456&serialNumber=1234');
 	}));
 
 	it('should not build table if there is only one asset', () => {

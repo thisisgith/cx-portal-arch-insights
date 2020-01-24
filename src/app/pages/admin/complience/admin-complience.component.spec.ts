@@ -522,4 +522,5 @@ describe('AdminComplienceComponent', () => {
 		expect(component.enableSaveButton)
 			.toBeFalsy();
 	});
+
 });

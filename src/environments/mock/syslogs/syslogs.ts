@@ -1,3 +1,5 @@
+import { SyslogsSeverityResponse } from '@sdp-api';
+
 /** Base of URL for SDP API */
 const api = '/api/customerportal/syslog/v1';
 /** event count URL */
@@ -10,6 +12,11 @@ const filterdetailsparams = '/syslogDetails';
 const categoryListParams = '/findallCategory';
 /** MovetoFaults URL */
 const moveToFaultsParams = '/afm/v1/fault/pushtoAFM';
+const syslogSeverityPath = '/syslogSeverityCounts';
+const syslogTimeRangePath = '/syslogTimeRangeCounts';
+const faultSeverityPath = '/faultSeverityCount';
+const faultStatePath = '/tacEnabledCount';
+const faultTimeRangePath = '/faultTimeIntervalCount';
 /** The mock response for syslogCount */
 const syslogCount: any = {
 	faultsCount: '10',
@@ -140,6 +147,50 @@ const pushToFaultResponse: any = {
 	statusCode: 'OK',
 	statusMessage: 'Signature is pushed from Syslog to AFM',
 };
+/** The mock response for syslogServerityCount */
+const syslogServerityCount: SyslogsSeverityResponse = {
+	message: 'Success',
+	filterCounts: {
+		syslogSeverity4: 50,
+		syslogSeverity5: 41,
+		syslogSeverity6: 55,
+		syslogSeverity7: 3,
+		syslogSeverity0: 5,
+		syslogSeverity1: 74,
+		syslogSeverity2: 38,
+		syslogSeverity3: 102,
+	},
+};
+/** The mock response for timeRangeCount */
+const timeRangeCount: any = {
+	message: 'Success',
+	filterCounts: {
+		days_1: 0,
+		days_7: 368,
+		days_15: 368,
+		days_30: 368,
+	},
+};
+/** The mock response for faultStateCount */
+const faultStateCount: any = {
+	message: 'Success',
+	filterCounts: {
+		Active: 3,
+		Inactive: 1,
+	},
+};
+/** The mock response for faultStateCount */
+const faultSeverityCount: any = {
+	message: 'Success',
+	filterCounts: {
+		critical: 3,
+		high: 1,
+		medium: 4,
+		low: 2,
+		informational: 5,
+
+	},
+};
 /** SyslogScenarios */
 export const SyslogScenarios = [
 	{
@@ -226,5 +277,90 @@ export const SyslogScenarios = [
 		},
 		url: `${moveToFaultsParams}`,
 		usecases: ['Push To Fault'],
+	},
+	{
+		scenarios: {
+			POST: [
+				{
+					delay: 100,
+					description: 'Syslogs severity',
+					response: {
+						body: syslogServerityCount,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}${syslogSeverityPath}`,
+		usecases: ['Syslogs severity'],
+	},
+	{
+		scenarios: {
+			POST: [
+				{
+					delay: 100,
+					description: 'Syslogs timeRange',
+					response: {
+						body: timeRangeCount,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}${syslogTimeRangePath}`,
+		usecases: ['Syslogs timeRange'],
+	},
+	{
+		scenarios: {
+			POST: [
+				{
+					delay: 100,
+					description: 'Fault Severity',
+					response: {
+						body: faultSeverityCount,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}${faultSeverityPath}`,
+		usecases: ['Fault Severity'],
+	},
+	{
+		scenarios: {
+			POST: [
+				{
+					delay: 100,
+					description: 'Fault State',
+					response: {
+						body: faultStateCount,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}${faultStatePath}`,
+		usecases: ['Fault State'],
+	},
+	{
+		scenarios: {
+			POST: [
+				{
+					delay: 100,
+					description: 'Fault timeRange',
+					response: {
+						body: timeRangeCount,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}${faultTimeRangePath}`,
+		usecases: ['Fault timeRange'],
 	},
 ];

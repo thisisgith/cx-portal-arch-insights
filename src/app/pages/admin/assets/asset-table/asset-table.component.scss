@@ -43,7 +43,7 @@ tr.td-row::after {
 		width: 10px;
 		height: 7px;
 		position: relative;
-		font-size: 10px;
+		font-size: 1rem;
 
 		&::before {
 			display: inline-block;
@@ -141,7 +141,7 @@ tr.td-row::after {
 
 					&::after {
 						color: $accent-color1;
-						font-size: 16px;
+						font-size: 1.6rem;
 					}
 				}
 			}

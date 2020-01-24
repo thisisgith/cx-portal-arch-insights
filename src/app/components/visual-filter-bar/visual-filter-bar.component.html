@@ -2,10 +2,11 @@
 	<ng-container *ngIf="customCard; else firstCard;">
 		<ng-container *ngTemplateOutlet="customCard"></ng-container>
 	</ng-container>
-	<div (click)="shiftCarousel(-1)"
+	<div 
+		(click)="shiftCarousel(-1)"
 		data-auto-id="carousel-left"
 		class="visual-filter__carousel__arrow vfca--left">
-		<img src="assets/img/filters/icon-metrics-arrow-left.svg" alt="arrow-left">
+		<img *ngIf="!hideCarouselArrow"  src="assets/img/filters/icon-metrics-arrow-left.svg" alt="arrow-left">
 	</div>
 	<div #carousel class="visual-filter__remaining">
 		<ng-container *ngFor="let filter of filters | slice:startIndex">
@@ -30,11 +31,11 @@
 			</div>
 		</ng-container>
 	</div>
-	<div
-	(click)="shiftCarousel(1)"
-	data-auto-id="carousel-right"
-	class="visual-filter__carousel__arrow vfca--right">
-		<img src="assets/img/filters/icon-metrics-arrow-right.svg" alt="arrow-right">
+	<div 
+		(click)="shiftCarousel(1)"
+		data-auto-id="carousel-right"
+		class="visual-filter__carousel__arrow vfca--right">
+		<img *ngIf="!hideCarouselArrow"  src="assets/img/filters/icon-metrics-arrow-right.svg" alt="arrow-right">
 	</div>
 </div>
 

@@ -134,4 +134,79 @@ describe('ComparisonviewComponent', () => {
 		expect(crashPreventionService.getComparison).not
 			.toHaveBeenCalled();
 	});
+
+	it('should unset the selected System', () => {
+		const selectedAsset = {
+			active: true,
+			deviceId: 'NA,JAB05460BA7,ASR1002-HX,NA',
+			deviceName: 'LA1-ASR1001X-2.corp.local',
+			globalRiskRank: 'HIGH',
+			productFamily: 'Cisco ASR 1000 Series Aggregation Services Routers',
+			productId: 'ASR1002-HX',
+			riskScore: 23.5,
+			serialNumber: 'AGM2118404V',
+			softwareType: 'IOS-XE',
+			softwareVersion: '16.6.2',
+		};
+		component.showAssetDetails(selectedAsset);
+		expect(component.selectedAsset)
+			.toBeDefined();
+		expect(component.showAssetDetailsView)
+			.toBeTruthy();
+	});
+	it('should  update the comparisonview', () => {
+		const event = {
+			altKey: false,
+			bubbles: true,
+			button: 0,
+			buttons: 0,
+			cancelBubble: false,
+			cancelable: true,
+			clientX: 1318,
+			clientY: 509,
+			composed: true,
+			ctrlKey: false,
+		};
+		const selectedTab = 'feature';
+		component.updateCompareView(event, selectedTab);
+		expect(component.compareView)
+		.toEqual(selectedTab);
+	});
+	it('should  not update the comparisonview', () => {
+		const event = {
+			altKey: false,
+			bubbles: true,
+			button: 0,
+			buttons: 0,
+			cancelBubble: false,
+			cancelable: true,
+			clientX: 1318,
+			clientY: 509,
+			composed: true,
+			ctrlKey: false,
+		};
+		const selectedTab = null;
+		component.updateCompareView(event, selectedTab);
+		expect(component.compareView)
+		.toBeUndefined();
+	});
+	it('should call asset api and return error response', () => {
+		component.comparisonInfo = null;
+		component.compareviewLoading = true ;
+		const error = {
+			status: 404,
+			statusText: 'Resource not found',
+		};
+		spyOn(crashPreventionService, 'getComparison')
+		.and
+		.returnValue(throwError(new HttpErrorResponse(error)));
+		fixture.detectChanges();
+		component.loadData();
+		expect(component.compareviewLoading)
+		.toBeFalsy();
+		expect(component.softwareData)
+		.toBeNull();
+		expect(component.featuresData)
+		.toBeNull();
+	});
 });

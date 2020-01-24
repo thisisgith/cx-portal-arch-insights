@@ -11,13 +11,13 @@ import {
 	user,
 	MockFieldNoticeBulletins,
 	MockFieldNoticeAdvisories,
-	MockFieldNotices,
 	Mock,
 	RacetrackScenarios,
 } from '@mock';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MicroMockModule } from '@cui-x-views/mock';
 import { RacetrackInfoService } from '@services';
+import { RouterTestingModule } from '@angular/router/testing';
 
 /**
  * Will fetch the currently active response body from the mock object
@@ -56,6 +56,7 @@ describe('FieldNoticeDetailsComponent', () => {
 				FieldNoticeDetailsModule,
 				HttpClientTestingModule,
 				MicroMockModule,
+				RouterTestingModule,
 			],
 			providers: [
 				{ provide: 'ENVIRONMENT', useValue: environment },
@@ -88,10 +89,11 @@ describe('FieldNoticeDetailsComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(productAlertsService, 'getFieldNotice')
+		spyOn(productAlertsService, 'getFieldNoticeBulletin')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(productAlertsService, 'getFieldNoticeBulletin')
+
+		spyOn(productAlertsService, 'getFNAffectedSystemSupportCoverage')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
 
@@ -103,9 +105,6 @@ describe('FieldNoticeDetailsComponent', () => {
 				.toEqual({
 					advisory: MockFieldNoticeAdvisories[0],
 				});
-
-			expect(d)
-				.toEqual(component.data);
 
 			done();
 		});
@@ -116,16 +115,9 @@ describe('FieldNoticeDetailsComponent', () => {
 	});
 
 	it('should fetch the advisory information given an advisory', done => {
-		const mockAdvisories = _.filter(MockFieldNotices,
-			{ fieldNoticeId: MockFieldNoticeAdvisories[0].id });
-
 		component.advisory = MockFieldNoticeAdvisories[0];
 		component.id = _.toString(MockFieldNoticeAdvisories[0].id);
 		component.customerId = user.info.customerId;
-
-		spyOn(productAlertsService, 'getFieldNotice')
-			.and
-			.returnValue(of({ data: mockAdvisories }));
 
 		const bulletins = _.filter(MockFieldNoticeBulletins,
 			{ fieldNoticeId: MockFieldNoticeAdvisories[0].id });
@@ -133,6 +125,9 @@ describe('FieldNoticeDetailsComponent', () => {
 			.and
 			.returnValue(of({ data: bulletins }));
 
+		spyOn(productAlertsService, 'getFNAffectedSystemSupportCoverage')
+			.and
+			.returnValue(of([]));
 		component.details
 		.subscribe(d => {
 			fixture.detectChanges();
@@ -140,13 +135,8 @@ describe('FieldNoticeDetailsComponent', () => {
 			expect(d)
 				.toEqual({
 					advisory: MockFieldNoticeAdvisories[0],
-					assetIds: component.data.assetIds,
 					bulletin: _.head(bulletins),
-					notice: _.head(mockAdvisories),
 				});
-
-			expect(d)
-				.toEqual(component.data);
 
 			done();
 		});

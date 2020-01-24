@@ -1,5 +1,10 @@
 @import "~cisco-ui/src/scss/utilities/_variables.scss";
 
+.visualSelected {
+	color: $info;
+	border-bottom: 4px solid $info;
+}
+
 .filter {
 	&__not-selected {
 		border-bottom: 4px solid $white;

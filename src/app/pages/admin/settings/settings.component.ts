@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import {
 	ControlPointIEHealthStatusAPIService,
 	ControlPointAdminSettingsAPIService,
@@ -18,6 +18,9 @@ import { I18n } from '@cisco-ngx/cui-utils';
 
 import * as _ from 'lodash-es';
 import { SetupIEStateService } from '../../setup-ie/setup-ie-state.service';
+import * as moment from 'moment';
+import { CuiModalService } from '@cisco-ngx/cui-components';
+import { IS_IE_OR_EDGE } from '@constants';
 
 enum SystemInfo {
 	OS_IMAGE = 0,
@@ -45,6 +48,8 @@ enum MemoryUsage {
 	templateUrl: './settings.component.html',
 })
 export class SettingsComponent implements OnInit {
+	@ViewChild('collectorReinstallModal',
+		{ static: true }) private collectorReinstallModal: TemplateRef<string>;
 	private destroyed$: Subject<void> = new Subject<void>();
 	public cpData: IEHealthStatusResponseModel[];
 	private customerId: string;
@@ -100,10 +105,14 @@ export class SettingsComponent implements OnInit {
 	public regulatoryCompliance: object;
 	public isLoading = false;
 	public ieSetupCompleted = false;
+	public lastDataSentStatus: string;
 
 	private user: User;
+	public params: NavigationExtras;
+	public isIEOrEdge = IS_IE_OR_EDGE;
 
 	constructor (
+		private cuiModalService: CuiModalService,
 		private controlPointIEHealthStatusAPIService: ControlPointIEHealthStatusAPIService,
 		private route: ActivatedRoute,
 		private userService: UserService,
@@ -216,6 +225,7 @@ ${HDDSizeUnit}`;
 			_.get(os_details, 'kubeletVersion');
 
 		this.data.lastUploadDate = _.get(this, 'cpData[0].lastUploadDate');
+		this.getlastUploadDate();
 		this.data.ieStatus = _.get(this, 'cpData[0].ieStatus');
 		this.data.ieVersion = _.get(this, 'cpData[0].ie_version');
 		this.prefixWithV(this.data, 'ieVersion');
@@ -327,7 +337,34 @@ ${HDDSizeUnit}`;
 	 */
 	public navigateTosetup () {
 		this.state.clearState();
-		const params: NavigationExtras = { queryParams: { fromAdmin: true } };
-		this.router.navigate(['/setup-ie'], params);
+		this.params = { queryParams: { fromAdmin: true } };
+		this.cuiModalService.show(this.collectorReinstallModal, 'normal');
 	}
+
+	/**
+	 * Function to get last Upload timestamps
+	 */
+	public getlastUploadDate () {
+		const lastUploadDate = moment(this.data.lastUploadDate);
+		const currentUTCTime = moment((new Date()).toUTCString())
+		.utc()
+		.format('YYYY-MM-DDTHH:mm:ss.SSSS');
+		const timeDifferenceinHours = moment(currentUTCTime)
+		.diff(lastUploadDate, 'hours');
+		const timeDifferenceinMinutes = moment(currentUTCTime)
+		.diff(lastUploadDate, 'minutes');
+		this.lastDataSentStatus = timeDifferenceinHours > 24 ? `${moment(currentUTCTime)
+		.diff(lastUploadDate, 'days')} days ago` : timeDifferenceinHours === 0 ?
+		 `${timeDifferenceinMinutes} minutes ago` : `${timeDifferenceinHours} hours ago`;
+
+	}
+
+	/**
+	 * Function to continue to setup
+	 */
+	public onContinue () {
+		this.router.navigate(['/setup-ie'], this.params);
+
+	}
+
 }

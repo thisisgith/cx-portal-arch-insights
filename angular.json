@@ -7,19 +7,16 @@
 			"schematics": {},
 			"architect": {
 				"build": {
-					"builder": "@angular-devkit/build-angular:browser",
+					"builder": "@angular-builders/custom-webpack:browser",
 					"configurations": {
 						"production": {
 							"aot": true,
-							"budgets": [
-								{
-									"maximumError": "10mb",
-									"maximumWarning": "2mb",
-									"type": "initial"
-								}
-							],
-							"fileReplacements": [
-								{
+							"budgets": [{
+								"maximumError": "10mb",
+								"maximumWarning": "2mb",
+								"type": "initial"
+							}],
+							"fileReplacements": [{
 									"replace": "src/environments/environment.ts",
 									"with": "src/environments/environment.prod.ts"
 								},
@@ -52,17 +49,38 @@
 								"node_modules/@cx-portal/metrics/cx_portal_metrics_rules.js"
 							]
 						},
-						"stage": {
-							"aot": true,
-							"budgets": [
-								{
-									"maximumError": "10mb",
-									"maximumWarning": "2mb",
-									"type": "initial"
-								}
-							],
+						"production-local": {
 							"fileReplacements": [
 								{
+									"replace": "src/environments/environment.ts",
+									"with": "src/environments/environment.prod.ts"
+								},
+								{
+									"replace": "src/app/components/header/header.module.ts",
+									"with": "src/app/components/header/header.module.prod"
+								},
+								{
+									"replace": "src/app/components/header/header.component.ts",
+									"with": "src/app/components/header/header.component.prod"
+								},
+								{
+									"replace": "src/app/components/header/header.component.html",
+									"with": "src/app/components/header/header.component.prod.html"
+								},
+								{
+									"replace": "src/index.html",
+									"with": "src/index.prod.html"
+								}
+							]
+						},
+						"stage": {
+							"aot": true,
+							"budgets": [{
+								"maximumError": "10mb",
+								"maximumWarning": "2mb",
+								"type": "initial"
+							}],
+							"fileReplacements": [{
 									"replace": "src/environments/environment.ts",
 									"with": "src/environments/environment.stage.ts"
 								},
@@ -92,17 +110,38 @@
 							"sourceMap": false,
 							"vendorChunk": false
 						},
-						"tie": {
-							"aot": true,
-							"budgets": [
-								{
-									"maximumError": "10mb",
-									"maximumWarning": "2mb",
-									"type": "initial"
-								}
-							],
+						"stage-local": {
 							"fileReplacements": [
 								{
+									"replace": "src/environments/environment.ts",
+									"with": "src/environments/environment.stage.ts"
+								},
+								{
+									"replace": "src/app/components/header/header.module.ts",
+									"with": "src/app/components/header/header.module.prod"
+								},
+								{
+									"replace": "src/app/components/header/header.component.ts",
+									"with": "src/app/components/header/header.component.prod"
+								},
+								{
+									"replace": "src/app/components/header/header.component.html",
+									"with": "src/app/components/header/header.component.prod.html"
+								},
+								{
+									"replace": "src/index.html",
+									"with": "src/index.stage.html"
+								}
+							]
+						},
+						"tie": {
+							"aot": true,
+							"budgets": [{
+								"maximumError": "10mb",
+								"maximumWarning": "2mb",
+								"type": "initial"
+							}],
+							"fileReplacements": [{
 									"replace": "src/environments/environment.ts",
 									"with": "src/environments/environment.tie.ts"
 								},
@@ -135,17 +174,38 @@
 								"node_modules/@cx-portal/metrics/cx_portal_metrics_rules.js"
 							]
 						},
-						"cxportal-qa": {
-							"aot": true,
-							"budgets": [
-								{
-									"maximumError": "10mb",
-									"maximumWarning": "2mb",
-									"type": "initial"
-								}
-							],
+						"tie-local": {
 							"fileReplacements": [
 								{
+									"replace": "src/environments/environment.ts",
+									"with": "src/environments/environment.tie.ts"
+								},
+								{
+									"replace": "src/app/components/header/header.module.ts",
+									"with": "src/app/components/header/header.module.prod"
+								},
+								{
+									"replace": "src/app/components/header/header.component.ts",
+									"with": "src/app/components/header/header.component.prod"
+								},
+								{
+									"replace": "src/app/components/header/header.component.html",
+									"with": "src/app/components/header/header.component.prod.html"
+								},
+								{
+									"replace": "src/index.html",
+									"with": "src/index.tie.html"
+								}
+							]
+						},
+						"cxportal-qa": {
+							"aot": true,
+							"budgets": [{
+								"maximumError": "10mb",
+								"maximumWarning": "2mb",
+								"type": "initial"
+							}],
+							"fileReplacements": [{
 									"replace": "src/environments/environment.ts",
 									"with": "src/environments/environment.cxcloud-qa.ts"
 								},
@@ -175,17 +235,38 @@
 							"sourceMap": false,
 							"vendorChunk": false
 						},
-						"cxportal-lt": {
-							"aot": true,
-							"budgets": [
-								{
-									"maximumError": "10mb",
-									"maximumWarning": "2mb",
-									"type": "initial"
-								}
-							],
+						"cxportal-qa-local": {
 							"fileReplacements": [
 								{
+									"replace": "src/environments/environment.ts",
+									"with": "src/environments/environment.cxcloud-qa.ts"
+								},
+								{
+									"replace": "src/app/components/header/header.module.ts",
+									"with": "src/app/components/header/header.module.prod"
+								},
+								{
+									"replace": "src/app/components/header/header.component.ts",
+									"with": "src/app/components/header/header.component.prod"
+								},
+								{
+									"replace": "src/app/components/header/header.component.html",
+									"with": "src/app/components/header/header.component.prod.html"
+								},
+								{
+									"replace": "src/index.html",
+									"with": "src/index.cxcloud-qa.html"
+								}
+							]
+						},
+						"cxportal-lt": {
+							"aot": true,
+							"budgets": [{
+								"maximumError": "10mb",
+								"maximumWarning": "2mb",
+								"type": "initial"
+							}],
+							"fileReplacements": [{
 									"replace": "src/environments/environment.ts",
 									"with": "src/environments/environment.cxcloud-lt.ts"
 								},
@@ -214,9 +295,39 @@
 							"outputHashing": "all",
 							"sourceMap": false,
 							"vendorChunk": false
+						},
+						"cxportal-lt-local": {
+							"fileReplacements": [
+								{
+									"replace": "src/environments/environment.ts",
+									"with": "src/environments/environment.cxcloud-lt.ts"
+								},
+								{
+									"replace": "src/app/components/header/header.module.ts",
+									"with": "src/app/components/header/header.module.prod"
+								},
+								{
+									"replace": "src/app/components/header/header.component.ts",
+									"with": "src/app/components/header/header.component.prod"
+								},
+								{
+									"replace": "src/app/components/header/header.component.html",
+									"with": "src/app/components/header/header.component.prod.html"
+								},
+								{
+									"replace": "src/index.html",
+									"with": "src/index.cxcloud-lt.html"
+								}
+							]
 						}
 					},
 					"options": {
+						"customWebpackConfig": {
+							"path": "./webpack.config.js",
+							"mergeStrategies": {
+								"module.rules": "prepend"
+							}
+						},
 						"assets": [
 							"src/favicon.png",
 							"src/assets"
@@ -255,7 +366,19 @@
 					"builder": "@angular-devkit/build-angular:dev-server",
 					"configurations": {
 						"production": {
-							"browserTarget": "persona-based-console:build:production"
+							"browserTarget": "persona-based-console:build:production-local"
+						},
+						"stage": {
+							"browserTarget": "persona-based-console:build:stage-local"
+						},
+						"tie": {
+							"browserTarget": "persona-based-console:build:tie-local"
+						},
+						"cxportal-lt": {
+							"browserTarget": "persona-based-console:build:cxportal-lt-local"
+						},
+						"cxportal-qa": {
+							"browserTarget": "persona-based-console:build:cxportal-qa-local"
 						}
 					},
 					"options": {
@@ -279,7 +402,15 @@
 						"tsConfig": "src/tsconfig.spec.json",
 						"codeCoverageExclude": [
 							"./src/app/**/*-routing.module.ts",
-							"./src/environments/**/*.ts"
+							"./src/environments/**/*.ts",
+
+							"./The_below_are_hacks_to_get_la_throttle_out_in_time__control-point_track__is_responsible_for_fixing_these",
+
+							"./src/app/components/user-mgmt/user-mgmt.component.ts",
+							"./src/app/components/user-mgmt/select-role/select-role.component.ts",
+							"./src/app/components/user-mgmt/select-role/roles.service.ts",
+							"./src/app/components/user-mgmt/user-mgmt-sort.pipe.ts",
+							"./src/app/components/user-mgmt/user-mgmt-filter.pipe.ts"
 						]
 					}
 				}
@@ -301,7 +432,7 @@
 						"tsConfig": "projects/sdp-api/tsconfig.lib.json",
 						"project": "projects/sdp-api/ng-package.json"
 					},
-				"configurations": {
+					"configurations": {
 						"production": {
 							"project": "projects/sdp-api/ng-package.json"
 						}

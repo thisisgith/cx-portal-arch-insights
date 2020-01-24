@@ -128,7 +128,7 @@ class OrgUserService extends __BaseService {
    *
    * @return successful operation
    */
-  getUserV2(params: OrgUserService.GetUserV2Params): __Observable<OrgUserResponse> {
+  getUserV2(params: OrgUserService.GetUserV2Params): __Observable<OrgUserResponse | OrgUserResponse[]> {
     return this.getUserV2Response(params).pipe(
       __map(_r => _r.body as OrgUserResponse)
     );

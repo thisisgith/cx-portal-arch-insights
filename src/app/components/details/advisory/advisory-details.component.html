@@ -1,8 +1,8 @@
-<details-panel *ngIf="advisoryId && customerId" [hidden]="!advisoryId && !advisory" (hiddenChange)="handleHidden($event)" [fullscreen]="fullscreen">
-	<details-panel-header (close)="onAllPanelsClose()"
+<details-panel id="advisoriesDetailPanel" *ngIf="advisoryId && customerId" [hidden]="!advisoryId && !advisory" (hiddenChange)="handleHidden($event)" [fullscreen]="fullscreen">
+	<details-panel-header (close)="onPanelBack()"
 		(back)="onPanelBack()"
 		[(fullscreen)]="fullscreen"
-		[fullscreenToggle]="false">
+		[fullscreenToggle]="screenWidth > 1024 ? true : false">
 		<ng-container *ngIf="details">
 			<security-details-header *ngIf="type === 'security'"
 				[details]="details"

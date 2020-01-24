@@ -3,7 +3,12 @@ import { CommonModule } from '@angular/common';
 import { InlineSVGModule } from 'ng-inline-svg';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { SolutionComponent } from './solution.component';
-import { CuiGaugeModule, CuiSpinnerModule, CuiModalModule } from '@cisco-ngx/cui-components';
+import {
+	CuiGaugeModule,
+	CuiSpinnerModule,
+	CuiModalModule,
+	CuiAlertModule,
+} from '@cisco-ngx/cui-components';
 import { SolutionRoutingModule } from './solution-routing.module';
 import {
 	ContractsModule,
@@ -24,6 +29,8 @@ import {
 } from '@components';
 import { SharedModule } from 'src/app/shared/shared.module';
 
+import { AtxWatchModalComponent } from './lifecycle/atx-watch-modal/atx-watch-modal.component';
+
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
  */
@@ -33,7 +40,8 @@ const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
  * Module representing the Solution Pages
  */
 @NgModule({
-	declarations: [SolutionComponent],
+	declarations: [SolutionComponent, AtxWatchModalComponent],
+	entryComponents: [AtxWatchModalComponent],
 	exports: [SolutionComponent],
 	imports: [
 		BarChartModule,
@@ -58,6 +66,7 @@ const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 		InsightsCrashesModule.forRoot({ rootUrl }),
 		SolutionRoutingModule,
 		SharedModule,
+		CuiAlertModule,
 	],
 })
 export class SolutionModule { }

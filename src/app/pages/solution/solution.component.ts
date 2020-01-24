@@ -7,6 +7,7 @@ import {
 	HostListener,
 	ElementRef,
 	ChangeDetectorRef,
+	AfterViewInit,
 } from '@angular/core';
 import { I18n } from '@cisco-ngx/cui-utils';
 import {
@@ -27,6 +28,9 @@ import {
 	ProductAlertsService,
 	InsightsCrashesService,
 	DiagnosticsService,
+	SecurityAdvisoriesResponse,
+	CriticalBugsResponse,
+	FieldNoticeAdvisoryResponse,
 } from '@sdp-api';
 import { CaseService } from '@cui-x/services';
 import { LogService } from '@cisco-ngx/cui-services';
@@ -35,9 +39,10 @@ import { CuiModalService } from '@cisco-ngx/cui-components';
 import { catchError, map, takeUntil } from 'rxjs/operators';
 import { Step } from '../../../../src/app/components/quick-tour/quick-tour.component';
 import { DetailsPanelStackService, UtilsService, RacetrackInfoService, CaseDetailsService } from '@services';
-import { HttpResponse } from '@angular/common/http';
 import { SmartAccount } from '@interfaces';
 import { UserResolve } from '@utilities';
+import { ACTIVE_TECHNOLOGY_KEY } from '@constants';
+import { ContactSupportComponent } from '../../components/contact-support/contact-support.component';
 
 /**
  * Interface representing a facet
@@ -50,6 +55,7 @@ interface Facet {
 	route: string;
 	selected?: boolean;
 	template: TemplateRef<{ }>;
+	srOnlyTemplate?: TemplateRef<{ }>;
 	title: string;
 }
 
@@ -60,7 +66,7 @@ interface Facet {
 	styleUrls: ['./solution.component.scss'],
 	templateUrl: './solution.component.html',
 })
-export class SolutionComponent implements OnInit, OnDestroy {
+export class SolutionComponent implements OnInit, OnDestroy, AfterViewInit {
 	public smartAccounts: SmartAccount[];
 	public activeSmartAccount: SmartAccount;
 	public showSmartAccountSelection: boolean;
@@ -94,12 +100,17 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	private quickTourFirstTime: boolean;
 	private destroy$ = new Subject();
 	public cxLevel: number;
+	public alert: any = { };
+	public showErrorMessage = false;
 
-	@ViewChild('kmWrapper', { static: true }) private kmWrapperRef: ElementRef;
+	@ViewChild('facetNavigationWrapper', { static: true }) private facetNavigationWrapperRef: ElementRef;
 	@ViewChild('advisoriesFacet', { static: true }) public advisoriesTemplate: TemplateRef<{ }>;
+	@ViewChild('advisoriesSrOnly', { static: true }) public advisoriesSrOnly: TemplateRef<{ }>;
 	@ViewChild('assetsFacet', { static: true }) public assetsTemplate: TemplateRef<{ }>;
 	@ViewChild('lifecycleFacet', { static: true }) public lifecycleTemplate: TemplateRef<{ }>;
+	@ViewChild('percentageGaugeSrOnly', { static: true }) public percentageGaugeSrOnly: TemplateRef<{ }>;
 	@ViewChild('resolutionFacet', { static: true }) public resolutionTemplate: TemplateRef<{ }>;
+	@ViewChild('resolutionSrOnly', { static: true }) public resolutionSrOnlyTemplate: TemplateRef<{ }>;
 	@ViewChild('insightsFacet', { static: true }) public insightsTemplate: TemplateRef<{ }>;
 	@ViewChild('content', { static: true }) private contentContainer: ElementRef;
 
@@ -176,9 +187,9 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	 * @param {number} shift The direction and magnitude of shift.
 	 */
 	public shiftCarousel (shift) {
-		const wrapper = this.kmWrapperRef.nativeElement;
-		const itemWidth = wrapper.querySelector('.km__items__item').offsetWidth;
-		wrapper.scrollTo(wrapper.scrollLeft + (shift * itemWidth), 0);
+		const wrapper = this.facetNavigationWrapperRef.nativeElement;
+		const itemWidth = wrapper.querySelector('.facet-navigation__list-item').offsetWidth;
+		wrapper.scrollTo(wrapper.scrollLeft + (shift * itemWidth) + 32, 0);
 	}
 
 	/**
@@ -186,10 +197,10 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	 * @param {Element} target the target key metric element
 	 */
 	public repositionCarousel (target) {
-		const wrapper = this.kmWrapperRef.nativeElement;
+		const wrapper = this.facetNavigationWrapperRef.nativeElement;
 		const wrapperBounds = wrapper.getBoundingClientRect();
 		const targetBounds = target.getBoundingClientRect();
-		const itemWidth = wrapper.querySelector('.km__items__item').offsetWidth;
+		const itemWidth = wrapper.querySelector('.facet-navigation__list-item').offsetWidth;
 
 		if (targetBounds.left < wrapperBounds.left) {
 			wrapper.scrollTo(wrapper.scrollLeft - itemWidth, 0);
@@ -213,9 +224,9 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	 */
 	public selectFacet (facet: Facet, navigate = false) {
 		if (facet) {
-			this.facets.forEach((f: Facet) => {
-				if (f !== facet) {
-					f.selected = false;
+			this.facets.forEach((otherFacet: Facet) => {
+				if (otherFacet !== facet) {
+					otherFacet.selected = false;
 				}
 			});
 
@@ -224,11 +235,14 @@ export class SolutionComponent implements OnInit, OnDestroy {
 
 			facet.selected = true;
 			this.selectedFacet = facet;
-			this.quickTourActive = facet.key === 'lifecycle' && (this.quickTourFirstTime ||
-			_.isNil(this.quickTourFirstTime));
+			this.quickTourActive = facet.key === 'lifecycle'
+				&& (this.quickTourFirstTime || _.isNil(this.quickTourFirstTime));
+
 			if (facet.route && this.activeRoute !== facet.route) {
 				this.activeRoute = facet.route;
 				if (navigate) {
+					// calling case service on every Prob-Res tile click
+					if (facet.key === 'resolution') { this.fetchCaseAndRmaCountOnRefresh(); }
 					this.router.navigate([facet.route]);
 				}
 			}
@@ -257,6 +271,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 				loading: false,
 				route: '/solution/lifecycle',
 				template: this.lifecycleTemplate,
+				srOnlyTemplate: this.percentageGaugeSrOnly,
 				title: I18n.get('_Lifecycle_'),
 			},
 			{
@@ -265,6 +280,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 				loading: true,
 				route: '/solution/assets',
 				template: this.assetsTemplate,
+				srOnlyTemplate: this.percentageGaugeSrOnly,
 				title: I18n.get('_Assets&Coverage_'),
 			},
 			{
@@ -272,13 +288,15 @@ export class SolutionComponent implements OnInit, OnDestroy {
 				loading: true,
 				route: '/solution/advisories',
 				template: this.advisoriesTemplate,
+				srOnlyTemplate: this.advisoriesSrOnly,
 				title: I18n.get('_Advisories_'),
 			},
 			{
 				key: 'resolution',
-				loading: true,
+				loading: false,
 				route: '/solution/resolution',
 				template: this.resolutionTemplate,
+				srOnlyTemplate: this.resolutionSrOnlyTemplate,
 				title: I18n.get('_ProblemResolution_'),
 			},
 			{
@@ -286,6 +304,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 				loading: false,
 				route: '/solution/insights',
 				template: this.insightsTemplate,
+				srOnlyTemplate: this.percentageGaugeSrOnly,
 				title: I18n.get('_Insights_'),
 			},
 		];
@@ -305,6 +324,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		this.racetrackInfoService.sendCurrentTechnology(technology);
 		this.racetrackInfoService.sendCurrentAdoptionPercentage(
 				technology.usecase_adoption_percentage);
+		window.localStorage.setItem(ACTIVE_TECHNOLOGY_KEY, technology.name);
 	}
 
 	public changeSolution (solution: RacetrackSolution) {
@@ -460,14 +480,16 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		let fieldTotal = 0;
 
 		return forkJoin([
-			this.productAlertsService.headAdvisoriesFieldNoticesResponse({
+			this.productAlertsService.getAdvisoriesFieldNotices({
 				customerId: this.customerId,
 				solution: this.selectedSolutionName,
 				useCase: this.selectedTechnologyName,
+				rows: 1,
+				page: 1,
 			})
 			.pipe(
-				map((response: HttpResponse<null>) => {
-					fieldTotal = _.toNumber(_.invoke(response, 'headers.get', 'X-API-RESULT-COUNT')) || 0;
+				map((response: FieldNoticeAdvisoryResponse) => {
+					fieldTotal = _.toNumber(_.get(response, ['Pagination', 'total'], 0)) || 0;
 				}),
 				catchError(err => {
 					this.logger.error('solution.component : fetchAdvisoryCounts():field ' +
@@ -476,14 +498,16 @@ export class SolutionComponent implements OnInit, OnDestroy {
 					return of({ });
 				}),
 			),
-			this.productAlertsService.headAdvisoriesSecurityAdvisoriesResponse({
+			this.productAlertsService.getAdvisoriesSecurityAdvisories({
 				customerId: this.customerId,
 				solution: this.selectedSolutionName,
 				useCase: this.selectedTechnologyName,
+				page: 1,
+				rows: 1,
 			})
 			.pipe(
-				map((response: HttpResponse<null>) => {
-					advisoryTotal = _.toNumber(_.invoke(response, 'headers.get', 'X-API-RESULT-COUNT')) || 0;
+				map((response: SecurityAdvisoriesResponse) => {
+					advisoryTotal = _.toNumber(_.get(response, ['Pagination', 'total'], 0)) || 0;
 				}),
 				catchError(err => {
 					this.logger.error('solution.component : fetchAdvisoryCounts():security ' +
@@ -492,14 +516,16 @@ export class SolutionComponent implements OnInit, OnDestroy {
 					return of({ });
 				}),
 			),
-			this.diagnosticsService.headCriticalBugsResponse({
+			this.diagnosticsService.getCriticalBugs({
 				customerId: this.customerId,
 				solution: this.selectedSolutionName,
 				useCase: this.selectedTechnologyName,
+				rows: 1,
+				page: 1,
 			})
 			.pipe(
-				map((response: HttpResponse<null>) => {
-					bugsTotal = _.toNumber(_.invoke(response, 'headers.get', 'X-API-RESULT-COUNT')) || 0;
+				map((response: CriticalBugsResponse) => {
+					bugsTotal = _.toNumber(_.get(response, ['Pagination', 'total'], 0)) || 0;
 				}),
 				catchError(err => {
 					this.logger.error('solution.component : fetchAdvisoryCounts():bugs ' +
@@ -591,6 +617,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	 */
 	public getCaseAndRMACount () {
 		const resolutionFacet = _.find(this.facets, { key: 'resolution' });
+		resolutionFacet.loading = true;
 		const params = {
 			nocache: Date.now(),
 			page: 0,
@@ -605,6 +632,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 			.pipe(
 				catchError(err => {
 					this.logger.error(`Case Data :: Case Count :: Error ${err}`);
+					resolutionFacet.loading = false;
 
 					return of(null);
 				}),
@@ -620,6 +648,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 					this.logger.error(`RMA Data :: RMA Count :: Error ${err}`);
 					this.casesCount = 0;
 					this.RMACount = 0;
+					resolutionFacet.loading = false;
 
 					return of(null);
 				}),
@@ -634,11 +663,19 @@ export class SolutionComponent implements OnInit, OnDestroy {
 			}),
 			catchError(err => {
 				this.logger.error(`RMA Data :: Case and RMA Count :: Error ${err}`);
+				resolutionFacet.loading = false;
 
 				return of(null);
 			}),
 			takeUntil(this.destroy$),
 		);
+	}
+
+	/**
+	 * Open contact support modal small
+	 */
+	public openPortalSupport () {
+		this.cuiModalService.showComponent(ContactSupportComponent, { }, 'small');
 	}
 
 	/**
@@ -659,10 +696,12 @@ export class SolutionComponent implements OnInit, OnDestroy {
 			},
 			{
 				arrows: 1,
-				data: { },
+				data: {
+					active: true,
+				},
 				description: I18n.get('_QuickTourStep3Description_'),
 				maxWidth: 300,
-				relative: true,
+				relative: false,
 				stepIndex: 2,
 				stepPos: 'bottom',
 				title: I18n.get('_QuickTourStep3Title_'),
@@ -688,41 +727,50 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	 */
 	@HostListener('window:resize')
 	public refreshQuickTour () {
-		this.calculateStep1();
-		this.calculateStep2();
+		this.calculateSteps();
 	}
 
-	/**
-	 * Calculates the position and dimensions of the second Quick Tour Step
-	 */
-	private calculateStep1 () {
+	private calculateStep1 (colRatio, offsetTop, offsetWidth) {
 		const step = _.find(this.quickTourSteps, { stepIndex: 0 });
-		const offsetLeft = this.contentContainer.nativeElement.offsetLeft;
-		const offsetTop = this.contentContainer.nativeElement.offsetTop;
-		const offsetWidth = this.contentContainer.nativeElement.offsetWidth;
-		const colRatio = 3 / 12;
 		const arrowOffset = 20;
-		step.data.left = offsetLeft + offsetWidth * colRatio - arrowOffset;
+		step.data.left = offsetWidth * colRatio - arrowOffset;
 		step.data.top = offsetTop + 150;
 		step.data.active = true;
 		step.width = offsetWidth * colRatio * 2;
 	}
 
-	/**
-	 * Calculates the position and dimensions of the second Quick Tour Step
-	 */
-	private calculateStep2 () {
+	private calculateStep2 (colRatio, offsetTop, offsetWidth, offsetHeight) {
 		const step = _.find(this.quickTourSteps, { stepIndex: 1 });
-		const offsetLeft = this.contentContainer.nativeElement.offsetLeft;
-		const offsetTop = this.contentContainer.nativeElement.offsetTop;
-		const offsetWidth = this.contentContainer.nativeElement.offsetWidth;
-		const offsetHeight = this.contentContainer.nativeElement.offsetHeight;
-		const colRatio = 3 / 12;
 		const center = colRatio * 2.5;
-		step.data.left = offsetLeft + offsetWidth * center;
+		step.data.left = offsetWidth * center;
 		step.data.top = offsetTop + offsetHeight * 0.4;
 		step.data.active = true;
 		step.width = offsetWidth * colRatio * 2;
+	}
+
+	private calculateStep3 (colRatio, offsetTop, offsetWidth) {
+		// Step 3 points to the Assets Facet card on top. So, unlike Step 1 and Step 2,
+		// the position is always constant.
+		const leftPos = 564;
+		const step = _.find(this.quickTourSteps, { stepIndex: 2 });
+		step.data.left = leftPos;
+		step.data.top = offsetTop * 0.75;
+		step.data.active = true;
+		step.width = offsetWidth * colRatio * 2;
+	}
+
+	/**
+	 * Calculates the offsets for the positions of quick guide tour steps.
+	 * Each individual step calculation method is then called with these offset values.
+	 */
+	private calculateSteps () {
+		const offsetTop = this.contentContainer.nativeElement.offsetTop;
+		const offsetWidth = this.contentContainer.nativeElement.offsetWidth;
+		const offsetHeight = this.contentContainer.nativeElement.offsetHeight;
+		const colRatio = 0.25;
+		this.calculateStep1(colRatio, offsetTop, offsetWidth);
+		this.calculateStep2(colRatio, offsetTop, offsetWidth, offsetHeight);
+		this.calculateStep3(colRatio, offsetTop, offsetWidth);
 	}
 
 	/**
@@ -755,6 +803,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	 * OnInit Functionality
 	 */
 	public ngOnInit () {
+		_.invoke(window, 'addToMap', 'id', _.get(window, ['cisco', 'user', '_id']));
 		this.initializeQuickTour();
 		this.initializeFacets();
 		this.fetchSolutions();
@@ -764,9 +813,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		this.caseDetailsService.caseCount$
 			.subscribe((data: boolean) => {
 				if (data && this.destroy$) {
-					this.getCaseAndRMACount()
-						.pipe(takeUntil(this.destroy$))
-						.subscribe();
+					this.fetchCaseAndRmaCountOnRefresh();
 				}
 			});
 	}
@@ -786,9 +833,18 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	 * Detects changes to the view after init
 	 */
 	public async ngAfterViewInit () {
-		this.calculateStep1();
-		this.calculateStep2();
+		this.calculateSteps();
 		this.selectFacet(this.getFacetFromRoute(this.activeRoute));
+		this.racetrackInfoService.getPitStopApiFailure()
+		.pipe(
+			map(() => {
+				const advisoryFacet = _.find(this.facets, { key: 'advisories' });
+				advisoryFacet.loading = false;
+				this.showErrorMessage = true;
+			}),
+			takeUntil(this.destroy$),
+		)
+		.subscribe();
 	}
 
 	/**
@@ -828,5 +884,20 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	 */
 	public clickOutsideDropdown (clickedOutsideDropdown: 'smartAccount' | 'solution' | 'technology') {
 		this.status.dropdowns[clickedOutsideDropdown] = false;
+	}
+
+	/**
+	 * calling fetchCaseAndRmaCountOnRefresh on case creation and when routed to Problem-Resolution tile
+	 */
+	public fetchCaseAndRmaCountOnRefresh () {
+		this.getCaseAndRMACount()
+			.pipe(catchError(err => {
+				this.logger.error('solution.component : fetchCaseAndRmaCountOnRefresh() ' +
+				`:: Error : (${err.status}) ${err.message}`);
+
+				return of({  });
+			}),
+			takeUntil(this.destroy$))
+			.subscribe();
 	}
 }

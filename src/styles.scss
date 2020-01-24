@@ -1,6 +1,7 @@
 @import '~src/variables.scss';
 @import "~mapbox-gl/dist/mapbox-gl.css";
 @import '~cisco-ui/src/scss/cui-standard.scss';
+@import '~src/mixins.scss';
 
 /* XL Margins */
 
@@ -56,8 +57,8 @@
 
 	@include btn-size(
 		$padding: 0 15px,
-		$font-size: 13px !important,
-		$line-height: 13px,
+		$font-size: 1.3rem !important,
+		$line-height: 1.3rem,
 		$height: 28px,
 		$min-width: 0
 	);
@@ -192,8 +193,16 @@
 /** Altering tabs css to match Demo app */
 
 .tab__heading {
-	font-size: 14px;
+	font-size: 1.4rem;
 	padding: 0 !important;
+}
+
+/** Handling the tabs for 100% resolution */
+
+@media screen and (min-width: $screen-lg-min) {
+	.tab__heading > span {
+		line-height: normal;
+	}
 }
 
 .cui .nav-tabs > li,
@@ -202,7 +211,7 @@
 	margin-right: 25px;
 	margin-left: 25px;
 	font-weight: 400;
-	font-size: 14px;
+	font-size: 1.4rem;
 }
 
 .cui .nav-tabs > li.active > a,
@@ -308,7 +317,7 @@
 }
 
 .step-title {
-	font-size: 36px !important;
+	font-size: 3.6rem !important;
 	font-weight: 300;
 	color: #848587;
 }
@@ -320,4 +329,16 @@ button.btn.btn-ctc {
 	&:hover {
 		background: $vibrant-blue;
 	}
+}
+
+.sr-only {
+	position: absolute;
+	left: -300vw;
+	border: none;
+	width: 1px;
+	height: 0;
+	overflow: hidden;
+	padding: 0;
+	margin: 0;
+	clip: rect(1px, 1px, 1px, 1px);
 }

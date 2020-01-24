@@ -8,7 +8,7 @@ import {
 	TemplateRef,
 } from '@angular/core';
 import { LogService } from '@cisco-ngx/cui-services';
-import { Subject } from 'rxjs';
+import { Subject, of } from 'rxjs';
 import { FpIntelligenceService, SimilarDevicesList, RacetrackSolution, RacetrackTechnology } from '@sdp-api';
 import {
 	FormGroup,
@@ -16,12 +16,13 @@ import {
 	FormBuilder,
 } from '@angular/forms';
 import { UserResolve } from '@utilities';
-import { takeUntil, debounceTime } from 'rxjs/operators';
+import { takeUntil, debounceTime, switchMap } from 'rxjs/operators';
 import * as _ from 'lodash-es';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { ActivatedRoute } from '@angular/router';
 import { RacetrackInfoService } from '@services';
+import { RiskScoreComponent } from './risk-score/risk-score.component';
 
 /**
  * fp-similarassets component
@@ -48,6 +49,7 @@ export class FpSimilarAssetsComponent {
 	public size = 3;
 	public similarityCriteria = 'softwares_features';
 	public noData = false;
+	public similarAssetError = false;
 	public requestForm: FormGroup = this.fb.group({
 		similarityCriteria: ['softwares_features', Validators.required],
 	});
@@ -55,6 +57,7 @@ export class FpSimilarAssetsComponent {
 	public globalRiskRankValue;
 	@Output() public devicesSelected: EventEmitter<any> = new EventEmitter<any>();
 	@Output() public reqError: EventEmitter<any> = new EventEmitter<any>();
+	public alert = { };
 	public selectedDevice2: any;
 	@ViewChild('assetTemplate', { static: true })
 	private assetTemplate: TemplateRef<[]>;
@@ -70,6 +73,7 @@ export class FpSimilarAssetsComponent {
 	private crashRiskAlignmentTemplate: TemplateRef<[]>;
 	private selectedSolutionName: string;
 	private selectedTechnologyName: string;
+	public riskScoreComponent = RiskScoreComponent;
 
 	constructor (
 		private userResolve: UserResolve,
@@ -196,11 +200,15 @@ export class FpSimilarAssetsComponent {
 		similarDeviceParams.useCase = this.selectedTechnologyName;
 		this.fpIntelligenceService
 			.getSimilarDevices(similarDeviceParams)
-			.pipe(takeUntil(this.destroyed$))
+			.pipe(
+				switchMap(similarDevicesData => of(similarDevicesData)),
+				takeUntil(this.destroyed$),
+			)
 			.subscribe(
 				similarDevicesData => {
 					if (_.get(similarDevicesData, ['similarDevices', 'length'], 0) > 0) {
 						this.similarDevicesData = similarDevicesData;
+						this.similarAssetError = false;
 						this.noData = false;
 						this.reqError.emit();
 					} else {
@@ -212,7 +220,13 @@ export class FpSimilarAssetsComponent {
 				err => {
 					this.seriesDataLoading = false;
 					this.noData = true;
-					this.reqError.emit(I18n.get('_CP_SimilarAssets_Error_'));
+					this.similarAssetError = true;
+					if (err.status >= 500) {
+						this.reqError.emit(I18n.get('_ServerError_'));
+
+					} else {
+						this.reqError.emit(I18n.get('_CP_SimilarAssets_Error_'));
+					}
 					this.logger.error(err);
 				},
 				() => (this.seriesDataLoading = false),

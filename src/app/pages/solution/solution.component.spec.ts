@@ -307,15 +307,15 @@ describe('SolutionComponent', () => {
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
 
-		spyOn(productAlertsService, 'headAdvisoriesFieldNoticesResponse')
+		spyOn(productAlertsService, 'getAdvisoriesFieldNotices')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
 
-		spyOn(productAlertsService, 'headAdvisoriesSecurityAdvisoriesResponse')
+		spyOn(productAlertsService, 'getAdvisoriesSecurityAdvisories')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
 
-		spyOn(diagnosticsService, 'headCriticalBugsResponse')
+		spyOn(diagnosticsService, 'getCriticalBugs')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
 
@@ -393,5 +393,18 @@ describe('SolutionComponent', () => {
 		expect(assetsFacet.data)
 			.toEqual({ gaugePercent: 7.920792079207921 });
 		discardPeriodicTasks();
+	}));
+
+	it('should call getCaseAndRMACount on fetchCaseAndRmaCountOnRefresh()', fakeAsync(() => {
+		spyOn(component, 'getCaseAndRMACount')
+			.and
+			.returnValue(of({ }));
+		component.fetchCaseAndRmaCountOnRefresh();
+		fixture.detectChanges();
+		expect(component.getCaseAndRMACount)
+			.toHaveBeenCalled();
+
+		discardPeriodicTasks();
+		flush();
 	}));
 });

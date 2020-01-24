@@ -69,7 +69,7 @@
 }
 
 .card__header {
-	min-height: 75px;
+	min-height: 15px;
 }
 
 .card__footer {
@@ -106,8 +106,7 @@
 	}
 
 	.cui .icon-more::before {
-		// styling to make the more icon sizing more aligned with design
-		font-size: 20px !important;
+		font-size: 2rem !important;
 	}
 }
 
@@ -144,5 +143,12 @@
 }
 
 .row-padding {
-	padding-left: 15px;
+	padding-left: 10px;
+}
+
+.label--circle.label--tiny {
+	width: 12px;
+	height: 12px;
+	min-width: 10px;
+	min-height: 10px;
 }

@@ -28,6 +28,7 @@ export interface FaultSearchParams {
 	faultSeverity?: string;
 	lastUpdateTime?: string;
 	msgType?: string;
+	srStatus?: string;
 }
 
 /**
@@ -130,6 +131,7 @@ export interface FaultAffectedSystemDetails {
 	serialNumber: string;
 	productId: string;
 	softwareType: string;
+	srStatus: string;
 	tacCaseNo: string;
 	alarmCreatedDate: string;
 	tacCaseCreatedDate: string;

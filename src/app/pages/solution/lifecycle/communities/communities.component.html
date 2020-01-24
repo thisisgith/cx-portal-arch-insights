@@ -4,22 +4,24 @@
 		<div class="flex-custom-vertical" *ngIf="curatedCommunity" data-auto-id="CuratedCommunityLink">
 			<span class="icon-communities"></span>
 			<span><a class="cx-lifecycle-card--link no-link half-padding-left"
-					(click)="crossLaunch(curatedCommunityUrl)"
+					href="{{ curatedCommunityUrl }}"
+					(click)="crossLaunch($event, curatedCommunityUrl, $event)"
 					data-toggle="tooltip"
-					data-placement="bottom" title="{{curatedCommunity.description}}" id="curatedcommunitytitle"
-					attr.data-auto-id="communitytitle-{{curatedCommunity.description}}-Lifecycle"
-					attr.data-auto-href="{{curatedCommunityUrl}}"
+					data-placement="bottom" title="{{ curatedCommunity.description }}" id="curatedcommunitytitle"
+					attr.data-auto-id="communitytitle-{{ curatedCommunity.description }}-Lifecycle"
+					attr.data-auto-href="{{ curatedCommunityUrl }}"
 					[innerText]="'_SuccessTrackCommunities_' | i18n"></a>
 			</span>
 		</div>
 		<div class="flex-center-vertical" *ngIf="publicCommunity" data-auto-id="PublicCommunityLink">
 			<span class="icon-communities"></span>
 			<span><a class="cx-lifecycle-card--link no-link half-padding-left"
-					(click)="crossLaunch(publicCommunityUrl)"
+					href="{{ publicCommunityUrl }}"
+					(click)="crossLaunch($event, publicCommunityUrl, $event)"
 					data-toggle="tooltip"
-					data-placement="bottom" title="{{publicCommunity.description}}" id="publiccommunitytitle"
-					attr.data-auto-id="communitytitle-{{publicCommunity.description}}-Public"
-					attr.data-auto-href="{{publicCommunityUrl}}"
+					data-placement="bottom" title="{{ publicCommunity.description }}" id="publiccommunitytitle"
+					attr.data-auto-id="communitytitle-{{ publicCommunity.description }}-Public"
+					attr.data-auto-href="{{ publicCommunityUrl }}"
 					[innerText]="'_Public_' | i18n"></a>
 			</span>
 		</div>

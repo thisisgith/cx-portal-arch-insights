@@ -19,6 +19,12 @@ import {
 	SystemAsset,
 	HardwareAssets,
 	SystemAssets,
+	DiagnosticsPagination,
+	SecurityAdvisoryInfo,
+	ProductAlertsService,
+	SecurityAdvisoryResponse,
+	FieldNoticeResponse,
+	FieldNoticeAdvisory,
 } from '@sdp-api';
 import { LogService } from '@cisco-ngx/cui-services';
 import {
@@ -33,6 +39,7 @@ import { I18n } from '@cisco-ngx/cui-utils';
 import { AdvisoryType } from '@interfaces';
 import { getProductTypeImage, getProductTypeTitle } from '@classes';
 import { RacetrackInfoService } from '@services';
+import { Router } from '@angular/router';
 
 /**
  * The interface for impacted asset ids utilizing managedNeId
@@ -60,9 +67,11 @@ export interface Impacted {
 	templateUrl: './impacted-assets.component.html',
 })
 export class AdvisoryImpactedAssetsComponent implements OnInit {
-
+	@Input('affectedSystems') public affectedSystems;
+	@Input('advisory') public advisory: SecurityAdvisoryInfo | FieldNoticeAdvisory;
 	@Input('id') public id: string;
 	@Input('type') public type: AdvisoryType;
+	@Input('vulnerability') public vulnerability: string;
 	@Input('assetIds') public assetIds: AssetIds;
 	@Input('customerId') public customerId: string;
 	@Output('impactedCount') public impactedCount = new EventEmitter<number>();
@@ -75,7 +84,6 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 	@ViewChild('recommendedVersionColumn', null) public recommendedVersionColumn: TemplateRef<{ }>;
 
 	public affectedTable: CuiTableOptions;
-	public potentiallyAffectedTable: CuiTableOptions;
 	public isLoading = false;
 	public potentiallyImpacted: SystemAsset[] = [];
 	public impacted: SystemAsset[] = [];
@@ -84,18 +92,22 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 		bugAssets?: DiagnosticsService.GetCriticalBugsAssetsParams;
 		system?: InventoryService.GetSystemAssetsParams;
 		assets?: InventoryService.GetHardwareAssetsParams;
+		notice?: any;
 	};
 	public getProductIcon = getProductTypeImage;
 	public getProductTitle = getProductTypeTitle;
 	private selectedSolutionName: string;
 	private selectedTechnologyName: string;
 	private destroyed$: Subject<void> = new Subject<void>();
+	public pagination?: DiagnosticsPagination;
 
 	constructor (
 		private logger: LogService,
 		private inventoryService: InventoryService,
 		private diagnosticsService: DiagnosticsService,
 		private racetrackInfoService: RacetrackInfoService,
+		private router: Router,
+		private productAlertsService: ProductAlertsService,
 	) { }
 
 	/**
@@ -109,39 +121,37 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 		this.potentiallyImpacted = [];
 
 		const impacted = _.get(this.assetIds, 'impacted', []);
-		const potentiallyImpacted = _.get(this.assetIds, 'potentiallyImpacted', []);
-
 		this.inventoryService.getSystemAssets(this.params.system)
-		.pipe(
-			mergeMap((response: SystemAssets) => {
-				const data = _.get(response, 'data', []);
+			.pipe(
+				mergeMap((response: SystemAssets) => {
+					const data = _.get(response, 'data', []);
 
-				this.impacted =
-					_.filter(data,
-						x => _.includes(impacted, _.get(x, 'managedNeId'))) || [];
+					this.impacted =
+						_.filter(data,
+							x => _.includes(impacted, _.get(x, 'managedNeId'))) || [];
+					this.pagination = this.buildPagination(_.get(response, 'Pagination'));
+					return this.fetchAssets();
+				}),
+				catchError(err => {
+					this.pagination = {
+						total: 0,
+					};
+					this.logger.error('advisory-details:impacted-assets.component : ' +
+						`fetchSystemAsset() :: Error : (${err.status}) ${err.message}`);
 
-				this.potentiallyImpacted =
-					_.filter(data,
-						x => _.includes(potentiallyImpacted, _.get(x, 'managedNeId'))) || [];
-
-				return this.fetchAssets();
-			}),
-			catchError(err => {
-				this.logger.error('advisory-details:impacted-assets.component : ' +
-				 `fetchSystemAsset() :: Error : (${err.status}) ${err.message}`);
-
-				return of({ });
-			}),
-		)
-		.subscribe(() => {
-			this.assets.emit({
-				assets: this.impactedAssets,
-				impacted: this.impacted,
-				potentiallyImpacted: this.potentiallyImpacted,
+					return of({ });
+				}),
+			)
+			.subscribe(() => {
+				this.assets.emit({
+					assets: this.impactedAssets,
+					impacted: this.impacted,
+					potentiallyImpacted: this.potentiallyImpacted,
+				});
+				// this.impactedCount.emit(this.impacted.length + this.potentiallyImpacted.length);
+				this.impactedCount.emit(this.impacted.length);
+				this.isLoading = false;
 			});
-			this.impactedCount.emit(this.impacted.length + this.potentiallyImpacted.length);
-			this.isLoading = false;
-		});
 	}
 
 	/**
@@ -158,17 +168,18 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 		_.set(this.params.assets, 'serialNumber', serials);
 
 		return this.inventoryService.getHardwareAssets(this.params.assets)
-		.pipe(
-			map((response: HardwareAssets) => {
-				this.impactedAssets = _.get(response, 'data', []);
-			}),
-			catchError(err => {
-				this.logger.error('advisory-details:impacted-assets.component : fetchAssets() ' +
-					`:: Error : (${err.status}) ${err.message}`);
+			.pipe(
+				map((response: HardwareAssets) => {
+					this.impactedAssets = _.get(response, 'data', []);
 
-				return of({ });
-			}),
-		);
+				}),
+				catchError(err => {
+					this.logger.error('advisory-details:impacted-assets.component : fetchAssets() ' +
+						`:: Error : (${err.status}) ${err.message}`);
+
+					return of({ });
+				}),
+			);
 
 	}
 
@@ -182,28 +193,31 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 		this.potentiallyImpacted = [];
 
 		this.diagnosticsService.getCriticalBugsAssets(this.params.bugAssets)
-		.pipe(
-			mergeMap((response: BugImpactedAssetsResponse) => {
-				this.impacted = _.get(response, 'data', []);
+			.pipe(
+				mergeMap((response: BugImpactedAssetsResponse) => {
+					this.impacted = _.get(response, 'data', []);
+					this.pagination = this.buildPagination(_.get(response, 'Pagination'));
+					return this.fetchAssets();
+				}),
+				catchError(err => {
+					this.pagination = {
+						total: 0,
+					};
+					this.logger.error('advisory-details:impacted-assets.component : getAssets() ' +
+						`:: Error : (${err.status}) ${err.message}`);
 
-				return this.fetchAssets();
-			}),
-			catchError(err => {
-				this.logger.error('advisory-details:impacted-assets.component : getAssets() ' +
-					`:: Error : (${err.status}) ${err.message}`);
-
-				return of({ });
-			}),
-		)
-		.subscribe(() => {
-			this.impactedCount.emit(this.impacted.length + this.potentiallyImpacted.length);
-			this.assets.emit({
-				assets: this.impactedAssets,
-				impacted: this.impacted,
-				potentiallyImpacted: this.potentiallyImpacted,
+					return of({ });
+				}),
+			)
+			.subscribe(() => {
+				this.impactedCount.emit(this.pagination.total);
+				this.assets.emit({
+					assets: this.impactedAssets,
+					impacted: this.impacted,
+					potentiallyImpacted: this.potentiallyImpacted,
+				});
+				this.isLoading = false;
 			});
-			this.isLoading = false;
-		});
 	}
 
 	/**
@@ -219,71 +233,18 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 			wrapText: true,
 		};
 		const affectedOptions = _.cloneDeep(defaultOptions);
-		const potentiallyAffectedOptions = _.cloneDeep(defaultOptions);
-
+		this.params.notice = { };
 		switch (this.type) {
 			case 'security':
 				const securityAffectedTableColumns = [
 					{
-						key: 'deviceName',
+						key: 'hostname',
 						name: I18n.get('_SystemName_'),
 						sortable: true,
 						sortDirection: 'asc',
 						sorting: true,
 						template: this.deviceColumn,
-						width: '300px',
-					},
-					{
-						key: 'ipAddress',
-						name: I18n.get('_IPAddress_'),
-						sortable: true,
-						template: this.ipAddressColumn,
-					},
-					{
-						key: 'swVersion',
-						name: I18n.get('_SoftwareRelease_'),
-						sortable: true,
-						template: this.softwareVersionColumn,
-						width: '300px',
-					},
-				];
-				const securityPotentiallyAffectedTableColumns = [
-					{
-						key: 'deviceName',
-						name: I18n.get('_SystemName_'),
-						sortable: true,
-						sortDirection: 'asc',
-						sorting: true,
-						template: this.deviceColumn,
-						width: '300px',
-					},
-					{
-						key: 'ipAddress',
-						name: I18n.get('_IPAddress_'),
-						sortable: true,
-						template: this.ipAddressColumn,
-					},
-					{
-						key: 'swVersion',
-						name: I18n.get('_SoftwareRelease_'),
-						sortable: true,
-						template: this.softwareVersionColumn,
-						width: '300px',
-					},
-				];
-				// Concat the default columns with the extra columns
-				_.set(affectedOptions, 'columns', securityAffectedTableColumns);
-				_.set(potentiallyAffectedOptions, 'columns',
-					securityPotentiallyAffectedTableColumns);
-				break;
-			case 'field':
-				const fieldAffectedTableColumns = [
-					{
-						key: 'deviceName',
-						name: I18n.get('_SystemName_'),
-						sortable: true,
-						template: this.deviceColumn,
-						width: '300px',
+						width: '225px',
 					},
 					{
 						key: 'ipAddress',
@@ -295,24 +256,40 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 						key: 'productId',
 						name: I18n.get('_ProductID_'),
 						sortable: true,
-						sortDirection: 'asc',
-						sorting: true,
 						template: this.productIdColumn,
 					},
 					{
-						key: 'serialNumber',
-						name: I18n.get('_SerialNumber_'),
+						key: 'swVersion',
+						name: I18n.get('_SoftwareRelease_'),
 						sortable: true,
-						template: this.serialNumberColumn,
+						template: this.softwareVersionColumn,
 					},
 				];
-				const fieldPotentiallyAffectedTableColumns = [
+				// Concat the default columns with the extra columns
+				_.set(affectedOptions, 'columns', securityAffectedTableColumns);
+				const advisoryId = _.get(this.advisory, 'id');
+				if (!this.id) {
+					this.id = advisoryId;
+				}
+				this.params.notice = {
+					advisoryId: [_.toSafeInteger(this.id)],
+					customerId: this.customerId,
+					solution: this.selectedSolutionName,
+					useCase: this.selectedTechnologyName,
+					vulnerabilityStatus: [this.vulnerability],
+					page: 1,
+					rows: 10,
+					sort: ['hostname:ASC'],
+				};
+				break;
+			case 'field':
+				const fieldAffectedTableColumns = [
 					{
-						key: 'deviceName',
+						key: 'hostname',
 						name: I18n.get('_SystemName_'),
 						sortable: true,
 						template: this.deviceColumn,
-						width: '300px',
+						width: '225px',
 					},
 					{
 						key: 'ipAddress',
@@ -336,19 +313,31 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 					},
 				];
 				_.set(affectedOptions, 'columns', fieldAffectedTableColumns);
-				_.set(potentiallyAffectedOptions, 'columns',
-					fieldPotentiallyAffectedTableColumns);
+				const fieldNoticeId = _.get(this.advisory, 'id');
+				if (!this.id) {
+					this.id = fieldNoticeId;
+				}
+				this.params.notice = {
+					customerId: this.customerId,
+					fieldNoticeId: [_.toSafeInteger(this.id)],
+					solution: this.selectedSolutionName,
+					useCase: this.selectedTechnologyName,
+					vulnerabilityStatus: [this.vulnerability],
+					sort: ['productId:ASC'],
+					page: 1,
+					rows: 10,
+				};
 				break;
 			case 'bug':
 				const bugAffectedTableColumns = [
 					{
 						key: 'hostName',
-						name: I18n.get('_Device_'),
+						name: I18n.get('_SystemName_'),
 						sortable: true,
 						sortDirection: 'asc',
 						sorting: true,
 						template: this.deviceColumn,
-						width: '300px',
+						width: '225px',
 					},
 					{
 						key: 'ipAddress',
@@ -357,55 +346,23 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 						template: this.ipAddressColumn,
 					},
 					{
-						key: 'softwareVersion',
-						name: I18n.get('_Release_'),
+						key: 'productId',
+						name: I18n.get('_ProductID_'),
 						sortable: true,
-						template: this.softwareVersionColumn,
-					},
-					{
-						key: 'recommendedVersion',
-						name: I18n.get('_RecommendedRelease_'),
-						sortable: false,
-						template: this.recommendedVersionColumn,
-					},
-				];
-				const bugPotentiallyAffectedTableColumns = [
-					{
-						key: 'hostName',
-						name: I18n.get('_Device_'),
-						sortable: true,
-						sortDirection: 'asc',
-						sorting: true,
-						template: this.deviceColumn,
-						width: '300px',
-					},
-					{
-						key: 'ipAddress',
-						name: I18n.get('_IPAddress_'),
-						sortable: true,
-						template: this.ipAddressColumn,
+						template: this.productIdColumn,
 					},
 					{
 						key: 'softwareVersion',
-						name: I18n.get('_Release_'),
+						name: I18n.get('_SoftwareRelease_'),
 						sortable: true,
 						template: this.softwareVersionColumn,
-					},
-					{
-						key: 'recommendedVersion',
-						name: I18n.get('_RecommendedRelease_'),
-						sortable: false,
-						template: this.recommendedVersionColumn,
 					},
 				];
 				_.set(affectedOptions, 'columns', bugAffectedTableColumns);
-				_.set(potentiallyAffectedOptions, 'columns', bugPotentiallyAffectedTableColumns);
 				break;
 		}
 
 		this.affectedTable = new CuiTableOptions(affectedOptions);
-		this.potentiallyAffectedTable = new CuiTableOptions(potentiallyAffectedOptions);
-
 		_.set(this.params, 'assets', {
 			customerId: this.customerId,
 			page: 1,
@@ -419,28 +376,79 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 				cdetId: [this.id],
 				customerId: this.customerId,
 				page: 1,
-				rows: 100,
+				rows: 15,
 				solution: this.selectedSolutionName,
 				useCase: this.selectedTechnologyName,
 			});
-
 			this.fetchBugAssets();
-		} else if (this.assetIds) {
-			_.set(this.params, 'system', {
-				customerId: this.customerId,
-				managedNeId: _.concat(
-					_.get(this.assetIds, 'impacted', []),
-					_.get(this.assetIds, 'potentiallyImpacted', []),
-				),
-				page: 1,
-				rows: 100,
-				solution: this.selectedSolutionName,
-				sort: [this.type === 'field' ? 'productId:ASC' : 'deviceName:ASC'],
-				useCase: this.selectedTechnologyName,
-			});
-
-			this.fetchSystemAsset();
+		} else if (this.type === 'field') {
+			this.getFieldNotice();
+		} else {
+			this.getSecurityAdvisory();
 		}
+	}
+
+	/**
+	 * Retrieves the field notices
+	 * @returns the data
+	 */
+	private getFieldNotice () {
+		return this.productAlertsService.getFieldNotice(this.params.notice)
+			.pipe(
+				map((response: FieldNoticeResponse) => {
+					const data = _.get(response, 'data', []);
+					data.forEach(element => {
+						const affectedSystem = _.find(this.affectedSystems, affectedSys =>
+							element.neInstanceId === affectedSys.neInstanceId);
+						element.serialNumber = _.get(affectedSystem, ['serialNumber']);
+						element.productType = _.get(affectedSystem, ['productType']);
+					});
+					this.impacted = data;
+					const pagination = _.get(response, 'Pagination');
+					const total = _.get(pagination, 'total', 0);
+					this.impactedCount.emit(total);
+					this.pagination = this.buildPagination(_.get(response, 'Pagination'));
+				}),
+				catchError(err => {
+					this.logger.error('field-notice-details.component : getFieldNotice() ' +
+						`:: Error : (${err.status}) ${err.message}`);
+
+					return of({ });
+				}),
+			)
+			.subscribe();
+	}
+
+	/**
+	 * Retrieves the security advisories
+	 * @returns the data
+	 */
+	private getSecurityAdvisory () {
+		this.params.notice = this.params.notice || { };
+		return this.productAlertsService.getSecurityAdvisories(this.params.notice)
+			.pipe(
+				map((response: SecurityAdvisoryResponse) => {
+					const data = _.get(response, 'data', []);
+					data.forEach(element => {
+						const affectedSystem = _.find(this.affectedSystems, affectedSys =>
+							element.neInstanceId === affectedSys.neInstanceId);
+						element.serialNumber = _.get(affectedSystem, ['serialNumber']);
+						element.productType = _.get(affectedSystem, ['productType']);
+					});
+					this.impacted = data;
+					const pagination = _.get(response, 'Pagination');
+					const total = _.get(pagination, 'total', 0);
+					this.impactedCount.emit(total);
+					this.pagination = this.buildPagination(_.get(response, 'Pagination'));
+				}),
+				catchError(err => {
+					this.logger.error('security-details.component : getSecurityAdvisory() ' +
+						`:: Error : (${err.status}) ${err.message}`);
+
+					return of({ });
+				}),
+			)
+			.subscribe();
 	}
 
 	/**
@@ -448,13 +456,15 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 	 * @param options the selected column
 	 */
 	public onColumnSort (options: CuiTableColumnOption) {
-		_.set(this.params, [this.type === 'bug' ? 'bugAssets' : 'system', 'sort'],
+		_.set(this.params, [this.type === 'bug' ? 'bugAssets' : 'notice', 'sort'],
 			[`${options.key}:${options.sortDirection.toUpperCase()}`]);
 
 		if (this.type === 'bug') {
 			this.fetchBugAssets();
+		} else if (this.type === 'field') {
+			this.getFieldNotice();
 		} else {
-			this.fetchSystemAsset();
+			this.getSecurityAdvisory();
 		}
 	}
 
@@ -463,23 +473,23 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 	 */
 	public ngOnInit () {
 		this.racetrackInfoService.getCurrentSolution()
-		.pipe(
-			takeUntil(this.destroyed$),
-		)
-		.subscribe((solution: RacetrackSolution) => {
-			this.selectedSolutionName = _.get(solution, 'name');
-		});
+			.pipe(
+				takeUntil(this.destroyed$),
+			)
+			.subscribe((solution: RacetrackSolution) => {
+				this.selectedSolutionName = _.get(solution, 'name');
+			});
 
 		this.racetrackInfoService.getCurrentTechnology()
-		.pipe(
-			takeUntil(this.destroyed$),
-		)
-		.subscribe((technology: RacetrackTechnology) => {
-			if (this.selectedTechnologyName !== _.get(technology, 'name')) {
-				this.selectedTechnologyName = _.get(technology, 'name');
-				this.refresh();
-			}
-		});
+			.pipe(
+				takeUntil(this.destroyed$),
+			)
+			.subscribe((technology: RacetrackTechnology) => {
+				if (this.selectedTechnologyName !== _.get(technology, 'name')) {
+					this.selectedTechnologyName = _.get(technology, 'name');
+					this.refresh();
+				}
+			});
 	}
 
 	/**
@@ -488,7 +498,8 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 	 */
 	public ngOnChanges (changes: SimpleChanges) {
 		const currentId = _.get(changes, ['id', 'currentValue']);
-		if (currentId && !changes.id.firstChange) {
+		const currentAdvisory = _.get(changes, ['advisory', 'currentValue']);
+		if ((currentId && !changes.id.firstChange) || (currentAdvisory && !changes.advisory.firstChange)) {
 			this.refresh();
 		}
 	}
@@ -497,5 +508,53 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 	public ngOnDestroy () {
 		this.destroyed$.next();
 		this.destroyed$.complete();
+	}
+
+	/**
+	 * Page change handler
+	 * @param event the event emitted
+	 * @param type the type of advisory
+ 	*/
+	public onPageChanged (event: any, type: any) {
+		if (type === 'bug') {
+			this.params.bugAssets.page = event.page + 1;
+			this.fetchBugAssets();
+		} else if (type === 'field') {
+			this.params.system.page = event.page + 1;
+			this.getFieldNotice();
+		} else {
+			this.params.notice.page = event.page + 1;
+			this.getSecurityAdvisory();
+		}
+	}
+
+	public openSystemDetails (cellData) {
+		const queryParams = { serialNumber: cellData.serialNumber, select: true, assetsViewOpen: false };
+		if (window.location.pathname.indexOf('assets/system') > -1) {
+			queryParams.assetsViewOpen = true;
+		}
+		const path = this.type === 'field' ? '/solution/assets/hardware' : '/solution/assets/system';
+		this.router.navigate([path], {
+			queryParams,
+		});
+	}
+
+	private buildPagination (
+		pagination: DiagnosticsPagination) {
+		const rows = _.get(pagination, 'rows', 10);
+		const page = _.get(pagination, 'page', 1);
+		const total = _.get(pagination, 'total', 0);
+		const first = (rows * (page - 1)) + 1;
+		let last = (rows * page);
+		if (last > total) {
+			last = total;
+		}
+
+		return {
+			page,
+			rows,
+			total,
+			countStr: `${first}-${last}`,
+		};
 	}
 }

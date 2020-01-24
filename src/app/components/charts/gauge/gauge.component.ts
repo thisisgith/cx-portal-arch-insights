@@ -6,6 +6,7 @@ import {
 	ViewChild,
 	ElementRef,
 	SimpleChanges,
+	OnDestroy,
 } from '@angular/core';
 import { format } from 'd3-format';
 import { interpolate } from 'd3-interpolate';
@@ -26,7 +27,7 @@ const d3 = { format, select, arc, transition, active, easeLinear, interpolate };
 	selector: 'app-gauge',
 	templateUrl: './gauge.component.html',
 })
-export class GaugeComponent implements OnInit, OnChanges {
+export class GaugeComponent implements OnInit, OnChanges, OnDestroy {
 	@Input() private percentage: number;
 	@Input() private width?: number;
 	@Input() private textColor?: string = null;
@@ -78,6 +79,12 @@ export class GaugeComponent implements OnInit, OnChanges {
 		if (changes.collecting && !changes.collecting.firstChange) {
 			this.drawGauge();
 		}
+	}
+
+	public ngOnDestroy (): void {
+		this.meter.select('.collectingIndicator')
+			.transition('infinite')
+			.remove();
 	}
 
 	/**
@@ -132,10 +139,10 @@ export class GaugeComponent implements OnInit, OnChanges {
 			.attr('stroke-dashoffset', function () {
 				return this.getTotalLength();
 			})
-			.transition()
+			.transition('infinite')
 				.ease(d3.easeLinear)
 				.on('start', function repeat () {
-					d3.active(this)
+					d3.active(this, 'infinite')
 						.duration(2000)
 						.attr('stroke-dashoffset', 0)
 					.on('end', function () {
@@ -181,10 +188,10 @@ export class GaugeComponent implements OnInit, OnChanges {
 			.attr('color', this.textColor)
 			.attr('font-family', 'CiscoSans')
 			.attr('font-weight', '300')
-			.attr('line-height', '19px')
-			.attr('letter-spacing', '0.72px')
+			.attr('line-height', '1.9rem')
+			.attr('letter-spacing', '0.072rem')
 			.attr('fill', this.textColor || '#afdff2')
-			.attr('font-size', () => self.collecting ? '10px' : '36px')
+			.attr('font-size', () => self.collecting ? '1rem' : '3.6rem')
 			.text(() => self.collecting ? 'Collecting...' : d3.format('.0f')(this.percentage))
 			.attr('transform', () => self.collecting ?
 				'translate(0, 5)' :
@@ -200,10 +207,10 @@ export class GaugeComponent implements OnInit, OnChanges {
 			.attr('color', this.textColor)
 			.attr('font-family', 'CiscoSans')
 			.attr('font-weight', '300')
-			.attr('line-height', '12px')
-			.attr('letter-spacing', '0.72px')
+			.attr('line-height', '1.2rem')
+			.attr('letter-spacing', '0.072rem')
 			.attr('fill', this.textColor || '#afdff2')
-			.attr('font-size', '14px')
+			.attr('font-size', '1.4rem')
 			.attr('transform', `translate(${
 				this.percentage > 99.5 ? 26 :
 				this.percentage >= 10 ? 18 : 11}, 10)`);
@@ -224,9 +231,9 @@ export class GaugeComponent implements OnInit, OnChanges {
 					.style('align-items', 'center')
 					.style('height', '100%')
 					.style('color', '#6c757d')
-					.style('font-size', '12px')
+					.style('font-size', '1.2rem')
 					.style('font-weight', '400')
-					.style('line-height', '14px');
+					.style('line-height', '1.4rem');
 		}
 
 		const i = d3.interpolate(this.previousPercentage / 100, this.percentage / 100);

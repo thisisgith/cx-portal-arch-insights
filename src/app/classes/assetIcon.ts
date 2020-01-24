@@ -14,11 +14,12 @@ export function getProductTypeImage (asset: (Asset | NetworkElement)) {
 		if (type.includes('router')) {
 			return 'router-outline';
 		}
-
 		if (type.includes('switch')) {
 			return 'switch-outline';
 		}
-
+		if (type.includes('module')) {
+			return 'module';
+		}
 		if (type.includes('wireless') && family) {
 			if (family.includes('wireless controller')) {
 				return 'wlc-outline';

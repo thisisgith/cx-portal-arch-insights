@@ -6,6 +6,7 @@ import {
 	CuiDropdownModule,
 	CuiLoaderModule,
 	CuiModalModule,
+	CuiAlertModule,
 } from '@cisco-ngx/cui-components';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { SelectRoleModule } from './select-role/select-role.module';
@@ -13,6 +14,8 @@ import { UserMgmtSortPipe } from './user-mgmt-sort.pipe';
 import { UserMgmtFilterPipe } from './user-mgmt-filter.pipe';
 import { AlertModule } from '../alert/alert.module';
 import { AddUserModule } from '../add-user/add-user.module';
+import { SelectVirtualAccountModule } from './select-virtual-account/select-virtual-account.module';
+import { TooltipModule } from '../tooltip/tooltip.module';
 
 /**
  * UserMgmtModule
@@ -28,12 +31,15 @@ import { AddUserModule } from '../add-user/add-user.module';
 		AlertModule,
 		AddUserModule,
 		CommonModule,
+		CuiAlertModule,
 		CuiDropdownModule,
 		CuiLoaderModule,
 		CuiModalModule,
 		FormsModule,
 		I18nPipeModule,
 		SelectRoleModule,
+		SelectVirtualAccountModule,
+		TooltipModule,
 	],
 })
 export class UserMgmtModule { }
