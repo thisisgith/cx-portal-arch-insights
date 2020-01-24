@@ -161,7 +161,7 @@ export class UserMgmtComponent implements OnInit, AfterViewInit, OnDestroy {
 	 */
 	private getUsers () {
 		this.isLoading = true;
-		// this.cdr.detectChanges();
+		this.cdr.detectChanges();
 
 		return this.usersService.getUserDetailsListForGivenSAUsingGET(
 			this.saAccountId,
