@@ -14,6 +14,7 @@ export { SoftwareGroupVersionsResponse } from './models/software-group-version-r
 export { SoftwareGroupAssetsResponse } from './models/software-group-asset-response';
 export { OsvBug } from './models/bugs';
 export { OsvPsirt } from './models/psrits';
+export { OsvField } from './models/field';
 export { MachineRecommendations } from './models/machine-recommendations'
 export { MachineRecommendationsResponse } from './models/machine-recommendations-response'
 export { OsvSeverity } from './models/osv-severity';

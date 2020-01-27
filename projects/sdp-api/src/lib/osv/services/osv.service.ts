@@ -19,6 +19,7 @@ import { SoftwareGroup } from '../models/software-group';
 import { ProfileRecommendationsResponse } from '../models/profile-recommendations-response';
 import { OsvPsirt } from '../models/psrits';
 import { OsvBug } from '../models/bugs';
+import { OsvField } from '../models/field';
 
 @Injectable({
 	providedIn: 'root',
@@ -768,7 +769,7 @@ static readonly getSoftwareGroupVersionsPath = '/customerportal/osv-ui/v1/profil
  	*
  	* @return successful operation
  	*/
-	 getFieldDetailsResponse (params: OSVService.FieldDetailsParams): __Observable<__StrictHttpResponse<OsvBug>> {
+	 getFieldDetailsResponse (params: OSVService.FieldDetailsParams): __Observable<__StrictHttpResponse<OsvField>> {
 		let __params = this.newParams();
 		let __headers = new HttpHeaders();
 		let __body: any = null;
@@ -787,7 +788,7 @@ static readonly getSoftwareGroupVersionsPath = '/customerportal/osv-ui/v1/profil
 		return this.http.request<any>(req).pipe(
 			__filter(_r => _r instanceof HttpResponse),
 			__map((_r) => {
-				return _r as __StrictHttpResponse<OsvBug>;
+				return _r as __StrictHttpResponse<OsvField>;
 			})
 		);
 	}
@@ -798,9 +799,9 @@ static readonly getSoftwareGroupVersionsPath = '/customerportal/osv-ui/v1/profil
 	 * - `customerId`: Unique identifier of a Bug.	
 	 * @return successful operation
 	 */
-	getFieldDetails (params: OSVService.FieldDetailsParams): __Observable<OsvBug> {
+	getFieldDetails (params: OSVService.FieldDetailsParams): __Observable<OsvField> {
 		return this.getFieldDetailsResponse(params).pipe(
-			__map(_r => _r.body as OsvBug)
+			__map(_r => _r.body as OsvField)
 		);
 	}
 

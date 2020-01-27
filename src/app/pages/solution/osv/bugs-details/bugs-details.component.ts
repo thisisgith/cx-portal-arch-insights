@@ -164,7 +164,7 @@ export class BugsDetailsComponent implements OnInit {
 				bordered: true,
 				columns: [
 					{
-						key: 'id',
+						key: 'fnId',
 						name: I18n.get('_OsvFieldId_'),
 						sortable: true,
 						template: this.fieldIdTemp,
@@ -178,14 +178,14 @@ export class BugsDetailsComponent implements OnInit {
 						width: '35%',
 					},
 					{
-						key: 'firstPublished',
+						key: 'firstPublishedDate',
 						name: I18n.get('_firstPublished_'),
 						sortable: true,
 						template: this.firstPublished,
 						width: '15%',
 					},
 					{
-						key: 'lastUpadted',
+						key: 'lastUpdatedDate',
 						name: I18n.get('_lastUpdated_'),
 						sortable: true,
 						template: this.updatedDateFieldTemp,
@@ -899,8 +899,15 @@ export class BugsDetailsComponent implements OnInit {
 				let description  = _.get(response.fnSummary, ['problemDescription'], '');
 				description = description.replace(/\n/g, '<br>');
 				field.description = description;
+				const fieldBackground  = _.get(response.fnSummary, ['background'], '');
+				field.background = fieldBackground.replace(/\n/g, '<br>');
+				const fieldSymp  = _.get(response.fnSummary, ['problemSymptoms'], '');
+				field.Symptom = fieldSymp.replace(/\n/g, '<br>');
+				const fieldWorkaround  = _.get(response.fnSummary, ['workAround'], '');
+				field.workaround = fieldWorkaround.replace(/\n/g, '<br>');
 				const fieldUrl  = _.get(response.fnSummary, ['url'], '');
-				field.url = fieldUrl;
+				field.url = fieldUrl.replace(/\n/g, '<br>');
+
 			}),
 			catchError(err => {
 				this.showLoadingMessage = false;

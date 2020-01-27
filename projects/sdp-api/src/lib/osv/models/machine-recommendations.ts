@@ -1,5 +1,6 @@
 import { OsvBug } from './bugs';
 import { OsvPsirt } from './psrits';
+import { OsvField } from './field';
 import { OsvSeverityTypes } from './severity-types';
 
 /* tslint:disable */
@@ -11,6 +12,7 @@ export interface MachineRecommendations {
 	osType: string;
 	postDate?: string;
 	psirts: OsvPsirt[];
+	fns: OsvField[];
 	release: string;
 	swVersion?: string;
 	score: any;
