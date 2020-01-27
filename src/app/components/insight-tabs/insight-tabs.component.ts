@@ -25,7 +25,6 @@ export class InsightTabsComponent implements OnInit {
 		'/solution/insights/architecture-review',
 		'/solution/insights/architecture'];
 	public activeUrl: string;
-	public showTab = false;
 
 	constructor (
 		private logger: LogService,
