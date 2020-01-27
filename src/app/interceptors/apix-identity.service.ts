@@ -12,6 +12,7 @@ export class ApixIdentityService {
 	private sdpRegex: RegExp;
 	private rmaRegex: RegExp;
 	private pitRegex: RegExp;
+	private partnerRegex: RegExp;
 
 	constructor () {
 		const sdpServiceOrigin = environment.sdpServiceOrigin &&
@@ -46,12 +47,16 @@ export class ApixIdentityService {
 			.join('|^')
 		}`);
 		this.pitRegex = new RegExp('/(customerportal|cxportal)/pitstop/v1/info$');
+		this.partnerRegex = new RegExp('/(customerportal|cxportal)/cxpp-partner-info/');
 	}
 
 	public testOrigin (url): OriginType {
 		if (this.originRegex.test(url.origin)) {
 			if (this.pitRegex.test(url.pathname)) {
 				return OriginType.PITSTOP;
+			}
+			if (this.partnerRegex.test(url.pathname)) {
+				return OriginType.PARTNER;
 			}
 			if (this.sdpRegex.test(url.pathname)) {
 				return OriginType.SDP;

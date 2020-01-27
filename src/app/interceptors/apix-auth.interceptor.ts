@@ -44,6 +44,9 @@ export class ApixAuthInterceptor implements HttpInterceptor {
 				case OriginType.PITSTOP:
 					clientId = environment.sdpServiceClientId;
 					break;
+				case OriginType.PARTNER:
+					clientId = environment.sdpServiceClientId;
+					break;
 				case OriginType.RMA:
 					clientId = environment.rmaServiceClientId;
 					break;
