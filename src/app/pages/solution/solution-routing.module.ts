@@ -16,6 +16,9 @@ const routes: Routes = [
 				resolve: {
 					user: UserResolve,
 				},
+				data: {
+					title: '_Lifecycle_',
+				},
 			},
 			{
 				loadChildren: () => import('./assets/assets.module')
@@ -23,6 +26,9 @@ const routes: Routes = [
 				path: 'assets/:view',
 				resolve: {
 					user: UserResolve,
+				},
+				data: {
+					title: '_Assets&Coverage_',
 				},
 			},
 			{
@@ -42,6 +48,9 @@ const routes: Routes = [
 				path: 'advisories',
 				pathMatch: 'full',
 				redirectTo: 'advisories/security',
+				data: {
+					title: '_Advisories_',
+				},
 			},
 			{
 				loadChildren: () => import('./advisories/advisories.module')
@@ -49,6 +58,9 @@ const routes: Routes = [
 				path: 'advisories/:advisory',
 				resolve: {
 					user: UserResolve,
+				},
+				data: {
+					title: '_Advisories_',
 				},
 			},
 			{
@@ -58,6 +70,9 @@ const routes: Routes = [
 				resolve: {
 					user: UserResolve,
 				},
+				data: {
+					title: '_ProblemResolution_',
+				},
 			},
 			{
 				loadChildren: () => import('./insights/insights.module')
@@ -65,6 +80,9 @@ const routes: Routes = [
 				path: 'insights',
 				resolve: {
 					user: UserResolve,
+				},
+				data: {
+					title: '_Insights_',
 				},
 			},
 			{

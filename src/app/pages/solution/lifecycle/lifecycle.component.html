@@ -1,4 +1,4 @@
-<div class="panel panel--ltgray panel--bordered" #lifecyclePanel 
+<div class="panel panel--ltgray panel--bordered" #lifecyclePanel
 	[class.panel--bottom-padding]="panelBottomPaddingNeeded || panelBottomPaddingNeededForMessage">
 	<div class="row base-padding-top">
 		<div class="col-md-3 base-padding-left" *ngIf="!status.loading.racetrack && componentData?.racetrack?.stage">
@@ -94,7 +94,7 @@
 			<span><img class="finishline qtr-margin-top" alt="'_FinishLine_' | i18n" src="assets/img/solutions/finishline_side.png"> </span>
 		</div>
 	</div>
-	<section aria-live="polite">
+	<section>
 		<div class="half-padding-top half-padding-left">
 			<app-racetrack [stage]="componentData.racetrack.stage"
 				[currentStage]="currentWorkingPitstop"
@@ -322,7 +322,7 @@
 			</div>
 			<div class="line-clamp acc-popover__description no-margin" [innerText]="description" attr.data-auto-id="{{ autoid }}-HoverModal-Description"></div>
 			<a class="acc-popover__datasheet"
-				href="{{ item.datasheetURL }}" 
+				href="{{ item.datasheetURL }}"
 				(click)="crossLaunch($event, item.datasheetURL)"
 				*ngIf="item.datasheetURL"
 				attr.data-auto-id="{{ autoid }}-HoverModal-Datasheet"
@@ -373,11 +373,12 @@
 			<span class="icon-flagged" attr.data-auto-id="{{ autoid }}-Flag"></span>
 			<span class="text-small" [innerText]="'_Recommended_' | i18n"></span>
 		</div>
-		<p *ngIf="item.providerInfo?.name"
-		class="text-bold text-medium qtr-padding-bottom"
-		[innerText]="item.providerInfo?.name" 
-		attr.data-auto-id="{{ autoid }}-ProviderText">
-		</p>
+		<p
+			*ngIf="item.providerInfo?.name"
+			class="text-bold text-medium qtr-padding-bottom"
+			[innerText]="item.providerInfo?.name"
+			attr.data-auto-id="{{ autoid }}-ProviderText"
+		></p>
 		<p class="text-capitalize cx-lifecycle-card__title qtr-padding-right"
 			attr.data-auto-id="{{ autoid }}-Title">
 			{{ title }}
@@ -406,9 +407,9 @@
 			</ng-container>
 			<button class="cx-btn cx-btn--small cx-btn--primary text-uppercase"
 				data-auto-id = "recommendedATXWatchButton"
-				[attr.aria-disabled]="componentData.atx?.recommended?.videoURL || 
+				[attr.aria-disabled]="componentData.atx?.recommended?.videoURL ||
 					(componentData.atx?.recommended?.providerInfo && componentData.atx?.recommended?.recordingURL) ? false : true"
-				[ngClass]="componentData.atx?.recommended?.videoURL || 
+				[ngClass]="componentData.atx?.recommended?.videoURL ||
 					(componentData.atx?.recommended?.providerInfo && componentData.atx?.recommended?.recordingURL) ? null : 'disabled'"
 				(click)="openWatchNow($event, componentData.atx.recommended)"
 				[innerText]="'_WatchNow_' | i18n">
@@ -451,7 +452,7 @@
 		</div>
 		<p *ngIf="item.providerInfo?.name"
 		class="text-bold text-medium qtr-padding-bottom"
-		[innerText]="item.providerInfo?.name" 
+		[innerText]="item.providerInfo?.name"
 		attr.data-auto-id="{{ autoid }}-ProviderText">
 		</p>
 		<p
@@ -637,7 +638,7 @@
 							attr.data-auto-id="{{ autoid }}-Click"
 							attr.aria-haspopup="true"
 							(click)="atxMoreSelect(item, autoid, moreList)"
-						> 
+						>
 						{{ item.title }}
 							<p class="cx-lifecycle-card__by-text text-muted" [innerText]="getProviderName(item)" attr.data-auto-id="{{ autoid }}-Provider"></p>
 							<ng-container *ngIf="autoid==='moreACCList'">
@@ -746,10 +747,10 @@
 			<div class="recommended-elearning-item panel small-panel" attr.data-auto-id="{{ title }}-Item">
 				<div class="row">
 					<div class="col-md-11">
-						<a class="no-link" 
-							 href="{{ item.url }}" 
-							 (click)="crossLaunch($event, item.url)" 
-							 attr.data-auto-id="{{ title }} -item.title" 
+						<a class="no-link"
+							 href="{{ item.url }}"
+							 (click)="crossLaunch($event, item.url)"
+							 attr.data-auto-id="{{ title }} -item.title"
 							 attr.data-auto-href="{{ item.url }}">
 							<span [innerText]="item.title"></span>
 						</a>
@@ -773,11 +774,11 @@
 
 <ng-template #successBlock let-title="title" let-data="data">
 	<div class="successbytes-item cx-lifecycle-card--link panel small-panel" data-auto-id="successbytes-item" *ngFor="let item of data | slice:0:3">
-		<a class="toggle" 
-			 href="{{ item.url }}" 
-			 (click)="crossLaunch($event, item.url)" 
-			 [innerText]="item.title" 
-			 attr.data-auto-id="{{ title }} -item.title" 
+		<a class="toggle"
+			 href="{{ item.url }}"
+			 (click)="crossLaunch($event, item.url)"
+			 [innerText]="item.title"
+			 attr.data-auto-id="{{ title }} -item.title"
 			 attr.data-auto-href="{{ item.url }}">
 		</a>
 		<ng-container *ngTemplateOutlet="successBytesHoverBlock; context: {
@@ -797,8 +798,8 @@
 					[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__white'"
 					attr.data-auto-id="{{ autoid }}-HoverModal-BookmarkRibbon">
 				</div>
-				<div class="sb-desc-line-clamp sb-popover__description" 
-					[innerText]="item.description" 
+				<div class="sb-desc-line-clamp sb-popover__description"
+					[innerText]="item.description"
 					attr.data-auto-id="{{ autoid }}-HoverModal-Description">
 				</div>
 			</div>
@@ -1480,7 +1481,7 @@
 					<span class="text-med" [innerText]="viewAllLabel | i18n"></span>
 					<span class="icon-play"></span>
 			</button>
-			</div>			
+			</div>
 		</div>
 
 		<div *ngIf="!loading && data">
