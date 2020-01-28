@@ -298,7 +298,7 @@
 	<div class="flex-center-horizontal">
 		<cui-spinner *ngIf="status?.isLoadingDetails"></cui-spinner>
 		<div class="half-padding-top half-margin-left" *ngIf="status?.isLoadingDetails && showLoadingMessage">
-		    <div [innerText]="'_OsvWaitingMessage_' | i18n"></div>
+		<div [innerText]="'_OsvWaitingMessage_' | i18n"></div>
 			<div [innerText]="'_OsvContinueWaiting_' | i18n"></div>
 		</div>
 	</div>
