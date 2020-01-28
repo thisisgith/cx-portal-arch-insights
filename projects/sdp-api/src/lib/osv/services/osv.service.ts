@@ -19,6 +19,7 @@ import { SoftwareGroup } from '../models/software-group';
 import { ProfileRecommendationsResponse } from '../models/profile-recommendations-response';
 import { OsvPsirt } from '../models/psrits';
 import { OsvBug } from '../models/bugs';
+import { OsvField } from '../models/field';
 
 @Injectable({
 	providedIn: 'root',
@@ -37,6 +38,7 @@ static readonly getSoftwareGroupVersionsPath = '/customerportal/osv-ui/v1/profil
 	static readonly getMachineRecommendationsPath = '/customerportal/osv-ui/v1/machineRecommendations';
 	static readonly getPsirtDetailsPath = '/customerportal/osv-ui/v1/psirtDetail';
 	static readonly getBugDetailsPath = '/customerportal/osv-ui/v1/bugDetail';
+	static readonly getFieldDetailsPath = '/customerportal/osv-ui/v1/fnDetail';
 	
 	constructor (
 		config: __Configuration,
@@ -590,6 +592,7 @@ static readonly getSoftwareGroupVersionsPath = '/customerportal/osv-ui/v1/profil
 		__params = __params.set('profileName', params.profileName);
 		__params = __params.set('productFamily', params.productFamily);
 		__params = __params.set('profileId', params.profileId);
+		__params = __params.set('productId', params.productId);
 		let req = new HttpRequest<any>(
 			'GET',
 			this.rootUrl + `${OSVService.getSoftwareGroupRecommendationPath}`,
@@ -757,6 +760,50 @@ static readonly getSoftwareGroupVersionsPath = '/customerportal/osv-ui/v1/profil
 			__map(_r => _r.body as OsvBug)
 		);
 	}	
+
+	 /**
+ 	* Field Details
+ 	* @param params The `OSVService.FieldDetailsParams` containing the following parameters:
+ 	*
+ 	* - `bugId `: Unique identifier of a Bug.
+ 	*
+ 	* @return successful operation
+ 	*/
+	 getFieldDetailsResponse (params: OSVService.FieldDetailsParams): __Observable<__StrictHttpResponse<OsvField>> {
+		let __params = this.newParams();
+		let __headers = new HttpHeaders();
+		let __body: any = null;
+
+		if (params.fnId != null) __params = __params.set('fnId', params.fnId.toString());
+		let req = new HttpRequest<any>(
+			'GET',
+			this.rootUrl + `${OSVService.getFieldDetailsPath}`,
+			__body,
+			{
+				headers: __headers,
+				params: __params,
+				responseType: 'json',
+			});
+
+		return this.http.request<any>(req).pipe(
+			__filter(_r => _r instanceof HttpResponse),
+			__map((_r) => {
+				return _r as __StrictHttpResponse<OsvField>;
+			})
+		);
+	}
+
+	/**
+	 * field Details
+	 * @param params The `OSVService.FieldDetailsParams` containing the following parameters:
+	 * - `customerId`: Unique identifier of a Bug.	
+	 * @return successful operation
+	 */
+	getFieldDetails (params: OSVService.FieldDetailsParams): __Observable<OsvField> {
+		return this.getFieldDetailsResponse(params).pipe(
+			__map(_r => _r.body as OsvField)
+		);
+	}
 
 }
 
@@ -981,6 +1028,11 @@ module OSVService {
 		 * profile id
 		 */
 		profileId:string;
+
+		/**
+		 * product id
+		 */
+		productId:string;
 	}
 
 	/**
@@ -1065,6 +1117,16 @@ module OSVService {
 		 * Unique id of bug.
 		 */
 		bugId: string;		
+	}
+	
+	/**
+	 * Parameters for field details
+	 */
+	export interface FieldDetailsParams {
+		/**
+		 * Unique id of field.
+		 */
+		fnId: string;		
 	}
 }
 

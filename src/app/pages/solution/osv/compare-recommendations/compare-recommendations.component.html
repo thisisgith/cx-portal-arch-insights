@@ -56,7 +56,7 @@
 									<div class="text-medium half-padding-left" [innerText]="'_OsvAcceptedOn_' | i18n"></div>
 									<div class="text-medium half-padding-left"
 										[innerText]="recommendation.acceptedDate | date:mediumDate">
-									</div>
+								</div>
 							</div>
 						</div>
 						<div class="flex align-item-center cancel-dropdown">
@@ -165,6 +165,48 @@
 				</td>
 
 			</tr>
+
+			<tr id="field-details"  data-auto-id="ShowFieldDetails">
+				<td (click)="showDetailsView('field',0)" data-auto-id="ShowFieldDetailsCurrentReleasesTab" class="first-column-width headingClass no-border-bottom no-border-top text-large  text-primary"
+					>
+					<div [innerText]="'_FieldsNotices_' | i18n"></div>
+					<div
+						*ngIf="showNoFieldMessage"
+						class="half-margin-top"
+						tooltip
+						[tooltipTemplate]="noFieldsTemplate"						
+						[tooltipMaxWidth]="200">
+						<div *ngIf="showNoFieldMessage"
+							class="alert qtr-padding alert--warning fade-and-slide-top text-left">
+								<div class="alert_icon icon-warning-outline icon-small"></div>
+								<div class="text-medium" [innerText]="noFieldsMessage"></div>
+						</div>
+					</div>
+					
+				</td>
+				<td (click)="showDetailsView('field',0)" data-auto-id="ShowFieldDetailsCurrentReleasesTab" class="recommendation-current">
+					<div class="base-margin-bottom"
+						[ngClass]="{'text-small':!fullscreen,'text-large base-margin-top':fullscreen}"
+						[innerText]="'_OsvCurrentlyExposed_' | i18n | uppercase">					
+					</div>
+					<div class="text-large" *ngIf="currentRecommendation?.fieldsExposed > 0; else notFieldAvailable" [innerText]="currentRecommendation?.fieldsExposed || '0'"
+						[ngClass]="{'base-padding-top':!fullscreen}"></div>				
+				</td>
+				<td (click)="showDetailsView('field',i+1)" data-auto-id="ShowFieldDetailsRecommendedReleasesTab" *ngFor="let recommendation of machineRecommendations;let i = index;" class="recommendation">
+					<div class="row" [ngClass]="{'base-margin-top':fullscreen}">
+						<div [ngClass]="{'text-small':!fullscreen,'text-large':fullscreen}"
+							[innerText]="'_OsvWillExposed_' | i18n" class="text-small col-6"></div>
+						<div [ngClass]="{'text-small':!fullscreen,'text-large':fullscreen}" class="col-6 text-right"
+							[innerText]="'_OsvFixed_' | i18n"></div>
+					</div>
+					<div class="base-margin-top row">
+						<div class="text-large col-6" [innerText]="recommendation.fieldsExposed  || '0'"></div>
+						<div class="col-6 text-right">
+							<span class="text-large" [innerText]="recommendation.resolvedFieldsCount  || '0'"></span>					
+						</div>
+					</div>
+				</td>
+			</tr>
 		</tbody>
 	</table>
 </div>
@@ -186,6 +228,15 @@
 	</div>
 </ng-template>
 
+<ng-template #notFieldAvailable >
+	<div data-auto-id="FieldsNotAvailable" [ngClass]="{'base-padding-top':!fullscreen}" [innerText]="'_OsvNotAvailable_' | i18n">	
+	</div>
+</ng-template>
+
 <ng-template #noBugsTemplate>
 	<span [innerText]="'_OsvNoBugsMessage_' | i18n"></span>
+</ng-template>
+
+<ng-template #noFieldsTemplate>
+	<span [innerText]="'_OsvNoFieldsMessage_' | i18n"></span>
 </ng-template>

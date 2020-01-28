@@ -53,9 +53,24 @@ describe('BugsDetailsComponent', () => {
 		component.tabIndex = 3;
 		expect(component.getCurrentTabData())
 			.toBeDefined();
+		component.params = { viewType: 'field' };
+		component.ngOnInit();
+		fixture.detectChanges();
+		component.tabIndex = 0;
+		expect(component.getCurrentTabData())
+			.toBeDefined();
+		component.tabIndex = 1;
+		expect(component.getCurrentTabData())
+			.toBeDefined();
+		component.tabIndex = 2;
+		expect(component.getCurrentTabData())
+			.toBeDefined();
+		component.tabIndex = 3;
+		expect(component.getCurrentTabData())
+			.toBeDefined();
 	});
 
-	it('should switch active filters for bugs', () => {
+	it('should switch active filters for bugs and field notices', () => {
 		const sgRecommendations = <any> OSVScenarios[9].scenarios.GET[0].response.body;
 		component.data = sgRecommendations.recommendationSummaries;
 		component.params = { viewType: 'bug' };
@@ -119,6 +134,11 @@ describe('BugsDetailsComponent', () => {
 		component.ngOnInit();
 		fixture.detectChanges();
 		expect(component.psirtsTable)
+			.toBeDefined();
+		component.params = { viewType: 'field' };
+		component.ngOnInit();
+		fixture.detectChanges();
+		expect(component.fieldTable)
 			.toBeDefined();
 	});
 

@@ -37,6 +37,8 @@ export class CompareRecommendationsComponent implements OnChanges {
 	};
 	public showNoBugsMessage  = false;
 	public noBugsMessage = '';
+	public showNoFieldMessage  = false;
+	public noFieldsMessage = '';
 
 	/**
 	 * lifecycle hook
@@ -82,6 +84,21 @@ export class CompareRecommendationsComponent implements OnChanges {
 			_.set(recommendation, 'actions', this.getRowActions(recommendation));
 			recommendation.totalPsirtsSeverity =
 				this.addAll(openPsirts, newOpenPsirts, resolvedPsirts);
+
+			/* Field Notice */
+
+			const openFields = _.get(recommendation, ['fnSeverity', 'OPEN']);
+			const newOpenFields = _.get(recommendation, ['fnSeverity', 'NEW_OPEN']);
+			const resolvedFields = _.get(recommendation, ['fnSeverity', 'RESOLVED']);
+
+			const openFieldsResponse = this.addOpen(openFields, newOpenFields);
+			recommendation.fieldsExposed = openFieldsResponse.totalOpenCount;
+			recommendation.openFieldsCount = this.calculateExposed(openFields);
+			recommendation.newOpenFieldsCount = this.calculateExposed(newOpenFields);
+			recommendation.resolvedFieldsCount = this.calculateExposed(resolvedFields);
+			recommendation.fieldsSeriesData = openFieldsResponse.totalOpenCount > 0
+				? this.populateBarGraphData(openFieldsResponse.totalOpen) : [];
+			recommendation.totalFieldsSeverity = this.addAll(openFields, newOpenFields, resolvedFields);
 		});
 		this.currentRecommendation = _.get(_.filter(recommendations,
 			(recomm: MachineRecommendations) => recomm.name === 'profile current'), 0);
@@ -95,6 +112,15 @@ export class CompareRecommendationsComponent implements OnChanges {
 		if (recommdationsBugCount === 0) {
 			this.showNoBugsMessage = true;
 			this.noBugsMessage = `0 ${I18n.get('_Bugs_')}`;
+		}
+
+		let recommdationsFieldCount = 0;
+		_.forEach(this.machineRecommendations, (recomm: MachineRecommendations) => {
+			recommdationsFieldCount += _.get(recomm , ['fns'], []).length;
+		});
+		if (recommdationsFieldCount === 0) {
+			this.showNoFieldMessage = true;
+			this.noFieldsMessage = `0 ${I18n.get('_FieldsNotices_')}`;
 		}
 	}
 
