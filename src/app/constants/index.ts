@@ -1,4 +1,4 @@
-export { UserRoles, INTERIM_VA_ID, ACTIVE_SMART_ACCOUNT_KEY, ACTIVE_TECHNOLOGY_KEY } from './user';
+export { UserRoles, INTERIM_VA_ID, USER_INFO_KEYS, VIRTUAL_ACCOUNT } from './user';
 export { OriginType, DEFAULT_DATACENTER } from './origin-type';
-export { UserInfoKey } from './user-info-keys';
-export { IS_IE_OR_EDGE, VIRTUAL_ACCOUNT } from './constants';
+export { ACTIVE_SMART_ACCOUNT_KEY, ACTIVE_TECHNOLOGY_KEY, ACTIVE_FACET_KEY } from './storage-keys';
+export { IS_IE_OR_EDGE } from './client';

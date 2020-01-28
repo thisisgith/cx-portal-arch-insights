@@ -1,3 +1,4 @@
+export const DEFAULT_DATACENTER = 'usa';
 export enum OriginType {
 	APOLLO = 'apollo',
 	SDP = 'sdp',
@@ -5,4 +6,3 @@ export enum OriginType {
 	PITSTOP = 'pit',
 	NONE = 'none',
 }
-export const DEFAULT_DATACENTER = 'usa';

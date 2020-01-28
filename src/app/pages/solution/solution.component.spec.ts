@@ -38,6 +38,7 @@ import { AdvisoriesComponent } from './advisories/advisories.component';
 import { CaseService } from '@cui-x/services';
 import { UtilsService, RacetrackInfoService } from '@services';
 import { UserResolve } from '@utilities';
+import { ACTIVE_FACET_KEY } from '@constants';
 
 /**
  * Will fetch the currently active response body from the mock object
@@ -139,9 +140,9 @@ describe('SolutionComponent', () => {
 		caseService = TestBed.get(CaseService);
 		racetrackService = TestBed.get(RacetrackService);
 		utils = TestBed.get(UtilsService);
-		localStorage.removeItem('quickTourFirstTime');
 		racetrackInfoService = TestBed.get(RacetrackInfoService);
 		userResolve = TestBed.get(UserResolve);
+		localStorage.clear();
 		restoreSpies();
 	});
 
@@ -202,6 +203,8 @@ describe('SolutionComponent', () => {
 			.toEqual(assetsFacet);
 		expect(component.quickTourActive)
 			.toBeFalsy();
+		expect(window.localStorage.getItem(ACTIVE_FACET_KEY))
+			.toEqual(assetsFacet.key);
 
 		component.selectFacet(lifecyclesFacet);
 		tick(1000);

@@ -4,7 +4,7 @@ import { UserResolve } from '@utilities';
 import { mergeMap, take, map } from 'rxjs/operators';
 import { environment } from '@environment';
 import { ApixIdentityService } from './apix-identity.service';
-import { OriginType, UserInfoKey } from '@constants';
+import { OriginType, USER_INFO_KEYS } from '@constants';
 import { LogService } from '@cisco-ngx/cui-services';
 import * as _ from 'lodash-es';
 import { RacetrackInfoService } from '@services';
@@ -134,12 +134,12 @@ export class ApixAccountInterceptor implements HttpInterceptor {
 			);
 
 		return forkJoin({
-			[UserInfoKey.SAID]: said$,
-			[UserInfoKey.VAID]: vaid$,
-			[UserInfoKey.CUSTOMERID]: customerId$,
-			[UserInfoKey.USECASE]: useCase$,
-			[UserInfoKey.SOLUTION]: solution$,
-			[UserInfoKey.CXLEVEL]: cxLevel$,
+			[USER_INFO_KEYS.SAID]: said$,
+			[USER_INFO_KEYS.VAID]: vaid$,
+			[USER_INFO_KEYS.CUSTOMERID]: customerId$,
+			[USER_INFO_KEYS.USECASE]: useCase$,
+			[USER_INFO_KEYS.SOLUTION]: solution$,
+			[USER_INFO_KEYS.CXLEVEL]: cxLevel$,
 		});
 	}
 
@@ -225,8 +225,8 @@ export class ApixAccountInterceptor implements HttpInterceptor {
 		const url = new URL(req.url, environment.origin);
 
 		if (this.pathsToExcludeCxLevelAndSaId.some(regex => regex.test(url.pathname))) {
-			delete accountInfo[UserInfoKey.SAID];
-			delete accountInfo[UserInfoKey.CXLEVEL];
+			delete accountInfo[USER_INFO_KEYS.SAID];
+			delete accountInfo[USER_INFO_KEYS.CXLEVEL];
 		}
 
 		return userInfo;
@@ -236,7 +236,7 @@ export class ApixAccountInterceptor implements HttpInterceptor {
 		const url = new URL(req.url, environment.origin);
 
 		if (!this.pathsToIncludeVaId.some(regex => regex.test(url.pathname))) {
-			delete userInfo.accountInfo[UserInfoKey.VAID];
+			delete userInfo.accountInfo[USER_INFO_KEYS.VAID];
 		}
 
 		return userInfo;
