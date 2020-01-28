@@ -33,10 +33,7 @@ export class ApixDatacenterInterceptor implements HttpInterceptor {
 	public intercept (req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 		const url = new URL(req.url, environment.origin);
 
-		if (
-			this.apixIdentityService.testOrigin(url) === OriginType.PITSTOP ||
-			this.apixIdentityService.testOrigin(url) === OriginType.PARTNER
-		) {
+		if (this.apixIdentityService.testOrigin(url) === OriginType.PITSTOP) {
 			const request = req.clone({
 				url: req.url.replace(environment.datacenterStub, DEFAULT_DATACENTER),
 			});
