@@ -194,7 +194,7 @@ export class BugsDetailsComponent implements OnInit {
 					{
 						key: 'status',
 						name: I18n.get('_State_'),
-						sortable: true,
+						sortable: false,
 						template: this.stateTemplate,
 						width: '15%',
 					},
@@ -923,6 +923,27 @@ export class BugsDetailsComponent implements OnInit {
 			this.status.isLoadingDetails = false;
 		});
 	}
+	   /**
+     * Sets the params for sorting
+     * @param column column to set sorting
+     */
+ 		public onColumnSort (column) {
+			 const recommendation = this.getCurrentTabData();
+			const data = recommendation.data.fns;
+			if (column.name === 'ID') {
+				recommendation.data.fns = column.sortDirection === 'asc' ?  _.sortBy(data, 'fnId') :
+				_.sortBy(data, 'fnId')
+				.reverse();
+			} else if (column.name === 'First Published') {
+				recommendation.data.fns = column.sortDirection === 'asc' ? _.sortBy(data, o => new Date(o.firstPublishedDate)) :
+				_.sortBy(data, o => new Date(o.firstPublishedDate))
+				.reverse();
+			} else if (column.name === 'Last Updated') {
+				recommendation.data.fns = column.sortDirection === 'asc' ? _.sortBy(data, o => new Date(o.lastUpdatedDate)) :
+				_.sortBy(data, o => new Date(o.lastUpdatedDate))
+				.reverse();
+			}
+		}
 	/**
 	 * OnDestroy lifecycle hook
 	 */
