@@ -8,8 +8,8 @@ import {
 	OnInit,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { empty, Observable, Subject } from 'rxjs';
-import { catchError, finalize, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { empty, Observable, Subject, forkJoin } from 'rxjs';
+import { catchError, finalize, map, takeUntil, tap } from 'rxjs/operators';
 import {
 	ControlPointUserManagementAPIService,
 	UserDetails,
@@ -38,6 +38,7 @@ export class UserMgmtComponent implements OnInit, AfterViewInit, OnDestroy {
 	@Output() private onUpdate = new EventEmitter<void>();
 	@Output() public onSelect: EventEmitter<Observable<UserUpdateResponseModel>> =
 		new EventEmitter<Observable<UserUpdateResponseModel>>();
+	public alert: any = { };
 	public userDetails: UserDetails;
 	public virtualAccountName = '';
 	private destroyed$: Subject<void> = new Subject<void>();
@@ -49,7 +50,7 @@ export class UserMgmtComponent implements OnInit, AfterViewInit, OnDestroy {
 	public numUsersWithRoles = 0;
 	private user: UserResponse['data'];
 	private customerId: string;
-	private saAccountId: number;
+	private saAccountId: string;
 	public vaAccountId: string;
 	public allUsers: UserDetails[];
 	public items: VADetails[];
@@ -79,9 +80,10 @@ export class UserMgmtComponent implements OnInit, AfterViewInit, OnDestroy {
 		this.user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(this.user, ['info', 'customerId']);
 		this.userReslove.getSaId()
-			.subscribe(saId => this.saAccountId = saId);
+			.subscribe(saId => this.saAccountId = saId.toString());
 	}
 	public ngOnInit () {
+		this.alert.visible = false;
 		this.user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(this.user, ['info', 'customerId']);
 		// this.vaAccountId = _.get(this.userDetails.roles , ['value_1'], null);
@@ -89,50 +91,62 @@ export class UserMgmtComponent implements OnInit, AfterViewInit, OnDestroy {
 		// tslint:disable-next-line:no-console
 		this.userReslove.getSaId()
 			.subscribe(saId => {
-				this.saAccountId = saId;
+				this.saAccountId = saId.toString();
 				this.getVirtualAccounts();
-				this.updateUsers$
-					.pipe(
-						switchMap(() => this.getUsers()),
-						map(response => {
-							this.allUsers = response.data;
+				// this.updateUsers$
+				// 	.pipe(
+				// 		switchMap(() => this.getUsers()),
+				// 		map(response => {
+				// 			this.allUsers = response.data;
 
-							return this.allUsers;
-						}),
-						tap(users => this.numUsers = users.length),
-						tap(users => this.numUsersWithRoles = users
-							.filter(user => user.roles && user.roles.length > 0).length),
-					)
-					.subscribe();
-				this.updateUsers$
-					.next();
+				// 			return this.allUsers;
+				// 		}),
+				// 		tap(users => this.numUsers = users.length),
+				// 		tap(users => this.numUsersWithRoles = users
+				// 			.filter(user => user.roles && user.roles.length > 0).length),
+				// 	)
+				// 	.subscribe();
+				// this.updateUsers$
+				// 	.next();
+				return forkJoin([
+					this.getUsers(),
+					this.getVirtualAccounts(),
+				])
+				.pipe(tap(() => {
+					this.reflectVA();
+				}))
+				.subscribe();
 			});
+
 	}
 
 	private getVirtualAccounts () {
-		this.usersService
-			.getVAListForGivenSACUsingGET(this.saAccountId.toString())
-			.pipe(takeUntil(this.destroyed$))
-			.subscribe(response => {
+		return this.usersService
+			.getVAListForGivenSACUsingGET(this.saAccountId)
+			.pipe(takeUntil(this.destroyed$),
+			map(response => {
 				this.items = _.get(response, 'data', []);
-				this.allUsers.forEach(selUser => {
-					if (selUser.isSelected) {
-						delete selUser.isSelected;
-					}
-					this.items.forEach(selItem => {
-						if (selItem.virtual_account_id === selUser.roles[0].value_1) {
-							selUser.selectedVirtualAccount = selItem;
-						}
-					});
-				});
-			});
+			}))
+			;
 	}
 
+	private reflectVA () {
+		this.allUsers.forEach(selUser => {
+			if (selUser.isSelected) {
+				delete selUser.isSelected;
+			}
+			this.items.forEach(selItem => {
+				if ((Array.isArray(selUser.roles) && selUser.roles.length) && selItem.virtual_account_id === selUser.roles[0].value_1) {
+					selUser.selectedVirtualAccount = selItem;
+				}
+			});
+		});
+	}
 	/**
 	 * NgAfterViewInit
 	 */
 	public ngAfterViewInit () {
-		this.updateUsers$.next();
+		this.update();
 	}
 
 	/**
@@ -152,9 +166,17 @@ export class UserMgmtComponent implements OnInit, AfterViewInit, OnDestroy {
 		this.cdr.detectChanges();
 
 		return this.usersService.getUserDetailsListForGivenSAUsingGET(
-			this.saAccountId.toString(),
+			this.saAccountId,
 		)
 			.pipe(
+				map(response => {
+					this.allUsers = response.data;
+
+					return this.allUsers;
+				}),
+			tap(users => this.numUsers = users.length),
+			tap(users => this.numUsersWithRoles = users
+				.filter(user => user.roles && user.roles.length > 0).length),
 				finalize(() => {
 					this.isLoading = false;
 					this.cdr.detectChanges();
@@ -197,7 +219,14 @@ export class UserMgmtComponent implements OnInit, AfterViewInit, OnDestroy {
 	public async onAddUser () {
 		const result = await this.cuiModalService.showComponent(AddUserComponent, { }, 'small');
 		if (result) {
-			this.updateUsers$.next();
+			this.update();
+			_.invoke(
+				this.alert,
+				'show',
+				`${result} ${this.i18n.transform('_UserAddedSuccessfully_')}`,
+				'success',
+			);
+			this.alert.visible = true;
 		}
 	}
 
@@ -230,11 +259,16 @@ export class UserMgmtComponent implements OnInit, AfterViewInit, OnDestroy {
 					takeUntil(this.destroyed$),
 				)
 				.subscribe(() => {
-					this.updateUsers$.next();
+					this.update();
 				});
 		}
 	}
-
+	private update () {
+		this.getUsers()
+		.subscribe(() => {
+			this.reflectVA();
+		});
+	}
 	/**
 	 * Makes API call to delete a user
 	 * @param user UserDetails
@@ -246,7 +280,7 @@ export class UserMgmtComponent implements OnInit, AfterViewInit, OnDestroy {
 			isPartner: false,
 			customerId: this.customerId,
 			rolesRemoved: user.roles,
-			saCompanyId: this.saAccountId.toString(),
+			saCompanyId: this.saAccountId,
 		});
 	}
 
@@ -256,10 +290,11 @@ export class UserMgmtComponent implements OnInit, AfterViewInit, OnDestroy {
 	 */
 	public changeRole (obs: Observable<UserUpdateResponseModel>) {
 		this.isLoading = true;
+
 		obs
 			.pipe(
 				finalize(() => {
-					this.updateUsers$.next();
+					this.update();
 				}),
 				catchError(() => {
 					this.error.show = true;
@@ -273,18 +308,27 @@ export class UserMgmtComponent implements OnInit, AfterViewInit, OnDestroy {
 					this.error.text = _.get(response.data, ['0', 'errMsg'], response.message);
 					this.error.show = true;
 				}
-				this.getVirtualAccounts();
+				this.getVirtualAccounts()
+				.subscribe();
 			});
 	}
 
 	public getRoleType (user) {
 		const role = _.get(user.roles, ['0'], null);
+		if (!role) {
+			return 'saRole';
+		}
 
 		return role.type_1 ? 'vaRole' : 'saRole';
 	}
 
 	public onSelection (event: any) {
 		const selectedUser = _.find(this.allUsers, user => user.ccoId === event.user.ccoId);
+		const getVA = _.get(selectedUser, 'selectedVirtualAccount');
+
+		if (getVA && selectedUser.selectedVirtualAccount.name === event.selectedVirtualAccount.name) {
+			return false;
+		}
 		selectedUser.selectedVirtualAccount = event.selectedVirtualAccount;
 		selectedUser.isSelected = true;
 		this.allUsers = _.cloneDeep(this.allUsers);

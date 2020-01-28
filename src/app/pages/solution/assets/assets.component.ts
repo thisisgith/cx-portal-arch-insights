@@ -12,11 +12,13 @@ import {
 	InventoryService,
 	InventoryPagination as Pagination,
 	RoleCount,
+	ProductTypeCount,
 	RoleCountResponse,
 	CoverageCountsResponse,
 	ProductAlertsService,
 	HardwareEOLCountResponse,
 	VulnerabilityResponse,
+	ProductTypeResponse,
 	TransactionRequest,
 	NetworkDataGatewayService,
 	ScanRequestResponse,
@@ -49,7 +51,6 @@ import { getProductTypeImage, getProductTypeTitle } from '@classes';
 import { DetailsPanelStackService, RacetrackInfoService, CaseDetailsService } from '@services';
 import { HttpResponse } from '@angular/common/http';
 import { IS_IE_OR_EDGE } from '@constants';
-
 /**
  * Interface representing an item of our inventory in our assets table
  */
@@ -391,6 +392,13 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					template: this.bubbleChartFilterTemplate,
 					title: I18n.get('_Role_'),
 				},
+				{
+					key: 'productType',
+					loading: true,
+					seriesData: [],
+					template: this.pieChartFilterTemplate,
+					title: I18n.get('_ProductType_'),
+				},
 			],
 			key: 'system',
 			loading: true,
@@ -522,6 +530,13 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					seriesData: [],
 					template: this.barChartFilterTemplate,
 					title: I18n.get('_HardwareType_'),
+				},
+				{
+					key: 'productType',
+					loading: true,
+					seriesData: [],
+					template: this.pieChartFilterTemplate,
+					title: I18n.get('_ProductType_'),
 				},
 			],
 			key: 'hardware',
@@ -1073,6 +1088,65 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		);
 	}
 
+	private getHardwareProductTypeCount () {
+		const hardwareView = this.getView('hardware');
+		const hardwareProductTypeFilter =
+			_.find(hardwareView.filters, { key: 'productType' });
+
+		return this.inventoryService.getHardwareProductTypeCount({
+			customerId: this.customerId,
+			solution: this.selectedSolutionName,
+			useCase: this.selectedTechnologyName,
+		})
+		.pipe(
+			map((data: ProductTypeResponse) => {
+				hardwareProductTypeFilter.seriesData = _.map(data, (d: ProductTypeCount) => ({
+					filter: d.productType,
+					label: d.productType,
+					selected: false,
+					value: d.deviceCount,
+				}));
+				hardwareProductTypeFilter.loading = false;
+			}),
+			catchError(err => {
+				hardwareProductTypeFilter.loading = false;
+				this.logger.error('assets.component : getHardwareProductTypeCount() ' +
+					`:: Error : (${err.status}) ${err.message}`);
+
+				return of({ });
+			}),
+		);
+	}
+
+	private getSystemProductTypeCount () {
+		const systemView = this.getView('system');
+		const systemProductTypeFilter =
+			_.find(systemView.filters, { key: 'productType' });
+
+		return this.inventoryService.getSystemProductTypeCount({
+			customerId: this.customerId,
+			solution: this.selectedSolutionName,
+			useCase: this.selectedTechnologyName,
+		})
+		.pipe(
+			map((data: ProductTypeResponse) => {
+				systemProductTypeFilter.seriesData = _.map(data, (d: ProductTypeCount) => ({
+					filter: d.productType,
+					label: d.productType,
+					selected: false,
+					value: d.deviceCount,
+				}));
+				systemProductTypeFilter.loading = false;
+			}),
+			catchError(err => {
+				systemProductTypeFilter.loading = false;
+				this.logger.error('assets.component : getSystemProductTypeCount() ' +
+					`:: Error : (${err.status}) ${err.message}`);
+				return of({ });
+			}),
+		);
+	}
+
 	/**
 	 * Fetches the hardware type counts for the visual filter
 	 * @returns the hardware type counts
@@ -1357,19 +1431,15 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			key = (subfilter === 'hasNoFieldNotices') ? 'hasFieldNotices' : subfilter;
 			val = (subfilter === 'hasNoFieldNotices') ? false : true;
 		}
-
 		if (filter.selected) {
 			_.set(params, [key], val);
 		} else {
 			_.unset(params, [key]);
 		}
-
 		view.params.page = 1;
-
 		if (filter.selected) {
 			view.filtered = true;
 		}
-
 		if (reload) {
 			this.selectedView.allAssetsSelected = false;
 			this.adjustQueryParams();
@@ -1413,6 +1483,8 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					this.getRoleCounts(),
 					this.getHardwareEOXCounts(),
 					this.getInventoryCounts(),
+					this.getHardwareProductTypeCount(),
+					this.getSystemProductTypeCount(),
 				)
 				.pipe(
 					map(() => _.map(this.views, (view: View) => {
@@ -1420,6 +1492,11 @@ export class AssetsComponent implements OnInit, OnDestroy {
 							const role = _.get(view, ['params', 'role']);
 							if (role) {
 								this.selectSubFilters(view, role, 'role');
+							}
+
+							const productType = _.get(view, ['params', 'productType']);
+							if (productType) {
+								this.selectSubFilters(view, productType, 'productType');
 							}
 
 							if (_.get(view, ['params', 'hasBugs'])) {
@@ -1434,6 +1511,11 @@ export class AssetsComponent implements OnInit, OnDestroy {
 							const coverage = _.get(view, ['params', 'coverage']);
 							if (coverage) {
 								this.selectSubFilters(view, coverage, 'coverage');
+							}
+
+							const productType = _.get(view, ['params', 'productType']);
+							if (productType) {
+								this.selectSubFilters(view, productType, 'productType');
 							}
 
 							const hasFieldNotices = _.get(view, ['params', 'hasFieldNotices']);
@@ -1523,11 +1605,19 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				if (params.hasFieldNotices) {
 					_.set(view.params, 'hasFieldNotices', params.hasFieldNotices);
 				}
+
+				if (params.productType) {
+					_.set(view.params, 'productType', _.castArray(params.productType));
+				}
 			}
 
 			if (view.key === 'system') {
 				if (params.role) {
 					_.set(view.params, 'role', _.castArray(params.role));
+				}
+
+				if (params.productType) {
+					_.set(view.params, 'productType', _.castArray(params.productType));
 				}
 
 				if (params.hasBugs) {
@@ -1536,7 +1626,6 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					_.set(view.params, 'hasSecurityAdvisories', params.hasSecurityAdvisories);
 				}
 			}
-
 			if (params.serialNumber) {
 				view.params.serialNumber = _.castArray(params.serialNumber);
 			}

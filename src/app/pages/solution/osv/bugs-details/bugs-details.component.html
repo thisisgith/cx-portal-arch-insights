@@ -194,7 +194,7 @@
 				[offset]="recommendation.params.offset"
 				[options]="fieldTable"
 				(onTableRowClicked)="onFieldRowSelect($event)"			
-				[data]="recommendation?.data.fns">
+				[data]="recommendation?.data.fns" (onSortChanged) = "onColumnSort($event)">
 			</cui-table>
 		</div>
 		<div *ngIf="recommendation.data?.fns.length === 0" class="text-center text-xlarge dbl-margin-top">

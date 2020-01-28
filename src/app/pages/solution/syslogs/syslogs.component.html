@@ -3,10 +3,11 @@
 	<visual-filter-bar [filters]="filters">
 		<ng-template #startingCard>
 			<div
-				class="text-center panel cursor"
+				class="text-center panel"
 			>
 				<div
 					*ngFor="let label of visualLabels; let i = index" data-auto-id="visualLabel"
+					class="toggle"
 					[ngClass]="{ 'visual-selected' : label.active == true }"
 					(click)="selectVisualLabel(i)"
 				>

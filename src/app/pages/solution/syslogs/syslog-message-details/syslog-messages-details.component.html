@@ -1,4 +1,3 @@
-
 <details-panel
 *ngIf="showSyslogsDetails"
 [hidden]="!asset"
@@ -34,7 +33,7 @@
 						</span>
 						<span *ngSwitchCase="'2'">
 							<span class="qtr-margin-right icon-circle text-warning"></span>
-							<span [innerText]="'_SyslogCritical_' | i18n"></span>
+							<span [innerText]="'_SyslogCriticalSev_' | i18n"></span>
 						</span>
 						<span *ngSwitchCase="'3'">
 							<span class="qtr-margin-right icon-circle text-warning"></span>
@@ -50,7 +49,7 @@
 						</span>
 						<span *ngSwitchCase="'6'">
 								<span class="qtr-margin-right icon-circle text-muted"></span>
-								<span [innerText]="'_SyslogInfo_' | i18n"></span>
+								<span [innerText]="'_SyslogInfoSev_' | i18n"></span>
 						</span>
 						<span *ngSwitchCase="'7'">
 								<span class="qtr-margin-right icon-circle text-muted"></span>
@@ -116,5 +115,3 @@
 		<span [innerText]="tableData[0]?.recommendation"></span>
 </div>
 </details-panel>
-
-

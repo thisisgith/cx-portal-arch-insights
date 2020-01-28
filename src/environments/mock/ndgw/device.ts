@@ -1,4 +1,4 @@
-import { Transaction, TransactionStatusResponse } from '@sdp-api';
+import { Transaction, TransactionStatusResponse, ScanRequestResponse } from '@sdp-api';
 
 /** Base of URL for SDP API */
 const api = '/api/customerportal/ndgw/v1/device';
@@ -15,6 +15,15 @@ export const MockTransactionRequestResponse: Transaction[] = [
 		customerId,
 		transactionId,
 		remoteNodeId: 'CAT2034B1H6',
+	},
+];
+
+/** Mock data for Scan Status (IN_PROGRESS) */
+export const MockScanStatusBySerialNumber: ScanRequestResponse = [
+	{
+		customerId,
+		transactionId,
+		status: 'IN_PROGRESS',
 	},
 ];
 
@@ -85,6 +94,23 @@ export const DeviceScenarios = [
 			],
 		},
 		url: `${api}/scan-request/status/${customerId}/${transactionId}`,
+		usecases: ['Diagnostic Scanning'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 250,
+					description: 'Scan Status by SN & PID for CAT2034B1H6',
+					response: {
+						body: MockScanStatusBySerialNumber,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/scan-request/status/${customerId}/CAT2034B1H6/WS-C2960X-24PS-L`,
 		usecases: ['Diagnostic Scanning'],
 	},
 ];
