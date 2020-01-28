@@ -189,7 +189,7 @@
 						[ngClass]="{'text-small':!fullscreen,'text-large base-margin-top':fullscreen}"
 						[innerText]="'_OsvCurrentlyExposed_' | i18n | uppercase">					
 					</div>
-					<div class="text-large" *ngIf="currentRecommendation?.fieldsExposed > 0; else notAvailable" [innerText]="currentRecommendation?.fieldsExposed || '0'"
+					<div class="text-large" *ngIf="currentRecommendation?.fieldsExposed > 0; else notFieldAvailable" [innerText]="currentRecommendation?.fieldsExposed || '0'"
 						[ngClass]="{'base-padding-top':!fullscreen}"></div>				
 				</td>
 				<td (click)="showDetailsView('field',i+1)" data-auto-id="ShowFieldDetailsRecommendedReleasesTab" *ngFor="let recommendation of machineRecommendations;let i = index;" class="recommendation">
@@ -225,6 +225,11 @@
 
 <ng-template #notAvailable >
 	<div data-auto-id="BugsNotAvailable" [ngClass]="{'base-padding-top':!fullscreen}" [innerText]="'_OsvNotAvailable_' | i18n">	
+	</div>
+</ng-template>
+
+<ng-template #notFieldAvailable >
+	<div data-auto-id="FieldsNotAvailable" [ngClass]="{'base-padding-top':!fullscreen}" [innerText]="'_OsvNotAvailable_' | i18n">	
 	</div>
 </ng-template>
 
