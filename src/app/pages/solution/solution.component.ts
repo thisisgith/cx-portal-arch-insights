@@ -41,7 +41,7 @@ import { Step } from '../../../../src/app/components/quick-tour/quick-tour.compo
 import { DetailsPanelStackService, UtilsService, RacetrackInfoService, CaseDetailsService } from '@services';
 import { SmartAccount } from '@interfaces';
 import { UserResolve } from '@utilities';
-import { ACTIVE_TECHNOLOGY_KEY } from '@constants';
+import { ACTIVE_TECHNOLOGY_KEY, ACTIVE_FACET_KEY } from '@constants';
 import { ContactSupportComponent } from '../../components/contact-support/contact-support.component';
 
 /**
@@ -151,7 +151,7 @@ export class SolutionComponent implements OnInit, OnDestroy, AfterViewInit {
 						(_.isArray(event.url) ? event.url[0] : event.url), '?')[0];
 					if (routePath.includes('solution')) {
 						this.activeRoute = routePath;
-						const routeFacet = this.getFacetFromRoute(this.activeRoute);
+						const routeFacet = this.getFacet(this.activeRoute);
 						if (routeFacet) {
 							this.selectFacet(routeFacet);
 						}
@@ -235,6 +235,7 @@ export class SolutionComponent implements OnInit, OnDestroy, AfterViewInit {
 
 			facet.selected = true;
 			this.selectedFacet = facet;
+			window.localStorage.setItem(ACTIVE_FACET_KEY, facet.key);
 			this.quickTourActive = facet.key === 'lifecycle'
 				&& (this.quickTourFirstTime || _.isNil(this.quickTourFirstTime));
 
@@ -315,8 +316,19 @@ export class SolutionComponent implements OnInit, OnDestroy, AfterViewInit {
 	 * @param route the route string
 	 * @returns the facet
 	 */
-	private getFacetFromRoute (route: string) {
-		return route ? _.find(this.facets, (facet: Facet) => route.includes(facet.route)) : this.facets[0];
+	private getFacet (route: string) {
+		let activeFacet: Facet;
+
+		const activeFacetKey = window.localStorage.getItem(ACTIVE_FACET_KEY);
+		if (route) {
+			activeFacet = _.find(this.facets, (facet: Facet) => route.includes(facet.route)) || activeFacet;
+		} else if (activeFacetKey) {
+			activeFacet = _.find(this.facets, { key: activeFacetKey }) || activeFacet;
+		} else {
+			activeFacet = this.facets[0];
+		}
+
+		return activeFacet;
 	}
 
 	public changeTechnology (technology: RacetrackTechnology) {
@@ -834,7 +846,7 @@ export class SolutionComponent implements OnInit, OnDestroy, AfterViewInit {
 	 */
 	public async ngAfterViewInit () {
 		this.calculateSteps();
-		this.selectFacet(this.getFacetFromRoute(this.activeRoute));
+		this.selectFacet(this.getFacet(this.activeRoute));
 		this.racetrackInfoService.getPitStopApiFailure()
 		.pipe(
 			map(() => {

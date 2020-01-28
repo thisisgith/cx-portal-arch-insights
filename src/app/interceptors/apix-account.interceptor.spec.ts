@@ -5,7 +5,7 @@ import { RMAService, APIxService, RacetrackInfoService } from '@services';
 import { ApixAccountInterceptor } from './apix-account.interceptor';
 import { Observable, from } from 'rxjs';
 import { ApixIdentityService } from './apix-identity.service';
-import { OriginType, UserInfoKey } from '@constants';
+import { OriginType, USER_INFO_KEYS } from '@constants';
 import { UserResolve } from '@utilities';
 
 describe('APIxAccountInterceptor', () => {
@@ -90,18 +90,18 @@ describe('APIxAccountInterceptor', () => {
 
 		const retValue = {
 			setHeaders: {
-				[UserInfoKey.SAID]: SAID_VALUE,
-				[UserInfoKey.CUSTOMERID]: CUSTOMERID_VALUE,
-				[UserInfoKey.USECASE]: USECASE_VALUE,
-				[UserInfoKey.SOLUTION]: SOLUTION_VALUE,
-				[UserInfoKey.CXLEVEL]: CXLEVEL_VALUE.toString(),
+				[USER_INFO_KEYS.SAID]: SAID_VALUE,
+				[USER_INFO_KEYS.CUSTOMERID]: CUSTOMERID_VALUE,
+				[USER_INFO_KEYS.USECASE]: USECASE_VALUE,
+				[USER_INFO_KEYS.SOLUTION]: SOLUTION_VALUE,
+				[USER_INFO_KEYS.CXLEVEL]: CXLEVEL_VALUE.toString(),
 			},
 			setParams: {
-				[UserInfoKey.SAID]: SAID_VALUE,
-				[UserInfoKey.CUSTOMERID]: CUSTOMERID_VALUE,
-				[UserInfoKey.USECASE]: USECASE_VALUE,
-				[UserInfoKey.SOLUTION]: SOLUTION_VALUE,
-				[UserInfoKey.CXLEVEL]: CXLEVEL_VALUE.toString(),
+				[USER_INFO_KEYS.SAID]: SAID_VALUE,
+				[USER_INFO_KEYS.CUSTOMERID]: CUSTOMERID_VALUE,
+				[USER_INFO_KEYS.USECASE]: USECASE_VALUE,
+				[USER_INFO_KEYS.SOLUTION]: SOLUTION_VALUE,
+				[USER_INFO_KEYS.CXLEVEL]: CXLEVEL_VALUE.toString(),
 			},
 		};
 		apixAccountInterceptor.intercept(req, next)
