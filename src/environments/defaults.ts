@@ -88,12 +88,12 @@ export const defaults = {
 	rmaToolUrl: 'https://ibpm-stage.cisco.com/rma-qa3/home',
 	sdAccessCommunitiesPath: 'software-defined-access-sda',
 	sdpServiceBasePath: '/api',
-	sdpServiceClientId: '4jr3csg78pg7ws7gwvj82sfa',
+	sdpServiceClientId: 'fndv7x6ucwx42p7cxq5k458m',
 	/**
 	 * sdpServiceOrigin MUST be explicitly declared in every single environment file,
 	 * because it is used inside of a module forRoot() call
 	 */
-	sdpServiceOrigin: 'https://api-stage.cisco.com',
+	sdpServiceOrigin: 'https://api-dev.cisco.com',
 	sdpServicePaths: {
 		contracts: '/api/v1/contracts',
 		customerportal: '/api/customerportal',

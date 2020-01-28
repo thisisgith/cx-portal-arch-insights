@@ -167,6 +167,7 @@ export class BugsDetailsComponent implements OnInit {
 						key: 'fnId',
 						name: I18n.get('_OsvFieldId_'),
 						sortable: true,
+						sortDirection: 'asc',
 						template: this.fieldIdTemp,
 						width: '20%',
 					},
@@ -181,6 +182,7 @@ export class BugsDetailsComponent implements OnInit {
 						key: 'firstPublishedDate',
 						name: I18n.get('_firstPublished_'),
 						sortable: true,
+						sortDirection: 'asc',
 						template: this.firstPublished,
 						width: '15%',
 					},
@@ -188,13 +190,15 @@ export class BugsDetailsComponent implements OnInit {
 						key: 'lastUpdatedDate',
 						name: I18n.get('_lastUpdated_'),
 						sortable: true,
+						sortDirection: 'asc',
 						template: this.updatedDateFieldTemp,
 						width: '15%',
 					},
 					{
 						key: 'status',
 						name: I18n.get('_State_'),
-						sortable: false,
+						sortable: true,
+						sortDirection: 'asc',
 						template: this.stateTemplate,
 						width: '15%',
 					},
@@ -941,6 +945,10 @@ export class BugsDetailsComponent implements OnInit {
 			} else if (column.name === 'Last Updated') {
 				recommendation.data.fns = column.sortDirection === 'asc' ? _.sortBy(data, o => new Date(o.lastUpdatedDate)) :
 				_.sortBy(data, o => new Date(o.lastUpdatedDate))
+				.reverse();
+			} else if (column.name === 'State') {
+				recommendation.data.fns = column.sortDirection === 'asc' ? _.sortBy(data, 'status') :
+				_.sortBy(data, 'status')
 				.reverse();
 			}
 		}
