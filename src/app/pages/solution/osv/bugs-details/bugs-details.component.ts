@@ -939,12 +939,12 @@ export class BugsDetailsComponent implements OnInit {
 				_.sortBy(data, 'fnId')
 				.reverse();
 			} else if (column.name === 'First Published') {
-				recommendation.data.fns = column.sortDirection === 'asc' ? _.sortBy(data, o => new Date(o.firstPublishedDate)) :
-				_.sortBy(data, o => new Date(o.firstPublishedDate))
+				recommendation.data.fns = column.sortDirection === 'asc' ? _.sortBy(data, e => new Date(e.firstPublishedDate)) :
+				_.sortBy(data, e => new Date(e.firstPublishedDate))
 				.reverse();
 			} else if (column.name === 'Last Updated') {
-				recommendation.data.fns = column.sortDirection === 'asc' ? _.sortBy(data, o => new Date(o.lastUpdatedDate)) :
-				_.sortBy(data, o => new Date(o.lastUpdatedDate))
+				recommendation.data.fns = column.sortDirection === 'asc' ? _.sortBy(data, e => new Date(e.lastUpdatedDate)) :
+				_.sortBy(data, e => new Date(e.lastUpdatedDate))
 				.reverse();
 			} else if (column.name === 'State') {
 				recommendation.data.fns = column.sortDirection === 'asc' ? _.sortBy(data, 'status') :
