@@ -161,9 +161,11 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 			const profileName = _.get(this.selectedSoftwareGroup, 'profileName');
 			const profileId = _.get(this.selectedSoftwareGroup, 'id');
 			const productFamily = _.get(this.selectedSoftwareGroup, 'productFamily');
+			const productId = _.get(this.selectedSoftwareGroup, 'productId');
 			this.softwareGroupDetailsParams.profileId = profileId;
 			this.softwareGroupDetailsParams.profileName = profileName;
 			this.softwareGroupDetailsParams.productFamily = productFamily;
+			this.softwareGroupDetailsParams.productId = productId;
 
 			this.softwareGroupAssetsParams.id = profileId;
 			this.softwareGroupAssetsParams.profileName = profileName;
