@@ -303,7 +303,9 @@ export class BugsDetailsComponent implements OnInit {
 
 			_.set(totalFilter, 'template', this.totalFilterTemplate);
 			_.set(stateFilter, 'template', this.stateFilterTemplate);
-			_.set(severityFilter, 'template', this.severityFilterTemplate);
+			if (viewType !== 'field') {
+				_.set(severityFilter, 'template', this.severityFilterTemplate);
+			}
 			totalFilter.seriesData = [
 				{
 					showTotal: true,
