@@ -1736,5 +1736,10 @@
 	"_firstPublished_": "First Published",
 	"_lastUpdated_":"Last Updated",
 	"_fieldUrl_": "This Advisory is avaliable in the following link",
+	"_fieldworkaround_": "WORKAROUND/SOLUTION", 
+	"_fieldescrption_": "PROBLEM DESCRIPTION", 
+	"_fieldsymptom_": "PROBLEM SYMPTOM",
+	"_fieldback_": "BACKGROUND",
+	"_fieldtitle_": "TITLE",
     "_OsvNoFieldsMessage_":"Field Notices count is 0 because the product is either not supported or the system is undergoing refresh. Please try again later."
 }
