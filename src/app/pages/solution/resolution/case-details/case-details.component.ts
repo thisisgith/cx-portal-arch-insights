@@ -186,7 +186,13 @@ export class CaseDetailsComponent implements OnInit, OnDestroy {
 		} else {
 			this.caseFiles = _.get(result,
 				['result', 'response', 'getBrokerResponse', 'downloadInfo'], []);
-			this.numberOfFiles = _.get(this.caseFiles, 'fileDetail').length;
+			if (this.caseFiles) {
+				if (Array.isArray(_.get(this.caseFiles, 'fileDetail'))) {
+					this.numberOfFiles = _.get(this.caseFiles, 'fileDetail').length;
+				} else if (_.get(this.caseFiles, ['fileDetail', 'fileInfo'])) {
+					this.numberOfFiles = 1;
+				}
+			}
 		}
 	}
 
