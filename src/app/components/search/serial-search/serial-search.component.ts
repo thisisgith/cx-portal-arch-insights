@@ -33,7 +33,7 @@ import { SearchService, RacetrackInfoService } from '@services';
 
 import { SpecialSearchComponent } from '../special-search/special-search.component';
 import { CaseOpenComponent } from '../../case/case-open/case-open.component';
-import { SearchQuery } from '@interfaces';
+import { SearchQuery, SearchEnum } from '@interfaces';
 import { CoverageStatusPipe, CoverageType } from '@pipes';
 
 import * as _ from 'lodash-es';
@@ -53,6 +53,7 @@ interface SerialData {
 	productName: string;
 	productSeries: string;
 	softwareType: string;
+	serialNumber?: string;
 }
 
 /**
@@ -110,6 +111,7 @@ implements OnInit, OnChanges, OnDestroy {
 	public expirationFromNow: string;
 	public alertsData: AlertsData;
 	public caseData: CaseData;
+	public type: string;
 	private selectedSolutionName: string;
 	private selectedTechnologyName: string;
 	private refresh$ = new Subject();
@@ -177,19 +179,20 @@ implements OnInit, OnChanges, OnDestroy {
 
 				return;
 			}
-
-			/** temporary till hostname search is introduced */
-			if (this.serialNumber.query.toUpperCase() !== this.assetData.serialNumber.toUpperCase()) {
-				this.hide.emit(true);
-
-				return;
+			if (this.assetData.ipAddress.includes(this.serialNumber.query)) {
+				this.type = SearchEnum.ipAddress;
+			} else if (this.assetData.serialNumber.toUpperCase()
+			.includes(this.serialNumber.query.toUpperCase())) {
+				this.type = SearchEnum.sn;
+			} else {
+				this.type = SearchEnum.hostName;
 			}
-
 			this.data.currentVersion = this.assetData.osVersion;
 			this.data.ipAddress = this.assetData.ipAddress;
 			this.data.lastScan = this.assetData.lastScan;
 			this.data.productId = this.assetData.productId;
 			this.data.softwareType = this.assetData.osType;
+			this.data.serialNumber = this.assetData.serialNumber;
 		});
 		/** Hardware Info Refresh */
 		this.refresh$.pipe(

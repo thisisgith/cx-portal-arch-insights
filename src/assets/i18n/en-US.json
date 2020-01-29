@@ -1351,6 +1351,8 @@
 	"_SendWelcomeEmail_": "Send welcome email",
 	"_SerialNumber_": "Serial Number",
 	"_SerialNumberHeader_": "Serial Number {0}",
+	"_IPAddressHeader_": "IP Address {0}",
+	"_HostNameHeader_": "Host Name {0}",
 	"_ServiceProviderMobility_": "Service Provider Mobility",
 	"_ServiceProviderVideo_": "Service Provider Video",
 	"_ServerError_": "Server is down, please try again.",
