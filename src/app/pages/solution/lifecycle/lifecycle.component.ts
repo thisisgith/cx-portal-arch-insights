@@ -1235,13 +1235,8 @@ export class LifecycleComponent implements OnDestroy {
 	 */
 	public resetFilter () {
 		this.resetSelectStatus();
-		const nextAction =  _.find(this.componentData.racetrack.pitstop.pitstopActions,
-			{ isComplete: false });
-		const actionName = nextAction ? nextAction.name : null;
-		if (this.componentData.params.suggestedAction !== actionName) {
-			this.componentData.params.suggestedAction = actionName;
-			this.loadLifecycleInfo();
-		}
+		this.componentData.params.suggestedAction = null;
+		this.loadLifecycleInfo();
 	}
 
 	/**
@@ -2209,8 +2204,7 @@ export class LifecycleComponent implements OnDestroy {
 				stage,
 				actionsCompPercent: this.currentPitstopCompPert,
 			};
-			const nextAction = pitstop ? _.find(pitstop.pitstopActions, { isComplete: false }) : null;
-			this.componentData.params.suggestedAction = (this.enableCheckList && nextAction) ? nextAction.name : null;
+			this.componentData.params.suggestedAction = null;
 			if (pitstop) {
 				pitstop.pitstopActions.map(ptstopActn => {
 					ptstopActn.description = this.parseHtmlText(ptstopActn.description);
@@ -2520,7 +2514,11 @@ export class LifecycleComponent implements OnDestroy {
 
 		// cross launch if partner atx
 		if (atx.providerInfo) {
-			this.crossLaunch(event, atx.recordingURL);
+			if (atx.recordingURL.includes(`${I18n.get('_Https_')}`)) {
+				this.crossLaunch(event, decodeURIComponent(atx.recordingURL));
+				return;
+			}
+			this.crossLaunch(event, `${I18n.get('_Https_')}${decodeURIComponent(atx.recordingURL)}`);
 			return;
 		}
 		const atxWatchData = {
