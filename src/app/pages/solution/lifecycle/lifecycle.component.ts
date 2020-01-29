@@ -1634,6 +1634,7 @@ export class LifecycleComponent implements OnDestroy {
 				if (window.Cypress) {
 					window.accLoading = false;
 				}
+
 				return result;
 			}),
 			catchError(err => {
@@ -1945,6 +1946,7 @@ export class LifecycleComponent implements OnDestroy {
 		_.set(this.componentData, ['learning', 'elearning'], []);
 		_.set(this.componentData, ['learning', 'training'], []);
 		_.set(this.componentData, ['learning', 'remotepracticelabs'], []);
+
 		return this.contentService.getRacetrackElearning(
 			_.pick(this.componentData.params,
 			['customerId', 'solution', 'usecase', 'pitstop', 'rows', 'suggestedAction']))
@@ -2494,6 +2496,7 @@ export class LifecycleComponent implements OnDestroy {
 	public parseHtmlText (txtString) {
 		const dmTemp = document.createElement('template');
 		dmTemp.innerHTML = txtString.trim();
+
 		return dmTemp.content.cloneNode(true).textContent;
 	}
 
@@ -2514,13 +2517,11 @@ export class LifecycleComponent implements OnDestroy {
 
 		// cross launch if partner atx
 		if (atx.providerInfo) {
-			if (atx.recordingURL.includes(`${I18n.get('_Https_')}`)) {
-				this.crossLaunch(event, decodeURIComponent(atx.recordingURL));
-				return;
-			}
-			this.crossLaunch(event, `${I18n.get('_Https_')}${decodeURIComponent(atx.recordingURL)}`);
+			this.crossLaunch(event, decodeURIComponent(atx.recordingURL));
+
 			return;
 		}
+
 		const atxWatchData = {
 			src: atx.videoURL,
 			title: atx.title,
