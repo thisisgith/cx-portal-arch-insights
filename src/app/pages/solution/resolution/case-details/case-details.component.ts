@@ -235,14 +235,13 @@ export class CaseDetailsComponent implements OnInit, OnDestroy {
 	 * @returns Observable
 	 */
 	public getAssetAvailability () {
-		const assetSerialNumber = (this.case && ((this.case.serialNumber) ? this.case.serialNumber : this.case.deviceName));
-		if (assetSerialNumber) {
+		if (this.case && this.case.serialNumber) {
 
 			return this.inventoryService.getHardware({
 				customerId: this.customerId,
 				solution: this.selectedSolutionName,
 				useCase: this.selectedTechnologyName,
-				serialNumber: [assetSerialNumber],
+				serialNumber: [this.case.serialNumber],
 			})
 			.pipe(
 				catchError(err => {
