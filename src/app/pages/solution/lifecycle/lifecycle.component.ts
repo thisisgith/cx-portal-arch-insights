@@ -1237,7 +1237,6 @@ export class LifecycleComponent implements OnDestroy {
 		this.resetSelectStatus();
 		this.componentData.params.suggestedAction = null;
 		this.loadLifecycleInfo();
-		
 	}
 
 	/**
@@ -2515,12 +2514,11 @@ export class LifecycleComponent implements OnDestroy {
 
 		// cross launch if partner atx
 		if (atx.providerInfo) {
-			if(atx.recordingURL.includes("https://")){
+			if (atx.recordingURL.includes(`${I18n.get('_Https_')}`)) {
 				this.crossLaunch(event, decodeURIComponent(atx.recordingURL));
+				return;
 			}
-			else{
-				this.crossLaunch(event, "https://"+decodeURIComponent(atx.recordingURL))
-			}
+			this.crossLaunch(event, `${I18n.get('_Https_')}${decodeURIComponent(atx.recordingURL)}`);
 			return;
 		}
 		const atxWatchData = {

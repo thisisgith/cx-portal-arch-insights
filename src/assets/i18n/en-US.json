@@ -691,6 +691,7 @@
 	"_Hostname_": "Hostname",
 	"_HostTimezoneAndTimeSet_": "Establishing connection with Cisco...",
 	"_HowWouldYouRateYourExp_": "How would you rate your experience?",
+	"_Https_": "https://",
 	"_HWModel_": "HW Model",
 	"_Hyper_V_Button_" : "VHD",
 	"_HypervisorReqs_": "The hypervisor should be able to host a VM which needs the following resources:",
