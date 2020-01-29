@@ -280,7 +280,7 @@
 </ng-template>
 
 <ng-template #firstPublished let-item="celldata">
-	<span  [title]="item.firstPublishedDate" [innerText]="item.firstPublishedDate"></span>	
+	<span  [title]="item.firstPublishedDate" [innerText]="item.firstPublishedDate | date:medium"></span>	
 </ng-template>
 
 <ng-template #updatedDateFieldTemp let-item="celldata">
