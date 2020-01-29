@@ -275,7 +275,7 @@ export class BugsDetailsComponent implements OnInit {
 		_.map(this.detailsData, (recommendation: any) => {
 
 			const data = viewType === 'bug' ? _.get(recommendation, ['data', 'bugs'], []) :
-			viewType === 'psirts' ? _.get(recommendation, ['data', 'psirts'], []) : _.get(recommendation, ['data', 'fns'], []);
+			viewType === 'psirt' ? _.get(recommendation, ['data', 'psirts'], []) : _.get(recommendation, ['data', 'fns'], []);
 
 			const offset = _.get(recommendation, ['params', 'offset']);
 			let first = (this.numberOfRows * ((offset + 1) - 1)) + 1;
@@ -309,11 +309,11 @@ export class BugsDetailsComponent implements OnInit {
 					showTotal: true,
 					selectedView: 'exposed',
 					total: viewType === 'bug' ?
-						_.get(recommendation, ['data', 'bugs'], []).length : viewType === 'psirts' ?
+						_.get(recommendation, ['data', 'bugs'], []).length : viewType === 'psirt' ?
 						_.get(recommendation, ['data', 'psirts'], []).length : _.get(recommendation, ['data', 'fns'], []).length,
 					exposed: viewType === 'bug' ?
 						_.get(recommendation, ['data', 'openBugsCount'])
-						+ _.get(recommendation, ['data', 'newOpenBugsCount']) : viewType === 'psirts' ?
+						+ _.get(recommendation, ['data', 'newOpenBugsCount']) : viewType === 'psirt' ?
 						_.get(recommendation, ['data', 'openPsirtCount'])
 						+ _.get(recommendation, ['data', 'newOpenPsirtCount']) : _.get(recommendation, ['data', 'openFieldsCount'])
 						+ _.get(recommendation, ['data', 'newOpenFieldsCount']),
@@ -440,7 +440,7 @@ export class BugsDetailsComponent implements OnInit {
 				selected: false,
 				seriesData: [],
 				title: _.get(this.params, 'viewType') === 'bug' ?
-					I18n.get('_Severity_') : I18n.get('_Impact_'),
+					I18n.get('_Severity_') : _.get(this.params, 'viewType') === 'psirt' ? I18n.get('_Impact_') : '',
 			},
 		];
 	}
@@ -574,7 +574,7 @@ export class BugsDetailsComponent implements OnInit {
 		const actualData = _.cloneDeep(_.get(_.filter(this.data,
 			(recomm: MachineRecommendations) => recomm.name === recommendation.name), 0));
 		const viewType = _.get(this.params, 'viewType');
-		const data = viewType === 'bug' ? actualData.bugs : viewType === 'psirts' ? actualData.psirts : actualData.fns;
+		const data = viewType === 'bug' ? actualData.bugs : viewType === 'psirt' ? actualData.psirts : actualData.fns;
 		const stateFilters = recommendation.appliedFilters.state;
 		const severityFilters = recommendation.appliedFilters.severity;
 		let filteredData = data;
@@ -613,7 +613,7 @@ export class BugsDetailsComponent implements OnInit {
 			}
 		}
 
-		viewType === 'bug' ? recommendation.data.bugs = filteredData : viewType === 'psirts' ?
+		viewType === 'bug' ? recommendation.data.bugs = filteredData : viewType === 'psirt' ?
 		recommendation.data.psirts = filteredData : recommendation.data.fns = filteredData;
 		recommendation.params.offset = 0;
 		this.populatePaginationInfo();
@@ -668,7 +668,7 @@ export class BugsDetailsComponent implements OnInit {
 		const actualData = _.get(_.filter(this.data,
 			(recomm: MachineRecommendations) => recomm.name === recommendation.name), 0);
 		const viewType = _.get(this.params, 'viewType');
-		viewType === 'bug' ? recommendation.data.bugs = actualData.bugs : viewType === 'psirts' ?
+		viewType === 'bug' ? recommendation.data.bugs = actualData.bugs : viewType === 'psirt' ?
 			recommendation.data.psirts = actualData.psirts : recommendation.data.fns = actualData.fns;
 		recommendation.params.offset = 0;
 		if (recommendation.name !== 'profile current') {
