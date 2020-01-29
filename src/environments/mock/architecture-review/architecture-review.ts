@@ -3,7 +3,7 @@ const api = '/api/customerportal/archinsights/v1';
 /**
  * Customer Id for mock response
  */
-const customerId = 2431199;
+const customerId = '2431199_0';
 
 /**
  * sample deviceIp
@@ -40,12 +40,15 @@ const getDnacList = {
 	CollectionDate: '2019-08-27T06:15:40.636+0000',
 	dnacDetails: [
 		{
+			accessPointsPublishedLimits: 20000,
+			accessPointsPublishedPercentage: 75,
 			collectionId: '6e252e67-3548-4e7d-b827-121f696bfc45',
 			collectorId: 'CSP0001047974',
 			customerId: '2431199',
 			devicesPublishedLimits: '5000',
 			devicesPublishedPercentage: 75,
 			devicesPublishedViolated: 'No',
+			dnacAppliance: '44 Core',
 			dnacCpu: '',
 			dnacFilesystem: '',
 			dnacHostname: '172.16.44.31',
@@ -62,6 +65,7 @@ const getDnacList = {
 			haCluster: 'NA',
 			haClusterNodes: 'NA',
 			inventoryCollectionDate: '2019-09-20T17:46:42.000Z',
+			noOfAccessPoints: 20,
 			noOfDevices: '0',
 			noOfEndpoints: '11',
 			noOfFabrics: '0',
