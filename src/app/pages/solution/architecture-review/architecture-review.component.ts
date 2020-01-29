@@ -285,12 +285,12 @@ export class ArchitectureReviewComponent implements OnInit {
 	public setSdaCompliantValue (obj: any) {
 		let sdaCompliant = 0;
 
-		if (obj.hasOwnProperty('Yes') && obj.hasOwnProperty('Warning')) {
-			sdaCompliant = obj.Yes + obj.Warning;
-		} else if (obj.hasOwnProperty('Warning'))  {
-			sdaCompliant = obj.Warning;
+		if (obj.hasOwnProperty('yes') && obj.hasOwnProperty('warning')) {
+			sdaCompliant = obj.yes + obj.warning;
+		} else if (obj.hasOwnProperty('warning'))  {
+			sdaCompliant = obj.warning;
 		} else {
-			sdaCompliant = obj.Yes;
+			sdaCompliant = obj.yes;
 		}
 
 		return sdaCompliant;
@@ -312,7 +312,7 @@ export class ArchitectureReviewComponent implements OnInit {
 				takeUntil(this.destroy$),
 				map((data: any) => {
 					const series = [];
-					const Compliant = _.get(data, 'overallCompliance.Yes');
+					const Compliant = _.get(data, 'overallCompliance.yes');
 
 					if (Compliant && Compliant > 0) {
 						series.push({
@@ -324,7 +324,7 @@ export class ArchitectureReviewComponent implements OnInit {
 						});
 					}
 
-					const NonCompliant = _.get(data, 'overallCompliance.No');
+					const NonCompliant = _.get(data, 'overallCompliance.no');
 
 					if (NonCompliant && NonCompliant > 0) {
 						series.push({
@@ -336,7 +336,7 @@ export class ArchitectureReviewComponent implements OnInit {
 						});
 					}
 
-					const NotAvailable = _.get(data, 'overallCompliance.Not Evaluated');
+					const NotAvailable = _.get(data, 'overallCompliance.not evaluated');
 
 					if (NotAvailable && NotAvailable > 0) {
 						series.push({
@@ -345,6 +345,18 @@ export class ArchitectureReviewComponent implements OnInit {
 							selected: false,
 							value: NotAvailable,
 							color: '#c8d4d7',
+						});
+					}
+
+					const NotApplicable = _.get(data, 'overallCompliance.not applicable');
+
+					if (NotApplicable && NotApplicable > 0) {
+						series.push({
+							filter: 'Not Applicable',
+							label: I18n.get('_ArchitectureNotApplicable_'),
+							selected: false,
+							value: NotApplicable,
+							color: '#a0a0a0',
 						});
 					}
 
@@ -359,7 +371,7 @@ export class ArchitectureReviewComponent implements OnInit {
 
 					if (sdaCompliant && sdaCompliant > 0) {
 						sdaSeriesData.push({
-							filter: 'Yes,Warning',
+							filter: 'yes,warning',
 							label: I18n.get('_ArchitectureCompliant_'),
 							selected: false,
 							value: sdaCompliant,
@@ -367,7 +379,7 @@ export class ArchitectureReviewComponent implements OnInit {
 						});
 					}
 
-					const sdaNonCompliant = _.get(data, 'sdaCompliance.No');
+					const sdaNonCompliant = _.get(data, 'sdaCompliance.no');
 
 					if (sdaNonCompliant && sdaNonCompliant > 0) {
 						sdaSeriesData.push({
@@ -379,7 +391,7 @@ export class ArchitectureReviewComponent implements OnInit {
 						});
 					}
 
-					const sdaNotAvailable = _.get(data, 'sdaCompliance.Not Evaluated');
+					const sdaNotAvailable = _.get(data, 'sdaCompliance.not evaluated');
 
 					if (sdaNotAvailable && sdaNotAvailable > 0) {
 						sdaSeriesData.push({
@@ -391,11 +403,23 @@ export class ArchitectureReviewComponent implements OnInit {
 						});
 					}
 
+					const sdaNotApplicable = _.get(data, 'sdaCompliance.not applicable');
+
+					if (sdaNotApplicable && sdaNotApplicable > 0) {
+						sdaSeriesData.push({
+							filter: 'Not Applicable',
+							label: I18n.get('_ArchitectureNotApplicable_'),
+							selected: false,
+							value: sdaNotApplicable,
+							color: '#a0a0a0',
+						});
+					}
+
 					sdaReadinessFilter.seriesData = sdaSeriesData;
 					sdaReadinessFilter.loading = false;
 
 					const assuranceSeriesData = [];
-					const assuranceCompliant = _.get(data, 'assuranceCompliance.Yes');
+					const assuranceCompliant = _.get(data, 'assuranceCompliance.yes');
 
 					if (assuranceCompliant && assuranceCompliant > 0) {
 						assuranceSeriesData.push({
@@ -407,7 +431,7 @@ export class ArchitectureReviewComponent implements OnInit {
 						});
 					}
 
-					const assuranceNonCompliant = _.get(data, 'assuranceCompliance.No');
+					const assuranceNonCompliant = _.get(data, 'assuranceCompliance.no');
 
 					if (assuranceNonCompliant && assuranceNonCompliant > 0) {
 						assuranceSeriesData.push({
@@ -419,7 +443,7 @@ export class ArchitectureReviewComponent implements OnInit {
 						});
 					}
 
-					const assuranceNotAvailable = _.get(data, 'assuranceCompliance.Not Evaluated');
+					const assuranceNotAvailable = _.get(data, 'assuranceCompliance.not evaluated');
 
 					if (assuranceNotAvailable && assuranceNotAvailable > 0) {
 						assuranceSeriesData.push({
@@ -431,11 +455,23 @@ export class ArchitectureReviewComponent implements OnInit {
 						});
 					}
 
+					const assuranceNotApplicable = _.get(data, 'assuranceCompliance.not applicable');
+
+					if (assuranceNotApplicable && assuranceNotApplicable > 0) {
+						assuranceSeriesData.push({
+							filter: 'Not Applicable',
+							label: I18n.get('_ArchitectureNotApplicable_'),
+							selected: false,
+							value: assuranceNotApplicable,
+							color: '#a0a0a0',
+						});
+					}
+
 					assuranceReadinessFilter.seriesData = assuranceSeriesData;
 					assuranceReadinessFilter.loading = false;
 
 					const swimReadinessData = [];
-					const swimCompliant = _.get(data, 'swimCompliance.Yes');
+					const swimCompliant = _.get(data, 'swimCompliance.yes');
 
 					if (swimCompliant && swimCompliant > 0) {
 						swimReadinessData.push({
@@ -447,7 +483,7 @@ export class ArchitectureReviewComponent implements OnInit {
 						});
 					}
 
-					const swimNonCompliant = _.get(data, 'swimCompliance.No');
+					const swimNonCompliant = _.get(data, 'swimCompliance.no');
 
 					if (swimNonCompliant && swimNonCompliant > 0) {
 						swimReadinessData.push({
@@ -459,7 +495,7 @@ export class ArchitectureReviewComponent implements OnInit {
 						});
 					}
 
-					const swimNotAvailable = _.get(data, 'swimCompliance.Not Evaluated');
+					const swimNotAvailable = _.get(data, 'swimCompliance.not evaluated');
 
 					if (swimNotAvailable && swimNotAvailable > 0) {
 						swimReadinessData.push({
@@ -471,11 +507,23 @@ export class ArchitectureReviewComponent implements OnInit {
 						});
 					}
 
+					const swimNotApplicable = _.get(data, 'swimCompliance.not applicable');
+
+					if (swimNotApplicable && swimNotApplicable > 0) {
+						swimReadinessData.push({
+							filter: 'Not Applicable',
+							label: I18n.get('_ArchitectureNotApplicable_'),
+							selected: false,
+							value: swimNotApplicable,
+							color: '#a0a0a0',
+						});
+					}
+
 					swimReadinessDataFilter.seriesData = swimReadinessData;
 					swimReadinessDataFilter.loading = false;
 
 					const pnpReadinessData = [];
-					const pnpCompliant = _.get(data, 'pnpCompliance.Yes');
+					const pnpCompliant = _.get(data, 'pnpCompliance.yes');
 
 					if (pnpCompliant && pnpCompliant > 0) {
 						pnpReadinessData.push({
@@ -487,7 +535,7 @@ export class ArchitectureReviewComponent implements OnInit {
 						});
 					}
 
-					const pnpNonCompliant = _.get(data, 'pnpCompliance.No');
+					const pnpNonCompliant = _.get(data, 'pnpCompliance.no');
 
 					if (pnpNonCompliant && pnpNonCompliant > 0) {
 						pnpReadinessData.push({
@@ -499,7 +547,7 @@ export class ArchitectureReviewComponent implements OnInit {
 						});
 					}
 
-					const pnpNotAvailable = _.get(data, 'pnpCompliance.Not Evaluated');
+					const pnpNotAvailable = _.get(data, 'pnpCompliance.not evaluated');
 
 					if (pnpNotAvailable && pnpNotAvailable > 0) {
 						pnpReadinessData.push({
@@ -508,6 +556,18 @@ export class ArchitectureReviewComponent implements OnInit {
 							selected: false,
 							value: pnpNotAvailable,
 							color: '#c8d4d7',
+						});
+					}
+
+					const pnpNotApplicable = _.get(data, 'pnpCompliance.not applicable');
+
+					if (pnpNotApplicable && pnpNotApplicable > 0) {
+						pnpReadinessData.push({
+							filter: 'Not Applicable',
+							label: I18n.get('_ArchitectureNotApplicable_'),
+							selected: false,
+							value: pnpNotApplicable,
+							color: '#a0a0a0',
 						});
 					}
 

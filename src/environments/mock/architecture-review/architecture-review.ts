@@ -384,30 +384,35 @@ const tabsPermissionData = {
  */
 const getSDAChartFilterCountResponseData = {
 	assuranceCompliance: {
-		NE: 1,
-		No: 3,
-		Yes: 4,
+		'not evaluated': 3,
+		'not applicable': 4,
+		no: 3,
+		yes: 4,
 	},
 	overallCompliance: {
-		NE: 4,
-		No: 4,
-		Yes: 4,
+		'not evaluated': 2,
+		'not applicable': 3,
+		no: 4,
+		yes: 4,
 	},
 	pnpCompliance: {
-		NE: 2,
-		No: 4,
-		Yes: 2,
+		'not evaluated': 1,
+		'not applicable': 2,
+		no: 4,
+		yes: 2,
 	},
 	sdaCompliance: {
-		NE: 3,
-		No: 3,
-		Warning: 1,
-		Yes: 2,
+		'not evaluated': 4,
+		'not applicable': 3,
+		no: 3,
+		warning: 5,
+		yes: 6,
 	},
 	swimCompliance: {
-		NE: 1,
-		No: 3,
-		Yes: 6,
+		'not evaluated': 2,
+		'not applicable': 4,
+		no: 3,
+		yes: 6,
 	},
 };
 /**
