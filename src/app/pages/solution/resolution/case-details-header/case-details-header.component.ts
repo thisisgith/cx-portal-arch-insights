@@ -1,6 +1,6 @@
 import { Component, Input, SimpleChanges } from '@angular/core';
 import { CaseDetails } from '@cui-x/services';
-import { RMAService } from '@services';
+import { RMAService, CaseDetailsService } from '@services';
 import { caseSeverities } from '@classes';
 import * as _ from 'lodash-es';
 import { Case, RMAResponse, RMARecord } from '@interfaces';
@@ -21,6 +21,7 @@ import { CSCUploadService, UploadFilesContent } from '@cui-x-views/csc';
 export class CaseDetailsHeaderComponent {
 	@Input() public case: Case;
 	@Input() public caseDetails: CaseDetails;
+	public lastUpdated: string;
 	public isAddNoteClicked = false;
 	public isRMAClicked = false;
 	public rmaRecords: RMARecord[] = [];
@@ -34,6 +35,7 @@ export class CaseDetailsHeaderComponent {
 		private logger: LogService,
 		private cuiModalService: CuiModalService,
 		private cscService: CSCUploadService,
+		private caseDetailService: CaseDetailsService,
 	) { }
 
 	/**
@@ -56,6 +58,14 @@ export class CaseDetailsHeaderComponent {
 				}
 				if (window.Cypress) {
 					window.loading = false;
+				}
+			});
+
+		this.caseDetailService.updatedLastModified$
+			.pipe(takeUntil(this.destroy$))
+			.subscribe((modifiedTime: string) => {
+				if (modifiedTime !== '') {
+					this.lastUpdated = modifiedTime;
 				}
 			});
 	}
@@ -175,6 +185,7 @@ export class CaseDetailsHeaderComponent {
 		}
 		if (changes.caseDetails) {
 			if (changes.caseDetails.currentValue) {
+				this.lastUpdated = _.get(changes.caseDetails.currentValue, ['lastModifiedDate']);
 				this.loading = false;
 				if (window.Cypress) {
 					window.loading = false;

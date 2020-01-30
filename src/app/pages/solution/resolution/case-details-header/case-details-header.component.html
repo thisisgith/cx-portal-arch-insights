@@ -31,7 +31,7 @@
 			<div class="col-md-2">
 				<div class="font-size" [innerText]="'_RMACaseUpdated_' | i18n | uppercase"></div>
 				<div [attr.data-balloon]="caseDetails?.lastUpdateDate | dateTime" data-balloon-pos="left" data-auto-id="CaseDetailsLastUpdatedDate">
-					<span [innerText]="caseDetails?.lastUpdateDate | fromNow"></span>
+					<span [innerText]="(lastUpdated ? lastUpdated : caseDetails?.lastUpdateDate) | fromNow"></span>
 				</div>
 			</div>
 		</div>

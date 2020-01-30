@@ -16,6 +16,10 @@ export class CaseDetailsService {
 	private _caseCountModified = new BehaviorSubject<boolean>(false);
 	public caseCount$ = this._caseCountModified.asObservable();
 	private caseFilesUrl = `${environment.origin}${environment.csc.fileList}`;
+	private _updatedLastModified = new BehaviorSubject<string>('');
+	public updatedLastModified$ = this._updatedLastModified.asObservable();
+	private _isLastModified = new BehaviorSubject<boolean>(false);
+	public isLastModified$ = this._isLastModified.asObservable();
 
 	constructor (
 		private http: HttpClient, private logger: LogService,
@@ -35,6 +39,22 @@ export class CaseDetailsService {
 	 */
 	public refreshCaseCount (refresh: boolean) {
 		this._caseCountModified.next(refresh);
+	}
+
+	/**
+	 * case last updated time changed
+	 * @param modifiedTime gets last updated time for case
+	 */
+	public refreshLastModified (modifiedTime: string) {
+		this._updatedLastModified.next(modifiedTime);
+	}
+
+	/**
+	 * whether case last updated time changed
+	 * @param refresh checks whether case is updated
+	 */
+	public refreshIsLastModified (refresh: boolean) {
+		this._isLastModified.next(refresh);
 	}
 
 	/**
