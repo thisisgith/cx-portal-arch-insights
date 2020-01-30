@@ -9,7 +9,7 @@ import * as _ from 'lodash-es';
 const api = '/api/customerportal/product-alerts/v1/field-notices';
 
 /** Default Customer ID */
-const customerId = '2431199';
+const customerId = '2431199_0';
 
 /** The mock response for coverage counts */
 export const MockFieldNotices: FieldNotice[] = [
@@ -18,13 +18,13 @@ export const MockFieldNotices: FieldNotice[] = [
 			"customerId": "2431199",
 			"managedNeId": "NA,FOC2045X0WJ,WS-C2960X-24PS-L,NA",
 			"neInstanceId": "NA,FOC2045X0WJ,WS-C2960X-24PS-L,NA",
-			"hwInstanceId": "FOC2045X0WJ,WS-C3850-48U-L,NA,FOC2045X0WJ,WS-C3850-48U-L,NA,NA",
+			"hwInstanceId": "FHK1045Y01E,WS-C2960-24TC-L,NA,FHK1045Y01E,WS-C2960-24TC-L,NA,NA",
 			"productId": "WS-C2960X-24PS-L",
 			"swType": "IOS",
 			"serialNumber": "FOC2045X0WJ",
 			"productFamily": "Cisco Catalyst 2960-X Series Switches",
 			"equipmentType": "CHASSIS",
-			"fieldNoticeId": 64134,
+			"fieldNoticeId": 63718,
 			"bulletinTitle": null,
 			"vulnerabilityStatus": "VUL",
 			"vulnerabilityReason": " Match on PID, TAN",
@@ -2748,7 +2748,8 @@ export const FieldNoticeScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&vulnerabilityStatus=POTVUL&vulnerabilityStatus=VUL`,
+		url: `${api}?customerId=${customerId}&vulnerabilityStatus=POTVUL&vulnerabilityStatus=VUL` +
+		'&useCase=Campus Network Assurance&solution=IBN&serialNumber=FHK1045Y01E&rows=100&page=1' ,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -2765,8 +2766,8 @@ export const FieldNoticeScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&` +
-			'vulnerabilityStatus=POTVUL&vulnerabilityStatus=VUL&rows=10&page=1',
+		url: `${api}?customerId=${customerId}&vulnerabilityStatus=POTVUL&vulnerabilityStatus=VUL` +
+		'&useCase=Campus Network Assurance&solution=IBN&serialNumber=FHK1045Y01E&rows=100&page=1' ,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -2783,8 +2784,8 @@ export const FieldNoticeScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&` +
-			'vulnerabilityStatus=POTVUL&vulnerabilityStatus=VUL&rows=10&page=2',
+		url: `${api}?customerId=${customerId}&vulnerabilityStatus=POTVUL&vulnerabilityStatus=VUL` +
+		'&useCase=Campus Network Assurance&solution=IBN&serialNumber=FHK1045Y01E&rows=100&page=2' ,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -2792,7 +2793,7 @@ export const FieldNoticeScenarios = [
 			GET: [
 				{
 					delay: 350,
-					description: 'Field Notices Advisories - Page 1',
+					description: 'Field Notices Advisories - Page 3',
 					response: {
 						body: MockNotices(10, 3),
 						status: 200,
@@ -2801,8 +2802,8 @@ export const FieldNoticeScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&` +
-			'vulnerabilityStatus=POTVUL&vulnerabilityStatus=VUL&rows=10&page=3',
+		url: `${api}?customerId=${customerId}&vulnerabilityStatus=POTVUL&vulnerabilityStatus=VUL` +
+		'&useCase=Campus Network Assurance&solution=IBN&serialNumber=FHK1045Y01E&rows=100&page=3' ,
 		usecases: ['Use Case 1'],
 	},
 	{

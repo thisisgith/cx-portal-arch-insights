@@ -4,7 +4,9 @@ import { HardwareEOLResponse } from '@sdp-api';
 const api = '/api/customerportal/product-alerts/v1/hardware-eol';
 
 /** Default Customer ID */
-const customerId = '2431199';
+const customerId = '2431199_0';
+
+const hwInstanceId = 'FHK1045Y01E,WS-C2960-24TC-L,NA,FHK1045Y01E,WS-C2960-24TC-L,NA,NA';
 
 /** The mock response for coverage counts */
 export const MockHardwareEOLResponse: HardwareEOLResponse = {
@@ -4610,8 +4612,7 @@ export const HardwareEOLScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&hwInstanceId=` +
-			'FOC1544Y16T,WS-C2960S-24PS-L,NA,FOC1544Y16T,WS-C2960S-24PS-L,NA,NA',
+		url: `${api}?customerId=${customerId}&rows=100&page=1&hwInstanceId=${hwInstanceId}`,
 		usecases: ['Use Case 1'],
 	},
 ];

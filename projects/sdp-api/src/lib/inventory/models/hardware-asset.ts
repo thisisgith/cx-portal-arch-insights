@@ -20,5 +20,6 @@ export interface HardwareAsset {
   saId?: number;
   vaId?: Array<number>;
   toggleWell?: boolean;
-
+  productFamily?: string;
+  contractNumber?: string;
 }

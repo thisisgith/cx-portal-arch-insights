@@ -594,6 +594,55 @@ export const MockNetworkElements: NetworkElement[] = [
 		tags: [],
 		udiProductIdentifier: '',
 	},
+	{
+		customerId: '189433_0',
+		collectorId: 'CSP0001048910',
+		managedNeId: 'NA,FHK1045Y01E,WS-C2960-24TC-L,NA',
+		neInstanceId: 'NA,FHK1045Y01E,WS-C2960-24TC-L,NA',
+		hostName: 'C2960-24TC-L',
+		neName: 'C2960-24TC-L',
+		managementAddress: '192.168.99.114',
+		neRegistrationStatus: '',
+		ipAddress: '192.168.99.114',
+		isManagedNE: true,
+		lastUpdateDate: '2020-01-29T09:03:53',
+		tags: [],
+		productFamily: 'Cisco Catalyst 2960 Series Switches',
+		productType: 'LAN Switches',
+		productId: 'WS-C2960-24TC-L',
+		swType: 'IOS',
+		swVersion: '12.2(50)SE',
+		serialNumber: 'FHK1045Y01E',
+		systemUptime: 'ul',
+		udiProductIdentifier: '',
+		smartLicenseProductInstanceIdentifier: '',
+		smartLicenseVirtualAccountName: '',
+		installedMemory: 0,
+		timeOfLastReset: '',
+		lastResetReason: '',
+		sysObjectId: '1.3.6.1.4.1.9.1.694',
+		imageName: '',
+		wfId: '100e65fd-7cba-4a0c-8fdf-4e0be6ee5467',
+		solutionInfo: [
+			{
+				useCase: 'Campus Software Image Management',
+				solution: 'IBN',
+			},
+			{
+				useCase: 'Campus Network Assurance',
+				solution: 'IBN',
+			},
+			{
+				useCase: 'Network Device Onboarding',
+				solution: 'IBN',
+			},
+		],
+		cxLevel: '2',
+		saId: 189433,
+		vaId: [
+			230368,
+		],
+	},
 ];
 
 /**
@@ -799,10 +848,10 @@ export const NetworkScenarios = [
 		},
 		url: `${
 			api
-		}?customerId=${
+			}?customerId=${
 			customerId
-		/* tslint:disable-next-line:ter-max-len max-line-length */
-		}&sort=hostName:ASC&rows=100&page=1&managedNeId=NA,FOX1335GRHG,WS-C4506-E,NA&managedNeId=NA,FOX1306GFKH,WS-C4506-E,NA`,
+			/* tslint:disable-next-line:ter-max-len max-line-length */
+			}&sort=hostName:ASC&rows=100&page=1&managedNeId=NA,FOX1335GRHG,WS-C4506-E,NA&managedNeId=NA,FOX1306GFKH,WS-C4506-E,NA`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -820,8 +869,28 @@ export const NetworkScenarios = [
 			],
 		},
 		url: `${api}?customerId=${customerId}&sort=hostName:ASC&rows=100&page=1`
-		+ '&managedNeId=NA,FOC1544Y17Q,WS-C2960S-24PS-L,NA'
-		+ '&managedNeId=NA,FOC1544Y1AV,WS-C2960S-24PS-L,NA',
+			+ '&managedNeId=NA,FOC1544Y17Q,WS-C2960S-24PS-L,NA'
+			+ '&managedNeId=NA,FOC1544Y1AV,WS-C2960S-24PS-L,NA',
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 500,
+					description: 'Network Elements by ManageNeId',
+					response: {
+						body: {
+							data: [MockNetworkElements[(MockNetworkElements.length - 1)]],
+						},
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?customerId=${customerId}&useCase=Campus Network Assurance&solution=IBN`
+			+ '&managedNeId=NA,FHK1045Y01E,WS-C2960-24TC-L,NA',
 		usecases: ['Use Case 1'],
 	},
 ];

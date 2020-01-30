@@ -160,6 +160,24 @@ export const CriticalBugScenarios = [
 			GET: [
 				{
 					delay: 500,
+					description: 'Critical Bugs - Page 1',
+					response: {
+						body: MockData(10, 1, null, null, 4),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?customerId=${customerId}&useCase=Campus Network Assurance&sort=severity:ASC&solution=IBN`
+			+ '&serialNumber=FHK1045Y01E&rows=10&page=1',
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 500,
 					description: 'Critical Bugs - Page 2',
 					response: {
 						body: MockData(10, 2, null, null, 4),
@@ -169,26 +187,8 @@ export const CriticalBugScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&useCase=Campus Network Assurance&solution=IBN`
-			+ '&sort=severity:ASC&rows=10&page=2',
-		usecases: ['Use Case 1'],
-	},
-	{
-		scenarios: {
-			GET: [
-				{
-					delay: 500,
-					description: 'Critical Bugs - Page 3',
-					response: {
-						body: MockData(10, 3, null, null, 4),
-						status: 200,
-					},
-					selected: true,
-				},
-			],
-		},
-		url: `${api}?customerId=${customerId}&useCase=Campus Network Assurance&solution=IBN`
-			+ '&sort=severity:ASC&rows=10&page=3',
+		url: `${api}?customerId=${customerId}&useCase=Campus Network Assurance&sort=severity:ASC&solution=IBN`
+			+ '&serialNumber=FHK1045Y01E&rows=10&page=2',
 		usecases: ['Use Case 1'],
 	},
 	{
