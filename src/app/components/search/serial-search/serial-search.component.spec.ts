@@ -85,7 +85,7 @@ describe('SerialSearchComponent', () => {
 		expect(component.hide.emit)
 			.toHaveBeenCalledWith(false);
 		expect(component.hide.emit)
-			.toHaveBeenCalledTimes(2);
+			.toHaveBeenCalledTimes(1);
 	});
 
 	it('should refresh data when an input changes', () => {
