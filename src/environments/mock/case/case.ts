@@ -1125,7 +1125,7 @@ export const CaseScenarios = [
 			GET: [
 				{
 					delay: 200,
-					description: 'Cases for SN FOC1544Y16T',
+					description: 'Cases for SN FHK1045Y01E',
 					response: {
 						body: caseListResponse1,
 						status: 200,
@@ -1134,7 +1134,7 @@ export const CaseScenarios = [
 				},
 			],
 		},
-		url: `${api}/${clientId}/details?statusTypes=O&pageSize=20&page=1&sortBy=lastModifiedDate&sortOrder=DESC&serialNumbers=FOC1544Y16T`,
+		url: `${api}/${clientId}/details?statusTypes=O&pageSize=20&page=1&sortBy=lastModifiedDate&sortOrder=DESC&serialNumbers=FHK1045Y01E`,
 		usecases: ['Use Case 1'],
 	},
 	// Case list used by problem resolution
@@ -1243,6 +1243,24 @@ export const CaseScenarios = [
 			],
 		},
 		url: `${cscApi}/caseFiles/${caseDetailNum}`,
+		usecases: ['Use Case 1'],
+	},
+	// Open cases for an asset (used by asset 360)
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 200,
+					description: 'Cases for SN FOC1544Y16T',
+					response: {
+						body: caseListResponse1,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/${clientId}/details?statusTypes=O&pageSize=20&page=1&sortBy=lastModifiedDate&sortOrder=DESC&serialNumbers=FOC1544Y16T`,
 		usecases: ['Use Case 1'],
 	},
 ];

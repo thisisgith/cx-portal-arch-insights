@@ -28,6 +28,9 @@ export * from './inventory/hardware';
 export * from './inventory/network-elements';
 export * from './inventory/roles';
 export * from './inventory/system-assets';
+export * from './inventory/product-type-count';
+export * from './inventory/hardware-product-type-count';
+export * from './inventory/hardware-type-count';
 
 export { Mock } from './mock';
 
@@ -85,6 +88,3 @@ export * from '../mock/syslogs/syslogs';
 export * from './asset-tagging/asset-tagging';
 
 export * from '../mock/fault/fault';
-
-export * from './inventory/product-type-count';
-export * from './inventory/hardware-product-type-count';

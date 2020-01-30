@@ -5,7 +5,7 @@ import { CoverageResponse, CoverageCountsResponse } from '@sdp-api';
 const api = '/api/customerportal/contracts/v1/';
 
 /** Default Customer ID */
-const customerId = '2431199';
+const customerId = '2431199_0';
 /** Default network ID */
 const managedNeId = 'NA,FOC1544Y16T,WS-C2960S-24PS-L,NA';
 /** Default contract number */
@@ -151,7 +151,7 @@ export const CoverageScenarios = [
 				},
 			],
 		},
-		url: `${api}coverages/count?customerId=${customerId}`,
+		url: `${api}coverages/count?customerId=${customerId}&useCase=Campus Network Assurance&solution=IBN`,
 		usecases: ['Use Case 1'],
 	},
 	{

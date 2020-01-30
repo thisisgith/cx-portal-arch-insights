@@ -3,7 +3,7 @@ import {
 } from '@sdp-api';
 
 /** The customerId */
-const customerId = '2431199';
+const customerId = '2431199_0';
 
 /** base API for user info */
 const api = '/api/customerportal/product-alerts/v1/field-notices';

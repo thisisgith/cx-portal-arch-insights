@@ -602,9 +602,7 @@ export const FieldNoticeBulletinScenarios = [
 				},
 			],
 		},
-		url: `${api}?fieldNoticeId=64134&fieldNoticeId=63718&fieldNoticeId=63722` +
-			'&fieldNoticeId=63352&fieldNoticeId=63744&fieldNoticeId=63564' +
-			'&fieldNoticeId=63251&fieldNoticeId=63745',
+		url: `${api}?rows=100&page=1&fieldNoticeId=63718`,
 		usecases: ['Use Case 1'],
 	},
 ];

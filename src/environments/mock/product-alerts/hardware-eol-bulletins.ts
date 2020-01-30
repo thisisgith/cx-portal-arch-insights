@@ -4,7 +4,7 @@ import { HardwareEOLBulletinResponse } from '@sdp-api';
 const api = '/api/customerportal/product-alerts/v1/hardware-eol-bulletins';
 
 /** Default EoL Instance ID */
-const defaultInstanceId = 318969;
+const defaultInstanceId = 286005;
 
 /** The mock response for coverage counts */
 export const MockHardwareEOLBulletinsResponse: HardwareEOLBulletinResponse = {

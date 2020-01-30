@@ -29,4 +29,12 @@ export interface AssetSummary {
   cxLevel?: string;
   saId?: number;
   vaId?: Array<number>;
+  collectorId?: string;
+  wfId?: string;
+  productFamilyCount?: number;
+  productType?: string;
+  osType?: string;
+  osVersion?: string;
+  solutionInfo?: Array<any>;
+  tags?: Array<any>;
 }

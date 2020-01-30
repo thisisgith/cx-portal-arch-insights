@@ -2,9 +2,10 @@ import { VulnerabilityResponse } from '@sdp-api';
 import * as _ from 'lodash-es';
 
 /** Base of URL for SDP API */
-const api = '/api/customerportal/product-alerts/v1/vulnerabilities/count';
+const system_api = '/api/customerportal/product-alerts/v1/assets/system/vulnerabilities/count';
+const hardwar_api = '/api/customerportal/product-alerts/v1/assets/hardware/vulnerabilities/count';
 /** Default Customer ID */
-const customerId = '2431199';
+const customerId = '2431199_0';
 /** Default Use Case */
 const useCase = 'Campus Network Assurance';
 /** Default Solution */
@@ -31,7 +32,7 @@ export const VulnerabilityScenarios = [
 			GET: [
 				{
 					delay: 100,
-					description: 'Advisory Counts',
+					description: 'System Advisory Counts',
 					response: {
 						body: mockAdvisoryCounts,
 						status: 200,
@@ -67,7 +68,24 @@ export const VulnerabilityScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&useCase=${useCase}&solution=${solution}`,
+		url: `${system_api}?customerId=${customerId}&useCase=${useCase}&solution=${solution}`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'Hardware Advisory Counts',
+					response: {
+						body: { 'field-notices': 10 },
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${hardwar_api}?customerId=${customerId}&useCase=${useCase}&solution=${solution}`,
 		usecases: ['Use Case 1'],
 	},
 ];
