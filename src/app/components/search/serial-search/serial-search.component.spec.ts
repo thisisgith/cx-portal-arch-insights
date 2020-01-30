@@ -65,7 +65,7 @@ describe('SerialSearchComponent', () => {
 	it('should show if SN data was found', () => {
 		spyOn(inventoryService, 'getAssets')
 			.and
-			.returnValues(of(<Assets> AssetScenarios[0].scenarios.GET[0].response.body));
+			.returnValues(of(<Assets> AssetScenarios[1].scenarios.GET[0].response.body));
 		spyOn(inventoryService, 'getHardware')
 			.and
 			.returnValues(of(HardwareScenarios[0].scenarios.GET[0].response.body));
@@ -135,7 +135,7 @@ describe('SerialSearchComponent', () => {
 	'"View Device Details" is clicked', fakeAsync(() => {
 		spyOn(inventoryService, 'getAssets')
 			.and
-			.returnValues(of(<Assets> AssetScenarios[0].scenarios.GET[0].response.body));
+			.returnValues(of(<Assets> AssetScenarios[1].scenarios.GET[0].response.body));
 		component.serialNumber = { query: 'FOX1306GBAD' };
 		const navSpy = spyOn(component.router, 'navigate');
 		component.ngOnChanges();

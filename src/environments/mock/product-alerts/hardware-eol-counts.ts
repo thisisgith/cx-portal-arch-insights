@@ -4,7 +4,7 @@ import { HardwareEOLCountResponse } from '@sdp-api';
 const api = '/api/customerportal/product-alerts/v1/hardware-eol/top/count';
 
 /** Default Customer ID */
-const customerId = '2431199';
+const customerId = '2431199_0';
 
 /** The mock response for coverage counts */
 const mockAdvisoryCounts: HardwareEOLCountResponse = {
@@ -38,7 +38,7 @@ export const HardwareEOLCountScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}`,
+		url: `${api}?customerId=${customerId}&useCase=Campus Network Assurance&solution=IBN`,
 		usecases: ['Use Case 1'],
 	},
 ];

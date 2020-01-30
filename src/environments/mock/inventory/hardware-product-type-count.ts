@@ -46,7 +46,7 @@ export const HardwareProductTypeScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}`,
+		url: `${api}?customerId=${customerId}&useCase=Campus Network Assurance&solution=IBN`,
 		usecases: ['Use Case 1'],
 	},
 ];

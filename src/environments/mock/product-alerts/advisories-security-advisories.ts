@@ -9,8 +9,9 @@ import * as _ from 'lodash-es';
 const api = '/api/customerportal/product-alerts/v1/advisories-security-advisories';
 
 /** Default Customer ID */
-const customerId = '2431199';
+const customerId = '2431199_0';
 
+const neInstanceId = 'NA,FHK1045Y01E,WS-C2960-24TC-L,NA';
 /** The mock response for coverage counts */
 export const MockAdvisorySecurityAdvisories: SecurityAdvisoryInfo[] = [
 	/* tslint:disable */
@@ -151,14 +152,15 @@ export const AdvisorySecurityAdvisoryScenarios = [
 					delay: 250,
 					description: 'Advisory Security Advisories - Page 1',
 					response: {
-						body: MockData(10, 1, 3),
+						body: MockData(10, 1),
 						status: 200,
 					},
 					selected: false,
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&sort=severity:ASC&rows=10&page=1`,
+		url: `${api}?customerId=${customerId}&useCase=Campus Network Assurance` +
+			`&sort=severity:ASC&solution=IBN&rows=10&page=1&neInstanceId=${neInstanceId}`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -175,7 +177,8 @@ export const AdvisorySecurityAdvisoryScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&sort=severity:ASC&rows=10&page=2`,
+		url: `${api}?customerId=${customerId}&useCase=Campus Network Assurance` +
+			`&sort=severity:ASC&solution=IBN&rows=10&page=2&neInstanceId=${neInstanceId}`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -192,7 +195,8 @@ export const AdvisorySecurityAdvisoryScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&sort=severity:ASC&rows=10&page=3`,
+		url: `${api}?customerId=${customerId}&useCase=Campus Network Assurance` +
+			`&sort=severity:ASC&solution=IBN&rows=10&page=3&neInstanceId=${neInstanceId}`,
 		usecases: ['Use Case 1'],
 	},
 	{

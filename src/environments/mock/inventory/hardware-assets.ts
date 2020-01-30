@@ -1,5 +1,6 @@
 import { HardwareAssets, HardwareAsset } from '@sdp-api';
 import * as _ from 'lodash-es';
+import { HttpHeaders } from '@angular/common/http';
 
 /** Base of URL for SDP API */
 const api = '/api/customerportal/inventory/v1/assets/hardware';
@@ -11,27 +12,25 @@ const customerId = '2431199_0';
 export const MockHardwareAssetsData: HardwareAsset[] = [
 	/* tslint:disable */
 	{
-		"deviceName": "C3850",
-		"ipAddress": "172.16.44.27",
-		"collectorId": "CSP0001048689",
-		"wfId": "66417d75-f2d3-4733-9e0a-4afbaf122fbf",
-		"criticalAdvisories": "0",
-		"serialNumber": "FOC2045X0WJ",
-		"productId": "WS-C3850-48U-L",
+		"deviceName": "C2960-24TC-L",
+		"ipAddress": "192.168.99.114",
+		"collectorId": "CSP0001048910",
+		"wfId": "100e65fd-7cba-4a0c-8fdf-4e0be6ee5467",
+		"criticalAdvisories": "1",
+		"serialNumber": "FHK1045Y01E",
+		"productId": "WS-C2960-24TC-L",
 		"productType": "LAN Switches",
-		"productName": "Cisco Catalyst 3850 48 Port UPOE LAN Base",
+		"productName": "^Catalyst 2960 24 10/100 + 2T/SFP LAN Base Image",
+		"productFamily": "Cisco Catalyst 2960 Series Switches",
 		"hasFieldNotices": "true",
 		"equipmentType": "CHASSIS",
-		"neId": "NA,FOC2045X0WJ,WS-C3850-48U-L,NA",
-		"hwInstanceId": "FOC2045X0WJ,WS-C3850-48U-L,NA,FOC2045X0WJ,WS-C3850-48U-L,NA,NA",
-		"toggleWell":true,
+		"neId": "NA,FHK1045Y01E,WS-C2960-24TC-L,NA",
+		"hwInstanceId": "FHK1045Y01E,WS-C2960-24TC-L,NA,FHK1045Y01E,WS-C2960-24TC-L,NA,NA",
+		"contractNumber": "93856991",
+		"supportCovered": true,
 		"solutionInfo": [
 			{
-				"useCase": "Campus Network Segmentation",
-				"solution": "IBN"
-			},
-			{
-				"useCase": "Scalable Access Policy",
+				"useCase": "Campus Software Image Management",
 				"solution": "IBN"
 			},
 			{
@@ -43,9 +42,7 @@ export const MockHardwareAssetsData: HardwareAsset[] = [
 				"solution": "IBN"
 			}
 		],
-		"cxLevel": null,
-		"saId": null,
-		"vaId": null
+		"cxLevel": "2",
 	},
 	{
 		"deviceName": "C3850",
@@ -742,7 +739,46 @@ export const HardwareAssetScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&rows=1&page=1`,
+		url: `${api}?customerId=${customerId}&useCase=Campus Network Assurance&sort=deviceName:ASC` +
+			'&sort=equipmentType:ASC&sort=productId:ASC&solution=IBN&rows=10&page=1',
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			HEAD: [
+				{
+					delay: 100,
+					description: 'Hardware Assets Count',
+					response: {
+						headers: new HttpHeaders({
+							'X-API-RESULT-COUNT': '20',
+						}),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?customerId=${customerId}&useCase=Campus Network Assurance&solution=IBN`,
+		usecases: ['Use Case 1'],
+	}, {
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'Hardware Assets By NeId',
+					response: {
+						body: {
+							data: [MockHardwareAssetsData[0]],
+						},
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?customerId=${customerId}&useCase=Campus Network Assurance&solution=IBN&rows=100&page=1` +
+			'&neId=NA,FHK1045Y01E,WS-C2960-24TC-L,NA',
 		usecases: ['Use Case 1'],
 	},
 ];

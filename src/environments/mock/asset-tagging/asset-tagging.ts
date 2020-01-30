@@ -3,7 +3,7 @@ const api = '/api/customerportal/asset-tagging/v1';
 /**
  * Customer Id for mock response
  */
-const customerId = 2431199;
+const customerId = '2431199_0';
 
 /**
  * sample deviceId
@@ -172,6 +172,23 @@ export const AssetTaggingScenarios = [
 			],
 		},
 		url: `${api}/device-tag-api/${customerId}&deviceId=${deviceId}`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'To get tags in asset 360 page',
+					response: {
+						body: getTagForAssets,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/device-tag-api/${customerId}?deviceId=NA,FHK1045Y01E,WS-C2960-24TC-L,NA`,
 		usecases: ['Use Case 1'],
 	},
 	{

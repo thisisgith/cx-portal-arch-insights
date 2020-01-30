@@ -63,4 +63,13 @@ export interface Asset {
   cxLevel?: string;
   saId?: number;
   vaId?: Array<number>;
+  collectorId?: string;
+  wfId?: string;
+  productFamily?: string;
+  hasSecurityAdvisories?: boolean;
+  hasBugs?: boolean;
+  scanStatus?: string;
+  isManagedNE?: boolean;
+  tags?: Array<any>
+  isScanCapable?: boolean;
 }
