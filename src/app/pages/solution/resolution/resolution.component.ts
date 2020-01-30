@@ -154,6 +154,7 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 	public defaultDurationOpenFilterData: FilterData[];
 	public defaultRmaFilterData: FilterData[];
 	public defaultFiltersData: any;
+	public isShowAssetDetailsClicked = false;
 
 	constructor (
 		private logger: LogService,
@@ -930,6 +931,7 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 	 * @param event is a Case
 	 */
 	public onTableRowClicked (event: Case) {
+		this.caseDetailsService.refreshIsLastModified(false);
 		if (this.showAsset360) {
 			this.showAsset360 = false;
 		}
@@ -952,6 +954,14 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 		_.each(this.caseListData, data => {
 			_.set(data, 'active', false);
 		});
+		// making caseCount subject as true, to reload resolution page
+		this.caseDetailsService.isLastModified$
+			.pipe(takeUntil(this.destroy$))
+			.subscribe((refresh: Boolean) => {
+				if (refresh && !this.selectedCase && !this.isShowAssetDetailsClicked) {
+					this.caseDetailsService.refreshCaseCount(true);
+				}
+			});
 	}
 
 	/**
@@ -969,6 +979,7 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 	 * @param assetObj contains asset details
 	 */
 	public showAssetDetails (assetObj) {
+		this.isShowAssetDetailsClicked = true;
 		this.handleHidden(true);
 		this.serialNumber = assetObj.serialNumber;
 		this.assetPanelLinkService.getAssetLinkData({
@@ -1043,6 +1054,15 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 				value: 0,
 			}],
 		};
+	}
+
+	/**
+	 * called when asset 360 is closed
+	 */
+	public hideAssetDetails () {
+		this.showAsset360 = false;
+		this.isShowAssetDetailsClicked = false;
+		this.detailsClose();
 	}
 
 	/**

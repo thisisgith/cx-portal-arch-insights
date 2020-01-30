@@ -134,6 +134,7 @@ export class CaseDetailsComponent implements OnInit, OnDestroy {
 						.subscribe(caseNotes => {
 							this.caseNotes = caseNotes;
 							this.loading = false;
+							this.caseDetailsService.refreshIsLastModified(true);
 						});
 				}
 			});
@@ -157,6 +158,7 @@ export class CaseDetailsComponent implements OnInit, OnDestroy {
 				this.caseNotes = results[0];
 				this.populateCaseFilesList(results[1]);
 				this.loading = false;
+				this.caseDetailsService.refreshIsLastModified(true);
 			});
 
 		this.cscService.getCurrentStatus()

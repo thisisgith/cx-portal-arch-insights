@@ -321,4 +321,16 @@ describe('ResolutionComponent', () => {
 		expect(component.searchCaseNumber)
 			.toHaveBeenCalledTimes(1);
 	});
+
+	it('should call details close on closing Asset 360', () => {
+		spyOn(component, 'detailsClose');
+		component.hideAssetDetails();
+		fixture.detectChanges();
+		expect(component.showAsset360)
+			.toBeFalsy();
+		expect(component.isShowAssetDetailsClicked)
+			.toBeFalsy();
+		expect(component.detailsClose)
+			.toHaveBeenCalledTimes(1);
+	});
 });

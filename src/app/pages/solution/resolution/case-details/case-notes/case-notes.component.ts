@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { I18n } from '@cisco-ngx/cui-utils';
 import * as _ from 'lodash-es';
 import { ActivatedRoute } from '@angular/router';
+import { CaseDetailsService } from '@services';
 
 /**
  * Case Notes Component
@@ -19,6 +20,7 @@ export class CaseNotesComponent implements OnInit {
 
 	constructor (
 		private route: ActivatedRoute,
+		private caseDetailService: CaseDetailsService,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.ccoId = _.get(user, ['info', 'individual', 'ccoId'], '');
@@ -46,5 +48,8 @@ export class CaseNotesComponent implements OnInit {
 				}
 			});
 		}
+		setTimeout(() => {
+			this.caseDetailService.refreshLastModified(_.get(this.caseNotes, [0, 'createdDate']));
+		}, 1);
 	}
 }
