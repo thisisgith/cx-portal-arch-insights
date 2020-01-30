@@ -234,7 +234,7 @@ describe('AssetDetailsHardwareComponent', () => {
 		expect(component.status.loading.overall)
 			.toBeFalsy();
 
-		const asset = _.find(component.hardwareAssets, { serialNumber: 'FOC2045X0WJ' });
+		const asset = _.find(component.hardwareAssets, { serialNumber: 'FHK1045Y01E' });
 
 		expect(asset.fieldNotices.length)
 			.toEqual(1);

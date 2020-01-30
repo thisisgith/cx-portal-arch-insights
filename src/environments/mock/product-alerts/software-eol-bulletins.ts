@@ -79,7 +79,7 @@ export const SoftwareEOLBulletinScenarios = [
 				},
 			],
 		},
-		url: `${api}?swEolInstanceId=0`,
+		url: `${api}?swEolInstanceId=349`,
 		usecases: ['Use Case 1'],
 	},
 ];

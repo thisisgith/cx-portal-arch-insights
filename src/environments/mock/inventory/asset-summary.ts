@@ -1,40 +1,109 @@
 import { AssetSummary } from '@sdp-api';
 
 /** Base of URL for SDP API */
-const api = '/api/customerportal/inventory/v1/assets/summary';
+const api = '/api/customerportal/inventory/v1/assets/system/summary';
+
+const hardware_asset_summary_api = '/api/customerportal/inventory/v1/assets/summary';
 
 /** Default Customer ID */
 const customerId = '2431199_0';
 
-/** Default Hardware Instance ID */
-const hwInstanceId = 'FOC1544Y16T,WS-C2960S-24PS-L,NA,FOC1544Y16T,WS-C2960S-24PS-L,NA,NA';
+const neId = 'NA,FHK1045Y01E,WS-C2960-24TC-L,NA';
+
+const hwInstanceId = 'FHK1045Y01E,WS-C2960-24TC-L,NA,FHK1045Y01E,WS-C2960-24TC-L,NA,NA';
 
 /** Mock data for Network Elements API Results */
 /* tslint:disable */
 export const MockAssetSummaryData: AssetSummary = {
-	"customerId": "2431199",
-	"managedNeId": "NA,FOC1544Y16T,WS-C2960S-24PS-L,NA",
-	"hwInstanceId": "FOC1544Y16T,WS-C2960S-24PS-L,NA,FOC1544Y16T,WS-C2960S-24PS-L,NA,NA",
-	"productFamily": "Cisco Catalyst 2960-S Series Switches",
-	"productId": "WS-C2960S-24PS-L",
-	"swVersion": "12.2(55)SE3",
-	"swType": "IOS",
-	"contractNumber": "93425688",
-	"coverageEndDate": "2020-11-30T00:00:00",
-	"slaCode": null,
-	"slaDescription": "SMARTnet 8x5xNBD",
-	"warrantyType": "WARR-ELTD-LIFE-HW",
-	"warrantyEndDate": "2024-11-30T00:00:00",
-	"installAddress1": "C/PASEO DE LOS LOCUTORES ",
-	"installAddress2": "",
-	"installCity": "SANTO DOMINGO",
-	"installState": "DISTRITO NACIONAL",
-	"installCountry": "",
-	"installPostalCode": "00000",
+	"customerId": "189433_0",
+	"managedNeId": "NA,FHK1045Y01E,WS-C2960-24TC-L,NA",
+	"collectorId": "CSP0001048910",
+	"wfId": "100e65fd-7cba-4a0c-8fdf-4e0be6ee5467",
+	"productFamily": "Cisco Catalyst 2960 Series Switches",
+	"productId": "WS-C2960-24TC-L",
+	"productName": "",
+	"productFamilyCount": 2,
+	"productType": "LAN Switches",
+	"osType": null,
+	"osVersion": "12.2(50)SE",
+	"installAddress1": "601 NW SECOND STREET",
+	"installAddress2": "C/O AMERICAN GENERAL FINANCE",
+	"installCity": "EVANSVILLE",
+	"installState": "IN",
+	"installCountry": "VANDERBURGH",
+	"installPostalCode": "47708",
 	"installProvince": "",
-	"eoSaleDate": "2015-11-06T00:00:00",
-	"lastDateOfSupport": "2025-11-30T00:00:00",
+	"installSiteName": "CISCO TAC CUSTOMER",
+	"solutionInfo": [
+		{
+			"useCase": "Campus Software Image Management",
+			"solution": "IBN"
+		},
+		{
+			"useCase": "Campus Network Assurance",
+			"solution": "IBN"
+		},
+		{
+			"useCase": "Network Device Onboarding",
+			"solution": "IBN"
+		}
+	],
+	"cxLevel": "2",
+	"saId": 189433,
+	"vaId": [
+		230368
+	],
+	"tags": [
+		{
+			"tagName": "AT-Tag4",
+			"tagValue": "e3f07a63-aec4-4ab7-8125-c685f0dc9edc"
+		},
+		{
+			"tagName": "C2900",
+			"tagValue": "9fbe56fb-7f92-4b3e-9211-ebb69e7d32ea"
+		},
+		{
+			"tagName": "cp-asset-tagging-test-tag2",
+			"tagValue": "5b8968b5-6789-4ebe-a0c3-3510c1ee4339"
+		}
+	]
 };
+
+/* tslint:disable */
+export const MockHardwareAssetSummaryData: AssetSummary = {
+	"customerId": "189433_0",
+	"collectorId": "CSP0001048910",
+	"managedNeId": "NA,FHK1045Y01E,WS-C2960-24TC-L,NA",
+	"productFamily": "Cisco Catalyst 2960 Series Switches",
+	"productId": "WS-C2960-24TC-L",
+	"swType": "IOS",
+	"swVersion": "12.2(50)SE",
+	"wfId": "100e65fd-7cba-4a0c-8fdf-4e0be6ee5467",
+	"cxLevel": "2",
+	"vaId": [
+	  230368
+	],
+	"hwInstanceId": "FHK1045Y01E,WS-C2960-24TC-L,NA,FHK1045Y01E,WS-C2960-24TC-L,NA,NA",
+	"productName": "^Catalyst 2960 24 10/100 + 2T/SFP LAN Base Image",
+	"contractNumber": "93856991",
+	"coverageStatus": "Covered",
+	"coverageStartDate": "2013-12-02T00:00:00",
+	"coverageEndDate": "2017-12-02T00:00:00",
+	"slaCode": "PSUT",
+	"slaDescription": "PRTNR SUP 8X5XNBD",
+	"warrantyType": "WARR-LTD-LIFE-HW",
+	"warrantyEndDate": "2019-10-31T00:00:00",
+	"installAddress1": "601 NW SECOND STREET",
+	"installAddress2": "C/O AMERICAN GENERAL FINANCE",
+	"installCity": "EVANSVILLE",
+	"installState": "IN",
+	"installCountry": "VANDERBURGH",
+	"installPostalCode": "47708",
+	"installProvince": "",
+	"installSiteName": "CISCO TAC CUSTOMER",
+	"eoSaleDate": "2014-10-31T00:00:00",
+	"lastDateOfSupport": "2019-10-31T00:00:00"
+	};
 /* tslint:enable */
 
 /** The scenarios */
@@ -44,7 +113,7 @@ export const AssetSummaryScenarios = [
 			GET: [
 				{
 					delay: 100,
-					description: 'Asset Summary',
+					description: 'Asset Summary By NeId',
 					response: {
 						body: MockAssetSummaryData,
 						status: 200,
@@ -144,7 +213,24 @@ export const AssetSummaryScenarios = [
 				},
 			],
 		},
-		url: `${api}?hwInstanceId=${hwInstanceId}&customerId=${customerId}`,
+		url: `${api}?neId=${neId}&customerId=${customerId}`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'Asset Summary By Hardware InstanceId',
+					response: {
+						body: MockHardwareAssetSummaryData,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${hardware_asset_summary_api}?hwInstanceId=${hwInstanceId}&customerId=${customerId}`,
 		usecases: ['Use Case 1'],
 	},
 ];

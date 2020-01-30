@@ -9,7 +9,9 @@ import * as _ from 'lodash-es';
 const api = '/api/customerportal/product-alerts/v1/advisories-field-notices';
 
 /** Default Customer ID */
-const customerId = '2431199';
+const customerId = '2431199_0';
+
+const hwInstanceId = 'FHK1045Y01E,WS-C2960-24TC-L,NA,FHK1045Y01E,WS-C2960-24TC-L,NA,NA';
 
 /** The mock response for coverage counts */
 export const MockFieldNoticeAdvisories: FieldNoticeAdvisory[] = [
@@ -58,7 +60,7 @@ function MockData (
 	rows?: number,
 	page?: number,
 	copy?: number,
-	): FieldNoticeAdvisoryResponse {
+): FieldNoticeAdvisoryResponse {
 	let data = _.cloneDeep(MockFieldNoticeAdvisories);
 	if (copy > 0) {
 		for (let i = 0; i < copy; i += 1) {
@@ -111,14 +113,15 @@ export const FieldNoticeAdvisoryScenarios = [
 					delay: 500,
 					description: 'Field Notice Advisories - Page 1',
 					response: {
-						body: MockData(10, 1, 3),
+						body: MockData(10, 1),
 						status: 200,
 					},
 					selected: false,
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&sort=id:ASC&rows=10&page=1`,
+		url: `${api}?customerId=${customerId}&useCase=Campus Network Assurance&sort=lastUpdated:DESC` +
+			`&solution=IBN&rows=10&page=1&hwInstanceId=${hwInstanceId}`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -135,7 +138,8 @@ export const FieldNoticeAdvisoryScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&sort=id:ASC&rows=10&page=2`,
+		url: `${api}?customerId=${customerId}&useCase=Campus Network Assurance&sort=lastUpdated:DESC` +
+			`&solution=IBN&rows=10&page=2&hwInstanceId=${hwInstanceId}`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -152,7 +156,8 @@ export const FieldNoticeAdvisoryScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&sort=id:ASC&rows=10&page=3`,
+		url: `${api}?customerId=${customerId}&useCase=Campus Network Assurance&sort=lastUpdated:DESC` +
+			`&solution=IBN&rows=10&page=3&hwInstanceId=${hwInstanceId}`,
 		usecases: ['Use Case 1'],
 	},
 	{
