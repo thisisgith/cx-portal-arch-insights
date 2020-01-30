@@ -127,7 +127,7 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 		if (useCaseChange) {
 			this.getSyslogsData();
 		}
-		if (!clear) {
+		if (clear === '') {
 			this.syslogsParams.localSearch = '';
 		}
 	}

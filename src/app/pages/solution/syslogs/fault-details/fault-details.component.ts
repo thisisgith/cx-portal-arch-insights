@@ -98,24 +98,22 @@ export class FaultDetailsComponent implements OnInit, Panel360, OnDestroy {
 		}];
 	public srStatus: any[] = [
 		{
-			name: I18n.get('_FaultSuccess_'),
-			value: 'Success',
+			name: I18n.get('_FaultCreated_'),
+			value: 'Created',
 		},
 		{
 			name: I18n.get('_FaultFailed_'),
 			value: 'Failed',
 		},
 		{
-			name: I18n.get('_FaultNoTacCase_'),
+			name: I18n.get('_FaultUpdated_'),
+			value: 'Updated',
+		},
+		{
+			name: I18n.get('_FaultSrDisabled_'),
 			value: 'Empty',
 		},
 	];
-
-	public selectDropDown = {
-		productID: '',
-		Software: '',
-		timePeriod: '',
-	};
 
 	public FAULT_CONSTANT = {
 		ACTIVE: 'ACTIVE',

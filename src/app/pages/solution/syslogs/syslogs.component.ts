@@ -140,8 +140,8 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 		this.racetrackInfoService.getCurrentTechnology()
 		.subscribe((technology: RacetrackTechnology) => {
 			this.useCase = _.get(technology, 'name');
+			this.clearFilters();
 			this.fetchSyslogsCount();
-			this.buildFilters();
 		});
 	}
 

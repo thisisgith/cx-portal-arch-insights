@@ -117,7 +117,7 @@ export class FaultsComponent implements OnInit, OnChanges, OnDestroy {
 			this.resetPage();
 			this.getFaultData(this.searchParams);
 		}
-		if (!clear) {
+		if (clear === '') {
 			this.searchQueryInFaultGrid = '';
 			this.searchParams.localSearch = '';
 		}
