@@ -7,6 +7,8 @@ export enum SearchEnum {
 	rma = 'rma',
 	contract = 'contract',
 	product = 'product',
+	ipAddress = 'ip',
+	hostName = 'hn',
 	default = 'default',
 }
 
