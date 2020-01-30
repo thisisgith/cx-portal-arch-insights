@@ -7,7 +7,9 @@
 	</div>
 </div>
 <div *ngIf="!loading && data">
-	<h3 data-auto-id="serialHeader" [innerText]="'_SerialNumberHeader_' | i18n:serialNumber.query"></h3>
+		<h3 data-auto-id="serialHeader" *ngIf="type ==='sn';" [innerText]="'_SerialNumberHeader_' | i18n:serialNumber.query"></h3>
+		<h3 data-auto-id="ipHeader" *ngIf="type ==='ip';" [innerText]="'_IPAddressHeader_' | i18n:serialNumber.query"></h3>
+		<h3 data-auto-id="hostHeader" *ngIf="type ==='hn';" [innerText]="'_HostNameHeader_' | i18n:serialNumber.query"></h3>
 	<div class="row">
 		<div class="row no-gutters col-md-7 base-margin-top">
 			<div class="col-md-5">
@@ -160,24 +162,39 @@
 								<span *ngIf="data?.productSeries; else loadingHardwareTemplate"
 									[innerText]="data.productSeries"></span>
 							</dd>
-							<dt>
-								<span class="subheading text-small text-uppercase"
-									data-auto-id="serialIP"
-									[innerText]="'_IPAddress_' | i18n"></span>
-							</dt>
-							<dd>
-								<span *ngIf="data?.ipAddress; else unavailable"
-									[innerText]="data.ipAddress"></span>
-							</dd>
-							<dt>
-								<span class="subheading text-small text-uppercase"
-									data-auto-id="serialHost"
-									[innerText]="'_HostName_' | i18n"></span>
-							</dt>
-							<dd>
-								<span *ngIf="data?.hostName; else loadingHardwareTemplate"
-									[innerText]="data.hostName"></span>
-							</dd>
+							<ng-container *ngIf="type !=='ip';">
+								<dt>
+									<span class="subheading text-small text-uppercase"
+										data-auto-id="serialIP"
+										[innerText]="'_IPAddress_' | i18n"></span>
+								</dt>
+								<dd>
+									<span *ngIf="data?.ipAddress; else unavailable"
+										[innerText]="data.ipAddress"></span>
+								</dd>
+							</ng-container>
+							<ng-container *ngIf="type !=='sn';">
+									<dt>
+										<span class="subheading text-small text-uppercase"
+												data-auto-id="serialNumber"
+												[innerText]="'_SerialNumber_' | i18n"></span>
+									</dt>
+									<dd>
+										<span *ngIf="data?.serialNumber; else unavailable"
+												[innerText]="data.serialNumber"></span>
+									</dd>
+								</ng-container>
+							<ng-container *ngIf="type !=='hn';">
+								<dt>
+									<span class="subheading text-small text-uppercase"
+										data-auto-id="serialHost"
+										[innerText]="'_HostName_' | i18n"></span>
+								</dt>
+								<dd>
+									<span *ngIf="data?.hostName; else loadingHardwareTemplate"
+										[innerText]="data.hostName"></span>
+								</dd>
+							</ng-container>
 						</dl>
 					</div>
 				</div>

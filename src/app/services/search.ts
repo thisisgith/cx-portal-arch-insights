@@ -9,10 +9,6 @@ import { Observable, Subject, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 /**
- * Regex for a serial number match
- */
-const serialRegex = /^[0-9a-zA-Z-]{3,}$/;
-/**
  * Regex for a case number match
  */
 const caseRegex = /\b(?:SR)?6\d{8}\b/;
@@ -84,14 +80,11 @@ export class SearchService {
 			};
 		}
 
-		// Serial Number matches the most strings and needs to be checked last
-		value = query.match(serialRegex);
-
-		if (value && value[0]) {
+		if (query.length > 2) {
 			return {
 				name: SearchEnum.sn,
-				value: value[0],
-			};
+				value: query,
+ 			};
 		}
 
 		return {

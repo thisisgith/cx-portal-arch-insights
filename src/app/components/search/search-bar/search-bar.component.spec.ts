@@ -317,13 +317,14 @@ describe('SearchBarComponent', () => {
 	});
 
 	it('should emit a default selection', () => {
-		component.onSearchSelect('Some value with spaces'); // RMA num
+		component.onSearchSelect('cs12');
 		expect(component.searchChange.emit)
 			.toHaveBeenCalledWith({
-				generalSearch: 'Some value with spaces',
-				text: 'Some value with spaces',
+				generalSearch: 'cs12',
+				text: 'cs12',
 				type: {
-					name: SearchEnum.default,
+					name: SearchEnum.sn,
+					value: 'cs12',
 				},
 			});
 	});
