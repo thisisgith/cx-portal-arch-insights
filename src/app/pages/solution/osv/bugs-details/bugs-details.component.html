@@ -372,7 +372,7 @@
 	<div *ngIf="!status?.isLoadingDetails">
 		<div class="row no-margin">
 			<div class="col-md-9 base-margin-top">
-					<div [innerText]= "'_Title_' | i18n " class="text-bold" ></div>
+					<div [innerText]= "'_fieldtitle_' | i18n " class="text-bold" ></div>
 					<div [title]="item?.title" [innerText]="item?.title"></div>
 			</div>
 			<div class="col-md-3 base-margin-top" >
@@ -390,23 +390,8 @@
 		</div>
 
 		<div class="row no-margin">
-			<div class="col-md-12 base-margin-top text-bold" [innerText]= "'_fieldback_' | i18n "></div>
-			<div class="col-md-12 base-margin-top" [innerHTML]="item?.background"></div>
-		</div>
-
-		<div class="row no-margin">
 			<div class="col-md-12 base-margin-top text-bold" [innerText]= "'_fieldescrption_' | i18n "></div>
 			<div class="col-md-12 base-margin-top" [innerHTML]="item?.description"></div>
-		</div>
-
-		<div class="row no-margin">
-			<div class="col-md-12 base-margin-top text-bold" [innerText]= "'_fieldsymptom_' | i18n "></div>
-			<div class="col-md-12 base-margin-top" [innerHTML]="item?.Symptom"></div>
-		</div>
-		
-		<div class="row no-margin">
-			<div class="col-md-12 base-margin-top text-bold" [innerText]= "'_fieldworkaround_' | i18n "></div>
-			<div class="col-md-12 base-margin-top" [innerHTML]="item?.workaround"></div>
 		</div>
 
 	</div>	
