@@ -17,6 +17,7 @@ import {
 } from '@sdp-api';
 import { ActivatedRoute } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
+import { InsightsUtilService } from 'src/app/services/insights-util.service';
 
 /**
  * Risk mitigation component
@@ -61,6 +62,7 @@ export class RiskMitigationComponent implements AfterViewInit {
 		_.indexOf(filter.view, selectedView) > -1,
 		);
 	}
+	public filterCollapse = false;
 	@ViewChild('riskScoreFilterTemplate', { static: true })
 	public riskScoreFilterTemplate: TemplateRef<string>;
 	@ViewChild('timeRangeFilterTemplate', { static: true })
@@ -72,6 +74,7 @@ export class RiskMitigationComponent implements AfterViewInit {
 		private route: ActivatedRoute,
 		private racetrackInfoService: RacetrackInfoService,
 		private crd: ChangeDetectorRef,
+		private insightsUtilService: InsightsUtilService,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
@@ -101,6 +104,12 @@ export class RiskMitigationComponent implements AfterViewInit {
 				}
 			});
 		this.buildFilters();
+		this.insightsUtilService
+			.getFilterCollapseState()
+			.pipe(takeUntil(this.destroy$))
+			.subscribe((filterCollapse: boolean) => {
+				this.filterCollapse = filterCollapse;
+			});
 	}
 
 	/**
