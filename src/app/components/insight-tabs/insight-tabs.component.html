@@ -11,4 +11,11 @@
 	</cui-tab-link>
 	<cui-tab-link [url]="['/solution/insights/compliance']" [label]="'_Compliance_' | i18n">
 	</cui-tab-link>
+	<ng-template cuiTabLinkPost>
+		<visual-filter-toggle
+			data-auto-id="VisualFilterToggle"
+			(click)="toggleFilterCollapse()"
+			[filterCollapse]="filterCollapse"
+		></visual-filter-toggle>
+	</ng-template>
 </cui-tabs-nav>

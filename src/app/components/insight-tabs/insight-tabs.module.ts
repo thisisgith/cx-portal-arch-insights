@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { InsightTabsComponent } from './insight-tabs.component';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { CuiTabsNavModule } from '@cisco-ngx/cui-components';
+import { VisualFilterBarModule } from '@components';
 
 /**
  * Module to encapsulate InsightTabs component
@@ -15,6 +16,7 @@ import { CuiTabsNavModule } from '@cisco-ngx/cui-components';
 		CommonModule,
 		I18nPipeModule,
 		CuiTabsNavModule,
+		VisualFilterBarModule,
 	],
 })
 export class InsightTabsModule { }

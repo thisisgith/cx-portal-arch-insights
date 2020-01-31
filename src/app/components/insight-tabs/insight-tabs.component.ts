@@ -5,6 +5,7 @@ import * as _ from 'lodash-es';
 import { LogService } from '@cisco-ngx/cui-services';
 import { map, catchError } from 'rxjs/operators';
 import { of, Subject } from 'rxjs';
+import { InsightsUtilService } from 'src/app/services/insights-util.service';
 /**
  * Component representing a nav bar for insights pages
  */
@@ -20,6 +21,7 @@ export class InsightTabsComponent implements OnInit {
 	public enableArchitectureTab = false;
 	public enableConfigurationTab = false;
 	public enableSystemEventsTab = false;
+	public filterCollapse = false;
 	private destroy$ = new Subject();
 	private switchUrl = ['/solution/insights/syslogs',
 		'/solution/insights/architecture-review',
@@ -31,6 +33,7 @@ export class InsightTabsComponent implements OnInit {
 		private routeAuthService: RouteAuthService,
 		private router: Router,
 		private route: ActivatedRoute,
+		private insightsUtilService: InsightsUtilService,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.cxLevel = _.get(user, ['service', 'cxLevel'], 0);
@@ -42,6 +45,7 @@ export class InsightTabsComponent implements OnInit {
 	public ngOnInit (): void {
 		this.canActivate();
 		this.activeUrl = this.router.url;
+		this.insightsUtilService.sendFilterCollapseState(this.filterCollapse);
 	}
 
 	/**
@@ -75,6 +79,15 @@ export class InsightTabsComponent implements OnInit {
 				}),
 			)
 			.subscribe();
+	}
+
+	/**
+	 * toggleFilterCollapse
+	 * Sends the current state of Visual-Filter toggle
+	 */
+	public toggleFilterCollapse () {
+		this.filterCollapse = !this.filterCollapse;
+		this.insightsUtilService.sendFilterCollapseState(this.filterCollapse);
 	}
 
 	/**
