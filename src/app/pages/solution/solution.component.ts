@@ -41,7 +41,7 @@ import { Step } from '../../../../src/app/components/quick-tour/quick-tour.compo
 import { DetailsPanelStackService, UtilsService, RacetrackInfoService, CaseDetailsService } from '@services';
 import { SmartAccount } from '@interfaces';
 import { UserResolve } from '@utilities';
-import { ACTIVE_TECHNOLOGY_KEY, ACTIVE_FACET_KEY } from '@constants';
+import { ACTIVE_TECHNOLOGY_KEY, ACTIVE_FACET_KEY, IBN_VISUAL_NAME } from '@constants';
 import { ContactSupportComponent } from '../../components/contact-support/contact-support.component';
 
 /**
@@ -102,6 +102,7 @@ export class SolutionComponent implements OnInit, OnDestroy, AfterViewInit {
 	public cxLevel: number;
 	public alert: any = { };
 	public showErrorMessage = false;
+	public ibnVisualName = IBN_VISUAL_NAME;
 
 	@ViewChild('facetNavigationWrapper', { static: true }) private facetNavigationWrapperRef: ElementRef;
 	@ViewChild('advisoriesFacet', { static: true }) public advisoriesTemplate: TemplateRef<{ }>;

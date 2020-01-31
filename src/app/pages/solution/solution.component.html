@@ -118,7 +118,7 @@
 						(clickOutside)="clickOutsideDropdown('solution')" 
 						(click)="changeDropdownSelection('solution')"
 						class="text-color-dkgray text-size-18" 
-						[innerText]="selectedSolution.name"
+						[innerText]="selectedSolution.name === 'IBN' ? ibnVisualName : selectedSolution.name"
 						data-auto-id="SolutionDropdown--button"
 						aria-haspopup="true"
 					></button>
@@ -131,7 +131,7 @@
 							[ngClass]="{
 								'selected': selectedSolution.name === solution.name
 							}"
-							[innerText]="solution.name"
+							[innerText]="solution.name === 'IBN' ? ibnVisualName : solution.name"
 						>
 						</button>
 					</div>
