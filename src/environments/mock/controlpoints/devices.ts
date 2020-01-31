@@ -57,7 +57,7 @@ export const DevicePoliciesScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 500,
+					delay: 30,
 					description: 'Call to get device list given customerId (2431199)',
 					response: {
 						body: mockData,
@@ -66,7 +66,7 @@ export const DevicePoliciesScenarios = [
 					selected: true,
 				},
 				{
-					delay: 500,
+					delay: 30,
 					description: 'Failure - Call to get device list given customerId (2431199)',
 					response: {
 						body: '',
@@ -83,7 +83,7 @@ export const DevicePoliciesScenarios = [
 		scenarios: {
 			PATCH: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 250,
+					delay: 30,
 					description: 'Patch Policy',
 					response: {
 						status: 200,
@@ -93,7 +93,7 @@ export const DevicePoliciesScenarios = [
 			],
 			POST: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 250,
+					delay: 30,
 					description: 'Post Policy',
 					response: {
 						status: 200,
@@ -109,7 +109,7 @@ export const DevicePoliciesScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 250,
+					delay: 30,
 					description: 'Get Devices given CustomerID',
 					response: {
 						body: mockData,
@@ -126,7 +126,7 @@ export const DevicePoliciesScenarios = [
 		scenarios: {
 			DELETE: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 250,
+					delay: 30,
 					description: 'Delete Policy given CustomerID and Policy',
 					response: {
 						status: 200,
@@ -143,7 +143,7 @@ export const DevicePoliciesScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 250,
+					delay: 30,
 					description: 'Get Devices given CustomerID and Policy',
 					response: {
 						body: mockData,

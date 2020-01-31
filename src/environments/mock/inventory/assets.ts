@@ -1068,7 +1068,7 @@ export const AssetScenarios = [
 		scenarios: {
 			HEAD: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Assets Count',
 					response: {
 						headers: new HttpHeaders({
@@ -1087,7 +1087,7 @@ export const AssetScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 500,
+					delay: 30,
 					description: 'Covered Assets',
 					response: {
 						body: MockAssets(10, 1, null, [true]),
@@ -1104,7 +1104,7 @@ export const AssetScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 350,
+					delay: 44,
 					description: 'Covered Assets - Grid View',
 					response: {
 						body: MockAssets(12, 1, null, [true]),
@@ -1121,7 +1121,7 @@ export const AssetScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 900,
+					delay: 60,
 					description: 'ACCESS Assets Page 1',
 					response: {
 						body: MockAssets(10, 1, null, null, ['ACCESS']),
@@ -1138,7 +1138,7 @@ export const AssetScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 900,
+					delay: 60,
 					description: 'ACCESS Assets Page 1 - Grid',
 					response: {
 						body: MockAssets(12, 1, null, null, ['ACCESS']),
@@ -1155,7 +1155,7 @@ export const AssetScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 500,
+					delay: 30,
 					description: 'Assets Page 1',
 					response: {
 						body: MockAssets(10, 1),
@@ -1182,7 +1182,7 @@ export const AssetScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 500,
+					delay: 30,
 					description: 'Assets Page 1 (no page param)',
 					response: {
 						body: MockAssets(10, 1),
@@ -1199,7 +1199,7 @@ export const AssetScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 250,
+					delay: 38,
 					description: 'Assets Page 2',
 					response: {
 						body: MockAssets(10, 2),
@@ -1217,7 +1217,7 @@ export const AssetScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 325,
+					delay: 43,
 					description: 'Assets Page 3',
 					response: {
 						body: MockAssets(10, 3),
@@ -1235,7 +1235,7 @@ export const AssetScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 150,
+					delay: 33,
 					description: 'Assets Page 4',
 					response: {
 						body: MockAssets(10, 4),
@@ -1253,7 +1253,7 @@ export const AssetScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 350,
+					delay: 44,
 					description: 'Assets Page 1 - Grid View',
 					response: {
 						body: MockAssets(12, 1),
@@ -1271,7 +1271,7 @@ export const AssetScenarios = [
 					selected: false,
 				},
 				{
-					delay: 250,
+					delay: 38,
 					description: '(Assets) Missing data - Grid View',
 					response: {
 						body: (() => {
@@ -1295,7 +1295,7 @@ export const AssetScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 350,
+					delay: 44,
 					description: 'Assets Page 2 - Grid View',
 					response: {
 						body: MockAssets(12, 2),
@@ -1312,7 +1312,7 @@ export const AssetScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 350,
+					delay: 44,
 					description: 'Assets Page 3 - Grid View',
 					response: {
 						body: MockAssets(12, 3),
@@ -1329,7 +1329,7 @@ export const AssetScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 350,
+					delay: 44,
 					description: 'Assets Page 4 - Grid View',
 					response: {
 						body: MockAssets(12, 4),
@@ -1346,7 +1346,7 @@ export const AssetScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 225,
+					delay: 36,
 					description: 'Contract 93856991 Filtering',
 					response: {
 						body: MockAssets(10, 1, ['93856991']),
@@ -1364,7 +1364,7 @@ export const AssetScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Serial Number ',
 					response: {
 						body: {
@@ -1383,7 +1383,7 @@ export const AssetScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Asset by managedNeId',
 					response: {
 						body: {

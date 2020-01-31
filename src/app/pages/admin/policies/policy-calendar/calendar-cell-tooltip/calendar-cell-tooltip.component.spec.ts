@@ -59,4 +59,5 @@ describe('PolicyCalendarTooltipComponent', () => {
 		expect(component)
 			.toBeTruthy();
 	});
+
 });

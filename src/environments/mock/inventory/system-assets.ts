@@ -556,7 +556,7 @@ export const SystemAssetScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'System Assets Page 1',
 					response: {
 						body: MockSystemAssets(10, 1),

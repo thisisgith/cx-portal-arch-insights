@@ -47,13 +47,11 @@ describe('CgtRequestFormComponent', () => {
 	};
 
 	const buildSpies = () => {
-		getAccUserInfoSpy = spyOn(contentService, 'getACCUserInfo')
-			.and
-			.returnValue(of(getActiveBody(ACCUserInfoScenarios[0])));
+		getAccUserInfoSpy = jest.spyOn(contentService, 'getACCUserInfo')
+			.mockReturnValue(of(getActiveBody(ACCUserInfoScenarios[0])));
 
-		requestTrainingSpy = spyOn(contentService, 'requestGroupTraining')
-			.and
-			.returnValue(of(getActiveBody(CGTScenarios[0], 'POST')));
+		requestTrainingSpy = jest.spyOn(contentService, 'requestGroupTraining')
+			.mockReturnValue(of(getActiveBody(CGTScenarios[0], 'POST')));
 	};
 
 	configureTestSuite(() => {
@@ -85,16 +83,14 @@ describe('CgtRequestFormComponent', () => {
 	});
 
 	it('should gracefully handle failures for all other api calls', () => {
-		getAccUserInfoSpy = spyOn(contentService, 'getACCUserInfo')
-			.and
-			.returnValue(throwError(new HttpErrorResponse({
+		getAccUserInfoSpy = jest.spyOn(contentService, 'getACCUserInfo')
+			.mockReturnValue(throwError(new HttpErrorResponse({
 				status: 404,
 				statusText: 'Resource not found',
 			})));
 
-		requestTrainingSpy = spyOn(contentService, 'requestGroupTraining')
-			.and
-			.returnValue(throwError(new HttpErrorResponse({
+		requestTrainingSpy = jest.spyOn(contentService, 'requestGroupTraining')
+			.mockReturnValue(throwError(new HttpErrorResponse({
 				status: 404,
 				statusText: 'Resource not found',
 			})));
@@ -210,4 +206,5 @@ describe('CgtRequestFormComponent', () => {
 		expect(component.sessionsAvailable)
 			.toEqual(0);
 	});
+
 });

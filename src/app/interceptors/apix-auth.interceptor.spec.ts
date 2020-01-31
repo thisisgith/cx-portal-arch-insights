@@ -61,7 +61,7 @@ describe('APIxAuthIntercetptor', () => {
 	});
 
 	it('should attach auth token for SDP origin APIs', () => {
-		spyOn(req, 'clone');
+		jest.spyOn(req, 'clone');
 		const retValue = {
 			headers: new HttpHeaders().set('authorization', `Bearer ${SDP_TOKEN_VALUE}`),
 		};
@@ -76,7 +76,7 @@ describe('APIxAuthIntercetptor', () => {
 		apixIdentityService.testOrigin = (_url: any) => OriginType.RMA;
 		apixService.getToken = (_clientId: string) => from([RMA_TOKEN_VALUE]);
 
-		spyOn(req, 'clone');
+		jest.spyOn(req, 'clone');
 		const retValue = {
 			headers: new HttpHeaders().set('authorization', `Bearer ${RMA_TOKEN_VALUE}`),
 		};
@@ -89,9 +89,7 @@ describe('APIxAuthIntercetptor', () => {
 
 	it('should ignore non-SDP / non-RMA origin API requests', () => {
 		apixIdentityService.testOrigin = (_url: any) => OriginType.NONE;
-		spyOn(next, 'handle')
-			.and
-			.callThrough();
+		jest.spyOn(next, 'handle');
 
 		apixAuthInterceptor.intercept(req, next)
 		.subscribe();
@@ -104,10 +102,10 @@ describe('APIxAuthIntercetptor', () => {
 		apixAuthInterceptor.cwayToken = 'Bearer 764535';
 		apixAuthInterceptor.isRefershingCwayToken = true;
 		apixIdentityService.testOrigin = (_url: any) => OriginType.APOLLO;
-		spyOn(next, 'handle')
-			.and
-			.returnValue(throwError(new HttpErrorResponse({ status: 401 })));
+		jest.spyOn(next, 'handle')
+			.mockReturnValue(throwError(new HttpErrorResponse({ status: 401 })));
 		apixAuthInterceptor.intercept(req, next)
 		.subscribe();
 	});
+
 });

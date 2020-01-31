@@ -44,4 +44,5 @@ describe('InstallProgressComponent', () => {
 		expect(component.accountForm.get('ipAddress').value)
 			.toBe('127.0.0.1');
 	});
+
 });

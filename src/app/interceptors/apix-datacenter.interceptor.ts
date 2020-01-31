@@ -5,7 +5,8 @@ import { mergeMap, take, takeUntil } from 'rxjs/operators';
 import { environment } from '@environment';
 import { ApixIdentityService } from './apix-identity.service';
 import { OriginType, DEFAULT_DATACENTER } from '@constants';
-
+import { Injectable } from '@angular/core';
+@Injectable()
 export class ApixDatacenterInterceptor implements HttpInterceptor {
 
 	private dataCenter: string;

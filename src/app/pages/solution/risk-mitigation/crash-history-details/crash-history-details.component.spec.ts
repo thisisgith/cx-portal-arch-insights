@@ -12,7 +12,6 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { of } from 'rxjs';
 import { user, RiskScenarios } from '@mock';
 import { SimpleChange, SimpleChanges } from '@angular/core';
-
 describe('CrashHistoryDetailsComponent', () => {
 	let component: CrashHistoryDetailsComponent;
 	let fixture: ComponentFixture<CrashHistoryDetailsComponent>;
@@ -65,9 +64,8 @@ describe('CrashHistoryDetailsComponent', () => {
 				productId: 'TestProdID',
 			}, false),
 		};
-		spyOn(riskMitigationService, 'getCrashHistoryForDevice')
-			.and
-			.returnValue(of(RiskScenarios[3].scenarios.GET[0].response.body));
+		jest.spyOn(riskMitigationService, 'getCrashHistoryForDevice')
+			.mockReturnValue(of(RiskScenarios[3].scenarios.GET[0].response.body));
 		component.ngOnChanges(fakeInput);
 		fixture.whenStable()
 			.then(() => {
@@ -87,10 +85,11 @@ describe('CrashHistoryDetailsComponent', () => {
 	});
 
 	it('should handle on panel hidden', () => {
-		const panelCloseSpy = spyOn(component, 'onAllPanelsClose');
+		const panelCloseSpy = jest.spyOn(component, 'onAllPanelsClose');
 
 		component.handleHidden();
 		expect(panelCloseSpy)
 			.toHaveBeenCalled();
 	});
+
 });

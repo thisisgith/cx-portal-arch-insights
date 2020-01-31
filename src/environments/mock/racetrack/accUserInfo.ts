@@ -30,7 +30,7 @@ export const ACCUserInfoScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 250,
+					delay: 38,
 					description: '(ACC) ACC-Request User Info',
 					response: {
 						body: MockACCUserInfoResponse(),

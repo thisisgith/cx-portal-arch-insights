@@ -16,7 +16,7 @@ describe('ChangePasswordComponent', () => {
 	let fixture: ComponentFixture<ChangeDNACCredentialsComponent>;
 	let registerService: RegisterCollectorService;
 	const mockRouter = {
-		navigate: jasmine.createSpy('navigate'),
+		navigate: jest.fn(),
 	};
 
 	configureTestSuite(() => {
@@ -74,9 +74,8 @@ describe('ChangePasswordComponent', () => {
 
 	it('should change credentials', () => {
 		const dummyData: String = 'Configurations updated.';
-		spyOn(registerService, 'changeDNACCredentials')
-			.and
-			.returnValue(of(<string> dummyData));
+		jest.spyOn(registerService, 'changeDNACCredentials')
+			.mockReturnValue(of(<string> dummyData));
 		component.changeCredentials();
 		fixture.detectChanges();
 		expect(registerService.changeDNACCredentials)
@@ -87,9 +86,8 @@ describe('ChangePasswordComponent', () => {
 
 	it('should not change credentials', () => {
 		const dummyData = '"{ staus : 400 }"';
-		spyOn(registerService, 'changeDNACCredentials')
-			.and
-			.returnValue(of(<string> dummyData));
+		jest.spyOn(registerService, 'changeDNACCredentials')
+			.mockReturnValue(of(<string> dummyData));
 		component.changeCredentials();
 		fixture.detectChanges();
 		expect(registerService.changeDNACCredentials)
@@ -100,9 +98,8 @@ describe('ChangePasswordComponent', () => {
 
 	it('should get Auth Token', () => {
 		const dummyData = 'tokenDummy';
-		spyOn(registerService, 'getAuthTokenDayN')
-			.and
-			.returnValue(of(<string> dummyData));
+		jest.spyOn(registerService, 'getAuthTokenDayN')
+			.mockReturnValue(of(<string> dummyData));
 		component.onSubmit();
 		fixture.detectChanges();
 		expect(registerService.getAuthTokenDayN)
@@ -111,9 +108,8 @@ describe('ChangePasswordComponent', () => {
 
 	it('should not get Auth Token', () => {
 		const dummyData = { status: 400 };
-		spyOn(registerService, 'getAuthTokenDayN')
-			.and
-			.returnValue(of(<any> dummyData));
+		jest.spyOn(registerService, 'getAuthTokenDayN')
+			.mockReturnValue(of(<any> dummyData));
 		component.onSubmit();
 		fixture.detectChanges();
 		expect(registerService.getAuthTokenDayN)
@@ -148,9 +144,8 @@ describe('ChangePasswordComponent', () => {
 
 	it('shold change credentials if certficate is present', () => {
 		const dummyData = true;
-		spyOn(component, 'checkIPConnection')
-			.and
-			.returnValue(of(<boolean> dummyData));
+		jest.spyOn(component, 'checkIPConnection')
+			.mockReturnValue(of(<boolean> dummyData));
 		component.onContinue();
 		fixture.detectChanges();
 		expect(component.checkIPConnection)
@@ -161,9 +156,8 @@ describe('ChangePasswordComponent', () => {
 
 	it('shold instruct if certficate is not present', () => {
 		const dummyData = false;
-		spyOn(component, 'checkIPConnection')
-			.and
-			.returnValue(of(<boolean> dummyData));
+		jest.spyOn(component, 'checkIPConnection')
+			.mockReturnValue(of(<boolean> dummyData));
 		component.onContinue();
 		fixture.detectChanges();
 		expect(component.checkIPConnection)
@@ -180,8 +174,8 @@ describe('ChangePasswordComponent', () => {
 
 	it('should handle api failure ', fakeAsync(() => {
 
-		spyOn(registerService, 'changePassword').and
-		.returnValue(throwError(new HttpErrorResponse({ status: 400,
+		jest.spyOn(registerService, 'changePassword')
+		.mockReturnValue(throwError(new HttpErrorResponse({ status: 400,
 			statusText: 'Resource not found',
 		})));
 		component.onSubmit();
@@ -196,4 +190,5 @@ describe('ChangePasswordComponent', () => {
 				.toEqual('Resource not found');
 		});
 	}));
+
 });

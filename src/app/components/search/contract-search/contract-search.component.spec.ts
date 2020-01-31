@@ -38,15 +38,13 @@ describe('ContractSearchComponent', () => {
 	});
 
 	it('should refresh on query change', () => {
-		spyOn(service, 'getContractDetails')
-			.and
-			.returnValue(of(
+		jest.spyOn(service, 'getContractDetails')
+			.mockReturnValue(of(
 				_.get(ContractScenarios, [0, 'scenarios', 'GET', 0, 'response', 'body']),
 			));
 		component.contractNumber = { query: '230000001' };
-		spyOn(service, 'headProductsCoveragesResponse')
-			.and
-			.returnValue(of(
+		jest.spyOn(service, 'headProductsCoveragesResponse')
+			.mockReturnValue(of(
 				_.get(CoverageScenarios, [0, 'scenarios', 'HEAD', 0, 'response']),
 			));
 		component.ngOnChanges();
@@ -64,12 +62,10 @@ describe('ContractSearchComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(service, 'getContractDetails')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(service, 'headProductsCoveragesResponse')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(service, 'getContractDetails')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(service, 'headProductsCoveragesResponse')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
 		component.ngOnChanges();
 		fixture.detectChanges();
 		expect(component.contractData)
@@ -77,4 +73,5 @@ describe('ContractSearchComponent', () => {
 		expect(component.coverageCount)
 			.toBe(null);
 	});
+
 });

@@ -54,9 +54,8 @@ describe('CbpDeviceAffectedComponent', () => {
 	});
 
 	it('should call getAllCBPDeviceAffected', () => {
-		spyOn(service, 'getAllCBPDeviceAffected')
-			.and
-			.returnValue(of({ assetDatas: [] }));
+		jest.spyOn(service, 'getAllCBPDeviceAffected')
+			.mockReturnValue(of({ assetDatas: [] }));
 		component.getData();
 		expect(service.getAllCBPDeviceAffected)
 			.toHaveBeenCalled();
@@ -95,9 +94,8 @@ describe('CbpDeviceAffectedComponent', () => {
 			softwareType: 'IOS-XE',
 			softwareVersion: '16.3.3',
 		};
-		spyOn(assetService, 'getAssetLinkData')
-			.and
-			.returnValue(of({ }));
+		jest.spyOn(assetService, 'getAssetLinkData')
+			.mockReturnValue(of({ }));
 		component.openAssetDetailsView(selectedAsset);
 		expect(assetService.getAssetLinkData)
 			.toHaveBeenCalled();
@@ -119,9 +117,8 @@ describe('CbpDeviceAffectedComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(service, 'getAllCBPDeviceAffected')
-			.and
-			.returnValue(
+		jest.spyOn(service, 'getAllCBPDeviceAffected')
+			.mockReturnValue(
 				throwError(new HttpErrorResponse(error)),
 			);
 		component.getData();

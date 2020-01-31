@@ -31,14 +31,12 @@ describe('GeneralSearchComponent', () => {
 	});
 
 	it('should create', () => {
-		spyOn(service, 'directCiscoSearch')
-			.and
-			.returnValue(
+		jest.spyOn(service, 'directCiscoSearch')
+			.mockReturnValue(
 				of(<CDCSearchResponse> (SearchScenarios[0].scenarios.POST[0].response.body)),
 			);
-		spyOn(service, 'allSearch')
-			.and
-			.returnValue(
+		jest.spyOn(service, 'allSearch')
+			.mockReturnValue(
 				of(<GlobalSearchResponse> (SearchScenarios[2].scenarios.POST[0].response.body)),
 			);
 		component.query = { query: 'query1' };
@@ -48,14 +46,12 @@ describe('GeneralSearchComponent', () => {
 	});
 
 	it('should refresh on query change', () => {
-		spyOn(service, 'directCiscoSearch')
-			.and
-			.returnValue(
+		jest.spyOn(service, 'directCiscoSearch')
+			.mockReturnValue(
 				of(<CDCSearchResponse> (SearchScenarios[0].scenarios.POST[0].response.body)),
 			);
-		spyOn(service, 'allSearch')
-			.and
-			.returnValue(
+		jest.spyOn(service, 'allSearch')
+			.mockReturnValue(
 				of(<GlobalSearchResponse> (SearchScenarios[2].scenarios.POST[0].response.body)),
 			);
 		component.query = { query: 'query1' };
@@ -70,14 +66,12 @@ describe('GeneralSearchComponent', () => {
 	});
 
 	it('should load more', fakeAsync(() => {
-		spyOn(service, 'directCiscoSearch')
-			.and
-			.returnValue(
+		jest.spyOn(service, 'directCiscoSearch')
+			.mockReturnValue(
 				of(<CDCSearchResponse> (SearchScenarios[0].scenarios.POST[0].response.body)),
 			);
-		spyOn(service, 'allSearch')
-			.and
-			.returnValue(
+		jest.spyOn(service, 'allSearch')
+			.mockReturnValue(
 				of(<GlobalSearchResponse> (SearchScenarios[2].scenarios.POST[0].response.body)),
 			);
 		component.query = { query: 'query1' };
@@ -93,9 +87,8 @@ describe('GeneralSearchComponent', () => {
 	}));
 
 	it('should refresh on filter change', fakeAsync(() => {
-		spyOn(service, 'directCiscoSearch')
-			.and
-			.returnValue(
+		jest.spyOn(service, 'directCiscoSearch')
+			.mockReturnValue(
 				of(<CDCSearchResponse> (SearchScenarios[0].scenarios.POST[0].response.body)),
 			);
 		component.query = { query: 'query1' };
@@ -123,12 +116,10 @@ describe('GeneralSearchComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(service, 'directCiscoSearch')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(service, 'allSearch')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(service, 'directCiscoSearch')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(service, 'allSearch')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
 		component.query = { query: 'query1' };
 		fixture.detectChanges();
 		expect(fixture.debugElement.query(By.css('app-no-results')))
@@ -136,9 +127,8 @@ describe('GeneralSearchComponent', () => {
 	});
 
 	it('should set the search token if one is returned', fakeAsync(() => {
-		spyOn(service, 'directCiscoSearch')
-			.and
-			.returnValue(
+		jest.spyOn(service, 'directCiscoSearch')
+			.mockReturnValue(
 				of(<CDCSearchResponse> (SearchScenarios[0].scenarios.POST[3].response.body)),
 			);
 		component.query = { query: 'query1' };

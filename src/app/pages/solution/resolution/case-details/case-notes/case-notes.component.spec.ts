@@ -7,7 +7,6 @@ import { user } from '@mock';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { environment } from '@environment';
 import { ActivatedRoute } from '@angular/router';
-
 describe('CaseNotesComponent', () => {
 	let component: CaseNotesComponent;
 	let fixture: ComponentFixture<CaseNotesComponent>;
@@ -48,7 +47,7 @@ describe('CaseNotesComponent', () => {
 	});
 
 	it('should get sorted notes on init', () => {
-		spyOn(component, 'getSortedNotes');
+		jest.spyOn(component, 'getSortedNotes');
 		component.ngOnInit();
 		expect(component.getSortedNotes)
 			.toHaveBeenCalled();
@@ -73,4 +72,5 @@ describe('CaseNotesComponent', () => {
 		expect(component.caseNotes[1].a)
 			.toEqual(0);
 	});
+
 });

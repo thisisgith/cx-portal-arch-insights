@@ -235,7 +235,7 @@ export const FaultScenarios = [
 		scenarios: {
 			POST: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Fault Data',
 					response: {
 						body: getFaultData,
@@ -252,7 +252,7 @@ export const FaultScenarios = [
 		scenarios: {
 			POST: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Fault Summary Data',
 					response: {
 						body: getFaultSummaryData,
@@ -269,7 +269,7 @@ export const FaultScenarios = [
 		scenarios: {
 			POST: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Fault Affected System Data',
 					response: {
 						body: getFaultAffectedSystemData,
@@ -286,7 +286,7 @@ export const FaultScenarios = [
 		scenarios: {
 			POST: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Fault Filter Data',
 					response: {
 						body: getFaultFilterData,
@@ -303,7 +303,7 @@ export const FaultScenarios = [
 		scenarios: {
 			POST: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Fault Empty Data',
 					response: {
 						body: getFaultEmptyData,
@@ -320,7 +320,7 @@ export const FaultScenarios = [
 		scenarios: {
 			POST: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Fault Update Ic Settings',
 					response: {
 						body: getUpdateIcSettings,

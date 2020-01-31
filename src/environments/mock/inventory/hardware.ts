@@ -1170,7 +1170,7 @@ export const HardwareScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: 'Hardware',
 					response: {
 						body: MockHardwareResponse,
@@ -1179,7 +1179,7 @@ export const HardwareScenarios = [
 					selected: true,
 				},
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: 'Empty Hardware',
 					response: {
 						body: { data: [] },
@@ -1197,7 +1197,7 @@ export const HardwareScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: 'Hardware productId',
 					response: {
 						body: MockHardware(1, 1),

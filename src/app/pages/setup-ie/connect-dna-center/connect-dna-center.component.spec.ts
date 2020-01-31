@@ -6,7 +6,6 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { SetupIEService } from '../setup-ie.service';
 import { environment } from '../../../../environments/environment';
 import { of, throwError } from 'rxjs';
-
 import { ConnectDNACenterComponent } from './connect-dna-center.component';
 import { ConnectDNACenterModule } from './connect-dna-center.module';
 import { SetupIEStateService } from '../setup-ie-state.service';
@@ -20,9 +19,9 @@ describe('ConnectDNACenterComponent', () => {
 	let setupService: SetupIEService;
 	let stateService: SetupIEStateService;
 	let modalService: CuiModalService;
-	let dnacSpy: jasmine.Spy;
-	let registerSpy: jasmine.Spy;
-	let modalSpy: jasmine.Spy;
+	let dnacSpy;
+	let registerSpy;
+	let modalSpy;
 
 	describe('without queryParams', () => {
 		beforeEach(() => {
@@ -79,15 +78,12 @@ describe('ConnectDNACenterComponent', () => {
 			modalService = TestBed.get(CuiModalService);
 
 			localStorage.removeItem('cxportal.cisco.com::IE_SETUP_STATE');
-			dnacSpy = spyOn(setupService, 'checkForDNAC')
-				.and
-				.returnValue(of(true));
-			registerSpy = spyOn(registerService, 'installAndRegisterDNAC')
-				.and
-				.returnValue(of(''));
-			modalSpy = spyOn(modalService, 'showComponent')
-				.and
-				.returnValue(new Promise(resolve => resolve()));
+			dnacSpy = jest.spyOn(setupService, 'checkForDNAC')
+				.mockReturnValue(of(true));
+			registerSpy = jest.spyOn(registerService, 'installAndRegisterDNAC')
+				.mockReturnValue(of(''));
+			modalSpy = jest.spyOn(modalService, 'showComponent')
+				.mockReturnValue(new Promise(resolve => resolve()));
 			fixture = TestBed.createComponent(ConnectDNACenterComponent);
 			component = fixture.componentInstance;
 			fixture.detectChanges();
@@ -100,8 +96,7 @@ describe('ConnectDNACenterComponent', () => {
 		});
 
 		it('should change route if no dnac', () => {
-			dnacSpy.and
-				.returnValue(of(false));
+			dnacSpy.mockReturnValue(of(false));
 			const sub = component.onStepComplete
 				.subscribe(array => {
 					sub.unsubscribe();
@@ -126,8 +121,7 @@ describe('ConnectDNACenterComponent', () => {
 		it('should go to next step on Enter keypress', () => {
 			let sub = component.onStepComplete
 				.subscribe(() => {
-					expect()
-						.nothing();
+					expect.anything();
 					sub.unsubscribe();
 				});
 			component.keyEvent(<any> { keyCode: 0 });
@@ -140,19 +134,17 @@ describe('ConnectDNACenterComponent', () => {
 				.setValue('Admin@123');
 			sub = component.onStepComplete
 				.subscribe(() => {
-					expect()
-						.nothing();
+					expect.anything();
 					sub.unsubscribe();
 				});
 			component.keyEvent(<any> { keyCode: 13 });
 		});
 
 		it('should open a modal if registration call fails', () => {
-			registerSpy.and
-				.returnValue(throwError(new HttpErrorResponse({
-					status: 404,
-					statusText: 'Resource not found',
-				})));
+			registerSpy.mockReturnValue(throwError(new HttpErrorResponse({
+				status: 404,
+				statusText: 'Resource not found',
+			})));
 			const sub = component.onStepComplete
 				.subscribe(() => {
 					sub.unsubscribe();
@@ -163,4 +155,5 @@ describe('ConnectDNACenterComponent', () => {
 			fixture.detectChanges();
 		});
 	});
+
 });

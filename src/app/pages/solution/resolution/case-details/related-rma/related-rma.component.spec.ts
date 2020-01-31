@@ -5,7 +5,6 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { RelatedRmaComponent } from './related-rma.component';
 import { RelatedRmaModule } from './related-rma.module';
 import { By } from '@angular/platform-browser';
-
 describe('RelatedRmaComponent', () => {
 	let component: RelatedRmaComponent;
 	let fixture: ComponentFixture<RelatedRmaComponent>;
@@ -31,14 +30,14 @@ describe('RelatedRmaComponent', () => {
 	});
 
 	it('should build table on init', () => {
-		spyOn(component, 'buildTable');
+		jest.spyOn(component, 'buildTable');
 		component.ngOnInit();
 		expect(component.buildTable)
 			.toHaveBeenCalled();
 	});
 
 	it('should hide', fakeAsync(() => {
-		spyOn(component.close, 'emit');
+		jest.spyOn(component.close, 'emit');
 		const button = fixture.debugElement.query(By.css('[data-auto-id="close"]'));
 		button.nativeElement.click();
 		tick();
@@ -74,4 +73,5 @@ describe('RelatedRmaComponent', () => {
 		expect(component.loading)
 			.toEqual(false);
 	});
+
 });

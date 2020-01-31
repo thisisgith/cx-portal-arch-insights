@@ -99,7 +99,7 @@ export const EntitlementScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Entitlement Call User 1',
 					response: {
 						body: mockUser1,
@@ -108,7 +108,7 @@ export const EntitlementScenarios = [
 					selected: true,
 				},
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Entitlement Call User 2',
 					response: {
 						body: mockUser2,
@@ -125,7 +125,7 @@ export const EntitlementScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Entitlement Service info Call for User 1',
 					response: {
 						body: mockServiceInfo,
@@ -142,7 +142,7 @@ export const EntitlementScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Entitlement Service info Call for User 2',
 					response: {
 						body: mockServiceInfo,

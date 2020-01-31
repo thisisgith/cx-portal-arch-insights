@@ -678,7 +678,7 @@ export const NetworkScenarios = [
 		scenarios: {
 			HEAD: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Network Elements Count',
 					response: {
 						headers: new HttpHeaders({
@@ -697,7 +697,7 @@ export const NetworkScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Network Elements Page 1',
 					response: {
 						body: MockNetwork(10, 1),
@@ -714,7 +714,7 @@ export const NetworkScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Network Elements Page 2',
 					response: {
 						body: MockNetwork(10, 2),
@@ -731,7 +731,7 @@ export const NetworkScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Network Elements Page 3',
 					response: {
 						body: MockNetwork(10, 3),
@@ -748,7 +748,7 @@ export const NetworkScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Network Elements for CAT2034B1H6',
 					response: {
 						body: MockNetwork(1, 1),
@@ -765,7 +765,7 @@ export const NetworkScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Impacted Network Elements for Security Advisory',
 					response: {
 						body: MockNetwork(100, 1),
@@ -783,7 +783,7 @@ export const NetworkScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Network Elements for FOC1544Y16T',
 					response: {
 						body: MockNetwork(1, 1, 'FOC1544Y16T'),
@@ -800,7 +800,7 @@ export const NetworkScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 350,
+					delay: 44,
 					description: 'Network Elements by SN - List view',
 					response: {
 						body: MockNetwork(10, 1),
@@ -818,7 +818,7 @@ export const NetworkScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 350,
+					delay: 44,
 					description: 'Network Elements by SN - Grid view',
 					response: {
 						body: MockNetwork(10, 1),
@@ -836,7 +836,7 @@ export const NetworkScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 350,
+					delay: 44,
 					description: 'Network Elements for SA',
 					response: {
 						body: MockNetwork(2, 1),
@@ -858,7 +858,7 @@ export const NetworkScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 500,
+					delay: 30,
 					description: 'Network Elements for SA 1074',
 					response: {
 						body: MockNetwork(5, 1),

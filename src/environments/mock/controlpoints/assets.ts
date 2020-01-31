@@ -164,7 +164,7 @@ export const ControlpointAssetsScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 500,
+					delay: 30,
 					description: 'Call to get assets',
 					response: {
 						body: mockData,

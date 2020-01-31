@@ -9,8 +9,8 @@ import { environment } from '../../../environments/environment';
 describe('SetupIEService', () => {
 	let cpApi: ControlPointIERegistrationAPIService;
 	let userResolve: UserResolve;
-	let userSpy: jasmine.Spy;
-	let dnacStatusSpy: jasmine.Spy;
+	let userSpy;
+	let dnacStatusSpy;
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
@@ -23,12 +23,10 @@ describe('SetupIEService', () => {
 		});
 		cpApi = TestBed.get(ControlPointIERegistrationAPIService);
 		userResolve = TestBed.get(UserResolve);
-		dnacStatusSpy = spyOn(cpApi, 'getDnacStatusUsingGET')
-			.and
-			.returnValue(of({ dnacInstalled: true }));
-		userSpy = spyOn(userResolve, 'getCustomerId')
-			.and
-			.returnValue(of('912834134'));
+		dnacStatusSpy = jest.spyOn(cpApi, 'getDnacStatusUsingGET')
+			.mockReturnValue(of({ dnacInstalled: true }));
+		userSpy = jest.spyOn(userResolve, 'getCustomerId')
+			.mockReturnValue(of('912834134'));
 	});
 
 	it('should be created', inject([SetupIEService], (service: SetupIEService) => {
@@ -58,8 +56,8 @@ describe('SetupIEService', () => {
 		inject(
 			[SetupIEService, HttpTestingController],
 			(service: SetupIEService) => {
-				dnacStatusSpy.and
-					.returnValue(of({ dnacInstalled: false }));
+				dnacStatusSpy
+					.mockReturnValue(of({ dnacInstalled: false }));
 				service.checkForDNAC()
 					.subscribe((response: boolean) => {
 						expect(userSpy)
@@ -85,8 +83,7 @@ describe('SetupIEService', () => {
 				const ipString = 'https://127.0.0.1';
 				service.ping(ipString)
 					.subscribe(() => {
-						expect()
-							.nothing();
+						expect.anything();
 					});
 				const req = httpMock.expectOne(`${ipString}${environment.ieSetup.pingURL}`);
 				req.flush({ });
@@ -109,4 +106,5 @@ describe('SetupIEService', () => {
 				req.flush(resultBlob);
 			}),
 	);
+
 });

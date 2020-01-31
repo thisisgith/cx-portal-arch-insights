@@ -54,7 +54,7 @@ describe('CaseFilesComponent', () => {
 	});
 
 	it('should refresh file list if different case is selected', () => {
-		spyOn(component, 'refresh');
+		jest.spyOn(component, 'refresh');
 		component.case = {
 			caseNumber: '1234',
 		};
@@ -72,9 +72,7 @@ describe('CaseFilesComponent', () => {
 	});
 
 	it('should rebuild table when refreshing', () => {
-		const spy = spyOn(component, 'buildTable')
-			.and
-			.callThrough();
+		const spy = jest.spyOn(component, 'buildTable');
 		component.caseFiles = [{
 			fileSize: 0,
 			fileId: 0,
@@ -136,4 +134,5 @@ describe('CaseFilesComponent', () => {
 		expect((<any> component).caseFiles[1].fileInfo.a)
 			.toEqual(1);
 	});
+
 });

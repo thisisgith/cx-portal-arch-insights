@@ -7,7 +7,6 @@ import { AddNoteComponent } from './add-note.component';
 import { AddNoteModule } from './add-note.module';
 import { CaseService } from '@cui-x/services';
 import { ProfileService } from '@cisco-ngx/cui-auth';
-
 describe('AddNoteComponent', () => {
 	let component: AddNoteComponent;
 	let service: CaseService;
@@ -54,13 +53,13 @@ describe('AddNoteComponent', () => {
 	});
 
 	it('should send a note create request', () => {
-		spyOn(service, 'addCaseNote')
-			.and
-			.returnValue(of({
+		jest.spyOn(service, 'addCaseNote')
+			.mockReturnValue(of({
 				status: 'SUCCESS',
 			}));
 		component.addCaseNote();
 		expect(service.addCaseNote)
 			.toHaveBeenCalled();
 	});
+
 });

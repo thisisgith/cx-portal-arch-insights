@@ -61,7 +61,7 @@ describe('ApixDatacenterInterceptor', () => {
 	});
 
 	it('should add datacenter value for SDP origin APIs', () => {
-		spyOn(req, 'clone');
+		jest.spyOn(req, 'clone');
 
 		const modifiedRequest = {
 			url: `${urlPrefix}${regionValue}`,
@@ -77,9 +77,7 @@ describe('ApixDatacenterInterceptor', () => {
 	it('should ignore an RMA APIx http request', () => {
 		apixIdentityService.testOrigin = (_url: any) => OriginType.RMA;
 
-		spyOn(next, 'handle')
-			.and
-			.callThrough();
+		jest.spyOn(next, 'handle');
 
 		apixDatacenterInterceptor.intercept(req, next)
 		.subscribe();
@@ -87,4 +85,5 @@ describe('ApixDatacenterInterceptor', () => {
 		expect(next.handle)
 			.toHaveBeenCalledWith(req);
 	});
+
 });

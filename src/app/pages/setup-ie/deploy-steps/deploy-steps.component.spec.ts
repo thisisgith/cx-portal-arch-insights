@@ -50,8 +50,7 @@ describe('DeployStepsComponent', () => {
 	it('should go to next step on Enter keypress', fakeAsync(() => {
 		const sub = component.onStepComplete
 			.subscribe(() => {
-				expect()
-					.nothing();
+				expect.anything();
 				sub.unsubscribe();
 			});
 		component.currentSlide = {
@@ -110,4 +109,5 @@ describe('DeployStepsComponent', () => {
 			.not
 			.toBeNull();
 	});
+
 });

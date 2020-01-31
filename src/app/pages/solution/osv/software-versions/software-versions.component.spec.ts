@@ -12,7 +12,6 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { MicroMockModule } from '@cui-x-views/mock';
 import { ActivatedRoute } from '@angular/router';
 import { environment } from '@environment';
-
 describe('SoftwareVersionsComponent', () => {
 	let component: SoftwareVersionsComponent;
 	let fixture: ComponentFixture<SoftwareVersionsComponent>;
@@ -60,9 +59,8 @@ describe('SoftwareVersionsComponent', () => {
 	});
 
 	it('should call getVersions list on init', () => {
-		spyOn(osvService, 'getSoftwareVersions')
-			.and
-			.returnValue(of(<any> OSVScenarios[2].scenarios.GET[0].response.body));
+		jest.spyOn(osvService, 'getSoftwareVersions')
+			.mockReturnValue(of(<any> OSVScenarios[2].scenarios.GET[0].response.body));
 		component.ngOnInit();
 		fixture.detectChanges();
 		expect(osvService.getSoftwareVersions)
@@ -78,10 +76,9 @@ describe('SoftwareVersionsComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(component, 'buildTable');
-		spyOn(osvService, 'getSoftwareVersions')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(component, 'buildTable');
+		jest.spyOn(osvService, 'getSoftwareVersions')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
 		component.ngOnInit();
 		fixture.detectChanges();
 		expect(osvService.getSoftwareVersions)
@@ -93,9 +90,8 @@ describe('SoftwareVersionsComponent', () => {
 	});
 
 	it('should refresh on sort', () => {
-		spyOn(osvService, 'getSoftwareVersions')
-			.and
-			.returnValue(of());
+		jest.spyOn(osvService, 'getSoftwareVersions')
+			.mockReturnValue(of());
 		component.onTableSortingChanged({
 			key: 'Key1',
 			value: 'Value1',
@@ -110,9 +106,8 @@ describe('SoftwareVersionsComponent', () => {
 	});
 
 	it('should refresh on page change', () => {
-		spyOn(osvService, 'getSoftwareVersions')
-			.and
-			.returnValue(of());
+		jest.spyOn(osvService, 'getSoftwareVersions')
+			.mockReturnValue(of());
 		component.onPageChanged({ page: 2 });
 		fixture.detectChanges();
 		expect(osvService.getSoftwareVersions)
@@ -135,9 +130,8 @@ describe('SoftwareVersionsComponent', () => {
 	});
 
 	it('should show pagination info if getVersion call is success', () => {
-		spyOn(osvService, 'getSoftwareVersions')
-			.and
-			.returnValue(of(<any> OSVScenarios[2].scenarios.GET[0].response.body));
+		jest.spyOn(osvService, 'getSoftwareVersions')
+			.mockReturnValue(of(<any> OSVScenarios[2].scenarios.GET[0].response.body));
 		component.ngOnInit();
 		fixture.detectChanges();
 		expect(osvService.getSoftwareVersions)
@@ -151,9 +145,8 @@ describe('SoftwareVersionsComponent', () => {
 	});
 
 	it('should show pagination info if getVersion call is success', () => {
-		spyOn(osvService, 'getSoftwareVersions')
-			.and
-			.returnValue(of(<any> OSVScenarios[6].scenarios.GET[0].response.body));
+		jest.spyOn(osvService, 'getSoftwareVersions')
+			.mockReturnValue(of(<any> OSVScenarios[6].scenarios.GET[0].response.body));
 		component.ngOnInit();
 		fixture.detectChanges();
 		expect(osvService.getSoftwareVersions)
@@ -167,7 +160,7 @@ describe('SoftwareVersionsComponent', () => {
 	});
 
 	it('should refresh on filters change ', () => {
-		spyOn(component, 'loadData');
+		jest.spyOn(component, 'loadData');
 		component.ngOnChanges({
 			solution: {
 				currentValue: 'ibn',
@@ -191,4 +184,5 @@ describe('SoftwareVersionsComponent', () => {
 		expect(component.loadData)
 			.toHaveBeenCalled();
 	});
+
 });

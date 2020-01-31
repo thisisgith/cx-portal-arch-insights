@@ -67,45 +67,53 @@ describe('DetailsPanelComponent', () => {
 		// These dummy divs will be cut off in the function
 		const dummy = document.createElement('div');
 		const dummy2 = document.createElement('div');
-		const eventIn = jasmine.createSpyObj('eventIn',
-			{
-				composedPath: [
+		const eventIn = {
+			composedPath: () =>
+				[
 					closeDiv,
 					notCloseDiv,
 					dummy,
 					dummy2,
 				],
-			},
-		);
-
-		const eventOut = jasmine.createSpyObj('eventIn',
-			{
-				composedPath: [
+		};
+		const eventOut = {
+			composedPath: () =>
+				[
 					closeDiv,
 					dummy,
 					dummy2,
 				],
-			},
-		);
+		};
+
+		const spy = jest.spyOn(component, 'onPageClick');
 
 		component.hidden = false;
 		component.onPageClick(eventIn);
+		expect(spy)
+			.toHaveBeenCalled();
 		expect(component.hidden)
 			.toBe(false);
 
 		component.hidden = true;
 		component.onPageClick(eventIn);
+		expect(spy)
+			.toHaveBeenCalled();
 		expect(component.hidden)
 			.toBe(true);
 
 		component.hidden = false;
 		component.onPageClick(eventOut);
+		expect(spy)
+			.toHaveBeenCalled();
 		expect(component.hidden)
 			.toBe(true);
 
 		component.hidden = true;
 		component.onPageClick(eventOut);
+		expect(spy)
+			.toHaveBeenCalled();
 		expect(component.hidden)
 			.toBe(true);
 	});
+
 });

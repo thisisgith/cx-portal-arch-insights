@@ -11,7 +11,6 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { OSVScenarios } from '@mock';
 import { MicroMockModule } from '@cui-x-views/mock';
 import * as _ from 'lodash-es';
-
 describe('SoftwareGroupsComponent', () => {
 	let component: SoftwareGroupsComponent;
 	let fixture: ComponentFixture<SoftwareGroupsComponent>;
@@ -42,9 +41,8 @@ describe('SoftwareGroupsComponent', () => {
 	});
 
 	it('should call profile groups list on init', () => {
-		spyOn(osvService, 'getSoftwareGroups')
-			.and
-			.returnValue(of(
+		jest.spyOn(osvService, 'getSoftwareGroups')
+			.mockReturnValue(of(
 				<SoftwareGroupsResponse> OSVScenarios[1].scenarios.GET[0].response.body));
 		component.ngOnInit();
 		fixture.detectChanges();
@@ -63,9 +61,8 @@ describe('SoftwareGroupsComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(osvService, 'getSoftwareGroups')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(osvService, 'getSoftwareGroups')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
 		component.selectedSoftwareGroup = <any> OSVScenarios[1].scenarios.GET[0].response.body;
 		component.ngOnInit();
 		tick();
@@ -79,9 +76,8 @@ describe('SoftwareGroupsComponent', () => {
 	}));
 
 	it('should refresh on page change', () => {
-		spyOn(osvService, 'getSoftwareGroups')
-			.and
-			.returnValue(of(<any> OSVScenarios[1].scenarios.GET[0].response.body));
+		jest.spyOn(osvService, 'getSoftwareGroups')
+			.mockReturnValue(of(<any> OSVScenarios[1].scenarios.GET[0].response.body));
 		component.onPageChanged({ page: 2 });
 		fixture.detectChanges();
 		expect(component.softwareGroupsParams.pageIndex)
@@ -105,9 +101,8 @@ describe('SoftwareGroupsComponent', () => {
 
 	it('should set the optimal version if the selectedSoftwareGroup has statusUpdated', () => {
 		const softwareGroups = (<any> OSVScenarios[1].scenarios.GET[0].response.body);
-		spyOn(osvService, 'getSoftwareGroups')
-			.and
-			.returnValue(of(softwareGroups));
+		jest.spyOn(osvService, 'getSoftwareGroups')
+			.mockReturnValue(of(softwareGroups));
 		component.ngOnInit();
 		fixture.detectChanges();
 		expect(component.softwareGroups)

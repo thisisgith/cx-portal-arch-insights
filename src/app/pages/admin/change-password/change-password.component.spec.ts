@@ -16,7 +16,7 @@ describe('ChangePasswordComponent', () => {
 	let fixture: ComponentFixture<ChangePasswordComponent>;
 	let registerService: RegisterCollectorService;
 	const mockRouter = {
-		navigate: jasmine.createSpy('navigate'),
+		navigate: jest.fn(),
 	};
 
 	configureTestSuite(() => {
@@ -82,9 +82,8 @@ describe('ChangePasswordComponent', () => {
 
 	it('should change password', () => {
 		const dummyData: String = 'Credential changed';
-		spyOn(registerService, 'changePassword')
-			.and
-			.returnValue(of(<string> dummyData));
+		jest.spyOn(registerService, 'changePassword')
+			.mockReturnValue(of(<string> dummyData));
 		component.onSubmit();
 		fixture.detectChanges();
 		expect(registerService.changePassword)
@@ -93,9 +92,8 @@ describe('ChangePasswordComponent', () => {
 
 	it('should not change password', () => {
 		const dummyData = { staus : 400 };
-		spyOn(registerService, 'changePassword')
-			.and
-			.returnValue(of(<any> dummyData));
+		jest.spyOn(registerService, 'changePassword')
+			.mockReturnValue(of(<any> dummyData));
 		component.onSubmit();
 		fixture.detectChanges();
 		expect(registerService.changePassword)
@@ -132,9 +130,8 @@ describe('ChangePasswordComponent', () => {
 
 	it('shold change pass if certficate is present', () => {
 		const dummyData = true;
-		spyOn(component, 'checkIPConnection')
-			.and
-			.returnValue(of(<boolean> dummyData));
+		jest.spyOn(component, 'checkIPConnection')
+			.mockReturnValue(of(<boolean> dummyData));
 		component.onContinue();
 		fixture.detectChanges();
 		expect(component.checkIPConnection)
@@ -145,9 +142,8 @@ describe('ChangePasswordComponent', () => {
 
 	it('shold instruct if certficate is not present', () => {
 		const dummyData = false;
-		spyOn(component, 'checkIPConnection')
-			.and
-			.returnValue(of(<boolean> dummyData));
+		jest.spyOn(component, 'checkIPConnection')
+			.mockReturnValue(of(<boolean> dummyData));
 		component.onContinue();
 		fixture.detectChanges();
 		expect(component.checkIPConnection)
@@ -164,8 +160,8 @@ describe('ChangePasswordComponent', () => {
 
 	it('should handle api failure ', fakeAsync(() => {
 
-		spyOn(registerService, 'changePassword').and
-		.returnValue(throwError(new HttpErrorResponse({ status: 400,
+		jest.spyOn(registerService, 'changePassword')
+		.mockReturnValue(throwError(new HttpErrorResponse({ status: 400,
 			statusText: 'Resource not found',
 		})));
 		component.onSubmit();
@@ -178,4 +174,5 @@ describe('ChangePasswordComponent', () => {
 			.toBeFalsy();
 		});
 	}));
+
 });

@@ -132,7 +132,7 @@ export const CriticalBugScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 200,
+					delay: 35,
 					description: 'Critical Bug State Counts',
 					response: {
 						body: mockCounts,
@@ -159,7 +159,7 @@ export const CriticalBugScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 500,
+					delay: 30,
 					description: 'Critical Bugs - Page 1',
 					response: {
 						body: MockData(10, 1, null, null, 4),
@@ -177,7 +177,7 @@ export const CriticalBugScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 500,
+					delay: 30,
 					description: 'Critical Bugs - Page 2',
 					response: {
 						body: MockData(10, 2, null, null, 4),
@@ -195,7 +195,7 @@ export const CriticalBugScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 200,
+					delay: 35,
 					description: 'Critical Bug Get CSCto03123',
 					response: {
 						body: MockData(1, 1, [], ['CSCto03123']),
@@ -213,7 +213,7 @@ export const CriticalBugScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 200,
+					delay: 35,
 					description: 'Critical Bug Get CSCva61927',
 					response: {
 						body: MockData(1, 1, [], ['CSCva61927']),
@@ -231,7 +231,7 @@ export const CriticalBugScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 500,
+					delay: 30,
 					description: 'Critical Bugs',
 					response: {
 						body: MockData(10, 1),
@@ -249,7 +249,7 @@ export const CriticalBugScenarios = [
 					selected: false,
 				},
 				{
-					delay: 500,
+					delay: 30,
 					description: 'Critical Bugs - Page 1',
 					response: {
 						body: MockData(10, 1, null, null, 4),
@@ -267,7 +267,7 @@ export const CriticalBugScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 200,
+					delay: 35,
 					description: 'Critical Bugs for FOC1544Y16T',
 					response: {
 						body: MockData(10, 1),
@@ -285,7 +285,7 @@ export const CriticalBugScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 200,
+					delay: 35,
 					description: 'Critical Bugs (New)',
 					response: {
 						body: MockData(10, 1, ['new']),
@@ -303,7 +303,7 @@ export const CriticalBugScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 500,
+					delay: 30,
 					description: 'Critical Bugs (Resolved)',
 					response: {
 						body: MockData(10, 1, ['resolved']),
@@ -321,7 +321,7 @@ export const CriticalBugScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 200,
+					delay: 35,
 					description: 'Critical Bugs for Asset',
 					response: {
 						body: MockData(10, 1),
@@ -339,7 +339,7 @@ export const CriticalBugScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 200,
+					delay: 35,
 					description: 'Critical Bugs - Count',
 					response: {
 						body: MockData(1, 1),
@@ -357,7 +357,7 @@ export const CriticalBugScenarios = [
 		scenarios: {
 			HEAD: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Critical Bugs - Count',
 					response: {
 						headers: new HttpHeaders({

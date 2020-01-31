@@ -92,7 +92,7 @@ export const FieldNoticeAdvisoryScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 500,
+					delay: 30,
 					description: 'Field Notice Advisories',
 					response: {
 						body: MockData(10, 1),
@@ -101,7 +101,7 @@ export const FieldNoticeAdvisoryScenarios = [
 					selected: true,
 				},
 				{
-					delay: 250,
+					delay: 38,
 					description: 'Field Notice Advisories - Unreachable',
 					response: {
 						body: { },
@@ -110,7 +110,7 @@ export const FieldNoticeAdvisoryScenarios = [
 					selected: false,
 				},
 				{
-					delay: 500,
+					delay: 30,
 					description: 'Field Notice Advisories - Page 1',
 					response: {
 						body: MockData(10, 1),
@@ -128,7 +128,7 @@ export const FieldNoticeAdvisoryScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 500,
+					delay: 30,
 					description: 'Field Notice Advisories - Page 2',
 					response: {
 						body: MockData(10, 2, 3),
@@ -146,7 +146,7 @@ export const FieldNoticeAdvisoryScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 500,
+					delay: 30,
 					description: 'Field Notice Advisories - Page 3',
 					response: {
 						body: MockData(10, 3, 3),
@@ -164,7 +164,7 @@ export const FieldNoticeAdvisoryScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 350,
+					delay: 44,
 					description: 'Field Notice Advisories for FOC1544Y16T',
 					response: {
 						body: MockData(10, 1),
@@ -191,7 +191,7 @@ export const FieldNoticeAdvisoryScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 250,
+					delay: 38,
 					description: 'Field Notice Advisories - Count',
 					response: {
 						body: MockData(1, 1),

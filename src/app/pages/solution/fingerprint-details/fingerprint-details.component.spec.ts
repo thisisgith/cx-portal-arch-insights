@@ -38,7 +38,7 @@ describe('FingerprintDetailsComponent', () => {
 	});
 
 	it('should handle on panel hidden', () => {
-		const panelCloseSpy = spyOn(component, 'onAllPanelsClose');
+		const panelCloseSpy = jest.spyOn(component, 'onAllPanelsClose');
 
 		component.handleHidden();
 		expect(panelCloseSpy)
@@ -46,9 +46,10 @@ describe('FingerprintDetailsComponent', () => {
 	});
 
 	it('should reset stack service', () => {
-		spyOn(detailsPanelStackService, 'reset');
+		jest.spyOn(detailsPanelStackService, 'reset');
 		component.onAllPanelsClose();
 		expect(detailsPanelStackService.reset)
 			.toHaveBeenCalled();
 	});
+
 });

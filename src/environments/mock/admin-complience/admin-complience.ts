@@ -72,7 +72,7 @@ export const AdminComplience = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Admin Complience Data',
 					response: {
 						body: leftSideResponse,
@@ -89,7 +89,7 @@ export const AdminComplience = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Admin Complience Data',
 					response: {
 						body: rightSideResponse,

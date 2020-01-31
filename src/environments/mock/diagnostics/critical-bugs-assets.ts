@@ -169,7 +169,7 @@ export const CriticalBugAssetsScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 200,
+					delay: 35,
 					description: 'Critical Bug CSCto03123 Assets',
 					response: {
 						body: MockData(10, 1),
@@ -186,7 +186,7 @@ export const CriticalBugAssetsScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 200,
+					delay: 35,
 					description: 'Critical Bug CSCto03123 Assets',
 					response: {
 						body: MockData(15, 2),
@@ -203,7 +203,7 @@ export const CriticalBugAssetsScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 250,
+					delay: 38,
 					description: 'Critical Bug CSCva61927 Assets',
 					response: {
 						body: MockData(10, 1),

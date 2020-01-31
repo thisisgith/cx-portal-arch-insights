@@ -167,4 +167,5 @@ describe('ASDAPIService', () => {
 				req.error(new ErrorEvent('401'), { status: 401, statusText: 'Bad Request' });
 			})),
 	);
+
 });

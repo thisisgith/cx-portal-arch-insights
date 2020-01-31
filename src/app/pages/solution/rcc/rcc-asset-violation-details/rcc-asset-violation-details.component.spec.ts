@@ -11,7 +11,6 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { environment } from '@environment';
 import { ActivatedRoute } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
-
 describe('RccAssetViolationDetailsComponent', () => {
 	let component: RccAssetViolationDetailsComponent;
 	let fixture: ComponentFixture<RccAssetViolationDetailsComponent>;
@@ -58,12 +57,10 @@ describe('RccAssetViolationDetailsComponent', () => {
 			.toBeTruthy();
 	});
 	it('should load filter and table grid data and display', fakeAsync(() => {
-		spyOn(rccAssetDetailsService, 'getAssetSummaryData')
-			.and
-			.returnValue(of(RCCScenarios[1].scenarios.GET[0].response.body));
-		spyOn(rccAssetDetailsService, 'getRccAssetFilterData')
-			.and
-			.returnValue(of(RCCScenarios[0].scenarios.GET[0].response.body));
+		jest.spyOn(rccAssetDetailsService, 'getAssetSummaryData')
+			.mockReturnValue(of(RCCScenarios[1].scenarios.GET[0].response.body));
+		jest.spyOn(rccAssetDetailsService, 'getRccAssetFilterData')
+			.mockReturnValue(of(RCCScenarios[0].scenarios.GET[0].response.body));
 		fixture.detectChanges();
 		component.assetRowParams = {
 			customerId: '7293498',
@@ -97,9 +94,8 @@ describe('RccAssetViolationDetailsComponent', () => {
 			sortBy: '',
 			sortOrder: '',
 		};
-		spyOn(rccAssetDetailsService, 'getAssetSummaryData')
-			.and
-			.returnValue(of(RCCScenarios[1].scenarios.GET[0].response.body));
+		jest.spyOn(rccAssetDetailsService, 'getAssetSummaryData')
+			.mockReturnValue(of(RCCScenarios[1].scenarios.GET[0].response.body));
 		component.onPolicyGroupSelection(component.assetRowParams);
 		tick();
 		expect(component.rccAssetPolicyTableData)
@@ -119,9 +115,8 @@ describe('RccAssetViolationDetailsComponent', () => {
 		};
 		tick();
 		component.onPolicySeveritySelection(component.assetRowParams);
-		spyOn(rccAssetDetailsService, 'getAssetSummaryData')
-			.and
-			.returnValue(of(RCCScenarios[1].scenarios.GET[0].response.body));
+		jest.spyOn(rccAssetDetailsService, 'getAssetSummaryData')
+			.mockReturnValue(of(RCCScenarios[1].scenarios.GET[0].response.body));
 		expect(component.rccAssetPolicyTableData)
 			.toBeDefined();
 	}));
@@ -146,9 +141,8 @@ describe('RccAssetViolationDetailsComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(rccAssetDetailsService, 'getAssetSummaryData')
-		.and
-		.returnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(rccAssetDetailsService, 'getAssetSummaryData')
+		.mockReturnValue(throwError(new HttpErrorResponse(error)));
 		tick();
 		component.getAssetPolicyGridData();
 		expect(component.errorResult)
@@ -167,12 +161,10 @@ describe('RccAssetViolationDetailsComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(rccAssetDetailsService, 'getAssetSummaryData')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(rccAssetDetailsService, 'getRccAssetFilterData')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(rccAssetDetailsService, 'getAssetSummaryData')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(rccAssetDetailsService, 'getRccAssetFilterData')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
 		component.assetRowParams = {
 			customerId: '7293498',
 			pageIndex: 0,
@@ -200,7 +192,7 @@ describe('RccAssetViolationDetailsComponent', () => {
 				previousValue: selectedPreviousAssetData,
 			},
 		});
-		spyOn(component, 'loadData');
+		jest.spyOn(component, 'loadData');
 		tick();
 		expect(component.loadData)
 			.toHaveBeenCalledTimes(0);
@@ -243,12 +235,10 @@ describe('RccAssetViolationDetailsComponent', () => {
 			message: 'SUCCESS',
 			status: 200,
 		};
-		spyOn(rccAssetDetailsService, 'getAssetSummaryData')
-			.and
-			.returnValue(of(emptyAssetDataDetails));
-		spyOn(rccAssetDetailsService, 'getRccAssetFilterData')
-			.and
-			.returnValue(of(emptyViolationDataDetails));
+		jest.spyOn(rccAssetDetailsService, 'getAssetSummaryData')
+			.mockReturnValue(of(emptyAssetDataDetails));
+		jest.spyOn(rccAssetDetailsService, 'getRccAssetFilterData')
+			.mockReturnValue(of(emptyViolationDataDetails));
 		component.loadData();
 		tick();
 		expect(component.initialLoading)
@@ -285,12 +275,10 @@ describe('RccAssetViolationDetailsComponent', () => {
 			message: 'SUCCESS',
 			status: 200,
 		};
-		spyOn(rccAssetDetailsService, 'getAssetSummaryData')
-			.and
-			.returnValue(of(emptyAssetDataDetails));
-		spyOn(rccAssetDetailsService, 'getRccAssetFilterData')
-			.and
-			.returnValue(of(emptyViolationDataDetails));
+		jest.spyOn(rccAssetDetailsService, 'getAssetSummaryData')
+			.mockReturnValue(of(emptyAssetDataDetails));
+		jest.spyOn(rccAssetDetailsService, 'getRccAssetFilterData')
+			.mockReturnValue(of(emptyViolationDataDetails));
 		component.loadData();
 		tick();
 		expect(component.tableOffset)
@@ -309,12 +297,12 @@ describe('RccAssetViolationDetailsComponent', () => {
 			sortOrder: '',
 		};
 		const assetViolations = undefined;
-		spyOn(rccAssetDetailsService, 'getAssetSummaryData')
-			.and
-			.returnValue(of(assetViolations));
+		jest.spyOn(rccAssetDetailsService, 'getAssetSummaryData')
+			.mockReturnValue(of(assetViolations));
 		tick();
 		component.getAssetPolicyGridData();
 		expect(component.tableOffset)
 			.toEqual(0);
 	}));
+
 });

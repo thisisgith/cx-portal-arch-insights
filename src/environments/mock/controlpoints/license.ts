@@ -34,7 +34,7 @@ export const LicenseScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 200,
+					delay: 35,
 					description: 'License data',
 					response: {
 						body: mockData,

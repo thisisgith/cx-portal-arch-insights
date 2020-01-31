@@ -28,4 +28,5 @@ describe('SecurityComponent', () => {
 		expect(component)
 			.toBeTruthy();
 	});
+
 });

@@ -32,4 +32,5 @@ describe('ReachabilityChartComponent', () => {
 			.toBeTruthy();
 		component.ngOnDestroy();
 	});
+
 });

@@ -146,7 +146,7 @@ describe('EntitlementUtilityService', () => {
 		const whitelistRoles = testRole;
 		const cxLevel = testCxLevel;
 
-		spyOn(service, 'checkRoleAndLevel');
+		jest.spyOn(service, 'checkRoleAndLevel');
 
 		const subscription = service.getUserCheckLevelAndRole({ whitelistRoles, cxLevel });
 		subscription.subscribe(
@@ -265,4 +265,5 @@ describe('EntitlementUtilityService', () => {
 			},
 		);
 	});
+
 });

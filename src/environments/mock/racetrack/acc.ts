@@ -170,7 +170,7 @@ export const ACCScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(ACC) IBN-Campus Network Assurance-Onboard',
 					response: {
 						body: MockACC('IBN', 'Campus Network Assurance', 'Onboard', ''),
@@ -179,7 +179,7 @@ export const ACCScenarios = [
 					selected: true,
 				},
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(ACC) IBN-Campus Network Assurance-Onboard-allButRecommended',
 					response: {
 						body: MockACC('IBN', 'Campus Network Assurance', 'Onboard', 'allButRecommended'),
@@ -188,7 +188,7 @@ export const ACCScenarios = [
 					selected: false,
 				},
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(ACC) IBN-Campus Network Assurance-Onboard-Empty',
 					response: {
 						body: {
@@ -202,7 +202,7 @@ export const ACCScenarios = [
 					selected: false,
 				},
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(ACC) IBN-Campus Network Assurance-Onboard-oneRecommended',
 					response: {
 						body: MockACC('IBN', 'Campus Network Assurance', 'Onboard', 'oneRecommended'),
@@ -211,7 +211,7 @@ export const ACCScenarios = [
 					selected: false,
 				},
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(ACC) IBN-Campus Network Assurance-Onboard-twoRecommended',
 					response: {
 						body: MockACC('IBN', 'Campus Network Assurance', 'Onboard', 'twoRecommended'),
@@ -220,7 +220,7 @@ export const ACCScenarios = [
 					selected: false,
 				},
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(ACC) IBN-Campus Network Assurance-Onboard-oneNonRecommended',
 					response: {
 						body: MockACC('IBN', 'Campus Network Assurance', 'Onboard', 'oneNonRecommended'),
@@ -229,7 +229,7 @@ export const ACCScenarios = [
 					selected: false,
 				},
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(ACC) IBN-Campus Network Assurance-Onboard-completedInProgress',
 					response: {
 						body: MockACC('IBN', 'Campus Network Assurance', 'Onboard',
@@ -239,7 +239,7 @@ export const ACCScenarios = [
 					selected: false,
 				},
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(ACC) IBN-Campus Network Assurance-Onboard-twoCompleted',
 					response: {
 						body: MockACC('IBN', 'Campus Network Assurance', 'Onboard', 'twoCompleted'),
@@ -248,7 +248,7 @@ export const ACCScenarios = [
 					selected: false,
 				},
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(ACC) IBN-Campus Network Assurance-Onboard-twoInProgress',
 					response: {
 						body: MockACC('IBN', 'Campus Network Assurance', 'Onboard', 'twoInProgress'),
@@ -257,7 +257,7 @@ export const ACCScenarios = [
 					selected: false,
 				},
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(ACC) IBN-Campus Network Assurance-Onboard-twoRequested',
 					response: {
 						body: MockACC('IBN', 'Campus Network Assurance', 'Onboard', 'twoRequested'),
@@ -266,7 +266,7 @@ export const ACCScenarios = [
 					selected: false,
 				},
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(ACC) IBN-Campus Network Assurance-Onboard-twoBookmarked',
 					response: {
 						body: MockACC('IBN', 'Campus Network Assurance', 'Onboard', 'twoBookmarked'),
@@ -275,7 +275,7 @@ export const ACCScenarios = [
 					selected: false,
 				},
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(ACC) IBN-Campus Network Assurance-Onboard-twoWithPartner',
 					response: {
 						body: MockACC('IBN', 'Campus Network Assurance', 'Onboard', 'twoWithPartner'),
@@ -284,7 +284,7 @@ export const ACCScenarios = [
 					selected: false,
 				},
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(ACC) IBN-Campus Network Assurance-Onboard-twoWithBlankPartner',
 					response: {
 						body: MockACC('IBN', 'Campus Network Assurance', 'Onboard', 'twoWithBlankPartner'),
@@ -293,7 +293,7 @@ export const ACCScenarios = [
 					selected: false,
 				},
 				{
-					delay: Math.floor(Math.random() * 2000 + 500),
+					delay: 30,
 					description: '(ACC) IBN-Campus Network Assurance-Onboard-feedbackNeeded',
 					response: {
 						body: MockACC('IBN', 'Campus Network Assurance', 'Onboard', 'feedbackNeeded'),
@@ -312,7 +312,7 @@ export const ACCScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(ACC) IBN-Campus Network Assurance-Implement-twoRecommended',
 					response: {
 						body: MockACC('IBN', 'Campus Network Assurance', 'Implement', 'twoRecommended'),
@@ -331,7 +331,7 @@ export const ACCScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(ACC) IBN-Campus Network Assurance-Use-twoRecommended',
 					response: {
 						body: MockACC('IBN', 'Campus Network Assurance', 'Use', 'twoRecommended'),
@@ -350,7 +350,7 @@ export const ACCScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(ACC) IBN-Campus Network Segmentation-Onboard',
 					response: {
 						body: MockACC('IBN', 'Campus Network Segmentation', 'Onboard', ''),
@@ -368,7 +368,7 @@ export const ACCScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(ACC) IBN-Scalable Access Policy-Onboard',
 					response: {
 						body: MockACC('IBN', 'Scalable Access Policy', 'Onboard', ''),
@@ -386,7 +386,7 @@ export const ACCScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(ACC) IBN-Network Device Onboarding-Onboard',
 					response: {
 						body: MockACC('IBN', 'Network Device Onboarding', 'Onboard', ''),
@@ -404,7 +404,7 @@ export const ACCScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(ACC) IBN-Campus Software Image Management-Onboard',
 					response: {
 						body: MockACC('IBN', 'Campus Software Image Management', 'Onboard', ''),
@@ -422,7 +422,7 @@ export const ACCScenarios = [
 		scenarios: {
 			POST: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: `(ACC) IBN-Bookmark-${accId1}`,
 					response: {
 						status: 200,
@@ -438,7 +438,7 @@ export const ACCScenarios = [
 		scenarios: {
 			POST: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: `(ACC) IBN-Bookmark-${accId2}`,
 					response: {
 						status: 200,
@@ -454,7 +454,7 @@ export const ACCScenarios = [
 		scenarios: {
 			POST: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: `(ACC) IBN-Bookmark-${accId3}`,
 					response: {
 						status: 200,
@@ -470,7 +470,7 @@ export const ACCScenarios = [
 		scenarios: {
 			POST: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: `(ACC) IBN-Bookmark-${accId4}`,
 					response: {
 						status: 200,
@@ -486,7 +486,7 @@ export const ACCScenarios = [
 		scenarios: {
 			POST: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(ACC) IBN-ACCRequestSubmit1',
 					response: {
 						status: 200,
@@ -494,7 +494,7 @@ export const ACCScenarios = [
 					selected: true,
 				},
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(ACC) IBN-WirelessAssurance/SDAccess-Onboard ACCRequestSubmit1 Error',
 					response: {
 						status: 500,
@@ -510,7 +510,7 @@ export const ACCScenarios = [
 		scenarios: {
 			POST: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: `(ACC) IBN-Bookmark-${accId6}`,
 					response: {
 						status: 200,
@@ -526,7 +526,7 @@ export const ACCScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(ATX) IBN-Campus Network Assurance-Onboard-twoProviders(293531,293532)',
 					response: {
 						body: {
@@ -548,7 +548,7 @@ export const ACCScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(ATX) IBN-Campus Network Assurance-Onboard-InProgress-Filter',
 					response: {
 						body: {

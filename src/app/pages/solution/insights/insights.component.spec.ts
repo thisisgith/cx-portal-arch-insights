@@ -8,7 +8,6 @@ import { OptimalSoftwareVersionComponent } from '../osv/osv.component';
 import { RiskMitigationComponent } from '../risk-mitigation/risk-mitigation.component';
 import { OptimalSoftwareVersionModule } from '../osv/osv.module';
 import { RiskMitigationModule } from '../risk-mitigation/risk-mitigation.module';
-
 describe('InsightsComponent', () => {
 	let component: InsightsComponent;
 	let fixture: ComponentFixture<InsightsComponent>;
@@ -44,4 +43,5 @@ describe('InsightsComponent', () => {
 		expect(component)
 			.toBeTruthy();
 	});
+
 });

@@ -86,7 +86,7 @@ describe('APIxAccountInterceptor', () => {
 
 	it('should add user / account information as headers and params for SDP origin APIs', () => {
 
-		spyOn(req, 'clone');
+		jest.spyOn(req, 'clone');
 
 		const retValue = {
 			setHeaders: {
@@ -114,9 +114,7 @@ describe('APIxAccountInterceptor', () => {
 	it('should ignore non-SDP origin APIs', () => {
 		apixIdentityService.testOrigin = (_url: any) => OriginType.RMA;
 
-		spyOn(next, 'handle')
-			.and
-			.callThrough();
+		jest.spyOn(next, 'handle');
 
 		apixAccountInterceptor.intercept(req, next)
 		.subscribe();
@@ -124,4 +122,5 @@ describe('APIxAccountInterceptor', () => {
 		expect(next.handle)
 			.toHaveBeenCalledWith(req);
 	});
+
 });

@@ -31,7 +31,7 @@ export const VulnerabilityScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'System Advisory Counts',
 					response: {
 						body: mockAdvisoryCounts,
@@ -49,7 +49,7 @@ export const VulnerabilityScenarios = [
 					selected: false,
 				},
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Advisory Counts - Missing keys',
 					response: {
 						body: _.pick(mockAdvisoryCounts, ['bugs']),
@@ -58,7 +58,7 @@ export const VulnerabilityScenarios = [
 					selected: true,
 				},
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Advisory Counts - Large',
 					response: {
 						body: mockLargeAdvisoryCounts,

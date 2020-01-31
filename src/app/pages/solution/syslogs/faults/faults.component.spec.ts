@@ -11,7 +11,6 @@ import { SimpleChanges, SimpleChange } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { UserResolve } from '@utilities';
 import { RacetrackInfoService } from '@services';
-
 describe('FaultsComponent', () => {
 
 	let component: FaultsComponent;
@@ -46,18 +45,14 @@ describe('FaultsComponent', () => {
 	});
 
 	it('should build table on in it', () => {
-		spyOn(racetrackInfoService, 'getCurrentTechnology')
-			.and
-			.callThrough();
+		jest.spyOn(racetrackInfoService, 'getCurrentTechnology');
 		component.ngOnInit();
 		expect(racetrackInfoService.getCurrentTechnology)
 			.toHaveBeenCalled();
 	});
 
 	it('should change on updating the filter', () => {
-		spyOn(component, 'getFaultData')
-			.and
-			.callThrough();
+		jest.spyOn(component, 'getFaultData');
 		const firstChange: SimpleChanges = {
 			faultFilter: new SimpleChange({ }, { faults: 'Detected' }, true),
 		};
@@ -74,9 +69,8 @@ describe('FaultsComponent', () => {
 	});
 
 	it('should change to active on updating the filter', () => {
-		spyOn(faultService, 'getFaultDetails')
-			.and
-			.returnValue(of<any>(FaultScenarios[0].scenarios.POST[0].response.body));
+		jest.spyOn(faultService, 'getFaultDetails')
+			.mockReturnValue(of<any>(FaultScenarios[0].scenarios.POST[0].response.body));
 		const changes: SimpleChanges = {
 			faultFilter: new SimpleChange({ }, { faults: 'Not Detected' }, false),
 		};
@@ -86,9 +80,8 @@ describe('FaultsComponent', () => {
 	});
 
 	it('should get fault data', () => {
-		spyOn(faultService, 'getFaultDetails')
-			.and
-			.returnValue(of<any>(FaultScenarios[0].scenarios.POST[0].response.body));
+		jest.spyOn(faultService, 'getFaultDetails')
+			.mockReturnValue(of<any>(FaultScenarios[0].scenarios.POST[0].response.body));
 		component.searchParams = {
 			customerId: '231215372',
 			tacEnabled: 'active',
@@ -103,9 +96,8 @@ describe('FaultsComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(faultService, 'getFaultDetails')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(faultService, 'getFaultDetails')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
 		component.getFaultData(component.searchParams);
 		expect(faultService.getFaultDetails)
 			.toHaveBeenCalled();
@@ -126,9 +118,8 @@ describe('FaultsComponent', () => {
 	});
 
 	it('should update the pager', () => {
-		spyOn(faultService, 'getFaultDetails')
-			.and
-			.returnValue(of<any>(FaultScenarios[0].scenarios.POST[0].response.body));
+		jest.spyOn(faultService, 'getFaultDetails')
+			.mockReturnValue(of<any>(FaultScenarios[0].scenarios.POST[0].response.body));
 		const pageInfo = {
 			page: 1,
 		};
@@ -144,9 +135,8 @@ describe('FaultsComponent', () => {
 	});
 
 	it('should update on search', () => {
-		spyOn(faultService, 'getFaultDetails')
-			.and
-			.returnValue(of<any>(FaultScenarios[4].scenarios.POST[0].response.body));
+		jest.spyOn(faultService, 'getFaultDetails')
+			.mockReturnValue(of<any>(FaultScenarios[4].scenarios.POST[0].response.body));
 		const searchEvent = {
 			search: 'abc',
 		};
@@ -156,9 +146,8 @@ describe('FaultsComponent', () => {
 	});
 
 	it('should call constructor', () => {
-		spyOn(userResolve, 'getCustomerId')
-			.and
-			.returnValue(of<string>('2431199'));
+		jest.spyOn(userResolve, 'getCustomerId')
+			.mockReturnValue(of<string>('2431199'));
 		TestBed.createComponent(FaultsComponent);
 		fixture.detectChanges();
 		expect(userResolve.getCustomerId)

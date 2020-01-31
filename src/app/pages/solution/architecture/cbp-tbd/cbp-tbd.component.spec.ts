@@ -56,9 +56,8 @@ describe('CbpTbdComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(service, 'getAllCBPExceptionDetails')
-			.and
-			.returnValue(
+		jest.spyOn(service, 'getAllCBPExceptionDetails')
+			.mockReturnValue(
 				throwError(new HttpErrorResponse(error)),
 			);
 		component.getData();
@@ -71,9 +70,8 @@ describe('CbpTbdComponent', () => {
 	});
 
 	it('should call getAllCBPExceptionDetails', () => {
-		spyOn(service, 'getAllCBPExceptionDetails')
-		.and
-		.returnValue(of({ exceptionDatas: [] }));
+		jest.spyOn(service, 'getAllCBPExceptionDetails')
+		.mockReturnValue(of({ exceptionDatas: [] }));
 		component.getData();
 		expect(service.getAllCBPExceptionDetails)
 			.toHaveBeenCalled();
@@ -123,4 +121,5 @@ describe('CbpTbdComponent', () => {
 		expect(component.exceptionDatas[0].active)
 			.toBeTruthy();
 	});
+
 });

@@ -72,7 +72,7 @@ export const AssetLinkScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Asset data',
 					response: {
 						body: getAssetLinkAssetData,
@@ -89,7 +89,7 @@ export const AssetLinkScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Element data',
 					response: {
 						body: getAssetLinkElementData,

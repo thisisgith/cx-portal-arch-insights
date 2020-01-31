@@ -271,7 +271,7 @@ describe('AdvisoryDetailsComponent', () => {
 	}));
 
 	it('should handle on panel hidden', () => {
-		const panelCloseSpy = spyOn(component, 'onAllPanelsClose');
+		const panelCloseSpy = jest.spyOn(component, 'onAllPanelsClose');
 		component.handleHidden(false);
 		expect(panelCloseSpy)
 			.not
@@ -283,7 +283,7 @@ describe('AdvisoryDetailsComponent', () => {
 	});
 
 	it('should pop panel on back', () => {
-		spyOn(detailsPanelStackService, 'pop');
+		jest.spyOn(detailsPanelStackService, 'pop');
 
 		component.onPanelBack();
 
@@ -292,11 +292,12 @@ describe('AdvisoryDetailsComponent', () => {
 	});
 
 	it('should reset stack service', () => {
-		spyOn(detailsPanelStackService, 'reset');
+		jest.spyOn(detailsPanelStackService, 'reset');
 
 		component.onAllPanelsClose();
 
 		expect(detailsPanelStackService.reset)
 			.toHaveBeenCalled();
 	});
+
 });

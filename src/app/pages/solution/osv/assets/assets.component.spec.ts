@@ -10,7 +10,6 @@ import { OSVScenarios } from '@mock';
 import { HttpErrorResponse } from '@angular/common/http';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MicroMockModule } from '@cui-x-views/mock';
-
 describe('AssetsComponent', () => {
 	let component: AssetsComponent;
 	let fixture: ComponentFixture<AssetsComponent>;
@@ -44,9 +43,8 @@ describe('AssetsComponent', () => {
 	});
 
 	it('should call asset list on init', () => {
-		spyOn(osvService, 'getAssets')
-			.and
-			.returnValue(of(<AssetsResponse> OSVScenarios[4].scenarios.GET[0].response.body));
+		jest.spyOn(osvService, 'getAssets')
+			.mockReturnValue(of(<AssetsResponse> OSVScenarios[4].scenarios.GET[0].response.body));
 		component.ngOnInit();
 		fixture.detectChanges();
 		expect(osvService.getAssets)
@@ -64,10 +62,9 @@ describe('AssetsComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(component, 'buildTable');
-		spyOn(osvService, 'getAssets')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(component, 'buildTable');
+		jest.spyOn(osvService, 'getAssets')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
 		component.ngOnInit();
 		fixture.detectChanges();
 		expect(osvService.getAssets)
@@ -77,9 +74,8 @@ describe('AssetsComponent', () => {
 	});
 
 	it('should refresh on sort', () => {
-		spyOn(osvService, 'getAssets')
-			.and
-			.returnValue(of(<AssetsResponse> OSVScenarios[4].scenarios.GET[0].response.body));
+		jest.spyOn(osvService, 'getAssets')
+			.mockReturnValue(of(<AssetsResponse> OSVScenarios[4].scenarios.GET[0].response.body));
 		component.ngOnInit();
 		fixture.detectChanges();
 		component.sortTable({
@@ -110,9 +106,8 @@ describe('AssetsComponent', () => {
 	});
 
 	it('should not call getAssets if the column is not sortable', () => {
-		spyOn(osvService, 'getAssets')
-			.and
-			.returnValue(of(<AssetsResponse> OSVScenarios[4].scenarios.GET[0].response.body));
+		jest.spyOn(osvService, 'getAssets')
+			.mockReturnValue(of(<AssetsResponse> OSVScenarios[4].scenarios.GET[0].response.body));
 		fixture.detectChanges();
 		component.sortTable({
 			key: 'Key1',
@@ -125,9 +120,8 @@ describe('AssetsComponent', () => {
 	});
 
 	it('should refresh on page change', () => {
-		spyOn(osvService, 'getAssets')
-			.and
-			.returnValue(of(<AssetsResponse> OSVScenarios[4].scenarios.GET[0].response.body));
+		jest.spyOn(osvService, 'getAssets')
+			.mockReturnValue(of(<AssetsResponse> OSVScenarios[4].scenarios.GET[0].response.body));
 		component.onPageChanged({ page: 2 });
 		fixture.detectChanges();
 		expect(component.assetsParams.pageIndex)
@@ -218,9 +212,8 @@ describe('AssetsComponent', () => {
 	}));
 
 	it('should show pagination info if getAssets call is success', () => {
-		spyOn(osvService, 'getAssets')
-			.and
-			.returnValue(of(<any> OSVScenarios[5].scenarios.GET[0].response.body));
+		jest.spyOn(osvService, 'getAssets')
+			.mockReturnValue(of(<any> OSVScenarios[5].scenarios.GET[0].response.body));
 		component.ngOnInit();
 		fixture.detectChanges();
 		expect(osvService.getAssets)
@@ -232,9 +225,8 @@ describe('AssetsComponent', () => {
 	});
 
 	it('should show pagination info if getAssets call is success', () => {
-		spyOn(osvService, 'getAssets')
-			.and
-			.returnValue(of(<any> OSVScenarios[4].scenarios.GET[0].response.body));
+		jest.spyOn(osvService, 'getAssets')
+			.mockReturnValue(of(<any> OSVScenarios[4].scenarios.GET[0].response.body));
 		component.ngOnInit();
 		fixture.detectChanges();
 		expect(osvService.getAssets)
@@ -246,4 +238,5 @@ describe('AssetsComponent', () => {
 		expect(component.pagination.total)
 			.toEqual(120);
 	});
+
 });

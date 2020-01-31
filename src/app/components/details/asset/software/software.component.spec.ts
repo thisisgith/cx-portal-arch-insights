@@ -46,9 +46,8 @@ describe('AssetDetailsSoftwareComponent', () => {
 		controlPointService = TestBed.get(ControlPointLicenseAPIService);
 		productAlertsService = TestBed.get(ProductAlertsService);
 		userResolve = TestBed.get(UserResolve);
-		spyOn(userResolve, 'getCustomerId')
-			.and
-			.returnValue(of('1234'));
+		jest.spyOn(userResolve, 'getCustomerId')
+			.mockReturnValue(of('1234'));
 	}));
 
 	beforeEach(() => {
@@ -72,15 +71,12 @@ describe('AssetDetailsSoftwareComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(productAlertsService, 'getSoftwareEoxBulletin')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(productAlertsService, 'getSoftwareEox')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(controlPointService, 'getLicenseUsingGET')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(productAlertsService, 'getSoftwareEoxBulletin')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(productAlertsService, 'getSoftwareEox')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(controlPointService, 'getLicenseUsingGET')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
 
 		component.ngOnInit();
 
@@ -108,15 +104,12 @@ describe('AssetDetailsSoftwareComponent', () => {
 		const mockEOLData = _.filter(MockSoftwareEOLResponse.data,
 			{ managedNeId: asset.managedNeId });
 
-		spyOn(productAlertsService, 'getSoftwareEox')
-			.and
-			.returnValue(of({ data: mockEOLData }));
-		spyOn(productAlertsService, 'getSoftwareEoxBulletin')
-			.and
-			.returnValue(of({ data: [] }));
-		spyOn(controlPointService, 'getLicenseUsingGET')
-			.and
-			.returnValue(of({ }));
+		jest.spyOn(productAlertsService, 'getSoftwareEox')
+			.mockReturnValue(of({ data: mockEOLData }));
+		jest.spyOn(productAlertsService, 'getSoftwareEoxBulletin')
+			.mockReturnValue(of({ data: [] }));
+		jest.spyOn(controlPointService, 'getLicenseUsingGET')
+			.mockReturnValue(of({ }));
 		component.ngOnInit();
 		tick();
 		fixture.detectChanges();
@@ -138,15 +131,12 @@ describe('AssetDetailsSoftwareComponent', () => {
 		const asset = MockSystemAssetsData[0];
 		component.systemAsset = asset;
 
-		spyOn(productAlertsService, 'getSoftwareEox')
-			.and
-			.returnValue(of(MockSoftwareEOLResponse));
-		spyOn(productAlertsService, 'getSoftwareEoxBulletin')
-			.and
-			.returnValue(of(MockSoftwareEOLBulletinsResponse));
-		spyOn(controlPointService, 'getLicenseUsingGET')
-			.and
-			.returnValue(of({ }));
+		jest.spyOn(productAlertsService, 'getSoftwareEox')
+			.mockReturnValue(of(MockSoftwareEOLResponse));
+		jest.spyOn(productAlertsService, 'getSoftwareEoxBulletin')
+			.mockReturnValue(of(MockSoftwareEOLBulletinsResponse));
+		jest.spyOn(controlPointService, 'getLicenseUsingGET')
+			.mockReturnValue(of({ }));
 		component.ngOnInit();
 		tick();
 		fixture.detectChanges();
@@ -166,15 +156,12 @@ describe('AssetDetailsSoftwareComponent', () => {
 		const mockEOLData = MockSoftwareEOLResponse.data[0];
 		const mockEOLBulletinData = MockSoftwareEOLBulletinsResponse.data[0];
 
-		spyOn(productAlertsService, 'getSoftwareEoxBulletin')
-			.and
-			.returnValue(of({ data: _.castArray(mockEOLBulletinData) }));
-		spyOn(productAlertsService, 'getSoftwareEox')
-			.and
-			.returnValue(of({ data: _.castArray(mockEOLData) }));
-		spyOn(controlPointService, 'getLicenseUsingGET')
-			.and
-			.returnValue(of({ }));
+		jest.spyOn(productAlertsService, 'getSoftwareEoxBulletin')
+			.mockReturnValue(of({ data: _.castArray(mockEOLBulletinData) }));
+		jest.spyOn(productAlertsService, 'getSoftwareEox')
+			.mockReturnValue(of({ data: _.castArray(mockEOLData) }));
+		jest.spyOn(controlPointService, 'getLicenseUsingGET')
+			.mockReturnValue(of({ }));
 
 		component.ngOnInit();
 		fixture.whenStable()
@@ -233,4 +220,5 @@ describe('AssetDetailsSoftwareComponent', () => {
 		expect(component.systemAsset)
 			.toEqual(newAsset);
 	});
+
 });

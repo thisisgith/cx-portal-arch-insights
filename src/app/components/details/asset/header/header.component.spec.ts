@@ -34,9 +34,8 @@ describe('AssetDetailsHeaderComponent', () => {
 	 * Build spies for our services
 	 */
 	const buildSpies = () => {
-		caseSpy = spyOn(caseService, 'read')
-			.and
-			.returnValue(of(CaseScenarios[4].scenarios.GET[0].response.body));
+		caseSpy = jest.spyOn(caseService, 'read')
+			.mockReturnValue(of(CaseScenarios[4].scenarios.GET[0].response.body));
 	};
 
 	configureTestSuite(() => {
@@ -65,9 +64,8 @@ describe('AssetDetailsHeaderComponent', () => {
 	});
 
 	it('should handle failing cases api call', () => {
-		caseSpy = spyOn(caseService, 'read')
-			.and
-			.returnValue(throwError(new HttpErrorResponse({
+		caseSpy = jest.spyOn(caseService, 'read')
+			.mockReturnValue(throwError(new HttpErrorResponse({
 				status: 404,
 				statusText: 'Resource not found',
 			})));
@@ -93,8 +91,8 @@ describe('AssetDetailsHeaderComponent', () => {
 
 		const button = fixture.debugElement.nativeElement.querySelector('.open-case-toggle-btn');
 
-		expect(button)
-			.toHaveClass('active');
+		expect(button.classList.contains('active'))
+			.toBe(true);
 	});
 
 	it('should toggle case list dropdown', () => {
@@ -169,4 +167,5 @@ describe('AssetDetailsHeaderComponent', () => {
 		expect(component.systemAsset.serialNumber)
 			.toEqual('FOC1610R0L4');
 	});
+
 });

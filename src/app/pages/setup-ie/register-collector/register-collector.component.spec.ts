@@ -20,11 +20,11 @@ describe('RegisterCollectorComponent', () => {
 	let stateService: SetupIEStateService;
 	let cpService: ControlPointIERegistrationAPIService;
 	let registerService: RegisterCollectorService;
-	let getRegSpy: jasmine.Spy;
-	let downloadSpy: jasmine.Spy;
-	let regSpy: jasmine.Spy;
-	let authTokenSpy: jasmine.Spy;
-	let getStatusSpy: jasmine.Spy;
+	let getRegSpy;
+	let downloadSpy;
+	let regSpy;
+	let authTokenSpy;
+	let getStatusSpy;
 	const blob = new Blob;
 
 	describe('with queryParams', () => {
@@ -83,21 +83,16 @@ describe('RegisterCollectorComponent', () => {
 			stateService = TestBed.get(SetupIEStateService);
 			stateService.clearState();
 			cpService = TestBed.get(ControlPointIERegistrationAPIService);
-			getRegSpy = spyOn(cpService, 'getIERegistrationUsingGET')
-				.and
-				.returnValue(of([{ registrationFileUrl: 'test' }]));
-			downloadSpy = spyOn(setupService, 'downloadFromUrl')
-				.and
-				.returnValue(of(blob));
-			regSpy = spyOn(registerService, 'registerOnline')
-				.and
-				.returnValue(of('token'));
-			authTokenSpy = spyOn(registerService, 'getAuthToken')
-				.and
-				.returnValue(of('token'));
-			getStatusSpy = spyOn(registerService, 'getStatus')
-				.and
-				.returnValue(of({ status: 'Pending' }));
+			getRegSpy = jest.spyOn(cpService, 'getIERegistrationUsingGET')
+				.mockReturnValue(of([{ registrationFileUrl: 'test' }]));
+			downloadSpy = jest.spyOn(setupService, 'downloadFromUrl')
+				.mockReturnValue(of(blob));
+			regSpy = jest.spyOn(registerService, 'registerOnline')
+				.mockReturnValue(of('token'));
+			authTokenSpy = jest.spyOn(registerService, 'getAuthToken')
+				.mockReturnValue(of('token'));
+			getStatusSpy = jest.spyOn(registerService, 'getStatus')
+				.mockReturnValue(of({ status: 'Pending' }));
 
 			fixture = TestBed.createComponent(RegisterCollectorComponent);
 			component = fixture.componentInstance;
@@ -131,10 +126,9 @@ describe('RegisterCollectorComponent', () => {
 			expect(downloadSpy)
 				.toHaveBeenCalled();
 
-			getRegSpy.and
-				.returnValue(throwError(new HttpErrorResponse({
-					status: 404,
-				})));
+			getRegSpy.mockReturnValue(throwError(new HttpErrorResponse({
+				status: 404,
+			})));
 			component.ngOnInit();
 			fixture.detectChanges();
 			expect(getRegSpy)
@@ -170,8 +164,7 @@ describe('RegisterCollectorComponent', () => {
 		});
 
 		it('should get an auth token if device is already registered', () => {
-			regSpy.and
-				.returnValue(of('Device is already register'));
+			regSpy.mockReturnValue(of('Device is already register'));
 			component.onSubmit();
 			expect(regSpy)
 				.toHaveBeenCalled();
@@ -190,8 +183,7 @@ describe('RegisterCollectorComponent', () => {
 				});
 			tick(10000);
 			let counter2 = 0;
-			getStatusSpy.and
-				.returnValue(of({ status: 'Registration Failed' }));
+			getStatusSpy.mockReturnValue(of({ status: 'Registration Failed' }));
 			const sub2 = component.pollStatus()
 				.subscribe(() => {
 					if (counter2 === 1) {
@@ -203,8 +195,7 @@ describe('RegisterCollectorComponent', () => {
 				});
 			tick(10000);
 			let counter3 = 0;
-			getStatusSpy.and
-				.returnValue(of({ status: 'Registered' }));
+			getStatusSpy.mockReturnValue(of({ status: 'Registered' }));
 			const sub3 = component.pollStatus()
 				.subscribe(() => {
 					if (counter3 === 1) {
@@ -216,8 +207,8 @@ describe('RegisterCollectorComponent', () => {
 		}));
 
 		it('should catch registration error', () => {
-			regSpy.and
-				.returnValue(throwError(new HttpErrorResponse({
+			regSpy
+				.mockReturnValue(throwError(new HttpErrorResponse({
 					status: 404,
 				})));
 			component.onSubmit();
@@ -227,16 +218,15 @@ describe('RegisterCollectorComponent', () => {
 		});
 
 		it('should catch auth error', () => {
-			regSpy.and
-				.returnValue(of('Device is already register'));
-			authTokenSpy.and
-				.returnValue(throwError(new HttpErrorResponse({
-					status: 404,
-				})));
+			regSpy.mockReturnValue(of('Device is already register'));
+			authTokenSpy.mockReturnValue(throwError(new HttpErrorResponse({
+				status: 404,
+			})));
 			component.onSubmit();
 			fixture.detectChanges();
 			expect(component.error)
 				.toBeDefined();
 		});
+
 	});
 });

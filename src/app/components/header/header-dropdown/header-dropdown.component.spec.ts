@@ -28,4 +28,5 @@ describe('HeaderDropdownComponent', () => {
 		expect(component)
 			.toBeTruthy();
 	});
+
 });

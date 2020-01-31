@@ -13,7 +13,6 @@ import { environment } from '@environment';
 import { ActivatedRoute } from '@angular/router';
 import { user, ArchitectureReviewScenarios } from '@mock';
 import { HttpErrorResponse } from '@angular/common/http';
-
 describe('ArchitectureReviewComponent', () => {
 	let component: ArchitectureReviewComponent;
 	let fixture: ComponentFixture<ArchitectureReviewComponent>;
@@ -132,18 +131,16 @@ describe('ArchitectureReviewComponent', () => {
 
 	it('should call getSDAReadinessCount', () => {
 
-		spyOn(service, 'getSDAReadinessCount')
-			.and
-			.returnValue(of(ArchitectureReviewScenarios[6].scenarios.GET[0].response.body));
+		jest.spyOn(service, 'getSDAReadinessCount')
+			.mockReturnValue(of(ArchitectureReviewScenarios[6].scenarios.GET[0].response.body));
 		component.getDevicesCount();
 		expect(service.getSDAReadinessCount)
 			.toHaveBeenCalled();
 	});
 
 	it('should not call getSDAReadinessCount', () => {
-		spyOn(service, 'getSDAReadinessCount')
-			.and
-			.returnValue(of([]));
+		jest.spyOn(service, 'getSDAReadinessCount')
+			.mockReturnValue(of([]));
 		component.getDevicesCount();
 		expect(service.getSDAReadinessCount)
 			.toHaveBeenCalled();
@@ -154,9 +151,8 @@ describe('ArchitectureReviewComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(service, 'getDevicesCount')
-			.and
-			.returnValue(
+		jest.spyOn(service, 'getDevicesCount')
+			.mockReturnValue(
 				throwError(new HttpErrorResponse(error)),
 			);
 		component.getAllDevicesCount();
@@ -170,9 +166,8 @@ describe('ArchitectureReviewComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(service, 'getDnacCount')
-			.and
-			.returnValue(
+		jest.spyOn(service, 'getDnacCount')
+			.mockReturnValue(
 				throwError(new HttpErrorResponse(error)),
 			);
 		component.getDnacCount();

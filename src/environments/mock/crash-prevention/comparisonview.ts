@@ -374,7 +374,7 @@ export const ComparisonViewScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: ' productFamily Details',
 					response: {
 						body: productFamilydeatils,
@@ -394,7 +394,7 @@ export const ComparisonViewScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'listDevice Deatils',
 					response: {
 						body: listDevicedeatils,
@@ -412,7 +412,7 @@ export const ComparisonViewScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'comparison Information',
 					response: {
 						body: comparisonInformation,
@@ -431,7 +431,7 @@ export const ComparisonViewScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'deviceInfo Response',
 					response: {
 						body: deviceInfoResponse,
@@ -450,7 +450,7 @@ export const ComparisonViewScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'fp IntelligenceInfo',
 					response: {
 						body: fpIntelligenceInfo,
@@ -469,7 +469,7 @@ export const ComparisonViewScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Ml visualizationInfo',
 					// description:'coparisonview scenarios '
 					response: {
@@ -488,7 +488,7 @@ export const ComparisonViewScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'fp IntelligenceInfo',
 					response: {
 						body: fpIntelligenceInfoNodata,
@@ -506,7 +506,7 @@ export const ComparisonViewScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'fp Similar Assets',
 					response: {
 						body: fpSimilarAssetsInfo,
@@ -524,7 +524,7 @@ export const ComparisonViewScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'fp Similar Assets',
 					response: {
 						body: fpSimilarAssetsInfoNoData,
@@ -542,7 +542,7 @@ export const ComparisonViewScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Ml visualizationInfo',
 					response: {
 						body: MlVisualizationInfoEmpty,
@@ -560,7 +560,7 @@ export const ComparisonViewScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'deviceInfo Response',
 					response: {
 						body: deviceDetailsResponse,
@@ -578,7 +578,7 @@ export const ComparisonViewScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'fp Similar Assets',
 					response: {
 						body: fpSimilarAssetsInfo,
@@ -596,7 +596,7 @@ export const ComparisonViewScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'FP compare devices',
 					response: {
 						body: comparisonInformation,

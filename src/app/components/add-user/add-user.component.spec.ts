@@ -64,9 +64,8 @@ describe('AddUserComponent', () => {
 				value_1 : 'test',
 			}],
 		};
-		spyOn(service, 'getListRolesForGivenUserUsingGET')
-			.and
-			.returnValue(of(<RoleDetailsResponseModel> (dummyData)));
+		jest.spyOn(service, 'getListRolesForGivenUserUsingGET')
+			.mockReturnValue(of(<RoleDetailsResponseModel> (dummyData)));
 		component.ngOnInit();
 		fixture.detectChanges();
 		expect(service.getListRolesForGivenUserUsingGET)
@@ -103,10 +102,9 @@ describe('AddUserComponent', () => {
 			status : 200,
 		};
 		const cuiService = TestBed.get(CuiModalService);
-		spyOn(service, 'AddNewUserUsingPOST')
-			.and
-			.returnValue(of(<UserAddResponseModel> (dummyData)));
-		spyOn(cuiService, 'hide');
+		jest.spyOn(service, 'AddNewUserUsingPOST')
+			.mockReturnValue(of(<UserAddResponseModel> (dummyData)));
+		jest.spyOn(cuiService, 'hide');
 		component.onContinue();
 		fixture.detectChanges();
 		expect(service.AddNewUserUsingPOST)
@@ -124,9 +122,8 @@ describe('AddUserComponent', () => {
 			data : [{ status: 500 }],
 			status : 500,
 		};
-		spyOn(service, 'AddNewUserUsingPOST')
-			.and
-			.returnValue(of(<UserAddResponseModel> (dummyData)));
+		jest.spyOn(service, 'AddNewUserUsingPOST')
+			.mockReturnValue(of(<UserAddResponseModel> (dummyData)));
 		component.onContinue();
 		fixture.detectChanges();
 		expect(service.AddNewUserUsingPOST)
@@ -143,9 +140,8 @@ describe('AddUserComponent', () => {
 		const dummyData: UserAddResponseModel = {
 			status : 500,
 		};
-		spyOn(service, 'AddNewUserUsingPOST')
-			.and
-			.returnValue(of(<UserAddResponseModel> (dummyData)));
+		jest.spyOn(service, 'AddNewUserUsingPOST')
+			.mockReturnValue(of(<UserAddResponseModel> (dummyData)));
 		component.onContinue();
 		fixture.detectChanges();
 		expect(service.AddNewUserUsingPOST)
@@ -157,4 +153,5 @@ describe('AddUserComponent', () => {
 		expect(component.alert.visible)
 			.toBeTruthy();
 	});
+
 });

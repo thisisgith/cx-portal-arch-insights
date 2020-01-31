@@ -83,7 +83,7 @@ describe('BubbleChartComponent', () => {
 	});
 
 	it('should emit the selected subfilter', () => {
-		const spy = spyOn(component.subfilter, 'emit');
+		const spy = jest.spyOn(component.subfilter, 'emit');
 		component.selectSubfilter({
 			point: {
 				name: 'a',
@@ -93,4 +93,5 @@ describe('BubbleChartComponent', () => {
 		(<any> expect(spy))
 			.toHaveBeenCalledWith(wrapperComponent.seriesData[0]);
 	});
+
 });

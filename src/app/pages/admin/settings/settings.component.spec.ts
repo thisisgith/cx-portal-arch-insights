@@ -14,7 +14,7 @@ describe('SettingsComponent', () => {
 	let fixture: ComponentFixture<SettingsComponent>;
 
 	const locationStub = {
-		back: jasmine.createSpy('back'),
+		back: jest.fn(),
 	};
 
 	configureTestSuite(() => {
@@ -66,4 +66,5 @@ describe('SettingsComponent', () => {
 			component.handleData();
 		});
 	});
+
 });

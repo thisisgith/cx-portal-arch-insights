@@ -13,7 +13,6 @@ import { MicroMockModule } from '@cui-x-views/mock';
 import { RouterTestingModule } from '@angular/router/testing';
 import { RiskMitigationService, HighCrashRiskDeviceCount } from '@sdp-api';
 import * as _ from 'lodash-es';
-
 describe('RiskMitigationComponent', () => {
 	let component: RiskMitigationComponent;
 	let fixture: ComponentFixture<RiskMitigationComponent>;
@@ -77,16 +76,13 @@ describe('RiskMitigationComponent', () => {
 	});
 
 	it('should fetch all data', () => {
-		spyOn(riskMitigationService, 'getAllCrashesData')
-			.and
-			.returnValue(of(RiskScenarios[0].scenarios.GET[0].response.body));
-		spyOn(riskMitigationService, 'getHighCrashRiskDeviceCountData')
-			.and
-			.returnValue(of(<HighCrashRiskDeviceCount>
+		jest.spyOn(riskMitigationService, 'getAllCrashesData')
+			.mockReturnValue(of(RiskScenarios[0].scenarios.GET[0].response.body));
+		jest.spyOn(riskMitigationService, 'getHighCrashRiskDeviceCountData')
+			.mockReturnValue(of(<HighCrashRiskDeviceCount>
 				RiskScenarios[1].scenarios.GET[0].response.body));
-		spyOn(riskMitigationService, 'getFingerPrintDeviceDetailsData')
-			.and
-			.returnValue(of(<any> { devices: [], count: 100 }));
+		jest.spyOn(riskMitigationService, 'getFingerPrintDeviceDetailsData')
+			.mockReturnValue(of(<any> { devices: [], count: 100 }));
 		component.ngOnInit();
 		fixture.detectChanges();
 		const advisoryFilter = _.find(component.filters, { key: 'timeRange' });
@@ -105,24 +101,18 @@ describe('RiskMitigationComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(riskMitigationService, 'getAllCrashesData')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(riskMitigationService, 'getDeviceDetails')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(riskMitigationService, 'getHighCrashRiskDeviceCountData')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(riskMitigationService, 'getSearchedData')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(riskMitigationService, 'getCrashHistoryForDevice')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(riskMitigationService, 'getFingerPrintDeviceDetailsData')
-		.and
-		.returnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(riskMitigationService, 'getAllCrashesData')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(riskMitigationService, 'getDeviceDetails')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(riskMitigationService, 'getHighCrashRiskDeviceCountData')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(riskMitigationService, 'getSearchedData')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(riskMitigationService, 'getCrashHistoryForDevice')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(riskMitigationService, 'getFingerPrintDeviceDetailsData')
+		.mockReturnValue(throwError(new HttpErrorResponse(error)));
 		component.ngOnInit();
 		component.clearFilters();
 		fixture.whenStable()
@@ -138,9 +128,8 @@ describe('RiskMitigationComponent', () => {
 	 * @TODO: modify test to Check Updated CrashedAssest Count
 	 */
 	it('Should get the last few days crash data', done => {
-		spyOn(riskMitigationService, 'getAllCrashesData')
-			.and
-			.returnValue(of(RiskScenarios[0].scenarios.GET[0].response.body));
+		jest.spyOn(riskMitigationService, 'getAllCrashesData')
+			.mockReturnValue(of(RiskScenarios[0].scenarios.GET[0].response.body));
 		component.ngOnInit();
 		fixture.whenStable()
 			.then(() => {
@@ -152,9 +141,8 @@ describe('RiskMitigationComponent', () => {
 	});
 
 	it('Should get all the high risks devices count', done => {
-		spyOn(riskMitigationService, 'getHighCrashRiskDeviceCountData')
-			.and
-			.returnValue(of(<HighCrashRiskDeviceCount>
+		jest.spyOn(riskMitigationService, 'getHighCrashRiskDeviceCountData')
+			.mockReturnValue(of(<HighCrashRiskDeviceCount>
 				RiskScenarios[1].scenarios.GET[0].response.body));
 		component.ngOnInit();
 		fixture.whenStable()
@@ -213,7 +201,7 @@ describe('RiskMitigationComponent', () => {
 	});
 
 	it('should get filtered results on subfilter select', () => {
-		spyOn(component, 'resetFilters');
+		jest.spyOn(component, 'resetFilters');
 		const advisoryFilter = _.find(component.filters, { key: 'timeRange' });
 		const riskScoreFilter = _.find(component.filters, { key: 'riskScore' });
 		component.filters[0].seriesData = [
@@ -307,9 +295,8 @@ describe('RiskMitigationComponent', () => {
 	});
 
 	it('Get the Total assest count ', () => {
-		spyOn(riskMitigationService, 'getTotalAssestCount')
-			.and
-			.returnValue(of(RiskScenarios[7].scenarios.GET[0].response.body));
+		jest.spyOn(riskMitigationService, 'getTotalAssestCount')
+			.mockReturnValue(of(RiskScenarios[7].scenarios.GET[0].response.body));
 		expect(component.totalAssetCount)
 			.toBeDefined();
 	});
@@ -369,14 +356,12 @@ describe('RiskMitigationComponent', () => {
 	});
 
 	it('Load data for score cards', () => {
-		const assetsCountSpy = spyOn(component, 'getTotalAssetCount')
-		.and
-			.callThrough();
-		spyOn(riskMitigationService, 'getTotalAssestCount')
-			.and
-			.returnValue(of(RiskScenarios[7].scenarios.GET[0].response.body));
+		const assetsCountSpy = jest.spyOn(component, 'getTotalAssetCount');
+		jest.spyOn(riskMitigationService, 'getTotalAssestCount')
+			.mockReturnValue(of(RiskScenarios[7].scenarios.GET[0].response.body));
 		component.loadData();
 		expect(assetsCountSpy)
 			.toHaveBeenCalled();
 	});
+
 });

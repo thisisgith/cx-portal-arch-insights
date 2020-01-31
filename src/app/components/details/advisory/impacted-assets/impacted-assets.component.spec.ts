@@ -14,6 +14,7 @@ import {
 	RacetrackScenarios,
 	MockHardwareAssetsData,
 	MockSecurityAdvisories,
+	MockSystemAssetsData,
 } from '@mock';
 import * as _ from 'lodash-es';
 import { DiagnosticsService, InventoryService, ProductAlertsService } from '@sdp-api';
@@ -93,13 +94,11 @@ describe('AdvisoryImpactedAssetsComponent', () => {
 
 		const data = getActiveBody(CriticalBugAssetsScenarios[0]).data;
 
-		spyOn(diagnosticsService, 'getCriticalBugsAssets')
-			.and
-			.returnValue(of({ data }));
+		jest.spyOn(diagnosticsService, 'getCriticalBugsAssets')
+			.mockReturnValue(of({ data }));
 
-		spyOn(inventoryService, 'getHardwareAssets')
-			.and
-			.returnValue(of({ data: MockHardwareAssetsData }));
+		jest.spyOn(inventoryService, 'getHardwareAssets')
+			.mockReturnValue(of({ data: MockHardwareAssetsData }));
 
 		component.ngOnInit();
 		sendRacetrack();
@@ -124,9 +123,22 @@ describe('AdvisoryImpactedAssetsComponent', () => {
 		component.customerId = user.info.customerId;
 		component.type = 'security';
 		component.vulnerability = 'VUL';
-		spyOn(productAlertsService, 'getSecurityAdvisories')
-			.and
-			.returnValue(of({ data: MockSecurityAdvisories }));
+		jest.spyOn(productAlertsService, 'getSecurityAdvisories')
+			.mockReturnValue(of({ data: MockSecurityAdvisories }));
+
+		component.assetIds = {
+			impacted: [
+				'NA,SAL1833YM7D,N9K-C9396PX,NA',
+			],
+		};
+
+		const data = _.filter(MockSystemAssetsData,
+			{ managedNeId: 'NA,SAL1833YM7D,N9K-C9396PX,NA' });
+		jest.spyOn(inventoryService, 'getSystemAssets')
+			.mockReturnValue(of({ data }));
+
+		jest.spyOn(inventoryService, 'getHardwareAssets')
+			.mockReturnValue(of({ data: MockHardwareAssetsData }));
 
 		component.ngOnInit();
 		sendRacetrack();
@@ -153,9 +165,14 @@ describe('AdvisoryImpactedAssetsComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(productAlertsService, 'getSecurityAdvisories')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
+
+		jest.spyOn(productAlertsService, 'getSecurityAdvisories')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(inventoryService, 'getSystemAssets')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(inventoryService, 'getHardwareAssets')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
+
 		component.ngOnInit();
 		sendRacetrack();
 		fixture.detectChanges();
@@ -181,12 +198,10 @@ describe('AdvisoryImpactedAssetsComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(diagnosticsService, 'getCriticalBugsAssets')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(inventoryService, 'getHardwareAssets')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(diagnosticsService, 'getCriticalBugsAssets')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(inventoryService, 'getHardwareAssets')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
 
 		component.ngOnInit();
 		sendRacetrack();
@@ -203,4 +218,5 @@ describe('AdvisoryImpactedAssetsComponent', () => {
 			done();
 		});
 	});
+
 });

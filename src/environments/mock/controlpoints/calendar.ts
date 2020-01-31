@@ -481,7 +481,7 @@ export const CalendarScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 500,
+					delay: 30,
 					description: 'Call to get policies by month',
 					response: {
 						body: mockData,

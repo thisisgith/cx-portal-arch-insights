@@ -66,9 +66,8 @@ describe('AssetDetailsComponent', () => {
 	}));
 
 	beforeEach(() => {
-		spyOn(userResolve, 'getCustomerId')
-			.and
-			.returnValue(of(user.info.customerId));
+		jest.spyOn(userResolve, 'getCustomerId')
+			.mockReturnValue(of(user.info.customerId));
 		detailsPanelStackService = TestBed.get(DetailsPanelStackService);
 		fixture = TestBed.createComponent(AssetDetailsComponent);
 		component = fixture.componentInstance;
@@ -109,7 +108,7 @@ describe('AssetDetailsComponent', () => {
 	});
 
 	it('should handle on panel hidden', () => {
-		const panelCloseSpy = spyOn(component, 'onAllPanelsClose');
+		const panelCloseSpy = jest.spyOn(component, 'onAllPanelsClose');
 
 		component.handleHidden(false);
 		expect(panelCloseSpy)
@@ -157,7 +156,7 @@ describe('AssetDetailsComponent', () => {
 	});
 
 	it('should pop panel on back', () => {
-		spyOn(detailsPanelStackService, 'pop');
+		jest.spyOn(detailsPanelStackService, 'pop');
 
 		component.onPanelBack();
 
@@ -166,11 +165,12 @@ describe('AssetDetailsComponent', () => {
 	});
 
 	it('should reset stack service', () => {
-		spyOn(detailsPanelStackService, 'reset');
+		jest.spyOn(detailsPanelStackService, 'reset');
 
 		component.onAllPanelsClose();
 
 		expect(detailsPanelStackService.reset)
 			.toHaveBeenCalled();
 	});
+
 });

@@ -39,4 +39,5 @@ describe('InstallProgressComponent', () => {
 		expect(component)
 			.toBeTruthy();
 	});
+
 });

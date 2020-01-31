@@ -24,4 +24,5 @@ describe('CharCountComponent', () => {
 		expect(component)
 			.toBeTruthy();
 	});
+
 });

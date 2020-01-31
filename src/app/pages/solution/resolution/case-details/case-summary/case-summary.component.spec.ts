@@ -3,7 +3,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CaseSummaryComponent } from './case-summary.component';
 import { CaseSummaryModule } from './case-summary.module';
-
 describe('CaseSummaryComponent', () => {
 	let component: CaseSummaryComponent;
 	let fixture: ComponentFixture<CaseSummaryComponent>;
@@ -29,9 +28,10 @@ describe('CaseSummaryComponent', () => {
 		component.caseDetails = {
 			serialNumber: 'FOC1544Y16T',
 		};
-		spyOn(component.showAssetDetails, 'emit');
+		jest.spyOn(component.showAssetDetails, 'emit');
 		component.openAssetDetailsView();
 		expect(component.showAssetDetails.emit)
 			.toHaveBeenCalled();
 	});
+
 });

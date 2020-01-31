@@ -51,7 +51,7 @@ export const PolicesScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 500,
+					delay: 30,
 					description: 'Call to get policies',
 					response: {
 						body: mockData,
@@ -60,7 +60,7 @@ export const PolicesScenarios = [
 					selected: true,
 				},
 				{
-					delay: 500,
+					delay: 30,
 					description: 'Policies - Failure',
 					response: {
 						body: '',
@@ -77,7 +77,7 @@ export const PolicesScenarios = [
 		scenarios: {
 			PATCH: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 250,
+					delay: 38,
 					description: 'Patch CollectionPolicy',
 					response: {
 						status: 200,

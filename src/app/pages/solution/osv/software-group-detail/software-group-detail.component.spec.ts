@@ -8,7 +8,6 @@ import { OSVService } from '@sdp-api';
 import { OSVScenarios } from '@mock';
 import { of, throwError } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
-
 describe('SoftwareGroupDetailComponent', () => {
 	let component: SoftwareGroupDetailComponent;
 	let fixture: ComponentFixture<SoftwareGroupDetailComponent>;
@@ -41,15 +40,12 @@ describe('SoftwareGroupDetailComponent', () => {
 		const sgAssets = <any> OSVScenarios[7].scenarios.GET[0].response.body;
 		const sgVersions = <any> OSVScenarios[8].scenarios.GET[0].response.body;
 		const sgRecommendations = <any> OSVScenarios[9].scenarios.GET[0].response.body;
-		spyOn(osvService, 'getSoftwareGroupAssets')
-			.and
-			.returnValue(of(sgAssets));
-		spyOn(osvService, 'getSoftwareGroupVersions')
-			.and
-			.returnValue(of(sgVersions));
-		spyOn(osvService, 'getSoftwareGroupRecommendations')
-			.and
-			.returnValue(of(sgRecommendations));
+		jest.spyOn(osvService, 'getSoftwareGroupAssets')
+			.mockReturnValue(of(sgAssets));
+		jest.spyOn(osvService, 'getSoftwareGroupVersions')
+			.mockReturnValue(of(sgVersions));
+		jest.spyOn(osvService, 'getSoftwareGroupRecommendations')
+			.mockReturnValue(of(sgRecommendations));
 		const selectedSG = (<any> OSVScenarios[1].scenarios.GET[0].response.body).uiProfileList[0];
 		component.selectedSoftwareGroup = selectedSG;
 		component.ngOnInit();
@@ -73,15 +69,12 @@ describe('SoftwareGroupDetailComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(osvService, 'getSoftwareGroupAssets')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(osvService, 'getSoftwareGroupVersions')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(osvService, 'getSoftwareGroupRecommendations')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(osvService, 'getSoftwareGroupAssets')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(osvService, 'getSoftwareGroupVersions')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(osvService, 'getSoftwareGroupRecommendations')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
 		const selectedSG = (<any> OSVScenarios[1].scenarios.GET[0].response.body).uiProfileList[0];
 		component.selectedSoftwareGroup = selectedSG;
 		component.ngOnInit();
@@ -101,12 +94,10 @@ describe('SoftwareGroupDetailComponent', () => {
 	});
 
 	it('should reload softwaregroup assets and version on ngOnChanges', () => {
-		spyOn(osvService, 'getSoftwareGroupAssets')
-			.and
-			.returnValue(of(<any> OSVScenarios[7].scenarios.GET[0].response.body));
-		spyOn(osvService, 'getSoftwareGroupVersions')
-			.and
-			.returnValue(of(<any> OSVScenarios[8].scenarios.GET[0].response.body));
+		jest.spyOn(osvService, 'getSoftwareGroupAssets')
+			.mockReturnValue(of(<any> OSVScenarios[7].scenarios.GET[0].response.body));
+		jest.spyOn(osvService, 'getSoftwareGroupVersions')
+			.mockReturnValue(of(<any> OSVScenarios[8].scenarios.GET[0].response.body));
 		const selectedSG = (<any> OSVScenarios[1].scenarios.GET[0].response.body).uiProfileList[0];
 		component.selectedSoftwareGroup = selectedSG;
 		component.ngOnChanges({
@@ -150,9 +141,8 @@ describe('SoftwareGroupDetailComponent', () => {
 	});
 
 	it('should refresh versions on page change', () => {
-		spyOn(osvService, 'getSoftwareGroupVersions')
-			.and
-			.returnValue(of());
+		jest.spyOn(osvService, 'getSoftwareGroupVersions')
+			.mockReturnValue(of());
 		component.onVersionsPageChanged({ page: 2 });
 		fixture.detectChanges();
 		expect(osvService.getSoftwareGroupVersions)
@@ -162,9 +152,8 @@ describe('SoftwareGroupDetailComponent', () => {
 	});
 
 	it('should refresh assets on page change', () => {
-		spyOn(osvService, 'getSoftwareGroupAssets')
-			.and
-			.returnValue(of());
+		jest.spyOn(osvService, 'getSoftwareGroupAssets')
+			.mockReturnValue(of());
 		component.onAssetsPageChanged({ page: 2 });
 		fixture.detectChanges();
 		expect(osvService.getSoftwareGroupAssets)
@@ -174,8 +163,10 @@ describe('SoftwareGroupDetailComponent', () => {
 	});
 
 	it('should trigger onAccept or onCancel actions', () => {
-		spyOn(component, 'onAccept');
-		spyOn(component, 'onCancel');
+		jest.spyOn(component, 'onAccept')
+			.mockReturnThis();
+		jest.spyOn(component, 'onCancel')
+			.mockReturnThis();
 		component.onAction({ type: 'accept', version: '1.1' });
 		fixture.detectChanges();
 		expect(component.onAccept)

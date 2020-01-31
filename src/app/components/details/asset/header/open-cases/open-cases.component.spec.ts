@@ -30,7 +30,7 @@ describe('OpenCasesComponent', () => {
 	});
 
 	it('should hide', () => {
-		spyOn(component.close, 'emit');
+		jest.spyOn(component.close, 'emit');
 		component.hide();
 		fixture.detectChanges();
 		expect(component.close.emit)
@@ -38,9 +38,8 @@ describe('OpenCasesComponent', () => {
 	});
 
 	it('should navigate to the problem resolution case list', () => {
-		spyOn(component.router, 'navigate')
-			.and
-			.returnValue(new Promise(() => true));
+		jest.spyOn(component.router, 'navigate')
+			.mockReturnValue(new Promise(() => true));
 		component.serial = 'FOX1306GBAD';
 		component.onClickCase('688296392');
 		fixture.detectChanges();

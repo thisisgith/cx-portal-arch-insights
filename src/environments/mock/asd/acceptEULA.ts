@@ -19,7 +19,7 @@ export const ASDAcceptEulaScenarios = [
 		scenarios: {
 			POST: [
 				{
-					delay: 500,
+					delay: 30,
 					description: 'Accept EULA Agreement',
 					response: {
 						body: mockData,

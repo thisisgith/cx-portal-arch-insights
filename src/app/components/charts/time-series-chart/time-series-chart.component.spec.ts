@@ -59,4 +59,5 @@ describe('TimeSeriesChartComponent', () => {
 		expect(component.chart)
 			.toBeNull();
 	});
+
 });

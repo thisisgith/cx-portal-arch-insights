@@ -49,9 +49,8 @@ describe('ArchitectureComponent', () => {
 	}));
 
 	beforeEach(() => {
-		spyOn(service, 'getAssetsExceptionsCount')
-			.and
-			.returnValue(of({ AssetsExceptionCount: 5000 }));
+		jest.spyOn(service, 'getAssetsExceptionsCount')
+			.mockReturnValue(of({ AssetsExceptionCount: 5000 }));
 		fixture = TestBed.createComponent(ArchitectureComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
@@ -68,20 +67,14 @@ describe('ArchitectureComponent', () => {
 			Low: 5,
 			Medium: 20,
 		};
-		spyOn(service, 'getExceptionsCount')
-			.and
-			.returnValue(of(response))
-			.and
-			.callThrough();
+		jest.spyOn(service, 'getExceptionsCount')
+			.mockReturnValue(of(response));
 		component.ngOnInit();
 	});
 
 	it('should call empty response on init', () => {
-		spyOn(service, 'getExceptionsCount')
-			.and
-			.returnValue(of([]))
-			.and
-			.callThrough();
+		jest.spyOn(service, 'getExceptionsCount')
+			.mockReturnValue(of([]));
 		component.ngOnInit();
 	});
 
@@ -132,4 +125,5 @@ describe('ArchitectureComponent', () => {
 		expect(component.getSelectedSubFilters('ExceptionsFilter'))
 			.toBeTruthy();
 	});
+
 });

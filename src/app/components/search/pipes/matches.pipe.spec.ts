@@ -6,4 +6,5 @@ describe('MatchesPipe', () => {
 		expect(pipe)
 			.toBeTruthy();
 	});
+
 });

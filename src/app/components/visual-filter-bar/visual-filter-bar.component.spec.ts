@@ -23,4 +23,5 @@ describe('VisualFilterBarComponent', () => {
 		expect(component)
 		.toBeTruthy();
 	});
+
 });

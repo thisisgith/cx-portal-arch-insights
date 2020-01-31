@@ -96,15 +96,12 @@ describe('AssetDetailsAdvisoriesComponent', () => {
 		component.element = MockNetworkElements[0];
 		component.customerId = user.info.customerId;
 
-		spyOn(productAlertsService, 'getAdvisoriesSecurityAdvisories')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(productAlertsService, 'getAdvisoriesFieldNotices')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(diagnosticsService, 'getCriticalBugs')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(productAlertsService, 'getAdvisoriesSecurityAdvisories')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(productAlertsService, 'getAdvisoriesFieldNotices')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(diagnosticsService, 'getCriticalBugs')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
 
 		sendRacetrack();
 
@@ -135,12 +132,10 @@ describe('AssetDetailsAdvisoriesComponent', () => {
 		component.element = MockNetworkElements[0];
 		component.customerId = user.info.customerId;
 
-		spyOn(productAlertsService, 'getAdvisoriesSecurityAdvisories')
-			.and
-			.returnValue(of(getActiveBody(AdvisorySecurityAdvisoryScenarios[0])));
-		spyOn(productAlertsService, 'getAdvisoriesFieldNotices')
-			.and
-			.returnValue(of(getActiveBody(FieldNoticeAdvisoryScenarios[0])));
+		jest.spyOn(productAlertsService, 'getAdvisoriesSecurityAdvisories')
+			.mockReturnValue(of(getActiveBody(AdvisorySecurityAdvisoryScenarios[0])));
+		jest.spyOn(productAlertsService, 'getAdvisoriesFieldNotices')
+			.mockReturnValue(of(getActiveBody(FieldNoticeAdvisoryScenarios[0])));
 
 		sendRacetrack();
 
@@ -169,15 +164,12 @@ describe('AssetDetailsAdvisoriesComponent', () => {
 		component.element = MockNetworkElements[0];
 		component.customerId = user.info.customerId;
 
-		spyOn(productAlertsService, 'getAdvisoriesSecurityAdvisories')
-			.and
-			.returnValue(of(getActiveBody(AdvisorySecurityAdvisoryScenarios[0])));
-		spyOn(productAlertsService, 'getAdvisoriesFieldNotices')
-			.and
-			.returnValue(of(getActiveBody(FieldNoticeAdvisoryScenarios[0])));
-		spyOn(diagnosticsService, 'getCriticalBugs')
-			.and
-			.returnValue(of({ data: CriticalBugData }));
+		jest.spyOn(productAlertsService, 'getAdvisoriesSecurityAdvisories')
+			.mockReturnValue(of(getActiveBody(AdvisorySecurityAdvisoryScenarios[0])));
+		jest.spyOn(productAlertsService, 'getAdvisoriesFieldNotices')
+			.mockReturnValue(of(getActiveBody(FieldNoticeAdvisoryScenarios[0])));
+		jest.spyOn(diagnosticsService, 'getCriticalBugs')
+			.mockReturnValue(of({ data: CriticalBugData }));
 
 		sendRacetrack();
 
@@ -232,16 +224,13 @@ describe('AssetDetailsAdvisoriesComponent', () => {
 		component.element = MockNetworkElements[0];
 		component.customerId = user.info.customerId;
 
-		spyOn(productAlertsService, 'getAdvisoriesSecurityAdvisories')
-			.and
-			.returnValue(of(getActiveBody(AdvisorySecurityAdvisoryScenarios[0])));
-		spyOn(productAlertsService, 'getAdvisoriesFieldNotices')
-			.and
-			.returnValue(of(getActiveBody(FieldNoticeAdvisoryScenarios[0])));
+		jest.spyOn(productAlertsService, 'getAdvisoriesSecurityAdvisories')
+			.mockReturnValue(of(getActiveBody(AdvisorySecurityAdvisoryScenarios[0])));
+		jest.spyOn(productAlertsService, 'getAdvisoriesFieldNotices')
+			.mockReturnValue(of(getActiveBody(FieldNoticeAdvisoryScenarios[0])));
 
-		spyOn(diagnosticsService, 'getCriticalBugs')
-			.and
-			.returnValue(of({ data: CriticalBugData }));
+		jest.spyOn(diagnosticsService, 'getCriticalBugs')
+			.mockReturnValue(of({ data: CriticalBugData }));
 
 		sendRacetrack();
 
@@ -306,4 +295,5 @@ describe('AssetDetailsAdvisoriesComponent', () => {
 		expect(component.hardwareAsset)
 			.toEqual(newAsset);
 	});
+
 });

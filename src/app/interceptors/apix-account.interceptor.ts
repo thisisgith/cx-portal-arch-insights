@@ -8,13 +8,14 @@ import { OriginType, USER_INFO_KEYS } from '@constants';
 import { LogService } from '@cisco-ngx/cui-services';
 import * as _ from 'lodash-es';
 import { RacetrackInfoService } from '@services';
+import { Injectable } from '@angular/core';
 
 export interface UserInformation {
 	accountInfo: any;
 	headers: any;
 	params: any;
 }
-
+@Injectable()
 export class ApixAccountInterceptor implements HttpInterceptor {
 	// TODO: Remove this when APIs become consistent / ignore unused params
 	private pathsToIgnore = [

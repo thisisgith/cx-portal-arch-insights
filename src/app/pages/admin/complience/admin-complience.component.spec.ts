@@ -65,6 +65,7 @@ describe('AdminComplienceComponent', () => {
 			expect(component.optlnStatus)
 				.toBeFalsy();
 		});
+
 	});
 
 	describe('filter duplicates', () => {
@@ -247,14 +248,14 @@ describe('AdminComplienceComponent', () => {
 			expect(component.rightSideTags)
 				.toBe(component.rightSideTags);
 		});
+
 	});
 
 	describe('update permissions', () => {
 		it('should update permissions with response', () => {
 			let routeAuthService: RouteAuthService;
 			routeAuthService = TestBed.get(RouteAuthService);
-			spyOn(routeAuthService, 'updatePermissions').and
-				.callThrough();
+			jest.spyOn(routeAuthService, 'updatePermissions');
 			component.updatePermissions();
 			expect(routeAuthService.updatePermissions)
 				.toHaveBeenCalled();
@@ -270,12 +271,11 @@ describe('AdminComplienceComponent', () => {
 			routeAuthService = TestBed.get(RouteAuthService);
 			logService = TestBed.get(LogService);
 
-			spyOn(logService, 'error').and
-				.callFake(() =>
+			jest.spyOn(logService, 'error')
+				.mockImplementation(() =>
 					null);
-			spyOn(routeAuthService, 'updatePermissions')
-				.and
-				.returnValue(throwError(new HttpErrorResponse(error)));
+			jest.spyOn(routeAuthService, 'updatePermissions')
+				.mockReturnValue(throwError(new HttpErrorResponse(error)));
 			component.updatePermissions()
 				.subscribe(null,
 					err => {
@@ -283,14 +283,15 @@ describe('AdminComplienceComponent', () => {
 							.toEqual(404);
 					});
 		}));
+
 	});
 
 	describe('should get tags', () => {
 		it('should handle api failure of to get left side tags', fakeAsync(() => {
 			let controlPointAdminComplienceService: ControlPointAdminComplienceService;
 			controlPointAdminComplienceService = TestBed.get(ControlPointAdminComplienceService);
-			spyOn(controlPointAdminComplienceService, 'getLeftSideTags').and
-				.returnValue(throwError(new HttpErrorResponse({
+			jest.spyOn(controlPointAdminComplienceService, 'getLeftSideTags')
+				.mockReturnValue(throwError(new HttpErrorResponse({
 					status: 404,
 					statusText: 'Resource not found',
 				})));
@@ -305,8 +306,8 @@ describe('AdminComplienceComponent', () => {
 		it('should handle api failure of to get right side tags', fakeAsync(() => {
 			let controlPointAdminComplienceService: ControlPointAdminComplienceService;
 			controlPointAdminComplienceService = TestBed.get(ControlPointAdminComplienceService);
-			spyOn(controlPointAdminComplienceService, 'getRightSideTags').and
-				.returnValue(throwError(new HttpErrorResponse({
+			jest.spyOn(controlPointAdminComplienceService, 'getRightSideTags')
+				.mockReturnValue(throwError(new HttpErrorResponse({
 					status: 404,
 					statusText: 'Resource not found',
 				})));
@@ -359,7 +360,7 @@ describe('AdminComplienceComponent', () => {
 	});
 
 	it('should save changes', () => {
-		spyOn(component, 'updateOptInOutStatus');
+		jest.spyOn(component, 'updateOptInOutStatus');
 		component.saveChanges();
 		expect(component.optlnStatus)
 			.toBeTruthy();
@@ -368,8 +369,8 @@ describe('AdminComplienceComponent', () => {
 	it('should save policy details', () => {
 		let assetTaggingService: AssetTaggingService;
 		assetTaggingService = TestBed.get(AssetTaggingService);
-		spyOn(assetTaggingService, 'getSelectedTags').and
-			.callFake(() =>
+		jest.spyOn(assetTaggingService, 'getSelectedTags')
+			.mockImplementation(() =>
 				of([]));
 		component.savePolicyDetails();
 		assetTaggingService.getSelectedTags()
@@ -382,10 +383,8 @@ describe('AdminComplienceComponent', () => {
 	it('should update OptInOut Status', () => {
 		let assetTaggingService: AssetTaggingService;
 		assetTaggingService = TestBed.get(AssetTaggingService);
-		spyOn(assetTaggingService, 'updateOptStatus').and
-			.callThrough();
-		spyOn(assetTaggingService, 'deleteMapping').and
-		.callThrough();
+		jest.spyOn(assetTaggingService, 'updateOptStatus');
+		jest.spyOn(assetTaggingService, 'deleteMapping');
 		component.updateOptInOutStatus();
 		expect(assetTaggingService.updateOptStatus)
 			.toHaveBeenCalled();
@@ -406,9 +405,7 @@ describe('AdminComplienceComponent', () => {
 		component.enableSaveButton = true;
 		component.selectedDeviceTagType = 'allDevices';
 		cuiModalService = TestBed.get(CuiModalService);
-		spyOn(cuiModalService, 'show')
-		.and
-		.callThrough();
+		jest.spyOn(cuiModalService, 'show');
 		component.onChangesDeviceTagType();
 		expect(component.cuiModalService.show)
 		.toHaveBeenCalled();
@@ -438,9 +435,7 @@ describe('AdminComplienceComponent', () => {
 
 		fixture.detectChanges();
 		component.triggerModal = 'policy';
-		spyOn(component, 'getRightSideTags')
-		.and
-		.callThrough();
+		jest.spyOn(component, 'getRightSideTags');
 		component.leftSideTagsResponse = {
 			tags: [],
 		};
@@ -452,8 +447,8 @@ describe('AdminComplienceComponent', () => {
 	it('should check for OptlnStatus', fakeAsync(() => {
 		let routeAuthService: RouteAuthService;
 		routeAuthService = TestBed.get(RouteAuthService);
-		spyOn(routeAuthService, 'checkPermissions').and
-			.returnValue(throwError(new HttpErrorResponse({
+		jest.spyOn(routeAuthService, 'checkPermissions')
+			.mockReturnValue(throwError(new HttpErrorResponse({
 				status: 404,
 				statusText: 'Resource not found',
 			})));
@@ -468,8 +463,8 @@ describe('AdminComplienceComponent', () => {
 	it('should handle error in get OptinOutStatus', fakeAsync(() => {
 		let assetTaggingService: AssetTaggingService;
 		assetTaggingService = TestBed.get(AssetTaggingService);
-		spyOn(assetTaggingService, 'getOptInStatus').and
-			.returnValue(throwError(new HttpErrorResponse({
+		jest.spyOn(assetTaggingService, 'getOptInStatus')
+			.mockReturnValue(throwError(new HttpErrorResponse({
 				status: 404,
 				statusText: 'Resource not found',
 			})));
@@ -508,7 +503,7 @@ describe('AdminComplienceComponent', () => {
 	it('should discard changes on policy change if not have policy', () => {
 		component.triggerModal = null;
 		component.selectedDeviceTagType = 'allDevices';
-		spyOn(component, 'filterDuplicates');
+		jest.spyOn(component, 'filterDuplicates');
 		component.discardChangesOnPolicyChange();
 		expect(component.enableSaveButton)
 			.toBeFalsy();
@@ -517,7 +512,7 @@ describe('AdminComplienceComponent', () => {
 	it('should disaply asset tagging template', () => {
 		component.triggerModal = null;
 		component.selectedDeviceTagType = null;
-		spyOn(component, 'filterDuplicates');
+		jest.spyOn(component, 'filterDuplicates');
 		component.discardChangesOnPolicyChange();
 		expect(component.enableSaveButton)
 			.toBeFalsy();

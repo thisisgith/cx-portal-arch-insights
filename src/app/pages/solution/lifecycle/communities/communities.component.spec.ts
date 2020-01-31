@@ -41,9 +41,8 @@ describe('CommunitiesComponent', () => {
 	 * Builds our spies for our services
 	 */
 	 const buildSpies = () => {
-		racetrackInfoSpy = spyOn(racetrackService, 'getRacetrack')
-	 	.and
-	 	.returnValue(of(getActiveBody(RacetrackScenarios[0])));
+		racetrackInfoSpy = jest.spyOn(racetrackService, 'getRacetrack')
+	 	.mockReturnValue(of(getActiveBody(RacetrackScenarios[0])));
 	 };
 
 	/**
@@ -173,4 +172,5 @@ describe('CommunitiesComponent', () => {
 				});
 		});
 	});
+
 });

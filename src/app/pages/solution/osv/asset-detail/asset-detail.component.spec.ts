@@ -10,7 +10,6 @@ import { OSVScenarios } from '@mock';
 import * as _ from 'lodash-es';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MicroMockModule } from '@cui-x-views/mock';
-
 describe('AssetDetailsComponent', () => {
 	let component: AssetDetailsComponent;
 	let fixture: ComponentFixture<AssetDetailsComponent>;
@@ -45,7 +44,7 @@ describe('AssetDetailsComponent', () => {
 	});
 
 	it('should not call fetchAssetsDetails if there is no selected asset', () => {
-		spyOn(osvService, 'getAssetDetails');
+		jest.spyOn(osvService, 'getAssetDetails');
 		component.selectedAsset = undefined;
 		component.ngOnInit();
 		fixture.detectChanges();
@@ -58,9 +57,8 @@ describe('AssetDetailsComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(osvService, 'getAssetDetails')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(osvService, 'getAssetDetails')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
 		component.selectedAsset = <any> OSVScenarios[4].scenarios.GET[0].response.body;
 		component.ngOnInit();
 		expect(component.assetDetails)
@@ -72,11 +70,10 @@ describe('AssetDetailsComponent', () => {
 	});
 
 	xit('should return asset recommendations on success', () => {
-		spyOn(component, 'buildTable');
-		spyOn(component, 'sortData');
-		spyOn(osvService, 'getAssetDetails')
-			.and
-			.returnValue(of(<any> OSVScenarios[3].scenarios.GET[0].response.body));
+		jest.spyOn(component, 'buildTable');
+		jest.spyOn(component, 'sortData');
+		jest.spyOn(osvService, 'getAssetDetails')
+			.mockReturnValue(of(<any> OSVScenarios[3].scenarios.GET[0].response.body));
 		component.selectedAsset = (<any> OSVScenarios[4].scenarios.GET[0].response.body)
 									.uiAssetList[0];
 		component.ngOnInit();
@@ -91,9 +88,8 @@ describe('AssetDetailsComponent', () => {
 	});
 
 	it('should build Table on success', () => {
-		spyOn(osvService, 'getAssetDetails')
-			.and
-			.returnValue(of(<any> OSVScenarios[3].scenarios.GET[0].response.body));
+		jest.spyOn(osvService, 'getAssetDetails')
+			.mockReturnValue(of(<any> OSVScenarios[3].scenarios.GET[0].response.body));
 		component.selectedAsset = (<any> OSVScenarios[4].scenarios.GET[0].response.body)
 									.uiAssetList[0];
 		component.ngOnInit();
@@ -117,10 +113,9 @@ describe('AssetDetailsComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(component, 'buildTable');
-		spyOn(osvService, 'getAssetDetails')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(component, 'buildTable');
+		jest.spyOn(osvService, 'getAssetDetails')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
 		component.fetchAssetDetails();
 		fixture.detectChanges();
 		expect(component.buildTable)
@@ -133,7 +128,7 @@ describe('AssetDetailsComponent', () => {
 	});
 
 	it('refresh if the selecteAsset is changed', () => {
-		spyOn(component, 'refresh');
+		jest.spyOn(component, 'refresh');
 		component.ngOnChanges({
 			selecteAsset: {
 				currentValue: true,
@@ -149,9 +144,8 @@ describe('AssetDetailsComponent', () => {
 	});
 
 	it('should reset the assetDetails on clear', () => {
-		spyOn(osvService, 'getAssetDetails')
-			.and
-			.returnValue(of(<any> OSVScenarios[3].scenarios.GET[0].response.body));
+		jest.spyOn(osvService, 'getAssetDetails')
+			.mockReturnValue(of(<any> OSVScenarios[3].scenarios.GET[0].response.body));
 		component.selectedAsset = <any> OSVScenarios[4].scenarios.GET[0].response.body;
 		component.ngOnInit();
 		fixture.detectChanges();
@@ -161,4 +155,5 @@ describe('AssetDetailsComponent', () => {
 		expect(component.assetDetails)
 			.toBeNull();
 	});
+
 });

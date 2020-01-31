@@ -501,7 +501,7 @@ export const SecurityAdvisoryBulletinScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 350,
+					delay: 44,
 					description: 'Security Advisory Bulletins',
 					response: {
 						body: MockSecurityAdvisoryBulletins,
@@ -518,7 +518,7 @@ export const SecurityAdvisoryBulletinScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 250,
+					delay: 38,
 					description: 'Security Advisory Details for ID 485',
 					response: {
 						body: { data: [MockSecurityAdvisoryBulletins.data[1]] },
@@ -536,7 +536,7 @@ export const SecurityAdvisoryBulletinScenarios = [
 					selected: false,
 				},
 				{
-					delay: 250,
+					delay: 38,
 					description: 'Security Advisory Details for ID 485 - Missing keys',
 					response: {
 						body: { data: [_.pick(

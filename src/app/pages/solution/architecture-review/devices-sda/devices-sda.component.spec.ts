@@ -134,12 +134,10 @@ describe('DevicesSdaComponent', () => {
 			},
 		};
 
-		spyOn(architectureReviewService, 'getDevicesSDA')
-			.and
-			.returnValue(of(fakeResponse));
-		spyOn(architectureReviewService, 'getOptimalLinks')
-			.and
-			.returnValue(of(nonOptimalLinksResponse));
+		jest.spyOn(architectureReviewService, 'getDevicesSDA')
+			.mockReturnValue(of(fakeResponse));
+		jest.spyOn(architectureReviewService, 'getOptimalLinks')
+			.mockReturnValue(of(nonOptimalLinksResponse));
 		component.ngOnChanges();
 		fakeResponse.dnacDeviceDetails.sdaL3AccessEnabled = 'No';
 		fakeResponse.dnacDeviceDetails.sdaRedundantLinks  = 'Yes';
@@ -169,9 +167,8 @@ describe('DevicesSdaComponent', () => {
 			},
 		};
 
-		spyOn(architectureReviewService, 'getDevicesSDA')
-			.and
-			.returnValue(of(fakeResponse));
+		jest.spyOn(architectureReviewService, 'getDevicesSDA')
+			.mockReturnValue(of(fakeResponse));
 		component.ngOnChanges();
 		fixture.detectChanges();
 		expect(component.showL3Switch)
@@ -188,12 +185,10 @@ describe('DevicesSdaComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(architectureReviewService, 'getDevicesSDA')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(architectureReviewService, 'getOptimalLinks')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(architectureReviewService, 'getDevicesSDA')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(architectureReviewService, 'getOptimalLinks')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
 		component.deviceDetails = {
 			ipAddress: '192.168.46.100',
 		};
@@ -201,10 +196,10 @@ describe('DevicesSdaComponent', () => {
 	});
 
 	it('should call deviceDetails on change', () => {
-		spyOn(component, 'getCollectionId');
-		spyOn(component, 'getSolutionInfo');
-		spyOn(component, 'getSdaDeviceData');
-		spyOn(component, 'getOptimalLinks');
+		jest.spyOn(component, 'getCollectionId');
+		jest.spyOn(component, 'getSolutionInfo');
+		jest.spyOn(component, 'getSdaDeviceData');
+		jest.spyOn(component, 'getOptimalLinks');
 		component.deviceDetails = {
 			ipAddress: '192.168.46.100',
 			sdaNoOfMtuNonOptimalInterfaces : '2',
@@ -222,8 +217,8 @@ describe('DevicesSdaComponent', () => {
 	});
 
 	it('should call when deviceDetails on change is undefined', () => {
-		spyOn(component, 'getCollectionId');
-		spyOn(component, 'getSolutionInfo');
+		jest.spyOn(component, 'getCollectionId');
+		jest.spyOn(component, 'getSolutionInfo');
 		component.deviceDetails = undefined;
 		component.ngOnChanges();
 		fixture.detectChanges();
@@ -234,4 +229,5 @@ describe('DevicesSdaComponent', () => {
 			.not
 			.toHaveBeenCalled();
 	});
+
 });

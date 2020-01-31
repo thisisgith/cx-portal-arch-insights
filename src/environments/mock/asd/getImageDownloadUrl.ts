@@ -424,7 +424,7 @@ export const ASDImageDownloadUrlScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 500,
+					delay: 30,
 					description: 'Get Image download URL - Needs k9/Eula',
 					response: {
 						body: mockData1,
@@ -433,7 +433,7 @@ export const ASDImageDownloadUrlScenarios = [
 					selected: true,
 				},
 				{
-					delay: 500,
+					delay: 30,
 					description: 'Get Image download URL - meta trans id expired',
 					response: {
 						body: mockData2,
@@ -442,7 +442,7 @@ export const ASDImageDownloadUrlScenarios = [
 					selected: false,
 				},
 				{
-					delay: 500,
+					delay: 30,
 					description: 'Get Image download URL - criteria met',
 					response: {
 						body: mockData3,

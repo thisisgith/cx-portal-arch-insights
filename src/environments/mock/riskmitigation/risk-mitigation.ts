@@ -151,7 +151,7 @@ export const RiskScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Graph Chart Data',
 					response: {
 						body: allCrashDetails,
@@ -168,7 +168,7 @@ export const RiskScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Summary',
 					response: {
 						body: highCrashCount,
@@ -185,7 +185,7 @@ export const RiskScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Details',
 					response: {
 						body: deviceDetails,
@@ -202,7 +202,7 @@ export const RiskScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Details',
 					response: {
 						body: crashHistory,
@@ -219,7 +219,7 @@ export const RiskScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'HCR table Data',
 					response: {
 						body: highCrashRiskGridData,
@@ -236,7 +236,7 @@ export const RiskScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'HCR table Data',
 					response: {
 						body: deviceDetails,
@@ -253,7 +253,7 @@ export const RiskScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'HCR table Data',
 					response: {
 						body: crashHistoryTable,
@@ -271,7 +271,7 @@ export const RiskScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Total Assest Count',
 					response: {
 						body: totalCountValue,
@@ -288,7 +288,7 @@ export const RiskScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'HCR table Data',
 					response: {
 						body: highCrashRiskGridDataEmpty,

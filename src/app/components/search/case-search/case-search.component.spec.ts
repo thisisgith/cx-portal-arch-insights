@@ -43,9 +43,8 @@ describe('caseSearchComponent', () => {
 
 	it('should refresh on query change', () => {
 		component.caseNumber = { query: '680000001' };
-		spyOn(caseService, 'fetchCaseDetails')
-			.and
-			.returnValue(of(CaseScenarios[0].scenarios.GET[0].response.body));
+		jest.spyOn(caseService, 'fetchCaseDetails')
+			.mockReturnValue(of(CaseScenarios[0].scenarios.GET[0].response.body));
 		component.ngOnChanges();
 		fixture.detectChanges();
 		expect(caseService.fetchCaseDetails)
@@ -53,18 +52,14 @@ describe('caseSearchComponent', () => {
 	});
 
 	it('should call all of the required APIs for a valid case', fakeAsync(() => {
-		spyOn(caseService, 'fetchCaseDetails')
-			.and
-			.returnValue(of(CaseScenarios[0].scenarios.GET[0].response.body));
-		spyOn(caseService, 'fetchCaseNotes')
-			.and
-			.returnValue(of(CaseScenarios[1].scenarios.GET[0].response.body));
-		spyOn(caseService, 'read')
-			.and
-			.returnValue(of(CaseScenarios[2].scenarios.GET[0].response.body));
-		spyOn(inventoryService, 'getHardware')
-			.and
-			.returnValue(of(HardwareScenarios[0].scenarios.GET[0].response.body));
+		jest.spyOn(caseService, 'fetchCaseDetails')
+			.mockReturnValue(of(CaseScenarios[0].scenarios.GET[0].response.body));
+		jest.spyOn(caseService, 'fetchCaseNotes')
+			.mockReturnValue(of(CaseScenarios[1].scenarios.GET[0].response.body));
+		jest.spyOn(caseService, 'read')
+			.mockReturnValue(of(CaseScenarios[2].scenarios.GET[0].response.body));
+		jest.spyOn(inventoryService, 'getHardware')
+			.mockReturnValue(of(HardwareScenarios[0].scenarios.GET[0].response.body));
 		component.caseNumber = { query: '688296392' };
 		component.ngOnChanges();
 		fixture.detectChanges();
@@ -84,23 +79,19 @@ describe('caseSearchComponent', () => {
 
 	it('should not hide if the main request succeeds and other requests error', fakeAsync(() => {
 		component.caseNumber = { query: '680000002' };
-		spyOn(caseService, 'fetchCaseDetails')
-			.and
-			.returnValue(of(CaseScenarios[0].scenarios.GET[0].response.body));
+		jest.spyOn(caseService, 'fetchCaseDetails')
+			.mockReturnValue(of(CaseScenarios[0].scenarios.GET[0].response.body));
 		const error = {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(component.hide, 'emit');
-		spyOn(caseService, 'fetchCaseNotes')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(caseService, 'read')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(inventoryService, 'getHardware')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(component.hide, 'emit');
+		jest.spyOn(caseService, 'fetchCaseNotes')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(caseService, 'read')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(inventoryService, 'getHardware')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
 		component.ngOnChanges();
 		fixture.detectChanges();
 		tick(1000); // Wait for all requests to finish
@@ -114,10 +105,9 @@ describe('caseSearchComponent', () => {
 	}));
 
 	it('should hide on no case details', () => {
-		spyOn(caseService, 'fetchCaseDetails')
-			.and
-			.returnValue(of({ }));
-		spyOn(component.hide, 'emit');
+		jest.spyOn(caseService, 'fetchCaseDetails')
+			.mockReturnValue(of({ }));
+		jest.spyOn(component.hide, 'emit');
 		component.caseNumber = { query: '688296392' };
 		component.ngOnChanges();
 		fixture.detectChanges();
@@ -129,13 +119,12 @@ describe('caseSearchComponent', () => {
 
 	it('should hide on case detail error', fakeAsync(() => {
 		component.caseNumber = { query: '688296392' };
-		spyOn(caseService, 'fetchCaseDetails')
-			.and
-			.returnValue(throwError(new HttpErrorResponse({
+		jest.spyOn(caseService, 'fetchCaseDetails')
+			.mockReturnValue(throwError(new HttpErrorResponse({
 				status: 404,
 				statusText: 'Resource not found',
 			})));
-		spyOn(component.hide, 'emit');
+		jest.spyOn(component.hide, 'emit');
 		component.ngOnChanges();
 		fixture.detectChanges();
 		expect(component.hide.emit)
@@ -147,9 +136,8 @@ describe('caseSearchComponent', () => {
 	it('should handle alternative case detail fields', fakeAsync(() => {
 		component.caseNumber = { query: '688296392' };
 		const mockResponse = <any> CaseScenarios[3].scenarios.GET[0].response.body;
-		spyOn(caseService, 'fetchCaseDetails')
-			.and
-			.returnValue(of(mockResponse));
+		jest.spyOn(caseService, 'fetchCaseDetails')
+			.mockReturnValue(of(mockResponse));
 		component.ngOnChanges();
 		fixture.detectChanges();
 		tick();

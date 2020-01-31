@@ -21,7 +21,7 @@ export const SecurityAdvisorySeverityCountScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Mock Severity Count',
 					response: {
 						body: mockCount,

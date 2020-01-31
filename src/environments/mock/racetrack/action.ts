@@ -24,7 +24,7 @@ export const ActionScenarios = [
 		scenarios: {
 			PUT: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 50,
+					delay: 25,
 					description: 'Update to complete the first Action',
 					response: {
 						status: 200,

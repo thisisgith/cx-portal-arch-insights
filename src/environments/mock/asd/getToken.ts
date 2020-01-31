@@ -17,7 +17,7 @@ export const ASDTokenScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 500,
+					delay: 30,
 					description: 'Get ASD Token',
 					response: {
 						body: mockData,

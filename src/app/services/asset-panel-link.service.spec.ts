@@ -30,13 +30,11 @@ describe('AssetPanelLinkService', () => {
 	});
 
 	it('should get asset link data', () => {
-		spyOn(inventoryService, 'getAssets')
-			.and
-			.returnValue(of(<any> AssetLinkScenarios[0].scenarios.GET[0].response.body));
+		jest.spyOn(inventoryService, 'getAssets')
+			.mockReturnValue(of(<any> AssetLinkScenarios[0].scenarios.GET[0].response.body));
 
-		spyOn(inventoryService, 'getNetworkElements')
-			.and
-			.returnValue(of(<any> AssetLinkScenarios[1].scenarios.GET[0].response.body));
+		jest.spyOn(inventoryService, 'getNetworkElements')
+			.mockReturnValue(of(<any> AssetLinkScenarios[1].scenarios.GET[0].response.body));
 
 		assetParams.customerId = '2431199';
 		assetParams.serialNumber = ['FCH2139V1B0'];

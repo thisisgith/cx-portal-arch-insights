@@ -451,7 +451,7 @@ export const SecurityAdvisoryTopScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 350,
+					delay: 44,
 					description: 'Security Advisories - Top - Page 1',
 					response: {
 						body: MockAdvisory(10, 1),
@@ -468,7 +468,7 @@ export const SecurityAdvisoryTopScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 350,
+					delay: 44,
 					description: 'Security Advisories - Top - Page 2',
 					response: {
 						body: MockAdvisory(10, 2),
@@ -485,7 +485,7 @@ export const SecurityAdvisoryTopScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 350,
+					delay: 44,
 					description: 'Security Advisories - Top - Page 3',
 					response: {
 						body: MockAdvisory(10, 3),
@@ -502,7 +502,7 @@ export const SecurityAdvisoryTopScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 350,
+					delay: 44,
 					description: 'Security Advisories - Top - Page 4',
 					response: {
 						body: MockAdvisory(10, 4),

@@ -62,9 +62,8 @@ describe('DevicesWithExceptionsComponent', () => {
 
 	it('should call getAllAssetsWithExceptions on init', () => {
 		const response = { TotalCounts: 1000, AssetsExceptionDetails: [] };
-		spyOn(service, 'getAllAssetsWithExceptions')
-		.and
-		.returnValue(of(response));
+		jest.spyOn(service, 'getAllAssetsWithExceptions')
+		.mockReturnValue(of(response));
 		component.getAllAssetsWithExceptions();
 		expect(service.getAllAssetsWithExceptions)
 			.toHaveBeenCalled();
@@ -123,9 +122,8 @@ describe('DevicesWithExceptionsComponent', () => {
 			softwareType: 'IOS-XE',
 			softwareVersion: '16.3.3',
 		};
-		spyOn(assetService, 'getAssetLinkData')
-			.and
-			.returnValue(of({ }));
+		jest.spyOn(assetService, 'getAssetLinkData')
+			.mockReturnValue(of({ }));
 		component.openAssetDetailsView(selectedAsset);
 		expect(assetService.getAssetLinkData)
 			.toHaveBeenCalled();
@@ -158,7 +156,7 @@ describe('DevicesWithExceptionsComponent', () => {
 
 	it('should not trigger search function', () => {
 		const enterKeyCode = 10;
-		spyOn(component, 'getAllAssetsWithExceptions');
+		jest.spyOn(component, 'getAllAssetsWithExceptions');
 		component.searchText = 'airios';
 		component.textFilter(enterKeyCode);
 		expect(component.getAllAssetsWithExceptions)
@@ -181,9 +179,8 @@ describe('DevicesWithExceptionsComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(service, 'getAllAssetsWithExceptions')
-			.and
-			.returnValue(
+		jest.spyOn(service, 'getAllAssetsWithExceptions')
+			.mockReturnValue(
 				throwError(new HttpErrorResponse(error)),
 			);
 		component.getAllAssetsWithExceptions();
@@ -199,18 +196,19 @@ describe('DevicesWithExceptionsComponent', () => {
 	}));
 
 	it('should call onpanelclose', () => {
-		spyOn(component, 'onPanelClose');
+		jest.spyOn(component, 'onPanelClose');
 		const hidden = true;
 		component.handleHidden(hidden);
 		expect(component.onPanelClose)
 			.toHaveBeenCalled();
 	});
 	it('should not call onpanelclose', () => {
-		spyOn(component, 'onPanelClose');
+		jest.spyOn(component, 'onPanelClose');
 		const hidden = false;
 		component.handleHidden(hidden);
 		expect(component.onPanelClose)
 			.not
 			.toHaveBeenCalled();
 	});
+
 });

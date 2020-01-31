@@ -44,9 +44,7 @@ describe('HeaderComponent', () => {
 	});
 
 	it('should provide a method for opening the the mock settings modal', () => {
-		const promptMockSettingsSpy = spyOn(mockService, 'promptMockSettings')
-			.and
-			.callThrough();
+		const promptMockSettingsSpy = jest.spyOn(mockService, 'promptMockSettings');
 		component.openMockModal();
 		expect(promptMockSettingsSpy)
 			.toHaveBeenCalled();
@@ -54,9 +52,8 @@ describe('HeaderComponent', () => {
 
 	it('should fetch user information when instantiated', () => {
 		const localUserResolve = TestBed.get(UserResolve);
-		const spy = spyOn(localUserResolve, 'getUser')
-			.and
-			.returnValue(of(user));
+		const spy = jest.spyOn(localUserResolve, 'getUser')
+			.mockReturnValue(of(user));
 
 		const localComponent = TestBed.createComponent(HeaderComponent);
 		expect(spy)
@@ -74,8 +71,7 @@ describe('HeaderComponent', () => {
 	});
 
 	it('should update innerHtml on window resize', () => {
-		const spy = spyOn(component, 'onResize').and
-			.callThrough();
+		const spy = jest.spyOn(component, 'onResize');
 		(<any> window).innerWidth = 200;
 		window.dispatchEvent(new Event('resize'));
 		expect(spy)
@@ -120,8 +116,7 @@ describe('HeaderComponent', () => {
 
 	it('should open a dropdown that has not been opened when clicked', () => {
 		const dropdowns = document.getElementsByClassName('cx-header-links');
-		const spy = spyOn(component, 'toggleDropdown').and
-			.callThrough();
+		const spy = jest.spyOn(component, 'toggleDropdown');
 		expect(component.dropdownComponents.first.open)
 			.toBe(false);
 		dropdowns[2].dispatchEvent(new Event('click'));
@@ -136,8 +131,7 @@ describe('HeaderComponent', () => {
 
 	it('should close a dropdown that has been opened when different dropdown is clicked', () => {
 		const dropdowns = document.getElementsByClassName('cx-header-links');
-		const spy = spyOn(component, 'toggleDropdown').and
-			.callThrough();
+		const spy = jest.spyOn(component, 'toggleDropdown');
 		expect(component.dropdownComponents.first.open)
 			.toBe(false);
 		dropdowns[2].dispatchEvent(new Event('click'));
@@ -155,4 +149,5 @@ describe('HeaderComponent', () => {
 		expect(component.dropdownComponents.first.open)
 			.toBe(false);
 	});
+
 });

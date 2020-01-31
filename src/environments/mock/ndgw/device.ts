@@ -49,7 +49,7 @@ export const DeviceScenarios = [
 		scenarios: {
 			POST: [
 				{
-					delay: 250,
+					delay: 38,
 					description: 'scan',
 					response: {
 						body: MockTransactionRequestResponse,
@@ -66,7 +66,7 @@ export const DeviceScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 250,
+					delay: 38,
 					description: 'Scan Status by SN & PID for CAT2034B1H6',
 					response: {
 						body: MockInProgressResponse,
@@ -83,7 +83,7 @@ export const DeviceScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 250,
+					delay: 38,
 					description: 'Scan Status by Transaction ID',
 					response: {
 						body: MockSuccessResponse,

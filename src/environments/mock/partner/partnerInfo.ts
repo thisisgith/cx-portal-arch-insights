@@ -48,7 +48,7 @@ export const PartnerInfoScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(Lifecycle) PartnerInfoListUsingGET',
 					response: {
 						body: PartnerList,

@@ -10,7 +10,6 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SyslogScenarios } from 'src/environments/mock/syslogs/syslogs';
 import { RacetrackInfoService } from '@services';
-
 describe('SyslogsComponent', () => {
 	let component: SyslogsComponent;
 	let fixture: ComponentFixture<SyslogsComponent>;
@@ -43,9 +42,8 @@ describe('SyslogsComponent', () => {
 	});
 
 	it('should set count values on request success', () => {
-		spyOn(syslogsService, 'getSyslogsCount')
-			.and
-			.returnValue(of(SyslogScenarios[0].scenarios.POST[0].response.body));
+		jest.spyOn(syslogsService, 'getSyslogsCount')
+			.mockReturnValue(of(SyslogScenarios[0].scenarios.POST[0].response.body));
 		component.fetchSyslogsCount();
 
 		expect(syslogsService.getSyslogsCount)
@@ -57,9 +55,8 @@ describe('SyslogsComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(syslogsService, 'getSyslogsCount')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(syslogsService, 'getSyslogsCount')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
 		component.fetchSyslogsCount();
 
 		expect(syslogsService.getSyslogsCount)
@@ -67,9 +64,7 @@ describe('SyslogsComponent', () => {
 	});
 
 	it('Should get the syslog message count data', () => {
-		spyOn(racetrackInfoService, 'getCurrentTechnology')
-		.and
-		.callThrough();
+		jest.spyOn(racetrackInfoService, 'getCurrentTechnology');
 		component.ngOnInit();
 		expect(racetrackInfoService.getCurrentTechnology)
 			.toHaveBeenCalled();
@@ -387,15 +382,12 @@ describe('SyslogsComponent', () => {
 	});
 
 	it('should get Fault graph count values on request success', () => {
-		spyOn(syslogsService, 'getFaultTimeRangeData')
-			.and
-			.returnValue(of(SyslogScenarios[9].scenarios.POST[0].response.body));
-		spyOn(syslogsService, 'getFaultStateData')
-			.and
-			.returnValue(of(SyslogScenarios[8].scenarios.POST[0].response.body));
-		spyOn(syslogsService, 'getFaultSeverityData')
-			.and
-			.returnValue(of(SyslogScenarios[7].scenarios.POST[0].response.body));
+		jest.spyOn(syslogsService, 'getFaultTimeRangeData')
+			.mockReturnValue(of(SyslogScenarios[9].scenarios.POST[0].response.body));
+		jest.spyOn(syslogsService, 'getFaultStateData')
+			.mockReturnValue(of(SyslogScenarios[8].scenarios.POST[0].response.body));
+		jest.spyOn(syslogsService, 'getFaultSeverityData')
+			.mockReturnValue(of(SyslogScenarios[7].scenarios.POST[0].response.body));
 		component.visualLabels[0].active = true;
 		component.loadData();
 		fixture.detectChanges();
@@ -410,12 +402,10 @@ describe('SyslogsComponent', () => {
 	});
 
 	it('should get syslog graph count values on request success', () => {
-		spyOn(syslogsService, 'getSyslogTimeRangeData')
-			.and
-			.returnValue(of(SyslogScenarios[6].scenarios.POST[0].response.body));
-		spyOn(syslogsService, 'getSyslogSeverityData')
-			.and
-			.returnValue(of(SyslogScenarios[5].scenarios.POST[0].response.body));
+		jest.spyOn(syslogsService, 'getSyslogTimeRangeData')
+			.mockReturnValue(of(SyslogScenarios[6].scenarios.POST[0].response.body));
+		jest.spyOn(syslogsService, 'getSyslogSeverityData')
+			.mockReturnValue(of(SyslogScenarios[5].scenarios.POST[0].response.body));
 		component.visualLabels[0].active = false;
 		component.loadData();
 		fixture.detectChanges();
@@ -553,5 +543,4 @@ describe('SyslogsComponent', () => {
 		expect(timeRangeFilter[0].filter)
 			.toEqual('Automated');
 	});
-
 });

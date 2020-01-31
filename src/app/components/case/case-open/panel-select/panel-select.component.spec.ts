@@ -89,7 +89,7 @@ describe('PanelSelectComponent', () => {
 	});
 
 	it('should write value', () => {
-		spyOn(component, 'writeValue');
+		jest.spyOn(component, 'writeValue');
 		wrapperComponent.testForm.controls.severity.setValue(3);
 		expect(component.writeValue)
 			.toHaveBeenCalled();
@@ -101,11 +101,12 @@ describe('PanelSelectComponent', () => {
 	});
 
 	it('should select on click', fakeAsync(() => {
-		spyOn(component, 'onChange');
+		jest.spyOn(component, 'onChange');
 		const panel = fixture.debugElement.queryAll(By.css('a'))[1];
 		panel.nativeElement.click();
 		tick();
 		expect(component.onChange)
 			.toHaveBeenCalledWith(2);
 	}));
+
 });

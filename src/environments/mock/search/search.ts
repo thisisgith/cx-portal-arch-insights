@@ -564,7 +564,7 @@ export const SearchScenarios = [
 		scenarios: {
 			POST: [
 				{
-					delay: Math.floor(Math.random() * 200) + 500,
+					delay: 30,
 					description: 'Generic Example',
 					response: {
 						body: mockData,
@@ -573,7 +573,7 @@ export const SearchScenarios = [
 					selected: true,
 				},
 				{
-					delay: Math.floor(Math.random() * 8000) + 5000,
+					delay: 50,
 					description: 'Empty Response',
 					response: {
 						body: {
@@ -586,7 +586,7 @@ export const SearchScenarios = [
 					},
 				},
 				{
-					delay: Math.floor(Math.random() * 200) + 1000,
+					delay: 700,
 					description: 'Failure Response',
 					response: {
 						status: 404,
@@ -595,7 +595,7 @@ export const SearchScenarios = [
 					selected: false,
 				},
 				{
-					delay: Math.floor(Math.random() * 200) + 1000,
+					delay: 30,
 					description: 'Response with Search Token',
 					response: {
 						body: mockDataWithSearchToken,
@@ -611,7 +611,7 @@ export const SearchScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 300,
+					delay: 40,
 					description: 'Typeahead Example',
 					response: {
 						body: mockTypeaheadResponse,
@@ -628,7 +628,7 @@ export const SearchScenarios = [
 		scenarios: {
 			POST: [
 				{
-					delay: 500,
+					delay: 30,
 					description: 'Generic Related Results Example',
 					response: {
 						body: mockGlobalResponse,

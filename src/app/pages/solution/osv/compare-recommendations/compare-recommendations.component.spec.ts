@@ -7,7 +7,6 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { OSVScenarios } from '@mock';
 import { MicroMockModule } from '@cui-x-views/mock';
 import { configureTestSuite } from 'ng-bullet';
-
 describe('CompareRecommendationsComponent', () => {
 	let component: CompareRecommendationsComponent;
 	let fixture: ComponentFixture<CompareRecommendationsComponent>;
@@ -54,7 +53,7 @@ describe('CompareRecommendationsComponent', () => {
 	});
 
 	it('should emit onAction event on accept', () => {
-		spyOn(component.onAction, 'emit');
+		jest.spyOn(component.onAction, 'emit');
 		component.onAcceptClick('1.1');
 		fixture.detectChanges();
 		expect(component.onAction.emit)
@@ -75,4 +74,5 @@ describe('CompareRecommendationsComponent', () => {
 		expect(component.populateBarGraphData({ H: 5 }).length)
 			.toEqual(3);
 	});
+
 });

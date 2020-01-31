@@ -14,7 +14,6 @@ import { OSVService } from '@sdp-api';
 import { HttpErrorResponse } from '@angular/common/http';
 import * as _ from 'lodash-es';
 import { RacetrackInfoService } from '@services';
-
 describe('OptimalSoftwareVersionComponent', () => {
 	let component: OptimalSoftwareVersionComponent;
 	let fixture: ComponentFixture<OptimalSoftwareVersionComponent>;
@@ -70,9 +69,8 @@ describe('OptimalSoftwareVersionComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(osvService, 'getSummary')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(osvService, 'getSummary')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
 		component.ngOnInit();
 
 		fixture.detectChanges();
@@ -85,9 +83,8 @@ describe('OptimalSoftwareVersionComponent', () => {
 
 	it('should switch active filters', () => {
 		const summaryResponse = <any> OSVScenarios[0].scenarios.GET[0].response.body;
-		spyOn(osvService, 'getSummary')
-			.and
-			.returnValue(of(summaryResponse));
+		jest.spyOn(osvService, 'getSummary')
+			.mockReturnValue(of(summaryResponse));
 		component.ngOnInit();
 		component.selectView('assets');
 		fixture.detectChanges();
@@ -104,9 +101,8 @@ describe('OptimalSoftwareVersionComponent', () => {
 
 	it('should select a assetType subfilter', () => {
 		const summaryResponse = <any> OSVScenarios[0].scenarios.GET[0].response.body;
-		spyOn(osvService, 'getSummary')
-			.and
-			.returnValue(of(summaryResponse));
+		jest.spyOn(osvService, 'getSummary')
+			.mockReturnValue(of(summaryResponse));
 		component.ngOnInit();
 		component.selectView('assets');
 		fixture.detectChanges();
@@ -129,9 +125,8 @@ describe('OptimalSoftwareVersionComponent', () => {
 
 	it('should clear the filter when selecting the same subfilter twice', () => {
 		const summaryResponse = <any> OSVScenarios[0].scenarios.GET[0].response.body;
-		spyOn(osvService, 'getSummary')
-			.and
-			.returnValue(of(summaryResponse));
+		jest.spyOn(osvService, 'getSummary')
+			.mockReturnValue(of(summaryResponse));
 		component.ngOnInit();
 		component.selectView('assets');
 		fixture.detectChanges();
@@ -164,9 +159,8 @@ describe('OptimalSoftwareVersionComponent', () => {
 
 	it('should clear the filters on clear button', () => {
 		const summaryResponse = <any> OSVScenarios[0].scenarios.GET[0].response.body;
-		spyOn(osvService, 'getSummary')
-			.and
-			.returnValue(of(summaryResponse));
+		jest.spyOn(osvService, 'getSummary')
+			.mockReturnValue(of(summaryResponse));
 		component.ngOnInit();
 		component.selectView('assets');
 		fixture.detectChanges();
@@ -194,9 +188,8 @@ describe('OptimalSoftwareVersionComponent', () => {
 
 	it('selectView should change the view ', () => {
 		const summaryResponse = <any> OSVScenarios[0].scenarios.GET[0].response.body;
-		spyOn(osvService, 'getSummary')
-			.and
-			.returnValue(of(summaryResponse));
+		jest.spyOn(osvService, 'getSummary')
+			.mockReturnValue(of(summaryResponse));
 		component.ngOnInit();
 		fixture.detectChanges();
 		component.selectView('assets');
@@ -213,9 +206,8 @@ describe('OptimalSoftwareVersionComponent', () => {
 		summaryResponse.assets = 0;
 		summaryResponse.profiles = 0;
 		summaryResponse.versions = 0;
-		spyOn(osvService, 'getSummary')
-			.and
-			.returnValue(of(summaryResponse));
+		jest.spyOn(osvService, 'getSummary')
+			.mockReturnValue(of(summaryResponse));
 		component.ngOnInit();
 		fixture.detectChanges();
 		expect(component.view)
@@ -244,7 +236,7 @@ describe('OptimalSoftwareVersionComponent', () => {
 	});
 
 	it('should call refresh on ibn or usecase filter change', done => {
-		spyOn(component, 'refresh');
+		jest.spyOn(component, 'refresh');
 		fixture.whenStable()
 		.then(() => {
 			racetrackInfoService
@@ -257,4 +249,5 @@ describe('OptimalSoftwareVersionComponent', () => {
 			done();
 		});
 	});
+
 });

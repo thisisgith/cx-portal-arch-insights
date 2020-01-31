@@ -132,7 +132,7 @@ export const CGTScenarios = [
 		scenarios: {
 			POST: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 250,
+					delay: 38,
 					description: '(CGT) CGT-Request Training',
 					response: {
 						body: MockCGTRequestResponse(),
@@ -149,7 +149,7 @@ export const CGTScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 250,
+					delay: 38,
 					description: '(CGT) CGT-GetCustomerQuota',
 					response: {
 						body: MockCustomerQuotaResponse(),
@@ -166,7 +166,7 @@ export const CGTScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 250,
+					delay: 38,
 					description: '(CGT) CGT-GetCompletedTrainings',
 					response: {
 						body: MockCompletedTrainingsResponse(),
@@ -175,7 +175,7 @@ export const CGTScenarios = [
 					selected: true,
 				},
 				{
-					delay: Math.floor(Math.random() * 2000) + 250,
+					delay: 38,
 					description: '(CGT) CGT-GetCompletedTrainings-Empty',
 					response: {
 						body: [],
@@ -184,7 +184,7 @@ export const CGTScenarios = [
 					selected: false,
 				},
 				{
-					delay: Math.floor(Math.random() * 2000) + 250,
+					delay: 38,
 					description: '(CGT) CGT-GetCompletedTrainings-fourCompleted',
 					response: {
 						body: MockCompletedTrainingsResponse('fourCompleted'),
@@ -193,7 +193,7 @@ export const CGTScenarios = [
 					selected: false,
 				},
 				{
-					delay: Math.floor(Math.random() * 2000) + 250,
+					delay: 38,
 					description: '(CGT) CGT-GetCompletedTrainings-twoCompletedThisYear',
 					response: {
 						body: MockCompletedTrainingsResponse('twoCompletedThisYear'),

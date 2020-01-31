@@ -32,4 +32,5 @@ describe('AdminAssetsTableComponent', () => {
 			.toBeTruthy();
 		component.ngOnDestroy();
 	});
+
 });

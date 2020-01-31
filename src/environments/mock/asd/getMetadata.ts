@@ -99,7 +99,7 @@ export const ASDMetadataScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 500,
+					delay: 30,
 					description: 'Get Metadata',
 					response: {
 						body: mockData,

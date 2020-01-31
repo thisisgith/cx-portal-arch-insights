@@ -24,4 +24,5 @@ describe('CloseConfirmComponent', () => {
 		expect(component)
 			.toBeTruthy();
 	});
+
 });

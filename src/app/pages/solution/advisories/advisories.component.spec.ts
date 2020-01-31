@@ -59,56 +59,46 @@ describe('AdvisoriesComponent', () => {
 
 	const buildSpies = () => {
 		const countHeaders = new HttpHeaders().set('X-API-RESULT-COUNT', '4');
-		spyOn(productAlertsService, 'headAdvisoriesFieldNoticesResponse')
-			.and
-			.returnValue(of(new HttpResponse({
+		jest.spyOn(productAlertsService, 'headAdvisoriesFieldNoticesResponse')
+			.mockReturnValue(of(new HttpResponse({
 				headers: countHeaders,
 				status: 200,
 			})));
-		spyOn(productAlertsService, 'headAdvisoriesSecurityAdvisoriesResponse')
-			.and
-			.returnValue(of(new HttpResponse({
+		jest.spyOn(productAlertsService, 'headAdvisoriesSecurityAdvisoriesResponse')
+			.mockReturnValue(of(new HttpResponse({
 				headers: countHeaders,
 				status: 200,
 			})));
-		spyOn(diagnosticsService, 'headCriticalBugsResponse')
-			.and
-			.returnValue(of(new HttpResponse({
+		jest.spyOn(diagnosticsService, 'headCriticalBugsResponse')
+			.mockReturnValue(of(new HttpResponse({
 				headers: countHeaders,
 				status: 200,
 			})));
-		spyOn(productAlertsService, 'getAdvisoriesFieldNotices')
-			.and
-			.returnValue(of(
+		jest.spyOn(productAlertsService, 'getAdvisoriesFieldNotices')
+			.mockReturnValue(of(
 				<any> FieldNoticeAdvisoryScenarios[0]
 				.scenarios.GET[0].response.body,
 			));
-		spyOn(productAlertsService, 'getAdvisoriesSecurityAdvisories')
-			.and
-			.returnValue(of(
+		jest.spyOn(productAlertsService, 'getAdvisoriesSecurityAdvisories')
+			.mockReturnValue(of(
 				<any> AdvisorySecurityAdvisoryScenarios[0].scenarios.GET[0].response.body,
 			));
-		spyOn(productAlertsService, 'getSecurityAdvisorySeverityCount')
-			.and
-			.returnValue(of(
+		jest.spyOn(productAlertsService, 'getSecurityAdvisorySeverityCount')
+			.mockReturnValue(of(
 				SecurityAdvisorySeverityCountScenarios[0].scenarios.GET[0].response.body,
 			));
-		spyOn(productAlertsService, 'getSecurityAdvisoryLastUpdatedCount')
-			.and
-			.returnValue(of(
+		jest.spyOn(productAlertsService, 'getSecurityAdvisoryLastUpdatedCount')
+			.mockReturnValue(of(
 				SecurityAdvisoryLastUpdatedCountScenarios[0].scenarios.GET[0].response.body,
 			));
-		spyOn(productAlertsService, 'getFieldNoticesLastUpdatedCount')
-			.and
-			.returnValue(of(
+		jest.spyOn(productAlertsService, 'getFieldNoticesLastUpdatedCount')
+			.mockReturnValue(of(
 				FieldNoticeCountScenarios[0].scenarios.GET[0].response.body,
 			));
-		spyOn(diagnosticsService, 'getCriticalBugs')
-			.and
-			.returnValue(of(<any> CriticalBugScenarios[5].scenarios.GET[0].response.body));
-		spyOn(diagnosticsService, 'getCriticalBugsStateCount')
-			.and
-			.returnValue(of(
+		jest.spyOn(diagnosticsService, 'getCriticalBugs')
+			.mockReturnValue(of(<any> CriticalBugScenarios[5].scenarios.GET[0].response.body));
+		jest.spyOn(diagnosticsService, 'getCriticalBugsStateCount')
+			.mockReturnValue(of(
 				CriticalBugScenarios[0].scenarios.GET[0].response.body,
 			));
 
@@ -207,36 +197,28 @@ describe('AdvisoriesComponent', () => {
 				status: 404,
 				statusText: 'Resource not found',
 			};
-			spyOn(productAlertsService, 'getFieldNoticesLastUpdatedCount')
-				.and
-				.returnValue(of(
+			jest.spyOn(productAlertsService, 'getFieldNoticesLastUpdatedCount')
+				.mockReturnValue(of(
 					FieldNoticeCountScenarios[0].scenarios.GET[0].response.body,
 				));
-			spyOn(productAlertsService, 'getVulnerabilityCounts')
-				.and
-				.returnValue(of(
+			jest.spyOn(productAlertsService, 'getVulnerabilityCounts')
+				.mockReturnValue(of(
 					VulnerabilityScenarios[0].scenarios.GET[0].response.body,
 				));
-			spyOn(diagnosticsService, 'getCriticalBugsStateCount')
-				.and
-				.returnValue(of(
+			jest.spyOn(diagnosticsService, 'getCriticalBugsStateCount')
+				.mockReturnValue(of(
 					CriticalBugScenarios[0].scenarios.GET[0].response.body,
 				));
-			spyOn(productAlertsService, 'getAdvisoriesFieldNotices')
-				.and
-				.returnValue(throwError(error));
-			spyOn(productAlertsService, 'getAdvisoriesSecurityAdvisories')
-				.and
-				.returnValue(throwError(error));
-			spyOn(productAlertsService, 'getSecurityAdvisorySeverityCount')
-				.and
-				.returnValue(throwError(error));
-			spyOn(productAlertsService, 'getSecurityAdvisoryLastUpdatedCount')
-				.and
-				.returnValue(throwError(error));
-			spyOn(diagnosticsService, 'getCriticalBugs')
-				.and
-				.returnValue(throwError(error));
+			jest.spyOn(productAlertsService, 'getAdvisoriesFieldNotices')
+				.mockReturnValue(throwError(error));
+			jest.spyOn(productAlertsService, 'getAdvisoriesSecurityAdvisories')
+				.mockReturnValue(throwError(error));
+			jest.spyOn(productAlertsService, 'getSecurityAdvisorySeverityCount')
+				.mockReturnValue(throwError(error));
+			jest.spyOn(productAlertsService, 'getSecurityAdvisoryLastUpdatedCount')
+				.mockReturnValue(throwError(error));
+			jest.spyOn(diagnosticsService, 'getCriticalBugs')
+				.mockReturnValue(throwError(error));
 			fixture.detectChanges();
 			tick();
 			const tab = _.find(component.tabs, { key: 'security' });
@@ -328,40 +310,30 @@ describe('AdvisoriesComponent', () => {
 				status: 404,
 				statusText: 'Resource not found',
 			};
-			spyOn(productAlertsService, 'getFieldNoticesLastUpdatedCount')
-				.and
-				.returnValue(of(
+			jest.spyOn(productAlertsService, 'getFieldNoticesLastUpdatedCount')
+				.mockReturnValue(of(
 					FieldNoticeCountScenarios[0].scenarios.GET[0].response.body,
 				));
-			spyOn(diagnosticsService, 'getCriticalBugsStateCount')
-				.and
-				.returnValue(of(
+			jest.spyOn(diagnosticsService, 'getCriticalBugsStateCount')
+				.mockReturnValue(of(
 					CriticalBugScenarios[0].scenarios.GET[0].response.body,
 				));
-			spyOn(productAlertsService, 'getAdvisoriesFieldNotices')
-				.and
-				.returnValue(throwError(error));
-			spyOn(productAlertsService, 'getAdvisoriesSecurityAdvisories')
-				.and
-				.returnValue(throwError(error));
-			spyOn(productAlertsService, 'getSecurityAdvisorySeverityCount')
-				.and
-				.returnValue(throwError(error));
-			spyOn(productAlertsService, 'getSecurityAdvisoryLastUpdatedCount')
-				.and
-				.returnValue(throwError(error));
-			spyOn(productAlertsService, 'headAdvisoriesSecurityAdvisoriesResponse')
-				.and
-				.returnValue(throwError(error));
-			spyOn(productAlertsService, 'headAdvisoriesFieldNoticesResponse')
-				.and
-				.returnValue(throwError(error));
-			spyOn(diagnosticsService, 'headCriticalBugsResponse')
-				.and
-				.returnValue(throwError(error));
-			spyOn(diagnosticsService, 'getCriticalBugs')
-				.and
-				.returnValue(throwError(error));
+			jest.spyOn(productAlertsService, 'getAdvisoriesFieldNotices')
+				.mockReturnValue(throwError(error));
+			jest.spyOn(productAlertsService, 'getAdvisoriesSecurityAdvisories')
+				.mockReturnValue(throwError(error));
+			jest.spyOn(productAlertsService, 'getSecurityAdvisorySeverityCount')
+				.mockReturnValue(throwError(error));
+			jest.spyOn(productAlertsService, 'getSecurityAdvisoryLastUpdatedCount')
+				.mockReturnValue(throwError(error));
+			jest.spyOn(productAlertsService, 'headAdvisoriesSecurityAdvisoriesResponse')
+				.mockReturnValue(throwError(error));
+			jest.spyOn(productAlertsService, 'headAdvisoriesFieldNoticesResponse')
+				.mockReturnValue(throwError(error));
+			jest.spyOn(diagnosticsService, 'headCriticalBugsResponse')
+				.mockReturnValue(throwError(error));
+			jest.spyOn(diagnosticsService, 'getCriticalBugs')
+				.mockReturnValue(throwError(error));
 
 			sendRacetrack();
 
@@ -524,7 +496,7 @@ describe('AdvisoriesComponent', () => {
 		}));
 
 		it('should change the route based on the selected tab', fakeAsync(() => {
-			spyOn(component.router, 'navigate');
+			jest.spyOn(component.router, 'navigate');
 			fixture.detectChanges();
 			tick(1000);
 
@@ -558,7 +530,7 @@ describe('AdvisoriesComponent', () => {
 
 		it('should add the selected filters to the route', fakeAsync(() => {
 			buildSpies();
-			spyOn(component.router, 'navigate');
+			jest.spyOn(component.router, 'navigate');
 			fixture.detectChanges();
 			tick(1000);
 
@@ -661,6 +633,7 @@ describe('AdvisoriesComponent', () => {
 			fixture.destroy();
 			flush();
 		}));
+
 	});
 
 	describe('Query Params: Security Advisory', () => {
@@ -731,6 +704,7 @@ describe('AdvisoriesComponent', () => {
 			fixture.destroy();
 			flush();
 		}));
+
 	});
 
 	describe('Query Params: Field Notice', () => {
@@ -797,6 +771,7 @@ describe('AdvisoriesComponent', () => {
 			fixture.destroy();
 			flush();
 		}));
+
 	});
 
 	describe('Query Params: Critical Bug', () => {
@@ -863,5 +838,6 @@ describe('AdvisoriesComponent', () => {
 			fixture.destroy();
 			flush();
 		}));
+
 	});
 });

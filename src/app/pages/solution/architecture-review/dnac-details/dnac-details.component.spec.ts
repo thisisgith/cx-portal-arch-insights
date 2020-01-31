@@ -11,7 +11,6 @@ import { ActivatedRoute } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { user } from '@mock';
 import { HttpErrorResponse } from '@angular/common/http';
-
 describe('DnacDetailsComponent', () => {
 	let component: DnacDetailsComponent;
 	let fixture: ComponentFixture<DnacDetailsComponent>;
@@ -95,9 +94,8 @@ describe('DnacDetailsComponent', () => {
 			},
 		};
 
-		spyOn(service, 'getDnacList')
-			.and
-			.returnValue(of(response));
+		jest.spyOn(service, 'getDnacList')
+			.mockReturnValue(of(response));
 		component.getNetworkDevicesCount();
 		expect(service.getDnacList)
 			.toHaveBeenCalled();
@@ -105,9 +103,8 @@ describe('DnacDetailsComponent', () => {
 
 	it('should not call getDnacList', () => {
 
-		spyOn(service, 'getDnacList')
-			.and
-			.returnValue(of([]));
+		jest.spyOn(service, 'getDnacList')
+			.mockReturnValue(of([]));
 		component.getNetworkDevicesCount();
 		expect(service.getDnacList)
 			.toHaveBeenCalled();
@@ -118,9 +115,8 @@ describe('DnacDetailsComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(service, 'getDnacList')
-			.and
-			.returnValue(
+		jest.spyOn(service, 'getDnacList')
+			.mockReturnValue(
 				throwError(new HttpErrorResponse(error)),
 			);
 		component.getNetworkDevicesCount();

@@ -35,4 +35,5 @@ describe('MultiGaugeComponent', () => {
 		expect(typelessComponent.initialized)
 			.toBeTruthy();
 	});
+
 });

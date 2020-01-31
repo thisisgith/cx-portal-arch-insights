@@ -61,9 +61,8 @@ describe('TechFormComponent', () => {
 	});
 
 	it('should refresh problemArea options on RMA change', fakeAsync(() => {
-		spyOn(caseService, 'fetchProblemArea')
-			.and
-			.returnValue(
+		jest.spyOn(caseService, 'fetchProblemArea')
+			.mockReturnValue(
 				of(null),
 			);
 		wrapperComponent.requestRma = true;
@@ -74,9 +73,8 @@ describe('TechFormComponent', () => {
 	}));
 
 	it('should refresh subtech options on tech change', fakeAsync(() => {
-		spyOn(caseService, 'fetchSubTechList')
-			.and
-			.returnValue(
+		jest.spyOn(caseService, 'fetchSubTechList')
+			.mockReturnValue(
 				of({ subTechList: [] }),
 			);
 		component.form.controls.technology.setValue('New Tech Value!');
@@ -86,9 +84,8 @@ describe('TechFormComponent', () => {
 	}));
 
 	it('should refresh problemArea options on Subtech change', fakeAsync(() => {
-		spyOn(caseService, 'fetchProblemArea')
-			.and
-			.returnValue(
+		jest.spyOn(caseService, 'fetchProblemArea')
+			.mockReturnValue(
 				of({ problemArea: { customerActivities: [] } }),
 			);
 		component.form.controls.subtech.setValue('New Subtech Value!');
@@ -98,9 +95,8 @@ describe('TechFormComponent', () => {
 	}));
 
 	it('should refresh suggestions when called', fakeAsync(() => {
-		spyOn(caseService, 'fetchClassification')
-			.and
-			.returnValue(
+		jest.spyOn(caseService, 'fetchClassification')
+			.mockReturnValue(
 				of({
 					locatorId: '01fbb089ed4',
 					prcode_time: 44,
@@ -179,7 +175,7 @@ describe('TechFormComponent', () => {
 	}));
 
 	it('should call onSeeAll() on seeAlloptions click', () => {
-		spyOn(component, 'onSeeAll');
+		jest.spyOn(component, 'onSeeAll');
 		const button = fixture.debugElement.query(By.css('a[data-auto-id="SeeAllTechs"]'));
 		button.nativeElement.click();
 
@@ -197,7 +193,7 @@ describe('TechFormComponent', () => {
 	});
 
 	it('should call refreshPredictions', () => {
-		spyOn(component, 'refreshPredictions');
+		jest.spyOn(component, 'refreshPredictions');
 		component.displayAll = true;
 		component.onRefreshSuggestions();
 		fixture.detectChanges();
@@ -224,4 +220,5 @@ describe('TechFormComponent', () => {
 		expect(component.displayAll)
 			.toBeTruthy();
 	});
+
 });

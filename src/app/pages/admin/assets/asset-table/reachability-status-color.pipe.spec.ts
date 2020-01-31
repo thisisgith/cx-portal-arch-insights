@@ -18,4 +18,5 @@ describe('AppStatusColorPipe', () => {
 		expect(cssClass)
 			.toBe('#e3e3e3');
 	});
+
 });

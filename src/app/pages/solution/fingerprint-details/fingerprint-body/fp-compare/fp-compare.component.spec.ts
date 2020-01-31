@@ -12,7 +12,6 @@ import { throwError, of } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { user, ComparisonViewScenarios } from '@mock';
 import { By } from '@angular/platform-browser';
-
 describe('FpCompareComponent', () => {
 	let component: FpCompareComponent;
 	let fixture: ComponentFixture<FpCompareComponent>;
@@ -66,9 +65,8 @@ describe('FpCompareComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(crashPreventionService, 'getListdevice')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(crashPreventionService, 'getListdevice')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
 		tick();
 		fixture.detectChanges();
 		expect(component.listdeviceData.length)
@@ -117,18 +115,16 @@ describe('FpCompareComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(crashPreventionService, 'getListdevice')
-		.and
-		.returnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(crashPreventionService, 'getListdevice')
+		.mockReturnValue(throwError(new HttpErrorResponse(error)));
 		component.pidsSelection('ErrorData');
 		fixture.detectChanges();
 		expect(component.deviceId1)
 		.toBeNull();
 	});
 	it('should check onselection productFamilyA', fakeAsync(() => {
-		spyOn(crashPreventionService, 'getListdevice')
-			.and
-			.returnValue(of(ComparisonViewScenarios[1].scenarios.GET[0].response.body));
+		jest.spyOn(crashPreventionService, 'getListdevice')
+			.mockReturnValue(of(ComparisonViewScenarios[1].scenarios.GET[0].response.body));
 		component.pidsSelection('AIR-CT5760');
 		tick();
 		fixture.detectChanges();
@@ -146,7 +142,7 @@ describe('FpCompareComponent', () => {
 		.toBeTruthy();
 	});
 	it('should check reError emit', () => {
-		spyOn(component.reqError, 'emit');
+		jest.spyOn(component.reqError, 'emit');
 		const errorMsg = 'error';
 		component.showError(errorMsg);
 		fixture.detectChanges();
@@ -192,9 +188,8 @@ describe('FpCompareComponent', () => {
 	}));
 
 	it('Should return the searched getListdevice response', fakeAsync(() => {
-		spyOn(crashPreventionService, 'getListdevice')
-			.and
-			.returnValue(of(ComparisonViewScenarios[1].scenarios.GET[0].response.body));
+		jest.spyOn(crashPreventionService, 'getListdevice')
+			.mockReturnValue(of(ComparisonViewScenarios[1].scenarios.GET[0].response.body));
 		component.ngOnChanges({
 			devices: {
 				currentValue: { deviceId1: '' },
@@ -210,12 +205,10 @@ describe('FpCompareComponent', () => {
 	}));
 
 	it('should check for ngOnchanges in ProductFamily and getListdevice', () => {
-		spyOn(crashPreventionService, 'getProductFamily')
-			.and
-			.returnValue(of(<any> []));
-		spyOn(crashPreventionService, 'getListdevice')
-			.and
-			.returnValue(of(<any> []));
+		jest.spyOn(crashPreventionService, 'getProductFamily')
+			.mockReturnValue(of(<any> []));
+		jest.spyOn(crashPreventionService, 'getListdevice')
+			.mockReturnValue(of(<any> []));
 		component.ngOnChanges({
 			devices: {
 				currentValue: null,
@@ -230,4 +223,5 @@ describe('FpCompareComponent', () => {
 		expect(crashPreventionService.getListdevice)
 			.toHaveBeenCalledTimes(0);
 	});
+
 });

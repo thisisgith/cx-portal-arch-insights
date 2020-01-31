@@ -339,7 +339,7 @@ export const ComplianceScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Summary',
 					response: {
 						body: violationGridData,
@@ -356,7 +356,7 @@ export const ComplianceScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Summary',
 					response: {
 						body: assetGridData,
@@ -373,7 +373,7 @@ export const ComplianceScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Details',
 					response: {
 						body: rccPolicyRuleDetailsData,
@@ -390,7 +390,7 @@ export const ComplianceScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Details',
 					response: {
 						body: rccViolationDetailsData,
@@ -407,7 +407,7 @@ export const ComplianceScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Details',
 					response: {
 						body: violationFilterData,
@@ -424,7 +424,7 @@ export const ComplianceScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Details',
 					response: {
 						body: assetFilterData,
@@ -441,7 +441,7 @@ export const ComplianceScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Violation 360 Details',
 					response: {
 						body: violationDetails,
@@ -458,7 +458,7 @@ export const ComplianceScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Policy Rule Details',
 					response: {
 						body: policyRuleDetails,
@@ -475,7 +475,7 @@ export const ComplianceScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Violation 360 Details',
 					response: {
 						body: emptyData,
@@ -492,7 +492,7 @@ export const ComplianceScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Violation 360 Details',
 					response: {
 						body: emptyViolationDataDetails,
@@ -509,7 +509,7 @@ export const ComplianceScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Summary',
 					response: {
 						body: emptyViolationGridData,
@@ -526,7 +526,7 @@ export const ComplianceScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Filter Asset Details Empty',
 					response: {
 						body: emptyViolationGridData,
@@ -543,7 +543,7 @@ export const ComplianceScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Filter Asset Details Empty',
 					response: {
 						body: assetGridData,
@@ -560,7 +560,7 @@ export const ComplianceScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Filter Asset Details Empty',
 					response: {
 						body: emprytAssetGridData,
@@ -577,7 +577,7 @@ export const ComplianceScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Policy Rule Details',
 					response: {
 						body: emptyPolicyRuleDetails,
@@ -594,7 +594,7 @@ export const ComplianceScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'OptIn Status True',
 					response: {
 						body: optInStatusData,

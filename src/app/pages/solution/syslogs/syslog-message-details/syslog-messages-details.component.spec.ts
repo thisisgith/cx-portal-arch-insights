@@ -12,7 +12,6 @@ import { user } from '@mock';
 import { SyslogMessagesDetailsComponent } from './syslog-messages-details.component';
 import { SyslogMessagesDetailsModule } from './syslog-messages-details.module';
 import { SyslogScenarios } from 'src/environments/mock/syslogs/syslogs';
-
 describe('SyslogMessagesDetailsComponent', () => {
 	let component: SyslogMessagesDetailsComponent;
 	let fixture: ComponentFixture<SyslogMessagesDetailsComponent>;
@@ -62,9 +61,8 @@ describe('SyslogMessagesDetailsComponent', () => {
 		const param = {
 			syslogId: '12345',
 		};
-		spyOn(syslogsService, 'getPanelGridData')
-			.and
-			.returnValue(of(SyslogScenarios[2].scenarios.POST[0].response.body));
+		jest.spyOn(syslogsService, 'getPanelGridData')
+			.mockReturnValue(of(SyslogScenarios[2].scenarios.POST[0].response.body));
 
 		const asset: SyslogPanelGridData = Object.create({ });
 		asset.count = 10;
@@ -86,9 +84,8 @@ describe('SyslogMessagesDetailsComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		 };
-		spyOn(syslogsService, 'getPanelGridData')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(syslogsService, 'getPanelGridData')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
 
 		component.asset = {
 			syslogId: '12345',
@@ -105,9 +102,8 @@ describe('SyslogMessagesDetailsComponent', () => {
 			.toBeFalsy();
 	});
 	it('should get all category', () => {
-		spyOn(syslogsService, 'getSyslogsCategoryList')
-		.and
-		.returnValue(of(SyslogScenarios[3].scenarios.GET[0].response.body));
+		jest.spyOn(syslogsService, 'getSyslogsCategoryList')
+		.mockReturnValue(of(SyslogScenarios[3].scenarios.GET[0].response.body));
 		component.getCategoryList();
 		expect(syslogsService.getSyslogsCategoryList)
 		.toHaveBeenCalled();
@@ -120,9 +116,8 @@ describe('SyslogMessagesDetailsComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(syslogsService, 'getSyslogsCategoryList')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
+		jest.spyOn(syslogsService, 'getSyslogsCategoryList')
+			.mockReturnValue(throwError(new HttpErrorResponse(error)));
 		component.getCategoryList();
 		expect(syslogsService.getSyslogsCategoryList)
 				.toHaveBeenCalled();
@@ -149,16 +144,14 @@ describe('SyslogMessagesDetailsComponent', () => {
 	});
 
 	it('Should Call the syslog categoryList data', () => {
-		spyOn(component, 'getCategoryList')
-			.and
-			.callThrough();
-		spyOn(syslogsService, 'getSyslogsCategoryList')
-		.and
-		.returnValue(of(SyslogScenarios[3].scenarios.GET[0].response.body));
+		jest.spyOn(component, 'getCategoryList');
+		jest.spyOn(syslogsService, 'getSyslogsCategoryList')
+		.mockReturnValue(of(SyslogScenarios[3].scenarios.GET[0].response.body));
 		component.ngOnChanges();
 		expect(component.getCategoryList)
 				.toHaveBeenCalled();
 		expect(component.categoryList.length)
 				.toBeGreaterThan(0);
 	});
+
 });

@@ -56,4 +56,5 @@ describe('UserMgmtComponent', () => {
 		expect(component.sortProps.dir)
 			.toBe('asc');
 	});
+
 });

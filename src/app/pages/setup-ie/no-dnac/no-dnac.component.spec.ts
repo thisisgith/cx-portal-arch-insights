@@ -23,7 +23,7 @@ describe('NoDNACComponent', () => {
 	let fixture: ComponentFixture<NoDNACComponent>;
 	let setupService: SetupIEService;
 	let stateService: SetupIEStateService;
-	let dnacSpy: jasmine.Spy;
+	let dnacSpy;
 
 	describe('with fake window', () => {
 		configureTestSuite(() => {
@@ -44,9 +44,8 @@ describe('NoDNACComponent', () => {
 		beforeEach(async(() => {
 			setupService = TestBed.get(SetupIEService);
 			stateService = TestBed.get(SetupIEStateService);
-			dnacSpy = spyOn(setupService, 'checkForDNAC')
-				.and
-				.returnValue(of(true));
+			dnacSpy = jest.spyOn(setupService, 'checkForDNAC')
+				.mockReturnValue(of(true));
 			stateService.clearState();
 			stateService.setState({
 				compKey: 8,
@@ -59,8 +58,7 @@ describe('NoDNACComponent', () => {
 		it('should go to next step on Enter keypress', fakeAsync(() => {
 			const sub = component.onStepComplete
 				.subscribe(() => {
-					expect()
-						.nothing();
+					expect.anything();
 					sub.unsubscribe();
 				});
 			component.clickedGuideLink = true;
@@ -88,9 +86,8 @@ describe('NoDNACComponent', () => {
 		beforeEach(async(() => {
 			setupService = TestBed.get(SetupIEService);
 			stateService = TestBed.get(SetupIEStateService);
-			dnacSpy = spyOn(setupService, 'checkForDNAC')
-				.and
-				.returnValue(of(true));
+			dnacSpy = jest.spyOn(setupService, 'checkForDNAC')
+				.mockReturnValue(of(true));
 			stateService.clearState();
 			stateService.setState({
 				compKey: 8,
@@ -111,12 +108,12 @@ describe('NoDNACComponent', () => {
 		it('should go home', () => {
 			const sub = component.onStepComplete
 				.subscribe(() => {
-					expect()
-						.nothing();
+					expect.anything();
 					sub.unsubscribe();
 				});
 			component.goHome();
 			fixture.detectChanges();
 		});
 	});
+
 });

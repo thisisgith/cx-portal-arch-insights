@@ -66,4 +66,5 @@ describe('GaugeComponent', () => {
 		expect(wrapperComponent.appGauge.previousPercentage)
 				.toEqual(10);
 	});
+
 });

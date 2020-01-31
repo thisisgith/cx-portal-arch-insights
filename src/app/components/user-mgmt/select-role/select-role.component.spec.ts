@@ -83,7 +83,7 @@ describe('SelectRoleComponent', () => {
 		};
 		component.roleName = 'test';
 		component.handleClick(dummyData);
-		expect()
-			.nothing();
+		expect.anything();
 	});
+
 });

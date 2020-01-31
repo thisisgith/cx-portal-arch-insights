@@ -18,7 +18,6 @@ import { MicroMockModule } from '@cui-x-views/mock';
 import { HttpErrorResponse } from '@angular/common/http';
 import { By } from '@angular/platform-browser';
 import { MlvisualizationInfo } from 'src/environments/mock/crash-prevention/comparisonview';
-
 describe('MlVisualizationComponent', () => {
 	let component: MlVisualizationComponent;
 	let fixture: ComponentFixture<MlVisualizationComponent>;
@@ -70,11 +69,11 @@ describe('MlVisualizationComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(
+		jest.spyOn(
 			mlVisualizationService,
 			'getMlVisualizationDevices',
-		).and
-		.returnValue(throwError(new HttpErrorResponse(error)));
+		)
+		.mockReturnValue(throwError(new HttpErrorResponse(error)));
 		component.ngOnChanges({
 			asset: {
 				currentValue: {
@@ -161,7 +160,7 @@ describe('MlVisualizationComponent', () => {
 	});
 
 	it('should check ml show Device Comparison', fakeAsync(() => {
-		spyOn(component, 'showDeviceComparison');
+		jest.spyOn(component, 'showDeviceComparison');
 		const button = fixture.debugElement.query(
 			By.css('[data-auto-id="CompareButton"]'),
 		);
@@ -186,11 +185,11 @@ describe('MlVisualizationComponent', () => {
 	});
 
 	it('Should set device list and data state on response', done => {
-		spyOn(
+		jest.spyOn(
 			mlVisualizationService,
 			'getMlVisualizationDevices',
-		).and
-		.returnValue(
+		)
+		.mockReturnValue(
 			of(ComparisonViewScenarios[5].scenarios.GET[0].response.body),
 		);
 		component.ngOnChanges({
@@ -218,11 +217,11 @@ describe('MlVisualizationComponent', () => {
 	});
 
 	it('Should not load data when productFamily is null', done => {
-		spyOn(
+		jest.spyOn(
 			mlVisualizationService,
 			'getMlVisualizationDevices',
-		).and
-		.returnValue(
+		)
+		.mockReturnValue(
 			of(ComparisonViewScenarios[5].scenarios.GET[0].response.body),
 		);
 		component.ngOnChanges({
@@ -248,9 +247,8 @@ describe('MlVisualizationComponent', () => {
 	});
 
 	it('should not load data if response contains empty values', done => {
-		spyOn(mlVisualizationService, 'getMlVisualizationDevices')
-		.and
-		.returnValue(of(ComparisonViewScenarios[9].scenarios.GET[0].response.body));
+		jest.spyOn(mlVisualizationService, 'getMlVisualizationDevices')
+		.mockReturnValue(of(ComparisonViewScenarios[9].scenarios.GET[0].response.body));
 		component.ngOnChanges({
 			asset: {
 				currentValue: {

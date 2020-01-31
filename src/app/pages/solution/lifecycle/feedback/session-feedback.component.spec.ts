@@ -7,7 +7,6 @@ import { RacetrackContentService, UserFeedbackEntitySchema } from '@sdp-api';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { of } from 'rxjs';
 import { UserResolve } from '@utilities';
-
 describe('SessionFeedbackComponent', () => {
 	let component: SessionFeedbackComponent;
 	let fixture: ComponentFixture<SessionFeedbackComponent>;
@@ -40,9 +39,8 @@ describe('SessionFeedbackComponent', () => {
 
 	beforeEach(() => {
 		userResolve = TestBed.get(UserResolve);
-		spyOn(userResolve, 'getCustomerId')
-			.and
-			.returnValue(of('2431199'));
+		jest.spyOn(userResolve, 'getCustomerId')
+			.mockReturnValue(of('2431199'));
 		fixture = TestBed.createComponent(SessionFeedbackComponent);
 		component = fixture.componentInstance;
 	});
@@ -74,9 +72,8 @@ describe('SessionFeedbackComponent', () => {
 			feedbackId: 'feedback1',
 			thumbs: 'UP',
 		};
-		const saveFeedbackSpy = spyOn(contentService, 'saveFeedback')
-			.and
-			.returnValue(of(mockResult));
+		const saveFeedbackSpy = jest.spyOn(contentService, 'saveFeedback')
+			.mockReturnValue(of(mockResult));
 		const thumbUpBtn = fixture.debugElement.query(
 			By.css('[data-auto-id="thumbUpBtn"]'),
 		);
@@ -104,9 +101,8 @@ describe('SessionFeedbackComponent', () => {
 			By.css('[data-auto-id="FeedbackPopup-Submit"]'),
 		);
 
-		const updateFeedbackSpy = spyOn(contentService, 'updateFeedback')
-			.and
-			.returnValue(of(null));
+		const updateFeedbackSpy = jest.spyOn(contentService, 'updateFeedback')
+			.mockReturnValue(of(null));
 
 		submitBtn.nativeElement.click();
 		tick();
@@ -117,4 +113,5 @@ describe('SessionFeedbackComponent', () => {
 		expect(updateFeedbackSpy)
 			.toHaveBeenCalled();
 	}));
+
 });

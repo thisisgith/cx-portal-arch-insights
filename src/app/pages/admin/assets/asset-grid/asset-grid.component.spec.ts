@@ -32,4 +32,5 @@ describe('AdminAssetsGridComponent', () => {
 			.toBeTruthy();
 		component.ngOnDestroy();
 	});
+
 });

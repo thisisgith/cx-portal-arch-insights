@@ -311,7 +311,7 @@ export const ATXScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(ATX) IBN-Campus Network Assurance-Onboard',
 					response: {
 						body: MockATX('IBN', 'Campus Network Assurance', 'Onboard'),
@@ -320,7 +320,7 @@ export const ATXScenarios = [
 					selected: true,
 				},
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(ATX) IBN-Campus Network Assurance-Onboard-singleNoScheduled',
 					response: {
 						body: MockATX('IBN', 'Campus Network Assurance', 'Onboard', 'singleNoScheduled'),
@@ -329,7 +329,7 @@ export const ATXScenarios = [
 					selected: false,
 				},
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(ATX) IBN-Campus Network Assurance-Onboard-twoCompleted',
 					response: {
 						body: MockATX('IBN', 'Campus Network Assurance', 'Onboard', 'twoCompleted'),
@@ -338,7 +338,7 @@ export const ATXScenarios = [
 					selected: false,
 				},
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(ATX) IBN-Campus Network Assurance-Onboard-twoScheduled',
 					response: {
 						body: MockATX('IBN', 'Campus Network Assurance', 'Onboard', 'twoScheduled'),
@@ -347,7 +347,7 @@ export const ATXScenarios = [
 					selected: false,
 				},
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(ATX) IBN-Campus Network Assurance-Onboard-twoRecommended',
 					response: {
 						body: MockATX('IBN', 'Campus Network Assurance', 'Onboard', 'twoRecommended'),
@@ -356,7 +356,7 @@ export const ATXScenarios = [
 					selected: false,
 				},
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(ATX) IBN-Campus Network Assurance-Onboard-emptyRecordingUrl',
 					response: {
 						body: MockATX('IBN', 'Campus Network Assurance', 'Onboard', 'emptyRecordingUrl'),
@@ -365,7 +365,7 @@ export const ATXScenarios = [
 					selected: false,
 				},
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(ATX) IBN-Campus Network Assurance-Onboard-missingRecordingUrl',
 					response: {
 						body: MockATX('IBN', 'Campus Network Assurance', 'Onboard', 'missingRecordingUrl'),
@@ -374,7 +374,7 @@ export const ATXScenarios = [
 					selected: false,
 				},
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(ATX) IBN-Campus Network Assurance-Onboard-nullRecordingUrl',
 					response: {
 						body: MockATX('IBN', 'Campus Network Assurance', 'Onboard', 'nullRecordingUrl'),
@@ -383,7 +383,7 @@ export const ATXScenarios = [
 					selected: false,
 				},
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(ATX) IBN-Campus Network Assurance-Onboard-emptySessions',
 					response: {
 						body: MockATX('IBN', 'Campus Network Assurance', 'Onboard', 'emptySessions'),
@@ -392,7 +392,7 @@ export const ATXScenarios = [
 					selected: false,
 				},
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(ATX) IBN-Campus Network Assurance-Onboard-missingSessions',
 					response: {
 						body: MockATX('IBN', 'Campus Network Assurance', 'Onboard', 'missingSessions'),
@@ -401,7 +401,7 @@ export const ATXScenarios = [
 					selected: false,
 				},
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(ATX) IBN-Campus Network Assurance-Onboard-nullSessions',
 					response: {
 						body: MockATX('IBN', 'Campus Network Assurance', 'Onboard', 'nullSessions'),
@@ -410,7 +410,7 @@ export const ATXScenarios = [
 					selected: false,
 				},
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(ATX) IBN-Campus Network Assurance-Onboard-partnerBranded',
 					response: {
 						body: MockATX('IBN', 'Campus Network Assurance', 'Onboard', 'partnerBranded'),
@@ -419,7 +419,7 @@ export const ATXScenarios = [
 					selected: false,
 				},
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(ATX) IBN-Campus Network Assurance-Onboard-twoRecommendedWithPartner',
 					response: {
 						body: MockATX('IBN', 'Campus Network Assurance', 'Onboard', 'twoRecommendedWithPartner'),
@@ -428,7 +428,7 @@ export const ATXScenarios = [
 					selected: false,
 				},
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(ATX) IBN-Campus Network Assurance-Onboard-twoScheduledWithPartner',
 					response: {
 						body: MockATX('IBN', 'Campus Network Assurance', 'Onboard', 'twoScheduledWithPartner'),
@@ -445,7 +445,7 @@ export const ATXScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(ATX) IBN-Campus Network Assurance-Implement',
 					response: {
 						body: MockATX('IBN', 'Campus Network Assurance', 'Implement'),
@@ -462,7 +462,7 @@ export const ATXScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(ATX) IBN-Campus Network Assurance-Use',
 					response: {
 						body: MockATX('IBN', 'Campus Network Assurance', 'Use'),
@@ -479,7 +479,7 @@ export const ATXScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(ATX) IBN-Campus Network Segmentation-Onboard',
 					response: {
 						body: MockATX('IBN', 'Campus Network Segmentation', 'Onboard'),
@@ -496,7 +496,7 @@ export const ATXScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(ATX) IBN-Scalable Access Policy-Onboard',
 					response: {
 						body: MockATX('IBN', 'Scalable Access Policy', 'Onboard'),
@@ -514,7 +514,7 @@ export const ATXScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(ATX) IBN-Network Device Onboarding-Onboard',
 					response: {
 						body: MockATX('IBN', 'Network Device Onboarding', 'Onboard'),
@@ -532,7 +532,7 @@ export const ATXScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(ATX) IBN-Campus Software Image Management-Onboard',
 					response: {
 						body: MockATX('IBN', 'Campus Software Image Management', 'Onboard'),
@@ -550,7 +550,7 @@ export const ATXScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(ATX) IBN-Campus Network Assurance-Onboard-singleNoScheduled',
 					response: {
 						body: MockATX('IBN', 'Campus Network Assurance', 'Onboard', 'singleNoScheduled'),
@@ -568,7 +568,7 @@ export const ATXScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(ATX) IBN-Campus Network Assurance-Onboard-twoProviders(293531,293532)',
 					response: {
 						body: {
@@ -590,7 +590,7 @@ export const ATXScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(ATX) IBN-Campus Network Assurance-Onboard-With partner filter',
 					response: {
 						body: MockATX('IBN', 'Campus Network Assurance', 'Onboard', 'partnerFilter'),
@@ -615,7 +615,7 @@ export const CancelATXScenarios = [
 		scenarios: {
 			DELETE: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(ATX) IBN-Cancel ATX Session1',
 					response: {
 						status: 200,
@@ -631,7 +631,7 @@ export const CancelATXScenarios = [
 		scenarios: {
 			DELETE: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(ATX) IBN-Cancel ATX Session2',
 					response: {
 						status: 200,
@@ -647,7 +647,7 @@ export const CancelATXScenarios = [
 		scenarios: {
 			DELETE: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(ATX) IBN-Cancel ATX3 Session13',
 					response: {
 						status: 200,
@@ -669,7 +669,7 @@ export const RegisterATXScenarios = [
 		scenarios: {
 			POST: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(ATX) IBN-Register ATX Session1',
 					response: {
 						status: 200,
@@ -685,7 +685,7 @@ export const RegisterATXScenarios = [
 		scenarios: {
 			POST: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(ATX) IBN-Register ATX Session2',
 					response: {
 						status: 200,
@@ -701,7 +701,7 @@ export const RegisterATXScenarios = [
 		scenarios: {
 			POST: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(ATX) IBN-Register ATX3 Session1',
 					response: {
 						status: 200,
@@ -717,7 +717,7 @@ export const RegisterATXScenarios = [
 		scenarios: {
 			POST: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(ATX) IBN-Register ATX1 Session1',
 					response: {
 						status: 200,
@@ -733,7 +733,7 @@ export const RegisterATXScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: '(ATX) IBN-Campus Network Assurance-Onboard-EntitlementV2',
 					response: {
 						body: MockATX('IBN', 'Campus Network Assurance', 'Onboard'),

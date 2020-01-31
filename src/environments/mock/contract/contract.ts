@@ -87,7 +87,7 @@ export const ContractScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: 'Contract Details Success',
 					response: {
 						body: mockData,
@@ -104,7 +104,7 @@ export const ContractScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 800,
+					delay: 30,
 					description: 'Contract Details Success Other',
 					response: {
 						body: mockDataOther,
@@ -121,7 +121,7 @@ export const ContractScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 800,
+					delay: 30,
 					description: 'Contract Details Success Other Other',
 					response: {
 						body: mockDataOtherOther,
@@ -138,7 +138,7 @@ export const ContractScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 800,
+					delay: 30,
 					description: 'Contract Counts Data',
 					response: {
 						body: contractCountData,
@@ -164,7 +164,7 @@ export const ContractScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: 'Serial Number FOC1544Y16T',
 					response: {
 						body: mockData,
@@ -181,7 +181,7 @@ export const ContractScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: Math.floor(Math.random() * 2000) + 500,
+					delay: 30,
 					description: 'Serial Number FOC1544Y16T',
 					response: {
 						body: mockData,

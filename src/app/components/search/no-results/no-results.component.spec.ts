@@ -25,4 +25,5 @@ describe('NoResultsComponent', () => {
 		expect(component)
 			.toBeTruthy();
 	});
+
 });

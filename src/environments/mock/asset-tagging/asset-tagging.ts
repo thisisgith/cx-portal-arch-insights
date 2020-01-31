@@ -127,7 +127,7 @@ export const AssetTaggingScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'To get all Tags and Associated Devices',
 					response: {
 						body: getAllTags,
@@ -144,7 +144,7 @@ export const AssetTaggingScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'To get Tags associated with policies',
 					response: {
 						body: getAssociatedPolicyTags,
@@ -161,7 +161,7 @@ export const AssetTaggingScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'To get tags in asset 360 page',
 					response: {
 						body: getTagForAssets,
@@ -195,7 +195,7 @@ export const AssetTaggingScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'To get policy list',
 					response: {
 						body: getPolicyList,
@@ -212,7 +212,7 @@ export const AssetTaggingScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'To get Opt status of complience',
 					response: {
 						body: getOptInStatus,
@@ -229,7 +229,7 @@ export const AssetTaggingScenarios = [
 		scenarios: {
 			POST: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'To save a policy group',
 					response: {
 						body: null,
@@ -246,7 +246,7 @@ export const AssetTaggingScenarios = [
 		scenarios: {
 			PUT: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'To update a Opt in status in complience as true',
 					response: {
 						body: updateOptInStatus,
@@ -264,7 +264,7 @@ export const AssetTaggingScenarios = [
 		scenarios: {
 			PUT: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'To update a Opt in status in complience as false',
 					response: {
 						body: updateOptInStatus,

@@ -257,4 +257,5 @@ describe('QuickTourComponent', () => {
 			done();
 		});
 	});
+
 });

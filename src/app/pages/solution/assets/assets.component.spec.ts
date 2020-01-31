@@ -73,55 +73,38 @@ describe('AssetsComponent', () => {
 		const countHeaders = new HttpHeaders().set('X-API-RESULT-COUNT', '4');
 		const hardwareAssets = getActiveBody(HardwareAssetScenarios[0]);
 		const systemAssets = getActiveBody(SystemAssetScenarios[0]);
-		spyOn(inventoryService, 'getHardwareAssets')
-			.and
-			.returnValue(of(hardwareAssets));
-		spyOn(inventoryService, 'getSystemAssets')
-			.and
-			.returnValue(of(systemAssets));
-		spyOn(inventoryService, 'headHardwareAssetsResponse')
-			.and
-			.returnValue(of(new HttpResponse({
+		jest.spyOn(inventoryService, 'getHardwareAssets')
+			.mockReturnValue(of(hardwareAssets));
+		jest.spyOn(inventoryService, 'getSystemAssets')
+			.mockReturnValue(of(systemAssets));
+		jest.spyOn(inventoryService, 'headHardwareAssetsResponse')
+			.mockReturnValue(of(new HttpResponse({
 				headers: countHeaders,
 				status: 200,
 			})));
-		spyOn(inventoryService, 'headSystemAssetsResponse')
-			.and
-			.returnValue(of(new HttpResponse({
+		jest.spyOn(inventoryService, 'headSystemAssetsResponse')
+			.mockReturnValue(of(new HttpResponse({
 				headers: countHeaders,
 				status: 200,
 			})));
-		spyOn(inventoryService, 'getRoleCount')
-			.and
-			.returnValue(of(RoleScenarios[0].scenarios.GET[0].response.body));
-		spyOn(productAlertsService, 'getSystemVulnerabilityCounts')
-			.and
-			.returnValue(of(VulnerabilityScenarios[0].scenarios.GET[0].response.body));
-		spyOn(productAlertsService, 'getHardwareVulnerabilityCounts')
-			.and
-			.returnValue(of(VulnerabilityScenarios[0].scenarios.GET[0].response.body));
-		spyOn(contractsService, 'getContractCounts')
-			.and
-			.returnValue(
-				of(
-					<ContractDeviceCountsResponse> ContractScenarios[3]
-					.scenarios.GET[0].response.body,
-				),
+		jest.spyOn(inventoryService, 'getRoleCount')
+			.mockReturnValue(of(RoleScenarios[0].scenarios.GET[0].response.body));
+		jest.spyOn(productAlertsService, 'getSystemVulnerabilityCounts')
+			.mockReturnValue(of(VulnerabilityScenarios[0].scenarios.GET[0].response.body));
+		jest.spyOn(productAlertsService, 'getHardwareVulnerabilityCounts')
+			.mockReturnValue(of(VulnerabilityScenarios[0].scenarios.GET[0].response.body));
+		jest.spyOn(contractsService, 'getContractCounts')
+			.mockReturnValue(of(<ContractDeviceCountsResponse> ContractScenarios[3].scenarios.GET[0].response.body));
+		jest.spyOn(contractsService, 'getCoverageCounts')
+			.mockReturnValue(of(<CoverageCountsResponse> (CoverageScenarios[2].scenarios.GET[0].response.body)),
 			);
-		spyOn(contractsService, 'getCoverageCounts')
-			.and
-			.returnValue(
-				of(<CoverageCountsResponse> (CoverageScenarios[2].scenarios.GET[0].response.body)),
-			);
-		spyOn(productAlertsService, 'getHardwareEolTopCount')
-			.and
-			.returnValue(of(HardwareEOLCountScenarios[0].scenarios.GET[0].response.body));
-		spyOn(inventoryService, 'getHardwareProductTypeCount')
-			.and
-			.returnValue(of(HardwareProductTypeScenarios[0].scenarios.GET[0].response.body));
-		spyOn(inventoryService, 'getSystemProductTypeCount')
-			.and
-			.returnValue(of(ProductTypeScenarios[0].scenarios.GET[0].response.body));
+		jest.spyOn(inventoryService, 'getHardwareProductTypeCount')
+			.mockReturnValue(of(HardwareProductTypeScenarios[0].scenarios.GET[0].response.body));
+		jest.spyOn(inventoryService, 'getSystemProductTypeCount')
+			.mockReturnValue(of(ProductTypeScenarios[0].scenarios.GET[0].response.body));
+		jest.spyOn(productAlertsService, 'getHardwareEolTopCount')
+			.mockReturnValue(of(HardwareEOLCountScenarios[0].scenarios.GET[0].response.body));
+
 		sendRacetrack();
 	};
 
@@ -181,45 +164,33 @@ describe('AssetsComponent', () => {
 				status: 404,
 				statusText: 'Resource not found',
 			};
-			spyOn(inventoryService, 'getHardwareAssets')
-				.and
-				.returnValue(throwError(new HttpErrorResponse(error)));
-			spyOn(inventoryService, 'getSystemAssets')
-				.and
-				.returnValue(throwError(new HttpErrorResponse(error)));
-			spyOn(inventoryService, 'headHardwareAssetsResponse')
-				.and
-				.returnValue(throwError(new HttpErrorResponse(error)));
-			spyOn(inventoryService, 'headSystemAssetsResponse')
-				.and
-				.returnValue(throwError(new HttpErrorResponse(error)));
-			spyOn(inventoryService, 'getRoleCount')
-				.and
-				.returnValue(throwError(new HttpErrorResponse(error)));
-			spyOn(productAlertsService, 'getVulnerabilityCounts')
-				.and
-				.returnValue(throwError(new HttpErrorResponse(error)));
-			spyOn(productAlertsService, 'getSystemVulnerabilityCounts')
-				.and
-				.returnValue(throwError(new HttpErrorResponse(error)));
-			spyOn(productAlertsService, 'getHardwareVulnerabilityCounts')
-				.and
-				.returnValue(throwError(new HttpErrorResponse(error)));
-			spyOn(contractsService, 'getContractCounts')
-				.and
-				.returnValue(throwError(new HttpErrorResponse(error)));
-			spyOn(contractsService, 'getCoverageCounts')
-				.and
-				.returnValue(throwError(new HttpErrorResponse(error)));
-			spyOn(productAlertsService, 'getHardwareEolTopCount')
-				.and
-				.returnValue(throwError(new HttpErrorResponse(error)));
-			spyOn(inventoryService, 'getHardwareProductTypeCount')
-				.and
-				.returnValue(throwError(new HttpErrorResponse(error)));
-			spyOn(inventoryService, 'getSystemProductTypeCount')
-				.and
-				.returnValue(throwError(new HttpErrorResponse(error)));
+			jest.spyOn(inventoryService, 'getHardwareAssets')
+				.mockReturnValue(throwError(new HttpErrorResponse(error)));
+			jest.spyOn(inventoryService, 'getSystemAssets')
+				.mockReturnValue(throwError(new HttpErrorResponse(error)));
+			jest.spyOn(inventoryService, 'headHardwareAssetsResponse')
+				.mockReturnValue(throwError(new HttpErrorResponse(error)));
+			jest.spyOn(inventoryService, 'headSystemAssetsResponse')
+				.mockReturnValue(throwError(new HttpErrorResponse(error)));
+			jest.spyOn(inventoryService, 'getRoleCount')
+				.mockReturnValue(throwError(new HttpErrorResponse(error)));
+			jest.spyOn(productAlertsService, 'getVulnerabilityCounts')
+				.mockReturnValue(throwError(new HttpErrorResponse(error)));
+			jest.spyOn(productAlertsService, 'getSystemVulnerabilityCounts')
+				.mockReturnValue(throwError(new HttpErrorResponse(error)));
+			jest.spyOn(productAlertsService, 'getHardwareVulnerabilityCounts')
+				.mockReturnValue(throwError(new HttpErrorResponse(error)));
+			jest.spyOn(contractsService, 'getContractCounts')
+				.mockReturnValue(throwError(new HttpErrorResponse(error)));
+			jest.spyOn(contractsService, 'getCoverageCounts')
+				.mockReturnValue(throwError(new HttpErrorResponse(error)));
+			jest.spyOn(productAlertsService, 'getHardwareEolTopCount')
+				.mockReturnValue(throwError(new HttpErrorResponse(error)));
+			jest.spyOn(inventoryService, 'getHardwareProductTypeCount')
+				.mockReturnValue(throwError(new HttpErrorResponse(error)));
+			jest.spyOn(inventoryService, 'getSystemProductTypeCount')
+				.mockReturnValue(throwError(new HttpErrorResponse(error)));
+
 			fixture.detectChanges();
 			component.ngOnInit();
 			fixture.detectChanges();
@@ -796,6 +767,7 @@ describe('AssetsComponent', () => {
 			fixture.destroy();
 			tick();
 		}));
+
 	});
 
 	describe('With Query Params for hardware', () => {
@@ -1030,4 +1002,5 @@ describe('AssetsComponent', () => {
 			tick();
 		}));
 	});
+
 });

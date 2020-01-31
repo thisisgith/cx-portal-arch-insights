@@ -39,7 +39,7 @@ export const SecurityAdvisorySummaryScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 30,
 					description: 'Mock Advisory Summary',
 					response: {
 						body: mockSummary,

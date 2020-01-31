@@ -6,4 +6,5 @@ describe('KeyHighlightPipe', () => {
 		expect(pipe)
 			.toBeTruthy();
 	});
+
 });

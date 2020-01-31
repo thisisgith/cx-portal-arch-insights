@@ -10,4 +10,5 @@ describe('DetailsPanelService', () => {
 		expect(service)
 		.toBeTruthy();
 	});
+
 });

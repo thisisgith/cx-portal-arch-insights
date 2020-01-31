@@ -83,9 +83,8 @@ describe('SearchComponent', () => {
 
 	it('should toggle general search with a searchString and searchContext', fakeAsync(() => {
 		caseService = TestBed.get(CaseService);
-		spyOn(caseService, 'fetchCaseDetails')
-			.and
-			.returnValue(of(CaseScenarios[0].scenarios.GET[0].response.body));
+		jest.spyOn(caseService, 'fetchCaseDetails')
+			.mockReturnValue(of(CaseScenarios[0].scenarios.GET[0].response.body));
 		component.onSearchChange({
 			generalSearch: '688296392',
 			text: '688296392',
@@ -193,9 +192,8 @@ describe('SearchComponent', () => {
 			customerId: '2431199',
 			serialNumber: ['FCH2139V1B0'],
 		};
-		spyOn(assetService, 'getAssetLinkData')
-			.and
-			.returnValue(of({ }));
+		jest.spyOn(assetService, 'getAssetLinkData')
+			.mockReturnValue(of({ }));
 		component.showAssetDetails(params);
 		expect(assetService.getAssetLinkData)
 			.toHaveBeenCalled();

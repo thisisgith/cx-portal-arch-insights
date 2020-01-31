@@ -18,8 +18,8 @@ describe('CollectorCredsModalComponent', () => {
 	let fixture: ComponentFixture<CollectorCredsModalComponent>;
 	let registerService: RegisterCollectorService;
 	let modalService: CuiModalService;
-	let getAuthSpy: jasmine.Spy;
-	let modalHideSpy: jasmine.Spy;
+	let getAuthSpy;
+	let modalHideSpy;
 
 	configureTestSuite(() => {
 		TestBed.configureTestingModule({
@@ -39,10 +39,9 @@ describe('CollectorCredsModalComponent', () => {
 	beforeEach(async(() => {
 		registerService = TestBed.get(RegisterCollectorService);
 		modalService = TestBed.get(CuiModalService);
-		getAuthSpy = spyOn(registerService, 'getAuthToken')
-			.and
-			.returnValue(of('token'));
-		modalHideSpy = spyOn(modalService, 'hide');
+		getAuthSpy = jest.spyOn(registerService, 'getAuthToken')
+			.mockReturnValue(of('token'));
+		modalHideSpy = jest.spyOn(modalService, 'hide');
 	}));
 
 	beforeEach(() => {
@@ -71,14 +70,14 @@ describe('CollectorCredsModalComponent', () => {
 	});
 
 	it('should show error when auth call fails', () => {
-		getAuthSpy.and
-			.returnValue(throwError(new HttpErrorResponse({
-				status: 404,
-			})));
+		getAuthSpy.mockReturnValue(throwError(new HttpErrorResponse({
+			status: 404,
+		})));
 		component.credsForm.get('password')
 			.setValue('Admin@123');
 		component.continue();
 		expect(component.error)
 			.toBe(true);
 	});
+
 });

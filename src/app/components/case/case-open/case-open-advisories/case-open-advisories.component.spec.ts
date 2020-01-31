@@ -87,7 +87,7 @@ describe('CaseOpenAdvisoriesComponent', () => {
 
 	it('should prompt the user if they want to close', fakeAsync(() => {
 		setData('security');
-		spyOn(cuiModalService, 'showComponent');
+		jest.spyOn(cuiModalService, 'showComponent');
 		const button = fixture.debugElement.query(By.css('a[data-auto-id="CaseOpenClose"]'));
 		button.nativeElement.click();
 		tick();
@@ -97,9 +97,8 @@ describe('CaseOpenAdvisoriesComponent', () => {
 
 	it('should submit', fakeAsync(() => {
 		setData('security');
-		spyOn(caseService, 'createCase')
-			.and
-			.returnValue(of(CaseScenarios[9].scenarios.POST[0].response.body));
+		jest.spyOn(caseService, 'createCase')
+			.mockReturnValue(of(CaseScenarios[9].scenarios.POST[0].response.body));
 		component.caseForm.controls.description.setValue('a');
 		component.caseForm.controls.title.setValue('a');
 		(<FormGroup> component.caseForm.controls.techInfo).controls.technology.setValue('10');
@@ -118,4 +117,5 @@ describe('CaseOpenAdvisoriesComponent', () => {
 		expect(caseService.createCase)
 			.toHaveBeenCalled();
 	}));
+
 });
