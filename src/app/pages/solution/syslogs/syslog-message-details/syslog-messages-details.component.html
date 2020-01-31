@@ -89,7 +89,17 @@
 		</div>
 			<div class="row half-padding">
 				<div class="col-4">
-					<cui-select label="{{'_SyslogCatalog_' | i18n}}"  [required]="false" [empty]="false" [items]="categoryList" [compressed]="true" [(ngModel)]="selectedCategory"  optionsKey="name" optionsValue="value" data-auto-id="syslogsCategory"></cui-select>
+					<cui-select label="{{'_SyslogCategory_' | i18n}}"
+						[required]="false"
+						[empty]="false"
+						[items]="categoryList"
+						placeholder="{{'_SyslogSelectCategory_' | i18n}}"
+						[compressed]="true"
+						[(ngModel)]="selectedCategory"
+						optionsKey="name"
+						optionsValue="value"
+						data-auto-id="syslogsCategory">
+					</cui-select>
 				</div>
 			</div>
 			<div class="row half-padding">
