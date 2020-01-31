@@ -1722,6 +1722,7 @@
 	"_XSmartAccountUsers_": "{0} Smart Account users",
 	"_Youarehere_": "You are here",
 	"_YouHaveInventory_": "you have <b>{0}</b> of these in your inventory",
+	"_YouHaveSelected_": "You have selected ",
 	"_YoullNeedAHypervisor_": "You'll need a hypervisor to host CX Collector",
 	"_YoullNeedAnEnvironment_": "You'll need an environment that:",
 	"_YourImpactedDevices_": "Your Impacted Devices",
