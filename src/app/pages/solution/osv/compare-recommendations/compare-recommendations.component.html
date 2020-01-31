@@ -67,7 +67,7 @@
 			</tr>
 			<!-- bugs -->
 			<tr id="bugs-details"  data-auto-id="ShowBugDetails">
-				<td (click)="showDetailsView('bug',0)" data-auto-id="ShowBugDetailsCurrentReleasesTab" class=" first-column-width headingClass no-border-bottom no-border-top text-large  text-primary"
+				<td (click)="showDetailsView('bug',0)" data-auto-id="ShowBugDetailsCurrentReleasesTab" class=" first-column-width headingClass no-border-bottom no-border-top text-large text-primary toggle"
 					>
 					<div [innerText]="'_Bugs_' | i18n"></div>
 					<div
@@ -128,7 +128,7 @@
 			</tr>
 			<!-- security advisories -->
 			<tr id="psirts-details" data-auto-id="ShowPsirtDetails" >
-				<td (click)="showDetailsView('psirt',0)" data-auto-id="ShowPsirtDetailsCurrentReleaseTab" class=" first-column-width headingClass no-border-bottom no-border-top text-large text-primary"
+				<td (click)="showDetailsView('psirt',0)" data-auto-id="ShowPsirtDetailsCurrentReleaseTab" class=" first-column-width headingClass no-border-bottom no-border-top text-large text-primary toggle"
 					[innerText]="'_SecurityAdvisories_' | i18n">
 				</td>
 				<td (click)="showDetailsView('psirt',0)" data-auto-id="ShowPsirtDetailsCurrentReleaseTab" class="recommendation-current">
@@ -167,7 +167,7 @@
 			</tr>
 
 			<tr id="field-details"  data-auto-id="ShowFieldDetails">
-				<td (click)="showDetailsView('field',0)" data-auto-id="ShowFieldDetailsCurrentReleasesTab" class="first-column-width headingClass no-border-bottom no-border-top text-large  text-primary"
+				<td (click)="showDetailsView('field',0)" data-auto-id="ShowFieldDetailsCurrentReleasesTab" class="first-column-width headingClass no-border-bottom no-border-top text-large text-primary toggle"
 					>
 					<div [innerText]="'_FieldsNotices_' | i18n"></div>
 					<div
