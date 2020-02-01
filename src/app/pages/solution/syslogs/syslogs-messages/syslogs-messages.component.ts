@@ -289,9 +289,11 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 	 */
 	public onShowSuccess (event) {
 		this.toasts.autoHide = 3000;
-		this.toasts.addToast('success', 'Event Type:',
-		I18n.get('_SyslogSuccessMessage_', event));
+		(event.statusMessage === 'Created') ? this.toasts.addToast('success', 'Event Type:',
+		I18n.get('_SyslogSuccessMessage_', event.msgType)) : this.toasts.addToast('success', 'Event Type:',
+		I18n.get('_SyslogUpdateMessage_', event.msgType));
 	}
+
 	/**
 	 * on destroy
 	 */

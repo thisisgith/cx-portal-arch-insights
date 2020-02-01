@@ -101,9 +101,10 @@
 					<cui-select
 						data-auto-id="productID"
 						label="{{'_FaultProductId_' | i18n}}"
-						placeholder="Select Product Id"
+						placeholder="{{'_FaultSelectProductId_' | i18n}}"
 						optionsKey="value"
 						optionsValue="value"
+						compressed="true"
 						[(ngModel)]="searchParams.productId"
 						(ngModelChange)="onSelection($event,FAULT_CONSTANT.PRODUCT_ID)"
 						[items]="productID"
@@ -112,11 +113,12 @@
 				</div>
 				<div class="col-3">
 					<cui-select
-						placeholder="Select Software Type"
+						placeholder="{{'_FaultSelectSoftwareType_' | i18n}}"
 						data-auto-id="Software"
 						label="{{'_FaultSoftware_' | i18n}}"
 						optionsKey="value"
 						optionsValue="value"
+						compressed="true"
 						(ngModelChange)="onSelection($event,FAULT_CONSTANT.SOFTWARE)"
 						[(ngModel)]="searchParams.software"
 						[items]="software"
@@ -125,8 +127,9 @@
 				</div>
 				<div class="col-3">
 					<cui-select
-						placeholder="Select Status"
+						placeholder="{{'_FaultSelectStatus_' | i18n}}"
 						data-auto-id="status"
+						compressed="true"
 						label="{{'_FaultStatus_' | i18n}}"
 						(ngModelChange)="onSelection($event,FAULT_CONSTANT.STATUS)"
 						[(ngModel)]="searchParams.srStatus"
@@ -138,8 +141,9 @@
 				</div>
 				<div class="col-3">
 					<cui-select
-						placeholder="Select Time Range"
+						placeholder="{{'_FaultSelectTimeRange_' | i18n}}"
 						data-auto-id="timeRange"
+						compressed="true"
 						label="{{'_FaultTimeRange_' | i18n}}"
 						(ngModelChange)="onSelection($event,FAULT_CONSTANT.TIME)"
 						[(ngModel)]="searchParams.days"
@@ -152,9 +156,9 @@
 			<div *ngIf="affectedSystemLoading" class="base-margin-bottom">
 				<cui-spinner></cui-spinner>
 			</div>
-			<div *ngIf="faultAffectedDetails.length" class="base-margin-top">
+			<div *ngIf="faultAffectedDetails?.length" class="base-margin-top">
 				<span [innerText]="
-							'_FaultShowingXofYSystems_'
+							'_FaultShowingXofYAlarms_'
 								| i18n: paginationCount:affectedCount
 					" class="qtr-margin-left text-medium text-muted" data-auto-id="ShowingAlarmCount">
 				</span>

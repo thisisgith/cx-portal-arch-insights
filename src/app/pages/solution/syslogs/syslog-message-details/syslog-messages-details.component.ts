@@ -24,7 +24,6 @@ import { DetailsPanelStackService } from '@services';
 /**
  * Syslogpanelgrid component
  */
-
 @Component({
 	selector: 'syslog-message-details',
 	styleUrls: ['./syslog-messages-details.component.scss'],
@@ -76,6 +75,9 @@ export class SyslogMessagesDetailsComponent implements OnInit, OnChanges, OnDest
 	public moveToFaultsResponse: PushToFaultResponse;
 	public currentUserFirstName = '';
 	public currentUserEmail = '';
+	public statusMesage = '';
+	public statusObj = { };
+
 	constructor (
 		private logger: LogService,
 		public syslogsService: SyslogsService,
@@ -118,11 +120,11 @@ export class SyslogMessagesDetailsComponent implements OnInit, OnChanges, OnDest
 	public ngOnInit () {
 		this.loadSyslogPaneldata(this.asset);
 	}
+
 	/**
 	 * Used to  get the table grid
 	 * @param asset gives table row info
 	 */
-
 	public loadSyslogPaneldata (asset) {
 		this.loading = true;
 		if (this.asset) {
@@ -200,26 +202,31 @@ export class SyslogMessagesDetailsComponent implements OnInit, OnChanges, OnDest
 		};
 		this.loading = true;
 		this.syslogsService
-		.getPushToFaultsInfo(this.moveToFaultParams)
-		.pipe(takeUntil(this.destroy$),
-		map((responseList: PushToFaultResponse) => {
-			this.moveToFaultsResponse = responseList;
-			this.loading = false;
-			this.togglePushToFaults();
-			this.showSuccess.emit(this.asset.msgType);
-			this.onPanelClose();
-		}), catchError(err => {
-			this.loading = false;
-			_.invoke(this.alert, 'show',  I18n.get('_SyslogsGenericError_'), 'danger');
-			this.logger.error('syslogs-messagedetails.component : getGridData() ' +
-				`:: Error : (${err.status}) ${err.message}`);
+			.getPushToFaultsInfo(this.moveToFaultParams)
+			.pipe(takeUntil(this.destroy$),
+			map((responseList: PushToFaultResponse) => {
+				this.moveToFaultsResponse = responseList;
+				this.statusMesage = responseList.statusMessage;
+				this.loading = false;
+				this.togglePushToFaults();
+				this.statusObj = {
+					msgType: this.asset.msgType,
+					statusMessage : this.statusMesage,
+				};
+				this.showSuccess.emit(this.statusObj);
+				this.onPanelClose();
+			}), catchError(err => {
+				this.loading = false;
+				_.invoke(this.alert, 'show', I18n.get('_SyslogsGenericError_'), 'danger');
+				this.logger.error('syslogs-messagedetails.component : getGridData() ' +
+			`:: Error : (${err.status}) ${err.message}`);
 
-			return of({ });
-		}))
-		.subscribe();
+				return of({ });
+			}))
+			.subscribe();
 	}
 
- /**
+	/**
 	 * Determines whether panel close on
 	 */
 	public onPanelClose () {
@@ -239,10 +246,10 @@ export class SyslogMessagesDetailsComponent implements OnInit, OnChanges, OnDest
 			this.detailsPanelStackService.reset();
 		}
 	}
+
 	/**
 	 * on destroy
 	 */
-
 	public ngOnDestroy () {
 		this.destroy$.next();
 		this.destroy$.complete();
