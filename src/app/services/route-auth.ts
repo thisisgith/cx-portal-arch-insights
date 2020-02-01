@@ -22,7 +22,7 @@ export type StrictHttpResponse<T> = HttpResponse<T> & {
 export class RouteAuthService {
 	public hasRccPermission;
 	private rccPath = '/customerportal/compliance/v1/service/checkOptInStatus';
-	private archPath = '/customerportal/archinsights/v1/checkOptInStatus';
+	private archPath = '/customerportal/syslog/v1/checkOptInStatus';
 	public rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 	constructor (private http: HttpClient, private logger: LogService) { }
 
@@ -124,10 +124,12 @@ export class RouteAuthService {
 	 * @returns Observable with response data.
 	 */
 	public invokeArchitecturePermission<T> (url: string): __Observable<any> {
-		const __headers = new HttpHeaders();
+		let __headers = new HttpHeaders();
 		const __body: any = null;
+
+		__headers = __headers.append('Content-Type', 'application/json');
 		const req = new HttpRequest<any>(
-			'GET',
+			'POST',
 			url,
 			__body,
 			{
