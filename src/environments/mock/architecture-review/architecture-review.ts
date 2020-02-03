@@ -3,7 +3,7 @@ const api = '/api/customerportal/archinsights/v1';
 /**
  * Customer Id for mock response
  */
-const customerId = '2431199_0';
+const customerId = 2431199;
 // const customerId = '145243_0';
 
 /**
