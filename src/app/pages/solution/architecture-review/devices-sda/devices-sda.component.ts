@@ -61,7 +61,7 @@ export class DevicesSdaComponent implements OnInit, OnChanges {
 	public nonOptimalLinkTableLimit = 10;
 	public nonOptimalLinksTotalCount = 0;
 	public selectedSoftwareGroup: any;
-	public tabIndex: number;
+	public tabIndex = 0;
 	private solution: string;
 	private useCase: string;
 	public params: IParamType = {
