@@ -146,9 +146,9 @@
 	</div>
 </ng-template>
 <ng-template #SDASupportedHardwareAccessPoint>
-    <div *ngIf="+sdaData?.noOfaccessPointsClients > 0" class="qtr-margin-top ">
-        <div class="col-lg-5 pull-left">
-            <div
+	<div *ngIf="+sdaData?.noOfaccessPointsClients > 0" class="qtr-margin-top ">
+		<div class="col-lg-5 pull-left">
+			<div
                 class="text-size-18 half-padding-left half-margin-top text-uppercase "
                 [innerText]="
                     '_ArchitectureAccesspointChannelUtilization_'
@@ -156,57 +156,56 @@
                         | uppercase
                 "
             ></div>
-            <div class="half-padding-left col-lg-7 pull-left">
-                <div
+			<div class="half-padding-left col-lg-7 pull-left">
+				<div
                     class="progressbar progressbar--large "
                     [attr.data-percentage]="
                         sdaData.accessPointsChannelUtilization
                     "
                 >
-                    <div class="progressbar__fill"></div>
-                </div>
-            </div>
-            <div class="col-lg-5 pull-left half-margin-top">
-                <span
+				<div class="progressbar__fill"></div>
+				</div>
+				</div>
+				<div class="col-lg-5 pull-left half-margin-top">
+					<span
                     [innerText]="getAccessPointsPercentage(sdaData)"
                     class="text-muted"
                 >
-                </span>
-                <span
+				</span>
+				<span
                     [ngClass]="
                         setIndicators(sdaData.accessPointsChannelUtilization)
                     "
                     class="qtr-margin-right icon-circle"
                 >
-                </span>
-                <span
+				</span>
+				<span
                     class="qtr-margin-right text-muted"
                     [innerText]="getAccesspointStatus(sdaData)"
                 >
-                </span>
-            </div>
-        </div>
-        <div class="col-lg-5 pull-left">
-            <div
+				</span>
+				</div>
+				</div>
+				<div class="col-lg-5 pull-left">
+					<div
                 class="text-size-18 half-padding-left half-margin-top text-uppercase cx-text-default"
                 [innerText]="
                     '_ArchitectureAccesspointClients_' | i18n | uppercase
                 "
             ></div>
-
-            <div class="col-lg-7 half-padding-left pull-left">
-                <div
+			<div class="col-lg-7 half-padding-left pull-left">
+				<div
                     class="progressbar progressbar--large "
                     [attr.data-percentage]="getAccessPointclientPercentage()"
                 >
-                    <div class="progressbar__fill"></div>
-                </div>
-            </div>
-            <div class="col-lg-5 pull-left half-margin-top text-muted">
-                <span [innerText]="getAccessPointsTemplate(sdaData)"> </span>
-            </div>
-        </div>
-    </div>
+				<div class="progressbar__fill"></div>
+				</div>
+				</div>
+				<div class="col-lg-5 pull-left half-margin-top text-muted">
+					<span [innerText]="getAccessPointsTemplate(sdaData)"> </span>
+					</div>
+			</div>
+			</div>
 </ng-template>
 <ng-template #SDAUnderlayRecommendationTemplate>
 		<cui-table [options]="nonOptimalLinksTableOptions" [data]="nonOptimalLinks" *ngIf="nonOptimalLinks?.length > 0"></cui-table>
