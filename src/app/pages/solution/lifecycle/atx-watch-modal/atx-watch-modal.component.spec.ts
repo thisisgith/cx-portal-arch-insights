@@ -8,15 +8,15 @@ const mockBrightcovePlayerData = {
 	videoId: '000001',
 };
 
-// jest.mock('@brightcove/player-loader', () => ({
-// 	playerLoader: () => ({
-// 		then: () => ({
-// 			catch: () => ({ }),
-// 		}),
-// 	}),
-// }));
+jest.mock('@brightcove/player-loader', () => ({
+	default: () => ({
+		then: () => ({
+			catch: () => ({ }),
+		}),
+	}),
+}));
 
-xdescribe('AtxWatchModalComponent', () => {
+describe('AtxWatchModalComponent', () => {
 	let component: AtxWatchModalComponent;
 	let fixture: ComponentFixture<AtxWatchModalComponent>;
 
