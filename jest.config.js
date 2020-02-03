@@ -50,7 +50,6 @@ module.exports = {
     '!src/app/components/user-mgmt/user-mgmt-filter.pipe.ts',
     '!src/app/pipes/assets/assets.pipe.module.ts',
     '!src/app/components/search/serial-search/serial-search.component.ts',
-    '!src/app/pages/solution/lifecycle/atx-watch-modal/atx-watch-modal.component.ts',
   ],
   coverageThreshold: {
     'global': {
