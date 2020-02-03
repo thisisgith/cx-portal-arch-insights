@@ -202,25 +202,25 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 						sortable: true,
 						sortDirection: 'asc',
 						sorting: true,
-						width: '20%',
+						width: '15%',
 					},
 					{
 						key: 'productFamily',
 						name: I18n.get('_OsvProductFamily_'),
 						sortable: true,
-						width: '25%',
+						width: '20%',
 					},
 					{
 						key: 'swType',
 						name: I18n.get('_OsvOSType_'),
 						sortable: true,
-						width: '10%',
+						width: '12%',
 					},
 					{
 						name: I18n.get('_OsvCurrentOSVersion_'),
 						sortable: false,
 						template: this.currentOSVersionsTemp,
-						width: '15%',
+						width: '12%',
 					},
 					{
 						key: 'optimalVersion',
@@ -241,7 +241,7 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 						name: I18n.get('_OsvRecommendations_'),
 						sortable: true,
 						template: this.recommendationsTemplate,
-						width: '15%',
+						width: '16%',
 					},
 					{
 						click: true,
