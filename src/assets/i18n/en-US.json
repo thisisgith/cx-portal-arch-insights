@@ -203,6 +203,8 @@
 	"_ArchitectureWlcTooltipContent_": "Displayed value is the WLCs as per the last data collection from DNAC",
 	"_ArchitectureYes_": "Yes",
 	"_ArchitetureSwimReady_": "SWIM",
+	"_ArchitetureDeviceTabHardware_":"Hardware",
+	"_ArchitetureDeviceTabSoftware_":"Software",
 	"_AskAQuestion_": "Ask a Question (S4)",
 	"_AskTheExperts_": "Ask the Experts",
 	"_Asset_": "Asset",
