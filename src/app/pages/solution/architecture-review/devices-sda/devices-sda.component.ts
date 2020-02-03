@@ -62,6 +62,7 @@ export class DevicesSdaComponent implements OnInit, OnChanges {
 	public nonOptimalLinksTotalCount = 0;
 	public selectedSoftwareGroup: any;
 	public tabIndex = 0;
+	public sdaNoAccesspoint;
 	private solution: string;
 	private useCase: string;
 	public params: IParamType = {
@@ -205,6 +206,63 @@ export class DevicesSdaComponent implements OnInit, OnChanges {
 		this.osvCriteriaToEmit.emit(data);
 	}
 	/**
+	 * Method to find Accesspoint in percentage
+	 * @returns data for accesspoint client
+	 */
+	public getAccessPointclientPercentage () {
+		let res = 0;
+		const curCount: number = this.sdaNoAccesspoint;
+		const totalCount: number = this.sdaAccesspointLimit;
+		res = Math.floor((curCount / totalCount) * 100);
+
+		return res;
+	}
+	/**
+	 * Method to find AccesspointClientUtilization
+	 * @param sdaData to pass
+	 * @returns data for accesspoint client utilization
+	 */
+	public getAccesspointStatus (sdaData) {
+
+		if (+(sdaData.accessPointsChannelUtilization) < 20) {
+			this.accessClientLabel = 'Low';
+		} else if (+(sdaData.accessPointsChannelUtilization) > 50 && +(sdaData.accessPointsChannelUtilization) < 60) {
+			this.accessClientLabel = 'Medium';
+		} else {
+			this.accessClientLabel = 'High';
+		}
+
+		return this.accessClientLabel;
+	}
+	/**
+	 * Method to find AccesspointClients vs total accesspoint clients
+	 * @param item to pass
+	 * @returns data as in fraction form.
+	 */
+	public getAccessPointsTemplate (item) {
+		return `${item.noOfaccessPointsClients}/${item.accessPointsClientsLimit}`;
+	}
+	/**
+	 * Method to find AccesspointClientsUtilization in percentage
+	 * @param item to pass
+	 * @returns data in percentage.
+	 */
+	public getAccessPointsPercentage (item) {
+		return `${item.accessPointsChannelUtilization} %`;
+	}
+	/**
+	 * To show the status of access point utilization
+	 * @param item will have the full indicator
+	 * @returns the css class
+	 */
+	public setIndicators (item) {
+		return {
+			'text-danger': item > 60,
+			'text-success': item < 50,
+			'text-warning': item > 50 && item < 60,
+		};
+	}
+	/**
 	 * gets SDA devices
 	 * @returns SDA devices
 	 */
@@ -219,6 +277,8 @@ export class DevicesSdaComponent implements OnInit, OnChanges {
 					 dnacDeviceDetails.sdaSupportedSoftware : [];
 					this.sdaHardwareGridData = dnacDeviceDetails.sdaSupportedHardware ?
 					dnacDeviceDetails.sdaSupportedHardware : [];
+					this.sdaNoAccesspoint = dnacDeviceDetails.noOfaccessPointsClients;
+					this.sdaAccesspointLimit = dnacDeviceDetails.accessPointsClientsLimit;
 					this.failedCriteriaToEmit.emit(dnacDeviceDetails.failedCriteria);
 					this.deviceInfoToEmit.emit(dnacDeviceDetails);
 					if (dnacDeviceDetails.sdaL3AccessEnabled === 'No') {
