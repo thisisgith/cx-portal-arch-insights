@@ -7,7 +7,6 @@
 
 <ng-template #stepTemplate let-step="step">
 	<div
-		aria-live="assertive"
 		*ngIf="step.data?.active"
 		class="step-container"
 		[ngStyle]="{
@@ -59,14 +58,14 @@
 				[innerText]="step.description"></div>
 		</div>
 		<div class="step-footer qtr-margin">
-			<button 
+			<button
 				attr.data-auto-id="NextButton-Step-{{ step.stepIndex }}"
 				*ngIf="step.stepIndex < lastIndex"
 				class="btn override-button"
 				[innerText]="'_Next_' | i18n"
 				(click)="nextStep()"
 			></button>
-			<a 
+			<a
 				attr.data-auto-id="NextButton-Step-{{ step.stepIndex }}"
 				*ngIf="step.stepIndex === lastIndex"
 				class="btn override-button text-uppercase"

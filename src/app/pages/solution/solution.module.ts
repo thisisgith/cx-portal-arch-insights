@@ -27,6 +27,7 @@ import {
 	GaugeModule,
 	MultiGaugeModule,
 } from '@components';
+import { A11yTitleComponent } from '@components/common/a11y-title.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 
 import { AtxWatchModalComponent } from './lifecycle/atx-watch-modal/atx-watch-modal.component';
@@ -40,7 +41,7 @@ const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
  * Module representing the Solution Pages
  */
 @NgModule({
-	declarations: [SolutionComponent, AtxWatchModalComponent],
+	declarations: [SolutionComponent, AtxWatchModalComponent, A11yTitleComponent],
 	entryComponents: [AtxWatchModalComponent],
 	exports: [SolutionComponent],
 	imports: [
