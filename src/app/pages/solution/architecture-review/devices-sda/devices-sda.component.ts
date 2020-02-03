@@ -224,12 +224,12 @@ export class DevicesSdaComponent implements OnInit, OnChanges {
 	 */
 	public getAccesspointStatus (sdaData) {
 
-		if (+(sdaData.accessPointsChannelUtilization) < 20) {
-			this.accessClientLabel = 'Low';
+		if (+(sdaData.accessPointsChannelUtilization) < 50) {
+			this.accessClientLabel = I18n.get('_Low_');
 		} else if (+(sdaData.accessPointsChannelUtilization) > 50 && +(sdaData.accessPointsChannelUtilization) < 60) {
-			this.accessClientLabel = 'Medium';
+			this.accessClientLabel = I18n.get('_Medium_');
 		} else {
-			this.accessClientLabel = 'High';
+			this.accessClientLabel = I18n.get('_High_');
 		}
 
 		return this.accessClientLabel;
