@@ -4,6 +4,7 @@ const api = '/api/customerportal/archinsights/v1';
  * Customer Id for mock response
  */
 const customerId = 2431199;
+// const customerId = '145243_0';
 
 /**
  * sample deviceIp
@@ -216,8 +217,12 @@ const getSdaSupportedData = {
 		hostName: 'AP70F3.5A7E.44C8',
 		ipAddress: '192.168.46.100',
 		sdaL3AccessEnabled: 'Yes',
-		sdaNoOfMtuNonOptimalInterfaces: 0,
-		sdaRedundantLinks: 'No',
+		sdaNoOfMtuNonOptimalInterfaces: 2,
+		sdaRedundantLinks: 'Yes',
+		accessPointsChannelUtilization : '55',
+		noOfaccessPointsClients : '6',
+		accessPointsClientsLimit: '13',
+
 		sdaSupportedHardware: [
 			{
 				deviceRole: 'controller',

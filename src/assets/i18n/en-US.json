@@ -205,6 +205,8 @@
 	"_ArchitetureSwimReady_": "SWIM",
 	"_ArchitetureDeviceTabHardware_":"Hardware",
 	"_ArchitetureDeviceTabSoftware_":"Software",
+	"_ArchitectureAccesspointChannelUtilization_":"Access Point Client Utilization",
+	"_ArchitectureAccesspointClients_":"Access Point Clients",
 	"_AskAQuestion_": "Ask a Question (S4)",
 	"_AskTheExperts_": "Ask the Experts",
 	"_Asset_": "Asset",
